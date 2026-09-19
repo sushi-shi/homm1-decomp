@@ -126,7 +126,7 @@ def rewrite_preamble(relative: Path) -> str:
             "declaration.\n\n"
             "#include <match.h>\n\n")
     if relative == Path("SOURCE/kbwin.cpp"):
-        text += "#include <Win32.h>\n\n"
+        text += "#define WIN32_LEAN_AND_MEAN\n#include <windows.h>\n\n"
     if relative in {Path("SOURCE/KB.cpp"), Path("SOURCE/kbwin.cpp")}:
         text += "#include <H1/KB.h>\n"
     text += "#include <H2/_all.h>\n"

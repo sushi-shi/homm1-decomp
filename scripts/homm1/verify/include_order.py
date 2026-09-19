@@ -3,7 +3,7 @@
 Ported: DUPLICATES, ORDER, and header SELF-SUFFICIENCY are gated. The order
 (groups, blank-line separated): 0 config #defines; 1 <rva.h>; 2 the TU's own
 header; 3 the platform preludes in DEPENDENCY order (Mfc.h, MfcNoInline.h,
-MfcWin.h, Win32.h - they configure how later headers parse, so group 3 is
+MfcWin.h, windows.h - they configure how later headers parse, so group 3 is
 RANKED, not sorted); 4 project headers; 5 libraries. A header that names a
 platform type pulls its own prelude (self-sufficiency; proven by the
 2026-08-02 standalone-compile sweep). Anything unrecognised in the block
@@ -32,7 +32,7 @@ PP_RE = re.compile(r"^\s*#\s*(\w+)")
 
 RVA_H = "match.h"
 
-PRELUDE_RANK = {"Mfc.h": 0, "MfcNoInline.h": 1, "MfcWin.h": 2, "Win32.h": 3}
+PRELUDE_RANK = {"Mfc.h": 0, "MfcNoInline.h": 1, "MfcWin.h": 2, "windows.h": 3}
 
 G_RVA, G_OWN, G_PRELUDE, G_PROJECT, G_LIBRARY = 1, 2, 3, 4, 5
 GROUPS = (G_RVA, G_OWN, G_PRELUDE, G_PROJECT, G_LIBRARY)
@@ -57,7 +57,7 @@ WIN_TOKENS = re.compile(
 MFC_SUPPLIERS = {"Mfc.h", "MfcWin.h", "MfcNoInline.h", "afx.h", "afxwin.h",
                  "afxtempl.h", "afxcmn.h"}
 AFXWIN_SUPPLIERS = {"MfcWin.h", "afxwin.h", "afxcmn.h"}
-WIN_SUPPLIERS = MFC_SUPPLIERS | {"Win32.h", "windows.h"}
+WIN_SUPPLIERS = MFC_SUPPLIERS | {"windows.h"}
 
 FWD_RE = re.compile(r"^\s*(?:class|struct|union)\s+(\w+)\s*;", re.M)
 ELAB_RE = re.compile(r"\b(?:class|struct|union)\s+(\w+)")

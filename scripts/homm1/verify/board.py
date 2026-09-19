@@ -186,11 +186,6 @@ def _header_extern_names(code: str) -> list[str]:
     return names
 
 
-#: <Mfc.h>/<Win32.h> are mutually exclusive umbrellas - a symbol declared once
-#: in each is never declared twice in any TU.
-_UMBRELLA_PAIR = {"include/Mfc.h", "include/Win32.h"}
-
-
 def duplicate_header_externs() -> dict[str, list[str]]:
     import collections
     seen: dict[str, list[str]] = collections.defaultdict(list)
@@ -208,8 +203,7 @@ def duplicate_header_externs() -> dict[str, list[str]]:
             r = str(path.relative_to(REPO))
             for name in _header_extern_names(code):
                 seen[name].append(r)
-    return {k: v for k, v in seen.items()
-            if len(v) > 1 and set(v) != _UMBRELLA_PAIR}
+    return {k: v for k, v in seen.items() if len(v) > 1}
 
 
 _CPP_PROTO = re.compile(
