@@ -2,6 +2,7 @@
 #define HOMM1_BASE_RESOURCEMANAGER_H
 
 #include <BASE/baseManager.h>
+#include <BASE/resource.h>
 
 class MIDIWrap;
 class bitmap;
@@ -9,12 +10,12 @@ class font;
 class icon;
 class mouse;
 class palette;
-class resource;
 class sample;
 class tileset;
 struct aggEntry;
 
 H1_ENUM_BEGIN(ResourceManagerConstant)
+    RESOURCE_MANAGER_INVALID_FILE = -1,
     RESOURCE_MANAGER_FILENAME_CAPACITY = 60,
     RESOURCE_MANAGER_SIZE = 0x86
 H1_ENUM_END(ResourceManagerConstant)
@@ -49,7 +50,7 @@ public:
     void Dispose(resource *);
     void AddResource(resource *);
     void Expunge();
-    resource *Query(unsigned long);
+    resource *Query(short);
     void RemoveResource(resource *);
     int LoadAggregateHeader(char *);
     void PointToFile(unsigned long);

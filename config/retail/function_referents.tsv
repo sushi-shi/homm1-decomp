@@ -6,4 +6,5 @@ rva	name	provenance
 0x0005DC9B	?KBTickCount@@YAJXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x00078940	?PollSound@soundManager@@QAEXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x00082500	_lseek	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body
+0x00082990	_read	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body
 0x0008B050	_tell	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body

@@ -1,6 +1,8 @@
 rva	size	symbol	provenance
 0x00094180	1	?gbInPollSound@@3DA	evidence/poll-sound.md; accessed storage only
 0x0009FE78	4	?gbForegroundApp@@3HA	evidence/poll-sound.md; accessed storage only
+0x000A0E0C	4	?gReadWordAssertLine@@3FA	evidence/resource-manager-layout.md; ReadWord assertion line record
+0x000A0E10	26	?gReadWordAssertFile@@3PADA	evidence/resource-manager-layout.md; ReadWord assertion source path
 0x000A1808	4	_gIconXAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
 0x000A180C	4	_gIconYAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
 0x000A1810	4	_gIconDataBase	evidence/handwritten-assembly-survey.md; code-required icon-data base identity

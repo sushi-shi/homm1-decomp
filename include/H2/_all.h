@@ -5,6 +5,7 @@
 // base constructors, vtables, or deleting destructors.
 
 #include <BASE/baseManager.h>
+#include <BASE/resource.h>
 #include <BASE/resourceManager.h>
 #include <H2/_carcass_types.h>
 #include <H2/_types.h>
@@ -24,7 +25,6 @@
 #include <H2/BASE/MIDIWrap.h>
 #include <H2/BASE/mouseManager.h>
 #include <H2/BASE/palette.h>
-#include <H2/BASE/resource.h>
 #include <H2/BASE/sample.h>
 #include <H2/BASE/soundManager.h>
 #include <H2/BASE/textEntryWidget.h>

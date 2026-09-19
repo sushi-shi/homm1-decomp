@@ -2,10 +2,14 @@
 
 #include <match.h>
 
+#include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
 #include <H2/_all.h>
 
 #include <io.h>
+
+short gReadWordAssertLine = 619;
+char gReadWordAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 
 // donor PoL RVA 0x000c8080; preferred Buka symbol ?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@H@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
@@ -34,14 +38,29 @@ void resourceManager::Dispose(class resource *) {}
 // donor PoL RVA 0x000c8740; preferred Buka symbol ?AddResource@resourceManager@@QAEXPAVresource@@@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.451638;margin=0.545401;shape=0.346;size=0.698;calls=1.000;alternate=pol20:void resourceManager::AddResource(class resource *)@0x000c8740
-VA(0x00475e70, 0x60)
-void resourceManager::AddResource(class resource *) {}
+VA(0x00475e70, 0x55)
+void resourceManager::AddResource(class resource *newResource)
+{
+    if (m_resourceListHead == 0) {
+        m_resourceListHead = newResource;
+        m_resourceListHead->m_next = 0;
+    } else {
+        newResource->m_next = m_resourceListHead;
+        m_resourceListHead = newResource;
+    }
+}
 
 // donor PoL RVA 0x000c8830; preferred Buka symbol ?Query@resourceManager@@QAEPAVresource@@K@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.434784;margin=0.589664;shape=0.276;size=0.688;calls=1.000;alternate=pol20:class resource * resourceManager::Query(unsigned long int)@0x000c8830
-VA(0x00475f60, 0x50)
-class resource * resourceManager::Query(unsigned long int) { return 0; }
+VA(0x00475f60, 0x4f)
+class resource *resourceManager::Query(short resourceId)
+{
+    resource *cursorResource = m_resourceListHead;
+    while (cursorResource != 0 && cursorResource->m_id != resourceId)
+        cursorResource = cursorResource->m_next;
+    return cursorResource;
+}
 
 // donor PoL RVA 0x000c8c00; preferred Buka symbol ?PointToFile@resourceManager@@QAEXK@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
@@ -70,5 +89,14 @@ void resourceManager::RestorePosition(void)
 // donor PoL RVA 0x000c8f70; preferred Buka symbol ?ReadWord@resourceManager@@QAEFXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
-VA(0x00476530, 0x60)
-short int resourceManager::ReadWord(void) { return 0; }
+VA(0x00476530, 0x58)
+short int resourceManager::ReadWord(void)
+{
+    ProcessAssert(
+        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
+        gReadWordAssertFile,
+        gReadWordAssertLine + 1);
+    short value = 0;
+    read(m_aggregateFd, &value, sizeof(value));
+    return value;
+}
