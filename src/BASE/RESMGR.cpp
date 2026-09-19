@@ -6,6 +6,7 @@
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
+#include <BASE/sample.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 
@@ -62,11 +63,21 @@ void resourceManager::GetBackdropAtLoc(
     }
 }
 
-// donor PoL RVA 0x000c8570; preferred Buka symbol ?GetSample@resourceManager@@QAEPAVsample@@PAD@Z
-// donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.514578;margin=0.400000;shape=0.333;size=0.838;calls=1.000;alternate=pol20:class sample * resourceManager::GetSample(char *)@0x000c8570
-VA(0x00475d40, 0xa0)
-class sample * resourceManager::GetSample(char *) { return 0; }
+// The Buka cache path is source-identical; HoMM1 passes its three playback defaults.
+VA(0x00475d40, 0x9c)
+class sample *resourceManager::GetSample(char *name)
+{
+    short fileId = MakeId(name);
+    resource *resourceEntry = Query(fileId);
+    if (resourceEntry != 0) {
+        resourceEntry->m_refCount++;
+        return static_cast<sample *>(resourceEntry);
+    } else {
+        resourceEntry = new sample(name, 0, 127, 1);
+        AddResource(resourceEntry);
+        return static_cast<sample *>(resourceEntry);
+    }
+}
 
 // donor PoL RVA 0x000c86b0; preferred Buka symbol ?Dispose@resourceManager@@QAEXPAVresource@@@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order

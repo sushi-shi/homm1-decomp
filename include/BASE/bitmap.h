@@ -4,6 +4,10 @@
 #include <BASE/resource.h>
 #include <H1/Macros.h>
 
+H1_ENUM_BEGIN(BitmapConstant)
+    BITMAP_SIZE = 0x18
+H1_ENUM_END(BitmapConstant)
+
 #pragma pack(push, 1)
 class bitmap : public resource {
 public:
@@ -29,7 +33,7 @@ public:
 };
 #pragma pack(pop)
 
-typedef char BitmapSizeCheck[sizeof(bitmap) == 0x18 ? 1 : -1];
+typedef char BitmapSizeCheck[sizeof(bitmap) == BITMAP_SIZE ? 1 : -1];
 
 void PostprocessBitmap(signed char *, int, int);
 #endif // HOMM1_BASE_BITMAP_H

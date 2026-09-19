@@ -63,6 +63,16 @@ and VC4 output establish nested local lifetimes: the row index is outermost,
 then image height, then width. Keeping those scopes emits the exact offsets
 without synthetic padding.
 
+`GetSample` at VA `0x00475D40` retains the Buka cache lookup and reference
+count increment, but constructs HoMM1's earlier sample type with arguments
+`(name, 0, 127, 1)`. The allocation operand proves a `0x2E`-byte object. The
+constructor at VA `0x0047FA60` accesses eight 32-bit playback fields after the
+`0x0E`-byte `resource` base, independently proving that size and inheritance.
+The allocation target at VA `0x004806E0` is the VC4 `operator new(unsigned
+int)` wrapper: it forwards the requested size and allocation flag `1` to the
+adjacent runtime allocator. `GetSample` itself ends after `0x9C` bytes; its
+four following `INT3` alignment bytes are excluded from the source claim.
+
 `ReadWord` at VA `0x00476530` refers to the packed assertion record at VAs
 `0x004A0E0C` and `0x004A0E10`. The record contains a 16-bit value `619`
 followed by `D:\\Heroes\\Base\\RESMGR.CPP`; the function increments the value

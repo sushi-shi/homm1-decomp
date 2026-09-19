@@ -7,6 +7,8 @@ rva	name	provenance
 0x0005DC9B	?KBTickCount@@YAJXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x000738C0	?PostprocessBitmap@@YAXPACHH@Z	evidence/resource-manager-layout.md; semantic provisional name from three bitmap-load callers and pixel/dimension arguments
 0x00078940	?PollSound@soundManager@@QAEXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
+0x0007FA60	??0sample@@QAE@PADJJJ@Z	evidence/resource-manager-layout.md; four-argument sample constructor and exact allocation size
+0x000806E0	??2@YAPAXI@Z	evidence/resource-manager-layout.md; VC4 operator new body and GetSample allocation call
 0x000806F0	_sprintf	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
 0x00080880	_free	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
 0x000809F0	_malloc	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
