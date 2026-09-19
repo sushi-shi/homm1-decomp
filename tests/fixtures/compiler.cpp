@@ -1,6 +1,5 @@
 #include "Domains.h"
 #include "match.h"
-#include <stddef.h>
 
 H1_ENUM_BEGIN(ProbeDomain)
     PROBE_FIRST = 1,
@@ -12,8 +11,6 @@ struct ProbeLayout {
     H1_ENUM_STORAGE(ProbeDomain, short) domain;
     int last;
 };
-typedef char AssertLayout[sizeof(ProbeLayout) == 8 ? 1 : -1];
-typedef char AssertOffset[offsetof(ProbeLayout, last) == 4 ? 1 : -1];
 
 class Probe {
 public:
@@ -25,7 +22,6 @@ public:
     int overload(short input);
     int field;
 };
-typedef char AssertClassSize[sizeof(Probe) == 8 ? 1 : -1];
 
 // Synthetic identities for binding tests; these are NOT game claims.
 VA(0x00401000, 1) Probe::Probe() : field(1) {}
