@@ -11,7 +11,7 @@ import shutil
 import subprocess
 import sys
 
-from homm1 import toolchain
+from homm1 import toolchain, verify
 from homm1.core import manifest
 from homm1.core.coff import CoffObject
 from homm1.core.compiler import compile_source
@@ -102,6 +102,7 @@ def write_report(path, report):
 
 
 def run(_args):
+    verify.check()
     retail = image()
     validate_claims(retail)
     config, entries = units()
