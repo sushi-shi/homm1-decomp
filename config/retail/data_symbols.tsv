@@ -1,6 +1,8 @@
 rva	size	symbol	provenance
 0x00094180	1	?gbInPollSound@@3DA	evidence/poll-sound.md; accessed storage only
 0x0009FE78	4	?gbForegroundApp@@3HA	evidence/poll-sound.md; accessed storage only
+0x000A0D00	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	evidence/resource-manager-layout.md; code-required resourceManager literal identity
+0x000A0D10	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	evidence/resource-manager-layout.md; code-required open-error literal identity
 0x000A0DEC	4	?gReadByteAssertLine@@3FA	evidence/resource-manager-layout.md; ReadByte assertion line record
 0x000A0DF0	26	?gReadByteAssertFile@@3PADA	evidence/resource-manager-layout.md; ReadByte assertion source path
 0x000A0E0C	4	?gReadWordAssertLine@@3FA	evidence/resource-manager-layout.md; ReadWord assertion line record
@@ -19,5 +21,7 @@ rva	size	symbol	provenance
 0x000A1BA4	4	_gBitmapRowSkip	evidence/handwritten-assembly-survey.md; code-required bitmap row-skip scratch
 0x000A1BC8	4	_gTileScratch	evidence/handwritten-assembly-survey.md; code-required identity only
 0x000A1BCC	2	_gTileRows	evidence/handwritten-assembly-survey.md; code-required identity only
+0x000C6750	4	?gText@@3PADA	evidence/resource-manager-layout.md; code-required shared text-buffer identity
 0x000C6A94	4	?gNextSoundPollTick@@3JA	evidence/poll-sound.md; accessed storage only
+0x000C79DC	4	?DEFAULT_AGGREGATE_NAME@@3PADA	evidence/resource-manager-layout.md; code-required aggregate path pointer identity
 0x000C7CA8	4	?gpSoundManager@@3PAVsoundManager@@A	evidence/poll-sound.md; accessed storage only

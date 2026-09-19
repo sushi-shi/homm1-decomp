@@ -35,9 +35,9 @@ public:
     short m_active;
 
     baseManager();
-    virtual int Open(int) = 0;
+    virtual short Open(short) = 0;
     virtual void Close() = 0;
-    virtual int Main(tag_message &) = 0;
+    virtual short Main(tag_message &) = 0;
 };
 #pragma pack(pop)
 

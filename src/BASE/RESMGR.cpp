@@ -9,6 +9,8 @@
 #include <H1/KB.h>
 
 #include <io.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 short gReadByteAssertLine = 598;
@@ -101,6 +103,27 @@ class resource *resourceManager::Query(short resourceId)
     return cursorResource;
 }
 
+// donor Buka RVA 0x000b8800; HoMM1 returns its dispatch result through AX
+VA(0x00475fb0, 0x1b)
+short resourceManager::Main(tag_message &)
+{
+    return 0;
+}
+
+// donor Buka RVA 0x000b8810; HoMM1 loads only the default aggregate
+VA(0x00475fd0, 0x8e)
+short resourceManager::Open(short priority)
+{
+    if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
+        return 3;
+    m_messageMask = BASE_MANAGER_ACCEPT_RESOURCE;
+    m_priority = priority;
+    m_active = 1;
+    strcpy(m_name, "resourceManager");
+    m_resourceListHead = 0;
+    return 0;
+}
+
 // donor Buka RVA 0x000b8890; PoL 2.0 is source-identical
 VA(0x00476060, 0x88)
 void resourceManager::RemoveResource(class resource *resourceToRemove)
@@ -117,6 +140,29 @@ void resourceManager::RemoveResource(class resource *resourceToRemove)
     } else {
         previousResource->m_next = resourceToRemove->m_next;
     }
+}
+
+// donor Buka RVA 0x000b89b0; HoMM1 replaces one packed aggregate directory
+VA(0x00476180, 0x100)
+short resourceManager::LoadAggregateHeader(char *aggregateName)
+{
+    short directoryBytes;
+    int aggregateFp = open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
+    if (aggregateFp == RESOURCE_MANAGER_INVALID_FILE) {
+        sprintf(gText, "Can't open file: %s", aggregateName);
+        ShutDown(gText);
+        return RESOURCE_MANAGER_LOAD_ERROR;
+    }
+    if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE)
+        close(m_aggregateFd);
+    if (m_aggregateDir != 0)
+        free(m_aggregateDir);
+    m_aggregateFd = aggregateFp;
+    read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
+    directoryBytes = m_aggregateEntryCount * sizeof(aggEntry);
+    m_aggregateDir = static_cast<aggEntry *>(malloc(directoryBytes));
+    read(m_aggregateFd, m_aggregateDir, directoryBytes);
+    return 0;
 }
 
 // donor PoL RVA 0x000c8c00; preferred Buka symbol ?PointToFile@resourceManager@@QAEXK@Z

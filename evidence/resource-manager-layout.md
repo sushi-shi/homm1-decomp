@@ -59,3 +59,22 @@ The adjacent read helpers repeat the same record shape. `ReadByte` uses line
 `0x004A0E2C`/`0x004A0E30`, and `ReadBlock` uses line 680 at
 `0x004A0E4C`/`0x004A0E50`. `ReadBlock` calls the C-linkage `_PollSound` body at
 VA `0x0044F640` before and after `_read`, matching the Buka 2.1 donor design.
+
+`Open` at VA `0x00475FD0` loads the pointer at VA `0x004C79DC` and passes it
+to `LoadAggregateHeader`. The other reference to that pointer, in the command
+line setup function at VA `0x00450FBC`, assigns it the address of the buffer
+filled from `".\\DATA\\"` and `"heroes.agg"`. This is the HoMM1 counterpart
+of HoMM2's `DEFAULT_AGGREGATE_NAME`; unlike the HoMM2 donor, HoMM1 loads only
+that one aggregate. Both `Open` and `LoadAggregateHeader` return their status
+through `AX`, establishing their 16-bit return types.
+
+`LoadAggregateHeader` at VA `0x00476180` reads the entry count directly into
+the 16-bit field at object offset `0x3C`. Its multiply-by-14 sequence and the
+later field accesses in `PointToFile` and `GetFileSize` establish a packed
+14-byte `aggEntry`. The failure branch formats `"Can't open file: %s"` into
+the shared `gText` buffer at VA `0x004C6750` before calling `ShutDown`.
+The called CRT bodies are `_sprintf` at VA `0x004806F0`, `_free` at
+`0x00480880`, `_malloc` at `0x004809F0`, `_close` at `0x00482890`, `_read` at
+`0x00482990`, and `_open` at `0x00482C40`. The first three are exact VC4
+library members in the executable census; the remaining identities also agree
+with the donor source and their argument/result use in this body.

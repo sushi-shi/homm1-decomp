@@ -12,15 +12,22 @@ class mouse;
 class palette;
 class sample;
 class tileset;
-struct aggEntry;
-
 H1_ENUM_BEGIN(ResourceManagerConstant)
     RESOURCE_MANAGER_INVALID_FILE = -1,
+    RESOURCE_MANAGER_LOAD_ERROR = 3,
+    RESOURCE_MANAGER_BINARY_OPEN_MODE = 0x8000,
     RESOURCE_MANAGER_FILENAME_CAPACITY = 60,
     RESOURCE_MANAGER_SIZE = 0x86
 H1_ENUM_END(ResourceManagerConstant)
 
 #pragma pack(push, 1)
+struct aggEntry {
+    short id;
+    long offset;
+    unsigned long size;
+    unsigned long unpackedSize;
+};
+
 class resourceManager : public baseManager {
 public:
     resource *m_resourceListHead;
@@ -33,9 +40,9 @@ public:
     int m_lastFileId;
 
     resourceManager();
-    virtual int Open(int);
+    virtual short Open(short);
     virtual void Close();
-    virtual int Main(tag_message &);
+    virtual short Main(tag_message &);
     void GetBackdrop(char *, bitmap *, int);
     void GetBackdropAtLoc(char *, bitmap *, int, int, int);
     palette *GetPalette(char *);
@@ -52,7 +59,7 @@ public:
     void Expunge();
     resource *Query(short);
     void RemoveResource(resource *);
-    int LoadAggregateHeader(char *);
+    short LoadAggregateHeader(char *);
     void PointToFile(unsigned long);
     unsigned long GetFileSize(unsigned long);
     void SavePosition();
