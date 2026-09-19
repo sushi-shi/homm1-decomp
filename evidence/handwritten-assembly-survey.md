@@ -9,14 +9,14 @@ sha256: 0d707d3456aacd470f4da601ac388a8b0be8976414b4ef689c8b849b9b2a1ce8
 ```
 
 There are **17 strong candidates, covering 3,428 bytes of function bodies**.
-The three bit helpers are byte-identical to both HoMM2 donors. The tile
-renderer has a close assembly counterpart in HoMM2. The other thirteen
-routines have compelling instruction and register-convention evidence, but
-their original source filenames and symbol spellings remain unproven.
+Fourteen now have exact source matches: the three bit helpers, three bitmap
+primitives, resource-name hash, tile renderer, and six small icon renderers.
+The six icon identities and donor-style module names come from the Buka 2.1
+sources, with PoL 2.0 as secondary correspondence evidence.
 
-This is an inspection report, not a set of reconstruction claims or matching
-scores. Source, manifests, baselines and tooling were not changed by this
-survey. Other reconstruction work was active during the inspection.
+This inventory records the retail evidence behind the assembly claims. Entries
+described as exact have source and match claims; the remaining candidates stay
+inspection findings until reconstructed.
 
 ## Inventory
 
@@ -131,6 +131,10 @@ The six small icon bodies are strongly corroborated by calls from cursor
 and map rendering and the icon wrappers. They share scratch identities
 `0xa1808` through `0xa1818`. The dimming pair reads destination pixels
 through the palette table and advances rows by a literal `0x280` (640).
+The reconstructed `Icon2b`, `Iconf2b`, `Iconm2b`, `Iconmf2b`, `Icond2b`, and
+`Icondf2b` modules match all six retail bodies and their relocations exactly.
+Their claims end at the final `ret`; the following `NOP`/`INT3` bytes remain
+linker partition padding outside the functions.
 The clipped pair is a later priority: about 600 bytes each and 41 HIGHLOW
 sites per body, with additional shared clipping state.
 

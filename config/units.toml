@@ -22,6 +22,36 @@ source = "src/BASE/BMAP2.asm"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "BASE/Icon2b"
+source = "src/BASE/Icon2b.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Iconf2b"
+source = "src/BASE/Iconf2b.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Iconm2b"
+source = "src/BASE/Iconm2b.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Iconmf2b"
+source = "src/BASE/Iconmf2b.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Icond2b"
+source = "src/BASE/Icond2b.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Icondf2b"
+source = "src/BASE/Icondf2b.asm"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
 flags = "cpp_carcass"

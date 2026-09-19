@@ -1,6 +1,11 @@
 rva	size	symbol	provenance
 0x00094180	1	?gbInPollSound@@3DA	evidence/poll-sound.md; accessed storage only
 0x0009FE78	4	?gbForegroundApp@@3HA	evidence/poll-sound.md; accessed storage only
+0x000A1808	4	_gIconXAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
+0x000A180C	4	_gIconYAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
+0x000A1810	4	_gIconDataBase	evidence/handwritten-assembly-survey.md; code-required icon-data base identity
+0x000A1814	4	_gIconWidth	evidence/handwritten-assembly-survey.md; code-required icon-frame width identity
+0x000A1818	4	_gIconHeight	evidence/handwritten-assembly-survey.md; code-required icon-frame height identity
 0x000A1AA0	256	_gDimPalette	evidence/handwritten-assembly-survey.md; code-required palette identity and extent
 0x000A1BA0	4	_gBitmapSourceSkip	evidence/handwritten-assembly-survey.md; code-required bitmap source row-skip scratch
 0x000A1BA4	4	_gBitmapRowSkip	evidence/handwritten-assembly-survey.md; code-required bitmap row-skip scratch
