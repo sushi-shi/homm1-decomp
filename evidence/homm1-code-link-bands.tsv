@@ -1,0 +1,7 @@
+# Code-only link-layout ownership recovered from the executable DNA census.
+# This remains evidence until data matching begins; config/retail/link_bands.tsv
+# deliberately stays empty because it activates strict data-target ownership.
+lo	hi	band
+0x00001000	0x00080188	game
+0x00080188	0x000801f0	import-thunks
+0x000801f0	0x0008b0a0	libc

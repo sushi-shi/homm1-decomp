@@ -62,6 +62,7 @@ REPORT_JSON = f"{COMPARE_DIR}/report.json"
 #: Phase 2 (opt-in): candidate image and link map.
 CANDIDATE_EXE = "build/exe/HEROES.candidate.EXE"
 CANDIDATE_MAP = "build/exe/HEROES.candidate.map"
+LINK_OMF_DIR = "build/link/omf"
 RESOURCE_SCRIPT = "src/Heroes/Heroes.rc"
 RESOURCE_RES = "build/gen/heroes.res"
 

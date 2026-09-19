@@ -49,6 +49,7 @@ from __future__ import annotations
 import bisect
 import os
 import re
+from pathlib import Path
 import struct
 
 from homm1.core import msvc_names
@@ -633,6 +634,14 @@ def run(only_units: list[str] | None = None, jobs: int = os.cpu_count() or 4):
     changed, problems = [], []
 
     def one(u):
+        if Path(u["source"]).suffix.lower() == ".asm":
+            from homm1.graph.fixed_asm import fragment_rows
+            rows = fragment_rows(u["unit"], u["source"])
+            banner = [f"# GENERATED fixed MASM claims for unit {u['unit']} "
+                      f"from {u['source']}; do not edit."]
+            did = write_tsv(FRAGMENTS / f"{u['unit']}.tsv", banner,
+                            HEADER, rows)
+            return u["unit"], did, []
         rows, probs = extract_unit(u["unit"], u["source"], db)
         if any(isinstance(pr, str) and "FATAL" in pr for pr in probs):
             # never replace a good cached fragment with a truncated one

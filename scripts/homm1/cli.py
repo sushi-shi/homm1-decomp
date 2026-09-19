@@ -99,7 +99,7 @@ def main(argv: list[str] | None = None) -> int:
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__.strip())
         print("\ncommands: init inspect toolchain configure build link match labels "
-              "model delink compare sema verify tool test")
+              "model delink compare audit sema verify tool test")
         return 0 if argv else 2
     cmd, rest = argv[0], argv[1:]
     if cmd == "init":
@@ -119,6 +119,11 @@ def main(argv: list[str] | None = None) -> int:
         }[cmd]
         sys.argv = [f"homm1 {cmd}", *rest]
         return importlib.import_module(module).main()
+    if cmd == "audit":
+        if not rest or rest[0] != "dna-bands":
+            print("homm1 audit: expected dna-bands", file=sys.stderr)
+            return 2
+        return importlib.import_module("homm1.audit.dna_bands").main(rest[1:])
     if cmd in ("sema", "verify"):
         return importlib.import_module(f"homm1.{cmd}").main(rest)
     if cmd in ("build", "link", "match"):

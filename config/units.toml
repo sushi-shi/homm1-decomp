@@ -13,12 +13,17 @@ cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
 
 [[unit]]
 unit = "BASE/BITS"
-source = "src/BASE/BITS.cpp"
+source = "src/BASE/BITS.asm"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/LZHUF"
+source = "src/BASE/LZHUF.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
@@ -49,6 +54,11 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/soundmgr"
 source = "src/BASE/soundmgr.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/TILE"
+source = "src/BASE/TILE.asm"
 flags = "cpp_carcass"
 
 [[unit]]

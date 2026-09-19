@@ -150,12 +150,14 @@ def generate(quiet: bool = False) -> bool:
         return [flag for flag in profiles.get(unit.get("flags", ""), [])
                 if flag.startswith(abi_prefixes)]
 
+    cpp_units = [u for u in units()
+                 if Path(u["source"]).suffix.lower() != ".asm"]
     entries = [{
         "directory": str(REPO),
         "file": u["source"],
         # clang-cl driver form; clangd/clang parse it internally.
         "arguments": ["clang-cl", "/c", u["source"], *shared, *abi_flags(u)],
-    } for u in units()]
+    } for u in cpp_units]
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(entries, indent=2) + "\n"
@@ -202,7 +204,8 @@ def check(quiet: bool = False) -> list[str]:
     from homm1.manifest import units
     from homm1.tool import clang
     db = clang.compdb()
-    us = units()
+    us = [u for u in units()
+          if Path(u["source"]).suffix.lower() != ".asm"]
     problems = []
     if not db:
         return [f"{OUT_FILE.relative_to(REPO)} is missing or unparsable - "

@@ -1,2 +1,4 @@
-# Located CRT/SDK functions excluded from source matching.
+# Delinker-active CRT/SDK providers. DNA identities intentionally stay
+# in evidence/homm1-dna-bands.tsv: enrolling the whole runtime band here
+# changes Vostok's anonymous-module partition.
 rva	name	lib	confidence	source

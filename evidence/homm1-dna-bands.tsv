@@ -1,0 +1,1892 @@
+# HoMM1 executable DNA census against VC4 LIBC.LIB/OLDNAMES.LIB.
+# Exact rows mask relocation fields on both sides; order rows are bracketed by exact anchors.
+rva	size	name	class	source	symbol	detail
+0x00001000	0xa0	FUN_00401000	unknown			-
+0x000010a0	0x1f	FUN_004010A0	unknown			-
+0x000010bf	0x141	FUN_004010BF	unknown			-
+0x00001200	0xd	FUN_00401200	eh-funclet			FuncInfo/unwind-map child record
+0x0000120d	0x1b	FUN_0040120D	eh-funclet			FuncInfo/unwind-map child record
+0x00001228	0x5d	FUN_00401228	unknown			-
+0x00001285	0x269	FUN_00401285	unknown			-
+0x000014ee	0x667	FUN_004014EE	unknown			-
+0x00001b55	0xb	FUN_00401B55	linker-pad			trailing 90/CC alignment fill
+0x00001b60	0x164	FUN_00401B60	unknown			-
+0x00001cc4	0x25a	FUN_00401CC4	unknown			-
+0x00001f1e	0xd	FUN_00401F1E	eh-funclet			FuncInfo/unwind-map child record
+0x00001f2b	0x1b	FUN_00401F2B	eh-funclet			FuncInfo/unwind-map child record
+0x00001f46	0xd1	FUN_00401F46	unknown			-
+0x00002017	0x127	FUN_00402017	unknown			-
+0x0000213e	0x3e5	FUN_0040213E	unknown			-
+0x00002523	0xd6	FUN_00402523	unknown			-
+0x000025f9	0xf4	FUN_004025F9	unknown			-
+0x000026ed	0x18f	FUN_004026ED	unknown			-
+0x0000287c	0xd	FUN_0040287C	eh-funclet			FuncInfo/unwind-map child record
+0x00002889	0x18	FUN_00402889	eh-funclet			FuncInfo/unwind-map child record
+0x000028a1	0xf	FUN_004028A1	linker-pad			trailing 90/CC alignment fill
+0x000028b0	0x240	FUN_004028B0	unknown			-
+0x00002af0	0xf0	FUN_00402AF0	unknown			-
+0x00002be0	0xa60	FUN_00402BE0	unknown			-
+0x00003640	0x59	FUN_00403640	unknown			-
+0x00003699	0x46	FUN_00403699	unknown			-
+0x000036df	0x9b	FUN_004036DF	unknown			-
+0x0000377a	0xeb	FUN_0040377A	unknown			-
+0x00003865	0x171	FUN_00403865	unknown			-
+0x000039d6	0x592	FUN_004039D6	unknown			-
+0x00003f68	0x140	FUN_00403F68	unknown			-
+0x000040a8	0xb3	FUN_004040A8	unknown			-
+0x0000415b	0x12a	FUN_0040415B	unknown			-
+0x00004285	0x3ee	FUN_00404285	unknown			-
+0x00004673	0x11c	FUN_00404673	unknown			-
+0x0000478f	0x17f	FUN_0040478F	unknown			-
+0x0000490e	0x2ea	FUN_0040490E	unknown			-
+0x00004bf8	0x89	FUN_00404BF8	unknown			-
+0x00004c81	0x151	FUN_00404C81	unknown			-
+0x00004dd2	0x1dd	FUN_00404DD2	unknown			-
+0x00004faf	0x1d5	FUN_00404FAF	unknown			-
+0x00005184	0x1c0	FUN_00405184	unknown			-
+0x00005344	0x78	FUN_00405344	unknown			-
+0x000053bc	0x6c	FUN_004053BC	unknown			-
+0x00005428	0x29	FUN_00405428	unknown			-
+0x00005451	0x2c	FUN_00405451	unknown			-
+0x0000547d	0x2e	FUN_0040547D	unknown			-
+0x000054ab	0x81	FUN_004054AB	unknown			-
+0x0000552c	0x60	FUN_0040552C	unknown			-
+0x0000558c	0x47	FUN_0040558C	unknown			-
+0x000055d3	0x2c	FUN_004055D3	unknown			-
+0x000055ff	0x3a	FUN_004055FF	unknown			-
+0x00005639	0x31	FUN_00405639	unknown			-
+0x0000566a	0xb9	FUN_0040566A	unknown			-
+0x00005723	0x31	FUN_00405723	unknown			-
+0x00005754	0x1f3	FUN_00405754	unknown			-
+0x00005947	0x9	FUN_00405947	linker-pad			trailing 90/CC alignment fill
+0x00005950	0x169	FUN_00405950	unknown			-
+0x00005ab9	0x150	FUN_00405AB9	unknown			-
+0x00005c09	0x5e4	FUN_00405C09	unknown			-
+0x000061ed	0x88	FUN_004061ED	unknown			-
+0x00006275	0x261	FUN_00406275	unknown			-
+0x000064d6	0x136	FUN_004064D6	unknown			-
+0x0000660c	0xe1e	FUN_0040660C	unknown			-
+0x0000742a	0x181	FUN_0040742A	unknown			-
+0x000075ab	0x20a	FUN_004075AB	unknown			-
+0x000077b5	0x2a3	FUN_004077B5	unknown			-
+0x00007a58	0x329	FUN_00407A58	unknown			-
+0x00007d81	0xf	FUN_00407D81	linker-pad			trailing 90/CC alignment fill
+0x00007d90	0x1c9	FUN_00407D90	unknown			-
+0x00007f59	0xd	FUN_00407F59	eh-funclet			FuncInfo/unwind-map child record
+0x00007f66	0x1b	FUN_00407F66	eh-funclet			FuncInfo/unwind-map child record
+0x00007f81	0x60	FUN_00407F81	unknown			-
+0x00007fe1	0x117	FUN_00407FE1	unknown			-
+0x000080f8	0x74	FUN_004080F8	unknown			-
+0x0000816c	0x783	FUN_0040816C	unknown			-
+0x000088ef	0xd	FUN_004088EF	eh-funclet			FuncInfo/unwind-map child record
+0x000088fc	0xd	FUN_004088FC	eh-funclet			FuncInfo/unwind-map child record
+0x00008909	0xd	FUN_00408909	eh-funclet			FuncInfo/unwind-map child record
+0x00008916	0xd	FUN_00408916	eh-funclet			FuncInfo/unwind-map child record
+0x00008923	0xd	FUN_00408923	eh-funclet			FuncInfo/unwind-map child record
+0x00008930	0xd	FUN_00408930	eh-funclet			FuncInfo/unwind-map child record
+0x0000893d	0x1b	FUN_0040893D	eh-funclet			FuncInfo/unwind-map child record
+0x00008958	0x1c4	FUN_00408958	unknown			-
+0x00008b1c	0x3b6	FUN_00408B1C	unknown			-
+0x00008ed2	0x468	FUN_00408ED2	unknown			-
+0x0000933a	0x74	FUN_0040933A	unknown			-
+0x000093ae	0x1299	FUN_004093AE	unknown			-
+0x0000a647	0x10	FUN_0040A647	eh-funclet			FuncInfo/unwind-map child record
+0x0000a657	0xd	FUN_0040A657	eh-funclet			FuncInfo/unwind-map child record
+0x0000a664	0xd	FUN_0040A664	eh-funclet			FuncInfo/unwind-map child record
+0x0000a671	0xd	FUN_0040A671	eh-funclet			FuncInfo/unwind-map child record
+0x0000a67e	0xd	FUN_0040A67E	eh-funclet			FuncInfo/unwind-map child record
+0x0000a68b	0xd	FUN_0040A68B	eh-funclet			FuncInfo/unwind-map child record
+0x0000a698	0xd	FUN_0040A698	eh-funclet			FuncInfo/unwind-map child record
+0x0000a6a5	0xd	FUN_0040A6A5	eh-funclet			FuncInfo/unwind-map child record
+0x0000a6b2	0x1b	FUN_0040A6B2	eh-funclet			FuncInfo/unwind-map child record
+0x0000a6cd	0x65f	FUN_0040A6CD	unknown			-
+0x0000ad2c	0xa5	FUN_0040AD2C	unknown			-
+0x0000add1	0x359	FUN_0040ADD1	unknown			-
+0x0000b12a	0xd	FUN_0040B12A	eh-funclet			FuncInfo/unwind-map child record
+0x0000b137	0x18	FUN_0040B137	eh-funclet			FuncInfo/unwind-map child record
+0x0000b14f	0xce	FUN_0040B14F	unknown			-
+0x0000b21d	0xab	FUN_0040B21D	unknown			-
+0x0000b2c8	0x95	FUN_0040B2C8	unknown			-
+0x0000b35d	0xf8	FUN_0040B35D	unknown			-
+0x0000b455	0xfc8	FUN_0040B455	unknown			-
+0x0000c41d	0x10	FUN_0040C41D	eh-funclet			FuncInfo/unwind-map child record
+0x0000c42d	0x10	FUN_0040C42D	eh-funclet			FuncInfo/unwind-map child record
+0x0000c43d	0x10	FUN_0040C43D	eh-funclet			FuncInfo/unwind-map child record
+0x0000c44d	0x10	FUN_0040C44D	eh-funclet			FuncInfo/unwind-map child record
+0x0000c45d	0x1b	FUN_0040C45D	eh-funclet			FuncInfo/unwind-map child record
+0x0000c478	0x3a0	FUN_0040C478	unknown			-
+0x0000c818	0x4b5	FUN_0040C818	unknown			-
+0x0000cccd	0x24d	FUN_0040CCCD	unknown			-
+0x0000cf1a	0x331	FUN_0040CF1A	unknown			-
+0x0000d24b	0x186	FUN_0040D24B	unknown			-
+0x0000d3d1	0x2c5	FUN_0040D3D1	unknown			-
+0x0000d696	0xd	FUN_0040D696	eh-funclet			FuncInfo/unwind-map child record
+0x0000d6a3	0x1a	FUN_0040D6A3	eh-funclet			FuncInfo/unwind-map child record
+0x0000d6bd	0x484	FUN_0040D6BD	unknown			-
+0x0000db41	0xea	FUN_0040DB41	unknown			-
+0x0000dc2b	0x2f	FUN_0040DC2B	unknown			-
+0x0000dc5a	0x93f	FUN_0040DC5A	unknown			-
+0x0000e599	0xd	FUN_0040E599	eh-funclet			FuncInfo/unwind-map child record
+0x0000e5a6	0xd	FUN_0040E5A6	eh-funclet			FuncInfo/unwind-map child record
+0x0000e5b3	0xd	FUN_0040E5B3	eh-funclet			FuncInfo/unwind-map child record
+0x0000e5c0	0x1b	FUN_0040E5C0	eh-funclet			FuncInfo/unwind-map child record
+0x0000e5db	0x155	FUN_0040E5DB	unknown			-
+0x0000e730	0x111	FUN_0040E730	unknown			-
+0x0000e841	0xd	FUN_0040E841	eh-funclet			FuncInfo/unwind-map child record
+0x0000e84e	0x18	FUN_0040E84E	eh-funclet			FuncInfo/unwind-map child record
+0x0000e866	0x726	FUN_0040E866	unknown			-
+0x0000ef8c	0x32d	FUN_0040EF8C	unknown			-
+0x0000f2b9	0x7	FUN_0040F2B9	linker-pad			trailing 90/CC alignment fill
+0x0000f2c0	0x311	FUN_0040F2C0	unknown			-
+0x0000f5d1	0xd6	FUN_0040F5D1	unknown			-
+0x0000f6a7	0x7e9	FUN_0040F6A7	unknown			-
+0x0000fe90	0x620	FUN_0040FE90	unknown			-
+0x000104b0	0x34	FUN_004104B0	unknown			-
+0x000104e4	0x5bb	FUN_004104E4	unknown			-
+0x00010a9f	0x139	FUN_00410A9F	unknown			-
+0x00010bd8	0x15d	FUN_00410BD8	unknown			-
+0x00010d35	0x316	FUN_00410D35	unknown			-
+0x0001104b	0x1dc	FUN_0041104B	unknown			-
+0x00011227	0x333	FUN_00411227	unknown			-
+0x0001155a	0x1a3	FUN_0041155A	unknown			-
+0x000116fd	0x110	FUN_004116FD	unknown			-
+0x0001180d	0x2fa	FUN_0041180D	unknown			-
+0x00011b07	0x766	FUN_00411B07	unknown			-
+0x0001226d	0x10	FUN_0041226D	eh-funclet			FuncInfo/unwind-map child record
+0x0001227d	0x10	FUN_0041227D	eh-funclet			FuncInfo/unwind-map child record
+0x0001228d	0x10	FUN_0041228D	eh-funclet			FuncInfo/unwind-map child record
+0x0001229d	0x10	FUN_0041229D	eh-funclet			FuncInfo/unwind-map child record
+0x000122ad	0x10	FUN_004122AD	eh-funclet			FuncInfo/unwind-map child record
+0x000122bd	0x1a	FUN_004122BD	eh-funclet			FuncInfo/unwind-map child record
+0x000122d7	0x777	FUN_004122D7	unknown			-
+0x00012a4e	0x10	FUN_00412A4E	eh-funclet			FuncInfo/unwind-map child record
+0x00012a5e	0x1a	FUN_00412A5E	eh-funclet			FuncInfo/unwind-map child record
+0x00012a78	0x524	FUN_00412A78	unknown			-
+0x00012f9c	0xd	FUN_00412F9C	eh-funclet			FuncInfo/unwind-map child record
+0x00012fa9	0x18	FUN_00412FA9	eh-funclet			FuncInfo/unwind-map child record
+0x00012fc1	0x2a0	FUN_00412FC1	unknown			-
+0x00013261	0xd	FUN_00413261	eh-funclet			FuncInfo/unwind-map child record
+0x0001326e	0x19	FUN_0041326E	eh-funclet			FuncInfo/unwind-map child record
+0x00013287	0xc2	FUN_00413287	unknown			-
+0x00013349	0xdf	FUN_00413349	unknown			-
+0x00013428	0x79	FUN_00413428	unknown			-
+0x000134a1	0x16a	FUN_004134A1	unknown			-
+0x0001360b	0xdb	FUN_0041360B	unknown			-
+0x000136e6	0x552	FUN_004136E6	unknown			-
+0x00013c38	0x8	FUN_00413C38	linker-pad			trailing 90/CC alignment fill
+0x00013c40	0xa8	FUN_00413C40	unknown			-
+0x00013ce8	0x1b2	FUN_00413CE8	unknown			-
+0x00013e9a	0x1f0	FUN_00413E9A	unknown			-
+0x0001408a	0x90	FUN_0041408A	unknown			-
+0x0001411a	0x104	FUN_0041411A	unknown			-
+0x0001421e	0x4f6	FUN_0041421E	unknown			-
+0x00014714	0x1e	FUN_00414714	unknown			-
+0x00014732	0x26f	FUN_00414732	unknown			-
+0x000149a1	0xbb	FUN_004149A1	unknown			-
+0x00014a5c	0x1cc	FUN_00414A5C	unknown			-
+0x00014c28	0xb8	FUN_00414C28	unknown			-
+0x00014ce0	0x146	FUN_00414CE0	unknown			-
+0x00014e26	0xc6	FUN_00414E26	unknown			-
+0x00014eec	0xc6	FUN_00414EEC	unknown			-
+0x00014fb2	0x134	FUN_00414FB2	unknown			-
+0x000150e6	0x14e	FUN_004150E6	unknown			-
+0x00015234	0xbf	FUN_00415234	unknown			-
+0x000152f3	0x176	FUN_004152F3	unknown			-
+0x00015469	0x81	FUN_00415469	unknown			-
+0x000154ea	0x6	FUN_004154EA	linker-pad			trailing 90/CC alignment fill
+0x000154f0	0x147	FUN_004154F0	unknown			-
+0x00015637	0x160	FUN_00415637	unknown			-
+0x00015797	0x295	FUN_00415797	unknown			-
+0x00015a2c	0x2f0	FUN_00415A2C	unknown			-
+0x00015d1c	0x128	FUN_00415D1C	unknown			-
+0x00015e44	0xd69	FUN_00415E44	unknown			-
+0x00016bad	0xcb	FUN_00416BAD	unknown			-
+0x00016c78	0x407	FUN_00416C78	unknown			-
+0x0001707f	0x12e	FUN_0041707F	unknown			-
+0x000171ad	0x432	FUN_004171AD	unknown			-
+0x000175df	0x439	FUN_004175DF	unknown			-
+0x00017a18	0x2f3	FUN_00417A18	unknown			-
+0x00017d0b	0x3b7	FUN_00417D0B	unknown			-
+0x000180c2	0xd	FUN_004180C2	eh-funclet			FuncInfo/unwind-map child record
+0x000180cf	0x18	FUN_004180CF	eh-funclet			FuncInfo/unwind-map child record
+0x000180e7	0x9	FUN_004180E7	linker-pad			trailing 90/CC alignment fill
+0x000180f0	0x152	FUN_004180F0	unknown			-
+0x00018242	0x9e	FUN_00418242	unknown			-
+0x000182e0	0x7b	FUN_004182E0	unknown			-
+0x0001835b	0xbf	FUN_0041835B	unknown			-
+0x0001841a	0x2d	FUN_0041841A	unknown			-
+0x00018447	0x1fc	FUN_00418447	unknown			-
+0x00018643	0x295	FUN_00418643	unknown			-
+0x000188d8	0x11e	FUN_004188D8	unknown			-
+0x000189f6	0xf8	FUN_004189F6	unknown			-
+0x00018aee	0x4c2	FUN_00418AEE	unknown			-
+0x00018fb0	0x58	FUN_00418FB0	unknown			-
+0x00019008	0x984	FUN_00419008	unknown			-
+0x0001998c	0x4	FUN_0041998C	linker-pad			trailing 90/CC alignment fill
+0x00019990	0x15	FUN_00419990	helper-order	BASE/Misc	_$E18	HoMM2 donor definition-order segment
+0x000199a5	0x79	FUN_004199A5	unknown			-
+0x00019a1e	0xa6	FUN_00419A1E	unknown			-
+0x00019ac4	0x86	FUN_00419AC4	unknown			-
+0x00019b4a	0x8a	FUN_00419B4A	unknown			-
+0x00019bd4	0xab	FUN_00419BD4	unknown			-
+0x00019c7f	0xb3	FUN_00419C7F	unknown			-
+0x00019d32	0x1f	FUN_00419D32	unknown			-
+0x00019d51	0x4e	FUN_00419D51	unknown			-
+0x00019d9f	0x177	FUN_00419D9F	unknown			-
+0x00019f16	0x1ef	FUN_00419F16	unknown			-
+0x0001a105	0x10	FUN_0041A105	unknown			-
+0x0001a115	0x8c	FUN_0041A115	unknown			-
+0x0001a1a1	0x5e	FUN_0041A1A1	unknown			-
+0x0001a1ff	0xb0	FUN_0041A1FF	unknown			-
+0x0001a2af	0x445	FUN_0041A2AF	unknown			-
+0x0001a6f4	0x1a9	FUN_0041A6F4	unknown			-
+0x0001a89d	0x473	FUN_0041A89D	unknown			-
+0x0001ad10	0x294	FUN_0041AD10	unknown			-
+0x0001afa4	0x1a0	FUN_0041AFA4	unknown			-
+0x0001b144	0x8f0	FUN_0041B144	unknown			-
+0x0001ba34	0x4b	FUN_0041BA34	unknown			-
+0x0001ba7f	0x6a0	FUN_0041BA7F	unknown			-
+0x0001c11f	0x600	FUN_0041C11F	unknown			-
+0x0001c71f	0x11c	FUN_0041C71F	unknown			-
+0x0001c83b	0x932	FUN_0041C83B	unknown			-
+0x0001d16d	0x64d	FUN_0041D16D	unknown			-
+0x0001d7ba	0x1e	FUN_0041D7BA	unknown			-
+0x0001d7d8	0x59b	FUN_0041D7D8	unknown			-
+0x0001dd73	0x185	FUN_0041DD73	unknown			-
+0x0001def8	0x2f5	FUN_0041DEF8	unknown			-
+0x0001e1ed	0x211	FUN_0041E1ED	unknown			-
+0x0001e3fe	0x48	FUN_0041E3FE	unknown			-
+0x0001e446	0x5f	FUN_0041E446	unknown			-
+0x0001e4a5	0x9b	FUN_0041E4A5	unknown			-
+0x0001e540	0x1bc	FUN_0041E540	unknown			-
+0x0001e6fc	0x1a0	FUN_0041E6FC	unknown			-
+0x0001e89c	0x65	FUN_0041E89C	unknown			-
+0x0001e901	0x1a	FUN_0041E901	unknown			-
+0x0001e91b	0x1d3	FUN_0041E91B	unknown			-
+0x0001eaee	0xed	FUN_0041EAEE	unknown			-
+0x0001ebdb	0xa6	FUN_0041EBDB	unknown			-
+0x0001ec81	0xca	FUN_0041EC81	unknown			-
+0x0001ed4b	0x55e	FUN_0041ED4B	unknown			-
+0x0001f2a9	0x1a	FUN_0041F2A9	unknown			-
+0x0001f2c3	0x895	FUN_0041F2C3	unknown			-
+0x0001fb58	0xd	FUN_0041FB58	eh-funclet			FuncInfo/unwind-map child record
+0x0001fb65	0x1b	FUN_0041FB65	eh-funclet			FuncInfo/unwind-map child record
+0x0001fb80	0xb1	FUN_0041FB80	unknown			-
+0x0001fc31	0x176	FUN_0041FC31	unknown			-
+0x0001fda7	0x134	FUN_0041FDA7	unknown			-
+0x0001fedb	0x51	FUN_0041FEDB	unknown			-
+0x0001ff2c	0x764	FUN_0041FF2C	unknown			-
+0x00020690	0x1da	FUN_00420690	unknown			-
+0x0002086a	0x3a7	FUN_0042086A	unknown			-
+0x00020c11	0xbae	FUN_00420C11	unknown			-
+0x000217bf	0x61	FUN_004217BF	unknown			-
+0x00021820	0xc7	FUN_00421820	unknown			-
+0x000218e7	0x69	FUN_004218E7	unknown			-
+0x00021950	0x1d	FUN_00421950	unknown			-
+0x0002196d	0x194	FUN_0042196D	unknown			-
+0x00021b01	0x25c	FUN_00421B01	unknown			-
+0x00021d5d	0x100	FUN_00421D5D	unknown			-
+0x00021e5d	0x188	FUN_00421E5D	unknown			-
+0x00021fe5	0x177	FUN_00421FE5	unknown			-
+0x0002215c	0x26a	FUN_0042215C	unknown			-
+0x000223c6	0x73	FUN_004223C6	unknown			-
+0x00022439	0x66	FUN_00422439	unknown			-
+0x0002249f	0xcb	FUN_0042249F	unknown			-
+0x0002256a	0x221	FUN_0042256A	unknown			-
+0x0002278b	0x2083	FUN_0042278B	unknown			-
+0x0002480e	0x2	FUN_0042480E	linker-pad			trailing 90/CC alignment fill
+0x00024810	0x10	FUN_00424810	unknown			-
+0x00024820	0x30	FUN_00424820	unknown			-
+0x00024850	0x50	FUN_00424850	unknown			-
+0x000248a0	0x60	FUN_004248A0	unknown			-
+0x00024900	0x4f	FUN_00424900	unknown			-
+0x0002494f	0x1	FUN_0042494F	linker-pad			trailing 90/CC alignment fill
+0x00024950	0x2ff	FUN_00424950	unknown			-
+0x00024c4f	0x1	FUN_00424C4F	linker-pad			trailing 90/CC alignment fill
+0x00024c50	0x140	FUN_00424C50	unknown			-
+0x00024d90	0x2b0	FUN_00424D90	unknown			-
+0x00025040	0x280	FUN_00425040	unknown			-
+0x000252c0	0x2cc	FUN_004252C0	unknown			-
+0x0002558c	0x1f	FUN_0042558C	unknown			-
+0x000255ab	0xe23	FUN_004255AB	unknown			-
+0x000263ce	0xd	FUN_004263CE	eh-funclet			FuncInfo/unwind-map child record
+0x000263db	0xd	FUN_004263DB	eh-funclet			FuncInfo/unwind-map child record
+0x000263e8	0xd	FUN_004263E8	eh-funclet			FuncInfo/unwind-map child record
+0x000263f5	0xd	FUN_004263F5	eh-funclet			FuncInfo/unwind-map child record
+0x00026402	0xd	FUN_00426402	eh-funclet			FuncInfo/unwind-map child record
+0x0002640f	0xd	FUN_0042640F	eh-funclet			FuncInfo/unwind-map child record
+0x0002641c	0xd	FUN_0042641C	eh-funclet			FuncInfo/unwind-map child record
+0x00026429	0xd	FUN_00426429	eh-funclet			FuncInfo/unwind-map child record
+0x00026436	0x1b	FUN_00426436	eh-funclet			FuncInfo/unwind-map child record
+0x00026451	0x3bd	FUN_00426451	unknown			-
+0x0002680e	0xc7	FUN_0042680E	unknown			-
+0x000268d5	0x619	FUN_004268D5	unknown			-
+0x00026eee	0xe10	FUN_00426EEE	unknown			-
+0x00027cfe	0x22	FUN_00427CFE	unknown			-
+0x00027d20	0xe39	FUN_00427D20	unknown			-
+0x00028b59	0x1ea	FUN_00428B59	unknown			-
+0x00028d43	0x49b	FUN_00428D43	unknown			-
+0x000291de	0xc02	FUN_004291DE	unknown			-
+0x00029de0	0x265	FUN_00429DE0	unknown			-
+0x0002a045	0x359	FUN_0042A045	unknown			-
+0x0002a39e	0x3a	FUN_0042A39E	unknown			-
+0x0002a3d8	0x40d	FUN_0042A3D8	unknown			-
+0x0002a7e5	0xee8	FUN_0042A7E5	unknown			-
+0x0002b6cd	0x7d	FUN_0042B6CD	unknown			-
+0x0002b74a	0x57e	FUN_0042B74A	unknown			-
+0x0002bcc8	0x56c	FUN_0042BCC8	unknown			-
+0x0002c234	0x10	FUN_0042C234	eh-funclet			FuncInfo/unwind-map child record
+0x0002c244	0x1a	FUN_0042C244	eh-funclet			FuncInfo/unwind-map child record
+0x0002c25e	0x3c8	FUN_0042C25E	unknown			-
+0x0002c626	0x108	FUN_0042C626	unknown			-
+0x0002c72e	0x27f	FUN_0042C72E	unknown			-
+0x0002c9ad	0x19f	FUN_0042C9AD	unknown			-
+0x0002cb4c	0x132	FUN_0042CB4C	unknown			-
+0x0002cc7e	0x565	FUN_0042CC7E	unknown			-
+0x0002d1e3	0xd	FUN_0042D1E3	eh-funclet			FuncInfo/unwind-map child record
+0x0002d1f0	0xd	FUN_0042D1F0	eh-funclet			FuncInfo/unwind-map child record
+0x0002d1fd	0xd	FUN_0042D1FD	eh-funclet			FuncInfo/unwind-map child record
+0x0002d20a	0xd	FUN_0042D20A	eh-funclet			FuncInfo/unwind-map child record
+0x0002d217	0xd	FUN_0042D217	eh-funclet			FuncInfo/unwind-map child record
+0x0002d224	0x19	FUN_0042D224	eh-funclet			FuncInfo/unwind-map child record
+0x0002d23d	0x393	FUN_0042D23D	unknown			-
+0x0002d5d0	0xd	FUN_0042D5D0	eh-funclet			FuncInfo/unwind-map child record
+0x0002d5dd	0xd	FUN_0042D5DD	eh-funclet			FuncInfo/unwind-map child record
+0x0002d5ea	0xd	FUN_0042D5EA	eh-funclet			FuncInfo/unwind-map child record
+0x0002d5f7	0xd	FUN_0042D5F7	eh-funclet			FuncInfo/unwind-map child record
+0x0002d604	0x19	FUN_0042D604	eh-funclet			FuncInfo/unwind-map child record
+0x0002d61d	0x3ad	FUN_0042D61D	unknown			-
+0x0002d9ca	0xd	FUN_0042D9CA	eh-funclet			FuncInfo/unwind-map child record
+0x0002d9d7	0xd	FUN_0042D9D7	eh-funclet			FuncInfo/unwind-map child record
+0x0002d9e4	0xd	FUN_0042D9E4	eh-funclet			FuncInfo/unwind-map child record
+0x0002d9f1	0xd	FUN_0042D9F1	eh-funclet			FuncInfo/unwind-map child record
+0x0002d9fe	0x19	FUN_0042D9FE	eh-funclet			FuncInfo/unwind-map child record
+0x0002da17	0x38e	FUN_0042DA17	unknown			-
+0x0002dda5	0xd	FUN_0042DDA5	eh-funclet			FuncInfo/unwind-map child record
+0x0002ddb2	0xd	FUN_0042DDB2	eh-funclet			FuncInfo/unwind-map child record
+0x0002ddbf	0xd	FUN_0042DDBF	eh-funclet			FuncInfo/unwind-map child record
+0x0002ddcc	0x19	FUN_0042DDCC	eh-funclet			FuncInfo/unwind-map child record
+0x0002dde5	0x5d2	FUN_0042DDE5	unknown			-
+0x0002e3b7	0xd	FUN_0042E3B7	eh-funclet			FuncInfo/unwind-map child record
+0x0002e3c4	0xd	FUN_0042E3C4	eh-funclet			FuncInfo/unwind-map child record
+0x0002e3d1	0xd	FUN_0042E3D1	eh-funclet			FuncInfo/unwind-map child record
+0x0002e3de	0xd	FUN_0042E3DE	eh-funclet			FuncInfo/unwind-map child record
+0x0002e3eb	0xd	FUN_0042E3EB	eh-funclet			FuncInfo/unwind-map child record
+0x0002e3f8	0x19	FUN_0042E3F8	eh-funclet			FuncInfo/unwind-map child record
+0x0002e411	0xcac	FUN_0042E411	unknown			-
+0x0002f0bd	0x10	FUN_0042F0BD	eh-funclet			FuncInfo/unwind-map child record
+0x0002f0cd	0x10	FUN_0042F0CD	eh-funclet			FuncInfo/unwind-map child record
+0x0002f0dd	0x10	FUN_0042F0DD	eh-funclet			FuncInfo/unwind-map child record
+0x0002f0ed	0x10	FUN_0042F0ED	eh-funclet			FuncInfo/unwind-map child record
+0x0002f0fd	0x10	FUN_0042F0FD	eh-funclet			FuncInfo/unwind-map child record
+0x0002f10d	0x10	FUN_0042F10D	eh-funclet			FuncInfo/unwind-map child record
+0x0002f11d	0x10	FUN_0042F11D	eh-funclet			FuncInfo/unwind-map child record
+0x0002f12d	0x10	FUN_0042F12D	eh-funclet			FuncInfo/unwind-map child record
+0x0002f13d	0x1a	FUN_0042F13D	eh-funclet			FuncInfo/unwind-map child record
+0x0002f157	0xe2	FUN_0042F157	unknown			-
+0x0002f239	0xbd7	FUN_0042F239	unknown			-
+0x0002fe10	0x10	FUN_0042FE10	eh-funclet			FuncInfo/unwind-map child record
+0x0002fe20	0x10	FUN_0042FE20	eh-funclet			FuncInfo/unwind-map child record
+0x0002fe30	0x10	FUN_0042FE30	eh-funclet			FuncInfo/unwind-map child record
+0x0002fe40	0x10	FUN_0042FE40	eh-funclet			FuncInfo/unwind-map child record
+0x0002fe50	0x10	FUN_0042FE50	eh-funclet			FuncInfo/unwind-map child record
+0x0002fe60	0x10	FUN_0042FE60	eh-funclet			FuncInfo/unwind-map child record
+0x0002fe70	0x1a	FUN_0042FE70	eh-funclet			FuncInfo/unwind-map child record
+0x0002fe8a	0xe8	FUN_0042FE8A	unknown			-
+0x0002ff72	0x1f	FUN_0042FF72	unknown			-
+0x0002ff91	0x27	FUN_0042FF91	unknown			-
+0x0002ffb8	0x59	FUN_0042FFB8	unknown			-
+0x00030011	0x199	FUN_00430011	unknown			-
+0x000301aa	0x255	FUN_004301AA	unknown			-
+0x000303ff	0x3e6	FUN_004303FF	unknown			-
+0x000307e5	0x290	FUN_004307E5	unknown			-
+0x00030a75	0x290	FUN_00430A75	unknown			-
+0x00030d05	0x3b5	FUN_00430D05	unknown			-
+0x000310ba	0xd	FUN_004310BA	eh-funclet			FuncInfo/unwind-map child record
+0x000310c7	0x18	FUN_004310C7	eh-funclet			FuncInfo/unwind-map child record
+0x000310df	0x236	FUN_004310DF	unknown			-
+0x00031315	0x1f2	FUN_00431315	unknown			-
+0x00031507	0x1127	FUN_00431507	unknown			-
+0x0003262e	0x41	FUN_0043262E	unknown			-
+0x0003266f	0x321	FUN_0043266F	unknown			-
+0x00032990	0x227	FUN_00432990	unknown			-
+0x00032bb7	0x20c	FUN_00432BB7	unknown			-
+0x00032dc3	0xd	FUN_00432DC3	eh-funclet			FuncInfo/unwind-map child record
+0x00032dd0	0x19	FUN_00432DD0	eh-funclet			FuncInfo/unwind-map child record
+0x00032de9	0x54b	FUN_00432DE9	unknown			-
+0x00033334	0xab	FUN_00433334	unknown			-
+0x000333df	0x1ee	FUN_004333DF	unknown			-
+0x000335cd	0xd	FUN_004335CD	eh-funclet			FuncInfo/unwind-map child record
+0x000335da	0x18	FUN_004335DA	eh-funclet			FuncInfo/unwind-map child record
+0x000335f2	0x1d3	FUN_004335F2	unknown			-
+0x000337c5	0x34b	FUN_004337C5	unknown			-
+0x00033b10	0xaf6	FUN_00433B10	unknown			-
+0x00034606	0x3a	FUN_00434606	unknown			-
+0x00034640	0x2dd	FUN_00434640	unknown			-
+0x0003491d	0x69	FUN_0043491D	unknown			-
+0x00034986	0x251	FUN_00434986	unknown			-
+0x00034bd7	0x340	FUN_00434BD7	unknown			-
+0x00034f17	0x221	FUN_00434F17	unknown			-
+0x00035138	0xd	FUN_00435138	eh-funclet			FuncInfo/unwind-map child record
+0x00035145	0x18	FUN_00435145	eh-funclet			FuncInfo/unwind-map child record
+0x0003515d	0x2a6	FUN_0043515D	unknown			-
+0x00035403	0x51c	FUN_00435403	unknown			-
+0x0003591f	0x31b	FUN_0043591F	unknown			-
+0x00035c3a	0x106	FUN_00435C3A	unknown			-
+0x00035d40	0x91	FUN_00435D40	unknown			-
+0x00035dd1	0x6e	FUN_00435DD1	unknown			-
+0x00035e3f	0x152	FUN_00435E3F	unknown			-
+0x00035f91	0x4f	FUN_00435F91	unknown			-
+0x00035fe0	0x1b6	FUN_00435FE0	unknown			-
+0x00036196	0x1e1	FUN_00436196	unknown			-
+0x00036377	0xa3	FUN_00436377	unknown			-
+0x0003641a	0x283	FUN_0043641A	unknown			-
+0x0003669d	0x152	FUN_0043669D	unknown			-
+0x000367ef	0x178	FUN_004367EF	unknown			-
+0x00036967	0xd4	FUN_00436967	unknown			-
+0x00036a3b	0x1c2	FUN_00436A3B	unknown			-
+0x00036bfd	0xd0	FUN_00436BFD	unknown			-
+0x00036ccd	0xd0	FUN_00436CCD	unknown			-
+0x00036d9d	0x138	FUN_00436D9D	unknown			-
+0x00036ed5	0x134	FUN_00436ED5	unknown			-
+0x00037009	0x7	FUN_00437009	linker-pad			trailing 90/CC alignment fill
+0x00037010	0x1bd	FUN_00437010	unknown			-
+0x000371cd	0x4b4	FUN_004371CD	unknown			-
+0x00037681	0x2f6	FUN_00437681	unknown			-
+0x00037977	0x63	FUN_00437977	unknown			-
+0x000379da	0x40	FUN_004379DA	unknown			-
+0x00037a1a	0x87	FUN_00437A1A	unknown			-
+0x00037aa1	0x273	FUN_00437AA1	unknown			-
+0x00037d14	0xf9	FUN_00437D14	unknown			-
+0x00037e0d	0x501	FUN_00437E0D	unknown			-
+0x0003830e	0x2	FUN_0043830E	linker-pad			trailing 90/CC alignment fill
+0x00038310	0x545	FUN_00438310	unknown			-
+0x00038855	0xd	FUN_00438855	eh-funclet			FuncInfo/unwind-map child record
+0x00038862	0x1b	FUN_00438862	eh-funclet			FuncInfo/unwind-map child record
+0x0003887d	0x222	FUN_0043887D	unknown			-
+0x00038a9f	0x152	FUN_00438A9F	unknown			-
+0x00038bf1	0xf	FUN_00438BF1	linker-pad			trailing 90/CC alignment fill
+0x00038c00	0x1f8	FUN_00438C00	unknown			-
+0x00038df8	0x1e8	FUN_00438DF8	unknown			-
+0x00038fe0	0x12c	FUN_00438FE0	unknown			-
+0x0003910c	0x68	FUN_0043910C	unknown			-
+0x00039174	0x5f	FUN_00439174	unknown			-
+0x000391d3	0xd1	FUN_004391D3	unknown			-
+0x000392a4	0x99	FUN_004392A4	unknown			-
+0x0003933d	0x386	FUN_0043933D	unknown			-
+0x000396c3	0x1b0	FUN_004396C3	unknown			-
+0x00039873	0xb3	FUN_00439873	unknown			-
+0x00039926	0x1e	FUN_00439926	unknown			-
+0x00039944	0xd9	FUN_00439944	unknown			-
+0x00039a1d	0x5f	FUN_00439A1D	unknown			-
+0x00039a7c	0x74	FUN_00439A7C	unknown			-
+0x00039af0	0x10e	FUN_00439AF0	unknown			-
+0x00039bfe	0x8f	FUN_00439BFE	unknown			-
+0x00039c8d	0x87	FUN_00439C8D	unknown			-
+0x00039d14	0x129	FUN_00439D14	unknown			-
+0x00039e3d	0x7b2	FUN_00439E3D	unknown			-
+0x0003a5ef	0x9b2	FUN_0043A5EF	unknown			-
+0x0003afa1	0x581	FUN_0043AFA1	unknown			-
+0x0003b522	0x2c3	FUN_0043B522	unknown			-
+0x0003b7e5	0x2c3	FUN_0043B7E5	unknown			-
+0x0003baa8	0x3eb	FUN_0043BAA8	unknown			-
+0x0003be93	0x286	FUN_0043BE93	unknown			-
+0x0003c119	0xd	FUN_0043C119	eh-funclet			FuncInfo/unwind-map child record
+0x0003c126	0x1a	FUN_0043C126	eh-funclet			FuncInfo/unwind-map child record
+0x0003c140	0x7f	FUN_0043C140	unknown			-
+0x0003c1bf	0x28c	FUN_0043C1BF	unknown			-
+0x0003c44b	0x1009	FUN_0043C44B	unknown			-
+0x0003d454	0x6f	FUN_0043D454	unknown			-
+0x0003d4c3	0x1e4	FUN_0043D4C3	unknown			-
+0x0003d6a7	0xc63	FUN_0043D6A7	unknown			-
+0x0003e30a	0x43a	FUN_0043E30A	unknown			-
+0x0003e744	0x321	FUN_0043E744	unknown			-
+0x0003ea65	0x2c9	FUN_0043EA65	unknown			-
+0x0003ed2e	0x262	FUN_0043ED2E	unknown			-
+0x0003ef90	0xd	FUN_0043EF90	eh-funclet			FuncInfo/unwind-map child record
+0x0003ef9d	0xd	FUN_0043EF9D	eh-funclet			FuncInfo/unwind-map child record
+0x0003efaa	0x1b	FUN_0043EFAA	eh-funclet			FuncInfo/unwind-map child record
+0x0003efc5	0xbb	FUN_0043EFC5	unknown			-
+0x0003f080	0x1e0	FUN_0043F080	unknown			-
+0x0003f260	0x4f8	FUN_0043F260	unknown			-
+0x0003f758	0x175	FUN_0043F758	unknown			-
+0x0003f8cd	0x8a7	FUN_0043F8CD	unknown			-
+0x00040174	0x10	FUN_00440174	eh-funclet			FuncInfo/unwind-map child record
+0x00040184	0x10	FUN_00440184	eh-funclet			FuncInfo/unwind-map child record
+0x00040194	0x1a	FUN_00440194	eh-funclet			FuncInfo/unwind-map child record
+0x000401ae	0x1b8	FUN_004401AE	unknown			-
+0x00040366	0xbf2	FUN_00440366	unknown			-
+0x00040f58	0x28b	FUN_00440F58	unknown			-
+0x000411e3	0x3d	FUN_004411E3	unknown			-
+0x00041220	0x25	FUN_00441220	unknown			-
+0x00041245	0x4e1	FUN_00441245	unknown			-
+0x00041726	0x280	FUN_00441726	unknown			-
+0x000419a6	0x463	FUN_004419A6	unknown			-
+0x00041e09	0x84b	FUN_00441E09	unknown			-
+0x00042654	0x2e1	FUN_00442654	unknown			-
+0x00042935	0x67f	FUN_00442935	unknown			-
+0x00042fb4	0x3b4	FUN_00442FB4	unknown			-
+0x00043368	0x659	FUN_00443368	unknown			-
+0x000439c1	0x79	FUN_004439C1	unknown			-
+0x00043a3a	0x102	FUN_00443A3A	unknown			-
+0x00043b3c	0x2e0	FUN_00443B3C	unknown			-
+0x00043e1c	0x2cd	FUN_00443E1C	unknown			-
+0x000440e9	0x259	FUN_004440E9	unknown			-
+0x00044342	0xfc	FUN_00444342	unknown			-
+0x0004443e	0x8c	FUN_0044443E	unknown			-
+0x000444ca	0x92	FUN_004444CA	unknown			-
+0x0004455c	0x52	FUN_0044455C	unknown			-
+0x000445ae	0x89	FUN_004445AE	unknown			-
+0x00044637	0x24	FUN_00444637	unknown			-
+0x0004465b	0xbf	FUN_0044465B	unknown			-
+0x0004471a	0x350	FUN_0044471A	unknown			-
+0x00044a6a	0xde	FUN_00444A6A	unknown			-
+0x00044b48	0x61	FUN_00444B48	unknown			-
+0x00044ba9	0x115	FUN_00444BA9	unknown			-
+0x00044cbe	0xa8	FUN_00444CBE	unknown			-
+0x00044d66	0x155	FUN_00444D66	unknown			-
+0x00044ebb	0xb2	FUN_00444EBB	unknown			-
+0x00044f6d	0x129	FUN_00444F6D	unknown			-
+0x00045096	0x213	FUN_00445096	unknown			-
+0x000452a9	0x347	FUN_004452A9	unknown			-
+0x000455f0	0x3b5	FUN_004455F0	unknown			-
+0x000459a5	0x6e9	FUN_004459A5	unknown			-
+0x0004608e	0x579	FUN_0044608E	unknown			-
+0x00046607	0x42b	FUN_00446607	unknown			-
+0x00046a32	0x58	FUN_00446A32	unknown			-
+0x00046a8a	0x337	FUN_00446A8A	unknown			-
+0x00046dc1	0x10	FUN_00446DC1	eh-funclet			FuncInfo/unwind-map child record
+0x00046dd1	0x10	FUN_00446DD1	eh-funclet			FuncInfo/unwind-map child record
+0x00046de1	0x18	FUN_00446DE1	eh-funclet			FuncInfo/unwind-map child record
+0x00046df9	0x98	FUN_00446DF9	unknown			-
+0x00046e91	0x30f	FUN_00446E91	unknown			-
+0x000471a0	0x138	FUN_004471A0	unknown			-
+0x000472d8	0x429	FUN_004472D8	unknown			-
+0x00047701	0xd	FUN_00447701	eh-funclet			FuncInfo/unwind-map child record
+0x0004770e	0x18	FUN_0044770E	eh-funclet			FuncInfo/unwind-map child record
+0x00047726	0x14f	FUN_00447726	unknown			-
+0x00047875	0xa1	FUN_00447875	unknown			-
+0x00047916	0xa	FUN_00447916	linker-pad			trailing 90/CC alignment fill
+0x00047920	0x3c	FUN_00447920	unknown			-
+0x0004795c	0x18	FUN_0044795C	unknown			-
+0x00047974	0x11b	FUN_00447974	unknown			-
+0x00047a8f	0x31	FUN_00447A8F	unknown			-
+0x00047ac0	0x59	FUN_00447AC0	unknown			-
+0x00047b19	0x153	FUN_00447B19	unknown			-
+0x00047c6c	0x54	FUN_00447C6C	unknown			-
+0x00047cc0	0x59	FUN_00447CC0	unknown			-
+0x00047d19	0x132	FUN_00447D19	unknown			-
+0x00047e4b	0x7d	FUN_00447E4B	unknown			-
+0x00047ec8	0x14d	FUN_00447EC8	unknown			-
+0x00048015	0xb	FUN_00448015	linker-pad			trailing 90/CC alignment fill
+0x00048020	0x1c	FUN_00448020	unknown			-
+0x0004803c	0x83d	FUN_0044803C	unknown			-
+0x00048879	0x1f	FUN_00448879	unknown			-
+0x00048898	0x12c	FUN_00448898	unknown			-
+0x000489c4	0x3fc	FUN_004489C4	unknown			-
+0x00048dc0	0xd	FUN_00448DC0	eh-funclet			FuncInfo/unwind-map child record
+0x00048dcd	0xd	FUN_00448DCD	eh-funclet			FuncInfo/unwind-map child record
+0x00048dda	0x1b	FUN_00448DDA	eh-funclet			FuncInfo/unwind-map child record
+0x00048df5	0x8a	FUN_00448DF5	unknown			-
+0x00048e7f	0xa8c	FUN_00448E7F	unknown			-
+0x0004990b	0x9d	FUN_0044990B	unknown			-
+0x000499a8	0x2b2	FUN_004499A8	unknown			-
+0x00049c5a	0x55e	FUN_00449C5A	unknown			-
+0x0004a1b8	0x7d	FUN_0044A1B8	unknown			-
+0x0004a235	0x13f	FUN_0044A235	unknown			-
+0x0004a374	0x269	FUN_0044A374	unknown			-
+0x0004a5dd	0x3	FUN_0044A5DD	linker-pad			trailing 90/CC alignment fill
+0x0004a5e0	0x267	FUN_0044A5E0	unknown			-
+0x0004a847	0x468	FUN_0044A847	unknown			-
+0x0004acaf	0x27	FUN_0044ACAF	unknown			-
+0x0004acd6	0x75e	FUN_0044ACD6	unknown			-
+0x0004b434	0xc	FUN_0044B434	linker-pad			trailing 90/CC alignment fill
+0x0004b440	0x1b8	FUN_0044B440	unknown			-
+0x0004b5f8	0x138	FUN_0044B5F8	unknown			-
+0x0004b730	0x3db	FUN_0044B730	unknown			-
+0x0004bb0b	0x3d9	FUN_0044BB0B	unknown			-
+0x0004bee4	0xd	FUN_0044BEE4	eh-funclet			FuncInfo/unwind-map child record
+0x0004bef1	0xd	FUN_0044BEF1	eh-funclet			FuncInfo/unwind-map child record
+0x0004befe	0x1b	FUN_0044BEFE	eh-funclet			FuncInfo/unwind-map child record
+0x0004bf19	0x1ea	FUN_0044BF19	unknown			-
+0x0004c103	0x161	FUN_0044C103	unknown			-
+0x0004c264	0x7be	FUN_0044C264	unknown			-
+0x0004ca22	0x18e	FUN_0044CA22	unknown			-
+0x0004cbb0	0x1e7	FUN_0044CBB0	unknown			-
+0x0004cd97	0x1d7	FUN_0044CD97	unknown			-
+0x0004cf6e	0x7b	FUN_0044CF6E	unknown			-
+0x0004cfe9	0x287	FUN_0044CFE9	unknown			-
+0x0004d270	0xdc	FUN_0044D270	unknown			-
+0x0004d34c	0x18	FUN_0044D34C	unknown			-
+0x0004d364	0xbe	FUN_0044D364	unknown			-
+0x0004d422	0x1d9	FUN_0044D422	unknown			-
+0x0004d5fb	0x1c6	FUN_0044D5FB	unknown			-
+0x0004d7c1	0x209	FUN_0044D7C1	unknown			-
+0x0004d9ca	0xd3	FUN_0044D9CA	unknown			-
+0x0004da9d	0xd55	FUN_0044DA9D	unknown			-
+0x0004e7f2	0x4e	FUN_0044E7F2	unknown			-
+0x0004e840	0xb8b	FUN_0044E840	unknown			-
+0x0004f3cb	0x114	FUN_0044F3CB	unknown			-
+0x0004f4df	0x78	FUN_0044F4DF	unknown			-
+0x0004f557	0x30	FUN_0044F557	unknown			-
+0x0004f587	0x64	FUN_0044F587	unknown			-
+0x0004f5eb	0x53	FUN_0044F5EB	unknown			-
+0x0004f63e	0x2	FUN_0044F63E	linker-pad			trailing 90/CC alignment fill
+0x0004f640	0x72	FUN_0044F640	unknown			-
+0x0004f6b2	0x20	FUN_0044F6B2	unknown			-
+0x0004f6d2	0x51c	FUN_0044F6D2	unknown			-
+0x0004fbee	0x10	FUN_0044FBEE	eh-funclet			FuncInfo/unwind-map child record
+0x0004fbfe	0xd	FUN_0044FBFE	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc0b	0xd	FUN_0044FC0B	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc18	0xd	FUN_0044FC18	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc25	0xd	FUN_0044FC25	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc32	0xd	FUN_0044FC32	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc3f	0xd	FUN_0044FC3F	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc4c	0xd	FUN_0044FC4C	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc59	0xd	FUN_0044FC59	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc66	0xd	FUN_0044FC66	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc73	0xd	FUN_0044FC73	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc80	0xd	FUN_0044FC80	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc8d	0xd	FUN_0044FC8D	eh-funclet			FuncInfo/unwind-map child record
+0x0004fc9a	0xd	FUN_0044FC9A	eh-funclet			FuncInfo/unwind-map child record
+0x0004fca7	0xd	FUN_0044FCA7	eh-funclet			FuncInfo/unwind-map child record
+0x0004fcb4	0xd	FUN_0044FCB4	eh-funclet			FuncInfo/unwind-map child record
+0x0004fcc1	0x18	FUN_0044FCC1	eh-funclet			FuncInfo/unwind-map child record
+0x0004fcd9	0x36d	FUN_0044FCD9	unknown			-
+0x00050046	0x116	FUN_00450046	unknown			-
+0x0005015c	0xe22	FUN_0045015C	unknown			-
+0x00050f7e	0x3e	FUN_00450F7E	unknown			-
+0x00050fbc	0x288	FUN_00450FBC	unknown			-
+0x00051244	0x1b6	FUN_00451244	unknown			-
+0x000513fa	0x14	FUN_004513FA	unknown			-
+0x0005140e	0x1cb	FUN_0045140E	unknown			-
+0x000515d9	0x47	FUN_004515D9	unknown			-
+0x00051620	0x9f	FUN_00451620	unknown			-
+0x000516bf	0x1a	FUN_004516BF	unknown			-
+0x000516d9	0xe6	FUN_004516D9	unknown			-
+0x000517bf	0x144	FUN_004517BF	unknown			-
+0x00051903	0xce	FUN_00451903	unknown			-
+0x000519d1	0x60	FUN_004519D1	unknown			-
+0x00051a31	0xf03	FUN_00451A31	unknown			-
+0x00052934	0x6b	FUN_00452934	unknown			-
+0x0005299f	0x1c5	FUN_0045299F	unknown			-
+0x00052b64	0x114	FUN_00452B64	unknown			-
+0x00052c78	0x1c	FUN_00452C78	unknown			-
+0x00052c94	0x16c	FUN_00452C94	unknown			-
+0x00052e00	0x99	FUN_00452E00	unknown			-
+0x00052e99	0xf1	FUN_00452E99	unknown			-
+0x00052f8a	0x1ea	FUN_00452F8A	unknown			-
+0x00053174	0x7d4	FUN_00453174	unknown			-
+0x00053948	0x95	FUN_00453948	unknown			-
+0x000539dd	0x1cb	FUN_004539DD	unknown			-
+0x00053ba8	0x450	FUN_00453BA8	unknown			-
+0x00053ff8	0x1f7	FUN_00453FF8	unknown			-
+0x000541ef	0x70	FUN_004541EF	unknown			-
+0x0005425f	0x8e	FUN_0045425F	unknown			-
+0x000542ed	0x3d2	FUN_004542ED	unknown			-
+0x000546bf	0x5b	FUN_004546BF	unknown			-
+0x0005471a	0x2e	FUN_0045471A	unknown			-
+0x00054748	0x39	FUN_00454748	unknown			-
+0x00054781	0xda	FUN_00454781	unknown			-
+0x0005485b	0x6cc	FUN_0045485B	unknown			-
+0x00054f27	0x10	FUN_00454F27	eh-funclet			FuncInfo/unwind-map child record
+0x00054f37	0x18	FUN_00454F37	eh-funclet			FuncInfo/unwind-map child record
+0x00054f4f	0x3b	FUN_00454F4F	unknown			-
+0x00054f8a	0x14f	FUN_00454F8A	unknown			-
+0x000550d9	0x4a	FUN_004550D9	unknown			-
+0x00055123	0x38c	FUN_00455123	unknown			-
+0x000554af	0xd	FUN_004554AF	eh-funclet			FuncInfo/unwind-map child record
+0x000554bc	0xd	FUN_004554BC	eh-funclet			FuncInfo/unwind-map child record
+0x000554c9	0x18	FUN_004554C9	eh-funclet			FuncInfo/unwind-map child record
+0x000554e1	0xb1	FUN_004554E1	unknown			-
+0x00055592	0x1c7	FUN_00455592	unknown			-
+0x00055759	0x1d9	FUN_00455759	unknown			-
+0x00055932	0x51	FUN_00455932	unknown			-
+0x00055983	0x8a	FUN_00455983	unknown			-
+0x00055a0d	0x7b	FUN_00455A0D	unknown			-
+0x00055a88	0x15	FUN_00455A88	unknown			-
+0x00055a9d	0x12	FUN_00455A9D	unknown			-
+0x00055aaf	0xdc	FUN_00455AAF	unknown			-
+0x00055b8b	0x51	FUN_00455B8B	unknown			-
+0x00055bdc	0x64	FUN_00455BDC	unknown			-
+0x00055c40	0x54	FUN_00455C40	unknown			-
+0x00055c94	0x10	FUN_00455C94	unknown			-
+0x00055ca4	0x7e	FUN_00455CA4	unknown			-
+0x00055d22	0x629	FUN_00455D22	unknown			-
+0x0005634b	0x3b7	FUN_0045634B	unknown			-
+0x00056702	0x99	FUN_00456702	unknown			-
+0x0005679b	0x24	FUN_0045679B	unknown			-
+0x000567bf	0x22	FUN_004567BF	unknown			-
+0x000567e1	0xf	FUN_004567E1	linker-pad			trailing 90/CC alignment fill
+0x000567f0	0x13e	FUN_004567F0	unknown			-
+0x0005692e	0xd	FUN_0045692E	eh-funclet			FuncInfo/unwind-map child record
+0x0005693b	0x19	FUN_0045693B	eh-funclet			FuncInfo/unwind-map child record
+0x00056954	0x16a	FUN_00456954	unknown			-
+0x00056abe	0xd	FUN_00456ABE	eh-funclet			FuncInfo/unwind-map child record
+0x00056acb	0x19	FUN_00456ACB	eh-funclet			FuncInfo/unwind-map child record
+0x00056ae4	0x1fc	FUN_00456AE4	unknown			-
+0x00056ce0	0xd	FUN_00456CE0	eh-funclet			FuncInfo/unwind-map child record
+0x00056ced	0x19	FUN_00456CED	eh-funclet			FuncInfo/unwind-map child record
+0x00056d06	0x137	FUN_00456D06	unknown			-
+0x00056e3d	0xd	FUN_00456E3D	eh-funclet			FuncInfo/unwind-map child record
+0x00056e4a	0x19	FUN_00456E4A	eh-funclet			FuncInfo/unwind-map child record
+0x00056e63	0x10d	FUN_00456E63	unknown			-
+0x00056f70	0xd	FUN_00456F70	eh-funclet			FuncInfo/unwind-map child record
+0x00056f7d	0x19	FUN_00456F7D	eh-funclet			FuncInfo/unwind-map child record
+0x00056f96	0x2e6	FUN_00456F96	unknown			-
+0x0005727c	0xd	FUN_0045727C	eh-funclet			FuncInfo/unwind-map child record
+0x00057289	0xd	FUN_00457289	eh-funclet			FuncInfo/unwind-map child record
+0x00057296	0xd	FUN_00457296	eh-funclet			FuncInfo/unwind-map child record
+0x000572a3	0xd	FUN_004572A3	eh-funclet			FuncInfo/unwind-map child record
+0x000572b0	0x19	FUN_004572B0	eh-funclet			FuncInfo/unwind-map child record
+0x000572c9	0x1f2	FUN_004572C9	unknown			-
+0x000574bb	0xd	FUN_004574BB	eh-funclet			FuncInfo/unwind-map child record
+0x000574c8	0x19	FUN_004574C8	eh-funclet			FuncInfo/unwind-map child record
+0x000574e1	0x486	FUN_004574E1	unknown			-
+0x00057967	0x1c1	FUN_00457967	unknown			-
+0x00057b28	0xd	FUN_00457B28	eh-funclet			FuncInfo/unwind-map child record
+0x00057b35	0x19	FUN_00457B35	eh-funclet			FuncInfo/unwind-map child record
+0x00057b4e	0x112	FUN_00457B4E	unknown			-
+0x00057c60	0x149	FUN_00457C60	unknown			-
+0x00057da9	0x149	FUN_00457DA9	unknown			-
+0x00057ef2	0x102	FUN_00457EF2	unknown			-
+0x00057ff4	0x139	FUN_00457FF4	unknown			-
+0x0005812d	0x112	FUN_0045812D	unknown			-
+0x0005823f	0xe1	FUN_0045823F	unknown			-
+0x00058320	0x102	FUN_00458320	unknown			-
+0x00058422	0xf1	FUN_00458422	unknown			-
+0x00058513	0xd	FUN_00458513	linker-pad			trailing 90/CC alignment fill
+0x00058520	0x8d	FUN_00458520	unknown			-
+0x000585ad	0x74	FUN_004585AD	unknown			-
+0x00058621	0x7b	FUN_00458621	unknown			-
+0x0005869c	0x27a	FUN_0045869C	unknown			-
+0x00058916	0x5b	FUN_00458916	unknown			-
+0x00058971	0xb6	FUN_00458971	unknown			-
+0x00058a27	0x86	FUN_00458A27	unknown			-
+0x00058aad	0x162	FUN_00458AAD	unknown			-
+0x00058c0f	0x141	FUN_00458C0F	unknown			-
+0x00058d50	0xf4	FUN_00458D50	unknown			-
+0x00058e44	0x194	FUN_00458E44	unknown			-
+0x00058fd8	0x1f1	FUN_00458FD8	unknown			-
+0x000591c9	0x9e	FUN_004591C9	unknown			-
+0x00059267	0x101	FUN_00459267	unknown			-
+0x00059368	0x1c8	FUN_00459368	unknown			-
+0x00059530	0xf7	FUN_00459530	unknown			-
+0x00059627	0xa5	FUN_00459627	unknown			-
+0x000596cc	0x5d	FUN_004596CC	unknown			-
+0x00059729	0x71	FUN_00459729	unknown			-
+0x0005979a	0x94	FUN_0045979A	unknown			-
+0x0005982e	0x6c	FUN_0045982E	unknown			-
+0x0005989a	0x7a	FUN_0045989A	unknown			-
+0x00059914	0xe2	FUN_00459914	unknown			-
+0x000599f6	0x2b	FUN_004599F6	unknown			-
+0x00059a21	0x47	FUN_00459A21	unknown			-
+0x00059a68	0x24	FUN_00459A68	unknown			-
+0x00059a8c	0x2c0	FUN_00459A8C	unknown			-
+0x00059d4c	0x316	FUN_00459D4C	unknown			-
+0x0005a062	0x109	FUN_0045A062	unknown			-
+0x0005a16b	0xdc	FUN_0045A16B	unknown			-
+0x0005a247	0x231	FUN_0045A247	unknown			-
+0x0005a478	0x10c	FUN_0045A478	unknown			-
+0x0005a584	0x4fe	FUN_0045A584	unknown			-
+0x0005aa82	0x14f	FUN_0045AA82	unknown			-
+0x0005abd1	0xf	FUN_0045ABD1	linker-pad			trailing 90/CC alignment fill
+0x0005abe0	0x4c	FUN_0045ABE0	unknown			-
+0x0005ac2c	0x1c	FUN_0045AC2C	unknown			-
+0x0005ac48	0x2a	FUN_0045AC48	unknown			-
+0x0005ac72	0x53	FUN_0045AC72	unknown			-
+0x0005acc5	0x1f	FUN_0045ACC5	unknown			-
+0x0005ace4	0x975	FUN_0045ACE4	unknown			-
+0x0005b659	0x93	FUN_0045B659	unknown			-
+0x0005b6ec	0x4	FUN_0045B6EC	linker-pad			trailing 90/CC alignment fill
+0x0005b6f0	0x14e	FUN_0045B6F0	unknown			-
+0x0005b83e	0x2d6	FUN_0045B83E	unknown			-
+0x0005bb14	0x31	FUN_0045BB14	unknown			-
+0x0005bb45	0x617	FUN_0045BB45	unknown			-
+0x0005c15c	0x90	FUN_0045C15C	unknown			-
+0x0005c1ec	0x1a	FUN_0045C1EC	unknown			-
+0x0005c206	0xca	FUN_0045C206	unknown			-
+0x0005c2d0	0x127	FUN_0045C2D0	unknown			-
+0x0005c3f7	0x185	FUN_0045C3F7	unknown			-
+0x0005c57c	0xd0	FUN_0045C57C	unknown			-
+0x0005c64c	0xaa	FUN_0045C64C	unknown			-
+0x0005c6f6	0x135	FUN_0045C6F6	unknown			-
+0x0005c82b	0x79	FUN_0045C82B	unknown			-
+0x0005c8a4	0x15a	FUN_0045C8A4	unknown			-
+0x0005c9fe	0x1a3	FUN_0045C9FE	unknown			-
+0x0005cba1	0x20d	FUN_0045CBA1	unknown			-
+0x0005cdae	0x523	FUN_0045CDAE	unknown			-
+0x0005d2d1	0x15	FUN_0045D2D1	unknown			-
+0x0005d2e6	0x8a	FUN_0045D2E6	unknown			-
+0x0005d370	0x3d0	FUN_0045D370	unknown			-
+0x0005d740	0x1a	FUN_0045D740	unknown			-
+0x0005d75a	0x4c5	FUN_0045D75A	unknown			-
+0x0005dc1f	0x7c	FUN_0045DC1F	unknown			-
+0x0005dc9b	0x16	FUN_0045DC9B	unknown			-
+0x0005dcb1	0x63	FUN_0045DCB1	unknown			-
+0x0005dd14	0x65	FUN_0045DD14	unknown			-
+0x0005dd79	0x63	FUN_0045DD79	unknown			-
+0x0005dddc	0x4	FUN_0045DDDC	linker-pad			trailing 90/CC alignment fill
+0x0005dde0	0x1ef0	FUN_0045DDE0	unknown			-
+0x0005fcd0	0x10	FUN_0045FCD0	eh-funclet			FuncInfo/unwind-map child record
+0x0005fce0	0x1a	FUN_0045FCE0	eh-funclet			FuncInfo/unwind-map child record
+0x0005fcfa	0x1d7	FUN_0045FCFA	unknown			-
+0x0005fed1	0xa6	FUN_0045FED1	unknown			-
+0x0005ff77	0xd	FUN_0045FF77	eh-funclet			FuncInfo/unwind-map child record
+0x0005ff84	0x1a	FUN_0045FF84	eh-funclet			FuncInfo/unwind-map child record
+0x0005ff9e	0x1bf	FUN_0045FF9E	unknown			-
+0x0006015d	0x243	FUN_0046015D	unknown			-
+0x000603a0	0xde	FUN_004603A0	unknown			-
+0x0006047e	0xa9	FUN_0046047E	unknown			-
+0x00060527	0x5f	FUN_00460527	unknown			-
+0x00060586	0xb0	FUN_00460586	unknown			-
+0x00060636	0x5a	FUN_00460636	unknown			-
+0x00060690	0xc5	FUN_00460690	unknown			-
+0x00060755	0xd	FUN_00460755	eh-funclet			FuncInfo/unwind-map child record
+0x00060762	0x1a	FUN_00460762	eh-funclet			FuncInfo/unwind-map child record
+0x0006077c	0x2e0	FUN_0046077C	unknown			-
+0x00060a5c	0x11e	FUN_00460A5C	unknown			-
+0x00060b7a	0x200	FUN_00460B7A	unknown			-
+0x00060d7a	0x243	FUN_00460D7A	unknown			-
+0x00060fbd	0x200	FUN_00460FBD	unknown			-
+0x000611bd	0x7d	FUN_004611BD	unknown			-
+0x0006123a	0x137	FUN_0046123A	unknown			-
+0x00061371	0x113	FUN_00461371	unknown			-
+0x00061484	0x1141	FUN_00461484	unknown			-
+0x000625c5	0x19a	FUN_004625C5	unknown			-
+0x0006275f	0x152	FUN_0046275F	unknown			-
+0x000628b1	0x18f	FUN_004628B1	unknown			-
+0x00062a40	0x5c6	FUN_00462A40	unknown			-
+0x00063006	0x2da	FUN_00463006	unknown			-
+0x000632e0	0x34c	FUN_004632E0	unknown			-
+0x0006362c	0x4	FUN_0046362C	linker-pad			trailing 90/CC alignment fill
+0x00063630	0x29c	FUN_00463630	unknown			-
+0x000638cc	0xd	FUN_004638CC	eh-funclet			FuncInfo/unwind-map child record
+0x000638d9	0xd	FUN_004638D9	eh-funclet			FuncInfo/unwind-map child record
+0x000638e6	0xd	FUN_004638E6	eh-funclet			FuncInfo/unwind-map child record
+0x000638f3	0x1b	FUN_004638F3	eh-funclet			FuncInfo/unwind-map child record
+0x0006390e	0x112	FUN_0046390E	unknown			-
+0x00063a20	0x42	FUN_00463A20	unknown			-
+0x00063a62	0x26e	FUN_00463A62	unknown			-
+0x00063cd0	0x37	FUN_00463CD0	unknown			-
+0x00063d07	0xd6	FUN_00463D07	unknown			-
+0x00063ddd	0xd	FUN_00463DDD	eh-funclet			FuncInfo/unwind-map child record
+0x00063dea	0x1b	FUN_00463DEA	eh-funclet			FuncInfo/unwind-map child record
+0x00063e05	0x43	FUN_00463E05	unknown			-
+0x00063e48	0xc5	FUN_00463E48	unknown			-
+0x00063f0d	0x3	FUN_00463F0D	linker-pad			trailing 90/CC alignment fill
+0x00063f10	0x6b	FUN_00463F10	unknown			-
+0x00063f7b	0x55	FUN_00463F7B	unknown			-
+0x00063fd0	0xe1	FUN_00463FD0	unknown			-
+0x000640b1	0x17c	FUN_004640B1	unknown			-
+0x0006422d	0xa5	FUN_0046422D	unknown			-
+0x000642d2	0x152	FUN_004642D2	unknown			-
+0x00064424	0xc	FUN_00464424	linker-pad			trailing 90/CC alignment fill
+0x00064430	0x40	FUN_00464430	unknown			-
+0x00064470	0x54	FUN_00464470	unknown			-
+0x000644c4	0x23	FUN_004644C4	unknown			-
+0x000644e7	0x2d	FUN_004644E7	unknown			-
+0x00064514	0xc	FUN_00464514	linker-pad			trailing 90/CC alignment fill
+0x00064520	0x783	FUN_00464520	unknown			-
+0x00064ca3	0x9ce	FUN_00464CA3	unknown			-
+0x00065671	0xca	FUN_00465671	unknown			-
+0x0006573b	0xbb	FUN_0046573B	unknown			-
+0x000657f6	0xd7	FUN_004657F6	unknown			-
+0x000658cd	0xb3	FUN_004658CD	unknown			-
+0x00065980	0xb3	FUN_00465980	unknown			-
+0x00065a33	0x109	FUN_00465A33	unknown			-
+0x00065b3c	0xbb	FUN_00465B3C	unknown			-
+0x00065bf7	0x1b0	FUN_00465BF7	unknown			-
+0x00065da7	0x2a9	FUN_00465DA7	unknown			-
+0x00066050	0x20f	FUN_00466050	unknown			-
+0x0006625f	0x229	FUN_0046625F	unknown			-
+0x00066488	0x8	FUN_00466488	linker-pad			trailing 90/CC alignment fill
+0x00066490	0xc9	FUN_00466490	unknown			-
+0x00066559	0x18	FUN_00466559	unknown			-
+0x00066571	0x71	FUN_00466571	unknown			-
+0x000665e2	0x122	FUN_004665E2	unknown			-
+0x00066704	0x237	FUN_00466704	unknown			-
+0x0006693b	0xf1	FUN_0046693B	unknown			-
+0x00066a2c	0x855	FUN_00466A2C	unknown			-
+0x00067281	0x63	FUN_00467281	unknown			-
+0x000672e4	0x61	FUN_004672E4	unknown			-
+0x00067345	0x852	FUN_00467345	unknown			-
+0x00067b97	0xca2	FUN_00467B97	unknown			-
+0x00068839	0x10	FUN_00468839	eh-funclet			FuncInfo/unwind-map child record
+0x00068849	0x18	FUN_00468849	eh-funclet			FuncInfo/unwind-map child record
+0x00068861	0x765	FUN_00468861	unknown			-
+0x00068fc6	0x2d	FUN_00468FC6	unknown			-
+0x00068ff3	0x108d	FUN_00468FF3	unknown			-
+0x0006a080	0x49	FUN_0046A080	unknown			-
+0x0006a0c9	0x27	FUN_0046A0C9	unknown			-
+0x0006a0f0	0xfc	FUN_0046A0F0	unknown			-
+0x0006a1ec	0x27	FUN_0046A1EC	unknown			-
+0x0006a213	0x1c9	FUN_0046A213	unknown			-
+0x0006a3dc	0x249	FUN_0046A3DC	unknown			-
+0x0006a625	0x2ae	FUN_0046A625	unknown			-
+0x0006a8d3	0x176	FUN_0046A8D3	unknown			-
+0x0006aa49	0x8a9	FUN_0046AA49	unknown			-
+0x0006b2f2	0x34	FUN_0046B2F2	unknown			-
+0x0006b326	0x131	FUN_0046B326	unknown			-
+0x0006b457	0xb2	FUN_0046B457	unknown			-
+0x0006b509	0x1de	FUN_0046B509	unknown			-
+0x0006b6e7	0x3a3	FUN_0046B6E7	unknown			-
+0x0006ba8a	0x6	FUN_0046BA8A	linker-pad			trailing 90/CC alignment fill
+0x0006ba90	0x68	FUN_0046BA90	unknown			-
+0x0006baf8	0x18	FUN_0046BAF8	unknown			-
+0x0006bb10	0x5d	FUN_0046BB10	unknown			-
+0x0006bb6d	0x1ed	FUN_0046BB6D	unknown			-
+0x0006bd5a	0x56	FUN_0046BD5A	unknown			-
+0x0006bdb0	0xf0	FUN_0046BDB0	unknown			-
+0x0006bea0	0x217	FUN_0046BEA0	unknown			-
+0x0006c0b7	0x1e3	FUN_0046C0B7	unknown			-
+0x0006c29a	0x53	FUN_0046C29A	unknown			-
+0x0006c2ed	0x69a	FUN_0046C2ED	unknown			-
+0x0006c987	0xd	FUN_0046C987	eh-funclet			FuncInfo/unwind-map child record
+0x0006c994	0x1b	FUN_0046C994	eh-funclet			FuncInfo/unwind-map child record
+0x0006c9af	0x7c	FUN_0046C9AF	unknown			-
+0x0006ca2b	0xab	FUN_0046CA2B	unknown			-
+0x0006cad6	0x1ba	FUN_0046CAD6	unknown			-
+0x0006cc90	0x1af	FUN_0046CC90	unknown			-
+0x0006ce3f	0x4a	FUN_0046CE3F	unknown			-
+0x0006ce89	0x59	FUN_0046CE89	unknown			-
+0x0006cee2	0x452	FUN_0046CEE2	unknown			-
+0x0006d334	0xd0	FUN_0046D334	unknown			-
+0x0006d404	0xf2	FUN_0046D404	unknown			-
+0x0006d4f6	0x14f	FUN_0046D4F6	unknown			-
+0x0006d645	0x1e	FUN_0046D645	unknown			-
+0x0006d663	0x2f4	FUN_0046D663	unknown			-
+0x0006d957	0x57	FUN_0046D957	unknown			-
+0x0006d9ae	0x52e	FUN_0046D9AE	unknown			-
+0x0006dedc	0x6c8	FUN_0046DEDC	unknown			-
+0x0006e5a4	0xc	FUN_0046E5A4	linker-pad			trailing 90/CC alignment fill
+0x0006e5b0	0x4a	FUN_0046E5B0	unknown			-
+0x0006e5fa	0x4d	FUN_0046E5FA	unknown			-
+0x0006e647	0x4b	FUN_0046E647	unknown			-
+0x0006e692	0x8a	FUN_0046E692	unknown			-
+0x0006e71c	0x151	FUN_0046E71C	unknown			-
+0x0006e86d	0x2b3	FUN_0046E86D	unknown			-
+0x0006eb20	0x181	FUN_0046EB20	unknown			-
+0x0006eca1	0xf	FUN_0046ECA1	linker-pad			trailing 90/CC alignment fill
+0x0006ecb0	0x75	FUN_0046ECB0	unknown			-
+0x0006ed25	0x3e	FUN_0046ED25	unknown			-
+0x0006ed63	0x4d	FUN_0046ED63	unknown			-
+0x0006edb0	0x2ad	FUN_0046EDB0	unknown			-
+0x0006f05d	0xd	FUN_0046F05D	eh-funclet			FuncInfo/unwind-map child record
+0x0006f06a	0x1b	FUN_0046F06A	eh-funclet			FuncInfo/unwind-map child record
+0x0006f085	0x123	FUN_0046F085	unknown			-
+0x0006f1a8	0x21f	FUN_0046F1A8	unknown			-
+0x0006f3c7	0x9ac	FUN_0046F3C7	unknown			-
+0x0006fd73	0xa5	FUN_0046FD73	unknown			-
+0x0006fe18	0x112	FUN_0046FE18	unknown			-
+0x0006ff2a	0x28e	FUN_0046FF2A	unknown			-
+0x000701b8	0x492	FUN_004701B8	unknown			-
+0x0007064a	0x37a	FUN_0047064A	unknown			-
+0x000709c4	0xd	FUN_004709C4	eh-funclet			FuncInfo/unwind-map child record
+0x000709d1	0x18	FUN_004709D1	eh-funclet			FuncInfo/unwind-map child record
+0x000709e9	0x7	FUN_004709E9	linker-pad			trailing 90/CC alignment fill
+0x000709f0	0x5f	FUN_004709F0	unknown			-
+0x00070a4f	0x5a	FUN_00470A4F	unknown			-
+0x00070aa9	0xb5	FUN_00470AA9	unknown			-
+0x00070b5e	0x2f3	FUN_00470B5E	unknown			-
+0x00070e51	0xd4	FUN_00470E51	unknown			-
+0x00070f25	0x24	FUN_00470F25	unknown			-
+0x00070f49	0xde	FUN_00470F49	unknown			-
+0x00071027	0x1d4	FUN_00471027	unknown			-
+0x000711fb	0xe27	FUN_004711FB	unknown			-
+0x00072022	0xe	FUN_00472022	linker-pad			trailing 90/CC alignment fill
+0x00072030	0x1c9	FUN_00472030	unknown			-
+0x000721f9	0x80	FUN_004721F9	unknown			-
+0x00072279	0x9d9	FUN_00472279	unknown			-
+0x00072c52	0xe	FUN_00472C52	linker-pad			trailing 90/CC alignment fill
+0x00072c60	0x6b	FUN_00472C60	unknown			-
+0x00072ccb	0x49	FUN_00472CCB	unknown			-
+0x00072d14	0x23	FUN_00472D14	unknown			-
+0x00072d37	0x2e5	FUN_00472D37	unknown			-
+0x0007301c	0x111	FUN_0047301C	unknown			-
+0x0007312d	0xad	FUN_0047312D	unknown			-
+0x000731da	0x113	FUN_004731DA	unknown			-
+0x000732ed	0x13	FUN_004732ED	unknown			-
+0x00073300	0x66	FUN_00473300	unknown			-
+0x00073366	0xd5	FUN_00473366	unknown			-
+0x0007343b	0x1	FUN_0047343B	linker-pad			trailing 90/CC alignment fill
+0x0007343c	0x6	FUN_0047343C	import-thunk	NETAPI32.dll	Netbios	IAT RVA 0xd65ac
+0x00073442	0xe	FUN_00473442	linker-pad			trailing 90/CC alignment fill
+0x00073450	0x199	FUN_00473450	unknown			-
+0x000735e9	0x7	FUN_004735E9	linker-pad			trailing 90/CC alignment fill
+0x000735f0	0x30	FUN_004735F0	unknown			-
+0x00073620	0x45	FUN_00473620	unknown			-
+0x00073665	0xb	FUN_00473665	linker-pad			trailing 90/CC alignment fill
+0x00073670	0xdd	FUN_00473670	unknown			-
+0x0007374d	0x3	FUN_0047374D	linker-pad			trailing 90/CC alignment fill
+0x00073750	0xcd	FUN_00473750	unknown			-
+0x0007381d	0x3	FUN_0047381D	linker-pad			trailing 90/CC alignment fill
+0x00073820	0x3a	FUN_00473820	unknown			-
+0x0007385a	0x6	FUN_0047385A	linker-pad			trailing 90/CC alignment fill
+0x00073860	0x60	FUN_00473860	unknown			-
+0x000738c0	0x1	FUN_004738C0	unknown			-
+0x000738c1	0xf	FUN_004738C1	linker-pad			trailing 90/CC alignment fill
+0x000738d0	0x1	FUN_004738D0	unknown			-
+0x000738d1	0xf	FUN_004738D1	linker-pad			trailing 90/CC alignment fill
+0x000738e0	0x1e6	FUN_004738E0	unknown			-
+0x00073ac6	0xa	FUN_00473AC6	linker-pad			trailing 90/CC alignment fill
+0x00073ad0	0x2ad	FUN_00473AD0	unknown			-
+0x00073d7d	0x3	FUN_00473D7D	linker-pad			trailing 90/CC alignment fill
+0x00073d80	0x1	FUN_00473D80	unknown			-
+0x00073d81	0xf	FUN_00473D81	linker-pad			trailing 90/CC alignment fill
+0x00073d90	0x4a	FUN_00473D90	unknown			-
+0x00073dda	0x6	FUN_00473DDA	linker-pad			trailing 90/CC alignment fill
+0x00073de0	0x1b0	FUN_00473DE0	unknown			-
+0x00073f90	0x46	FUN_00473F90	unknown			-
+0x00073fd6	0xa	FUN_00473FD6	linker-pad			trailing 90/CC alignment fill
+0x00073fe0	0x141	FUN_00473FE0	unknown			-
+0x00074121	0xf	FUN_00474121	linker-pad			trailing 90/CC alignment fill
+0x00074130	0x3c	FUN_00474130	unknown			-
+0x0007416c	0x4	FUN_0047416C	linker-pad			trailing 90/CC alignment fill
+0x00074170	0xce	FUN_00474170	unknown			-
+0x0007423e	0x2	FUN_0047423E	linker-pad			trailing 90/CC alignment fill
+0x00074240	0x87	FUN_00474240	unknown			-
+0x000742c7	0x9	FUN_004742C7	linker-pad			trailing 90/CC alignment fill
+0x000742d0	0x1e0	FUN_004742D0	unknown			-
+0x000744b0	0xed	FUN_004744B0	unknown			-
+0x0007459d	0x3	FUN_0047459D	linker-pad			trailing 90/CC alignment fill
+0x000745a0	0xbf	FUN_004745A0	unknown			-
+0x0007465f	0x1	FUN_0047465F	linker-pad			trailing 90/CC alignment fill
+0x00074660	0x4e	FUN_00474660	unknown			-
+0x000746ae	0x2	FUN_004746AE	linker-pad			trailing 90/CC alignment fill
+0x000746b0	0x88	FUN_004746B0	unknown			-
+0x00074738	0x8	FUN_00474738	linker-pad			trailing 90/CC alignment fill
+0x00074740	0x320	FUN_00474740	unknown			-
+0x00074a60	0x19	FUN_00474A60	unknown			-
+0x00074a79	0x7	FUN_00474A79	linker-pad			trailing 90/CC alignment fill
+0x00074a80	0xad	FUN_00474A80	unknown			-
+0x00074b2d	0x3	FUN_00474B2D	linker-pad			trailing 90/CC alignment fill
+0x00074b30	0x448	FUN_00474B30	unknown			-
+0x00074f78	0x8	FUN_00474F78	linker-pad			trailing 90/CC alignment fill
+0x00074f80	0x9d	FUN_00474F80	unknown			-
+0x0007501d	0x3	FUN_0047501D	linker-pad			trailing 90/CC alignment fill
+0x00075020	0xb0	FUN_00475020	unknown			-
+0x000750d0	0x145	FUN_004750D0	unknown			-
+0x00075215	0xb	FUN_00475215	linker-pad			trailing 90/CC alignment fill
+0x00075220	0x116	FUN_00475220	unknown			-
+0x00075336	0xa	FUN_00475336	linker-pad			trailing 90/CC alignment fill
+0x00075340	0x98	FUN_00475340	unknown			-
+0x000753d8	0x8	FUN_004753D8	linker-pad			trailing 90/CC alignment fill
+0x000753e0	0x20	FUN_004753E0	unknown			-
+0x00075400	0x2e	FUN_00475400	unknown			-
+0x0007542e	0x2	FUN_0047542E	linker-pad			trailing 90/CC alignment fill
+0x00075430	0xfd	FUN_00475430	unknown			-
+0x0007552d	0x3	FUN_0047552D	linker-pad			trailing 90/CC alignment fill
+0x00075530	0x84	FUN_00475530	unknown			-
+0x000755b4	0xc	FUN_004755B4	linker-pad			trailing 90/CC alignment fill
+0x000755c0	0x90	FUN_004755C0	unknown			-
+0x00075650	0x1d4	FUN_00475650	unknown			-
+0x00075824	0xc	FUN_00475824	linker-pad			trailing 90/CC alignment fill
+0x00075830	0x9b	FUN_00475830	unknown			-
+0x000758cb	0x5	FUN_004758CB	linker-pad			trailing 90/CC alignment fill
+0x000758d0	0x85	FUN_004758D0	unknown			-
+0x00075955	0xb	FUN_00475955	linker-pad			trailing 90/CC alignment fill
+0x00075960	0x90	FUN_00475960	unknown			-
+0x000759f0	0x96	FUN_004759F0	unknown			-
+0x00075a86	0xa	FUN_00475A86	linker-pad			trailing 90/CC alignment fill
+0x00075a90	0x96	FUN_00475A90	unknown			-
+0x00075b26	0xa	FUN_00475B26	linker-pad			trailing 90/CC alignment fill
+0x00075b30	0x34	FUN_00475B30	unknown			-
+0x00075b64	0xc	FUN_00475B64	linker-pad			trailing 90/CC alignment fill
+0x00075b70	0x86	FUN_00475B70	unknown			-
+0x00075bf6	0xa	FUN_00475BF6	linker-pad			trailing 90/CC alignment fill
+0x00075c00	0x96	FUN_00475C00	unknown			-
+0x00075c96	0xa	FUN_00475C96	linker-pad			trailing 90/CC alignment fill
+0x00075ca0	0x96	FUN_00475CA0	unknown			-
+0x00075d36	0xa	FUN_00475D36	linker-pad			trailing 90/CC alignment fill
+0x00075d40	0x9c	FUN_00475D40	unknown			-
+0x00075ddc	0x4	FUN_00475DDC	linker-pad			trailing 90/CC alignment fill
+0x00075de0	0x87	FUN_00475DE0	unknown			-
+0x00075e67	0x9	FUN_00475E67	linker-pad			trailing 90/CC alignment fill
+0x00075e70	0x55	FUN_00475E70	unknown			-
+0x00075ec5	0xb	FUN_00475EC5	linker-pad			trailing 90/CC alignment fill
+0x00075ed0	0x8b	FUN_00475ED0	unknown			-
+0x00075f5b	0x5	FUN_00475F5B	linker-pad			trailing 90/CC alignment fill
+0x00075f60	0x4f	FUN_00475F60	unknown			-
+0x00075faf	0x1	FUN_00475FAF	linker-pad			trailing 90/CC alignment fill
+0x00075fb0	0x1b	FUN_00475FB0	unknown			-
+0x00075fcb	0x5	FUN_00475FCB	linker-pad			trailing 90/CC alignment fill
+0x00075fd0	0x8e	FUN_00475FD0	unknown			-
+0x0007605e	0x2	FUN_0047605E	linker-pad			trailing 90/CC alignment fill
+0x00076060	0x88	FUN_00476060	unknown			-
+0x000760e8	0x8	FUN_004760E8	linker-pad			trailing 90/CC alignment fill
+0x000760f0	0x88	FUN_004760F0	unknown			-
+0x00076178	0x8	FUN_00476178	linker-pad			trailing 90/CC alignment fill
+0x00076180	0x100	FUN_00476180	unknown			-
+0x00076280	0xf2	FUN_00476280	unknown			-
+0x00076372	0xe	FUN_00476372	linker-pad			trailing 90/CC alignment fill
+0x00076380	0xe4	FUN_00476380	unknown			-
+0x00076464	0xc	FUN_00476464	linker-pad			trailing 90/CC alignment fill
+0x00076470	0x2b	FUN_00476470	unknown			-
+0x0007649b	0x5	FUN_0047649B	linker-pad			trailing 90/CC alignment fill
+0x000764a0	0x2e	FUN_004764A0	unknown			-
+0x000764ce	0x2	FUN_004764CE	linker-pad			trailing 90/CC alignment fill
+0x000764d0	0x55	FUN_004764D0	unknown			-
+0x00076525	0xb	FUN_00476525	linker-pad			trailing 90/CC alignment fill
+0x00076530	0x58	FUN_00476530	unknown			-
+0x00076588	0x8	FUN_00476588	linker-pad			trailing 90/CC alignment fill
+0x00076590	0x58	FUN_00476590	unknown			-
+0x000765e8	0x8	FUN_004765E8	linker-pad			trailing 90/CC alignment fill
+0x000765f0	0x5f	FUN_004765F0	unknown			-
+0x0007664f	0x1	FUN_0047664F	linker-pad			trailing 90/CC alignment fill
+0x00076650	0x26	FUN_00476650	unknown			-
+0x00076676	0xa	FUN_00476676	linker-pad			trailing 90/CC alignment fill
+0x00076680	0x5f	FUN_00476680	unknown			-
+0x000766df	0x1	FUN_004766DF	linker-pad			trailing 90/CC alignment fill
+0x000766e0	0xf6	FUN_004766E0	unknown			-
+0x000767d6	0xa	FUN_004767D6	linker-pad			trailing 90/CC alignment fill
+0x000767e0	0x106	FUN_004767E0	unknown			-
+0x000768e6	0xa	FUN_004768E6	linker-pad			trailing 90/CC alignment fill
+0x000768f0	0x45	FUN_004768F0	unknown			-
+0x00076935	0xb	FUN_00476935	linker-pad			trailing 90/CC alignment fill
+0x00076940	0x489	FUN_00476940	unknown			-
+0x00076dc9	0x7	FUN_00476DC9	linker-pad			trailing 90/CC alignment fill
+0x00076dd0	0x1	FUN_00476DD0	unknown			-
+0x00076dd1	0xf	FUN_00476DD1	linker-pad			trailing 90/CC alignment fill
+0x00076de0	0x1	FUN_00476DE0	unknown			-
+0x00076de1	0xf	FUN_00476DE1	linker-pad			trailing 90/CC alignment fill
+0x00076df0	0x1	FUN_00476DF0	unknown			-
+0x00076df1	0xf	FUN_00476DF1	linker-pad			trailing 90/CC alignment fill
+0x00076e00	0x1	FUN_00476E00	unknown			-
+0x00076e01	0xf	FUN_00476E01	linker-pad			trailing 90/CC alignment fill
+0x00076e10	0x3	FUN_00476E10	unknown			-
+0x00076e13	0xd	FUN_00476E13	linker-pad			trailing 90/CC alignment fill
+0x00076e20	0x3	FUN_00476E20	unknown			-
+0x00076e23	0xd	FUN_00476E23	linker-pad			trailing 90/CC alignment fill
+0x00076e30	0x1	FUN_00476E30	unknown			-
+0x00076e31	0xf	FUN_00476E31	linker-pad			trailing 90/CC alignment fill
+0x00076e40	0x3	FUN_00476E40	unknown			-
+0x00076e43	0xd	FUN_00476E43	linker-pad			trailing 90/CC alignment fill
+0x00076e50	0x3	FUN_00476E50	unknown			-
+0x00076e53	0xd	FUN_00476E53	linker-pad			trailing 90/CC alignment fill
+0x00076e60	0x5a	FUN_00476E60	unknown			-
+0x00076eba	0x6	FUN_00476EBA	linker-pad			trailing 90/CC alignment fill
+0x00076ec0	0x3	FUN_00476EC0	unknown			-
+0x00076ec3	0xd	FUN_00476EC3	linker-pad			trailing 90/CC alignment fill
+0x00076ed0	0x3	FUN_00476ED0	unknown			-
+0x00076ed3	0xd	FUN_00476ED3	linker-pad			trailing 90/CC alignment fill
+0x00076ee0	0x9	FUN_00476EE0	unknown			-
+0x00076ee9	0x7	FUN_00476EE9	linker-pad			trailing 90/CC alignment fill
+0x00076ef0	0x9	FUN_00476EF0	unknown			-
+0x00076ef9	0x7	FUN_00476EF9	linker-pad			trailing 90/CC alignment fill
+0x00076f00	0x20e	FUN_00476F00	unknown			-
+0x0007710e	0x2	FUN_0047710E	linker-pad			trailing 90/CC alignment fill
+0x00077110	0xd7	FUN_00477110	unknown			-
+0x000771e7	0x9	FUN_004771E7	linker-pad			trailing 90/CC alignment fill
+0x000771f0	0x5b7	FUN_004771F0	unknown			-
+0x000777a7	0x9	FUN_004777A7	linker-pad			trailing 90/CC alignment fill
+0x000777b0	0x42	FUN_004777B0	unknown			-
+0x000777f2	0xe	FUN_004777F2	linker-pad			trailing 90/CC alignment fill
+0x00077800	0x63	FUN_00477800	unknown			-
+0x00077863	0xd	FUN_00477863	linker-pad			trailing 90/CC alignment fill
+0x00077870	0xf3	FUN_00477870	unknown			-
+0x00077963	0xd	FUN_00477963	linker-pad			trailing 90/CC alignment fill
+0x00077970	0x1bc	FUN_00477970	unknown			-
+0x00077b2c	0x4	FUN_00477B2C	linker-pad			trailing 90/CC alignment fill
+0x00077b30	0x186	FUN_00477B30	unknown			-
+0x00077cb6	0xa	FUN_00477CB6	linker-pad			trailing 90/CC alignment fill
+0x00077cc0	0x331	FUN_00477CC0	unknown			-
+0x00077ff1	0xf	FUN_00477FF1	linker-pad			trailing 90/CC alignment fill
+0x00078000	0xe1	FUN_00478000	unknown			-
+0x000780e1	0xf	FUN_004780E1	linker-pad			trailing 90/CC alignment fill
+0x000780f0	0x4f	FUN_004780F0	unknown			-
+0x0007813f	0x1	FUN_0047813F	linker-pad			trailing 90/CC alignment fill
+0x00078140	0x1f1	FUN_00478140	unknown			-
+0x00078331	0xf	FUN_00478331	linker-pad			trailing 90/CC alignment fill
+0x00078340	0x4d	FUN_00478340	unknown			-
+0x0007838d	0x3	FUN_0047838D	linker-pad			trailing 90/CC alignment fill
+0x00078390	0xbd	FUN_00478390	unknown			-
+0x0007844d	0x3	FUN_0047844D	linker-pad			trailing 90/CC alignment fill
+0x00078450	0x16c	FUN_00478450	unknown			-
+0x000785bc	0x4	FUN_004785BC	linker-pad			trailing 90/CC alignment fill
+0x000785c0	0x104	FUN_004785C0	unknown			-
+0x000786c4	0xc	FUN_004786C4	linker-pad			trailing 90/CC alignment fill
+0x000786d0	0x26e	FUN_004786D0	unknown			-
+0x0007893e	0x2	FUN_0047893E	linker-pad			trailing 90/CC alignment fill
+0x00078940	0x489	FUN_00478940	unknown			-
+0x00078dc9	0x7	FUN_00478DC9	linker-pad			trailing 90/CC alignment fill
+0x00078dd0	0x1ad	FUN_00478DD0	unknown			-
+0x00078f7d	0x3	FUN_00478F7D	linker-pad			trailing 90/CC alignment fill
+0x00078f80	0x1ea	FUN_00478F80	unknown			-
+0x0007916a	0x6	FUN_0047916A	linker-pad			trailing 90/CC alignment fill
+0x00079170	0x10	FUN_00479170	unknown			-
+0x00079180	0xfe	FUN_00479180	unknown			-
+0x0007927e	0x2	FUN_0047927E	linker-pad			trailing 90/CC alignment fill
+0x00079280	0xd5	FUN_00479280	unknown			-
+0x00079355	0x1	FUN_00479355	linker-pad			trailing 90/CC alignment fill
+0x00079356	0xcb	FUN_00479356	unknown			-
+0x00079421	0x1	FUN_00479421	linker-pad			trailing 90/CC alignment fill
+0x00079422	0xd5	FUN_00479422	unknown			-
+0x000794f7	0x1	FUN_004794F7	linker-pad			trailing 90/CC alignment fill
+0x000794f8	0xd3	FUN_004794F8	unknown			-
+0x000795cb	0x1	FUN_004795CB	linker-pad			trailing 90/CC alignment fill
+0x000795cc	0xd9	FUN_004795CC	unknown			-
+0x000796a5	0x1	FUN_004796A5	linker-pad			trailing 90/CC alignment fill
+0x000796a6	0xd6	FUN_004796A6	unknown			-
+0x0007977c	0x4	FUN_0047977C	linker-pad			trailing 90/CC alignment fill
+0x00079780	0x6a	FUN_00479780	unknown			-
+0x000797ea	0x6	FUN_004797EA	linker-pad			trailing 90/CC alignment fill
+0x000797f0	0x5d	FUN_004797F0	unknown			-
+0x0007984d	0x3	FUN_0047984D	linker-pad			trailing 90/CC alignment fill
+0x00079850	0x2cd	FUN_00479850	unknown			-
+0x00079b1d	0x3	FUN_00479B1D	linker-pad			trailing 90/CC alignment fill
+0x00079b20	0xa3	FUN_00479B20	unknown			-
+0x00079bc3	0xd	FUN_00479BC3	linker-pad			trailing 90/CC alignment fill
+0x00079bd0	0x22a	FUN_00479BD0	unknown			-
+0x00079dfa	0x6	FUN_00479DFA	linker-pad			trailing 90/CC alignment fill
+0x00079e00	0x51	FUN_00479E00	unknown			-
+0x00079e51	0xf	FUN_00479E51	linker-pad			trailing 90/CC alignment fill
+0x00079e60	0x132	FUN_00479E60	unknown			-
+0x00079f92	0xe	FUN_00479F92	linker-pad			trailing 90/CC alignment fill
+0x00079fa0	0x1c2	FUN_00479FA0	unknown			-
+0x0007a162	0xe	FUN_0047A162	linker-pad			trailing 90/CC alignment fill
+0x0007a170	0x10	FUN_0047A170	unknown			-
+0x0007a180	0xa9	FUN_0047A180	unknown			-
+0x0007a229	0x7	FUN_0047A229	linker-pad			trailing 90/CC alignment fill
+0x0007a230	0x84	FUN_0047A230	unknown			-
+0x0007a2b4	0xc	FUN_0047A2B4	linker-pad			trailing 90/CC alignment fill
+0x0007a2c0	0x10c	FUN_0047A2C0	unknown			-
+0x0007a3cc	0x4	FUN_0047A3CC	linker-pad			trailing 90/CC alignment fill
+0x0007a3d0	0xd2	FUN_0047A3D0	unknown			-
+0x0007a4a2	0xe	FUN_0047A4A2	linker-pad			trailing 90/CC alignment fill
+0x0007a4b0	0x76	FUN_0047A4B0	unknown			-
+0x0007a526	0xa	FUN_0047A526	linker-pad			trailing 90/CC alignment fill
+0x0007a530	0x62	FUN_0047A530	unknown			-
+0x0007a592	0xe	FUN_0047A592	linker-pad			trailing 90/CC alignment fill
+0x0007a5a0	0x108	FUN_0047A5A0	unknown			-
+0x0007a6a8	0x8	FUN_0047A6A8	linker-pad			trailing 90/CC alignment fill
+0x0007a6b0	0x6e	FUN_0047A6B0	unknown			-
+0x0007a71e	0x2	FUN_0047A71E	linker-pad			trailing 90/CC alignment fill
+0x0007a720	0x4d	FUN_0047A720	unknown			-
+0x0007a76d	0x3	FUN_0047A76D	linker-pad			trailing 90/CC alignment fill
+0x0007a770	0xa1	FUN_0047A770	unknown			-
+0x0007a811	0xf	FUN_0047A811	linker-pad			trailing 90/CC alignment fill
+0x0007a820	0x3e	FUN_0047A820	unknown			-
+0x0007a85e	0x2	FUN_0047A85E	linker-pad			trailing 90/CC alignment fill
+0x0007a860	0x18	FUN_0047A860	unknown			-
+0x0007a878	0x8	FUN_0047A878	linker-pad			trailing 90/CC alignment fill
+0x0007a880	0x2b	FUN_0047A880	unknown			-
+0x0007a8ab	0x5	FUN_0047A8AB	linker-pad			trailing 90/CC alignment fill
+0x0007a8b0	0x7f	FUN_0047A8B0	unknown			-
+0x0007a92f	0x1	FUN_0047A92F	linker-pad			trailing 90/CC alignment fill
+0x0007a930	0xbd	FUN_0047A930	unknown			-
+0x0007a9ed	0x3	FUN_0047A9ED	linker-pad			trailing 90/CC alignment fill
+0x0007a9f0	0x66	FUN_0047A9F0	unknown			-
+0x0007aa56	0xa	FUN_0047AA56	linker-pad			trailing 90/CC alignment fill
+0x0007aa60	0x61	FUN_0047AA60	unknown			-
+0x0007aac1	0xf	FUN_0047AAC1	linker-pad			trailing 90/CC alignment fill
+0x0007aad0	0xce	FUN_0047AAD0	unknown			-
+0x0007ab9e	0x2	FUN_0047AB9E	linker-pad			trailing 90/CC alignment fill
+0x0007aba0	0x1bc	FUN_0047ABA0	unknown			-
+0x0007ad5c	0x4	FUN_0047AD5C	linker-pad			trailing 90/CC alignment fill
+0x0007ad60	0x68	FUN_0047AD60	unknown			-
+0x0007adc8	0x8	FUN_0047ADC8	linker-pad			trailing 90/CC alignment fill
+0x0007add0	0x82	FUN_0047ADD0	unknown			-
+0x0007ae52	0xe	FUN_0047AE52	linker-pad			trailing 90/CC alignment fill
+0x0007ae60	0x61	FUN_0047AE60	unknown			-
+0x0007aec1	0xf	FUN_0047AEC1	linker-pad			trailing 90/CC alignment fill
+0x0007aed0	0xeb	FUN_0047AED0	unknown			-
+0x0007afbb	0x5	FUN_0047AFBB	linker-pad			trailing 90/CC alignment fill
+0x0007afc0	0x21a	FUN_0047AFC0	unknown			-
+0x0007b1da	0x6	FUN_0047B1DA	linker-pad			trailing 90/CC alignment fill
+0x0007b1e0	0x3b	FUN_0047B1E0	unknown			-
+0x0007b21b	0x5	FUN_0047B21B	linker-pad			trailing 90/CC alignment fill
+0x0007b220	0x96	FUN_0047B220	unknown			-
+0x0007b2b6	0xa	FUN_0047B2B6	linker-pad			trailing 90/CC alignment fill
+0x0007b2c0	0xa1	FUN_0047B2C0	unknown			-
+0x0007b361	0xf	FUN_0047B361	linker-pad			trailing 90/CC alignment fill
+0x0007b370	0x39	FUN_0047B370	unknown			-
+0x0007b3a9	0x7	FUN_0047B3A9	linker-pad			trailing 90/CC alignment fill
+0x0007b3b0	0x39	FUN_0047B3B0	unknown			-
+0x0007b3e9	0x7	FUN_0047B3E9	linker-pad			trailing 90/CC alignment fill
+0x0007b3f0	0xd1	FUN_0047B3F0	unknown			-
+0x0007b4c1	0xf	FUN_0047B4C1	linker-pad			trailing 90/CC alignment fill
+0x0007b4d0	0x2d0	FUN_0047B4D0	unknown			-
+0x0007b7a0	0x211	FUN_0047B7A0	unknown			-
+0x0007b9b1	0xf	FUN_0047B9B1	linker-pad			trailing 90/CC alignment fill
+0x0007b9c0	0x108	FUN_0047B9C0	unknown			-
+0x0007bac8	0x2e	FUN_0047BAC8	unknown			-
+0x0007baf6	0x20	FUN_0047BAF6	unknown			-
+0x0007bb16	0x22	FUN_0047BB16	unknown			-
+0x0007bb38	0x8	FUN_0047BB38	linker-pad			trailing 90/CC alignment fill
+0x0007bb40	0x2e4	FUN_0047BB40	unknown			-
+0x0007be24	0xc	FUN_0047BE24	linker-pad			trailing 90/CC alignment fill
+0x0007be30	0x27c	FUN_0047BE30	unknown			-
+0x0007c0ac	0x4	FUN_0047C0AC	linker-pad			trailing 90/CC alignment fill
+0x0007c0b0	0xf5	FUN_0047C0B0	unknown			-
+0x0007c1a5	0xb	FUN_0047C1A5	linker-pad			trailing 90/CC alignment fill
+0x0007c1b0	0x46	FUN_0047C1B0	unknown			-
+0x0007c1f6	0xa	FUN_0047C1F6	linker-pad			trailing 90/CC alignment fill
+0x0007c200	0x11	FUN_0047C200	unknown			-
+0x0007c211	0xf	FUN_0047C211	linker-pad			trailing 90/CC alignment fill
+0x0007c220	0xd1	FUN_0047C220	unknown			-
+0x0007c2f1	0xf	FUN_0047C2F1	linker-pad			trailing 90/CC alignment fill
+0x0007c300	0x1f	FUN_0047C300	unknown			-
+0x0007c31f	0x1	FUN_0047C31F	linker-pad			trailing 90/CC alignment fill
+0x0007c320	0x1cb	FUN_0047C320	unknown			-
+0x0007c4eb	0x5	FUN_0047C4EB	linker-pad			trailing 90/CC alignment fill
+0x0007c4f0	0x33c	FUN_0047C4F0	unknown			-
+0x0007c82c	0x74	FUN_0047C82C	unknown			-
+0x0007c8a0	0xe6	FUN_0047C8A0	unknown			-
+0x0007c986	0x4b	FUN_0047C986	unknown			-
+0x0007c9d1	0x1	FUN_0047C9D1	linker-pad			trailing 90/CC alignment fill
+0x0007c9d2	0x43	FUN_0047C9D2	unknown			-
+0x0007ca15	0x3	FUN_0047CA15	linker-pad			trailing 90/CC alignment fill
+0x0007ca18	0x2a	FUN_0047CA18	unknown			-
+0x0007ca42	0x2	FUN_0047CA42	linker-pad			trailing 90/CC alignment fill
+0x0007ca44	0x25f	FUN_0047CA44	unknown			-
+0x0007cca3	0x1	FUN_0047CCA3	linker-pad			trailing 90/CC alignment fill
+0x0007cca4	0x258	FUN_0047CCA4	unknown			-
+0x0007cefc	0x4	FUN_0047CEFC	linker-pad			trailing 90/CC alignment fill
+0x0007cf00	0x63	FUN_0047CF00	unknown			-
+0x0007cf63	0xd	FUN_0047CF63	linker-pad			trailing 90/CC alignment fill
+0x0007cf70	0x53	FUN_0047CF70	unknown			-
+0x0007cfc3	0xd	FUN_0047CFC3	linker-pad			trailing 90/CC alignment fill
+0x0007cfd0	0x4	FUN_0047CFD0	unknown			-
+0x0007cfd4	0xc	FUN_0047CFD4	linker-pad			trailing 90/CC alignment fill
+0x0007cfe0	0x45	FUN_0047CFE0	unknown			-
+0x0007d025	0xb	FUN_0047D025	linker-pad			trailing 90/CC alignment fill
+0x0007d030	0x34	FUN_0047D030	unknown			-
+0x0007d064	0xc	FUN_0047D064	linker-pad			trailing 90/CC alignment fill
+0x0007d070	0x9d	FUN_0047D070	unknown			-
+0x0007d10d	0x3	FUN_0047D10D	linker-pad			trailing 90/CC alignment fill
+0x0007d110	0x134	FUN_0047D110	unknown			-
+0x0007d244	0xc	FUN_0047D244	linker-pad			trailing 90/CC alignment fill
+0x0007d250	0xb9	FUN_0047D250	unknown			-
+0x0007d309	0x7	FUN_0047D309	linker-pad			trailing 90/CC alignment fill
+0x0007d310	0x743	FUN_0047D310	unknown			-
+0x0007da53	0xd	FUN_0047DA53	linker-pad			trailing 90/CC alignment fill
+0x0007da60	0x14f	FUN_0047DA60	unknown			-
+0x0007dbaf	0x1	FUN_0047DBAF	linker-pad			trailing 90/CC alignment fill
+0x0007dbb0	0x23d	FUN_0047DBB0	unknown			-
+0x0007dded	0x3	FUN_0047DDED	linker-pad			trailing 90/CC alignment fill
+0x0007ddf0	0x1d9	FUN_0047DDF0	unknown			-
+0x0007dfc9	0x7	FUN_0047DFC9	linker-pad			trailing 90/CC alignment fill
+0x0007dfd0	0x127	FUN_0047DFD0	unknown			-
+0x0007e0f7	0x9	FUN_0047E0F7	linker-pad			trailing 90/CC alignment fill
+0x0007e100	0x66	FUN_0047E100	unknown			-
+0x0007e166	0xa	FUN_0047E166	linker-pad			trailing 90/CC alignment fill
+0x0007e170	0xb14	FUN_0047E170	unknown			-
+0x0007ec84	0xc	FUN_0047EC84	linker-pad			trailing 90/CC alignment fill
+0x0007ec90	0x182	FUN_0047EC90	unknown			-
+0x0007ee12	0xe	FUN_0047EE12	linker-pad			trailing 90/CC alignment fill
+0x0007ee20	0x45	FUN_0047EE20	unknown			-
+0x0007ee65	0xb	FUN_0047EE65	linker-pad			trailing 90/CC alignment fill
+0x0007ee70	0x75	FUN_0047EE70	unknown			-
+0x0007eee5	0xb	FUN_0047EEE5	linker-pad			trailing 90/CC alignment fill
+0x0007eef0	0x76	FUN_0047EEF0	unknown			-
+0x0007ef66	0xa	FUN_0047EF66	linker-pad			trailing 90/CC alignment fill
+0x0007ef70	0xda	FUN_0047EF70	unknown			-
+0x0007f04a	0x6	FUN_0047F04A	linker-pad			trailing 90/CC alignment fill
+0x0007f050	0x528	FUN_0047F050	unknown			-
+0x0007f578	0x8	FUN_0047F578	linker-pad			trailing 90/CC alignment fill
+0x0007f580	0xed	FUN_0047F580	unknown			-
+0x0007f66d	0x3	FUN_0047F66D	linker-pad			trailing 90/CC alignment fill
+0x0007f670	0x5a	FUN_0047F670	unknown			-
+0x0007f6ca	0x6	FUN_0047F6CA	linker-pad			trailing 90/CC alignment fill
+0x0007f6d0	0x7	FUN_0047F6D0	unknown			-
+0x0007f6d7	0x9	FUN_0047F6D7	linker-pad			trailing 90/CC alignment fill
+0x0007f6e0	0x16	FUN_0047F6E0	unknown			-
+0x0007f6f6	0xa	FUN_0047F6F6	linker-pad			trailing 90/CC alignment fill
+0x0007f700	0x1	FUN_0047F700	unknown			-
+0x0007f701	0xf	FUN_0047F701	linker-pad			trailing 90/CC alignment fill
+0x0007f710	0x25a	FUN_0047F710	unknown			-
+0x0007f96a	0x6	FUN_0047F96A	linker-pad			trailing 90/CC alignment fill
+0x0007f970	0xe3	FUN_0047F970	unknown			-
+0x0007fa53	0xd	FUN_0047FA53	linker-pad			trailing 90/CC alignment fill
+0x0007fa60	0x1bb	FUN_0047FA60	unknown			-
+0x0007fc1b	0x5	FUN_0047FC1B	linker-pad			trailing 90/CC alignment fill
+0x0007fc20	0x2f	FUN_0047FC20	unknown			-
+0x0007fc4f	0x1	FUN_0047FC4F	linker-pad			trailing 90/CC alignment fill
+0x0007fc50	0x7	FUN_0047FC50	unknown			-
+0x0007fc57	0x1	FUN_0047FC57	linker-pad			trailing 90/CC alignment fill
+0x0007fc58	0x4d	FUN_0047FC58	unknown			-
+0x0007fca5	0x85	FUN_0047FCA5	unknown			-
+0x0007fd2a	0xc9	FUN_0047FD2A	unknown			-
+0x0007fdf3	0x119	FUN_0047FDF3	unknown			-
+0x0007ff0c	0x153	FUN_0047FF0C	unknown			-
+0x0008005f	0x129	FUN_0048005F	unknown			-
+0x00080188	0x6	FUN_00480188	import-thunk	smkwai32.dll	ordinal_14	IAT RVA 0xd66c8
+0x0008018e	0x6	FUN_0048018E	import-thunk	smkwai32.dll	ordinal_29	IAT RVA 0xd66d4
+0x00080194	0x6	FUN_00480194	import-thunk	smkwai32.dll	ordinal_17	IAT RVA 0xd66bc
+0x0008019a	0x6	FUN_0048019A	import-thunk	smkwai32.dll	ordinal_20	IAT RVA 0xd66cc
+0x000801a0	0x6	FUN_004801A0	import-thunk	smkwai32.dll	ordinal_26	IAT RVA 0xd66c4
+0x000801a6	0x6	FUN_004801A6	import-thunk	smkwai32.dll	ordinal_31	IAT RVA 0xd66b0
+0x000801ac	0x6	FUN_004801AC	import-thunk	smkwai32.dll	ordinal_32	IAT RVA 0xd66ac
+0x000801b2	0x6	FUN_004801B2	import-thunk	smkwai32.dll	ordinal_21	IAT RVA 0xd66d0
+0x000801b8	0x6	FUN_004801B8	import-thunk	smkwai32.dll	ordinal_28	IAT RVA 0xd66c0
+0x000801be	0x6	FUN_004801BE	import-thunk	smkwai32.dll	ordinal_22	IAT RVA 0xd66b8
+0x000801c4	0x6	FUN_004801C4	import-thunk	smkwai32.dll	ordinal_50	IAT RVA 0xd66b4
+0x000801ca	0x6	FUN_004801CA	import-thunk	WING32.dll	WinGCreateBitmap	IAT RVA 0xd6728
+0x000801d0	0x6	FUN_004801D0	import-thunk	WING32.dll	WinGCreateDC	IAT RVA 0xd672c
+0x000801d6	0x6	FUN_004801D6	import-thunk	WING32.dll	WinGRecommendDIBFormat	IAT RVA 0xd6730
+0x000801dc	0x6	FUN_004801DC	import-thunk	WING32.dll	WinGSetDIBColorTable	IAT RVA 0xd6734
+0x000801e2	0x6	FUN_004801E2	import-thunk	WING32.dll	WinGStretchBlt	IAT RVA 0xd6738
+0x000801e8	0x6	FUN_004801E8	import-thunk	WING32.dll	WinGBitBlt	IAT RVA 0xd673c
+0x000801ee	0x2	FUN_004801EE	linker-pad			trailing 90/CC alignment fill
+0x000801f0	0x42	FUN_004801F0	crt-prefix	libc.lib:/9022	__global_unwind2	unique masked 24-byte prefix
+0x00080232	0x68	FUN_00480232	crt-exact	libc.lib:/9022	__local_unwind2	-
+0x0008029a	0x23	FUN_0048029A	crt-exact	libc.lib:/9022	__abnormal_termination	-
+0x000802bd	0x9	FUN_004802BD	crt-exact	libc.lib:/9022	__NLG_Notify1	-
+0x000802c6	0x18	FUN_004802C6	crt-exact	libc.lib:/9022	__NLG_Notify	-
+0x000802de	0x2	FUN_004802DE	linker-pad			trailing 90/CC alignment fill
+0x000802e0	0x35	FUN_004802E0	crt-exact	libc.lib:/1877	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	-
+0x00080315	0xb	FUN_00480315	linker-pad			trailing 90/CC alignment fill
+0x00080320	0x7	FUN_00480320	crt-order	libc.lib:/1877	?_CallMemberFunction0@@YGXPAX0@Z	between exact anchors 0x802e0,0x80350
+0x00080327	0x9	FUN_00480327	linker-pad			trailing 90/CC alignment fill
+0x00080330	0x7	FUN_00480330	crt-order	libc.lib:/1877	?_CallMemberFunction1@@YGXPAX00@Z	between exact anchors 0x802e0,0x80350
+0x00080337	0x9	FUN_00480337	linker-pad			trailing 90/CC alignment fill
+0x00080340	0x7	FUN_00480340	crt-order	libc.lib:/1877	?_CallMemberFunction2@@YGXPAX00H@Z	between exact anchors 0x802e0,0x80350
+0x00080347	0x9	FUN_00480347	linker-pad			trailing 90/CC alignment fill
+0x00080350	0x51	FUN_00480350	crt-exact	libc.lib:/1877	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	-
+0x000803a1	0xf	FUN_004803A1	linker-pad			trailing 90/CC alignment fill
+0x000803b0	0x3c	FUN_004803B0	crt-exact	libc.lib:/1877	___CxxFrameHandler	-
+0x000803ec	0x4	FUN_004803EC	linker-pad			trailing 90/CC alignment fill
+0x000803f0	0x99	FUN_004803F0	crt-prefix	libc.lib:/1877	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	unique masked 24-byte prefix
+0x00080489	0x7	FUN_00480489	linker-pad			trailing 90/CC alignment fill
+0x00080490	0xd3	FUN_00480490	crt-prefix	libc.lib:/1877	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	unique masked 24-byte prefix
+0x00080563	0xd	FUN_00480563	linker-pad			trailing 90/CC alignment fill
+0x00080570	0x6b	FUN_00480570	crt-exact	libc.lib:/1877	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	-
+0x000805db	0x5	FUN_004805DB	linker-pad			trailing 90/CC alignment fill
+0x000805e0	0xe	FUN_004805E0	crt-band	libc.lib:(link-band)	__crt_004805E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000805ee	0x2	FUN_004805EE	linker-pad			trailing 90/CC alignment fill
+0x000805f0	0x7	FUN_004805F0	crt-band	libc.lib:(link-band)	__crt_004805F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000805f7	0x1	FUN_004805F7	linker-pad			trailing 90/CC alignment fill
+0x000805f8	0xe0	FUN_004805F8	crt-band	libc.lib:(link-band)	__crt_004805F8	LIBC band 0x801f0..text-end; symbol unresolved
+0x000806d8	0x8	FUN_004806D8	linker-pad			trailing 90/CC alignment fill
+0x000806e0	0x10	FUN_004806E0	crt-band	libc.lib:(link-band)	__crt_004806E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000806f0	0x67	FUN_004806F0	crt-exact	libc.lib:/14048	_sprintf	-
+0x00080757	0x9	FUN_00480757	linker-pad			trailing 90/CC alignment fill
+0x00080760	0xa4	FUN_00480760	crt-exact	libc.lib:/152	_atol	-
+0x00080804	0xc	FUN_00480804	linker-pad			trailing 90/CC alignment fill
+0x00080810	0xe	FUN_00480810	crt-band	libc.lib:(link-band)	__crt_00480810	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008081e	0x2	FUN_0048081E	linker-pad			trailing 90/CC alignment fill
+0x00080820	0x58	FUN_00480820	crt-exact	libc.lib:/15134	_memset	-
+0x00080878	0x8	FUN_00480878	linker-pad			trailing 90/CC alignment fill
+0x00080880	0x18	FUN_00480880	crt-exact	libc.lib:/3760	_free	-
+0x00080898	0x8	FUN_00480898	linker-pad			trailing 90/CC alignment fill
+0x000808a0	0x14e	FUN_004808A0	crt-band	libc.lib:(link-band)	__crt_004808A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000809ee	0x2	FUN_004809EE	linker-pad			trailing 90/CC alignment fill
+0x000809f0	0x14	FUN_004809F0	crt-exact	libc.lib:/4008	_malloc	-
+0x00080a04	0xc	FUN_00480A04	linker-pad			trailing 90/CC alignment fill
+0x00080a10	0x40	FUN_00480A10	crt-band	libc.lib:(link-band)	__crt_00480A10	LIBC band 0x801f0..text-end; symbol unresolved
+0x00080a50	0x15	FUN_00480A50	crt-band	libc.lib:(link-band)	__crt_00480A50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00080a65	0x3	FUN_00480A65	linker-pad			trailing 90/CC alignment fill
+0x00080a68	0x27	FUN_00480A68	crt-exact	libc.lib:/19928	__ftol	-
+0x00080a8f	0x1	FUN_00480A8F	linker-pad			trailing 90/CC alignment fill
+0x00080a90	0x21	FUN_00480A90	crt-band	libc.lib:(link-band)	__crt_00480A90	LIBC band 0x801f0..text-end; symbol unresolved
+0x00080ab1	0xf	FUN_00480AB1	linker-pad			trailing 90/CC alignment fill
+0x00080ac0	0x38	FUN_00480AC0	crt-exact	libc.lib:/18959	__cfltcvt_init	-
+0x00080af8	0x8	FUN_00480AF8	linker-pad			trailing 90/CC alignment fill
+0x00080b00	0x117	FUN_00480B00	crt-exact	libc.lib:/19670	_fdiv_main_routine	-
+0x00080c17	0x49f	FUN_00480C17	crt-exact	libc.lib:/19670	__adj_fdiv_r	-
+0x000810b6	0x13	FUN_004810B6	crt-exact	libc.lib:/19670	__fdivp_sti_st	-
+0x000810c9	0x13	FUN_004810C9	crt-exact	libc.lib:/19670	__fdivrp_sti_st	-
+0x000810dc	0x4c	FUN_004810DC	crt-exact	libc.lib:/19670	__adj_fdiv_m32	-
+0x00081128	0xb4	FUN_00481128	crt-band	libc.lib:(link-band)	__crt_00481128	LIBC band 0x801f0..text-end; symbol unresolved
+0x000811dc	0x4c	FUN_004811DC	crt-exact	libc.lib:/19670	__adj_fdivr_m32	-
+0x00081228	0x663	FUN_00481228	crt-band	libc.lib:(link-band)	__crt_00481228	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008188b	0x5	FUN_0048188B	linker-pad			trailing 90/CC alignment fill
+0x00081890	0xa	FUN_00481890	crt-band	libc.lib:(link-band)	__crt_00481890	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008189a	0x6	FUN_0048189A	linker-pad			trailing 90/CC alignment fill
+0x000818a0	0x77	FUN_004818A0	crt-exact	libc.lib:/15346	_strlen	-
+0x00081917	0x9	FUN_00481917	linker-pad			trailing 90/CC alignment fill
+0x00081920	0x1f	FUN_00481920	crt-exact	libc.lib:/15011	_memcmp	-
+0x0008193f	0x1	FUN_0048193F	linker-pad			trailing 90/CC alignment fill
+0x00081940	0x3f	FUN_00481940	crt-band	libc.lib:(link-band)	__crt_00481940	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008197f	0x1	FUN_0048197F	linker-pad			trailing 90/CC alignment fill
+0x00081980	0x5f	FUN_00481980	crt-band	libc.lib:(link-band)	__crt_00481980	LIBC band 0x801f0..text-end; symbol unresolved
+0x000819df	0x1	FUN_004819DF	linker-pad			trailing 90/CC alignment fill
+0x000819e0	0x64	FUN_004819E0	crt-prefix	libc.lib:/12443	_fputs	unique masked 24-byte prefix
+0x00081a44	0xc	FUN_00481A44	linker-pad			trailing 90/CC alignment fill
+0x00081a50	0x3a	FUN_00481A50	crt-band	libc.lib:(link-band)	__crt_00481A50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081a8a	0x6	FUN_00481A8A	linker-pad			trailing 90/CC alignment fill
+0x00081a90	0x15	FUN_00481A90	crt-band	libc.lib:(link-band)	__crt_00481A90	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081aa5	0xb	FUN_00481AA5	linker-pad			trailing 90/CC alignment fill
+0x00081ab0	0x44	FUN_00481AB0	crt-band	libc.lib:(link-band)	__crt_00481AB0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081af4	0xc	FUN_00481AF4	linker-pad			trailing 90/CC alignment fill
+0x00081b00	0x14e	FUN_00481B00	crt-band	libc.lib:(link-band)	__crt_00481B00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081c4e	0x2	FUN_00481C4E	linker-pad			trailing 90/CC alignment fill
+0x00081c50	0x84	FUN_00481C50	crt-exact	libc.lib:/15224	_strcmp	-
+0x00081cd4	0xc	FUN_00481CD4	linker-pad			trailing 90/CC alignment fill
+0x00081ce0	0x18	FUN_00481CE0	crt-exact	libc.lib:/15194	_strchr	-
+0x00081cf8	0x8	FUN_00481CF8	linker-pad			trailing 90/CC alignment fill
+0x00081d00	0xd	FUN_00481D00	crt-band	libc.lib:(link-band)	__crt_00481D00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081d0d	0x3	FUN_00481D0D	linker-pad			trailing 90/CC alignment fill
+0x00081d10	0x2f	FUN_00481D10	crt-band	libc.lib:(link-band)	__crt_00481D10	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081d3f	0x1	FUN_00481D3F	linker-pad			trailing 90/CC alignment fill
+0x00081d40	0x30	FUN_00481D40	crt-exact	libc.lib:/11499	__cinit	-
+0x00081d70	0x12	FUN_00481D70	crt-exact	libc.lib:/11499	_exit	-
+0x00081d82	0xe	FUN_00481D82	linker-pad			trailing 90/CC alignment fill
+0x00081d90	0x12	FUN_00481D90	crt-exact	libc.lib:/11499	__exit	-
+0x00081da2	0xe	FUN_00481DA2	linker-pad			trailing 90/CC alignment fill
+0x00081db0	0x8d	FUN_00481DB0	crt-band	libc.lib:(link-band)	__crt_00481DB0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081e3d	0x3	FUN_00481E3D	linker-pad			trailing 90/CC alignment fill
+0x00081e40	0xb	FUN_00481E40	crt-band	libc.lib:(link-band)	__crt_00481E40	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081e4b	0x5	FUN_00481E4B	linker-pad			trailing 90/CC alignment fill
+0x00081e50	0xb	FUN_00481E50	crt-band	libc.lib:(link-band)	__crt_00481E50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081e5b	0x5	FUN_00481E5B	linker-pad			trailing 90/CC alignment fill
+0x00081e60	0x20	FUN_00481E60	crt-band	libc.lib:(link-band)	__crt_00481E60	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081e80	0x24	FUN_00481E80	crt-exact	libc.lib:/15438	_strncpy	-
+0x00081ea4	0xc	FUN_00481EA4	linker-pad			trailing 90/CC alignment fill
+0x00081eb0	0x37	FUN_00481EB0	crt-band	libc.lib:(link-band)	__crt_00481EB0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081ee7	0x9	FUN_00481EE7	linker-pad			trailing 90/CC alignment fill
+0x00081ef0	0x146	FUN_00481EF0	crt-band	libc.lib:(link-band)	__crt_00481EF0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082036	0xa	FUN_00482036	linker-pad			trailing 90/CC alignment fill
+0x00082040	0x32	FUN_00482040	crt-band	libc.lib:(link-band)	__crt_00482040	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082072	0xe	FUN_00482072	linker-pad			trailing 90/CC alignment fill
+0x00082080	0x9a	FUN_00482080	crt-band	libc.lib:(link-band)	__crt_00482080	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008211a	0x6	FUN_0048211A	linker-pad			trailing 90/CC alignment fill
+0x00082120	0x28	FUN_00482120	crt-band	libc.lib:(link-band)	__crt_00482120	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082148	0x8	FUN_00482148	linker-pad			trailing 90/CC alignment fill
+0x00082150	0x1a1	FUN_00482150	crt-band	libc.lib:(link-band)	__crt_00482150	LIBC band 0x801f0..text-end; symbol unresolved
+0x000822f1	0xf	FUN_004822F1	linker-pad			trailing 90/CC alignment fill
+0x00082300	0x38	FUN_00482300	crt-exact	libc.lib:/15407	_strncmp	-
+0x00082338	0x8	FUN_00482338	linker-pad			trailing 90/CC alignment fill
+0x00082340	0x37	FUN_00482340	crt-band	libc.lib:(link-band)	__crt_00482340	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082377	0x9	FUN_00482377	linker-pad			trailing 90/CC alignment fill
+0x00082380	0x180	FUN_00482380	crt-prefix	libc.lib:/13455	_fwrite	unique masked 24-byte prefix
+0x00082500	0x78	FUN_00482500	crt-band	libc.lib:(link-band)	__crt_00482500	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082578	0x8	FUN_00482578	linker-pad			trailing 90/CC alignment fill
+0x00082580	0x82	FUN_00482580	crt-band	libc.lib:(link-band)	__crt_00482580	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082602	0xe	FUN_00482602	linker-pad			trailing 90/CC alignment fill
+0x00082610	0xa4	FUN_00482610	crt-exact	libc.lib:/1152	__chdir	-
+0x000826b4	0xc	FUN_004826B4	linker-pad			trailing 90/CC alignment fill
+0x000826c0	0x199	FUN_004826C0	crt-band	libc.lib:(link-band)	__crt_004826C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082859	0x7	FUN_00482859	linker-pad			trailing 90/CC alignment fill
+0x00082860	0x2a	FUN_00482860	crt-exact	libc.lib:/11957	__amsg_exit	2 byte-identical candidates
+0x0008288a	0x6	FUN_0048288A	linker-pad			trailing 90/CC alignment fill
+0x00082890	0x6e	FUN_00482890	crt-band	libc.lib:(link-band)	__crt_00482890	LIBC band 0x801f0..text-end; symbol unresolved
+0x000828fe	0x2	FUN_004828FE	linker-pad			trailing 90/CC alignment fill
+0x00082900	0x89	FUN_00482900	crt-band	libc.lib:(link-band)	__crt_00482900	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082989	0x7	FUN_00482989	linker-pad			trailing 90/CC alignment fill
+0x00082990	0x78	FUN_00482990	crt-band	libc.lib:(link-band)	__crt_00482990	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082a08	0x8	FUN_00482A08	linker-pad			trailing 90/CC alignment fill
+0x00082a10	0x22c	FUN_00482A10	crt-band	libc.lib:(link-band)	__crt_00482A10	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082c3c	0x4	FUN_00482C3C	linker-pad			trailing 90/CC alignment fill
+0x00082c40	0x1a	FUN_00482C40	crt-band	libc.lib:(link-band)	__crt_00482C40	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082c5a	0x6	FUN_00482C5A	linker-pad			trailing 90/CC alignment fill
+0x00082c60	0x45d	FUN_00482C60	crt-band	libc.lib:(link-band)	__crt_00482C60	LIBC band 0x801f0..text-end; symbol unresolved
+0x000830bd	0x3	FUN_004830BD	linker-pad			trailing 90/CC alignment fill
+0x000830c0	0x78	FUN_004830C0	crt-band	libc.lib:(link-band)	__crt_004830C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083138	0x8	FUN_00483138	linker-pad			trailing 90/CC alignment fill
+0x00083140	0x1fb	FUN_00483140	crt-band	libc.lib:(link-band)	__crt_00483140	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008333b	0x5	FUN_0048333B	linker-pad			trailing 90/CC alignment fill
+0x00083340	0xc7	FUN_00483340	crt-band	libc.lib:(link-band)	__crt_00483340	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083407	0x9	FUN_00483407	linker-pad			trailing 90/CC alignment fill
+0x00083410	0xa2	FUN_00483410	crt-prefix	libc.lib:/15315	__stricmp	unique masked 24-byte prefix
+0x000834b2	0xe	FUN_004834B2	linker-pad			trailing 90/CC alignment fill
+0x000834c0	0x5b	FUN_004834C0	crt-band	libc.lib:(link-band)	__crt_004834C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008351b	0x5	FUN_0048351B	linker-pad			trailing 90/CC alignment fill
+0x00083520	0x6e	FUN_00483520	crt-band	libc.lib:(link-band)	__crt_00483520	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008358e	0x2	FUN_0048358E	linker-pad			trailing 90/CC alignment fill
+0x00083590	0xbc	FUN_00483590	crt-exact	libc.lib:/1973	___InternalCxxFrameHandler	-
+0x0008364c	0x4	FUN_0048364C	linker-pad			trailing 90/CC alignment fill
+0x00083650	0x29e	FUN_00483650	crt-prefix	libc.lib:/1973	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	unique masked 24-byte prefix
+0x000838ee	0x2	FUN_004838EE	linker-pad			trailing 90/CC alignment fill
+0x000838f0	0xd6	FUN_004838F0	crt-band	libc.lib:(link-band)	__crt_004838F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000839c6	0xa	FUN_004839C6	linker-pad			trailing 90/CC alignment fill
+0x000839d0	0x9f	FUN_004839D0	crt-prefix	libc.lib:/1973	?GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	unique masked 24-byte prefix
+0x00083a6f	0x1	FUN_00483A6F	linker-pad			trailing 90/CC alignment fill
+0x00083a70	0xe6	FUN_00483A70	crt-band	libc.lib:(link-band)	__crt_00483A70	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083b56	0xa	FUN_00483B56	linker-pad			trailing 90/CC alignment fill
+0x00083b60	0x94	FUN_00483B60	crt-band	libc.lib:(link-band)	__crt_00483B60	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083bf4	0xc	FUN_00483BF4	linker-pad			trailing 90/CC alignment fill
+0x00083c00	0x14c	FUN_00483C00	crt-band	libc.lib:(link-band)	__crt_00483C00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083d4c	0x4	FUN_00483D4C	linker-pad			trailing 90/CC alignment fill
+0x00083d50	0x1fe	FUN_00483D50	crt-band	libc.lib:(link-band)	__crt_00483D50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083f4e	0x2	FUN_00483F4E	linker-pad			trailing 90/CC alignment fill
+0x00083f50	0x71	FUN_00483F50	crt-exact	libc.lib:/1973	?DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	-
+0x00083fc1	0xf	FUN_00483FC1	linker-pad			trailing 90/CC alignment fill
+0x00083fd0	0x21	FUN_00483FD0	crt-exact	libc.lib:/1973	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	-
+0x00083ff1	0xf	FUN_00483FF1	linker-pad			trailing 90/CC alignment fill
+0x00084000	0x48	FUN_00484000	crt-exact	libc.lib:/1909	__CallSettingFrame@12	-
+0x00084048	0x8	FUN_00484048	linker-pad			trailing 90/CC alignment fill
+0x00084050	0x60	FUN_00484050	crt-band	libc.lib:(link-band)	__crt_00484050	LIBC band 0x801f0..text-end; symbol unresolved
+0x000840b0	0x13	FUN_004840B0	crt-band	libc.lib:(link-band)	__crt_004840B0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000840c3	0xd	FUN_004840C3	linker-pad			trailing 90/CC alignment fill
+0x000840d0	0x6f	FUN_004840D0	crt-band	libc.lib:(link-band)	__crt_004840D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008413f	0x1	FUN_0048413F	linker-pad			trailing 90/CC alignment fill
+0x00084140	0x14d	FUN_00484140	crt-band	libc.lib:(link-band)	__crt_00484140	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008428d	0x3	FUN_0048428D	linker-pad			trailing 90/CC alignment fill
+0x00084290	0x9da	FUN_00484290	crt-prefix	libc.lib:/13630	__output	unique masked 24-byte prefix
+0x00084c6a	0x6	FUN_00484C6A	linker-pad			trailing 90/CC alignment fill
+0x00084c70	0x41	FUN_00484C70	crt-exact	libc.lib:/13630	_write_char	-
+0x00084cb1	0xf	FUN_00484CB1	linker-pad			trailing 90/CC alignment fill
+0x00084cc0	0x31	FUN_00484CC0	crt-exact	libc.lib:/13630	_write_multi_char	-
+0x00084cf1	0xf	FUN_00484CF1	linker-pad			trailing 90/CC alignment fill
+0x00084d00	0x37	FUN_00484D00	crt-exact	libc.lib:/13630	_write_string	-
+0x00084d37	0x9	FUN_00484D37	linker-pad			trailing 90/CC alignment fill
+0x00084d40	0xf	FUN_00484D40	crt-exact	libc.lib:/12938	_get_int_arg	3 byte-identical candidates
+0x00084d4f	0x1	FUN_00484D4F	linker-pad			trailing 90/CC alignment fill
+0x00084d50	0x15	FUN_00484D50	crt-exact	libc.lib:/12938	_get_int64_arg	3 byte-identical candidates
+0x00084d65	0xb	FUN_00484D65	linker-pad			trailing 90/CC alignment fill
+0x00084d70	0x10	FUN_00484D70	crt-exact	libc.lib:/13630	_get_short_arg	-
+0x00084d80	0x91	FUN_00484D80	crt-exact	libc.lib:/236	__isctype	-
+0x00084e11	0xf	FUN_00484E11	linker-pad			trailing 90/CC alignment fill
+0x00084e20	0x15	FUN_00484E20	crt-band	libc.lib:(link-band)	__crt_00484E20	LIBC band 0x801f0..text-end; symbol unresolved
+0x00084e35	0xb	FUN_00484E35	linker-pad			trailing 90/CC alignment fill
+0x00084e40	0x3e	FUN_00484E40	crt-band	libc.lib:(link-band)	__crt_00484E40	LIBC band 0x801f0..text-end; symbol unresolved
+0x00084e7e	0x2	FUN_00484E7E	linker-pad			trailing 90/CC alignment fill
+0x00084e80	0x13	FUN_00484E80	crt-exact	libc.lib:/12144	__setdefaultprecision	-
+0x00084e93	0xd	FUN_00484E93	linker-pad			trailing 90/CC alignment fill
+0x00084ea0	0x4f	FUN_00484EA0	crt-exact	libc.lib:/20119	__ms_p5_test_fdiv	-
+0x00084eef	0x1	FUN_00484EEF	linker-pad			trailing 90/CC alignment fill
+0x00084ef0	0x25c	FUN_00484EF0	crt-prefix	libc.lib:/20119	__ms_p5_mp_test_fdiv	unique masked 24-byte prefix
+0x0008514c	0x4	FUN_0048514C	linker-pad			trailing 90/CC alignment fill
+0x00085150	0x77	FUN_00485150	crt-band	libc.lib:(link-band)	__crt_00485150	LIBC band 0x801f0..text-end; symbol unresolved
+0x000851c7	0x9	FUN_004851C7	linker-pad			trailing 90/CC alignment fill
+0x000851d0	0xe4	FUN_004851D0	crt-band	libc.lib:(link-band)	__crt_004851D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000852b4	0xc	FUN_004852B4	linker-pad			trailing 90/CC alignment fill
+0x000852c0	0x68	FUN_004852C0	crt-band	libc.lib:(link-band)	__crt_004852C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085328	0x8	FUN_00485328	linker-pad			trailing 90/CC alignment fill
+0x00085330	0xbe	FUN_00485330	crt-band	libc.lib:(link-band)	__crt_00485330	LIBC band 0x801f0..text-end; symbol unresolved
+0x000853ee	0x2	FUN_004853EE	linker-pad			trailing 90/CC alignment fill
+0x000853f0	0x115	FUN_004853F0	crt-band	libc.lib:(link-band)	__crt_004853F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085505	0xb	FUN_00485505	linker-pad			trailing 90/CC alignment fill
+0x00085510	0x2b	FUN_00485510	crt-exact	libc.lib:/18929	__shift	-
+0x0008553b	0x5	FUN_0048553B	linker-pad			trailing 90/CC alignment fill
+0x00085540	0x2a	FUN_00485540	crt-band	libc.lib:(link-band)	__crt_00485540	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008556a	0x6	FUN_0048556A	linker-pad			trailing 90/CC alignment fill
+0x00085570	0x68	FUN_00485570	crt-band	libc.lib:(link-band)	__crt_00485570	LIBC band 0x801f0..text-end; symbol unresolved
+0x000855d8	0x8	FUN_004855D8	linker-pad			trailing 90/CC alignment fill
+0x000855e0	0x17	FUN_004855E0	crt-band	libc.lib:(link-band)	__crt_004855E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000855f7	0x9	FUN_004855F7	linker-pad			trailing 90/CC alignment fill
+0x00085600	0x36	FUN_00485600	crt-band	libc.lib:(link-band)	__crt_00485600	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085636	0xa	FUN_00485636	linker-pad			trailing 90/CC alignment fill
+0x00085640	0x28	FUN_00485640	crt-band	libc.lib:(link-band)	__crt_00485640	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085668	0x8	FUN_00485668	linker-pad			trailing 90/CC alignment fill
+0x00085670	0x36	FUN_00485670	crt-band	libc.lib:(link-band)	__crt_00485670	LIBC band 0x801f0..text-end; symbol unresolved
+0x000856a6	0xa	FUN_004856A6	linker-pad			trailing 90/CC alignment fill
+0x000856b0	0x28	FUN_004856B0	crt-band	libc.lib:(link-band)	__crt_004856B0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000856d8	0x8	FUN_004856D8	linker-pad			trailing 90/CC alignment fill
+0x000856e0	0x39	FUN_004856E0	crt-exact	libc.lib:/12751	__freebuf	-
+0x00085719	0x7	FUN_00485719	linker-pad			trailing 90/CC alignment fill
+0x00085720	0x3c	FUN_00485720	crt-band	libc.lib:(link-band)	__crt_00485720	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008575c	0x4	FUN_0048575C	linker-pad			trailing 90/CC alignment fill
+0x00085760	0x7b	FUN_00485760	crt-prefix	libc.lib:/13059	__flush	unique masked 24-byte prefix
+0x000857db	0x5	FUN_004857DB	linker-pad			trailing 90/CC alignment fill
+0x000857e0	0xb9	FUN_004857E0	crt-band	libc.lib:(link-band)	__crt_004857E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085899	0x7	FUN_00485899	linker-pad			trailing 90/CC alignment fill
+0x000858a0	0x92	FUN_004858A0	crt-exact	libc.lib:/12843	__stbuf	-
+0x00085932	0xe	FUN_00485932	linker-pad			trailing 90/CC alignment fill
+0x00085940	0x38	FUN_00485940	crt-band	libc.lib:(link-band)	__crt_00485940	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085978	0x8	FUN_00485978	linker-pad			trailing 90/CC alignment fill
+0x00085980	0x20e	FUN_00485980	crt-exact	libc.lib:/12814	__openfile	-
+0x00085b8e	0x2	FUN_00485B8E	linker-pad			trailing 90/CC alignment fill
+0x00085b90	0x2f7	FUN_00485B90	crt-band	libc.lib:(link-band)	__crt_00485B90	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085e87	0x9	FUN_00485E87	linker-pad			trailing 90/CC alignment fill
+0x00085e90	0x3e	FUN_00485E90	crt-band	libc.lib:(link-band)	__crt_00485E90	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085ece	0x3d	FUN_00485ECE	crt-band	libc.lib:(link-band)	__crt_00485ECE	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085f0b	0x48	FUN_00485F0B	crt-band	libc.lib:(link-band)	__crt_00485F0B	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085f53	0x7	FUN_00485F53	crt-band	libc.lib:(link-band)	__crt_00485F53	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085f5a	0x131	FUN_00485F5A	crt-band	libc.lib:(link-band)	__crt_00485F5A	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008608b	0x33	FUN_0048608B	crt-band	libc.lib:(link-band)	__crt_0048608B	LIBC band 0x801f0..text-end; symbol unresolved
+0x000860be	0x3c	FUN_004860BE	crt-exact	libc.lib:/19196	__fload	-
+0x000860fa	0x6	FUN_004860FA	linker-pad			trailing 90/CC alignment fill
+0x00086100	0xf5	FUN_00486100	crt-band	libc.lib:(link-band)	__crt_00486100	LIBC band 0x801f0..text-end; symbol unresolved
+0x000861f5	0xb	FUN_004861F5	linker-pad			trailing 90/CC alignment fill
+0x00086200	0x73	FUN_00486200	crt-band	libc.lib:(link-band)	__crt_00486200	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086273	0xd	FUN_00486273	linker-pad			trailing 90/CC alignment fill
+0x00086280	0x9	FUN_00486280	crt-band	libc.lib:(link-band)	__crt_00486280	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086289	0x7	FUN_00486289	linker-pad			trailing 90/CC alignment fill
+0x00086290	0x9	FUN_00486290	crt-band	libc.lib:(link-band)	__crt_00486290	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086299	0x7	FUN_00486299	linker-pad			trailing 90/CC alignment fill
+0x000862a0	0x1db	FUN_004862A0	crt-band	libc.lib:(link-band)	__crt_004862A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008647b	0x5	FUN_0048647B	linker-pad			trailing 90/CC alignment fill
+0x00086480	0x146	FUN_00486480	crt-band	libc.lib:(link-band)	__crt_00486480	LIBC band 0x801f0..text-end; symbol unresolved
+0x000865c6	0xa	FUN_004865C6	linker-pad			trailing 90/CC alignment fill
+0x000865d0	0xa4	FUN_004865D0	crt-band	libc.lib:(link-band)	__crt_004865D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086674	0xc	FUN_00486674	linker-pad			trailing 90/CC alignment fill
+0x00086680	0x91	FUN_00486680	crt-band	libc.lib:(link-band)	__crt_00486680	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086711	0xf	FUN_00486711	linker-pad			trailing 90/CC alignment fill
+0x00086720	0x4a	FUN_00486720	crt-band	libc.lib:(link-band)	__crt_00486720	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008676a	0x6	FUN_0048676A	linker-pad			trailing 90/CC alignment fill
+0x00086770	0x61	FUN_00486770	crt-band	libc.lib:(link-band)	__crt_00486770	LIBC band 0x801f0..text-end; symbol unresolved
+0x000867d1	0xf	FUN_004867D1	linker-pad			trailing 90/CC alignment fill
+0x000867e0	0x28	FUN_004867E0	crt-band	libc.lib:(link-band)	__crt_004867E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086808	0x8	FUN_00486808	linker-pad			trailing 90/CC alignment fill
+0x00086810	0x8d	FUN_00486810	crt-exact	libc.lib:/8927	__mbctoupper	-
+0x0008689d	0x3	FUN_0048689D	linker-pad			trailing 90/CC alignment fill
+0x000868a0	0x14f	FUN_004868A0	crt-band	libc.lib:(link-band)	__crt_004868A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000869ef	0x1	FUN_004869EF	linker-pad			trailing 90/CC alignment fill
+0x000869f0	0x2f	FUN_004869F0	crt-band	libc.lib:(link-band)	__crt_004869F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086a1f	0x1	FUN_00486A1F	linker-pad			trailing 90/CC alignment fill
+0x00086a20	0x12	FUN_00486A20	crt-exact	libc.lib:/7122	__ismbblead	-
+0x00086a32	0xe	FUN_00486A32	linker-pad			trailing 90/CC alignment fill
+0x00086a40	0x3a	FUN_00486A40	crt-exact	libc.lib:/7122	_x_ismbbtype	-
+0x00086a7a	0x6	FUN_00486A7A	linker-pad			trailing 90/CC alignment fill
+0x00086a80	0xdb	FUN_00486A80	crt-exact	libc.lib:/11745	__setenvp	-
+0x00086b5b	0x5	FUN_00486B5B	linker-pad			trailing 90/CC alignment fill
+0x00086b60	0x9b	FUN_00486B60	crt-exact	libc.lib:/11714	__setargv	-
+0x00086bfb	0x5	FUN_00486BFB	linker-pad			trailing 90/CC alignment fill
+0x00086c00	0x1d2	FUN_00486C00	crt-exact	libc.lib:/11714	_parse_cmdline	-
+0x00086dd2	0xe	FUN_00486DD2	linker-pad			trailing 90/CC alignment fill
+0x00086de0	0x19b	FUN_00486DE0	crt-exact	libc.lib:/9412	___crtGetEnvironmentStringsA	-
+0x00086f7b	0x5	FUN_00486F7B	linker-pad			trailing 90/CC alignment fill
+0x00086f80	0x223	FUN_00486F80	crt-band	libc.lib:(link-band)	__crt_00486F80	LIBC band 0x801f0..text-end; symbol unresolved
+0x000871a3	0xd	FUN_004871A3	linker-pad			trailing 90/CC alignment fill
+0x000871b0	0x4d	FUN_004871B0	crt-exact	libc.lib:/7620	_getSystemCP	-
+0x000871fd	0x3	FUN_004871FD	linker-pad			trailing 90/CC alignment fill
+0x00087200	0x5f	FUN_00487200	crt-exact	libc.lib:/7620	_CPtoLCID	-
+0x0008725f	0x1	FUN_0048725F	linker-pad			trailing 90/CC alignment fill
+0x00087260	0x2c	FUN_00487260	crt-exact	libc.lib:/7620	_setSBCS	-
+0x0008728c	0x4	FUN_0048728C	linker-pad			trailing 90/CC alignment fill
+0x00087290	0xd1	FUN_00487290	crt-band	libc.lib:(link-band)	__crt_00487290	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087361	0x1b	FUN_00487361	crt-exact	libc.lib:/9081	__seh_longjmp_unwind@4	-
+0x0008737c	0x4	FUN_0048737C	linker-pad			trailing 90/CC alignment fill
+0x00087380	0x3d	FUN_00487380	crt-exact	libc.lib:/11592	__FF_MSGBANNER	-
+0x000873bd	0x3	FUN_004873BD	linker-pad			trailing 90/CC alignment fill
+0x000873c0	0x1ee	FUN_004873C0	crt-prefix	libc.lib:/11592	__NMSG_WRITE	unique masked 24-byte prefix
+0x000875ae	0x2	FUN_004875AE	linker-pad			trailing 90/CC alignment fill
+0x000875b0	0x132	FUN_004875B0	crt-band	libc.lib:(link-band)	__crt_004875B0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000876e2	0xe	FUN_004876E2	linker-pad			trailing 90/CC alignment fill
+0x000876f0	0x44	FUN_004876F0	crt-band	libc.lib:(link-band)	__crt_004876F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087734	0xc	FUN_00487734	linker-pad			trailing 90/CC alignment fill
+0x00087740	0x18d	FUN_00487740	crt-prefix	libc.lib:/478	_tolower	unique masked 24-byte prefix
+0x000878cd	0x3	FUN_004878CD	linker-pad			trailing 90/CC alignment fill
+0x000878d0	0x7b	FUN_004878D0	crt-band	libc.lib:(link-band)	__crt_004878D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008794b	0x5	FUN_0048794B	linker-pad			trailing 90/CC alignment fill
+0x00087950	0x73	FUN_00487950	crt-band	libc.lib:(link-band)	__crt_00487950	LIBC band 0x801f0..text-end; symbol unresolved
+0x000879c3	0xd	FUN_004879C3	linker-pad			trailing 90/CC alignment fill
+0x000879d0	0x20	FUN_004879D0	crt-band	libc.lib:(link-band)	__crt_004879D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000879f0	0x20	FUN_004879F0	crt-band	libc.lib:(link-band)	__crt_004879F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087a10	0x1b	FUN_00487A10	crt-exact	libc.lib:/2120	?_ValidateExecute@@YAHP6GHXZ@Z	-
+0x00087a2b	0x5	FUN_00487A2B	linker-pad			trailing 90/CC alignment fill
+0x00087a30	0x52	FUN_00487A30	crt-band	libc.lib:(link-band)	__crt_00487A30	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087a82	0xe	FUN_00487A82	linker-pad			trailing 90/CC alignment fill
+0x00087a90	0x4b	FUN_00487A90	crt-exact	libc.lib:/12783	__getbuf	-
+0x00087adb	0x5	FUN_00487ADB	linker-pad			trailing 90/CC alignment fill
+0x00087ae0	0x114	FUN_00487AE0	crt-band	libc.lib:(link-band)	__crt_00487AE0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087bf4	0xc	FUN_00487BF4	linker-pad			trailing 90/CC alignment fill
+0x00087c00	0x2e	FUN_00487C00	crt-band	libc.lib:(link-band)	__crt_00487C00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087c2e	0x2	FUN_00487C2E	linker-pad			trailing 90/CC alignment fill
+0x00087c30	0x94	FUN_00487C30	crt-prefix	libc.lib:/696	_wctomb	unique masked 24-byte prefix
+0x00087cc4	0xc	FUN_00487CC4	linker-pad			trailing 90/CC alignment fill
+0x00087cd0	0x68	FUN_00487CD0	crt-exact	libc.lib:/4395	__aulldiv	-
+0x00087d38	0x8	FUN_00487D38	linker-pad			trailing 90/CC alignment fill
+0x00087d40	0x75	FUN_00487D40	crt-exact	libc.lib:/4425	__aullrem	-
+0x00087db5	0xb	FUN_00487DB5	linker-pad			trailing 90/CC alignment fill
+0x00087dc0	0x123	FUN_00487DC0	crt-exact	libc.lib:/9502	___crtGetStringTypeA	-
+0x00087ee3	0xd	FUN_00487EE3	linker-pad			trailing 90/CC alignment fill
+0x00087ef0	0x3f	FUN_00487EF0	crt-exact	libc.lib:/20022	__control87	-
+0x00087f2f	0x1	FUN_00487F2F	linker-pad			trailing 90/CC alignment fill
+0x00087f30	0x18	FUN_00487F30	crt-exact	libc.lib:/20022	__controlfp	-
+0x00087f48	0x8	FUN_00487F48	linker-pad			trailing 90/CC alignment fill
+0x00087f50	0xa1	FUN_00487F50	crt-exact	libc.lib:/20022	__abstract_cw	-
+0x00087ff1	0xf	FUN_00487FF1	linker-pad			trailing 90/CC alignment fill
+0x00088000	0x8d	FUN_00488000	crt-exact	libc.lib:/20022	__hw_cw	-
+0x0008808d	0x3	FUN_0048808D	linker-pad			trailing 90/CC alignment fill
+0x00088090	0xb	FUN_00488090	crt-exact	libc.lib:/11530	__fptrap	-
+0x0008809b	0x5	FUN_0048809B	linker-pad			trailing 90/CC alignment fill
+0x000880a0	0x64	FUN_004880A0	crt-exact	libc.lib:/18992	__ZeroTail	-
+0x00088104	0xc	FUN_00488104	linker-pad			trailing 90/CC alignment fill
+0x00088110	0x63	FUN_00488110	crt-exact	libc.lib:/18992	__IncMan	-
+0x00088173	0xd	FUN_00488173	linker-pad			trailing 90/CC alignment fill
+0x00088180	0xac	FUN_00488180	crt-exact	libc.lib:/18992	__RoundMan	-
+0x0008822c	0x4	FUN_0048822C	linker-pad			trailing 90/CC alignment fill
+0x00088230	0x1d	FUN_00488230	crt-exact	libc.lib:/18992	__CopyMan	-
+0x0008824d	0x3	FUN_0048824D	linker-pad			trailing 90/CC alignment fill
+0x00088250	0xf	FUN_00488250	crt-exact	libc.lib:/18992	__FillZeroMan	-
+0x0008825f	0x1	FUN_0048825F	linker-pad			trailing 90/CC alignment fill
+0x00088260	0x1d	FUN_00488260	crt-exact	libc.lib:/18992	__IsZeroMan	-
+0x0008827d	0x3	FUN_0048827D	linker-pad			trailing 90/CC alignment fill
+0x00088280	0xad	FUN_00488280	crt-exact	libc.lib:/18992	__ShrMan	-
+0x0008832d	0x3	FUN_0048832D	linker-pad			trailing 90/CC alignment fill
+0x00088330	0x1cb	FUN_00488330	crt-exact	libc.lib:/18992	__ld12cvt	-
+0x000884fb	0x5	FUN_004884FB	linker-pad			trailing 90/CC alignment fill
+0x00088500	0x18	FUN_00488500	crt-band	libc.lib:(link-band)	__crt_00488500	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088518	0x8	FUN_00488518	linker-pad			trailing 90/CC alignment fill
+0x00088520	0x18	FUN_00488520	crt-band	libc.lib:(link-band)	__crt_00488520	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088538	0x8	FUN_00488538	linker-pad			trailing 90/CC alignment fill
+0x00088540	0x35	FUN_00488540	crt-band	libc.lib:(link-band)	__crt_00488540	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088575	0xb	FUN_00488575	linker-pad			trailing 90/CC alignment fill
+0x00088580	0x35	FUN_00488580	crt-band	libc.lib:(link-band)	__crt_00488580	LIBC band 0x801f0..text-end; symbol unresolved
+0x000885b5	0xb	FUN_004885B5	linker-pad			trailing 90/CC alignment fill
+0x000885c0	0x81	FUN_004885C0	crt-exact	libc.lib:/30	__fptostr	-
+0x00088641	0xf	FUN_00488641	linker-pad			trailing 90/CC alignment fill
+0x00088650	0x81	FUN_00488650	crt-band	libc.lib:(link-band)	__crt_00488650	LIBC band 0x801f0..text-end; symbol unresolved
+0x000886d1	0xf	FUN_004886D1	linker-pad			trailing 90/CC alignment fill
+0x000886e0	0xbb	FUN_004886E0	crt-exact	libc.lib:/18862	___dtold	-
+0x0008879b	0x5	FUN_0048879B	linker-pad			trailing 90/CC alignment fill
+0x000887a0	0xa2	FUN_004887A0	crt-band	libc.lib:(link-band)	__crt_004887A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088842	0xe	FUN_00488842	linker-pad			trailing 90/CC alignment fill
+0x00088850	0x67	FUN_00488850	crt-exact	libc.lib:/19402	__trandisp1	-
+0x000888b7	0x3b1	FUN_004888B7	crt-band	libc.lib:(link-band)	__crt_004888B7	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088c68	0x8	FUN_00488C68	linker-pad			trailing 90/CC alignment fill
+0x00088c70	0x7f	FUN_00488C70	crt-exact	libc.lib:/20086	__d_inttype	-
+0x00088cef	0x1	FUN_00488CEF	linker-pad			trailing 90/CC alignment fill
+0x00088cf0	0x120	FUN_00488CF0	crt-exact	libc.lib:/19435	__87except	-
+0x00088e10	0x22b	FUN_00488E10	crt-exact	libc.lib:/9472	___crtLCMapStringA	-
+0x0008903b	0x5	FUN_0048903B	linker-pad			trailing 90/CC alignment fill
+0x00089040	0x2c	FUN_00489040	crt-band	libc.lib:(link-band)	__crt_00489040	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008906c	0x4	FUN_0048906C	linker-pad			trailing 90/CC alignment fill
+0x00089070	0x92	FUN_00489070	crt-prefix	libc.lib:/9626	___crtMessageBoxA	unique masked 24-byte prefix
+0x00089102	0xe	FUN_00489102	linker-pad			trailing 90/CC alignment fill
+0x00089110	0x6c	FUN_00489110	crt-band	libc.lib:(link-band)	__crt_00489110	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008917c	0x4	FUN_0048917C	linker-pad			trailing 90/CC alignment fill
+0x00089180	0x116	FUN_00489180	crt-band	libc.lib:(link-band)	__crt_00489180	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089296	0xa	FUN_00489296	linker-pad			trailing 90/CC alignment fill
+0x000892a0	0x1f	FUN_004892A0	crt-exact	libc.lib:/9266	_abort	-
+0x000892bf	0x1	FUN_004892BF	linker-pad			trailing 90/CC alignment fill
+0x000892c0	0x98	FUN_004892C0	crt-band	libc.lib:(link-band)	__crt_004892C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089358	0x8	FUN_00489358	linker-pad			trailing 90/CC alignment fill
+0x00089360	0x1dd	FUN_00489360	crt-band	libc.lib:(link-band)	__crt_00489360	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008953d	0x3	FUN_0048953D	linker-pad			trailing 90/CC alignment fill
+0x00089540	0x31	FUN_00489540	crt-band	libc.lib:(link-band)	__crt_00489540	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089571	0xf	FUN_00489571	linker-pad			trailing 90/CC alignment fill
+0x00089580	0x31	FUN_00489580	crt-exact	libc.lib:/15376	_strncat	-
+0x000895b1	0xf	FUN_004895B1	linker-pad			trailing 90/CC alignment fill
+0x000895c0	0x23	FUN_004895C0	crt-exact	libc.lib:/19027	___addl	-
+0x000895e3	0xd	FUN_004895E3	linker-pad			trailing 90/CC alignment fill
+0x000895f0	0x66	FUN_004895F0	crt-exact	libc.lib:/19027	___add_12	-
+0x00089656	0xa	FUN_00489656	linker-pad			trailing 90/CC alignment fill
+0x00089660	0x3e	FUN_00489660	crt-exact	libc.lib:/19027	___shl_12	-
+0x0008969e	0x2	FUN_0048969E	linker-pad			trailing 90/CC alignment fill
+0x000896a0	0x36	FUN_004896A0	crt-exact	libc.lib:/19027	___shr_12	-
+0x000896d6	0xa	FUN_004896D6	linker-pad			trailing 90/CC alignment fill
+0x000896e0	0xe8	FUN_004896E0	crt-exact	libc.lib:/19027	___mtold12	-
+0x000897c8	0x8	FUN_004897C8	linker-pad			trailing 90/CC alignment fill
+0x000897d0	0x74f	FUN_004897D0	crt-prefix	libc.lib:/19061	___strgtold12	unique masked 24-byte prefix
+0x00089f1f	0x1	FUN_00489F1F	linker-pad			trailing 90/CC alignment fill
+0x00089f20	0x39b	FUN_00489F20	crt-exact	libc.lib:/19129	_$I10_OUTPUT	-
+0x0008a2bb	0x5	FUN_0048A2BB	linker-pad			trailing 90/CC alignment fill
+0x0008a2c0	0x39	FUN_0048A2C0	crt-exact	libc.lib:/20355	__set_exp	-
+0x0008a2f9	0x7	FUN_0048A2F9	linker-pad			trailing 90/CC alignment fill
+0x0008a300	0x63	FUN_0048A300	crt-exact	libc.lib:/20355	__sptype	-
+0x0008a363	0xd	FUN_0048A363	linker-pad			trailing 90/CC alignment fill
+0x0008a370	0xee	FUN_0048A370	crt-exact	libc.lib:/20355	__decomp	-
+0x0008a45e	0x2	FUN_0048A45E	linker-pad			trailing 90/CC alignment fill
+0x0008a460	0x15	FUN_0048A460	crt-exact	libc.lib:/19865	__frnd	-
+0x0008a475	0xb	FUN_0048A475	linker-pad			trailing 90/CC alignment fill
+0x0008a480	0xa2	FUN_0048A480	crt-exact	libc.lib:/20254	__fpclass	-
+0x0008a522	0xe	FUN_0048A522	linker-pad			trailing 90/CC alignment fill
+0x0008a530	0x36c	FUN_0048A530	crt-prefix	libc.lib:/20187	__raise_exc	unique masked 24-byte prefix
+0x0008a89c	0x4	FUN_0048A89C	linker-pad			trailing 90/CC alignment fill
+0x0008a8a0	0x2c0	FUN_0048A8A0	crt-exact	libc.lib:/20187	__handle_exc	-
+0x0008ab60	0x2c	FUN_0048AB60	crt-band	libc.lib:(link-band)	__crt_0048AB60	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008ab8c	0x4	FUN_0048AB8C	linker-pad			trailing 90/CC alignment fill
+0x0008ab90	0x3	FUN_0048AB90	crt-band	libc.lib:(link-band)	__crt_0048AB90	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008ab93	0xd	FUN_0048AB93	linker-pad			trailing 90/CC alignment fill
+0x0008aba0	0x11	FUN_0048ABA0	crt-exact	libc.lib:/19832	__statfp	-
+0x0008abb1	0xf	FUN_0048ABB1	linker-pad			trailing 90/CC alignment fill
+0x0008abc0	0x12	FUN_0048ABC0	crt-exact	libc.lib:/19832	__clrfp	-
+0x0008abd2	0xe	FUN_0048ABD2	linker-pad			trailing 90/CC alignment fill
+0x0008abe0	0x34	FUN_0048ABE0	crt-exact	libc.lib:/19832	__ctrlfp	-
+0x0008ac14	0xc	FUN_0048AC14	linker-pad			trailing 90/CC alignment fill
+0x0008ac20	0xe5	FUN_0048AC20	crt-prefix	libc.lib:/19832	__set_statfp	unique masked 24-byte prefix
+0x0008ad05	0xb	FUN_0048AD05	linker-pad			trailing 90/CC alignment fill
+0x0008ad10	0x2a6	FUN_0048AD10	crt-exact	libc.lib:/19096	___ld12mul	-
+0x0008afb6	0xa	FUN_0048AFB6	linker-pad			trailing 90/CC alignment fill
+0x0008afc0	0x7b	FUN_0048AFC0	crt-exact	libc.lib:/19096	___multtenpow12	-
+0x0008b03b	0x1	FUN_0048B03B	linker-pad			trailing 90/CC alignment fill
+0x0008b03c	0x6	FUN_0048B03C	import-thunk	KERNEL32.dll	RtlUnwind	IAT RVA 0xd6548
+0x0008b042	0xe	FUN_0048B042	linker-pad			trailing 90/CC alignment fill
+0x0008b050	0x12	FUN_0048B050	crt-band	libc.lib:(link-band)	__crt_0048B050	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008b062	0xe	FUN_0048B062	linker-pad			trailing 90/CC alignment fill
+0x0008b070	0x30	FUN_0048B070	crt-exact	libc.lib:/15594	__strrev	-

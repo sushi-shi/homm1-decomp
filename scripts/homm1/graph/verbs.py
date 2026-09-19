@@ -135,12 +135,26 @@ def link_main(argv: list[str] | None = None) -> int:
     configure_if_needed()
     if not argv:
         return ninja(["candidate"])
-    targets = ["base"]
+    targets = ["link-inputs"]
     if graph.RESOURCE_RES in manifest_targets():
         targets.append(graph.RESOURCE_RES)
     rc = ninja(targets)
     if rc:
         return rc
+    # The generated candidate edge passes the OMF variants explicitly.  Keep
+    # the direct CLI (`homm1 link --dry-run`, experimental flags) on the same
+    # object set unless the caller supplied an order or explicit objects.
+    if not any(a == "--order" or a == "--obj" or a.startswith("--order=")
+               for a in argv):
+        from homm1.graph.fixed_asm import unit as fixed_asm_unit
+        from homm1.manifest import units
+        for record in units():
+            unit = record["unit"]
+            if fixed_asm_unit(unit, record["source"]) is not None:
+                obj = f"{graph.LINK_OMF_DIR}/{unit}.obj"
+            else:
+                obj = f"{graph.BASE_DIR}/{unit}.obj"
+            argv.extend(["--obj", obj])
     sys.argv = ["homm1 link", *argv]
     return link_direct()
 
