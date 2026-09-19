@@ -14,7 +14,7 @@ from homm1.core.coff import CoffObject
 from homm1.core.image import Image
 from homm1.core import manifest
 from homm1.core.inputs import REPO, read_verified, stage_executable, targets
-from homm1 import build, toolchain, verify
+from homm1 import build, toolchain, verify, probes
 
 
 def verified_image(target):
@@ -154,7 +154,8 @@ def main(argv=None):
     p.set_defaults(run=verify.command)
     p = commands.add_parser('probe', help='compare pinned compiler candidates with /Od and /O2 controls')
     p.add_argument('--ids', nargs='+', choices=sorted(toolchain.pins()), default=['vc40'])
-    p.set_defaults(run=build.probe)
+    p.add_argument('--contracts', action='store_true', help='measure calling conventions, domains, classes and EH')
+    p.set_defaults(run=lambda args: probes.run(args) if args.contracts else build.probe(args))
     p = commands.add_parser('toolchain', help='install or verify pinned compiler components')
     p.add_argument('action', choices=['install', 'check'])
     p.add_argument('--id', choices=sorted(toolchain.pins()), default='vc40')

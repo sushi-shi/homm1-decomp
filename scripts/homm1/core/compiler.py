@@ -32,7 +32,12 @@ def compile_source(source, output, flags, name):
     output.parent.mkdir(parents=True, exist_ok=True)
     output.unlink(missing_ok=True)
     environment = wine_env()
-    environment['INCLUDE'] = windows_path(REPO / 'include', environment)
+    include = [REPO / 'include']
+    if (compiler_root / 'include').is_dir():
+        include.append(compiler_root / 'include')
+    environment['INCLUDE'] = ';'.join(windows_path(p, environment) for p in include)
+    if (compiler_root / 'lib').is_dir():
+        environment['LIB'] = windows_path(compiler_root / 'lib', environment)
     command = ['wine', str(compiler_root / 'bin/CL.EXE'), *flags,
                '/Fo' + windows_path(output, environment), windows_path(source, environment)]
     log = output.with_suffix('.compile.log')

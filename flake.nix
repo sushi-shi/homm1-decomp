@@ -85,12 +85,13 @@
         '';
       };
 
+      python = pkgs.python3.withPackages (ps: [ ps.capstone ]);
       homm1-cli = pkgs.writeShellScriptBin "homm1" ''
         project_dir="''${HOMM1_DIR:-$PWD}"
-        exec ${pkgs.python3}/bin/python3 "$project_dir/homm1" "$@"
+        exec ${python}/bin/python3 "$project_dir/homm1" "$@"
       '';
       commonTools = with pkgs; [
-        homm1-cli python3 git ninja binutils llvm clang-tools
+        homm1-cli python git ninja binutils llvm llvmPackages.clang-unwrapped clang-tools
         ripgrep file jq p7zip vostok-delinker objdiff objdiff-cli
       ];
       commonHook = ''
@@ -103,7 +104,7 @@
         default = vostok-delinker;
       };
       checks.${system}.tooling = pkgs.runCommand "homm1-tooling-tests" {
-        nativeBuildInputs = [ pkgs.python3 ];
+        nativeBuildInputs = [ python pkgs.llvmPackages.clang-unwrapped ];
       } ''
         cp -r ${./.} source
         chmod -R u+w source

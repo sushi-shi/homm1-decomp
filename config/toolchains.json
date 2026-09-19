@@ -146,6 +146,1382 @@
       "bin/MSVCRT40.DLL": {
         "media_path": "MSDEV/REDIST/MSVCRT40.DLL",
         "sha256": "65d5fd6b24c12734897da9a7a036936ca038e799d87a8012e6dd0d1509445de0"
+      },
+      "include/alphaops.h": {
+        "media_path": "MSDEV/INCLUDE/ALPHAOPS.H",
+        "sha256": "df345c2250fb9984264ba289ab764e237a1a6b6b9b009efab0f3f667e966723f"
+      },
+      "include/assert.h": {
+        "media_path": "MSDEV/INCLUDE/ASSERT.H",
+        "sha256": "f40f8068070fc36295ea45d2a642e976665fd29b08d88a407e984526e9b53eb3"
+      },
+      "include/atalkwsh.h": {
+        "media_path": "MSDEV/INCLUDE/ATALKWSH.H",
+        "sha256": "3400e376e50603734d745d4c290055d34b5607e1354fc4364182dee59021daa7"
+      },
+      "include/basetyps.h": {
+        "media_path": "MSDEV/INCLUDE/BASETYPS.H",
+        "sha256": "ce3324049f0f0d846ce58279d3dc62c73812109c0617ee291b98f6b75c7f4218"
+      },
+      "include/callconv.inc": {
+        "media_path": "MSDEV/INCLUDE/CALLCONV.INC",
+        "sha256": "044e0712a074c7fd61e1a4ca04fac1ff860f028d289c92e320b01cc9c7690bb5"
+      },
+      "include/cderr.h": {
+        "media_path": "MSDEV/INCLUDE/CDERR.H",
+        "sha256": "766094b2424e1b7159e0d4a9089d60aac07859a0785d6c60a8ec3ebcbba38400"
+      },
+      "include/cguid.h": {
+        "media_path": "MSDEV/INCLUDE/CGUID.H",
+        "sha256": "32c1913ac0dcbbf4526b19e8771984fbafdbcb558b67306ec30166262958c444"
+      },
+      "include/color.dlg": {
+        "media_path": "MSDEV/INCLUDE/COLOR.DLG",
+        "sha256": "cf3b096a42c640360f3f64f7cf65a0802931f62b8c9954d535ed7f32a6060391"
+      },
+      "include/colordlg.h": {
+        "media_path": "MSDEV/INCLUDE/COLORDLG.H",
+        "sha256": "3ca6d45696e6a20f4a510bb20e4d62b3e000c548327fea1bbd1f83e37b4c5a20"
+      },
+      "include/commctrl.h": {
+        "media_path": "MSDEV/INCLUDE/COMMCTRL.H",
+        "sha256": "5c1972448ee12dc63d0e3daf1cb5e8f71b8e10868c4fb5123ff467375a57cd59"
+      },
+      "include/commdlg.h": {
+        "media_path": "MSDEV/INCLUDE/COMMDLG.H",
+        "sha256": "ebed51027626725b58e1c20bdffe616369878d4d0f5c864dccb7b0a6b6235478"
+      },
+      "include/compobj.h": {
+        "media_path": "MSDEV/INCLUDE/COMPOBJ.H",
+        "sha256": "519db8836156bb151c59c7ab47abea79db30226a93164203b6d4eb2a67b9b073"
+      },
+      "include/conio.h": {
+        "media_path": "MSDEV/INCLUDE/CONIO.H",
+        "sha256": "f33060f7d2309c7741dd4e1d2f012decdbae928278370803c39e1cc03033fad0"
+      },
+      "include/cpl.h": {
+        "media_path": "MSDEV/INCLUDE/CPL.H",
+        "sha256": "93a47766cea9bc52f25e6693367d5a6116c49304f01b34620c7f004ded49a807"
+      },
+      "include/cplext.h": {
+        "media_path": "MSDEV/INCLUDE/CPLEXT.H",
+        "sha256": "3444cbd742a3e183f9e682a79ba9c65633e90a5f3f37146cddb6a52991debdf1"
+      },
+      "include/crtdbg.h": {
+        "media_path": "MSDEV/INCLUDE/CRTDBG.H",
+        "sha256": "ce56b2fe83f9075b6769e7adb0f2a6cd825af2c2ca097160fe9cfd6b80f2cd76"
+      },
+      "include/ctl3d.h": {
+        "media_path": "MSDEV/INCLUDE/CTL3D.H",
+        "sha256": "dfae25124e38b73657575c104325f15caa229562b8aae285222ea048fff8ede2"
+      },
+      "include/ctype.h": {
+        "media_path": "MSDEV/INCLUDE/CTYPE.H",
+        "sha256": "14d649dd384ef4bb77f9b5bfd55671ab19ee9807be6872cd7c29f05ba323f2b3"
+      },
+      "include/custcntl.h": {
+        "media_path": "MSDEV/INCLUDE/CUSTCNTL.H",
+        "sha256": "d3ff71df42b139870e0d3285c601ed86e8e6610317a5640597ca85db697000b4"
+      },
+      "include/customaw.h": {
+        "media_path": "MSDEV/INCLUDE/CUSTOMAW.H",
+        "sha256": "27ed64aec4a219f98278246c5b59f50fad01dbb717ad9ac3723a57441d7f868d"
+      },
+      "include/daogetrw.h": {
+        "media_path": "MSDEV/INCLUDE/DAOGETRW.H",
+        "sha256": "bc07dfc34f10b0e797f909f24a87bebf7ea696c414f2d4ed2b2c23e51fc31fdc"
+      },
+      "include/dbdaoerr.h": {
+        "media_path": "MSDEV/INCLUDE/DBDAOERR.H",
+        "sha256": "7fcfc17a8c2ca4efeaf205572ec8759f7b09dd20e5fe1745b30ae15e363cadba"
+      },
+      "include/dbdaoid.h": {
+        "media_path": "MSDEV/INCLUDE/DBDAOID.H",
+        "sha256": "cccf3a08376fa3c296606a39ccc1762ba808e7633644f3db3a0bf8c8e978a624"
+      },
+      "include/dbdaoint.h": {
+        "media_path": "MSDEV/INCLUDE/DBDAOINT.H",
+        "sha256": "28e8a4114536b1f6742187d9d7695c81f00b64c4d39f4a925ee05209ceb7c96e"
+      },
+      "include/dbt.h": {
+        "media_path": "MSDEV/INCLUDE/DBT.H",
+        "sha256": "41c19023f9b60deef342dd2bda3ef27cf8dbfd9cf133561837e0c42193d53886"
+      },
+      "include/dde.h": {
+        "media_path": "MSDEV/INCLUDE/DDE.H",
+        "sha256": "391fcb45d6a57995da94bd0b22435dc1d6d3442fe363f601221e19ce6a6ffac2"
+      },
+      "include/ddeml.h": {
+        "media_path": "MSDEV/INCLUDE/DDEML.H",
+        "sha256": "1b23109b004ecd1116fe5a5643d8a436035f5da72a85bd96e824e1270d021c37"
+      },
+      "include/digitalv.h": {
+        "media_path": "MSDEV/INCLUDE/DIGITALV.H",
+        "sha256": "5e9bc6b4204ee8d145201dc59e96da3a4dda5d45c3b94a0b60ff6719cb3a2d5c"
+      },
+      "include/direct.h": {
+        "media_path": "MSDEV/INCLUDE/DIRECT.H",
+        "sha256": "6459596d87e9409266544ee4721cc3dbd48761955d6b3f070704bfaff5e8f392"
+      },
+      "include/dispatch.h": {
+        "media_path": "MSDEV/INCLUDE/DISPATCH.H",
+        "sha256": "ec4fb6d2e49dc6dc10fe6ceff8c78064693ff8af607ab2db621af6ff925dc7f5"
+      },
+      "include/dispdib.h": {
+        "media_path": "MSDEV/INCLUDE/DISPDIB.H",
+        "sha256": "8b9e4a1238df814d60b2abf9e340a677e7f354d030e21a20b9621059d992b681"
+      },
+      "include/dlcapi.h": {
+        "media_path": "MSDEV/INCLUDE/DLCAPI.H",
+        "sha256": "46979e356619697ea4abd06d0cc3366d7c76c48cefc5ce38f02f015b2a7d0051"
+      },
+      "include/dlgs.h": {
+        "media_path": "MSDEV/INCLUDE/DLGS.H",
+        "sha256": "3785c32adf20af78fda14322118cb33cdfa20cb498917403962e9b89328a81b9"
+      },
+      "include/dos.h": {
+        "media_path": "MSDEV/INCLUDE/DOS.H",
+        "sha256": "409a3bb8dec6fe0495e6feca5ef49722b70cd7ba23e11b0194b01f708f9c21ae"
+      },
+      "include/drivinit.h": {
+        "media_path": "MSDEV/INCLUDE/DRIVINIT.H",
+        "sha256": "0d2c7be7aa884cf5573c122e433e8df33b647447fa6e0b2ec9e0ddbbd7f28b2e"
+      },
+      "include/dvobj.h": {
+        "media_path": "MSDEV/INCLUDE/DVOBJ.H",
+        "sha256": "80b7e3b270a660710f5899681e5fea04cb1557553a9224cfe6956b2dc1c7f5b4"
+      },
+      "include/eh.h": {
+        "media_path": "MSDEV/INCLUDE/EH.H",
+        "sha256": "32859dac0e977e42f40a3507c9a421b3f2ca825fe686788987dbbef3628e2345"
+      },
+      "include/errno.h": {
+        "media_path": "MSDEV/INCLUDE/ERRNO.H",
+        "sha256": "4e686a94b2534c286e02c80fa8861ffeb3529b55107a7ff886204a963fc86ea7"
+      },
+      "include/error.h": {
+        "media_path": "MSDEV/INCLUDE/ERROR.H",
+        "sha256": "7e157973a533da4f3923988933c5f7cd30823db2b226e00f9005dc30384eb840"
+      },
+      "include/exchext.h": {
+        "media_path": "MSDEV/INCLUDE/EXCHEXT.H",
+        "sha256": "68335b107781abea037dd919831a5373d425e5b82737afe51835d9342b44f0fb"
+      },
+      "include/excpt.h": {
+        "media_path": "MSDEV/INCLUDE/EXCPT.H",
+        "sha256": "3435e614d6ccab9f139226ab2caae9840d72d0aadb13b0825e9b14fbecfa4161"
+      },
+      "include/fcntl.h": {
+        "media_path": "MSDEV/INCLUDE/FCNTL.H",
+        "sha256": "7190f22b778cdf9f196aaed9c4ee91dc2302c80a28080415fb713bde29125d99"
+      },
+      "include/fileopen.dlg": {
+        "media_path": "MSDEV/INCLUDE/FILEOPEN.DLG",
+        "sha256": "087a659e092f1757dec555d6016598c8b181b463f29c33f2188c8196b50f633f"
+      },
+      "include/findtext.dlg": {
+        "media_path": "MSDEV/INCLUDE/FINDTEXT.DLG",
+        "sha256": "9aeef772b1308eb7a63b6aebb3876ac9d9185c8c2c7c36973f329221c18e0aac"
+      },
+      "include/float.h": {
+        "media_path": "MSDEV/INCLUDE/FLOAT.H",
+        "sha256": "a0e25bc5794d2a4ebabd86e40100ca4fe95521682f2abb827aa731c9ece281f3"
+      },
+      "include/font.dlg": {
+        "media_path": "MSDEV/INCLUDE/FONT.DLG",
+        "sha256": "ca8fd3ef2015d80743cff1c857709db4a34ecc0905f6ab0d2ffd01f3b305d4f1"
+      },
+      "include/fpieee.h": {
+        "media_path": "MSDEV/INCLUDE/FPIEEE.H",
+        "sha256": "86300de3bc54c0aaf78615e28a332040d2bc433640faff73fc479f33b67dd4de"
+      },
+      "include/fstream.h": {
+        "media_path": "MSDEV/INCLUDE/FSTREAM.H",
+        "sha256": "f2fe3c601d25755b4a85fdab8fbdd0dc283b935530706a116b0b1af8322a3795"
+      },
+      "include/ftsiface.h": {
+        "media_path": "MSDEV/INCLUDE/FTSIFACE.H",
+        "sha256": "969dcfbbc2f5b3622a6feabb8d1640e54f8176e8483db66ba4f12f58ab2be7de"
+      },
+      "include/gl/gl.h": {
+        "media_path": "MSDEV/INCLUDE/GL/GL.H",
+        "sha256": "9075d3382f6f0cc3fc9aca944d8f8d8181b2de563bb6a9adb13bc17470f9f482"
+      },
+      "include/gl/glaux.h": {
+        "media_path": "MSDEV/INCLUDE/GL/GLAUX.H",
+        "sha256": "defff8a9f3320a9289cf297fa74435078a18c3edfa474f9e9f2a0d00f34490a0"
+      },
+      "include/gl/glu.h": {
+        "media_path": "MSDEV/INCLUDE/GL/GLU.H",
+        "sha256": "522bab6191efc252055cd5ab0f67eb1068b5d9e0bac65a72093bc6284d49e126"
+      },
+      "include/idf.h": {
+        "media_path": "MSDEV/INCLUDE/IDF.H",
+        "sha256": "db60ad385ca576966be3d8f722523477163d348d54ce906f9751aa90194e6934"
+      },
+      "include/imessage.h": {
+        "media_path": "MSDEV/INCLUDE/IMESSAGE.H",
+        "sha256": "7adacd49366215c3d240ebe825829b49d267344833f9ea3be587415ee4efee4f"
+      },
+      "include/imm.h": {
+        "media_path": "MSDEV/INCLUDE/IMM.H",
+        "sha256": "ba66cdf91e1ce79c84afcebb604479717ca8e7df25b6445fff6daa5a88a8b15e"
+      },
+      "include/initguid.h": {
+        "media_path": "MSDEV/INCLUDE/INITGUID.H",
+        "sha256": "58f5e086e6c3a24dd227835070cab5f88c09678dbce699ae65ae9e5525d7d80e"
+      },
+      "include/initoid.h": {
+        "media_path": "MSDEV/INCLUDE/INITOID.H",
+        "sha256": "5a10e5ba39b6b127c07953a8eaa32afb9899d0c31ebb8533377c40157d7dd22b"
+      },
+      "include/intshcut.h": {
+        "media_path": "MSDEV/INCLUDE/INTSHCUT.H",
+        "sha256": "c82fa766688298df4ec13796bfcc572e07711573b8d1ceb62cca518eb079cddb"
+      },
+      "include/io.h": {
+        "media_path": "MSDEV/INCLUDE/IO.H",
+        "sha256": "a72aeb5ecdd850450c82ae702887caa292f93b427440a752b8b3c310548e94c1"
+      },
+      "include/iomanip.h": {
+        "media_path": "MSDEV/INCLUDE/IOMANIP.H",
+        "sha256": "b98a474f511a0df3ee50a64dc6e64eac779e9f4f73a7b7f6765a9e38966c8357"
+      },
+      "include/ios.h": {
+        "media_path": "MSDEV/INCLUDE/IOS.H",
+        "sha256": "923fce5b35274d9747d978070266d7433978fbca3d424f6b0fb944f6908dd708"
+      },
+      "include/iostream.h": {
+        "media_path": "MSDEV/INCLUDE/IOSTREAM.H",
+        "sha256": "b0d63030f7f0b2c7655a739d31856123a50ac9eda0047a07ac914cfe644d6c20"
+      },
+      "include/isguids.h": {
+        "media_path": "MSDEV/INCLUDE/ISGUIDS.H",
+        "sha256": "0ef30c2d780a3b081a0e57e79b5b0479ca6a4111f8d0c90bb64a081e890236a2"
+      },
+      "include/istream.h": {
+        "media_path": "MSDEV/INCLUDE/ISTREAM.H",
+        "sha256": "02580f711fa73bc513e63e9c7eaa5fe3efef93266c63e3cd16ab0d90b800f382"
+      },
+      "include/largeint.h": {
+        "media_path": "MSDEV/INCLUDE/LARGEINT.H",
+        "sha256": "3972d7ba09d2da646864367ddd2876e478515c9bf126b0dc10025130e54891bb"
+      },
+      "include/limits.h": {
+        "media_path": "MSDEV/INCLUDE/LIMITS.H",
+        "sha256": "d04660393dc289c8e90b86f7ced6e518de3b9af25f4617358675d64d6943b405"
+      },
+      "include/listing.inc": {
+        "media_path": "MSDEV/INCLUDE/LISTING.INC",
+        "sha256": "418ac5c56584f355256bbe754626d0f3568ba7ba82131c47bb11194ca669b15f"
+      },
+      "include/lm.h": {
+        "media_path": "MSDEV/INCLUDE/LM.H",
+        "sha256": "2a1a6bffebfa095d289679928077652cc44facfadc87d8fbaaa03925a1030022"
+      },
+      "include/lmaccess.h": {
+        "media_path": "MSDEV/INCLUDE/LMACCESS.H",
+        "sha256": "d7b2b39c7f9169a87523895464599abd8183059292eb77f13e2846ac62ca3b36"
+      },
+      "include/lmalert.h": {
+        "media_path": "MSDEV/INCLUDE/LMALERT.H",
+        "sha256": "0d25f20a746f12e96e81e3a5c6183821bb270c7a5a3fefc5ee2803cd130d9d3b"
+      },
+      "include/lmapibuf.h": {
+        "media_path": "MSDEV/INCLUDE/LMAPIBUF.H",
+        "sha256": "64d8b4bd02dfe9229b33b71ccc037720ad1d9ba829c3d8bfe470528fdbf97417"
+      },
+      "include/lmat.h": {
+        "media_path": "MSDEV/INCLUDE/LMAT.H",
+        "sha256": "2baffcc92422a883ab3741ef62a9351e7efc48be87c4426a71f4286910fdff77"
+      },
+      "include/lmaudit.h": {
+        "media_path": "MSDEV/INCLUDE/LMAUDIT.H",
+        "sha256": "50f273612fd6f99ffbf17779e370da666a2d786c671ee08ffa88f7446a434e63"
+      },
+      "include/lmbrowsr.h": {
+        "media_path": "MSDEV/INCLUDE/LMBROWSR.H",
+        "sha256": "390b02930a0b274e0c18cf57602121ed77d75cf20ef236c9fee68862edd2145c"
+      },
+      "include/lmchdev.h": {
+        "media_path": "MSDEV/INCLUDE/LMCHDEV.H",
+        "sha256": "9402b2c19a38dd9ea74946b16e4c92f6b649e26641c538d13d31ec62aa01106b"
+      },
+      "include/lmconfig.h": {
+        "media_path": "MSDEV/INCLUDE/LMCONFIG.H",
+        "sha256": "40e1d433c9b85e65849b96416f7ae722f98f50659f11fc081f7b3ca3992a03a1"
+      },
+      "include/lmcons.h": {
+        "media_path": "MSDEV/INCLUDE/LMCONS.H",
+        "sha256": "1ef59f387888aa45fe2bf4ab00c695fd3f20a4592f74ee6cca2f7dca1026c711"
+      },
+      "include/lmerr.h": {
+        "media_path": "MSDEV/INCLUDE/LMERR.H",
+        "sha256": "88c74dab279bf417b7a57646b04c39da65a7e41f94bc8f03f66474dba43c5316"
+      },
+      "include/lmerrlog.h": {
+        "media_path": "MSDEV/INCLUDE/LMERRLOG.H",
+        "sha256": "a33b31a097f16262c77029079af9d658a28dd08e731d71527713c75c7a1b3d98"
+      },
+      "include/lmmsg.h": {
+        "media_path": "MSDEV/INCLUDE/LMMSG.H",
+        "sha256": "c5e8f6d2777503d8b57b3c5958a2ab9cc3b5795ac5e706d1223a18b38bd0336f"
+      },
+      "include/lmremutl.h": {
+        "media_path": "MSDEV/INCLUDE/LMREMUTL.H",
+        "sha256": "391f4403426b3e79b9445cab2f23afdd905fcdb0f7017f13fa92d7e26c87d05b"
+      },
+      "include/lmrepl.h": {
+        "media_path": "MSDEV/INCLUDE/LMREPL.H",
+        "sha256": "dd738e6c324df3368e9766a7d4988f5358cb6fb011604fd7f47028d4a555acef"
+      },
+      "include/lmserver.h": {
+        "media_path": "MSDEV/INCLUDE/LMSERVER.H",
+        "sha256": "c538d6424003df5bb1557a645d13d8e48b2534812b392fd4a7b9acc2cb00eceb"
+      },
+      "include/lmshare.h": {
+        "media_path": "MSDEV/INCLUDE/LMSHARE.H",
+        "sha256": "9eb4d8eb89fbe156a8dab68933a573373815f4a03e5f325eb03df3cf92879fb9"
+      },
+      "include/lmsname.h": {
+        "media_path": "MSDEV/INCLUDE/LMSNAME.H",
+        "sha256": "a799a45dfed2e4e9f3df75129f6be5b633dbc99e28662b95a2a7757d0ef1f364"
+      },
+      "include/lmstats.h": {
+        "media_path": "MSDEV/INCLUDE/LMSTATS.H",
+        "sha256": "82c0fdb2a446729b8949b3de59a10bb4b5194dcaf3b3feedea9e3308111d14d5"
+      },
+      "include/lmsvc.h": {
+        "media_path": "MSDEV/INCLUDE/LMSVC.H",
+        "sha256": "98306e7ac49c5ae6cf5aa17487a5e33ac05062f3c0f0fbf1620d3b1327c1d1f2"
+      },
+      "include/lmuse.h": {
+        "media_path": "MSDEV/INCLUDE/LMUSE.H",
+        "sha256": "3020ff5c5271347dde974393adfd81bcdf1fa4d0ec092439ff257b6158a99105"
+      },
+      "include/lmuseflg.h": {
+        "media_path": "MSDEV/INCLUDE/LMUSEFLG.H",
+        "sha256": "f99fee1d5908f017f813268e0a8b72df6eb2356c3b602376334df8e4038b1f30"
+      },
+      "include/lmwksta.h": {
+        "media_path": "MSDEV/INCLUDE/LMWKSTA.H",
+        "sha256": "81713748da1994158d1c5d2931cefcbbeee2f341dc349aa42f198d491b17c12a"
+      },
+      "include/locale.h": {
+        "media_path": "MSDEV/INCLUDE/LOCALE.H",
+        "sha256": "f03eef719aabd97a121fb0276cfb4a0512f917ed432031452c7dda3af4e61fe8"
+      },
+      "include/lzexpand.h": {
+        "media_path": "MSDEV/INCLUDE/LZEXPAND.H",
+        "sha256": "acf85c1fe28e47da4f8caaf26153061d2221f89c297b0d731bf291b74413da50"
+      },
+      "include/malloc.h": {
+        "media_path": "MSDEV/INCLUDE/MALLOC.H",
+        "sha256": "ba01b63e44a0ad69e347bfbe81b1daea2161bb58cb7ac85aa1c9513e11d03d26"
+      },
+      "include/mapi.h": {
+        "media_path": "MSDEV/INCLUDE/MAPI.H",
+        "sha256": "e745197a6239487acb2f5fbfc4c2601ef77f3bef0849f0ecbc9ec33dd212ca43"
+      },
+      "include/mapicode.h": {
+        "media_path": "MSDEV/INCLUDE/MAPICODE.H",
+        "sha256": "06ad565b23df3f0c3e32778a36b4e32efc34b02a3cf8f5ba2889e61a760e3b99"
+      },
+      "include/mapidbg.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIDBG.H",
+        "sha256": "027988e43aa0dba853e04975ed9d543f8f1dc29facfe42f66eb264f2627193d9"
+      },
+      "include/mapidefs.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIDEFS.H",
+        "sha256": "8a416ba54197657214a28bae1c872dde9fe63f2a54239907bf9eb09622a0eded"
+      },
+      "include/mapiform.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIFORM.H",
+        "sha256": "39c5d5e62e4437203673cdeab417577528d279177bd66c082a96c1a795360e80"
+      },
+      "include/mapiguid.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIGUID.H",
+        "sha256": "09ca30f6bf56e22815696cd3a1649d6fd9329429ec8439e6e2a8428f191d56fa"
+      },
+      "include/mapihook.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIHOOK.H",
+        "sha256": "85fe5da7f2deee037bdb6f64dfb9a5c837c8a17ae938b733d6a410d2dd59bc98"
+      },
+      "include/mapinls.h": {
+        "media_path": "MSDEV/INCLUDE/MAPINLS.H",
+        "sha256": "0b453bf020cc38226d59f298c8d3a2891612d15e55dae75f03f969e210e9bd23"
+      },
+      "include/mapioid.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIOID.H",
+        "sha256": "084eeda259168d3e29b5cba911a7fbf0f4ffa4fb4528404c262a172afbc55a64"
+      },
+      "include/mapispi.h": {
+        "media_path": "MSDEV/INCLUDE/MAPISPI.H",
+        "sha256": "a9f6394da4bfac08b03f2018466d52d1f92a965b5bae7551f73aef16de9634d9"
+      },
+      "include/mapitags.h": {
+        "media_path": "MSDEV/INCLUDE/MAPITAGS.H",
+        "sha256": "aa81f1abb326867f7df130482249ebec0350882e465cb64ffbe188f2895020df"
+      },
+      "include/mapiutil.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIUTIL.H",
+        "sha256": "d00c4fa41993b0bd1657588545df3b026c7bbb93e839382d2d4830709ff85bfc"
+      },
+      "include/mapival.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIVAL.H",
+        "sha256": "585d1c001a69200b09b084386f5652e8b918977be234c58058b6c6aa3a779c14"
+      },
+      "include/mapivb.bas": {
+        "media_path": "MSDEV/INCLUDE/MAPIVB.BAS",
+        "sha256": "11150c20c572af7fdf8aa937bc7a1fc73a01a1067ac6e86d70fce7eaea27d22f"
+      },
+      "include/mapiwin.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIWIN.H",
+        "sha256": "43880cf743e4592f80743ccb3d81f229f2f6f84871df9c61763ff5259cbdc903"
+      },
+      "include/mapiwz.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIWZ.H",
+        "sha256": "eda4168edb723fa428ba22bc302905449262023436cef50b2041762cc9969a68"
+      },
+      "include/mapix.h": {
+        "media_path": "MSDEV/INCLUDE/MAPIX.H",
+        "sha256": "49686b039234c97929723f9afd449ddaa0523abda402f63a82467aa714f80ba0"
+      },
+      "include/math.h": {
+        "media_path": "MSDEV/INCLUDE/MATH.H",
+        "sha256": "f7f2ad6fd2cde27625d6973120178529c3af81a9a0e8b98d9e2ac66c3cf8ec16"
+      },
+      "include/mbctype.h": {
+        "media_path": "MSDEV/INCLUDE/MBCTYPE.H",
+        "sha256": "20aabf6632e07cdcddf62f5745f9d2012ea7e2be7dffec39bca08a1950317f85"
+      },
+      "include/mbstring.h": {
+        "media_path": "MSDEV/INCLUDE/MBSTRING.H",
+        "sha256": "808efdf8346c0031b880ac9dbc5372d3d85c3fb7e5bf3b632b8a7e67ed9061f2"
+      },
+      "include/mciavi.h": {
+        "media_path": "MSDEV/INCLUDE/MCIAVI.H",
+        "sha256": "3d6a42ddc86c2105df7b3187b768caa868406652fcb63e697cdb96f0f5f4bc09"
+      },
+      "include/mcx.h": {
+        "media_path": "MSDEV/INCLUDE/MCX.H",
+        "sha256": "1298ae035237b8395101b304021beae453e7682adfa8a462ecd70991ba2a65cf"
+      },
+      "include/memory.h": {
+        "media_path": "MSDEV/INCLUDE/MEMORY.H",
+        "sha256": "9b41fa72d8dc9e7796a9a054cc0c03f6247b7901b6588b75cd3cc61365a707da"
+      },
+      "include/mgmtapi.h": {
+        "media_path": "MSDEV/INCLUDE/MGMTAPI.H",
+        "sha256": "c36b7b155efdae456fe6d0f108391dded4d3b29f7f5c4f7dad8c4a48dcd27fba"
+      },
+      "include/midles.h": {
+        "media_path": "MSDEV/INCLUDE/MIDLES.H",
+        "sha256": "833932d56354661357a22bc8e1e3b78554c6ff05cf28628fd3940fa4b513537a"
+      },
+      "include/mmreg.h": {
+        "media_path": "MSDEV/INCLUDE/MMREG.H",
+        "sha256": "ec5297470808ac8909cabde120ba8a75e4014aa41d5b8cbc7ec236447c67bb5e"
+      },
+      "include/mmsystem.h": {
+        "media_path": "MSDEV/INCLUDE/MMSYSTEM.H",
+        "sha256": "7c5277014d0d16e1f4541298073182486b5732e93a45e0e8c62ea299bfa18981"
+      },
+      "include/moniker.h": {
+        "media_path": "MSDEV/INCLUDE/MONIKER.H",
+        "sha256": "7728ca648236ec379480ab7bac183207912adca5129e9ab06bc4b79f6190a273"
+      },
+      "include/msacm.h": {
+        "media_path": "MSDEV/INCLUDE/MSACM.H",
+        "sha256": "618f3739acb35392f685c8f3da0861999753310dde118d2b5b0f5f5e5c0e7077"
+      },
+      "include/msacmdlg.dlg": {
+        "media_path": "MSDEV/INCLUDE/MSACMDLG.DLG",
+        "sha256": "f35b9615bb9bf0497f6d16f219bbc3d7495fe76e645eb3bb46fdd86b6f143383"
+      },
+      "include/msacmdlg.h": {
+        "media_path": "MSDEV/INCLUDE/MSACMDLG.H",
+        "sha256": "043ce4d92924e21f0975a0ee4b08230b6017a80a8cca1cbca20b41b50a46c1b7"
+      },
+      "include/msfs.h": {
+        "media_path": "MSDEV/INCLUDE/MSFS.H",
+        "sha256": "0cd12dcf1a2c8275f64541ec5a92433448f34d0ef1cf49edd896c7d8d6396d98"
+      },
+      "include/mspab.h": {
+        "media_path": "MSDEV/INCLUDE/MSPAB.H",
+        "sha256": "a98242b899ae0258792013dc4b448203da6aad351132294fa34886005751b7b4"
+      },
+      "include/mspst.h": {
+        "media_path": "MSDEV/INCLUDE/MSPST.H",
+        "sha256": "534f18938973afbb96ff23728617c3a585aa36f4a3db6a4721325ba18fd11bf4"
+      },
+      "include/msviddrv.h": {
+        "media_path": "MSDEV/INCLUDE/MSVIDDRV.H",
+        "sha256": "c3e4971b21d7ac4dae8d46b81bd63f738fc2a8170bd8e943c74e7596cb304fb3"
+      },
+      "include/nb30.h": {
+        "media_path": "MSDEV/INCLUDE/NB30.H",
+        "sha256": "da5a91a862ef60221568a64ef37d73e4f0856c044b9175fbc02d8d372e618ea6"
+      },
+      "include/nddeapi.h": {
+        "media_path": "MSDEV/INCLUDE/NDDEAPI.H",
+        "sha256": "6b3d023b373705d49cd198df43a19c5a13e3c5286e1230e59a532851d0dce723"
+      },
+      "include/nddesec.h": {
+        "media_path": "MSDEV/INCLUDE/NDDESEC.H",
+        "sha256": "8072553f51c4e4cccf67142cfedc34f2d8782bd0c6bcb5a0a52636a435db1603"
+      },
+      "include/new.h": {
+        "media_path": "MSDEV/INCLUDE/NEW.H",
+        "sha256": "47aca77cea44f6e9a2ad2cfe6609df9ccaf48a11dd317ced43abb76259068eb4"
+      },
+      "include/nspapi.h": {
+        "media_path": "MSDEV/INCLUDE/NSPAPI.H",
+        "sha256": "3e3476329095952546d5e97ca6c67e6ae3da3baa91f4f99a363916da9e69dc95"
+      },
+      "include/ntsdexts.h": {
+        "media_path": "MSDEV/INCLUDE/NTSDEXTS.H",
+        "sha256": "be3bec46371e927fd5b922b9a7fe3d7ca8a4b5b6450117a20cbfeeccb745e64f"
+      },
+      "include/ntwin32.mak": {
+        "media_path": "MSDEV/INCLUDE/NTWIN32.MAK",
+        "sha256": "755a060653d2ba2775384bad070ab25840517555132a76b4fa838fc1ffa6a518"
+      },
+      "include/oaidl.h": {
+        "media_path": "MSDEV/INCLUDE/OAIDL.H",
+        "sha256": "766d4c7cff58912c8afe12b0c6e98be15d6213e197fa8f47020281857c5f29db"
+      },
+      "include/oaidl.idl": {
+        "media_path": "MSDEV/INCLUDE/OAIDL.IDL",
+        "sha256": "4b3400a322477c3331e27aedf724bdf165aeb90b409fa17773d78403a52e748f"
+      },
+      "include/objbase.h": {
+        "media_path": "MSDEV/INCLUDE/OBJBASE.H",
+        "sha256": "760eb2421abb7615862ffa4799414c9270cdcfd02ca8d4e44cb2d86f2de8ad67"
+      },
+      "include/objerror.h": {
+        "media_path": "MSDEV/INCLUDE/OBJERROR.H",
+        "sha256": "5ec82295b025a07459a4ca1f71fb8bb6708ce97302e1e00b5fc82f704a11af34"
+      },
+      "include/objidl.h": {
+        "media_path": "MSDEV/INCLUDE/OBJIDL.H",
+        "sha256": "6dd811da1341a4807c3bbc31a7d784f751fb009888aae40f3fd5c265536c5b7d"
+      },
+      "include/objidl.idl": {
+        "media_path": "MSDEV/INCLUDE/OBJIDL.IDL",
+        "sha256": "81ee3ece5ea087ab91fb5ad9534ee4c0b0f568f90f76562a0a2662626a8ee161"
+      },
+      "include/odbcinst.h": {
+        "media_path": "MSDEV/INCLUDE/ODBCINST.H",
+        "sha256": "89f03f7187f03e31d19b2c283f7c50b117738c4d45bd7cdaa60682b9d50f9d65"
+      },
+      "include/odbcver.h": {
+        "media_path": "MSDEV/INCLUDE/ODBCVER.H",
+        "sha256": "fcf1688919d0207adf2346e840840fec05a3354d891500de4883673fce5dbd32"
+      },
+      "include/ole.h": {
+        "media_path": "MSDEV/INCLUDE/OLE.H",
+        "sha256": "ed8a36362011222cd5792fed57d589798d6b64feef34d53239fe6195d4a09c43"
+      },
+      "include/ole2.h": {
+        "media_path": "MSDEV/INCLUDE/OLE2.H",
+        "sha256": "2ba17476a4e2b4ca8cb5304b6ff1cd34ec055a4b829f7871f07d7dd4c386039a"
+      },
+      "include/ole2ver.h": {
+        "media_path": "MSDEV/INCLUDE/OLE2VER.H",
+        "sha256": "f38f186cbd7ae71b00f197738499aeb5b9f32a341dab1140f8a27373dfe0afcc"
+      },
+      "include/oleauto.h": {
+        "media_path": "MSDEV/INCLUDE/OLEAUTO.H",
+        "sha256": "1107b36beffe3d90df346762aa2bf68eee0b39c63a96268e1773ba05a06f54ae"
+      },
+      "include/olectl.h": {
+        "media_path": "MSDEV/INCLUDE/OLECTL.H",
+        "sha256": "89bf7cd30f73b615c58e11cfdb72d7cdc80e3d73cf7d0e18ab62adfd6999f1ff"
+      },
+      "include/olectlid.h": {
+        "media_path": "MSDEV/INCLUDE/OLECTLID.H",
+        "sha256": "5542d7b139cb9f095df120a16362052e8667f679214f702efec8a6acd1c31e94"
+      },
+      "include/oledlg.h": {
+        "media_path": "MSDEV/INCLUDE/OLEDLG.H",
+        "sha256": "463d7e36373a98a575c4f4934585621477c68453d2798d211be96663d93a9a58"
+      },
+      "include/oledlgs.h": {
+        "media_path": "MSDEV/INCLUDE/OLEDLGS.H",
+        "sha256": "0d73b8a94e8bc5915b50b35892706e32dd8eb277ecb3cee11a68da75b128b261"
+      },
+      "include/oleidl.h": {
+        "media_path": "MSDEV/INCLUDE/OLEIDL.H",
+        "sha256": "de56595ee5d68781f807a1b4c75fd0583e7adb701f2044be325a59f73e101c5e"
+      },
+      "include/oleidl.idl": {
+        "media_path": "MSDEV/INCLUDE/OLEIDL.IDL",
+        "sha256": "8c3a53b1fb454f0d5f7b03adfc879d7caa09dd86e53525836c0b041108d1b7af"
+      },
+      "include/ostream.h": {
+        "media_path": "MSDEV/INCLUDE/OSTREAM.H",
+        "sha256": "550d6c8e74cafe9600c45abc4e9d5d70a113dd18cc2a797c65e1537aca501b11"
+      },
+      "include/pbt.h": {
+        "media_path": "MSDEV/INCLUDE/PBT.H",
+        "sha256": "6e96b834406ba52d455e52a15586eeb8f253089ed1777eebac0c9329d8efc4ee"
+      },
+      "include/pcrt32.h": {
+        "media_path": "MSDEV/INCLUDE/PCRT32.H",
+        "sha256": "5b349b69ce488ac7ba6d208e992602bfe7c1e7021fad16146a95cb8a48d39b00"
+      },
+      "include/penwin.h": {
+        "media_path": "MSDEV/INCLUDE/PENWIN.H",
+        "sha256": "d93870de18eb0830061e8146ec5cf2b4b22199eb29b41f033507188bde900f61"
+      },
+      "include/plan32.h": {
+        "media_path": "MSDEV/INCLUDE/PLAN32.H",
+        "sha256": "faa0b543eb19ecc390eb6dccacc13aa1e83b5573cdd0fb416f7dd098a7aec8b9"
+      },
+      "include/poppack.h": {
+        "media_path": "MSDEV/INCLUDE/POPPACK.H",
+        "sha256": "2364384b843b5612f325cb6f6840c5b2ecb6ff4ac358511c40090c800aaa3d04"
+      },
+      "include/prnsetup.dlg": {
+        "media_path": "MSDEV/INCLUDE/PRNSETUP.DLG",
+        "sha256": "96eeb1af055196c15dfdfe6243788af5061d3d38b25f1cc08645954ce1459ce5"
+      },
+      "include/process.h": {
+        "media_path": "MSDEV/INCLUDE/PROCESS.H",
+        "sha256": "2f6d5a7e4e5dc5374cc6de06241894dea83eab530307471a2c2593a346b08d3d"
+      },
+      "include/prsht.h": {
+        "media_path": "MSDEV/INCLUDE/PRSHT.H",
+        "sha256": "f1520efce5081a8f38b7efd77770e326b50ae8d2ba8bbfafb52891ff8daf0742"
+      },
+      "include/pshpack1.h": {
+        "media_path": "MSDEV/INCLUDE/PSHPACK1.H",
+        "sha256": "e07b4f27c0eedb9e825a88bfae60badecdef3871f3bf6fd28779d1debc2a8962"
+      },
+      "include/pshpack2.h": {
+        "media_path": "MSDEV/INCLUDE/PSHPACK2.H",
+        "sha256": "67064a18f354d8dea491545294c3b01324602a9742fa7138388dc4065b74941c"
+      },
+      "include/pshpack4.h": {
+        "media_path": "MSDEV/INCLUDE/PSHPACK4.H",
+        "sha256": "f8b872f10880bea7884406a9c4ab4e98fdf2a7bd19f3eb8923ae30ae22f51c92"
+      },
+      "include/pshpack8.h": {
+        "media_path": "MSDEV/INCLUDE/PSHPACK8.H",
+        "sha256": "e241abb9c768a8fee2f9485ab46f54f3a07e8f1bdc203aa5cceeff8afde43a18"
+      },
+      "include/ras.h": {
+        "media_path": "MSDEV/INCLUDE/RAS.H",
+        "sha256": "59ef0324d616c75851a335b9a6245c9fcf0568a7d48fe4cfcb9315fb751085cb"
+      },
+      "include/raserror.h": {
+        "media_path": "MSDEV/INCLUDE/RASERROR.H",
+        "sha256": "9442582e9d628c94ac728474d66d94d345ad4851c332ac569467fb1b1d7b042b"
+      },
+      "include/recguids.h": {
+        "media_path": "MSDEV/INCLUDE/RECGUIDS.H",
+        "sha256": "f70f555481edb76dc04dc1325d9a41dbbfa4ecaae7e27fd91d15643ce3a75697"
+      },
+      "include/reconcil.h": {
+        "media_path": "MSDEV/INCLUDE/RECONCIL.H",
+        "sha256": "c29a546aa23dfcf31c2ed5d49b7630cab2df12c692233c8bfb23cc00f95df6d9"
+      },
+      "include/regstr.h": {
+        "media_path": "MSDEV/INCLUDE/REGSTR.H",
+        "sha256": "1390f3a804bd4dafa5bb559776cb80809b3383b6ac03c1902ae5ef6c099f0865"
+      },
+      "include/richedit.h": {
+        "media_path": "MSDEV/INCLUDE/RICHEDIT.H",
+        "sha256": "a353715d88614f36501a46aa125f917bae72d9610265babf99ed15dcef3719ca"
+      },
+      "include/richole.h": {
+        "media_path": "MSDEV/INCLUDE/RICHOLE.H",
+        "sha256": "6fb26a5ef101904f4c703a79099d5311d62b8609d0d456c658aa2d904f6b832c"
+      },
+      "include/rpc.h": {
+        "media_path": "MSDEV/INCLUDE/RPC.H",
+        "sha256": "21c420b70d9d09451a27b15e74c536655668d989d24dd4dbbfc426e4bbb70f64"
+      },
+      "include/rpcbase.h": {
+        "media_path": "MSDEV/INCLUDE/RPCBASE.H",
+        "sha256": "871f11c6ee46cf38a59153a23edd71b9355937d7e483f6d8b4a766ff6dedc9aa"
+      },
+      "include/rpcdce.h": {
+        "media_path": "MSDEV/INCLUDE/RPCDCE.H",
+        "sha256": "7bbaefb2689119fd7d763387da596152041095af5e478ae689799acfaa5c70e9"
+      },
+      "include/rpcdcep.h": {
+        "media_path": "MSDEV/INCLUDE/RPCDCEP.H",
+        "sha256": "ed357ec21d5fa068da75306a795d7f612948bbd99c02abe61d5d5d2034b50fdd"
+      },
+      "include/rpcndr.h": {
+        "media_path": "MSDEV/INCLUDE/RPCNDR.H",
+        "sha256": "2c95c4732b14f5fa674e9ab8927d157b4f95c662e0920b90ab4fb68279031bf7"
+      },
+      "include/rpcnsi.h": {
+        "media_path": "MSDEV/INCLUDE/RPCNSI.H",
+        "sha256": "440d247d5e93ab8a79bd3ba9a5b6b29b99a55a3fb43aa99539fd37d656a1bc7f"
+      },
+      "include/rpcnsip.h": {
+        "media_path": "MSDEV/INCLUDE/RPCNSIP.H",
+        "sha256": "4744eac7aa52bcac5da521f013db1c2c2ddc991bcd1fcf3b1daf7326d4a0d939"
+      },
+      "include/rpcnterr.h": {
+        "media_path": "MSDEV/INCLUDE/RPCNTERR.H",
+        "sha256": "5bd62ed92069051319c4ec5fd9c1e820313dcc0b9e896aabdde279543cb40cf2"
+      },
+      "include/rpcproxy.h": {
+        "media_path": "MSDEV/INCLUDE/RPCPROXY.H",
+        "sha256": "9ce18d49cade1d146c548eb2467f84c1eaed8a9a7ccef24cd3f402638c56fad6"
+      },
+      "include/scode.h": {
+        "media_path": "MSDEV/INCLUDE/SCODE.H",
+        "sha256": "886a28b7fc3d87c9696daee44cd53b6cacfd98cb14599e810baf442310953308"
+      },
+      "include/scrnsave.h": {
+        "media_path": "MSDEV/INCLUDE/SCRNSAVE.H",
+        "sha256": "84b0f9677bf310630918c49513b0c86c3dba7b5735a81c74d538308d2b593f2d"
+      },
+      "include/search.h": {
+        "media_path": "MSDEV/INCLUDE/SEARCH.H",
+        "sha256": "0143e7e1e7a7861d4f6da57ce38a27ae6239f2afde1eab2234006a79d5687836"
+      },
+      "include/setjmp.h": {
+        "media_path": "MSDEV/INCLUDE/SETJMP.H",
+        "sha256": "2e8853ab3eccea0f7b0e79b15c3c622268aacf9154defc4aadbe6218c3d7af9b"
+      },
+      "include/setjmpex.h": {
+        "media_path": "MSDEV/INCLUDE/SETJMPEX.H",
+        "sha256": "aa72b820411b1bad5b12e797b829dc95130ce9ceec4c1d34ce8c54214299898e"
+      },
+      "include/share.h": {
+        "media_path": "MSDEV/INCLUDE/SHARE.H",
+        "sha256": "961e2be439bd72d1966e595b9df53e74ffec138022eccade25dd17a005f48d93"
+      },
+      "include/shellapi.h": {
+        "media_path": "MSDEV/INCLUDE/SHELLAPI.H",
+        "sha256": "280fee7b2a4950d0c1b3ffdccf1e07647317292429e8b0f63899a127b6bed6be"
+      },
+      "include/shlguid.h": {
+        "media_path": "MSDEV/INCLUDE/SHLGUID.H",
+        "sha256": "2fa3a632e8178a4723f2c727dd715e31a3bd6736055a13fe3b16b887a2c29ebb"
+      },
+      "include/shlobj.h": {
+        "media_path": "MSDEV/INCLUDE/SHLOBJ.H",
+        "sha256": "e30b4e5539375e980676bf9db62c9cfcb74adf0b3a3e02699808dd8afa2ec69a"
+      },
+      "include/signal.h": {
+        "media_path": "MSDEV/INCLUDE/SIGNAL.H",
+        "sha256": "1f4cf1afbcb699ad70c95432d25f1a2a61c2893923626b254c4af9699e60117b"
+      },
+      "include/smpab.h": {
+        "media_path": "MSDEV/INCLUDE/SMPAB.H",
+        "sha256": "aa95286cde12c59ddc15af841876ec8efb310d66cc8f4931d2306182ac5ff02c"
+      },
+      "include/smpms.h": {
+        "media_path": "MSDEV/INCLUDE/SMPMS.H",
+        "sha256": "e3429d3f16b1491e2b2a2e87fde6708bf258a38b6e99f1e98d4a05e7269cc400"
+      },
+      "include/smpxp.h": {
+        "media_path": "MSDEV/INCLUDE/SMPXP.H",
+        "sha256": "44099dd65ee514335c72974757e5c17b97adac82f2ff282d78d91885afdfcc8a"
+      },
+      "include/snmp.h": {
+        "media_path": "MSDEV/INCLUDE/SNMP.H",
+        "sha256": "90ae9b52feb37d43b6757e3bc2a3b03984f1386ffdfc551c9fe5e6dbb31ab1c3"
+      },
+      "include/sql.h": {
+        "media_path": "MSDEV/INCLUDE/SQL.H",
+        "sha256": "8f3ac121512390285b111e7c47d7a7517a7222915d53637a57a44793aed042e9"
+      },
+      "include/sqlext.h": {
+        "media_path": "MSDEV/INCLUDE/SQLEXT.H",
+        "sha256": "ad08e0d047c76acafb24d6a53914eb9c0d1894c741166290afba95d0a1c63032"
+      },
+      "include/sqltypes.h": {
+        "media_path": "MSDEV/INCLUDE/SQLTYPES.H",
+        "sha256": "d1267b55cc03c56451118a54975cd764ef78df98866a4188762e9d2c8b1326ee"
+      },
+      "include/stdarg.h": {
+        "media_path": "MSDEV/INCLUDE/STDARG.H",
+        "sha256": "edddf1766d75ea5765a3f7342eff5905ae9cae141eb902250ca1b49df968b1ea"
+      },
+      "include/stddef.h": {
+        "media_path": "MSDEV/INCLUDE/STDDEF.H",
+        "sha256": "97adf556d34b95dd130702fd99a14a1e7c0fa9681ba6aeb01acfd1dda84d276f"
+      },
+      "include/stdexcpt.h": {
+        "media_path": "MSDEV/INCLUDE/STDEXCPT.H",
+        "sha256": "b4df4657c840ebb64c46e1a61b0e2a5702d1f3b128da5153370e3d22349ea995"
+      },
+      "include/stdio.h": {
+        "media_path": "MSDEV/INCLUDE/STDIO.H",
+        "sha256": "89a419ddb70ccb41cbe4ce52ec29ba207671cbb938672f8a2c893c432ca30820"
+      },
+      "include/stdiostr.h": {
+        "media_path": "MSDEV/INCLUDE/STDIOSTR.H",
+        "sha256": "9f5a38ee4694894f21b259ab546a95f9c4a6425d5bd13612bd5d1ff5143caea3"
+      },
+      "include/stdlib.h": {
+        "media_path": "MSDEV/INCLUDE/STDLIB.H",
+        "sha256": "61cded1bc75c9e39a3b96b374d11ad1ef0e23a97a340bc89ef47c594a0f015b7"
+      },
+      "include/storage.h": {
+        "media_path": "MSDEV/INCLUDE/STORAGE.H",
+        "sha256": "9a05fcbb428f8cae33f3b370844fa0c77cbed92507a4890abe98eb11a0907996"
+      },
+      "include/streamb.h": {
+        "media_path": "MSDEV/INCLUDE/STREAMB.H",
+        "sha256": "95490aa5ea3c906f985890cde2047301993a6302941ba8fe0426af956393794b"
+      },
+      "include/string.h": {
+        "media_path": "MSDEV/INCLUDE/STRING.H",
+        "sha256": "11028aee7817c6ab3cb10743fc9d1bd874b6158a58fbf13ede2ceac8914ebff1"
+      },
+      "include/strstrea.h": {
+        "media_path": "MSDEV/INCLUDE/STRSTREA.H",
+        "sha256": "74da49d72544b90244ecbc83328569738485dc6fa581df7ad92258014919d091"
+      },
+      "include/svcguid.h": {
+        "media_path": "MSDEV/INCLUDE/SVCGUID.H",
+        "sha256": "4550d91489a1faa31a5ee013602397cf711d532c61cc7de45a81eb229c77dea0"
+      },
+      "include/svrapi.h": {
+        "media_path": "MSDEV/INCLUDE/SVRAPI.H",
+        "sha256": "3287280188ec88e91a8562310b84c6ab168943d29e91678bdbd158c74e803c49"
+      },
+      "include/sys/locking.h": {
+        "media_path": "MSDEV/INCLUDE/SYS/LOCKING.H",
+        "sha256": "c061128be27ea0644f960cd7c30c72c591ad3414899df75d12941db6c884210c"
+      },
+      "include/sys/stat.h": {
+        "media_path": "MSDEV/INCLUDE/SYS/STAT.H",
+        "sha256": "7373a706219f434d44c375243d9f6c72f46d715ea922e5be486164de1bf10eea"
+      },
+      "include/sys/timeb.h": {
+        "media_path": "MSDEV/INCLUDE/SYS/TIMEB.H",
+        "sha256": "4c9781a43821c1011eb78d87b5a30eb3f4e6bddb4788fdd960fcf5a3e6d39eb4"
+      },
+      "include/sys/types.h": {
+        "media_path": "MSDEV/INCLUDE/SYS/TYPES.H",
+        "sha256": "12f2177a01f51a4fd50e75682ab657ce1a3b05e5070dfa5ae44249a452773d66"
+      },
+      "include/sys/utime.h": {
+        "media_path": "MSDEV/INCLUDE/SYS/UTIME.H",
+        "sha256": "a691753f746da1dba41d3131a726c535892e6f01c96eeb580434fd3bd42c722b"
+      },
+      "include/tapi.h": {
+        "media_path": "MSDEV/INCLUDE/TAPI.H",
+        "sha256": "2bf39e4bdda5254d029f7d9aa4df5448691d47258546489ed0de2e5eeb73fe31"
+      },
+      "include/tchar.h": {
+        "media_path": "MSDEV/INCLUDE/TCHAR.H",
+        "sha256": "43d00560573aaa00cfafcd974ab58eb4df21dfb4f6d963365cb1b6ca52496fee"
+      },
+      "include/time.h": {
+        "media_path": "MSDEV/INCLUDE/TIME.H",
+        "sha256": "deac72471041c501fd673818476ed02684c6a08dfc03bd3eeb938c7a25252a22"
+      },
+      "include/tlhelp32.h": {
+        "media_path": "MSDEV/INCLUDE/TLHELP32.H",
+        "sha256": "16534a7d616bef74caddea0c872cbd3b421a42a29482032cbfa8da403920569a"
+      },
+      "include/tnef.h": {
+        "media_path": "MSDEV/INCLUDE/TNEF.H",
+        "sha256": "307bdac723d46d76ec26673c3926aa4bc7f879e6aa8db360027c783f3a08d266"
+      },
+      "include/tspi.h": {
+        "media_path": "MSDEV/INCLUDE/TSPI.H",
+        "sha256": "ea8052e45dedb6d255fd8d36ab996fc9fb53544753cf957ba93c8c1cc3110e00"
+      },
+      "include/typeinfo.h": {
+        "media_path": "MSDEV/INCLUDE/TYPEINFO.H",
+        "sha256": "6c8307f5e71dcae47d3004a659b77e60390086a920e7cfcb119c7db1a3b6a154"
+      },
+      "include/unknwn.h": {
+        "media_path": "MSDEV/INCLUDE/UNKNWN.H",
+        "sha256": "6a4810aa67c22a04fcf8a6d1a789d488f21485caceeb789a8ac25718808bd15e"
+      },
+      "include/unknwn.idl": {
+        "media_path": "MSDEV/INCLUDE/UNKNWN.IDL",
+        "sha256": "713f1f5df6147efabb93cf9a447d8ad99b7043bdffb12ca395948079fa7b90f2"
+      },
+      "include/varargs.h": {
+        "media_path": "MSDEV/INCLUDE/VARARGS.H",
+        "sha256": "9c9f0fb4aeac19e79416ebc7aa79f0045c34e26269f66ccf17feca0e215d4f37"
+      },
+      "include/variant.h": {
+        "media_path": "MSDEV/INCLUDE/VARIANT.H",
+        "sha256": "d8da4a9a6ef831bae8854ebc1ecbe51e5819bc8ea054d3d4a03e24a69e673437"
+      },
+      "include/vcr.h": {
+        "media_path": "MSDEV/INCLUDE/VCR.H",
+        "sha256": "f2e74594dec21dbfc61fa26d7069cd7ec8d6b90abc8f930496a19d319a1ec3ed"
+      },
+      "include/vdmdbg.h": {
+        "media_path": "MSDEV/INCLUDE/VDMDBG.H",
+        "sha256": "98c1892509569903bada614fd1036c42009b57f616034d87756f8fa1fe2a30ed"
+      },
+      "include/ver.h": {
+        "media_path": "MSDEV/INCLUDE/VER.H",
+        "sha256": "5ceff93b8c0c6b77977db3f287f845b767f95dcc696baea205310573405d8a84"
+      },
+      "include/vfw.h": {
+        "media_path": "MSDEV/INCLUDE/VFW.H",
+        "sha256": "538aa5b9c94184a8b1aff46e7383c02c32f42d3af9757fc9ac89c4594ab2849d"
+      },
+      "include/w32chico.mk": {
+        "media_path": "MSDEV/INCLUDE/W32CHICO.MK",
+        "sha256": "755a060653d2ba2775384bad070ab25840517555132a76b4fa838fc1ffa6a518"
+      },
+      "include/wchar.h": {
+        "media_path": "MSDEV/INCLUDE/WCHAR.H",
+        "sha256": "bcc7b7e6d4c31e2ffe1a63d8c3d93096a5caba3bb0124b1bb23fd47ecc4d676f"
+      },
+      "include/wdbgexts.h": {
+        "media_path": "MSDEV/INCLUDE/WDBGEXTS.H",
+        "sha256": "001447b384049640821a19f3c9c7622ff408c2ef963b0beb089e3b991493e481"
+      },
+      "include/wfext.h": {
+        "media_path": "MSDEV/INCLUDE/WFEXT.H",
+        "sha256": "3817d378adbd04b73b8c94f7a2b5d3b8ae02ea5624c9dca35ec8996b9d44b4f6"
+      },
+      "include/win32.mak": {
+        "media_path": "MSDEV/INCLUDE/WIN32.MAK",
+        "sha256": "ef9395964d24d5cee798197d79caf3ad1fac4021cbeb0159ca1c0198a1862385"
+      },
+      "include/winbase.h": {
+        "media_path": "MSDEV/INCLUDE/WINBASE.H",
+        "sha256": "a79dad131252b80cd2b7b9ae9e0f10d9906b6d032e330974f330b58a448cd422"
+      },
+      "include/wincon.h": {
+        "media_path": "MSDEV/INCLUDE/WINCON.H",
+        "sha256": "513cbc5c01409d914a5600e9142cb39a7044967d839322e346e77b6c9e326555"
+      },
+      "include/windef.h": {
+        "media_path": "MSDEV/INCLUDE/WINDEF.H",
+        "sha256": "5f276cb8f48a14b113381f5f892ea593cee625238c1cd80433908064a028b454"
+      },
+      "include/windows.h": {
+        "media_path": "MSDEV/INCLUDE/WINDOWS.H",
+        "sha256": "92015447d03bdfbb00eb5abb6552b257b100c537ed9e342db2a93dbfc4881b5d"
+      },
+      "include/windowsx.h": {
+        "media_path": "MSDEV/INCLUDE/WINDOWSX.H",
+        "sha256": "8c2d2db0c334e4a73e231d814af960bfa3918e22caf6d4b3c80949ff4f49d135"
+      },
+      "include/windowsx.h16": {
+        "media_path": "MSDEV/INCLUDE/WINDOWSX.H16",
+        "sha256": "b85228c01045fec93cdd1cf71dc2ab9da3601e37579ab2866b1e977990f51dc5"
+      },
+      "include/winerror.h": {
+        "media_path": "MSDEV/INCLUDE/WINERROR.H",
+        "sha256": "9f6fbfaa74ce3ff9d54383139b748728ff2878edb6febd98bb314cab9b61edc4"
+      },
+      "include/wingdi.h": {
+        "media_path": "MSDEV/INCLUDE/WINGDI.H",
+        "sha256": "87cbe23b6cef237fe97420d73cc59890670e6c657d5d8838dfd2746533a9aca8"
+      },
+      "include/winioctl.h": {
+        "media_path": "MSDEV/INCLUDE/WINIOCTL.H",
+        "sha256": "24c56d8236d3ec1636864583c0b807a65ab95cff5b2a7aa3ff8bf3e4f88f4558"
+      },
+      "include/winnetwk.h": {
+        "media_path": "MSDEV/INCLUDE/WINNETWK.H",
+        "sha256": "1d89f0dd855040f7bf8cc037eb77a9277115d7aabd649c21160ae593f521a478"
+      },
+      "include/winnls.h": {
+        "media_path": "MSDEV/INCLUDE/WINNLS.H",
+        "sha256": "f601c36f9bc065b8cbc52f761904197e65801b39774a8f1db58f0f555520b140"
+      },
+      "include/winnt.h": {
+        "media_path": "MSDEV/INCLUDE/WINNT.H",
+        "sha256": "99e16482bd5b75dce9d599f866d6bba143cff4173f5bf8117eedb2f13423f398"
+      },
+      "include/winperf.h": {
+        "media_path": "MSDEV/INCLUDE/WINPERF.H",
+        "sha256": "bceff22ff81acb012c007d565025d49c600eb44ce63c85d045a62f0d4acb1feb"
+      },
+      "include/winreg.h": {
+        "media_path": "MSDEV/INCLUDE/WINREG.H",
+        "sha256": "96fe9aae21bf0cc65a08bf016a321b60692e839d89f5113306749e41f67eabc5"
+      },
+      "include/winsock.h": {
+        "media_path": "MSDEV/INCLUDE/WINSOCK.H",
+        "sha256": "fe98e407f6729db432b38ae85c0e7ca0d4bd37468044002475e0cbe45dc0b8af"
+      },
+      "include/winspool.h": {
+        "media_path": "MSDEV/INCLUDE/WINSPOOL.H",
+        "sha256": "e79a4bf6470fe341d6a9d7c67208fbfedecd9a5c3dff41b3ea8579e0d4660d1d"
+      },
+      "include/winsvc.h": {
+        "media_path": "MSDEV/INCLUDE/WINSVC.H",
+        "sha256": "20137eb21f1c00fb25c6372772198cea52ff0da491052222b967867c01523b61"
+      },
+      "include/winuser.h": {
+        "media_path": "MSDEV/INCLUDE/WINUSER.H",
+        "sha256": "3b2ebe8bcf63a141227216b8f8b44764f6e000e93ec3acf3cc1a329f7699261a"
+      },
+      "include/winver.h": {
+        "media_path": "MSDEV/INCLUDE/WINVER.H",
+        "sha256": "17bb83d2504cfdd84a031d682b9c7dc33c6e5dc6ae0a0228b106a7eb13f7d447"
+      },
+      "include/winwlx.h": {
+        "media_path": "MSDEV/INCLUDE/WINWLX.H",
+        "sha256": "753ccb2737a89d77b388759a3738322b4fd72217693601f120beb344cd9178ac"
+      },
+      "include/wownt16.h": {
+        "media_path": "MSDEV/INCLUDE/WOWNT16.H",
+        "sha256": "d507980fa597e2a63c0082a3fc1855f144d66c4589139ae91f93193179415045"
+      },
+      "include/wownt32.h": {
+        "media_path": "MSDEV/INCLUDE/WOWNT32.H",
+        "sha256": "6b1b68b3b9ba98fa93e556cc42b5b564accd3fd93c3cb6b33bc4a2c4581eee68"
+      },
+      "include/wshisotp.h": {
+        "media_path": "MSDEV/INCLUDE/WSHISOTP.H",
+        "sha256": "0816bdef0dbbf499ab0929ec39ba2e95923d905ba0103dd67958e839098d5b1d"
+      },
+      "include/wsipx.h": {
+        "media_path": "MSDEV/INCLUDE/WSIPX.H",
+        "sha256": "039abcb9e2b83c66b27aff50c2ec0d073932e28cafeae858ca9655431ce13f1e"
+      },
+      "include/wsnetbs.h": {
+        "media_path": "MSDEV/INCLUDE/WSNETBS.H",
+        "sha256": "aa8aecca85c99e6cdb43319fc63a79a53bc1bc4cf10a33a1b5470956012dd436"
+      },
+      "include/wsnwlink.h": {
+        "media_path": "MSDEV/INCLUDE/WSNWLINK.H",
+        "sha256": "f204ca301f834c4ac55e260976963cf1a467ec1b72d4f8a91776c34ed32eb751"
+      },
+      "include/wtypes.h": {
+        "media_path": "MSDEV/INCLUDE/WTYPES.H",
+        "sha256": "5e67c5a029dd8e8d7184c06e3074456b99ecd0c0e125bf592fd2e0c3848ff4cf"
+      },
+      "include/wtypes.idl": {
+        "media_path": "MSDEV/INCLUDE/WTYPES.IDL",
+        "sha256": "ff3a27e7da761a64cf39f2490816eda67637d2e945b1daec05ffb9c8b697d9e4"
+      },
+      "include/xcmc.h": {
+        "media_path": "MSDEV/INCLUDE/XCMC.H",
+        "sha256": "9068beb3876fa065846839b1dd1a08db487aed683fad3d8155f323eb4268fc20"
+      },
+      "include/xcmcext.h": {
+        "media_path": "MSDEV/INCLUDE/XCMCEXT.H",
+        "sha256": "0a9da3e37be391fbe14301431db99459e3289fa17a4570033722f7b43e4d1897"
+      },
+      "include/xcmcmsx2.h": {
+        "media_path": "MSDEV/INCLUDE/XCMCMSX2.H",
+        "sha256": "986bfb552791ed75b5af1b85f1780ebf6f8b229b6df9105f4600613ee81f95c7"
+      },
+      "include/xcmcmsxt.h": {
+        "media_path": "MSDEV/INCLUDE/XCMCMSXT.H",
+        "sha256": "b2a230147976f36ca31b8a7ef0ea0df2ac37b50818b52350cf0a3ec3e1a68847"
+      },
+      "lib/advapi32.lib": {
+        "media_path": "MSDEV/LIB/ADVAPI32.LIB",
+        "sha256": "f3311e6755c5637d34ae5867fc18b6aff0e5d867d83edc2aa2e22008ec8c51e7"
+      },
+      "lib/binmode.obj": {
+        "media_path": "MSDEV/LIB/BINMODE.OBJ",
+        "sha256": "fdad5c60127de8f6e313a47a1c2bc363f63605fe41b756472f33216e4f7477b9"
+      },
+      "lib/cap.lib": {
+        "media_path": "MSDEV/LIB/CAP.LIB",
+        "sha256": "962b3ca28ba85f9f407ecf5edc56754eeee4b1d53146f5187832613d66a94eab"
+      },
+      "lib/chkstk.obj": {
+        "media_path": "MSDEV/LIB/CHKSTK.OBJ",
+        "sha256": "bfb13951b21d1ff6c4fafd7dd76da205bbdefef1bbfea315383545d6bda18631"
+      },
+      "lib/comctl32.lib": {
+        "media_path": "MSDEV/LIB/COMCTL32.LIB",
+        "sha256": "75ca953a4198e78161dea41bd76f08aa87cccd20d13abed78434deafa9901918"
+      },
+      "lib/comdlg32.lib": {
+        "media_path": "MSDEV/LIB/COMDLG32.LIB",
+        "sha256": "dcd1c64e4b7ca420f1f197cb3649538068ef0de99788f15160526726c31616a2"
+      },
+      "lib/commode.obj": {
+        "media_path": "MSDEV/LIB/COMMODE.OBJ",
+        "sha256": "3823d97f707678e8dbdb05d4ef38bd79c18c0eff5937372de5d7746fb2d1f0a6"
+      },
+      "lib/ctl3d32.lib": {
+        "media_path": "MSDEV/LIB/CTL3D32.LIB",
+        "sha256": "eeff32415ad626648a9344066dc56447f4d68eff848d2c3a82c225bd75063a3d"
+      },
+      "lib/ctl3d32s.lib": {
+        "media_path": "MSDEV/LIB/CTL3D32S.LIB",
+        "sha256": "ff4c5cb66df6f110fce8dd96430dfcfe38db0c3466fdd314e8a2b17883764ce5"
+      },
+      "lib/dlcapi.lib": {
+        "media_path": "MSDEV/LIB/DLCAPI.LIB",
+        "sha256": "4fe13620e07c6ab56fab13138a4d607b4309c6a10ab23007f4454ee360a7496a"
+      },
+      "lib/fp10.obj": {
+        "media_path": "MSDEV/LIB/FP10.OBJ",
+        "sha256": "0b9cc2e9ead6b9b47f69d9a16d0c275790f100a58343a146763f2a46578e8d2d"
+      },
+      "lib/gdi32.lib": {
+        "media_path": "MSDEV/LIB/GDI32.LIB",
+        "sha256": "482a3db8633bf01d733d1640ee1051596041b4e03723f5cd5b70958632e8ca5b"
+      },
+      "lib/glaux.lib": {
+        "media_path": "MSDEV/LIB/GLAUX.LIB",
+        "sha256": "53b36453c024a0e1552bd7fd76c9059a15c54936f6cefebaadfb2306539a1520"
+      },
+      "lib/glu32.lib": {
+        "media_path": "MSDEV/LIB/GLU32.LIB",
+        "sha256": "c304892e1f780a09f82308ae4bb4499fa06df1cf0e3c3029330096940d73eb02"
+      },
+      "lib/imm32.lib": {
+        "media_path": "MSDEV/LIB/IMM32.LIB",
+        "sha256": "aa7e9e0dc3993c5654527c4cd3b7b45720905cc3e07e0076745e8c398604ae81"
+      },
+      "lib/kernel32.lib": {
+        "media_path": "MSDEV/LIB/KERNEL32.LIB",
+        "sha256": "45d366d154d7bf56ab305a4930e2bd80da3ec33b5049cdcf66b983e6789ea508"
+      },
+      "lib/largeint.lib": {
+        "media_path": "MSDEV/LIB/LARGEINT.LIB",
+        "sha256": "0261dbf0318d133b1d0f9530233f75624f722faea34bc78423ad50bdd51436bb"
+      },
+      "lib/libc.lib": {
+        "media_path": "MSDEV/LIB/LIBC.LIB",
+        "sha256": "e5f0d0e6dd2e01dbb0005e9dd4764507b852ede9a824798f0970bc570966a7e3"
+      },
+      "lib/libcd.lib": {
+        "media_path": "MSDEV/LIB/LIBCD.LIB",
+        "sha256": "08eff0ddca5631cedaa61140c0bfb45fa958c1e165326aaf7e451f6c12105d8f"
+      },
+      "lib/libcd.pdb": {
+        "media_path": "MSDEV/LIB/LIBCD.PDB",
+        "sha256": "fb8f0fa3da3a3376213655b60399678b02bc35cdcf7b2d709fd95ecb67b50247"
+      },
+      "lib/libcmt.lib": {
+        "media_path": "MSDEV/LIB/LIBCMT.LIB",
+        "sha256": "d7bdb49c0a3bc77dee026b9aa9a994c5a78963c8aefc6512dbb298b4d41c4907"
+      },
+      "lib/libcmtd.lib": {
+        "media_path": "MSDEV/LIB/LIBCMTD.LIB",
+        "sha256": "d26cea5874f6fea008cdcaa9fbf4bb1d9db0cd2a435117e73dae719fb74aa382"
+      },
+      "lib/libcmtd.pdb": {
+        "media_path": "MSDEV/LIB/LIBCMTD.PDB",
+        "sha256": "84f3af8586b8ffe6aab047fc002ad085df28b9b45bd4ec9e9324fcb3740deb81"
+      },
+      "lib/lz32.lib": {
+        "media_path": "MSDEV/LIB/LZ32.LIB",
+        "sha256": "3d0db3f878ce7eed9681652832769475314c7986f5d8ef89070515d8327f9dfc"
+      },
+      "lib/mapi32.lib": {
+        "media_path": "MSDEV/LIB/MAPI32.LIB",
+        "sha256": "3607da7e3c78a12154cfba1ea9e7fb00de768c3df392fcb8c7fb604386662140"
+      },
+      "lib/mfcapwz.lib": {
+        "media_path": "MSDEV/LIB/MFCAPWZ.LIB",
+        "sha256": "ceefcd3ee4cf1f0d2a0c6a5eeabc33bf3f27ad836367f84d9401ea8c4e7a6fe4"
+      },
+      "lib/mfcuia32.lib": {
+        "media_path": "MSDEV/LIB/MFCUIA32.LIB",
+        "sha256": "268090880a0d4c9c2a376344240081bb40765334f545e3769a898a57fb346a9a"
+      },
+      "lib/mgmtapi.lib": {
+        "media_path": "MSDEV/LIB/MGMTAPI.LIB",
+        "sha256": "c28bad1cf4fb5c98532a76e9455f5a2c10788ea00989b7520dc1e02d10cd8cba"
+      },
+      "lib/mpr.lib": {
+        "media_path": "MSDEV/LIB/MPR.LIB",
+        "sha256": "8fedcdea2a85555ba3e7a6de350535df2c5b42b63ac8f711713dbc47cdba9d98"
+      },
+      "lib/msacm32.lib": {
+        "media_path": "MSDEV/LIB/MSACM32.LIB",
+        "sha256": "0cc90409d489f45f671d5df7b64bfbf73f14a641ae6975ca2542197d6fe290ac"
+      },
+      "lib/msvcrt.lib": {
+        "media_path": "MSDEV/LIB/MSVCRT.LIB",
+        "sha256": "4eb4156ade210fc73ca9eba92b7e2c02c699d2fd9c272d0ec1cdb9911bd9e07f"
+      },
+      "lib/msvcrtd.lib": {
+        "media_path": "MSDEV/LIB/MSVCRTD.LIB",
+        "sha256": "7e67380003a9935a140fcdac76db901b46f630ddbe370d9f31a86432542c29c8"
+      },
+      "lib/msvcrtd.pdb": {
+        "media_path": "MSDEV/LIB/MSVCRTD.PDB",
+        "sha256": "9d593f830efa13d37daab6389ca55239dc6db1a212d20160b28a5c1b8d021b20"
+      },
+      "lib/nddeapi.lib": {
+        "media_path": "MSDEV/LIB/NDDEAPI.LIB",
+        "sha256": "3e566604c97cc3e7b8260fdd47c4f893721daef73e549264ef7a001acd7e3716"
+      },
+      "lib/netapi32.lib": {
+        "media_path": "MSDEV/LIB/NETAPI32.LIB",
+        "sha256": "888ffd688358327b27fde1ec435acfed3061b661398b62c4f05bdafc6e8a6203"
+      },
+      "lib/newmode.obj": {
+        "media_path": "MSDEV/LIB/NEWMODE.OBJ",
+        "sha256": "b4ae38016bcea2926773179b6e6d918e6d16194b766552c7c421782d0575bca8"
+      },
+      "lib/odbc32.lib": {
+        "media_path": "MSDEV/LIB/ODBC32.LIB",
+        "sha256": "9e42096f5aec0a765f90a5d2611b62bd805b16dc7fe85f0e842d02b03b709ff5"
+      },
+      "lib/odbccp32.lib": {
+        "media_path": "MSDEV/LIB/ODBCCP32.LIB",
+        "sha256": "3411b9301f3547958dbd719cab544621cacf21eb4006ed2950a184659d442fd5"
+      },
+      "lib/oldnames.lib": {
+        "media_path": "MSDEV/LIB/OLDNAMES.LIB",
+        "sha256": "ad2e63232541408d6b0216a665456b6d641362c3622dfc8beea76839b2558fd4"
+      },
+      "lib/ole32.lib": {
+        "media_path": "MSDEV/LIB/OLE32.LIB",
+        "sha256": "915adf79d12cee44ba9b1e246719b6bf26bfd888b581bc8553d6dd43dc9fd03f"
+      },
+      "lib/oleaut32.lib": {
+        "media_path": "MSDEV/LIB/OLEAUT32.LIB",
+        "sha256": "735fe3f6484f28df29d0d62480a0f4377afdf1bfddcd9267cedee97ff4df5f15"
+      },
+      "lib/oledlg.lib": {
+        "media_path": "MSDEV/LIB/OLEDLG.LIB",
+        "sha256": "5c9c3526a965aa613e0586400a711f6c4baed5fc9551a18d97b707b710154546"
+      },
+      "lib/olepro32.lib": {
+        "media_path": "MSDEV/LIB/OLEPRO32.LIB",
+        "sha256": "9f7476f8d8539f970fa4c1a175a30dab199d70b8d5ffc8e45f0e083485dd0cce"
+      },
+      "lib/opengl32.lib": {
+        "media_path": "MSDEV/LIB/OPENGL32.LIB",
+        "sha256": "e1ce3e0ba5f40511229ae36fafcc7aeab5af53cb6e6d1ecde26037e29926c53a"
+      },
+      "lib/penter.lib": {
+        "media_path": "MSDEV/LIB/PENTER.LIB",
+        "sha256": "38a1f5f0dcd2c3fbae5a3bde4c191f0690b0e88174322e90bd5e31bf864941f4"
+      },
+      "lib/penwin32.lib": {
+        "media_path": "MSDEV/LIB/PENWIN32.LIB",
+        "sha256": "5bdd7a981405a17b5e1999d9ded8230ccb7e9659c631f93a8fbbc7f89fc92a00"
+      },
+      "lib/pkpd32.lib": {
+        "media_path": "MSDEV/LIB/PKPD32.LIB",
+        "sha256": "3af37cc15487f47e95bc2c763136bd603a97438113fa18904ad8a5a827a77a4f"
+      },
+      "lib/rasapi32.lib": {
+        "media_path": "MSDEV/LIB/RASAPI32.LIB",
+        "sha256": "e48f6841c8521cdf3a20675f692e001f9d14b212792e91d68e4de04ee8bb1822"
+      },
+      "lib/rpcdce4.lib": {
+        "media_path": "MSDEV/LIB/RPCDCE4.LIB",
+        "sha256": "038179587adc7a6f36b5887adc8dad72a76c580b546086419a1376cb245b87ac"
+      },
+      "lib/rpcndr.lib": {
+        "media_path": "MSDEV/LIB/RPCNDR.LIB",
+        "sha256": "001c775b3add291f146f45b2fe67208c3ed3ce6c74c17f110b8e751f9e99c237"
+      },
+      "lib/rpcns4.lib": {
+        "media_path": "MSDEV/LIB/RPCNS4.LIB",
+        "sha256": "65b0cb0df6ba18ce745a19250eab503e4c2a9c5cc07c41c74e65a7968d1286e1"
+      },
+      "lib/rpcrt4.lib": {
+        "media_path": "MSDEV/LIB/RPCRT4.LIB",
+        "sha256": "9de5f195f2a4b444bb6eba3593af39284c13a7ac3179ff8f39a832fa07bc70aa"
+      },
+      "lib/scrnsave.lib": {
+        "media_path": "MSDEV/LIB/SCRNSAVE.LIB",
+        "sha256": "892eed442fcf0097746b1303bca9eb070398d5187dddb2f0ca0f3b8b0c47a1e2"
+      },
+      "lib/setargv.obj": {
+        "media_path": "MSDEV/LIB/SETARGV.OBJ",
+        "sha256": "0683009c096f69868983af0c752f6e956740aa9f9fbc5d4ec5d603e28449158b"
+      },
+      "lib/shell32.lib": {
+        "media_path": "MSDEV/LIB/SHELL32.LIB",
+        "sha256": "04ac37279c410e7d16082d16e20df47563c8b675d8d4be6d017ffd59400b10f5"
+      },
+      "lib/snmp.lib": {
+        "media_path": "MSDEV/LIB/SNMP.LIB",
+        "sha256": "cef49ebe2820ae8bd38fe2e2658f62c6eb1710b90e8ac2429b53368c704f19c1"
+      },
+      "lib/svrapi.lib": {
+        "media_path": "MSDEV/LIB/SVRAPI.LIB",
+        "sha256": "b94ac333c218091d9393e6c49734e3449e0c41be0785629fa9579fcaa1952942"
+      },
+      "lib/tapi32.lib": {
+        "media_path": "MSDEV/LIB/TAPI32.LIB",
+        "sha256": "ea710e4a077713321093ddfeb3434d1b03d9ad298098d4762178d415fd07baf0"
+      },
+      "lib/th32.lib": {
+        "media_path": "MSDEV/LIB/TH32.LIB",
+        "sha256": "ca1a333206bb324f1be59778fac9b91a9de1735288bce50f0f087fd484a526a0"
+      },
+      "lib/thunk32.lib": {
+        "media_path": "MSDEV/LIB/THUNK32.LIB",
+        "sha256": "6261a017176c3c52b35451547c8a4f68c5774abe46dbf26d95c6bac5bc8be84b"
+      },
+      "lib/url.lib": {
+        "media_path": "MSDEV/LIB/URL.LIB",
+        "sha256": "12f456d5a63659af6aa87ffcf50aad6290e959a424f42590d534572d6585b85b"
+      },
+      "lib/user32.lib": {
+        "media_path": "MSDEV/LIB/USER32.LIB",
+        "sha256": "6584e42154dbb49e75bb1104e05ad62af180b445708631f2dbb7046a04deea89"
+      },
+      "lib/uuid.lib": {
+        "media_path": "MSDEV/LIB/UUID.LIB",
+        "sha256": "6fd1743d5655ce3ea5ab9e97cc193ad828906084efae7e2cd7c3c0eeeb9cc4a1"
+      },
+      "lib/uuid2.lib": {
+        "media_path": "MSDEV/LIB/UUID2.LIB",
+        "sha256": "099aa04cc7a03252279a13e98934e0378b80160f25a7ec0eaf4ee078bc01dfec"
+      },
+      "lib/vdmdbg.lib": {
+        "media_path": "MSDEV/LIB/VDMDBG.LIB",
+        "sha256": "ea4b19b031332acc633d88e7ef86c708f5716bca510c0a84685ed6ca31e9ce39"
+      },
+      "lib/version.lib": {
+        "media_path": "MSDEV/LIB/VERSION.LIB",
+        "sha256": "b193565504a3e6e349c746eb67ff46b0f5c4b51cfd673f5c4794be67fb561d98"
+      },
+      "lib/vfw32.lib": {
+        "media_path": "MSDEV/LIB/VFW32.LIB",
+        "sha256": "0b6898978edf3518c5e688be4cdfaca77efafbfe2d2606072238792739694eea"
+      },
+      "lib/win32api.csv": {
+        "media_path": "MSDEV/LIB/WIN32API.CSV",
+        "sha256": "ff0e2e9bd9faf4dece0b65ac22a067e7bcc2aac4125b07b574d5904c9aec8849"
+      },
+      "lib/win32spl.lib": {
+        "media_path": "MSDEV/LIB/WIN32SPL.LIB",
+        "sha256": "9be86a65609f23f4fd921de42a977dee1cc1e6d8219209875a30a683d7281bb5"
+      },
+      "lib/winmm.lib": {
+        "media_path": "MSDEV/LIB/WINMM.LIB",
+        "sha256": "95b907366711ff88b539d83fca956a53841724660a4c09923c450f9c688a41a2"
+      },
+      "lib/winspool.lib": {
+        "media_path": "MSDEV/LIB/WINSPOOL.LIB",
+        "sha256": "9cf6aebdfe8642b63550ef932213f911731d81b2ee7708969755ce4b1cc07432"
+      },
+      "lib/winstrm.lib": {
+        "media_path": "MSDEV/LIB/WINSTRM.LIB",
+        "sha256": "1291f04a4ba0208e6ac72d5bdb3196da9ceeaf01a5db813b7ba8db39a29ff008"
+      },
+      "lib/wow32.lib": {
+        "media_path": "MSDEV/LIB/WOW32.LIB",
+        "sha256": "07e7f8125db036e3da72401ad8984310a72e78d88384b362f1f033a75997d328"
+      },
+      "lib/wsetargv.obj": {
+        "media_path": "MSDEV/LIB/WSETARGV.OBJ",
+        "sha256": "cabc6b5df221f896cb6d702fd69397fff445489f1f6eb953bff663406b7ea2c5"
+      },
+      "lib/wsock32.lib": {
+        "media_path": "MSDEV/LIB/WSOCK32.LIB",
+        "sha256": "0d0c311ed4a6fe5d36a7f23ebe3a3bef71dba4189619e48c0cb9a2427aae7ec8"
+      },
+      "lib/wst.lib": {
+        "media_path": "MSDEV/LIB/WST.LIB",
+        "sha256": "9c77ff721768cde62c9a042ec95bda9ff5f1040368507c357251c7d683aa8853"
       }
     }
   }
