@@ -25,6 +25,17 @@ class FixedAsmUnit:
 
 
 UNITS = {
+    "BASE/BMAP2": FixedAsmUnit(
+        source="src/BASE/BMAP2.asm",
+        claims=(
+            FixedAsmClaim(0x0047C82C, 0x74,
+                          "?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z"),
+            FixedAsmClaim(0x0047C986, 0x4B,
+                          "?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z"),
+            FixedAsmClaim(0x0047C9D2, 0x43,
+                          "?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z"),
+        ),
+    ),
     "BASE/BITS": FixedAsmUnit(
         source="src/BASE/BITS.asm",
         claims=(
@@ -37,6 +48,12 @@ UNITS = {
         source="src/BASE/TILE.asm",
         claims=(
             FixedAsmClaim(0x0047D110, 0x134, "_TileToBitmap"),
+        ),
+    ),
+    "BASE/MAKEFILEID": FixedAsmUnit(
+        source="src/BASE/MAKEFILEID.asm",
+        claims=(
+            FixedAsmClaim(0x0047CA18, 0x2A, "?MAKEFILEID@@YAKPAD@Z"),
         ),
     ),
 }

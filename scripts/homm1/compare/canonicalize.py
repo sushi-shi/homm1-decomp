@@ -107,6 +107,9 @@ FUNCTION_TYPE = 0x0020
 EXTERNAL_STORAGE = 2
 LABEL_STORAGE = 6
 WEAK_EXTERNAL_STORAGE = 105
+STATIC_STORAGE = 3
+ALIGNMENT_FILL = {0x90, 0xCC}
+ALIGNMENT_FILL_LIMIT = 16
 
 
 @dataclass(frozen=True)
@@ -320,6 +323,85 @@ class CoffObject:
         if section.raw_offset == 0:
             return bytes(section.raw_size)
         return self.data[section.raw_offset:section.raw_offset + section.raw_size]
+
+
+def add_function_padding_boundaries(
+        payload: bytes, claims: tuple[tuple[str, int], ...]) -> bytes:
+    """Append donor-style local symbols at reviewed function ends.
+
+    Vostok keeps linker alignment fill in the delinked ``.text`` section.
+    Objdiff otherwise infers the preceding function through that fill.  HoMM2's
+    comparison pipeline adds a local boundary symbol when the reviewed end is
+    followed by fewer than 16 bytes consisting solely of NOP/INT3.  No payload
+    byte is inserted, removed, or changed.
+    """
+    if not claims:
+        return payload
+    coff = CoffObject(payload)
+    by_name: dict[str, list[Symbol]] = defaultdict(list)
+    for symbol in coff.symbols.values():
+        if (symbol.section > 0 and symbol.typ == FUNCTION_TYPE and
+                symbol.storage_class == EXTERNAL_STORAGE and
+                coff.sections[symbol.section - 1].characteristics & MEM_EXECUTE):
+            by_name[symbol.name].append(symbol)
+    boundaries = []
+    for name, size in claims:
+        functions = by_name.get(name, ())
+        if len(functions) != 1 or size <= 0:
+            continue
+        function = functions[0]
+        section = coff.sections[function.section - 1]
+        claim_end = function.value + size
+        span_end = min(
+            (symbol.value for symbol in coff.symbols.values()
+             if symbol.section == function.section
+             and symbol.value > function.value),
+            default=section.raw_size)
+        if not claim_end < span_end <= section.raw_size:
+            continue
+        if span_end - claim_end >= ALIGNMENT_FILL_LIMIT:
+            continue
+        fill = coff.section_bytes(section)[claim_end:span_end]
+        if any(byte not in ALIGNMENT_FILL for byte in fill):
+            continue
+        boundaries.append((f"$fnpad@{claim_end:x}", claim_end,
+                           function.section))
+    if not boundaries:
+        return payload
+
+    string_table = bytearray(payload[coff.string_offset:])
+    string_offsets = {}
+    cursor = 4
+    while cursor < len(string_table):
+        end = string_table.index(0, cursor)
+        string_offsets[bytes(string_table[cursor:end])] = cursor
+        cursor = end + 1
+
+    records = bytearray()
+    for name, value, section in sorted(boundaries,
+                                       key=lambda item: (item[2], item[1])):
+        encoded = name.encode("latin-1")
+        if len(encoded) <= 8:
+            name_field = encoded.ljust(8, b"\0")
+        else:
+            offset = string_offsets.get(encoded)
+            if offset is None:
+                offset = len(string_table)
+                string_offsets[encoded] = offset
+                string_table.extend(encoded + b"\0")
+            name_field = struct.pack("<II", 0, offset)
+        records.extend(name_field)
+        records.extend(struct.pack("<IhHBB", value, section, 0,
+                                   STATIC_STORAGE, 0))
+    struct.pack_into("<I", string_table, 0, len(string_table))
+    result = bytearray(payload[:coff.string_offset] + records + string_table)
+    struct.pack_into("<I", result, 12, coff.symbol_count + len(boundaries))
+
+    reparsed = CoffObject(bytes(result))
+    if any(reparsed.section_bytes(after) != coff.section_bytes(before)
+           for before, after in zip(coff.sections, reparsed.sections)):
+        raise RuntimeError("function boundary normalization changed section bytes")
+    return bytes(result)
 
 
 def _storage(section: Section) -> str | None:

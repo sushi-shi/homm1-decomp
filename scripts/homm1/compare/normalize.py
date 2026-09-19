@@ -79,12 +79,14 @@ def _stale(src: Path, out: Path) -> bool:
 
 
 def _normalize_one(src: Path, out_obj: Path, out_sidecar: Path, *,
-                   force: bool = False) -> str:
+                   force: bool = False,
+                   function_claims: tuple[tuple[str, int], ...] = ()) -> str:
     """Normalize src -> out_obj (+ sidecar) when stale. Return a state token."""
     if not force and not _stale(src, out_obj) and not _stale(src, out_sidecar):
         return "skip"
     result = canon.canonicalize_coff(src.read_bytes())
-    canon._atomic_write(out_obj, result.data)
+    data = canon.add_function_padding_boundaries(result.data, function_claims)
+    canon._atomic_write(out_obj, data)
     canon._atomic_write(out_sidecar, canon.sidecar_bytes(result.rows))
     return "wrote"
 
@@ -165,11 +167,16 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
     weak_n = _assert_weak_externals_have_no_strong_definition(inputs)
 
     for unit in ordered:
+        from homm1.graph.fixed_asm import unit as fixed_asm_unit
+        fixed = fixed_asm_unit(unit)
+        function_claims = tuple(
+            (claim.name, claim.size) for claim in fixed.claims
+            if claim.kind == "func") if fixed is not None else ()
         base_src = base_dir / f"{unit}.obj"
         if base_src.exists():
             state = _normalize_one(
                 base_src, base_out / f"{unit}.obj", base_out / f"{unit}.symbols.tsv",
-                force=force)
+                force=force, function_claims=function_claims)
             wrote += state == "wrote"
             skipped += state == "skip"
             base_n += 1
@@ -178,7 +185,9 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
         target_sidecar = target_out / f"{unit}.symbols.tsv"
         if target_src is not None:
             target_obj = target_out / target_src.relative_to(target_dir)
-            state = _normalize_one(target_src, target_obj, target_sidecar, force=force)
+            state = _normalize_one(
+                target_src, target_obj, target_sidecar, force=force,
+                function_claims=function_claims)
             wrote += state == "wrote"
             skipped += state == "skip"
             target_n += 1

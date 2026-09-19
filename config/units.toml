@@ -17,6 +17,11 @@ source = "src/BASE/BITS.asm"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "BASE/BMAP2"
+source = "src/BASE/BMAP2.asm"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
 flags = "cpp_carcass"
@@ -24,6 +29,11 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/LZHUF"
 source = "src/BASE/LZHUF.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/MAKEFILEID"
+source = "src/BASE/MAKEFILEID.asm"
 flags = "cpp_carcass"
 
 [[unit]]
