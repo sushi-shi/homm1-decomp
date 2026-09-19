@@ -2,7 +2,8 @@
 
 #include <match.h>
 
-#include <Win32.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 #include <H1/KB.h>
 #include <H2/_all.h>
@@ -28,17 +29,16 @@ long int __stdcall AppWndProc(void *, unsigned int, unsigned int, long int) { re
 // Identity: PE export AppAbout, ordinal 1.
 // Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
 extern "C" VA(0x0045c15c, 0x90)
-BOOL __stdcall AppAbout(HWND hDlg, H1_ENUM_PARAM(WindowMessage, UINT) message,
-                       WPARAM wParam, LPARAM lParam)
+BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    H1_ENUM_PARAM(DialogControl, int) wmId;
+    int wmId;
     WORD codeNotify;
     HWND hwndCtl;
     switch (message) {
     case WM_INITDIALOG:
         return 1;
     case WM_COMMAND:
-        wmId = H1_ENUM_CAST(DialogControl, int, wParam & 0xffff);
+        wmId = wParam & 0xffff;
         hwndCtl = reinterpret_cast<HWND>(lParam); // WM_COMMAND passes HWND in LPARAM.
         codeNotify = (wParam >> 16) & 0xffff;
         if (wmId == IDOK)
@@ -96,7 +96,7 @@ void SetWinText(heroWindow *j, int id)
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:long int KBTickCount(void)@0x0001d011
 VA(0x0045dc9b, 0x16)
-long int KBTickCount(void) { return 0; }
+long int KBTickCount(void) { return GetTickCount(); }
 
 // donor PoL RVA 0x000c47f0; preferred Buka symbol ?ProcessAssert@@YIXHPADH@Z
 // donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order

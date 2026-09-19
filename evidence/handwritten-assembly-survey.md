@@ -65,6 +65,12 @@ descriptor setup. These observations support manual assembly; they do not
 establish whether each original unit used a separate `.asm` file or inline
 assembly.
 
+The HoMM2 Buka reconstruction keeps the corresponding icon modules in `.cpp`
+files. Those substantially larger HoMM2 bodies establish names and module
+boundaries, but they do not prove the source language of these different
+HoMM1 implementations. MASM is the current exact reconstruction form, not a
+claim that the original HoMM1 filename extension is known.
+
 ### First priority: the bit helpers
 
 The existing HoMM2 Buka reconstruction has a real
