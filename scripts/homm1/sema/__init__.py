@@ -11,6 +11,7 @@
     homm1 sema gaps    [options]         unclaimed same-file .text gaps
     homm1 sema map     [sub ...]         retail address-space map
     homm1 sema match   <unit|rva|name>   objdiff scores for a unit / function
+    homm1 sema frame   <unit|function>   VC4 candidate local names and /Od slots
 
 Every module is also a direct entry: `python3 -m homm1.sema.xref 0x136180`.
 `homm1 sema -` is batch mode: newline-delimited view commands on stdin,
@@ -22,7 +23,8 @@ the Model (`homm1.model.resolve`) for identity, the retail image
 (`homm1.core.pe`) for bytes, the compare slice's current report
 (`build/objdiff/compare-new/report.json`, falling back to the older
 `build/objdiff/report.json`) for scores and `config/units.toml` for the unit
-list. It writes nothing.
+list. Usage events are appended to build/homm1_usage.jsonl; queries do not
+change reconstruction inputs.
 
 Doctrine: assembly only. Nothing here decompiles - views annotate real
 instruction bytes with Model labels, and a question the labels cannot answer
@@ -49,6 +51,7 @@ SUBCOMMANDS = {
     "gaps": "homm1.sema.gaps",
     "map": "homm1.sema.map",
     "match": "homm1.sema.match",
+    "frame": "homm1.sema.frame",
 }
 
 
@@ -123,6 +126,10 @@ def batch() -> int:
     return rc
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if not argv or argv[0] in ("-h", "--help", "help"):

@@ -281,6 +281,10 @@ def _group(found):
     return sorted(groups.items(), key=lambda item: (item[0][0], item[0][1]))
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 verify library-data-refs",

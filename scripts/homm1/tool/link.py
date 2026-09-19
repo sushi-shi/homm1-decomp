@@ -39,6 +39,10 @@ def link(args: list[str], *, cwd: Path | None = None,
     return output
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

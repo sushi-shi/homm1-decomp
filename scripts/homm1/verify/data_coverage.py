@@ -286,6 +286,10 @@ def _summary(rows, claims, sections):
               f"addressed  {touched[v]:7} B TOUCHED by retail")
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 verify data-coverage",

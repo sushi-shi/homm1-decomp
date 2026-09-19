@@ -46,6 +46,10 @@ def findings() -> tuple[list[str], int]:
     return out, n_src
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     argparse.ArgumentParser(

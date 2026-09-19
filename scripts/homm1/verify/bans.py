@@ -28,6 +28,10 @@ def scan():
                        m.group(0).strip())
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     argparse.ArgumentParser(

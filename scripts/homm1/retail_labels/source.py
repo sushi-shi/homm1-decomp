@@ -661,6 +661,10 @@ def run(only_units: list[str] | None = None, jobs: int = os.cpu_count() or 4):
     return changed, problems
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

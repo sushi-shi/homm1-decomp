@@ -67,6 +67,10 @@ def load(path: Path | str) -> dict:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

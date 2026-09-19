@@ -424,6 +424,10 @@ def serialize(model: Model) -> tuple[bool, bool]:
     return changed_b, changed_v
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     from collections import Counter

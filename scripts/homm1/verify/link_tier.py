@@ -253,6 +253,10 @@ def gate_findings() -> list[str]:
     return link_defect_findings() + census_findings() + image_diff_findings()
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 verify link-tier",

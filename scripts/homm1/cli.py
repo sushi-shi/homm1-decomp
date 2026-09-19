@@ -15,7 +15,7 @@ import subprocess
 import sys
 
 
-TOOLS = ("wine", "cl", "delinker", "pdbutil", "objdiff", "objdump",
+TOOLS = ("wine", "cl", "ml", "link", "rc", "delinker", "pdbutil", "objdiff", "objdump",
          "clangd", "ghidra")
 
 
@@ -94,12 +94,16 @@ def _toolchain(argv: list[str]) -> int:
     return 0
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__.strip())
         print("\ncommands: init inspect toolchain configure build link match labels "
-              "model delink compare audit sema verify tool test")
+              "model delink compare audit sema ghidra verify tool test")
         return 0 if argv else 2
     cmd, rest = argv[0], argv[1:]
     if cmd == "init":
@@ -120,11 +124,12 @@ def main(argv: list[str] | None = None) -> int:
         sys.argv = [f"homm1 {cmd}", *rest]
         return importlib.import_module(module).main()
     if cmd == "audit":
-        if not rest or rest[0] != "dna-bands":
-            print("homm1 audit: expected dna-bands", file=sys.stderr)
+        audits = {"dna-bands": "dna_bands", "tooling": "tooling"}
+        if not rest or rest[0] not in audits:
+            print("homm1 audit: expected " + ", ".join(audits), file=sys.stderr)
             return 2
-        return importlib.import_module("homm1.audit.dna_bands").main(rest[1:])
-    if cmd in ("sema", "verify"):
+        return importlib.import_module(f"homm1.audit.{audits[rest[0]]}").main(rest[1:])
+    if cmd in ("sema", "ghidra", "verify"):
         return importlib.import_module(f"homm1.{cmd}").main(rest)
     if cmd in ("build", "link", "match"):
         from homm1.graph.verbs import VERBS

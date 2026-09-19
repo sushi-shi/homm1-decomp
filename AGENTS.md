@@ -26,3 +26,9 @@ authority. The editor and other releases are secondary evidence.
 - The tooling design comes directly from the pinned Gruntz donor documented in
   `docs/tooling.md`. Adapt target facts in the existing modules; do not add a
   parallel adapter pipeline.
+- Preserve usage logging on every tooling entry point (`homm1.core.usage.logged`),
+  including direct module and batch commands. Run `homm1 test` to check coverage.
+- Review tooling ports against both Gruntz and HoMM2. Record donor revisions and
+  retained/adapted/deferred/inapplicable capabilities in
+  `docs/tooling-inheritance.md`; repeat `homm1 audit tooling`. A copied package
+  or game-specific ledger does not establish command or behavioral parity.

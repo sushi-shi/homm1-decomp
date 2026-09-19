@@ -83,6 +83,10 @@ def gate_findings(files=None) -> list[str]:
     return problems + compare(marked, rva_sites, explicit, dead)
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 verify dead-code",

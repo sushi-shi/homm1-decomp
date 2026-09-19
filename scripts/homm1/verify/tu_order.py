@@ -268,6 +268,10 @@ def gate_findings():
     return findings, (cur, pairs, n_exiled, len(exiles))
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="homm1 verify tu-order",
                                  description=__doc__,

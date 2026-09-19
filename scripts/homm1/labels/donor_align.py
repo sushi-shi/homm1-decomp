@@ -574,6 +574,10 @@ def infer_segments(targets: list[Function], donors: list[Function], path: Path,
     write(path, rows)
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--homm1-exe", type=Path, required=True)

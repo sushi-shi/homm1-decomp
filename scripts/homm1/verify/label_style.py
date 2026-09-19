@@ -125,6 +125,10 @@ def violations() -> list[str]:
     return out
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="homm1 verify label-style",
                                  description=__doc__)

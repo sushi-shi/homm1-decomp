@@ -54,6 +54,7 @@ _SUBS = ("status", "check", "bank", "fingerprints")
 #: question, they do not return findings.
 _GATES = {"board": "homm1.verify.board", "bans": "homm1.verify.bans",
           "casts": "homm1.verify.casts",
+          "compiler-artifacts": "homm1.verify.compiler_artifacts",
           "constants": "homm1.verify.constants",
           "enum-domains": "homm1.verify.enum_domains",
           "label-style": "homm1.verify.label_style",
@@ -107,6 +108,10 @@ def _usage(stream=None) -> None:
           + ", ".join(sorted(_QUERY_ONLY)), file=out)
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import sys
     argv = list(sys.argv[1:] if argv is None else argv)

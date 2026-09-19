@@ -226,6 +226,10 @@ def empty_body(block: str) -> str:
     raise ValueError("unterminated donor function body")
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--matches", type=Path, required=True)

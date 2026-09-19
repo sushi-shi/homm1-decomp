@@ -255,6 +255,10 @@ def query(targets: list[str], *, mode: str = "default", raw: bool = False,
     return 0 if hit else 1
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 sema xref",

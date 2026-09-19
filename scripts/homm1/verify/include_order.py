@@ -355,6 +355,10 @@ def audit(fix=False, fix_dupes=False, fix_prelude=False):
     return dupes, preludes, unordered, manual, changed
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="homm1 verify include-order",
                                  description=__doc__,

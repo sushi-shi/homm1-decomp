@@ -41,6 +41,10 @@ def compile(src: Path | str, out: Path | str, *, flags: list[str] = (),
     return output
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

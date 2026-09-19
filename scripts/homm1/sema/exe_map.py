@@ -203,6 +203,10 @@ are not TU rows.</p>
 """
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     from pathlib import Path

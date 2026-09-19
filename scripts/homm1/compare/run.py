@@ -152,6 +152,10 @@ def run(base_dir: Path = BASE_DIR, target_dir: Path = TARGET_DIR,
     return report
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import sys
     ap = argparse.ArgumentParser(

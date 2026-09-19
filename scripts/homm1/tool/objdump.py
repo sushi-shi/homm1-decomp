@@ -54,6 +54,10 @@ def disassemble(blob: bytes, vma: int = 0, *, arch: str = "i386",
     return proc.stdout
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     import sys

@@ -208,6 +208,10 @@ def verify_prefix() -> None:
                         "(a cold wineserver can fail the first winepath)")
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

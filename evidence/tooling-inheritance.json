@@ -1,0 +1,700 @@
+{
+  "donor": "gruntz",
+  "revision": "b1de0e555576a215898907b8ec8ed5423368883e",
+  "scope": "all Python modules under scripts/gruntz; AST comparison is structural only",
+  "counts": {
+    "adapted_review_required": 37,
+    "equivalent_ast_after_rename": 74,
+    "missing": 61
+  },
+  "modules": [
+    {
+      "module": "__init__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "__main__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "cli.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "compare/__init__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "compare/canonicalize.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "compare/normalize.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "compare/project.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "compare/run.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "core/__init__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "core/coff.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "core/msvc_names.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "core/paths.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "core/pe.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "core/tsv.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "delink/__init__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "delink/coffx.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "delink/data_manifest.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "delink/eh_band.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "delink/image.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "delink/implib.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "delink/pdb_synth.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "delink/run.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "ghidra/__init__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "ghidra/__main__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "ghidra/apply.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "ghidra/dump.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "ghidra/export.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "ghidra/headless.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "ghidra/project.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "graph/__init__.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "graph/__main__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "graph/cc.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "graph/compdb.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "graph/emit.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "graph/implib.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "graph/link.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "graph/ninja_syntax.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "graph/play.py",
+      "status": "missing"
+    },
+    {
+      "module": "graph/scan.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "graph/test_play.py",
+      "status": "missing"
+    },
+    {
+      "module": "graph/verbs.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "lineage/__init__.py",
+      "status": "missing"
+    },
+    {
+      "module": "lineage/discovery.py",
+      "status": "missing"
+    },
+    {
+      "module": "lineage/ledger.py",
+      "status": "missing"
+    },
+    {
+      "module": "lineage/test_lineage.py",
+      "status": "missing"
+    },
+    {
+      "module": "lsp/__init__.py",
+      "status": "missing"
+    },
+    {
+      "module": "lsp/__main__.py",
+      "status": "missing"
+    },
+    {
+      "module": "lsp/query.py",
+      "status": "missing"
+    },
+    {
+      "module": "lsp/rename.py",
+      "status": "missing"
+    },
+    {
+      "module": "manifest.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "model.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "permute/__init__.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/batch_source_variants.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/campaign.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/generate_ast_variants.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/match_variants.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/test_campaign.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/test_source_variants.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/test_tu_state_metrics.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/test_tu_state_noise.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/topology.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/tu_state_metrics.py",
+      "status": "missing"
+    },
+    {
+      "module": "permute/tu_state_noise.py",
+      "status": "missing"
+    },
+    {
+      "module": "retail_labels/__init__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "retail_labels/censuses.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "retail_labels/fragments.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "retail_labels/providers.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "retail_labels/source.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "rsrc/__init__.py",
+      "status": "missing"
+    },
+    {
+      "module": "rsrc/__main__.py",
+      "status": "missing"
+    },
+    {
+      "module": "rsrc/check.py",
+      "status": "missing"
+    },
+    {
+      "module": "rsrc/res.py",
+      "status": "missing"
+    },
+    {
+      "module": "sema/__init__.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "sema/__main__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/classof.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/disasm.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/dump_target.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/exe_map.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "sema/gaps.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/image.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/index.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/map.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/match.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/report.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/rva.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/strings.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/vtable.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "sema/xref.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/__init__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/cl.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/clang.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "tool/clangd.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/delinker.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/ghidra.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/link.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/objdiff.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/objdump.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/pdbutil.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/rc.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "tool/rez.py",
+      "status": "missing"
+    },
+    {
+      "module": "tool/wine.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/__init__.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/__main__.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/access_map.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/alloc_size.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/assert_relocs.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/bans.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/baseline.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/board.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/caller_callee.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/casts.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/classify.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/compiler_artifacts.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/constants.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/data_access.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/data_coverage.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/data_relocs.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/data_tu_order.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/dead_code.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/enum_domains.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/fingerprints.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/include_order.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/label_style.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/layout.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/library_data_refs.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/library_overlap.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/link_tier.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/readme.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/scores.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/selftest.py",
+      "status": "missing"
+    },
+    {
+      "module": "verify/srcscan.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/tiers.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/tu_order.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/undefined_closure.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/unique_names.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/universe.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/verbs.py",
+      "status": "adapted_review_required"
+    },
+    {
+      "module": "verify/vtable_scan.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "verify/vtables.py",
+      "status": "equivalent_ast_after_rename"
+    },
+    {
+      "module": "walls/__init__.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/abstractions.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/aggdecl.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/aggregate_copies.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/aggscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/calibrate.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/diagnose.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/eh_frame.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/ehactions.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/escapescan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/framescan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/global_refs.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/inline_model.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/inventory.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/jccscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/loopscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/offsetscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/pairscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/priors.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/recheck.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/reloadscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/residue.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/retscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/reviews.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/semdiff.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/signscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/stale_markers.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/storescan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/test_abstractions.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/thisscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/uninitscan.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/valuetemp.py",
+      "status": "missing"
+    },
+    {
+      "module": "walls/vptrscan.py",
+      "status": "missing"
+    }
+  ]
+}

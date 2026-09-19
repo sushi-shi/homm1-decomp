@@ -344,6 +344,10 @@ def ensure_all(out_dir: Path = OUT_DIR, verbose: bool = True) -> list[Path]:
     return libs
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

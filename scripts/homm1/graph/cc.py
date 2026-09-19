@@ -153,6 +153,10 @@ def compile_unit(src: Path | str, out: Path | str, flags: list[str]) -> bool:
         shutil.rmtree(scratch, ignore_errors=True)
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(

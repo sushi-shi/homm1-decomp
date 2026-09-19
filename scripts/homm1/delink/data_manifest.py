@@ -1325,6 +1325,10 @@ def generate(model: Model, output: Path = OUTPUT,
     return enrolled, secs, withheld
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     from homm1.model import resolve

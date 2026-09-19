@@ -209,7 +209,7 @@ homm1 inspect
 homm1 toolchain install --id vc40 --media /path/to/MSVC40.iso
 homm1 build
 homm1 match
-homm1 sema diff 0x0004f640
+homm1 sema disasm 0x0004f640
 homm1 verify status
 homm1 link --dry-run
 ```

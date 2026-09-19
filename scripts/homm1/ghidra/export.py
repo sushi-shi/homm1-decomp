@@ -156,6 +156,10 @@ def write(out: Path | str = PAYLOAD) -> tuple[dict, bool]:
     return doc, True
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(

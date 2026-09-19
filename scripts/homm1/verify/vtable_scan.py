@@ -191,6 +191,10 @@ def _fn_label(rva: int) -> str:
     return f"sub_{rva:06x}"
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 verify vtable-scan",

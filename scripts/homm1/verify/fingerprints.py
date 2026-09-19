@@ -341,14 +341,18 @@ def regenerate(force_all: bool = False, verbose: bool = False) -> int:
         for unit in todo:
             new_units[unit] = {"cpp_hash": cur_cpp[unit],
                                "source": sources[unit]}
+        # Handwritten MASM units have no clangd AST. Keep their unit hash and
+        # existing explicit fallback semantics; never invent C++ body hashes.
+        cpp_todo = [u for u in todo if Path(sources[u]).suffix.lower()
+                    not in (".asm", ".s")]
         allm: set = set()
-        for u in todo:
+        for u in cpp_todo:
             allm |= umang.get(u, set())
         if allm:
             m2q = demangle_map(allm)
             lsp = Clangd()
             try:
-                for unit in todo:
+                for unit in cpp_todo:
                     path = (REPO / sources[unit]).resolve()
                     if not path.is_file():
                         continue
@@ -375,6 +379,10 @@ def regenerate(force_all: bool = False, verbose: bool = False) -> int:
     return 0
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(

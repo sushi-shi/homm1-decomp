@@ -232,6 +232,10 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
             "duplicates": dups, "exe": out, "map": mapf}
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     from homm1 import graph

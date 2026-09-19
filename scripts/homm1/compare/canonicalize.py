@@ -1650,6 +1650,10 @@ def corpus_summary(roots: list[Path]) -> dict:
     return summary
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="python3 -m homm1.compare.canonicalize", description=__doc__,

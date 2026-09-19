@@ -445,6 +445,10 @@ def write_report(rows, path: Path) -> None:
             writer.writerow(cooked)
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write-config", action="store_true")

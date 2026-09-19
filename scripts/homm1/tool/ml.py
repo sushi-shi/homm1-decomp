@@ -26,6 +26,10 @@ def assemble(src: Path | str, out: Path | str, *, coff: bool = False) -> None:
                         f"{output.strip()}")
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

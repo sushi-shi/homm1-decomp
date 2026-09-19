@@ -558,6 +558,10 @@ def emit(out: Path | None = None) -> tuple[int, int]:
     return len(units), pruned
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(

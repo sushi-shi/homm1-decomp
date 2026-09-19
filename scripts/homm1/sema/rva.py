@@ -90,6 +90,10 @@ def dossier(rva: int, refs: bool = False, depth: int = 0) -> tuple[list[str], in
     return out, 0
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 sema rva",

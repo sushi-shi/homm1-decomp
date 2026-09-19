@@ -156,6 +156,10 @@ def ranked(limit: int = 60) -> list[str]:
     return out
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 sema strings",

@@ -60,6 +60,10 @@ def dump(pdb_path: Path | str, *flags: str,
     return r.stdout
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

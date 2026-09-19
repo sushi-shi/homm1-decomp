@@ -1,11 +1,12 @@
 # Matching tooling
 
-The campaign tooling is a direct port of the local Gruntz repository at
-`b1de0e555576a215898907b8ec8ed5423368883e`. The package was copied as
-`scripts/homm1`, mechanically renamed, and then changed only where the target
-requires different inputs: `HEROES.EXE`, VC4, HoMM1 section/import layout and
-the smaller source manifest. There is no compatibility adapter between HoMM1
-and the donor pipeline.
+The campaign tooling began as a partial port of the local Gruntz repository at
+`b1de0e555576a215898907b8ec8ed5423368883e`, renamed into `scripts/homm1` and
+adapted for `HEROES.EXE`, VC4, and HoMM1 inputs. Copying that package did not
+preserve all useful Gruntz or HoMM2 behavior. The two-donor capability review,
+restored features, and outstanding omissions are in
+[tooling-inheritance.md](tooling-inheritance.md). There is no compatibility
+adapter between HoMM1 and the donor pipeline.
 
 The copied graph is the campaign loop:
 
@@ -29,7 +30,7 @@ nix develop .#build
 homm1 configure
 homm1 build
 homm1 match
-homm1 sema diff 0x0004f640
+homm1 sema disasm 0x0004f640
 homm1 verify status
 homm1 test
 ```
@@ -98,6 +99,37 @@ closure. Gruntz fixtures tied to its source tree, mature data census and review
 walls are not in the default HoMM1 tier. This keeps the active gates strict
 without pretending that deferred data work is complete.
 
-The port deliberately omits Gruntz-only gameplay, resource, LSP, permutation,
-wall-ledger and play-launcher features. Candidate linking, delinking, semantic
-inspection, comparison, score banking and README status refresh are retained.
+The original port omitted gameplay, resource, LSP, permutation, wall-ledger and
+play-launcher features. LSP, permutation, and code-difference diagnostics are
+not Gruntz-only requirements; their absence is tracked as tooling debt in the
+inheritance review. Candidate linking, delinking, semantic inspection,
+comparison, score banking and README status refresh are retained.
+
+## Usage history
+
+All Python tooling entry points append events to `build/homm1_usage.jsonl`.
+This includes `homm1 ...`, `python3 -m homm1...`, Ninja's module commands,
+help/invalid arguments, and each command in `homm1 sema -` batch mode.
+Each invocation has start/finish records with UTC timestamps, module, original
+arguments, copyable command, working directory, PID, parent invocation ID,
+elapsed time, exit code, and an exception when one escapes the entry point.
+Nested dispatches have separate IDs; count root starts for top-level usage.
+Cross-process relationships can be inspected using PID/PPID.
+
+Python subprocess launches made during those commands are recorded too,
+including arguments and working directory. A subprocess event records an
+attempted launch, not its eventual exit status; the enclosing tool's finish
+records its result. A start without a finish may be running or terminated.
+Stdout, stdin, environment variables and arbitrary shell commands outside
+HoMM1 are not captured. This is an invocation history, not a terminal recorder.
+Logs are local, ignored build artifacts and are not rotated or truncated by
+the tooling. Concurrent writers lock the append; a logging failure warns once
+per process and preserves the tool's normal result.
+
+`homm1 test` checks every Python `main` remains instrumented, direct module
+execution and concurrent writes, batch queries, errors, and unavailable logs.
+It also checks that every copied `tool.*` CLI remains publicly reachable.
+
+Run `homm1 audit tooling --json` to repeat the complete pinned Gruntz module
+inventory (use `--gruntz /path/to/checkout` if needed). This reports missing and
+adapted modules; it does not certify behavioral parity.

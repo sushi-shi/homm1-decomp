@@ -25,7 +25,15 @@ import argparse
 import sys
 from pathlib import Path
 
+# Also support the script-path launch used by tool.ghidra without PYTHONPATH.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="headless.py", description=__doc__)
     ap.add_argument("--exe", required=True)

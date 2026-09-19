@@ -877,6 +877,10 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     return result
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     from homm1.model import resolve

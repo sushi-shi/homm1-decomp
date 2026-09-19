@@ -228,6 +228,10 @@ def check(quiet: bool = False) -> list[str]:
     return problems
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)

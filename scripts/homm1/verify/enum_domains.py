@@ -151,6 +151,10 @@ def audit():
     return fatal, warn, declared
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="homm1 verify enum-domains",
                                  description=__doc__,

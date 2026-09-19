@@ -173,6 +173,10 @@ def status() -> int:
     return 0
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     import sys

@@ -1195,6 +1195,10 @@ def do_touched(args):
     return 0
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     from pathlib import Path

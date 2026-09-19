@@ -517,6 +517,10 @@ def report_lines(rows=None) -> list[str]:
     return lines
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 verify board", description=__doc__,

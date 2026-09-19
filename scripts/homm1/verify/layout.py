@@ -460,6 +460,10 @@ def harvest(rebuild: bool = False, jobs: int | None = None,
     return Layout(doc, len(todo)), problems
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 verify layout",

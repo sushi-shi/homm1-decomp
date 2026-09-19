@@ -260,6 +260,10 @@ def match_main(argv: list[str] | None = None) -> int:
 VERBS = {"build": build_main, "link": link_main, "match": match_main}
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     argv = sys.argv[1:]
     if not argv or argv[0] not in VERBS:

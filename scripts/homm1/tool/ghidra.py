@@ -112,6 +112,10 @@ def headless(exe: Path | str, project_dir: Path | str, project: str,
     return output
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 tool ghidra",

@@ -264,6 +264,10 @@ def switch_tables(rva: int, size: int) -> tuple[list[str], int]:
     return (out, 0)
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 sema disasm",

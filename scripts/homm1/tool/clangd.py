@@ -238,6 +238,10 @@ def clang_query(matcher: str, files: list[str], timeout: float = 600.0) -> str:
     return proc.stdout
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)

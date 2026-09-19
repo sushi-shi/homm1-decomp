@@ -658,6 +658,10 @@ def summary(sites: list[Site]) -> str:
             f"enum {classes['enum']})")
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="homm1 verify constants",
                                      description=__doc__)

@@ -96,6 +96,10 @@ _DELINKER_HINTS = (
 )
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     import argparse
     import sys

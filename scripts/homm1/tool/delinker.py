@@ -74,6 +74,10 @@ def delink(pdb: Path | str, exe: Path | str, out_dir: Path | str, *,
     return (r.stdout or "") + (r.stderr or "")
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main() -> int:
     import argparse
     import sys

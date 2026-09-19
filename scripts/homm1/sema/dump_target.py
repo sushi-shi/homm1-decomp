@@ -73,6 +73,10 @@ def dump(target: str, *, size: str | None = None, no_disasm: bool = False,
     return out
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 sema dump",

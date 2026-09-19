@@ -98,6 +98,10 @@ def project(units: list[dict], target_dir: Path, out_dir: Path, *,
     return path
 
 
+from homm1.core.usage import logged
+
+
+@logged
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="python3 -m homm1.compare.project", description=__doc__,
