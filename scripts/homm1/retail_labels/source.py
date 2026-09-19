@@ -4,11 +4,11 @@
 
 Per TU (ported from the old labels pipeline, mechanisms unchanged):
 
-  RVA(rva, size)   clang IR: @llvm.global.annotations pairs the annotation
+  VA(va, size)     clang IR: @llvm.global.annotations pairs the annotation
                    string DIRECTLY with the function's mangled symbol - no
                    positional join, so an inline header definition can never
                    steal a nearby address.
-  DATA(rva)        clang drops extern annotations from IR, so the macro is
+  DATA(va)         clang drops extern annotations from IR, so the macro is
                    text-scanned (comments blanked) and bound to the AST
                    VarDecl BELOW it; the exact extent and the declaration's
                    linkage come from pylibclang.
@@ -66,7 +66,7 @@ BASE_OBJS = BUILD / "objdiff/base"
 
 # Presence test ONLY (never extraction): a TU with no rva.h macro at all is a
 # vendored TU whose claims are the functions_zlib/data_zlib tables - skip it.
-LABELED_TU_RE = re.compile(r"\b(?:RVA|DATA|RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
+LABELED_TU_RE = re.compile(r"\b(?:VA|RVA|DATA|RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
 DATA_MACRO_RE = re.compile(r"\bDATA\s*\(\s*(0x[0-9a-fA-F]+)\s*\)")
 RVA_COMPGEN_RE = re.compile(
     r"\bRVA_COMPGEN\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,"
@@ -75,7 +75,8 @@ RVA_DYNINIT_RE = re.compile(
     r"\bRVA_DYNINIT\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,"
     r"\s*([A-Za-z_][A-Za-z0-9_:<>]*)\s*\)")
 ANN_RVA_RE = re.compile(r"^rva:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?$")
-ANN_DATA_RE = re.compile(r"^data:(0x[0-9a-fA-F]+)$")
+ANN_VA_RE = re.compile(r"^va:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?$")
+ANN_DATA_RE = re.compile(r"^(data-va|data):(0x[0-9a-fA-F]+)$")
 
 DATA_COMPGEN_RE = re.compile(r"\bDATA_COMPGEN\s*\(")
 COMPGEN_ADDR_RE = re.compile(r"0x[0-9a-fA-F]{8}$")
@@ -157,6 +158,15 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
             if ann is None:
                 continue
             name, decorated = _ir_symbol_name(sym_ref)
+            m = ANN_VA_RE.match(ann)
+            if m:
+                size = None
+                if m.group(2):
+                    v = m.group(2)
+                    size = int(v, 16) if v.lower().startswith("0x") else int(v)
+                funcs.append((int(m.group(1), 16) - image().image_base,
+                              msvc_names.func(name, decorated=decorated), size))
+                continue
             m = ANN_RVA_RE.match(ann)
             if m:
                 size = None
@@ -168,7 +178,9 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
                 continue
             m = ANN_DATA_RE.match(ann)
             if m:
-                datas.append((int(m.group(1), 16),
+                address = int(m.group(2), 16)
+                rva = address - image().image_base if m.group(1) == "data-va" else address
+                datas.append((rva,
                               msvc_names.data(name, decorated=decorated,
                                               internal=linkage.get(sym_ref, False))))
     return funcs, datas
@@ -431,7 +443,8 @@ def data_claims(text: str, ast: dict, main_file: str) -> list[tuple[int, str | N
         if dm:
             cand = next(((mn, qt) for (dl, mn, qt) in var_defs if dl >= line_no),
                         (None, ""))
-            out.append((int(dm.group(1), 16), cand[0], cand[1]))
+            out.append((int(dm.group(1), 16) - image().image_base,
+                        cand[0], cand[1]))
     return out
 
 
@@ -532,7 +545,7 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
 
 
 MACRO_SITE_RE = re.compile(
-    r"\b(RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|RVA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
+    r"\b(RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|RVA|VA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
 
 
 def sweep_sites() -> dict[str, dict[int, str]]:
@@ -553,8 +566,12 @@ def sweep_sites() -> dict[str, dict[int, str]]:
             text = blank_comments(path.read_text(errors="replace"))
             for m in MACRO_SITE_RE.finditer(text):        # whole-file: a macro
                 lineno = text.count("\n", 0, m.start()) + 1   # may span lines
-                out.setdefault(m.group(1), {}).setdefault(
-                    int(m.group(2), 16), []).append(
+                macro = m.group(1)
+                address = int(m.group(2), 16)
+                if macro in {"VA", "DATA"}:
+                    address -= image().image_base
+                out.setdefault(macro, {}).setdefault(
+                    address, []).append(
                     f"{path.relative_to(REPO)}:{lineno}")
     return out
 
@@ -571,7 +588,8 @@ def check_completeness() -> list[str]:
     for c in all_claims():
         have.setdefault((c.channel, c.kind), set()).add(c.rva)
     problems = []
-    checks = [("RVA", "src", "func"), ("RVA_COMPGEN", "src_compgen", "func"),
+    checks = [("VA", "src", "func"), ("RVA", "src", "func"),
+              ("RVA_COMPGEN", "src_compgen", "func"),
               ("RVA_DYNINIT", "src_dyninit", "func"), ("DATA", "src", "data"),
               ("DATA_COMPGEN", "src_data_compgen", "data")]
     for macro, channel, kind in checks:

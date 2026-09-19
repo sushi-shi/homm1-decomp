@@ -119,6 +119,16 @@ def referent_function_names() -> dict[int, tuple[str, str, int]]:
     return found
 
 
+def reviewed_data_names() -> dict[int, str]:
+    """Names needed by code relocations, without source/data ownership."""
+    from homm1.core.paths import RETAIL
+    from homm1.core.tsv import read as read_tsv
+
+    path = RETAIL / "data_symbols.tsv"
+    _body, _header, rows = read_tsv(path)
+    return {int(row["rva"], 16): row["symbol"] for row in rows}
+
+
 def ilt_thunk_names(model: Model, names_map: dict) -> dict[int, str]:
     """Map retail ILT forwarding thunks to curated body names.
 
@@ -200,7 +210,7 @@ def import_thunk_names(iat_syms, names_map: dict) -> dict[int, str]:
 
 
 def function_records(model: Model, names_map, thunk_names, import_thunks,
-                     drop_spans, log) -> list[tuple[int, int, str]]:
+                     drop_spans, owner_body_ends, log) -> list[tuple[int, int, str]]:
     """(rva, size, name) for every emitted function record, sorted.
 
     kind=pad rows never emit; rows inside `drop_spans` (the EH funclet band)
@@ -222,6 +232,15 @@ def function_records(model: Model, names_map, thunk_names, import_thunks,
             dropped += 1
             continue
         size = b.size
+        # HoMM1's linker leaves many /GX cleanup funclets directly after the
+        # owning body.  The ordinary census extent reaches the next top-level
+        # function and therefore includes that packed COMDAT band.  Emitting
+        # both the parent over the full census extent and the proven funclet
+        # records creates overlapping S_GPROC32 records; vostok then discards
+        # the affected unit's code.  The first derived funclet is the proven
+        # upper bound of the parent body.
+        if b.rva in owner_body_ends:
+            size = min(size, owner_body_ends[b.rva] - b.rva)
         if b.rva in names_map:
             name = names_map[b.rva][0]
             at_size = names_map[b.rva][2]
@@ -423,7 +442,7 @@ def data_symbols(model, data_names, base_dir=BASE_DIR, log=lambda m: None):
     --unprovisioned worklist."""
     rdata_syms, data_syms = reloc_data_symbols(model)
     ndat = apply_named_data(rdata_syms, data_syms, data_names)
-    log(f"named {ndat} global data symbol(s) from the Model")
+    log(f"named {ndat} global data symbol(s) from model/reviewed evidence")
     nstr = apply_string_names(rdata_syms, data_syms, base_dir)
     log(f"renamed {nstr} string constant(s) to MSVC ??_C@ names")
     ndrop = drop_interior_placeholders(rdata_syms, data_syms, model)
@@ -544,7 +563,8 @@ def worklist(model: Model) -> list[dict]:
     return the unprovisioned rows."""
     names_map = unit_names(model)
     band = eh_band.groups(retail().pe.path, names_map)
-    data_names = {b.rva: b.name for b in model.data if b.channel and b.name}
+    data_names = reviewed_data_names()
+    data_names.update({b.rva: b.name for b in model.data if b.channel and b.name})
     for rva, name, _unit, _size in eh_band.data_records(band):
         data_names.setdefault(rva, name)
     rdata_syms, data_syms = data_symbols(model, data_names)
@@ -754,6 +774,11 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
         log(f"applied {len(referent_names)} referent-proven function name(s)")
     band = eh_band.groups(exe, names_map)
     band_spans = [(g.start, g.end) for g in band]
+    owner_body_ends: dict[int, int] = {}
+    for group in band:
+        previous = owner_body_ends.get(group.owner_rva)
+        owner_body_ends[group.owner_rva] = min(previous, group.start) \
+            if previous is not None else group.start
     for rva, name, unit, size in eh_band.records(band):
         names_map.setdefault(rva, (name, unit, size))
     log(f"EH funclet band: {len(band)} group(s), "
@@ -778,7 +803,8 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     if nlib:
         log(f"applied {nlib} tracked library symbol name(s)")
 
-    data_names = {b.rva: b.name for b in model.data if b.channel and b.name}
+    data_names = reviewed_data_names()
+    data_names.update({b.rva: b.name for b in model.data if b.channel and b.name})
     neh = 0
     for rva, name, _unit, _size in eh_band.data_records(band):
         if data_names.setdefault(rva, name) == name:
@@ -807,7 +833,7 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     import_thunks = import_thunk_names(iat_syms, names_map)
 
     funcs = function_records(model, names_map, thunk_names, import_thunks,
-                             band_spans, log)
+                             band_spans, owner_body_ends, log)
     rdata_syms, data_syms = data_symbols(model, data_names, base_dir, log)
     unprov = unprovisioned_rows(rdata_syms, data_syms, model)
     if unprov:

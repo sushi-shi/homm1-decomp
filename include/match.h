@@ -3,9 +3,11 @@
 
 // Reconstruction metadata. The compiler receives ordinary C++.
 #ifdef __clang__
+#define VA(address, size) __attribute__((annotate("va:" #address " size:" #size), used))
 #define RVA(address, size) __attribute__((annotate("rva:" #address " size:" #size), used))
-#define DATA(address) __attribute__((annotate("data:" #address), used))
+#define DATA(address) __attribute__((annotate("data-va:" #address), used))
 #else
+#define VA(address, size)
 #define RVA(address, size)
 #define DATA(address)
 #endif

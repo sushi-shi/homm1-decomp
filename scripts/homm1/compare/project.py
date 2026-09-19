@@ -74,7 +74,8 @@ def project(units: list[dict], target_dir: Path, out_dir: Path, *,
     for u in units:
         unit = u["unit"] if isinstance(u, dict) else str(u)
         delinked = target_object(target_dir, unit)
-        target_path = (f"./{target_subdir}/{delinked.name}"
+        target_path = (f"./{target_subdir}/"
+                       f"{delinked.relative_to(target_dir).as_posix()}"
                        if delinked is not None else "./dummy.obj")
         entries.append({
             "name": unit,

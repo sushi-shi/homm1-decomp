@@ -22,7 +22,7 @@ import re
 from pathlib import Path
 
 from homm1.core.paths import REPO
-from homm1.verify.srcscan import (RVA_COMPGEN_RE, RVA_RE, blank_comments,
+from homm1.verify.srcscan import (RVA_COMPGEN_RE, RVA_RE, blank_comments, claim_rva,
                                    source_files)
 
 ADDR = r"0x[0-9a-f]{8}"
@@ -31,6 +31,7 @@ MANGLED = r"[^\s,()]+"
 VOLATILE_COMPGEN_RE = re.compile(r"\bRVA_COMPGEN\([^)]*,\s*_?\$E[0-9]+\s*\)")
 
 CANON = {
+    "VA": rf"VA\({ADDR}, {HEXN}\)",
     "RVA": rf"RVA\({ADDR}, {HEXN}\)",
     "DATA": rf"DATA\({ADDR}\)",
     "RVA_COMPGEN": rf"RVA_COMPGEN\({ADDR}, {HEXN}, {MANGLED}\)",
@@ -42,8 +43,8 @@ CANON = {
     "DATA_COMPGEN": rf"DATA_COMPGEN\({ADDR},",
 }
 CANON_RE = {k: re.compile(v) for k, v in CANON.items()}
-WRAPPABLE = {"RVA", "DATA"}   # StatementMacros clang-format arg-wraps past 100
-FIND_RE = re.compile(r"\b(RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|RVA|DATA)\s*\(")
+WRAPPABLE = {"VA", "RVA", "DATA"}   # StatementMacros clang-format arg-wraps past 100
+FIND_RE = re.compile(r"\b(RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|RVA|VA|DATA)\s*\(")
 COMMENT_ROW_RE = re.compile(r"@(?:rva|data)-symbol:\s*\S+\s+0x[0-9a-fA-F]+")
 ALLOWED_MARKERS = {"stub", "early-stop", "identity-TODO", "confidence",
                    "source", "interleaver", "dead-code"}
@@ -92,7 +93,7 @@ def compgen_order(path: Path):
     for i, ln in enumerate(path.read_text(errors="replace").splitlines(), 1):
         m = RVA_RE.search(ln)
         if m:
-            seq.append((i, int(m.group(1), 16), False))
+            seq.append((i, claim_rva(m), False))
             continue
         m = RVA_COMPGEN_RE.search(ln)
         if m:

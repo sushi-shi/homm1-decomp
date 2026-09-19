@@ -34,6 +34,7 @@ TARGET = BUILD / "delink/named"
 BASE = BUILD / "objdiff/base"
 BASELINE = CONFIG / "cleanliness/declared-only-baseline.tsv"
 INCOMPLETE_TYPES = CONFIG / "cleanliness/types.toml"
+REVIEWED_DATA = CONFIG / "retail/data_symbols.tsv"
 LIB_CACHE = BUILD / "gen/lib_symbols.txt"
 
 LIBRARY_CLASSES = {
@@ -63,7 +64,8 @@ _EXTERNAL = 2
 def live_base_objs() -> list[Path]:
     from homm1 import manifest
     live = {u["unit"] for u in manifest.units()}
-    return [p for p in sorted(BASE.glob("*.obj")) if p.stem in live]
+    return [p for p in sorted(BASE.rglob("*.obj"))
+            if p.relative_to(BASE).with_suffix("").as_posix() in live]
 
 
 def _sym_sets(paths) -> tuple[set[str], set[str]]:
@@ -252,10 +254,24 @@ def reviewed_incomplete_types() -> set[str]:
             if row.get("name") and row.get("evidence")}
 
 
+def reviewed_retail_data() -> set[str]:
+    """Data identities proven at retail addresses but deliberately unowned.
+
+    Data matching is deferred, so these names need not occur in a collected
+    target TU yet.  They are still members of the reviewed retail namespace
+    and are not fabricated declared-only aliases.
+    """
+    if not REVIEWED_DATA.is_file():
+        return set()
+    from homm1.core.tsv import read as read_tsv
+    _body, _header, rows = read_tsv(REVIEWED_DATA)
+    return {row["symbol"] for row in rows if row.get("symbol")}
+
+
 def analyse():
     """(phantom {class: [syms]}, shadows, declared_only set)."""
     bdef, bund = _sym_sets(live_base_objs())
-    tdef, tund = _sym_sets(sorted(TARGET.glob("*.obj")))
+    tdef, tund = _sym_sets(sorted(TARGET.rglob("*.obj")))
     never = bund - bdef
     libs = lib_symbols()
     rtti = _rtti_classes()
@@ -274,7 +290,7 @@ def analyse():
             continue
         phantom[c].append(s)
 
-    alias = never - tdef - tund
+    alias = never - tdef - tund - reviewed_retail_data()
     declared = {s for s in alias if not _is_library(s, libs)
                 and _sym_class(s) not in incomplete}
     return phantom, source_library_shadows(), declared
@@ -298,7 +314,7 @@ def _write_baseline(syms) -> None:
 
 
 def gate_findings() -> list[str]:
-    if not BASE.is_dir() or not any(BASE.glob("*.obj")):
+    if not live_base_objs():
         return ["undefined-closure: no base objs - run `homm1 build` first "
                 "(never vacuous)"]
     phantom, shadows, declared = analyse()
@@ -326,7 +342,7 @@ def main(argv=None) -> int:
     ap.add_argument("--update", action="store_true",
                     help="MANUAL bless: rewrite the declared-only baseline")
     a = ap.parse_args(argv)
-    if not BASE.is_dir() or not any(BASE.glob("*.obj")):
+    if not live_base_objs():
         print("undefined-closure: no base objs - run `homm1 build` first",
               file=sys.stderr)
         return 1

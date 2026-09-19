@@ -211,9 +211,10 @@ def prune_orphan_artifacts(units: list[dict]) -> int:
         if not d.is_dir():
             continue
         head, tail = pat.split("{}")
-        for p in d.iterdir():
-            if p.is_file() and p.name.startswith(head) and p.name.endswith(tail):
-                stem = p.name[len(head):len(p.name) - len(tail)]
+        for p in d.rglob("*"):
+            relative = p.relative_to(d).as_posix()
+            if p.is_file() and relative.startswith(head) and relative.endswith(tail):
+                stem = relative[len(head):len(relative) - len(tail)]
                 if stem and stem not in live:
                     stems.add(stem)
     if not stems:

@@ -30,7 +30,11 @@ def model_rvas() -> dict[tuple[str, str], int]:
     out: dict[tuple[str, str], int] = {}
     for b in resolve().functions:
         if b.name and b.unit:
-            out.setdefault((b.unit, b.name), b.rva)
+            # objdiff reports the object basename even when config keeps the
+            # donor directory (SOURCE/KB). Use the same identity convention as
+            # scores.functions; duplicate basenames are rejected by the model's
+            # unique-name/TU gates rather than guessed here.
+            out.setdefault((b.unit.rsplit("/", 1)[-1], b.name), b.rva)
     return out
 
 

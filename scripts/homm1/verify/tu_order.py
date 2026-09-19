@@ -26,7 +26,7 @@ import sys
 
 from homm1.core.paths import BUILD, CONFIG, REPO, SRC
 from homm1.core.tsv import read as read_tsv
-from homm1.verify.srcscan import RVA_RE
+from homm1.verify.srcscan import RVA_RE, claim_rva
 
 EXILES_TSV = CONFIG / "cleanliness/kept-comdat-exiles.tsv"
 BASELINE = CONFIG / "cleanliness/tu-order-baseline.tsv"
@@ -77,7 +77,7 @@ def load_emitted_claims() -> dict[int, set[str]]:
     out: dict[int, set[str]] = {}
     if not CLAIMS.is_dir():
         return out
-    for path in CLAIMS.glob("*.tsv"):
+    for path in CLAIMS.rglob("*.tsv"):
         try:
             _b, _h, rows = read_tsv(path)
         except (OSError, ValueError):
@@ -85,7 +85,8 @@ def load_emitted_claims() -> dict[int, set[str]]:
         for r in rows:
             if r.get("kind") != "func" or not r.get("rva"):
                 continue
-            out.setdefault(int(r["rva"], 16), set()).add(path.stem.casefold())
+            unit = path.relative_to(CLAIMS).with_suffix("").as_posix()
+            out.setdefault(int(r["rva"], 16), set()).add(unit.casefold())
     return out
 
 
@@ -100,7 +101,7 @@ def load_in_file_order(exclude_pools: bool = False) -> dict[str, list[Entry]]:
             m = RVA_RE.search(ln)
             if not m:
                 continue
-            rva = int(m.group(1), 16)
+            rva = claim_rva(m)
             s = m.group(2)
             size = int(s, 16) if s.lower().startswith("0x") else int(s)
             if exclude_pools and pooled(rva):

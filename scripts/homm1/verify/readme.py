@@ -33,6 +33,8 @@ def module_of(source: str) -> str:
     parts = PurePosixPath(source).parts
     if not parts:
         return "?"
+    if len(parts) > 2 and parts[:2] == ("src", "carcass"):
+        return parts[2]
     if parts[0] in ("src", "vendor") and len(parts) > 1:
         return parts[1]
     return parts[0]
@@ -40,7 +42,7 @@ def module_of(source: str) -> str:
 
 def unit_modules() -> dict[str, str]:
     from homm1 import manifest
-    return {u["unit"]: module_of(u.get("source", ""))
+    return {u["unit"].rsplit("/", 1)[-1]: module_of(u.get("source", ""))
             for u in manifest.units()}
 
 

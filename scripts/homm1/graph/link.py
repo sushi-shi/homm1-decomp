@@ -118,8 +118,9 @@ def collect_objs(objs_dir: Path, *, order: Path | None = None,
     from homm1.manifest import units as manifest_units
     owned = {u["unit"] for u in manifest_units()}
     objs, orphans = [], []
-    for p in sorted(objs_dir.glob("*.obj")):
-        (objs if p.stem in owned else orphans).append(p)
+    for p in sorted(objs_dir.rglob("*.obj")):
+        unit = p.relative_to(objs_dir).with_suffix("").as_posix()
+        (objs if unit in owned else orphans).append(p)
     if orphans:
         print(f"[link] skipping {len(orphans)} orphaned obj(s) with no [[unit]]: "
               + ", ".join(p.name for p in orphans[:6])

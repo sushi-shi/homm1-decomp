@@ -28,11 +28,10 @@ def units(model: Model) -> list[str]:
     """The unit stems to collect a <unit>.c.obj for: the source unit census
     (extraction's per-TU fragment cache), falling back to the claimed units.
     A unit whose only claims are data still gets a (data-only) object."""
-    from homm1.retail_labels.fragments import FRAGMENTS
-    if FRAGMENTS.is_dir():
-        stems = sorted(p.stem for p in FRAGMENTS.glob("*.tsv"))
-        if stems:
-            return stems
+    from homm1.retail_labels.fragments import units as fragment_units
+    stems = fragment_units()
+    if stems:
+        return stems
     return sorted({b.unit for b in model.functions + model.data
                    if b.channel in (*pdb_synth.UNIT_CHANNELS, "src") and b.unit})
 
@@ -46,6 +45,11 @@ def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
     data_manifest.generate(model)
 
     from homm1.tool import delinker
+    # The delinker writes one file per inferred source path but does not prune
+    # paths whose ownership disappeared. Recreate its producer directory so a
+    # formerly data-only object cannot shadow newly attributed code.
+    if delink_dir.exists():
+        shutil.rmtree(delink_dir)
     out = delinker.delink(
         synth["pdb"], pdb_synth.retail().pe.path, delink_dir,
         data_manifest=data_manifest.OUTPUT,
@@ -62,7 +66,9 @@ def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
     for unit in wanted:
         src = delink_dir / f"{unit}.c.obj"
         if src.exists():
-            shutil.copy2(src, target_dir / f"{unit}.c.obj")
+            dst = target_dir / f"{unit}.c.obj"
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
             collected.append(unit)
         else:
             missing.append(unit)

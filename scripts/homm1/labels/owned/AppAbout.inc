@@ -1,12 +1,8 @@
-#include <Win32.h>
-
-#include <match.h>
-#include <SOURCE/KB.h>
-
-// Identity: PE export AppAbout, ordinal 1. Original TU ownership is unknown.
-// Extent: entry through ret 16 at 0x45C1E9; next function starts at 0x45C1EC.
-extern "C" RVA(0x0005c15c, 0x90)
-BOOL __stdcall AppAbout(HWND hDlg, H1_ENUM_PARAM(WindowMessage, UINT) message, WPARAM wParam, LPARAM lParam)
+// Identity: PE export AppAbout, ordinal 1.
+// Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
+extern "C" VA(0x0045c15c, 0x90)
+BOOL __stdcall AppAbout(HWND hDlg, H1_ENUM_PARAM(WindowMessage, UINT) message,
+                       WPARAM wParam, LPARAM lParam)
 {
     H1_ENUM_PARAM(DialogControl, int) wmId;
     WORD codeNotify;

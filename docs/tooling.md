@@ -40,12 +40,26 @@ content changed. `homm1 verify check --tier full` enables the slower code
 evidence gates. The separate `data` tier is intentionally opt-in until data
 matching begins.
 
-The current pilot contains two units and three exact functions: `AppAbout`,
-`PollSound`, and `ForcePollSound`. The report scores 290/290 claimed code bytes
-exactly. The hand-owned `functions.tsv` partitions all 1,250 `.text` function
+The first labeling pass contains 386 functions in 31 inferred donor TUs. It
+accepts 383 functions only where HoMM2 Buka 2.1 and PoL 2.0 independently name
+the same logical function. Buka 2.1 takes precedence for names and module
+order; PoL 2.0 supplies declarations known to compile with VC4. `AppAbout`,
+`PollSound`, and `ForcePollSound` are reconstructed and byte-exact. The other
+functions deliberately have empty carcass bodies so the matching campaign can
+start from named, compilable TUs.
+
+Source annotations use `VA(0x004xxxxx, size)`. Claim extraction subtracts the
+PE image base and keeps the model, comparisons, and evidence tables in RVA
+space. The hand-owned `functions.tsv` partitions all 1,250 `.text` function
 starts; it was admitted from a one-time Ghidra analysis and is never regenerated
-by the build. The data census contains only the four identities required by the
-pilot code. Initializers, ownership and data bytes remain outside the score.
+by the build. Data names needed by code relocations come from reviewed evidence,
+but all four data bodies remain unclaimed and unscored.
+
+The alignment evidence is committed under `evidence/homm2-label-*.tsv`.
+`scripts/homm1/labels/donor_align.py` compares instruction shapes, strings,
+calls, and function order against both donor builds. Its materializer places
+accepted declarations in `src/carcass/{BASE,SOURCE}` and keeps the normal source
+claim path; there is no label-provider adapter.
 
 ## Candidate linking
 
@@ -62,10 +76,10 @@ The tooling synthesizes WinG and WAIL import libraries from the retail import
 table. `smkwai32.dll` is ordinal-only, so its import library remains deferred
 until matching code needs it.
 
-With the current three-function pilot, the real link reaches LINK.EXE and stops
-on eight expected reconstruction gaps: `KBTickCount`, `PollRemote`,
-`soundManager::PollSound`, four global storage definitions, and `_WinMain@16`.
-These are source backlog, not a missing link stage.
+The real link reaches LINK.EXE. With this batch it has only four unresolved
+symbols: `gbInPollSound`, `gbForegroundApp`, `gNextSoundPollTick`, and
+`gpSoundManager`. They are the deliberately deferred data definitions; code
+closure, `_WinMain@16`, and the previously external helper calls now resolve.
 
 ## Target-specific evidence
 

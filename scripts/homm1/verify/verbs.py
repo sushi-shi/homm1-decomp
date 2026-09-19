@@ -101,7 +101,7 @@ def _warn_stale_report(report=None) -> None:
     try:
         path = report or scores.report_path()
         newest = max((p.stat().st_mtime
-                      for p in (REPO / "build/objdiff/base").glob("*.obj")),
+                      for p in (REPO / "build/objdiff/base").rglob("*.obj")),
                      default=0.0)
         age = newest - path.stat().st_mtime
     except (OSError, SystemExit):
@@ -503,7 +503,7 @@ def cmd_bank(argv) -> int:
     mods, started_fzw, started_code = rm.collect_modules(umeas)
     from homm1.model import resolve
     model = resolve()
-    sizes = {(b.unit, b.name): b.size for b in model.functions
+    sizes = {(b.unit.rsplit("/", 1)[-1], b.name): b.size for b in model.functions
              if b.name and b.unit}
     from homm1.verify.universe import engine_universe
     eng = engine_universe(model)

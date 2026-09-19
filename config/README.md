@@ -29,7 +29,7 @@ small evidence-backed exceptions.
   donor provider channels and are currently empty.
 
 Base censuses supply structure. Source `RVA`/`DATA` annotations and provider
-tables supply identity. Exact function sizes come from `RVA(rva, size)` claims;
+tables supply identity. Exact function sizes come from `VA(va, size)` claims;
 data identities do not imply that initializers or bytes are matched.
 
 All RVAs in these tables refer to `HEROES.EXE`. Editor evidence needs a separate

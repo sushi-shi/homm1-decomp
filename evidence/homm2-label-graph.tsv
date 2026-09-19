@@ -1,0 +1,735 @@
+rva	size	donor	donor_rva	symbol	unit	evidence
+0x00001000	0xa0	pol20	0x000cc330	void soundManager::constructor(void)	BASE/soundmgr	graph:2;base=0.588617;margin=0.048081;shape=0.548;size=0.744;calls=1.000
+0x000010bf	0x169	buka21	0x00065169	?Open@highScoreManager@@UAEHH@Z	SOURCE/HISCORE	graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
+0x00001228	0x5d	pol20	0x00089be2	void highScoreManager::Close(void);   // virtual [override (implements baseManager pure virtual)]	SOURCE/HISCORE	unique-instructions
+0x00001285	0x269	buka21	0x00065325	?Main@highScoreManager@@UAEHAAUtag_message@@@Z	SOURCE/HISCORE	graph:2;base=0.479652;margin=0.177846;shape=0.336;size=0.742;calls=1.000;alternate=pol20:int highScoreManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00089c40
+0x000014ee	0x672	buka21	0x000654ef	?Update@highScoreManager@@QAEXXZ	SOURCE/HISCORE	graph:2;base=0.683474;margin=0.421632;shape=0.404;size=0.957;calls=0.730;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:void highScoreManager::Update(void)@0x00089e6a
+0x00001b60	0x164	buka21	0x0008c330	?SetupRecruitWin@@YIXPAVheroWindow@@HHHHH@Z	SOURCE/RECRUIT	graph:2;base=0.642179;margin=0.286053;shape=0.397;size=0.715;calls=0.929;strings=%s %s|%s%d;alternate=pol20:void SetupRecruitWin(class heroWindow *, int, int, int, int, int)@0x0008b310
+0x00001cc4	0x282	buka21	0x0008c522	?Open@recruitUnit@@UAEHH@Z	SOURCE/RECRUIT	graph:4;base=0.766621;margin=0.519238;shape=0.510;size=0.964;calls=1.000;strings=recruit0.bin|recruit1.bin|recruitManager;alternate=pol20:int recruitUnit::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0008b49c
+0x00001f46	0xd1	buka21	0x0008c78d	?Close@recruitUnit@@UAEXXZ	SOURCE/RECRUIT	graph:2;base=0.515555;margin=0.462411;shape=0.327;size=0.957;calls=0.857;alternate=pol20:void recruitUnit::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x0008b6e7
+0x00002017	0x127	buka21	0x0008c855	?Update@recruitUnit@@QAEXXZ	SOURCE/RECRUIT	graph:1;base=0.730023;margin=0.237862;shape=0.449;size=0.939;calls=1.000;strings=%s%d;alternate=pol20:void recruitUnit::Update(void)@0x0008b7ce
+0x0000213e	0x3e5	buka21	0x0008c96a	?Main@recruitUnit@@UAEHAAUtag_message@@@Z	SOURCE/RECRUIT	graph:2;base=0.367477;margin=0.265938;shape=0.265;size=0.928;calls=0.231;alternate=pol20:int recruitUnit::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0008b8f0
+0x00002523	0xd6	buka21	0x0008cd07	??0recruitUnit@@QAE@PAVarmyGroup@@HPAF@Z	SOURCE/RECRUIT	graph:2;base=0.525485;margin=0.166304;shape=0.333;size=0.916;calls=1.000;alternate=pol20:void recruitUnit::constructor(class armyGroup *, int, short int *)@0x0008bd0b
+0x000025f9	0xf4	buka21	0x0008cdcb	??0recruitUnit@@QAE@PAVtown@@HH@Z	SOURCE/RECRUIT	graph:2;base=0.543110;margin=0.262899;shape=0.371;size=0.914;calls=1.000;alternate=pol20:void recruitUnit::constructor(class town *, int, int)@0x0008bdea
+0x000026ed	0x1c3	buka21	0x0008ceaa	?QuickViewRecruit@@YIXPAVtown@@H@Z	SOURCE/RECRUIT	graph:2;base=0.627669;margin=0.094785;shape=0.388;size=0.783;calls=0.727;strings=recruiq0.bin|recruiq1.bin;alternate=pol20:void QuickViewRecruit(class town *, int)@0x0008bee5
+0x00002af0	0xf0	pol20	0x000a25e0	int searchArray::BuildPath(int, int, int, int, int)	SOURCE/SEARCH	graph:3;base=0.441049;margin=0.725819;shape=0.190;size=0.800;calls=1.000
+0x00002be0	0xa60	buka21	0x000917d6	?SeedPosition@searchArray@@QAEXHHHHHHHHHHHH@Z	SOURCE/SEARCH	graph:2;base=0.418459;margin=0.401354;shape=0.193;size=0.813;calls=0.875;alternate=pol20:void searchArray::SeedPosition(int, int, int, int, int, int, int, int, int, int, int, int)@0x000a26a0
+0x00003640	0x59	pol20	0x00035290	void DDRestoreDisplayMode(void)	SOURCE/wingraph	graph:2;base=0.688749;margin=0.407291;shape=0.677;size=0.955;calls=1.000
+0x00003699	0x46	pol20	0x000352e5	int DDQueryNewPalette(void)	SOURCE/wingraph	unique-normalized
+0x000036df	0x9b	buka21	0x000afc47	?CreatePrimary@@YIXXZ	SOURCE/wingraph	graph:2;base=0.466160;margin=0.260025;shape=0.308;size=0.761;calls=1.000;alternate=pol20:void CreatePrimary(void)@0x0003532b
+0x0000377a	0xeb	buka21	0x000afcbd	?SetupClipper@@YIXXZ	SOURCE/wingraph	graph:3;base=0.462387;margin=0.608484;shape=0.302;size=0.757;calls=1.000;alternate=pol20:void SetupClipper(void)@0x000353bf
+0x00003865	0x171	buka21	0x000afd6f	?DDInitGraphics@@YIXXZ	SOURCE/wingraph	graph:4;base=0.478180;margin=0.785524;shape=0.323;size=0.780;calls=1.000;alternate=pol20:void DDInitGraphics(void)@0x000354a2
+0x000039d6	0x592	buka21	0x000afe8f	?DDAppPaint@@YIHPAX0@Z	SOURCE/wingraph	graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
+0x00003f68	0x140	pol20	0x00035b31	void DDInitializePalette(void)	SOURCE/wingraph	graph:2;base=0.794926;margin=0.671542;shape=0.889;size=0.987;calls=1.000
+0x000040a8	0xb3	pol20	0x00035c6d	int DDSetPalette(void)	SOURCE/wingraph	graph:1;base=0.744443;margin=0.402034;shape=0.786;size=0.978;calls=1.000
+0x0000415b	0x12a	buka21	0x000b04f8	?DDCreateSurface@@YIPAUIDirectDrawSurface@@KKH@Z	SOURCE/wingraph	graph:2;base=0.607502;margin=0.616633;shape=0.536;size=0.889;calls=1.000;alternate=pol20:struct IDirectDrawSurface * DDCreateSurface(unsigned long int, unsigned long int, int)@0x00035d1c
+0x00004285	0x3ee	buka21	0x000b0601	?DDSD@@YIXHPADH@Z	SOURCE/wingraph	graph:3;base=0.296609;margin=0.202074;shape=0.224;size=0.647;calls=0.194;alternate=pol20:void DDSD(int, char *, int)@0x00035e4f
+0x00004673	0x11c	buka21	0x000b0c15	?DDUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	graph:2;base=0.482125;margin=0.532523;shape=0.296;size=0.838;calls=1.000;alternate=pol20:void DDUpdatePalette(signed char *)@0x00036421
+0x0000478f	0x17f	buka21	0x000b0d03	?DDCleanUpWinGraphics@@YIXXZ	SOURCE/wingraph	graph:2;base=0.511358;margin=0.374406;shape=0.341;size=0.862;calls=1.000;alternate=pol20:void DDCleanUpWinGraphics(void)@0x00036539
+0x0000490e	0x2ea	buka21	0x000b0e4d	?DDSetFullScreenStatus@@YIXH@Z	SOURCE/wingraph	graph:2;base=0.474854;margin=0.471351;shape=0.269;size=0.849;calls=1.000;alternate=pol20:void DDSetFullScreenStatus(int)@0x000366b0
+0x00004bf8	0x89	pol20	0x000369b5	int WGQueryNewPalette(void)	SOURCE/wingraph	unique-normalized
+0x00004c81	0x151	pol20	0x00036a3e	void WGInitGraphics(void)	SOURCE/wingraph	unique-instructions
+0x00004dd2	0x1dd	buka21	0x000b1273	?WGUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	graph:2;base=0.572794;margin=0.559534;shape=0.427;size=0.941;calls=1.000
+0x00004faf	0x1d5	pol20	0x00036d76	void WGInitializePalette(void)	SOURCE/wingraph	unique-normalized
+0x00005344	0x78	pol20	0x0003710f	void WGCleanUpWinGraphics(void)	SOURCE/wingraph	unique-normalized
+0x000053bc	0x6c	pol20	0x00037187	void ConnectToDLLs(void)	SOURCE/wingraph	graph:1;base=0.753649;margin=0.445078;shape=0.548;size=0.844;calls=1.000;strings=DDRAW.DLL|DirectDrawCreate
+0x00005428	0x29	pol20	0x00037207	void DisconnectDLLs(void)	SOURCE/wingraph	unique-normalized
+0x00005451	0x2c	pol20	0x00037230	void RestoreDisplayMode(void)	SOURCE/wingraph	unique-normalized
+0x0000547d	0x2e	pol20	0x0003725c	int SetPalette(void)	SOURCE/wingraph	unique-normalized
+0x000054ab	0x81	buka21	0x000b18a6	?GetGraphicsInfo@@YIXXZ	SOURCE/wingraph	graph:2;base=0.553360;margin=0.492664;shape=0.455;size=0.829;calls=1.000;alternate=pol20:void GetGraphicsInfo(void)@0x0003728a
+0x0000552c	0x60	pol20	0x00037308	void InitGraphics(void)	SOURCE/wingraph	graph:3;base=0.371070;margin=0.558927;shape=0.342;size=0.600;calls=0.333
+0x000055d3	0x2c	pol20	0x000373ee	void InitializePalette(void)	SOURCE/wingraph	unique-normalized
+0x000055ff	0x3a	buka21	0x000b19de	?UpdatePalette@@YAXPAC@Z	SOURCE/wingraph	graph:2;base=0.455956;margin=0.505805;shape=0.333;size=0.690;calls=1.000
+0x00005639	0x31	pol20	0x00037452	void CleanUpWinGraphics(void)	SOURCE/wingraph	unique-normalized
+0x0000566a	0xb9	buka21	0x000b1a25	?SetFullScreenStatus@@YIXH@Z	SOURCE/wingraph	graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
+0x00005723	0x31	pol20	0x00037564	int QueryNewPalette(void)	SOURCE/wingraph	unique-normalized
+0x00005754	0x1fc	buka21	0x000b1ae0	?SetGraphicsType@@YIHH@Z	SOURCE/wingraph	graph:2;base=0.565182;margin=0.258783;shape=0.434;size=0.909;calls=1.000;alternate=pol20:int SetGraphicsType(int)@0x00037595
+0x00005950	0x169	pol20	0x0000d5e0	void advManager::StartCursor(int)	SOURCE/CURSOR	graph:2;base=0.535759;margin=0.462676;shape=0.382;size=0.864;calls=1.000
+0x00005ab9	0x150	pol20	0x0000d718	void advManager::StopCursor(int)	SOURCE/CURSOR	graph:7;base=0.506320;margin=1.178536;shape=0.344;size=0.845;calls=1.000
+0x00005c09	0x5e4	pol20	0x0000d834	void advManager::DrawCursor(void)	SOURCE/CURSOR	graph:2;base=0.524437;margin=0.571767;shape=0.325;size=0.987;calls=0.833
+0x000061ed	0x88	buka21	0x00033dde	?GetCursorBaseFrame@advManager@@QAEHH@Z	SOURCE/CURSOR	graph:2;base=0.375377;margin=0.466673;shape=0.186;size=0.574;calls=1.000;alternate=pol20:int advManager::GetCursorBaseFrame(int)@0x0000e198
+0x00006275	0x261	buka21	0x00033e2c	?TurnTo@advManager@@QAEXH@Z	SOURCE/CURSOR	graph:2;base=0.461800;margin=0.347232;shape=0.223;size=0.872;calls=1.000;alternate=pol20:void advManager::TurnTo(int)@0x0000e21d
+0x0000660c	0xe1e	buka21	0x000340ca	?MoveHero@advManager@@QAEPAVmapCell@@HHPAH00H0H@Z	SOURCE/CURSOR	graph:3;base=0.461867;margin=0.353958;shape=0.281;size=0.831;calls=0.879;alternate=pol20:class mapCell * advManager::MoveHero(int, int, int *, int *, int *, int, int *, int)@0x0000e51f
+0x0000742a	0x181	buka21	0x000351c5	?CheckAdjacentMon@advManager@@QAEXPAH@Z	SOURCE/CURSOR	graph:4;base=0.530646;margin=0.751795;shape=0.360;size=0.888;calls=1.000;alternate=pol20:void advManager::CheckAdjacentMon(int *)@0x0000f753
+0x00007d90	0x1f1	buka21	0x000a4740	??0townObject@@QAE@HHPAD@Z	SOURCE/TOWNMGR	graph:2;base=0.615649;margin=0.314990;shape=0.431;size=0.799;calls=0.333;strings=%s.icn;alternate=pol20:void townObject::constructor(int, int, char *)@0x00013900
+0x00007f81	0x60	buka21	0x000a48cd	??1townObject@@QAE@XZ	SOURCE/TOWNMGR	graph:2;base=0.564007;margin=0.293257;shape=0.438;size=0.896;calls=1.000;alternate=pol20:void townObject::~destructor(void)@0x00013a6a
+0x000080f8	0x74	pol20	0x00089a30	void highScoreManager::constructor(void)	SOURCE/HISCORE	graph:2;base=0.634276;margin=0.344895;shape=0.680;size=0.879;calls=0.500
+0x0000816c	0x7ec	buka21	0x000a51da	?SetupTown@townManager@@QAEXXZ	SOURCE/TOWNMGR	graph:5;base=0.644440;margin=0.052173;shape=0.362;size=0.803;calls=0.887;strings=%s%s|port%04d.icn|strip.icn;alternate=pol20:void townManager::SetupTown(void)@0x0001436f
+0x00008958	0x1c4	buka21	0x000a5bb9	?UnloadTown@townManager@@QAEXXZ	SOURCE/TOWNMGR	graph:2;base=0.470224;margin=0.176996;shape=0.284;size=0.924;calls=0.667;alternate=pol20:void townManager::UnloadTown(void)@0x00014cc9
+0x0000933a	0x74	buka21	0x000a67ce	?ShowText@townManager@@QAEXPAD@Z	SOURCE/TOWNMGR	graph:2;base=0.613333;margin=0.109874;shape=0.519;size=1.000;calls=1.000;alternate=pol20:void townManager::ShowText(char *)@0x000158e0
+0x000093ae	0x131f	buka21	0x000a6842	?Main@townManager@@UAEHAAUtag_message@@@Z	SOURCE/TOWNMGR	graph:5;base=0.513026;margin=0.490356;shape=0.272;size=0.823;calls=0.467;strings=caslwind.bin|magewind.bin|thiefwin.bin;alternate=pol20:int townManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0001595d
+0x0000a6cd	0x65f	buka21	0x000a7f7b	?DoCommand@townManager@@QAEXH@Z	SOURCE/TOWNMGR	graph:2;base=0.443170;margin=0.301918;shape=0.326;size=0.721;calls=0.800;alternate=pol20:void townManager::DoCommand(int)@0x0001718d
+0x0000ad2c	0xa5	pol20	0x00017670	void townManager::RedrawTownScreen(void)	SOURCE/TOWNMGR	graph:3;base=0.839276;margin=0.743044;shape=1.000;size=0.954;calls=1.000
+0x0000add1	0x37e	buka21	0x000a84b7	?SplitArmy@townManager@@QAEXXZ	SOURCE/TOWNMGR	graph:3;base=0.732616;margin=0.021648;shape=0.430;size=0.991;calls=1.000;strings=splitwin.bin;alternate=pol20:void townManager::SplitArmy(void)@0x0001771d
+0x0000b21d	0xab	buka21	0x000a8843	?ResetStrips@townManager@@QAEXXZ	SOURCE/TOWNMGR	graph:2;base=0.515580;margin=0.398432;shape=0.375;size=0.860;calls=1.000;alternate=pol20:void townManager::ResetStrips(void)@0x00017ab2
+0x0000b35d	0xf8	pol20	0x00017bdd	void townManager::DrawTown(int, int)	SOURCE/TOWNMGR	graph:2;base=0.452321;margin=0.229873;shape=0.324;size=0.774;calls=0.778
+0x0000b455	0x1023	buka21	0x000a89fe	?BuyBuild@townManager@@QAEHHHH@Z	SOURCE/TOWNMGR	graph:4;base=0.668468;margin=0.054253;shape=0.329;size=0.894;calls=0.897;strings=bigfont.fnt|buybuil%d.bin|resource.icn;alternate=pol20:int townManager::BuyBuild(int, int, int)@0x00017c9d
+0x0000c478	0x3a0	buka21	0x000a986a	?BuildObj@townManager@@QAEXH@Z	SOURCE/TOWNMGR	graph:2;base=0.630156;margin=0.342681;shape=0.206;size=0.999;calls=0.933;strings=buildtwn.82M;alternate=pol20:void townManager::BuildObj(int)@0x00018bd2
+0x0000c818	0x4b5	buka21	0x00024320	?SetupCastle@townManager@@QAEXPAVheroWindow@@H@Z	SOURCE/Castle	graph:5;base=0.228280;margin=0.655471;shape=0.234;size=0.312;calls=0.264;alternate=pol20:void townManager::SetupCastle(class heroWindow *, int)@0x0001d040
+0x0000cf1a	0x331	buka21	0x000a9c0b	?SetupMage@townManager@@QAEXPAVheroWindow@@@Z	SOURCE/TOWNMGR	graph:2;base=0.426387;margin=0.115621;shape=0.211;size=0.919;calls=0.625;alternate=pol20:void townManager::SetupMage(class heroWindow *)@0x00018fbb
+0x0000d3d1	0x2ec	buka21	0x000ab344	?SetupThievesGuild@townManager@@QAEXPAVheroWindow@@H@Z	SOURCE/TOWNMGR	graph:5;base=0.350822;margin=0.362412;shape=0.263;size=0.210;calls=0.163;strings=townwind.icn;alternate=pol20:void townManager::SetupThievesGuild(class heroWindow *, int)@0x0001a783
+0x0000d6bd	0x484	buka21	0x000ac127	?GetCategoryStats@@YIXHQAJQAC@Z	SOURCE/TOWNMGR	graph:2;base=0.459458;margin=0.479043;shape=0.193;size=0.976;calls=0.800;alternate=pol20:void GetCategoryStats(int, long int * const, signed char * const)@0x0001b692
+0x0000dc5a	0x981	buka21	0x000aa0d8	?RecruitHero@townManager@@QAEHHH@Z	SOURCE/TOWNMGR	graph:4;base=0.555715;margin=0.218228;shape=0.276;size=0.741;calls=0.578;strings=port%04d.icn|rcrthero.bin;alternate=pol20:int townManager::RecruitHero(int, int)@0x00019523
+0x0000e5db	0x155	buka21	0x000aa7e3	?TavernHandler@@YIHAAUtag_message@@@Z	SOURCE/TOWNMGR	graph:2;base=0.461090;margin=0.267847;shape=0.244;size=0.845;calls=1.000;alternate=pol20:int TavernHandler(struct tag_message &)@0x00019c29
+0x0000e730	0x136	buka21	0x000aa903	?DoTavern@townManager@@QAEXXZ	SOURCE/TOWNMGR	graph:2;base=0.728216;margin=0.164549;shape=0.467;size=0.965;calls=0.889;strings=tavwin.bin;alternate=pol20:void townManager::DoTavern(void)@0x00019d7c
+0x0000e866	0x726	buka21	0x00025230	?CastleHandler@@YIHAAUtag_message@@@Z	SOURCE/Castle	graph:4;base=0.424517;margin=0.478912;shape=0.381;size=0.626;calls=0.675;alternate=pol20:int CastleHandler(struct tag_message &)@0x0001e0fb
+0x0000f2c0	0x311	buka21	0x0002b850	?Main@combatManager@@UAEHAAUtag_message@@@Z	SOURCE/COMMAND	graph:2;base=0.520039;margin=0.117792;shape=0.347;size=0.894;calls=0.889;alternate=pol20:int combatManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0002a6d0
+0x0000f5d1	0xd6	buka21	0x0002bb0e	?ValidHexToStandOn@combatManager@@QAEHH@Z	SOURCE/COMMAND	graph:2;base=0.417866;margin=0.483630;shape=0.194;size=0.735;calls=1.000;alternate=pol20:int combatManager::ValidHexToStandOn(int)@0x0002aa3d
+0x0000f6a7	0x7e9	buka21	0x0002bc31	?SetCombatDirections@combatManager@@QAEXH@Z	SOURCE/COMMAND	graph:2;base=0.555396;margin=0.346771;shape=0.387;size=0.928;calls=1.000;alternate=pol20:void combatManager::SetCombatDirections(int)@0x0002abbe
+0x0000fe90	0x620	buka21	0x0002c389	?CheckSetMouseDirection@combatManager@@QAEXHHH@Z	SOURCE/COMMAND	graph:2;base=0.473098;margin=0.353023;shape=0.247;size=0.891;calls=0.857;alternate=pol20:void combatManager::CheckSetMouseDirection(int, int, int)@0x0002b45f
+0x000104e4	0x5bb	buka21	0x0002c958	?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z	SOURCE/COMMAND	graph:2;base=0.392432;margin=0.340460;shape=0.273;size=0.720;calls=0.630;alternate=pol20:int combatManager::ProcessCombatMsg(struct tag_message &)@0x0002bb26
+0x00010d35	0x316	buka21	0x0002d56e	?GetCommand@combatManager@@QAEHH@Z	SOURCE/COMMAND	graph:2;base=0.402881;margin=0.493749;shape=0.255;size=0.779;calls=0.500;alternate=pol20:int combatManager::GetCommand(int)@0x0002c8ff
+0x0001104b	0x1dc	buka21	0x0002d964	?RightClick@combatManager@@QAEHH@Z	SOURCE/COMMAND	graph:4;base=0.497332;margin=0.914777;shape=0.275;size=0.969;calls=0.875;alternate=pol20:int combatManager::RightClick(int)@0x0002ce19
+0x00011227	0x333	buka21	0x0002db4f	?DoCommand@combatManager@@QAEXH@Z	SOURCE/COMMAND	graph:2;base=0.479004;margin=0.375974;shape=0.217;size=0.994;calls=0.842;alternate=pol20:void combatManager::DoCommand(int)@0x0002d0bf
+0x0001155a	0x1a3	buka21	0x0002de7d	?WinCombatHandler@@YIHAAUtag_message@@@Z	SOURCE/COMMAND	graph:3;base=0.240792;margin=0.378009;shape=0.252;size=0.331;calls=0.261;alternate=pol20:int WinCombatHandler(struct tag_message &)@0x0002d472
+0x000116fd	0x110	buka21	0x0002e370	?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z	SOURCE/COMMAND	graph:2;base=0.589024;margin=0.347731;shape=0.432;size=0.971;calls=1.000;alternate=pol20:void combatManager::ClearWinLoseBottom(class heroWindow *)@0x0002d9ed
+0x0001180d	0x2fa	buka21	0x0002e93a	?ShowEagleEyeSpell@combatManager@@QAEXPAVheroWindow@@@Z	SOURCE/COMMAND	graph:3;base=0.775867;margin=0.001000;shape=0.535;size=0.990;calls=0.875;strings=pickup%02d.82M|smalfont.fnt;alternate=pol20:void combatManager::ShowWinLoseArtifact(class heroWindow *, int)@0x0002dafd
+0x00011b07	0x7d0	buka21	0x0002ec2c	?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z	SOURCE/COMMAND	graph:5;base=0.669049;margin=0.415746;shape=0.366;size=0.795;calls=0.971;strings=mons32.icn|smalfont.fnt;alternate=pol20:void combatManager::ShowDeadArmies(class heroWindow *)@0x0002e2bf
+0x000122d7	0x7a1	buka21	0x0002f601	?DoVictory@combatManager@@QAEXH@Z	SOURCE/COMMAND	graph:3;base=0.616103;margin=0.112225;shape=0.417;size=0.688;calls=0.762;strings=wincmbt.bin;alternate=pol20:void combatManager::DoVictory(int)@0x0002ec8b
+0x00012a78	0x549	buka21	0x00030118	?DoLoseWindow@combatManager@@QAEXXZ	SOURCE/COMMAND	graph:4;base=0.434201;margin=0.199849;shape=0.391;size=0.664;calls=0.594;alternate=pol20:void combatManager::DoLoseWindow(void)@0x0002f834
+0x00012fc1	0x2c6	buka21	0x0003049b	?DoSurrender@combatManager@@QAEHXZ	SOURCE/COMMAND	graph:3;base=0.579024;margin=0.030061;shape=0.292;size=0.742;calls=0.667;strings=port%04d.icn|surrendr.bin;alternate=pol20:int combatManager::DoSurrender(void)@0x0002fbf0
+0x00013349	0xdf	pol20	0x00030109	void combatManager::CheckCastleAttack(void)	SOURCE/COMMAND	graph:2;base=0.508514;margin=0.481510;shape=0.385;size=0.953;calls=0.500
+0x00013428	0x79	buka21	0x000309fa	?CheckGetAIMove@combatManager@@QAEXXZ	SOURCE/COMMAND	graph:2;base=0.398729;margin=0.350217;shape=0.260;size=0.665;calls=0.750;alternate=pol20:void combatManager::CheckGetAIMove(void)@0x000301f3
+0x000134a1	0x16a	buka21	0x00030ab0	?GetControl@combatManager@@QAEXXZ	SOURCE/COMMAND	graph:2;base=0.502120;margin=0.368499;shape=0.323;size=0.925;calls=0.750;alternate=pol20:void combatManager::GetControl(void)@0x000302d0
+0x0001360b	0xdb	buka21	0x00030bff	?ResetMouse@combatManager@@QAEXXZ	SOURCE/COMMAND	graph:3;base=0.488306;margin=0.692886;shape=0.271;size=0.872;calls=1.000;alternate=pol20:void combatManager::ResetMouse(void)@0x0003045f
+0x000136e6	0x55a	buka21	0x00030cbe	?ProcessNextAction@combatManager@@QAEHAAUtag_message@@@Z	SOURCE/COMMAND	graph:3;base=0.593971;margin=0.483478;shape=0.242;size=0.886;calls=0.629;strings=Process Act;alternate=pol20:int combatManager::ProcessNextAction(struct tag_message &)@0x00030536
+0x00013c40	0xa8	buka21	0x00073da0	?is_netbios_avail@@YIHXZ	SOURCE/netwin	graph:2;base=0.601182;margin=0.610067;shape=0.521;size=0.881;calls=1.000;alternate=pol20:int is_netbios_avail(void)@0x000a6be0
+0x00013ce8	0x1b2	buka21	0x00073e34	_nb_init	SOURCE/netwin	graph:3;base=0.569810;margin=0.557141;shape=0.568;size=0.810;calls=0.714;alternate=pol20:@nb_init@8@0x000a6c88
+0x00013e9a	0x1f0	buka21	0x0007404c	@nb_term@0	SOURCE/netwin	graph:2;base=0.622698;margin=0.218100;shape=0.523;size=0.935;calls=1.000
+0x0001408a	0x90	buka21	0x0007421c	_nb_rcv	SOURCE/netwin	graph:3;base=0.551014;margin=0.613566;shape=0.357;size=0.960;calls=1.000
+0x0001411a	0x104	buka21	0x000742b2	_nb_snd	SOURCE/netwin	graph:3;base=0.424579;margin=0.396789;shape=0.244;size=0.738;calls=0.875;alternate=pol20:@nb_snd@12@0x000a7186
+0x0001421e	0x4f6	buka21	0x00074372	_nb_sess	SOURCE/netwin	graph:2;base=0.596373;margin=0.181597;shape=0.465;size=0.963;calls=1.000;alternate=pol20:_nb_sess@0x000a726a
+0x00014732	0x26f	buka21	0x00074848	?nb_thr_ctl@@YIXXZ	SOURCE/netwin	graph:2;base=0.603867;margin=0.370541;shape=0.533;size=0.856;calls=1.000
+0x000149a1	0xbb	buka21	0x00074a5d	?nb_add_name@@YIXXZ	SOURCE/netwin	graph:3;base=0.648376;margin=0.629279;shape=0.600;size=0.968;calls=1.000
+0x00014a5c	0x1cc	buka21	0x00074b12	?nb_add_name_done@@YGXPAUNetbiosControlBlock@@@Z	SOURCE/netwin	graph:2;base=0.526559;margin=0.402446;shape=0.386;size=0.876;calls=1.000
+0x00014c28	0xb8	buka21	0x00074ca5	?nb_recv_any@@YIGH@Z	SOURCE/netwin	graph:2;base=0.652334;margin=0.180033;shape=0.595;size=0.978;calls=1.000
+0x00014ce0	0x146	buka21	0x00074d59	?nb_recv_any_done@@YGXPAUNetbiosControlBlock@@@Z	SOURCE/netwin	graph:2;base=0.615862;margin=0.390586;shape=0.547;size=0.874;calls=1.000
+0x00014e26	0xc6	buka21	0x00074e76	?nb_call@@YIGHPAX@Z	SOURCE/netwin	graph:4;base=0.623528;margin=0.200000;shape=0.526;size=0.980;calls=1.000
+0x00014eec	0xc6	buka21	0x00074f38	?nb_listen@@YIGHPAX@Z	SOURCE/netwin	graph:3;base=0.623528;margin=0.000000;shape=0.526;size=0.980;calls=1.000
+0x00014fb2	0x134	buka21	0x00074ffa	?nb_call_done@@YGXPAUNetbiosControlBlock@@@Z	SOURCE/netwin	graph:2;base=0.559585;margin=0.426970;shape=0.470;size=0.792;calls=1.000
+0x000150e6	0x14e	buka21	0x000750ee	?nb_arm_recv@@YIXH@Z	SOURCE/netwin	graph:2;base=0.540579;margin=0.389631;shape=0.387;size=0.874;calls=1.000
+0x00015234	0xbf	buka21	0x00075212	?nb_close_session@@YIXH@Z	SOURCE/netwin	graph:3;base=0.648719;margin=0.405727;shape=0.609;size=0.927;calls=1.000
+0x000152f3	0x176	buka21	0x000752c3	?nb_recv_complete@@YIXH@Z	SOURCE/netwin	graph:2;base=0.538434;margin=0.261248;shape=0.430;size=0.832;calls=1.000
+0x00015469	0x87	buka21	0x000753fa	?nb_format_name@@YIXPADPAE@Z	SOURCE/netwin	graph:2;base=0.502333;margin=0.531318;shape=0.300;size=0.874;calls=1.000
+0x000154f0	0x147	buka21	0x000987f7	?ViewSpells@combatManager@@QAEHH@Z	SOURCE/SPELLS	graph:3;base=0.380473;margin=0.603680;shape=0.231;size=0.337;calls=0.235;strings=cmbtmous.mse|spelmous.mse;alternate=pol20:int combatManager::ViewSpells(int)@0x00020546
+0x00015797	0x295	pol20	0x00020aec	int HandleCastSpell(struct tag_message &)	SOURCE/SPELLS	graph:1;base=0.706243;margin=0.450598;shape=0.383;size=0.969;calls=0.900;strings=Invalid Teleport Destination|Select Spell Target|Select teleport destination.
+0x00015a2c	0x2f0	pol20	0x0002107b	int combatManager::ValidSpellTarget(int, int)	SOURCE/SPELLS	graph:3;base=0.330529;margin=0.669913;shape=0.246;size=0.573;calls=0.500
+0x00015e44	0xd69	buka21	0x00099653	?CastSpell@combatManager@@QAEXHHHH@Z	SOURCE/SPELLS	graph:3;base=0.313511;margin=0.551146;shape=0.234;size=0.481;calls=0.596;alternate=pol20:void combatManager::CastSpell(int, int, int, int)@0x000217be
+0x00016bad	0xcb	pol20	0x00023688	void combatManager::DefaultSpell(int)	SOURCE/SPELLS	graph:2;base=0.460466;margin=0.352892;shape=0.303;size=0.931;calls=0.500
+0x000171ad	0x432	buka21	0x0009b2bd	?Fireball@combatManager@@QAEXHH@Z	SOURCE/SPELLS	graph:2;base=0.573325;margin=0.154314;shape=0.268;size=0.794;calls=0.643;strings=fireball.icn;alternate=pol20:void combatManager::Fireball(int, int)@0x00023762
+0x000175df	0x439	buka21	0x0009b805	?MeteorShower@combatManager@@QAEXH@Z	SOURCE/SPELLS	graph:3;base=0.570305;margin=0.151054;shape=0.232;size=0.755;calls=0.889;strings=meteor.icn;alternate=pol20:void combatManager::MeteorShower(int)@0x00023d85
+0x00017a18	0x2f3	buka21	0x0009bb35	?ElementalStorm@combatManager@@QAEXXZ	SOURCE/SPELLS	graph:2;base=0.609860;margin=0.145005;shape=0.203;size=0.928;calls=0.824;strings=storm.icn;alternate=pol20:void combatManager::ElementalStorm(void)@0x0002414e
+0x00017d0b	0x3e5	buka21	0x0009bdf2	?Armageddon@combatManager@@QAEXXZ	SOURCE/SPELLS	graph:4;base=0.422058;margin=0.013140;shape=0.223;size=0.375;calls=0.500;strings=kb.pal;alternate=pol20:void combatManager::Armageddon(void)@0x00024449
+0x000180f0	0x152	pol20	0x000bdbf0	int army::FindPath(int, int, int, int, int)	SOURCE/PATH	graph:3;base=0.612504;margin=0.616710;shape=0.500;size=0.976;calls=1.000
+0x00018242	0x9e	buka21	0x0007cf9d	?ValidPath@army@@QAEHHH@Z	SOURCE/PATH	graph:2;base=0.547636;margin=0.507012;shape=0.439;size=0.810;calls=1.000;alternate=pol20:int army::ValidPath(int, int)@0x000bdd3a
+0x0001835b	0xbf	pol20	0x000bde41	int army::GetAttackMask(int, int, int)	SOURCE/PATH	graph:2;base=0.606849;margin=0.583514;shape=0.500;size=0.948;calls=1.000
+0x00018643	0x295	pol20	0x000be217	int army::ValidAttack(int, int, int, int, int *)	SOURCE/PATH	graph:3;base=0.569417;margin=0.276322;shape=0.416;size=0.949;calls=1.000
+0x00018aee	0x4c2	pol20	0x000be59d	int army::ValidRange(int)	SOURCE/PATH	graph:2;base=0.621660;margin=0.510382;shape=0.552;size=0.901;calls=1.000
+0x00018fb0	0x58	buka21	0x0007d9b7	?OppositeDirection@@YIHH@Z	SOURCE/PATH	graph:2;base=0.351556;margin=0.353789;shape=0.125;size=0.602;calls=1.000;alternate=pol20:int OppositeDirection(int)@0x000be9e7
+0x00019008	0x988	pol20	0x000bea3f	int army::GetBestDirection(int, int, int)	SOURCE/PATH	graph:2;base=0.494623;margin=0.654664;shape=0.279;size=0.944;calls=1.000
+0x000199a5	0x79	buka21	0x000bf990	?LogTruncate@@YIXXZ	BASE/Misc	graph:2;base=0.606653;margin=0.398605;shape=0.316;size=0.834;calls=0.667;strings=KB.LOG
+0x00019a1e	0xa6	buka21	0x000bfa30	?LogStr@@YIXPAD@Z	BASE/Misc	graph:1;base=0.724628;margin=0.262043;shape=0.429;size=0.928;calls=1.000;strings=KB.LOG;alternate=pol20:void LogStr(char *)@0x000c6120
+0x00019ac4	0x86	pol20	0x000c61c0	void LogInt(char *, int, int, int, int, int, int, int)	BASE/Misc	graph:4;base=0.354228;margin=0.616422;shape=0.184;size=0.245;calls=0.455;strings=KB.LOG
+0x00019f16	0x1ef	buka21	0x0007e376	?CheckDoMain@@YIXHH@Z	SOURCE/PHILAI	graph:5;base=0.463287;margin=0.627999;shape=0.348;size=0.713;calls=0.909;alternate=pol20:void CheckDoMain(int, int)@0x000379d0
+0x0001a105	0x10	pol20	0x00037b50	void ShowStatus(void)	SOURCE/PHILAI	graph:1;base=1.000000;margin=0.200000;normalized-instructions
+0x0001a1a1	0x5e	pol20	0x00037b60	void philAI::constructor(void)	SOURCE/PHILAI	graph:1;base=0.824195;margin=0.256505;shape=1.000;size=0.904;calls=1.000
+0x0001a1ff	0xb0	buka21	0x0007e524	?DoAllHeroInteractions@philAI@@QAEXXZ	SOURCE/PHILAI	graph:2;base=0.414032;margin=0.418353;shape=0.188;size=0.773;calls=1.000;alternate=pol20:void philAI::DoAllHeroInteractions(void)@0x00037bb5
+0x0001a2af	0x445	buka21	0x0007e8cf	?CheckBuyStuff@philAI@@QAEXXZ	SOURCE/PHILAI	graph:2;base=0.641449;margin=0.572995;shape=0.312;size=0.907;calls=0.824;strings=CheckBuy End  |CheckBuy Start;alternate=pol20:void philAI::CheckBuyStuff(void)@0x00037fdf
+0x0001a6f4	0x1a9	buka21	0x0007ed84	?GoodAdjacent@philAI@@QAEHPAH@Z	SOURCE/PHILAI	graph:2;base=0.410367;margin=0.413392;shape=0.366;size=0.596;calls=0.600;alternate=pol20:int philAI::GoodAdjacent(int *)@0x0003849d
+0x0001a89d	0x473	buka21	0x0007f04d	?CheckReload@philAI@@QAEXXZ	SOURCE/PHILAI	graph:2;base=0.433109;margin=0.377228;shape=0.310;size=0.859;calls=0.417;alternate=pol20:void philAI::CheckReload(void)@0x00038785
+0x0001ad10	0x294	buka21	0x0007f41f	?CheckBerserk@philAI@@QAEXXZ	SOURCE/PHILAI	graph:2;base=0.559466;margin=0.357720;shape=0.362;size=0.984;calls=1.000;alternate=pol20:void philAI::CheckBerserk(void)@0x00038c3d
+0x0001b144	0x8f0	buka21	0x0007fd23	?DoAI@philAI@@QAEXH@Z	SOURCE/PHILAI	graph:5;base=0.641984;margin=1.146879;shape=0.398;size=0.795;calls=0.741;strings====================================|DO AI|DO AI 1;alternate=pol20:void philAI::DoAI(int)@0x00039631
+0x0001ba34	0x4b	pol20	0x0003a2de	void philAI::GetGameAIVars(void)	SOURCE/PHILAI	unique-instructions
+0x0001ba7f	0x6a0	buka21	0x000808a1	?GetTurnAIVars@philAI@@QAEXH@Z	SOURCE/PHILAI	graph:3;base=0.345425;margin=0.144973;shape=0.282;size=0.515;calls=0.667;alternate=pol20:void philAI::GetTurnAIVars(int)@0x0003a329
+0x0001c11f	0x600	buka21	0x00081580	?GetBestBHC@philAI@@QAEXHAAUBHC@@@Z	SOURCE/PHILAI	graph:2;base=0.679791;margin=0.499826;shape=0.401;size=0.937;calls=0.722;strings=BestBHC |Turns Owned;alternate=pol20:void philAI::GetBestBHC(int, struct BHC &)@0x0003b154
+0x0001c71f	0x11c	pol20	0x0003b748	class hero * philAI::DetermineHeroToMove(int)	SOURCE/PHILAI	graph:2;base=0.636868;margin=0.448489;shape=0.528;size=0.996;calls=1.000
+0x0001c83b	0x932	buka21	0x00081c03	?DetermineTargetPosition@philAI@@QAEHAAH0H0@Z	SOURCE/PHILAI	graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
+0x0001d16d	0x64d	buka21	0x00082969	?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010HHHAAMAAH3333@Z	SOURCE/PHILAI	graph:4;base=0.549946;margin=0.581641;shape=0.449;size=0.953;calls=0.724;alternate=pol20:void philAI::ProbableOutcomeOfBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, class armyGroup *, int, int, int, float &, int &, int &, int &, int &, int &)@0x0003c6e2
+0x0001d7ba	0x1e	pol20	0x0003ce73	float philAI::GetOddsOfWinning(int)	SOURCE/PHILAI	unique-normalized
+0x0001dd73	0x185	buka21	0x0008372c	?GetBestBuilding@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z	SOURCE/PHILAI	graph:2;base=0.526596;margin=0.075083;shape=0.323;size=0.949;calls=1.000;alternate=pol20:void philAI::GetBestBuilding(class town *, struct BHC &, float &)@0x0003d6b7
+0x0001def8	0x2f5	buka21	0x0008389d	?ValueOfBuyingCreature@philAI@@QAEXPAVtown@@HAAHHAAM@Z	SOURCE/PHILAI	graph:3;base=0.431663;margin=0.517459;shape=0.208;size=0.811;calls=0.923;alternate=pol20:void philAI::ValueOfBuyingCreature(class town *, int, int &, int, float &)@0x0003d852
+0x0001e1ed	0x211	buka21	0x00083b03	?GetBestCreature@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z	SOURCE/PHILAI	graph:2;base=0.467416;margin=0.566378;shape=0.359;size=0.696;calls=1.000;alternate=pol20:void philAI::GetBestCreature(class town *, struct BHC &, float &)@0x0003db58
+0x0001e3fe	0x48	pol20	0x0003deb3	int philAI::CreaturesToBuy(class town *, int)	SOURCE/PHILAI	unique-instructions
+0x0001e446	0x5f	pol20	0x0003defb	int philAI::CreaturesToBuy(int, int)	SOURCE/PHILAI	unique-normalized
+0x0001e4a5	0x9b	buka21	0x00083e81	?MaxBuyableCreatures@philAI@@QAEHH@Z	SOURCE/PHILAI	graph:2;base=0.533802;margin=0.565073;shape=0.392;size=0.839;calls=1.000;alternate=pol20:int philAI::MaxBuyableCreatures(int)@0x0003df5a
+0x0001e540	0x1bc	buka21	0x00083f03	?ValueOfBuyingHero@philAI@@QAEXPAVtown@@PAVhero@@AAHAAM@Z	SOURCE/PHILAI	graph:3;base=0.452634;margin=0.608146;shape=0.221;size=0.851;calls=1.000;alternate=pol20:void philAI::ValueOfBuyingHero(class town *, class hero *, int &, float &)@0x0003dff6
+0x0001e6fc	0x1a0	buka21	0x0008410d	?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z	SOURCE/PHILAI	graph:2;base=0.649528;margin=0.194728;shape=0.311;size=0.925;calls=0.800;strings=Town:%2d  Hero    : % 15i   Raw BC = %8.2f,  RandBC = %8.2f.;alternate=pol20:void philAI::GetBestHero(class town *, struct BHC &, float &)@0x0003e2a8
+0x0001e89c	0x65	buka21	0x0008428e	?LikelihoodOfEnemyAttacking@philAI@@QAEXPAVtown@@PAVhero@@AAM2AAH332@Z	SOURCE/PHILAI	graph:2;base=0.488198;margin=0.360468;shape=0.323;size=0.832;calls=1.000;alternate=pol20:void philAI::LikelihoodOfEnemyAttacking(class town *, class hero *, float &, float &, int &, int &, int &, float &)@0x0003e459
+0x0001e901	0x1a	pol20	0x0003e4be	int philAI::MeanRVOfUnexploredTerritory(int)	SOURCE/PHILAI	graph:1;base=1.000000;margin=0.200000;normalized-instructions
+0x0001e91b	0x1d3	pol20	0x0003e4d8	void philAI::GetGameAttentionValue(int)	SOURCE/PHILAI	graph:2;base=0.706312;margin=0.744358;shape=0.685;size=0.989;calls=1.000
+0x0001eaee	0xed	pol20	0x0003e6b0	void philAI::GetTurnAttentionValue(int)	SOURCE/PHILAI	graph:1;base=0.724050;margin=0.464903;shape=0.737;size=0.979;calls=1.000
+0x0001ebdb	0xa6	buka21	0x00084504	?RVConversion@philAI@@QAEHQAH@Z	SOURCE/PHILAI	graph:2;base=0.411394;margin=0.429857;shape=0.250;size=0.681;calls=1.000;alternate=pol20:int philAI::RVConversion(int * const)@0x0003e7a2
+0x0001ec81	0xca	pol20	0x0003e848	float philAI::TurnsToBuy(int * const)	SOURCE/PHILAI	unique-instructions
+0x0001ed4b	0x55e	buka21	0x00084642	?RVOfPosition@philAI@@QAEHHHHHHHHHHH@Z	SOURCE/PHILAI	graph:3;base=0.513260;margin=0.500427;shape=0.306;size=0.971;calls=0.812;alternate=pol20:int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int)@0x0003e918
+0x0001f2c3	0x8bd	buka21	0x00084b78	?StrategicValueOfPosition@philAI@@QAEHHHHHPAHH@Z	SOURCE/PHILAI	graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
+0x0001fc31	0x176	pol20	0x0003fb8c	void philAI::TurnCostResource(int)	SOURCE/PHILAI	graph:1;base=0.767693;margin=0.291665;shape=0.837;size=0.974;calls=1.000
+0x0001fda7	0x134	buka21	0x0008584e	?TurnValueOfObelisk@philAI@@QAEMH@Z	SOURCE/PHILAI	graph:2;base=0.491757;margin=0.401590;shape=0.220;size=0.997;calls=1.000
+0x0001fedb	0x51	buka21	0x00085981	?FutureDeflator@philAI@@QAEMQAH@Z	SOURCE/PHILAI	graph:2;base=0.484127;margin=0.409347;shape=0.286;size=0.877;calls=1.000;alternate=pol20:float philAI::FutureDeflator(int * const)@0x0003fe81
+0x0001ff2c	0x764	buka21	0x000859c8	?FightValueOfStack@philAI@@QAEHPAVarmyGroup@@PAVhero@@HHHH@Z	SOURCE/PHILAI	graph:4;base=0.393076;margin=0.447055;shape=0.297;size=0.768;calls=0.382;alternate=pol20:int philAI::FightValueOfStack(class armyGroup *, class hero *, int, int, int, int)@0x0003fed2
+0x00020690	0x1da	buka21	0x00086369	?EvaluateOneTimeCreaturePurchase@philAI@@QAEXHHHAAH00@Z	SOURCE/PHILAI	graph:3;base=0.513526;margin=0.703256;shape=0.342;size=0.854;calls=1.000;alternate=pol20:void philAI::EvaluateOneTimeCreaturePurchase(int, int, int, int &, int &, int &)@0x00040aca
+0x0002086a	0x3a7	buka21	0x000864fe	?QuickCombat@philAI@@QAEHPAVarmyGroup@@PAVhero@@01HHAAM2@Z	SOURCE/PHILAI	graph:5;base=0.373791;margin=0.600389;shape=0.327;size=0.583;calls=0.548;alternate=pol20:int philAI::QuickCombat(class armyGroup *, class hero *, class armyGroup *, class hero *, int, int, float &, float &)@0x00040cb1
+0x00020c11	0xbae	buka21	0x00086ed0	?HeroInteractionAtTown@philAI@@QAEXPAVhero@@PAVtown@@HPAH@Z	SOURCE/PHILAI	graph:3;base=0.484024;margin=0.235954;shape=0.394;size=0.661;calls=0.952;alternate=pol20:void philAI::HeroInteractionAtTown(class hero *, class town *, int, int *)@0x0004183b
+0x00021820	0xc7	buka21	0x00087a7b	?ChooseEvaluateBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@01HHHAAH2@Z	SOURCE/PHILAI	graph:3;base=0.572029;margin=0.742196;shape=0.490;size=0.824;calls=1.000;alternate=pol20:void philAI::ChooseEvaluateBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, int, int, int, int &, int &)@0x000425b0
+0x00021950	0x1d	pol20	0x000427c4	int philAI::ChooseToPayRansomOnHero(int)	SOURCE/PHILAI	graph:1;base=0.970000;margin=0.200000;instruction-sequence
+0x0002196d	0x194	buka21	0x000a43f9	?BuildBuilding@town@@QAEXH@Z	SOURCE/TOWN	graph:2;base=0.356811;margin=0.440169;shape=0.204;size=0.687;calls=0.625;alternate=pol20:void philAI::BuildBuilding(class town *, int)@0x000427e1
+0x00021b01	0x25c	pol20	0x000428b8	void philAI::BuildHero(class town *, int)	SOURCE/PHILAI	graph:2;base=0.447567;margin=0.248604;shape=0.351;size=0.748;calls=0.667
+0x00021d5d	0x100	pol20	0x00042be0	void philAI::BuildCreature(class town *, int, int)	SOURCE/PHILAI	graph:3;base=0.354722;margin=0.104251;shape=0.383;size=0.357;calls=0.667
+0x00021e5d	0x188	buka21	0x00088284	?CanBuyBHC@philAI@@QAEHAAUBHC@@@Z	SOURCE/PHILAI	graph:3;base=0.453882;margin=0.780446;shape=0.369;size=0.712;calls=0.667;alternate=pol20:int philAI::CanBuyBHC(struct BHC &)@0x00042ead
+0x00021fe5	0x177	buka21	0x0008839b	?CombatMonsterEvent@philAI@@QAEHPAVhero@@HPAHPAVmapCell@@@Z	SOURCE/PHILAI	graph:2;base=0.554517;margin=0.429398;shape=0.381;size=0.912;calls=1.000;alternate=pol20:int philAI::CombatMonsterEvent(class hero *, int, int *, class mapCell *)@0x00043007
+0x0002215c	0x26a	buka21	0x000884f1	?FightEvent@philAI@@QAEHPAVhero@@PAVmapCell@@H@Z	SOURCE/PHILAI	graph:5;base=0.277616;margin=0.834782;shape=0.262;size=0.393;calls=0.393;alternate=pol20:int philAI::FightEvent(class hero *, class mapCell *, int)@0x0004316b
+0x000223c6	0x73	buka21	0x00088b14	?DamageGroup@philAI@@QAEHPAVarmyGroup@@PAVhero@@1M@Z	SOURCE/PHILAI	graph:2;base=0.548912;margin=0.547381;shape=0.486;size=0.739;calls=1.000;alternate=pol20:int philAI::DamageGroup(class armyGroup *, class hero *, class hero *, float)@0x00043842
+0x0002249f	0xcb	pol20	0x000438b5	void philAI::IncrementHourGlass(void)	SOURCE/PHILAI	unique-instructions
+0x0002256a	0x221	buka21	0x00088c35	?TownEvent@philAI@@QAEXPAVmapCell@@PAVhero@@HH@Z	SOURCE/PHILAI	graph:3;base=0.582749;margin=0.601748;shape=0.455;size=0.921;calls=1.000;alternate=pol20:void philAI::TownEvent(class mapCell *, class hero *, int, int)@0x00043980
+0x0002278b	0x2085	buka21	0x0008911d	?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z	SOURCE/PHILAI	graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
+0x00024810	0x10	pol20	0x000a4a50	void searchArray::constructor(void)	SOURCE/FINDPATH	graph:2;base=0.450000;margin=0.300000;shape=0.200;size=1.000;calls=1.000
+0x00024950	0x300	pol20	0x000a53f0	int searchArray::FindCombatPath(int, int, class army *, int, int)	SOURCE/FINDPATH	graph:3;base=0.450697;margin=0.615808;shape=0.275;size=0.738;calls=1.000
+0x00024c50	0x140	pol20	0x000a5800	void searchArray::PushCombatPoint(int, int, int, int)	SOURCE/FINDPATH	graph:2;base=0.509323;margin=0.588394;shape=0.351;size=0.800;calls=1.000
+0x000252c0	0x2cc	buka21	0x00001000	??0advManager@@QAE@XZ	SOURCE/ADVMGR	graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
+0x000255ab	0xea6	buka21	0x000012f2	?Open@advManager@@UAEHH@Z	SOURCE/ADVMGR	graph:5;base=0.608500;margin=0.280356;shape=0.449;size=0.637;calls=0.611;strings=advManager|adv_wind.bin|advmice.mse;alternate=pol20:int advManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0005665f
+0x00026451	0x3bd	buka21	0x00001c47	?Close@advManager@@UAEXXZ	SOURCE/ADVMGR	graph:3;base=0.555933;margin=0.510723;shape=0.387;size=0.995;calls=0.909;alternate=pol20:void advManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x00057028
+0x0002680e	0xc7	buka21	0x00001fff	?GetCursorSampleSet@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:2;base=0.701218;margin=0.695021;shape=0.378;size=0.921;calls=1.000;strings=wsnd%1d%1d.82M;alternate=pol20:void advManager::GetCursorSampleSet(int)@0x00057432
+0x000268d5	0x619	buka21	0x000020d7	?DoAdvCommand@advManager@@QAEPAVmapCell@@XZ	SOURCE/ADVMGR	graph:7;base=0.528946;margin=1.360342;shape=0.339;size=0.921;calls=0.947;alternate=pol20:class mapCell * advManager::DoAdvCommand(void)@0x0005751b
+0x00026eee	0xe10	buka21	0x000027cf	?Main@advManager@@UAEHAAUtag_message@@@Z	SOURCE/ADVMGR	graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
+0x00027cfe	0x22	pol20	0x00058d46	void advManager::Reseed(int, int)	SOURCE/ADVMGR	unique-normalized
+0x00027d20	0xe39	buka21	0x000035e9	?ProcessSelect@advManager@@QAEHPAUtag_message@@PAPAVmapCell@@@Z	SOURCE/ADVMGR	graph:2;base=0.526004;margin=0.306176;shape=0.329;size=0.923;calls=0.956;alternate=pol20:int advManager::ProcessSelect(struct tag_message *, class mapCell * *)@0x00058d68
+0x00028b59	0x1ea	buka21	0x00004308	?ProcessDeSelect@advManager@@QAEHPAUtag_message@@PAHPAPAVmapCell@@@Z	SOURCE/ADVMGR	graph:4;base=0.346709;margin=0.551065;shape=0.313;size=0.541;calls=0.500;alternate=pol20:int advManager::ProcessDeSelect(struct tag_message *, int *, class mapCell * *)@0x00059c19
+0x00028d43	0x49b	buka21	0x00004692	?ProcessSearch@advManager@@QAEHHH@Z	SOURCE/ADVMGR	graph:2;base=0.676641;margin=0.529889;shape=0.365;size=0.904;calls=0.935;strings=%s%s|DIGSOUND.82M;alternate=pol20:int advManager::ProcessSearch(int, int)@0x0005a07c
+0x000291de	0xc02	buka21	0x00004baa	?ProcessHover@advManager@@QAEHHH@Z	SOURCE/ADVMGR	graph:2;base=0.464646;margin=0.430920;shape=0.299;size=0.767;calls=0.971;alternate=pol20:int advManager::ProcessHover(int, int)@0x0005a644
+0x00029de0	0x265	buka21	0x000054df	?UpdateScreen@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:2;base=0.492392;margin=0.157827;shape=0.294;size=0.928;calls=0.818;alternate=pol20:void advManager::UpdateScreen(int, int)@0x0005b094
+0x0002a045	0x359	buka21	0x00005718	?CompleteDraw@advManager@@QAEXHHHH@Z	SOURCE/ADVMGR	graph:8;base=0.459172;margin=1.327145;shape=0.409;size=0.723;calls=0.706;alternate=pol20:void advManager::CompleteDraw(int, int, int, int)@0x0005b2ae
+0x0002a39e	0x3a	pol20	0x0005b799	void advManager::CompleteDraw(int)	SOURCE/ADVMGR	graph:3;base=0.816875;margin=0.629079;shape=0.938;size=1.000;calls=1.000
+0x0002a3d8	0x40d	pol20	0x0005b7d3	int advManager::GetCloudLookup(int, int)	SOURCE/ADVMGR	graph:2;base=0.570070;margin=0.691363;shape=0.440;size=0.904;calls=1.000
+0x0002a7e5	0xee8	buka21	0x00005fc9	?DrawCell@advManager@@QAEXHHHHHH@Z	SOURCE/ADVMGR	graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
+0x0002b74a	0x57e	buka21	0x000084ac	?UpdateRadar@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:6;base=0.227177;margin=0.921091;shape=0.195;size=0.373;calls=0.222;alternate=pol20:void advManager::UpdateRadar(int, int)@0x0005e0da
+0x0002bcc8	0x596	buka21	0x00009363	?QuickInfo@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:4;base=0.437984;margin=0.160503;shape=0.304;size=0.325;calls=0.543;strings=qwikinfo.bin;alternate=pol20:void advManager::QuickInfo(int, int)@0x0005f127
+0x0002c25e	0x3c8	buka21	0x0000a491	?UpdateHeroLocator@advManager@@QAEXHHH@Z	SOURCE/ADVMGR	graph:2;base=0.539169;margin=0.099782;shape=0.447;size=0.791;calls=0.917;alternate=pol20:void advManager::UpdateHeroLocator(int, int, int)@0x00060465
+0x0002c626	0x108	buka21	0x0000a78f	?UpdateHeroLocators@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:2;base=0.520706;margin=0.246406;shape=0.456;size=0.777;calls=0.750;alternate=pol20:void advManager::UpdateHeroLocators(int, int)@0x000607ad
+0x0002c72e	0x27f	buka21	0x0000a85c	?UpdateTownLocators@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:3;base=0.535916;margin=0.510257;shape=0.379;size=0.971;calls=0.800;alternate=pol20:void advManager::UpdateTownLocators(int, int)@0x000608af
+0x0002c9ad	0x19f	buka21	0x0000aaee	?UpdBottomView@advManager@@QAEXHHH@Z	SOURCE/ADVMGR	graph:3;base=0.587774;margin=0.642167;shape=0.494;size=0.843;calls=1.000;alternate=pol20:void advManager::UpdBottomView(int, int, int)@0x00060b97
+0x0002cb4c	0x132	buka21	0x0000ac4c	?ClearBottomView@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:5;base=0.613154;margin=1.071587;shape=0.489;size=0.961;calls=1.000;alternate=pol20:void advManager::ClearBottomView(void)@0x00060d63
+0x0002cc7e	0x5bf	buka21	0x0000ad72	?UpdBottomViewEnemyTurn@advManager@@QAEHXZ	SOURCE/ADVMGR	graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
+0x0002d23d	0x3e0	buka21	0x0000b2ad	?UpdBottomViewNewTurn@advManager@@QAEHXZ	SOURCE/ADVMGR	graph:2;base=0.861364;margin=0.145966;shape=0.778;size=0.910;calls=0.840;strings=%s: %d|%s: %d  %s: %d|bigfont.fnt;alternate=pol20:int advManager::UpdBottomViewNewTurn(void)@0x000613b0
+0x0002d61d	0x3fa	buka21	0x0000b634	?UpdBottomViewResMsg@advManager@@QAEHXZ	SOURCE/ADVMGR	graph:3;base=0.790087;margin=0.239399;shape=0.649;size=0.884;calls=0.793;strings=resource.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewResMsg(void)@0x00061716
+0x0002da17	0x3ce	buka21	0x0000b9b8	?UpdBottomViewKingdom@advManager@@QAEHXZ	SOURCE/ADVMGR	graph:2;base=0.769757;margin=0.069402;shape=0.564;size=0.915;calls=0.850;strings=ressmall.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewKingdom(void)@0x00061a75
+0x0002dde5	0x62c	buka21	0x0000bd33	?UpdBottomViewHero@advManager@@QAEHXZ	SOURCE/ADVMGR	graph:3;base=0.635193;margin=0.117414;shape=0.302;size=0.961;calls=0.625;strings=mons32.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewHero(void)@0x00061dd8
+0x0002e411	0xd46	buka21	0x0000c322	?HeroQuickView@advManager@@QAEXHHHH@Z	SOURCE/ADVMGR	graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
+0x0002f157	0xe2	buka21	0x0000d11d	?GetArmySizeName@advManager@@QAEPADHH@Z	SOURCE/ADVMGR	graph:2;base=0.463915;margin=0.489878;shape=0.171;size=0.973;calls=1.000;alternate=pol20:char * advManager::GetArmySizeName(int, int)@0x0006308d
+0x0002f239	0xc51	buka21	0x0000d1f9	?TownQuickView@advManager@@QAEXHHHH@Z	SOURCE/ADVMGR	graph:6;base=0.675336;margin=0.051432;shape=0.330;size=0.961;calls=0.941;strings=mons32.icn|qtown1.bin|smalfont.fnt;alternate=pol20:void advManager::TownQuickView(int, int, int, int)@0x000631ad
+0x0002fe8a	0xe8	buka21	0x0000deca	?RedrawAdvScreen@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:3;base=0.562981;margin=0.429826;shape=0.444;size=0.906;calls=0.909;alternate=pol20:void advManager::RedrawAdvScreen(int, int)@0x00063dd6
+0x0002ff72	0x1f	pol20	0x00063ef5	void advManager::DeactivateCurrTown(void)	SOURCE/ADVMGR	graph:2;base=0.970000;margin=0.400000;instruction-sequence
+0x0002ff91	0x27	pol20	0x00063f14	void advManager::DeactivateCurrHero(void)	SOURCE/ADVMGR	unique-instructions
+0x0002ffb8	0x59	buka21	0x0000dffa	?MobilizeCurrHero@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:3;base=0.511468;margin=0.529744;shape=0.406;size=0.742;calls=1.000;alternate=pol20:void advManager::MobilizeCurrHero(int)@0x00063f3b
+0x00030011	0x199	buka21	0x0000e03c	?DemobilizeCurrHero@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:5;base=0.450729;margin=0.647673;shape=0.295;size=0.807;calls=0.800;alternate=pol20:void advManager::DemobilizeCurrHero(void)@0x00063f95
+0x000301aa	0x255	buka21	0x0000e186	?SetTownContext@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:5;base=0.489027;margin=0.082311;shape=0.312;size=0.827;calls=0.923;alternate=pol20:void advManager::SetTownContext(int)@0x00064101
+0x000303ff	0x3e6	buka21	0x0000e374	?SetHeroContext@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:5;base=0.499995;margin=0.151356;shape=0.325;size=0.844;calls=0.947;alternate=pol20:void advManager::SetHeroContext(int, int)@0x00064318
+0x000307e5	0x290	buka21	0x0000e6be	?DoHeroKnob@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:5;base=0.410865;margin=0.380092;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoHeroKnob(void)@0x000646aa
+0x00030a75	0x290	buka21	0x0000e8a5	?DoTownKnob@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:3;base=0.410865;margin=0.000000;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoTownKnob(void)@0x000648d9
+0x00030d05	0x3da	buka21	0x00013c27	?ViewPuzzle@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:3;base=0.634399;margin=0.712778;shape=0.353;size=0.798;calls=0.917;strings=advmice.mse|puzzle.icn|viewpuzl.bin;alternate=pol20:void advManager::ViewPuzzle(void)@0x0006a1dd
+0x00031315	0x1f2	buka21	0x0000ea8c	?CastSpell@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:6;base=0.339671;margin=1.295843;shape=0.207;size=0.620;calls=0.615;alternate=pol20:void advManager::CastSpell(int)@0x00064b08
+0x00031507	0x1127	buka21	0x0007869f	?ShowScenInfo@game@@QAEXXZ	SOURCE/Newgame	graph:3;base=0.533621;margin=0.173025;shape=0.211;size=0.712;calls=0.768;strings=advmice.mse;alternate=pol20:void game::ShowCampaignInfo(int, int)@0x00047fb6
+0x0003266f	0x321	buka21	0x00014562	?ControlPanel@advManager@@QAEHXZ	SOURCE/ADVMGR	graph:8;base=0.552235;margin=0.031986;shape=0.333;size=0.605;calls=0.636;strings=advmice.mse|cpanel.bin;alternate=pol20:void advManager::SystemOptions(void)@0x0006b082
+0x00032990	0x227	pol20	0x0006b219	void UpdateSystemOptions(int)	SOURCE/ADVMGR	graph:2;base=0.491745;margin=0.333508;shape=0.508;size=0.638;calls=0.684
+0x00032bb7	0x232	buka21	0x0000edaf	?SaveGame@@YIHXZ	SOURCE/ADVMGR	graph:3;base=0.731974;margin=0.187030;shape=0.477;size=0.957;calls=0.889;strings=.GM%d|.\GAMES\|advmice.mse;alternate=pol20:int SaveGame(void)@0x00064e9f
+0x00033334	0xab	buka21	0x0000effa	?CheckCastSpell@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:2;base=0.587490;margin=0.208808;shape=0.255;size=0.813;calls=0.857;strings=advmice.mse;alternate=pol20:void advManager::CheckCastSpell(void)@0x000650eb
+0x000333df	0x213	buka21	0x00014173	?AdvPanel@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:5;base=0.644374;margin=0.446733;shape=0.427;size=0.786;calls=0.720;strings=advmice.mse|apanel.bin;alternate=pol20:void advManager::AdvPanel(void)@0x0006a724
+0x000337c5	0x34b	buka21	0x0000f085	?DimensionDoorHandler@@YIHAAUtag_message@@@Z	SOURCE/ADVMGR	graph:2;base=0.481967;margin=0.254497;shape=0.313;size=0.765;calls=1.000;alternate=pol20:int DimensionDoorHandler(struct tag_message &)@0x00065191
+0x00033b10	0xaf6	buka21	0x0000f30a	?ComboDraw@advManager@@QAEHHHH@Z	SOURCE/ADVMGR	graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
+0x00034606	0x3a	pol20	0x00066656	int advManager::ComboDraw(int)	SOURCE/ADVMGR	graph:0;base=0.970000;margin=0.153125;instruction-sequence
+0x00034640	0x2dd	buka21	0x000105eb	?SetEnvironmentOrigin@advManager@@QAEXHHH@Z	SOURCE/ADVMGR	graph:3;base=0.577153;margin=0.265756;shape=0.425;size=0.947;calls=1.000;alternate=pol20:void advManager::SetEnvironmentOrigin(int, int, int)@0x0006668e
+0x0003491d	0x69	buka21	0x000108a1	?CheckLoadSample@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:1;base=0.741786;margin=0.490066;shape=0.533;size=0.857;calls=1.000;strings=loop%04d.82M;alternate=pol20:void advManager::CheckLoadSample(int)@0x000669c6
+0x00034986	0x251	buka21	0x00010d39	?InsertSound@advManager@@QAEXHHHH@Z	SOURCE/ADVMGR	graph:2;base=0.476286;margin=0.526376;shape=0.266;size=0.902;calls=0.750;alternate=pol20:void advManager::InsertSound(int, int, int, int)@0x00066ef0
+0x00034bd7	0x340	buka21	0x00010f50	?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z	SOURCE/ADVMGR	graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
+0x00034f17	0x246	buka21	0x00011313	?DimensionDoor@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:4;base=0.671113;margin=0.501597;shape=0.372;size=0.883;calls=0.867;strings=dimdoor.bin;alternate=pol20:void advManager::DimensionDoor(void)@0x00067539
+0x0003515d	0x2a6	buka21	0x000115f5	?TownGate@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:2;base=0.385467;margin=0.208066;shape=0.290;size=0.657;calls=0.526;alternate=pol20:void advManager::TownGate(int)@0x0006785d
+0x00035403	0x51c	buka21	0x000119fd	?SummonBoat@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:2;base=0.502597;margin=0.051626;shape=0.294;size=0.965;calls=0.867;alternate=pol20:void advManager::SummonBoat(void)@0x00067c9b
+0x0003591f	0x31b	buka21	0x00011f49	?ShowRoute@advManager@@QAEXHHH@Z	SOURCE/ADVMGR	graph:3;base=0.438878;margin=0.464254;shape=0.279;size=0.721;calls=1.000;alternate=pol20:void advManager::ShowRoute(int, int, int)@0x00068247
+0x00035c3a	0x106	buka21	0x00012397	?HideRoute@advManager@@QAEXHHH@Z	SOURCE/ADVMGR	graph:4;base=0.524051;margin=0.948488;shape=0.403;size=0.809;calls=1.000;alternate=pol20:void advManager::HideRoute(int, int, int)@0x00068720
+0x00035d40	0x91	buka21	0x0001246b	?CheckDimHero@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:2;base=0.465466;margin=0.233620;shape=0.306;size=0.738;calls=1.000;alternate=pol20:void advManager::CheckDimHero(void)@0x00068827
+0x00035dd1	0x6e	buka21	0x000124d6	?CheckDimNextHeroBut@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:3;base=0.454682;margin=0.437763;shape=0.225;size=0.845;calls=1.000;alternate=pol20:void advManager::CheckDimNextHeroBut(void)@0x000688b4
+0x00035e3f	0x152	buka21	0x00012533	?SeedTo@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:3;base=0.530039;margin=0.750383;shape=0.400;size=0.820;calls=1.000;alternate=pol20:void advManager::SeedTo(int, int)@0x0006891f
+0x00035fe0	0x1b6	buka21	0x00012697	?ScreenScroll@advManager@@QAEXHH@Z	SOURCE/ADVMGR	graph:2;base=0.463708;margin=0.069995;shape=0.184;size=0.968;calls=1.000;alternate=pol20:void advManager::ScreenScroll(int, int)@0x00068ab6
+0x00036196	0x1e1	buka21	0x0001283f	?CheckScreenScroll@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:3;base=0.475412;margin=0.607960;shape=0.306;size=0.761;calls=1.000;alternate=pol20:void advManager::CheckScreenScroll(void)@0x00068c5c
+0x00036377	0xa3	buka21	0x000129ad	?MouseInScrollZone@advManager@@QAEHXZ	SOURCE/ADVMGR	graph:2;base=0.376012;margin=0.441568;shape=0.180;size=0.620;calls=1.000;alternate=pol20:int advManager::MouseInScrollZone(void)@0x00068e17
+0x0003641a	0x283	buka21	0x00012a12	?SetInitialMapOrigin@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:5;base=0.512925;margin=0.905583;shape=0.330;size=0.958;calls=0.778;alternate=pol20:void advManager::SetInitialMapOrigin(void)@0x00068ea8
+0x0003669d	0x152	buka21	0x00012c7a	?LoadRemote@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:4;base=0.559158;margin=0.708697;shape=0.333;size=0.638;calls=0.706;strings=advmice.mse;alternate=pol20:void advManager::LoadRemote(void)@0x00069160
+0x000367ef	0x178	buka21	0x00012e8c	?CheckHandleNet@advManager@@QAEPADXZ	SOURCE/ADVMGR	graph:2;base=0.410587;margin=0.478746;shape=0.288;size=0.750;calls=0.692;alternate=pol20:char * advManager::CheckHandleNet(void)@0x0006931e
+0x00036967	0xd4	buka21	0x00013081	?CheckHandleNetPlayerWait@advManager@@QAEHAAUtag_message@@H@Z	SOURCE/ADVMGR	graph:5;base=0.447497;margin=1.157842;shape=0.264;size=0.731;calls=1.000;alternate=pol20:int advManager::CheckHandleNetPlayerWait(struct tag_message &, int)@0x0006952a
+0x00036a3b	0x1c2	buka21	0x0001311c	?TrimLoopingSounds@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:3;base=0.593881;margin=0.540898;shape=0.483;size=0.978;calls=1.000;alternate=pol20:void advManager::TrimLoopingSounds(int)@0x000695f7
+0x00036d9d	0x138	buka21	0x00013464	?SaveAdventureBorder@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:2;base=0.567475;margin=0.473800;shape=0.423;size=0.969;calls=1.000;alternate=pol20:void advManager::SaveAdventureBorder(void)@0x00069976
+0x00036ed5	0x13b	buka21	0x000135a6	?DrawAdventureBorder@advManager@@QAEXXZ	SOURCE/ADVMGR	graph:2;base=0.567997;margin=0.477634;shape=0.397;size=0.978;calls=1.000;alternate=pol20:void advManager::DrawAdventureBorder(void)@0x00069abb
+0x00037977	0x63	buka21	0x00097724	?ClearEffects@combatManager@@QAEXXZ	SOURCE/SPELLAI	graph:2;base=0.425101;margin=0.364782;shape=0.143;size=0.828;calls=1.000;alternate=pol20:void combatManager::ClearEffects(void)@0x00088607
+0x000379da	0x40	pol20	0x0008866d	void combatManager::NextPos(int *)	SOURCE/SPELLAI	unique-instructions
+0x00037a1a	0x87	pol20	0x000886ad	int combatManager::FirstArmy(int, int, int *)	SOURCE/SPELLAI	graph:1;base=0.681732;margin=0.132187;shape=0.733;size=0.839;calls=1.000
+0x00038310	0x56d	buka21	0x000ad4b0	?ViewGeneral@combatManager@@QAEHHHH@Z	SOURCE/VIEW	graph:4;base=0.677383;margin=0.274305;shape=0.458;size=0.778;calls=0.853;strings=port%04d.icn|vgenwin.bin;alternate=pol20:int combatManager::ViewGeneral(int, int, int)@0x0000bd60
+0x00038a9f	0x161	buka21	0x000ade2f	?ViewArmy@combatManager@@QAEXPAVarmy@@H@Z	SOURCE/VIEW	graph:3;base=0.474703;margin=0.690322;shape=0.250;size=0.915;calls=1.000;alternate=pol20:void combatManager::ViewArmy(class army *, int)@0x0000c784
+0x00038c00	0x1f8	buka21	0x0004bff0	?Write@playerData@@QAEXH@Z	SOURCE/GAME	graph:2;base=0.582104;margin=0.473963;shape=0.500;size=0.883;calls=0.885;alternate=pol20:void playerData::Write(int)@0x000708b0
+0x00038df8	0x1e8	buka21	0x0004c22b	?Read@playerData@@QAEXH@Z	SOURCE/GAME	graph:2;base=0.555449;margin=0.750197;shape=0.444;size=0.878;calls=0.880;alternate=pol20:void playerData::Read(int)@0x00070aed
+0x00038fe0	0x12c	buka21	0x0004c457	?NextHero@playerData@@QAEHH@Z	SOURCE/GAME	graph:2;base=0.473378;margin=0.450383;shape=0.230;size=0.850;calls=1.000;alternate=pol20:int playerData::NextHero(int)@0x00070d1a
+0x0003910c	0x68	pol20	0x00070e47	int playerData::HasMobileHero(void)	SOURCE/GAME	graph:3;base=0.635249;margin=0.699128;shape=0.550;size=0.971;calls=1.000
+0x0003933d	0x386	pol20	0x000710f3	void ComputeUALoc(int)	SOURCE/GAME	graph:2;base=0.536740;margin=0.410965;shape=0.383;size=0.870;calls=1.000
+0x000396c3	0x1b0	buka21	0x0004cb1e	?SetupPuzzlePieces@game@@QAEHHH@Z	SOURCE/GAME	graph:2;base=0.371036;margin=0.440737;shape=0.148;size=0.799;calls=0.615
+0x00039873	0xb3	pol20	0x000717ac	int game::IsMobile(int)	SOURCE/GAME	graph:2;base=0.596540;margin=0.549964;shape=0.441;size=0.989;calls=1.000
+0x00039926	0x1e	pol20	0x00071861	class fullMap * game::GetWorldMapData(void)	SOURCE/GAME	unique-instructions
+0x00039bfe	0x8f	pol20	0x00071c80	int game::GetTownId(int, int)	SOURCE/GAME	graph:2;base=0.573359;margin=0.313392;shape=0.432;size=0.930;calls=1.000
+0x00039d14	0x129	buka21	0x0004d202	?GenerateStandardFileName@@YIXPAD0@Z	SOURCE/GAME	graph:2;base=0.427111;margin=0.052277;shape=0.267;size=0.694;calls=1.000;alternate=pol20:void GenerateStandardFileName(char *, char *)@0x00071d89
+0x00039e3d	0x7b2	buka21	0x0004d3ae	?SaveGame@game@@QAEHPADHC@Z	SOURCE/GAME	graph:3;base=0.606443;margin=0.348788;shape=0.410;size=0.678;calls=0.698;strings=%s%s|%s.%s|%s.GM%d;alternate=pol20:int game::SaveGame(char *, int, signed char)@0x00071eb7
+0x0003a5ef	0x9b2	buka21	0x0004e8d9	?LoadGame@game@@QAEXPADHH@Z	SOURCE/GAME	graph:5;base=0.668603;margin=0.422052;shape=0.401;size=0.926;calls=0.741;strings=%s%s|.\DATA\|.\GAMES\;alternate=pol20:void game::LoadGame(char *, int, int)@0x000735bf
+0x0003b522	0x2c3	buka21	0x00076e3b	?UpdateNewGameWindow@game@@QAEXXZ	SOURCE/Newgame	graph:2;base=0.454910;margin=0.298327;shape=0.215;size=0.546;calls=0.480;strings=%s %d%%;alternate=pol20:void game::UpdateNewGameWindow(void)@0x000b88d6
+0x0003b7e5	0x2c3	pol20	0x000741e6	void game::GiveTroopsToNeutralTown(int)	SOURCE/GAME	graph:2;base=0.438805;margin=0.078380;shape=0.324;size=0.703;calls=0.857
+0x0003baa8	0x3eb	buka21	0x000a4f5d	?Open@townManager@@UAEHH@Z	SOURCE/TOWNMGR	graph:3;base=0.367020;margin=0.187105;shape=0.352;size=0.516;calls=0.565;alternate=pol20:int game::NewGame(void)@0x000b769e
+0x0003be93	0x2ad	buka21	0x000b3aba	?ShowInfo@ExpCampaign@@QAEXHH@Z	SOURCE/X_CAMPGN	graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
+0x0003c1bf	0x28c	buka21	0x000b3427	?InitMap@ExpCampaign@@QAEXXZ	SOURCE/X_CAMPGN	graph:2;base=0.361177;margin=0.269979;shape=0.160;size=0.387;calls=0.167;strings=origdata.bin;alternate=pol20:void ExpCampaign::InitMap(void)@0x000bb843
+0x0003c44b	0x1009	buka21	0x0007734a	?NewGameHandler@@YIHAAUtag_message@@@Z	SOURCE/Newgame	graph:2;base=0.444304;margin=0.067157;shape=0.265;size=0.862;calls=0.812;alternate=pol20:void game::NewMap(char *)@0x00074678
+0x0003d6a7	0xc63	pol20	0x0008041e	void game::ProcessRandomObjects(void)	SOURCE/GAME	graph:2;base=0.367437;margin=0.149769;shape=0.194;size=0.587;calls=0.821
+0x0003e30a	0x43a	buka21	0x00053b9e	?LoadMap@game@@QAEHPAD@Z	SOURCE/GAME	graph:4;base=0.657346;margin=0.109543;shape=0.244;size=0.995;calls=1.000;strings=%s%s|.\MAPS\;alternate=pol20:int game::LoadMap(char *)@0x00078b72
+0x0003e744	0x321	buka21	0x00053fd3	?ClaimTown@game@@QAEXHHH@Z	SOURCE/GAME	graph:4;base=0.415111;margin=0.758393;shape=0.164;size=0.968;calls=0.500;alternate=pol20:void game::ClaimTown(int, int, int)@0x00078fea
+0x0003ea65	0x2c9	buka21	0x000542da	?ClaimMine@game@@QAEXHH@Z	SOURCE/GAME	graph:3;base=0.252405;margin=0.498955;shape=0.139;size=0.683;calls=0.000
+0x0003ed2e	0x297	buka21	0x000546ee	?ViewSpells@game@@QAEHPAVhero@@HP6IHAAUtag_message@@@ZH@Z	SOURCE/GAME	graph:4;base=0.637141;margin=0.178696;shape=0.427;size=0.725;calls=0.733;strings=spellwin.bin;alternate=pol20:int game::ViewSpells(class hero *, int, int (*)(struct tag_message &), int)@0x00079856
+0x0003f080	0x1e0	pol20	0x00079a38	void game::UpdateSpellWidgets(void)	SOURCE/GAME	graph:2;base=0.348608;margin=0.082690;shape=0.382;size=0.467;calls=0.348
+0x0003f8cd	0x8e1	buka21	0x00055529	?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z	SOURCE/GAME	graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
+0x000401ae	0x1b8	buka21	0x00056231	?ViewArmyHandler@@YIHAAUtag_message@@@Z	SOURCE/GAME	graph:3;base=0.308927;margin=0.170943;shape=0.232;size=0.493;calls=0.556;alternate=pol20:int ViewArmyHandler(struct tag_message &)@0x0007b2cf
+0x00040366	0xbf2	buka21	0x00075b4b	?NewGame@game@@QAEHXZ	SOURCE/Newgame	graph:5;base=0.446715;margin=0.076639;shape=0.250;size=0.874;calls=0.797;alternate=pol20:int DoArenaDialog(void)@0x000c0080
+0x000411e3	0x3d	pol20	0x0007bd35	void game::TurnOnAIMusic(void)	SOURCE/GAME	graph:2;base=0.748571;margin=0.468087;shape=0.800;size=0.968;calls=1.000
+0x00041220	0x25	pol20	0x0007bd74	void game::TurnOffAIMusic(void)	SOURCE/GAME	graph:1;base=0.970000;margin=0.200000;instruction-sequence
+0x00041245	0x4e1	buka21	0x00056c32	?NextPlayer@game@@QAEXXZ	SOURCE/GAME	graph:6;base=0.506997;margin=1.216721;shape=0.284;size=0.968;calls=0.889;alternate=pol20:void game::NextPlayer(void)@0x0007bd99
+0x00042654	0x2e1	pol20	0x0007ec44	void game::PerMonth(void)	SOURCE/GAME	graph:2;base=0.500605;margin=0.545096;shape=0.381;size=0.833;calls=0.778
+0x00043a3a	0x102	pol20	0x0007feb7	void game::RandomizeHeroPool(void)	SOURCE/GAME	graph:3;base=0.430013;margin=0.606675;shape=0.375;size=0.521;calls=1.000
+0x00043b3c	0x2e0	pol20	0x000800a6	void game::SetRandomHeroArmies(int, int)	SOURCE/GAME	graph:3;base=0.618267;margin=0.809411;shape=0.570;size=0.829;calls=1.000
+0x000440e9	0x259	buka21	0x0005b736	?SetVisibility@game@@QAEXHHHH@Z	SOURCE/GAME	graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64
+0x00044342	0xfc	buka21	0x0005ba0c	?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z	SOURCE/GAME	graph:2;base=0.542661;margin=0.479075;shape=0.407;size=0.794;calls=1.000;alternate=pol20:void game::GiveArmy(class armyGroup *, int, int, int)@0x00080e6c
+0x0004443e	0x8c	buka21	0x0005bad4	?ExperienceValueOfStack@game@@QAEHPAVarmyGroup@@PAVhero@@@Z	SOURCE/GAME	graph:2;base=0.491573;margin=0.501516;shape=0.250;size=0.900;calls=1.000;alternate=pol20:int game::ExperienceValueOfStack(class armyGroup *, class hero *)@0x00080f68
+0x00044637	0x24	buka21	0x000c0510	?SRand@@YIXH@Z	BASE/Misc	graph:2;base=0.488870;margin=0.436445;shape=0.316;size=0.861;calls=1.000
+0x0004465b	0xbf	buka21	0x0005bb52	?GetLuck@game@@QAEHPAVhero@@PAVarmy@@PAVtown@@@Z	SOURCE/GAME	graph:3;base=0.340271;margin=0.529148;shape=0.188;size=0.654;calls=0.667;alternate=pol20:int game::GetLuck(class hero *, class army *, class town *)@0x00080ff9
+0x0004471a	0x350	buka21	0x000136da	?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z	SOURCE/ADVMGR	graph:3;base=0.502628;margin=0.574839;shape=0.364;size=0.953;calls=0.667;alternate=pol20:int advManager::FindAdjacentMonster(int, int, int *, int *, int, int)@0x00069bef
+0x00044a6a	0xde	buka21	0x0005bc76	?SetupAdjacentMons@game@@QAEXXZ	SOURCE/GAME	graph:3;base=0.519474;margin=0.741945;shape=0.279;size=0.996;calls=1.000;alternate=pol20:void game::SetupAdjacentMons(void)@0x0008111f
+0x00044b48	0x61	buka21	0x0005bd55	?CancelComputerScreen@game@@QAEXXZ	SOURCE/GAME	graph:2;base=0.526467;margin=0.434153;shape=0.371;size=0.866;calls=1.000;alternate=pol20:void game::CancelComputerScreen(void)@0x00081210
+0x00044ba9	0x115	buka21	0x0005bda9	?ShowComputerScreen@game@@QAEXXZ	SOURCE/GAME	graph:3;base=0.481260;margin=0.673888;shape=0.345;size=0.812;calls=0.778;alternate=pol20:void game::ShowComputerScreen(void)@0x00081271
+0x00044d66	0x155	buka21	0x0005bf1f	?WaitForPlayer@game@@QAEXPADH@Z	SOURCE/GAME	graph:2;base=0.547163;margin=0.571086;shape=0.476;size=0.842;calls=0.833;alternate=pol20:void game::WaitForPlayer(char *, int)@0x000813fe
+0x00044ebb	0xb2	pol20	0x00078a49	void game::InitializePasswords(void)	SOURCE/GAME	graph:2;base=0.485981;margin=0.409582;shape=0.302;size=0.904;calls=1.000
+0x000452a9	0x347	buka21	0x0005ce94	?ProcessOnMapHeroes@game@@QAEXXZ	SOURCE/GAME	graph:3;base=0.296138;margin=0.478209;shape=0.233;size=0.458;calls=0.545;alternate=pol20:void game::ProcessOnMapHeroes(void)@0x00082547
+0x000455f0	0x3b5	buka21	0x0005d5ba	?CheckHeroConsistency@game@@QAEXXZ	SOURCE/GAME	graph:2;base=0.487324;margin=0.544395;shape=0.344;size=0.775;calls=1.000;alternate=pol20:void game::CheckHeroConsistency(void)@0x00082cbb
+0x000459a5	0x6e9	buka21	0x0005da83	?TransmitSaveGame@game@@QAEHHHH@Z	SOURCE/GAME	graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
+0x0004608e	0x579	buka21	0x0005e236	?ReceiveSaveGame@game@@QAEHHHHH@Z	SOURCE/GAME	graph:2;base=0.655741;margin=0.222523;shape=0.420;size=0.807;calls=0.714;strings=%s%s|.\DATA\|Receive End;alternate=pol20:int game::ReceiveSaveGame(int, int, int, int)@0x00083937
+0x00046607	0x42b	buka21	0x0005e8fe	?DoNewTurn@game@@QAEXXZ	SOURCE/GAME	graph:2;base=0.487826;margin=0.297906;shape=0.344;size=0.836;calls=0.867;alternate=pol20:void game::DoNewTurn(void)@0x00083fc4
+0x00046a32	0x58	pol20	0x00084419	int game::GetBoatsBuilt(void)	SOURCE/GAME	graph:0;base=0.970000;margin=0.284245;instruction-sequence
+0x00046a8a	0x36f	buka21	0x000754b0	?GetMap@game@@QAEXXZ	SOURCE/Newgame	graph:2;base=0.547944;margin=0.077231;shape=0.356;size=0.530;calls=0.607;strings=.\MAPS\;alternate=pol20:void game::GetMap(void)@0x000b6f40
+0x00046df9	0x98	pol20	0x00084471	int game::GetNumThievesGuilds(int)	SOURCE/GAME	graph:2;base=0.622077;margin=0.353497;shape=0.509;size=0.974;calls=1.000
+0x000472d8	0x44e	buka21	0x000adfb0	?ViewWorld@advManager@@QAEXHHH@Z	SOURCE/Viewwrld	graph:4;base=0.364493;margin=0.061615;shape=0.277;size=0.633;calls=0.682;alternate=pol20:void advManager::ViewWorld(int, int, int)@0x000333c0
+0x00047875	0xab	buka21	0x0005f13c	?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z	SOURCE/GAME	graph:2;base=0.572404;margin=0.482531;shape=0.423;size=0.977;calls=1.000;alternate=pol20:void game::RestoreCell(int, int, int, int, class mapCell *, int)@0x0008480a
+0x00047920	0x3c	buka21	0x00021710	??0armyGroup@@QAE@XZ	SOURCE/ARMYGRP	graph:2;base=0.513410;margin=0.267257;shape=0.385;size=0.817;calls=1.000;alternate=pol20:void armyGroup::constructor(void)@0x0008c040
+0x00047974	0x11b	pol20	0x0008c17a	int armyGroup::GetMorale(class hero *, class town *, class armyGroup *)	SOURCE/ARMYGRP	graph:5;base=0.376508;margin=0.944795;shape=0.376;size=0.480;calls=0.545
+0x00047a8f	0x31	pol20	0x0008c3c7	void armyGroup::Dismiss(int)	SOURCE/ARMYGRP	graph:2;base=0.683830;margin=0.409989;shape=0.647;size=0.959;calls=1.000
+0x00047ac0	0x59	buka21	0x00021a56	?IsMember@armyGroup@@QAEHH@Z	SOURCE/ARMYGRP	graph:2;base=0.401440;margin=0.383163;shape=0.171;size=0.719;calls=1.000;alternate=pol20:int armyGroup::IsMember(int)@0x0008c3f6
+0x00047b19	0x153	pol20	0x0008c44b	int armyGroup::IsHomogeneous(int)	SOURCE/ARMYGRP	graph:2;base=0.468798;margin=0.143678;shape=0.393;size=0.985;calls=0.000
+0x00047c6c	0x54	buka21	0x00021bba	?CanJoin@armyGroup@@QAEHH@Z	SOURCE/ARMYGRP	graph:2;base=0.455116;margin=0.419277;shape=0.310;size=0.702;calls=1.000;alternate=pol20:int armyGroup::CanJoin(int)@0x0008c599
+0x00047cc0	0x59	pol20	0x0008c5ed	int armyGroup::GetNumArmies(void)	SOURCE/ARMYGRP	graph:2;base=0.675925;margin=0.391910;shape=0.645;size=0.944;calls=1.000
+0x00047d19	0x132	buka21	0x00021c3d	?Add@armyGroup@@QAEHHHH@Z	SOURCE/ARMYGRP	graph:2;base=0.418523;margin=0.356193;shape=0.176;size=0.729;calls=1.000;alternate=pol20:int armyGroup::Add(int, int, int)@0x0008c641
+0x00047e4b	0x7d	pol20	0x0008c75d	void armyGroup::Swap(int, class armyGroup *, int)	SOURCE/ARMYGRP	graph:1;base=0.763480;margin=0.440190;shape=0.833;size=0.936;calls=1.000
+0x00047ec8	0x158	buka21	0x00021d87	?DamageGroup@armyGroup@@QAEXM@Z	SOURCE/ARMYGRP	graph:2;base=0.521804;margin=0.531953;shape=0.341;size=0.892;calls=1.000;alternate=pol20:void armyGroup::DamageGroup(float)@0x0008c7d2
+0x0004803c	0x83d	buka21	0x0005f47a	?CreateDiffFile@@YIXPAD00HH@Z	SOURCE/GAME	graph:3;base=0.561672;margin=0.038740;shape=0.231;size=0.646;calls=0.951;strings=%s%s;alternate=pol20:int fileRequester::InitializeFiles(char *, char *, int)@0x0008ca91
+0x000489c4	0x431	buka21	0x0008f275	?Open@fileRequester@@UAEHH@Z	SOURCE/REQUEST	graph:4;base=0.718088;margin=0.176393;shape=0.403;size=0.976;calls=0.963;strings=fileRequester|request.bin;alternate=pol20:int fileRequester::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0008d5e1
+0x00048df5	0x8a	pol20	0x0008da47	void fileRequester::SetOK(int)	SOURCE/REQUEST	graph:2;base=0.619117;margin=0.332467;shape=0.571;size=0.836;calls=1.000
+0x00048e7f	0xa8c	buka21	0x0008f737	?Main@fileRequester@@UAEHAAUtag_message@@@Z	SOURCE/REQUEST	graph:5;base=0.521487;margin=0.114044;shape=0.300;size=0.615;calls=0.600;strings=$%'-_@~`!(){}^#&+,;=[].;alternate=pol20:int fileRequester::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0008daec
+0x000499a8	0x2b2	buka21	0x0009085b	?DoKnob@fileRequester@@QAEXXZ	SOURCE/REQUEST	graph:4;base=0.459180;margin=0.170271;shape=0.236;size=0.874;calls=0.875;alternate=pol20:void fileRequester::DoKnob(void)@0x0008ec9a
+0x00049c5a	0x55e	buka21	0x00090ab6	?Update@fileRequester@@QAEXH@Z	SOURCE/REQUEST	graph:4;base=0.311908;margin=0.264606;shape=0.243;size=0.506;calls=0.526;alternate=pol20:void fileRequester::Update(int)@0x0008ef82
+0x0004a374	0x26c	buka21	0x0007b9e6	?SetupNewOverviewType@game@@QAEXHH@Z	SOURCE/Overview	graph:2;base=0.380836;margin=0.069682;shape=0.207;size=0.742;calls=0.615;alternate=pol20:void combatManager::ShowEagleEyeSpell(class heroWindow *)@0x0002dfc9
+0x0004a5e0	0x267	pol20	0x000a5900	int army::CanFit(int, int, int *)	SOURCE/FLY	graph:2;base=0.565743;margin=0.284408;shape=0.417;size=0.930;calls=1.000
+0x0004a847	0x468	buka21	0x0004b21e	?ValidFlight@army@@QAEHHH@Z	SOURCE/FLY	graph:2;base=0.458791;margin=0.507880;shape=0.224;size=0.814;calls=1.000;alternate=pol20:int army::ValidFlight(int, int)@0x000a5b95
+0x0004acd6	0x76a	pol20	0x0004bc55	void army::Walk(int, int, int)	SOURCE/ARMY	graph:2;base=0.402072;margin=0.049022;shape=0.223;size=0.641;calls=1.000
+0x0004b440	0x1b8	pol20	0x0008fd50	void combatManager::constructor(void)	SOURCE/CMBTMGR	graph:2;base=0.640461;margin=0.236805;shape=0.650;size=0.995;calls=0.500
+0x0004b5f8	0x138	buka21	0x00025f8f	?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z	SOURCE/CMBTMGR	graph:2;base=0.491936;margin=0.502339;shape=0.296;size=0.801;calls=1.000;alternate=pol20:void combatManager::CombineGroups(class armyGroup *, class armyGroup *)@0x0008ff0a
+0x0004b730	0x3db	buka21	0x00026089	?SetupCombat@combatManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHH@Z	SOURCE/CMBTMGR	graph:2;base=0.451835;margin=0.439518;shape=0.448;size=0.718;calls=0.400;alternate=pol20:void combatManager::SetupCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int)@0x00090032
+0x0004bb0b	0x40e	buka21	0x000269fe	?Open@combatManager@@UAEHH@Z	SOURCE/CMBTMGR	graph:1;base=0.748451;margin=0.311399;shape=0.506;size=0.976;calls=0.795;strings=PREBATTL.82M|cmbtmous.mse|cmbtwin.bin;alternate=pol20:int combatManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00090aa0
+0x0004bf19	0x1ea	buka21	0x00026e25	?Close@combatManager@@UAEXXZ	SOURCE/CMBTMGR	graph:3;base=0.395151;margin=0.373062;shape=0.339;size=0.542;calls=0.800;alternate=pol20:void combatManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x00090edf
+0x0004cf6e	0x7b	pol20	0x000921c1	void combatManager::FreeIcons(void)	SOURCE/CMBTMGR	graph:2;base=0.377834;margin=0.078956;shape=0.429;size=0.421;calls=0.500
+0x0004d270	0xdc	buka21	0x00028241	?FreeArmies@combatManager@@QAEXXZ	SOURCE/CMBTMGR	graph:2;base=0.478232;margin=0.494777;shape=0.264;size=0.859;calls=1.000;alternate=pol20:void combatManager::FreeArmies(void)@0x00092652
+0x0004d422	0x1d9	buka21	0x0002848f	?CheckApplyGoodMorale@combatManager@@QAEXHH@Z	SOURCE/CMBTMGR	graph:3;base=0.635108;margin=0.421439;shape=0.300;size=0.934;calls=0.800;strings=goodmrle.82M;alternate=pol20:void combatManager::CheckApplyGoodMorale(int, int)@0x0009290f
+0x0004d5fb	0x1c6	buka21	0x00028649	?CheckApplyBadMorale@combatManager@@QAEHHH@Z	SOURCE/CMBTMGR	graph:2;base=0.593667;margin=0.185214;shape=0.274;size=0.824;calls=0.800;strings=BADMRLE.82M;alternate=pol20:int combatManager::CheckApplyBadMorale(int, int)@0x00092afa
+0x0004d7c1	0x209	buka21	0x000287bf	?GetNextArmy@combatManager@@QAEHH@Z	SOURCE/CMBTMGR	graph:3;base=0.362089;margin=0.657323;shape=0.226;size=0.622;calls=0.750;alternate=pol20:int combatManager::GetNextArmy(int)@0x00092cc7
+0x0004da9d	0xd55	buka21	0x00029990	?KeepAttack@combatManager@@QAEXH@Z	SOURCE/CMBTMGR	graph:3;base=0.294892;margin=0.485427;shape=0.208;size=0.479;calls=0.586;alternate=pol20:void combatManager::CatAttack(int)@0x0009311f
+0x0004e840	0xb8b	buka21	0x00028bb8	?CatAttack@combatManager@@QAEXH@Z	SOURCE/CMBTMGR	graph:2;base=0.441703;margin=0.144682;shape=0.241;size=0.834;calls=0.911;alternate=pol20:void combatManager::KeepAttack(int)@0x0009412d
+0x0004f557	0x30	pol20	0x00094a7f	int ValidHex(int)	SOURCE/CMBTMGR	graph:2;base=0.613455;margin=0.513335;shape=0.545;size=0.889;calls=1.000
+0x0004f640	0x72	buka21	0x00065bf0	@PollSound@0	SOURCE/KB	reviewed-anchor;alternate=pol20:@PollSound@0@0x00096450
+0x0004f6b2	0x20	buka21	0x00065d05	?ForcePollSound@@YIXXZ	SOURCE/KB	reviewed-anchor;alternate=pol20:void ForcePollSound(void)@0x0009659e
+0x0004f6d2	0x607	buka21	0x00065d1c	?InitMainClasses@@YIXXZ	SOURCE/KB	graph:2;base=0.512387;margin=0.755802;shape=0.400;size=0.925;calls=0.653;alternate=pol20:void InitMainClasses(void)@0x000965be
+0x0004fcd9	0x36d	pol20	0x0009695c	void DeleteMainClasses(void)	SOURCE/KB	graph:1;base=0.774485;margin=0.558843;shape=0.875;size=0.953;calls=0.944
+0x00050046	0x116	buka21	0x00066709	?EarlySetup@@YIHXZ	SOURCE/KB	graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
+0x0005015c	0xe22	buka21	0x00066767	?oldmain@@YIHXZ	SOURCE/KB	graph:10;base=0.460600;margin=1.304964;shape=0.248;size=0.679;calls=0.349;strings=advmice.mse|bigfont.fnt|kb.pal;alternate=pol20:void SmackManagerMain(void)@0x0000126d
+0x00050fbc	0x288	buka21	0x00067ca8	?InterpretCommandLine@@YIHXZ	SOURCE/KB	graph:3;base=0.411656;margin=0.097857;shape=0.235;size=0.425;calls=0.316;strings=%s%s|.\DATA\
+0x0005140e	0x1cb	pol20	0x000993e0	int RecruitHeroHandler(struct tag_message &)	SOURCE/KB	graph:3;base=0.639555;margin=0.848285;shape=0.585;size=0.926;calls=1.000
+0x000516bf	0x1a	pol20	0x0009990c	char * GetMonsterName(int)	SOURCE/KB	graph:2;base=0.620250;margin=0.282175;shape=0.600;size=0.812;calls=1.000
+0x000516d9	0xe6	buka21	0x00068d05	?GetMonsterCost@@YIXHQAH@Z	SOURCE/KB	graph:2;base=0.424205;margin=0.383727;shape=0.192;size=0.855;calls=1.000;alternate=pol20:void GetMonsterCost(int, int * const)@0x0009992c
+0x000517bf	0x144	buka21	0x00068e12	?CanBuild@@YIHPAVtown@@H@Z	SOURCE/KB	graph:2;base=0.375672;margin=0.371383;shape=0.277;size=0.517;calls=1.000;alternate=pol20:int CanBuild(class town *, int)@0x00099a6c
+0x00051903	0xce	buka21	0x00069085	?CanBuy@@YIHPAVtown@@H@Z	SOURCE/KB	graph:2;base=0.384626;margin=0.370647;shape=0.216;size=0.621;calls=1.000;alternate=pol20:int CanBuy(class town *, int)@0x00099d21
+0x00051a31	0xf03	buka21	0x0006f5cb	?NormalDialog@@YIXPADHHHHHHHHH@Z	SOURCE/KB	graph:4;base=0.584669;margin=0.735146;shape=0.389;size=0.643;calls=0.689;strings=artifact.icn|bigfont.fnt|brcrest.icn;alternate=pol20:void game::ShowScenInfo(void)@0x000ba39c
+0x00052934	0x6b	buka21	0x00070d22	?UpdateNormalDialog@@YIXPAD@Z	SOURCE/KB	graph:2;base=0.563703;margin=0.348381;shape=0.417;size=0.972;calls=1.000;alternate=pol20:void UpdateNormalDialog(char *)@0x000a2565
+0x0005299f	0x1c5	buka21	0x00069180	?WaitHandler@@YIHAAUtag_message@@@Z	SOURCE/KB	graph:2;base=0.445743;margin=0.444520;shape=0.204;size=0.951;calls=0.688;alternate=pol20:int WaitHandler(struct tag_message &)@0x00099e81
+0x00052c94	0x16c	buka21	0x00069734	?PlayerDead@@YIXH@Z	SOURCE/KB	graph:2;base=0.488269;margin=0.466685;shape=0.274;size=0.981;calls=0.750;alternate=pol20:void PlayerDead(int)@0x0009a52f
+0x00052f8a	0x1ea	buka21	0x0006f115	?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z	SOURCE/KB	graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
+0x00053174	0x7d4	buka21	0x00069899	?CheckEndGame@@YIXHH@Z	SOURCE/KB	graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
+0x00053948	0x95	buka21	0x0006aec9	?QuickViewWait@@YIXXZ	SOURCE/KB	graph:4;base=0.435968;margin=0.219505;shape=0.250;size=0.859;calls=0.600;alternate=pol20:void QuickViewWait(void)@0x0009c07c
+0x000539dd	0x1cb	buka21	0x0006af49	?InitVars@@YIXXZ	SOURCE/KB	graph:2;base=0.679533;margin=0.555045;shape=0.387;size=0.991;calls=0.692;strings=mnuAdv|mnuCmbt|mnuDflt;alternate=pol20:void InitVars(void)@0x0009c111
+0x00053ba8	0x450	buka21	0x0006b118	?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z	SOURCE/KB	graph:3;base=0.469331;margin=0.613523;shape=0.400;size=0.774;calls=0.649;alternate=pol20:void game::ShowMoraleInfo(class hero *, int)@0x0009c312
+0x00053ff8	0x1f7	buka21	0x0006b6ab	?ShowLuckInfo@game@@QAEXPAVhero@@H@Z	SOURCE/KB	graph:2;base=0.456267;margin=0.157936;shape=0.493;size=0.606;calls=0.556;alternate=pol20:void game::ShowLuckInfo(class hero *, int)@0x0009c92d
+0x000541ef	0x70	buka21	0x0006b9e9	?ClearMapExtra@@YIXXZ	SOURCE/KB	graph:2;base=0.346927;margin=0.308030;shape=0.268;size=0.651;calls=0.333
+0x000542ed	0x3d2	buka21	0x0006bb0e	?AddScoreToHighScore@@YIHHHHHPAD@Z	SOURCE/KB	graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
+0x000546bf	0x5b	buka21	0x0006bf13	?BVResMsg@@YIXPADHH@Z	SOURCE/KB	graph:2;base=0.598508;margin=0.532475;shape=0.481;size=0.968;calls=1.000;alternate=pol20:void BVResMsg(char *, int, int)@0x0009d2c0
+0x00054781	0xda	buka21	0x0006bfcd	?WaitForOtherPlayer@@YIHXZ	SOURCE/KB	graph:2;base=0.581419;margin=0.608732;shape=0.409;size=0.995;calls=1.000;alternate=pol20:int WaitForOtherPlayer(void)@0x0009d3a7
+0x0005485b	0x6f4	buka21	0x0006c0a6	?PopNetBox@@YIXPADH@Z	SOURCE/KB	graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
+0x00054f8a	0x14f	buka21	0x0006cc61	?ShutDown@@YIXPAD@Z	SOURCE/KB	graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
+0x000550d9	0x4a	buka21	0x0006ce3a	?FileError@@YIXPAD@Z	SOURCE/KB	graph:3;base=0.316461;margin=0.125092;shape=0.216;size=0.484;calls=0.500;alternate=pol20:void FileError(char *)@0x0009e306
+0x00055123	0x3be	buka21	0x0007bda1	?Overview@game@@QAEXXZ	SOURCE/Overview	graph:4;base=0.482449;margin=0.238001;shape=0.359;size=0.797;calls=0.763;alternate=pol20:void game::Overview(void)@0x00009e89
+0x000554e1	0xb1	buka21	0x0006d4bb	?CongratsWait@@YIXXZ	SOURCE/KB	graph:2;base=0.447463;margin=0.065171;shape=0.300;size=0.684;calls=1.000;alternate=pol20:void CongratsWait(void)@0x0009e900
+0x00055592	0x1c7	buka21	0x000c05e0	?GetDataEntry@@YIXPAD0H0HH@Z	BASE/Misc	graph:4;base=0.539849;margin=0.107093;shape=0.475;size=0.405;calls=0.500;strings=advmice.mse;alternate=pol20:int advManager::ControlPanel(void)@0x0006ab9a
+0x00055759	0x1d9	buka21	0x000c0a50	?DataEntryWindowHandler@@YIHAAUtag_message@@@Z	BASE/Misc	graph:3;base=0.541945;margin=0.542007;shape=0.356;size=0.935;calls=1.000;alternate=pol20:int SplitArmyHandler(struct tag_message &)@0x00019e8c
+0x00055932	0x51	buka21	0x0006d534	?LoadPlaySample@@YIPAVsample@@PAD@Z	SOURCE/KB	graph:6;base=0.524829;margin=1.189024;shape=0.423;size=0.802;calls=1.000;alternate=pol20:struct SAMPLE2 LoadPlaySample(char *)@0x0009e999
+0x00055983	0x8a	buka21	0x0006d575	?WaitEndSample@@YIXPAPAVsample@@H@Z	SOURCE/KB	graph:2;base=0.479563;margin=0.490944;shape=0.207;size=0.957;calls=1.000;alternate=pol20:void WaitEndSample(struct SAMPLE2, int)@0x0009e9ed
+0x00055a0d	0x7b	buka21	0x0006d5f9	?MemError@@YIXXZ	SOURCE/KB	graph:4;base=0.499168;margin=0.828160;shape=0.176;size=0.610;calls=1.000;strings=Out of Memory;alternate=pol20:void MemError(void)@0x0009ea7c
+0x00055c40	0x54	pol20	0x0009eb4e	void UnloadSystemwideIcons(void)	SOURCE/KB	graph:2;base=0.691587;margin=0.227653;shape=1.000;size=0.595;calls=0.500
+0x00055c94	0x10	pol20	0x0009eb80	void EarlyShutDownSystem(void)	SOURCE/KB	graph:1;base=1.000000;margin=0.200000;normalized-instructions
+0x00055d22	0x629	buka21	0x0006d715	?HandleAppSpecificMenuCommands@@YIHH@Z	SOURCE/KB	graph:4;base=0.410709;margin=0.595745;shape=0.257;size=0.699;calls=0.542;alternate=pol20:int HandleAppSpecificMenuCommands(int)@0x0009ec05
+0x00056702	0x99	pol20	0x0009f92d	void CleanUpMenus(void)	SOURCE/KB	unique-normalized
+0x000567f0	0x164	buka21	0x000ac6e0	?DoTradingPost@@YIXHM@Z	SOURCE/tradpost	graph:2;base=0.511421;margin=0.057302;shape=0.391;size=0.883;calls=0.600;alternate=pol20:void DoTradingPost(int, float)@0x000bf340
+0x00056954	0x190	buka21	0x00092504	?SetupBaud@game@@QAEHXZ	SOURCE/SETUP	graph:2;base=0.648115;margin=0.123105;shape=0.395;size=0.777;calls=0.833;strings=stpbaud.bin;alternate=pol20:int game::SetupBaud(void)@0x00010ebf
+0x00056ae4	0x222	buka21	0x0009263b	?SetupComPort@game@@QAEHXZ	SOURCE/SETUP	graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
+0x00056d06	0x15d	buka21	0x00092817	?SetupHotSeatGame@game@@QAEHXZ	SOURCE/SETUP	graph:3;base=0.510359;margin=0.105262;shape=0.279;size=0.627;calls=0.545;strings=stphotst.bin;alternate=pol20:int game::SetupHotSeatGame(void)@0x00011200
+0x00056e63	0x133	buka21	0x00092a44	?SetupNetworkGame@game@@QAEHXZ	SOURCE/SETUP	graph:2;base=0.778953;margin=0.116684;shape=0.550;size=0.938;calls=1.000;strings=stpnet.bin;alternate=pol20:int game::SetupNetworkGame(void)@0x00011438
+0x00056f96	0x333	buka21	0x00092de5	?SetupModemGame@game@@QAEHXZ	SOURCE/SETUP	graph:2;base=0.697331;margin=0.184673;shape=0.396;size=0.996;calls=0.720;strings=stpdc.bin|stpdccfg.bin|stpmcfg.bin;alternate=pol20:int game::SetupModemGame(void)@0x00011795
+0x000572c9	0x218	buka21	0x00093115	?SetupMultiPlayerGame@game@@QAEHXZ	SOURCE/SETUP	graph:2;base=0.675100;margin=0.160042;shape=0.444;size=0.973;calls=0.529;strings=stpmp.bin;alternate=pol20:int game::SetupMultiPlayerGame(void)@0x00011aac
+0x000574e1	0x486	buka21	0x0009333c	?SetupGame@game@@QAEHXZ	SOURCE/SETUP	graph:2;base=0.562612;margin=0.099660;shape=0.292;size=0.808;calls=0.357;strings=stpnewgm.bin;alternate=pol20:void DoHeroSplit(int, int)@0x0006ff31
+0x00057967	0x1e7	buka21	0x000938d5	?PickLoadGame@game@@QAEHXZ	SOURCE/SETUP	graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
+0x00058520	0x8d	pol20	0x000a3080	void RemoteCleanup(void)	SOURCE/REMOTE	graph:3;base=0.300148;margin=0.674625;shape=0.273;size=0.360;calls=0.400
+0x00058621	0x7b	buka21	0x000c0350	?FileSize@@YIJPAD@Z	BASE/Misc	graph:2;base=0.520837;margin=0.283794;shape=0.324;size=0.935;calls=1.000
+0x0005869c	0x27a	buka21	0x00072ca0	?ModemSetup@@YIXH@Z	SOURCE/Modem	graph:4;base=0.387701;margin=0.229361;shape=0.196;size=0.795;calls=0.591;alternate=pol20:void ModemSetup(int)@0x0000c8f0
+0x00058aad	0x162	buka21	0x0008d93c	?DecodePacket@@YIHPAEH@Z	SOURCE/REMOTE	graph:2;base=0.496845;margin=0.356674;shape=0.447;size=0.760;calls=0.750;alternate=pol20:int DecodePacket(unsigned char *, int)@0x000a3aa7
+0x00058c0f	0x141	buka21	0x0008da49	?SendRemoteData@@YIHPAE0HH@Z	SOURCE/REMOTE	graph:3;base=0.468075;margin=0.614352;shape=0.312;size=0.933;calls=0.500;alternate=pol20:int SendRemoteData(unsigned char *, unsigned char *, int, int)@0x000a3be1
+0x00058d50	0xf4	buka21	0x0008dba1	?ReceiveRemoteData@@YIHPAE0H@Z	SOURCE/REMOTE	graph:3;base=0.404111;margin=0.668725;shape=0.214;size=0.850;calls=0.500;alternate=pol20:int ReceiveRemoteData(unsigned char *, unsigned char *, int)@0x000a3d6f
+0x00058e44	0x194	buka21	0x00073830	?InitNetHost@@YICXZ	SOURCE/Netbios	graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
+0x00058fd8	0x1f1	buka21	0x0007394c	?InitNetGuest@@YICXZ	SOURCE/Netbios	graph:2;base=0.423322;margin=0.095753;shape=0.173;size=0.829;calls=0.833;alternate=pol20:signed char InitNetGuest(void)@0x00013445
+0x00059267	0x101	buka21	0x00073b23	?WaitForGuest@@YICXZ	SOURCE/Netbios	graph:2;base=0.465490;margin=0.416814;shape=0.321;size=0.696;calls=1.000;alternate=pol20:signed char WaitForGuest(void)@0x0001364f
+0x00059368	0x1c8	buka21	0x00073bd6	?nbnet_init@@YIHXZ	SOURCE/Netbios	graph:2;base=0.412852;margin=0.048839;shape=0.173;size=0.868;calls=0.824
+0x00059627	0xa5	buka21	0x00072e98	?Dial@@YIJXZ	SOURCE/Modem	graph:3;base=0.658408;margin=0.279474;shape=0.349;size=0.861;calls=1.000;strings=%s %s|ATDT%s|CONNECT;alternate=pol20:long int Dial(void)@0x0000cb3e
+0x000596cc	0x5d	buka21	0x00072f26	?Wait@@YIJXZ	SOURCE/Modem	graph:3;base=0.520648;margin=0.735557;shape=0.143;size=0.710;calls=1.000;strings=CONNECT|RING;alternate=pol20:long int Wait(void)@0x0000cbdc
+0x00059729	0x71	buka21	0x00072f68	?GUIModemCommand@@YIXPAD0@Z	SOURCE/Modem	graph:3;base=0.504929;margin=0.542655;shape=0.294;size=0.956;calls=1.000;alternate=pol20:void GUIModemCommand(char *, char *)@0x0000cc30
+0x0005979a	0x94	buka21	0x00072fd4	?GUIModemCommandExec@@YICXZ	SOURCE/Modem	graph:2;base=0.478276;margin=0.078716;shape=0.283;size=0.851;calls=1.000;alternate=pol20:signed char GUIModemCommandExec(void)@0x0000cca9
+0x0005989a	0x7a	buka21	0x000730b3	?GUIModemResponse@@YICPAD0@Z	SOURCE/Modem	graph:4;base=0.487980;margin=0.528115;shape=0.250;size=0.959;calls=1.000;alternate=pol20:signed char GUIModemResponse(char *, char *)@0x0000cdcc
+0x00059914	0xe2	buka21	0x00073128	?GUIModemResponseExec@@YICXZ	SOURCE/Modem	graph:2;base=0.623720;margin=0.638042;shape=0.611;size=0.792;calls=1.000;alternate=pol20:signed char GUIModemResponseExec(void)@0x0000ce4e
+0x00059a21	0x47	pol20	0x0000cf7e	int read_byte(void)	SOURCE/Modem	graph:2;base=0.690383;margin=0.627817;shape=0.655;size=1.000;calls=1.000
+0x00059a8c	0x2c0	buka21	0x0007326c	?Connect@@YIXXZ	SOURCE/Modem	graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
+0x00059d4c	0x316	buka21	0x00073408	?WaitForDirectConnect@@YIHXZ	SOURCE/Modem	graph:4;base=0.592752;margin=0.888123;shape=0.373;size=0.613;calls=0.929;strings=ID%s_%i;alternate=pol20:int WaitForDirectConnect(void)@0x0000d1a7
+0x0005a062	0x109	buka21	0x000735ec	?ReadPacket@@YIDXZ	SOURCE/Modem	graph:2;base=0.530036;margin=0.483413;shape=0.466;size=0.966;calls=0.333;alternate=pol20:char ReadPacket(void)@0x0000d3b8
+0x0005a16b	0xdc	buka21	0x000736ec	?WriteModemPacket@@YIXPADH@Z	SOURCE/Modem	graph:2;base=0.395642;margin=0.361596;shape=0.175;size=0.824;calls=0.667;alternate=pol20:void WriteModemPacket(char *, int)@0x0000d4df
+0x0005a247	0x231	buka21	0x0008dcc0	?TransmitRemoteData@@YIHPADHHCCCC@Z	SOURCE/REMOTE	graph:5;base=0.560856;margin=1.192457;shape=0.450;size=0.831;calls=1.000;alternate=pol20:int TransmitRemoteData(char *, int, int, signed char, signed char, signed char, signed char)@0x000a3ec7
+0x0005a478	0x10c	buka21	0x0008de92	?GetRemoteData@@YIPADC@Z	SOURCE/REMOTE	graph:5;base=0.517569;margin=0.974708;shape=0.366;size=0.825;calls=1.000;alternate=pol20:char * GetRemoteData(signed char)@0x000a40e1
+0x0005a584	0x4fe	buka21	0x0008df6f	?PollRemote@@YIXXZ	SOURCE/REMOTE	reviewed-anchor;alternate=pol20:void PollRemote(void)@0x000a41ec
+0x0005aa82	0x15e	buka21	0x0008e5d3	?TransmitAndWait@@YIHPADHHCCPAPAD@Z	SOURCE/REMOTE	graph:2;base=0.561659;margin=0.362301;shape=0.477;size=0.829;calls=1.000;alternate=pol20:int TransmitAndWait(char *, int, int, signed char, signed char, char * *)@0x000a48e0
+0x0005ac48	0x2a	pol20	0x00013f01	void townManager::constructor(void)	SOURCE/TOWNMGR	graph:2;base=0.673365;margin=0.193747;shape=0.941;size=0.404;calls=1.000
+0x0005ace4	0x975	buka21	0x00094769	?SmackManagerMain@@YIXXZ	SOURCE/SMACKMGR	graph:5;base=0.505033;margin=0.296601;shape=0.261;size=0.541;calls=0.677;strings=%s%s;alternate=pol20:int oldmain(void)@0x00096e98
+0x0005b6f0	0x14e	buka21	0x00070e30	_WinMain@16	SOURCE/kbwin	graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
+0x0005b83e	0x2d6	buka21	0x00070f42	?AppInit@@YIHPAX0HPAD@Z	SOURCE/kbwin	graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
+0x0005bb14	0x31	pol20	0x0001c15f	int AppIdle(void)	SOURCE/kbwin	unique-normalized
+0x0005bb45	0x617	buka21	0x00071248	?AppWndProc@@YGJPAXIIJ@Z	SOURCE/kbwin	graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
+0x0005c15c	0x90	buka21	0x00071883	?AppAbout@@YGHPAXIIJ@Z	SOURCE/kbwin	reviewed-anchor;alternate=pol20:int AppAbout(void *, unsigned int, unsigned int, long int)@0x0001c70e
+0x0005c1ec	0x1a	pol20	0x0001c79e	void AppExit(void)	SOURCE/kbwin	graph:2;base=1.000000;margin=0.964231;normalized-instructions
+0x0005c206	0xca	buka21	0x000718f9	?Process1WindowsMessage@@YIXXZ	SOURCE/kbwin	graph:2;base=0.631126;margin=0.664983;shape=0.634;size=0.797;calls=1.000;alternate=pol20:void Process1WindowsMessage(void)@0x0001c7b8
+0x0005c2d0	0x127	buka21	0x0007199a	?ResizeWindow@@YIXHHHH@Z	SOURCE/kbwin	graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
+0x0005c3f7	0x185	buka21	0x00071abf	?AppCommand@@YIJPAXIIJ@Z	SOURCE/kbwin	graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
+0x0005c57c	0xd0	pol20	0x0001cb5e	void UpdateDfltMenu(void *)	SOURCE/kbwin	graph:2;base=0.711032;margin=0.715200;shape=0.719;size=0.967;calls=1.000
+0x0005c64c	0xaa	buka21	0x00071cd1	?KBChangeMenu@@YIXPAX@Z	SOURCE/kbwin	graph:2;base=0.545069;margin=0.304682;shape=0.429;size=0.841;calls=1.000;alternate=pol20:void KBChangeMenu(void *)@0x0001cc35
+0x0005c6f6	0x135	buka21	0x00071d60	?SetMenuStatus@@YIXH@Z	SOURCE/kbwin	graph:2;base=0.517140;margin=0.517010;shape=0.323;size=0.903;calls=1.000;alternate=pol20:void SetMenuStatus(int)@0x0001cce1
+0x0005c82b	0x79	buka21	0x00071e77	?SetNoDialogMenus@@YIXH@Z	SOURCE/kbwin	graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
+0x0005c8a4	0x15a	pol20	0x0001ceb8	void SetMenus(void *, int)	SOURCE/kbwin	graph:1;base=0.747080;margin=0.423148;shape=0.778;size=0.997;calls=1.000
+0x0005cba1	0x20d	buka21	0x000be340	?ReadPrefsFromFile@@YIXXZ	BASE/Misc	graph:2;base=0.386222;margin=0.169975;shape=0.354;size=0.387;calls=1.000
+0x0005cdae	0x523	buka21	0x000be410	?ReadPrefsFromRegistry@@YIXXZ	BASE/Misc	graph:2;base=0.485024;margin=0.053572;shape=0.480;size=0.596;calls=0.719
+0x0005d75a	0x4c5	buka21	0x000bf370	?SetupCDDrive@@YIHXZ	BASE/Misc	graph:3;base=0.630488;margin=0.175302;shape=0.432;size=0.707;calls=0.692;strings=%c:%s
+0x0005dc1f	0x7c	buka21	0x0006f4ca	?SetWinText@@YIXPAVheroWindow@@H@Z	SOURCE/KB	graph:2;base=0.447557;margin=0.235076;shape=0.180;size=0.912;calls=1.000;alternate=pol20:void SetWinText(class heroWindow *, int)@0x000a0c76
+0x0005dc9b	0x16	buka21	0x00071ff8	?KBTickCount@@YIJXZ	SOURCE/kbwin	reviewed-anchor;alternate=pol20:long int KBTickCount(void)@0x0001d011
+0x0005dcb1	0x63	buka21	0x000bde90	?ProcessAssert@@YIXHPADH@Z	BASE/Misc	graph:2;base=0.598916;margin=0.432613;shape=0.279;size=0.853;calls=0.600;strings=Assert Failure;alternate=pol20:void ProcessAssert(int, char *, int)@0x000c47f0
+0x0005dd14	0x65	buka21	0x000bdf90	?FindToken@@YIPADPADD@Z	BASE/Misc	graph:2;base=0.488084;margin=0.208142;shape=0.271;size=0.851;calls=1.000
+0x0005dd79	0x67	buka21	0x000bdff0	?FindLastToken@@YIPADPADD@Z	BASE/Misc	graph:3;base=0.464330;margin=0.413690;shape=0.250;size=0.835;calls=1.000
+0x0005dde0	0x1f1a	buka21	0x0003b640	?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z	SOURCE/EVENTS	graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
+0x0005fcfa	0x1d7	buka21	0x00041609	?EraseObj@advManager@@QAEXPAVmapCell@@HH@Z	SOURCE/EVENTS	graph:3;base=0.250269;margin=0.452005;shape=0.201;size=0.204;calls=1.000
+0x0005fed1	0xcd	buka21	0x00041f0d	?HeroSwap@advManager@@QAEXPAVhero@@0@Z	SOURCE/EVENTS	graph:2;base=0.621863;margin=0.183841;shape=0.591;size=0.854;calls=1.000;alternate=pol20:void advManager::HeroSwap(class hero *, class hero *)@0x000aea02
+0x0005ff9e	0x1bf	buka21	0x00042d86	?TownEvent@advManager@@QAEXPAVmapCell@@HH@Z	SOURCE/EVENTS	graph:2;base=0.530630;margin=0.268223;shape=0.333;size=0.946;calls=1.000;alternate=pol20:void advManager::TownEvent(class mapCell *, int, int)@0x000af87c
+0x000603a0	0xde	buka21	0x00043340	?EventWindow@advManager@@QAEXHHPADHHHHH@Z	SOURCE/EVENTS	graph:2;base=0.574046;margin=0.505217;shape=0.246;size=0.761;calls=0.800;strings=Event ID %d;alternate=pol20:void advManager::EventWindow(int, int, char *, int, int, int, int, int)@0x000aff6c
+0x0006047e	0xa9	pol20	0x000b0033	int GiveArtifact(class hero *, int, int, signed char)	SOURCE/EVENTS	graph:2;base=0.526145;margin=0.140314;shape=0.473;size=0.929;calls=0.333
+0x00060527	0x5f	buka21	0x0004347b	?GiveRandomArtifact@advManager@@QAEHPAVhero@@@Z	SOURCE/EVENTS	graph:3;base=0.483471;margin=0.618508;shape=0.306;size=0.821;calls=1.000;alternate=pol20:int advManager::GiveRandomArtifact(class hero *)@0x000b00e9
+0x00060586	0xb0	buka21	0x000434c9	?GiveExperience@advManager@@QAEHPAVhero@@HH@Z	SOURCE/EVENTS	graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
+0x00060690	0xec	buka21	0x000435ad	?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z	SOURCE/EVENTS	graph:2;base=0.608108;margin=0.082972;shape=0.542;size=0.949;calls=0.833;alternate=pol20:void advManager::RecruitEvent(class hero *, int, class mapCell *)@0x000b022e
+0x0006077c	0x2e0	buka21	0x00043b2a	?GhostEvent@advManager@@QAEHPAVhero@@PAVmapCell@@PADHH@Z	SOURCE/EVENTS	graph:3;base=0.581832;margin=0.097486;shape=0.425;size=0.973;calls=1.000;alternate=pol20:int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int)@0x000b07e5
+0x00060a5c	0x11e	buka21	0x00043df6	?HouseEvent@advManager@@QAEXPAVhero@@PAVmapCell@@@Z	SOURCE/EVENTS	graph:2;base=0.402651;margin=0.176834;shape=0.333;size=0.492;calls=1.000;alternate=pol20:void advManager::HouseEvent(class hero *, class mapCell *)@0x000b0add
+0x00060b7a	0x200	pol20	0x000b0d51	int advManager::CombatMonsterEvent(class hero *, int, int, class mapCell *, int, int, int, int, int, int, int, int, int, int, int)	SOURCE/EVENTS	graph:3;base=0.320627;margin=0.567027;shape=0.316;size=0.323;calls=0.727
+0x00060fbd	0x200	buka21	0x00044949	?TransferArtifacts@advManager@@QAEXPAVhero@@0@Z	SOURCE/EVENTS	graph:2;base=0.505054;margin=0.383531;shape=0.360;size=0.848;calls=0.800;alternate=pol20:void advManager::TransferArtifacts(class hero *, class hero *)@0x000b1973
+0x000611bd	0x7d	buka21	0x00044afb	?HeroLoses@advManager@@QAEXPAVhero@@@Z	SOURCE/EVENTS	graph:4;base=0.567256;margin=0.641527;shape=0.448;size=0.872;calls=1.000;alternate=pol20:void advManager::HeroLoses(class hero *)@0x000b1b50
+0x0006123a	0x137	buka21	0x00044b68	?DoWhirlpool@advManager@@QAEXPAVhero@@@Z	SOURCE/EVENTS	graph:2;base=0.515247;margin=0.370456;shape=0.302;size=0.900;calls=1.000;alternate=pol20:void advManager::DoWhirlpool(class hero *)@0x000b1bcf
+0x00061371	0x113	buka21	0x00044c80	?FizzleCenter@advManager@@QAEXH@Z	SOURCE/EVENTS	graph:2;base=0.628535;margin=0.385528;shape=0.317;size=0.884;calls=0.800;strings=killfade.82M|pickup%02d.82M;alternate=pol20:void advManager::FizzleCenter(int)@0x000b1d01
+0x00061484	0x1141	buka21	0x00044d73	?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z	SOURCE/EVENTS	graph:7;base=0.283401;margin=1.483201;shape=0.274;size=0.397;calls=0.409;alternate=pol20:void advManager::DoAIEvent(class mapCell *, class hero *, int, int)@0x000b1e43
+0x000625c5	0x19a	buka21	0x00047fff	?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PAHHHHHH@Z	SOURCE/EVENTS	graph:4;base=0.214069;margin=0.493239;shape=0.272;size=0.223;calls=0.212;alternate=pol20:void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int)@0x000b4fd5
+0x0006275f	0x152	buka21	0x00048730	?ComputerMonsterInteract@advManager@@QAEXPAVmapCell@@PAVhero@@PAH@Z	SOURCE/EVENTS	graph:6;base=0.236973;margin=1.104727;shape=0.224;size=0.345;calls=0.250
+0x000628b1	0x18f	buka21	0x00048b04	?DoNetCombat@advManager@@QAEHPAD@Z	SOURCE/EVENTS	graph:3;base=0.634004;margin=0.818203;shape=0.529;size=0.995;calls=1.000;alternate=pol20:int advManager::DoNetCombat(char *)@0x000b5c40
+0x00062a40	0x5c6	buka21	0x00048c95	?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHH@Z	SOURCE/EVENTS	graph:3;base=0.590184;margin=0.564001;shape=0.455;size=0.978;calls=0.927;alternate=pol20:int advManager::DoCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int)@0x000b5e10
+0x00063006	0x2da	buka21	0x0004927c	?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHHHHH@Z	SOURCE/EVENTS	graph:4;base=0.543308;margin=0.967008;shape=0.438;size=0.943;calls=0.684;alternate=pol20:void advManager::SendHeroTownData(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int, int, int, int)@0x000b645e
+0x000632e0	0x350	buka21	0x00049582	?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z	SOURCE/EVENTS	graph:2;base=0.493176;margin=0.152223;shape=0.314;size=0.857;calls=0.909;alternate=pol20:void advManager::ReceiveHeroTownData(char *, int *, int *, int *, class hero * *, class armyGroup * *, class town * *, class hero * *, class armyGroup * *, int *, int *, int *, signed char *, signed char *, signed char *)@0x000b67cd
+0x00063630	0x2de	buka21	0x000a18a0	??0strip@@QAE@HHHKHPAVarmyGroup@@HHH@Z	SOURCE/STRIP	graph:2;base=0.710816;margin=0.058489;shape=0.438;size=0.937;calls=0.800;strings=strip.icn;alternate=pol20:void strip::constructor(int, int, int, unsigned long int, int, class armyGroup *, int, int, int)@0x00032230
+0x0006390e	0x112	buka21	0x000a1b50	??1strip@@QAE@XZ	SOURCE/STRIP	graph:2;base=0.560366;margin=0.278966;shape=0.418;size=0.916;calls=1.000;alternate=pol20:void strip::~destructor(void)@0x000324ae
+0x00063a20	0x42	buka21	0x000a1c7b	?Draw@strip@@QAEXXZ	SOURCE/STRIP	graph:3;base=0.508282;margin=0.688808;shape=0.381;size=0.803;calls=1.000;alternate=pol20:void strip::Draw(void)@0x000325f2
+0x00063a62	0x26e	buka21	0x000a1cb0	?DrawIcons@strip@@QAEXH@Z	SOURCE/STRIP	graph:2;base=0.411442;margin=0.465209;shape=0.280;size=0.697;calls=0.714;alternate=pol20:void strip::DrawIcons(int)@0x00032632
+0x00063d07	0xfe	buka21	0x000a2055	??0bankBox@@QAE@HHPAVplayerData@@@Z	SOURCE/STRIP	graph:2;base=0.721149;margin=0.159729;shape=0.520;size=0.843;calls=0.833;strings=bankbox.bin;alternate=pol20:void bankBox::constructor(int, int, class playerData *)@0x00032a38
+0x00063e05	0x43	buka21	0x000a212b	??1bankBox@@QAE@XZ	SOURCE/STRIP	graph:2;base=0.486146;margin=0.167932;shape=0.360;size=0.776;calls=1.000;alternate=pol20:void bankBox::~destructor(void)@0x00032aea
+0x00063e48	0xc8	buka21	0x000a8413	?RedrawTownScreen@townManager@@QAEXXZ	SOURCE/TOWNMGR	graph:2;base=0.400259;margin=0.055605;shape=0.222;size=0.820;calls=0.714;alternate=pol20:void bankBox::Update(int)@0x00032b2d
+0x00063f10	0x6b	buka21	0x000a3ff0	??0town@@QAE@XZ	SOURCE/TOWN	graph:2;base=0.468183;margin=0.431232;shape=0.273;size=0.841;calls=1.000;alternate=pol20:void town::constructor(void)@0x00032c00
+0x00063f7b	0x55	buka21	0x000a404a	?HasGarrison@town@@QAEHXZ	SOURCE/TOWN	graph:2;base=0.410733;margin=0.365325;shape=0.175;size=0.741;calls=1.000;alternate=pol20:int town::HasGarrison(void)@0x00032c65
+0x00063fd0	0xe1	buka21	0x000a4089	?GiveSpells@town@@QAEXPAVhero@@@Z	SOURCE/TOWN	graph:3;base=0.430933;margin=0.601053;shape=0.167;size=0.987;calls=0.667;alternate=pol20:void town::GiveSpells(class hero *)@0x00032cb9
+0x0006422d	0xa5	buka21	0x000a420c	?View@town@@QAEXH@Z	SOURCE/TOWN	graph:4;base=0.510810;margin=0.878787;shape=0.327;size=0.842;calls=1.000;alternate=pol20:void town::View(int)@0x00032e74
+0x00064470	0x54	pol20	0x00035200	void DelayTil(int *)	SOURCE/NOOPT	graph:2;base=0.454143;margin=0.041236;shape=0.406;size=0.631;calls=0.750
+0x000644e7	0x39	pol20	0x0003525a	void DelayTilMilli(long int)	SOURCE/NOOPT	graph:4;base=0.545923;margin=0.940730;shape=0.458;size=0.895;calls=1.000
+0x00064520	0x783	buka21	0x00015a60	?AICheckRetreat@combatManager@@QAEHXZ	SOURCE/AI	graph:2;base=0.550932;margin=0.199965;shape=0.407;size=0.920;calls=0.857;alternate=pol20:int combatManager::AICheckRetreat(void)@0x000c0790
+0x00064ca3	0x9ce	pol20	0x000c1067	void combatManager::DoCompAI(int)	SOURCE/AI	graph:2;base=0.395992;margin=0.362607;shape=0.405;size=0.527;calls=0.508
+0x000658cd	0xb3	pol20	0x000c2dca	int combatManager::GetBestArmy(int, int)	SOURCE/AI	graph:3;base=0.374690;margin=0.035085;shape=0.380;size=0.360;calls=1.000
+0x00065980	0xb3	pol20	0x000c2fbb	int combatManager::GetWorstArmy(int, int)	SOURCE/AI	graph:2;base=0.569419;margin=0.219910;shape=0.435;size=0.923;calls=1.000
+0x00065a33	0x109	pol20	0x000c307d	int combatManager::GetClosestArmy(class army *, int, int)	SOURCE/AI	graph:2;base=0.471274;margin=0.217317;shape=0.349;size=0.722;calls=1.000
+0x00065bf7	0x1b0	pol20	0x000c32ad	int combatManager::AttemptAttack(class army *, int, int)	SOURCE/AI	graph:2;base=0.582256;margin=0.335081;shape=0.429;size=0.975;calls=1.000
+0x00065da7	0x2a9	pol20	0x000c3468	int combatManager::AttemptAdjacentAttack(class army *)	SOURCE/AI	graph:2;base=0.355824;margin=0.059832;shape=0.256;size=0.567;calls=0.667
+0x00066050	0x20f	pol20	0x000c35ea	int combatManager::WalkTowardArmyFront(class army *, int, int)	SOURCE/AI	graph:3;base=0.565297;margin=0.873292;shape=0.417;size=0.915;calls=1.000
+0x0006625f	0x231	pol20	0x000c382a	int combatManager::WalkTowardArmy(class army *, int, int)	SOURCE/AI	graph:2;base=0.567861;margin=0.288605;shape=0.394;size=0.967;calls=1.000
+0x00066490	0xc9	pol20	0x0004a8c0	void army::constructor(void)	SOURCE/ARMY	graph:1;base=0.833244;margin=0.295558;shape=1.000;size=0.971;calls=1.000
+0x00066559	0x18	pol20	0x0004a98f	void army::WaitSample(int)	SOURCE/ARMY	graph:1;base=1.000000;margin=0.200000;normalized-instructions
+0x0006693b	0xf1	buka21	0x00018fca	?FreeResources@army@@QAEXXZ	SOURCE/ARMY	graph:2;base=0.463954;margin=0.140795;shape=0.318;size=0.842;calls=0.750;alternate=pol20:void army::FreeResources(void)@0x0004b36e
+0x00066a2c	0x855	pol20	0x0004b456	void army::DrawToBuffer(int, int, int)	SOURCE/ARMY	graph:2;base=0.415247;margin=0.412145;shape=0.244;size=0.939;calls=0.455
+0x00067345	0x852	pol20	0x00003f80	void combatManager::UpdateMouseGrid(int, int)	SOURCE/DRAWING	graph:2;base=0.371756;margin=0.407057;shape=0.246;size=0.757;calls=0.258
+0x00067b97	0xcca	buka21	0x0001a1d9	?SpecialAttack@army@@QAEXXZ	SOURCE/ARMY	graph:3;base=0.357822;margin=0.373223;shape=0.266;size=0.572;calls=0.585;alternate=pol20:void army::SpecialAttack(void)@0x0004c7e5
+0x00068861	0x765	pol20	0x0004dcba	void army::DoHydraAttack(int)	SOURCE/ARMY	graph:2;base=0.558775;margin=0.105841;shape=0.338;size=0.663;calls=0.625;strings=%s %s %d %s.|creature|creatures
+0x00068fc6	0x2d	pol20	0x0004dc8f	void army::DirDoAttack(int)	SOURCE/ARMY	unique-instructions
+0x00068ff3	0x108d	buka21	0x0001bddb	?DoAttack@army@@QAEXH@Z	SOURCE/ARMY	graph:4;base=0.427643;margin=0.977018;shape=0.217;size=0.817;calls=0.724;alternate=pol20:void army::DoAttack(int)@0x0004e1a1
+0x0006a1ec	0x27	pol20	0x0004f731	int army::AttackTo(void)	SOURCE/ARMY	graph:2;base=0.698664;margin=0.434177;shape=0.684;size=0.949;calls=1.000
+0x0006a213	0x1c9	pol20	0x0004f756	int army::AttackTo(int)	SOURCE/ARMY	graph:2;base=0.568537;margin=0.418217;shape=0.426;size=0.936;calls=0.900
+0x0006a3dc	0x249	buka21	0x0001d6d1	?CheckLuck@army@@QAEXXZ	SOURCE/ARMY	graph:1;base=0.723107;margin=0.234495;shape=0.473;size=0.925;calls=0.875;strings=badluck.82m|goodluck.82m;alternate=pol20:void army::CheckLuck(void)@0x0004f93e
+0x0006a625	0x2ae	buka21	0x0001d8ee	?DamageEnemy@army@@QAEXPAV1@PAH1HH@Z	SOURCE/ARMY	graph:2;base=0.387284;margin=0.228483;shape=0.296;size=0.628;calls=0.714;alternate=pol20:void army::DamageEnemy(class army *, int *, int *, int, int)@0x0004fbc0
+0x0006a8d3	0x176	buka21	0x0001dd32	?Damage@army@@QAEHJH@Z	SOURCE/ARMY	graph:6;base=0.419408;margin=1.157007;shape=0.216;size=0.693;calls=1.000;alternate=pol20:int army::Damage(long int, int)@0x0005012e
+0x0006aa49	0x8a9	buka21	0x000d3890	?Main@button@@UAEHAAUtag_message@@@Z	BASE/BUTTON	graph:2;base=0.352078;margin=0.195322;shape=0.201;size=0.559;calls=0.765;alternate=pol20:void army::PowEffect(int, int, int, int)@0x0005036a
+0x0006b6e7	0x3a9	buka21	0x00020238	?MoveAttack@army@@QAEXHH@Z	SOURCE/ARMY	graph:2;base=0.522810;margin=0.525862;shape=0.325;size=0.919;calls=0.929;alternate=pol20:void army::MoveAttack(int, int)@0x00052ad9
+0x0006ba90	0x68	buka21	0x00060e50	??0hero@@QAE@XZ	SOURCE/HERO	graph:2;base=0.493986;margin=0.210035;shape=0.273;size=0.962;calls=1.000;alternate=pol20:void hero::constructor(void)@0x0006c3a0
+0x0006bb10	0x5d	buka21	0x00060f43	?HasArtifact@hero@@QAEHH@Z	SOURCE/HERO	graph:5;base=0.403615;margin=0.791427;shape=0.171;size=0.731;calls=1.000;alternate=pol20:int hero::HasArtifact(int)@0x0006c4cd
+0x0006bb6d	0x1ed	buka21	0x00060f87	?CalcMobility@hero@@QAEHXZ	SOURCE/HERO	graph:2;base=0.418178;margin=0.237740;shape=0.210;size=0.862;calls=0.714;alternate=pol20:int hero::CalcMobility(void)@0x0006c526
+0x0006c29a	0x53	buka21	0x000638b2	?RedrawHeroScreen@@YIXXZ	SOURCE/HERO	graph:2;base=0.519414;margin=0.462427;shape=0.417;size=0.819;calls=1.000;alternate=pol20:void RedrawHeroScreen(void)@0x0006f305
+0x0006c2ed	0x6c2	buka21	0x000638f6	?HeroView@@YIHHHH@Z	SOURCE/HERO	graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
+0x0006c9af	0x7c	buka21	0x0006141a	?HeroMessageUpdate@@YIXPAD@Z	SOURCE/HERO	graph:2;base=0.570065;margin=0.065812;shape=0.448;size=0.919;calls=1.000;alternate=pol20:void HeroMessageUpdate(char *)@0x0006cab1
+0x0006ca2b	0xab	buka21	0x0006148c	?HeroScreenUpdate@hero@@QAEXXZ	SOURCE/HERO	graph:2;base=0.542456;margin=0.317795;shape=0.400;size=0.865;calls=1.000;alternate=pol20:void hero::HeroScreenUpdate(void)@0x0006cb33
+0x0006cad6	0x1ba	buka21	0x00061520	?UpdateArmies@hero@@QAEXXZ	SOURCE/HERO	graph:2;base=0.520009;margin=0.290164;shape=0.295;size=0.980;calls=0.909;alternate=pol20:void hero::UpdateArmies(void)@0x0006cbdb
+0x0006cc90	0x1af	buka21	0x00064415	?DoHeroSplit@@YIXHH@Z	SOURCE/HERO	graph:4;base=0.442690;margin=0.359868;shape=0.372;size=0.621;calls=0.750;alternate=pol20:void combatManager::CombatSystemOptions(void)@0x00095dcd
+0x0006ce89	0x59	buka21	0x000617a7	?Dismiss@hero@@QAEHXZ	SOURCE/HERO	graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
+0x0006cee2	0x452	buka21	0x000617f2	?Deallocate@hero@@QAEXH@Z	SOURCE/HERO	graph:5;base=0.482098;margin=0.987612;shape=0.300;size=0.883;calls=0.875;alternate=pol20:void hero::Deallocate(int)@0x0006cee8
+0x0006d334	0xd0	buka21	0x00061cd6	?GetExperience@hero@@QAEHH@Z	SOURCE/HERO	graph:2;base=0.429028;margin=0.385573;shape=0.283;size=0.663;calls=1.000
+0x0006d404	0xf2	buka21	0x00061d60	?GetLevel@hero@@QAEHH@Z	SOURCE/HERO	graph:2;base=0.411151;margin=0.242527;shape=0.205;size=0.711;calls=1.000;alternate=pol20:int hero::GetLevel(int)@0x0006d50d
+0x0006d4f6	0x14f	pol20	0x0006d5cd	void hero::ApplyBattleWinTemps(void)	SOURCE/HERO	graph:2;base=0.653678;margin=0.552459;shape=0.848;size=0.562;calls=1.000
+0x0006d645	0x1e	pol20	0x0006d821	void hero::ApplyBattleLossTemps(void)	SOURCE/HERO	graph:2;base=1.000000;margin=0.400000;normalized-instructions
+0x0006d663	0x2f4	buka21	0x000620c8	?CheckLevel@hero@@QAEXXZ	SOURCE/HERO	graph:3;base=0.312130;margin=0.246272;shape=0.276;size=0.445;calls=0.500;alternate=pol20:void hero::CheckLevel(void)@0x0006d83f
+0x0006d957	0x57	pol20	0x0006e067	int hero::NumArtifacts(void)	SOURCE/HERO	unique-instructions
+0x0006d9ae	0x52e	buka21	0x000627b6	?UpdateHeroScreenStatusBar@@YIXAAUtag_message@@@Z	SOURCE/HERO	graph:4;base=0.389885;margin=0.637226;shape=0.282;size=0.714;calls=0.718;alternate=pol20:void UpdateHeroScreenStatusBar(struct tag_message &)@0x0006e0be
+0x0006dedc	0x6d4	buka21	0x00062ef8	?HeroHandler@@YIHAAUtag_message@@@Z	SOURCE/HERO	graph:4;base=0.360602;margin=0.481730;shape=0.266;size=0.702;calls=0.568;alternate=pol20:int HeroHandler(struct tag_message &)@0x0006e816
+0x0006e5b0	0x4a	pol20	0x0004a3c0	void hexcell::constructor(void)	SOURCE/HEXCELL	graph:1;base=0.831699;margin=0.264633;shape=1.000;size=0.946;calls=1.000
+0x0006e647	0x4b	pol20	0x0004a86e	void hexcell::DrawObstacle(void)	SOURCE/HEXCELL	graph:1;base=0.721636;margin=0.268836;shape=0.760;size=0.949;calls=1.000
+0x0006ecb0	0x75	pol20	0x000543c0	void swapManager::constructor(void)	SOURCE/SWAPMGR	unique-instructions
+0x0006ed25	0x3e	pol20	0x00054444	void swapManager::constructor(class hero *, class hero *)	SOURCE/SWAPMGR	unique-instructions
+0x0006ed63	0x4d	pol20	0x00054482	void swapManager::Reset(void)	SOURCE/SWAPMGR	unique-instructions
+0x0006edb0	0x2d5	buka21	0x000a236e	?Open@swapManager@@UAEHH@Z	SOURCE/SWAPMGR	graph:5;base=0.683274;margin=0.416085;shape=0.517;size=0.729;calls=0.800;strings=port%04d.icn|swapManager|swapbtn.icn;alternate=pol20:int swapManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00054502
+0x0006f085	0x123	buka21	0x000a2750	?Close@swapManager@@UAEXXZ	SOURCE/SWAPMGR	graph:3;base=0.610218;margin=0.602384;shape=0.500;size=0.986;calls=1.000;alternate=pol20:void swapManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x000548be
+0x0006f3c7	0x9ac	buka21	0x000a29f4	?Main@swapManager@@UAEHAAUtag_message@@@Z	SOURCE/SWAPMGR	graph:4;base=0.525982;margin=0.522986;shape=0.320;size=0.991;calls=0.960;alternate=pol20:int swapManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00054be3
+0x0006fd73	0xa5	buka21	0x000a33b6	?ViewMon@swapManager@@QAEXXZ	SOURCE/SWAPMGR	graph:2;base=0.509716;margin=0.520416;shape=0.289;size=0.921;calls=1.000;alternate=pol20:void swapManager::ViewMon(void)@0x000556d3
+0x0006ff2a	0x28e	pol20	0x000559cb	void swapManager::SwapMons(void)	SOURCE/SWAPMGR	graph:2;base=0.448412;margin=0.222909;shape=0.474;size=0.573;calls=0.600
+0x000701b8	0x492	buka21	0x000a37e7	?Update@swapManager@@QAEXXZ	SOURCE/SWAPMGR	graph:2;base=0.575258;margin=0.321463;shape=0.441;size=0.938;calls=0.900;alternate=pol20:void swapManager::Update(void)@0x00055b42
+0x0007064a	0x3a6	buka21	0x000a3c30	?SplitMons@swapManager@@QAEXXZ	SOURCE/SWAPMGR	graph:3;base=0.761691;margin=0.047739;shape=0.487;size=0.960;calls=1.000;strings=splitwin.bin;alternate=pol20:void swapManager::SplitMons(void)@0x00055fbd
+0x00070aa9	0xb5	pol20	0x00095ebf	void UpdateCombatSystemOptions(int)	SOURCE/CMBTMGR	graph:2;base=0.379535;margin=0.045348;shape=0.514;size=0.369;calls=0.308
+0x00070b5e	0x2f3	buka21	0x000381ef	?CombatMessage@combatManager@@QAEXH@Z	SOURCE/DRAWING	graph:2;base=0.437007;margin=0.291793;shape=0.214;size=0.851;calls=0.786
+0x00070e51	0xd4	buka21	0x00038566	?ResetLimitCreature@combatManager@@QAEXXZ	SOURCE/DRAWING	graph:2;base=0.450422;margin=0.400104;shape=0.155;size=0.951;calls=1.000;alternate=pol20:void combatManager::ResetLimitCreature(void)@0x0000327e
+0x000711fb	0xe35	buka21	0x0001df4e	?PowEffect@army@@QAEXHHHH@Z	SOURCE/ARMY	graph:2;base=0.411175;margin=0.311324;shape=0.226;size=0.796;calls=0.719;alternate=pol20:void combatManager::DrawFrame(int, int, int, int, int, int, int)@0x000045cc
+0x00072c60	0x6b	buka21	0x00032760	?add_node@@YIXPAUtag_Anchor@@PAUtag_Node@@@Z	SOURCE/comwin	graph:2;base=0.517873;margin=0.500067;shape=0.348;size=0.888;calls=1.000;alternate=pol20:void add_node(struct tag_Anchor *, struct tag_Node *)@0x0008a640
+0x00072ccb	0x49	buka21	0x000327bf	?pop_node@@YIPAUtag_Node@@PAUtag_Anchor@@@Z	SOURCE/comwin	graph:2;base=0.512007;margin=0.418981;shape=0.375;size=0.808;calls=1.000
+0x000731da	0x113	buka21	0x00033048	?com_snd@@YIFFGGPAXH@Z	SOURCE/comwin	graph:2;base=0.500645;margin=0.346479;shape=0.286;size=0.968;calls=0.778
+0x00073366	0xd6	buka21	0x000331c7	?comm_wrt_task@@YIXXZ	SOURCE/comwin	graph:2;base=0.517823;margin=0.534422;shape=0.361;size=0.911;calls=0.800
+0x00073450	0x1a0	buka21	0x000bf7a0	?BlitBitmapToScreen@@YIXPAVbitmap@@HHHHHH@Z	BASE/Misc	graph:2;base=0.393847;margin=0.217572;shape=0.150;size=0.860;calls=0.571;alternate=pol20:@BlitBitmapToScreenVesa@28@0x000d8540
+0x00073620	0x50	pol20	0x000c5e70	void SetPalette(signed char *, int)	BASE/Misc	graph:3;base=0.464897;margin=0.485540;shape=0.333;size=0.763;calls=1.000
+0x00073670	0xe0	buka21	0x000bdc90	?FadeOut@@YIXH@Z	BASE/Misc	graph:3;base=0.330446;margin=0.000684;shape=0.178;size=0.516;calls=0.778;alternate=pol20:void FadeIn(int)@0x000c45e0
+0x00073750	0xd0	pol20	0x000c46d0	void FadeOut(int)	BASE/Misc	graph:1;base=0.684088;margin=0.182051;shape=0.732;size=0.904;calls=0.750
+0x00073820	0x40	pol20	0x000c47c0	int Random(int, int)	BASE/Misc	graph:8;base=0.305357;margin=1.498496;shape=0.095;size=0.625;calls=0.500
+0x00073d90	0x50	buka21	0x000b5660	??0baseManager@@QAE@XZ	BASE/BASEMGR	graph:2;base=0.427992;margin=0.483575;shape=0.081;size=0.860;calls=0.000;strings=Unknown;alternate=pol20:void baseManager::constructor(void)@0x000d2530
+0x00074130	0x40	buka21	0x000b7270	?BroadcastMessage@heroWindowManager@@QAEHHHHH@Z	BASE/WINMGR	graph:7;base=0.484375;margin=1.382188;shape=0.250;size=0.844;calls=1.000;alternate=pol20:int heroWindowManager::BroadcastMessage(int, int, int, int)@0x000cac40
+0x00074170	0xd0	buka21	0x000cb120	??0border@@QAE@FFFFFFFPAD@Z	BASE/BORDER	graph:2;base=0.366874;margin=0.348295;shape=0.216;size=0.808;calls=0.500;alternate=pol20:void heroWindowManager::AddWindow(class heroWindow *, int, int)@0x000cac80
+0x00074240	0x90	buka21	0x000b7400	?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z	BASE/WINMGR	graph:2;base=0.383824;margin=0.385483;shape=0.180;size=0.618;calls=1.000;alternate=pol20:void heroWindowManager::RemoveWindow(class heroWindow *)@0x000cad40
+0x000742d0	0x1e0	buka21	0x00092b64	?SetupNetworkGame2@game@@QAEHXZ	SOURCE/SETUP	graph:2;base=0.392614;margin=0.226942;shape=0.186;size=0.749;calls=0.667;alternate=pol20:int heroWindowManager::DoDialog(class heroWindow *, int (*)(struct tag_message &), int)@0x000cadd0
+0x00074660	0x50	pol20	0x000cb0b0	void heroWindowManager::ScreenShot(void)	BASE/WINMGR	graph:2;base=0.531981;margin=0.554914;shape=0.382;size=0.964;calls=0.750
+0x000746b0	0x90	pol20	0x000cb110	void heroWindowManager::SaveFizzleSource(int, int, int, int)	BASE/WINMGR	graph:4;base=0.472718;margin=0.713424;shape=0.307;size=0.750;calls=1.000
+0x00074740	0x320	buka21	0x000b79b0	?FizzleForward@heroWindowManager@@QAEXHHHHHPAC0@Z	BASE/WINMGR	graph:2;base=0.536514;margin=0.381106;shape=0.221;size=0.706;calls=0.783;strings=CCYCLE%02d.BIN;alternate=pol20:void heroWindowManager::FizzleForward(int, int, int, int, int, signed char *, signed char *)@0x000cb1e0
+0x00074a80	0xb0	buka21	0x000ba660	??0heroWindow@@QAE@HHHHH@Z	BASE/WINDOW	graph:2;base=0.651321;margin=0.357646;shape=0.346;size=0.852;calls=1.000;strings=Dynamic Construct;alternate=pol20:void heroWindow::constructor(int, int, int, int, int)@0x000cec20
+0x00074b30	0x450	buka21	0x000ba700	??0heroWindow@@QAE@HHPAD@Z	BASE/WINDOW	graph:4;base=0.375549;margin=0.549564;shape=0.254;size=0.606;calls=0.800;alternate=pol20:void heroWindow::constructor(int, int, char *)@0x000cecd0
+0x00074f80	0xa0	buka21	0x000bae20	?Open@heroWindow@@QAEHHH@Z	BASE/WINDOW	graph:2;base=0.353009;margin=0.367120;shape=0.216;size=0.638;calls=0.500;alternate=pol20:int heroWindow::Open(int, int)@0x000cf200
+0x00075020	0xb0	buka21	0x000baf20	?Close@heroWindow@@QAEXXZ	BASE/WINDOW	graph:2;base=0.586039;margin=0.311864;shape=0.455;size=0.909;calls=1.000;alternate=pol20:void heroWindow::Close(void)@0x000cf310
+0x000750d0	0x150	buka21	0x000bafc0	?AddWidget@heroWindow@@QAEXPAVwidget@@H@Z	BASE/WINDOW	graph:3;base=0.553676;margin=0.412288;shape=0.475;size=0.789;calls=1.000;alternate=pol20:void heroWindow::AddWidget(class widget *, int)@0x000cf3c0
+0x00075220	0x120	buka21	0x000bb0d0	?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z	BASE/WINDOW	graph:2;base=0.565639;margin=0.542930;shape=0.500;size=0.802;calls=1.000;alternate=pol20:void heroWindow::RemoveWidget(class widget *)@0x000cf500
+0x00075340	0xa0	buka21	0x000bb1c0	?BroadcastMessage@heroWindow@@QAEHAAUtag_message@@@Z	BASE/WINDOW	graph:2;base=0.435923;margin=0.333583;shape=0.340;size=0.588;calls=1.000;alternate=pol20:int heroWindow::BroadcastMessage(struct tag_message &)@0x000cf620
+0x000753e0	0x20	pol20	0x000cf6c0	void heroWindow::DrawWindow(void)	BASE/WINDOW	unique-normalized
+0x00075400	0x30	buka21	0x000bb240	?DrawWindow@heroWindow@@QAEXH@Z	BASE/WINDOW	graph:5;base=0.418036;margin=0.971201;shape=0.250;size=0.729;calls=1.000;alternate=pol20:void heroWindow::DrawWindow(int)@0x000cf6e0
+0x00075430	0x100	buka21	0x000bb270	?DrawWindow@heroWindow@@QAEXHHH@Z	BASE/WINDOW	graph:2;base=0.624064;margin=0.444596;shape=0.548;size=0.926;calls=1.000;alternate=pol20:void heroWindow::DrawWindow(int, int, int)@0x000cf710
+0x00075530	0x90	buka21	0x000bb360	?SaveBackground@heroWindow@@QAEHXZ	BASE/WINDOW	graph:2;base=0.570741;margin=0.294707;shape=0.467;size=0.852;calls=1.000;alternate=pol20:int heroWindow::SaveBackground(void)@0x000cf830
+0x000755c0	0x90	buka21	0x000bb410	?RestoreBackground@heroWindow@@QAEXXZ	BASE/WINDOW	graph:2;base=0.579338;margin=0.220950;shape=0.412;size=0.993;calls=1.000;alternate=pol20:void heroWindow::RestoreBackground(void)@0x000cf8b0
+0x00075650	0x1e0	buka21	0x000bb4a0	?MoveWindow@heroWindow@@QAEXHH@Z	BASE/WINDOW	graph:3;base=0.486346;margin=0.742274;shape=0.333;size=0.777;calls=1.000;alternate=pol20:void heroWindow::MoveWindow(int, int)@0x000cf950
+0x00075830	0xa0	pol20	0x000c7fa0	void resourceManager::constructor(void)	BASE/RESMGR	graph:2;base=0.686989;margin=0.188021;shape=0.780;size=0.731;calls=1.000
+0x000758d0	0x90	buka21	0x000b7fa0	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@H@Z	BASE/RESMGR	graph:2;base=0.523311;margin=0.276556;shape=0.370;size=0.986;calls=0.778;alternate=pol20:void resourceManager::GetBackdrop(char *, class bitmap *, int)@0x000c8080
+0x00075960	0x90	buka21	0x000b8040	?GetBackdropAtLoc@resourceManager@@QAEXPADPAVbitmap@@HHH@Z	BASE/RESMGR	graph:3;base=0.388383;margin=0.191324;shape=0.224;size=0.750;calls=0.667;alternate=pol20:void resourceManager::GetBackdropAtLoc(char *, class bitmap *, int, int, int)@0x000c8130
+0x000759f0	0xa0	buka21	0x000b8100	?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z	BASE/RESMGR	graph:4;base=0.526908;margin=0.640000;shape=0.347;size=0.838;calls=1.000;alternate=pol20:class font * resourceManager::GetFont(char *)@0x000c84d0
+0x00075a90	0xa0	buka21	0x000b82b0	?GetIcon@resourceManager@@QAEPAVicon@@K@Z	BASE/RESMGR	graph:3;base=0.509226;margin=0.222318;shape=0.347;size=0.920;calls=0.800;alternate=pol20:class bitmap * resourceManager::GetBitmap(char *)@0x000c82b0
+0x00075b70	0x90	buka21	0x000b81c0	?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z	BASE/RESMGR	graph:3;base=0.472301;margin=0.240000;shape=0.327;size=0.754;calls=0.800;alternate=pol20:class icon * resourceManager::GetIcon(unsigned long int)@0x000c8380
+0x00075c00	0xa0	buka21	0x000b8360	?GetTileset@resourceManager@@QAEPAVtileset@@PAD@Z	BASE/RESMGR	graph:2;base=0.526908;margin=0.440000;shape=0.347;size=0.838;calls=1.000;alternate=pol20:class MIDIWrap * resourceManager::GetMIDIWrap(char *)@0x000c8610
+0x00075ca0	0xa0	buka21	0x000b8430	?GetFont@resourceManager@@QAEPAVfont@@PAD@Z	BASE/RESMGR	graph:3;base=0.526908;margin=0.200000;shape=0.347;size=0.838;calls=1.000;alternate=pol20:class palette * resourceManager::GetPalette(char *)@0x000c8210
+0x00075d40	0xa0	buka21	0x000b84f0	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	BASE/RESMGR	graph:2;base=0.514578;margin=0.400000;shape=0.333;size=0.838;calls=1.000;alternate=pol20:class sample * resourceManager::GetSample(char *)@0x000c8570
+0x00075de0	0x90	buka21	0x000b8670	?Dispose@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	graph:2;base=0.520865;margin=0.403030;shape=0.400;size=0.812;calls=1.000;alternate=pol20:void resourceManager::Dispose(class resource *)@0x000c86b0
+0x00075e70	0x60	buka21	0x000b86f0	?AddResource@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	graph:3;base=0.451638;margin=0.545401;shape=0.346;size=0.698;calls=1.000;alternate=pol20:void resourceManager::AddResource(class resource *)@0x000c8740
+0x00075ed0	0x90	pol20	0x000c87a0	void resourceManager::Expunge(void)	BASE/RESMGR	graph:1;base=0.789562;margin=0.296214;shape=0.906;size=0.965;calls=1.000
+0x00075f60	0x50	buka21	0x000b87c0	?Query@resourceManager@@QAEPAVresource@@K@Z	BASE/RESMGR	graph:3;base=0.434784;margin=0.589664;shape=0.276;size=0.688;calls=1.000;alternate=pol20:class resource * resourceManager::Query(unsigned long int)@0x000c8830
+0x00076060	0x90	pol20	0x000c8950	void resourceManager::RemoveResource(class resource *)	BASE/RESMGR	graph:1;base=0.776176;margin=0.347353;shape=0.900;size=0.944;calls=1.000
+0x00076180	0x100	buka21	0x0005f9cd	?CreateJoinFile@@YIXPAD00@Z	SOURCE/GAME	graph:3;base=0.243303;margin=0.323263;shape=0.293;size=0.286;calls=0.222
+0x00076280	0x100	buka21	0x000b8af0	?PointToFile@resourceManager@@QAEXK@Z	BASE/RESMGR	graph:3;base=0.595306;margin=0.474349;shape=0.195;size=0.969;calls=0.750;strings=ResMgr::PointToFile failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s;alternate=pol20:void resourceManager::PointToFile(unsigned long int)@0x000c8c00
+0x00076470	0x30	buka21	0x000b8cd0	?SavePosition@resourceManager@@QAEXXZ	BASE/RESMGR	graph:2;base=0.435067;margin=0.395891;shape=0.259;size=0.600;calls=1.000;alternate=pol20:void resourceManager::SavePosition(void)@0x000c8e20
+0x000764a0	0x30	buka21	0x000b8d20	?RestorePosition@resourceManager@@QAEXXZ	BASE/RESMGR	graph:2;base=0.425713;margin=0.238867;shape=0.231;size=0.593;calls=1.000;alternate=pol20:void resourceManager::RestorePosition(void)@0x000c8e80
+0x00076530	0x60	buka21	0x000b8de0	?ReadWord@resourceManager@@QAEFXZ	BASE/RESMGR	graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
+0x00076590	0x60	pol20	0x000c9000	long int resourceManager::ReadLong(void)	BASE/RESMGR	graph:2;base=0.495795;margin=0.196956;shape=0.408;size=0.727;calls=0.667
+0x000765f0	0x60	pol20	0x000c9090	unsigned long int resourceManager::MakeId(char *, int)	BASE/RESMGR	graph:2;base=0.402926;margin=0.271504;shape=0.475;size=0.423;calls=0.500
+0x00076650	0x30	pol20	0x000c9180	void resourceManager::Read13(signed char *)	BASE/RESMGR	graph:3;base=0.690231;margin=0.442402;shape=0.824;size=0.792;calls=1.000
+0x00076680	0x60	buka21	0x000b8f60	?ReadBlock@resourceManager@@QAEXPACK@Z	BASE/RESMGR	graph:2;base=0.372879;margin=0.300057;shape=0.264;size=0.619;calls=0.571
+0x000766e0	0x100	buka21	0x000b9050	??0mouseManager@@QAE@XZ	BASE/MOUSEMGR	graph:2;base=0.494087;margin=0.231461;shape=0.072;size=0.848;calls=0.667;strings=mouseManager;alternate=pol20:void mouseManager::constructor(void)@0x000c9270
+0x00076940	0x490	buka21	0x000b95e0	?SetPointer@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	graph:7;base=0.417606;margin=1.286688;shape=0.189;size=0.849;calls=0.737;alternate=pol20:void mouseManager::SetPointer(int)@0x000c9630
+0x00076dd0	0x10	buka21	0x00008427	?GetCell@advManager@@QAEPAVmapCell@@HH@Z	SOURCE/ADVMGR	graph:6;base=0.163393;margin=0.278176;shape=0.000;size=0.120;calls=1.000
+0x00076de0	0x10	buka21	0x00005bba	?CompleteDraw@advManager@@QAEXH@Z	SOURCE/ADVMGR	graph:4;base=0.167943;margin=0.165464;shape=0.000;size=0.340;calls=0.000
+0x00076e60	0x60	buka21	0x000ba100	?MouseCoords@mouseManager@@QAEXAAH0@Z	BASE/MOUSEMGR	graph:4;base=0.387847;margin=0.576156;shape=0.081;size=0.906;calls=1.000;alternate=pol20:void mouseManager::MouseCoords(int &, int &)@0x000c9ec0
+0x000771f0	0x5c0	pol20	0x000cbc40	void soundManager::CDPlay(int, int, int, int)	BASE/soundmgr	graph:3;base=0.536644;margin=0.393082;shape=0.179;size=0.774;calls=0.846;strings= notify|play CD from %d to %d%s|play CD from %s to %d%s
+0x00078390	0xc0	pol20	0x000ccf40	void soundManager::AdjustSoundVolumes(void)	BASE/soundmgr	graph:2;base=0.379918;margin=0.266554;shape=0.143;size=0.828;calls=0.600
+0x00078940	0x490	buka21	0x000b65e0	?PollSound@soundManager@@QAEXXZ	BASE/soundmgr	reviewed-anchor;alternate=pol20:void soundManager::PollSound(void)@0x000cd320
+0x00078f80	0x1f0	pol20	0x000cd7f0	struct _SAMPLE * soundManager::MemorySample(class sample *)	BASE/soundmgr	graph:3;base=0.416816;margin=0.634970;shape=0.185;size=0.757;calls=0.786
+0x000797f0	0x60	pol20	0x000d2130	void border::constructor(short int, short int, short int, short int, short int, short int, short int, char *)	BASE/BORDER	graph:1;base=0.774579;margin=0.399488;shape=0.864;size=0.960;calls=1.000
+0x00079850	0x2d0	pol20	0x000d21e0	void border::Read(void)	BASE/BORDER	graph:3;base=0.256292;margin=0.272774;shape=0.158;size=0.375;calls=0.882
+0x00079b20	0xb0	buka21	0x000c5df0	??0bitmap@@QAE@K@Z	BASE/BITMAP	graph:3;base=0.465210;margin=0.233461;shape=0.283;size=0.749;calls=0.900;alternate=pol20:void icon::constructor(unsigned long int)@0x000c7a20
+0x00079bd0	0x230	pol20	0x000c7b50	int icon::CombatClipDrawToBuffer(int, int, int, struct SLimitData *, int, int, unsigned char *, signed char *)	BASE/ICON	graph:4;base=0.349844;margin=0.556955;shape=0.142;size=0.801;calls=0.571
+0x0007a170	0x10	pol20	0x000d1610	void executive::constructor(void)	BASE/EXEC	unique-normalized
+0x0007a180	0xb0	pol20	0x000d1620	int executive::InitSystem(void)	BASE/EXEC	graph:2;base=0.678352;margin=0.746953;shape=0.364;size=0.898;calls=1.000;strings=Unable to initialize input devices - possible problem with mouse or keyboard.|Unable to initialize mouse.|Unable to initialize resources - possible disk problem.
+0x0007a230	0x90	buka21	0x000c5010	?ShutDownSystem@executive@@QAEXXZ	BASE/EXEC	graph:2;base=0.476451;margin=0.436580;shape=0.279;size=0.783;calls=1.000;alternate=pol20:void executive::ShutDownSystem(void)@0x000d16c0
+0x0007a2c0	0x110	pol20	0x000d1750	int executive::DoDialog(class baseManager *)	BASE/EXEC	graph:1;base=0.845533;margin=0.528580;shape=0.712;size=0.923;calls=1.000;strings=Can't add manager!
+0x0007a3d0	0xe0	buka21	0x000c52f0	?AddManager@executive@@QAEHPAVbaseManager@@H@Z	BASE/EXEC	graph:2;base=0.437231;margin=0.327463;shape=0.214;size=0.709;calls=1.000;alternate=pol20:int executive::AddManager(class baseManager *, int)@0x000d18e0
+0x0007a4b0	0x80	buka21	0x000c5430	?RemoveManager@executive@@QAEXPAVbaseManager@@@Z	BASE/EXEC	graph:2;base=0.457582;margin=0.316699;shape=0.314;size=0.656;calls=1.000;alternate=pol20:void executive::RemoveManager(class baseManager *)@0x000d19b0
+0x0007a530	0x70	buka21	0x000c5500	?CallManager@executive@@QAEXPAVbaseManager@@@Z	BASE/EXEC	graph:2;base=0.458117;margin=0.448699;shape=0.211;size=0.903;calls=1.000;alternate=pol20:void executive::CallManager(class baseManager *)@0x000d1a30
+0x0007a5a0	0x110	buka21	0x000c5580	?MainLoop@executive@@QAEXXZ	BASE/EXEC	graph:2;base=0.400386;margin=0.234811;shape=0.152;size=0.721;calls=1.000;alternate=pol20:void executive::MainLoop(void)@0x000d1a90
+0x0007a720	0x50	buka21	0x000c5d50	??0bitmap@@QAE@FFF@Z	BASE/BITMAP	graph:2;base=0.480481;margin=0.412136;shape=0.467;size=0.523;calls=1.000;alternate=pol20:void bitmap::constructor(short int, short int, short int)@0x000d0040
+0x0007a770	0xb0	buka21	0x000c26f0	??0icon@@QAE@K@Z	BASE/ICON	graph:3;base=0.465117;margin=0.243657;shape=0.295;size=0.962;calls=0.600;alternate=pol20:void bitmap::constructor(unsigned long int)@0x000d00a0
+0x0007a820	0x40	buka21	0x000c6090	?DrawToBuffer@bitmap@@QAEXFF@Z	BASE/BITMAP	graph:2;base=0.474636;margin=0.179452;shape=0.226;size=0.901;calls=1.000;alternate=pol20:void bitmap::DrawToBuffer(short int, short int)@0x000d0260
+0x0007a880	0x30	pol20	0x000d0310	void bitmap::GrabBitmap(class bitmap *, short int, short int)	BASE/BITMAP	graph:2;base=0.441786;margin=0.405057;shape=0.278;size=0.792;calls=1.000
+0x0007a8b0	0x80	buka21	0x000bed60	?WritePrefsToFile@@YIXXZ	BASE/Misc	graph:2;base=0.408443;margin=0.380075;shape=0.289;size=0.773;calls=0.571
+0x0007a930	0xc0	pol20	0x000d0430	void bitmap::CopyTo(class bitmap *, int, int, int, int, int, int)	BASE/BITMAP	graph:3;base=0.619683;margin=0.651187;shape=0.521;size=0.946;calls=1.000
+0x0007aa60	0x70	buka21	0x000bb7c0	??0iconWidget@@QAE@FFFFPADFCFFF@Z	BASE/ICONWDGT	graph:2;base=0.448686;margin=0.131076;shape=0.409;size=0.569;calls=0.667;alternate=pol20:void iconWidget::constructor(short int, short int, short int, short int, char *, short int, signed char, short int, short int, short int)@0x000d0b40
+0x0007aad0	0xd0	buka21	0x000bb890	?Read@iconWidget@@QAEXXZ	BASE/ICONWDGT	graph:3;base=0.397115;margin=0.158761;shape=0.184;size=0.756;calls=0.929;alternate=pol20:void iconWidget::Read(void)@0x000d0bc0
+0x0007aba0	0x1c0	pol20	0x000d0cd0	int iconWidget::Main(struct tag_message &);   // virtual [override (implements widget pure virtual)]	BASE/ICONWDGT	graph:2;base=0.456470;margin=0.151034;shape=0.410;size=0.682;calls=0.667
+0x0007ae60	0x70	buka21	0x000c2fe0	??0textWidget@@QAE@FFFFPAD0FFFF@Z	BASE/TEXTWDGT	graph:8;base=0.546676;margin=1.617074;shape=0.474;size=0.671;calls=1.000
+0x0007aed0	0xf0	buka21	0x000c3090	?Read@textWidget@@QAEXXZ	BASE/TEXTWDGT	graph:2;base=0.448756;margin=0.211293;shape=0.240;size=0.792;calls=1.000;alternate=pol20:void textWidget::Read(void)@0x000d1160
+0x0007b2c0	0xb0	buka21	0x000c3620	??0font@@QAE@K@Z	BASE/FONT	graph:3;base=0.550095;margin=0.577901;shape=0.439;size=0.769;calls=1.000;alternate=pol20:void font::constructor(unsigned long int)@0x000c6fd0
+0x0007b3b0	0x40	pol20	0x000c70e0	void font::~destructor(void)	BASE/FONT	graph:1;base=0.737061;margin=0.205061;shape=0.857;size=0.891;calls=1.000
+0x0007b4d0	0x2d0	pol20	0x000c7470	void font::DrawBoundedString(char *, int, int, int, int, int, int)	BASE/FONT	graph:2;base=0.409947;margin=0.423797;shape=0.271;size=0.915;calls=0.200
+0x0007b7a0	0x220	pol20	0x000c7790	int font::LineLength(char *, int)	BASE/FONT	graph:2;base=0.358513;margin=0.371072;shape=0.273;size=0.800;calls=0.000
+0x0007bac8	0x2e	buka21	0x000c2ed4	_BitTest	BASE/BITS	unique-normalized;alternate=pol20:_BitTest@0x000d1594
+0x0007baf6	0x20	buka21	0x000c2f02	_BitSet	BASE/BITS	unique-normalized;alternate=pol20:_BitSet@0x000d15c2
+0x0007bb40	0x2f0	pol20	0x000cdb50	int KeyboardMessageHandler(void *, unsigned int, unsigned int, long int)	BASE/INPUTMGR	graph:2;base=0.546335;margin=0.415164;shape=0.378;size=0.969;calls=1.000
+0x0007be30	0x280	buka21	0x000bc390	?MouseMessageHandler@@YIHPAXIIJ@Z	BASE/INPUTMGR	graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
+0x0007c200	0x20	pol20	0x000ce2e0	void inputManager::Flush(void)	BASE/INPUTMGR	graph:4;base=0.389638;margin=0.747157;shape=0.400;size=0.469;calls=1.000
+0x0007c220	0xe0	buka21	0x000bc8f0	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	BASE/INPUTMGR	graph:3;base=0.448830;margin=0.440547;shape=0.193;size=0.938;calls=1.000;alternate=pol20:struct tag_message inputManager::GetEvent(void)@0x000ce2f0
+0x0007c320	0x1d0	pol20	0x000ce480	void inputManager::AsciiConvert(struct tag_message &)	BASE/INPUTMGR	graph:2;base=0.568564;margin=0.663311;shape=0.420;size=0.989;calls=1.000
+0x0007c4f0	0x33c	pol20	0x000ce650	void inputManager::MakeScanCodeTable(void)	BASE/INPUTMGR	unique-instructions
+0x0007c82c	0x74	pol20	0x000ca570	void BlitBitmap(class bitmap *, int, int, int, int, class bitmap *, int, int)	BASE/bmap2	graph:2;base=0.410012;margin=0.369659;shape=0.159;size=0.699;calls=1.000
+0x0007ca44	0x260	pol20	0x000d0570	void IconToBitmap(class icon *, class bitmap *, int, int, int, int, int, int, int, int, int)	BASE/Icon2b	graph:3;base=0.285944;margin=0.405645;shape=0.094;size=0.482;calls=1.000
+0x0007cf00	0x70	buka21	0x000caea0	??0palette@@QAE@XZ	BASE/PALETTE	graph:2;base=0.446186;margin=0.391099;shape=0.342;size=0.991;calls=0.400
+0x0007cf70	0x60	buka21	0x000caf40	??0palette@@QAE@K@Z	BASE/PALETTE	graph:2;base=0.470157;margin=0.088848;shape=0.324;size=0.627;calls=1.000
+0x0007e170	0xb20	buka21	0x000d22a0	?Main@textEntryWidget@@UAEHAAUtag_message@@@Z	BASE/Textntry	graph:2;base=0.447158;margin=0.095850;shape=0.186;size=0.999;calls=0.865;alternate=pol20:int textEntryWidget::Main(struct tag_message &);   // virtual [override (implements widget pure virtual)]@0x000d8b90
+0x0007ee70	0x80	pol20	0x000dd390	void dimmerWidget::Read(void)	BASE/DIMMER	graph:2;base=0.440989;margin=0.130366;shape=0.353;size=0.742;calls=0.857
+0x0007ef70	0xe0	buka21	0x000d3710	?Read@button@@QAEXXZ	BASE/BUTTON	graph:3;base=0.430000;margin=0.002594;shape=0.212;size=0.809;calls=0.933;alternate=pol20:void button::Read(void)@0x000dd5b0
+0x0007f050	0x530	pol20	0x000dd6d0	int button::Main(struct tag_message &);   // virtual [override (implements widget pure virtual)]	BASE/BUTTON	graph:2;base=0.591151;margin=0.235581;shape=0.490;size=0.929;calls=0.909
+0x0007f580	0xf0	pol20	0x000ddc70	short int button::Select(struct tag_message &)	BASE/BUTTON	graph:2;base=0.407599;margin=0.408945;shape=0.385;size=0.625;calls=0.600
+0x0007f670	0x60	pol20	0x000dde00	void widget::constructor(short int, short int, short int, short int, short int, short int)	BASE/WIDGET	graph:2;base=0.701422;margin=0.655562;shape=0.750;size=0.938;calls=1.000
+0x0007f710	0x260	pol20	0x000ddee0	int widget::Main(struct tag_message &)	BASE/WIDGET	graph:2;base=0.485539;margin=0.429986;shape=0.364;size=0.804;calls=0.875
+0x0007f970	0xf0	buka21	0x000ce090	??0tileset@@QAE@K@Z	BASE/TILESET	graph:3;base=0.470849;margin=0.029096;shape=0.295;size=0.996;calls=0.636;alternate=pol20:void tileset::constructor(unsigned long int)@0x000dac60
+0x0007fa60	0x1c0	pol20	0x000dad60	void sample::constructor(char *, long int, long int, long int)	BASE/SAMPLE	graph:2;base=0.605076;margin=0.491385;shape=0.623;size=0.859;calls=0.700
+0x0007fc20	0x30	pol20	0x000d9750	void resource::constructor(short int, unsigned long int, short int, class resource *)	BASE/RESOURCE	graph:2;base=0.580179;margin=0.556429;shape=0.444;size=0.938;calls=1.000
+0x00080232	0x68	buka21	0x000d6d92	__local_unwind2	(libcmt)	unique-normalized
+0x0008029a	0x23	buka21	0x000d6dfa	__abnormal_termination	(libcmt)	unique-normalized
+0x000802bd	0x9	buka21	0x000d6e1d	__NLG_Notify1	(libcmt)	unique-normalized
+0x000802c6	0x1a	buka21	0x000d6e26	__NLG_Notify	(libcmt)	graph:2;base=0.703654;margin=0.597850;shape=0.750;size=0.923;calls=1.000
+0x000805f0	0x8	buka21	0x000d68d0	_strcpy	(libcmt)	graph:3;base=0.572500;margin=0.949891;shape=0.500;size=0.875;calls=1.000
+0x000805f8	0xe8	buka21	0x000d68e0	_strcat	(libcmt)	graph:2;base=0.802677;margin=0.683680;shape=0.932;size=0.966;calls=1.000
+0x000806f0	0x70	buka21	0x000a215f	?Update@bankBox@@QAEXH@Z	SOURCE/STRIP	graph:3;base=0.304779;margin=0.353705;shape=0.161;size=0.583;calls=0.400
+0x00080820	0x60	buka21	0x000d6f20	_memset	(libcmt)	graph:2;base=0.777500;margin=0.862206;shape=0.917;size=0.917;calls=1.000
+0x000808a0	0x150	buka21	0x000d70d0	_memcpy	(libcmt)	graph:8;base=0.188853;margin=1.467600;shape=0.087;size=0.506;calls=0.000
+0x000809f0	0x20	buka21	0x000d8c6e	_open	(libcmt)	graph:2;base=0.423586;margin=0.370429;shape=0.333;size=0.719;calls=1.000;alternate=pol20:void textWidget::constructor(short int, short int, short int, short int, char *, char *, short int, short int, short int, short int)@0x000d10f0
+0x00080a68	0x28	buka21	0x000d6ef0	__ftol	(libcmt)	graph:2;base=0.808441;margin=0.808876;shape=0.933;size=0.975;calls=1.000
+0x000818a0	0x80	buka21	0x000d69c0	_strlen	(libcmt)	graph:2;base=0.624062;margin=0.521779;shape=0.559;size=0.961;calls=1.000
+0x00081980	0x60	buka21	0x000d91d5	__fclose_lk	(libcmt)	graph:2;base=0.447163;margin=0.501000;shape=0.220;size=0.792;calls=1.000
+0x00081a50	0x40	buka21	0x000d9338	__fsopen	(libcmt)	graph:2;base=0.430305;margin=0.220163;shape=0.258;size=0.766;calls=1.000
+0x00081a90	0x20	buka21	0x000d9369	_fopen	(libcmt)	graph:3;base=0.379770;margin=0.431625;shape=0.300;size=0.594;calls=1.000
+0x00081d00	0x10	buka21	0x000d7f22	_srand	(libcmt)	graph:2;base=0.494821;margin=0.448338;shape=0.400;size=0.812;calls=1.000
+0x00081eb0	0x40	buka21	0x000d9221	_fread	(libcmt)	graph:3;base=0.420841;margin=0.197720;shape=0.269;size=0.734;calls=1.000
+0x00081ef0	0x150	buka21	0x000d9250	__fread_lk	(libcmt)	graph:2;base=0.363506;margin=0.474863;shape=0.206;size=0.690;calls=0.667
+0x00082040	0x40	buka21	0x000d96ab	_fseek	(libcmt)	graph:2;base=0.408036;margin=0.292982;shape=0.280;size=0.688;calls=1.000
+0x00082080	0xa0	buka21	0x000d96d7	__fseek_lk	(libcmt)	graph:2;base=0.525164;margin=0.560753;shape=0.377;size=0.881;calls=1.000
+0x00082120	0x30	buka21	0x000d9528	_ftell	(libcmt)	graph:2;base=0.406643;margin=0.197770;shape=0.238;size=0.708;calls=1.000
+0x00082150	0x1b0	buka21	0x000d954a	__ftell_lk	(libcmt)	graph:2;base=0.442241;margin=0.543143;shape=0.236;size=0.817;calls=1.000
+0x00082300	0x40	buka21	0x000d7f60	_strncmp	(libcmt)	graph:1;base=0.760697;margin=0.553373;shape=0.906;size=0.875;calls=1.000
+0x00082340	0x40	buka21	0x000d94da	_fputs	(libcmt)	graph:3;base=0.423121;margin=0.002280;shape=0.257;size=0.821;calls=0.500
+0x00082380	0x180	buka21	0x000dfedc	__fwrite_lk	(libcmt)	graph:2;base=0.384740;margin=0.514688;shape=0.222;size=0.693;calls=0.750
+0x00082500	0x80	buka21	0x000d937c	_lseek	(libcmt)	graph:2;base=0.427928;margin=0.400000;shape=0.228;size=0.789;calls=1.000
+0x00082580	0x90	buka21	0x000d93e1	__lseek_lk	(libcmt)	graph:2;base=0.403818;margin=0.392820;shape=0.176;size=0.799;calls=1.000
+0x00082610	0xb0	buka21	0x000d9454	__chdir	(libcmt)	graph:2;base=0.411828;margin=0.430180;shape=0.188;size=0.761;calls=1.000
+0x00082890	0x70	buka21	0x000d8b8e	_close	(libcmt)	graph:2;base=0.443118;margin=0.182785;shape=0.212;size=0.830;calls=1.000
+0x00082900	0x90	buka21	0x000d8beb	__close_lk	(libcmt)	graph:3;base=0.466836;margin=0.766035;shape=0.240;size=0.910;calls=0.875
+0x00082990	0x80	buka21	0x000d8950	_read	(libcmt)	graph:2;base=0.427928;margin=0.224043;shape=0.228;size=0.789;calls=1.000
+0x00082a10	0x230	buka21	0x000d89b5	__read_lk	(libcmt)	graph:3;base=0.508123;margin=0.836476;shape=0.345;size=0.845;calls=1.000
+0x00082c60	0x460	buka21	0x000d8c85	__sopen	(libcmt)	graph:2;base=0.376860;margin=0.473417;shape=0.275;size=0.642;calls=0.581
+0x000830c0	0x80	buka21	0x000d8760	_write	(libcmt)	graph:3;base=0.427928;margin=0.600000;shape=0.228;size=0.789;calls=1.000
+0x00083140	0x200	buka21	0x000d87c5	__write_lk	(libcmt)	graph:2;base=0.444274;margin=0.188965;shape=0.271;size=0.771;calls=0.900
+0x00083340	0xd0	buka21	0x000d8f60	__strnicmp	(libcmt)	graph:3;base=0.672531;margin=0.199741;shape=0.690;size=0.809;calls=1.000
+0x00083410	0xb0	buka21	0x000d8690	_strcmpi	(libcmt)	graph:3;base=0.658011;margin=0.238646;shape=0.641;size=0.846;calls=1.000
+0x000834c0	0x60	buka21	0x000e7ecb	__access	(libcmt)	graph:2;base=0.445233;margin=0.471290;shape=0.343;size=0.729;calls=0.833
+0x00084000	0x50	buka21	0x000da300	__CallSettingFrame@12	(libcmt)	graph:1;base=0.686940;margin=0.491317;shape=0.686;size=0.950;calls=1.000
+0x000840d0	0x70	buka21	0x000da3d1	__getptd	(libcmt)	graph:2;base=0.526275;margin=0.491596;shape=0.326;size=0.920;calls=1.000
+0x00084140	0x150	buka21	0x000da5b3	__flsbuf	(libcmt)	graph:2;base=0.489128;margin=0.555992;shape=0.309;size=0.833;calls=1.000
+0x00085570	0x70	buka21	0x000db409	__lock	(libcmt)	graph:2;base=0.451415;margin=0.217359;shape=0.220;size=0.866;calls=1.000
+0x000855e0	0x20	buka21	0x000db46a	__unlock	(libcmt)	graph:2;base=0.517537;margin=0.553493;shape=0.556;size=0.656;calls=1.000
+0x00085600	0x40	buka21	0x000df998	__lock_file	(libcmt)	graph:3;base=0.578759;margin=0.240000;shape=0.619;size=0.734;calls=1.000
+0x00085640	0x30	buka21	0x000df9c7	__lock_file2	(libcmt)	graph:2;base=0.518650;margin=0.240000;shape=0.500;size=0.729;calls=1.000
+0x00085670	0x40	buka21	0x000df9ea	__unlock_file	(libcmt)	graph:3;base=0.578759;margin=0.240000;shape=0.619;size=0.734;calls=1.000
+0x000856b0	0x30	buka21	0x000dfa19	__unlock_file2	(libcmt)	graph:2;base=0.518650;margin=0.240000;shape=0.500;size=0.729;calls=1.000
+0x00085720	0x40	buka21	0x000d981a	__fflush_lk	(libcmt)	graph:2;base=0.398661;margin=0.487768;shape=0.167;size=0.719;calls=1.000
+0x00085760	0x80	buka21	0x000d9848	__flush	(libcmt)	graph:2;base=0.461340;margin=0.502135;shape=0.455;size=0.719;calls=0.500
+0x000857e0	0xc0	buka21	0x000d98ad	_flsall	(libcmt)	graph:2;base=0.480745;margin=0.547389;shape=0.276;size=0.854;calls=1.000
+0x00085980	0x210	buka21	0x000dfb43	__openfile	(libcmt)	graph:2;base=0.363373;margin=0.464253;shape=0.142;size=0.697;calls=1.000
+0x00085e90	0x3e	buka21	0x000de610	__cintrindisp2	(libcmt)	unique-normalized
+0x00085ece	0x3d	buka21	0x000de64e	__cintrindisp1	(libcmt)	unique-normalized
+0x00085f0b	0x48	buka21	0x000de68b	__ctrandisp2	(libcmt)	unique-normalized
+0x00085f5a	0x131	buka21	0x000de6da	$disp_body@0xde6da	(libcmt)	unique-instructions
+0x0008608b	0x33	buka21	0x000de80b	__ctrandisp1	(libcmt)	unique-normalized
+0x000860be	0x42	buka21	0x000de83e	__fload	(libcmt)	graph:2;base=0.749226;margin=0.721102;shape=0.870;size=0.909;calls=1.000
+0x00086100	0x100	buka21	0x000dfa67	__filbuf	(libcmt)	graph:2;base=0.503821;margin=0.524168;shape=0.336;size=0.859;calls=1.000
+0x00086200	0x80	buka21	0x000d7e9d	__dosmaperr	(libcmt)	graph:2;base=0.595973;margin=0.649306;shape=0.545;size=0.898;calls=1.000
+0x00086280	0x10	buka21	0x000d7f10	__errno	(libcmt)	graph:6;base=0.349750;margin=1.144053;shape=0.250;size=0.562;calls=1.000
+0x00086290	0x10	buka21	0x000d7f19	___doserrno	(libcmt)	graph:4;base=0.349750;margin=0.000000;shape=0.250;size=0.562;calls=1.000
+0x00086480	0x150	buka21	0x000df391	__alloc_osfhnd	(libcmt)	graph:2;base=0.443836;margin=0.460864;shape=0.172;size=0.866;calls=1.000
+0x000865d0	0xb0	buka21	0x000df4b4	__set_osfhnd	(libcmt)	graph:3;base=0.312959;margin=0.189521;shape=0.101;size=0.705;calls=0.600
+0x00086680	0xa0	buka21	0x000df530	__free_osfhnd	(libcmt)	graph:3;base=0.409202;margin=0.685168;shape=0.176;size=0.794;calls=1.000
+0x00086720	0x50	buka21	0x000df5af	__get_osfhandle	(libcmt)	graph:2;base=0.414763;margin=0.477757;shape=0.182;size=0.825;calls=1.000
+0x00086770	0x70	buka21	0x000df698	__lock_fhandle	(libcmt)	graph:2;base=0.445179;margin=0.412576;shape=0.250;size=0.848;calls=1.000
+0x000867e0	0x30	buka21	0x000df6f7	__unlock_fhandle	(libcmt)	graph:2;base=0.384643;margin=0.426635;shape=0.222;size=0.708;calls=1.000
+0x00086f80	0x230	buka21	0x000e3c9f	__setmbcp	(libcmt)	graph:2;base=0.350466;margin=0.422232;shape=0.148;size=0.766;calls=0.615
+0x00087290	0xd1	buka21	0x000de0a4	__except_handler3	(libcmt)	graph:1;base=0.734593;margin=0.563514;shape=0.848;size=0.904;calls=0.857
+0x00087361	0x1f	buka21	0x000de161	__seh_longjmp_unwind@4	(libcmt)	graph:1;base=0.682274;margin=0.328274;shape=0.750;size=0.871;calls=1.000
+0x000875b0	0x140	buka21	0x000df772	__chsize_lk	(libcmt)	graph:2;base=0.497318;margin=0.498848;shape=0.304;size=0.916;calls=0.938
+0x000876f0	0x50	buka21	0x000df257	_tolower	(libcmt)	graph:2;base=0.355639;margin=0.445311;shape=0.167;size=0.721;calls=0.500
+0x00087740	0x190	buka21	0x000df2c6	__tolower_lk	(libcmt)	graph:3;base=0.250323;margin=0.451664;shape=0.164;size=0.507;calls=0.250
+0x000887a0	0xb0	buka21	0x000dffe6	__commit	(libcmt)	graph:2;base=0.417605;margin=0.485285;shape=0.171;size=0.835;calls=1.000
+0x00088850	0x67	buka21	0x000dbde0	__trandisp1	(libcmt)	unique-normalized
+0x00089110	0x70	buka21	0x000e4185	__setmode_lk	(libcmt)	graph:2;base=0.434611;margin=0.472756;shape=0.185;size=0.866;calls=1.000
+0x000892c0	0xa0	buka21	0x000dfcb3	__getstream	(libcmt)	graph:2;base=0.417905;margin=0.455405;shape=0.231;size=0.800;calls=0.714
+0x00089360	0x1e0	buka21	0x000e444b	_raise	(libcmt)	graph:3;base=0.436060;margin=0.063507;shape=0.211;size=0.804;calls=1.000
+0x0008b050	0x20	buka21	0x000e7eba	_tell	(libcmt)	graph:2;base=0.454911;margin=0.400536;shape=0.500;size=0.531;calls=1.000

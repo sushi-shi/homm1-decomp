@@ -62,7 +62,8 @@ def _sha12(text: str) -> str:
 
 def unit_sources() -> dict[str, str]:
     from homm1 import manifest
-    return {u["unit"]: u.get("source", "") for u in manifest.units()}
+    return {u["unit"].rsplit("/", 1)[-1]: u.get("source", "")
+            for u in manifest.units()}
 
 
 def unit_mangled() -> dict[str, set]:
@@ -71,7 +72,7 @@ def unit_mangled() -> dict[str, set]:
     out: dict[str, set] = {}
     for b in resolve().functions:
         if b.name and b.unit:
-            out.setdefault(b.unit, set()).add(b.name)
+            out.setdefault(b.unit.rsplit("/", 1)[-1], set()).add(b.name)
     return out
 
 

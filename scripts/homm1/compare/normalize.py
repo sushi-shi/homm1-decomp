@@ -64,7 +64,10 @@ def units_with_a_target(target_dir: Path) -> set[str]:
         return set()
     units: set[str] = set()
     for suffix in TARGET_SUFFIXES:
-        units |= {p.name[:-len(suffix)] for p in target_dir.glob(f"*{suffix}")}
+        units |= {
+            p.relative_to(target_dir).as_posix()[:-len(suffix)]
+            for p in target_dir.rglob(f"*{suffix}")
+        }
     return units
 
 
@@ -174,7 +177,7 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
         target_src = target_object(target_dir, unit)
         target_sidecar = target_out / f"{unit}.symbols.tsv"
         if target_src is not None:
-            target_obj = target_out / target_src.name
+            target_obj = target_out / target_src.relative_to(target_dir)
             state = _normalize_one(target_src, target_obj, target_sidecar, force=force)
             wrote += state == "wrote"
             skipped += state == "skip"

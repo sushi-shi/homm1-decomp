@@ -132,16 +132,29 @@ def base_flags(msvc_inc: Path, msvc_low: Path) -> list[str]:
 
 def generate(quiet: bool = False) -> bool:
     """(Re)write the compdb from config/units.toml. Returns True if changed."""
-    from homm1.manifest import units
+    from homm1.manifest import flag_profiles, units
     msvc_inc, provenance = resolve_include_dirs()
     msvc_low = build_lowercase_mirror(msvc_inc, MIRROR_DIR / "msvc")
     shared = base_flags(msvc_inc, msvc_low)
+
+    # Most cl profiles differ only in optimisation/code-generation switches,
+    # which the source probes deliberately do not inherit.  ABI switches are
+    # different: /Gr changes the mangled name of every unqualified free
+    # function.  Omitting it made extraction claim a cdecl spelling while the
+    # VC4 object contained the fastcall body.  Keep the small semantic subset
+    # that affects declarations and symbol identity.
+    profiles = flag_profiles()
+    abi_prefixes = ("/Gd", "/Gr", "/Gz", "/Zp", "/D", "/U")
+
+    def abi_flags(unit: dict) -> list[str]:
+        return [flag for flag in profiles.get(unit.get("flags", ""), [])
+                if flag.startswith(abi_prefixes)]
 
     entries = [{
         "directory": str(REPO),
         "file": u["source"],
         # clang-cl driver form; clangd/clang parse it internally.
-        "arguments": ["clang-cl", "/c", u["source"], *shared],
+        "arguments": ["clang-cl", "/c", u["source"], *shared, *abi_flags(u)],
     } for u in units()]
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)

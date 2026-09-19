@@ -35,9 +35,21 @@ def unit_claims(unit: str) -> list[Claim]:
     return out
 
 
+def units() -> list[str]:
+    """Manifest unit names represented by the fragment tree.
+
+    Unit names intentionally retain donor directories (for example
+    ``SOURCE/HISCORE``), so a recursive walk must recover the path relative to
+    ``FRAGMENTS`` rather than just ``Path.stem``.
+    """
+    if not FRAGMENTS.is_dir():
+        return []
+    return [p.relative_to(FRAGMENTS).with_suffix("").as_posix()
+            for p in sorted(FRAGMENTS.rglob("*.tsv"))]
+
+
 def all_claims() -> list[Claim]:
     out: list[Claim] = []
-    if FRAGMENTS.is_dir():
-        for path in sorted(FRAGMENTS.glob("*.tsv")):
-            out.extend(unit_claims(path.stem))
+    for unit in units():
+        out.extend(unit_claims(unit))
     return out

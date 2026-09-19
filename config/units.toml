@@ -6,13 +6,162 @@ compiler_status = "VC4.0 /Od compatible with AppAbout and PollSound fragments; h
 
 [flags]
 cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
+# HoMM2 supplies declarations and ownership. HoMM1's exact PollSound family
+# proves the free-function convention is the compiler default (/Gd), unlike
+# the donor's /Gr build; reconstruction replaces these bodies in place.
+cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
 
 [[unit]]
-unit = "app_about"
-source = "src/SOURCE/AppAbout.cpp"
-flags = "cpp_od"
+unit = "BASE/BITS"
+source = "src/carcass/BASE/BITS.cpp"
+flags = "cpp_carcass"
 
 [[unit]]
-unit = "kb_poll_sound"
-source = "src/SOURCE/KB.cpp"
-flags = "cpp_od"
+unit = "BASE/INPUTMGR"
+source = "src/carcass/BASE/INPUTMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/MOUSEMGR"
+source = "src/carcass/BASE/MOUSEMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Misc"
+source = "src/carcass/BASE/Misc.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/RESMGR"
+source = "src/carcass/BASE/RESMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/WINDOW"
+source = "src/carcass/BASE/WINDOW.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/WINMGR"
+source = "src/carcass/BASE/WINMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/soundmgr"
+source = "src/carcass/BASE/soundmgr.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/ADVMGR"
+source = "src/carcass/SOURCE/ADVMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/CMBTMGR"
+source = "src/carcass/SOURCE/CMBTMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/COMMAND"
+source = "src/carcass/SOURCE/COMMAND.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/EVENTS"
+source = "src/carcass/SOURCE/EVENTS.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/GAME"
+source = "src/carcass/SOURCE/GAME.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/HERO"
+source = "src/carcass/SOURCE/HERO.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/HISCORE"
+source = "src/carcass/SOURCE/HISCORE.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/KB"
+source = "src/carcass/SOURCE/KB.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/Modem"
+source = "src/carcass/SOURCE/Modem.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/PATH"
+source = "src/carcass/SOURCE/PATH.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/PHILAI"
+source = "src/carcass/SOURCE/PHILAI.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/RECRUIT"
+source = "src/carcass/SOURCE/RECRUIT.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/REMOTE"
+source = "src/carcass/SOURCE/REMOTE.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/REQUEST"
+source = "src/carcass/SOURCE/REQUEST.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/SETUP"
+source = "src/carcass/SOURCE/SETUP.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/SPELLS"
+source = "src/carcass/SOURCE/SPELLS.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/STRIP"
+source = "src/carcass/SOURCE/STRIP.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/SWAPMGR"
+source = "src/carcass/SOURCE/SWAPMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/TOWN"
+source = "src/carcass/SOURCE/TOWN.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/TOWNMGR"
+source = "src/carcass/SOURCE/TOWNMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/kbwin"
+source = "src/carcass/SOURCE/kbwin.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/netwin"
+source = "src/carcass/SOURCE/netwin.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/wingraph"
+source = "src/carcass/SOURCE/wingraph.cpp"
+flags = "cpp_carcass"

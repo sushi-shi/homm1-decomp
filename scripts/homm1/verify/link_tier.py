@@ -185,7 +185,7 @@ def image_diff_findings(limit: int = 25) -> list[str]:
     # a candidate older than the newest base obj was linked from OTHER
     # bytes: a divergence would be stale-image noise, not a link fact
     newest = max((p.stat().st_mtime
-                  for p in (BUILD / "objdiff/base").glob("*.obj")),
+                  for p in (BUILD / "objdiff/base").rglob("*.obj")),
                  default=0.0)
     if newest > CAND.stat().st_mtime:
         return ["image-diff: candidate EXE is STALE (a base obj is newer) - "

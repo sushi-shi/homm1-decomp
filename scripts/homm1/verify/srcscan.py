@@ -25,9 +25,18 @@ _SKIP = {RVA_H.resolve(), (INCLUDE / "strstrea.h").resolve()}
 _CLASS_HEAD_RE = re.compile(r"^(class|struct)\s+([A-Za-z_]\w*)\b")
 
 #: The one label-claim regex family (single-line canonical spellings).
-RVA_RE = re.compile(r"\bRVA\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*\)")
+RVA_RE = re.compile(r"\b(?:VA|RVA)\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*\)")
 RVA_COMPGEN_RE = re.compile(r"\bRVA_COMPGEN\s*\(\s*(0x[0-9a-fA-F]+)")
 DATA_RE = re.compile(r"\bDATA\s*\(\s*(0x[0-9a-fA-F]+)\s*\)")
+
+
+def claim_rva(match) -> int:
+    """Normalize a source ``VA`` (or legacy ``RVA``) match to an RVA."""
+    address = int(match.group(1), 16)
+    if match.group(0).lstrip().startswith("VA"):
+        from homm1.core.pe import image
+        address -= image().image_base
+    return address
 
 
 def blank_comments(text: str) -> str:

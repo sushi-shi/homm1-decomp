@@ -30,7 +30,7 @@ IFNDEF_RE = re.compile(r"^\s*#\s*ifndef\s+(\w+)\s*$")
 DEFINE_RE = re.compile(r"^\s*#\s*define\s+(\w+)\s*$")
 PP_RE = re.compile(r"^\s*#\s*(\w+)")
 
-RVA_H = "rva.h"
+RVA_H = "match.h"
 
 PRELUDE_RANK = {"Mfc.h": 0, "MfcNoInline.h": 1, "MfcWin.h": 2, "Win32.h": 3}
 
