@@ -60,7 +60,7 @@ public:
     resource *Query(short);
     void RemoveResource(resource *);
     short LoadAggregateHeader(char *);
-    void PointToFile(unsigned long);
+    void PointToFile(short);
     unsigned long GetFileSize(unsigned long);
     void SavePosition();
     void RestorePosition();

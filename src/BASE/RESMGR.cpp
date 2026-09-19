@@ -165,11 +165,27 @@ short resourceManager::LoadAggregateHeader(char *aggregateName)
     return 0;
 }
 
-// donor PoL RVA 0x000c8c00; preferred Buka symbol ?PointToFile@resourceManager@@QAEXK@Z
-// donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.595306;margin=0.474349;shape=0.195;size=0.969;calls=0.750;strings=ResMgr::PointToFile failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s;alternate=pol20:void resourceManager::PointToFile(unsigned long int)@0x000c8c00
-VA(0x00476280, 0x100)
-void resourceManager::PointToFile(unsigned long int) {}
+// donor Buka uses the same lookup and failure path across multiple aggregates;
+// HoMM1 has one packed directory and a signed 16-bit resource ID.
+VA(0x00476280, 0xf2)
+void resourceManager::PointToFile(short fileId)
+{
+    if (m_aggregateDir == 0)
+        ShutDown("File Error: .AGG File not valid");
+    short entry = 0;
+    while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
+        entry++;
+    if (m_aggregateDir[entry].id != fileId) {
+        sprintf(
+            gText,
+            "ResMgr::PointToFile failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s",
+            fileId,
+            m_lastFileId,
+            m_lastFileName);
+        ShutDown(gText);
+    }
+    lseek(m_aggregateFd, m_aggregateDir[entry].offset, 0);
+}
 
 // donor PoL RVA 0x000c8e20; preferred Buka symbol ?SavePosition@resourceManager@@QAEXXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order

@@ -3,6 +3,8 @@ rva	size	symbol	provenance
 0x0009FE78	4	?gbForegroundApp@@3HA	evidence/poll-sound.md; accessed storage only
 0x000A0D00	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	evidence/resource-manager-layout.md; code-required resourceManager literal identity
 0x000A0D10	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	evidence/resource-manager-layout.md; code-required open-error literal identity
+0x000A0D24	32	$anon_str_ca2427e0f3917c25fd1e64b0d475896ac3002453e2d73c433c391a34fbc830ff_0	evidence/resource-manager-layout.md; code-required invalid-aggregate literal identity
+0x000A0D44	76	$anon_str_eb27b9b48e8c2732b85397bc8636fc7eeb79802771cac487ea5e2a5fc9705844_0	evidence/resource-manager-layout.md; code-required missing-resource literal identity
 0x000A0DEC	4	?gReadByteAssertLine@@3FA	evidence/resource-manager-layout.md; ReadByte assertion line record
 0x000A0DF0	26	?gReadByteAssertFile@@3PADA	evidence/resource-manager-layout.md; ReadByte assertion source path
 0x000A0E0C	4	?gReadWordAssertLine@@3FA	evidence/resource-manager-layout.md; ReadWord assertion line record

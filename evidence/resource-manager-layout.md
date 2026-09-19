@@ -78,3 +78,15 @@ The called CRT bodies are `_sprintf` at VA `0x004806F0`, `_free` at
 `0x00482990`, and `_open` at `0x00482C40`. The first three are exact VC4
 library members in the executable census; the remaining identities also agree
 with the donor source and their argument/result use in this body.
+
+`PointToFile` at VA `0x00476280` uses a signed 16-bit resource ID and walks
+the one packed directory until the count is exhausted or the ID matches. Its
+entry stride is 14 bytes, independently confirming the `aggEntry` layout. A
+null directory reports `"File Error: .AGG File not valid"`; a missing ID
+formats the longer diagnostic beginning `"ResMgr::PointToFile failure!"`.
+Both string starts, at VAs `0x004A0D24` and `0x004A0D44`, are direct relocated
+operands in the retail body. The final `_lseek` uses the matched entry's
+32-bit offset at `entry + 2` and the single descriptor at object offset
+`0x34`. The source function ends after `0xF2` bytes at its `ret 4`; the
+following 14 `INT3` bytes are linker alignment before `GetFileSize` and are
+excluded from the function claim.
