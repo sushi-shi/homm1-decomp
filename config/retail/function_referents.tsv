@@ -8,10 +8,15 @@ rva	name	provenance
 0x000738C0	?PostprocessBitmap@@YAXPACHH@Z	evidence/resource-manager-layout.md; semantic provisional name from three bitmap-load callers and pixel/dimension arguments
 0x00078940	?PollSound@soundManager@@QAEXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x0007FA60	??0sample@@QAE@PADJJJ@Z	evidence/resource-manager-layout.md; four-argument sample constructor and exact allocation size
+0x000805F0	_strcpy	evidence/log-string.md; donor identity and seven-byte VC4 strcpy entry stub
+0x000805F8	_strcat	evidence/log-string.md; donor identity and LogStr append call
 0x000806E0	??2@YAPAXI@Z	evidence/resource-manager-layout.md; VC4 operator new body and GetSample allocation call
 0x000806F0	_sprintf	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
 0x00080880	_free	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
 0x000809F0	_malloc	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
+0x00081940	_fclose	evidence/log-string.md; donor identity and LogStr stream-close call
+0x000819E0	_fputs	evidence/log-string.md; unique VC4 CRT prefix and LogStr stream-write call
+0x00081A90	_fopen	evidence/log-string.md; donor identity and LogStr two-argument stream-open call
 0x00082500	_lseek	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body
 0x00082890	_close	evidence/resource-manager-layout.md; donor identity and LoadAggregateHeader file-descriptor call
 0x00082990	_read	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body
