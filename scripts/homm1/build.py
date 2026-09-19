@@ -11,7 +11,7 @@ import shutil
 import subprocess
 import sys
 
-from homm1 import toolchain, verify
+from homm1 import toolchain, verify, analysis, model
 from homm1.core import manifest
 from homm1.core.coff import CoffObject
 from homm1.core.compiler import compile_source
@@ -45,18 +45,7 @@ def image():
 
 
 def validate_claims(retail):
-    admitted = manifest.check_retail(retail)
-    _, entries = units()
-    claims = []
-    for unit in entries:
-        claim = source_claim(REPO / unit['source'], retail)
-        if admitted.get(claim.rva) != '':
-            raise ValueError('source claim is not an admitted function body')
-        if any(max(other.rva, claim.rva) < min(other.rva + other.size, claim.rva + claim.size)
-               for other in claims):
-            raise ValueError('overlapping reconstruction claims')
-        claims.append(claim)
-        retail_relocations(retail, claim)
+    claims, _ = model.resolve(retail)
     with (REPO / 'config/match_baseline.tsv').open() as handle:
         baseline = csv.DictReader((line for line in handle if not line.startswith('#')), delimiter='\t')
         expected = [(int(row['rva'], 0), int(row['size'], 0), row['symbol']) for row in baseline]
@@ -108,6 +97,7 @@ def run(_args):
     config, entries = units()
     compiler = config['build']['compiler']
     toolchain.verify(compiler)
+    analysis.check(config, entries)
     configure()
     if not shutil.which('ninja') or not shutil.which('objdiff-cli'):
         raise ValueError('Ninja and objdiff-cli are required; enter nix develop .#build')

@@ -100,7 +100,11 @@ def check(root=REPO):
 def command(args):
     result = board()
     if args.action == 'check' and args.tier != 'fast':
-        # Later tiers must never silently look green before their engines run.
-        raise ValueError(f'{args.tier} verification is not provisioned yet')
+        from homm1 import analysis, build
+        config, entries = build.units()
+        build.validate_claims(build.image())
+        result['semantic_checks'] = analysis.check(config, entries)
+        if args.tier == 'full':
+            raise ValueError('full binary verification is not provisioned yet')
     print(json.dumps(result, indent=2))
     return bool(result['findings'])

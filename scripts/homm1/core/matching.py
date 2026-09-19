@@ -16,29 +16,18 @@ class Claim:
     rva: int
     size: int
     symbol: str
+    unit: str = ''
+    source: str = ''
+    src_hash: str = ''
+    parent: int | None = None
 
 
 def source_claim(source, image):
-    text = source.read_text()
-    # Strip comments before reading the deliberately tiny bootstrap annotation grammar.
-    text = re.sub(r'/\*.*?\*/|//[^\n]*', '', text, flags=re.S)
-    annotations = re.findall(r'\bRVA\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+)\s*\)', text)
-    if len(annotations) != 1:
-        raise ValueError(f'{source}: bootstrap requires exactly one RVA annotation')
-    rva, size = (int(value, 16) for value in annotations[0])
-    section = image.section_of(rva)
-    if size <= 0 or section is None or not section.executable or rva + size > section.rva + section.size:
-        raise ValueError('claim is outside file-backed executable code')
-    exports = [row for row in image.exports() if row['rva'] == rva and not row['forwarder']]
-    if len(exports) != 1 or len(exports[0]['names']) != 1:
-        raise ValueError('bootstrap claims must identify one named retail export')
-    name = exports[0]['names'][0]
-    # Bind by source name and explicit stdcall ABI; adding other signatures needs a real claim extractor.
-    declaration = re.findall(r'extern\s+"C"\s+BOOL\s+__stdcall\s+' + re.escape(name)
-                             + r'\(HWND\s+\w+,\s*UINT\s+\w+,\s*WPARAM\s+\w+,\s*LPARAM\s+\w+\)', text)
-    if len(declaration) != 1:
-        raise ValueError('bootstrap supports the evidenced four-argument Win32 dialog ABI only')
-    return Claim(rva, size, f'_{name}@16')
+    from homm1.labels import definitions
+    claims = definitions(source)
+    if len(claims) != 1:
+        raise ValueError('single-function compatibility API requires one claim')
+    return claims[0]
 
 
 def retail_relocations(image, claim, retail=None):
