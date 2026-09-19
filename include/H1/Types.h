@@ -7,7 +7,6 @@
 // remain provisional until their member accesses and allocation sizes are
 // matched in HoMM1.
 
-struct tag_message { int type, field4, field8, fieldC, field10, field14; char *text; };
 struct SMapChange { char _pad[64]; };
 struct SPlayerExit { signed char player[7]; };
 

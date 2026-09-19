@@ -42,12 +42,18 @@ rva	size	symbol	provenance
 0x000A1810	4	_gIconDataBase	evidence/handwritten-assembly-survey.md; code-required icon-data base identity
 0x000A1814	4	_gIconWidth	evidence/handwritten-assembly-survey.md; code-required icon-frame width identity
 0x000A1818	4	_gIconHeight	evidence/handwritten-assembly-survey.md; code-required icon-frame height identity
+0x000A1A40	2	?gInputManagerAssertLine@@3FA	evidence/input-message-handler.md; INPUTMGR assertion line base
+0x000A1A44	24	?gLeftReleaseCaptureFailure@@3PADA	evidence/input-message-handler.md; first code-required release-failure literal slot
+0x000A1A5C	24	?gRightReleaseCaptureFailure@@3PADA	evidence/input-message-handler.md; second code-required release-failure literal slot
+0x000A1A74	28	?gInputManagerAssertFile@@3PADA	evidence/input-message-handler.md; code-required assertion source path
 0x000A1AA0	256	_gDimPalette	evidence/handwritten-assembly-survey.md; code-required palette identity and extent
 0x000A1BA0	4	_gBitmapSourceSkip	evidence/handwritten-assembly-survey.md; code-required bitmap source row-skip scratch
 0x000A1BA4	4	_gBitmapRowSkip	evidence/handwritten-assembly-survey.md; code-required bitmap row-skip scratch
 0x000A1BC8	4	_gTileScratch	evidence/handwritten-assembly-survey.md; code-required identity only
 0x000A1BCC	2	_gTileRows	evidence/handwritten-assembly-survey.md; code-required identity only
+0x000C517C	4	?gpInputManager@@3PAVinputManager@@A	evidence/input-message-handler.md; global input manager used by the handler
 0x000C5190	4	?gpResourceManager@@3PAVresourceManager@@A	evidence/mouse-coordinates.md; resource manager used by SetPointer
+0x000C6714	4	?gpMouseManager@@3PAVmouseManager@@A	evidence/input-message-handler.md; cursor manager used by mouse-move handling
 0x000C6750	4	?gText@@3PADA	evidence/resource-manager-layout.md; code-required shared text-buffer identity
 0x000C6A94	4	?gNextSoundPollTick@@3JA	evidence/poll-sound.md; accessed storage only
 0x000C79DC	4	?DEFAULT_AGGREGATE_NAME@@3PADA	evidence/resource-manager-layout.md; code-required aggregate path pointer identity

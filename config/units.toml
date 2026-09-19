@@ -56,7 +56,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
-flags = "cpp_carcass"
+flags = "cpp_o2"
 
 [[unit]]
 unit = "BASE/LZHUF"

@@ -2,5 +2,6 @@
 #define HOMM1_BASE_MISC_H
 
 void ProcessAssert(int, char *, int);
+void LogStr(char *);
 
 #endif

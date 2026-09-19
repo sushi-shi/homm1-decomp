@@ -16,6 +16,7 @@
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
 #include <BASE/listBoxWidget.h>
+#include <BASE/message.h>
 #include <BASE/MIDIWrap.h>
 #include <BASE/mouseManager.h>
 #include <BASE/palette.h>
