@@ -24,6 +24,11 @@ source = "src/BASE/BMAP2.asm"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "BASE/BITMAP"
+source = "src/BASE/BITMAP.cpp"
+flags = "cpp_o2"
+
+[[unit]]
 unit = "BASE/Icon2b"
 source = "src/BASE/Icon2b.asm"
 flags = "cpp_carcass"
@@ -84,9 +89,19 @@ source = "src/BASE/RESMGR.cpp"
 flags = "cpp_carcass_oi"
 
 [[unit]]
+unit = "BASE/RESOURCE"
+source = "src/BASE/RESOURCE.cpp"
+flags = "cpp_o2"
+
+[[unit]]
 unit = "BASE/WINDOW"
 source = "src/BASE/WINDOW.cpp"
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/WIDGET"
+source = "src/BASE/WIDGET.cpp"
+flags = "cpp_o2"
 
 [[unit]]
 unit = "BASE/WINMGR"

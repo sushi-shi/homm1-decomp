@@ -8,7 +8,7 @@
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.484375;margin=1.382188;shape=0.250;size=0.844;calls=1.000;alternate=pol20:int heroWindowManager::BroadcastMessage(int, int, int, int)@0x000cac40
 VA(0x00474130, 0x40)
-int heroWindowManager::BroadcastMessage(int, int, int, int) { return 0; }
+short heroWindowManager::BroadcastMessage(short, short, short, short) { return 0; }
 
 // donor PoL RVA 0x000cad40; preferred Buka symbol ?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order

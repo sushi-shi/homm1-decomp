@@ -9,24 +9,40 @@
 // forward declarations:
 class heroWindow;
 class palette;
+class bitmap;
 struct tag_message;
 
-class heroWindowManager {
+#pragma pack(push, 1)
+class heroWindowManager : public baseManager {
 public:
+    heroWindow *m_windowListHead;
+    heroWindow *m_windowListTail;
+    heroWindow *m_focusWindow;
+    heroWindow *m_activeWindow;
+    char m_unknown40;
+    char m_unknown41;
+    bitmap *m_screen;
+    bitmap *m_fizzleSource;
+    bitmap *m_fizzleWork;
+    short m_screenshotIndex;
+    short m_updateFlags;
+    int m_dialogResult;
+    signed char m_lastHoverId;
+
     // --- constructors ---
     heroWindowManager(void);
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
-    int ConvertToHover(struct tag_message &);
-    int BroadcastMessage(int, int, int, int);
+    short ConvertToHover(struct tag_message &);
+    short BroadcastMessage(short, short, short, short);
     void AddWindow(class heroWindow *, int, int);
     void RemoveWindow(class heroWindow *);
     int DoDialog(class heroWindow *, int (*)(struct tag_message &), int);
     void UpdateScreen(void);
-    void UpdateScreenRegion(int, int, int, int);
+    void UpdateScreenRegion(short, short, short, short);
     void RedrawScreen(void);
     void FadeScreen(int, int, class palette *);
     void ScreenShot(void);
@@ -34,4 +50,5 @@ public:
     void FizzleForward(int, int, int, int, int, signed char *, signed char *);
     void ReleaseFizzleSource(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_BASE_HEROWINDOWMANAGER_H

@@ -9,7 +9,7 @@
 // forward declarations:
 struct tag_message;
 
-class border {
+class border : public widget {
 public:
     // --- constructors ---
     border(void);

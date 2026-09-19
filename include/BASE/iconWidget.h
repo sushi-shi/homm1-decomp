@@ -9,7 +9,7 @@
 // forward declarations:
 struct tag_message;
 
-class iconWidget {
+class iconWidget : public widget {
 public:
     // --- constructors ---
     iconWidget(void);
