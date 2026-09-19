@@ -35,6 +35,8 @@ homm1 sema xref 0x4F640
 homm1 sema callers 0x4F640
 homm1 sema blocks 0x4F640 --diff --lite
 homm1 sema branches 0x4F640 --diff
+homm1 reference PollSound
+homm1 sema reference KBTickCount
 homm1 verify check --tier full
 homm1 audit casts --check --all
 homm1 audit readability --check
@@ -63,6 +65,14 @@ candidate and report without extracting the retail target again. Compiler
 objects are validated, timestamp-stabilized and installed only when changed.
 The Wine runner is copied from Buka, including process-group timeout cleanup.
 Whole-image linking and data matching remain deferred.
+
+`reference [RVA|VA|name]` reads the structured correspondence provider without
+retail files, a compiler installation, or a sibling checkout. It reports donor
+revision/blob/source location, confidence and differences; Buka 2.1 precedes
+supplementary 2.0 evidence. `reference --checkout /path/to/homm2-buka` optionally
+verifies every selected record against its pinned Git objects, ignoring local
+donor edits. `sema reference` returns the same information as JSON. Lookup uses
+exact located starts and never supplies HoMM1 function extents or claims.
 
 `probe --contracts` exercises the native compiler's calling conventions,
 constructor/destructor names, member/static/overloaded functions, virtual

@@ -43,6 +43,10 @@ def render(instruction, origin):
 
 
 def command(args):
+    if args.action == 'reference':
+        from argparse import Namespace
+        from homm1.correspondence import command as reference
+        return reference(Namespace(query=args.address, checkout=None, json=True))
     image = build.image()
     claims, refs = model.resolve(image)
     if args.action == 'find-string':

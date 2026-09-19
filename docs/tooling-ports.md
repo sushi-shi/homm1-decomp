@@ -53,7 +53,7 @@ count, not a claim of semantic coverage.
 | Code prerequisites | No complete ABI/layout/allocation/virtual/library closure | Port Gruntz's existing auditors for admitted code. Data initializer scoring remains deferred. |
 | Delinking and relocation ownership | Pilot works; general source-owned symbols and independent relocation fixtures remain incomplete | Connect donor identity/provider and canonicalization modules, then exercise the independent PDB/delinker route. |
 | Freshness/publication | Shared CLI lock, journal and input fingerprints implemented | Finish direct-stage/concurrent-writer audit and complete acceptance evidence. |
-| Navigation and correspondence | Buka discovery tools copied; structured correspondence is still prose | Add the reviewed Buka correspondence provider and CLI; finish source context and discovery integration. |
+| Navigation and correspondence | Buka discovery tools copied; structured correspondence provider and CLI implemented | Finish source context and discovery integration. |
 
 This is an implementation gap list, not a claim that these capabilities are
 unavailable in the donors. The complete fourteen-item checklist remains open
@@ -78,3 +78,9 @@ semantic `VA_COMPGEN` scanner and binary providers are not yet wired into the
 HoMM1 legacy `RVA_COMPGEN`/manual-reference join. Consequently item 4 remains
 open. The standalone scanner writes `source_symbols.csv`, never overwriting the
 graph's joined `symbol_names.csv`.
+
+The correspondence provider is target-specific mapping data, not a replacement
+for a donor algorithm. It reuses the existing Gruntz-style TSV reader. Six
+function correspondences record Buka Git provenance, known differences and
+reviewed/hypothesis confidence. CLI lookup works offline; optional donor
+verification reads pinned Git objects and never depends on the sibling at runtime.

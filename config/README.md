@@ -13,6 +13,8 @@ admitted function fragment, not a claim of original TU ownership. Its `/Od`
 profile has passed compiler probes and the full matching loop.
 
 `toolchains.json` pins original media and each provisioned compiler/SDK/CRT component.
+`references.toml` pins navigation donors and their priority. Buka Gold 2.1 is
+priority zero; 2.0 may be added as supplementary evidence with a pinned revision.
 `match_baseline.tsv` records stable RVA/extent identity and observational
 CUR/MAX/HIST scores plus per-function source-token hashes. Full green builds
 update it; unit builds do not. Dropped/resized claims fail; score dips do not.
@@ -39,6 +41,12 @@ or duplicate rows fail the copied Buka audit. It is initially empty.
 - `functions_exports.tsv`: naming/provenance provider for PE exports, with
   `rva`, `name`, `ordinal`, `provenance`. Each row must refer to an admitted
   body in `functions.tsv` and match the pinned PE export table.
+- `functions_correspondence.tsv`: behavioral source correspondences keyed by
+  HoMM1 RVA and reference ID. Each has a donor VA, source path/annotation line,
+  Git blob identity, confidence, local evidence, and known differences. It
+  joins the located-function census, never supplies a HoMM1 extent or matching
+  claim. `homm1 reference` displays preferred and supplementary records;
+  `--checkout PATH` verifies against pinned Git objects rather than worktree text.
 - `data_symbols.tsv`: minimal referenced storage identities, explicit extents and
   provenance. Every row must join to the sparse data census.
 - `code_data.tsv`: explicit embedded jump/EH table extents inside code claims.

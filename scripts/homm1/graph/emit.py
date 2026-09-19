@@ -40,7 +40,7 @@ def _mods(*rel: str) -> list[str]:
 
 CL_MODS = _mods('graph/cc.py', 'core/compiler.py', 'core/wine.py', 'core/profile.py', 'core/inputs.py', 'toolchain.py')
 LABELS_MODS = _mods('symbols/', 'audit/common.py', 'clang_options.py', 'labels.py', 'analysis.py', 'verify.py', 'core/cpp_tokens.py', 'core/profile.py', 'core/matching.py', 'core/inputs.py', 'graph/steps.py')
-MODEL_MODS = _mods('symbols/source_symbols.py', 'model.py', 'core/manifest.py', 'core/matching.py', 'core/disasm.py', 'core/image.py', 'graph/steps.py')
+MODEL_MODS = _mods('correspondence.py', 'symbols/source_symbols.py', 'model.py', 'core/manifest.py', 'core/matching.py', 'core/disasm.py', 'core/image.py', 'graph/steps.py')
 DELINK_MODS = _mods('delink.py', 'core/image.py', 'core/coff.py', 'normalized_freshness.py', 'graph/steps.py')
 REPORT_MODS = _mods('build.py', 'core/matching.py', 'core/coff.py', 'core/disasm.py', 'graph/steps.py')
 CONFIGURE_MODS = _mods('graph/', 'build.py', 'analysis.py', 'core/profile.py', 'core/manifest.py', 'toolchain.py', 'core/inputs.py')
@@ -127,7 +127,7 @@ def emit(out=None):
                 implicit=['build/gen/namespace.json', retail, *tables, *REPORT_MODS, report_id, *extraction], variables={'unit': name})
         fragments.append(fragment); bindings.append(binding); reports.append(report); objects.append(obj); targets_.append(target)
     w.build([*bindings, 'build/gen/namespace.json', 'build/gen/symbol_names.csv'], 'model', inputs=fragments,
-            implicit=[MANIFEST, retail, *tables, *MODEL_MODS])
+            implicit=[MANIFEST, 'config/references.toml', retail, *tables, *MODEL_MODS])
     w.build('base', 'phony', inputs=objects)
     w.build('claims', 'phony', inputs=fragments)
     w.build('target', 'phony', inputs=targets_)

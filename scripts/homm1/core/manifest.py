@@ -60,4 +60,9 @@ def check_retail(image, retail=None):
         if key in seen or key not in exports or not row['provenance']:
             raise ValueError(f'export provider disagrees with retail or duplicates a row: {key}')
         seen.add(key)
+    retail_root = retail or CONFIG / 'retail'
+    root = retail_root.parent.parent
+    if (retail_root / 'functions_correspondence.tsv').exists():
+        from homm1.correspondence import load as correspondences
+        correspondences(root, image)
     return bases['functions.tsv']

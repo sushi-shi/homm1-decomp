@@ -53,6 +53,12 @@ def main():
             return process.stdout
         run('test')
         run('check')
+        correspondence = json.loads(run('reference', '--json'))
+        assert len(correspondence['correspondences']) == 6
+        assert all(row['reference'] == 'homm2_buka_21' for row in correspondence['correspondences'])
+        unclaimed = json.loads(run('sema', 'reference', 'KBTickCount'))
+        assert unclaimed['correspondences'][0]['rva'] == 0x5DC9B
+        result['offline_buka_correspondence'] = True
         run('build')
         run('verify', 'check', '--tier', 'full')
         report = checkout / 'build/match-report.json'

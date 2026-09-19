@@ -153,6 +153,12 @@ def main(argv=None):
     p.add_argument('--unit', help='compile/compare a single unit without banking a checkpoint')
     p.set_defaults(run=build.run)
     commands.add_parser('configure', help='emit the incremental Ninja graph').set_defaults(run=lambda _: build.configure() and 0)
+    from homm1 import correspondence
+    p = commands.add_parser('reference', help='look up pinned Buka source correspondences')
+    p.add_argument('query', nargs='?', help='HoMM1 RVA, VA, or recovered name; omit to list all')
+    p.add_argument('--checkout', type=Path, help='verify source pins against this donor Git repository')
+    p.add_argument('--json', action='store_true')
+    p.set_defaults(run=correspondence.command)
     from homm1 import audit
     p = commands.add_parser('audit', help='Buka semantic casts and physical source inventory')
     p.add_argument('audit', choices=['casts', 'readability'])
@@ -167,7 +173,7 @@ def main(argv=None):
     commands.add_parser('labels', help='AST-bound source identities').set_defaults(run=labels.command)
     commands.add_parser('model', help='joined retail claims and reference model').set_defaults(run=model.command)
     p = commands.add_parser('sema', help='inspect matching evidence and first divergence')
-    p.add_argument('action', choices=['rva', 'disasm', 'diff', 'xref', 'strings', 'source', 'frame', 'blocks', 'branches', 'callers', 'callees', 'find-string'])
+    p.add_argument('action', choices=['rva', 'disasm', 'diff', 'xref', 'strings', 'source', 'frame', 'blocks', 'branches', 'callers', 'callees', 'find-string', 'reference'])
     p.add_argument('address', help='RVA, VA, or unambiguous source symbol')
     p.add_argument('--side', choices=['retail', 'compiled'], default='retail')
     p.add_argument('--size', type=lambda v: int(v, 0))

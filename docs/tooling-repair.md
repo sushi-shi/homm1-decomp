@@ -54,13 +54,17 @@ localization, or VC6 optimizer assumptions as HoMM1 evidence.
 - [ ] 10. Complete freshness, checkpoint consistency and recoverable publication.
 - [ ] 11. General independent delinking and relocation acceptance fixtures.
 - [ ] 12. Discovery, source context, mismatch diagnostics and campaign queue.
-- [ ] 13. Structured Buka correspondence with provenance and CLI access.
+- [x] 13. Structured Buka correspondence with provenance and CLI access.
+      Six located-function rows pin donor revision/blob/VA/source line, preserve
+      reviewed versus hypothesis status, and record known differences. Buka 2.1
+      takes precedence over supplementary references. Offline lookup and pinned
+      donor verification are implemented; correspondences never create claims.
 - [ ] 14. End-to-end acceptance coverage, clean-checkout verification and docs.
 
 Record evidence here as each item is completed. Do not check off a capability
 based only on a unit test of one internal helper or a compiler-only probe.
 
-Current intermediate validation: 190 tooling tests pass, including copied Buka
+Current intermediate validation: 193 tooling tests pass, including copied Buka
 provenance-chain, Wine, residual-queue and disassembly tests and Gruntz object
 installation checks. The native VC4 build matches all three pilot functions
 (290 bytes); full verification accepts generated README/ledger/report
@@ -103,3 +107,12 @@ campaign passes the complete existing acceptance sequence with Buka supplying
 source identities, including focused/no-op behavior and exact/nonexact/restored
 publication. The standalone donor scanner reports exactly the three admitted
 source functions; its span inventory agrees with the graph's joined manifest.
+
+Correspondence acceptance: `homm1 reference --checkout` verified all six rows
+against Buka commit 299514f88900c0cf30ba03422c72830a38fc1cb7. All 193 tests and
+the clean Nix check pass. The exported-worktree campaign verifies offline
+`reference` and `sema reference` lookup, then the full exact/nonexact/restored
+matching/publication sequence. The admitted campaign remains three functions
+and 290 bytes; neither located wrappers nor hypothesis correspondences gain
+matching claims. The provider uses the existing retail TSV reader; the mapping
+itself is necessarily HoMM1-specific evidence.
