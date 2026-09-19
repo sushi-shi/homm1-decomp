@@ -7,6 +7,7 @@ import subprocess
 
 from homm1.core.inputs import REPO
 from homm1 import toolchain
+from homm1.core.profile import parse
 
 
 def wine_env():
@@ -26,6 +27,7 @@ def windows_path(path, environment):
 
 
 def compile_source(source, output, flags, name):
+    profile = parse(flags)
     compiler_root = toolchain.verify(name)
     if not shutil.which('wine') or not shutil.which('winepath'):
         raise ValueError('Wine is required; enter nix develop .#build')
@@ -39,7 +41,9 @@ def compile_source(source, output, flags, name):
     environment['INCLUDE'] = ';'.join(windows_path(p, environment) for p in include)
     if (compiler_root / 'lib').is_dir():
         environment['LIB'] = windows_path(compiler_root / 'lib', environment)
-    command = ['wine', str(compiler_root / 'bin/CL.EXE'), *flags,
+    native_flags = [flag + (windows_path(value, environment) if flag in ('/I', '/FI') else value or '')
+                    for flag, value in profile]
+    command = ['wine', str(compiler_root / 'bin/CL.EXE'), *native_flags,
                '/Fo' + windows_path(output, environment), windows_path(source, environment)]
     log = output.with_suffix('.compile.log')
     try:

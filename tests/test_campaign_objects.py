@@ -1,10 +1,12 @@
 import struct
 import unittest
+from dataclasses import replace
 
 from homm1.core.coff import CoffObject, REL32
 from homm1.core.image import Image
 from homm1.core.matching import Claim, compare, confirm_object, function_extent
 from homm1.delink import sparse_relocation_view, yaml_text, normalize, code_object
+from homm1.model import validate, validate_referents
 from test_image import fixture
 
 
@@ -20,6 +22,24 @@ def two_functions():
 
 
 class MultiFunctionTests(unittest.TestCase):
+    def test_local_binding_wins_over_same_named_external_in_other_unit(self):
+        image = Image(fixture())
+        local = Claim(0x1000, 1, '_helper', unit='one', linkage='internal')
+        other = Claim(0x1100, 1, '_helper', unit='two')
+        caller = Claim(0x1010, 6, '_caller', unit='one')
+        validate([local, other, caller], image, {c.rva: '' for c in (local, other, caller)})
+        refs = [dict(site=1, typ=REL32, symbol='_helper', target_rva=0x1000, addend=0)]
+        references = {local.rva: [], caller.rva: refs, other.rva: []}
+        validate_referents([local, other, caller], references)
+        class Retail:
+            image_base = 0x400000
+            def read(self, rva, size):
+                return b'\xe8' + struct.pack('<i', 0x1000 - 0x1015) + b'\xc3'
+        obj = CoffObject(code_object([(local, b'\xc3', []), (caller, b'\xe8\0\0\0\0\xc3', refs)]))
+        self.assertTrue(compare(obj, Retail(), caller, refs, [local, caller], {'_helper': other.rva})['exact'])
+        with self.assertRaisesRegex(ValueError, 'different unit'):
+            validate_referents([local, replace(caller, unit='two')], {local.rva: [], caller.rva: refs})
+
     def test_definition_and_intra_object_reference_are_independently_bound(self):
         obj = two_functions()
         claims = [Claim(0x1000, 6, '_first'), Claim(0x1100, 6, '_second')]

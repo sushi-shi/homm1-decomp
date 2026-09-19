@@ -1,5 +1,5 @@
 # Observational scores: CUR <= MAX(current source) <= HIST(all source). Full green builds only.
 rva	size	symbol	unit	cur	max	hist	src_hash
-0x0004F640	0x72	_PollSound	kb_poll_sound	100.0	100.0	100.0	da1481218534657d5d2b7bef4287adc035e672c81cea1f4b838d43a2147183d0
-0x0004F6B2	0x20	?ForcePollSound@@YAXXZ	kb_poll_sound	100.0	100.0	100.0	09cba46877051a56f5c5295791fc09ef078d0055025f67c2fb5f02fd9eefaaf3
-0x0005C15C	0x90	_AppAbout@16	app_about	100.0	100.0	100.0	c2f55e1eeb66c026f3dd576010442c51a8471d7889e968ea9168084166a34e82
+0x0004F640	0x72	_PollSound	kb_poll_sound	100.0	100.0	100.0	tokens1:b866ea8e5b8b
+0x0004F6B2	0x20	?ForcePollSound@@YAXXZ	kb_poll_sound	100.0	100.0	100.0	tokens1:ab45f4b8869f
+0x0005C15C	0x90	_AppAbout@16	app_about	100.0	100.0	100.0	tokens1:bbfe7f22b055

@@ -1,8 +1,9 @@
 from pathlib import Path
 import tempfile
 import unittest
+import hashlib
 
-from homm1.checkpoint import advance, read, write, fingerprint
+from homm1.checkpoint import advance, read, write, fingerprint, check_consistency, serialize
 
 
 def measurement(score, digest='first', rva=0x1000, symbol='_f'):
@@ -52,3 +53,26 @@ class CheckpointTests(unittest.TestCase):
             self.assertEqual(before, fingerprint(root, tools=False))
             header.write_text('long f();')
             self.assertNotEqual(before, fingerprint(root, tools=False))
+
+    def test_previously_omitted_inputs_invalidate_reports(self):
+        for name in ('include/a.inl', 'src/a.cc', 'src/a.cxx', 'flake.nix', 'flake.lock'):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('before')
+                before = fingerprint(root, tools=False)
+                path.write_text('after')
+                self.assertNotEqual(before, fingerprint(root, tools=False))
+
+    def test_report_and_ledger_must_describe_the_same_generation(self):
+        functions = [measurement(80.0)]
+        rows = advance({}, functions)
+        report = dict(functions=functions, ledger_sha256=hashlib.sha256(serialize(rows).encode()).hexdigest())
+        check_consistency(report, rows)
+        rows[0x1000]['hist'] = 100
+        with self.assertRaisesRegex(ValueError, 'history differs'):
+            check_consistency(report, rows)
+        rows[0x1000]['cur'] = 50
+        with self.assertRaisesRegex(ValueError, 'measurement differs'):
+            check_consistency(report, rows)

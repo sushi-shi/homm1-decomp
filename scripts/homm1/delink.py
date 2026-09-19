@@ -14,6 +14,7 @@ import tempfile
 
 from homm1.core.inputs import REPO, targets
 from homm1.core.coff import CoffObject
+from homm1.normalized_freshness import write_stamp
 
 
 def quote(text):
@@ -198,7 +199,7 @@ def code_object(payloads):
     return struct.pack('<HHIIIHH', 0x14c, len(payloads), 0, offset, len(names), 0, 0) + headers + content + symbols + strings
 
 
-def generate(image, claims, references):
+def _generate_unit(image, claims, references):
     for tool in ('llvm-pdbutil', 'vostok-delinker'):
         if not shutil.which(tool):
             raise ValueError(f'{tool} required; enter nix develop')
@@ -206,7 +207,7 @@ def generate(image, claims, references):
     for option in ('--pdb-path', '--exe-path', '--output-path', '--engine-path'):
         if option not in help_text:
             raise ValueError('vostok-delinker does not implement the pinned interface')
-    destination = REPO / 'build/delink'
+    destination = REPO / 'build/delink' / claims[0].unit
     destination.mkdir(parents=True, exist_ok=True)
     # Fresh scratch output prevents successful reads from an earlier generation.
     with tempfile.TemporaryDirectory(prefix='run-', dir=destination) as directory:
@@ -237,7 +238,31 @@ def generate(image, claims, references):
             objects[unit] = payload
         for path in (yaml, pdb):
             shutil.copyfile(path, destination / path.name)
+        shutil.copyfile(view, destination / 'code-view.exe')
+        for unit in objects:
+            raw = destination / (unit + '.raw.obj')
+            shutil.copyfile(next(output.rglob(unit + '.cpp.obj')), raw)
+            write_stamp(raw, {'image': destination / 'code-view.exe',
+                              'pdb': destination / 'retail.pdb',
+                              'delinker': Path(shutil.which('vostok-delinker'))})
         return objects
+
+
+def stamp_target(unit, target):
+    write_stamp(target, {'raw': REPO / 'build/delink' / unit / (unit + '.raw.obj'),
+                         'normalizer': Path(__file__),
+                         'referents': REPO / 'config/retail/reloc_referents.tsv'})
+
+
+def generate(image, claims, references):
+    # Each unit has its own symbol namespace, including ordinary static names.
+    # Zero-size cross-unit referents remain identities, not owned definitions.
+    objects = {}
+    for unit in sorted({c.unit for c in claims}):
+        owned = [c for c in claims if c.unit == unit]
+        scoped = {c.rva: references[c.rva] for c in owned}
+        objects.update(_generate_unit(image, owned, scoped))
+    return objects
 
 
 def command(_args):
@@ -248,5 +273,7 @@ def command(_args):
     path = REPO / 'build/objdiff/target'
     path.mkdir(parents=True, exist_ok=True)
     for unit, payload in objects.items():
-        (path / (unit + '.obj')).write_bytes(payload)
+        target = path / (unit + '.obj')
+        target.write_bytes(payload)
+        stamp_target(unit, target)
     print(json.dumps(dict(units=list(objects), scope='claimed code; referenced data identities only'), indent=2))

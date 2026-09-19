@@ -1,6 +1,6 @@
 """Exact i386 COFF-to-retail comparison; relocation fields are resolved, not masked.
 
-Bootstrap scope: one exported function and one RVA claim per source/object.
+Claims include multiple ordinary and compiler-generated bodies per object.
 Unsupported topology fails closed instead of manufacturing a matching target.
 """
 from dataclasses import dataclass
@@ -21,6 +21,8 @@ class Claim:
     source: str = ''
     src_hash: str = ''
     parent: int | None = None
+    linkage: str = 'external'
+    context_hash: str = ''
 
 
 def source_claim(source, image):
@@ -161,9 +163,9 @@ def confirm_object(obj, claims):
 def compare(obj, image, claim, references, claims=(), namespace=None):
     section, start, end = function_extent(obj, claim.symbol, claims)
     code = bytearray(obj.section_bytes(section)[start:end])
-    targets = {row['symbol']: image.image_base + row['target_rva'] for row in references}
+    targets = {name: image.image_base + rva for name, rva in (namespace or {}).items()}
+    targets.update({row['symbol']: image.image_base + row['target_rva'] for row in references})
     targets.update({c.symbol: image.image_base + c.rva for c in claims})
-    targets.update({name: image.image_base + rva for name, rva in (namespace or {}).items()})
     expected_relocs = {(row['site'], row['typ'], row['symbol'], row['addend'] & 0xffffffff) for row in references}
     actual_relocs = set()
     seen = set()

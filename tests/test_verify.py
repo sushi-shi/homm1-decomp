@@ -38,3 +38,11 @@ class VerifyTests(unittest.TestCase):
             path.write_text('[[review]]\nrva="0x1000"\nsrc_hash="old"\nreviewer="reviewer"\nevidence="read"\n')
             with self.assertRaisesRegex(ValueError, 'stale'):
                 verify.check_reviews([Claim(0x1000, 4, '_a', src_hash='new')], root)
+
+    def test_pending_review_prevents_full_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            claims = [Claim(0x1000, 4, '_a', src_hash='new')]
+            self.assertEqual(verify.check_reviews(claims, root)['pending'], [0x1000])
+            with self.assertRaisesRegex(ValueError, 'requires source review'):
+                verify.check_reviews(claims, root, require_complete=True)

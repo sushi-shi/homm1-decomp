@@ -12,14 +12,9 @@ import re
 from homm1 import analysis
 from homm1.core.inputs import REPO
 from homm1.core.matching import Claim
+from homm1.core.cpp_tokens import fingerprint as source_hash
 
 FUNCTIONS = {'FunctionDecl', 'CXXMethodDecl', 'CXXConstructorDecl', 'CXXDestructorDecl', 'CXXConversionDecl'}
-TOKEN = re.compile(r'//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|[A-Za-z_]\w*|0[xX][\da-fA-F]+|\d+(?:\.\d+)?|[^\s]', re.S)
-
-
-def source_hash(text):
-    tokens = [m[0] for m in TOKEN.finditer(text) if not m[0].startswith(('//', '/*'))]
-    return hashlib.sha256(json.dumps(tokens).encode()).hexdigest()
 
 
 def walk(node):
@@ -37,6 +32,30 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
     tree = analysis.run(source, compiler, ast=True, flags=flags)
     from homm1.verify import check_incomplete_types
     check_incomplete_types(tree)
+    # Reviews include the compilation context, independently of the function
+    # token hash used by the observational MAX score. Header edits are
+    # conservatively review-affecting, including macro/preprocessor changes.
+    context = hashlib.sha256()
+    context.update(json.dumps([compiler, analysis.clang_flags(flags)]).encode())
+    for dependency in analysis.dependencies(source, compiler, flags):
+        if dependency != source:
+            context.update(dependency.name.encode() + b'\0' + dependency.read_bytes() + b'\0')
+    declarations_text = source.read_text()
+    excluded = []
+    for n in walk(tree):
+        if n.get('kind') in FUNCTIONS:
+            loc = location(n.get('loc', {}))
+            if loc.get('includedFrom') or Path(loc.get('file', source)).resolve() != source:
+                continue
+            b = next((c for c in n.get('inner', []) if c.get('kind') in ('CompoundStmt', 'CXXTryStmt')), None)
+            if b:
+                start, end = location(b['range']['begin']), location(b['range']['end'])
+                if 'offset' in start and 'offset' in end:
+                    excluded.append((start['offset'], end['offset'] + end.get('tokLen', 1)))
+    for start, end in sorted(excluded, reverse=True):
+        declarations_text = declarations_text[:start] + '{}' + declarations_text[end:]
+    context.update(declarations_text.encode())
+    context_hash = context.hexdigest()
     if declarations is not None:
         for node in walk(tree):
             if node.get('kind') not in FUNCTIONS and not (node.get('kind') == 'VarDecl' and node.get('storageClass') == 'extern'):
@@ -108,7 +127,9 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
         casts = [n for n in walk(body) if n.get('kind') == 'CStyleCastExpr']
         if casts:
             raise ValueError(f'{path}: {node["name"]}: C-style cast; use an evidenced named conversion')
-        results.append(Claim(rva, size, symbol, source=str(path), src_hash=source_hash(snippet)))
+        internal = (node['kind'] == 'FunctionDecl' and node.get('storageClass') == 'static') or '?A0x' in symbol
+        results.append(Claim(rva, size, symbol, source=str(path), src_hash=source_hash(snippet),
+                             linkage='internal' if internal else 'external', context_hash=context_hash))
     # Compiler-generated bodies have explicit ownership, not invented source.
     text = source.read_text()
     from homm1.verify import blank
@@ -124,6 +145,7 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
             if claim.parent not in parents:
                 raise ValueError(f'generated body {claim.symbol} lacks its source owner')
             object.__setattr__(claim, 'src_hash', parents[claim.parent].src_hash)
+            object.__setattr__(claim, 'context_hash', parents[claim.parent].context_hash)
     return results
 
 

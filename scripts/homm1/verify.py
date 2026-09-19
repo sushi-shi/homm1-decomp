@@ -101,19 +101,22 @@ def check(root=REPO):
     return report
 
 
-def check_reviews(claims, root=REPO):
+def check_reviews(claims, root=REPO, require_complete=False):
     path = root / 'config/cleanliness/reviews.toml'
     rows = tomllib.loads(path.read_text()).get('review', []) if path.exists() else []
     owned = {c.rva: c for c in claims if c.parent is None}
     seen = set()
     for row in rows:
         rva = int(row['rva'], 0)
-        if rva in seen or rva not in owned or row['src_hash'] != owned[rva].src_hash:
+        if rva in seen or rva not in owned or row['src_hash'] != owned[rva].src_hash or row.get('context_hash', '') != owned[rva].context_hash:
             raise ValueError(f'stale or duplicate source review for {rva:#x}; re-review changed source')
         if not row.get('reviewer') or not row.get('evidence'):
             raise ValueError('source review requires reviewer and evidence')
         seen.add(rva)
-    return dict(reviewed=sorted(seen), pending=sorted(owned.keys() - seen))
+    pending = sorted(owned.keys() - seen)
+    if require_complete and pending:
+        raise ValueError('full checkpoint requires source review: ' + ', '.join(hex(rva) for rva in pending))
+    return dict(reviewed=sorted(seen), pending=pending)
 
 
 def check_incomplete_types(tree, root=REPO):
@@ -134,10 +137,24 @@ def check_incomplete_types(tree, root=REPO):
             if by_value and kind in ('VarDecl', 'ParmVarDecl', 'FieldDecl', 'CXXConstructExpr',
                                      'CXXTemporaryObjectExpr', 'UnaryExprOrTypeTraitExpr', 'ArraySubscriptExpr'):
                 raise ValueError(f'{name}: {kind} requires an unrecovered class layout')
-            if mentions and kind in ('CXXNewExpr', 'CXXDeleteExpr', 'BinaryOperator', 'UnaryOperator'):
+            operands = node.get('inner', [])
+            operand_mentions = any(re.search(r'\b' + re.escape(name) + r'\b',
+                                            n.get('type', {}).get('desugaredQualType', n.get('type', {}).get('qualType', '')))
+                                   for n in operands)
+            arithmetic = kind in ('BinaryOperator', 'CompoundAssignOperator', 'UnaryOperator') and node.get('opcode') in ('+', '-', '++', '--', '+=', '-=')
+            if (mentions and kind in ('CXXNewExpr', 'CXXDeleteExpr')) or (arithmetic and (mentions or operand_mentions)):
                 raise ValueError(f'{name}: allocation/pointer arithmetic requires a recovered layout')
             if kind == 'CXXDeleteExpr' and any(re.search(r'\b' + re.escape(name) + r'\b', n.get('type', {}).get('qualType', '')) for n in walk(node)):
                 raise ValueError(f'{name}: deletion requires a recovered layout/destructor')
+            if kind == 'CXXRecordDecl':
+                if any(re.search(r'\b' + re.escape(name) + r'\b', b.get('type', {}).get('qualType', '')) for b in node.get('bases', [])):
+                    raise ValueError(f'{name}: inheritance requires a recovered layout')
+                if node.get('name') == name and (node.get('bases') or any(c.get('kind') == 'FieldDecl' for c in operands)):
+                    raise ValueError(f'{name}: fields/bases require a recovered layout')
+            if kind in ('FunctionDecl', 'CXXMethodDecl'):
+                returned = typ.split('(', 1)[0]
+                if re.search(r'\b' + re.escape(name) + r'\b', returned) and '*' not in returned and '&' not in returned:
+                    raise ValueError(f'{name}: return by value requires a recovered layout')
 
 
 def command(args):
@@ -146,7 +163,7 @@ def command(args):
         from homm1 import analysis, build
         config, entries = build.units()
         claims = build.validate_claims(build.image())
-        result['readability'] = check_reviews(claims)
+        result['readability'] = check_reviews(claims, require_complete=args.tier == 'full')
         result['semantic_checks'] = analysis.check(config, entries)
         if args.tier == 'full':
             from homm1.checkpoint import fresh_report

@@ -18,9 +18,10 @@ def validate(claims, image, admitted):
             raise ValueError(f'claim {claim.symbol} lacks an admitted retail function of the correct kind')
         if spans and claim.rva < spans[-1][1]:
             raise ValueError('overlapping or duplicate reconstruction claims')
-        if claim.symbol in symbols:
+        identity = (claim.unit or claim.source, claim.symbol) if claim.linkage == 'internal' else ('', claim.symbol)
+        if identity in symbols:
             raise ValueError(f'duplicate source symbol {claim.symbol}')
-        symbols.add(claim.symbol)
+        symbols.add(identity)
         spans.append((claim.rva, claim.rva + claim.size))
 
 
@@ -38,7 +39,23 @@ def resolve(image, config=None, entries=None):
               for c in labels.definitions(REPO / u['source'], config['build']['compiler'], config['flags'][u['flags']], declarations)]
     validate(claims, image, admitted)
     references = {c.rva: retail_relocations(image, c) for c in claims}
+    validate_referents(claims, references)
     return claims, references
+
+
+def validate_referents(claims, references):
+    owned = {c.rva: c for c in claims}
+    for caller in claims:
+        names = {c.symbol: c.rva for c in claims if c.unit == caller.unit}
+        for ref in references[caller.rva]:
+            target = owned.get(ref['target_rva'])
+            if target and target.symbol != ref['symbol']:
+                raise ValueError('retail referent disagrees with source symbol identity')
+            if target and target.linkage == 'internal' and caller.unit != target.unit:
+                raise ValueError('internal source symbol referenced from a different unit')
+            if ref['symbol'] in names and names[ref['symbol']] != ref['target_rva']:
+                raise ValueError('conflicting relocation identities in one source unit')
+            names[ref['symbol']] = ref['target_rva']
 
 
 def command(_args):

@@ -10,6 +10,7 @@ import json
 import math
 from pathlib import Path
 import shutil
+import sys
 
 from homm1.core.inputs import REPO
 from homm1 import toolchain
@@ -60,7 +61,7 @@ def advance(previous, functions):
     return result
 
 
-def write(rows, path=BASELINE):
+def serialize(rows):
     stream = io.StringIO()
     stream.write('# Observational scores: CUR <= MAX(current source) <= HIST(all source). Full green builds only.\n')
     columns = ('rva', 'size', 'symbol', 'unit', 'cur', 'max', 'hist', 'src_hash')
@@ -68,21 +69,25 @@ def write(rows, path=BASELINE):
     writer.writeheader()
     for rva, row in sorted(rows.items()):
         writer.writerow({**row, 'rva': f'0x{rva:08X}', 'size': f'0x{row["size"]:X}'})
-    pending = path.with_suffix('.tmp')
-    pending.write_text(stream.getvalue())
-    pending.replace(path)
+    return stream.getvalue()
+
+
+def write(rows, path=BASELINE):
+    from homm1.publication import atomic_write
+    atomic_write(path, serialize(rows))
 
 
 def fingerprint(root=REPO, tools=True):
     digest = hashlib.sha256()
     files = sorted(p for directory in ('src', 'include', 'scripts/homm1', 'config')
                    for p in (root / directory).rglob('*')
-                   if p.is_file() and p.suffix in ('.cpp', '.h', '.hpp', '.py', '.toml', '.json', '.tsv')
+                   if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc'
                    and p.name != 'match_baseline.tsv')
+    files += [root / name for name in ('flake.nix', 'flake.lock', 'homm1') if (root / name).exists()]
     for path in files:
         digest.update(str(path.relative_to(root)).encode() + b'\0' + path.read_bytes() + b'\0')
     if tools:
-        for name in ('clang++', 'llvm-pdbutil', 'vostok-delinker', 'objdiff-cli'):
+        for name in ('clang++', 'llvm-pdbutil', 'vostok-delinker', 'objdiff-cli', 'wine', 'winepath', 'ninja', sys.executable):
             path = shutil.which(name)
             if not path:
                 raise ValueError(f'{name} required for a measured fresh report')
@@ -92,6 +97,12 @@ def fingerprint(root=REPO, tools=True):
 
 
 def fresh_report(path=None):
+    from homm1.publication import locked
+    with locked():
+        return _fresh_report(path)
+
+
+def _fresh_report(path=None):
     path = path or REPO / 'build/match-report.json'
     if not path.exists():
         raise ValueError('no measured report; run homm1 build')
@@ -102,12 +113,40 @@ def fresh_report(path=None):
     from homm1.build import image
     if hashlib.sha256(image().data).hexdigest() != report['target_sha256']:
         raise ValueError('report target changed')
+    for name, expected in report.get('dependencies', {}).items():
+        dependency = REPO / name
+        if not dependency.exists() or toolchain.digest(dependency) != expected:
+            raise ValueError(f'stale report dependency: {name}')
     for fn in report['functions']:
         for side, field in (('base', 'object_sha256'), ('target', 'target_object_sha256')):
             obj = REPO / f'build/objdiff/{side}/{fn["unit"]}.obj'
             if not obj.exists() or toolchain.digest(obj) != fn[field]:
                 raise ValueError(f'stale or missing {side} object for {fn["unit"]}; run homm1 build')
+            if side == 'target':
+                from homm1.normalized_freshness import freshness_problems
+                problems = freshness_problems(obj)
+                if problems:
+                    raise ValueError('\n'.join(problems))
+    if report.get('complete'):
+        rows = read()
+        check_consistency(report, rows)
+        from homm1.reporting import render
+        readme = (REPO / 'README.md').read_text()
+        if render(readme, report, rows) != readme:
+            raise ValueError('README campaign block disagrees with the checkpoint; run homm1 build')
     return report
+
+
+def check_consistency(report, rows):
+    functions = report['functions']
+    if len({f['rva'] for f in functions}) != len(functions) or {f['rva'] for f in functions} != rows.keys():
+        raise ValueError('checkpoint/report claims differ')
+    for fn in functions:
+        row = rows[fn['rva']]
+        if (row['size'], row['symbol'], row['unit'], row['cur'], row['src_hash']) != (fn['retail_size'], fn['symbol'], fn['unit'], fn['score'], fn['src_hash']):
+            raise ValueError(f'checkpoint/report measurement differs at {fn["rva"]:#x}')
+    if report.get('ledger_sha256') != hashlib.sha256(serialize(rows).encode()).hexdigest():
+        raise ValueError('checkpoint/report history differs')
 
 
 def command(args):

@@ -4,10 +4,27 @@ import tempfile
 import unittest
 
 from homm1 import analysis
+from homm1.core.profile import parse
 
 
 @unittest.skipUnless(shutil.which('clang++'), 'Clang is required; run in nix develop')
 class DomainTests(unittest.TestCase):
+    def test_forced_include_changes_the_analyzed_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'profile.cpp'
+            header = Path(directory) / 'forced.h'
+            header.write_text('#define FORCED_VALUE 7\n')
+            path.write_text('typedef char Assert[FORCED_VALUE == 7 ? 1 : -1];')
+            analysis.run(path, flags=['/FI', str(header)])
+            with self.assertRaises(ValueError):
+                analysis.run(path)
+
+    def test_unsupported_flags_fail_and_relative_paths_share_a_root(self):
+        with self.assertRaisesRegex(ValueError, 'unsupported compiler flag'):
+            analysis.arguments('file.cpp', flags=['/Za'])
+        self.assertEqual(parse(['/Ilocal', '/FI', 'forced.h'], Path('/tmp/project')),
+                         [('/I', '/tmp/project/local'), ('/FI', '/tmp/project/forced.h')])
+
     def test_compiler_profile_defines_reach_analysis(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'profile.cpp'

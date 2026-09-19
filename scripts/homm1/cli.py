@@ -14,7 +14,7 @@ from homm1.core.coff import CoffObject
 from homm1.core.image import Image
 from homm1.core import manifest
 from homm1.core.inputs import REPO, read_verified, stage_executable, targets
-from homm1 import build, toolchain, verify, probes, labels, model, delink, checkpoint, sema
+from homm1 import build, toolchain, verify, probes, labels, model, delink, checkpoint, sema, publication
 
 
 def verified_image(target):
@@ -181,7 +181,8 @@ def main(argv=None):
         cwd=REPO, env={**os.environ, 'PYTHONPATH': str(REPO / 'scripts')}).returncode)
     args = parser.parse_args(argv)
     try:
-        return args.run(args) or 0
+        with publication.locked():
+            return args.run(args) or 0
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         print(f'[homm1] ERROR: {exc}', file=sys.stderr)
         return 1
