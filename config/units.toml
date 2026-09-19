@@ -1,0 +1,7 @@
+# Per-TU build contract, following Gruntz. See config/README.md.
+# Add [[unit]] with unit/source/flags only after compiler and retail validation.
+[build]
+platform = "win32"
+compiler_status = "unconfirmed; investigate MSVC 2.x (retail linker 3.00)"
+
+[flags]

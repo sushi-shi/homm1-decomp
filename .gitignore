@@ -1,0 +1,26 @@
+/build/
+/compile_commands.json
+/.cache/
+/result
+/result-*
+*.pyc
+# Retail binaries, compiler artifacts, and disc/archive assets stay local.
+*.[eE][xX][eE]
+*.[dD][lL][lL]
+*.obj
+*.lib
+*.pdb
+*.idb
+*.i64
+*.id0
+*.id1
+*.zip
+*.7z
+*.iso
+*.img
+/.nix-gc-roots/
+/.claude/worktrees/
+/scratchpad*/
+__pycache__/
+.ninja_log
+.ninja_deps

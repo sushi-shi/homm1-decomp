@@ -1,0 +1,192 @@
+# homm1-decomp
+
+Binary-matching decompilation of **Heroes of Might and Magic** (`HEROES.EXE`, New World
+Computing, 1996) — the Windows 95 port, not the original DOS release. The goal is to recover
+the C++ structure and behavior and reproduce the original code, data, and relocations with an
+**MSVC 2.0-era** toolchain. Retail executable bytes and RVAs are authoritative.
+
+This repository does **not** contain the original game's executable or resources. Supply a
+legally obtained `HEROES.EXE` locally to initialize the matching workspace.
+
+**Status: analysis workspace initialized.** The repository provides verified input staging,
+PE inspection, retail disassembly, a function catalogue, COFF inspection, and a pinned Nix
+environment based on the HoMM3/HoMM2 tooling. No matching compiler or reconstruction build
+has been established yet; there is no match score. MSVC 2.x is a compiler hypothesis pending
+probe validation, not an exact toolchain pin.
+
+## Pinned target
+
+The canonical image is the **Windows 95 `HEROES.EXE` dated 1 February 1996**, shipped
+byte-identically on Heroes of Might and Magic Platinum Edition (USA) disc 1 and Heroes of
+Might & Magic Millennium Edition (USA) disc 1:
+
+```
+file        HEROES.EXE
+size        713,216 bytes
+sha256      0d707d3456aacd470f4da601ac388a8b0be8976414b4ef689c8b849b9b2a1ce8
+md5         58a5ddcc48793618632d48dff2522fa9
+base        0x00400000 (relocatable; .reloc present, 33,892 bytes)
+entry       VA 0x004826C0
+.text       RVA 0x001000, vsize 0x08A0A0 (565,408 bytes)
+.rdata      RVA 0x08C000, vsize 0x00165B
+.data       RVA 0x08E000, vsize 0x047F40
+.idata      RVA 0x0D6000, vsize 0x001480 (separate section; IAT at RVA 0x0D6410)
+.rsrc       RVA 0x0D8000, vsize 0x001728
+.reloc      RVA 0x0DA000, vsize 0x008D00
+timestamp   1 February 1996 05:15:33 UTC (0x31104C75)
+linker      3.00 (MSVC 2.0 era), subsystem Windows GUI 4.0
+imports     KERNEL32 USER32 GDI32 ADVAPI32 WINMM NETAPI32 WING32 wail32 smkwai32
+```
+
+Secondary target, same pressing and same build settings:
+
+```
+file        EDITOR.EXE
+size        305,152 bytes
+sha256      c572831acdb56009e07343de25d67a10c29b50c8b5f984ffb1c24eee906f0cc2
+entry       VA 0x00429B70
+.text       RVA 0x001000, vsize 0x030200 (197,120 bytes)
+timestamp   1 February 1996 01:08:14 UTC (0x3110127E)
+```
+
+Place both under `build/orig/` (gitignored).
+
+## Why this build
+
+Every HOMM1 build was surveyed before pinning this one. The Win95 port wins on three counts
+that matter for matching, and one that matters for contributors.
+
+**Compiled `/Od`.** The game code is debug codegen: redundant stack temp store/reload chains,
+jumps to the immediately following instruction, unconditional full prologues that push
+`ebx`/`esi`/`edi` whether or not they are used. Measured against the statically-linked CRT in
+the same image, game code shows ~4.5x the register-to-stack spill rate and ~3.7x the
+compare-against-stack-slot rate. Statements map close to 1:1 onto source.
+
+**Linked non-incremental.** 1,133 call sites land directly on real function entry points;
+the only jump-thunks present are the 19 ordinary `jmp *[IAT]` import stubs. `.text` opens at
+`0x401000` with a real `__thiscall` function body, not an incremental link table. No thunk
+indirection to unwind and no incremental-link padding scrambling layout.
+
+**Leaks the build tree.** 64 `assert` sites across 12 translation units, with string pooling
+off so each site carries its own copy of `__FILE__`.
+
+**Obtainable.** Byte-identical across two separate retail releases, and the same build GOG
+ships — so a contributor can actually get the exact bytes for verification. This is why it is
+pinned over the otherwise equivalent 1997 Compendium `HEROESW.EXE`.
+
+## Symbolic evidence available
+
+There is **no debug information of any kind** in any HOMM1 build. Confirmed four ways: the PE
+debug data directory is `RVA=0 size=0`; the file has **zero** trailing overlay (size equals the
+end of the last section, so there is no region for a CodeView blob); a byte-level scan for
+`NB00`-`NB99` finds nothing; and fixed-string scans for `$$SYMBOLS`, `$$TYPES`, `.debug_info`,
+`.debug_line`, `.debug_abbrev` are clean. These were linked without `/DEBUG` in the first
+place — there is no missing PDB to hunt for.
+
+What does exist:
+
+**Two exported symbols** — the only true names in the binary:
+
+| Symbol | Ordinal | VA |
+| :--- | ---: | :--- |
+| `AppAbout` | 1 | `0x0045C15C` |
+| `AppWndProc` | 2 | `0x0045BB45` |
+
+The export directory's module name string is `HEROES.EXE`.
+
+**Twelve source file names**, in two directories that mirror the layout HOMM2 later used:
+
+```
+D:\Heroes\Base\    INPUTMGR.CPP MOUSEMGR.CPP OLDASM.CPP RESMGR.CPP Soundmgr.cpp WINMGR.CPP
+D:\Heroes\Source\  EVENTS.CPP netlo.cpp NOOPT.CPP PATH.CPP TOWNMGR.CPP wingraph.cpp
+```
+
+`EDITOR.EXE` shares the six `Base\` files and adds `D:\Heroes\Editor\{EDITMGR,EDITOR,OVERLAY}.CPP`
+plus its own `wingraph.cpp`.
+
+These are only the units containing asserts, not the full file list — the real translation unit
+count is much higher.
+
+**Partial line anchors.** Each `__FILE__` string is preceded in `.data` by a base value; the
+call site loads it and adds an immediate. Where base values are distinct they increase with
+code address, which both confirms they are line numbers and shows **function layout follows
+source order**:
+
+| Unit | Sites | Base values by code address | |
+| :--- | ---: | :--- | :--- |
+| `resmgr.cpp` | 4 | 598, 619, 639, 679 | monotonic |
+| `netlo.cpp` | 3 | 414, 538, 742 | monotonic |
+| `soundmgr.cpp` | 11 | 52, 605, 740, 808, 900, 1008, 1118 | monotonic |
+| `wingraph.cpp` | 29 | 49, 71, 91, then 112 repeated | base shared across sites |
+
+So `resmgr`/`netlo`/`soundmgr` give reliable per-site anchors. `wingraph.cpp` shares one base
+across roughly eighteen sites, so the `add $N` immediate carries the distinction there and that
+encoding has not been worked out yet.
+
+**No RTTI and no C++ exception handling** — no `.?AV`, no `type_info`, no `__CxxFrameHandler`.
+C++ with virtual functions (~70 vtable call sites) and heavy `__thiscall` use — ~500 functions
+spill `this` from `ecx` to a stack slot within the first few instructions of their prologue —
+but none of the heavier runtime machinery.
+
+## Scope
+
+| | HOMM1 `HEROES.EXE` | HOMM2 `HEROES2W.EXE` | ratio |
+| :--- | ---: | ---: | ---: |
+| `.text` | 565,408 | 957,910 | 0.59x |
+| frame-pointer prologues | 839 | 1,242 | 0.68x |
+| instructions | 158,129 | 259,374 | 0.61x |
+
+Both figures include a comparable static MSVC CRT (~110 KB, ~120 functions); net of that the
+game-code ratio is ~0.54-0.64x. HOMM2 is also a `/Od` build, with closely comparable hallmark
+rates, so difficulty per function should be similar.
+
+Seven of HOMM1's twelve named units already exist in the homm2 decomp at matching paths —
+`EVENTS`, `TOWNMGR`, `wingraph` under `SOURCE/`, and `MOUSEMGR`, `RESMGR`, `soundmgr`, `WINMGR`
+under `BASE/`. Those are the later HOMM2 revisions rather than reusable code, but the class
+layouts, member ordering and naming conventions transfer.
+
+## Other builds surveyed
+
+Catalogued and rejected as match targets. All extracted binaries and an md5 manifest are in
+`../exe/`.
+
+| Build | Format | Notes |
+| :--- | :--- | :--- |
+| `HEROESW.EXE` 1997-08-29 (Compendium) | PE32, linker 3.10 | Same `/Od` quality, paths under `F:\H1w95src\`. Rejected only for being harder to obtain. |
+| `EDITORW.EXE` 1997-07-30 (Compendium) | PE32, linker 3.10 | Editor counterpart of the above. |
+| `HEROES.EXE` 1995-10-09 (CD01) | LE / DOS4GW, Watcom 10 | German retail. No source names at all. |
+| `HEROES.EXE` 1995-10-12 (patch 1.2) | LE / DOS4GW, Watcom 10 | English 1.2 patch. |
+| `HEROES.EXE` 1995-11-28 (PC Gamer) | LE / DOS4GW, Watcom 10 | Demo v1.2. |
+| `HEROES.EXE` 1997-08-01 (Compendium) | LE / DOS4GW, Watcom 10 | Latest DOS build. |
+
+The DOS builds are all Watcom C/C++ 10 bound with DOS/4GW. They are worse targets on every
+axis: asserts compiled out under `NDEBUG` so there are zero source filenames, optimized codegen
+with values held in registers across calls, and Watcom's register calling convention
+(`eax`/`edx`/`ebx`/`ecx`) which makes signature recovery considerably harder. The LE header
+`debug_info_length` field is 0 in all four, ruling out Watcom `-hw`/`-hc`/`-hd` debug records.
+
+## Quickstart
+
+```sh
+nix develop
+# Supply the game; the editor is optional. Both are hash-verified and staged in build/orig/.
+homm1 init --exe /path/to/HEROES.EXE --editor-exe /path/to/EDITOR.EXE
+homm1 inspect
+homm1 disasm 0x0045BB45 --size 0x80
+homm1 check
+homm1 test
+homm1 status
+```
+
+`HOMM1_EXE` and `HOMM1_EDITOR_EXE` are alternatives to the command-line paths. Re-running
+`homm1 init` reuses and verifies staged files and regenerates `build/analysis/{game,editor}.json`.
+With Python 3.11+ installed, `./homm1` works without Nix; disassembly also needs GNU objdump.
+`nix develop .#build` adds Wine for compiler experiments. It does not install a matching
+compiler. See [tooling and next steps](docs/tooling.md) for commands, provenance and the
+compiler bring-up sequence.
+
+## License
+
+Project-authored reconstruction source and tooling are dedicated to the public domain under
+[CC0 1.0](LICENSE). Separately licensed dependencies retain their own terms. Retail inputs,
+compiler binaries and game assets are not included or covered by this dedication.

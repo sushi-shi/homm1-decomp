@@ -1,0 +1,4 @@
+# PE export provider; each RVA must be a body in functions.tsv.
+rva	name	ordinal	provenance
+0x0005BB45	AppWndProc	2	PE export directory of pinned HEROES.EXE
+0x0005C15C	AppAbout	1	PE export directory of pinned HEROES.EXE
