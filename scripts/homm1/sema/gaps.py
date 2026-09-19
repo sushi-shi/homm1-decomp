@@ -25,8 +25,8 @@ from homm1.sema.index import index
 
 
 CHANNEL_MACRO = {
-    "src": "RVA",
-    "src_compgen": "RVA_COMPGEN",
+    "src": "VA",
+    "src_compgen": "VA_COMPGEN",
     "src_dyninit": "RVA_DYNINIT",
 }
 

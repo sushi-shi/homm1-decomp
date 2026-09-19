@@ -6,13 +6,13 @@
 #include <windows.h>
 
 #include <H1/KB.h>
-#include <H2/_all.h>
+#include <H1/All.h>
 
 // donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
 VA(0x0045b6f0, 0x14e)
-H2_C_LINKAGE int __stdcall WinMain(void *, void *, char *, int) { return 0; }
+H1_C_LINKAGE int __stdcall WinMain(void *, void *, char *, int) { return 0; }
 
 // donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order

@@ -2,7 +2,7 @@
 
 #include <match.h>
 
-#include <H2/_all.h>
+#include <H1/All.h>
 
 // donor PoL RVA 0x00020546; preferred Buka symbol ?ViewSpells@combatManager@@QAEHH@Z
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order

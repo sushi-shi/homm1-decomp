@@ -129,7 +129,7 @@ def rewrite_preamble(relative: Path) -> str:
         text += "#define WIN32_LEAN_AND_MEAN\n#include <windows.h>\n\n"
     if relative in {Path("SOURCE/KB.cpp"), Path("SOURCE/kbwin.cpp")}:
         text += "#include <H1/KB.h>\n"
-    text += "#include <H2/_all.h>\n"
+    text += "#include <H1/All.h>\n"
     return text
 
 
@@ -304,7 +304,7 @@ def main(argv: list[str] | None = None) -> int:
                 chunks.append(owned_path.read_text().rstrip() + "\n")
             block = empty_body(block)
             block = MARKER.sub(f"VA(0x{0x400000 + rva:08x}, 0x{size:x})", block, count=1)
-            block = block.replace('extern "C"', "H2_C_LINKAGE")
+            block = block.replace('extern "C"', "H1_C_LINKAGE")
             block = re.sub(r"\ba1\b", "firstValue", block)
             block = re.sub(r"\bp6\b", "cellFlags", block)
             dead = ("// @dead-code\n"

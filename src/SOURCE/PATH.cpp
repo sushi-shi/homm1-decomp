@@ -4,7 +4,7 @@
 
 #include <SOURCE/PATH.h>
 
-#include <H2/_all.h>
+#include <H1/All.h>
 
 // donor PoL RVA 0x000bdd3a; preferred Buka symbol ?ValidPath@army@@QAEHHH@Z
 // donor Buka TU SOURCE/PATH; HoMM1 owner inferred from contiguous order

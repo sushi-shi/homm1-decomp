@@ -1,7 +1,7 @@
 """homm1.tool.clang - the native front-end (extraction's tool).
 
 Three probes over one TU, all under the MSVC-compat flag set:
-    emit_ir()   textual LLVM IR - @llvm.global.annotations pairs each RVA()
+    emit_ir()   textual LLVM IR - @llvm.global.annotations pairs each VA()
                 annotation DIRECTLY with the function's mangled symbol
     ast_dump()  JSON AST - VarDecls for the DATA() join
     var_facts() pylibclang - exact byte extents and storage of main-file globals

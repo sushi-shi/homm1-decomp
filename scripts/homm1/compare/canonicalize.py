@@ -72,7 +72,7 @@ NAMED_STATIC = re.compile(r"^.+\$S[0-9]*$")
 # by a fixed number. The disposable comparison copy hashes the body and its
 # recorded relocations where possible. Delinked target helpers can lack those
 # relocation records, so this is not a source-label authority and an `_$E<n>`
-# RVA_COMPGEN claim is forbidden.
+# VA_COMPGEN claim is forbidden.
 VOLATILE_E = re.compile(r"^_?\$E[0-9]+$")
 # A delinker-enrolled per-TU copy of a header static (config/retail/data_compgen.tsv):
 # the copies share one source name, so the manifest disambiguates each with its

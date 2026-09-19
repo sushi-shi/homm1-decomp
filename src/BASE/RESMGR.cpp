@@ -5,8 +5,8 @@
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
+#include <H1/All.h>
 #include <H1/KB.h>
-#include <H2/_all.h>
 
 #include <io.h>
 #include <string.h>

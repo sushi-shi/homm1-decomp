@@ -13,7 +13,7 @@ import re
 from homm1.core.paths import REPO
 from homm1.sema.index import index
 from homm1.sema.xref import is_effectively_reached
-from homm1.verify.srcscan import RVA_RE, claim_rva, source_files
+from homm1.verify.srcscan import VA_RE, claim_rva, source_files
 
 MARKER_RE = re.compile(r"^\s*//\s*@dead-code\b")
 PROOF_RE = re.compile(r"\bZero-ref:")
@@ -29,7 +29,7 @@ def source_markers(files=None):
         rel = str(path.relative_to(REPO)) if path.is_relative_to(REPO) else str(path)
         lines = path.read_text(errors="replace").splitlines()
         for i, line in enumerate(lines):
-            m = RVA_RE.search(line)
+            m = VA_RE.search(line)
             if m:
                 rva_sites[claim_rva(m)] = (rel, i + 1)
             if not MARKER_RE.match(line):
@@ -37,7 +37,7 @@ def source_markers(files=None):
             claim = None
             stop = min(len(lines), i + LOOKAHEAD + 1)
             for j in range(i + 1, stop):
-                m = RVA_RE.search(lines[j])
+                m = VA_RE.search(lines[j])
                 if m:
                     claim = (claim_rva(m), j)
                     break

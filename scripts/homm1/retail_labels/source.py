@@ -12,7 +12,8 @@ Per TU (ported from the old labels pipeline, mechanisms unchanged):
                    text-scanned (comments blanked) and bound to the AST
                    VarDecl BELOW it; the exact extent and the declaration's
                    linkage come from pylibclang.
-  RVA_COMPGEN      verbatim regex - the name is given, no join, no IR.
+  VA_COMPGEN       verbatim regex - the name and owning source VA are given,
+                   with no positional join and no IR carrier of its own.
   RVA_DYNINIT      the `$E` owner pins - regex; the pin's owner stands in for
                    the volatile ordinal.
   DATA_COMPGEN     the compiler-generated DATUM pins. The macro expands to its
@@ -67,15 +68,15 @@ BASE_OBJS = BUILD / "objdiff/base"
 
 # Presence test ONLY (never extraction): a TU with no rva.h macro at all is a
 # vendored TU whose claims are the functions_zlib/data_zlib tables - skip it.
-LABELED_TU_RE = re.compile(r"\b(?:VA|RVA|DATA|RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
+LABELED_TU_RE = re.compile(r"\b(?:VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
 DATA_MACRO_RE = re.compile(r"\bDATA\s*\(\s*(0x[0-9a-fA-F]+)\s*\)")
-RVA_COMPGEN_RE = re.compile(
-    r"\bRVA_COMPGEN\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,"
-    r"\s*([^\s,)]+)\s*\)")
+VA_COMPGEN_RE = re.compile(
+    r'\bVA_COMPGEN\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*'
+    r'(0x[0-9a-fA-F]+|\d+)\s*,\s*"([^"\n]+)"\s*,\s*'
+    r'(0x[0-9a-fA-F]+)\s*\)')
 RVA_DYNINIT_RE = re.compile(
     r"\bRVA_DYNINIT\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,"
     r"\s*([A-Za-z_][A-Za-z0-9_:<>]*)\s*\)")
-ANN_RVA_RE = re.compile(r"^rva:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?$")
 ANN_VA_RE = re.compile(r"^va:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?$")
 ANN_DATA_RE = re.compile(r"^(data-va|data):(0x[0-9a-fA-F]+)$")
 
@@ -168,15 +169,6 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
                 funcs.append((int(m.group(1), 16) - image().image_base,
                               msvc_names.func(name, decorated=decorated), size))
                 continue
-            m = ANN_RVA_RE.match(ann)
-            if m:
-                size = None
-                if m.group(2):
-                    v = m.group(2)
-                    size = int(v, 16) if v.lower().startswith("0x") else int(v)
-                funcs.append((int(m.group(1), 16),
-                              msvc_names.func(name, decorated=decorated), size))
-                continue
             m = ANN_DATA_RE.match(ann)
             if m:
                 address = int(m.group(2), 16)
@@ -216,6 +208,34 @@ def blank_comments(text: str) -> str:
             st = "code"
         i += 1
     return "".join(out)
+
+
+def generated_function_claims(
+        text: str, source_rvas: set[int], image_base: int,
+) -> tuple[list[tuple[int, str, int]], list[str]]:
+    """Extract ``VA_COMPGEN`` bodies and validate their source owners.
+
+    Both addresses in source are absolute VAs. The generated body has no AST
+    declaration of its own, so its stable linker symbol is explicit; its owner
+    must be a normal ``VA`` definition extracted from this translation unit.
+    """
+    claims, problems = [], []
+    for m in VA_COMPGEN_RE.finditer(blank_comments(text)):
+        va, size = int(m.group(1), 16), int(m.group(2), 0)
+        symbol, owner_va = m.group(3), int(m.group(4), 16)
+        rva, owner_rva = va - image_base, owner_va - image_base
+        if va < image_base or owner_va < image_base:
+            problems.append(
+                f'VA_COMPGEN(0x{va:08x}) uses an address below image base '
+                f'0x{image_base:08x} (FATAL)')
+            continue
+        if owner_rva not in source_rvas:
+            problems.append(
+                f'VA_COMPGEN(0x{va:08x}) {symbol} lacks its source owner '
+                f'VA(0x{owner_va:08x}) in this translation unit (FATAL)')
+            continue
+        claims.append((rva, symbol, size))
+    return claims, problems
 
 
 def _skip_quote(text: str, i: int) -> int:
@@ -467,17 +487,19 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
     # functions via IR
     ir = clang.emit_ir(str(src_path), cl_flags)
     if ir is None:
-        return rows, [f"{unit}: clang produced no IR - every RVA() label of "
+        return rows, [f"{unit}: clang produced no IR - every VA() label of "
                       f"this TU would silently vanish (FATAL)"]
     ir_funcs, ir_datas = ir_claims(ir)
     for rva, name, size in ir_funcs:
         emit(rva, size, name, "func", "src")
 
-    # compiler-generated bodies, name verbatim
+    # compiler-generated bodies: both their address and source owner are VAs
     blanked = blank_comments(text)
-    for m in RVA_COMPGEN_RE.finditer(blanked):
-        rva, size = int(m.group(1), 16), int(m.group(2), 0)
-        emit(rva, size or None, m.group(3), "func", "src_compgen")
+    generated, generated_problems = generated_function_claims(
+        text, {rva for rva, _name, _size in ir_funcs}, image().image_base)
+    problems.extend(f"{unit}: {problem}" for problem in generated_problems)
+    for rva, name, size in generated:
+        emit(rva, size or None, name, "func", "src_compgen")
 
     # $E dynamic-init owner pins (the body is a volatile ordinal by design)
     for m in RVA_DYNINIT_RE.finditer(blanked):
@@ -546,7 +568,7 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
 
 
 MACRO_SITE_RE = re.compile(
-    r"\b(RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|RVA|VA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
+    r"\b(VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
 
 
 def sweep_sites() -> dict[str, dict[int, str]]:
@@ -569,7 +591,7 @@ def sweep_sites() -> dict[str, dict[int, str]]:
                 lineno = text.count("\n", 0, m.start()) + 1   # may span lines
                 macro = m.group(1)
                 address = int(m.group(2), 16)
-                if macro in {"VA", "DATA"}:
+                if macro in {"VA", "VA_COMPGEN", "DATA"}:
                     address -= image().image_base
                 out.setdefault(macro, {}).setdefault(
                     address, []).append(
@@ -589,8 +611,8 @@ def check_completeness() -> list[str]:
     for c in all_claims():
         have.setdefault((c.channel, c.kind), set()).add(c.rva)
     problems = []
-    checks = [("VA", "src", "func"), ("RVA", "src", "func"),
-              ("RVA_COMPGEN", "src_compgen", "func"),
+    checks = [("VA", "src", "func"),
+              ("VA_COMPGEN", "src_compgen", "func"),
               ("RVA_DYNINIT", "src_dyninit", "func"), ("DATA", "src", "data"),
               ("DATA_COMPGEN", "src_data_compgen", "data")]
     for macro, channel, kind in checks:
@@ -604,7 +626,7 @@ def check_completeness() -> list[str]:
             if rva not in have.get((channel, kind), set()):
                 problems.append(f"{macro}(0x{rva:06x}) at {wheres[0]} is in "
                                 f"NO fragment - silently lost label (FATAL)")
-            if len(wheres) > 1 and macro != "RVA":
+            if len(wheres) > 1:
                 problems.append(f"{macro}(0x{rva:06x}) appears at "
                                 f"{len(wheres)} sites ({wheres[0]} ...) - "
                                 f"stacked/duplicated macro")

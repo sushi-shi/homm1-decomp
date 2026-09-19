@@ -2,8 +2,8 @@
 
 #include <match.h>
 
+#include <H1/All.h>
 #include <H1/KB.h>
-#include <H2/_all.h>
 
 // HoMM2 KB.cpp confirms the identity and behavior. HoMM1 differs in the timer
 // comparison and placement of the re-entry guard.

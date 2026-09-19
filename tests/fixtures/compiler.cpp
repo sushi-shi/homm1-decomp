@@ -28,18 +28,18 @@ public:
 typedef char AssertClassSize[sizeof(Probe) == 8 ? 1 : -1];
 
 // Synthetic identities for binding tests; these are NOT game claims.
-RVA(0x1000, 1) Probe::Probe() : field(1) {}
-RVA(0x1010, 1) Probe::~Probe() { field = 0; }
-RVA(0x1020, 1) int Probe::value(int input) { return field + input; }
-RVA(0x1030, 1) int Probe::twice(int input) { return input * 2; }
-RVA(0x1040, 1) int Probe::overload(int input) { return field + input; }
-RVA(0x1050, 1) int Probe::overload(short input) { return field - input; }
-RVA(0x1060, 1) int probe_dispatch(Probe *object) { return object->value(3); }
+VA(0x00401000, 1) Probe::Probe() : field(1) {}
+VA(0x00401010, 1) Probe::~Probe() { field = 0; }
+VA(0x00401020, 1) int Probe::value(int input) { return field + input; }
+VA(0x00401030, 1) int Probe::twice(int input) { return input * 2; }
+VA(0x00401040, 1) int Probe::overload(int input) { return field + input; }
+VA(0x00401050, 1) int Probe::overload(short input) { return field - input; }
+VA(0x00401060, 1) int probe_dispatch(Probe *object) { return object->value(3); }
 
-extern "C" RVA(0x1070, 1) int __stdcall probe_stdcall(int a, int b) { return a + b; }
-extern "C" RVA(0x1080, 1) int __cdecl probe_cdecl(int a) { return a + 1; }
-RVA(0x1090, 1) static int probe_static(int a) { return a - 1; }
-RVA(0x10A0, 1) int probe_switch(int a) {
+extern "C" VA(0x00401070, 1) int __stdcall probe_stdcall(int a, int b) { return a + b; }
+extern "C" VA(0x00401080, 1) int __cdecl probe_cdecl(int a) { return a + 1; }
+VA(0x00401090, 1) static int probe_static(int a) { return a - 1; }
+VA(0x004010a0, 1) int probe_switch(int a) {
     switch (a) {
     case 0: return probe_static(a);
     case 1: return 7;
@@ -50,7 +50,7 @@ RVA(0x10A0, 1) int probe_switch(int a) {
     }
 }
 extern void probe_throwing_call();
-RVA(0x10B0, 1) int probe_unwind() {
+VA(0x004010b0, 1) int probe_unwind() {
     Probe local;
     probe_throwing_call();
     return local.field;

@@ -4,7 +4,7 @@ link.exe 5.10 lays each .obj's .text down as ONE CONTIGUOUS block, input
 sections in cl's emission order (== file order), objs in link-line order
 (docs/link-text-layout.md). A faithful reconstruction therefore satisfies:
 
-  INTRA-TU  RVA() functions appear in FILE ORDER strictly increasing in
+  INTRA-TU  VA() functions appear in FILE ORDER strictly increasing in
             retail RVA, spans non-overlapping;
   INTER-TU  each TU's [min_start, max_end) block never interleaves another's.
 
@@ -26,7 +26,7 @@ import sys
 
 from homm1.core.paths import BUILD, CONFIG, REPO, SRC
 from homm1.core.tsv import read as read_tsv
-from homm1.verify.srcscan import RVA_RE, claim_rva
+from homm1.verify.srcscan import VA_RE, claim_rva
 
 EXILES_TSV = CONFIG / "cleanliness/kept-comdat-exiles.tsv"
 BASELINE = CONFIG / "cleanliness/tu-order-baseline.tsv"
@@ -98,7 +98,7 @@ def load_in_file_order(exclude_pools: bool = False) -> dict[str, list[Entry]]:
         lines = path.read_text(errors="replace").splitlines()
         seq: list[Entry] = []
         for i, ln in enumerate(lines):
-            m = RVA_RE.search(ln)
+            m = VA_RE.search(ln)
             if not m:
                 continue
             rva = claim_rva(m)
@@ -137,7 +137,7 @@ def verify_exiles(exiles, claimed, spans, emitted) -> list[str]:
         got = claimed.get(rva)
         owner_emits = owner.casefold() in emitted.get(rva, set())
         if got is None and not owner_emits:
-            bad.append(f"exile {rva:#010x} {name}: no owner RVA() pin/emission "
+            bad.append(f"exile {rva:#010x} {name}: no owner VA() pin/emission "
                        f"found (owner {owner})")
         elif got is not None and got != owner and not owner_emits:
             bad.append(f"exile {rva:#010x} {name}: pinned in {got}, ledger "

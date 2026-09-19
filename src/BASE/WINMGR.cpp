@@ -2,7 +2,7 @@
 
 #include <match.h>
 
-#include <H2/_all.h>
+#include <H1/All.h>
 
 // donor PoL RVA 0x000cac40; preferred Buka symbol ?BroadcastMessage@heroWindowManager@@QAEHHHHH@Z
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order

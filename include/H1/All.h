@@ -1,0 +1,55 @@
+#ifndef HOMM1_H1_ALL_H
+#define HOMM1_H1_ALL_H
+// Shared declarations for the currently recovered HoMM1 source tree.
+
+#include <BASE/baseManager.h>
+#include <BASE/bitmap.h>
+#include <BASE/border.h>
+#include <BASE/button.h>
+#include <BASE/dimmerWidget.h>
+#include <BASE/dropListWidget.h>
+#include <BASE/executive.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/iconWidget.h>
+#include <BASE/inputManager.h>
+#include <BASE/listBoxWidget.h>
+#include <BASE/MIDIWrap.h>
+#include <BASE/mouseManager.h>
+#include <BASE/palette.h>
+#include <BASE/resource.h>
+#include <BASE/resourceManager.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
+#include <BASE/textEntryWidget.h>
+#include <BASE/textWidget.h>
+#include <BASE/tileset.h>
+#include <BASE/widget.h>
+#include <EDITOR/fullMap.h>
+#include <H1/Ints.h>
+#include <H1/Macros.h>
+#include <H1/Types.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/bankBox.h>
+#include <SOURCE/combatManager.h>
+#include <SOURCE/ExpCampaign.h>
+#include <SOURCE/fileRequester.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/hexcell.h>
+#include <SOURCE/highScoreManager.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/recruitUnit.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/strip.h>
+#include <SOURCE/swapManager.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
+#include <SOURCE/townObject.h>
+
+#endif // HOMM1_H1_ALL_H

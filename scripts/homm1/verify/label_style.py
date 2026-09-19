@@ -7,7 +7,7 @@ comment-form label rows are FATAL; comment @markers come from the closed
 vocabulary (docs/comment-markers.md); a volatile `_$E<n>` ordinal is
 emission-order state, never a source label.
 
-MERGED (compgen_order.py): every RVA_COMPGEN invocation sits in RVA order
+MERGED (compgen_order.py): every VA_COMPGEN invocation sits in RVA order
 among its TU's other labeled lines - the intra-file monotonic-walk property.
 (COMDAT copies are linker-pooled away from the TU's contiguous run, so this
 is purely against each invocation's nearest labeled neighbours.)
@@ -22,19 +22,18 @@ import re
 from pathlib import Path
 
 from homm1.core.paths import REPO
-from homm1.verify.srcscan import (RVA_COMPGEN_RE, RVA_RE, blank_comments, claim_rva,
+from homm1.verify.srcscan import (VA_COMPGEN_RE, VA_RE, blank_comments, claim_rva,
                                    source_files)
 
 ADDR = r"0x[0-9a-f]{8}"
 HEXN = r"(?:0x0|0x[1-9a-f][0-9a-f]*)"
-MANGLED = r"[^\s,()]+"
-VOLATILE_COMPGEN_RE = re.compile(r"\bRVA_COMPGEN\([^)]*,\s*_?\$E[0-9]+\s*\)")
+MANGLED = r'[^"\n]+'
+VOLATILE_COMPGEN_RE = re.compile(r"\bVA_COMPGEN\([^)]*,\s*_?\$E[0-9]+\s*\)")
 
 CANON = {
     "VA": rf"VA\({ADDR}, {HEXN}\)",
-    "RVA": rf"RVA\({ADDR}, {HEXN}\)",
     "DATA": rf"DATA\({ADDR}\)",
-    "RVA_COMPGEN": rf"RVA_COMPGEN\({ADDR}, {HEXN}, {MANGLED}\)",
+    "VA_COMPGEN": rf'VA_COMPGEN\({ADDR}, {HEXN}, "{MANGLED}", {ADDR}\)',
     # the owner charset mirrors the LIVE extraction regex (retail_labels.source
     # RVA_DYNINIT_RE): template-id owners (CActRegPool<CGrunt>::s_table) are
     # canonical - the frozen gate predated that convention
@@ -43,8 +42,8 @@ CANON = {
     "DATA_COMPGEN": rf"DATA_COMPGEN\({ADDR},",
 }
 CANON_RE = {k: re.compile(v) for k, v in CANON.items()}
-WRAPPABLE = {"VA", "RVA", "DATA"}   # StatementMacros clang-format arg-wraps past 100
-FIND_RE = re.compile(r"\b(RVA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|RVA|VA|DATA)\s*\(")
+WRAPPABLE = {"VA", "DATA"}   # StatementMacros clang-format arg-wraps past 100
+FIND_RE = re.compile(r"\b(VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(")
 COMMENT_ROW_RE = re.compile(r"@(?:rva|data)-symbol:\s*\S+\s+0x[0-9a-fA-F]+")
 ALLOWED_MARKERS = {"stub", "early-stop", "identity-TODO", "confidence",
                    "source", "interleaver", "dead-code"}
@@ -57,7 +56,7 @@ def scan(path: Path):
     for i, ln in enumerate(raw.splitlines(), 1):
         if COMMENT_ROW_RE.search(ln):
             out.append((i, "retired comment-form label row (use "
-                           "RVA_COMPGEN/DATA)", ln.strip()[:90]))
+                           "VA_COMPGEN/DATA)", ln.strip()[:90]))
         m = MARKER_RE.match(ln)
         if m and m.group(1) not in ALLOWED_MARKERS:
             out.append((i, f"@{m.group(1)} is not a blessed comment marker "
@@ -88,16 +87,16 @@ def scan(path: Path):
 
 
 def compgen_order(path: Path):
-    """RVA_COMPGEN invocations out of RVA order among the TU's labeled lines."""
+    """VA_COMPGEN invocations out of RVA order among the TU's labeled lines."""
     seq = []
     for i, ln in enumerate(path.read_text(errors="replace").splitlines(), 1):
-        m = RVA_RE.search(ln)
+        m = VA_RE.search(ln)
         if m:
             seq.append((i, claim_rva(m), False))
             continue
-        m = RVA_COMPGEN_RE.search(ln)
+        m = VA_COMPGEN_RE.search(ln)
         if m:
-            seq.append((i, int(m.group(1), 16), True))
+            seq.append((i, claim_rva(m), True))
     out = []
     for k, (ln, rva, is_cg) in enumerate(seq):
         if not is_cg:
@@ -105,7 +104,7 @@ def compgen_order(path: Path):
         prev = seq[k - 1][1] if k > 0 else None
         nxt = seq[k + 1][1] if k + 1 < len(seq) else None
         if (prev is not None and rva < prev) or (nxt is not None and rva > nxt):
-            out.append((ln, f"RVA_COMPGEN 0x{rva:06x} out of RVA order "
+            out.append((ln, f"VA_COMPGEN 0x{rva:06x} out of RVA order "
                             f"(between "
                             f"{'0x%06x' % prev if prev is not None else 'BOF'} "
                             f"and "
@@ -133,7 +132,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="homm1 verify label-style",
                                  description=__doc__)
     ap.add_argument("--gate", action="store_true",
-                    help="exit 1 on any off-canon label, marker or out-of-order RVA_COMPGEN")
+                    help="exit 1 on any off-canon label, marker or out-of-order VA_COMPGEN")
     a = ap.parse_args(argv)
     viol = violations()
     for v in viol:
@@ -142,7 +141,7 @@ def main(argv=None) -> int:
         print(f"label-style: {len(viol)} off-canon label/marker finding(s)")
         return 1 if a.gate else 0
     print("label-style: OK - canonical macros, blessed markers, "
-          "RVA_COMPGEN in RVA order")
+          "VA_COMPGEN in RVA order")
     return 0
 
 

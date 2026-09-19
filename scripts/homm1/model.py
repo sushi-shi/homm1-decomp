@@ -6,7 +6,7 @@
 
 THE RULE: functions.tsv / data.tsv contribute ONLY structure - starts, kinds,
 derived extents. Every identity (name, unit, exact matched size) comes from a
-channel: the extracted source claims (RVA/DATA/RVA_COMPGEN/RVA_DYNINIT/
+channel: the extracted source claims (VA/DATA/VA_COMPGEN/RVA_DYNINIT/
 DATA_COMPGEN) and the committed provider tables. A claim whose rva is not an
 admitted census row is a violation; a claim size may never cross the next
 admitted start.
@@ -119,7 +119,7 @@ def unmaterialized(claims: list[Claim]) -> list[Claim]:
     """Function claims NO claiming unit's object defines, and nothing else
     names the rva.
 
-    Every RVA() names a body retail emitted, so a claim with no body anywhere
+    Every VA() names a body retail emitted, so a claim with no body anywhere
     is a reconstruction gap - typically a header inline no TU odr-uses, which
     cl therefore never emits. A rva ANOTHER source claim spells differently is
     not that gap: the two pins compete for one body, the materialized one wins
@@ -147,7 +147,7 @@ def unmaterialized(claims: list[Claim]) -> list[Claim]:
 def _materialized(claims: list[Claim], violations: list[str]) -> list[Claim]:
     """Keep only the units that MATERIALIZED a function claim.
 
-    A header inline's `RVA()` reaches every including TU, so extraction - a
+    A header inline's `VA()` reaches every including TU, so extraction - a
     pure function of source - claims it from all of them. Which TUs actually
     hold a body is not a source fact: cl emits the COMDAT only where the
     inline is odr-used, and the retail linker picked one of exactly those
@@ -281,7 +281,7 @@ def resolve() -> Model:
     if kw_owners:
         violations.append(f"{kw_owners} RVA_DYNINIT pin(s) spell a KEYWORD as "
                           f"the owner ('int') - name the real owning datum")
-    # A header-inline definition carries its RVA()/DATA() macro into EVERY
+    # A header-inline definition carries its VA()/DATA() macro into EVERY
     # including TU, so identical (kind, rva, channel, name) claims arrive from
     # several units. The OWNER is the unit whose retail link band contains the
     # rva (link_order.tsv is the authority); alphabetical only as fallback.
