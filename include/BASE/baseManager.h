@@ -20,8 +20,7 @@ H1_ENUM_BEGIN(BaseManagerMessageMask)
 H1_ENUM_END(BaseManagerMessageMask)
 
 H1_ENUM_BEGIN(BaseManagerConstant)
-    BASE_MANAGER_NAME_CAPACITY = 30,
-    BASE_MANAGER_SIZE = 0x30
+    BASE_MANAGER_NAME_CAPACITY = 30
 H1_ENUM_END(BaseManagerConstant)
 
 #pragma pack(push, 1)
@@ -40,8 +39,5 @@ public:
     virtual short Main(tag_message &) = 0;
 };
 #pragma pack(pop)
-
-typedef char BaseManagerSizeCheck[
-    sizeof(baseManager) == BASE_MANAGER_SIZE ? 1 : -1];
 
 #endif

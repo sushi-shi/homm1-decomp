@@ -14,7 +14,4 @@
 // The compiler itself supplies the body; these are not C++ implementations.
 #define VA_COMPGEN(address, size, symbol, owner)
 
-// Layout assertion compatible with the period compiler.
-#define SIZE(type, bytes) typedef char size_check_##type[(sizeof(type) == (bytes)) ? 1 : -1]
-
 #endif

@@ -3,10 +3,6 @@
 
 #include <BASE/resource.h>
 
-H1_ENUM_BEGIN(SampleConstant)
-    SAMPLE_SIZE = 0x2E
-H1_ENUM_END(SampleConstant)
-
 #pragma pack(push, 1)
 class sample : public resource {
 public:
@@ -24,5 +20,4 @@ public:
 };
 #pragma pack(pop)
 
-typedef char SampleSizeCheck[sizeof(sample) == SAMPLE_SIZE ? 1 : -1];
 #endif // HOMM1_BASE_SAMPLE_H

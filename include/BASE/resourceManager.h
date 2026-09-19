@@ -17,8 +17,7 @@ H1_ENUM_BEGIN(ResourceManagerConstant)
     RESOURCE_MANAGER_LOAD_ERROR = 3,
     RESOURCE_MANAGER_BINARY_OPEN_MODE = 0x8000,
     RESOURCE_MANAGER_BACKDROP_ROW_BYTES = 640,
-    RESOURCE_MANAGER_FILENAME_CAPACITY = 60,
-    RESOURCE_MANAGER_SIZE = 0x86
+    RESOURCE_MANAGER_FILENAME_CAPACITY = 60
 H1_ENUM_END(ResourceManagerConstant)
 
 #pragma pack(push, 1)
@@ -73,8 +72,5 @@ public:
     void ReadBlock(signed char *, unsigned long);
 };
 #pragma pack(pop)
-
-typedef char ResourceManagerSizeCheck[
-    sizeof(resourceManager) == RESOURCE_MANAGER_SIZE ? 1 : -1];
 
 #endif

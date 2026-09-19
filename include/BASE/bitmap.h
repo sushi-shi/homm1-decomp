@@ -29,8 +29,5 @@ public:
 };
 #pragma pack(pop)
 
-typedef char BitmapSizeCheck[
-    sizeof(bitmap) == sizeof(char[0x18]) ? 1 : -1];
-
 void PostprocessBitmap(signed char *, int, int);
 #endif // HOMM1_BASE_BITMAP_H

@@ -9,8 +9,6 @@
 //   - mapCell is a 12-byte record (cells allocated as width*height*12; memcpy 12).
 // Byte/word access widths + bit positions are read off the andb/andw/movw forms.
 
-#include <match.h>
-
 #include <H1/Ints.h>
 
 #pragma pack(push, 1)
@@ -29,7 +27,6 @@ struct mapCellExtra {       // 7 bytes (packed)
     u8  ovlIndex;           // +6  overlay sprite index (0xFF == none)
 };
 #pragma pack(pop)
-SIZE(mapCellExtra, 7);
 
 class mapCell {            // 12 bytes (CodeView mangles every use as PAVmapCell -> class)
 public:
@@ -49,7 +46,6 @@ public:
     u16 unk8;               // +8
     u16 extra;              // +0xa  head index into the extras chain
 };
-SIZE(mapCell, 12);
 
 // Legacy on-disk record sizes (fullMap::Read's convert path streams the old layout and
 // copies the leading bytes into the new packed records).

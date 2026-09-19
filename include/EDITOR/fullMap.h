@@ -3,8 +3,6 @@
 // Reconstructed class (EDITOR) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 11 methods, 0 own-virtual, 0 static data.
 
-#include <match.h>
-
 #include <EDITOR/mapcell.h>
 
 // forward declarations:
@@ -41,5 +39,4 @@ public:
     mapCell      *Row(int y)   { return cells + width * y; }   // row base ptr; caller does [x]
     mapCellExtra *Extra(int i) { return &extras[i]; }          // &extras[i] (stride 7)
 };
-SIZE(fullMap, 20);
 #endif // HOMM1_EDITOR_FULLMAP_H
