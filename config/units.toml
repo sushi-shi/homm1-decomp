@@ -13,155 +13,155 @@ cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
 
 [[unit]]
 unit = "BASE/BITS"
-source = "src/carcass/BASE/BITS.cpp"
+source = "src/BASE/BITS.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/INPUTMGR"
-source = "src/carcass/BASE/INPUTMGR.cpp"
+source = "src/BASE/INPUTMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/MOUSEMGR"
-source = "src/carcass/BASE/MOUSEMGR.cpp"
+source = "src/BASE/MOUSEMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/Misc"
-source = "src/carcass/BASE/Misc.cpp"
+source = "src/BASE/Misc.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/RESMGR"
-source = "src/carcass/BASE/RESMGR.cpp"
+source = "src/BASE/RESMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/WINDOW"
-source = "src/carcass/BASE/WINDOW.cpp"
+source = "src/BASE/WINDOW.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/WINMGR"
-source = "src/carcass/BASE/WINMGR.cpp"
+source = "src/BASE/WINMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/soundmgr"
-source = "src/carcass/BASE/soundmgr.cpp"
+source = "src/BASE/soundmgr.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/ADVMGR"
-source = "src/carcass/SOURCE/ADVMGR.cpp"
+source = "src/SOURCE/ADVMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/CMBTMGR"
-source = "src/carcass/SOURCE/CMBTMGR.cpp"
+source = "src/SOURCE/CMBTMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/COMMAND"
-source = "src/carcass/SOURCE/COMMAND.cpp"
+source = "src/SOURCE/COMMAND.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/EVENTS"
-source = "src/carcass/SOURCE/EVENTS.cpp"
+source = "src/SOURCE/EVENTS.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/GAME"
-source = "src/carcass/SOURCE/GAME.cpp"
+source = "src/SOURCE/GAME.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/HERO"
-source = "src/carcass/SOURCE/HERO.cpp"
+source = "src/SOURCE/HERO.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/HISCORE"
-source = "src/carcass/SOURCE/HISCORE.cpp"
+source = "src/SOURCE/HISCORE.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/KB"
-source = "src/carcass/SOURCE/KB.cpp"
+source = "src/SOURCE/KB.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/Modem"
-source = "src/carcass/SOURCE/Modem.cpp"
+source = "src/SOURCE/Modem.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/PATH"
-source = "src/carcass/SOURCE/PATH.cpp"
+source = "src/SOURCE/PATH.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/PHILAI"
-source = "src/carcass/SOURCE/PHILAI.cpp"
+source = "src/SOURCE/PHILAI.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/RECRUIT"
-source = "src/carcass/SOURCE/RECRUIT.cpp"
+source = "src/SOURCE/RECRUIT.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/REMOTE"
-source = "src/carcass/SOURCE/REMOTE.cpp"
+source = "src/SOURCE/REMOTE.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/REQUEST"
-source = "src/carcass/SOURCE/REQUEST.cpp"
+source = "src/SOURCE/REQUEST.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/SETUP"
-source = "src/carcass/SOURCE/SETUP.cpp"
+source = "src/SOURCE/SETUP.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/SPELLS"
-source = "src/carcass/SOURCE/SPELLS.cpp"
+source = "src/SOURCE/SPELLS.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/STRIP"
-source = "src/carcass/SOURCE/STRIP.cpp"
+source = "src/SOURCE/STRIP.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/SWAPMGR"
-source = "src/carcass/SOURCE/SWAPMGR.cpp"
+source = "src/SOURCE/SWAPMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/TOWN"
-source = "src/carcass/SOURCE/TOWN.cpp"
+source = "src/SOURCE/TOWN.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/TOWNMGR"
-source = "src/carcass/SOURCE/TOWNMGR.cpp"
+source = "src/SOURCE/TOWNMGR.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/kbwin"
-source = "src/carcass/SOURCE/kbwin.cpp"
+source = "src/SOURCE/kbwin.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/netwin"
-source = "src/carcass/SOURCE/netwin.cpp"
+source = "src/SOURCE/netwin.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/wingraph"
-source = "src/carcass/SOURCE/wingraph.cpp"
+source = "src/SOURCE/wingraph.cpp"
 flags = "cpp_carcass"

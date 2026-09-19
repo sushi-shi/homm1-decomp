@@ -45,7 +45,7 @@ accepts 383 functions only where HoMM2 Buka 2.1 and PoL 2.0 independently name
 the same logical function. Buka 2.1 takes precedence for names and module
 order; PoL 2.0 supplies declarations known to compile with VC4. `AppAbout`,
 `PollSound`, and `ForcePollSound` are reconstructed and byte-exact. The other
-functions deliberately have empty carcass bodies so the matching campaign can
+functions deliberately have empty bodies so the matching campaign can
 start from named, compilable TUs.
 
 Source annotations use `VA(0x004xxxxx, size)`. Claim extraction subtracts the
@@ -58,7 +58,7 @@ but all four data bodies remain unclaimed and unscored.
 The alignment evidence is committed under `evidence/homm2-label-*.tsv`.
 `scripts/homm1/labels/donor_align.py` compares instruction shapes, strings,
 calls, and function order against both donor builds. Its materializer places
-accepted declarations in `src/carcass/{BASE,SOURCE}` and keeps the normal source
+accepted declarations in `src/{BASE,SOURCE}` and keeps the normal source
 claim path; there is no label-provider adapter.
 
 ## Candidate linking

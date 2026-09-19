@@ -153,8 +153,33 @@ cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
     path.write_text(text)
 
 
+def remove_previous_outputs(manifest: Path, output: Path) -> None:
+    """Remove only files emitted by the preceding materialization pass.
+
+    Generated donor TUs live in the ordinary source tree.  Recursively
+    clearing ``output`` would therefore delete hand-reconstructed and newly
+    added sources as the campaign progresses.  The generated manifest is the
+    exact ownership record for stale-output cleanup.
+    """
+    if not manifest.is_file():
+        return
+    root = output.resolve()
+    with manifest.open(newline="") as stream:
+        for row in csv.DictReader(stream, delimiter="\t"):
+            source = Path(row["source"])
+            if not source.is_absolute():
+                source = Path.cwd() / source
+            source = source.resolve()
+            try:
+                source.relative_to(root)
+            except ValueError:
+                continue
+            if source.is_file():
+                source.unlink()
+
+
 def empty_body(block: str) -> str:
-    """Replace donor code with the minimal compiling carcass body."""
+    """Replace donor code with the minimal compiling source body."""
     start = block.find("{")
     if start < 0:
         raise ValueError("donor function block has no body")
@@ -261,9 +286,7 @@ def main(argv: list[str] | None = None) -> int:
                                        preferred[0], preferred[1], row["evidence"]))
 
     manifest_rows = []
-    if args.output.is_dir():
-        for stale in args.output.rglob("*.cpp"):
-            stale.unlink()
+    remove_previous_outputs(args.manifest, args.output)
     for relative, rows in sorted(selected.items(), key=lambda item: str(item[0])):
         destination = args.output / relative
         destination.parent.mkdir(parents=True, exist_ok=True)

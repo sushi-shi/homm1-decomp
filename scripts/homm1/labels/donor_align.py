@@ -1,7 +1,7 @@
 """Align the HoMM1 function census with HoMM2 symbol-bearing donors.
 
 This is a locating tool, not a source-claim provider.  It records the evidence
-used to create the ordinary ``RVA`` carcass under ``src``; labels continue to
+used to create ordinary ``VA`` source stubs under ``src``; labels continue to
 enter the build through the same source path as reconstructed functions.
 
 The preferred donor is the Buka 2.1 symbol model.  The PoL 2.0 CodeView model

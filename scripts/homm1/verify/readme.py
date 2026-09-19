@@ -33,8 +33,6 @@ def module_of(source: str) -> str:
     parts = PurePosixPath(source).parts
     if not parts:
         return "?"
-    if len(parts) > 2 and parts[:2] == ("src", "carcass"):
-        return parts[2]
     if parts[0] in ("src", "vendor") and len(parts) > 1:
         return parts[1]
     return parts[0]
