@@ -5,6 +5,7 @@ rva	name	provenance
 0x0004F640	_PollSound	evidence/resource-manager-layout.md; ReadBlock call target and donor C linkage
 0x0005A584	?PollRemote@@YAXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x0005DC9B	?KBTickCount@@YAJXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
+0x000738C0	?PostprocessBitmap@@YAXPACHH@Z	evidence/resource-manager-layout.md; semantic provisional name from three bitmap-load callers and pixel/dimension arguments
 0x00078940	?PollSound@soundManager@@QAEXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x000806F0	_sprintf	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
 0x00080880	_free	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape

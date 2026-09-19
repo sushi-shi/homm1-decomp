@@ -16,6 +16,7 @@ H1_ENUM_BEGIN(ResourceManagerConstant)
     RESOURCE_MANAGER_INVALID_FILE = -1,
     RESOURCE_MANAGER_LOAD_ERROR = 3,
     RESOURCE_MANAGER_BINARY_OPEN_MODE = 0x8000,
+    RESOURCE_MANAGER_BACKDROP_ROW_BYTES = 640,
     RESOURCE_MANAGER_FILENAME_CAPACITY = 60,
     RESOURCE_MANAGER_SIZE = 0x86
 H1_ENUM_END(ResourceManagerConstant)
@@ -43,8 +44,8 @@ public:
     virtual short Open(short);
     virtual void Close();
     virtual short Main(tag_message &);
-    void GetBackdrop(char *, bitmap *, int);
-    void GetBackdropAtLoc(char *, bitmap *, int, int, int);
+    void GetBackdrop(char *, bitmap *);
+    void GetBackdropAtLoc(char *, bitmap *, int, int);
     palette *GetPalette(char *);
     bitmap *GetBitmap(char *);
     icon *GetIcon(char *);

@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/bitmap.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
@@ -22,17 +23,44 @@ char gReadLongAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 short gReadBlockAssertLine = 679;
 char gReadBlockAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 
-// donor PoL RVA 0x000c8080; preferred Buka symbol ?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@H@Z
-// donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.523311;margin=0.276556;shape=0.370;size=0.986;calls=0.778;alternate=pol20:void resourceManager::GetBackdrop(char *, class bitmap *, int)@0x000c8080
-VA(0x004758d0, 0x90)
-void resourceManager::GetBackdrop(char *, class bitmap *, int) {}
+// HoMM1 has only the raw-backdrop path of the Buka donor overload.
+VA(0x004758d0, 0x85)
+void resourceManager::GetBackdrop(char *name, class bitmap *backdrop)
+{
+    PointToFile(MakeId(name));
+    ReadWord();
+    ReadWord();
+    ReadWord();
+    ReadBlock(backdrop->m_pixels, backdrop->m_width * backdrop->m_height);
+    PostprocessBitmap(backdrop->m_pixels, backdrop->m_width, backdrop->m_height);
+}
 
-// donor PoL RVA 0x000c8130; preferred Buka symbol ?GetBackdropAtLoc@resourceManager@@QAEXPADPAVbitmap@@HHH@Z
-// donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.388383;margin=0.191324;shape=0.224;size=0.750;calls=0.667;alternate=pol20:void resourceManager::GetBackdropAtLoc(char *, class bitmap *, int, int, int)@0x000c8130
+// HoMM1 likewise omits Buka's useIcon branch and keeps its row-copy loop.
 VA(0x00475960, 0x90)
-void resourceManager::GetBackdropAtLoc(char *, class bitmap *, int, int, int) {}
+void resourceManager::GetBackdropAtLoc(
+    char *filename,
+    class bitmap *destination,
+    int destinationX,
+    int destinationY)
+{
+    int curRow;
+    {
+        short imageHeight;
+        {
+            short width;
+            PointToFile(MakeId(filename));
+            ReadWord();
+            width = ReadWord();
+            imageHeight = ReadWord();
+            for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
+                ReadBlock(
+                    curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
+                        + destination->m_pixels + destinationX,
+                    width);
+            }
+        }
+    }
+}
 
 // donor PoL RVA 0x000c8570; preferred Buka symbol ?GetSample@resourceManager@@QAEPAVsample@@PAD@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order

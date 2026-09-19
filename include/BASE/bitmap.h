@@ -1,12 +1,17 @@
 #ifndef HOMM1_BASE_BITMAP_H
 #define HOMM1_BASE_BITMAP_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 13 methods, 0 own-virtual, 0 static data.
 
+#include <BASE/resource.h>
 #include <H1/Macros.h>
 
-class bitmap {
+#pragma pack(push, 1)
+class bitmap : public resource {
 public:
+    short m_bitmapType;
+    short m_width;
+    short m_height;
+    signed char *m_pixels;
+
     // --- constructors ---
     bitmap(void);
     bitmap(short int, short int, short int);
@@ -22,4 +27,9 @@ public:
     void CopyTo(class bitmap *, int, int, int, int, int, int);
     void CopyToCareful(class bitmap *, int, int, int, int, int, int);
 };
+#pragma pack(pop)
+
+typedef char BitmapSizeCheck[sizeof(bitmap) == 0x18 ? 1 : -1];
+
+void PostprocessBitmap(signed char *, int, int);
 #endif // HOMM1_BASE_BITMAP_H

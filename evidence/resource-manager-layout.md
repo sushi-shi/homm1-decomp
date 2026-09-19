@@ -47,6 +47,22 @@ The function bodies end at their `ret` instructions after `0x2B` and `0x2E`
 bytes. The following `INT3` bytes align the next linker partitions and are not
 part of either source function.
 
+`GetBackdrop` at VA `0x004758D0` is the raw branch of the later Buka donor:
+HoMM1 has no `useIcon` argument. After reading the bitmap header and pixels it
+calls the one-byte cdecl stub at VA `0x004738C0` with the pixel pointer, width,
+and height. The same target follows pixel reads in the bitmap constructor at
+VA `0x0047A770` and the three-dimensional image constructor at VA
+`0x0047F970`, where the last argument is the product of two dimensions. The
+provisional semantic identity `PostprocessBitmap` records that strong calling
+evidence without claiming an original-source spelling that neither donor
+preserves. Its empty retail body explains why HoMM2 could remove the call.
+
+`GetBackdropAtLoc` at VA `0x00475960` is Buka's raw row-copy loop without its
+`useIcon` branch. Its `ret 16` proves four arguments. The retail stack slots
+and VC4 output establish nested local lifetimes: the row index is outermost,
+then image height, then width. Keeping those scopes emits the exact offsets
+without synthetic padding.
+
 `ReadWord` at VA `0x00476530` refers to the packed assertion record at VAs
 `0x004A0E0C` and `0x004A0E10`. The record contains a 16-bit value `619`
 followed by `D:\\Heroes\\Base\\RESMGR.CPP`; the function increments the value
