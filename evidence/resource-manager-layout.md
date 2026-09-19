@@ -31,6 +31,12 @@ access the reference count at `0x06`; `Query` sign-extends the resource ID at
 Together with the vptr and category at the start, these accesses establish a
 record size of `0x0E` and a 16-bit ID parameter for HoMM1's `Query`.
 
+`Expunge` at VA `0x00475ED0` follows the donor list walk exactly. Its two
+traversal pointers occupy one two-element cursor array: element zero holds the
+next node at `[ebp-8]`, and element one holds the current node at `[ebp-4]`.
+That layout accounts for every retail stack access while retaining the donor's
+remove-then-delete order.
+
 HoMM1 differs from both HoMM2 donors here. Buka 2.1 and PoL 2.0 save positions
 in global stacks and select among aggregate descriptors. HoMM1 saves one
 position in the object. Its functions at VAs `0x00476470` and `0x004764A0`
@@ -47,3 +53,9 @@ followed by `D:\\Heroes\\Base\\RESMGR.CPP`; the function increments the value
 before passing line `620` to `ProcessAssert`. Its final call target at VA
 `0x00482990` is `_read`, as shown independently by the donor CRT identity and
 the matching three-argument file-read body.
+
+The adjacent read helpers repeat the same record shape. `ReadByte` uses line
+599 at VAs `0x004A0DEC`/`0x004A0DF0`, `ReadLong` uses line 640 at
+`0x004A0E2C`/`0x004A0E30`, and `ReadBlock` uses line 680 at
+`0x004A0E4C`/`0x004A0E50`. `ReadBlock` calls the C-linkage `_PollSound` body at
+VA `0x0044F640` before and after `_read`, matching the Buka 2.1 donor design.

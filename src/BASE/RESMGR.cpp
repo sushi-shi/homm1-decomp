@@ -4,12 +4,19 @@
 
 #include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
+#include <H1/KB.h>
 #include <H2/_all.h>
 
 #include <io.h>
 
+short gReadByteAssertLine = 598;
+char gReadByteAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 short gReadWordAssertLine = 619;
 char gReadWordAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
+short gReadLongAssertLine = 639;
+char gReadLongAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
+short gReadBlockAssertLine = 679;
+char gReadBlockAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 
 // donor PoL RVA 0x000c8080; preferred Buka symbol ?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@H@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
@@ -32,8 +39,21 @@ class sample * resourceManager::GetSample(char *) { return 0; }
 // donor PoL RVA 0x000c86b0; preferred Buka symbol ?Dispose@resourceManager@@QAEXPAVresource@@@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520865;margin=0.403030;shape=0.400;size=0.812;calls=1.000;alternate=pol20:void resourceManager::Dispose(class resource *)@0x000c86b0
-VA(0x00475de0, 0x90)
-void resourceManager::Dispose(class resource *) {}
+VA(0x00475de0, 0x87)
+void resourceManager::Dispose(class resource *resourceToDispose)
+{
+    if (m_expunging != 0)
+        return;
+    if (resourceToDispose != 0) {
+        resourceToDispose->m_refCount--;
+        if (resourceToDispose->m_refCount > 0) {
+            return;
+        } else {
+            RemoveResource(resourceToDispose);
+            delete resourceToDispose;
+        }
+    }
+}
 
 // donor PoL RVA 0x000c8740; preferred Buka symbol ?AddResource@resourceManager@@QAEXPAVresource@@@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
@@ -50,6 +70,23 @@ void resourceManager::AddResource(class resource *newResource)
     }
 }
 
+// donor Buka RVA 0x000b8740; PoL 2.0 has the same list walk and deletion order
+VA(0x00475ed0, 0x8b)
+void resourceManager::Expunge(void)
+{
+    m_expunging = 1;
+    resource *cursor[2];
+    cursor[1] = m_resourceListHead;
+    cursor[0] = 0;
+    while (cursor[1] != 0) {
+        cursor[0] = cursor[1]->m_next;
+        RemoveResource(cursor[1]);
+        delete cursor[1];
+        cursor[1] = cursor[0];
+    }
+    m_expunging = 0;
+}
+
 // donor PoL RVA 0x000c8830; preferred Buka symbol ?Query@resourceManager@@QAEPAVresource@@K@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.434784;margin=0.589664;shape=0.276;size=0.688;calls=1.000;alternate=pol20:class resource * resourceManager::Query(unsigned long int)@0x000c8830
@@ -60,6 +97,24 @@ class resource *resourceManager::Query(short resourceId)
     while (cursorResource != 0 && cursorResource->m_id != resourceId)
         cursorResource = cursorResource->m_next;
     return cursorResource;
+}
+
+// donor Buka RVA 0x000b8890; PoL 2.0 is source-identical
+VA(0x00476060, 0x88)
+void resourceManager::RemoveResource(class resource *resourceToRemove)
+{
+    if (m_resourceListHead == resourceToRemove) {
+        m_resourceListHead = resourceToRemove->m_next;
+        return;
+    }
+    resource *previousResource = m_resourceListHead;
+    while (previousResource != 0 && previousResource->m_next != resourceToRemove)
+        previousResource = previousResource->m_next;
+    if (previousResource == 0) {
+        return;
+    } else {
+        previousResource->m_next = resourceToRemove->m_next;
+    }
 }
 
 // donor PoL RVA 0x000c8c00; preferred Buka symbol ?PointToFile@resourceManager@@QAEXK@Z
@@ -86,6 +141,19 @@ void resourceManager::RestorePosition(void)
     lseek(m_aggregateFd, m_savedPosition, 0);
 }
 
+// donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
+VA(0x004764d0, 0x55)
+signed char resourceManager::ReadByte(void)
+{
+    ProcessAssert(
+        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
+        gReadByteAssertFile,
+        gReadByteAssertLine + 1);
+    signed char value = 0;
+    read(m_aggregateFd, &value, sizeof(value));
+    return value;
+}
+
 // donor PoL RVA 0x000c8f70; preferred Buka symbol ?ReadWord@resourceManager@@QAEFXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
@@ -99,4 +167,37 @@ short int resourceManager::ReadWord(void)
     short value = 0;
     read(m_aggregateFd, &value, sizeof(value));
     return value;
+}
+
+// donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
+VA(0x00476590, 0x58)
+long resourceManager::ReadLong(void)
+{
+    ProcessAssert(
+        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
+        gReadLongAssertFile,
+        gReadLongAssertLine + 1);
+    long value = 0;
+    read(m_aggregateFd, &value, sizeof(value));
+    return value;
+}
+
+// donor Buka RVA 0x000b8f40; constant and call shape are identical in HoMM1
+VA(0x00476650, 0x26)
+void resourceManager::Read13(signed char *destination)
+{
+    ReadBlock(destination, 13);
+}
+
+// donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
+VA(0x00476680, 0x5f)
+void resourceManager::ReadBlock(signed char *destination, unsigned long size)
+{
+    ProcessAssert(
+        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
+        gReadBlockAssertFile,
+        gReadBlockAssertLine + 1);
+    PollSound();
+    int bytesRead = read(m_aggregateFd, destination, size);
+    PollSound();
 }
