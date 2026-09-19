@@ -1,0 +1,5 @@
+# Reviewed code relocation fields for admitted reconstruction claims.
+# Fields are image RVAs; addend is encoded against the named referent.
+function_rva	site_rva	kind	symbol	target_rva	addend	provenance
+0x0005C15C	0x0005C1AC	DIR32	__imp__EndDialog@8	0x000D661C	0	USER32 EndDialog IAT entry; retail HIGHLOW site
+0x0005C15C	0x0005C1DA	REL32	_RetailService_0044F640	0x0004F640	0	Direct E8 call to admitted body; name provisional

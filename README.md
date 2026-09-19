@@ -3,16 +3,16 @@
 Binary-matching decompilation of **Heroes of Might and Magic** (`HEROES.EXE`, New World
 Computing, 1996) — the Windows 95 port, not the original DOS release. The goal is to recover
 the C++ structure and behavior and reproduce the original code, data, and relocations with an
-**MSVC 2.0-era** toolchain. Retail executable bytes and RVAs are authoritative.
+period MSVC toolchain. Retail executable bytes and RVAs are authoritative.
 
 This repository does **not** contain the original game's executable or resources. Supply a
 legally obtained `HEROES.EXE` locally to initialize the matching workspace.
 
-**Status: analysis workspace initialized.** The repository provides verified input staging,
-PE inspection, retail disassembly, a function catalogue, COFF inspection, and a pinned Nix
-environment based on the HoMM3/HoMM2 tooling. No matching compiler or reconstruction build
-has been established yet; there is no match score. MSVC 2.x is a compiler hypothesis pending
-probe validation, not an exact toolchain pin.
+**Status: first matching fragment.** `AppAbout` matches **144/144 bytes**, including its
+two relocation fields, using pinned **MSVC 4.0 (10.00.5270), `/Od`**. The compile/carve/compare
+loop runs with `homm1 build` and produces an objdiff project. This is one exported function,
+not a complete translation unit or a whole-game coverage score. VC2.0 and VC2.2 emit the
+same function; the historical compiler revision remains unproven. See [compiler evidence](docs/compiler.md).
 
 ## Pinned target
 
@@ -34,7 +34,7 @@ entry       VA 0x004826C0
 .rsrc       RVA 0x0D8000, vsize 0x001728
 .reloc      RVA 0x0DA000, vsize 0x008D00
 timestamp   1 February 1996 05:15:33 UTC (0x31104C75)
-linker      3.00 (MSVC 2.0 era), subsystem Windows GUI 4.0
+linker      3.00 (consistent with VC4.0's linker), subsystem Windows GUI 4.0
 imports     KERNEL32 USER32 GDI32 ADVAPI32 WINMM NETAPI32 WING32 wail32 smkwai32
 ```
 
@@ -123,10 +123,12 @@ So `resmgr`/`netlo`/`soundmgr` give reliable per-site anchors. `wingraph.cpp` sh
 across roughly eighteen sites, so the `add $N` immediate carries the distinction there and that
 encoding has not been worked out yet.
 
-**No RTTI and no C++ exception handling** — no `.?AV`, no `type_info`, no `__CxxFrameHandler`.
-C++ with virtual functions (~70 vtable call sites) and heavy `__thiscall` use — ~500 functions
-spill `this` from `ecx` to a stack slot within the first few instructions of their prologue —
-but none of the heavier runtime machinery.
+**No RTTI strings found; exception machinery is present.** The initial survey found no
+`.?AV`, `type_info`, or `__CxxFrameHandler` strings, but that does not exclude statically
+linked exception support. The body at `0x4010BF` installs an `fs:[0]` registration frame,
+updates unwind state around construction, and points to the handler thunk at `0x40120D`.
+The earlier “no C++ exception handling” conclusion was incorrect. C++ virtual functions
+and heavy `__thiscall` use are also visible; exact runtime/flag attribution remains open.
 
 ## Scope
 
@@ -181,9 +183,18 @@ homm1 status
 `HOMM1_EXE` and `HOMM1_EDITOR_EXE` are alternatives to the command-line paths. Re-running
 `homm1 init` reuses and verifies staged files and regenerates `build/analysis/{game,editor}.json`.
 With Python 3.11+ installed, `./homm1` works without Nix; disassembly also needs GNU objdump.
-`nix develop .#build` adds Wine for compiler experiments. It does not install a matching
-compiler. See [tooling and next steps](docs/tooling.md) for commands, provenance and the
-compiler bring-up sequence.
+To compile the first fragment, supply the pinned compiler media described in
+[compiler evidence and setup](docs/compiler.md):
+
+```sh
+nix develop .#build
+homm1 toolchain install --id vc40 --media /path/to/MSVC40.iso
+homm1 build
+objdiff -p build/objdiff
+```
+
+Compiler binaries and media remain under ignored `build/`. See [tooling](docs/tooling.md)
+for the supported fragment scope and next steps.
 
 ## License
 

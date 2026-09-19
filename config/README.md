@@ -8,11 +8,15 @@ from build enrollment, matching scores, and source-quality policy.
 
 `units.toml` is the sole per-TU build manifest: `[build]` identifies the
 platform/toolchain, `[flags]` defines complete named compiler profiles, and
-each `[[unit]]` will select `unit`, `source`, and `flags`. No units or flags
-are admitted until a compiler probe and end-to-end matching build validate them.
+each `[[unit]]` selects `unit`, `source`, and `flags`. `app_about` is an
+admitted function fragment, not a claim of original TU ownership. Its `/Od`
+profile has passed compiler probes and the full matching loop.
 
-Future measured match baselines belong here. Future source-quality audit
-baselines belong in `cleanliness/`. Neither is fabricated at bootstrap.
+`toolchains.json` pins original media and each provisioned compiler component.
+`match_baseline.tsv` records the admitted exact function's RVA, size and symbol;
+checks reject dropped or shortened baseline claims, and builds reject byte or
+relocation differences. Future source-quality audit baselines belong in
+`cleanliness/`.
 
 ## `retail/`: facts about the executable
 
@@ -25,13 +29,17 @@ baselines belong in `cleanliness/`. Neither is fabricated at bootstrap.
 - `functions_exports.tsv`: naming/provenance provider for PE exports, with
   `rva`, `name`, `ordinal`, `provenance`. Each row must refer to an admitted
   body in `functions.tsv` and match the pinned PE export table.
+- `reloc_referents.tsv`: reviewed function-relative relocation ownership,
+  expressed as image RVAs, kind, symbol, target RVA, addend and provenance.
+  `check` verifies encoded operands, IAT identity, admitted callee starts, and
+  complete HIGHLOW coverage inside each claim.
 
 All census/provider RVAs currently refer to **HEROES.EXE**. Do not mix editor
 addresses into those tables; future editor censuses need a separate namespace.
 
 Base tables contain starts/kinds, not names, ownership, or matched sizes.
-Providers may supply names and evidence; exact matched code sizes will belong
-to reconstruction claims. `homm1 check` gates address spaces, ordering,
+Providers may supply names and evidence; exact matched code sizes belong
+to `RVA(rva, size)` reconstruction claims in source. `homm1 check` gates address spaces, ordering,
 uniqueness, kinds, and the provider-to-base relationship.
 
 The initial censuses are **sparse**, not full partitions. Unlike the mature

@@ -1,0 +1,3 @@
+# Admitted exact fragment baseline. Updates require retail evidence and a full build.
+rva	size	symbol
+0x0005C15C	0x90	_AppAbout@16

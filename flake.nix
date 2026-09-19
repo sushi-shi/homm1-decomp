@@ -91,7 +91,7 @@
       '';
       commonTools = with pkgs; [
         homm1-cli python3 git ninja binutils llvm clang-tools
-        ripgrep file jq vostok-delinker objdiff objdiff-cli
+        ripgrep file jq p7zip vostok-delinker objdiff objdiff-cli
       ];
       commonHook = ''
         export HOMM1_DIR="$PWD"

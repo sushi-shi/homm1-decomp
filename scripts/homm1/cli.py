@@ -14,6 +14,7 @@ from homm1.core.coff import CoffObject
 from homm1.core.image import Image
 from homm1.core import manifest
 from homm1.core.inputs import REPO, read_verified, stage_executable, targets
+from homm1 import build, toolchain
 
 
 def verified_image(target):
@@ -41,7 +42,7 @@ def initialize(args):
         path.write_text(json.dumps(report, indent=2) + '\n')
         print(f'{key}: verified {pins[key].name}; report: {path.relative_to(REPO)}')
     manifest.check_retail(verified_image('game'))
-    print('Analysis workspace ready. Compiler identity and matching build are not yet established.')
+    print('Analysis workspace ready. Use homm1 toolchain install and homm1 build for matching.')
 
 
 def status(args):
@@ -59,7 +60,8 @@ def status(args):
                  census_status='sparse; extents unknown',
                  admitted_units=len(config.get('unit', [])),
                  compiler=config['build']['compiler_status'],
-                 matching_build='not configured', match_score=None)
+                 matching_build='homm1 build (admitted fragments only)',
+                 last_build_report='build/match-report.json' if (REPO / 'build/match-report.json').exists() else None)
     if args.json:
         emit(value)
     else:
@@ -108,11 +110,9 @@ def check(_args):
     editor = targets()['editor']
     if editor.destination.exists():
         verified_image('editor').report()
-    units = manifest.load().get('unit', [])
-    if units:
-        raise ValueError('admitted units require a matching build implementation first')
+    claims = build.validate_claims(image)
     print(f'Input hashes, PE reports, and {len(rows)} located functions validated.')
-    print('Matching compilation is not configured; this is an analysis check.')
+    print(f'{len(claims)} source claims and their retail relocation fields validated; run homm1 build to compile/compare.')
 
 
 def object_info(args):
@@ -146,6 +146,16 @@ def main(argv=None):
     p = commands.add_parser('object', help='inspect an i386 COFF object as JSON')
     p.add_argument('path', type=Path)
     p.set_defaults(run=object_info)
+    p = commands.add_parser('build', help='compile, carve retail targets, and compare bytes and relocations')
+    p.set_defaults(run=build.run)
+    p = commands.add_parser('probe', help='compare pinned compiler candidates with /Od and /O2 controls')
+    p.add_argument('--ids', nargs='+', choices=sorted(toolchain.pins()), default=['vc40'])
+    p.set_defaults(run=build.probe)
+    p = commands.add_parser('toolchain', help='install or verify pinned compiler components')
+    p.add_argument('action', choices=['install', 'check'])
+    p.add_argument('--id', choices=sorted(toolchain.pins()), default='vc40')
+    p.add_argument('--media', type=Path)
+    p.set_defaults(run=toolchain.command)
     p = commands.add_parser('test', help='run portable tooling tests without retail files')
     p.set_defaults(run=lambda _: subprocess.run(
         [sys.executable, '-m', 'unittest', 'discover', '-s', str(REPO / 'tests'), '-v'],

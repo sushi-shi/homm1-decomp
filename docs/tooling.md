@@ -50,23 +50,53 @@ structural kinds. The separate `functions_exports.tsv` provider records the
 export names and provenance. Neither table asserts sizes or source ownership.
 `data.tsv` is an empty starting census. These are sparse censuses, not complete
 partitions; gaps must not be interpreted as function/data extents.
-`config/units.toml` deliberately admits no units yet. See [configuration](../config/README.md).
+`config/units.toml` admits the `app_about` fragment with one source-owned
+`RVA(rva, size)` claim. See [configuration](../config/README.md).
 
-## Bring up the matching compiler next
+## Matching loop
 
-1. Identify and locally provision candidate MSVC 2.x compiler/CRT/SDK versions.
-   Linker 3.00 and the observed unoptimized code narrow the search; they do not
-   establish an exact compiler, runtime mode, or complete command line.
-2. Compile small probes under Wine and compare their prologues, stack homes,
-   member calling convention, instruction choices, and COFF records to retail.
-   Pin the validated compiler artifacts by hash before adding an automatic fetch.
-3. Establish function extents and relocation ownership for a small evidenced
-   unit. Preserve HoMM1's HIGHLOW relocations and initialized/BSS distinction.
-4. Add compiler wrapper, Ninja configuration, delinker inputs, objdiff project,
-   and relocation-aware comparison together. Admit that unit and record a real
-   baseline only after the end-to-end loop runs.
+[Compiler setup and evidence](compiler.md) document the pinned VC4.0 compiler
+and the VC2.x comparison controls. The repository commands are:
 
-The available objdiff/delinker packages do not by themselves establish a
-matching build. HoMM3's VC6 `/O2 /Gr /GX` profiles, Dreamcast symbol roster and
-fixed-base assumptions must not be carried over. HoMM2's later code and types
-are research references; they are not recovered HoMM1 source.
+```sh
+homm1 toolchain install --id vc40 --media /path/to/MSVC40.iso
+homm1 toolchain check --id vc40
+homm1 build
+homm1 probe --ids vc20 vc22 vc40  # after installing the other candidates
+```
+
+`build` verifies retail and compiler hashes, checks source claims and their
+baseline, generates `build/build.ninja`, compiles, carves an independent retail
+COFF object, compares resolved bytes and the relocation stream, and runs
+objdiff-cli. It writes `build/match-report.json` and an objdiff project in
+`build/objdiff/`. Ninja depends on source, local headers, tooling and compiler
+configuration. Compiler failure removes stale objects and retains diagnostics.
+Any byte/size/relocation difference returns a failure; a visual objdiff score
+cannot override that verdict. The tracked exact baseline also detects dropped
+or shortened claims.
+
+The initial carver supports **one exported four-argument stdcall dialog body
+per source/object**, with one `RVA` annotation and no additional emitted code.
+It binds the claim to the export name and the compiled COFF symbol. It only
+accepts reviewed IAT DIR32 and direct-call/jump REL32 references. Every retail
+HIGHLOW field in the body must be covered, and encoded targets/addends must
+agree with the PE bytes. No relocation field is masked. The target object's
+code comes from retail, with the reviewed relocations reversed into COFF
+addends; it is not copied from the compiler's output.
+
+This deliberately small carver does not use vostok-delinker's PDB path yet.
+The pinned package remains available for the later multi-function/data pipeline.
+The build is not a linked/runnable game, a full-TU reconstruction, or a coverage
+score for the whole executable. The compiled callback still references an
+unimplemented retail service. Exact historical compiler attribution and CRT/SDK
+provisioning remain open.
+
+## Next work
+
+Recover more independent function/type evidence and compiler probes. Extend
+claim extraction beyond the explicit dialog ABI, add full instruction decoding
+for broader relocation recovery, and establish multi-function/TU boundaries
+before admitting a larger unit. Preserve the Gruntz census/provider separation.
+Add PDB-based delinking, data ownership and linker reproduction when the evidence
+supports them. HoMM3's VC6 profiles, Dreamcast roster and fixed-base assumptions
+must not be carried over to HoMM1.

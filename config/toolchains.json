@@ -1,0 +1,152 @@
+{
+  "vc20": {
+    "compiler_version": "9.00",
+    "media": {
+      "filename": "en_vc_2.0.exe",
+      "url": "https://archive.org/download/en_vc_2.0/en_vc%2B%2B_2.0.exe",
+      "sha256": "dda64ac02e7adc5e537333ece94c6a8e3a46e7a0b55061d1d7d762a34eccd236"
+    },
+    "files": {
+      "bin/CL.EXE": {
+        "media_path": "MSVC20/BIN/CL.EXE",
+        "sha256": "6e8a2add9b8c8ff8ec02be83ede80e142fbae402cfefeba42b88a28263692678"
+      },
+      "bin/C1.EXE": {
+        "media_path": "MSVC20/BIN/C1.EXE",
+        "sha256": "35ee6187db994beb90d1028df9dbd332fc308f5f687cfb01d0d8364b349cf361"
+      },
+      "bin/C1XX.EXE": {
+        "media_path": "MSVC20/BIN/C1XX.EXE",
+        "sha256": "3e414c1148884ec9945c81fb8445fb42fb8940102a39ed5777fe4dfbe13adb97"
+      },
+      "bin/C2.EXE": {
+        "media_path": "MSVC20/BIN/C2.EXE",
+        "sha256": "f28504956bc659c81853a67cbfaa34dfe6bfcd56a7218c8f3d648f266e0fd8f7"
+      },
+      "bin/LINK.EXE": {
+        "media_path": "MSVC20/BIN/LINK.EXE",
+        "sha256": "33471e01276cd80141e32610f531fdae2ddec4f5ded4870ce2fc52b69c8e7dd7"
+      },
+      "bin/DBI.DLL": {
+        "media_path": "MSVC20/BIN/DBI.DLL",
+        "sha256": "d8c6180a72ef272e42b0f393ba1f2030c56d7d3ce301280e21f142b48f8cb2ae"
+      },
+      "bin/C1.ERR": {
+        "media_path": "MSVC20/BIN/C1.ERR",
+        "sha256": "24923d8f9c1707b78d2ed7fe97b08f6eaa924960e0b04ead7556ea51105915df"
+      },
+      "bin/C23.ERR": {
+        "media_path": "MSVC20/BIN/C23.ERR",
+        "sha256": "ca65303033079fe605763ca911b51c1ae155e445e5451408e1ab6a1ef77a8698"
+      },
+      "bin/CL.ERR": {
+        "media_path": "MSVC20/BIN/CL.ERR",
+        "sha256": "23cd0399e84e0d0fc8ce2fe212be5a8c893dd03944d8243921970be25fffc2fe"
+      },
+      "bin/MSVCRT20.DLL": {
+        "media_path": "MSVC20/REDIST/MSVCRT20.DLL",
+        "sha256": "e93215473c8dda1add068bbeb7f0f168084ab2aff57f0a367176884a282eb55e"
+      }
+    }
+  },
+  "vc22": {
+    "compiler_version": "9.10",
+    "media": {
+      "filename": "MSVC22.iso",
+      "url": "https://archive.org/download/msft-visual-cplusplus-22/MSVC22.iso",
+      "sha256": "a48554a2bde7cd723ca9b2d9e6caa3d46589ee8aa64fb8df2d9d6d94df33e79e"
+    },
+    "files": {
+      "bin/CL.EXE": {
+        "media_path": "MSVC20/BIN/CL.EXE",
+        "sha256": "fe2ba885bd52c3f54f851716da707926236869bcd002834d884d3c0601ae4103"
+      },
+      "bin/C1.EXE": {
+        "media_path": "MSVC20/BIN/C1.EXE",
+        "sha256": "9018dcc06c9a332598c361fbb0d953c868218e991268bb7f10f7381fbd481102"
+      },
+      "bin/C1XX.EXE": {
+        "media_path": "MSVC20/BIN/C1XX.EXE",
+        "sha256": "1c563e553eadcbee2317ce556891ec96b7165e4fe68c19eef8696545c5499e90"
+      },
+      "bin/C2.EXE": {
+        "media_path": "MSVC20/BIN/C2.EXE",
+        "sha256": "38d0bbada6a9ca61e09ebaa8b68dbae1d58469344a335d356edf9e35cd384233"
+      },
+      "bin/LINK.EXE": {
+        "media_path": "MSVC20/BIN/LINK.EXE",
+        "sha256": "37e7983d8cbd983992e341f92926a523aa271aca31453073e448024a70d690f9"
+      },
+      "bin/DBI.DLL": {
+        "media_path": "MSVC20/BIN/DBI.DLL",
+        "sha256": "d8c6180a72ef272e42b0f393ba1f2030c56d7d3ce301280e21f142b48f8cb2ae"
+      },
+      "bin/C1.ERR": {
+        "media_path": "MSVC20/BIN/C1.ERR",
+        "sha256": "1d0ed4ba28576d51f8e67a619c2a6eff005094fe3bccc1f5f8f5217a6e5dc3ad"
+      },
+      "bin/C23.ERR": {
+        "media_path": "MSVC20/BIN/C23.ERR",
+        "sha256": "e68b0887de07e78f616583dab2e9d50960b341c39cecfb7a04634aa2c398cfe7"
+      },
+      "bin/CL.ERR": {
+        "media_path": "MSVC20/BIN/CL.ERR",
+        "sha256": "23cd0399e84e0d0fc8ce2fe212be5a8c893dd03944d8243921970be25fffc2fe"
+      },
+      "bin/MSVCRT20.DLL": {
+        "media_path": "MSVC20/REDIST/MSVCRT20.DLL",
+        "sha256": "a7d47ed69fc91d0a891eabfa39bec191ddf91a27e49404e10b044876a55de9c5"
+      }
+    }
+  },
+  "vc40": {
+    "compiler_version": "10.00.5270",
+    "media": {
+      "filename": "MSVC40.iso",
+      "url": "https://archive.org/download/msvc4x/MSVC40.iso",
+      "sha256": "961326efbfbd299794e2cbb102e9ff3bfe78ebf91a11b89978095f59e0aea93e"
+    },
+    "files": {
+      "bin/CL.EXE": {
+        "media_path": "MSDEV/BIN/CL.EXE",
+        "sha256": "f097e736bb04d38391c8b524945d58809ec4c42e97c056eca6f40bba2de910c3"
+      },
+      "bin/C1.EXE": {
+        "media_path": "MSDEV/BIN/C1.EXE",
+        "sha256": "7a7c14aff9631b9460a5666a8c344a5a177fce125ba3c4e9c2a4d57c7f402bb2"
+      },
+      "bin/C1XX.EXE": {
+        "media_path": "MSDEV/BIN/C1XX.EXE",
+        "sha256": "3376b1dfaff0bdb1018b13fbb22cf407858044f327d4bbc3e4d9335640aea7f0"
+      },
+      "bin/C2.EXE": {
+        "media_path": "MSDEV/BIN/C2.EXE",
+        "sha256": "820ed4e4930db97bcba646afb88fdb7d1f329631ca8e5b84096c0d6daa82e9a9"
+      },
+      "bin/LINK.EXE": {
+        "media_path": "MSDEV/BIN/LINK.EXE",
+        "sha256": "81109c8cb534debc0c5645db7c3a1b99dd646d982b0fd545070ceb1c77f9cb6c"
+      },
+      "bin/MSPDB40.DLL": {
+        "media_path": "MSDEV/BIN/MSPDB40.DLL",
+        "sha256": "7c99519244e1dfe9f8cbc0b54842a757c22121c4269572c7c744d8bd7da0d419"
+      },
+      "bin/C1.ERR": {
+        "media_path": "MSDEV/BIN/C1.ERR",
+        "sha256": "52fcc5bdbf5c9c202d11cfccccafb34a7bf610abdb7e0b053e9666f56268bb7e"
+      },
+      "bin/C23.ERR": {
+        "media_path": "MSDEV/BIN/C23.ERR",
+        "sha256": "9abf29f9b01e888a1cbe0cdcd51f7a5b11ea334a5797ffe30d2cad65508c931f"
+      },
+      "bin/CL.ERR": {
+        "media_path": "MSDEV/BIN/CL.ERR",
+        "sha256": "48f9976e3d42f2ddc09ddf8f742421e9d0bf0228377ff66b1028b08d07ec23df"
+      },
+      "bin/MSVCRT40.DLL": {
+        "media_path": "MSDEV/REDIST/MSVCRT40.DLL",
+        "sha256": "65d5fd6b24c12734897da9a7a036936ca038e799d87a8012e6dd0d1509445de0"
+      }
+    }
+  }
+}
