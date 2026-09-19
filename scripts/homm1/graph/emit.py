@@ -39,8 +39,8 @@ def _mods(*rel: str) -> list[str]:
 
 
 CL_MODS = _mods('graph/cc.py', 'core/compiler.py', 'core/wine.py', 'core/profile.py', 'core/inputs.py', 'toolchain.py')
-LABELS_MODS = _mods('labels.py', 'analysis.py', 'verify.py', 'core/cpp_tokens.py', 'core/profile.py', 'core/matching.py', 'core/inputs.py', 'graph/steps.py')
-MODEL_MODS = _mods('model.py', 'core/manifest.py', 'core/matching.py', 'core/disasm.py', 'core/image.py', 'graph/steps.py')
+LABELS_MODS = _mods('symbols/', 'audit/common.py', 'clang_options.py', 'labels.py', 'analysis.py', 'verify.py', 'core/cpp_tokens.py', 'core/profile.py', 'core/matching.py', 'core/inputs.py', 'graph/steps.py')
+MODEL_MODS = _mods('symbols/source_symbols.py', 'model.py', 'core/manifest.py', 'core/matching.py', 'core/disasm.py', 'core/image.py', 'graph/steps.py')
 DELINK_MODS = _mods('delink.py', 'core/image.py', 'core/coff.py', 'normalized_freshness.py', 'graph/steps.py')
 REPORT_MODS = _mods('build.py', 'core/matching.py', 'core/coff.py', 'core/disasm.py', 'graph/steps.py')
 CONFIGURE_MODS = _mods('graph/', 'build.py', 'analysis.py', 'core/profile.py', 'core/manifest.py', 'toolchain.py', 'core/inputs.py')

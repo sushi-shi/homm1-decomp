@@ -5,8 +5,6 @@ outputs, separating source fingerprints from retail binding identity so a body
 edit does not invalidate independent target extraction.
 """
 import argparse
-import csv
-import io
 from dataclasses import asdict, replace
 import json
 import sys
@@ -77,12 +75,10 @@ def bind():
         write(f'build/gen/bindings/{unit["unit"]}.json',
               dict(claims=structural, references={c.rva: references[c.rva] for c in owned}))
     write('build/gen/namespace.json', namespace)
-    inventory = io.StringIO()
-    writer = csv.writer(inventory, lineterminator='\n')
-    writer.writerow(('rva', 'name', 'unit', 'size', 'kind', 'provenance'))
-    for claim in sorted(claims, key=lambda c: c.rva):
-        writer.writerow((hex(claim.rva), claim.symbol, claim.unit, hex(claim.size), 'func', 'source RVA annotation'))
-    publication.atomic_write(REPO / 'build/gen/symbol_names.csv', inventory.getvalue())
+    from homm1.symbols.source_symbols import SourceSymbol, render
+    inventory = [SourceSymbol(c.rva, c.symbol, c.unit, c.size, 'func', 'source RVA annotation')
+                 for c in sorted(claims, key=lambda c: c.rva)]
+    publication.atomic_write(REPO / 'build/gen/symbol_names.csv', render(inventory))
 
 
 def bindings(name):

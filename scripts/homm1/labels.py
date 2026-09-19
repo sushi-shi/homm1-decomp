@@ -10,6 +10,7 @@ from pathlib import Path
 import re
 
 from homm1 import analysis
+from homm1.symbols.source_symbols import symbols_for_file
 from homm1.core.inputs import REPO
 from homm1.core.matching import Claim
 from homm1.core.cpp_tokens import fingerprint as source_hash
@@ -40,7 +41,7 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
     for dependency in analysis.dependencies(source, compiler, flags):
         if dependency != source:
             context.update(dependency.name.encode() + b'\0' + dependency.read_bytes() + b'\0')
-    declarations_text = source.read_text()
+    declarations_text = source.read_bytes()
     excluded = []
     for n in walk(tree):
         if n.get('kind') in FUNCTIONS:
@@ -53,8 +54,8 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
                 if 'offset' in start and 'offset' in end:
                     excluded.append((start['offset'], end['offset'] + end.get('tokLen', 1)))
     for start, end in sorted(excluded, reverse=True):
-        declarations_text = declarations_text[:start] + '{}' + declarations_text[end:]
-    context.update(declarations_text.encode())
+        declarations_text = declarations_text[:start] + b'{}' + declarations_text[end:]
+    context.update(declarations_text)
     context_hash = context.hexdigest()
     if declarations is not None:
         for node in walk(tree):
@@ -68,17 +69,11 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
             if symbol in declarations and declarations[symbol] != signature:
                 raise ValueError(f'conflicting source declarations for {symbol}: {declarations[symbol]} / {signature}')
             declarations[symbol] = signature
-    nodes = {n['id']: n for n in walk(tree) if 'id' in n}
-    access = {}
-    for record in walk(tree):
-        if record.get('kind') != 'CXXRecordDecl':
-            continue
-        current = 'private' if record.get('tagUsed') == 'class' else 'public'
-        for member in record.get('inner', []):
-            if member.get('kind') == 'AccessSpecDecl':
-                current = member['access']
-            elif member.get('kind') in FUNCTIONS:
-                access[member['id']] = current
+    # The copied Buka scanner owns annotation decoding and Microsoft names.
+    # The JSON AST below supplies existing review spans/layout checks only.
+    bindings = {}
+    symbols_for_file(source, source.parent, REPO,
+                     args=analysis.arguments(source, compiler, flags=flags)[1:-1], bindings=bindings)
     results, seen = [], set()
     for node in walk(tree):
         if node.get('kind') not in FUNCTIONS:
@@ -86,50 +81,26 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
         body = next((c for c in node.get('inner', []) if c.get('kind') in ('CompoundStmt', 'CXXTryStmt')), None)
         if body is None:
             continue
-        attributes = [c for c in node.get('inner', []) if c.get('kind') == 'AnnotateAttr']
-        if not attributes:
-            # Header inline helpers may not emit code; emitted bodies are checked
-            # against COFF ownership later. Main-file bodies must be annotated.
-            loc = location(node.get('loc', {}))
-            if not loc.get('includedFrom') and Path(loc.get('file', source)) == source:
-                raise ValueError(f'{source}: function {node.get("name")} has no RVA identity')
+        loc = location(node.get('loc', {}))
+        if loc.get('includedFrom') or Path(loc.get('file', source)).resolve() != source:
             continue
-        matches = []
-        for attr in attributes:
-            loc = location(attr['range']['begin'])
-            path = Path(loc.get('file', source)).resolve()
-            text = path.read_text()
-            annotation = re.match(r'RVA\s*\(\s*(0[xX][\da-fA-F]+|\d+)\s*,\s*(0[xX][\da-fA-F]+|\d+)\s*\)', text[loc['offset']:])
-            if annotation:
-                matches.append((path, text, int(annotation[1], 0), int(annotation[2], 0)))
-        if len(matches) != 1:
-            raise ValueError(f'{source}: {node.get("name")}: expected one literal RVA annotation on the definition')
-        path, text, rva, size = matches[0]
+        identity = bindings.get(loc.get('offset'))
+        if identity is None:
+            raise ValueError(f'{source}: function {node.get("name")} has no RVA identity')
+        row, linkage = identity
+        path, rva, size, symbol = source, row.rva, row.size, row.name
         begin, end = location(node['range']['begin']), location(node['range']['end'])
         if Path(end.get('file', path)).resolve() != path:
             raise ValueError('cross-file macro-generated definitions are not supported')
-        snippet = text[begin['offset']:end['offset'] + end.get('tokLen', 1)]
-        symbol = node.get('mangledName')
-        # HoMM2 source_symbols documents Clang's destructor-definition alias.
-        # VC4 probes confirm the user body is ??1, not the ??_D vbase helper.
-        if node['kind'] == 'CXXDestructorDecl' and symbol and symbol.startswith('??_D'):
-            declaration = node
-            while declaration.get('previousDecl') in nodes:
-                declaration = nodes[declaration['previousDecl']]
-            visibility = access.get(declaration['id'], 'public')
-            letter = {'public': ('Q', 'U'), 'protected': ('I', 'M'), 'private': ('A', 'E')}[visibility][bool(declaration.get('virtual'))]
-            if not symbol.endswith('@@QAEXXZ'):
-                raise ValueError('unsupported destructor mangling; calibrate against the period compiler')
-            symbol = '??1' + symbol[4:-len('@@QAEXXZ')] + '@@' + letter + 'AE@XZ'
+        snippet = path.read_bytes()[begin['offset']:end['offset'] + end.get('tokLen', 1)].decode()
         if not symbol or (rva, symbol) in seen:
             raise ValueError(f'{source}: duplicate or unnameable source definition')
         seen.add((rva, symbol))
         casts = [n for n in walk(body) if n.get('kind') == 'CStyleCastExpr']
         if casts:
             raise ValueError(f'{path}: {node["name"]}: C-style cast; use an evidenced named conversion')
-        internal = (node['kind'] == 'FunctionDecl' and node.get('storageClass') == 'static') or '?A0x' in symbol
         results.append(Claim(rva, size, symbol, source=str(path), src_hash=source_hash(snippet),
-                             linkage='internal' if internal else 'external', context_hash=context_hash))
+                             linkage=linkage, context_hash=context_hash))
     # Compiler-generated bodies have explicit ownership, not invented source.
     text = source.read_text()
     from homm1.verify import blank

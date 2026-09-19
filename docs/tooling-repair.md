@@ -60,7 +60,7 @@ localization, or VC6 optimizer assumptions as HoMM1 evidence.
 Record evidence here as each item is completed. Do not check off a capability
 based only on a unit test of one internal helper or a compiler-only probe.
 
-Current intermediate validation: 145 tooling tests pass, including copied Buka
+Current intermediate validation: 190 tooling tests pass, including copied Buka
 provenance-chain, Wine, residual-queue and disassembly tests and Gruntz object
 installation checks. The native VC4 build matches all three pilot functions
 (290 bytes); full verification accepts generated README/ledger/report
@@ -89,3 +89,17 @@ Validation for this port: all 145 tests and `nix flake check` pass. The exported
 worktree campaign passes exact/nonexact/restored publication, no-op and focused
 artifact isolation, and a new check that a stale physical review blocks full
 publication without changing the ledger, README or complete report.
+
+Source-binding port: copied Buka `source_symbols.py`, `annotated_functions.py`
+and their data/vtable/provider dependencies. `labels` now uses the donor's
+libclang annotations, decorated identities and internal linkage; the graph uses
+its inventory renderer. Donor tests are retained with target fixtures adapted.
+Native VC4 contract probes confirm all twelve fixture source bindings; the
+pilot retains its exact 290 bytes and unchanged function/context hashes.
+Generated-code/provider canonicalization and general independent relocation
+fixtures are still outstanding, so item 4 is not yet closed.
+Validation: all 190 tests and the clean Nix check pass. The exported-worktree
+campaign passes the complete existing acceptance sequence with Buka supplying
+source identities, including focused/no-op behavior and exact/nonexact/restored
+publication. The standalone donor scanner reports exactly the three admitted
+source functions; its span inventory agrees with the graph's joined manifest.

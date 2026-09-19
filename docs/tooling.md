@@ -80,7 +80,9 @@ The period compiler's objects are the only candidate code that is scored.
 HoMM2-style enum helpers expose strict domains to analysis and the explicit
 integer representation to MSVC. There is no source transpilation or rewriting.
 
-`RVA(rva, size)` attaches to an actual definition in the Clang AST. Place it
+`RVA(rva, size)` attaches to an actual definition through the copied Buka
+libclang source-symbol scanner. Its annotation metadata and Microsoft-decorated
+name supply the identity; the local literal-text annotation parser was removed. Place it
 inside an `extern "C"` declaration, before its return type. Claims can include
 multiple functions, static/member functions, overloads, constructors and
 destructors. Period-compiler COFF must confirm every claimed symbol; extra

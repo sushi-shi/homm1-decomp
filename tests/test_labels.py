@@ -56,6 +56,27 @@ RVA(0x1030, 0x10) int Counter::value(short a) { return a; }
         with self.assertRaisesRegex(ValueError, 'no RVA identity'):
             self.claims('// RVA(0x1000, 0x10)\nint function() { return 1; }')
 
+    def test_buka_reads_annotation_metadata_through_macro_alias(self):
+        claims = self.claims('#define BODY_ID RVA(0x1000, 16)\nBODY_ID int function() { return 1; }')
+        self.assertEqual([(c.rva, c.size, c.symbol) for c in claims], [(0x1000, 16, '?function@@YAHXZ')])
+
+    def test_anonymous_namespace_has_internal_linkage(self):
+        claims = self.claims('namespace { RVA(0x1000, 16) int local() { return 1; } }')
+        self.assertEqual(claims[0].linkage, 'internal')
+
+    def test_annotation_macro_in_header_and_utf8_source_offsets(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / 'claims.cpp'
+            (source.parent / 'identity.h').write_text('#include "match.h"\n#define BODY_ID RVA(0x1000, 16)\n')
+            prefix = '#include "identity.h"\n// współrzędne\n'
+            source.write_text(prefix + 'BODY_ID int f() { return 1; }')
+            first = definitions(source)[0]
+            source.write_text(prefix + 'BODY_ID int f() { return 2; }')
+            second = definitions(source)[0]
+            self.assertEqual(first.rva, 0x1000)
+            self.assertNotEqual(first.src_hash, second.src_hash)
+            self.assertEqual(first.context_hash, second.context_hash)
+
     def test_cstyle_cast_fails_semantic_gate(self):
         with self.assertRaisesRegex(ValueError, 'C-style cast'):
             self.claims('RVA(0x1000, 0x10) int function(long a) { return (int)a; }')
