@@ -1,6 +1,5 @@
-"""The first compile/carve/compare loop, intentionally scoped to exported fragments."""
+"""Incremental code reconstruction with strict integrity and observational scores."""
 import argparse
-import csv
 import hashlib
 import json
 import os
@@ -11,7 +10,7 @@ import shutil
 import subprocess
 import sys
 
-from homm1 import toolchain, verify, analysis, model, delink
+from homm1 import toolchain, verify, analysis, model, delink, checkpoint
 from homm1.core import manifest
 from homm1.core.coff import CoffObject
 from homm1.core.compiler import compile_source
@@ -36,6 +35,10 @@ def units():
         if not isinstance(flags, list) or any(not isinstance(f, str) for f in flags) or '/c' not in flags:
             raise ValueError('compiler profile must be a list of flags including /c')
         seen.add(unit['unit'])
+    enrolled = {u['source'] for u in result}
+    physical = {str(p.relative_to(REPO)) for p in (REPO / 'src').rglob('*.cpp')}
+    if enrolled != physical or len(enrolled) != len(result):
+        raise ValueError(f'source enrollment differs from physical source files: {sorted(enrolled ^ physical)}')
     return config, result
 
 
@@ -46,12 +49,7 @@ def image():
 
 def validate_claims(retail):
     claims, _ = model.resolve(retail)
-    with (REPO / 'config/match_baseline.tsv').open() as handle:
-        baseline = csv.DictReader((line for line in handle if not line.startswith('#')), delimiter='\t')
-        expected = [(int(row['rva'], 0), int(row['size'], 0), row['symbol']) for row in baseline]
-    actual = [(c.rva, c.size, c.symbol) for c in claims]
-    if len(set(expected)) != len(expected) or any(row not in actual for row in expected):
-        raise ValueError('lost or changed exact baseline claim; review against retail before updating the baseline')
+    checkpoint.check_claims(claims, checkpoint.read())
     return claims
 
 
@@ -72,7 +70,7 @@ def configure():
     _, entries = units()
     build = REPO / 'build'
     build.mkdir(exist_ok=True)
-    dependencies = [REPO / 'config/units.toml', REPO / 'config/toolchains.json']
+    dependencies = sorted(p for p in (REPO / 'config').rglob('*') if p.is_file() and p.name != 'match_baseline.tsv')
     dependencies += sorted(p for p in (REPO / 'include').rglob('*') if p.is_file())
     dependencies += sorted((REPO / 'scripts/homm1').rglob('*.py'))
     command = ' '.join(shlex.quote(s) for s in [sys.executable, '-m', 'homm1.build', '--compile'])
@@ -82,7 +80,10 @@ def configure():
         lines += [f'build build/objdiff/base/{unit["unit"]}.obj: cl '
                   + ninja_escape(REPO / unit['source']) + ' | '
                   + ' '.join(ninja_escape(p) for p in dependencies), f'  unit = {unit["unit"]}']
-    (build / 'build.ninja').write_text('\n'.join(lines) + '\n')
+    path = build / 'build.ninja'
+    content = '\n'.join(lines) + '\n'
+    if not path.exists() or path.read_text() != content:
+        path.write_text(content)
 
 
 def write_report(path, report):
@@ -90,20 +91,27 @@ def write_report(path, report):
     path.write_text(json.dumps(report, indent=2) + '\n')
 
 
-def run(_args):
+def run(args):
     verify.check()
     retail = image()
     claims = validate_claims(retail)
     references = {c.rva: retail_relocations(retail, c) for c in claims}
     config, entries = units()
+    selected = getattr(args, 'unit', None)
+    if selected:
+        entries = [u for u in entries if u['unit'] == selected]
+        if not entries:
+            raise ValueError(f'unknown unit {selected}')
     compiler = config['build']['compiler']
     toolchain.verify(compiler)
     analysis.check(config, entries)
+    generation = checkpoint.fingerprint()
     configure()
     if not shutil.which('ninja') or not shutil.which('objdiff-cli'):
         raise ValueError('Ninja and objdiff-cli are required; enter nix develop .#build')
     environment = {**os.environ, 'PYTHONPATH': str(REPO / 'scripts')}
-    subprocess.run(['ninja', '-f', 'build/build.ninja'], cwd=REPO, env=environment, check=True)
+    build_targets = [f'build/objdiff/base/{u["unit"]}.obj' for u in entries]
+    subprocess.run(['ninja', '-f', 'build/build.ninja', *build_targets], cwd=REPO, env=environment, check=True)
     targets = delink.generate(retail, claims, references)
     namespace = {}
     for refs in references.values():
@@ -132,7 +140,7 @@ def run(_args):
             result = compare(candidate, retail, claim, refs, owned, namespace)
             result.update(unit=unit['unit'], source=unit['source'], src_hash=claim.src_hash,
                           source_sha256=toolchain.digest(REPO / unit['source']),
-                          object_sha256=toolchain.digest(base))
+                          object_sha256=toolchain.digest(base), target_object_sha256=toolchain.digest(target))
             results.append(result)
             print(f'{unit["unit"]}/{claim.symbol}: {"EXACT" if result["exact"] else "DIFF"} '
                   f'{result["matched_bytes"]}/{claim.size} bytes; '
@@ -141,12 +149,34 @@ def run(_args):
                                   base_path=str(base.relative_to(REPO / 'build/objdiff'))))
         report_path = REPO / f'build/objdiff/{unit["unit"]}.diff.json'
         subprocess.run(['objdiff-cli', 'diff', '-1', str(target), '-2', str(base), '-o', str(report_path)], check=True)
-    write_report(REPO / 'build/objdiff/objdiff.json', dict(units=objdiff_units))
-    write_report(REPO / 'build/match-report.json', dict(
-        target_sha256=hashlib.sha256(retail.data).hexdigest(), toolchain=compiler,
-        compiler_files=toolchain.pins()[compiler]['files'], flags=config['flags'],
-        scope='admitted fragments only; not whole-game coverage', functions=results))
-    return 0 if results and all(r['exact'] for r in results) else 1
+        diff = json.loads(report_path.read_text())
+        scores = {s['name']: float(s.get('match_percent', 0)) for s in diff['right']['symbols']
+                  if s.get('kind') == 'SYMBOL_FUNCTION' and 'size' in s}
+        for fn in results:
+            if fn['unit'] == unit['unit']:
+                if fn['symbol'] not in scores:
+                    raise ValueError(f'objdiff did not measure {fn["symbol"]}')
+                fn['score'] = scores[fn['symbol']]
+    if not results or checkpoint.fingerprint() != generation:
+        raise ValueError('empty campaign or inputs changed during the build; no checkpoint published')
+    report = dict(target_sha256=hashlib.sha256(retail.data).hexdigest(), toolchain=compiler,
+                  compiler_files=toolchain.pins()[compiler]['files'], flags=config['flags'],
+                  scope='admitted fragments only; not whole-game coverage', functions=results,
+                  fingerprint=generation, complete=not bool(selected), cleanliness=verify.check())
+    if selected:
+        write_report(REPO / f'build/unit-reports/{selected}.json', report)
+        print('Unit report only; full checkpoint unchanged.')
+    else:
+        previous = checkpoint.read()
+        next_rows = checkpoint.advance(previous, results)
+        for fn in results:
+            old = previous.get(fn['rva'])
+            if old and fn['score'] < old['cur']:
+                print(f'{fn["symbol"]}: score decreased {old["cur"]:.2f} -> {fn["score"]:.2f} (observational)')
+        write_report(REPO / 'build/objdiff/objdiff.json', dict(units=objdiff_units))
+        write_report(REPO / 'build/match-report.json', report)
+        checkpoint.write(next_rows)
+    return 0
 
 
 def probe(args):

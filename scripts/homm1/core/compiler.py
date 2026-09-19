@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 import shutil
+import struct
 import subprocess
 
 from homm1.core.inputs import REPO
@@ -52,4 +53,8 @@ def compile_source(source, output, flags, name):
     if result.returncode or not output.is_file():
         output.unlink(missing_ok=True)
         raise ValueError(f'compiler failed; see {log}:\n{log.read_text(errors="replace")[-3000:]}')
+    # COFF timestamp is not code or debugging evidence; make repeated builds stable.
+    payload = bytearray(output.read_bytes())
+    struct.pack_into('<I', payload, 4, 0)
+    output.write_bytes(payload)
     return output

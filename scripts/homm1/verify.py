@@ -105,6 +105,12 @@ def command(args):
         build.validate_claims(build.image())
         result['semantic_checks'] = analysis.check(config, entries)
         if args.tier == 'full':
-            raise ValueError('full binary verification is not provisioned yet')
+            from homm1.checkpoint import fresh_report
+            report = fresh_report()
+            if not report.get('complete'):
+                raise ValueError('full verification requires a complete build report')
+            result['binary_checks'] = dict(functions=len(report['functions']),
+                                            exact=sum(f['exact'] for f in report['functions']),
+                                            status='validated against original retail')
     print(json.dumps(result, indent=2))
     return bool(result['findings'])

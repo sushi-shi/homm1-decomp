@@ -14,7 +14,7 @@ from homm1.core.coff import CoffObject
 from homm1.core.image import Image
 from homm1.core import manifest
 from homm1.core.inputs import REPO, read_verified, stage_executable, targets
-from homm1 import build, toolchain, verify, probes, labels, model, delink
+from homm1 import build, toolchain, verify, probes, labels, model, delink, checkpoint
 
 
 def verified_image(target):
@@ -46,6 +46,8 @@ def initialize(args):
 
 
 def status(args):
+    if args.view:
+        return checkpoint.command(args)
     pins = targets()
     states = {}
     for key, pin in pins.items():
@@ -130,6 +132,7 @@ def main(argv=None):
     p.add_argument('--editor-exe', type=Path)
     p.set_defaults(run=initialize)
     p = commands.add_parser('status', help='show inputs and reconstruction readiness')
+    p.add_argument('view', nargs='?', choices=['functions', 'queue', 'check'])
     p.add_argument('--json', action='store_true')
     p.set_defaults(run=status)
     p = commands.add_parser('inspect', help='inspect the pinned PE image')
@@ -147,11 +150,13 @@ def main(argv=None):
     p.add_argument('path', type=Path)
     p.set_defaults(run=object_info)
     p = commands.add_parser('build', help='compile, carve retail targets, and compare bytes and relocations')
+    p.add_argument('--unit', help='compile/compare a single unit without banking a checkpoint')
     p.set_defaults(run=build.run)
     p = commands.add_parser('verify', help='source cleanliness and evidence gates')
     p.add_argument('action', choices=['check', 'board'])
     p.add_argument('--tier', choices=['fast', 'normal', 'full'], default='fast')
     p.set_defaults(run=verify.command)
+    commands.add_parser('compare', help='verify freshness and show current comparisons').set_defaults(run=lambda _: emit(checkpoint.fresh_report()))
     commands.add_parser('delink', help='generate independent retail objects').set_defaults(run=delink.command)
     commands.add_parser('labels', help='AST-bound source identities').set_defaults(run=labels.command)
     commands.add_parser('model', help='joined retail claims and reference model').set_defaults(run=model.command)
@@ -171,6 +176,6 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         return args.run(args) or 0
-    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
         print(f'[homm1] ERROR: {exc}', file=sys.stderr)
         return 1

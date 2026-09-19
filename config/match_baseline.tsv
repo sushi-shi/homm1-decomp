@@ -1,3 +1,3 @@
-# Admitted exact fragment baseline. Updates require retail evidence and a full build.
-rva	size	symbol
-0x0005C15C	0x90	_AppAbout@16
+# Observational scores: CUR <= MAX(current source) <= HIST(all source). Full green builds only.
+rva	size	symbol	unit	cur	max	hist	src_hash
+0x0005C15C	0x90	_AppAbout@16	app_about	100.0	100.0	100.0	460fab3ac73fdc01af53ad372e61bb2e9cecded80194f94b470c2430a9b06f74
