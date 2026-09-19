@@ -29,8 +29,13 @@ def resolve(image, config=None, entries=None):
         from homm1.build import units
         config, entries = units()
     admitted = manifest.check_retail(image)
+    data_bases = {int(r['rva'], 0) for r in manifest.table('data.tsv', ('rva', 'kind'))}
+    for row in manifest.table('data_symbols.tsv', ('rva', 'size', 'symbol', 'provenance')):
+        if int(row['rva'], 0) not in data_bases:
+            raise ValueError('data identity provider has no sparse census row')
+    declarations = {}
     claims = [replace(c, unit=u['unit']) for u in entries
-              for c in labels.definitions(REPO / u['source'], config['build']['compiler'])]
+              for c in labels.definitions(REPO / u['source'], config['build']['compiler'], config['flags'][u['flags']], declarations)]
     validate(claims, image, admitted)
     references = {c.rva: retail_relocations(image, c) for c in claims}
     return claims, references

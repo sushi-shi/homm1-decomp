@@ -1,6 +1,9 @@
-# Hand-owned, sparse admitted function starts in HEROES.EXE; NOT a complete partition.
-# No names or sizes. Do not derive extents from gaps until the census is complete.
+# Located functions only; sparse gaps do not imply extents.
 rva	kind
 0x0004F640	
+0x0004F6B2	
+0x0005A584	
 0x0005BB45	
 0x0005C15C	
+0x0005DC9B	
+0x00078940	

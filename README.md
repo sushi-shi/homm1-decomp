@@ -8,11 +8,11 @@ period MSVC toolchain. Retail executable bytes and RVAs are authoritative.
 This repository does **not** contain the original game's executable or resources. Supply a
 legally obtained `HEROES.EXE` locally to initialize the matching workspace.
 
-**Status: first matching fragment.** `AppAbout` matches **144/144 bytes**, including its
-two relocation fields, using pinned **MSVC 4.0 (10.00.5270), `/Od`**. The compile/carve/compare
-loop runs with `homm1 build` and produces an objdiff project. This is one exported function,
-not a complete translation unit or a whole-game coverage score. VC2.0 and VC2.2 emit the
-same function; the historical compiler revision remains unproven. See [compiler evidence](docs/compiler.md).
+**Status: code-matching campaign tooling ready.** AppAbout, PollSound and
+ForcePollSound match **290/290 claimed code bytes**, including reviewed
+relocations. The pipeline supports incremental multi-function claims, mandatory
+quality/integrity gates and observational CUR/MAX/HIST checkpoints. Data matching
+is deferred; this is not whole-game coverage or a linked executable.
 
 ## Pinned target
 

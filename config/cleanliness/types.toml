@@ -1,0 +1,3 @@
+[[incomplete_type]]
+name = "soundManager"
+evidence = "evidence/poll-sound.md: ECX supplies this at RVA 0x4F697; only the PollSound method ABI is admitted."

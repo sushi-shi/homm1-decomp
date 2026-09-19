@@ -32,9 +32,34 @@ def location(value):
     return value.get('expansionLoc', value)
 
 
-def definitions(source, compiler='vc40'):
+def definitions(source, compiler='vc40', flags=(), declarations=None):
     source = Path(source).resolve()
-    tree = analysis.run(source, compiler, ast=True)
+    tree = analysis.run(source, compiler, ast=True, flags=flags)
+    from homm1.verify import check_incomplete_types
+    check_incomplete_types(tree)
+    if declarations is not None:
+        for node in walk(tree):
+            if node.get('kind') not in FUNCTIONS and not (node.get('kind') == 'VarDecl' and node.get('storageClass') == 'extern'):
+                continue
+            symbol = node.get('mangledName')
+            if not symbol or node.get('storageClass') == 'static':
+                continue
+            typ = node.get('type', {})
+            signature = typ.get('desugaredQualType', typ.get('qualType'))
+            if symbol in declarations and declarations[symbol] != signature:
+                raise ValueError(f'conflicting source declarations for {symbol}: {declarations[symbol]} / {signature}')
+            declarations[symbol] = signature
+    nodes = {n['id']: n for n in walk(tree) if 'id' in n}
+    access = {}
+    for record in walk(tree):
+        if record.get('kind') != 'CXXRecordDecl':
+            continue
+        current = 'private' if record.get('tagUsed') == 'class' else 'public'
+        for member in record.get('inner', []):
+            if member.get('kind') == 'AccessSpecDecl':
+                current = member['access']
+            elif member.get('kind') in FUNCTIONS:
+                access[member['id']] = current
     results, seen = [], set()
     for node in walk(tree):
         if node.get('kind') not in FUNCTIONS:
@@ -66,6 +91,17 @@ def definitions(source, compiler='vc40'):
             raise ValueError('cross-file macro-generated definitions are not supported')
         snippet = text[begin['offset']:end['offset'] + end.get('tokLen', 1)]
         symbol = node.get('mangledName')
+        # HoMM2 source_symbols documents Clang's destructor-definition alias.
+        # VC4 probes confirm the user body is ??1, not the ??_D vbase helper.
+        if node['kind'] == 'CXXDestructorDecl' and symbol and symbol.startswith('??_D'):
+            declaration = node
+            while declaration.get('previousDecl') in nodes:
+                declaration = nodes[declaration['previousDecl']]
+            visibility = access.get(declaration['id'], 'public')
+            letter = {'public': ('Q', 'U'), 'protected': ('I', 'M'), 'private': ('A', 'E')}[visibility][bool(declaration.get('virtual'))]
+            if not symbol.endswith('@@QAEXXZ'):
+                raise ValueError('unsupported destructor mangling; calibrate against the period compiler')
+            symbol = '??1' + symbol[4:-len('@@QAEXXZ')] + '@@' + letter + 'AE@XZ'
         if not symbol or (rva, symbol) in seen:
             raise ValueError(f'{source}: duplicate or unnameable source definition')
         seen.add((rva, symbol))
@@ -75,9 +111,11 @@ def definitions(source, compiler='vc40'):
         results.append(Claim(rva, size, symbol, source=str(path), src_hash=source_hash(snippet)))
     # Compiler-generated bodies have explicit ownership, not invented source.
     text = source.read_text()
-    uncommented = ''.join(' ' * len(m[0]) if m[0].startswith(('//', '/*')) else m[0]
-                          for m in re.finditer(r'//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"|[^/"\n]+|.', text, re.S))
-    for match in re.finditer(r'\bRVA_COMPGEN\(\s*(0x[\da-fA-F]+)\s*,\s*(0x[\da-fA-F]+)\s*,\s*"([^"\n]+)"\s*,\s*(0x[\da-fA-F]+)\s*\)', uncommented):
+    from homm1.verify import blank
+    for marker in re.finditer(r'\bRVA_COMPGEN\s*\(', blank(text)):
+        match = re.match(r'RVA_COMPGEN\s*\(\s*(0x[\da-fA-F]+|\d+)\s*,\s*(0x[\da-fA-F]+|\d+)\s*,\s*"([^"\n]+)"\s*,\s*(0x[\da-fA-F]+|\d+)\s*\)', text[marker.start():])
+        if not match:
+            raise ValueError('generated annotations require literal RVA, size, symbol and owner')
         rva, size, symbol, owner = match.groups()
         results.append(Claim(int(rva, 0), int(size, 0), symbol, source=str(source), parent=int(owner, 0)))
     parents = {c.rva: c for c in results if c.parent is None}
@@ -92,4 +130,4 @@ def definitions(source, compiler='vc40'):
 def command(_args):
     from homm1.build import units
     config, entries = units()
-    print(json.dumps([asdict(c) for u in entries for c in definitions(REPO / u['source'], config['build']['compiler'])], indent=2))
+    print(json.dumps([dict(asdict(c), unit=u['unit']) for u in entries for c in definitions(REPO / u['source'], config['build']['compiler'], config['flags'][u['flags']])], indent=2))

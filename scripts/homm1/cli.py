@@ -14,7 +14,7 @@ from homm1.core.coff import CoffObject
 from homm1.core.image import Image
 from homm1.core import manifest
 from homm1.core.inputs import REPO, read_verified, stage_executable, targets
-from homm1 import build, toolchain, verify, probes, labels, model, delink, checkpoint
+from homm1 import build, toolchain, verify, probes, labels, model, delink, checkpoint, sema
 
 
 def verified_image(target):
@@ -160,12 +160,18 @@ def main(argv=None):
     commands.add_parser('delink', help='generate independent retail objects').set_defaults(run=delink.command)
     commands.add_parser('labels', help='AST-bound source identities').set_defaults(run=labels.command)
     commands.add_parser('model', help='joined retail claims and reference model').set_defaults(run=model.command)
+    p = commands.add_parser('sema', help='inspect matching evidence and first divergence')
+    p.add_argument('action', choices=['rva', 'disasm', 'diff', 'xref', 'strings', 'source', 'frame'])
+    p.add_argument('address', help='RVA, VA, or unambiguous source symbol')
+    p.add_argument('--side', choices=['retail', 'compiled'], default='retail')
+    p.add_argument('--size', type=lambda v: int(v, 0))
+    p.set_defaults(run=sema.command)
     p = commands.add_parser('probe', help='compare pinned compiler candidates with /Od and /O2 controls')
     p.add_argument('--ids', nargs='+', choices=sorted(toolchain.pins()), default=['vc40'])
     p.add_argument('--contracts', action='store_true', help='measure calling conventions, domains, classes and EH')
     p.set_defaults(run=lambda args: probes.run(args) if args.contracts else build.probe(args))
     p = commands.add_parser('toolchain', help='install or verify pinned compiler components')
-    p.add_argument('action', choices=['install', 'check'])
+    p.add_argument('action', choices=['install', 'check', 'symbols'])
     p.add_argument('--id', choices=sorted(toolchain.pins()), default='vc40')
     p.add_argument('--media', type=Path)
     p.set_defaults(run=toolchain.command)

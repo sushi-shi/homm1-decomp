@@ -4,7 +4,7 @@ import unittest
 from homm1.core.coff import CoffObject, REL32
 from homm1.core.image import Image
 from homm1.core.matching import Claim, compare, confirm_object, function_extent
-from homm1.delink import sparse_relocation_view, yaml_text
+from homm1.delink import sparse_relocation_view, yaml_text, normalize, code_object
 from test_image import fixture
 
 
@@ -55,3 +55,13 @@ class MultiFunctionTests(unittest.TestCase):
         text = yaml_text(image, [claim], {claim.rva: [dict(symbol='_external', target_rva=0x1100)]})
         self.assertIn('CodeSize: 0', text)
         self.assertNotIn('CodeSize: 256', text)
+
+    def test_normalization_cannot_hide_wrong_retail_bytes(self):
+        image = Image(fixture())
+        claim = Claim(0x1000, 1, '_first')
+        broken = code_object([(claim, b'\x90', [])])
+        with self.assertRaisesRegex(ValueError, 'original retail'):
+            normalize(broken, image, [claim], {claim.rva: []})
+        good = code_object([(claim, b'\xc3', [])])
+        normalized = normalize(good, image, [claim], {claim.rva: []})
+        self.assertTrue(compare(CoffObject(normalized), image, claim, [])['exact'])

@@ -18,7 +18,12 @@ secondary evidence, and the DOS and 1997 builds are different targets.
   `src/SOURCE`. Mark function fragments whose original TU ownership is unknown.
 - Retail inputs, extracted assets, compilers, Wine prefixes and generated
   reports belong in ignored `build/`. Do not commit them.
-- VC4.0 `/Od` is validated for AppAbout only. VC2.0 and VC2.2 emit the same
+- Run `homm1 verify check --tier full` before banking/committing campaign work.
+  Scores are observational; source/identity/relocation integrity remains strict.
+  Refresh a human source review only after actually re-reading the changed body.
+- Data matching is last. Admit only code-required identities/layout evidence;
+  never use sparse census gaps as boundaries or a coverage denominator.
+- VC4.0 `/Od` is validated for AppAbout and the small PollSound fragment only. VC2.0 and VC2.2 emit the same
   callback; historical compiler identity and engine-wide flags remain open.
   Do not reuse HoMM3 VC6 settings. See docs/compiler.md for measured evidence.
 - Use sibling repositories as references without modifying or depending on

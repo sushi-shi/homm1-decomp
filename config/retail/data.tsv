@@ -1,3 +1,6 @@
-# Hand-owned, sparse data census in HEROES.EXE. No data boundaries admitted yet.
-# Structural starts and kinds only; names and claims belong to providers/source.
+# Only identities needed by admitted code; data matching is deferred.
 rva	kind
+0x00094180	
+0x0009FE78	
+0x000C6A94	
+0x000C7CA8	

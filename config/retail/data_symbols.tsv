@@ -1,1 +1,5 @@
 rva	size	symbol	provenance
+0x00094180	1	?gbInPollSound@@3DA	evidence/poll-sound.md; accessed storage only
+0x0009FE78	4	?gbForegroundApp@@3HA	evidence/poll-sound.md; accessed storage only
+0x000C6A94	4	?gNextSoundPollTick@@3JA	evidence/poll-sound.md; accessed storage only
+0x000C7CA8	4	?gpSoundManager@@3PAVsoundManager@@A	evidence/poll-sound.md; accessed storage only

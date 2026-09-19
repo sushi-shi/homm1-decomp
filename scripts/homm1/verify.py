@@ -19,7 +19,8 @@ def blank(text):
 
 
 def fingerprint(text):
-    return hashlib.sha256(' '.join(blank(text).split()).encode()).hexdigest()
+    from homm1.labels import source_hash
+    return source_hash(text)
 
 
 # Hard bans have no exception mechanism. Scoped debt is deliberately separate.
@@ -62,11 +63,14 @@ def board(root=REPO):
             for line, code in enumerate(text.splitlines(), 1):
                 if re.match(r'\s*extern\b.*;\s*$', code):
                     findings.append(f'{relative}:{line}: declaration belongs in a canonical header')
-                if re.match(r'\s*(?:typedef|enum)\b', code):
+                if re.match(r'\s*(?:(?:typedef|enum)\b|H1_ENUM_BEGIN\s*\()', code):
                     findings.append(f'{relative}:{line}: shared type/domain belongs in a header')
         includes = re.findall(r'^\s*#\s*include\s*([<"][^>"\n]+[>"])', source, re.M)
         if len(includes) != len(set(includes)):
             findings.append(f'{relative}: duplicate include')
+        if relative not in ('include/match.h', 'include/Domains.h') and re.search(
+                r'^\s*#\s*(?:if|ifdef|ifndef|elif)\b[^\n]*(?:__clang__|_MSC_VER|__cplusplus|H1_RETAIL_COMPILER)', text, re.M):
+            findings.append(f'{relative}: compiler-specific source behavior outside approved annotation/domain headers')
     ledger_path = root / 'config/cleanliness/debt.toml'
     ledger = tomllib.loads(ledger_path.read_text()).get('debt', []) if ledger_path.exists() else []
     keys = lambda row: (row['path'], row['rule'], row['fingerprint'])
@@ -97,12 +101,52 @@ def check(root=REPO):
     return report
 
 
+def check_reviews(claims, root=REPO):
+    path = root / 'config/cleanliness/reviews.toml'
+    rows = tomllib.loads(path.read_text()).get('review', []) if path.exists() else []
+    owned = {c.rva: c for c in claims if c.parent is None}
+    seen = set()
+    for row in rows:
+        rva = int(row['rva'], 0)
+        if rva in seen or rva not in owned or row['src_hash'] != owned[rva].src_hash:
+            raise ValueError(f'stale or duplicate source review for {rva:#x}; re-review changed source')
+        if not row.get('reviewer') or not row.get('evidence'):
+            raise ValueError('source review requires reviewer and evidence')
+        seen.add(rva)
+    return dict(reviewed=sorted(seen), pending=sorted(owned.keys() - seen))
+
+
+def check_incomplete_types(tree, root=REPO):
+    """A method-only class declaration is not permission to invent its layout."""
+    from homm1.labels import walk
+    path = root / 'config/cleanliness/types.toml'
+    rows = tomllib.loads(path.read_text()).get('incomplete_type', []) if path.exists() else []
+    for row in rows:
+        name = row['name']
+        if not re.fullmatch(r'[A-Za-z_]\w*', name) or not row.get('evidence'):
+            raise ValueError('invalid incomplete-type debt')
+        for node in walk(tree):
+            kind = node.get('kind')
+            typ = node.get('argType', node.get('type', {}))
+            typ = typ.get('desugaredQualType', typ.get('qualType', ''))
+            mentions = re.search(r'\b' + re.escape(name) + r'\b', typ)
+            by_value = mentions and '*' not in typ and '&' not in typ
+            if by_value and kind in ('VarDecl', 'ParmVarDecl', 'FieldDecl', 'CXXConstructExpr',
+                                     'CXXTemporaryObjectExpr', 'UnaryExprOrTypeTraitExpr', 'ArraySubscriptExpr'):
+                raise ValueError(f'{name}: {kind} requires an unrecovered class layout')
+            if mentions and kind in ('CXXNewExpr', 'CXXDeleteExpr', 'BinaryOperator', 'UnaryOperator'):
+                raise ValueError(f'{name}: allocation/pointer arithmetic requires a recovered layout')
+            if kind == 'CXXDeleteExpr' and any(re.search(r'\b' + re.escape(name) + r'\b', n.get('type', {}).get('qualType', '')) for n in walk(node)):
+                raise ValueError(f'{name}: deletion requires a recovered layout/destructor')
+
+
 def command(args):
     result = board()
     if args.action == 'check' and args.tier != 'fast':
         from homm1 import analysis, build
         config, entries = build.units()
-        build.validate_claims(build.image())
+        claims = build.validate_claims(build.image())
+        result['readability'] = check_reviews(claims)
         result['semantic_checks'] = analysis.check(config, entries)
         if args.tier == 'full':
             from homm1.checkpoint import fresh_report

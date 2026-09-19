@@ -50,6 +50,7 @@ def image():
 def validate_claims(retail):
     claims, _ = model.resolve(retail)
     checkpoint.check_claims(claims, checkpoint.read())
+    verify.check_reviews(claims)
     return claims
 
 
@@ -163,6 +164,7 @@ def run(args):
                   compiler_files=toolchain.pins()[compiler]['files'], flags=config['flags'],
                   scope='admitted fragments only; not whole-game coverage', functions=results,
                   fingerprint=generation, complete=not bool(selected), cleanliness=verify.check())
+    report['cleanliness']['readability'] = verify.check_reviews(claims)
     if selected:
         write_report(REPO / f'build/unit-reports/{selected}.json', report)
         print('Unit report only; full checkpoint unchanged.')
@@ -183,6 +185,8 @@ def probe(args):
     retail = image()
     validate_claims(retail)
     _, entries = units()
+    # Historical /Od-vs-/O2 control is established only for this callback.
+    entries = [u for u in entries if u['unit'] == 'app_about']
     reports = []
     for compiler in args.ids:
         toolchain.verify(compiler)

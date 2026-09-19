@@ -2,7 +2,7 @@
 [build]
 platform = "win32"
 compiler = "vc40"
-compiler_status = "VC4.0 /Od compatible with AppAbout; historical compiler revision unconfirmed"
+compiler_status = "VC4.0 /Od compatible with AppAbout and PollSound fragments; historical compiler revision unconfirmed"
 
 [flags]
 cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
@@ -10,4 +10,9 @@ cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
 [[unit]]
 unit = "app_about"
 source = "src/SOURCE/AppAbout.cpp"
+flags = "cpp_od"
+
+[[unit]]
+unit = "kb_poll_sound"
+source = "src/SOURCE/KB.cpp"
 flags = "cpp_od"

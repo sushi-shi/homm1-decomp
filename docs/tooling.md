@@ -20,83 +20,122 @@ its design notes; imports and module names have been adapted to HoMM1.
 The PE report parser is new and handles this target's imports, exports and
 base-relocation table. It does not guess function boundaries from prologues.
 
-## Commands
-
-Use `nix develop` for analysis, or `nix develop .#build` to also obtain Wine
-with a repository-local prefix. The shell supplies `homm1`, objdiff GUI/CLI,
-vostok-delinker, Ninja, LLVM and GNU binutils. Python 3.11+ is sufficient for
-the standalone `./homm1` CLI; `disasm` additionally requires GNU objdump.
+## Campaign loop
 
 ```sh
-homm1 init --exe /path/to/HEROES.EXE --editor-exe /path/to/EDITOR.EXE
-homm1 status --json
-homm1 inspect
-homm1 inspect --target editor --json
-homm1 disasm 0x0045BB45 --size 0x80
+nix develop .#build
 homm1 check
-homm1 test
-homm1 object /path/to/compiler-output.obj
-```
-
-The game is required by `init`; the editor is optional. Explicit input paths
-override `HOMM1_EXE` / `HOMM1_EDITOR_EXE`, which override existing staged copies.
-Every selected input must match its size and SHA-256 pin. Bad explicit inputs
-are rejected even if a valid staged copy exists. Subsequent analysis reads and
-verifies the staged copies without consulting the environment. Reports contain
-integer VAs/RVAs; `inspect` renders the principal addresses in hexadecimal.
-
-`config/retail/functions.tsv` records **located** game function starts and
-structural kinds. The separate `functions_exports.tsv` provider records the
-export names and provenance. Neither table asserts sizes or source ownership.
-`data.tsv` is an empty starting census. These are sparse censuses, not complete
-partitions; gaps must not be interpreted as function/data extents.
-`config/units.toml` admits the `app_about` fragment with one source-owned
-`RVA(rva, size)` claim. See [configuration](../config/README.md).
-
-## Matching loop
-
-[Compiler setup and evidence](compiler.md) document the pinned VC4.0 compiler
-and the VC2.x comparison controls. The repository commands are:
-
-```sh
-homm1 toolchain install --id vc40 --media /path/to/MSVC40.iso
-homm1 toolchain check --id vc40
 homm1 build
-homm1 probe --ids vc20 vc22 vc40  # after installing the other candidates
+homm1 build --unit kb_poll_sound
+homm1 status functions
+homm1 status queue
+homm1 sema diff 0x4F640
+homm1 sema frame 0x4F640
+homm1 sema xref 0x4F640
+homm1 verify check --tier full
+homm1 test
 ```
 
-`build` verifies retail and compiler hashes, checks source claims and their
-baseline, generates `build/build.ninja`, compiles, carves an independent retail
-COFF object, compares resolved bytes and the relocation stream, and runs
-objdiff-cli. It writes `build/match-report.json` and an objdiff project in
-`build/objdiff/`. Ninja depends on source, local headers, tooling and compiler
-configuration. Compiler failure removes stale objects and retains diagnostics.
-Any byte/size/relocation difference returns a failure; a visual objdiff score
-cannot override that verdict. The tracked exact baseline also detects dropped
-or shortened claims.
+`labels` shows AST-bound definitions; `model` joins those claims to sparse
+retail evidence; `delink` generates independent target objects; `compare`
+reads a fresh validated comparison report. `sema rva`, `disasm`, `source`,
+`strings`, `xref`, `diff`, and `frame` expose the matching evidence. An
+unclaimed function requires an explicit disassembly size. Xrefs describe
+reviewed references in admitted code, not a complete executable call graph.
 
-The initial carver supports **one exported four-argument stdcall dialog body
-per source/object**, with one `RVA` annotation and no additional emitted code.
-It binds the claim to the export name and the compiled COFF symbol. It only
-accepts reviewed IAT DIR32 and direct-call/jump REL32 references. Every retail
-HIGHLOW field in the body must be covered, and encoded targets/addends must
-agree with the PE bytes. No relocation field is masked. The target object's
-code comes from retail, with the reviewed relocations reversed into COFF
-addends; it is not copied from the compiler's output.
+`probe --contracts` exercises the native compiler's calling conventions,
+constructor/destructor names, member/static/overloaded functions, virtual
+calls, enum storage, class layout, switch and exception code. It confirms
+source bindings against emitted symbols and checks that `/Z7` leaves code
+unchanged. `probe --ids vc20 vc22 vc40` remains the AppAbout-only historical
+optimization control. `toolchain symbols --id vc40` indexes verified SDK/CRT
+library membership; membership never supplies a guessed retail address.
 
-This deliberately small carver does not use vostok-delinker's PDB path yet.
-The pinned package remains available for the later multi-function/data pipeline.
-The build is not a linked/runnable game, a full-TU reconstruction, or a coverage
-score for the whole executable. The compiled callback still references an
-unimplemented retail service. Exact historical compiler attribution and CRT/SDK
-provisioning remain open.
+## Source and quality contracts
 
-## Next work
+Source compiles directly under the selected MSVC profile. Clang has separate
+retail-language and strict-domain compilation databases under `build/analysis`.
+The period compiler's objects are the only candidate code that is scored.
+HoMM2-style enum helpers expose strict domains to analysis and the explicit
+integer representation to MSVC. There is no source transpilation or rewriting.
 
-Recover more independent function/type evidence and compiler probes. Extend
-claim extraction beyond the explicit dialog ABI, add full instruction decoding
-for broader relocation recovery, and establish multi-function/TU boundaries
-before admitting a larger unit. Preserve the Gruntz census/provider separation.
-Add PDB-based delinking, data ownership and linker reproduction when the evidence
-supports them. HoMM3's VC6 profiles, Dreamcast roster and fixed-base assumptions
-must not be carried over to HoMM1.
+`RVA(rva, size)` attaches to an actual definition in the Clang AST. Place it
+inside an `extern "C"` declaration, before its return type. Claims can include
+multiple functions, static/member functions, overloads, constructors and
+destructors. Period-compiler COFF must confirm every claimed symbol; extra
+emitted bodies fail ownership checks. `RVA_COMPGEN(rva, size, "symbol", owner_rva)`
+attributes generated code to an existing source definition. Unsupported or
+ambiguous bindings fail explicitly. Retail extents never come from sparse gaps.
+
+Cleanliness runs from the beginning:
+
+- Fast checks cover source/header inventory, banned assembly/vtable/codegen
+  idioms, compiler-specific behavior forks, declaration placement, and scoped
+  debt for provisional names, reinterpret casts and volatile use.
+- Normal checks add source bindings, retail identity/fixup integrity,
+  C-style-cast rejection, strict domains, unresolved-layout restrictions and
+  source-review freshness.
+- Full checks additionally require a fresh complete binary comparison.
+
+Human review records are distinct from automated checks. A changed function
+invalidates its recorded review; a function without a record is reported as
+pending, never automatically credited as read. Unknown layouts permit pointer
+and method declarations, not fabricated field layouts, allocation or sizeof.
+New RVAs may introduce explicit, evidenced debt; they do not get blanket waivers.
+
+## Delinking and exactness
+
+The synthetic PDB describes claimed function extents and reference identities.
+Unclaimed code identities carry zero extents. The pinned delinker attempts to
+process unrelated data relocations, so it receives an ignored **metadata view**
+of the executable with unrelated relocation-directory records disabled. No
+code/data operand is altered in that view. The hash-pinned original executable
+remains the sole comparison oracle.
+
+Delinker output can add alignment bytes, attach zero-size external definitions,
+and synthesize data ownership. Target normalization first resolves every
+retained code byte against the original executable, then emits canonical code
+sections with reviewed fixups and undefined data references. Unknown code or
+unreviewed fixups fail. Candidate objects never receive retail-size trimming.
+The bootstrap one-function carver remains covered as a separate regression
+oracle in the portable tests.
+
+VC4 `/Z7` COFF auxiliaries supply compiled function extents. The comparison
+resolves addresses and checks the full site/type/symbol/addend stream; address
+fields are never masked. Retail HIGHLOW fields and outgoing direct calls/jumps
+must be accounted for. Explicit embedded table ranges support code/data
+boundaries; missing information fails instead of inventing a matching target.
+
+## Checkpoints and freshness
+
+A full successful build records **CUR / MAX / HIST**, keyed by retail RVA:
+current objdiff score, best for the current function token hash, and historical
+best. Source edits reset MAX to CUR while preserving HIST. Collateral changes
+preserve MAX. Scores are observational; a non-exact but structurally valid,
+clean implementation is a successful build. Exactness is reported separately
+and requires resolved bytes plus relocation equality.
+
+Dropped/resized claims and integrity/cleanliness failures remain fatal. Missing
+measurements cannot enter the ledger. `build --unit` writes an isolated unit
+report and never banks a repository checkpoint. Reports reject changed source,
+headers, configuration, tools, targets or object content. Compiler failures
+remove stale output; only the COFF timestamp is normalized in candidate objects.
+
+## Scope and provenance
+
+The campaign currently includes AppAbout and the PollSound/ForcePollSound
+fragment; see `evidence/poll-sound.md`. Neither source filename proves original
+HoMM1 TU ownership. Four referenced storage identities are sufficient for this
+slice; their initializers and enclosing ownership remain unscored.
+
+Additional ports/adaptations use the sibling snapshots named above: Gruntz's
+verification tiers, source bindings, unified model and PDB stream repair;
+HoMM2's direct-source enum modes, destructor spelling correction, stack-frame
+comparison and KB/kbwin source evidence; HoMM3's observational checkpoints and
+semantic inspection interface. Modules retain local provenance notes. There
+are no runtime imports or dependencies on sibling checkouts. The HoMM2 global
+`AUDITS = False` switch and complete-census assumptions were not copied.
+
+Whole-data census/ownership, initializer scoring, vtable/data-table byte
+matching, complete source-recovery certification, and executable linking are
+later work. Minimal references and code prerequisites do not claim data matching.

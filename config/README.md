@@ -12,11 +12,15 @@ each `[[unit]]` selects `unit`, `source`, and `flags`. `app_about` is an
 admitted function fragment, not a claim of original TU ownership. Its `/Od`
 profile has passed compiler probes and the full matching loop.
 
-`toolchains.json` pins original media and each provisioned compiler component.
-`match_baseline.tsv` records the admitted exact function's RVA, size and symbol;
-checks reject dropped or shortened baseline claims, and builds reject byte or
-relocation differences. Future source-quality audit baselines belong in
-`cleanliness/`.
+`toolchains.json` pins original media and each provisioned compiler/SDK/CRT component.
+`match_baseline.tsv` records stable RVA/extent identity and observational
+CUR/MAX/HIST scores plus per-function source-token hashes. Full green builds
+update it; unit builds do not. Dropped/resized claims fail; score dips do not.
+
+`cleanliness/debt.toml` holds occurrence-scoped, fingerprinted debt and evidence.
+`cleanliness/types.toml` records unresolved layouts whose size-dependent use is
+forbidden. `cleanliness/reviews.toml` records human source review by function
+hash; stale reviews fail and missing reviews remain explicitly pending.
 
 ## `retail/`: facts about the executable
 
@@ -25,14 +29,17 @@ relocation differences. Future source-quality audit baselines belong in
   Kinds follow Gruntz: empty = body, or `thunk`, `eh`, `helper`, `pad`.
 - `data.tsv`: structural datum-start census with `rva`, `kind`. Empty = datum;
   other kinds are `string`, `fppool`, `vtable`, `rtti`, `ehtable`, `guard`,
-  `common`, `copy`, `pad`. No data boundaries have been admitted yet.
+  `common`, `copy`, `pad`. Only code-required datum identities are admitted; no initializer matching.
 - `functions_exports.tsv`: naming/provenance provider for PE exports, with
   `rva`, `name`, `ordinal`, `provenance`. Each row must refer to an admitted
   body in `functions.tsv` and match the pinned PE export table.
+- `data_symbols.tsv`: minimal referenced storage identities, explicit extents and
+  provenance. Every row must join to the sparse data census.
+- `code_data.tsv`: explicit embedded jump/EH table extents inside code claims.
 - `reloc_referents.tsv`: reviewed function-relative relocation ownership,
   expressed as image RVAs, kind, symbol, target RVA, addend and provenance.
   `check` verifies encoded operands, IAT identity, admitted callee starts, and
-  complete HIGHLOW coverage inside each claim.
+  complete HIGHLOW and outgoing direct-call/jump coverage inside each claim.
 
 All census/provider RVAs currently refer to **HEROES.EXE**. Do not mix editor
 addresses into those tables; future editor censuses need a separate namespace.

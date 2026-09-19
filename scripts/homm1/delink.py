@@ -114,6 +114,90 @@ and fixup-coverage validation always use the original hash-verified image.
     return bytes(data)
 
 
+def normalize(raw, image, claims, references):
+    """Remove delinker padding/data ownership and restore reviewed code fixups.
+
+Every retained byte is first resolved and checked against the ORIGINAL image.
+In particular, a missing delinker fixup cannot conceal an address mismatch.
+Candidate objects never pass through this retail-extent normalization.
+"""
+    obj = CoffObject(raw)
+    namespace = {c.symbol: c.rva for c in claims}
+    for refs in references.values():
+        namespace.update({r['symbol']: r['target_rva'] for r in refs})
+    payloads, covered = [], {}
+    for claim in claims:
+        found = [s for s in obj.symbols.values() if s.name == claim.symbol and s.section > 0]
+        if len(found) != 1:
+            raise ValueError(f'delinker did not bind {claim.symbol} uniquely')
+        symbol = found[0]
+        section = obj.section(symbol.section)
+        start, end = symbol.value, symbol.value + claim.size
+        if not section.characteristics & 0x20000000 or end > section.raw_size:
+            raise ValueError('delinker output truncated claimed code')
+        mask = covered.setdefault(section.index, bytearray(section.raw_size))
+        if any(mask[start:end]):
+            raise ValueError('overlapping delinker definitions')
+        mask[start:end] = b'\1' * claim.size
+        code = bytearray(obj.section_bytes(section)[start:end])
+        refs = references[claim.rva]
+        expected = {(r['site'], r['typ'], r['symbol'], r['addend'] & 0xffffffff) for r in refs}
+        seen = set()
+        for reloc in obj.relocations:
+            if reloc.section != section.index or not start <= reloc.site < end:
+                continue
+            site = reloc.site - start
+            if site + 4 > len(code):
+                raise ValueError('delinker relocation crosses function boundary')
+            target = obj.symbols[reloc.symbol_index].name
+            addend, = struct.unpack_from('<I', code, site)
+            identity = (site, reloc.typ, target, addend)
+            if identity not in expected or site in seen:
+                raise ValueError(f'delinker produced an unreviewed relocation: {identity}')
+            seen.add(site)
+            value = image.image_base + namespace[target] + addend
+            if reloc.typ == 0x14:
+                value -= image.image_base + claim.rva + site + 4
+            struct.pack_into('<I', code, site, value & 0xffffffff)
+        if bytes(code) != image.read(claim.rva, claim.size):
+            raise ValueError(f'delinker bytes do not resolve to original retail for {claim.symbol}')
+        for ref in refs:
+            struct.pack_into('<I', code, ref['site'], ref['addend'] & 0xffffffff)
+        payloads.append((claim, bytes(code), refs))
+    for section in obj.sections:
+        if section.characteristics & 0x20000000:
+            mask = covered.get(section.index, bytearray(section.raw_size))
+            if any(not used and byte not in (0x90, 0xcc) for used, byte in zip(mask, obj.section_bytes(section))):
+                raise ValueError('unexplained code in delinker output')
+    return code_object(payloads)
+
+
+def code_object(payloads):
+    """Canonical per-function sections; referenced data remains undefined/unscored."""
+    definitions = {claim.symbol: index + 1 for index, (claim, _, _) in enumerate(payloads)}
+    names = list(definitions) + sorted({r['symbol'] for _, _, refs in payloads for r in refs} - definitions.keys())
+    indices = {name: index for index, name in enumerate(names)}
+    offset = 20 + 40 * len(payloads)
+    headers, content = bytearray(), bytearray()
+    for claim, code, refs in payloads:
+        relocations = b''.join(struct.pack('<IIH', r['site'], indices[r['symbol']], r['typ']) for r in refs)
+        headers += b'.text\0\0\0' + struct.pack('<IIIIIIHHI', 0, 0, len(code), offset,
+                                               offset + len(code), 0, len(refs), 0, 0x60000020)
+        content += code + relocations
+        offset += len(code) + len(relocations)
+    strings, symbols = bytearray(b'\0' * 4), bytearray()
+    for name in names:
+        encoded = name.encode('ascii')
+        if len(encoded) <= 8:
+            symbols += encoded.ljust(8, b'\0')
+        else:
+            symbols += struct.pack('<II', 0, len(strings))
+            strings += encoded + b'\0'
+        symbols += struct.pack('<IhHBB', 0, definitions.get(name, 0), 32 if name in definitions else 0, 2, 0)
+    struct.pack_into('<I', strings, 0, len(strings))
+    return struct.pack('<HHIIIHH', 0x14c, len(payloads), 0, offset, len(names), 0, 0) + headers + content + symbols + strings
+
+
 def generate(image, claims, references):
     for tool in ('llvm-pdbutil', 'vostok-delinker'):
         if not shutil.which(tool):
@@ -149,8 +233,7 @@ def generate(image, claims, references):
             matches = list(output.rglob(unit + '.cpp.obj'))
             if len(matches) != 1:
                 raise ValueError(f'vostok did not emit exactly one object for {unit}: {list(output.rglob("*.obj"))}')
-            payload = matches[0].read_bytes()
-            CoffObject(payload)
+            payload = normalize(matches[0].read_bytes(), image, [c for c in claims if c.unit == unit], references)
             objects[unit] = payload
         for path in (yaml, pdb):
             shutil.copyfile(path, destination / path.name)

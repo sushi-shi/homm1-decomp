@@ -1,5 +1,5 @@
 #include "match.h"
-#include "RetailServices.h"
+#include "SOURCE/KB.h"
 #include "Win32.h"
 
 // Identity: PE export AppAbout, ordinal 1. Original TU ownership is unknown.
@@ -21,6 +21,6 @@ BOOL __stdcall AppAbout(HWND hDlg, H1_ENUM_PARAM(WindowMessage, UINT) message, W
             EndDialog(hDlg, 1);
         break;
     }
-    RetailService_0044F640();
+    PollSound();
     return 0;
 }

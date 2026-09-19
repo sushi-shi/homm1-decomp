@@ -55,3 +55,29 @@ RVA(0x1030, 0x10) int Counter::value(short a) { return a; }
     def test_generated_body_requires_owner(self):
         with self.assertRaisesRegex(ValueError, 'lacks its source owner'):
             self.claims('RVA_COMPGEN(0x1020, 0x10, "generated", 0x1000)')
+
+    def test_constructors_destructors_and_generated_ownership(self):
+        claims = self.claims('''
+class Item { public: Item(); ~Item(); };
+RVA(0x1000, 0x10) Item::Item() {}
+RVA(0x1010, 0x10) Item::~Item() {}
+RVA_COMPGEN(0x1020, 0x10, "helper", 0x1000)
+''')
+        self.assertEqual(claims[0].symbol, '??0Item@@QAE@XZ')
+        self.assertEqual(claims[1].symbol, '??1Item@@QAE@XZ')
+        self.assertEqual(claims[2].parent, 0x1000)
+        self.assertEqual(claims[2].src_hash, claims[0].src_hash)
+
+    def test_unknown_layout_cannot_be_used_for_sizeof(self):
+        with self.assertRaisesRegex(ValueError, 'unrecovered class layout'):
+            self.claims('#include "SOURCE/KB.h"\nRVA(0x1000, 0x10) int size() { return sizeof(soundManager); }')
+
+    def test_conflicting_external_declarations_across_units_fail(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'declaration.cpp'
+            declarations = {}
+            path.write_text('extern "C" int shared(int);')
+            definitions(path, declarations=declarations)
+            path.write_text('extern "C" long shared(long);')
+            with self.assertRaisesRegex(ValueError, 'conflicting source declarations'):
+                definitions(path, declarations=declarations)

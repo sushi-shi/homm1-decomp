@@ -1,7 +1,7 @@
 # Compiler bring-up and first matched fragment
 
 The working compiler is **Visual C++ 4.0, compiler 10.00.5270**, with the
-profile `/nologo /c /Od`. `AppAbout` at VA `0x0045C15C`, RVA `0x0005C15C`,
+profile `/nologo /c /Od /Z7`. `/Z7` supplies measured COFF function extents. `AppAbout` at VA `0x0045C15C`, RVA `0x0005C15C`,
 matches 144 bytes, including both resolved relocation operands. The original
 source file/TU name is unknown; `src/SOURCE/AppAbout.cpp` is a reconstruction
 fragment named after the verified PE export, not an inferred original TU.
@@ -24,11 +24,14 @@ The original Microsoft media used here is preserved as
 Its SHA-256 is
 `961326efbfbd299794e2cbb102e9ff3bfe78ebf91a11b89978095f59e0aea93e`.
 `config/toolchains.json` is authoritative for media and component hashes.
-Provisioning extracts only the pinned compiler passes, diagnostics, linker,
-PDB support DLL and native compiler runtime. It does not install the IDE, CRT
-libraries or SDK. This self-contained callback uses local ABI declarations
-and does not need those headers/libraries. They must be provisioned and pinned
-when a later unit needs them.
+Provisioning extracts pinned compiler passes, diagnostics, linker/PDB support,
+native compiler runtime, SDK headers and CRT/import libraries. VC4 currently
+has 354 pinned files. SDK filenames are installed in lowercase for native
+Clang analysis; Wine's compiler uses the same verified bytes.
+
+`homm1 probe --contracts` checks the compiler ABI, enum storage and class-layout
+fixtures, source-to-object names, and code parity with/without `/Z7`. This is
+compiler evidence; the `/GX` fixture does not set a game-wide exception profile.
 
 There is no automatic network download in `init` or `build`. Supply the media
 locally; all installed files, Wine state, extracted target objects and reports
@@ -37,7 +40,7 @@ Wine prefix. Inherited `CL`, `_CL_`, `INCLUDE` and `LIB` cannot alter the profil
 
 ## What identifies the compiler, and what does not
 
-The same source was tested using original Microsoft compiler media:
+The bootstrap callback source was tested using original Microsoft compiler media:
 
 | Candidate | Compiler banner | Linker banner | `/Od` callback | `/O2` control |
 | --- | --- | --- | --- | --- |
@@ -80,7 +83,7 @@ debugger metadata, excluded from the code comparison.
 - The operand at RVA `0x0005C1AC` is a HIGHLOW relocation to the USER32
   `EndDialog` IAT entry at RVA `0x000D661C`.
 - The relative-call operand at RVA `0x0005C1DA` resolves to VA `0x0044F640`.
-  `RetailService_0044F640` is deliberately provisional; no original name is known.
+  `PollSound` is the recovered HoMM2 correspondence; see [pilot evidence](../evidence/poll-sound.md).
 
 Reproduce the instruction evidence with:
 

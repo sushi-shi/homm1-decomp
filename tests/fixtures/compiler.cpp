@@ -1,4 +1,5 @@
 #include "Domains.h"
+#include "match.h"
 #include <stddef.h>
 
 H1_ENUM_BEGIN(ProbeDomain)
@@ -24,18 +25,21 @@ public:
     int overload(short input);
     int field;
 };
+typedef char AssertClassSize[sizeof(Probe) == 8 ? 1 : -1];
 
-Probe::Probe() : field(1) {}
-Probe::~Probe() { field = 0; }
-int Probe::value(int input) { return field + input; }
-int Probe::twice(int input) { return input * 2; }
-int Probe::overload(int input) { return field + input; }
-int Probe::overload(short input) { return field - input; }
+// Synthetic identities for binding tests; these are NOT game claims.
+RVA(0x1000, 1) Probe::Probe() : field(1) {}
+RVA(0x1010, 1) Probe::~Probe() { field = 0; }
+RVA(0x1020, 1) int Probe::value(int input) { return field + input; }
+RVA(0x1030, 1) int Probe::twice(int input) { return input * 2; }
+RVA(0x1040, 1) int Probe::overload(int input) { return field + input; }
+RVA(0x1050, 1) int Probe::overload(short input) { return field - input; }
+RVA(0x1060, 1) int probe_dispatch(Probe *object) { return object->value(3); }
 
-extern "C" int __stdcall probe_stdcall(int a, int b) { return a + b; }
-extern "C" int __cdecl probe_cdecl(int a) { return a + 1; }
-static int probe_static(int a) { return a - 1; }
-int probe_switch(int a) {
+extern "C" RVA(0x1070, 1) int __stdcall probe_stdcall(int a, int b) { return a + b; }
+extern "C" RVA(0x1080, 1) int __cdecl probe_cdecl(int a) { return a + 1; }
+RVA(0x1090, 1) static int probe_static(int a) { return a - 1; }
+RVA(0x10A0, 1) int probe_switch(int a) {
     switch (a) {
     case 0: return probe_static(a);
     case 1: return 7;
@@ -46,7 +50,7 @@ int probe_switch(int a) {
     }
 }
 extern void probe_throwing_call();
-int probe_unwind() {
+RVA(0x10B0, 1) int probe_unwind() {
     Probe local;
     probe_throwing_call();
     return local.field;

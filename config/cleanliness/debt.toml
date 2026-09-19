@@ -1,19 +1,7 @@
 # Explicit scoped reconstruction debt; edits require renewed evidence.
 
 [[debt]]
-path = "include/RetailServices.h"
-rule = "provisional-name"
-fingerprint = "77a7768989bbed9d91887cd1b2ff51919f0e7cf94dc1e9a8a4eebd9e5967f753"
-evidence = "Located RVA 0x4F640; called at RVA 0x5C1D9. Behavior and semantic name remain open."
-
-[[debt]]
-path = "src/SOURCE/AppAbout.cpp"
-rule = "provisional-name"
-fingerprint = "2eb2ff9439fa2949afe30151589f1d824c8b5d01147ab21fe2c88c6ce0bcb602"
-evidence = "Located RVA 0x4F640; called at RVA 0x5C1D9. Behavior and semantic name remain open."
-
-[[debt]]
 path = "src/SOURCE/AppAbout.cpp"
 rule = "reinterpret-cast"
-fingerprint = "cf8ccda0df42d72418b23c878eed4b9748378d5d24bf9fd542cbac28f0b4f332"
+fingerprint = "400023acb9212aa5dd4bf22b00abdd7b116249de3053f701ec7f2a6ddfc0841e"
 evidence = "WM_COMMAND encodes the child HWND in LPARAM; preserve the four-byte Win32 representation."
