@@ -1,11 +1,28 @@
 """Campaign inspection: HoMM3-style semantic context and HoMM2 frame evidence."""
 from dataclasses import asdict
 import json
+import os
+import subprocess
+import sys
 
 from homm1 import build, checkpoint, model
 from homm1.core.disasm import instructions, code_instructions, frame
 from homm1.core import manifest
 from homm1.core.inputs import REPO
+
+
+# HoMM2 Buka analysis/sema.py: child navigation modules belong to this tree,
+# including when the front door was invoked without an exported PYTHONPATH.
+def _pkg_env():
+    env = dict(os.environ)
+    scripts = str(REPO / 'scripts')
+    env['PYTHONPATH'] = scripts + (os.pathsep + env['PYTHONPATH'] if env.get('PYTHONPATH') else '')
+    return env
+
+
+def _sema_tool(module, argv):
+    return subprocess.run([sys.executable, '-m', module, *map(str, argv)],
+                          cwd=REPO, env=_pkg_env()).returncode
 
 
 def measured(unit):
@@ -28,6 +45,8 @@ def render(instruction, origin):
 def command(args):
     image = build.image()
     claims, refs = model.resolve(image)
+    if args.action == 'find-string':
+        return _sema_tool('homm1.navigation.string_xref', ['--find', args.address])
     try:
         rva = int(args.address, 0)
         if rva >= image.image_base:
@@ -38,6 +57,22 @@ def command(args):
             raise ValueError('name lookup must identify exactly one claimed function')
         rva = matches[0].rva
     owner = next((c for c in claims if c.rva <= rva < c.rva + c.size), None)
+    if args.action in ('callers', 'callees'):
+        print('Discovery: raw retail opcode candidates; confirm instruction boundaries before admitting references.', flush=True)
+        flags = ['--callees'] if args.action == 'callees' else ['--raw']
+        return _sema_tool('homm1.navigation.xref', [*flags, hex(rva)])
+    if args.action in ('blocks', 'branches'):
+        if not owner:
+            raise ValueError('block/branch navigation requires a claimed function extent')
+        measured(owner.unit)
+        flags = ['--' + args.action]
+        if getattr(args, 'diff', False):
+            flags.append('--diff')
+        elif args.side == 'compiled':
+            flags.append('--base')
+        if getattr(args, 'lite', False):
+            flags.append('--lite')
+        return _sema_tool('homm1.navigation.disasm', [hex(owner.rva), *flags])
     if args.action == 'rva':
         kinds = manifest.check_retail(image)
         value = dict(rva=hex(rva), va=hex(image.image_base + rva),
@@ -67,8 +102,9 @@ def command(args):
         origin = image.image_base + owner.rva
         retail = image.read(owner.rva, owner.size)
         rows, _ = code_instructions(image, owner)
-        target_rows = [dict(address=f'0x{i.address + image.image_base:08X}', offset=i.address - owner.rva,
-                            bytes=i.bytes.hex(), instruction=i.mnemonic + ' ' + i.op_str) for i in rows]
+        # Decode at the same VA origin on both sides; changing only the printed
+        # address left relative branch operands expressed as RVAs on one side.
+        target_rows = [render(instructions(i.bytes, i.address + image.image_base)[0], origin) for i in rows]
         if args.action == 'disasm' and args.side == 'retail':
             value = target_rows
         else:

@@ -32,6 +32,9 @@ homm1 status queue
 homm1 sema diff 0x4F640
 homm1 sema frame 0x4F640
 homm1 sema xref 0x4F640
+homm1 sema callers 0x4F640
+homm1 sema blocks 0x4F640 --diff --lite
+homm1 sema branches 0x4F640 --diff
 homm1 verify check --tier full
 homm1 test
 ```
@@ -42,6 +45,22 @@ reads a fresh validated comparison report. `sema rva`, `disasm`, `source`,
 `strings`, `xref`, `diff`, and `frame` expose the matching evidence. An
 unclaimed function requires an explicit disassembly size. Xrefs describe
 reviewed references in admitted code, not a complete executable call graph.
+
+Buka 2.1's `callers`, `callees`, and `find-string` tools provide discovery
+outside reviewed relocation rows. Call/jump hits are raw opcode candidates,
+not admitted instruction boundaries. Unknown function sizes never confer
+ownership of a census gap. Buka's `blocks` and `branches` compare the candidate
+and independent target objects; a diagnostic difference returns status 1.
+VC4's `.lf/.bf/.ef` debug symbols are removed only in a temporary disassembly
+view, with unchanged section bytes and relocation identities verified.
+
+`homm1 configure` emits the Gruntz-derived Ninja graph. It has separate
+per-unit compiler, labels/strict-analysis, target extraction and comparison
+edges, with a shared sparse model join. A source-body edit can update the
+candidate and report without extracting the retail target again. Compiler
+objects are validated, timestamp-stabilized and installed only when changed.
+The Wine runner is copied from Buka, including process-group timeout cleanup.
+Whole-image linking and data matching remain deferred.
 
 `probe --contracts` exercises the native compiler's calling conventions,
 constructor/destructor names, member/static/overloaded functions, virtual

@@ -25,7 +25,7 @@ def validate(claims, image, admitted):
         spans.append((claim.rva, claim.rva + claim.size))
 
 
-def resolve(image, config=None, entries=None):
+def resolve(image, config=None, entries=None, source_claims=None):
     if config is None:
         from homm1.build import units
         config, entries = units()
@@ -35,7 +35,7 @@ def resolve(image, config=None, entries=None):
         if int(row['rva'], 0) not in data_bases:
             raise ValueError('data identity provider has no sparse census row')
     declarations = {}
-    claims = [replace(c, unit=u['unit']) for u in entries
+    claims = source_claims if source_claims is not None else [replace(c, unit=u['unit']) for u in entries
               for c in labels.definitions(REPO / u['source'], config['build']['compiler'], config['flags'][u['flags']], declarations)]
     validate(claims, image, admitted)
     references = {c.rva: retail_relocations(image, c) for c in claims}

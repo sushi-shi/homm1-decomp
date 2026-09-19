@@ -8,6 +8,7 @@ import subprocess
 from homm1.core.inputs import REPO
 from homm1 import toolchain
 from homm1.core.profile import parse
+from homm1.core.wine import run_hang_proof
 
 
 def wine_env():
@@ -46,15 +47,13 @@ def compile_source(source, output, flags, name):
     command = ['wine', str(compiler_root / 'bin/CL.EXE'), *native_flags,
                '/Fo' + windows_path(output, environment), windows_path(source, environment)]
     log = output.with_suffix('.compile.log')
-    try:
-        with log.open('wb') as handle:
-            result = subprocess.run(command, cwd=output.parent, env=environment,
-                                    stdin=subprocess.DEVNULL, stdout=handle,
-                                    stderr=subprocess.STDOUT, timeout=120)
-    except subprocess.TimeoutExpired:
+    message, status, timed_out = run_hang_proof(command, output, cwd=output.parent,
+                                              timeout=120, environment=environment)
+    log.write_text(message)
+    if timed_out:
         output.unlink(missing_ok=True)
-        raise ValueError(f'compiler timed out; see {log}') from None
-    if result.returncode or not output.is_file():
+        raise ValueError(f'compiler timed out; see {log}')
+    if status or not output.is_file():
         output.unlink(missing_ok=True)
         raise ValueError(f'compiler failed; see {log}:\n{log.read_text(errors="replace")[-3000:]}')
     # COFF timestamp is not code or debugging evidence; make repeated builds stable.

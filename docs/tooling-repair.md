@@ -35,7 +35,8 @@ extents and RVA annotations, `config/retail` providers, and data-last scope.
 Do not import Buka-specific absolute addresses, complete-census assumptions,
 localization, or VC6 optimizer assumptions as HoMM1 evidence.
 
-- [ ] 1. Generated README reporting and freshness tests.
+- [x] 1. Generated README reporting and freshness tests: full exact/nonexact/
+      restored builds update the block; focused builds preserve it.
 - [x] 2. Correct C++ token hashes, including compound operators: copied HoMM3
       `core/cpp_tokens.py`; regression checks preserve operator/literal boundaries
       and line splicing. Native rebuild remains exact for all three pilot functions.
@@ -45,8 +46,11 @@ localization, or VC6 optimizer assumptions as HoMM1 evidence.
 - [ ] 6. Semantic cleanliness gates and auditable quality board.
 - [ ] 7. Dependency-aware source review freshness and publication policy.
 - [ ] 8. Code prerequisites: ABI/layout/allocation/virtual-call/library closure.
-- [ ] 9. Incremental dependency graph across analysis, model, compilation,
-      delinking and comparison; focused unit builds.
+- [x] 9. Incremental dependency graph across analysis, model, compilation,
+      delinking and comparison; focused unit builds. Gruntz graph port retains
+      include scanning, generator timestamps, per-edge dependencies and stable
+      object installation. Exported-worktree acceptance proves no-op behavior
+      and target/other-unit isolation after a single-body edit.
 - [ ] 10. Complete freshness, checkpoint consistency and recoverable publication.
 - [ ] 11. General independent delinking and relocation acceptance fixtures.
 - [ ] 12. Discovery, source context, mismatch diagnostics and campaign queue.
@@ -56,8 +60,18 @@ localization, or VC6 optimizer assumptions as HoMM1 evidence.
 Record evidence here as each item is completed. Do not check off a capability
 based only on a unit test of one internal helper or a compiler-only probe.
 
-Current intermediate validation: 80 tooling tests pass, including the copied
-Buka provenance-chain tests. The native VC4 build matches all three pilot
-functions (290 bytes); full verification accepts generated README/ledger/report
-consistency and the Buka target-object provenance chain. This does not close
-the broader ownership, graph, cleanliness, or general-delinking requirements.
+Current intermediate validation: 110 tooling tests pass, including copied Buka
+provenance-chain, Wine, residual-queue and disassembly tests and Gruntz object
+installation checks. The native VC4 build matches all three pilot functions
+(290 bytes); full verification accepts generated README/ledger/report
+consistency and the Buka target-object provenance chain. The exported-worktree
+campaign additionally checks no-op and focused rebuild behavior and nonexact
+full publication. This does not close broader ownership, cleanliness, ABI,
+general-delinking or source-recovery requirements.
+
+Direct ports now in use: Buka `core/wine.py`, `build/normalized_freshness.py`,
+`match/residual_queue.py`, `analysis/{disasm,xref,string_xref}.py`; Gruntz
+`graph/{cc,scan,ninja_syntax}.py` and its graph wiring; HoMM3
+`core/cpp_tokens.py`. The graph's stage adapters translate the current HoMM1
+claim/report schema. They do not constitute a completed port of Buka's richer
+source-symbol/provider and ABI/audit modules.

@@ -58,7 +58,8 @@ def compilation_databases(config, units):
         rows = [dict(directory=str(REPO), file=str(REPO / u['source']),
                      arguments=arguments(REPO / u['source'], config['build']['compiler'], strict, config['flags'][u['flags']])
                      + ['-fsyntax-only']) for u in units]
-        path.write_text(json.dumps(rows, indent=2) + '\n')
+        from homm1.publication import atomic_write
+        atomic_write(path, json.dumps(rows, indent=2) + '\n')
 
 
 def check(config, units):

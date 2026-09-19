@@ -152,6 +152,19 @@ def check_consistency(report, rows):
 def command(args):
     report = fresh_report()
     rows = read()
+    if args.view == 'queue':
+        from homm1.match.residual_queue import campaign_rows, write_queue, OUTPUT
+        queue = campaign_rows(report)
+        write_queue(OUTPUT, queue)
+        if getattr(args, 'json', False):
+            print(json.dumps(queue, indent=2))
+        else:
+            for row in queue:
+                print(f'{row["rank"]:4} {row["rva"]:#010x} {row["fuzzy"]:6.2f}% {row["size"]:5} bytes {row["unit"]}/{row["name"]}')
+        return 0
+    if getattr(args, 'json', False):
+        print(json.dumps(report, indent=2))
+        return 0
     for fn in report['functions']:
         if args.view == 'queue' and fn['exact']:
             continue
