@@ -5,7 +5,7 @@ compiler = "vc40"
 compiler_status = "VC4.0 /Od compatible with AppAbout; historical compiler revision unconfirmed"
 
 [flags]
-cpp_od = ["/nologo", "/c", "/Od"]
+cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
 
 [[unit]]
 unit = "app_about"

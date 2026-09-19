@@ -11,13 +11,13 @@ import shutil
 import subprocess
 import sys
 
-from homm1 import toolchain, verify, analysis, model
+from homm1 import toolchain, verify, analysis, model, delink
 from homm1.core import manifest
 from homm1.core.coff import CoffObject
 from homm1.core.compiler import compile_source
 from homm1.core.image import Image
 from homm1.core.inputs import REPO, read_verified, targets
-from homm1.core.matching import compare, retail_relocations, source_claim, target_object
+from homm1.core.matching import compare, confirm_object, retail_relocations, source_claim, target_object
 
 
 def units():
@@ -93,7 +93,8 @@ def write_report(path, report):
 def run(_args):
     verify.check()
     retail = image()
-    validate_claims(retail)
+    claims = validate_claims(retail)
+    references = {c.rva: retail_relocations(retail, c) for c in claims}
     config, entries = units()
     compiler = config['build']['compiler']
     toolchain.verify(compiler)
@@ -103,27 +104,43 @@ def run(_args):
         raise ValueError('Ninja and objdiff-cli are required; enter nix develop .#build')
     environment = {**os.environ, 'PYTHONPATH': str(REPO / 'scripts')}
     subprocess.run(['ninja', '-f', 'build/build.ninja'], cwd=REPO, env=environment, check=True)
+    targets = delink.generate(retail, claims, references)
+    namespace = {}
+    for refs in references.values():
+        for ref in refs:
+            name, rva = ref['symbol'], ref['target_rva']
+            if name in namespace and namespace[name] != rva:
+                raise ValueError(f'conflicting relocation namespace for {name}')
+            namespace[name] = rva
     results = []
     objdiff_units = []
     for unit in entries:
-        source = REPO / unit['source']
-        claim = source_claim(source, retail)
-        references = retail_relocations(retail, claim)
+        owned = [c for c in claims if c.unit == unit['unit']]
         base = REPO / f'build/objdiff/base/{unit["unit"]}.obj'
         target = REPO / f'build/objdiff/target/{unit["unit"]}.obj'
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(target_object(retail, claim, references))
-        result = compare(CoffObject(base.read_bytes()), retail, claim, references)
-        result.update(unit=unit['unit'], source=unit['source'], source_sha256=toolchain.digest(source),
-                      object_sha256=toolchain.digest(base))
-        results.append(result)
+        target.write_bytes(targets[unit['unit']])
+        candidate = CoffObject(base.read_bytes())
+        independent = CoffObject(target.read_bytes())
+        confirm_object(candidate, owned)
+        confirm_object(independent, owned)
+        for claim in owned:
+            refs = references[claim.rva]
+            oracle = compare(independent, retail, claim, refs, owned, namespace)
+            if not oracle['exact']:
+                raise ValueError(f'delinked target fails original-retail validation: {claim.symbol}: {oracle}')
+            result = compare(candidate, retail, claim, refs, owned, namespace)
+            result.update(unit=unit['unit'], source=unit['source'], src_hash=claim.src_hash,
+                          source_sha256=toolchain.digest(REPO / unit['source']),
+                          object_sha256=toolchain.digest(base))
+            results.append(result)
+            print(f'{unit["unit"]}/{claim.symbol}: {"EXACT" if result["exact"] else "DIFF"} '
+                  f'{result["matched_bytes"]}/{claim.size} bytes; '
+                  f'relocations {"exact" if result["relocations_exact"] else "differ"}', flush=True)
         objdiff_units.append(dict(name=unit['unit'], target_path=str(target.relative_to(REPO / 'build/objdiff')),
                                   base_path=str(base.relative_to(REPO / 'build/objdiff'))))
         report_path = REPO / f'build/objdiff/{unit["unit"]}.diff.json'
         subprocess.run(['objdiff-cli', 'diff', '-1', str(target), '-2', str(base), '-o', str(report_path)], check=True)
-        print(f'{unit["unit"]}: {"EXACT" if result["exact"] else "DIFF"} '
-              f'{result["matched_bytes"]}/{claim.size} bytes; '
-              f'relocations {"exact" if result["relocations_exact"] else "differ"}', flush=True)
     write_report(REPO / 'build/objdiff/objdiff.json', dict(units=objdiff_units))
     write_report(REPO / 'build/match-report.json', dict(
         target_sha256=hashlib.sha256(retail.data).hexdigest(), toolchain=compiler,

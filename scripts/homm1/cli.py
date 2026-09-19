@@ -14,7 +14,7 @@ from homm1.core.coff import CoffObject
 from homm1.core.image import Image
 from homm1.core import manifest
 from homm1.core.inputs import REPO, read_verified, stage_executable, targets
-from homm1 import build, toolchain, verify, probes, labels, model
+from homm1 import build, toolchain, verify, probes, labels, model, delink
 
 
 def verified_image(target):
@@ -152,6 +152,7 @@ def main(argv=None):
     p.add_argument('action', choices=['check', 'board'])
     p.add_argument('--tier', choices=['fast', 'normal', 'full'], default='fast')
     p.set_defaults(run=verify.command)
+    commands.add_parser('delink', help='generate independent retail objects').set_defaults(run=delink.command)
     commands.add_parser('labels', help='AST-bound source identities').set_defaults(run=labels.command)
     commands.add_parser('model', help='joined retail claims and reference model').set_defaults(run=model.command)
     p = commands.add_parser('probe', help='compare pinned compiler candidates with /Od and /O2 controls')
