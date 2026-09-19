@@ -1,0 +1,35 @@
+A data-manifest hypothesis must CONTAIN the rva it claims to identify.
+
+`hypothesis_owner_and_addend_for_rva` ranks enrolled definitions by
+`(!contains, distance, ...)` but then returns the best candidate even when NOTHING
+contains the rva, with an addend that is simply `rva - definition.rva` and so is
+unbounded in both directions. Both callers in relocs.rs consult it BEFORE the
+`--recover-data-relocs-from-pdb` fallback, so that unbounded guess wins over an
+exact-address PDB symbol that names the datum.
+
+Measured on GRUNTZ.EXE: 1,020 of 21,730 data relocations that name an enrolled
+symbol decompose PAST its end, across 185 of 341 objects and 28 distinct symbols -
+`??_R4CGruntVoice@@6B@ + 0x10800` into a 0x14 B RTTI complete-object-locator (750
+sites: every `/GX` registration stub's `mov eax,<FuncInfo>`), `_inflate_mask +
+0x3db4` into 0x44 B (164 sites), and 22 sites on `?g_scratch@@3PAEA + 0xffffffff`
+where the nearest enrolled datum sits AFTER the target so the addend is negative.
+
+A definition that does not contain the rva is not an identity for it - the manifest
+does not enroll that rva, which is precisely the case the PDB fallback exists to
+serve. Require containment and fall through.
+
+--- a/src/data_manifest.rs
++++ b/src/data_manifest.rs
+@@ -310,6 +310,12 @@
+                 definition.name.as_bytes(),
+             )
+         })?;
++        // Ranking prefers a containing definition but does not require one, so a
++        // miss still returned the nearest enrolled datum with an unbounded addend
++        // (in either direction) and beat the exact-address PDB symbol below it.
++        if !(definition.rva <= rva && rva - definition.rva < definition.size) {
++            return None;
++        }
+         Some((definition, (rva as u32).wrapping_sub(definition.rva as u32)))
+     }
+ }

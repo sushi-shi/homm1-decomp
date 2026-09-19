@@ -1,7 +1,7 @@
 #ifndef HOMM1_WIN32_H
 #define HOMM1_WIN32_H
 
-#include "Domains.h"
+#include <Domains.h>
 
 // Win32 ABI used by the recovered dialog fragment.
 typedef void *HWND;

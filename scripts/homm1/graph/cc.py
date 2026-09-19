@@ -1,4 +1,3 @@
-# Ported from scripts/gruntz/graph/cc.py at b1de0e555576a215898907b8ec8ed5423368883e.
 """homm1.graph.cc - the `cl` edge driver: compile, stabilise, write-if-changed.
 
     python3 -m homm1.graph.cc --out <obj> --src <src> [--unit U] -- <cl flags>
@@ -59,7 +58,7 @@ import struct
 import sys
 from pathlib import Path
 
-ToolError = ValueError
+from homm1.tool import ToolError
 
 #: COFF file header: Machine(2) NumberOfSections(2) TimeDateStamp(4) ...
 _MACHINE_I386 = 0x14C
@@ -135,9 +134,9 @@ def install(new: bytes, out: Path) -> bool:
     return True
 
 
-def compile_unit(src: Path | str, out: Path | str, flags: list[str], compiler: str = 'vc40') -> bool:
+def compile_unit(src: Path | str, out: Path | str, flags: list[str]) -> bool:
     """Compile one TU into `out`. Returns True when the object changed."""
-    from homm1.core.compiler import compile_source
+    from homm1.tool import cl
 
     src, out = Path(src), Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -148,7 +147,7 @@ def compile_unit(src: Path | str, out: Path | str, flags: list[str], compiler: s
     scratch.mkdir(parents=True, exist_ok=True)
     staged = scratch / out.name
     try:
-        compile_source(src, staged, flags, compiler)
+        cl.compile(src, staged, flags)
         return install(staged.read_bytes(), out)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
@@ -162,13 +161,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", required=True)
     ap.add_argument("--src", required=True)
     ap.add_argument("--unit", help="manifest unit name (diagnostics only)")
-    ap.add_argument("--compiler", default="vc40", choices=['vc20', 'vc22', 'vc40'])
     ap.add_argument("flags", nargs=argparse.REMAINDER,
                     help="cl flags after `--`")
     a = ap.parse_args(argv)
     flags = a.flags[1:] if a.flags and a.flags[0] == "--" else a.flags
     try:
-        compile_unit(a.src, a.out, flags, a.compiler)
+        compile_unit(a.src, a.out, flags)
     except ToolError as e:
         print(f"[cl] {a.unit or a.src}: {e}", file=sys.stderr)
         return 1

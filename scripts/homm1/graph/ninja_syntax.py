@@ -1,4 +1,3 @@
-# Ported from scripts/gruntz/graph/ninja_syntax.py at b1de0e555576a215898907b8ec8ed5423368883e.
 #!/usr/bin/env python3
 # This file is a vendored copy of the upstream ninja `misc/ninja_syntax.py`
 # helper (https://github.com/ninja-build/ninja), used by homm1.graph.emit to

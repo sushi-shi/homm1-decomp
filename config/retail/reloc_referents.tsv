@@ -1,19 +1,4 @@
-# Reviewed code relocation fields for admitted reconstruction claims.
-# Fields are image RVAs; addend is encoded against the named referent.
-function_rva	site_rva	kind	symbol	target_rva	addend	provenance
-0x0004F640	0x0004F647	REL32	?KBTickCount@@YAJXZ	0x0005DC9B	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F64D	DIR32	?gNextSoundPollTick@@3JA	0x000C6A94	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F65F	DIR32	?gbInPollSound@@3DA	0x00094180	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F672	DIR32	?gbInPollSound@@3DA	0x00094180	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F678	REL32	?KBTickCount@@YAJXZ	0x0005DC9B	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F680	DIR32	?gNextSoundPollTick@@3JA	0x000C6A94	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F686	DIR32	?gbForegroundApp@@3HA	0x0009FE78	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F693	DIR32	?gpSoundManager@@3PAVsoundManager@@A	0x000C7CA8	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F698	REL32	?PollSound@soundManager@@QAEXXZ	0x00078940	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F69D	REL32	?PollRemote@@YAXXZ	0x0005A584	0	evidence/poll-sound.md; decoded retail operand
-0x0004F640	0x0004F6A3	DIR32	?gbInPollSound@@3DA	0x00094180	0	evidence/poll-sound.md; decoded retail operand
-0x0004F6B2	0x0004F6B9	REL32	?KBTickCount@@YAJXZ	0x0005DC9B	0	evidence/poll-sound.md; decoded retail operand
-0x0004F6B2	0x0004F6BF	DIR32	?gNextSoundPollTick@@3JA	0x000C6A94	0	evidence/poll-sound.md; decoded retail operand
-0x0004F6B2	0x0004F6C4	REL32	_PollSound	0x0004F640	0	evidence/poll-sound.md; decoded retail operand
-0x0005C15C	0x0005C1AC	DIR32	__imp__EndDialog@8	0x000D661C	0	USER32 EndDialog IAT entry; retail HIGHLOW site
-0x0005C15C	0x0005C1DA	REL32	_PollSound	0x0004F640	0	Direct E8 call to admitted body; name provisional
+# Reviewed retail relocation referents that the delinker cannot infer from
+# containment alone. This is the Gruntz manifest schema; fields are image RVAs.
+# HoMM1 currently has no such exceptions.
+function_rva	target_rva	site_rva	owner	addend	occurrences	provenance

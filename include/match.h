@@ -4,8 +4,10 @@
 // Reconstruction metadata. The compiler receives ordinary C++.
 #ifdef __clang__
 #define RVA(address, size) __attribute__((annotate("rva:" #address " size:" #size), used))
+#define DATA(address) __attribute__((annotate("data:" #address), used))
 #else
 #define RVA(address, size)
+#define DATA(address)
 #endif
 
 // Generated code has explicit retail identity and an owning source RVA.

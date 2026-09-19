@@ -1,0 +1,50 @@
+A legacy (unplaced) data definition must not be appended to a COMDAT.
+
+`with_sections` adopts the FIRST manifest section of each storage class as the
+container for the definitions the manifest does not place - and with the
+candidate section manifest that first section is almost always a per-symbol
+COMDAT (a `??_C@` string literal, a `??_7` vtable). A COMDAT is a distinct
+linker input section holding exactly the one symbol cl.exe emitted into it, so
+appending an unrelated definition to it grows the COMDAT past the shape the
+candidate object has, and the alignment gap in front of the appended definition
+is content the base object does not have at all.
+
+Measured on `fadereffects`: the unit's sixteen ordinary `.rdata` globals were
+appended to `??_7CFaderFlat@@6B@`'s 0x14-byte COMDAT, taking it to 0x70 and
+starting the run at a 4-aligned offset, which moved every `double` in it off the
+8-aligned slot cl.exe gave it.
+
+Only an ORDINARY (non-COMDAT) manifest section may serve as the fallback
+container. When the manifest declares none of that storage class,
+`data_section()` / `rdata_section()` already create a fresh ordinary one lazily
+- which is also where cl.exe puts a unit's non-COMDAT globals.
+
+--- a/src/object_files.rs
++++ b/src/object_files.rs
+@@ -425,14 +425,23 @@
+                     size: section.size,
+                 },
+             );
++            // A COMDAT holds exactly the one symbol cl.exe put in it, so it can never
++            // be the container for a definition the manifest did not place: the
++            // appended bytes, and the alignment gap in front of them, are content the
++            // candidate COMDAT does not have. Only an ordinary section may serve as
++            // the fallback - when the manifest declares none of that storage,
++            // data_section()/rdata_section() create a fresh one lazily.
++            let ordinary = section.comdat_selection == 0;
+             match section.storage {
+-                Some(SectionStorage::Data) if data_section_id.is_none() => {
++                Some(SectionStorage::Data) if ordinary && data_section_id.is_none() => {
+                     data_section_id = Some(id)
+                 }
+-                Some(SectionStorage::Rdata) if rdata_section_id.is_none() => {
++                Some(SectionStorage::Rdata) if ordinary && rdata_section_id.is_none() => {
+                     rdata_section_id = Some(id)
+                 }
+-                Some(SectionStorage::Bss) if bss_section_id.is_none() => bss_section_id = Some(id),
++                Some(SectionStorage::Bss) if ordinary && bss_section_id.is_none() => {
++                    bss_section_id = Some(id)
++                }
+                 None if section.name == b".text" && text_section_id.is_none() => {
+                     text_section_id = Some(id)
+                 }

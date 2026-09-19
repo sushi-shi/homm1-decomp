@@ -1,0 +1,44 @@
+--- a/src/object_files.rs	2026-08-08 19:34:24.446481763 +0200
++++ b/src/object_files.rs	2026-08-08 19:33:58.544264880 +0200
+@@ -30,7 +30,7 @@
+     pub text_section_id: Option<object::write::SectionId>,
+     pub topology_sections: HashMap<usize, TopologySection>,
+     pub data_comdats: Vec<(usize, object::write::SectionId, u8)>,
+-    pub comdat_leaders: HashMap<usize, SymbolId>,
++    pub comdat_leaders: HashMap<usize, (usize, SymbolId)>,
+     pub symbols: HashMap<Vec<u8>, SymbolId>,
+     pub definition_offsets: HashMap<Vec<u8>, ObjectOffset>,
+     pub definition_ranges: HashMap<usize, Vec<(usize, usize)>>,
+@@ -916,8 +916,18 @@
+             flags: object::SymbolFlags::None,
+         });
+         if let Some(ordinal) = definition.section_ordinal {
+-            if definition.section_offset == Some(0) && definition.scope == DataScope::External {
+-                self.comdat_leaders.entry(ordinal).or_insert(symbol);
++            // The COMDAT leader is the section's LOWEST-offset external definition,
++            // which need not sit at offset 0. With /GR, cl emits a class vtable as
++            // `??_R4<class>@@6B@` (the complete-object-locator POINTER, an unnamed
++            // word) at offset 0 and `??_7<class>@@6B@` at offset 4, and the vtable
++            // symbol is that COMDAT's leader. COFF only requires the leader to be a
++            // symbol of the section, not one at its start.
++            if definition.scope == DataScope::External {
++                let offset = definition.section_offset.unwrap_or(0);
++                let leader = self.comdat_leaders.entry(ordinal).or_insert((offset, symbol));
++                if offset < leader.0 {
++                    *leader = (offset, symbol);
++                }
+             }
+         }
+         if self
+@@ -934,9 +944,9 @@
+
+     fn finish_data_comdats(&mut self) -> anyhow::Result<()> {
+         for (ordinal, section, selection) in self.data_comdats.clone() {
+-            let leader = self.comdat_leaders.get(&ordinal).copied().ok_or_else(|| {
++            let (_, leader) = self.comdat_leaders.get(&ordinal).copied().ok_or_else(|| {
+                 anyhow::anyhow!(
+-                    "candidate data COMDAT section {ordinal} has no external offset-zero leader"
++                    "candidate data COMDAT section {ordinal} has no external leader symbol"
+                 )
+             })?;
+             let kind = match selection {

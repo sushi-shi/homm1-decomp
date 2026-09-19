@@ -29,9 +29,10 @@ native compiler runtime, SDK headers and CRT/import libraries. VC4 currently
 has 354 pinned files. SDK filenames are installed in lowercase for native
 Clang analysis; Wine's compiler uses the same verified bytes.
 
-`homm1 probe --contracts` checks the compiler ABI, enum storage and class-layout
-fixtures, source-to-object names, and code parity with/without `/Z7`. This is
-compiler evidence; the `/GX` fixture does not set a game-wide exception profile.
+The initial compiler survey checked ABI, enum storage, class layout,
+source-to-object names, and code parity with and without `/Z7`. This is
+historical compiler evidence; its `/GX` fixture does not establish a game-wide
+exception profile.
 
 There is no automatic network download in `init` or `build`. Supply the media
 locally; all installed files, Wine state, extracted target objects and reports
@@ -56,18 +57,10 @@ The exact historical compiler and CRT revision, packing, exception settings,
 and engine-wide flags require more independent probes. No `/GX` or `/Zp`
 claim is made from this callback.
 
-To repeat the controls after provisioning each candidate with `toolchain install`:
-
-```sh
-homm1 probe --ids vc20 vc22 vc40
-```
-
-This recompiles each candidate with `/Od` and an `/O2` negative control. The
-command succeeds only when all `/Od` cases match and all `/O2` cases differ;
-compiler failures and unresolved references fail the command. The report at
-`build/probes/report.json` includes compiler component, source, object and
-retail hashes plus byte/relocation results. MSVC's `.debug$F` FPO records are
-debugger metadata, excluded from the code comparison.
+The old one-time probe results are summarized above. The active campaign uses
+the pinned VC4 profile in `config/units.toml`; `homm1 build` recompiles and
+scores every enrolled unit. MSVC's `.debug$F` FPO records are debugger metadata
+and are excluded from code comparison.
 
 ## Retail evidence for AppAbout
 
@@ -85,11 +78,11 @@ debugger metadata, excluded from the code comparison.
 - The relative-call operand at RVA `0x0005C1DA` resolves to VA `0x0044F640`.
   `PollSound` is the recovered HoMM2 correspondence; see [pilot evidence](../evidence/poll-sound.md).
 
-Reproduce the instruction evidence with:
+Inspect the pinned image and the admitted source/object diff with:
 
 ```sh
-homm1 disasm 0x0045C15C --size 0x93
 homm1 inspect --json
+homm1 sema diff 0x0005c15c
 ```
 
 ## Correction to the exception-handling survey

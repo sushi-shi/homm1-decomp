@@ -8,7 +8,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vostok-delinker-src = {
-      url = "github:srp-survarium/vostok-delinker/1393e24b4804cb357fdac147c68013f0aa5a9d95";
+      # Same reviewed-data-topology revision used by the Gruntz donor.
+      url = "github:srp-survarium/vostok-delinker/81d34b204a0384a92cf3b4c641a8430256b2922e";
       flake = false;
     };
     objdiff-src = {
@@ -37,7 +38,17 @@
         pname = "vostok-delinker";
         version = "0.1.0";
         src = vostok-delinker-src;
-        cargoHash = "sha256-ZwFdbqUyh4b0S+fUYKGMN1fWaxRu1zU2ozKpe7CbcYs=";
+        cargoHash = "sha256-ry3TH1fz7Aj/JdbmlgQFFn29m8E7EQHyGaVXnZTEcXo=";
+        patches = [
+          ./nix/patches/vostok-data-manifest-folded-comdat.patch
+          ./nix/patches/vostok-ilt-thunk-resolution.patch
+          ./nix/patches/vostok-comdat-leader-nonzero-offset.patch
+          ./nix/patches/vostok-grouped-section-names.patch
+          ./nix/patches/vostok-legacy-data-not-into-comdat.patch
+          ./nix/patches/vostok-data-hypothesis-must-contain.patch
+          ./nix/patches/vostok-canonical-alias-owner.patch
+          ./nix/patches/vostok-unprovisioned-identity-refusal.patch
+        ];
       };
 
       objdiffVersion = "3.7.3";
@@ -60,6 +71,10 @@
         pname = "objdiff-cli";
         version = objdiffVersion;
         src = objdiff-src;
+        patches = [
+          ./nix/patches/objdiff-bss-inferred-extent.patch
+          ./nix/patches/objdiff-score-reloc-addend.patch
+        ];
         cargoHash = "sha256-Z9vyUj35nrHuUoOYM54RLCn7CzcQ6k3A6FsDYKCVqVM=";
         cargoBuildFlags = [ "-p" "objdiff-cli" ];
         cargoTestFlags = [ "-p" "objdiff-core" "-p" "objdiff-cli" ];
@@ -92,10 +107,12 @@
       '';
       commonTools = with pkgs; [
         homm1-cli python git ninja binutils llvm llvmPackages.clang-unwrapped clang-tools
-        ripgrep file jq p7zip universal-ctags vostok-delinker objdiff objdiff-cli
+        ripgrep file jq p7zip vostok-delinker objdiff objdiff-cli
       ];
       commonHook = ''
         export HOMM1_DIR="$PWD"
+        export PYTHONPATH="$HOMM1_DIR/scripts''${PYTHONPATH:+:$PYTHONPATH}"
+        export MSVC_DIR="$HOMM1_DIR/build/toolchains/vc40"
         export PYTHONDONTWRITEBYTECODE=1
       '';
     in {
@@ -104,7 +121,7 @@
         default = vostok-delinker;
       };
       checks.${system}.tooling = pkgs.runCommand "homm1-tooling-tests" {
-        nativeBuildInputs = [ python pkgs.llvmPackages.clang-unwrapped pkgs.universal-ctags ];
+        nativeBuildInputs = [ python pkgs.llvmPackages.clang-unwrapped ];
       } ''
         cp -r ${./.} source
         chmod -R u+w source

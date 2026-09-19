@@ -1,0 +1,7 @@
+# Exact names of unclaimed game functions referenced by admitted base objects.
+# These are symbol identities only: they remain in anonymous delink buckets and
+# do not become source claims or matching-denominator entries.
+rva	name	provenance
+0x0005A584	?PollRemote@@YAXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
+0x0005DC9B	?KBTickCount@@YAJXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
+0x00078940	?PollSound@soundManager@@QAEXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target

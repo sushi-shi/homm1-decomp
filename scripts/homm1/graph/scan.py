@@ -1,4 +1,3 @@
-# Ported from scripts/gruntz/graph/scan.py at b1de0e555576a215898907b8ec8ed5423368883e.
 """homm1.graph.scan - repo-local `#include` deps for the `cl` edges.
 
 The `cl` rule lists only the .cpp as its input, so without the headers as
@@ -25,7 +24,7 @@ from __future__ import annotations
 import os
 import re
 
-from homm1.core.inputs import REPO
+from homm1.core.paths import REPO
 
 _INCLUDE_RE = re.compile(r'^[ \t]*#[ \t]*include[ \t]*[<"]([^>"]+)[>"]', re.M)
 

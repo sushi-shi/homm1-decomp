@@ -1,3 +1,3 @@
-from homm1.graph.emit import emit
+from homm1.graph.emit import main
 
-emit()
+raise SystemExit(main())

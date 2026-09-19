@@ -1,0 +1,38 @@
+diff --git a/src/relocs.rs b/src/relocs.rs
+index 2b42280..e62fdc2 100644
+--- a/src/relocs.rs
++++ b/src/relocs.rs
+@@ -207,13 +207,31 @@ fn resolve_manifest_alias(
+     let Some(alias) = aliases.resolve(*function_rva, target_rva, reloc_rva, observed) else {
+         return Ok(None);
+     };
+-    let Some((owner_rva, _)) = symbols.iter().find(|(_, name)| **name == alias.owner) else {
++    // A trailing bare `$S` marks a CANONICAL owner: a reviewed manifest may not
++    // carry the volatile CodeView ordinal, so match the live symbol by its
++    // ordinal-stripped spelling and emit the live name.
++    let owner_entry = symbols
++        .iter()
++        .find(|(_, name)| **name == alias.owner)
++        .or_else(|| {
++            let canon = alias.owner.as_bytes();
++            if !canon.ends_with(b"$S") {
++                return None;
++            }
++            symbols.iter().find(|(_, name)| {
++                let live = name.as_bytes();
++                live.len() > canon.len()
++                    && live.starts_with(canon)
++                    && live[canon.len()..].iter().all(u8::is_ascii_digit)
++            })
++        });
++    let Some((owner_rva, owner)) = owner_entry else {
+         anyhow::bail!("relocation alias owner is absent: {}", alias.owner);
+     };
+     if (*owner_rva as u32).wrapping_add(alias.addend) != target_rva as u32 {
+         anyhow::bail!("relocation alias owner/addend does not resolve to target");
+     }
+-    Ok(Some((alias.addend, alias.owner, *owner_rva)))
++    Ok(Some((alias.addend, *owner, *owner_rva)))
+ }
+
+ fn closest_data_symbol<'a>(

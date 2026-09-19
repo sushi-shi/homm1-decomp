@@ -1,0 +1,27 @@
+m_<hex> fields	0
+address-derived identifiers	0
+Unknown ids	0
+g_<hex> globals	0
+Method/Stub/FUN/Gap	0
+virtual slot placeholders	0
+positional arg placeholders	0
+placeholder classes	0
+.cpp-local views	0
+placeholder vtable slots	0
+*Vtbl structs	0
+->vtbl accesses	0
+g_*Vtbl globals	0
+m_vtbl/m_vptr members	0
+magic case labels	0
+unnamed domain compares	0
+.cpp-local enums	0
+C-style casts	0
+reinterpret_casts	1
+unexplained casts	0
+void* m_ members	0
+offset-cast macros	0
+forced COMDAT emitters	0
+cpp extern decls	6
+cpp external prototypes	0
+view classes (*Views.h)	0
+duplicate header externs	0

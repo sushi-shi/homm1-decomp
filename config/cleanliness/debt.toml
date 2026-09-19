@@ -3,5 +3,5 @@
 [[debt]]
 path = "src/SOURCE/AppAbout.cpp"
 rule = "reinterpret-cast"
-fingerprint = "tokens1:f18e59d84ef2"
+fingerprint = "400023acb9212aa5dd4bf22b00abdd7b116249de3053f701ec7f2a6ddfc0841e"
 evidence = "WM_COMMAND encodes the child HWND in LPARAM; preserve the four-byte Win32 representation."

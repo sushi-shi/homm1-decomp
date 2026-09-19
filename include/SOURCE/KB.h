@@ -1,9 +1,11 @@
 #ifndef HOMM1_KB_H
 #define HOMM1_KB_H
 
-#include "Domains.h"
+#include <Domains.h>
 
-enum SoundPollTiming { SOUND_POLL_INTERVAL = 30 };
+H1_ENUM_BEGIN(SoundPollTiming)
+    SOUND_POLL_INTERVAL = 30
+H1_ENUM_END(SoundPollTiming)
 
 // Confirmed member-call ABI; class layout is still unknown. Do not instantiate,
 // pass by value, take sizeof, or add fields before recovering that layout.

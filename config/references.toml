@@ -1,9 +1,0 @@
-# Navigation references; these pins do not select the HoMM1 compiler or claims.
-[target]
-image_base = 0x00400000
-
-[reference.homm2_buka_21]
-name = "HoMM2 Gold 2.1 Buka"
-branch = "decomp-gold-2.1-buka"
-revision = "299514f88900c0cf30ba03422c72830a38fc1cb7"
-priority = 0

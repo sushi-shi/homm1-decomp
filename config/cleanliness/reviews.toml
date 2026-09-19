@@ -1,21 +1,18 @@
 # Human source review, separate from mechanical checks and byte matching.
 [[review]]
 rva = "0x0005C15C"
-src_hash = "tokens1:bbfe7f22b055"
-context_hash = "63f9ad02ad34fe368604071b3c5ecba8062e8f10ccabbe65960a2b3dda21053b"
+src_hash = "c2f55e1eeb66c026f3dd576010442c51a8471d7889e968ea9168084166a34e82"
 reviewer = "Codex"
 evidence = "Reviewed switch domains, Win32 LPARAM conversion, return paths and HoMM2 PollSound correspondence."
 
 [[review]]
 rva = "0x0004F640"
-src_hash = "tokens1:b866ea8e5b8b"
-context_hash = "531594513ca95a65db33ec6e11769cc32fec4e9927bede5021b3f560092a3453"
+src_hash = "da1481218534657d5d2b7bef4287adc035e672c81cea1f4b838d43a2147183d0"
 reviewer = "Codex"
 evidence = "Reviewed against every retail basic block and HoMM2 KB.cpp; retain HoMM1 timer equality and byte guard semantics."
 
 [[review]]
 rva = "0x0004F6B2"
-src_hash = "tokens1:ab45f4b8869f"
-context_hash = "531594513ca95a65db33ec6e11769cc32fec4e9927bede5021b3f560092a3453"
+src_hash = "09cba46877051a56f5c5295791fc09ef078d0055025f67c2fb5f02fd9eefaaf3"
 reviewer = "Codex"
 evidence = "Reviewed deadline assignment and PollSound call against the adjacent retail function and HoMM2 ForcePollSound."

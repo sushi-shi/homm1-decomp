@@ -1,0 +1,121 @@
+diff --git a/src/relocs.rs b/src/relocs.rs
+index db4717c..2b42280 100644
+--- a/src/relocs.rs
++++ b/src/relocs.rs
+@@ -57,6 +57,87 @@ const HEADER_SIZE: usize = std::mem::size_of::<RelocHeader>();
+
+ const DATA_ALIAS_PREFIX: &[u8] = b"__homm2_data_alias$";
+
++/// The linker's incremental-link thunk table (ILT).
++///
++/// `link.exe /INCREMENTAL` emits, at the very start of `.text`, a contiguous
++/// array of 5-byte `jmp rel32` thunks and routes *function-address* references
++/// through them, so a body can move on a relink without rewriting every
++/// reference to it.
++///
++/// This matters for delinking because the indirection is a pure LINK-time
++/// artifact: a compiler cannot name a thunk that does not exist until link, so
++/// every `DIR32` in the original object named the *body*. A vtable slot holding
++/// a thunk address in the linked image therefore reconstructs to a relocation
++/// against the body symbol; resolving through the thunk restores what the object
++/// actually said, exactly as the `.idata` handling restores an import reference
++/// from its IAT slot.
++///
++/// The band is recovered structurally rather than assumed: skip the `0xCC` pad
++/// at the section start, then take the maximal run of 5-byte `jmp rel32`
++/// entries. On GRUNTZ.EXE that recovers rva 0x1005..0x44a8 (2695 entries),
++/// terminated by `0xCC` padding.
++#[derive(Copy, Clone, Debug, Default)]
++pub struct IltBand {
++    start: usize,
++    end: usize,
++}
++
++const JMP_REL32: u8 = 0xE9;
++const THUNK_LEN: usize = 5;
++const INT3: u8 = 0xCC;
++
++impl IltBand {
++    fn detect(image: &[u8], text_rva: usize, text_size: usize) -> Self {
++        let text_end = (text_rva + text_size).min(image.len());
++        let mut start = text_rva;
++        while start < text_end && image[start] == INT3 {
++            start += 1;
++        }
++        let mut end = start;
++        while end + THUNK_LEN <= text_end && image[end] == JMP_REL32 {
++            end += THUNK_LEN;
++        }
++        if end == start {
++            return Self::default();
++        }
++        Self { start, end }
++    }
++
++    fn contains(self, rva: usize) -> bool {
++        rva >= self.start && rva < self.end && (rva - self.start) % THUNK_LEN == 0
++    }
++
++    /// Destination of the thunk at `rva`, if `rva` is an ILT entry.
++    fn destination(self, image: &[u8], rva: usize) -> Option<usize> {
++        if !self.contains(rva) || image.get(rva).copied()? != JMP_REL32 {
++            return None;
++        }
++        let disp = i32::from_le_bytes(image.get(rva + 1..rva + THUNK_LEN)?.try_into().ok()?);
++        usize::try_from(i64::try_from(rva).ok()? + THUNK_LEN as i64 + i64::from(disp)).ok()
++    }
++
++    pub fn len(self) -> usize {
++        (self.end - self.start) / THUNK_LEN
++    }
++}
++
++/// Rewrite an ILT thunk address to the body it forwards to.
++///
++/// Conservative by construction: the hop is taken only when a function symbol
++/// sits EXACTLY at the destination, so a reference can never be moved off an
++/// exact symbol onto some unrelated preceding symbol plus an addend. When the
++/// destination is unnamed the thunk address is left alone and the delink is
++/// bit-for-bit what it was before.
++fn resolve_ilt_thunk(
++    ilt: IltBand,
++    image: &[u8],
++    functions: &BTreeMap<usize, Vec<RawString<'static>>>,
++    target_rva: usize,
++) -> Option<usize> {
++    let destination = ilt.destination(image, target_rva)?;
++    functions.contains_key(&destination).then_some(destination)
++}
++
+ fn decode_data_alias(
+     symbol: RawString<'static>,
+ ) -> anyhow::Result<Option<(u32, RawString<'static>)>> {
+@@ -208,6 +289,15 @@ pub fn resolve_absolute_relocations<'s>(
+     let mut relocs_rva = BTreeMap::<usize, RelocKind>::new();
+     let mut observed_aliases = RelocAliasObservations::default();
+
++    let ilt = IltBand::detect(&exe_data, env.text.rva, env.text.size);
++    if ilt.len() > 0 {
++        eprintln!(
++            "[delink] incremental-link thunk table: {} entries, resolving \
++             function-address references through it to their bodies",
++            ilt.len(),
++        );
++    }
++
+     let mut pos = 0;
+     let reloc_data = reloc_sec.data()?;
+     while pos + HEADER_SIZE <= reloc_data.len() {
+@@ -252,6 +342,12 @@ pub fn resolve_absolute_relocations<'s>(
+
+             match () {
+                 () if (env.text.rva..env.text.rva + env.text.size).contains(&target_rva) => {
++                    // Undo the /INCREMENTAL thunk indirection: the object's
++                    // DIR32 named the body, never the link-generated thunk.
++                    let target_rva =
++                        resolve_ilt_thunk(ilt, &exe_data, &symbols.functions, target_rva)
++                            .unwrap_or(target_rva);
++
+                     let (function_rva, function_overloads) = symbols
+                         .functions
+                         .range(..=target_rva)
