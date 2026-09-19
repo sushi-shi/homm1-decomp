@@ -40,10 +40,15 @@ localization, or VC6 optimizer assumptions as HoMM1 evidence.
 - [x] 2. Correct C++ token hashes, including compound operators: copied HoMM3
       `core/cpp_tokens.py`; regression checks preserve operator/literal boundaries
       and line splicing. Native rebuild remains exact for all three pilot functions.
-- [ ] 3. Complete unrecovered-layout restrictions.
+- [ ] 3. Complete unrecovered-layout restrictions. Canonical Clang checks now
+      reject aliases hiding object storage, by-value signatures, pointer stride,
+      allocation/deletion and member pointers. Expression traits, copying and
+      invented fields/virtual methods are covered. Broader admission audit remains.
 - [ ] 4. Unit-scoped internal symbol ownership and relocation resolution.
 - [ ] 5. Explicit compiler/analysis flag contract and consistent paths.
-- [ ] 6. Semantic cleanliness gates and auditable quality board.
+- [ ] 6. Semantic cleanliness gates and auditable quality board. Buka casts and
+      physical inventory plus Gruntz compiler-artifact checks are integrated;
+      remaining semantic gates and readability contracts still need porting.
 - [ ] 7. Dependency-aware source review freshness and publication policy.
 - [ ] 8. Code prerequisites: ABI/layout/allocation/virtual-call/library closure.
 - [x] 9. Incremental dependency graph across analysis, model, compilation,
@@ -64,7 +69,7 @@ localization, or VC6 optimizer assumptions as HoMM1 evidence.
 Record evidence here as each item is completed. Do not check off a capability
 based only on a unit test of one internal helper or a compiler-only probe.
 
-Current intermediate validation: 193 tooling tests pass, including copied Buka
+Current intermediate validation: 203 tooling tests pass, including copied Buka
 provenance-chain, Wine, residual-queue and disassembly tests and Gruntz object
 installation checks. The native VC4 build matches all three pilot functions
 (290 bytes); full verification accepts generated README/ledger/report
@@ -116,3 +121,17 @@ matching/publication sequence. The admitted campaign remains three functions
 and 290 bytes; neither located wrappers nor hypothesis correspondences gain
 matching claims. The provider uses the existing retail TSV reader; the mapping
 itself is necessarily HoMM1-specific evidence.
+
+Compiler-artifact port: copied Gruntz `verify/compiler_artifacts.py` and its
+source scanner at `b1de0e555576a215898907b8ec8ed5423368883e`, retaining the
+five donor controls. HoMM1 adapters cover source paths, COFF fields and the
+fresh complete report. No donor-specific exception addresses or lifetime sites
+are admitted. The fast board runs the source guard; full verification checks
+suspicious candidate-only symbols. The CLI lists candidate-only external code.
+The canonical unknown-layout supplement reuses Buka's parsed translation unit;
+it does not replace the donor source-symbol scanner. Native VC4 validation
+remains 3/3 exact (290 bytes), with zero candidate-only external code and no
+full-verification findings. All 203 tests and the clean Nix check pass. The
+exported-worktree campaign also passes the artifact-audit CLI and the existing
+exact/nonexact/restored, focused/no-op and stale-review publication checks.
+Items 3 and 6 remain open.

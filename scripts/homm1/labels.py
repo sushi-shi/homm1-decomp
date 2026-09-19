@@ -31,7 +31,7 @@ def location(value):
 def definitions(source, compiler='vc40', flags=(), declarations=None):
     source = Path(source).resolve()
     tree = analysis.run(source, compiler, ast=True, flags=flags)
-    from homm1.verify import check_incomplete_types
+    from homm1.verify import check_incomplete_types, check_incomplete_declarations
     check_incomplete_types(tree)
     # Reviews include the compilation context, independently of the function
     # token hash used by the observational MAX score. Header edits are
@@ -73,7 +73,8 @@ def definitions(source, compiler='vc40', flags=(), declarations=None):
     # The JSON AST below supplies existing review spans/layout checks only.
     bindings = {}
     symbols_for_file(source, source.parent, REPO,
-                     args=analysis.arguments(source, compiler, flags=flags)[1:-1], bindings=bindings)
+                     args=analysis.arguments(source, compiler, flags=flags)[1:-1], bindings=bindings,
+                     validate_translation=check_incomplete_declarations)
     results, seen = [], set()
     for node in walk(tree):
         if node.get('kind') not in FUNCTIONS:

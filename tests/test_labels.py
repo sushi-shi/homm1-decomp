@@ -114,6 +114,39 @@ RVA_COMPGEN(0x1020, 0x10, "helper", 0x1000)
                 self.claims('#include "SOURCE/KB.h"\n' + source)
         self.assertEqual(len(self.claims('#include "SOURCE/KB.h"\nRVA(0x1000,16) bool f(soundManager *a, soundManager *b) { return a == b; }')), 1)
 
+    def test_unknown_layout_expression_traits_and_copy_assignment_fail(self):
+        for expression in ('sizeof(*a)', 'sizeof(a[0])', '__alignof__(*a)'):
+            with self.subTest(expression=expression), self.assertRaisesRegex(ValueError, 'unrecovered class layout'):
+                self.claims('#include "SOURCE/KB.h"\nRVA(0x1000,16) int f(soundManager *a) { return ' + expression + '; }')
+        with self.assertRaisesRegex(ValueError, 'recovered layout'):
+            self.claims('#include "SOURCE/KB.h"\nRVA(0x1000,16) void f(soundManager *a, soundManager *b) { *a = *b; }')
+        # A pointer's size is known independently of its pointee's layout.
+        self.assertEqual(len(self.claims('#include "SOURCE/KB.h"\nRVA(0x1000,16) int f(soundManager *a) { a->PollSound(); return sizeof(a); }')), 1)
+
+    def test_unknown_layout_aliases_do_not_hide_storage_stride_or_call_abi(self):
+        cases = (
+            'Alias factory();',
+            'Alias (*factory)();',
+            'class Derived : public Alias {};',
+            'RVA(0x1000,16) Alias *f(Alias *a) { return a+1; }',
+            'RVA(0x1000,16) Alias *f(Alias *a) { return ++a; }',
+            'RVA(0x1000,16) int f(Alias *a, Alias *b) { return a-b; }',
+            'RVA(0x1000,16) void f(Alias *a) { delete a; }',
+            'RVA(0x1000,16) void f() { void (Alias::*p)() = &Alias::PollSound; }',
+        )
+        for code in cases:
+            with self.subTest(code=code), self.assertRaisesRegex(ValueError, 'recovered.*layout'):
+                self.claims('#include "SOURCE/KB.h"\ntypedef soundManager Alias;\n' + code)
+        self.assertEqual(len(self.claims('#include "SOURCE/KB.h"\ntypedef soundManager Alias;\nRVA(0x1000,16) bool f(Alias *a, Alias *b) { a->PollSound(); return a == b; }')), 1)
+        self.assertEqual(len(self.claims('#include "SOURCE/KB.h"\nRVA(0x1000,16) soundManager **f(soundManager **p) { return p+1; }')), 1)
+        self.assertEqual(len(self.claims('#include "SOURCE/KB.h"\nRVA(0x1000,16) soundManager **f() { return new soundManager*; }')), 1)
+
+    def test_unknown_layout_shell_cannot_grow_fields_or_virtual_methods(self):
+        for definition in ('class soundManager { int invented; };',
+                           'class soundManager { public: virtual void PollSound(); };'):
+            with self.subTest(definition=definition), self.assertRaisesRegex(ValueError, 'recovered layout'):
+                self.claims(definition)
+
     def test_internal_names_are_scoped_to_source_unit(self):
         first = self.claims('RVA(0x1000,16) static int helper(int a) { return a; }')[0]
         second = self.claims('RVA(0x1010,16) static int helper(int a) { return a; }')[0]

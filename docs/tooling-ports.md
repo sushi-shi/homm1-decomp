@@ -29,6 +29,7 @@ integration failures, not recreate the donor's whole test suite.
 | `audit/casts.py` | Buka equivalent | Imports, H1 prefix, configuration path, additional source suffixes; reject errors outside project headers too. Classifier, cursor traversal, deduplication and review-key logic retained. |
 | `audit/readability.py` | Buka equivalent | RVA spelling (including `extern "C"`), H1 macros, configuration path, source exports/untracked files and additional suffixes. Physical Ctags/macro indexing and reading-credit logic retained. |
 | `audit/common.py` | Buka `build/annotated_data.py`, `audit/bool_fields.py` | Extracted the actual helper functions needed by the cast audit; no data-matching callers. Retail arguments come directly from HoMM1's generated VC4 analysis database. Prefer the libclang library paired with its Nix Python binding. |
+| `audit/compiler_artifacts.py`, `audit/srcscan.py` | Gruntz `verify` equivalents at `b1de0e555576a215898907b8ec8ed5423368883e` | Copied guard/scanner and five donor tests. HoMM1 paths, COFF/report adapters and source suffixes; no donor-specific lifetime exceptions. Buka's lexical masking excludes quoted examples. The object report requires a fresh complete build. |
 
 Buka's copied cast and readability tests remain in `tests/test_buka_*.py`.
 Four integration controls cover unclaimed header casts, external parse failures,
@@ -84,3 +85,10 @@ for a donor algorithm. It reuses the existing Gruntz-style TSV reader. Six
 function correspondences record Buka Git provenance, known differences and
 reviewed/hypothesis confidence. CLI lookup works offline; optional donor
 verification reads pinned Git objects and never depends on the sibling at runtime.
+
+The compiler-artifact source guard runs in the fast board and before building;
+its candidate-object check also runs in full verification. The existing HoMM1
+unrecovered-layout policy now uses canonical types from the Buka scanner's
+already-parsed translation unit to catch aliases and object-pointer operations.
+That admission policy is a HoMM1 adaptation for method-only shells, not another
+source-symbol implementation. Remaining semantic and ABI gates are still open.

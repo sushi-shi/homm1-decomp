@@ -61,6 +61,7 @@ def main():
         result['offline_buka_correspondence'] = True
         run('build')
         run('verify', 'check', '--tier', 'full')
+        run('audit', 'compiler-artifacts', '--base-only')
         report = checkout / 'build/match-report.json'
         functions = json.loads(report.read_text())['functions']
         assert len(functions) == 3 and all(f['exact'] for f in functions)

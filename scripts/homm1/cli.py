@@ -160,8 +160,8 @@ def main(argv=None):
     p.add_argument('--json', action='store_true')
     p.set_defaults(run=correspondence.command)
     from homm1 import audit
-    p = commands.add_parser('audit', help='Buka semantic casts and physical source inventory')
-    p.add_argument('audit', choices=['casts', 'readability'])
+    p = commands.add_parser('audit', help='Buka source audits and Gruntz compiler-artifact guard')
+    p.add_argument('audit', choices=['casts', 'readability', 'compiler-artifacts'])
     p.add_argument('arguments', nargs=argparse.REMAINDER)
     p.set_defaults(run=audit.command)
     p = commands.add_parser('verify', help='source cleanliness and evidence gates')

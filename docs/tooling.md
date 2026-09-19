@@ -40,6 +40,7 @@ homm1 sema reference KBTickCount
 homm1 verify check --tier full
 homm1 audit casts --check --all
 homm1 audit readability --check
+homm1 audit compiler-artifacts --base-only
 homm1 test
 ```
 
@@ -105,6 +106,9 @@ Cleanliness runs from the beginning:
 - Fast checks cover source/header inventory, banned assembly/vtable/codegen
   idioms, compiler-specific behavior forks, declaration placement, and scoped
   debt for provisional names, reinterpret casts and volatile use.
+  The copied Gruntz compiler-artifact guard rejects forced-emission helpers,
+  direct compiler allocation calls, manual static-init hooks and unreviewed
+  placement construction/destructor calls, including inactive source.
 - Normal checks add source bindings, retail identity/fixup integrity,
   C-style-cast rejection, strict domains, unresolved-layout restrictions and
   source-review freshness. The copied Buka cast audit classifies explicit casts
@@ -114,6 +118,9 @@ Cleanliness runs from the beginning:
   current physical file reviews. The copied Buka Ctags inventory includes
   header bodies, inactive bodies, macros and conditional variants. Normal and
   focused builds report unread files; full publication requires review.
+  Full verification also checks candidate-only code for suspicious emission
+  helpers. `audit compiler-artifacts --base-only` lists all such external code
+  definitions and requires a fresh complete build report.
 
 `verify board --tier normal` measures the semantic audits too. Generated audit
 reports are under `build/audit` and `build/readability/inventory`; their presence
@@ -126,6 +133,10 @@ Human review records are distinct from automated checks. A changed function
 invalidates its recorded review; a function without a record is reported as
 pending, never automatically credited as read. Unknown layouts permit pointer
 and method declarations, not fabricated field layouts, allocation or sizeof.
+Canonical Clang types also check aliases in storage and function signatures,
+object-pointer arithmetic, expression `sizeof`/alignment, member pointers and
+virtual methods. Pointer-to-pointer arithmetic and allocation of pointer
+storage remain permitted because they do not use the object's unknown size.
 New RVAs may introduce explicit, evidenced debt; they do not get blanket waivers.
 
 ## Delinking and exactness

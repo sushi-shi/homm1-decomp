@@ -42,15 +42,18 @@ DEBT = {
 
 def source_files(root):
     return sorted(p for directory in ('src', 'include') for p in (root / directory).rglob('*')
-                  if p.suffix in ('.h', '.hpp', '.cpp', '.cc', '.cxx', '.inl'))
+                  if p.suffix in ('.h', '.hh', '.hpp', '.cpp', '.cc', '.cxx', '.inl', '.asm', '.s'))
 
 
 def board(root=REPO):
-    findings, sites = [], []
+    from homm1.audit.compiler_artifacts import source_findings
+    findings, sites = source_findings(source_files(root)), []
     for path in source_files(root):
         source = path.read_text()
         text = blank(source)
         relative = str(path.relative_to(root))
+        if path.suffix in ('.asm', '.s'):
+            findings.append(f'{relative}: assembly source has no admitted original-assembly provider')
         for rules, hard in ((HARD, True), (DEBT, False)):
             for rule, pattern in rules.items():
                 for match in re.finditer(pattern, text, re.M):
@@ -154,6 +157,80 @@ def check_reviews(claims, root=REPO, require_complete=False):
     return dict(reviewed=sorted(seen), pending=pending)
 
 
+def check_incomplete_declarations(translation, root=REPO):
+    """Canonical Clang types catch aliases hidden inside signatures/storage.
+
+    HoMM1's method-only, unrecovered class shells need this admission policy;
+    the mature donor classes already have recovered layouts. Reuse the Buka
+    translation and qualified-name helper rather than parsing type spellings.
+    """
+    import clang.cindex as ci
+    from homm1.symbols.annotated_data import _qualified_name
+    path = root / 'config/cleanliness/types.toml'
+    rows = tomllib.loads(path.read_text()).get('incomplete_type', []) if path.exists() else []
+    unknown = {row['name'] for row in rows}
+
+    def value_record(typ):
+        typ = typ.get_canonical()
+        while typ.kind in (ci.TypeKind.CONSTANTARRAY, ci.TypeKind.INCOMPLETEARRAY, ci.TypeKind.VARIABLEARRAY):
+            typ = typ.element_type.get_canonical()
+        if typ.kind == ci.TypeKind.RECORD:
+            name = _qualified_name(typ.get_declaration())
+            return name if name in unknown else None
+        return None
+
+    def signature(typ):
+        typ = typ.get_canonical()
+        while typ.kind in (ci.TypeKind.POINTER, ci.TypeKind.LVALUEREFERENCE,
+                           ci.TypeKind.RVALUEREFERENCE):
+            typ = typ.get_pointee().get_canonical()
+        if typ.kind in (ci.TypeKind.FUNCTIONPROTO, ci.TypeKind.FUNCTIONNOPROTO):
+            types = [typ.get_result()]
+            if typ.kind == ci.TypeKind.FUNCTIONPROTO:
+                types += list(typ.argument_types())
+            for item in types:
+                if name := value_record(item):
+                    raise ValueError(f'{name}: by-value function ABI requires a recovered layout')
+
+    def pointer_record(typ):
+        typ = typ.get_canonical()
+        return value_record(typ.get_pointee()) if typ.kind == ci.TypeKind.POINTER else None
+
+    for cursor in translation.cursor.walk_preorder():
+        children = list(cursor.get_children())
+        if cursor.kind in (ci.CursorKind.VAR_DECL, ci.CursorKind.PARM_DECL, ci.CursorKind.FIELD_DECL):
+            if name := value_record(cursor.type):
+                raise ValueError(f'{name}: object storage requires an unrecovered class layout')
+        if cursor.kind == ci.CursorKind.CXX_BASE_SPECIFIER and value_record(cursor.type):
+            raise ValueError('inheritance requires a recovered layout')
+        if cursor.kind == ci.CursorKind.FIELD_DECL and _qualified_name(cursor.semantic_parent) in unknown:
+            raise ValueError('fields require a recovered layout')
+        if (cursor.kind == ci.CursorKind.CXX_METHOD and cursor.is_virtual_method()
+                and _qualified_name(cursor.semantic_parent) in unknown):
+            raise ValueError('virtual methods require a recovered layout')
+        if cursor.kind in (ci.CursorKind.BINARY_OPERATOR, ci.CursorKind.COMPOUND_ASSIGNMENT_OPERATOR):
+            if (cursor.binary_operator in (ci.BinaryOperator.Add, ci.BinaryOperator.Sub,
+                                           ci.BinaryOperator.AddAssign, ci.BinaryOperator.SubAssign)
+                    and any(pointer_record(c.type) for c in children)):
+                raise ValueError('pointer arithmetic requires a recovered layout')
+        if (cursor.kind == ci.CursorKind.UNARY_OPERATOR and pointer_record(cursor.type)
+                and any(pointer_record(c.type) for c in children)):
+            raise ValueError('pointer increment/decrement requires a recovered layout')
+        if ((cursor.kind == ci.CursorKind.CXX_NEW_EXPR and pointer_record(cursor.type))
+                or (cursor.kind == ci.CursorKind.CXX_DELETE_EXPR
+                    and any(pointer_record(c.type) for c in children))):
+            raise ValueError('allocation/deletion requires a recovered layout')
+        if cursor.kind in (ci.CursorKind.ARRAY_SUBSCRIPT_EXPR, ci.CursorKind.CALL_EXPR) and value_record(cursor.type):
+            raise ValueError('object construction/indexing requires an unrecovered class layout')
+        if (cursor.kind == ci.CursorKind.CXX_UNARY_EXPR
+                and any(c.kind != ci.CursorKind.TYPE_REF and value_record(c.type) for c in children)):
+            raise ValueError('expression type trait requires an unrecovered class layout')
+        typ = cursor.type.get_canonical()
+        if typ.kind == ci.TypeKind.MEMBERPOINTER and value_record(typ.get_class_type()):
+            raise ValueError('member-pointer representation requires a recovered layout')
+        signature(cursor.type)
+
+
 def check_incomplete_types(tree, root=REPO):
     """A method-only class declaration is not permission to invent its layout."""
     from homm1.labels import walk
@@ -173,19 +250,23 @@ def check_incomplete_types(tree, root=REPO):
                                      'CXXTemporaryObjectExpr', 'UnaryExprOrTypeTraitExpr', 'ArraySubscriptExpr'):
                 raise ValueError(f'{name}: {kind} requires an unrecovered class layout')
             operands = node.get('inner', [])
-            operand_mentions = any(re.search(r'\b' + re.escape(name) + r'\b',
-                                            n.get('type', {}).get('desugaredQualType', n.get('type', {}).get('qualType', '')))
-                                   for n in operands)
-            arithmetic = kind in ('BinaryOperator', 'CompoundAssignOperator', 'UnaryOperator') and node.get('opcode') in ('+', '-', '++', '--', '+=', '-=')
-            if (mentions and kind in ('CXXNewExpr', 'CXXDeleteExpr')) or (arithmetic and (mentions or operand_mentions)):
-                raise ValueError(f'{name}: allocation/pointer arithmetic requires a recovered layout')
-            if kind == 'CXXDeleteExpr' and any(re.search(r'\b' + re.escape(name) + r'\b', n.get('type', {}).get('qualType', '')) for n in walk(node)):
-                raise ValueError(f'{name}: deletion requires a recovered layout/destructor')
+            # sizeof/alignof(expr) reports the result's integer type on the
+            # outer node; the expression operand carries the measured type.
+            if kind == 'UnaryExprOrTypeTraitExpr' and 'argType' not in node:
+                for operand in operands:
+                    measured = operand.get('type', {})
+                    measured = measured.get('desugaredQualType', measured.get('qualType', ''))
+                    if re.search(r'\b' + re.escape(name) + r'\b', measured) and '*' not in measured:
+                        raise ValueError(f'{name}: {node.get("name")} requires an unrecovered class layout')
+            if kind == 'CXXOperatorCallExpr' and mentions:
+                raise ValueError(f'{name}: object operator requires a recovered layout')
             if kind == 'CXXRecordDecl':
-                if any(re.search(r'\b' + re.escape(name) + r'\b', b.get('type', {}).get('qualType', '')) for b in node.get('bases', [])):
+                if any(re.search(r'\b' + re.escape(name) + r'\b', b.get('type', {}).get('desugaredQualType', b.get('type', {}).get('qualType', ''))) for b in node.get('bases', [])):
                     raise ValueError(f'{name}: inheritance requires a recovered layout')
                 if node.get('name') == name and (node.get('bases') or any(c.get('kind') == 'FieldDecl' for c in operands)):
                     raise ValueError(f'{name}: fields/bases require a recovered layout')
+                if node.get('name') == name and any(c.get('virtual') for c in operands):
+                    raise ValueError(f'{name}: virtual methods require a recovered layout')
             if kind in ('FunctionDecl', 'CXXMethodDecl'):
                 returned = typ.split('(', 1)[0]
                 if re.search(r'\b' + re.escape(name) + r'\b', returned) and '*' not in returned and '&' not in returned:
@@ -207,6 +288,8 @@ def command(args):
             report = fresh_report()
             if not report.get('complete'):
                 raise ValueError('full verification requires a complete build report')
+            from homm1.audit.compiler_artifacts import base_only_suspicious
+            result['findings'] += base_only_suspicious()
             result['binary_checks'] = dict(functions=len(report['functions']),
                                             exact=sum(f['exact'] for f in report['functions']),
                                             status='validated against original retail')

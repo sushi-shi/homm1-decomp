@@ -20,6 +20,15 @@ class VerifyTests(unittest.TestCase):
     def test_inactive_assembly_is_forbidden(self):
         self.assertTrue(self.scan('#if 0\n__asm { nop }\n#endif')['findings'])
 
+    def test_fast_board_runs_donor_compiler_guard_and_checks_assembly_files(self):
+        findings = self.scan('#if 0\nvoid f() { atexit(cleanup); }\n#endif')['findings']
+        self.assertTrue(any('manual static-init hook' in finding for finding in findings))
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'src').mkdir()
+            (root / 'src/probe.asm').write_text('nop\n')
+            self.assertTrue(any('assembly source' in finding for finding in verify.board(root)['findings']))
+
     def test_debt_is_not_silently_accepted(self):
         self.assertTrue(self.scan('void f() { RetailService_0044F640(); }')['findings'])
 

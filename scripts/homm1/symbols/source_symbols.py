@@ -141,7 +141,7 @@ def source_compgen_functions(
 
 
 def symbols_for_file(path: Path, source_root: Path, repo: Path,
-                     index=None, args=None, bindings=None) -> list[SourceSymbol]:
+                     index=None, args=None, bindings=None, validate_translation=None) -> list[SourceSymbol]:
     """Every VA- or DATA-annotated definition in one translation unit."""
     blob = path.read_bytes()
     if bindings is None and not VA_TOKEN.search(blob) and not DATA_TOKEN.search(blob):
@@ -155,6 +155,8 @@ def symbols_for_file(path: Path, source_root: Path, repo: Path,
     if own:
         detail = "; ".join(str(d) for d in own[:5])
         raise ValueError(f"{path}: Clang could not read the annotations: {detail}")
+    if validate_translation is not None:
+        validate_translation(translation)
 
     unit = source_unit(path, source_root, repo)
     rows = []

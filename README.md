@@ -209,11 +209,19 @@ To compile the first fragment, supply the pinned compiler media described in
 nix develop .#build
 homm1 toolchain install --id vc40 --media /path/to/MSVC40.iso
 homm1 build
+homm1 verify check --tier full
+homm1 audit compiler-artifacts --base-only
 objdiff -p build/objdiff
 ```
 
 Compiler binaries and media remain under ignored `build/`. See [tooling](docs/tooling.md)
 for the supported fragment scope and next steps.
+
+Tooling ports use completed HoMM2 Gold **2.1 Buka** first, with 2.0 as
+supplementary evidence. The [port inventory](docs/tooling-ports.md) records
+donor modules and adaptations; the [repair checklist](docs/tooling-repair.md)
+tracks the remaining campaign work. Gruntz's compiler-artifact source guard
+runs from the fast checks onward. Data byte matching remains deferred.
 
 ## License
 
