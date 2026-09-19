@@ -5,8 +5,9 @@ vostok-delinker to slice HOMM1.EXE into per-unit COFF objects:
 
   1. Function records from the Model's function bindings: the claimed name (or
      a FUN_<va> placeholder), the claim-resolved extent, and the owning unit as
-     a synthetic `c:\\proj\\<unit>.c` source file (C13 line info) so the
-     delinker emits one `<unit>.c.obj` per TU. kind=pad rows are never emitted;
+     a synthetic `c:\\proj\\<unit>.c` source file. Each source has its own DBI
+     module and C13 line program, so the delinker emits one `<unit>.c.obj` per
+     TU without ambiguous source ownership. kind=pad rows are never emitted;
      kind=eh rows are superseded by the per-owner EH-band records
      (homm1.delink.eh_band). ILT/import thunks inherit the body/import name so
      relocations pair by name on both sides.
@@ -37,7 +38,6 @@ from homm1.model import Model
 
 PDB_DIR = BUILD / "pdb"
 BASE_DIR = BUILD / "objdiff/base"
-MODULE_PATH = r"c:\proj\homm1.obj"
 
 # Section -> (1-based PE/object-crate section index). The delinker compares
 # offset.section against object-crate section indices, 1-based in PE order.
@@ -577,16 +577,23 @@ def func_source_file(rva: int, names_map) -> str:
     """`c:\\proj\\<unit>.c` for a claimed function, else the address bucket
     `c:\\proj\\seg_NNNN.cpp` (both under the engine root the delinker strips)."""
     if rva in names_map and names_map[rva][1]:
-        return r"c:\proj\%s.c" % names_map[rva][1]
+        unit = names_map[rva][1].replace("/", "\\")
+        return r"c:\proj\%s.c" % unit
     text_lo, _hi = sections_of()[".text"]
     bucket = (rva - text_lo) >> BUCKET_SHIFT
     return r"c:\proj\seg_%04x.cpp" % bucket
 
 
 def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
-    """Write the yaml2pdb description: one DBI module, C13 line info that
-    attributes each function to its synthetic source file, S_GPROC32 records
-    for .text and S_LDATA32 for .rdata/.data/.idata."""
+    """Write one synthetic DBI module per source object.
+
+    Vostok asks a module's C13 line program which source owns each procedure.
+    Putting every source and every procedure into one module, as the earliest
+    Gruntz synthesizer did, leaves that lookup ambiguous inside pdb2: identical
+    input can assign whole functions to different files on successive runs.
+    HoMM3's current donor design uses one module per unit, making ownership a
+    structural fact.  A final data-only module carries the S_LDATA32 inventory.
+    """
     bounds = sections_of()
     text_base = bounds[".text"][0]
     rdata_base = bounds[".rdata"][0]
@@ -594,13 +601,69 @@ def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
     idata_base = bounds[".idata"][0]
     w = out.write
 
-    func_files, files_seen, files_set = [], [], set()
+    per_file: dict[str, list[tuple[int, int, str]]] = {}
     for rva, _size, _name in funcs:
         sf = func_source_file(rva, names_map)
-        func_files.append(sf)
-        if sf not in files_set:
-            files_set.add(sf)
-            files_seen.append(sf)
+        per_file.setdefault(sf, [])
+    for record in funcs:
+        per_file[func_source_file(record[0], names_map)].append(record)
+
+    data_file = r"c:\proj\_data.c"
+    files = [*per_file, data_file]
+
+    def module(source: str, records, data_records=()) -> None:
+        module_path = source[:-2] if source.endswith(".c") else source
+        w("    - Module:          '%s'\n" % module_path)
+        w("      ObjFile:         '%s'\n" % module_path)
+        w("      SourceFiles:\n")
+        w("        - '%s'\n" % source)
+        w("      Subsections:\n")
+        w("        - !FileChecksums\n")
+        w("          Checksums:\n")
+        cks = hashlib.md5(source.encode()).hexdigest()
+        w("            - FileName:        '%s'\n" % source)
+        w("              Kind:            MD5\n")
+        w("              Checksum:        %s\n" % cks.upper())
+        for rva, size, _name in records:
+            off = rva - text_base
+            w("        - !Lines\n")
+            w("          CodeSize:        %d\n" % size)
+            w("          Flags:           [  ]\n")
+            w("          RelocOffset:     %d\n" % off)
+            w("          RelocSegment:    %d\n" % SEG_TEXT)
+            w("          Blocks:\n")
+            w("            - FileName:        '%s'\n" % source)
+            w("              Lines:\n")
+            w("                - Offset:          0\n")
+            w("                  LineStart:       1\n")
+            w("                  EndDelta:        0\n")
+            w("                  IsStatement:     true\n")
+            w("              Columns:         []\n")
+
+        w("      Modi:\n")
+        w("        Records:\n")
+        for rva, size, name in records:
+            off = rva - text_base
+            w("          - Kind:            S_GPROC32\n")
+            w("            ProcSym:\n")
+            w("              CodeSize:        %d\n" % size)
+            w("              DbgStart:        0\n")
+            w("              DbgEnd:          0\n")
+            w("              FunctionType:    0\n")
+            w("              Offset:          %d\n" % off)
+            w("              Segment:         %d\n" % SEG_TEXT)
+            w("              Flags:           [  ]\n")
+            w("              DisplayName:     '%s'\n" % sanitize_name(name))
+            w("          - Kind:            S_END\n")
+            w("            ScopeEndSym:     {}\n")
+        for syms, base, seg in data_records:
+            for rva, name in syms:
+                w("          - Kind:            S_LDATA32\n")
+                w("            DataSym:\n")
+                w("              Type:            0\n")
+                w("              Offset:          %d\n" % (rva - base))
+                w("              Segment:         %d\n" % seg)
+                w("              DisplayName:     '%s'\n" % sanitize_name(name))
 
     w("MSF:\n")
     w("  SuperBlock:\n")
@@ -625,67 +688,17 @@ def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
     w("  Flags:           0\n")
     w("  MachineType:     x86\n")
     w("  Modules:\n")
-    w("    - Module:          '%s'\n" % MODULE_PATH)
-    w("      ObjFile:         '%s'\n" % MODULE_PATH)
-
-    w("      SourceFiles:\n")
-    for sf in files_seen:
-        w("        - '%s'\n" % sf)
-    w("      Subsections:\n")
-    w("        - !FileChecksums\n")
-    w("          Checksums:\n")
-    for sf in files_seen:
-        # Deterministic 16-byte checksum from the path (content is fake).
-        cks = hashlib.md5(sf.encode()).hexdigest()
-        w("            - FileName:        '%s'\n" % sf)
-        w("              Kind:            MD5\n")
-        w("              Checksum:        %s\n" % cks.upper())
-    for (rva, size, _name), sf in zip(funcs, func_files):
-        off = rva - text_base
-        w("        - !Lines\n")
-        w("          CodeSize:        %d\n" % size)
-        w("          Flags:           [  ]\n")
-        w("          RelocOffset:     %d\n" % off)
-        w("          RelocSegment:    %d\n" % SEG_TEXT)
-        w("          Blocks:\n")
-        w("            - FileName:        '%s'\n" % sf)
-        w("              Lines:\n")
-        w("                - Offset:          0\n")
-        w("                  LineStart:       1\n")
-        w("                  EndDelta:        0\n")
-        w("                  IsStatement:     true\n")
-        w("              Columns:         []\n")
-
-    w("      Modi:\n")
-    w("        Records:\n")
-    for rva, size, name in funcs:
-        off = rva - text_base
-        w("          - Kind:            S_GPROC32\n")
-        w("            ProcSym:\n")
-        w("              CodeSize:        %d\n" % size)
-        w("              DbgStart:        0\n")
-        w("              DbgEnd:          0\n")
-        w("              FunctionType:    0\n")
-        w("              Offset:          %d\n" % off)
-        w("              Segment:         %d\n" % SEG_TEXT)
-        w("              Flags:           [  ]\n")
-        w("              DisplayName:     '%s'\n" % sanitize_name(name))
-        w("          - Kind:            S_END\n")
-        w("            ScopeEndSym:     {}\n")
-    for syms, base, seg in ((rdata_syms, rdata_base, SEG_RDATA),
-                            (data_syms, data_base, SEG_DATA),
-                            (iat_syms, idata_base, SEG_IDATA)):
-        for rva, name in syms:
-            w("          - Kind:            S_LDATA32\n")
-            w("            DataSym:\n")
-            w("              Type:            0\n")
-            w("              Offset:          %d\n" % (rva - base))
-            w("              Segment:         %d\n" % seg)
-            w("              DisplayName:     '%s'\n" % sanitize_name(name))
+    for source, records in per_file.items():
+        module(source, records)
+    module(data_file, (), (
+        (rdata_syms, rdata_base, SEG_RDATA),
+        (data_syms, data_base, SEG_DATA),
+        (iat_syms, idata_base, SEG_IDATA),
+    ))
 
     # Top-level PDB string table: the source paths line info references.
     w("StringTable:\n")
-    for sf in files_seen:
+    for sf in files:
         w("  - '%s'\n" % sf)
 
 
