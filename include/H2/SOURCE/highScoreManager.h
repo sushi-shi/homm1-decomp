@@ -3,8 +3,8 @@
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 5 methods, 3 own-virtual, 0 static data.
 
+#include <BASE/baseManager.h>
 #include <H2/_macros.h>
-#include <H2/BASE/baseManager.h>
 
 // forward declarations:
 struct tag_message;

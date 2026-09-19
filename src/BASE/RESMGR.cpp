@@ -2,7 +2,10 @@
 
 #include <match.h>
 
+#include <BASE/resourceManager.h>
 #include <H2/_all.h>
+
+#include <io.h>
 
 // donor PoL RVA 0x000c8080; preferred Buka symbol ?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@H@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
@@ -49,14 +52,20 @@ void resourceManager::PointToFile(unsigned long int) {}
 // donor PoL RVA 0x000c8e20; preferred Buka symbol ?SavePosition@resourceManager@@QAEXXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.435067;margin=0.395891;shape=0.259;size=0.600;calls=1.000;alternate=pol20:void resourceManager::SavePosition(void)@0x000c8e20
-VA(0x00476470, 0x30)
-void resourceManager::SavePosition(void) {}
+VA(0x00476470, 0x2b)
+void resourceManager::SavePosition(void)
+{
+    m_savedPosition = tell(m_aggregateFd);
+}
 
 // donor PoL RVA 0x000c8e80; preferred Buka symbol ?RestorePosition@resourceManager@@QAEXXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.425713;margin=0.238867;shape=0.231;size=0.593;calls=1.000;alternate=pol20:void resourceManager::RestorePosition(void)@0x000c8e80
-VA(0x004764a0, 0x30)
-void resourceManager::RestorePosition(void) {}
+VA(0x004764a0, 0x2e)
+void resourceManager::RestorePosition(void)
+{
+    lseek(m_aggregateFd, m_savedPosition, 0);
+}
 
 // donor PoL RVA 0x000c8f70; preferred Buka symbol ?ReadWord@resourceManager@@QAEFXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
