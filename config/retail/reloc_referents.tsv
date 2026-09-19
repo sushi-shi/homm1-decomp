@@ -1,4 +1,22 @@
 # Reviewed retail relocation referents that the delinker cannot infer from
 # containment alone. This is the Gruntz manifest schema; fields are image RVAs.
-# HoMM1 currently has no such exceptions.
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
+0x00076940	0x000CADBC	0x00076C43	?bmpAndMask@@3PAUtagBITMAP@@A	0x4	1	evidence/mouse-coordinates.md; BITMAP bmWidth field
+0x00076940	0x000CADC0	0x00076C4D	?bmpAndMask@@3PAUtagBITMAP@@A	0x8	1	evidence/mouse-coordinates.md; BITMAP bmHeight field
+0x00076940	0x000CADC4	0x00076C53	?bmpAndMask@@3PAUtagBITMAP@@A	0xC	1	evidence/mouse-coordinates.md; BITMAP bmWidthBytes field
+0x00076940	0x000CADC8	0x00076C5E	?bmpAndMask@@3PAUtagBITMAP@@A	0x10	1	evidence/mouse-coordinates.md; BITMAP bmPlanes field
+0x00076940	0x000CADCA	0x00076C67	?bmpAndMask@@3PAUtagBITMAP@@A	0x12	1	evidence/mouse-coordinates.md; BITMAP bmBitsPixel field
+0x00076940	0x000CADC4	0x00076C6E	?bmpAndMask@@3PAUtagBITMAP@@A	0xC	1	evidence/mouse-coordinates.md; repeated BITMAP bmWidthBytes field
+0x00076940	0x000CADCC	0x00076C78	?bmpAndMask@@3PAUtagBITMAP@@A	0x14	1	evidence/mouse-coordinates.md; BITMAP bmBits field
+0x00076940	0x000CB724	0x00076CD3	?bmpColor@@3PAUtagBITMAP@@A	0x4	1	evidence/mouse-coordinates.md; BITMAP bmWidth field
+0x00076940	0x000CB728	0x00076CD9	?bmpColor@@3PAUtagBITMAP@@A	0x8	1	evidence/mouse-coordinates.md; BITMAP bmHeight field
+0x00076940	0x000CB730	0x00076CE0	?bmpColor@@3PAUtagBITMAP@@A	0x10	1	evidence/mouse-coordinates.md; BITMAP bmPlanes field
+0x00076940	0x000CB732	0x00076CE7	?bmpColor@@3PAUtagBITMAP@@A	0x12	1	evidence/mouse-coordinates.md; BITMAP bmBitsPixel field
+0x00076940	0x000CB72C	0x00076CEF	?bmpColor@@3PAUtagBITMAP@@A	0xC	1	evidence/mouse-coordinates.md; BITMAP bmWidthBytes field
+0x00076940	0x000CB734	0x00076CF5	?bmpColor@@3PAUtagBITMAP@@A	0x14	1	evidence/mouse-coordinates.md; BITMAP bmBits field
+0x00076940	0x000CBF5C	0x00076D3B	?mouseIconInfo@@3PAU_ICONINFO@@A	0x4	1	evidence/mouse-coordinates.md; ICONINFO xHotspot field
+0x00076940	0x000A0E81	0x00076D46	?iHotSpot@@3PAY01EA	0x1	1	evidence/mouse-coordinates.md; second cursor-hotspot axis
+0x00076940	0x000CBF60	0x00076D4C	?mouseIconInfo@@3PAU_ICONINFO@@A	0x8	1	evidence/mouse-coordinates.md; ICONINFO yHotspot field
+0x00076940	0x000CBF64	0x00076D52	?mouseIconInfo@@3PAU_ICONINFO@@A	0xC	1	evidence/mouse-coordinates.md; ICONINFO hbmMask field
+0x00076940	0x000CBF68	0x00076D61	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	evidence/mouse-coordinates.md; ICONINFO hbmColor field
+0x00076940	0x000CBF68	0x00076D69	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	evidence/mouse-coordinates.md; ICONINFO hbmColor zero branch

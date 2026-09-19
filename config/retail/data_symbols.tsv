@@ -1,5 +1,9 @@
 rva	size	symbol	provenance
+0x00092E28	4	?gbColorMice@@3HA	evidence/mouse-coordinates.md; SetPointer color-cursor mode selector
+0x00092E2C	4	?gbSpecialMouseMasks@@3HA	evidence/mouse-coordinates.md; SetPointer monochrome mask selector
+0x00092E30	4	?giCurExe@@3HA	evidence/mouse-coordinates.md; SetPointer editor executable check
 0x00094180	1	?gbInPollSound@@3DA	evidence/poll-sound.md; accessed storage only
+0x0009FE74	4	?hwndApp@@3PAXA	evidence/mouse-coordinates.md; HWND passed to ScreenToClient
 0x0009FE78	4	?gbForegroundApp@@3HA	evidence/poll-sound.md; accessed storage only
 0x000A0D00	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	evidence/resource-manager-layout.md; code-required resourceManager literal identity
 0x000A0D10	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	evidence/resource-manager-layout.md; code-required open-error literal identity
@@ -13,6 +17,23 @@ rva	size	symbol	provenance
 0x000A0E30	26	?gReadLongAssertFile@@3PADA	evidence/resource-manager-layout.md; ReadLong assertion source path
 0x000A0E4C	4	?gReadBlockAssertLine@@3FA	evidence/resource-manager-layout.md; ReadBlock assertion line record
 0x000A0E50	26	?gReadBlockAssertFile@@3PADA	evidence/resource-manager-layout.md; ReadBlock assertion source path
+0x000A0E70	12	?iMouseOffset@@3PAHA	evidence/mouse-coordinates.md; three cursor-family base offsets
+0x000A0E7C	4	?gMouseCursorType@@3HA	evidence/mouse-coordinates.md; current cursor family
+0x000A0E80	150	?iHotSpot@@3PAY01EA	evidence/mouse-coordinates.md; 75 two-axis cursor hotspots
+0x000A0F28	4	?gbInSetPointer@@3HA	evidence/mouse-coordinates.md; SetPointer recursion guard
+0x000A0F2C	2	?gMouseManagerAssertLine@@3FA	evidence/mouse-coordinates.md; MOUSEMGR assertion line base
+0x000A0F30	28	?gMouseManagerAssertFile1@@3PADA	evidence/mouse-coordinates.md; first SetPointer assertion path
+0x000A0F4C	3	?gAdventureColor@@3PADA	evidence/mouse-coordinates.md; adventure color filename component
+0x000A0F50	3	?gAdventureMonochrome@@3PADA	evidence/mouse-coordinates.md; adventure monochrome filename component
+0x000A0F54	15	?gAdventureBitmapFormat@@3PADA	evidence/mouse-coordinates.md; adventure cursor bitmap format
+0x000A0F64	3	?gSpellColor@@3PADA	evidence/mouse-coordinates.md; spell color filename component
+0x000A0F68	3	?gSpellMonochrome@@3PADA	evidence/mouse-coordinates.md; spell monochrome filename component
+0x000A0F6C	15	?gSpellBitmapFormat@@3PADA	evidence/mouse-coordinates.md; spell cursor bitmap format
+0x000A0F7C	3	?gCombatColor@@3PADA	evidence/mouse-coordinates.md; combat color filename component
+0x000A0F80	3	?gCombatMonochrome@@3PADA	evidence/mouse-coordinates.md; combat monochrome filename component
+0x000A0F84	15	?gCombatBitmapFormat@@3PADA	evidence/mouse-coordinates.md; combat cursor bitmap format
+0x000A0F94	28	?gMouseManagerAssertFile2@@3PADA	evidence/mouse-coordinates.md; second SetPointer assertion path
+0x000A0FB0	28	?gMouseManagerAssertFile3@@3PADA	evidence/mouse-coordinates.md; third SetPointer assertion path
 0x000A1808	4	_gIconXAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
 0x000A180C	4	_gIconYAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
 0x000A1810	4	_gIconDataBase	evidence/handwritten-assembly-survey.md; code-required icon-data base identity
@@ -23,7 +44,18 @@ rva	size	symbol	provenance
 0x000A1BA4	4	_gBitmapRowSkip	evidence/handwritten-assembly-survey.md; code-required bitmap row-skip scratch
 0x000A1BC8	4	_gTileScratch	evidence/handwritten-assembly-survey.md; code-required identity only
 0x000A1BCC	2	_gTileRows	evidence/handwritten-assembly-survey.md; code-required identity only
+0x000C5190	4	?gpResourceManager@@3PAVresourceManager@@A	evidence/mouse-coordinates.md; resource manager used by SetPointer
 0x000C6750	4	?gText@@3PADA	evidence/resource-manager-layout.md; code-required shared text-buffer identity
 0x000C6A94	4	?gNextSoundPollTick@@3JA	evidence/poll-sound.md; accessed storage only
 0x000C79DC	4	?DEFAULT_AGGREGATE_NAME@@3PADA	evidence/resource-manager-layout.md; code-required aggregate path pointer identity
 0x000C7CA8	4	?gpSoundManager@@3PAVsoundManager@@A	evidence/poll-sound.md; accessed storage only
+0x000CA4A8	4	?iMainWinScreenHeight@@3HA	evidence/mouse-coordinates.md; vertical game-coordinate divisor
+0x000CA900	4	?iMainWinScreenWidth@@3HA	evidence/mouse-coordinates.md; horizontal game-coordinate divisor
+0x000CAC88	300	?hbmpColor@@3PAPAXA	evidence/mouse-coordinates.md; 75 color bitmap handles
+0x000CADB8	1800	?bmpAndMask@@3PAUtagBITMAP@@A	evidence/mouse-coordinates.md; 75 cursor mask bitmap descriptors
+0x000CB4C0	300	?hMouseCursor@@3PAPAXA	evidence/mouse-coordinates.md; 75 cursor handles
+0x000CB5F0	300	?cAndBits@@3PAPAEA	evidence/mouse-coordinates.md; 75 cursor mask buffers
+0x000CB720	1800	?bmpColor@@3PAUtagBITMAP@@A	evidence/mouse-coordinates.md; 75 color bitmap descriptors
+0x000CBE28	300	?cColorBits@@3PAPACA	evidence/mouse-coordinates.md; 75 cursor color buffers
+0x000CBF58	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	evidence/mouse-coordinates.md; 75 cursor icon descriptors
+0x000CC538	300	?hbmpAndMask@@3PAPAXA	evidence/mouse-coordinates.md; 75 mask bitmap handles

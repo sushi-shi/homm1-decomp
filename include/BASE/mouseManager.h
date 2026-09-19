@@ -8,20 +8,27 @@
 
 // forward declarations:
 struct tag_message;
+class bitmap;
 
-class mouseManager {
+class mouseManager : public baseManager {
 public:
+    void *m_cursorResource;
+    bitmap *m_savedUnderlying;
+    void *m_cursorImage;
+    short m_cursorFrame;
+    short m_cursorReady;
+
     // --- constructors ---
     mouseManager(void);
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void SetPointer(char *, int, int);
-    void SetPointer(int);
+    void SetPointer(short);
     void NewUpdate(int);
-    void MouseCoords(int &, int &);
+    void MouseCoords(short &, short &);
     void SaveAndDraw(void);
     void RestoreUnderlying(void);
     void ReallyHidePointer(void);

@@ -11,6 +11,7 @@ cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
 # the donor's /Gr build; reconstruction replaces these bodies in place.
 cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
 cpp_carcass_oi = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Oi"]
+cpp_o2 = ["/nologo", "/c", "/O2", "/Z7", "/G5"]
 
 [[unit]]
 unit = "BASE/BITS"
@@ -70,7 +71,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/MOUSEMGR"
 source = "src/BASE/MOUSEMGR.cpp"
-flags = "cpp_carcass"
+flags = "cpp_o2"
 
 [[unit]]
 unit = "BASE/Misc"
