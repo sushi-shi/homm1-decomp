@@ -36,6 +36,8 @@ homm1 sema callers 0x4F640
 homm1 sema blocks 0x4F640 --diff --lite
 homm1 sema branches 0x4F640 --diff
 homm1 verify check --tier full
+homm1 audit casts --check --all
+homm1 audit readability --check
 homm1 test
 ```
 
@@ -93,8 +95,20 @@ Cleanliness runs from the beginning:
   debt for provisional names, reinterpret casts and volatile use.
 - Normal checks add source bindings, retail identity/fixup integrity,
   C-style-cast rejection, strict domains, unresolved-layout restrictions and
-  source-review freshness.
-- Full checks additionally require a fresh complete binary comparison.
+  source-review freshness. The copied Buka cast audit classifies explicit casts
+  in active project source and headers and rejects unreviewed high-priority
+  sites, stale exceptions, and parse errors (including external SDK errors).
+- Full checks additionally require a fresh complete binary comparison and
+  current physical file reviews. The copied Buka Ctags inventory includes
+  header bodies, inactive bodies, macros and conditional variants. Normal and
+  focused builds report unread files; full publication requires review.
+
+`verify board --tier normal` measures the semantic audits too. Generated audit
+reports are under `build/audit` and `build/readability/inventory`; their presence
+does not grant review credit. Builds regenerate them from current source.
+The lexical cast census explicitly reports casts outside the active AST (for
+example macro definitions); those are not advertised as semantically checked.
+Broader ABI and ownership gates remain on the repair checklist.
 
 Human review records are distinct from automated checks. A changed function
 invalidates its recorded review; a function without a record is reported as

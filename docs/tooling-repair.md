@@ -60,7 +60,7 @@ localization, or VC6 optimizer assumptions as HoMM1 evidence.
 Record evidence here as each item is completed. Do not check off a capability
 based only on a unit test of one internal helper or a compiler-only probe.
 
-Current intermediate validation: 110 tooling tests pass, including copied Buka
+Current intermediate validation: 145 tooling tests pass, including copied Buka
 provenance-chain, Wine, residual-queue and disassembly tests and Gruntz object
 installation checks. The native VC4 build matches all three pilot functions
 (290 bytes); full verification accepts generated README/ledger/report
@@ -75,3 +75,17 @@ Direct ports now in use: Buka `core/wine.py`, `build/normalized_freshness.py`,
 `core/cpp_tokens.py`. The graph's stage adapters translate the current HoMM1
 claim/report schema. They do not constitute a completed port of Buka's richer
 source-symbol/provider and ABI/audit modules.
+
+Semantic-audit port: Buka `audit/casts.py` and `audit/readability.py`, unchanged
+`clang_options.py`, and extracted shared helpers now run in the build. Existing
+donor tests were retained. The native pilot remains 3/3 exact. The physical
+inventory covers six files, seven bodies (including four header bodies), and
+nineteen macro definitions; every file was reread before recording its current
+review. Full publication requires those reviews. The cast audit sees four
+explicit sites and no high-priority sites; macro-only casts remain explicitly
+unmapped lexical evidence. Item 6 remains open for the other semantic gates.
+See [the port/adaptation and replacement list](tooling-ports.md).
+Validation for this port: all 145 tests and `nix flake check` pass. The exported
+worktree campaign passes exact/nonexact/restored publication, no-op and focused
+artifact isolation, and a new check that a stale physical review blocks full
+publication without changing the ledger, README or complete report.

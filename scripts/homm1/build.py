@@ -91,6 +91,7 @@ def _run(args):
     toolchain.verify(compiler)
     generation = checkpoint.fingerprint()
     configure()
+    semantic = verify.check_semantic(require_complete=not bool(selected))
     environment = {**os.environ, 'PYTHONPATH': str(REPO / 'scripts')}
     build_targets = [f'build/gen/reports/{u["unit"]}.json' for u in entries]
     subprocess.run(['ninja', '-f', 'build/build.ninja', *build_targets], cwd=REPO, env=environment, check=True)
@@ -119,6 +120,7 @@ def _run(args):
                   scope='admitted fragments only; not whole-game coverage', functions=results,
                   fingerprint=generation, dependencies=dependencies, complete=not bool(selected), cleanliness=verify.check())
     report['cleanliness']['readability'] = verify.check_reviews(claims, require_complete=not bool(selected))
+    report['cleanliness']['semantic_checks'] = semantic
     if selected:
         write_report(REPO / f'build/unit-reports/{selected}.json', report)
         print('Unit report only; full checkpoint unchanged.')

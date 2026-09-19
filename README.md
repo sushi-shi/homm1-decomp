@@ -22,6 +22,7 @@ The remaining requirements and their validation evidence are tracked in
 | kb_poll_sound | 2/2 | 146 | 100.00% | 100.00% | 100.00% |
 
 Cleanliness: 0 findings; 1 scoped debt sites. Source reviews: 3 current, 0 pending.
+Physical source review: 6/6 files; 7 bodies and 19 macro definitions inventoried. Cast audit: 4 explicit sites, 0 unreviewed high-priority sites.
 
 Scores are weighted by claimed retail code size. MAX is the best for the current
 function source; HIST includes earlier implementations. Exactness includes resolved

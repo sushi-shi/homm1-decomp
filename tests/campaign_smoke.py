@@ -93,6 +93,13 @@ def main():
                 assert after[name] == timestamp, f'unrelated stage rebuilt: {name}'
         assert ledger.read_bytes() == ledger_before and readme.read_bytes() == readme_before
         result['focused_body_edit_preserves_targets_and_other_unit'] = True
+        # Token-equivalent edits preserve function reviews, but cannot silently
+        # renew Buka's physical file review when banking a full checkpoint.
+        report_before = report.read_bytes()
+        run('build', expected=1)
+        assert report.read_bytes() == report_before
+        assert ledger.read_bytes() == ledger_before and readme.read_bytes() == readme_before
+        result['stale_physical_review_blocks_publication'] = True
         source.write_text(original_source)
         run('build')
         config = checkout / 'config/units.toml'

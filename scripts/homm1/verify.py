@@ -4,7 +4,9 @@ Text checks include inactive code. Semantic checks are supplied by analysis;
 human review is never inferred from a byte score or a successful compiler run.
 """
 from collections import Counter
+import csv
 import hashlib
+import io
 import json
 import re
 import tomllib
@@ -101,6 +103,39 @@ def check(root=REPO):
     return report
 
 
+def semantic(root=REPO, require_complete=False):
+    """Run the copied Buka audits; compilation databases must be current."""
+    from homm1.audit import casts, readability
+    from homm1.publication import atomic_write
+    cast_report = casts.scan(root, jobs=1)
+    products = readability.generate(root, 'ctags')
+    files = list(csv.DictReader(io.StringIO(products['files.tsv']), delimiter='\t'))
+    bodies = list(csv.DictReader(io.StringIO(products['functions.tsv']), delimiter='\t'))
+    macros = list(csv.DictReader(io.StringIO(products['macros.tsv']), delimiter='\t'))
+    pending = [row['path'] for row in files if row['status'] != 'read']
+    findings = [f'{row["file"]}:{row["line"]}: {row["message"]}'
+                for row in cast_report['strict_diagnostics']]
+    findings += [f'{row["file"]}: unreviewed {row["category"]} in {row["function"]}'
+                 for row in cast_report['unreviewed_high_priority']]
+    findings += [f'{row["file"]}: stale cast exception in {row["function"]}'
+                 for row in cast_report['stale_reviewed_exceptions']]
+    if require_complete and pending:
+        findings.append('full publication requires physical source review: ' + ', '.join(pending))
+    for name, content in products.items():
+        atomic_write(root / readability.REPORT / name, content)
+    atomic_write(root / 'build/audit/casts.json', json.dumps(cast_report, indent=2) + '\n')
+    return dict(findings=findings, casts=cast_report,
+                physical_source=dict(files=len(files), functions=len(bodies), macros=len(macros),
+                                     reviewed=len(files) - len(pending), pending=pending))
+
+
+def check_semantic(root=REPO, require_complete=False):
+    report = semantic(root, require_complete)
+    if report['findings']:
+        raise ValueError('semantic cleanliness failed:\n' + '\n'.join(report['findings']))
+    return report
+
+
 def check_reviews(claims, root=REPO, require_complete=False):
     path = root / 'config/cleanliness/reviews.toml'
     rows = tomllib.loads(path.read_text()).get('review', []) if path.exists() else []
@@ -159,12 +194,14 @@ def check_incomplete_types(tree, root=REPO):
 
 def command(args):
     result = board()
-    if args.action == 'check' and args.tier != 'fast':
+    if args.tier != 'fast':
         from homm1 import analysis, build
         config, entries = build.units()
         claims = build.validate_claims(build.image())
         result['readability'] = check_reviews(claims, require_complete=args.tier == 'full')
-        result['semantic_checks'] = analysis.check(config, entries)
+        result['analysis'] = analysis.check(config, entries)
+        result['semantic_checks'] = semantic(require_complete=args.tier == 'full')
+        result['findings'] += result['semantic_checks']['findings']
         if args.tier == 'full':
             from homm1.checkpoint import fresh_report
             report = fresh_report()

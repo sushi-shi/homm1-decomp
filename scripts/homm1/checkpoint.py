@@ -87,12 +87,17 @@ def fingerprint(root=REPO, tools=True):
     for path in files:
         digest.update(str(path.relative_to(root)).encode() + b'\0' + path.read_bytes() + b'\0')
     if tools:
-        for name in ('clang++', 'llvm-pdbutil', 'vostok-delinker', 'objdiff-cli', 'wine', 'winepath', 'ninja', sys.executable):
+        for name in ('clang++', 'llvm-pdbutil', 'vostok-delinker', 'objdiff-cli', 'wine', 'winepath', 'ninja', 'ctags', sys.executable):
             path = shutil.which(name)
             if not path:
                 raise ValueError(f'{name} required for a measured fresh report')
             digest.update(str(Path(path).resolve()).encode())
             digest.update(toolchain.digest(path).encode())
+        from homm1.audit.common import configure_libclang, ci
+        configure_libclang()
+        library = Path(ci.conf.get_filename()).resolve()
+        digest.update(str(library).encode())
+        digest.update(toolchain.digest(library).encode())
     return digest.hexdigest()
 
 

@@ -24,7 +24,16 @@ def block(report, ledger):
     quality = report['cleanliness']
     reviews = quality['readability']
     lines += ['', f'Cleanliness: {len(quality["findings"])} findings; {len(quality["debt_sites"])} scoped debt sites. '
-              f'Source reviews: {len(reviews["reviewed"])} current, {len(reviews["pending"])} pending.', '',
+              f'Source reviews: {len(reviews["reviewed"])} current, {len(reviews["pending"])} pending.']
+    if isinstance(quality.get('semantic_checks'), dict):
+        semantic = quality['semantic_checks']
+        physical = semantic['physical_source']
+        casts = semantic['casts']
+        lines += [f'Physical source review: {physical["reviewed"]}/{physical["files"]} files; '
+                  f'{physical["functions"]} bodies and {physical["macros"]} macro definitions inventoried. '
+                  f'Cast audit: {len(casts["casts"])} explicit sites, '
+                  f'{len(casts["unreviewed_high_priority"])} unreviewed high-priority sites.']
+    lines += ['',
               'Scores are weighted by claimed retail code size. MAX is the best for the current',
               'function source; HIST includes earlier implementations. Exactness includes resolved',
               'bytes and relocations. Located functions without measured extents are excluded.',

@@ -153,6 +153,11 @@ def main(argv=None):
     p.add_argument('--unit', help='compile/compare a single unit without banking a checkpoint')
     p.set_defaults(run=build.run)
     commands.add_parser('configure', help='emit the incremental Ninja graph').set_defaults(run=lambda _: build.configure() and 0)
+    from homm1 import audit
+    p = commands.add_parser('audit', help='Buka semantic casts and physical source inventory')
+    p.add_argument('audit', choices=['casts', 'readability'])
+    p.add_argument('arguments', nargs=argparse.REMAINDER)
+    p.set_defaults(run=audit.command)
     p = commands.add_parser('verify', help='source cleanliness and evidence gates')
     p.add_argument('action', choices=['check', 'board'])
     p.add_argument('--tier', choices=['fast', 'normal', 'full'], default='fast')

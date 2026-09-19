@@ -21,6 +21,12 @@ update it; unit builds do not. Dropped/resized claims fail; score dips do not.
 `cleanliness/types.toml` records unresolved layouts whose size-dependent use is
 forbidden. `cleanliness/reviews.toml` records human source review by function
 hash; stale reviews fail and missing reviews remain explicitly pending.
+`cleanliness/file_reviews.json` is Buka's physical file-review ledger: exact
+SHA-256 and a substantive reading note for every source/header file, including
+inactive bodies and macros. Full publication requires current records. The
+generator never updates review records. `cleanliness/cast_exceptions.tsv` holds
+exact semantic identities and evidence for high-priority cast exceptions; stale
+or duplicate rows fail the copied Buka audit. It is initially empty.
 
 ## `retail/`: facts about the executable
 
