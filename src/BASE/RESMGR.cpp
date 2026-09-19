@@ -2,12 +2,14 @@
 
 #include <match.h>
 
+#include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
 #include <H1/KB.h>
 #include <H2/_all.h>
 
 #include <io.h>
+#include <string.h>
 
 short gReadByteAssertLine = 598;
 char gReadByteAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
@@ -180,6 +182,16 @@ long resourceManager::ReadLong(void)
     long value = 0;
     read(m_aggregateFd, &value, sizeof(value));
     return value;
+}
+
+// donor Buka RVA 0x000b8ea0; HoMM1 has no translation argument and uses 16-bit IDs
+VA(0x004765f0, 0x5f)
+short resourceManager::MakeId(char *name)
+{
+    unsigned long result = MAKEFILEID(name);
+    strcpy(m_lastFileName, name);
+    m_lastFileId = result;
+    return result;
 }
 
 // donor Buka RVA 0x000b8f40; constant and call shape are identical in HoMM1

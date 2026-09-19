@@ -10,6 +10,7 @@ cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
 # proves the free-function convention is the compiler default (/Gd), unlike
 # the donor's /Gr build; reconstruction replaces these bodies in place.
 cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
+cpp_carcass_oi = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Oi"]
 
 [[unit]]
 unit = "BASE/BITS"
@@ -79,7 +80,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/RESMGR"
 source = "src/BASE/RESMGR.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_oi"
 
 [[unit]]
 unit = "BASE/WINDOW"

@@ -60,7 +60,7 @@ public:
     signed char ReadByte();
     short ReadWord();
     long ReadLong();
-    unsigned long MakeId(char *, int);
+    short MakeId(char *);
     void Read13(signed char *);
     void ReadBlock(signed char *, unsigned long);
 };

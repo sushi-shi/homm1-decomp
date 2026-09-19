@@ -146,10 +146,12 @@ cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
 # proves the free-function convention is the compiler default (/Gd), unlike
 # the donor's /Gr build; reconstruction replaces these bodies in place.
 cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
+cpp_carcass_oi = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Oi"]
 """
     for unit, source, _count in rows:
+        flags = "cpp_carcass_oi" if unit == "BASE/RESMGR" else "cpp_carcass"
         text += (f"\n[[unit]]\nunit = \"{unit}\"\n"
-                 f"source = \"{source}\"\nflags = \"cpp_carcass\"\n")
+                 f"source = \"{source}\"\nflags = \"{flags}\"\n")
     path.write_text(text)
 
 
