@@ -16,15 +16,9 @@
       url = "github:encounter/objdiff/v3.7.3";
       flake = false;
     };
-    objconv-omf-src = {
-      # 32-bit OMF fixes used only to make Watcom 10 comparison COFF objects.
-      url = "github:tomsons26/objconv/50d635877d22ec1b483a3a752f5159762839f791";
-      flake = false;
-    };
   };
 
-  outputs = { nixpkgs, rust-overlay, vostok-delinker-src, objdiff-src,
-              objconv-omf-src, ... }:
+  outputs = { nixpkgs, rust-overlay, vostok-delinker-src, objdiff-src, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -106,25 +100,6 @@
         '';
       };
 
-      objconv-omf = pkgs.stdenv.mkDerivation {
-        pname = "objconv-omf";
-        version = "2.54.1-50d6358";
-        src = objconv-omf-src;
-        # Upstream's fixed-size legacy buffers trip modern fortify before the
-        # validated OMF conversion completes. The compiler's stack protector
-        # and the remaining Nix hardening stay enabled.
-        hardeningDisable = [ "fortify" ];
-        nativeBuildInputs = [ pkgs.gnumake pkgs.gcc ];
-        postPatch = ''
-          substituteInPlace src/omf2cof.cpp \
-            --replace-fail 'switch (Records[RecNum].Type) {' \
-                           'switch (Records[RecNum].Type2) {'
-        '';
-        installPhase = ''
-          install -Dm755 objconv $out/bin/objconv-omf
-        '';
-      };
-
       python = pkgs.python3.withPackages (ps: [ ps.capstone ps.libclang ]);
       homm1-cli = pkgs.writeShellScriptBin "homm1" ''
         project_dir="''${HOMM1_DIR:-$PWD}"
@@ -132,18 +107,17 @@
       '';
       commonTools = with pkgs; [
         homm1-cli python git ninja binutils llvm llvmPackages.clang-unwrapped clang-tools
-        ripgrep file jq p7zip objconv-omf vostok-delinker objdiff objdiff-cli
+        ripgrep file jq p7zip vostok-delinker objdiff objdiff-cli
       ];
       commonHook = ''
         export HOMM1_DIR="$PWD"
         export PYTHONPATH="$HOMM1_DIR/scripts''${PYTHONPATH:+:$PYTHONPATH}"
         export MSVC_DIR="$HOMM1_DIR/build/toolchains/vc40"
-        export WATCOM_DIR="$HOMM1_DIR/build/toolchains/watcom10"
         export PYTHONDONTWRITEBYTECODE=1
       '';
     in {
       packages.${system} = {
-        inherit vostok-delinker objdiff objdiff-cli objconv-omf;
+        inherit vostok-delinker objdiff objdiff-cli;
         default = vostok-delinker;
       };
       checks.${system}.tooling = pkgs.runCommand "homm1-tooling-tests" {

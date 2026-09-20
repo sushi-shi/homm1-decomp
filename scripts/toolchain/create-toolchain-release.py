@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Build the reproducible HoMM1 compiler bundle from preserved media.
 
-The archive combines the pinned VC4 and Watcom 10.0a files in
-``config/toolchains.json`` with MASM 6.11's ML.EXE/ML.ERR. Microsoft shipped
-MASM separately; its first diskette is preserved by PCjs as a lossless CHS
-JSON image, and its two KWAJ-compressed members are expanded with libmspack.
+The archive combines the pinned VC4 files in ``config/toolchains.json`` with
+MASM 6.11's ML.EXE/ML.ERR. Microsoft shipped MASM separately; its first
+diskette is preserved by PCjs as a lossless CHS JSON image, and its two
+KWAJ-compressed members are expanded with libmspack.
 
 Run through ``scripts/toolchain/create-toolchain-release.nix``. Nothing from
 the input media is checked into the repository.
@@ -175,7 +175,7 @@ def entries(config: dict) -> dict:
 
 def verify(root: Path, configs: dict) -> None:
     count = 0
-    for name in ("vc40", "watcom10"):
+    for name in ("vc40",):
         for relative, expected in entries(configs[name]).items():
             path = root / name / relative
             if not path.is_file():
@@ -216,11 +216,9 @@ def main() -> None:
         return
 
     vc_media = media("MSVC40_MEDIA", configs["vc40"]["media"]["sha256"])
-    watcom_media = media(
-        "WATCOM10_MEDIA", configs["watcom10"]["media"]["sha256"])
     masm_media = Path(os.environ["MASM611_DISK1"]).resolve()
     output = Path(os.environ.get(
-        "OUTPUT", REPO / "build/homm1-toolchain.tar.xz")).resolve()
+        "OUTPUT", REPO / "build/homm1-toolchain-vc40-masm611.tar.xz")).resolve()
 
     (REPO / "build").mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=".toolchain-release-",
@@ -229,9 +227,6 @@ def main() -> None:
         root = work / "toolchains"
         log("extracting pinned Visual C++ 4.0 files")
         extract_component("vc40", vc_media, root / "vc40", configs["vc40"])
-        log("extracting pinned Watcom 10.0a files")
-        extract_component("watcom10", watcom_media, root / "watcom10",
-                          configs["watcom10"])
         log("reconstructing MASM 6.11 from its preserved diskette")
         install_masm(masm_media, root / "vc40", work)
         verify(root, configs)

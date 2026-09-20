@@ -1532,35 +1532,5 @@
         "sha256": "9c77ff721768cde62c9a042ec95bda9ff5f1040368507c357251c7d683aa8853"
       }
     }
-  },
-  "watcom10": {
-    "compiler_version": "10.0a",
-    "media": {
-      "filename": "Watcom_C++_10.0.iso",
-      "url": "https://archive.org/download/Watcom_C_10.0/Watcom_C%2B%2B_10.0.iso",
-      "sha256": "c55c2c70c6e42d4c55d079693da7f3ed8719003cd562e2445c8ea77b000fdbfb"
-    },
-    "files": {
-      "BINNT/WCC386.EXE": {
-        "media_path": "WATCOM/BINNT/WCC386.EXE",
-        "sha256": "8fee7d6ab3f2c06a0a874135e3898386898679e7dd53993fcc508e296364767d"
-      },
-      "BINNT/WATCOM.DLL": {
-        "media_path": "WATCOM/BINNT/WATCOM.DLL",
-        "sha256": "24055c74dfdb986570a791ec9c8c0b9cfd4a02329fa25bfa0aa60b401985f197"
-      },
-      "BINB/WCC386.EXE": {
-        "media_path": "WATCOM/BINB/WCC386.EXE",
-        "sha256": "c3666de94f6fa6800f452dae8acf45505ecdb62f0ade2cc27cc86c2d9e8e2b6b"
-      },
-      "WCC386.PRF": {
-        "media_path": "WATCOM/WCC386.PRF",
-        "sha256": "f1fd2a7a15500904a777bf4df5d55b1713339d8fd8c45daed7aed7e0539b1d88"
-      },
-      "WATCOM/H/STRING.H": {
-        "media_path": "WATCOM/H/STRING.H",
-        "sha256": "7b5e9dfad7588bea54e19c87a72de5e72fcb3ff062b0b4b2f6d9652d40ef3eeb"
-      }
-    }
   }
 }

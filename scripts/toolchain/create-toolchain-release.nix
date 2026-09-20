@@ -1,4 +1,4 @@
-# Reproduce the HoMM1 VC4 + Watcom 10.0a + MASM 6.11 release bundle.
+# Reproduce the HoMM1 VC4 + MASM 6.11 release bundle.
 # Usage: nix-shell scripts/toolchain/create-toolchain-release.nix
 
 { pkgs ? import <nixpkgs> {} }:
@@ -8,11 +8,6 @@ let
     name = "MSVC40.iso";
     url = "https://archive.org/download/msvc4x/MSVC40.iso";
     hash = "sha256-lhMm77+9KZeU4suxAun/O/546/kaEbiZeAlfWeCuqT4=";
-  };
-  watcom10 = pkgs.fetchurl {
-    name = "Watcom_C++_10.0.iso";
-    url = "https://archive.org/download/Watcom_C_10.0/Watcom_C%2B%2B_10.0.iso";
-    hash = "sha256-xVwscMbkLUxV0HlpPafz7YcZADzVYuJEXI6newAP2/s=";
   };
   masm611-disk1 = pkgs.fetchurl {
     name = "MASM611-DISK1.json";
@@ -24,7 +19,6 @@ pkgs.mkShell {
   packages = [ pkgs.python3 pkgs.p7zip pkgs.libmspack pkgs.gnutar pkgs.xz ];
   shellHook = ''
     export MSVC40_MEDIA="${vc40}"
-    export WATCOM10_MEDIA="${watcom10}"
     export MASM611_DISK1="${masm611-disk1}"
     export LIBMSPACK="${pkgs.libmspack}/lib/libmspack.so"
     export HOMM1_DIR="$PWD"

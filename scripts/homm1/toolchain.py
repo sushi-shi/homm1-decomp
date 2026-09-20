@@ -12,10 +12,10 @@ from homm1.core.inputs import REPO
 
 
 RELEASE_REPOSITORY = "sushi-shi/homm1-decomp"
-RELEASE_TAG = "toolchain-vc40-watcom10-masm611"
-RELEASE_ASSET = "homm1-toolchain.tar.xz"
-RELEASE_SHA256 = "a4675d4159f8ca76f74b5abee2411c28b773e0d1902d6ebd1b5a343a7a8e608e"
-RELEASE_COMPONENTS = ("vc40", "watcom10")
+RELEASE_TAG = "toolchain-vc40-masm611"
+RELEASE_ASSET = "homm1-toolchain-vc40-masm611.tar.xz"
+RELEASE_SHA256 = "d489c97f0625ae6cedd4de7f349bb7efc77d7497206dfe815b254e1046e692da"
+RELEASE_COMPONENTS = ("vc40",)
 
 
 def pins():
@@ -114,7 +114,7 @@ def _download_release(directory):
 
 
 def install_release(archive=None):
-    """Install the hash-pinned VC4 + Watcom + MASM release atomically."""
+    """Install the hash-pinned VC4 + MASM release atomically."""
     parent = REPO / 'build/toolchains'
     parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.release-', dir=parent) as scratch_name:

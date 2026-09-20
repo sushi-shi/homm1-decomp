@@ -16,23 +16,6 @@
         "type": "github"
       }
     },
-    "objconv-omf-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1713694881,
-        "narHash": "sha256-wIg869ACsWVM9DANukgZ3dtTZFVhYu7RfF13aNav1H0=",
-        "owner": "tomsons26",
-        "repo": "objconv",
-        "rev": "50d635877d22ec1b483a3a752f5159762839f791",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tomsons26",
-        "repo": "objconv",
-        "rev": "50d635877d22ec1b483a3a752f5159762839f791",
-        "type": "github"
-      }
-    },
     "objdiff-src": {
       "flake": false,
       "locked": {
@@ -53,7 +36,6 @@
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "objconv-omf-src": "objconv-omf-src",
         "objdiff-src": "objdiff-src",
         "rust-overlay": "rust-overlay",
         "vostok-delinker-src": "vostok-delinker-src"

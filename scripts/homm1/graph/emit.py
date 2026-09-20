@@ -59,7 +59,7 @@ import sys
 from pathlib import Path
 
 from homm1 import graph
-from homm1.core.paths import REPO, msvc_dir, watcom_dir
+from homm1.core.paths import REPO, msvc_dir
 from homm1.graph import ninja_syntax
 from homm1.graph.scan import Scanner
 
@@ -100,8 +100,6 @@ def _mods(*rel: str) -> list[str]:
 #: toolchain would re-run all of them whenever an unrelated module is touched.
 TOOL_MODS = _mods("tool/__init__.py", "tool/wine.py", "core/paths.py")
 CL_MODS = _mods("graph/cc.py", "tool/cl.py") + TOOL_MODS
-WCC_MODS = _mods("graph/wcc.py", "graph/cc.py", "tool/wcc386.py",
-                 "tool/objconv_omf.py", "toolchain.py") + TOOL_MODS
 ML_MODS = _mods("graph/fixed_asm.py", "tool/ml.py") + TOOL_MODS
 COMPDB_MODS = _mods("graph/compdb.py", "tool/clang.py", "manifest.py",
                     "core/paths.py")
@@ -171,7 +169,7 @@ def load_units() -> tuple[dict, list[dict]]:
                 "carrying the FULL set instead.")
         u["compiler"] = u.get("compiler", data.get("build", {}).get(
             "compiler", "vc40"))
-        if u["compiler"] not in ("vc40", "watcom10"):
+        if u["compiler"] != "vc40":
             raise SystemExit(f"{MANIFEST}: unit '{u['unit']}' has unsupported "
                              f"compiler '{u['compiler']}'")
         u["cflags"] = list(profiles[u["flags"]])
@@ -270,12 +268,8 @@ def toolchain_id() -> str:
     import shutil
     parts = []
     parts.append(f"MSVC_DIR={os.path.realpath(msvc_dir())}")
-    parts.append(f"WATCOM_DIR={os.path.realpath(watcom_dir())}")
     delinker = shutil.which("vostok-delinker")
     parts.append("delinker=" + (os.path.realpath(delinker) if delinker else "-"))
-    converter = shutil.which("objconv-omf")
-    parts.append("objconv-omf=" +
-                 (os.path.realpath(converter) if converter else "-"))
     return "\n".join(parts) + "\n"
 
 
@@ -304,12 +298,9 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
     """
     w.comment("=== PHASE 2: link -> candidate HEROES.EXE + .map (opt-in) ===")
     link_objs = []
-    for obj, src, _headers, _cflags, unit, assembly, compiler in cl_edges:
+    for obj, src, _headers, _cflags, unit, assembly in cl_edges:
         if assembly is None:
-            if compiler == "watcom10":
-                link_objs.append(f"{graph.LINK_OMF_DIR}/{unit}.obj")
-            else:
-                link_objs.append(obj)
+            link_objs.append(obj)
             continue
         omf = f"{graph.LINK_OMF_DIR}/{unit}.obj"
         w.build(omf, "ml_omf", inputs=src,
@@ -358,7 +349,7 @@ def emit(out: Path | None = None) -> tuple[int, int]:
     from homm1.graph.fixed_asm import unit as fixed_asm_unit
     cl_edges = [(f"{graph.BASE_DIR}/{u['unit']}.obj", u["source"],
                  scan.headers(u["source"]), u["cflags"], u["unit"],
-                 fixed_asm_unit(u["unit"], u["source"]), u["compiler"])
+                 fixed_asm_unit(u["unit"], u["source"]))
                 for u in units]
     base_objs = [e[0] for e in cl_edges]
     headers_by_unit = {e[4]: e[2] for e in cl_edges}
@@ -405,10 +396,6 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                command="$py -m homm1.graph.cc --out $out --src $in "
                        "--unit $unit -- $cflags",
                description="cl $unit", pool="wine", restat=True)
-        w.rule("wcc",
-               command="$py -m homm1.graph.wcc --out $out_coff "
-                       "--omf-out $out_omf --src $in --unit $unit -- $wflags",
-               description="wcc386 $unit", pool="wine", restat=True)
         w.rule("ml_coff",
                command="$py -m homm1.tool.ml --src $in --out $out --coff",
                description="assemble-coff $unit", pool="wine", restat=True)
@@ -416,19 +403,11 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                command="$py -m homm1.tool.ml --src $in --out $out",
                description="assemble-omf $unit", pool="wine", restat=True)
         w.newline()
-        for obj, src, headers, cflags, unit, assembly, compiler in cl_edges:
+        for obj, src, headers, cflags, unit, assembly in cl_edges:
             variables = {"unit": unit}
             if assembly is not None:
                 w.build(obj, "ml_coff", inputs=src,
                         implicit=ML_MODS + [graph.TOOLCHAIN_ID],
-                        variables=variables)
-                continue
-            if compiler == "watcom10":
-                omf = f"{graph.LINK_OMF_DIR}/{unit}.obj"
-                variables.update(out_coff=obj, out_omf=omf,
-                                 wflags=" ".join(cflags))
-                w.build([obj, omf], "wcc", inputs=src,
-                        implicit=headers + WCC_MODS + [graph.TOOLCHAIN_ID],
                         variables=variables)
                 continue
             if cflags != global_cflags:

@@ -33,11 +33,6 @@ def msvc_dir() -> Path:
     return Path(os.environ.get("MSVC_DIR") or BUILD / "toolchains/vc40")
 
 
-def watcom_dir() -> Path:
-    """The installed September 1994 Watcom C/C++ 10.0a tree."""
-    return Path(os.environ.get("WATCOM_DIR") or BUILD / "toolchains/watcom10")
-
-
 def dxsdk_dir() -> Path:
     v = os.environ.get("DXSDK_DIR")
     if not v:

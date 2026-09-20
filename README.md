@@ -219,7 +219,7 @@ homm1 link --dry-run
 `HOMM1_EXE` and `HOMM1_EDITOR_EXE` are alternatives to the command-line paths. Re-running
 `homm1 init` reuses and verifies staged files and regenerates `build/analysis/{game,editor}.json`.
 `homm1 toolchain install` downloads a public, SHA-256-gated release containing
-the pinned VC4, Watcom 10.0a and MASM 6.11 files. The archive is reproducible
+the pinned VC4 and MASM 6.11 files. The archive is reproducible
 from preserved original media with
 `nix-shell scripts/toolchain/create-toolchain-release.nix`. Compiler binaries,
 Wine state and media remain under ignored `build/`. See

@@ -13,7 +13,6 @@ cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
 cpp_carcass_oi = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Oi"]
 cpp_o2 = ["/nologo", "/c", "/O2", "/Z7", "/G5"]
 cpp_codec = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
-c_watcom_codec = ["-bt=nt", "-5r", "-otex", "-s", "-zq", "-zl", "-zld"]
 
 [[unit]]
 unit = "BASE/BITS"

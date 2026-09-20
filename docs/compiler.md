@@ -15,7 +15,6 @@ nix develop .#build
 homm1 init --exe /path/to/HEROES.EXE
 homm1 toolchain install
 homm1 toolchain check --id vc40
-homm1 toolchain check --id watcom10
 homm1 tool wine --init
 homm1 build
 objdiff-cli diff -p build/objdiff -u app_about -o /tmp/app_about.json
@@ -26,13 +25,12 @@ The original Microsoft media used here is preserved as
 Its SHA-256 is
 `961326efbfbd299794e2cbb102e9ff3bfe78ebf91a11b89978095f59e0aea93e`.
 `config/toolchains.json` is authoritative for media and component hashes.
-The public `toolchain-vc40-watcom10-masm611` release contains 361 pinned files:
+The public `toolchain-vc40-masm611` release contains 356 pinned files:
 VC4 compiler passes, diagnostics, linker/PDB support, native runtime, SDK
-headers and libraries; Watcom 10.0a's compiler and required C header; and MASM
-6.11's assembler and diagnostics. SDK filenames are installed in lowercase
+headers and libraries; and MASM 6.11's assembler and diagnostics. SDK filenames are installed in lowercase
 for native Clang analysis; Wine's compiler uses the same verified bytes.
 
-The release is reproduced from the two original compiler discs and PCjs's
+The release is reproduced from the original VC4 disc and PCjs's
 lossless image of the separate MASM 6.11 diskette:
 
 ```sh
