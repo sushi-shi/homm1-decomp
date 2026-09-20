@@ -10,8 +10,8 @@ This repository does **not** contain the original game's executable or resources
 legally obtained `HEROES.EXE` locally to initialize the matching workspace.
 
 **Status: direct Gruntz matching pipeline operational.** The 50-unit build graph
-currently reproduces **77 of 985 engine functions exactly**, including 62 of 67
-started `BASE` functions and 10 of 12 LZHUF functions. HoMM2 Buka 2.1 supplies
+currently reproduces **79 of 985 engine functions exactly**, including 62 of 67
+started `BASE` functions and all 12 LZHUF functions. HoMM2 Buka 2.1 supplies
 preferred source correspondence and TU order; PoL 2.0 independently confirms
 identities and supplies VC4-compatible declarations. Data matching remains
 deferred.
