@@ -29,17 +29,20 @@ and length from globals. The other three surveyed DOS releases contain the
 same helper signatures, and the August 1997 Windows release retains the same
 decoder bodies.
 
-The six decoder members are reconstructed as separate MASM sources under
-`vendor/lzhuf/decoder`. Keeping the helper and five routines separate preserves
-the external call relocations found in retail; combining the same exact bodies
-into one module resolves those calls and scores 99.93%. Each separate member
-matches its retail function at 100%, including relocation symbol and addend.
-`vendor/lzhuf/decoder.c` remains the ordinary C correspondence source used for
-type and compiler experiments. The encoder is reconstructed in
-`vendor/lzhuf/encoder.cpp`; it remains ordinary C++ and is compiled with the
-optimized VC4 profile proven by its instruction selection. Compiler family
-does not imply that this imported algorithm belongs to the game's authored
-source tree.
+No tested compiler, source form, and flag combination reproduced the retail
+decoder objects. This includes Watcom 10.0, 10.0a, 10.0b, and 10.5. The six
+decoder members under `vendor/lzhuf/decoder` are manual MASM reconstructions
+from the pinned retail bytes, not recovered original vendor assembly source.
+Keeping the helper and five routines separate preserves the external call
+relocations found in retail; combining the same exact bodies into one module
+resolves those calls and scores 99.93%. Each separate member matches its retail
+function at 100%, including relocation symbol and addend.
+`vendor/lzhuf/reference/decoder_correspondence.c` remains the ordinary C
+correspondence source used for type and compiler experiments. The encoder is
+reconstructed in `vendor/lzhuf/encoder.cpp`; it remains ordinary C++ and is
+compiled with the optimized VC4 profile proven by its instruction selection.
+Compiler family does not imply that this imported algorithm belongs to the
+game's authored source tree.
 
 The decoder run has stronger evidence for an assembly-bearing source than for
 five independently compiled C functions. The Windows sequence is completely

@@ -1,6 +1,6 @@
-; Legacy LZHUF decoder object linked into the VC4 Windows build.  Its register
-; convention and bodies match the Watcom-built DOS family; that does not imply
-; the Windows build itself invoked Watcom.
+; Manual reconstruction from the pinned retail bytes, not recovered vendor MASM.
+; No tested Watcom compiler/source/flags combination emitted this exact object.
+; Its register convention and body match the Watcom-built DOS family.
 .386
 .model flat, C
 option casemap:none

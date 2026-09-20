@@ -1,7 +1,7 @@
 /*
- * Memory-backed Okumura/Yoshizaki LZHUF decoder used by the legacy object
- * linked into HEROES.EXE.  The short table/index types are part of this port,
- * not substitutes for the ordinary C algorithm.
+ * REFERENCE ONLY: this file is not a build input. It is the ordinary-C
+ * correspondence source for the legacy decoder objects linked into
+ * HEROES.EXE. The short table/index types are part of this port.
  */
 #include <match.h>
 
