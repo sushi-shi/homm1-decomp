@@ -44,7 +44,8 @@ def _init(argv: list[str]) -> int:
         path = output / f"{key}.json"
         path.write_text(json.dumps(report, indent=2) + "\n")
         print(f"{key}: verified {pin.name}; report: {path.relative_to(REPO)}")
-    print("Retail workspace ready. Install VC4, then run `homm1 build`.")
+    print("Retail workspace ready. Run `homm1 toolchain install`, initialise "
+          "Wine, then run `homm1 build`.")
     return 0
 
 
@@ -85,7 +86,11 @@ def _toolchain(argv: list[str]) -> int:
     ap.add_argument("action", choices=("install", "check", "symbols"))
     ap.add_argument("--id", choices=sorted(toolchain.pins()), default="vc40")
     ap.add_argument("--media", type=Path)
+    ap.add_argument("--archive", type=Path,
+                    help="install the pinned combined release from a local archive")
     a = ap.parse_args(argv)
+    if a.media is not None and a.archive is not None:
+        ap.error("--media and --archive are mutually exclusive")
     try:
         toolchain.command(a)
     except (OSError, ValueError, subprocess.SubprocessError) as exc:

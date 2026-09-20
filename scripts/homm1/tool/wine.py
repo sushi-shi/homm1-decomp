@@ -65,8 +65,8 @@ def era_tool(name: str) -> Path:
         # for those.
         hint = (" (rc.exe arrived in toolchain release r3)"
                 if name.lower() == "rc.exe" else "")
-        raise ToolError(f"{name} not found under {root}/bin - run inside "
-                        f"`nix develop`{hint}")
+        raise ToolError(f"{name} not found under {root}/bin - run "
+                        f"`homm1 toolchain install`{hint}")
     require("wine")
     return p
 

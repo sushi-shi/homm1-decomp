@@ -106,6 +106,14 @@
       "url": "https://archive.org/download/msvc4x/MSVC40.iso",
       "sha256": "961326efbfbd299794e2cbb102e9ff3bfe78ebf91a11b89978095f59e0aea93e"
     },
+    "release_files": {
+      "bin/ML.EXE": {
+        "sha256": "94595b9ccc09dbcaf6b877aa11a35576f78de2ab0eb39546abfde430b79dce2f"
+      },
+      "bin/ML.ERR": {
+        "sha256": "092755d3a488767da3de277c141be7c8144110a156cdbd8ae1391eba64697cee"
+      }
+    },
     "files": {
       "bin/CL.EXE": {
         "media_path": "MSDEV/BIN/CL.EXE",
@@ -1548,6 +1556,10 @@
       "WCC386.PRF": {
         "media_path": "WATCOM/WCC386.PRF",
         "sha256": "f1fd2a7a15500904a777bf4df5d55b1713339d8fd8c45daed7aed7e0539b1d88"
+      },
+      "WATCOM/H/STRING.H": {
+        "media_path": "WATCOM/H/STRING.H",
+        "sha256": "7b5e9dfad7588bea54e19c87a72de5e72fcb3ff062b0b4b2f6d9652d40ef3eeb"
       }
     }
   }

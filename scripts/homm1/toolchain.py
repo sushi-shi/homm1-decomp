@@ -6,8 +6,16 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import urllib.request
 
 from homm1.core.inputs import REPO
+
+
+RELEASE_REPOSITORY = "sushi-shi/homm1-decomp"
+RELEASE_TAG = "toolchain-vc40-watcom10-masm611"
+RELEASE_ASSET = "homm1-toolchain.tar.xz"
+RELEASE_SHA256 = "a4675d4159f8ca76f74b5abee2411c28b773e0d1902d6ebd1b5a343a7a8e608e"
+RELEASE_COMPONENTS = ("vc40", "watcom10")
 
 
 def pins():
@@ -23,14 +31,25 @@ def root(name):
     return REPO / 'build/toolchains' / name
 
 
+def _entries(config, *, release=True):
+    entries = dict(config['files'])
+    if release:
+        entries.update(config.get('release_files', {}))
+    return entries
+
+
+def _verify_entries(name, directory, entries):
+    for relative, expected in entries.items():
+        path = directory / relative
+        if not path.is_file() or digest(path) != expected['sha256']:
+            raise ValueError(f'{name}: missing or changed {relative}; run homm1 toolchain install')
+    return directory
+
+
 def verify(name, directory=None):
     config = pins()[name]
     directory = directory or root(name)
-    for relative, expected in config['files'].items():
-        path = directory / relative
-        if not path.is_file() or digest(path) != expected['sha256']:
-            raise ValueError(f'{name}: missing or changed {relative}; run homm1 toolchain install --id {name} --media PATH')
-    return directory
+    return _verify_entries(name, directory, _entries(config))
 
 
 def install(name, media):
@@ -54,7 +73,7 @@ def install(name, media):
             target = staged / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(extraction / entry['media_path'], target)
-        verify(name, staged)
+        _verify_entries(name, staged, config['files'])
         if destination.exists():
             # Repair individual files atomically; never remove unrelated files.
             for relative in config['files']:
@@ -63,14 +82,74 @@ def install(name, media):
                 os.replace(staged / relative, target)
         else:
             staged.rename(destination)
-    print(f'{name}: compiler files verified and installed in {destination.relative_to(REPO)}')
+    suffix = ("; the release bundle also supplies MASM"
+              if config.get('release_files') else "")
+    print(f'{name}: media files verified and installed in '
+          f'{destination.relative_to(REPO)}{suffix}')
+
+
+def _release_url():
+    return (f"https://github.com/{RELEASE_REPOSITORY}/releases/download/"
+            f"{RELEASE_TAG}/{RELEASE_ASSET}")
+
+
+def _verify_archive(path):
+    if len(RELEASE_SHA256) != 64:
+        raise ValueError('toolchain release hash is not pinned yet')
+    actual = digest(path)
+    if actual != RELEASE_SHA256:
+        raise ValueError(f'toolchain release SHA-256 {actual} differs from the pin')
+
+
+def _download_release(directory):
+    archive = directory / RELEASE_ASSET
+    try:
+        with urllib.request.urlopen(_release_url()) as response, archive.open('wb') as output:
+            shutil.copyfileobj(response, output)
+    except Exception as error:
+        archive.unlink(missing_ok=True)
+        raise ValueError(f'cannot download {_release_url()}: {error}') from error
+    _verify_archive(archive)
+    return archive
+
+
+def install_release(archive=None):
+    """Install the hash-pinned VC4 + Watcom + MASM release atomically."""
+    parent = REPO / 'build/toolchains'
+    parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.release-', dir=parent) as scratch_name:
+        scratch = Path(scratch_name)
+        if archive is None:
+            archive = _download_release(scratch)
+        else:
+            archive = Path(archive).resolve()
+            _verify_archive(archive)
+        extraction = scratch / 'extract'
+        extraction.mkdir()
+        subprocess.run(['tar', 'xf', str(archive), '-C', str(extraction)], check=True)
+        staged_root = extraction / 'toolchains'
+        for name in RELEASE_COMPONENTS:
+            verify(name, staged_root / name)
+        for name in RELEASE_COMPONENTS:
+            source = staged_root / name
+            destination = root(name)
+            previous = parent / f'.{name}.previous'
+            if previous.exists():
+                shutil.rmtree(previous)
+            if destination.exists():
+                os.replace(destination, previous)
+            os.replace(source, destination)
+            if previous.exists():
+                shutil.rmtree(previous)
+    print(f'toolchain release {RELEASE_TAG} verified and installed')
 
 
 def command(args):
     if args.action == 'install':
-        if args.media is None:
-            raise ValueError('toolchain install requires --media PATH')
-        install(args.id, args.media)
+        if args.media is not None:
+            install(args.id, args.media)
+        else:
+            install_release(args.archive)
     elif args.action == 'symbols':
         index = library_symbols(args.id)
         print(f'{args.id}: indexed {len(index)} external symbols from verified libraries')

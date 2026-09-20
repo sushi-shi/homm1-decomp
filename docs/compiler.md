@@ -13,8 +13,10 @@ From the repository root:
 ```sh
 nix develop .#build
 homm1 init --exe /path/to/HEROES.EXE
-homm1 toolchain install --id vc40 --media /path/to/MSVC40.iso
+homm1 toolchain install
 homm1 toolchain check --id vc40
+homm1 toolchain check --id watcom10
+homm1 tool wine --init
 homm1 build
 objdiff-cli diff -p build/objdiff -u app_about -o /tmp/app_about.json
 ```
@@ -24,20 +26,36 @@ The original Microsoft media used here is preserved as
 Its SHA-256 is
 `961326efbfbd299794e2cbb102e9ff3bfe78ebf91a11b89978095f59e0aea93e`.
 `config/toolchains.json` is authoritative for media and component hashes.
-Provisioning extracts pinned compiler passes, diagnostics, linker/PDB support,
-native compiler runtime, SDK headers and CRT/import libraries. VC4 currently
-has 354 pinned files. SDK filenames are installed in lowercase for native
-Clang analysis; Wine's compiler uses the same verified bytes.
+The public `toolchain-vc40-watcom10-masm611` release contains 361 pinned files:
+VC4 compiler passes, diagnostics, linker/PDB support, native runtime, SDK
+headers and libraries; Watcom 10.0a's compiler and required C header; and MASM
+6.11's assembler and diagnostics. SDK filenames are installed in lowercase
+for native Clang analysis; Wine's compiler uses the same verified bytes.
+
+The release is reproduced from the two original compiler discs and PCjs's
+lossless image of the separate MASM 6.11 diskette:
+
+```sh
+nix-shell scripts/toolchain/create-toolchain-release.nix
+```
+
+The builder verifies the input media, reconstructs the MASM disk, expands its
+original KWAJ members, checks every output file, normalizes archive metadata,
+and prints the release archive's SHA-256. To inspect or repair an individual
+disc-derived component without the release, use
+`homm1 toolchain install --id ID --media PATH`; VC4 media does not itself
+contain MASM, so that route is deliberately not the normal build setup.
 
 The initial compiler survey checked ABI, enum storage, class layout,
 source-to-object names, and code parity with and without `/Z7`. This is
 historical compiler evidence; its `/GX` fixture does not establish a game-wide
 exception profile.
 
-There is no automatic network download in `init` or `build`. Supply the media
-locally; all installed files, Wine state, extracted target objects and reports
-stay under ignored `build/`. Compiler execution always uses this repository's
-Wine prefix. Inherited `CL`, `_CL_`, `INCLUDE` and `LIB` cannot alter the profile.
+`init` and `build` never fetch tools implicitly. The explicit
+`homm1 toolchain install` command downloads and hash-checks the release; all
+installed files, Wine state, extracted target objects and reports stay under
+ignored `build/`. Compiler execution always uses this repository's Wine prefix.
+Inherited `CL`, `_CL_`, `INCLUDE` and `LIB` cannot alter the profile.
 
 ## What identifies the compiler, and what does not
 

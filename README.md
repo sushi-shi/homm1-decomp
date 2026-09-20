@@ -207,8 +207,8 @@ nix develop .#build
 # Supply the game; the editor is optional. Both are hash-verified and staged in build/orig/.
 homm1 init --exe /path/to/HEROES.EXE --editor-exe /path/to/EDITOR.EXE
 homm1 inspect
-homm1 toolchain install --id vc40 --media /path/to/MSVC40.iso
-homm1 toolchain install --id watcom10 --media /path/to/Watcom_C++_10.0.iso
+homm1 toolchain install
+homm1 tool wine --init
 homm1 build
 homm1 match
 homm1 sema disasm 0x0004f640
@@ -218,7 +218,11 @@ homm1 link --dry-run
 
 `HOMM1_EXE` and `HOMM1_EDITOR_EXE` are alternatives to the command-line paths. Re-running
 `homm1 init` reuses and verifies staged files and regenerates `build/analysis/{game,editor}.json`.
-Compiler binaries and media remain under ignored `build/`. See
+`homm1 toolchain install` downloads a public, SHA-256-gated release containing
+the pinned VC4, Watcom 10.0a and MASM 6.11 files. The archive is reproducible
+from preserved original media with
+`nix-shell scripts/toolchain/create-toolchain-release.nix`. Compiler binaries,
+Wine state and media remain under ignored `build/`. See
 [compiler evidence and setup](docs/compiler.md) and the
 [matching-tooling notes](docs/tooling.md).
 

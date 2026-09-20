@@ -26,6 +26,23 @@ class ToolchainTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     toolchain.verify('test', root)
 
+    def test_release_only_component_is_part_of_verification(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            (root / 'bin').mkdir()
+            (root / 'bin/CL.EXE').write_bytes(b'compiler')
+            config = {'test': {
+                'files': {'bin/CL.EXE': {
+                    'sha256': hashlib.sha256(b'compiler').hexdigest()}},
+                'release_files': {'bin/ML.EXE': {
+                    'sha256': hashlib.sha256(b'assembler').hexdigest()}},
+            }}
+            with patch.object(toolchain, 'pins', return_value=config):
+                with self.assertRaisesRegex(ValueError, 'bin/ML.EXE'):
+                    toolchain.verify('test', root)
+                (root / 'bin/ML.EXE').write_bytes(b'assembler')
+                self.assertEqual(toolchain.verify('test', root), root)
+
     def test_wrong_media_is_rejected_before_extraction(self):
         with tempfile.TemporaryDirectory() as scratch:
             media = Path(scratch) / 'wrong.iso'
