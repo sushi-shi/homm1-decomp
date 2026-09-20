@@ -81,10 +81,9 @@ removing a command; do not relabel reusable tooling as game-specific.
 
 ## Validation of this repair
 
-`homm1 test` passed all 60 tests present at the final run, including the 30
-ported donor controls and logging/surface/fingerprint regressions.
-`homm1 verify compiler-artifacts` passed, and `homm1 verify fingerprints`
-successfully refreshed 389 function fingerprints across the 33-unit manifest.
-The attempted full build stopped on compiler errors in concurrently edited
-`src/BASE/LZHUF.cpp` (a `decodeLength` type redefinition and an undeclared
-`InitializeHuffman`); that unrelated reconstruction was not changed here.
+`homm1 test` passes all 67 tests, including the 30 ported donor controls and
+the logging, surface, fingerprint, Watcom conversion, and MASM dead-code
+regressions. `homm1 build` passes the full verification gate and fingerprints
+411 functions across the 50-unit manifest. `homm1 link --dry-run` resolves the
+complete object and library line; the real link reaches VC4 LINK.EXE and
+reports the remaining reconstruction closure without `/FORCE`.

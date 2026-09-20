@@ -50,6 +50,8 @@ BitSet PROC C
     ret
 BitSet ENDP
 
+; @dead-code
+; Zero-ref: no effective incoming retail reference; both HoMM2 donors retain it.
 BitClear PROC C
     push ebp
     mov ebp, esp

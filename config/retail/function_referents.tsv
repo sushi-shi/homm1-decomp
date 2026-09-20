@@ -6,8 +6,8 @@ rva	name	provenance
 0x0005A584	?PollRemote@@YAXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x0005DC9B	?KBTickCount@@YAJXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x000644E7	?DelayTilMilli@@YAXJ@Z	evidence/window-layout.md; FizzleForward frame pacing call with the accumulated tick target
-0x00073450	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	evidence/window-layout.md; seven-argument screen blit used by each FizzleForward frame
 0x000735F0	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	evidence/window-layout.md; screen-buffer copy into a bitmap with two integer coordinates
+0x00073450	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	evidence/window-layout.md; seven-argument screen blit used by each FizzleForward frame
 0x000738C0	?PostprocessBitmap@@YAXPACHH@Z	evidence/resource-manager-layout.md; semantic provisional name from three bitmap-load callers and pixel/dimension arguments
 0x000744B0	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	evidence/window-layout.md; WINDOW draw/move calls and four signed-word region arguments
 0x00076DD0	?ReallyShowPointer@mouseManager@@QAEXXZ	evidence/window-layout.md; paired cursor-show call after drawing
@@ -20,13 +20,16 @@ rva	name	provenance
 0x000806F0	_sprintf	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
 0x00080880	_free	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
 0x000809F0	_malloc	evidence/resource-manager-layout.md; exact VC4 libc member and LoadAggregateHeader call shape
-0x00081890	_abs	evidence/window-layout.md; absolute coordinate delta used twice by MoveWindow
 0x00081940	_fclose	evidence/log-string.md; donor identity and LogStr stream-close call
 0x000819E0	_fputs	evidence/log-string.md; unique VC4 CRT prefix and LogStr stream-write call
 0x00081A90	_fopen	evidence/log-string.md; donor identity and LogStr two-argument stream-open call
+0x00081890	_abs	evidence/window-layout.md; absolute coordinate delta used twice by MoveWindow
 0x00082500	_lseek	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body
 0x00082890	_close	evidence/resource-manager-layout.md; donor identity and LoadAggregateHeader file-descriptor call
 0x00082990	_read	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body
 0x00082C40	_open	evidence/resource-manager-layout.md; donor identity and two-argument binary-open call
 0x000834C0	__purecall	evidence/window-layout.md; three pure widget vtable slots share the VC runtime pure-call handler
 0x0008B050	_tell	evidence/resource-manager-layout.md; donor identity and matching VC4 CRT body
+0x00019B4A	?LogStr@@YAXPADJJ@Z	evidence/lzhuf-provenance.md; decoded three-argument logging body
+0x0007FC58	_LzhufMemmove	evidence/lzhuf-provenance.md; byte-identical legacy helper in all surveyed DOS releases
+0x00081B00	_memmove	evidence/lzhuf-provenance.md; VC encoder relocation and CRT body

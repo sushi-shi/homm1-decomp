@@ -77,10 +77,11 @@ The tooling synthesizes WinG and WAIL import libraries from the retail import
 table. `smkwai32.dll` is ordinal-only, so its import library remains deferred
 until matching code needs it.
 
-The real link reaches LINK.EXE. With this batch it has only four unresolved
-symbols: `gbInPollSound`, `gbForegroundApp`, `gNextSoundPollTick`, and
-`gpSoundManager`. They are the deliberately deferred data definitions; code
-closure, `_WinMain@16`, and the previously external helper calls now resolve.
+The real link reaches LINK.EXE and currently stops on the reconstruction
+backlog, as intended. The current log reports 11 distinct missing game symbols
+(41 unresolved references): seven deferred globals and four functions that
+have not yet been reconstructed. `_WinMain@16` and the vendor import libraries
+resolve. No `/FORCE` or placeholder definitions hide the remaining closure.
 
 ## Target-specific evidence
 

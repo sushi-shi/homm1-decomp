@@ -12,6 +12,8 @@ cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
 cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
 cpp_carcass_oi = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Oi"]
 cpp_o2 = ["/nologo", "/c", "/O2", "/Z7", "/G5"]
+cpp_codec = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
+c_watcom_codec = ["-bt=nt", "-5r", "-otex", "-s", "-zq", "-zl", "-zld"]
 
 [[unit]]
 unit = "BASE/BITS"
@@ -59,19 +61,49 @@ source = "src/BASE/Icondf2b.asm"
 flags = "cpp_carcass"
 
 [[unit]]
-unit = "BASE/INPUTMGR"
-source = "src/BASE/INPUTMGR.cpp"
-flags = "cpp_o2"
-
-[[unit]]
 unit = "BASE/LZHUF"
-source = "src/BASE/LZHUF.cpp"
-flags = "cpp_carcass"
+source = "vendor/lzhuf/encoder.cpp"
+flags = "cpp_codec"
 
 [[unit]]
 unit = "BASE/MAKEFILEID"
 source = "src/BASE/MAKEFILEID.asm"
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/LZHUFDEC"
+source = "vendor/lzhuf/decoder/LzhufMemmove.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/LZHUFDEC_GetBit"
+source = "vendor/lzhuf/decoder/GetBit.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/LZHUFDEC_DecodePosition"
+source = "vendor/lzhuf/decoder/DecodePosition.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/LZHUFDEC_Update"
+source = "vendor/lzhuf/decoder/UpdateDecoderTree.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/LZHUFDEC_Reconstruct"
+source = "vendor/lzhuf/decoder/ReconstructDecoderTree.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/LZHUFDEC_Decode"
+source = "vendor/lzhuf/decoder/Decode.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/INPUTMGR"
+source = "src/BASE/INPUTMGR.cpp"
+flags = "cpp_o2"
 
 [[unit]]
 unit = "BASE/MOUSEMGR"

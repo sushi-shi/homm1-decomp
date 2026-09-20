@@ -113,6 +113,7 @@ def shutdown_wineserver() -> None:
 
 
 def run(argv: list[str], *, cwd: Path | None = None,
+        env: dict[str, str] | None = None,
         timeout: float | None = None,
         success: Path | None = None) -> tuple[str, int]:
     """Run one wine tool hang-proof; return (combined output, returncode).
@@ -131,6 +132,7 @@ def run(argv: list[str], *, cwd: Path | None = None,
     with tempfile.TemporaryFile() as logf:
         try:
             proc = subprocess.Popen(argv, cwd=str(cwd) if cwd else None,
+                                    env=env,
                                     stdin=subprocess.DEVNULL, stdout=logf,
                                     stderr=subprocess.STDOUT,
                                     start_new_session=True)

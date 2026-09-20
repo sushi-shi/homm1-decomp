@@ -20,3 +20,4 @@ function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x00076940	0x000CBF64	0x00076D52	?mouseIconInfo@@3PAU_ICONINFO@@A	0xC	1	evidence/mouse-coordinates.md; ICONINFO hbmMask field
 0x00076940	0x000CBF68	0x00076D61	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	evidence/mouse-coordinates.md; ICONINFO hbmColor field
 0x00076940	0x000CBF68	0x00076D69	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	evidence/mouse-coordinates.md; ICONINFO hbmColor zero branch
+0x0007FF0C	0x000D0906	0x0007FF2B	_son	0xFFFFFFFE	1	evidence/lzhuf-provenance.md; legacy object overlapping dword load uses son-2

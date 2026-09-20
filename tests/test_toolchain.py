@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from homm1 import toolchain
 from homm1.core.compiler import wine_env
+from homm1.tool import objconv_omf
 
 
 class ToolchainTests(unittest.TestCase):
@@ -42,3 +43,24 @@ class ToolchainTests(unittest.TestCase):
             for key in ('CL', '_CL_', 'INCLUDE', 'LIB'):
                 self.assertNotIn(key, environment)
             self.assertEqual(environment['WINEPREFIX'], str(toolchain.REPO / 'build/wineprefix'))
+
+    def test_watcom_comparison_object_renames_text_section(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            source = root / 'input.omf'
+            output = root / 'output.obj'
+            source.write_bytes(b'\x80omf')
+
+            def convert(argv, **kwargs):
+                output.write_bytes(b'coff')
+                return type('Result', (), {
+                    'returncode': 0, 'stdout': '', 'stderr': ''})()
+
+            with patch.object(objconv_omf, 'require',
+                              return_value='objconv-omf'), \
+                    patch.object(objconv_omf.subprocess, 'run',
+                                 side_effect=convert) as run:
+                objconv_omf.convert(source, output)
+
+            argv = run.call_args.args[0]
+            self.assertIn('-nr:_TEXT:.text', argv)

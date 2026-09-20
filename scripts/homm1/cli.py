@@ -15,7 +15,7 @@ import subprocess
 import sys
 
 
-TOOLS = ("wine", "cl", "ml", "link", "rc", "delinker", "pdbutil", "objdiff", "objdump",
+TOOLS = ("wine", "cl", "wcc386", "objconv_omf", "ml", "link", "rc", "delinker", "pdbutil", "objdiff", "objdump",
          "clangd", "ghidra")
 
 

@@ -98,6 +98,42 @@ UNITS = {
             FixedAsmClaim(0x0047CA18, 0x2A, "?MAKEFILEID@@YAKPAD@Z"),
         ),
     ),
+    "BASE/LZHUFDEC": FixedAsmUnit(
+        source="vendor/lzhuf/decoder/LzhufMemmove.asm",
+        claims=(
+            FixedAsmClaim(0x0047FC58, 0x4D, "_LzhufMemmove"),
+        ),
+    ),
+    "BASE/LZHUFDEC_GetBit": FixedAsmUnit(
+        source="vendor/lzhuf/decoder/GetBit.asm",
+        claims=(
+            FixedAsmClaim(0x0047FCA5, 0x85, "_GetBit"),
+        ),
+    ),
+    "BASE/LZHUFDEC_DecodePosition": FixedAsmUnit(
+        source="vendor/lzhuf/decoder/DecodePosition.asm",
+        claims=(
+            FixedAsmClaim(0x0047FD2A, 0xC9, "_DecodePosition"),
+        ),
+    ),
+    "BASE/LZHUFDEC_Update": FixedAsmUnit(
+        source="vendor/lzhuf/decoder/UpdateDecoderTree.asm",
+        claims=(
+            FixedAsmClaim(0x0047FDF3, 0x119, "_UpdateDecoderTree"),
+        ),
+    ),
+    "BASE/LZHUFDEC_Reconstruct": FixedAsmUnit(
+        source="vendor/lzhuf/decoder/ReconstructDecoderTree.asm",
+        claims=(
+            FixedAsmClaim(0x0047FF0C, 0x153, "_ReconstructDecoderTree"),
+        ),
+    ),
+    "BASE/LZHUFDEC_Decode": FixedAsmUnit(
+        source="vendor/lzhuf/decoder/Decode.asm",
+        claims=(
+            FixedAsmClaim(0x0048005F, 0x129, "_Decode"),
+        ),
+    ),
 }
 
 

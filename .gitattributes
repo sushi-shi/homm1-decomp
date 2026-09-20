@@ -1,2 +1,2 @@
-# Empty final TSV fields (such as the default body kind) are meaningful.
-config/retail/*.tsv whitespace=-blank-at-eol
+vendor/lzhuf/upstream/jnos-1.11f-lzhuf.c -text -diff
+config/retail/data.tsv whitespace=-blank-at-eol

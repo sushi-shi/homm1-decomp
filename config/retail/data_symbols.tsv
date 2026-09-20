@@ -12,7 +12,6 @@ rva	size	symbol	provenance
 0x00094180	1	?gbInPollSound@@3DA	evidence/poll-sound.md; accessed storage only
 0x0009FE74	4	?hwndApp@@3PAXA	evidence/mouse-coordinates.md; HWND passed to ScreenToClient
 0x0009FE78	4	?gbForegroundApp@@3HA	evidence/poll-sound.md; accessed storage only
-0x000A0CE8	18	?gDynamicConstruct@@3PADA	evidence/window-layout.md; code-required heroWindow constructor name
 0x000A0D00	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	evidence/resource-manager-layout.md; code-required resourceManager literal identity
 0x000A0D10	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	evidence/resource-manager-layout.md; code-required open-error literal identity
 0x000A0D24	32	$anon_str_ca2427e0f3917c25fd1e64b0d475896ac3002453e2d73c433c391a34fbc830ff_0	evidence/resource-manager-layout.md; code-required invalid-aggregate literal identity
@@ -51,6 +50,7 @@ rva	size	symbol	provenance
 0x000A1A44	24	?gLeftReleaseCaptureFailure@@3PADA	evidence/input-message-handler.md; first code-required release-failure literal slot
 0x000A1A5C	24	?gRightReleaseCaptureFailure@@3PADA	evidence/input-message-handler.md; second code-required release-failure literal slot
 0x000A1A74	28	?gInputManagerAssertFile@@3PADA	evidence/input-message-handler.md; code-required assertion source path
+0x000A0CE8	18	?gDynamicConstruct@@3PADA	evidence/window-layout.md; code-required heroWindow constructor name
 0x000A1AA0	256	_gDimPalette	evidence/handwritten-assembly-survey.md; code-required palette identity and extent
 0x000A1BA0	4	_gBitmapSourceSkip	evidence/handwritten-assembly-survey.md; code-required bitmap source row-skip scratch
 0x000A1BA4	4	_gBitmapRowSkip	evidence/handwritten-assembly-survey.md; code-required bitmap row-skip scratch
@@ -59,12 +59,11 @@ rva	size	symbol	provenance
 0x000C517C	4	?gpInputManager@@3PAVinputManager@@A	evidence/input-message-handler.md; global input manager used by the handler
 0x000C5190	4	?gpResourceManager@@3PAVresourceManager@@A	evidence/mouse-coordinates.md; resource manager used by SetPointer
 0x000C6714	4	?gpMouseManager@@3PAVmouseManager@@A	evidence/input-message-handler.md; cursor manager used by mouse-move handling
-0x000C6750	4	?gText@@3PADA	evidence/resource-manager-layout.md; code-required shared text-buffer identity
+0x000C7C9C	4	?gpWindowManager@@3PAVheroWindowManager@@A	evidence/window-layout.md; window manager used by window drawing and movement
 0x000C6A94	4	?gNextSoundPollTick@@3JA	evidence/poll-sound.md; accessed storage only
 0x000C79DC	4	?DEFAULT_AGGREGATE_NAME@@3PADA	evidence/resource-manager-layout.md; code-required aggregate path pointer identity
 0x000C7C90	4	?bShowIt@@3HA	evidence/window-layout.md; FizzleForward display-enabled guard
 0x000C7C94	4	?giDebugLevel@@3HA	evidence/log-string.md; LogStr file/debugger output level
-0x000C7C9C	4	?gpWindowManager@@3PAVheroWindowManager@@A	evidence/window-layout.md; window manager used by window drawing and movement
 0x000C7CA8	4	?gpSoundManager@@3PAVsoundManager@@A	evidence/poll-sound.md; accessed storage only
 0x000CA4A8	4	?iMainWinScreenHeight@@3HA	evidence/mouse-coordinates.md; vertical game-coordinate divisor
 0x000CA900	4	?iMainWinScreenWidth@@3HA	evidence/mouse-coordinates.md; horizontal game-coordinate divisor
@@ -76,3 +75,30 @@ rva	size	symbol	provenance
 0x000CBE28	300	?cColorBits@@3PAPACA	evidence/mouse-coordinates.md; 75 cursor color buffers
 0x000CBF58	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	evidence/mouse-coordinates.md; 75 cursor icon descriptors
 0x000CC538	300	?hbmpAndMask@@3PAPAXA	evidence/mouse-coordinates.md; 75 mask bitmap handles
+0x000A1BD0	256	_d_code	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000A1CD0	256	_d_len	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000A1DD0	1254	_initialSon	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000A22B8	1882	_initialParent	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000A2A18	1256	_initialFrequency	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000A2F00	64	_positionLength$S481	evidence/lzhuf-provenance.md; code-required position-code table
+0x000A2F40	64	_positionCode$S482	evidence/lzhuf-provenance.md; code-required position-code table
+0x000A2F80	2	_putbuf	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000A2F84	1	_putlen	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000A2F88	13	??_C@_0N@PCJN@Data?5decoded?$AA@	evidence/lzhuf-provenance.md; code-required pooled literal identity
+0x000C6750	4	?gText@@3PADA	evidence/resource-manager-layout.md; code-required shared text-buffer identity
+0x000CC8F0	8194	_dad	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000CE8F4	4	_decodeSize	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000CE900	8194	_lson	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D0908	1254	_son	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D0DF0	1882	_prnt	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D1554	4	_textsize	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D1558	4155	_text_buf	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D2598	8706	_rson	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D479C	4	_codesize	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D47A0	2	_getbuf	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D47A8	1256	_freq	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D4C90	1	_getlen	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D4C94	4	_codePtr	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D4C98	2	_match_position	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D4C9C	2	_match_length	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000D4CA0	4	_decodeOutput	evidence/lzhuf-provenance.md; code-required identity and extent
