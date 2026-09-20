@@ -5,6 +5,8 @@ rva	name	provenance
 0x0004F640	_PollSound	evidence/resource-manager-layout.md; ReadBlock call target and donor C linkage
 0x0005A584	?PollRemote@@YAXXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
 0x0005DC9B	?KBTickCount@@YAJXZ	evidence/poll-sound.md; base-object relocation and decoded retail target
+0x000644E7	?DelayTilMilli@@YAXJ@Z	evidence/window-layout.md; FizzleForward frame pacing call with the accumulated tick target
+0x00073450	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	evidence/window-layout.md; seven-argument screen blit used by each FizzleForward frame
 0x000735F0	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	evidence/window-layout.md; screen-buffer copy into a bitmap with two integer coordinates
 0x000738C0	?PostprocessBitmap@@YAXPACHH@Z	evidence/resource-manager-layout.md; semantic provisional name from three bitmap-load callers and pixel/dimension arguments
 0x000744B0	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	evidence/window-layout.md; WINDOW draw/move calls and four signed-word region arguments

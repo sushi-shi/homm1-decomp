@@ -106,7 +106,7 @@ flags = "cpp_o2"
 [[unit]]
 unit = "BASE/WINMGR"
 source = "src/BASE/WINMGR.cpp"
-flags = "cpp_carcass"
+flags = "cpp_o2"
 
 [[unit]]
 unit = "BASE/soundmgr"

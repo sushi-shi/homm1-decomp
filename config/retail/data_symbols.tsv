@@ -5,6 +5,7 @@ rva	size	symbol	provenance
 0x0008F590	4	$SG16676	evidence/log-string.md; VC4 literal `at+` including terminator
 0x0008F594	8	$SG16677	evidence/log-string.md; VC4 literal `KB.LOG` plus alignment byte
 0x0008F59C	2	$SG16678	evidence/log-string.md; VC4 newline literal including terminator
+0x00092E14	4	?gbEnlargeScreenBlit@@3HA	evidence/window-layout.md; FizzleForward disables and restores enlarged screen blitting
 0x00092E28	4	?gbColorMice@@3HA	evidence/mouse-coordinates.md; SetPointer color-cursor mode selector
 0x00092E2C	4	?gbSpecialMouseMasks@@3HA	evidence/mouse-coordinates.md; SetPointer monochrome mask selector
 0x00092E30	4	?giCurExe@@3HA	evidence/mouse-coordinates.md; SetPointer editor executable check
@@ -61,6 +62,7 @@ rva	size	symbol	provenance
 0x000C6750	4	?gText@@3PADA	evidence/resource-manager-layout.md; code-required shared text-buffer identity
 0x000C6A94	4	?gNextSoundPollTick@@3JA	evidence/poll-sound.md; accessed storage only
 0x000C79DC	4	?DEFAULT_AGGREGATE_NAME@@3PADA	evidence/resource-manager-layout.md; code-required aggregate path pointer identity
+0x000C7C90	4	?bShowIt@@3HA	evidence/window-layout.md; FizzleForward display-enabled guard
 0x000C7C94	4	?giDebugLevel@@3HA	evidence/log-string.md; LogStr file/debugger output level
 0x000C7C9C	4	?gpWindowManager@@3PAVheroWindowManager@@A	evidence/window-layout.md; window manager used by window drawing and movement
 0x000C7CA8	4	?gpSoundManager@@3PAVsoundManager@@A	evidence/poll-sound.md; accessed storage only

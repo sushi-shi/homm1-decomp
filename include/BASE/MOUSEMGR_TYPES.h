@@ -7,8 +7,6 @@
 
 #include <BASE/mouseManager.h>
 
-class resourceManager;
-
 H1_ENUM_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_COUNT = 75,
     MOUSE_CURSOR_AXIS_COUNT = 2,
@@ -52,6 +50,4 @@ extern BITMAP bmpColor[MOUSE_CURSOR_COUNT];
 extern HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];
 extern HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
 extern ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
-extern resourceManager *gpResourceManager;
-
 #endif

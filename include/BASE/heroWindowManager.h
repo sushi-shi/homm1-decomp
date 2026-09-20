@@ -47,7 +47,7 @@ public:
     void FadeScreen(int, int, class palette *);
     void ScreenShot(void);
     void SaveFizzleSource(int, int, int, int);
-    void FizzleForward(int, int, int, int, int, signed char *, signed char *);
+    void FizzleForward(int, int, int, int, int);
     void ReleaseFizzleSource(void);
 };
 #pragma pack(pop)

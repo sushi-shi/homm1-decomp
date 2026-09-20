@@ -5,6 +5,7 @@
 #include <BASE/Misc.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <H1/All.h>
+#include <H1/KB.h>
 
 #include <stdio.h>
 #include <stdlib.h>

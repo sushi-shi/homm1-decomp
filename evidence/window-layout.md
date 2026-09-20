@@ -23,3 +23,10 @@ reference that exact slot for screen updates and bitmap access.
 The method bodies were ported from HoMM2 Buka 2.1, checked against PoL 2.0,
 and adjusted only where the HoMM1 instructions prove the older field widths or
 behavior.
+
+`FizzleForward` at VA `0x00474740` proves two more globals: the display guard
+at VA `0x004c7c90` and the enlarged-blit flag at VA `0x00492e14`. Its frame
+loop calls the seven-argument screen blit at VA `0x00473450` and schedules each
+frame through `DelayTilMilli` at VA `0x004644e7`. The body reads only five
+stack arguments and returns with `ret 0x14`; HoMM1 predates the two palette
+arguments present in the HoMM2 donors.
