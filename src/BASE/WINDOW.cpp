@@ -71,17 +71,17 @@ short heroWindow::Open(short zOrder, signed char flags)
 VA(0x00475020, 0xb0)
 void heroWindow::Close(void)
 {
-    widget *w, *next;
+    widget *current, *next;
     if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0
         && (m_winState & WINDOW_STATE_OPEN) != 0)
         RestoreBackground();
-    w = m_widgetListHead;
-    while (w != 0) {
-        next = w->m_next;
-        RemoveWidget(w);
+    current = m_widgetListHead;
+    while (current != 0) {
+        next = current->m_next;
+        RemoveWidget(current);
         if ((m_winFlags & WINDOW_FLAG_OWNS_WIDGETS) != 0)
-            delete w;
-        w = next;
+            delete current;
+        current = next;
     }
     m_winState = WINDOW_STATE_CLOSED;
 }
@@ -256,31 +256,31 @@ VA(0x00475650, 0x1d4)
 void heroWindow::MoveWindow(short dx, short dy)
 {
     short x = m_posX;
-    short yPrev = m_posY;
-    short oldWidth = m_winWidth;
-    short oldHgt = m_winHeight;
-    short toX = m_posX + dx;
-    short toY = m_posY + dy;
-    if (toX < 0)
-        toX = 0;
-    if (toY < 0)
-        toY = 0;
-    if (toX + m_winWidth > 640)
-        toX = 640 - m_winWidth;
-    if (toY + m_winHeight > 480)
-        toY = 480 - m_winHeight;
+    short y = m_posY;
+    short initialWidth = m_winWidth;
+    short startHeight = m_winHeight;
+    short targetX = m_posX + dx;
+    short targetY = m_posY + dy;
+    if (targetX < 0)
+        targetX = 0;
+    if (targetY < 0)
+        targetY = 0;
+    if (targetX + m_winWidth > 640)
+        targetX = 640 - m_winWidth;
+    if (targetY + m_winHeight > 480)
+        targetY = 480 - m_winHeight;
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
-    m_posX = toX;
-    m_posY = toY;
+    m_posX = targetX;
+    m_posY = targetY;
     m_savedBackground->GrabBitmap(
         gpWindowManager->m_screen, m_posX, m_posY);
     DrawWindow(0);
-    oldWidth += abs(m_posX - x);
-    oldHgt += abs(m_posY - yPrev);
+    initialWidth += abs(m_posX - x);
+    startHeight += abs(m_posY - y);
     if (m_posX < x)
         x = m_posX;
-    if (m_posY < yPrev)
-        yPrev = m_posY;
+    if (m_posY < y)
+        y = m_posY;
     gpWindowManager->UpdateScreenRegion(
-        x, yPrev, oldWidth, oldHgt);
+        x, y, initialWidth, startHeight);
 }
