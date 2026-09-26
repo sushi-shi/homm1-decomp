@@ -32,6 +32,7 @@ VOLATILE_COMPGEN_RE = re.compile(r"\bVA_COMPGEN\([^)]*,\s*_?\$E[0-9]+\s*\)")
 
 CANON = {
     "VA": rf"VA\({ADDR}, {HEXN}\)",
+    "VA_DECL": rf"VA_DECL\({ADDR}\)",
     "DATA": rf"DATA\({ADDR}\)",
     "VA_COMPGEN": rf'VA_COMPGEN\({ADDR}, {HEXN}, "{MANGLED}", {ADDR}\)',
     # the owner charset mirrors the LIVE extraction regex (retail_labels.source
@@ -43,7 +44,7 @@ CANON = {
 }
 CANON_RE = {k: re.compile(v) for k, v in CANON.items()}
 WRAPPABLE = {"VA", "DATA"}   # StatementMacros clang-format arg-wraps past 100
-FIND_RE = re.compile(r"\b(VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(")
+FIND_RE = re.compile(r"\b(VA_COMPGEN|VA_DECL|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(")
 COMMENT_ROW_RE = re.compile(r"@(?:rva|data)-symbol:\s*\S+\s+0x[0-9a-fA-F]+")
 ALLOWED_MARKERS = {"stub", "early-stop", "identity-TODO", "confidence",
                    "source", "interleaver", "dead-code"}

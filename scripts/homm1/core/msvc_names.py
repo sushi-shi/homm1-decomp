@@ -33,6 +33,7 @@ pool slots), and `mask` folds it straight back onto the family.
 from __future__ import annotations
 
 import re
+import hashlib
 
 #: clang's top-level-array storage class, at the mangled storage-class digit.
 ARRAY_STORAGE = re.compile(r"@@([0-9])Q")
@@ -55,7 +56,7 @@ def decorate(name: str) -> str:
 
 def mask(name: str) -> str:
     """`name` with every volatile cl ordinal reduced to its canonical form."""
-    return LOCAL_STATIC_SCOPE.sub(CANONICAL_SCOPE, STATIC_ORDINAL.sub("$S", name))
+    return LOCAL_STATIC_SCOPE.sub(CANONICAL_SCOPE, STATIC_ORDINAL.sub("$S", anonymous_namespaces(name)))
 
 
 def func(name: str, *, decorated: bool = False) -> str:
@@ -89,3 +90,27 @@ def discriminate(name: str, rva: int) -> str | None:
     unique image-wide and `mask` still folds it onto the shared family.
     """
     return f"{name}{rva}" if name.endswith("$S") else None
+
+
+# VC5 encodes a source-file anonymous namespace as ?%<absolute cpp path><nonce>@.
+# Only a namespace declared in a repository .cpp can be identified from this
+# spelling alone. A header path does NOT identify its instantiating TU.
+ANONYMOUS_NAMESPACE = re.compile(r"\?%([^@]+?\.(?:cpp|cxx|cc))([0-9]+)@")
+
+
+def anonymous_namespaces(name: str) -> str:
+    """Stable TU identity for source-file anonymous namespaces, never headers.
+
+    Keep the source path below src/, discarding only the checkout prefix and
+    compiler nonce. Standard MSVC anonymous-namespace syntax carries the hash.
+    This is a comparison/claim spelling; the linker consumes the untouched obj.
+    """
+    def replace(match: re.Match) -> str:
+        path = re.sub(r"/+", "/", match[1].replace("\\", "/"))
+        before, separator, relative = path.rpartition("/src/")
+        if not separator:
+            return match[0]
+        identity = "src/" + relative
+        digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
+        return "?A0x" + digest + "@"
+    return ANONYMOUS_NAMESPACE.sub(replace, name)

@@ -16,7 +16,7 @@ import sys
 
 
 TOOLS = ("wine", "cl", "ml", "link", "rc", "delinker", "pdbutil", "objdiff", "objdump",
-         "clangd", "ghidra")
+         "clangd", "ghidra", "merge_units")
 
 
 def _init(argv: list[str]) -> int:
@@ -108,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__.strip())
         print("\ncommands: init inspect toolchain configure build link match labels "
-              "model delink compare audit sema ghidra verify tool test")
+              "model delink compare audit sema walls permute lsp ghidra verify workflow tool test")
         return 0 if argv else 2
     cmd, rest = argv[0], argv[1:]
     if cmd == "init":
@@ -128,14 +128,82 @@ def main(argv: list[str] | None = None) -> int:
         }[cmd]
         sys.argv = [f"homm1 {cmd}", *rest]
         return importlib.import_module(module).main()
+    if cmd == "workflow":
+        from homm1.workflow import main as workflow_main
+        return workflow_main(rest)
     if cmd == "audit":
         audits = {"dna-bands": "dna_bands", "tooling": "tooling"}
         if not rest or rest[0] not in audits:
             print("homm1 audit: expected " + ", ".join(audits), file=sys.stderr)
             return 2
         return importlib.import_module(f"homm1.audit.{audits[rest[0]]}").main(rest[1:])
-    if cmd in ("sema", "ghidra", "verify"):
+    if cmd in ("sema", "ghidra", "verify", "walls", "lsp"):
         return importlib.import_module(f"homm1.{cmd}").main(rest)
+    if cmd == "permute":
+        if not rest or rest[0] in ("-h", "--help"):
+            print("homm1 permute candidates [options]\n"
+                  "homm1 permute campaign [--rva <rva>] [options]\n"
+                  "homm1 permute state --source <tu.cpp> --rva <rva> [options]\n"
+                  "homm1 permute variants <tu.cpp> <rva> [options]\n"
+                  "  candidates: classify every live source-owned residual\n"
+                  "  campaign: run N islands and retain M distinct best solutions\n"
+                  "  state: classified, disposable compiler-state search\n"
+                  "  variants: reviewed exact axes x AST shapes x TU state")
+            return 0 if rest else 2
+        if rest[0] in ("candidates", "campaign"):
+            from homm1.permute.campaign import main as campaign_main
+            return campaign_main(rest)
+        if rest[0] not in ("state", "variants"):
+            print("homm1 permute: unknown verb " + repr(rest[0])
+                  + " (have: candidates, campaign, state, variants)", file=sys.stderr)
+            return 2
+        verb, permute_args = rest[0], rest[1:]
+        if any(value in ("-h", "--help") for value in permute_args):
+            if verb == "state":
+                from homm1.permute.tu_state_noise import main as permute_main
+            else:
+                from homm1.permute.match_variants import main as permute_main
+            return permute_main(permute_args)
+        rva_arg = (
+            next((
+                permute_args[index + 1]
+                for index, value in enumerate(permute_args[:-1])
+                if value == "--rva"
+            ), None)
+            if verb == "state"
+            else (permute_args[1] if len(permute_args) >= 2 else None)
+        )
+        if rva_arg is None:
+            print(f"homm1 permute {verb}: an RVA is required", file=sys.stderr)
+            return 2
+        from contextlib import redirect_stdout
+        from io import StringIO
+        from homm1.walls.diagnose import diagnose
+        diagnosis = StringIO()
+        with redirect_stdout(diagnosis):
+            result = diagnose(rva_arg)
+        report = diagnosis.getvalue()
+        print(report, end="")
+        if result or "class: REGALLOC/SCHEDULING" not in report:
+            print(f"homm1 permute {verb}: refused - permutation requires a "
+                  "REGALLOC/SCHEDULING diagnosis", file=sys.stderr)
+            return 2
+        from homm1.model import resolve
+        from homm1.verify.baseline import load as load_baseline
+        rva = int(rva_arg, 0)
+        if rva >= 0x400000:
+            rva -= 0x400000
+        binding = next((row for row in resolve().functions if row.rva == rva), None)
+        bank = load_baseline().get((binding.unit.rsplit("/", 1)[-1], binding.name)) if binding else None
+        if bank and bank["hist"] >= 100.0:
+            print(f"homm1 permute {verb}: refused - historical MAX is already "
+                  "100%", file=sys.stderr)
+            return 2
+        if verb == "state":
+            from homm1.permute.tu_state_noise import main as permute_main
+        else:
+            from homm1.permute.match_variants import main as permute_main
+        return permute_main(permute_args)
     if cmd in ("build", "link", "match"):
         from homm1.graph.verbs import VERBS
         return VERBS[cmd](rest)

@@ -37,7 +37,7 @@ VIOLATIONS = BUILD / "gen/violations.tsv"
 
 _PRECEDENCE = ["src", "src_compgen", "src_dyninit", "src_data_compgen",
                "functions_zlib", "data_zlib", "data_vtables", "data_compgen",
-               "data_static_libs", "functions_static_libs"]
+               "data_static_libs", "functions_static_libs", "src_decl"]
 
 #: channels whose claimed size is the exact matched extent (overrides derived,
 #: bounded by it - the overrun check guards the other direction). Every channel
@@ -49,7 +49,8 @@ _SIZE_AUTHORITY = {"src", "src_compgen", "src_dyninit", "src_data_compgen",
 #: census kinds a func claim may bind, per channel
 _FUNC_KINDS = {"src": {"", "helper"}, "src_compgen": {"", "helper"},
                "src_dyninit": {""}, "functions_zlib": {""},
-               "functions_static_libs": {"", "thunk", "helper"}}
+               "functions_static_libs": {"", "thunk", "helper"},
+               "src_decl": {"", "helper"}}
 
 #: census kind a data channel implies (None = any non-bookkeeping kind)
 _DATA_KIND = {"data_vtables": "vtable", "data_zlib": None, "src": None}
@@ -225,6 +226,29 @@ def _disambiguate(data: list[Binding], violations: list[str]) -> list[Binding]:
     return out
 
 
+def decl_conflicts(claims: list[Claim]) -> list[str]:
+    """Violations for label-only declaration claims whose name disagrees with
+    another claim (declaration or definition, any channel) on the same rva.
+
+    A declaration states nothing but a name, so a second spelling is not a
+    tie precedence may break: one of the two is wrong."""
+    names: dict[tuple[str, int], set[str]] = {}
+    decl: set[tuple[str, int]] = set()
+    for c in claims:
+        if not c.name or (c.channel == "src_dyninit"):
+            continue
+        names.setdefault((c.kind, c.rva), set()).add(c.name)
+        if c.channel == "src_decl":
+            decl.add((c.kind, c.rva))
+    out = []
+    for key in sorted(decl):
+        spellings = names[key]
+        if len(spellings) > 1:
+            out.append(f"{key[0]} rva 0x{key[1]:06x} has conflicting names "
+                       f"{sorted(spellings)} (a VA_DECL declaration disagrees)")
+    return out
+
+
 def _data_expected_kind(claim: Claim) -> str | None:
     if claim.channel == "data_compgen":
         return claim.meta.get("class")            # 'common' | 'copy'
@@ -303,6 +327,7 @@ def resolve() -> Model:
                 also.remove(owner)
                 also.append(c.unit)
                 merged[key] = c._replace(unit=owner)
+    violations.extend(decl_conflicts(list(merged.values())))
     per_rva: dict[tuple[str, int], list[Claim]] = {}
     for c in merged.values():
         per_rva.setdefault((c.kind, c.rva), []).append(c)
@@ -322,6 +347,8 @@ def resolve() -> Model:
         if win.channel == "src_dyninit":
             rest = [win] + list(rest)          # keep the owner pin visible
             win = win._replace(name="")
+        elif win.channel == "src_decl":
+            win = win._replace(unit="", meta={})
         allowed = _FUNC_KINDS.get(win.channel, {""})
         if row["kind"] not in allowed:
             violations.append(

@@ -21,7 +21,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from homm1.core.paths import BUILD, INCLUDE, VENDOR
+from homm1.core.paths import BUILD, INCLUDE, VENDOR, REPO
 
 COMPDB = BUILD / "clangd/compile_commands.json"
 
@@ -160,3 +160,69 @@ def var_facts(tu: str, cl_flags: list[str] | None) -> dict[str, dict] | None:
     for name in conflicts:
         facts.pop(name, None)
     return facts
+
+
+def annotated_decls(tu: str, cl_flags: list[str] | None) -> list[dict] | None:
+    """Every annotated function/variable declaration the TU sees in a repo
+    file (the TU itself or a project header), one record per redeclaration:
+    {'kind': 'func'|'var', 'name': libclang's mangled name, 'annotations':
+    [str], 'defined': bool, 'file': realpath, 'internal': bool}.
+
+    A clang annotation on a declaration never reaches IR, so the declaration
+    channel (`RVA_DECL`) reads it here. Only namespace/record/linkage scopes
+    are descended (never a function body), and a cursor outside the repo
+    (SDK, CRT) is skipped before its children are read. None when pylibclang
+    could not parse cleanly."""
+    try:
+        import clang.cindex as cidx
+    except ImportError:
+        return None
+    args = (["--driver-mode=cl", "/DHOMM1_EMIT_META", *cl_flags, *inc_cl()]
+            if cl_flags is not None
+            else ["-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc()])
+    try:
+        parsed = cidx.Index.create().parse(tu, args=args)
+    except cidx.LibclangError:
+        return None
+    if any(d.severity >= cidx.Diagnostic.Error for d in parsed.diagnostics):
+        return None
+    K = cidx.CursorKind
+    scopes = {K.NAMESPACE, K.CLASS_DECL, K.STRUCT_DECL, K.UNION_DECL,
+              K.LINKAGE_SPEC, K.UNEXPOSED_DECL}
+    funcs = {K.FUNCTION_DECL, K.CXX_METHOD, K.CONSTRUCTOR, K.DESTRUCTOR}
+    repo = os.path.realpath(REPO) + os.sep
+    real: dict[str, str] = {}
+    out: list[dict] = []
+
+    def in_repo(cursor) -> str | None:
+        f = cursor.location.file
+        if f is None:
+            return None
+        path = real.get(f.name)
+        if path is None:
+            path = real[f.name] = os.path.realpath(f.name)
+        return path if path.startswith(repo) else None
+
+    def visit(parent):
+        for cursor in parent.get_children():
+            if cursor.kind in scopes:
+                visit(cursor)
+                continue
+            if cursor.kind not in funcs and cursor.kind != K.VAR_DECL:
+                continue
+            path = in_repo(cursor)
+            if path is None:
+                continue
+            anns = [c.spelling for c in cursor.get_children()
+                    if c.kind == K.ANNOTATE_ATTR]
+            if not anns:
+                continue
+            out.append({"kind": "func" if cursor.kind in funcs else "var",
+                        "name": cursor.mangled_name,
+                        "annotations": anns,
+                        "defined": cursor.is_definition(),
+                        "file": path,
+                        "internal": cursor.linkage != cidx.LinkageKind.EXTERNAL})
+
+    visit(parsed.cursor)
+    return out

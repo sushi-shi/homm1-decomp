@@ -71,7 +71,8 @@ def ninja(targets: list[str] = (), *, jobs: int | None = None,
     if keep_going:
         argv += ["-k", "0"]
     argv += [*extra, *targets]
-    return subprocess.run(argv, cwd=REPO).returncode
+    from homm1.core.usage import run_process
+    return run_process(argv, cwd=REPO)
 
 
 def object_census() -> dict[str, str]:
@@ -79,8 +80,8 @@ def object_census() -> dict[str, str]:
     base = REPO / graph.BASE_DIR
     if not base.is_dir():
         return {}
-    return {p.stem: hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sorted(base.glob("*.obj"))}
+    return {p.relative_to(base).with_suffix("").as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(base.rglob("*.obj"))}
 
 
 def changed_units(before: dict[str, str], after: dict[str, str]) -> list[str]:
@@ -106,7 +107,39 @@ def build_main(argv: list[str] | None = None) -> int:
     configure_if_needed(a.reconfigure)
     if a.force_delink:
         (REPO / graph.DELINK_STAMP).unlink(missing_ok=True)
-    return ninja(a.targets, jobs=a.jobs, verbose=a.verbose)
+    rc = ninja(a.targets, jobs=a.jobs, verbose=a.verbose)
+    if rc == 0:
+        print_data_debt()
+    return rc
+
+
+def print_data_debt() -> None:
+    """The two data-debt counts, every build, in both modes.
+
+    `unprovisioned` is the delink worklist (build/gen/data_debt.tsv, derived by
+    homm1.delink.pdb_synth); `placeholder externs` is the source-side closure
+    (homm1.verify.undefined_closure). Strict mode fails on either; relaxed
+    mode lists them, and this line keeps them from going unseen."""
+    from homm1.core import data_matching
+    from homm1.core.tsv import read as read_tsv
+    from homm1.delink.pdb_synth import DATA_DEBT
+    from homm1.verify import undefined_closure
+    try:
+        unprovisioned = len(read_tsv(DATA_DEBT)[2])
+    except (OSError, ValueError):
+        unprovisioned = None
+    try:
+        externs = len(undefined_closure.placeholder_externs())
+    except (OSError, ValueError, SystemExit):
+        externs = None
+
+    def shown(n):
+        return "?" if n is None else str(n)
+    print(f"[homm1 build] data debt ({data_matching.label()}): "
+          f"{shown(unprovisioned)} unprovisioned identit(ies) "
+          f"({DATA_DEBT.relative_to(REPO)}), {shown(externs)} placeholder "
+          f"extern(s) (`homm1 verify undefined-closure --list`)")
+
 
 
 # --------------------------------------------------------------------------- #
@@ -199,10 +232,174 @@ def print_changed(report: dict, units: list[str], *, functions: bool = True,
           f"units {m.get('total_units', 0)}")
 
 
+def resolve_units(specs: list[str]) -> list[str]:
+    """Unit stems from stems or source paths (`fader`, `src/DDrawMgr/Fader.cpp`)."""
+    from homm1.manifest import units as manifest_units
+    rows = manifest_units()
+    by_stem = {u["unit"]: u for u in rows}
+    by_source = {str(Path(u["source"])): u["unit"] for u in rows}
+    out = []
+    for spec in specs:
+        if spec in by_stem:
+            out.append(spec)
+            continue
+        path = Path(spec)
+        if path.is_absolute():
+            try:
+                path = path.resolve().relative_to(REPO)
+            except ValueError:
+                pass
+        unit = by_source.get(str(path))
+        if unit is None:
+            raise SystemExit(f"homm1 match: {spec!r} is not a unit stem or a "
+                             "unit source in config/units.toml")
+        out.append(unit)
+    return list(dict.fromkeys(out))
+
+
+def match_units(units: list[str], *, jobs: int | None, verbose: bool) -> int:
+    """The fast loop: compile, label, delink, and compare only `units`.
+
+    Every other unit keeps its last-built objects, claims, and scores, even
+    when an edited header would change them; `homm1 build` refreshes them.
+    No fingerprints, no gates.
+    """
+    import time
+
+    from homm1.compare import normalize, project
+    from homm1.delink import run as delink
+    from homm1.manifest import units as manifest_units
+    from homm1.model import resolve, serialize
+    from homm1.tool import objdiff
+    from homm1.verify import scores
+
+    started = time.monotonic()
+    report_path = REPO / graph.REPORT_JSON
+    before = scores.functions(scores.load(report_path)) if report_path.exists() else {}
+
+    targets = [f"{graph.BASE_DIR}/{u}.obj" for u in units]
+    targets += [f"{graph.CLAIMS_DIR}/{u}.tsv" for u in units]
+    rc = ninja(targets, jobs=jobs, verbose=verbose)
+    if rc:
+        return rc
+
+    model = resolve()
+    bindings_changed, _ = serialize(model)
+    target_dir = REPO / graph.TARGET_DIR
+    missing = [u for u in units if not (target_dir / f"{u}.c.obj").exists()]
+    if bindings_changed or missing:
+        delink.run(model, target_dir=target_dir,
+                   only=None if bindings_changed else units)
+    project.project(manifest_units(), target_dir, REPO / graph.COMPARE_DIR)
+    normalize.normalize(REPO / graph.BASE_DIR, target_dir,
+                        REPO / graph.COMPARE_DIR, units,
+                        stamp=REPO / "build/match/normalize.stamp")
+    objdiff.report(REPO / graph.COMPARE_DIR, report_path)
+
+    after = scores.functions(scores.load(report_path))
+    print_unit_functions(units, before, after)
+    print(f"\n[match] {', '.join(units)} in {time.monotonic() - started:.1f}s"
+          + (" (labels changed: delinked)" if bindings_changed else ""))
+    return 0
+
+
+def print_unit_functions(units: list[str], before: dict, after: dict) -> None:
+    """MAX movement only. An unchanged function keeps its banked MAX, so a CUR
+    dip is noise and stays silent; it is listed only when it rises above MAX.
+    An edited function's MAX becomes its new score, so it is listed with the
+    MAX it replaces: `drop` when the edit moved its CUR down, `reset` when CUR
+    held and only the new source hash lowered MAX (HIST keeps the old peak)."""
+    from contextlib import redirect_stdout
+    from io import StringIO
+
+    from homm1.verify import baseline
+    from homm1.verify.baseline import EPS
+    from homm1.verify.fingerprints import fingerprinter, real_edit, regenerate
+    with redirect_stdout(StringIO()):
+        regenerate()
+    fp, _cpp_of, _stale = fingerprinter()
+    bank = baseline.load()
+    mismatch = baseline.mode_mismatch()
+    if mismatch:
+        print(f"WARNING: MAX comparisons below are meaningless - {mismatch}")
+    resets = []
+    for unit in units:
+        score_unit = unit.rsplit("/", 1)[-1]
+        rows = sorted((name, pct) for (u, name), pct in after.items() if u == score_unit)
+        if not rows:
+            print(f"\n{unit}: no paired functions in the report")
+            continue
+        shown, at_max = [], 0
+        for name, pct in rows:
+            row = bank.get((score_unit, name))
+            if row is None:
+                shown.append((pct, None, name, "new"))
+                at_max += pct >= 100.0
+                continue
+            edited = real_edit(row["fp"], fp(score_unit, name))
+            new_max = pct if edited else max(row["best"], pct)
+            at_max += new_max >= 100.0
+            was = before.get((score_unit, name))
+            if edited and pct > row["best"] + EPS:
+                shown.append((pct, row["best"], name, "up"))
+            elif edited and row["best"] - pct > EPS:
+                held = was is not None and abs(pct - was) <= EPS
+                if held:
+                    resets.append((row.get("addr"), unit, name, row["best"], pct))
+                shown.append((pct, row["best"], name,
+                              "reset: CUR held, recorded for syntactic recovery"
+                              if held else "drop"))
+            elif edited and pct < 100.0:
+                shown.append((pct, row["best"], name, "edited"))
+            elif not edited and pct > row["best"] + EPS:
+                shown.append((pct, row["best"], name, "up"))
+        print(f"\n{unit}: {at_max}/{len(rows)} at MAX 100")
+        if not shown:
+            print("  no MAX change")
+            continue
+        print(f"  {'now':>8} {'max':>8}  function  [kind]")
+        for pct, best, name, kind in sorted(shown, key=lambda r: (r[0], r[2])):
+            print(f"  {pct:8.2f} {'' if best is None else f'{best:8.2f}':>8}  "
+                  f"{name}  [{kind}]")
+    record_resets(resets)
+
+
+#: Functions whose MAX an edit lowered while their CUR held: a later
+#: fuzzy syntactic recovery pass looks for a spelling that regains the peak.
+RECOVERY_TODO = REPO / "build/match/syntactic-recovery.tsv"
+
+
+def record_resets(resets: list) -> None:
+    """Add or update one row per reset function, keeping the highest lost MAX."""
+    if not resets:
+        return
+    header = "rva\tunit\tfunction\tlost_max\tcur\n"
+    rows: dict[tuple[str, str], list[str]] = {}
+    if RECOVERY_TODO.exists():
+        for line in RECOVERY_TODO.read_text().splitlines()[1:]:
+            cols = line.split("\t")
+            if len(cols) == 5:
+                rows[(cols[1], cols[2])] = cols
+    for addr, unit, name, lost_max, pct in resets:
+        old = rows.get((unit, name))
+        peak = max(lost_max, float(old[3])) if old else lost_max
+        rows[(unit, name)] = ["" if addr is None else f"0x{addr:06x}", unit,
+                              name, f"{peak:.4f}", f"{pct:.4f}"]
+    text = header + "".join("\t".join(r) + "\n" for r in sorted(
+        rows.values(), key=lambda r: (r[1], r[2])))
+    if not RECOVERY_TODO.exists() or RECOVERY_TODO.read_text() != text:
+        RECOVERY_TODO.parent.mkdir(parents=True, exist_ok=True)
+        RECOVERY_TODO.write_text(text)
+
+
 def match_main(argv: list[str] | None = None) -> int:
-    """Build, then print the compare summary for the units that changed."""
+    """Fast loop for named units; with none, build everything and summarise
+    the units whose objects changed."""
     import argparse
     ap = argparse.ArgumentParser(prog="homm1 match", description=match_main.__doc__)
+    ap.add_argument("units", nargs="*",
+                    help="unit stems or source paths: compile, delink and "
+                         "compare only these")
     ap.add_argument("-j", "--jobs", type=int)
     ap.add_argument("-v", "--verbose", action="store_true")
     ap.add_argument("--reference", type=Path,
@@ -219,8 +416,16 @@ def match_main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
 
     configure_if_needed()
+    if a.units:
+        return match_units(resolve_units(a.units), jobs=a.jobs, verbose=a.verbose)
+
+    from homm1.verify import scores
+    report_path = REPO / graph.REPORT_JSON
+    before_scores = (scores.functions(scores.load(report_path))
+                     if report_path.exists() else {})
     before = object_census()
-    rc = ninja(jobs=a.jobs, verbose=a.verbose, keep_going=a.keep_going)
+    rc = ninja(["compare"], jobs=a.jobs, verbose=a.verbose,
+               keep_going=a.keep_going)
     if rc and not a.keep_going:
         return rc
     after = object_census()
@@ -244,8 +449,11 @@ def match_main(argv: list[str] | None = None) -> int:
              if changed else " (nothing rebuilt)"))
     if a.all or not changed:
         print_summary(report, all_units=False)
+    elif a.functions:
+        print_unit_functions(changed, before_scores,
+                             scores.functions(scores.load(report_path)))
     else:
-        print_changed(report, changed, functions=a.functions)
+        print_changed(report, changed, functions=False)
     if a.reference is not None:
         try:
             reference = objdiff.load(a.reference)

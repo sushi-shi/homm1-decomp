@@ -5,9 +5,14 @@ the name is only our label for it, and labels get reassigned (a fold renames a
 method, a COMDAT re-home moves it between units). The Model
 (homm1.model.resolve) is the one rva/unit/name join - no label re-joins here.
 
-Bucket doctrine (ported):
-  * BELOW-BEST IS TESTED FIRST - an edited function's drop below its own
-    high-water is still a REGRESS; TOUCHED means "edited and NOT below best".
+Bucket doctrine:
+  * MAX (`best`) belongs to a function's own source hash, so only an EDIT can
+    lower it. Below best, an EDITED function whose CUR moved down is a
+    REGRESS (its new MAX is lower); an edited function whose CUR held is a
+    RESET (the new hash lowered MAX, the code did not move); an UNEDITED
+    function is a DIP (TU-wide codegen perturbation, MAX held). Only REGRESS
+    gates. An unknown edit (a fallback fingerprint that changed) is treated
+    as an edit. TOUCHED means "edited and NOT below best".
   * a vanished (unit, fn) whose rva is scored under a new key is MOVED (cross
     unit) or RENAMED (in place), gated against the same body's best there.
   * a vanished row whose rva is no longer scored at all is LOST - unless its
@@ -21,7 +26,7 @@ Bucket doctrine (ported):
 from __future__ import annotations
 
 from homm1.verify.baseline import EPS, below_best
-from homm1.verify.fingerprints import real_edit
+from homm1.verify.fingerprints import is_fallback, real_edit
 
 
 def model_rvas() -> dict[tuple[str, str], int]:
@@ -30,10 +35,6 @@ def model_rvas() -> dict[tuple[str, str], int]:
     out: dict[tuple[str, str], int] = {}
     for b in resolve().functions:
         if b.name and b.unit:
-            # objdiff reports the object basename even when config keeps the
-            # donor directory (SOURCE/KB). Use the same identity convention as
-            # scores.functions; duplicate basenames are rejected by the model's
-            # unique-name/TU gates rather than guessed here.
             out.setdefault((b.unit.rsplit("/", 1)[-1], b.name), b.rva)
     return out
 
@@ -107,9 +108,19 @@ def classify(cur: dict, base_funcs: dict, fp, rvas: dict):
         if old_key is not None:          # informational; the gating is below
             yield ("MOVED" if old_key[0] != unit else "RENAMED",
                    unit, fn, pct, prev["best"])
-        if below_best(pct, prev["best"]):  # BELOW-BEST FIRST
-            yield ("REGRESS", unit, fn, pct, prev["best"])
-        elif real_edit(prev["fp"], fp(*key)):
+        cur_fp = fp(*key)
+        edited = real_edit(prev["fp"], cur_fp) or (
+            (is_fallback(prev["fp"]) or is_fallback(cur_fp))
+            and prev["fp"] != cur_fp)
+        if below_best(pct, prev["best"]):
+            if not edited:
+                kind = "DIP"
+            elif abs(pct - prev["cur"]) <= EPS:
+                kind = "RESET"
+            else:
+                kind = "REGRESS"
+            yield (kind, unit, fn, pct, prev["best"])
+        elif edited:
             yield ("TOUCHED", unit, fn, pct, prev["best"])
         elif pct > prev["best"] + EPS:
             yield ("IMPROVE", unit, fn, pct, prev["best"])

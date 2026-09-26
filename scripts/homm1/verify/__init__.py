@@ -46,13 +46,17 @@ maps), which is derived and regenerated.
 
 from __future__ import annotations
 
-_SUBS = ("status", "check", "bank", "fingerprints")
+_SUBS = ("selftest", "status", "check", "bank", "readme", "fingerprints")
 
 #: the ported gate/audit modules, runnable as `homm1 verify <name>`. MOST are
 #: also a tier member of `check --tier` (homm1.verify.tiers); the ones in
 #: _QUERY_ONLY below are read-only oracles no tier runs - they answer a
 #: question, they do not return findings.
-_GATES = {"board": "homm1.verify.board", "bans": "homm1.verify.bans",
+_GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.verify.enum_reuse",
+          "claim-size": "homm1.verify.claim_size",
+          "source-encoding": "homm1.verify.source_encoding",
+          "review-claims": "homm1.walls.recheck",
+          "board": "homm1.verify.board", "bans": "homm1.verify.bans",
           "casts": "homm1.verify.casts",
           "compiler-artifacts": "homm1.verify.compiler_artifacts",
           "constants": "homm1.verify.constants",
@@ -85,7 +89,7 @@ _QUERY_ONLY = ("layout", "library-data-refs", "vtable-scan")
 
 #: Audits that are deliberately explicit because they parse the whole source
 #: tree and are not part of a normal build tier.
-_STANDALONE = ("constants",)
+_STANDALONE = ("constants", "enum-reuse", "claim-size", "source-encoding", "review-claims")
 
 #: tier label -> verb, where the two spellings differ. homm1.verify.tiers
 #: labels the bans row `vtable-bans` (so do docs/tooling-map.md and every
@@ -132,6 +136,9 @@ def main(argv=None) -> int:
               f"the names listed above", file=sys.stderr)
         return 2
     sub, rest = argv[0], argv[1:]
+    if sub == "selftest":
+        from homm1.verify.selftest import main as selftest_main
+        return selftest_main(rest)
     if sub == "fingerprints":
         from homm1.verify.fingerprints import main as fp_main
         return fp_main(rest)
@@ -142,5 +149,5 @@ def main(argv=None) -> int:
         return mod.main(rest)
     from homm1.verify import verbs
     sys.argv = [f"homm1 verify {sub}", *rest]
-    return {"status": verbs.cmd_status, "check": verbs.cmd_check,
+    return {"status": verbs.cmd_status, "check": verbs.cmd_check, "readme": verbs.cmd_readme,
             "bank": verbs.cmd_bank}[sub](rest)

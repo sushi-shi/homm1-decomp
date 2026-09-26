@@ -1,2 +1,4 @@
 vendor/lzhuf/upstream/jnos-1.11f-lzhuf.c -text -diff
 config/retail/data.tsv whitespace=-blank-at-eol
+config/match_baseline.tsv whitespace=-blank-at-eol
+config/units.toml merge=units

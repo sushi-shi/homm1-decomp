@@ -94,6 +94,7 @@ class Group:
     states: int = 0             # its maxState == the unwind map's entry count
     packed: bool = False        # its unwind map begins at funcinfo + FUNCINFO_SIZE
     simple: bool = False        # ... and it has no try-block / ip-to-state map
+    inline: bool = False        # VC4 cleanup/stub precede the owner's restoring epilog
 
     @property
     def start(self) -> int:
@@ -109,6 +110,31 @@ class Group:
         if not (self.packed and self.simple) or self.states <= 0:
             return 0
         return FUNCINFO_SIZE + UNWIND_ENTRY_SIZE * self.states
+
+
+def inline_epilog(tail: bytes) -> bool:
+    """Prove the VC4 owner continuation after an inline registration stub.
+
+    A saved frame-chain load and matching fs:[0] restoration, register pops,
+    leave and ret distinguish it from a packed out-of-line COMDAT tail.
+    Nothing before or after an unsupported shape is discarded.
+    """
+    if len(tail) < 14 or tail[0] != 0x8b or tail[1] & 0xc7 != 0x45:
+        return False
+    register = (tail[1] >> 3) & 7
+    restore = b"\x64\xa3\x00\x00\x00\x00" if register == 0 else (
+        bytes((0x64, 0x89, 0x05 | (register << 3))) + bytes(4))
+    prefix = tail[:3] + restore + b"\x5f\x5e\x5b\xc9"
+    if not tail.startswith(prefix):
+        return False
+    end = len(prefix)
+    if tail[end:end + 1] == b"\xc3":
+        end += 1
+    elif tail[end:end + 1] == b"\xc2" and len(tail) >= end + 3:
+        end += 3
+    else:
+        return False
+    return all(byte in (0x90, 0xcc) for byte in tail[end:])
 
 
 class _Image:
@@ -213,10 +239,17 @@ def groups(exe: Path, names_map: dict[int, tuple]) -> list[Group]:
                 # A funclet at or past the registration stub would make the
                 # group non-contiguous; refuse to guess an extent for it.
                 continue
+            start = min(addresses) if addresses else stub
+            inside = rva <= start and stub + STUB_SIZE <= rva + size
+            continuation = body[stub + STUB_SIZE - rva:] if inside else b""
+            inline = inside and inline_epilog(continuation)
+            if inside and continuation and not inline and any(
+                    byte not in (0x90, 0xcc) for byte in continuation):
+                raise ValueError(f"unrecognized inline EH continuation in {name}")
             found[stub] = Group(owner_rva=rva, owner=name, unit=unit,
                                 funclets=tuple(sorted(addresses)), stub=stub,
                                 funcinfo=funcinfo, states=states,
-                                packed=packed, simple=simple)
+                                packed=packed, simple=simple, inline=inline)
     ordered = sorted(found.values(), key=lambda g: g.start)
     for previous, current in zip(ordered, ordered[1:]):
         if current.start < previous.end:
@@ -230,6 +263,8 @@ def records(band: list[Group]) -> list[tuple[int, str, str, int]]:
     """``(rva, symbol, unit, size)`` rows for pdb_synth's names_map overlay."""
     out = []
     for group in band:
+        if group.inline:
+            continue
         bounds = list(group.funclets) + [group.stub]
         for index, start in enumerate(group.funclets):
             out.append((start, unwind_symbol(group.owner, index), group.unit,

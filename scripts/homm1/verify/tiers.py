@@ -62,6 +62,8 @@ def _include_order():
         out.append(f"header missing prelude {rel}: {', '.join(w)}")
     for rel in unordered:
         out.append(f"include block out of canonical order: {rel}")
+    for edge in include_order.layering_violations():
+        out.append(f"library header includes a consumer: {edge}")
     return out
 
 
@@ -91,6 +93,16 @@ def _data_tu_order():
 def _undefined_closure():
     from homm1.verify import undefined_closure
     return undefined_closure.gate_findings()
+
+
+def _data_identity():
+    from homm1.verify import data_identity
+    return data_identity.gate_findings()
+
+
+def _review_claims():
+    from homm1.walls import recheck
+    return recheck.gate_findings()
 
 
 def _dead_code():
@@ -154,6 +166,8 @@ TIERS: dict[str, list[tuple[str, object]]] = {
         ("tu-order", _tu_order),
         ("dead-code", _dead_code),
         ("undefined-closure", _undefined_closure),
+        ("data-identity", _data_identity),
+        ("review-claims", _review_claims),
     ],
     "full": [
         ("assert-relocs", _assert_relocs),

@@ -102,7 +102,10 @@
 
       python = pkgs.python3.withPackages (ps: [ ps.capstone ps.libclang ]);
       homm1-cli = pkgs.writeShellScriptBin "homm1" ''
-        project_dir="''${HOMM1_DIR:-$PWD}"
+        project_dir="''${HOMM1_DIR:-}"
+        if [ -z "$project_dir" ]; then
+          project_dir="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+        fi
         exec ${python}/bin/python3 "$project_dir/homm1" "$@"
       '';
       commonTools = with pkgs; [
@@ -110,10 +113,20 @@
         ripgrep file jq p7zip vostok-delinker objdiff objdiff-cli
       ];
       commonHook = ''
-        export HOMM1_DIR="$PWD"
+        export HOMM1_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
         export PYTHONPATH="$HOMM1_DIR/scripts''${PYTHONPATH:+:$PYTHONPATH}"
         export MSVC_DIR="$HOMM1_DIR/build/toolchains/vc40"
         export PYTHONDONTWRITEBYTECODE=1
+        if [ -z "''${HOMM1_NVIM_WRAPPED:-}" ] && command -v nvim >/dev/null 2>&1; then
+          homm1_nvim_real="$(command -v nvim)"
+          homm1_nvim_bin="$HOMM1_DIR/build/nvim-shim"
+          mkdir -p "$homm1_nvim_bin"
+          printf '#!/bin/sh\nexec "%s" --cmd "set rtp^=%s/editor/nvim" "$@"\n' \
+            "$homm1_nvim_real" "$HOMM1_DIR" > "$homm1_nvim_bin/nvim"
+          chmod +x "$homm1_nvim_bin/nvim"
+          export PATH="$homm1_nvim_bin:$PATH"
+          export HOMM1_NVIM_WRAPPED=1
+        fi
       '';
     in {
       packages.${system} = {
@@ -121,7 +134,7 @@
         default = vostok-delinker;
       };
       checks.${system}.tooling = pkgs.runCommand "homm1-tooling-tests" {
-        nativeBuildInputs = [ python pkgs.llvmPackages.clang-unwrapped ];
+        nativeBuildInputs = [ python pkgs.git pkgs.llvmPackages.clang-unwrapped ];
       } ''
         cp -r ${./.} source
         chmod -R u+w source

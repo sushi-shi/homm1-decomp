@@ -1,0 +1,4 @@
+# Scores in different modes are not comparable; the MAX ledger records its mode.
+# Code first, data later: use the pinned Giten campaign's current mode.
+[compare]
+data_matching = false

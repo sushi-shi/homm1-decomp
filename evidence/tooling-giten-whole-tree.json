@@ -1,0 +1,3403 @@
+{
+  "donor": "giten",
+  "revision": "39384dc6726478357b5efd42c66522781e8310fe",
+  "scope": "every tracked donor path; content presence is not behavioral parity",
+  "counts": {
+    "adapted": 1,
+    "adapted_review_required": 225,
+    "deferred": 4,
+    "inapplicable": 4,
+    "retained": 7,
+    "target_specific": 285
+  },
+  "files": [
+    {
+      "path": ".agents/skills/holista/SKILL.md",
+      "donor_sha256": "7882c858286276c4199dcbeece2dc0202f44435643618b11ce9f38cb66e57e36",
+      "destination": ".agents/skills/holista/SKILL.md",
+      "local_sha256": "0086249ad3861188f838dd9d62886dda7c36a3565dd6578e6598fd50ca87d756",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".agents/skills/holista/agents/openai.yaml",
+      "donor_sha256": "14200d8c63641fd58e984a44a3edb29a90d8355ac61a65b0a47d34cc7186282c",
+      "destination": ".agents/skills/holista/agents/openai.yaml",
+      "local_sha256": "0013355c5807e2838500d1b05d0169238018141208f91c4a87f9d5e622fc024c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".agents/skills/matcher/SKILL.md",
+      "donor_sha256": "605e2344a6f9a13e8214ab2fcd4784b80019cf559c31088afaa02b132ecc44be",
+      "destination": ".agents/skills/matcher/SKILL.md",
+      "local_sha256": "1e4d512540ecf78bc62eafe14d7e988a0c502804f27b8cb992f9664efd92cbac",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".agents/skills/matcher/agents/openai.yaml",
+      "donor_sha256": "00811e2c0d2991450a8b0fd39fcecbc561cb7bb3266b2cc4f92977a1a1db5caf",
+      "destination": ".agents/skills/matcher/agents/openai.yaml",
+      "local_sha256": "c238cd8c9cdb0200802c68a68002ae3a966dc768ded184dbdb993fbf2eff27e1",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".agents/skills/matcher/references/levers.md",
+      "donor_sha256": "d0daecdc964d6193665084a6df79f2372e4a44e7ca3e288c73fa0b5dba3eeec3",
+      "destination": ".agents/skills/matcher/references/levers.md",
+      "local_sha256": "69780eaa625d2c3e329fc11a77ee449099b996cd2d9a1d405bbf6df0f6a766bb",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".agents/skills/permute/SKILL.md",
+      "donor_sha256": "1ca0b8c96ef29dd5a077f8baaa78832077e0b9eac0199c652b1370b2a7581f7b",
+      "destination": ".agents/skills/permute/SKILL.md",
+      "local_sha256": "b49735e2ef90038ecec435455a17cbcbb776c60866cbdcbf42f1d54def2d646c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".agents/skills/permute/agents/openai.yaml",
+      "donor_sha256": "36b301bbe40dd48a2baaebdb65bc7964c71445e62f348efda3627de6346fe84e",
+      "destination": ".agents/skills/permute/agents/openai.yaml",
+      "local_sha256": "0226f3464fc54b4c8cf2a769f22eafae6e305a9b64875297b407cbf5c019f69b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".agents/skills/wall-identifier/SKILL.md",
+      "donor_sha256": "7c43ebb7696cf60c5c396d8505078d29fcff3672b05224ae99587176952c49f7",
+      "destination": ".agents/skills/wall-identifier/SKILL.md",
+      "local_sha256": "17778431a38eac8a8f1dd01dc683c118cd06b0a408fcfcc9b09d7219397c3158",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".clang-format",
+      "donor_sha256": "26067dd92245d4e80cc1688c70043fb3c83ad2c87674595553210444d7ac6b37",
+      "destination": ".clang-format",
+      "local_sha256": "f03ec2fc8e4e03e1fc6d2fd49d220050c00d4521fc9b5b3c5343450d372c8ffc",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".clangd",
+      "donor_sha256": "db7b15eaefa50aa62a67ee98e45ec163faaada7d78b505c440e0b3da65ae8152",
+      "destination": ".clangd",
+      "local_sha256": "c30eff5a5708831773f3381651bcf944ba3b41a61e44a43bbea87dbef065f020",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".claude/agents/matcher.md",
+      "donor_sha256": "bf6a9f87350fbb08909f0d2dad52c62f6326a91e77a11fb011fcfb526d1f2a0d",
+      "destination": ".claude/agents/matcher.md",
+      "local_sha256": "7a76354b0585bacd93790c9b32d2090344697e2ad1cc01f72a21e0dc7b32398b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".claude/skills",
+      "donor_sha256": "3c74c93317f015d16370349a76529b6f8332c808bdd589e7640eeba6a1b1b874",
+      "destination": ".claude/skills",
+      "local_sha256": "3c74c93317f015d16370349a76529b6f8332c808bdd589e7640eeba6a1b1b874",
+      "status": "retained"
+    },
+    {
+      "path": ".gitattributes",
+      "donor_sha256": "0db6ce9b416641edaaef2f31ab9133ac505c19dc8d87d714deb354e11a3caf4f",
+      "destination": ".gitattributes",
+      "local_sha256": "7889b927d9983c33e135f9957eaff064b1f9931da33a4180563a528f86cc32f2",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".githooks/pre-commit",
+      "donor_sha256": "4313de7b8aa0e092dd0ddea72b59e6901d51c8b460dbbc30001df52744f03a26",
+      "destination": ".githooks/pre-commit",
+      "local_sha256": "82cefc06cc2dc7c0481cb38f86b0f8f9522dc6338d1c2349ebec9a8f2a27508d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": ".gitignore",
+      "donor_sha256": "ed821683d0e001f0274adb8920ab6d999305f1e85c8276bb4c770021af190fb5",
+      "destination": ".gitignore",
+      "local_sha256": "8df09ab84ad14a1e1b251701f62ef87dc70ee0c88ec43dd300e292edefbe8c8a",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "AGENTS.md",
+      "donor_sha256": "6fa8b04c703ead0bb22afcb11936e03e54748ffed15d0173ae5cef106d9c1a4c",
+      "destination": "AGENTS.md",
+      "local_sha256": "2b23bce1c2de552e6b4d9d6b0d9cb17ba68c28c045b6e00c18aeb31efd2026a8",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "CLAUDE.md",
+      "donor_sha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
+      "destination": "CLAUDE.md",
+      "local_sha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
+      "status": "retained"
+    },
+    {
+      "path": "LICENSE",
+      "donor_sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+      "destination": "LICENSE",
+      "local_sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+      "status": "retained"
+    },
+    {
+      "path": "README.md",
+      "donor_sha256": "ebb814482478cc2f69c21c5a40e148158f569ac31ff9ae94ee2d136717cd8349",
+      "destination": "README.md",
+      "local_sha256": "7d45b014a2053715cc54fc5b8c1968a8609fa1351d82a70fa6328114ef792175",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "config/README.md",
+      "donor_sha256": "5d3ed3e52d0e2898d38491b327335cec2e5ac028df5f1845a516677c1f90381f",
+      "destination": "config/README.md",
+      "local_sha256": "46b46ca82c7acbec981bf5dcf05f2f4746522a9a005b3abdc7c465428635d383",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "config/cleanliness/bare-constants-baseline.tsv",
+      "donor_sha256": "1f091a6e7a457a5b394999f7f001fdabf996a0a05a6da7af590087dde9bc9266",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/cleanliness-semantic-baseline.tsv",
+      "donor_sha256": "96702654e8bd283df8f2b90022fde7c10519dd4c36d19f56add3a805ce1db715",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/cleanliness-text-baseline.tsv",
+      "donor_sha256": "af6d475730dc51e8993d135c0fed15b5fde7777dc0169b82f67ca200cd14a0d9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/compgen-pin-unemitted.tsv",
+      "donor_sha256": "493c8ebd1fb910a0f9202a2a027660a372e6182b3165ec2a8257f585a14be9df",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/data-integrity-ratchet.tsv",
+      "donor_sha256": "76b81f3c8294144abeda9e9fd52e4d6a19df19a3ea9d384f5567cd045a5813d8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/data-tu-order-baseline.tsv",
+      "donor_sha256": "3972013e3db2e0c6c9ed633d9760436461688fd6edfb0d6c4df2afde22dd5e29",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/kept-comdat-exiles.tsv",
+      "donor_sha256": "cbcdbdf1479ad7a52fca99c5437c83e95dc58ee62dff070eb1a6334527d97948",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/single-view-baseline.tsv",
+      "donor_sha256": "24d24ec1c2883d317488464c28e5fbf2e90f4b8d661f4010fe4c06f3e80baa9b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/cleanliness/tu-order-baseline.tsv",
+      "donor_sha256": "b5ffcf184bde499480f08506c6f99d7e18d282b8af359eab670e6b53a740f044",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/compare.toml",
+      "donor_sha256": "29742257dba671f578de49c3e67f6750922f7e2009eb0be18404075c5a2a789f",
+      "destination": "config/compare.toml",
+      "local_sha256": "fe8d166d0ef242422ce92008a04eef7e078a091c430fe76c2ea5150c269a0e8b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "config/match_baseline.tsv",
+      "donor_sha256": "a9ad274337fb52e895cfe48ac0cbc69bbdb5fd76aa9e1a1a71f8756a4a5c9038",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/data.tsv",
+      "donor_sha256": "2b35ebee3dd87311a06f8bdd4502c9a45805702b31e71697c377b4c2890b0d46",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/data_compgen.tsv",
+      "donor_sha256": "cde1bbe211940504c51ad7587c44a692bb5639717fe6f439ed9d32bfed777925",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/data_static_libs.tsv",
+      "donor_sha256": "45b9288ba29e0ac1fcc8ee4930b1ffb32c0ef28b254a7c524912128eeec057b4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/data_vtables.tsv",
+      "donor_sha256": "50931c5192bf9a6a9e3e0f34d29a8d773231ff4f87c890ce16650abf29bb7389",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/data_zlib.tsv",
+      "donor_sha256": "afee8a01a4911d815dae8b00e7acf6da5c491046fadf30e4de583e9ece5969c7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/functions.tsv",
+      "donor_sha256": "bbda3c477fd71ec67aa7796bf0de37dc3805948204abc2244243f8b2e3308239",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/functions_static_libs.tsv",
+      "donor_sha256": "0e486338af2703545396e84a7154e6f68d5ac35b8786736116e8bb9c5f3b4864",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/functions_zlib.tsv",
+      "donor_sha256": "28447827ce3603ea892a838f885f543ab13170a0b420997ab9299119429dfb1c",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/link_bands.tsv",
+      "donor_sha256": "9e98cf5f24f018687f70bf51c33a920aac6347286f37b95108881cf27d9e8fb4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/link_order.tsv",
+      "donor_sha256": "8dc2d3a949c8e881eb503a186ba2b76b7c4e6afaf880d70066ca796b3a8dca49",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/reloc_referents.tsv",
+      "donor_sha256": "a55441e5a9c6d99d17d3b43bcbb5729216964372c412f05ba5409160bd26b307",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/retail/reloc_sites.tsv",
+      "donor_sha256": "1699f0843232adea39a17e8b41c9e0d1389dec564f69f582e79999f9bb25e24c",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "config/units.toml",
+      "donor_sha256": "4fd4ee24bc02e47927ec49f6ab51b265d022234d3f78d428c2264d8579846fda",
+      "destination": "config/units.toml",
+      "local_sha256": "02473db7e6dc08a038b911f691e385ca58bdb8bc1b85d8fc9e1e1bbfa2eb8c32",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/README.md",
+      "donor_sha256": "fb3183a271e0bcfb72186ba45f6a480d7385470b8756e7cdf0985f24bc5681aa",
+      "destination": "docs/README.md",
+      "local_sha256": "e1c5bb36ec66992609f2638cfccba8ad995f3f3729c14aeea13d5cd5578ba049",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/build-system.md",
+      "donor_sha256": "f783ec2cc630d664fca5a0f331564284808d7d86e738a3f21984835b75dd2a6c",
+      "destination": "docs/build-system.md",
+      "local_sha256": "93c5a712265197b621005b5308f4cdc35c0fd128b4c9f3ebb6b6c7ad36f33480",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/clangd.md",
+      "donor_sha256": "82aca43259222e7eeafb08fadbb9ffbe04f638ed3962aa6abc3b292fa22dd4ab",
+      "destination": "docs/clangd.md",
+      "local_sha256": "c4d51ca908ed5698396da6a919173705413629fc5d3b5b9b2474c975914f2942",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/cleanliness-metrics.md",
+      "donor_sha256": "65c848924696558f14d832d243cc6cc32ef0efc09d23086f514f7a2763d9b511",
+      "destination": "docs/cleanliness-metrics.md",
+      "local_sha256": "784c1e55cec21d454b5ae538deeba1147a81d5da34f13b3791fd3c7af52a8a73",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/comment-markers.md",
+      "donor_sha256": "ec384f686ddac47e107955f4b1c5308b725f13426b13f89d2c6fba6c59297c93",
+      "destination": "docs/comment-markers.md",
+      "local_sha256": "c82b8283bdca63a0abfd855ba7cd93a922060323bad9ce0032d844b2707188fd",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/compiler-detection.md",
+      "donor_sha256": "330c4b51d63e3222a82587328f68165036d09a3eec849e09010b15766d77a404",
+      "destination": "docs/compiler-detection.md",
+      "local_sha256": "6a3a7e64ef98bcb9b15911396eac3cfd6dfd98cccae77da8da7653f774fe1068",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/compiler-flags.md",
+      "donor_sha256": "fda06856d37930e7350cb104609dcb3a60bed4495823521d61a8aafad0942245",
+      "destination": "docs/compiler-flags.md",
+      "local_sha256": "7aa96064897570f5cf8bca409ad3562abf7ccfd88b282a0a4d1f2161f6653897",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/data-attribution.md",
+      "donor_sha256": "7ce2f6b8464b6dacdc86b2052cf7dbe2f4ba722d963f3313ed176211233b32cf",
+      "destination": "docs/data-attribution.md",
+      "local_sha256": "292b1ac10307081e437abf26691aac730a7ac6b1019edf9aa15cf5a0c9e22e46",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/image-diff.md",
+      "donor_sha256": "bbdff2fc13153fe3361dcb96de8353f903a8eb7bd59e70d2590ee501cf8e4810",
+      "destination": "docs/image-diff.md",
+      "local_sha256": "ae2dd0cd5e4c4e8065e04f056eeaf1ec5c5cce91c162aca5f394b7a52c0a7a4f",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/linker-flags.md",
+      "donor_sha256": "65741e34a9f4693cd55ef9623fb9cabf7a790396b4fa27d3ee84070159fe74ea",
+      "destination": "docs/linker-flags.md",
+      "local_sha256": "d729e17f146ab83346be9b59737f27c73f526036852526de8c8d47163fe30b83",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/match-status.md",
+      "donor_sha256": "0af34aadc574ad88352cd47043ff8a7ad0216e34143d7a4a4e235ac028bb6ada",
+      "destination": "docs/match-status.md",
+      "local_sha256": "16a7570efe234a4379761548858c63ed4d0e4601c718602504807155c49309f5",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/INDEX.md",
+      "donor_sha256": "0047de352cd1a83961582280c4d181deeb85df51596069755a5bb3cef721fced",
+      "destination": "docs/patterns/INDEX.md",
+      "local_sha256": "92e442fa7f7ba4bf37b95991be76de593aa1cc43249c565374231fbe54c8af47",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/README.md",
+      "donor_sha256": "c836d67391f16fca863ef54717417b38fae519d1a2618b07a2d38bd0c0e42c4f",
+      "destination": "docs/patterns/README.md",
+      "local_sha256": "0f9b782468ececc5d253127c7c9603bf57436fe5e04488903706711f9173a76e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/call-argument-evaluated-before-pushes-means-a-temporary.md",
+      "donor_sha256": "4370c1a843445621c6083206ae27571dcca0746a0880b9e0369484fc3215607c",
+      "destination": "docs/patterns/call-argument-evaluated-before-pushes-means-a-temporary.md",
+      "local_sha256": "06b69109d015185f86339e6736b575c63fe0f819ba97c7f8493d85537c45e66d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/eh-frame-presence-is-a-source-fact.md",
+      "donor_sha256": "1c69d1cddfdc990d175fd2ec91f9bbf82a9c7b4e380cdb995309ccfc654b9c06",
+      "destination": "docs/patterns/eh-frame-presence-is-a-source-fact.md",
+      "local_sha256": "6e62d2cf0b2d7896216a46bc85c6878e4c7a5a40f9939dbd2c067155ceb9e1b0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/emitted-store-order-is-not-the-source-order.md",
+      "donor_sha256": "e9db5101e9e6252dd7b7c9f059a56dc5392752769f5f4d5158b5f858e13180d6",
+      "destination": "docs/patterns/emitted-store-order-is-not-the-source-order.md",
+      "local_sha256": "8747f0704143e2ae8fe00fa60092984c5322289b32094bf9a9c46c724454f6d5",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/function-local-static-dynamic-init-guard.md",
+      "donor_sha256": "d3d8f123a43336d17e290819d22c6562bfbb7c3a6aafdbeae5bb2968f36fe4de",
+      "destination": "docs/patterns/function-local-static-dynamic-init-guard.md",
+      "local_sha256": "b74fac8d47078f2d500fe632a11f09f7e9a08c1913642f5ebe15e56838703b37",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/inline-budget-emits-ool-comdat.md",
+      "donor_sha256": "8ec3cb849949dcbddf07fe67b690dc68d9ab44c370f9f7276a6c78ed1c9d2906",
+      "destination": "docs/patterns/inline-budget-emits-ool-comdat.md",
+      "local_sha256": "fdcd6cace32386b6adf1c268b964e70672f3454d3e4eeb346612e3f7a0ea57a8",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/signed-modulo-pow2-abs-restore.md",
+      "donor_sha256": "7f961dc4d7210447abe50c6e4997b10705796f92bfd2a1e53ea2164d54297c75",
+      "destination": "docs/patterns/signed-modulo-pow2-abs-restore.md",
+      "local_sha256": "8247e4f990b0a44140f9ebe4f92648fe1f2e99c55036e92b44d09ff95187be9d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/switch-arm-locals-overlay-only-when-scoped.md",
+      "donor_sha256": "4e21ba3efd09ae56b3d8d65cbea22036cb4df3fd063c1ee67be977802d0810dd",
+      "destination": "docs/patterns/switch-arm-locals-overlay-only-when-scoped.md",
+      "local_sha256": "9f88f3529bcbb98b4df3037b4c7a3f350d7b73718f718755d059d0ef98fbd43b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/tu-state-probe-family-decides-reachability.md",
+      "donor_sha256": "0815c30bc4db68b1cf9050e69524bda003e1a5720ff908cf446a1e274de24c1d",
+      "destination": "docs/patterns/tu-state-probe-family-decides-reachability.md",
+      "local_sha256": "5cc611199bf26709ca1ae4eb781b53c0b7a3a03682cc973ad3b758f19bfb3bb7",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/vc5-explicit-only-template-arguments-collapse.md",
+      "donor_sha256": "6e806c9fc1454d89ae45458d7cb34cfd6bbfc4ce58957200afbb20aa9a3321c5",
+      "destination": "docs/patterns/vc5-explicit-only-template-arguments-collapse.md",
+      "local_sha256": "40976d87f9e481cd01d34da2960973c5e1f798482fd327c0ff7f89ff735af438",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/patterns/vc5-template-members-inline-without-inline-keyword.md",
+      "donor_sha256": "1482b11ccf0678c98727d93f50322da700d3cd1ba27e20315afc9b16191f6e7f",
+      "destination": "docs/patterns/vc5-template-members-inline-without-inline-keyword.md",
+      "local_sha256": "b621464ee63e7bfcc0c2a9da135853f33f32be343f465e2092238eca8fc63b94",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/permuter.md",
+      "donor_sha256": "0f46a87d38cbb01833428e15b8fbbaabd2e32f866ce0443861fef876a7387a43",
+      "destination": "docs/permuter.md",
+      "local_sha256": "00f567c689bfadedba616ba3274f1ef979813417c98f2dbc22f89f53a4247733",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/relocations.md",
+      "donor_sha256": "08b3c57a37b6b460e8fdcf1b72289187f5d7c8f350f59c0b7c5df7e0bef70721",
+      "destination": "docs/relocations.md",
+      "local_sha256": "fcd52481aa318e24565f5a1b173f0ac9cc4f4f7aac363486db26e35df9ac08a1",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/todos/README.md",
+      "donor_sha256": "39fff537aec0475b41fb3ae048b6fa70be3ad6481f85b6f70ebdb25a73e704ab",
+      "destination": "docs/todos/README.md",
+      "local_sha256": "2b524f943ada6fe71c11c2fd0128816e502be286471222ee908f893398a06edd",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/todos/rule-exceptions.tsv",
+      "donor_sha256": "7582b809610b58b250e8f86377c8140a77190f22181f7d17f0c7a616c973cb7b",
+      "status": "inapplicable",
+      "reason": "Donor rule exceptions are not HoMM1 authorizations"
+    },
+    {
+      "path": "docs/todos/syntactic-recovery.tsv",
+      "donor_sha256": "7b1d8945af45eb78489253a42494bf2d6355f1688733875395dc41a9bbf2caae",
+      "status": "adapted",
+      "reason": "HoMM1 derives build/match/syntactic-recovery.tsv; no foreign task rows imported"
+    },
+    {
+      "path": "docs/toolchain-vc50-sp3.md",
+      "donor_sha256": "7c5c84f958642344324b3ac3db0b866a29d4288065977fbd5a54406340c02340",
+      "destination": "docs/compiler.md",
+      "local_sha256": "da6ae514af087c715256506bd618e628d92073cfccf0c7a25f97a69b504a1cbd",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "docs/tooling-map.md",
+      "donor_sha256": "45a5df50c3bf78a2b2ca2098ac6104fb5745d1644aa1373db1f3b0a3a1a48543",
+      "destination": "docs/tooling-map.md",
+      "local_sha256": "89ed7d17ed39d1cb0f48782f1e9c10debbe6ef7b04c7076cee796d8129e653d6",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "editor/nvim/README.md",
+      "donor_sha256": "57be9edfcb1b962cb01fddcb623227c49cc736cfcb71a4e78c879f1d05fc2aae",
+      "destination": "editor/nvim/README.md",
+      "local_sha256": "17bfc6bbb6bd7d5d0a54a9c9f180e8fca747414a039bb8690119c57337537000",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "editor/nvim/lua/giten/init.lua",
+      "donor_sha256": "2909beaa5061aed652b6ceccfe1e28da305ff0809f37ed80e099b3f469d3d333",
+      "destination": "editor/nvim/lua/homm1/init.lua",
+      "local_sha256": "d90bb5e87bd03d70e74f709357ad4f7d7b3d764129447b8ce355094dab19553d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "editor/nvim/plugin/giten.lua",
+      "donor_sha256": "b084b5beb2a638d805b55454012941fa36482232e4325e1f639d378c9eb5f080",
+      "destination": "editor/nvim/plugin/homm1.lua",
+      "local_sha256": "edd014502a1fe95888d8e62444f04b8a72d5aa28435467d1ff4a322513f95c1a",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "flake.lock",
+      "donor_sha256": "08ccb30693810290b7d80aa8f1313ac89406ce48cc208e8c2582fed4e60ad771",
+      "destination": "flake.lock",
+      "local_sha256": "08ccb30693810290b7d80aa8f1313ac89406ce48cc208e8c2582fed4e60ad771",
+      "status": "retained"
+    },
+    {
+      "path": "flake.nix",
+      "donor_sha256": "08b1b9bd9542a02c8f37e46c8d6037b1c563121433d2f453d108c6f8490862e6",
+      "destination": "flake.nix",
+      "local_sha256": "768b8eefae745d1bfadf6c3780cb4330f94cc630f231dded5ed8b6c511108af6",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "include/File/DataFile.h",
+      "donor_sha256": "72e10365fbcabc9fd24454b2f9515dfeafc09cda3cf53b78f481b80e58417246",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Actor.h",
+      "donor_sha256": "5caa9f70fb12fc45b4e558a797e2520567546e9f5a008c741749c6c52c075952",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Alignment.h",
+      "donor_sha256": "defda414148309bae42210ef53b01720f010687e8ff4186b16c2e706f4cf14f7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Analyze.h",
+      "donor_sha256": "a8b069626de652a83bf6e5285ecceaf6c3c1757851d7a96f2dd63905cba6ede0",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/AnalyzeData.h",
+      "donor_sha256": "bf66f5f5b2c9a197ce88327751fd94c86ffb9dab7d42a2ceafc5313c40ed39e5",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/AreaLevel.h",
+      "donor_sha256": "a16fc8b044d0cc16fafb77e2d96a4042b59944a4dff7b6f78d1b2e07b0b8932b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/AreaMap.h",
+      "donor_sha256": "b4be1a561653d90a2a16959634959ca51bed220aacf37c50ba533b6099243342",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/AreaNpc.h",
+      "donor_sha256": "fbc2a4d83052321357de6b25fb9979030629ac1b3576e771bdf5f7c50314d9b8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Attack.h",
+      "donor_sha256": "78a98b374ae6097c3de6554f4bc1bac369737730ab572692cb9d5ff030b75b4d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Automap.h",
+      "donor_sha256": "d08a8ded36be0640a19a4c00d29c59ffac2a55ba12e593a8abd845b8c027e886",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/AutomapData.h",
+      "donor_sha256": "d1b2b69880868ae4bae6fe496faa399d068590dad64721f3afeb951d82421fe0",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/BagItems.h",
+      "donor_sha256": "793032ece5439d0d80515f68997a0ce11e7747c39d660b8b0e505018fa950a23",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Battle.h",
+      "donor_sha256": "a9ff4bae2042ea1b542d52a0b977032e857bf7017fd54e7d7e09a1bf2a460332",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/BattleEffect.h",
+      "donor_sha256": "53cb0c707893fc7ea0a826b90f3b9b898a3a07b99a13ca5e568820d2b99db4cd",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/CharInfo.h",
+      "donor_sha256": "9f788de6f28df86304e94998249942cf02cf487838a2a4cee73dc49d541ba4a8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Character.h",
+      "donor_sha256": "5316d8d2fd2dc813f4b1a83b9026e0498e971a79a7dc2fc1c9e8925ec064a189",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ClickWait.h",
+      "donor_sha256": "bfe4d7560f4386dca61edf62056988e1f2937333c56616f6d20050775c949c6d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Clock.h",
+      "donor_sha256": "b154f779aada40c15b3d5c2f1e7bfcb3e1998922e63064f4b393d99bca7c00fd",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Condition.h",
+      "donor_sha256": "3c3ca1960be77cca738b9ce9798610352bb6c2ed466a0821328a660c71d3ec38",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ConditionAge.h",
+      "donor_sha256": "bf5aa4a258c829cc5b78974b20a4ef66210929f1902397cbe2ec8a585abb2be9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/DebugMenu.h",
+      "donor_sha256": "ef0a325ae91c79a1cdf474c40aefd8c71b7b4de53a47c453f9957c2386b197ff",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/DemonTable.h",
+      "donor_sha256": "340ec8a5cb1d75f5b4812260c30bf6e429c88c0db149e537107078ece256e277",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/DropTable.h",
+      "donor_sha256": "4a16abd7493a34bf476c8287cec59d85d988f7ef7e4b7af929fc4482ec0a8496",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/EquipBonus17.h",
+      "donor_sha256": "493b6a893f7f0d6e05b7d94871a0a6723b95893029a5bc64c6c2f1ea0b77f242",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/EquipEffect.h",
+      "donor_sha256": "227ce40fd869de5f69e75359cd670277a6d2a7d532b4cb499112997a07ed80c8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/EquipRequirements.h",
+      "donor_sha256": "ad1696baa09073c36a6d3cc222510abde5fdc90560f31557d0db1bdb1671b2a3",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/EquipScreen.h",
+      "donor_sha256": "15c7181e5df7db075396b7133064e10300f1a929190fa864c21975f9ac0d99c3",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Familiarity.h",
+      "donor_sha256": "74fa2fb7dc20be1386dc1e1f8105f9f3455aff8bff0fe9ea1a519f1da45aacd6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Field.h",
+      "donor_sha256": "c3c4100c9dd32382935c5b3bfe50ca322cd5e35fb37e6ab7dc5487125c2a237d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldActor.h",
+      "donor_sha256": "920b21b93d9f439e3029d4c8132209ac06b97e8f2bfd263afb3e642a43790bcc",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldHud.h",
+      "donor_sha256": "f58b75726687cb95e7e8b7e1c2cb41c7c50dff03ee5bd416d8f3260fa4be9fa4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldMain.h",
+      "donor_sha256": "11b718421fa71b56e3a61c807f667bc34ca0b9eefd06b066c6373e782ed57df9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldMap.h",
+      "donor_sha256": "784d710385a000aeadd993e078c128d5fe3f62fb62ec17c479b42cfe30f88d33",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldObject.h",
+      "donor_sha256": "9dc8fc253e01f1672082fe2a548262332ad7c3f70c94393a427b7b8d3fc9b855",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldScreen.h",
+      "donor_sha256": "bfb4c491c5267829c49a0c64f0fd836b1275736e62830629b64edecad22f78a6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldSight.h",
+      "donor_sha256": "3ddee97a38fdeea136b72cc86a0e87072788bb072db977302d19c10b849d1387",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldSupport.h",
+      "donor_sha256": "85ee5c91a66ecd303445d559fd21f7392cb49bc8a8134299a3ff9300fff1ba2d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/FieldView.h",
+      "donor_sha256": "91938ec5cb9805a01b48b47ba29827948fc6544633123983d46546a3f766ee73",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/GameLoop.h",
+      "donor_sha256": "b54850909de257b18b79e39503d3c81a2854b1ab0b2c1fe75c0d7b9ee92b909a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/GameState.h",
+      "donor_sha256": "a64bff725c8eea6c07a2f67a5ff0f4dcc50c3b6384b10761a287d946fb94fb10",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Growth.h",
+      "donor_sha256": "bf5950bc4ae527c65539cd20a712418135a8ea3976da8e25bd76bd7b3666a214",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Guest.h",
+      "donor_sha256": "3dfdfa04d0797df1406005788c283cc72ebb530ea6db91e134caa1f2bf413fca",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/IndexedItems.h",
+      "donor_sha256": "bedc0529ca31ff2f13efa7b1f3382c1ad8e6c06a5cf2be9507f9d8587d90eaf6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/InfoBar.h",
+      "donor_sha256": "fe6bc31488907eaec533bc13d0871695d741852b662a5b0772a5d5edb0cab004",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemBag.h",
+      "donor_sha256": "943f9f6f4194e7936932863a479c3487833157baa3bf8d9fdcd68caa9b24600d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemBonus.h",
+      "donor_sha256": "1a05ebe79deb7ebad27bf7aa7acf17b6cc5f4b1a78a1c22133912df275d2821b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemEffect.h",
+      "donor_sha256": "f8581321bdf61881e7e27291cede736db9ee25a23c8d70d81958b408e9ccbc8e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemMenu.h",
+      "donor_sha256": "8313268cdb5f071a9f6c54579b5ac88d63b566f3af15fa152c7392be2d2ae41f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemPool.h",
+      "donor_sha256": "1beb8ffd66969685c194f55960eab170847589430145f7e7086e9fba189b10a9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemRecord.h",
+      "donor_sha256": "7f8e5c4172b3034c96fc42e1a7e49cc2fb8efe7919295d562522e7863047d726",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemStack.h",
+      "donor_sha256": "a0e7b63a6a13be8333f4bc0e90a960286346f172d418316bcb52610db6f68e46",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ItemUse.h",
+      "donor_sha256": "516fa26143ad5997197d1a541cfce6888ab228a2cd0e7c12b5b12f3f4b1967ac",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/LevelUp.h",
+      "donor_sha256": "fa262452d8e7c547a16bb622a7f50f2d00b0be05e330f9e0b115958ed3bb5123",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/MenuCursor.h",
+      "donor_sha256": "8275341453c521fd2735d4a2b043f2b0f371bff5bb9fd240460a152cfc93f6ac",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ModeFlags.h",
+      "donor_sha256": "a112457f23a83f6542af9fc7f5fc84408906bce22d67bafd8903e948ec92973b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/ObjectRecord.h",
+      "donor_sha256": "32da5f4ccf33792a5faebb8786d01f307920752861ad8dcb6b99e0af689e981a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Party.h",
+      "donor_sha256": "b42196e02c40ad2a58f2bf7d9f941c27b0956484f0464186fcf65d008196ce9a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/PartyCommand.h",
+      "donor_sha256": "99ffd0ea66e79048f9dc818fb14b88822fa1963013ed3cae4aa4aada1445c9de",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/PartyPick.h",
+      "donor_sha256": "380cbe41ea0aefd590e690f22fed7fd461c1eae7fcc3086f1afa17f60fd93353",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/PlayTime.h",
+      "donor_sha256": "8c95a47a72cb4575cd1df1d8fcabae515c42a472fba536685016e03075db8483",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Pool.h",
+      "donor_sha256": "544aa79eae60f7aa05f67845ac6bd243c5d237cd683147a1bdb1dee5e56397e0",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/SaveGame.h",
+      "donor_sha256": "37ed5b11bae78ec91d87c398b44fc6129b570d153ca506d9918f8cb2676134cb",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Scene.h",
+      "donor_sha256": "5cc8d2a52ed05515a36053bc7f6d2065382ea7b3210471fd63b6e3344935b70f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Skill.h",
+      "donor_sha256": "cabae02aaaffef3d6b84128f44a7d287923ae8d5b97a5366f1fe5541f071bc61",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/SkillList.h",
+      "donor_sha256": "d4573fdf433569c502c04c8f62ad28212cdb372d66c7af005b950a154937dbcd",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/SkillUse.h",
+      "donor_sha256": "9227199d8e34dd0b399392c4ae94950bd22d8cc0029b8060052a7c4f0b4565d8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/SpecialItems.h",
+      "donor_sha256": "2aab5c442200ecb5941226de6d81a72472c07f9f08c9b429c4fe2c64bd045c53",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/StatUpdate.h",
+      "donor_sha256": "84ae9cf68a8ba1072d7a964c6da07c109dd33b8d302717016e037f3c3b0f00f7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/StateStack.h",
+      "donor_sha256": "6fea0d324eeaa3e88de12076f953486807a2b93e6e4eb5a34ac0dedb40048545",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/Stats.h",
+      "donor_sha256": "68c892411e072c54dd7b371d4c59bb7a3f6d83508c4f5447f87a080193666a7c",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/StatusDraw.h",
+      "donor_sha256": "09d2b41a9a660995d198be3fc3a8223e6f80ab94b5ccd871e99a5d1877c4493e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/StatusScreen.h",
+      "donor_sha256": "10c471cc82a4f0835f73ca1da88fcde63853db85d28b91c13c6aeeb371e66420",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/TreasureBox.h",
+      "donor_sha256": "48113473aa1c1652b45ce34f1917018ca0e144c258ddfdd0552b9db888012d99",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/WaitLoop.h",
+      "donor_sha256": "1203081a8359b009282d97883c029f20d9c491adeed8ff5f58b42e0f6fc166f3",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/WaitState.h",
+      "donor_sha256": "f678cffae8ec06106ee7980248454100063517cc0394b75ef4c688adefa9af77",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Game/WorldMap.h",
+      "donor_sha256": "69b8c0a3381bec068009462ce40a8647e39913316d78a12236e2f47e51e5d800",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Background.h",
+      "donor_sha256": "3f65ffe9a285e2b2b47d22f0415cf39fc091620d74dee7d3f502da9103df24e1",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Bitmap.h",
+      "donor_sha256": "f7675411dc07d67da3d5ce2573484127cb4359f47b84f8af4348b86d40ad094d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Blit.h",
+      "donor_sha256": "c88906b253ddb660dde1da36f5a8eaa823adbdaae3a9d824648e9ed3e9f758c2",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/D3DState.h",
+      "donor_sha256": "e3fcbec54f396f331f13d7f89816db942c739de643a70231f03cad7c66c029e4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/DDError.h",
+      "donor_sha256": "039092a92c810d5cb971e6a8786d59b5288f783562217c806042e26ff75cd42d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/DDraw.h",
+      "donor_sha256": "0c528c23faa9e2a67afb5c2c647b3302252f747aa5881a3fa8a997b5501cfaf6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/DisplayConfig.h",
+      "donor_sha256": "5e5f7a454c9ec13dc6f25f381c21b3840fc7f66b9b4bf9bbccc1dd45921bb445",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Motion.h",
+      "donor_sha256": "2d16a1acbe57b5d56c77f864a0d50052a2a7c69e04e58091dd92ad7e698d0116",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Picture.h",
+      "donor_sha256": "8582c0993569478ad04ce69bbe49063e1db9fca6a29ab0a38bebe5d5db7e8609",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Render.h",
+      "donor_sha256": "8b5a5beaa3eb9590b8b93d14f5d3ed6ce3d95ac3e37885f662d1611ed2e84d93",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Scene.h",
+      "donor_sha256": "346579a1c9bb9abff64716f23aa629d35a6c95940a7244b6586fe5e2df732bb6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/ScreenLayer.h",
+      "donor_sha256": "08e1211723aef6768ae5ec02c2372e83b232d7a03f5a9596d7cea9b673a36a49",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/ScreenMode.h",
+      "donor_sha256": "5d4e19ee9133288406de0af7ee5e1cb7ef4deb8b52ccd40f58d2a5d8897161cb",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/ScreenSave.h",
+      "donor_sha256": "ba22799fe2729523e6fe6b2a39fdeb1275a73bd21b12d475e078b5909c36f27a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Shot.h",
+      "donor_sha256": "c6b9b500369aff2fc950494dd634dc4d6b58613a06fcbc3c432ec571853b6d39",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Sprite.h",
+      "donor_sha256": "a66d4fdde3082c88952e623f2b5120b9e6c4713c87ec810710603861750ce451",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Texture.h",
+      "donor_sha256": "790f7827e90cb3a1f077ee2cd183cf2b7b7e1c15ae10d60b44903ca84302523c",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/VideoState.h",
+      "donor_sha256": "aa0c826b77c74d755236f34f0df763df0a4535a77bc5266c42e3f383b10df3f4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/Vram.h",
+      "donor_sha256": "8488a900c068b2e7bcdb287ace8b08e28296fed29c7d6888d6bb3c0c8e247f45",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/VramAccess.h",
+      "donor_sha256": "27c61977159a2aaaa10a9adfa8b798d02e02a706e8f11981383c3efa9d76de2c",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Gfx/VramCell.h",
+      "donor_sha256": "627ae8763e0d948c5e21ac55f18e102e2649bdaa7d2ef235ccd0116dd552e0af",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Input/Mouse.h",
+      "donor_sha256": "ead6fdeaa02229fa9cca4ea7ef7ab9829f6bf47289bfd5aed97c0465455a1f6a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ints.h",
+      "donor_sha256": "e657e763a5b5497df9c1bdf2bbaeaa32c729f42176922744f7b53b52e8fab590",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Math/Vec3.h",
+      "donor_sha256": "59936fc579d0dc004c7ef5c08e2049a328fe1fbd0d6ebef2c04ff38d5d119efa",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Mem/Alloc.h",
+      "donor_sha256": "948d5295f5a6be12998f610f24b62883512e6e43ab3d24574889f3f65400e9cf",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Mem/Handle.h",
+      "donor_sha256": "a1a3261934b04678d23abb306b0b550801b3b311cc0a95e028e8b6cfede3bf58",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Mem/Pool.h",
+      "donor_sha256": "e0ec74f71ac1caeefa4ff72d51b12f61c4bdf4e602433f27a452c836cf9a20c3",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/D3DApp.h",
+      "donor_sha256": "7ff52eac4af96a2781958592ea894dfb02b230f6a0c39b27273375de0ddf39ca",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/D3DMath.h",
+      "donor_sha256": "6e45f7de6b1f4e2ad39b94eede209caa0889a53459c1f0ecb573b7cb9716d7b1",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/Direct3D.h",
+      "donor_sha256": "29d52a10752cdb10baaae246e8b4bbc0f473c49e4879adceb94a9191f5956e0e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/GameApi.h",
+      "donor_sha256": "6946efa137bd1dfd6bce11c4c45eb4cd8df881e7ae65a6a9933167a70dd7e040",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/GameCalls.h",
+      "donor_sha256": "3aaee93daff69a00a38ea0232f50f27ef7fa184f5e481b3bf22f181e2b1775f9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/Ime.h",
+      "donor_sha256": "a7f2d0de83f3aac4c355909d32552c24962798e48975290f9e56e9af9cad21f7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/InputSound.h",
+      "donor_sha256": "8b8272e79d31f4d3222479ed4b1d26471fda8b8b28fd68482f0f642562ce35f3",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/Joystick.h",
+      "donor_sha256": "6cc4b7bc393e6c68eb5f0f806f42c698d9b3c070df50d336a412ce8d36e07a67",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/Mesh.h",
+      "donor_sha256": "f3fbf3598c8997945ced4e19f4248cb3f98f4aa00160945c9246d04394fc3747",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/PlatformApi.h",
+      "donor_sha256": "e3f66f2e8513c55e26cdda9889e7431c418d74401a57941037d92934b68a8519",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/Scene3D.h",
+      "donor_sha256": "3b632002360e484c32a28f398e92978681e215901e743c6a80c3d306801bfcd9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/WinMM.h",
+      "donor_sha256": "33f3218adde4a71b0835ea9f0c529cab9ac465513c8aff3f822ef803b7aecd57",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Platform/WinMain.h",
+      "donor_sha256": "9994e6262ace7dd203e365d4d5497bd97e6282890351694e62a17e3617499697",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/EventFlags.h",
+      "donor_sha256": "1e144f8ba00c6b5e00dbf8978fbc61b3a00604c8778e90ed6f3ee6aeb94a8f7e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/LongVar.h",
+      "donor_sha256": "e189ee70aef915aa8d9676cd110b972339b32de296312c8c79a36c4bed839e34",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/Script.h",
+      "donor_sha256": "f1b4f1cd1220ee984d80a25d1f45f163ef8eef0021b0441790416045cfa9dcf1",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptBlock.h",
+      "donor_sha256": "daa2d7eb304620e67c08b8f4b648a92ceacf5450128e481175774f1f1cf25c58",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptCmd.h",
+      "donor_sha256": "c8e5a871baf2c4dbf606cc5cae120a1302925f1525d2da72eda4ac860e04e384",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptOperand.h",
+      "donor_sha256": "22979588d90e132a5aeda5e81f3b4a788c5272effa25ab201ae07897046abb95",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptOps.h",
+      "donor_sha256": "04c149a43f7641bbe6d9af34d2637abd0d0561221d216f9ba9bb5a7e3a4225ca",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptPanel.h",
+      "donor_sha256": "c1469707805f1712e33ccb216b2264806c369c03eb6cd0a4bc92b959059e82fe",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptSprite.h",
+      "donor_sha256": "b926337567783348b8b4428d18faade3d5d2b0c08ed4b8695223e6960e968094",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptState.h",
+      "donor_sha256": "79a8b7eca4b3a0321639228763636ca55343ed4f1c65cd217b952bc9034753df",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptText.h",
+      "donor_sha256": "eec44dc091d3652281b17692069b2a66c92cfc30f376f4a0dcf90fec0aa5f130",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptVars.h",
+      "donor_sha256": "70cad15898fc23aa56134fd2a9c0fca0368954cbbd5ab7e6ac34090415494965",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/ScriptVm.h",
+      "donor_sha256": "885ee8e33e8100c43c95b9ce1e929444743171daff005114966e26ab3a10b0e6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/TextState.h",
+      "donor_sha256": "7d25b8a466bd7e175e77869660d946965ebdde4979b68bc8b0eb372e7a9d7b18",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Script/TextToken.h",
+      "donor_sha256": "9c65657e7891cfaacf89b7aeb59d9f0d08ae3268f132924bf037be202b6afe21",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Sound/MidiStream.h",
+      "donor_sha256": "3bd4461cb5d46d8d8e963387fafa793da0be8f3ea6e08c928c6c4f9f328609f7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Sound/Mmio.h",
+      "donor_sha256": "e9046f3ba9b253cd0488e51f9101a165bdc0d7e87638e25a36723c29f77590af",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Sound/Sound.h",
+      "donor_sha256": "4a9049d0fe24e48d210f8f0d94ac4218bf7041a5519b116a8aa9b5c357ffefa7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Text/Font.h",
+      "donor_sha256": "c8d3e60387bdf5b54816fc36bae70b6c6b53276c3f4197f3b3cde1f1731bb1f4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Text/FontApi.h",
+      "donor_sha256": "38d34843dac7cd1d064ccaf9dd987460bfb5e3181af3df95213c8b00f1854aca",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Text/TextAttr.h",
+      "donor_sha256": "dba52b20df74e49e9565e788453789052155d141b4caef6893906339100cca08",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Text/TextPlane.h",
+      "donor_sha256": "c9bb50e42f044340bfa01566bec1c2bca532557521cb5ec232c8c762a2532122",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Text/TextPlaneAttr.h",
+      "donor_sha256": "4b8a6c604d604d5d991a96055d2bb771bcdcd156346cef42e1c5829c8bc63066",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Text/TextWindow.h",
+      "donor_sha256": "6f260b7c35671f68e6d5536aede0a909384cf583e7e38f92add77f2526d1176a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Text/WindowText.h",
+      "donor_sha256": "beefeb55b4aaacbc5dfbac6925f1e2a18775c6aa0f6a27b5787ae084ef1571a2",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/FieldMenus.h",
+      "donor_sha256": "75d083b48c4d6fd3105862e74a5f7af9b70372816f17cf3c10c0e104ef16138a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/Hotspot.h",
+      "donor_sha256": "bcd082bb4f1e67ee5afeb64d2c3eb10fc24781de395181f4d7e478bf66a582b9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/Menu.h",
+      "donor_sha256": "d9e92c6cae46b1d4df8219b265a10a354b068636265364ec9d37da87dedd1ff7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/MenuBox.h",
+      "donor_sha256": "b3239ab0b24b3fa71fe24483da86654f5cde57af18680bb2db36656e535bd4a3",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/Message.h",
+      "donor_sha256": "7a0b1609f63098948f8a25d96b350fdd9c9811a07bfb5288a2a2477bd8140e3c",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/MessageScript.h",
+      "donor_sha256": "8cefbea82578dd50c6dbb47c658b5c0c8b34b45100c94da28df9973c82fdf2f5",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/Panel.h",
+      "donor_sha256": "cf8c833529b3fe4d3d8fe6003d049e678ce47489e33bc295f7492d058a59ae63",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Ui/PartySlotSelection.h",
+      "donor_sha256": "7a958ec7f0f98b5888d648ab753f7c19a774a1c72422f13cec250c9c983f1c11",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/BitSet.h",
+      "donor_sha256": "c38e287204064e9e390491c3bc0e940086327874389482d69effe4acbf0a379d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/CurMax.h",
+      "donor_sha256": "6efd0076e0fdf5d116adc786ff4cffd9ec2efbbab7cc75badaf7c3cfdf704888",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/Debug.h",
+      "donor_sha256": "65ef1a00b148970dd8e71f059c00e559f147f9da355004e591d86fef62b7cd36",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/List.h",
+      "donor_sha256": "7f1958c77d9540d5c56f63ed57f5ffcb597c03e1e5d6f70e700415945c7b6f4b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/PixelMask.h",
+      "donor_sha256": "5e93da4c9c1098d7b7c1d8f03872e79ad3edc08f49cb8df6e54026e4630325b8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/Range.h",
+      "donor_sha256": "2ee0f8e15d3180335571a6c9e252ea4e99c7f6e69c55e914d7dbe54b9205552f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/Scratch.h",
+      "donor_sha256": "ac084401e38977dbf6b066e5e236a9beb7f668fec1ecc838ca9ab60bc62d43a6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Util/WordList.h",
+      "donor_sha256": "c951fb9eef8f6496c9c0f8de5ee607ab209d12de6fceb4a85c67922a4b050f46",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/Win32.h",
+      "donor_sha256": "5eed27965f4b70f0eeda0f9310e30c20f9fa29d15499be1b2f577dd7334aac97",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "include/rva.h",
+      "donor_sha256": "b0fac5d8bf7a3c70f95a43fb370919c33fad6a32982b4e7daacf59bfdfa6d751",
+      "destination": "include/match.h",
+      "local_sha256": "66613578b24a93d43c6b6b75221f99468e36f441375a540d9e300fed62eb8421",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "nix/patches/objdiff-bss-inferred-extent.patch",
+      "donor_sha256": "e514622a9b0bb8c4f03bd9a35cd07f76eeeab495c21e4968cc21697d7ee673da",
+      "destination": "nix/patches/objdiff-bss-inferred-extent.patch",
+      "local_sha256": "e514622a9b0bb8c4f03bd9a35cd07f76eeeab495c21e4968cc21697d7ee673da",
+      "status": "retained"
+    },
+    {
+      "path": "nix/patches/objdiff-score-reloc-addend.patch",
+      "donor_sha256": "3bcc0b63569c2d724f91fb9071e76cdef726237eb8fc5c3b2d028bb73117aacb",
+      "destination": "nix/patches/objdiff-score-reloc-addend.patch",
+      "local_sha256": "97089d6fc9bd1b89ed670777820d7abb6127f295e866a6d04e09c9630c139759",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "nix/patches/vostok-canonical-alias-owner.patch",
+      "donor_sha256": "e81153518646b5272ad9a8fffb8668c3bb22a00c8aff4ef5ce0a1c0ad82961ac",
+      "destination": "nix/patches/vostok-canonical-alias-owner.patch",
+      "local_sha256": "336b10343d256ba5a643ec7c6d95fcefe1d98cf1dc719ac3fdaa27593f28ed8b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "nix/patches/vostok-comdat-leader-nonzero-offset.patch",
+      "donor_sha256": "b1ffa5bc7b7f36d9d154bd4cbeb9f0a108e745840a2438e2b096c89b674fd018",
+      "destination": "nix/patches/vostok-comdat-leader-nonzero-offset.patch",
+      "local_sha256": "912980aa92a0e8b3490062a1e57ae2f229a92c0f736bf71a9f5af76a88dd5e57",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "nix/patches/vostok-data-hypothesis-must-contain.patch",
+      "donor_sha256": "3f15f4eabc215a76274576396342682259989646e8eecdcf6e23a95a64b0ac05",
+      "destination": "nix/patches/vostok-data-hypothesis-must-contain.patch",
+      "local_sha256": "79f5d752957e869ca0e13ef953e220a5d8a7c61e2c93211115aeda894963050d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "nix/patches/vostok-data-manifest-folded-comdat.patch",
+      "donor_sha256": "3bb21e9fd6ac8d42b046296d3f9ddd17e882f548b767fec2579a18343f96d58f",
+      "destination": "nix/patches/vostok-data-manifest-folded-comdat.patch",
+      "local_sha256": "65c2f9528140786e9b26d97dddafcea7de0eb9c2b595eb6f632feb99fdd2cf12",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "nix/patches/vostok-grouped-section-names.patch",
+      "donor_sha256": "41ade51649bfdcb9be9bf6bc84e86286c19357ff79bccfcdda1797222d6bdcfc",
+      "destination": "nix/patches/vostok-grouped-section-names.patch",
+      "local_sha256": "41ade51649bfdcb9be9bf6bc84e86286c19357ff79bccfcdda1797222d6bdcfc",
+      "status": "retained"
+    },
+    {
+      "path": "nix/patches/vostok-iat-in-rdata.patch",
+      "donor_sha256": "ab5c36f1203a91e081b6d899be0889f4a684a6e45a5a01186bde58f0df060227",
+      "status": "inapplicable",
+      "reason": "HoMM1 imports are modeled from its own .idata; donor IAT-in-rdata layout differs"
+    },
+    {
+      "path": "nix/patches/vostok-ilt-thunk-resolution.patch",
+      "donor_sha256": "b33be491860a3e3c322640328bbcec4d2f0f0da20b337f9b53370f25e136323f",
+      "destination": "nix/patches/vostok-ilt-thunk-resolution.patch",
+      "local_sha256": "ede9e7600e70a9381207d83e91b28d4dd5f606ffd161db74720afd2f8be3e159",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "nix/patches/vostok-legacy-data-not-into-comdat.patch",
+      "donor_sha256": "7468e514138eac2d4e2bb83c86b83cf1f09e21dfbaa406d21590371557807781",
+      "destination": "nix/patches/vostok-legacy-data-not-into-comdat.patch",
+      "local_sha256": "7468e514138eac2d4e2bb83c86b83cf1f09e21dfbaa406d21590371557807781",
+      "status": "retained"
+    },
+    {
+      "path": "nix/patches/vostok-text-data-symbols.patch",
+      "donor_sha256": "942d081ca4d808a1a49d9393385e05d81142b1001803ac99b1c71cb4dfeaaa9f",
+      "status": "deferred",
+      "reason": "Require HoMM1 code-section data evidence before changing the pinned delinker"
+    },
+    {
+      "path": "nix/patches/vostok-unprovisioned-identity-refusal.patch",
+      "donor_sha256": "de5994c46dbf067cab2dcd442452810d569e24e722f23f721f9f0c4801659bfc",
+      "destination": "nix/patches/vostok-unprovisioned-identity-refusal.patch",
+      "local_sha256": "77f7ab56aed923355845ed2a063f4df73805410fb1adb130585bd9149cf097c8",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/create-toolchain-release.nix",
+      "donor_sha256": "22419892ace650c0c30f219d5d2d3963485ae36d5eaffedc01a616033c1071ee",
+      "destination": "scripts/toolchain/create-toolchain-release.nix",
+      "local_sha256": "98d8704e018ea22590408f4c698bb69c30027f4137fca25051d8ffef9740593c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/create-toolchain-release.py",
+      "donor_sha256": "51b8d691e4166a8fb4883aeb879516197a84af8362aeb461d931b45d5f3f494c",
+      "destination": "scripts/toolchain/create-toolchain-release.py",
+      "local_sha256": "89ce65edb82376408e65ed28b393a0f786c6231a1459b17d4496e8cfea6107c3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/__init__.py",
+      "donor_sha256": "d6ad51113e600d144ec9ac82c9cc2e3a910b5081187c9368434fe7286dc80c2c",
+      "destination": "scripts/homm1/__init__.py",
+      "local_sha256": "2b780d0776db6042d2056c912fcbce4d06f5f2be1bbd69b6217c90f525c875a8",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/__main__.py",
+      "donor_sha256": "dc3169d810264690ec5899cde54a83099ec9fca033032cd2d9fc31b23acb0215",
+      "destination": "scripts/homm1/__main__.py",
+      "local_sha256": "fa6556e059f39fb87244a3919543a78388d0f22af849b533e966366ea26b76a0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/cli.py",
+      "donor_sha256": "f32cff3c9d82107b935b7382098bd076867f26c97f33d9cde149054ebde11f2e",
+      "destination": "scripts/homm1/cli.py",
+      "local_sha256": "67e7692d3337c1ebe14a3334acde4bfab0e431e9b33264bf1b79abfac874edc0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/compare/__init__.py",
+      "donor_sha256": "d9f169b84b8605cb48a889e021c1a4b395cad4e13c09af4e904c460c2cd6aff3",
+      "destination": "scripts/homm1/compare/__init__.py",
+      "local_sha256": "3d5d929db052eb6f755281b585ec5958aa6476f9227402f6a4c151c382cfc03f",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/compare/canonicalize.py",
+      "donor_sha256": "ba761941355ac507e4334a4fef31ca0cc8c1a8e6f019ba9b1ab891d7cafbc1da",
+      "destination": "scripts/homm1/compare/canonicalize.py",
+      "local_sha256": "5d58cf5f20e1acec437710b423956d30306460f471c4634d85fad37d764ad721",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/compare/normalize.py",
+      "donor_sha256": "94990e21438828060d57451a127b242b9127d3c799528ac5e4c7f6dd66eda9e0",
+      "destination": "scripts/homm1/compare/normalize.py",
+      "local_sha256": "fd5e11c1e6de99ded658f5b33f5aa8ca7d3d19499962c55374cd3dc1005eec95",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/compare/project.py",
+      "donor_sha256": "78bcc6ec85301449edcff9a19cb73abfb7633d0569278bbb54d433191925d6aa",
+      "destination": "scripts/homm1/compare/project.py",
+      "local_sha256": "493d39fbfe9f5982ebd5aacc2fe7a4355be837a7831cace567cf666fcf9fe3fb",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/compare/run.py",
+      "donor_sha256": "e8d2f36f173d1a4f578299889738037785f17e433dba3860dd253f963a67fb7c",
+      "destination": "scripts/homm1/compare/run.py",
+      "local_sha256": "1e9afecfb886b6c642915782ae3da6b53ce27d3e3835223760b942f1b80e7ba5",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/compare/test_normalize.py",
+      "donor_sha256": "daff75ee07ba3d8d6695c641b0b7b9cdf5d28946e0418ff175decbfaeceeecb5",
+      "destination": "scripts/homm1/compare/test_normalize.py",
+      "local_sha256": "bedad8ca52aa41f9f5b1dff14161daea4085e2128579b11fc4d749074c88643c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/__init__.py",
+      "donor_sha256": "a5ecfd04c6917b1dae9b79b66027295824013a4adc903834f59e0db596adbc7d",
+      "destination": "scripts/homm1/core/__init__.py",
+      "local_sha256": "fd103dc5fe330362cd1b87c8b6dea6238e2340c7895fc627c4137810c1a7633a",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/coff.py",
+      "donor_sha256": "8668582442093ed78ca21aaa055d5880acdb722f8b39b731db954d19ef5c2437",
+      "destination": "scripts/homm1/core/coff.py",
+      "local_sha256": "0bfa83a596a38b04a94735455d766b403c7cf2563d3374c0e04ccf1482f51b24",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/data_matching.py",
+      "donor_sha256": "ccd17f18de309500dbd35835af4d666cf11b23f6e38b057b179851d8397ea36f",
+      "destination": "scripts/homm1/core/data_matching.py",
+      "local_sha256": "632b453d83eec0c64a865e62d2d7f53dcb515ad57df5799d4fcfb386ed79c15d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/msvc_names.py",
+      "donor_sha256": "a0837eff46b70412ee7403a56d0bf51c7c766b330f83f613320660c7888b71b9",
+      "destination": "scripts/homm1/core/msvc_names.py",
+      "local_sha256": "1fad9084bbae41bec26185f17e339cd07843a807530055f8d8f0c6c9d793cbf3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/paths.py",
+      "donor_sha256": "8d7114c006a90fa4a03e4305cd6967099359a890d9cc3db65fc8c93abfe9520a",
+      "destination": "scripts/homm1/core/paths.py",
+      "local_sha256": "98ad47d1a695c68e7c1e6c6fc18988e09732f52f0f28061ee9b848fba1f82535",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/pe.py",
+      "donor_sha256": "0fe3ebbddae4a938649ed2eceea4d5f08bbaeffe0c4539ca11c02e26cf3c3a8d",
+      "destination": "scripts/homm1/core/pe.py",
+      "local_sha256": "d5cc88a855ac8624c46b6ca0dd5faf79e314de6846ec93784c6236c5c4ec84d4",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/test_data_matching.py",
+      "donor_sha256": "46d4b110fe0e1e83f5b0fd03bed8ddcfcb58d501a6b3d6c247b111900be20654",
+      "destination": "scripts/homm1/core/test_data_matching.py",
+      "local_sha256": "e8c17e0d134419d75a9d3fd83ce01ec792f7f72ac0f274f9174a5bce32d66936",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/test_usage.py",
+      "donor_sha256": "01799268a38eabf7b2fe805fed60cfe69409fbd8701ffe09af58921d2fd545c6",
+      "destination": "tests/test_usage.py",
+      "local_sha256": "85bb92a1b5adc0d16d3fa3c08e6cc834ce10a78edd4428bbfad66c204bbd91f4",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/tsv.py",
+      "donor_sha256": "dd8277e5cadfbe69c06916f745631404da322d2db5aee60ecda353bb5e292a44",
+      "destination": "scripts/homm1/core/tsv.py",
+      "local_sha256": "578669c5a91bbdd631eaef6059bb73d818274b107702ac660dd8e3ad6234923d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/core/usage.py",
+      "donor_sha256": "dfbe55d0b30dfd20fbaa8b1a07b09ab25af957197aba46087b8d745b65269c3d",
+      "destination": "scripts/homm1/core/usage.py",
+      "local_sha256": "a4e390711cc674962313976cba0b696f40a479e9491a3e45f80600b0b397439c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/__init__.py",
+      "donor_sha256": "355c888b1b32b76c541ab241f98cf866dcb5133cacb574f875788cc840aba50e",
+      "destination": "scripts/homm1/delink/__init__.py",
+      "local_sha256": "fa53213b1bde84d78ce05c7a38880bbade04d74b0fd0175bfe6234be6987db6b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/coffx.py",
+      "donor_sha256": "47ee10fb2f5ff184a516a2b7278ec601318e706ef175420ff9abf40baccb2cb0",
+      "destination": "scripts/homm1/delink/coffx.py",
+      "local_sha256": "80950d33862d6632071c7bfcb6e5dfccdc9872bb31fdd16cf43a913a5a758384",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/data_manifest.py",
+      "donor_sha256": "710456e3d650ad14f86f7d1a4efa27767e5ae6c7c179041bc4bc1acfdf9779a1",
+      "destination": "scripts/homm1/delink/data_manifest.py",
+      "local_sha256": "84a5c4857fb7aa5ddf91e6e4abb1c9710f33d22f260f4ac11bbc94be3e8a8e7c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/eh_band.py",
+      "donor_sha256": "ded74af0a822736271f6b3edd8ef0c9326ca1d5957b21268959646dc540540f0",
+      "destination": "scripts/homm1/delink/eh_band.py",
+      "local_sha256": "34092449b94b4896b10ed3db3f90d8549670ab1d95cb0bf6249ef17ceb97bb42",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/image.py",
+      "donor_sha256": "f6dca3149bd4a4564d02724717b4edde292fc6ec862242f644a3bc4fa318c9f5",
+      "destination": "scripts/homm1/delink/image.py",
+      "local_sha256": "eccb36a0f4092f62e80efbad4d6f7b6a3b89bc04ee539654ae576ed7c98147fd",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/implib.py",
+      "donor_sha256": "ed8cf06b293674cbd03a0c640508a3668128aa7e40a84b2fe188093dd5281b5f",
+      "destination": "scripts/homm1/delink/implib.py",
+      "local_sha256": "fb8bbb3b92c77a5d274f0ced55bfde1f6b47350eaf261ac7839a8e3ae2c891f1",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/pdb_synth.py",
+      "donor_sha256": "0bf9b8f2a40a5d52d9e746ffabafb4e67db07909f827ffd2bdb2f5f1c96b7ecd",
+      "destination": "scripts/homm1/delink/pdb_synth.py",
+      "local_sha256": "dd62c8f15d05b8b52d176018519f3a945535ea91003141268e5df380f583f837",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/reloc_image.py",
+      "donor_sha256": "66207217b3b275648a75d3833c2c721ce6246c827300eb46b1dd2b8c4cf1e801",
+      "status": "inapplicable",
+      "reason": "HoMM1 retains retail relocations; Giten synthesizes .reloc for /FIXED DDS.EXE"
+    },
+    {
+      "path": "scripts/giten/delink/run.py",
+      "donor_sha256": "69802f434a5d45c29f0dd3a6c8438e8315565746e8150d7de24b1cef492cf87d",
+      "destination": "scripts/homm1/delink/run.py",
+      "local_sha256": "d72866ec4fca10215cee5c6dec50953a1588307b93063010a8730e05750aea83",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/static_dtors.py",
+      "donor_sha256": "8bf4e114f7e35f136ffc627d245c2b69135a0132bcc8283cd48e98d0039a788d",
+      "destination": "scripts/homm1/delink/static_dtors.py",
+      "local_sha256": "d8e008225bf0acec73d77a879c5b245119295b5625b68d27c22fc1884302b4ab",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/delink/test_pdb_synth.py",
+      "donor_sha256": "5e998d5ad8a41e169f2f52e66b2d99eb154b21c68e4d18180e0727385c6fda0d",
+      "destination": "tests/test_pdb_synth.py",
+      "local_sha256": "0cd70e9b4bbdcd7444d1a1e8bd9962ed365a01ebf5dab257f8512ce01e22f6e1",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/ghidra/__init__.py",
+      "donor_sha256": "d174823931b80151a5b2892a0cd91424034f81ca170ee4171fbf2f2a77370955",
+      "destination": "scripts/homm1/ghidra/__init__.py",
+      "local_sha256": "a532adb03b9e2977751e5fb4749801045dc874949f85d166be59dc04fa64873d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/ghidra/__main__.py",
+      "donor_sha256": "8c23a7ac78e3d891226266a39f79ff575ab747600b88d51f154e03b6fb0d3393",
+      "destination": "scripts/homm1/ghidra/__main__.py",
+      "local_sha256": "d850b9e46b645361369bd84150e90ccacabf2c4b681bf8e5e850f8f10855b2ba",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/ghidra/apply.py",
+      "donor_sha256": "a1f911e0402c64956b4065418826bf0f05a1f88383b82968580399d26053aee5",
+      "destination": "scripts/homm1/ghidra/apply.py",
+      "local_sha256": "2d94a24c43ce66e0c10215ea2f76a0281145e380cec965f1089059d3ea466fae",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/ghidra/dump.py",
+      "donor_sha256": "3649d447ca12431998ab81daf7c2d5db5e3ea9a5f652ca9f21e0accf34c17679",
+      "destination": "scripts/homm1/ghidra/dump.py",
+      "local_sha256": "c27377b6486496d29d6ff0ff4460bb1651d959a58e6df42f8d10a15c11a90801",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/ghidra/export.py",
+      "donor_sha256": "fe100d6b632bf724b2109d1fa0045dc84d59706fe31df7d957b01ec4c5261b6e",
+      "destination": "scripts/homm1/ghidra/export.py",
+      "local_sha256": "f7fe3f552b80c4e63bbc4195401d5e0bb370be27eaec65944b6f433d1493f65f",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/ghidra/headless.py",
+      "donor_sha256": "8e9d388e63ca84f3fb4066cada8ba7e47817aefb057a36d79d83fc67c6f63cf9",
+      "destination": "scripts/homm1/ghidra/headless.py",
+      "local_sha256": "0fef58d94fccff3588ac7191d2d7c7dd6baec1d7152ffe1b2a543ec70d7d5f6c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/ghidra/project.py",
+      "donor_sha256": "eb6911dd05a2a4e39f3994bcc823c88288f6a732b67291f173e0e1de398dd3b6",
+      "destination": "scripts/homm1/ghidra/project.py",
+      "local_sha256": "b710232fc14be35d62b61ea45511f2ed5c32110bf961943b536dc63deaea84d0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/__init__.py",
+      "donor_sha256": "66bd647f471a63f08ca9e5cf31d70e931d5c2529621ad0449d39634d238148b1",
+      "destination": "scripts/homm1/graph/__init__.py",
+      "local_sha256": "820e2f7c2b269195c552a92cb85013c88bc5fe26d0cd0f6a2b1a49d695be0864",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/__main__.py",
+      "donor_sha256": "7e1edcbec0ec253d9267888f7fc9970600e4df2582b59cbed6a58b1cfce86fa1",
+      "destination": "scripts/homm1/graph/__main__.py",
+      "local_sha256": "608c0120d11d88be3f543f115f68419e4e9490e37600dc7f68f23ac5e0a1a5ee",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/cc.py",
+      "donor_sha256": "eb1effca2f08415840d4ce3f50004e9d3cdcdb9dd447a0b0c3c0668ca87cd575",
+      "destination": "scripts/homm1/graph/cc.py",
+      "local_sha256": "74b3c853347ec6899a1f46a0a3a99c2dac467b60bba4de84e89831b1343ec90e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/compdb.py",
+      "donor_sha256": "a853e1eb6f913b901c92d6c9dbeb36a4f8379b42fcf621a79ea2ae166e7a4d29",
+      "destination": "scripts/homm1/graph/compdb.py",
+      "local_sha256": "bb571d0981e19839424c4f9c56b476f57701dc77d41a8936ca27f37e40c67c1f",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/emit.py",
+      "donor_sha256": "fb49233c89fd53b111a9cf59c8942a5af258798ce0869c9b214ff1d181039a42",
+      "destination": "scripts/homm1/graph/emit.py",
+      "local_sha256": "8e611aaf6a6fb64279e5f5efd6b87a0ba0d9552236a948de6817431e6c369028",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/implib.py",
+      "donor_sha256": "b7bd5ea2f9b78d870559dd28776e20590378c60199ad398819154f54a2fdced9",
+      "destination": "scripts/homm1/graph/implib.py",
+      "local_sha256": "32df8117cbc110a819f3e6ce44095e60ae46c6964a7ea7ef44608db33d55e37c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/link.py",
+      "donor_sha256": "a2fde95a4172f1dab3ac54a00daf585abbf0ca5459d8adc4443aff51a4cce40c",
+      "destination": "scripts/homm1/graph/link.py",
+      "local_sha256": "af6ff6120c804ff943640d3fa3bde66422a6e7777f1227de8e43bc2e4bb37cfb",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/ninja_syntax.py",
+      "donor_sha256": "f13e05c5493d2db4d48e3ff8d331cda3a2226c891e3b76ef917ebac579bb1c0b",
+      "destination": "scripts/homm1/graph/ninja_syntax.py",
+      "local_sha256": "def051898e628f6c2a9bdb2b084613bc384c6891d9f32d0beba91e566badbe2b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/scan.py",
+      "donor_sha256": "2b4fa9dda276788ef77a32f3c80df8f8385bd03279cb43207691f507f01f2c41",
+      "destination": "scripts/homm1/graph/scan.py",
+      "local_sha256": "b52371659c83bb0315b4063893c6ecbe97f0ed78d1d558ea20e155bccd2b8a7e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/graph/verbs.py",
+      "donor_sha256": "e9a15637b14766738092832970cfb34abb0aa0bb808359208b702d7047f7b689",
+      "destination": "scripts/homm1/graph/verbs.py",
+      "local_sha256": "039f800f5a803337b411c1f780dccbdb177db35d162f378f8da285952897b6a0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/lsp/__init__.py",
+      "donor_sha256": "9bfbcf07385cae85a6c9f1232a7e95506fae02118756a24de68038b999e3a1ed",
+      "destination": "scripts/homm1/lsp/__init__.py",
+      "local_sha256": "55833a7f15961f84ea2e208426fa95612ca9f37704baf67afc962ed9907b4658",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/lsp/__main__.py",
+      "donor_sha256": "7c4efa2af5a64edd54cfb577a886f7b1b075a0b110961dec4c15ee0ffd580056",
+      "destination": "scripts/homm1/lsp/__main__.py",
+      "local_sha256": "c69bbd0c1d8e26c24fe2ef0bbcf5dc3acb0c966d242783131b276c8f5961c2d6",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/lsp/query.py",
+      "donor_sha256": "9aa883caf2b3d060cb6da1ce54b3605b605a4c5767f3efe10c03c753b1b4d7cd",
+      "destination": "scripts/homm1/lsp/query.py",
+      "local_sha256": "d24e3888e7d64ecffe9a0694b1cfebf595d2e14faded7a1825b73bb85e496663",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/lsp/rename.py",
+      "donor_sha256": "66f1f49fec9ba7d141f802c23ada3e924f65914045c9c5a969fa1c8559b5e0d1",
+      "destination": "scripts/homm1/lsp/rename.py",
+      "local_sha256": "fff7609d295d9f2e29cff52bab968c3faf9d7935832c299b05ce8606fdc1ffe0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/manifest.py",
+      "donor_sha256": "6f28501e236f667139ece6dd9dd3a7912147e9e125b2081d88df5d152714ff3a",
+      "destination": "scripts/homm1/manifest.py",
+      "local_sha256": "294b5d942cc748ebb331696c4407f95cae8877358ce499041f408375868d563d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/model.py",
+      "donor_sha256": "6e506ef0ed49532b816f733f33cce98654de36cb660e2c7f35f88b072c22a9aa",
+      "destination": "scripts/homm1/model.py",
+      "local_sha256": "779412d42b05284f96fb9ced19f481edfe5bcef8ca730895f4491c8bbe940f98",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/__init__.py",
+      "donor_sha256": "04848f0647b9a03c7d66a7ecbcc769b243a2cfdd338179a45d4c136430579c9f",
+      "destination": "scripts/homm1/permute/__init__.py",
+      "local_sha256": "b6fce577ca5fd3f4061ee4ed3fbac72d397ecb543b7b611474c3db77b3eb4e6e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/batch_source_variants.py",
+      "donor_sha256": "f553934f47ac5d3bda4e69b8d43440e5c6c71bf77da1e139dfbf1d68b46f976c",
+      "destination": "scripts/homm1/permute/batch_source_variants.py",
+      "local_sha256": "7ec9488bc0720fa66722f662e2137174178b938276bbc21335574c9c72e059d5",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/campaign.py",
+      "donor_sha256": "b54243027cb65f0f032d23521109c41ae1a2b8e1e7dd9d5626d326c1dd86d7a1",
+      "destination": "scripts/homm1/permute/campaign.py",
+      "local_sha256": "24a7e0d1ea4838d5359edbfb6ec30a77ecf105409831cc54250874cb7c5a1b9d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/generate_ast_variants.py",
+      "donor_sha256": "969c5a0629c64060db2125c68092068148af8bc6ec14603ff5be1c2d0c79ad4e",
+      "destination": "scripts/homm1/permute/generate_ast_variants.py",
+      "local_sha256": "94635134534e0f4dea930f7eadaa73b0a39c6833a3514376fd7f0e7490a81cdf",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/match_variants.py",
+      "donor_sha256": "28c9b77fbe96bd0e82d6addc799bf673ad5d166a4a3216d22f2275a9ab0ceb3c",
+      "destination": "scripts/homm1/permute/match_variants.py",
+      "local_sha256": "5e46afbaae8c0b68dff80280dfae8f982e8ec72190eca097b389588621523a39",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/test_campaign.py",
+      "donor_sha256": "72a59da86114eb8f220c9ab18ee69ec41145a4b74910185f5a33d84ee334c1c4",
+      "destination": "scripts/homm1/permute/test_campaign.py",
+      "local_sha256": "ccb2bf57603168cff4aa21376397a028bfbb0ae470a0a28fd81b1c857e729f74",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/test_source_variants.py",
+      "donor_sha256": "3a29c3aada395dce063a5af2698de401d66d416c15b028052f699fe7645807f0",
+      "destination": "scripts/homm1/permute/test_source_variants.py",
+      "local_sha256": "a7bf487a98caafa97923218d9790376851027602ea1c3b8143f7092ed9db3bff",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/test_tu_state_metrics.py",
+      "donor_sha256": "39f402f5560f2f3255bfc81dd06ca6d79f98178e3b233f860b4f104b76ade515",
+      "destination": "scripts/homm1/permute/test_tu_state_metrics.py",
+      "local_sha256": "e094bc120fb701378760a1e4eacc15d66813277333d865374aa1b15c5a924990",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/test_tu_state_noise.py",
+      "donor_sha256": "99aaecaffbc029876e96656f8b1e915b05f7e80d7b9a59edf6dc99347417de11",
+      "destination": "scripts/homm1/permute/test_tu_state_noise.py",
+      "local_sha256": "1ceb7dc7c863f5802850cc3fcc36efcdb791b6efeb56976efe3d5aca856f8918",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/topology.py",
+      "donor_sha256": "b4d9eee66fe7027505850a26f671599bafaefd1c65f5aa162b1406813375c4b9",
+      "destination": "scripts/homm1/permute/topology.py",
+      "local_sha256": "1c355bfec7a5f0940261b4a92498b40523274c616f355eb0e6668b41b5c3407b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/tu_state_metrics.py",
+      "donor_sha256": "bb7e07d6890e9cd0b2384d44179c4ccf85763d43a1cbdd03bcde490204d61f56",
+      "destination": "scripts/homm1/permute/tu_state_metrics.py",
+      "local_sha256": "f5294a8d885a40ce4ecb30b0bc8e5c9011286c13bdaad7f270463c452e797eee",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/permute/tu_state_noise.py",
+      "donor_sha256": "ec74ac4d1c8d269792842fac5c8ba475bbb7bd5a39baa79dcd31e2e2a5a35dc6",
+      "destination": "scripts/homm1/permute/tu_state_noise.py",
+      "local_sha256": "1a5d4306274533e3c5a48c70496dc744b493f2713e20847692821bcb0e872832",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/retail_labels/__init__.py",
+      "donor_sha256": "ec9c5b6e2524eb26caae6435ec740bb7e3b554b469c72e16e1fa4682aa42054f",
+      "destination": "scripts/homm1/retail_labels/__init__.py",
+      "local_sha256": "352b6071dfa7b350becf1d50748f19c982751ad18d3a3b173e5b3c7923086bd7",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/retail_labels/censuses.py",
+      "donor_sha256": "c621103e8a9a8523732ab982769a166a96956247cf67064e4848ae517da87c0a",
+      "destination": "scripts/homm1/retail_labels/censuses.py",
+      "local_sha256": "251c8175e367310cf97c9de9579090344630ad85941814beea39e8527a0141f0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/retail_labels/fragments.py",
+      "donor_sha256": "3b35ecc7b04784d2334bf354d69a54be11ef91b423d072560739a1d6cf9d8e15",
+      "destination": "scripts/homm1/retail_labels/fragments.py",
+      "local_sha256": "66f7bfb98fe7001e16f93b5e012fdb0180eed2f0c9bf9c836ae430a0f7c514ce",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/retail_labels/providers.py",
+      "donor_sha256": "0b4d6750a64ac66bfe52b7c1bba0a0f62f2e610fad55b9e7eccb412aea555f9b",
+      "destination": "scripts/homm1/retail_labels/providers.py",
+      "local_sha256": "b756aa2495e4bd7324282561d5410eb845fa50e05ea743e2a451f7e31e7f7934",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/retail_labels/source.py",
+      "donor_sha256": "53802e9ddb7988956bf1e1e31fef1d0e978485d33495d31550ed58903ccdd0b2",
+      "destination": "scripts/homm1/retail_labels/source.py",
+      "local_sha256": "6a14c6c9d0565357ebd9fbb4c122cdd93673563e23504d08a5639b349c0e1f02",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/retail_labels/test_censuses.py",
+      "donor_sha256": "6a40f766b463e7f8b1e7c1c6d74f862c07d9be4a689383c8a4f39db837d45a92",
+      "status": "deferred",
+      "reason": "Executable-section data census controls accompany the deferred text-data delinker patch"
+    },
+    {
+      "path": "scripts/giten/retail_labels/test_decl_claims.py",
+      "donor_sha256": "269a47a37156a424666c2b411c24ad234bab7547eaeea1bcf60711f9f4eb49b5",
+      "destination": "scripts/homm1/retail_labels/test_decl_claims.py",
+      "local_sha256": "486290b005f159f58f737f5f0f6940e28e5a91d75c85c6382acb1359316896a7",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/__init__.py",
+      "donor_sha256": "e6df422a41e11098580b7600d9ea7958f2058fd31a8a6f5b7b242e6d7ffeaf32",
+      "destination": "scripts/homm1/sema/__init__.py",
+      "local_sha256": "7417567b6bd9a7c030c944dcdcfc116d6432243381beef80c6be8c961fecbcce",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/__main__.py",
+      "donor_sha256": "b0f2bfa1a0a4df2b941655bb30396a2773878695e417727cd4e133c67cd62b8d",
+      "destination": "scripts/homm1/sema/__main__.py",
+      "local_sha256": "e22c33ad494834683b34b191e5b85473f8cd2858748e60c4b708b3e3c27ed4b2",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/classof.py",
+      "donor_sha256": "85b48875819e97d84697bf8c7410e6beadd2ced9da674e7e76edbbf91cc08f71",
+      "destination": "scripts/homm1/sema/classof.py",
+      "local_sha256": "b068e79b1f63795c4645b569cb524609c0c6d39c842abbda2fee48c800c8a6ad",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/disasm.py",
+      "donor_sha256": "5e8c9a7b3a921cd944d3c41a122356c44edc46b3ff804efa8bf6d970978bddec",
+      "destination": "scripts/homm1/sema/disasm.py",
+      "local_sha256": "d01ff40b455ced52fc96435dab96ca5d69f2fea2ec422e8fed90147a2fdc3ba1",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/dump_target.py",
+      "donor_sha256": "ba1639f923e2aebaeeb8234ced1517e753de33f4b88c2f2db0a26f7289719b09",
+      "destination": "scripts/homm1/sema/dump_target.py",
+      "local_sha256": "aa7b804dae2f7efeff3f67fd677f6639cbe38c7faa9d6c993cc0a95d4720ee68",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/exe_map.py",
+      "donor_sha256": "0d29fee9db5347e4e7b6107e6d9ec5c1837bdfdf0a2893663b01864efa2ba61c",
+      "destination": "scripts/homm1/sema/exe_map.py",
+      "local_sha256": "47f923c7f4b3da1aff3132960e73a8cbda488ad3e07a2904d949ec676aa98ab7",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/gaps.py",
+      "donor_sha256": "7de8f88117b8ec76018621f8b9b2f5bc042c1527bbdd1239e736ec5bdaf8e678",
+      "destination": "scripts/homm1/sema/gaps.py",
+      "local_sha256": "3d1be0b82b2c596e98865e10f64115447e9dd9f73c6cd15fca76c9afafb1e20c",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/image.py",
+      "donor_sha256": "ca7f900e0d54b32dcef80e01dd8ee7af2694fa520b1860df785a8bb231d71fe2",
+      "destination": "scripts/homm1/sema/image.py",
+      "local_sha256": "ef4e907e9a47c211cc149a8645d4e80e8f35f1a0145295a0fd1058c615f16e1e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/index.py",
+      "donor_sha256": "fa3e80021fb2c02ad2de01c6f1ff79aedf31b900f1ab69a8358571ffb7734a83",
+      "destination": "scripts/homm1/sema/index.py",
+      "local_sha256": "3cad78a65dabeb5af744fea2b09b1eb5d28588b10b2dc627c0f38a8113cc1753",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/map.py",
+      "donor_sha256": "6fadde79014474eee9d2d3456ab7c5a8c2ff595d5c8402111c7429170cc9b73e",
+      "destination": "scripts/homm1/sema/map.py",
+      "local_sha256": "f38af86f69ea862f39115a1ac2ec953a8b2ed74f78a72ccf2f0ca31923d5aa32",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/match.py",
+      "donor_sha256": "d1f5e82d3d07569471a928850ee379546d14dbacf0fbb9a767ac6e8397b04d58",
+      "destination": "scripts/homm1/sema/match.py",
+      "local_sha256": "73ec100697fee4a8f6f3c7d6d07a7cea96ef6e3213e12aec17a24ebdc2c2d793",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/report.py",
+      "donor_sha256": "2e45f154083618a6038491db79d64c0266500fccb7b9e2f4ab2575e6f6efea5d",
+      "destination": "scripts/homm1/sema/report.py",
+      "local_sha256": "c6377c99eeca86e3242ac05d3510d7138e1aee78b0a1249d4c03f570fc025f98",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/rva.py",
+      "donor_sha256": "3c84b27ea280c0190ae2c68a1726df07af2325526af72b4983c6f9905a3bdbf4",
+      "destination": "scripts/homm1/sema/rva.py",
+      "local_sha256": "422fd42e22ec44ce35ceb691ae8d35ba23e9e295df20af21f63412c842ccdfad",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/strings.py",
+      "donor_sha256": "0937dc25ae86db037b9e3fbc5d952ea4c29a92bb7ad5f376d3ac64d67a201d80",
+      "destination": "scripts/homm1/sema/strings.py",
+      "local_sha256": "5cab836615132fe458e1dad989d644e66b2959cd56e7150f7f6c5416aecfbede",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/vtable.py",
+      "donor_sha256": "c83bca879e3bcfef8a651e32e6c129b06a3cafcbf5ba5be1ee6dfade17da14ac",
+      "destination": "scripts/homm1/sema/vtable.py",
+      "local_sha256": "6a9511b75a17205cd9ef46e953a40909d1c8923bdbe1ba75c050914377a99069",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/sema/xref.py",
+      "donor_sha256": "2faef6a4404779baea3945bc24ca91fec8ecb795e7e9cb03a12e615b275ce0b9",
+      "destination": "scripts/homm1/sema/xref.py",
+      "local_sha256": "a5ee6c4634299343c32812094c9174a450997a3861db086bf009f2623d6c5ec3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/test_model.py",
+      "donor_sha256": "2c148dbc8c13ff65e694fc3c3fa47586aa6b9d6aa012417568accef23fd01eef",
+      "destination": "scripts/homm1/test_model.py",
+      "local_sha256": "82c97a66fd8e12d809553d69311adb53f12d2ad348fb4af552ba8565dbb779ba",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/__init__.py",
+      "donor_sha256": "8731d4dc2f3df071890eff6f27c6e5389cf12c36a4803f9b030ce8b095888d3a",
+      "destination": "scripts/homm1/tool/__init__.py",
+      "local_sha256": "f3a5ad815c97d09fcc494c4ed6303419af411debc8453ff2c00e33ad961b626f",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/cdfs.py",
+      "donor_sha256": "b361acb42a61c8274a0af4c660a6f174513775b54f4e2790b05712909e87cf5c",
+      "status": "inapplicable",
+      "reason": "Giten disc extraction; HoMM1 uses hash-pinned local PE inputs"
+    },
+    {
+      "path": "scripts/giten/tool/cl.py",
+      "donor_sha256": "660f68ebc44f60173d4a7a43108d975a7aa1b584df0c913c11d301836d339c03",
+      "destination": "scripts/homm1/tool/cl.py",
+      "local_sha256": "7ed70c1ee4205c430f0f53b0a95b8d048fca8d85c48f7503f9d064611af8366b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/clang.py",
+      "donor_sha256": "7c829c5dbadf07095f2776511516857215257452cc602613f04f0da702961ad9",
+      "destination": "scripts/homm1/tool/clang.py",
+      "local_sha256": "fac87bf08c800886d7d7967afdb6dd4ae2390c4912b8f5e2a6354ec97d526dcb",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/clangd.py",
+      "donor_sha256": "54a7d8912434c8b478cf0a164d0ae982932a848da5f38a35cd0cdf833632c837",
+      "destination": "scripts/homm1/tool/clangd.py",
+      "local_sha256": "a698bf4b6dbf2f8fd277e3ab021a72beb8a9e47f1d7ef28985cc74d12f30356f",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/delinker.py",
+      "donor_sha256": "ed4d0af5f6a307d3683213c0ee554cc4a1b0c9e6af13ba56d7d675f4ae97110f",
+      "destination": "scripts/homm1/tool/delinker.py",
+      "local_sha256": "7128dece99835a9412a9fa00375f9740fc91ef367884b8ceb210e296e7a5ccb1",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/ghidra.py",
+      "donor_sha256": "e2f14955a4c2a73a47a82ff234862f24c843e0dd19ef6b1bf158b0cedab1dbc5",
+      "destination": "scripts/homm1/tool/ghidra.py",
+      "local_sha256": "b7065ab234c1686ab006b6b62927f484ea4e74e5f7a092126e5ea69411d01354",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/link.py",
+      "donor_sha256": "6ab2e146087b98969b268dd0cefda85e5e7e792954f1eb31511d9dcbbb847a44",
+      "destination": "scripts/homm1/tool/link.py",
+      "local_sha256": "da2dd2e1c30320048b08ad0ce8b38461213babb3bf1131df0e8ac817b26cb8ad",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/merge_units.py",
+      "donor_sha256": "dea29fd5dfb2afbbe15638b2864cbfc82c0e485a462651ff2a628284a0d643c7",
+      "destination": "scripts/homm1/tool/merge_units.py",
+      "local_sha256": "cd41322caa1de7e7cb2c71d235544a0adb5cea46c165e2910169cf2a0c5815e0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/objdiff.py",
+      "donor_sha256": "7d28ead9364779f47611d28290a40cb2ef0b2226c4a5cb07cc102bb5f4ab49fe",
+      "destination": "scripts/homm1/tool/objdiff.py",
+      "local_sha256": "1d2b4676e72054f314c9f0a646f7d23e4be7f0b9af3520271d2916296eeb45b4",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/objdump.py",
+      "donor_sha256": "280f9b6146d1180eb79974955fffe28e7cefc8c8853eb94786cbdd64750df0c0",
+      "destination": "scripts/homm1/tool/objdump.py",
+      "local_sha256": "a2f80f2509d380c39f798e289fb7e7c243a88bdb5a08fe46ea0d4c636b2c85fa",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/pdbutil.py",
+      "donor_sha256": "fce6bba72ab90d410223d687042c6b6871dccadb17742ace63e1b4522affe8f1",
+      "destination": "scripts/homm1/tool/pdbutil.py",
+      "local_sha256": "bed954edaaa3079cb8f83223fd55493b6398cf9a47f1c539dab285e77b766529",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/rc.py",
+      "donor_sha256": "580c3a48344a3d6a3585e109d77c1e38d18610789af031dcc2042bda4a2d2e72",
+      "destination": "scripts/homm1/tool/rc.py",
+      "local_sha256": "19a1f66913f4be948bd2ed8626ee9362ec7c8e1912c49ca26eeaa3d5817340b3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/test_merge_units.py",
+      "donor_sha256": "faea4f79d5838c8c9b99a1e68eda657a55d8a80f14b4a9bd4b24fe606023cc15",
+      "destination": "scripts/homm1/tool/test_merge_units.py",
+      "local_sha256": "2e6e09bb49f3d2238db54bbf2e28ebba9563e7b78e326d089199f9bf84c4d051",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/tool/wine.py",
+      "donor_sha256": "17f6d96cb72b5d28dac9a29bba52e0ef55f764b943c632f98752bf543392f963",
+      "destination": "scripts/homm1/tool/wine.py",
+      "local_sha256": "06c2b2c7995b3169ac44a85c2744f46afbf82f3cfb4cfb0ba5670c44962f4bbe",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/__init__.py",
+      "donor_sha256": "3ac8cb17337b8e3f62acb8fa335028c0c32ab15cdc0cdb9d722f4a838e0b090d",
+      "destination": "scripts/homm1/verify/__init__.py",
+      "local_sha256": "0794613fba49a827995fa65d7668385d9a13a18ed79ec93baa5dd62d544131f0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/__main__.py",
+      "donor_sha256": "6fe8da0f1508966bdb9e62e4041fe5247dec6a457791b4f8b1fd23fc2eb9e593",
+      "destination": "scripts/homm1/verify/__main__.py",
+      "local_sha256": "42f6d9d65128c3b8762df17c6acf589cd575af32915782b04b3001078fe024e4",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/access_map.py",
+      "donor_sha256": "925361e736b62c6cd89444248aa8c985318d291a47a3e16323af98b13389cee1",
+      "destination": "scripts/homm1/verify/access_map.py",
+      "local_sha256": "261be77221644c9d452737be65299e2af4c2f79d7b4fece54cdd7ffb8a9fde1b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/alloc_size.py",
+      "donor_sha256": "de45ec0a4706aa8ea368a7c8be8bc59aa4df23366bfda6a5a5fd9f49ca0c04b1",
+      "destination": "scripts/homm1/verify/alloc_size.py",
+      "local_sha256": "f1f90ada18c4afc121bfd363144a4d2d4668bac9ce9ec48ef33e36ef5e149f61",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/assert_relocs.py",
+      "donor_sha256": "985c904791feca15978d0924065021d33b6fc4052c77fbd2ad104dbaf779c10b",
+      "destination": "scripts/homm1/verify/assert_relocs.py",
+      "local_sha256": "248ee9e39e60c8c1a94a2b433c3450f65bb2f6481341d699b62297b729db95be",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/bans.py",
+      "donor_sha256": "46c37a0d430a02aaca5a5fa812790f6c4b763022558832449fdc9dd361aaee0b",
+      "destination": "scripts/homm1/verify/bans.py",
+      "local_sha256": "d03318c3e8bc97d52537057227d5529b68d9f9efc8f0a9df6bc948ec33dbe1da",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/baseline.py",
+      "donor_sha256": "a03b4ae5b80ef9eef5209ee95967547a84f1f3458b39b4fcab2c6e94a89153f4",
+      "destination": "scripts/homm1/verify/baseline.py",
+      "local_sha256": "836f061996aac666815b62f52879fcf2183ec17dad8c4d9bb30b211a40f659b0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/board.py",
+      "donor_sha256": "21fb7ca9781f46c4f71aecac93e24febd0373c5d301b8dad1efbac1031dd95f3",
+      "destination": "scripts/homm1/verify/board.py",
+      "local_sha256": "58728cd8a0116421b80f8a8d6b19374bc084ccb810e25194c3098c41fd865033",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/caller_callee.py",
+      "donor_sha256": "22919cdc87fa699b495d10e4b72db7fea24313282086f33533822aa7b8042d70",
+      "destination": "scripts/homm1/verify/caller_callee.py",
+      "local_sha256": "576d5203bf3a2f1408e480ddea0c97fdc84350bf72d99b023ef73e08199c7d52",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/casts.py",
+      "donor_sha256": "93e24458a65fb946296a156dd3ff427e311746198594d60f5f3144f2ecf5e80e",
+      "destination": "scripts/homm1/verify/casts.py",
+      "local_sha256": "4c50f3a02531eb7fc2fc96774441e990490dfd2e0e24e9e9b09ea99fe432eed5",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/claim_size.py",
+      "donor_sha256": "d837316c37a9770dc07df4063cf18cf1382a072f9b131897162e434d4375e5bb",
+      "destination": "scripts/homm1/verify/claim_size.py",
+      "local_sha256": "42c899f8fac8b5303e10ac358eb61966cf4ca38b438db6779a094f9e559baf9a",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/classify.py",
+      "donor_sha256": "881b03f545a130ae16c67438b10de9fb01ee9d7196d32dd0fc3ed1830f9ceffa",
+      "destination": "scripts/homm1/verify/classify.py",
+      "local_sha256": "e410965c7171c93a2551cc5df4e67ba125db76e24457062c7a673ca078911bb2",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/compiler_artifacts.py",
+      "donor_sha256": "174b507e9836118d6383a5b54fd70c7e0ed30086254569da9b59f5ad64a3d7c3",
+      "destination": "scripts/homm1/verify/compiler_artifacts.py",
+      "local_sha256": "2c5c484edcae089db5929224bf6c1dc5171d03d3846e62d0a7b215cc733a8d4b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/constants.py",
+      "donor_sha256": "f461bd46c9fad8b3f504f98d2bae8a7639130fce1dee3e327f0f6f036ac99d7c",
+      "destination": "scripts/homm1/verify/constants.py",
+      "local_sha256": "f298f49424f7ea11c5c0b0c5f1d4b40399c82642c4a4075e496e3d50c358f73a",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/data_access.py",
+      "donor_sha256": "04a8d1a3792a7832c363aedbd2cf701ec4e9d73a3ad5f8a9c4ac09648a6b11d9",
+      "destination": "scripts/homm1/verify/data_access.py",
+      "local_sha256": "408466fdab8ff2cc146970a963337ccae607a7c066a752c5e2811994402e24fd",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/data_coverage.py",
+      "donor_sha256": "fd37ceff04c990687ee3c25edbd9efb00ee3c451af722b4e0d1553c9472449d1",
+      "destination": "scripts/homm1/verify/data_coverage.py",
+      "local_sha256": "0292b5c0d1b7015bb24c1d6652d54e677cf4732052b101189ecb27e7c5b03a05",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/data_identity.py",
+      "donor_sha256": "1500cf5069d941ffcdedb8680924ca00bee153dac3b579d9339dd22cceb7b693",
+      "destination": "scripts/homm1/verify/data_identity.py",
+      "local_sha256": "db99394299bb1dc4b8447c6c37860ef308dba95c0f3055ad36eda4e32d3c0b0f",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/data_relocs.py",
+      "donor_sha256": "580cafd6d497dc9920fe8a174861be6a6275e38345ffdffcc8bdfca7226ff8da",
+      "destination": "scripts/homm1/verify/data_relocs.py",
+      "local_sha256": "ebafbf7e45714054caf47f2eb69b0af078d8a8ec85111a20dcdba64da378b310",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/data_tu_order.py",
+      "donor_sha256": "1a7e361a34e2b5e6f94df50ca9fa4ed10f30c463ef46c79556326b7598869857",
+      "destination": "scripts/homm1/verify/data_tu_order.py",
+      "local_sha256": "e7412f6913be033d87d570e01187892acb57f366d5cb00f050864948e42614a0",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/dead_code.py",
+      "donor_sha256": "781ae0f5dd75ea9ed1669fb7e60d1f4a293d3b12eb9f5cb268ae712805fdf1c8",
+      "destination": "scripts/homm1/verify/dead_code.py",
+      "local_sha256": "d4dc0656dfcf9925b530441ef1a00c2ea72224b9ed094b8e093744faffaa13b2",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/enum_domains.py",
+      "donor_sha256": "d950303db392252884b5fe713ac1c0512f7b686935330029207200ff5d8d45a3",
+      "destination": "scripts/homm1/verify/enum_domains.py",
+      "local_sha256": "ec48141922a24e179ca4afd608b43247eec0f6580afeaff7929edd2a56d18ce2",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/enum_reuse.py",
+      "donor_sha256": "b7616410e3d7133411a69befb3331bf15cc2e5148924b2b25d158bb605d3b006",
+      "destination": "scripts/homm1/verify/enum_reuse.py",
+      "local_sha256": "7d43db17220ff8de4e239831cf030640222a7bcf19fe71cfef784c4e9122c835",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/fingerprints.py",
+      "donor_sha256": "1425c9934fd8bbbbec96acea8bec29efa3c406a4b2e991773c29abdde1c58462",
+      "destination": "scripts/homm1/verify/fingerprints.py",
+      "local_sha256": "408b725d95d25fd0735f345d14d02bb8b9ce4d1bd9c5d8998ebe7bd6f0e3c626",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/include_order.py",
+      "donor_sha256": "82eb74ebe719fd76bdd8b2b06ee8c1d1dbcd42c60c1269bfb4928a4a13b28569",
+      "destination": "scripts/homm1/verify/include_order.py",
+      "local_sha256": "33280208ce7b59fe90e768e3f94ab4b5d41df54cc7c8d6733312d016e5df5e6e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/label_style.py",
+      "donor_sha256": "feaadba367214d6af06f422ff7e24d236f7bd81dbd10b84fc7ff65191329eb5a",
+      "destination": "scripts/homm1/verify/label_style.py",
+      "local_sha256": "3159f762883ae97f1eed300f484cfc69df8f29627e8744dbebd86bde8939d975",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/layout.py",
+      "donor_sha256": "64e62e1df7807732f8959e2ca6f8eb9cdfe48170d742259ef6aa2ce59073ef15",
+      "destination": "scripts/homm1/verify/layout.py",
+      "local_sha256": "f3cb2d24814317dd9859bd4dfc1e50b6ed76dbb26736ed5cd05d188208d42eaa",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/library_data_refs.py",
+      "donor_sha256": "6bc3c4388ce27814984890f1b040eb3721a6baabf76b542d37ed19c64544d6c7",
+      "destination": "scripts/homm1/verify/library_data_refs.py",
+      "local_sha256": "3d37841a8422eb511df6aa39ee5a63509db6cb43b94244d2f8d453ec6bcc1347",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/library_overlap.py",
+      "donor_sha256": "679eda4f2cc075c1a7b93ab8db0a2e59a413a2c67788ebcd312dbcfc7c2ce957",
+      "destination": "scripts/homm1/verify/library_overlap.py",
+      "local_sha256": "6f5ef1e8d1b14a647630f1c5c33d38fa46568bcddc842bb242269d07c9c4a6ec",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/link_tier.py",
+      "donor_sha256": "bfd1243519e4735584b0b6d1c1b31eab5e6da04894be38f2923bf2cc92bc53cf",
+      "destination": "scripts/homm1/verify/link_tier.py",
+      "local_sha256": "b8aeacf261537fd5ba5d1b64f7e1bee8288f6f5367cfa92110b78956aea164cc",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/placement.py",
+      "donor_sha256": "421ed427f7ffe2448ed7553699caf9acb23c28c6eb528c73369e3e096f2a43e8",
+      "status": "deferred",
+      "reason": "Data-claim extent and declaration placement audit needs HoMM1 fixtures; data campaign follows code"
+    },
+    {
+      "path": "scripts/giten/verify/readme.py",
+      "donor_sha256": "e7be72d6f0a881f97a6f68c8a7f3b68b715f540cd9dac67dd00facb3d0d35614",
+      "destination": "scripts/homm1/verify/readme.py",
+      "local_sha256": "b61bd0e2605ad18f7afb6740e777213ee04b49bc328b975c6d0650185e7712c3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/scores.py",
+      "donor_sha256": "10d575f8cdec171ac7e22d38a368762ebc0081eec252141a6f8580f934d094b5",
+      "destination": "scripts/homm1/verify/scores.py",
+      "local_sha256": "b58cda51a64f4ae6453d2a89c1e5809041321f3d399ab89f351c6a6176914b81",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/selftest.py",
+      "donor_sha256": "59f73d612dfa45ce5f5e60ae7b7fbdc3f91c4be06fa48e688dd7a8ede3aa7623",
+      "destination": "scripts/homm1/verify/selftest.py",
+      "local_sha256": "5f01bdff23a460d123b80eff89ab5d07e849753a4173472be62cf7e7f1f9ecdb",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/source_encoding.py",
+      "donor_sha256": "ecb8a0f61004d714e2fbf33aaa51dcf3a4cd9236770c1e65549844d682c74173",
+      "destination": "scripts/homm1/verify/source_encoding.py",
+      "local_sha256": "858f3b89f138c8595f9d261e68e89df060e8b2d92cd1b8dcd43124e957c185e7",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/srcscan.py",
+      "donor_sha256": "0c0b9ae8380dc3918548aec122664ad0d49175f8ddb40ee192acdb0564e508ff",
+      "destination": "scripts/homm1/verify/srcscan.py",
+      "local_sha256": "3dc7ae00bcb81ded48fafdac676fd2587c213ad6bf65cf381453c400590b0d0e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/test_data_identity.py",
+      "donor_sha256": "c3799a3126e8e7197265fca697059aa6074a9c3b57b5ebbe1b8df14eb6a760e6",
+      "destination": "scripts/homm1/verify/test_data_identity.py",
+      "local_sha256": "fbe14a77091f7004c5bda20b7d5a871d40ea40eda54f1347e78f6f9f33e3d4d8",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/tiers.py",
+      "donor_sha256": "118c6b0ba0244c562af03e8b8a5f77744f94b6c0d8400ec8a64d25c6acde2fc6",
+      "destination": "scripts/homm1/verify/tiers.py",
+      "local_sha256": "4433cd25298845f4fc9122d0796bd1724c6296cba765248d14092fc79b7f4767",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/tu_order.py",
+      "donor_sha256": "393c8e2603cd6ee62037f1defbf49e83530964dd70dc4dea86bcf403af682010",
+      "destination": "scripts/homm1/verify/tu_order.py",
+      "local_sha256": "9979fe13cabb85e40d8c6766f62d3bf1023eaa2f6e514df92e5c55ccfae571a3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/undefined_closure.py",
+      "donor_sha256": "07dab51cbcb5d3c96939ea0edeb0b6467182875d85aef8b611730d33cf95954f",
+      "destination": "scripts/homm1/verify/undefined_closure.py",
+      "local_sha256": "0585abc948b815329b8f27827e3c548bd7301fd5d68d09f59d7d1f53fe537d6d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/unique_names.py",
+      "donor_sha256": "775d7a070112e22c4a1e08e5f9cc85e4c43040b65eecee167ff665c35f9a41ec",
+      "destination": "scripts/homm1/verify/unique_names.py",
+      "local_sha256": "a06efba7598923f92151ad24bd3c633ab524f105111e87fd0d3955ecd13d99cf",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/universe.py",
+      "donor_sha256": "70e62ac2ce48e011fefa9a4b78073a4bb6485b1114efad9e8c9a57e113e0a97b",
+      "destination": "scripts/homm1/verify/universe.py",
+      "local_sha256": "118d99612511d26204559cdc5014a8b5df64b6fd2cb94ae92497a4b73e8ab860",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/verbs.py",
+      "donor_sha256": "45e52ea87c4c3f90e3201d64b69defa07d90b59b4730165793dc264174f6683c",
+      "destination": "scripts/homm1/verify/verbs.py",
+      "local_sha256": "540e7e563f6effd564fccc4cdabeb11a429d9f88966f335b596d87a473490e08",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/vtable_scan.py",
+      "donor_sha256": "a56c5bc17360f89abf73ce99c6920fd729174c514a17be65d3e41fcfd3a605ae",
+      "destination": "scripts/homm1/verify/vtable_scan.py",
+      "local_sha256": "d6d0d671f425e93f05b5c23c85324997b8932cc0bb640b7066e02cc7c69f9158",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/verify/vtables.py",
+      "donor_sha256": "037109a7bd505b97017eaf49e337af52b3411bb4e380104e4defca42052d6e22",
+      "destination": "scripts/homm1/verify/vtables.py",
+      "local_sha256": "c63a228299a267f537a78331688d4dae00f785e54c9eb293a74034be64a51704",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/__init__.py",
+      "donor_sha256": "7b583bc180ba762f42630c606e400879898d181d2f052c4e36caae77c218a575",
+      "destination": "scripts/homm1/walls/__init__.py",
+      "local_sha256": "412ea3e1dc7feba405ee881f9e5c01db3ece6895758f5cb1a466b8d4c21a6913",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/abstractions.py",
+      "donor_sha256": "de0d99656227900bc99fd0128fa2644d687b0df33f058c0e703a938414762b48",
+      "destination": "scripts/homm1/walls/abstractions.py",
+      "local_sha256": "3ff026a7bde87be19d37a4da3faa6b57a186ea8c12a95e9a0b8125e364fe13f7",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/aggdecl.py",
+      "donor_sha256": "fb377967deed870283f60e2f57b5208d2fd27ac230465706df8925cbe94fa095",
+      "destination": "scripts/homm1/walls/aggdecl.py",
+      "local_sha256": "e1f7ffffca4ca931e61d712755dbf3a96cfea74f0e360d83df9b694714fd318d",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/aggregate_copies.py",
+      "donor_sha256": "253c11493db40535286ce2739889179769dd588800c08b7555963bbef5ca65cc",
+      "destination": "scripts/homm1/walls/aggregate_copies.py",
+      "local_sha256": "ac189d26324990fc92ad5ef0df1b27cbd5438f407b0c22725ee446d14a1ac1a3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/aggscan.py",
+      "donor_sha256": "3a1c0e8d5db880af0880e144329a7741e230b8b780651929ae22d63c6f3f299e",
+      "destination": "scripts/homm1/walls/aggscan.py",
+      "local_sha256": "b791117059fe018ed3251db61d7ae43f5ee0c1c94cadd0ea262d75864018dc93",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/diagnose.py",
+      "donor_sha256": "5f865ae500dc358a2b932458b10a281955c2429f13c567a66debe0718b078906",
+      "destination": "scripts/homm1/walls/diagnose.py",
+      "local_sha256": "e957a32ea8efc0de213c07c69983a55dd041462731b1b52435df5547e9a3c7cd",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/eh_frame.py",
+      "donor_sha256": "7ee39a678ff0eecc809da1c80c88b5e7a181a83fefb44507e305b5d30ccac54c",
+      "destination": "scripts/homm1/walls/eh_frame.py",
+      "local_sha256": "e3e520de2859ff8d516e3aff71729b73be7ae60dd10df87e66bbb7ec9eaaf07e",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/global_refs.py",
+      "donor_sha256": "36a654fbbe28eb0c3ed1b4d9327210865f2d6845818b81cebc02035e26a80f90",
+      "destination": "scripts/homm1/walls/global_refs.py",
+      "local_sha256": "e6966ae9038c421f3f1ec568f60cb086c13a36571775124ba1af19f67f6a40b1",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/inline_model.py",
+      "donor_sha256": "c562511c2c260227c2e749f3a4dbe921b4b0f88ae35b5f2c3c535d1c0f347677",
+      "destination": "scripts/homm1/walls/inline_model.py",
+      "local_sha256": "6a748f85e284d78e80adbf3bae54359d4bdfe8623ead3aede7d7ab293f2a5757",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/inventory.py",
+      "donor_sha256": "25f0371a3d35bdc1fdba98309d23c217cfc555ad39c52dd64aec29e046338571",
+      "destination": "scripts/homm1/walls/inventory.py",
+      "local_sha256": "b558d4cd619c7e47bde42139c3e71da472b4f97b3008b9dcae8cc3ebbec4e02a",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/pairscan.py",
+      "donor_sha256": "bd778aafbc7fb8dc0439d2707ec278adc87902d7f5c0ce8e4e09a631d98cf99f",
+      "destination": "scripts/homm1/walls/pairscan.py",
+      "local_sha256": "007d4484b7ac0761b9b562d70301428c40cfb5eec8d3599aa2ba3363cf718557",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/priors.py",
+      "donor_sha256": "d1e9b666fab9264e81aa4e14db60ac8d522673aa4d545f79f7bce25f67122852",
+      "destination": "scripts/homm1/walls/priors.py",
+      "local_sha256": "b1c96f5d9edf077c7a89691812290967e5a53603a6005429aed969f6890ad7d2",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/recheck.py",
+      "donor_sha256": "ad337d971720c4af7f337130cc525ce0fdb81ea748856704b6f7882ff688b0ca",
+      "destination": "scripts/homm1/walls/recheck.py",
+      "local_sha256": "a676ca1783676a7d3e90bea57c649f2135aebba73a45e36670b2cb1942ec8902",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/reviews.py",
+      "donor_sha256": "1c09a767410a46700d6e18400cd63c595e31387d3c689c70423a4e9d5f2b57e9",
+      "destination": "scripts/homm1/walls/reviews.py",
+      "local_sha256": "ef52ed731799d0eb5a4f9f4fc9e94151de9a0b2289a5cd6c23a6e6dcc333e0b8",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/semdiff.py",
+      "donor_sha256": "70bf0a310baa5dadd8ba342a04b3e7b863ca7cacc682665768454d474dcca2cc",
+      "destination": "scripts/homm1/walls/semdiff.py",
+      "local_sha256": "368fce21a40728deb64e6db458e8ec8174f552bea71b816c6d63e95a28142afd",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/stale_markers.py",
+      "donor_sha256": "9cd672af48d09dc2f93bab67692bfa1d26d904608fd88788dbf26d992930a754",
+      "destination": "scripts/homm1/walls/stale_markers.py",
+      "local_sha256": "04a087c2f6eb12e72745eae5866b6a7f5bc28a63d5a6f39c5ecc8bcab24c1b7b",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/test_abstractions.py",
+      "donor_sha256": "73db7071e6a7b1bef604ceecc23fda441fa194bbbc6af57082b38235ff992f1a",
+      "destination": "scripts/homm1/walls/test_abstractions.py",
+      "local_sha256": "7206795a41e606698e2aaf94547132357207410b5dc9b4f4d15756d9c09f15b3",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/giten/walls/test_inline_measure.py",
+      "donor_sha256": "f4faf26b6a4797cce7e5097f3e9ef57f38b6a85472e65c130fc56bf21a83224a",
+      "status": "deferred",
+      "reason": "VC5 budget model not calibrated for VC4"
+    },
+    {
+      "path": "scripts/giten/walls/valuetemp.py",
+      "donor_sha256": "10642dce3b71588bf34f55baab2072796744fe327d1e64404d7122e97314719d",
+      "destination": "scripts/homm1/walls/valuetemp.py",
+      "local_sha256": "219f9cc0332d5d67270d79672f8f8501c81719affa93562fbcb60b7c45a122cb",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "scripts/merge-units.sh",
+      "donor_sha256": "9af4a147d2bf0037a11407460b2b6142cb7adaf0d2a38cee0b0a904a8b06f03c",
+      "destination": "scripts/merge-units.sh",
+      "local_sha256": "3fa92e13da6ab57cb5ebad12f67df6da776b9697a50fd216250e29803e391554",
+      "status": "adapted_review_required"
+    },
+    {
+      "path": "src/File/datafile.c",
+      "donor_sha256": "e05713dee2e8b322a54bb4ecc637ff5952b80f5981d59818eb988e22f6443094",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/abortflag.c",
+      "donor_sha256": "dceea577b2c0e84ab7f9d1af18f16b5f760df57980923b2dc2b76960cf6ba787",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/affinity.c",
+      "donor_sha256": "0febe902d698fc67adbfdf0806738af3f3f0eb6c97afc64d5a41f89f0b12743f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/alignchart.c",
+      "donor_sha256": "30abcc6e8ea4289180b71ac1ee3accedd68820d3b94ba43ebf0435cc24daa556",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/analyze.c",
+      "donor_sha256": "4f0f4b22af45cd3e356de5ab34e265ba2f1a9b2b87621c708073fe7dc71900a7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/areamap.c",
+      "donor_sha256": "61938acf96e8c793d18631fcba5da12f60d576d6e80f9dda9b368283afbaf4df",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/areanpc.c",
+      "donor_sha256": "8e58ccf0eea3e5b398cbe9492b051aff4cb8117ecb4d948ab900aef08ec01614",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/automapbits.c",
+      "donor_sha256": "22d4bf380030bb914bc12b45fdba421eb863cd695d24c297be643936137e09cd",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/character.c",
+      "donor_sha256": "bcfb6c0fce7e317a8e782fe87318e6b2fa88cbd406bb293422657248d2d7be40",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/charinfo.c",
+      "donor_sha256": "6ebe0337033725415801346603aae76fac861274bf9c5a178fb5bda0b418791b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/charpool.c",
+      "donor_sha256": "31311a0c1eaf1fcf20872db014ca8defa4e77b11c8c0f16968ffb32a6b847404",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/charsave.c",
+      "donor_sha256": "67e1668fab8294e6369017162865bcbadd2a4be733826201e282bb9bed1348b3",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/clickwait.c",
+      "donor_sha256": "cdf439e357a40d382a31083a487427f2247ee95b2342b44411066b91bbbc16ba",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/clock.c",
+      "donor_sha256": "f5eb22429aa472934fa7e5a3040eee2b5a318a9fd2b553acf4813c6c87ce45d7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/condition.c",
+      "donor_sha256": "da5878e56b3a6faadfb70af7a6515618d8a10a6bdd1ee37bf45a7dd441dc1cd0",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/debugmenu.c",
+      "donor_sha256": "3efe799204c6e1709bb253e1b51ce99f2376c848737bd3b76ec59fde94eb8b00",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/demontable.c",
+      "donor_sha256": "c2a8c4ab85944e70561753af7a14e8b5ce883d1f11f408f8d55b9c8314bac16a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/equipeffect.c",
+      "donor_sha256": "b6b8843e6945d7721f1a5a3b338da2cac9888bb217b77e290fd009451acd8b5e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/equipscreen.c",
+      "donor_sha256": "a6e770a5dd2f882fd2f630edffeb9d8ee7aa97d100e7014abb8895c049a7987f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/familiarity.c",
+      "donor_sha256": "8abc9164a43e1bca9d8a13f2eae89a16807ba5584fe17ef4bfd15df70712bb50",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/field.c",
+      "donor_sha256": "20352e3000e8ae47a3e62bfaedb5c2d7927c9ecd2cd5b9074545dc1dd51a62ed",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/fieldmain.c",
+      "donor_sha256": "e5001b0d799f490333c54c9d0696002406cfd0fd7b7382e1ae6a3724861b0ac2",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/fieldobj.c",
+      "donor_sha256": "977257ab9e8bf7e8134b873e1f8db25d505cbd0d991ce9945be81d8ba49512e1",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/fieldscreen.c",
+      "donor_sha256": "16951cb81644e7e09cc57572283df21f50443042f4bbb4b5de97dcb4d166200d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/fieldskill.c",
+      "donor_sha256": "752feef4edceb910a8728688f7c7f3e6ab092388900647c95fe6191224d272ab",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/fieldview.c",
+      "donor_sha256": "7634ed3cbf663dea2eaaf71ecb4b70efac06b4cc43d66279ad28c2dfaace3a68",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/gameloop.c",
+      "donor_sha256": "ecab586ec7005441190a64987cf703cb7cb4dcd3ab6dbc6c045e1afe745d1b79",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/gamestate.c",
+      "donor_sha256": "d8e07659c93750d5b254ad7feac7bdc55e93e65324ad1a6aa32b6ab3c3394d4a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/guest.c",
+      "donor_sha256": "3933e2412e00392d4d1774b608823b06bdd970e54ab25658e7658c962041b210",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/infobar.c",
+      "donor_sha256": "9e64ececefb1168cbf1b91e2294f652d128824dc9b1fb814ccfcadffcbba0aba",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/itemmenu.c",
+      "donor_sha256": "6239006b92f0c01cf3eb0938b888eb796156f651e51f338a3b4642bb7b169f3a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/itemrecord.c",
+      "donor_sha256": "b584514b0c72903fdfe45547f21fa82d23ea9ab71b3723bf0222219a9949f6c8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/itemuse.c",
+      "donor_sha256": "82400a73c4ff121cbe0dfdc00146a8547c66af5fb09b1c7fe87639dc234a2447",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/levelup.c",
+      "donor_sha256": "94f197f847d82707a8e637be7c991d88e6858a3246caa2a8bcb43a534968fffc",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/maxstats.c",
+      "donor_sha256": "197698f2b838c9ffdaf8b937e82c65ad4d640764995d5535444c146aad3aeebb",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/menucursor.c",
+      "donor_sha256": "35ec0ba2f28f10184a49159615dcd4c63722d43cd607bd0317db52aaf3dc16ee",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/modeflags.c",
+      "donor_sha256": "cb0493550f6b3be72b2b4c61ac6b2712803b2f9d5938f704c9b9d74b49d1ce9a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/party.c",
+      "donor_sha256": "9a2f61e732fca53ee2789e8e4e20e7ac6dd0fc74818f0e987c73fe33d9d87453",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/partypick.c",
+      "donor_sha256": "3479b65c16826e72cd8b90539dcc7b523a37539803477b2ac078ea28726e66aa",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/playtime.c",
+      "donor_sha256": "2eec6f2d446f7c5082714d25d6c01ac77ee0842d4728b4caa7d4507bfd0f365f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/savegame.c",
+      "donor_sha256": "d44abc6a89915192cbc1522547b3206f3017afab630eeeff526180dfe07f4b01",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/scenecell.c",
+      "donor_sha256": "4a714e911d33b748de4ce83992ca80622467758ddf8eb67d0c079e65cfb6d49b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/skilluse.c",
+      "donor_sha256": "a36954e3db0e9ff8895bce34c245cbaa2d9646bdaa884d49351718595fdb18a1",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/statestack.c",
+      "donor_sha256": "b3e2a6d123c4d3d5173ddef74880cd84a9a450e0281fa589b51a556c25f4b800",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/stattotal.c",
+      "donor_sha256": "0a62800fbe9714e38b4900c3847dcc8fc6d8ef87b3f94d09e6070a97c47590c0",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/statusdraw.c",
+      "donor_sha256": "745039a93c20d00f93380d28da081104ac5ae63d42216128fc876b4ea647dcad",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/statusline.c",
+      "donor_sha256": "07796daff824a4ae0cac5be2a464530dc41cbc62dccd35614b558648045bc161",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/statusmenu.c",
+      "donor_sha256": "87e77c2750d42c8139efa1aa724608637aa2bc564023d43477110d303f20f689",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/subscreen.c",
+      "donor_sha256": "e5eae3a24a1591cb81d16ca8aceba65c1e51203557d5cd934fc5db2cd1e282de",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/training.c",
+      "donor_sha256": "a65095957b2929145029e0ba719996cdab27cf56d1d5a8fcebe1d91dc410d4a7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/worldblocks.c",
+      "donor_sha256": "34bdc090d21a038322fe69b69ba3c4fb4413e49bb8e1b6d65d51b8203b963156",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Game/worldmap.c",
+      "donor_sha256": "7ebb7af17a23a4134bcb52893caddca3834d992b3a7e3897a41a3dedb444a974",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/automap.c",
+      "donor_sha256": "77963ce59a45534550e7b47634095030791e68194d20f5a5cb12e90ef0763e33",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/blit.c",
+      "donor_sha256": "3370f956e406d306bc42eb0e44789da0888b711ae8bb0213b86e2a39e7f3a647",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/bmpseek.c",
+      "donor_sha256": "8794218185cf0df9f1e8f7c1343ba4749e026a4e0ff462cf16d3fbddea32d0fc",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/displayconfig.c",
+      "donor_sha256": "cedee72b61573a6db597a9256b07dd2181f3360aca2ffd393b6239d27af05708",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/motion.c",
+      "donor_sha256": "7cd578eca7b0ace83cc11e633d8f6a028ad829d6f91e6b0899385d567a5ad483",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/picture.c",
+      "donor_sha256": "df7beff37fdb125f9bed84c73e52b56508a070cc41132bd998fa9f74b2f3dfc9",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/screensave.c",
+      "donor_sha256": "658f896403ff08088513a892a82ce8b30e91b6f951ed90b0d6b2a7bd64af8f0e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/shot.c",
+      "donor_sha256": "3dd072adc5084c95ac403492a58dbaea9b7250bf56792521d713c57d9f3857f4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/texture.c",
+      "donor_sha256": "43158f86531630c433010dccae1fb705430cf15ea9b5fd0047cd7247a4fdef09",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/videostate.c",
+      "donor_sha256": "9806be9a769d5dd21c91ee1e5d758cbddc918301a6ca6b13d48406e7562be7c4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/vram.c",
+      "donor_sha256": "f73dadbae17bc499c5d8b2115a7990b776af24ea9b785f78efb2c60172ff5323",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/vramaccess.c",
+      "donor_sha256": "69cc402e810a8d726a96c4363ee4702611d6652ab7b41f3b692c4f3fda8cadb4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Gfx/vramcell.c",
+      "donor_sha256": "4e834a969967cfdc3dda7321c69003c88a6ce9f9e9e801e51ca6f5396f319036",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Input/mouse.c",
+      "donor_sha256": "a2afe1013ab914c9e15eb7b1fd4d29c7cd914c40671a15e39a90dff25e8ff4d7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Math/vec3.c",
+      "donor_sha256": "0ff3fc5551ceb8259b2f89f5e5fefc11c6743f47dcc73c0c9f8275c879127b3f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Mem/handle.c",
+      "donor_sha256": "eece47f6197ca35bf30395b50bb56b2fa3096cc486cba18d01cc12101aaa0d52",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Mem/pool.c",
+      "donor_sha256": "e2e5e76cb1bc2cd68d7c7123d97a3788685741f8c9cd918ed096eaf622e4dc10",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Platform/d3dapp.cpp",
+      "donor_sha256": "c214a52509bd8aba54669f40c52fee2f24e0848a122c6221d20750f7eb7d89ca",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Platform/joystick.cpp",
+      "donor_sha256": "f6d0b164f020f8e823d27a7bcd226dfbcafa80a7a67798bb82756821a6172bcb",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Platform/winmain.cpp",
+      "donor_sha256": "152e912a08c559b10a234a00cd6c005dea8a9cfbe40c2d263465ac5ae7ccc397",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/clockops.c",
+      "donor_sha256": "544df89eae4c60ceea87d5256c95ed4c4145fd3be024c93a51492675fb1339c8",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/eventflags.c",
+      "donor_sha256": "e6be108d29e3a9032560e1e64268102c89f4e43ccba8d10569542ced5ad6fee4",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/recordcache.c",
+      "donor_sha256": "3b90d1d155672a96159b01d4b1afffdbd5b507da81da4721a2a345f59a4a4d20",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptactor.c",
+      "donor_sha256": "4968282745e98938d495a8ee4d36b3d7ae121566eb9f1ad1f7c1d3573af2d0d6",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptcmd.c",
+      "donor_sha256": "ec079b31478e3b32c9c68c62ccce9101c9de9395bfc5443aa26c47f0d9fa6c05",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptctx.c",
+      "donor_sha256": "7b5f54d29ebf65d4701b652edb86e40d69721d2847136bf6963bcbe0f46eb955",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptflow.c",
+      "donor_sha256": "c1dcac4b13e68877352e6a0b02c6a17f5e63742d1cb0dad41692d1ca2ef64c9d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptop.c",
+      "donor_sha256": "2bddbeafab1322d7a1a01411ccb433aadf8219abe76284dbc53636ff18b7d832",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptoperand.c",
+      "donor_sha256": "ca3f30beaf547fcdf3cb009cd231146ebd17882286d40b7f5675bfa65bf5fdba",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptpanel.c",
+      "donor_sha256": "c6e7686583bbd2fce2179f5cc99b432db4dbf15a98e15f3af59899699d83be68",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptsprite.c",
+      "donor_sha256": "dcb283fbb822f0f37e5640583d93400f8f78e960e5da6148332059aaf31c645d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scripttext.c",
+      "donor_sha256": "ab0e23bbbc9ea92229ab6be6d864b2c622c8a7725f99dae29a46d7e542d16a5f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptvars.c",
+      "donor_sha256": "5b7bc901b83569c86ff9ed276b0dc56dd7e6668fe72d77134f2b4564ff996922",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/scriptvm.c",
+      "donor_sha256": "20a03099bba600314275dcbf70d2efb938be656b27a313b1e6167860f3bb03b7",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/textstate.c",
+      "donor_sha256": "f1b527131b48126e0fc252aa3b7ef622edc33a8b7bb1ddd9db4364bcad82af5e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/texttoken.c",
+      "donor_sha256": "f24897ab22d9d3ff3213a5b1510dd49b2e2f7d4412e090c519f5c43cd81b5c54",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Script/windowcolor.c",
+      "donor_sha256": "d799eb8c872cb5986f02d945815882ffd146b76af1f16da3162012ffff09d14f",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Sound/midistream.cpp",
+      "donor_sha256": "26dd94b567afc3064fe873b2a760c21956d70404b65d0398e7e26e8b799e7fdc",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Text/font.cpp",
+      "donor_sha256": "4b4720a3f9b4dcf11f00490b7aa8997beaf4157043270b927c9056d2485b2595",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Text/textapi.c",
+      "donor_sha256": "f8950d21fb713f363becb06e5b53f0c8bedb64339dc3814c58d8f3a5db64be40",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Text/textchar.c",
+      "donor_sha256": "61c7e8b47325eb80d2c691d6217d6113857cff4d7b159d331831fac09f0314ac",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Ui/hotspot.c",
+      "donor_sha256": "7442226b58523a09921a1b7a2a3fca9bdb126a1fe827420ca1e51082153a1a5e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Ui/menubox.c",
+      "donor_sha256": "0af31ad208b2cd441481204ff161cac5ac9fb9cf92fdd2de5315333f9dc9828a",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Ui/menuresult.c",
+      "donor_sha256": "6fbd38a309120cd090095a2b760a5c22ccf475a491a8d37dcaa2c4ca852a2721",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Ui/message.c",
+      "donor_sha256": "2c7cd9ceef1f6a0673416acd359dd747a4787ee9d46f1420639b7a3f942fb53e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Ui/panel.c",
+      "donor_sha256": "81ee756867a506ffc6e10cacbafd25bbfad8367db902d0d92d8d83471d6dac46",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Ui/panelinput.c",
+      "donor_sha256": "f724529f32f9dec648cfc1e2443b9bc0153235302fe4b407b004340b837b1d1e",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Util/bitset.c",
+      "donor_sha256": "5b5299611a1d8e3f810446a2e577ce15d58ad5856792e9fda677f326b022ccf2",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Util/compare.c",
+      "donor_sha256": "33f48834a57a6f148c4827384b11139574ec16ee80d170df6b5a5334a3a39c27",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Util/level.c",
+      "donor_sha256": "80aaed7b7310a2c75eddf7f68aec440723173b120570fdb029428ee28940db08",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Util/list.c",
+      "donor_sha256": "3d6ecad81ee02b931ddbcc33f6e3a7749dcd710c0eae7d0d62f10d229a41344b",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Util/nibble.c",
+      "donor_sha256": "72113d48a66627da20b443dc05fe61b480f48d701215bddd17aec2d6c92fbc3d",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "src/Util/range.c",
+      "donor_sha256": "7efd216c1fe398bf3758bec7aefebdb0c88bb5b9e35fc8936b5000f3583502e2",
+      "status": "target_specific",
+      "reason": "Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts"
+    },
+    {
+      "path": "vendor/.clang-format",
+      "donor_sha256": "f8405bf75d1ab2ed2e69b525a538b409b801812a7c71225da7bb46434f7dcc18",
+      "destination": "vendor/.clang-format",
+      "local_sha256": "b31f421733899646b1bafbeb8ab3dda7391a50169ecac50f16ce7f6abd80409a",
+      "status": "adapted_review_required"
+    }
+  ]
+}

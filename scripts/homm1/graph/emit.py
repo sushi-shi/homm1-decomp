@@ -104,12 +104,13 @@ ML_MODS = _mods("graph/fixed_asm.py", "tool/ml.py") + TOOL_MODS
 COMPDB_MODS = _mods("graph/compdb.py", "tool/clang.py", "manifest.py",
                     "core/paths.py")
 LABELS_MODS = _mods("retail_labels/", "tool/clang.py", "core/coff.py",
-                    "core/tsv.py", "manifest.py", "core/paths.py")
+                    "core/tsv.py", "manifest.py", "core/paths.py", "core/msvc_names.py")
 MODEL_MODS = _mods("model.py", "retail_labels/", "core/tsv.py", "core/paths.py")
 DELINK_MODS = _mods("delink/", "tool/delinker.py", "core/pe.py",
-                    "core/coff.py", "model.py") + TOOL_MODS
+                    "core/coff.py", "model.py", "core/data_matching.py") + TOOL_MODS + ["config/compare.toml"]
 NORMALIZE_MODS = _mods("compare/normalize.py", "compare/canonicalize.py",
-                       "delink/eh_band.py", "core/coff.py")
+                       "delink/eh_band.py", "core/coff.py", "core/msvc_names.py",
+                       "core/data_matching.py") + ["config/compare.toml"]
 PROJECT_MODS = _mods("compare/project.py", "compare/normalize.py", "manifest.py")
 REPORT_MODS = _mods("tool/objdiff.py")
 LINK_MODS = _mods("graph/link.py", "graph/implib.py", "tool/link.py",
@@ -534,12 +535,16 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         w.build(FINGERPRINTS, "verify_fp",
                 inputs=[u["source"] for u in units],
                 implicit=[graph.BINDINGS, MANIFEST, COMPDB, *VERIFY_MODS])
-        # The DEFAULT tiers only (fast+normal): the full/link tiers are
-        # opt-in (`homm1 verify check --tier full`). A failing gate fails
-        # the build - the gates are FATAL, and their committed baselines are
-        # how known debt is carried.
+        w.rule("verify_readme", command="$py -m homm1.verify readme && touch $out",
+               description="refresh README score block")
+        w.build("build/objdiff/.readme.stamp", "verify_readme",
+                inputs=[graph.REPORT_JSON, FINGERPRINTS, "README.md"],
+                implicit=[MANIFEST, *VERIFY_BASELINES, *VERIFY_MODS])
+        # Giten matching-loop behavior: build refreshes scores and README.
+        # Merge preparation explicitly runs `homm1 build verify`; all gates
+        # remain fatal there, including MAX and the fast+normal tiers.
         w.rule("verify_check",
-               command="$py -m homm1.verify check && touch $out",
+               command="$py -m homm1.verify check --no-readme && touch $out",
                description="verify check (MAX gate + fast+normal tiers)")
         w.build(VERIFY_STAMP, "verify_check",
                 inputs=[graph.REPORT_JSON, FINGERPRINTS],
@@ -555,7 +560,7 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         w.build("all", "phony",
                 inputs=base_objs + [graph.BINDINGS, graph.DELINK_STAMP,
                                     graph.OBJDIFF_JSON, graph.REPORT_JSON,
-                                    VERIFY_STAMP])
+                                    FINGERPRINTS, "build/objdiff/.readme.stamp"])
         w.default(["all"])
         w.newline()
 

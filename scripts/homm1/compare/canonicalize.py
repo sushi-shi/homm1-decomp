@@ -800,21 +800,28 @@ def _rewrite_jump_table_relocations(
     """Rewrite same-function local-label DIR32 sites to owner+relative addend."""
     data = bytearray(payload)
     ranges = _function_ranges(original)
+    inline_aliases = {}
+    for stub_index, (owner, actions) in _inline_eh_groups(original).items():
+        inline_aliases[stub_index] = owner
+        inline_aliases.update({action.index: owner for action in actions})
     rewrites = []
     for relocation in original.relocations:
         if relocation.typ != DIR32:
             continue
         section = original.sections[relocation.section - 1]
-        if not section.characteristics & MEM_EXECUTE:
-            continue
         target = original.symbols[relocation.symbol_index]
-        if (target.section != relocation.section or target.typ != 0 or
-                target.storage_class != 6):
-            continue
-        site_owner = _function_owner(ranges, relocation.section, relocation.site)
-        target_owner = _function_owner(ranges, target.section, target.value)
-        if site_owner is None or target_owner is None or site_owner != target_owner:
-            continue
+        if section.characteristics & MEM_EXECUTE:
+            if (target.section != relocation.section or target.typ != 0 or
+                    target.storage_class != LABEL_STORAGE):
+                continue
+            site_owner = _function_owner(ranges, relocation.section, relocation.site)
+            target_owner = _function_owner(ranges, target.section, target.value)
+            if site_owner is None or target_owner is None or site_owner != target_owner:
+                continue
+        else:
+            target_owner = inline_aliases.get(target.index)
+            if target_owner is None:
+                continue
         if relocation.site + 4 > section.raw_size:
             raise ValueError("DIR32 jump-table relocation crosses .text payload")
         operand_offset = section.raw_offset + relocation.site
@@ -990,7 +997,7 @@ def _assert_only_canonical_changes(
             after_target.section,
             (after_target.value + after_addend) & 0xFFFFFFFF,
         )
-        expected = (rewrite.section, rewrite.resolved_offset)
+        expected = (before_target.section, rewrite.resolved_offset)
         if before_resolved != expected or after_resolved != expected:
             raise RuntimeError(
                 "jump-table relocation resolved-target postcondition failed")
@@ -1005,6 +1012,94 @@ SEH_INSTALL_WINDOW = 24
 
 def _installs_seh_frame(data: bytes, start: int) -> bool:
     return SEH_INSTALL in data[start:start + SEH_INSTALL_WINDOW]
+
+
+def _inline_eh_groups(coff: CoffObject) -> dict[int, tuple[Symbol, tuple[Symbol, ...]]]:
+    """Certify inline VC4 stubs and their unwind actions from this COFF alone."""
+    ranges = _function_ranges(coff)
+    by_site = {(r.section, r.site): r for r in coff.relocations}
+    found = {}
+    for relocation in coff.relocations:
+        if relocation.typ != DIR32:
+            continue
+        section = coff.sections[relocation.section - 1]
+        if not section.characteristics & MEM_EXECUTE:
+            continue
+        operand = section.raw_offset + relocation.site
+        target = coff.symbols[relocation.symbol_index]
+        if (_byte_at(coff.data, operand - 1) != PUSH_IMM32 or
+                not _installs_seh_frame(coff.data, operand + 4) or
+                target.section != relocation.section or
+                target.storage_class != LABEL_STORAGE or not target.name.startswith("$L")):
+            continue
+        owner = _function_owner(ranges, target.section, relocation.site)
+        target_owner = _function_owner(ranges, target.section, target.value)
+        if owner is None or owner != target_owner:
+            continue
+        end = next(end for start, end, symbol in ranges[target.section] if symbol == owner)
+        raw = coff.section_bytes(section)
+        if (raw[target.value:target.value + 1] != bytes((MOV_EAX_IMM32,)) or
+                raw[target.value + 5:target.value + 6] != b"\xe9"):
+            raise ValueError("malformed same-owner EH registration stub")
+        continuation = raw[target.value + 10:end]
+        if not eh_band.inline_epilog(continuation):
+            if continuation and any(byte not in ALIGNMENT_FILL for byte in continuation):
+                raise ValueError("unrecognized inline EH continuation")
+            continue  # packed tail: retain the existing separate-band behavior
+        handler = by_site.get((target.section, target.value + 6))
+        record_ref = by_site.get((target.section, target.value + 1))
+        if (handler is None or handler.typ != 0x14 or
+                coff.symbols[handler.symbol_index].name != "___CxxFrameHandler" or
+                record_ref is None or record_ref.typ != DIR32):
+            raise ValueError("malformed inline EH registration relocations")
+        record = coff.symbols[record_ref.symbol_index]
+        if record.section <= 0:
+            raise ValueError("undefined inline EH FuncInfo")
+        data_section = coff.sections[record.section - 1]
+        if data_section.characteristics & MEM_EXECUTE:
+            raise ValueError("inline EH FuncInfo points into code")
+        header = coff.section_bytes(data_section)[record.value:record.value + 28]
+        if len(header) != 28:
+            raise ValueError("truncated inline EH FuncInfo")
+        magic, states = struct.unpack_from("<Ii", header)
+        map_ref = by_site.get((record.section, record.value + FUNCINFO_UNWIND_MAP))
+        if magic != eh_band.FUNCINFO_MAGIC or not 0 <= states <= 4096 or map_ref is None:
+            raise ValueError("invalid inline EH FuncInfo/unwind map")
+        unwind_map = coff.symbols[map_ref.symbol_index]
+        if map_ref.typ != DIR32 or unwind_map.section <= 0:
+            raise ValueError("undefined inline EH unwind map")
+        map_section = coff.sections[unwind_map.section - 1]
+        if map_section.characteristics & MEM_EXECUTE:
+            raise ValueError("inline EH unwind map points into code")
+        entries = coff.section_bytes(map_section)[unwind_map.value:unwind_map.value + states * 8]
+        if len(entries) != states * 8:
+            raise ValueError("truncated inline EH unwind map")
+        actions = []
+        valid = True
+        for state in range(states):
+            to_state, action_addend = struct.unpack_from("<iI", entries, state * 8)
+            action_ref = by_site.get((unwind_map.section, unwind_map.value + state * 8 + 4))
+            if to_state < -1 or to_state >= state:
+                valid = False
+                break
+            if action_ref is None:
+                if action_addend:
+                    valid = False
+                    break
+                continue
+            action = coff.symbols[action_ref.symbol_index]
+            if (action_ref.typ != DIR32 or action_addend != 0 or
+                    action.storage_class != LABEL_STORAGE or not action.name.startswith("$L") or
+                    action.section != target.section or
+                    not owner.value <= action.value < target.value):
+                valid = False
+                break
+            actions.append(action)
+        if not valid:
+            raise ValueError("invalid inline EH unwind action")
+        if valid:
+            found[target.index] = (owner, tuple(sorted(actions, key=lambda item: item.value)))
+    return found
 
 
 def _eh_funclet_owners(
@@ -1059,6 +1154,7 @@ def _eh_funclet_owners(
     if stubs is None:
         stubs = []
     out: dict[int, str] = {}
+    inline_groups = _inline_eh_groups(coff)
     for relocation in coff.relocations:
         if relocation.typ != DIR32:
             continue
@@ -1071,7 +1167,7 @@ def _eh_funclet_owners(
         target = coff.symbols[relocation.symbol_index]
         base_side = (target.section > 0 and target.storage_class == LABEL_STORAGE and
                      target.name.startswith("$L") and
-                     target.section != relocation.section and
+                     (target.section != relocation.section or target.index in inline_groups) and
                      coff.sections[target.section - 1].characteristics & MEM_EXECUTE)
         # On the delinked side the only structure available is "an undefined
         # FUN_<rva>", which is ALSO what a `push <$E atexit thunk>; call
@@ -1092,7 +1188,8 @@ def _eh_funclet_owners(
         out.setdefault(target.index, eh_band.registration_symbol(owner))
         if base_side:
             index = 0
-            for symbol in labels[target.section]:
+            group_labels = inline_groups[target.index][1] if target.index in inline_groups else labels[target.section]
+            for symbol in group_labels:
                 if symbol.value >= target.value:
                     break
                 out.setdefault(symbol.index, eh_band.unwind_symbol(owner, index))
@@ -1653,6 +1750,25 @@ def canonicalize_coff(payload: bytes) -> CanonicalizedObject:
                 symbol.name, canonical, "eh", "rdata",
                 symbol.section, symbol.value, 0, 0, 0, "-",
                 "eh-funcinfo-owner-derived-name", ""))
+
+    # Anonymous namespaces declared in .cpp files carry a checkout path and a
+    # volatile cl nonce. Keep their TU identity in both definitions and uses.
+    # Header namespaces cannot be identified from the encoded path alone.
+    namespace_names = {}
+    for symbol in coff.symbols.values():
+        current = renames.get(symbol.index, symbol.name)
+        canonical = msvc_names.anonymous_namespaces(current)
+        previous = namespace_names.setdefault(canonical, current)
+        if previous != current:
+            raise ValueError("anonymous-namespace identities collide: "
+                             + previous + " / " + current)
+        if canonical != current:
+            renames[symbol.index] = canonical
+            rows.append(CanonicalRow(
+                symbol.name, canonical, "namespace",
+                "defined" if symbol.section > 0 else "undefined",
+                symbol.section, symbol.value, 0, 0, 0, "-",
+                "source-file-anonymous-namespace", ""))
 
     normalized = _rewrite_names(coff, renames)
     normalized, jump_table_rewrites = _rewrite_jump_table_relocations(

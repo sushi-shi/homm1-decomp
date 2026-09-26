@@ -99,6 +99,41 @@ class UsageTests(unittest.TestCase):
         self.assertEqual({r["id"] for r in starts}, {r["id"] for r in ends})
         self.assertTrue(all(r["module"] == "homm1.sema.strings" for r in starts))
 
+    def test_child_compiler_error_is_streamed_and_classified(self):
+        @usage.logged
+        def command(argv):
+            return usage.run_process([sys.executable, "-c",
+                "import sys; print('error C2143: syntax error', file=sys.stderr); sys.exit(1)"], cwd=self.root)
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as err:
+            self.assertEqual(command([]), 1)
+        self.assertIn("error C2143", err.getvalue())
+        finish = self.rows()[-1]
+        self.assertEqual(finish["error_category"], "compile.cpp")
+        self.assertIn("error C2143", finish["diagnostic"])
+        self.assertEqual(finish["outcome"], "error")
+
+    def test_error_tail_is_bounded_and_success_output_is_not_stored(self):
+        @usage.logged
+        def command(argv):
+            print("x" * (usage.TAIL * 2), end="")
+            return int(argv[0])
+        with redirect_stdout(io.StringIO()):
+            command(["1"])
+            command(["0"])
+        finishes = [r for r in self.rows() if r["event"] == "finish"]
+        self.assertEqual(len(finishes[0]["diagnostic"]), usage.TAIL)
+        self.assertIsNone(finishes[1]["diagnostic"])
+        self.assertEqual(finishes[1]["outcome"], "success")
+        self.assertTrue((self.root / "build/homm1_usage.log").is_file())
+
+    def test_query_difference_is_not_an_error(self):
+        from homm1.cli import main
+        with patch("homm1.walls.main", return_value=1):
+            self.assertEqual(main(["walls", "diagnose", "0x1000"]), 1)
+        finish = self.rows()[-1]
+        self.assertEqual(finish["outcome"], "difference")
+        self.assertIsNone(finish["error_category"])
+
     def test_every_main_is_instrumented(self):
         missing = []
         for path in (paths.REPO / "scripts/homm1").rglob("*.py"):

@@ -59,6 +59,8 @@ LIBRARY_EXTRA = {
 }
 
 _EXTERNAL = 2
+_DT_FUNCTION = 2
+_SOURCE_CHANNELS = ("src", "src_compgen", "src_dyninit", "src_data_compgen")
 
 
 def live_base_objs() -> list[Path]:
@@ -296,6 +298,69 @@ def analyse():
     return phantom, source_library_shadows(), declared
 
 
+def _data_externs(paths) -> tuple[dict[str, set[str]], set[str]]:
+    """({undefined data external: {referencing unit}}, {defined names}) over
+    `paths` - a COMMON is a definition, a DT_FUNCTION reference is not data."""
+    from homm1.compare.canonicalize import CoffObject
+    refs: dict[str, set[str]] = defaultdict(set)
+    defined: set[str] = set()
+    for p in paths:
+        try:
+            coff = CoffObject(Path(p).read_bytes())
+        except (ValueError, OSError, struct.error):
+            continue
+        for sym in coff.symbols.values():
+            if sym.name.startswith("."):
+                continue
+            if sym.section > 0 or (sym.section == 0 and sym.value
+                                   and sym.storage_class == _EXTERNAL):
+                defined.add(sym.name)
+            elif (sym.section == 0 and sym.storage_class == _EXTERNAL
+                    and (sym.typ >> 4) & 0x3 != _DT_FUNCTION):
+                refs[sym.name].add(Path(p).stem)
+    return refs, defined
+
+
+def _data_claims() -> tuple[set[str], set[str]]:
+    """(names a SOURCE channel claims, names a retail PROVIDER table binds)."""
+    from homm1.model import resolve
+    src, provided = set(), set()
+    for b in resolve().data:
+        if b.channel and b.name:
+            (src if b.channel in _SOURCE_CHANNELS else provided).add(b.name)
+    return src, provided | reviewed_retail_data()
+
+
+def placeholder_externs(paths=None, libs=None) -> dict[str, dict]:
+    """{symbol: {units, reason}} - the placeholder-extern debt.
+
+    reason is `undefined` (no live base obj defines it) or `unclaimed` (a base
+    obj defines it but no Model claim names it, so the delinker has no
+    identity to give the referencing unit's target either)."""
+    paths = live_base_objs() if paths is None else paths
+    refs, defined = _data_externs(paths)
+    if not refs:
+        return {}
+    libs = lib_symbols() if libs is None else libs
+    src, provided = _data_claims()
+    out = {}
+    for name, units in refs.items():
+        if name.startswith("__imp_") or name in libs or name in provided:
+            continue
+        if name in defined and name in src:
+            continue
+        out[name] = {"units": sorted(units),
+                     "reason": "unclaimed" if name in defined else "undefined"}
+    return out
+
+
+def placeholder_lines(debt: dict[str, dict]) -> list[str]:
+    return [f"placeholder extern {name} ({row['reason']}; referenced by "
+            f"{', '.join(row['units'])}) - define and DATA()-claim it in its "
+            f"owner TU"
+            for name, row in sorted(debt.items())]
+
+
 def _read_baseline() -> set[str]:
     if not BASELINE.is_file():
         return set()
@@ -382,3 +447,11 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def gate_verdict():
+    """Existing closure defects always fail; list unprovided data separately."""
+    from homm1.core import data_matching
+    hard = gate_findings()
+    debt = placeholder_lines(placeholder_externs())
+    return (hard + debt, []) if data_matching.enabled() else (hard, debt)

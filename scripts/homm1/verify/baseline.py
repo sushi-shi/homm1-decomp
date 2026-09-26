@@ -6,6 +6,12 @@ on rows with >= 7 columns). One column is APPENDED (never inserted): `state`,
 empty for a scored row, `absent` for a row bank preserved while its body was
 not scored (the high-water kept for a later natural emitter). Old-format rows
 without it parse as scored.
+
+The `# [data_matching]` banner line records the mode (config/compare.toml)
+every score in the file was measured under. A file without it predates the
+switch and was banked strict. Scores from different modes never compare:
+`homm1 verify check` and `bank` refuse a mismatch, and
+`bank --rebase-data-matching` re-bases the ledger at the new mode.
 """
 
 from __future__ import annotations
@@ -73,8 +79,43 @@ HEADER = (
     "#   state    = '' scored at the last bank | 'absent' preserved while unscored\n"
     "#              (no natural emitter in that build; the MAX is kept so a later\n"
     "#              emitter resumes from it instead of forgetting proven work).\n"
+    "#   [data_matching] = the config/compare.toml mode these scores were measured\n"
+    "#              under. check/bank refuse a different mode; re-base with\n"
+    "#              `homm1 verify bank --rebase-data-matching`.\n"
     "# Query: python3 -m homm1.verify status | check | bank\n"
 )
+MODE_MARKER = "# [data_matching]\t"
+
+
+def load_mode(text: str | None = None) -> bool:
+    """The data-matching mode the ledger was banked under (True = strict).
+
+    A ledger without the marker predates the switch: it was banked strict."""
+    if text is None:
+        if not BASELINE.is_file():
+            return True
+        text = BASELINE.read_text()
+    for line in text.splitlines():
+        if line.startswith(MODE_MARKER):
+            value = line[len(MODE_MARKER):].strip()
+            if value not in ("true", "false"):
+                raise SystemExit(f"{BASELINE}: malformed {MODE_MARKER.strip()} "
+                                 f"line {line!r}")
+            return value == "true"
+    return True
+
+
+def mode_mismatch(text: str | None = None) -> str | None:
+    """Why the ledger's scores do not compare with this build's, or None."""
+    from homm1.core import data_matching
+    banked, now = load_mode(text), data_matching.enabled()
+    if banked == now:
+        return None
+    return (f"the ledger was banked under {data_matching.label(banked)} but "
+            f"config/compare.toml says {data_matching.label(now)}: scores from "
+            f"different modes do not compare. Re-base the ledger at this mode "
+            f"with `homm1 verify bank --rebase-data-matching` (docs/build-system.md, "
+            f"\"Data matching\")")
 
 
 def unit_counts(funcs: dict[tuple[str, str], dict]) -> dict[str, dict]:
@@ -129,9 +170,14 @@ def load(text: str | None = None) -> dict[tuple[str, str], dict]:
     return funcs
 
 
-def render(funcs: dict[tuple[str, str], dict]) -> str:
+def render(funcs: dict[tuple[str, str], dict], data_matching_on: bool | None = None) -> str:
+    """The ledger text; the mode line defaults to the current switch."""
+    if data_matching_on is None:
+        from homm1.core import data_matching
+        data_matching_on = data_matching.enabled()
     units = unit_counts(funcs)
-    lines = [HEADER, "# [units]\tunit\tn_functions\tmatched\n"]
+    lines = [HEADER, f"{MODE_MARKER}{'true' if data_matching_on else 'false'}\n",
+             "# [units]\tunit\tn_functions\tmatched\n"]
     for unit in sorted(units):
         u = units[unit]
         lines.append(f"{unit}\t{u['n']}\t{u['matched']}\n")
@@ -144,16 +190,15 @@ def render(funcs: dict[tuple[str, str], dict]) -> str:
         line = (f"{unit}\t{fn}\t{f['best']:.4f}\t{f['cur']:.4f}\t{f['tries']}"
                 f"\t{f['fp']}")
         line += f"\t0x{addr:x}" if addr is not None else "\t"
-        line += f"\t{f.get('hist', f['best']):.4f}"
-        if f.get("state"):
-            line += f"\t{f['state']}"
+        line += f"\t{f.get('hist', f['best']):.4f}\t{f.get('state', '')}"
         lines.append(line + "\n")
     return "".join(lines)
 
 
-def write(funcs: dict[tuple[str, str], dict]) -> bool:
+def write(funcs: dict[tuple[str, str], dict],
+          data_matching_on: bool | None = None) -> bool:
     """Write the baseline; True when the file actually changed."""
-    text = render(funcs)
+    text = render(funcs, data_matching_on)
     if BASELINE.is_file() and BASELINE.read_text() == text:
         return False
     BASELINE.write_text(text)

@@ -1,0 +1,4 @@
+interface:
+  display_name: "HoMM1 Matcher"
+  short_description: "Reconstruct and byte-match HoMM1 C++"
+  default_prompt: "Use $matcher to reconstruct and verify a HoMM1 function against retail."

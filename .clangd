@@ -1,0 +1,46 @@
+# clangd over the GENERATED clang-cl compilation database. This is ADDITIVE
+# editor tooling (go-to-def / completion / hover / diagnostics) that runs
+# alongside the real matching build - it does NOT drive or verify it. The Wine
+# MSVC 4.0 build (homm1.tool.cl, driven by the ninja `cl` edge) is the sole
+# verdict on correctness; clang is only a READER of this MSVC4-dialect code.
+#
+# Generate the DB first:  python3 -m homm1.graph.compdb   (see docs/clangd.md)
+CompileFlags:
+  # The generator writes build/clangd/compile_commands.json; nothing in the
+  # matching build writes a repo-root database, so this path is the whole story.
+  CompilationDatabase: build/clangd
+  Add:
+    # Emulate MSVC 4.0 (cl 10.00 == _MSC_VER 1000) so the era CRT / DirectX
+    # headers take their MSVC-version codepaths. Mirrors homm1/graph/compdb.py;
+    # also applies when clangd opens a header with no direct compdb entry.
+    - --target=i386-pc-windows-msvc
+    - -fms-compatibility-version=10.00
+    - -fms-extensions
+    - -fdelayed-template-parsing
+    # The era CRT/SDK headers trip dialect errors clang's compat mode cannot be
+    # talked out of, and their knock-on cascades blow past clangd's default
+    # ~20-error limit - which ABORTS the parse mid-TU and loses the AST below
+    # the abort point. clangd's command mangler drops this flag when it comes
+    # from the compdb, so it MUST live here.
+    - -ferror-limit=0
+    # MSVC 4.0 predates the C++11 rule that bans `char *p = "literal";` (only
+    # *deprecated* in C++98/03). The real cl build accepts it, so clang's
+    # -Wwritable-strings ("ISO C++11 does not allow conversion from string
+    # literal to 'char *'") is a false positive against our target - silence it.
+    - -Wno-writable-strings
+
+Diagnostics:
+  # The toolchain headers are reached via /imsvc (system includes), so clangd
+  # already silences diagnostics that ORIGINATE inside CRT/DirectX headers.
+  # The settings below tame the few clang-cl warnings that still leak through
+  # MSVC4-dialect code without hiding genuine problems in our own src/ sources.
+  Suppress:
+    # MSVC lets a non-virtual dtor be called through a base ptr etc.; the old
+    # SDK headers lean on several such MSVC-isms that are not actionable here.
+    - -Wmicrosoft
+    - -Wignored-pragmas
+    - -Wpragma-pack
+    - -Wnonportable-include-path
+  UnusedIncludes: None
+  ClangTidy:
+    Remove: "*"

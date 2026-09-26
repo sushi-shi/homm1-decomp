@@ -96,6 +96,12 @@ def build_lowercase_mirror(real: Path, mirror: Path) -> Path:
     return mirror
 
 
+def layout_flags(profile: list[str]) -> list[str]:
+    """The profile flags that change a struct layout clang must reproduce.
+    clang-cl implements /Zp[n] as cl does; code-generation flags stay cl's."""
+    return [f for f in profile if f.startswith("/Zp")]
+
+
 def base_flags(msvc_inc: Path, msvc_low: Path) -> list[str]:
     """The clang-cl flag set shared by every unit.
 

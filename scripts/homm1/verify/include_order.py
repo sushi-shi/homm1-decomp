@@ -313,6 +313,36 @@ def missing_prelude(path: Path, headers) -> list[str]:
     return want
 
 
+LIBRARY_HEADERS = ("BASE/*.h",)
+CONSUMER_DIRS = ("SOURCE/", "EDITOR/")
+
+
+def layering_violations(include_root: Path | None = None) -> list[str]:
+    """`library.h -> consumer.h` for every library header that reaches a
+    consumer-directory include."""
+    root = include_root or REPO / "include"
+    out = []
+    for pattern in LIBRARY_HEADERS:
+        for start in sorted(root.glob(pattern)):
+            pending, seen = [start], set()
+            while pending:
+                header = pending.pop()
+                if header in seen:
+                    continue
+                seen.add(header)
+                text = header.read_text(encoding="utf-8", errors="replace")
+                for line in text.splitlines():
+                    if not (m := INC_RE.match(line)):
+                        continue
+                    name = m.group(1)
+                    if name.startswith(CONSUMER_DIRS):
+                        out.append(f"{header.relative_to(root).as_posix()}"
+                                   f" -> {name}")
+                    elif (root / name).is_file():
+                        pending.append(root / name)
+    return sorted(set(out))
+
+
 def audit(fix=False, fix_dupes=False, fix_prelude=False):
     """(dupes, preludes, unordered, manual, changed)."""
     dupes, preludes, unordered, manual = {}, {}, [], {}

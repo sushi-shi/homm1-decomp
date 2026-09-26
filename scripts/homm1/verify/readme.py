@@ -13,14 +13,12 @@ from __future__ import annotations
 import re
 
 from homm1.core.paths import REPO
-from homm1.verify.baseline import EPS
-from homm1.verify.scores import measure
 
 README = REPO / "README.md"
 RM_START = "<!-- match-score:start -->"
 RM_END = "<!-- match-score:end -->"
 OLD_SIGNATURE = "homm1.match.status"     # the frozen pipeline's generator tag
-NEW_SIGNATURE = "homm1 verify check` and `homm1 verify bank"
+NEW_SIGNATURE = "homm1 verify readme"
 
 
 def _pct(num: float, den: float) -> float:
@@ -85,98 +83,77 @@ def collect_modules(umeas: dict[str, dict]):
     return mods, started_fzw, started_code
 
 
-def churn_weights(cur: dict, base: dict, sizes: dict,
-                  mods: dict, modules: dict) -> None:
-    """Per-module best-ever churn (code-weighted) for the `Fuzzy Max` column:
-    sum (best - cur) * bytes over functions now below their peak."""
+def score_weights(cur: dict, ledger: dict, sizes: dict,
+                  mods: dict, modules: dict) -> dict:
+    """Fill each module's MAX exact count (`mx`) and MAX churn weight (`cw`,
+    sum (MAX - CUR) * bytes), and return the whole-tree CUR/MAX/HIST exact
+    counts and churn weights. `ledger` is the would-be banked ledger, so an
+    edited function's MAX is its new CUR."""
     for a in mods.values():
-        a["cw"] = 0.0
-    for (unit, fn), pct in cur.items():
-        b = base.get((unit, fn))
-        if not b:
-            continue
-        churn = b["best"] - pct
-        if churn <= EPS:
-            continue
-        mod = modules.get(unit, "?")
+        a["cw"], a["mx"] = 0.0, 0
+    tot = {"cur": 0, "max": 0, "hist": 0, "cw": 0.0, "hw": 0.0}
+    for key, pct in cur.items():
+        row = ledger.get(key) or {}
+        mx = max(row.get("best", pct), pct)
+        hs = max(row.get("hist", mx), mx)
+        size = sizes.get(key, 0)
+        tot["cur"] += pct >= 100.0
+        tot["max"] += mx >= 100.0
+        tot["hist"] += hs >= 100.0
+        tot["cw"] += (mx - pct) * size
+        tot["hw"] += (hs - pct) * size
+        mod = modules.get(key[0], "?")
         if mod in mods:
-            mods[mod]["cw"] += churn * sizes.get((unit, fn), 0)
+            mods[mod]["mx"] += mx >= 100.0
+            mods[mod]["cw"] += (mx - pct) * size
+    return tot
 
 
-def render_block(overall: dict, mods: dict, started_fzw: float,
-                 started_code: int, eng: dict) -> str:
-    """The README score block (between the markers)."""
-    matched_fn = int(overall.get("matched_functions") or 0)
-    started_fn = int(overall.get("total_functions") or 0)
+def render_block(mods: dict, started_fzw: float, eng: dict, tot: dict) -> str:
+    """The README score block (between the markers): everything at MAX, plus
+    one CUR/MAX/HIST line."""
     tot_fn, tot_code = eng["real_fn"], eng["real_code"]
 
     rows = []
     for mod in sorted(mods, key=lambda k: -mods[k]["tf"]):
         a = mods[mod]
-        fz = (a["fzw"] / a["tc"] if a["tc"] else 0.0)
-        fzmax = fz + (a.get("cw", 0.0) / a["tc"] if a["tc"] else 0.0)
+        fz = (a["fzw"] + a["cw"]) / a["tc"] if a["tc"] else 0.0
         rows.append([f"`{mod}`", f"{a['units']}",
-                     f"{a['mf']:,} / {a['tf']:,} ({_pct(a['mf'], a['tf']):.1f}%)",
-                     f"{fz:.1f}%", f"{fzmax:.1f}%"])
+                     f"{a['mx']:,} / {a['tf']:,} ({_pct(a['mx'], a['tf']):.1f}%)",
+                     f"{fz:.1f}%"])
     if eng["unmatched_fn"]:
         rows.append(["`(unmatched)`", "—",
-                     f"0 / {eng['unmatched_fn']:,} (0.0%)", "0.0%", "0.0%"])
-    table = _md_table(["Module", "Units", "Functions exact", "Fuzzy",
-                       "Fuzzy Max"], "lrrrr", rows)
+                     f"0 / {eng['unmatched_fn']:,} (0.0%)", "0.0%"])
+    table = _md_table(["Module", "Units", "Functions exact", "Fuzzy"],
+                      "lrrr", rows)
 
-    ex_rows = [[f"`{label}`", f"{fn:,}", f"{code:,}", note]
-               for (label, fn, code, note) in eng["categories"]]
-    excl = _md_table(["Category", "Functions", "Code (B)", "Why excluded"],
-                     "lrrl", ex_rows)
+    def fuzzy(extra: float) -> float:
+        return (started_fzw + extra) / tot_code if tot_code else 0.0
 
-    overall_fuzzy = started_fzw / tot_code if tot_code else 0.0
-    started_fuzzy = started_fzw / started_code if started_code else 0.0
-    overall_cw = sum(a.get("cw", 0.0) for a in mods.values())
-    overall_fuzzy_max = overall_fuzzy + (overall_cw / tot_code if tot_code else 0.0)
-
-    md_pct = measure(overall, "matched_data_percent")
-    td = int(overall.get("total_data") or 0)
-    if md_pct is not None and td:
-        data_line = (
-            f"_Data: objdiff `matched_data` {int(overall.get('matched_data') or 0):,} "
-            f"of {td:,} B ({md_pct:.2f}%) - a per-unit sum (a shared COMDAT "
-            "counts once per emitting unit), history, never a headline. The "
-            "coverage/fidelity partition is the data-audit slice's product and "
-            "is not re-derived here._")
-    else:
-        data_line = "_Data: not reported (no data measures in this report)._"
-
+    from homm1.core import data_matching
+    mode_note = ("_Comparison mode: strict data references._" if data_matching.enabled()
+                 else "_Comparison mode: code first; data-reference identities and addends are deferred. "
+                      "Initializer and placement coverage are not reported._")
     block = [
         RM_START,
         "## Match status",
         "",
-        f"_Auto-generated by `{NEW_SIGNATURE}`; do not hand-edit. Diff this "
-        "block across commits to spot regressions._",
+        f"_Auto-generated by `{NEW_SIGNATURE}`; do not hand-edit. Scores are "
+        "MAX (the best of each function's current source)._",
         "",
-        f"**Overall (vs full engine): {matched_fn:,} / {tot_fn:,} functions "
-        f"exact ({_pct(matched_fn, tot_fn):.2f}%) &middot; "
-        f"{overall_fuzzy:.2f}% fuzzy &middot; {overall_fuzzy_max:.2f}% "
-        f"fuzzy max.**",
+        f"**{tot['max']:,} / {tot_fn:,} functions exact "
+        f"({_pct(tot['max'], tot_fn):.2f}%) &middot; "
+        f"{fuzzy(tot['cw']):.2f}% fuzzy.**",
         "",
-        data_line,
-        "",
-        "_Totals are vs the whole engine = every in-`.text` reconstruction-"
-        "target function; the generated/library categories tabled below are "
-        "excluded from the denominator. `Fuzzy` = code-weighted partial "
-        "credit; `Fuzzy Max` = the same with every function at its banked "
-        "best-ever fuzzy% - a gap above `Fuzzy` is entropy churn since the "
-        "last bank._",
-        "",
-        f"_Started units alone: {matched_fn:,}/{started_fn:,} fns exact, "
-        f"{started_fuzzy:.2f}% fuzzy over {started_code:,} of {tot_code:,} "
-        f"engine code bytes._",
+        mode_note,
         "",
         *table,
         "",
-        "_Excluded from the % above — generated/library code, not independent "
-        "reconstruction targets:_",
-        "",
-        *excl,
+        f"_CUR / MAX / HIST: {tot['cur']:,} / {tot['max']:,} / "
+        f"{tot['hist']:,} exact &middot; {fuzzy(0.0):.2f}% / "
+        f"{fuzzy(tot['cw']):.2f}% / {fuzzy(tot['hw']):.2f}% fuzzy "
+        "(defined in AGENTS.md). Totals cover every in-`.text` "
+        "reconstruction target; generated and library code is excluded._",
         RM_END,
     ]
     return "\n".join(block)

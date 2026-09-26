@@ -1,7 +1,7 @@
 """homm1.delink.pdb_synth - synthesize the delinker's named PDB from the Model.
 
-No real PDB exists for HoMM1 (1999); this builds one good enough for
-vostok-delinker to slice HOMM1.EXE into per-unit COFF objects:
+No real PDB exists for HoMM1 (1996); this builds one good enough for
+vostok-delinker to slice HEROES.EXE into per-unit COFF objects:
 
   1. Function records from the Model's function bindings: the claimed name (or
      a FUN_<va> placeholder), the claim-resolved extent, and the owning unit as
@@ -32,7 +32,7 @@ import struct
 from pathlib import Path
 
 from homm1.core.paths import BUILD
-from homm1.delink import coffx, eh_band, implib
+from homm1.delink import coffx, eh_band, implib, static_dtors
 from homm1.delink.image import retail, sections_of
 from homm1.model import Model
 
@@ -49,7 +49,10 @@ BUCKET_SHIFT = 16
 
 #: End of retail's leading incremental-link thunk (ILT) band: every `E9 rel32`
 #: below it is a linker forwarder in front of a real body.
-ILT_BAND_END = 0x7C20
+def ilt_band_end():
+    from homm1.retail_labels.censuses import link_bands
+    bands = [hi for _lo, hi, name in link_bands() if name == "ilt-thunks"]
+    return max(bands, default=sections_of()[".text"][0])
 
 #: Function channels that attribute a unit (a static-lib label names a library
 #: body; its code is never partitioned into a TU).
@@ -168,7 +171,7 @@ def ilt_thunk_names(model: Model, names_map: dict) -> dict[int, str]:
             break
 
     lo = text_lo
-    hi = min(ILT_BAND_END, text_lo + raw_size - 5)
+    hi = min(ilt_band_end(), text_lo + raw_size - 5)
     for rva in range(lo, hi):
         if rva in aliases or rva in names_map:
             continue
@@ -558,6 +561,43 @@ def format_unprovisioned(rows) -> list[str]:
     return lines
 
 
+#: The derived unprovisioned worklist, written every delink in both modes.
+DATA_DEBT = BUILD / "gen/data_debt.tsv"
+
+
+def write_data_debt(rows, path: Path = DATA_DEBT) -> bool:
+    """Write the unprovisioned worklist (`homm1 build` prints its count as
+    the data debt). Returns True when the file changed."""
+    from homm1.core import data_matching
+    from homm1.core.tsv import write as write_tsv
+    return write_tsv(path, [
+        "# data debt (homm1.delink.pdb_synth): game-referenced data targets "
+        "with no provided identity - derived every delink, never hand-kept.",
+        f"# {data_matching.label()}: strict refuses these in the delinker; "
+        "relaxed fences them as DAT_ and lists them here."],
+        ["rva", "units", "bands", "sites", "census"],
+        [[f"0x{r['rva']:06x}", ",".join(r["units"]) or "-",
+          ",".join(r["bands"]), ",".join(f"0x{s:06x}" for s in r["sites"]),
+          line.split("  ", 2)[1]]
+         for r, line in zip(rows, format_unprovisioned(rows))])
+
+
+def relax_fences(rdata_syms, data_syms, data_matching_on: bool) -> int:
+    """With data matching off, respell every `UNPROVISIONED_` fence `DAT_` so
+    the delinker emits it instead of refusing. Call AFTER the worklist is
+    derived: the worklist is what keeps the relaxed fences counted. Mutates;
+    returns count."""
+    if data_matching_on:
+        return 0
+    n = 0
+    for syms in (rdata_syms, data_syms):
+        for i, (rva, name) in enumerate(syms):
+            if name.startswith("UNPROVISIONED_"):
+                syms[i] = (rva, "DAT_" + name[len("UNPROVISIONED_"):])
+                n += 1
+    return n
+
+
 def worklist(model: Model) -> list[dict]:
     """Recompute the data-identity pipeline (no YAML, no build outputs) and
     return the unprovisioned rows."""
@@ -780,15 +820,23 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     exe = retail().pe.path
 
     names_map = unit_names(model)
+    local_dtors = static_dtors.provision(model, names_map, base_dir, retail())
+    names_map.update(local_dtors)
+    log(f"attributed {len(local_dtors)} pinned static destructor callback(s)")
+    for binding in model.functions:
+        if binding.channel == "src_decl" and binding.name:
+            names_map.setdefault(binding.rva, (binding.name, "", 0))
     referent_names = referent_function_names()
     for rva, value in referent_names.items():
         names_map.setdefault(rva, value)
     if referent_names:
         log(f"applied {len(referent_names)} referent-proven function name(s)")
     band = eh_band.groups(exe, names_map)
-    band_spans = [(g.start, g.end) for g in band]
+    band_spans = [(g.start, g.end) for g in band if not g.inline]
     owner_body_ends: dict[int, int] = {}
     for group in band:
+        if group.inline:
+            continue
         previous = owner_body_ends.get(group.owner_rva)
         owner_body_ends[group.owner_rva] = min(previous, group.start) \
             if previous is not None else group.start
@@ -849,6 +897,10 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
                              band_spans, owner_body_ends, log)
     rdata_syms, data_syms = data_symbols(model, data_names, base_dir, log)
     unprov = unprovisioned_rows(rdata_syms, data_syms, model)
+    write_data_debt(unprov)
+    from homm1.core import data_matching
+    relaxed = relax_fences(rdata_syms, data_syms, data_matching.enabled())
+    log(f"{data_matching.label()}: {relaxed} unprovided data fences relaxed")
     if unprov:
         log(f"UNPROVISIONED: {len(unprov)} game-referenced data target(s) "
             "lack a provided identity (the delinker refuses to emit these):")

@@ -1,0 +1,4 @@
+interface:
+  display_name: "HoMM1 Permute Campaign"
+  short_description: "Run classified island-search matching campaigns"
+  default_prompt: "Use $permute to classify HoMM1 residuals, run a diverse island frontier, and turn the best clues into evidence-backed source changes."

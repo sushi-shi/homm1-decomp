@@ -27,7 +27,8 @@ class Obj:
     """
 
     def __init__(self, path: Path | str):
-        self.buf = b = Path(path).read_bytes()
+        self.path = Path(path)
+        self.buf = b = self.path.read_bytes()
         if struct.unpack_from("<H", b, 0)[0] != 0x14C:
             raise ValueError(f"{path}: not an i386 COFF")
         self.nsec = struct.unpack_from("<H", b, 2)[0]

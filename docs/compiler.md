@@ -98,7 +98,7 @@ Inspect the pinned image and the admitted source/object diff with:
 
 ```sh
 homm1 inspect --json
-homm1 sema diff 0x0005c15c
+homm1 walls semdiff 0x0005c15c
 ```
 
 ## Correction to the exception-handling survey

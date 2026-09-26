@@ -27,12 +27,17 @@ import argparse
 import hashlib
 import struct
 from pathlib import Path
+from dataclasses import dataclass
+from homm1.core import data_matching
 
 from homm1.compare import canonicalize as canon
 from homm1.delink import eh_band
 
 _MODULE_MTIME = max(
     Path(canon.__file__).stat().st_mtime,
+    Path(canon.msvc_names.__file__).stat().st_mtime,
+    *([data_matching.COMPARE_TOML.stat().st_mtime]
+      if data_matching.COMPARE_TOML.is_file() else []),
     Path(eh_band.__file__).stat().st_mtime,
     Path(__file__).stat().st_mtime,
 )
@@ -63,12 +68,187 @@ def units_with_a_target(target_dir: Path) -> set[str]:
     if not target_dir.is_dir():
         return set()
     units: set[str] = set()
-    for suffix in TARGET_SUFFIXES:
-        units |= {
-            p.relative_to(target_dir).as_posix()[:-len(suffix)]
-            for p in target_dir.rglob(f"*{suffix}")
-        }
+    for path in target_dir.rglob("*.obj"):
+        relative = path.relative_to(target_dir).as_posix()
+        for suffix in TARGET_SUFFIXES:
+            if relative.endswith(suffix):
+                units.add(relative[:-len(suffix)])
+                break
     return units
+
+
+#: The one undefined external every relaxed data relocation targets.
+DATA_SINK = "$data"
+#: IMAGE_REL_I386_DIR32 / DIR32NB: the types whose addend is stored inline as
+#: a plain symbol offset (the field objdiff-score-reloc-addend.patch scores).
+_INLINE_ADDEND_TYPES = (canon.DIR32, 0x0007)
+_CNT_CODE = 0x00000020
+
+
+@dataclass(frozen=True)
+class RelaxedRelocation:
+    relocation_offset: int     # file offset of the 10-byte relocation record
+    section: int
+    site: int
+    original_symbol: str
+    original_addend: int
+
+
+def _is_function_symbol(coff: canon.CoffObject, symbol: canon.Symbol) -> bool:
+    """COFF type DT_FUNCTION (0x20), or any symbol defined in a code section
+    (a jump-table label, a funclet, a section symbol of `.text`)."""
+    if (symbol.typ >> 4) & 0x3 == 2:
+        return True
+    if symbol.section > 0:
+        flags = coff.sections[symbol.section - 1].characteristics
+        return bool(flags & (canon.MEM_EXECUTE | _CNT_CODE))
+    return False
+
+
+def _stays_strict(symbol: canon.Symbol) -> bool:
+    """Non-function targets that are nevertheless CALL or EH identities.
+
+    `__imp_*` is an IAT slot: `call [__imp__Foo@4]` names the callee, so it
+    stays a function call target. The EH band's records (`__ehfuncinfo$` and
+    friends) are the /GX handling, which stays strict."""
+    name = symbol.name
+    return (name == DATA_SINK or name.startswith("__imp_")
+            or eh_band.is_band_symbol(name.removeprefix(canon.DUP_PREFIX))
+            or eh_band.is_band_data_symbol(name.removeprefix(canon.DUP_PREFIX)))
+
+
+def is_relaxed(coff: canon.CoffObject, relocation: canon.Relocation) -> bool:
+    """Whether `relax_data_relocations` retargets this relocation to `$data`:
+    a DIR32/DIR32NB in a code section whose target is neither a function nor
+    a call/EH identity. `homm1.verify.data_identity` audits exactly this set."""
+    section = coff.sections[relocation.section - 1]
+    if not section.characteristics & (canon.MEM_EXECUTE | _CNT_CODE):
+        return False
+    if relocation.typ not in _INLINE_ADDEND_TYPES:
+        return False
+    target = coff.symbols[relocation.symbol_index]
+    return not (_is_function_symbol(coff, target) or _stays_strict(target))
+
+
+def relax_data_relocations(payload: bytes) -> tuple[bytes, tuple]:
+    """Stop scoring DATA identity: the data_matching = false step.
+
+    Every relocation in a CODE section whose target is not a function
+    (`_is_function_symbol`) and not a call/EH identity (`_stays_strict`) is
+    retargeted to one undefined external `$data` appended at the END of the
+    symbol table (so no existing index moves), and its inline DIR32/DIR32NB
+    addend is zeroed. Both copies get the same treatment, so objdiff sees
+    `$data+0` on both sides wherever both sides referenced some datum:
+    two undefined externals compare by name and addend, which is exactly the
+    comparison this removes. objdiff's own `functionRelocDiffs` cannot say
+    this - its relaxed modes drop FUNCTION call identity too.
+
+    Still strict: every instruction byte and immediate, the relocation's
+    presence, site and type, function call targets (REL32 and DIR32 function
+    pointers), IAT calls, jump tables, the EH band, and every relocation in a
+    data section (the data-section referent audit, verify.data_relocs, reads
+    those). A reference to a datum on one side and a function on the other
+    still differs. `_assert_only_data_relaxation` re-proves byte for byte that
+    nothing else moved.
+    """
+    coff = canon.CoffObject(payload)
+    if any(s.name == DATA_SINK for s in coff.symbols.values()):
+        raise ValueError(f"object already defines the relaxation sink {DATA_SINK}")
+    relaxed: list[RelaxedRelocation] = []
+    for relocation in coff.relocations:
+        if not is_relaxed(coff, relocation):
+            continue
+        section = coff.sections[relocation.section - 1]
+        target = coff.symbols[relocation.symbol_index]
+        operand = section.raw_offset + relocation.site
+        relaxed.append(RelaxedRelocation(
+            relocation.offset, relocation.section, relocation.site, target.name,
+            struct.unpack_from("<I", payload, operand)[0]))
+    if not relaxed:
+        return payload, ()
+
+    sink = coff.symbol_count
+    data = bytearray(payload[:coff.string_offset])
+    for row in relaxed:
+        section = coff.sections[row.section - 1]
+        struct.pack_into("<I", data, section.raw_offset + row.site, 0)
+        struct.pack_into("<I", data, row.relocation_offset + 4, sink)
+    struct.pack_into("<I", data, 12, coff.symbol_count + 1)
+    data += struct.pack("<8sIhHBB", DATA_SINK.encode("ascii").ljust(8, b"\0"),
+                        0, 0, 0, canon.EXTERNAL_STORAGE, 0)
+    data += payload[coff.string_offset:]
+    result = bytes(data)
+    _assert_only_data_relaxation(coff, payload, result, relaxed)
+    return result, tuple(relaxed)
+
+
+def _assert_only_data_relaxation(original: canon.CoffObject, payload: bytes,
+                                 result: bytes, relaxed) -> None:
+    """Fail closed unless ONLY data relocation targets and their addend
+    fields changed (plus the appended sink and the symbol count)."""
+    new = canon.CoffObject(result)
+    sink = original.symbol_count
+    if new.symbol_count != sink + 1 or new.symbol_offset != original.symbol_offset:
+        raise RuntimeError("data relaxation changed the symbol table shape")
+    added = new.symbols.get(sink)
+    if added is None or (added.name, added.value, added.section, added.typ,
+                         added.storage_class, added.aux_count) != (
+                             DATA_SINK, 0, 0, 0, canon.EXTERNAL_STORAGE, 0):
+        raise RuntimeError("data relaxation appended a malformed sink symbol")
+    by_offset = {row.relocation_offset: row for row in relaxed}
+    if len(by_offset) != len(relaxed):
+        raise RuntimeError("data relaxation recorded a relocation twice")
+    if len(original.relocations) != len(new.relocations):
+        raise RuntimeError("data relaxation changed the relocation count")
+    for before, after in zip(original.relocations, new.relocations):
+        if (before.offset, before.section, before.site, before.typ) != (
+                after.offset, after.section, after.site, after.typ):
+            raise RuntimeError("data relaxation moved a relocation")
+        row = by_offset.get(before.offset)
+        if row is None:
+            if after.symbol_index != before.symbol_index:
+                raise RuntimeError("data relaxation retargeted a strict relocation")
+            continue
+        target = original.symbols[before.symbol_index]
+        if (_is_function_symbol(original, target) or _stays_strict(target)
+                or after.symbol_index != sink):
+            raise RuntimeError(
+                f"data relaxation touched a non-data relocation to {target.name}")
+    # Byte proof: the file before the old string table is identical except the
+    # symbol count, each relaxed record's symbol index and each relaxed
+    # addend; the sink record follows; the string table is unchanged.
+    mask = [(12, 16)]
+    for row in relaxed:
+        operand = original.sections[row.section - 1].raw_offset + row.site
+        if struct.unpack_from("<I", result, operand)[0] != 0:
+            raise RuntimeError("data relaxation left a nonzero addend")
+        mask += [(operand, operand + 4),
+                 (row.relocation_offset + 4, row.relocation_offset + 8)]
+    before = bytearray(payload[:original.string_offset])
+    after = bytearray(result[:original.string_offset])
+    for lo, hi in mask:
+        before[lo:hi] = after[lo:hi] = bytes(hi - lo)
+    if before != after:
+        raise RuntimeError("data relaxation changed bytes outside its fields")
+    if result[original.string_offset + canon.SYMBOL_SIZE:] != \
+            payload[original.string_offset:]:
+        raise RuntimeError("data relaxation changed the string table")
+
+
+def comparison_copy(payload: bytes, *, data_matching_on: bool | None = None):
+    """canonicalize, then (data matching off) relax: (bytes, sidecar rows)."""
+    result = canon.canonicalize_coff(payload)
+    rows = list(result.rows)
+    on = data_matching.enabled() if data_matching_on is None else data_matching_on
+    if on:
+        return result.data, tuple(rows)
+    data, relaxed = relax_data_relocations(result.data)
+    if relaxed:
+        rows.append(canon.CanonicalRow(
+            DATA_SINK, DATA_SINK, "data-relax", "undefined", 0, 0, 0, 0,
+            len(relaxed), "-", "data-matching-off-data-reloc-relaxed",
+            ",".join(sorted({row.original_symbol for row in relaxed}))[:200]))
+    return data, tuple(rows)
 
 
 def _stale(src: Path, out: Path) -> bool:
@@ -84,10 +264,10 @@ def _normalize_one(src: Path, out_obj: Path, out_sidecar: Path, *,
     """Normalize src -> out_obj (+ sidecar) when stale. Return a state token."""
     if not force and not _stale(src, out_obj) and not _stale(src, out_sidecar):
         return "skip"
-    result = canon.canonicalize_coff(src.read_bytes())
-    data = canon.add_function_padding_boundaries(result.data, function_claims)
+    data, rows = comparison_copy(src.read_bytes())
+    data = canon.add_function_padding_boundaries(data, function_claims)
     canon._atomic_write(out_obj, data)
-    canon._atomic_write(out_sidecar, canon.sidecar_bytes(result.rows))
+    canon._atomic_write(out_sidecar, canon.sidecar_bytes(rows))
     return "wrote"
 
 
@@ -158,6 +338,16 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
     target_out = out_dir / "target"
     stamp = stamp if stamp is not None else out_dir / "normalize.stamp"
 
+    # A selected-unit build must not mix scoring modes in one objdiff project.
+    mode_path = out_dir / "data-matching.mode"
+    mode = str(data_matching.enabled()).lower() + "\n"
+    if not mode_path.exists() or mode_path.read_text() != mode:
+        units = sorted(set(units) | {
+            p.relative_to(base_dir).with_suffix("").as_posix()
+            for p in base_dir.rglob("*.obj")
+        } | units_with_a_target(target_dir))
+        force = True
+
     wrote = skipped = base_n = target_n = 0
     processed: list[str] = []
     ordered = sorted(units)
@@ -216,6 +406,7 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
          f"wrote\t{wrote}\n"
          f"skipped\t{skipped}\n"
          f"set_sha256\t{digest}\n").encode("utf-8"))
+    canon._atomic_write(mode_path, mode.encode("ascii"))
     if not quiet:
         print(f"[normalize] base={base_n} target={target_n} wrote={wrote} "
               f"skipped={skipped} weak-externals-resolved={weak_n}")

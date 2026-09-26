@@ -280,7 +280,8 @@ def _common_owner(base_dir=BASE_DIR):
     from homm1.core.coff import Coff
     pos = _link_position()
     owners: dict[str, str] = {}
-    for obj in sorted(Path(base_dir).glob("*.obj")):
+    for obj in sorted(Path(base_dir).rglob("*.obj")):
+        unit = obj.relative_to(base_dir).with_suffix("").as_posix()
         try:
             commons = Coff(obj).commons()
         except (ValueError, OSError):
@@ -288,8 +289,12 @@ def _common_owner(base_dir=BASE_DIR):
         for name in commons:
             key = msvc_names.mask(name)
             prev = owners.get(key)
-            if prev is None or pos.get(obj.stem, 1 << 30) < pos.get(prev, 1 << 30):
-                owners[key] = obj.stem
+            if (msvc_names.anonymous_namespaces(name) != name
+                    and prev is not None and prev != unit):
+                raise ValueError("source-file anonymous COMMON emitted by multiple units: "
+                                 + key + " in " + prev + " and " + unit)
+            if prev is None or pos.get(unit, 1 << 30) < pos.get(prev, 1 << 30):
+                owners[key] = unit
     return owners
 
 

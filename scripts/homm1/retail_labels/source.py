@@ -68,7 +68,8 @@ BASE_OBJS = BUILD / "objdiff/base"
 
 # Presence test ONLY (never extraction): a TU with no rva.h macro at all is a
 # vendored TU whose claims are the functions_zlib/data_zlib tables - skip it.
-LABELED_TU_RE = re.compile(r"\b(?:VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
+ANN_DECL_RE = re.compile(r"^decl-va:(0x[0-9a-fA-F]+)$")
+LABELED_TU_RE = re.compile(r"\b(?:VA_DECL|VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
 DATA_MACRO_RE = re.compile(r"\bDATA\s*\(\s*(0x[0-9a-fA-F]+)\s*\)")
 VA_COMPGEN_RE = re.compile(
     r'\bVA_COMPGEN\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*'
@@ -469,6 +470,32 @@ def data_claims(text: str, ast: dict, main_file: str) -> list[tuple[int, str | N
     return out
 
 
+def decl_claims(decls: list[dict]) -> tuple[list[tuple[int, str]], list[str]]:
+    """([(rva, name)], [problems]) - the label-only `VA_DECL` claims among
+    `tool.clang.annotated_decls` records, in cl 5.0's spelling.
+
+    Each non-defining function declaration carrying the annotation binds. The
+    attribute is inherited by every redeclaration, the definition included,
+    and a definition's identity is its own `RVA()`, so defining cursors are
+    skipped."""
+    seen, out, problems = set(), [], []
+    for d in decls:
+        for ann in d["annotations"]:
+            m = ANN_DECL_RE.match(ann)
+            if not m:
+                continue
+            if d["kind"] != "func":
+                problems.append(f"VA_DECL({m.group(1)}) annotates {d['name']}, "
+                                f"which is not a function")
+                continue
+            if d["defined"]:
+                continue
+            claim = (int(m.group(1), 16) - image().image_base, msvc_names.func(d["name"], decorated=True))
+            if claim not in seen:
+                seen.add(claim)
+                out.append(claim)
+    return sorted(out), problems
+
 def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]], list[str]]:
     """(fragment rows, problems). Empty rows for a vendored (macro-free) TU."""
     src_path = REPO / source
@@ -492,6 +519,15 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
     ir_funcs, ir_datas = ir_claims(ir)
     for rva, name, size in ir_funcs:
         emit(rva, size, name, "func", "src")
+
+    # Function declarations carry identities before their bodies are reconstructed.
+    decls = clang.annotated_decls(str(src_path), cl_flags)
+    if decls is None:
+        return rows, [f"{unit}: libclang could not resolve declaration identities (FATAL)"]
+    d_claims, d_problems = decl_claims(decls)
+    problems.extend(f"{unit}: {problem} (FATAL)" for problem in d_problems)
+    for rva, name in d_claims:
+        emit(rva, None, name, "func", "src_decl")
 
     # compiler-generated bodies: both their address and source owner are VAs
     blanked = blank_comments(text)
@@ -568,7 +604,7 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
 
 
 MACRO_SITE_RE = re.compile(
-    r"\b(VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
+    r"\b(VA_DECL|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
 
 
 def sweep_sites() -> dict[str, dict[int, str]]:
@@ -591,7 +627,7 @@ def sweep_sites() -> dict[str, dict[int, str]]:
                 lineno = text.count("\n", 0, m.start()) + 1   # may span lines
                 macro = m.group(1)
                 address = int(m.group(2), 16)
-                if macro in {"VA", "VA_COMPGEN", "DATA"}:
+                if macro in {"VA", "VA_DECL", "VA_COMPGEN", "DATA"}:
                     address -= image().image_base
                 out.setdefault(macro, {}).setdefault(
                     address, []).append(
@@ -611,7 +647,7 @@ def check_completeness() -> list[str]:
     for c in all_claims():
         have.setdefault((c.channel, c.kind), set()).add(c.rva)
     problems = []
-    checks = [("VA", "src", "func"),
+    checks = [("VA", "src", "func"), ("VA_DECL", "src_decl", "func"),
               ("VA_COMPGEN", "src_compgen", "func"),
               ("RVA_DYNINIT", "src_dyninit", "func"), ("DATA", "src", "data"),
               ("DATA_COMPGEN", "src_data_compgen", "data")]

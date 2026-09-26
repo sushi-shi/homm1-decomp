@@ -161,6 +161,16 @@ def _show(kind, rows, note=""):
 
 
 def _report(args, gate: bool) -> int:
+    mismatch = bl.mode_mismatch()
+    if mismatch:
+        # Every row would read as a regression (or a gain) that no source
+        # edit caused; there is nothing to gate until the ledger is re-based.
+        print(f"HARD FAILURE: {mismatch}")
+        if gate:
+            print("\nCHECK FAILED: the banked MAX was measured under the other "
+                  "data-matching mode.")
+            return 1
+        return 0
     doc, cur, base_funcs, fp, stale, rvas = load_state(args.report)
     _warn_stale_report(args.report)
     fails = scores.hard_failures(doc)
@@ -184,12 +194,15 @@ def _report(args, gate: bool) -> int:
     total = int(m.get("total_functions") or 0)
     print(f"scored {total} function(s) (EH band carved) - {exact} exact, "
           f"overall fuzzy {float(m.get('fuzzy_match_percent') or 0.0):.2f}%")
-    print(f"below-bank: {len(regress)} beyond EPS={EPS} "
-          f"({len(carried)} carried in the snapshot, {len(fresh)} fresh) - "
-          f"strict-< count {strict_below} (the no-EPS reading; "
-          f"{jitter} of those are sub-EPS float jitter)")
+    print(f"below the banked MAX (beyond EPS={EPS}): "
+          f"{len(regress)} REGRESS ({len(carried)} carried, {len(fresh)} fresh), "
+          f"{len(buckets.get('RESET', []))} RESET, "
+          f"{len(buckets.get('DIP', []))} DIP (MAX held); "
+          f"strict-< count {strict_below} ({jitter} sub-EPS float jitter)")
 
-    for kind, note in (("REGRESS", " (cur < banked best)"),
+    for kind, note in (("REGRESS", " (edited, CUR fell below the banked MAX)"),
+                       ("RESET", " (edited, CUR held; the new hash lowers MAX)"),
+                       ("DIP", " (unedited, CUR dip; MAX held, no action)"),
                        ("LOST", " (rva no longer scored, not banked absent)"),
                        ("IMPROVE", " (bankable: cur > best)"),
                        ("MOVED", " (same rva, new unit - transfers)"),
@@ -197,7 +210,7 @@ def _report(args, gate: bool) -> int:
                        ("NEW", ""), ("REMOVED", " (rename/edit adjudicated)"),
                        ("KNOWN-ABSENT", " (banked absent, MAX preserved)")):
         rows = buckets.get(kind, [])
-        if kind in ("MOVED", "RENAMED", "REMOVED", "KNOWN-ABSENT") \
+        if kind in ("MOVED", "RENAMED", "REMOVED", "KNOWN-ABSENT", "DIP") \
                 and not getattr(args, "all", False):
             if rows:
                 print(f"\n{kind}: {len(rows)} row(s){note} (--all lists them)")
@@ -268,16 +281,28 @@ def refresh_readme_block(report=None) -> bool:
     """
     from homm1.model import resolve
     from homm1.verify.universe import engine_universe
-    doc, cur, _base, _fp, _stale, _rvas = load_state(report)
+    doc, cur, base, fp, _stale, rvas = load_state(report)
     umeas = scores.unit_measures(doc)
     mods, started_fzw, started_code = rm.collect_modules(umeas)
     model = resolve()
-    sizes = {(b.unit, b.name): b.size for b in model.functions
+    sizes = {(b.unit.rsplit("/", 1)[-1], b.name): b.size for b in model.functions
              if b.name and b.size}
-    rm.churn_weights(cur, bl.load(), sizes, mods, rm.unit_modules())
-    block = rm.render_block(doc.get("measures", {}), mods, started_fzw,
-                            started_code, engine_universe(model))
+    ledger, *_ = bank_rows(cur, base, fp, rvas)
+    tot = rm.score_weights(cur, ledger, sizes, mods, rm.unit_modules())
+    block = rm.render_block(mods, started_fzw, engine_universe(model), tot)
     return rm.write_block(block)
+
+
+def cmd_readme(argv) -> int:
+    ap = argparse.ArgumentParser(prog="homm1 verify readme",
+                                 description="refresh derived README status without banking")
+    ap.add_argument("--report", type=Path)
+    args = ap.parse_args(argv)
+    if bl.mode_mismatch():
+        raise SystemExit(bl.mode_mismatch())
+    changed = refresh_readme_block(args.report)
+    print(f"README score block {'refreshed' if changed else 'unchanged'}")
+    return 0
 
 
 def cmd_check(argv) -> int:
@@ -400,6 +425,23 @@ def bank_rows(cur, base_funcs, fp, rvas):
     return new_funcs, stats, reset_by_edit, dropped
 
 
+def rebase_rows(new_funcs: dict) -> tuple[dict, list]:
+    """Re-base a freshly banked ledger at a new data-matching mode.
+
+    MAX and HIST of every scored row become its CUR: the old values were
+    measured under the other mode, so keeping them would make every function
+    whose score moved with the mode read as a lost match (HIST > MAX) or an
+    unearned high-water. Rows banked `absent` have no score in the new mode;
+    they are dropped (returned) rather than carried at an incomparable MAX."""
+    rebased, dropped = {}, []
+    for key, row in new_funcs.items():
+        if row.get("state") == "absent":
+            dropped.append(key)
+            continue
+        rebased[key] = dict(row, best=row["cur"], hist=row["cur"])
+    return rebased, sorted(dropped)
+
+
 def _reconcile(overall, mods, started_fzw, started_code, eng, cur,
                base_funcs, rvas) -> None:
     old = rm.old_block_numbers(rm.current_block() or "")
@@ -477,9 +519,21 @@ def cmd_bank(argv) -> int:
                     help="skip the fingerprint-cache refresh")
     ap.add_argument("--baseline-only", action="store_true",
                     help="skip the README block refresh")
+    ap.add_argument("--rebase-data-matching", action="store_true",
+                    help="after flipping config/compare.toml: re-base every "
+                         "scored row's MAX and HIST at this mode's CUR and "
+                         "record the new mode (refused when the mode did not "
+                         "change)")
     a = ap.parse_args(argv)
     report = Path(a.report) if a.report else None
 
+    mismatch = bl.mode_mismatch()
+    if mismatch and not a.rebase_data_matching:
+        raise SystemExit(f"refusing to bank: {mismatch}")
+    if a.rebase_data_matching and not mismatch:
+        raise SystemExit("refusing to re-base: the ledger was already banked "
+                         "under this data-matching mode; a plain `homm1 verify "
+                         "bank` is the update")
     require_bankable_tree("write config/match_baseline.tsv", a.dirty)
     if not a.no_refresh:
         from homm1.verify.fingerprints import regenerate
@@ -512,6 +566,15 @@ def cmd_bank(argv) -> int:
         _reconcile(overall, mods, started_fzw, started_code, eng, cur,
                    base_funcs, rvas)
 
+    if a.rebase_data_matching:
+        from homm1.core import data_matching
+        new_funcs, rebase_dropped = rebase_rows(new_funcs)
+        print(f"RE-BASED at {data_matching.label()}: MAX and HIST of "
+              f"{len(new_funcs)} scored row(s) set to their CUR; "
+              f"{len(rebase_dropped)} absent row(s) dropped (no score in "
+              f"this mode)")
+        for key in rebase_dropped[:8]:
+            print(f"  dropped absent {key[0]}/{key[1]}")
     changed_b = bl.write(new_funcs)
     print(f"baseline {'UPDATED' if changed_b else 'unchanged'}: "
           f"{len(new_funcs)} functions across "
@@ -535,8 +598,8 @@ def cmd_bank(argv) -> int:
         # `Fuzzy Max` reads the JUST-banked baseline, so the block and the
         # ledger describe the same tree state.
         banked = bl.load()
-        rm.churn_weights(cur, banked, sizes, mods, rm.unit_modules())
-        block = rm.render_block(overall, mods, started_fzw, started_code, eng)
+        tot = rm.score_weights(cur, banked, sizes, mods, rm.unit_modules())
+        block = rm.render_block(mods, started_fzw, eng, tot)
         changed_r = rm.write_block(block)
         print(f"README score block "
               f"{'UPDATED' if changed_r else 'unchanged'} "
