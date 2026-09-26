@@ -5,12 +5,23 @@
 
 #include <H1/Macros.h>
 
+class icon;
+class border;
+
+#pragma pack(push, 1)
 class townObject {
 public:
+    signed char m_animationFrameCount;
+    signed char m_animationFrame;
+    signed char m_visible;
+    short m_buildingId;
+    icon *m_icon;
+    border *m_border;
     // --- constructors ---
     townObject(int, int, char *);
     ~townObject();
     // --- methods ---
     void Draw(int);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_TOWNOBJECT_H

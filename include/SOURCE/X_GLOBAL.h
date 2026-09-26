@@ -2,5 +2,6 @@
 #define HOMM1_SOURCE_X_GLOBAL_H
 
 extern int gbEnlargeScreenBlit;
+extern int gAdvDisposeLevel;
 
 #endif

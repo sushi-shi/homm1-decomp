@@ -3,10 +3,28 @@
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 75 methods, 0 own-virtual, 0 static data.
 
+#include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/resourceTypes.h>
+
+extern signed char gDwellingType[4][6];
+
+extern float gafAITurnCostResource[static_cast<int>(RESOURCE_COUNT)];
+
+H1_ENUM_BEGIN(AIPlayerConstant)
+    AI_PLAYER_COUNT = 4,
+    AI_PLAYER_BEGIN = 0,
+    AI_PLAYER_END = AI_PLAYER_COUNT
+H1_ENUM_END(AIPlayerConstant)
+
+extern signed char giBuildShipyard[AI_PLAYER_COUNT];
+extern signed char giBuildBoat[AI_PLAYER_COUNT];
+extern signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
+void ShowStatus();
 
 // forward declarations:
 class armyGroup;
+class font;
 class hero;
 class mapCell;
 class town;
@@ -14,6 +32,8 @@ struct BHC;
 
 class philAI {
 public:
+    // Retail four-byte allocation; adjacent debug-text routine draws through this font.
+    font *m_debugFont;
     // --- constructors ---
     philAI(void);
     // --- methods ---
@@ -66,7 +86,7 @@ public:
     void ChooseEvaluateBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, int, int, int, int &, int &);
     int ChooseToFightForArtifact(int, int, int);
     int NetValueOfArtifact(int, int, int, int);
-    int ChooseToPayRansomOnHero(int);
+    int ChooseToPayRansomOnHero(class hero *, int);
     void BuildBuilding(class town *, int);
     void BuildHero(class town *, int);
     void BuildCreature(class town *, int, int);

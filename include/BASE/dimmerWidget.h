@@ -19,7 +19,7 @@ public:
                                           // NO standalone ??1 — an out-of-line body would emit one.
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void Read(void);
 };

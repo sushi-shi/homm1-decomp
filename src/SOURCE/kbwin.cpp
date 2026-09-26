@@ -2,9 +2,15 @@
 
 #include <match.h>
 
+#include <SOURCE/kbwin.h>
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <stdio.h>
 
+#include <BASE/Misc.h>
+#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/soundmgr.h>
 #include <H1/KB.h>
 #include <H1/All.h>
 
@@ -53,13 +59,62 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.631126;margin=0.664983;shape=0.634;size=0.797;calls=1.000;alternate=pol20:void Process1WindowsMessage(void)@0x0001c7b8
 VA(0x0045c206, 0xca)
-void Process1WindowsMessage(void) {}
+void Process1WindowsMessage(void) {
+    MSG message;
+    long currentTick;
+
+    while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != 0) {
+        TranslateMessage(&message);
+        DispatchMessageA(&message);
+    }
+    currentTick = KBTickCount();
+    if (currentTick - lLastAilServe > 20) {
+        lLastAilServe = currentTick;
+        if (gbNoSound == 0)
+            gpSoundManager->ServiceSound();
+    }
+    if (currentTick - lLastGetMessage > 150) {
+        lLastGetMessage = currentTick;
+        if (GetMessageA(&message, NULL, 0, 0) != 0) {
+            TranslateMessage(&message);
+            DispatchMessageA(&message);
+        }
+    }
+}
 
 // donor PoL RVA 0x0001c880; preferred Buka symbol ?ResizeWindow@@YIXHHHH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
 VA(0x0045c2d0, 0x127)
-void ResizeWindow(int, int, int, int) {}
+void ResizeWindow(int x, int y, int width, int height)
+{
+    int windowX;
+    RECT windowRect;
+    int targetY;
+    if (gConfig.gfx[giCurExe].fullScreen != 0)
+        return;
+    GetWindowRect(hwndApp, &windowRect);
+    if (x == -1)
+        windowX = windowRect.left;
+    else
+        windowX = x;
+    if (y == -1)
+        targetY = windowRect.top;
+    else
+        targetY = y;
+    windowRect.left = 0;
+    windowRect.top = 0;
+    windowRect.right = width - 1;
+    windowRect.bottom = height - 1;
+    AdjustWindowRect(&windowRect, giCurWindowsStyleFlags, gConfig.gfx[giCurExe].showMenu);
+    MoveWindow(hwndApp, windowX, targetY, windowRect.right - windowRect.left + 1,
+        windowRect.bottom - windowRect.top + 1, 1);
+    gConfig.gfx[giCurExe].x = windowX;
+    gConfig.gfx[giCurExe].y = targetY;
+    gConfig.gfx[giCurExe].width = width;
+    gConfig.gfx[giCurExe].height = height;
+    WritePrefs();
+}
 
 // donor PoL RVA 0x0001c9c7; preferred Buka symbol ?AppCommand@@YIJPAXIIJ@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
@@ -71,26 +126,88 @@ long int AppCommand(void *, unsigned int, unsigned int, long int) { return 0; }
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.545069;margin=0.304682;shape=0.429;size=0.841;calls=1.000;alternate=pol20:void KBChangeMenu(void *)@0x0001cc35
 VA(0x0045c64c, 0xaa)
-void KBChangeMenu(void *) {}
+void KBChangeMenu(void *menu)
+{
+    if (menu == 0)
+        menu = hmnuCurrent;
+    else
+        hmnuCurrent = menu;
+    hmnuApp = menu;
+    if (gConfig.gfx[giCurExe].showMenu) {
+        if (menu != 0) {
+            SetMenu(hwndApp, menu);
+            UpdateDfltMenu(menu);
+            UpdateAppSpecificMenus(menu);
+            DrawMenuBar(hwndApp);
+        }
+    } else {
+        SetMenu(hwndApp, 0);
+        DrawMenuBar(hwndApp);
+    }
+}
 
 // donor PoL RVA 0x0001cce1; preferred Buka symbol ?SetMenuStatus@@YIXH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.517140;margin=0.517010;shape=0.323;size=0.903;calls=1.000;alternate=pol20:void SetMenuStatus(int)@0x0001cce1
 VA(0x0045c6f6, 0x135)
-void SetMenuStatus(int) {}
+void SetMenuStatus(int showMenu)
+{
+    int clientWidth;
+    int height;
+    long windowStyle;
+    long replacedStyle;
+    if (gConfig.gfx[giCurExe].fullScreen && showMenu)
+        return;
+    clientWidth = gConfig.gfx[giCurExe].width;
+    height = gConfig.gfx[giCurExe].height;
+    gConfig.gfx[giCurExe].showMenu = showMenu;
+    KBChangeMenu(0);
+    gConfig.gfx[giCurExe].width = clientWidth;
+    gConfig.gfx[giCurExe].height = height;
+    WritePrefs();
+    windowStyle = GetWindowLongA(hwndApp, GWL_STYLE);
+    if (gConfig.gfx[giCurExe].showMenu)
+        giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+    else
+        giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
+    replacedStyle = SetWindowLongA(hwndApp, GWL_STYLE, giCurWindowsStyleFlags);
+    ShowWindow(hwndApp, SW_SHOWNA);
+    ResizeWindow(-1, -1, gConfig.gfx[giCurExe].width, gConfig.gfx[giCurExe].height);
+}
 
 // donor PoL RVA 0x0001ce3d; preferred Buka symbol ?SetNoDialogMenus@@YIXH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
 VA(0x0045c82b, 0x79)
-void SetNoDialogMenus(int) {}
+void SetNoDialogMenus(int menusEnabled) {
+    if (gbNoDialogMenusOn && !menusEnabled)
+        return;
+    if (!gbNoDialogMenusOn && menusEnabled)
+        return;
+    if (!hmnuApp)
+        return;
+    gbNoDialogMenusOn = 1 - menusEnabled;
+    SetMenus(hmnuApp, menusEnabled);
+}
 
 // donor PoL RVA 0x000a0c76; preferred Buka symbol ?SetWinText@@YIXPAVheroWindow@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447557;margin=0.235076;shape=0.180;size=0.912;calls=1.000;alternate=pol20:void SetWinText(class heroWindow *, int)@0x000a0c76
 VA(0x0045dc1f, 0x7c)
-void SetWinText(heroWindow *j, int id)
-{}
+void SetWinText(heroWindow *window, short id)
+{
+    int i;
+    tag_message message;
+    for (i = 0; i < static_cast<int>(WINDOW_TEXT_ENTRY_COUNT); i++) {
+        if (gWinSetup[i].windowId == id) {
+            message.type = MESSAGE_WIDGET;
+            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+            message.payload.widget.id = gWinSetup[i].widgetId;
+            message.payload.widget.data.text = gWinSetupText[i];
+            window->BroadcastMessage(message);
+        }
+    }
+}
 
 // donor PoL RVA 0x0001d011; preferred Buka symbol ?KBTickCount@@YIJXZ
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
@@ -103,4 +220,12 @@ long int KBTickCount(void) { return GetTickCount(); }
 // evidence: graph:2;base=0.598916;margin=0.432613;shape=0.279;size=0.853;calls=0.600;strings=Assert Failure;alternate=pol20:void ProcessAssert(int, char *, int)@0x000c47f0
 VA(0x0045dcb1, 0x63)
 void ProcessAssert(int condition, char *file, int line)
-{}
+{
+    int unusedAssertWord;
+    if (condition == 0) {
+        sprintf(gText, "Assert statement failed in module %s, line %d.", file, line);
+        MessageBoxA(hwndApp, gText, "Assert Failure", MB_ICONHAND);
+        unusedAssertWord = 0;
+        ShutDown(gText);
+    }
+}

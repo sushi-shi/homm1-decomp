@@ -2,6 +2,7 @@
 #define HOMM1_H1_ALL_H
 // Shared declarations for the currently recovered HoMM1 source tree.
 
+#include <BASE/backdropWidget.h>
 #include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/border.h>

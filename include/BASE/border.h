@@ -4,21 +4,31 @@
 // 7 methods, 2 own-virtual, 0 static data.
 
 #include <BASE/widget.h>
+#include <Domains.h>
 #include <H1/Macros.h>
 
+H1_ENUM_BEGIN(BorderBackgroundKind)
+    BORDER_BACKGROUND_BITMAP = 0x800
+H1_ENUM_END(BorderBackgroundKind)
+
 // forward declarations:
+class bitmap;
 struct tag_message;
 
+#pragma pack(push, 1)
 class border : public widget {
 public:
+    bitmap *m_background;
+    short m_fillColor;
     // --- constructors ---
     border(void);
     border(short int, short int, short int, short int, short int, short int, short int, char *);
-    virtual ~border() OVERRIDE;
+    virtual inline ~border() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void Read(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_BASE_BORDER_H

@@ -14,7 +14,28 @@ typedef unsigned int UInt32;
 struct MemEntry;
 struct _SAMPLE;
 
-struct configStruct { char pad[0x1a0]; };
+// HoMM1 uses six-word graphics records; HoMM2 adds colorMouseCursor.
+struct exeGfxConfig {
+    int showMenu;
+    int x;
+    int y;
+    int width;
+    int height;
+    int fullScreen;
+};
+
+// ReadPrefsFromFile reads 0x134 bytes at the owner base; graphics records
+// begin at 0x18. Unused provisional HoMM2 sound offsets are superseded.
+struct configStruct {
+    char _pad_0x000[4];
+    int musicVolume;
+    int soundVolume;
+    char _pad_0x00c[0xc];
+    exeGfxConfig gfx[2];
+    char _pad_0x048[0x70];
+    int musicSource;
+    char _pad_0x0bc[0x78];
+};
 struct SCreatureInfo { unsigned short value; char pad[24]; };
 struct tag_tilePoint { signed char x; signed char _1; signed char y; signed char _3; };
 struct tag_monsterInfo { short attributes; char padding[24]; };

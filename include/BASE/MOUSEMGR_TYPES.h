@@ -5,6 +5,7 @@
 
 #include <windows.h>
 
+#include <BASE/MISC_TYPES.h>
 #include <BASE/mouseManager.h>
 
 H1_ENUM_BEGIN(MouseManagerConstant)
@@ -32,10 +33,6 @@ H1_ENUM_BEGIN(MouseManagerConstant)
     CONFIG_EXECUTABLE_EDITOR = 1
 H1_ENUM_END(MouseManagerConstant)
 
-extern void *hwndApp;
-extern int iMainWinScreenWidth;
-extern int iMainWinScreenHeight;
-extern int giCurExe;
 extern int gbColorMice;
 extern int gbSpecialMouseMasks;
 extern int gMouseCursorType;

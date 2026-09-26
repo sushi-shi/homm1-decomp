@@ -28,6 +28,18 @@ void combatManager::SetCombatDirections(int) {}
 VA(0x0040fe90, 0x620)
 void combatManager::CheckSetMouseDirection(int, int, int) {}
 
+// Buka GetPointer precedes ProcessCombatMsg. HoMM1's sole caller passes one
+// command and retail maps command 13 to pointer 5, preserving all others.
+VA(0x004104b0, 0x34)
+H1_ENUM_RETURN(CombatPointerCode, int)
+combatManager::GetPointer(H1_ENUM_PARAM(CombatPointerCode, int) command)
+{
+    if (command == COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS)
+        return COMBAT_POINTER_VIEW;
+    else
+        return command;
+}
+
 // donor PoL RVA 0x0002bb26; preferred Buka symbol ?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.392432;margin=0.340460;shape=0.273;size=0.720;calls=0.630;alternate=pol20:int combatManager::ProcessCombatMsg(struct tag_message &)@0x0002bb26

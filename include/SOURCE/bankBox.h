@@ -7,9 +7,14 @@
 
 // forward declarations:
 class playerData;
+class heroWindow;
 
 class bankBox {
 public:
+    playerData *m_player;
+    short m_x;
+    short m_y;
+    heroWindow *m_window;
     // --- constructors ---
     bankBox(int, int, class playerData *);
     ~bankBox();

@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <H1/All.h>
+#include <H1/KB.h>
 
 // donor PoL RVA 0x00032230; preferred Buka symbol ??0strip@@QAE@HHHKHPAVarmyGroup@@HHH@Z
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
@@ -38,4 +39,7 @@ bankBox::bankBox(int, int, class playerData *) {}
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.486146;margin=0.167932;shape=0.360;size=0.776;calls=1.000;alternate=pol20:void bankBox::~destructor(void)@0x00032aea
 VA(0x00463e05, 0x43)
-bankBox::~bankBox() {}
+bankBox::~bankBox() {
+    gpWindowManager->RemoveWindow(m_window);
+    delete m_window;
+}

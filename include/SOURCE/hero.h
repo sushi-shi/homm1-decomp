@@ -27,8 +27,8 @@ public:
     void UpdateArmies(void);
     void ViewStat(int, int);
     void ViewArtifact(int, int, int);
-    int Dismiss(void);
-    void Deallocate(int);
+    signed char Dismiss(void);
+    void Deallocate(void);
     int GetExperience(int);
     int GetLevel(int);
     void ApplyBattleWinTemps(void);

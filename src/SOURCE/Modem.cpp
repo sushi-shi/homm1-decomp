@@ -2,43 +2,119 @@
 
 #include <match.h>
 
+#include <SOURCE/Modem.h>
+
 #include <H1/All.h>
+#include <H1/KB.h>
+
+#include <stdio.h>
+#include <string.h>
 
 // donor PoL RVA 0x0000cb3e; preferred Buka symbol ?Dial@@YIJXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.658408;margin=0.279474;shape=0.349;size=0.861;calls=1.000;strings=%s %s|ATDT%s|CONNECT;alternate=pol20:long int Dial(void)@0x0000cb3e
 VA(0x00459627, 0xa5)
-long int Dial(void) { return 0; }
+long int Dial(void) {
+    char dialCommand[40];
+    iLastDialPos = 0;
+    sprintf(dialCommand, "ATDT%s", numbuf);
+    sprintf(gText, "%s %s", "Dialing...", numbuf);
+    GUIModemCommand(gText, dialCommand);
+    sprintf(gText, "%s %s", "Dialing...", numbuf);
+    if (GUIModemResponse(gText, "CONNECT"))
+        return 1;
+    return 0;
+}
 
 // donor PoL RVA 0x0000cbdc; preferred Buka symbol ?Wait@@YIJXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.520648;margin=0.735557;shape=0.143;size=0.710;calls=1.000;strings=CONNECT|RING;alternate=pol20:long int Wait(void)@0x0000cbdc
 VA(0x004596cc, 0x5d)
-long int Wait(void) { return 0; }
+long int Wait(void) {
+    GUIModemResponse("Waiting for ring...", "RING");
+    GUIModemCommand("Initializing modem...", "ATA");
+    if (GUIModemResponse("Establishing connection...", "CONNECT"))
+        return 1;
+    return 0;
+}
 
 // donor PoL RVA 0x0000cc30; preferred Buka symbol ?GUIModemCommand@@YIXPAD0@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.504929;margin=0.542655;shape=0.294;size=0.956;calls=1.000;alternate=pol20:void GUIModemCommand(char *, char *)@0x0000cc30
 VA(0x00459729, 0x71)
-void GUIModemCommand(char *, char *) {}
+void GUIModemCommand(char *message, char *command) {
+    iLastActionTime = 0;
+    iModemCommandPos = 0;
+    giWaitType = 5;
+    strcpy(cModemCommand, command);
+    NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
+    if (!gbFunctionComplete)
+        ShutDown(0);
+}
 
 // donor PoL RVA 0x0000cca9; preferred Buka symbol ?GUIModemCommandExec@@YICXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.478276;margin=0.078716;shape=0.283;size=0.851;calls=1.000;alternate=pol20:signed char GUIModemCommandExec(void)@0x0000cca9
 VA(0x0045979a, 0x94)
-signed char GUIModemCommandExec(void) { return 0; }
+signed char GUIModemCommandExec(void) {
+    int commandLength;
+    if (KBTickCount() < iLastActionTime + 250)
+        return 0;
+
+    iLastActionTime = KBTickCount();
+    commandLength = strlen(cModemCommand);
+    if (iModemCommandPos < commandLength) {
+        write_buffer(cModemCommand + iModemCommandPos, 1);
+        ++iModemCommandPos;
+        return 0;
+    } else {
+        write_buffer("\r", 1);
+        return 1;
+    }
+}
 
 // donor PoL RVA 0x0000cdcc; preferred Buka symbol ?GUIModemResponse@@YICPAD0@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.487980;margin=0.528115;shape=0.250;size=0.959;calls=1.000;alternate=pol20:signed char GUIModemResponse(char *, char *)@0x0000cdcc
 VA(0x0045989a, 0x7a)
-signed char GUIModemResponse(char *, char *) { return 0; }
+signed char GUIModemResponse(char *message, char *response) {
+    memset(GUIMRresponse, 0, 80);
+    GUIMRrespptr = 0;
+    strcpy(GUIMRresp, response);
+    giWaitType = 6;
+    NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
+    if (!gbFunctionComplete)
+        ShutDown(0);
+    return 0;
+}
 
 // donor PoL RVA 0x0000ce4e; preferred Buka symbol ?GUIModemResponseExec@@YICXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.623720;margin=0.638042;shape=0.611;size=0.792;calls=1.000;alternate=pol20:signed char GUIModemResponseExec(void)@0x0000ce4e
 VA(0x00459914, 0xe2)
-signed char GUIModemResponseExec(void) { return 0; }
+signed char GUIModemResponseExec(void) {
+    GUIMRc = read_byte();
+    if (GUIMRc == -1)
+        return 0;
+    if (GUIMRc == '\n' || GUIMRrespptr == MODEM_RESPONSE_LAST) {
+        GUIMRresponse[GUIMRrespptr] = 0;
+        if (GUIMRrespptr > 17)
+            GUIMRresponse[17] = 0;
+        goto compareResponse;
+    }
+    if (GUIMRc >= ' ') {
+        GUIMRresponse[GUIMRrespptr] = static_cast<char>(GUIMRc);
+        ++GUIMRrespptr;
+    }
+    return 0;
+compareResponse:
+    if (strncmp(GUIMRresponse, GUIMRresp, strlen(GUIMRresp)) != 0) {
+        GUIMRrespptr = 0;
+        return 0;
+    } else {
+        return 1;
+    }
+}
 
 // donor PoL RVA 0x0000cfec; preferred Buka symbol ?Connect@@YIXXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
@@ -56,4 +132,38 @@ int WaitForDirectConnect(void) { return 0; }
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.530036;margin=0.483413;shape=0.466;size=0.966;calls=0.333;alternate=pol20:char ReadPacket(void)@0x0000d3b8
 VA(0x0045a062, 0x109)
-char ReadPacket(void) { return 0; }
+char ReadPacket(void) {
+    int input;
+    if (inque.writePosition > 4092) {
+        inque.writePosition = 0;
+        newpacket = 1;
+    }
+readPacketStart:
+    if (newpacket) {
+        packetlen = 0;
+        newpacket = 0;
+    }
+    do {
+    readNextByte:
+        input = read_byte();
+        if (input < 0)
+            return 0;
+        if (inescape) {
+            inescape = 0;
+            if (input == 1) {
+                newpacket = 1;
+                return 1;
+            } else if (input == 0) {
+                newpacket = 1;
+                goto readPacketStart;
+            }
+        } else if (input == MODEM_PACKET_ESCAPE) {
+            inescape = 1;
+            goto readNextByte;
+        }
+        if (packetlen >= 256)
+            goto readPacketStart;
+        packet[packetlen] = static_cast<char>(input);
+        ++packetlen;
+    } while (1);
+}

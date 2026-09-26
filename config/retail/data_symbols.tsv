@@ -1,11 +1,47 @@
 rva	size	symbol	provenance
+0x000C82C8	8	?inque@@3Uinque_t@@A	ReadPacket accesses input queue writePosition at +4 (0x004C82CC); donor queue layout
+0x0009F82C	4	?inescape@@3HA	ReadPacket tests and clears escape state at 0x0049F82C
+0x0009F830	4	?newpacket@@3HA	ReadPacket tests and sets packet reset state at 0x0049F830
+0x0009F828	4	?packetlen@@3HA	ReadPacket tracks packet length at 0x0049F828
+0x000C92D8	1	?packet@@3PADA	ReadPacket stores received bytes at 0x004C92D8; identity only
+0x000C8288	4	?iLastDialPos@@3HA	Dial resets last dial position at 0x004C8288
+0x000C7F88	1	?numbuf@@3PADA	Dial passes 0x004C7F88 as dial number buffer; identity only
+0x000C7F78	4	?GUIMRc@@3HA	GUIModemResponseExec stores read_byte result at 0x004C7F78
+0x000C93D8	4	?iLastActionTime@@3HA	GUIModemCommand resets action time at 0x004C93D8
+0x000C7F7C	4	?iModemCommandPos@@3HA	GUIModemCommand resets command position at 0x004C7F7C
+0x000C6D60	1	?giWaitType@@3CA	GUIModemCommand stores byte mode 5 at 0x004C6D60
+0x000C8260	1	?cModemCommand@@3PADA	GUIModemCommand passes 0x004C8260 to strcpy; identity only, extent deferred
+0x000C7B4C	1	?gbFunctionComplete@@3CA	GUIModemCommand tests signed byte completion flag at 0x004C7B4C
+0x000C94E0	1	?GUIMRresponse@@3PADA	GUIModemResponse clears 80 bytes at 0x004C94E0; identity only
+0x000C7F80	4	?GUIMRrespptr@@3HA	GUIModemResponse clears response position at 0x004C7F80
+0x000C8298	1	?GUIMRresp@@3PADA	GUIModemResponse copies expected response to 0x004C8298; identity only
+0x0009FF50	4	?gbNoDialogMenusOn@@3HA	SetNoDialogMenus tests and stores 0x0049FF50; donor names same state
+0x0009FE7C	4	?hmnuApp@@3PAXA	SetNoDialogMenus checks and passes menu pointer at 0x0049FE7C
+0x000C670C	4	?pNormalDialogWindow@@3PAVheroWindow@@A	UpdateNormalDialog broadcasts and draws through pointer at 0x004C670C
+0x000C6D68	4	?giBottomViewOverride@@3HA	BVResMsg sets override mode 5 at 0x004C6D68
+0x000C5158	4	?giBottomViewOverrideEndTime@@3JA	BVResMsg stores KBTickCount plus 5000 at 0x004C5158
+0x000C516C	4	?giBottomViewResource@@3HA	BVResMsg stores resource argument at 0x004C516C
+0x000C7CA4	4	?giBottomViewResourceQty@@3HA	BVResMsg stores quantity argument at 0x004C7CA4
+0x000C6ED8	1	?gcBottomViewText@@3PADA	BVResMsg passes 0x004C6ED8 as strcpy destination; identity only, extent deferred
+0x00094160	4	?gAdvDisposeLevel@@3HA	town::View stores 2/1/0 at 0x00494160; HoMM2 Buka 2.1 names this state
+0x00094174	4	?giHighMemBuffer@@3HA	town::View compares DWORD at 0x00494174 with 200; HoMM2 Buka 2.1 names this memory measure
+0x000C78B8	4	?gpExec@@3PAVexecutive@@A	town::View calls executive::CallManager through pointer at 0x004C78B8
+0x000C7E10	4	?gpTownManager@@3PAVtownManager@@A	town::View stores its town through manager pointer at 0x004C7E10
+0x000C7E18	4	?gpAdvManager@@3PAVadvManager@@A	town::View calls SetHeroContext through pointer at 0x004C7E18
 0x0008C600	4	??_7bitmap@@6B@	evidence/window-layout.md; bitmap virtual-destructor table referenced by bitmap construction
 0x0008C678	12	??_7widget@@6B@	evidence/window-layout.md; three-slot pure widget virtual table referenced by widget construction
 0x0008C68C	4	??_7resource@@6B@	evidence/window-layout.md; resource virtual-destructor table referenced by resource construction
+0x0008E180	4	?giGraphicsType@@3HA	evidence/wingraph-globals.md; graphics backend selector in five wrappers
+0x0008E5A8	4	?gbWinGraphBusy@@3HA	evidence/wingraph-globals.md; DD palette-query busy guard
+0x0008E94C	4	?hdcImage@@3PAXA	evidence/wingraph-globals.md; WinG image DC released on cleanup
+0x0008E950	4	?gbmOldMonoBitmap@@3PAXA	evidence/wingraph-globals.md; bitmap restored to WinG image DC
+0x0008E954	4	?hpalApp@@3PAXA	evidence/wingraph-globals.md; WinG palette handle
+0x0008E9FC	4	?hDDrawLibrary@@3PAXA	evidence/wingraph-globals.md; DirectDraw DLL handle checked before FreeLibrary
 0x0008F590	4	$SG16676	evidence/log-string.md; VC4 literal `at+` including terminator
 0x0008F594	8	$SG16677	evidence/log-string.md; VC4 literal `KB.LOG` plus alignment byte
 0x0008F59C	2	$SG16678	evidence/log-string.md; VC4 newline literal including terminator
 0x00092E14	4	?gbEnlargeScreenBlit@@3HA	evidence/window-layout.md; FizzleForward disables and restores enlarged screen blitting
+0x00092E00	4	?gbLoadingMonoIcon@@3HA	evidence/resource-manager-layout.md; font constructor and adventure-window callers bracket icon loading with 1/0 writes
 0x00092E28	4	?gbColorMice@@3HA	evidence/mouse-coordinates.md; SetPointer color-cursor mode selector
 0x00092E2C	4	?gbSpecialMouseMasks@@3HA	evidence/mouse-coordinates.md; SetPointer monochrome mask selector
 0x00092E30	4	?giCurExe@@3HA	evidence/mouse-coordinates.md; SetPointer editor executable check
@@ -41,11 +77,19 @@ rva	size	symbol	provenance
 0x000A0F84	15	?gCombatBitmapFormat@@3PADA	evidence/mouse-coordinates.md; combat cursor bitmap format
 0x000A0F94	28	?gMouseManagerAssertFile2@@3PADA	evidence/mouse-coordinates.md; second SetPointer assertion path
 0x000A0FB0	28	?gMouseManagerAssertFile3@@3PADA	evidence/mouse-coordinates.md; third SetPointer assertion path
+0x000A1778	4	?gSoundManagerAssertLine@@3FA	evidence/poll-sound.md; PollSound assertion line base
+0x000A177C	28	?gSoundManagerAssertFile1@@3PADA	evidence/poll-sound.md; first PollSound assertion source path
+0x000A1798	28	?gSoundManagerAssertFile2@@3PADA	evidence/poll-sound.md; second PollSound assertion source path
+0x000A17B4	28	?gSoundManagerAssertFile3@@3PADA	evidence/poll-sound.md; third PollSound assertion source path
+0x000A17D0	28	?gSoundManagerAssertFile4@@3PADA	evidence/poll-sound.md; fourth PollSound assertion source path
+0x000A17EC	28	?gSoundManagerAssertFile5@@3PADA	evidence/poll-sound.md; fifth PollSound assertion source path
 0x000A1808	4	_gIconXAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
 0x000A180C	4	_gIconYAdjust	evidence/handwritten-assembly-survey.md; code-required icon-frame scratch identity
 0x000A1810	4	_gIconDataBase	evidence/handwritten-assembly-survey.md; code-required icon-data base identity
 0x000A1814	4	_gIconWidth	evidence/handwritten-assembly-survey.md; code-required icon-frame width identity
 0x000A1818	4	_gIconHeight	evidence/handwritten-assembly-survey.md; code-required icon-frame height identity
+0x000A1A00	20	?gCallManagerError1@@3PADA	evidence/executive-manager.md; first 20-byte manager-add failure slot used by CallManager
+0x000A1A14	20	?gCallManagerError2@@3PADA	evidence/executive-manager.md; second distinct 20-byte manager-add failure slot used by CallManager
 0x000A1A40	2	?gInputManagerAssertLine@@3FA	evidence/input-message-handler.md; INPUTMGR assertion line base
 0x000A1A44	24	?gLeftReleaseCaptureFailure@@3PADA	evidence/input-message-handler.md; first code-required release-failure literal slot
 0x000A1A5C	24	?gRightReleaseCaptureFailure@@3PADA	evidence/input-message-handler.md; second code-required release-failure literal slot
@@ -56,11 +100,14 @@ rva	size	symbol	provenance
 0x000A1BA4	4	_gBitmapRowSkip	evidence/handwritten-assembly-survey.md; code-required bitmap row-skip scratch
 0x000A1BC8	4	_gTileScratch	evidence/handwritten-assembly-survey.md; code-required identity only
 0x000A1BCC	2	_gTileRows	evidence/handwritten-assembly-survey.md; code-required identity only
+0x000C5170	4	?giSeedingValid@@3HA	evidence/advmanager-reseed.md; retail Reseed writes the dword false value
 0x000C517C	4	?gpInputManager@@3PAVinputManager@@A	evidence/input-message-handler.md; global input manager used by the handler
 0x000C5190	4	?gpResourceManager@@3PAVresourceManager@@A	evidence/mouse-coordinates.md; resource manager used by SetPointer
 0x000C6714	4	?gpMouseManager@@3PAVmouseManager@@A	evidence/input-message-handler.md; cursor manager used by mouse-move handling
+0x000C6A90	4	?gMusicFadeTimer@@3JA	evidence/poll-sound.md; ambient-music fade deadline
 0x000C7C9C	4	?gpWindowManager@@3PAVheroWindowManager@@A	evidence/window-layout.md; window manager used by window drawing and movement
 0x000C6A94	4	?gNextSoundPollTick@@3JA	evidence/poll-sound.md; accessed storage only
+0x000C6ED4	1	?gbNoSound@@3DA	evidence/poll-sound.md; PollSound global sound-disable flag
 0x000C79DC	4	?DEFAULT_AGGREGATE_NAME@@3PADA	evidence/resource-manager-layout.md; code-required aggregate path pointer identity
 0x000C7C90	4	?bShowIt@@3HA	evidence/window-layout.md; FizzleForward display-enabled guard
 0x000C7C94	4	?giDebugLevel@@3HA	evidence/log-string.md; LogStr file/debugger output level
@@ -102,3 +149,136 @@ rva	size	symbol	provenance
 0x000D4C98	2	_match_position	evidence/lzhuf-provenance.md; code-required identity and extent
 0x000D4C9C	2	_match_length	evidence/lzhuf-provenance.md; code-required identity and extent
 0x000D4CA0	4	_decodeOutput	evidence/lzhuf-provenance.md; code-required identity and extent
+0x000C5160	10	?gArmyEffected@@3PAY04CA	ClearEffects zeros two five-slot byte rows at 0x004C5160; code-required extent
+0x0009FF2C	4	?lLastGetMessage@@3JA	Process1WindowsMessage reads and updates GetMessage deadline at 0x0049FF2C; HoMM2 Buka 2.1 names same state
+0x0009FF30	4	?lLastAilServe@@3JA	Process1WindowsMessage reads and updates sound-service deadline at 0x0049FF30; HoMM2 Buka 2.1 names same state
+0x0008E184	4	?giMainVideoModeColorDepth@@3HA	evidence/wingraph-paint.md; palette update's video depth comparison
+0x0008E198	1028	?LogicalPalette@@3UWingPalette@@A	evidence/wingraph-paint.md; LOGPALETTE-compatible version/count and 256 PALETTEENTRY records
+0x0008E5A4	4	?giTtlBlts@@3HA	evidence/wingraph-paint.md; retail WinG paint increments the blit count
+0x00092E08	4	?giScrollX@@3HA	evidence/wingraph-paint.md; x scroll added to WinG paint source coordinate
+0x00092E0C	4	?giScrollY@@3HA	evidence/wingraph-paint.md; y scroll added to WinG paint source coordinate
+0x00094130	4	?gbFullCombatScreenDrawn@@3HA	evidence/wingraph-paint.md; limited combat palette repaint guard
+0x00094134	4	?gbLimitedCombatUpdatePalette@@3HA	evidence/wingraph-paint.md; palette repaint mode guard
+0x000A4740	1068	?screenImage@@3UWingImage@@A	evidence/wingraph-paint.md; BITMAPINFOHEADER, 256 RGBQUAD entries, image-bits pointer
+0x0008E17C	4	?gbDDrawAttached@@3HA	evidence/wingraph-connect-dlls.md; retail DLL loader marks DirectDraw attached after factory lookup
+0x0008E5AC	4	?lpDirectDrawCreate@@3P6GJPAU_GUID@@PAPAUIDirectDraw@@PAUIUnknown@@@ZA	evidence/wingraph-connect-dlls.md; retail DLL loader stores GetProcAddress result in DirectDraw factory pointer
+0x0008E18C	4	?giMainVideoModeHeight@@3HA	GetGraphicsInfo stores GetDeviceCaps(VERTRES) result at 0x0048E18C; Buka 2.1 donor name
+0x0008E188	4	?giMainVideoModeWidth@@3HA	GetGraphicsInfo stores GetDeviceCaps(HORZRES) result at 0x0048E188; Buka 2.1 donor name
+0x0008E190	4	?Orientation@@3HA	evidence/wingraph-init-graphics.md; retail stores recommended DIB height for bitmap size computation
+0x0008E59C	4	?lpInitWin@@3PAXA	evidence/wingraph-init-graphics.md; retail stores WinG bitmap bits pointer for drawing
+0x000C6AA8	308	?gConfig@@3UconfigStruct@@A	evidence/wingraph-startup.md; ReadPrefsFromFile memset/fread owner base and persisted width
+0x000A138C	4	?CDPlaying@@3HA	evidence/cd-playback.md; retail-backed code identity only
+0x000A1384	4	?CDPlayOnce@@3HA	evidence/cd-playback.md; retail-backed code identity only
+0x000A1390	1	?CDTrackMap@@3PACA	evidence/cd-playback.md; retail-backed code identity only
+0x000A1000	900	?CDPreviousPosition@@3PAY0P@DA	evidence/cd-playback.md; retail-backed code identity only
+0x000CC7B0	256	?CommandString@@3PADA	evidence/cd-playback.md; retail-backed code identity only
+0x000CC668	256	?lpszReturnString@@3PADA	evidence/cd-playback.md; retail-backed code identity only
+0x000CC768	4	?nMCIError@@3KA	evidence/cd-playback.md; retail-backed code identity only
+0x000A14F8	2	?gCDPositionAssertLine@@3FA	evidence/cd-playback.md; retail-backed code identity only
+0x000A14FC	26	?gCDPositionAssertFile@@3PADA	evidence/cd-playback.md; retail-backed code identity only
+0x0008E5B0	4	?lpDD@@3PAUIDirectDraw@@A	evidence/wingraph-restore-mode.md; retail DirectDraw pointer for external COM RestoreDisplayMode
+0x0008E5C4	2	?gDDRestoreLineBase@@3FA	evidence/wingraph-restore-mode.md; PoL source line-base word loaded before DDSD
+0x0008E5B4	4	?lpDDSPrimary@@3PAUIDirectDrawSurface@@A	evidence/wingraph-set-palette.md; retail primary surface for external COM SetPalette
+0x0008E5C0	4	?lpDDPal@@3PAUIDirectDrawPalette@@A	evidence/wingraph-set-palette.md; retail DirectDraw palette passed to primary surface
+0x0008E824	2	?gDDSetPaletteLineBase@@3FA	evidence/wingraph-set-palette.md; retail signed source-line word before DDSD
+0x0008E800	2	?gDDInitializePaletteLineBase@@3FA	evidence/wingraph-initialize-dd-palette.md; retail signed source-line-base word before DDSD
+0x000BE7B0	28	?gafAITurnCostResource@@3PAMA	RVConversion reads seven float resource weights at 0x004BE7B0..0x004BE7C8; TurnCostResource writes seven entries; Buka 2.1 name
+0x000913A0	24	?gDwellingType@@3PAY05CA	evidence/philAI-town-purchase.md; four-faction six-dwelling signed-byte table used by town purchase overload
+0x00092838	272	?gWinSetup@@3PAUWindowTextEntry@@A	SetWinText reads 68 packed short widget/window IDs at0x00492838; Buka2.1 donor gWinSetup correspondence, H1 separated text pointers
+0x00094008	272	?gWinSetupText@@3PAPADA	SetWinText reads 68 char pointers at0x00494008; semantic name for H1 text half of donor gWinSetup; identity/layout only
+0x000A1728	2	?gAmbientMusicAssertLine@@3FA	evidence/ambient-music.md; PlayAmbientMusic signed word plus37
+0x000A172C	26	?gAmbientMusicAssertFile@@3PADA	evidence/ambient-music.md; PlayAmbientMusic assertion filename
+0x0009F534	1	?gbInMemError@@3CA	MemError signed-byte reentry guard; retail operands and pointed-to strings; semantic name, identity/layout only
+0x00093A50	4	?gcMemoryErrorTitle@@3PADA	MemError title string pointer; retail operands and pointed-to strings; semantic name, identity/layout only
+0x00093A54	4	?gcMemoryRequirements@@3PADA	MemError requirement message string pointer; retail operands and pointed-to strings; semantic name, identity/layout only
+0x00093A58	4	?gcExtendedMemoryUnits@@3PADA	MemError extended-memory suffix string pointer; retail operands and pointed-to strings; semantic name, identity/layout only
+0x00093A5C	4	?gcConventionalMemoryUnits@@3PADA	MemError conventional-memory suffix string pointer; retail operands and pointed-to strings; semantic name, identity/layout only
+0x00094118	4	?giRequiredExtendedMemory@@3HA	MemError extended memory requirement in K; retail operands and pointed-to strings; semantic name, identity/layout only
+0x0009411C	4	?giRequiredConventionalMemory@@3HA	MemError conventional memory requirement in K; retail operands and pointed-to strings; semantic name, identity/layout only
+0x00094158	4	?gbLimitToExtent@@3HA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
+0x0009415C	4	?gbCurrArmyDrawn@@3HA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
+0x000C5148	4	?giMaxExtentX@@3HA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
+0x000C514C	4	?giMaxExtentY@@3HA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
+0x000C6738	4	?giMinExtentX@@3HA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
+0x000C673C	4	?giMinExtentY@@3HA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
+0x00092D00	1	?gMonoColorMap@@3PAEA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
+0x000CA4AC	4	?hmnuCurrent@@3PAXA	KBChangeMenu remembers current Win32 menu handle at0x004CA4AC; Buka donor identity
+0x000C7950	4	?giCurWindowsStyleFlags@@3JA	SetMenuStatus stores DWORD window style, passed to SetWindowLongA; Buka donor name
+0x0008E8C0	2	?gDDUpdatePaletteLineBase@@3FA	evidence/wingraph-update-dd-palette.md; retail signed diagnostic source-line-base word
+0x0008E5B8	4	?lpDDSOne@@3PAUIDirectDrawSurface@@A	evidence/wingraph-cleanup-dd.md; retail secondary surface owner pointer
+0x0008E5BC	4	?lpClipper@@3PAUIDirectDrawClipper@@A	evidence/wingraph-cleanup-dd.md; retail clipper owner pointer
+0x0008E904	2	?gDDCleanUpLineBase@@3FA	evidence/wingraph-cleanup-dd.md; retail signed diagnostic source-line-base
+0x0008E5E8	2	?gCreatePrimaryLineBase@@3FA	evidence/wingraph-dd-startup.md; retail signed diagnostic line-base word
+0x0008E60C	2	?gSetupClipperLineBase@@3FA	evidence/wingraph-dd-startup.md; retail signed diagnostic line-base word
+0x0008E670	2	?gDDInitLineBase@@3FA	evidence/wingraph-dd-startup.md; retail signed diagnostic line-base word
+0x000A1920	20	?gDialogManagerError1@@3PADA	evidence/executive-manager.md; retail DoDialog separate manager-add failure slot
+0x000A1934	20	?gDialogManagerError2@@3PADA	evidence/executive-manager.md; retail DoDialog separate manager-add failure slot
+0x000A1948	20	?gDialogManagerError3@@3PADA	evidence/executive-manager.md; retail DoDialog separate manager-add failure slot
+0x000A195C	20	?gDialogManagerError4@@3PADA	evidence/executive-manager.md; retail DoDialog separate manager-add failure slot
+0x000A1694	2	?gStartSampleAssertLine@@3FA	evidence/sample-stream-start.md; retail code-required identity, initializer/complete extent deferred
+0x000A1698	26	?gStartSampleAssertFile@@3PADA	evidence/sample-stream-start.md; retail code-required identity, initializer/complete extent deferred
+0x000A16E8	2	?gModifySampleAssertLine@@3FA	evidence/sample-stream-start.md; ModifySample loads signed line word then adds 27
+0x000A16EC	26	?gModifySampleAssertFile@@3PADA	evidence/sample-stream-start.md; ModifySample assertion filename identity, initializer coverage deferred
+0x000CC770	2	?gSampleVolumes@@3PAFA	evidence/sample-stream-start.md; retail code-required identity, initializer/complete extent deferred
+0x00091EA0	1	?gcSoundPath@@3PADA	evidence/sample-stream-start.md; retail code-required identity, initializer/complete extent deferred
+0x00091BE0	1	?gcDataPath@@3PADA	evidence/sample-stream-start.md; retail code-required identity, initializer/complete extent deferred
+0x00093968	48	?gArmySizeNames@@3PAY01PADA	GetArmySizeName reads six rows of two string pointers; retail six 8-byte spaced category bases, first strings Few/A few; no initializer coverage
+0x000C4F50	1	?cArmySizeName@@3PADA	GetArmySizeName sprintf buffer base and return pointer; unsized extern, full extent unresolved, identity only
+0x00094150	4	?gbComputeExtent@@3HA	evidence/icon-fill.md; retail icon extent computation flag
+0x00094154	4	?gbSaveBiggestExtent@@3HA	evidence/icon-fill.md; retail icon extent union flag
+0x000C74A8	1	?gbUseClippedIconRenderer@@3CA	evidence/icon-fill.md; retail byte selects screen-clipped renderer pair
+0x0008E848	2	?gDDCreateSurfaceLineBase@@3FA	evidence/wingraph-create-dd-surface.md; retail signed diagnostic line-base word
+0x0008E84C	4	?bInDDSD@@3HA	evidence/wingraph-dd-errors.md; retail DirectDraw diagnostic reentry guard
+0x0008E948	2	?gDDSetFullScreenLineBase@@3FA	evidence/wingraph-dd-fullscreen.md; retail signed diagnostic line-base word
+0x000ACEB8	1	?gNetbiosLana@@3EA	is_netbios_avail unsigned-byte adapter loop at0x004ACEB8; Buka donor name
+0x0008F1E8	1	?gNetbiosAvail@@3EA	is_netbios_avail unsigned-byte availability result at0x0048F1E8; Buka donor name
+0x000A1820	56	?gResourceManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000A1858	80	?gInputManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000A18A8	28	?gSoundManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000A18C4	28	?gMouseManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000A18E0	64	?gWindowManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x0008E6F8	2	?gDDPaintLineBase@@3FA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x000A4B70	16	?gDDClientRect@@3UtagRECT@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46A8	16	?gDDSourceRect@@3UtagRECT@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46B8	16	?gDDDestinationRect@@3UtagRECT@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46A0	4	?gDDResult@@3JA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46D0	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46C8	4	?lPaintStart@@3JA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x0008E674	4	?iBusyRetry@@3HA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x00093030	4	?gbMinimized@@3HA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x000C6A54	4	?gpBufferPalette@@3PAVpalette@@A	evidence/palette-graphics.md; retail current palette owner pointer in graphics helper band
+0x000CAC28	96	?gCyclePal@@3PACA	evidence/palette-graphics.md; SetPalette copies32RGBtriplets and cycle helper references same table
+0x000CC8E0	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	evidence/digital-driver-startup.md; retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only
+0x000CC8B0	48	?gAuxCaps@@3UtagAUXCAPSA@@A	evidence/digital-driver-startup.md; CDStartup fills the real SDK auxiliary-device capability record, code layout only
+0x000AF754	4	?giBuildShipyard@@3PACA	evidence/philAI-construction.md; retail ctor and donor four-player byte-array identity/layout
+0x000AF75C	4	?giBuildBoat@@3PACA	evidence/philAI-construction.md; retail ctor and donor four-player byte-array identity/layout
+0x000C4DE0	4	?giBuildBoatStuffTurn@@3PACA	evidence/philAI-construction.md; retail ctor and donor four-player byte-array identity/layout
+0x0008F1F0	1	?gNbMaxSess@@3EA	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x0008F1EC	1	?gNbShutdown@@3EA	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x0008F1F4	7	?gNetStatus@@3PAEA	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000A4BD0	7	?gNbSessLsn@@3PAEA	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ACC48	448	?gNbSessNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ABBD8	112	?gNbNameBuf@@3PAUNetbiosName@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ACE60	24	?gNbRcvLock@@3U_RTL_CRITICAL_SECTION@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ACEA0	24	?gNbSndLock@@3U_RTL_CRITICAL_SECTION@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ACE50	8	?gNbRcvQueue@@3Utag_Anchor@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ACE58	8	?gNbSndQueue@@3Utag_Anchor@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000A4BC8	8	?gNbFreeQueue@@3Utag_Anchor@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000ACE78	36	?gNbEvents@@3PAPAXA	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x0008F200	4	?gNbListenName@@3PAEA	nb_sess retail LISTEN_ANY loads name pointer; Buka donor listen-name identity only
+0x000A0800	2	?gNooptAssertLine@@3FA	DelayTil retail sign-extends short assertion line at64476 and increments; code-required identity
+0x000A0804	27	?gNooptAssertFile@@3PADA	DelayTil retail assertion source-file operand at6447f; code identity without initializer coverage
+0x0008C000	12	??_7highScoreManager@@6B@	retail ctor vptr; three slots Open10bf,Close1228,Main1285
+0x00094170	1	?gbShowHighScore@@3CA	retail AddScore5444b sets1 and Main clears; Buka gbShowHighScore
+0x000C794C	1	?gbStandardHighScore@@3CA	retail AddScore54452 stores standard-score selector; inferred descriptive name
+0x000A0C80	2	?gWindowFadeAssertLine@@3FA	evidence/window-add.md; FadeScreen signed word assertion line base
+0x000A0C84	26	?gWindowFadeAssertFile@@3PADA	evidence/window-add.md; FadeScreen WINMGR source assertion path
+0x000CAC20	1	?gWindowFadeSavedUpdate@@3CA	evidence/window-add.md; FadeScreen signed byte saved update flags
+0x000A1708	2	?gAdjustMusicAssertLine@@3FA	evidence/sound-volume-control.md; signed word assertion base used by AdjustMusicVolumes
+0x000A170C	28	?gAdjustMusicAssertFile@@3PADA	evidence/sound-volume-control.md; retail source assertion path, identity only
+0x000C6A80	4	?glTimers@@3PAJA	highScore Open/Main reads timer slot0; unsized array owner, extent4 is code-proven slot only, full timer-array extent unresolved
+0x00092E18	4	?hmnuDflt@@3PAXA	highScore Open passes retail default menu handle; Buka donor identity
+0x000C6D50	14	?giTerrainCost@@3PAY01CA	InitVars53a76..53abf fills seven signedbyte rows with ordinary/diagonal costs; CalcTerrainCost24900
+0x000C518C	4	?gPalette@@3PAVpalette@@A	evidence/window-lifecycle.md; dialog current palette passed to fade
+0x00092E38	4	?gbInDialog@@3HA	evidence/window-lifecycle.md; dialog dword enter/leave flag
+0x000A0C7C	4	?iDialogNestCount@@3HA	evidence/window-lifecycle.md; dialog nesting counter

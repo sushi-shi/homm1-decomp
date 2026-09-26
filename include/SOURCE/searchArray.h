@@ -3,13 +3,55 @@
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 13 methods, 0 own-virtual, 0 static data.
 
+#include <Domains.h>
 #include <H1/Macros.h>
 
 // forward declarations:
 class army;
 
+H1_ENUM_BEGIN(SearchStorageConstant)
+    SEARCH_QUEUE_CAPACITY = 1024,
+    SEARCH_CELL_CAPACITY = 5184,
+    SEARCH_FLAG_BIT_COUNT = 1,
+    SEARCH_DIRECTION_BIT_COUNT = 4
+H1_ENUM_END(SearchStorageConstant)
+
+// Donor searchNode's real packed record; HoMM1 stores nodes inline.
+#pragma pack(push, 1)
+struct searchNode {
+    unsigned char x;
+    unsigned char y;
+    unsigned short distance;
+    unsigned char visited : SEARCH_FLAG_BIT_COUNT;
+    unsigned char unknownFlag : SEARCH_FLAG_BIT_COUNT;
+    unsigned char rvFlag1 : SEARCH_FLAG_BIT_COUNT;
+    unsigned char rvFlag2 : SEARCH_FLAG_BIT_COUNT;
+    unsigned char direction : SEARCH_DIRECTION_BIT_COUNT;
+    union {
+        struct {
+            unsigned char adjacentMonsterX;
+            unsigned char adjacentMonsterY;
+            unsigned char previousFlags;
+            unsigned char terrain;
+        };
+        struct {
+            signed char valueX;
+            signed char valueY;
+            signed char previousX;
+            signed char previousY;
+        };
+    };
+};
+
 class searchArray {
 public:
+    unsigned int m_queueCount;
+    unsigned int m_maxQueueCount;
+    int m_pathLength;
+    int m_specialTargetX;
+    int m_specialTargetY;
+    searchNode m_queue[SEARCH_QUEUE_CAPACITY];
+    searchNode m_cells[SEARCH_CELL_CAPACITY];
     // --- constructors ---
     searchArray(void);
     ~searchArray();
@@ -19,11 +61,12 @@ public:
     void Init(void);
     void Close(void);
     void Clear(void);
-    int QuickDistance(int, int, int, int);
+    short QuickDistance(short, short, short, short);
     void PushPoint(int, int, int, int, int, int, int, int, int, int, int, int);
     void TestPossibleDirections(int, int, signed char * const, signed char * const, int, int);
     void SeedCombatPosition(class army *);
     int FindCombatPath(int, int, class army *, int, int);
     void PushCombatPoint(int, int, int, int);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

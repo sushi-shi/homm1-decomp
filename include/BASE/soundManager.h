@@ -4,26 +4,98 @@
 // 37 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
+#include <Domains.h>
 #include <H1/Macros.h>
+
+#include <stdio.h>
+
+H1_ENUM_BEGIN(SoundManagerConstant)
+    MUSIC_TRACK_COUNT = 60,
+    MUSIC_POSITION_TRACK_END = 7,
+    MUSIC_POSITION_TRACK_1 = 47,
+    MUSIC_POSITION_TRACK_2 = 48,
+    MUSIC_POSITION_TRACK_3 = 49,
+    MUSIC_FADE_HOLD_LAST = 10,
+    MUSIC_FADE_TOTAL_STEPS = 11,
+    MUSIC_FADE_RISE_STEPS = 6,
+    MUSIC_FADE_STEP_TICKS = 60,
+    SAMPLE_VOLUME_MAX = 64,
+    MIDI_VOLUME_MAX = 127,
+    CD_VOLUME_SCALE_DIVISOR = 640,
+    SOUND_OPERATION_VOLUME = 1,
+    SOUND_OPERATION_START = 5,
+    SOUND_OPERATION_EFFECT_VOLUME = 100,
+    SOUND_OPERATION_MUSIC_VOLUME = 101,
+    MUSIC_STREAM_BUFFER_SIZE = 0x4000,
+    MUSIC_STREAM_RATE = 22050,
+    SAMPLE_STATUS_PLAYING = 4
+H1_ENUM_END(SoundManagerConstant)
+
+H1_ENUM_BEGIN(SoundStartupConstant)
+    SOUND_SAMPLE_HANDLE_COUNT = 15,
+    SOUND_MANAGER_PRIORITY = -1,
+    SOUND_MUSIC_SOURCE_DIGITAL = 0,
+    SOUND_MUSIC_SOURCE_CD = 2,
+    SOUND_DEFAULT_SAMPLE_BITS = 8,
+    SOUND_DEFAULT_SAMPLE_CHANNELS = 1
+H1_ENUM_END(SoundStartupConstant)
 
 // forward declarations:
 class sample;
 struct _SAMPLE;
 struct tag_message;
 
-class soundManager {
+#pragma pack(push, 1)
+class soundManager : public baseManager {
 public:
+    struct _DIG_DRIVER *m_digitalDriver;
+    struct _SAMPLE *m_activeSample;
+    int m_samplesReady;
+    struct _SAMPLE *m_musicSample;
+    char m_musicStreamOpen;
+    char m_musicStreamRestart;
+    void *m_musicBuffers[2];
+    FILE *m_midiFile;
+    struct _SAMPLE *m_sampleHandles[SOUND_SAMPLE_HANDLE_COUNT];
+    char _pad_0x08a[4];
+    int m_numSampleHandles;
+    char _pad_0x092[0x40];
+    char m_channelVolumes[0x14];
+    struct _SAMPLE *m_channelSamples[14];
+    char _pad_0x11e[8];
+    void *m_channelSampleData[14];
+    char _pad_0x15e[8];
+    unsigned long m_channelSampleSizes[14];
+    char _pad_0x19e[0x3c8];
+    int m_field_0x566;
+    char _pad_0x56a[4];
+    int m_field_0x56e;
+    char m_currentTrack;
+    char m_pollRequested;
+    char m_pollDue;
+    char m_pollToggle;
+    char _pad_0x576[0x14];
+    long m_savedTrackPositions[60];
+    int m_fading;
+    int m_musicReady;
+    int m_fadeSteps;
+    int m_fadeTargetTrack;
+    int m_cdTrack;
+    int m_cdPlayFrame;
+    short m_auxDevice;
+    int m_cdReady;
+    int m_cdStarted;
     // --- constructors ---
     soundManager(void);
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void ValidatePreviousPosition(int);
     void CDStop(void);
     int CDIsPlaying(void);
-    void CDStartup(void);
+    unsigned long CDStartup(void);
     void CDShutdown(void);
     void CDSetVolume(int, int);
     void CDPlay(int, int, int, int);
@@ -54,4 +126,5 @@ public:
     void MIDISetVolume(void);
     void MIDIPoll(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_BASE_SOUNDMANAGER_H

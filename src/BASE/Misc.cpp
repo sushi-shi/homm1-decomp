@@ -11,6 +11,21 @@
 #include <stdio.h>
 #include <string.h>
 
+// HoMM1's retained logging path opens KB.LOG afresh and writes its banner.
+VA(0x004199a5, 0x79)
+void LogTruncate()
+{
+    char logText[MISC_LOG_TEXT_CAPACITY];
+    FILE *out;
+
+    if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)
+        return;
+    out = fopen("KB.LOG", "wt+");
+    strcpy(logText, "===========New Log==========\n");
+    fputs(logText, out);
+    fclose(out);
+}
+
 // donor PoL RVA 0x000c6120; preferred Buka symbol ?LogStr@@YIXPAD@Z
 // donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.724628;margin=0.262043;shape=0.429;size=0.928;calls=1.000;strings=KB.LOG;alternate=pol20:void LogStr(char *)@0x000c6120
@@ -25,6 +40,40 @@ void LogStr(char *text)
     out = fopen("KB.LOG", "at+");
     strcpy(logText, text);
     strcat(logText, "\n");
+    fputs(logText, out);
+    fclose(out);
+    if (giDebugLevel == MISC_DEBUGGER_OUTPUT_LEVEL)
+        OutputDebugStringA(logText);
+}
+
+// HoMM1 keeps the two-value logging form used by its AI call sites.
+VA(0x00419ac4, 0x86)
+void LogInt(char *label, int value)
+{
+    char logText[100];
+    FILE *out;
+
+    if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)
+        return;
+    out = fopen("KB.LOG", "at+");
+    sprintf(logText, "%s : % 8d \n", label, value);
+    fputs(logText, out);
+    fclose(out);
+    if (giDebugLevel == MISC_DEBUGGER_OUTPUT_LEVEL)
+        OutputDebugStringA(logText);
+}
+
+// Prior LZHUF source uses this two-long LogStr overload (evidence/lzhuf-provenance.md).
+VA(0x00419b4a, 0x8a)
+void LogStr(char *label, long value1, long value2)
+{
+    char logText[100];
+    FILE *out;
+
+    if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)
+        return;
+    out = fopen("KB.LOG", "at+");
+    sprintf(logText, "%s : % 8d  % 8d", label, value1, value2);
     fputs(logText, out);
     fclose(out);
     if (giDebugLevel == MISC_DEBUGGER_OUTPUT_LEVEL)

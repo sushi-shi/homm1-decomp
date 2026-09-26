@@ -3,12 +3,33 @@
 #include <match.h>
 
 #include <H1/All.h>
+#include <H1/KB.h>
+#include <SOURCE/combatTypes.h>
+
+#include <string.h>
 
 // donor PoL RVA 0x00088607; preferred Buka symbol ?ClearEffects@combatManager@@QAEXXZ
 // donor Buka TU SOURCE/SPELLAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.425101;margin=0.364782;shape=0.143;size=0.828;calls=1.000;alternate=pol20:void combatManager::ClearEffects(void)@0x00088607
 VA(0x00437977, 0x63)
-void combatManager::ClearEffects(void) {}
+void combatManager::ClearEffects(void) {
+    int side;
+    int index;
+    for (side = 0; side < COMBAT_EFFECT_SIDE_COUNT; ++side) {
+        for (index = 0; index < COMBAT_EFFECT_SLOT_COUNT; ++index)
+            gArmyEffected[side][index] = 0;
+    }
+}
+
+// Buka 2.1 NextPos with HoMM1's retail-backed nine-hex row width.
+VA(0x004379da, 0x40)
+void combatManager::NextPos(int *hex)
+{
+    if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_SPELL_AI_ROW_LENGTH == 0)
+        *hex += COMBAT_SPELL_AI_ROW_SKIP;
+    else
+        (*hex)++;
+}
 
 // donor PoL RVA 0x0000bd60; preferred Buka symbol ?ViewGeneral@combatManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/VIEW; HoMM1 owner inferred from contiguous order
@@ -177,8 +198,14 @@ void game::SetupAdjacentMons(void)
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526467;margin=0.434153;shape=0.371;size=0.866;calls=1.000;alternate=pol20:void game::CancelComputerScreen(void)@0x00081210
 VA(0x00444b48, 0x61)
-void game::CancelComputerScreen(void)
-{}
+void game::CancelComputerScreen(void) {
+    TurnOffAIMusic();
+    bShowIt = 1;
+    int i;
+    for (i = 1; i <= 6; ++i)
+        gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS,
+                                          i, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
+}
 
 // donor PoL RVA 0x00081271; preferred Buka symbol ?ShowComputerScreen@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -259,19 +286,36 @@ void game::RestoreCell(int x, int y, int obj, int barrier, mapCell *passedCell, 
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.513410;margin=0.267257;shape=0.385;size=0.817;calls=1.000;alternate=pol20:void armyGroup::constructor(void)@0x0008c040
 VA(0x00447920, 0x3c)
-armyGroup::armyGroup(void) {}
+armyGroup::armyGroup(void) {
+    memset(m_creatureTypes, -1, sizeof(m_creatureTypes));
+    memset(m_creatureCounts, 0, sizeof(m_creatureCounts));
+}
 
 // donor PoL RVA 0x0008c3f6; preferred Buka symbol ?IsMember@armyGroup@@QAEHH@Z
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.401440;margin=0.383163;shape=0.171;size=0.719;calls=1.000;alternate=pol20:int armyGroup::IsMember(int)@0x0008c3f6
+// HoMM1 retail reads a signed byte parameter and returns in AL.
 VA(0x00447ac0, 0x59)
-int armyGroup::IsMember(int) { return 0; }
+signed char armyGroup::IsMember(signed char creatureType) {
+    for (short slot = 0; slot < 5; ++slot) {
+        if (m_creatureTypes[slot] == creatureType)
+            return 1;
+    }
+    return 0;
+}
 
 // donor PoL RVA 0x0008c599; preferred Buka symbol ?CanJoin@armyGroup@@QAEHH@Z
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.455116;margin=0.419277;shape=0.310;size=0.702;calls=1.000;alternate=pol20:int armyGroup::CanJoin(int)@0x0008c599
+// HoMM1 retail returns in AL and sign-extends its IsMember call results.
 VA(0x00447c6c, 0x54)
-int armyGroup::CanJoin(int) { return 0; }
+signed char armyGroup::CanJoin(signed char creatureType) {
+    if (IsMember(creatureType))
+        return 1;
+    if (IsMember(-1))
+        return 1;
+    return 0;
+}
 
 // donor PoL RVA 0x0008c641; preferred Buka symbol ?Add@armyGroup@@QAEHHHH@Z
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order

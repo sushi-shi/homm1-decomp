@@ -48,7 +48,7 @@ public:
     palette *GetPalette(char *);
     bitmap *GetBitmap(char *);
     icon *GetIcon(char *);
-    icon *GetIcon(unsigned long);
+    icon *GetIcon(short);
     tileset *GetTileset(char *);
     mouse *GetMouse(char *);
     font *GetFont(char *);
@@ -61,7 +61,7 @@ public:
     void RemoveResource(resource *);
     short LoadAggregateHeader(char *);
     void PointToFile(short);
-    unsigned long GetFileSize(unsigned long);
+    unsigned long GetFileSize(short);
     void SavePosition();
     void RestorePosition();
     signed char ReadByte();

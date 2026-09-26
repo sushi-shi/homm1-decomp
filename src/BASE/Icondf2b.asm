@@ -15,7 +15,7 @@ EXTERN _gDimPalette:BYTE
 
 .code
 
-?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z PROC NEAR
+?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
     push esi
@@ -102,6 +102,6 @@ flip_dim_done:
     pop esi
     pop ebp
     ret
-?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z ENDP
+?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z ENDP
 
 END

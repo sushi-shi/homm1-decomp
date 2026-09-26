@@ -38,16 +38,16 @@ public:
     // --- methods ---
     short ConvertToHover(struct tag_message &);
     short BroadcastMessage(short, short, short, short);
-    void AddWindow(class heroWindow *, int, int);
+    void AddWindow(class heroWindow *, short, int);
     void RemoveWindow(class heroWindow *);
-    int DoDialog(class heroWindow *, int (*)(struct tag_message &), int);
+    short DoDialog(class heroWindow *, short (*)(struct tag_message &), int);
     void UpdateScreen(void);
     void UpdateScreenRegion(short, short, short, short);
     void RedrawScreen(void);
-    void FadeScreen(int, int, class palette *);
+    void FadeScreen(short, short, class palette *);
     void ScreenShot(void);
-    void SaveFizzleSource(int, int, int, int);
-    void FizzleForward(int, int, int, int, int);
+    void SaveFizzleSource(short, short, short, short);
+    void FizzleForward(short, short, short, short, int);
     void ReleaseFizzleSource(void);
 };
 #pragma pack(pop)

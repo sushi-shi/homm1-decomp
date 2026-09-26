@@ -51,7 +51,7 @@ public:
     // --- constructors ---
     heroWindow(void);
     heroWindow(short, short, short, short, short);
-    heroWindow(int, int, char *);
+    heroWindow(short, short, char *);
     // --- methods ---
     short Open(short, signed char);
     void RemoveAndDeleteWidget(int);

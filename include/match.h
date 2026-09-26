@@ -4,9 +4,11 @@
 // Reconstruction metadata. The compiler receives ordinary C++.
 #ifdef __clang__
 #define VA(address, size) __attribute__((annotate("va:" #address " size:" #size), used))
+#define VA_DECL(address) __attribute__((annotate("decl-va:" #address)))
 #define DATA(address) __attribute__((annotate("data-va:" #address), used))
 #else
 #define VA(address, size)
+#define VA_DECL(address)
 #define DATA(address)
 #endif
 

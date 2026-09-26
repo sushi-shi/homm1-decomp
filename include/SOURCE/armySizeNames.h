@@ -1,0 +1,31 @@
+#ifndef HOMM1_SOURCE_ARMYSIZENAMES_H
+#define HOMM1_SOURCE_ARMYSIZENAMES_H
+
+#include <Domains.h>
+
+H1_ENUM_BEGIN(ArmySizeNameVariant)
+    ARMY_SIZE_NAME_TITLE = 0,
+    ARMY_SIZE_NAME_SENTENCE = 1
+H1_ENUM_END(ArmySizeNameVariant)
+
+H1_ENUM_BEGIN(ArmySizeNameCategory)
+    ARMY_SIZE_FEW = 0,
+    ARMY_SIZE_SEVERAL = 1,
+    ARMY_SIZE_PACK = 2,
+    ARMY_SIZE_LOTS = 3,
+    ARMY_SIZE_HORDE = 4,
+    ARMY_SIZE_ZOUNDS = 5
+H1_ENUM_END(ArmySizeNameCategory)
+
+H1_ENUM_BEGIN(ArmySizeLimit)
+    ARMY_FEW_LIMIT = 5,
+    ARMY_SEVERAL_LIMIT = 10,
+    ARMY_PACK_LIMIT = 20,
+    ARMY_LOTS_LIMIT = 50,
+    ARMY_HORDE_LIMIT = 100
+H1_ENUM_END(ArmySizeLimit)
+
+extern char *gArmySizeNames[6][2];
+extern char cArmySizeName[];
+
+#endif

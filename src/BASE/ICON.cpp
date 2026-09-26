@@ -1,0 +1,137 @@
+// HoMM1 icon loading follows Buka 2.1, with a retail post-read hook.
+
+#include <match.h>
+
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/Icon2b.h>
+#include <BASE/Icond2b.h>
+#include <BASE/IconEntry.h>
+#include <BASE/Iconm2b.h>
+#include <BASE/resourceManager.h>
+#include <H1/KB.h>
+
+#include <stdlib.h>
+
+VA(0x00479b20, 0x6d)
+icon::icon(short id)
+    : resource(RESOURCE_CATEGORY_ICON, id, 1, 0)
+{
+    gpResourceManager->PointToFile(id);
+    m_frameCount = gpResourceManager->ReadWord();
+    unsigned long length = gpResourceManager->ReadLong();
+    m_data = static_cast<unsigned char *>(malloc(length));
+    gpResourceManager->ReadBlock(reinterpret_cast<signed char *>(m_data), length); // byte-evidenced: ReadBlock accepts signed bytes for icon pixel storage.
+    PostprocessIcon(this);
+}
+
+VA_COMPGEN(0x00479b90, 0x33, "??_Gicon@@UAEPAXI@Z", 0x00479b20)
+icon::~icon(void)
+{
+    free(m_data);
+}
+
+VA(0x00479bd0, 0x22a)
+void icon::DrawToBuffer(short x, short y, short frame, signed char orientation, signed char mode)
+{
+    if (gbComputeExtent != 0) {
+        if (orientation != 0) {
+            if (mode != 0)
+                m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2); // byte-evidenced: packed frame entry in resource bytes.
+            else
+                m_drawRight = x - reinterpret_cast<IconEntry *>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawLeft = m_drawRight - reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+        } else {
+            if (mode != 0)
+                m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2) + x; // byte-evidenced: packed frame entry in resource bytes.
+            else
+                m_drawLeft = reinterpret_cast<IconEntry *>(m_data)[frame].x + x; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawRight = m_drawLeft + reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+        }
+        m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
+        m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
+        if (gbSaveBiggestExtent != 0) {
+            if (giMinExtentX > m_drawLeft) giMinExtentX = m_drawLeft;
+            if (giMinExtentY > m_drawTop) giMinExtentY = m_drawTop;
+            if (giMaxExtentX < m_drawRight) giMaxExtentX = m_drawRight;
+            if (giMaxExtentY < m_drawBottom) giMaxExtentY = m_drawBottom;
+        }
+    }
+    if (gbLimitToExtent != 0 && (gbCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX
+        || m_drawRight < giMinExtentX || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
+        return;
+    if (gbUseClippedIconRenderer != 0) {
+        if (orientation == 0)
+            ClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+        else
+            FlipClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+    } else {
+        if (orientation == 0)
+            IconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+        else
+            FlipIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+    }
+}
+
+VA(0x00479e00, 0x51)
+void icon::ClipFillToBuffer(short x, short y, short frame, short color, signed char orientation, signed char mode, int clipX, int clipY, int clipW, int clipH)
+{
+    ClippedMonoIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode, clipX, clipY, clipW, clipH);
+}
+
+VA(0x00479e60, 0x132)
+void icon::FillToBuffer(short x, short y, short frame, short color,
+    signed char orientation, signed char mode)
+{
+    if (orientation == 0) {
+        if (gbLimitToExtent) {
+            IconEntry *entry = reinterpret_cast<IconEntry *>(m_data) + frame; // byte-evidenced: packed frame directory decoded from icon resource bytes.
+            m_drawLeft = x + entry->x;
+            m_drawRight = m_drawLeft + entry->w;
+            m_drawTop = y + entry->y;
+            m_drawBottom = m_drawTop + entry->h;
+            if (!gbCurrArmyDrawn || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
+                || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY)
+                return;
+        }
+        MonoIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode);
+    } else {
+        FlipMonoIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode);
+    }
+}
+
+VA(0x00479fa0, 0x1c2)
+void icon::DimToBuffer(short x, short y, short frame, signed char orientation, signed char mode)
+{
+    if (gbComputeExtent != 0) {
+        if (orientation != 0) {
+            if (mode != 0)
+                m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2); // byte-evidenced: packed frame entry in resource bytes.
+            else
+                m_drawRight = x - reinterpret_cast<IconEntry *>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawLeft = m_drawRight - reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+        } else {
+            if (mode != 0)
+                m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2) + x; // byte-evidenced: packed frame entry in resource bytes.
+            else
+                m_drawLeft = reinterpret_cast<IconEntry *>(m_data)[frame].x + x; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawRight = m_drawLeft + reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+        }
+        m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
+        m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
+        if (gbSaveBiggestExtent != 0) {
+            if (giMinExtentX > m_drawLeft) giMinExtentX = m_drawLeft;
+            if (giMinExtentY > m_drawTop) giMinExtentY = m_drawTop;
+            if (giMaxExtentX < m_drawRight) giMaxExtentX = m_drawRight;
+            if (giMaxExtentY < m_drawBottom) giMaxExtentY = m_drawBottom;
+        }
+    }
+    if (gbLimitToExtent != 0 && (gbCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX
+        || m_drawRight < giMinExtentX || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
+        return;
+    if (orientation == 0)
+        DimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+    else
+        FlipDimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+}
+

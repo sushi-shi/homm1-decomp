@@ -25,7 +25,7 @@ static inline void ResetEventQueue(inputManager *manager)
 // donor PoL RVA 0x000cde60; preferred Buka symbol ?MouseMessageHandler@@YIHPAXIIJ@Z
 // donor Buka TU BASE/INPUTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
-VA(0x0047be30, 0x280)
+VA(0x0047be30, 0x27c)
 int MouseMessageHandler(
     void *, unsigned int message, unsigned int, long messageData)
 {
@@ -73,7 +73,7 @@ int MouseMessageHandler(
         event->type = MESSAGE_RIGHT_BUTTON_DOWN;
         goto mouseCoordinates;
     default:
-        goto afterMouseCoordinates;
+        goto mouseMoveCursorCheck;
     }
 
 mouseCoordinates:
@@ -82,18 +82,19 @@ mouseCoordinates:
         gInputManagerAssertFile,
         gInputManagerAssertLine + 50);
     event->payload.mouse.x =
-        static_cast<unsigned short>(messageData) * INPUT_GAME_WIDTH
+        LOWORD(messageData) * INPUT_GAME_WIDTH
         / iMainWinScreenWidth;
     event->payload.mouse.y =
-        static_cast<unsigned short>(static_cast<unsigned long>(messageData) >> 16)
-        * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
+        HIWORD(messageData) * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
 
-    if (message == WM_MOUSEMOVE && gpMouseManager != 0
-        && event->payload.mouse.x > INPUT_CURSOR_INTERIOR_X_MIN
-        && event->payload.mouse.x < INPUT_CURSOR_INTERIOR_X_MAX
-        && event->payload.mouse.y > INPUT_CURSOR_INTERIOR_Y_MIN
-        && event->payload.mouse.y < INPUT_CURSOR_INTERIOR_Y_MAX)
-        gpMouseManager->SetPointer(INPUT_KEEP_CURRENT_MOUSE_FRAME);
+mouseMoveCursorCheck:
+    if (message == WM_MOUSEMOVE && gpMouseManager != 0) {
+        if (event->payload.mouse.x > INPUT_CURSOR_INTERIOR_X_MIN
+            && event->payload.mouse.x < INPUT_CURSOR_INTERIOR_X_MAX
+            && event->payload.mouse.y > INPUT_CURSOR_INTERIOR_Y_MIN
+            && event->payload.mouse.y < INPUT_CURSOR_INTERIOR_Y_MAX)
+            gpMouseManager->SetPointer(INPUT_KEEP_CURRENT_MOUSE_FRAME);
+    }
 
 afterMouseCoordinates:
     event->payload.mouse.modifiers = MESSAGE_MODIFIER_NONE;

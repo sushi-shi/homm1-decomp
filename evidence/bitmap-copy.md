@@ -1,0 +1,7 @@
+# Bitmap screen capture and rectangular copy
+
+The anonymous helper at RVA 0x735f0 is GrabScreenBitmap, proven by its admitted bitmap::GrabScreen caller, the screen-buffer owner load, destination dimensions and eight-argument BlitBitmap call. Its entire 0x30-byte body is real code, ending at the cdecl return. Ordinary C++ in the existing BITMAP translation unit provides the missing definition without altering mapped bitmap methods.
+
+RVA 0x7a930 is bitmap::CopyTo, corresponding to both HoMM2 donors' PollSound / row-wise memcpy / bulk memcpy / PollSound method. Its actual end is 0x7a9ed; three padding bytes are excluded. The seven method arguments are destination plus six dword coordinates/dimensions, proved by ret 0x1c and dword loads. Retail row copies advance by the fixed 640-byte stride and use intrinsic memcpy lowering at both copy sites (rep movsd/movsb, no CRT memcpy call).
+
+The width==640 branch directly adds sourceY and destinationY to the respective pixel pointers; it does not multiply these two offsets by 640, unlike the later donor. Those literal retail additions are preserved. No bound checks or donor corrections are invented. Operand-level comparison finds no exclusive semantic operands or referent divergence; the remaining mismatch is allocation/scheduling and two candidate alignment nops. Existing constructors, destructor and mapped draw/grab method bodies remain unchanged.

@@ -116,3 +116,102 @@ operands in the retail body. The final `_lseek` uses the matched entry's
 `0x34`. The source function ends after `0xF2` bytes at its `ret 4`; the
 following 14 `INT3` bytes are linker alignment before `GetFileSize` and are
 excluded from the function claim.
+
+The previously unnamed cache getter family at RVAs `0x759F0`, `0x75A90`,
+`0x75C00`, and `0x75CA0` follows Buka 2.1's `GetPalette`, `GetBitmap`,
+`GetTileset`, and `GetFont` order. Each calls `MakeId` and `Query`, increments
+the cached resource's 16-bit reference count at offset `+6`, or allocates and
+constructs a derived resource before `AddResource`. The allocation sizes are
+`0x12`, `0x18`, `0x18`, and `0x16` respectively. Their constructor targets at
+RVAs `0x7CF70`, `0x7A770`, `0x7F970`, and `0x7B2C0` each call the known
+`resource::resource` body with category `2`, `0`, `3`, and `5` respectively,
+then write a distinct vtable. The getter's argument is a 16-bit ID and the
+constructor reads only its low word; the source uses `short` for the VC4
+constructor signature. All four constructor bodies now have source claims.
+
+The retail constructor stores establish the cache classes' inherited
+`resource` prefix: palette's data pointer is at `+0x0E`; tileset's count,
+width, height and data pointer are at `+0x0E`, `+0x10`, `+0x12`, and `+0x14`;
+font's two 16-bit properties and icon pointer are at `+0x0E`, `+0x10`, and
+`+0x12`. Together with the allocation sizes, these determine the packed
+class layouts used by the getters. The bitmap already has its resource base
+and 0x18-byte layout in its owner header.
+
+The name overload of `GetIcon` at RVA `0x75B30` calls `MakeId` and forwards
+its signed short result to the cache overload at `0x75B70`. The latter's
+`Query`/reference-count/new-icon path matches the adjacent donor family.
+The icon allocation is `0x1C` bytes. Its retail drawing bodies read and write
+four signed 16-bit bounds at offsets `+0x14`, `+0x16`, `+0x18`, and `+0x1A`,
+after the frame count at `+0x0E` and data pointer at `+0x10`. That completes
+the class layout needed by the exact cache body and constructor.
+
+Retail's bitmap ID constructor at RVA `0x7A770` has the Buka load sequence
+plus `PollSound` before and after data read and `PostprocessBitmap` between
+them. The palette constructor at `0x7CF70` allocates 768 bytes and reads that
+many palette bytes. The tileset constructor at `0x7F970` zero-extends its
+three 16-bit dimensions, reads their product, and passes the decoded tile
+height and width to `PostprocessBitmap`.
+
+The font constructor at RVA `0x7B2C0` stores two 16-bit header words, reads a
+13-byte icon name, and brackets `GetIcon(name)` with 1/0 writes to the global
+at RVA `0x92E00`. The same global is bracketed around icon loads by
+`combatManager::DoLoseWindow` and `advManager::Open`, matching Buka 2.1's
+`gbLoadingMonoIcon` identity. The icon constructor at `0x79B20` reads its
+frame count and data length, allocates and reads the data, then calls RVA
+`0x738D0`. That retail callee is a `ret` and sits after the analogous bitmap
+hook at `0x738C0`; `PostprocessIcon` is a provisional name for this reviewed
+call identity, with no claimed source body.
+
+The previously unnamed `resourceManager::Close` body at RVA `0x760F0` is the
+single-aggregate form of Buka 2.1's `Close`: it checks active state at `+0x2E`,
+calls `Expunge`, clears the list head at `+0x30`, frees the directory at
+`+0x38`, closes the file descriptor at `+0x34`, and clears active state.
+The previously unnamed `GetFileSize` body at RVA `0x76380` repeats the
+single-aggregate directory search of `PointToFile`, returns zero if the
+directory is absent, reports a missing ID using its distinct retail string,
+and returns the matched entry's 32-bit size at offset `+6`.
+
+The retail vtables at RVAs `0x8C5FC`, `0x8C624`, `0x8C634`, and `0x8C684`
+point to the icon, font, palette, and tileset virtual deleting destructors at
+`0x79B90`, `0x7B370`, `0x7CF30`, and `0x7FA20`. The first, third, and fourth
+inline a free of their owned data pointer followed by `resource::~resource`;
+their source destructor is correspondingly `inline`, as in the Buka 2.1
+headers. The font deleting destructor calls its separate ordinary destructor
+at `0x7B3B0`, which disposes the glyph icon through `resourceManager::Dispose`
+before calling the resource base destructor. Each deleting destructor tests
+its flag and conditionally calls RVA `0x805E0`. The callee is the VC4 operator
+delete wrapper: its body passes its pointer to the reviewed `_free` at
+`0x80880`. The three newly split census boundaries are function entries,
+not padding; the vtable pointers and complete prologue-to-`ret 4` disassembly
+support them. These destructor claims cover only code; they do not assert the
+vtable initializer bytes.
+
+The bitmap vtable at RVA `0x8C600` points to its deleting destructor at
+`0x7A6E0`, an entry embedded in the previous coarse census span. Retail
+first sets that vtable, frees the non-null pixel pointer, clears the pointer,
+calls `resource::~resource`, and conditionally calls operator delete. The
+ordinary destructor already reconstructs those operations; making it inline
+exposes them to VC4's deleting-destructor generator and matches the retail
+code. The preceding default constructor at `0x7A6B0` zeroes its dimensions
+and pixel pointer. Palette's default constructor at `0x7CF00` allocates the
+same 768-byte buffer as the ID constructor after passing ID `-1` and an
+initial reference to `resource::resource`. Its `Data` accessor at `0x7CFD0`
+returns the data pointer at `+0x0E`. These four source bodies match exactly.
+
+## Constructor source boundaries
+
+The base constructor returns at VA 0x00473DD9, giving a 0x4A-byte body;
+the following six INT3 bytes align the next retail function. Buka BASEMGR
+supplies the corresponding initializer list and priority/mask/active/name
+statements. The retail packed base fields and existing cpp_o2 profile
+reproduce all constructor instructions and ordered code referents.
+
+The resource constructor returns at VA 0x004758CA, giving a 0x9B-byte body;
+the following five INT3 bytes are padding. InitMainClasses allocates 0x86
+bytes at VA 0x004F806 and calls this constructor at VA 0x004F82A. The
+constructor calls the base constructor at VA 0x0047583F and initializes the
+single aggregate fields in retail order before copying the empty last-file
+name and clearing the last-file ID. The saved position at offset 0x42 is
+written by SavePosition, rather than by this constructor. The existing
+cpp_carcass_oi profile reproduces this constructor exactly. Code matching
+does not admit initializer/data-byte coverage for either name string.

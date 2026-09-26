@@ -6,11 +6,26 @@
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/resourceManager.h>
 #include <H1/KB.h>
 
 #include <stdlib.h>
+#include <string.h>
+
+#pragma intrinsic(memcpy)
 
 extern heroWindowManager *gpWindowManager;
+
+VA(0x0047a6b0, 0x2a)
+VA_COMPGEN(0x0047a6e0, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047a6b0)
+bitmap::bitmap(void)
+    : resource(RESOURCE_CATEGORY_BITMAP, 0, -1, 0)
+{
+    m_bitmapType = 0;
+    m_width = 0;
+    m_height = 0;
+    m_pixels = 0;
+}
 
 VA(0x0047a720, 0x4d)
 bitmap::bitmap(short type, short width, short height)
@@ -20,6 +35,23 @@ bitmap::bitmap(short type, short width, short height)
     m_width = width;
     m_height = height;
     m_pixels = static_cast<signed char *>(malloc(width * height));
+}
+
+// Retail's ID constructor reads the packed bitmap and postprocesses its pixels.
+VA(0x0047a770, 0xa1)
+bitmap::bitmap(short id)
+    : resource(RESOURCE_CATEGORY_BITMAP, id, 1, 0)
+{
+    gpResourceManager->PointToFile(id);
+    m_bitmapType = gpResourceManager->ReadWord();
+    m_width = gpResourceManager->ReadWord();
+    m_height = gpResourceManager->ReadWord();
+    int size = m_width * m_height;
+    m_pixels = static_cast<signed char *>(malloc(size));
+    PollSound();
+    gpResourceManager->ReadBlock(m_pixels, size);
+    PostprocessBitmap(m_pixels, m_width, m_height);
+    PollSound();
 }
 
 bitmap::~bitmap(void)
@@ -48,4 +80,20 @@ VA(0x0047a880, 0x2b)
 void bitmap::GrabBitmap(bitmap *source, short x, short y)
 {
     BlitBitmap(source, x, y, m_width, m_height, this, 0, 0);
+}
+
+VA(0x0047a930, 0xbd)
+void bitmap::CopyTo(bitmap *destination, int destinationX, int destinationY, int sourceX, int sourceY, int width, int height)
+{
+    PollSound();
+    if (width != BITMAP_COPY_STRIDE) {
+        for (int row = 0; row < height; row++) {
+            memcpy(destination->m_pixels + destinationX + (destinationY + row) * BITMAP_COPY_STRIDE,
+                m_pixels + sourceX + (sourceY + row) * BITMAP_COPY_STRIDE, width);
+        }
+    } else {
+        memcpy(destination->m_pixels + destinationX + destinationY,
+            m_pixels + sourceX + sourceY, width * height);
+    }
+    PollSound();
 }

@@ -3,15 +3,18 @@
 // Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 5 methods, 0 own-virtual, 0 static data.
 
-#include <H1/Macros.h>
+#include <BASE/resource.h>
 
-class palette {
+#pragma pack(push, 1)
+class palette : public resource {
 public:
+    signed char *m_data;
     // --- constructors ---
     palette(void);
-    palette(unsigned long int);
-    virtual ~palette();
+    palette(short);
+    virtual inline ~palette();
     // --- methods ---
     signed char * Data(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_BASE_PALETTE_H

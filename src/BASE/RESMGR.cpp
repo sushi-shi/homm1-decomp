@@ -3,10 +3,14 @@
 #include <match.h>
 
 #include <BASE/bitmap.h>
+#include <BASE/font.h>
+#include <BASE/icon.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
+#include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
+#include <BASE/tileset.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 
@@ -23,6 +27,20 @@ short gReadLongAssertLine = 639;
 char gReadLongAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 short gReadBlockAssertLine = 679;
 char gReadBlockAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
+
+// HoMM1 owns one aggregate descriptor rather than Buka's descriptor array.
+VA(0x00475830, 0x9b)
+resourceManager::resourceManager(void) : baseManager()
+{
+    m_active = 0;
+    m_resourceListHead = 0;
+    m_aggregateDir = 0;
+    m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
+    m_aggregateEntryCount = 0;
+    m_expunging = 0;
+    strcpy(m_lastFileName, "");
+    m_lastFileId = 0;
+}
 
 // HoMM1 has only the raw-backdrop path of the Buka donor overload.
 VA(0x004758d0, 0x85)
@@ -55,11 +73,97 @@ void resourceManager::GetBackdropAtLoc(
             imageHeight = ReadWord();
             for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
                 ReadBlock(
-                    curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
-                        + destination->m_pixels + destinationX,
+                    destination->m_pixels
+                        + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
+                        + destinationX,
                     width);
             }
         }
+    }
+}
+
+// The resource cache and its miss path follow Buka 2.1 RESMGR. Retail's
+// 16-bit MakeId/Query pair and the derived constructors identify each member.
+VA(0x004759f0, 0x96)
+palette *resourceManager::GetPalette(char *name)
+{
+    short fileId = MakeId(name);
+    resource *resourceEntry = Query(fileId);
+    if (resourceEntry != 0) {
+        resourceEntry->m_refCount++;
+        return static_cast<palette *>(resourceEntry);
+    } else {
+        resourceEntry = new palette(fileId);
+        AddResource(resourceEntry);
+        return static_cast<palette *>(resourceEntry);
+    }
+}
+
+VA(0x00475a90, 0x96)
+bitmap *resourceManager::GetBitmap(char *name)
+{
+    short fileId = MakeId(name);
+    resource *resourceEntry = Query(fileId);
+    if (resourceEntry != 0) {
+        resourceEntry->m_refCount++;
+        return static_cast<bitmap *>(resourceEntry);
+    } else {
+        resourceEntry = new bitmap(fileId);
+        AddResource(resourceEntry);
+        return static_cast<bitmap *>(resourceEntry);
+    }
+}
+
+// Retail forwards the 16-bit name ID to the cache overload below.
+VA(0x00475b30, 0x34)
+icon *resourceManager::GetIcon(char *name)
+{
+    short fileId = MakeId(name);
+    return GetIcon(fileId);
+}
+
+// Same cache/refcount path as the neighboring palette and tileset getters.
+VA(0x00475b70, 0x86)
+icon *resourceManager::GetIcon(short fileId)
+{
+    icon *iconEntry = static_cast<icon *>(Query(fileId));
+    if (iconEntry != 0) {
+        iconEntry->m_refCount++;
+        return iconEntry;
+    } else {
+        iconEntry = new icon(fileId);
+        AddResource(iconEntry);
+        return iconEntry;
+    }
+}
+
+VA(0x00475c00, 0x96)
+tileset *resourceManager::GetTileset(char *name)
+{
+    short fileId = MakeId(name);
+    resource *resourceEntry = Query(fileId);
+    if (resourceEntry != 0) {
+        resourceEntry->m_refCount++;
+        return static_cast<tileset *>(resourceEntry);
+    } else {
+        resourceEntry = new tileset(fileId);
+        AddResource(resourceEntry);
+        return static_cast<tileset *>(resourceEntry);
+    }
+}
+
+VA(0x00475ca0, 0x96)
+font *resourceManager::GetFont(char *name)
+{
+    short resourceId = MakeId(name);
+    resource *fontEntry = Query(resourceId);
+    if (fontEntry != 0) {
+        fontEntry->m_refCount++;
+        return static_cast<font *>(fontEntry);
+    } else {
+        fontEntry = new font(resourceId);
+        AddResource(fontEntry);
+        return static_cast<font *>(fontEntry);
     }
 }
 
@@ -181,6 +285,23 @@ void resourceManager::RemoveResource(class resource *resourceToRemove)
     }
 }
 
+// HoMM1 has one aggregate, while Buka's later Close loops over several.
+VA(0x004760f0, 0x88)
+void resourceManager::Close(void)
+{
+    if (m_active != 1)
+        return;
+    Expunge();
+    m_resourceListHead = 0;
+    if (m_aggregateDir != 0)
+        free(m_aggregateDir);
+    if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE) {
+        close(m_aggregateFd);
+        m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
+    }
+    m_active = 0;
+}
+
 // donor Buka RVA 0x000b89b0; HoMM1 replaces one packed aggregate directory
 VA(0x00476180, 0x100)
 short resourceManager::LoadAggregateHeader(char *aggregateName)
@@ -224,6 +345,25 @@ void resourceManager::PointToFile(short fileId)
         ShutDown(gText);
     }
     lseek(m_aggregateFd, m_aggregateDir[entry].offset, 0);
+}
+
+// Single-aggregate variant of the Buka 2.1 directory lookup.
+VA(0x00476380, 0xe4)
+unsigned long resourceManager::GetFileSize(short fileId)
+{
+    if (m_aggregateDir == 0)
+        return 0;
+    short entry = 0;
+    while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
+        entry++;
+    if (m_aggregateDir[entry].id != fileId) {
+        sprintf(gText,
+                "ResMgr::PointToFile(GetFileSize) failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s",
+                fileId, m_lastFileId, m_lastFileName);
+        ShutDown(gText);
+        return RESOURCE_MANAGER_LOAD_ERROR;
+    }
+    return m_aggregateDir[entry].size;
 }
 
 // donor PoL RVA 0x000c8e20; preferred Buka symbol ?SavePosition@resourceManager@@QAEXXZ

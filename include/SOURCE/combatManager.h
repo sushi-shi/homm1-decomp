@@ -4,6 +4,7 @@
 // 149 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
+#include <Domains.h>
 #include <H1/Macros.h>
 
 // forward declarations:
@@ -15,6 +16,13 @@ class icon;
 class town;
 struct SBolt;
 struct tag_message;
+
+// Buka's combat command/pointer domain, narrowed to the two values used by
+// HoMM1 GetPointer; retail compares command 13 and returns pointer 5.
+H1_ENUM_BEGIN(CombatPointerCode)
+    COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13,
+    COMBAT_POINTER_VIEW = 5
+H1_ENUM_END(CombatPointerCode)
 
 class combatManager {
 public:
@@ -78,7 +86,7 @@ public:
     int ValidHexToStandOn(int);
     void SetCombatDirections(int);
     void CheckSetMouseDirection(int, int, int);
-    int GetPointer(int, int);
+    H1_ENUM_RETURN(CombatPointerCode, int) GetPointer(H1_ENUM_PARAM(CombatPointerCode, int));
     int ProcessCombatMsg(struct tag_message &);
     int IsNegationSphereInEffect(void);
     void ResetRound(void);

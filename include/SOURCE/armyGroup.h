@@ -9,8 +9,12 @@
 class hero;
 class town;
 
+#pragma pack(push, 1)
 class armyGroup {
 public:
+    // Retail constructor clears five signed type bytes, then five short counts.
+    signed char m_creatureTypes[5];
+    short m_creatureCounts[5];
     // --- constructors ---
     armyGroup(void);
     // --- methods ---
@@ -19,12 +23,13 @@ public:
     int HasSomeUndead(void);
     int GetMorale(class hero *, class town *, class armyGroup *);
     void Dismiss(int);
-    int IsMember(int);
+    signed char IsMember(signed char);
     int IsHomogeneous(int);
-    int CanJoin(int);
+    signed char CanJoin(signed char);
     int GetNumArmies(void);
     int Add(int, int, int);
     void Swap(int, class armyGroup *, int);
     void DamageGroup(float);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_ARMYGROUP_H

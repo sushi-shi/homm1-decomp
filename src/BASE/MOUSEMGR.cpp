@@ -6,6 +6,7 @@
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/NOOPT.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,6 +25,51 @@ char gCombatMonochrome[] = "BW";
 char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
 char gMouseManagerAssertFile2[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
 char gMouseManagerAssertFile3[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
+
+// Retail releases both monochrome/color masks and pauses around cursor teardown.
+VA(0x004767e0, 0xf2)
+void mouseManager::Close(void)
+{
+    int cursorIndex;
+    if (m_active == 1) {
+        m_active = 0;
+        delete m_savedUnderlying;
+        m_savedUnderlying = 0;
+        SetCursor(LoadCursorA(0, IDC_ARROW));
+        DelayMilli(50);
+        for (cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
+            if (hMouseCursor[cursorIndex] != 0)
+                DestroyIcon(hMouseCursor[cursorIndex]);
+            hMouseCursor[cursorIndex] = 0;
+            if (cAndBits[cursorIndex] != 0)
+                free(cAndBits[cursorIndex]);
+            cAndBits[cursorIndex] = 0;
+            if (cColorBits[cursorIndex] != 0)
+                free(cColorBits[cursorIndex]);
+            cColorBits[cursorIndex] = 0;
+            if (hbmpAndMask[cursorIndex] != 0)
+                DeleteObject(hbmpAndMask[cursorIndex]);
+            hbmpAndMask[cursorIndex] = 0;
+            if (hbmpColor[cursorIndex] != 0)
+                DeleteObject(hbmpColor[cursorIndex]);
+            hbmpColor[cursorIndex] = 0;
+        }
+        DelayMilli(50);
+    }
+}
+
+// HoMM1 selects the cursor family by name and forwards the requested frame.
+VA(0x004768f0, 0x45)
+void mouseManager::SetPointer(char *name, int frame)
+{
+    if (*name == 'a' || *name == 'A')
+        gMouseCursorType = MOUSE_CURSOR_ADVENTURE;
+    else if (*name == 's' || *name == 'S')
+        gMouseCursorType = MOUSE_CURSOR_SPELL;
+    else
+        gMouseCursorType = MOUSE_CURSOR_COMBAT;
+    SetPointer(frame);
+}
 
 // donor PoL RVA 0x000c9630; preferred Buka symbol ?SetPointer@mouseManager@@QAEXH@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order

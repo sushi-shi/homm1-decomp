@@ -25,7 +25,7 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
-    void SetPointer(char *, int, int);
+    void SetPointer(char *, int);
     void SetPointer(short);
     void NewUpdate(int);
     void MouseCoords(short &, short &);

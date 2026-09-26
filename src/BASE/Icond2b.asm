@@ -15,7 +15,7 @@ EXTERN _gDimPalette:BYTE
 
 .code
 
-?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z PROC NEAR
+?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
     push esi
@@ -101,6 +101,6 @@ dim_icon_done:
     pop esi
     pop ebp
     ret
-?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z ENDP
+?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z ENDP
 
 END

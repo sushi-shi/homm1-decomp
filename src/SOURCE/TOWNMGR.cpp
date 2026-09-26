@@ -3,12 +3,29 @@
 #include <match.h>
 
 #include <H1/All.h>
+#include <H1/KB.h>
 
 // donor PoL RVA 0x0000e198; preferred Buka symbol ?GetCursorBaseFrame@advManager@@QAEHH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375377;margin=0.466673;shape=0.186;size=0.574;calls=1.000;alternate=pol20:int advManager::GetCursorBaseFrame(int)@0x0000e198
 VA(0x004061ed, 0x88)
-int advManager::GetCursorBaseFrame(int) { return 0; }
+short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) direction)
+{
+    if (static_cast<int>(direction) > static_cast<int>(MAP_DIRECTION_SOUTH)) {
+        switch (direction) {
+            case MAP_DIRECTION_SOUTH_WEST:
+                return static_cast<short>(CURSOR_BOAT_BASE_FRAME_5);
+            case MAP_DIRECTION_WEST:
+                return static_cast<short>(CURSOR_BOAT_BASE_FRAME_6);
+            case MAP_DIRECTION_NORTH_WEST:
+                return static_cast<short>(CURSOR_BOAT_BASE_FRAME_7);
+            default:
+                return 0;
+        }
+    } else {
+        return static_cast<int>(direction) * static_cast<int>(CURSOR_FRAMES_PER_DIRECTION);
+    }
+}
 
 // donor PoL RVA 0x0000e21d; preferred Buka symbol ?TurnTo@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
@@ -38,7 +55,11 @@ townObject::townObject(int, int, char *) {}
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.564007;margin=0.293257;shape=0.438;size=0.896;calls=1.000;alternate=pol20:void townObject::~destructor(void)@0x00013a6a
 VA(0x00407f81, 0x60)
-townObject::~townObject() {}
+townObject::~townObject() {
+    if (m_border != 0)
+        delete m_border;
+    gpResourceManager->Dispose(m_icon);
+}
 
 // donor PoL RVA 0x0001436f; preferred Buka symbol ?SetupTown@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -62,7 +83,7 @@ void townManager::ShowText(char *) {}
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.513026;margin=0.490356;shape=0.272;size=0.823;calls=0.467;strings=caslwind.bin|magewind.bin|thiefwin.bin;alternate=pol20:int townManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0001595d
 VA(0x004093ae, 0x131f)
-int townManager::Main(struct tag_message &) { return 0; }
+short townManager::Main(struct tag_message &) { return 0; }
 
 // donor PoL RVA 0x0001718d; preferred Buka symbol ?DoCommand@townManager@@QAEXH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order

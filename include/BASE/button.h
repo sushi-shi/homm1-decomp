@@ -7,21 +7,29 @@
 #include <H1/Macros.h>
 
 // forward declarations:
+class icon;
 struct tag_message;
 
+#pragma pack(push, 1)
 class button : public widget {
 public:
+    icon *m_icon;
+    short m_normalFrame;
+    short m_pressedFrame;
+    short m_selectMode;
+    short m_hotkey;
     // --- constructors ---
     button(void);
     button(short int, short int, short int, short int, unsigned long int, short int, short int, short int, short int, short int, short int);
     button(short int, short int, short int, short int, char *, short int, short int, short int, short int, short int, short int);
-    virtual ~button() OVERRIDE;
+    virtual inline ~button() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void Read(void);
     short int Select(struct tag_message &);
     short int Deselect(struct tag_message &);
 };
+#pragma pack(pop)
 #endif // HOMM1_BASE_BUTTON_H

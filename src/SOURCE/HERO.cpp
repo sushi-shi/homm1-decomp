@@ -3,6 +3,8 @@
 #include <match.h>
 
 #include <H1/All.h>
+#include <H1/KB.h>
+#include <SOURCE/dialogTypes.h>
 
 // donor PoL RVA 0x000c0790; preferred Buka symbol ?AICheckRetreat@combatManager@@QAEHXZ
 // donor Buka TU SOURCE/AI; HoMM1 owner inferred from contiguous order
@@ -104,13 +106,21 @@ void hero::UpdateArmies(void) {}
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
 VA(0x0046ce89, 0x59)
-int hero::Dismiss(void) { return 0; }
+signed char hero::Dismiss(void) {
+    NormalDialog("Are you sure you want to dismiss this Hero?", 2, 0xb1, 0x1c,
+                 -1, 0, -1, 0, -1);
+    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+        Deallocate();
+        return 1;
+    }
+    return 0;
+}
 
 // donor PoL RVA 0x0006cee8; preferred Buka symbol ?Deallocate@hero@@QAEXH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.482098;margin=0.987612;shape=0.300;size=0.883;calls=0.875;alternate=pol20:void hero::Deallocate(int)@0x0006cee8
 VA(0x0046cee2, 0x452)
-void hero::Deallocate(int) {}
+void hero::Deallocate(void) {}
 
 // donor PoL RVA 0x0006d50d; preferred Buka symbol ?GetLevel@hero@@QAEHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order

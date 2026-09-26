@@ -18,4 +18,18 @@ H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_COUNT = 8
 H1_ENUM_END(CombatHexDirection)
 
+H1_ENUM_BEGIN(CombatEffectDimension)
+    COMBAT_EFFECT_SIDE_COUNT = 2,
+    COMBAT_EFFECT_SLOT_COUNT = 5
+H1_ENUM_END(CombatEffectDimension)
+
+extern signed char gArmyEffected[COMBAT_EFFECT_SIDE_COUNT][COMBAT_EFFECT_SLOT_COUNT];
+
+// HoMM1 spell-AI row traversal: retail NextPos divides by nine.
+H1_ENUM_BEGIN(CombatSpellAIGrid)
+    COMBAT_SPELL_AI_ROW_LENGTH = 9,
+    COMBAT_SPELL_AI_ROW_END_OFFSET = 2,
+    COMBAT_SPELL_AI_ROW_SKIP = 3
+H1_ENUM_END(CombatSpellAIGrid)
+
 #endif

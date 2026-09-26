@@ -8,18 +8,21 @@
 
 // forward declarations:
 class heroWindow;
+class town;
 struct tag_message;
 
-class townManager {
+class townManager : public baseManager {
 public:
+    town *m_town;
     // --- constructors ---
     townManager(void);
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void SetupExtraStuff(void);
+    void SetTown(town *value) { m_town = value; }
     void ChangeTown(void);
     void SetupTown(void);
     void UnloadTown(void);

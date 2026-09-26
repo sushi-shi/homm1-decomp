@@ -2,8 +2,20 @@
 
 #include <match.h>
 
+#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/dialogTypes.h>
+
+#include <stdio.h>
+#include <string.h>
+
+// Retail score-dialog owner bytes; initializer coverage is deferred.
+DATA(0x00494170) signed char gbShowHighScore;
+DATA(0x004c794c) signed char gbStandardHighScore;
+// InitVars proves seven terrain rows, ordinary/diagonal cost columns.
+DATA(0x004c6d50) signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 
 // HoMM2 KB.cpp confirms the identity and behavior. HoMM1 differs in the timer
 // comparison and placement of the re-entry guard.
@@ -76,7 +88,19 @@ int CanBuy(town *t, int type)
 // Zero-ref: no effective incoming retail reference.
 VA(0x00452934, 0x6b)
 void UpdateNormalDialog(char *text)
-{}
+{
+    tag_message message;
+    {
+        short show = 1; // Retained from donor and retail stack frame.
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+        message.payload.widget.id = 1;
+        message.payload.widget.data.text = text;
+        pNormalDialogWindow->BroadcastMessage(message);
+        pNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
+        pNormalDialogWindow->DrawWindow(1, WINDOW_ALL_WIDGETS_LOW, NORMAL_DIALOG_BACKGROUND_WIDGET_LAST_ID);
+    }
+}
 
 // donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -109,7 +133,20 @@ void CheckEndGame(int, int) {}
 // evidence: graph:4;base=0.435968;margin=0.219505;shape=0.250;size=0.859;calls=0.600;alternate=pol20:void QuickViewWait(void)@0x0009c07c
 VA(0x00453948, 0x95)
 void QuickViewWait(void)
-{}
+{
+    tag_message event;
+    int done = 0;
+    while (!done) {
+        PollSound();
+        Process1WindowsMessage();
+        event = gpInputManager->GetEvent();
+        if (event.type == MESSAGE_RIGHT_BUTTON_UP || event.type == MESSAGE_LEFT_BUTTON_DOWN
+            || event.type == MESSAGE_LEFT_BUTTON_UP)
+            done = 1;
+        else
+            done = 0;
+    }
+}
 
 // donor PoL RVA 0x0009c111; preferred Buka symbol ?InitVars@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -141,7 +178,14 @@ int AddScoreToHighScore(int, int, int, int, char *) { return 0; }
 // evidence: graph:2;base=0.598508;margin=0.532475;shape=0.481;size=0.968;calls=1.000;alternate=pol20:void BVResMsg(char *, int, int)@0x0009d2c0
 VA(0x004546bf, 0x5b)
 void BVResMsg(char *s, int res, int qty)
-{}
+{
+    giBottomViewOverride = 5;
+    giBottomViewOverrideEndTime = KBTickCount() + 5000;
+    giBottomViewResource = res;
+    giBottomViewResourceQty = qty;
+    strcpy(gcBottomViewText, s);
+    gpAdvManager->UpdBottomView(1, 1, 1);
+}
 
 // donor PoL RVA 0x0009d3a7; preferred Buka symbol ?WaitForOtherPlayer@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -168,7 +212,12 @@ void ShutDown(char *msg)
 // evidence: graph:3;base=0.316461;margin=0.125092;shape=0.216;size=0.484;calls=0.500;alternate=pol20:void FileError(char *)@0x0009e306
 VA(0x004550d9, 0x4a)
 void FileError(char *filename)
-{}
+{
+    char message[200];
+    LogStr("File Error");
+    sprintf(message, "Error opening file %s!", filename);
+    ShutDown(message);
+}
 
 // @early-stop
 // tu-cumulative: logic + all 14 frame slots byte-exact (od_oracle-verified). The only
@@ -196,21 +245,56 @@ void CongratsWait(void)
 // evidence: graph:6;base=0.524829;margin=1.189024;shape=0.423;size=0.802;calls=1.000;alternate=pol20:struct SAMPLE2 LoadPlaySample(char *)@0x0009e999
 VA(0x00455932, 0x51)
 SAMPLE2 LoadPlaySample(char *name)
-{ return *(SAMPLE2 *)0; }
+{
+    SAMPLE2 s;
+    s.pSample = gpResourceManager->GetSample(name);
+    if (s.pSample) {
+        s.pSample->m_channelType = SAMPLE_PLAYBACK_CHANNEL_GROUP;
+        s.pMem = gpSoundManager->MemorySample(s.pSample);
+    }
+    return s;
+}
 
 // donor PoL RVA 0x0009e9ed; preferred Buka symbol ?WaitEndSample@@YIXPAPAVsample@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.479563;margin=0.490944;shape=0.207;size=0.957;calls=1.000;alternate=pol20:void WaitEndSample(struct SAMPLE2, int)@0x0009e9ed
 VA(0x00455983, 0x8a)
 void WaitEndSample(SAMPLE2 s, int waitTime)
-{}
+{
+    if (waitTime < 0)
+        waitTime = 4000;
+    long endTime = KBTickCount() + waitTime;
+    if (s.pMem) {
+        while (gpSoundManager->DigitalReport(s.pMem, 4) && KBTickCount() < endTime) {
+            Process1WindowsMessage();
+            PollSound();
+        }
+    }
+    if (s.pSample)
+        gpResourceManager->Dispose(s.pSample);
+}
 
 // donor PoL RVA 0x0009ea7c; preferred Buka symbol ?MemError@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.499168;margin=0.828160;shape=0.176;size=0.610;calls=1.000;strings=Out of Memory;alternate=pol20:void MemError(void)@0x0009ea7c
 VA(0x00455a0d, 0x7b)
 void MemError(void)
-{}
+{
+    if (gbInMemError)
+        return;
+    gbInMemError = 1;
+    LogStr("Out of Memory");
+    sprintf(gText, "\n\n%s\n%s\n%d%s\n%d%s\n\n", gcMemoryErrorTitle,
+        gcMemoryRequirements, giRequiredExtendedMemory, gcExtendedMemoryUnits,
+        giRequiredConventionalMemory, gcConventionalMemoryUnits);
+    ShutDown(gText);
+}
+
+// Retail empty lifecycle hook; Buka and PoL KB correspondence.
+VA(0x00455c94, 0x10)
+void EarlyShutDownSystem(void)
+{
+}
 
 // donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

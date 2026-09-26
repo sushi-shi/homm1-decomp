@@ -5,6 +5,8 @@
 
 #include <BASE/baseManager.h>
 #include <H1/Macros.h>
+#include <SOURCE/armySizeNames.h>
+#include <SOURCE/cursorTypes.h>
 
 // forward declarations:
 class armyGroup;
@@ -28,7 +30,7 @@ public:
     void StopCursor(int);
     void DrawCursor(void);
     void DrawCursorShadow(void);
-    int GetCursorBaseFrame(int);
+    short GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short));
     void TurnTo(int);
     int GetMoveShowIt(class hero *, int);
     class mapCell * MoveHero(int, int, int *, int *, int *, int, int *, int);
@@ -72,7 +74,7 @@ public:
     int UpdBottomViewKingdom(void);
     int UpdBottomViewHero(void);
     void HeroQuickView(int, int, int, int);
-    char * GetArmySizeName(int, int);
+    char *GetArmySizeName(short, H1_ENUM_PARAM(ArmySizeNameVariant, signed char));
     void TownQuickView(int, int, int, int);
     void RedrawAdvScreen(int, int);
     void DeactivateCurrTown(void);
@@ -80,7 +82,7 @@ public:
     void MobilizeCurrHero(int);
     void DemobilizeCurrHero(void);
     void SetTownContext(int);
-    void SetHeroContext(int, int);
+    void SetHeroContext(signed char, int);
     void DoHeroKnob(void);
     void DoTownKnob(void);
     void CastSpell(int);

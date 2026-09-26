@@ -3,12 +3,18 @@
 // Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 3 methods, 0 own-virtual, 0 static data.
 
-#include <H1/Macros.h>
+#include <BASE/resource.h>
 
-class tileset {
+#pragma pack(push, 1)
+class tileset : public resource {
 public:
+    unsigned short m_tileCount;
+    unsigned short m_tileWidth;
+    unsigned short m_tileHeight;
+    signed char *m_data;
     // --- constructors ---
-    tileset(unsigned long int);
-    virtual ~tileset();
+    tileset(short);
+    virtual inline ~tileset();
 };
+#pragma pack(pop)
 #endif // HOMM1_BASE_TILESET_H

@@ -10,8 +10,13 @@ cpp_od = ["/nologo", "/c", "/Od", "/Z7"]
 # proves the free-function convention is the compiler default (/Gd), unlike
 # the donor's /Gr build; reconstruction replaces these bodies in place.
 cpp_carcass = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1"]
+# HISCORE::Open retail fs:[0] registration and new-window delete unwind prove /GX.
+cpp_carcass_eh = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/GX"]
 cpp_carcass_oi = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Oi"]
 cpp_o2 = ["/nologo", "/c", "/O2", "/Z7", "/G5"]
+# Standalone DigitalReport/FadeScreen and expanded callers jointly require
+# automatic inlining; see evidence/sound-volume-control.md and window-lifecycle.md.
+cpp_o2_inline = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
 cpp_codec = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
 
 [[unit]]
@@ -23,6 +28,11 @@ flags = "cpp_carcass"
 unit = "BASE/BMAP2"
 source = "src/BASE/BMAP2.asm"
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/BASEMGR"
+source = "src/BASE/BASEMGR.cpp"
+flags = "cpp_o2"
 
 [[unit]]
 unit = "BASE/BITMAP"
@@ -100,6 +110,36 @@ source = "vendor/lzhuf/decoder/Decode.asm"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "BASE/BACKDROP"
+source = "src/BASE/BACKDROP.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/BORDER"
+source = "src/BASE/BORDER.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/BUTTON"
+source = "src/BASE/BUTTON.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/DIMMER"
+source = "src/BASE/DIMMER.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/ICONWDGT"
+source = "src/BASE/ICONWDGT.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/EXEC"
+source = "src/BASE/EXEC.cpp"
+flags = "cpp_o2"
+
+[[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
 flags = "cpp_o2"
@@ -125,6 +165,36 @@ source = "src/BASE/RESOURCE.cpp"
 flags = "cpp_o2"
 
 [[unit]]
+unit = "BASE/PALETTE"
+source = "src/BASE/PALETTE.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/TILESET"
+source = "src/BASE/TILESET.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/TEXTWDGT"
+source = "src/BASE/TEXTWDGT.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/TEXTNTRY"
+source = "src/BASE/TEXTNTRY.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/FONT"
+source = "src/BASE/FONT.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/ICON"
+source = "src/BASE/ICON.cpp"
+flags = "cpp_o2"
+
+[[unit]]
 unit = "BASE/WINDOW"
 source = "src/BASE/WINDOW.cpp"
 flags = "cpp_carcass"
@@ -137,12 +207,12 @@ flags = "cpp_o2"
 [[unit]]
 unit = "BASE/WINMGR"
 source = "src/BASE/WINMGR.cpp"
-flags = "cpp_o2"
+flags = "cpp_o2_inline"
 
 [[unit]]
 unit = "BASE/soundmgr"
 source = "src/BASE/soundmgr.cpp"
-flags = "cpp_carcass"
+flags = "cpp_o2_inline"
 
 [[unit]]
 unit = "BASE/TILE"
@@ -182,7 +252,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/HISCORE"
 source = "src/SOURCE/HISCORE.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/KB"
@@ -195,9 +265,22 @@ source = "src/SOURCE/Modem.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "SOURCE/NOOPT"
+source = "src/SOURCE/NOOPT.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "SOURCE/PATH"
 source = "src/SOURCE/PATH.cpp"
 flags = "cpp_carcass"
+
+# Retail FINDPATH's aligned24820..24950 controls use optimized VC4 code.
+# Reuse the pinned O2 profile; no existing TU profile is changed.
+
+[[unit]]
+unit = "SOURCE/FINDPATH"
+source = "src/SOURCE/FINDPATH.cpp"
+flags = "cpp_o2"
 
 [[unit]]
 unit = "SOURCE/PHILAI"
@@ -263,3 +346,13 @@ flags = "cpp_carcass"
 unit = "SOURCE/wingraph"
 source = "src/SOURCE/wingraph.cpp"
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/miscwin"
+source = "src/BASE/miscwin.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/Iconm2bClip"
+source = "src/BASE/Iconm2bClip.cpp"
+flags = "cpp_o2"

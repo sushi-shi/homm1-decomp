@@ -16,7 +16,7 @@ public:
     virtual ~listBoxWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void Read(void);
     void DeleteItem(int);

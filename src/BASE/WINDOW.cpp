@@ -2,11 +2,19 @@
 
 #include <match.h>
 
+#include <BASE/backdropWidget.h>
 #include <BASE/bitmap.h>
+#include <BASE/border.h>
+#include <BASE/button.h>
+#include <BASE/dimmerWidget.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/iconWidget.h>
 #include <BASE/message.h>
 #include <BASE/mouseManager.h>
+#include <BASE/resourceManager.h>
+#include <BASE/textEntryWidget.h>
+#include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <H1/KB.h>
 
@@ -17,6 +25,19 @@ extern heroWindowManager *gpWindowManager;
 extern mouseManager *gpMouseManager;
 
 char gDynamicConstruct[] = "Dynamic Construct";
+
+H1_ENUM_BEGIN(WindowWidgetRecordType)
+    WIDGET_RECORD_END = 0,
+    WIDGET_RECORD_BORDER = 1,
+    WIDGET_RECORD_BUTTON = 2,
+    WIDGET_RECORD_TEXT = 8,
+    WIDGET_RECORD_ICON = 0x10,
+    WIDGET_RECORD_BACKDROP = 0x20,
+    WIDGET_RECORD_DIMMER = 0x40,
+    WIDGET_RECORD_TEXT_ENTRY = 0x100,
+    WIDGET_RECORD_TEXT_ENTRY_RECT = 0x201,
+    WIDGET_RECORD_TEXT_ENTRY_MULTILINE = 0x202
+H1_ENUM_END(WindowWidgetRecordType)
 
 // donor PoL RVA 0x000cec20; preferred Buka symbol ??0heroWindow@@QAE@HHHHH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
@@ -43,8 +64,97 @@ heroWindow::heroWindow(
 // donor PoL RVA 0x000cecd0; preferred Buka symbol ??0heroWindow@@QAE@HHPAD@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.375549;margin=0.549564;shape=0.254;size=0.606;calls=0.800;alternate=pol20:void heroWindow::constructor(int, int, char *)@0x000cecd0
-VA(0x00474b30, 0x450)
-heroWindow::heroWindow(int, int, char *) {}
+VA(0x00474b30, 0x448)
+heroWindow::heroWindow(short x, short y, char *resourceName)
+{
+    short jb;
+    short idx;
+    textEntryWidget *pte;
+    textWidget *ptw;
+    H1_ENUM_STORAGE(WindowWidgetRecordType, short) type;
+    button *pbtn;
+    backdropWidget *pback;
+    border *pbd;
+    widget *pwdg;
+    iconWidget *picn;
+    dimmerWidget *pdim;
+
+    strcpy(m_name, resourceName);
+    jb = gpResourceManager->MakeId(resourceName);
+    gpResourceManager->PointToFile(jb);
+    m_savedBackground = 0;
+    m_prevWindow = 0;
+    m_nextWindow = m_prevWindow;
+    m_winState = WINDOW_STATE_CLOSED;
+    m_zOrder = -1;
+    m_posX = x;
+    m_posY = y;
+    m_winWidth = gpResourceManager->ReadWord();
+    m_winHeight = gpResourceManager->ReadWord();
+    m_winFlags = H1_ENUM_CAST(WindowFlag, short, gpResourceManager->ReadWord());
+    m_winFlags = H1_ENUM_CAST(WindowFlag, short, m_winFlags | WINDOW_FLAG_OWNS_WIDGETS);
+    m_widgetListHead = 0;
+    m_widgetListTail = m_widgetListHead;
+    idx = 0;
+    while (idx == 0) {
+        PollSound();
+        type = H1_ENUM_CAST(WindowWidgetRecordType, short,
+                            gpResourceManager->ReadWord());
+        pwdg = 0;
+        switch (type) {
+        case WIDGET_RECORD_END:
+            idx++;
+            break;
+        case WIDGET_RECORD_BORDER:
+            pbd = new border();
+            pbd->Read();
+            pwdg = pbd;
+            break;
+        case WIDGET_RECORD_BUTTON:
+            pbtn = new button();
+            pbtn->Read();
+            pwdg = pbtn;
+            break;
+        case WIDGET_RECORD_ICON:
+            picn = new iconWidget();
+            picn->Read();
+            pwdg = picn;
+            break;
+        case WIDGET_RECORD_DIMMER:
+            pdim = new dimmerWidget();
+            pdim->Read();
+            pwdg = pdim;
+            break;
+        case WIDGET_RECORD_BACKDROP:
+            pback = new backdropWidget();
+            pback->Read();
+            pwdg = pback;
+            break;
+        case WIDGET_RECORD_TEXT:
+            ptw = new textWidget();
+            ptw->Read();
+            pwdg = ptw;
+            break;
+        case WIDGET_RECORD_TEXT_ENTRY:
+            pte = new textEntryWidget();
+            pte->Read(1);
+            pwdg = pte;
+            break;
+        case WIDGET_RECORD_TEXT_ENTRY_RECT:
+            pte = new textEntryWidget();
+            pte->Read(2);
+            pwdg = pte;
+            break;
+        case WIDGET_RECORD_TEXT_ENTRY_MULTILINE:
+            pte = new textEntryWidget();
+            pte->Read(3);
+            pwdg = pte;
+            break;
+        }
+        if (idx == 0 && pwdg != 0)
+            AddWidget(pwdg, -1);
+    }
+}
 
 // donor PoL RVA 0x000cf200; preferred Buka symbol ?Open@heroWindow@@QAEHHH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order

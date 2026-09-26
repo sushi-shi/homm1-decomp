@@ -2,3 +2,4 @@
 # in evidence/homm1-dna-bands.tsv: enrolling the whole runtime band here
 # changes Vostok's anonymous-module partition.
 rva	name	lib	confidence	source
+0x00080820	_memset	libc.lib	crt-exact	evidence/homm1-dna-bands.tsv; retail bytes match VC4 memset

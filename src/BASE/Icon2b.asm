@@ -20,7 +20,7 @@ _gIconHeight DWORD 0
 
 .code
 
-?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z PROC NEAR
+?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
     push esi
@@ -105,6 +105,6 @@ icon_done:
     pop esi
     pop ebp
     ret
-?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z ENDP
+?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z ENDP
 
 END

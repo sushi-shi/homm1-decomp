@@ -14,7 +14,7 @@ EXTERN _gIconHeight:DWORD
 
 .code
 
-?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z PROC NEAR
+?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
     push esi
@@ -97,6 +97,6 @@ mono_icon_done:
     pop esi
     pop ebp
     ret
-?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z ENDP
+?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z ENDP
 
 END

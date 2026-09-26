@@ -4,6 +4,10 @@
 #include <BASE/resource.h>
 #include <H1/Macros.h>
 
+H1_ENUM_BEGIN(BitmapCopyConstant)
+    BITMAP_COPY_STRIDE = 640
+H1_ENUM_END(BitmapCopyConstant)
+
 #pragma pack(push, 1)
 class bitmap : public resource {
 public:
@@ -15,8 +19,8 @@ public:
     // --- constructors ---
     bitmap(void);
     bitmap(short int, short int, short int);
-    bitmap(unsigned long int);
-    virtual ~bitmap();
+    bitmap(short);
+    virtual inline ~bitmap();
     // --- methods ---
     void DrawToBufferCareful(short int, short int);
     void DrawToBuffer(short int, short int);

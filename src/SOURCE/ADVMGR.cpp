@@ -2,7 +2,14 @@
 
 #include <match.h>
 
+#include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
+
+#include <stdio.h>
+
+// Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
+// Code-use identity only; no initializer-byte coverage is asserted.
+DATA(0x004c5170) int giSeedingValid;
 
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -39,6 +46,13 @@ class mapCell * advManager::DoAdvCommand(void) { return 0; }
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x00426eee, 0xe10)
 int advManager::Main(struct tag_message &) { return 0; }
+
+// Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
+VA(0x00427cfe, 0x22)
+void advManager::Reseed(int, int)
+{
+    giSeedingValid = 0;
+}
 
 // donor PoL RVA 0x00058d68; preferred Buka symbol ?ProcessSelect@advManager@@QAEHPAUtag_message@@PAPAVmapCell@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -164,7 +178,24 @@ void advManager::HeroQuickView(int, int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463915;margin=0.489878;shape=0.171;size=0.973;calls=1.000;alternate=pol20:char * advManager::GetArmySizeName(int, int)@0x0006308d
 VA(0x0042f157, 0xe2)
-char * advManager::GetArmySizeName(int, int) { return 0; }
+char *advManager::GetArmySizeName(short armySize, H1_ENUM_PARAM(ArmySizeNameVariant, signed char) grammar)
+{
+    if (giDebugLevel > 0) {
+        sprintf(cArmySizeName, "%d", armySize);
+        return cArmySizeName;
+    }
+    if (armySize < static_cast<int>(ARMY_FEW_LIMIT))
+        return gArmySizeNames[static_cast<int>(ARMY_SIZE_FEW)][static_cast<int>(grammar)];
+    if (armySize < static_cast<int>(ARMY_SEVERAL_LIMIT))
+        return gArmySizeNames[static_cast<int>(ARMY_SIZE_SEVERAL)][static_cast<int>(grammar)];
+    if (armySize < static_cast<int>(ARMY_PACK_LIMIT))
+        return gArmySizeNames[static_cast<int>(ARMY_SIZE_PACK)][static_cast<int>(grammar)];
+    if (armySize < static_cast<int>(ARMY_LOTS_LIMIT))
+        return gArmySizeNames[static_cast<int>(ARMY_SIZE_LOTS)][static_cast<int>(grammar)];
+    if (armySize < static_cast<int>(ARMY_HORDE_LIMIT))
+        return gArmySizeNames[static_cast<int>(ARMY_SIZE_HORDE)][static_cast<int>(grammar)];
+    return gArmySizeNames[static_cast<int>(ARMY_SIZE_ZOUNDS)][static_cast<int>(grammar)];
+}
 
 // donor PoL RVA 0x000631ad; preferred Buka symbol ?TownQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -200,7 +231,7 @@ void advManager::SetTownContext(int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.499995;margin=0.151356;shape=0.325;size=0.844;calls=0.947;alternate=pol20:void advManager::SetHeroContext(int, int)@0x00064318
 VA(0x004303ff, 0x3e6)
-void advManager::SetHeroContext(int, int) {}
+void advManager::SetHeroContext(signed char, int) {}
 
 // donor PoL RVA 0x000646aa; preferred Buka symbol ?DoHeroKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
