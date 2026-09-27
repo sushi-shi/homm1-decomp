@@ -1,8 +1,8 @@
 """Align the HoMM1 function census with HoMM2 symbol-bearing donors.
 
-This is a locating tool, not a source-claim provider.  It records the evidence
-used to create ordinary ``VA`` source stubs under ``src``; labels continue to
-enter the build through the same source path as reconstructed functions.
+This is a locating tool, not a source-claim provider. Write candidate reports
+under ignored ``build/`` and review them against retail before reconstructing
+ordinary C++ with ``VA`` annotations. Donor similarity does not admit a body.
 
 The preferred donor is the Buka 2.1 symbol model.  The PoL 2.0 CodeView model
 is accepted as a second donor because it was built with the same VC4 family as

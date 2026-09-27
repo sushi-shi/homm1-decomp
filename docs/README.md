@@ -8,7 +8,8 @@
   [donor compiler patterns](patterns/INDEX.md), [clangd](clangd.md).
 - [Data attribution](data-attribution.md), [candidate-image checks](image-diff.md),
   [cleanliness](cleanliness-metrics.md), [markers](comment-markers.md).
-- [Inheritance and validation](tooling-inheritance.md).
+- [Inheritance and validation](tooling-inheritance.md),
+  [retail evidence](../evidence/README.md), [script maintenance](../scripts/README.md).
 
 Retail facts are under `config/retail`; build contracts under `config`;
 generated state under `build`; research under `evidence`. Documentation is

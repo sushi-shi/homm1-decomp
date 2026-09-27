@@ -6,4 +6,5 @@ HoMM1 baseManager is packed 0x30 bytes; high-score animation frames are ten shor
 
 Close compiled to exactly the retail 93 bytes, 34 instructions, three calls, one branch and five relocations. Initial 99.71 score was solely unlabelled FadeScreen745a0/operator delete805e0. Mirroring already reviewed root referent identities resolves both without changing body source; full build reports 100. No CRT body or data coverage is claimed. FadeScreen identity is corroborated by donor and adjacent retail callers; operator delete identity is already root-reviewed against its free wrapper.
 
-The constructor is not claimed yet: its extra score-type flag at VA4c794c still needs domain/owner evidence. No artificial locals or storage were added.
+The constructor and its score-type flag at VA `0x4c794c` are covered by
+[the constructor evidence](high-score-constructor.md). No artificial locals or storage were added.

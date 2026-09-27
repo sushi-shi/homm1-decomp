@@ -100,7 +100,7 @@ rva	name	provenance
 0x0007CCA4	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	evidence/icon-fill.md; retail six-argument flipped screen-clipped renderer identity only
 0x0007343C	_Netbios@4	is_netbios_avail calls retail import thunk jmp[0x004D65AC]; pinned PE IAT Netbios and VC4 nb30.h stdcall signature
 0x00055c94	?EarlyShutDownSystem@@YAXXZ	executive ShutDownSystem call7a235; Buka EXEC/KB EarlyShutDownSystem correspondence
-0x00019BD4	?LogStr@@YAXPADJJJJJ@Z	evidence/wingraph-dd-paint.md; provisional five-value logging family identity from existing two-long overload and retail argument/formatter census, no body coverage
+0x00019BD4	?LogStr@@YAXPADJJJJJ@Z	evidence/wingraph.md; provisional five-value logging family identity from existing two-long overload and retail argument/formatter census, no body coverage
 0x00072D14	?init_anchor@@YAXPAUtag_Anchor@@HH@Z	nb_init three queue initialization calls; retail helper clears head/tail pointers+0/+4; Buka comwin signature
 0x000149A1	?nb_add_name@@YAXXZ	nb_snd registration special case retail call; Buka donor no-argument helper
 0x00072C60	?add_node@@YAXPAUtag_Anchor@@PAUtag_Node@@@Z	nb_snd queue append retail calls; helper proves prev+0,next+4 and anchor head+0,tail+4

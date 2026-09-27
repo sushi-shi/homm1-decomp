@@ -31,12 +31,12 @@ rva	size	symbol	provenance
 0x0008C600	4	??_7bitmap@@6B@	evidence/window-layout.md; bitmap virtual-destructor table referenced by bitmap construction
 0x0008C678	12	??_7widget@@6B@	evidence/window-layout.md; three-slot pure widget virtual table referenced by widget construction
 0x0008C68C	4	??_7resource@@6B@	evidence/window-layout.md; resource virtual-destructor table referenced by resource construction
-0x0008E180	4	?giGraphicsType@@3HA	evidence/wingraph-globals.md; graphics backend selector in five wrappers
-0x0008E5A8	4	?gbWinGraphBusy@@3HA	evidence/wingraph-globals.md; DD palette-query busy guard
-0x0008E94C	4	?hdcImage@@3PAXA	evidence/wingraph-globals.md; WinG image DC released on cleanup
-0x0008E950	4	?gbmOldMonoBitmap@@3PAXA	evidence/wingraph-globals.md; bitmap restored to WinG image DC
-0x0008E954	4	?hpalApp@@3PAXA	evidence/wingraph-globals.md; WinG palette handle
-0x0008E9FC	4	?hDDrawLibrary@@3PAXA	evidence/wingraph-globals.md; DirectDraw DLL handle checked before FreeLibrary
+0x0008E180	4	?giGraphicsType@@3HA	evidence/wingraph.md; graphics backend selector in five wrappers
+0x0008E5A8	4	?gbWinGraphBusy@@3HA	evidence/wingraph.md; DD palette-query busy guard
+0x0008E94C	4	?hdcImage@@3PAXA	evidence/wingraph.md; WinG image DC released on cleanup
+0x0008E950	4	?gbmOldMonoBitmap@@3PAXA	evidence/wingraph.md; bitmap restored to WinG image DC
+0x0008E954	4	?hpalApp@@3PAXA	evidence/wingraph.md; WinG palette handle
+0x0008E9FC	4	?hDDrawLibrary@@3PAXA	evidence/wingraph.md; DirectDraw DLL handle checked before FreeLibrary
 0x0008F590	4	$SG16676	evidence/log-string.md; VC4 literal `at+` including terminator
 0x0008F594	8	$SG16677	evidence/log-string.md; VC4 literal `KB.LOG` plus alignment byte
 0x0008F59C	2	$SG16678	evidence/log-string.md; VC4 newline literal including terminator
@@ -152,21 +152,21 @@ rva	size	symbol	provenance
 0x000C5160	10	?gArmyEffected@@3PAY04CA	ClearEffects zeros two five-slot byte rows at 0x004C5160; code-required extent
 0x0009FF2C	4	?lLastGetMessage@@3JA	Process1WindowsMessage reads and updates GetMessage deadline at 0x0049FF2C; HoMM2 Buka 2.1 names same state
 0x0009FF30	4	?lLastAilServe@@3JA	Process1WindowsMessage reads and updates sound-service deadline at 0x0049FF30; HoMM2 Buka 2.1 names same state
-0x0008E184	4	?giMainVideoModeColorDepth@@3HA	evidence/wingraph-paint.md; palette update's video depth comparison
-0x0008E198	1028	?LogicalPalette@@3UWingPalette@@A	evidence/wingraph-paint.md; LOGPALETTE-compatible version/count and 256 PALETTEENTRY records
-0x0008E5A4	4	?giTtlBlts@@3HA	evidence/wingraph-paint.md; retail WinG paint increments the blit count
-0x00092E08	4	?giScrollX@@3HA	evidence/wingraph-paint.md; x scroll added to WinG paint source coordinate
-0x00092E0C	4	?giScrollY@@3HA	evidence/wingraph-paint.md; y scroll added to WinG paint source coordinate
-0x00094130	4	?gbFullCombatScreenDrawn@@3HA	evidence/wingraph-paint.md; limited combat palette repaint guard
-0x00094134	4	?gbLimitedCombatUpdatePalette@@3HA	evidence/wingraph-paint.md; palette repaint mode guard
-0x000A4740	1068	?screenImage@@3UWingImage@@A	evidence/wingraph-paint.md; BITMAPINFOHEADER, 256 RGBQUAD entries, image-bits pointer
-0x0008E17C	4	?gbDDrawAttached@@3HA	evidence/wingraph-connect-dlls.md; retail DLL loader marks DirectDraw attached after factory lookup
-0x0008E5AC	4	?lpDirectDrawCreate@@3P6GJPAU_GUID@@PAPAUIDirectDraw@@PAUIUnknown@@@ZA	evidence/wingraph-connect-dlls.md; retail DLL loader stores GetProcAddress result in DirectDraw factory pointer
+0x0008E184	4	?giMainVideoModeColorDepth@@3HA	evidence/wingraph.md; palette update's video depth comparison
+0x0008E198	1028	?LogicalPalette@@3UWingPalette@@A	evidence/wingraph.md; LOGPALETTE-compatible version/count and 256 PALETTEENTRY records
+0x0008E5A4	4	?giTtlBlts@@3HA	evidence/wingraph.md; retail WinG paint increments the blit count
+0x00092E08	4	?giScrollX@@3HA	evidence/wingraph.md; x scroll added to WinG paint source coordinate
+0x00092E0C	4	?giScrollY@@3HA	evidence/wingraph.md; y scroll added to WinG paint source coordinate
+0x00094130	4	?gbFullCombatScreenDrawn@@3HA	evidence/wingraph.md; limited combat palette repaint guard
+0x00094134	4	?gbLimitedCombatUpdatePalette@@3HA	evidence/wingraph.md; palette repaint mode guard
+0x000A4740	1068	?screenImage@@3UWingImage@@A	evidence/wingraph.md; BITMAPINFOHEADER, 256 RGBQUAD entries, image-bits pointer
+0x0008E17C	4	?gbDDrawAttached@@3HA	evidence/wingraph.md; retail DLL loader marks DirectDraw attached after factory lookup
+0x0008E5AC	4	?lpDirectDrawCreate@@3P6GJPAU_GUID@@PAPAUIDirectDraw@@PAUIUnknown@@@ZA	evidence/wingraph.md; retail DLL loader stores GetProcAddress result in DirectDraw factory pointer
 0x0008E18C	4	?giMainVideoModeHeight@@3HA	GetGraphicsInfo stores GetDeviceCaps(VERTRES) result at 0x0048E18C; Buka 2.1 donor name
 0x0008E188	4	?giMainVideoModeWidth@@3HA	GetGraphicsInfo stores GetDeviceCaps(HORZRES) result at 0x0048E188; Buka 2.1 donor name
-0x0008E190	4	?Orientation@@3HA	evidence/wingraph-init-graphics.md; retail stores recommended DIB height for bitmap size computation
-0x0008E59C	4	?lpInitWin@@3PAXA	evidence/wingraph-init-graphics.md; retail stores WinG bitmap bits pointer for drawing
-0x000C6AA8	308	?gConfig@@3UconfigStruct@@A	evidence/wingraph-startup.md; ReadPrefsFromFile memset/fread owner base and persisted width
+0x0008E190	4	?Orientation@@3HA	evidence/wingraph.md; retail stores recommended DIB height for bitmap size computation
+0x0008E59C	4	?lpInitWin@@3PAXA	evidence/wingraph.md; retail stores WinG bitmap bits pointer for drawing
+0x000C6AA8	308	?gConfig@@3UconfigStruct@@A	evidence/wingraph.md; ReadPrefsFromFile memset/fread owner base and persisted width
 0x000A138C	4	?CDPlaying@@3HA	evidence/cd-playback.md; retail-backed code identity only
 0x000A1384	4	?CDPlayOnce@@3HA	evidence/cd-playback.md; retail-backed code identity only
 0x000A1390	1	?CDTrackMap@@3PACA	evidence/cd-playback.md; retail-backed code identity only
@@ -176,12 +176,12 @@ rva	size	symbol	provenance
 0x000CC768	4	?nMCIError@@3KA	evidence/cd-playback.md; retail-backed code identity only
 0x000A14F8	2	?gCDPositionAssertLine@@3FA	evidence/cd-playback.md; retail-backed code identity only
 0x000A14FC	26	?gCDPositionAssertFile@@3PADA	evidence/cd-playback.md; retail-backed code identity only
-0x0008E5B0	4	?lpDD@@3PAUIDirectDraw@@A	evidence/wingraph-restore-mode.md; retail DirectDraw pointer for external COM RestoreDisplayMode
-0x0008E5C4	2	?gDDRestoreLineBase@@3FA	evidence/wingraph-restore-mode.md; PoL source line-base word loaded before DDSD
-0x0008E5B4	4	?lpDDSPrimary@@3PAUIDirectDrawSurface@@A	evidence/wingraph-set-palette.md; retail primary surface for external COM SetPalette
-0x0008E5C0	4	?lpDDPal@@3PAUIDirectDrawPalette@@A	evidence/wingraph-set-palette.md; retail DirectDraw palette passed to primary surface
-0x0008E824	2	?gDDSetPaletteLineBase@@3FA	evidence/wingraph-set-palette.md; retail signed source-line word before DDSD
-0x0008E800	2	?gDDInitializePaletteLineBase@@3FA	evidence/wingraph-initialize-dd-palette.md; retail signed source-line-base word before DDSD
+0x0008E5B0	4	?lpDD@@3PAUIDirectDraw@@A	evidence/wingraph.md; retail DirectDraw pointer for external COM RestoreDisplayMode
+0x0008E5C4	2	?gDDRestoreLineBase@@3FA	evidence/wingraph.md; PoL source line-base word loaded before DDSD
+0x0008E5B4	4	?lpDDSPrimary@@3PAUIDirectDrawSurface@@A	evidence/wingraph.md; retail primary surface for external COM SetPalette
+0x0008E5C0	4	?lpDDPal@@3PAUIDirectDrawPalette@@A	evidence/wingraph.md; retail DirectDraw palette passed to primary surface
+0x0008E824	2	?gDDSetPaletteLineBase@@3FA	evidence/wingraph.md; retail signed source-line word before DDSD
+0x0008E800	2	?gDDInitializePaletteLineBase@@3FA	evidence/wingraph.md; retail signed source-line-base word before DDSD
 0x000BE7B0	28	?gafAITurnCostResource@@3PAMA	RVConversion reads seven float resource weights at 0x004BE7B0..0x004BE7C8; TurnCostResource writes seven entries; Buka 2.1 name
 0x000913A0	24	?gDwellingType@@3PAY05CA	evidence/philAI-town-purchase.md; four-faction six-dwelling signed-byte table used by town purchase overload
 0x00092838	272	?gWinSetup@@3PAUWindowTextEntry@@A	SetWinText reads 68 packed short widget/window IDs at0x00492838; Buka2.1 donor gWinSetup correspondence, H1 separated text pointers
@@ -204,13 +204,13 @@ rva	size	symbol	provenance
 0x00092D00	1	?gMonoColorMap@@3PAEA	evidence/icon-fill.md; accessed identity only from retail mono fill arguments/extent checks, no initializer claim
 0x000CA4AC	4	?hmnuCurrent@@3PAXA	KBChangeMenu remembers current Win32 menu handle at0x004CA4AC; Buka donor identity
 0x000C7950	4	?giCurWindowsStyleFlags@@3JA	SetMenuStatus stores DWORD window style, passed to SetWindowLongA; Buka donor name
-0x0008E8C0	2	?gDDUpdatePaletteLineBase@@3FA	evidence/wingraph-update-dd-palette.md; retail signed diagnostic source-line-base word
-0x0008E5B8	4	?lpDDSOne@@3PAUIDirectDrawSurface@@A	evidence/wingraph-cleanup-dd.md; retail secondary surface owner pointer
-0x0008E5BC	4	?lpClipper@@3PAUIDirectDrawClipper@@A	evidence/wingraph-cleanup-dd.md; retail clipper owner pointer
-0x0008E904	2	?gDDCleanUpLineBase@@3FA	evidence/wingraph-cleanup-dd.md; retail signed diagnostic source-line-base
-0x0008E5E8	2	?gCreatePrimaryLineBase@@3FA	evidence/wingraph-dd-startup.md; retail signed diagnostic line-base word
-0x0008E60C	2	?gSetupClipperLineBase@@3FA	evidence/wingraph-dd-startup.md; retail signed diagnostic line-base word
-0x0008E670	2	?gDDInitLineBase@@3FA	evidence/wingraph-dd-startup.md; retail signed diagnostic line-base word
+0x0008E8C0	2	?gDDUpdatePaletteLineBase@@3FA	evidence/wingraph.md; retail signed diagnostic source-line-base word
+0x0008E5B8	4	?lpDDSOne@@3PAUIDirectDrawSurface@@A	evidence/wingraph.md; retail secondary surface owner pointer
+0x0008E5BC	4	?lpClipper@@3PAUIDirectDrawClipper@@A	evidence/wingraph.md; retail clipper owner pointer
+0x0008E904	2	?gDDCleanUpLineBase@@3FA	evidence/wingraph.md; retail signed diagnostic source-line-base
+0x0008E5E8	2	?gCreatePrimaryLineBase@@3FA	evidence/wingraph.md; retail signed diagnostic line-base word
+0x0008E60C	2	?gSetupClipperLineBase@@3FA	evidence/wingraph.md; retail signed diagnostic line-base word
+0x0008E670	2	?gDDInitLineBase@@3FA	evidence/wingraph.md; retail signed diagnostic line-base word
 0x000A1920	20	?gDialogManagerError1@@3PADA	evidence/executive-manager.md; retail DoDialog separate manager-add failure slot
 0x000A1934	20	?gDialogManagerError2@@3PADA	evidence/executive-manager.md; retail DoDialog separate manager-add failure slot
 0x000A1948	20	?gDialogManagerError3@@3PADA	evidence/executive-manager.md; retail DoDialog separate manager-add failure slot
@@ -227,9 +227,9 @@ rva	size	symbol	provenance
 0x00094150	4	?gbComputeExtent@@3HA	evidence/icon-fill.md; retail icon extent computation flag
 0x00094154	4	?gbSaveBiggestExtent@@3HA	evidence/icon-fill.md; retail icon extent union flag
 0x000C74A8	1	?gbUseClippedIconRenderer@@3CA	evidence/icon-fill.md; retail byte selects screen-clipped renderer pair
-0x0008E848	2	?gDDCreateSurfaceLineBase@@3FA	evidence/wingraph-create-dd-surface.md; retail signed diagnostic line-base word
-0x0008E84C	4	?bInDDSD@@3HA	evidence/wingraph-dd-errors.md; retail DirectDraw diagnostic reentry guard
-0x0008E948	2	?gDDSetFullScreenLineBase@@3FA	evidence/wingraph-dd-fullscreen.md; retail signed diagnostic line-base word
+0x0008E848	2	?gDDCreateSurfaceLineBase@@3FA	evidence/wingraph.md; retail signed diagnostic line-base word
+0x0008E84C	4	?bInDDSD@@3HA	evidence/wingraph.md; retail DirectDraw diagnostic reentry guard
+0x0008E948	2	?gDDSetFullScreenLineBase@@3FA	evidence/wingraph.md; retail signed diagnostic line-base word
 0x000ACEB8	1	?gNetbiosLana@@3EA	is_netbios_avail unsigned-byte adapter loop at0x004ACEB8; Buka donor name
 0x0008F1E8	1	?gNetbiosAvail@@3EA	is_netbios_avail unsigned-byte availability result at0x0048F1E8; Buka donor name
 0x000A1820	56	?gResourceManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
@@ -237,15 +237,15 @@ rva	size	symbol	provenance
 0x000A18A8	28	?gSoundManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
 0x000A18C4	28	?gMouseManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
 0x000A18E0	64	?gWindowManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x0008E6F8	2	?gDDPaintLineBase@@3FA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x000A4B70	16	?gDDClientRect@@3UtagRECT@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x000A46A8	16	?gDDSourceRect@@3UtagRECT@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x000A46B8	16	?gDDDestinationRect@@3UtagRECT@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x000A46A0	4	?gDDResult@@3JA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x000A46D0	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x000A46C8	4	?lPaintStart@@3JA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x0008E674	4	?iBusyRetry@@3HA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
-0x00093030	4	?gbMinimized@@3HA	evidence/wingraph-dd-paint.md; retail paint path owner/layout identity, no initializer coverage
+0x0008E6F8	2	?gDDPaintLineBase@@3FA	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x000A4B70	16	?gDDClientRect@@3UtagRECT@@A	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46A8	16	?gDDSourceRect@@3UtagRECT@@A	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46B8	16	?gDDDestinationRect@@3UtagRECT@@A	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46A0	4	?gDDResult@@3JA	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46D0	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x000A46C8	4	?lPaintStart@@3JA	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x0008E674	4	?iBusyRetry@@3HA	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
+0x00093030	4	?gbMinimized@@3HA	evidence/wingraph.md; retail paint path owner/layout identity, no initializer coverage
 0x000C6A54	4	?gpBufferPalette@@3PAVpalette@@A	evidence/palette-graphics.md; retail current palette owner pointer in graphics helper band
 0x000CAC28	96	?gCyclePal@@3PACA	evidence/palette-graphics.md; SetPalette copies32RGBtriplets and cycle helper references same table
 0x000CC8E0	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	evidence/digital-driver-startup.md; retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only

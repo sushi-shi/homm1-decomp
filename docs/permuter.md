@@ -77,10 +77,8 @@ declaration population, inline candidates, and sibling functions remain present.
 Each disposable object and the retail object are canonicalized through the same
 same-function jump-table and compiler-private-symbol transform as `homm1 build`
 before scoring; otherwise raw `$L...` labels can hide an exact result. Parallel
-results are still scored and audited one target at a time, and only the authored, probe-free source can bank MAX. A target-only harness may be useful as an explicitly
-non-authoritative prefilter, but it is not the default because it can change C1
-handle state; on `gamelevelmove` it was also no faster after warm-up because the
-shared header parse dominated both 0.90-second compiles.
+results are still scored and audited one target at a time, and only the authored, probe-free source can bank MAX. A target-only harness changes compiler context and is only a non-authoritative
+prefilter, not a replacement for the complete-TU comparison.
 Exact closure requires all of:
 
 1. unrounded objdiff score exactly 100%;
