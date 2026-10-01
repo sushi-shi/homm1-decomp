@@ -20,6 +20,7 @@ extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUN
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];
+extern struct tag_monsterInfo gMonsterDatabase[];
 extern int gbMinimized;
 extern signed char gbInMemError;
 extern char* gcMemoryErrorTitle;
@@ -59,6 +60,7 @@ extern long lLastAilServe;
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(int);
 long KBTickCount();
+extern long glTimers[];
 void Process1WindowsMessage();
 void SetNoDialogMenus(int);
 void EarlyShutDownSystem();
@@ -77,5 +79,9 @@ void GetMonsterCost(int, int* const);
 int NullHandler(struct tag_message&);
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
+// Buka's default dialog dispatcher (retail 0x00452b64).
+short EventWindowHandler(struct tag_message&);
+extern char* gSpellDesc[];
+extern char* gSpellNames[];
 
 #endif

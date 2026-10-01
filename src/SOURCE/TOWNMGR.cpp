@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
@@ -165,7 +166,7 @@ void townManager::Close(void)
         m_townWindow->RemoveWidget(m_townObjects[index]->m_border);
         delete m_townObjects[index];
     }
-    gpResourceManager->Dispose(m_backgroundIcon);
+    gpResourceManager->Dispose(m_backgroundBitmap);
     gpWindowManager->RemoveWindow(m_townWindow);
     delete m_townWindow;
     gpSoundManager->SwitchAmbientMusic(-1);
@@ -446,6 +447,29 @@ void townManager::Toggle(signed char building)
     }
 }
 
+// Buka TOWNMGR.cpp:2005-2029; HoMM1 draws a bitmap background and folds
+// the mouse pointer into the screen buffer around the viewport blit.
+VA(0x0040b35d, 0xf8)
+void townManager::DrawTown(signed char updateScreen, int drawFlags)
+{
+    short index;
+    short x;
+    short y;
+
+    m_backgroundBitmap->DrawToBuffer(0, 0);
+    for (index = 0; index < m_townObjectCount; index++)
+        m_townObjects[index]->Draw(drawFlags);
+    m_townWindow->DrawWindow(0, TOWN_REDRAW_FIRST_CONTROL, TOWN_REDRAW_LAST_CONTROL);
+    gpMouseManager->MouseCoords(x, y);
+    if (y < TOWN_VIEWPORT_HEIGHT)
+        gpMouseManager->SaveAndDraw(gpWindowManager->m_screen, 0, 0, 1);
+    if (updateScreen)
+        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, TOWN_VIEWPORT_WIDTH,
+                           TOWN_VIEWPORT_HEIGHT, 0, 0);
+    if (y < TOWN_VIEWPORT_HEIGHT)
+        gpMouseManager->RestoreUnderlying();
+}
+
 // donor PoL RVA 0x00017c9d; preferred Buka symbol ?BuyBuild@townManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.668468;margin=0.054253;shape=0.329;size=0.894;calls=0.897;strings=bigfont.fnt|buybuil%d.bin|resource.icn;alternate=pol20:int townManager::BuyBuild(int, int, int)@0x00017c9d
@@ -464,11 +488,205 @@ void townManager::BuildObj(int) {}
 VA(0x0040c818, 0x4b5)
 void townManager::SetupCastle(class heroWindow *, int) {}
 
-// donor PoL RVA 0x00018fbb; preferred Buka symbol ?SetupMage@townManager@@QAEXPAVheroWindow@@@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.426387;margin=0.115621;shape=0.211;size=0.919;calls=0.625;alternate=pol20:void townManager::SetupMage(class heroWindow *)@0x00018fbb
+// Buka TOWNMGR.cpp:3131 SetupWell; HoMM1 has six fixed dwellings and
+// capitalises the creature name in gText.
+VA(0x0040cccd, 0x24d)
+void townManager::SetupWell(class heroWindow *window)
+{
+    short iconBase = 1;
+    short buildingName = 7;
+    short growthRate;
+    short firstMonsterIcon = 0xd;
+    short creatureId = 0x13;
+    short firstAvailable = 0x19;
+    tag_message message;
+    short i;
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    for (i = 0; i < TOWN_WELL_DWELLING_COUNT; i++) {
+        message.payload.widget.id = i + TOWN_WELL_FIRST_ICON_CONTROL;
+        message.payload.widget.data.value =
+            (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
+        window->BroadcastMessage(message);
+        message.payload.widget.id = i + TOWN_WELL_FIRST_MONSTER_ICON_CONTROL;
+        message.payload.widget.data.value = gDwellingType[m_town->m_type][i];
+        window->BroadcastMessage(message);
+    }
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    for (i = 0; i < TOWN_WELL_DWELLING_COUNT; i++) {
+        message.payload.widget.id = i + TOWN_WELL_FIRST_NAME_CONTROL;
+        message.payload.widget.data.text = GetBuildingName(i + TOWN_WELL_FIRST_DWELLING_BUILDING);
+        window->BroadcastMessage(message);
+        message.payload.widget.id = i + TOWN_WELL_FIRST_CREATURE_CONTROL;
+        strcpy(gText, gArmyNames[gDwellingType[m_town->m_type][i]]);
+        gText[0] -= 'a' - 'A';
+        message.payload.widget.data.text = gText;
+        window->BroadcastMessage(message);
+    }
+    for (i = 0; i < TOWN_WELL_DWELLING_COUNT; i++) {
+        message.payload.widget.id = i + TOWN_WELL_FIRST_AVAILABLE_CONTROL;
+        if (!(m_town->m_buildings & (1 << (i + TOWN_WELL_FIRST_DWELLING_BUILDING))))
+            strcpy(gText, "Available:\nNONE\nGrowth Rate:\nN/A");
+        else {
+            growthRate = gMonsterDatabase[gDwellingType[m_town->m_type][i]].growth;
+            growthRate += 2;
+            sprintf(gText, "Available:\n%d\nGrowth Rate:\n%d/week", m_town->m_garrison[i],
+                    growthRate);
+        }
+        message.payload.widget.data.text = gText;
+        window->BroadcastMessage(message);
+    }
+}
+
+// Buka TOWNMGR.cpp:2597 SetupMage; HoMM1 shows nine guild spells, hiding
+// the levels above the guild and stacking tower frames by level.
 VA(0x0040cf1a, 0x331)
-void townManager::SetupMage(class heroWindow *) {}
+void townManager::SetupMage(class heroWindow *window)
+{
+    short off = 0;
+    short shown = 1;
+    short iconFrame = 2;
+    short messageId = TOWN_MAGE_DESCRIPTION_CONTROL;
+    short slotBase = TOWN_MAGE_FIRST_SPELL_CONTROL;
+    short iconOffset = TOWN_MAGE_FIRST_ICON_CONTROL;
+    short nameBase = TOWN_MAGE_FIRST_NAME_CONTROL;
+    short firstTower = TOWN_MAGE_FIRST_TOWER_CONTROL;
+    tag_message message;
+    short spellIndex;
+    int spellState;
+
+    message.type = MESSAGE_WIDGET;
+    if (m_town->m_occupyingHeroId == -1) {
+        strcpy(gText, "The above spells are available here.");
+        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+        message.payload.widget.id = TOWN_MAGE_DESCRIPTION_CONTROL;
+        message.payload.widget.data.text = gText;
+        window->BroadcastMessage(message);
+    }
+    for (spellIndex = 0; spellIndex < TOWN_MAGE_SPELL_COUNT; spellIndex++) {
+        switch (spellIndex) {
+            case 0:
+            case 1:
+            case 2:
+                if (m_town->m_buildState >= 0)
+                    spellState = 0;
+                else
+                    spellState = 1;
+                break;
+            case 3:
+            case 4:
+                if (m_town->m_buildState >= 1)
+                    spellState = 0;
+                else
+                    spellState = 1;
+                break;
+            case 5:
+            case 6:
+                if (m_town->m_buildState >= 2)
+                    spellState = 0;
+                else
+                    spellState = 1;
+                break;
+            case 8:
+                ;
+            default:
+                if (m_town->m_buildState >= 3)
+                    spellState = 0;
+                else
+                    spellState = 1;
+                break;
+        }
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_SPELL_CONTROL;
+        message.payload.widget.data.value = spellState;
+        window->BroadcastMessage(message);
+        if (spellState == 1) {
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.data.value = TOWN_MAGE_WIDGET_VISIBLE_FLAG;
+            message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_ICON_CONTROL;
+            window->BroadcastMessage(message);
+            message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_NAME_CONTROL;
+            window->BroadcastMessage(message);
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_ICON_CONTROL;
+            message.payload.widget.data.value = m_town->m_spells[spellIndex];
+            window->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+            message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_NAME_CONTROL;
+            message.payload.widget.data.text = gSpellNames[m_town->m_spells[spellIndex]];
+            window->BroadcastMessage(message);
+        }
+    }
+    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.payload.widget.data.value = TOWN_MAGE_WIDGET_VISIBLE_FLAG;
+    for (spellIndex = 1; spellIndex < TOWN_MAGE_TOWER_FRAME_COUNT; spellIndex++) {
+        message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_TOWER_CONTROL;
+        window->BroadcastMessage(message);
+    }
+    message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+    message.payload.widget.data.value = TOWN_MAGE_WIDGET_VISIBLE_FLAG;
+    for (spellIndex = 0; spellIndex < m_town->m_buildState; spellIndex++) {
+        message.payload.widget.id = (spellIndex + 1) * 2 + TOWN_MAGE_FIRST_TOWER_CONTROL;
+        window->BroadcastMessage(message);
+    }
+    message.payload.widget.id = m_town->m_buildState * 2 + TOWN_MAGE_FIRST_TOWER_CONTROL + 1;
+    window->BroadcastMessage(message);
+}
+
+// Buka TOWNMGR.cpp:2735 MageGuildHandler; HoMM1 numbers spells 1-9 and
+// icons 10-18 and bounds them by the guild level.
+VA(0x0040d24b, 0x186)
+short MageGuildHandler(struct tag_message &message)
+{
+    short firstSpell = TOWN_MAGE_FIRST_SPELL_CONTROL;
+    short iconBase = TOWN_MAGE_FIRST_ICON_CONTROL;
+    int quickView;
+    int spellId;
+    int mageLevel;
+    int spellPos;
+
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_SELECT:
+                quickView = message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON;
+                switch (message.payload.widget.id) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                        spellPos = message.payload.widget.id - TOWN_MAGE_FIRST_SPELL_CONTROL;
+                        goto showSpell;
+                    case 10:
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                    case 15:
+                    case 16:
+                    case 17:
+                    case 18:
+                        spellPos = message.payload.widget.id - TOWN_MAGE_FIRST_ICON_CONTROL;
+                    showSpell:
+                        mageLevel = gpTownManager->m_town->m_buildState;
+                        if ((mageLevel == 0 && spellPos > 2) || (mageLevel == 1 && spellPos > 4)
+                            || (mageLevel == 2 && spellPos > 6))
+                            return MESSAGE_DISPATCH_CONSUME;
+                        spellId = gpTownManager->m_town->m_spells[spellPos];
+                        NormalDialog(gSpellDesc[spellId], quickView ? 4 : 1, -1, -1, 8, spellId, -1, 0, -1);
+                        return MESSAGE_DISPATCH_CONSUME;
+                }
+        }
+    }
+    return EventWindowHandler(message);
+}
 
 // donor PoL RVA 0x0001a783; preferred Buka symbol ?SetupThievesGuild@townManager@@QAEXPAVheroWindow@@H@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -476,11 +694,108 @@ void townManager::SetupMage(class heroWindow *) {}
 VA(0x0040d3d1, 0x2ec)
 void townManager::SetupThievesGuild(class heroWindow *, int) {}
 
-// donor PoL RVA 0x0001b692; preferred Buka symbol ?GetCategoryStats@@YIXHQAJQAC@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.459458;margin=0.479043;shape=0.193;size=0.976;calls=0.800;alternate=pol20:void GetCategoryStats(int, long int * const, signed char * const)@0x0001b692
+// Buka TOWNMGR.cpp:3727-3833; HoMM1 has eight categories, sums three
+// resources per row and counts obelisks through playerData.
 VA(0x0040d6bd, 0x484)
-void GetCategoryStats(int, long int * const, signed char * const) {}
+void townManager::GetCategoryStats(signed char category, long *const stats,
+                                   signed char *const order)
+{
+    short player;
+    short townIndex;
+    short index;
+    long strength;
+    short numTowns;
+    short numCastles;
+    hero *playerHero;
+    town *theTown;
+
+    for (player = 0; player < gpGame->m_playerCount; player++) {
+        numTowns = 0;
+        numCastles = 0;
+        order[player] = player;
+        if (gpGame->m_playerDead[player]) {
+            stats[player] = TOWN_THIEVES_DEAD_PLAYER_STAT;
+        } else {
+            switch (category) {
+                case THIEVES_CATEGORY_TOWNS:
+                    for (townIndex = 0; townIndex < GAME_TOWN_COUNT; townIndex++) {
+                        if (gpGame->m_castleRecs[townIndex].m_owner == player
+                            && (gpGame->m_castleRecs[townIndex].m_buildings & TOWN_BUILDING_TENT_FLAG))
+                            numTowns++;
+                    }
+                    stats[player] = numTowns;
+                    break;
+                case THIEVES_CATEGORY_CASTLES:
+                    for (townIndex = 0; townIndex < GAME_TOWN_COUNT; townIndex++) {
+                        if (gpGame->m_castleRecs[townIndex].m_owner == player
+                            && (gpGame->m_castleRecs[townIndex].m_buildings & TOWN_BUILDING_CASTLE_FLAG))
+                            numCastles++;
+                    }
+                    stats[player] = numCastles;
+                    break;
+                case THIEVES_CATEGORY_HEROES:
+                    stats[player] = gpGame->m_players[player].m_heroCount;
+                    break;
+                case THIEVES_CATEGORY_GOLD:
+                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_GOLD];
+                    break;
+                case THIEVES_CATEGORY_WOOD_AND_ORE:
+                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_ORE]
+                                    + gpGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
+                                    + gpGame->m_players[player].m_resources[RESOURCE_WOOD];
+                    break;
+                case THIEVES_CATEGORY_RARE_RESOURCES:
+                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_MERCURY]
+                                    + gpGame->m_players[player].m_resources[RESOURCE_SULFUR]
+                                    + gpGame->m_players[player].m_resources[RESOURCE_GEMS];
+                    break;
+                case THIEVES_CATEGORY_OBELISKS:
+                    stats[player] = gpGame->m_players[player].CountVisitedObelisks();
+                    break;
+                case THIEVES_CATEGORY_ARMY_STRENGTH:
+                    strength = 0;
+                    for (index = 0; index < gpGame->m_players[player].m_heroCount;
+                         index++) {
+                        playerHero = gpGame->GetHero(gpGame->m_players[player].m_heroIds[index]);
+                        strength +=
+                            gpPhilAI->FightValueOfStack(&playerHero->m_army, playerHero, 0, 0, 0);
+                    }
+                    for (index = 0; index < gpGame->m_players[player].m_townCount;
+                         index++) {
+                        theTown = gpGame->GetTown(gpGame->m_players[player].m_townIds[index]);
+                        if (theTown->HasGarrison())
+                            strength +=
+                                gpPhilAI->FightValueOfStack(&theTown->m_army, 0, 0, 0, 0);
+                    }
+                    stats[player] = strength;
+                    break;
+            }
+        }
+    }
+}
+
+// Buka TOWNMGR.cpp:3843-3862 SortStats, a townManager member in HoMM1.
+VA(0x0040db41, 0xea)
+void townManager::SortStats(long *const stats, signed char *const order)
+{
+    long temp;
+    short firstPlayer;
+    short secondPlayer;
+    signed char tempColor;
+
+    for (firstPlayer = 0; firstPlayer < gpGame->m_playerCount - 1; firstPlayer++) {
+        for (secondPlayer = firstPlayer + 1; secondPlayer < gpGame->m_playerCount; secondPlayer++) {
+            if (stats[firstPlayer] < stats[secondPlayer]) {
+                temp = stats[firstPlayer];
+                stats[firstPlayer] = stats[secondPlayer];
+                stats[secondPlayer] = temp;
+                tempColor = order[firstPlayer];
+                order[firstPlayer] = order[secondPlayer];
+                order[secondPlayer] = tempColor;
+            }
+        }
+    }
+}
 
 // HoMM1 town-type wrapper over the global building-name table lookup.
 VA(0x0040dc2b, 0x2f)
@@ -498,8 +813,46 @@ int townManager::RecruitHero(int, int) { return 0; }
 // donor PoL RVA 0x00019c29; preferred Buka symbol ?TavernHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.461090;margin=0.267847;shape=0.244;size=0.845;calls=1.000;alternate=pol20:int TavernHandler(struct tag_message &)@0x00019c29
+// Buka TOWNMGR.cpp:2968-3000; HoMM1 animates frames 1-8 of control 2.
 VA(0x0040e5db, 0x155)
-short TavernHandler(struct tag_message &) { return 0; }
+short TavernHandler(struct tag_message &message)
+{
+    int unusedDelay = TOWN_TAVERN_ANIMATION_DELAY;
+    short unusedFrame = TOWN_TAVERN_UNUSED_FRAME;
+
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case TOWN_DIALOG_BUTTON_0:
+                    case TOWN_DIALOG_BUTTON_1:
+                    case TOWN_DIALOG_BUTTON_2:
+                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        message.payload.widget.command = message.payload.widget.id =
+                            WIDGET_COMMAND_DIALOG_SELECT;
+                        return MESSAGE_DISPATCH_FORWARD;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (glTimers[0] < KBTickCount()) {
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.id = TOWN_TAVERN_ANIMATION_CONTROL;
+        ++gpGame->m_viewArmyResult;
+        message.payload.widget.data.value =
+            gpGame->m_viewArmyResult % TOWN_TAVERN_ANIMATION_FRAME_COUNT
+            + TOWN_TAVERN_FIRST_ANIMATION_FRAME;
+        gpTownManager->m_heroWindow0->BroadcastMessage(message);
+        gpTownManager->m_heroWindow0->MoveWindow(0, 0);
+        glTimers[0] = KBTickCount() + TOWN_TAVERN_ANIMATION_DELAY;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
 
 // donor PoL RVA 0x00019d7c; preferred Buka symbol ?DoTavern@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order

@@ -25,7 +25,10 @@ public:
     signed char m_buildState;
     char m_unknown19;
     short m_garrison[6];
-    char m_unknown26[0x11];
+    char m_unknown26[6];
+    // MageGuildHandler indexes nine guild spells from +0x2c.
+    signed char m_spells[9];
+    char m_unknown35[2];
     // --- constructors ---
     town(void);
     // --- methods ---

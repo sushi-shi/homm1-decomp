@@ -269,6 +269,15 @@ void mouseManager::ReallyHidePointer(void) {}
 VA(0x00476df0, 0x1)
 void mouseManager::HideColorPointer(void) {}
 
+// townManager::DrawTown and advManager::UpdateScreen bracket a screen blit
+// under the pointer with these hooks (Buka MiscRuntime's SaveAndDraw /
+// RestoreUnderlying pair); retail keeps only the returns.
+VA(0x00476e00, 0x1)
+void mouseManager::RestoreUnderlying(void) {}
+
+VA(0x00476e10, 0x3)
+void mouseManager::SaveAndDraw(bitmap*, int, int, int) {}
+
 VA(0x00476e30, 0x1)
 void mouseManager::ShowColorPointer(void) {}
 

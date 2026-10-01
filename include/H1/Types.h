@@ -46,12 +46,18 @@ struct configStruct {
 };
 struct SCreatureInfo { unsigned short value; char pad[24]; };
 struct tag_tilePoint { signed char x; signed char _1; signed char y; signed char _3; };
-struct tag_monsterInfo { short attributes; char padding[24]; };
 struct SSpellInfo { char m_pad0[14]; unsigned char m_e; char m_pad1[7]; };
 struct SNetPlayerInfo { char m_pad[0xcc]; };
 struct SAMPLE2 { class sample *pSample; struct _SAMPLE *pMem; };
 
 #pragma pack(push, 1)
+// HoMM1 records are 0x1f bytes from 0x00492060; SetupWell reads the weekly
+// growth byte at +7 (Buka's tag_monsterInfo::growth offset).
+struct tag_monsterInfo {
+    char unknown0[7];
+    signed char growth;
+    char unknown8[0x17];
+};
 struct monsterRV { int rv; char pad[22]; };
 struct SWinSetup { unsigned char status; unsigned short port; char *value; };
 #pragma pack(pop)

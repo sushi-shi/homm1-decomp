@@ -4,6 +4,7 @@
 // 34 methods, 0 own-virtual, 0 static data.
 
 #include <H1/Macros.h>
+#include <SOURCE/armyGroup.h>
 
 // forward declarations:
 class town;
@@ -31,7 +32,10 @@ public:
     signed char m_occupiedTown;
     short m_mobility;
     short m_remainingMobility;
-    char m_unknown29[0x85];
+    char m_unknown29[0x2e];
+    // Thieves-guild army strength passes &hero+0x57 to FightValueOfStack.
+    armyGroup m_army;
+    char m_unknown66[0x48];
     int m_eventFlags;
     float m_aiFightValue;
     // --- constructors ---

@@ -99,7 +99,7 @@ public:
     void TurnCostResource(int);
     float TurnValueOfObelisk(int);
     float FutureDeflator(int* const);
-    int FightValueOfStack(class armyGroup*, class hero*, int, int, int, int);
+    int FightValueOfStack(class armyGroup*, class hero*, int, int, int);
     void EvaluateOneTimeCreaturePurchase(int, int, int, int&, int&, int&);
     int QuickCombat(
         class armyGroup*,
