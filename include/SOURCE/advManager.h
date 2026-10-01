@@ -179,6 +179,7 @@ public:
     void DoHeroKnob(void);
     void DoTownKnob(void);
     void CastSpell(int);
+    void GrabScreen(void);
     void CheckCastSpell(void);
     int ComboDraw(short, short, int);
     int ComboDraw(int);

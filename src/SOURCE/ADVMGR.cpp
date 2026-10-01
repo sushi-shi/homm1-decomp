@@ -2,7 +2,9 @@
 
 #include <match.h>
 
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MISC_TYPES.h>
+#include <BASE/bmap2.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 
@@ -16,7 +18,29 @@ DATA(0x004c5170) int giSeedingValid;
 H1_ENUM_BEGIN(AdventureButtonConstant)
     BUTTON_BROADCAST_ARG = 1
 H1_ENUM_END(AdventureButtonConstant)
+
+H1_ENUM_BEGIN(AdventureScreenConstant)
+    LOGICAL_SCREEN_WIDTH = 640,
+    LOGICAL_SCREEN_HEIGHT = 480,
+    SCROLL_BORDER = 16
+H1_ENUM_END(AdventureScreenConstant)
+
+H1_ENUM_BEGIN(AdventurePanelButtonConstant)
+    ADVMGR_PANEL_BUTTON_FIRST = 1,
+    ADVMGR_PANEL_BUTTON_LAST = 6
+H1_ENUM_END(AdventurePanelButtonConstant)
 // clang-format on
+
+// Buka 2.1's unconditional six-button enable/disable broadcast.
+#define SET_ADVENTURE_BUTTON_FLAGS(message, window, cmd) \
+    ((message).type = MESSAGE_WIDGET, (message).payload.widget.command = (cmd), \
+     (message).payload.widget.data.value = WIDGET_FLAG_ENABLED, \
+     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST, (window)->BroadcastMessage(message), \
+     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 1, (window)->BroadcastMessage(message), \
+     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 2, (window)->BroadcastMessage(message), \
+     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 3, (window)->BroadcastMessage(message), \
+     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 4, (window)->BroadcastMessage(message), \
+     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_LAST, (window)->BroadcastMessage(message))
 
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -364,6 +388,15 @@ void advManager::CastSpell(int) {}
 // donor PoL RVA 0x00064e9f; preferred Buka symbol ?SaveGame@@YIHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.731974;margin=0.187030;shape=0.477;size=0.957;calls=0.889;strings=.GM%d|.\GAMES\|advmice.mse;alternate=pol20:int SaveGame(void)@0x00064e9f
+// HoMM1-only helper: refresh the saved screen copy with the pointer hidden.
+VA(0x0043262e, 0x41)
+void advManager::GrabScreen(void)
+{
+    gpMouseManager->ReallyHidePointer();
+    GrabScreenBitmap(gpWindowManager->m_screen, 0, 0);
+    gpMouseManager->ReallyShowPointer();
+}
+
 VA(0x00432bb7, 0x232)
 int SaveGame(void) { return 0; }
 
@@ -371,7 +404,17 @@ int SaveGame(void) { return 0; }
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.587490;margin=0.208808;shape=0.255;size=0.813;calls=0.857;strings=advmice.mse;alternate=pol20:void advManager::CheckCastSpell(void)@0x000650eb
 VA(0x00433334, 0xab)
-void advManager::CheckCastSpell(void) {}
+void advManager::CheckCastSpell(void)
+{
+    if (gpCurPlayer->CurrentHero() != -1) {
+        MobilizeCurrHero(0);
+        CompleteDraw(0);
+        UpdateScreen(0, 0);
+        GrabScreen();
+        gpMouseManager->SetPointer("advmice.mse", 0);
+        CastSpell(gpGame->ViewSpells(gpGame->GetHero(gpCurPlayer->m_currentHero), 1, NullHandler, 0));
+    }
+}
 
 // donor PoL RVA 0x0006a724; preferred Buka symbol ?AdvPanel@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -408,7 +451,14 @@ void advManager::SetEnvironmentOrigin(int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.741786;margin=0.490066;shape=0.533;size=0.857;calls=1.000;strings=loop%04d.82M;alternate=pol20:void advManager::CheckLoadSample(int)@0x000669c6
 VA(0x0043491d, 0x69)
-void advManager::CheckLoadSample(int) {}
+void advManager::CheckLoadSample(int index)
+{
+    if (m_loopingSamples[index] == 0) {
+        TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
+        sprintf(gText, "loop%04d.82M", index);
+        m_loopingSamples[index] = gpResourceManager->GetSample(gText);
+    }
+}
 
 // donor PoL RVA 0x00066ef0; preferred Buka symbol ?InsertSound@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -518,7 +568,20 @@ void advManager::CheckScreenScroll(void) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.376012;margin=0.441568;shape=0.180;size=0.620;calls=1.000;alternate=pol20:int advManager::MouseInScrollZone(void)@0x00068e17
 VA(0x00436377, 0xa3)
-int advManager::MouseInScrollZone(void) { return 0; }
+int advManager::MouseInScrollZone(void)
+{
+    short mouseX;
+    short mouseY;
+
+    gpMouseManager->MouseCoords(mouseX, mouseY);
+    if (mouseX >= 0 && mouseX < LOGICAL_SCREEN_WIDTH && mouseY >= 0 && mouseY < LOGICAL_SCREEN_HEIGHT) {
+        if (mouseX < SCROLL_BORDER || mouseX > LOGICAL_SCREEN_WIDTH - SCROLL_BORDER - 1
+            || mouseY < SCROLL_BORDER || mouseY > LOGICAL_SCREEN_HEIGHT - SCROLL_BORDER) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 // donor PoL RVA 0x00068ea8; preferred Buka symbol ?SetInitialMapOrigin@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -553,6 +616,24 @@ void advManager::TrimLoopingSounds(int) {}
 // donor PoL RVA 0x00069976; preferred Buka symbol ?SaveAdventureBorder@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.567475;margin=0.473800;shape=0.423;size=0.969;calls=1.000;alternate=pol20:void advManager::SaveAdventureBorder(void)@0x00069976
+VA(0x00436bfd, 0xd0)
+void advManager::DisableButtons(void)
+{
+    if (gpAdvManager->m_active != 1)
+        return;
+    struct tag_message message;
+    SET_ADVENTURE_BUTTON_FLAGS(message, m_adventureWindow, WIDGET_COMMAND_CLEAR_FLAGS);
+}
+
+VA(0x00436ccd, 0xd0)
+void advManager::EnableButtons(void)
+{
+    if (gpAdvManager->m_active != 1)
+        return;
+    struct tag_message message;
+    SET_ADVENTURE_BUTTON_FLAGS(message, m_adventureWindow, WIDGET_COMMAND_SET_FLAGS);
+}
+
 VA(0x00436d9d, 0x138)
 void advManager::SaveAdventureBorder(void) {}
 
