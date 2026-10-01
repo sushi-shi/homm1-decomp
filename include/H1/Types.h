@@ -31,10 +31,12 @@ struct exeGfxConfig {
 // ReadPrefsFromFile reads 0x134 bytes at the owner base; graphics records
 // begin at 0x18. Unused provisional HoMM2 sound offsets are superseded.
 struct configStruct {
-    char _pad_0x000[4];
+    int walkSpeed;
     int musicVolume;
     int soundVolume;
-    char _pad_0x00c[0xc];
+    int autosave;
+    int showRoute;
+    int blackoutComputer;
     exeGfxConfig gfx[2];
     char _pad_0x048[0x70];
     int musicSource;

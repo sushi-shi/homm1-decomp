@@ -6,7 +6,10 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/MISC_TYPES.h>
 #include <SOURCE/creatureTypes.h>
+#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
@@ -502,4 +505,150 @@ void EarlyShutDownSystem(void) {}
 VA(0x00455d22, 0x629)
 int HandleAppSpecificMenuCommands(int) {
     return 0;
+}
+
+// HoMM1 menu ids: music 0x9c50-0x9c5a, sound 0x9c5c-0x9c66, walk speed
+// 0x9c68-0x9c6c, then the music-source, route and blackout toggles.
+VA(0x0045634b, 0x3b7)
+void UpdateSystemOptionsMenu(void) {
+    int checkedCommand;
+    int menuCommand;
+
+    if (!gConfig.gfx[giCurExe].showMenu)
+        return;
+    if (!hmnuApp)
+        return;
+    if (hmnuApp != hmnuAdv)
+        return;
+
+    for (menuCommand = 0x9c50; menuCommand <= 0x9c5a; menuCommand++)
+        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+    switch (gConfig.musicVolume) {
+        case 1:
+            checkedCommand = 0x9c51;
+            break;
+        case 2:
+            checkedCommand = 0x9c52;
+            break;
+        case 3:
+            checkedCommand = 0x9c53;
+            break;
+        case 4:
+            checkedCommand = 0x9c54;
+            break;
+        case 5:
+            checkedCommand = 0x9c55;
+            break;
+        case 6:
+            checkedCommand = 0x9c56;
+            break;
+        case 7:
+            checkedCommand = 0x9c57;
+            break;
+        case 8:
+            checkedCommand = 0x9c58;
+            break;
+        case 9:
+            checkedCommand = 0x9c59;
+            break;
+        case 10:
+            checkedCommand = 0x9c5a;
+            break;
+        default:
+            checkedCommand = 0x9c50;
+            break;
+    }
+    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+
+    for (menuCommand = 0x9c5c; menuCommand <= 0x9c66; menuCommand++)
+        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+    switch (gConfig.soundVolume) {
+        case 1:
+            checkedCommand = 0x9c5d;
+            break;
+        case 2:
+            checkedCommand = 0x9c5e;
+            break;
+        case 3:
+            checkedCommand = 0x9c5f;
+            break;
+        case 4:
+            checkedCommand = 0x9c60;
+            break;
+        case 5:
+            checkedCommand = 0x9c61;
+            break;
+        case 6:
+            checkedCommand = 0x9c62;
+            break;
+        case 7:
+            checkedCommand = 0x9c63;
+            break;
+        case 8:
+            checkedCommand = 0x9c64;
+            break;
+        case 9:
+            checkedCommand = 0x9c65;
+            break;
+        case 10:
+            checkedCommand = 0x9c66;
+            break;
+        default:
+            checkedCommand = 0x9c5c;
+            break;
+    }
+    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+
+    for (menuCommand = 0x9c68; menuCommand <= 0x9c6c; menuCommand++)
+        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+    switch (gConfig.walkSpeed) {
+        case 4:
+            checkedCommand = 0x9c68;
+            break;
+        case 3:
+            checkedCommand = 0x9c69;
+            break;
+        case 2:
+            checkedCommand = 0x9c6a;
+            break;
+        case 1:
+            checkedCommand = 0x9c6b;
+            break;
+        default:
+            checkedCommand = 0x9c6c;
+            break;
+    }
+    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+    CheckMenuItem((HMENU)hmnuApp, 0x9c6d, gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, 0x9c6e, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, 0x9c6f,
+                  1 - gConfig.blackoutComputer ? MF_CHECKED : MF_UNCHECKED);
+}
+
+VA(0x00456702, 0x99)
+void CleanUpMenus(void) {
+    if (hmnuApp) {
+        SetMenu((HWND)hwndApp, 0);
+        if (hmnuAdv)
+            DestroyMenu((HMENU)hmnuAdv);
+        if (hmnuDflt)
+            DestroyMenu((HMENU)hmnuDflt);
+        if (hmnuCmbt)
+            DestroyMenu((HMENU)hmnuCmbt);
+        if (hmnuTown)
+            DestroyMenu((HMENU)hmnuTown);
+    }
+    hmnuApp = 0;
+}
+
+VA(0x0045679b, 0x24)
+void UpdateAppSpecificMenus(void* hMenu) {
+    if (hmnuAdv == hMenu)
+        UpdateSystemOptionsMenu();
+}
+
+VA(0x004567bf, 0x22)
+void EarlyResizeWindow(int, int, int, int) {
+    if (gbClosingApp)
+        return;
 }
