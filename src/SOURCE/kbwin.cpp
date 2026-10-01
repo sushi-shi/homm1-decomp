@@ -256,7 +256,38 @@ void ResizeWindow(int x, int y, int width, int height) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
 VA(0x0045c3f7, 0x185)
-long int AppCommand(void*, unsigned int, unsigned int, long int) {
+long int AppCommand(void *window, unsigned int message, unsigned int messageParam, long int messageData)
+{
+    DLGPROC appDialogProc;
+    int command;
+
+    command = LOWORD(messageParam);
+    switch (command) {
+    case KBWIN_MENU_ABOUT:
+        appDialogProc = reinterpret_cast<DLGPROC>(AppAbout); // AppAbout is the exported BOOL dialog procedure.
+        DialogBoxParamA(static_cast<HINSTANCE>(hInstApp), "HEROES", static_cast<HWND>(window), appDialogProc, 0);
+        break;
+    case KBWIN_MENU_HELP:
+        WinHelpA(static_cast<HWND>(hwndApp), ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
+        break;
+    case KBWIN_MENU_SIZE_640_480:
+        ResizeWindow(-1, -1, KBWIN_WIDTH_640, KBWIN_HEIGHT_480);
+        break;
+    case KBWIN_MENU_SIZE_800_600:
+        ResizeWindow(-1, -1, KBWIN_WIDTH_800, KBWIN_HEIGHT_600);
+        break;
+    case KBWIN_MENU_SIZE_1024_768:
+        ResizeWindow(-1, -1, KBWIN_WIDTH_1024, KBWIN_HEIGHT_768);
+        break;
+    case KBWIN_MENU_SIZE_1280_1024:
+        ResizeWindow(-1, -1, KBWIN_WIDTH_1280, KBWIN_HEIGHT_1024);
+        break;
+    case KBWIN_MENU_FULLSCREEN:
+        SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
+        break;
+    default:
+        return HandleAppSpecificMenuCommands(command);
+    }
     return 0;
 }
 

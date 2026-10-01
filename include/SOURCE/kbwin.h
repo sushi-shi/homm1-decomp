@@ -17,7 +17,13 @@ H1_ENUM_BEGIN(KbwinMenuConstant)
     KBWIN_MENU_SIZE_1024_768 = 0x9c47,
     KBWIN_MENU_SIZE_1280_1024 = 0x9c48,
     KBWIN_MENU_FULLSCREEN = 0x9c49,
-    KBWIN_MENU_ENTRY_COUNT = 70
+    KBWIN_MENU_ENTRY_COUNT = 70,
+    KBWIN_MENU_HELP = 0x9c74,
+    KBWIN_MENU_ABOUT = 0x9c75,
+    KBWIN_HEIGHT_480 = 480,
+    KBWIN_HEIGHT_600 = 600,
+    KBWIN_HEIGHT_768 = 768,
+    KBWIN_HEIGHT_1024 = 1024
 H1_ENUM_END(KbwinMenuConstant)
 
 // clang-format off
@@ -119,6 +125,7 @@ int SetupCDDrive(void);
 int EarlySetup(void);
 int AppInit(void *, void *, int, char *);
 int oldmain(void);
+int HandleAppSpecificMenuCommands(int);
 long __stdcall AppWndProc(void *, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);
