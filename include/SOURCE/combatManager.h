@@ -24,14 +24,17 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_VIEW = 5
 H1_ENUM_END(CombatPointerCode)
 
-class combatManager {
+// GameUnsaved reads the baseManager m_active word through gpCombatManager.
+class combatManager : public baseManager {
 public:
+    // InitMainClasses allocates 0x7d3 bytes; the fields stay opaque here.
+    char m_unknown30[0x7a3];
     // --- constructors ---
     combatManager(void);
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void NoShowCombatLog(char *);
     void ClearCombatMessages(int);

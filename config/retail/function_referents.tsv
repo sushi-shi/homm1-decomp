@@ -2,7 +2,6 @@
 # These are symbol identities only: they remain in anonymous delink buckets and
 # do not become source claims or matching-denominator entries.
 rva	name	provenance
-0x00041220	?TurnOffAIMusic@game@@QAEXXZ	CancelComputerScreen calls this game method at 0x044b57; HoMM2 Buka 2.1 correspondence
 0x000745A0	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	evidence/window-add.md; retail FadeScreen word arguments and town::View call at 0x06427e
 0x000599F6	?write_buffer@@YAHPADH@Z	GUIModemCommandExec calls 0x0599F6 with buffer and byte count; donor names write_buffer
 0x000818A0	_strlen	GUIModemCommandExec passes command buffer to 0x0818A0; one-argument C strlen call
@@ -121,8 +120,11 @@ rva	name	provenance
 0x00039174	?CountVisitedObelisks@playerData@@QAECXZ	philAI::TurnValueOfObelisk calls it on &players[p]; counts set bits of the 48-bit obelisk bitmap at player+0x9b
 0x00039873	?IsMobile@game@@QAECC@Z	HoMM2 Buka 2.1 game::IsMobile; advManager::CheckDimHero passes the signed current-hero byte and tests the AL result
 0x0003910C	?HasMobileHero@playerData@@QAECXZ	HoMM2 Buka 2.1 playerData::HasMobileHero; CheckDimNextHeroBut tests the sign-extended AL result
-0x00039926	?GetWorldMapData@game@@QAEPAY0EI@VmapCell@@XZ	HoMM2 Buka 2.1 game::GetWorldMapData; returns game+0x620, the 72x72 ten-byte map that advManager::GetCell indexes
 0x000513FA	?NullHandler@@YAHAAUtag_message@@@Z	HoMM2 Buka 2.1 NullHandler passed to game::ViewSpells by advManager::CheckCastSpell
 0x000519D1	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
 0x00081228	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
 0x0006BEA0	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
+0x00081D00	_srand	MT LIBC srand: _getptd()->_holdrand = seed, ret; SRand 0x044637 tail-calls it with the caller seed
+0x00081D10	_rand	MT LIBC rand: _getptd()->_holdrand * 214013 + 2531011, (>>16)&0x7fff; adjacent to srand in the LIBC rand object
+0x00081D70	_exit	LIBC exit: doexit(code, 0, 0) at 0x081db0; EarlySetup calls it on the CD/setup failure exits
+0x000830C0	_write	LIBC write (oldnames write -> _write): fd range check against _nhandle; playerData::Write streams its fields through it

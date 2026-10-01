@@ -2,18 +2,22 @@
 
 #include <match.h>
 
+#include <BASE/BITS.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
+#include <SOURCE/smackManager.h>
+#include <SOURCE/wingraph.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -57,7 +61,78 @@ void ForcePollSound() {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.512387;margin=0.755802;shape=0.400;size=0.925;calls=0.653;alternate=pol20:void InitMainClasses(void)@0x000965be
 VA(0x0044f6d2, 0x607)
-void InitMainClasses(void) {}
+void InitMainClasses(void) {
+    gpExec = new executive;
+    gpInputManager = new inputManager;
+    gpMouseManager = new mouseManager;
+    gpWindowManager = new heroWindowManager;
+    gpResourceManager = new resourceManager;
+    gpSoundManager = new soundManager;
+    gpSmackManager = new smackManager;
+    gpHighScoreManager = new highScoreManager;
+    gpGame = new game;
+    gpAdvManager = new advManager;
+    gpCombatManager = new combatManager;
+    gpTownManager = new townManager;
+    gpSearchArray = new searchArray;
+    gpPhilAI = new philAI;
+    gpMonGroup = new armyGroup;
+    gpBufferPalette = new palette;
+}
+
+// Buka 2.1 DeleteMainClasses; HoMM1 also owns the smacker manager and frees the
+// resource manager before the window, mouse and input managers.
+VA(0x0044fcd9, 0x36d)
+void DeleteMainClasses(void) {
+    if (gpBufferPalette)
+        delete gpBufferPalette;
+    gpBufferPalette = 0;
+    if (gpMonGroup)
+        delete gpMonGroup;
+    gpMonGroup = 0;
+    if (gpPhilAI)
+        delete gpPhilAI;
+    gpPhilAI = 0;
+    if (gpSearchArray)
+        delete gpSearchArray;
+    gpSearchArray = 0;
+    if (gpTownManager)
+        delete gpTownManager;
+    gpTownManager = 0;
+    if (gpCombatManager)
+        delete gpCombatManager;
+    gpCombatManager = 0;
+    if (gpAdvManager)
+        delete gpAdvManager;
+    gpAdvManager = 0;
+    if (gpGame)
+        delete gpGame;
+    gpGame = 0;
+    if (gpHighScoreManager)
+        delete gpHighScoreManager;
+    gpHighScoreManager = 0;
+    if (gpSmackManager)
+        delete gpSmackManager;
+    gpSmackManager = 0;
+    if (gpSoundManager)
+        delete gpSoundManager;
+    gpSoundManager = 0;
+    if (gpResourceManager)
+        delete gpResourceManager;
+    gpResourceManager = 0;
+    if (gpWindowManager)
+        delete gpWindowManager;
+    gpWindowManager = 0;
+    if (gpMouseManager)
+        delete gpMouseManager;
+    gpMouseManager = 0;
+    if (gpInputManager)
+        delete gpInputManager;
+    gpInputManager = 0;
+    if (gpExec)
+        delete gpExec;
+    gpExec = 0;
+}
 
 // donor PoL RVA 0x00096e21; preferred Buka symbol ?EarlySetup@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -169,6 +244,62 @@ int InterpretCommandLine(void) {
     return 1;
 }
 
+extern char* gInitMenuHelp[];
+extern int giMenuCommand;
+
+// Buka 2.1 InitMenuHandler reduced to HoMM1's right-click help and button
+// release; the main menu draws its own hover frames.
+VA(0x00451244, 0x1b6)
+short InitMenuHandler(tag_message& message) {
+    int handled = 0;
+    int helpIndex;
+
+    PollSound();
+    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+        if (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK) {
+            helpIndex = -1;
+            switch (message.payload.widget.id) {
+                case 1:
+                    helpIndex = 0;
+                    break;
+                case 2:
+                    helpIndex = 1;
+                    break;
+                case 3:
+                    helpIndex = 2;
+                    break;
+                case 4:
+                    helpIndex = 3;
+                    break;
+                case 5:
+                    helpIndex = 4;
+                    break;
+                case 6:
+                    ;
+            }
+            if (helpIndex >= 0)
+                NormalDialog(gInitMenuHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+        }
+    } else if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                if (message.payload.widget.id > 0 && message.payload.widget.id <= 6)
+                    handled = 1;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (handled || giMenuCommand != -1) {
+        gpWindowManager->m_dialogResult = message.payload.widget.id;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
 VA(0x004513fa, 0x14)
 short NullHandler(tag_message&) {
     return MESSAGE_DISPATCH_CONSUME;
@@ -229,18 +360,34 @@ void GetMonsterCost(int monster, int* const cost) {
     }
 }
 
-// @early-stop
-// tu-cumulative: logic + all frame slots byte-exact (reqMask@-8, haveMask@-4 match
-// retail); the only residual is 2 bytes — the commutative `&` operand load-order in
-// `(reqMask & haveMask) == reqMask` (retail loads reqMask first, this cl loads the
-// just-OR'd haveMask first). Not source-steerable (tried both `&` orders, `==` swap).
-
 // donor PoL RVA 0x00099a6c; preferred Buka symbol ?CanBuild@@YIHPAVtown@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375672;margin=0.371383;shape=0.277;size=0.517;calls=1.000;alternate=pol20:int CanBuild(class town *, int)@0x00099a6c
 // HoMM1 retail returns the result in AL (xor al,al / mov al,1).
 VA(0x004517bf, 0x144)
 signed char CanBuild(town* t, short building) {
+    mapCell* cell;
+    unsigned short required;
+    if (BitTest(gpGame->m_townBuiltToday, t->m_id))
+        return 0;
+    if (building != 6 && !(t->m_buildings & 0x40))
+        return 0;
+    if (building == 3) {
+        cell = gpAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
+        if (cell->m_tileIndex < 20)
+            return 1;
+        else
+            return 0;
+    }
+    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= 3)
+        return 0;
+    if (building == 5)
+        return 0;
+    if (building < BUILDING_SLOT_DWELLING_FIRST)
+        return 1;
+    required = gDwellingRequirements[building - BUILDING_SLOT_DWELLING_FIRST + t->m_type * 6];
+    if ((t->m_buildings & required) == required)
+        return 1;
     return 0;
 }
 
@@ -250,7 +397,21 @@ signed char CanBuild(town* t, short building) {
 // Retail returns a byte flag (xor al,al / mov al,1); philAI::CanBuyBHC tests al.
 VA(0x00451903, 0xce)
 signed char CanBuy(town* t, short type) {
+    int cost[RESOURCE_COUNT];
+    playerData* rec;
+    int i;
+    GetBuildingCost(
+        t->m_type,
+        type,
+        cost,
+        (t->m_buildings & 1) ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1) : 0
+    );
+    rec = &gpGame->m_players[giCurPlayer];
+    for (i = 0; i < RESOURCE_COUNT; ++i) {
+        if (rec->m_resources[i] < cost[i])
     return 0;
+}
+    return 1;
 }
 
 // HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
@@ -287,33 +448,246 @@ void UpdateNormalDialog(char* text) {
     }
 }
 
+// Modem.cpp's wait-loop steps; Modem.h does not export them (declaring them
+// there ahead of their definitions reorders Modem's own compare operands).
+signed char GUIModemCommandExec(void);
+signed char GUIModemResponseExec(void);
+int WaitForDirectConnect(void);
+
 // donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.445743;margin=0.444520;shape=0.204;size=0.951;calls=0.688;alternate=pol20:int WaitHandler(struct tag_message &)@0x00099e81
 VA(0x0045299f, 0x1c5)
-int WaitHandler(tag_message& msg) {
-    return 0;
+short WaitHandler(tag_message& message) {
+    signed char result = 0;
+    gbFunctionComplete = 1;
+    PollSound();
+    if (!gpSoundManager->MusicPlaying())
+        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 0x7800:
+                    case 0x7801:
+                    case 0x7802:
+                        gbFunctionComplete = 0;
+                        result = 1;
+                        break;
+                }
+        }
+    }
+    if (!result) {
+        switch (giWaitType) {
+            case 0:
+                result = WaitForOtherPlayer();
+                break;
+            case 1:
+                result = WaitForHost();
+                break;
+            case 2:
+                result = WaitForGuest();
+                break;
+            case 3:
+                result = InitNetGuest();
+                break;
+            case 4:
+                result = InitNetHost();
+                break;
+            case 5:
+                result = GUIModemCommandExec();
+                break;
+            case 6:
+                result = GUIModemResponseExec();
+                break;
+            case 7:
+                result = WaitForDirectConnect();
+                break;
+        }
+    }
+    if (result) {
+        gpWindowManager->m_dialogResult = 0x7801;
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
+// Buka 2.1 EventWindowHandler without HoMM2's dialog timeout and resource help.
+VA(0x00452b64, 0x114)
+short EventWindowHandler(tag_message& message) {
+    if (!gpSoundManager->MusicPlaying())
+        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 0x385:
+                    case 0x7800:
+                    case 0x7801:
+                    case 0x7802:
+                    case 0x7803:
+                    case 0x7805:
+                    case 0x7806:
+                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        message.payload.widget.command = message.payload.widget.id =
+                            WIDGET_COMMAND_DIALOG_SELECT;
+                        return MESSAGE_DISPATCH_FORWARD;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
+// Buka 2.1 TrueFalseDialogHandler.
+VA(0x00452c78, 0x1c)
+short TrueFalseDialogHandler(tag_message& message) {
+    return EventWindowHandler(message);
 }
 
 // donor PoL RVA 0x0009a52f; preferred Buka symbol ?PlayerDead@@YIXH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.488269;margin=0.466685;shape=0.274;size=0.981;calls=0.750;alternate=pol20:void PlayerDead(int)@0x0009a52f
 VA(0x00452c94, 0x16c)
-void PlayerDead(int player) {}
+void PlayerDead(int player) {
+    playerData* currentPlayer;
+    int i;
+    gbRetreatWin = 0;
+    currentPlayer = &gpGame->m_players[player];
+    gpGame->m_playerDead[player] = 1;
+    ++gpGame->m_deadPlayerCount;
+    for (i = 0; i < GAME_MINE_COUNT; ++i) {
+        if (gpGame->m_mineOwners[i] == player)
+            gpGame->ClaimMine(i, -1);
+    }
+    for (i = currentPlayer->m_heroCount - 1; i >= 0; --i)
+        gpGame->GetHero(currentPlayer->m_heroIds[i])->Deallocate();
+    for (i = 0; i < 2; ++i) {
+        if (gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] == 0x40)
+            gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] = -1;
+    }
+    if (gbRemoteOn && gbHumanPlayer[player])
+        HandleRemoteDeadPlayerExit(player);
+}
+
+// HoMM1's three-byte exit notice: game position, control hand-off, next player.
+#pragma pack(push, 1)
+struct playerExitMessage {
+    signed char gamePosition;
+    signed char takesControl;
+    signed char nextPlayer;
+};
+#pragma pack(pop)
+extern playerExitMessage gPlayerExitMessage;
+extern int giHostGamePos;
+
+// Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
+VA(0x00452e00, 0x99)
+void HandleRemoteDeadPlayerExit(int position) {
+    if (position == giThisGamePos) {
+        if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
+            ShutDown(0);
+        RemoteCleanup();
+    } else if (giNumHumanPlayers == 2) {
+        giNumHumanPlayers--;
+        gPlayerExitMessage.gamePosition = position;
+        gPlayerExitMessage.takesControl = 0;
+        TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+        RemoteCleanup();
+        gbHumanPlayer[position] = 0;
+    }
+}
+
+// Buka 2.1 HandleRemoteSuddenExit; HoMM1 names the next human player itself.
+VA(0x00452e99, 0xf1)
+void HandleRemoteSuddenExit(void) {
+    int next;
+    if (!gbGameInitialized)
+        return;
+    gPlayerExitMessage.gamePosition = giThisGamePos;
+    if (gbThisNetHumanPlayer[giCurPlayer]
+        || (!gbHumanPlayer[giCurPlayer] && giHostGamePos == giThisGamePos)) {
+        gPlayerExitMessage.takesControl = 1;
+        next = giCurPlayer;
+        next = (next + 1) % gpGame->m_playerCount;
+        while (!gbHumanPlayer[next])
+            next = (next + 1) % gpGame->m_playerCount;
+        gPlayerExitMessage.nextPlayer = next;
+    } else {
+        gPlayerExitMessage.takesControl = 0;
+    }
+    TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+}
 
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
+extern char* gColorNames[];
+
 VA(0x00452f8a, 0x1ea)
 // HoMM1 callers push four byte-sized values: player, an unused flag,
 // elimination and timeout.
-void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char) {}
+void ReceiveRemotePlayerExit(signed char position, signed char, signed char eliminated, signed char timedOut) {
+    if (position == giThisGamePos) {
+        sprintf(gText, "You have been eliminated from the game!!!");
+        NormalDialog(gText, 1, -1, -1, -1, 0, -1, 0, -1);
+        RemoteCleanup();
+        gbGameOver = 1;
+        giEndSequence = 0;
+        return;
+    }
+    if (giNumHumanPlayers <= 2) {
+        gpGame->SaveGame("PLYREXIT", 1);
+        if (eliminated) {
+            sprintf(gText, "%s player has been vanquished!", gColorNames[gpGame->m_players[position].Color()]);
+            gText[0] -= 32;
+            NormalDialog(gText, 1, 0x61, -1, 9, gpGame->m_players[position].Color(), -1, 0, -1);
+            goto dropPlayer;
+        } else {
+            if (timedOut)
+                sprintf(
+                    gText,
+                    "Player %d has been logged out of the game.  The current game has been saved as "
+                    "'PLYREXIT'.  Do you wish to continue playing with a computer player filling in for "
+                    "player %d?",
+                    position + 1,
+                    position + 1
+                );
+            else
+                sprintf(
+                    gText,
+                    "Player %d is exiting the game.  The current game has been saved as 'PLYREXIT'.  Do "
+                    "you wish to continue playing with a computer player filling in for player %d?",
+                    position + 1,
+                    position + 1
+                );
+            NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+        }
+        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+        dropPlayer:
+            if (giNumHumanPlayers == 2) {
+                giNumHumanPlayers--;
+                RemoteCleanup();
+                gbHumanPlayer[position] = 0;
+            }
+        } else {
+            RemoteCleanup();
+            ShutDown(0);
+        }
+    }
+}
 
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
 VA(0x00453174, 0x7d4)
-void CheckEndGame(int, int) {}
+void CheckEndGame(int) {}
 
 // donor PoL RVA 0x0009c07c; preferred Buka symbol ?QuickViewWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -338,7 +712,33 @@ void QuickViewWait(void) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.679533;margin=0.555045;shape=0.387;size=0.991;calls=0.692;strings=mnuAdv|mnuCmbt|mnuDflt;alternate=pol20:void InitVars(void)@0x0009c111
 VA(0x004539dd, 0x1cb)
-void InitVars(void) {}
+void InitVars(void) {
+    int i;
+    NULL_SAMPLE2.pSample = 0;
+    NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
+    gbMapExtraCleared = 1;
+    gGameCommand = -1;
+    gPalette = 0;
+    gpPhilAI->m_debugFont = 0;
+    gbCombatSurrender = 0;
+    gpGame->m_viewArmyResult = 0;
+    gbInNewGameSetup = 0;
+    for (i = 0; i < 140; i++)
+        giGroundToTerrain[i] = i / 20;
+    for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
+        giTerrainCost[i][0] = TerrainStepCost(i, 0);
+        giTerrainCost[i][1] = TerrainStepCost(i, 1);
+    }
+    strcpy(cNetBoxLine[0], "");
+    strcpy(cNetBoxLine[1], "");
+    for (i = 0; i < 255; i++)
+        ppMapExtra[i] = 0;
+    hmnuDflt = LoadMenuA((HINSTANCE)hInstApp, "mnuDflt");
+    hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
+    hmnuAdv = LoadMenuA((HINSTANCE)hInstApp, "mnuAdv");
+    hmnuTown = LoadMenuA((HINSTANCE)hInstApp, "mnuTown");
+    LogStr("LoadMenus", (long)hmnuDflt, (long)hmnuCmbt, (long)hmnuAdv, (long)hmnuTown, (long)hInstApp);
+}
 
 // donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -401,6 +801,13 @@ void BVResMsg(char* s, int res, int qty) {
     gpAdvManager->UpdBottomView(1, 1, 1);
 }
 
+// Buka 2.1 GOut.
+VA(0x0045471a, 0x2e)
+void GOut(char* text) {
+    if (gpAdvManager->m_active == 1)
+        AiPrint(text);
+}
+
 // donor PoL RVA 0x0009d3a7; preferred Buka symbol ?WaitForOtherPlayer@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.581419;margin=0.608732;shape=0.409;size=0.995;calls=1.000;alternate=pol20:int WaitForOtherPlayer(void)@0x0009d3a7
@@ -452,7 +859,42 @@ void AddNetBoxLine(char* text) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
 VA(0x00454f8a, 0x14f)
-void ShutDown(char* msg) {}
+void ShutDown(char* message) {
+    char buffer[768];
+    if (bInShutDown)
+        return;
+    bInShutDown = 1;
+    gbClosingApp = 1;
+    buffer[0] = 0;
+    if (message) {
+        strcpy(buffer, message);
+        SetFullScreenStatus(0);
+        LogStr(buffer);
+        MessageBoxA((HWND)hwndApp, buffer, "Unexpected Program Termination", MB_ICONHAND);
+    }
+    ClearMapExtra();
+    UnloadSystemwideIcons();
+    if (gbRemoteOn)
+        HandleRemoteSuddenExit();
+    if (gPalette) {
+        gpResourceManager->Dispose(gPalette);
+        gPalette = 0;
+    }
+    if (gpPhilAI->m_debugFont) {
+        gpResourceManager->Dispose(gpPhilAI->m_debugFont);
+        gpPhilAI->m_debugFont = 0;
+    }
+    gpExec->ShutDownSystem();
+    RemoteCleanup();
+    if (gEventHandle) {
+        CloseHandle(gEventHandle);
+        gEventHandle = 0;
+    }
+    DeleteMainClasses();
+    AppExit();
+    PrintMemoryLeaks();
+    exit(0);
+}
 
 // donor PoL RVA 0x0009e306; preferred Buka symbol ?FileError@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -648,6 +1090,30 @@ signed char CheckMem(void) {
     return 1;
 }
 
+// Campaign maps rename the town at a fixed position (x, y, then the name).
+#pragma pack(push, 1)
+struct campaignTownName {
+    signed char x;
+    signed char y;
+    char name[83];
+};
+#pragma pack(pop)
+extern campaignTownName gCampaignTownNames[];
+extern char* gTownNames[];
+
+// Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
+// override one town by position.
+VA(0x00455aaf, 0xdc)
+char* GetTownName(signed char i) {
+    town* townPointer = gpGame->GetTown(i);
+    if (gpGame->m_campaignType > 0
+        && gCampaignTownNames[gpGame->m_campaignScenario].x >= 0
+        && gCampaignTownNames[gpGame->m_campaignScenario].x == townPointer->m_x
+        && gCampaignTownNames[gpGame->m_campaignScenario].y == townPointer->m_y)
+        return gCampaignTownNames[gpGame->m_campaignScenario].name;
+    return gTownNames[townPointer->m_threat];
+}
+
 // Buka 2.1 Misc IsCDDrive.
 VA(0x00455b8b, 0x51)
 int IsCDDrive(int driveIndex) {
@@ -675,6 +1141,17 @@ void UnloadSystemwideIcons(void) {
 // Retail empty lifecycle hook; Buka and PoL KB correspondence.
 VA(0x00455c94, 0x10)
 void EarlyShutDownSystem(void) {}
+
+// Buka 2.1 GameUnsaved.
+VA(0x00455ca4, 0x7e)
+int GameUnsaved(void) {
+    if ((gpAdvManager && gpAdvManager->m_active == 1)
+        || (gpCombatManager && gpCombatManager->m_active == 1)
+        || (gpTownManager && gpTownManager->m_active == 1))
+        return 1;
+    else
+        return 0;
+}
 
 // donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

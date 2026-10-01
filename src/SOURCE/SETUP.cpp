@@ -4,6 +4,7 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
@@ -60,11 +61,37 @@ int nbnet_init(void);
 void RemoteMain(int);
 extern int iLastIds[];
 
-// donor PoL RVA 0x000bf340; preferred Buka symbol ?DoTradingPost@@YIXHM@Z
-// donor Buka TU SOURCE/tradpost; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.511421;margin=0.057302;shape=0.391;size=0.883;calls=0.600;alternate=pol20:void DoTradingPost(int, float)@0x000bf340
+short SetupCampaignGameHandler(tag_message&);
+// Campaign lord picked on stpcmpgn.bin (1-4); PickLoadGame filters *.CGM on it.
+extern signed char giCampaignChoice;
+
+// Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
+// game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
 VA(0x004567f0, 0x164)
-void DoTradingPost(int, float) {}
+signed char game::SetupCampaignGame(void) {
+    heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupCampaignGameHandler, 0);
+    delete window;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            giCampaignChoice = 1;
+            break;
+        case 2:
+            giCampaignChoice = 2;
+            break;
+        case 3:
+            giCampaignChoice = 3;
+            break;
+        case 4:
+            giCampaignChoice = 4;
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    return 1;
+}
 
 // donor PoL RVA 0x00010ebf; preferred Buka symbol ?SetupBaud@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
@@ -100,7 +127,7 @@ signed char game::SetupBaud(void) {
 // evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
 VA(0x00456ae4, 0x222)
 signed char game::SetupComPort(void) {
-    char initString[40];
+    char initStr[40];
 
     heroWindow* window = new heroWindow(400, 35, "stpcom.bin");
     if (!window)
@@ -130,8 +157,8 @@ signed char game::SetupComPort(void) {
         sprintf(gText, "%s", gConfig.modemInitString);
         GetDataEntry("Please enter any special initialization string required by your modem, or "
                      "hit 'ENTER' to accept the default.",
-                     initString, 40, gText);
-        strcpy(gConfig.modemInitString, initString);
+                     initStr, 40, gText);
+        strcpy(gConfig.modemInitString, initStr);
     }
     WritePrefs();
     return 1;
@@ -283,12 +310,179 @@ signed char game::SetupMultiPlayerGame(void) {
     return 1;
 }
 
+short SetupGameHandler(tag_message&);
+extern signed char gbWaitForRemoteReceive;
+extern int gbInSetupDialog;
+extern char gLastFilename[];
+
+// Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
+// keep separate restart and load command ids.
+VA(0x004574e1, 0x486)
+signed char game::SetupGame(signed char newGame) {
+    heroWindow* window;
+    int result;
+
+    result = 1;
+    iMPExtendedType = 10;
+    iMPBaseType = 10;
+    giNumHumanPlayers = 1;
+    gbWaitForRemoteReceive = 0;
+    gbDirectConnect = 0;
+    gbInSetupDialog = 1;
+
+    if (giMenuCommand != -1) {
+        switch (giMenuCommand) {
+            case 0x9ca8:
+                giCampaignChoice = 1;
+                break;
+            case 0x9ca9:
+                giCampaignChoice = 2;
+                break;
+            case 0x9caa:
+                giCampaignChoice = 3;
+                break;
+            case 0x9cab:
+                giCampaignChoice = 4;
+                break;
+            case 0x9ca6:
+            case 0x9cbb:
+                break;
+            case 0x9cbc:
+                giCampaignChoice = 1;
+                break;
+            case 0x9cae:
+            case 0x9cbf:
+                giNumHumanPlayers = 2;
+                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                break;
+            case 0x9caf:
+            case 0x9cc0:
+                giNumHumanPlayers = 3;
+                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                break;
+            case 0x9cb0:
+            case 0x9cc1:
+                giNumHumanPlayers = 4;
+                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                break;
+            case 0x9cb2:
+            case 0x9cc3:
+                iMPBaseType = MULTIPLAYER_BASE_NETWORK;
+                iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
+                goto remoteSetup;
+            case 0x9cb3:
+            case 0x9cc4:
+                iMPBaseType = MULTIPLAYER_BASE_NETWORK;
+                iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
+                goto remoteSetup;
+            case 0x9cb5:
+            case 0x9cc6:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+                goto remoteSetup;
+            case 0x9cb6:
+            case 0x9cc7:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+                goto remoteSetup;
+            case 0x9cb8:
+            case 0x9cc9:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+                gbDirectConnect = 1;
+                goto remoteSetup;
+            case 0x9cb9:
+            case 0x9cca:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+                gbDirectConnect = 1;
+                goto remoteSetup;
+
+            remoteSetup:
+                RemoteMain(iMPExtendedType);
+                if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST
+                    || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
+                    gbWaitForRemoteReceive = 1;
+                break;
+        }
+        giMenuCommand = -1;
+        result = 1;
+        goto done;
+    }
+
+    window = new heroWindow(400, 35, "stpnewgm.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupGameHandler, 0);
+    delete window;
+
+    switch ((short)gpWindowManager->m_dialogResult) {
+        case 1:
+            break;
+        case 2:
+            giCampaignChoice = 1;
+            if (newGame) {
+                if (!SetupCampaignGame()) {
+                    result = 0;
+                    goto done;
+                }
+            }
+            break;
+        case 3:
+            if (!SetupMultiPlayerGame()) {
+                result = 0;
+                goto done;
+            }
+            break;
+        case DIALOG_CANCEL:
+            result = 0;
+            goto done;
+    }
+
+    if (iMPBaseType == MULTIPLAYER_BASE_NETWORK || iMPBaseType == MULTIPLAYER_BASE_MODEM) {
+        RemoteMain(iMPExtendedType);
+        if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
+            gbWaitForRemoteReceive = 1;
+    }
+
+done:
+    gbInSetupDialog = 0;
+    return result;
+}
+
 // donor PoL RVA 0x000123cc; preferred Buka symbol ?PickLoadGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
 VA(0x00457967, 0x1e7)
-int game::PickLoadGame(void) {
-    return 0;
+signed char game::PickLoadGame(void) {
+    fileRequester* requester;
+    short result;
+
+    if (!SetupGame(0))
+        return 0;
+    if (gbWaitForRemoteReceive)
+        return 1;
+    requester = new fileRequester(
+        0x136,
+        0xe,
+        0,
+        giCampaignChoice > 0 ? "*.CGM" : "*.GM*",
+        ".\\GAMES\\",
+        giCampaignChoice > 0 ? ".CGM" : ".GM*"
+    );
+    if (!requester)
+        MemError();
+    gpMouseManager->ReallyShowPointer();
+    result = gpExec->DoDialog(requester);
+    gpMouseManager->ReallyHidePointer();
+    if (result == 0x7802) {
+        gpGame->LoadGame(gLastFilename, 0, 0);
+        delete requester;
+        return 1;
+    } else {
+        delete requester;
+        return 0;
+    }
 }
 
 // Buka 2.1 SETUP help handlers; HoMM1 shows each help text as a type-4 dialog.
@@ -814,8 +1008,8 @@ finished:
 // evidence: graph:3;base=0.404111;margin=0.668725;shape=0.214;size=0.850;calls=0.500;alternate=pol20:int ReceiveRemoteData(unsigned char *, unsigned char *, int)@0x000a3d6f
 VA(0x00458d50, 0xf4)
 int ReceiveRemoteData(unsigned char*, unsigned char* data, int decodeType) {
-    int result;
     int receiveResult;
+    int result;
 
     result = 1;
     switch (GameMode) {
@@ -846,7 +1040,7 @@ int ReceiveRemoteData(unsigned char*, unsigned char* data, int decodeType) {
 // evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
 VA(0x00458e44, 0x194)
 signed char InitNetHost(void) {
-    int reserved;
+    int unused;
     int needName;
 
     switch (iInitNetHostStatus) {

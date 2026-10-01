@@ -956,11 +956,11 @@ void townManager::SetupMage(class heroWindow *window)
         } else {
             message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
             message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_ICON_CONTROL;
-            message.payload.widget.data.value = m_town->m_spells[spellIndex];
+            message.payload.widget.data.value = m_town->m_mageGuildSpells[spellIndex];
             window->BroadcastMessage(message);
             message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
             message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_NAME_CONTROL;
-            message.payload.widget.data.text = gSpellNames[m_town->m_spells[spellIndex]];
+            message.payload.widget.data.text = gSpellNames[m_town->m_mageGuildSpells[spellIndex]];
             window->BroadcastMessage(message);
         }
     }
@@ -1023,7 +1023,7 @@ short MageGuildHandler(struct tag_message &message)
                         if ((mageLevel == 0 && spellPos > 2) || (mageLevel == 1 && spellPos > 4)
                             || (mageLevel == 2 && spellPos > 6))
                             return MESSAGE_DISPATCH_CONSUME;
-                        spellId = gpTownManager->m_town->m_spells[spellPos];
+                        spellId = gpTownManager->m_town->m_mageGuildSpells[spellPos];
                         NormalDialog(gSpellDesc[spellId], quickView ? 4 : 1, -1, -1, 8, spellId, -1, 0, -1);
                         return MESSAGE_DISPATCH_CONSUME;
                 }

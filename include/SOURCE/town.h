@@ -3,11 +3,18 @@
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 9 methods, 0 own-virtual, 0 static data.
 
+#include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
 
 // forward declarations:
 class hero;
+
+// clang-format off
+H1_ENUM_BEGIN(TownConstant)
+    TOWN_MAGE_GUILD_SPELL_COUNT = 9
+H1_ENUM_END(TownConstant)
+// clang-format on
 
 #pragma pack(push, 1)
 class town {
@@ -26,9 +33,9 @@ public:
     char m_unknown19;
     short m_garrison[6];
     char m_unknown26[6];
-    // MageGuildHandler indexes nine guild spells from +0x2c.
-    signed char m_spells[9];
-    char m_unknown35[2];
+    signed char m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
+    // ClaimTown sets two turns for a town taken from no owner, else zero.
+    short m_turnsOwned;
     // --- constructors ---
     town(void);
     // --- methods ---
