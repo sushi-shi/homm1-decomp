@@ -103,6 +103,7 @@ char* GetMonsterName(int);
 int GetBuildingBaseResourceValue(int, int, int);
 void AddNetBoxLine(char*);
 void GOut(char*);
+char* FindLastToken(char*, char);
 void ClearMapExtra(void);
 short GetMonType(int, int);
 int MemSize(int);

@@ -67,7 +67,36 @@ int playerData::NextHero(int) { return 0; }
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.427111;margin=0.052277;shape=0.267;size=0.694;calls=1.000;alternate=pol20:void GenerateStandardFileName(char *, char *)@0x00071d89
 VA(0x00439d14, 0x129)
-void GenerateStandardFileName(char *, char *) {}
+void GenerateStandardFileName(char *source, char *destination) {
+    char *extension;
+    int indexOut;
+    int idx;
+    char character;
+    int size;
+
+    extension = FindLastToken(source, '.');
+    if (!extension) {
+        strcpy(destination, source);
+        return;
+    }
+    *extension = 0;
+    indexOut = 0;
+    size = strlen(source);
+    for (idx = 0; idx < size; idx++) {
+        character = source[idx];
+        if (character >= 'a' && character <= 'z')
+            character = character - ('a' - 'A');
+        if ((character >= 'A' && character <= 'Z') || (character >= '0' && character <= '9')
+            || character == '_') {
+            destination[indexOut] = character;
+            indexOut++;
+        }
+        if (indexOut >= 8)
+            idx = 999;
+    }
+    *extension = '.';
+    strcpy(destination + indexOut, extension);
+}
 
 // donor PoL RVA 0x00071eb7; preferred Buka symbol ?SaveGame@game@@QAEHPADHC@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
