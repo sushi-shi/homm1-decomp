@@ -116,7 +116,7 @@ int game::LoadMap(char*) {
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.415111;margin=0.758393;shape=0.164;size=0.968;calls=0.500;alternate=pol20:void game::ClaimTown(int, int, int)@0x00078fea
 VA(0x0043e744, 0x321)
-void game::ClaimTown(int, int, int) {}
+void game::ClaimTown(signed char, signed char) {}
 
 // donor PoL RVA 0x00079856; preferred Buka symbol ?ViewSpells@game@@QAEHPAVhero@@HP6IHAAUtag_message@@@ZH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order

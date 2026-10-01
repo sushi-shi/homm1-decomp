@@ -110,7 +110,7 @@ public:
     void RandomizeBarrier(class mapCell*);
     void RandomizePassword(class mapCell*);
     int LoadMap(char*);
-    void ClaimTown(int, int, int);
+    void ClaimTown(signed char, signed char);
     void ClaimMine(int, int);
     int ViewSpells(class hero*, int, int (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);

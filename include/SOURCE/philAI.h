@@ -113,7 +113,7 @@ public:
         class armyGroup*,
         class hero*,
         int,
-        int,
+        signed char,
         float&,
         float&
     );
@@ -168,6 +168,8 @@ extern int costTemp[];
 extern int iLastFrameRateTimer;
 extern signed char gbDrawSavedCursor;
 extern int bSpecialHideCursor;
+extern int gbHumanPlayer[];
+extern int giHumanTownConquered;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.

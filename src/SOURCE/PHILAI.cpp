@@ -842,7 +842,7 @@ int philAI::QuickCombat(
     class armyGroup*,
     class hero*,
     int,
-    int,
+    signed char,
     float&,
     float&
 ) {
@@ -1168,7 +1168,66 @@ void philAI::IncrementHourGlass(void) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.582749;margin=0.601748;shape=0.455;size=0.921;calls=1.000;alternate=pol20:void philAI::TownEvent(class mapCell *, class hero *, int, int)@0x00043980
 VA(0x0042256a, 0x221)
-void philAI::TownEvent(class mapCell*, class hero*, int, int) {}
+void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
+    float attackerLoss;
+    float defenderLoss;
+    int owner;
+    int quickResult;
+    town* townPointer;
+    hero* defendingHero;
+    int outcome;
+
+    townPointer = gpGame->GetTown(cell->m_objectMetadata);
+    owner = giCurPlayer;
+    gpAdvManager->DemobilizeCurrHero();
+    if (townPointer->m_owner != giCurPlayer) {
+        if (townPointer->HasGarrison()) {
+            if (townPointer->m_owner < 0 || gbHumanPlayer[townPointer->m_owner] == 0) {
+                quickResult = QuickCombat(
+                    &heroPointer->m_army,
+                    heroPointer,
+                    &townPointer->m_army,
+                    0,
+                    1,
+                    townPointer->m_id,
+                    defenderLoss,
+                    attackerLoss
+                );
+            } else {
+                defendingHero = townPointer->m_occupyingHeroId == -1
+                                    ? 0
+                                    : gpGame->GetHero(townPointer->m_occupyingHeroId);
+                outcome = gpAdvManager->DoCombat(
+                    x,
+                    y,
+                    heroPointer,
+                    &heroPointer->m_army,
+                    townPointer,
+                    defendingHero,
+                    &townPointer->m_army,
+                    x,
+                    y,
+                    -1,
+                    1
+                );
+                if (outcome == 1) {
+                    gpGame->ClaimTown(townPointer->m_id, giCurPlayer);
+                    giHumanTownConquered = townPointer->m_id;
+                }
+            }
+        } else {
+            gpGame->ClaimTown(townPointer->m_id, giCurPlayer);
+        }
+    }
+    if (townPointer->m_owner == giCurPlayer && heroPointer->m_x == x && heroPointer->m_y == y) {
+        townPointer->m_occupyingHeroId = gpCurPlayer->CurrentHero();
+        heroPointer->m_locationType = 0xa8;
+        heroPointer->m_occupiedTown = townPointer->m_id;
+        HeroInteractionAtTown(heroPointer, townPointer, 0, &iDummy);
+    }
+    gpAdvManager->MobilizeCurrHero(0);
+    townPointer->GiveSpells();
+}
 
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
