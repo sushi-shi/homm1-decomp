@@ -177,7 +177,9 @@ flags = "cpp_o2"
 [[unit]]
 unit = "BASE/TEXTWDGT"
 source = "src/BASE/TEXTWDGT.cpp"
-flags = "cpp_o2"
+# Retail keeps standalone ~textWidget and SetText while expanding both in
+# the deleting destructor and Main; that pair requires automatic inlining.
+flags = "cpp_o2_inline"
 
 [[unit]]
 unit = "BASE/TEXTNTRY"
@@ -356,4 +358,14 @@ flags = "cpp_o2"
 [[unit]]
 unit = "BASE/Iconm2bClip"
 source = "src/BASE/Iconm2bClip.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/SAMPLE"
+source = "src/BASE/SAMPLE.cpp"
+flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/OLDASM"
+source = "src/BASE/OLDASM.cpp"
 flags = "cpp_o2"

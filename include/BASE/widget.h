@@ -24,15 +24,17 @@ H1_ENUM_END(WidgetFlag)
 
 H1_ENUM_BEGIN(WidgetKind)
     WIDGET_KIND_TEXT = 0x200,
+    WIDGET_KIND_AUTO_REPEAT = 0x1000,
+    WIDGET_KIND_TRACK_PRESS = 0x2000,
     WIDGET_KIND_TEXT_ENTRY = 0x4000
 H1_ENUM_END(WidgetKind)
 
 #pragma pack(push, 1)
 class widget /* abstract */ {
 public:
-    heroWindow *m_owner;
-    widget *m_next;
-    widget *m_prev;
+    heroWindow* m_owner;
+    widget* m_next;
+    widget* m_prev;
     short m_id;
     short m_zOrder;
     short m_kind;
@@ -48,9 +50,9 @@ public:
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) = 0;
     virtual ~widget(void) = 0;
-    virtual short Main(struct tag_message &) = 0;
+    virtual short Main(struct tag_message&) = 0;
     // --- methods ---
-    short Open(short, class heroWindow *);
+    short Open(short, class heroWindow*);
     void Close(void);
     void Dim(void);
 };

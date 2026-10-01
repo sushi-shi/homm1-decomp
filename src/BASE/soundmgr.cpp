@@ -30,27 +30,30 @@ char gSoundManagerAssertFile4[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
 char gSoundManagerAssertFile5[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
 
 // PoL preserves this helper family; retail expands these helpers in CDPlay.
-inline void HandleMCIError(int errorCode, char *command)
-{
+inline void HandleMCIError(int errorCode, char* command) {
     mciGetErrorStringA(errorCode, lpszReturnString, CD_MCI_RESULT_LAST);
-    sprintf(gText, "CD MUSIC ERROR\n\nDescription '%s'\n\nCommand '%s'\n\n\nBecause of this problem running with CD stereo music, Heroes has been configured to run with 8 bit mono music in the future.  You can always manually change this setting in the control panel within the game.", lpszReturnString, command);
+    sprintf(
+        gText,
+        "CD MUSIC ERROR\n\nDescription '%s'\n\nCommand '%s'\n\n\nBecause of this problem running "
+        "with CD stereo music, Heroes has been configured to run with 8 bit mono music in the "
+        "future.  You can always manually change this setting in the control panel within the "
+        "game.",
+        lpszReturnString,
+        command
+    );
     gConfig.musicSource = 0;
     WritePrefs();
     ShutDown(gText);
 }
 
-inline void soundManager::ServiceSound(void)
-{
-    if (gbNoSound == 0)
-        AIL_serve();
-}
-
-inline void soundManager::ValidatePreviousPosition(int track)
-{
+inline void soundManager::ValidatePreviousPosition(int track) {
     char buffer[CD_POSITION_BUFFER_SIZE];
-    char *separator;
-    ProcessAssert(track >= 0 && track < MUSIC_TRACK_COUNT,
-                  gCDPositionAssertFile, gCDPositionAssertLine + 4);
+    char* separator;
+    ProcessAssert(
+        track >= 0 && track < MUSIC_TRACK_COUNT,
+        gCDPositionAssertFile,
+        gCDPositionAssertLine + 4
+    );
     if (CDPreviousPosition[track][0] == 0)
         return;
     strcpy(buffer, CDPreviousPosition[track]);
@@ -61,8 +64,7 @@ inline void soundManager::ValidatePreviousPosition(int track)
         CDPreviousPosition[track][0] = 0;
 }
 
-inline void soundManager::CDSetVolume(int volume, int fadeScale)
-{
+inline void soundManager::CDSetVolume(int volume, int fadeScale) {
     int level;
     unsigned long stereoVolume;
     if (gbNoSound != 0 || m_auxDevice == -1)
@@ -74,7 +76,8 @@ inline void soundManager::CDSetVolume(int volume, int fadeScale)
     if (level != 0) {
         int channel;
         if (fadeScale != 0)
-            channel = CD_VOLUME_LEVEL_COUNT - (MUSIC_FADE_TOTAL_STEPS - level / CD_VOLUME_LEVEL_COUNT);
+            channel =
+                CD_VOLUME_LEVEL_COUNT - (MUSIC_FADE_TOTAL_STEPS - level / CD_VOLUME_LEVEL_COUNT);
         else
             channel = CD_VOLUME_LEVEL_COUNT - level;
         channel <<= CD_VOLUME_LEVEL_SHIFT;
@@ -86,8 +89,7 @@ inline void soundManager::CDSetVolume(int volume, int fadeScale)
 }
 
 VA(0x00476f00, 0x20e)
-void soundManager::CDStop(void)
-{
+void soundManager::CDStop(void) {
     char position[CD_POSITION_BUFFER_SIZE];
     if (gbNoSound != 0)
         return;
@@ -106,9 +108,19 @@ void soundManager::CDStop(void)
     CDPlaying = 0;
 }
 
+// PoL keeps this out of line; HoMM1 retains only its expansions.
+inline int soundManager::CDIsPlaying(void) {
+    if (gbNoSound != 0)
+        return 0;
+    wsprintfA(CommandString, "status CD mode");
+    nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
+    if (nMCIError != 0)
+        HandleMCIError(nMCIError, CommandString);
+    return strcmpi(lpszReturnString, "playing") == 0;
+}
+
 VA(0x00477110, 0xd7)
-unsigned long soundManager::CDStartup(void)
-{
+unsigned long soundManager::CDStartup(void) {
     int numDevices;
     int device;
     if (gbNoSound != 0)
@@ -137,8 +149,7 @@ unsigned long soundManager::CDStartup(void)
 }
 
 VA(0x004771f0, 0x5b7)
-void soundManager::CDPlay(int track, int resume, int volume, int restart)
-{
+void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     char buffer[CD_POSITION_BUFFER_SIZE];
     unsigned char notify;
     int cdTrack;
@@ -166,12 +177,11 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart)
     }
     m_cdTrack = track;
     m_cdPlayFrame = volume;
-    if ((track >= 0 && track < MUSIC_POSITION_TRACK_END)
-        || track == MUSIC_POSITION_TRACK_1 || track == MUSIC_POSITION_TRACK_3 || resume > 0)
+    if ((track >= 0 && track < MUSIC_POSITION_TRACK_END) || track == MUSIC_POSITION_TRACK_1
+        || track == MUSIC_POSITION_TRACK_3 || resume > 0)
         resume = 1;
     notify = 0;
-    if (track < MUSIC_POSITION_TRACK_END
-        || (track >= CD_NOTIFY_FIRST && track <= CD_NOTIFY_LAST)
+    if (track < MUSIC_POSITION_TRACK_END || (track >= CD_NOTIFY_FIRST && track <= CD_NOTIFY_LAST)
         || (track >= CD_NOTIFY_EXTRA_FIRST && track <= CD_NOTIFY_EXTRA_LAST)
         || track == MUSIC_POSITION_TRACK_1 || track == MUSIC_POSITION_TRACK_2
         || track == MUSIC_POSITION_TRACK_3
@@ -197,15 +207,25 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart)
     Process1WindowsMessage();
     ServiceSound();
     if (restart == 0 && resume != 0 && CDPreviousPosition[cdTrack][0] != 0) {
-        wsprintfA(CommandString, "play CD from %s to %d%s",
-                  CDPreviousPosition[cdTrack], cdTrack + 1, notify ? " notify" : "");
+        wsprintfA(
+            CommandString,
+            "play CD from %s to %d%s",
+            CDPreviousPosition[cdTrack],
+            cdTrack + 1,
+            notify ? " notify" : ""
+        );
         window = notify ? hwndApp : NULL;
         nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, window);
         if (nMCIError != 0)
             HandleMCIError(nMCIError, CommandString);
     } else {
-        wsprintfA(CommandString, "play CD from %d to %d%s", cdTrack, cdTrack + 1,
-                  notify ? " notify" : "");
+        wsprintfA(
+            CommandString,
+            "play CD from %d to %d%s",
+            cdTrack,
+            cdTrack + 1,
+            notify ? " notify" : ""
+        );
         newWindow = notify ? hwndApp : NULL;
         nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, newWindow);
         if (nMCIError != 0)
@@ -225,12 +245,42 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart)
     m_currentTrack = static_cast<char>(track);
 }
 
+// PoL SetReady2Poll correspondence; HoMM1 also requests a stream poll.
+VA(0x004777b0, 0x42)
+void SetReady2Poll(void) {
+    if (gpSoundManager == NULL)
+        return;
+    if (gpSoundManager->m_musicStreamOpen != 0)
+        gpSoundManager->m_pollRequested = 1;
+    gpSoundManager->m_pollToggle ^= 1;
+    if (gpSoundManager->m_pollToggle != 0)
+        gpSoundManager->m_pollDue = 1;
+}
+
+VA(0x00477800, 0x63)
+soundManager::soundManager(void) {
+    m_active = 0;
+    m_fadeSteps = 0;
+    m_field_0x566 = 0;
+    m_field_0x56e = 1;
+    memset(gSampleVolumes, 0, SAMPLE_VOLUME_TABLE_BYTES);
+    memset(&m_samplesReady, 0, SOUND_STATE_RESET_SPAN);
+    m_musicReady = 0;
+    m_digitalDriver = NULL;
+    m_activeSample = NULL;
+    m_cdTrack = 0;
+    m_cdPlayFrame = 0;
+}
+
 VA(0x00477870, 0xf3)
-struct _DIG_DRIVER *WAVE_init_driver(unsigned long sampleRate, unsigned short bitsPerSample,
-                                   unsigned short channels, unsigned short showErrors)
-{
+struct _DIG_DRIVER* WAVE_init_driver(
+    unsigned long sampleRate,
+    unsigned short bitsPerSample,
+    unsigned short channels,
+    unsigned short showErrors
+) {
     unsigned int numDevs;
-    struct _DIG_DRIVER *drvr;
+    struct _DIG_DRIVER* drvr;
     WAVEOUTCAPSA caps;
     int rc;
     numDevs = waveOutGetNumDevs();
@@ -239,8 +289,12 @@ struct _DIG_DRIVER *WAVE_init_driver(unsigned long sampleRate, unsigned short bi
         return NULL;
     }
     if (waveOutGetDevCapsA(0, &caps, sizeof(caps)) != 0) {
-        MessageBoxA(hwndApp, "Sound initialization error!  No wave devices found.",
-                    "Startup Error", 0);
+        MessageBoxA(
+            hwndApp,
+            "Sound initialization error!  No wave devices found.",
+            "Startup Error",
+            0
+        );
         drvr = NULL;
         return NULL;
     }
@@ -261,8 +315,7 @@ struct _DIG_DRIVER *WAVE_init_driver(unsigned long sampleRate, unsigned short bi
     return drvr;
 }
 
-inline void soundManager::AllocateSampleHandles(void)
-{
+inline void soundManager::AllocateSampleHandles(void) {
     int sampleIndex;
     if (gbNoSound != 0)
         return;
@@ -278,8 +331,7 @@ inline void soundManager::AllocateSampleHandles(void)
 }
 
 VA(0x00477970, 0x1bc)
-short soundManager::Open(short)
-{
+short soundManager::Open(short) {
     int keyState;
     keyState = GetAsyncKeyState(VK_F6);
     if (HIBYTE(keyState)) {
@@ -301,8 +353,12 @@ short soundManager::Open(short)
         m_musicBuffers[0] = malloc(MUSIC_STREAM_BUFFER_SIZE);
         m_musicBuffers[1] = malloc(MUSIC_STREAM_BUFFER_SIZE);
         if (m_digitalDriver == NULL)
-            m_digitalDriver = WAVE_init_driver(MUSIC_STREAM_RATE,
-                SOUND_DEFAULT_SAMPLE_BITS, SOUND_DEFAULT_SAMPLE_CHANNELS, 0);
+            m_digitalDriver = WAVE_init_driver(
+                MUSIC_STREAM_RATE,
+                SOUND_DEFAULT_SAMPLE_BITS,
+                SOUND_DEFAULT_SAMPLE_CHANNELS,
+                0
+            );
         if (m_digitalDriver == NULL) {
             gbNoSound = 1;
             if (m_musicBuffers[0] != NULL)
@@ -330,8 +386,7 @@ short soundManager::Open(short)
     return 0;
 }
 
-inline void soundManager::CDShutdown(void)
-{
+inline void soundManager::CDShutdown(void) {
     if (gbNoSound != 0)
         return;
     if (m_cdStarted == 0)
@@ -347,8 +402,7 @@ inline void soundManager::CDShutdown(void)
 }
 
 VA(0x00477b30, 0x179)
-void soundManager::Close(void)
-{
+void soundManager::Close(void) {
     if (m_active != 1)
         return;
     if (gbNoSound == 0) {
@@ -366,45 +420,21 @@ void soundManager::Close(void)
 }
 
 VA(0x00477cb0, 0x6)
-short soundManager::Main(tag_message &)
-{
+short soundManager::Main(tag_message&) {
     return 0;
 }
 
-// The same helper is expanded in StartSample and PlayAmbientMusic in retail.
-inline void soundManager::StopSample(struct _SAMPLE *sample)
-{
-    int wait;
-    unsigned char music;
-    if (gbNoSound != 0)
-        return;
-    music = 0;
-    if (m_sampleHandles[0] == sample)
-        music = 1;
-    AIL_end_sample(sample);
-    if (music != 0) {
-        for (wait = 0; wait < MUSIC_STOP_WAIT_COUNT; wait++) {
-            ServiceSound();
-            DelayMilli(1);
-        }
-    }
-}
-
-inline int soundManager::ConvertVolume(int volume, int soundType)
-{
+inline int soundManager::ConvertVolume(int volume, int soundType) {
     int result = 0;
     if (soundType == SOUND_VOLUME_MUSIC) {
-        if (gConfig.musicVolume >= SOUND_VOLUME_FIRST
-            && gConfig.musicVolume <= SOUND_VOLUME_LAST) {
-            result = ((SOUND_VOLUME_LAST + 1 - gConfig.musicVolume) * volume)
-                / SOUND_VOLUME_LAST;
+        if (gConfig.musicVolume >= SOUND_VOLUME_FIRST && gConfig.musicVolume <= SOUND_VOLUME_LAST) {
+            result = ((SOUND_VOLUME_LAST + 1 - gConfig.musicVolume) * volume) / SOUND_VOLUME_LAST;
             if (result < 1)
                 result = 1;
         }
     } else if (gConfig.soundVolume >= SOUND_VOLUME_FIRST
                && gConfig.soundVolume <= SOUND_VOLUME_LAST) {
-        result = ((SOUND_VOLUME_LAST + 1 - gConfig.soundVolume) * volume)
-            / SOUND_VOLUME_LAST;
+        result = ((SOUND_VOLUME_LAST + 1 - gConfig.soundVolume) * volume) / SOUND_VOLUME_LAST;
         if (result < 1)
             result = 1;
     }
@@ -416,18 +446,24 @@ inline int soundManager::ConvertVolume(int volume, int soundType)
 }
 
 VA(0x00477cc0, 0x331)
-struct _SAMPLE *soundManager::StartSample(char *name, char **, short, short loop,
-                                        int volume, int channelType, long resume)
-{
+struct _SAMPLE* soundManager::StartSample(
+    char* name,
+    char**,
+    short,
+    short loop,
+    int volume,
+    int channelType,
+    long resume
+) {
     short channel;
-    struct _SAMPLE *sample;
+    struct _SAMPLE* sample;
     int sampleType;
     int stereo;
     int sampleRate;
     short index;
-    char *filename;
+    char* filename;
     char path[SAMPLE_PATH_CAPACITY];
-    FILE *file;
+    FILE* file;
     if (gbNoSound != 0)
         return NULL;
     if (m_musicReady == 0)
@@ -440,8 +476,13 @@ struct _SAMPLE *soundManager::StartSample(char *name, char **, short, short loop
         if (m_musicStreamOpen != 0) {
             StopSample(m_musicSample);
             m_musicStreamOpen = 0;
-            ProcessAssert(reinterpret_cast<int>(m_midiFile), // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
-                          gStartSampleAssertFile, gStartSampleAssertLine + 37);
+            ProcessAssert(
+                reinterpret_cast<int>(
+                    m_midiFile
+                ), // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
+                gStartSampleAssertFile,
+                gStartSampleAssertLine + 37
+            );
             fclose(m_midiFile);
             m_midiFile = NULL;
         }
@@ -456,13 +497,25 @@ struct _SAMPLE *soundManager::StartSample(char *name, char **, short, short loop
     filename = _strrev(name);
     for (index = 0; index < SAMPLE_SUFFIX_COUNT; index++) {
         switch (filename[index]) {
-        case '1': sampleRate = SAMPLE_RATE_LOW; break;
-        case '2': sampleRate = SAMPLE_RATE_NORMAL; break;
-        case '4': sampleRate = SAMPLE_RATE_HIGH; break;
-        case '6': sampleType = SAMPLE_FORMAT_16_BIT; break;
-        case '8': sampleType = 0; break;
-        case 'M':
-        case 'm': stereo = 0; break;
+            case '1':
+                sampleRate = SAMPLE_RATE_LOW;
+                break;
+            case '2':
+                sampleRate = SAMPLE_RATE_NORMAL;
+                break;
+            case '4':
+                sampleRate = SAMPLE_RATE_HIGH;
+                break;
+            case '6':
+                sampleType = SAMPLE_FORMAT_16_BIT;
+                break;
+            case '8':
+                sampleType = 0;
+                break;
+            case 'M':
+            case 'm':
+                stereo = 0;
+                break;
         }
     }
     sampleType += stereo;
@@ -492,9 +545,60 @@ struct _SAMPLE *soundManager::StartSample(char *name, char **, short, short loop
     return sample;
 }
 
+VA(0x00478000, 0xe1)
+void soundManager::StopAllSamples(void) {
+    short sampleIndex;
+    int wait;
+    if (gbNoSound != 0)
+        return;
+    if (m_musicReady == 0)
+        return;
+    for (sampleIndex = 0; sampleIndex < m_numSampleHandles; sampleIndex++) {
+        if (AIL_sample_status(m_sampleHandles[sampleIndex]) == SAMPLE_STATUS_PLAYING)
+            AIL_end_sample(m_sampleHandles[sampleIndex]);
+    }
+    m_fadeSteps = 0;
+    if (m_cdReady != 0) {
+        CDStop();
+    } else if (m_musicStreamOpen != 0) {
+        m_musicStreamOpen = 0;
+        ProcessAssert(
+            reinterpret_cast<int>(
+                m_midiFile
+            ), // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+            gStopAllSamplesAssertFile,
+            gStopAllSamplesAssertLine + 27
+        );
+        fclose(m_midiFile);
+        m_midiFile = NULL;
+    }
+    for (wait = 0; wait < SAMPLE_STOP_ALL_WAIT_COUNT; wait++) {
+        ServiceSound();
+        DelayMilli(1);
+    }
+}
+
+// /Ob2 expands this ordinary routine in StartSample and PlayAmbientMusic.
+VA(0x004780f0, 0x4f)
+void soundManager::StopSample(struct _SAMPLE* sample) {
+    int wait;
+    unsigned char music;
+    if (gbNoSound != 0)
+        return;
+    music = 0;
+    if (m_sampleHandles[0] == sample)
+        music = 1;
+    AIL_end_sample(sample);
+    if (music != 0) {
+        for (wait = 0; wait < MUSIC_STOP_WAIT_COUNT; wait++) {
+            ServiceSound();
+            DelayMilli(1);
+        }
+    }
+}
+
 VA(0x00478140, 0x1f1)
-void soundManager::ModifySample(struct _SAMPLE *sampleHandle, short operation, long value)
-{
+void soundManager::ModifySample(struct _SAMPLE* sampleHandle, short operation, long value) {
     if (gbNoSound != 0)
         return;
     if (m_musicReady == 0)
@@ -507,47 +611,45 @@ void soundManager::ModifySample(struct _SAMPLE *sampleHandle, short operation, l
             foundChannel = sampleIndex;
     }
     switch (operation) {
-    case SOUND_OPERATION_VOLUME:
-    case SOUND_OPERATION_EFFECT_VOLUME:
-        AIL_set_sample_volume(sampleHandle, ConvertVolume(value, SOUND_VOLUME_EFFECT));
-        if (foundChannel >= 0)
-            gSampleVolumes[foundChannel] = static_cast<short>(value);
-        break;
-    case SOUND_OPERATION_MUSIC_VOLUME:
-        ProcessAssert(m_cdReady == 0, gModifySampleAssertFile, gModifySampleAssertLine + 27);
-        AIL_set_sample_volume(sampleHandle, ConvertVolume(value, SOUND_VOLUME_MUSIC));
-        if (foundChannel >= 0)
-            gSampleVolumes[foundChannel] = static_cast<short>(value);
-        break;
-    case SOUND_OPERATION_START:
-        AIL_start_sample(sampleHandle);
-        break;
+        case SOUND_OPERATION_VOLUME:
+        case SOUND_OPERATION_EFFECT_VOLUME:
+            AIL_set_sample_volume(sampleHandle, ConvertVolume(value, SOUND_VOLUME_EFFECT));
+            if (foundChannel >= 0)
+                gSampleVolumes[foundChannel] = static_cast<short>(value);
+            break;
+        case SOUND_OPERATION_MUSIC_VOLUME:
+            ProcessAssert(m_cdReady == 0, gModifySampleAssertFile, gModifySampleAssertLine + 27);
+            AIL_set_sample_volume(sampleHandle, ConvertVolume(value, SOUND_VOLUME_MUSIC));
+            if (foundChannel >= 0)
+                gSampleVolumes[foundChannel] = static_cast<short>(value);
+            break;
+        case SOUND_OPERATION_START:
+            AIL_start_sample(sampleHandle);
+            break;
     }
     Process1WindowsMessage();
 }
 
 // The retail volume updater expands this same query helper.
 VA(0x00478340, 0x4d)
-long soundManager::DigitalReport(struct _SAMPLE *sample, short reportType)
-{
+long soundManager::DigitalReport(struct _SAMPLE* sample, short reportType) {
     int sampleStatus;
     if (gbNoSound != 0)
         return 0;
     switch (reportType) {
-    case SAMPLE_REPORT_VOLUME:
-        return AIL_sample_volume(sample);
-    case SAMPLE_REPORT_PLAYING:
-        sampleStatus = AIL_sample_status(sample);
-        return sampleStatus == SAMPLE_STATUS_PLAYING;
+        case SAMPLE_REPORT_VOLUME:
+            return AIL_sample_volume(sample);
+        case SAMPLE_REPORT_PLAYING:
+            sampleStatus = AIL_sample_status(sample);
+            return sampleStatus == SAMPLE_STATUS_PLAYING;
     }
     return 0;
 }
 
 VA(0x00478390, 0xbd)
-void soundManager::AdjustSoundVolumes(void)
-{
+void soundManager::AdjustSoundVolumes(void) {
     int sampleIndex;
-    struct _SAMPLE *sampleHandle;
+    struct _SAMPLE* sampleHandle;
     if (gbNoSound != 0)
         return;
     if (m_musicReady == 0)
@@ -556,8 +658,11 @@ void soundManager::AdjustSoundVolumes(void)
         sampleHandle = m_sampleHandles[sampleIndex];
         if (gConfig.soundVolume != 0) {
             if (DigitalReport(sampleHandle, SAMPLE_REPORT_PLAYING) != 0)
-                ModifySample(sampleHandle, SOUND_OPERATION_EFFECT_VOLUME,
-                             gSampleVolumes[sampleIndex]);
+                ModifySample(
+                    sampleHandle,
+                    SOUND_OPERATION_EFFECT_VOLUME,
+                    gSampleVolumes[sampleIndex]
+                );
         } else {
             ModifySample(sampleHandle, SOUND_OPERATION_VOLUME, 0);
         }
@@ -565,8 +670,7 @@ void soundManager::AdjustSoundVolumes(void)
 }
 
 VA(0x00478450, 0x16c)
-void soundManager::AdjustMusicVolumes(void)
-{
+void soundManager::AdjustMusicVolumes(void) {
     unsigned char savePosition;
     if (gbNoSound != 0)
         return;
@@ -575,25 +679,29 @@ void soundManager::AdjustMusicVolumes(void)
     if (m_currentTrack < 0)
         return;
     savePosition = 0;
-    if (m_currentTrack < MUSIC_POSITION_TRACK_END
-        || m_currentTrack == MUSIC_POSITION_TRACK_1
+    if (m_currentTrack < MUSIC_POSITION_TRACK_END || m_currentTrack == MUSIC_POSITION_TRACK_1
         || m_currentTrack == MUSIC_POSITION_TRACK_3)
         savePosition = 1;
     if (gConfig.musicVolume != 0) {
         if (m_cdReady != 0)
             CDSetVolume(-1, 0);
         else
-            ModifySample(m_sampleHandles[0], SOUND_OPERATION_MUSIC_VOLUME,
-                         SAMPLE_VOLUME_MAX);
-        PlayAmbientMusic(m_currentTrack,
-                         savePosition ? m_savedTrackPositions[m_currentTrack] : 0, -1);
+            ModifySample(m_sampleHandles[0], SOUND_OPERATION_MUSIC_VOLUME, SAMPLE_VOLUME_MAX);
+        PlayAmbientMusic(
+            m_currentTrack,
+            savePosition ? m_savedTrackPositions[m_currentTrack] : 0,
+            -1
+        );
     } else {
         if (m_cdReady != 0) {
             CDSetVolume(-1, 0);
         } else {
             if (savePosition != 0) {
-                ProcessAssert(reinterpret_cast<int>(m_midiFile), // byte-evidenced
-                              gAdjustMusicAssertFile, gAdjustMusicAssertLine + 40);
+                ProcessAssert(
+                    reinterpret_cast<int>(m_midiFile), // byte-evidenced
+                    gAdjustMusicAssertFile,
+                    gAdjustMusicAssertLine + 40
+                );
                 m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
             }
             ModifySample(m_sampleHandles[0], SOUND_OPERATION_VOLUME, 0);
@@ -602,8 +710,7 @@ void soundManager::AdjustMusicVolumes(void)
 }
 
 VA(0x004785c0, 0x104)
-void soundManager::SetMusicQuality(int musicSource)
-{
+void soundManager::SetMusicQuality(int musicSource) {
     int track;
     if (gbNoSound != 0)
         return;
@@ -634,10 +741,9 @@ void soundManager::SetMusicQuality(int musicSource)
 }
 
 VA(0x004786d0, 0x26e)
-void soundManager::PlayAmbientMusic(int track, long resume, int volume)
-{
+void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
     char filename[MUSIC_FILENAME_CAPACITY];
-    char *data;
+    char* data;
     unsigned char loop;
     int wait;
     if (gbNoSound != 0)
@@ -657,11 +763,15 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume)
     }
     if (m_midiFile != NULL
         && ((m_currentTrack >= 0 && m_currentTrack < MUSIC_POSITION_TRACK_END)
-            || m_currentTrack == MUSIC_POSITION_TRACK_1
-            || m_currentTrack == MUSIC_POSITION_TRACK_2
+            || m_currentTrack == MUSIC_POSITION_TRACK_1 || m_currentTrack == MUSIC_POSITION_TRACK_2
             || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
-        ProcessAssert(reinterpret_cast<int>(m_midiFile), // byte-evidenced: retail passes the FILE pointer as its assertion condition.
-                      gAmbientMusicAssertFile, gAmbientMusicAssertLine + 37);
+        ProcessAssert(
+            reinterpret_cast<int>(
+                m_midiFile
+            ), // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+            gAmbientMusicAssertFile,
+            gAmbientMusicAssertLine + 37
+        );
         m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
     }
     m_currentTrack = static_cast<char>(track);
@@ -715,8 +825,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume)
 // donor Buka TU BASE/soundmgr; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:void soundManager::PollSound(void)@0x000cd320
 VA(0x00478940, 0x489)
-void soundManager::PollSound(void)
-{
+void soundManager::PollSound(void) {
     int volume;
     int buffer;
     long delta;
@@ -731,19 +840,16 @@ void soundManager::PollSound(void)
 
     if (m_fadeSteps > 0) {
         Process1WindowsMessage();
-        if (m_currentTrack >= MUSIC_POSITION_TRACK_END
-            || m_currentTrack < 0)
+        if (m_currentTrack >= MUSIC_POSITION_TRACK_END || m_currentTrack < 0)
             gMusicFadeTimer = KBTickCount();
         delta = gMusicFadeTimer - KBTickCount();
         m_fadeSteps = delta / MUSIC_FADE_STEP_TICKS;
         if (m_fadeSteps < 1)
             m_fadeSteps = 0;
 
-        if (m_fadeSteps <= MUSIC_FADE_HOLD_LAST
-            && m_currentTrack != m_fadeTargetTrack) {
+        if (m_fadeSteps <= MUSIC_FADE_HOLD_LAST && m_currentTrack != m_fadeTargetTrack) {
             if (m_midiFile != 0
-                && ((m_currentTrack >= 0
-                     && m_currentTrack < MUSIC_POSITION_TRACK_END)
+                && ((m_currentTrack >= 0 && m_currentTrack < MUSIC_POSITION_TRACK_END)
                     || m_currentTrack == MUSIC_POSITION_TRACK_1
                     || m_currentTrack == MUSIC_POSITION_TRACK_2
                     || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
@@ -751,22 +857,19 @@ void soundManager::PollSound(void)
                     ProcessAssert(
                         reinterpret_cast<int>(m_midiFile), // byte-evidenced
                         gSoundManagerAssertFile1,
-                        gSoundManagerAssertLine + 42);
+                        gSoundManagerAssertLine + 42
+                    );
                     m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
                 }
             } else {
                 gMusicFadeTimer = KBTickCount();
             }
             m_fading = 1;
-            if ((m_fadeTargetTrack >= 0
-                 && m_fadeTargetTrack < MUSIC_POSITION_TRACK_END)
+            if ((m_fadeTargetTrack >= 0 && m_fadeTargetTrack < MUSIC_POSITION_TRACK_END)
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_1
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_2
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_3)
-                PlayAmbientMusic(
-                    m_fadeTargetTrack,
-                    m_savedTrackPositions[m_fadeTargetTrack],
-                    -1);
+                PlayAmbientMusic(m_fadeTargetTrack, m_savedTrackPositions[m_fadeTargetTrack], -1);
             else
                 PlayAmbientMusic(m_fadeTargetTrack, 0, -1);
             delta = gMusicFadeTimer - KBTickCount();
@@ -778,20 +881,20 @@ void soundManager::PollSound(void)
 
         musicFadeStep = m_fadeSteps;
         if (m_fadeSteps <= MUSIC_FADE_HOLD_LAST)
-            volume = (MUSIC_FADE_TOTAL_STEPS - m_fadeSteps)
-                * SAMPLE_VOLUME_MAX / MUSIC_FADE_TOTAL_STEPS;
+            volume =
+                (MUSIC_FADE_TOTAL_STEPS - m_fadeSteps) * SAMPLE_VOLUME_MAX / MUSIC_FADE_TOTAL_STEPS;
         else
-            volume = (m_fadeSteps - MUSIC_FADE_HOLD_LAST)
-                * SAMPLE_VOLUME_MAX / MUSIC_FADE_RISE_STEPS;
+            volume =
+                (m_fadeSteps - MUSIC_FADE_HOLD_LAST) * SAMPLE_VOLUME_MAX / MUSIC_FADE_RISE_STEPS;
         if (volume > SAMPLE_VOLUME_MAX)
             volume = SAMPLE_VOLUME_MAX;
         if (volume < 0)
             volume = 0;
 
-        struct _SAMPLE *sample = m_sampleHandles[0];
+        struct _SAMPLE* sample = m_sampleHandles[0];
         if (m_cdReady != 0) {
-            volume = (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume) * volume
-                * MIDI_VOLUME_MAX / CD_VOLUME_SCALE_DIVISOR;
+            volume = (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume) * volume * MIDI_VOLUME_MAX
+                     / CD_VOLUME_SCALE_DIVISOR;
             if (volume > MIDI_VOLUME_MAX)
                 volume = MIDI_VOLUME_MAX;
             if (volume < 0)
@@ -822,11 +925,11 @@ void soundManager::PollSound(void)
             ProcessAssert(
                 reinterpret_cast<int>(m_midiFile), // byte-evidenced
                 gSoundManagerAssertFile2,
-                gSoundManagerAssertLine + 103);
-            unsigned long bytesRead = fread(
-                m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
-            AIL_load_sample_buffer(
-                m_musicSample, buffer, m_musicBuffers[buffer], bytesRead);
+                gSoundManagerAssertLine + 103
+            );
+            unsigned long bytesRead =
+                fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
+            AIL_load_sample_buffer(m_musicSample, buffer, m_musicBuffers[buffer], bytesRead);
         }
 
         Process1WindowsMessage();
@@ -836,7 +939,8 @@ void soundManager::PollSound(void)
                     ProcessAssert(
                         reinterpret_cast<int>(m_midiFile), // byte-evidenced
                         gSoundManagerAssertFile3,
-                        gSoundManagerAssertLine + 116);
+                        gSoundManagerAssertLine + 116
+                    );
                     rewind(m_midiFile);
                 } else {
                     m_fading = 0;
@@ -845,8 +949,7 @@ void soundManager::PollSound(void)
                 Process1WindowsMessage();
                 AIL_init_sample(m_musicSample);
                 int format;
-                if (m_currentTrack == MUSIC_POSITION_TRACK_1
-                    || gConfig.musicSource == 0)
+                if (m_currentTrack == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == 0)
                     format = 0;
                 else if (gConfig.musicSource == 1)
                     format = 2;
@@ -857,8 +960,8 @@ void soundManager::PollSound(void)
 
                 volume = 0;
                 if (gConfig.musicVolume >= 1 && gConfig.musicVolume <= 10) {
-                    volume = (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume)
-                        * SAMPLE_VOLUME_MAX / 10;
+                    volume =
+                        (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume) * SAMPLE_VOLUME_MAX / 10;
                     if (volume < 1)
                         volume = 1;
                 }
@@ -875,23 +978,121 @@ void soundManager::PollSound(void)
                     ProcessAssert(
                         reinterpret_cast<int>(m_midiFile), // byte-evidenced
                         gSoundManagerAssertFile4,
-                        gSoundManagerAssertLine + 145);
-                    unsigned long bytesRead = fread(
-                        m_musicBuffers[buffer], 1,
-                        MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
+                        gSoundManagerAssertLine + 145
+                    );
+                    unsigned long bytesRead =
+                        fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
                     AIL_load_sample_buffer(
-                        m_musicSample, buffer, m_musicBuffers[buffer], bytesRead);
+                        m_musicSample,
+                        buffer,
+                        m_musicBuffers[buffer],
+                        bytesRead
+                    );
                 }
             } else {
                 m_musicStreamOpen = 0;
                 ProcessAssert(
                     reinterpret_cast<int>(m_midiFile), // byte-evidenced
                     gSoundManagerAssertFile5,
-                    gSoundManagerAssertLine + 153);
+                    gSoundManagerAssertLine + 153
+                );
                 fclose(m_midiFile);
                 m_midiFile = 0;
             }
         }
     }
     m_pollRequested = 0;
+}
+
+VA(0x00478dd0, 0x1ad)
+void soundManager::SwitchAmbientMusic(int track) {
+    if (gbNoSound != 0)
+        return;
+    if (m_musicReady == 0)
+        return;
+    if (gConfig.musicVolume == 0) {
+        m_currentTrack = static_cast<char>(track);
+        return;
+    }
+    if (MusicPlaying() == 0) {
+        PlayAmbientMusic(track, 0, -1);
+        return;
+    }
+    Process1WindowsMessage();
+    if ((m_fadeSteps != 0 && m_fadeTargetTrack != track)
+        || (m_fadeSteps == 0 && m_currentTrack != track)) {
+        if (m_fadeSteps <= MUSIC_FADE_HOLD_LAST) {
+            m_fadeSteps = MUSIC_FADE_TOTAL_STEPS;
+            gMusicFadeTimer = KBTickCount() + AMBIENT_FADE_DELAY_TICKS;
+        }
+        m_fadeTargetTrack = track;
+        PollSound();
+    }
+}
+
+VA(0x00478f80, 0x1ea)
+struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
+    struct _SAMPLE* handle;
+    short channel;
+    SampleChannelStruct* channels;
+    SamplePlaybackData* playback;
+    if (gbNoSound != 0)
+        return NULL;
+    if (m_musicReady == 0)
+        return NULL;
+    if (gConfig.soundVolume == 0)
+        return NULL;
+    playback = &sampleResource->m_playbackData;
+    if (m_samplesReady == 0 || playback->volume == 0)
+        return NULL;
+    channels = &SCS[playback->channelType];
+    for (channel = static_cast<short>(channels->startChannel); channel < channels->endChannel;
+         channel++) {
+        if (AIL_sample_status(m_sampleHandles[channel]) == SAMPLE_STATUS_DONE)
+            break;
+    }
+    if (channel == channels->endChannel) {
+        if (playback->channelType == SAMPLE_PLAYBACK_CHANNEL_NONE)
+            return NULL;
+        channel = static_cast<short>(channels->currentChannel);
+        channels->currentChannel++;
+        if (channels->endChannel <= channels->currentChannel) {
+            channels->currentChannel = channels->startChannel;
+            channel = static_cast<short>(channels->currentChannel);
+        }
+        StopSample(m_sampleHandles[channel]);
+    }
+    handle = m_sampleHandles[channel];
+    m_channelVolumes[channel] = static_cast<char>(playback->volume);
+    gSampleVolumes[channel] = static_cast<short>(playback->volume);
+    AIL_init_sample(handle);
+    AIL_set_sample_type(handle, playback->format, 1);
+    AIL_set_sample_playback_rate(handle, playback->sampleRate);
+    AIL_set_sample_loop_count(handle, playback->loopCount);
+    AIL_set_sample_address(handle, playback->data, playback->size);
+    if (gConfig.soundVolume != 0)
+        AIL_set_sample_volume(handle, ConvertVolume(playback->volume, SOUND_VOLUME_EFFECT));
+    else
+        AIL_set_sample_volume(handle, 0);
+    AIL_start_sample(handle);
+    playback->activeSample = handle;
+    m_channelSamples[channel] = handle;
+    m_channelSampleData[channel] = playback->data;
+    m_channelSampleSizes[channel] = playback->size;
+    return handle;
+}
+
+VA(0x00479170, 0x10)
+void soundManager::ServiceSound(void) {
+    if (gbNoSound == 0)
+        AIL_serve();
+}
+
+VA(0x00479180, 0xfe)
+int soundManager::MusicPlaying(void) {
+    if (gbNoSound != 0)
+        return 0;
+    if (m_cdReady != 0)
+        return CDIsPlaying();
+    return DigitalReport(m_musicSample, SAMPLE_REPORT_PLAYING);
 }

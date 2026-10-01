@@ -48,22 +48,22 @@ struct tag_message;
 #pragma pack(push, 1)
 class soundManager : public baseManager {
 public:
-    struct _DIG_DRIVER *m_digitalDriver;
-    struct _SAMPLE *m_activeSample;
+    struct _DIG_DRIVER* m_digitalDriver;
+    struct _SAMPLE* m_activeSample;
     int m_samplesReady;
-    struct _SAMPLE *m_musicSample;
+    struct _SAMPLE* m_musicSample;
     char m_musicStreamOpen;
     char m_musicStreamRestart;
-    void *m_musicBuffers[2];
-    FILE *m_midiFile;
-    struct _SAMPLE *m_sampleHandles[SOUND_SAMPLE_HANDLE_COUNT];
+    void* m_musicBuffers[2];
+    FILE* m_midiFile;
+    struct _SAMPLE* m_sampleHandles[SOUND_SAMPLE_HANDLE_COUNT];
     char _pad_0x08a[4];
     int m_numSampleHandles;
     char _pad_0x092[0x40];
     char m_channelVolumes[0x14];
-    struct _SAMPLE *m_channelSamples[14];
+    struct _SAMPLE* m_channelSamples[14];
     char _pad_0x11e[8];
-    void *m_channelSampleData[14];
+    void* m_channelSampleData[14];
     char _pad_0x15e[8];
     unsigned long m_channelSampleSizes[14];
     char _pad_0x19e[0x3c8];
@@ -90,7 +90,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void ValidatePreviousPosition(int);
     void CDStop(void);
@@ -102,11 +102,11 @@ public:
     void CDPoll(void);
     int ConvertVolume(int, int);
     void AllocateSampleHandles(void);
-    struct _SAMPLE * StartSample(char *, char * *, short int, short int, int, int, long int);
-    void StopAllSamples(int);
-    void StopSample(struct _SAMPLE *);
-    void ModifySample(struct _SAMPLE *, short int, long int);
-    long int DigitalReport(struct _SAMPLE *, short int);
+    struct _SAMPLE* StartSample(char*, char**, short int, short int, int, int, long int);
+    void StopAllSamples(void);
+    void StopSample(struct _SAMPLE*);
+    void ModifySample(struct _SAMPLE*, short int, long int);
+    long int DigitalReport(struct _SAMPLE*, short int);
     void AdjustSoundVolumes(void);
     void AdjustMusicVolumes(void);
     void ForcePollSound(void);
@@ -114,7 +114,7 @@ public:
     void PlayAmbientMusic(int, long int, int);
     void PollSound(void);
     void SwitchAmbientMusic(int);
-    struct _SAMPLE * MemorySample(class sample *);
+    struct _SAMPLE* MemorySample(class sample*);
     void GetNumberCDDrives(void);
     void ServiceSound(void);
     int MusicPlaying(void);

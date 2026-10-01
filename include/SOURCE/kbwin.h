@@ -15,14 +15,15 @@ struct WindowTextEntry {
 #pragma pack(pop)
 
 extern WindowTextEntry gWinSetup[];
-extern char *gWinSetupText[];
+extern char* gWinSetupText[];
 
-extern void *hmnuCurrent;
+extern void* hmnuCurrent;
 extern long giCurWindowsStyleFlags;
-void KBChangeMenu(void *);
+long AppCommand(void*, unsigned int, unsigned int, long);
+void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);
 void SetMenuStatus(int);
-void UpdateDfltMenu(void *);
-void UpdateAppSpecificMenus(void *);
+void UpdateDfltMenu(void*);
+void UpdateAppSpecificMenus(void*);
 
 #endif

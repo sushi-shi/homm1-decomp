@@ -5,7 +5,8 @@
 #include <H1/Macros.h>
 
 H1_ENUM_BEGIN(BitmapCopyConstant)
-    BITMAP_COPY_STRIDE = 640
+    BITMAP_COPY_STRIDE = 640,
+    PALETTE_RAW_BYTES = 0x300
 H1_ENUM_END(BitmapCopyConstant)
 
 #pragma pack(push, 1)
@@ -14,7 +15,7 @@ public:
     short m_bitmapType;
     short m_width;
     short m_height;
-    signed char *m_pixels;
+    signed char* m_pixels;
 
     // --- constructors ---
     bitmap(void);
@@ -26,12 +27,13 @@ public:
     void DrawToBuffer(short int, short int);
     void DrawToScreen(short int, short int);
     void GrabScreen(short int, short int);
-    void GrabBitmap(class bitmap *, short int, short int);
-    void GrabBitmapCareful(class bitmap *, short int, short int);
-    void CopyTo(class bitmap *, int, int, int, int, int, int);
-    void CopyToCareful(class bitmap *, int, int, int, int, int, int);
+    void GrabBitmap(class bitmap*, short int, short int);
+    void GrabBitmapCareful(class bitmap*, short int, short int);
+    void Write(char*);
+    void CopyTo(class bitmap*, int, int, int, int, int, int);
+    void CopyToCareful(class bitmap*, int, int, int, int, int, int);
 };
 #pragma pack(pop)
 
-void PostprocessBitmap(signed char *, int, int);
+void PostprocessBitmap(signed char*, int, int);
 #endif // HOMM1_BASE_BITMAP_H

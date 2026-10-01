@@ -8,7 +8,7 @@ struct pcmwaveformat_tag;
 struct tagAUXCAPSA;
 extern pcmwaveformat_tag gWaveFormat;
 extern tagAUXCAPSA gAuxCaps;
-_DIG_DRIVER *WAVE_init_driver(unsigned long, unsigned short, unsigned short, unsigned short);
+_DIG_DRIVER* WAVE_init_driver(unsigned long, unsigned short, unsigned short, unsigned short);
 
 H1_ENUM_BEGIN(CDPlaybackConstant)
     CD_POSITION_BUFFER_SIZE = 20,
@@ -26,6 +26,11 @@ H1_ENUM_BEGIN(CDPlaybackConstant)
     CD_NOTIFY_SCENARIO_LAST = 32,
     MUSIC_FILENAME_CAPACITY = 40,
     MUSIC_STOP_WAIT_COUNT = 10,
+    SAMPLE_STOP_ALL_WAIT_COUNT = 5,
+    AMBIENT_FADE_DELAY_TICKS = 900,
+    SAMPLE_STATUS_DONE = 2,
+    SAMPLE_VOLUME_TABLE_BYTES = 0x40,
+    SOUND_STATE_RESET_SPAN = 0xae,
     MUSIC_STOP_WAIT_MILLISECONDS = 5
 H1_ENUM_END(CDPlaybackConstant)
 
@@ -62,6 +67,8 @@ extern short gAmbientMusicAssertLine;
 extern char gAmbientMusicAssertFile[];
 extern short gStartSampleAssertLine;
 extern char gStartSampleAssertFile[];
+extern short gStopAllSamplesAssertLine;
+extern char gStopAllSamplesAssertFile[];
 extern short gModifySampleAssertLine;
 extern char gModifySampleAssertFile[];
 extern short gAdjustMusicAssertLine;
@@ -69,7 +76,15 @@ extern char gAdjustMusicAssertFile[];
 extern short gSampleVolumes[];
 extern char gcSoundPath[];
 extern char gcDataPath[];
-char *FindToken(char *, char);
-void HandleMCIError(int, char *);
+struct SampleChannelStruct {
+    int startChannel;
+    int endChannel;
+    int currentChannel;
+};
+extern SampleChannelStruct SCS[];
+
+char* FindToken(char*, char);
+void SetReady2Poll(void);
+void HandleMCIError(int, char*);
 
 #endif

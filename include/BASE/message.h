@@ -5,6 +5,8 @@
 
 H1_ENUM_BEGIN(MessageType)
     MESSAGE_NONE = 0,
+    MESSAGE_KEY_DOWN = 1,
+    MESSAGE_KEY_UP = 2,
     MESSAGE_MOUSE_MOVE = 4,
     MESSAGE_LEFT_BUTTON_DOWN = 8,
     MESSAGE_LEFT_BUTTON_UP = 0x10,
@@ -35,12 +37,22 @@ H1_ENUM_BEGIN(BaseWidgetCommand)
     WIDGET_COMMAND_HOVER = 11,
     WIDGET_COMMAND_DIMMED = 0x1000,
     WIDGET_COMMAND_SET_FRAME = 4,
-    WIDGET_NOTIFY_DESELECT = 13
+    WIDGET_COMMAND_SET_COLOR = 8,
+    WIDGET_COMMAND_SET_ICON = 9,
+    WIDGET_NOTIFY_SELECT = 12,
+    WIDGET_NOTIFY_DESELECT = 13,
+    WIDGET_NOTIFY_RIGHT_CLICK = 14
 H1_ENUM_END(BaseWidgetCommand)
 
 H1_ENUM_BEGIN(MessageModifier)
     MESSAGE_MODIFIER_NONE = 0,
-    MESSAGE_MODIFIER_RIGHT_BUTTON = 0x200
+    MESSAGE_MODIFIER_RIGHT_SHIFT = 1,
+    MESSAGE_MODIFIER_LEFT_SHIFT = 2,
+    MESSAGE_MODIFIER_SHIFT_KEYS = 3,
+    MESSAGE_MODIFIER_CONTROL = 4,
+    MESSAGE_MODIFIER_ALT = 0x20,
+    MESSAGE_MODIFIER_RIGHT_BUTTON = 0x200,
+    MESSAGE_MODIFIER_BUTTON_MASK = 0x300
 H1_ENUM_END(MessageModifier)
 
 #pragma pack(push, 1)
@@ -51,9 +63,14 @@ struct tag_messageMousePayload {
     char unknown[8];
 };
 
+struct tag_messageKeyboardPayload {
+    short keyCode;
+    char unknown[12];
+};
+
 union tag_messageWidgetData {
     long value;
-    char *text;
+    char* text;
 };
 
 struct tag_messageWidgetPayload {
@@ -71,6 +88,7 @@ struct tag_messageExecutivePayload {
 
 union tag_messagePayload {
     tag_messageMousePayload mouse;
+    tag_messageKeyboardPayload keyboard;
     tag_messageWidgetPayload widget;
     tag_messageExecutivePayload executive;
     char unknown[14];

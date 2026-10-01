@@ -17,6 +17,7 @@ void LogStr(char*, long, long, long, long, long);
 void LogStr(char*, long, long, long, long, long, long, long);
 void AiPrint(char*);
 void AbsAiPrint(char*);
+void PostprocessPalette(signed char*);
 void BlitBitmapToScreen(bitmap*, int, int, int, int, int, int);
 
 void WritePrefs();
