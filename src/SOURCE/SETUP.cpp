@@ -309,6 +309,145 @@ signed char game::SetupMultiPlayerGame(void) {
     return 1;
 }
 
+short SetupGameHandler(tag_message&);
+extern signed char gbWaitForRemoteReceive;
+extern int gbInSetupDialog;
+
+// Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
+// keep separate restart and load command ids.
+VA(0x004574e1, 0x486)
+signed char game::SetupGame(signed char newGame) {
+    heroWindow* window;
+    int result;
+
+    result = 1;
+    iMPExtendedType = 10;
+    iMPBaseType = 10;
+    giNumHumanPlayers = 1;
+    gbWaitForRemoteReceive = 0;
+    gbDirectConnect = 0;
+    gbInSetupDialog = 1;
+
+    if (giMenuCommand != -1) {
+        switch (giMenuCommand) {
+            case 0x9ca8:
+                giCampaignChoice = 1;
+                break;
+            case 0x9ca9:
+                giCampaignChoice = 2;
+                break;
+            case 0x9caa:
+                giCampaignChoice = 3;
+                break;
+            case 0x9cab:
+                giCampaignChoice = 4;
+                break;
+            case 0x9ca6:
+            case 0x9cbb:
+                break;
+            case 0x9cbc:
+                giCampaignChoice = 1;
+                break;
+            case 0x9cae:
+            case 0x9cbf:
+                giNumHumanPlayers = 2;
+                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                break;
+            case 0x9caf:
+            case 0x9cc0:
+                giNumHumanPlayers = 3;
+                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                break;
+            case 0x9cb0:
+            case 0x9cc1:
+                giNumHumanPlayers = 4;
+                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                break;
+            case 0x9cb2:
+            case 0x9cc3:
+                iMPBaseType = MULTIPLAYER_BASE_NETWORK;
+                iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
+                goto remoteSetup;
+            case 0x9cb3:
+            case 0x9cc4:
+                iMPBaseType = MULTIPLAYER_BASE_NETWORK;
+                iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
+                goto remoteSetup;
+            case 0x9cb5:
+            case 0x9cc6:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+                goto remoteSetup;
+            case 0x9cb6:
+            case 0x9cc7:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+                goto remoteSetup;
+            case 0x9cb8:
+            case 0x9cc9:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+                gbDirectConnect = 1;
+                goto remoteSetup;
+            case 0x9cb9:
+            case 0x9cca:
+                iMPBaseType = MULTIPLAYER_BASE_MODEM;
+                iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+                gbDirectConnect = 1;
+                goto remoteSetup;
+
+            remoteSetup:
+                RemoteMain(iMPExtendedType);
+                if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST
+                    || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
+                    gbWaitForRemoteReceive = 1;
+                break;
+        }
+        giMenuCommand = -1;
+        result = 1;
+        goto done;
+    }
+
+    window = new heroWindow(400, 35, "stpnewgm.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupGameHandler, 0);
+    delete window;
+
+    switch ((short)gpWindowManager->m_dialogResult) {
+        case 1:
+            break;
+        case 2:
+            giCampaignChoice = 1;
+            if (newGame) {
+                if (!SetupCampaignGame()) {
+                    result = 0;
+                    goto done;
+                }
+            }
+            break;
+        case 3:
+            if (!SetupMultiPlayerGame()) {
+                result = 0;
+                goto done;
+            }
+            break;
+        case DIALOG_CANCEL:
+            result = 0;
+            goto done;
+    }
+
+    if (iMPBaseType == MULTIPLAYER_BASE_NETWORK || iMPBaseType == MULTIPLAYER_BASE_MODEM) {
+        RemoteMain(iMPExtendedType);
+        if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
+            gbWaitForRemoteReceive = 1;
+    }
+
+done:
+    gbInSetupDialog = 0;
+    return result;
+}
+
 // donor PoL RVA 0x000123cc; preferred Buka symbol ?PickLoadGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc

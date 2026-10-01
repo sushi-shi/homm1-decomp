@@ -127,7 +127,7 @@ public:
     int SetupNetworkGame2(void);
     signed char SetupModemGame(void);
     signed char SetupMultiPlayerGame(void);
-    int SetupGame(void);
+    signed char SetupGame(signed char);
     int PickLoadGame(void);
     int HandleCampaignWin(void);
     void PlayPreScenarioSmacker(int, int);
