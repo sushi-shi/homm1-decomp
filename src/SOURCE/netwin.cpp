@@ -20,8 +20,7 @@
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.601182;margin=0.610067;shape=0.521;size=0.881;calls=1.000;alternate=pol20:int is_netbios_avail(void)@0x000a6be0
 VA(0x00413c40, 0xa8)
-int is_netbios_avail(void)
-{
+int is_netbios_avail(void) {
     NCB ncb;
     memset(&ncb, 0, sizeof(ncb));
     for (gNetbiosLana = 0; gNetbiosLana < MAX_LANA; gNetbiosLana++) {
@@ -42,11 +41,10 @@ int is_netbios_avail(void)
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.569810;margin=0.557141;shape=0.568;size=0.810;calls=0.714;alternate=pol20:@nb_init@8@0x000a6c88
 VA(0x00413ce8, 0x1b2)
-H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned short maxNames)
-{
+H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned short maxNames) {
+    unsigned char* statusBuf;
     NCB ncb;
     int i;
-    unsigned char *statusBuffer;
     // Retained unused result local from the PoL donor; retail reserves its frame word.
     int returnCode;
     if (is_netbios_avail() == 0)
@@ -67,20 +65,24 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned
         for (i = 0; i < static_cast<int>(NETBIOS_THREAD_EVENT_COUNT); i++)
             gNbEvents[i] = CreateEventA(0, 1, 0, 0);
         memset(&ncb, 0, sizeof(ncb));
-        statusBuffer = static_cast<unsigned char *>(GlobalAlloc(GPTR, static_cast<int>(NETBIOS_ADAPTER_STATUS_SIZE)));
+        statusBuf = static_cast<unsigned char*>(
+            GlobalAlloc(GPTR, static_cast<int>(NETBIOS_ADAPTER_STATUS_SIZE))
+        );
         ncb.ncb_command = NCBASTAT;
         ncb.ncb_length = static_cast<unsigned short>(NETBIOS_ADAPTER_STATUS_SIZE);
-        ncb.ncb_buffer = statusBuffer;
+        ncb.ncb_buffer = statusBuf;
         ncb.ncb_lana_num = gNetbiosLana;
         if (Netbios(&ncb) == NRC_ENVNOTDEF) {
             memset(&ncb, 0, sizeof(ncb));
             ncb.ncb_command = NCBRESET;
             ncb.ncb_lana_num = gNetbiosLana;
-            ncb.ncb_callname[static_cast<int>(NETBIOS_RESET_SESSION_LIMIT_INDEX)] = static_cast<unsigned char>(NETBIOS_RESET_SESSION_LIMIT);
-            ncb.ncb_callname[static_cast<int>(NETBIOS_RESET_NAME_LIMIT_INDEX)] = static_cast<unsigned char>(NETBIOS_RESET_NAME_LIMIT);
+            ncb.ncb_callname[static_cast<int>(NETBIOS_RESET_SESSION_LIMIT_INDEX)] =
+                static_cast<unsigned char>(NETBIOS_RESET_SESSION_LIMIT);
+            ncb.ncb_callname[static_cast<int>(NETBIOS_RESET_NAME_LIMIT_INDEX)] =
+                static_cast<unsigned char>(NETBIOS_RESET_NAME_LIMIT);
             Netbios(&ncb);
         }
-        GlobalFree(statusBuffer);
+        GlobalFree(statusBuf);
         gNbShutdown = 0;
         return 0;
     }
@@ -93,16 +95,16 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned
 VA(0x0041411a, 0x104)
 // Retail has an unused leading argument and an explicit queue selection argument.
 // Their stack positions are proven by all four retail call sites.
-H1_C_LINKAGE short __cdecl nb_snd(int, unsigned short session, unsigned short len, void *data, int queueToFree)
-{
-    tag_Node *node;
+H1_C_LINKAGE short __cdecl
+nb_snd(int, unsigned short session, unsigned short len, void* data, int queueToFree) {
+    tag_Node* node;
     if (gNbMaxSess == session && len == 0) {
         nb_add_name();
         return 0;
     }
     if (!(gNetStatus[session] & static_cast<int>(NETBIOS_SESSION_ACTIVE)))
         return static_cast<short>(NETBIOS_RESULT_SESSION_OUT_OF_RANGE);
-    node = static_cast<tag_Node *>(malloc(len + static_cast<int>(NETBIOS_PACKET_HEADER_SIZE)));
+    node = static_cast<tag_Node*>(malloc(len + static_cast<int>(NETBIOS_PACKET_HEADER_SIZE)));
     node->len = len;
     node->sessionIndex = static_cast<unsigned char>(session);
     memcpy(node->data, data, len);
@@ -120,15 +122,14 @@ H1_C_LINKAGE short __cdecl nb_snd(int, unsigned short session, unsigned short le
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.596373;margin=0.181597;shape=0.465;size=0.963;calls=1.000;alternate=pol20:_nb_sess@0x000a726a
 VA(0x0041421e, 0x4f6)
-H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...)
-{
-    int oldSession;
-    int destinationSession;
-    int detachFlag;
+H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
     NCB ncb;
     char* callName;
+    int destinationSession;
+    int bFree;
     va_list argList;
     short returnCode;
+    int oldSession;
 
     va_start(argList, operation);
     switch (operation) {
@@ -138,8 +139,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...)
             nb_format_name(callName, gNbNameBuf[gNbMaxSess].bytes);
             memset(&gNbSessNcb[gNbMaxSess], 0, sizeof(NCB));
             memcpy(gNbSessNcb[gNbMaxSess].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
-            gNbSessNcb[gNbMaxSess].ncb_command =
-                NCBADDNAME | ASYNCH;
+            gNbSessNcb[gNbMaxSess].ncb_command = NCBADDNAME | ASYNCH;
             gNbSessNcb[gNbMaxSess].ncb_post = nb_add_name_done;
             gNbSessNcb[gNbMaxSess].ncb_cmd_cplt = NRC_PENDING;
             gNbSessNcb[gNbMaxSess].ncb_lana_num = gNetbiosLana;
@@ -159,7 +159,9 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...)
                 memset(&ncb, 0, sizeof(ncb));
                 ncb.ncb_command = NCBCANCEL;
                 ncb.ncb_lana_num = gNetbiosLana;
-                ncb.ncb_buffer = reinterpret_cast<unsigned char *>(&gNbSessNcb[destinationSession]); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
+                ncb.ncb_buffer = reinterpret_cast<unsigned char*>(
+                    &gNbSessNcb[destinationSession]
+                ); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
                 Netbios(&ncb);
             }
             returnCode = nb_recv_any(destinationSession);
@@ -189,20 +191,16 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...)
         case NETBIOS_SESSION_MOVE:
             oldSession = va_arg(argList, int);
             destinationSession = va_arg(argList, int);
-            detachFlag = va_arg(argList, int);
+            bFree = va_arg(argList, int);
             if (oldSession == gNbMaxSess)
                 gNbMaxSess = static_cast<u8>(destinationSession);
             if (gNbSessLsn[oldSession] == static_cast<int>(NETBIOS_INVALID_ID))
                 return 0;
             gNbSessLsn[destinationSession] = gNbSessLsn[oldSession];
             gNetStatus[destinationSession] = gNetStatus[oldSession];
-            memcpy(
-                gNbNameBuf[destinationSession].bytes,
-                gNbNameBuf[oldSession].bytes,
-                NCBNAMSZ
-            );
+            memcpy(gNbNameBuf[destinationSession].bytes, gNbNameBuf[oldSession].bytes, NCBNAMSZ);
             nb_arm_recv(destinationSession);
-            if (detachFlag != 0) {
+            if (bFree != 0) {
                 gNbSessLsn[oldSession] = static_cast<int>(NETBIOS_INVALID_ID);
                 gNetStatus[oldSession] = 0;
                 memset(gNbNameBuf[oldSession].bytes, 0, NCBNAMSZ);
@@ -216,7 +214,9 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...)
                 memset(&ncb, 0, sizeof(ncb));
                 ncb.ncb_command = NCBCANCEL;
                 ncb.ncb_lana_num = gNetbiosLana;
-                ncb.ncb_buffer = reinterpret_cast<unsigned char *>(&gNbSessNcb[destinationSession]); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
+                ncb.ncb_buffer = reinterpret_cast<unsigned char*>(
+                    &gNbSessNcb[destinationSession]
+                ); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
                 Netbios(&ncb);
             }
             nb_close_session(destinationSession);
