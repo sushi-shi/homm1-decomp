@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/BITS.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
@@ -229,17 +230,33 @@ void GetMonsterCost(int monster, int* const cost) {
     }
 }
 
-// @early-stop
-// tu-cumulative: logic + all frame slots byte-exact (reqMask@-8, haveMask@-4 match
-// retail); the only residual is 2 bytes — the commutative `&` operand load-order in
-// `(reqMask & haveMask) == reqMask` (retail loads reqMask first, this cl loads the
-// just-OR'd haveMask first). Not source-steerable (tried both `&` orders, `==` swap).
-
 // donor PoL RVA 0x00099a6c; preferred Buka symbol ?CanBuild@@YIHPAVtown@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375672;margin=0.371383;shape=0.277;size=0.517;calls=1.000;alternate=pol20:int CanBuild(class town *, int)@0x00099a6c
 VA(0x004517bf, 0x144)
-int CanBuild(town* t, int building) {
+signed char CanBuild(town* t, short building) {
+    mapCell* cell;
+    unsigned short required;
+    if (BitTest(gpGame->m_townBuiltToday, t->m_id))
+        return 0;
+    if (building != 6 && !(t->m_buildings & 0x40))
+        return 0;
+    if (building == 3) {
+        cell = gpAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
+        if (cell->m_tileIndex < 20)
+            return 1;
+        else
+            return 0;
+    }
+    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= 3)
+        return 0;
+    if (building == 5)
+        return 0;
+    if (building < BUILDING_SLOT_DWELLING_FIRST)
+        return 1;
+    required = gDwellingRequirements[building - BUILDING_SLOT_DWELLING_FIRST + t->m_type * 6];
+    if ((t->m_buildings & required) == required)
+        return 1;
     return 0;
 }
 
@@ -247,8 +264,22 @@ int CanBuild(town* t, int building) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.384626;margin=0.370647;shape=0.216;size=0.621;calls=1.000;alternate=pol20:int CanBuy(class town *, int)@0x00099d21
 VA(0x00451903, 0xce)
-int CanBuy(town* t, int type) {
-    return 0;
+signed char CanBuy(town* t, short type) {
+    int cost[RESOURCE_COUNT];
+    playerData* rec;
+    int i;
+    GetBuildingCost(
+        t->m_type,
+        type,
+        cost,
+        (t->m_buildings & 1) ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1) : 0
+    );
+    rec = &gpGame->m_players[giCurPlayer];
+    for (i = 0; i < RESOURCE_COUNT; ++i) {
+        if (rec->m_resources[i] < cost[i])
+            return 0;
+    }
+    return 1;
 }
 
 // HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.

@@ -82,6 +82,8 @@ extern char* gDwellingNames[];
 extern int gMageBuildingCosts[][7];
 extern int gNeutralBuildingCosts[][7];
 extern int gDwellingCosts[][7];
+// CanBuild's six dwelling prerequisite masks per faction.
+extern unsigned short gDwellingRequirements[];
 extern int gMageBaseResourceValues[];
 extern int gNeutralBaseResourceValues[];
 extern int gDwellingBaseResourceValues[];
