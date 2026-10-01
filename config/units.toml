@@ -257,7 +257,7 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/KB"
 source = "src/SOURCE/KB.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/Modem"

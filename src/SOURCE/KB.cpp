@@ -403,6 +403,87 @@ void CongratsWait(void) {
     }
 }
 
+// Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
+VA(0x00455592, 0x1c7)
+void GetDataEntry(char* prompt, char* destination, int maximumLength, char* initialText) {
+    short widgetId = 10;
+    tag_message message;
+    char textBuffer[100];
+
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    cDEDest = destination;
+    iDEMaxLen = maximumLength;
+    strcpy(cDEDest, "");
+    DataEntryWin = new heroWindow(0xb1, 0x14, "dataentr.bin");
+    if (!DataEntryWin)
+        MemError();
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = prompt;
+    DataEntryWin->BroadcastMessage(message);
+    if (initialText)
+        strcpy(textBuffer, initialText);
+    else
+        strcpy(textBuffer, "");
+    message.payload.widget.id = 10;
+    message.payload.widget.data.text = textBuffer;
+    DataEntryWin->BroadcastMessage(message);
+    strcpy(destination, textBuffer);
+    bDataEntryTime = 0;
+    gpWindowManager->DoDialog(DataEntryWin, DataEntryWindowHandler, 0);
+    delete DataEntryWin;
+}
+
+VA(0x00455759, 0x1d9)
+short DataEntryWindowHandler(tag_message& message) {
+    short widgetId = 10;
+
+    if (bDataEntryTime == 0) {
+        ++bDataEntryTime;
+        message.type = MESSAGE_LEFT_BUTTON_DOWN;
+        message.payload.mouse.x = 0xc3;
+        message.payload.mouse.y = 0x9a;
+        DataEntryWin->BroadcastMessage(message);
+        return MESSAGE_DISPATCH_CONSUME;
+    }
+
+    if (bDataEntryTime == 1) {
+        ++bDataEntryTime;
+        goto gotText;
+    }
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_SELECT:
+                switch (message.payload.widget.id) {
+                    case 10:
+                    gotText:
+                        message.type = MESSAGE_WIDGET;
+                        message.payload.widget.id = 10;
+                        message.payload.widget.command = WIDGET_COMMAND_GET_TEXT;
+                        DataEntryWin->BroadcastMessage(message);
+                        if (strlen(message.payload.widget.data.text) == 0) {
+                            break;
+                        } else {
+                            memset(cDEDest, 0, iDEMaxLen);
+                            strncpy(cDEDest, message.payload.widget.data.text, iDEMaxLen - 1);
+                        }
+                        message.type = MESSAGE_WIDGET;
+                        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+                        message.payload.widget.id = 10;
+                        message.payload.widget.data.text = cDEDest;
+                        DataEntryWin->BroadcastMessage(message);
+                        DataEntryWin->DrawWindow(1, 10, 10);
+                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        message.payload.widget.command = message.payload.widget.id =
+                            WIDGET_COMMAND_DIALOG_SELECT;
+                        return MESSAGE_DISPATCH_FORWARD;
+                }
+        }
+    }
+    return EventWindowHandler(message);
+}
+
 // donor PoL RVA 0x0009e999; preferred Buka symbol ?LoadPlaySample@@YIPAVsample@@PAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.524829;margin=1.189024;shape=0.423;size=0.802;calls=1.000;alternate=pol20:struct SAMPLE2 LoadPlaySample(char *)@0x0009e999
