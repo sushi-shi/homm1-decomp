@@ -21,6 +21,7 @@ extern signed char giBuildShipyard[AI_PLAYER_COUNT];
 extern signed char giBuildBoat[AI_PLAYER_COUNT];
 extern signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
 void ShowStatus();
+void CheckDoMain(int, int);
 int GetBuildingBaseResourceValue(int, int, int);
 extern int iDummy;
 extern int gArtifactBaseRV[];

@@ -5,6 +5,7 @@
 
 H1_ENUM_BEGIN(MessageType)
     MESSAGE_NONE = 0,
+    MESSAGE_KEY_DOWN = 1,
     MESSAGE_MOUSE_MOVE = 4,
     MESSAGE_LEFT_BUTTON_DOWN = 8,
     MESSAGE_LEFT_BUTTON_UP = 0x10,
@@ -56,6 +57,13 @@ union tag_messageWidgetData {
     char *text;
 };
 
+struct tag_messageKeyboardPayload {
+    short keyCode;
+    short unknown;
+    short modifiers;
+    char unknown6[8];
+};
+
 struct tag_messageWidgetPayload {
     H1_ENUM_STORAGE(BaseWidgetCommand, short) command;
     short id;
@@ -71,6 +79,7 @@ struct tag_messageExecutivePayload {
 
 union tag_messagePayload {
     tag_messageMousePayload mouse;
+    tag_messageKeyboardPayload keyboard;
     tag_messageWidgetPayload widget;
     tag_messageExecutivePayload executive;
     char unknown[14];

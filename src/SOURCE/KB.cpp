@@ -198,7 +198,7 @@ int WaitForOtherPlayer(void)
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
 VA(0x0045485b, 0x6f4)
-void PopNetBox(char *, int) {}
+void PopNetBox(char *) {}
 
 // donor PoL RVA 0x0009e0f2; preferred Buka symbol ?ShutDown@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

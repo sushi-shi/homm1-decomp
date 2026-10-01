@@ -66,6 +66,7 @@ void MemError();
 void SetMenus(void *, int);
 void GetMonsterCost(int, int *const);
 int NullHandler(struct tag_message &);
+void PopNetBox(char *);
 void NormalDialog(char *, int, int, int, int, int, int, int, int);
 
 #endif

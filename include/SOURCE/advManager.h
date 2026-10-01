@@ -203,7 +203,7 @@ public:
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
     char * CheckHandleNet(void);
-    int CheckHandleNetPlayerWait(struct tag_message &, int);
+    short CheckHandleNetPlayerWait(struct tag_message &, signed char);
     void TrimLoopingSounds(int);
     void DisableButtons(void);
     void EnableButtons(void);
@@ -259,6 +259,8 @@ public:
 #pragma pack(pop)
 
 extern int gbNoBorder;
+extern int gbRemoteOn;
+extern long giForceSwitchMusic;
 extern long iLastScrollTime;
 extern int gbForceUpdate;
 extern int gbAllBlack;

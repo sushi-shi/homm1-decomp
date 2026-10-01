@@ -918,7 +918,26 @@ void advManager::SetInitialMapOrigin(void) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.559158;margin=0.708697;shape=0.333;size=0.638;calls=0.706;strings=advmice.mse;alternate=pol20:void advManager::LoadRemote(void)@0x00069160
 VA(0x0043669d, 0x152)
-void advManager::LoadRemote(void) {}
+void advManager::LoadRemote(void)
+{
+    gpMouseManager->ReallyHidePointer();
+    if (gbThisNetHumanPlayer[giCurPlayer])
+        gpMouseManager->SetPointer("advmice.mse", 0);
+    gpGame->LoadGame("REMOTE.GAM", 0, 1);
+    if (gbThisNetHumanPlayer[giCurPlayer])
+        gpGame->CancelComputerScreen();
+    gpGame->DoNewTurn();
+    UpdateHeroLocators(1, 1);
+    UpdateTownLocators(1, 1);
+    UpdateRadar(1, 0);
+    gpMouseManager->ReallyShowPointer();
+    UpdBottomView(1, 1, 1);
+    if ((gpGame->m_day != 1 || (gpGame->m_week == 1 && gpGame->m_month == 1)) && gbRemoteOn
+        && gbThisNetHumanPlayer[giCurPlayer] && giForceSwitchMusic == -1) {
+        gpSoundManager->SwitchAmbientMusic(15);
+        giForceSwitchMusic = KBTickCount();
+    }
+}
 
 // donor PoL RVA 0x0006931e; preferred Buka symbol ?CheckHandleNet@advManager@@QAEPADXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -930,7 +949,33 @@ char * advManager::CheckHandleNet(void) { return 0; }
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.447497;margin=1.157842;shape=0.264;size=0.731;calls=1.000;alternate=pol20:int advManager::CheckHandleNetPlayerWait(struct tag_message &, int)@0x0006952a
 VA(0x00436967, 0xd4)
-int advManager::CheckHandleNetPlayerWait(struct tag_message &, int) { return 0; }
+short advManager::CheckHandleNetPlayerWait(struct tag_message &message, signed char doMain)
+{
+    if (message.type == MESSAGE_MOUSE_MOVE)
+        gpMouseManager->Main(message);
+
+    CheckDoMain(1, doMain);
+    if (message.type == MESSAGE_KEY_DOWN) {
+        switch (message.payload.keyboard.keyCode) {
+            case 0x3b:
+                PopNetBox(0);
+                break;
+
+            case 0x10:
+                if (message.payload.keyboard.modifiers & 0xc) {
+                    message.type = MESSAGE_EXECUTIVE;
+                    message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+                    return MESSAGE_DISPATCH_FORWARD;
+                }
+
+            default:
+                break;
+        }
+    }
+
+    UpdBottomView(0, 1, 1);
+    return MESSAGE_DISPATCH_CONTINUE;
+}
 
 // donor PoL RVA 0x000695f7; preferred Buka symbol ?TrimLoopingSounds@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

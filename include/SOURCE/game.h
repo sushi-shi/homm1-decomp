@@ -37,7 +37,10 @@ class game {
 public:
     char m_unknown0000[0x1ff];
     signed char m_playerCount;
-    char m_unknown200[0xc];
+    char m_unknown200[6];
+    unsigned short m_day;
+    unsigned short m_week;
+    unsigned short m_month;
     class playerData m_players[GAME_PLAYER_COUNT];
     class mapCell m_map[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     char m_unknownd0a0[0x5100];
