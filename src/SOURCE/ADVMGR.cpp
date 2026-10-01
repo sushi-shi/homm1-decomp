@@ -1565,7 +1565,58 @@ signed char advManager::ComboDraw(int update) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.577153;margin=0.265756;shape=0.425;size=0.947;calls=1.000;alternate=pol20:void advManager::SetEnvironmentOrigin(int, int, int)@0x0006668e
 VA(0x00434640, 0x2dd)
-void advManager::SetEnvironmentOrigin(int, int, int) {}
+void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSounds) {
+    int soundRadius;
+    int edgeOffset;
+    int maxCells = ADVMGR_ACTIVE_SOUND_COUNT / 2;
+    int layer;
+
+    if (gpSoundManager->m_musicReady == 0)
+        return;
+    for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
+        if (m_activeSounds[edgeOffset].soundId != -1) {
+            if (stopSounds) {
+                gpSoundManager->StopSample(
+                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample
+                );
+                m_activeSounds[edgeOffset].soundId = -1;
+                m_activeSounds[edgeOffset].volume = 127;
+            } else {
+                m_activeSounds[edgeOffset].volume = 127;
+            }
+        }
+    }
+    if (gConfig.soundVolume != 0) {
+        m_activeSoundMask = 0;
+        for (layer = 1; layer <= 2; ++layer) {
+            InsertSound(originX, originY, 0, layer);
+            for (soundRadius = 0; soundRadius < 4; ++soundRadius) {
+                for (edgeOffset = 0; edgeOffset < soundRadius * 2; ++edgeOffset) {
+                    InsertSound(originX - soundRadius + edgeOffset, originY - soundRadius, soundRadius, layer);
+                    InsertSound(originX + soundRadius, originY - soundRadius + edgeOffset, soundRadius, layer);
+                    InsertSound(originX + soundRadius - edgeOffset, originY + soundRadius, soundRadius, layer);
+                    InsertSound(originX - soundRadius, originY + soundRadius - edgeOffset, soundRadius, layer);
+                }
+            }
+        }
+        for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
+            if (m_activeSounds[edgeOffset].soundId != -1 && m_activeSounds[edgeOffset].volume > 5) {
+                gpSoundManager->StopSample(
+                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample
+                );
+                m_activeSounds[edgeOffset].soundId = -1;
+            }
+            if (m_activeSounds[edgeOffset].soundId != -1
+                && (m_activeSoundMask & (1 << m_activeSounds[edgeOffset].soundId)) != 0) {
+                gpSoundManager->ModifySample(
+                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample,
+                    100,
+                    glEnvironmentVolume[m_activeSounds[edgeOffset].volume]
+                );
+            }
+        }
+    }
+}
 
 // donor PoL RVA 0x000669c6; preferred Buka symbol ?CheckLoadSample@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -1583,7 +1634,7 @@ void advManager::CheckLoadSample(int index) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.476286;margin=0.526376;shape=0.266;size=0.902;calls=0.750;alternate=pol20:void advManager::InsertSound(int, int, int, int)@0x00066ef0
 VA(0x00434986, 0x251)
-void advManager::InsertSound(int, int, int, int) {}
+void advManager::InsertSound(short, short, short, signed char) {}
 
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

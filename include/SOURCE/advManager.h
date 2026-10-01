@@ -183,10 +183,10 @@ public:
     void CheckCastSpell(void);
     signed char ComboDraw(short, short, int);
     signed char ComboDraw(int);
-    void SetEnvironmentOrigin(int, int, int);
+    void SetEnvironmentOrigin(short, short, short);
     void CheckLoadSample(int);
     int GetSoundId(int, int);
-    void InsertSound(int, int, int, int);
+    void InsertSound(short, short, short, signed char);
     void TeleportTo(int, int, int);
     void DimensionDoor(void);
     void TownGate(void);
@@ -362,6 +362,8 @@ extern unsigned char giCurWatchPlayerBit;
 extern short gGameCommand;
 extern int gbHeroMoving;
 extern unsigned char giCurPlayerBit;
+// Volume per environment-sound distance step.
+extern long glEnvironmentVolume[];
 // Per hero type scouting radius used by TeleportTo.
 extern signed char gHeroScoutRadius[];
 extern int giLimitUpdMinX;
