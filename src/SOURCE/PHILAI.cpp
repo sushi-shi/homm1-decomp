@@ -341,8 +341,8 @@ void philAI::ProbableOutcomeOfBattle(
     class armyGroup*,
     class hero*,
     class armyGroup*,
-    int,
-    int,
+    signed char,
+    signed char,
     int,
     float&,
     int&,
@@ -958,16 +958,96 @@ void philAI::EvaluateOneTimeCreaturePurchase(
 // evidence: graph:5;base=0.373791;margin=0.600389;shape=0.327;size=0.583;calls=0.548;alternate=pol20:int philAI::QuickCombat(class armyGroup *, class hero *, class armyGroup *, class hero *, int, int, float &, float &)@0x00040cb1
 VA(0x0042086a, 0x3a7)
 int philAI::QuickCombat(
-    class armyGroup*,
-    class hero*,
-    class armyGroup*,
-    class hero*,
-    int,
-    signed char,
-    float&,
-    float&
+    armyGroup* attacker,
+    hero* attackerHero,
+    armyGroup* defender,
+    hero* defenderHero,
+    signed char townBattle,
+    signed char townId,
+    float& attackerDamage,
+    float& defenderDamage
 ) {
-    return 0;
+    float fracLost;
+    float winChance;
+    float rnd;
+    armyGroup* winner;
+    int aDead;
+    int unused;
+    int dDead;
+    int win;
+    int aLeft;
+    int dLeft;
+    int tmp;
+    int atkExp;
+    int defenderExp;
+    float diff;
+    int res;
+    float wChance;
+
+    atkExp = gpGame->ExperienceValueOfStack(attacker, attackerHero);
+    defenderExp = gpGame->ExperienceValueOfStack(defender, defenderHero);
+    win = 0;
+    winner = 0;
+    ProbableOutcomeOfBattle(
+        attacker,
+        attackerHero,
+        defender,
+        defenderHero,
+        0,
+        townBattle,
+        townId,
+        defenderHero != 0 ? defenderHero->m_owner : -1,
+        winChance,
+        aDead,
+        dDead,
+        aLeft,
+        dLeft,
+        res
+    );
+    if ((rnd = Random(0, 100) / 100.0) < winChance) {
+        win = 1;
+        wChance = winChance;
+        winner = attacker;
+    } else {
+        wChance = 1.0f - winChance;
+        winner = defender;
+    }
+    diff = static_cast<float>(winChance < rnd ? rnd - winChance : winChance - rnd);
+    if (win != 0 && winChance > 0.6)
+        diff *= winChance + 0.65;
+    fracLost = (1.0 - diff) * (1.0 - diff);
+    if (wChance > 0.8 && fracLost > 0.2)
+        fracLost *= fracLost;
+    if (wChance > 0.96 && fracLost > (1.0f - wChance) / 2.0f)
+        fracLost = (1.0f - wChance) / 2.0f;
+    if (win != 0) {
+        if (attackerHero != 0) {
+            gpAdvManager->GiveExperience(attackerHero, defenderExp, 1);
+            attackerHero->ApplyBattleWinTemps();
+        }
+        defenderDamage = 1.0f;
+        attackerDamage = fracLost;
+    } else {
+        if (attackerHero != 0) {
+            attackerHero->m_remainingMobility = 0;
+            attackerHero->ApplyBattleLossTemps();
+        }
+        if (defenderHero != 0)
+            attackerHero->ApplyBattleWinTemps();
+        defenderDamage = diff * fracLost;
+        attackerDamage = 1.0f;
+        if (attackerDamage >= 0.99 && defenderHero != 0)
+            gpAdvManager->GiveExperience(defenderHero, defenderExp, 1);
+    }
+    if (attackerDamage > 0.99)
+        gpAdvManager->TransferArtifacts(attackerHero, defenderHero);
+    else if (defenderDamage > 0.99)
+        gpAdvManager->TransferArtifacts(defenderHero, attackerHero);
+    DamageGroup(attacker, attackerHero, defenderHero, attackerDamage);
+    DamageGroup(defender, defenderHero, attackerHero, defenderDamage);
+    if (win != 0 && townBattle)
+        gpGame->ClaimTown(townId, giCurPlayer);
+    return win;
 }
 
 // donor PoL RVA 0x0004183b; preferred Buka symbol ?HeroInteractionAtTown@philAI@@QAEXPAVhero@@PAVtown@@HPAH@Z
