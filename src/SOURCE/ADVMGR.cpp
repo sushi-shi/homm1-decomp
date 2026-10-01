@@ -155,8 +155,8 @@ void advManager::GetCursorSampleSet(int sampleSet) {
     for (int index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
         sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
         m_cursorSamples[index] = gpResourceManager->GetSample(gText);
-        m_cursorSamples[index]->m_volume = 0x40;
-        m_cursorSamples[index]->m_channelType = 2;
+        m_cursorSamples[index]->m_playbackData.volume = 0x40;
+        m_cursorSamples[index]->m_playbackData.channelType = SAMPLE_PLAYBACK_CHANNEL_GROUP;
     }
 }
 
