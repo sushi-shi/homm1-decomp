@@ -32,7 +32,7 @@ public:
     signed char SetupNetworkGame(void);
     int SetupNetworkGame2(void);
     signed char SetupModemGame(void);
-    int SetupMultiPlayerGame(void);
+    signed char SetupMultiPlayerGame(void);
     int SetupGame(void);
     int PickLoadGame(void);
     int HandleCampaignWin(void);

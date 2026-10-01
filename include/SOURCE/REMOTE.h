@@ -38,7 +38,8 @@ H1_ENUM_END(RemoteGameMode)
 
 H1_ENUM_BEGIN(MultiplayerBaseType)
     MULTIPLAYER_BASE_MODEM = 0,
-    MULTIPLAYER_BASE_NETWORK = 1
+    MULTIPLAYER_BASE_NETWORK = 1,
+    MULTIPLAYER_BASE_HOT_SEAT = 2
 H1_ENUM_END(MultiplayerBaseType)
 
 // DecodePacket/EncodePacket frame every wire packet with this six-byte header.

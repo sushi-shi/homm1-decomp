@@ -50,6 +50,7 @@ short BaseSetupHandler(tag_message&);
 short SetupBaudHandler(tag_message&);
 short SetupComPortHandler(tag_message&);
 short SetupModemGameHandler(tag_message&);
+short SetupMultiPlayerGameHandler(tag_message&);
 extern int gbDoModemConfig;
 short SetupHotSeatGameHandler(tag_message&);
 short SetupNetworkGameHandler(tag_message&);
@@ -235,8 +236,51 @@ signed char game::SetupModemGame(void) {
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.675100;margin=0.160042;shape=0.444;size=0.973;calls=0.529;strings=stpmp.bin;alternate=pol20:int game::SetupMultiPlayerGame(void)@0x00011aac
 VA(0x004572c9, 0x218)
-int game::SetupMultiPlayerGame(void) {
-    return 0;
+signed char game::SetupMultiPlayerGame(void) {
+    int loop;
+
+    heroWindow* window = new heroWindow(400, 35, "stpmp.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupMultiPlayerGameHandler, 0);
+    delete window;
+
+    gbDirectConnect = 0;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+            if (!SetupHotSeatGame())
+                return 0;
+            break;
+        case 2:
+            iMPBaseType = MULTIPLAYER_BASE_NETWORK;
+            if (!SetupNetworkGame())
+                return 0;
+            break;
+        case 4:
+            gbDirectConnect = 1;
+            goto setupModem;
+        case 3:
+            gbDirectConnect = 0;
+        setupModem:
+            iMPBaseType = MULTIPLAYER_BASE_MODEM;
+            loop = 1;
+            while (loop) {
+                if (!SetupModemGame())
+                    return 0;
+                if (gbDoModemConfig) {
+                    gbDoModemConfig = 0;
+                    if (!SetupComPort())
+                        return 0;
+                } else {
+                    loop = 0;
+                }
+            }
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x000123cc; preferred Buka symbol ?PickLoadGame@game@@QAEHXZ
