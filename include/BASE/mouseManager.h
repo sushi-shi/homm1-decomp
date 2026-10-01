@@ -56,6 +56,10 @@ public:
     void CheckUpdateMousePos(void);
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
     void MovePointer(short, short);
+    // Empty Windows-build hooks around advManager::UpdateScreen's blit
+    // (retail 0x00476e10 `ret 0x10` and 0x00476e00 `ret`).
+    void BeginScreenUpdate(class bitmap*, short, short, short);
+    void EndScreenUpdate(void);
     void SetColorMice(int);
 };
 #pragma pack(pop)

@@ -9,6 +9,8 @@
 #include <BASE/bmap2.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/wingraph.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -272,7 +274,52 @@ int advManager::ProcessHover(struct tag_message*) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.492392;margin=0.157827;shape=0.294;size=0.928;calls=0.818;alternate=pol20:void advManager::UpdateScreen(int, int)@0x0005b094
 VA(0x00429de0, 0x265)
-void advManager::UpdateScreen(int, int) {}
+void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate) {
+    if (!forceUpdate && !bShowIt) {
+        if (KBTickCount() > glTimers[0])
+            glTimers[0] = KBTickCount() + 120;
+        return;
+    }
+    gpMouseManager->BeginScreenUpdate(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
+    PollSound();
+    giScrollX = m_updateMinX;
+    giScrollY = m_updateMinY;
+    if (giLimitUpdMinX == -1)
+        BlitBitmapToScreen(gpWindowManager->m_screen, 16, 16, 448, 448, 16, 16);
+    else
+        BlitBitmapToScreen(
+            gpWindowManager->m_screen,
+            giLimitUpdMinX,
+            giLimitUpdMinY,
+            giLimitUpdMaxX - giLimitUpdMinX,
+            giLimitUpdMaxY - giLimitUpdMinY,
+            giLimitUpdMinX,
+            giLimitUpdMinY
+        );
+    giScrollY = 0;
+    giScrollX = giScrollY;
+    PollSound();
+    if (KBTickCount() > glTimers[0]) {
+        ++m_updateMaxX;
+        if (m_updateMaxX >= 6)
+            m_updateMaxX = 0;
+        glTimers[0] = KBTickCount() + 120;
+        if (m_updateMaxX == 1 || m_updateMaxX == 3 || m_updateMaxX == 5) {
+            ++m_animationPhases[1];
+            m_animationPhases[1] %= 6;
+            ++m_animationPhases[3];
+            m_animationPhases[3] %= 6;
+        } else {
+            ++m_animationPhases[0];
+            m_animationPhases[0] %= 6;
+            ++m_animationPhases[2];
+            m_animationPhases[2] %= 6;
+        }
+    }
+    giLimitUpdMinX = -1;
+    gpMouseManager->EndScreenUpdate();
+    Process1WindowsMessage();
+}
 
 // donor PoL RVA 0x0005b2ae; preferred Buka symbol ?CompleteDraw@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
