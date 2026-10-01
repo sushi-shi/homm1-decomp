@@ -4,6 +4,7 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
@@ -312,6 +313,7 @@ signed char game::SetupMultiPlayerGame(void) {
 short SetupGameHandler(tag_message&);
 extern signed char gbWaitForRemoteReceive;
 extern int gbInSetupDialog;
+extern char gLastFilename[];
 
 // Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
 // keep separate restart and load command ids.
@@ -452,8 +454,35 @@ done:
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
 VA(0x00457967, 0x1e7)
-int game::PickLoadGame(void) {
-    return 0;
+signed char game::PickLoadGame(void) {
+    fileRequester* requester;
+    short result;
+
+    if (!SetupGame(0))
+        return 0;
+    if (gbWaitForRemoteReceive)
+        return 1;
+    requester = new fileRequester(
+        0x136,
+        0xe,
+        0,
+        giCampaignChoice > 0 ? "*.CGM" : "*.GM*",
+        ".\\GAMES\\",
+        giCampaignChoice > 0 ? ".CGM" : ".GM*"
+    );
+    if (!requester)
+        MemError();
+    gpMouseManager->ReallyShowPointer();
+    result = gpExec->DoDialog(requester);
+    gpMouseManager->ReallyHidePointer();
+    if (result == 0x7802) {
+        gpGame->LoadGame(gLastFilename, 0, 0);
+        delete requester;
+        return 1;
+    } else {
+        delete requester;
+        return 0;
+    }
 }
 
 // Buka 2.1 SETUP help handlers; HoMM1 shows each help text as a type-4 dialog.

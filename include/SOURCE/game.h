@@ -128,7 +128,7 @@ public:
     signed char SetupModemGame(void);
     signed char SetupMultiPlayerGame(void);
     signed char SetupGame(signed char);
-    int PickLoadGame(void);
+    signed char PickLoadGame(void);
     int HandleCampaignWin(void);
     void PlayPreScenarioSmacker(int, int);
     void ShowCampaignInfo(int, int);
