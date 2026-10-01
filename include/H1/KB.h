@@ -79,5 +79,8 @@ void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
 struct SAMPLE2 LoadPlaySample(char*);
 void WaitEndSample(struct SAMPLE2, int);
+void CheckEndGame(int);
+extern signed char gbCombatSurrender;
+extern signed char gbRetreatWin;
 
 #endif

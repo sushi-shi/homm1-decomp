@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/dialogTypes.h>
@@ -414,7 +415,70 @@ signed char hero::Dismiss(void) {
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.482098;margin=0.987612;shape=0.300;size=0.883;calls=0.875;alternate=pol20:void hero::Deallocate(int)@0x0006cee8
 VA(0x0046cee2, 0x452)
-void hero::Deallocate(void) {}
+void hero::Deallocate(void) {
+    playerData* player;
+    signed char heroNum;
+    short i;
+    int owner;
+    town* townRec;
+    int slotNum;
+
+    owner = m_owner;
+    player = &gpGame->m_players[m_owner];
+    gpAdvManager->MobilizeCurrHero(0);
+    gpAdvManager->HideRoute(0, 0, 0);
+    if (m_eventFlags & HERO_EVENT_EMBARKED) {
+        for (i = 0; i < GAME_BOAT_COUNT; i++) {
+            if (gpGame->m_boats[i].heroId == m_id) {
+                gpGame->m_boats[i].heroId = -1;
+                gpGame->m_boatSlots[i] = -1;
+            }
+        }
+    }
+    if (m_locationType == 0xa8) {
+        townRec = gpGame->GetTown(m_occupiedTown);
+        townRec->m_occupyingHeroId = -1;
+    }
+    if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
+        || !gpAdvManager->m_heroContextLocked)
+        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, 0, 1);
+    if (!gbCombatSurrender) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
+            m_army.Dismiss(i);
+    }
+    heroNum = -1;
+    for (i = 0; i < player->m_heroCount; i++) {
+        if (player->m_heroIds[i] == m_id)
+            heroNum = i;
+    }
+    for (i = heroNum; i < player->m_heroCount - 1; i++)
+        player->m_heroIds[i] = player->m_heroIds[i + 1];
+    player->m_heroIds[player->m_heroCount - 1] = -1;
+    if (player->m_currentHero == m_id) {
+        player->m_currentHero = -1;
+        if (m_owner == giCurPlayer) {
+            gpAdvManager->m_cursorActive = 0;
+            gpGame->m_map[m_x][m_y].m_flags &= ~0x40;
+        }
+        if (giCurPlayer == owner)
+            gpAdvManager->m_heroContextLocked = 0;
+    }
+    player->m_heroCount--;
+    player->m_heroLocatorPage = 0;
+    gpGame->m_availableHeroes[m_id] = -1;
+    if (gbRetreatWin) {
+        slotNum = Random(0, 1);
+        if (gpGame->m_availableHeroes[gpGame->m_players[m_owner].m_availableHeroIds[slotNum]] == 0x40)
+            gpGame->m_availableHeroes[gpGame->m_players[m_owner].m_availableHeroIds[slotNum]] = -1;
+        gpGame->m_players[m_owner].m_availableHeroIds[slotNum] = m_id;
+        gpGame->m_availableHeroes[m_id] = 0x40;
+    }
+    m_owner = -1;
+    m_destinationX = m_destinationY = -1;
+    if (!gbCombatSurrender)
+        gpGame->SetRandomHeroArmies(m_id, 0);
+    CheckEndGame(0);
+}
 
 // donor PoL RVA 0x0006d50d; preferred Buka symbol ?GetLevel@hero@@QAEHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order

@@ -29,7 +29,8 @@ public:
     int HasAllUndead(void);
     int HasSomeUndead(void);
     int GetMorale(class hero*, class town*, class armyGroup*);
-    void Dismiss(int);
+    // HoMM1 retail: byte slot (movsx [ebp+8], ret 4).
+    void Dismiss(signed char);
     signed char IsMember(signed char);
     int IsHomogeneous(int);
     signed char CanJoin(signed char);

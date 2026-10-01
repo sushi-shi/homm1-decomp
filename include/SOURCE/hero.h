@@ -61,7 +61,8 @@ public:
     signed char m_destinationY;
     unsigned char m_direction;
     unsigned char m_locationType;
-    signed char m_occupiedTown;
+    // Deallocate zero-extends it for RestoreCell.
+    unsigned char m_occupiedTown;
     short m_mobility;
     short m_remainingMobility;
     int m_experience;

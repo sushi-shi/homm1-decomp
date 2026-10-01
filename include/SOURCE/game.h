@@ -26,7 +26,8 @@ H1_ENUM_BEGIN(GameStorageConstant)
     GAME_PLAYER_COUNT = 4,
     GAME_TOWN_COUNT = 36,
     GAME_HERO_COUNT = 36,
-    GAME_MINE_COUNT = 36
+    GAME_MINE_COUNT = 36,
+    GAME_BOAT_COUNT = 32
 H1_ENUM_END(GameStorageConstant)
 // clang-format on
 
@@ -41,6 +42,13 @@ struct mineRecord {
     unsigned char guardianCount;
     unsigned char x;
     unsigned char y;
+};
+// hero::Deallocate releases a boat whose +6 byte names the hero; records
+// stride eight bytes from game+0x14486 and end at the 0x14586 slot table.
+struct boatRecord {
+    char unknown00[6];
+    signed char heroId;
+    char unknown07;
 };
 #pragma pack(pop)
 
@@ -64,12 +72,15 @@ public:
     signed char m_townOwners[GAME_TOWN_COUNT];
     char m_unknown12981[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    char m_unknown1431d[0x24];
+    // Deallocate marks retreated heroes 0x40 and gone heroes -1.
+    signed char m_availableHeroes[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];
     char m_unknown1443d[0x24];
     // GiveArtifact records the receiving hero per artifact.
-    signed char m_artifactOwners[0x28];
-    char m_unknown14489[0x29cd];
+    signed char m_artifactOwners[0x25];
+    boatRecord m_boats[GAME_BOAT_COUNT];
+    signed char m_boatSlots[GAME_BOAT_COUNT];
+    char m_unknown145a6[0x28b0];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
@@ -160,7 +171,8 @@ public:
     // HoMM1 retail: no arguments, artifact in AL.
     signed char GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
-    void SetRandomHeroArmies(int, int);
+    // HoMM1 retail: word hero id (movsx word [ebp+8]).
+    void SetRandomHeroArmies(short, int);
     void ProcessRandomObjects(void);
     void SetVisibility(int, int, int, int);
     void MakeAllWaterVisible(int);
