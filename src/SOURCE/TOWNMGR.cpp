@@ -640,11 +640,106 @@ void townManager::BuildObj(short building)
     m_town->GiveSpells();
 }
 
-// donor PoL RVA 0x0001d040; preferred Buka symbol ?SetupCastle@townManager@@QAEXPAVheroWindow@@H@Z
-// donor Buka TU SOURCE/Castle; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.228280;margin=0.655471;shape=0.234;size=0.312;calls=0.264;alternate=pol20:void townManager::SetupCastle(class heroWindow *, int)@0x0001d040
+// Buka Castle.cpp SetupCastle; HoMM1 lays out five special buildings and
+// six dwellings plus the hero-recruit slot with fixed frames.
 VA(0x0040c818, 0x4b5)
-void townManager::SetupCastle(class heroWindow *, int) {}
+void townManager::SetupCastle(class heroWindow *window)
+{
+    short builtIcon = TOWN_CASTLE_FRAME_BUILT;
+    short cannotBuild = TOWN_CASTLE_FRAME_CANNOT_BUILD;
+    short noMoney = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
+    short i;
+    tag_message message;
+    int stateFrame;
+
+    m_affordableBuildings = m_buildableBuildings = 0;
+    for (i = 0; i < TOWN_CASTLE_BUILDING_COUNT; i++) {
+        if (CanBuy(m_town, i))
+            m_affordableBuildings |= 1 << i;
+        if (CanBuild(m_town, i))
+            m_buildableBuildings |= 1 << i;
+    }
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    for (i = 0; i < TOWN_WELL_DWELLING_COUNT; i++) {
+        message.payload.widget.id = i + TOWN_WELL_FIRST_NAME_CONTROL;
+        message.payload.widget.data.value =
+            (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
+        window->BroadcastMessage(message);
+    }
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    for (i = 0; i < TOWN_WELL_DWELLING_COUNT; i++) {
+        message.payload.widget.id = i + TOWN_CASTLE_FIRST_DWELLING_NAME_CONTROL;
+        message.payload.widget.data.text = GetBuildingName(i + TOWN_BUILDING_FIRST_DWELLING);
+        window->BroadcastMessage(message);
+    }
+    for (i = 0; i < TOWN_CASTLE_SPECIAL_BUILDING_COUNT; i++) {
+        stateFrame = -1;
+        if ((m_town->m_buildings & (1 << i)) && (i != 0 || m_town->m_buildState == 3))
+            stateFrame = TOWN_CASTLE_FRAME_BUILT;
+        else if (!(m_buildableBuildings & (1 << i)))
+            stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
+        else if (!(m_affordableBuildings & (1 << i)))
+            stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
+        if (stateFrame != -1) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.payload.widget.id = i + TOWN_CASTLE_FIRST_STATE_CONTROL;
+            message.payload.widget.data.value = TOWN_WIDGET_VISIBLE_FLAG;
+            window->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = stateFrame;
+            window->BroadcastMessage(message);
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.id = i + TOWN_CASTLE_FIRST_STATE_CONTROL;
+            message.payload.widget.data.value = TOWN_WIDGET_VISIBLE_FLAG;
+            window->BroadcastMessage(message);
+        }
+    }
+    for (i = 0; i < TOWN_WELL_DWELLING_COUNT; i++) {
+        stateFrame = -1;
+        if (m_town->m_buildings & (1 << (i + TOWN_BUILDING_FIRST_DWELLING)))
+            stateFrame = TOWN_CASTLE_FRAME_BUILT;
+        else if (!(m_buildableBuildings & (1 << (i + TOWN_BUILDING_FIRST_DWELLING))))
+            stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
+        else if (!(m_affordableBuildings & (1 << (i + TOWN_BUILDING_FIRST_DWELLING))))
+            stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
+        if (stateFrame != -1) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.payload.widget.id = i + TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL;
+            message.payload.widget.data.value = TOWN_WIDGET_VISIBLE_FLAG;
+            window->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = stateFrame;
+            window->BroadcastMessage(message);
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.id = i + TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL;
+            message.payload.widget.data.value = TOWN_WIDGET_VISIBLE_FLAG;
+            window->BroadcastMessage(message);
+        }
+    }
+    if (gpCurPlayer->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
+        stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
+    else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY || m_town->m_occupyingHeroId != -1)
+        stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
+    else if (m_recruitResult)
+        stateFrame = TOWN_CASTLE_FRAME_BUILT;
+    else
+        stateFrame = -1;
+    message.payload.widget.id = TOWN_CASTLE_HERO_STATE_CONTROL;
+    message.payload.widget.data.value = TOWN_WIDGET_VISIBLE_FLAG;
+    if (stateFrame != -1) {
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        window->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = stateFrame;
+        window->BroadcastMessage(message);
+    } else {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        window->BroadcastMessage(message);
+    }
+}
 
 // Buka TOWNMGR.cpp:3131 SetupWell; HoMM1 has six fixed dwellings and
 // capitalises the creature name in gText.

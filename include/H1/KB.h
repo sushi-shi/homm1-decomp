@@ -74,6 +74,10 @@ void PollRemote();
 void QuickViewWait();
 // HoMM1 building-name lookup by town type (retail 0x004515d9).
 char *GetBuildingName(int, int);
+// HoMM1 town build checks return byte flags (retail 0x004517bf/0x00451903).
+signed char CanBuild(class town*, short);
+signed char CanBuy(class town*, short);
+extern short gHeroGoldCost;
 extern "C" void PollSound();
 void ForcePollSound();
 void ShutDown(char*);

@@ -129,6 +129,17 @@ H1_ENUM_BEGIN(TownSplitConstant)
     TOWN_SPLIT_SETUP_AMOUNT_CONTROL = 4,
     TOWN_SPLIT_WINDOW_X = 0xb1,
     TOWN_SPLIT_WINDOW_Y = 0x14,
+    TOWN_CASTLE_BUILDING_COUNT = 13,
+    TOWN_CASTLE_FRAME_BUILT = 0xb,
+    TOWN_CASTLE_FRAME_CANNOT_BUILD = 0xc,
+    TOWN_CASTLE_FRAME_CANNOT_AFFORD = 0xd,
+    TOWN_CASTLE_FIRST_ICON_CONTROL = 1,
+    TOWN_CASTLE_FIRST_DWELLING_NAME_CONTROL = 0x17,
+    TOWN_CASTLE_FIRST_STATE_CONTROL = 0x20,
+    TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL = 0x27,
+    TOWN_CASTLE_HERO_STATE_CONTROL = 0x50,
+    TOWN_CASTLE_SPECIAL_BUILDING_COUNT = 5,
+    TOWN_WIDGET_VISIBLE_FLAG = 4,
     TOWN_ARMY_VIEW_X = 0x77,
     TOWN_ARMY_VIEW_Y = 0x14,
     TOWN_BUILDING_MAGE_GUILD = 0,
@@ -179,9 +190,10 @@ public:
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     short m_lastHoverId;
     H1_ENUM_STORAGE(TownArmyCommand, signed char) m_command;
-    signed char m_unknownf2;
-    short m_unknownf3;
-    short m_unknownf5;
+    // SetupCastle's recruit-slot state and its affordable/buildable masks.
+    signed char m_recruitResult;
+    unsigned short m_affordableBuildings;
+    unsigned short m_buildableBuildings;
     signed char m_castleDialogActive;
     short m_selectedBuilding;
     heroWindow *m_heroWindow0;
@@ -222,7 +234,7 @@ public:
     void DoTavern(void);
     void SetupWell(class heroWindow *);
     void SetupThievesGuild(class heroWindow *, short);
-    void SetupCastle(class heroWindow *, int);
+    void SetupCastle(class heroWindow *);
     char *GetBuildingName(int);
     // HoMM1 keeps the thieves-guild helpers as townManager members.
     void GetCategoryStats(signed char, long *const, signed char *const);
