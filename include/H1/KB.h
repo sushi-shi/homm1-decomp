@@ -160,7 +160,10 @@ extern signed char gbGameInitialized;
 extern SAMPLE2 NULL_SAMPLE2;
 extern short gGameCommand;
 extern signed char gbCombatSurrender;
+// The new-map builder raises this while it claims towns and mines.
+extern int gbInNewGameSetup;
 extern int gbGameOver;
+extern int giEndSequence;
 extern int bInShutDown;
 void DeleteMainClasses(void);
 extern class highScoreManager* gpHighScoreManager;

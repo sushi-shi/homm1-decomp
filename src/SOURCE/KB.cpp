@@ -621,10 +621,60 @@ void HandleRemoteSuddenExit(void) {
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
+extern char* gColorNames[];
+
 VA(0x00452f8a, 0x1ea)
 // HoMM1 callers push four byte-sized values: player, an unused flag,
 // elimination and timeout.
-void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char) {}
+void ReceiveRemotePlayerExit(signed char position, signed char, signed char eliminated, signed char timedOut) {
+    if (position == giThisGamePos) {
+        sprintf(gText, "You have been eliminated from the game!!!");
+        NormalDialog(gText, 1, -1, -1, -1, 0, -1, 0, -1);
+        RemoteCleanup();
+        gbGameOver = 1;
+        giEndSequence = 0;
+        return;
+    }
+    if (giNumHumanPlayers <= 2) {
+        gpGame->SaveGame("PLYREXIT", 1);
+        if (eliminated) {
+            sprintf(gText, "%s player has been vanquished!", gColorNames[gpGame->m_players[position].Color()]);
+            gText[0] -= 32;
+            NormalDialog(gText, 1, 0x61, -1, 9, gpGame->m_players[position].Color(), -1, 0, -1);
+            goto dropPlayer;
+        } else {
+            if (timedOut)
+                sprintf(
+                    gText,
+                    "Player %d has been logged out of the game.  The current game has been saved as "
+                    "'PLYREXIT'.  Do you wish to continue playing with a computer player filling in for "
+                    "player %d?",
+                    position + 1,
+                    position + 1
+                );
+            else
+                sprintf(
+                    gText,
+                    "Player %d is exiting the game.  The current game has been saved as 'PLYREXIT'.  Do "
+                    "you wish to continue playing with a computer player filling in for player %d?",
+                    position + 1,
+                    position + 1
+                );
+            NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+        }
+        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+        dropPlayer:
+            if (giNumHumanPlayers == 2) {
+                giNumHumanPlayers--;
+                RemoteCleanup();
+                gbHumanPlayer[position] = 0;
+            }
+        } else {
+            RemoteCleanup();
+            ShutDown(0);
+        }
+    }
+}
 
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -665,7 +715,7 @@ void InitVars(void) {
     gpPhilAI->m_debugFont = 0;
     gbCombatSurrender = 0;
     gpGame->m_viewArmyResult = 0;
-    gbGameOver = 0;
+    gbInNewGameSetup = 0;
     for (i = 0; i < 140; i++)
         giGroundToTerrain[i] = i / 20;
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
