@@ -156,7 +156,7 @@ public:
     class mapCell* GetCell(short, short);
     void UpdateRadar(int, int);
     void QuickInfo(int, int);
-    void UpdateHeroLocator(int, int, int);
+    void UpdateHeroLocator(int, signed char, signed char);
     void UpdateHeroLocators(signed char, signed char);
     void UpdateTownLocators(signed char, signed char);
     void UpdBottomView(signed char, signed char, signed char);

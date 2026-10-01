@@ -417,7 +417,93 @@ void advManager::QuickInfo(int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.539169;margin=0.099782;shape=0.447;size=0.791;calls=0.917;alternate=pol20:void advManager::UpdateHeroLocator(int, int, int)@0x00060465
 VA(0x0042c25e, 0x3c8)
-void advManager::UpdateHeroLocator(int, int, int) {}
+void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, signed char updateScreen) {
+    tag_message message;
+    signed char whichHero;
+    int i;
+    int wBase;
+    int activeHero;
+    hero* hPtr;
+    int moveFrame;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+    if (locatorSlot == -1) {
+        activeHero = gpCurPlayer->CurrentHero();
+        if (activeHero == -1)
+            return;
+        for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
+            if (gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + i] == activeHero)
+                locatorSlot = i;
+        }
+        if (locatorSlot == -1)
+            return;
+    }
+    wBase = locatorSlot * 7 + 100;
+    message.type = MESSAGE_WIDGET;
+    whichHero = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + locatorSlot];
+    message.payload.widget.command = WIDGET_COMMAND_SET_COLOR;
+    message.payload.widget.id = wBase + 6;
+    message.payload.widget.data.value =
+        (gpCurPlayer->m_currentHero == whichHero && gpCurPlayer->m_currentHero != -1 && !gbAllBlack)
+            ? 0xc5
+            : 0;
+    m_adventureWindow->BroadcastMessage(message);
+    if (whichHero == -1 || gbAllBlack) {
+        message.payload.widget.id = wBase + 5;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = locatorSlot;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 4;
+        for (i = 0; i <= 4; i++) {
+            message.payload.widget.id = i + wBase;
+            m_adventureWindow->BroadcastMessage(message);
+        }
+    } else {
+        hPtr = gpGame->GetHero(whichHero);
+        message.payload.widget.id = wBase + 5;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = 8;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 6;
+        for (i = 0; i <= 6; i++) {
+            message.payload.widget.id = i + wBase;
+            m_adventureWindow->BroadcastMessage(message);
+        }
+        moveFrame = hPtr->m_remainingMobility * 22 / 60;
+        if (moveFrame < 0)
+            moveFrame = 0;
+        if (moveFrame > 30)
+            moveFrame = 25;
+        else if (moveFrame > 26)
+            moveFrame = 24;
+        else if (moveFrame > 23)
+            moveFrame = 23;
+        message.payload.widget.id = wBase + 1;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = moveFrame;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = wBase + 2;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = whichHero;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = wBase + 3;
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = wBase + 4;
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        m_adventureWindow->BroadcastMessage(message);
+    }
+    if (drawWindow) {
+        m_adventureWindow->DrawWindow(0, wBase, wBase + 6);
+        if (updateScreen)
+            gpWindowManager->UpdateScreenRegion(481, locatorSlot * 32 + 177, 54, 30);
+    }
+}
 
 // donor PoL RVA 0x000607ad; preferred Buka symbol ?UpdateHeroLocators@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
