@@ -71,6 +71,9 @@ public:
     signed char CurrentHero(void) {
         return m_currentHero;
     }
+    signed char CurrentTown(void) {
+        return m_currentTown;
+    }
 };
 #pragma pack(pop)
 

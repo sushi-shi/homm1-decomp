@@ -2086,7 +2086,44 @@ int advManager::MouseInScrollZone(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.512925;margin=0.905583;shape=0.330;size=0.958;calls=0.778;alternate=pol20:void advManager::SetInitialMapOrigin(void)@0x00068ea8
 VA(0x0043641a, 0x283)
-void advManager::SetInitialMapOrigin(void) {}
+void advManager::SetInitialMapOrigin(void) {
+    short x;
+    short y;
+    game* gameState;
+    hero* initialHero;
+    town* townPointer;
+    town* ownTown;
+
+    gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS, 2, 0x4008);
+    m_lastHoverCell = m_hoverCellY = 0;
+    m_cursorActive = 0;
+    gbHeroMoving = 0;
+    if (gpCurPlayer->CurrentTown() != -1) {
+        townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
+        m_mapOriginX = townPointer->m_x - 7;
+        m_mapOriginY = townPointer->m_y - 7;
+    } else if (gpCurPlayer->CurrentHero() != -1) {
+        MobilizeCurrHero(0);
+    } else if (gpCurPlayer->m_heroCount > 0) {
+        initialHero = &gpGame->m_heroRecs[gpCurPlayer->m_heroIds[0]];
+        m_mapOriginX = initialHero->m_x - 7;
+        m_mapOriginY = initialHero->m_y - 7;
+    } else if (gpCurPlayer->m_townCount > 0) {
+        ownTown = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[0]];
+        m_mapOriginX = ownTown->m_x - 7;
+        m_mapOriginY = ownTown->m_y - 7;
+    } else {
+        m_mapOriginX = 0;
+        m_mapOriginY = 0;
+    }
+    m_currentTerrain = giGroundToTerrain[GetCell(m_mapOriginX + 7, m_mapOriginY + 7)->m_tileIndex];
+    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    gpMouseManager->MouseCoords(x, y);
+    gpMouseManager->WarpPointer(x - 20, y - 20);
+    Reseed(0, 0);
+    CheckDimNextHeroBut();
+}
 
 // donor PoL RVA 0x00069160; preferred Buka symbol ?LoadRemote@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

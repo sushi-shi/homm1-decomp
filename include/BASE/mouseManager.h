@@ -63,6 +63,8 @@ public:
     // Empty in the Windows build (retail 0x00476ec0, `ret 4`); the locator
     // knob drag passes 4 on entry and 6 on release.
     void SetCursorShape(int);
+    // Empty in the Windows build (retail 0x00476e50, `ret 8`).
+    void WarpPointer(int, int);
     void SetColorMice(int);
 };
 #pragma pack(pop)
