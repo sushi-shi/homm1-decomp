@@ -44,7 +44,7 @@ struct tag_tilePoint { signed char x; signed char y; short frameOffset; };
 // Retail 31-byte monster rows from 0x492062: philAI reads the dword fight
 // value and BuildBuilding the growth byte.
 #pragma pack(push, 1)
-struct tag_monsterInfo { int fightValue; signed char unknown04; signed char growth; char unknown06[25]; };
+struct tag_monsterInfo { int fightValue; signed char unknown04; signed char growth; char unknown06[19]; int attributes; char unknown1d[2]; };
 #pragma pack(pop)
 extern tag_monsterInfo gMonsterDatabase[];
 struct SSpellInfo { char m_pad0[14]; unsigned char m_e; char m_pad1[7]; };

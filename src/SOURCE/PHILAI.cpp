@@ -411,7 +411,68 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.431663;margin=0.517459;shape=0.208;size=0.811;calls=0.923;alternate=pol20:void philAI::ValueOfBuyingCreature(class town *, int, int &, int, float &)@0x0003d852
 VA(0x0041def8, 0x2f5)
-void philAI::ValueOfBuyingCreature(class town*, int, int&, int, float&) {}
+void philAI::ValueOfBuyingCreature(
+    town* townPointer,
+    int creature,
+    int& resourceValue,
+    int purchaseCount,
+    float& benefitCost
+) {
+    int nWeeks;
+    int nPoints;
+    float peril;
+    int monsterCost[PLAYER_RESOURCE_COUNT];
+    int archers;
+    int creatRV;
+    int rvCost;
+    float attackChance;
+    float foeStrength;
+    float factor;
+    int nTurns;
+    int n;
+    hero* occupant;
+    int slotNum;
+
+    archers = 0;
+    GetMonsterCost(creature, monsterCost);
+    rvCost = purchaseCount * RVConversion(monsterCost);
+    creatRV = static_cast<int>(
+        purchaseCount * gMonsterDatabase[creature].fightValue
+        * gpCurPlayer->m_aiData.m_upgradeValueWeight
+    );
+    if (townPointer->m_occupyingHeroId != -1) {
+        occupant = gpGame->GetHero(townPointer->m_occupyingHeroId);
+        creatRV = static_cast<int>(creatRV * 1.1);
+        if (occupant->m_unknown1c == creature / 6)
+            creatRV = static_cast<int>(creatRV * 1.1f);
+        if ((gMonsterDatabase[creature].attributes & 8)) {
+            for (n = 0; n < 5; n++) {
+                if (occupant->m_army.m_creatureTypes[n] != -1
+                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].attributes & 8))
+                    archers++;
+            }
+            creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
+        }
+        creatRV = static_cast<int>(
+            creatRV
+            * (gpGame->m_players[townPointer->m_owner].m_aiData.m_attentionWeights.upgradeBase + 0.66)
+        );
+    }
+    if ((gMonsterDatabase[creature].attributes & 8)) {
+        for (slotNum = 0; slotNum < 5; slotNum++) {
+            if (townPointer->m_army.m_creatureTypes[slotNum] != -1
+                && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].attributes & 8))
+                archers++;
+        }
+        creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
+    }
+    LikelihoodOfEnemyAttacking(townPointer, 0, attackChance, foeStrength, nTurns, nPoints, nWeeks, peril);
+    factor = peril + 0.96;
+    creatRV = static_cast<int>(creatRV * (factor * factor * factor));
+    creatRV = static_cast<int>(creatRV * FutureDeflator(monsterCost));
+    resourceValue = creatRV;
+    benefitCost = static_cast<float>(resourceValue) / static_cast<float>(rvCost);
+}
 
 // donor PoL RVA 0x0003db58; preferred Buka symbol ?GetBestCreature@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
