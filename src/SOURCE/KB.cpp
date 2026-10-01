@@ -63,7 +63,43 @@ void InitMainClasses(void) {}
 // evidence: graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
 VA(0x00450046, 0x116)
 int EarlySetup(void) {
-    return 0;
+    int iCDRomErr;
+
+    if (bEarlySetupDone)
+        return 0;
+    InitMainClasses();
+    GetGraphicsInfo();
+    ReadPrefs();
+    if (!InterpretCommandLine())
+        return 1;
+    LogTruncate();
+    iCDRomErr = SetupCDDrive();
+    if (iCDRomErr == 1) {
+        MessageBoxA((HWND)hwndApp, "Unable to access CD Drive.", "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    if (iCDRomErr == 2) {
+        MessageBoxA((HWND)hwndApp,
+                    "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of "
+                    "Might and Magic.  \n\nPlease insert the CD and try again.",
+                    "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    if (iCDRomErr == 3) {
+        MessageBoxA((HWND)hwndApp,
+                    "Unable to change to the Heroes directory.  Please run the installation "
+                    "program.",
+                    "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    if (iCDRomErr == 4) {
+        MessageBoxA((HWND)hwndApp,
+                    "Unable to find the Heroes data files.  Please run the installation program.",
+                    "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    InitVars();
+    return 1;
 }
 
 // Buka 2.1 toupper; HoMM1 keeps the narrow character form.
