@@ -20,12 +20,18 @@ public:
     short m_cursorReady;
     // Constructor and UpdateScreenRegion establish the packed tail.
     unsigned char m_pointerFlags;
-    int m_unknown41;
+    // CheckDoMain compares the pointer position less this offset with the
+    // last drawn position at +0x5b/+0x5d.
+    short m_hotspotX;
+    short m_hotspotY;
     short m_mouseX;
     short m_mouseY;
     int m_unknown49;
     int m_unknown4d;
     char m_unknown51;
+    char m_unknown52[9];
+    short m_drawnX;
+    short m_drawnY;
 
     // --- constructors ---
     mouseManager(void);
@@ -48,6 +54,8 @@ public:
         return m_pointerFlags & 1;
     }
     void CheckUpdateMousePos(void);
+    // Empty in the Windows build (retail 0x00476e20, `ret 8`).
+    void MovePointer(short, short);
     void SetColorMice(int);
 };
 #pragma pack(pop)

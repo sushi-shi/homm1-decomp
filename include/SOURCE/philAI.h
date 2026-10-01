@@ -106,7 +106,7 @@ public:
     float TurnValueOfObelisk(int);
     float FutureDeflator(int* const);
     int FightValueOfStack(class armyGroup*, class hero*, int, int, int, int);
-    void EvaluateOneTimeCreaturePurchase(int, int, int, int&, int&, int&);
+    void EvaluateOneTimeCreaturePurchase(class hero*, int, int, int, int&, int&, int&);
     int QuickCombat(
         class armyGroup*,
         class hero*,
@@ -164,6 +164,10 @@ public:
 };
 extern philAI* gpPhilAI;
 extern armyGroup* gpMonGroup;
+extern int costTemp[];
+extern int iLastFrameRateTimer;
+extern signed char gbDrawSavedCursor;
+extern int bSpecialHideCursor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.

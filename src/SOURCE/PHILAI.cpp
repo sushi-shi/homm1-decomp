@@ -4,10 +4,12 @@
 
 #include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/highScoreRuntime.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +28,44 @@ signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.463287;margin=0.627999;shape=0.348;size=0.713;calls=0.909;alternate=pol20:void CheckDoMain(int, int)@0x000379d0
 VA(0x00419f16, 0x1ef)
-void CheckDoMain(int firstValue, int doMain) {}
+void CheckDoMain(int, int doMain) {
+    if (KBTickCount() > iLastFrameRateTimer + 15 || KBTickCount() > glTimers[0]) {
+        Process1WindowsMessage();
+        PollSound();
+        if (KBTickCount() > glTimers[0]) {
+            if (doMain == 0) {
+                int oldShowIt = bShowIt;
+                int oldX = gpAdvManager->m_previousOriginX;
+                int oldY = gpAdvManager->m_previousOriginY;
+                gbDrawSavedCursor = 1;
+                if (gConfig.blackoutComputer == 0 && gbRemoteOn == 0)
+                    bShowIt = 1;
+                else
+                    bShowIt = 0;
+                if (bShowIt == 0)
+                    bSpecialHideCursor = 1;
+                if (gpAdvManager->ComboDraw(
+                        gpAdvManager->m_previousOriginX,
+                        gpAdvManager->m_previousOriginY,
+                        0
+                    ))
+                    gpAdvManager->UpdateScreen(0, 0);
+                else
+                    gpAdvManager->UpdBottomView(0, 1, 1);
+                bShowIt = oldShowIt;
+                gbDrawSavedCursor = 0;
+                bSpecialHideCursor = 0;
+                gpAdvManager->m_previousOriginX = oldX;
+                gpAdvManager->m_previousOriginY = oldY;
+            }
+            glTimers[0] = KBTickCount() + 120;
+        } else if (gpMouseManager->m_mouseX - gpMouseManager->m_hotspotX != gpMouseManager->m_drawnX
+                   || gpMouseManager->m_mouseY - gpMouseManager->m_hotspotY != gpMouseManager->m_drawnY) {
+            gpMouseManager->MovePointer(gpMouseManager->m_mouseX, gpMouseManager->m_mouseY);
+        }
+        iLastFrameRateTimer = KBTickCount();
+    }
+}
 
 // Both donors retain this intentionally empty status hook; retail has no side effects.
 VA(0x0041a105, 0x10)
@@ -737,7 +776,61 @@ int philAI::FightValueOfStack(class armyGroup*, class hero*, int, int, int, int)
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.513526;margin=0.703256;shape=0.342;size=0.854;calls=1.000;alternate=pol20:void philAI::EvaluateOneTimeCreaturePurchase(int, int, int, int &, int &, int &)@0x00040aca
 VA(0x00420690, 0x1da)
-void philAI::EvaluateOneTimeCreaturePurchase(int, int, int, int&, int&, int&) {}
+void philAI::EvaluateOneTimeCreaturePurchase(
+    hero* pHero,
+    int creature,
+    int availableCount,
+    int useAvailableCount,
+    int& purchaseCount,
+    int& purchaseValue,
+    int& replacementSlot
+) {
+    int leastStackValue;
+    int replacementValue;
+    int purchaseFightValue;
+    int i;
+
+    purchaseCount = 0;
+    purchaseValue = 0;
+    replacementSlot = -1;
+    leastStackValue = 999999;
+    if (useAvailableCount != 0)
+        purchaseCount = availableCount;
+    else
+        purchaseCount = MaxBuyableCreatures(creature);
+    if (purchaseCount > availableCount)
+        purchaseCount = availableCount;
+    if (purchaseCount == 0)
+        return;
+    purchaseFightValue = purchaseCount * gMonsterDatabase[creature].fightValue;
+    if (pHero->m_army.CanJoin(creature) == 0) {
+        for (i = 0; i < 5; i++) {
+            if (pHero->m_army.m_creatureTypes[i] == creature) {
+                replacementSlot = -1;
+                i = 5;
+            } else {
+                replacementValue = pHero->m_army.m_creatureCounts[i] * gMonsterDatabase[i].fightValue;
+                if (replacementValue < leastStackValue) {
+                    leastStackValue = replacementValue;
+                    replacementSlot = i;
+                }
+            }
+        }
+    }
+    if (replacementSlot != -1)
+        purchaseFightValue -= leastStackValue;
+    purchaseValue = static_cast<int>(
+        purchaseFightValue * gpGame->m_players[pHero->m_owner].m_aiData.m_upgradeValueWeight
+    );
+    if (useAvailableCount == 0) {
+        GetMonsterCost(creature, costTemp);
+        purchaseValue -= purchaseCount * RVConversion(costTemp);
+    }
+    if (purchaseValue < 0) {
+        purchaseValue = 0;
+        purchaseCount = 0;
+    }
+}
 
 // donor PoL RVA 0x00040cb1; preferred Buka symbol ?QuickCombat@philAI@@QAEHPAVarmyGroup@@PAVhero@@01HHAAM2@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order

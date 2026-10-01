@@ -181,8 +181,8 @@ public:
     void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    int ComboDraw(short, short, int);
-    int ComboDraw(int);
+    signed char ComboDraw(short, short, int);
+    signed char ComboDraw(int);
     void SetEnvironmentOrigin(int, int, int);
     void CheckLoadSample(int);
     int GetSoundId(int, int);
