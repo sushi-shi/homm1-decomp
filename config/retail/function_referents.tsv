@@ -138,3 +138,10 @@ rva	name	provenance
 0x00047974	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	hero::HeroView reads the army morale with hero and null town (ret 8) and sign-extends AX; body reads town+0x16 buildings
 0x00040366	?Overview@game@@QAEXXZ	HeroHandler crest click calls it on gpGame with no arguments; body loads overmain.bmp, advmice.mse and the fonts
 0x0003F758	?ViewSpecialHandler@@YAHAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
+0x00081D10	_rand	Random's CRT call; body is the LIBCMT per-thread LCG (holdrand at _getptd()+0x14, 214013/2531011, >>16 & 0x7fff)
+0x000830C0	_write	bitmap::Write/playerData::Write/SaveGame low-level writes; LIBCMT _write handle check, _lock_fh and _write_lk body
+0x00082610	_chdir	SetupCDDrive's chdir call; evidence/homm1-dna-bands.tsv crt-exact libc.lib:/1152 __chdir
+0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
+0x00055B8B	?IsCDDrive@@YAHH@Z	SetupCDDrive probes each drive letter through it; body formats the root path and returns GetDriveTypeA(...) == DRIVE_CDROM, as Buka IsCDDrive
+0x000567BF	?EarlyResizeWindow@@YAXHHHH@Z	AppWndProc calls it with four zero arguments (cdecl); HoMM1 body only tests a flag, Buka EarlyResizeWindow identity
+0x00081D00	_srand	AppWndProc seeds the CRT; LIBCMT srand body stores the seed at _getptd()+0x14
