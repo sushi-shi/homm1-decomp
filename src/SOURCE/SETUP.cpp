@@ -100,7 +100,7 @@ signed char game::SetupBaud(void) {
 // evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
 VA(0x00456ae4, 0x222)
 signed char game::SetupComPort(void) {
-    char initString[40];
+    char initStr[40];
 
     heroWindow* window = new heroWindow(400, 35, "stpcom.bin");
     if (!window)
@@ -130,8 +130,8 @@ signed char game::SetupComPort(void) {
         sprintf(gText, "%s", gConfig.modemInitString);
         GetDataEntry("Please enter any special initialization string required by your modem, or "
                      "hit 'ENTER' to accept the default.",
-                     initString, 40, gText);
-        strcpy(gConfig.modemInitString, initString);
+                     initStr, 40, gText);
+        strcpy(gConfig.modemInitString, initStr);
     }
     WritePrefs();
     return 1;
@@ -814,8 +814,8 @@ finished:
 // evidence: graph:3;base=0.404111;margin=0.668725;shape=0.214;size=0.850;calls=0.500;alternate=pol20:int ReceiveRemoteData(unsigned char *, unsigned char *, int)@0x000a3d6f
 VA(0x00458d50, 0xf4)
 int ReceiveRemoteData(unsigned char*, unsigned char* data, int decodeType) {
-    int result;
     int receiveResult;
+    int result;
 
     result = 1;
     switch (GameMode) {
@@ -846,7 +846,7 @@ int ReceiveRemoteData(unsigned char*, unsigned char* data, int decodeType) {
 // evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
 VA(0x00458e44, 0x194)
 signed char InitNetHost(void) {
-    int reserved;
+    int unused;
     int needName;
 
     switch (iInitNetHostStatus) {
