@@ -13,6 +13,7 @@
 H1_ENUM_BEGIN(NetbiosRuntimeConstant)
     NETBIOS_SESSION_COUNT = 7,
     NETBIOS_SESSION_ACTIVE = 1,
+    NETBIOS_SESSION_NAME_REGISTERED = 2,
     NETBIOS_SESSION_CONNECTED = 8,
     NETBIOS_SESSION_ERROR = 0x80,
     NETBIOS_RESULT_SESSION_OUT_OF_RANGE = 8,
@@ -57,6 +58,7 @@ extern unsigned char gNbShutdown;
 extern unsigned char gNetStatus[7];
 extern unsigned char gNbSessLsn[7];
 extern NCB gNbSessNcb[7];
+extern NCB gNbCtlNcb;
 extern NetbiosName gNbNameBuf[7];
 extern CRITICAL_SECTION gNbRcvLock;
 extern CRITICAL_SECTION gNbSndLock;

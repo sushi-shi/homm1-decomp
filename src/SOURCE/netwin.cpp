@@ -89,6 +89,70 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned
     return 1;
 }
 
+// Buka netwin.cpp:149-193; HoMM1 drains the free queue and keeps the
+// cancel/delete-name sequence on one stack NCB.
+VA(0x00413e9a, 0x1f0)
+H1_C_LINKAGE void __cdecl nb_term(void)
+{
+    NCB ncb;
+    tag_Node *node;
+    int i;
+
+    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++)
+        nb_close_session(i);
+    if (gNbCtlNcb.ncb_cmd_cplt == NRC_PENDING) {
+        memset(&ncb, 0, sizeof(ncb));
+        ncb.ncb_command = NCBCANCEL;
+        ncb.ncb_lana_num = gNetbiosLana;
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbCtlNcb);
+        Netbios(&ncb);
+    }
+    if (gNetStatus[gNbMaxSess] & static_cast<int>(NETBIOS_SESSION_NAME_REGISTERED)) {
+        memset(&ncb, 0, sizeof(ncb));
+        memcpy(ncb.ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
+        ncb.ncb_command = NCBDELNAME;
+        ncb.ncb_lana_num = gNetbiosLana;
+        Netbios(&ncb);
+    }
+    EnterCriticalSection(&gNbSndLock);
+    while ((node = pop_node(&gNbSndQueue)) != 0)
+        free(node);
+    while ((node = pop_node(&gNbFreeQueue)) != 0)
+        free(node);
+    LeaveCriticalSection(&gNbSndLock);
+    DeleteCriticalSection(&gNbSndLock);
+    for (i = 0; i < static_cast<int>(NETBIOS_THREAD_EVENT_COUNT); i++) {
+        CloseHandle(gNbEvents[i]);
+        gNbEvents[i] = 0;
+    }
+    gNbShutdown |= 1;
+    SetEvent(gNbEvents[0]);
+    EnterCriticalSection(&gNbRcvLock);
+    while ((node = pop_node(&gNbRcvQueue)) != 0)
+        free(node);
+    LeaveCriticalSection(&gNbRcvLock);
+    DeleteCriticalSection(&gNbRcvLock);
+}
+
+// Buka netwin.cpp:195-217; HoMM1 keeps the unused leading argument.
+VA(0x0041408a, 0x90)
+H1_C_LINKAGE unsigned short __cdecl nb_rcv(int, unsigned short len, void *buffer)
+{
+    tag_Node *node;
+    int size;
+
+    EnterCriticalSection(&gNbRcvLock);
+    node = pop_node(&gNbRcvQueue);
+    LeaveCriticalSection(&gNbRcvLock);
+    if (node) {
+        size = node->len < len ? node->len : len;
+        memcpy(buffer, node->data, size);
+        free(node);
+        return size;
+    }
+    return 0;
+}
+
 // donor PoL RVA 0x000a7186; preferred Buka symbol _nb_snd
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.424579;margin=0.396789;shape=0.244;size=0.738;calls=0.875;alternate=pol20:@nb_snd@12@0x000a7186
@@ -242,4 +306,11 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
     if (returnCode == NRC_PENDING)
         returnCode = 0;
     return returnCode;
+}
+
+// Buka netwin.cpp:374-380.
+VA(0x00414714, 0x1e)
+H1_C_LINKAGE char __cdecl nb_stat(int, unsigned short session)
+{
+    return gNetStatus[session];
 }
