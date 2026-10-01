@@ -52,7 +52,8 @@ public:
     class widget* m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class widget* m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class heroWindow* m_adventureWindow;
-    unsigned short* m_visibilityMap;
+    // ShowRoute clears 72*72 bytes and stores signed route frames.
+    signed char* m_visibilityMap;
     signed char m_routeShown;
     signed char m_currentTerrain;
     char m_unknown9b[4];
@@ -364,6 +365,8 @@ extern int gbHeroMoving;
 extern unsigned char giCurPlayerBit;
 // Volume per environment-sound distance step.
 extern long glEnvironmentVolume[];
+// Route arrow frame by [next step][this step] path direction.
+extern signed char gRouteFrame[][8];
 // Per hero type scouting radius used by TeleportTo.
 extern signed char gHeroScoutRadius[];
 extern int giLimitUpdMinX;

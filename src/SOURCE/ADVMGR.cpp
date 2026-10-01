@@ -1977,7 +1977,68 @@ void advManager::SummonBoat(void) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.438878;margin=0.464254;shape=0.279;size=0.721;calls=1.000;alternate=pol20:void advManager::ShowRoute(int, int, int)@0x00068247
 VA(0x0043591f, 0x31b)
-void advManager::ShowRoute(int, int, int) {}
+void advManager::ShowRoute(int redraw, int, int updateButton) {
+    hero* pHero;
+    int canReach;
+    int fromDirection;
+    int x;
+    int y;
+    int dir;
+    int j;
+    int remMob;
+    int terr;
+    short buttonFrame;
+
+    canReach = 0;
+    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
+        return;
+    if (gpCurPlayer->m_currentHero == -1) {
+        HideRoute(redraw, 0, 1);
+        return;
+    }
+    pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (pHero->m_destinationX == -1) {
+        HideRoute(redraw, 1, 1);
+        return;
+    }
+    gpSearchArray->BuildPath(pHero->m_x, pHero->m_y, pHero->m_destinationX, pHero->m_destinationY, 999);
+    if (gpSearchArray->m_pathLength > 0) {
+        memset(m_visibilityMap, 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
+        m_routeShown = 1;
+        remMob = pHero->m_remainingMobility;
+        x = pHero->m_x;
+        y = pHero->m_y;
+        for (j = gpSearchArray->m_pathLength - 1; j >= 0; --j) {
+            dir = gpSearchArray->m_directions[j];
+            terr = giGroundToTerrain[GetCell(x, y)->m_tileIndex];
+            remMob -= CalcTerrainCost(terr, dir & 1, remMob, pHero->m_unknown1c);
+            x += normalDirTable[dir].x;
+            y += normalDirTable[dir].y;
+            if (j == 0) {
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = 14;
+            } else {
+                fromDirection = gpSearchArray->m_directions[j - 1];
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = gRouteFrame[fromDirection][dir];
+            }
+            if (remMob >= 0) {
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] + 14;
+                canReach = 1;
+            }
+        }
+        if (updateButton) {
+            buttonFrame = canReach ? 6 : 5;
+            gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, buttonFrame, 2, 0x4008);
+        }
+    } else {
+        HideRoute(redraw, 1, 1);
+    }
+    if (redraw) {
+        CompleteDraw(0);
+        gpMouseManager->ReallyHidePointer();
+        UpdateScreen(0, 0);
+        gpMouseManager->ReallyShowPointer();
+    }
+}
 
 // donor PoL RVA 0x00068720; preferred Buka symbol ?HideRoute@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

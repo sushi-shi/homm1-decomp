@@ -59,7 +59,7 @@ public:
     searchArray(void);
     ~searchArray();
     // --- methods ---
-    int BuildPath(int, int, int, int, int);
+    int BuildPath(short, short, short, short, int);
     void SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int);
     void Init(void);
     void Close(void);
