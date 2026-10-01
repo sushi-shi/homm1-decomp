@@ -179,4 +179,6 @@ public:
     int WalkTowardArmyFront(class army *, int, int);
     int WalkTowardArmy(class army *, int, int);
 };
+
+int ValidHex(int);
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

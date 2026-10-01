@@ -12,6 +12,7 @@
 #include <SOURCE/resourceTypes.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Retail score-dialog owner bytes; initializer coverage is deferred.
@@ -248,6 +249,34 @@ void game::ShowMoraleInfo(class hero*, int) {}
 // evidence: graph:2;base=0.456267;margin=0.157936;shape=0.493;size=0.606;calls=0.556;alternate=pol20:void game::ShowLuckInfo(class hero *, int)@0x0009c92d
 VA(0x00453ff8, 0x1f7)
 void game::ShowLuckInfo(class hero*, int) {}
+
+VA(0x004541ef, 0x70)
+void ClearMapExtra(void) {
+    int i;
+    for (i = 0; i < 255; i++) {
+        if (ppMapExtra[i]) {
+            free(ppMapExtra[i]);
+            ppMapExtra[i] = 0;
+        }
+    }
+    gbMapExtraCleared = 1;
+}
+
+// HoMM1 score-to-monster tables pair a threshold word with a monster word.
+VA(0x0045425f, 0x8e)
+short GetMonType(int score, int highScoreType) {
+    int index;
+    for (index = 27; index >= 0; index--) {
+        if (highScoreType == 0) {
+            if (giScoreCampaignMon[index][0] >= score)
+                return giScoreCampaignMon[index][1];
+        } else {
+            if (giScoreMon[index][0] <= score)
+                return giScoreMon[index][1];
+        }
+    }
+    return giScoreMon[0][1];
+}
 
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
