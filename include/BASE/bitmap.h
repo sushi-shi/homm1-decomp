@@ -5,10 +5,12 @@
 #include <H1/Macros.h>
 
 H1_ENUM_BEGIN(BitmapCopyConstant)
-BITMAP_COPY_STRIDE = 640, PALETTE_RAW_BYTES = 0x300 H1_ENUM_END(BitmapCopyConstant)
+    BITMAP_COPY_STRIDE = 640,
+    PALETTE_RAW_BYTES = 0x300
+H1_ENUM_END(BitmapCopyConstant)
 
 #pragma pack(push, 1)
-                              class bitmap : public resource {
+class bitmap : public resource {
 public:
     short m_bitmapType;
     short m_width;
