@@ -311,3 +311,56 @@ void advManager::CheckAdjacentMon(signed char *adjacentMonster)
         *adjacentMonster = 1;
     }
 }
+
+// Buka CURSOR.cpp:962 ValidMoveWithEvent; HoMM1 lets a boat meet another
+// boat, forbids landing a boat on most objects and defers the rest to
+// ValidMove.
+VA(0x004075ab, 0x20a)
+short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
+{
+    short deltaX;
+    short newX;
+    short deltaY;
+    short newY;
+    mapCell *cell;
+
+    deltaX = normalDirTable[direction].x;
+    deltaY = normalDirTable[direction].y;
+    newX = movingHero->m_x + deltaX;
+    newY = movingHero->m_y + deltaY;
+    if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
+        return 0;
+    cell = &m_mapData[newX][newY];
+    switch (cell->m_triggerType & 0x7f) {
+        case 3:
+            if (!(movingHero->m_eventFlags & 0x80))
+                return 1;
+            else
+                return 0;
+        case 61:
+            if (movingHero->m_eventFlags & 0x80) {
+                if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & 0x80)
+                    return 1;
+                else
+                    return 0;
+            }
+        case 2:
+        case 4:
+        case 6:
+        case 8:
+        case 9:
+        case 11:
+        case 26:
+        case 27:
+        case 28:
+        case 29:
+        case 36:
+        case 43:
+        case 48:
+            if (m_cursorType == 4)
+                return 0;
+            else
+                return 1;
+    }
+    return ValidMove(direction);
+}

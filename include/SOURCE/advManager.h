@@ -128,8 +128,8 @@ public:
     int GetMoveShowIt(signed char);
     class mapCell* MoveHero(int, int, int*, int*, int*, int, int*, int);
     void CheckAdjacentMon(signed char*);
-    int ValidMoveWithEvent(class hero*, int);
-    int ValidMove(int, int);
+    short ValidMoveWithEvent(class hero*, short);
+    short ValidMove(short);
     void MoveOrigin(int, int);
     void ProcessMapChange(struct SMapChange);
     void ProcessIncomingSingleMapChange(struct SMapChange*);
