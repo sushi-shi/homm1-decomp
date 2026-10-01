@@ -5,6 +5,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
 
 #include <string.h>
 
@@ -461,13 +462,27 @@ int townManager::RecruitHero(int, int) { return 0; }
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.461090;margin=0.267847;shape=0.244;size=0.845;calls=1.000;alternate=pol20:int TavernHandler(struct tag_message &)@0x00019c29
 VA(0x0040e5db, 0x155)
-int TavernHandler(struct tag_message &) { return 0; }
+short TavernHandler(struct tag_message &) { return 0; }
 
 // donor PoL RVA 0x00019d7c; preferred Buka symbol ?DoTavern@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.728216;margin=0.164549;shape=0.467;size=0.965;calls=0.889;strings=tavwin.bin;alternate=pol20:void townManager::DoTavern(void)@0x00019d7c
+// Buka TOWNMGR.cpp:3003-3032; HoMM1 plays the tavern theme instead of a
+// rumour and restores the town theme afterwards.
 VA(0x0040e730, 0x136)
-void townManager::DoTavern(void) {}
+void townManager::DoTavern(void)
+{
+    int unusedValue = 0;
+
+    m_heroWindow0 = new heroWindow(TOWN_TAVERN_WINDOW_X, TOWN_TAVERN_WINDOW_Y, "tavwin.bin");
+    if (m_heroWindow0 == 0)
+        MemError();
+    SetWinText(m_heroWindow0, TOWN_TAVERN_WINDOW_TEXT);
+    gpSoundManager->SwitchAmbientMusic(TOWN_TAVERN_MUSIC);
+    gpWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
+    delete m_heroWindow0;
+    gpSoundManager->SwitchAmbientMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
+}
 
 // donor PoL RVA 0x0001e0fb; preferred Buka symbol ?CastleHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/Castle; HoMM1 owner inferred from contiguous order

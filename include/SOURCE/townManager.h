@@ -69,6 +69,14 @@ H1_ENUM_BEGIN(TownControl)
     TOWN_HERO_SLOT_FIRST = 0x17,
     TOWN_CLOSE_CONTROL = 0x7800
 H1_ENUM_END(TownControl)
+
+H1_ENUM_BEGIN(TownTavernConstant)
+    TOWN_TAVERN_WINDOW_X = 0xa2,
+    TOWN_TAVERN_WINDOW_Y = 0xa,
+    TOWN_TAVERN_WINDOW_TEXT = 0xe,
+    TOWN_TAVERN_MUSIC = 0x2f,
+    TOWN_THEME_MUSIC_BASE = 0x1d
+H1_ENUM_END(TownTavernConstant)
 // clang-format on
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
@@ -143,4 +151,6 @@ public:
 #pragma pack(pop)
 
 extern char *cTownCommand[];
+extern signed char townTheme[];
+short TavernHandler(struct tag_message &);
 #endif // HOMM1_SOURCE_TOWNMANAGER_H
