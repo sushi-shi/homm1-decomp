@@ -175,7 +175,7 @@ public:
     void MobilizeCurrHero(int);
     void DemobilizeCurrHero(void);
     void SetTownContext(signed char);
-    void SetHeroContext(signed char, int);
+    void SetHeroContext(signed char, signed char);
     void DoHeroKnob(void);
     void DoTownKnob(void);
     void CastSpell(signed char);
@@ -360,6 +360,7 @@ extern short gMapX;
 extern short gMapY;
 extern unsigned char giCurWatchPlayerBit;
 extern short gGameCommand;
+extern int gbHeroMoving;
 extern int giLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;

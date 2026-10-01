@@ -719,7 +719,77 @@ void advManager::SetTownContext(signed char townId) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.499995;margin=0.151356;shape=0.325;size=0.844;calls=0.947;alternate=pol20:void advManager::SetHeroContext(int, int)@0x00064318
 VA(0x004303ff, 0x3e6)
-void advManager::SetHeroContext(signed char, int) {}
+void advManager::SetHeroContext(signed char heroId, signed char update) {
+    signed char wasVisible;
+    signed char heroSlot;
+    short n;
+    mapCell* cellPtr;
+    hero* currentHero;
+
+    if (heroId == -1)
+        return;
+    wasVisible = gpMouseManager->IsVis();
+    gpMouseManager->ReallyHidePointer();
+    DeactivateCurrTown();
+    HideRoute(0, 0, 1);
+    DeactivateCurrHero();
+    m_heroContextLocked = 1;
+    gpCurPlayer->m_currentHero = heroId;
+    currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    m_mapOriginX = currentHero->m_x - 7;
+    m_mapOriginY = currentHero->m_y - 7;
+    m_cursorMapX = m_cursorMapY = 7;
+    m_previousCursorMapX = m_previousCursorMapY = -1;
+    if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
+        m_cursorType = 4;
+    else
+        m_cursorType = currentHero->m_unknown1c;
+    m_cursorDirection = currentHero->m_direction;
+    m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+    cellPtr = GetCell(currentHero->m_x, currentHero->m_y);
+    cellPtr->m_flags |= 0x40;
+    gpGame->RestoreCell(
+        currentHero->m_x,
+        currentHero->m_y,
+        currentHero->m_locationType,
+        currentHero->m_occupiedTown,
+        0,
+        4
+    );
+    heroSlot = 0;
+    for (n = 0; n < gpCurPlayer->m_heroCount; n++) {
+        if (gpCurPlayer->m_heroIds[n] == heroId)
+            heroSlot = n;
+    }
+    if (gpCurPlayer->m_heroLocatorPage > heroSlot)
+        gpCurPlayer->m_heroLocatorPage = heroSlot;
+    else if (gpCurPlayer->m_heroLocatorPage + 3 < heroSlot)
+        gpCurPlayer->m_heroLocatorPage = heroSlot - 3;
+    UpdateHeroLocators(1, 1);
+    UpdateTownLocators(1, 1);
+    if (!update && (m_active == 1 || gbThisNetHumanPlayer[giCurPlayer])) {
+        Reseed(0, 0);
+        SeedTo(currentHero->m_destinationX, currentHero->m_destinationY);
+        ShowRoute(0, 0, !update);
+    }
+    UpdBottomView(1, 1, 1);
+    m_cursorActive = 1;
+    UpdateRadar(1, 0);
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    UpdateScreen(0, 0);
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    heroSlot = giGroundToTerrain[cellPtr->m_tileIndex];
+    if (m_currentTerrain != heroSlot) {
+        m_currentTerrain = heroSlot;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    if (!gbHeroMoving) {
+        if (wasVisible)
+            gpMouseManager->ReallyShowPointer();
+        gpInputManager->m_field_0x34a = 1;
+        m_lastHoverCell = 0;
+    }
+}
 
 // donor PoL RVA 0x000646aa; preferred Buka symbol ?DoHeroKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
