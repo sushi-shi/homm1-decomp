@@ -17,6 +17,7 @@ extern char* cHeroLevel[];
 extern signed char gHeroSkillBonus[][9][HERO_PRIMARY_STAT_COUNT];
 extern int gbInNewGameSetup;
 void SRand(int);
+int ViewSpecialHandler(struct tag_message&);
 int SRandom(int, int);
 
 // donor PoL RVA 0x000c0790; preferred Buka symbol ?AICheckRetreat@combatManager@@QAEHXZ
@@ -886,5 +887,160 @@ void UpdateHeroScreenStatusBar(short widgetId) {
 // donor PoL RVA 0x0006e816; preferred Buka symbol ?HeroHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.360602;margin=0.481730;shape=0.266;size=0.702;calls=0.568;alternate=pol20:int HeroHandler(struct tag_message &)@0x0006e816
-VA(0x0046dedc, 0x6d4)
-short HeroHandler(struct tag_message &) { return 0; }
+VA(0x0046dedc, 0x6c8)
+short HeroHandler(struct tag_message& message) {
+    tag_message newEvent;
+    int unusedValue15;
+    int unusedValue21;
+    int unusedValue16;
+    int unusedValue22;
+    int heroLevel;
+    int nextLevelExp;
+    signed char quickView;
+    signed char finished = 0;
+    short slot;
+    short temporary;
+    int spare;
+
+    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        quickView = 1;
+    else
+        quickView = 0;
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+        case WIDGET_COMMAND_HOVER:
+            if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                break;
+            gpWindowManager->m_lastHoverId = message.payload.widget.id;
+            UpdateHeroScreenStatusBar(message.payload.widget.id);
+            return 1;
+        case WIDGET_NOTIFY_DESELECT:
+            if (!quickView) {
+                switch (message.payload.widget.id) {
+                case 0x7803:
+                    if (gpHVHero->Dismiss())
+                        finished = 1;
+                    break;
+                case 0x7800:
+                    finished = 1;
+                    break;
+                default:
+                    break;
+                }
+            }
+            break;
+        case WIDGET_NOTIFY_SELECT:
+            switch (message.payload.widget.id) {
+            case 86:
+                if (!quickView) {
+                    gpGame->Overview();
+                    gpHVHero->RedrawHeroScreen();
+                    gpWindowManager->FadeScreen(0, 8, 0);
+                }
+                break;
+            case 81:
+            case 82:
+            case 83:
+            case 84:
+                gpHVHero->ViewStat(message.payload.widget.id - 81, quickView);
+                break;
+            case 200:
+            case 201:
+            case 202:
+                gpGame->ShowMoraleInfo(gpHVHero, quickView == 0 ? 1 : 4);
+                break;
+            case 203:
+            case 204:
+            case 205:
+                gpGame->ShowLuckInfo(gpHVHero, quickView == 0 ? 1 : 4);
+                break;
+            case 206:
+            case 207:
+                heroLevel = gpHVHero->GetLevel(gpHVHero->m_experience);
+                nextLevelExp = gpHVHero->GetExperience(heroLevel + 1);
+                sprintf(gText, "Level %d\n\nExperience %d\n\nNext level %d", heroLevel,
+                        gpHVHero->m_experience, nextLevelExp);
+                NormalDialog(gText, quickView == 0 ? 1 : 4, -1, -1, -1, 0, -1, 0, -1);
+                break;
+            case 102:
+            case 103:
+            case 104:
+            case 105:
+            case 106:
+                slot = message.payload.widget.id - 102;
+                if (!quickView && giHeroScreenSrcIndex == -1) {
+                    if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
+                        giHeroScreenSrcIndex = slot;
+                        gpHVHero->HeroScreenUpdate();
+                    }
+                } else if ((quickView && gpHVHero->m_army.m_creatureTypes[slot] != -1)
+                           || (!quickView
+                               && message.payload.widget.id - 102 == giHeroScreenSrcIndex)) {
+                    gpGame->ViewArmy(119, 20, gpHVHero->m_army.m_creatureTypes[slot],
+                                     gpHVHero->m_army.m_creatureCounts[slot], 0,
+                                     quickView || gpTownManager->m_heroViewLocked == 1
+                                         || gpHVHero->m_army.GetNumArmies() == 1,
+                                     0, quickView, gpHVHero, 0, &gpHVHero->m_army);
+                    if (!quickView)
+                        giHeroScreenSrcIndex = -1;
+                    gpHVHero->HeroScreenUpdate();
+                } else if (!quickView && gpTownManager->m_heroViewLocked) {
+                    if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
+                        giHeroScreenSrcIndex = slot;
+                        gpHVHero->HeroScreenUpdate();
+                    }
+                } else if (!quickView) {
+                    temporary = gpHVHero->m_army.m_creatureTypes[slot];
+                    gpHVHero->m_army.m_creatureTypes[slot] =
+                        gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex];
+                    gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex] = temporary;
+                    temporary = gpHVHero->m_army.m_creatureCounts[slot];
+                    gpHVHero->m_army.m_creatureCounts[slot] =
+                        gpHVHero->m_army.m_creatureCounts[giHeroScreenSrcIndex];
+                    gpHVHero->m_army.m_creatureCounts[giHeroScreenSrcIndex] = temporary;
+                    giHeroScreenSrcIndex = -1;
+                    gpHVHero->HeroScreenUpdate();
+                }
+                if (!quickView) {
+                    gpWindowManager->m_lastHoverId = -1;
+                    UpdateHeroScreenStatusBar(message.payload.widget.id);
+                }
+                break;
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+            case 29:
+            case 30:
+            case 31:
+            case 32:
+            case 33:
+                if (gpHVHero->m_artifacts[message.payload.widget.id - 20] != -1) {
+                    if (!quickView
+                        && gpHVHero->m_artifacts[message.payload.widget.id - 20]
+                               == ARTIFACT_MAGIC_BOOK)
+                        gpGame->ViewSpells(gpHVHero, 2, ViewSpecialHandler, 1);
+                    else
+                        gpHVHero->ViewArtifact(gpHVHero->m_artifacts[message.payload.widget.id - 20],
+                                               quickView);
+                }
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    if (finished) {
+        gpWindowManager->m_dialogResult = message.payload.widget.id;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return 2;
+    } else {
+        return 1;
+    }
+}
