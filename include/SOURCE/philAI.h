@@ -19,6 +19,13 @@ AI_PLAYER_COUNT = 4, AI_PLAYER_BEGIN = 0,
 extern signed char giBuildBoat[AI_PLAYER_COUNT];
 extern signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
 void ShowStatus();
+int GetBuildingBaseResourceValue(int, int, int);
+extern int iDummy;
+extern int gArtifactBaseRV[];
+extern int gResourceBaseValue[];
+extern float gfStatValue[];
+extern int bHeroBuiltThisTurn;
+extern int iCurHourGlassPhase;
 
 // forward declarations:
 class armyGroup;
@@ -35,8 +42,7 @@ public:
     // --- constructors ---
     philAI(void);
     // --- methods ---
-    // HoMM1 status-line print behind AiPrint/AbsAiPrint (retail 0x0041a115).
-    void AiPrint(char*);
+    void ShowDebugText(char*);
     void DoAllHeroInteractions(void);
     void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
@@ -107,7 +113,7 @@ public:
     void HeroInteractionAtHero(class hero*, class hero*, int, int*);
     void HeroInteractionAtTown(class hero*, class town*, int, int*);
     void RedistributeTroops(class armyGroup*, class armyGroup*, int, int, int, int, int);
-    int ChooseGoldOrExperience(int, int);
+    int ChooseGoldOrExperience(class hero*, int, int);
     void ChooseEvaluateBattle(
         class armyGroup*,
         class hero*,
@@ -120,6 +126,7 @@ public:
         int&
     );
     int ChooseToFightForArtifact(int, int, int);
+    int ChooseToBuyArtifact(class hero*, int, int);
     int NetValueOfArtifact(int, int, int, int);
     int ChooseToPayRansomOnHero(class hero*, int);
     void BuildBuilding(class town*, int);
@@ -129,6 +136,7 @@ public:
     int CombatMonsterEvent(class hero*, int, int*, class mapCell*);
     int FightEvent(class hero*, class mapCell*, int);
     int DamageGroup(class armyGroup*, class hero*, class hero*, float);
+    float StatChangeValue(int, int);
     void IncrementHourGlass(void);
     void TownEvent(class mapCell*, class hero*, int, int);
     int ComputeUpgradeValue(int, int);

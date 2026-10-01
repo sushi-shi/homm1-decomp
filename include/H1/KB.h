@@ -38,6 +38,7 @@ extern soundManager* gpSoundManager;
 extern heroWindowManager* gpWindowManager;
 extern heroWindow* pNormalDialogWindow;
 extern advManager* gpAdvManager;
+extern signed char gbThisNetHumanPlayer[];
 extern townManager* gpTownManager;
 extern executive* gpExec;
 extern class game* gpGame;
@@ -68,6 +69,7 @@ void ShutDown(char*);
 void MemError();
 void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
+int NullHandler(struct tag_message&);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
 
 #endif

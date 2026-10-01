@@ -12,12 +12,35 @@ H1_ENUM_BEGIN(PlayerDataConstant)
     PLAYER_TOWN_CAPACITY = 36,
     PLAYER_RESOURCE_COUNT = 7
 H1_ENUM_END(PlayerDataConstant)
-// clang-format on
+    // clang-format on
+
+    // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
+    // HoMM2's per-player AI block (without its last float) inside playerData.
+    struct playerAttentionWeights {
+    float gameWeightA;
+    float gameRemainder;
+    float gameWeightB;
+    float buildingValue;
+    float upgradeBase;
+    float heroValue;
+};
+
+class playerAIData {
+public:
+    playerAttentionWeights m_attentionWeights;
+    char m_unknown18[0x1c];
+    int m_income[PLAYER_RESOURCE_COUNT];
+    int m_obeliskValue;
+    int m_totalObeliskValue;
+    int m_unexploredValue;
+    float m_upgradeValueWeight;
+    float m_artifactValue;
+};
 
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at
 // the 0x620 world map); fields follow HoMM2's order after a HoMM1 prefix.
 #pragma pack(push, 1)
-        class playerData {
+class playerData {
 public:
     char m_unknown00[0x12];
     signed char m_color;
@@ -31,7 +54,9 @@ public:
     signed char m_townLocatorPage;
     signed char m_townIds[PLAYER_TOWN_CAPACITY];
     int m_resources[PLAYER_RESOURCE_COUNT];
-    char m_unknown99[0x6c];
+    char m_unknown99[2];
+    unsigned char m_obelisksVisited[6];
+    playerAIData m_aiData;
     // --- methods ---
     void Write(int);
     void Read(int);
@@ -39,6 +64,7 @@ public:
     signed char HasMobileHero(void);
     int BuildingsOwned(int, int, int);
     int NumOfGivenArtifact(int);
+    signed char CountVisitedObelisks(void);
     signed char CurrentHero(void) {
         return m_currentHero;
     }
@@ -47,4 +73,5 @@ public:
 
 extern playerData* gpCurPlayer;
 extern signed char giCurPlayer;
+extern int giCurTurn;
 #endif // HOMM1_SOURCE_PLAYERDATA_H

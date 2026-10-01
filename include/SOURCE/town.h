@@ -25,17 +25,18 @@ public:
     signed char m_buildState;
     char m_unknown19;
     short m_garrison[6];
+    char m_unknown26[0x11];
     // --- constructors ---
     town(void);
     // --- methods ---
     signed char HasGarrison(void);
-    void GiveSpells(class hero *);
+    void GiveSpells(class hero*);
     void XformToCastle(void);
     void View(void);
     void Deallocate(void);
     void BuildBuilding(int);
     int CanBuildDock(void);
-    void CalcNumLevelArchers(int *, int *);
+    void CalcNumLevelArchers(int*, int*);
 };
 #pragma pack(pop)
 #endif // HOMM1_SOURCE_TOWN_H

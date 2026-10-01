@@ -140,7 +140,7 @@ void LogStr(
 // HoMM1 routes the status-line print through the AI object's debug font.
 VA(0x00419d32, 0x1f)
 void AiPrint(char* text) {
-    gpPhilAI->AiPrint(text);
+    gpPhilAI->ShowDebugText(text);
 }
 
 VA(0x00419d51, 0x4e)
@@ -151,6 +151,6 @@ void AbsAiPrint(char* text) {
         return;
     saved = giDebugLevel;
     giDebugLevel = MISC_FORCED_DEBUG_LEVEL;
-    gpPhilAI->AiPrint(text);
+    gpPhilAI->ShowDebugText(text);
     giDebugLevel = saved;
 }
