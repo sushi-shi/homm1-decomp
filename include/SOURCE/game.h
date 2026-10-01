@@ -73,7 +73,8 @@ public:
     hero* GetHero(int id) {
         return &m_heroRecs[id];
     }
-    town* GetTown(int id) {
+    // TownEvent sign-extends the unsigned cell metadata through this byte.
+    town* GetTown(signed char id) {
         return &m_castleRecs[id];
     }
     // --- methods ---
@@ -120,7 +121,8 @@ public:
     void RandomizeBarrier(class mapCell*);
     void RandomizePassword(class mapCell*);
     int LoadMap(char*);
-    void ClaimTown(int, int, int);
+    // HoMM1 retail: byte town and player (ret 8).
+    void ClaimTown(signed char, signed char);
     void ClaimMine(int, int);
     int ViewSpells(class hero*, int, int (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);

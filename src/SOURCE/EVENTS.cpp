@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <H1/All.h>
+#include <H1/KB.h>
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -14,13 +15,49 @@ void advManager::DoEvent(class mapCell *, int, int) {}
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.621863;margin=0.183841;shape=0.591;size=0.854;calls=1.000;alternate=pol20:void advManager::HeroSwap(class hero *, class hero *)@0x000aea02
 VA(0x0045fed1, 0xcd)
-void advManager::HeroSwap(class hero *, class hero *) {}
+void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
+    swapManager* swapMgr;
+
+    swapMgr = new swapManager(firstHero, secondHero);
+    if (!swapMgr)
+        MemError();
+    gpExec->DoDialog(swapMgr);
+    delete swapMgr;
+}
 
 // donor PoL RVA 0x000af87c; preferred Buka symbol ?TownEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.530630;margin=0.268223;shape=0.333;size=0.946;calls=1.000;alternate=pol20:void advManager::TownEvent(class mapCell *, int, int)@0x000af87c
 VA(0x0045ff9e, 0x1bf)
-void advManager::TownEvent(class mapCell *, int, int) {}
+void advManager::TownEvent(class mapCell* cell, int x, int y) {
+    hero* curHero;
+    int result;
+    hero* defender;
+    town* townRec;
+
+    townRec = gpGame->GetTown(cell->m_objectMetadata);
+    curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    DemobilizeCurrHero();
+    if (townRec->m_owner == giCurPlayer) {
+        townRec->m_occupyingHeroId = gpCurPlayer->CurrentHero();
+        townRec->View();
+    } else if (townRec->HasGarrison()) {
+        defender = townRec->m_occupyingHeroId == -1 ? 0 : gpGame->GetHero(townRec->m_occupyingHeroId);
+        result = DoCombat(x, y, curHero, &curHero->m_army, townRec, defender, &townRec->m_army, x, y,
+                          -1, 1);
+        if (result == 1)
+            gpGame->ClaimTown(townRec->m_id, giCurPlayer);
+    } else {
+        gpGame->ClaimTown(townRec->m_id, giCurPlayer);
+        UpdateRadar(1, 0);
+        UpdateHeroLocators(1, 1);
+        UpdateTownLocators(1, 1);
+        townRec->m_occupyingHeroId = gpCurPlayer->CurrentHero();
+        townRec->View();
+    }
+    townRec->GiveSpells();
+    curHero->CheckLevel();
+}
 
 // donor PoL RVA 0x000aff6c; preferred Buka symbol ?EventWindow@advManager@@QAEXHHPADHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
