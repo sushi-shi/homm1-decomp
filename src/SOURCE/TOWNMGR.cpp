@@ -52,8 +52,45 @@ void advManager::CheckAdjacentMon(int *) {}
 // donor PoL RVA 0x00013900; preferred Buka symbol ??0townObject@@QAE@HHPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.615649;margin=0.314990;shape=0.431;size=0.799;calls=0.333;strings=%s.icn;alternate=pol20:void townObject::constructor(int, int, char *)@0x00013900
+// Buka TOWNMGR.cpp townObject ctor; HoMM1 reads frame count, rectangle and
+// building id from the .tod resource instead of sBuildingInfo.
 VA(0x00407d90, 0x1f1)
-townObject::townObject(int, int, char *) {}
+townObject::townObject(char *name)
+{
+    char fileName[16];
+    short w;
+    short tmp;
+    short id;
+    short x;
+    short h;
+    short y;
+
+    m_animationFrame = 0;
+    m_icon = 0;
+    m_border = 0;
+    m_visible = 1;
+    sprintf(fileName, "%s.tod", name);
+    id = gpResourceManager->MakeId(fileName);
+    gpResourceManager->PointToFile(id);
+    m_animationFrameCount = gpResourceManager->ReadByte();
+    x = gpResourceManager->ReadWord();
+    y = gpResourceManager->ReadWord();
+    w = gpResourceManager->ReadWord();
+    h = gpResourceManager->ReadWord();
+    id = gpResourceManager->ReadWord();
+    m_buildingId = id;
+    sprintf(fileName, "%s.icn", name);
+    m_icon = gpResourceManager->GetIcon(fileName);
+    if (id == 0) {
+        h = gpTownManager->m_town->m_buildState * 20 + 0x61;
+        y = 0x99 - h;
+    }
+    if (id != -1) {
+        m_border = new border(x, y, w, h, id, 1, 0, 0);
+        if (m_border == 0)
+            MemError();
+    }
+}
 
 // donor PoL RVA 0x00013a6a; preferred Buka symbol ??1townObject@@QAE@XZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
