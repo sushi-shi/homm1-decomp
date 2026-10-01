@@ -122,6 +122,12 @@ H1_ENUM_BEGIN(TownMageConstant)
     TOWN_MAGE_WIDGET_VISIBLE_FLAG = 4
 H1_ENUM_END(TownMageConstant)
 
+H1_ENUM_BEGIN(TownSplitConstant)
+    TOWN_SPLIT_AMOUNT_CONTROL = 0x44,
+    TOWN_SPLIT_INCREASE_CONTROL = 0x45,
+    TOWN_SPLIT_DECREASE_CONTROL = 0x46
+H1_ENUM_END(TownSplitConstant)
+
 H1_ENUM_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,
@@ -217,4 +223,5 @@ extern char *cTownCommand[];
 extern signed char townTheme[];
 short TavernHandler(struct tag_message &);
 short MageGuildHandler(struct tag_message &);
+short SplitArmyHandler(struct tag_message &);
 #endif // HOMM1_SOURCE_TOWNMANAGER_H
