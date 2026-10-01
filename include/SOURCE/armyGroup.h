@@ -33,10 +33,11 @@ public:
     signed char IsMember(signed char);
     int IsHomogeneous(int);
     signed char CanJoin(signed char);
-    int GetNumArmies(void);
+    short GetNumArmies(void);
     // HoMM1 retail: byte creature/slot, word count, word result (ret 0xc).
     short Add(signed char, short, signed char);
-    void Swap(int, class armyGroup*, int);
+    // HoMM1 retail: byte slots (movsx [ebp+8]/[ebp+0x10]).
+    void Swap(signed char, class armyGroup*, signed char);
     void DamageGroup(float);
 };
 #pragma pack(pop)

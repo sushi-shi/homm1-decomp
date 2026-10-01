@@ -19,8 +19,9 @@ class swapManager : public baseManager {
 public:
     heroWindow* m_window;
     icon* m_selectorIcon;
-    hero* m_rightHero;
-    hero* m_leftHero;
+    // Main indexes the pair by side byte: [1] is the constructor's first
+    // (left) hero, [0] the second.
+    hero* m_heroes[2];
     signed char m_selectedSide;
     signed char m_targetSide;
     signed char m_selectedSlot;

@@ -170,6 +170,7 @@ public:
     char* GetArmySizeName(short, H1_ENUM_PARAM(ArmySizeNameVariant, signed char));
     void TownQuickView(int, int, int, int);
     void RedrawAdvScreen(int);
+    void GiveTakeArtifactStat(class hero*, signed char, signed char);
     void DeactivateCurrTown(void);
     void DeactivateCurrHero(void);
     void MobilizeCurrHero(int);

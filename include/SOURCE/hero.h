@@ -26,6 +26,7 @@ class town;
 // clang-format off
 H1_ENUM_BEGIN(HeroConstant)
     HERO_PRIMARY_STAT_COUNT = 4,
+    HERO_STARTING_STAT_COUNT = 5,
     HERO_COMBAT_SPELL_SLOT_COUNT = 19,
     HERO_SPELL_SLOT_COUNT = 29,
     HERO_ARTIFACT_SLOT_COUNT = 14,
@@ -65,8 +66,8 @@ public:
     int m_experience;
     char m_unknown2d;
     short m_level;
-    signed char m_primaryStats[HERO_PRIMARY_STAT_COUNT];
-    char m_unknown34;
+    // GiveTakeArtifactStat raises a fifth stat byte for artifact 17.
+    signed char m_primaryStats[HERO_STARTING_STAT_COUNT];
     signed char m_morale;
     signed char m_luck;
     char m_unknown37[6];
@@ -96,6 +97,7 @@ public:
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
+    void HeroView(signed char);
     void ViewStat(signed char, signed char);
     void ViewArtifact(signed char, signed char);
     signed char Dismiss(void);

@@ -35,6 +35,11 @@ public:
     char m_unknown89[0x12];
     bankBox* m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
+    char m_unknownf7[7];
+    // swapManager::SplitMons runs the split dialog through these fields.
+    heroWindow* m_heroWindow1;
+    short m_splitAmount;
+    short m_splitMaximum;
     // --- constructors ---
     townManager(void);
     // --- virtual methods (vtable order) ---
@@ -69,4 +74,6 @@ public:
     void SetupCastle(class heroWindow*, int);
 };
 #pragma pack(pop)
+
+short SplitArmyHandler(struct tag_message&);
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

@@ -127,3 +127,6 @@ rva	name	provenance
 0x00081228	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
 0x0006BEA0	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
 0x00052C78	?TrueFalseDialogHandler@@YAFAAUtag_message@@@Z	ViewStat passes it to DoDialog at 0x06cde7; body forwards its message to the 0x052b64 event-window handler as Buka KB TrueFalseDialogHandler
+0x00047CC0	?GetNumArmies@armyGroup@@QAEFXZ	swapManager::ViewMon calls it on a hero army and sign-extends AX; body counts non-empty creature slots of five
+0x00047E4B	?Swap@armyGroup@@QAEXCPAV1@C@Z	swapManager::SwapMons passes byte slots around the destination group; body reads both slots with movsx byte [ebp+8]/[ebp+0x10] (ret 0xc)
+0x0000EF8C	?SplitArmyHandler@@YAFAAUtag_message@@@Z	swapManager::SplitMons passes it to DoDialog with the splitwin.bin window; Buka SplitArmyHandler correspondence, cdecl ret

@@ -58,6 +58,110 @@ int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int) { re
 VA(0x00460a5c, 0x11e)
 void advManager::HouseEvent(class hero *, class mapCell *) {}
 
+// Buka's free GiveTakeArtifactStat; HoMM1 keeps per-artifact primary-stat
+// bonuses here and is called through gpAdvManager.
+VA(0x00460d7a, 0x243)
+void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifact, signed char take) {
+    signed char stat = -1;
+    signed char amount = 0;
+    int i;
+
+    switch (artifact) {
+    case 0:
+        stat = 3;
+        amount = 12;
+        break;
+    case 1:
+        stat = 0;
+        amount = 12;
+        break;
+    case 2:
+        stat = 1;
+        amount = 12;
+        break;
+    case 3:
+        stat = 2;
+        amount = 12;
+        break;
+    case 4:
+        stat = 2;
+        amount = 4;
+        break;
+    case 5:
+    case 6:
+        stat = 2;
+        amount = 2;
+        break;
+    case 7:
+        stat = 2;
+        amount = 3;
+        break;
+    case 13:
+    case 16:
+        stat = 0;
+        amount = 1;
+        break;
+    case 14:
+    case 15:
+        stat = 1;
+        amount = 1;
+        break;
+    case 17:
+        stat = 4;
+        amount = 3;
+        break;
+    case 18:
+        stat = 1;
+        amount = 2;
+        break;
+    case 19:
+        stat = 0;
+        amount = 3;
+        break;
+    case 20:
+        stat = 0;
+        amount = 2;
+        break;
+    case 21:
+        stat = 1;
+        amount = 3;
+        break;
+    case 22:
+        stat = 3;
+        amount = 2;
+        break;
+    case 23:
+        stat = 3;
+        amount = 3;
+        break;
+    case 24:
+        stat = 3;
+        amount = 4;
+        break;
+    case 25:
+        stat = 3;
+        amount = 5;
+        break;
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+        break;
+    }
+    if (take == 1)
+        amount = -amount;
+    if (stat != -1) {
+        targetHero->m_primaryStats[stat] += amount;
+        if (amount < 0 && stat == 3) {
+            for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
+                if (targetHero->m_spellCharges[i] > targetHero->m_primaryStats[3])
+                    targetHero->m_spellCharges[i] = targetHero->m_primaryStats[3];
+            }
+        }
+    }
+}
+
 // donor PoL RVA 0x000b1973; preferred Buka symbol ?TransferArtifacts@advManager@@QAEXPAVhero@@0@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.505054;margin=0.383531;shape=0.360;size=0.848;calls=0.800;alternate=pol20:void advManager::TransferArtifacts(class hero *, class hero *)@0x000b1973
