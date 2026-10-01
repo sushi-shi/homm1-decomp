@@ -378,3 +378,8 @@ flags = "cpp_o2"
 unit = "SOURCE/comwin"
 source = "src/SOURCE/comwin.cpp"
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/PrintMemoryLeaks"
+source = "src/BASE/PrintMemoryLeaks.cpp"
+flags = "cpp_o2"

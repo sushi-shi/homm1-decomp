@@ -43,17 +43,22 @@ public:
 class playerData {
 public:
     char m_unknown00[0x11];
-    // HeroView picks the crest frame class + color * 4.
+    // SetupThievesGuild adds this byte to the town-window flag frame base.
+    signed char m_unknown11;
+    // CalcMobility grants computer players whose +0x12 byte is 3 or above
+    // extra moves (an AI difficulty level; master keeps the m_color name).
     signed char m_color;
-    // CalcMobility grants computer players at level 3 or above extra moves.
-    signed char m_difficulty;
     signed char m_heroCount;
     signed char m_currentHero;
     signed char m_heroLocatorPage;
     signed char m_heroIds[PLAYER_HERO_CAPACITY];
-    // Tavern slots; Deallocate parks a retreating hero in one of them.
     signed char m_availableHeroIds[2];
-    char m_unknown20[0x36];
+    char m_unknown20[0x32];
+    // Saved one byte at a time between the hero and town blocks.
+    signed char m_unknown52;
+    signed char m_unknown53;
+    signed char m_unknown54;
+    signed char m_unknown55;
     signed char m_townCount;
     signed char m_currentTown;
     signed char m_townLocatorPage;
@@ -73,8 +78,11 @@ public:
     signed char CurrentHero(void) {
         return m_currentHero;
     }
+    signed char CurrentTown(void) {
+        return m_currentTown;
+    }
     signed char Color(void) {
-        return m_color;
+        return m_unknown11;
     }
 };
 #pragma pack(pop)
