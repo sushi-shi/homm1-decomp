@@ -128,7 +128,13 @@ H1_ENUM_BEGIN(TownSplitConstant)
     TOWN_SPLIT_DECREASE_CONTROL = 0x46,
     TOWN_SPLIT_SETUP_AMOUNT_CONTROL = 4,
     TOWN_SPLIT_WINDOW_X = 0xb1,
-    TOWN_SPLIT_WINDOW_Y = 0x14
+    TOWN_SPLIT_WINDOW_Y = 0x14,
+    TOWN_BUILDING_MAGE_GUILD = 0,
+    TOWN_BUILDING_TENT = 5,
+    TOWN_BUILDING_CASTLE = 6,
+    TOWN_BUILDING_FIRST_DWELLING = 7,
+    TOWN_BUILDING_LAST_DWELLING = 12,
+    TOWN_OBJECT_ENABLED_FLAG = 2
 H1_ENUM_END(TownSplitConstant)
 
 H1_ENUM_BEGIN(TownTavernConstant)
@@ -208,7 +214,7 @@ public:
     void Toggle(signed char);
     void DrawTown(signed char, int);
     int BuyBuild(int, int, int);
-    void BuildObj(int);
+    void BuildObj(short);
     void SetupMage(class heroWindow *);
     int RecruitHero(int, int);
     void DoTavern(void);
@@ -221,6 +227,15 @@ public:
     void SortStats(long *const, signed char *const);
 };
 #pragma pack(pop)
+
+// BuildObj's fizzle rectangle per town type and building (0x00491868).
+struct TownBuildingExtent {
+    short x;
+    short y;
+    short width;
+    short height;
+};
+extern TownBuildingExtent gTownBuildingExtents[4][16];
 
 extern char *cTownCommand[];
 extern signed char townTheme[];

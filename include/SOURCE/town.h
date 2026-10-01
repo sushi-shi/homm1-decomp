@@ -33,7 +33,8 @@ public:
     town(void);
     // --- methods ---
     signed char HasGarrison(void);
-    void GiveSpells(class hero*);
+    // HoMM1 retail 0x00463fd0 takes no argument (plain ret).
+    void GiveSpells(void);
     void XformToCastle(void);
     void View(void);
     void Deallocate(void);

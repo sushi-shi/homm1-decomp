@@ -528,8 +528,63 @@ int townManager::BuyBuild(int, int, int) { return 0; }
 // donor PoL RVA 0x00018bd2; preferred Buka symbol ?BuildObj@townManager@@QAEXH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.630156;margin=0.342681;shape=0.206;size=0.999;calls=0.933;strings=buildtwn.82M;alternate=pol20:void townManager::BuildObj(int)@0x00018bd2
+// Buka TOWNMGR.cpp:2475; HoMM1 fizzles a fixed per-building rectangle
+// instead of computing the drawn extent.
 VA(0x0040c478, 0x3a0)
-void townManager::BuildObj(int) {}
+void townManager::BuildObj(short building)
+{
+    short index;
+    SAMPLE2 buildSample;
+
+    gpMouseManager->ReallyHidePointer();
+    DrawTown(1, 1);
+    if (building == TOWN_BUILDING_MAGE_GUILD) {
+        if (m_town->m_buildings & 1)
+            m_town->m_buildState++;
+        if (m_town->m_occupyingHeroId != -1)
+            m_town->GiveSpells();
+    }
+    m_town->m_buildings |= 1 << building;
+    if (building >= TOWN_BUILDING_FIRST_DWELLING && building <= TOWN_BUILDING_LAST_DWELLING)
+        m_town->m_garrison[building - TOWN_BUILDING_FIRST_DWELLING] =
+            gMonsterDatabase[gDwellingType[m_town->m_type][building - TOWN_BUILDING_FIRST_DWELLING]]
+                .growth;
+    for (index = 0; index < m_townObjectCount; index++) {
+        if (m_townObjects[index]->m_buildingId == building) {
+            m_townObjects[index]->m_visible = 1;
+            m_townObjects[index]->m_border->m_flags |= TOWN_OBJECT_ENABLED_FLAG;
+        }
+    }
+    if (building == TOWN_BUILDING_CASTLE) {
+        m_town->m_buildings &= ~(1 << TOWN_BUILDING_TENT);
+        for (index = 0; index < m_townObjectCount; index++) {
+            if (m_townObjects[index]->m_buildingId == TOWN_BUILDING_TENT) {
+                m_townObjects[index]->m_visible = 0;
+                m_townObjects[index]->m_border->m_flags &= ~TOWN_OBJECT_ENABLED_FLAG;
+            }
+        }
+    }
+    gpWindowManager->SaveFizzleSource(gTownBuildingExtents[m_town->m_type][building].x,
+                                      gTownBuildingExtents[m_town->m_type][building].y,
+                                      gTownBuildingExtents[m_town->m_type][building].width,
+                                      gTownBuildingExtents[m_town->m_type][building].height);
+    DrawTown(0, 1);
+    buildSample = NULL_SAMPLE2;
+    buildSample = LoadPlaySample("buildtwn.82M");
+    gpWindowManager->FizzleForward(gTownBuildingExtents[m_town->m_type][building].x,
+                                   gTownBuildingExtents[m_town->m_type][building].y,
+                                   gTownBuildingExtents[m_town->m_type][building].width,
+                                   gTownBuildingExtents[m_town->m_type][building].height, -1);
+    WaitEndSample(buildSample, -1);
+    m_selectedBuilding = -1;
+    m_bankBox->Update();
+    m_townWindow->DrawWindow();
+    gpMouseManager->ReallyShowPointer();
+    gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS, TOWN_DIALOG_BUTTON_0,
+                                      0x4008);
+    BitSet(gpGame->m_townBuiltToday, m_town->m_id);
+    m_town->GiveSpells();
+}
 
 // donor PoL RVA 0x0001d040; preferred Buka symbol ?SetupCastle@townManager@@QAEXPAVheroWindow@@H@Z
 // donor Buka TU SOURCE/Castle; HoMM1 owner inferred from contiguous order

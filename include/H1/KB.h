@@ -60,6 +60,11 @@ extern long lLastAilServe;
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(int);
 long KBTickCount();
+struct SAMPLE2 LoadPlaySample(char*);
+void WaitEndSample(struct SAMPLE2, int);
+// Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
+extern struct SAMPLE2 NULL_SAMPLE2;
+extern "C" void BitSet(void*, unsigned int);
 extern long glTimers[];
 void Process1WindowsMessage();
 void SetNoDialogMenus(int);
