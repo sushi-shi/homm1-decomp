@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/BITS.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Icon2b.h>
 #include <BASE/MISC_TYPES.h>
@@ -11,6 +12,7 @@
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
 
 #include <stdio.h>
@@ -101,6 +103,15 @@ H1_ENUM_BEGIN(AdventureSpellType)
     SPELL_TOWN_GATE = 28,
     SPELL_TRAVEL_MOBILITY_COST = 12
 H1_ENUM_END(AdventureSpellType)
+
+H1_ENUM_BEGIN(AdventureDrawMask)
+    ADVMGR_DRAW_GROUND = 0x01,
+    ADVMGR_DRAW_OBJECT = 0x02,
+    ADVMGR_DRAW_OVERLAY = 0x04,
+    ADVMGR_DRAW_HERO = 0x08,
+    ADVMGR_DRAW_CLOUD = 0x20,
+    ADVMGR_VIEW_CELL_COUNT = 15
+H1_ENUM_END(AdventureDrawMask)
 
 H1_ENUM_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
@@ -199,7 +210,66 @@ short advManager::Open(short) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.555933;margin=0.510723;shape=0.387;size=0.995;calls=0.909;alternate=pol20:void advManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x00057028
 VA(0x00426451, 0x3bd)
-void advManager::Close(void) {}
+void advManager::Close(void) {
+    short index;
+
+    ClearBottomView();
+    gpMouseManager->SetPointer(-1);
+    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->StopAllSamples();
+    if (m_adventureBorder) {
+        free(m_adventureBorder);
+        m_adventureBorder = 0;
+    }
+    if (gAdvDisposeLevel <= 1) {
+        for (index = 0; index < ADVMGR_OBJECT_ICON_COUNT; index++) {
+            if (m_objectIcons[index])
+                gpResourceManager->Dispose(m_objectIcons[index]);
+            m_objectIcons[index] = 0;
+        }
+    }
+    if (gAdvDisposeLevel <= 0) {
+        gpResourceManager->Dispose(m_puzzleIcon);
+        m_puzzleIcon = 0;
+        gpResourceManager->Dispose(m_cloudOverlayIcon);
+        m_cloudOverlayIcon = 0;
+        for (index = 0; index < ADVMGR_HERO_ICON_COUNT; index++) {
+            gpResourceManager->Dispose(m_heroIcons[index]);
+            m_heroIcons[index] = 0;
+        }
+        gpResourceManager->Dispose(m_boatShadowIcon);
+        m_boatShadowIcon = 0;
+        for (index = 0; index < ADVMGR_PLAYER_COLOR_COUNT; index++) {
+            gpResourceManager->Dispose(m_flagIcons[index]);
+            m_flagIcons[index] = 0;
+            gpResourceManager->Dispose(m_boatFlagIcons[index]);
+            m_boatFlagIcons[index] = 0;
+        }
+        gpResourceManager->Dispose(m_groundTiles);
+        m_groundTiles = 0;
+        gpResourceManager->Dispose(m_cloudTiles);
+        m_cloudTiles = 0;
+        gpResourceManager->Dispose(m_stoneTiles);
+        m_stoneTiles = 0;
+    }
+    for (index = 0; index < ADVMGR_ENVIRONMENT_SOUND_COUNT; index++) {
+        if (m_loopingSamples[index])
+            gpResourceManager->Dispose(m_loopingSamples[index]);
+        m_loopingSamples[index] = 0;
+    }
+    for (index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; index++) {
+        gpResourceManager->Dispose(m_cursorSamples[index]);
+        m_cursorSamples[index] = 0;
+    }
+    gpWindowManager->RemoveWindow(m_adventureWindow);
+    delete m_adventureWindow;
+    m_adventureWindow = 0;
+    if (m_visibilityMap)
+        delete m_visibilityMap;
+    m_visibilityMap = 0;
+    iCurBottomView = BOTTOM_VIEW_NONE;
+    m_active = 0;
+}
 
 // donor PoL RVA 0x00057432; preferred Buka symbol ?GetCursorSampleSet@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -370,7 +440,58 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.459172;margin=1.327145;shape=0.409;size=0.723;calls=0.706;alternate=pol20:void advManager::CompleteDraw(int, int, int, int)@0x0005b2ae
 VA(0x0042a045, 0x359)
-void advManager::CompleteDraw(short, short, int) {}
+void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
+    int drawX;
+    int drawY;
+
+    PollSound();
+    if (!forceDraw && !bShowIt)
+        return;
+
+    giLimitUpdMinX = -1;
+    m_previousOriginX = m_mapOriginX;
+    m_previousOriginY = m_mapOriginY;
+    if (gbAllBlack)
+        m_mapOriginX = m_mapOriginY = 0;
+    m_comboHeroDrawn = 0;
+    m_forceCompleteDraw = 0;
+
+    for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
+        DrawCell(originX + drawX, originY, drawX, 0, ADVMGR_DRAW_GROUND | ADVMGR_DRAW_OBJECT, 0, forceDraw);
+    for (drawY = 1; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++)
+        for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
+            DrawCell(originX + drawX, originY + drawY, drawX, drawY, ADVMGR_DRAW_GROUND, 0, forceDraw);
+
+    for (drawY = 1; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++) {
+        PollSound();
+        if (m_cursorDirection > 4) {
+            for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
+                DrawCell(originX + drawX, originY + drawY - 1, drawX, drawY - 1,
+                         ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, forceDraw);
+        } else {
+            for (drawX = ADVMGR_VIEW_CELL_COUNT - 1; drawX >= 0; drawX--)
+                DrawCell(originX + drawX, originY + drawY - 1, drawX, drawY - 1,
+                         ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, forceDraw);
+        }
+        for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
+            DrawCell(originX + drawX, originY + drawY, drawX, drawY, ADVMGR_DRAW_OBJECT, 0, forceDraw);
+    }
+
+    for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
+        DrawCell(originX + drawX, originY + ADVMGR_VIEW_CELL_COUNT - 1, drawX, ADVMGR_VIEW_CELL_COUNT - 1,
+                 ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, forceDraw);
+    for (drawY = 0; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++)
+        for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
+            DrawCell(originX + drawX, originY + drawY, drawX, drawY, ADVMGR_DRAW_CLOUD, 0, forceDraw);
+
+    PollSound();
+    UpdBottomView(0, 1, 1);
+    DrawAdventureBorder();
+    if (gbAllBlack) {
+        m_mapOriginX = m_previousOriginX;
+        m_mapOriginY = m_previousOriginY;
+    }
+}
 
 // Buka 2.1 CompleteDraw(update) forwards the current map origin.
 VA(0x0042a39e, 0x3a)
@@ -434,7 +555,7 @@ int advManager::GetCloudLookup(int x, int y) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
 VA(0x0042a7e5, 0xee8)
-void advManager::DrawCell(int, int, int, int, int, int, int) {}
+void advManager::DrawCell(short, short, short, short, signed char, signed char, signed char) {}
 
 // donor PoL RVA 0x0005e0da; preferred Buka symbol ?UpdateRadar@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -712,19 +833,197 @@ signed char advManager::UpdBottomViewEnemyTurn(void) { return 0; }
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.861364;margin=0.145966;shape=0.778;size=0.910;calls=0.840;strings=%s: %d|%s: %d  %s: %d|bigfont.fnt;alternate=pol20:int advManager::UpdBottomViewNewTurn(void)@0x000613b0
 VA(0x0042d23d, 0x3e0)
-signed char advManager::UpdBottomViewNewTurn(void) { return 0; }
+signed char advManager::UpdBottomViewNewTurn(void) {
+    int frameIndex;
+    int month;
+    char* weekStr;
+    char* dayStr;
+
+    frameIndex = 0;
+    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_NEW_TURN)
+        return 0;
+
+    ClearBottomView();
+    iCurBottomView = BOTTOM_VIEW_NEW_TURN;
+    if (gpGame->m_day == 1 && (gpGame->m_month != 1 || gpGame->m_week != 1 || gpGame->m_day != 1))
+        frameIndex = gpGame->m_week;
+
+    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
+                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+    if (!m_bottomViewPrimaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+
+    m_bottomViewPrimaryWidgets[1] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
+                                                   BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
+                                                   "sunmoon.icn", frameIndex, 0,
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+    if (!m_bottomViewPrimaryWidgets[1])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+
+    weekStr = static_cast<char*>(malloc(30));
+    sprintf(weekStr, "%s: %d  %s: %d", "Month", gpGame->m_month, "Week", gpGame->m_week);
+    m_bottomViewSecondaryWidgets[0] =
+        new textWidget(479, 421, 145, 12, weekStr, "smalfont.fnt", 1, 2100, 512);
+    if (!m_bottomViewSecondaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+
+    dayStr = static_cast<char*>(malloc(30));
+    sprintf(dayStr, "%s: %d", "Day", gpGame->m_day);
+    m_bottomViewSecondaryWidgets[0] =
+        new textWidget(479, 438, 145, 25, dayStr, "bigfont.fnt", 1, 2100, 512);
+    if (!m_bottomViewSecondaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+    return 1;
+}
 
 // donor PoL RVA 0x00061716; preferred Buka symbol ?UpdBottomViewResMsg@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.790087;margin=0.239399;shape=0.649;size=0.884;calls=0.793;strings=resource.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewResMsg(void)@0x00061716
 VA(0x0042d61d, 0x3fa)
-signed char advManager::UpdBottomViewResMsg(void) { return 0; }
+signed char advManager::UpdBottomViewResMsg(void) {
+    int iconW;
+    int iconH;
+    int y;
+    int lineCnt;
+    char* messageText;
+    char* countString;
+    font* smFont;
+
+    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_RESOURCE)
+        return 0;
+
+    ClearBottomView();
+    iCurBottomView = BOTTOM_VIEW_RESOURCE;
+    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
+                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+    if (!m_bottomViewPrimaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+
+    y = 0;
+    if (giBottomViewResource < 0) {
+        y = 32;
+        smFont = gpResourceManager->GetFont("smalfont.fnt");
+        lineCnt = smFont->LineLength(gcBottomViewText, BOTTOM_VIEW_PANEL_WIDTH);
+        gpResourceManager->Dispose(smFont);
+        y -= lineCnt * 6;
+    }
+    messageText = static_cast<char*>(malloc(strlen(gcBottomViewText) + 1));
+    sprintf(messageText, gcBottomViewText);
+    m_bottomViewSecondaryWidgets[0] = new textWidget(480, y + 395, BOTTOM_VIEW_PANEL_WIDTH, 36,
+                                                     messageText, "smalfont.fnt", 1, 2100, 512);
+    if (!m_bottomViewSecondaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+
+    if (giBottomViewResource >= 0) {
+        if (giBottomViewResource == 6) {
+            iconW = 76;
+            iconH = 26;
+        } else {
+            iconW = 38;
+            iconH = 32;
+        }
+        m_bottomViewPrimaryWidgets[1] =
+            new iconWidget((BOTTOM_VIEW_PANEL_WIDTH - iconW) / 2 + 480, 463 - iconH - 14, iconW, iconH,
+                           "resource.icn", giBottomViewResource, 0,
+                           BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+        if (!m_bottomViewPrimaryWidgets[1])
+            MemError();
+        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+
+        countString = static_cast<char*>(malloc(8));
+        sprintf(countString, "%d", giBottomViewResourceQty);
+        m_bottomViewSecondaryWidgets[1] =
+            new textWidget(511, 450, 80, 12, countString, "smalfont.fnt", 1, 2101, 512);
+        if (!m_bottomViewSecondaryWidgets[1])
+            MemError();
+        m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[1], -1);
+    }
+    return 1;
+}
 
 // donor PoL RVA 0x00061a75; preferred Buka symbol ?UpdBottomViewKingdom@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.769757;margin=0.069402;shape=0.564;size=0.915;calls=0.850;strings=ressmall.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewKingdom(void)@0x00061a75
 VA(0x0042da17, 0x3ce)
-signed char advManager::UpdBottomViewKingdom(void) { return 0; }
+signed char advManager::UpdBottomViewKingdom(void) {
+    int numVillages;
+    int i;
+    int nCastles;
+    signed char rowY[9];
+    unsigned char colX[9];
+    char* texts[9];
+
+    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_KINGDOM)
+        return 0;
+
+    ClearBottomView();
+    iCurBottomView = BOTTOM_VIEW_KINGDOM;
+    rowY[0] = 59;
+    rowY[1] = 59;
+    rowY[2] = 59;
+    rowY[3] = 59;
+    rowY[4] = 59;
+    rowY[5] = 59;
+    rowY[6] = 28;
+    rowY[7] = 28;
+    rowY[8] = 28;
+    colX[0] = 15;
+    colX[1] = 38;
+    colX[2] = 61;
+    colX[3] = 85;
+    colX[4] = 109;
+    colX[5] = 132;
+    colX[6] = 123;
+    colX[7] = 27;
+    colX[8] = 80;
+    numVillages = 0;
+    nCastles = 0;
+
+    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
+                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+    if (!m_bottomViewPrimaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+
+    m_bottomViewPrimaryWidgets[1] = new iconWidget(481, 393, BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
+                                                   "ressmall.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1,
+                                                   16, 1);
+    if (!m_bottomViewPrimaryWidgets[1])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+
+    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
+        if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & 0x40)
+            nCastles++;
+        else
+            numVillages++;
+    }
+
+    for (i = 0; i < 9; i++) {
+        texts[i] = static_cast<char*>(malloc(8));
+        if (i < 7)
+            sprintf(texts[i], "%d", gpCurPlayer->m_resources[i]);
+        else if (i == 7)
+            sprintf(texts[i], "%d", nCastles);
+        else
+            sprintf(texts[i], "%d", numVillages);
+        m_bottomViewSecondaryWidgets[i] = new textWidget(colX[i] + 464, rowY[i] + 392, 32, 12, texts[i],
+                                                         "smalfont.fnt", 1, i + 2100, 512);
+        if (!m_bottomViewSecondaryWidgets[i])
+            MemError();
+        m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[i], -1);
+    }
+    return 1;
+}
 
 // donor PoL RVA 0x00061dd8; preferred Buka symbol ?UpdBottomViewHero@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -1075,7 +1374,69 @@ void advManager::DoTownKnob(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634399;margin=0.712778;shape=0.353;size=0.798;calls=0.917;strings=advmice.mse|puzzle.icn|viewpuzl.bin;alternate=pol20:void advManager::ViewPuzzle(void)@0x0006a1dd
 VA(0x00430d05, 0x3da)
-void advManager::ViewPuzzle(void) {}
+void advManager::ViewPuzzle(void) {
+    int puzzleX;
+    int puzzleY;
+    signed char visibleCount;
+    icon* puzzlePieces;
+    heroWindow* pWin;
+    short j;
+
+    visibleCount = 0;
+    gpSoundManager->SwitchAmbientMusic(13);
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    puzzlePieces = gpResourceManager->GetIcon("puzzle.icn");
+    for (j = 0; j < 48; j++)
+        puzzlePieces->DrawToBuffer(0, 0, j, 0, 0);
+    gpWindowManager->UpdateScreenRegion(16, 16, 448, 448);
+    gpWindowManager->SaveFizzleSource(16, 16, 448, 448);
+    pWin = new heroWindow(480, 16, "viewpuzl.bin");
+    if (!pWin)
+        MemError();
+    gpWindowManager->AddWindow(pWin, -1, 1);
+
+    puzzleX = gpGame->m_ultimateArtifactX - 7;
+    puzzleY = gpGame->m_ultimateArtifactY - 7;
+    int biasX = 0;
+    int biasY = 0;
+    biasX = (gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % 3 - 1;
+    biasY = (gpGame->m_ultimateArtifactY * 5 + gpGame->m_ultimateArtifactX * 2) % 3 - 1;
+    if ((gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % 3 == 1) {
+        if (biasX > 0)
+            biasX++;
+        else if (biasX < 0)
+            biasX--;
+    } else if ((gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % 2 == 1) {
+        if (biasY > 0)
+            biasY++;
+        else if (biasY < 0)
+            biasY--;
+    }
+    puzzleX += biasX;
+    puzzleY += biasY;
+    PuzzleDraw(puzzleX, puzzleY, gpGame->m_ultimateArtifactX, gpGame->m_ultimateArtifactY);
+
+    for (j = 0; j < 48; j++) {
+        if (!BitTest(gpCurPlayer->m_obelisksVisited, j)) {
+            puzzlePieces->DrawToBuffer(0, 0, j, 0, 0);
+            visibleCount++;
+        }
+    }
+    if (visibleCount != 48) {
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->FizzleForward(16, 16, 448, 448, 220);
+        gpMouseManager->ReallyShowPointer();
+    } else {
+        gpWindowManager->ReleaseFizzleSource();
+    }
+
+    gpWindowManager->DoDialog(pWin, EventWindowHandler, 0);
+    delete pWin;
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    UpdateScreen(0, 0);
+    UpdateRadar(1, 0);
+    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+}
 
 // HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
 // visible object/overlay frames and marking the target cell.

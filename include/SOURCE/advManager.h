@@ -153,7 +153,7 @@ public:
     void CompleteDraw(short, short, int);
     void CompleteDraw(int);
     int GetCloudLookup(int, int);
-    void DrawCell(int, int, int, int, int, int, int);
+    void DrawCell(short, short, short, short, signed char, signed char, signed char);
     class mapCell* GetCell(short, short);
     void UpdateRadar(int, int);
     void QuickInfo(int, int);
