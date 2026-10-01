@@ -159,13 +159,13 @@ public:
     void UpdateHeroLocator(int, int, int);
     void UpdateHeroLocators(signed char, signed char);
     void UpdateTownLocators(int, int);
-    void UpdBottomView(int, int, int);
+    void UpdBottomView(signed char, signed char, signed char);
     void ClearBottomView(void);
-    int UpdBottomViewEnemyTurn(void);
-    int UpdBottomViewNewTurn(void);
-    int UpdBottomViewResMsg(void);
-    int UpdBottomViewKingdom(void);
-    int UpdBottomViewHero(void);
+    signed char UpdBottomViewEnemyTurn(void);
+    signed char UpdBottomViewNewTurn(void);
+    signed char UpdBottomViewResMsg(void);
+    signed char UpdBottomViewKingdom(void);
+    signed char UpdBottomViewHero(void);
     void HeroQuickView(int, int, int, int);
     char *GetArmySizeName(short, H1_ENUM_PARAM(ArmySizeNameVariant, signed char));
     void TownQuickView(int, int, int, int);
@@ -259,6 +259,8 @@ public:
 #pragma pack(pop)
 
 extern int gbNoBorder;
+extern int gbForceUpdate;
+extern int gbAllBlack;
 extern int giFullySeeded;
 extern class searchArray *gpSearchArray;
 extern int iCurBottomView;

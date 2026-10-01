@@ -45,6 +45,23 @@ H1_ENUM_BEGIN(AdventureLocatorConstant)
     LOCATOR_SCROLL_NO_PAGES_Y = 232
 H1_ENUM_END(AdventureLocatorConstant)
 
+H1_ENUM_BEGIN(BottomViewMode)
+    BOTTOM_VIEW_NONE = 0,
+    BOTTOM_VIEW_NEW_TURN = 1,
+    BOTTOM_VIEW_KINGDOM = 2,
+    BOTTOM_VIEW_RESOURCE = 5,
+    BOTTOM_VIEW_OVERRIDE_DISABLED = 6
+H1_ENUM_END(BottomViewMode)
+
+H1_ENUM_BEGIN(BottomViewPanelConstant)
+    BOTTOM_VIEW_DRAW_FIRST_WIDGET = 2000,
+    BOTTOM_VIEW_DRAW_LAST_WIDGET = 2200,
+    BOTTOM_VIEW_PANEL_X = 480,
+    BOTTOM_VIEW_PANEL_Y = 392,
+    BOTTOM_VIEW_PANEL_WIDTH = 143,
+    BOTTOM_VIEW_PANEL_HEIGHT = 71
+H1_ENUM_END(BottomViewPanelConstant)
+
 H1_ENUM_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
@@ -286,7 +303,50 @@ void advManager::UpdateTownLocators(int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.587774;margin=0.642167;shape=0.494;size=0.843;calls=1.000;alternate=pol20:void advManager::UpdBottomView(int, int, int)@0x00060b97
 VA(0x0042c9ad, 0x19f)
-void advManager::UpdBottomView(int, int, int) {}
+void advManager::UpdBottomView(signed char forceUpdate, signed char drawWindow, signed char updateScreen)
+{
+    signed char updated;
+
+    updated = 0;
+    gbForceUpdate = forceUpdate;
+    if (giBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
+        return;
+
+    if (giBottomViewOverride > BOTTOM_VIEW_NONE) {
+        if (KBTickCount() > giBottomViewOverrideEndTime) {
+            giBottomViewOverride = BOTTOM_VIEW_NONE;
+        } else {
+            switch (giBottomViewOverride) {
+                case BOTTOM_VIEW_NEW_TURN:
+                    updated = UpdBottomViewNewTurn();
+                    break;
+                case BOTTOM_VIEW_KINGDOM:
+                    updated = UpdBottomViewKingdom();
+                    break;
+                case BOTTOM_VIEW_RESOURCE:
+                    updated = UpdBottomViewResMsg();
+                    break;
+            }
+            goto update_bottom_view;
+        }
+    }
+
+    if (!gbThisNetHumanPlayer[giCurPlayer] || gbAllBlack)
+        updated = UpdBottomViewEnemyTurn();
+    else if (gpCurPlayer->CurrentHero() == -1)
+        updated = UpdBottomViewKingdom();
+    else
+        updated = UpdBottomViewHero();
+
+update_bottom_view:
+    if (updated && drawWindow) {
+        m_adventureWindow->DrawWindow(0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, BOTTOM_VIEW_DRAW_LAST_WIDGET);
+        if (updateScreen)
+            gpWindowManager->UpdateScreenRegion(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
+                                                BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT);
+    }
+    forceUpdate = gbForceUpdate;
+}
 
 // donor PoL RVA 0x00060d63; preferred Buka symbol ?ClearBottomView@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -296,7 +356,7 @@ void advManager::ClearBottomView(void)
 {
     int widgetIndex;
 
-    if (iCurBottomView == 0)
+    if (iCurBottomView == BOTTOM_VIEW_NONE)
         return;
 
     for (widgetIndex = 0; widgetIndex < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; ++widgetIndex) {
@@ -312,7 +372,7 @@ void advManager::ClearBottomView(void)
         m_bottomViewSecondaryWidgets[widgetIndex] = 0;
     }
     iCurBottomViewEnemy = -1;
-    iCurBottomView = 0;
+    iCurBottomView = BOTTOM_VIEW_NONE;
     iLastAnimFrame = -1;
 }
 
@@ -320,31 +380,31 @@ void advManager::ClearBottomView(void)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
 VA(0x0042cc7e, 0x5bf)
-int advManager::UpdBottomViewEnemyTurn(void) { return 0; }
+signed char advManager::UpdBottomViewEnemyTurn(void) { return 0; }
 
 // donor PoL RVA 0x000613b0; preferred Buka symbol ?UpdBottomViewNewTurn@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.861364;margin=0.145966;shape=0.778;size=0.910;calls=0.840;strings=%s: %d|%s: %d  %s: %d|bigfont.fnt;alternate=pol20:int advManager::UpdBottomViewNewTurn(void)@0x000613b0
 VA(0x0042d23d, 0x3e0)
-int advManager::UpdBottomViewNewTurn(void) { return 0; }
+signed char advManager::UpdBottomViewNewTurn(void) { return 0; }
 
 // donor PoL RVA 0x00061716; preferred Buka symbol ?UpdBottomViewResMsg@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.790087;margin=0.239399;shape=0.649;size=0.884;calls=0.793;strings=resource.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewResMsg(void)@0x00061716
 VA(0x0042d61d, 0x3fa)
-int advManager::UpdBottomViewResMsg(void) { return 0; }
+signed char advManager::UpdBottomViewResMsg(void) { return 0; }
 
 // donor PoL RVA 0x00061a75; preferred Buka symbol ?UpdBottomViewKingdom@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.769757;margin=0.069402;shape=0.564;size=0.915;calls=0.850;strings=ressmall.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewKingdom(void)@0x00061a75
 VA(0x0042da17, 0x3ce)
-int advManager::UpdBottomViewKingdom(void) { return 0; }
+signed char advManager::UpdBottomViewKingdom(void) { return 0; }
 
 // donor PoL RVA 0x00061dd8; preferred Buka symbol ?UpdBottomViewHero@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.635193;margin=0.117414;shape=0.302;size=0.961;calls=0.625;strings=mons32.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewHero(void)@0x00061dd8
 VA(0x0042dde5, 0x62c)
-int advManager::UpdBottomViewHero(void) { return 0; }
+signed char advManager::UpdBottomViewHero(void) { return 0; }
 
 // donor PoL RVA 0x0006235b; preferred Buka symbol ?HeroQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
