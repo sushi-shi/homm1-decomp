@@ -63,6 +63,8 @@ void SetNoDialogMenus(int);
 void EarlyShutDownSystem();
 void PollRemote();
 void QuickViewWait();
+// HoMM1 building-name lookup by town type (retail 0x004515d9).
+char *GetBuildingName(int, int);
 extern "C" void PollSound();
 void ForcePollSound();
 void ShutDown(char*);

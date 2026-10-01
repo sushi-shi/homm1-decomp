@@ -85,7 +85,7 @@ public:
     void SplitArmy(void);
     void ShiftQualChange(void);
     void ResetStrips(void);
-    void Toggle(int);
+    void Toggle(signed char);
     void DrawTown(int, int);
     int BuyBuild(int, int, int);
     void BuildObj(int);
@@ -95,6 +95,7 @@ public:
     void SetupWell(class heroWindow *);
     void SetupThievesGuild(class heroWindow *, int);
     void SetupCastle(class heroWindow *, int);
+    char *GetBuildingName(int);
 };
 #pragma pack(pop)
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

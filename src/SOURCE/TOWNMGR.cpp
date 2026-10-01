@@ -106,14 +106,16 @@ townManager::townManager(void)
 // donor PoL RVA 0x0001436f; preferred Buka symbol ?SetupTown@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.644440;margin=0.052173;shape=0.362;size=0.803;calls=0.887;strings=%s%s|port%04d.icn|strip.icn;alternate=pol20:void townManager::SetupTown(void)@0x0001436f
+// Retail vtable slot 0 (0x0048c068): HoMM1's Open performs Buka's SetupTown work.
 VA(0x0040816c, 0x7ec)
-void townManager::SetupTown(void) {}
+short townManager::Open(short) { return 0; }
 
 // donor PoL RVA 0x00014cc9; preferred Buka symbol ?UnloadTown@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.470224;margin=0.176996;shape=0.284;size=0.924;calls=0.667;alternate=pol20:void townManager::UnloadTown(void)@0x00014cc9
+// Retail vtable slot 1: HoMM1's Close performs Buka's UnloadTown work.
 VA(0x00408958, 0x1c4)
-void townManager::UnloadTown(void)
+void townManager::Close(void)
 {
     short index;
 
@@ -164,6 +166,25 @@ short townManager::Main(struct tag_message &) { return 0; }
 VA(0x0040a6cd, 0x65f)
 void townManager::DoCommand(int) {}
 
+// Buka TOWNMGR.cpp:1905-1921; HoMM1 redraws strips before the status text.
+VA(0x0040ad2c, 0xa5)
+void townManager::RedrawTownScreen(void)
+{
+    tag_message message;
+
+    DrawTown(1, 1);
+    m_garrisonStrip->DrawIcons(1);
+    m_heroStrip->DrawIcons(1);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = TOWN_STATUS_TEXT_CONTROL;
+    message.payload.widget.data.text = m_statusText;
+    m_townWindow->BroadcastMessage(message);
+    m_townWindow->DrawWindow(0);
+    gpWindowManager->UpdateScreenRegion(0, 0x100, 0x280, 0x1e0);
+    m_bankBox->Update();
+}
+
 // donor PoL RVA 0x0001771d; preferred Buka symbol ?SplitArmy@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.732616;margin=0.021648;shape=0.430;size=0.991;calls=1.000;strings=splitwin.bin;alternate=pol20:void townManager::SplitArmy(void)@0x0001771d
@@ -184,6 +205,20 @@ void townManager::ResetStrips(void)
     m_garrisonStrip->Draw();
     m_swapStrip = m_pendingStrip = 0;
     m_swapArmySlot = m_pendingArmySlot = -1;
+}
+
+// Buka TOWNMGR.cpp:1993-2003.
+VA(0x0040b2c8, 0x95)
+void townManager::Toggle(signed char building)
+{
+    short index;
+
+    if (m_town->m_buildings & (1 << building)) {
+        for (index = 0; index < m_townObjectCount; index++) {
+            if (m_townObjects[index]->m_buildingId == building)
+                m_townObjects[index]->m_visible ^= 1;
+        }
+    }
 }
 
 // donor PoL RVA 0x00017c9d; preferred Buka symbol ?BuyBuild@townManager@@QAEHHHH@Z
@@ -221,6 +256,13 @@ void townManager::SetupThievesGuild(class heroWindow *, int) {}
 // evidence: graph:2;base=0.459458;margin=0.479043;shape=0.193;size=0.976;calls=0.800;alternate=pol20:void GetCategoryStats(int, long int * const, signed char * const)@0x0001b692
 VA(0x0040d6bd, 0x484)
 void GetCategoryStats(int, long int * const, signed char * const) {}
+
+// HoMM1 town-type wrapper over the global building-name table lookup.
+VA(0x0040dc2b, 0x2f)
+char *townManager::GetBuildingName(int building)
+{
+    return ::GetBuildingName(m_town->m_type, building);
+}
 
 // donor PoL RVA 0x00019523; preferred Buka symbol ?RecruitHero@townManager@@QAEHHH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
