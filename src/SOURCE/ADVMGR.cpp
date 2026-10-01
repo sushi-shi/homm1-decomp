@@ -9,6 +9,8 @@
 #include <H1/KB.h>
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
@@ -16,7 +18,8 @@ DATA(0x004c5170) int giSeedingValid;
 
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)
-    BUTTON_BROADCAST_ARG = 1
+    BUTTON_BROADCAST_ARG = 1,
+    PANEL_CONTINUE_ROUTE = 2
 H1_ENUM_END(AdventureButtonConstant)
 
 H1_ENUM_BEGIN(AdventureScreenConstant)
@@ -24,6 +27,22 @@ H1_ENUM_BEGIN(AdventureScreenConstant)
     LOGICAL_SCREEN_HEIGHT = 480,
     SCROLL_BORDER = 16
 H1_ENUM_END(AdventureScreenConstant)
+
+H1_ENUM_BEGIN(AdventureBorderConstant)
+    ADVENTURE_VIEWPORT_EXTENT = 480,
+    BORDER_EDGE_SIZE = 16,
+    BORDER_SIDE_BYTES = 16,
+    BORDER_SAVED_SIDE_BYTES = 32,
+    BORDER_MIDDLE_END = 464,
+    BORDER_BUFFER_SIZE = 0x7400
+H1_ENUM_END(AdventureBorderConstant)
+
+H1_ENUM_BEGIN(AdventureLocatorConstant)
+    LOCATOR_VISIBLE_COUNT = 4,
+    LOCATOR_PAGE_THRESHOLD = 5,
+    LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
+    LOCATOR_SCROLL_NO_PAGES_Y = 232
+H1_ENUM_END(AdventureLocatorConstant)
 
 H1_ENUM_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
@@ -235,7 +254,26 @@ void advManager::UpdateHeroLocator(int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520706;margin=0.246406;shape=0.456;size=0.777;calls=0.750;alternate=pol20:void advManager::UpdateHeroLocators(int, int)@0x000607ad
 VA(0x0042c626, 0x108)
-void advManager::UpdateHeroLocators(int, int) {}
+void advManager::UpdateHeroLocators(signed char drawWindow, signed char updateScreen)
+{
+    int locatorSlot;
+    double scrollStep;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+
+    for (locatorSlot = 0; locatorSlot < LOCATOR_VISIBLE_COUNT; ++locatorSlot)
+        UpdateHeroLocator(locatorSlot, 0, 0);
+
+    if (gpCurPlayer->m_heroCount < LOCATOR_PAGE_THRESHOLD) {
+        m_scrollLeftButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
+    } else {
+        scrollStep = 73.0 / (gpCurPlayer->m_heroCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
+        m_scrollLeftButton->m_y = static_cast<short>(gpCurPlayer->m_heroLocatorPage * scrollStep + 195.0);
+    }
+    if (drawWindow)
+        m_adventureWindow->DrawWindow(updateScreen);
+}
 
 // donor PoL RVA 0x000608af; preferred Buka symbol ?UpdateTownLocators@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -527,7 +565,33 @@ void advManager::ShowRoute(int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.524051;margin=0.948488;shape=0.403;size=0.809;calls=1.000;alternate=pol20:void advManager::HideRoute(int, int, int)@0x00068720
 VA(0x00435c3a, 0x106)
-void advManager::HideRoute(int, int, int) {}
+void advManager::HideRoute(int redraw, int clearDestination, int updateButton)
+{
+    hero *currentHero;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
+        return;
+
+    if (updateButton)
+        gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
+                                          PANEL_CONTINUE_ROUTE,
+                                          WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
+
+    if (clearDestination && gpCurPlayer->m_currentHero != -1) {
+        currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+        currentHero->m_destinationX = -1;
+        currentHero->m_destinationY = -1;
+    }
+
+    if (!m_routeShown)
+        return;
+
+    m_routeShown = 0;
+    if (redraw) {
+        CompleteDraw(0);
+        UpdateScreen(0, 0);
+    }
+}
 
 // donor PoL RVA 0x00068827; preferred Buka symbol ?CheckDimHero@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -662,10 +726,64 @@ void advManager::EnableButtons(void)
 }
 
 VA(0x00436d9d, 0x138)
-void advManager::SaveAdventureBorder(void) {}
+void advManager::SaveAdventureBorder(void)
+{
+    if (m_adventureBorder != 0)
+        return;
+
+    m_adventureBorder = static_cast<unsigned char *>(malloc(BORDER_BUFFER_SIZE));
+    unsigned char *savedPixels = m_adventureBorder;
+    unsigned char *src = reinterpret_cast<unsigned char *>(gpWindowManager->m_screen->m_pixels);
+    int row;
+    for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
+        memcpy(savedPixels, src, ADVENTURE_VIEWPORT_EXTENT);
+        src += LOGICAL_SCREEN_WIDTH;
+        savedPixels += ADVENTURE_VIEWPORT_EXTENT;
+    }
+    for (row = BORDER_EDGE_SIZE; row < BORDER_MIDDLE_END; ++row) {
+        memcpy(savedPixels, src, BORDER_SIDE_BYTES);
+        memcpy(savedPixels + BORDER_SIDE_BYTES, src + BORDER_MIDDLE_END, BORDER_SIDE_BYTES);
+        src += LOGICAL_SCREEN_WIDTH;
+        savedPixels += BORDER_SAVED_SIDE_BYTES;
+    }
+    for (row = BORDER_MIDDLE_END; row < LOGICAL_SCREEN_HEIGHT; ++row) {
+        memcpy(savedPixels, src, ADVENTURE_VIEWPORT_EXTENT);
+        src += LOGICAL_SCREEN_WIDTH;
+        savedPixels += ADVENTURE_VIEWPORT_EXTENT;
+    }
+}
 
 // donor PoL RVA 0x00069abb; preferred Buka symbol ?DrawAdventureBorder@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.567997;margin=0.477634;shape=0.397;size=0.978;calls=1.000;alternate=pol20:void advManager::DrawAdventureBorder(void)@0x00069abb
-VA(0x00436ed5, 0x13b)
-void advManager::DrawAdventureBorder(void) {}
+VA(0x00436ed5, 0x134)
+void advManager::DrawAdventureBorder(void)
+{
+    unsigned char *savedPixels;
+    unsigned char *dest;
+    int row;
+
+    if (m_adventureBorder == 0)
+        return;
+    if (gbNoBorder != 0)
+        return;
+
+    dest = reinterpret_cast<unsigned char *>(gpWindowManager->m_screen->m_pixels);
+    savedPixels = m_adventureBorder;
+    for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
+        memcpy(dest, savedPixels, ADVENTURE_VIEWPORT_EXTENT);
+        dest += LOGICAL_SCREEN_WIDTH;
+        savedPixels += ADVENTURE_VIEWPORT_EXTENT;
+    }
+    for (row = BORDER_EDGE_SIZE; row < BORDER_MIDDLE_END; ++row) {
+        memcpy(dest, savedPixels, BORDER_SIDE_BYTES);
+        memcpy(dest + BORDER_MIDDLE_END, savedPixels + BORDER_SIDE_BYTES, BORDER_SIDE_BYTES);
+        dest += LOGICAL_SCREEN_WIDTH;
+        savedPixels += BORDER_SAVED_SIDE_BYTES;
+    }
+    for (row = BORDER_MIDDLE_END; row < LOGICAL_SCREEN_HEIGHT; ++row) {
+        memcpy(dest, savedPixels, ADVENTURE_VIEWPORT_EXTENT);
+        dest += LOGICAL_SCREEN_WIDTH;
+        savedPixels += ADVENTURE_VIEWPORT_EXTENT;
+    }
+}

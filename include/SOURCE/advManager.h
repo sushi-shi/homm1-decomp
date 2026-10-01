@@ -157,7 +157,7 @@ public:
     void UpdateRadar(int, int);
     void QuickInfo(int, int);
     void UpdateHeroLocator(int, int, int);
-    void UpdateHeroLocators(int, int);
+    void UpdateHeroLocators(signed char, signed char);
     void UpdateTownLocators(int, int);
     void UpdBottomView(int, int, int);
     void ClearBottomView(void);
@@ -258,6 +258,8 @@ public:
 };
 #pragma pack(pop)
 
+extern int gbNoBorder;
+extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;
 #endif // HOMM1_SOURCE_ADVMANAGER_H

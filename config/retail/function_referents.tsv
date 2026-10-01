@@ -124,3 +124,4 @@ rva	name	provenance
 0x00039926	?GetWorldMapData@game@@QAEPAY0EI@VmapCell@@XZ	HoMM2 Buka 2.1 game::GetWorldMapData; returns game+0x620, the 72x72 ten-byte map that advManager::GetCell indexes
 0x000513FA	?NullHandler@@YAHAAUtag_message@@@Z	HoMM2 Buka 2.1 NullHandler passed to game::ViewSpells by advManager::CheckCastSpell
 0x000519D1	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
+0x00081228	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
