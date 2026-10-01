@@ -2,8 +2,12 @@
 
 #include <match.h>
 
+#include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
+
+#include <string.h>
 
 // donor PoL RVA 0x0000e198; preferred Buka symbol ?GetCursorBaseFrame@advManager@@QAEHH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
@@ -48,8 +52,45 @@ void advManager::CheckAdjacentMon(int *) {}
 // donor PoL RVA 0x00013900; preferred Buka symbol ??0townObject@@QAE@HHPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.615649;margin=0.314990;shape=0.431;size=0.799;calls=0.333;strings=%s.icn;alternate=pol20:void townObject::constructor(int, int, char *)@0x00013900
+// Buka TOWNMGR.cpp townObject ctor; HoMM1 reads frame count, rectangle and
+// building id from the .tod resource instead of sBuildingInfo.
 VA(0x00407d90, 0x1f1)
-townObject::townObject(int, int, char *) {}
+townObject::townObject(char *name)
+{
+    char fileName[16];
+    short w;
+    short tmp;
+    short id;
+    short x;
+    short h;
+    short y;
+
+    m_animationFrame = 0;
+    m_icon = 0;
+    m_border = 0;
+    m_visible = 1;
+    sprintf(fileName, "%s.tod", name);
+    id = gpResourceManager->MakeId(fileName);
+    gpResourceManager->PointToFile(id);
+    m_animationFrameCount = gpResourceManager->ReadByte();
+    x = gpResourceManager->ReadWord();
+    y = gpResourceManager->ReadWord();
+    w = gpResourceManager->ReadWord();
+    h = gpResourceManager->ReadWord();
+    id = gpResourceManager->ReadWord();
+    m_buildingId = id;
+    sprintf(fileName, "%s.icn", name);
+    m_icon = gpResourceManager->GetIcon(fileName);
+    if (id == 0) {
+        h = gpTownManager->m_town->m_buildState * 20 + 0x61;
+        y = 0x99 - h;
+    }
+    if (id != -1) {
+        m_border = new border(x, y, w, h, id, 1, 0, 0);
+        if (m_border == 0)
+            MemError();
+    }
+}
 
 // donor PoL RVA 0x00013a6a; preferred Buka symbol ??1townObject@@QAE@XZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -61,23 +102,263 @@ townObject::~townObject() {
     gpResourceManager->Dispose(m_icon);
 }
 
+// Buka TOWNMGR.cpp:537-625; HoMM1 draws the base frame, then the castle's
+// mage-guild levels and the animation frame.
+VA(0x00407fe1, 0x117)
+void townObject::Draw(signed char advanceAnimation)
+{
+    short level;
+
+    if (!m_visible)
+        return;
+    m_icon->DrawToBuffer(0, 0, 0, 0, 0);
+    if (m_buildingId == 0) {
+        for (level = 0; level < gpTownManager->m_town->m_buildState; level++)
+            m_icon->DrawToBuffer(0, 0, (level + 1) * 2, 0, 0);
+        m_icon->DrawToBuffer(0, 0, gpTownManager->m_town->m_buildState * 2 + 1, 0, 0);
+    }
+    if (m_animationFrameCount) {
+        m_icon->DrawToBuffer(0, 0, m_animationFrame + 1, 0, 0);
+        if (advanceAnimation == 1) {
+            m_animationFrame++;
+            if (m_animationFrame == m_animationFrameCount)
+                m_animationFrame = 0;
+        }
+    }
+}
+
+// Buka TOWNMGR.cpp:627-633; HoMM1 also clears the object count and adds
+// its dispatch mask.
+VA(0x004080f8, 0x74)
+townManager::townManager(void)
+{
+    m_town = 0;
+    m_townObjectCount = 0;
+    m_heroWindow0 = 0;
+    m_unknown79 = 0;
+    m_selectedBuilding = -1;
+    m_castleDialogActive = 0;
+    m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
+}
+
 // donor PoL RVA 0x0001436f; preferred Buka symbol ?SetupTown@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.644440;margin=0.052173;shape=0.362;size=0.803;calls=0.887;strings=%s%s|port%04d.icn|strip.icn;alternate=pol20:void townManager::SetupTown(void)@0x0001436f
+// Retail vtable slot 0 (0x0048c068): HoMM1's Open performs Buka's SetupTown work.
 VA(0x0040816c, 0x7ec)
-void townManager::SetupTown(void) {}
+short townManager::Open(short) { return 0; }
 
 // donor PoL RVA 0x00014cc9; preferred Buka symbol ?UnloadTown@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.470224;margin=0.176996;shape=0.284;size=0.924;calls=0.667;alternate=pol20:void townManager::UnloadTown(void)@0x00014cc9
+// Retail vtable slot 1: HoMM1's Close performs Buka's UnloadTown work.
 VA(0x00408958, 0x1c4)
-void townManager::UnloadTown(void) {}
+void townManager::Close(void)
+{
+    short index;
+
+    delete m_bankBox;
+    if (m_heroStrip)
+        delete m_heroStrip;
+    delete m_garrisonStrip;
+    for (index = 0; index < m_townObjectCount; index++) {
+        m_townWindow->RemoveWidget(m_townObjects[index]->m_border);
+        delete m_townObjects[index];
+    }
+    gpResourceManager->Dispose(m_backgroundIcon);
+    gpWindowManager->RemoveWindow(m_townWindow);
+    delete m_townWindow;
+    gpSoundManager->SwitchAmbientMusic(-1);
+    gpWindowManager->FadeScreen(1, 8, 0);
+    gpMouseManager->SetPointer(-1);
+    m_active = 0;
+}
+
+// Buka TOWNMGR.cpp:944-1020; HoMM1 matches the dragged creature against
+// every slot of the target army and keeps word-sized flags.
+VA(0x00408b1c, 0x3b6)
+void townManager::SetArmyCommand(short qualifier)
+{
+    short lastArmy;
+    short i;
+    short sameType;
+
+    m_command = TOWN_ARMY_COMMAND_NONE;
+    lastArmy = 0;
+    if (m_swapStrip->m_army->GetNumArmies() == 1 && m_swapStrip == m_heroStrip
+        && m_swapStrip != m_pendingStrip)
+        lastArmy = 1;
+
+    if (m_swapStrip != m_pendingStrip) {
+        sameType = 0;
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+            if (m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]
+                == m_pendingStrip->m_army->m_creatureTypes[i])
+                sameType = 1;
+        }
+        if (sameType) {
+            if (qualifier) {
+                sprintf(m_statusText, cTownCommand[TOWN_TEXT_REDISTRIBUTE_ARMY],
+                        gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+                m_command = TOWN_ARMY_COMMAND_SPLIT;
+            } else if (lastArmy) {
+                strcpy(m_statusText, cTownCommand[TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY]);
+                return;
+            } else {
+                sprintf(m_statusText, cTownCommand[TOWN_TEXT_COMBINE_ARMIES],
+                        gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+                m_command = TOWN_ARMY_COMMAND_MERGE;
+            }
+        } else if (qualifier && m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == -1) {
+            sprintf(m_statusText, cTownCommand[TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT],
+                    gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+            m_command = TOWN_ARMY_COMMAND_SPLIT;
+        }
+    } else if (m_swapArmySlot == m_pendingArmySlot) {
+        sprintf(m_statusText, cTownCommand[TOWN_TEXT_VIEW_ARMY],
+                gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+        m_command = TOWN_ARMY_COMMAND_VIEW;
+    }
+
+    if (m_command != TOWN_ARMY_COMMAND_NONE)
+        return;
+    if (m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == -1) {
+        if (lastArmy) {
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_CANNOT_MOVE_LAST_ARMY]);
+            return;
+        } else {
+            sprintf(m_statusText, cTownCommand[TOWN_TEXT_MOVE_ARMY],
+                    gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+            m_command = TOWN_ARMY_COMMAND_SWAP;
+        }
+    } else {
+        sprintf(m_statusText, cTownCommand[TOWN_TEXT_EXCHANGE_ARMIES],
+                gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]],
+                gArmyNames[m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]]);
+        m_command = TOWN_ARMY_COMMAND_SWAP;
+    }
+}
+
+// Buka TOWNMGR.cpp:1022-1176; HoMM1 has no calendar entry and names the
+// six dwellings through gDwellingType.
+VA(0x00408ed2, 0x468)
+void townManager::SetCommandAndText(struct tag_message &message)
+{
+    short id;
+
+    id = message.payload.widget.id;
+    m_command = TOWN_ARMY_COMMAND_NONE;
+    switch (id) {
+        case TOWN_CLOSE_CONTROL:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_EXIT]);
+            break;
+        case -1:
+        case TOWN_EMPTY_STATUS_CONTROL_FIRST:
+        case TOWN_EMPTY_STATUS_CONTROL_LAST:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_STATUS]);
+            break;
+        case TOWN_GARRISON_FIRST_CONTROL:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_GARRISON]);
+            m_command = TOWN_ARMY_COMMAND_GARRISON;
+            break;
+        case TOWN_GARRISON_SLOT_FIRST:
+        case TOWN_GARRISON_SLOT_FIRST + 1:
+        case TOWN_GARRISON_SLOT_FIRST + 2:
+        case TOWN_GARRISON_SLOT_FIRST + 3:
+        case TOWN_GARRISON_SLOT_FIRST + 4:
+            if (m_swapArmySlot != -1) {
+                m_pendingStrip = m_garrisonStrip;
+                m_pendingArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
+                SetArmyCommand(message.payload.mouse.modifiers & TOWN_SHIFT_QUALIFIER_MASK);
+            } else {
+                m_selectedStrip = m_garrisonStrip;
+                m_selectedArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
+                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == -1)
+                    strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
+                else {
+                    sprintf(m_statusText, cTownCommand[TOWN_TEXT_SELECT_ARMY],
+                            gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]);
+                    m_command = TOWN_ARMY_COMMAND_SELECT;
+                }
+            }
+            break;
+        case TOWN_HERO_FIRST_CONTROL:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_VIEW_HERO]);
+            m_command = TOWN_ARMY_COMMAND_VIEW_HERO;
+            break;
+        case TOWN_HERO_SLOT_FIRST:
+        case TOWN_HERO_SLOT_FIRST + 1:
+        case TOWN_HERO_SLOT_FIRST + 2:
+        case TOWN_HERO_SLOT_FIRST + 3:
+        case TOWN_HERO_SLOT_FIRST + 4:
+            if (m_swapArmySlot != -1) {
+                m_pendingStrip = m_heroStrip;
+                m_pendingArmySlot = id - TOWN_HERO_SLOT_FIRST;
+                SetArmyCommand(message.payload.mouse.modifiers & TOWN_SHIFT_QUALIFIER_MASK);
+            } else {
+                m_selectedStrip = m_heroStrip;
+                m_selectedArmySlot = id - TOWN_HERO_SLOT_FIRST;
+                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == -1) {
+                    strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
+                    m_command = TOWN_ARMY_COMMAND_NONE;
+                } else {
+                    sprintf(m_statusText, cTownCommand[TOWN_TEXT_SELECT_ARMY],
+                            gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]);
+                    m_command = TOWN_ARMY_COMMAND_SELECT;
+                }
+            }
+            break;
+        case 0:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0]);
+            break;
+        case 1:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 1]);
+            break;
+        case 2:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 2]);
+            break;
+        case 3:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 3]);
+            break;
+        case 4:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 4]);
+            break;
+        case 5:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 5]);
+            break;
+        case 6:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 6]);
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            sprintf(m_statusText, cTownCommand[TOWN_TEXT_DWELLING],
+                    gArmyNames[gDwellingType[m_town->m_type][id - 7]]);
+            break;
+    }
+    ShowText(m_statusText);
+}
 
 // donor PoL RVA 0x000158e0; preferred Buka symbol ?ShowText@townManager@@QAEXPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.613333;margin=0.109874;shape=0.519;size=1.000;calls=1.000;alternate=pol20:void townManager::ShowText(char *)@0x000158e0
 VA(0x0040933a, 0x74)
-void townManager::ShowText(char *) {}
+void townManager::ShowText(char *)
+{
+    tag_message message;
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = TOWN_STATUS_TEXT_CONTROL;
+    message.payload.widget.data.text = m_statusText;
+    m_townWindow->BroadcastMessage(message);
+    m_townWindow->DrawWindow(0, TOWN_STATUS_TEXT_CONTROL - 2, TOWN_STATUS_TEXT_CONTROL);
+    gpWindowManager->UpdateScreenRegion(0, TOWN_STATUS_REGION_Y, TOWN_STATUS_REGION_WIDTH,
+                                        TOWN_STATUS_REGION_HEIGHT);
+}
 
 // donor PoL RVA 0x0001595d; preferred Buka symbol ?Main@townManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -91,17 +372,79 @@ short townManager::Main(struct tag_message &) { return 0; }
 VA(0x0040a6cd, 0x65f)
 void townManager::DoCommand(int) {}
 
+// Buka TOWNMGR.cpp:1905-1921; HoMM1 redraws strips before the status text.
+VA(0x0040ad2c, 0xa5)
+void townManager::RedrawTownScreen(void)
+{
+    tag_message message;
+
+    DrawTown(1, 1);
+    m_garrisonStrip->DrawIcons(1);
+    m_heroStrip->DrawIcons(1);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = TOWN_STATUS_TEXT_CONTROL;
+    message.payload.widget.data.text = m_statusText;
+    m_townWindow->BroadcastMessage(message);
+    m_townWindow->DrawWindow(0);
+    gpWindowManager->UpdateScreenRegion(0, 0x100, 0x280, 0x1e0);
+    m_bankBox->Update();
+}
+
 // donor PoL RVA 0x0001771d; preferred Buka symbol ?SplitArmy@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.732616;margin=0.021648;shape=0.430;size=0.991;calls=1.000;strings=splitwin.bin;alternate=pol20:void townManager::SplitArmy(void)@0x0001771d
 VA(0x0040add1, 0x37e)
 void townManager::SplitArmy(void) {}
 
+// HoMM1 re-evaluates the pending strip command when the shift qualifier
+// changes, then refreshes the status line.
+VA(0x0040b14f, 0xce)
+void townManager::ShiftQualChange(void)
+{
+    tag_message message;
+
+    if (m_swapStrip != m_pendingStrip
+        && (m_command == TOWN_ARMY_COMMAND_NONE || m_command == TOWN_ARMY_COMMAND_SPLIT
+            || m_command == TOWN_ARMY_COMMAND_MERGE || m_command == TOWN_ARMY_COMMAND_SWAP))
+        SetArmyCommand(gpInputManager->GetModifiers() & TOWN_SHIFT_QUALIFIER_MASK);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = TOWN_STATUS_TEXT_CONTROL;
+    message.payload.widget.data.text = m_statusText;
+    m_townWindow->BroadcastMessage(message);
+    m_townWindow->DrawWindow();
+}
+
 // donor PoL RVA 0x00017ab2; preferred Buka symbol ?ResetStrips@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.515580;margin=0.398432;shape=0.375;size=0.860;calls=1.000;alternate=pol20:void townManager::ResetStrips(void)@0x00017ab2
 VA(0x0040b21d, 0xab)
-void townManager::ResetStrips(void) {}
+void townManager::ResetStrips(void)
+{
+    if (m_swapStrip)
+        m_swapStrip->m_selectedSlot = -1;
+    if (m_pendingStrip)
+        m_pendingStrip->m_selectedSlot = -1;
+    m_heroStrip->Draw();
+    m_garrisonStrip->Draw();
+    m_swapStrip = m_pendingStrip = 0;
+    m_swapArmySlot = m_pendingArmySlot = -1;
+}
+
+// Buka TOWNMGR.cpp:1993-2003.
+VA(0x0040b2c8, 0x95)
+void townManager::Toggle(signed char building)
+{
+    short index;
+
+    if (m_town->m_buildings & (1 << building)) {
+        for (index = 0; index < m_townObjectCount; index++) {
+            if (m_townObjects[index]->m_buildingId == building)
+                m_townObjects[index]->m_visible ^= 1;
+        }
+    }
+}
 
 // donor PoL RVA 0x00017c9d; preferred Buka symbol ?BuyBuild@townManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -139,6 +482,13 @@ void townManager::SetupThievesGuild(class heroWindow *, int) {}
 VA(0x0040d6bd, 0x484)
 void GetCategoryStats(int, long int * const, signed char * const) {}
 
+// HoMM1 town-type wrapper over the global building-name table lookup.
+VA(0x0040dc2b, 0x2f)
+char *townManager::GetBuildingName(int building)
+{
+    return ::GetBuildingName(m_town->m_type, building);
+}
+
 // donor PoL RVA 0x00019523; preferred Buka symbol ?RecruitHero@townManager@@QAEHHH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.555715;margin=0.218228;shape=0.276;size=0.741;calls=0.578;strings=port%04d.icn|rcrthero.bin;alternate=pol20:int townManager::RecruitHero(int, int)@0x00019523
@@ -149,13 +499,27 @@ int townManager::RecruitHero(int, int) { return 0; }
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.461090;margin=0.267847;shape=0.244;size=0.845;calls=1.000;alternate=pol20:int TavernHandler(struct tag_message &)@0x00019c29
 VA(0x0040e5db, 0x155)
-int TavernHandler(struct tag_message &) { return 0; }
+short TavernHandler(struct tag_message &) { return 0; }
 
 // donor PoL RVA 0x00019d7c; preferred Buka symbol ?DoTavern@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.728216;margin=0.164549;shape=0.467;size=0.965;calls=0.889;strings=tavwin.bin;alternate=pol20:void townManager::DoTavern(void)@0x00019d7c
+// Buka TOWNMGR.cpp:3003-3032; HoMM1 plays the tavern theme instead of a
+// rumour and restores the town theme afterwards.
 VA(0x0040e730, 0x136)
-void townManager::DoTavern(void) {}
+void townManager::DoTavern(void)
+{
+    int unusedValue = 0;
+
+    m_heroWindow0 = new heroWindow(TOWN_TAVERN_WINDOW_X, TOWN_TAVERN_WINDOW_Y, "tavwin.bin");
+    if (m_heroWindow0 == 0)
+        MemError();
+    SetWinText(m_heroWindow0, TOWN_TAVERN_WINDOW_TEXT);
+    gpSoundManager->SwitchAmbientMusic(TOWN_TAVERN_MUSIC);
+    gpWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
+    delete m_heroWindow0;
+    gpSoundManager->SwitchAmbientMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
+}
 
 // donor PoL RVA 0x0001e0fb; preferred Buka symbol ?CastleHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/Castle; HoMM1 owner inferred from contiguous order

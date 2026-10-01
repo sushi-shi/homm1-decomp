@@ -16,57 +16,141 @@ class town;
 class townObject;
 struct tag_message;
 
+// clang-format off
 H1_ENUM_BEGIN(TownManagerStorageConstant)
-TOWN_MANAGER_OBJECT_CAPACITY = 16, TOWN_MANAGER_STATUS_TEXT_SIZE =
-                                       0x58 H1_ENUM_END(TownManagerStorageConstant)
+    TOWN_MANAGER_OBJECT_CAPACITY = 16,
+    TOWN_MANAGER_STATUS_TEXT_SIZE = 0x50,
+    TOWN_MANAGER_DISPATCH_MASK = 0x32f,
+    TOWN_STATUS_TEXT_CONTROL = 0x386,
+    TOWN_STATUS_REGION_Y = 0x1ce,
+    TOWN_STATUS_REGION_WIDTH = 0x280,
+    TOWN_STATUS_REGION_HEIGHT = 0x10
+H1_ENUM_END(TownManagerStorageConstant)
+// clang-format on
 
-// Constructor, UnloadTown, ShowText and recruitUnit::Close fix these offsets.
+// clang-format off
+H1_ENUM_BEGIN(TownArmyCommand)
+    TOWN_ARMY_COMMAND_NONE = -1,
+    TOWN_ARMY_COMMAND_SELECT = 0,
+    TOWN_ARMY_COMMAND_VIEW = 1,
+    TOWN_ARMY_COMMAND_MERGE = 2,
+    TOWN_ARMY_COMMAND_SWAP = 3,
+    TOWN_ARMY_COMMAND_VIEW_HERO = 4,
+    TOWN_ARMY_COMMAND_SPLIT = 5,
+    TOWN_ARMY_COMMAND_GARRISON = 6,
+    TOWN_SHIFT_QUALIFIER_MASK = 3
+H1_ENUM_END(TownArmyCommand)
+
+H1_ENUM_BEGIN(TownCommandText)
+    TOWN_TEXT_REDISTRIBUTE_ARMY = 0,
+    TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY = 1,
+    TOWN_TEXT_COMBINE_ARMIES = 2,
+    TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT = 3,
+    TOWN_TEXT_VIEW_ARMY = 4,
+    TOWN_TEXT_CANNOT_MOVE_LAST_ARMY = 5,
+    TOWN_TEXT_MOVE_ARMY = 6,
+    TOWN_TEXT_EXCHANGE_ARMIES = 7,
+    TOWN_TEXT_EXIT = 8,
+    TOWN_TEXT_EMPTY_STATUS = 9,
+    TOWN_TEXT_GARRISON = 10,
+    TOWN_TEXT_EMPTY_SLOT = 11,
+    TOWN_TEXT_SELECT_ARMY = 12,
+    TOWN_TEXT_VIEW_HERO = 13,
+    TOWN_TEXT_BUILDING_0 = 14,
+    TOWN_TEXT_DWELLING = 21
+H1_ENUM_END(TownCommandText)
+
+H1_ENUM_BEGIN(TownControl)
+    TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
+    TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d,
+    TOWN_GARRISON_FIRST_CONTROL = 0x10,
+    TOWN_GARRISON_SLOT_FIRST = 0x11,
+    TOWN_HERO_FIRST_CONTROL = 0x16,
+    TOWN_HERO_SLOT_FIRST = 0x17,
+    TOWN_CLOSE_CONTROL = 0x7800
+H1_ENUM_END(TownControl)
+
+H1_ENUM_BEGIN(TownTavernConstant)
+    TOWN_TAVERN_WINDOW_X = 0xa2,
+    TOWN_TAVERN_WINDOW_Y = 0xa,
+    TOWN_TAVERN_WINDOW_TEXT = 0xe,
+    TOWN_TAVERN_MUSIC = 0x2f,
+    TOWN_THEME_MUSIC_BASE = 0x1d
+H1_ENUM_END(TownTavernConstant)
+// clang-format on
+
+// The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
+// fix these packed offsets; names follow Buka where the use matches.
 #pragma pack(push, 1)
-                                           class townManager : public baseManager {
+class townManager : public baseManager {
 public:
-    town* m_town;
-    icon* m_backgroundIcon;
-    townObject* m_townObjects[TOWN_MANAGER_OBJECT_CAPACITY];
+    town *m_town;
+    icon *m_backgroundIcon;
+    townObject *m_townObjects[TOWN_MANAGER_OBJECT_CAPACITY];
     signed char m_townObjectCount;
     int m_unknown79;
-    heroWindow* m_townWindow;
-    strip* m_garrisonStrip;
-    strip* m_heroStrip;
-    char m_unknown89[0x12];
-    bankBox* m_bankBox;
+    heroWindow *m_townWindow;
+    strip *m_garrisonStrip;
+    strip *m_heroStrip;
+    strip *m_selectedStrip;
+    short m_selectedArmySlot;
+    strip *m_swapStrip;
+    short m_swapArmySlot;
+    strip *m_pendingStrip;
+    short m_pendingArmySlot;
+    bankBox *m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
+    short m_lastHoverId;
+    H1_ENUM_STORAGE(TownArmyCommand, signed char) m_command;
+    signed char m_unknownf2;
+    short m_unknownf3;
+    short m_unknownf5;
+    signed char m_castleDialogActive;
+    short m_selectedBuilding;
+    heroWindow *m_heroWindow0;
+    heroWindow *m_heroWindow1;
+    short m_splitAmount;
+    short m_splitMaximum;
+    short m_unknown106;
+    int m_unknown108;
+    int m_unknown10c;
+    // HoMM1 Main tests this additional mask against message.type.
+    short m_dispatchMask;
     // --- constructors ---
     townManager(void);
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void SetupExtraStuff(void);
-    void SetTown(town* value) {
-        m_town = value;
-    }
+    void SetTown(town *value) { m_town = value; }
     void ChangeTown(void);
     void SetupTown(void);
     void UnloadTown(void);
-    void SetArmyCommand(int);
-    void SetCommandAndText(struct tag_message&);
-    void ShowText(char*);
+    void SetArmyCommand(short);
+    void SetCommandAndText(struct tag_message &);
+    void ShowText(char *);
     void DoCommand(int);
     void RedrawTownScreen(void);
     void SplitArmy(void);
     void ShiftQualChange(void);
     void ResetStrips(void);
-    void Toggle(int);
+    void Toggle(signed char);
     void DrawTown(int, int);
     int BuyBuild(int, int, int);
     void BuildObj(int);
-    void SetupMage(class heroWindow*);
+    void SetupMage(class heroWindow *);
     int RecruitHero(int, int);
     void DoTavern(void);
-    void SetupWell(class heroWindow*);
-    void SetupThievesGuild(class heroWindow*, int);
-    void SetupCastle(class heroWindow*, int);
+    void SetupWell(class heroWindow *);
+    void SetupThievesGuild(class heroWindow *, int);
+    void SetupCastle(class heroWindow *, int);
+    char *GetBuildingName(int);
 };
 #pragma pack(pop)
+
+extern char *cTownCommand[];
+extern signed char townTheme[];
+short TavernHandler(struct tag_message &);
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

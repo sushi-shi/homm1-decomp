@@ -333,7 +333,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/TOWNMGR"
 source = "src/SOURCE/TOWNMGR.cpp"
-flags = "cpp_carcass"
+# DoTavern registers an fs:[0] frame around new heroWindow.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/kbwin"

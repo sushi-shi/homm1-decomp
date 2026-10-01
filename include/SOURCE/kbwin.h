@@ -154,7 +154,8 @@ long __stdcall AppWndProc(void *, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);
 void SetMenuStatus(int);
-
+// HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
+void SetWinText(class heroWindow *, short);
 void UpdateDfltMenu(void*);
 void UpdateAppSpecificMenus(void*);
 

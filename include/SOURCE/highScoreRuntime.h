@@ -19,9 +19,34 @@ H1_ENUM_BEGIN(HighScoreRuntimeConstant)
     HIGH_SCORE_UPDATE_HEIGHT = 400,
     HIGH_SCORE_STANDARD_BUTTON = 100,
     HIGH_SCORE_CAMPAIGN_BUTTON = 147,
-    HIGH_SCORE_CLOSE_BUTTON = 0x7800
+    HIGH_SCORE_CLOSE_BUTTON = 0x7800,
+    HIGH_SCORE_TITLE_WIDGET = 0x67,
+    HIGH_SCORE_SUBTITLE_WIDGET = 0x68,
+    HIGH_SCORE_CAMPAIGN_TITLE_FRAME = 12,
+    HIGH_SCORE_STANDARD_TITLE_FRAME = 7,
+    HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME = 8,
+    HIGH_SCORE_STANDARD_SUBTITLE_FRAME = 9,
+    HIGH_SCORE_WIDGET_SHOWN = 6,
+    HIGH_SCORE_EMPTY = -1,
+    HIGH_SCORE_TEXT_WIDGET_STRIDE = 4,
+    HIGH_SCORE_FIRST_TEXT_WIDGET = 0x6a,
+    WIDGET_COMMAND_SET_FILL_COLOR = 8,
+    HIGH_SCORE_HIGHLIGHT_COLOR = -65,
+    HIGH_SCORE_NORMAL_COLOR = 1
 H1_ENUM_END(HighScoreRuntimeConstant)
 
+// HoMM1 score files hold 0x57-byte records; Update reads name, scenario and
+// score from the fixed prefix.
+#pragma pack(push, 1)
+struct HighScoreEntry {
+    char playerName[17];
+    char scenarioName[15];
+    int score;
+    char unknown24[0x33];
+};
+#pragma pack(pop)
+
+extern signed char giHighScoreRank;
 extern long glTimers[];
 extern void *hmnuDflt;
 

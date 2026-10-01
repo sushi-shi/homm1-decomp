@@ -52,6 +52,8 @@ public:
     void AsciiConvert(tag_message&);
     void MakeScanCodeTable(void);
     void ForceMouseMove(void);
+    // Inline qualifier accessor; townManager::ShiftQualChange retains its jmp.
+    short GetModifiers(void) { return m_modifiers; }
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_INPUTMANAGER_H
