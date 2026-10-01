@@ -71,16 +71,18 @@ void GetMonsterCost(int monster, int* const cost) {}
 // donor PoL RVA 0x00099a6c; preferred Buka symbol ?CanBuild@@YIHPAVtown@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375672;margin=0.371383;shape=0.277;size=0.517;calls=1.000;alternate=pol20:int CanBuild(class town *, int)@0x00099a6c
+// Retail returns a byte flag; philAI::GetBestBuilding tests al.
 VA(0x004517bf, 0x144)
-int CanBuild(town* t, int building) {
+signed char CanBuild(town* t, int building) {
     return 0;
 }
 
 // donor PoL RVA 0x00099d21; preferred Buka symbol ?CanBuy@@YIHPAVtown@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.384626;margin=0.370647;shape=0.216;size=0.621;calls=1.000;alternate=pol20:int CanBuy(class town *, int)@0x00099d21
+// Retail returns a byte flag (xor al,al / mov al,1); philAI::CanBuyBHC tests al.
 VA(0x00451903, 0xce)
-int CanBuy(town* t, int type) {
+signed char CanBuy(town* t, int type) {
     return 0;
 }
 

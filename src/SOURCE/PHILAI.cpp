@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 DATA(0x004913a0)
 signed char gDwellingType[4][6];
@@ -233,7 +234,48 @@ float philAI::GetOddsOfWinning(int) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526596;margin=0.075083;shape=0.323;size=0.949;calls=1.000;alternate=pol20:void philAI::GetBestBuilding(class town *, struct BHC &, float &)@0x0003d6b7
 VA(0x0041dd73, 0x185)
-void philAI::GetBestBuilding(town* t, BHC& bhc, float& fOut) {}
+void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCost) {
+    float buildingValue;
+    int bestBuilding;
+    float bestScore;
+    float bestCost;
+    int curBuilding;
+    int costRV;
+    float score;
+
+    bestCost = -99.0f;
+    bestScore = -99.0f;
+    bestBuilding = -1;
+    for (curBuilding = 0; curBuilding <= 12; curBuilding++) {
+        if (!(townPointer->m_buildings & (1 << curBuilding))
+            || (curBuilding == 0 && townPointer->m_buildState < 3)) {
+            if (CanBuild(townPointer, curBuilding)) {
+                ValueOfBuyingBuilding(townPointer, curBuilding, costRV, buildingValue);
+                score = (Random(1, 5) + 95) * buildingValue / 100.0f;
+                if (score > bestScore) {
+                    bestBuilding = curBuilding;
+                    bestCost = buildingValue;
+                    bestScore = score;
+                }
+                if (giDebugLevel >= 5) {
+                    sprintf(
+                        gText,
+                        "Town:%2d  Building: % 15s   Raw BC = %8.2f,  RandBC = %8.2f.",
+                        townPointer->m_id,
+                        GetBuildingName(townPointer->m_type, curBuilding),
+                        buildingValue,
+                        score
+                    );
+                    LogStr(gText);
+                }
+            }
+        }
+    }
+    purchase.pTown = townPointer;
+    purchase.type = 0;
+    purchase.what = bestBuilding;
+    benefitCost = bestCost;
+}
 
 // donor PoL RVA 0x0003d852; preferred Buka symbol ?ValueOfBuyingCreature@philAI@@QAEXPAVtown@@HAAHHAAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -245,7 +287,66 @@ void philAI::ValueOfBuyingCreature(class town*, int, int&, int, float&) {}
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.467416;margin=0.566378;shape=0.359;size=0.696;calls=1.000;alternate=pol20:void philAI::GetBestCreature(class town *, struct BHC &, float &)@0x0003db58
 VA(0x0041e1ed, 0x211)
-void philAI::GetBestCreature(class town*, struct BHC&, float&) {}
+void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
+    int canAdd;
+    int bestBuy;
+    float worth;
+    float bestRandScore;
+    float bestCost;
+    int topDwelling;
+    int curDwelling;
+    float rand;
+    int mon;
+    int iArmy;
+    int numUnits;
+    int costRV;
+
+    topDwelling = -1;
+    bestBuy = 0;
+    bestCost = -99.0f;
+    bestRandScore = -99.0f;
+    for (curDwelling = 0; curDwelling < 6; curDwelling++) {
+        mon = gDwellingType[townPointer->m_type][curDwelling];
+        if ((townPointer->m_buildings & (1 << (curDwelling + 7)))
+            && townPointer->m_garrison[curDwelling] > 0) {
+            canAdd = 0;
+            for (iArmy = 0; iArmy < 5; iArmy++) {
+                if (townPointer->m_army.m_creatureTypes[iArmy] == -1
+                    || townPointer->m_army.m_creatureTypes[iArmy] == mon)
+                    canAdd = 1;
+            }
+            if (canAdd) {
+                numUnits = CreaturesToBuy(townPointer, curDwelling);
+                if (numUnits > 0) {
+                    ValueOfBuyingCreature(townPointer, mon, costRV, numUnits, worth);
+                    rand = (Random(1, 10) + 90) * worth / 100.0;
+                    if (rand > bestRandScore) {
+                        topDwelling = curDwelling;
+                        bestCost = worth;
+                        bestRandScore = rand;
+                        bestBuy = numUnits;
+                    }
+                    if (giDebugLevel >= 5) {
+                        sprintf(
+                            gText,
+                            "Town:%2d  Creature: % 15s   Raw BC = %8.2f,  RandBC = %8.2f.",
+                            townPointer->m_id,
+                            GetMonsterName(mon),
+                            worth,
+                            rand
+                        );
+                        LogStr(gText);
+                    }
+                }
+            }
+        }
+    }
+    best.pTown = townPointer;
+    best.type = 2;
+    best.what = topDwelling;
+    best.num = bestBuy;
+    bestValue = bestCost;
+}
 
 // Buka's town overload indexes the six dwelling stocks and faction table.
 VA(0x0041e3fe, 0x48)
@@ -300,7 +401,47 @@ void philAI::ValueOfBuyingHero(class town*, class hero*, int&, float&) {}
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.649528;margin=0.194728;shape=0.311;size=0.925;calls=0.800;strings=Town:%2d  Hero    : % 15i   Raw BC = %8.2f,  RandBC = %8.2f.;alternate=pol20:void philAI::GetBestHero(class town *, struct BHC &, float &)@0x0003e2a8
 VA(0x0041e6fc, 0x1a0)
-void philAI::GetBestHero(class town*, struct BHC&, float&) {}
+void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
+    int bestHero;
+    float worth;
+    int curHero;
+    float bestScore;
+    hero* availHero;
+    float adjusted;
+    float bestCost;
+    int cost;
+
+    bestHero = -1;
+    bestCost = -99.0f;
+    bestScore = -99.0f;
+    for (curHero = 0; curHero < 2; curHero++) {
+        availHero = &gpGame->m_heroRecs[gpCurPlayer->m_availableHeroIds[curHero]];
+        ValueOfBuyingHero(townPointer, availHero, cost, worth);
+        adjusted = (Random(1, 10) + 90.0) * worth / 100.0;
+        if (adjusted > bestScore) {
+            bestHero = curHero;
+            bestCost = worth;
+            bestScore = adjusted;
+        }
+        if (giDebugLevel >= 5) {
+            sprintf(
+                gText,
+                "Town:%2d  Hero    : % 15i   Raw BC = %8.2f,  RandBC = %8.2f.",
+                townPointer->m_id,
+                curHero,
+                worth,
+                adjusted
+            );
+            LogStr(gText);
+        }
+    }
+    best.pTown = townPointer;
+    best.type = 1;
+    best.what = bestHero;
+    bestValue = bestCost;
+    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == 0xbd)
+        bestValue -= 200.0f;
+}
 
 // donor PoL RVA 0x0003e459; preferred Buka symbol ?LikelihoodOfEnemyAttacking@philAI@@QAEXPAVtown@@PAVhero@@AAM2AAH332@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -741,7 +882,32 @@ void philAI::BuildCreature(town* townPointer, int dwelling, int purchaseCount) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.453882;margin=0.780446;shape=0.369;size=0.712;calls=0.667;alternate=pol20:int philAI::CanBuyBHC(struct BHC &)@0x00042ead
 VA(0x00421e5d, 0x188)
-int philAI::CanBuyBHC(BHC& bhc) {
+int philAI::CanBuyBHC(BHC& purchase) {
+    int index;
+    int j;
+    int cost[PLAYER_RESOURCE_COUNT];
+    switch (purchase.type) {
+    case 0:
+        if (CanBuy(purchase.pTown, purchase.what))
+            return 1;
+        break;
+    case 1:
+        if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
+            && purchase.pTown->m_occupyingHeroId == -1 && bHeroBuiltThisTurn == 0)
+            return 1;
+        break;
+    case 2:
+        j = gDwellingType[purchase.pTown->m_type][purchase.what];
+        if (purchase.num > purchase.pTown->m_garrison[purchase.what])
+            return 0;
+        if (!purchase.pTown->m_army.CanJoin(j))
+            return 0;
+        GetMonsterCost(j, cost);
+        for (index = 0; index < PLAYER_RESOURCE_COUNT; index++)
+            if (gpCurPlayer->m_resources[index] < cost[index] * purchase.num)
+                return 0;
+        return 1;
+    }
     return 0;
 }
 
@@ -749,7 +915,32 @@ int philAI::CanBuyBHC(BHC& bhc) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.554517;margin=0.429398;shape=0.381;size=0.912;calls=1.000;alternate=pol20:int philAI::CombatMonsterEvent(class hero *, int, int *, class mapCell *)@0x00043007
 VA(0x00421fe5, 0x177)
-int philAI::CombatMonsterEvent(hero* h, int monType, int* pCount, mapCell* cell) {
+signed char philAI::CombatMonsterEvent(hero* h, int monType, int* pCount, mapCell*) {
+    float casualtyRatio;
+    float fLoss;
+    int result;
+    short newCount;
+    short i;
+
+    memset(gpMonGroup->m_creatureTypes, -1, sizeof(gpMonGroup->m_creatureTypes));
+    memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+    if (*pCount / 5 > 0) {
+        for (i = 0; i < 5; i++) {
+            gpMonGroup->m_creatureTypes[i] = monType;
+            gpMonGroup->m_creatureCounts[i] = *pCount / 5;
+        }
+    }
+    for (i = *pCount % 5 - 1; i >= 0; i--) {
+        gpMonGroup->m_creatureTypes[i] = monType;
+        gpMonGroup->m_creatureCounts[i]++;
+    }
+    result = gpPhilAI->QuickCombat(&h->m_army, h, gpMonGroup, 0, 0, 0, casualtyRatio, fLoss);
+    newCount = 0;
+    for (i = 0; i < 5; i++)
+        newCount += gpMonGroup->m_creatureCounts[i];
+    *pCount = newCount;
+    if (result != 0)
+        return 1;
     return 0;
 }
 

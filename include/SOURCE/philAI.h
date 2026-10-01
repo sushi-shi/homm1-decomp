@@ -34,7 +34,13 @@ class font;
 class hero;
 class mapCell;
 class town;
-struct BHC;
+// Buka 2.1 purchase record: town, kind, building/dwelling and count.
+struct BHC {
+    town* pTown;
+    int type;
+    int what;
+    int num;
+};
 
 class philAI {
 public:
@@ -134,7 +140,7 @@ public:
     void BuildHero(class town*, short);
     void BuildCreature(class town*, int, int);
     int CanBuyBHC(struct BHC&);
-    int CombatMonsterEvent(class hero*, int, int*, class mapCell*);
+    signed char CombatMonsterEvent(class hero*, int, int*, class mapCell*);
     int FightEvent(class hero*, class mapCell*, int);
     int DamageGroup(class armyGroup*, class hero*, class hero*, float);
     float StatChangeValue(int, int);
@@ -157,5 +163,6 @@ public:
     int EvaluateTownEvent(int, int, int, int, int*);
 };
 extern philAI* gpPhilAI;
+extern armyGroup* gpMonGroup;
 
 #endif // HOMM1_SOURCE_PHILAI_H
