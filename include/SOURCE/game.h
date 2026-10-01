@@ -35,7 +35,11 @@ H1_ENUM_END(GameStorageConstant)
 #pragma pack(push, 1)
         class game {
 public:
-    char m_unknown0000[0x1ff];
+    char m_unknown0000[3];
+    // ControlPanel's scenario-info choice shows the campaign when positive.
+    int m_campaignType;
+    int m_campaignScenario;
+    char m_unknown000b[0x1f4];
     signed char m_playerCount;
     char m_unknown200[6];
     unsigned short m_day;
@@ -46,16 +50,24 @@ public:
     char m_unknownd0a0[0x5100];
     signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
-    char m_unknown1295d[0x28];
+    // CheckBerserk compares each town owner with the hero owner.
+    signed char m_townOwners[GAME_TOWN_COUNT];
+    unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    char m_unknown1431d[0x2b39];
+    signed char m_availableHeroes[GAME_HERO_COUNT];
+    char m_unknown14341[0x295];
+    // InsertSound reads the environment sound id per [x][y] cell.
+    signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    // GetCloudLookup tests the watching player bit per [x][y] cell.
+    unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
-    hero* GetHero(int id) {
+    hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
-    town* GetTown(int id) {
+    // TownEvent passes the unsigned cell metadata through a signed byte.
+    town* GetTown(signed char id) {
         return &m_castleRecs[id];
     }
     // --- methods ---
@@ -77,7 +89,7 @@ public:
     int PickLoadGame(void);
     int HandleCampaignWin(void);
     void PlayPreScenarioSmacker(int, int);
-    void ShowCampaignInfo(int, int);
+    void ShowCampaignInfo(int, int, int);
     void CampaignInfoUpdate(int);
     void InitEntireCampaign(int);
     void InitCampaignMap(void);
@@ -88,7 +100,7 @@ public:
     int CreateBoat(int, int, int);
     int Scan(signed char*, int, int);
     int RandomScan(signed char*, int, int, int, signed char);
-    int GetNewHeroId(int, int, int);
+    signed char GetNewHeroId(signed char);
     int GetTownId(int, int);
     int GetMineId(int, int);
     short SaveGame(char *, signed char);
@@ -102,7 +114,7 @@ public:
     void RandomizeBarrier(class mapCell*);
     void RandomizePassword(class mapCell*);
     int LoadMap(char*);
-    void ClaimTown(int, int, int);
+    void ClaimTown(signed char, signed char);
     void ClaimMine(int, int);
     int ViewSpells(class hero*, int, short (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);
@@ -136,9 +148,9 @@ public:
     void InitRandomArtifacts(void);
     int GetRandomArtifactId(int, int);
     void RandomizeHeroPool(void);
-    void SetRandomHeroArmies(int, int);
+    void SetRandomHeroArmies(short, int);
     void ProcessRandomObjects(void);
-    void SetVisibility(int, int, int, int);
+    void SetVisibility(short, short, short, short);
     void MakeAllWaterVisible(int);
     void GiveArmy(class armyGroup*, int, int, int);
     int ExperienceValueOfStack(class armyGroup*, class hero*);

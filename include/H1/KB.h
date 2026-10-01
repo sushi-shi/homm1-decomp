@@ -18,12 +18,15 @@ class townManager;
 class executive;
 class game;
 struct configStruct;
+struct tag_tilePoint;
 
 extern char gbInPollSound;
 extern char gbNoSound;
 extern signed char gbShowHighScore;
 extern signed char gbStandardHighScore;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
+// InitVars fills it; SetTownContext maps a cell tile index to its terrain.
+extern signed char giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];
@@ -50,6 +53,8 @@ extern signed char gbThisNetHumanPlayer[];
 extern townManager* gpTownManager;
 extern executive* gpExec;
 extern class game* gpGame;
+// Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
+extern tag_tilePoint normalDirTable[];
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;
 extern long giBottomViewOverrideEndTime;
@@ -147,7 +152,12 @@ void FileError(char*);
 void MemError();
 void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
+// philAI::BuildHero charges this word-sized gold price.
+extern short gHeroGoldCost;
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
+void SetWinText(heroWindow*, short);
+signed char CanBuy(class town*, int);
+signed char CanBuild(class town*, int);
 
 #endif

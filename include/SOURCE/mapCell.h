@@ -17,7 +17,13 @@ class mapCell {
 public:
     // Tile index read zero-extended into the terrain lookup table.
     unsigned char m_tileIndex;
-    char m_unknown01[5];
+    // PuzzleDraw masks the object and overlay tileset low nibbles and their
+    // 0xff-terminated frame indices.
+    unsigned char m_objectTileset;
+    unsigned char m_objectIndex;
+    unsigned char m_overlayTileset;
+    unsigned char m_overlayIndex;
+    char m_unknown05;
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
     unsigned char m_flags;
     unsigned char m_unknown07;

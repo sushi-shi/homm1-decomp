@@ -32,9 +32,11 @@ public:
     int m_income[PLAYER_RESOURCE_COUNT];
     int m_obeliskValue;
     int m_totalObeliskValue;
-    int m_unexploredValue;
+    // EvaluateOneTimeCreaturePurchase weights fight value by the float at +0xf9;
+    // FightEvent adds the artifact float at +0xfd.
     float m_upgradeValueWeight;
     float m_artifactValue;
+    int m_unexploredValue;
 };
 
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at
@@ -48,7 +50,8 @@ public:
     signed char m_currentHero;
     signed char m_heroLocatorPage;
     signed char m_heroIds[PLAYER_HERO_CAPACITY];
-    char m_unknown1e[0x38];
+    signed char m_availableHeroIds[2];
+    char m_unknown20[0x36];
     signed char m_townCount;
     signed char m_currentTown;
     signed char m_townLocatorPage;
@@ -67,6 +70,9 @@ public:
     signed char CountVisitedObelisks(void);
     signed char CurrentHero(void) {
         return m_currentHero;
+    }
+    signed char CurrentTown(void) {
+        return m_currentTown;
     }
 };
 #pragma pack(pop)

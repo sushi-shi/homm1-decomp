@@ -19,13 +19,19 @@ public:
     short m_cursorFrame;
     short m_cursorReady;
     // Constructor and UpdateScreenRegion establish the packed tail.
-    unsigned char m_pointerFlags;
-    int m_unknown41;
+    signed char m_pointerFlags;
+    // CheckDoMain compares the pointer position less this offset with the
+    // last drawn position at +0x5b/+0x5d.
+    short m_hotspotX;
+    short m_hotspotY;
     short m_mouseX;
     short m_mouseY;
     int m_unknown49;
     int m_unknown4d;
     char m_unknown51;
+    char m_unknown52[9];
+    short m_drawnX;
+    short m_drawnY;
 
     // --- constructors ---
     mouseManager(void);
@@ -48,6 +54,17 @@ public:
         return m_pointerFlags & 1;
     }
     void CheckUpdateMousePos(void);
+    // Empty in the Windows build (retail 0x00476e20, `ret 8`).
+    void MovePointer(short, short);
+    // Empty Windows-build hooks around advManager::UpdateScreen's blit
+    // (retail 0x00476e10 `ret 0x10` and 0x00476e00 `ret`).
+    void BeginScreenUpdate(class bitmap*, short, short, short);
+    void EndScreenUpdate(void);
+    // Empty in the Windows build (retail 0x00476ec0, `ret 4`); the locator
+    // knob drag passes 4 on entry and 6 on release.
+    void SetCursorShape(int);
+    // Empty in the Windows build (retail 0x00476e50, `ret 8`).
+    void WarpPointer(int, int);
     void SetColorMice(int);
 };
 #pragma pack(pop)

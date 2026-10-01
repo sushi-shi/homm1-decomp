@@ -4,6 +4,7 @@
 // 34 methods, 0 own-virtual, 0 static data.
 
 #include <H1/Macros.h>
+#include <SOURCE/armyGroup.h>
 
 // forward declarations:
 class town;
@@ -17,7 +18,7 @@ class town;
 #pragma pack(push, 1)
 class hero {
 public:
-    unsigned char m_id;
+    signed char m_id;
     signed char m_owner;
     char m_name[0x1a];
     signed char m_unknown1c;
@@ -28,10 +29,16 @@ public:
     signed char m_destinationY;
     unsigned char m_direction;
     unsigned char m_locationType;
-    signed char m_occupiedTown;
+    // SetHeroContext passes it zero-extended to game::RestoreCell.
+    unsigned char m_occupiedTown;
     short m_mobility;
     short m_remainingMobility;
-    char m_unknown29[0x85];
+    int m_experience;
+    char m_unknown2d[0x2a];
+    // philAI::CombatMonsterEvent passes &m_army to QuickCombat.
+    armyGroup m_army;
+    char m_unknown66[0x3a];
+    signed char m_artifacts[14];
     int m_eventFlags;
     float m_aiFightValue;
     // --- constructors ---

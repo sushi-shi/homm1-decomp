@@ -54,9 +54,8 @@ struct SCreatureInfo {
 };
 struct tag_tilePoint {
     signed char x;
-    signed char _1;
     signed char y;
-    signed char _3;
+    short frameOffset;
 };
 struct SSpellInfo {
     char m_pad0[14];

@@ -40,7 +40,7 @@ signed char town::HasGarrison(void) {
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430933;margin=0.601053;shape=0.167;size=0.987;calls=0.667;alternate=pol20:void town::GiveSpells(class hero *)@0x00032cb9
 VA(0x00463fd0, 0xe1)
-void town::GiveSpells(class hero *) {}
+void town::GiveSpells(void) {}
 
 // donor PoL RVA 0x00032e74; preferred Buka symbol ?View@town@@QAEXH@Z
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order

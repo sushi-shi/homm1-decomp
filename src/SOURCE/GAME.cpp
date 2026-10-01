@@ -122,8 +122,10 @@ void game::UpdateNewGameWindow(void) {}
 // donor PoL RVA 0x000bc00e; preferred Buka symbol ?ShowInfo@ExpCampaign@@QAEXHH@Z
 // donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
+// HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
+// arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
 VA(0x0043be93, 0x2ad)
-void ExpCampaign::ShowInfo(int, int) {}
+void game::ShowCampaignInfo(int, int, int) {}
 
 // donor PoL RVA 0x000bb843; preferred Buka symbol ?InitMap@ExpCampaign@@QAEXXZ
 // donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
@@ -143,7 +145,7 @@ int game::LoadMap(char*) {
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.415111;margin=0.758393;shape=0.164;size=0.968;calls=0.500;alternate=pol20:void game::ClaimTown(int, int, int)@0x00078fea
 VA(0x0043e744, 0x321)
-void game::ClaimTown(int, int, int) {}
+void game::ClaimTown(signed char, signed char) {}
 
 // donor PoL RVA 0x00079856; preferred Buka symbol ?ViewSpells@game@@QAEHPAVhero@@HP6IHAAUtag_message@@@ZH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -189,7 +191,8 @@ void game::NextPlayer(void) {}
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64
 VA(0x004440e9, 0x259)
-void game::SetVisibility(int, int, int, int) {}
+// Retail reads all four arguments as words (ret 0x10).
+void game::SetVisibility(short, short, short, short) {}
 
 // @early-stop
 // Logic + frame slots byte-exact; residual is 3 commutative operand-load swaps (the

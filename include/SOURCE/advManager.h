@@ -52,7 +52,8 @@ public:
     class widget* m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class widget* m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class heroWindow* m_adventureWindow;
-    unsigned short* m_visibilityMap;
+    // ShowRoute clears 72*72 bytes and stores signed route frames.
+    signed char* m_visibilityMap;
     signed char m_routeShown;
     signed char m_currentTerrain;
     char m_unknown9b[4];
@@ -128,7 +129,7 @@ public:
     int GetMoveShowIt(class hero*, int);
     class mapCell* MoveHero(int, int, int*, int*, int*, int, int*, int);
     void CheckAdjacentMon(int*);
-    int ValidMoveWithEvent(class hero*, int);
+    short ValidMoveWithEvent(class hero*, int);
     int ValidMove(int, int);
     void MoveOrigin(int, int);
     void ProcessMapChange(struct SMapChange);
@@ -148,17 +149,17 @@ public:
     int ProcessDeSelect(struct tag_message*, int*, class mapCell**);
     int ProcessSearch(int, int);
     int ProcessHover(struct tag_message*);
-    void UpdateScreen(int, int);
+    void UpdateScreen(signed char, signed char);
     void CompleteDraw(short, short, int);
     void CompleteDraw(int);
     int GetCloudLookup(int, int);
-    void DrawCell(int, int, int, int, int, int);
+    void DrawCell(int, int, int, int, int, int, int);
     class mapCell* GetCell(short, short);
     void UpdateRadar(int, int);
     void QuickInfo(int, int);
-    void UpdateHeroLocator(int, int, int);
+    void UpdateHeroLocator(int, signed char, signed char);
     void UpdateHeroLocators(signed char, signed char);
-    void UpdateTownLocators(int, int);
+    void UpdateTownLocators(signed char, signed char);
     void UpdBottomView(signed char, signed char, signed char);
     void ClearBottomView(void);
     signed char UpdBottomViewEnemyTurn(void);
@@ -174,20 +175,20 @@ public:
     void DeactivateCurrHero(void);
     void MobilizeCurrHero(int);
     void DemobilizeCurrHero(void);
-    void SetTownContext(int);
-    void SetHeroContext(signed char, int);
+    void SetTownContext(signed char);
+    void SetHeroContext(signed char, signed char);
     void DoHeroKnob(void);
     void DoTownKnob(void);
     void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    int ComboDraw(short, short, int);
-    int ComboDraw(int);
-    void SetEnvironmentOrigin(int, int, int);
+    signed char ComboDraw(short, short, int);
+    signed char ComboDraw(int);
+    void SetEnvironmentOrigin(short, short, short);
     void CheckLoadSample(int);
     int GetSoundId(int, int);
-    void InsertSound(int, int, int, int);
-    void TeleportTo(class hero*, int, int, int, int);
+    void InsertSound(short, short, short, signed char);
+    void TeleportTo(int, int, int);
     void DimensionDoor(void);
     void TownGate(void);
     void SummonBoat(void);
@@ -213,7 +214,7 @@ public:
     void ViewPuzzle(void);
     void PuzzleDraw(int, int, int, int);
     void AdvPanel(void);
-    int ControlPanel(void);
+    short ControlPanel(void);
     void SystemOptions(void);
     int DoVisions(class hero*);
     int IsCrystalBallInEffect(int, int, int);
@@ -340,6 +341,9 @@ public:
 #pragma pack(pop)
 
 short APanelHandler(struct tag_message &);
+void UpdateCPanel(signed char);
+int SaveGame(void);
+short CPanelHandler(struct tag_message &);
 
 extern int gbNoBorder;
 extern int gbRemoteOn;
@@ -355,4 +359,22 @@ extern int iLastAnimFrame;
 extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;
+extern unsigned char giCurWatchPlayerBit;
+extern short gGameCommand;
+extern int gbHeroMoving;
+extern unsigned char giCurPlayerBit;
+// Volume per environment-sound distance step.
+extern long glEnvironmentVolume[];
+// Route arrow frame by [next step][this step] path direction.
+extern signed char gRouteFrame[][8];
+// Per hero type scouting radius used by TeleportTo.
+extern signed char gHeroScoutRadius[];
+extern int giLimitUpdMinX;
+extern int giLimitUpdMinY;
+extern int giLimitUpdMaxX;
+extern int giLimitUpdMaxY;
+extern class heroWindow *cPanel;
+extern signed char bPrefsChanged;
+extern signed char bFreshSave;
+extern unsigned char giCloudType[];
 #endif // HOMM1_SOURCE_ADVMANAGER_H

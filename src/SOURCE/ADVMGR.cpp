@@ -3,11 +3,15 @@
 #include <match.h>
 
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Icon2b.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/bmap2.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/wingraph.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -247,8 +251,52 @@ int advManager::ProcessSelect(struct tag_message*, class mapCell**) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.346709;margin=0.551065;shape=0.313;size=0.541;calls=0.500;alternate=pol20:int advManager::ProcessDeSelect(struct tag_message *, int *, class mapCell * *)@0x00059c19
 VA(0x00428b59, 0x1ea)
-int advManager::ProcessDeSelect(struct tag_message*, int*, class mapCell**) {
-    return 0;
+int advManager::ProcessDeSelect(struct tag_message* message, int* result, class mapCell** eventCell) {
+    switch (message->payload.widget.id) {
+        case 2:
+            m_selectedCell = 7;
+            *eventCell = DoAdvCommand();
+            break;
+        case 5:
+            AdvPanel();
+            break;
+        case 6:
+            *result = ControlPanel();
+            break;
+        case 4:
+            if (gpCurPlayer->HasMobileHero()) {
+                NormalDialog(
+                    "One or more Heroes may still move, are you sure you want to end your turn?",
+                    2, -1, -1, -1, 0, -1, 0, -1
+                );
+                if (gpWindowManager->m_dialogResult == 0x7806)
+                    break;
+            }
+            gpGame->NextPlayer();
+            break;
+        case 1:
+            HideRoute(1, 0, 1);
+            SetHeroContext(gpCurPlayer->NextHero(1), 0);
+            break;
+        case 3:
+            gpGame->Overview();
+            RedrawAdvScreen(1);
+            gpWindowManager->FadeScreen(0, 8, 0);
+            break;
+    }
+    if (message->payload.widget.id >= 2000 && message->payload.widget.id <= 2200) {
+        if (giBottomViewOverride == 2)
+            giBottomViewOverride = 1;
+        else if (giBottomViewOverride != 0)
+            giBottomViewOverride = 0;
+        else if (iCurBottomView == 2)
+            giBottomViewOverride = 1;
+        else
+            giBottomViewOverride = 2;
+        giBottomViewOverrideEndTime = KBTickCount() + 3000;
+        UpdBottomView(1, 1, 1);
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x0005a07c; preferred Buka symbol ?ProcessSearch@advManager@@QAEHHH@Z
@@ -271,7 +319,52 @@ int advManager::ProcessHover(struct tag_message*) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.492392;margin=0.157827;shape=0.294;size=0.928;calls=0.818;alternate=pol20:void advManager::UpdateScreen(int, int)@0x0005b094
 VA(0x00429de0, 0x265)
-void advManager::UpdateScreen(int, int) {}
+void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate) {
+    if (!forceUpdate && !bShowIt) {
+        if (KBTickCount() > glTimers[0])
+            glTimers[0] = KBTickCount() + 120;
+        return;
+    }
+    gpMouseManager->BeginScreenUpdate(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
+    PollSound();
+    giScrollX = m_updateMinX;
+    giScrollY = m_updateMinY;
+    if (giLimitUpdMinX == -1)
+        BlitBitmapToScreen(gpWindowManager->m_screen, 16, 16, 448, 448, 16, 16);
+    else
+        BlitBitmapToScreen(
+            gpWindowManager->m_screen,
+            giLimitUpdMinX,
+            giLimitUpdMinY,
+            giLimitUpdMaxX - giLimitUpdMinX,
+            giLimitUpdMaxY - giLimitUpdMinY,
+            giLimitUpdMinX,
+            giLimitUpdMinY
+        );
+    giScrollY = 0;
+    giScrollX = giScrollY;
+    PollSound();
+    if (KBTickCount() > glTimers[0]) {
+        ++m_updateMaxX;
+        if (m_updateMaxX >= 6)
+            m_updateMaxX = 0;
+        glTimers[0] = KBTickCount() + 120;
+        if (m_updateMaxX == 1 || m_updateMaxX == 3 || m_updateMaxX == 5) {
+            ++m_animationPhases[1];
+            m_animationPhases[1] %= 6;
+            ++m_animationPhases[3];
+            m_animationPhases[3] %= 6;
+        } else {
+            ++m_animationPhases[0];
+            m_animationPhases[0] %= 6;
+            ++m_animationPhases[2];
+            m_animationPhases[2] %= 6;
+        }
+    }
+    giLimitUpdMinX = -1;
+    gpMouseManager->EndScreenUpdate();
+    Process1WindowsMessage();
+}
 
 // donor PoL RVA 0x0005b2ae; preferred Buka symbol ?CompleteDraw@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -285,11 +378,63 @@ void advManager::CompleteDraw(int update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
+// Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
+// masks first, then each unseen neighbour, indexed into the cloud table.
+VA(0x0042a3d8, 0x40d)
+int advManager::GetCloudLookup(int x, int y) {
+    int cloudMask = 0;
+
+    if (x < 1)
+        cloudMask |= 0xc8;
+    else if (x >= 71)
+        cloudMask |= 0x32;
+    if (y < 1)
+        cloudMask |= 0x91;
+    else if (y >= 71)
+        cloudMask |= 0x64;
+    if (cloudMask == 0) {
+        if ((gpGame->m_mapExtra[x][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x01;
+        if ((gpGame->m_mapExtra[x + 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x02;
+        if ((gpGame->m_mapExtra[x][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x04;
+        if ((gpGame->m_mapExtra[x - 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x08;
+        if ((gpGame->m_mapExtra[x + 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x10;
+        if ((gpGame->m_mapExtra[x + 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x20;
+        if ((gpGame->m_mapExtra[x - 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x40;
+        if ((gpGame->m_mapExtra[x - 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x80;
+    } else {
+        if ((cloudMask & 0x01) == 0 && (gpGame->m_mapExtra[x][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x01;
+        if ((cloudMask & 0x02) == 0 && (gpGame->m_mapExtra[x + 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x02;
+        if ((cloudMask & 0x04) == 0 && (gpGame->m_mapExtra[x][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x04;
+        if ((cloudMask & 0x08) == 0 && (gpGame->m_mapExtra[x - 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x08;
+        if ((cloudMask & 0x10) == 0 && (gpGame->m_mapExtra[x + 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x10;
+        if ((cloudMask & 0x20) == 0 && (gpGame->m_mapExtra[x + 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x20;
+        if ((cloudMask & 0x40) == 0 && (gpGame->m_mapExtra[x - 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x40;
+        if ((cloudMask & 0x80) == 0 && (gpGame->m_mapExtra[x - 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x80;
+    }
+    return giCloudType[cloudMask];
+}
+
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
 VA(0x0042a7e5, 0xee8)
-void advManager::DrawCell(int, int, int, int, int, int) {}
+void advManager::DrawCell(int, int, int, int, int, int, int) {}
 
 // donor PoL RVA 0x0005e0da; preferred Buka symbol ?UpdateRadar@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -316,7 +461,93 @@ void advManager::QuickInfo(int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.539169;margin=0.099782;shape=0.447;size=0.791;calls=0.917;alternate=pol20:void advManager::UpdateHeroLocator(int, int, int)@0x00060465
 VA(0x0042c25e, 0x3c8)
-void advManager::UpdateHeroLocator(int, int, int) {}
+void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, signed char updateScreen) {
+    tag_message message;
+    signed char whichHero;
+    int i;
+    int wBase;
+    int activeHero;
+    hero* hPtr;
+    int moveFrame;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+    if (locatorSlot == -1) {
+        activeHero = gpCurPlayer->CurrentHero();
+        if (activeHero == -1)
+            return;
+        for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
+            if (gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + i] == activeHero)
+                locatorSlot = i;
+        }
+        if (locatorSlot == -1)
+            return;
+    }
+    wBase = locatorSlot * 7 + 100;
+    message.type = MESSAGE_WIDGET;
+    whichHero = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + locatorSlot];
+    message.payload.widget.command = WIDGET_COMMAND_SET_COLOR;
+    message.payload.widget.id = wBase + 6;
+    message.payload.widget.data.value =
+        (gpCurPlayer->m_currentHero == whichHero && gpCurPlayer->m_currentHero != -1 && !gbAllBlack)
+            ? 0xc5
+            : 0;
+    m_adventureWindow->BroadcastMessage(message);
+    if (whichHero == -1 || gbAllBlack) {
+        message.payload.widget.id = wBase + 5;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = locatorSlot;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 4;
+        for (i = 0; i <= 4; i++) {
+            message.payload.widget.id = i + wBase;
+            m_adventureWindow->BroadcastMessage(message);
+        }
+    } else {
+        hPtr = gpGame->GetHero(whichHero);
+        message.payload.widget.id = wBase + 5;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = 8;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 6;
+        for (i = 0; i <= 6; i++) {
+            message.payload.widget.id = i + wBase;
+            m_adventureWindow->BroadcastMessage(message);
+        }
+        moveFrame = hPtr->m_remainingMobility * 22 / 60;
+        if (moveFrame < 0)
+            moveFrame = 0;
+        if (moveFrame > 30)
+            moveFrame = 25;
+        else if (moveFrame > 26)
+            moveFrame = 24;
+        else if (moveFrame > 23)
+            moveFrame = 23;
+        message.payload.widget.id = wBase + 1;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = moveFrame;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = wBase + 2;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.data.value = whichHero;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = wBase + 3;
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = wBase + 4;
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        m_adventureWindow->BroadcastMessage(message);
+    }
+    if (drawWindow) {
+        m_adventureWindow->DrawWindow(0, wBase, wBase + 6);
+        if (updateScreen)
+            gpWindowManager->UpdateScreenRegion(481, locatorSlot * 32 + 177, 54, 30);
+    }
+}
 
 // donor PoL RVA 0x000607ad; preferred Buka symbol ?UpdateHeroLocators@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -347,7 +578,52 @@ void advManager::UpdateHeroLocators(signed char drawWindow, signed char updateSc
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.535916;margin=0.510257;shape=0.379;size=0.971;calls=0.800;alternate=pol20:void advManager::UpdateTownLocators(int, int)@0x000608af
 VA(0x0042c72e, 0x27f)
-void advManager::UpdateTownLocators(int, int) {}
+void advManager::UpdateTownLocators(signed char drawWindow, signed char updateScreen) {
+    tag_message message;
+    short i;
+    signed char whichTown;
+    double scrollStep;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+    message.type = MESSAGE_WIDGET;
+    for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
+        whichTown = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + i];
+        message.payload.widget.command = WIDGET_COMMAND_SET_COLOR;
+        message.payload.widget.id = i + 32;
+        message.payload.widget.data.value =
+            (gpCurPlayer->m_currentTown != -1 && gpCurPlayer->m_currentTown == whichTown && !gbAllBlack)
+                ? 0xc5
+                : 0;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = i + 16;
+        if (whichTown == -1 || gbAllBlack) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = i + 4;
+            m_adventureWindow->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+            m_adventureWindow->BroadcastMessage(message);
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+            m_adventureWindow->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = gpGame->GetTown(whichTown)->m_type + 12;
+            if (gpGame->GetTown(whichTown)->m_buildings & 0x40)
+                message.payload.widget.data.value += 4;
+            m_adventureWindow->BroadcastMessage(message);
+        }
+    }
+    if (gpCurPlayer->m_townCount < 5) {
+        m_scrollRightButton->m_y = 232;
+    } else {
+        scrollStep = 74.0 / (gpCurPlayer->m_townCount - 4);
+        m_scrollRightButton->m_y = static_cast<short>(gpCurPlayer->m_townLocatorPage * scrollStep + 195.0);
+    }
+    if (drawWindow)
+        m_adventureWindow->DrawWindow(updateScreen);
+}
 
 // donor PoL RVA 0x00060b97; preferred Buka symbol ?UpdBottomView@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -574,31 +850,294 @@ void advManager::DemobilizeCurrHero(void)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.489027;margin=0.082311;shape=0.312;size=0.827;calls=0.923;alternate=pol20:void advManager::SetTownContext(int)@0x00064101
 VA(0x004301aa, 0x255)
-void advManager::SetTownContext(int) {}
+void advManager::SetTownContext(signed char townId) {
+    short k;
+    signed char townNo;
+    signed char wasVisible;
+    town* townPointer;
+
+    DeactivateCurrHero();
+    wasVisible = gpMouseManager->IsVis();
+    gpMouseManager->ReallyHidePointer();
+    gpCurPlayer->m_currentTown = townId;
+    townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
+    m_mapOriginX = townPointer->m_x - 7;
+    m_mapOriginY = townPointer->m_y - 7;
+    townNo = 0;
+    for (k = 0; k < gpCurPlayer->m_townCount; k++) {
+        if (gpCurPlayer->m_townIds[k] == townId)
+            townNo = k;
+    }
+    if (gpCurPlayer->m_townLocatorPage > townNo)
+        gpCurPlayer->m_townLocatorPage = townNo;
+    else if (gpCurPlayer->m_townLocatorPage + 3 < townNo)
+        gpCurPlayer->m_townLocatorPage = townNo - 3;
+    UpdateHeroLocators(1, 1);
+    UpdateTownLocators(1, 1);
+    HideRoute(0, 0, 1);
+    UpdBottomView(1, 1, 1);
+    UpdateRadar(1, 0);
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    UpdateScreen(0, 0);
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    townNo = giGroundToTerrain[GetCell(townPointer->m_x, townPointer->m_y)->m_tileIndex];
+    if (m_currentTerrain != townNo) {
+        m_currentTerrain = townNo;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    if (wasVisible)
+        gpMouseManager->ReallyShowPointer();
+    gpInputManager->m_field_0x34a = 1;
+    m_lastHoverCell = 0;
+}
 
 // donor PoL RVA 0x00064318; preferred Buka symbol ?SetHeroContext@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.499995;margin=0.151356;shape=0.325;size=0.844;calls=0.947;alternate=pol20:void advManager::SetHeroContext(int, int)@0x00064318
 VA(0x004303ff, 0x3e6)
-void advManager::SetHeroContext(signed char, int) {}
+void advManager::SetHeroContext(signed char heroId, signed char update) {
+    signed char wasVisible;
+    signed char heroSlot;
+    short n;
+    mapCell* cellPtr;
+    hero* currentHero;
+
+    if (heroId == -1)
+        return;
+    wasVisible = gpMouseManager->IsVis();
+    gpMouseManager->ReallyHidePointer();
+    DeactivateCurrTown();
+    HideRoute(0, 0, 1);
+    DeactivateCurrHero();
+    m_heroContextLocked = 1;
+    gpCurPlayer->m_currentHero = heroId;
+    currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    m_mapOriginX = currentHero->m_x - 7;
+    m_mapOriginY = currentHero->m_y - 7;
+    m_cursorMapX = m_cursorMapY = 7;
+    m_previousCursorMapX = m_previousCursorMapY = -1;
+    if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
+        m_cursorType = 4;
+    else
+        m_cursorType = currentHero->m_unknown1c;
+    m_cursorDirection = currentHero->m_direction;
+    m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+    cellPtr = GetCell(currentHero->m_x, currentHero->m_y);
+    cellPtr->m_flags |= 0x40;
+    gpGame->RestoreCell(
+        currentHero->m_x,
+        currentHero->m_y,
+        currentHero->m_locationType,
+        currentHero->m_occupiedTown,
+        0,
+        4
+    );
+    heroSlot = 0;
+    for (n = 0; n < gpCurPlayer->m_heroCount; n++) {
+        if (gpCurPlayer->m_heroIds[n] == heroId)
+            heroSlot = n;
+    }
+    if (gpCurPlayer->m_heroLocatorPage > heroSlot)
+        gpCurPlayer->m_heroLocatorPage = heroSlot;
+    else if (gpCurPlayer->m_heroLocatorPage + 3 < heroSlot)
+        gpCurPlayer->m_heroLocatorPage = heroSlot - 3;
+    UpdateHeroLocators(1, 1);
+    UpdateTownLocators(1, 1);
+    if (!update && (m_active == 1 || gbThisNetHumanPlayer[giCurPlayer])) {
+        Reseed(0, 0);
+        SeedTo(currentHero->m_destinationX, currentHero->m_destinationY);
+        ShowRoute(0, 0, !update);
+    }
+    UpdBottomView(1, 1, 1);
+    m_cursorActive = 1;
+    UpdateRadar(1, 0);
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    UpdateScreen(0, 0);
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    heroSlot = giGroundToTerrain[cellPtr->m_tileIndex];
+    if (m_currentTerrain != heroSlot) {
+        m_currentTerrain = heroSlot;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    if (!gbHeroMoving) {
+        if (wasVisible)
+            gpMouseManager->ReallyShowPointer();
+        gpInputManager->m_field_0x34a = 1;
+        m_lastHoverCell = 0;
+    }
+}
 
 // donor PoL RVA 0x000646aa; preferred Buka symbol ?DoHeroKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.410865;margin=0.380092;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoHeroKnob(void)@0x000646aa
 VA(0x004307e5, 0x290)
-void advManager::DoHeroKnob(void) {}
+void advManager::DoHeroKnob(void) {
+    double scale;
+    short pg;
+    tag_message message;
+    short numHeroes;
+    signed char prevPage;
+    short x;
+    short offset;
+    short my;
+
+    gpMouseManager->SetCursorShape(4);
+    prevPage = gpCurPlayer->m_heroLocatorPage;
+    numHeroes = gpCurPlayer->m_heroCount;
+    scale = 73.0 / (numHeroes - 4);
+    gpMouseManager->MouseCoords(x, my);
+    offset = my - m_scrollLeftButton->m_y;
+    gpInputManager->Flush();
+    message = gpInputManager->GetEvent();
+    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+        if (message.type == MESSAGE_MOUSE_MOVE) {
+            if (message.payload.mouse.y < offset + 195)
+                message.payload.mouse.y = offset + 195;
+            if (message.payload.mouse.y > offset + 268)
+                message.payload.mouse.y = offset + 268;
+            gpMouseManager->Main(message);
+            m_scrollLeftButton->m_y = message.payload.mouse.y - offset;
+            m_adventureWindow->DrawWindow();
+            if (numHeroes > 4) {
+                pg = static_cast<short>((m_scrollLeftButton->m_y - 195) / scale);
+                if (prevPage != pg) {
+                    gpCurPlayer->m_heroLocatorPage = pg;
+                    if (numHeroes - 3 < pg)
+                        pg = numHeroes - 3;
+                    UpdateHeroLocators(0, 1);
+                    m_scrollLeftButton->m_y = message.payload.mouse.y - offset;
+                    m_adventureWindow->DrawWindow();
+                    prevPage = pg;
+                }
+            }
+        }
+        Process1WindowsMessage();
+        message = gpInputManager->GetEvent();
+    }
+    gpMouseManager->SetCursorShape(6);
+    m_scrollLeftButton->m_flags &= ~1;
+    UpdateHeroLocators(1, 1);
+}
 
 // donor PoL RVA 0x000648d9; preferred Buka symbol ?DoTownKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.410865;margin=0.000000;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoTownKnob(void)@0x000648d9
 VA(0x00430a75, 0x290)
-void advManager::DoTownKnob(void) {}
+void advManager::DoTownKnob(void) {
+    double scale;
+    short pg;
+    tag_message message;
+    short numHeroes;
+    signed char prevPage;
+    short x;
+    short offset;
+    short my;
+
+    gpMouseManager->SetCursorShape(4);
+    prevPage = gpCurPlayer->m_townLocatorPage;
+    numHeroes = gpCurPlayer->m_townCount;
+    scale = 73.0 / (numHeroes - 4);
+    gpMouseManager->MouseCoords(x, my);
+    offset = my - m_scrollRightButton->m_y;
+    gpInputManager->Flush();
+    message = gpInputManager->GetEvent();
+    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+        if (message.type == MESSAGE_MOUSE_MOVE) {
+            if (message.payload.mouse.y < offset + 195)
+                message.payload.mouse.y = offset + 195;
+            if (message.payload.mouse.y > offset + 268)
+                message.payload.mouse.y = offset + 268;
+            gpMouseManager->Main(message);
+            m_scrollRightButton->m_y = message.payload.mouse.y - offset;
+            m_adventureWindow->DrawWindow();
+            if (numHeroes > 4) {
+                pg = static_cast<short>((m_scrollRightButton->m_y - 195) / scale);
+                if (prevPage != pg) {
+                    gpCurPlayer->m_townLocatorPage = pg;
+                    if (numHeroes - 3 < pg)
+                        pg = numHeroes - 3;
+                    UpdateTownLocators(0, 1);
+                    m_scrollRightButton->m_y = message.payload.mouse.y - offset;
+                    m_adventureWindow->DrawWindow();
+                    prevPage = pg;
+                }
+            }
+        }
+        Process1WindowsMessage();
+        message = gpInputManager->GetEvent();
+    }
+    gpMouseManager->SetCursorShape(6);
+    m_scrollRightButton->m_flags &= ~1;
+    UpdateTownLocators(1, 1);
+}
 
 // donor PoL RVA 0x0006a1dd; preferred Buka symbol ?ViewPuzzle@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634399;margin=0.712778;shape=0.353;size=0.798;calls=0.917;strings=advmice.mse|puzzle.icn|viewpuzl.bin;alternate=pol20:void advManager::ViewPuzzle(void)@0x0006a1dd
 VA(0x00430d05, 0x3da)
 void advManager::ViewPuzzle(void) {}
+
+// HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
+// visible object/overlay frames and marking the target cell.
+VA(0x004310df, 0x236)
+void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
+    unsigned char tileset;
+    mapCell* cell;
+    int x;
+    int y;
+    short screenX;
+    short screenY;
+
+    for (y = 0; y < 15; y++) {
+        for (x = 0; x < 15; x++) {
+            DrawCell(x + left, top + y, x, y, 1, 1, 0);
+            screenX = x * 32;
+            screenY = y * 32;
+            cell = GetCell(left + x, top + y);
+            if (!(cell->m_flags & 0x80) && cell->m_objectIndex != 0xff) {
+                tileset = cell->m_objectTileset & 0xf;
+                switch (tileset) {
+                case 4:
+                case 8:
+                case 9:
+                    IconToBitmap(
+                        m_objectIcons[tileset],
+                        gpWindowManager->m_screen,
+                        screenX,
+                        screenY,
+                        cell->m_objectIndex,
+                        0
+                    );
+                    break;
+                default:
+                    break;
+                }
+            }
+            if (cell->m_overlayIndex != 0xff) {
+                tileset = cell->m_overlayTileset & 0xf;
+                switch (tileset) {
+                case 4:
+                case 8:
+                case 9:
+                    IconToBitmap(
+                        m_objectIcons[tileset],
+                        gpWindowManager->m_screen,
+                        screenX,
+                        screenY,
+                        cell->m_overlayIndex,
+                        0
+                    );
+                    break;
+                default:
+                    break;
+                }
+            }
+            if (left + x == markX && top + y == markY)
+                IconToBitmap(m_objectIcons[17], gpWindowManager->m_screen, screenX, screenY + 2, 13, 0);
+        }
+    }
+    DrawAdventureBorder();
+}
 
 // donor PoL RVA 0x00064b08; preferred Buka symbol ?CastSpell@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -671,9 +1210,298 @@ void advManager::GrabScreen(void) {
     gpMouseManager->ReallyShowPointer();
 }
 
+// clang-format off
+H1_ENUM_BEGIN(ControlPanelDialogConstant)
+    CONTROL_NEW_GAME = 1,
+    CONTROL_LOAD_GAME = 2,
+    CONTROL_SAVE_GAME = 3,
+    CONTROL_QUIT = 4,
+    CONTROL_MUSIC_VOLUME = 5,
+    CONTROL_SOUND_VOLUME = 6,
+    CONTROL_WALK_SPEED = 7,
+    CONTROL_MUSIC_SOURCE = 11,
+    CONTROL_SHOW_ROUTE = 12,
+    CONTROL_SHOW_ENEMY_MOVES = 13,
+    CONTROL_SCENARIO_INFO = 17
+H1_ENUM_END(ControlPanelDialogConstant)
+// clang-format on
+
+// HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
+// that also applies the walk-speed sample set and saves changed preferences.
+VA(0x0043266f, 0x321)
+short advManager::ControlPanel(void) {
+    tag_message message;
+    int mobilized;
+    signed char oldSpeed;
+    int gameCommand;
+    int n;
+
+    TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    gameCommand = -1;
+    oldSpeed = gConfig.walkSpeed;
+    bFreshSave = 0;
+    mobilized = m_heroContextLocked;
+    bPrefsChanged = 0;
+    DemobilizeCurrHero();
+    cPanel = new heroWindow(160, 10, "cpanel.bin");
+    if (cPanel == 0)
+        MemError();
+    SetWinText(cPanel, 3);
+    if (gbRemoteOn) {
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.id = CONTROL_NEW_GAME;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        cPanel->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        cPanel->BroadcastMessage(message);
+        message.payload.widget.id = CONTROL_LOAD_GAME;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        cPanel->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        cPanel->BroadcastMessage(message);
+    }
+    UpdateCPanel(1);
+    gpWindowManager->DoDialog(cPanel, CPanelHandler, 0);
+    delete cPanel;
+    switch (gpWindowManager->m_dialogResult) {
+    case CONTROL_NEW_GAME:
+    case CONTROL_LOAD_GAME:
+    case CONTROL_QUIT:
+        gameCommand = gpWindowManager->m_dialogResult;
+        break;
+    case CONTROL_SCENARIO_INFO:
+        if (gpGame->m_campaignType > 0)
+            gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 1, 0);
+        else
+            gpGame->ShowScenInfo();
+        break;
+    case CONTROL_SAVE_GAME:
+        SaveGame();
+        break;
+    }
+    if (oldSpeed != gConfig.walkSpeed) {
+        for (n = 0; n < ADVMGR_CURSOR_SAMPLE_COUNT; n++)
+            gpResourceManager->Dispose(m_cursorSamples[n]);
+        GetCursorSampleSet(gConfig.walkSpeed);
+    }
+    if (bPrefsChanged)
+        WritePrefs();
+    if (mobilized)
+        MobilizeCurrHero(0);
+    if (gameCommand != -1) {
+        gGameCommand = gameCommand;
+        return 1;
+    }
+    return 0;
+}
+
+extern char *onOffText[];
+extern char *walkSpeedText[];
+extern char *musicQualityText[];
+
+// Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
+VA(0x00432990, 0x227)
+void UpdateCPanel(signed char initialDraw) {
+    tag_message message;
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = CONTROL_MUSIC_VOLUME;
+    message.payload.widget.data.value = gConfig.musicVolume ? 11 : 10;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_SOUND_VOLUME;
+    message.payload.widget.data.value = gConfig.soundVolume ? 13 : 12;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_WALK_SPEED;
+    message.payload.widget.data.value = gConfig.walkSpeed + 14;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_MUSIC_SOURCE;
+    message.payload.widget.data.value = gConfig.musicSource + 27;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_SHOW_ROUTE;
+    message.payload.widget.data.value = gConfig.showRoute + 21;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_SHOW_ENEMY_MOVES;
+    message.payload.widget.data.value = gbRemoteOn ? 23 : 1 - gConfig.blackoutComputer + 23;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 8;
+    message.payload.widget.data.text = onOffText[gConfig.musicVolume];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 9;
+    message.payload.widget.data.text = onOffText[gConfig.soundVolume];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 10;
+    message.payload.widget.data.text = walkSpeedText[gConfig.walkSpeed];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 14;
+    message.payload.widget.data.text = musicQualityText[gConfig.musicSource];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 15;
+    message.payload.widget.data.text = onOffText[gConfig.showRoute];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 16;
+    message.payload.widget.data.text = onOffText[1 - gConfig.blackoutComputer];
+    cPanel->BroadcastMessage(message);
+    if (!initialDraw)
+        cPanel->MoveWindow(0, 0);
+}
+
 VA(0x00432bb7, 0x232)
 int SaveGame(void) {
     return 0;
+}
+
+extern char *gCPanelHelp[];
+
+// Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
+VA(0x00432de9, 0x54b)
+short CPanelHandler(struct tag_message &message) {
+    signed char changed = 0;
+    char question[120];
+    signed char handled = 0;
+    if (message.type == MESSAGE_WIDGET) {
+        if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (IS_WIDGET_SELECTION_NOTIFICATION(message.payload.widget.command)) {
+                int helpIndex = -1;
+                switch (message.payload.widget.id) {
+                    case CONTROL_NEW_GAME:
+                        helpIndex = 0;
+                        break;
+                    case CONTROL_LOAD_GAME:
+                        helpIndex = 1;
+                        break;
+                    case CONTROL_QUIT:
+                        helpIndex = 2;
+                        break;
+                    case PANEL_CLOSE_WIDGET:
+                        helpIndex = 3;
+                        break;
+                    case CONTROL_SAVE_GAME:
+                        helpIndex = 4;
+                        break;
+                    case CONTROL_MUSIC_VOLUME:
+                        helpIndex = 5;
+                        break;
+                    case CONTROL_SOUND_VOLUME:
+                        helpIndex = 6;
+                        break;
+                    case CONTROL_WALK_SPEED:
+                        helpIndex = 7;
+                        break;
+                    case CONTROL_MUSIC_SOURCE:
+                        helpIndex = 8;
+                        break;
+                    case CONTROL_SHOW_ROUTE:
+                        helpIndex = 9;
+                        break;
+                    case CONTROL_SHOW_ENEMY_MOVES:
+                        helpIndex = 10;
+                        break;
+                    case CONTROL_SCENARIO_INFO:
+                        helpIndex = 11;
+                        break;
+                }
+                if (helpIndex >= 0)
+                    NormalDialog(gCPanelHelp[helpIndex], 4, 0xb1, -1, -1, 0, -1, 0, -1);
+            }
+        } else {
+            switch (message.payload.widget.command) {
+                case WIDGET_NOTIFY_DESELECT:
+                    switch (message.payload.widget.id) {
+                        case CONTROL_NEW_GAME:
+                            strcpy(question, "Are you sure you want to restart?  (Your current game will be lost)");
+                            goto confirm_reset;
+                        case CONTROL_LOAD_GAME:
+                            strcpy(question, "Are you sure you want to load a new game?  (Your current game will be lost)");
+                            goto confirm_reset;
+                        case CONTROL_QUIT:
+                            strcpy(question, "Are you sure you want to quit?");
+                        confirm_reset:
+                            handled = 1;
+                            if (!bFreshSave) {
+                                NormalDialog(question, 2, 0xb1, 0x50, -1, 0, -1, 0, -1);
+                                if (gpWindowManager->m_dialogResult == 0x7806)
+                                    handled = 0;
+                            }
+                            break;
+                        case CONTROL_SAVE_GAME:
+                            handled = 1;
+                            break;
+                        case CONTROL_SCENARIO_INFO:
+                        case PANEL_CLOSE_WIDGET:
+                            handled = 1;
+                            break;
+                    }
+                    break;
+                case WIDGET_NOTIFY_SELECT:
+                    switch (message.payload.widget.id) {
+                        case CONTROL_MUSIC_VOLUME:
+                            gConfig.musicVolume = (gConfig.musicVolume + 1) % 11;
+                            gpSoundManager->AdjustMusicVolumes();
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_SOUND_VOLUME:
+                            gConfig.soundVolume = (gConfig.soundVolume + 1) % 11;
+                            gpSoundManager->AdjustSoundVolumes();
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_WALK_SPEED:
+                            ++gConfig.walkSpeed;
+                            gConfig.walkSpeed %= 5;
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_MUSIC_SOURCE:
+                            if (gConfig.musicSource == 2) {
+                                gConfig.musicSource = 0;
+                            } else {
+                                if (gpSoundManager->m_cdStarted == 0) {
+                                    NormalDialog(
+                                        "Unable to set up CD stereo music.  Your CD player might be in use by another "
+                                        "program, or your sound driver might not support CD stereo.",
+                                        1, -1, -1, -1, 0, -1, 0, -1
+                                    );
+                                    break;
+                                }
+                                gConfig.musicSource = 2;
+                            }
+                            gpSoundManager->SetMusicQuality(gConfig.musicSource);
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_SHOW_ROUTE:
+                            gConfig.showRoute = 1 - gConfig.showRoute;
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_SHOW_ENEMY_MOVES:
+                            if (!gbRemoteOn) {
+                                gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
+                                changed = 1;
+                                bPrefsChanged = 1;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+    if (changed)
+        UpdateCPanel(0);
+    if (handled) {
+        gpWindowManager->m_dialogResult = message.payload.widget.id;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 // donor PoL RVA 0x000650eb; preferred Buka symbol ?CheckCastSpell@advManager@@QAEXXZ
@@ -811,21 +1639,100 @@ short APanelHandler(struct tag_message &message)
 }
 
 VA(0x004337c5, 0x34b)
-int DimensionDoorHandler(struct tag_message&) {
-    return 0;
+short DimensionDoorHandler(struct tag_message& message) {
+    signed char result;
+    short mouseX;
+    short mouseY;
+    mapCell* cell;
+
+    if (KBTickCount() > glTimers[0]) {
+        gpAdvManager->CompleteDraw(gpAdvManager->m_mapOriginX, gpAdvManager->m_mapOriginY, 0);
+        gpAdvManager->UpdateScreen(0, 0);
+    }
+    result = 0;
+    switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.payload.widget.command) {
+                case WIDGET_NOTIFY_SELECT:
+                    switch (message.payload.widget.id) {
+                        case 10:
+                        case 11:
+                            if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+                            } else if (gpWindowManager->m_dialogResult == 1) {
+                                result = 1;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case WIDGET_COMMAND_HOVER:
+                    switch (message.payload.widget.id) {
+                        case 11:
+                            gpWindowManager->m_dialogResult = 0;
+                            gpMouseManager->SetPointer(0);
+                            break;
+                        case 10:
+                            gpMouseManager->MouseCoords(mouseX, mouseY);
+                            mouseX /= 32;
+                            mouseY /= 32;
+                            if (mouseX < 0)
+                                mouseX = 0;
+                            if (mouseY < 0)
+                                mouseY = 0;
+                            if (mouseX > 14)
+                                mouseX = 14;
+                            if (mouseY > 14)
+                                mouseY = 14;
+                            if (gpAdvManager->m_lastHoverCell != mouseX || gpAdvManager->m_hoverCellY != mouseY) {
+                                gpAdvManager->m_lastHoverCell = mouseX;
+                                gpAdvManager->m_hoverCellY = mouseY;
+                                cell = gpAdvManager->GetCell(
+                                    gpAdvManager->m_mapOriginX + mouseX,
+                                    gpAdvManager->m_mapOriginY + mouseY
+                                );
+                                if ((cell->m_triggerType & 0x80) || (cell->m_unknown07 & 0x80)) {
+                                    gpWindowManager->m_dialogResult = 0;
+                                    gpMouseManager->SetPointer(0);
+                                } else {
+                                    gpWindowManager->m_dialogResult = 1;
+                                    gpMouseManager->SetPointer(4);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case WIDGET_NOTIFY_DESELECT:
+                    switch (message.payload.widget.id) {
+                        case PANEL_CLOSE_WIDGET:
+                            gpWindowManager->m_dialogResult = 0;
+                            result = 1;
+                            break;
+                    }
+                    break;
+            }
+            break;
+    }
+    if (result) {
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 // donor PoL RVA 0x000654ad; preferred Buka symbol ?ComboDraw@advManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
 VA(0x00433b10, 0xaf6)
-int advManager::ComboDraw(short, short, int) {
+signed char advManager::ComboDraw(short, short, int) {
     return 0;
 }
 
 // Buka 2.1 ComboDraw(update) forwards the current map origin.
 VA(0x00434606, 0x3a)
-int advManager::ComboDraw(int update) {
+signed char advManager::ComboDraw(int update) {
     return ComboDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
@@ -833,7 +1740,58 @@ int advManager::ComboDraw(int update) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.577153;margin=0.265756;shape=0.425;size=0.947;calls=1.000;alternate=pol20:void advManager::SetEnvironmentOrigin(int, int, int)@0x0006668e
 VA(0x00434640, 0x2dd)
-void advManager::SetEnvironmentOrigin(int, int, int) {}
+void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSounds) {
+    int soundRadius;
+    int edgeOffset;
+    int maxCells = ADVMGR_ACTIVE_SOUND_COUNT / 2;
+    int layer;
+
+    if (gpSoundManager->m_musicReady == 0)
+        return;
+    for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
+        if (m_activeSounds[edgeOffset].soundId != -1) {
+            if (stopSounds) {
+                gpSoundManager->StopSample(
+                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample
+                );
+                m_activeSounds[edgeOffset].soundId = -1;
+                m_activeSounds[edgeOffset].volume = 127;
+            } else {
+                m_activeSounds[edgeOffset].volume = 127;
+            }
+        }
+    }
+    if (gConfig.soundVolume != 0) {
+        m_activeSoundMask = 0;
+        for (layer = 1; layer <= 2; ++layer) {
+            InsertSound(originX, originY, 0, layer);
+            for (soundRadius = 0; soundRadius < 4; ++soundRadius) {
+                for (edgeOffset = 0; edgeOffset < soundRadius * 2; ++edgeOffset) {
+                    InsertSound(originX - soundRadius + edgeOffset, originY - soundRadius, soundRadius, layer);
+                    InsertSound(originX + soundRadius, originY - soundRadius + edgeOffset, soundRadius, layer);
+                    InsertSound(originX + soundRadius - edgeOffset, originY + soundRadius, soundRadius, layer);
+                    InsertSound(originX - soundRadius, originY + soundRadius - edgeOffset, soundRadius, layer);
+                }
+            }
+        }
+        for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
+            if (m_activeSounds[edgeOffset].soundId != -1 && m_activeSounds[edgeOffset].volume > 5) {
+                gpSoundManager->StopSample(
+                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample
+                );
+                m_activeSounds[edgeOffset].soundId = -1;
+            }
+            if (m_activeSounds[edgeOffset].soundId != -1
+                && (m_activeSoundMask & (1 << m_activeSounds[edgeOffset].soundId)) != 0) {
+                gpSoundManager->ModifySample(
+                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample,
+                    100,
+                    glEnvironmentVolume[m_activeSounds[edgeOffset].volume]
+                );
+            }
+        }
+    }
+}
 
 // donor PoL RVA 0x000669c6; preferred Buka symbol ?CheckLoadSample@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -851,25 +1809,207 @@ void advManager::CheckLoadSample(int index) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.476286;margin=0.526376;shape=0.266;size=0.902;calls=0.750;alternate=pol20:void advManager::InsertSound(int, int, int, int)@0x00066ef0
 VA(0x00434986, 0x251)
-void advManager::InsertSound(int, int, int, int) {}
+void advManager::InsertSound(short x, short y, short distance, signed char soundLayer) {
+    int slot;
+    int distanceLimit;
+    int i;
+    int soundId;
+
+    if (x < 0 || y < 0 || x >= 72 || y >= 72)
+        return;
+    soundId = gpGame->m_mapSounds[x][y];
+    if (soundId == -1)
+        return;
+    for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; ++i) {
+        if (m_activeSounds[i].soundId == soundId) {
+            if (m_activeSounds[i].volume > distance) {
+                m_activeSounds[i].volume = distance;
+                m_activeSoundMask |= 1 << m_activeSounds[i].soundId;
+            }
+            return;
+        }
+    }
+    if (soundLayer == 1)
+        return;
+    distanceLimit = distance;
+    slot = -1;
+    for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; ++i) {
+        if (m_activeSounds[i].volume > distanceLimit) {
+            distanceLimit = m_activeSounds[i].volume;
+            slot = i;
+        }
+    }
+    if (slot != -1) {
+        if (m_activeSounds[slot].soundId != -1)
+            gpSoundManager->StopSample(m_loopingSamples[m_activeSounds[slot].soundId]->m_playbackData.activeSample);
+        m_activeSounds[slot].soundId = soundId;
+        m_activeSounds[slot].volume = distance;
+        CheckLoadSample(soundId);
+        m_loopingSamples[soundId]->m_playbackData.volume = glEnvironmentVolume[distance];
+        m_loopingSamples[soundId]->m_playbackData.loopCount = 0;
+        m_loopingSamples[soundId]->m_playbackData.channelType = 3;
+        gpSoundManager->MemorySample(m_loopingSamples[soundId]);
+        m_activeSoundMask ^= 1 << m_activeSounds[slot].soundId;
+    }
+}
 
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
 VA(0x00434bd7, 0x340)
-void advManager::TeleportTo(class hero*, int, int, int, int) {}
+void advManager::TeleportTo(int x, int y, int) {
+    int savedShow;
+    hero* mapHero;
+    signed char newTerrain;
+    mapCell* oldCell;
+    int tmp;
+    mapCell* destinationCell;
+    int fizzle;
+    town* occupiedTown;
+
+    savedShow = bShowIt;
+    mapHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    destinationCell = GetCell(x, y);
+    oldCell = GetCell(m_mapOriginX + 7, m_mapOriginY + 7);
+    if (mapHero->m_locationType == 0xa8) {
+        occupiedTown = gpGame->GetTown(mapHero->m_occupiedTown);
+        occupiedTown->m_occupyingHeroId = -1;
+    }
+    if (oldCell->m_flags & 0x40)
+        oldCell->m_flags -= 0x40;
+    CompleteDraw(0);
+    if (!gbHumanPlayer[giCurPlayer]) {
+        if (!gConfig.blackoutComputer && !gbRemoteOn
+            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurPlayerBit))
+            bShowIt = 1;
+        else
+            bShowIt = 0;
+    }
+    if (savedShow)
+        HideRoute(1, 1, 1);
+    if (bShowIt) {
+        m_mapOriginX = x - 7;
+        m_mapOriginY = y - 7;
+        DelayMilli(90);
+    }
+    mapHero->m_x = x;
+    mapHero->m_y = y;
+    gpGame->SetVisibility(
+        m_mapOriginX + 7,
+        m_mapOriginY + 7,
+        giCurPlayer,
+        gHeroScoutRadius[mapHero->m_unknown1c]
+    );
+    if (bShowIt) {
+        destinationCell->m_flags |= 0x40;
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->SaveFizzleSource(16, 16, 448, 448);
+        CompleteDraw(0);
+        PollSound();
+        fizzle = 128;
+        if (!gbHumanPlayer[giCurPlayer])
+            fizzle -= 64;
+        gpWindowManager->FizzleForward(16, 16, 448, 448, -1);
+        PollSound();
+        gpMouseManager->ReallyShowPointer();
+    }
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    newTerrain = giGroundToTerrain[destinationCell->m_tileIndex];
+    if (m_currentTerrain != newTerrain) {
+        m_currentTerrain = newTerrain;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    Reseed(0, 0);
+    UpdateRadar(1, 0);
+    CompleteDraw(0);
+    ForceNewHover();
+}
 
 // donor PoL RVA 0x00067539; preferred Buka symbol ?DimensionDoor@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.671113;margin=0.501597;shape=0.372;size=0.883;calls=0.867;strings=dimdoor.bin;alternate=pol20:void advManager::DimensionDoor(void)@0x00067539
 VA(0x00434f17, 0x246)
-void advManager::DimensionDoor(void) {}
+void advManager::DimensionDoor(void) {
+    hero* heroPointer;
+    heroWindow* win;
+    short x;
+    short y;
+    mapCell* targetCell;
+
+    win = new heroWindow(0, 0, "dimdoor.bin");
+    if (win == 0)
+        MemError();
+    SetWinText(win, 4);
+    gpWindowManager->DoDialog(win, DimensionDoorHandler, 0);
+    delete win;
+    heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (gpWindowManager->m_dialogResult == 1) {
+        x = m_mapOriginX + m_lastHoverCell;
+        y = m_mapOriginY + m_hoverCellY;
+        targetCell = GetCell(x, y);
+        if (((heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex >= 20)
+            || (!(heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex < 20)) {
+            NormalDialog("Dimension Door failed!!!", 1, 0x61, 0x91, -1, 0, -1, 0, -1);
+            UpdateRadar(1, 0);
+        } else {
+            gpSoundManager->SwitchAmbientMusic(16);
+            TeleportTo(x, y, 0);
+            gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+        }
+        gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(SPELL_DIMENSION_DOOR);
+    } else {
+        UpdateRadar(1, 0);
+    }
+}
 
 // donor PoL RVA 0x0006785d; preferred Buka symbol ?TownGate@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.385467;margin=0.208066;shape=0.290;size=0.657;calls=0.526;alternate=pol20:void advManager::TownGate(int)@0x0006785d
 VA(0x0043515d, 0x2a6)
-void advManager::TownGate(void) {}
+void advManager::TownGate(void) {
+    int k;
+    int bestDist;
+    int bestTown;
+    hero* heroPointer;
+    int distance;
+
+    bestDist = 1000;
+    bestTown = -1;
+    heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) {
+        NormalDialog(
+            "Town Gate Failed!!!  You must be on land for this spell to work.",
+            1, -1, -1, -1, 0, -1, 0, -1
+        );
+        return;
+    }
+    for (k = 0; k < gpCurPlayer->m_townCount; k++) {
+        distance = abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[k]].m_x - heroPointer->m_x)
+                   + abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[k]].m_y - heroPointer->m_y);
+        if (distance < bestDist) {
+            bestDist = distance;
+            bestTown = k;
+        }
+    }
+    if (bestTown == -1)
+        NormalDialog("No available town.  Town Gate Failed!!!", 1, -1, -1, -1, 0, -1, 0, -1);
+    if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId != -1) {
+        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", 1, 0x61, -1, -1, 0, -1, 0, -1);
+        return;
+    }
+    gpSoundManager->SwitchAmbientMusic(16);
+    TeleportTo(
+        gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_x,
+        gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_y,
+        0
+    );
+    heroPointer->UseSpell(SPELL_TOWN_GATE);
+    gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId = heroPointer->m_id;
+    gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
+    heroPointer->m_locationType = 0xa8;
+    heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
+    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+}
 
 // donor PoL RVA 0x00067c9b; preferred Buka symbol ?SummonBoat@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -881,7 +2021,68 @@ void advManager::SummonBoat(void) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.438878;margin=0.464254;shape=0.279;size=0.721;calls=1.000;alternate=pol20:void advManager::ShowRoute(int, int, int)@0x00068247
 VA(0x0043591f, 0x31b)
-void advManager::ShowRoute(int, int, int) {}
+void advManager::ShowRoute(int redraw, int, int updateButton) {
+    hero* pHero;
+    int canReach;
+    int fromDirection;
+    int x;
+    int y;
+    int dir;
+    int j;
+    int remMob;
+    int terr;
+    short buttonFrame;
+
+    canReach = 0;
+    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
+        return;
+    if (gpCurPlayer->m_currentHero == -1) {
+        HideRoute(redraw, 0, 1);
+        return;
+    }
+    pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (pHero->m_destinationX == -1) {
+        HideRoute(redraw, 1, 1);
+        return;
+    }
+    gpSearchArray->BuildPath(pHero->m_x, pHero->m_y, pHero->m_destinationX, pHero->m_destinationY, 999);
+    if (gpSearchArray->m_pathLength > 0) {
+        memset(m_visibilityMap, 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
+        m_routeShown = 1;
+        remMob = pHero->m_remainingMobility;
+        x = pHero->m_x;
+        y = pHero->m_y;
+        for (j = gpSearchArray->m_pathLength - 1; j >= 0; --j) {
+            dir = gpSearchArray->m_directions[j];
+            terr = giGroundToTerrain[GetCell(x, y)->m_tileIndex];
+            remMob -= CalcTerrainCost(terr, dir & 1, remMob, pHero->m_unknown1c);
+            x += normalDirTable[dir].x;
+            y += normalDirTable[dir].y;
+            if (j == 0) {
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = 14;
+            } else {
+                fromDirection = gpSearchArray->m_directions[j - 1];
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = gRouteFrame[fromDirection][dir];
+            }
+            if (remMob >= 0) {
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] + 14;
+                canReach = 1;
+            }
+        }
+        if (updateButton) {
+            buttonFrame = canReach ? 6 : 5;
+            gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, buttonFrame, 2, 0x4008);
+        }
+    } else {
+        HideRoute(redraw, 1, 1);
+    }
+    if (redraw) {
+        CompleteDraw(0);
+        gpMouseManager->ReallyHidePointer();
+        UpdateScreen(0, 0);
+        gpMouseManager->ReallyShowPointer();
+    }
+}
 
 // donor PoL RVA 0x00068720; preferred Buka symbol ?HideRoute@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -1121,7 +2322,44 @@ int advManager::MouseInScrollZone(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.512925;margin=0.905583;shape=0.330;size=0.958;calls=0.778;alternate=pol20:void advManager::SetInitialMapOrigin(void)@0x00068ea8
 VA(0x0043641a, 0x283)
-void advManager::SetInitialMapOrigin(void) {}
+void advManager::SetInitialMapOrigin(void) {
+    short x;
+    short y;
+    game* gameState;
+    hero* initialHero;
+    town* townPointer;
+    town* ownTown;
+
+    gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS, 2, 0x4008);
+    m_lastHoverCell = m_hoverCellY = 0;
+    m_cursorActive = 0;
+    gbHeroMoving = 0;
+    if (gpCurPlayer->CurrentTown() != -1) {
+        townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
+        m_mapOriginX = townPointer->m_x - 7;
+        m_mapOriginY = townPointer->m_y - 7;
+    } else if (gpCurPlayer->CurrentHero() != -1) {
+        MobilizeCurrHero(0);
+    } else if (gpCurPlayer->m_heroCount > 0) {
+        initialHero = &gpGame->m_heroRecs[gpCurPlayer->m_heroIds[0]];
+        m_mapOriginX = initialHero->m_x - 7;
+        m_mapOriginY = initialHero->m_y - 7;
+    } else if (gpCurPlayer->m_townCount > 0) {
+        ownTown = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[0]];
+        m_mapOriginX = ownTown->m_x - 7;
+        m_mapOriginY = ownTown->m_y - 7;
+    } else {
+        m_mapOriginX = 0;
+        m_mapOriginY = 0;
+    }
+    m_currentTerrain = giGroundToTerrain[GetCell(m_mapOriginX + 7, m_mapOriginY + 7)->m_tileIndex];
+    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    gpMouseManager->MouseCoords(x, y);
+    gpMouseManager->WarpPointer(x - 20, y - 20);
+    Reseed(0, 0);
+    CheckDimNextHeroBut();
+}
 
 // donor PoL RVA 0x00069160; preferred Buka symbol ?LoadRemote@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

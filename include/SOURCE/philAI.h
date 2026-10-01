@@ -34,7 +34,13 @@ class font;
 class hero;
 class mapCell;
 class town;
-struct BHC;
+// Buka 2.1 purchase record: town, kind, building/dwelling and count.
+struct BHC {
+    town* pTown;
+    int type;
+    int what;
+    int num;
+};
 
 class philAI {
 public:
@@ -47,12 +53,12 @@ public:
     void DoAllHeroInteractions(void);
     void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
-    int GoodAdjacent(int*);
+    int GoodAdjacent(class hero*, int*);
     void CheckReload(void);
-    void CheckBerserk(void);
+    void CheckBerserk(class hero*);
     void DimensionDoorTo(int, int);
     int DoAnywhereDDoorTownGate(int);
-    int DoDimensionDoor(class hero*);
+    signed char DoDimensionDoor(class hero*);
     void SetupRelativeHeroStrengths(void);
     void DoAI(int);
     void GetGameAIVars(void);
@@ -66,8 +72,8 @@ public:
         class armyGroup*,
         class hero*,
         class armyGroup*,
-        int,
-        int,
+        signed char,
+        signed char,
         int,
         float&,
         int&,
@@ -94,20 +100,20 @@ public:
     int RVConversion(int* const);
     float TurnsToBuy(int* const);
     int RVOfPosition(int, int, int, int, int, int, int, int, int, int);
-    int StrategicValueOfPosition(int, int, int, int, int*, int);
+    int StrategicValueOfPosition(class hero*, short, short, signed char, int*);
     int ValueOfTown(class town*);
     void TurnCostResource(int);
     float TurnValueOfObelisk(int);
     float FutureDeflator(int* const);
-    int FightValueOfStack(class armyGroup*, class hero*, int, int, int, int);
-    void EvaluateOneTimeCreaturePurchase(int, int, int, int&, int&, int&);
+    int FightValueOfStack(class armyGroup*, class hero*, int, int, signed char);
+    void EvaluateOneTimeCreaturePurchase(class hero*, int, int, int, int&, int&, int&);
     int QuickCombat(
         class armyGroup*,
         class hero*,
         class armyGroup*,
         class hero*,
-        int,
-        int,
+        signed char,
+        signed char,
         float&,
         float&
     );
@@ -130,12 +136,12 @@ public:
     int ChooseToBuyArtifact(class hero*, int, int);
     int NetValueOfArtifact(int, int, int, int);
     int ChooseToPayRansomOnHero(class hero*, int);
-    void BuildBuilding(class town*, int);
-    void BuildHero(class town*, int);
+    void BuildBuilding(class town*, short);
+    void BuildHero(class town*, short);
     void BuildCreature(class town*, int, int);
     int CanBuyBHC(struct BHC&);
-    int CombatMonsterEvent(class hero*, int, int*, class mapCell*);
-    int FightEvent(class hero*, class mapCell*, int);
+    signed char CombatMonsterEvent(class hero*, int, int*, class mapCell*);
+    void FightEvent(class hero*, class mapCell*);
     int DamageGroup(class armyGroup*, class hero*, class hero*, float);
     float StatChangeValue(int, int);
     void IncrementHourGlass(void);
@@ -144,7 +150,7 @@ public:
     int ComputeValueOfSS(class hero*, int, int);
     int ComputeValueOfFreeSS(class hero*, int);
     int ManaRefreshValue(class hero*, int);
-    int ValueOfEventAtPosition(int, int, int, int*);
+    int ValueOfEventAtPosition(class hero*, int, int, int, int*);
     int EvaluateGenericSite(class mapCell*);
     int EvaluateBarrier(class mapCell*);
     int EvaluatePassword(class mapCell*);
@@ -157,5 +163,18 @@ public:
     int EvaluateTownEvent(int, int, int, int, int*);
 };
 extern philAI* gpPhilAI;
+extern armyGroup* gpMonGroup;
+extern int costTemp[];
+extern int iLastFrameRateTimer;
+extern signed char gbDrawSavedCursor;
+extern int bSpecialHideCursor;
+extern int gbHumanPlayer[];
+extern int giHumanTownConquered;
+extern int gbBerserk;
+extern float fBerserkFactor;
+// ValueOfBuyingHero: the hero class native to each town type.
+extern signed char gTownHeroClass[];
+// GoodAdjacent skips cells whose adjacency byte carries the monster bit.
+extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 #endif // HOMM1_SOURCE_PHILAI_H
