@@ -353,6 +353,11 @@ source = "src/BASE/miscwin.cpp"
 flags = "cpp_o2"
 
 [[unit]]
+unit = "BASE/OLDASM"
+source = "src/BASE/OLDASM.cpp"
+flags = "cpp_o2"
+
+[[unit]]
 unit = "BASE/Iconm2bClip"
 source = "src/BASE/Iconm2bClip.cpp"
 flags = "cpp_o2"

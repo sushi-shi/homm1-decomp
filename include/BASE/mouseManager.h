@@ -10,33 +10,45 @@
 struct tag_message;
 class bitmap;
 
+#pragma pack(push, 1)
 class mouseManager : public baseManager {
 public:
-    void *m_cursorResource;
-    bitmap *m_savedUnderlying;
-    void *m_cursorImage;
+    void* m_cursorResource;
+    bitmap* m_savedUnderlying;
+    void* m_cursorImage;
     short m_cursorFrame;
     short m_cursorReady;
+    // Constructor and UpdateScreenRegion establish the packed tail.
+    unsigned char m_pointerFlags;
+    int m_unknown41;
+    short m_mouseX;
+    short m_mouseY;
+    int m_unknown49;
+    int m_unknown4d;
+    char m_unknown51;
 
     // --- constructors ---
     mouseManager(void);
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    void SetPointer(char *, int);
+    void SetPointer(char*, int);
     void SetPointer(short);
     void NewUpdate(int);
-    void MouseCoords(short &, short &);
+    void MouseCoords(short&, short&);
     void SaveAndDraw(void);
     void RestoreUnderlying(void);
     void ReallyHidePointer(void);
     void ReallyShowPointer(void);
     void HideColorPointer(void);
     void ShowColorPointer(void);
-    int IsVis(void);
+    int IsVis(void) {
+        return m_pointerFlags & 1;
+    }
     void CheckUpdateMousePos(void);
     void SetColorMice(int);
 };
+#pragma pack(pop)
 #endif // HOMM1_BASE_MOUSEMANAGER_H
