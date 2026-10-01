@@ -241,6 +241,34 @@ void advManager::TurnTo(signed char direction)
         UpdateScreen(0, 0);
 }
 
+extern unsigned char giCurWatchPlayerBit;
+extern int gbHideComputerMoves;
+
+// Buka CURSOR.cpp:429 GetMoveShowIt; HoMM1 reads the current hero itself
+// and tests the watch bit directly in the map-extra grid.
+VA(0x004064d6, 0x136)
+int advManager::GetMoveShowIt(signed char direction)
+{
+    hero *movingHero;
+    short dy;
+    short dirX;
+
+    if (gpCurPlayer->CurrentHero() == -1)
+        return 0;
+    movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    dirX = normalDirTable[direction].x;
+    dy = normalDirTable[direction].y;
+    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gbHideComputerMoves))
+        && ((gpGame->m_mapExtra[movingHero->m_x * MAP_CELL_GRID_SIZE + movingHero->m_y]
+             & giCurWatchPlayerBit)
+            || (gpGame->m_mapExtra[(movingHero->m_x + dirX) * MAP_CELL_GRID_SIZE + movingHero->m_y
+                                   + dy]
+                & giCurWatchPlayerBit)))
+        return 1;
+    else
+        return 0;
+}
+
 // donor PoL RVA 0x0000e51f; preferred Buka symbol ?MoveHero@advManager@@QAEPAVmapCell@@HHPAH00H0H@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.461867;margin=0.353958;shape=0.281;size=0.831;calls=0.879;alternate=pol20:class mapCell * advManager::MoveHero(int, int, int *, int *, int *, int, int *, int)@0x0000e51f

@@ -125,7 +125,7 @@ public:
     void DrawCursorShadow(void);
     short GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short));
     void TurnTo(signed char);
-    int GetMoveShowIt(class hero*, int);
+    int GetMoveShowIt(signed char);
     class mapCell* MoveHero(int, int, int*, int*, int*, int, int*, int);
     void CheckAdjacentMon(int*);
     int ValidMoveWithEvent(class hero*, int);

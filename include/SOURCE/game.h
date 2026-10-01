@@ -52,7 +52,9 @@ public:
     // BuildObj sets the town's bit here once it has built today.
     unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    char m_unknown1431d[0x2b39];
+    char m_unknown1431d[0x16f9];
+    // GetMoveShowIt tests giCurWatchPlayerBit in this 72x72 byte map.
+    unsigned char m_mapExtra[MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
