@@ -251,8 +251,52 @@ int advManager::ProcessSelect(struct tag_message*, class mapCell**) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.346709;margin=0.551065;shape=0.313;size=0.541;calls=0.500;alternate=pol20:int advManager::ProcessDeSelect(struct tag_message *, int *, class mapCell * *)@0x00059c19
 VA(0x00428b59, 0x1ea)
-int advManager::ProcessDeSelect(struct tag_message*, int*, class mapCell**) {
-    return 0;
+int advManager::ProcessDeSelect(struct tag_message* message, int* result, class mapCell** eventCell) {
+    switch (message->payload.widget.id) {
+        case 2:
+            m_selectedCell = 7;
+            *eventCell = DoAdvCommand();
+            break;
+        case 5:
+            AdvPanel();
+            break;
+        case 6:
+            *result = ControlPanel();
+            break;
+        case 4:
+            if (gpCurPlayer->HasMobileHero()) {
+                NormalDialog(
+                    "One or more Heroes may still move, are you sure you want to end your turn?",
+                    2, -1, -1, -1, 0, -1, 0, -1
+                );
+                if (gpWindowManager->m_dialogResult == 0x7806)
+                    break;
+            }
+            gpGame->NextPlayer();
+            break;
+        case 1:
+            HideRoute(1, 0, 1);
+            SetHeroContext(gpCurPlayer->NextHero(1), 0);
+            break;
+        case 3:
+            gpGame->Overview();
+            RedrawAdvScreen(1);
+            gpWindowManager->FadeScreen(0, 8, 0);
+            break;
+    }
+    if (message->payload.widget.id >= 2000 && message->payload.widget.id <= 2200) {
+        if (giBottomViewOverride == 2)
+            giBottomViewOverride = 1;
+        else if (giBottomViewOverride != 0)
+            giBottomViewOverride = 0;
+        else if (iCurBottomView == 2)
+            giBottomViewOverride = 1;
+        else
+            giBottomViewOverride = 2;
+        giBottomViewOverrideEndTime = KBTickCount() + 3000;
+        UpdBottomView(1, 1, 1);
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x0005a07c; preferred Buka symbol ?ProcessSearch@advManager@@QAEHHH@Z
