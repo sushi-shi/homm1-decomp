@@ -44,6 +44,7 @@ extern executive* gpExec;
 extern class game* gpGame;
 extern int gbHumanPlayer[];
 extern struct tag_monsterInfo gMonsterDatabase[];
+extern char* gArmyNames[];
 extern char* gArmyNamesPlural[];
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;

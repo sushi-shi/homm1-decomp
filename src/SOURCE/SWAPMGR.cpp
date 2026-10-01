@@ -633,7 +633,7 @@ void swapManager::SplitMons(void) {
     gpTownManager->m_splitMaximum = selectedArmy->m_creatureCounts[m_selectedSlot];
     message.type = MESSAGE_WIDGET;
     sprintf(gText, "Move how many %s troops from %s to %s?",
-            gArmyNamesPlural[selectedArmy->m_creatureTypes[m_selectedSlot]],
+            gArmyNames[selectedArmy->m_creatureTypes[m_selectedSlot]],
             m_heroes[m_selectedSide]->m_name, m_heroes[m_targetSide]->m_name);
     message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
     message.payload.widget.id = 1;
