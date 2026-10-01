@@ -87,7 +87,9 @@ public:
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];
-    char m_unknown1443d[0x49];
+    char m_unknown1443d[0x24];
+    // GetRandomArtifactId scans artifacts 4..36 for a free (-1) entry.
+    signed char m_randomArtifacts[0x25];
     boatRecord m_boats[GAME_BOAT_COUNT];
     signed char m_boatSlots[GAME_BOAT_COUNT];
     char m_unknown145a6[0x1470];
@@ -178,7 +180,7 @@ public:
     void RandomizeTown(int, int, int);
     void RandomizeMine(int, int);
     void InitRandomArtifacts(void);
-    int GetRandomArtifactId(int, int);
+    signed char GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(int, int);
     void ProcessRandomObjects(void);

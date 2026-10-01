@@ -337,11 +337,38 @@ int ViewArmyHandler(struct tag_message&) {
     return 0;
 }
 
+// Buka 2.1 game::TurnOnAIMusic.
+VA(0x004411e3, 0x3d)
+void game::TurnOnAIMusic(void) {
+    gpSoundManager->StopAllSamples();
+    gpSoundManager->SwitchAmbientMusic(49);
+    gpSoundManager->m_musicReady = 0;
+}
+
+// Buka 2.1 game::TurnOffAIMusic.
+VA(0x00441220, 0x25)
+void game::TurnOffAIMusic(void) {
+    gpSoundManager->m_musicReady = 1;
+}
+
 // donor PoL RVA 0x0007bd99; preferred Buka symbol ?NextPlayer@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.506997;margin=1.216721;shape=0.284;size=0.968;calls=0.889;alternate=pol20:void game::NextPlayer(void)@0x0007bd99
 VA(0x00441245, 0x4e1)
 void game::NextPlayer(void) {}
+
+// HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
+VA(0x004439c1, 0x79)
+signed char game::GetRandomArtifactId(void) {
+    signed char freeSlot = Scan(m_randomArtifacts, 4, 33);
+    if (freeSlot == -1)
+        return -1;
+    signed char artifact = RandomScan(m_randomArtifacts, 4, 33, 37);
+    if (artifact == -1)
+        return freeSlot;
+    else
+        return artifact;
+}
 
 // donor PoL RVA 0x00080b64; preferred Buka symbol ?SetVisibility@game@@QAEXHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -523,6 +550,18 @@ int game::ReceiveSaveGame(int, int) { return 0; }
 VA(0x00446607, 0x42b)
 void game::DoNewTurn(void) {}
 
+// Buka 2.1 game::GetBoatsBuilt.
+VA(0x00446a32, 0x58)
+int game::GetBoatsBuilt(void) {
+    int count = 0;
+    int i;
+    for (i = 0; i < GAME_BOAT_COUNT; ++i) {
+        if (m_boatSlots[i] != -1)
+            ++count;
+    }
+    return count;
+}
+
 // donor PoL RVA 0x000b6f40; preferred Buka symbol ?GetMap@game@@QAEXXZ
 // donor Buka TU SOURCE/Newgame; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.547944;margin=0.077231;shape=0.356;size=0.530;calls=0.607;strings=.\MAPS\;alternate=pol20:void game::GetMap(void)@0x000b6f40
@@ -536,6 +575,18 @@ void game::GetMap(void) {}
 // Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
 VA(0x004472d8, 0x44e)
 void game::ShowScenInfo(void) {}
+
+// Buka 2.1 game::GetNumThievesGuilds.
+VA(0x00446df9, 0x98)
+int game::GetNumThievesGuilds(int color) {
+    int numGuilds = 0;
+    int i;
+    for (i = 0; i < m_players[color].m_townCount; ++i) {
+        if (gpGame->m_castleRecs[m_players[color].m_townIds[i]].m_buildings & 2)
+            ++numGuilds;
+    }
+    return numGuilds;
+}
 
 // donor PoL RVA 0x0008480a; preferred Buka symbol ?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
