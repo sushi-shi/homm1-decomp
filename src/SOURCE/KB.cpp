@@ -293,6 +293,43 @@ int WaitHandler(tag_message& msg) {
     return 0;
 }
 
+// Buka 2.1 EventWindowHandler without HoMM2's dialog timeout and resource help.
+VA(0x00452b64, 0x114)
+short EventWindowHandler(tag_message& message) {
+    if (!gpSoundManager->MusicPlaying())
+        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 0x385:
+                    case 0x7800:
+                    case 0x7801:
+                    case 0x7802:
+                    case 0x7803:
+                    case 0x7805:
+                    case 0x7806:
+                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        message.payload.widget.command = message.payload.widget.id =
+                            WIDGET_COMMAND_DIALOG_SELECT;
+                        return MESSAGE_DISPATCH_FORWARD;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
+// Buka 2.1 TrueFalseDialogHandler.
+VA(0x00452c78, 0x1c)
+short TrueFalseDialogHandler(tag_message& message) {
+    return EventWindowHandler(message);
+}
+
 // donor PoL RVA 0x0009a52f; preferred Buka symbol ?PlayerDead@@YIXH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.488269;margin=0.466685;shape=0.274;size=0.981;calls=0.750;alternate=pol20:void PlayerDead(int)@0x0009a52f
@@ -397,6 +434,13 @@ void BVResMsg(char* s, int res, int qty) {
     giBottomViewResourceQty = qty;
     strcpy(gcBottomViewText, s);
     gpAdvManager->UpdBottomView(1, 1, 1);
+}
+
+// Buka 2.1 GOut.
+VA(0x0045471a, 0x2e)
+void GOut(char* text) {
+    if (gpAdvManager->m_active == 1)
+        AiPrint(text);
 }
 
 // donor PoL RVA 0x0009d3a7; preferred Buka symbol ?WaitForOtherPlayer@@YIHXZ
@@ -646,6 +690,30 @@ signed char CheckMem(void) {
     return 1;
 }
 
+// Campaign maps rename the town at a fixed position (x, y, then the name).
+#pragma pack(push, 1)
+struct campaignTownName {
+    signed char x;
+    signed char y;
+    char name[83];
+};
+#pragma pack(pop)
+extern campaignTownName gCampaignTownNames[];
+extern char* gTownNames[];
+
+// Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
+// override one town by position.
+VA(0x00455aaf, 0xdc)
+char* GetTownName(signed char i) {
+    town* townPointer = gpGame->GetTown(i);
+    if (gpGame->m_campaignType > 0
+        && gCampaignTownNames[gpGame->m_campaignScenario].x >= 0
+        && gCampaignTownNames[gpGame->m_campaignScenario].x == townPointer->m_x
+        && gCampaignTownNames[gpGame->m_campaignScenario].y == townPointer->m_y)
+        return gCampaignTownNames[gpGame->m_campaignScenario].name;
+    return gTownNames[townPointer->m_threat];
+}
+
 // Buka 2.1 Misc IsCDDrive.
 VA(0x00455b8b, 0x51)
 int IsCDDrive(int driveIndex) {
@@ -673,6 +741,17 @@ void UnloadSystemwideIcons(void) {
 // Retail empty lifecycle hook; Buka and PoL KB correspondence.
 VA(0x00455c94, 0x10)
 void EarlyShutDownSystem(void) {}
+
+// Buka 2.1 GameUnsaved.
+VA(0x00455ca4, 0x7e)
+int GameUnsaved(void) {
+    if ((gpAdvManager && gpAdvManager->m_active == 1)
+        || (gpCombatManager && gpCombatManager->m_active == 1)
+        || (gpTownManager && gpTownManager->m_active == 1))
+        return 1;
+    else
+        return 0;
+}
 
 // donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

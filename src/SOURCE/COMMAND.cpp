@@ -8,7 +8,7 @@
 // donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520039;margin=0.117792;shape=0.347;size=0.894;calls=0.889;alternate=pol20:int combatManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0002a6d0
 VA(0x0040f2c0, 0x311)
-int combatManager::Main(struct tag_message &) { return 0; }
+short combatManager::Main(struct tag_message &) { return 0; }
 
 // donor PoL RVA 0x0002aa3d; preferred Buka symbol ?ValidHexToStandOn@combatManager@@QAEHH@Z
 // donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order

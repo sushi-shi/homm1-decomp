@@ -26,7 +26,7 @@ void combatManager::SetupCombat(int, int, class hero *, class armyGroup *, class
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.748451;margin=0.311399;shape=0.506;size=0.976;calls=0.795;strings=PREBATTL.82M|cmbtmous.mse|cmbtwin.bin;alternate=pol20:int combatManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00090aa0
 VA(0x0044bb0b, 0x40e)
-int combatManager::Open(int) { return 0; }
+short combatManager::Open(short) { return 0; }
 
 // donor PoL RVA 0x00090edf; preferred Buka symbol ?Close@combatManager@@UAEXXZ
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
