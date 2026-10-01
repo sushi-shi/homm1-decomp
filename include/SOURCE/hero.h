@@ -94,6 +94,7 @@ public:
     int AddSpell(signed char, signed char, int);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
+    void RedrawHeroScreen(void);
     void ViewStat(int, int);
     void ViewArtifact(int, int, int);
     signed char Dismiss(void);
@@ -122,6 +123,9 @@ public:
 // 0x492598).
 extern float gfClassNavigationMod[];
 extern class heroWindow* heroWin;
+extern class heroWindow* gheroWin;
+
+void HeroMessageUpdate(char*);
 extern int giHeroScreenSrcIndex;
 extern short gMinExpForLevel[][HERO_EXPERIENCE_LEVEL_TABLE_COUNT];
 #endif // HOMM1_SOURCE_HERO_H

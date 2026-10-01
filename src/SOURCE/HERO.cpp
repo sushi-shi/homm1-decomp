@@ -6,6 +6,8 @@
 #include <H1/KB.h>
 #include <SOURCE/dialogTypes.h>
 
+#include <stdio.h>
+
 // donor PoL RVA 0x000c0790; preferred Buka symbol ?AICheckRetreat@combatManager@@QAEHXZ
 // donor Buka TU SOURCE/AI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.550932;margin=0.199965;shape=0.407;size=0.920;calls=0.857;alternate=pol20:int combatManager::AICheckRetreat(void)@0x000c0790
@@ -73,6 +75,9 @@ hero::hero(void) {
 // donor PoL RVA 0x0006c4cd; preferred Buka symbol ?HasArtifact@hero@@QAEHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.403615;margin=0.791427;shape=0.171;size=0.731;calls=1.000;alternate=pol20:int hero::HasArtifact(int)@0x0006c4cd
+VA(0x0046baf8, 0x18)
+void hero::GetArmyStrengths(unsigned long int* const) {}
+
 VA(0x0046bb10, 0x5d)
 signed char hero::HasArtifact(signed char artifact) {
     short i;
@@ -251,7 +256,11 @@ done:
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.519414;margin=0.462427;shape=0.417;size=0.819;calls=1.000;alternate=pol20:void RedrawHeroScreen(void)@0x0006f305
 VA(0x0046c29a, 0x53)
-void RedrawHeroScreen(void) {}
+void hero::RedrawHeroScreen(void) {
+    gpResourceManager->GetBackdrop("heroscrn.bmp", gpWindowManager->m_screen);
+    heroWin->DrawWindow();
+    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+}
 
 // donor PoL RVA 0x0006f354; preferred Buka symbol ?HeroView@@YIHHHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
@@ -263,19 +272,88 @@ int HeroView(int, int, int) { return 0; }
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.570065;margin=0.065812;shape=0.448;size=0.919;calls=1.000;alternate=pol20:void HeroMessageUpdate(char *)@0x0006cab1
 VA(0x0046c9af, 0x7c)
-void HeroMessageUpdate(char *) {}
+void HeroMessageUpdate(char* text) {
+    tag_message message;
+
+    if (!gheroWin)
+        return;
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 302;
+    message.payload.widget.data.text = text;
+    gheroWin->BroadcastMessage(message);
+    gheroWin->DrawWindow(0, 300, 302);
+    gpWindowManager->UpdateScreenRegion(0, 459, 640, 20);
+}
 
 // donor PoL RVA 0x0006cb33; preferred Buka symbol ?HeroScreenUpdate@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.542456;margin=0.317795;shape=0.400;size=0.865;calls=1.000;alternate=pol20:void hero::HeroScreenUpdate(void)@0x0006cb33
 VA(0x0046ca2b, 0xab)
-void hero::HeroScreenUpdate(void) {}
+void hero::HeroScreenUpdate(void) {
+    tag_message message;
+    short i;
+
+    message.type = MESSAGE_WIDGET;
+    UpdateArmies();
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        if (i == giHeroScreenSrcIndex)
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        else
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 4;
+        message.payload.widget.id = i + 102;
+        heroWin->BroadcastMessage(message);
+    }
+    heroWin->DrawWindow();
+    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+}
 
 // donor PoL RVA 0x0006cbdb; preferred Buka symbol ?UpdateArmies@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520009;margin=0.290164;shape=0.295;size=0.980;calls=0.909;alternate=pol20:void hero::UpdateArmies(void)@0x0006cbdb
 VA(0x0046cad6, 0x1ba)
-void hero::UpdateArmies(void) {}
+void hero::UpdateArmies(void) {
+    tag_message message;
+    short i;
+
+    message.type = MESSAGE_WIDGET;
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        if (m_army.m_creatureTypes[i] == -1) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.id = i + 87;
+            message.payload.widget.data.value = 2;
+            heroWin->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.id = i + 92;
+            message.payload.widget.data.value = 4;
+            heroWin->BroadcastMessage(message);
+            message.payload.widget.id = i + 97;
+            heroWin->BroadcastMessage(message);
+            message.payload.widget.id = i + 102;
+            heroWin->BroadcastMessage(message);
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.id = i + 87;
+            message.payload.widget.data.value = m_army.m_creatureTypes[i] / 6 + 3;
+            heroWin->BroadcastMessage(message);
+            message.payload.widget.id = i + 92;
+            message.payload.widget.data.value = m_army.m_creatureTypes[i];
+            heroWin->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.payload.widget.data.value = 4;
+            heroWin->BroadcastMessage(message);
+            sprintf(gText, "%d", m_army.m_creatureCounts[i]);
+            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+            message.payload.widget.id = i + 97;
+            message.payload.widget.data.text = gText;
+            heroWin->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.payload.widget.data.value = 4;
+            heroWin->BroadcastMessage(message);
+        }
+    }
+}
 
 // donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
