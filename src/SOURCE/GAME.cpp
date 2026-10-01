@@ -162,7 +162,8 @@ void game::NextPlayer(void) {}
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64
 VA(0x004440e9, 0x259)
-void game::SetVisibility(int, int, int, int) {}
+// Retail reads all four arguments as words (ret 0x10).
+void game::SetVisibility(short, short, short, short) {}
 
 // @early-stop
 // Logic + frame slots byte-exact; residual is 3 commutative operand-load swaps (the

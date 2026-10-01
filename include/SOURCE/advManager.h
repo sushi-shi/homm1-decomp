@@ -361,6 +361,9 @@ extern short gMapY;
 extern unsigned char giCurWatchPlayerBit;
 extern short gGameCommand;
 extern int gbHeroMoving;
+extern unsigned char giCurPlayerBit;
+// Per hero type scouting radius used by TeleportTo.
+extern signed char gHeroScoutRadius[];
 extern int giLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;

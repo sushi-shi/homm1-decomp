@@ -148,7 +148,7 @@ public:
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(short, int);
     void ProcessRandomObjects(void);
-    void SetVisibility(int, int, int, int);
+    void SetVisibility(short, short, short, short);
     void MakeAllWaterVisible(int);
     void GiveArmy(class armyGroup*, int, int, int);
     int ExperienceValueOfStack(class armyGroup*, class hero*);

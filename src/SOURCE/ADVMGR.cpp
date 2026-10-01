@@ -10,6 +10,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/wingraph.h>
 
 #include <stdio.h>
@@ -1588,7 +1589,73 @@ void advManager::InsertSound(int, int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
 VA(0x00434bd7, 0x340)
-void advManager::TeleportTo(int, int, int) {}
+void advManager::TeleportTo(int x, int y, int) {
+    int savedShow;
+    hero* mapHero;
+    signed char newTerrain;
+    mapCell* oldCell;
+    int tmp;
+    mapCell* destinationCell;
+    int fizzle;
+    town* occupiedTown;
+
+    savedShow = bShowIt;
+    mapHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    destinationCell = GetCell(x, y);
+    oldCell = GetCell(m_mapOriginX + 7, m_mapOriginY + 7);
+    if (mapHero->m_locationType == 0xa8) {
+        occupiedTown = gpGame->GetTown(mapHero->m_occupiedTown);
+        occupiedTown->m_occupyingHeroId = -1;
+    }
+    if (oldCell->m_flags & 0x40)
+        oldCell->m_flags -= 0x40;
+    CompleteDraw(0);
+    if (!gbHumanPlayer[giCurPlayer]) {
+        if (!gConfig.blackoutComputer && !gbRemoteOn
+            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurPlayerBit))
+            bShowIt = 1;
+        else
+            bShowIt = 0;
+    }
+    if (savedShow)
+        HideRoute(1, 1, 1);
+    if (bShowIt) {
+        m_mapOriginX = x - 7;
+        m_mapOriginY = y - 7;
+        DelayMilli(90);
+    }
+    mapHero->m_x = x;
+    mapHero->m_y = y;
+    gpGame->SetVisibility(
+        m_mapOriginX + 7,
+        m_mapOriginY + 7,
+        giCurPlayer,
+        gHeroScoutRadius[mapHero->m_unknown1c]
+    );
+    if (bShowIt) {
+        destinationCell->m_flags |= 0x40;
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->SaveFizzleSource(16, 16, 448, 448);
+        CompleteDraw(0);
+        PollSound();
+        fizzle = 128;
+        if (!gbHumanPlayer[giCurPlayer])
+            fizzle -= 64;
+        gpWindowManager->FizzleForward(16, 16, 448, 448, -1);
+        PollSound();
+        gpMouseManager->ReallyShowPointer();
+    }
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    newTerrain = giGroundToTerrain[destinationCell->m_tileIndex];
+    if (m_currentTerrain != newTerrain) {
+        m_currentTerrain = newTerrain;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    Reseed(0, 0);
+    UpdateRadar(1, 0);
+    CompleteDraw(0);
+    ForceNewHover();
+}
 
 // donor PoL RVA 0x00067539; preferred Buka symbol ?DimensionDoor@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
