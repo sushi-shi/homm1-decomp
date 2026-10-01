@@ -119,8 +119,8 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    void StartCursor(int);
-    void StopCursor(int);
+    void StartCursor(signed char);
+    void StopCursor(signed char);
     void DrawCursor(void);
     void DrawCursorShadow(void);
     short GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short));

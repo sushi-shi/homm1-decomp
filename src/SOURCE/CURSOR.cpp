@@ -8,6 +8,61 @@
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 
+// Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
+// walk speed and indexes the map directly.
+VA(0x00405950, 0x169)
+void advManager::StartCursor(signed char direction)
+{
+    short directionX;
+    short newX;
+    short directionY;
+    short newY;
+
+    m_cursorDirection = direction;
+    m_cursorFrame = GetCursorBaseFrame(direction) + 1;
+    if (gConfig.walkSpeed > 0)
+        m_cursorCycle = 1;
+    else
+        m_cursorCycle = 2;
+    directionX = normalDirTable[direction].x;
+    directionY = normalDirTable[direction].y;
+    m_previousCursorMapX = m_cursorMapX;
+    m_previousCursorMapY = m_cursorMapY;
+    m_cursorMapX += directionX;
+    m_cursorMapY += directionY;
+    newX = m_mapOriginX + m_cursorMapX;
+    newY = m_mapOriginY + m_cursorMapY;
+    m_mapData[newX][newY].m_flags |= 0x40;
+}
+
+// CURSOR globals: Buka names; HoMM1 keeps byte flags and the last two
+// footstep sample handles (0x0048eb3c/0x0048eb40).
+extern signed char bMoveSoundMade;
+extern signed char EveryOther;
+extern struct _SAMPLE* hPrevMoveSound;
+extern struct _SAMPLE* hLastMoveSound;
+
+// Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
+VA(0x00405ab9, 0x150)
+void advManager::StopCursor(signed char stopSound)
+{
+    if (stopSound) {
+        bMoveSoundMade = 1;
+        m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+        m_cursorFrameCount = 0;
+        EveryOther = 0;
+        hPrevMoveSound = 0;
+        hLastMoveSound = 0;
+    }
+    m_cursorCycle = 0;
+    if (m_previousCursorMapX != -1) {
+        m_mapData[m_mapOriginX + m_previousCursorMapX][m_mapOriginY + m_previousCursorMapY].m_flags &=
+            ~0x40;
+        m_previousCursorMapX = m_previousCursorMapY = -1;
+    }
+    m_cursorTurning = 0;
+}
+
 // donor PoL RVA 0x0000e198; preferred Buka symbol ?GetCursorBaseFrame@advManager@@QAEHH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375377;margin=0.466673;shape=0.186;size=0.574;calls=1.000;alternate=pol20:int advManager::GetCursorBaseFrame(int)@0x0000e198

@@ -45,7 +45,8 @@ struct configStruct {
     int slowVideo;
 };
 struct SCreatureInfo { unsigned short value; char pad[24]; };
-struct tag_tilePoint { signed char x; signed char _1; signed char y; signed char _3; };
+// StartCursor reads x/y bytes from four-byte records at 0x00491848.
+struct tag_tilePoint { signed char x; signed char y; short frameOffset; };
 struct SSpellInfo { char m_pad0[14]; unsigned char m_e; char m_pad1[7]; };
 struct SNetPlayerInfo { char m_pad[0xcc]; };
 struct SAMPLE2 { class sample *pSample; struct _SAMPLE *pMem; };

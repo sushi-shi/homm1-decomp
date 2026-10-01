@@ -34,6 +34,7 @@ extern int gbLoadingMonoIcon;
 extern long gNextSoundPollTick;
 extern long gMusicFadeTimer;
 extern configStruct gConfig;
+extern struct tag_tilePoint normalDirTable[];
 extern char* DEFAULT_AGGREGATE_NAME;
 extern resourceManager* gpResourceManager;
 extern soundManager* gpSoundManager;
