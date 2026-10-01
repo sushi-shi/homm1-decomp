@@ -7,7 +7,10 @@
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 
+#include <SOURCE/dialogTypes.h>
+
 #include <stdio.h>
+#include <string.h>
 
 // EVENTS assertion records (file literals and line base), as in MOUSEMGR.
 extern short gEventsAssertLine;
@@ -17,6 +20,7 @@ extern char* gEventText[];
 extern signed char gbEventMusicPlaying;
 extern char* gArtifactNames[];
 extern SAMPLE2 gNullSample;
+extern armyGroup* gpMonsterGroup;
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -276,13 +280,123 @@ void advManager::RecruitEvent(class hero* eventHero, int creatureType, class map
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.581832;margin=0.097486;shape=0.425;size=0.973;calls=1.000;alternate=pol20:int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int)@0x000b07e5
 VA(0x0046077c, 0x2e0)
-int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int) { return 0; }
+signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, int textId, int x,
+                                   int y) {
+    int artifact;
+
+    switch (cell->m_objectMetadata) {
+    case 2:
+        if (CombatMonsterEvent(eventHero, 26, 10, cell, x, y, 0, x, y) == 1) {
+            sprintf(gText, "%s", gEventText[textId]);
+            EventWindow(-1, 1, gText, 6, 1000, -1, 0, -1);
+            GiveResource(eventHero, 6, 1000);
+            eventHero->CheckLevel();
+            return 1;
+        }
+        break;
+    case 3:
+        if (CombatMonsterEvent(eventHero, 26, 15, cell, x, y, 0, x, y) == 1) {
+            sprintf(gText, "%s", gEventText[textId]);
+            EventWindow(-1, 1, gText, 6, 2000, -1, 0, -1);
+            GiveResource(eventHero, 6, 2000);
+            eventHero->CheckLevel();
+            return 1;
+        }
+        break;
+    case 4:
+        if (CombatMonsterEvent(eventHero, 26, 25, cell, x, y, 0, x, y) == 1) {
+            sprintf(gText, "%s", gEventText[textId]);
+            EventWindow(-1, 1, gText, 6, 5000, -1, 0, -1);
+            GiveResource(eventHero, 6, 5000);
+            eventHero->CheckLevel();
+            return 1;
+        }
+        break;
+    default:
+        if (CombatMonsterEvent(eventHero, 26, 50, cell, x, y, 0, x, y) == 1) {
+            artifact = GiveRandomArtifact(eventHero);
+            sprintf(gText, "%s", gEventText[textId]);
+            if (artifact != -1)
+                EventWindow(-1, 1, gText, 6, 2000, 7, artifact, -1);
+            else
+                EventWindow(-1, 1, gText, 6, 2000, -1, 0, -1);
+            GiveResource(eventHero, 6, 2000);
+            eventHero->CheckLevel();
+            return 1;
+        }
+        break;
+    }
+    return 0;
+}
 
 // donor PoL RVA 0x000b0add; preferred Buka symbol ?HouseEvent@advManager@@QAEXPAVhero@@PAVmapCell@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.402651;margin=0.176834;shape=0.333;size=0.492;calls=1.000;alternate=pol20:void advManager::HouseEvent(class hero *, class mapCell *)@0x000b0add
 VA(0x00460a5c, 0x11e)
-void advManager::HouseEvent(class hero *, class mapCell *) {}
+void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
+    short houseIndex;
+
+    houseIndex = (cell->m_triggerType & 0x7f) - 13;
+    if (!cell->m_objectMetadata) {
+        EventWindow(houseIndex * 3 + 25, 1, "", -1, 0, -1, 0, -1);
+    } else {
+        signed char creatures[5] = {6, 0, 1, 13, 0};
+
+        EventWindow(houseIndex * 3 + 23, 2, "", -1, 0, -1, 0, -1);
+        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+            if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
+                eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, -1);
+                cell->m_objectMetadata = 0;
+            } else {
+                EventWindow(houseIndex * 3 + 24, 1, "", -1, 0, -1, 0, -1);
+            }
+        }
+    }
+}
+
+VA(0x00460b7a, 0x200)
+signed char advManager::CombatMonsterEvent(class hero* eventHero, signed char monsterType,
+                                           short count, class mapCell* cell, int x, int y,
+                                           signed char heroDefends, int fromX, int fromY) {
+    short i;
+    int res;
+
+    DemobilizeCurrHero();
+    if (fromX == -1) {
+        fromX = x;
+        fromY = y;
+    } else {
+        m_lastQuickViewX = fromX;
+        m_lastQuickViewY = fromY;
+        if (eventHero->m_x >= fromX)
+            m_mineGuardianFacingLeft = 0;
+        else
+            m_mineGuardianFacingLeft = 1;
+        if (ComboDraw(0))
+            UpdateScreen(0, 0);
+        m_lastQuickViewX = -1;
+    }
+    memset(gpMonsterGroup->m_creatureTypes, -1, 5);
+    memset(gpMonsterGroup->m_creatureCounts, 0, 10);
+    if (count / 5 > 0) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+            gpMonsterGroup->m_creatureTypes[i] = monsterType;
+            gpMonsterGroup->m_creatureCounts[i] = count / 5;
+        }
+    }
+    for (i = count % 5 - 1; i >= 0; i--) {
+        gpMonsterGroup->m_creatureTypes[i] = monsterType;
+        gpMonsterGroup->m_creatureCounts[i]++;
+    }
+    if (heroDefends)
+        res = DoCombat(fromX, fromY, 0, gpMonsterGroup, 0, eventHero, &eventHero->m_army, x, y,
+                          -1, 1);
+    else
+        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, 0, 0, gpMonsterGroup, x, y,
+                          -1, 1);
+    MobilizeCurrHero(0);
+    return res;
+}
 
 // Buka's free GiveTakeArtifactStat; HoMM1 keeps per-artifact primary-stat
 // bonuses here and is called through gpAdvManager.

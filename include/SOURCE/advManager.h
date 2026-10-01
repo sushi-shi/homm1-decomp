@@ -182,8 +182,9 @@ public:
     void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    int ComboDraw(short, short, int);
-    int ComboDraw(int);
+    // Retail returns the redraw flag in AL.
+    signed char ComboDraw(short, short, int);
+    signed char ComboDraw(int);
     void SetEnvironmentOrigin(int, int, int);
     void CheckLoadSample(int);
     int GetSoundId(int, int);
@@ -238,25 +239,11 @@ public:
     void RecruitEvent(class hero*, int, class mapCell*);
     int SkeletonEvent(class hero*, class mapCell*, char*, int, int);
     int ZombieEvent(class hero*, class mapCell*, char*, int, int);
-    int GhostEvent(class hero*, class mapCell*, char*, int, int);
+    signed char GhostEvent(class hero*, class mapCell*, int, int, int);
     void HouseEvent(class hero*, class mapCell*);
-    int CombatMonsterEvent(
-        class hero*,
-        int,
-        int,
-        class mapCell*,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int
-    );
+    // HoMM1 retail: nine arguments (ret 0x24), result in AL.
+    signed char CombatMonsterEvent(class hero*, signed char, short, class mapCell*, int, int,
+                                   signed char, int, int);
     void TransferArtifacts(class hero*, class hero*);
     void HeroLoses(class hero*);
     void DoWhirlpool(class hero*);
