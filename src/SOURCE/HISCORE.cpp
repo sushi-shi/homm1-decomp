@@ -13,6 +13,8 @@
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
 
+#include <fcntl.h>
+#include <io.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -30,6 +32,12 @@ highScoreManager::highScoreManager(void) {
         else
             m_showCampaignScores = 0;
     }
+}
+
+// HoMM1 keeps an empty destructor; it only restores this class's vtable.
+VA(0x004010a0, 0x1f)
+highScoreManager::~highScoreManager()
+{
 }
 
 // donor PoL RVA 0x00089a96; preferred Buka symbol ?Open@highScoreManager@@UAEHH@Z
@@ -144,5 +152,137 @@ short highScoreManager::Main(struct tag_message& message) {
 // donor PoL RVA 0x00089e6a; preferred Buka symbol ?Update@highScoreManager@@QAEXXZ
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.683474;margin=0.421632;shape=0.404;size=0.957;calls=0.730;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:void highScoreManager::Update(void)@0x00089e6a
-VA(0x004014ee, 0x672)
-void highScoreManager::Update(void) {}
+// Buka HISCORE.cpp:121-283; HoMM1 reads 0x57-byte records, names the
+// rating creature directly and highlights the new entry by fill colour.
+VA(0x004014ee, 0x667)
+void highScoreManager::Update(void)
+{
+    signed char bNoFile;
+    char fileName[350];
+    tag_message message;
+    HighScoreEntry record;
+    int handle;
+    int i;
+
+    bNoFile = 0;
+    if (m_showCampaignScores)
+        sprintf(fileName, "%sCAMPAIGN.HS", ".\\DATA\\");
+    else
+        sprintf(fileName, "%sSTANDARD.HS", ".\\DATA\\");
+    handle = open(fileName, _O_BINARY);
+    if (handle == -1)
+        bNoFile = 1;
+
+    sprintf(gText, "hiscore.bmp");
+    gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.id = HIGH_SCORE_TITLE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    if (m_showCampaignScores)
+        message.payload.widget.data.value = HIGH_SCORE_CAMPAIGN_TITLE_FRAME;
+    else
+        message.payload.widget.data.value = HIGH_SCORE_STANDARD_TITLE_FRAME;
+    m_window->BroadcastMessage(message);
+
+    message.payload.widget.id = HIGH_SCORE_SUBTITLE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    if (m_showCampaignScores)
+        message.payload.widget.data.value = HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME;
+    else
+        message.payload.widget.data.value = HIGH_SCORE_STANDARD_SUBTITLE_FRAME;
+    m_window->BroadcastMessage(message);
+
+    if (m_showCampaignScores)
+        message.payload.widget.id = HIGH_SCORE_CAMPAIGN_BUTTON;
+    else
+        message.payload.widget.id = HIGH_SCORE_STANDARD_BUTTON;
+    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.payload.widget.data.value = HIGH_SCORE_WIDGET_SHOWN;
+    m_window->BroadcastMessage(message);
+
+    if (m_showCampaignScores)
+        message.payload.widget.id = HIGH_SCORE_STANDARD_BUTTON;
+    else
+        message.payload.widget.id = HIGH_SCORE_CAMPAIGN_BUTTON;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+    message.payload.widget.data.value = HIGH_SCORE_WIDGET_SHOWN;
+    m_window->BroadcastMessage(message);
+
+    for (i = 0; i < HIGH_SCORE_DISPLAY_ENTRY_COUNT; i++) {
+        if (bNoFile)
+            record.score = HIGH_SCORE_EMPTY;
+        else
+            read(handle, &record, sizeof(record));
+
+        if (record.score == HIGH_SCORE_EMPTY) {
+            m_monsterTypes[i] = 0;
+            sprintf(gText, "");
+        } else {
+            m_monsterTypes[i] = GetMonType(record.score, static_cast<signed char>(!m_showCampaignScores));
+        }
+
+        message.payload.widget.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;
+        if (record.score == HIGH_SCORE_EMPTY)
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        else
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = HIGH_SCORE_WIDGET_SHOWN;
+        m_window->BroadcastMessage(message);
+
+        if (record.score != HIGH_SCORE_EMPTY) {
+            m_animationFrames[i] = (m_animationFrames[i] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
+            message.payload.widget.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value =
+                m_monsterTypes[i] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                + m_animationFrames[i] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
+            m_window->BroadcastMessage(message);
+        }
+
+        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+        message.payload.widget.data.text = gText;
+        message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
+        if (record.score != HIGH_SCORE_EMPTY)
+            sprintf(gText, record.playerName);
+        m_window->BroadcastMessage(message);
+
+        message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 1;
+        if (record.score != HIGH_SCORE_EMPTY)
+            sprintf(gText, record.scenarioName);
+        m_window->BroadcastMessage(message);
+
+        message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 2;
+        if (record.score != HIGH_SCORE_EMPTY)
+            sprintf(gText, "%d", record.score);
+        m_window->BroadcastMessage(message);
+
+        message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 3;
+        if (record.score != HIGH_SCORE_EMPTY) {
+            sprintf(gText, "%s", gArmyNames[m_monsterTypes[i]]);
+            gText[0] -= 'a' - 'A';
+        }
+        m_window->BroadcastMessage(message);
+
+        if (giHighScoreRank == i) {
+            if ((m_showCampaignScores && !gbStandardHighScore)
+                || (!m_showCampaignScores && gbStandardHighScore)) {
+                message.payload.widget.command = WIDGET_COMMAND_SET_FILL_COLOR;
+                message.payload.widget.data.value = HIGH_SCORE_HIGHLIGHT_COLOR;
+            } else {
+                message.payload.widget.command = WIDGET_COMMAND_SET_FILL_COLOR;
+                message.payload.widget.data.value = HIGH_SCORE_NORMAL_COLOR;
+            }
+            message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
+            m_window->BroadcastMessage(message);
+            message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 1;
+            m_window->BroadcastMessage(message);
+            message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 2;
+            m_window->BroadcastMessage(message);
+            message.payload.widget.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 3;
+            m_window->BroadcastMessage(message);
+        }
+    }
+    if (!bNoFile)
+        close(handle);
+}

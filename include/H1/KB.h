@@ -19,6 +19,7 @@ extern signed char gbStandardHighScore;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 extern int bShowIt;
 extern char gText[];
+extern char *gArmyNames[];
 extern int gbMinimized;
 extern signed char gbInMemError;
 extern char* gcMemoryErrorTitle;
@@ -65,6 +66,8 @@ void QuickViewWait();
 extern "C" void PollSound();
 void ForcePollSound();
 void ShutDown(char*);
+// HoMM1 callers narrow the standard-table flag to a byte (retail 0x0045425f).
+int GetMonType(int, int);
 void MemError();
 void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
