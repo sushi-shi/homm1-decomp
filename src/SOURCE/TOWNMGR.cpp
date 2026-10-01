@@ -103,12 +103,103 @@ townManager::townManager(void)
     m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
 }
 
-// donor PoL RVA 0x0001436f; preferred Buka symbol ?SetupTown@townManager@@QAEXXZ
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.644440;margin=0.052173;shape=0.362;size=0.803;calls=0.887;strings=%s%s|port%04d.icn|strip.icn;alternate=pol20:void townManager::SetupTown(void)@0x0001436f
-// Retail vtable slot 0 (0x0048c068): HoMM1's Open performs Buka's SetupTown work.
+// Buka TOWNMGR.cpp Open/SetupTown; retail vtable slot 0 (0x0048c068).
+// HoMM1 builds the town window, objects, strips and bank box here.
 VA(0x0040816c, 0x7ec)
-short townManager::Open(short) { return 0; }
+short townManager::Open(short id)
+{
+    short crest;
+    tag_message message;
+    short i;
+    signed char buildingType;
+
+    gpGame->CheckHeroConsistency();
+    gpSoundManager->PlayAmbientMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE, 0, -1);
+    PollSound();
+    m_townWindow = new heroWindow(0, 0, "townwind.bin");
+    if (m_townWindow == 0)
+        MemError();
+    sprintf(gText, GetTownName(m_town->m_id));
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = TOWN_NAME_TEXT_CONTROL;
+    message.payload.widget.data.text = gText;
+    m_townWindow->BroadcastMessage(message);
+    strcpy(gText, "Town Screen");
+    message.payload.widget.id = TOWN_STATUS_TEXT_CONTROL;
+    message.payload.widget.data.text = gText;
+    m_townWindow->BroadcastMessage(message);
+    sprintf(gText, "townbkg%d.bmp", m_town->m_type);
+    m_backgroundBitmap = gpResourceManager->GetBitmap(gText);
+    m_townObjectCount = 0;
+    for (i = 0; i < TOWN_MANAGER_OBJECT_CAPACITY; i++) {
+        buildingType = gTownObjectType[m_town->m_type][i];
+        if (buildingType != -1) {
+            if (buildingType < TOWN_FIRST_FACTION_OBJECT)
+                strcpy(gText, cNeutralObjectName[buildingType]);
+            else
+                sprintf(gText, "%s%s", cTownPrefix[m_town->m_type],
+                        cTownObjectSuffix[buildingType - TOWN_FIRST_FACTION_OBJECT]);
+            m_townObjects[m_townObjectCount] = new townObject(gText);
+            if (m_townObjects[m_townObjectCount] == 0)
+                MemError();
+            if (m_townObjects[m_townObjectCount]->m_border) {
+                if (!(m_town->m_buildings & (1 << buildingType))) {
+                    m_townObjects[m_townObjectCount]->m_border->m_flags &= ~TOWN_OBJECT_ENABLED_FLAG;
+                    m_townObjects[m_townObjectCount]->m_visible = 0;
+                }
+                m_townWindow->AddWidget(m_townObjects[m_townObjectCount]->m_border, -1);
+            }
+            m_townObjectCount++;
+        }
+    }
+    glTimers[0] = KBTickCount() + TOWN_REDRAW_INTERVAL;
+    gpWindowManager->AddWindow(m_townWindow, 0, 1);
+    crest = gpCurPlayer->m_unknown11;
+    if (m_town->OccupyingHero() != -1) {
+        crest = crest << 2;
+        crest += gpGame->GetHero(m_town->m_occupyingHeroId)->m_unknown1c;
+    } else
+        crest += TOWN_CREST_NO_HERO_OFFSET;
+    sprintf(gText, "crst%04d.icn", crest);
+    m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == -1 ? 4 : 1,
+                                gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 1);
+    if (m_garrisonStrip == 0)
+        MemError();
+    if (m_town->m_occupyingHeroId != -1) {
+        sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_unknown1d);
+        m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
+                                &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army, 0x16, 1);
+        if (m_heroStrip == 0)
+            MemError();
+        if (m_town->m_buildings & 1)
+            m_town->GiveSpells();
+    } else {
+        m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId("strip.icn"), 8, 0, -1, 1);
+        if (m_heroStrip == 0)
+            MemError();
+    }
+    m_bankBox = new bankBox(0x222, 0x100, gpCurPlayer);
+    if (m_bankBox == 0)
+        MemError();
+    m_selectedStrip = m_swapStrip = m_pendingStrip = 0;
+    m_selectedArmySlot = m_swapArmySlot = m_pendingArmySlot = -1;
+    DrawTown(0, 0);
+    gpWindowManager->UpdateScreenRegion(0, 0, 0x280, 0x1e0);
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->ReallyShowPointer();
+    gpMouseManager->NewUpdate(1);
+    KBChangeMenu(hmnuDflt);
+    gpWindowManager->FadeScreen(0, 8, 0);
+    m_castleDialogActive = 0;
+    m_recruitResult = 0;
+    m_lastHoverId = -1;
+    m_messageMask = TOWN_MANAGER_MESSAGE_MASK;
+    m_priority = id;
+    m_active = 1;
+    strcpy(m_name, "townManager");
+    return 0;
+}
 
 // donor PoL RVA 0x00014cc9; preferred Buka symbol ?UnloadTown@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order

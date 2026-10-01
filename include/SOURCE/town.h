@@ -33,6 +33,10 @@ public:
     town(void);
     // --- methods ---
     signed char HasGarrison(void);
+    // Buka town::OccupyingHero inline; townManager::Open emits its jmp $+0.
+    signed char OccupyingHero(void) {
+        return m_occupyingHeroId;
+    }
     // HoMM1 retail 0x00463fd0 takes no argument (plain ret).
     void GiveSpells(void);
     void XformToCastle(void);

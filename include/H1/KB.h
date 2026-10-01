@@ -93,6 +93,11 @@ void NormalDialog(char*, int, int, int, int, int, int, int, int);
 short EventWindowHandler(struct tag_message&);
 // Buka TrueFalseDialogHandler (retail 0x00452c78), the plain dialog dispatcher.
 short TrueFalseDialogHandler(struct tag_message&);
+// HoMM1 town-name lookup by town id (retail 0x00455aaf).
+char* GetTownName(int);
+extern char* cTownPrefix[];
+extern char* cNeutralObjectName[];
+extern char* cTownObjectSuffix[];
 extern char* gSpellDesc[];
 extern char* gSpellNames[];
 

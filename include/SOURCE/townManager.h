@@ -26,6 +26,11 @@ H1_ENUM_BEGIN(TownManagerStorageConstant)
     TOWN_STATUS_REGION_Y = 0x1ce,
     TOWN_STATUS_REGION_WIDTH = 0x280,
     TOWN_STATUS_REGION_HEIGHT = 0x10,
+    TOWN_NAME_TEXT_CONTROL = 0x25,
+    TOWN_REDRAW_INTERVAL = 0x96,
+    TOWN_FIRST_FACTION_OBJECT = 5,
+    TOWN_CREST_NO_HERO_OFFSET = 0x10,
+    TOWN_MANAGER_MESSAGE_MASK = 0x800,
     TOWN_REDRAW_FIRST_CONTROL = 0x24,
     TOWN_REDRAW_LAST_CONTROL = 0x25,
     TOWN_VIEWPORT_WIDTH = 0x280,
@@ -275,6 +280,8 @@ extern TownBuildingExtent gTownBuildingExtents[4][16];
 
 extern char *cTownCommand[];
 extern signed char townTheme[];
+// Open's per-type town-object layout (0x0048c028).
+extern signed char gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
 short TavernHandler(struct tag_message &);
 short MageGuildHandler(struct tag_message &);
 short SplitArmyHandler(struct tag_message &);

@@ -9,7 +9,8 @@
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.710816;margin=0.058489;shape=0.438;size=0.937;calls=0.800;strings=strip.icn;alternate=pol20:void strip::constructor(int, int, int, unsigned long int, int, class armyGroup *, int, int, int)@0x00032230
 VA(0x00463630, 0x2de)
-strip::strip(int, int, int, unsigned long int, int, class armyGroup *, int, int, int) {}
+// HoMM1 retail takes eight stack arguments (word x/y, byte style/mode).
+strip::strip(short, short, signed char, short, signed char, class armyGroup *, int, int) {}
 
 // donor PoL RVA 0x000324ae; preferred Buka symbol ??1strip@@QAE@XZ
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
