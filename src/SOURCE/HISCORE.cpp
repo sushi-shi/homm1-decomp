@@ -19,10 +19,10 @@
 // Buka HISCORE.cpp:22-29; HoMM1 adds the dispatch mask and score-type selection.
 VA(0x00401000, 0xa0)
 highScoreManager::highScoreManager(void) {
-    int entry;
+    int rank;
     m_dispatchMask = HIGH_SCORE_DISPATCH_MASK;
-    for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-        m_animationFrames[entry] = Random(0, HIGH_SCORE_ANIMATION_FRAME_COUNT - 1);
+    for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++)
+        m_animationFrames[rank] = Random(0, HIGH_SCORE_ANIMATION_FRAME_COUNT - 1);
     m_showCampaignScores = 0;
     if (gbShowHighScore) {
         if (!gbStandardHighScore)
@@ -36,8 +36,7 @@ highScoreManager::highScoreManager(void) {
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
 VA(0x004010bf, 0x169)
-short highScoreManager::Open(short id)
-{
+short highScoreManager::Open(short id) {
     gpWindowManager->FadeScreen(HIGH_SCORE_FADE_OUT, HIGH_SCORE_FADE_STEPS, 0);
     sprintf(gText, "hiscore.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
@@ -52,7 +51,8 @@ short highScoreManager::Open(short id)
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
     gpWindowManager->FadeScreen(HIGH_SCORE_FADE_IN, HIGH_SCORE_FADE_STEPS, 0);
-    glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] = KBTickCount() + static_cast<int>(HIGH_SCORE_ANIMATION_DELAY);
+    glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] =
+        KBTickCount() + static_cast<int>(HIGH_SCORE_ANIMATION_DELAY);
     return static_cast<short>(HIGH_SCORE_MANAGER_OPEN_OK);
 }
 
@@ -69,13 +69,12 @@ void highScoreManager::Close(void) {
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.479652;margin=0.177846;shape=0.336;size=0.742;calls=1.000;alternate=pol20:int highScoreManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00089c40
 VA(0x00401285, 0x269)
-short highScoreManager::Main(struct tag_message &message)
-{
-    int result;
+short highScoreManager::Main(struct tag_message& message) {
+    int retVal;
     int rank;
     tag_message windowMessage;
 
-    result = 0;
+    retVal = 0;
     if (gbShowHighScore != 0)
         gbShowHighScore = 0;
 
@@ -92,11 +91,7 @@ short highScoreManager::Main(struct tag_message &message)
                 + m_animationFrames[rank] / static_cast<int>(HIGH_SCORE_ANIMATION_FRAME_DIVISOR);
             m_window->BroadcastMessage(windowMessage);
         }
-        m_window->DrawWindow(
-            0,
-            HIGH_SCORE_ANIMATED_WIDGET_FIRST,
-            HIGH_SCORE_ANIMATED_WIDGET_LAST
-        );
+        m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);
         gpWindowManager->UpdateScreenRegion(
             HIGH_SCORE_UPDATE_X,
             HIGH_SCORE_UPDATE_Y,
@@ -128,7 +123,7 @@ short highScoreManager::Main(struct tag_message &message)
                             break;
                         case HIGH_SCORE_CLOSE_BUTTON:
                             message.payload.widget.data.value = message.payload.widget.id;
-                            result = 1;
+                            retVal = 1;
                             break;
                     }
                     break;
@@ -138,7 +133,7 @@ short highScoreManager::Main(struct tag_message &message)
             break;
     }
 
-    if (result == 1) {
+    if (retVal == 1) {
         message.type = MESSAGE_EXECUTIVE;
         message.payload.executive.command = EXECUTIVE_COMMAND_RETURN_RESULT;
         return MESSAGE_DISPATCH_FORWARD;
