@@ -24,16 +24,121 @@
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
 VA(0x0045b6f0, 0x14e)
-H1_C_LINKAGE int __stdcall WinMain(void*, void*, char*, int) {
-    return 0;
+H1_C_LINKAGE int __stdcall WinMain(void *instance, void *previousInstance, char *commandLine, int showCommand)
+{
+    DWORD error;
+    MSG message;
+
+    hInstApp = instance;
+    gEventHandle = CreateEventA(0, 0, 0, "Heroes");
+    error = GetLastError();
+    if (gEventHandle == 0 || error == ERROR_ALREADY_EXISTS) {
+        sprintf(gText, "Only one copy of %s may run at a time", "Heroes of Might and Magic");
+        MessageBoxA(0, gText, "Startup Error", MB_ICONHAND);
+        return 0;
+    }
+
+    memset(gcCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
+    strncpy(gcCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
+    if (EarlySetup() == 0)
+        return 0;
+    if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
+        return 0;
+
+    for (;;) {
+        if (PeekMessageA(&message, 0, 0, 0, PM_REMOVE) != 0) {
+            if (message.message == WM_QUIT)
+                break;
+            TranslateMessage(&message);
+            DispatchMessageA(&message);
+        } else {
+            if (AppIdle() != 0)
+                WaitMessage();
+        }
+    }
+    ShutDown(0);
+    return message.wParam;
 }
 
 // donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
 VA(0x0045b83e, 0x2d6)
-int AppInit(void*, void*, int, char*) {
-    return 0;
+int AppInit(void *instance, void *previousInstance, int showCommand, char *commandLine)
+{
+    WNDCLASSA appClass;
+    HMENU windowMenu;
+    RECT rc;
+
+    LogInt("hInstApp", reinterpret_cast<int>(hInstApp)); // API-forced handle value.
+    memset(bProcessMessage, 0, KBWIN_MESSAGE_FILTER_SIZE);
+    bProcessMessage[WM_CREATE] = 1;
+    bProcessMessage[WM_KEYDOWN] = 1;
+    bProcessMessage[WM_KEYUP] = 1;
+    bProcessMessage[WM_MOUSEMOVE] = 1;
+    bProcessMessage[WM_LBUTTONDOWN] = 1;
+    bProcessMessage[WM_LBUTTONDBLCLK] = 1;
+    bProcessMessage[WM_RBUTTONDOWN] = 1;
+    bProcessMessage[WM_RBUTTONDBLCLK] = 1;
+    bProcessMessage[WM_LBUTTONUP] = 1;
+    bProcessMessage[WM_RBUTTONUP] = 1;
+    bProcessMessage[WM_TIMER] = 1;
+    bProcessMessage[WM_ACTIVATEAPP] = 1;
+    bProcessMessage[WM_ERASEBKGND] = 1;
+    bProcessMessage[WM_MOVE] = 1;
+    bProcessMessage[WM_SIZE] = 1;
+    bProcessMessage[WM_COMMAND] = 1;
+    bProcessMessage[WM_PALETTECHANGED] = 1;
+    bProcessMessage[WM_QUERYNEWPALETTE] = 1;
+    bProcessMessage[WM_PAINT] = 1;
+    bProcessMessage[WM_DESTROY] = 1;
+    bProcessMessage[WM_QUIT] = 1;
+    bProcessMessage[WM_CLOSE] = 1;
+    bProcessMessage[MM_MCINOTIFY] = 1;
+
+    if (previousInstance == 0) {
+        appClass.hCursor = 0;
+        appClass.hIcon = LoadIconA(static_cast<HINSTANCE>(instance), "Heroes");
+        appClass.lpszMenuName = 0;
+        appClass.lpszClassName = szAppName;
+        appClass.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
+        appClass.hInstance = static_cast<HINSTANCE>(instance);
+        appClass.style = KBWIN_CLASS_STYLE;
+        appClass.lpfnWndProc = reinterpret_cast<WNDPROC>(AppWndProc); // HoMM1 declares the procedure with void* handles.
+        appClass.cbWndExtra = 0;
+        appClass.cbClsExtra = 0;
+        if (RegisterClassA(&appClass) == 0)
+            return 0;
+    }
+
+    if (gConfig.gfx[giCurExe].showMenu != 0)
+        giCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
+    else
+        giCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
+    rc.left = rc.top = 0;
+    rc.right = gConfig.gfx[giCurExe].width - 1;
+    rc.bottom = gConfig.gfx[giCurExe].height - 1;
+    AdjustWindowRect(&rc, giCurWindowsStyleFlags, gConfig.gfx[giCurExe].showMenu);
+    if (gConfig.gfx[giCurExe].showMenu != 0)
+        windowMenu = static_cast<HMENU>(hmnuDflt);
+    else
+        windowMenu = 0;
+    hwndApp = CreateWindowExA(0, szAppName, szTitle, giCurWindowsStyleFlags,
+                              gConfig.gfx[giCurExe].x, gConfig.gfx[giCurExe].y,
+                              rc.right - rc.left + 1, rc.bottom - rc.top + 1, 0, windowMenu,
+                              static_cast<HINSTANCE>(instance), 0);
+    if (hwndApp != 0) {
+        ShowWindow(static_cast<HWND>(hwndApp), showCommand);
+        SetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE, giCurWindowsStyleFlags);
+        if (gConfig.gfx[giCurExe].showMenu == 0)
+            SetMenuStatus(0);
+        InitGraphics();
+        SetCursor(LoadCursorA(0, IDC_ARROW));
+        oldmain();
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 // PoL 2.0 AppIdle correspondence: both foreground states report idle work.

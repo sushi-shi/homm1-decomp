@@ -54,7 +54,13 @@ H1_ENUM_BEGIN(PrefsConstant)
     CD_SETUP_ATTEMPTS = 2,
     CD_SETUP_RETRY_DELAY = 3000,
     CD_AUTORUN_TAIL_BYTES = 100,
-    MCI_COMMAND_BUFFER_SIZE = 256
+    MCI_COMMAND_BUFFER_SIZE = 256,
+    KBWIN_COMMAND_LINE_CLEAR_SIZE = 61,
+    KBWIN_COMMAND_LINE_LIMIT = 60,
+    KBWIN_MESSAGE_FILTER_SIZE = 0x400,
+    KBWIN_CLASS_STYLE = 0x100b,
+    KBWIN_WINDOWED_STYLE = 0x14cf0000,
+    KBWIN_FULLSCREEN_STYLE = 0x14000000
 H1_ENUM_END(PrefsConstant)
 // clang-format on
 
@@ -63,6 +69,13 @@ extern char gcRegCDDrive[];
 extern signed char gbFirstTimeThrough;
 extern char gcAnimPath[];
 extern int giCDDrive;
+extern void *hInstApp;
+extern void *gEventHandle;
+extern char gcCommandLine[];
+extern char bProcessMessage[];
+extern char szAppName[];
+extern char szTitle[];
+extern void *hmnuDflt;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {
@@ -103,6 +116,10 @@ void WritePrefsToRegistry(void);
 void FileError(char *);
 int IsCDDrive(int);
 int SetupCDDrive(void);
+int EarlySetup(void);
+int AppInit(void *, void *, int, char *);
+int oldmain(void);
+long __stdcall AppWndProc(void *, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);
 void SetMenuStatus(int);
