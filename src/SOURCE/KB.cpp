@@ -14,6 +14,7 @@
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/Modem.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/smackManager.h>
@@ -450,8 +451,60 @@ void UpdateNormalDialog(char* text) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.445743;margin=0.444520;shape=0.204;size=0.951;calls=0.688;alternate=pol20:int WaitHandler(struct tag_message &)@0x00099e81
 VA(0x0045299f, 0x1c5)
-int WaitHandler(tag_message& msg) {
-    return 0;
+short WaitHandler(tag_message& message) {
+    signed char result = 0;
+    gbFunctionComplete = 1;
+    PollSound();
+    if (!gpSoundManager->MusicPlaying())
+        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 0x7800:
+                    case 0x7801:
+                    case 0x7802:
+                        gbFunctionComplete = 0;
+                        result = 1;
+                        break;
+                }
+        }
+    }
+    if (!result) {
+        switch (giWaitType) {
+            case 0:
+                result = WaitForOtherPlayer();
+                break;
+            case 1:
+                result = WaitForHost();
+                break;
+            case 2:
+                result = WaitForGuest();
+                break;
+            case 3:
+                result = InitNetGuest();
+                break;
+            case 4:
+                result = InitNetHost();
+                break;
+            case 5:
+                result = GUIModemCommandExec();
+                break;
+            case 6:
+                result = GUIModemResponseExec();
+                break;
+            case 7:
+                result = WaitForDirectConnect();
+                break;
+        }
+    }
+    if (result) {
+        gpWindowManager->m_dialogResult = 0x7801;
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 // Buka 2.1 EventWindowHandler without HoMM2's dialog timeout and resource help.
