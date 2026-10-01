@@ -14,7 +14,6 @@
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
-#include <SOURCE/Modem.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/smackManager.h>
@@ -446,6 +445,12 @@ void UpdateNormalDialog(char* text) {
             ->DrawWindow(1, WINDOW_ALL_WIDGETS_LOW, NORMAL_DIALOG_BACKGROUND_WIDGET_LAST_ID);
     }
 }
+
+// Modem.cpp's wait-loop steps; Modem.h does not export them (declaring them
+// there ahead of their definitions reorders Modem's own compare operands).
+signed char GUIModemCommandExec(void);
+signed char GUIModemResponseExec(void);
+int WaitForDirectConnect(void);
 
 // donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
