@@ -209,8 +209,9 @@ int game::GetLuck(class hero*, class army*, class town*) {
 // donor PoL RVA 0x00069bef; preferred Buka symbol ?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.502628;margin=0.574839;shape=0.364;size=0.953;calls=0.667;alternate=pol20:int advManager::FindAdjacentMonster(int, int, int *, int *, int, int)@0x00069bef
+// HoMM1 retail returns the found flag in AL (xor al,al / mov al,1).
 VA(0x0044471a, 0x350)
-int advManager::FindAdjacentMonster(int, int, int*, int*, int, int) {
+signed char advManager::FindAdjacentMonster(int, int, int*, int*, int, int) {
     return 0;
 }
 

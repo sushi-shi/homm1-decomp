@@ -278,5 +278,36 @@ class mapCell * advManager::MoveHero(int, int, int *, int *, int *, int, int *, 
 // donor PoL RVA 0x0000f753; preferred Buka symbol ?CheckAdjacentMon@advManager@@QAEXPAH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.530646;margin=0.751795;shape=0.360;size=0.888;calls=1.000;alternate=pol20:void advManager::CheckAdjacentMon(int *)@0x0000f753
+// Buka CURSOR.cpp:907; HoMM1 keeps byte flags and redraws through the
+// three-argument CompleteDraw.
 VA(0x0040742a, 0x181)
-void advManager::CheckAdjacentMon(int *) {}
+void advManager::CheckAdjacentMon(signed char *adjacentMonster)
+{
+    int monX;
+    int monY;
+    hero *theHero;
+    signed char dead;
+    mapCell *heroCell;
+    mapCell *monsterCell;
+
+    theHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    dead = 0;
+    if (FindAdjacentMonster(theHero->m_x, theHero->m_y, &monX, &monY, -1, -1)) {
+        StopCursor(1);
+        CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+        UpdateScreen(0, 0);
+        monsterCell = GetCell(monX, monY);
+        heroCell = GetCell(theHero->m_x, theHero->m_y);
+        if (gbThisNetHumanPlayer[giCurPlayer])
+            PlayerMonsterInteract(monsterCell, heroCell, theHero, &dead, theHero->m_x, theHero->m_y,
+                                  1, monX, monY);
+        else
+            ComputerMonsterInteract(monsterCell, theHero, &dead);
+        if (dead) {
+            EraseObj(monsterCell, monX, monY);
+            if (gbThisNetHumanPlayer[giCurPlayer])
+                FizzleCenter(0);
+        }
+        *adjacentMonster = 1;
+    }
+}

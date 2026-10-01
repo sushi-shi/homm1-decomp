@@ -127,7 +127,7 @@ public:
     void TurnTo(signed char);
     int GetMoveShowIt(signed char);
     class mapCell* MoveHero(int, int, int*, int*, int*, int, int*, int);
-    void CheckAdjacentMon(int*);
+    void CheckAdjacentMon(signed char*);
     int ValidMoveWithEvent(class hero*, int);
     int ValidMove(int, int);
     void MoveOrigin(int, int);
@@ -209,7 +209,7 @@ public:
     void EnableButtons(void);
     void SaveAdventureBorder(void);
     void DrawAdventureBorder(void);
-    int FindAdjacentMonster(int, int, int*, int*, int, int);
+    signed char FindAdjacentMonster(int, int, int*, int*, int, int);
     void ViewPuzzle(void);
     void PuzzleDraw(int, int, int, int);
     void AdvPanel(void);
@@ -268,14 +268,14 @@ public:
         class mapCell*,
         class mapCell*,
         class hero*,
-        int*,
+        signed char*,
         int,
         int,
         int,
         int,
         int
     );
-    void ComputerMonsterInteract(class mapCell*, class hero*, int*);
+    void ComputerMonsterInteract(class mapCell*, class hero*, signed char*);
     int DoNetCombat(char*);
     int DoCombat(
         int,

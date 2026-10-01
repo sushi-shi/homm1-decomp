@@ -92,7 +92,7 @@ void advManager::DoAIEvent(class mapCell *, class hero *, int, int) {}
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.214069;margin=0.493239;shape=0.272;size=0.223;calls=0.212;alternate=pol20:void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int)@0x000b4fd5
 VA(0x004625c5, 0x19a)
-void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int) {}
+void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, signed char *, int, int, int, int, int) {}
 
 // donor PoL RVA 0x000b5c40; preferred Buka symbol ?DoNetCombat@advManager@@QAEHPAD@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
