@@ -175,6 +175,11 @@ source = "src/BASE/TILESET.cpp"
 flags = "cpp_o2"
 
 [[unit]]
+unit = "BASE/SAMPLE"
+source = "src/BASE/SAMPLE.cpp"
+flags = "cpp_o2"
+
+[[unit]]
 unit = "BASE/TEXTWDGT"
 source = "src/BASE/TEXTWDGT.cpp"
 # Retail keeps standalone ~textWidget and SetText while expanding both in
