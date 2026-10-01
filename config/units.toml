@@ -325,7 +325,8 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/SWAPMGR"
 source = "src/SOURCE/SWAPMGR.cpp"
-flags = "cpp_carcass"
+# Open's fs:[0] frame around new heroWindow proves /GX.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/TOWN"

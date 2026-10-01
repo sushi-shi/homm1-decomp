@@ -34,6 +34,10 @@ public:
     short m_active;
 
     baseManager();
+    // swapManager::Close's inline store through a this temporary.
+    void Activate(void) {
+        m_active = 1;
+    }
     virtual short Open(short) = 0;
     virtual void Close() = 0;
     virtual short Main(tag_message &) = 0;

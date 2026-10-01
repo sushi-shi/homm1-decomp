@@ -48,4 +48,5 @@ extern int giMaxExtentY;
 extern int giMinExtentX;
 extern int giMinExtentY;
 extern unsigned char gMonoColorMap[];
+extern int giMonoIconSkip;
 #endif // HOMM1_BASE_ICON_H
