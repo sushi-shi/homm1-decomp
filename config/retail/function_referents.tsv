@@ -126,3 +126,6 @@ rva	name	provenance
 0x000519D1	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
 0x00081228	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
 0x0006BEA0	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
+0x00081D00	_srand	MT LIBC srand: _getptd()->_holdrand = seed, ret; SRand 0x044637 tail-calls it with the caller seed
+0x00081D10	_rand	MT LIBC rand: _getptd()->_holdrand * 214013 + 2531011, (>>16)&0x7fff; adjacent to srand in the LIBC rand object
+0x00081D70	_exit	LIBC exit: doexit(code, 0, 0) at 0x081db0; EarlySetup calls it on the CD/setup failure exits
