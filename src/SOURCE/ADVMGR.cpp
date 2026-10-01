@@ -1463,8 +1463,87 @@ short APanelHandler(struct tag_message &message)
 }
 
 VA(0x004337c5, 0x34b)
-short DimensionDoorHandler(struct tag_message&) {
-    return 0;
+short DimensionDoorHandler(struct tag_message& message) {
+    signed char result;
+    short mouseX;
+    short mouseY;
+    mapCell* cell;
+
+    if (KBTickCount() > glTimers[0]) {
+        gpAdvManager->CompleteDraw(gpAdvManager->m_mapOriginX, gpAdvManager->m_mapOriginY, 0);
+        gpAdvManager->UpdateScreen(0, 0);
+    }
+    result = 0;
+    switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.payload.widget.command) {
+                case WIDGET_NOTIFY_SELECT:
+                    switch (message.payload.widget.id) {
+                        case 10:
+                        case 11:
+                            if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+                            } else if (gpWindowManager->m_dialogResult == 1) {
+                                result = 1;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case WIDGET_COMMAND_HOVER:
+                    switch (message.payload.widget.id) {
+                        case 11:
+                            gpWindowManager->m_dialogResult = 0;
+                            gpMouseManager->SetPointer(0);
+                            break;
+                        case 10:
+                            gpMouseManager->MouseCoords(mouseX, mouseY);
+                            mouseX /= 32;
+                            mouseY /= 32;
+                            if (mouseX < 0)
+                                mouseX = 0;
+                            if (mouseY < 0)
+                                mouseY = 0;
+                            if (mouseX > 14)
+                                mouseX = 14;
+                            if (mouseY > 14)
+                                mouseY = 14;
+                            if (gpAdvManager->m_lastHoverCell != mouseX || gpAdvManager->m_hoverCellY != mouseY) {
+                                gpAdvManager->m_lastHoverCell = mouseX;
+                                gpAdvManager->m_hoverCellY = mouseY;
+                                cell = gpAdvManager->GetCell(
+                                    gpAdvManager->m_mapOriginX + mouseX,
+                                    gpAdvManager->m_mapOriginY + mouseY
+                                );
+                                if ((cell->m_triggerType & 0x80) || (cell->m_unknown07 & 0x80)) {
+                                    gpWindowManager->m_dialogResult = 0;
+                                    gpMouseManager->SetPointer(0);
+                                } else {
+                                    gpWindowManager->m_dialogResult = 1;
+                                    gpMouseManager->SetPointer(4);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case WIDGET_NOTIFY_DESELECT:
+                    switch (message.payload.widget.id) {
+                        case PANEL_CLOSE_WIDGET:
+                            gpWindowManager->m_dialogResult = 0;
+                            result = 1;
+                            break;
+                    }
+                    break;
+            }
+            break;
+    }
+    if (result) {
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 // donor PoL RVA 0x000654ad; preferred Buka symbol ?ComboDraw@advManager@@QAEHHHH@Z
