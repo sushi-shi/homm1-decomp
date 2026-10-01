@@ -102,7 +102,9 @@ public:
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
-    char m_unknown16e59[9];
+    char m_unknown16e59[5];
+    // ViewArmy's open army window; ViewArmyHandler animates it.
+    class heroWindow* m_viewArmyWindow;
     // TavernHandler advances this word as its animation counter (Buka name).
     short m_viewArmyResult;
     // InitMainClasses allocates 0x16e7a bytes for the game object.

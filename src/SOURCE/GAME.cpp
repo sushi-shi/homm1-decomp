@@ -485,12 +485,56 @@ void game::ViewArmy(
     class armyGroup*
 ) {}
 
+extern signed char gbDismissArmy;
+extern long gViewArmyAnimTimer;
+
 // donor PoL RVA 0x0007b2cf; preferred Buka symbol ?ViewArmyHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.308927;margin=0.170943;shape=0.232;size=0.493;calls=0.556;alternate=pol20:int ViewArmyHandler(struct tag_message &)@0x0007b2cf
 VA(0x004401ae, 0x1b8)
-int ViewArmyHandler(struct tag_message&) {
-    return 0;
+short ViewArmyHandler(tag_message& message) {
+    short frameDelay;
+    short offset;
+    gbDismissArmy = 0;
+    frameDelay = 5;
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 0x7800:
+                    case 0x7801:
+                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        message.payload.widget.command = message.payload.widget.id =
+                            WIDGET_COMMAND_DIALOG_SELECT;
+                        return MESSAGE_DISPATCH_FORWARD;
+                    case 0x7803:
+                        NormalDialog("Are you sure you want to dismiss this army?", 2, 0xb1, 0x36, -1, 0, -1, 0, -1);
+                        if (gpWindowManager->m_dialogResult == 0x7805) {
+                            gbDismissArmy = 1;
+                            message.payload.widget.command = message.payload.widget.id =
+                                WIDGET_COMMAND_DIALOG_SELECT;
+                            return MESSAGE_DISPATCH_FORWARD;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (KBTickCount() > gViewArmyAnimTimer) {
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.id = 5;
+        gpGame->m_viewArmyResult++;
+        message.payload.widget.data.value = gpGame->m_viewArmyResult % 6;
+        gpGame->m_viewArmyWindow->BroadcastMessage(message);
+        gpGame->m_viewArmyWindow->DrawWindow();
+        gViewArmyAnimTimer = KBTickCount() + 90;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 // Buka 2.1 game::TurnOnAIMusic.
