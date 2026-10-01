@@ -7,6 +7,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <BASE/MISC_TYPES.h>
+#include <BASE/MOUSEMGR_TYPES.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
@@ -109,6 +110,63 @@ char toupper(char character) {
         return character - 32;
     else
         return character;
+}
+
+// Buka 2.1 InterpretCommandLine reduced to HoMM1's /I, /C, /S and /B switches.
+VA(0x00450fbc, 0x288)
+int InterpretCommandLine(void) {
+    int i;
+    int helpRequested = 0;
+    int size;
+
+    giDebugLevel = 0;
+    giShowIntro = 1;
+    gbColorMice = 0;
+    gbSpecialMouseMasks = 1;
+    giScreenScroll = 1;
+    gbCheatMenus = 0;
+    gbBlackoutPlayer = 1;
+    strcpy(gMapName, "AES31000.map");
+    strcpy(gFullMapName, "Claw ( Easy )");
+    strcpy(gMapDescription, "The Griffons will protect you until you are ready to make your move.");
+
+    size = strlen(gcCommandLine);
+    for (i = 0; i < size; i++) {
+        if (gcCommandLine[i] == '/' && i + 1 < size) {
+            switch (toupper(gcCommandLine[i + 1])) {
+                case 'I':
+                    if (i + 2 < size)
+                        giShowIntro = gcCommandLine[i + 2] - '0';
+                    break;
+                case 'C':
+                    if (i + 2 < size)
+                        gbColorMice = gcCommandLine[i + 2] - '0';
+                    break;
+                case 'S':
+                    if (i + 2 < size)
+                        gbNoSound = 1 - (gcCommandLine[i + 2] - '0');
+                    break;
+                case 'B':
+                    if (i + 2 < size)
+                        gbSpecialMouseMasks = gcCommandLine[i + 2] - '0';
+                    break;
+            }
+        }
+    }
+
+    sprintf(cAggPathName, "%s%s", ".\\DATA\\", "heroes.agg");
+    DEFAULT_AGGREGATE_NAME = cAggPathName;
+    giFrameStep = 6;
+    for (i = 0; i < 4; i++) {
+        if (giNumHumanPlayers > i)
+            gbHumanPlayer[i] = 1;
+        else
+            gbHumanPlayer[i] = 0;
+    }
+    if (giNumHumanPlayers == 1)
+        gbBlackoutPlayer = 0;
+    helpRequested = 0;
+    return 1;
 }
 
 VA(0x004513fa, 0x14)
