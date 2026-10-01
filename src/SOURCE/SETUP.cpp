@@ -47,10 +47,17 @@ H1_ENUM_END(SetupDialogResult)
 // clang-format on
 
 short BaseSetupHandler(tag_message&);
+short SetupBaudHandler(tag_message&);
+short SetupComPortHandler(tag_message&);
+short SetupModemGameHandler(tag_message&);
+extern int gbDoModemConfig;
+short SetupHotSeatGameHandler(tag_message&);
+short SetupNetworkGameHandler(tag_message&);
+extern signed char iMPExtendedType;
+extern int giNumHumanPlayers;
 int nbnet_init(void);
 void RemoteMain(int);
 extern int iLastIds[];
-extern int giNumHumanPlayers;
 
 // donor PoL RVA 0x000bf340; preferred Buka symbol ?DoTradingPost@@YIXHM@Z
 // donor Buka TU SOURCE/tradpost; HoMM1 owner inferred from contiguous order
@@ -62,40 +69,166 @@ void DoTradingPost(int, float) {}
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.648115;margin=0.123105;shape=0.395;size=0.777;calls=0.833;strings=stpbaud.bin;alternate=pol20:int game::SetupBaud(void)@0x00010ebf
 VA(0x00456954, 0x190)
-int game::SetupBaud(void) {
-    return 0;
+signed char game::SetupBaud(void) {
+    heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupBaudHandler, 0);
+    delete window;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            gConfig.baudRate[gbDirectConnect] = 2400;
+            break;
+        case 2:
+            gConfig.baudRate[gbDirectConnect] = 9600;
+            break;
+        case 3:
+            gConfig.baudRate[gbDirectConnect] = 19200;
+            break;
+        case 4:
+            gConfig.baudRate[gbDirectConnect] = 38400;
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x00011000; preferred Buka symbol ?SetupComPort@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
 VA(0x00456ae4, 0x222)
-int game::SetupComPort(void) {
-    return 0;
+signed char game::SetupComPort(void) {
+    char initString[40];
+
+    heroWindow* window = new heroWindow(400, 35, "stpcom.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupComPortHandler, 0);
+    delete window;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            gConfig.comPort[gbDirectConnect] = 1;
+            break;
+        case 2:
+            gConfig.comPort[gbDirectConnect] = 2;
+            break;
+        case 3:
+            gConfig.comPort[gbDirectConnect] = 3;
+            break;
+        case 4:
+            gConfig.comPort[gbDirectConnect] = 4;
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    if (!SetupBaud())
+        return 0;
+    if (!gbDirectConnect) {
+        strcpy(gConfig.modemInitString, "ATZ");
+        sprintf(gText, "%s", gConfig.modemInitString);
+        GetDataEntry("Please enter any special initialization string required by your modem, or "
+                     "hit 'ENTER' to accept the default.",
+                     initString, 40, gText);
+        strcpy(gConfig.modemInitString, initString);
+    }
+    WritePrefs();
+    return 1;
 }
 
 // donor PoL RVA 0x00011200; preferred Buka symbol ?SetupHotSeatGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.510359;margin=0.105262;shape=0.279;size=0.627;calls=0.545;strings=stphotst.bin;alternate=pol20:int game::SetupHotSeatGame(void)@0x00011200
 VA(0x00456d06, 0x15d)
-int game::SetupHotSeatGame(void) {
-    return 0;
+signed char game::SetupHotSeatGame(void) {
+    heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupHotSeatGameHandler, 0);
+    delete window;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            giNumHumanPlayers = 2;
+            break;
+        case 2:
+            giNumHumanPlayers = 3;
+            break;
+        case 3:
+            giNumHumanPlayers = 4;
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x00011438; preferred Buka symbol ?SetupNetworkGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.778953;margin=0.116684;shape=0.550;size=0.938;calls=1.000;strings=stpnet.bin;alternate=pol20:int game::SetupNetworkGame(void)@0x00011438
 VA(0x00456e63, 0x133)
-int game::SetupNetworkGame(void) {
-    return 0;
+signed char game::SetupNetworkGame(void) {
+    heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupNetworkGameHandler, 0);
+    delete window;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
+            break;
+        case 2:
+            iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x00011795; preferred Buka symbol ?SetupModemGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.697331;margin=0.184673;shape=0.396;size=0.996;calls=0.720;strings=stpdc.bin|stpdccfg.bin|stpmcfg.bin;alternate=pol20:int game::SetupModemGame(void)@0x00011795
 VA(0x00456f96, 0x333)
-int game::SetupModemGame(void) {
-    return 0;
+signed char game::SetupModemGame(void) {
+    heroWindow* window;
+
+    if (gbDirectConnect) {
+        if (gConfig.comPort[gbDirectConnect] == 0)
+            window = new heroWindow(400, 35, "stpdc.bin");
+        else
+            window = new heroWindow(400, 35, "stpdccfg.bin");
+    } else {
+        if (gConfig.comPort[gbDirectConnect] == 0)
+            window = new heroWindow(400, 35, "stpmodem.bin");
+        else
+            window = new heroWindow(400, 35, "stpmcfg.bin");
+    }
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupModemGameHandler, 0);
+    delete window;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+            if (gConfig.comPort[gbDirectConnect] == 0) {
+                if (!SetupComPort())
+                    return 0;
+            }
+            if (!gbDirectConnect)
+                GetDataEntry("Please enter the telephone number.", numbuf, 35, 0);
+            break;
+        case 2:
+            iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+            if (gConfig.comPort[gbDirectConnect] == 0 && !SetupComPort())
+                return 0;
+            break;
+        case 3:
+            gbDoModemConfig = 1;
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x00011aac; preferred Buka symbol ?SetupMultiPlayerGame@game@@QAEHXZ

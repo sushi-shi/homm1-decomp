@@ -26,12 +26,12 @@ public:
     void DoKnob(void);
     int ProcessIconSelect(int, int);
     int SetupCampaignGame(void);
-    int SetupBaud(void);
-    int SetupComPort(void);
-    int SetupHotSeatGame(void);
-    int SetupNetworkGame(void);
+    signed char SetupBaud(void);
+    signed char SetupComPort(void);
+    signed char SetupHotSeatGame(void);
+    signed char SetupNetworkGame(void);
     int SetupNetworkGame2(void);
-    int SetupModemGame(void);
+    signed char SetupModemGame(void);
     int SetupMultiPlayerGame(void);
     int SetupGame(void);
     int PickLoadGame(void);

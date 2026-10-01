@@ -305,7 +305,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/SETUP"
 source = "src/SOURCE/SETUP.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/SMACKMGR"
