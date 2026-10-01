@@ -4,6 +4,8 @@
 #include <match.h>
 
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Icon2b.h>
+#include <BASE/Icond2b.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
@@ -61,6 +63,106 @@ void advManager::StopCursor(signed char stopSound)
         m_previousCursorMapX = m_previousCursorMapY = -1;
     }
     m_cursorTurning = 0;
+}
+
+extern int bSpecialHideCursor;
+extern signed char gbDrawSavedCursor;
+extern signed char S1cursorDirection;
+extern short S1cursorBaseFrame;
+extern short S1cursorFrameCount;
+extern short S1cursorCycle;
+extern short S1cursorTurning;
+extern signed char giGroundToTerrain[];
+
+// Buka CURSOR.cpp:99 DrawCursor; HoMM1 draws the hero shadow first and
+// counts flag frames with m_updateMaxY.
+VA(0x00405c09, 0x5e4)
+void advManager::DrawCursor(void)
+{
+    short drawX;
+    short screenY;
+    short drawFrame;
+
+    if (bShowIt == 0 || bSpecialHideCursor)
+        return;
+    if (gbDrawSavedCursor) {
+        m_cursorDirection = S1cursorDirection;
+        m_cursorFrame = S1cursorBaseFrame;
+        m_cursorFrameCount = S1cursorFrameCount;
+        m_cursorCycle = S1cursorCycle;
+        m_cursorTurning = S1cursorTurning;
+    }
+    drawX = m_updateMinX + 0xe0;
+    screenY = m_updateMinY + 0xff;
+    if (m_cursorType == 4)
+        screenY -= 10;
+    if (m_cursorFrame & 0x80) {
+        drawX += 0x20;
+        drawFrame = (m_cursorFrame & 0x7f) + m_cursorFrameCount;
+        if (m_drawHeroShadows && m_cursorType != 4)
+            FlipDimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, 0);
+        FlipIconToBitmap(m_heroIcons[m_cursorType], gpWindowManager->m_screen, drawX, screenY,
+                         drawFrame, 0);
+        if (m_cursorType == 4) {
+            if (m_cursorCycle == 0)
+                drawFrame = m_cursorFrame & 0x7f;
+            FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen,
+                             drawX, screenY, drawFrame, 0);
+        } else {
+            if (m_cursorCycle == 0)
+                drawFrame = (m_updateMaxY & 3) + (m_cursorFrame & 0x7f) + 0x38;
+            FlipIconToBitmap(m_flagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+                             screenY, drawFrame, 0);
+            m_updateMaxY++;
+        }
+    } else {
+        drawFrame = m_cursorFrame + m_cursorFrameCount;
+        if (m_drawHeroShadows && m_cursorType != 4)
+            DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, 0);
+        IconToBitmap(m_heroIcons[m_cursorType], gpWindowManager->m_screen, drawX, screenY, drawFrame,
+                     0);
+        if (m_cursorType == 4) {
+            if (m_cursorCycle == 0)
+                drawFrame = m_cursorFrame;
+            IconToBitmap(m_boatFlagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+                         screenY, drawFrame, 0);
+        } else {
+            if (m_cursorCycle == 0)
+                drawFrame = (m_updateMaxY & 3) + m_cursorFrame + 0x38;
+            IconToBitmap(m_flagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+                         screenY, drawFrame, 0);
+            m_updateMaxY++;
+        }
+    }
+    if (m_cursorCycle && gConfig.walkSpeed != 4) {
+        m_cursorFrameCount++;
+        if (gConfig.walkSpeed == 3 && (m_cursorFrameCount == 4 || m_cursorFrameCount == 1))
+            m_cursorFrameCount++;
+        if (gConfig.walkSpeed == 0) {
+            EveryOther = 1 - EveryOther;
+            if (EveryOther)
+                m_cursorFrameCount--;
+        }
+    }
+    if (m_cursorFrameCount >= 8)
+        m_cursorFrameCount = 0;
+    if (!m_cursorTurning) {
+        if (m_cursorFrameCount == 0)
+            hPrevMoveSound = hLastMoveSound;
+        if (m_cursorFrameCount == 3 || (gConfig.walkSpeed == 4 && !bMoveSoundMade)) {
+            bMoveSoundMade = 1;
+            if (!EveryOther)
+                hLastMoveSound = gpSoundManager->MemorySample(
+                    m_cursorSamples[giGroundToTerrain[GetCell(m_mapOriginX + 7, m_mapOriginY + 7)->m_tileIndex]]);
+        }
+    }
+    if (!gbDrawSavedCursor) {
+        S1cursorDirection = m_cursorDirection;
+        S1cursorBaseFrame = m_cursorFrame;
+        S1cursorFrameCount = m_cursorFrameCount;
+        S1cursorCycle = m_cursorCycle;
+        S1cursorTurning = m_cursorTurning;
+    }
 }
 
 // donor PoL RVA 0x0000e198; preferred Buka symbol ?GetCursorBaseFrame@advManager@@QAEHH@Z
