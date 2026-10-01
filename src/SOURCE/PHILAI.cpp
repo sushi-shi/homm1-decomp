@@ -164,7 +164,67 @@ void philAI::CheckReload(void) {}
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.559466;margin=0.357720;shape=0.362;size=0.984;calls=1.000;alternate=pol20:void philAI::CheckBerserk(void)@0x00038c3d
 VA(0x0041ad10, 0x294)
-void philAI::CheckBerserk(void) {}
+void philAI::CheckBerserk(hero* pHero) {
+    int heroFightValue;
+    int x;
+    mapCell* cell;
+    int y;
+    hero* enemyHero;
+    int best = -1;
+    int enemy;
+
+    gbBerserk = 0;
+    fBerserkFactor = 1.0f;
+    heroFightValue = FightValueOfStack(&pHero->m_army, pHero, 1, 0, 0);
+    if (heroFightValue < 100)
+        heroFightValue = 100;
+    if (heroFightValue < 30000)
+        return;
+    for (x = 0; x < 72; x++) {
+        for (y = 0; y < 72; y++) {
+            cell = gpAdvManager->GetCell(x, y);
+            switch (cell->m_triggerType) {
+            case 0xa8:
+                if (gpGame->m_townOwners[cell->m_objectMetadata] != pHero->m_owner) {
+                    if (gpGame->m_townOwners[cell->m_objectMetadata] != -1) {
+                        enemy = FightValueOfStack(
+                            &gpGame->GetTown(cell->m_objectMetadata)->m_army,
+                            0,
+                            1,
+                            1,
+                            cell->m_objectMetadata
+                        );
+                        if (enemy > heroFightValue)
+                            return;
+                        if (enemy > best)
+                            best = enemy;
+                    }
+                }
+                break;
+            case 0xbd:
+                if (gpGame->m_availableHeroes[cell->m_objectMetadata] != pHero->m_owner) {
+                    enemyHero = gpGame->GetHero(cell->m_objectMetadata);
+                    enemy = FightValueOfStack(
+                        &enemyHero->m_army,
+                        0,
+                        1,
+                        enemyHero->m_locationType == 0xa8,
+                        enemyHero->m_occupiedTown
+                    );
+                    if (enemy * 2 > heroFightValue)
+                        return;
+                    if (enemy * 2 > best)
+                        best = enemy * 2;
+                }
+                break;
+            }
+        }
+    }
+    if (best <= 0)
+        return;
+    fBerserkFactor = best * 0.75 / heroFightValue;
+    gbBerserk = 1;
+}
 
 // Buka 2.1 DoDimensionDoor with DimensionDoorTo inlined for the given hero:
 // HoMM1 teleports with three arguments and returns a byte flag.
@@ -768,7 +828,7 @@ float philAI::FutureDeflator(int* const resources) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.393076;margin=0.447055;shape=0.297;size=0.768;calls=0.382;alternate=pol20:int philAI::FightValueOfStack(class armyGroup *, class hero *, int, int, int, int)@0x0003fed2
 VA(0x0041ff2c, 0x764)
-int philAI::FightValueOfStack(class armyGroup*, class hero*, int, int, int, int) {
+int philAI::FightValueOfStack(class armyGroup*, class hero*, int, int, signed char) {
     return 0;
 }
 

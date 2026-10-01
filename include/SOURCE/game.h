@@ -50,7 +50,8 @@ public:
     char m_unknownd0a0[0x5100];
     signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
-    char m_unknown1295d[0x24];
+    // CheckBerserk compares each town owner with the hero owner.
+    signed char m_townOwners[GAME_TOWN_COUNT];
     unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
@@ -60,7 +61,7 @@ public:
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
-    hero* GetHero(int id) {
+    hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
     // TownEvent passes the unsigned cell metadata through a signed byte.

@@ -55,7 +55,7 @@ public:
     void CheckBuyStuff(void);
     int GoodAdjacent(class hero*, int*);
     void CheckReload(void);
-    void CheckBerserk(void);
+    void CheckBerserk(class hero*);
     void DimensionDoorTo(int, int);
     int DoAnywhereDDoorTownGate(int);
     signed char DoDimensionDoor(class hero*);
@@ -105,7 +105,7 @@ public:
     void TurnCostResource(int);
     float TurnValueOfObelisk(int);
     float FutureDeflator(int* const);
-    int FightValueOfStack(class armyGroup*, class hero*, int, int, int, int);
+    int FightValueOfStack(class armyGroup*, class hero*, int, int, signed char);
     void EvaluateOneTimeCreaturePurchase(class hero*, int, int, int, int&, int&, int&);
     int QuickCombat(
         class armyGroup*,
@@ -170,6 +170,8 @@ extern signed char gbDrawSavedCursor;
 extern int bSpecialHideCursor;
 extern int gbHumanPlayer[];
 extern int giHumanTownConquered;
+extern int gbBerserk;
+extern float fBerserkFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
