@@ -448,7 +448,52 @@ void advManager::UpdateHeroLocators(signed char drawWindow, signed char updateSc
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.535916;margin=0.510257;shape=0.379;size=0.971;calls=0.800;alternate=pol20:void advManager::UpdateTownLocators(int, int)@0x000608af
 VA(0x0042c72e, 0x27f)
-void advManager::UpdateTownLocators(int, int) {}
+void advManager::UpdateTownLocators(signed char drawWindow, signed char updateScreen) {
+    tag_message message;
+    short i;
+    signed char whichTown;
+    double scrollStep;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+    message.type = MESSAGE_WIDGET;
+    for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
+        whichTown = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + i];
+        message.payload.widget.command = WIDGET_COMMAND_SET_COLOR;
+        message.payload.widget.id = i + 32;
+        message.payload.widget.data.value =
+            (gpCurPlayer->m_currentTown != -1 && gpCurPlayer->m_currentTown == whichTown && !gbAllBlack)
+                ? 0xc5
+                : 0;
+        m_adventureWindow->BroadcastMessage(message);
+        message.payload.widget.id = i + 16;
+        if (whichTown == -1 || gbAllBlack) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = i + 4;
+            m_adventureWindow->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+            m_adventureWindow->BroadcastMessage(message);
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+            m_adventureWindow->BroadcastMessage(message);
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = gpGame->GetTown(whichTown)->m_type + 12;
+            if (gpGame->GetTown(whichTown)->m_buildings & 0x40)
+                message.payload.widget.data.value += 4;
+            m_adventureWindow->BroadcastMessage(message);
+        }
+    }
+    if (gpCurPlayer->m_townCount < 5) {
+        m_scrollRightButton->m_y = 232;
+    } else {
+        scrollStep = 74.0 / (gpCurPlayer->m_townCount - 4);
+        m_scrollRightButton->m_y = static_cast<short>(gpCurPlayer->m_townLocatorPage * scrollStep + 195.0);
+    }
+    if (drawWindow)
+        m_adventureWindow->DrawWindow(updateScreen);
+}
 
 // donor PoL RVA 0x00060b97; preferred Buka symbol ?UpdBottomView@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

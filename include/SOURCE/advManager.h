@@ -158,7 +158,7 @@ public:
     void QuickInfo(int, int);
     void UpdateHeroLocator(int, int, int);
     void UpdateHeroLocators(signed char, signed char);
-    void UpdateTownLocators(int, int);
+    void UpdateTownLocators(signed char, signed char);
     void UpdBottomView(signed char, signed char, signed char);
     void ClearBottomView(void);
     signed char UpdBottomViewEnemyTurn(void);
