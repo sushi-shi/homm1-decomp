@@ -37,6 +37,8 @@ public:
     int m_goldTotal;
     short m_resourceTotal;
     short m_quantity;
+    // RecruitEvent allocates 0x5c bytes.
+    char m_unknown5a[2];
     // --- constructors ---
     recruitUnit(class armyGroup*, int, short int*);
     // HoMM1 has no refresh-town argument (retail ret 8).

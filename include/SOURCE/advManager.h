@@ -229,10 +229,12 @@ public:
     void JailEvent(class mapCell*, class hero*, int, int);
     void TownEvent(class mapCell*, int, int);
     void EventSound(int, int, struct SAMPLE2*);
-    void EventWindow(int, int, char*, int, int, int, int, int);
+    void EventWindow(short, int, char*, int, int, int, int, int);
     int GiveRandomArtifact(class hero*);
-    int GiveExperience(class hero*, int, int);
-    void GiveResource(class hero*, int, int);
+    int GiveExperience(class hero*, int, signed char);
+    // HoMM1 retail: byte resource, word amount (ret 0xc).
+    void GiveResource(class hero*, signed char, short);
+    short GiveArtifact(class hero*, signed char);
     void RecruitEvent(class hero*, int, class mapCell*);
     int SkeletonEvent(class hero*, class mapCell*, char*, int, int);
     int ZombieEvent(class hero*, class mapCell*, char*, int, int);

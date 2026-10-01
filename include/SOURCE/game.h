@@ -66,7 +66,10 @@ public:
     class hero m_heroRecs[GAME_HERO_COUNT];
     char m_unknown1431d[0x24];
     mineRecord m_mines[GAME_MINE_COUNT];
-    char m_unknown1443d[0x2a19];
+    char m_unknown1443d[0x24];
+    // GiveArtifact records the receiving hero per artifact.
+    signed char m_artifactOwners[0x28];
+    char m_unknown14489[0x29cd];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
@@ -154,7 +157,8 @@ public:
     void RandomizeTown(int, int, int);
     void RandomizeMine(int, int);
     void InitRandomArtifacts(void);
-    int GetRandomArtifactId(int, int);
+    // HoMM1 retail: no arguments, artifact in AL.
+    signed char GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(int, int);
     void ProcessRandomObjects(void);

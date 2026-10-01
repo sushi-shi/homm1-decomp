@@ -130,3 +130,4 @@ rva	name	provenance
 0x00047CC0	?GetNumArmies@armyGroup@@QAEFXZ	swapManager::ViewMon calls it on a hero army and sign-extends AX; body counts non-empty creature slots of five
 0x00047E4B	?Swap@armyGroup@@QAEXCPAV1@C@Z	swapManager::SwapMons passes byte slots around the destination group; body reads both slots with movsx byte [ebp+8]/[ebp+0x10] (ret 0xc)
 0x0000EF8C	?SplitArmyHandler@@YAFAAUtag_message@@@Z	swapManager::SplitMons passes it to DoDialog with the splitwin.bin window; Buka SplitArmyHandler correspondence, cdecl ret
+0x000439C1	?GetRandomArtifactId@game@@QAECXZ	advManager::GiveRandomArtifact calls it on gpGame with no arguments and stores AL; body returns 0xff or a byte artifact id

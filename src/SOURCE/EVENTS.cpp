@@ -2,8 +2,18 @@
 
 #include <match.h>
 
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
+
+#include <stdio.h>
+
+// EVENTS assertion records (file literals and line base), as in MOUSEMGR.
+extern short gEventsAssertLine;
+extern char gEventsAssertFile1[];
+extern char gEventsAssertFile2[];
+extern char* gEventText[];
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -63,25 +73,107 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.574046;margin=0.505217;shape=0.246;size=0.761;calls=0.800;strings=Event ID %d;alternate=pol20:void advManager::EventWindow(int, int, char *, int, int, int, int, int)@0x000aff6c
 VA(0x004603a0, 0xde)
-void advManager::EventWindow(int, int, char *, int, int, int, int, int) {}
+void advManager::EventWindow(short eventId, int buttons, char* text, int type1, int value1,
+                             int type2, int value2, int type3) {
+    int unusedValue1;
+    int unusedValue7;
+    int finished;
+    int unusedValue8;
+    int unusedValue9;
+    int unusedValue11;
+    int unusedValue12;
+    char eventText[500];
+    short unusedStyle;
+
+    finished = 0;
+    GrabScreen();
+    unusedStyle = 1;
+    if (eventId >= 0 && eventId < 76)
+        sprintf(eventText, gEventText[eventId]);
+    else if (eventId == -1)
+        sprintf(eventText, text);
+    else
+        sprintf(eventText, "Event ID %d", eventId);
+    NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, type3);
+}
+
+VA(0x0046047e, 0xa9)
+short advManager::GiveArtifact(class hero* eventHero, signed char artifact) {
+    short slot;
+
+    for (slot = 0; slot < HERO_ARTIFACT_SLOT_COUNT; slot++) {
+        if (eventHero->m_artifacts[slot] == -1)
+            break;
+    }
+    if (slot == HERO_ARTIFACT_SLOT_COUNT)
+        return -1;
+    eventHero->m_artifacts[slot] = artifact;
+    gpGame->m_artifactOwners[artifact] = eventHero->m_id;
+    GiveTakeArtifactStat(eventHero, artifact, 0);
+    return slot;
+}
 
 // donor PoL RVA 0x000b00e9; preferred Buka symbol ?GiveRandomArtifact@advManager@@QAEHPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.483471;margin=0.618508;shape=0.306;size=0.821;calls=1.000;alternate=pol20:int advManager::GiveRandomArtifact(class hero *)@0x000b00e9
 VA(0x00460527, 0x5f)
-int advManager::GiveRandomArtifact(class hero *) { return 0; }
+int advManager::GiveRandomArtifact(class hero* eventHero) {
+    signed char artifact;
+
+    artifact = gpGame->GetRandomArtifactId();
+    if (artifact == -1)
+        GiveResource(eventHero, 6, 1000);
+    else
+        GiveArtifact(eventHero, artifact);
+    return artifact;
+}
 
 // donor PoL RVA 0x000b0147; preferred Buka symbol ?GiveExperience@advManager@@QAEHPAVhero@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
 VA(0x00460586, 0xb0)
-int advManager::GiveExperience(class hero *, int, int) { return 0; }
+int advManager::GiveExperience(class hero* eventHero, int experience, signed char checkLevel) {
+    int prevLevel;
+    int unusedValue1;
+    int unusedValue2;
+    int newLevel;
+    int levelGap;
+
+    prevLevel = eventHero->GetLevel(eventHero->m_experience);
+    eventHero->m_level = prevLevel;
+    eventHero->m_experience += experience;
+    ProcessAssert(experience >= 0, gEventsAssertFile1, gEventsAssertLine + 8);
+    ProcessAssert(eventHero->m_experience >= 0, gEventsAssertFile2, gEventsAssertLine + 9);
+    newLevel = eventHero->GetLevel(eventHero->m_experience);
+    if (checkLevel)
+        eventHero->CheckLevel();
+    return newLevel - prevLevel;
+}
+
+VA(0x00460636, 0x5a)
+void advManager::GiveResource(class hero* eventHero, signed char resource, short amount) {
+    if (resource >= 0 && resource <= 6)
+        gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
+}
 
 // donor PoL RVA 0x000b022e; preferred Buka symbol ?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.608108;margin=0.082972;shape=0.542;size=0.949;calls=0.833;alternate=pol20:void advManager::RecruitEvent(class hero *, int, class mapCell *)@0x000b022e
 VA(0x00460690, 0xec)
-void advManager::RecruitEvent(class hero *, int, class mapCell *) {}
+void advManager::RecruitEvent(class hero* eventHero, int creatureType, class mapCell* cell) {
+    tag_message message;
+    short availableCount;
+    recruitUnit* recruitWindow;
+    int result;
+
+    availableCount = cell->m_objectMetadata;
+    recruitWindow = new recruitUnit(&eventHero->m_army, creatureType, &availableCount);
+    if (!recruitWindow)
+        MemError();
+    gpExec->DoDialog(recruitWindow);
+    delete recruitWindow;
+    cell->m_objectMetadata = availableCount;
+}
 
 // donor PoL RVA 0x000b07e5; preferred Buka symbol ?GhostEvent@advManager@@QAEHPAVhero@@PAVmapCell@@PADHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
