@@ -38,7 +38,8 @@ H1_ENUM_BEGIN(BaseWidgetCommand)
     WIDGET_COMMAND_SET_FRAME = 4,
     WIDGET_COMMAND_GET_TEXT = 7,
     WIDGET_NOTIFY_SELECT = 12,
-    WIDGET_NOTIFY_DESELECT = 13
+    WIDGET_NOTIFY_DESELECT = 13,
+    WIDGET_NOTIFY_RIGHT_CLICK = 14
 H1_ENUM_END(BaseWidgetCommand)
 
 H1_ENUM_BEGIN(MessageModifier)
@@ -62,7 +63,8 @@ union tag_messageWidgetData {
 struct tag_messageWidgetPayload {
     H1_ENUM_STORAGE(BaseWidgetCommand, short) command;
     short id;
-    char unknown[6];
+    short modifiers;
+    char unknown[4];
     tag_messageWidgetData data;
 };
 

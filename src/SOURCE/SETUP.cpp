@@ -24,6 +24,27 @@ extern signed char iInitNetGuestStatus;
 extern signed char iWaitForHostStatus;
 extern signed char iWaitForGuestStatus;
 extern long iLastBroadcastTime;
+extern signed char gbDirectConnect;
+extern int giMenuCommand;
+extern char* gSetupCampaignGameHelp[];
+extern char* gSetupComPortHelp[];
+extern char* gSetupDCComPortHelp[];
+extern char* gSetupBaudHelp[];
+extern char* gSetupDCBaudHelp[];
+extern char* gSetupHotSeatGameHelp[];
+extern char* gSetupModemGameHelp[];
+extern char* gSetupDCGameHelp[];
+extern char* gSetupMultiPlayerGameHelp[];
+extern char* gSetupNetworkGameHelp[];
+extern char* gSetupGameHelp[];
+
+// clang-format off
+H1_ENUM_BEGIN(SetupDialogResult)
+    DIALOG_CANCEL = 0x7801
+H1_ENUM_END(SetupDialogResult)
+// clang-format on
+
+short BaseSetupHandler(tag_message&);
 
 // donor PoL RVA 0x000bf340; preferred Buka symbol ?DoTradingPost@@YIXHM@Z
 // donor Buka TU SOURCE/tradpost; HoMM1 owner inferred from contiguous order
@@ -86,6 +107,277 @@ VA(0x00457967, 0x1e7)
 int game::PickLoadGame(void) {
     return 0;
 }
+
+// Buka 2.1 SETUP help handlers; HoMM1 shows each help text as a type-4 dialog.
+VA(0x00457b4e, 0x112)
+short SetupCampaignGameHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case 3:
+                helpIndex = 2;
+                break;
+            case 4:
+                helpIndex = 3;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 4;
+                break;
+        }
+        if (helpIndex >= 0)
+            NormalDialog(gSetupCampaignGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x00457c60, 0x149)
+short SetupComPortHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case 3:
+                helpIndex = 2;
+                break;
+            case 4:
+                helpIndex = 3;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 4;
+                break;
+        }
+        if (helpIndex >= 0) {
+            if (gbDirectConnect)
+                NormalDialog(gSetupDCComPortHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            else
+                NormalDialog(gSetupComPortHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+        }
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x00457da9, 0x149)
+short SetupBaudHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case 3:
+                helpIndex = 2;
+                break;
+            case 4:
+                helpIndex = 3;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 4;
+                break;
+        }
+        if (helpIndex >= 0) {
+            if (gbDirectConnect)
+                NormalDialog(gSetupDCBaudHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            else
+                NormalDialog(gSetupBaudHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+        }
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x00457ef2, 0x102)
+short SetupHotSeatGameHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case 3:
+                helpIndex = 2;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 3;
+                break;
+        }
+        if (helpIndex >= 0)
+            NormalDialog(gSetupHotSeatGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x00457ff4, 0x139)
+short SetupModemGameHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case 3:
+                helpIndex = 2;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 3;
+                break;
+        }
+        if (helpIndex >= 0) {
+            if (gbDirectConnect)
+                NormalDialog(gSetupDCGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            else
+                NormalDialog(gSetupModemGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+        }
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x0045812d, 0x112)
+short SetupMultiPlayerGameHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case 3:
+                helpIndex = 2;
+                break;
+            case 4:
+                helpIndex = 3;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 4;
+                break;
+        }
+        if (helpIndex >= 0)
+            NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x0045823f, 0xe1)
+short SetupNetworkGameHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 2;
+                break;
+        }
+        if (helpIndex >= 0)
+            NormalDialog(gSetupNetworkGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x00458320, 0x102)
+short SetupGameHandler(tag_message& message) {
+    int helpIndex;
+
+    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        helpIndex = -1;
+        switch (message.payload.widget.id) {
+            case 1:
+                helpIndex = 0;
+                break;
+            case 2:
+                helpIndex = 1;
+                break;
+            case 3:
+                helpIndex = 2;
+                break;
+            case DIALOG_CANCEL:
+                helpIndex = 3;
+                break;
+        }
+        if (helpIndex >= 0)
+            NormalDialog(gSetupGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+    }
+    return BaseSetupHandler(message);
+}
+
+VA(0x00458422, 0xf1)
+short BaseSetupHandler(tag_message& message) {
+    int handled = 0;
+
+    PollSound();
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                if ((message.payload.widget.id > 0 && message.payload.widget.id <= 1000)
+                    || message.payload.widget.id == DIALOG_CANCEL)
+                    handled = 1;
+        }
+    }
+
+    if (handled || giMenuCommand != -1) {
+        gpWindowManager->m_dialogResult = message.payload.widget.id;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        if (giMenuCommand != -1)
+            gpWindowManager->m_dialogResult = DIALOG_CANCEL;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
 
 // Buka 2.1 RemoteCleanup without the HoMM2 logging and DirectPlay modes.
 VA(0x00458520, 0x8d)
