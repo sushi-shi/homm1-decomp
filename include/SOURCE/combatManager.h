@@ -27,6 +27,8 @@ H1_ENUM_END(CombatPointerCode)
 // GameUnsaved reads the baseManager m_active word through gpCombatManager.
 class combatManager : public baseManager {
 public:
+    // InitMainClasses allocates 0x7d3 bytes; the fields stay opaque here.
+    char m_unknown30[0x7a3];
     // --- constructors ---
     combatManager(void);
     // --- virtual methods (vtable order) ---

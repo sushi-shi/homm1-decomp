@@ -104,6 +104,8 @@ public:
     char m_unknown16e59[9];
     // TavernHandler advances this word as its animation counter (Buka name).
     short m_viewArmyResult;
+    // InitMainClasses allocates 0x16e7a bytes for the game object.
+    char m_unknown16e64[0x16];
     hero* GetHero(int id) {
         return &m_heroRecs[id];
     }

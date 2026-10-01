@@ -61,7 +61,24 @@ void ForcePollSound() {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.512387;margin=0.755802;shape=0.400;size=0.925;calls=0.653;alternate=pol20:void InitMainClasses(void)@0x000965be
 VA(0x0044f6d2, 0x607)
-void InitMainClasses(void) {}
+void InitMainClasses(void) {
+    gpExec = new executive;
+    gpInputManager = new inputManager;
+    gpMouseManager = new mouseManager;
+    gpWindowManager = new heroWindowManager;
+    gpResourceManager = new resourceManager;
+    gpSoundManager = new soundManager;
+    gpSmackManager = new smackManager;
+    gpHighScoreManager = new highScoreManager;
+    gpGame = new game;
+    gpAdvManager = new advManager;
+    gpCombatManager = new combatManager;
+    gpTownManager = new townManager;
+    gpSearchArray = new searchArray;
+    gpPhilAI = new philAI;
+    gpMonGroup = new armyGroup;
+    gpBufferPalette = new palette;
+}
 
 // Buka 2.1 DeleteMainClasses; HoMM1 also owns the smacker manager and frees the
 // resource manager before the window, mouse and input managers.
