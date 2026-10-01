@@ -249,7 +249,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/HERO"
 source = "src/SOURCE/HERO.cpp"
-flags = "cpp_carcass"
+# ViewStat's fs:[0] frame around new heroWindow proves /GX.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/HISCORE"

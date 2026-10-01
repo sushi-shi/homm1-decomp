@@ -95,8 +95,8 @@ public:
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
-    void ViewStat(int, int);
-    void ViewArtifact(int, int, int);
+    void ViewStat(signed char, signed char);
+    void ViewArtifact(signed char, signed char);
     signed char Dismiss(void);
     void Deallocate(void);
     int GetExperience(int);
@@ -126,6 +126,9 @@ extern class heroWindow* heroWin;
 extern class heroWindow* gheroWin;
 
 void HeroMessageUpdate(char*);
+extern char* gStatNames[];
+extern char* gStatDesc[];
+extern char* gArtifactDesc[];
 extern int giHeroScreenSrcIndex;
 extern short gMinExpForLevel[][HERO_EXPERIENCE_LEVEL_TABLE_COUNT];
 #endif // HOMM1_SOURCE_HERO_H

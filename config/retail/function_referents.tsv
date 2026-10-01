@@ -126,3 +126,4 @@ rva	name	provenance
 0x000519D1	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
 0x00081228	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
 0x0006BEA0	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
+0x00052C78	?TrueFalseDialogHandler@@YAFAAUtag_message@@@Z	ViewStat passes it to DoDialog at 0x06cde7; body forwards its message to the 0x052b64 event-window handler as Buka KB TrueFalseDialogHandler

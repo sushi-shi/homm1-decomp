@@ -7,6 +7,7 @@
 #include <SOURCE/dialogTypes.h>
 
 #include <stdio.h>
+#include <string.h>
 
 // donor PoL RVA 0x000c0790; preferred Buka symbol ?AICheckRetreat@combatManager@@QAEHXZ
 // donor Buka TU SOURCE/AI; HoMM1 owner inferred from contiguous order
@@ -353,6 +354,40 @@ void hero::UpdateArmies(void) {
             heroWin->BroadcastMessage(message);
         }
     }
+}
+
+VA(0x0046cc90, 0x1af)
+void hero::ViewStat(signed char stat, signed char quickView) {
+    heroWindow* win;
+    tag_message message;
+
+    if (quickView) {
+        sprintf(gText, "%s\n\n%s", gStatNames[stat], gStatDesc[stat]);
+        NormalDialog(gText, 4, 0xb1, 0x19, -1, 0, -1, 0, -1);
+        return;
+    }
+    win = new heroWindow(0xb1, 0x19, "vstat.bin");
+    if (!win)
+        MemError();
+    strcpy(gText, gStatNames[stat]);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+    strcpy(gText, gStatDesc[stat]);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 2;
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+    gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
+    delete win;
+}
+
+VA(0x0046ce3f, 0x4a)
+void hero::ViewArtifact(signed char artifact, signed char quickView) {
+    NormalDialog(gArtifactDesc[artifact], quickView == 0 ? 1 : 4, -1, 0x1c, -1, 0, -1, 0, -1);
 }
 
 // donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
