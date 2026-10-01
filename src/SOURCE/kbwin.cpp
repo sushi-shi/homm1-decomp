@@ -6,7 +6,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <io.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <BASE/Misc.h>
 #include <BASE/MOUSEMGR_TYPES.h>
@@ -240,12 +242,12 @@ void SetNoDialogMenus(int menusEnabled) {
 // each command from the normal or setup enable table.
 VA(0x0045c8a4, 0x15a)
 void SetMenus(void* menu, int enabled) {
+    int itemIndex;
     int numItems;
     unsigned int id;
     int scanIndex;
     int k;
     int change;
-    int itemIndex;
 
     numItems = GetMenuItemCount(static_cast<HMENU>(menu));
     for (itemIndex = 0; itemIndex < numItems; itemIndex++) {
@@ -273,6 +275,223 @@ void SetMenus(void* menu, int enabled) {
             EnableMenuItem(static_cast<HMENU>(menu), id, enabled == 0 ? MF_GRAYED : MF_ENABLED);
     }
     UpdateDfltMenu(menu);
+}
+
+// PoL 2.0 Misc.cpp SetGameDefaults correspondence; HoMM1 picks the walk
+// speed and slow-video default from the detected processor family.
+VA(0x0045c9fe, 0x1a3)
+void SetGameDefaults(void)
+{
+    int cpuType;
+    int i;
+
+    gConfig.musicVolume = 1;
+    gConfig.soundVolume = 1;
+    gConfig.autosave = 1;
+    gConfig.showRoute = 1;
+    gConfig.blackoutComputer = 0;
+    for (i = 0; i < CONFIG_EXECUTABLE_COUNT; i++) {
+        gConfig.gfx[i].showMenu = 1;
+        gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
+        gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
+        if (giMainVideoModeWidth <= DEFAULT_WINDOW_WIDTH && gbDDrawAttached) {
+            gConfig.gfx[i].fullScreen = 1;
+            gConfig.gfx[i].width = DEFAULT_SMALL_WINDOW_WIDTH;
+            gConfig.gfx[i].height = DEFAULT_SMALL_WINDOW_HEIGHT;
+        } else {
+            gConfig.gfx[i].fullScreen = 1;
+            gConfig.gfx[i].width = DEFAULT_WINDOW_WIDTH;
+            gConfig.gfx[i].height = DEFAULT_WINDOW_HEIGHT;
+        }
+    }
+    gConfig.blackoutComputer = 0;
+    gConfig.currentMapOffset = 0;
+    gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
+    gConfig.cdOffset = 0;
+    gConfig.musicSource = CONFIG_MUSIC_SOURCE_CD;
+    gbFirstTimeThrough = 1;
+    cpuType = GetCPUType();
+    if ((cpuType & 0xff) >= CPU_FAMILY_PENTIUM) {
+        gConfig.walkSpeed = CONFIG_WALK_SPEED_FAST;
+        gConfig.slowVideo = 0;
+    } else {
+        gConfig.walkSpeed = CONFIG_WALK_SPEED_SLOW;
+        gConfig.slowVideo = 1;
+    }
+}
+
+VA(0x0045cba1, 0x20d)
+void ReadPrefsFromFile(void)
+{
+    FILE *fp;
+    int result;
+    char buffer[100];
+
+    sprintf(gText, "%s", "HEROES.CFG");
+    if (_access(gText, 0) == -1) {
+        memset(&gConfig, 0, sizeof(gConfig));
+        SetGameDefaults();
+        WritePrefs();
+    } else {
+        fp = fopen(gText, "rb");
+        if (fp == 0)
+            FileError(gText);
+        fread(&gConfig, sizeof(gConfig), 1, fp);
+        if (gConfig.gfx[giCurExe].width <= 0)
+            gConfig.gfx[giCurExe].width = MINIMUM_WINDOW_WIDTH;
+        if (gConfig.gfx[giCurExe].height <= 0)
+            gConfig.gfx[giCurExe].height = MINIMUM_WINDOW_HEIGHT;
+        if (gConfig.gfx[giCurExe].x < 0)
+            gConfig.gfx[giCurExe].x = 0;
+        if (gConfig.gfx[giCurExe].x > giMainVideoModeHeight - WINDOW_POSITION_MARGIN)
+            gConfig.gfx[giCurExe].x = giMainVideoModeHeight - WINDOW_POSITION_MARGIN;
+        if (gConfig.gfx[giCurExe].y < 0)
+            gConfig.gfx[giCurExe].y = 0;
+        if (gConfig.gfx[giCurExe].y > giMainVideoModeWidth - WINDOW_POSITION_MARGIN)
+            gConfig.gfx[giCurExe].y = giMainVideoModeWidth - WINDOW_POSITION_MARGIN;
+        result = fclose(fp);
+        if (gConfig.walkSpeed == CONFIG_UNINITIALIZED) {
+            SetGameDefaults();
+            WritePrefs();
+        }
+    }
+    strcpy(gcRegCDDrive, "");
+    strcpy(gcRegAppPath, "");
+}
+
+VA(0x0045cdae, 0x523)
+void ReadPrefsFromRegistry(void)
+{
+    HKEY key;
+    DWORD cbData;
+    char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
+    DWORD dataType;
+    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    long rc;
+
+    strcpy(szTemp, "");
+    strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+    key = 0;
+    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
+    if (rc == 0) {
+        cbData = REGISTRY_DWORD_BYTES;
+        if (RegQueryValueExA(key, "Music Volume", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.musicVolume), &cbData) != 0) {
+            memset(&gConfig, 0, sizeof(gConfig));
+            SetGameDefaults();
+            RegCloseKey(key);
+            WritePrefs();
+            return;
+        }
+        RegQueryValueExA(key, "Music Volume", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.musicVolume), &cbData);
+        RegQueryValueExA(key, "Sound Volume", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.soundVolume), &cbData);
+        RegQueryValueExA(key, "Walk Speed", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.walkSpeed), &cbData);
+        RegQueryValueExA(key, "Show Route", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.showRoute), &cbData);
+        RegQueryValueExA(key, "Blackout Computer", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.blackoutComputer), &cbData);
+        RegQueryValueExA(key, "Sound Quality", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.musicSource), &cbData);
+        RegQueryValueExA(key, "Direct Connect Com Port", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]), &cbData);
+        RegQueryValueExA(key, "Direct Connect Baud Rate", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]), &cbData);
+        RegQueryValueExA(key, "Modem Com Port", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]), &cbData);
+        RegQueryValueExA(key, "Modem Baud Rate", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]), &cbData);
+        cbData = REGISTRY_TEXT_VALUE_SIZE;
+        RegQueryValueExA(key, "Modem Init String", 0, &dataType, reinterpret_cast<BYTE *>(gConfig.modemInitString), &cbData);
+        cbData = REGISTRY_DWORD_BYTES;
+        RegQueryValueExA(key, "Autosave", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.autosave), &cbData);
+        RegQueryValueExA(key, "CD Offset", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.cdOffset), &cbData);
+        RegQueryValueExA(key, "Slow Video", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.slowVideo), &cbData);
+        RegQueryValueExA(key, "First Map Offset", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.firstMapOffset), &cbData);
+        RegQueryValueExA(key, "Current Map Offset", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.currentMapOffset), &cbData);
+        RegQueryValueExA(key, "Main Game Show Menu", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu), &cbData);
+        RegQueryValueExA(key, "Main Game X", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x), &cbData);
+        RegQueryValueExA(key, "Main Game Y", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y), &cbData);
+        RegQueryValueExA(key, "Main Game Width", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width), &cbData);
+        RegQueryValueExA(key, "Main Game Height", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height), &cbData);
+        RegQueryValueExA(key, "Main Game Full Screen", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen), &cbData);
+        RegQueryValueExA(key, "Editor Show Menu", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu), &cbData);
+        RegQueryValueExA(key, "Editor X", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x), &cbData);
+        RegQueryValueExA(key, "Editor Y", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y), &cbData);
+        RegQueryValueExA(key, "Editor Width", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width), &cbData);
+        RegQueryValueExA(key, "Editor Height", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height), &cbData);
+        RegQueryValueExA(key, "Editor Full Screen", 0, &dataType, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen), &cbData);
+        cbData = REGISTRY_TEXT_VALUE_SIZE;
+        if (RegQueryValueExA(key, "AppPath", 0, &dataType, reinterpret_cast<BYTE *>(gcRegAppPath), &cbData) != 0)
+            strcpy(gcRegAppPath, "");
+        if (RegQueryValueExA(key, "CDDrive", 0, &dataType, reinterpret_cast<BYTE *>(gcRegCDDrive), &cbData) != 0)
+            strcpy(gcRegCDDrive, "");
+        RegCloseKey(key);
+    }
+}
+
+VA(0x0045d2d1, 0x15)
+void ReadPrefs(void)
+{
+    ReadPrefsFromRegistry();
+}
+
+VA(0x0045d2e6, 0x8a)
+void WritePrefsToFile(void)
+{
+    FILE *file;
+    char buffer[100];
+
+    memset(buffer, 0, sizeof(buffer));
+    sprintf(gText, "%s", "HEROES.CFG");
+    file = fopen(gText, "wb");
+    if (file == 0)
+        FileError(gText);
+    fwrite(&gConfig, sizeof(gConfig), 1, file);
+    fclose(file);
+}
+
+VA(0x0045d370, 0x3d0)
+void WritePrefsToRegistry(void)
+{
+    HKEY key;
+    char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
+    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    long rc;
+
+    strcpy(szTemp, "");
+    strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+    key = 0;
+    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
+    if (rc == 0) {
+        RegSetValueExA(key, "Music Volume", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.musicVolume), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Sound Volume", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.soundVolume), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Walk Speed", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.walkSpeed), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Show Route", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.showRoute), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Blackout Computer", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.blackoutComputer), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Sound Quality", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.musicSource), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Direct Connect Com Port", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Direct Connect Baud Rate", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Modem Com Port", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Modem Baud Rate", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Modem Init String", 0, REG_SZ, reinterpret_cast<BYTE *>(gConfig.modemInitString), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Autosave", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.autosave), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "CD Offset", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.cdOffset), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Slow Video", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.slowVideo), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "First Map Offset", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.firstMapOffset), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Current Map Offset", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.currentMapOffset), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Main Game Show Menu", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Main Game X", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Main Game Y", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Main Game Width", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Main Game Height", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Main Game Full Screen", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Editor Show Menu", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Editor X", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Editor Y", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Editor Width", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Editor Height", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(key, "Editor Full Screen", 0, REG_DWORD, reinterpret_cast<BYTE *>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen), REGISTRY_DWORD_BYTES);
+        RegCloseKey(key);
+    }
+}
+
+VA(0x0045d740, 0x1a)
+void WritePrefs(void)
+{
+    UpdateSystemOptionsMenu();
+    WritePrefsToRegistry();
 }
 
 // donor PoL RVA 0x000a0c76; preferred Buka symbol ?SetWinText@@YIXPAVheroWindow@@H@Z
