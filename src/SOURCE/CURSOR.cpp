@@ -408,3 +408,38 @@ short advManager::ValidMove(short direction)
         return 0;
     return 1;
 }
+
+// Buka CURSOR.cpp:1099 MoveOrigin; HoMM1 indexes the map directly.
+VA(0x00407a58, 0x329)
+void advManager::MoveOrigin(short directionX, short directionY)
+{
+    short oldOriginX;
+    short oldOriginY;
+    short cellX;
+    short cellY;
+
+    oldOriginX = m_mapOriginX;
+    oldOriginY = m_mapOriginY;
+    m_mapOriginX += directionX;
+    m_mapOriginY += directionY;
+    directionX = oldOriginX - m_mapOriginX;
+    directionY = oldOriginY - m_mapOriginY;
+    if (directionX != 0 || directionY != 0) {
+        m_mapData[m_cursorMapX + oldOriginX][m_cursorMapY + oldOriginY].m_flags &= ~0x40;
+        m_cursorMapX += directionX;
+        m_cursorMapY += directionY;
+        cellX = m_cursorMapX + m_mapOriginX;
+        cellY = m_cursorMapY + m_mapOriginY;
+        m_mapData[cellX][cellY].m_flags |= 0x40;
+        if (m_previousCursorMapX != -1) {
+            m_mapData[m_previousCursorMapX + oldOriginX][m_previousCursorMapY + oldOriginY].m_flags &=
+                ~0x40;
+            m_previousCursorMapX += directionX;
+            m_previousCursorMapY += directionY;
+            cellX = m_previousCursorMapX + m_mapOriginX;
+            cellY = m_previousCursorMapY + m_mapOriginY;
+            m_mapData[cellX][cellY].m_flags |= 0x40;
+        }
+    }
+    m_forceCompleteDraw = 1;
+}

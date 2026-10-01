@@ -130,7 +130,7 @@ public:
     void CheckAdjacentMon(signed char*);
     short ValidMoveWithEvent(class hero*, short);
     short ValidMove(short);
-    void MoveOrigin(int, int);
+    void MoveOrigin(short, short);
     void ProcessMapChange(struct SMapChange);
     void ProcessIncomingSingleMapChange(struct SMapChange*);
     void ProcessIncomingGroupMapChange(char*);
