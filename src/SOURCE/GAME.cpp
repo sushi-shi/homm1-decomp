@@ -12,6 +12,7 @@
 #include <SOURCE/FINDPATH.h>
 
 #include <io.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -926,11 +927,88 @@ int game::TransmitSaveGame(int, int) { return 0; }
 VA(0x0044608e, 0x579)
 int game::ReceiveSaveGame(int, int) { return 0; }
 
+// New-turn texts: days-left and last-day warnings, then the month/week banners.
+extern char* gNewTurnText[];
+extern char* gColorNames[];
+extern char* gMonsterNames[];
+extern char* gMonthNames[];
+extern char* gWeekNames[];
+extern signed char giWeekType;
+extern signed char giMonthType;
+extern signed char giWeekSpecial;
+extern signed char giMonthSpecial;
+
 // donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.487826;margin=0.297906;shape=0.344;size=0.836;calls=0.867;alternate=pol20:void game::DoNewTurn(void)@0x00083fc4
 VA(0x00446607, 0x42b)
-void game::DoNewTurn(void) {}
+void game::DoNewTurn(void) {
+    int track;
+    char monsterName[52];
+
+    if (!gbThisNetHumanPlayer[giCurPlayer]) {
+        CheckEndGame(0);
+        return;
+    }
+    giBottomViewOverrideEndTime = KBTickCount() + 3000;
+    giBottomViewOverride = 1;
+    gpAdvManager->UpdBottomView(1, 1, 1);
+    gpAdvManager->SetInitialMapOrigin();
+    gpAdvManager->CompleteDraw(0);
+    gpAdvManager->UpdateScreen(0, 0);
+    CheckEndGame(0);
+    if (gpCurPlayer->m_unknown55 >= 0) {
+        if (gpCurPlayer->m_unknown55 == 1) {
+            sprintf(gText, gNewTurnText[1], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
+            gText[0] -= 32;
+        } else {
+            sprintf(
+                gText,
+                gNewTurnText[0],
+                gColorNames[gpGame->m_players[giCurPlayer].Color()],
+                gpCurPlayer->m_unknown55
+            );
+            gText[0] -= 32;
+        }
+        NormalDialog(gText, 1, 0x61, -1, 9, gpGame->m_players[giCurPlayer].Color(), -1, 0, -1);
+    }
+    if (gpCurPlayer->m_heroCount > 0)
+        gpAdvManager->SetHeroContext(gpCurPlayer->NextHero(0), 0);
+    else if (gpCurPlayer->m_townCount > 0)
+        gpAdvManager->SetTownContext(gpCurPlayer->m_townIds[0]);
+    gpAdvManager->CheckDimNextHeroBut();
+    gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    if (m_day == 1) {
+        if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != -1) {
+            track = -1;
+            if (m_week == 1) {
+                track = 0x33;
+                if (giMonthType == 0) {
+                    sprintf(gText, gNewTurnText[2], gMonthNames[giMonthSpecial]);
+                } else if (giMonthType == 1) {
+                    strcpy(monsterName, gMonsterNames[giMonthSpecial]);
+                    monsterName[0] -= 32;
+                    sprintf(gText, gNewTurnText[3], gMonsterNames[giMonthSpecial], monsterName);
+                } else {
+                    sprintf(gText, gNewTurnText[4]);
+                }
+            } else {
+                track = 0x32;
+                if (giWeekType == 0) {
+                    sprintf(gText, gNewTurnText[5], gWeekNames[giWeekSpecial]);
+                } else {
+                    strcpy(monsterName, gMonsterNames[giWeekSpecial]);
+                    monsterName[0] -= 32;
+                    sprintf(gText, gNewTurnText[6], gMonsterNames[giWeekSpecial], monsterName);
+                }
+            }
+            gpSoundManager->SwitchAmbientMusic(track);
+            gpMouseManager->SetPointer(0);
+            NormalDialog(gText, 1, 0x61, -1, -1, 0, -1, 0, -1);
+            gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+        }
+    }
+}
 
 // Buka 2.1 game::GetBoatsBuilt.
 VA(0x00446a32, 0x58)
