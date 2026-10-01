@@ -334,7 +334,75 @@ short TrueFalseDialogHandler(tag_message& message) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.488269;margin=0.466685;shape=0.274;size=0.981;calls=0.750;alternate=pol20:void PlayerDead(int)@0x0009a52f
 VA(0x00452c94, 0x16c)
-void PlayerDead(int player) {}
+void PlayerDead(int player) {
+    playerData* currentPlayer;
+    int i;
+    gbRetreatWin = 0;
+    currentPlayer = &gpGame->m_players[player];
+    gpGame->m_playerDead[player] = 1;
+    ++gpGame->m_deadPlayerCount;
+    for (i = 0; i < GAME_MINE_COUNT; ++i) {
+        if (gpGame->m_mineOwners[i] == player)
+            gpGame->ClaimMine(i, -1);
+    }
+    for (i = currentPlayer->m_heroCount - 1; i >= 0; --i)
+        gpGame->GetHero(currentPlayer->m_heroIds[i])->Deallocate();
+    for (i = 0; i < 2; ++i) {
+        if (gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] == 0x40)
+            gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] = -1;
+    }
+    if (gbRemoteOn && gbHumanPlayer[player])
+        HandleRemoteDeadPlayerExit(player);
+}
+
+// HoMM1's three-byte exit notice: game position, control hand-off, next player.
+#pragma pack(push, 1)
+struct playerExitMessage {
+    signed char gamePosition;
+    signed char takesControl;
+    signed char nextPlayer;
+};
+#pragma pack(pop)
+extern playerExitMessage gPlayerExitMessage;
+extern int giHostGamePos;
+
+// Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
+VA(0x00452e00, 0x99)
+void HandleRemoteDeadPlayerExit(int position) {
+    if (position == giThisGamePos) {
+        if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
+            ShutDown(0);
+        RemoteCleanup();
+    } else if (giNumHumanPlayers == 2) {
+        giNumHumanPlayers--;
+        gPlayerExitMessage.gamePosition = position;
+        gPlayerExitMessage.takesControl = 0;
+        TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+        RemoteCleanup();
+        gbHumanPlayer[position] = 0;
+    }
+}
+
+// Buka 2.1 HandleRemoteSuddenExit; HoMM1 names the next human player itself.
+VA(0x00452e99, 0xf1)
+void HandleRemoteSuddenExit(void) {
+    int next;
+    if (!gbGameInitialized)
+        return;
+    gPlayerExitMessage.gamePosition = giThisGamePos;
+    if (gbThisNetHumanPlayer[giCurPlayer]
+        || (!gbHumanPlayer[giCurPlayer] && giHostGamePos == giThisGamePos)) {
+        gPlayerExitMessage.takesControl = 1;
+        next = giCurPlayer;
+        next = (next + 1) % gpGame->m_playerCount;
+        while (!gbHumanPlayer[next])
+            next = (next + 1) % gpGame->m_playerCount;
+        gPlayerExitMessage.nextPlayer = next;
+    } else {
+        gPlayerExitMessage.takesControl = 0;
+    }
+    TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+}
 
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

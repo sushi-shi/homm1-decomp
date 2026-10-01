@@ -48,7 +48,8 @@ public:
     signed char m_currentHero;
     signed char m_heroLocatorPage;
     signed char m_heroIds[PLAYER_HERO_CAPACITY];
-    char m_unknown1e[0x38];
+    signed char m_availableHeroIds[2];
+    char m_unknown20[0x36];
     signed char m_townCount;
     signed char m_currentTown;
     signed char m_townLocatorPage;

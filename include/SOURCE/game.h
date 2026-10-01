@@ -73,7 +73,9 @@ public:
     int m_campaignScenario;
     char m_unknown000b[0x1f4];
     signed char m_playerCount;
-    char m_unknown200[6];
+    char m_unknown200;
+    signed char m_deadPlayerCount;
+    signed char m_playerDead[GAME_PLAYER_COUNT];
     unsigned short m_day;
     unsigned short m_week;
     unsigned short m_month;
@@ -87,7 +89,8 @@ public:
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];
-    char m_unknown1443d[0x24];
+    // ClaimMine mirrors each mine owner into this byte array.
+    signed char m_mineOwners[GAME_MINE_COUNT];
     // GetRandomArtifactId scans artifacts 4..36 for a free (-1) entry.
     signed char m_randomArtifacts[0x25];
     boatRecord m_boats[GAME_BOAT_COUNT];
@@ -149,7 +152,7 @@ public:
     void RandomizePassword(class mapCell*);
     int LoadMap(char*);
     void ClaimTown(int, int, int);
-    void ClaimMine(int, int);
+    void ClaimMine(signed char, signed char);
     int ViewSpells(class hero*, int, short (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);
     // HoMM1 retail: byte creature/flags, word count, eleven arguments (ret 0x2c).
