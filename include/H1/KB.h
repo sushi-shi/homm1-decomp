@@ -81,5 +81,6 @@ extern short gHeroGoldCost;
 int NullHandler(struct tag_message&);
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
+void SetWinText(heroWindow*, short);
 
 #endif

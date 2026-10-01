@@ -152,7 +152,7 @@ public:
     void CompleteDraw(short, short, int);
     void CompleteDraw(int);
     int GetCloudLookup(int, int);
-    void DrawCell(int, int, int, int, int, int);
+    void DrawCell(int, int, int, int, int, int, int);
     class mapCell* GetCell(short, short);
     void UpdateRadar(int, int);
     void QuickInfo(int, int);
@@ -213,7 +213,7 @@ public:
     void ViewPuzzle(void);
     void PuzzleDraw(int, int, int, int);
     void AdvPanel(void);
-    int ControlPanel(void);
+    short ControlPanel(void);
     void SystemOptions(void);
     int DoVisions(class hero*);
     int IsCrystalBallInEffect(int, int, int);
@@ -340,6 +340,9 @@ public:
 #pragma pack(pop)
 
 short APanelHandler(struct tag_message &);
+void UpdateCPanel(signed char);
+int SaveGame(void);
+short CPanelHandler(struct tag_message &);
 
 extern int gbNoBorder;
 extern int gbRemoteOn;
@@ -355,4 +358,10 @@ extern int iLastAnimFrame;
 extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;
+extern unsigned char giCurWatchPlayerBit;
+extern short gGameCommand;
+extern class heroWindow *cPanel;
+extern signed char bPrefsChanged;
+extern signed char bFreshSave;
+extern unsigned char giCloudType[];
 #endif // HOMM1_SOURCE_ADVMANAGER_H

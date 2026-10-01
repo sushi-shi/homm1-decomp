@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Icon2b.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/bmap2.h>
@@ -285,11 +286,63 @@ void advManager::CompleteDraw(int update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
+// Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
+// masks first, then each unseen neighbour, indexed into the cloud table.
+VA(0x0042a3d8, 0x40d)
+int advManager::GetCloudLookup(int x, int y) {
+    int cloudMask = 0;
+
+    if (x < 1)
+        cloudMask |= 0xc8;
+    else if (x >= 71)
+        cloudMask |= 0x32;
+    if (y < 1)
+        cloudMask |= 0x91;
+    else if (y >= 71)
+        cloudMask |= 0x64;
+    if (cloudMask == 0) {
+        if ((gpGame->m_mapExtra[x][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x01;
+        if ((gpGame->m_mapExtra[x + 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x02;
+        if ((gpGame->m_mapExtra[x][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x04;
+        if ((gpGame->m_mapExtra[x - 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x08;
+        if ((gpGame->m_mapExtra[x + 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x10;
+        if ((gpGame->m_mapExtra[x + 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x20;
+        if ((gpGame->m_mapExtra[x - 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x40;
+        if ((gpGame->m_mapExtra[x - 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x80;
+    } else {
+        if ((cloudMask & 0x01) == 0 && (gpGame->m_mapExtra[x][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x01;
+        if ((cloudMask & 0x02) == 0 && (gpGame->m_mapExtra[x + 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x02;
+        if ((cloudMask & 0x04) == 0 && (gpGame->m_mapExtra[x][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x04;
+        if ((cloudMask & 0x08) == 0 && (gpGame->m_mapExtra[x - 1][y] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x08;
+        if ((cloudMask & 0x10) == 0 && (gpGame->m_mapExtra[x + 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x10;
+        if ((cloudMask & 0x20) == 0 && (gpGame->m_mapExtra[x + 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x20;
+        if ((cloudMask & 0x40) == 0 && (gpGame->m_mapExtra[x - 1][y + 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x40;
+        if ((cloudMask & 0x80) == 0 && (gpGame->m_mapExtra[x - 1][y - 1] & giCurWatchPlayerBit) == 0)
+            cloudMask |= 0x80;
+    }
+    return giCloudType[cloudMask];
+}
+
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
 VA(0x0042a7e5, 0xee8)
-void advManager::DrawCell(int, int, int, int, int, int) {}
+void advManager::DrawCell(int, int, int, int, int, int, int) {}
 
 // donor PoL RVA 0x0005e0da; preferred Buka symbol ?UpdateRadar@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -600,6 +653,68 @@ void advManager::DoTownKnob(void) {}
 VA(0x00430d05, 0x3da)
 void advManager::ViewPuzzle(void) {}
 
+// HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
+// visible object/overlay frames and marking the target cell.
+VA(0x004310df, 0x236)
+void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
+    unsigned char tileset;
+    mapCell* cell;
+    int x;
+    int y;
+    short screenX;
+    short screenY;
+
+    for (y = 0; y < 15; y++) {
+        for (x = 0; x < 15; x++) {
+            DrawCell(x + left, top + y, x, y, 1, 1, 0);
+            screenX = x * 32;
+            screenY = y * 32;
+            cell = GetCell(left + x, top + y);
+            if (!(cell->m_flags & 0x80) && cell->m_objectIndex != 0xff) {
+                tileset = cell->m_objectTileset & 0xf;
+                switch (tileset) {
+                case 4:
+                case 8:
+                case 9:
+                    IconToBitmap(
+                        m_objectIcons[tileset],
+                        gpWindowManager->m_screen,
+                        screenX,
+                        screenY,
+                        cell->m_objectIndex,
+                        0
+                    );
+                    break;
+                default:
+                    break;
+                }
+            }
+            if (cell->m_overlayIndex != 0xff) {
+                tileset = cell->m_overlayTileset & 0xf;
+                switch (tileset) {
+                case 4:
+                case 8:
+                case 9:
+                    IconToBitmap(
+                        m_objectIcons[tileset],
+                        gpWindowManager->m_screen,
+                        screenX,
+                        screenY,
+                        cell->m_overlayIndex,
+                        0
+                    );
+                    break;
+                default:
+                    break;
+                }
+            }
+            if (left + x == markX && top + y == markY)
+                IconToBitmap(m_objectIcons[17], gpWindowManager->m_screen, screenX, screenY + 2, 13, 0);
+        }
+    }
+    DrawAdventureBorder();
+}
+
 // donor PoL RVA 0x00064b08; preferred Buka symbol ?CastSpell@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.339671;margin=1.295843;shape=0.207;size=0.620;calls=0.615;alternate=pol20:void advManager::CastSpell(int)@0x00064b08
@@ -671,9 +786,298 @@ void advManager::GrabScreen(void) {
     gpMouseManager->ReallyShowPointer();
 }
 
+// clang-format off
+H1_ENUM_BEGIN(ControlPanelDialogConstant)
+    CONTROL_NEW_GAME = 1,
+    CONTROL_LOAD_GAME = 2,
+    CONTROL_SAVE_GAME = 3,
+    CONTROL_QUIT = 4,
+    CONTROL_MUSIC_VOLUME = 5,
+    CONTROL_SOUND_VOLUME = 6,
+    CONTROL_WALK_SPEED = 7,
+    CONTROL_MUSIC_SOURCE = 11,
+    CONTROL_SHOW_ROUTE = 12,
+    CONTROL_SHOW_ENEMY_MOVES = 13,
+    CONTROL_SCENARIO_INFO = 17
+H1_ENUM_END(ControlPanelDialogConstant)
+// clang-format on
+
+// HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
+// that also applies the walk-speed sample set and saves changed preferences.
+VA(0x0043266f, 0x321)
+short advManager::ControlPanel(void) {
+    tag_message message;
+    int mobilized;
+    signed char oldSpeed;
+    int gameCommand;
+    int n;
+
+    TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    gameCommand = -1;
+    oldSpeed = gConfig.walkSpeed;
+    bFreshSave = 0;
+    mobilized = m_heroContextLocked;
+    bPrefsChanged = 0;
+    DemobilizeCurrHero();
+    cPanel = new heroWindow(160, 10, "cpanel.bin");
+    if (cPanel == 0)
+        MemError();
+    SetWinText(cPanel, 3);
+    if (gbRemoteOn) {
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.id = CONTROL_NEW_GAME;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        cPanel->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        cPanel->BroadcastMessage(message);
+        message.payload.widget.id = CONTROL_LOAD_GAME;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        cPanel->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        cPanel->BroadcastMessage(message);
+    }
+    UpdateCPanel(1);
+    gpWindowManager->DoDialog(cPanel, CPanelHandler, 0);
+    delete cPanel;
+    switch (gpWindowManager->m_dialogResult) {
+    case CONTROL_NEW_GAME:
+    case CONTROL_LOAD_GAME:
+    case CONTROL_QUIT:
+        gameCommand = gpWindowManager->m_dialogResult;
+        break;
+    case CONTROL_SCENARIO_INFO:
+        if (gpGame->m_campaignType > 0)
+            gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 1, 0);
+        else
+            gpGame->ShowScenInfo();
+        break;
+    case CONTROL_SAVE_GAME:
+        SaveGame();
+        break;
+    }
+    if (oldSpeed != gConfig.walkSpeed) {
+        for (n = 0; n < ADVMGR_CURSOR_SAMPLE_COUNT; n++)
+            gpResourceManager->Dispose(m_cursorSamples[n]);
+        GetCursorSampleSet(gConfig.walkSpeed);
+    }
+    if (bPrefsChanged)
+        WritePrefs();
+    if (mobilized)
+        MobilizeCurrHero(0);
+    if (gameCommand != -1) {
+        gGameCommand = gameCommand;
+        return 1;
+    }
+    return 0;
+}
+
+extern char *onOffText[];
+extern char *walkSpeedText[];
+extern char *musicQualityText[];
+
+// Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
+VA(0x00432990, 0x227)
+void UpdateCPanel(signed char initialDraw) {
+    tag_message message;
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = CONTROL_MUSIC_VOLUME;
+    message.payload.widget.data.value = gConfig.musicVolume ? 11 : 10;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_SOUND_VOLUME;
+    message.payload.widget.data.value = gConfig.soundVolume ? 13 : 12;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_WALK_SPEED;
+    message.payload.widget.data.value = gConfig.walkSpeed + 14;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_MUSIC_SOURCE;
+    message.payload.widget.data.value = gConfig.musicSource + 27;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_SHOW_ROUTE;
+    message.payload.widget.data.value = gConfig.showRoute + 21;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = CONTROL_SHOW_ENEMY_MOVES;
+    message.payload.widget.data.value = gbRemoteOn ? 23 : 1 - gConfig.blackoutComputer + 23;
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 8;
+    message.payload.widget.data.text = onOffText[gConfig.musicVolume];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 9;
+    message.payload.widget.data.text = onOffText[gConfig.soundVolume];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 10;
+    message.payload.widget.data.text = walkSpeedText[gConfig.walkSpeed];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 14;
+    message.payload.widget.data.text = musicQualityText[gConfig.musicSource];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 15;
+    message.payload.widget.data.text = onOffText[gConfig.showRoute];
+    cPanel->BroadcastMessage(message);
+    message.payload.widget.id = 16;
+    message.payload.widget.data.text = onOffText[1 - gConfig.blackoutComputer];
+    cPanel->BroadcastMessage(message);
+    if (!initialDraw)
+        cPanel->MoveWindow(0, 0);
+}
+
 VA(0x00432bb7, 0x232)
 int SaveGame(void) {
     return 0;
+}
+
+extern char *gCPanelHelp[];
+
+// Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
+VA(0x00432de9, 0x54b)
+short CPanelHandler(struct tag_message &message) {
+    signed char changed = 0;
+    char question[120];
+    signed char handled = 0;
+    if (message.type == MESSAGE_WIDGET) {
+        if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (IS_WIDGET_SELECTION_NOTIFICATION(message.payload.widget.command)) {
+                int helpIndex = -1;
+                switch (message.payload.widget.id) {
+                    case CONTROL_NEW_GAME:
+                        helpIndex = 0;
+                        break;
+                    case CONTROL_LOAD_GAME:
+                        helpIndex = 1;
+                        break;
+                    case CONTROL_QUIT:
+                        helpIndex = 2;
+                        break;
+                    case PANEL_CLOSE_WIDGET:
+                        helpIndex = 3;
+                        break;
+                    case CONTROL_SAVE_GAME:
+                        helpIndex = 4;
+                        break;
+                    case CONTROL_MUSIC_VOLUME:
+                        helpIndex = 5;
+                        break;
+                    case CONTROL_SOUND_VOLUME:
+                        helpIndex = 6;
+                        break;
+                    case CONTROL_WALK_SPEED:
+                        helpIndex = 7;
+                        break;
+                    case CONTROL_MUSIC_SOURCE:
+                        helpIndex = 8;
+                        break;
+                    case CONTROL_SHOW_ROUTE:
+                        helpIndex = 9;
+                        break;
+                    case CONTROL_SHOW_ENEMY_MOVES:
+                        helpIndex = 10;
+                        break;
+                    case CONTROL_SCENARIO_INFO:
+                        helpIndex = 11;
+                        break;
+                }
+                if (helpIndex >= 0)
+                    NormalDialog(gCPanelHelp[helpIndex], 4, 0xb1, -1, -1, 0, -1, 0, -1);
+            }
+        } else {
+            switch (message.payload.widget.command) {
+                case WIDGET_NOTIFY_DESELECT:
+                    switch (message.payload.widget.id) {
+                        case CONTROL_NEW_GAME:
+                            strcpy(question, "Are you sure you want to restart?  (Your current game will be lost)");
+                            goto confirm_reset;
+                        case CONTROL_LOAD_GAME:
+                            strcpy(question, "Are you sure you want to load a new game?  (Your current game will be lost)");
+                            goto confirm_reset;
+                        case CONTROL_QUIT:
+                            strcpy(question, "Are you sure you want to quit?");
+                        confirm_reset:
+                            handled = 1;
+                            if (!bFreshSave) {
+                                NormalDialog(question, 2, 0xb1, 0x50, -1, 0, -1, 0, -1);
+                                if (gpWindowManager->m_dialogResult == 0x7806)
+                                    handled = 0;
+                            }
+                            break;
+                        case CONTROL_SAVE_GAME:
+                            handled = 1;
+                            break;
+                        case CONTROL_SCENARIO_INFO:
+                        case PANEL_CLOSE_WIDGET:
+                            handled = 1;
+                            break;
+                    }
+                    break;
+                case WIDGET_NOTIFY_SELECT:
+                    switch (message.payload.widget.id) {
+                        case CONTROL_MUSIC_VOLUME:
+                            gConfig.musicVolume = (gConfig.musicVolume + 1) % 11;
+                            gpSoundManager->AdjustMusicVolumes();
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_SOUND_VOLUME:
+                            gConfig.soundVolume = (gConfig.soundVolume + 1) % 11;
+                            gpSoundManager->AdjustSoundVolumes();
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_WALK_SPEED:
+                            ++gConfig.walkSpeed;
+                            gConfig.walkSpeed %= 5;
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_MUSIC_SOURCE:
+                            if (gConfig.musicSource == 2) {
+                                gConfig.musicSource = 0;
+                            } else {
+                                if (gpSoundManager->m_cdStarted == 0) {
+                                    NormalDialog(
+                                        "Unable to set up CD stereo music.  Your CD player might be in use by another "
+                                        "program, or your sound driver might not support CD stereo.",
+                                        1, -1, -1, -1, 0, -1, 0, -1
+                                    );
+                                    break;
+                                }
+                                gConfig.musicSource = 2;
+                            }
+                            gpSoundManager->SetMusicQuality(gConfig.musicSource);
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_SHOW_ROUTE:
+                            gConfig.showRoute = 1 - gConfig.showRoute;
+                            changed = 1;
+                            bPrefsChanged = 1;
+                            break;
+                        case CONTROL_SHOW_ENEMY_MOVES:
+                            if (!gbRemoteOn) {
+                                gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
+                                changed = 1;
+                                bPrefsChanged = 1;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+    if (changed)
+        UpdateCPanel(0);
+    if (handled) {
+        gpWindowManager->m_dialogResult = message.payload.widget.id;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 // donor PoL RVA 0x000650eb; preferred Buka symbol ?CheckCastSpell@advManager@@QAEXXZ

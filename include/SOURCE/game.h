@@ -35,7 +35,11 @@ H1_ENUM_END(GameStorageConstant)
 #pragma pack(push, 1)
         class game {
 public:
-    char m_unknown0000[0x1ff];
+    char m_unknown0000[3];
+    // ControlPanel's scenario-info choice shows the campaign when positive.
+    int m_campaignType;
+    int m_campaignScenario;
+    char m_unknown000b[0x1f4];
     signed char m_playerCount;
     char m_unknown200[6];
     unsigned short m_day;
@@ -50,7 +54,9 @@ public:
     unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
-    char m_unknown14341[0x2b15];
+    char m_unknown14341[0x16d5];
+    // GetCloudLookup tests the watching player bit per [x][y] cell.
+    unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
@@ -79,7 +85,7 @@ public:
     int PickLoadGame(void);
     int HandleCampaignWin(void);
     void PlayPreScenarioSmacker(int, int);
-    void ShowCampaignInfo(int, int);
+    void ShowCampaignInfo(int, int, int);
     void CampaignInfoUpdate(int);
     void InitEntireCampaign(int);
     void InitCampaignMap(void);

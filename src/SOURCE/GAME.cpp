@@ -93,8 +93,10 @@ void game::UpdateNewGameWindow(void) {}
 // donor PoL RVA 0x000bc00e; preferred Buka symbol ?ShowInfo@ExpCampaign@@QAEXHH@Z
 // donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
+// HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
+// arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
 VA(0x0043be93, 0x2ad)
-void ExpCampaign::ShowInfo(int, int) {}
+void game::ShowCampaignInfo(int, int, int) {}
 
 // donor PoL RVA 0x000bb843; preferred Buka symbol ?InitMap@ExpCampaign@@QAEXXZ
 // donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
