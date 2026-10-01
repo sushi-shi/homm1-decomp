@@ -8,8 +8,15 @@
 // forward declarations:
 class armyGroup;
 
+// strip::strip and townManager::ResetStrips fix this packed prefix.
+#pragma pack(push, 1)
 class strip {
 public:
+    char m_unknown00[0x16];
+    short m_x;
+    short m_y;
+    signed char m_unknown1a;
+    signed char m_selectedSlot;
     // --- constructors ---
     strip(int, int, int, unsigned long int, int, class armyGroup *, int, int, int);
     ~strip();
@@ -18,4 +25,5 @@ public:
     void DrawIcons(int);
     void DrawFrame(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_STRIP_H

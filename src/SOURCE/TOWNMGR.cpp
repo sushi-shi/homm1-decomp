@@ -2,8 +2,11 @@
 
 #include <match.h>
 
+#include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+
+#include <string.h>
 
 // donor PoL RVA 0x0000e198; preferred Buka symbol ?GetCursorBaseFrame@advManager@@QAEHH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
@@ -61,6 +64,45 @@ townObject::~townObject() {
     gpResourceManager->Dispose(m_icon);
 }
 
+// Buka TOWNMGR.cpp:537-625; HoMM1 draws the base frame, then the castle's
+// mage-guild levels and the animation frame.
+VA(0x00407fe1, 0x117)
+void townObject::Draw(signed char advanceAnimation)
+{
+    short level;
+
+    if (!m_visible)
+        return;
+    m_icon->DrawToBuffer(0, 0, 0, 0, 0);
+    if (m_buildingId == 0) {
+        for (level = 0; level < gpTownManager->m_town->m_buildState; level++)
+            m_icon->DrawToBuffer(0, 0, (level + 1) * 2, 0, 0);
+        m_icon->DrawToBuffer(0, 0, gpTownManager->m_town->m_buildState * 2 + 1, 0, 0);
+    }
+    if (m_animationFrameCount) {
+        m_icon->DrawToBuffer(0, 0, m_animationFrame + 1, 0, 0);
+        if (advanceAnimation == 1) {
+            m_animationFrame++;
+            if (m_animationFrame == m_animationFrameCount)
+                m_animationFrame = 0;
+        }
+    }
+}
+
+// Buka TOWNMGR.cpp:627-633; HoMM1 also clears the object count and adds
+// its dispatch mask.
+VA(0x004080f8, 0x74)
+townManager::townManager(void)
+{
+    m_town = 0;
+    m_townObjectCount = 0;
+    m_heroWindow0 = 0;
+    m_unknown79 = 0;
+    m_selectedBuilding = -1;
+    m_castleDialogActive = 0;
+    m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
+}
+
 // donor PoL RVA 0x0001436f; preferred Buka symbol ?SetupTown@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.644440;margin=0.052173;shape=0.362;size=0.803;calls=0.887;strings=%s%s|port%04d.icn|strip.icn;alternate=pol20:void townManager::SetupTown(void)@0x0001436f
@@ -71,13 +113,44 @@ void townManager::SetupTown(void) {}
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.470224;margin=0.176996;shape=0.284;size=0.924;calls=0.667;alternate=pol20:void townManager::UnloadTown(void)@0x00014cc9
 VA(0x00408958, 0x1c4)
-void townManager::UnloadTown(void) {}
+void townManager::UnloadTown(void)
+{
+    short index;
+
+    delete m_bankBox;
+    if (m_heroStrip)
+        delete m_heroStrip;
+    delete m_garrisonStrip;
+    for (index = 0; index < m_townObjectCount; index++) {
+        m_townWindow->RemoveWidget(m_townObjects[index]->m_border);
+        delete m_townObjects[index];
+    }
+    gpResourceManager->Dispose(m_backgroundIcon);
+    gpWindowManager->RemoveWindow(m_townWindow);
+    delete m_townWindow;
+    gpSoundManager->SwitchAmbientMusic(-1);
+    gpWindowManager->FadeScreen(1, 8, 0);
+    gpMouseManager->SetPointer(-1);
+    m_active = 0;
+}
 
 // donor PoL RVA 0x000158e0; preferred Buka symbol ?ShowText@townManager@@QAEXPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.613333;margin=0.109874;shape=0.519;size=1.000;calls=1.000;alternate=pol20:void townManager::ShowText(char *)@0x000158e0
 VA(0x0040933a, 0x74)
-void townManager::ShowText(char *) {}
+void townManager::ShowText(char *)
+{
+    tag_message message;
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = TOWN_STATUS_TEXT_CONTROL;
+    message.payload.widget.data.text = m_statusText;
+    m_townWindow->BroadcastMessage(message);
+    m_townWindow->DrawWindow(0, TOWN_STATUS_TEXT_CONTROL - 2, TOWN_STATUS_TEXT_CONTROL);
+    gpWindowManager->UpdateScreenRegion(0, TOWN_STATUS_REGION_Y, TOWN_STATUS_REGION_WIDTH,
+                                        TOWN_STATUS_REGION_HEIGHT);
+}
 
 // donor PoL RVA 0x0001595d; preferred Buka symbol ?Main@townManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -101,7 +174,17 @@ void townManager::SplitArmy(void) {}
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.515580;margin=0.398432;shape=0.375;size=0.860;calls=1.000;alternate=pol20:void townManager::ResetStrips(void)@0x00017ab2
 VA(0x0040b21d, 0xab)
-void townManager::ResetStrips(void) {}
+void townManager::ResetStrips(void)
+{
+    if (m_swapStrip)
+        m_swapStrip->m_selectedSlot = -1;
+    if (m_pendingStrip)
+        m_pendingStrip->m_selectedSlot = -1;
+    m_heroStrip->Draw();
+    m_garrisonStrip->Draw();
+    m_swapStrip = m_pendingStrip = 0;
+    m_swapArmySlot = m_pendingArmySlot = -1;
+}
 
 // donor PoL RVA 0x00017c9d; preferred Buka symbol ?BuyBuild@townManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
