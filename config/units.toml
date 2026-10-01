@@ -290,7 +290,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/RECRUIT"
 source = "src/SOURCE/RECRUIT.cpp"
-flags = "cpp_carcass"
+# recruitUnit::Open and QuickViewRecruit register fs:[0] frames for new heroWindow.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/REMOTE"

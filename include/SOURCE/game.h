@@ -44,29 +44,42 @@ public:
     int MineTypesOwned(int, int);
     int SetupPuzzlePieces(int, int);
     int IsMobile(int);
-    class fullMap * GetWorldMapData(void);
+    class fullMap* GetWorldMapData(void);
     int CreateBoat(int, int, int);
-    int Scan(signed char *, int, int);
-    int RandomScan(signed char *, int, int, int, signed char);
+    int Scan(signed char*, int, int);
+    int RandomScan(signed char*, int, int, int, signed char);
     int GetNewHeroId(int, int, int);
     int GetTownId(int, int);
     int GetMineId(int, int);
-    int SaveGame(char *, int, signed char);
+    int SaveGame(char*, int, signed char);
     void SetupOrigData(void);
-    void LoadGame(char *, int, int);
+    void LoadGame(char*, int, int);
     void GiveTroopsToNeutralTown(int);
     void GiveTroopsToNeutralTowns(void);
-    void NewMap(char *);
+    void NewMap(char*);
     void RandomizeEvents(void);
     void InitializePasswords(void);
-    void RandomizeBarrier(class mapCell *);
-    void RandomizePassword(class mapCell *);
-    int LoadMap(char *);
+    void RandomizeBarrier(class mapCell*);
+    void RandomizePassword(class mapCell*);
+    int LoadMap(char*);
     void ClaimTown(int, int, int);
     void ClaimMine(int, int);
-    int ViewSpells(class hero *, int, int (*)(struct tag_message &), int);
+    int ViewSpells(class hero*, int, int (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);
-    void ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int);
+    // HoMM1 retail: byte creature/flags, word count, eleven arguments (ret 0x2c).
+    void ViewArmy(
+        int,
+        int,
+        signed char,
+        short,
+        class town*,
+        signed char,
+        signed char,
+        signed char,
+        class hero*,
+        class army*,
+        class armyGroup*
+    );
     int GetRandomNumTroops(int);
     void TurnOnAIMusic(void);
     void TurnOffAIMusic(void);
@@ -74,8 +87,8 @@ public:
     int ComputeDailyGold(int);
     void PerDay(void);
     void PerWeek(void);
-    void WeeklyRecruitSite(class mapCell *);
-    void WeeklyGenericSite(class mapCell *);
+    void WeeklyRecruitSite(class mapCell*);
+    void WeeklyGenericSite(class mapCell*);
     void PerMonth(void);
     void ConvertObject(int, int, int, int, int, int, int, int, int, int, int);
     void RandomizeTown(int, int, int);
@@ -87,14 +100,14 @@ public:
     void ProcessRandomObjects(void);
     void SetVisibility(int, int, int, int);
     void MakeAllWaterVisible(int);
-    void GiveArmy(class armyGroup *, int, int, int);
-    int ExperienceValueOfStack(class armyGroup *, class hero *);
-    int GetLuck(class hero *, class army *, class town *);
+    void GiveArmy(class armyGroup*, int, int, int);
+    int ExperienceValueOfStack(class armyGroup*, class hero*);
+    int GetLuck(class hero*, class army*, class town*);
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
     void ShowComputerScreen(void);
     void ShowHeroesLogo(void);
-    void WaitForPlayer(char *, int);
+    void WaitForPlayer(char*, int);
     int HasLateOverlay(int, int);
     void ConvertFlagToLateOverlay(int, int);
     int HasObjectTilesetIndex(int, int, int, int);
@@ -109,29 +122,29 @@ public:
     int GetBoatsBuilt(void);
     int GetNumThievesGuilds(int);
     int CalcDifficultyRating(void);
-    void RestoreCell(int, int, int, int, class mapCell *, int);
+    void RestoreCell(int, int, int, int, class mapCell*, int);
     void SetMapSize(int, int);
-    int HeroIDToHeroPos(class playerData *, int);
-    int TownIDToTownPos(class playerData *, int);
+    int HeroIDToHeroPos(class playerData*, int);
+    int TownIDToTownPos(class playerData*, int);
     void SetupNewRumour(void);
     void CheckForTimeEvent(void);
     int CountShrines(int);
-    void ShowMoraleInfo(class hero *, int);
-    void ShowLuckInfo(class hero *, int);
+    void ShowMoraleInfo(class hero*, int);
+    void ShowLuckInfo(class hero*, int);
     void GetMap(void);
-    void ProcessNewMap(struct SMapHeader *);
-    void InitNewGame(struct SMapHeader *);
+    void ProcessNewMap(struct SMapHeader*);
+    void InitNewGame(struct SMapHeader*);
     void SetupNetPlayerNames(void);
     int NewGame(void);
     void CleanUpNewGameWindow(void);
     void InitNewGameWindow(void);
     void UpdateNewGameWindow(void);
-    int ProcessNGKeyPress(struct tag_message &);
-    void NGKPSetupDisplayString(char *, unsigned short int);
+    int ProcessNGKeyPress(struct tag_message&);
+    void NGKPSetupDisplayString(char*, unsigned short int);
     void DrawNGKPDisplayString(int);
     void ShowScenInfo(void);
-    void GetLossConditionText(char *);
-    void GetVictoryConditionText(char *);
-    int GetSideDesc(char *, int, int);
+    void GetLossConditionText(char*);
+    void GetVictoryConditionText(char*);
+    int GetSideDesc(char*, int, int);
 };
 #endif // HOMM1_SOURCE_GAME_H

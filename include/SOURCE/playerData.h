@@ -3,16 +3,48 @@
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 6 methods, 0 own-virtual, 0 static data.
 
+#include <Domains.h>
 #include <H1/Macros.h>
 
-class playerData {
+// clang-format off
+H1_ENUM_BEGIN(PlayerDataConstant)
+    PLAYER_HERO_CAPACITY = 8,
+    PLAYER_TOWN_CAPACITY = 36,
+    PLAYER_RESOURCE_COUNT = 7
+H1_ENUM_END(PlayerDataConstant)
+// clang-format on
+
+// Retail strides players by 0x105 bytes from game+0x20c (four records end at
+// the 0x620 world map); fields follow HoMM2's order after a HoMM1 prefix.
+#pragma pack(push, 1)
+        class playerData {
 public:
+    char m_unknown00[0x12];
+    signed char m_color;
+    signed char m_heroCount;
+    signed char m_currentHero;
+    signed char m_heroLocatorPage;
+    signed char m_heroIds[PLAYER_HERO_CAPACITY];
+    char m_unknown1e[0x38];
+    signed char m_townCount;
+    signed char m_currentTown;
+    signed char m_townLocatorPage;
+    signed char m_townIds[PLAYER_TOWN_CAPACITY];
+    int m_resources[PLAYER_RESOURCE_COUNT];
+    char m_unknown99[0x6c];
     // --- methods ---
     void Write(int);
     void Read(int);
     int NextHero(int);
-    int HasMobileHero(void);
+    signed char HasMobileHero(void);
     int BuildingsOwned(int, int, int);
     int NumOfGivenArtifact(int);
+    signed char CurrentHero(void) {
+        return m_currentHero;
+    }
 };
+#pragma pack(pop)
+
+extern playerData* gpCurPlayer;
+extern signed char giCurPlayer;
 #endif // HOMM1_SOURCE_PLAYERDATA_H
