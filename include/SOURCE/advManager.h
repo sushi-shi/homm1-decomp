@@ -136,7 +136,7 @@ public:
     void ProcessIncomingGroupMapChange(char *);
     void PurgeMapChangeQueue(void);
     void UnwindMapChangeQueue(int, int);
-    void ViewWorld(int, int, int);
+    void ViewWorld(signed char, signed char, signed char);
     void VWCleanup(void);
     void VWInit(int, int);
     void VWCompleteDraw(void);
@@ -257,6 +257,8 @@ public:
     int AutoResolveCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int);
 };
 #pragma pack(pop)
+
+short APanelHandler(struct tag_message &);
 
 extern int gbNoBorder;
 extern int gbRemoteOn;

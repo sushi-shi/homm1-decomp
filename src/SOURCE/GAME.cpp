@@ -265,8 +265,10 @@ void game::GetMap(void) {}
 // donor PoL RVA 0x000333c0; preferred Buka symbol ?ViewWorld@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/Viewwrld; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.364493;margin=0.061615;shape=0.277;size=0.633;calls=0.682;alternate=pol20:void advManager::ViewWorld(int, int, int)@0x000333c0
+// Retail loads sceninfo.bin and is called on gpGame with no arguments:
+// Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
 VA(0x004472d8, 0x44e)
-void advManager::ViewWorld(int, int, int) {}
+void game::ShowScenInfo(void) {}
 
 // donor PoL RVA 0x0008480a; preferred Buka symbol ?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order

@@ -75,11 +75,11 @@ H1_ENUM_BEGIN(AdventurePanelDialogConstant)
     PANEL_NO_HELP = -1,
     PANEL_VIEW_WORLD_HELP = 0,
     PANEL_VIEW_PUZZLE_HELP = 1,
-    PANEL_SCENARIO_INFO_HELP = 2,
+    PANEL_CAST_SPELL_HELP = 2,
     PANEL_SEARCH_HELP = 3,
     PANEL_VIEW_WORLD = 1,
     PANEL_VIEW_PUZZLE = 2,
-    PANEL_SCENARIO_INFO = 3,
+    PANEL_CAST_SPELL = 3,
     PANEL_SEARCH = 4
 H1_ENUM_END(AdventurePanelDialogConstant)
 
@@ -582,6 +582,11 @@ void advManager::CastSpell(int) {}
 // donor PoL RVA 0x00064e9f; preferred Buka symbol ?SaveGame@@YIHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.731974;margin=0.187030;shape=0.477;size=0.957;calls=0.889;strings=.GM%d|.\GAMES\|advmice.mse;alternate=pol20:int SaveGame(void)@0x00064e9f
+// HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
+// CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
+VA(0x00431507, 0x1127)
+void advManager::ViewWorld(signed char, signed char, signed char) {}
+
 // HoMM1-only helper: refresh the saved screen copy with the pointer hidden.
 VA(0x0043262e, 0x41)
 void advManager::GrabScreen(void)
@@ -614,7 +619,56 @@ void advManager::CheckCastSpell(void)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.644374;margin=0.446733;shape=0.427;size=0.786;calls=0.720;strings=advmice.mse|apanel.bin;alternate=pol20:void advManager::AdvPanel(void)@0x0006a724
 VA(0x004333df, 0x213)
-void advManager::AdvPanel(void) {}
+void advManager::AdvPanel(void)
+{
+    heroWindow *adventurePanel;
+    struct tag_message message;
+    int mobilized;
+
+    TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    mobilized = m_heroContextLocked;
+    DemobilizeCurrHero();
+
+    adventurePanel = new heroWindow(160, 40, "apanel.bin");
+    if (adventurePanel == 0)
+        MemError();
+    if (gpCurPlayer->CurrentHero() == -1) {
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.id = PANEL_SEARCH;
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        adventurePanel->BroadcastMessage(message);
+        message.payload.widget.id = PANEL_CAST_SPELL;
+        adventurePanel->BroadcastMessage(message);
+        message.payload.widget.id = PANEL_SEARCH;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        adventurePanel->BroadcastMessage(message);
+        message.payload.widget.id = PANEL_CAST_SPELL;
+        adventurePanel->BroadcastMessage(message);
+    }
+
+    gpWindowManager->DoDialog(adventurePanel, APanelHandler, 0);
+    delete adventurePanel;
+    switch (gpWindowManager->m_dialogResult) {
+        case PANEL_CAST_SPELL:
+            CheckCastSpell();
+            break;
+        case PANEL_SEARCH:
+            ProcessSearch(-1, -1);
+            break;
+        case PANEL_VIEW_WORLD:
+            ViewWorld(0x18, 0, 0);
+            break;
+        case PANEL_VIEW_PUZZLE:
+            ViewPuzzle();
+            break;
+    }
+
+    if (mobilized)
+        MobilizeCurrHero(0);
+}
 
 // donor PoL RVA 0x00065191; preferred Buka symbol ?DimensionDoorHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -638,8 +692,8 @@ short APanelHandler(struct tag_message &message)
                     case PANEL_VIEW_PUZZLE:
                         helpIndex = PANEL_VIEW_PUZZLE_HELP;
                         break;
-                    case PANEL_SCENARIO_INFO:
-                        helpIndex = PANEL_SCENARIO_INFO_HELP;
+                    case PANEL_CAST_SPELL:
+                        helpIndex = PANEL_CAST_SPELL_HELP;
                         break;
                     case PANEL_SEARCH:
                         helpIndex = PANEL_SEARCH_HELP;
@@ -657,7 +711,7 @@ short APanelHandler(struct tag_message &message)
                     switch (message.payload.widget.id) {
                         case PANEL_VIEW_WORLD:
                         case PANEL_VIEW_PUZZLE:
-                        case PANEL_SCENARIO_INFO:
+                        case PANEL_CAST_SPELL:
                         case PANEL_SEARCH:
                         case PANEL_CLOSE_WIDGET:
                             handled = 1;
