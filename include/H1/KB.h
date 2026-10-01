@@ -87,6 +87,7 @@ char* GetMonsterName(int);
 int GetBuildingBaseResourceValue(int, int, int);
 void AddNetBoxLine(char*);
 void GOut(char*);
+void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char);
 void ShutDown(char*);
 void FileError(char*);
 void MemError();

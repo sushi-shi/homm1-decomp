@@ -202,7 +202,9 @@ void PlayerDead(int player) {}
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
 VA(0x00452f8a, 0x1ea)
-void ReceiveRemotePlayerExit(struct SPlayerExit) {}
+// HoMM1 callers push four byte-sized values: player, an unused flag,
+// elimination and timeout.
+void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char) {}
 
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

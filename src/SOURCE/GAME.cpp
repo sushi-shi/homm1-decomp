@@ -71,7 +71,7 @@ void GenerateStandardFileName(char *, char *) {}
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.606443;margin=0.348788;shape=0.410;size=0.678;calls=0.698;strings=%s%s|%s.%s|%s.GM%d;alternate=pol20:int game::SaveGame(char *, int, signed char)@0x00071eb7
 VA(0x00439e3d, 0x7b2)
-int game::SaveGame(char *, int, signed char) { return 0; }
+short game::SaveGame(char *, signed char) { return 0; }
 
 // donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -242,7 +242,7 @@ void game::CheckHeroConsistency(void) {}
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
 VA(0x004459a5, 0x6e9)
-int game::TransmitSaveGame(int, int, int) { return 0; }
+int game::TransmitSaveGame(int, int) { return 0; }
 
 // donor PoL RVA 0x00083937; preferred Buka symbol ?ReceiveSaveGame@game@@QAEHHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order

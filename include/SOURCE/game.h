@@ -51,7 +51,7 @@ public:
     int GetNewHeroId(int, int, int);
     int GetTownId(int, int);
     int GetMineId(int, int);
-    int SaveGame(char *, int, signed char);
+    short SaveGame(char *, signed char);
     void SetupOrigData(void);
     void LoadGame(char *, int, int);
     void GiveTroopsToNeutralTown(int);
@@ -103,7 +103,7 @@ public:
     void SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
-    int TransmitSaveGame(int, int, int);
+    int TransmitSaveGame(int, int);
     int ReceiveSaveGame(int, int);
     void DoNewTurn(void);
     int GetBoatsBuilt(void);
