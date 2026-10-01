@@ -10,9 +10,14 @@
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 
+#include <stdlib.h>
+#include <string.h>
+
 // Code-required retail identities; initializer/data-byte matching is deferred.
 DATA(0x0048e180)
 int giGraphicsType;
+DATA(0x0048e178)
+int gbWinGAttached;
 DATA(0x0048e17c)
 int gbDDrawAttached;
 DATA(0x0048e5a8)
@@ -1042,7 +1047,24 @@ void CleanUpWinGraphics() {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
 VA(0x0040566a, 0xb9)
-void SetFullScreenStatus(int) {}
+void SetFullScreenStatus(int fullScreen) {
+    if (gbInSmackMgr != 0)
+        return;
+    if (gConfig.gfx[giCurExe].fullScreen == fullScreen)
+        return;
+    if (giGraphicsType == 1) {
+        // HoMM1 has no DirectDraw-attached guard or cursor refresh here.
+        gConfig.gfx[giCurExe].fullScreen = 1;
+        if (SetGraphicsType(2) != 0)
+            DDSetFullScreenStatus(fullScreen);
+        return;
+    } else if (fullScreen == 0) {
+        if (gbWinGAttached != 0)
+            SetGraphicsType(1);
+    } else {
+        DDSetFullScreenStatus(fullScreen);
+    }
+}
 
 VA(0x00405723, 0x31)
 int QueryNewPalette() {
@@ -1055,7 +1077,48 @@ int QueryNewPalette() {
 // donor PoL RVA 0x00037595; preferred Buka symbol ?SetGraphicsType@@YIHH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.565182;margin=0.258783;shape=0.434;size=0.909;calls=1.000;alternate=pol20:int SetGraphicsType(int)@0x00037595
-VA(0x00405754, 0x1fc)
-int SetGraphicsType(int) {
-    return 0;
+VA(0x00405754, 0x1f3)
+int SetGraphicsType(int graphicsType) {
+    void* screenBuffer;
+    int w;
+    int fullScreen;
+    int x;
+    int h;
+    int y;
+
+    if (graphicsType == giGraphicsType)
+        return 1;
+    if (graphicsType == 1 && gbWinGAttached == 0)
+        return 0;
+    if (graphicsType == 2 && gbDDrawAttached == 0)
+        return 0;
+
+    fullScreen = gConfig.gfx[giCurExe].fullScreen;
+    x = gConfig.gfx[giCurExe].x;
+    y = gConfig.gfx[giCurExe].y;
+    w = gConfig.gfx[giCurExe].width;
+    h = gConfig.gfx[giCurExe].height;
+    screenBuffer = malloc(WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
+    memcpy(screenBuffer, gpWindowManager->m_screen->m_pixels, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
+    if (graphicsType == 1) {
+        gConfig.gfx[giCurExe].fullScreen = 0;
+        DDCleanUpWinGraphics();
+        giGraphicsType = 1;
+        WGInitGraphics();
+        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
+    } else {
+        WGCleanUpWinGraphics();
+        giGraphicsType = 2;
+        DDInitGraphics();
+        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
+    }
+    memcpy(gpWindowManager->m_screen->m_pixels, screenBuffer, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
+    free(screenBuffer);
+    if (fullScreen != 0 && graphicsType == 1) {
+        SetMenuStatus(1);
+        ResizeWindow(x, y, w, h);
+    }
+    BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 0, 0);
+    UpdatePalette(gpBufferPalette->m_data);
+    return 1;
 }
