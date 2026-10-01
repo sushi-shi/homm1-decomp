@@ -201,6 +201,109 @@ void townManager::SetArmyCommand(short qualifier)
     }
 }
 
+// Buka TOWNMGR.cpp:1022-1176; HoMM1 has no calendar entry and names the
+// six dwellings through gDwellingType.
+VA(0x00408ed2, 0x468)
+void townManager::SetCommandAndText(struct tag_message &message)
+{
+    short id;
+
+    id = message.payload.widget.id;
+    m_command = TOWN_ARMY_COMMAND_NONE;
+    switch (id) {
+        case TOWN_CLOSE_CONTROL:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_EXIT]);
+            break;
+        case -1:
+        case TOWN_EMPTY_STATUS_CONTROL_FIRST:
+        case TOWN_EMPTY_STATUS_CONTROL_LAST:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_STATUS]);
+            break;
+        case TOWN_GARRISON_FIRST_CONTROL:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_GARRISON]);
+            m_command = TOWN_ARMY_COMMAND_GARRISON;
+            break;
+        case TOWN_GARRISON_SLOT_FIRST:
+        case TOWN_GARRISON_SLOT_FIRST + 1:
+        case TOWN_GARRISON_SLOT_FIRST + 2:
+        case TOWN_GARRISON_SLOT_FIRST + 3:
+        case TOWN_GARRISON_SLOT_FIRST + 4:
+            if (m_swapArmySlot != -1) {
+                m_pendingStrip = m_garrisonStrip;
+                m_pendingArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
+                SetArmyCommand(message.payload.mouse.modifiers & TOWN_SHIFT_QUALIFIER_MASK);
+            } else {
+                m_selectedStrip = m_garrisonStrip;
+                m_selectedArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
+                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == -1)
+                    strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
+                else {
+                    sprintf(m_statusText, cTownCommand[TOWN_TEXT_SELECT_ARMY],
+                            gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]);
+                    m_command = TOWN_ARMY_COMMAND_SELECT;
+                }
+            }
+            break;
+        case TOWN_HERO_FIRST_CONTROL:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_VIEW_HERO]);
+            m_command = TOWN_ARMY_COMMAND_VIEW_HERO;
+            break;
+        case TOWN_HERO_SLOT_FIRST:
+        case TOWN_HERO_SLOT_FIRST + 1:
+        case TOWN_HERO_SLOT_FIRST + 2:
+        case TOWN_HERO_SLOT_FIRST + 3:
+        case TOWN_HERO_SLOT_FIRST + 4:
+            if (m_swapArmySlot != -1) {
+                m_pendingStrip = m_heroStrip;
+                m_pendingArmySlot = id - TOWN_HERO_SLOT_FIRST;
+                SetArmyCommand(message.payload.mouse.modifiers & TOWN_SHIFT_QUALIFIER_MASK);
+            } else {
+                m_selectedStrip = m_heroStrip;
+                m_selectedArmySlot = id - TOWN_HERO_SLOT_FIRST;
+                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == -1) {
+                    strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
+                    m_command = TOWN_ARMY_COMMAND_NONE;
+                } else {
+                    sprintf(m_statusText, cTownCommand[TOWN_TEXT_SELECT_ARMY],
+                            gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]);
+                    m_command = TOWN_ARMY_COMMAND_SELECT;
+                }
+            }
+            break;
+        case 0:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0]);
+            break;
+        case 1:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 1]);
+            break;
+        case 2:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 2]);
+            break;
+        case 3:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 3]);
+            break;
+        case 4:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 4]);
+            break;
+        case 5:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 5]);
+            break;
+        case 6:
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 6]);
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            sprintf(m_statusText, cTownCommand[TOWN_TEXT_DWELLING],
+                    gArmyNames[gDwellingType[m_town->m_type][id - 7]]);
+            break;
+    }
+    ShowText(m_statusText);
+}
+
 // donor PoL RVA 0x000158e0; preferred Buka symbol ?ShowText@townManager@@QAEXPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.613333;margin=0.109874;shape=0.519;size=1.000;calls=1.000;alternate=pol20:void townManager::ShowText(char *)@0x000158e0
