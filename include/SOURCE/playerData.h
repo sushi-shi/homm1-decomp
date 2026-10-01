@@ -44,7 +44,9 @@ public:
 #pragma pack(push, 1)
 class playerData {
 public:
-    char m_unknown00[0x12];
+    char m_unknown00[0x11];
+    // SetupThievesGuild adds this byte to the town-window flag frame base.
+    signed char m_unknown11;
     signed char m_color;
     signed char m_heroCount;
     signed char m_currentHero;

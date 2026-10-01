@@ -20,7 +20,7 @@ public:
     char m_unknown1c[0x29];
     armyGroup *m_army;
     // --- constructors ---
-    strip(int, int, int, unsigned long int, int, class armyGroup *, int, int, int);
+    strip(short, short, signed char, short, signed char, class armyGroup *, int, int);
     ~strip();
     // --- methods ---
     void Draw(void);

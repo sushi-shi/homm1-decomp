@@ -55,6 +55,7 @@ public:
     void UseSpell(signed char);
     void AddSpell(int, int);
     void HeroScreenUpdate(void);
+    signed char HeroView(signed char);
     void UpdateArmies(void);
     void ViewStat(int, int);
     void ViewArtifact(int, int, int);

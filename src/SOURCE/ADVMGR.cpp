@@ -1725,6 +1725,7 @@ short DimensionDoorHandler(struct tag_message& message) {
 // donor PoL RVA 0x000654ad; preferred Buka symbol ?ComboDraw@advManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
+// HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
 VA(0x00433b10, 0xaf6)
 signed char advManager::ComboDraw(short, short, int) {
     return 0;

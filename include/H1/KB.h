@@ -30,6 +30,7 @@ extern signed char giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];
+extern struct tag_monsterInfo gMonsterDatabase[];
 extern int gbMinimized;
 extern signed char gbInMemError;
 extern char* gcMemoryErrorTitle;
@@ -43,6 +44,7 @@ extern int gbLoadingMonoIcon;
 extern long gNextSoundPollTick;
 extern long gMusicFadeTimer;
 extern configStruct gConfig;
+extern struct tag_tilePoint normalDirTable[];
 extern char* DEFAULT_AGGREGATE_NAME;
 extern resourceManager* gpResourceManager;
 extern soundManager* gpSoundManager;
@@ -98,11 +100,19 @@ extern short giScoreCampaignMon[][2];
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(int);
 long KBTickCount();
+struct SAMPLE2 LoadPlaySample(char*);
+void WaitEndSample(struct SAMPLE2, int);
+// Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
+extern struct SAMPLE2 NULL_SAMPLE2;
+extern "C" void BitSet(void*, unsigned int);
+extern int glTimers[];
 void Process1WindowsMessage();
 void SetNoDialogMenus(int);
 void EarlyShutDownSystem();
 void PollRemote();
 void QuickViewWait();
+signed char CanBuild(class town*, short);
+signed char CanBuy(class town*, short);
 extern "C" void PollSound();
 void ForcePollSound();
 char toupper(char);
@@ -157,7 +167,16 @@ extern short gHeroGoldCost;
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
 void SetWinText(heroWindow*, short);
-signed char CanBuy(class town*, int);
-signed char CanBuild(class town*, int);
+// Buka's default dialog dispatcher (retail 0x00452b64).
+short EventWindowHandler(struct tag_message&);
+// Buka TrueFalseDialogHandler (retail 0x00452c78), the plain dialog dispatcher.
+short TrueFalseDialogHandler(struct tag_message&);
+// HoMM1 town-name lookup by town id (retail 0x00455aaf).
+char* GetTownName(int);
+extern char* cTownPrefix[];
+extern char* cNeutralObjectName[];
+extern char* cTownObjectSuffix[];
+extern char* gSpellDesc[];
+extern char* gSpellNames[];
 
 #endif

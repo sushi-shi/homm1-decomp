@@ -120,18 +120,18 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    void StartCursor(int);
-    void StopCursor(int);
+    void StartCursor(signed char);
+    void StopCursor(signed char);
     void DrawCursor(void);
     void DrawCursorShadow(void);
     short GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short));
-    void TurnTo(int);
-    int GetMoveShowIt(class hero*, int);
+    void TurnTo(signed char);
+    int GetMoveShowIt(signed char);
     class mapCell* MoveHero(int, int, int*, int*, int*, int, int*, int);
-    void CheckAdjacentMon(int*);
-    short ValidMoveWithEvent(class hero*, int);
-    int ValidMove(int, int);
-    void MoveOrigin(int, int);
+    void CheckAdjacentMon(signed char*);
+    short ValidMoveWithEvent(class hero*, short);
+    short ValidMove(short);
+    void MoveOrigin(short, short);
     void ProcessMapChange(struct SMapChange);
     void ProcessIncomingSingleMapChange(struct SMapChange*);
     void ProcessIncomingGroupMapChange(char*);
@@ -210,7 +210,7 @@ public:
     void EnableButtons(void);
     void SaveAdventureBorder(void);
     void DrawAdventureBorder(void);
-    int FindAdjacentMonster(int, int, int*, int*, int, int);
+    signed char FindAdjacentMonster(int, int, int*, int*, int, int);
     void ViewPuzzle(void);
     void PuzzleDraw(int, int, int, int);
     void AdvPanel(void);
@@ -269,14 +269,14 @@ public:
         class mapCell*,
         class mapCell*,
         class hero*,
-        int*,
+        signed char*,
         int,
         int,
         int,
         int,
         int
     );
-    void ComputerMonsterInteract(class mapCell*, class hero*, int*);
+    void ComputerMonsterInteract(class mapCell*, class hero*, signed char*);
     int DoNetCombat(char*);
     int DoCombat(
         int,

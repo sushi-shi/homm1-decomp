@@ -9,6 +9,7 @@
 #include <H1/All.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // HoMM1's retained logging path opens KB.LOG afresh and writes its banner.
@@ -153,4 +154,35 @@ void AbsAiPrint(char* text) {
     giDebugLevel = MISC_FORCED_DEBUG_LEVEL;
     gpPhilAI->ShowDebugText(text);
     giDebugLevel = saved;
+}
+
+// AI strategic-value maps reset by philAI::DoAI (Buka PHILAI.cpp ResetHeroRVs).
+extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiHeroLiveChance[GAME_HERO_COUNT];
+
+// Buka ResetHeroRVs; HoMM1 has no off-map guard and indexes [x][y].
+VA(0x00419d9f, 0x177)
+void ResetHeroRVs(int resetAll, int x, int y)
+{
+    int i;
+    int j;
+
+    for (i = 0; i < MAP_CELL_GRID_SIZE; i++) {
+        for (j = 0; j < MAP_CELL_GRID_SIZE; j++) {
+            if (resetAll) {
+                if (abs(x - i) + abs(y - j) < 10)
+                    gaiHeroStrategicRVOfPos[i][j] = -32001;
+            } else {
+                gaiHeroStrategicRVOfPos[i][j] = -32001;
+                gaiHeroEventStratRVOfPos[i][j] = -32001;
+            }
+        }
+    }
+    gaiHeroEventStratRVOfPos[x][y] = -32001;
+    for (i = 0; i < GAME_HERO_COUNT; i++) {
+        if (!resetAll
+            || abs(y - gpGame->m_heroRecs[i].m_x) + abs(x - gpGame->m_heroRecs[i].m_x) < 10)
+            gaiHeroLiveChance[i] = -32001;
+    }
 }

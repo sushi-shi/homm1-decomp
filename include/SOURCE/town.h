@@ -25,11 +25,19 @@ public:
     signed char m_buildState;
     char m_unknown19;
     short m_garrison[6];
-    char m_unknown26[0x11];
+    char m_unknown26[6];
+    // MageGuildHandler indexes nine guild spells from +0x2c.
+    signed char m_spells[9];
+    char m_unknown35[2];
     // --- constructors ---
     town(void);
     // --- methods ---
     signed char HasGarrison(void);
+    // Buka town::OccupyingHero inline; townManager::Open emits its jmp $+0.
+    signed char OccupyingHero(void) {
+        return m_occupyingHeroId;
+    }
+    // HoMM1 retail 0x00463fd0 takes no argument (plain ret).
     void GiveSpells(void);
     void XformToCastle(void);
     void View(void);

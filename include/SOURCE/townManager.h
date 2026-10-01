@@ -9,6 +9,7 @@
 
 // forward declarations:
 class bankBox;
+class bitmap;
 class heroWindow;
 class icon;
 class strip;
@@ -24,7 +25,16 @@ H1_ENUM_BEGIN(TownManagerStorageConstant)
     TOWN_STATUS_TEXT_CONTROL = 0x386,
     TOWN_STATUS_REGION_Y = 0x1ce,
     TOWN_STATUS_REGION_WIDTH = 0x280,
-    TOWN_STATUS_REGION_HEIGHT = 0x10
+    TOWN_STATUS_REGION_HEIGHT = 0x10,
+    TOWN_NAME_TEXT_CONTROL = 0x25,
+    TOWN_REDRAW_INTERVAL = 0x96,
+    TOWN_FIRST_FACTION_OBJECT = 5,
+    TOWN_CREST_NO_HERO_OFFSET = 0x10,
+    TOWN_MANAGER_MESSAGE_MASK = 0x800,
+    TOWN_REDRAW_FIRST_CONTROL = 0x24,
+    TOWN_REDRAW_LAST_CONTROL = 0x25,
+    TOWN_VIEWPORT_WIDTH = 0x280,
+    TOWN_VIEWPORT_HEIGHT = 0x100
 H1_ENUM_END(TownManagerStorageConstant)
 // clang-format on
 
@@ -70,12 +80,117 @@ H1_ENUM_BEGIN(TownControl)
     TOWN_CLOSE_CONTROL = 0x7800
 H1_ENUM_END(TownControl)
 
+H1_ENUM_BEGIN(TownThievesCategory)
+    THIEVES_CATEGORY_TOWNS = 0,
+    THIEVES_CATEGORY_CASTLES = 1,
+    THIEVES_CATEGORY_HEROES = 2,
+    THIEVES_CATEGORY_GOLD = 3,
+    THIEVES_CATEGORY_WOOD_AND_ORE = 4,
+    THIEVES_CATEGORY_RARE_RESOURCES = 5,
+    THIEVES_CATEGORY_OBELISKS = 6,
+    THIEVES_CATEGORY_ARMY_STRENGTH = 7,
+    TOWN_THIEVES_DEAD_PLAYER_STAT = -1,
+    TOWN_BUILDING_TENT_FLAG = 0x20,
+    TOWN_BUILDING_CASTLE_FLAG = 0x40,
+    THIEVES_RANK_FIRST_X = 0x120,
+    THIEVES_PLAYER_COLUMN_WIDTH = 0x61,
+    THIEVES_FIRST_CATEGORY_Y = 0x1b,
+    THIEVES_CATEGORY_ROW_HEIGHT = 0x1a,
+    THIEVES_FLAG_FRAME_BASE = 0xe,
+    THIEVES_RANK_ICON_WIDTH = 0x12,
+    THIEVES_RANK_ICON_HEIGHT = 0x16,
+    THIEVES_PLAYER_WIDTH = 0x48,
+    THIEVES_TIE_CENTERING_STEP = 9,
+    THIEVES_CATEGORY_COUNT = 8,
+    THIEVES_RANK_COUNT = 4
+H1_ENUM_END(TownThievesCategory)
+
+H1_ENUM_BEGIN(TownWellConstant)
+    TOWN_WELL_DWELLING_COUNT = 6,
+    TOWN_WELL_FIRST_ICON_CONTROL = 1,
+    TOWN_WELL_FIRST_NAME_CONTROL = 7,
+    TOWN_WELL_FIRST_MONSTER_ICON_CONTROL = 0xd,
+    TOWN_WELL_FIRST_CREATURE_CONTROL = 0x13,
+    TOWN_WELL_FIRST_AVAILABLE_CONTROL = 0x19,
+    TOWN_WELL_FRAMES_PER_TYPE = 7,
+    TOWN_WELL_FIRST_DWELLING_BUILDING = 7
+H1_ENUM_END(TownWellConstant)
+
+H1_ENUM_BEGIN(TownMageConstant)
+    TOWN_MAGE_FIRST_SPELL_CONTROL = 1,
+    TOWN_MAGE_FIRST_ICON_CONTROL = 10,
+    TOWN_MAGE_FIRST_NAME_CONTROL = 0x13,
+    TOWN_MAGE_FIRST_TOWER_CONTROL = 0x1c,
+    TOWN_MAGE_DESCRIPTION_CONTROL = 0x50,
+    TOWN_MAGE_SPELL_COUNT = 9,
+    TOWN_MAGE_TOWER_FRAME_COUNT = 8,
+    TOWN_MAGE_WIDGET_VISIBLE_FLAG = 4
+H1_ENUM_END(TownMageConstant)
+
+H1_ENUM_BEGIN(TownSplitConstant)
+    TOWN_SPLIT_AMOUNT_CONTROL = 0x44,
+    TOWN_SPLIT_INCREASE_CONTROL = 0x45,
+    TOWN_SPLIT_DECREASE_CONTROL = 0x46,
+    TOWN_SPLIT_SETUP_AMOUNT_CONTROL = 4,
+    TOWN_SPLIT_WINDOW_X = 0xb1,
+    TOWN_SPLIT_WINDOW_Y = 0x14,
+    TOWN_CASTLE_BUILDING_COUNT = 13,
+    TOWN_CASTLE_FRAME_BUILT = 0xb,
+    TOWN_CASTLE_FRAME_CANNOT_BUILD = 0xc,
+    TOWN_CASTLE_FRAME_CANNOT_AFFORD = 0xd,
+    TOWN_CASTLE_FIRST_ICON_CONTROL = 1,
+    TOWN_CASTLE_FIRST_DWELLING_NAME_CONTROL = 0x17,
+    TOWN_CASTLE_FIRST_STATE_CONTROL = 0x20,
+    TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL = 0x27,
+    TOWN_CASTLE_HERO_STATE_CONTROL = 0x50,
+    TOWN_CASTLE_SPECIAL_BUILDING_COUNT = 5,
+    TOWN_WIDGET_VISIBLE_FLAG = 4,
+    TOWN_CASTLE_HERO_CONTROL = 0x30,
+    TOWN_CASTLE_STATUS_CONTROL = 0x32,
+    TOWN_CASTLE_STATUS_FIRST_CONTROL = 0x1f4,
+    TOWN_CASTLE_STATUS_TEXT_CONTROL = 0x1f6,
+    TOWN_CASTLE_STATUS_X = 0xa,
+    TOWN_CASTLE_STATUS_Y = 0xf0,
+    TOWN_CASTLE_STATUS_WIDTH = 0x21a,
+    TOWN_CASTLE_STATUS_HEIGHT = 0x10,
+    TOWN_CASTLE_INFO_BUILD_MAGE_GUILD = 0,
+    TOWN_CASTLE_INFO_MAGE_GUILD_MAX_LEVEL = 1,
+    TOWN_CASTLE_INFO_CANNOT_AFFORD_MAGE_LEVEL = 2,
+    TOWN_CASTLE_INFO_ADD_MAGE_GUILD_LEVEL = 3,
+    TOWN_CASTLE_INFO_ALREADY_BUILT = 4,
+    TOWN_CASTLE_INFO_CANNOT_BUILD = 5,
+    TOWN_CASTLE_INFO_CANNOT_AFFORD = 6,
+    TOWN_CASTLE_INFO_BUILD = 7,
+    TOWN_CASTLE_INFO_CANNOT_AFFORD_HERO = 8,
+    TOWN_CASTLE_INFO_TOO_MANY_HEROES = 9,
+    TOWN_CASTLE_INFO_TOWN_OCCUPIED = 10,
+    TOWN_CASTLE_INFO_RECRUIT_HERO = 11,
+    TOWN_CASTLE_INFO_EXIT = 12,
+    TOWN_CASTLE_INFO_OPTIONS = 13,
+    TOWN_ARMY_VIEW_X = 0x77,
+    TOWN_ARMY_VIEW_Y = 0x14,
+    TOWN_BUILDING_MAGE_GUILD = 0,
+    TOWN_BUILDING_TENT = 5,
+    TOWN_BUILDING_CASTLE = 6,
+    TOWN_BUILDING_FIRST_DWELLING = 7,
+    TOWN_BUILDING_LAST_DWELLING = 12,
+    TOWN_OBJECT_ENABLED_FLAG = 2
+H1_ENUM_END(TownSplitConstant)
+
 H1_ENUM_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,
     TOWN_TAVERN_WINDOW_TEXT = 0xe,
     TOWN_TAVERN_MUSIC = 0x2f,
-    TOWN_THEME_MUSIC_BASE = 0x1d
+    TOWN_THEME_MUSIC_BASE = 0x1d,
+    TOWN_TAVERN_ANIMATION_DELAY = 6,
+    TOWN_TAVERN_UNUSED_FRAME = 2,
+    TOWN_TAVERN_ANIMATION_CONTROL = 2,
+    TOWN_TAVERN_ANIMATION_FRAME_COUNT = 8,
+    TOWN_TAVERN_FIRST_ANIMATION_FRAME = 1,
+    TOWN_DIALOG_BUTTON_0 = 0x7800,
+    TOWN_DIALOG_BUTTON_1 = 0x7801,
+    TOWN_DIALOG_BUTTON_2 = 0x7802
 H1_ENUM_END(TownTavernConstant)
 // clang-format on
 
@@ -85,7 +200,7 @@ H1_ENUM_END(TownTavernConstant)
 class townManager : public baseManager {
 public:
     town *m_town;
-    icon *m_backgroundIcon;
+    bitmap *m_backgroundBitmap;
     townObject *m_townObjects[TOWN_MANAGER_OBJECT_CAPACITY];
     signed char m_townObjectCount;
     int m_unknown79;
@@ -102,9 +217,10 @@ public:
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     short m_lastHoverId;
     H1_ENUM_STORAGE(TownArmyCommand, signed char) m_command;
-    signed char m_unknownf2;
-    short m_unknownf3;
-    short m_unknownf5;
+    // SetupCastle's recruit-slot state and its affordable/buildable masks.
+    signed char m_recruitResult;
+    unsigned short m_affordableBuildings;
+    unsigned short m_buildableBuildings;
     signed char m_castleDialogActive;
     short m_selectedBuilding;
     heroWindow *m_heroWindow0;
@@ -131,26 +247,44 @@ public:
     void SetArmyCommand(short);
     void SetCommandAndText(struct tag_message &);
     void ShowText(char *);
-    void DoCommand(int);
+    void DoCommand(signed char);
     void RedrawTownScreen(void);
     void SplitArmy(void);
     void ShiftQualChange(void);
     void ResetStrips(void);
     void Toggle(signed char);
-    void DrawTown(int, int);
-    int BuyBuild(int, int, int);
-    void BuildObj(int);
+    void DrawTown(signed char, int);
+    short BuyBuild(short, signed char, signed char);
+    void BuildObj(short);
     void SetupMage(class heroWindow *);
-    int RecruitHero(int, int);
+    signed char RecruitHero(signed char);
     void DoTavern(void);
     void SetupWell(class heroWindow *);
-    void SetupThievesGuild(class heroWindow *, int);
-    void SetupCastle(class heroWindow *, int);
-    char *GetBuildingName(int);
+    void SetupThievesGuild(class heroWindow *, short);
+    void SetupCastle(class heroWindow *);
+    char *GetBuildingName(short);
+    // HoMM1 keeps the thieves-guild helpers as townManager members.
+    void GetCategoryStats(signed char, long *const, signed char *const);
+    void SortStats(long *const, signed char *const);
 };
 #pragma pack(pop)
 
+// BuildObj's fizzle rectangle per town type and building (0x00491868).
+struct TownBuildingExtent {
+    short x;
+    short y;
+    short width;
+    short height;
+};
+extern TownBuildingExtent gTownBuildingExtents[4][16];
+
 extern char *cTownCommand[];
 extern signed char townTheme[];
+// Open's per-type town-object layout (0x0048c028).
+extern signed char gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
 short TavernHandler(struct tag_message &);
+short MageGuildHandler(struct tag_message &);
+short SplitArmyHandler(struct tag_message &);
+short CastleHandler(struct tag_message &);
+extern char *cCastleInfo[];
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

@@ -82,7 +82,8 @@ void RedrawHeroScreen(void) {}
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
 VA(0x0046c2ed, 0x6c2)
-int HeroView(int, int, int) { return 0; }
+// HoMM1 retail is a hero thiscall with one byte argument (ret 4, AL result).
+signed char hero::HeroView(signed char) { return 0; }
 
 // donor PoL RVA 0x0006cab1; preferred Buka symbol ?HeroMessageUpdate@@YIXPAD@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order

@@ -41,7 +41,9 @@ public:
     int m_campaignScenario;
     char m_unknown000b[0x1f4];
     signed char m_playerCount;
-    char m_unknown200[6];
+    char m_unknown200;
+    signed char m_deadPlayerCount;
+    signed char m_playerDead[GAME_PLAYER_COUNT];
     unsigned short m_day;
     unsigned short m_week;
     unsigned short m_month;
@@ -63,6 +65,9 @@ public:
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
+    char m_unknown16e59[9];
+    // TavernHandler advances this word as its animation counter (Buka name).
+    short m_viewArmyResult;
     hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
