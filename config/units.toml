@@ -372,3 +372,8 @@ flags = "cpp_o2"
 unit = "BASE/OLDASM"
 source = "src/BASE/OLDASM.cpp"
 flags = "cpp_o2"
+
+[[unit]]
+unit = "SOURCE/comwin"
+source = "src/SOURCE/comwin.cpp"
+flags = "cpp_carcass"
