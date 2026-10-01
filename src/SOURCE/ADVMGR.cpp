@@ -1631,7 +1631,50 @@ void advManager::DimensionDoor(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.385467;margin=0.208066;shape=0.290;size=0.657;calls=0.526;alternate=pol20:void advManager::TownGate(int)@0x0006785d
 VA(0x0043515d, 0x2a6)
-void advManager::TownGate(void) {}
+void advManager::TownGate(void) {
+    int k;
+    int bestDist;
+    int bestTown;
+    hero* heroPointer;
+    int distance;
+
+    bestDist = 1000;
+    bestTown = -1;
+    heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) {
+        NormalDialog(
+            "Town Gate Failed!!!  You must be on land for this spell to work.",
+            1, -1, -1, -1, 0, -1, 0, -1
+        );
+        return;
+    }
+    for (k = 0; k < gpCurPlayer->m_townCount; k++) {
+        distance = abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[k]].m_x - heroPointer->m_x)
+                   + abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[k]].m_y - heroPointer->m_y);
+        if (distance < bestDist) {
+            bestDist = distance;
+            bestTown = k;
+        }
+    }
+    if (bestTown == -1)
+        NormalDialog("No available town.  Town Gate Failed!!!", 1, -1, -1, -1, 0, -1, 0, -1);
+    if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId != -1) {
+        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", 1, 0x61, -1, -1, 0, -1, 0, -1);
+        return;
+    }
+    gpSoundManager->SwitchAmbientMusic(16);
+    TeleportTo(
+        gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_x,
+        gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_y,
+        0
+    );
+    heroPointer->UseSpell(SPELL_TOWN_GATE);
+    gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId = heroPointer->m_id;
+    gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
+    heroPointer->m_locationType = 0xa8;
+    heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
+    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+}
 
 // donor PoL RVA 0x00067c9b; preferred Buka symbol ?SummonBoat@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
