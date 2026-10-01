@@ -33,7 +33,7 @@ void PostprocessPalette(signed char* data) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_GRAPHICS_BYTES));
     memset(remapped, 0, PALETTE_GRAPHICS_BYTES);
     for (int index = 0; index < 256; index++)
-        remapped[gPaletteRemap[index]] =
+        remapped[gMonoColorMap[index]] =
             reinterpret_cast<PaletteColor*>(data)[index]; // byte-evidenced: 3-byte colour copies
     memcpy(data, remapped, PALETTE_GRAPHICS_BYTES);
     free(remapped);

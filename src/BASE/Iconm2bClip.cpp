@@ -9,7 +9,7 @@
 
 #include <string.h>
 
-#pragma intrinsic(memset)
+#pragma intrinsic(memcpy, memset)
 
 VA(0x004738e0, 0x1e6)
 void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int frame, int color, int mode, int clipX, int clipY, int clipW, int clipH)
@@ -53,5 +53,69 @@ void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y
             rowOffset += ICON_SCREEN_ROW_BYTES;
         }
         source++;
+    }
+}
+
+// Clipped colour icon blit kept beside the mono path. Retail keeps every
+// working value in file statics, as in the assembly renderers.
+static int sClipRight;
+static signed char *sClipRow;
+static IconEntry *sClipEntry;
+static unsigned int sClipRun;
+static int sClipBottom;
+static int sClipX;
+static int sClipY;
+static unsigned char *sClipSource;
+static int sClipInside;
+static int sClipRowStart;
+
+VA(0x00473ad0, 0x2ad)
+void ClipIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int frame, int mode, int clipX, int clipY, int clipW, int clipH)
+{
+    sClipEntry = reinterpret_cast<IconEntry *>(sourceIcon->m_data) + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
+    sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
+    sClipX = sClipRowStart = x + sClipEntry->x;
+    sClipY = y + sClipEntry->y;
+    if (sClipRowStart < clipX || sClipRowStart + sClipEntry->w > clipX + clipW
+        || sClipY < clipY || sClipY + sClipEntry->h > clipY + clipH) {
+        sClipInside = 0;
+        sClipRight = clipX + clipW - 1;
+        sClipBottom = clipY + clipH - 1;
+    } else {
+        sClipInside = 1;
+    }
+    sClipRow = destination->m_pixels + destination->m_width * sClipY;
+    for (;;) {
+        sClipRun = *sClipSource++;
+        if (static_cast<signed char>(sClipRun) < 0) {
+            if ((sClipRun & ICON_MONO_SKIP_MASK) == 0)
+                return;
+            sClipX += sClipRun & ICON_MONO_SKIP_MASK;
+            continue;
+        }
+        if (sClipRun != 0) {
+            if (sClipInside) {
+                memcpy(sClipRow + sClipX, sClipSource, sClipRun);
+            } else if (sClipY >= clipY && sClipBottom >= sClipY && sClipRun + sClipX >= clipX
+                       && sClipX <= sClipRight) {
+                if (sClipX >= clipX) {
+                    if (sClipRight >= sClipX + sClipRun)
+                        memcpy(sClipRow + sClipX, sClipSource, sClipRun);
+                    else
+                        memcpy(sClipRow + sClipX, sClipSource, sClipRight - sClipX + 1);
+                } else {
+                    if (*sClipSource + sClipX <= sClipRight)
+                        memcpy(sClipRow + sClipX, sClipSource, sClipRun - clipX + sClipX);
+                    else
+                        memcpy(sClipRow + sClipX, sClipSource, clipW);
+                }
+            }
+            sClipX += sClipRun;
+            sClipSource += sClipRun;
+        } else {
+            sClipX = sClipRowStart;
+            sClipY++;
+            sClipRow += destination->m_width;
+        }
     }
 }
