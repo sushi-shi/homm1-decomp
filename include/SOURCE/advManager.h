@@ -178,7 +178,7 @@ public:
     void SetHeroContext(signed char, int);
     void DoHeroKnob(void);
     void DoTownKnob(void);
-    void CastSpell(int);
+    void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
     int ComboDraw(short, short, int);
@@ -189,7 +189,7 @@ public:
     void InsertSound(int, int, int, int);
     void TeleportTo(class hero *, int, int, int, int);
     void DimensionDoor(void);
-    void TownGate(int);
+    void TownGate(void);
     void SummonBoat(void);
     void ShowRoute(int, int, int);
     void HideRoute(int, int, int);

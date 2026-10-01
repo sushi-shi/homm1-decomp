@@ -45,7 +45,7 @@ public:
     int HasSpell(int);
     int GetNthSpell(int, int);
     int GetNumSpells(int);
-    void UseSpell(int);
+    void UseSpell(signed char);
     void AddSpell(int, int);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);

@@ -83,6 +83,20 @@ H1_ENUM_BEGIN(AdventurePanelDialogConstant)
     PANEL_SEARCH = 4
 H1_ENUM_END(AdventurePanelDialogConstant)
 
+H1_ENUM_BEGIN(AdventureSpellType)
+    SPELL_VIEW_MINES = 19,
+    SPELL_VIEW_RESOURCES = 20,
+    SPELL_VIEW_ARTIFACTS = 21,
+    SPELL_VIEW_TOWNS = 22,
+    SPELL_VIEW_HEROES = 23,
+    SPELL_VIEW_ALL = 24,
+    SPELL_IDENTIFY_HERO = 25,
+    SPELL_SUMMON_BOAT = 26,
+    SPELL_DIMENSION_DOOR = 27,
+    SPELL_TOWN_GATE = 28,
+    SPELL_TRAVEL_MOBILITY_COST = 12
+H1_ENUM_END(AdventureSpellType)
+
 H1_ENUM_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
@@ -577,7 +591,56 @@ void advManager::ViewPuzzle(void) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.339671;margin=1.295843;shape=0.207;size=0.620;calls=0.615;alternate=pol20:void advManager::CastSpell(int)@0x00064b08
 VA(0x00431315, 0x1f2)
-void advManager::CastSpell(int) {}
+void advManager::CastSpell(signed char spell)
+{
+    hero *caster;
+    int guardianCount;
+
+    if (gpCurPlayer->CurrentHero() != -1)
+        caster = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    else
+        caster = 0;
+
+    switch (spell) {
+        case SPELL_VIEW_MINES:
+        case SPELL_VIEW_RESOURCES:
+        case SPELL_VIEW_ARTIFACTS:
+        case SPELL_VIEW_TOWNS:
+        case SPELL_VIEW_HEROES:
+        case SPELL_VIEW_ALL:
+            ViewWorld(spell, 1, spell == SPELL_VIEW_ALL);
+            break;
+        case SPELL_IDENTIFY_HERO:
+            m_identifyHeroActive = 1;
+            NormalDialog("Enemy Heroes are now fully identifiable.", 1, 0x61, 0x91, -1, 0, -1, 0, -1);
+            break;
+        case SPELL_SUMMON_BOAT:
+            SummonBoat();
+            break;
+        case SPELL_DIMENSION_DOOR:
+        case SPELL_TOWN_GATE:
+            if (caster->m_remainingMobility == 0) {
+                NormalDialog("Your hero is too tired to cast this spell today.  Try again tomorrow.",
+                             1, -1, -1, -1, 0, -1, 0, -1);
+                return;
+            }
+            if (caster->m_remainingMobility < SPELL_TRAVEL_MOBILITY_COST)
+                caster->m_remainingMobility = 0;
+            else
+                caster->m_remainingMobility -= SPELL_TRAVEL_MOBILITY_COST;
+            UpdateHeroLocator(-1, 1, 1);
+            if (spell == SPELL_DIMENSION_DOOR)
+                DimensionDoor();
+            else
+                TownGate();
+            break;
+        default:
+            break;
+    }
+
+    if (spell != SPELL_DIMENSION_DOOR && spell != SPELL_TOWN_GATE)
+        gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(spell);
+}
 
 // donor PoL RVA 0x00064e9f; preferred Buka symbol ?SaveGame@@YIHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -789,7 +852,7 @@ void advManager::DimensionDoor(void) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.385467;margin=0.208066;shape=0.290;size=0.657;calls=0.526;alternate=pol20:void advManager::TownGate(int)@0x0006785d
 VA(0x0043515d, 0x2a6)
-void advManager::TownGate(int) {}
+void advManager::TownGate(void) {}
 
 // donor PoL RVA 0x00067c9b; preferred Buka symbol ?SummonBoat@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
