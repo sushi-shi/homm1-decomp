@@ -62,6 +62,14 @@ H1_ENUM_BEGIN(BottomViewPanelConstant)
     BOTTOM_VIEW_PANEL_HEIGHT = 71
 H1_ENUM_END(BottomViewPanelConstant)
 
+H1_ENUM_BEGIN(AdventureScrollConstant)
+    SCROLL_MIN_ORIGIN = -7,
+    SCROLL_MAX_ORIGIN = 64,
+    SCROLL_TICK_INTERVAL = 70,
+    HOVER_SCROLL_FRAME_FIRST = 32,
+    HOVER_SCROLL_FRAME_END = 40
+H1_ENUM_END(AdventureScrollConstant)
+
 H1_ENUM_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
@@ -773,13 +781,113 @@ void advManager::ForceNewHover(void)
 }
 
 VA(0x00435fe0, 0x1b6)
-void advManager::ScreenScroll(int, int) {}
+void advManager::ScreenScroll(signed char direction, int updatePointer)
+{
+    short yOrigin;
+    short xOrigin;
+
+    xOrigin = m_mapOriginX;
+    yOrigin = m_mapOriginY;
+    iLastScrollTime = KBTickCount();
+
+    switch (direction) {
+        case MAP_DIRECTION_NORTH:
+            --yOrigin;
+            break;
+        case MAP_DIRECTION_NORTH_EAST:
+            ++xOrigin;
+            --yOrigin;
+            break;
+        case MAP_DIRECTION_EAST:
+            ++xOrigin;
+            break;
+        case MAP_DIRECTION_SOUTH_EAST:
+            ++xOrigin;
+            ++yOrigin;
+            break;
+        case MAP_DIRECTION_SOUTH:
+            ++yOrigin;
+            break;
+        case MAP_DIRECTION_SOUTH_WEST:
+            --xOrigin;
+            ++yOrigin;
+            break;
+        case MAP_DIRECTION_WEST:
+            --xOrigin;
+            break;
+        case MAP_DIRECTION_NORTH_WEST:
+            --xOrigin;
+            --yOrigin;
+            break;
+    }
+
+    if (updatePointer)
+        gpMouseManager->SetPointer(direction + HOVER_SCROLL_FRAME_FIRST);
+
+    if (xOrigin < SCROLL_MIN_ORIGIN)
+        xOrigin = SCROLL_MIN_ORIGIN;
+    if (xOrigin > SCROLL_MAX_ORIGIN)
+        xOrigin = SCROLL_MAX_ORIGIN;
+    if (yOrigin < SCROLL_MIN_ORIGIN)
+        yOrigin = SCROLL_MIN_ORIGIN;
+    if (yOrigin > SCROLL_MAX_ORIGIN)
+        yOrigin = SCROLL_MAX_ORIGIN;
+
+    if (xOrigin != m_mapOriginX || yOrigin != m_mapOriginY) {
+        DemobilizeCurrHero();
+        m_mapOriginX = xOrigin;
+        m_mapOriginY = yOrigin;
+        UpdateRadar(1, 0);
+        CompleteDraw(0);
+        UpdateScreen(0, 0);
+    }
+}
 
 // donor PoL RVA 0x00068c5c; preferred Buka symbol ?CheckScreenScroll@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.475412;margin=0.607960;shape=0.306;size=0.761;calls=1.000;alternate=pol20:void advManager::CheckScreenScroll(void)@0x00068c5c
 VA(0x00436196, 0x1e1)
-void advManager::CheckScreenScroll(void) {}
+void advManager::CheckScreenScroll(void)
+{
+    short mouseX;
+    short mouseY;
+    int oldX;
+    int oldY;
+
+    if (KBTickCount() - iLastScrollTime > SCROLL_TICK_INTERVAL) {
+        iLastScrollTime = KBTickCount();
+        oldX = m_mapOriginX;
+        oldY = m_mapOriginY;
+        gpMouseManager->MouseCoords(mouseX, mouseY);
+
+        if (mouseX >= 0 && mouseX < LOGICAL_SCREEN_WIDTH && mouseY >= 0 && mouseY < LOGICAL_SCREEN_HEIGHT) {
+            if (mouseX < SCROLL_BORDER) {
+                if (mouseY < SCROLL_BORDER)
+                    ScreenScroll(MAP_DIRECTION_NORTH_WEST, 1);
+                else if (mouseY > LOGICAL_SCREEN_HEIGHT - SCROLL_BORDER)
+                    ScreenScroll(MAP_DIRECTION_SOUTH_WEST, 1);
+                else
+                    ScreenScroll(MAP_DIRECTION_WEST, 1);
+            } else if (mouseX > LOGICAL_SCREEN_WIDTH - SCROLL_BORDER - 1) {
+                if (mouseY < SCROLL_BORDER)
+                    ScreenScroll(MAP_DIRECTION_NORTH_EAST, 1);
+                else if (mouseY > LOGICAL_SCREEN_HEIGHT - SCROLL_BORDER)
+                    ScreenScroll(MAP_DIRECTION_SOUTH_EAST, 1);
+                else
+                    ScreenScroll(MAP_DIRECTION_EAST, 1);
+            } else if (mouseY < SCROLL_BORDER) {
+                ScreenScroll(MAP_DIRECTION_NORTH, 1);
+            } else if (mouseY > LOGICAL_SCREEN_HEIGHT - SCROLL_BORDER) {
+                ScreenScroll(MAP_DIRECTION_SOUTH, 1);
+            }
+        }
+
+        if (gpMouseManager->m_cursorFrame >= HOVER_SCROLL_FRAME_FIRST
+            && gpMouseManager->m_cursorFrame < HOVER_SCROLL_FRAME_END && oldX == m_mapOriginX
+            && oldY == m_mapOriginY)
+            gpMouseManager->SetPointer(0);
+    }
+}
 
 // donor PoL RVA 0x00068e17; preferred Buka symbol ?MouseInScrollZone@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -828,7 +936,48 @@ int advManager::CheckHandleNetPlayerWait(struct tag_message &, int) { return 0; 
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.593881;margin=0.540898;shape=0.483;size=0.978;calls=1.000;alternate=pol20:void advManager::TrimLoopingSounds(int)@0x000695f7
 VA(0x00436a3b, 0x1c2)
-void advManager::TrimLoopingSounds(int) {}
+void advManager::TrimLoopingSounds(int maxSamples)
+{
+    if (giHighMemBuffer > 0)
+        maxSamples += giHighMemBuffer / 100;
+
+    if (maxSamples >= ADVMGR_ENVIRONMENT_SOUND_COUNT)
+        return;
+
+    signed char keep[ADVMGR_ENVIRONMENT_SOUND_COUNT];
+    int loaded = 0;
+    memset(keep, 0, sizeof(keep));
+
+    int i;
+    for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; ++i) {
+        if (m_activeSounds[i].soundId >= 0 && m_activeSounds[i].soundId < ADVMGR_ENVIRONMENT_SOUND_COUNT)
+            ++keep[m_activeSounds[i].soundId];
+    }
+
+    for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
+        if (keep[i] != 0)
+            ++loaded;
+    }
+
+    if (loaded < maxSamples) {
+        for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
+            if (keep[i] == 0 && m_loopingSamples[i] != 0) {
+                ++keep[i];
+                ++loaded;
+                if (loaded >= maxSamples)
+                    goto disposeSamples;
+            }
+        }
+    }
+
+disposeSamples:
+    for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
+        if (m_loopingSamples[i] != 0 && keep[i] == 0) {
+            gpResourceManager->Dispose(m_loopingSamples[i]);
+            m_loopingSamples[i] = 0;
+        }
+    }
+}
 
 // donor PoL RVA 0x00069976; preferred Buka symbol ?SaveAdventureBorder@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

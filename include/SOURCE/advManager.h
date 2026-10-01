@@ -197,7 +197,7 @@ public:
     void CheckDimNextHeroBut(void);
     void SeedTo(int, int);
     void ForceNewHover(void);
-    void ScreenScroll(int, int);
+    void ScreenScroll(signed char, int);
     void CheckScreenScroll(void);
     int MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
@@ -259,6 +259,7 @@ public:
 #pragma pack(pop)
 
 extern int gbNoBorder;
+extern long iLastScrollTime;
 extern int gbForceUpdate;
 extern int gbAllBlack;
 extern int giFullySeeded;
