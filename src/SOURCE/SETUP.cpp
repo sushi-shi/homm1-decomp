@@ -12,12 +12,14 @@
 #include <string.h>
 
 H1_ENUM_BEGIN(NetbiosSessionStatus)
-NETBIOS_SESSION_ACTIVE_FLAG = 1, NETBIOS_SESSION_NAME_REGISTERED = 2,
-                                 NETBIOS_SESSION_NAME_ERROR = 0x80 H1_ENUM_END(NetbiosSessionStatus)
+    NETBIOS_SESSION_ACTIVE_FLAG = 1,
+    NETBIOS_SESSION_NAME_REGISTERED = 2,
+    NETBIOS_SESSION_NAME_ERROR = 0x80
+H1_ENUM_END(NetbiosSessionStatus)
 
 #define NETBIOS_SESSION_ACTIVE NETBIOS_SESSION_ACTIVE_FLAG
 
-                                     extern signed char iInitNetHostStatus;
+extern signed char iInitNetHostStatus;
 extern signed char iInitNetGuestStatus;
 extern signed char iWaitForHostStatus;
 extern signed char iWaitForGuestStatus;
@@ -83,6 +85,55 @@ int game::SetupMultiPlayerGame(void) {
 VA(0x00457967, 0x1e7)
 int game::PickLoadGame(void) {
     return 0;
+}
+
+// Buka 2.1 RemoteCleanup without the HoMM2 logging and DirectPlay modes.
+VA(0x00458520, 0x8d)
+void RemoteCleanup(void) {
+    if (!gbRemoteOn)
+        return;
+    switch (GameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+        case REMOTE_GAME_NETWORK_GUEST:
+            UnloadRemoteDriver(1);
+            break;
+        case REMOTE_GAME_MODEM_HOST:
+        case REMOTE_GAME_MODEM_GUEST:
+            UnloadRemoteDriver(0);
+            break;
+        default:
+            break;
+    }
+    gbRemoteOn = 0;
+}
+
+// @dead-code
+// Zero-ref: reads one block from a file offset into the caller buffer.
+VA(0x004585ad, 0x74)
+void* ReadFileBlock(char* filename, void* buffer, int size, long offset) {
+    FILE* fp;
+    fp = fopen(filename, "r+b");
+    if (!fp)
+        FileError(filename);
+    fseek(fp, offset, SEEK_SET);
+    fread(buffer, size, 1, fp);
+    fclose(fp);
+    return buffer;
+}
+
+// Buka 2.1 MiscRuntime FileSize.
+VA(0x00458621, 0x7b)
+long FileSize(char* filename) {
+    long length;
+    FILE* f;
+    f = fopen(filename, "r+b");
+    if (!f)
+        FileError(filename);
+    fseek(f, 0, SEEK_END);
+    length = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    fclose(f);
+    return length;
 }
 
 // donor PoL RVA 0x0000c8f0; preferred Buka symbol ?ModemSetup@@YIXH@Z

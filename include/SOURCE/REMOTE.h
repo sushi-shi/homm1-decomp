@@ -5,29 +5,45 @@
 #include <H1/Macros.h>
 
 H1_ENUM_BEGIN(RemoteMessageType)
-REMOTE_MESSAGE_DEFAULT = -1,
-    REMOTE_MESSAGE_NONE = 0, REMOTE_MESSAGE_CONFIRM = 1, REMOTE_MESSAGE_RELIABLE = 2,
+    REMOTE_MESSAGE_DEFAULT = -1,
+    REMOTE_MESSAGE_NONE = 0,
+    REMOTE_MESSAGE_CONFIRM = 1,
+    REMOTE_MESSAGE_RELIABLE = 2,
     REMOTE_MESSAGE_UNRELIABLE = 3,
-    REMOTE_MESSAGE_HEARTBEAT = 4 H1_ENUM_END(RemoteMessageType)
+    REMOTE_MESSAGE_HEARTBEAT = 4
+H1_ENUM_END(RemoteMessageType)
 
-        H1_ENUM_BEGIN(RemoteBoxCommand) BOX_REMOTE_SAVE = 1,
-    BOX_REMOTE_SETUP = 0x1f H1_ENUM_END(RemoteBoxCommand)
+H1_ENUM_BEGIN(RemoteBoxCommand)
+    BOX_REMOTE_SAVE = 1,
+    BOX_REMOTE_SETUP = 0x1f
+H1_ENUM_END(RemoteBoxCommand)
 
-        H1_ENUM_BEGIN(RemoteConstant) REMOTE_BROADCAST_PLAYER = 0x7f,
-    REMOTE_MESSAGE_HEADER_SIZE = 9, REMOTE_MESSAGE_SIZE = 0x100, REMOTE_QUEUE_CAPACITY = 7,
-    REMOTE_RECENT_ID_COUNT = 30, REMOTE_RETRY_COUNT = 7,
-    REMOTE_CONFIRM_POLL_COUNT = 200 H1_ENUM_END(RemoteConstant)
+H1_ENUM_BEGIN(RemoteConstant)
+    REMOTE_BROADCAST_PLAYER = 0x7f,
+    REMOTE_MESSAGE_HEADER_SIZE = 9,
+    REMOTE_MESSAGE_SIZE = 0x100,
+    REMOTE_QUEUE_CAPACITY = 7,
+    REMOTE_RECENT_ID_COUNT = 30,
+    REMOTE_RETRY_COUNT = 7,
+    REMOTE_CONFIRM_POLL_COUNT = 200
+H1_ENUM_END(RemoteConstant)
 
-        H1_ENUM_BEGIN(RemoteGameMode) REMOTE_GAME_NONE = 0,
-    REMOTE_GAME_NETWORK_HOST = 1, REMOTE_GAME_NETWORK_GUEST = 2, REMOTE_GAME_MODEM_HOST = 3,
-    REMOTE_GAME_MODEM_GUEST = 4 H1_ENUM_END(RemoteGameMode)
+H1_ENUM_BEGIN(RemoteGameMode)
+    REMOTE_GAME_NONE = 0,
+    REMOTE_GAME_NETWORK_HOST = 1,
+    REMOTE_GAME_NETWORK_GUEST = 2,
+    REMOTE_GAME_MODEM_HOST = 3,
+    REMOTE_GAME_MODEM_GUEST = 4
+H1_ENUM_END(RemoteGameMode)
 
-        H1_ENUM_BEGIN(MultiplayerBaseType) MULTIPLAYER_BASE_MODEM = 0,
-    MULTIPLAYER_BASE_NETWORK = 1 H1_ENUM_END(MultiplayerBaseType)
+H1_ENUM_BEGIN(MultiplayerBaseType)
+    MULTIPLAYER_BASE_MODEM = 0,
+    MULTIPLAYER_BASE_NETWORK = 1
+H1_ENUM_END(MultiplayerBaseType)
 
 // DecodePacket/EncodePacket frame every wire packet with this six-byte header.
 #pragma pack(push, 1)
-        struct RemotePacketHeader {
+struct RemotePacketHeader {
     signed char source;
     signed char destination;
     unsigned char sequence;
@@ -90,7 +106,9 @@ char* GetRemoteData(signed char);
 int TransmitAndWait(char*, int, int, signed char, signed char, char**);
 signed char NetPosToGamePos(int);
 signed char WaitForOtherPlayer(void);
+void RemoteCleanup(void);
 void UnloadRemoteDriver(short);
+long FileSize(char*);
 void WriteModemPacket(char*, int);
 char ReadPacket(void);
 void calc_crc(unsigned short*, unsigned char*, int);

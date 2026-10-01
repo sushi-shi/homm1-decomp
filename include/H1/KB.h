@@ -5,9 +5,11 @@
 #include <Domains.h>
 
 H1_ENUM_BEGIN(BuildingSlotType)
-BUILDING_SLOT_MAGE_GUILD = 0, BUILDING_SLOT_DWELLING_FIRST = 7 H1_ENUM_END(BuildingSlotType)
+    BUILDING_SLOT_MAGE_GUILD = 0,
+    BUILDING_SLOT_DWELLING_FIRST = 7
+H1_ENUM_END(BuildingSlotType)
 
-                                  class soundManager;
+class soundManager;
 class heroWindowManager;
 class heroWindow;
 class resourceManager;
@@ -83,6 +85,7 @@ void GetBuildingCost(int, short, int* const, int);
 char* GetMonsterName(int);
 int GetBuildingBaseResourceValue(int, int, int);
 void ShutDown(char*);
+void FileError(char*);
 void MemError();
 void SetMenus(void*, int);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);

@@ -44,7 +44,7 @@ long int Wait(void) {
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.504929;margin=0.542655;shape=0.294;size=0.956;calls=1.000;alternate=pol20:void GUIModemCommand(char *, char *)@0x0000cc30
 VA(0x00459729, 0x71)
-void GUIModemCommand(char *message, char *command) {
+void GUIModemCommand(char* message, char* command) {
     iLastActionTime = 0;
     iModemCommandPos = 0;
     giWaitType = 5;
@@ -77,7 +77,7 @@ signed char GUIModemCommandExec(void) {
 
 // Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
 VA(0x0045982e, 0x6c)
-void ModemCommand(char *command) {
+void ModemCommand(char* command) {
     int pos;
     int len = strlen(command);
     for (pos = 0; pos < len; ++pos) {
@@ -91,7 +91,7 @@ void ModemCommand(char *command) {
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.487980;margin=0.528115;shape=0.250;size=0.959;calls=1.000;alternate=pol20:signed char GUIModemResponse(char *, char *)@0x0000cdcc
 VA(0x0045989a, 0x7a)
-signed char GUIModemResponse(char *message, char *response) {
+signed char GUIModemResponse(char* message, char* response) {
     memset(GUIMRresponse, 0, 80);
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
@@ -132,7 +132,7 @@ compareResponse:
 
 // Buka 2.1 serial queue helpers; HoMM1 has no outgoing-queue guard.
 VA(0x004599f6, 0x2b)
-int write_buffer(char *buffer, int length) {
+int write_buffer(char* buffer, int length) {
     com_snd(0, 0, length, buffer, 0);
     return 1;
 }
@@ -162,7 +162,9 @@ void Connect(void) {}
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.592752;margin=0.888123;shape=0.373;size=0.613;calls=0.929;strings=ID%s_%i;alternate=pol20:int WaitForDirectConnect(void)@0x0000d1a7
 VA(0x00459d4c, 0x316)
-int WaitForDirectConnect(void) { return 0; }
+int WaitForDirectConnect(void) {
+    return 0;
+}
 
 // donor PoL RVA 0x0000d3b8; preferred Buka symbol ?ReadPacket@@YIDXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order

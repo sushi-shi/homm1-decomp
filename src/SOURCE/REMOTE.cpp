@@ -15,7 +15,7 @@
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.395642;margin=0.361596;shape=0.175;size=0.824;calls=0.667;alternate=pol20:void WriteModemPacket(char *, int)@0x0000d4df
 VA(0x0045a16b, 0xdc)
-void WriteModemPacket(char *buffer, int length) {
+void WriteModemPacket(char* buffer, int length) {
     char buf[544];
     int pos = 0;
     if (length > 256)
@@ -47,9 +47,16 @@ void WriteModemPacket(char *buffer, int length) {
 // evidence: graph:5;base=0.560856;margin=1.192457;shape=0.450;size=0.831;calls=1.000;alternate=pol20:int TransmitRemoteData(char *, int, int, signed char, signed char, signed char, signed char)@0x000a3ec7
 VA(0x0045a247, 0x231)
 // HoMM1 callers pass an eighth flag that maps a game position to its net position.
-int TransmitRemoteData(char *data, int destination, int length, signed char command,
-                       signed char reliable, signed char allowRetryDialog,
-                       signed char messageType, signed char gamePosDestination) {
+int TransmitRemoteData(
+    char* data,
+    int destination,
+    int length,
+    signed char command,
+    signed char reliable,
+    signed char allowRetryDialog,
+    signed char messageType,
+    signed char gamePosDestination
+) {
     int k;
     int retval;
     int j;
@@ -76,7 +83,12 @@ int TransmitRemoteData(char *data, int destination, int length, signed char comm
     if (length > 0)
         memcpy(msg.payload.data, data, length);
     while (retval == 0 && tries <= REMOTE_RETRY_COUNT) {
-        retval = SendRemoteData((unsigned char *)&msg, 0, destination, length + REMOTE_MESSAGE_HEADER_SIZE);
+        retval = SendRemoteData(
+            (unsigned char*)&msg,
+            0,
+            destination,
+            length + REMOTE_MESSAGE_HEADER_SIZE
+        );
         if (!reliable && retval) {
             return 1;
         } else if (retval) {
@@ -106,7 +118,7 @@ int TransmitRemoteData(char *data, int destination, int length, signed char comm
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.517569;margin=0.974708;shape=0.366;size=0.825;calls=1.000;alternate=pol20:char * GetRemoteData(signed char)@0x000a40e1
 VA(0x0045a478, 0x10c)
-char * GetRemoteData(signed char remove) {
+char* GetRemoteData(signed char remove) {
     int oldest;
     int i;
     int index;
@@ -141,17 +153,24 @@ void PollRemote(void) {}
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.561659;margin=0.362301;shape=0.477;size=0.829;calls=1.000;alternate=pol20:int TransmitAndWait(char *, int, int, signed char, signed char, char * *)@0x000a48e0
 VA(0x0045aa82, 0x14f)
-int TransmitAndWait(char *bytes, int destination, int length, signed char command,
-                    signed char responseCommand, char **response) {
+int TransmitAndWait(
+    char* bytes,
+    int destination,
+    int length,
+    signed char command,
+    signed char responseCommand,
+    char** response
+) {
     int start;
     int result;
-    RemoteMessage *received;
+    RemoteMessage* received;
     char complete;
 
     if (!gbRemoteOn || gbInNetSetup)
         return 1;
     received = 0;
-    result = TransmitRemoteData(bytes, destination, length, command, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
+    result =
+        TransmitRemoteData(bytes, destination, length, command, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
     if (result == 0)
         goto transmitComplete;
     start = KBTickCount();
@@ -167,12 +186,12 @@ int TransmitAndWait(char *bytes, int destination, int length, signed char comman
             }
         }
         ForcePollSound();
-        received = (RemoteMessage *)GetRemoteData(1);
+        received = (RemoteMessage*)GetRemoteData(1);
         if (received && received->type == REMOTE_MESSAGE_RELIABLE
             && received->command == responseCommand)
             complete = 1;
     }
-    *response = (char *)received;
+    *response = (char*)received;
 transmitComplete:
     return result;
 }
