@@ -60,7 +60,7 @@ public:
     // --- methods ---
     void Write(int);
     void Read(int);
-    int NextHero(int);
+    signed char NextHero(int);
     signed char HasMobileHero(void);
     int BuildingsOwned(int, int, int);
     int NumOfGivenArtifact(int);

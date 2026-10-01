@@ -209,7 +209,7 @@ public:
     void EnableButtons(void);
     void SaveAdventureBorder(void);
     void DrawAdventureBorder(void);
-    int FindAdjacentMonster(int, int, int*, int*, int, int);
+    signed char FindAdjacentMonster(int, int, int*, int*, int, int);
     void ViewPuzzle(void);
     void PuzzleDraw(int, int, int, int);
     void AdvPanel(void);

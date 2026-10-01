@@ -26,6 +26,8 @@ extern signed char gbStandardHighScore;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
 extern signed char giGroundToTerrain[];
+// Per-cell adjacency flags; bit 0x80 marks a cell next to a wandering monster.
+extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];

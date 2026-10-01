@@ -64,8 +64,26 @@ void playerData::Read(int) {}
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.473378;margin=0.450383;shape=0.230;size=0.850;calls=1.000;alternate=pol20:int playerData::NextHero(int)@0x00070d1a
 VA(0x00438fe0, 0x12c)
-int playerData::NextHero(int) {
-    return 0;
+signed char playerData::NextHero(int) {
+    int curHero = -1;
+    int i;
+
+    if (gpCurPlayer->m_currentHero != -1) {
+        for (i = 0; i < gpCurPlayer->m_heroCount; ++i) {
+            if (gpCurPlayer->m_heroIds[i] == gpCurPlayer->m_currentHero)
+                curHero = i;
+        }
+    }
+
+    for (i = curHero + 1; i < gpCurPlayer->m_heroCount; ++i) {
+        if (gpGame->IsMobile(gpCurPlayer->m_heroIds[i]))
+            return m_heroIds[i];
+    }
+    for (i = 0; i < curHero + 1; ++i) {
+        if (gpGame->IsMobile(gpCurPlayer->m_heroIds[i]))
+            return m_heroIds[i];
+    }
+    return -1;
 }
 
 // Buka 2.1 playerData::HasMobileHero.
@@ -376,34 +394,51 @@ signed char game::GetRandomArtifactId(void) {
 VA(0x004440e9, 0x259)
 void game::SetVisibility(int, int, int, int) {}
 
-// @early-stop
-// Logic + frame slots byte-exact; residual is 3 commutative operand-load swaps (the
-// inner-loop test y<MAP_HEIGHT and the two y*MAP_WIDTH index multiplies load the OTHER
-// operand into eax first). Not source-steerable (operand order / reversed compare /
-// extra temp all tested - no effect): it is the TU-cumulative /Od eval-order parity of
-// the partial GAME TU (most preceding functions are still placeholders, so the temp
-// counter is off from retail). Same class as the ExperienceValueOfStack @early-stop;
-// aligns when GAME is fuller.
-
 // donor PoL RVA 0x00080e6c; preferred Buka symbol ?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.542661;margin=0.479075;shape=0.407;size=0.794;calls=1.000;alternate=pol20:void game::GiveArmy(class armyGroup *, int, int, int)@0x00080e6c
 VA(0x00444342, 0xfc)
-void game::GiveArmy(armyGroup* group, int type, int count, int slot) {}
-
-// @early-stop
-// ~96%: only the operand-load order of one ((signed char*)group)[i] read differs
-// (retail loads i then group; we load group then i) — the movsbl(%eax,%ecx) bytes are
-// identical (commutative address), only the two preceding movs swap. Proven to compile
-// byte-exact in isolation; the flip is a TU-global eval-order effect of the partial GAME
-// TU. Re-check when GAME is fuller.
+void game::GiveArmy(armyGroup* group, int type, int count, int slot) {
+    int swap;
+    int i;
+    if (slot >= 0) {
+        i = slot;
+        group->m_creatureTypes[i] = type;
+        group->m_creatureCounts[i] = 0;
+    } else {
+        for (i = 0; i < 5; ++i) {
+            if (group->m_creatureTypes[i] == type)
+                break;
+        }
+        if (i >= 5) {
+            for (i = 0; i < 5; ++i) {
+                if (group->m_creatureTypes[i] < 0) {
+                    group->m_creatureCounts[i] = 0;
+                    break;
+                }
+            }
+        }
+        if (i >= 5)
+            return;
+    }
+    group->m_creatureTypes[i] = type;
+    group->m_creatureCounts[i] += count;
+}
 
 // donor PoL RVA 0x00080f68; preferred Buka symbol ?ExperienceValueOfStack@game@@QAEHPAVarmyGroup@@PAVhero@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.491573;margin=0.501516;shape=0.250;size=0.900;calls=1.000;alternate=pol20:int game::ExperienceValueOfStack(class armyGroup *, class hero *)@0x00080f68
 VA(0x0044443e, 0x8c)
 int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
-    return 0;
+    int expValue = 0;
+    int i;
+    for (i = 0; i < 5; ++i) {
+        if (group->m_creatureCounts[i] > 0)
+            expValue += group->m_creatureCounts[i] * gMonsterDatabase[group->m_creatureTypes[i]].hitPoints;
+    }
+    if (h)
+        expValue += 500;
+    return expValue;
 }
 
 // Buka 2.1 MiscRuntime seeded generator; HoMM1 keeps it in this TU.
@@ -465,17 +500,11 @@ int game::GetLuck(class hero*, class army*, class town*) {
     return 0;
 }
 
-// @early-stop
-// Logic + frame slots byte-exact (col/row/mask + nested x/y land on retail's -0x4..-0x14
-// via the {} block); residual is the same TU-cumulative /Od eval-order parity as
-// MakeAllWaterVisible - the inner-loop test and the y*MAP_WIDTH multiplies load the other
-// operand first. Aligns when GAME is fuller.
-
 // donor PoL RVA 0x00069bef; preferred Buka symbol ?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.502628;margin=0.574839;shape=0.364;size=0.953;calls=0.667;alternate=pol20:int advManager::FindAdjacentMonster(int, int, int *, int *, int, int)@0x00069bef
 VA(0x0044471a, 0x350)
-int advManager::FindAdjacentMonster(int, int, int*, int*, int, int) {
+signed char advManager::FindAdjacentMonster(int, int, int*, int*, int, int) {
     return 0;
 }
 
@@ -483,7 +512,22 @@ int advManager::FindAdjacentMonster(int, int, int*, int*, int, int) {
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.519474;margin=0.741945;shape=0.279;size=0.996;calls=1.000;alternate=pol20:void game::SetupAdjacentMons(void)@0x0008111f
 VA(0x00444a6a, 0xde)
-void game::SetupAdjacentMons(void) {}
+void game::SetupAdjacentMons(void) {
+    int monX;
+    int monY;
+    int x;
+    int mask = 0x7f;
+    int y;
+
+    for (x = 0; x < MAP_CELL_GRID_SIZE; ++x) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; ++y) {
+            if (gpAdvManager->FindAdjacentMonster(x, y, &monX, &monY, -1, -1))
+                mapExtra[x][y] |= 0x80;
+            else
+                mapExtra[x][y] &= mask;
+        }
+    }
+}
 
 // donor PoL RVA 0x00081210; preferred Buka symbol ?CancelComputerScreen@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -513,12 +557,6 @@ void game::ShowComputerScreen(void) {}
 // evidence: graph:2;base=0.547163;margin=0.571086;shape=0.476;size=0.842;calls=0.833;alternate=pol20:void game::WaitForPlayer(char *, int)@0x000813fe
 VA(0x00444d66, 0x155)
 void game::WaitForPlayer(char*, int) {}
-
-// @early-stop
-// Computation byte-exact; residual is 2 inline-accessor jmp$+0 brackets the /Ob1
-// expander places leading (after the ternary test) where retail places them trailing
-// (after the Extra() body) - the documented /Od /Ob1 block-boundary artifact, identical
-// in kind to EDITOR/mapcell GetNewCellExtra*. See docs/patterns/inline-accessors.md.
 
 // donor PoL RVA 0x00082547; preferred Buka symbol ?ProcessOnMapHeroes@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -591,15 +629,21 @@ int game::GetNumThievesGuilds(int color) {
 // donor PoL RVA 0x0008480a; preferred Buka symbol ?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.572404;margin=0.482531;shape=0.423;size=0.977;calls=1.000;alternate=pol20:void game::RestoreCell(int, int, int, int, class mapCell *, int)@0x0008480a
-VA(0x00447875, 0xab)
-void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, int cellFlags) {}
-
-// @early-stop
-// Condition (3-term &&), reinit, and realloc (BaseFree/BaseAlloc/memset) all byte-exact;
-// residual is 2 redundant jumps retail /Od emits for the empty then-branch of the
-// if/else - an end-of-function trampoline (jmp $+0 class) plus a dead `jmp realloc` -
-// that my build collapses to one direct jmp. A /Od jump-layout artifact of the empty
-// then; not behaviorally meaningful.
+VA(0x00447875, 0xa1)
+void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, int) {
+    mapCell* cell;
+    if (passedCell)
+        cell = passedCell;
+    else
+        cell = gpAdvManager->GetCell(x, y);
+    if (y > 0 && obj == 0xa8 && gpAdvManager->GetCell(x, y - 1)->m_triggerType != 0x28) {
+        cell->m_triggerType = 0;
+        cell->m_objectMetadata = 0;
+    } else {
+        cell->m_triggerType = obj;
+        cell->m_objectMetadata = barrier;
+    }
+}
 
 // donor PoL RVA 0x0008c040; preferred Buka symbol ??0armyGroup@@QAE@XZ
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
