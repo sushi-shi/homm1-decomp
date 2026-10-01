@@ -17,11 +17,14 @@ class mapCell {
 public:
     // Tile index read zero-extended into the terrain lookup table.
     unsigned char m_tileIndex;
-    char m_unknown01[7];
-    // Object type in the low seven bits; bit seven marks an event cell.
-    unsigned char m_objType : 7;
-    unsigned char m_hasEvent : 1;
-    unsigned char m_objExtra;
+    char m_unknown01[5];
+    // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
+    unsigned char m_flags;
+    unsigned char m_unknown07;
+    // Whole-byte trigger: readers mask the low seven type bits and the
+    // 0x80 event bit; DemobilizeCurrHero stores the hero trigger directly.
+    unsigned char m_triggerType;
+    unsigned char m_objectMetadata;
 };
 #pragma pack(pop)
 

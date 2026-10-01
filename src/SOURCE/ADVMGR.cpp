@@ -4,6 +4,7 @@
 
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MISC_TYPES.h>
+#include <BASE/Misc.h>
 #include <BASE/bmap2.h>
 #include <H1/All.h>
 #include <H1/KB.h>
@@ -434,7 +435,32 @@ void advManager::MobilizeCurrHero(int update)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.450729;margin=0.647673;shape=0.295;size=0.807;calls=0.800;alternate=pol20:void advManager::DemobilizeCurrHero(void)@0x00063f95
 VA(0x00430011, 0x199)
-void advManager::DemobilizeCurrHero(void) {}
+void advManager::DemobilizeCurrHero(void)
+{
+    if (gpCurPlayer->m_currentHero == -1)
+        return;
+    if (!m_heroContextLocked)
+        return;
+
+    m_heroContextLocked = 0;
+    hero *currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    LogInt(currentHero->m_name, currentHero->m_x);
+    StopCursor(1);
+    currentHero->m_x = m_cursorMapX + m_mapOriginX;
+    currentHero->m_y = m_cursorMapY + m_mapOriginY;
+    mapCell *cell = GetCell(currentHero->m_x, currentHero->m_y);
+    currentHero->m_locationType = cell->m_triggerType;
+    currentHero->m_occupiedTown = cell->m_objectMetadata;
+    currentHero->m_direction = m_cursorDirection;
+    if (m_cursorType == 4)
+        currentHero->m_eventFlags |= HERO_EVENT_EMBARKED;
+    cell->m_triggerType = 0xbd;
+    cell->m_objectMetadata = currentHero->m_id;
+    cell->m_flags &= ~0x40;
+    m_cursorActive = 0;
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    UpdateScreen(0, 0);
+}
 
 // donor PoL RVA 0x00064101; preferred Buka symbol ?SetTownContext@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
