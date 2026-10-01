@@ -243,6 +243,52 @@ int philAI::MeanRVOfUnexploredTerritory(int)
     return 0;
 }
 
+// Buka 2.1's attention identity constants are loaded, not folded, at /Od.
+static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
+static const float AI_ATTENTION_IDENTITY = 1.0f;
+
+// Buka 2.1 GetGameAttentionValue: randomized game weights tempered by the
+// number of players.
+VA(0x0041e91b, 0x1d3)
+void philAI::GetGameAttentionValue(int player)
+{
+    playerAttentionWeights *attention = &gpGame->m_players[player].m_aiData.m_attentionWeights;
+    attention->gameWeightA = Random(0, 100) / 500.0 + 0.23;
+    attention->gameWeightB = Random(0, 100) / 500.0 + 0.23;
+    attention->gameWeightB *= (AI_ATTENTION_IDENTITY_FLOAT + 3.0) / 4.0;
+    attention->gameWeightB *= (5.0 - AI_ATTENTION_IDENTITY) / 4.0;
+    attention->gameWeightA *= (AI_ATTENTION_IDENTITY + 3.0) / 4.0;
+    attention->gameWeightB = attention->gameWeightB * ((3.0 - gpGame->m_playerCount) * 0.15 + 1.0);
+    attention->gameWeightA = attention->gameWeightA * ((3.0 - gpGame->m_playerCount) * 0.07 + 1.0);
+    attention->gameRemainder = ((1.0f - attention->gameWeightB) - attention->gameWeightA);
+}
+
+// Buka 2.1 GetTurnAttentionValue: reset the game weights and scale the hero
+// weight down as the game ages.
+VA(0x0041eaee, 0xed)
+void philAI::GetTurnAttentionValue(int player)
+{
+    playerAttentionWeights *attentionWeights = &gpGame->m_players[player].m_aiData.m_attentionWeights;
+    attentionWeights->gameWeightA = 0.4f;
+    attentionWeights->gameWeightB = 0.3f;
+    attentionWeights->gameRemainder = 0.3f;
+    attentionWeights->buildingValue = attentionWeights->gameWeightA;
+    attentionWeights->heroValue = attentionWeights->gameWeightB;
+    attentionWeights->upgradeBase = attentionWeights->gameRemainder;
+    float multiplier;
+    if (giCurTurn < 5)
+        multiplier = 1.6f;
+    else if (giCurTurn < 10)
+        multiplier = 1.4f;
+    else if (giCurTurn < 20)
+        multiplier = 1.2f;
+    else if (giCurTurn < 30)
+        multiplier = 1.0f;
+    else
+        multiplier = 0.8f;
+    attentionWeights->heroValue = attentionWeights->heroValue * multiplier;
+}
+
 // donor PoL RVA 0x0003e7a2; preferred Buka symbol ?RVConversion@philAI@@QAEHQAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.411394;margin=0.429857;shape=0.250;size=0.681;calls=1.000;alternate=pol20:int philAI::RVConversion(int * const)@0x0003e7a2
@@ -351,7 +397,7 @@ float philAI::TurnValueOfObelisk(int player)
         playerAI->m_obeliskValue
         * (1.5 - abs(32 - gpGame->m_players[player].CountVisitedObelisks()) / 48.0f));
     playerAI->m_obeliskValue =
-        static_cast<int>(playerAI->m_obeliskValue * (playerAI->m_heroAttention + 0.66));
+        static_cast<int>(playerAI->m_obeliskValue * (playerAI->m_attentionWeights.heroValue + 0.66));
     return playerAI->m_obeliskValue;
 }
 
