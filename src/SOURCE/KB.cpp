@@ -150,6 +150,19 @@ int CanBuy(town* t, int type) {
     return 0;
 }
 
+// HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
+VA(0x004519d1, 0x60)
+int GetBuildingBaseResourceValue(int race, int building, int level) {
+    if (building < BUILDING_SLOT_DWELLING_FIRST) {
+        if (building == BUILDING_SLOT_MAGE_GUILD)
+            return gMageBaseResourceValues[level];
+        else
+            return gNeutralBaseResourceValues[building];
+    } else {
+        return gDwellingBaseResourceValues[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
+    }
+}
+
 // donor PoL RVA 0x000a2565; preferred Buka symbol ?UpdateNormalDialog@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.563703;margin=0.348381;shape=0.417;size=0.972;calls=1.000;alternate=pol20:void UpdateNormalDialog(char *)@0x000a2565
@@ -294,6 +307,13 @@ signed char WaitForOtherPlayer(void) {
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
 VA(0x0045485b, 0x6f4)
 void PopNetBox(char*, int) {}
+
+// Buka 2.1 AddNetBoxLine reduced to HoMM1's two uncoloured lines.
+VA(0x00454f4f, 0x3b)
+void AddNetBoxLine(char* text) {
+    strcpy(cNetBoxLine[0], cNetBoxLine[1]);
+    strcpy(cNetBoxLine[1], text);
+}
 
 // donor PoL RVA 0x0009e0f2; preferred Buka symbol ?ShutDown@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

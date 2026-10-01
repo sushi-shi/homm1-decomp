@@ -70,6 +70,7 @@ extern int gDwellingCosts[][7];
 extern int gMageBaseResourceValues[];
 extern int gNeutralBaseResourceValues[];
 extern int gDwellingBaseResourceValues[];
+extern char cNetBoxLine[][60];
 
 long KBTickCount();
 void Process1WindowsMessage();
@@ -84,6 +85,8 @@ char* GetBuildingName(int, short);
 void GetBuildingCost(int, short, int* const, int);
 char* GetMonsterName(int);
 int GetBuildingBaseResourceValue(int, int, int);
+void AddNetBoxLine(char*);
+void GOut(char*);
 void ShutDown(char*);
 void FileError(char*);
 void MemError();

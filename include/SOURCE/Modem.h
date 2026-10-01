@@ -30,10 +30,17 @@ extern int inescape;
 extern int newpacket;
 extern int packetlen;
 extern char packet[];
+extern char idstr[];
+extern char remoteidstr[];
+extern int oldsec;
+extern int stime;
+extern int remotestage;
+extern int localstage;
+extern int WFDCStage;
 
-void GUIModemCommand(char *, char *);
-signed char GUIModemResponse(char *, char *);
-int write_buffer(char *, int);
+void GUIModemCommand(char*, char*);
+signed char GUIModemResponse(char*, char*);
+int write_buffer(char*, int);
 int read_byte(void);
 
 #endif // HOMM1_SOURCE_MODEM_H

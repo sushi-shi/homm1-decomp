@@ -5,6 +5,7 @@
 #include <SOURCE/Modem.h>
 #include <SOURCE/comwin.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/REMOTE.h>
 
 #include <H1/All.h>
 #include <H1/KB.h>
@@ -156,13 +157,114 @@ void write_byte(int value) {
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
 VA(0x00459a8c, 0x2c0)
-void Connect(void) {}
+void Connect(void) {
+    char idMessage[20];
+    int packetResult;
+    unsigned long seed = KBTickCount();
+    seed %= 1000000;
+    idstr[0] = seed / 100000 + '0';
+    seed -= (idstr[0] - '0') * 100000;
+    idstr[1] = seed / 10000 + '0';
+    seed -= (idstr[1] - '0') * 10000;
+    idstr[2] = seed / 1000 + '0';
+    seed -= (idstr[2] - '0') * 1000;
+    idstr[3] = seed / 100 + '0';
+    seed -= (idstr[3] - '0') * 100;
+    idstr[4] = seed / 10 + '0';
+    seed -= (idstr[4] - '0') * 10;
+    idstr[5] = seed + '0';
+    idstr[6] = 0;
+    oldsec = -1;
+    remotestage = 0;
+    localstage = remotestage;
+    do {
+        if (ReadPacket()) {
+            packet[packetlen] = 0;
+            if (packetlen != 10)
+                continue;
+            if (strncmp(packet, "ID", 2))
+                continue;
+            if (!strncmp(packet + 2, idstr, 6)) {
+                sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
+                GOut(gText);
+                RemoteCleanup();
+            }
+            strncpy(remoteidstr, packet + 2, 6);
+            remotestage = packet[9] - '0';
+            localstage = remotestage + 1;
+            oldsec = -1;
+        }
+        stime = KBTickCount();
+        if (oldsec / 1000 != stime / 1000) {
+            oldsec = stime;
+            sprintf(idMessage, "ID%s_%i", idstr, localstage);
+            WriteModemPacket(idMessage, strlen(idMessage));
+        }
+        PollSound();
+    } while (localstage < 2);
+    while (ReadPacket()) {
+    }
+}
 
 // donor PoL RVA 0x0000d1a7; preferred Buka symbol ?WaitForDirectConnect@@YIHXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.592752;margin=0.888123;shape=0.373;size=0.613;calls=0.929;strings=ID%s_%i;alternate=pol20:int WaitForDirectConnect(void)@0x0000d1a7
 VA(0x00459d4c, 0x316)
 int WaitForDirectConnect(void) {
+    char idMessage[20];
+    unsigned long seed;
+    switch (WFDCStage) {
+        case 0:
+            seed = KBTickCount();
+            seed %= 1000000;
+            idstr[0] = seed / 100000 + '0';
+            seed -= (idstr[0] - '0') * 100000;
+            idstr[1] = seed / 10000 + '0';
+            seed -= (idstr[1] - '0') * 10000;
+            idstr[2] = seed / 1000 + '0';
+            seed -= (idstr[2] - '0') * 1000;
+            idstr[3] = seed / 100 + '0';
+            seed -= (idstr[3] - '0') * 100;
+            idstr[4] = seed / 10 + '0';
+            seed -= (idstr[4] - '0') * 10;
+            idstr[5] = seed + '0';
+            idstr[6] = 0;
+            oldsec = -1;
+            remotestage = 0;
+            localstage = remotestage;
+            WFDCStage++;
+            break;
+        case 1:
+            if (ReadPacket()) {
+                packet[packetlen] = 0;
+                if (packetlen != 10)
+                    return 0;
+                if (strncmp(packet, "ID", 2))
+                    return 0;
+                if (!strncmp(packet + 2, idstr, 6)) {
+                    sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
+                    GOut(gText);
+                    RemoteCleanup();
+                }
+                strncpy(remoteidstr, packet + 2, 6);
+                remotestage = packet[9] - '0';
+                localstage = remotestage + 1;
+                oldsec = -1;
+            }
+            stime = KBTickCount();
+            if (oldsec / 1000 != stime / 1000) {
+                oldsec = stime;
+                sprintf(idMessage, "ID%s_%i", idstr, localstage);
+                WriteModemPacket(idMessage, strlen(idMessage));
+            }
+            if (localstage >= 2)
+                WFDCStage++;
+            break;
+        case 2:
+            if (!ReadPacket())
+                return 1;
+            break;
+    }
     return 0;
 }
 
