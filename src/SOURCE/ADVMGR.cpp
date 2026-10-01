@@ -1463,7 +1463,7 @@ short APanelHandler(struct tag_message &message)
 }
 
 VA(0x004337c5, 0x34b)
-int DimensionDoorHandler(struct tag_message&) {
+short DimensionDoorHandler(struct tag_message&) {
     return 0;
 }
 
@@ -1515,7 +1515,38 @@ void advManager::TeleportTo(int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.671113;margin=0.501597;shape=0.372;size=0.883;calls=0.867;strings=dimdoor.bin;alternate=pol20:void advManager::DimensionDoor(void)@0x00067539
 VA(0x00434f17, 0x246)
-void advManager::DimensionDoor(void) {}
+void advManager::DimensionDoor(void) {
+    hero* heroPointer;
+    heroWindow* win;
+    short x;
+    short y;
+    mapCell* targetCell;
+
+    win = new heroWindow(0, 0, "dimdoor.bin");
+    if (win == 0)
+        MemError();
+    SetWinText(win, 4);
+    gpWindowManager->DoDialog(win, DimensionDoorHandler, 0);
+    delete win;
+    heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (gpWindowManager->m_dialogResult == 1) {
+        x = m_mapOriginX + m_lastHoverCell;
+        y = m_mapOriginY + m_hoverCellY;
+        targetCell = GetCell(x, y);
+        if (((heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex >= 20)
+            || (!(heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex < 20)) {
+            NormalDialog("Dimension Door failed!!!", 1, 0x61, 0x91, -1, 0, -1, 0, -1);
+            UpdateRadar(1, 0);
+        } else {
+            gpSoundManager->SwitchAmbientMusic(16);
+            TeleportTo(x, y, 0);
+            gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+        }
+        gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(SPELL_DIMENSION_DOOR);
+    } else {
+        UpdateRadar(1, 0);
+    }
+}
 
 // donor PoL RVA 0x0006785d; preferred Buka symbol ?TownGate@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
