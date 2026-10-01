@@ -1634,7 +1634,49 @@ void advManager::CheckLoadSample(int index) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.476286;margin=0.526376;shape=0.266;size=0.902;calls=0.750;alternate=pol20:void advManager::InsertSound(int, int, int, int)@0x00066ef0
 VA(0x00434986, 0x251)
-void advManager::InsertSound(short, short, short, signed char) {}
+void advManager::InsertSound(short x, short y, short distance, signed char soundLayer) {
+    int slot;
+    int distanceLimit;
+    int i;
+    int soundId;
+
+    if (x < 0 || y < 0 || x >= 72 || y >= 72)
+        return;
+    soundId = gpGame->m_mapSounds[x][y];
+    if (soundId == -1)
+        return;
+    for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; ++i) {
+        if (m_activeSounds[i].soundId == soundId) {
+            if (m_activeSounds[i].volume > distance) {
+                m_activeSounds[i].volume = distance;
+                m_activeSoundMask |= 1 << m_activeSounds[i].soundId;
+            }
+            return;
+        }
+    }
+    if (soundLayer == 1)
+        return;
+    distanceLimit = distance;
+    slot = -1;
+    for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; ++i) {
+        if (m_activeSounds[i].volume > distanceLimit) {
+            distanceLimit = m_activeSounds[i].volume;
+            slot = i;
+        }
+    }
+    if (slot != -1) {
+        if (m_activeSounds[slot].soundId != -1)
+            gpSoundManager->StopSample(m_loopingSamples[m_activeSounds[slot].soundId]->m_playbackData.activeSample);
+        m_activeSounds[slot].soundId = soundId;
+        m_activeSounds[slot].volume = distance;
+        CheckLoadSample(soundId);
+        m_loopingSamples[soundId]->m_playbackData.volume = glEnvironmentVolume[distance];
+        m_loopingSamples[soundId]->m_playbackData.loopCount = 0;
+        m_loopingSamples[soundId]->m_playbackData.channelType = 3;
+        gpSoundManager->MemorySample(m_loopingSamples[soundId]);
+        m_activeSoundMask ^= 1 << m_activeSounds[slot].soundId;
+    }
+}
 
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

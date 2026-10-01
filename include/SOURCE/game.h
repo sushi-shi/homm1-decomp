@@ -55,7 +55,9 @@ public:
     unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
-    char m_unknown14341[0x16d5];
+    char m_unknown14341[0x295];
+    // InsertSound reads the environment sound id per [x][y] cell.
+    signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.
     unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     signed char m_ultimateArtifactX;
