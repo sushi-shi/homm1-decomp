@@ -21,6 +21,7 @@
 // Compiler line-base word for netlo.cpp's ProcessAssert sites.
 DATA(0x0048f214) short gNbThrCtlLineBase;
 DATA(0x0048f234) short gNbAddNameDoneLineBase;
+DATA(0x0048f26c) short gNbArmRecvLineBase;
 
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
@@ -438,4 +439,207 @@ void __stdcall nb_add_name_done(NCB *ncb)
             gNetStatus[gNbMaxSess] |= NETBIOS_SESSION_ERROR;
             break;
     }
+}
+
+// Buka netwin.cpp:520-536.
+VA(0x00414c28, 0xb8)
+unsigned short nb_recv_any(int session)
+{
+    if (gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING) {
+        memset(&gNbSessNcb[session], 0, sizeof(NCB));
+        gNbSessNcb[session].ncb_command = NCBDGRECVBC | ASYNCH;
+        gNbSessNcb[session].ncb_num = gNbLocalNum;
+        gNbSessNcb[session].ncb_length = NETBIOS_PAYLOAD_SIZE;
+        gNbSessNcb[session].ncb_buffer = gNbRcvData[session];
+        gNbSessNcb[session].ncb_post = nb_recv_any_done;
+        Netbios(&gNbSessNcb[session]);
+    }
+    return gNbSessNcb[session].ncb_cmd_cplt;
+}
+
+// Buka netwin.cpp:538-567.
+VA(0x00414ce0, 0x146)
+void __stdcall nb_recv_any_done(NCB *ncb)
+{
+    int i;
+
+    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
+        if (&gNbSessNcb[i] == ncb)
+            break;
+    }
+    if (i >= static_cast<int>(NETBIOS_SESSION_COUNT))
+        return;
+    if (gNbSessNcb[i].ncb_retcode == NRC_GOODRET) {
+        if (memcmp(gNbRcvData[i], gNbGroupName, strlen(gNbGroupName)) == 0) {
+            memcpy(gNbNameBuf[i].bytes, gNbRcvData[i] + strlen(gNbGroupName), NCBNAMSZ);
+            nb_call(i, gNbNameBuf[i].bytes);
+        } else {
+            Netbios(&gNbSessNcb[i]);
+        }
+    } else if (gNbSessNcb[i].ncb_retcode != NRC_CMDCAN && gNbSessNcb[i].ncb_retcode != NRC_CANOCCR) {
+        Netbios(&gNbSessNcb[i]);
+    }
+}
+
+// Buka netwin.cpp:569-580.
+VA(0x00414e26, 0xc6)
+unsigned short nb_call(int session, void *name)
+{
+    memset(&gNbSessNcb[session], 0, sizeof(NCB));
+    memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
+    memcpy(gNbSessNcb[session].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
+    gNbSessNcb[session].ncb_command = NCBCALL | ASYNCH;
+    gNbSessNcb[session].ncb_cmd_cplt = NRC_PENDING;
+    gNbSessNcb[session].ncb_post = nb_call_done;
+    gNbSessNcb[session].ncb_lana_num = gNetbiosLana;
+    gNbCallRetries = 0;
+    return Netbios(&gNbSessNcb[session]);
+}
+
+// Buka netwin.cpp:582-596.
+VA(0x00414eec, 0xc6)
+unsigned short nb_listen(int session, void *name)
+{
+    memset(&gNbSessNcb[session], 0, sizeof(NCB));
+    memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
+    memcpy(gNbSessNcb[session].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
+    gNbSessNcb[session].ncb_command = NCBLISTEN | ASYNCH;
+    gNbSessNcb[session].ncb_cmd_cplt = NRC_PENDING;
+    gNbSessNcb[session].ncb_post = nb_call_done;
+    gNbSessNcb[session].ncb_lana_num = gNetbiosLana;
+    gNbCallRetries = 0;
+    return Netbios(&gNbSessNcb[session]);
+}
+
+// Buka netwin.cpp:598-628.
+VA(0x00414fb2, 0x134)
+void __stdcall nb_call_done(NCB *ncb)
+{
+    int i;
+
+    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
+        if (&gNbSessNcb[i] == ncb)
+            break;
+    }
+    if (i >= static_cast<int>(NETBIOS_SESSION_COUNT))
+        return;
+    switch (gNbSessNcb[i].ncb_retcode) {
+        case NRC_GOODRET:
+            gNbSessLsn[i] = gNbSessNcb[i].ncb_lsn;
+            memcpy(gNbNameBuf[i].bytes, gNbSessNcb[i].ncb_callname, NCBNAMSZ);
+            gNetStatus[i] |= NETBIOS_SESSION_ACTIVE | NETBIOS_SESSION_CONNECTED;
+            nb_arm_recv(i);
+            break;
+        case NRC_CMDCAN:
+        case NRC_CANOCCR:
+            break;
+        default:
+            gNbCallRetries++;
+            if (gNbCallRetries < NETBIOS_CALL_RETRY_LIMIT) {
+                Sleep(NETBIOS_CALL_RETRY_DELAY);
+                Netbios(&gNbSessNcb[i]);
+            }
+            break;
+    }
+}
+
+// Buka netwin.cpp:630-659.
+VA(0x004150e6, 0x14e)
+void nb_arm_recv(int session)
+{
+    unsigned char result;
+
+    while (1) {
+        ProcessAssert(gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING,
+                      "D:\\Heroes\\Source\\netlo.cpp", gNbArmRecvLineBase + 5);
+        memset(&gNbSessNcb[session], 0, sizeof(NCB));
+        gNbSessNcb[session].ncb_command = NCBRECV | ASYNCH;
+        gNbSessNcb[session].ncb_lsn = gNbSessLsn[session];
+        gNbSessNcb[session].ncb_buffer = gNbRcvData[session];
+        gNbSessNcb[session].ncb_length = NETBIOS_PAYLOAD_SIZE;
+        gNbSessNcb[session].ncb_lana_num = gNetbiosLana;
+        gNbSessNcb[session].ncb_event = gNbEvents[session + NETBIOS_RECEIVE_EVENT_FIRST];
+        result = Netbios(&gNbSessNcb[session]);
+        switch (result) {
+            case NRC_GOODRET:
+            case NRC_SNUMOUT:
+            case NRC_SCLOSED:
+            case NRC_SABORT:
+            case NRC_PENDING:
+                return;
+            default:
+                Sleep(NETBIOS_RECEIVE_RETRY_DELAY);
+                continue;
+        }
+    }
+}
+
+// Buka netwin.cpp:661-679.
+VA(0x00415234, 0xbf)
+void nb_close_session(int session)
+{
+    NCB ncb;
+
+    if (gNbSessNcb[session].ncb_cmd_cplt == NRC_PENDING) {
+        memset(&ncb, 0, sizeof(ncb));
+        ncb.ncb_command = NCBCANCEL;
+        ncb.ncb_lana_num = gNetbiosLana;
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[session]);
+        Netbios(&ncb);
+    }
+    if (gNbSessLsn[session] != NETBIOS_INVALID_ID) {
+        memset(&ncb, 0, sizeof(ncb));
+        ncb.ncb_lsn = gNbSessLsn[session];
+        ncb.ncb_command = NCBHANGUP;
+        ncb.ncb_lana_num = gNetbiosLana;
+        Netbios(&ncb);
+        gNetStatus[session] &= ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
+    }
+}
+
+// Buka netwin.cpp:681-711.
+VA(0x004152f3, 0x176)
+void nb_recv_complete(int session)
+{
+    tag_Node *node;
+
+    switch (gNbSessNcb[session].ncb_command & ~ASYNCH) {
+        case NCBRECV:
+            switch (gNbSessNcb[session].ncb_retcode) {
+                case NRC_GOODRET:
+                    node = static_cast<tag_Node *>(
+                        malloc(gNbSessNcb[session].ncb_length + NETBIOS_PACKET_HEADER_SIZE));
+                    if (node != 0) {
+                        node->len = gNbSessNcb[session].ncb_length;
+                        node->sessionIndex = static_cast<unsigned char>(session);
+                        memcpy(node->data, gNbRcvData[session], node->len);
+                        EnterCriticalSection(&gNbRcvLock);
+                        add_node(&gNbRcvQueue, node);
+                        LeaveCriticalSection(&gNbRcvLock);
+                    }
+                    nb_arm_recv(session);
+                    break;
+                case NRC_SNUMOUT:
+                case NRC_SCLOSED:
+                case NRC_SABORT:
+                    gNetStatus[session] &= ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
+                    break;
+                default:
+                    nb_arm_recv(session);
+                    break;
+            }
+    }
+}
+
+// Buka netwin.cpp:713-721.
+VA(0x00415469, 0x81)
+void nb_format_name(char *source, unsigned char *destination)
+{
+    unsigned int i;
+
+    memset(destination, 0, NCBNAMSZ);
+    for (i = 0; i < NCBNAMSZ - 1 && *source != '\0'; i++, source++)
+        destination[i] = *source;
+    for (; i < NCBNAMSZ - 1; i++)
+        destination[i] = ' ';
 }
