@@ -14,6 +14,7 @@ extern short gEventsAssertLine;
 extern char gEventsAssertFile1[];
 extern char gEventsAssertFile2[];
 extern char* gEventText[];
+extern signed char gbEventMusicPlaying;
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -67,6 +68,100 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
     }
     townRec->GiveSpells();
     curHero->CheckLevel();
+}
+
+// Adventure-event music cue; HoMM1 keys the ambient track off the map
+// object type and records that an event track is playing.
+VA(0x0046015d, 0x243)
+void advManager::EventSound(short eventType, short eventData) {
+    int musicTrack = -1;
+
+    switch (eventType) {
+    case 13:
+    case 14:
+    case 15:
+    case 16:
+    case 17:
+        musicTrack = 0x16;
+        break;
+    case 63:
+        musicTrack = 0x2e;
+        break;
+    case 23:
+        musicTrack = 0x1a;
+        break;
+    case 34:
+        musicTrack = 0x1b;
+        break;
+    case 48:
+        if (eventData == 1)
+            musicTrack = 0x1c;
+        break;
+    case 4:
+    case 6:
+    case 8:
+    case 24:
+    case 45:
+        musicTrack = 0x1c;
+        break;
+    case 1:
+    case 25:
+    case 32:
+        musicTrack = 0x17;
+        break;
+    case 3:
+    case 28:
+        musicTrack = 0x14;
+        break;
+    case 5:
+        musicTrack = 7;
+        break;
+    case 7:
+        musicTrack = 8;
+        break;
+    case 9:
+        musicTrack = 0x18;
+        break;
+    case 10:
+        musicTrack = 9;
+        break;
+    case 11:
+        musicTrack = 0xa;
+        break;
+    case 12:
+        musicTrack = 0xb;
+        break;
+    case 22:
+        musicTrack = 0xc;
+        break;
+    case 27:
+        musicTrack = 0x15;
+        break;
+    case 36:
+        musicTrack = 0xe;
+        break;
+    case 39:
+        musicTrack = 0xf;
+        break;
+    case 41:
+        musicTrack = 0x10;
+        break;
+    case 42:
+        musicTrack = 0x11;
+        break;
+    case 44:
+        musicTrack = 0x19;
+        break;
+    default:
+        musicTrack = -1;
+        break;
+    }
+    if (musicTrack != -1) {
+        gpSoundManager->SwitchAmbientMusic(musicTrack);
+        gbEventMusicPlaying = 1;
+    } else {
+        gbEventMusicPlaying = 0;
+    }
 }
 
 // donor PoL RVA 0x000aff6c; preferred Buka symbol ?EventWindow@advManager@@QAEXHHPADHHHHH@Z

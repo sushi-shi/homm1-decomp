@@ -228,7 +228,7 @@ public:
     void ExpansionRecruitEvent(class hero*, int, short int*);
     void JailEvent(class mapCell*, class hero*, int, int);
     void TownEvent(class mapCell*, int, int);
-    void EventSound(int, int, struct SAMPLE2*);
+    void EventSound(short, short);
     void EventWindow(short, int, char*, int, int, int, int, int);
     int GiveRandomArtifact(class hero*);
     int GiveExperience(class hero*, int, signed char);
