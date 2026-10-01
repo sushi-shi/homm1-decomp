@@ -319,7 +319,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/STRIP"
 source = "src/SOURCE/STRIP.cpp"
-flags = "cpp_carcass"
+# strip and bankBox constructors register fs:[0] frames around new.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/SWAPMGR"
