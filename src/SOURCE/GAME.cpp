@@ -375,6 +375,54 @@ int game::LoadMap(char*) {
 VA(0x0043e744, 0x321)
 void game::ClaimTown(int, int, int) {}
 
+// Buka 2.1 game::ClaimMine reduced to HoMM1's flag placement: the flag cell
+// sits beside the mine by type and shows the owner's colour frame.
+VA(0x0043ea65, 0x2c9)
+void game::ClaimMine(signed char mineId, signed char player) {
+    short frame;
+    mapCell* cell;
+    m_mines[mineId].owner = player;
+    m_mineOwners[mineId] = player;
+    switch (m_mines[mineId].type) {
+        case 0:
+            frame = 0x14;
+            break;
+        case 1:
+            frame = 0x18;
+            break;
+        case 0x16:
+            frame = 0x10;
+            break;
+        case 0x17:
+            frame = 0xc;
+            break;
+        default:
+            frame = 8;
+            break;
+    }
+    switch (m_mines[mineId].type) {
+        case 1:
+            cell = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
+            break;
+        case 0x16:
+            cell = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
+            break;
+        case 0x17:
+            cell = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
+            break;
+        default:
+            cell = &m_map[m_mines[mineId].x][m_mines[mineId].y - 1];
+            break;
+    }
+    if (player == -1) {
+        cell->m_flags ^= 0x20;
+    } else {
+        cell->m_flags |= 0x20;
+        cell->m_overlayTileset |= 0xe0;
+        cell->m_unknown05 = m_players[player].Color() + frame;
+    }
+}
+
 // donor PoL RVA 0x00079856; preferred Buka symbol ?ViewSpells@game@@QAEHPAVhero@@HP6IHAAUtag_message@@@ZH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.637141;margin=0.178696;shape=0.427;size=0.725;calls=0.733;strings=spellwin.bin;alternate=pol20:int game::ViewSpells(class hero *, int, int (*)(struct tag_message &), int)@0x00079856

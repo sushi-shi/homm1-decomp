@@ -76,6 +76,9 @@ public:
     signed char CurrentHero(void) {
         return m_currentHero;
     }
+    signed char Color(void) {
+        return m_unknown11;
+    }
 };
 #pragma pack(pop)
 
