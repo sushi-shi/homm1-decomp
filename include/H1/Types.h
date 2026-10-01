@@ -37,8 +37,12 @@ struct configStruct {
     char _pad_0x0bc[0x78];
 };
 struct SCreatureInfo { unsigned short value; char pad[24]; };
-struct tag_tilePoint { signed char x; signed char _1; signed char y; signed char _3; };
-struct tag_monsterInfo { short attributes; char padding[24]; };
+struct tag_tilePoint { signed char x; signed char y; short frameOffset; };
+// Retail 31-byte monster rows: philAI::BuildBuilding reads the growth byte.
+#pragma pack(push, 1)
+struct tag_monsterInfo { signed char unknown00; signed char growth; char unknown02[29]; };
+#pragma pack(pop)
+extern tag_monsterInfo gMonsterDatabase[];
 struct SSpellInfo { char m_pad0[14]; unsigned char m_e; char m_pad1[7]; };
 struct SNetPlayerInfo { char m_pad[0xcc]; };
 struct SAMPLE2 { class sample *pSample; struct _SAMPLE *pMem; };

@@ -46,9 +46,11 @@ public:
     char m_unknownd0a0[0x5100];
     signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
-    char m_unknown1295d[0x28];
+    char m_unknown1295d[0x24];
+    unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    char m_unknown1431d[0x2b39];
+    signed char m_availableHeroes[GAME_HERO_COUNT];
+    char m_unknown14341[0x2b15];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
@@ -88,7 +90,7 @@ public:
     int CreateBoat(int, int, int);
     int Scan(signed char*, int, int);
     int RandomScan(signed char*, int, int, int, signed char);
-    int GetNewHeroId(int, int, int);
+    signed char GetNewHeroId(signed char);
     int GetTownId(int, int);
     int GetMineId(int, int);
     int SaveGame(char*, int, signed char);
@@ -136,7 +138,7 @@ public:
     void InitRandomArtifacts(void);
     int GetRandomArtifactId(int, int);
     void RandomizeHeroPool(void);
-    void SetRandomHeroArmies(int, int);
+    void SetRandomHeroArmies(short, int);
     void ProcessRandomObjects(void);
     void SetVisibility(int, int, int, int);
     void MakeAllWaterVisible(int);

@@ -17,7 +17,7 @@ class town;
 #pragma pack(push, 1)
 class hero {
 public:
-    unsigned char m_id;
+    signed char m_id;
     signed char m_owner;
     char m_name[0x1a];
     signed char m_unknown1c;

@@ -187,7 +187,7 @@ public:
     void CheckLoadSample(int);
     int GetSoundId(int, int);
     void InsertSound(int, int, int, int);
-    void TeleportTo(class hero*, int, int, int, int);
+    void TeleportTo(int, int, int);
     void DimensionDoor(void);
     void TownGate(void);
     void SummonBoat(void);

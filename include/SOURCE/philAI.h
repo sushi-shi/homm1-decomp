@@ -52,7 +52,7 @@ public:
     void CheckBerserk(void);
     void DimensionDoorTo(int, int);
     int DoAnywhereDDoorTownGate(int);
-    int DoDimensionDoor(class hero*);
+    signed char DoDimensionDoor(class hero*);
     void SetupRelativeHeroStrengths(void);
     void DoAI(int);
     void GetGameAIVars(void);
@@ -130,8 +130,8 @@ public:
     int ChooseToBuyArtifact(class hero*, int, int);
     int NetValueOfArtifact(int, int, int, int);
     int ChooseToPayRansomOnHero(class hero*, int);
-    void BuildBuilding(class town*, int);
-    void BuildHero(class town*, int);
+    void BuildBuilding(class town*, short);
+    void BuildHero(class town*, short);
     void BuildCreature(class town*, int, int);
     int CanBuyBHC(struct BHC&);
     int CombatMonsterEvent(class hero*, int, int*, class mapCell*);

@@ -15,6 +15,7 @@ H1_ENUM_BEGIN(FindPathTerrainConstant)
 H1_ENUM_END(FindPathTerrainConstant)
 
 int CalcTerrainCost(int, int, int, int);
+short TerrainStepCost(signed char, char);
 
 // PoL FINDPATH.cpp:32-36 retains this inline approximation helper.
 inline short ApproximateGridDistance(short xDistance, short yDistance) {

@@ -857,7 +857,7 @@ void advManager::InsertSound(int, int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
 VA(0x00434bd7, 0x340)
-void advManager::TeleportTo(class hero*, int, int, int, int) {}
+void advManager::TeleportTo(int, int, int) {}
 
 // donor PoL RVA 0x00067539; preferred Buka symbol ?DimensionDoor@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

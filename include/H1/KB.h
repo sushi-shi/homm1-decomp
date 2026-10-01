@@ -11,6 +11,7 @@ class advManager;
 class townManager;
 class executive;
 struct configStruct;
+struct tag_tilePoint;
 
 extern char gbInPollSound;
 extern char gbNoSound;
@@ -42,6 +43,8 @@ extern signed char gbThisNetHumanPlayer[];
 extern townManager* gpTownManager;
 extern executive* gpExec;
 extern class game* gpGame;
+// Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
+extern tag_tilePoint normalDirTable[];
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;
 extern long giBottomViewOverrideEndTime;
@@ -69,6 +72,12 @@ void ShutDown(char*);
 void MemError();
 void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
+// HoMM1 building tables (retail 0x004515d9/0x00451620): philAI's builders pass
+// the short building index through unwidened.
+char* GetBuildingName(int, short);
+void GetBuildingCost(int, short, int* const, int);
+// philAI::BuildHero charges this word-sized gold price.
+extern short gHeroGoldCost;
 int NullHandler(struct tag_message&);
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);

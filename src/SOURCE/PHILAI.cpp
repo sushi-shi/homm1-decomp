@@ -2,12 +2,14 @@
 
 #include <match.h>
 
+#include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 
 DATA(0x004913a0)
@@ -93,6 +95,43 @@ void philAI::CheckReload(void) {}
 VA(0x0041ad10, 0x294)
 void philAI::CheckBerserk(void) {}
 
+// Buka 2.1 DoDimensionDoor with DimensionDoorTo inlined for the given hero:
+// HoMM1 teleports with three arguments and returns a byte flag.
+VA(0x0041afa4, 0x1a0)
+signed char philAI::DoDimensionDoor(hero* pHero) {
+    int i;
+    int x, y;
+    int length;
+    int bestX, bestY;
+    mapCell* cell;
+    if (pHero->m_remainingMobility < 4)
+        return 0;
+    bestX = -1;
+    x = pHero->m_x;
+    y = pHero->m_y;
+    for (i = gpSearchArray->m_pathLength - 1; i >= 1; i--) {
+        x += normalDirTable[gpSearchArray->m_directions[i]].x;
+        y += normalDirTable[gpSearchArray->m_directions[i]].y;
+        if (abs(x - pHero->m_x) <= 7 && abs(y - pHero->m_y) <= 7) {
+            cell = gpAdvManager->GetCell(x, y);
+            if (!(cell->m_triggerType & 0x80) && !(cell->m_unknown07 & 0x80)) {
+                bestX = x;
+                bestY = y;
+                length = gpSearchArray->m_pathLength - i;
+            }
+        }
+    }
+    if (bestX == -1 || length <= 4)
+        return 0;
+    gpAdvManager->TeleportTo(bestX, bestY, 0);
+    if (pHero->m_remainingMobility < 12)
+        pHero->m_remainingMobility = 0;
+    else
+        pHero->m_remainingMobility -= 12;
+    pHero->UseSpell(27);
+    return 1;
+}
+
 // donor PoL RVA 0x00039631; preferred Buka symbol ?DoAI@philAI@@QAEXH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.641984;margin=1.146879;shape=0.398;size=0.795;calls=0.741;strings====================================|DO AI|DO AI 1;alternate=pol20:void philAI::DoAI(int)@0x00039631
@@ -119,6 +158,32 @@ void philAI::GetTurnAIVars(int) {}
 // evidence: graph:2;base=0.679791;margin=0.499826;shape=0.401;size=0.937;calls=0.722;strings=BestBHC |Turns Owned;alternate=pol20:void philAI::GetBestBHC(int, struct BHC &)@0x0003b154
 VA(0x0041c11f, 0x600)
 void philAI::GetBestBHC(int, struct BHC&) {}
+
+// Buka 2.1 DetermineHeroToMove: the current player's hero with the most
+// remaining mobility; HoMM1 counts with a byte index.
+VA(0x0041c71f, 0x11c)
+hero* philAI::DetermineHeroToMove(int player) {
+    int bestHero;
+    int bestMobility;
+    int mobility;
+    signed char i;
+
+    bestMobility = 0;
+    bestHero = -1;
+    if (gpCurPlayer->HasMobileHero()) {
+        for (i = 0; i < gpCurPlayer->m_heroCount; i++) {
+            mobility = gpGame->m_heroRecs[gpGame->m_players[player].m_heroIds[i]].m_remainingMobility;
+            if (mobility > bestMobility) {
+                bestMobility = mobility;
+                bestHero = i;
+            }
+        }
+    }
+    if (bestHero >= 0)
+        return &gpGame->m_heroRecs[gpGame->m_players[player].m_heroIds[bestHero]];
+    gpGame->m_players[player].m_currentHero = -1;
+    return 0;
+}
 
 // @early-stop
 // Complete & correct; two residuals are /Od codegen-shape picks (verified via scratch cl,
@@ -569,6 +634,107 @@ int philAI::ChooseToBuyArtifact(hero*, int artifact, int goldCost) {
 VA(0x00421950, 0x1d)
 int philAI::ChooseToPayRansomOnHero(hero*, int) {
     return 1;
+}
+
+// Buka 2.1 BuildBuilding with HoMM1's town update written in place: the mage
+// guild level, castle conversion and new dwelling stock.
+VA(0x0042196d, 0x194)
+void philAI::BuildBuilding(town* townPointer, short building) {
+    int i;
+    int cost[PLAYER_RESOURCE_COUNT];
+
+    sprintf(
+        gText,
+        "Player %d built %s in town %d.\n",
+        giCurPlayer,
+        GetBuildingName(townPointer->m_type, building),
+        townPointer->m_id
+    );
+    LogStr(gText);
+    GetBuildingCost(townPointer->m_type, building, cost, townPointer->m_buildState);
+    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++)
+        gpCurPlayer->m_resources[i] -= cost[i];
+    if (building == 0) {
+        if (townPointer->m_buildings & 1)
+            townPointer->m_buildState++;
+        if (townPointer->m_occupyingHeroId != -1)
+            townPointer->GiveSpells();
+    }
+    townPointer->m_buildings |= 1 << building;
+    if (building >= 7 && building <= 12)
+        townPointer->m_garrison[building - 7] =
+            gMonsterDatabase[gDwellingType[townPointer->m_type][building - 7]].growth;
+    if (building == 6) {
+        townPointer->m_buildings &= ~0x20;
+        townPointer->XformToCastle();
+    }
+    BitSet(gpGame->m_townBuiltToday, townPointer->m_id);
+    ShowStatus();
+}
+
+// Buka 2.1 BuildHero without the later network/army bookkeeping: the hero
+// stands on the town cell and a random faction refills the tavern slot.
+VA(0x00421b01, 0x25c)
+void philAI::BuildHero(town* townPointer, short availableHeroIndex) {
+    hero* newHero;
+    short townX;
+    short townY;
+
+    sprintf(gText, "Player %d built hero in town %d.\n", giCurPlayer, townPointer->m_id);
+    LogStr(gText);
+    gpCurPlayer->m_resources[RESOURCE_GOLD] -= gHeroGoldCost;
+    gpCurPlayer->m_heroIds[gpCurPlayer->m_heroCount] =
+        gpCurPlayer->m_availableHeroIds[availableHeroIndex];
+    gpCurPlayer->m_heroCount++;
+    townX = townPointer->m_x;
+    townY = townPointer->m_y;
+    newHero = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[availableHeroIndex]);
+    gpGame->SetRandomHeroArmies(newHero->m_id, 1);
+    newHero->m_owner = giCurPlayer;
+    newHero->m_x = townX;
+    newHero->m_y = townY;
+    newHero->m_eventFlags = 0;
+    newHero->m_direction = 2;
+    newHero->m_remainingMobility = newHero->CalcMobility();
+    newHero->m_mobility = newHero->m_remainingMobility;
+    newHero->m_locationType = gpGame->m_map[townX][townY].m_triggerType;
+    newHero->m_occupiedTown = gpGame->m_map[townX][townY].m_objectMetadata;
+    gpGame->m_map[townX][townY].m_triggerType = 0xbd;
+    gpGame->m_map[townX][townY].m_objectMetadata =
+        gpCurPlayer->m_availableHeroIds[availableHeroIndex];
+    gpGame->m_availableHeroes[newHero->m_id] = townPointer->m_owner;
+    townPointer->m_occupyingHeroId = newHero->m_id;
+    townPointer->GiveSpells();
+    gpCurPlayer->m_availableHeroIds[availableHeroIndex] = gpGame->GetNewHeroId(Random(0, 3));
+    gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[availableHeroIndex]] = 0x40;
+    bHeroBuiltThisTurn = 1;
+    ShowStatus();
+}
+
+// Buka 2.1 BuildCreature without the full-army eviction: pay, take the stock
+// and add the stack to the garrison.
+VA(0x00421d5d, 0x100)
+void philAI::BuildCreature(town* townPointer, int dwelling, int purchaseCount) {
+    int cost[PLAYER_RESOURCE_COUNT];
+    int creature;
+    int i;
+
+    sprintf(
+        gText,
+        "Player %d built %d %s in town %d.\n",
+        giCurPlayer,
+        purchaseCount,
+        GetMonsterName(gDwellingType[townPointer->m_type][dwelling]),
+        townPointer->m_id
+    );
+    LogStr(gText);
+    creature = gDwellingType[townPointer->m_type][dwelling];
+    GetMonsterCost(creature, cost);
+    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++)
+        gpCurPlayer->m_resources[i] -= cost[i] * purchaseCount;
+    townPointer->m_garrison[dwelling] -= purchaseCount;
+    townPointer->m_army.Add(creature, purchaseCount, -1);
+    ShowStatus();
 }
 
 // donor PoL RVA 0x00042ead; preferred Buka symbol ?CanBuyBHC@philAI@@QAEHAAUBHC@@@Z
