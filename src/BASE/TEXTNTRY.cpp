@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/font.h>
+#include <BASE/heroWindow.h>
 #include <BASE/icon.h>
 #include <BASE/resourceManager.h>
 #include <BASE/textEntryWidget.h>
@@ -12,9 +13,7 @@
 #include <string.h>
 
 VA(0x0047e100, 0x2d)
-textEntryWidget::textEntryWidget(void)
-    : textWidget()
-{
+textEntryWidget::textEntryWidget(void) : textWidget() {
     m_cursorPosition = 0;
     m_icon = 0;
     m_kind = 0x4000;
@@ -24,31 +23,36 @@ textEntryWidget::textEntryWidget(void)
 }
 
 VA_COMPGEN(0x0047e130, 0x36, "??_GtextEntryWidget@@UAEPAXI@Z", 0x0047e100)
-textEntryWidget::~textEntryWidget(void)
-{
+textEntryWidget::~textEntryWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
 VA(0x0047e170, 0x1e8)
-void textEntryWidget::Read(int type)
-{
+void textEntryWidget::Read(int type) {
     signed char name[13];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
     m_height = gpResourceManager->ReadWord();
     m_maxLength = gpResourceManager->ReadWord();
-    m_text = static_cast<char *>(malloc(m_maxLength + 5));
-    gpResourceManager->ReadBlock(reinterpret_cast<signed char *>(m_text), m_maxLength); // byte-evidenced: ReadBlock accepts signed bytes for text storage.
+    m_text = static_cast<char*>(malloc(m_maxLength + 5));
+    gpResourceManager->ReadBlock(
+        reinterpret_cast<signed char*>(m_text),
+        m_maxLength
+    ); // byte-evidenced: ReadBlock accepts signed bytes for text storage.
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_font = gpResourceManager->GetFont(reinterpret_cast<char *>(name)); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_font = gpResourceManager->GetFont(
+        reinterpret_cast<char*>(name)
+    ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & 0xff;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord());
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(reinterpret_cast<char *>(name)); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_icon = gpResourceManager->GetIcon(
+        reinterpret_cast<char*>(name)
+    ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
     m_entryType = type;
     if (type == TEXT_ENTRY_READ_RECT) {
@@ -75,9 +79,34 @@ void textEntryWidget::Read(int type)
     m_kind = 0x4000;
 }
 
+VA(0x0047eb60, 0x124)
+void textEntryWidget::Draw(void) {
+    if (m_entryType == TEXT_ENTRY_READ_MULTILINE) {
+        char display[TEXT_ENTRY_DISPLAY_CAPACITY];
+        strcpy(display, m_text + m_displayOffset);
+        unsigned int length = strlen(display);
+        while (m_font->LineWidth(display) > m_width)
+            display[--length] = 0;
+        m_icon
+            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, 0, 0);
+        m_font->DrawBoundedString(
+            display,
+            m_x + m_owner->m_posX,
+            m_owner->m_posY + m_y,
+            m_width,
+            m_height,
+            m_color,
+            m_alignment
+        );
+    } else {
+        m_icon
+            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, 0, 0);
+        textWidget::Draw();
+    }
+}
+
 VA(0x0047ec90, 0x182)
-void textEntryWidget::SetupDisplayString(char *source, unsigned short cursor)
-{
+void textEntryWidget::SetupDisplayString(char* source, unsigned short cursor) {
     int changed;
     char display[TEXT_ENTRY_DISPLAY_CAPACITY];
     if (cursor > 0)
