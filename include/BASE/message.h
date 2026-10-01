@@ -35,6 +35,7 @@ H1_ENUM_BEGIN(BaseWidgetCommand)
     WIDGET_COMMAND_HOVER = 11,
     WIDGET_COMMAND_DIMMED = 0x1000,
     WIDGET_COMMAND_SET_FRAME = 4,
+    WIDGET_NOTIFY_SELECT = 12,
     WIDGET_NOTIFY_DESELECT = 13
 H1_ENUM_END(BaseWidgetCommand)
 
@@ -53,7 +54,7 @@ struct tag_messageMousePayload {
 
 union tag_messageWidgetData {
     long value;
-    char *text;
+    char* text;
 };
 
 struct tag_messageWidgetPayload {

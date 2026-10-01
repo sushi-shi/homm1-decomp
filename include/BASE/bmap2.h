@@ -3,8 +3,9 @@
 
 class bitmap;
 
-void BlitBitmap(
-    bitmap *, int, int, int, int, bitmap *, int, int);
-void GrabScreenBitmap(bitmap *, int, int);
+void BlitBitmap(bitmap*, int, int, int, int, bitmap*, int, int);
+void GrabScreenBitmap(bitmap*, int, int);
+void DimBitmapArea(bitmap*, int, int, int, int);
+void FillBitmapArea(bitmap*, int, int, int, int, int);
 
 #endif

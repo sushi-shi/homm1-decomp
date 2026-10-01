@@ -30,11 +30,12 @@ H1_ENUM_BEGIN(PaletteGraphicsConstant)
 H1_ENUM_END(PaletteGraphicsConstant)
 
 class palette;
-extern palette *gpBufferPalette;
+extern palette* gpBufferPalette;
 extern signed char gCyclePal[PALETTE_CYCLE_BYTES];
 
+extern unsigned char gPaletteRemap[256];
 extern int giCurExe;
-extern void *hwndApp;
+extern void* hwndApp;
 extern int iMainWinScreenWidth;
 extern int iMainWinScreenHeight;
 extern int giDebugLevel;

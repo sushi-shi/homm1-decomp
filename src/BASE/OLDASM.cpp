@@ -18,8 +18,6 @@ struct PaletteColor {
     unsigned char blue;
 };
 
-extern unsigned char gPaletteRemap[256];
-
 short gOldAsmAssertLine = 207;
 char gOldAsmAssertFile[] = "D:\\Heroes\\Base\\OLDASM.CPP";
 

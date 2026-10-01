@@ -8,6 +8,7 @@
 #include <H1/Macros.h>
 
 H1_ENUM_BEGIN(BorderBackgroundKind)
+    BORDER_BACKGROUND_SOLID = 0x400,
     BORDER_BACKGROUND_BITMAP = 0x800
 H1_ENUM_END(BorderBackgroundKind)
 
@@ -18,15 +19,15 @@ struct tag_message;
 #pragma pack(push, 1)
 class border : public widget {
 public:
-    bitmap *m_background;
+    bitmap* m_background;
     short m_fillColor;
     // --- constructors ---
     border(void);
-    border(short int, short int, short int, short int, short int, short int, short int, char *);
+    border(short int, short int, short int, short int, short int, short int, short int, char*);
     virtual inline ~border() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void Read(void);
 };
