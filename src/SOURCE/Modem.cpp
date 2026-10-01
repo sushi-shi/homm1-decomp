@@ -158,8 +158,8 @@ void write_byte(int value) {
 // evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
 VA(0x00459a8c, 0x2c0)
 void Connect(void) {
-    char idMessage[20];
-    int packetResult;
+    int result;
+    char msg[20];
     unsigned long seed = KBTickCount();
     seed %= 1000000;
     idstr[0] = seed / 100000 + '0';
@@ -197,8 +197,8 @@ void Connect(void) {
         stime = KBTickCount();
         if (oldsec / 1000 != stime / 1000) {
             oldsec = stime;
-            sprintf(idMessage, "ID%s_%i", idstr, localstage);
-            WriteModemPacket(idMessage, strlen(idMessage));
+            sprintf(msg, "ID%s_%i", idstr, localstage);
+            WriteModemPacket(msg, strlen(msg));
         }
         PollSound();
     } while (localstage < 2);
