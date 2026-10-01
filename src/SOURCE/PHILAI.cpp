@@ -80,7 +80,38 @@ void philAI::CheckBuyStuff(void) {}
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.410367;margin=0.413392;shape=0.366;size=0.596;calls=0.600;alternate=pol20:int philAI::GoodAdjacent(int *)@0x0003849d
 VA(0x0041a6f4, 0x1a9)
-int philAI::GoodAdjacent(int*) {
+int philAI::GoodAdjacent(hero* pHero, int* direction) {
+    int bestDirection;
+    int dirIndex;
+    int x;
+    int y;
+    int maxValue;
+    int value;
+    int iChance;
+
+    bestDirection = -1;
+    maxValue = 100;
+    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & 0x7f) == 0x29)
+        return 0;
+    for (dirIndex = 0; dirIndex < 8; dirIndex++) {
+        if (gpAdvManager->ValidMoveWithEvent(pHero, dirIndex)) {
+            x = normalDirTable[dirIndex].x + pHero->m_x;
+            y = normalDirTable[dirIndex].y + pHero->m_y;
+            if ((gpAdvManager->GetCell(x, y)->m_triggerType & 0x80) && !(mapExtra[x][y] & 0x80)
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x29
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x2c) {
+                value = ValueOfEventAtPosition(pHero, x, y, 2, &iChance);
+                if (iChance > 80 && value > maxValue) {
+                    maxValue = value;
+                    bestDirection = dirIndex;
+                }
+            }
+        }
+    }
+    if (bestDirection != -1) {
+        *direction = bestDirection;
+        return 1;
+    }
     return 0;
 }
 
@@ -395,7 +426,40 @@ int philAI::MaxBuyableCreatures(int creatureType) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.452634;margin=0.608146;shape=0.221;size=0.851;calls=1.000;alternate=pol20:void philAI::ValueOfBuyingHero(class town *, class hero *, int &, float &)@0x0003dff6
 VA(0x0041e540, 0x1bc)
-void philAI::ValueOfBuyingHero(class town*, class hero*, int&, float&) {}
+void philAI::ValueOfBuyingHero(town* townPointer, hero* heroPointer, int& resourceValue, float& benefitCost) {
+    int tmp;
+    int heroRV;
+    int i;
+    int heroCost[PLAYER_RESOURCE_COUNT];
+    int costRV;
+
+    heroCost[RESOURCE_WOOD] = 0;
+    heroCost[RESOURCE_MERCURY] = 0;
+    heroCost[RESOURCE_ORE] = 0;
+    heroCost[RESOURCE_SULFUR] = 0;
+    heroCost[RESOURCE_CRYSTAL] = 0;
+    heroCost[RESOURCE_GEMS] = 0;
+    heroCost[RESOURCE_GOLD] = 2500;
+    costRV = RVConversion(heroCost);
+    heroRV = heroPointer->m_experience + 2000;
+    for (i = 0; i < 14; i++) {
+        if (heroPointer->m_artifacts[i] >= 0 && heroPointer->m_artifacts[i] < 37)
+            heroRV += gArtifactBaseRV[heroPointer->m_artifacts[i]];
+    }
+    heroRV += heroPointer->m_experience / 2;
+    heroRV = static_cast<int>(
+        heroRV
+        * (gpCurPlayer->m_aiData.m_attentionWeights.heroValue + 1.0
+           - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase)
+    );
+    if (gTownHeroClass[townPointer->m_type] == heroPointer->m_unknown1c)
+        heroRV = static_cast<int>(heroRV * 1.12f);
+    heroRV += StrategicValueOfPosition(heroPointer, heroPointer->m_x, heroPointer->m_y, 0, &tmp);
+    heroRV -= 200;
+    heroRV = static_cast<int>(heroRV * FutureDeflator(heroCost));
+    benefitCost = static_cast<float>(heroRV) / costRV;
+    resourceValue = heroRV;
+}
 
 // donor PoL RVA 0x0003e2a8; preferred Buka symbol ?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -574,7 +638,7 @@ int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
 VA(0x0041f2c3, 0x8bd)
-int philAI::StrategicValueOfPosition(int, int, int, int, int*, int) {
+int philAI::StrategicValueOfPosition(hero*, short, short, signed char, int*) {
     return 0;
 }
 
@@ -1017,6 +1081,6 @@ void philAI::TownEvent(class mapCell*, class hero*, int, int) {}
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
 VA(0x0042278b, 0x2085)
-int philAI::ValueOfEventAtPosition(int, int, int, int*) {
+int philAI::ValueOfEventAtPosition(hero*, int, int, int, int*) {
     return 0;
 }

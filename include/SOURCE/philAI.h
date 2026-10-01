@@ -53,7 +53,7 @@ public:
     void DoAllHeroInteractions(void);
     void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
-    int GoodAdjacent(int*);
+    int GoodAdjacent(class hero*, int*);
     void CheckReload(void);
     void CheckBerserk(void);
     void DimensionDoorTo(int, int);
@@ -100,7 +100,7 @@ public:
     int RVConversion(int* const);
     float TurnsToBuy(int* const);
     int RVOfPosition(int, int, int, int, int, int, int, int, int, int);
-    int StrategicValueOfPosition(int, int, int, int, int*, int);
+    int StrategicValueOfPosition(class hero*, short, short, signed char, int*);
     int ValueOfTown(class town*);
     void TurnCostResource(int);
     float TurnValueOfObelisk(int);
@@ -150,7 +150,7 @@ public:
     int ComputeValueOfSS(class hero*, int, int);
     int ComputeValueOfFreeSS(class hero*, int);
     int ManaRefreshValue(class hero*, int);
-    int ValueOfEventAtPosition(int, int, int, int*);
+    int ValueOfEventAtPosition(class hero*, int, int, int, int*);
     int EvaluateGenericSite(class mapCell*);
     int EvaluateBarrier(class mapCell*);
     int EvaluatePassword(class mapCell*);
@@ -164,5 +164,9 @@ public:
 };
 extern philAI* gpPhilAI;
 extern armyGroup* gpMonGroup;
+// ValueOfBuyingHero: the hero class native to each town type.
+extern signed char gTownHeroClass[];
+// GoodAdjacent skips cells whose adjacency byte carries the monster bit.
+extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 #endif // HOMM1_SOURCE_PHILAI_H

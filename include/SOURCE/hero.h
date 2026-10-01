@@ -32,10 +32,12 @@ public:
     signed char m_occupiedTown;
     short m_mobility;
     short m_remainingMobility;
-    char m_unknown29[0x2e];
+    int m_experience;
+    char m_unknown2d[0x2a];
     // philAI::CombatMonsterEvent passes &m_army to QuickCombat.
     armyGroup m_army;
-    char m_unknown66[0x48];
+    char m_unknown66[0x3a];
+    signed char m_artifacts[14];
     int m_eventFlags;
     float m_aiFightValue;
     // --- constructors ---
