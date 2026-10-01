@@ -140,6 +140,28 @@ H1_ENUM_BEGIN(TownSplitConstant)
     TOWN_CASTLE_HERO_STATE_CONTROL = 0x50,
     TOWN_CASTLE_SPECIAL_BUILDING_COUNT = 5,
     TOWN_WIDGET_VISIBLE_FLAG = 4,
+    TOWN_CASTLE_HERO_CONTROL = 0x30,
+    TOWN_CASTLE_STATUS_CONTROL = 0x32,
+    TOWN_CASTLE_STATUS_FIRST_CONTROL = 0x1f4,
+    TOWN_CASTLE_STATUS_TEXT_CONTROL = 0x1f6,
+    TOWN_CASTLE_STATUS_X = 0xa,
+    TOWN_CASTLE_STATUS_Y = 0xf0,
+    TOWN_CASTLE_STATUS_WIDTH = 0x21a,
+    TOWN_CASTLE_STATUS_HEIGHT = 0x10,
+    TOWN_CASTLE_INFO_BUILD_MAGE_GUILD = 0,
+    TOWN_CASTLE_INFO_MAGE_GUILD_MAX_LEVEL = 1,
+    TOWN_CASTLE_INFO_CANNOT_AFFORD_MAGE_LEVEL = 2,
+    TOWN_CASTLE_INFO_ADD_MAGE_GUILD_LEVEL = 3,
+    TOWN_CASTLE_INFO_ALREADY_BUILT = 4,
+    TOWN_CASTLE_INFO_CANNOT_BUILD = 5,
+    TOWN_CASTLE_INFO_CANNOT_AFFORD = 6,
+    TOWN_CASTLE_INFO_BUILD = 7,
+    TOWN_CASTLE_INFO_CANNOT_AFFORD_HERO = 8,
+    TOWN_CASTLE_INFO_TOO_MANY_HEROES = 9,
+    TOWN_CASTLE_INFO_TOWN_OCCUPIED = 10,
+    TOWN_CASTLE_INFO_RECRUIT_HERO = 11,
+    TOWN_CASTLE_INFO_EXIT = 12,
+    TOWN_CASTLE_INFO_OPTIONS = 13,
     TOWN_ARMY_VIEW_X = 0x77,
     TOWN_ARMY_VIEW_Y = 0x14,
     TOWN_BUILDING_MAGE_GUILD = 0,
@@ -227,15 +249,15 @@ public:
     void ResetStrips(void);
     void Toggle(signed char);
     void DrawTown(signed char, int);
-    int BuyBuild(int, int, int);
+    short BuyBuild(short, signed char, signed char);
     void BuildObj(short);
     void SetupMage(class heroWindow *);
-    int RecruitHero(int, int);
+    signed char RecruitHero(signed char);
     void DoTavern(void);
     void SetupWell(class heroWindow *);
     void SetupThievesGuild(class heroWindow *, short);
     void SetupCastle(class heroWindow *);
-    char *GetBuildingName(int);
+    char *GetBuildingName(short);
     // HoMM1 keeps the thieves-guild helpers as townManager members.
     void GetCategoryStats(signed char, long *const, signed char *const);
     void SortStats(long *const, signed char *const);
@@ -256,4 +278,6 @@ extern signed char townTheme[];
 short TavernHandler(struct tag_message &);
 short MageGuildHandler(struct tag_message &);
 short SplitArmyHandler(struct tag_message &);
+short CastleHandler(struct tag_message &);
+extern char *cCastleInfo[];
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

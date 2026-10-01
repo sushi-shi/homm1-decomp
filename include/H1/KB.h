@@ -73,7 +73,7 @@ void EarlyShutDownSystem();
 void PollRemote();
 void QuickViewWait();
 // HoMM1 building-name lookup by town type (retail 0x004515d9).
-char *GetBuildingName(int, int);
+char *GetBuildingName(int, short);
 // HoMM1 town build checks return byte flags (retail 0x004517bf/0x00451903).
 signed char CanBuild(class town*, short);
 signed char CanBuy(class town*, short);
@@ -91,6 +91,8 @@ void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
 // Buka's default dialog dispatcher (retail 0x00452b64).
 short EventWindowHandler(struct tag_message&);
+// Buka TrueFalseDialogHandler (retail 0x00452c78), the plain dialog dispatcher.
+short TrueFalseDialogHandler(struct tag_message&);
 extern char* gSpellDesc[];
 extern char* gSpellNames[];
 

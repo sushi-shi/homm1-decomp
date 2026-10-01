@@ -577,7 +577,7 @@ void townManager::DrawTown(signed char updateScreen, int drawFlags)
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.668468;margin=0.054253;shape=0.329;size=0.894;calls=0.897;strings=bigfont.fnt|buybuil%d.bin|resource.icn;alternate=pol20:int townManager::BuyBuild(int, int, int)@0x00017c9d
 VA(0x0040b455, 0x1023)
-int townManager::BuyBuild(int, int, int) { return 0; }
+short townManager::BuyBuild(short, signed char, signed char) { return 0; }
 
 // donor PoL RVA 0x00018bd2; preferred Buka symbol ?BuildObj@townManager@@QAEXH@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -1120,7 +1120,7 @@ void townManager::SortStats(long *const stats, signed char *const order)
 
 // HoMM1 town-type wrapper over the global building-name table lookup.
 VA(0x0040dc2b, 0x2f)
-char *townManager::GetBuildingName(int building)
+char *townManager::GetBuildingName(short building)
 {
     return ::GetBuildingName(m_town->m_type, building);
 }
@@ -1129,7 +1129,7 @@ char *townManager::GetBuildingName(int building)
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.555715;margin=0.218228;shape=0.276;size=0.741;calls=0.578;strings=port%04d.icn|rcrthero.bin;alternate=pol20:int townManager::RecruitHero(int, int)@0x00019523
 VA(0x0040dc5a, 0x981)
-int townManager::RecruitHero(int, int) { return 0; }
+signed char townManager::RecruitHero(signed char) { return 0; }
 
 // donor PoL RVA 0x00019c29; preferred Buka symbol ?TavernHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -1270,8 +1270,153 @@ update_amount:
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// donor PoL RVA 0x0001e0fb; preferred Buka symbol ?CastleHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/Castle; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.424517;margin=0.478912;shape=0.381;size=0.626;calls=0.675;alternate=pol20:int CastleHandler(struct tag_message &)@0x0001e0fb
+// Buka Castle.cpp CastleHandler; HoMM1 hovers by widget id, has no
+// captain or formation controls and recruits a single hero (control 0x30).
 VA(0x0040e866, 0x726)
-int CastleHandler(struct tag_message &) { return 0; }
+short CastleHandler(struct tag_message &message)
+{
+    short statusId = TOWN_CASTLE_STATUS_CONTROL;
+    int result = 0;
+    int quickFlag;
+    int objNum;
+
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_COMMAND_HOVER:
+                if (message.payload.widget.id == gpTownManager->m_lastHoverId)
+                    break;
+                gpTownManager->m_lastHoverId = message.payload.widget.id;
+                switch (message.payload.widget.id) {
+                    case TOWN_BUILDING_MAGE_GUILD:
+                        if (!(gpTownManager->m_buildableBuildings & (1 << message.payload.widget.id)))
+                            sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
+                                    gpTownManager->GetBuildingName(message.payload.widget.id));
+                        else if (!(gpTownManager->m_affordableBuildings & (1 << message.payload.widget.id)))
+                            sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
+                                    gpTownManager->GetBuildingName(message.payload.widget.id));
+                        else {
+                            if (!(gpTownManager->m_town->m_buildings & 1))
+                                objNum = TOWN_CASTLE_INFO_BUILD_MAGE_GUILD;
+                            else if (gpTownManager->m_town->m_buildState == 3)
+                                objNum = TOWN_CASTLE_INFO_MAGE_GUILD_MAX_LEVEL;
+                            else if (!CanBuy(gpTownManager->m_town, TOWN_BUILDING_MAGE_GUILD))
+                                objNum = TOWN_CASTLE_INFO_CANNOT_AFFORD_MAGE_LEVEL;
+                            else
+                                objNum = TOWN_CASTLE_INFO_ADD_MAGE_GUILD_LEVEL;
+                            strcpy(gText, cCastleInfo[objNum]);
+                        }
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                        if (gpTownManager->m_town->m_buildings & (1 << message.payload.widget.id))
+                            sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_ALREADY_BUILT],
+                                    gpTownManager->GetBuildingName(message.payload.widget.id));
+                        else if (!(gpTownManager->m_buildableBuildings & (1 << message.payload.widget.id)))
+                            sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
+                                    gpTownManager->GetBuildingName(message.payload.widget.id));
+                        else if (!(gpTownManager->m_affordableBuildings & (1 << message.payload.widget.id)))
+                            sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
+                                    gpTownManager->GetBuildingName(message.payload.widget.id));
+                        else
+                            sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_BUILD],
+                                    gpTownManager->GetBuildingName(message.payload.widget.id));
+                        break;
+                    case TOWN_CASTLE_HERO_CONTROL:
+                        if (gpCurPlayer->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
+                            strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD_HERO]);
+                        else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY)
+                            sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_TOO_MANY_HEROES],
+                                    PLAYER_HERO_CAPACITY);
+                        else if (gpTownManager->m_town->m_occupyingHeroId != -1)
+                            strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_TOWN_OCCUPIED]);
+                        else
+                            strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_RECRUIT_HERO]);
+                        break;
+                    case TOWN_DIALOG_BUTTON_0:
+                        strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_EXIT]);
+                        break;
+                    default:
+                        strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_OPTIONS]);
+                        break;
+                }
+                message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+                message.payload.widget.id = TOWN_CASTLE_STATUS_TEXT_CONTROL;
+                message.payload.widget.data.text = gText;
+                gpTownManager->m_heroWindow0->BroadcastMessage(message);
+                gpTownManager->m_heroWindow0->DrawWindow(0, TOWN_CASTLE_STATUS_FIRST_CONTROL,
+                                                         TOWN_CASTLE_STATUS_TEXT_CONTROL);
+                gpWindowManager->UpdateScreenRegion(TOWN_CASTLE_STATUS_X, TOWN_CASTLE_STATUS_Y,
+                                                    TOWN_CASTLE_STATUS_WIDTH, TOWN_CASTLE_STATUS_HEIGHT);
+                return MESSAGE_DISPATCH_CONSUME;
+            case WIDGET_NOTIFY_SELECT:
+                if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+                    quickFlag = 1;
+                else
+                    quickFlag = 0;
+                switch (message.payload.widget.id) {
+                    case TOWN_BUILDING_MAGE_GUILD:
+                        if (!quickFlag
+                            && (gpTownManager->m_town->m_buildState == 3
+                                || !(gpTownManager->m_buildableBuildings
+                                     & (1 << message.payload.widget.id))))
+                            break;
+                        else
+                            goto buy_building;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                        if (!quickFlag
+                            && ((gpTownManager->m_town->m_buildings & (1 << message.payload.widget.id))
+                                || !(gpTownManager->m_buildableBuildings
+                                     & (1 << message.payload.widget.id))))
+                            break;
+                    buy_building:
+                        for (objNum = 0; objNum < gpTownManager->m_townObjectCount; objNum++) {
+                            if (gpTownManager->m_townObjects[objNum]->m_buildingId
+                                == message.payload.widget.id)
+                                break;
+                        }
+                        result = gpTownManager->BuyBuild(
+                            message.payload.widget.id,
+                            (gpTownManager->m_affordableBuildings & (1 << message.payload.widget.id))
+                                == 0,
+                            quickFlag);
+                        break;
+                    case TOWN_CASTLE_HERO_CONTROL:
+                        if (quickFlag)
+                            gpTownManager->RecruitHero(1);
+                        else if (!gpTownManager->m_recruitResult
+                                 && gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
+                                 && gpCurPlayer->m_heroCount < PLAYER_HERO_CAPACITY
+                                 && gpTownManager->m_town->m_occupyingHeroId == -1)
+                            result = gpTownManager->RecruitHero(0);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (result) {
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return TrueFalseDialogHandler(message);
+}
