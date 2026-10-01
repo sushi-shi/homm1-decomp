@@ -14,6 +14,21 @@ H1_ENUM_BEGIN(PlayerDataConstant)
 H1_ENUM_END(PlayerDataConstant)
 // clang-format on
 
+// TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
+// HoMM2's per-player AI block (without its last float) inside playerData.
+class playerAIData {
+public:
+    char m_unknown00[0x14];
+    float m_heroAttention;
+    char m_unknown18[0x1c];
+    int m_income[PLAYER_RESOURCE_COUNT];
+    int m_obeliskValue;
+    int m_totalObeliskValue;
+    int m_unexploredValue;
+    float m_upgradeValueWeight;
+    float m_artifactValue;
+};
+
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at
 // the 0x620 world map); fields follow HoMM2's order after a HoMM1 prefix.
 #pragma pack(push, 1)
@@ -31,7 +46,9 @@ public:
     signed char m_townLocatorPage;
     signed char m_townIds[PLAYER_TOWN_CAPACITY];
     int m_resources[PLAYER_RESOURCE_COUNT];
-    char m_unknown99[0x6c];
+    char m_unknown99[2];
+    unsigned char m_obelisksVisited[6];
+    playerAIData m_aiData;
     // --- methods ---
     void Write(int);
     void Read(int);
@@ -39,6 +56,7 @@ public:
     signed char HasMobileHero(void);
     int BuildingsOwned(int, int, int);
     int NumOfGivenArtifact(int);
+    signed char CountVisitedObelisks(void);
     signed char CurrentHero(void) { return m_currentHero; }
 };
 #pragma pack(pop)

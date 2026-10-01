@@ -8,6 +8,8 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 
+#include <stdlib.h>
+
 DATA(0x004913a0) signed char gDwellingType[4][6];
 DATA(0x004af754) signed char giBuildShipyard[AI_PLAYER_COUNT];
 DATA(0x004af75c) signed char giBuildBoat[AI_PLAYER_COUNT];
@@ -255,6 +257,29 @@ int philAI::RVConversion(int *const resources) {
                  + static_cast<float>(resources[static_cast<int>(RESOURCE_WOOD)]) * gafAITurnCostResource[static_cast<int>(RESOURCE_WOOD)]);
 }
 
+// Buka 2.1 TurnsToBuy: the slowest shortfall in turns of income, 99 when a
+// short resource has no income.
+VA(0x0041ec81, 0xca)
+float philAI::TurnsToBuy(int *const resources)
+{
+    float maxT = 0;
+    int resourceIndex;
+    float fTurns;
+    for (resourceIndex = 0; resourceIndex < RESOURCE_COUNT; resourceIndex++) {
+        if (gpCurPlayer->m_resources[resourceIndex] < resources[resourceIndex]) {
+            if (gpCurPlayer->m_aiData.m_income[resourceIndex] > 0)
+                fTurns = static_cast<float>(
+                    (resources[resourceIndex] - gpCurPlayer->m_resources[resourceIndex])
+                        / gpCurPlayer->m_aiData.m_income[resourceIndex]
+                    + 1);
+            else
+                fTurns = 99.0f;
+            maxT = fTurns > maxT ? fTurns : maxT;
+        }
+    }
+    return maxT;
+}
+
 // donor PoL RVA 0x0003e918; preferred Buka symbol ?RVOfPosition@philAI@@QAEHHHHHHHHHHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.513260;margin=0.500427;shape=0.306;size=0.971;calls=0.812;alternate=pol20:int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int)@0x0003e918
@@ -266,6 +291,69 @@ int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int) { ret
 // evidence: graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
 VA(0x0041f2c3, 0x8bd)
 int philAI::StrategicValueOfPosition(int, int, int, int, int *, int) { return 0; }
+
+// Buka 2.1 ValueOfTown without the later scenario-town bonuses: built
+// structures' base values plus a fixed gold-turn allowance.
+VA(0x0041fb80, 0xb1)
+int philAI::ValueOfTown(town *townPointer)
+{
+    int sum = 0;
+    int building;
+    for (building = 0; building < 13; building++) {
+        if (townPointer->m_buildings & (1 << building))
+            sum += GetBuildingBaseResourceValue(
+                townPointer->m_type, building,
+                townPointer->m_buildState > 0 ? townPointer->m_buildState : 0);
+    }
+    sum = static_cast<int>(sum + gafAITurnCostResource[RESOURCE_GOLD] * 1250.0f * 1.5);
+    sum += 750;
+    return sum;
+}
+
+// Buka 2.1 TurnCostResource: each resource's turn cost scales its base
+// value against the player's relative stock-plus-income share.
+VA(0x0041fc31, 0x176)
+void philAI::TurnCostResource(int player)
+{
+    playerAIData *playerAI;
+    float ratio[RESOURCE_COUNT];
+    float avg;
+    int i;
+    int totalRV;
+    int value[RESOURCE_COUNT];
+    playerAI = &gpGame->m_players[player].m_aiData;
+    totalRV = 0;
+    for (i = 0; i < RESOURCE_COUNT; i++) {
+        value[i] = static_cast<int>(
+            gResourceBaseValue[i]
+            * ((playerAI->m_income[i] * 5) * 0.7 + gpGame->m_players[player].m_resources[i]));
+        totalRV += value[i];
+    }
+    avg = (totalRV / RESOURCE_COUNT);
+    for (i = 0; i < RESOURCE_COUNT; i++) {
+        ratio[i] = value[i] / avg;
+        gafAITurnCostResource[i] = (gResourceBaseValue[i] / (ratio[i] / 2.0f + 0.5));
+    }
+}
+
+// Buka 2.1 TurnValueOfObelisk without the later victory/explorer terms.
+VA(0x0041fda7, 0x134)
+float philAI::TurnValueOfObelisk(int player)
+{
+    playerAIData *playerAI;
+    int each;
+    playerAI = &gpGame->m_players[player].m_aiData;
+    each = gArtifactBaseRV[gpGame->m_ultimateArtifactId] / 110;
+    if (gpGame->m_ultimateArtifactId == -1)
+        return 0.0f;
+    playerAI->m_obeliskValue = each * 48 / gpGame->m_obeliskCount;
+    playerAI->m_obeliskValue = static_cast<int>(
+        playerAI->m_obeliskValue
+        * (1.5 - abs(32 - gpGame->m_players[player].CountVisitedObelisks()) / 48.0f));
+    playerAI->m_obeliskValue =
+        static_cast<int>(playerAI->m_obeliskValue * (playerAI->m_heroAttention + 0.66));
+    return playerAI->m_obeliskValue;
+}
 
 // @early-stop
 // Complete & correct except the two castle-match `==` compares: cl unconditionally loads
@@ -309,12 +397,59 @@ int philAI::QuickCombat(class armyGroup *, class hero *, class armyGroup *, clas
 VA(0x00420c11, 0xbae)
 void philAI::HeroInteractionAtTown(class hero *, class town *, int, int *) {}
 
+// Buka 2.1 ChooseGoldOrExperience; HoMM1 weighs the experience by the
+// hero's AI fight value instead of a fixed gold threshold.
+VA(0x004217bf, 0x61)
+int philAI::ChooseGoldOrExperience(hero *thisHero, int gold, int experience)
+{
+    int goldRV;
+    int expRV;
+
+    expRV = static_cast<int>(experience * thisHero->m_aiFightValue);
+    goldRV = static_cast<int>(gold * gafAITurnCostResource[RESOURCE_GOLD]);
+    return goldRV > expRV;
+}
+
 // donor PoL RVA 0x000425b0; preferred Buka symbol ?ChooseEvaluateBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@01HHHAAH2@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.572029;margin=0.742196;shape=0.490;size=0.824;calls=1.000;alternate=pol20:void philAI::ChooseEvaluateBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, int, int, int, int &, int &)@0x000425b0
 VA(0x00421820, 0xc7)
-void philAI::ChooseEvaluateBattle(armyGroup *ag1, hero *h1, armyGroup *ag2, hero *h2,
-                                  int a, int b, int c, int &outFlag, int &outValue) {}
+void philAI::ChooseEvaluateBattle(armyGroup *attackerArmy, hero *attackerHero,
+                                  armyGroup *defenderArmy, hero *defenderHero, int isCastle,
+                                  int castleId, int rewardValue, int &outFlag, int &outValue)
+{
+    float chance;
+    int lossA;
+    int lossB;
+    int leftA;
+    int leftB;
+    int empty;
+    int score;
+
+    ProbableOutcomeOfBattle(attackerArmy, attackerHero, defenderArmy, defenderHero, 0, isCastle,
+                            castleId, defenderHero != 0 ? defenderHero->m_owner : -1, chance,
+                            lossA, lossB, leftA, leftB, score);
+    score = static_cast<int>(score + rewardValue * chance);
+    if (score <= 0) {
+        outValue = 0;
+        outFlag = 0;
+    } else {
+        outValue = score;
+        outFlag = 1;
+    }
+}
+
+// HoMM1 treasure-artifact purchase: affordable gold and an artifact worth
+// more than its gold cost (Buka NetValueOfArtifact's valuation).
+VA(0x004218e7, 0x69)
+int philAI::ChooseToBuyArtifact(hero *, int artifact, int goldCost)
+{
+    if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= goldCost
+        && gArtifactBaseRV[artifact] > goldCost * gafAITurnCostResource[RESOURCE_GOLD])
+        return 1;
+    else
+        return 0;
+}
 
 // Buka 2.1 returns one for the ransom choice. HoMM1's daemon-cave caller
 // passes a hero and the gold amount; the retail body returns the same one.
@@ -358,6 +493,47 @@ int philAI::DamageGroup(armyGroup *ag, hero *loser, hero *, float dmg)
             ag->DamageGroup(dmg);
         return 1;
     }
+}
+
+// HoMM1 primary-stat valuation: the table worth of the new level (capped at
+// twenty) less that of the old one; used for hero stat gains.
+VA(0x00422439, 0x66)
+float philAI::StatChangeValue(int oldValue, int newValue)
+{
+    float newRV;
+    float oldRV;
+
+    if (newValue > 20)
+        newRV = gfStatValue[20];
+    else
+        newRV = gfStatValue[newValue];
+    if (oldValue > 20)
+        oldRV = gfStatValue[20];
+    else
+        oldRV = gfStatValue[oldValue];
+    return newRV - oldRV;
+}
+
+// Buka 2.1 IncrementHourGlass: the AI-turn hourglass advances faster with
+// fewer (prospective) heroes and stops at its last phase.
+VA(0x0042249f, 0xcb)
+void philAI::IncrementHourGlass(void)
+{
+    int heroCount = gpCurPlayer->m_heroCount;
+    if (heroCount < 4 && gpCurPlayer->m_resources[RESOURCE_GOLD] >= 2500
+        && bHeroBuiltThisTurn == 0)
+        heroCount++;
+    iCurHourGlassPhase++;
+    if (heroCount == 1) {
+        iCurHourGlassPhase++;
+        iCurHourGlassPhase++;
+    }
+    if (heroCount == 2 && iCurHourGlassPhase != 1)
+        iCurHourGlassPhase++;
+    if (heroCount == 3 && (iCurHourGlassPhase == 3 || iCurHourGlassPhase == 6))
+        iCurHourGlassPhase++;
+    if (iCurHourGlassPhase > 9)
+        iCurHourGlassPhase = 9;
 }
 
 // donor PoL RVA 0x00043980; preferred Buka symbol ?TownEvent@philAI@@QAEXPAVmapCell@@PAVhero@@HH@Z

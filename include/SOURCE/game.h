@@ -40,10 +40,15 @@ public:
     char m_unknown200[0xc];
     class playerData m_players[GAME_PLAYER_COUNT];
     class mapCell m_map[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-    char m_unknownd0a0[0x5101];
+    char m_unknownd0a0[0x5100];
+    signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
     char m_unknown1295d[0x28];
     class hero m_heroRecs[GAME_HERO_COUNT];
+    char m_unknown1431d[0x2b39];
+    signed char m_ultimateArtifactX;
+    signed char m_ultimateArtifactY;
+    signed char m_ultimateArtifactId;
     hero *GetHero(int id) { return &m_heroRecs[id]; }
     town *GetTown(int id) { return &m_castleRecs[id]; }
     // --- methods ---
