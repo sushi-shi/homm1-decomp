@@ -6,7 +6,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <direct.h>
+#include <fcntl.h>
 #include <io.h>
+#include <mmsystem.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -492,6 +495,107 @@ void WritePrefs(void)
 {
     UpdateSystemOptionsMenu();
     WritePrefsToRegistry();
+}
+
+// HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
+// drive's autorun file and remember the first one in the registry.
+VA(0x0045d75a, 0x4c5)
+int SetupCDDrive(void)
+{
+    int count;
+    unsigned long logicalDrives;
+    int cd;
+    int fh;
+    int pass;
+    unsigned int nError;
+    char cdDrives[CD_DRIVE_LETTER_COUNT];
+    char numCD;
+    HKEY hRegKey;
+    long pos;
+    char mciCommand[MCI_COMMAND_BUFFER_SIZE];
+    char szReturn[MCI_COMMAND_BUFFER_SIZE];
+    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    char driveText[REGISTRY_TEXT_BUFFER_SIZE];
+    long rc;
+
+    sprintf(gText, ".\\DATA\\HEROES.AGG");
+    fh = open(gText, _O_BINARY);
+    if (fh == -1) {
+        if (chdir(gcRegAppPath) == -1)
+            return CD_SETUP_NO_APP_PATH;
+        fh = open(gText, _O_BINARY);
+        if (fh == -1)
+            return CD_SETUP_NO_DATA;
+    }
+    close(fh);
+    logicalDrives = 0;
+    logicalDrives = GetLogicalDrives();
+    count = 0;
+    memset(cdDrives, 0, sizeof(cdDrives));
+    for (cd = CD_FIRST_DRIVE_LETTER; cd < CD_DRIVE_LETTER_COUNT; cd++) {
+        if (logicalDrives & (1 << cd)) {
+            if (IsCDDrive(cd)) {
+                cdDrives[count] = static_cast<char>(cd);
+                count++;
+            }
+        }
+    }
+    numCD = static_cast<char>(count);
+    giCDDrive = cdDrives[gConfig.cdOffset];
+    if (giCDDrive < CD_FIRST_DRIVE_LETTER)
+        giCDDrive = cdDrives[0];
+    if (strlen(gcRegCDDrive)) {
+        sprintf(gText, "%s\\_autorun\\autorun.exe", gcRegCDDrive);
+        fh = open(gText, _O_BINARY);
+        if (fh != -1) {
+            close(fh);
+            sprintf(gText + 2, "%s", gcSoundPath);
+            strcpy(gcSoundPath, gText);
+            sprintf(gText + 2, "%s", gcAnimPath);
+            strcpy(gcAnimPath, gText);
+            return CD_SETUP_READY;
+        }
+    }
+    if (giCDDrive < CD_FIRST_DRIVE_LETTER)
+        return CD_SETUP_NO_DRIVE;
+    for (pass = 0; pass < CD_SETUP_ATTEMPTS; pass++) {
+        for (cd = 0; cd < numCD; cd++) {
+            wsprintfA(mciCommand, "open %c: type cdaudio alias CD", cdDrives[cd] + 'A');
+            nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, 0);
+            if (nError == 0) {
+                wsprintfA(mciCommand, "info CD UPC wait");
+                nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, 0);
+                wsprintfA(mciCommand, "close CD");
+                nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, 0);
+            }
+            sprintf(gText, "%c:\\_autorun\\autorun.exe", cdDrives[cd] + 'A', gcSoundPath);
+            fh = open(gText, _O_BINARY);
+            if (fh == -1)
+                continue;
+            pos = lseek(fh, 0, SEEK_END);
+            if (pos != -1) {
+                pos = lseek(fh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
+                if (pos != -1)
+                    pos = read(fh, szReturn, CD_AUTORUN_TAIL_BYTES);
+            }
+            close(fh);
+            strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+            hRegKey = 0;
+            rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_WRITE, &hRegKey);
+            if (rc == 0) {
+                wsprintfA(driveText, "%c:", cdDrives[cd] + 'A');
+                pass = RegSetValueExA(hRegKey, "CDDrive", 0, REG_SZ, reinterpret_cast<BYTE *>(driveText), lstrlenA(driveText) + 1);
+                RegCloseKey(hRegKey);
+            }
+            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gcSoundPath);
+            strcpy(gcSoundPath, gText);
+            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gcAnimPath);
+            strcpy(gcAnimPath, gText);
+            return CD_SETUP_READY;
+        }
+        Sleep(CD_SETUP_RETRY_DELAY);
+    }
+    return CD_SETUP_NOT_FOUND;
 }
 
 // donor PoL RVA 0x000a0c76; preferred Buka symbol ?SetWinText@@YIXPAVheroWindow@@H@Z

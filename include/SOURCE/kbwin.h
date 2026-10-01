@@ -43,13 +43,26 @@ H1_ENUM_BEGIN(PrefsConstant)
     WINDOW_POSITION_MARGIN = 200,
     REGISTRY_TEXT_BUFFER_SIZE = 100,
     REGISTRY_TEXT_VALUE_SIZE = 99,
-    REGISTRY_DWORD_BYTES = 4
+    REGISTRY_DWORD_BYTES = 4,
+    CD_DRIVE_LETTER_COUNT = 26,
+    CD_FIRST_DRIVE_LETTER = 2,
+    CD_SETUP_READY = 0,
+    CD_SETUP_NO_DRIVE = 1,
+    CD_SETUP_NOT_FOUND = 2,
+    CD_SETUP_NO_APP_PATH = 3,
+    CD_SETUP_NO_DATA = 4,
+    CD_SETUP_ATTEMPTS = 2,
+    CD_SETUP_RETRY_DELAY = 3000,
+    CD_AUTORUN_TAIL_BYTES = 100,
+    MCI_COMMAND_BUFFER_SIZE = 256
 H1_ENUM_END(PrefsConstant)
 // clang-format on
 
 extern char gcRegAppPath[];
 extern char gcRegCDDrive[];
 extern signed char gbFirstTimeThrough;
+extern char gcAnimPath[];
+extern int giCDDrive;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {
@@ -88,6 +101,8 @@ void ReadPrefs(void);
 void WritePrefsToFile(void);
 void WritePrefsToRegistry(void);
 void FileError(char *);
+int IsCDDrive(int);
+int SetupCDDrive(void);
 void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);
 void SetMenuStatus(int);
