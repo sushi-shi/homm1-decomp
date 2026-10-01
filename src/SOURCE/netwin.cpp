@@ -16,6 +16,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <BASE/Misc.h>
+
+// Compiler line-base word for netlo.cpp's ProcessAssert sites.
+DATA(0x0048f214) short gNbThrCtlLineBase;
+
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.601182;margin=0.610067;shape=0.521;size=0.881;calls=1.000;alternate=pol20:int is_netbios_avail(void)@0x000a6be0
@@ -313,4 +318,68 @@ VA(0x00414714, 0x1e)
 H1_C_LINKAGE char __cdecl nb_stat(int, unsigned short session)
 {
     return gNetStatus[session];
+}
+
+// Buka netwin.cpp:382-453; HoMM1 asserts through its netlo.cpp line base.
+VA(0x00414732, 0x26f)
+void nb_thr_ctl(void)
+{
+    NCB ncb;
+    tag_Node *pkt;
+    int keepRunning;
+    unsigned char result;
+    int i;
+    int sendComplete;
+
+    keepRunning = 1;
+    if (WaitForMultipleObjects(NETBIOS_THREAD_EVENT_COUNT, gNbEvents, 0, 0) == WAIT_TIMEOUT)
+        return;
+    if (WaitForSingleObject(gNbEvents[0], 0) == WAIT_OBJECT_0)
+        ResetEvent(gNbEvents[0]);
+    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
+        if (WaitForSingleObject(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST], 0) == WAIT_OBJECT_0) {
+            ResetEvent(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST]);
+            nb_recv_complete(i);
+        }
+    }
+    while (keepRunning) {
+        EnterCriticalSection(&gNbSndLock);
+        pkt = pop_node(&gNbFreeQueue);
+        if (pkt == 0)
+            pkt = pop_node(&gNbSndQueue);
+        LeaveCriticalSection(&gNbSndLock);
+        if (pkt == 0) {
+            keepRunning = 0;
+        } else {
+            memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
+            gNbCtlNcb.ncb_lsn = gNbSessLsn[pkt->sessionIndex];
+            if (gNbCtlNcb.ncb_lsn != NETBIOS_INVALID_ID) {
+                memcpy(gNbSessBuf, pkt->data, pkt->len);
+                gNbCtlNcb.ncb_buffer = gNbSessBuf;
+                gNbCtlNcb.ncb_length = pkt->len;
+                gNbCtlNcb.ncb_command = NCBSEND;
+                gNbCtlNcb.ncb_lana_num = gNetbiosLana;
+                sendComplete = 0;
+                while (!sendComplete) {
+                    result = Netbios(&gNbCtlNcb);
+                    switch (result) {
+                        case NRC_GOODRET:
+                            sendComplete = 1;
+                            break;
+                        case NRC_PENDING:
+                            ProcessAssert(0, "D:\\Heroes\\Source\\netlo.cpp", gNbThrCtlLineBase + 82);
+                            break;
+                        case NRC_SNUMOUT:
+                        case NRC_SCLOSED:
+                        case NRC_SABORT:
+                            gNetStatus[pkt->sessionIndex] &= ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            free(pkt);
+        }
+    }
 }

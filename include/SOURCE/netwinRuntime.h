@@ -20,6 +20,7 @@ H1_ENUM_BEGIN(NetbiosRuntimeConstant)
     NETBIOS_PACKET_HEADER_SIZE = 11,
     NETBIOS_INVALID_ID = 0xff,
     NETBIOS_THREAD_EVENT_COUNT = 9,
+    NETBIOS_RECEIVE_EVENT_FIRST = 2,
     NETBIOS_ADAPTER_STATUS_SIZE = 0x400,
     NETBIOS_RESET_SESSION_LIMIT_INDEX = 0,
     NETBIOS_RESET_NAME_LIMIT_INDEX = 2,
@@ -51,6 +52,8 @@ unsigned short nb_call(int, void *);
 unsigned short nb_listen(int, void *);
 void nb_arm_recv(int);
 void nb_close_session(int);
+void nb_recv_complete(int);
+void nb_thr_ctl(void);
 extern unsigned char *gNbListenName;
 
 extern unsigned char gNbMaxSess;
@@ -59,6 +62,7 @@ extern unsigned char gNetStatus[7];
 extern unsigned char gNbSessLsn[7];
 extern NCB gNbSessNcb[7];
 extern NCB gNbCtlNcb;
+extern unsigned char gNbSessBuf[];
 extern NetbiosName gNbNameBuf[7];
 extern CRITICAL_SECTION gNbRcvLock;
 extern CRITICAL_SECTION gNbSndLock;
