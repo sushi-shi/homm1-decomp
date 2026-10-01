@@ -20,6 +20,7 @@
 
 // Compiler line-base word for netlo.cpp's ProcessAssert sites.
 DATA(0x0048f214) short gNbThrCtlLineBase;
+DATA(0x0048f234) short gNbAddNameDoneLineBase;
 
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
@@ -381,5 +382,60 @@ void nb_thr_ctl(void)
             }
             free(pkt);
         }
+    }
+}
+
+// Buka netwin.cpp:455-475.
+VA(0x004149a1, 0xbb)
+void nb_add_name(void)
+{
+    if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
+        strcpy(reinterpret_cast<char *>(gNbSessBuf), gNbGroupName);
+        memcpy(gNbSessBuf + strlen(gNbGroupName), gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
+        memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
+        gNbCtlNcb.ncb_command = NCBDGSENDBC | ASYNCH;
+        gNbCtlNcb.ncb_num = gNbLocalNum;
+        gNbCtlNcb.ncb_length = strlen(gNbGroupName) + NCBNAMSZ;
+        gNbCtlNcb.ncb_buffer = gNbSessBuf;
+        gNbCtlNcb.ncb_lana_num = gNetbiosLana;
+        Netbios(&gNbCtlNcb);
+    }
+}
+
+// Buka netwin.cpp:477-518; HoMM1 reports failures with wsprintf and
+// OutputDebugString instead of ShutDown.
+VA(0x00414a5c, 0x1cc)
+void __stdcall nb_add_name_done(NCB *ncb)
+{
+    char buf[80];
+    int j;
+
+    ProcessAssert(ncb == &gNbSessNcb[gNbMaxSess], "D:\\Heroes\\Source\\netlo.cpp",
+                  gNbAddNameDoneLineBase + 3);
+    switch (ncb->ncb_retcode) {
+        case NRC_GOODRET:
+        case NRC_CANOCCR:
+            gNbLocalNum = ncb->ncb_num;
+            memcpy(gNbNameBuf[gNbMaxSess].bytes, ncb->ncb_name, NCBNAMSZ);
+            gNetStatus[gNbMaxSess] |= NETBIOS_SESSION_NAME_REGISTERED;
+            break;
+        case NRC_DUPNAME:
+        case NRC_INUSE:
+        case NRC_NAMCONF:
+        case NRC_DUPENV:
+            for (j = NCBNAMSZ - 1; j >= 0; j--) {
+                ncb->ncb_name[j]++;
+                if (gNbNameBuf[gNbMaxSess].bytes[j] != ncb->ncb_name[j])
+                    break;
+            }
+            Netbios(ncb);
+            break;
+        case NRC_CMDCAN:
+            break;
+        default:
+            wsprintfA(buf, "Add Name Error %02x", ncb->ncb_retcode);
+            OutputDebugStringA(buf);
+            gNetStatus[gNbMaxSess] |= NETBIOS_SESSION_ERROR;
+            break;
     }
 }

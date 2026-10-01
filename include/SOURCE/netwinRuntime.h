@@ -63,6 +63,8 @@ extern unsigned char gNbSessLsn[7];
 extern NCB gNbSessNcb[7];
 extern NCB gNbCtlNcb;
 extern unsigned char gNbSessBuf[];
+extern unsigned char gNbLocalNum;
+extern char *gNbGroupName;
 extern NetbiosName gNbNameBuf[7];
 extern CRITICAL_SECTION gNbRcvLock;
 extern CRITICAL_SECTION gNbSndLock;
