@@ -9,6 +9,12 @@
 #include <stdio.h>
 #include <string.h>
 
+extern char* cHeroLevel[];
+extern signed char gHeroSkillBonus[][9][HERO_PRIMARY_STAT_COUNT];
+extern int gbInNewGameSetup;
+void SRand(int);
+int SRandom(int, int);
+
 // donor PoL RVA 0x000c0790; preferred Buka symbol ?AICheckRetreat@combatManager@@QAEHXZ
 // donor Buka TU SOURCE/AI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.550932;margin=0.199965;shape=0.407;size=0.920;calls=0.857;alternate=pol20:int combatManager::AICheckRetreat(void)@0x000c0790
@@ -498,7 +504,64 @@ void hero::ApplyBattleLossTemps(void) {
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.312130;margin=0.246272;shape=0.276;size=0.445;calls=0.500;alternate=pol20:void hero::CheckLevel(void)@0x0006d83f
 VA(0x0046d663, 0x2f4)
-void hero::CheckLevel(void) {}
+void hero::CheckLevel(void) {
+    int lvl;
+    int i;
+    int stats[HERO_PRIMARY_STAT_COUNT];
+    int levelCount;
+    int highIndex;
+    char text[50];
+    int roll;
+
+    lvl = GetLevel(m_experience);
+    if (m_level == lvl)
+        return;
+    levelCount = lvl - m_level;
+    sprintf(gText, cHeroLevel[0], m_name);
+    if (levelCount == 1)
+        sprintf(text, cHeroLevel[1]);
+    else
+        sprintf(text, cHeroLevel[2], levelCount);
+    strcat(gText, text);
+    stats[0] = 0;
+    stats[1] = 0;
+    stats[2] = 0;
+    stats[3] = 0;
+    for (i = m_level + 1; i <= lvl; i++) {
+        highIndex = i - 2;
+        if (highIndex > 8)
+            highIndex = 8;
+        SRand(m_randomSeed + i * 30);
+        roll = SRandom(1, 100);
+        if (gHeroSkillBonus[m_unknown1c][highIndex][0] > roll) {
+            stats[0]++;
+        } else {
+            roll -= gHeroSkillBonus[m_unknown1c][highIndex][0];
+            if (gHeroSkillBonus[m_unknown1c][highIndex][1] > roll) {
+                stats[1]++;
+            } else {
+                roll -= gHeroSkillBonus[m_unknown1c][highIndex][1];
+                if (gHeroSkillBonus[m_unknown1c][highIndex][2] > roll)
+                    stats[2]++;
+                else
+                    stats[3]++;
+            }
+        }
+    }
+    for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
+        if (stats[i] > 0) {
+            m_primaryStats[i] += stats[i];
+            sprintf(text, "\n%s +%d", gStatNames[i], stats[i]);
+            strcat(gText, text);
+        }
+    }
+    m_level = lvl;
+    if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
+        gpSoundManager->SwitchAmbientMusic(52);
+        NormalDialog(gText, 1, -1, -1, 15, m_id, -1, 0, -1);
+        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    }
+}
 
 // donor PoL RVA 0x0006e0be; preferred Buka symbol ?UpdateHeroScreenStatusBar@@YIXAAUtag_message@@@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order

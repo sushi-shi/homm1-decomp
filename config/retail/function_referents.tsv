@@ -131,3 +131,5 @@ rva	name	provenance
 0x00047E4B	?Swap@armyGroup@@QAEXCPAV1@C@Z	swapManager::SwapMons passes byte slots around the destination group; body reads both slots with movsx byte [ebp+8]/[ebp+0x10] (ret 0xc)
 0x0000EF8C	?SplitArmyHandler@@YAFAAUtag_message@@@Z	swapManager::SplitMons passes it to DoDialog with the splitwin.bin window; Buka SplitArmyHandler correspondence, cdecl ret
 0x000439C1	?GetRandomArtifactId@game@@QAECXZ	advManager::GiveRandomArtifact calls it on gpGame with no arguments and stores AL; body returns 0xff or a byte artifact id
+0x00044637	?SRand@@YAXH@Z	hero::CheckLevel seeds with hero seed + level*30 (cdecl, one argument); body stores the seed and calls CRT srand, as Buka SRand
+0x0004455C	?SRandom@@YAHHH@Z	hero::CheckLevel draws SRandom(1, 100) (cdecl, two arguments, int result); Buka SRandom correspondence
