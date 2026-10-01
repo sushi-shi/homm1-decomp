@@ -10,7 +10,7 @@
 
 struct IDirectDraw;
 struct IUnknown;
-typedef long (__stdcall *DirectDrawCreateProc)(GUID *, IDirectDraw **, IUnknown *);
+typedef long(__stdcall* DirectDrawCreateProc)(GUID*, IDirectDraw**, IUnknown*);
 
 H1_ENUM_BEGIN(WingraphPaintConstant)
     WINGRAPH_WIDTH = 640,
@@ -74,16 +74,16 @@ struct WingPalette {
 struct WingImage {
     BITMAPINFOHEADER header;
     RGBQUAD colors[256];
-    void *bits;
+    void* bits;
 };
 
 extern "C" BOOL __stdcall WinGBitBlt(HDC, int, int, int, int, HDC, int, int);
 extern "C" BOOL __stdcall WinGStretchBlt(HDC, int, int, int, int, HDC, int, int, int, int);
-extern "C" UINT __stdcall WinGSetDIBColorTable(HDC, UINT, UINT, const RGBQUAD *);
+extern "C" UINT __stdcall WinGSetDIBColorTable(HDC, UINT, UINT, const RGBQUAD*);
 
-extern "C" BOOL __stdcall WinGRecommendDIBFormat(BITMAPINFO *);
+extern "C" BOOL __stdcall WinGRecommendDIBFormat(BITMAPINFO*);
 extern "C" HDC __stdcall WinGCreateDC();
-extern "C" HBITMAP __stdcall WinGCreateBitmap(HDC, BITMAPINFO *, void **);
+extern "C" HBITMAP __stdcall WinGCreateBitmap(HDC, BITMAPINFO*, void**);
 
 extern int giGraphicsType;
 extern int giMainVideoModeHeight;
@@ -93,11 +93,11 @@ extern int gbWinGraphBusy;
 extern HPALETTE hpalApp;
 extern HINSTANCE hDDrawLibrary;
 extern DirectDrawCreateProc lpDirectDrawCreate;
-extern IDirectDraw *lpDD;
-extern IDirectDrawSurface *lpDDSPrimary;
-extern IDirectDrawSurface *lpDDSOne;
-extern IDirectDrawClipper *lpClipper;
-extern IDirectDrawPalette *lpDDPal;
+extern IDirectDraw* lpDD;
+extern IDirectDrawSurface* lpDDSPrimary;
+extern IDirectDrawSurface* lpDDSOne;
+extern IDirectDrawClipper* lpClipper;
+extern IDirectDrawPalette* lpDDPal;
 extern short gDDRestoreLineBase;
 extern short gDDSetPaletteLineBase;
 extern short gDDInitializePaletteLineBase;
@@ -122,7 +122,7 @@ extern HBITMAP gbmOldMonoBitmap;
 extern WingImage screenImage;
 extern WingPalette LogicalPalette;
 extern int Orientation;
-extern void *lpInitWin;
+extern void* lpInitWin;
 extern int giScrollX;
 extern int giScrollY;
 extern int giTtlBlts;
@@ -130,9 +130,9 @@ extern int giMainVideoModeColorDepth;
 extern int gbFullCombatScreenDrawn;
 extern int gbLimitedCombatUpdatePalette;
 
-
 void DDRestoreDisplayMode();
-void DDSD(int, char *, int);
+void SetFullScreenStatus(int);
+void DDSD(int, char*, int);
 int DDSetPalette();
 int SetPalette();
 void DDCleanUpWinGraphics();
@@ -140,10 +140,10 @@ void DDInitializePalette();
 void WGInitializePalette();
 void WGInitGraphics();
 void WGCleanUpWinGraphics();
-int DDAppPaint(void *, void *);
-int WGAppPaint(void *, void *);
-void DDUpdatePalette(signed char *);
-void WGUpdatePalette(signed char *);
+int DDAppPaint(void*, void*);
+int WGAppPaint(void*, void*);
+void DDUpdatePalette(signed char*);
+void WGUpdatePalette(signed char*);
 int DDQueryNewPalette();
 int WGQueryNewPalette();
 void DisconnectDLLs();
@@ -152,11 +152,11 @@ void InitGraphics();
 void DDInitGraphics();
 void CreatePrimary();
 void SetupClipper();
-IDirectDrawSurface *DDCreateSurface(unsigned long, unsigned long, int);
+IDirectDrawSurface* DDCreateSurface(unsigned long, unsigned long, int);
 void RestoreDisplayMode();
 void InitializePalette();
-int AppPaint(void *, void *);
-void UpdatePalette(signed char *);
+int AppPaint(void*, void*);
+void UpdatePalette(signed char*);
 void CleanUpWinGraphics();
 int QueryNewPalette();
 
