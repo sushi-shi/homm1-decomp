@@ -674,7 +674,46 @@ void advManager::DemobilizeCurrHero(void)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.489027;margin=0.082311;shape=0.312;size=0.827;calls=0.923;alternate=pol20:void advManager::SetTownContext(int)@0x00064101
 VA(0x004301aa, 0x255)
-void advManager::SetTownContext(int) {}
+void advManager::SetTownContext(signed char townId) {
+    short k;
+    signed char townNo;
+    signed char wasVisible;
+    town* townPointer;
+
+    DeactivateCurrHero();
+    wasVisible = gpMouseManager->IsVis();
+    gpMouseManager->ReallyHidePointer();
+    gpCurPlayer->m_currentTown = townId;
+    townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
+    m_mapOriginX = townPointer->m_x - 7;
+    m_mapOriginY = townPointer->m_y - 7;
+    townNo = 0;
+    for (k = 0; k < gpCurPlayer->m_townCount; k++) {
+        if (gpCurPlayer->m_townIds[k] == townId)
+            townNo = k;
+    }
+    if (gpCurPlayer->m_townLocatorPage > townNo)
+        gpCurPlayer->m_townLocatorPage = townNo;
+    else if (gpCurPlayer->m_townLocatorPage + 3 < townNo)
+        gpCurPlayer->m_townLocatorPage = townNo - 3;
+    UpdateHeroLocators(1, 1);
+    UpdateTownLocators(1, 1);
+    HideRoute(0, 0, 1);
+    UpdBottomView(1, 1, 1);
+    UpdateRadar(1, 0);
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    UpdateScreen(0, 0);
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    townNo = giGroundToTerrain[GetCell(townPointer->m_x, townPointer->m_y)->m_tileIndex];
+    if (m_currentTerrain != townNo) {
+        m_currentTerrain = townNo;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    if (wasVisible)
+        gpMouseManager->ReallyShowPointer();
+    gpInputManager->m_field_0x34a = 1;
+    m_lastHoverCell = 0;
+}
 
 // donor PoL RVA 0x00064318; preferred Buka symbol ?SetHeroContext@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

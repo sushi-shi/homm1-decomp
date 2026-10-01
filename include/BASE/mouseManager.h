@@ -19,7 +19,7 @@ public:
     short m_cursorFrame;
     short m_cursorReady;
     // Constructor and UpdateScreenRegion establish the packed tail.
-    unsigned char m_pointerFlags;
+    signed char m_pointerFlags;
     // CheckDoMain compares the pointer position less this offset with the
     // last drawn position at +0x5b/+0x5d.
     short m_hotspotX;

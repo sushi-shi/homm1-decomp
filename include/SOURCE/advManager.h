@@ -174,7 +174,7 @@ public:
     void DeactivateCurrHero(void);
     void MobilizeCurrHero(int);
     void DemobilizeCurrHero(void);
-    void SetTownContext(int);
+    void SetTownContext(signed char);
     void SetHeroContext(signed char, int);
     void DoHeroKnob(void);
     void DoTownKnob(void);
