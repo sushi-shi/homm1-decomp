@@ -396,8 +396,56 @@ void townManager::RedrawTownScreen(void)
 // donor PoL RVA 0x0001771d; preferred Buka symbol ?SplitArmy@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.732616;margin=0.021648;shape=0.430;size=0.991;calls=1.000;strings=splitwin.bin;alternate=pol20:void townManager::SplitArmy(void)@0x0001771d
+// Buka TOWNMGR.cpp:1923-1970; HoMM1 always names both armies and merges
+// into the first matching slot of the target army.
 VA(0x0040add1, 0x37e)
-void townManager::SplitArmy(void) {}
+void townManager::SplitArmy(void)
+{
+    short messageId = 1;
+    tag_message message;
+    short merge;
+    short numberId = TOWN_SPLIT_SETUP_AMOUNT_CONTROL;
+    short n;
+
+    m_heroWindow1 = new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
+    if (m_heroWindow1 == 0)
+        MemError();
+    m_splitAmount = 0;
+    m_splitMaximum = m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot];
+    message.type = MESSAGE_WIDGET;
+    sprintf(gText, "Move how many %s troops from %s to %s?",
+            gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]],
+            m_swapStrip == m_heroStrip ? "Hero's Army" : "Garrison",
+            m_pendingStrip == m_heroStrip ? "Hero's Army" : "Garrison");
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = gText;
+    m_heroWindow1->BroadcastMessage(message);
+    sprintf(gText, "%d", m_splitAmount);
+    message.payload.widget.id = TOWN_SPLIT_SETUP_AMOUNT_CONTROL;
+    message.payload.widget.data.text = gText;
+    m_heroWindow1->BroadcastMessage(message);
+    gpWindowManager->DoDialog(m_heroWindow1, SplitArmyHandler, 0);
+    delete m_heroWindow1;
+    if (gpWindowManager->m_dialogResult == TOWN_DIALOG_BUTTON_2) {
+        merge = 0;
+        for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
+            if (m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]
+                == m_pendingStrip->m_army->m_creatureTypes[n]) {
+                merge = 1;
+                break;
+            }
+        }
+        if (merge)
+            m_pendingStrip->m_army->m_creatureCounts[n] += m_splitAmount;
+        else {
+            m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] =
+                m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot];
+            m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot] = m_splitAmount;
+        }
+        m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot] -= m_splitAmount;
+    }
+}
 
 // HoMM1 re-evaluates the pending strip command when the shift qualifier
 // changes, then refreshes the status line.
