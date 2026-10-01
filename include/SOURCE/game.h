@@ -101,6 +101,9 @@ public:
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
+    char m_unknown16e59[9];
+    // TavernHandler advances this word as its animation counter (Buka name).
+    short m_viewArmyResult;
     hero* GetHero(int id) {
         return &m_heroRecs[id];
     }

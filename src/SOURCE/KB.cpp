@@ -9,12 +9,14 @@
 #include <H1/KB.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
+#include <SOURCE/wingraph.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -472,7 +474,33 @@ void QuickViewWait(void) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.679533;margin=0.555045;shape=0.387;size=0.991;calls=0.692;strings=mnuAdv|mnuCmbt|mnuDflt;alternate=pol20:void InitVars(void)@0x0009c111
 VA(0x004539dd, 0x1cb)
-void InitVars(void) {}
+void InitVars(void) {
+    int i;
+    NULL_SAMPLE2.pSample = 0;
+    NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
+    gbMapExtraCleared = 1;
+    gGameCommand = -1;
+    gPalette = 0;
+    gpPhilAI->m_debugFont = 0;
+    gbCombatSurrender = 0;
+    gpGame->m_viewArmyResult = 0;
+    gbGameOver = 0;
+    for (i = 0; i < 140; i++)
+        giGroundToTerrain[i] = i / 20;
+    for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
+        giTerrainCost[i][0] = TerrainStepCost(i, 0);
+        giTerrainCost[i][1] = TerrainStepCost(i, 1);
+    }
+    strcpy(cNetBoxLine[0], "");
+    strcpy(cNetBoxLine[1], "");
+    for (i = 0; i < 255; i++)
+        ppMapExtra[i] = 0;
+    hmnuDflt = LoadMenuA((HINSTANCE)hInstApp, "mnuDflt");
+    hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
+    hmnuAdv = LoadMenuA((HINSTANCE)hInstApp, "mnuAdv");
+    hmnuTown = LoadMenuA((HINSTANCE)hInstApp, "mnuTown");
+    LogStr("LoadMenus", (long)hmnuDflt, (long)hmnuCmbt, (long)hmnuAdv, (long)hmnuTown, (long)hInstApp);
+}
 
 // donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -593,7 +621,42 @@ void AddNetBoxLine(char* text) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
 VA(0x00454f8a, 0x14f)
-void ShutDown(char* msg) {}
+void ShutDown(char* message) {
+    char buffer[768];
+    if (bInShutDown)
+        return;
+    bInShutDown = 1;
+    gbClosingApp = 1;
+    buffer[0] = 0;
+    if (message) {
+        strcpy(buffer, message);
+        SetFullScreenStatus(0);
+        LogStr(buffer);
+        MessageBoxA((HWND)hwndApp, buffer, "Unexpected Program Termination", MB_ICONHAND);
+    }
+    ClearMapExtra();
+    UnloadSystemwideIcons();
+    if (gbRemoteOn)
+        HandleRemoteSuddenExit();
+    if (gPalette) {
+        gpResourceManager->Dispose(gPalette);
+        gPalette = 0;
+    }
+    if (gpPhilAI->m_debugFont) {
+        gpResourceManager->Dispose(gpPhilAI->m_debugFont);
+        gpPhilAI->m_debugFont = 0;
+    }
+    gpExec->ShutDownSystem();
+    RemoteCleanup();
+    if (gEventHandle) {
+        CloseHandle(gEventHandle);
+        gEventHandle = 0;
+    }
+    DeleteMainClasses();
+    AppExit();
+    PrintMemoryLeaks();
+    exit(0);
+}
 
 // donor PoL RVA 0x0009e306; preferred Buka symbol ?FileError@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
