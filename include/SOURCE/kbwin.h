@@ -66,7 +66,19 @@ H1_ENUM_BEGIN(PrefsConstant)
     KBWIN_MESSAGE_FILTER_SIZE = 0x400,
     KBWIN_CLASS_STYLE = 0x100b,
     KBWIN_WINDOWED_STYLE = 0x14cf0000,
-    KBWIN_FULLSCREEN_STYLE = 0x14000000
+    KBWIN_FULLSCREEN_STYLE = 0x14000000,
+    KBWIN_TRACE_DEBUG_LEVEL = 4,
+    KBWIN_TRACE_TICK_MODULUS = 100000,
+    KBWIN_TRACE_TICK_DIVISOR = 100,
+    KBWIN_PROCESS_MESSAGE_MAX = 0x3ff,
+    KBWIN_TIMER_ID = 1,
+    KBWIN_TIMER_INTERVAL = 10,
+    KBWIN_POLL_INTERVAL = 5,
+    KBWIN_CYCLE_INTERVAL = 150,
+    KBWIN_CYCLE_DIRECT_DRAW_DELAY = 300,
+    KBWIN_GRAPHICS_DIRECT_DRAW = 1,
+    KBWIN_MIN_WIDTH = 240,
+    KBWIN_MIN_HEIGHT = 160
 H1_ENUM_END(PrefsConstant)
 // clang-format on
 
@@ -78,10 +90,18 @@ extern int giCDDrive;
 extern void *hInstApp;
 extern void *gEventHandle;
 extern char gcCommandLine[];
-extern char bProcessMessage[];
+extern unsigned char bProcessMessage[];
 extern char szAppName[];
 extern char szTitle[];
 extern void *hmnuDflt;
+extern long lTemp;
+extern struct tagRECT rcTemp;
+extern int iTempX;
+extern int iTempY;
+extern long lLastGTimerTickCount;
+extern long lLastCycleTickCount;
+extern int gbClosingApp;
+extern int gbHeroMoving;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {
@@ -126,6 +146,10 @@ int EarlySetup(void);
 int AppInit(void *, void *, int, char *);
 int oldmain(void);
 int HandleAppSpecificMenuCommands(int);
+void EarlyResizeWindow(int, int, int, int);
+int GameUnsaved(void);
+int KeyboardMessageHandler(void *, unsigned int, unsigned int, long);
+int MouseMessageHandler(void *, unsigned int, unsigned int, long);
 long __stdcall AppWndProc(void *, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);

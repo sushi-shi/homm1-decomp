@@ -11,6 +11,7 @@
 #include <io.h>
 #include <mmsystem.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <BASE/Misc.h>
@@ -18,6 +19,7 @@
 #include <BASE/soundmgr.h>
 #include <H1/KB.h>
 #include <H1/All.h>
+#include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>
 
 // donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
@@ -154,8 +156,126 @@ int AppIdle(void) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x0045bb45, 0x617)
-long int __stdcall AppWndProc(void*, unsigned int, unsigned int, long int) {
-    return 0;
+long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int messageParam, long int messageData)
+{
+    if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
+        LogStr("AWP", KBTickCount() % KBWIN_TRACE_TICK_MODULUS / KBWIN_TRACE_TICK_DIVISOR,
+               reinterpret_cast<long>(window), message, messageParam, messageData); // Logged handle value.
+    if (message > KBWIN_PROCESS_MESSAGE_MAX || bProcessMessage[message] == 0)
+        return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
+
+    switch (message) {
+    case WM_CREATE:
+        srand(KBTickCount());
+        SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, 0);
+        GdiSetBatchLimit(1);
+        return 0;
+    case WM_KEYDOWN:
+    case WM_KEYUP:
+        if (KeyboardMessageHandler(window, message, messageParam, messageData) == 0)
+            return 0;
+        break;
+    case WM_MOUSEMOVE:
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONUP:
+    case WM_LBUTTONDBLCLK:
+    case WM_RBUTTONDOWN:
+    case WM_RBUTTONUP:
+    case WM_RBUTTONDBLCLK:
+        if (MouseMessageHandler(window, message, messageParam, messageData) == 0)
+            return 0;
+        break;
+    case WM_TIMER:
+        lTemp = KBTickCount();
+        if (lLastGTimerTickCount + KBWIN_POLL_INTERVAL < lTemp) {
+            lLastGTimerTickCount = lTemp;
+            SetReady2Poll();
+        }
+        if (lLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
+            lLastCycleTickCount = lTemp;
+            if (giGraphicsType == KBWIN_GRAPHICS_DIRECT_DRAW && giMainVideoModeColorDepth != 8) {
+                lLastCycleTickCount += KBWIN_CYCLE_DIRECT_DRAW_DELAY;
+                if (gbHeroMoving)
+                    return 0;
+            }
+            CycleColors();
+        }
+        return 0;
+    case MM_MCINOTIFY:
+        if (messageParam == MCI_NOTIFY_SUCCESSFUL)
+            gpSoundManager->CDPlay(gpSoundManager->m_cdTrack, 0, gpSoundManager->m_cdPlayFrame, 1);
+        break;
+    case WM_ACTIVATEAPP:
+        gbForegroundApp = messageParam;
+        return 0;
+    case WM_ERASEBKGND:
+        return 1;
+    case WM_MOVE:
+        if (hwndApp == 0)
+            return 0;
+        lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+        if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
+            && gConfig.gfx[giCurExe].fullScreen == 0) {
+            GetWindowRect(static_cast<HWND>(window), &rcTemp);
+            gConfig.gfx[giCurExe].x = rcTemp.left;
+            gConfig.gfx[giCurExe].y = rcTemp.top;
+            WritePrefs();
+        }
+        return 0;
+    case WM_SIZE:
+        if (hwndApp != 0) {
+            lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+            gbMinimized = lTemp & WS_MINIMIZE;
+            if ((lTemp & WS_MINIMIZE) == 0)
+                EarlyResizeWindow(0, 0, 0, 0);
+            if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0
+                && (LOWORD(messageData) < KBWIN_MIN_WIDTH || HIWORD(messageData) < KBWIN_MIN_HEIGHT)) {
+                iTempX = LOWORD(messageData) > KBWIN_MIN_WIDTH ? LOWORD(messageData) : KBWIN_MIN_WIDTH;
+                iTempY = HIWORD(messageData) > KBWIN_MIN_HEIGHT ? HIWORD(messageData) : KBWIN_MIN_HEIGHT;
+                ResizeWindow(-1, -1, iTempX, iTempY);
+                return 0;
+            }
+        }
+        iMainWinScreenWidth = LOWORD(messageData);
+        iMainWinScreenHeight = HIWORD(messageData);
+        if (iMainWinScreenWidth < 1)
+            iMainWinScreenWidth = 1;
+        if (iMainWinScreenHeight < 1)
+            iMainWinScreenHeight = 1;
+        if (hwndApp != 0 && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
+            && gConfig.gfx[giCurExe].fullScreen == 0) {
+            gConfig.gfx[giCurExe].width = iMainWinScreenWidth;
+            gConfig.gfx[giCurExe].height = iMainWinScreenHeight;
+            WritePrefs();
+        }
+        return 0;
+    case WM_COMMAND:
+        return AppCommand(window, message, messageParam, messageData);
+    case WM_PALETTECHANGED:
+        if (reinterpret_cast<unsigned int>(window) == messageParam) // Win32 passes the changing window in WPARAM.
+            break;
+    case WM_QUERYNEWPALETTE:
+        return QueryNewPalette();
+    case WM_PAINT:
+        AppPaint(window, 0);
+        return 0;
+    case WM_CLOSE:
+        if (window == hwndApp) {
+            if (GameUnsaved() != 0) {
+                NormalDialog("Are you sure you want to quit?", 2, -1, -1, -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                    DestroyWindow(static_cast<HWND>(window));
+                return 0;
+            }
+        }
+    case WM_DESTROY:
+        gbClosingApp = 1;
+        PostQuitMessage(0);
+    case WM_QUIT:
+        ShutDown(0);
+        break;
+    }
+    return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
 }
 
 // Identity: PE export AppAbout, ordinal 1.
