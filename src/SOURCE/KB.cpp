@@ -244,6 +244,62 @@ int InterpretCommandLine(void) {
     return 1;
 }
 
+extern char* gInitMenuHelp[];
+extern int giMenuCommand;
+
+// Buka 2.1 InitMenuHandler reduced to HoMM1's right-click help and button
+// release; the main menu draws its own hover frames.
+VA(0x00451244, 0x1b6)
+short InitMenuHandler(tag_message& message) {
+    int handled = 0;
+    int helpIndex;
+
+    PollSound();
+    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+        if (message.payload.widget.command == WIDGET_NOTIFY_SELECT
+            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK) {
+            helpIndex = -1;
+            switch (message.payload.widget.id) {
+                case 1:
+                    helpIndex = 0;
+                    break;
+                case 2:
+                    helpIndex = 1;
+                    break;
+                case 3:
+                    helpIndex = 2;
+                    break;
+                case 4:
+                    helpIndex = 3;
+                    break;
+                case 5:
+                    helpIndex = 4;
+                    break;
+                case 6:
+                    ;
+            }
+            if (helpIndex >= 0)
+                NormalDialog(gInitMenuHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+        }
+    } else if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                if (message.payload.widget.id > 0 && message.payload.widget.id <= 6)
+                    handled = 1;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (handled || giMenuCommand != -1) {
+        gpWindowManager->m_dialogResult = message.payload.widget.id;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
 VA(0x004513fa, 0x14)
 short NullHandler(tag_message&) {
     return MESSAGE_DISPATCH_CONSUME;
