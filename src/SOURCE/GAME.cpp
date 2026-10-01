@@ -11,6 +11,7 @@
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
 
+#include <io.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -54,13 +55,64 @@ void combatManager::ViewArmy(class army*, int) {}
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.582104;margin=0.473963;shape=0.500;size=0.883;calls=0.885;alternate=pol20:void playerData::Write(int)@0x000708b0
 VA(0x00438c00, 0x1f8)
-void playerData::Write(int) {}
+void playerData::Write(int file) {
+    char unused[52];
+
+    write(file, m_unknown00, sizeof(m_unknown00));
+    write(file, &m_unknown11, 1);
+    write(file, &m_color, 1);
+    write(file, &m_heroCount, 1);
+    write(file, &m_currentHero, 1);
+    write(file, &m_heroLocatorPage, 1);
+    write(file, m_heroIds, sizeof(m_heroIds));
+    write(file, m_availableHeroIds, sizeof(m_availableHeroIds));
+    memset(unused, 0, 50);
+    write(file, unused, 50);
+    write(file, &m_unknown52, 1);
+    write(file, &m_unknown53, 1);
+    write(file, &m_unknown54, 1);
+    write(file, &m_unknown55, 1);
+    write(file, &m_townCount, 1);
+    write(file, &m_currentTown, 1);
+    write(file, &m_townLocatorPage, 1);
+    write(file, m_townIds, sizeof(m_townIds));
+    write(file, m_resources, sizeof(m_resources));
+    write(file, m_aiData.m_income, sizeof(m_aiData.m_income));
+    write(file, &m_unknown99[1], 1);
+    write(file, &m_unknown99[1], 1);
+    write(file, m_obelisksVisited, sizeof(m_obelisksVisited));
+}
 
 // donor PoL RVA 0x00070aed; preferred Buka symbol ?Read@playerData@@QAEXH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.555449;margin=0.750197;shape=0.444;size=0.878;calls=0.880;alternate=pol20:void playerData::Read(int)@0x00070aed
 VA(0x00438df8, 0x1e8)
-void playerData::Read(int) {}
+void playerData::Read(int file) {
+    char unused[52];
+
+    read(file, m_unknown00, sizeof(m_unknown00));
+    read(file, &m_unknown11, 1);
+    read(file, &m_color, 1);
+    read(file, &m_heroCount, 1);
+    read(file, &m_currentHero, 1);
+    read(file, &m_heroLocatorPage, 1);
+    read(file, m_heroIds, sizeof(m_heroIds));
+    read(file, m_availableHeroIds, sizeof(m_availableHeroIds));
+    read(file, unused, 50);
+    read(file, &m_unknown52, 1);
+    read(file, &m_unknown53, 1);
+    read(file, &m_unknown54, 1);
+    read(file, &m_unknown55, 1);
+    read(file, &m_townCount, 1);
+    read(file, &m_currentTown, 1);
+    read(file, &m_townLocatorPage, 1);
+    read(file, m_townIds, sizeof(m_townIds));
+    read(file, m_resources, sizeof(m_resources));
+    read(file, m_aiData.m_income, sizeof(m_aiData.m_income));
+    read(file, &m_unknown99[1], 1);
+    read(file, &m_unknown99[1], 1);
+    read(file, m_obelisksVisited, sizeof(m_obelisksVisited));
+}
 
 // donor PoL RVA 0x00070d1a; preferred Buka symbol ?NextHero@playerData@@QAEHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order

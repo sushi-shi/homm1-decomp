@@ -51,7 +51,12 @@ public:
     signed char m_heroLocatorPage;
     signed char m_heroIds[PLAYER_HERO_CAPACITY];
     signed char m_availableHeroIds[2];
-    char m_unknown20[0x36];
+    char m_unknown20[0x32];
+    // Saved one byte at a time between the hero and town blocks.
+    signed char m_unknown52;
+    signed char m_unknown53;
+    signed char m_unknown54;
+    signed char m_unknown55;
     signed char m_townCount;
     signed char m_currentTown;
     signed char m_townLocatorPage;
