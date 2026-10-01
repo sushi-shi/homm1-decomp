@@ -500,12 +500,82 @@ int game::GetLuck(class hero*, class army*, class town*) {
     return 0;
 }
 
+// Buka 2.1 keeps the scan cursor in file statics.
+static int s_adjacentMonsterEndX;
+static int s_adjacentMonsterEndY;
+static int s_adjacentMonsterX;
+static int s_adjacentMonsterY;
+static int s_adjacentMonsterMinX;
+static int s_adjacentMonsterMinY;
+
 // donor PoL RVA 0x00069bef; preferred Buka symbol ?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.502628;margin=0.574839;shape=0.364;size=0.953;calls=0.667;alternate=pol20:int advManager::FindAdjacentMonster(int, int, int *, int *, int, int)@0x00069bef
 VA(0x0044471a, 0x350)
-signed char advManager::FindAdjacentMonster(int, int, int*, int*, int, int) {
+signed char advManager::FindAdjacentMonster(
+    int originX, int originY, int* monsterX, int* monsterY, int excludedX, int excludedY
+) {
+    s_adjacentMonsterEndX = originX + 2;
+    s_adjacentMonsterEndY = originY + 2;
+
+    if (originX > 0 && originY > 0 && originX < MAP_CELL_GRID_SIZE - 1
+        && originY < MAP_CELL_GRID_SIZE - 1) {
+        for (s_adjacentMonsterX = originX - 1; s_adjacentMonsterX < s_adjacentMonsterEndX;
+             ++s_adjacentMonsterX) {
+            for (s_adjacentMonsterY = originY - 1; s_adjacentMonsterY < s_adjacentMonsterEndY;
+                 ++s_adjacentMonsterY) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                    if (s_adjacentMonsterY < originY) {
+                        if ((GetCell(originX, originY)->m_objectIndex == 0xff
+                             || (GetCell(originX, originY)->m_flags & 0x80))
+                            && (s_adjacentMonsterX != excludedX
+                                || s_adjacentMonsterY != excludedY))
+                            goto foundAdjacentMonster;
+                    } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
+                        goto foundAdjacentMonster;
+                    }
+                }
+            }
+        }
+    } else {
+        if (originX == MAP_CELL_GRID_SIZE - 1)
+            s_adjacentMonsterEndX = originX + 1;
+        if (originY == MAP_CELL_GRID_SIZE - 1)
+            s_adjacentMonsterEndY = originY + 1;
+        if (originX == 0)
+            s_adjacentMonsterMinX = 0;
+        else
+            s_adjacentMonsterMinX = originX - 1;
+        if (originY == 0)
+            s_adjacentMonsterMinY = 0;
+        else
+            s_adjacentMonsterMinY = originY - 1;
+
+        for (s_adjacentMonsterX = s_adjacentMonsterMinX; s_adjacentMonsterX < s_adjacentMonsterEndX;
+             ++s_adjacentMonsterX) {
+            for (s_adjacentMonsterY = s_adjacentMonsterMinY;
+                 s_adjacentMonsterY < s_adjacentMonsterEndY;
+                 ++s_adjacentMonsterY) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                    if (s_adjacentMonsterY < originY) {
+                        if ((GetCell(originX, originY)->m_objectIndex == 0xff
+                             || (GetCell(originX, originY)->m_flags & 0x80))
+                            && (s_adjacentMonsterX != excludedX
+                                || s_adjacentMonsterY != excludedY))
+                            goto foundAdjacentMonster;
+                    } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
+                        goto foundAdjacentMonster;
+                    }
+                }
+            }
+        }
+    }
     return 0;
+
+foundAdjacentMonster:
+    *monsterX = s_adjacentMonsterX;
+    *monsterY = s_adjacentMonsterY;
+    return 1;
 }
 
 // donor PoL RVA 0x0008111f; preferred Buka symbol ?SetupAdjacentMons@game@@QAEXXZ
