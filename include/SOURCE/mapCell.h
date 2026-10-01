@@ -17,7 +17,13 @@ class mapCell {
 public:
     // Tile index read zero-extended into the terrain lookup table.
     unsigned char m_tileIndex;
-    char m_unknown01[5];
+    char m_unknown01;
+    // XformToCastle shifts the town's lower rows by twelve object frames
+    // and its top row by twelve overlay frames.
+    unsigned char m_objectIndex;
+    char m_unknown03;
+    unsigned char m_overlayIndex;
+    char m_unknown05;
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
     unsigned char m_flags;
     unsigned char m_unknown07;

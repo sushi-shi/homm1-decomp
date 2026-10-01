@@ -61,7 +61,8 @@ public:
     char m_unknownd0a0[0x5100];
     signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
-    char m_unknown1295d[0x28];
+    signed char m_townOwners[GAME_TOWN_COUNT];
+    char m_unknown12981[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
     char m_unknown1431d[0x24];
     mineRecord m_mines[GAME_MINE_COUNT];

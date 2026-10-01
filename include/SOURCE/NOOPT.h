@@ -4,7 +4,8 @@
 extern short gNooptAssertLine;
 extern char gNooptAssertFile[];
 
-void DelayTil(int *);
+void DelayTicks(int);
+void DelayTil(long *);
 void DelayMilli(long);
 void DelayTilMilli(long);
 
