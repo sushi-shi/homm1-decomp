@@ -191,6 +191,25 @@ void townManager::RedrawTownScreen(void)
 VA(0x0040add1, 0x37e)
 void townManager::SplitArmy(void) {}
 
+// HoMM1 re-evaluates the pending strip command when the shift qualifier
+// changes, then refreshes the status line.
+VA(0x0040b14f, 0xce)
+void townManager::ShiftQualChange(void)
+{
+    tag_message message;
+
+    if (m_swapStrip != m_pendingStrip
+        && (m_command == TOWN_ARMY_COMMAND_NONE || m_command == TOWN_ARMY_COMMAND_SPLIT
+            || m_command == TOWN_ARMY_COMMAND_MERGE || m_command == TOWN_ARMY_COMMAND_SWAP))
+        SetArmyCommand(gpInputManager->GetModifiers() & TOWN_SHIFT_QUALIFIER_MASK);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = TOWN_STATUS_TEXT_CONTROL;
+    message.payload.widget.data.text = m_statusText;
+    m_townWindow->BroadcastMessage(message);
+    m_townWindow->DrawWindow();
+}
+
 // donor PoL RVA 0x00017ab2; preferred Buka symbol ?ResetStrips@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.515580;margin=0.398432;shape=0.375;size=0.860;calls=1.000;alternate=pol20:void townManager::ResetStrips(void)@0x00017ab2

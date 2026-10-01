@@ -28,6 +28,19 @@ H1_ENUM_BEGIN(TownManagerStorageConstant)
 H1_ENUM_END(TownManagerStorageConstant)
 // clang-format on
 
+// clang-format off
+H1_ENUM_BEGIN(TownArmyCommand)
+    TOWN_ARMY_COMMAND_NONE = -1,
+    TOWN_ARMY_COMMAND_SELECT = 0,
+    TOWN_ARMY_COMMAND_VIEW = 1,
+    TOWN_ARMY_COMMAND_MERGE = 2,
+    TOWN_ARMY_COMMAND_SWAP = 3,
+    TOWN_ARMY_COMMAND_VIEW_HERO = 4,
+    TOWN_ARMY_COMMAND_SPLIT = 5,
+    TOWN_SHIFT_QUALIFIER_MASK = 3
+H1_ENUM_END(TownArmyCommand)
+// clang-format on
+
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
 // fix these packed offsets; names follow Buka where the use matches.
 #pragma pack(push, 1)
@@ -50,7 +63,7 @@ public:
     bankBox *m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     short m_lastHoverId;
-    signed char m_unknownf1;
+    H1_ENUM_STORAGE(TownArmyCommand, signed char) m_command;
     signed char m_unknownf2;
     short m_unknownf3;
     short m_unknownf5;
