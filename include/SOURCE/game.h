@@ -4,6 +4,7 @@
 // 114 methods, 0 own-virtual, 0 static data.
 
 #include <H1/Macros.h>
+#include <SOURCE/mapCell.h>
 
 // forward declarations:
 class army;
@@ -43,8 +44,8 @@ public:
     void InitCampaignMap(void);
     int MineTypesOwned(int, int);
     int SetupPuzzlePieces(int, int);
-    int IsMobile(int);
-    class fullMap * GetWorldMapData(void);
+    signed char IsMobile(signed char);
+    class mapCell (* GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
     int CreateBoat(int, int, int);
     int Scan(signed char *, int, int);
     int RandomScan(signed char *, int, int, int, signed char);
@@ -134,4 +135,6 @@ public:
     void GetVictoryConditionText(char *);
     int GetSideDesc(char *, int, int);
 };
+
+extern game *gpGame;
 #endif // HOMM1_SOURCE_GAME_H

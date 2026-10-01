@@ -2,6 +2,9 @@
 
 #include <match.h>
 
+#include <BASE/BMAP2.h>
+#include <BASE/MISC_TYPES.h>
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 
@@ -19,6 +22,18 @@ void CheckDoMain(int firstValue, int doMain) {}
 // Both donors retain this intentionally empty status hook; retail has no side effects.
 VA(0x0041a105, 0x10)
 void ShowStatus() {}
+
+// HoMM1-only AI status line drawn with philAI's debug font across the bottom
+// twenty screen rows; retail gates it on the second debug level.
+VA(0x0041a115, 0x8c)
+void philAI::ShowDebugText(char *text)
+{
+    if (giDebugLevel >= 2) {
+        FillBitmapArea(gpWindowManager->m_screen, 0, 460, 640, 20, 0);
+        m_debugFont->DrawBoundedString(text, 0, 464, 640, 16, 1, 0);
+        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 460, 640, 20, 0, 460);
+    }
+}
 
 // Preferred Buka's three build arrays, plus HoMM1's surviving debug-font owner.
 VA(0x0041a1a1, 0x5e)

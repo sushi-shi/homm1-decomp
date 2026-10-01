@@ -3,5 +3,6 @@
 
 class bitmap;
 void DimBitmapArea(bitmap *, int, int, int, int);
+void FillBitmapArea(bitmap *, int, int, int, int, int);
 
 #endif // HOMM1_BASE_BMAP2_H

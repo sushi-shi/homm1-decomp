@@ -29,7 +29,6 @@
 #include <BASE/textWidget.h>
 #include <BASE/tileset.h>
 #include <BASE/widget.h>
-#include <EDITOR/fullMap.h>
 #include <H1/Ints.h>
 #include <H1/Macros.h>
 #include <H1/Types.h>
@@ -43,6 +42,7 @@
 #include <SOURCE/game.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/hexcell.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/highScoreManager.h>
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>

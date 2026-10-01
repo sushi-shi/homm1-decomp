@@ -37,6 +37,7 @@ public:
     // --- constructors ---
     philAI(void);
     // --- methods ---
+    void ShowDebugText(char *);
     void DoAllHeroInteractions(void);
     void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);

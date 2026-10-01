@@ -7,24 +7,117 @@
 #include <H1/Macros.h>
 #include <SOURCE/armySizeNames.h>
 #include <SOURCE/cursorTypes.h>
+#include <SOURCE/mapCell.h>
 
 // forward declarations:
 class armyGroup;
 class hero;
+class heroWindow;
+class icon;
+class iconWidget;
 class mapCell;
+class sample;
+class tileset;
 class town;
+class widget;
 struct SAMPLE2;
 struct SMapChange;
 struct tag_message;
 
-class advManager {
+// clang-format off
+H1_ENUM_BEGIN(AdventureManagerStorageConstant)
+    ADVMGR_BOTTOM_VIEW_WIDGET_COUNT = 12,
+    ADVMGR_OBJECT_ICON_COUNT = 21,
+    ADVMGR_PANEL_ICON_COUNT = 5,
+    ADVMGR_ANIMATION_PHASE_COUNT = 4,
+    ADVMGR_HERO_ICON_COUNT = 5,
+    ADVMGR_PLAYER_COLOR_COUNT = 4,
+    ADVMGR_ACTIVE_SOUND_COUNT = 8,
+    ADVMGR_ENVIRONMENT_SOUND_COUNT = 22,
+    ADVMGR_CURSOR_SAMPLE_COUNT = 7
+H1_ENUM_END(AdventureManagerStorageConstant)
+// clang-format on
+
+struct adventureSoundCell {
+    int soundId;
+    int volume;
+};
+
+// Retail constructor, Open and InitMainClasses' 0x260-byte allocation fix
+// this packed layout after the 0x30-byte baseManager prefix.
+#pragma pack(push, 1)
+class advManager : public baseManager {
 public:
+    signed char m_selectedCell;
+    class widget *m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
+    class widget *m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
+    class heroWindow *m_adventureWindow;
+    unsigned short *m_visibilityMap;
+    signed char m_routeShown;
+    signed char m_currentTerrain;
+    char m_unknown9b[4];
+    class mapCell (*m_mapData)[MAP_CELL_GRID_SIZE];
+    class iconWidget *m_scrollLeftButton;
+    class iconWidget *m_scrollRightButton;
+    class icon *m_panelIcons[ADVMGR_PANEL_ICON_COUNT];
+    unsigned char *m_adventureBorder;
+    char m_unknownc3[4];
+    class tileset *m_groundTiles;
+    class tileset *m_cloudTiles;
+    class tileset *m_stoneTiles;
+    class icon *m_objectIcons[ADVMGR_OBJECT_ICON_COUNT];
+    class icon *m_puzzleIcon;
+    class icon *m_cloudOverlayIcon;
+    short m_mapOriginX;
+    short m_mapOriginY;
+    short m_previousOriginX;
+    short m_previousOriginY;
+    short m_lastHoverCell;
+    short m_hoverCellY;
+    short m_commandTargetX;
+    short m_commandTargetY;
+    short m_updateMinX;
+    short m_updateMinY;
+    short m_updateMaxX;
+    short m_updateMaxY;
+    signed char m_animationPhases[ADVMGR_ANIMATION_PHASE_COUNT];
+    class icon *m_heroIcons[ADVMGR_HERO_ICON_COUNT];
+    class icon *m_boatShadowIcon;
+    class icon *m_flagIcons[ADVMGR_PLAYER_COLOR_COUNT];
+    class icon *m_boatFlagIcons[ADVMGR_PLAYER_COLOR_COUNT];
+    signed char m_cursorActive;
+    signed char m_drawHeroShadows;
+    signed char m_cursorType;
+    signed char m_cursorDirection;
+    short m_cursorFrame;
+    short m_cursorFrameCount;
+    short m_cursorCycle;
+    short m_cursorTurning;
+    short m_cursorMapX;
+    short m_previousCursorMapX;
+    short m_cursorMapY;
+    short m_previousCursorMapY;
+    signed char m_comboHeroDrawn;
+    int m_heroContextLocked;
+    int m_townContextLocked;
+    signed char m_forceCompleteDraw;
+    signed char m_lastQuickViewX;
+    signed char m_lastQuickViewY;
+    signed char m_mineGuardianFacingLeft;
+    int m_activeSoundMask;
+    adventureSoundCell m_activeSounds[ADVMGR_ACTIVE_SOUND_COUNT];
+    class sample *m_loopingSamples[ADVMGR_ENVIRONMENT_SOUND_COUNT];
+    class sample *m_cursorSamples[ADVMGR_CURSOR_SAMPLE_COUNT];
+    signed char m_identifyHeroActive;
+    signed char m_openState;
+    short m_unknown25e;
     // --- constructors ---
     advManager(void);
+    ~advManager();
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void StartCursor(int);
     void StopCursor(int);
@@ -54,13 +147,13 @@ public:
     int ProcessSelect(struct tag_message *, class mapCell * *);
     int ProcessDeSelect(struct tag_message *, int *, class mapCell * *);
     int ProcessSearch(int, int);
-    int ProcessHover(int, int);
+    int ProcessHover(struct tag_message *);
     void UpdateScreen(int, int);
-    void CompleteDraw(int, int, int, int);
+    void CompleteDraw(short, short, int);
     void CompleteDraw(int);
     int GetCloudLookup(int, int);
     void DrawCell(int, int, int, int, int, int);
-    class mapCell * GetCell(int, int);
+    class mapCell * GetCell(short, short);
     void UpdateRadar(int, int);
     void QuickInfo(int, int);
     void UpdateHeroLocator(int, int, int);
@@ -87,7 +180,7 @@ public:
     void DoTownKnob(void);
     void CastSpell(int);
     void CheckCastSpell(void);
-    int ComboDraw(int, int, int);
+    int ComboDraw(short, short, int);
     int ComboDraw(int);
     void SetEnvironmentOrigin(int, int, int);
     void CheckLoadSample(int);
@@ -162,4 +255,8 @@ public:
     void ReceiveHeroTownData(char *, int *, int *, int *, class hero * *, class armyGroup * *, class town * *, class hero * *, class armyGroup * *, int *, int *, int *, signed char *, signed char *, signed char *);
     int AutoResolveCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int);
 };
+#pragma pack(pop)
+
+extern short gMapX;
+extern short gMapY;
 #endif // HOMM1_SOURCE_ADVMANAGER_H

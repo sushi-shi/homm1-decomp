@@ -4,6 +4,7 @@
 
 #include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
+#include <H1/KB.h>
 
 #include <stdio.h>
 
@@ -11,17 +12,81 @@
 // Code-use identity only; no initializer-byte coverage is asserted.
 DATA(0x004c5170) int giSeedingValid;
 
+// clang-format off
+H1_ENUM_BEGIN(AdventureButtonConstant)
+    BUTTON_BROADCAST_ARG = 1
+H1_ENUM_END(AdventureButtonConstant)
+// clang-format on
+
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
 VA(0x004252c0, 0x2cc)
-advManager::advManager(void) {}
+advManager::advManager(void)
+{
+    int i;
+
+    m_groundTiles = 0;
+    m_puzzleIcon = 0;
+    m_mapOriginX = 0;
+    m_mapOriginY = 0;
+    m_updateMinX = 0;
+    m_updateMinY = 0;
+    m_updateMaxX = 0;
+    m_updateMaxY = 0;
+    m_selectedCell = -1;
+    m_cursorActive = 0;
+    m_identifyHeroActive = 0;
+    m_drawHeroShadows = 1;
+    m_adventureBorder = 0;
+    for (i = 0; i < ADVMGR_OBJECT_ICON_COUNT; i++)
+        m_objectIcons[i] = 0;
+    for (i = 0; i < ADVMGR_HERO_ICON_COUNT; i++)
+        m_heroIcons[i] = 0;
+    for (i = 0; i < ADVMGR_PLAYER_COLOR_COUNT; i++) {
+        m_flagIcons[i] = 0;
+        m_boatFlagIcons[i] = 0;
+    }
+    for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
+        m_loopingSamples[i] = 0;
+    for (i = 0; i < ADVMGR_CURSOR_SAMPLE_COUNT; i++)
+        m_cursorSamples[i] = 0;
+    m_puzzleIcon = 0;
+    m_cloudOverlayIcon = 0;
+    m_boatShadowIcon = 0;
+    m_groundTiles = 0;
+    m_cloudTiles = 0;
+    m_stoneTiles = 0;
+    m_adventureWindow = 0;
+    m_visibilityMap = 0;
+    m_heroContextLocked = 0;
+    m_townContextLocked = 0;
+    bShowIt = 1;
+    m_lastQuickViewX = -99;
+    m_lastQuickViewY = -99;
+    m_animationPhases[0] = 0;
+    m_animationPhases[1] = 1;
+    m_animationPhases[2] = 3;
+    m_animationPhases[3] = 5;
+    m_mapData = gpGame->GetWorldMapData();
+    gMapX = 0;
+    gMapY = 0;
+    m_cursorFrameCount = 0;
+    m_cursorCycle = 0;
+    m_cursorTurning = 0;
+}
+
+// InitMainClasses deletes gpAdvManager through this vtable-reset destructor.
+VA(0x0042558c, 0x1f)
+advManager::~advManager()
+{
+}
 
 // donor PoL RVA 0x0005665f; preferred Buka symbol ?Open@advManager@@UAEHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.608500;margin=0.280356;shape=0.449;size=0.637;calls=0.611;strings=advManager|adv_wind.bin|advmice.mse;alternate=pol20:int advManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0005665f
 VA(0x004255ab, 0xea6)
-int advManager::Open(int) { return 0; }
+short advManager::Open(short) { return 0; }
 
 // donor PoL RVA 0x00057028; preferred Buka symbol ?Close@advManager@@UAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -45,7 +110,7 @@ class mapCell * advManager::DoAdvCommand(void) { return 0; }
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x00426eee, 0xe10)
-int advManager::Main(struct tag_message &) { return 0; }
+short advManager::Main(struct tag_message &) { return 0; }
 
 // Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
 VA(0x00427cfe, 0x22)
@@ -76,7 +141,7 @@ int advManager::ProcessSearch(int, int) { return 0; }
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.464646;margin=0.430920;shape=0.299;size=0.767;calls=0.971;alternate=pol20:int advManager::ProcessHover(int, int)@0x0005a644
 VA(0x004291de, 0xc02)
-int advManager::ProcessHover(int, int) { return 0; }
+int advManager::ProcessHover(struct tag_message *) { return 0; }
 
 // donor PoL RVA 0x0005b094; preferred Buka symbol ?UpdateScreen@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -88,7 +153,14 @@ void advManager::UpdateScreen(int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.459172;margin=1.327145;shape=0.409;size=0.723;calls=0.706;alternate=pol20:void advManager::CompleteDraw(int, int, int, int)@0x0005b2ae
 VA(0x0042a045, 0x359)
-void advManager::CompleteDraw(int, int, int, int) {}
+void advManager::CompleteDraw(short, short, int) {}
+
+// Buka 2.1 CompleteDraw(update) forwards the current map origin.
+VA(0x0042a39e, 0x3a)
+void advManager::CompleteDraw(int update)
+{
+    CompleteDraw(m_mapOriginX, m_mapOriginY, update);
+}
 
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -99,6 +171,16 @@ void advManager::DrawCell(int, int, int, int, int, int) {}
 // donor PoL RVA 0x0005e0da; preferred Buka symbol ?UpdateRadar@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.227177;margin=0.921091;shape=0.195;size=0.373;calls=0.222;alternate=pol20:void advManager::UpdateRadar(int, int)@0x0005e0da
+// Buka 2.1 GetCell; HoMM1 returns the map base for any off-grid position.
+VA(0x0042b6cd, 0x7d)
+mapCell *advManager::GetCell(short x, short y)
+{
+    if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
+        return m_mapData[0];
+    else
+        return &m_mapData[x][y];
+}
+
 VA(0x0042b74a, 0x57e)
 void advManager::UpdateRadar(int, int) {}
 
@@ -212,8 +294,30 @@ void advManager::RedrawAdvScreen(int, int) {}
 // donor PoL RVA 0x00063f3b; preferred Buka symbol ?MobilizeCurrHero@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.511468;margin=0.529744;shape=0.406;size=0.742;calls=1.000;alternate=pol20:void advManager::MobilizeCurrHero(int)@0x00063f3b
+// Buka 2.1 DeactivateCurrTown clears the current player's town slot.
+VA(0x0042ff72, 0x1f)
+void advManager::DeactivateCurrTown(void)
+{
+    gpCurPlayer->m_currentTown = -1;
+}
+
+// Buka 2.1 DeactivateCurrHero demobilizes before clearing the hero slot.
+VA(0x0042ff91, 0x27)
+void advManager::DeactivateCurrHero(void)
+{
+    DemobilizeCurrHero();
+    gpCurPlayer->m_currentHero = -1;
+}
+
 VA(0x0042ffb8, 0x59)
-void advManager::MobilizeCurrHero(int) {}
+void advManager::MobilizeCurrHero(int update)
+{
+    if (gpCurPlayer->m_currentHero == -1)
+        return;
+    if (m_heroContextLocked)
+        return;
+    SetHeroContext(gpCurPlayer->m_currentHero, update);
+}
 
 // donor PoL RVA 0x00063f95; preferred Buka symbol ?DemobilizeCurrHero@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -285,7 +389,14 @@ int DimensionDoorHandler(struct tag_message &) { return 0; }
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
 VA(0x00433b10, 0xaf6)
-int advManager::ComboDraw(int, int, int) { return 0; }
+int advManager::ComboDraw(short, short, int) { return 0; }
+
+// Buka 2.1 ComboDraw(update) forwards the current map origin.
+VA(0x00434606, 0x3a)
+int advManager::ComboDraw(int update)
+{
+    return ComboDraw(m_mapOriginX, m_mapOriginY, update);
+}
 
 // donor PoL RVA 0x0006668e; preferred Buka symbol ?SetEnvironmentOrigin@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -345,13 +456,32 @@ void advManager::HideRoute(int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.465466;margin=0.233620;shape=0.306;size=0.738;calls=1.000;alternate=pol20:void advManager::CheckDimHero(void)@0x00068827
 VA(0x00435d40, 0x91)
-void advManager::CheckDimHero(void) {}
+void advManager::CheckDimHero(void)
+{
+    if (!gbThisNetHumanPlayer[giCurPlayer] || gpCurPlayer->CurrentHero() == -1)
+        return;
+    if (!gpGame->IsMobile(gpCurPlayer->CurrentHero())) {
+        ShowRoute(1, 0, 0);
+        UpdateHeroLocators(1, 1);
+        gpAdvManager->CheckDimNextHeroBut();
+    }
+}
 
 // donor PoL RVA 0x000688b4; preferred Buka symbol ?CheckDimNextHeroBut@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.454682;margin=0.437763;shape=0.225;size=0.845;calls=1.000;alternate=pol20:void advManager::CheckDimNextHeroBut(void)@0x000688b4
 VA(0x00435dd1, 0x6e)
-void advManager::CheckDimNextHeroBut(void) {}
+void advManager::CheckDimNextHeroBut(void)
+{
+    short frame;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer] || !gpCurPlayer->HasMobileHero())
+        frame = WIDGET_COMMAND_SET_FLAGS;
+    else
+        frame = WIDGET_COMMAND_CLEAR_FLAGS;
+    gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, frame, BUTTON_BROADCAST_ARG,
+                                      WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
+}
 
 // donor PoL RVA 0x0006891f; preferred Buka symbol ?SeedTo@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -362,6 +492,19 @@ void advManager::SeedTo(int, int) {}
 // donor PoL RVA 0x00068ab6; preferred Buka symbol ?ScreenScroll@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463708;margin=0.069995;shape=0.184;size=0.968;calls=1.000;alternate=pol20:void advManager::ScreenScroll(int, int)@0x00068ab6
+// Buka 2.1 ForceNewHover; HoMM1 routes the hover through a message record.
+VA(0x00435f91, 0x4f)
+void advManager::ForceNewHover(void)
+{
+    struct tag_message msg;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+    m_lastHoverCell = -1;
+    msg.payload.widget.id = 10;
+    ProcessHover(&msg);
+}
+
 VA(0x00435fe0, 0x1b6)
 void advManager::ScreenScroll(int, int) {}
 

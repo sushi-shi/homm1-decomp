@@ -29,14 +29,16 @@ short searchArray::QuickDistance(short x1, short y1, short x2, short y2) {
 VA(0x00424900, 0x4f)
 int CalcTerrainCost(int terrain, int diagonal, int mobility, int waterMode) {
     int baseCost;
+    int diagonalCost;
     if (waterMode == FINDPATH_WATER_MODE)
         terrain = FINDPATH_WATER_TERRAIN;
     if (diagonal == 0)
         return giTerrainCost[terrain][diagonal];
-    if (giTerrainCost[terrain][1] <= mobility)
+    diagonalCost = giTerrainCost[terrain][1];
+    if (diagonalCost <= mobility)
         return giTerrainCost[terrain][diagonal];
     baseCost = giTerrainCost[terrain][0];
     if (baseCost > mobility)
-        baseCost = giTerrainCost[terrain][1];
+        baseCost = diagonalCost;
     return baseCost;
 }

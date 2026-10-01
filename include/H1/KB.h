@@ -38,6 +38,7 @@ extern soundManager *gpSoundManager;
 extern heroWindowManager *gpWindowManager;
 extern heroWindow *pNormalDialogWindow;
 extern advManager *gpAdvManager;
+extern signed char gbThisNetHumanPlayer[];
 extern townManager *gpTownManager;
 extern executive *gpExec;
 extern int giHighMemBuffer;
