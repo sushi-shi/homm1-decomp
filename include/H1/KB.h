@@ -42,6 +42,8 @@ extern signed char gbThisNetHumanPlayer[];
 extern townManager* gpTownManager;
 extern executive* gpExec;
 extern class game* gpGame;
+extern int gbHumanPlayer[];
+extern struct tag_monsterInfo gMonsterDatabase[];
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;
 extern long giBottomViewOverrideEndTime;

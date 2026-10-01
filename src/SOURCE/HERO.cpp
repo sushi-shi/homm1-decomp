@@ -58,19 +58,194 @@ void army::MoveAttack(int, int) {}
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.493986;margin=0.210035;shape=0.273;size=0.962;calls=1.000;alternate=pol20:void hero::constructor(void)@0x0006c3a0
 VA(0x0046ba90, 0x68)
-hero::hero(void) {}
+hero::hero(void) {
+    m_id = 0;
+    m_owner = 0;
+    m_x = 0;
+    m_y = 0;
+    m_unknown1c = 0;
+    m_unknown1d = 0;
+    m_name[0] = 0;
+    heroWin = 0;
+    giHeroScreenSrcIndex = -1;
+}
 
 // donor PoL RVA 0x0006c4cd; preferred Buka symbol ?HasArtifact@hero@@QAEHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.403615;margin=0.791427;shape=0.171;size=0.731;calls=1.000;alternate=pol20:int hero::HasArtifact(int)@0x0006c4cd
 VA(0x0046bb10, 0x5d)
-int hero::HasArtifact(int) { return 0; }
+signed char hero::HasArtifact(signed char artifact) {
+    short i;
+
+    for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
+        if (m_artifacts[i] == artifact)
+            return 1;
+    }
+    return 0;
+}
 
 // donor PoL RVA 0x0006c526; preferred Buka symbol ?CalcMobility@hero@@QAEHXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.418178;margin=0.237740;shape=0.210;size=0.862;calls=0.714;alternate=pol20:int hero::CalcMobility(void)@0x0006c526
 VA(0x0046bb6d, 0x1ed)
-int hero::CalcMobility(void) { return 0; }
+short hero::CalcMobility(void) {
+    short mobility[3] = {40, 50, 60};
+    const short seaMobility = 60;
+    const short lighthouseExtra = 20;
+    const short astrolabe = 40;
+    const short compass = 20;
+    const short nomadBonus = 24;
+    const short travelerBonus = 12;
+    int result;
+    short speed;
+    int j;
+
+    if (m_eventFlags & HERO_EVENT_EMBARKED) {
+        if (gpGame->m_mines[1].owner == m_owner)
+            result = seaMobility + lighthouseExtra;
+        else
+            result = seaMobility;
+        if (HasArtifact(ARTIFACT_SAILORS_ASTROLABE))
+            result += astrolabe;
+        result = (int)(result * gfClassNavigationMod[m_unknown1c]);
+    } else {
+        speed = 3;
+        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+            if (m_army.m_creatureTypes[j] != -1
+                && gMonsterDatabase[m_army.m_creatureTypes[j]].speed < speed)
+                speed = gMonsterDatabase[m_army.m_creatureTypes[j]].speed;
+        }
+        result = mobility[speed - 1];
+        if (HasArtifact(ARTIFACT_NOMAD_BOOTS))
+            result += nomadBonus;
+        if (HasArtifact(ARTIFACT_TRAVELER_BOOTS))
+            result += travelerBonus;
+    }
+    if (HasArtifact(ARTIFACT_TRUE_COMPASS))
+        result += compass;
+    if (m_owner >= 0 && !gbHumanPlayer[m_owner]
+        && gpGame->m_players[m_owner].m_difficulty >= 3)
+        result += 3;
+    return result;
+}
+
+VA(0x0046bd5a, 0x56)
+signed char hero::HasSpell(signed char spell) {
+    int i;
+
+    for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
+        if (m_spells[i] == spell)
+            return 1;
+    }
+    return 0;
+}
+
+VA(0x0046bdb0, 0xf0)
+short hero::GetNumSpells(signed char type) {
+    short combat = 0;
+    short adventure = 0;
+    short i;
+
+    for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
+        if (m_spells[i] != -1)
+            combat++;
+    }
+    for (i = 0; i < HERO_SPELL_SLOT_COUNT - HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
+        if (m_spells[HERO_COMBAT_SPELL_SLOT_COUNT + i] != -1)
+            adventure++;
+    }
+    switch (type) {
+    case 0:
+        return combat;
+    case 1:
+        return adventure;
+    case 2:
+        return adventure + combat;
+    }
+    return 0;
+}
+
+VA(0x0046bea0, 0x217)
+void hero::UseSpell(signed char spell) {
+    short i;
+    int j;
+    int k;
+
+    if (spell >= 0 && spell < HERO_COMBAT_SPELL_SLOT_COUNT) {
+        for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
+            if (m_spells[i] == spell)
+                break;
+        }
+        if (m_spellCharges[i] > 1) {
+            m_spellCharges[i]--;
+        } else {
+            m_spells[i] = -1;
+            m_spellCharges[i] = 0;
+            for (j = i + 1; j < HERO_COMBAT_SPELL_SLOT_COUNT; j++) {
+                m_spells[j - 1] = m_spells[j];
+                m_spellCharges[j - 1] = m_spellCharges[j];
+            }
+            m_spells[HERO_COMBAT_SPELL_SLOT_COUNT - 1] = -1;
+            m_spellCharges[HERO_COMBAT_SPELL_SLOT_COUNT - 1] = 0;
+        }
+    } else if (spell >= HERO_COMBAT_SPELL_SLOT_COUNT && spell < HERO_SPELL_SLOT_COUNT) {
+        for (i = HERO_COMBAT_SPELL_SLOT_COUNT; i < HERO_SPELL_SLOT_COUNT; i++) {
+            if (m_spells[i] == spell)
+                break;
+        }
+        if (m_spellCharges[i] > 1) {
+            m_spellCharges[i]--;
+        } else {
+            m_spells[i] = -1;
+            m_spellCharges[i] = 0;
+            for (k = i + 1; k < HERO_SPELL_SLOT_COUNT; k++) {
+                m_spells[k - 1] = m_spells[k];
+                m_spellCharges[k - 1] = m_spellCharges[k];
+            }
+            m_spells[HERO_SPELL_SLOT_COUNT - 1] = -1;
+            m_spellCharges[HERO_SPELL_SLOT_COUNT - 1] = 0;
+        }
+    }
+}
+
+VA(0x0046c0b7, 0x1e3)
+int hero::AddSpell(signed char spell, signed char charges, int checkOnly) {
+    int added = 0;
+    short i;
+
+    if (spell >= 0 && spell < HERO_COMBAT_SPELL_SLOT_COUNT) {
+        for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
+            if (m_spells[i] == spell || m_spells[i] == -1) {
+                if (m_spells[i] == spell)
+                    added = charges - m_spellCharges[i];
+                else
+                    added = charges;
+                if (checkOnly)
+                    goto done;
+                m_spells[i] = spell;
+                m_spellCharges[i] = charges;
+                break;
+            }
+        }
+    }
+    if (spell >= HERO_COMBAT_SPELL_SLOT_COUNT && spell < HERO_SPELL_SLOT_COUNT) {
+        for (i = HERO_COMBAT_SPELL_SLOT_COUNT; i < HERO_SPELL_SLOT_COUNT; i++) {
+            if (m_spells[i] == spell || m_spells[i] == -1) {
+                if (m_spells[i] == spell)
+                    added = charges - m_spellCharges[i];
+                else
+                    added = charges;
+                if (checkOnly)
+                    goto done;
+                m_spells[i] = spell;
+                m_spellCharges[i] = charges;
+                break;
+            }
+        }
+    }
+done:
+    return added;
+}
 
 // donor PoL RVA 0x0006f305; preferred Buka symbol ?RedrawHeroScreen@@YIXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
@@ -125,8 +300,86 @@ void hero::Deallocate(void) {}
 // donor PoL RVA 0x0006d50d; preferred Buka symbol ?GetLevel@hero@@QAEHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.411151;margin=0.242527;shape=0.205;size=0.711;calls=1.000;alternate=pol20:int hero::GetLevel(int)@0x0006d50d
+VA(0x0046d334, 0xd0)
+int hero::GetExperience(int level) {
+    int experience;
+    int stage;
+    int incr;
+
+    if (level <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
+        return gMinExpForLevel[m_unknown1c][level - 1];
+    stage = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
+    incr = (int)((gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+                  - gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+                 * 1.2);
+    experience = gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
+    while (stage < level) {
+        incr = (int)(incr * 1.2);
+        experience += incr;
+        stage++;
+    }
+    return experience;
+}
+
 VA(0x0046d404, 0xf2)
-int hero::GetLevel(int) { return 0; }
+int hero::GetLevel(int experienceValue) {
+    int experience;
+    int nLevel;
+    int growth;
+
+    for (nLevel = 1; nLevel <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT; nLevel++) {
+        if (gMinExpForLevel[m_unknown1c][nLevel - 1] > experienceValue)
+            return nLevel - 1;
+    }
+    growth = (int)((gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+                    - gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+                   * 1.2);
+    experience = gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
+    nLevel = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
+    while (experience < experienceValue) {
+        growth = (int)(growth * 1.2);
+        experience += growth;
+        nLevel++;
+    }
+    return nLevel - 1;
+}
+
+VA(0x0046d4f6, 0x14f)
+void hero::ApplyBattleWinTemps(void) {
+    if (m_eventFlags & HERO_EVENT_GRAVEYARD) {
+        m_morale++;
+        m_eventFlags -= HERO_EVENT_GRAVEYARD;
+    }
+    if (m_eventFlags & HERO_EVENT_SHIPWRECK) {
+        m_morale++;
+        m_eventFlags -= HERO_EVENT_SHIPWRECK;
+    }
+    if (m_eventFlags & HERO_EVENT_BUOY) {
+        m_morale--;
+        m_eventFlags -= HERO_EVENT_BUOY;
+    }
+    if (m_eventFlags & HERO_EVENT_OASIS) {
+        m_morale--;
+        m_eventFlags -= HERO_EVENT_OASIS;
+    }
+    if (m_eventFlags & HERO_EVENT_TEMPLE) {
+        m_morale -= 2;
+        m_eventFlags -= HERO_EVENT_TEMPLE;
+    }
+    if (m_eventFlags & HERO_EVENT_FAERIE_RING) {
+        m_luck--;
+        m_eventFlags -= HERO_EVENT_FAERIE_RING;
+    }
+    if (m_eventFlags & HERO_EVENT_FOUNTAIN) {
+        m_luck--;
+        m_eventFlags -= HERO_EVENT_FOUNTAIN;
+    }
+}
+
+VA(0x0046d645, 0x1e)
+void hero::ApplyBattleLossTemps(void) {
+    ApplyBattleWinTemps();
+}
 
 // donor PoL RVA 0x0006d83f; preferred Buka symbol ?CheckLevel@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
@@ -137,6 +390,18 @@ void hero::CheckLevel(void) {}
 // donor PoL RVA 0x0006e0be; preferred Buka symbol ?UpdateHeroScreenStatusBar@@YIXAAUtag_message@@@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.389885;margin=0.637226;shape=0.282;size=0.714;calls=0.718;alternate=pol20:void UpdateHeroScreenStatusBar(struct tag_message &)@0x0006e0be
+VA(0x0046d957, 0x57)
+int hero::NumArtifacts(void) {
+    int count = 0;
+    int i;
+
+    for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
+        if (m_artifacts[i] >= 0)
+            count++;
+    }
+    return count;
+}
+
 VA(0x0046d9ae, 0x52e)
 void UpdateHeroScreenStatusBar(struct tag_message &) {}
 

@@ -3,11 +3,18 @@
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 13 methods, 0 own-virtual, 0 static data.
 
+#include <Domains.h>
 #include <H1/Macros.h>
 
 // forward declarations:
 class hero;
 class town;
+
+// clang-format off
+H1_ENUM_BEGIN(ArmyGroupConstant)
+    ARMY_GROUP_SLOT_COUNT = 5
+H1_ENUM_END(ArmyGroupConstant)
+// clang-format on
 
 #pragma pack(push, 1)
 class armyGroup {

@@ -43,7 +43,8 @@ public:
 class playerData {
 public:
     char m_unknown00[0x12];
-    signed char m_color;
+    // CalcMobility grants computer players at level 3 or above extra moves.
+    signed char m_difficulty;
     signed char m_heroCount;
     signed char m_currentHero;
     signed char m_heroLocatorPage;

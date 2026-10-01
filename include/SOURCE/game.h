@@ -25,9 +25,24 @@ struct tag_message;
 H1_ENUM_BEGIN(GameStorageConstant)
     GAME_PLAYER_COUNT = 4,
     GAME_TOWN_COUNT = 36,
-    GAME_HERO_COUNT = 36
+    GAME_HERO_COUNT = 36,
+    GAME_MINE_COUNT = 36
 H1_ENUM_END(GameStorageConstant)
 // clang-format on
+
+// ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
+// owner at +1 and the type at +2, as in HoMM2's mineRecord.
+#pragma pack(push, 1)
+struct mineRecord {
+    signed char id;
+    signed char owner;
+    signed char type;
+    signed char guardianType;
+    unsigned char guardianCount;
+    unsigned char x;
+    unsigned char y;
+};
+#pragma pack(pop)
 
 // Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
@@ -48,7 +63,9 @@ public:
     class town m_castleRecs[GAME_TOWN_COUNT];
     char m_unknown1295d[0x28];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    char m_unknown1431d[0x2b39];
+    char m_unknown1431d[0x24];
+    mineRecord m_mines[GAME_MINE_COUNT];
+    char m_unknown1443d[0x2a19];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
