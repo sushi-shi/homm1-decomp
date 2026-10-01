@@ -364,3 +364,47 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
     }
     return ValidMove(direction);
 }
+
+// Buka CURSOR.cpp:1006 ValidMove; HoMM1 indexes from the cursor's map
+// position and tests the north/south object masks directly.
+VA(0x004077b5, 0x2a3)
+short advManager::ValidMove(short direction)
+{
+    short downMask;
+    short directionX;
+    short newX;
+    short directionY;
+    short newY;
+    mapCell *destCell;
+    mapCell *hereCell;
+    short north;
+
+    directionX = normalDirTable[direction].x;
+    directionY = normalDirTable[direction].y;
+    newX = m_mapOriginX + directionX;
+    newY = m_mapOriginY + directionY;
+    if (newX < -7 || newX > MAP_CELL_GRID_SIZE - 7 - 1)
+        return 0;
+    if (newY < -7 || newY > MAP_CELL_GRID_SIZE - 7 - 1)
+        return 0;
+    destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
+    if (destCell->m_unknown07 & 0x80)
+        return 0;
+    if (giGroundToTerrain[destCell->m_tileIndex] == 0) {
+        if (m_cursorType != 4 && destCell->m_triggerType != 0xbe && destCell->m_triggerType != 0xa3)
+            return 0;
+    } else {
+        if (m_cursorType == 4 && destCell->m_triggerType != 0x1f && destCell->m_triggerType != 0xac)
+            return 0;
+    }
+    hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
+    north = (1 << direction) & 0x83;
+    downMask = (1 << direction) & 0x38;
+    if (north && hereCell->m_objectIndex != 0xff && !(hereCell->m_flags & 0x80)
+        && hereCell->m_triggerType != 0xac)
+        return 0;
+    if (downMask && destCell->m_objectIndex != 0xff && !(destCell->m_flags & 0x80)
+        && destCell->m_triggerType != 0xac)
+        return 0;
+    return 1;
+}

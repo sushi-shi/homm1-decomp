@@ -17,7 +17,10 @@ class mapCell {
 public:
     // Tile index read zero-extended into the terrain lookup table.
     unsigned char m_tileIndex;
-    char m_unknown01[5];
+    char m_unknown01;
+    // ValidMove treats 0xff as an empty object slot (Buka m_objectIndex).
+    unsigned char m_objectIndex;
+    char m_unknown03[3];
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
     unsigned char m_flags;
     unsigned char m_unknown07;
