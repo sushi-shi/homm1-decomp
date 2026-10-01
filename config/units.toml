@@ -370,3 +370,10 @@ flags = "cpp_o2"
 unit = "BASE/OLDASM"
 source = "src/BASE/OLDASM.cpp"
 flags = "cpp_o2"
+
+[[unit]]
+unit = "SOURCE/CURSOR"
+source = "src/SOURCE/CURSOR.cpp"
+# 0x00405950..0x00407d8f sits between int3-aligned wingraph and TOWNMGR objects;
+# no fs:[0] frame appears in the band.
+flags = "cpp_carcass"
