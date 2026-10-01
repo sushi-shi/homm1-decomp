@@ -157,5 +157,6 @@ public:
     int EvaluateTownEvent(int, int, int, int, int*);
 };
 extern philAI* gpPhilAI;
+extern armyGroup* gpMonGroup;
 
 #endif // HOMM1_SOURCE_PHILAI_H

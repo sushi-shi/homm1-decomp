@@ -54,7 +54,6 @@ public:
     searchNode m_cells[SEARCH_CELL_CAPACITY];
     // --- constructors ---
     searchArray(void);
-    ~searchArray();
     // --- methods ---
     int BuildPath(int, int, int, int, int);
     void SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int);

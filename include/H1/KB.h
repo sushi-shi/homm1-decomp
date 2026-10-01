@@ -162,6 +162,7 @@ extern signed char gbCombatSurrender;
 extern int gbGameOver;
 extern int bInShutDown;
 void DeleteMainClasses(void);
+extern class highScoreManager* gpHighScoreManager;
 void FileError(char*);
 void MemError();
 void SetMenus(void*, int);

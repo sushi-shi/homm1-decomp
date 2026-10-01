@@ -16,6 +16,7 @@
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
+#include <SOURCE/smackManager.h>
 #include <SOURCE/wingraph.h>
 
 #define WIN32_LEAN_AND_MEAN
@@ -61,6 +62,60 @@ void ForcePollSound() {
 // evidence: graph:2;base=0.512387;margin=0.755802;shape=0.400;size=0.925;calls=0.653;alternate=pol20:void InitMainClasses(void)@0x000965be
 VA(0x0044f6d2, 0x607)
 void InitMainClasses(void) {}
+
+// Buka 2.1 DeleteMainClasses; HoMM1 also owns the smacker manager and frees the
+// resource manager before the window, mouse and input managers.
+VA(0x0044fcd9, 0x36d)
+void DeleteMainClasses(void) {
+    if (gpBufferPalette)
+        delete gpBufferPalette;
+    gpBufferPalette = 0;
+    if (gpMonGroup)
+        delete gpMonGroup;
+    gpMonGroup = 0;
+    if (gpPhilAI)
+        delete gpPhilAI;
+    gpPhilAI = 0;
+    if (gpSearchArray)
+        delete gpSearchArray;
+    gpSearchArray = 0;
+    if (gpTownManager)
+        delete gpTownManager;
+    gpTownManager = 0;
+    if (gpCombatManager)
+        delete gpCombatManager;
+    gpCombatManager = 0;
+    if (gpAdvManager)
+        delete gpAdvManager;
+    gpAdvManager = 0;
+    if (gpGame)
+        delete gpGame;
+    gpGame = 0;
+    if (gpHighScoreManager)
+        delete gpHighScoreManager;
+    gpHighScoreManager = 0;
+    if (gpSmackManager)
+        delete gpSmackManager;
+    gpSmackManager = 0;
+    if (gpSoundManager)
+        delete gpSoundManager;
+    gpSoundManager = 0;
+    if (gpResourceManager)
+        delete gpResourceManager;
+    gpResourceManager = 0;
+    if (gpWindowManager)
+        delete gpWindowManager;
+    gpWindowManager = 0;
+    if (gpMouseManager)
+        delete gpMouseManager;
+    gpMouseManager = 0;
+    if (gpInputManager)
+        delete gpInputManager;
+    gpInputManager = 0;
+    if (gpExec)
+        delete gpExec;
+    gpExec = 0;
+}
 
 // donor PoL RVA 0x00096e21; preferred Buka symbol ?EarlySetup@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
