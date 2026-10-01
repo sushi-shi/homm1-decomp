@@ -2,10 +2,12 @@
 
 #include <match.h>
 
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
 
+#include <stdlib.h>
 #include <string.h>
 
 // donor PoL RVA 0x00088607; preferred Buka symbol ?ClearEffects@combatManager@@QAEXXZ
@@ -168,6 +170,57 @@ void game::GiveArmy(armyGroup *group, int type, int count, int slot)
 VA(0x0044443e, 0x8c)
 int game::ExperienceValueOfStack(armyGroup *group, hero *h)
 { return 0; }
+
+// Buka 2.1 MiscRuntime seeded generator; HoMM1 keeps it in this TU.
+VA(0x004444ca, 0x92)
+int SGenRand(void)
+{
+    int value = 0;
+    int i;
+    int bitMask;
+    iLastSeed &= 0xfff;
+    iLastSeed *= 7;
+    iLastSeed += (iLastSeed & 0xff0) >> 4;
+    for (i = 31; i >= 0; --i) {
+        bitMask = 1 << i;
+        if (iLastSeed & bitMask)
+            value |= 1 << i;
+    }
+    return value;
+}
+
+VA(0x0044455c, 0x52)
+int SRandom(int low, int high)
+{
+    int result;
+    SIncRandomize(low, high);
+    result = SGenRand();
+    iLastSeed += low;
+    iLastSeed += high * 8;
+    return result % (high - low + 1) + low;
+}
+
+VA(0x004445ae, 0x89)
+void SIncRandomize(int x, int y)
+{
+    int feedback;
+    x *= 13;
+    y *= 13;
+    x &= 0xff;
+    y &= 0xff;
+    iLastSeed += y << 5;
+    iLastSeed += x * 13233;
+    iLastSeed += y;
+    feedback = iLastSeed & 0x3f;
+    iLastSeed += feedback << 8;
+}
+
+VA(0x00444637, 0x24)
+void SRand(int seed)
+{
+    iLastSeed = seed;
+    srand(seed);
+}
 
 // donor PoL RVA 0x00080ff9; preferred Buka symbol ?GetLuck@game@@QAEHPAVhero@@PAVarmy@@PAVtown@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
