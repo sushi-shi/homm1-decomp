@@ -15,6 +15,8 @@ extern char gEventsAssertFile1[];
 extern char gEventsAssertFile2[];
 extern char* gEventText[];
 extern signed char gbEventMusicPlaying;
+extern char* gArtifactNames[];
+extern SAMPLE2 gNullSample;
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -390,25 +392,117 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.505054;margin=0.383531;shape=0.360;size=0.848;calls=0.800;alternate=pol20:void advManager::TransferArtifacts(class hero *, class hero *)@0x000b1973
 VA(0x00460fbd, 0x200)
-void advManager::TransferArtifacts(class hero *, class hero *) {}
+void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero) {
+    short i;
+    short j;
+
+    if (!sourceHero || !destHero)
+        return;
+    for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
+        if (destHero->m_artifacts[i] == -1) {
+            for (j = 0; j < HERO_ARTIFACT_SLOT_COUNT; j++) {
+                if (sourceHero->m_artifacts[j] != -1
+                    && sourceHero->m_artifacts[j] != ARTIFACT_MAGIC_BOOK) {
+                    if (sourceHero->m_artifacts[j] <= 3) {
+                        if (gbThisNetHumanPlayer[sourceHero->m_owner]
+                            || gbThisNetHumanPlayer[destHero->m_owner]) {
+                            sprintf(gText,
+                                    "As you reach for the %s, it mysteriously disappears.",
+                                    gArtifactNames[sourceHero->m_artifacts[j]]);
+                            NormalDialog(gText, 1, -1, -1, 7, sourceHero->m_artifacts[j], -1, 0, -1);
+                        }
+                        gpGame->m_artifactOwners[sourceHero->m_artifacts[j]] = -1;
+                    } else {
+                        GiveTakeArtifactStat(destHero, sourceHero->m_artifacts[j], 0);
+                        destHero->m_artifacts[i] = sourceHero->m_artifacts[j];
+                        gpGame->m_artifactOwners[sourceHero->m_artifacts[j]] = destHero->m_id;
+                    }
+                    GiveTakeArtifactStat(sourceHero, sourceHero->m_artifacts[j], 1);
+                    sourceHero->m_artifacts[j] = -1;
+                    break;
+                }
+            }
+        }
+    }
+}
 
 // donor PoL RVA 0x000b1b50; preferred Buka symbol ?HeroLoses@advManager@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.567256;margin=0.641527;shape=0.448;size=0.872;calls=1.000;alternate=pol20:void advManager::HeroLoses(class hero *)@0x000b1b50
 VA(0x004611bd, 0x7d)
-void advManager::HeroLoses(class hero *) {}
+void advManager::HeroLoses(class hero* lostHero) {
+    if (!lostHero)
+        return;
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    UpdateScreen(0, 0);
+    lostHero->Deallocate();
+    FizzleCenter(0);
+    UpdateRadar(1, 0);
+    UpdateHeroLocators(1, 1);
+}
 
 // donor PoL RVA 0x000b1bcf; preferred Buka symbol ?DoWhirlpool@advManager@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.515247;margin=0.370456;shape=0.302;size=0.900;calls=1.000;alternate=pol20:void advManager::DoWhirlpool(class hero *)@0x000b1bcf
 VA(0x0046123a, 0x137)
-void advManager::DoWhirlpool(class hero *) {}
+void advManager::DoWhirlpool(class hero* eventHero) {
+    int weakest;
+    short slotNo;
+    int groupValues[ARMY_GROUP_SLOT_COUNT];
+    long worth;
+    long lowestValue;
+
+    if (!gbHumanPlayer[eventHero->m_owner])
+        return;
+    if (Random(1, 3) != 1)
+        return;
+    lowestValue = 99999999;
+    weakest = -1;
+    for (slotNo = 0; slotNo < ARMY_GROUP_SLOT_COUNT; slotNo++) {
+        if (eventHero->m_army.m_creatureCounts[slotNo] > 0) {
+            worth = gMonsterDatabase[eventHero->m_army.m_creatureTypes[slotNo]].fightValue
+                    * eventHero->m_army.m_creatureCounts[slotNo];
+            if (lowestValue > worth) {
+                lowestValue = worth;
+                weakest = slotNo;
+            }
+        }
+    }
+    if (eventHero->m_army.GetNumArmies() > 1) {
+        eventHero->m_army.m_creatureCounts[weakest] >>= 1;
+        if (!eventHero->m_army.m_creatureCounts[weakest])
+            eventHero->m_army.m_creatureTypes[weakest] = -1;
+    } else if (eventHero->m_army.m_creatureCounts[weakest] > 1) {
+        eventHero->m_army.m_creatureCounts[weakest] >>= 1;
+    }
+}
 
 // donor PoL RVA 0x000b1d01; preferred Buka symbol ?FizzleCenter@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.628535;margin=0.385528;shape=0.317;size=0.884;calls=0.800;strings=killfade.82M|pickup%02d.82M;alternate=pol20:void advManager::FizzleCenter(int)@0x000b1d01
 VA(0x00461371, 0x113)
-void advManager::FizzleCenter(int) {}
+void advManager::FizzleCenter(int fizzleType) {
+    SAMPLE2 fizzleSample;
+
+    if (!bShowIt)
+        return;
+    switch (fizzleType) {
+    case 0:
+        sprintf(gText, "killfade.82M");
+        break;
+    case 1:
+        sprintf(gText, "pickup%02d.82M", Random(1, 5));
+        break;
+    default:
+        return;
+    }
+    fizzleSample = gNullSample;
+    fizzleSample = LoadPlaySample(gText);
+    gpWindowManager->SaveFizzleSource(180, 172, 120, 120);
+    CompleteDraw(0);
+    gpWindowManager->FizzleForward(180, 172, 120, 120, 65);
+    WaitEndSample(fizzleSample, -1);
+}
 
 // donor PoL RVA 0x000b1e43; preferred Buka symbol ?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order

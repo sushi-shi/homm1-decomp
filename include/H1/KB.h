@@ -76,5 +76,7 @@ int NullHandler(struct tag_message&);
 short TrueFalseDialogHandler(struct tag_message&);
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
+struct SAMPLE2 LoadPlaySample(char*);
+void WaitEndSample(struct SAMPLE2, int);
 
 #endif
