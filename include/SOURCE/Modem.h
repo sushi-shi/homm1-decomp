@@ -26,6 +26,8 @@ struct inque_t {
     char data[4096];
 };
 extern inque_t inque;
+extern inque_t outque;
+extern int iBaudBits;
 extern int inescape;
 extern int newpacket;
 extern int packetlen;
@@ -39,6 +41,11 @@ extern int localstage;
 extern int WFDCStage;
 
 void GUIModemCommand(char*, char*);
+void ModemCommand(char*);
+void ModemSetup(void);
+long Dial(void);
+long Wait(void);
+void Connect(void);
 signed char GUIModemResponse(char*, char*);
 int write_buffer(char*, int);
 int read_byte(void);

@@ -40,7 +40,9 @@ struct configStruct {
     exeGfxConfig gfx[2];
     char _pad_0x048[0x70];
     int musicSource;
-    char _pad_0x0bc[0x78];
+    int comPort[2];
+    int baudRate[2];
+    char modemInitString[0x68];
 };
 struct SCreatureInfo {
     unsigned short value;

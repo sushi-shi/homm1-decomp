@@ -6,7 +6,9 @@
 #include <H1/KB.h>
 #include <BASE/Misc.h>
 #include <SOURCE/Modem.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/comwin.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -45,6 +47,10 @@ H1_ENUM_END(SetupDialogResult)
 // clang-format on
 
 short BaseSetupHandler(tag_message&);
+int nbnet_init(void);
+void RemoteMain(int);
+extern int iLastIds[];
+extern int giNumHumanPlayers;
 
 // donor PoL RVA 0x000bf340; preferred Buka symbol ?DoTradingPost@@YIXHM@Z
 // donor Buka TU SOURCE/tradpost; HoMM1 owner inferred from contiguous order
@@ -428,11 +434,71 @@ long FileSize(char* filename) {
     return length;
 }
 
-// donor PoL RVA 0x0000c8f0; preferred Buka symbol ?ModemSetup@@YIXH@Z
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.387701;margin=0.229361;shape=0.196;size=0.795;calls=0.591;alternate=pol20:void ModemSetup(int)@0x0000c8f0
+// Buka 2.1 RemoteMain merged with the HoMM2 ModemSetup mode switch; HoMM1
+// keeps the modem reset sequence in ModemSetup (0x459530).
 VA(0x0045869c, 0x27a)
-void ModemSetup(int) {}
+void RemoteMain(int gameMode) {
+    char directConnectMessage[164];
+
+    gbInNetSetup = 1;
+    memset(rcvBuf, 0, sizeof(rcvBuf));
+    memset(iLastIds, 0, 30);
+    GameMode = gameMode;
+    switch (gameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+            nbnet_init();
+            break;
+        case REMOTE_GAME_NETWORK_GUEST:
+            nbnet_init();
+            break;
+        case REMOTE_GAME_MODEM_HOST:
+            giThisNetPos = 0;
+            goto modemStart;
+        case REMOTE_GAME_MODEM_GUEST:
+            giThisNetPos = 1;
+        modemStart:
+            gbRemoteOn = 1;
+            giNumNetGuests = 1;
+            inque.writePosition = 0;
+            inque.readPosition = 0;
+            outque.writePosition = 0;
+            outque.readPosition = 0;
+            iBaudBits = 115200 / gConfig.baudRate[gbDirectConnect];
+            ModemSetup();
+            switch (gameMode) {
+                case REMOTE_GAME_MODEM_HOST:
+                    if (!gbDirectConnect && Dial()) {
+                        RemoteCleanup();
+                        GameMode = REMOTE_GAME_NONE;
+                    }
+                    break;
+                case REMOTE_GAME_MODEM_GUEST:
+                    if (!gbDirectConnect && Wait()) {
+                        RemoteCleanup();
+                        GameMode = REMOTE_GAME_NONE;
+                    }
+                    break;
+                default:
+                    return;
+            }
+            if (gbDirectConnect) {
+                WFDCStage = 0;
+                giWaitType = 7;
+                strcpy(directConnectMessage,
+                       "Waiting for other computer to log in to direct connection.");
+                NormalDialog(directConnectMessage, 6, -1, -1, -1, 0, -1, 0, -1);
+                if (!gbFunctionComplete)
+                    ShutDown(0);
+            } else {
+                Connect();
+            }
+            break;
+    }
+    gbRemoteOn = 1;
+    giNumHumanPlayers = giNumNetGuests + 1;
+    iIDCtr = (iNetNameIndex * 400 + giThisNetPos + 1) * 100000000;
+    gbInNetSetup = 0;
+}
 
 VA(0x00458916, 0x5b)
 void UnloadRemoteDriver(short networkDriver) {
@@ -752,4 +818,70 @@ signed char WaitForGuest(void) {
             }
     }
     return 0;
+}
+
+// Buka 2.1 Netbios nbnet_init; the host also sends the guest count.
+VA(0x00459368, 0x1c8)
+int nbnet_init(void) {
+    char buffer[80];
+    int status;
+
+    giNumNetGuests = 0;
+    switch (GameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+            giWaitType = 4;
+            sprintf(gText, "Initializing network.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            giWaitType = 1;
+            sprintf(gText, "Waiting On Guest.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            buffer[0] = giNumNetGuests;
+            while (nb_snd(0, iNetNameIndex + 1, 3, buffer, 0))
+                PollSound();
+            break;
+        case REMOTE_GAME_NETWORK_GUEST:
+            giWaitType = 3;
+            sprintf(gText, "Initializing network.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            giWaitType = 2;
+            sprintf(gText, "Waiting On Host.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            break;
+    }
+    return 0;
+}
+
+// Buka 2.1 ModemSetup reset loop: open the port and reset a dial-up modem.
+VA(0x00459530, 0xf7)
+void ModemSetup(void) {
+    char command[104];
+    int resetAttempt;
+    int i;
+
+    com_init(gConfig.comPort[gbDirectConnect], 4, 0);
+    if (!gbDirectConnect) {
+        for (resetAttempt = 0; resetAttempt < 2; resetAttempt++) {
+            if (gConfig.comPort[gbDirectConnect] >= 1)
+                sprintf(command, gConfig.modemInitString);
+            else
+                sprintf(command, "ATZ");
+            PollSound();
+            ModemCommand(command);
+            for (i = 0; i < 12; i++) {
+                DelayMilli(10);
+                PollSound();
+            }
+            ModemCommand("\r");
+            DelayMilli(80);
+            PollSound();
+        }
+    }
 }

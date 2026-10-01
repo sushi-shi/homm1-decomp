@@ -15,6 +15,7 @@ struct tag_Anchor {
 
 void init_anchor(tag_Anchor*, int, int);
 void add_node(tag_Anchor*, tag_Node*);
+short com_init(unsigned char, int, int);
 short com_rcv(short, unsigned short, void*);
 short com_snd(short, unsigned short, unsigned short, void*, int);
 
