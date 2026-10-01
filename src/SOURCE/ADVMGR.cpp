@@ -291,7 +291,29 @@ void advManager::UpdBottomView(int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.613154;margin=1.071587;shape=0.489;size=0.961;calls=1.000;alternate=pol20:void advManager::ClearBottomView(void)@0x00060d63
 VA(0x0042cb4c, 0x132)
-void advManager::ClearBottomView(void) {}
+void advManager::ClearBottomView(void)
+{
+    int widgetIndex;
+
+    if (iCurBottomView == 0)
+        return;
+
+    for (widgetIndex = 0; widgetIndex < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; ++widgetIndex) {
+        if (m_bottomViewPrimaryWidgets[widgetIndex] != 0) {
+            m_adventureWindow->RemoveWidget(m_bottomViewPrimaryWidgets[widgetIndex]);
+            delete m_bottomViewPrimaryWidgets[widgetIndex];
+        }
+        if (m_bottomViewSecondaryWidgets[widgetIndex] != 0) {
+            m_adventureWindow->RemoveWidget(m_bottomViewSecondaryWidgets[widgetIndex]);
+            delete m_bottomViewSecondaryWidgets[widgetIndex];
+        }
+        m_bottomViewPrimaryWidgets[widgetIndex] = 0;
+        m_bottomViewSecondaryWidgets[widgetIndex] = 0;
+    }
+    iCurBottomViewEnemy = -1;
+    iCurBottomView = 0;
+    iLastAnimFrame = -1;
+}
 
 // donor PoL RVA 0x00060e95; preferred Buka symbol ?UpdBottomViewEnemyTurn@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -628,7 +650,25 @@ void advManager::CheckDimNextHeroBut(void)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.530039;margin=0.750383;shape=0.400;size=0.820;calls=1.000;alternate=pol20:void advManager::SeedTo(int, int)@0x0006891f
 VA(0x00435e3f, 0x152)
-void advManager::SeedTo(int, int) {}
+void advManager::SeedTo(int targetX, int targetY)
+{
+    hero *currentHero;
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+    if (gpCurPlayer->m_currentHero == -1)
+        return;
+
+    currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (!giSeedingValid)
+        gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
+                                    m_cursorType == 4, 0, currentHero->m_remainingMobility,
+                                    currentHero->m_unknown1c, targetX, targetY, 0, 1);
+    else if (!giFullySeeded)
+        gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
+                                    m_cursorType == 4, 0, currentHero->m_remainingMobility,
+                                    currentHero->m_unknown1c, targetX, targetY, 1, 1);
+}
 
 // donor PoL RVA 0x00068ab6; preferred Buka symbol ?ScreenScroll@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

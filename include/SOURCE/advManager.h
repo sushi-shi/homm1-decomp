@@ -87,7 +87,7 @@ public:
     class icon *m_boatFlagIcons[ADVMGR_PLAYER_COLOR_COUNT];
     signed char m_cursorActive;
     signed char m_drawHeroShadows;
-    signed char m_cursorType;
+    unsigned char m_cursorType;
     signed char m_cursorDirection;
     short m_cursorFrame;
     short m_cursorFrameCount;
@@ -259,6 +259,11 @@ public:
 #pragma pack(pop)
 
 extern int gbNoBorder;
+extern int giFullySeeded;
+extern class searchArray *gpSearchArray;
+extern int iCurBottomView;
+extern int iCurBottomViewEnemy;
+extern int iLastAnimFrame;
 extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;
