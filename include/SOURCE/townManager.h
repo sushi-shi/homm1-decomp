@@ -39,6 +39,17 @@ H1_ENUM_BEGIN(TownArmyCommand)
     TOWN_ARMY_COMMAND_SPLIT = 5,
     TOWN_SHIFT_QUALIFIER_MASK = 3
 H1_ENUM_END(TownArmyCommand)
+
+H1_ENUM_BEGIN(TownCommandText)
+    TOWN_TEXT_REDISTRIBUTE_ARMY = 0,
+    TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY = 1,
+    TOWN_TEXT_COMBINE_ARMIES = 2,
+    TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT = 3,
+    TOWN_TEXT_VIEW_ARMY = 4,
+    TOWN_TEXT_CANNOT_MOVE_LAST_ARMY = 5,
+    TOWN_TEXT_MOVE_ARMY = 6,
+    TOWN_TEXT_EXCHANGE_ARMIES = 7
+H1_ENUM_END(TownCommandText)
 // clang-format on
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
@@ -90,7 +101,7 @@ public:
     void ChangeTown(void);
     void SetupTown(void);
     void UnloadTown(void);
-    void SetArmyCommand(int);
+    void SetArmyCommand(short);
     void SetCommandAndText(struct tag_message &);
     void ShowText(char *);
     void DoCommand(int);
@@ -111,4 +122,6 @@ public:
     char *GetBuildingName(int);
 };
 #pragma pack(pop)
+
+extern char *cTownCommand[];
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

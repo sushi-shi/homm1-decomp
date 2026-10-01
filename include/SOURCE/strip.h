@@ -17,6 +17,8 @@ public:
     short m_y;
     signed char m_unknown1a;
     signed char m_selectedSlot;
+    char m_unknown1c[0x29];
+    armyGroup *m_army;
     // --- constructors ---
     strip(int, int, int, unsigned long int, int, class armyGroup *, int, int, int);
     ~strip();

@@ -136,6 +136,71 @@ void townManager::Close(void)
     m_active = 0;
 }
 
+// Buka TOWNMGR.cpp:944-1020; HoMM1 matches the dragged creature against
+// every slot of the target army and keeps word-sized flags.
+VA(0x00408b1c, 0x3b6)
+void townManager::SetArmyCommand(short qualifier)
+{
+    short lastArmy;
+    short i;
+    short sameType;
+
+    m_command = TOWN_ARMY_COMMAND_NONE;
+    lastArmy = 0;
+    if (m_swapStrip->m_army->GetNumArmies() == 1 && m_swapStrip == m_heroStrip
+        && m_swapStrip != m_pendingStrip)
+        lastArmy = 1;
+
+    if (m_swapStrip != m_pendingStrip) {
+        sameType = 0;
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+            if (m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]
+                == m_pendingStrip->m_army->m_creatureTypes[i])
+                sameType = 1;
+        }
+        if (sameType) {
+            if (qualifier) {
+                sprintf(m_statusText, cTownCommand[TOWN_TEXT_REDISTRIBUTE_ARMY],
+                        gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+                m_command = TOWN_ARMY_COMMAND_SPLIT;
+            } else if (lastArmy) {
+                strcpy(m_statusText, cTownCommand[TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY]);
+                return;
+            } else {
+                sprintf(m_statusText, cTownCommand[TOWN_TEXT_COMBINE_ARMIES],
+                        gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+                m_command = TOWN_ARMY_COMMAND_MERGE;
+            }
+        } else if (qualifier && m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == -1) {
+            sprintf(m_statusText, cTownCommand[TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT],
+                    gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+            m_command = TOWN_ARMY_COMMAND_SPLIT;
+        }
+    } else if (m_swapArmySlot == m_pendingArmySlot) {
+        sprintf(m_statusText, cTownCommand[TOWN_TEXT_VIEW_ARMY],
+                gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+        m_command = TOWN_ARMY_COMMAND_VIEW;
+    }
+
+    if (m_command != TOWN_ARMY_COMMAND_NONE)
+        return;
+    if (m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == -1) {
+        if (lastArmy) {
+            strcpy(m_statusText, cTownCommand[TOWN_TEXT_CANNOT_MOVE_LAST_ARMY]);
+            return;
+        } else {
+            sprintf(m_statusText, cTownCommand[TOWN_TEXT_MOVE_ARMY],
+                    gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+            m_command = TOWN_ARMY_COMMAND_SWAP;
+        }
+    } else {
+        sprintf(m_statusText, cTownCommand[TOWN_TEXT_EXCHANGE_ARMIES],
+                gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]],
+                gArmyNames[m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]]);
+        m_command = TOWN_ARMY_COMMAND_SWAP;
+    }
+}
+
 // donor PoL RVA 0x000158e0; preferred Buka symbol ?ShowText@townManager@@QAEXPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.613333;margin=0.109874;shape=0.519;size=1.000;calls=1.000;alternate=pol20:void townManager::ShowText(char *)@0x000158e0
