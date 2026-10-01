@@ -86,7 +86,18 @@ H1_ENUM_BEGIN(TownThievesCategory)
     THIEVES_CATEGORY_ARMY_STRENGTH = 7,
     TOWN_THIEVES_DEAD_PLAYER_STAT = -1,
     TOWN_BUILDING_TENT_FLAG = 0x20,
-    TOWN_BUILDING_CASTLE_FLAG = 0x40
+    TOWN_BUILDING_CASTLE_FLAG = 0x40,
+    THIEVES_RANK_FIRST_X = 0x120,
+    THIEVES_PLAYER_COLUMN_WIDTH = 0x61,
+    THIEVES_FIRST_CATEGORY_Y = 0x1b,
+    THIEVES_CATEGORY_ROW_HEIGHT = 0x1a,
+    THIEVES_FLAG_FRAME_BASE = 0xe,
+    THIEVES_RANK_ICON_WIDTH = 0x12,
+    THIEVES_RANK_ICON_HEIGHT = 0x16,
+    THIEVES_PLAYER_WIDTH = 0x48,
+    THIEVES_TIE_CENTERING_STEP = 9,
+    THIEVES_CATEGORY_COUNT = 8,
+    THIEVES_RANK_COUNT = 4
 H1_ENUM_END(TownThievesCategory)
 
 H1_ENUM_BEGIN(TownWellConstant)
@@ -193,7 +204,7 @@ public:
     int RecruitHero(int, int);
     void DoTavern(void);
     void SetupWell(class heroWindow *);
-    void SetupThievesGuild(class heroWindow *, int);
+    void SetupThievesGuild(class heroWindow *, short);
     void SetupCastle(class heroWindow *, int);
     char *GetBuildingName(int);
     // HoMM1 keeps the thieves-guild helpers as townManager members.

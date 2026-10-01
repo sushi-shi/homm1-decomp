@@ -691,8 +691,76 @@ short MageGuildHandler(struct tag_message &message)
 // donor PoL RVA 0x0001a783; preferred Buka symbol ?SetupThievesGuild@townManager@@QAEXPAVheroWindow@@H@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.350822;margin=0.362412;shape=0.263;size=0.210;calls=0.163;strings=townwind.icn;alternate=pol20:void townManager::SetupThievesGuild(class heroWindow *, int)@0x0001a783
+// Buka TOWNMGR.cpp:3328 SetupThievesGuild; HoMM1 only draws the ranking
+// flags, with the category count taken from the number of guilds owned.
 VA(0x0040d3d1, 0x2ec)
-void townManager::SetupThievesGuild(class heroWindow *, int) {}
+void townManager::SetupThievesGuild(class heroWindow *window, short categories)
+{
+    iconWidget *marker;
+    short firstPlayer;
+    int numThieves;
+    short wUnusedRankX = THIEVES_RANK_FIRST_X;
+    short iUnusedRankWidth = THIEVES_PLAYER_COLUMN_WIDTH;
+    short top = THIEVES_FIRST_CATEGORY_Y;
+    short rowSpacing = THIEVES_CATEGORY_ROW_HEIGHT;
+    short frameBase = THIEVES_FLAG_FRAME_BASE;
+    short pos;
+    short lMarkWidth = THIEVES_RANK_ICON_WIDTH;
+    short bIconHeight = THIEVES_RANK_ICON_HEIGHT;
+    short bColWidth = THIEVES_PLAYER_WIDTH;
+    signed char ranking[GAME_PLAYER_COUNT];
+    short rank;
+    short categoryIndex;
+    long totals[GAME_PLAYER_COUNT];
+    short startPos;
+    short hi;
+    short tied;
+
+    if (categories == -1) {
+        numThieves = gpGame->GetNumThievesGuilds(giCurPlayer);
+        if (numThieves >= 4)
+            categories = 8;
+        else if (numThieves == 3)
+            categories = 7;
+        else if (numThieves == 2)
+            categories = 5;
+        else
+            categories = 3;
+    }
+    if (categories > THIEVES_CATEGORY_COUNT)
+        categories = THIEVES_CATEGORY_COUNT;
+    for (categoryIndex = 0; categoryIndex < categories; categoryIndex++) {
+        GetCategoryStats(categoryIndex, totals, ranking);
+        SortStats(totals, ranking);
+        firstPlayer = 0;
+        hi = 0;
+        for (rank = 0; rank < THIEVES_RANK_COUNT; rank++) {
+            if (firstPlayer == gpGame->m_playerCount - gpGame->m_deadPlayerCount)
+                break;
+            tied = 1;
+            while (hi + 1 < gpGame->m_playerCount
+                   && totals[hi + 1] == totals[hi]) {
+                tied++;
+                hi++;
+            }
+            startPos = rank * THIEVES_PLAYER_COLUMN_WIDTH + THIEVES_RANK_FIRST_X
+                    - (tied - 1) * THIEVES_TIE_CENTERING_STEP;
+            for (pos = firstPlayer; !(pos > hi); pos++) {
+                marker = new iconWidget(
+                    (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH + startPos,
+                    categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
+                    THIEVES_RANK_ICON_WIDTH, THIEVES_RANK_ICON_HEIGHT, "townwind.icn",
+                    gpGame->m_players[ranking[pos]].m_unknown11 + THIEVES_FLAG_FRAME_BASE,
+                    0, -1, 0x10, 1);
+                if (marker == 0)
+                    MemError();
+                window->AddWidget(marker, -1);
+            }
+            hi++;
+            firstPlayer = hi;
+        }
+    }
+}
 
 // Buka TOWNMGR.cpp:3727-3833; HoMM1 has eight categories, sums three
 // resources per row and counts obelisks through playerData.

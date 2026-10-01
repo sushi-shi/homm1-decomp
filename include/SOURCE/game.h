@@ -37,7 +37,8 @@ H1_ENUM_END(GameStorageConstant)
 public:
     char m_unknown0000[0x1ff];
     signed char m_playerCount;
-    char m_unknown200[2];
+    char m_unknown200;
+    signed char m_deadPlayerCount;
     signed char m_playerDead[GAME_PLAYER_COUNT];
     unsigned short m_day;
     unsigned short m_week;
