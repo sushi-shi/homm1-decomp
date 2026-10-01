@@ -5,6 +5,8 @@
 
 H1_ENUM_BEGIN(MessageType)
     MESSAGE_NONE = 0,
+    MESSAGE_KEY_DOWN = 1,
+    MESSAGE_KEY_UP = 2,
     MESSAGE_MOUSE_MOVE = 4,
     MESSAGE_LEFT_BUTTON_DOWN = 8,
     MESSAGE_LEFT_BUTTON_UP = 0x10,
@@ -38,7 +40,8 @@ H1_ENUM_BEGIN(BaseWidgetCommand)
     WIDGET_COMMAND_SET_COLOR = 8,
     WIDGET_COMMAND_SET_ICON = 9,
     WIDGET_NOTIFY_SELECT = 12,
-    WIDGET_NOTIFY_DESELECT = 13
+    WIDGET_NOTIFY_DESELECT = 13,
+    WIDGET_NOTIFY_RIGHT_CLICK = 14
 H1_ENUM_END(BaseWidgetCommand)
 
 H1_ENUM_BEGIN(MessageModifier)
@@ -53,6 +56,11 @@ struct tag_messageMousePayload {
     short y;
     H1_ENUM_STORAGE(MessageModifier, short) modifiers;
     char unknown[8];
+};
+
+struct tag_messageKeyboardPayload {
+    short keyCode;
+    char unknown[12];
 };
 
 union tag_messageWidgetData {
@@ -75,6 +83,7 @@ struct tag_messageExecutivePayload {
 
 union tag_messagePayload {
     tag_messageMousePayload mouse;
+    tag_messageKeyboardPayload keyboard;
     tag_messageWidgetPayload widget;
     tag_messageExecutivePayload executive;
     char unknown[14];

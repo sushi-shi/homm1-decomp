@@ -6,7 +6,10 @@
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
+#include <BASE/inputManager.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/message.h>
+#include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <H1/KB.h>
 
@@ -46,6 +49,87 @@ void button::Read(void) {
     m_hotkey = gpResourceManager->ReadWord();
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
+}
+
+inline short button::Deselect(tag_message& message) {
+    if (!(m_flags & WIDGET_FLAG_SELECTED))
+        return MESSAGE_DISPATCH_CONTINUE;
+    m_flags &= ~WIDGET_FLAG_SELECTED;
+    Draw();
+    gpWindowManager
+        ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
+    message.payload.widget.command = WIDGET_NOTIFY_DESELECT;
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.id = m_id;
+    message.payload.mouse.modifiers = iLeftRightSave;
+    iLeftRightSave = MESSAGE_MODIFIER_NONE;
+    return MESSAGE_DISPATCH_FORWARD;
+}
+
+VA(0x0047f050, 0x528)
+short button::Main(tag_message& message) {
+    if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
+        && KBTickCount() > gButtonRepeatTimer)
+        return Deselect(message);
+    if (!(m_flags & WIDGET_FLAG_ENABLED)) {
+        if (message.type == MESSAGE_WIDGET)
+            return widget::Main(message);
+        return MESSAGE_DISPATCH_CONTINUE;
+    }
+    switch (message.type) {
+        case MESSAGE_KEY_DOWN:
+            if (m_hotkey != BUTTON_NO_HOTKEY && message.payload.keyboard.keyCode == m_hotkey)
+                return Select(message);
+            return MESSAGE_DISPATCH_CONTINUE;
+        case MESSAGE_KEY_UP:
+            if (m_hotkey != BUTTON_NO_HOTKEY && message.payload.keyboard.keyCode == m_hotkey)
+                return Deselect(message);
+            return MESSAGE_DISPATCH_CONTINUE;
+        case MESSAGE_LEFT_BUTTON_DOWN:
+        case MESSAGE_RIGHT_BUTTON_DOWN: {
+            short x = message.payload.mouse.x - m_owner->m_posX;
+            short y = message.payload.mouse.y - m_owner->m_posY;
+            if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
+                if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+                    message.type = MESSAGE_WIDGET;
+                    message.payload.widget.command = WIDGET_NOTIFY_RIGHT_CLICK;
+                    message.payload.widget.id = m_id;
+                    message.payload.mouse.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                    return MESSAGE_DISPATCH_FORWARD;
+                }
+                return MESSAGE_DISPATCH_CONTINUE;
+            }
+            if (!(m_flags & WIDGET_FLAG_DIMMED) && x >= m_x && y >= m_y && x < m_x + m_width
+                && y < m_y + m_height) {
+                if (m_kind != WIDGET_KIND_TRACK_PRESS)
+                    return Select(message);
+                Select(message);
+                while (message.type != MESSAGE_LEFT_BUTTON_UP
+                       && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+                    gpMouseManager->Main(message);
+                    if (message.type == MESSAGE_MOUSE_MOVE) {
+                        x = message.payload.mouse.x - m_owner->m_posX;
+                        y = message.payload.mouse.y - m_owner->m_posY;
+                        if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+                            if (!(m_flags & WIDGET_FLAG_SELECTED))
+                                Select(message);
+                        } else if (m_flags & WIDGET_FLAG_SELECTED) {
+                            Deselect(message);
+                        }
+                    }
+                    Process1WindowsMessage();
+                    message = gpInputManager->GetEvent();
+                }
+                return Deselect(message);
+            }
+            return MESSAGE_DISPATCH_CONTINUE;
+        }
+        case MESSAGE_LEFT_BUTTON_UP:
+            if (m_flags & WIDGET_FLAG_SELECTED)
+                return Deselect(message);
+            break;
+    }
+    return widget::Main(message);
 }
 
 VA(0x0047f580, 0x92)

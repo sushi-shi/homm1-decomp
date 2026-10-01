@@ -8,7 +8,8 @@
 
 H1_ENUM_BEGIN(ButtonConstant)
     BUTTON_SELECT_DIALOG_RESULT = 1,
-    BUTTON_REPEAT_DELAY_TICKS = 60
+    BUTTON_REPEAT_DELAY_TICKS = 60,
+    BUTTON_NO_HOTKEY = -1
 H1_ENUM_END(ButtonConstant)
 
 // forward declarations:
