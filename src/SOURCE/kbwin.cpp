@@ -240,42 +240,37 @@ void SetNoDialogMenus(int menusEnabled) {
 // each command from the normal or setup enable table.
 VA(0x0045c8a4, 0x15a)
 void SetMenus(void* menu, int enabled) {
-    int count;
-    unsigned int commandId;
-    int scanPosition;
-    int commandPosition;
-    int disableFlag;
-    int index;
+    int numItems;
+    unsigned int id;
+    int scanIndex;
+    int k;
+    int change;
+    int itemIndex;
 
-    count = GetMenuItemCount(static_cast<HMENU>(menu));
-    for (index = 0; index < count; index++) {
-        commandId = GetMenuItemID(static_cast<HMENU>(menu), index);
-        if (commandId == static_cast<unsigned int>(-1)) {
-            SetMenus(GetSubMenu(static_cast<HMENU>(menu), index), enabled);
-            disableFlag = 0;
+    numItems = GetMenuItemCount(static_cast<HMENU>(menu));
+    for (itemIndex = 0; itemIndex < numItems; itemIndex++) {
+        id = GetMenuItemID(static_cast<HMENU>(menu), itemIndex);
+        if (id == static_cast<unsigned int>(-1)) {
+            SetMenus(GetSubMenu(static_cast<HMENU>(menu), itemIndex), enabled);
+            change = 0;
         } else {
-            disableFlag = 0;
+            change = 0;
             if (enabled) {
-                disableFlag = 1;
+                change = 1;
             } else {
-                scanPosition = 0;
-                for (commandPosition = 0; commandPosition < KBWIN_MENU_ENTRY_COUNT;
-                     commandPosition++) {
-                    if (gsMenuEnableStatus[commandPosition].command == commandId)
-                        scanPosition = commandPosition;
+                scanIndex = 0;
+                for (k = 0; k < KBWIN_MENU_ENTRY_COUNT; k++) {
+                    if (gsMenuEnableStatus[k].command == id)
+                        scanIndex = k;
                 }
                 if (gbInSetupDialog)
-                    disableFlag = 1 - gsMenuEnableStatus[scanPosition].setupEnabled;
+                    change = 1 - gsMenuEnableStatus[scanIndex].setupEnabled;
                 else
-                    disableFlag = 1 - gsMenuEnableStatus[scanPosition].normalEnabled;
+                    change = 1 - gsMenuEnableStatus[scanIndex].normalEnabled;
             }
         }
-        if (disableFlag != 0)
-            EnableMenuItem(
-                static_cast<HMENU>(menu),
-                commandId,
-                enabled == 0 ? MF_GRAYED : MF_ENABLED
-            );
+        if (change != 0)
+            EnableMenuItem(static_cast<HMENU>(menu), id, enabled == 0 ? MF_GRAYED : MF_ENABLED);
     }
     UpdateDfltMenu(menu);
 }
@@ -318,4 +313,32 @@ void ProcessAssert(int condition, char* file, int line) {
         unusedAssertWord = 0;
         ShutDown(gText);
     }
+}
+
+// PoL 2.0 Misc.cpp FindToken correspondence.
+VA(0x0045dd14, 0x65)
+char* FindToken(char* text, char token) {
+    int pos;
+    int len;
+
+    len = strlen(text);
+    for (pos = 0; len > pos; pos++) {
+        if (text[pos] == token)
+            return text + pos;
+    }
+    return 0;
+}
+
+// PoL 2.0 Misc.cpp FindLastToken correspondence.
+VA(0x0045dd79, 0x63)
+char* FindLastToken(char* text, char token) {
+    int pos;
+    int len;
+
+    len = strlen(text);
+    for (pos = len - 1; pos >= 0; pos--) {
+        if (text[pos] == token)
+            return text + pos;
+    }
+    return 0;
 }
