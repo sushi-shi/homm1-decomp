@@ -4,6 +4,8 @@
 
 #include <BASE/BITS.h>
 #include <BASE/Misc.h>
+#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/TILE.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
@@ -620,13 +622,74 @@ void game::CancelComputerScreen(void) {
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.481260;margin=0.673888;shape=0.345;size=0.812;calls=0.778;alternate=pol20:void game::ShowComputerScreen(void)@0x00081271
 VA(0x00444ba9, 0x115)
-void game::ShowComputerScreen(void) {}
+void game::ShowComputerScreen(void) {
+    if (gConfig.blackoutComputer || gbRemoteOn) {
+        int saved = gbThisNetHumanPlayer[giCurPlayer];
+        gbThisNetHumanPlayer[giCurPlayer] = 1;
+        int i;
+        for (i = 1; i <= 6; ++i)
+            gpWindowManager->BroadcastMessage(
+                MESSAGE_WIDGET,
+                WIDGET_COMMAND_SET_FLAGS,
+                i,
+                WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
+            );
+        gpMouseManager->ReallyHidePointer();
+        gbAllBlack = 1;
+        gpAdvManager->CompleteDraw(1);
+        gpAdvManager->UpdateHeroLocators(1, 1);
+        gpAdvManager->UpdateTownLocators(1, 1);
+        gpAdvManager->UpdBottomView(1, 1, 1);
+        gpAdvManager->UpdateScreen(0, 1);
+        gbAllBlack = 0;
+        gbThisNetHumanPlayer[giCurPlayer] = saved;
+        gpMouseManager->ReallyShowPointer();
+    }
+    ShowHeroesLogo();
+}
+
+// Buka 2.1 game::ShowHeroesLogo; HoMM1 draws the logo from a tileset.
+VA(0x00444cbe, 0xa8)
+void game::ShowHeroesLogo(void) {
+    tileset* logo;
+    if (!gpAdvManager->m_openState) {
+        gpMouseManager->ReallyHidePointer();
+        gpAdvManager->m_openState = 1;
+        logo = gpResourceManager->GetTileset("herologo.til");
+        TileToBitmap(logo, 0, gpWindowManager->m_screen, 480, 16);
+        gpWindowManager->UpdateScreenRegion(480, 16, 144, 144);
+        gpResourceManager->Dispose(logo);
+        gpMouseManager->ReallyShowPointer();
+    }
+}
 
 // donor PoL RVA 0x000813fe; preferred Buka symbol ?WaitForPlayer@game@@QAEXPADH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.547163;margin=0.571086;shape=0.476;size=0.842;calls=0.833;alternate=pol20:void game::WaitForPlayer(char *, int)@0x000813fe
 VA(0x00444d66, 0x155)
-void game::WaitForPlayer(char*, int) {}
+void game::WaitForPlayer(char* text, int player) {
+    if (gbBlackoutPlayer && giNumHumanPlayers > 1 && !gbRemoteOn) {
+        gpMouseManager->SetPointer(0);
+        gbAllBlack = 1;
+        giBottomViewOverrideEndTime = KBTickCount() + 9999999;
+        if (gbThisNetHumanPlayer[giCurPlayer])
+            giBottomViewOverride = 1;
+        else
+            giBottomViewOverride = 0;
+        gpSoundManager->m_musicReady = 1;
+        gpSoundManager->SwitchAmbientMusic(15);
+        gpMouseManager->ReallyHidePointer();
+        gpAdvManager->CompleteDraw(1);
+        gpAdvManager->UpdateHeroLocators(1, 1);
+        gpAdvManager->UpdateTownLocators(1, 1);
+        gpAdvManager->UpdateScreen(0, 1);
+        ShowHeroesLogo();
+        gbAllBlack = 0;
+        gpMouseManager->ReallyShowPointer();
+        NormalDialog(text, 1, 0x61, -1, 9, gpGame->m_players[player].m_unknown11, -1, 0, -1);
+        gpSoundManager->SwitchAmbientMusic(-1);
+    }
+}
 
 // donor PoL RVA 0x00082547; preferred Buka symbol ?ProcessOnMapHeroes@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
