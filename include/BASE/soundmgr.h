@@ -27,6 +27,8 @@ H1_ENUM_BEGIN(CDPlaybackConstant)
     MUSIC_FILENAME_CAPACITY = 40,
     MUSIC_STOP_WAIT_COUNT = 10,
     SAMPLE_STOP_ALL_WAIT_COUNT = 5,
+    AMBIENT_FADE_DELAY_TICKS = 900,
+    SAMPLE_STATUS_DONE = 2,
     SAMPLE_VOLUME_TABLE_BYTES = 0x40,
     SOUND_STATE_RESET_SPAN = 0xae,
     MUSIC_STOP_WAIT_MILLISECONDS = 5
@@ -74,6 +76,13 @@ extern char gAdjustMusicAssertFile[];
 extern short gSampleVolumes[];
 extern char gcSoundPath[];
 extern char gcDataPath[];
+struct SampleChannelStruct {
+    int startChannel;
+    int endChannel;
+    int currentChannel;
+};
+extern SampleChannelStruct SCS[];
+
 char* FindToken(char*, char);
 void SetReady2Poll(void);
 void HandleMCIError(int, char*);

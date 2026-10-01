@@ -46,11 +46,6 @@ inline void HandleMCIError(int errorCode, char* command) {
     ShutDown(gText);
 }
 
-inline void soundManager::ServiceSound(void) {
-    if (gbNoSound == 0)
-        AIL_serve();
-}
-
 inline void soundManager::ValidatePreviousPosition(int track) {
     char buffer[CD_POSITION_BUFFER_SIZE];
     char* separator;
@@ -111,6 +106,17 @@ void soundManager::CDStop(void) {
         ValidatePreviousPosition(CDTrackMap[m_currentTrack]);
     }
     CDPlaying = 0;
+}
+
+// PoL keeps this out of line; HoMM1 retains only its expansions.
+inline int soundManager::CDIsPlaying(void) {
+    if (gbNoSound != 0)
+        return 0;
+    wsprintfA(CommandString, "status CD mode");
+    nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
+    if (nMCIError != 0)
+        HandleMCIError(nMCIError, CommandString);
+    return strcmpi(lpszReturnString, "playing") == 0;
 }
 
 VA(0x00477110, 0xd7)
@@ -996,4 +1002,97 @@ void soundManager::PollSound(void) {
         }
     }
     m_pollRequested = 0;
+}
+
+VA(0x00478dd0, 0x1ad)
+void soundManager::SwitchAmbientMusic(int track) {
+    if (gbNoSound != 0)
+        return;
+    if (m_musicReady == 0)
+        return;
+    if (gConfig.musicVolume == 0) {
+        m_currentTrack = static_cast<char>(track);
+        return;
+    }
+    if (MusicPlaying() == 0) {
+        PlayAmbientMusic(track, 0, -1);
+        return;
+    }
+    Process1WindowsMessage();
+    if ((m_fadeSteps != 0 && m_fadeTargetTrack != track)
+        || (m_fadeSteps == 0 && m_currentTrack != track)) {
+        if (m_fadeSteps <= MUSIC_FADE_HOLD_LAST) {
+            m_fadeSteps = MUSIC_FADE_TOTAL_STEPS;
+            gMusicFadeTimer = KBTickCount() + AMBIENT_FADE_DELAY_TICKS;
+        }
+        m_fadeTargetTrack = track;
+        PollSound();
+    }
+}
+
+VA(0x00478f80, 0x1ea)
+struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
+    struct _SAMPLE* handle;
+    short channel;
+    SampleChannelStruct* channels;
+    SamplePlaybackData* playback;
+    if (gbNoSound != 0)
+        return NULL;
+    if (m_musicReady == 0)
+        return NULL;
+    if (gConfig.soundVolume == 0)
+        return NULL;
+    playback = &sampleResource->m_playbackData;
+    if (m_samplesReady == 0 || playback->volume == 0)
+        return NULL;
+    channels = &SCS[playback->channelType];
+    for (channel = static_cast<short>(channels->startChannel); channel < channels->endChannel;
+         channel++) {
+        if (AIL_sample_status(m_sampleHandles[channel]) == SAMPLE_STATUS_DONE)
+            break;
+    }
+    if (channel == channels->endChannel) {
+        if (playback->channelType == SAMPLE_PLAYBACK_CHANNEL_NONE)
+            return NULL;
+        channel = static_cast<short>(channels->currentChannel);
+        channels->currentChannel++;
+        if (channels->endChannel <= channels->currentChannel) {
+            channels->currentChannel = channels->startChannel;
+            channel = static_cast<short>(channels->currentChannel);
+        }
+        StopSample(m_sampleHandles[channel]);
+    }
+    handle = m_sampleHandles[channel];
+    m_channelVolumes[channel] = static_cast<char>(playback->volume);
+    gSampleVolumes[channel] = static_cast<short>(playback->volume);
+    AIL_init_sample(handle);
+    AIL_set_sample_type(handle, playback->format, 1);
+    AIL_set_sample_playback_rate(handle, playback->sampleRate);
+    AIL_set_sample_loop_count(handle, playback->loopCount);
+    AIL_set_sample_address(handle, playback->data, playback->size);
+    if (gConfig.soundVolume != 0)
+        AIL_set_sample_volume(handle, ConvertVolume(playback->volume, SOUND_VOLUME_EFFECT));
+    else
+        AIL_set_sample_volume(handle, 0);
+    AIL_start_sample(handle);
+    playback->activeSample = handle;
+    m_channelSamples[channel] = handle;
+    m_channelSampleData[channel] = playback->data;
+    m_channelSampleSizes[channel] = playback->size;
+    return handle;
+}
+
+VA(0x00479170, 0x10)
+void soundManager::ServiceSound(void) {
+    if (gbNoSound == 0)
+        AIL_serve();
+}
+
+VA(0x00479180, 0xfe)
+int soundManager::MusicPlaying(void) {
+    if (gbNoSound != 0)
+        return 0;
+    if (m_cdReady != 0)
+        return CDIsPlaying();
+    return DigitalReport(m_musicSample, SAMPLE_REPORT_PLAYING);
 }

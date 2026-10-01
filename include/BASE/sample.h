@@ -4,22 +4,28 @@
 #include <BASE/resource.h>
 
 H1_ENUM_BEGIN(SamplePlaybackChannel)
-    SAMPLE_PLAYBACK_CHANNEL_GROUP = 2
+    SAMPLE_PLAYBACK_CHANNEL_GROUP = 2,
+    SAMPLE_PLAYBACK_CHANNEL_NONE = 4
 H1_ENUM_END(SamplePlaybackChannel)
 
 #pragma pack(push, 1)
+// MemorySample addresses these fields through one sub-object pointer.
+struct SamplePlaybackData {
+    struct _SAMPLE* activeSample;
+    signed char* data;
+    long size;
+    H1_ENUM_STORAGE(SamplePlaybackChannel, long) channelType;
+    long sampleRate;
+    long format;
+    long volume;
+    long loopCount;
+};
+
 class sample : public resource {
 public:
-    void *m_activeSample;
-    signed char *m_data;
-    long m_size;
-    H1_ENUM_STORAGE(SamplePlaybackChannel, long) m_channelType;
-    long m_sampleRate;
-    long m_format;
-    long m_volume;
-    long m_loopCount;
+    SamplePlaybackData m_playbackData;
 
-    sample(char *, long int, long int, long int);
+    sample(char*, long int, long int, long int);
     virtual ~sample();
 };
 #pragma pack(pop)
