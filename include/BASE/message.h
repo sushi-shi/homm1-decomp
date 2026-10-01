@@ -34,6 +34,8 @@ H1_ENUM_BEGIN(BaseWidgetCommand)
     WIDGET_COMMAND_SET_FLAGS = 5,
     WIDGET_COMMAND_CLEAR_FLAGS = 6,
     WIDGET_COMMAND_DIALOG_SELECT = 10,
+    WIDGET_NOTIFY_SELECT = 12,
+    WIDGET_NOTIFY_RIGHT_CLICK = 14,
     WIDGET_COMMAND_HOVER = 11,
     WIDGET_COMMAND_DIMMED = 0x1000,
     WIDGET_COMMAND_SET_FRAME = 4,
@@ -63,20 +65,23 @@ struct tag_messageMousePayload {
     char unknown[8];
 };
 
-struct tag_messageKeyboardPayload {
-    short keyCode;
-    char unknown[12];
-};
-
 union tag_messageWidgetData {
     long value;
     char* text;
 };
 
+struct tag_messageKeyboardPayload {
+    short keyCode;
+    short unknown;
+    short modifiers;
+    char unknown6[8];
+};
+
 struct tag_messageWidgetPayload {
     H1_ENUM_STORAGE(BaseWidgetCommand, short) command;
     short id;
-    char unknown[6];
+    short modifiers;
+    char unknown[4];
     tag_messageWidgetData data;
 };
 
@@ -99,5 +104,8 @@ struct tag_message {
     tag_messagePayload payload;
 };
 #pragma pack(pop)
+
+#define IS_WIDGET_SELECTION_NOTIFICATION(command) \
+    ((command) == WIDGET_NOTIFY_SELECT || (command) == WIDGET_NOTIFY_RIGHT_CLICK)
 
 #endif

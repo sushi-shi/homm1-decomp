@@ -224,7 +224,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/ADVMGR"
 source = "src/SOURCE/ADVMGR.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/CMBTMGR"
@@ -287,7 +287,7 @@ flags = "cpp_o2"
 [[unit]]
 unit = "SOURCE/PHILAI"
 source = "src/SOURCE/PHILAI.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/RECRUIT"

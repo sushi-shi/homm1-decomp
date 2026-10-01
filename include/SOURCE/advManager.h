@@ -87,7 +87,7 @@ public:
     class icon* m_boatFlagIcons[ADVMGR_PLAYER_COLOR_COUNT];
     signed char m_cursorActive;
     signed char m_drawHeroShadows;
-    signed char m_cursorType;
+    unsigned char m_cursorType;
     signed char m_cursorDirection;
     short m_cursorFrame;
     short m_cursorFrameCount;
@@ -136,7 +136,7 @@ public:
     void ProcessIncomingGroupMapChange(char*);
     void PurgeMapChangeQueue(void);
     void UnwindMapChangeQueue(int, int);
-    void ViewWorld(int, int, int);
+    void ViewWorld(signed char, signed char, signed char);
     void VWCleanup(void);
     void VWInit(int, int);
     void VWCompleteDraw(void);
@@ -159,13 +159,13 @@ public:
     void UpdateHeroLocator(int, int, int);
     void UpdateHeroLocators(signed char, signed char);
     void UpdateTownLocators(int, int);
-    void UpdBottomView(int, int, int);
+    void UpdBottomView(signed char, signed char, signed char);
     void ClearBottomView(void);
-    int UpdBottomViewEnemyTurn(void);
-    int UpdBottomViewNewTurn(void);
-    int UpdBottomViewResMsg(void);
-    int UpdBottomViewKingdom(void);
-    int UpdBottomViewHero(void);
+    signed char UpdBottomViewEnemyTurn(void);
+    signed char UpdBottomViewNewTurn(void);
+    signed char UpdBottomViewResMsg(void);
+    signed char UpdBottomViewKingdom(void);
+    signed char UpdBottomViewHero(void);
     void HeroQuickView(int, int, int, int);
     char* GetArmySizeName(short, H1_ENUM_PARAM(ArmySizeNameVariant, signed char));
     void TownQuickView(int, int, int, int);
@@ -178,7 +178,7 @@ public:
     void SetHeroContext(signed char, int);
     void DoHeroKnob(void);
     void DoTownKnob(void);
-    void CastSpell(int);
+    void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
     int ComboDraw(short, short, int);
@@ -189,7 +189,7 @@ public:
     void InsertSound(int, int, int, int);
     void TeleportTo(class hero*, int, int, int, int);
     void DimensionDoor(void);
-    void TownGate(int);
+    void TownGate(void);
     void SummonBoat(void);
     void ShowRoute(int, int, int);
     void HideRoute(int, int, int);
@@ -197,13 +197,13 @@ public:
     void CheckDimNextHeroBut(void);
     void SeedTo(int, int);
     void ForceNewHover(void);
-    void ScreenScroll(int, int);
+    void ScreenScroll(signed char, int);
     void CheckScreenScroll(void);
     int MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
     char* CheckHandleNet(void);
-    int CheckHandleNetPlayerWait(struct tag_message&, int);
+    short CheckHandleNetPlayerWait(struct tag_message &, signed char);
     void TrimLoopingSounds(int);
     void DisableButtons(void);
     void EnableButtons(void);
@@ -339,7 +339,19 @@ public:
 };
 #pragma pack(pop)
 
+short APanelHandler(struct tag_message &);
+
 extern int gbNoBorder;
+extern int gbRemoteOn;
+extern long giForceSwitchMusic;
+extern long iLastScrollTime;
+extern int gbForceUpdate;
+extern int gbAllBlack;
+extern int giFullySeeded;
+extern class searchArray *gpSearchArray;
+extern int iCurBottomView;
+extern int iCurBottomViewEnemy;
+extern int iLastAnimFrame;
 extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;

@@ -19,6 +19,7 @@ AI_PLAYER_COUNT = 4, AI_PLAYER_BEGIN = 0,
 extern signed char giBuildBoat[AI_PLAYER_COUNT];
 extern signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
 void ShowStatus();
+void CheckDoMain(int, int);
 int GetBuildingBaseResourceValue(int, int, int);
 extern int iDummy;
 extern int gArtifactBaseRV[];
