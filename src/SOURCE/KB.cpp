@@ -11,6 +11,9 @@
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -449,6 +452,44 @@ void MemError(void) {
         gcConventionalMemoryUnits
     );
     ShutDown(gText);
+}
+
+// Buka 2.1 MiscRuntime MemSize: a fixed reported memory size.
+// @dead-code
+// Zero-ref: no effective incoming retail reference.
+VA(0x00455a88, 0x15)
+int MemSize(int) {
+    return 16034;
+}
+
+// Buka 2.1 CheckMem without HoMM2's memory globals.
+VA(0x00455a9d, 0x12)
+signed char CheckMem(void) {
+    return 1;
+}
+
+// Buka 2.1 Misc IsCDDrive.
+VA(0x00455b8b, 0x51)
+int IsCDDrive(int driveIndex) {
+    sprintf(gText, "A:\\");
+    gText[0] += driveIndex;
+    return GetDriveTypeA(gText) == DRIVE_CDROM;
+}
+
+VA(0x00455bdc, 0x64)
+void LoadSystemwideIcons(void) {
+    gBuyBuildIcons = gpResourceManager->GetIcon("buybuild.icn");
+    gSystemIcons = gpResourceManager->GetIcon("system.icn");
+    bigFont = gpResourceManager->GetFont("bigfont.fnt");
+    smallFont = gpResourceManager->GetFont("smalfont.fnt");
+}
+
+VA(0x00455c40, 0x54)
+void UnloadSystemwideIcons(void) {
+    gpResourceManager->Dispose(gBuyBuildIcons);
+    gpResourceManager->Dispose(gSystemIcons);
+    gpResourceManager->Dispose(bigFont);
+    gpResourceManager->Dispose(smallFont);
 }
 
 // Retail empty lifecycle hook; Buka and PoL KB correspondence.
