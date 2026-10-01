@@ -24,6 +24,8 @@ extern char gbNoSound;
 extern signed char gbShowHighScore;
 extern signed char gbStandardHighScore;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
+// Cell tile index -> terrain type; IsMobile reads it zero-extended.
+extern signed char giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];

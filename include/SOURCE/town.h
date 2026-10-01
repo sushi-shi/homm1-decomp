@@ -17,8 +17,8 @@ public:
     signed char m_owner;
     signed char m_threat;
     signed char m_type;
-    unsigned char m_x;
-    unsigned char m_y;
+    signed char m_x;
+    signed char m_y;
     armyGroup m_army;
     signed char m_occupyingHeroId;
     short m_buildings;

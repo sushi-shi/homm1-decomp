@@ -2,10 +2,12 @@
 
 #include <match.h>
 
+#include <BASE/BITS.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/FINDPATH.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -64,6 +66,162 @@ void playerData::Read(int) {}
 VA(0x00438fe0, 0x12c)
 int playerData::NextHero(int) {
     return 0;
+}
+
+// Buka 2.1 playerData::HasMobileHero.
+VA(0x0043910c, 0x68)
+signed char playerData::HasMobileHero(void) {
+    for (short i = 0; i < m_heroCount; ++i) {
+        if (gpGame->IsMobile(m_heroIds[i]))
+            return 1;
+    }
+    return 0;
+}
+
+// HoMM1 counts this player's visited-obelisk bits.
+VA(0x00439174, 0x5f)
+signed char playerData::CountVisitedObelisks(void) {
+    signed char count = 0;
+    for (short i = 0; i < 48; ++i) {
+        if (BitTest(m_obelisksVisited, i))
+            ++count;
+    }
+    return count;
+}
+
+// Buka 2.1 playerData::BuildingsOwned; slot 0 is the mage guild.
+VA(0x004391d3, 0xd1)
+int playerData::BuildingsOwned(int townType, int buildingIndex, int buildState) {
+    int count = 0;
+    int i;
+    for (i = 0; i < m_townCount; ++i) {
+        town* ownedTown = &gpGame->m_castleRecs[m_townIds[i]];
+        if (buildingIndex < 7 || ownedTown->m_type == townType) {
+            if (buildingIndex == 0) {
+                if (ownedTown->m_buildings & 1) {
+                    if (ownedTown->m_buildState == buildState)
+                        ++count;
+                }
+            } else {
+                if (ownedTown->m_buildings & (1 << buildingIndex))
+                    ++count;
+            }
+        }
+    }
+    return count;
+}
+
+// Buka 2.1 game::IsMobile.
+VA(0x00439873, 0xb3)
+signed char game::IsMobile(signed char heroId) {
+    if (heroId == -1)
+        return 0;
+    hero* mobileHero = &m_heroRecs[heroId];
+    int terrain = giGroundToTerrain[gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y)->m_tileIndex];
+    return mobileHero->m_remainingMobility >= CalcTerrainCost(
+               terrain,
+               mobileHero->m_direction & 1,
+               mobileHero->m_remainingMobility,
+               mobileHero->m_unknown1c
+           );
+}
+
+// Buka 2.1 game::GetWorldMapData.
+VA(0x00439926, 0x1e)
+mapCell (*game::GetWorldMapData(void))[MAP_CELL_GRID_SIZE] {
+    return m_map;
+}
+
+// Buka 2.1 game::CreateBoat without the network map-change notice.
+VA(0x00439944, 0xd9)
+signed char game::CreateBoat(signed char x, signed char y) {
+    signed char boatIdx = Scan(m_boatSlots, 0, GAME_BOAT_COUNT);
+    if (boatIdx != -1) {
+        m_boatSlots[boatIdx] = boatIdx;
+        boatRecord* boat = &m_boats[boatIdx];
+        boat->id = boatIdx;
+        boat->x = x;
+        boat->y = y;
+        boat->direction = 2;
+        boat->owner = giCurPlayer;
+        mapCell* square = &m_map[x][y];
+        boat->savedTriggerType = square->m_triggerType;
+        boat->savedEventData = square->m_objectMetadata;
+        square->m_triggerType = 0xbe;
+        square->m_objectMetadata = boatIdx;
+    }
+    return boatIdx;
+}
+
+// Buka 2.1 game::Scan.
+VA(0x00439a1d, 0x5f)
+signed char game::Scan(signed char* array, signed char start, signed char length) {
+    signed char i;
+    for (i = start; i < start + length; ++i) {
+        if (array[i] == -1)
+            return i;
+    }
+    return -1;
+}
+
+// Buka 2.1 game::RandomScan; HoMM1 always looks for a free (-1) entry.
+VA(0x00439a7c, 0x74)
+signed char game::RandomScan(signed char* array, signed char start, signed char range, int) {
+    signed char index = -1;
+    int i;
+    for (i = 0; i < 10000; ++i) {
+        index = start + Random(0, range - 1);
+        if (array[index] == -1)
+            return index;
+    }
+    return -1;
+}
+
+// HoMM1 nine heroes per class; a 0x40 entry is the fallback pick.
+VA(0x00439af0, 0x10e)
+signed char game::GetNewHeroId(signed char heroClass) {
+    signed char freeSlot = -1;
+    signed char id = -1;
+    short first = heroClass * 9;
+    int i;
+    freeSlot = Scan(m_availableHeroes, first, 9);
+    if (freeSlot != -1) {
+        id = RandomScan(m_availableHeroes, first, 9, 9);
+    } else {
+        freeSlot = Scan(m_availableHeroes, 0, GAME_HERO_COUNT);
+        if (freeSlot != -1) {
+            id = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
+        } else {
+            for (i = 0; i < GAME_HERO_COUNT; ++i) {
+                if (m_availableHeroes[i] == 0x40)
+                    id = i;
+            }
+        }
+    }
+    if (id != -1)
+        return id;
+    else
+        return 0;
+}
+
+// Buka 2.1 game::GetTownId.
+VA(0x00439bfe, 0x8f)
+signed char game::GetTownId(signed char x, signed char y) {
+    for (short i = 0; i < GAME_TOWN_COUNT; ++i) {
+        if (m_castleRecs[i].m_x == x && m_castleRecs[i].m_y == y)
+            return i;
+    }
+    return -1;
+}
+
+// Buka 2.1 game::GetMineId.
+VA(0x00439c8d, 0x87)
+signed char game::GetMineId(signed char x, signed char y) {
+    for (short i = 0; i < GAME_MINE_COUNT; ++i) {
+        if (m_mines[i].x == x && m_mines[i].y == y)
+            return i;
+    }
+    return -1;
 }
 
 // donor PoL RVA 0x00071d89; preferred Buka symbol ?GenerateStandardFileName@@YIXPAD0@Z

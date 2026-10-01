@@ -25,9 +25,41 @@ struct tag_message;
 H1_ENUM_BEGIN(GameStorageConstant)
     GAME_PLAYER_COUNT = 4,
     GAME_TOWN_COUNT = 36,
-    GAME_HERO_COUNT = 36
+    GAME_HERO_COUNT = 36,
+    GAME_MINE_COUNT = 36,
+    GAME_BOAT_COUNT = 32
 H1_ENUM_END(GameStorageConstant)
 // clang-format on
+
+// ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
+// owner at +1 and the type at +2, as in HoMM2's mineRecord.
+#pragma pack(push, 1)
+struct mineRecord {
+    signed char id;
+    signed char owner;
+    signed char type;
+    signed char guardianType;
+    unsigned char guardianCount;
+    // GetMineId sign-extends both coordinates.
+    signed char x;
+    signed char y;
+};
+#pragma pack(pop)
+
+// CreateBoat fills eight-byte records from game+0x14486 in HoMM2's
+// boatRecord order (direction 2, owner at +7).
+#pragma pack(push, 1)
+struct boatRecord {
+    signed char id;
+    signed char x;
+    signed char y;
+    signed char direction;
+    unsigned char savedTriggerType;
+    unsigned char savedEventData;
+    signed char heroId;
+    signed char owner;
+};
+#pragma pack(pop)
 
 // Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
@@ -35,7 +67,11 @@ H1_ENUM_END(GameStorageConstant)
 #pragma pack(push, 1)
         class game {
 public:
-    char m_unknown0000[0x1ff];
+    char m_unknown0000[3];
+    // ControlPanel's scenario-info choice shows the campaign when positive.
+    int m_campaignType;
+    int m_campaignScenario;
+    char m_unknown000b[0x1f4];
     signed char m_playerCount;
     char m_unknown200[6];
     unsigned short m_day;
@@ -46,9 +82,17 @@ public:
     char m_unknownd0a0[0x5100];
     signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
-    char m_unknown1295d[0x28];
+    char m_unknown1295d[0x24];
+    unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    char m_unknown1431d[0x2b39];
+    signed char m_availableHeroes[GAME_HERO_COUNT];
+    mineRecord m_mines[GAME_MINE_COUNT];
+    char m_unknown1443d[0x49];
+    boatRecord m_boats[GAME_BOAT_COUNT];
+    signed char m_boatSlots[GAME_BOAT_COUNT];
+    char m_unknown145a6[0x1470];
+    // GetCloudLookup tests the watching player bit per [x][y] cell.
+    unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
@@ -85,12 +129,12 @@ public:
     int SetupPuzzlePieces(int, int);
     signed char IsMobile(signed char);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
-    int CreateBoat(int, int, int);
-    int Scan(signed char*, int, int);
-    int RandomScan(signed char*, int, int, int, signed char);
-    int GetNewHeroId(int, int, int);
-    int GetTownId(int, int);
-    int GetMineId(int, int);
+    signed char CreateBoat(signed char, signed char);
+    signed char Scan(signed char*, signed char, signed char);
+    signed char RandomScan(signed char*, signed char, signed char, int);
+    signed char GetNewHeroId(signed char);
+    signed char GetTownId(signed char, signed char);
+    signed char GetMineId(signed char, signed char);
     short SaveGame(char *, signed char);
     void SetupOrigData(void);
     void LoadGame(char*, int, int);
