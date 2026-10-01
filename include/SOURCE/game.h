@@ -104,7 +104,7 @@ public:
     int LoadMap(char*);
     void ClaimTown(int, int, int);
     void ClaimMine(int, int);
-    int ViewSpells(class hero*, int, int (*)(struct tag_message&), int);
+    int ViewSpells(class hero*, int, short (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);
     // HoMM1 retail: byte creature/flags, word count, eleven arguments (ret 0x2c).
     void ViewArmy(
