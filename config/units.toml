@@ -259,7 +259,7 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/KB"
 source = "src/SOURCE/KB.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/Modem"
@@ -308,7 +308,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/SETUP"
 source = "src/SOURCE/SETUP.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/SPELLS"
@@ -370,3 +370,8 @@ flags = "cpp_o2"
 unit = "BASE/OLDASM"
 source = "src/BASE/OLDASM.cpp"
 flags = "cpp_o2"
+
+[[unit]]
+unit = "SOURCE/SMACKMGR"
+source = "src/SOURCE/SMACKMGR.cpp"
+flags = "cpp_carcass"

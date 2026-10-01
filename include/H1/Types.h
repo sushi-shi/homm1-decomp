@@ -7,8 +7,12 @@
 // remain provisional until their member accesses and allocation sizes are
 // matched in HoMM1.
 
-struct SMapChange { char _pad[64]; };
-struct SPlayerExit { signed char player[7]; };
+struct SMapChange {
+    char _pad[64];
+};
+struct SPlayerExit {
+    signed char player[7];
+};
 
 typedef unsigned int UInt32;
 struct MemEntry;
@@ -44,16 +48,57 @@ struct configStruct {
     char modemInitString[100];
     int slowVideo;
 };
-struct SCreatureInfo { unsigned short value; char pad[24]; };
-struct tag_tilePoint { signed char x; signed char _1; signed char y; signed char _3; };
-struct tag_monsterInfo { short attributes; char padding[24]; };
-struct SSpellInfo { char m_pad0[14]; unsigned char m_e; char m_pad1[7]; };
-struct SNetPlayerInfo { char m_pad[0xcc]; };
-struct SAMPLE2 { class sample *pSample; struct _SAMPLE *pMem; };
+struct SCreatureInfo {
+    unsigned short value;
+    char pad[24];
+};
+struct tag_tilePoint {
+    signed char x;
+    signed char _1;
+    signed char y;
+    signed char _3;
+};
+struct SSpellInfo {
+    char m_pad0[14];
+    unsigned char m_e;
+    char m_pad1[7];
+};
+struct SNetPlayerInfo {
+    char m_pad[0xcc];
+};
+struct SAMPLE2 {
+    class sample* pSample;
+    struct _SAMPLE* pMem;
+};
 
 #pragma pack(push, 1)
-struct monsterRV { int rv; char pad[22]; };
-struct SWinSetup { unsigned char status; unsigned short port; char *value; };
+// HoMM1 monster records are 0x1f bytes: GetMonsterCost reads the cost word at
+// +0, retail readers use a dword at +8 and test attribute bits at +0x1b.
+struct tag_monsterInfo {
+    short cost;
+    int fightValue;
+    signed char iconIndex;
+    signed char growth;
+    int hitPoints;
+    signed char race;
+    signed char speed;
+    signed char attack;
+    signed char defense;
+    signed char damageMin;
+    signed char damageMax;
+    signed char shots;
+    char spriteName[8];
+    int attributes;
+};
+struct monsterRV {
+    int rv;
+    char pad[22];
+};
+struct SWinSetup {
+    unsigned char status;
+    unsigned short port;
+    char* value;
+};
 #pragma pack(pop)
 
 #endif // HOMM1_H1_TYPES_H

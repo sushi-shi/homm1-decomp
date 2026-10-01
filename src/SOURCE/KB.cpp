@@ -6,9 +6,20 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/MISC_TYPES.h>
+#include <BASE/MOUSEMGR_TYPES.h>
+#include <SOURCE/creatureTypes.h>
+#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/REMOTE.h>
+#include <SOURCE/resourceTypes.h>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Retail score-dialog owner bytes; initializer coverage is deferred.
@@ -53,14 +64,170 @@ void InitMainClasses(void) {}
 // evidence: graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
 VA(0x00450046, 0x116)
 int EarlySetup(void) {
-    return 0;
+    int iCDRomErr;
+
+    if (bEarlySetupDone)
+        return 0;
+    InitMainClasses();
+    GetGraphicsInfo();
+    ReadPrefs();
+    if (!InterpretCommandLine())
+        return 1;
+    LogTruncate();
+    iCDRomErr = SetupCDDrive();
+    if (iCDRomErr == 1) {
+        MessageBoxA((HWND)hwndApp, "Unable to access CD Drive.", "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    if (iCDRomErr == 2) {
+        MessageBoxA((HWND)hwndApp,
+                    "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of "
+                    "Might and Magic.  \n\nPlease insert the CD and try again.",
+                    "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    if (iCDRomErr == 3) {
+        MessageBoxA((HWND)hwndApp,
+                    "Unable to change to the Heroes directory.  Please run the installation "
+                    "program.",
+                    "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    if (iCDRomErr == 4) {
+        MessageBoxA((HWND)hwndApp,
+                    "Unable to find the Heroes data files.  Please run the installation program.",
+                    "Startup Error", MB_ICONHAND);
+        exit(0);
+    }
+    InitVars();
+    return 1;
+}
+
+// Buka 2.1 toupper; HoMM1 keeps the narrow character form.
+VA(0x00450f7e, 0x3e)
+char toupper(char character) {
+    if (character >= 'a' && character <= 'z')
+        return character - 32;
+    else
+        return character;
+}
+
+// Buka 2.1 InterpretCommandLine reduced to HoMM1's /I, /C, /S and /B switches.
+VA(0x00450fbc, 0x288)
+int InterpretCommandLine(void) {
+    int i;
+    int helpRequested = 0;
+    int size;
+
+    giDebugLevel = 0;
+    giShowIntro = 1;
+    gbColorMice = 0;
+    gbSpecialMouseMasks = 1;
+    giScreenScroll = 1;
+    gbCheatMenus = 0;
+    gbBlackoutPlayer = 1;
+    strcpy(gMapName, "AES31000.map");
+    strcpy(gFullMapName, "Claw ( Easy )");
+    strcpy(gMapDescription, "The Griffons will protect you until you are ready to make your move.");
+
+    size = strlen(gcCommandLine);
+    for (i = 0; i < size; i++) {
+        if (gcCommandLine[i] == '/' && i + 1 < size) {
+            switch (toupper(gcCommandLine[i + 1])) {
+                case 'I':
+                    if (i + 2 < size)
+                        giShowIntro = gcCommandLine[i + 2] - '0';
+                    break;
+                case 'C':
+                    if (i + 2 < size)
+                        gbColorMice = gcCommandLine[i + 2] - '0';
+                    break;
+                case 'S':
+                    if (i + 2 < size)
+                        gbNoSound = 1 - (gcCommandLine[i + 2] - '0');
+                    break;
+                case 'B':
+                    if (i + 2 < size)
+                        gbSpecialMouseMasks = gcCommandLine[i + 2] - '0';
+                    break;
+            }
+        }
+    }
+
+    sprintf(cAggPathName, "%s%s", ".\\DATA\\", "heroes.agg");
+    DEFAULT_AGGREGATE_NAME = cAggPathName;
+    giFrameStep = 6;
+    for (i = 0; i < 4; i++) {
+        if (giNumHumanPlayers > i)
+            gbHumanPlayer[i] = 1;
+        else
+            gbHumanPlayer[i] = 0;
+    }
+    if (giNumHumanPlayers == 1)
+        gbBlackoutPlayer = 0;
+    helpRequested = 0;
+    return 1;
+}
+
+VA(0x004513fa, 0x14)
+short NullHandler(tag_message&) {
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
+// HoMM1 has seven neutral building slots before six per-faction dwellings.
+VA(0x004515d9, 0x47)
+char* GetBuildingName(int race, short building) {
+    if (building < BUILDING_SLOT_DWELLING_FIRST)
+        return gNeutralBuildingNames[building];
+    else
+        return gDwellingNames[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
+}
+
+VA(0x00451620, 0x9f)
+void GetBuildingCost(int race, short building, int* const destination, int mageLevel) {
+    if (building < BUILDING_SLOT_DWELLING_FIRST) {
+        if (building == BUILDING_SLOT_MAGE_GUILD)
+            memcpy(destination, gMageBuildingCosts[mageLevel], RESOURCE_COUNT * sizeof(int));
+        else
+            memcpy(destination, gNeutralBuildingCosts[building], RESOURCE_COUNT * sizeof(int));
+    } else {
+        memcpy(
+            destination,
+            gDwellingCosts[building - BUILDING_SLOT_DWELLING_FIRST + race * 6],
+            RESOURCE_COUNT * sizeof(int)
+        );
+    }
+}
+
+VA(0x004516bf, 0x1a)
+char* GetMonsterName(int monster) {
+    return gArmyNames[monster];
 }
 
 // donor PoL RVA 0x0009992c; preferred Buka symbol ?GetMonsterCost@@YIXHQAH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.424205;margin=0.383727;shape=0.192;size=0.855;calls=1.000;alternate=pol20:void GetMonsterCost(int, int * const)@0x0009992c
 VA(0x004516d9, 0xe6)
-void GetMonsterCost(int monster, int* const cost) {}
+void GetMonsterCost(int monster, int* const cost) {
+    int index;
+    for (index = 0; index < RESOURCE_COUNT; index++)
+        cost[index] = 0;
+    cost[RESOURCE_GOLD] = gMonsterDatabase[monster].cost;
+    switch (monster) {
+        case CREATURE_GENIE:
+            cost[RESOURCE_GEMS] = 1;
+            break;
+        case CREATURE_PHOENIX:
+            cost[RESOURCE_MERCURY] = 1;
+            break;
+        case CREATURE_CYCLOPS:
+            cost[RESOURCE_CRYSTAL] = 1;
+            break;
+        case CREATURE_DRAGON:
+            cost[RESOURCE_SULFUR] = 1;
+            break;
+    }
+}
 
 // @early-stop
 // tu-cumulative: logic + all frame slots byte-exact (reqMask@-8, haveMask@-4 match
@@ -82,6 +249,19 @@ int CanBuild(town* t, int building) {
 VA(0x00451903, 0xce)
 int CanBuy(town* t, int type) {
     return 0;
+}
+
+// HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
+VA(0x004519d1, 0x60)
+int GetBuildingBaseResourceValue(int race, int building, int level) {
+    if (building < BUILDING_SLOT_DWELLING_FIRST) {
+        if (building == BUILDING_SLOT_MAGE_GUILD)
+            return gMageBaseResourceValues[level];
+        else
+            return gNeutralBaseResourceValues[building];
+    } else {
+        return gDwellingBaseResourceValues[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
+    }
 }
 
 // donor PoL RVA 0x000a2565; preferred Buka symbol ?UpdateNormalDialog@@YIXPAD@Z
@@ -123,7 +303,9 @@ void PlayerDead(int player) {}
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
 VA(0x00452f8a, 0x1ea)
-void ReceiveRemotePlayerExit(struct SPlayerExit) {}
+// HoMM1 callers push four byte-sized values: player, an unused flag,
+// elimination and timeout.
+void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char) {}
 
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -168,6 +350,34 @@ void game::ShowMoraleInfo(class hero*, int) {}
 VA(0x00453ff8, 0x1f7)
 void game::ShowLuckInfo(class hero*, int) {}
 
+VA(0x004541ef, 0x70)
+void ClearMapExtra(void) {
+    int i;
+    for (i = 0; i < 255; i++) {
+        if (ppMapExtra[i]) {
+            free(ppMapExtra[i]);
+            ppMapExtra[i] = 0;
+        }
+    }
+    gbMapExtraCleared = 1;
+}
+
+// HoMM1 score-to-monster tables pair a threshold word with a monster word.
+VA(0x0045425f, 0x8e)
+short GetMonType(int score, int highScoreType) {
+    int index;
+    for (index = 27; index >= 0; index--) {
+        if (highScoreType == 0) {
+            if (giScoreCampaignMon[index][0] >= score)
+                return giScoreCampaignMon[index][1];
+        } else {
+            if (giScoreMon[index][0] <= score)
+                return giScoreMon[index][1];
+        }
+    }
+    return giScoreMon[0][1];
+}
+
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
@@ -192,9 +402,35 @@ void BVResMsg(char* s, int res, int qty) {
 // donor PoL RVA 0x0009d3a7; preferred Buka symbol ?WaitForOtherPlayer@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.581419;margin=0.608732;shape=0.409;size=0.995;calls=1.000;alternate=pol20:int WaitForOtherPlayer(void)@0x0009d3a7
+// HoMM1 maps every remote position other than the host to the one opponent slot.
+VA(0x00454748, 0x39)
+signed char NetPosToGamePos(int netPos) {
+    if (netPos == 0)
+        return 0;
+    else if (netPos > 0)
+        return 1;
+    return -1;
+}
+
 VA(0x00454781, 0xda)
-int WaitForOtherPlayer(void) {
-    return 0;
+signed char WaitForOtherPlayer(void) {
+    int result = 0;
+    RemoteMessage* data;
+    PollSound();
+    data = (RemoteMessage*)GetRemoteData(1);
+    if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
+        switch (data->command) {
+            case BOX_REMOTE_SETUP:
+                memcpy(gbGamePosToNetPos, data->payload.data, 4);
+                giThisGamePos = NetPosToGamePos(giThisNetPos);
+                giHostGamePos = NetPosToGamePos(0);
+                break;
+            case BOX_REMOTE_SAVE:
+                result = gpGame->ReceiveSaveGame(data->payload.saveSize, data->sender);
+                break;
+        }
+    }
+    return result;
 }
 
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
@@ -202,6 +438,13 @@ int WaitForOtherPlayer(void) {
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
 VA(0x0045485b, 0x6f4)
 void PopNetBox(char *) {}
+
+// Buka 2.1 AddNetBoxLine reduced to HoMM1's two uncoloured lines.
+VA(0x00454f4f, 0x3b)
+void AddNetBoxLine(char* text) {
+    strcpy(cNetBoxLine[0], cNetBoxLine[1]);
+    strcpy(cNetBoxLine[1], text);
+}
 
 // donor PoL RVA 0x0009e0f2; preferred Buka symbol ?ShutDown@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -238,7 +481,102 @@ void game::Overview(void) {}
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447463;margin=0.065171;shape=0.300;size=0.684;calls=1.000;alternate=pol20:void CongratsWait(void)@0x0009e900
 VA(0x004554e1, 0xb1)
-void CongratsWait(void) {}
+void CongratsWait(void) {
+    int cmd = 0;
+    signed char finished = 0;
+    tag_message message;
+    gpInputManager->Flush();
+    while (!finished) {
+        PollSound();
+        Process1WindowsMessage();
+        message = gpInputManager->GetEvent();
+        if (message.type == MESSAGE_KEY_DOWN || message.type == MESSAGE_LEFT_BUTTON_DOWN
+            || message.type == MESSAGE_LEFT_BUTTON_UP || message.type == MESSAGE_RIGHT_BUTTON_DOWN
+            || message.type == MESSAGE_RIGHT_BUTTON_UP)
+            finished = 1;
+    }
+}
+
+// Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
+VA(0x00455592, 0x1c7)
+void GetDataEntry(char* prompt, char* destination, int maximumLength, char* initialText) {
+    short widgetId = 10;
+    tag_message message;
+    char textBuffer[100];
+
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    cDEDest = destination;
+    iDEMaxLen = maximumLength;
+    strcpy(cDEDest, "");
+    DataEntryWin = new heroWindow(0xb1, 0x14, "dataentr.bin");
+    if (!DataEntryWin)
+        MemError();
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = prompt;
+    DataEntryWin->BroadcastMessage(message);
+    if (initialText)
+        strcpy(textBuffer, initialText);
+    else
+        strcpy(textBuffer, "");
+    message.payload.widget.id = 10;
+    message.payload.widget.data.text = textBuffer;
+    DataEntryWin->BroadcastMessage(message);
+    strcpy(destination, textBuffer);
+    bDataEntryTime = 0;
+    gpWindowManager->DoDialog(DataEntryWin, DataEntryWindowHandler, 0);
+    delete DataEntryWin;
+}
+
+VA(0x00455759, 0x1d9)
+short DataEntryWindowHandler(tag_message& message) {
+    short widgetId = 10;
+
+    if (bDataEntryTime == 0) {
+        ++bDataEntryTime;
+        message.type = MESSAGE_LEFT_BUTTON_DOWN;
+        message.payload.mouse.x = 0xc3;
+        message.payload.mouse.y = 0x9a;
+        DataEntryWin->BroadcastMessage(message);
+        return MESSAGE_DISPATCH_CONSUME;
+    }
+
+    if (bDataEntryTime == 1) {
+        ++bDataEntryTime;
+        goto gotText;
+    }
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_SELECT:
+                switch (message.payload.widget.id) {
+                    case 10:
+                    gotText:
+                        message.type = MESSAGE_WIDGET;
+                        message.payload.widget.id = 10;
+                        message.payload.widget.command = WIDGET_COMMAND_GET_TEXT;
+                        DataEntryWin->BroadcastMessage(message);
+                        if (strlen(message.payload.widget.data.text) == 0) {
+                            break;
+                        } else {
+                            memset(cDEDest, 0, iDEMaxLen);
+                            strncpy(cDEDest, message.payload.widget.data.text, iDEMaxLen - 1);
+                        }
+                        message.type = MESSAGE_WIDGET;
+                        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+                        message.payload.widget.id = 10;
+                        message.payload.widget.data.text = cDEDest;
+                        DataEntryWin->BroadcastMessage(message);
+                        DataEntryWin->DrawWindow(1, 10, 10);
+                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        message.payload.widget.command = message.payload.widget.id =
+                            WIDGET_COMMAND_DIALOG_SELECT;
+                        return MESSAGE_DISPATCH_FORWARD;
+                }
+        }
+    }
+    return EventWindowHandler(message);
+}
 
 // donor PoL RVA 0x0009e999; preferred Buka symbol ?LoadPlaySample@@YIPAVsample@@PAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -294,6 +632,44 @@ void MemError(void) {
     ShutDown(gText);
 }
 
+// Buka 2.1 MiscRuntime MemSize: a fixed reported memory size.
+// @dead-code
+// Zero-ref: no effective incoming retail reference.
+VA(0x00455a88, 0x15)
+int MemSize(int) {
+    return 16034;
+}
+
+// Buka 2.1 CheckMem without HoMM2's memory globals.
+VA(0x00455a9d, 0x12)
+signed char CheckMem(void) {
+    return 1;
+}
+
+// Buka 2.1 Misc IsCDDrive.
+VA(0x00455b8b, 0x51)
+int IsCDDrive(int driveIndex) {
+    sprintf(gText, "A:\\");
+    gText[0] += driveIndex;
+    return GetDriveTypeA(gText) == DRIVE_CDROM;
+}
+
+VA(0x00455bdc, 0x64)
+void LoadSystemwideIcons(void) {
+    gBuyBuildIcons = gpResourceManager->GetIcon("buybuild.icn");
+    gSystemIcons = gpResourceManager->GetIcon("system.icn");
+    bigFont = gpResourceManager->GetFont("bigfont.fnt");
+    smallFont = gpResourceManager->GetFont("smalfont.fnt");
+}
+
+VA(0x00455c40, 0x54)
+void UnloadSystemwideIcons(void) {
+    gpResourceManager->Dispose(gBuyBuildIcons);
+    gpResourceManager->Dispose(gSystemIcons);
+    gpResourceManager->Dispose(bigFont);
+    gpResourceManager->Dispose(smallFont);
+}
+
 // Retail empty lifecycle hook; Buka and PoL KB correspondence.
 VA(0x00455c94, 0x10)
 void EarlyShutDownSystem(void) {}
@@ -304,4 +680,150 @@ void EarlyShutDownSystem(void) {}
 VA(0x00455d22, 0x629)
 int HandleAppSpecificMenuCommands(int) {
     return 0;
+}
+
+// HoMM1 menu ids: music 0x9c50-0x9c5a, sound 0x9c5c-0x9c66, walk speed
+// 0x9c68-0x9c6c, then the music-source, route and blackout toggles.
+VA(0x0045634b, 0x3b7)
+void UpdateSystemOptionsMenu(void) {
+    int checkedCommand;
+    int menuCommand;
+
+    if (!gConfig.gfx[giCurExe].showMenu)
+        return;
+    if (!hmnuApp)
+        return;
+    if (hmnuApp != hmnuAdv)
+        return;
+
+    for (menuCommand = 0x9c50; menuCommand <= 0x9c5a; menuCommand++)
+        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+    switch (gConfig.musicVolume) {
+        case 1:
+            checkedCommand = 0x9c51;
+            break;
+        case 2:
+            checkedCommand = 0x9c52;
+            break;
+        case 3:
+            checkedCommand = 0x9c53;
+            break;
+        case 4:
+            checkedCommand = 0x9c54;
+            break;
+        case 5:
+            checkedCommand = 0x9c55;
+            break;
+        case 6:
+            checkedCommand = 0x9c56;
+            break;
+        case 7:
+            checkedCommand = 0x9c57;
+            break;
+        case 8:
+            checkedCommand = 0x9c58;
+            break;
+        case 9:
+            checkedCommand = 0x9c59;
+            break;
+        case 10:
+            checkedCommand = 0x9c5a;
+            break;
+        default:
+            checkedCommand = 0x9c50;
+            break;
+    }
+    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+
+    for (menuCommand = 0x9c5c; menuCommand <= 0x9c66; menuCommand++)
+        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+    switch (gConfig.soundVolume) {
+        case 1:
+            checkedCommand = 0x9c5d;
+            break;
+        case 2:
+            checkedCommand = 0x9c5e;
+            break;
+        case 3:
+            checkedCommand = 0x9c5f;
+            break;
+        case 4:
+            checkedCommand = 0x9c60;
+            break;
+        case 5:
+            checkedCommand = 0x9c61;
+            break;
+        case 6:
+            checkedCommand = 0x9c62;
+            break;
+        case 7:
+            checkedCommand = 0x9c63;
+            break;
+        case 8:
+            checkedCommand = 0x9c64;
+            break;
+        case 9:
+            checkedCommand = 0x9c65;
+            break;
+        case 10:
+            checkedCommand = 0x9c66;
+            break;
+        default:
+            checkedCommand = 0x9c5c;
+            break;
+    }
+    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+
+    for (menuCommand = 0x9c68; menuCommand <= 0x9c6c; menuCommand++)
+        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+    switch (gConfig.walkSpeed) {
+        case 4:
+            checkedCommand = 0x9c68;
+            break;
+        case 3:
+            checkedCommand = 0x9c69;
+            break;
+        case 2:
+            checkedCommand = 0x9c6a;
+            break;
+        case 1:
+            checkedCommand = 0x9c6b;
+            break;
+        default:
+            checkedCommand = 0x9c6c;
+            break;
+    }
+    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+    CheckMenuItem((HMENU)hmnuApp, 0x9c6d, gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, 0x9c6e, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, 0x9c6f,
+                  1 - gConfig.blackoutComputer ? MF_CHECKED : MF_UNCHECKED);
+}
+
+VA(0x00456702, 0x99)
+void CleanUpMenus(void) {
+    if (hmnuApp) {
+        SetMenu((HWND)hwndApp, 0);
+        if (hmnuAdv)
+            DestroyMenu((HMENU)hmnuAdv);
+        if (hmnuDflt)
+            DestroyMenu((HMENU)hmnuDflt);
+        if (hmnuCmbt)
+            DestroyMenu((HMENU)hmnuCmbt);
+        if (hmnuTown)
+            DestroyMenu((HMENU)hmnuTown);
+    }
+    hmnuApp = 0;
+}
+
+VA(0x0045679b, 0x24)
+void UpdateAppSpecificMenus(void* hMenu) {
+    if (hmnuAdv == hMenu)
+        UpdateSystemOptionsMenu();
+}
+
+VA(0x004567bf, 0x22)
+void EarlyResizeWindow(int, int, int, int) {
+    if (gbClosingApp)
+        return;
 }

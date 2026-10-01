@@ -2,6 +2,12 @@
 #define HOMM1_H1_KB_H
 
 #include <SOURCE/FINDPATH.h>
+#include <Domains.h>
+
+H1_ENUM_BEGIN(BuildingSlotType)
+    BUILDING_SLOT_MAGE_GUILD = 0,
+    BUILDING_SLOT_DWELLING_FIRST = 7
+H1_ENUM_END(BuildingSlotType)
 
 class soundManager;
 class heroWindowManager;
@@ -10,6 +16,7 @@ class resourceManager;
 class advManager;
 class townManager;
 class executive;
+class game;
 struct configStruct;
 
 extern char gbInPollSound;
@@ -51,10 +58,37 @@ extern int giBottomViewResourceQty;
 extern char gcBottomViewText[];
 extern int gbNoDialogMenusOn;
 extern void* hmnuApp;
+extern void* hmnuAdv;
+extern void* hmnuCmbt;
+extern void* hmnuTown;
+extern int gbClosingApp;
+extern heroWindow* DataEntryWin;
+extern char* cDEDest;
+extern int iDEMaxLen;
+extern signed char bDataEntryTime;
 extern signed char giWaitType;
 extern signed char gbFunctionComplete;
 extern long lLastGetMessage;
 extern long lLastAilServe;
+extern struct tag_monsterInfo gMonsterDatabase[];
+extern char* gArmyNames[];
+extern char* gNeutralBuildingNames[];
+extern char* gDwellingNames[];
+extern int gMageBuildingCosts[][7];
+extern int gNeutralBuildingCosts[][7];
+extern int gDwellingCosts[][7];
+extern int gMageBaseResourceValues[];
+extern int gNeutralBaseResourceValues[];
+extern int gDwellingBaseResourceValues[];
+extern char cNetBoxLine[][60];
+extern void* ppMapExtra[];
+extern class icon* gBuyBuildIcons;
+extern class icon* gSystemIcons;
+extern class font* bigFont;
+extern class font* smallFont;
+extern int gbMapExtraCleared;
+extern short giScoreMon[][2];
+extern short giScoreCampaignMon[][2];
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(int);
@@ -64,17 +98,55 @@ void SetNoDialogMenus(int);
 void EarlyShutDownSystem();
 void PollRemote();
 void QuickViewWait();
-// HoMM1 building-name lookup by town type (retail 0x004515d9).
-char *GetBuildingName(int, int);
 extern "C" void PollSound();
 void ForcePollSound();
+char toupper(char);
+short NullHandler(struct tag_message&);
+char* GetBuildingName(int, short);
+void GetBuildingCost(int, short, int* const, int);
+char* GetMonsterName(int);
+int GetBuildingBaseResourceValue(int, int, int);
+void AddNetBoxLine(char*);
+void GOut(char*);
+extern signed char bEarlySetupDone;
+extern int giShowIntro;
+extern signed char giScreenScroll;
+extern signed char gbCheatMenus;
+extern int gbBlackoutPlayer;
+extern char gMapName[];
+extern char gFullMapName[];
+extern char gMapDescription[];
+extern char gcCommandLine[];
+extern char cAggPathName[];
+extern int giFrameStep;
+extern int giNumHumanPlayers;
+extern int gbHumanPlayer[];
+void InitMainClasses(void);
+void InitVars(void);
+void GetGraphicsInfo(void);
+void ReadPrefs(void);
+int InterpretCommandLine(void);
+int SetupCDDrive(void);
+char* FindLastToken(char*, char);
+void ClearMapExtra(void);
+short GetMonType(int, int);
+int MemSize(int);
+signed char CheckMem(void);
+int IsCDDrive(int);
+void LoadSystemwideIcons(void);
+void UnloadSystemwideIcons(void);
+void UpdateSystemOptionsMenu(void);
+void CleanUpMenus(void);
+void EarlyResizeWindow(int, int, int, int);
+void GetDataEntry(char*, char*, int, char*);
+short DataEntryWindowHandler(struct tag_message&);
+short EventWindowHandler(struct tag_message&);
+void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char);
 void ShutDown(char*);
-// HoMM1 callers narrow the standard-table flag to a byte (retail 0x0045425f).
-int GetMonType(int, int);
+void FileError(char*);
 void MemError();
 void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
-int NullHandler(struct tag_message&);
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
 

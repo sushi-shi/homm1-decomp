@@ -4,6 +4,11 @@
 class bitmap;
 
 int Random(int, int);
+extern unsigned long iLastSeed;
+int SGenRand(void);
+int SRandom(int, int);
+void SIncRandomize(int, int);
+void SRand(int);
 void CycleColors(void);
 void FadeIn(int);
 void FadeOut(int);
