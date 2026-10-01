@@ -70,6 +70,19 @@ H1_ENUM_BEGIN(AdventureScrollConstant)
     HOVER_SCROLL_FRAME_END = 40
 H1_ENUM_END(AdventureScrollConstant)
 
+H1_ENUM_BEGIN(AdventurePanelDialogConstant)
+    PANEL_CLOSE_WIDGET = 0x7800,
+    PANEL_NO_HELP = -1,
+    PANEL_VIEW_WORLD_HELP = 0,
+    PANEL_VIEW_PUZZLE_HELP = 1,
+    PANEL_SCENARIO_INFO_HELP = 2,
+    PANEL_SEARCH_HELP = 3,
+    PANEL_VIEW_WORLD = 1,
+    PANEL_VIEW_PUZZLE = 2,
+    PANEL_SCENARIO_INFO = 3,
+    PANEL_SEARCH = 4
+H1_ENUM_END(AdventurePanelDialogConstant)
+
 H1_ENUM_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
@@ -606,6 +619,65 @@ void advManager::AdvPanel(void) {}
 // donor PoL RVA 0x00065191; preferred Buka symbol ?DimensionDoorHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.481967;margin=0.254497;shape=0.313;size=0.765;calls=1.000;alternate=pol20:int DimensionDoorHandler(struct tag_message &)@0x00065191
+extern char *gAPanelHelp[];
+
+// Buka 2.1 APanelHandler; HoMM1 shares the search help text with Close and
+// chains the dialog-select stores.
+VA(0x004335f2, 0x1d3)
+short APanelHandler(struct tag_message &message)
+{
+    signed char handled = 0;
+    if (message.type == MESSAGE_WIDGET) {
+        if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (IS_WIDGET_SELECTION_NOTIFICATION(message.payload.widget.command)) {
+                int helpIndex = PANEL_NO_HELP;
+                switch (message.payload.widget.id) {
+                    case PANEL_VIEW_WORLD:
+                        helpIndex = PANEL_VIEW_WORLD_HELP;
+                        break;
+                    case PANEL_VIEW_PUZZLE:
+                        helpIndex = PANEL_VIEW_PUZZLE_HELP;
+                        break;
+                    case PANEL_SCENARIO_INFO:
+                        helpIndex = PANEL_SCENARIO_INFO_HELP;
+                        break;
+                    case PANEL_SEARCH:
+                        helpIndex = PANEL_SEARCH_HELP;
+                        break;
+                    case PANEL_CLOSE_WIDGET:
+                        helpIndex = PANEL_SEARCH_HELP;
+                        break;
+                }
+                if (helpIndex >= 0)
+                    NormalDialog(gAPanelHelp[helpIndex], 4, 0xb1, -1, -1, 0, -1, 0, -1);
+            }
+        } else {
+            switch (message.payload.widget.command) {
+                case WIDGET_NOTIFY_DESELECT:
+                    switch (message.payload.widget.id) {
+                        case PANEL_VIEW_WORLD:
+                        case PANEL_VIEW_PUZZLE:
+                        case PANEL_SCENARIO_INFO:
+                        case PANEL_SEARCH:
+                        case PANEL_CLOSE_WIDGET:
+                            handled = 1;
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    if (handled) {
+        gpWindowManager->m_dialogResult = message.payload.widget.id;
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
 VA(0x004337c5, 0x34b)
 int DimensionDoorHandler(struct tag_message &) { return 0; }
 
