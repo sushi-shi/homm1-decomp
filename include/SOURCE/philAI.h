@@ -141,7 +141,7 @@ public:
     void BuildCreature(class town*, int, int);
     int CanBuyBHC(struct BHC&);
     signed char CombatMonsterEvent(class hero*, int, int*, class mapCell*);
-    int FightEvent(class hero*, class mapCell*, int);
+    void FightEvent(class hero*, class mapCell*);
     int DamageGroup(class armyGroup*, class hero*, class hero*, float);
     float StatChangeValue(int, int);
     void IncrementHourGlass(void);

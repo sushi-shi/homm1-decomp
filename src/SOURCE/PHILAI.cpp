@@ -1105,8 +1105,67 @@ signed char philAI::CombatMonsterEvent(hero* h, int monType, int* pCount, mapCel
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.277616;margin=0.834782;shape=0.262;size=0.393;calls=0.393;alternate=pol20:int philAI::FightEvent(class hero *, class mapCell *, int)@0x0004316b
 VA(0x0042215c, 0x26a)
-int philAI::FightEvent(class hero*, class mapCell*, int) {
-    return 0;
+void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
+    float attackerLoss;
+    int rewardValue;
+    int unusedValue;
+    int evalValue;
+    short guards[4];
+    float defenderLoss;
+    int flag;
+    short n;
+    int won;
+
+    if (cell->m_objectMetadata == 1)
+        return;
+    guards[0] = 2;
+    guards[1] = 3;
+    guards[2] = 5;
+    guards[3] = 10;
+    for (n = 0; n < 5; n++) {
+        gpMonGroup->m_creatureTypes[n] = 26;
+        gpMonGroup->m_creatureCounts[n] = guards[cell->m_objectMetadata - 2];
+    }
+    switch (cell->m_objectMetadata) {
+    case 2:
+        rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 1000.0f);
+        break;
+    case 3:
+        rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 2000.0f);
+        break;
+    case 4:
+        rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 5000.0f);
+        break;
+    case 5:
+        rewardValue = static_cast<int>(
+            gafAITurnCostResource[RESOURCE_GOLD] * 2000.0f + gpCurPlayer->m_aiData.m_artifactValue
+        );
+        break;
+    default:
+        return;
+    }
+    ChooseEvaluateBattle(&heroPointer->m_army, heroPointer, gpMonGroup, 0, 0, 0, rewardValue, flag, evalValue);
+    if (flag) {
+        won = QuickCombat(&heroPointer->m_army, heroPointer, gpMonGroup, 0, 0, 0, defenderLoss, attackerLoss);
+        if (won) {
+            switch (cell->m_objectMetadata) {
+            case 2:
+                gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 1000);
+                break;
+            case 3:
+                gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
+                break;
+            case 4:
+                gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 5000);
+                break;
+            case 5:
+                gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
+                gpAdvManager->GiveRandomArtifact(heroPointer);
+                break;
+            }
+            cell->m_objectMetadata = 1;
+        }
+    }
 }
 
 // donor PoL RVA 0x00043842; preferred Buka symbol ?DamageGroup@philAI@@QAEHPAVarmyGroup@@PAVhero@@1M@Z

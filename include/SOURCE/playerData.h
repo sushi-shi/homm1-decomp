@@ -32,10 +32,11 @@ public:
     int m_income[PLAYER_RESOURCE_COUNT];
     int m_obeliskValue;
     int m_totalObeliskValue;
-    // EvaluateOneTimeCreaturePurchase weights fight value by the float at +0xf9.
+    // EvaluateOneTimeCreaturePurchase weights fight value by the float at +0xf9;
+    // FightEvent adds the artifact float at +0xfd.
     float m_upgradeValueWeight;
-    int m_unexploredValue;
     float m_artifactValue;
+    int m_unexploredValue;
 };
 
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at

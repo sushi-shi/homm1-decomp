@@ -63,7 +63,8 @@ public:
     hero* GetHero(int id) {
         return &m_heroRecs[id];
     }
-    town* GetTown(int id) {
+    // TownEvent passes the unsigned cell metadata through a signed byte.
+    town* GetTown(signed char id) {
         return &m_castleRecs[id];
     }
     // --- methods ---
