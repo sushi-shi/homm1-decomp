@@ -66,7 +66,7 @@ void WaitEndSample(struct SAMPLE2, int);
 // Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
 extern struct SAMPLE2 NULL_SAMPLE2;
 extern "C" void BitSet(void*, unsigned int);
-extern long glTimers[];
+extern int glTimers[];
 void Process1WindowsMessage();
 void SetNoDialogMenus(int);
 void EarlyShutDownSystem();

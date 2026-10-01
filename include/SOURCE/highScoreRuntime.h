@@ -47,7 +47,7 @@ struct HighScoreEntry {
 #pragma pack(pop)
 
 extern signed char giHighScoreRank;
-extern long glTimers[];
+extern int glTimers[];
 extern void *hmnuDflt;
 
 #endif

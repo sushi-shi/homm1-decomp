@@ -818,14 +818,15 @@ int DimensionDoorHandler(struct tag_message&) {
 // donor PoL RVA 0x000654ad; preferred Buka symbol ?ComboDraw@advManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
+// HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
 VA(0x00433b10, 0xaf6)
-int advManager::ComboDraw(short, short, int) {
+signed char advManager::ComboDraw(short, short, int) {
     return 0;
 }
 
 // Buka 2.1 ComboDraw(update) forwards the current map origin.
 VA(0x00434606, 0x3a)
-int advManager::ComboDraw(int update) {
+signed char advManager::ComboDraw(int update) {
     return ComboDraw(m_mapOriginX, m_mapOriginY, update);
 }
 

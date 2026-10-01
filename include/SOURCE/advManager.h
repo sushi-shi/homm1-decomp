@@ -124,7 +124,7 @@ public:
     void DrawCursor(void);
     void DrawCursorShadow(void);
     short GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short));
-    void TurnTo(int);
+    void TurnTo(signed char);
     int GetMoveShowIt(class hero*, int);
     class mapCell* MoveHero(int, int, int*, int*, int*, int, int*, int);
     void CheckAdjacentMon(int*);
@@ -181,8 +181,8 @@ public:
     void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    int ComboDraw(short, short, int);
-    int ComboDraw(int);
+    signed char ComboDraw(short, short, int);
+    signed char ComboDraw(int);
     void SetEnvironmentOrigin(int, int, int);
     void CheckLoadSample(int);
     int GetSoundId(int, int);

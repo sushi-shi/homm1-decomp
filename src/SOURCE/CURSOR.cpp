@@ -9,6 +9,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/NOOPT.h>
 
 // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
 // walk speed and indexes the map directly.
@@ -187,11 +188,58 @@ short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) directio
     }
 }
 
-// donor PoL RVA 0x0000e21d; preferred Buka symbol ?TurnTo@advManager@@QAEXH@Z
-// donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.461800;margin=0.347232;shape=0.223;size=0.872;calls=1.000;alternate=pol20:void advManager::TurnTo(int)@0x0000e21d
+extern short giStepDelay[];
+extern short horseFrameFlip[];
+extern short boatFrameFlip[];
+
+// Buka CURSOR.cpp:379 TurnTo; HoMM1 keeps sixteen half-step frames and
+// word-sized step delays.
 VA(0x00406275, 0x261)
-void advManager::TurnTo(int) {}
+void advManager::TurnTo(signed char direction)
+{
+    short frameStep = 1;
+    short curFrame;
+    short directionDifference = direction - m_cursorDirection;
+    int delayTime;
+
+    if (directionDifference == 0)
+        return;
+    if ((directionDifference < 0 && directionDifference >= -4)
+        || (directionDifference > 0 && directionDifference > 4))
+        frameStep = -1;
+    m_cursorTurning = 1;
+    curFrame = m_cursorDirection * 2;
+    delayTime = giStepDelay[gConfig.walkSpeed];
+    if (gConfig.walkSpeed == 0)
+        delayTime *= 3;
+    if (gConfig.walkSpeed == 1)
+        delayTime = delayTime * 1.5;
+    do {
+        m_cursorCycle = 1;
+        if (m_cursorType >= 4)
+            m_cursorFrame = boatFrameFlip[curFrame];
+        else
+            m_cursorFrame = horseFrameFlip[curFrame];
+        m_cursorFrameCount = 0;
+        glTimers[1] = KBTickCount() + delayTime;
+        if (gConfig.walkSpeed != 4) {
+            if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
+                UpdateScreen(0, 0);
+            if (bShowIt)
+                DelayTil(&glTimers[1]);
+        }
+        curFrame += frameStep;
+        if (curFrame < 0)
+            curFrame = 15;
+        curFrame %= 16;
+    } while (curFrame != direction * 2);
+    m_cursorDirection = direction;
+    StopCursor(1);
+    if (bShowIt)
+        DelayTil(&glTimers[1]);
+    if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
+        UpdateScreen(0, 0);
+}
 
 // donor PoL RVA 0x0000e51f; preferred Buka symbol ?MoveHero@advManager@@QAEPAVmapCell@@HHPAH00H0H@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
