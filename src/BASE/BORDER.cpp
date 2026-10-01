@@ -6,6 +6,7 @@
 #include <BASE/bmap2.h>
 #include <BASE/border.h>
 #include <BASE/heroWindow.h>
+#include <BASE/icon.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/message.h>
 #include <BASE/MISC_TYPES.h>
@@ -112,7 +113,7 @@ void border::Draw(void) {
                 y,
                 m_width,
                 m_height,
-                gPaletteRemap[m_fillColor]
+                gMonoColorMap[m_fillColor]
             );
             break;
         case BORDER_BACKGROUND_BITMAP:
