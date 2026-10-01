@@ -153,6 +153,7 @@ char* GetTownName(signed char);
 void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char);
 void ShutDown(char*);
 void HandleRemoteDeadPlayerExit(int);
+void CheckEndGame(int);
 void HandleRemoteSuddenExit(void);
 extern signed char gbRetreatWin;
 extern signed char gbGameInitialized;

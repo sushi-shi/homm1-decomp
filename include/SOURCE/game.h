@@ -84,7 +84,8 @@ public:
     char m_unknownd0a0[0x5100];
     signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
-    char m_unknown1295d[0x24];
+    // ClaimTown mirrors each town owner into this byte array.
+    signed char m_townOwners[GAME_TOWN_COUNT];
     unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
@@ -156,7 +157,7 @@ public:
     void RandomizeBarrier(class mapCell*);
     void RandomizePassword(class mapCell*);
     int LoadMap(char*);
-    void ClaimTown(int, int, int);
+    void ClaimTown(signed char, signed char);
     void ClaimMine(signed char, signed char);
     int ViewSpells(class hero*, int, short (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);

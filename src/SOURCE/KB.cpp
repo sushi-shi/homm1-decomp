@@ -630,7 +630,7 @@ void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char)
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
 VA(0x00453174, 0x7d4)
-void CheckEndGame(int, int) {}
+void CheckEndGame(int) {}
 
 // donor PoL RVA 0x0009c07c; preferred Buka symbol ?QuickViewWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

@@ -369,11 +369,47 @@ int game::LoadMap(char*) {
     return 0;
 }
 
+// Vision radius a claimed town grants its new owner.
+extern signed char giVisRangeTown;
+
 // donor PoL RVA 0x00078fea; preferred Buka symbol ?ClaimTown@game@@QAEXHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.415111;margin=0.758393;shape=0.164;size=0.968;calls=0.500;alternate=pol20:void game::ClaimTown(int, int, int)@0x00078fea
 VA(0x0043e744, 0x321)
-void game::ClaimTown(int, int, int) {}
+void game::ClaimTown(signed char townId, signed char player) {
+    int i;
+    town* townRec;
+    mapCell* cell;
+
+    townRec = &m_castleRecs[townId];
+    if (townRec->m_owner == player)
+        return;
+    if (m_townOwners[townId] != -1)
+        gpGame->GetTown(townId)->Deallocate();
+    for (i = 0; i < 5; ++i) {
+        townRec->m_army.m_creatureTypes[i] = -1;
+        townRec->m_army.m_creatureCounts[i] = 0;
+    }
+    if (m_castleRecs[townId].m_owner == -1)
+        m_castleRecs[townId].m_turnsOwned = 2;
+    else
+        m_castleRecs[townId].m_turnsOwned = 0;
+    m_castleRecs[townId].m_owner = player;
+    m_townOwners[townId] = player;
+    m_players[player].m_townIds[m_players[player].m_townCount] = townId;
+    m_players[player].m_townCount++;
+
+    cell = &m_map[m_castleRecs[townId].m_x - 1][m_castleRecs[townId].m_y];
+    cell->m_flags |= 0x10;
+    cell->m_objectTileset |= 0xe0;
+    cell->m_unknown05 = m_players[player].Color() * 2;
+    cell = &m_map[m_castleRecs[townId].m_x + 1][m_castleRecs[townId].m_y];
+    cell->m_flags |= 0x10;
+    cell->m_objectTileset |= 0xe0;
+    cell->m_unknown05 = m_players[player].Color() * 2 + 1;
+    SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, giVisRangeTown);
+    CheckEndGame(0);
+}
 
 // Buka 2.1 game::ClaimMine reduced to HoMM1's flag placement: the flag cell
 // sits beside the mine by type and shows the owner's colour frame.
