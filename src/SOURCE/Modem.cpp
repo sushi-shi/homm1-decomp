@@ -3,6 +3,8 @@
 #include <match.h>
 
 #include <SOURCE/Modem.h>
+#include <SOURCE/comwin.h>
+#include <SOURCE/NOOPT.h>
 
 #include <H1/All.h>
 #include <H1/KB.h>
@@ -73,6 +75,18 @@ signed char GUIModemCommandExec(void) {
     }
 }
 
+// Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
+VA(0x0045982e, 0x6c)
+void ModemCommand(char *command) {
+    int pos;
+    int len = strlen(command);
+    for (pos = 0; pos < len; ++pos) {
+        write_buffer(command + pos, 1);
+        DelayMilli(100);
+    }
+    write_buffer("\r", 1);
+}
+
 // donor PoL RVA 0x0000cdcc; preferred Buka symbol ?GUIModemResponse@@YICPAD0@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.487980;margin=0.528115;shape=0.250;size=0.959;calls=1.000;alternate=pol20:signed char GUIModemResponse(char *, char *)@0x0000cdcc
@@ -114,6 +128,28 @@ compareResponse:
     } else {
         return 1;
     }
+}
+
+// Buka 2.1 serial queue helpers; HoMM1 has no outgoing-queue guard.
+VA(0x004599f6, 0x2b)
+int write_buffer(char *buffer, int length) {
+    com_snd(0, 0, length, buffer, 0);
+    return 1;
+}
+
+VA(0x00459a21, 0x47)
+int read_byte(void) {
+    unsigned char value;
+    int received = com_rcv(0, 1, &value);
+    if (received == 1)
+        return value;
+    else
+        return -1;
+}
+
+VA(0x00459a68, 0x24)
+void write_byte(int value) {
+    com_snd(0, 0, 1, &value, 0);
 }
 
 // donor PoL RVA 0x0000cfec; preferred Buka symbol ?Connect@@YIXXZ

@@ -248,7 +248,7 @@ int game::TransmitSaveGame(int, int, int) { return 0; }
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.655741;margin=0.222523;shape=0.420;size=0.807;calls=0.714;strings=%s%s|.\DATA\|Receive End;alternate=pol20:int game::ReceiveSaveGame(int, int, int, int)@0x00083937
 VA(0x0044608e, 0x579)
-int game::ReceiveSaveGame(int, int, int, int) { return 0; }
+int game::ReceiveSaveGame(int, int) { return 0; }
 
 // donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order

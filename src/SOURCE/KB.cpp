@@ -6,7 +6,10 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/creatureTypes.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/REMOTE.h>
+#include <SOURCE/resourceTypes.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -59,7 +62,26 @@ int EarlySetup(void)
 // evidence: graph:2;base=0.424205;margin=0.383727;shape=0.192;size=0.855;calls=1.000;alternate=pol20:void GetMonsterCost(int, int * const)@0x0009992c
 VA(0x004516d9, 0xe6)
 void GetMonsterCost(int monster, int *const cost)
-{}
+{
+    int index;
+    for (index = 0; index < RESOURCE_COUNT; index++)
+        cost[index] = 0;
+    cost[RESOURCE_GOLD] = gMonsterDatabase[monster].cost;
+    switch (monster) {
+        case CREATURE_GENIE:
+            cost[RESOURCE_GEMS] = 1;
+            break;
+        case CREATURE_PHOENIX:
+            cost[RESOURCE_MERCURY] = 1;
+            break;
+        case CREATURE_CYCLOPS:
+            cost[RESOURCE_CRYSTAL] = 1;
+            break;
+        case CREATURE_DRAGON:
+            cost[RESOURCE_SULFUR] = 1;
+            break;
+    }
+}
 
 // @early-stop
 // tu-cumulative: logic + all frame slots byte-exact (reqMask@-8, haveMask@-4 match
@@ -190,9 +212,38 @@ void BVResMsg(char *s, int res, int qty)
 // donor PoL RVA 0x0009d3a7; preferred Buka symbol ?WaitForOtherPlayer@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.581419;margin=0.608732;shape=0.409;size=0.995;calls=1.000;alternate=pol20:int WaitForOtherPlayer(void)@0x0009d3a7
+// HoMM1 maps every remote position other than the host to the one opponent slot.
+VA(0x00454748, 0x39)
+signed char NetPosToGamePos(int netPos)
+{
+    if (netPos == 0)
+        return 0;
+    else if (netPos > 0)
+        return 1;
+    return -1;
+}
+
 VA(0x00454781, 0xda)
-int WaitForOtherPlayer(void)
-{ return 0; }
+signed char WaitForOtherPlayer(void)
+{
+    int result = 0;
+    RemoteMessage *data;
+    PollSound();
+    data = (RemoteMessage *)GetRemoteData(1);
+    if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
+        switch (data->command) {
+            case BOX_REMOTE_SETUP:
+                memcpy(gbGamePosToNetPos, data->payload.data, 4);
+                giThisGamePos = NetPosToGamePos(giThisNetPos);
+                giHostGamePos = NetPosToGamePos(0);
+                break;
+            case BOX_REMOTE_SAVE:
+                result = gpGame->ReceiveSaveGame(data->payload.saveSize, data->sender);
+                break;
+        }
+    }
+    return result;
+}
 
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order

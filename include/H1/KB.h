@@ -10,6 +10,7 @@ class resourceManager;
 class advManager;
 class townManager;
 class executive;
+class game;
 struct configStruct;
 
 extern char gbInPollSound;
@@ -40,6 +41,7 @@ extern heroWindow *pNormalDialogWindow;
 extern advManager *gpAdvManager;
 extern townManager *gpTownManager;
 extern executive *gpExec;
+extern game *gpGame;
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;
 extern long giBottomViewOverrideEndTime;
@@ -52,6 +54,7 @@ extern signed char giWaitType;
 extern signed char gbFunctionComplete;
 extern long lLastGetMessage;
 extern long lLastAilServe;
+extern struct tag_monsterInfo gMonsterDatabase[];
 
 long KBTickCount();
 void Process1WindowsMessage();

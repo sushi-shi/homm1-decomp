@@ -104,7 +104,7 @@ public:
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
     int TransmitSaveGame(int, int, int);
-    int ReceiveSaveGame(int, int, int, int);
+    int ReceiveSaveGame(int, int);
     void DoNewTurn(void);
     int GetBoatsBuilt(void);
     int GetNumThievesGuilds(int);
