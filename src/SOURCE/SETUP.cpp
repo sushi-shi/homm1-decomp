@@ -60,11 +60,37 @@ int nbnet_init(void);
 void RemoteMain(int);
 extern int iLastIds[];
 
-// donor PoL RVA 0x000bf340; preferred Buka symbol ?DoTradingPost@@YIXHM@Z
-// donor Buka TU SOURCE/tradpost; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.511421;margin=0.057302;shape=0.391;size=0.883;calls=0.600;alternate=pol20:void DoTradingPost(int, float)@0x000bf340
+short SetupCampaignGameHandler(tag_message&);
+// Campaign lord picked on stpcmpgn.bin (1-4); PickLoadGame filters *.CGM on it.
+extern signed char giCampaignChoice;
+
+// Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
+// game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
 VA(0x004567f0, 0x164)
-void DoTradingPost(int, float) {}
+signed char game::SetupCampaignGame(void) {
+    heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
+    if (!window)
+        MemError();
+    gpWindowManager->DoDialog(window, SetupCampaignGameHandler, 0);
+    delete window;
+    switch (gpWindowManager->m_dialogResult) {
+        case 1:
+            giCampaignChoice = 1;
+            break;
+        case 2:
+            giCampaignChoice = 2;
+            break;
+        case 3:
+            giCampaignChoice = 3;
+            break;
+        case 4:
+            giCampaignChoice = 4;
+            break;
+        case DIALOG_CANCEL:
+            return 0;
+    }
+    return 1;
+}
 
 // donor PoL RVA 0x00010ebf; preferred Buka symbol ?SetupBaud@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order

@@ -119,7 +119,7 @@ public:
     void Overview(void);
     void DoKnob(void);
     int ProcessIconSelect(int, int);
-    int SetupCampaignGame(void);
+    signed char SetupCampaignGame(void);
     signed char SetupBaud(void);
     signed char SetupComPort(void);
     signed char SetupHotSeatGame(void);
