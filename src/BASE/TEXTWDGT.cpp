@@ -3,6 +3,8 @@
 #include <match.h>
 
 #include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/message.h>
 #include <BASE/resourceManager.h>
 #include <BASE/textWidget.h>
 #include <H1/KB.h>
@@ -12,9 +14,7 @@
 
 VA(0x0047add0, 0x3e)
 VA_COMPGEN(0x0047ae10, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x0047add0)
-textWidget::textWidget(void)
-    : widget(0, 0, 0, 0, 0, 0)
-{
+textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, 0) {
     m_font = 0;
     m_text = 0;
     m_color = 1;
@@ -22,20 +22,44 @@ textWidget::textWidget(void)
     m_kind = 0x200;
 }
 
+VA(0x0047ae60, 0x61)
+textWidget::textWidget(
+    short x,
+    short y,
+    short width,
+    short height,
+    char* text,
+    char* fontName,
+    short color,
+    short id,
+    short kind
+)
+    : widget(x, y, width, height, id, kind) {
+    m_font = gpResourceManager->GetFont(fontName);
+    m_color = color;
+    m_text = text;
+    m_alignment = 1;
+    m_kind = WIDGET_KIND_TEXT;
+}
+
 VA(0x0047aed0, 0xeb)
-void textWidget::Read(void)
-{
+void textWidget::Read(void) {
     signed char name[13];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
     m_height = gpResourceManager->ReadWord();
     short length = gpResourceManager->ReadWord();
-    m_text = static_cast<char *>(malloc(length));
-    gpResourceManager->ReadBlock(reinterpret_cast<signed char *>(m_text), length); // byte-evidenced: ReadBlock accepts signed bytes for stored text.
+    m_text = static_cast<char*>(malloc(length));
+    gpResourceManager->ReadBlock(
+        reinterpret_cast<signed char*>(m_text),
+        length
+    ); // byte-evidenced: ReadBlock accepts signed bytes for stored text.
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_font = gpResourceManager->GetFont(reinterpret_cast<char *>(name)); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_font = gpResourceManager->GetFont(
+        reinterpret_cast<char*>(name)
+    ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & 0xff;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord());
@@ -44,20 +68,83 @@ void textWidget::Read(void)
     m_kind = 0x200;
 }
 
-textWidget::~textWidget(void)
-{
+VA(0x0047afc0, 0x2d)
+textWidget::~textWidget(void) {
     gpResourceManager->Dispose(m_font);
     free(m_text);
 }
 
+VA(0x0047aff0, 0x1ea)
+short textWidget::Main(tag_message& message) {
+    if (!(m_flags & WIDGET_FLAG_ENABLED)) {
+        if (message.type == MESSAGE_WIDGET)
+            return widget::Main(message);
+        return MESSAGE_DISPATCH_CONTINUE;
+    }
+    switch (message.type) {
+        case MESSAGE_LEFT_BUTTON_DOWN:
+        case MESSAGE_RIGHT_BUTTON_DOWN: {
+            short x = message.payload.mouse.x - m_owner->m_posX;
+            short y = message.payload.mouse.y - m_owner->m_posY;
+            if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+                m_flags |= WIDGET_FLAG_SELECTED;
+                message.type = MESSAGE_WIDGET;
+                message.payload.widget.command = WIDGET_NOTIFY_SELECT;
+                message.payload.widget.id = m_id;
+                return MESSAGE_DISPATCH_FORWARD;
+            }
+            return MESSAGE_DISPATCH_CONTINUE;
+        }
+        case MESSAGE_LEFT_BUTTON_UP:
+        case MESSAGE_RIGHT_BUTTON_UP:
+            if (m_flags & WIDGET_FLAG_SELECTED) {
+                m_flags &= ~WIDGET_FLAG_SELECTED;
+                message.type = MESSAGE_WIDGET;
+                message.payload.widget.command = WIDGET_NOTIFY_DESELECT;
+                message.payload.widget.id = m_id;
+                return MESSAGE_DISPATCH_FORWARD;
+            }
+            return MESSAGE_DISPATCH_CONTINUE;
+        case MESSAGE_WIDGET:
+            switch (message.payload.widget.command) {
+                case WIDGET_COMMAND_SET_TEXT:
+                    if (message.payload.widget.id == m_id) {
+                        SetText(message.payload.widget.data.text);
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+                case WIDGET_COMMAND_SET_COLOR:
+                    if (message.payload.widget.id == m_id) {
+                        m_color = message.payload.widget.data.value;
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+            }
+            break;
+    }
+    return widget::Main(message);
+}
+
+VA(0x0047b1e0, 0x3b)
+void textWidget::Draw(void) {
+    m_font->DrawBoundedString(
+        m_text,
+        m_x + m_owner->m_posX,
+        m_y + m_owner->m_posY,
+        m_width,
+        m_height,
+        m_color,
+        m_alignment
+    );
+}
+
 VA(0x0047b220, 0x96)
-void textWidget::SetText(char *text)
-{
+void textWidget::SetText(char* text) {
     if (m_kind == WIDGET_KIND_TEXT || m_kind == WIDGET_KIND_TEXT_ENTRY) {
         unsigned short newLength = strlen(text);
         if (newLength > strlen(m_text)) {
             free(m_text);
-            m_text = static_cast<char *>(malloc(newLength + 5));
+            m_text = static_cast<char*>(malloc(newLength + 5));
         }
         strcpy(m_text, text);
     } else {
