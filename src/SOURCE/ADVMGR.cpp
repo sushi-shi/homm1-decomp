@@ -122,7 +122,18 @@ void advManager::Close(void) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701218;margin=0.695021;shape=0.378;size=0.921;calls=1.000;strings=wsnd%1d%1d.82M;alternate=pol20:void advManager::GetCursorSampleSet(int)@0x00057432
 VA(0x0042680e, 0xc7)
-void advManager::GetCursorSampleSet(int) {}
+void advManager::GetCursorSampleSet(int sampleSet)
+{
+    if (sampleSet >= 1)
+        sampleSet = 2;
+    signed char suffixSample[ADVMGR_CURSOR_SAMPLE_COUNT] = {0, 3, 5, 3, 4, 5, 6};
+    for (int index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
+        sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
+        m_cursorSamples[index] = gpResourceManager->GetSample(gText);
+        m_cursorSamples[index]->m_volume = 0x40;
+        m_cursorSamples[index]->m_channelType = 2;
+    }
+}
 
 // donor PoL RVA 0x0005751b; preferred Buka symbol ?DoAdvCommand@advManager@@QAEPAVmapCell@@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -313,7 +324,23 @@ void advManager::TownQuickView(int, int, int, int) {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.562981;margin=0.429826;shape=0.444;size=0.906;calls=0.909;alternate=pol20:void advManager::RedrawAdvScreen(int, int)@0x00063dd6
 VA(0x0042fe8a, 0xe8)
-void advManager::RedrawAdvScreen(int, int) {}
+void advManager::RedrawAdvScreen(int update)
+{
+    if (!bShowIt)
+        return;
+    gpResourceManager->GetBackdrop("bord.bmp", gpWindowManager->m_screen);
+    SaveAdventureBorder();
+    UpdateHeroLocators(0, 0);
+    UpdateTownLocators(0, 0);
+    UpdBottomView(1, 0, 0);
+    m_adventureWindow->DrawWindow(0);
+    if (update)
+        gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
+    UpdateRadar(update, 0);
+    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+    if (update)
+        UpdateScreen(0, 0);
+}
 
 // donor PoL RVA 0x00063f3b; preferred Buka symbol ?MobilizeCurrHero@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
