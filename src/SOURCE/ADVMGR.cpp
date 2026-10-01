@@ -795,13 +795,105 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.410865;margin=0.380092;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoHeroKnob(void)@0x000646aa
 VA(0x004307e5, 0x290)
-void advManager::DoHeroKnob(void) {}
+void advManager::DoHeroKnob(void) {
+    double scale;
+    short pg;
+    tag_message message;
+    short numHeroes;
+    signed char prevPage;
+    short x;
+    short offset;
+    short my;
+
+    gpMouseManager->SetCursorShape(4);
+    prevPage = gpCurPlayer->m_heroLocatorPage;
+    numHeroes = gpCurPlayer->m_heroCount;
+    scale = 73.0 / (numHeroes - 4);
+    gpMouseManager->MouseCoords(x, my);
+    offset = my - m_scrollLeftButton->m_y;
+    gpInputManager->Flush();
+    message = gpInputManager->GetEvent();
+    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+        if (message.type == MESSAGE_MOUSE_MOVE) {
+            if (message.payload.mouse.y < offset + 195)
+                message.payload.mouse.y = offset + 195;
+            if (message.payload.mouse.y > offset + 268)
+                message.payload.mouse.y = offset + 268;
+            gpMouseManager->Main(message);
+            m_scrollLeftButton->m_y = message.payload.mouse.y - offset;
+            m_adventureWindow->DrawWindow();
+            if (numHeroes > 4) {
+                pg = static_cast<short>((m_scrollLeftButton->m_y - 195) / scale);
+                if (prevPage != pg) {
+                    gpCurPlayer->m_heroLocatorPage = pg;
+                    if (numHeroes - 3 < pg)
+                        pg = numHeroes - 3;
+                    UpdateHeroLocators(0, 1);
+                    m_scrollLeftButton->m_y = message.payload.mouse.y - offset;
+                    m_adventureWindow->DrawWindow();
+                    prevPage = pg;
+                }
+            }
+        }
+        Process1WindowsMessage();
+        message = gpInputManager->GetEvent();
+    }
+    gpMouseManager->SetCursorShape(6);
+    m_scrollLeftButton->m_flags &= ~1;
+    UpdateHeroLocators(1, 1);
+}
 
 // donor PoL RVA 0x000648d9; preferred Buka symbol ?DoTownKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.410865;margin=0.000000;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoTownKnob(void)@0x000648d9
 VA(0x00430a75, 0x290)
-void advManager::DoTownKnob(void) {}
+void advManager::DoTownKnob(void) {
+    double scale;
+    short pg;
+    tag_message message;
+    short numHeroes;
+    signed char prevPage;
+    short x;
+    short offset;
+    short my;
+
+    gpMouseManager->SetCursorShape(4);
+    prevPage = gpCurPlayer->m_townLocatorPage;
+    numHeroes = gpCurPlayer->m_townCount;
+    scale = 73.0 / (numHeroes - 4);
+    gpMouseManager->MouseCoords(x, my);
+    offset = my - m_scrollRightButton->m_y;
+    gpInputManager->Flush();
+    message = gpInputManager->GetEvent();
+    while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
+        if (message.type == MESSAGE_MOUSE_MOVE) {
+            if (message.payload.mouse.y < offset + 195)
+                message.payload.mouse.y = offset + 195;
+            if (message.payload.mouse.y > offset + 268)
+                message.payload.mouse.y = offset + 268;
+            gpMouseManager->Main(message);
+            m_scrollRightButton->m_y = message.payload.mouse.y - offset;
+            m_adventureWindow->DrawWindow();
+            if (numHeroes > 4) {
+                pg = static_cast<short>((m_scrollRightButton->m_y - 195) / scale);
+                if (prevPage != pg) {
+                    gpCurPlayer->m_townLocatorPage = pg;
+                    if (numHeroes - 3 < pg)
+                        pg = numHeroes - 3;
+                    UpdateTownLocators(0, 1);
+                    m_scrollRightButton->m_y = message.payload.mouse.y - offset;
+                    m_adventureWindow->DrawWindow();
+                    prevPage = pg;
+                }
+            }
+        }
+        Process1WindowsMessage();
+        message = gpInputManager->GetEvent();
+    }
+    gpMouseManager->SetCursorShape(6);
+    m_scrollRightButton->m_flags &= ~1;
+    UpdateTownLocators(1, 1);
+}
 
 // donor PoL RVA 0x0006a1dd; preferred Buka symbol ?ViewPuzzle@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

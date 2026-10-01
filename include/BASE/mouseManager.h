@@ -60,6 +60,9 @@ public:
     // (retail 0x00476e10 `ret 0x10` and 0x00476e00 `ret`).
     void BeginScreenUpdate(class bitmap*, short, short, short);
     void EndScreenUpdate(void);
+    // Empty in the Windows build (retail 0x00476ec0, `ret 4`); the locator
+    // knob drag passes 4 on entry and 6 on release.
+    void SetCursorShape(int);
     void SetColorMice(int);
 };
 #pragma pack(pop)
