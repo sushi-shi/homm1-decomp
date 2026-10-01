@@ -781,7 +781,107 @@ int hero::NumArtifacts(void) {
 }
 
 VA(0x0046d9ae, 0x52e)
-void UpdateHeroScreenStatusBar(struct tag_message &) {}
+void UpdateHeroScreenStatusBar(short widgetId) {
+    tag_message message; // Unused; retail keeps the donor's message frame.
+    short slot;
+
+    switch (widgetId) {
+    case 86:
+        strcpy(gText, cHeroScreen[0]);
+        break;
+    case 81:
+    case 82:
+    case 83:
+    case 84:
+        sprintf(gText, cHeroScreen[1], gStatNames[widgetId - 81]);
+        break;
+    case 85:
+        sprintf(gText, cHeroScreen[2]);
+        break;
+    case 200:
+    case 201:
+    case 202:
+        if (gpHVHero->m_army.GetMorale(gpHVHero, 0) > 0)
+            sprintf(gText, cHeroScreen[3]);
+        else if (gpHVHero->m_army.GetMorale(gpHVHero, 0) == 0)
+            sprintf(gText, cHeroScreen[4]);
+        else
+            sprintf(gText, cHeroScreen[5]);
+        break;
+    case 203:
+    case 204:
+    case 205:
+        if (gpGame->GetLuck(gpHVHero, 0) > 0)
+            sprintf(gText, cHeroScreen[6]);
+        else if (gpGame->GetLuck(gpHVHero, 0) == 0)
+            sprintf(gText, cHeroScreen[7]);
+        else
+            sprintf(gText, cHeroScreen[8]);
+        break;
+    case 206:
+    case 207:
+        sprintf(gText, cHeroScreen[9]);
+        break;
+    case 102:
+    case 103:
+    case 104:
+    case 105:
+    case 106:
+        slot = widgetId - 102;
+        if (giHeroScreenSrcIndex == -1) {
+            if (gpHVHero->m_army.m_creatureTypes[slot] != -1)
+                sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
+            else
+                strcpy(gText, cHeroScreen[11]);
+        } else if (slot == giHeroScreenSrcIndex) {
+            sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
+        } else if (gpTownManager->m_heroViewLocked) {
+            if (gpHVHero->m_army.m_creatureTypes[slot] != -1)
+                sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
+            else
+                strcpy(gText, cHeroScreen[11]);
+        } else if (gpHVHero->m_army.m_creatureTypes[slot] == -1) {
+            sprintf(gText, cHeroScreen[12],
+                    gArmyNames[gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]);
+        } else {
+            sprintf(gText, cHeroScreen[13],
+                    gArmyNames[gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]],
+                    gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
+        }
+        break;
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+    case 24:
+    case 25:
+    case 26:
+    case 27:
+    case 28:
+    case 29:
+    case 30:
+    case 31:
+    case 32:
+    case 33:
+        if (gpHVHero->m_artifacts[widgetId - 20] == -1)
+            sprintf(gText, cHeroScreen[11]);
+        else if (gpHVHero->m_artifacts[widgetId - 20] == ARTIFACT_MAGIC_BOOK)
+            strcpy(gText, cHeroScreen[14]);
+        else
+            sprintf(gText, cHeroScreen[15], gArtifactNames[gpHVHero->m_artifacts[widgetId - 20]]);
+        break;
+    case 0x7803:
+        sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_unknown1c]);
+        break;
+    case 0x7800:
+        strcpy(gText, cHeroScreen[17]);
+        break;
+    default:
+        strcpy(gText, cHeroScreen[18]);
+        break;
+    }
+    HeroMessageUpdate(gText);
+}
 
 // donor PoL RVA 0x0006e816; preferred Buka symbol ?HeroHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
