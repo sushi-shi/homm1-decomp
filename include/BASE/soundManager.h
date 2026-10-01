@@ -10,60 +10,45 @@
 #include <stdio.h>
 
 H1_ENUM_BEGIN(SoundManagerConstant)
-    MUSIC_TRACK_COUNT = 60,
-    MUSIC_POSITION_TRACK_END = 7,
-    MUSIC_POSITION_TRACK_1 = 47,
-    MUSIC_POSITION_TRACK_2 = 48,
-    MUSIC_POSITION_TRACK_3 = 49,
-    MUSIC_FADE_HOLD_LAST = 10,
-    MUSIC_FADE_TOTAL_STEPS = 11,
-    MUSIC_FADE_RISE_STEPS = 6,
-    MUSIC_FADE_STEP_TICKS = 60,
-    SAMPLE_VOLUME_MAX = 64,
-    MIDI_VOLUME_MAX = 127,
-    CD_VOLUME_SCALE_DIVISOR = 640,
-    SOUND_OPERATION_VOLUME = 1,
-    SOUND_OPERATION_START = 5,
-    SOUND_OPERATION_EFFECT_VOLUME = 100,
-    SOUND_OPERATION_MUSIC_VOLUME = 101,
-    MUSIC_STREAM_BUFFER_SIZE = 0x4000,
+MUSIC_TRACK_COUNT = 60,
+    MUSIC_POSITION_TRACK_END = 7, MUSIC_POSITION_TRACK_1 = 47, MUSIC_POSITION_TRACK_2 = 48,
+    MUSIC_POSITION_TRACK_3 = 49, MUSIC_FADE_HOLD_LAST = 10, MUSIC_FADE_TOTAL_STEPS = 11,
+    MUSIC_FADE_RISE_STEPS = 6, MUSIC_FADE_STEP_TICKS = 60, SAMPLE_VOLUME_MAX = 64,
+    MIDI_VOLUME_MAX = 127, CD_VOLUME_SCALE_DIVISOR = 640, SOUND_OPERATION_VOLUME = 1,
+    SOUND_OPERATION_START = 5, SOUND_OPERATION_EFFECT_VOLUME = 100,
+    SOUND_OPERATION_MUSIC_VOLUME = 101, MUSIC_STREAM_BUFFER_SIZE = 0x4000,
     MUSIC_STREAM_RATE = 22050,
-    SAMPLE_STATUS_PLAYING = 4
-H1_ENUM_END(SoundManagerConstant)
+    SAMPLE_STATUS_PLAYING = 4 H1_ENUM_END(SoundManagerConstant)
 
-H1_ENUM_BEGIN(SoundStartupConstant)
-    SOUND_SAMPLE_HANDLE_COUNT = 15,
-    SOUND_MANAGER_PRIORITY = -1,
-    SOUND_MUSIC_SOURCE_DIGITAL = 0,
-    SOUND_MUSIC_SOURCE_CD = 2,
+        H1_ENUM_BEGIN(SoundStartupConstant) SOUND_SAMPLE_HANDLE_COUNT = 15,
+    SOUND_MANAGER_PRIORITY = -1, SOUND_MUSIC_SOURCE_DIGITAL = 0, SOUND_MUSIC_SOURCE_CD = 2,
     SOUND_DEFAULT_SAMPLE_BITS = 8,
-    SOUND_DEFAULT_SAMPLE_CHANNELS = 1
-H1_ENUM_END(SoundStartupConstant)
+    SOUND_DEFAULT_SAMPLE_CHANNELS = 1 H1_ENUM_END(SoundStartupConstant)
 
-// forward declarations:
-class sample;
+    // forward declarations:
+    class sample;
 struct _SAMPLE;
 struct tag_message;
 
 #pragma pack(push, 1)
 class soundManager : public baseManager {
 public:
-    struct _DIG_DRIVER *m_digitalDriver;
-    struct _SAMPLE *m_activeSample;
+    struct _DIG_DRIVER* m_digitalDriver;
+    struct _SAMPLE* m_activeSample;
     int m_samplesReady;
-    struct _SAMPLE *m_musicSample;
+    struct _SAMPLE* m_musicSample;
     char m_musicStreamOpen;
     char m_musicStreamRestart;
-    void *m_musicBuffers[2];
-    FILE *m_midiFile;
-    struct _SAMPLE *m_sampleHandles[SOUND_SAMPLE_HANDLE_COUNT];
+    void* m_musicBuffers[2];
+    FILE* m_midiFile;
+    struct _SAMPLE* m_sampleHandles[SOUND_SAMPLE_HANDLE_COUNT];
     char _pad_0x08a[4];
     int m_numSampleHandles;
     char _pad_0x092[0x40];
     char m_channelVolumes[0x14];
-    struct _SAMPLE *m_channelSamples[14];
+    struct _SAMPLE* m_channelSamples[14];
     char _pad_0x11e[8];
-    void *m_channelSampleData[14];
+    void* m_channelSampleData[14];
     char _pad_0x15e[8];
     unsigned long m_channelSampleSizes[14];
     char _pad_0x19e[0x3c8];
@@ -90,7 +75,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void ValidatePreviousPosition(int);
     void CDStop(void);
@@ -102,11 +87,11 @@ public:
     void CDPoll(void);
     int ConvertVolume(int, int);
     void AllocateSampleHandles(void);
-    struct _SAMPLE * StartSample(char *, char * *, short int, short int, int, int, long int);
-    void StopAllSamples(int);
-    void StopSample(struct _SAMPLE *);
-    void ModifySample(struct _SAMPLE *, short int, long int);
-    long int DigitalReport(struct _SAMPLE *, short int);
+    struct _SAMPLE* StartSample(char*, char**, short int, short int, int, int, long int);
+    void StopAllSamples(void);
+    void StopSample(struct _SAMPLE*);
+    void ModifySample(struct _SAMPLE*, short int, long int);
+    long int DigitalReport(struct _SAMPLE*, short int);
     void AdjustSoundVolumes(void);
     void AdjustMusicVolumes(void);
     void ForcePollSound(void);
@@ -114,7 +99,7 @@ public:
     void PlayAmbientMusic(int, long int, int);
     void PollSound(void);
     void SwitchAmbientMusic(int);
-    struct _SAMPLE * MemorySample(class sample *);
+    struct _SAMPLE* MemorySample(class sample*);
     void GetNumberCDDrives(void);
     void ServiceSound(void);
     int MusicPlaying(void);
