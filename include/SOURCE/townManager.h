@@ -129,6 +129,8 @@ H1_ENUM_BEGIN(TownSplitConstant)
     TOWN_SPLIT_SETUP_AMOUNT_CONTROL = 4,
     TOWN_SPLIT_WINDOW_X = 0xb1,
     TOWN_SPLIT_WINDOW_Y = 0x14,
+    TOWN_ARMY_VIEW_X = 0x77,
+    TOWN_ARMY_VIEW_Y = 0x14,
     TOWN_BUILDING_MAGE_GUILD = 0,
     TOWN_BUILDING_TENT = 5,
     TOWN_BUILDING_CASTLE = 6,
@@ -206,7 +208,7 @@ public:
     void SetArmyCommand(short);
     void SetCommandAndText(struct tag_message &);
     void ShowText(char *);
-    void DoCommand(int);
+    void DoCommand(signed char);
     void RedrawTownScreen(void);
     void SplitArmy(void);
     void ShiftQualChange(void);

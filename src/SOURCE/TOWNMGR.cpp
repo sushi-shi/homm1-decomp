@@ -328,11 +328,105 @@ void townManager::ShowText(char *)
 VA(0x004093ae, 0x131f)
 short townManager::Main(struct tag_message &) { return 0; }
 
-// donor PoL RVA 0x0001718d; preferred Buka symbol ?DoCommand@townManager@@QAEXH@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.443170;margin=0.301918;shape=0.326;size=0.721;calls=0.800;alternate=pol20:void townManager::DoCommand(int)@0x0001718d
+// Buka TOWNMGR.cpp:1817-1902; HoMM1 merges duplicate stacks after a swap
+// and opens the kingdom overview from the town.
 VA(0x0040a6cd, 0x65f)
-void townManager::DoCommand(int) {}
+void townManager::DoCommand(signed char command)
+{
+    hero *visitor;
+    int temp;
+    short i;
+    hero *viewedHero;
+    int single;
+
+    switch (command) {
+        case TOWN_ARMY_COMMAND_SELECT:
+            m_swapStrip = m_selectedStrip;
+            m_swapArmySlot = m_selectedArmySlot;
+            m_swapStrip->m_selectedSlot = m_swapArmySlot;
+            m_swapStrip->Draw();
+            break;
+        case TOWN_ARMY_COMMAND_VIEW:
+            viewedHero =
+                m_heroStrip == m_selectedStrip ? gpGame->GetHero(m_town->m_occupyingHeroId) : 0;
+            if (m_castleDialogActive == 1
+                || (m_heroStrip == m_selectedStrip && m_selectedStrip->m_army->GetNumArmies() == 1))
+                single = 1;
+            else
+                single = 0;
+            gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y,
+                             m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot],
+                             m_selectedStrip->m_army->m_creatureCounts[m_selectedArmySlot], m_town, single,
+                             0, 0, viewedHero, 0, m_selectedStrip->m_army);
+            if (gpWindowManager->m_dialogResult == TOWN_DIALOG_BUTTON_2) {
+                m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] = -1;
+                m_selectedStrip->m_army->m_creatureCounts[m_selectedArmySlot] = 0;
+            }
+            ResetStrips();
+            break;
+        case TOWN_ARMY_COMMAND_MERGE:
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+                if (m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]
+                    == m_pendingStrip->m_army->m_creatureTypes[i])
+                    break;
+            }
+            if (i < ARMY_GROUP_SLOT_COUNT)
+                m_pendingArmySlot = i;
+            m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot] +=
+                m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot];
+            m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = -1;
+            m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot] = 0;
+            ResetStrips();
+            break;
+        case TOWN_ARMY_COMMAND_SWAP:
+            temp = m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot];
+            m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot] =
+                m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot];
+            m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot] = temp;
+            temp = m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot];
+            m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] =
+                m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot];
+            m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = temp;
+            if (m_swapStrip != m_pendingStrip) {
+                for (temp = 0; temp < ARMY_GROUP_SLOT_COUNT; temp++) {
+                    if (m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]
+                            == m_pendingStrip->m_army->m_creatureTypes[temp]
+                        && m_pendingArmySlot != temp) {
+                        m_pendingStrip->m_army->m_creatureCounts[temp] +=
+                            m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot];
+                        m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] = -1;
+                        m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot] = 0;
+                    }
+                    if (m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]
+                            == m_swapStrip->m_army->m_creatureTypes[temp]
+                        && m_swapArmySlot != temp) {
+                        m_swapStrip->m_army->m_creatureCounts[temp] +=
+                            m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot];
+                        m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = -1;
+                        m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot] = 0;
+                    }
+                }
+            }
+            ResetStrips();
+            break;
+        case TOWN_ARMY_COMMAND_VIEW_HERO:
+            visitor = gpGame->GetHero(m_town->m_occupyingHeroId);
+            visitor->HeroView(1);
+            RedrawTownScreen();
+            gpWindowManager->FadeScreen(0, 8, 0);
+            break;
+        case TOWN_ARMY_COMMAND_GARRISON:
+            gpGame->Overview();
+            RedrawTownScreen();
+            gpWindowManager->FadeScreen(0, 8, 0);
+            break;
+        case TOWN_ARMY_COMMAND_SPLIT:
+            SplitArmy();
+            ResetStrips();
+            break;
+    }
+    m_lastHoverId = -1;
+}
 
 // Buka TOWNMGR.cpp:1905-1921; HoMM1 redraws strips before the status text.
 VA(0x0040ad2c, 0xa5)
