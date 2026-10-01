@@ -446,7 +446,38 @@ signed char game::GetRandomArtifactId(void) {
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64
 VA(0x004440e9, 0x259)
-void game::SetVisibility(int, int, int, int) {}
+void game::SetVisibility(short x, short y, short player, short radius) {
+    int i;
+    int j;
+    int cutoff;
+    int rangeLeft;
+    unsigned char viewMask = 1 << player;
+    unsigned char outerMask = 1 << (player + 4);
+
+    if (radius >= 5)
+        cutoff = 3;
+    else
+        cutoff = 2;
+
+    for (j = y - radius; j <= y + radius; ++j) {
+        for (i = x - radius; i <= x + radius; ++i) {
+            rangeLeft = radius - abs(y - j) + radius - abs(x - i);
+            if (rangeLeft >= cutoff && i >= 0 && j >= 0 && i < MAP_CELL_GRID_SIZE
+                && j < MAP_CELL_GRID_SIZE)
+                gpGame->m_mapExtra[i][j] |= viewMask;
+        }
+    }
+    if (gbHumanPlayer[player]) {
+        for (j = y - radius - 1; j <= y + radius + 1; ++j) {
+            for (i = x - radius - 1; i <= x + radius + 1; ++i) {
+                rangeLeft = radius - abs(y - j) + radius - abs(x - i);
+                if (rangeLeft + 1 >= cutoff && i >= 0 && j >= 0 && i < MAP_CELL_GRID_SIZE
+                    && j < MAP_CELL_GRID_SIZE)
+                    gpGame->m_mapExtra[i][j] |= outerMask;
+            }
+        }
+    }
+}
 
 // donor PoL RVA 0x00080e6c; preferred Buka symbol ?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
