@@ -196,7 +196,7 @@ int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.340271;margin=0.529148;shape=0.188;size=0.654;calls=0.667;alternate=pol20:int game::GetLuck(class hero *, class army *, class town *)@0x00080ff9
 VA(0x0044465b, 0xbf)
-int game::GetLuck(class hero*, class army*, class town*) {
+int game::GetLuck(class hero*, class army*) {
     return 0;
 }
 

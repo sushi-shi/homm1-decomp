@@ -135,3 +135,4 @@ rva	name	provenance
 0x0004455C	?SRandom@@YAHHH@Z	hero::CheckLevel draws SRandom(1, 100) (cdecl, two arguments, int result); Buka SRandom correspondence
 0x00047A8F	?Dismiss@armyGroup@@QAEXC@Z	hero::Deallocate dismisses each of five slots; body reads a byte slot (movsx [ebp+8], ret 4) as Buka armyGroup::Dismiss
 0x00043B3C	?SetRandomHeroArmies@game@@QAEXFH@Z	hero::Deallocate re-arms the freed hero with a word id and 0; Buka game::SetRandomHeroArmies correspondence
+0x00047974	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	hero::HeroView reads the army morale with hero and null town (ret 8) and sign-extends AX; body reads town+0x16 buildings

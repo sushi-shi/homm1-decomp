@@ -35,7 +35,9 @@ public:
     char m_unknown89[0x12];
     bankBox* m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
-    char m_unknownf7[7];
+    // HeroView disables dismissal while a town screen is open.
+    signed char m_heroViewLocked;
+    char m_unknownf8[6];
     // swapManager::SplitMons runs the split dialog through these fields.
     heroWindow* m_heroWindow1;
     short m_splitAmount;

@@ -28,7 +28,8 @@ public:
     void View(int);
     int HasAllUndead(void);
     int HasSomeUndead(void);
-    int GetMorale(class hero*, class town*, class armyGroup*);
+    // HoMM1 retail: hero and town (ret 8), result in AX.
+    short GetMorale(class hero*, class town*);
     // HoMM1 retail: byte slot (movsx [ebp+8], ret 4).
     void Dismiss(signed char);
     signed char IsMember(signed char);

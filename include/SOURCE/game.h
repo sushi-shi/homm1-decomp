@@ -178,7 +178,8 @@ public:
     void MakeAllWaterVisible(int);
     void GiveArmy(class armyGroup*, int, int, int);
     int ExperienceValueOfStack(class armyGroup*, class hero*);
-    int GetLuck(class hero*, class army*, class town*);
+    // HoMM1 retail: two arguments (ret 8).
+    int GetLuck(class hero*, class army*);
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
     void ShowComputerScreen(void);

@@ -99,7 +99,7 @@ public:
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
-    void HeroView(signed char);
+    signed char HeroView(signed char);
     void ViewStat(signed char, signed char);
     void ViewArtifact(signed char, signed char);
     signed char Dismiss(void);
@@ -134,6 +134,10 @@ void HeroMessageUpdate(char*);
 extern char* gStatNames[];
 extern char* gStatDesc[];
 extern char* gArtifactDesc[];
+extern char* gClassNames[];
+extern class hero* gpHVHero;
+extern signed char gbHeroScreenActive;
+short HeroHandler(struct tag_message&);
 extern int giHeroScreenSrcIndex;
 extern short gMinExpForLevel[][HERO_EXPERIENCE_LEVEL_TABLE_COUNT];
 #endif // HOMM1_SOURCE_HERO_H

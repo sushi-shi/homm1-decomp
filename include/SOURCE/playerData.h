@@ -42,7 +42,9 @@ public:
 #pragma pack(push, 1)
 class playerData {
 public:
-    char m_unknown00[0x12];
+    char m_unknown00[0x11];
+    // HeroView picks the crest frame class + color * 4.
+    signed char m_color;
     // CalcMobility grants computer players at level 3 or above extra moves.
     signed char m_difficulty;
     signed char m_heroCount;
@@ -70,6 +72,9 @@ public:
     signed char CountVisitedObelisks(void);
     signed char CurrentHero(void) {
         return m_currentHero;
+    }
+    signed char Color(void) {
+        return m_color;
     }
 };
 #pragma pack(pop)

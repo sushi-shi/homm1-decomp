@@ -7,7 +7,10 @@
 #include <H1/KB.h>
 #include <SOURCE/dialogTypes.h>
 
+#include <SOURCE/kbwin.h>
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 extern char* cHeroLevel[];
@@ -274,7 +277,142 @@ void hero::RedrawHeroScreen(void) {
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
 VA(0x0046c2ed, 0x6c2)
-void hero::HeroView(signed char) {}
+signed char hero::HeroView(signed char viewOnly) {
+    int armyLuckLevel;
+    int armyMoraleLevel;
+    tag_message message;
+    short i;
+    int shown;
+
+    gpAdvManager->TrimLoopingSounds(8);
+    gbHeroScreenActive = 1;
+    gpWindowManager->FadeScreen(1, 8, 0);
+    heroWin = new heroWindow(0, 0, "herowind.bin");
+    if (!heroWin)
+        MemError();
+    gheroWin = heroWin;
+    SetWinText(heroWin, 5);
+    message.type = MESSAGE_WIDGET;
+    sprintf(gText, "%s the %s", m_name, gClassNames[m_unknown1c]);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 2;
+    message.payload.widget.data.text = gText;
+    heroWin->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.payload.widget.data.value = 4;
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        message.payload.widget.id = i + 81;
+        heroWin->BroadcastMessage(message);
+        message.payload.widget.id = i + 102;
+        heroWin->BroadcastMessage(message);
+    }
+    if (viewOnly || gpTownManager->m_heroViewLocked
+        || (!gpCurPlayer->m_townCount && gpCurPlayer->m_heroCount == 1)) {
+        message.payload.widget.id = 0x7803;
+        message.payload.widget.data.value = 6;
+        heroWin->BroadcastMessage(message);
+    }
+    sprintf(gText, "port%04d.icn", m_unknown1d);
+    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
+    message.payload.widget.id = 65;
+    message.payload.widget.data.text = gText;
+    heroWin->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
+        sprintf(gText, "%d", m_primaryStats[i]);
+        message.payload.widget.id = i + 76;
+        message.payload.widget.data.text = gText;
+        heroWin->BroadcastMessage(message);
+    }
+    armyLuckLevel = gpGame->GetLuck(this, 0);
+    for (i = 0; i < 3; i++) {
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.id = i + 203;
+        if (armyLuckLevel < 0)
+            message.payload.widget.data.value = 12;
+        else if (armyLuckLevel == 0)
+            message.payload.widget.data.value = 16;
+        else
+            message.payload.widget.data.value = 11;
+        heroWin->BroadcastMessage(message);
+    }
+    shown = abs(armyLuckLevel);
+    if (shown <= 0)
+        shown = 1;
+    for (i = 3; i > shown; i--) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = i + 202;
+        message.payload.widget.data.value = 6;
+        heroWin->BroadcastMessage(message);
+    }
+    armyMoraleLevel = m_army.GetMorale(this, 0);
+    for (i = 0; i < 3; i++) {
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.id = i + 200;
+        if (armyMoraleLevel < 0)
+            message.payload.widget.data.value = 14;
+        else if (armyMoraleLevel == 0)
+            message.payload.widget.data.value = 17;
+        else
+            message.payload.widget.data.value = 13;
+        heroWin->BroadcastMessage(message);
+    }
+    shown = abs(armyMoraleLevel);
+    if (shown <= 0)
+        shown = 1;
+    for (i = 3; i > shown; i--) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = i + 199;
+        message.payload.widget.data.value = 6;
+        heroWin->BroadcastMessage(message);
+    }
+    sprintf(gText, "%ld", m_experience);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 207;
+    message.payload.widget.data.text = gText;
+    heroWin->BroadcastMessage(message);
+    sprintf(gText, "crst%04d.icn", m_unknown1c + gpCurPlayer->Color() * 4);
+    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
+    message.payload.widget.id = 86;
+    heroWin->BroadcastMessage(message);
+    UpdateArmies();
+    for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
+        message.payload.widget.id = i + 20;
+        if (m_artifacts[i] != -1) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = m_artifacts[i];
+            heroWin->BroadcastMessage(message);
+            if (m_artifacts[i] >= 4) {
+                message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+                message.payload.widget.id = i + 6;
+                message.payload.widget.data.value = 4;
+                heroWin->BroadcastMessage(message);
+            }
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.data.value = 4;
+            heroWin->BroadcastMessage(message);
+            message.payload.widget.id = i + 6;
+            heroWin->BroadcastMessage(message);
+        }
+    }
+    RedrawHeroScreen();
+    gpWindowManager->FadeScreen(0, 8, 0);
+    gpHVHero = this;
+    gpWindowManager->DoDialog(heroWin, HeroHandler, 0);
+    gpWindowManager->FadeScreen(1, 8, 0);
+    delete heroWin;
+    gheroWin = 0;
+    if (gpWindowManager->m_dialogResult == 0x7803) {
+        return 1;
+    } else {
+        m_mobility = CalcMobility();
+        if (m_mobility < m_remainingMobility)
+            m_remainingMobility = m_mobility;
+    }
+    gbHeroScreenActive = 0;
+    return 0;
+}
 
 // donor PoL RVA 0x0006cab1; preferred Buka symbol ?HeroMessageUpdate@@YIXPAD@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
@@ -649,4 +787,4 @@ void UpdateHeroScreenStatusBar(struct tag_message &) {}
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.360602;margin=0.481730;shape=0.266;size=0.702;calls=0.568;alternate=pol20:int HeroHandler(struct tag_message &)@0x0006e816
 VA(0x0046dedc, 0x6d4)
-int HeroHandler(struct tag_message &) { return 0; }
+short HeroHandler(struct tag_message &) { return 0; }
