@@ -53,7 +53,16 @@ philAI::philAI()
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.414032;margin=0.418353;shape=0.188;size=0.773;calls=1.000;alternate=pol20:void philAI::DoAllHeroInteractions(void)@0x00037bb5
 VA(0x0041a1ff, 0xb0)
-void philAI::DoAllHeroInteractions(void) {}
+void philAI::DoAllHeroInteractions(void)
+{
+    int i;
+
+    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
+        town *pTown = gpGame->GetTown(gpCurPlayer->m_townIds[i]);
+        if (pTown->m_occupyingHeroId != -1)
+            HeroInteractionAtTown(gpGame->GetHero(pTown->m_occupyingHeroId), pTown, 0, &iDummy);
+    }
+}
 
 // donor PoL RVA 0x00037fdf; preferred Buka symbol ?CheckBuyStuff@philAI@@QAEXXZ
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -84,6 +93,16 @@ void philAI::CheckBerserk(void) {}
 // evidence: graph:5;base=0.641984;margin=1.146879;shape=0.398;size=0.795;calls=0.741;strings====================================|DO AI|DO AI 1;alternate=pol20:void philAI::DoAI(int)@0x00039631
 VA(0x0041b144, 0x8f0)
 void philAI::DoAI(int) {}
+
+// Buka 2.1 GetGameAIVars refreshes every player's game attention value.
+VA(0x0041ba34, 0x4b)
+void philAI::GetGameAIVars(void)
+{
+    int i;
+
+    for (i = 0; i < gpGame->m_playerCount; i++)
+        GetGameAttentionValue(i);
+}
 
 // donor PoL RVA 0x0003a329; preferred Buka symbol ?GetTurnAIVars@philAI@@QAEXH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -169,8 +188,25 @@ int philAI::CreaturesToBuy(int creatureType, int availableCount)
 // donor PoL RVA 0x0003df5a; preferred Buka symbol ?MaxBuyableCreatures@philAI@@QAEHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.533802;margin=0.565073;shape=0.392;size=0.839;calls=1.000;alternate=pol20:int philAI::MaxBuyableCreatures(int)@0x0003df5a
+// Buka 2.1 body: the last resource's affordable count wins.
 VA(0x0041e4a5, 0x9b)
-int philAI::MaxBuyableCreatures(int level) { return 0; }
+int philAI::MaxBuyableCreatures(int creatureType)
+{
+    int monsterCost[PLAYER_RESOURCE_COUNT];
+    int maxUnits;
+    int i;
+
+    GetMonsterCost(creatureType, monsterCost);
+    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++) {
+        if (monsterCost[i] == 0)
+            maxUnits = 9999;
+        else if (gpCurPlayer->m_resources[i] > 0)
+            maxUnits = gpCurPlayer->m_resources[i] / monsterCost[i];
+        else
+            maxUnits = 0;
+    }
+    return maxUnits;
+}
 
 // donor PoL RVA 0x0003dff6; preferred Buka symbol ?ValueOfBuyingHero@philAI@@QAEXPAVtown@@PAVhero@@AAHAAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order

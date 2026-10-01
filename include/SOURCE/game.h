@@ -3,8 +3,12 @@
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 114 methods, 0 own-virtual, 0 static data.
 
+#include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/town.h>
 
 // forward declarations:
 class army;
@@ -17,8 +21,31 @@ class town;
 struct SMapHeader;
 struct tag_message;
 
+// clang-format off
+H1_ENUM_BEGIN(GameStorageConstant)
+    GAME_PLAYER_COUNT = 4,
+    GAME_TOWN_COUNT = 36,
+    GAME_HERO_COUNT = 36
+H1_ENUM_END(GameStorageConstant)
+// clang-format on
+
+// Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
+// 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
+// are fixed by retail address arithmetic; unrecovered spans stay opaque.
+#pragma pack(push, 1)
 class game {
 public:
+    char m_unknown0000[0x1ff];
+    signed char m_playerCount;
+    char m_unknown200[0xc];
+    class playerData m_players[GAME_PLAYER_COUNT];
+    class mapCell m_map[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    char m_unknownd0a0[0x5101];
+    class town m_castleRecs[GAME_TOWN_COUNT];
+    char m_unknown1295d[0x28];
+    class hero m_heroRecs[GAME_HERO_COUNT];
+    hero *GetHero(int id) { return &m_heroRecs[id]; }
+    town *GetTown(int id) { return &m_castleRecs[id]; }
     // --- methods ---
     void SetupDynamicStuff(int, int, int);
     void SetupNewOverviewType(int, int);
@@ -135,6 +162,7 @@ public:
     void GetVictoryConditionText(char *);
     int GetSideDesc(char *, int, int);
 };
+#pragma pack(pop)
 
 extern game *gpGame;
 #endif // HOMM1_SOURCE_GAME_H

@@ -64,6 +64,7 @@ void ForcePollSound();
 void ShutDown(char *);
 void MemError();
 void SetMenus(void *, int);
+void GetMonsterCost(int, int *const);
 void NormalDialog(char *, int, int, int, int, int, int, int, int);
 
 #endif

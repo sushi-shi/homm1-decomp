@@ -25,6 +25,7 @@ public:
     signed char m_buildState;
     char m_unknown19;
     short m_garrison[6];
+    char m_unknown26[0x11];
     // --- constructors ---
     town(void);
     // --- methods ---
