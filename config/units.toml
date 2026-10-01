@@ -308,6 +308,11 @@ source = "src/SOURCE/SETUP.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "SOURCE/SMACKMGR"
+source = "src/SOURCE/SMACKMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "SOURCE/SPELLS"
 source = "src/SOURCE/SPELLS.cpp"
 flags = "cpp_carcass"
