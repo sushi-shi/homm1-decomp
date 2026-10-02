@@ -174,14 +174,14 @@ short heroWindowManager::BroadcastMessage(short type, short command, short widge
 
 // Buka list insertion correspondence; retail keeps the requested layer as a short.
 VA(0x00474170, 0xce)
-void heroWindowManager::AddWindow(heroWindow* window, short requestedOrder, int openFlags) {
+void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlags) {
     heroWindow* currentWindow = m_windowListTail;
-    short zOrder = 0;
-    if (!(window->m_winFlags & WINDOW_FLAG_FIXED_LAYER))
-        zOrder = requestedOrder;
-    if (zOrder == -1) {
+    if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = 0;
-        if (currentWindow != 0)
+    if (zOrder == -1) {
+        if (currentWindow == 0)
+            zOrder = 0;
+        else
             zOrder = currentWindow->m_zOrder + 1;
     }
     if (zOrder == 0 && m_windowListHead != 0)
@@ -193,14 +193,14 @@ void heroWindowManager::AddWindow(heroWindow* window, short requestedOrder, int 
     while (currentWindow != 0 && currentWindow->m_zOrder > zOrder)
         currentWindow = currentWindow->m_prevWindow;
     if (currentWindow == 0) {
-        window->m_prevWindow = 0;
         window->m_nextWindow = m_windowListHead;
+        window->m_prevWindow = 0;
         m_windowListHead = window;
         if (m_windowListTail == 0)
             m_windowListTail = window;
     } else if (currentWindow->m_nextWindow == 0) {
-        window->m_nextWindow = 0;
         window->m_prevWindow = m_windowListTail;
+        window->m_nextWindow = 0;
         m_windowListTail->m_nextWindow = window;
         m_windowListTail = window;
     } else {
