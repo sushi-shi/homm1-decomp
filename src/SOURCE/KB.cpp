@@ -2218,7 +2218,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
 // evidence: graph:2;base=0.598508;margin=0.532475;shape=0.481;size=0.968;calls=1.000;alternate=pol20:void BVResMsg(char *, int, int)@0x0009d2c0
 VA(0x004546bf, 0x5b)
 void BVResMsg(char* s, int res, int qty) {
-    giBottomViewOverride = 5;
+    giBottomViewOverride = BOTTOM_VIEW_RESOURCE;
     giBottomViewOverrideEndTime = KBTickCount() + 5000;
     giBottomViewResource = res;
     giBottomViewResourceQty = qty;
