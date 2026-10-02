@@ -1980,11 +1980,97 @@ void game::TurnOffAIMusic(void) {
     gpSoundManager->m_musicReady = 1;
 }
 
-// donor PoL RVA 0x0007bd99; preferred Buka symbol ?NextPlayer@game@@QAEXXZ
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:6;base=0.506997;margin=1.216721;shape=0.284;size=0.968;calls=0.889;alternate=pol20:void game::NextPlayer(void)@0x0007bd99
+extern char* gColorNames[];
+// The host's and this machine's game positions in a network game.
+extern int giHostGamePos;
+extern int giThisGamePos;
+
+// Buka 2.1 game::NextPlayer for HoMM1: autosaves, advances to the next
+// living player (a new day after the last), restores hero movement (none
+// on the campaign's goal town) and hands the turn to the computer or the
+// human.
 VA(0x00441245, 0x4e1)
-void game::NextPlayer(void) {}
+void game::NextPlayer(void) {
+    hero* currentHero;
+    int numHumans;
+    int i;
+    int remote;
+    // Retail reserves 0x14 unused bytes above the named locals.
+    char unused[20];
+
+    iCurHourGlassPhase = 0;
+    if (gbThisNetHumanPlayer[giCurPlayer] && gConfig.autosave) {
+        numHumans = 0;
+        for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+            if (!m_playerDead[i] && gbHumanPlayer[i])
+                numHumans++;
+        }
+        SaveGame("AUTOSAVE", 1);
+    }
+    if (gpGame->m_players[giCurPlayer].m_unknown55 > 0)
+        gpGame->m_players[giCurPlayer].m_unknown55--;
+    CheckEndGame(0);
+    gpAdvManager->DeactivateCurrTown();
+    gpAdvManager->DeactivateCurrHero();
+    do {
+        giCurPlayer++;
+        if (giCurPlayer >= m_playerCount) {
+            giCurPlayer = 0;
+            PerDay();
+        }
+    } while (gpGame->m_playerDead[giCurPlayer]);
+    gpCurPlayer = &gpGame->m_players[giCurPlayer];
+    giCurPlayerBit = 1 << giCurPlayer;
+    giCurPlayerHighBit = 1 << (giCurPlayer + 4);
+    for (i = 0; i < m_players[giCurPlayer].m_heroCount; i++) {
+        currentHero = &m_heroRecs[m_players[giCurPlayer].m_heroIds[i]];
+        currentHero->m_mobility = currentHero->CalcMobility();
+        if (m_campaignType > 0 && gCampaignScenarios[m_campaignScenario].victoryTownX == currentHero->m_x
+            && gCampaignScenarios[m_campaignScenario].victoryTownY == currentHero->m_y)
+            currentHero->m_mobility = 0;
+        currentHero->m_remainingMobility = currentHero->m_mobility;
+    }
+    if (!gbThisNetHumanPlayer[giCurPlayer]) {
+        gpMouseManager->SetPointer(1);
+        gpAdvManager->HideRoute(1, 0, 1);
+        gpAdvManager->CheckDimNextHeroBut();
+        TurnOnAIMusic();
+        SetNoDialogMenus(0);
+        giBottomViewOverride = 6;
+        ShowComputerScreen();
+        bShowIt = 0;
+        if (gbRemoteOn && (gbHumanPlayer[giCurPlayer] || giHostGamePos != giThisGamePos)) {
+            if (!gbHumanPlayer[giCurPlayer])
+                remote = giHostGamePos;
+            else
+                remote = giCurPlayer;
+            if (!gpGame->TransmitSaveGame(remote, 0))
+                ShutDown(0);
+        }
+        if (giBottomViewOverride == 6)
+            giBottomViewOverride = 0;
+    } else {
+        SetNoDialogMenus(1);
+        gpInputManager->Flush();
+        if (gbBlackoutPlayer && giNumHumanPlayers > 1) {
+            sprintf(gText, "%s player turn.", gColorNames[gpGame->m_players[giCurPlayer].m_unknown11]);
+            gText[0] -= 32;
+            WaitForPlayer(gText, giCurPlayer);
+        }
+        if (gbThisNetHumanPlayer[giCurPlayer])
+            CancelComputerScreen();
+        giCurWatchPlayerBit = giCurPlayerBit;
+        giCurWatchPlayer = giCurPlayer;
+        giCurWatchPlayerHighBit = 1 << (giCurPlayer + 4);
+    }
+    DoNewTurn();
+    gpMouseManager->ReallyShowPointer();
+    CheckEndGame(0);
+    if (gbThisNetHumanPlayer[giCurPlayer] && gbRemoteOn && m_day != 1 && giForceSwitchMusic == -1) {
+        gpSoundManager->SwitchAmbientMusic(15);
+        giForceSwitchMusic = KBTickCount();
+    }
+}
 
 // Buka 2.1 game::RandomizeTown for HoMM1's 4x3 town footprint: the town
 // type comes from the campaign crest, a distinct roll for the first four
@@ -3132,7 +3218,6 @@ int game::ReceiveSaveGame(int, int) { return 0; }
 
 // New-turn texts: days-left and last-day warnings, then the month/week banners.
 extern char* gNewTurnText[];
-extern char* gColorNames[];
 extern char* gMonsterNames[];
 extern char* gMonthNames[];
 extern char* gWeekNames[];
