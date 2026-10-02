@@ -238,7 +238,7 @@ signed char hero::HeroView(signed char viewOnly) {
     int shown;
 
     gpAdvManager->TrimLoopingSounds(8);
-    gbHeroScreenActive = 1;
+    gbHeroWindShowing = 1;
     gpWindowManager->FadeScreen(1, 8, 0);
     heroWin = new heroWindow(0, 0, "herowind.bin");
     if (!heroWin)
@@ -363,7 +363,7 @@ signed char hero::HeroView(signed char viewOnly) {
         if (m_mobility < m_remainingMobility)
             m_remainingMobility = m_mobility;
     }
-    gbHeroScreenActive = 0;
+    gbHeroWindShowing = 0;
     return 0;
 }
 

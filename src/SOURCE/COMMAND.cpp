@@ -1378,7 +1378,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
 
         netPos = m_playerId[1 - m_currentSide];
         if (netPos < 0 || !gbHumanPlayer[netPos])
-            netPos = giRemoteDefaultPlayer;
+            netPos = giHostGamePos;
         data[0] = giNextAction;
         data[1] = giNextActionExtra;
         data[2] = giNextActionGridIndex;

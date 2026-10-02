@@ -182,7 +182,7 @@ short combatManager::Open(short priority)
     m_unknown727 = 0;
     m_unknown72b = 0;
     gCurLoadedSpellIcon = 0;
-    gCurLoadedSpellEffect = 0;
+    gCurLoadedSpellFileId = 0;
     gpMouseManager->SetPointer("cmbtmous.mse", 6);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
@@ -583,7 +583,7 @@ void combatManager::FreeArmies(void)
     if (gCurLoadedSpellIcon)
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
     gCurLoadedSpellIcon = 0;
-    gCurLoadedSpellEffect = 0;
+    gCurLoadedSpellFileId = 0;
 }
 
 // HoMM1 retail 0x0044d34c: no callers and an empty body; HoMM2's combat log

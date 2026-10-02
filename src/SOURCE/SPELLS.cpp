@@ -580,12 +580,12 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        giCombatFxFrame = armyIndex;
+        giSpellEffectFrame = armyIndex;
         DrawFrame(1);
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        giCombatFxFrame = armyIndex;
+        giSpellEffectFrame = armyIndex;
         DrawFrame(1);
     }
     if (castSide == 2) {
