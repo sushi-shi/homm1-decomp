@@ -9,6 +9,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/philAI.h>
 #include <SOURCE/wingraph.h>
@@ -17,7 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SOURCE/mapObjectTypes.h>
 
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x00490d50)
@@ -226,6 +226,23 @@ short combatManager::Open(short priority)
     return 0;
 }
 
+// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
+// table after Open's literals, followed by its own literals.
+DATA(0x00490db0)
+char* cCombatBkgNames[11] = {
+    "frstwgrs.bkg",
+    "mtnwgrsf.bkg",
+    "snowfrst.bkg",
+    "snowmtnf.bkg",
+    "swamp.bkg",
+    "lava.bkg",
+    "desert.bkg",
+    "frstwdrt.bkg",
+    "mtnwdrtf.bkg",
+    "boat.bkg",
+    "gravyard.bkg",
+};
+
 // Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
 // count of the side that held it.
 VA(0x0044bf19, 0x1ea)
@@ -290,9 +307,9 @@ void combatManager::UpdateArmyGroup(signed char side)
 VA(0x0044c264, 0x7be)
 void combatManager::GenerateMap(void)
 {
-    short count;
     short x;
     short i;
+    short count;
     short y;
     int randomRow;
     int randomCol;
@@ -699,8 +716,8 @@ signed char combatManager::GetNextArmy(int checkMorale)
     signed char iSpeed;
     int sideIter;
     short temp;
-    signed char stackCounter;
     signed char stackSide;
+    signed char stackCounter;
     int bSkip;
 
     stackSide = m_currentSide;
@@ -764,16 +781,16 @@ signed char combatManager::IsWinner(signed char side)
 VA(0x0044da9d, 0xd55)
 void combatManager::CatAttack(signed char side)
 {
-    short dx;
     icon* boulder;
     short summitX;
+    short dx;
+    short x;
     signed char col;
     short i;
     short frm;
     short dy;
     short y;
     short tgtY;
-    short x;
     short tgtX;
     short force;
     short startX;
@@ -1035,12 +1052,12 @@ void combatManager::KeepAttack(void)
     short gapX;
     signed char hexCol;
     signed char keepY;
+    float yAdvance;
     short lastY;
     signed char targetRow;
+    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     int bestRank;
     signed char srcCol;
-    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
-    float yAdvance;
     float yRun;
     short distance;
     float xAdvance;
@@ -1052,8 +1069,8 @@ void combatManager::KeepAttack(void)
     short height;
     bitmap* behind;
     int i;
-    int bestWorth;
     int power;
+    int bestWorth;
     short startX;
     float xRun;
     short maxY;
@@ -1256,20 +1273,3 @@ void combatManager::DrawCombatBorder(void)
         return;
     memcpy(gpWindowManager->m_screen->m_pixels + 0x47e00, m_savedBorder, 0x3200);
 }
-
-// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
-// table after Open's literals, followed by its own literals.
-DATA(0x00490db0)
-char* cCombatBkgNames[11] = {
-    "frstwgrs.bkg",
-    "mtnwgrsf.bkg",
-    "snowfrst.bkg",
-    "snowmtnf.bkg",
-    "swamp.bkg",
-    "lava.bkg",
-    "desert.bkg",
-    "frstwdrt.bkg",
-    "mtnwdrtf.bkg",
-    "boat.bkg",
-    "gravyard.bkg",
-};

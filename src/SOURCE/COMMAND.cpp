@@ -102,6 +102,7 @@ signed char combatManager::ValidHexToStandOn(int hex) {
 VA(0x0040f6a7, 0x7e9)
 void combatManager::SetCombatDirections(int targetHex) {
     int mapped;
+    int targetSide;
     int numUnset;
     signed char hasPath[8];
     int after;
@@ -113,7 +114,6 @@ void combatManager::SetCombatDirections(int targetHex) {
     army* curArmy;
     int targetIndex;
     army* target;
-    int targetSide;
     signed char canStand[8];
 
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
@@ -894,6 +894,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
 // side with fixed 40-pixel spacing.
 VA(0x00411b07, 0x7d0)
 void combatManager::ShowDeadArmies(class heroWindow* window) {
+    int numLost[2];
     char* buffer;
     int casualtyType[2][5];
     int iconSpacing;
@@ -903,7 +904,6 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     short bottom = 0x1ca;
     int rowY;
     tag_message message;
-    int numLost[2];
     int casualtyCount[2][5];
     int firstX;
 
