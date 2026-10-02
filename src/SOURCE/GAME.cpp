@@ -34,42 +34,6 @@ extern unsigned char giCurPlayerHighBit;
 extern unsigned char giCurWatchPlayerHighBit;
 extern int giCurWatchPlayer;
 
-// donor PoL RVA 0x00088607; preferred Buka symbol ?ClearEffects@combatManager@@QAEXXZ
-// donor Buka TU SOURCE/SPELLAI; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.425101;margin=0.364782;shape=0.143;size=0.828;calls=1.000;alternate=pol20:void combatManager::ClearEffects(void)@0x00088607
-VA(0x00437977, 0x63)
-void combatManager::ClearEffects(void) {
-    int side;
-    int index;
-    for (side = 0; side < COMBAT_EFFECT_SIDE_COUNT; ++side) {
-        for (index = 0; index < COMBAT_EFFECT_SLOT_COUNT; ++index)
-            gArmyEffected[side][index] = 0;
-    }
-}
-
-// Buka 2.1 NextPos with HoMM1's retail-backed nine-hex row width.
-VA(0x004379da, 0x40)
-void combatManager::NextPos(int* hex) {
-    if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_SPELL_AI_ROW_LENGTH == 0)
-        *hex += COMBAT_SPELL_AI_ROW_SKIP;
-    else
-        (*hex)++;
-}
-
-// donor PoL RVA 0x0000bd60; preferred Buka symbol ?ViewGeneral@combatManager@@QAEHHHH@Z
-// donor Buka TU SOURCE/VIEW; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.677383;margin=0.274305;shape=0.458;size=0.778;calls=0.853;strings=port%04d.icn|vgenwin.bin;alternate=pol20:int combatManager::ViewGeneral(int, int, int)@0x0000bd60
-VA(0x00438310, 0x56d)
-int combatManager::ViewGeneral(int, int, int) {
-    return 0;
-}
-
-// donor PoL RVA 0x0000c784; preferred Buka symbol ?ViewArmy@combatManager@@QAEXPAVarmy@@H@Z
-// donor Buka TU SOURCE/VIEW; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.474703;margin=0.690322;shape=0.250;size=0.915;calls=1.000;alternate=pol20:void combatManager::ViewArmy(class army *, int)@0x0000c784
-VA(0x00438a9f, 0x161)
-void combatManager::ViewArmy(class army*, int, int) {}
-
 // donor PoL RVA 0x000708b0; preferred Buka symbol ?Write@playerData@@QAEXH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.582104;margin=0.473963;shape=0.500;size=0.883;calls=0.885;alternate=pol20:void playerData::Write(int)@0x000708b0
@@ -2194,8 +2158,8 @@ short ViewSpecialHandler(tag_message& message) {
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
 VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
-    int,
-    int,
+    short,
+    short,
     signed char,
     short,
     class town*,

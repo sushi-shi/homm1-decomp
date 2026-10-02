@@ -444,6 +444,12 @@ source = "src/SOURCE/SPELLAI.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "SOURCE/VIEW"
+source = "src/SOURCE/VIEW.cpp"
+# ViewGeneral registers fs:[0] around its new heroWindow.
+flags = "cpp_carcass_eh"
+
+[[unit]]
 unit = "SOURCE/DRAWING"
 source = "src/SOURCE/DRAWING.cpp"
 flags = "cpp_carcass"

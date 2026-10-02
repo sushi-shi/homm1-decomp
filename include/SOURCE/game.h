@@ -231,10 +231,12 @@ public:
     // HoMM1: limits the spell page to the combat or adventure slots.
     void SetupSpellRange(short);
     void UpdateSpellWidgets(void);
-    // HoMM1 retail: byte creature/flags, word count, eleven arguments (ret 0x2c).
+    // HoMM1 retail: word x/y, byte creature/flags, word count, eleven
+    // arguments (ret 0x2c); combatManager::ViewArmy pushes its word locals
+    // unextended and the body hands them to heroWindow(short, short, char*).
     void ViewArmy(
-        int,
-        int,
+        short,
+        short,
         signed char,
         short,
         class town*,
