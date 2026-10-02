@@ -27,7 +27,8 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 | Gruntz-only scanners | Deferred: `walls/calibrate`, `ehactions`, `escapescan`, `framescan`, `jccscan`, `loopscan`, `offsetscan`, `reloadscan`, `residue`, `retscan`, `signscan`, `storescan`, `thisscan`, `uninitscan`, `vptrscan` need separate applicability review and VC4 controls; the Giten diagnostic port does not establish their parity. |
 | Inline-budget prediction | Deferred: VC5 thresholds need measured VC4 controls. The local gap command reports definitions/calls only. |
 | Executable-section data/placement | Deferred: requires HoMM1 fixtures and the later data campaign. No initializer coverage is admitted. |
-| Resources/runtime deployment | Deferred pending HoMM1 resource and deployment evidence. |
+| Resources | Adapted from HoMM2 Buka `rc_res.py` (reviewed at `e0689d3`): `homm1.tool.rc` stages the retail icon in a temporary directory and gates every compiled payload against retail in both directions. RC/RCDLL/CVTRES are the VC4 media tools pinned as vc40 `resource_files`. See [candidate linking](linker-flags.md). |
+| Runtime deployment | Deferred pending HoMM1 deployment evidence. |
 | Relocation synthesis/disc/IAT patches | Inapplicable to current inputs: HoMM1 retains retail relocations and its own `.idata`; Giten's fixed-image and disc-layout assumptions differ. |
 | LithTech lineage/REZ and donor ledgers | Inapplicable to HoMM1. Foreign task rows and exceptions are not evidence or authorization. |
 

@@ -175,5 +175,62 @@ class RelaxDataRelocationsTest(unittest.TestCase):
             self.assertEqual(normalize.comparison_copy(payload)[0], strict)
 
 
+class RuntimeAliasTest(unittest.TestCase):
+    """OLDNAMES references are named by the runtime function LINK binds."""
+
+    TABLE = {"_chdir": "__chdir", "_strcmpi": "__stricmp",
+             "__strcmpi": "__stricmp"}
+
+    @staticmethod
+    def caller(*callees: str) -> bytes:
+        text = bytearray()
+        relocs = []
+        for index, _name in enumerate(callees, start=1):
+            relocs.append((len(text) + 1, index, REL32))
+            text += b"\xe8" + bytes(4)
+        symbols = [("_Func", 0, 1, 0x20, 2)]
+        symbols += [(name, 0, 0, 0x20, 2) for name in callees]
+        return coff(bytes(text), relocs, bytes(4), [], symbols)
+
+    def canonical(self, payload: bytes) -> bytes:
+        return canon.canonicalize_coff(
+            payload, runtime_aliases=self.TABLE).data
+
+    def test_alias_and_runtime_spellings_compare_equal(self):
+        self.assertEqual(self.canonical(self.caller("_chdir")),
+                         self.canonical(self.caller("__chdir")))
+        self.assertEqual(self.canonical(self.caller("_strcmpi")),
+                         self.canonical(self.caller("__stricmp")))
+
+    def test_both_spellings_in_one_object_share_one_target(self):
+        out = self.canonical(self.caller("_strcmpi", "__stricmp"))
+        names = {name for name, _addend in targets(out).values()}
+        self.assertEqual(names, {"__stricmp"})
+
+    def test_a_different_function_still_differs(self):
+        self.assertNotEqual(self.canonical(self.caller("_chdir")),
+                            self.canonical(self.caller("__stricmp")))
+
+    def test_a_defined_name_is_not_renamed(self):
+        payload = coff(b"\xc3" + bytes(3), [], bytes(4), [],
+                       [("_chdir", 0, 1, 0x20, 2)])
+        out = canon.CoffObject(self.canonical(payload))
+        self.assertEqual(out.symbols[0].name, "_chdir")
+
+    def test_pinned_library_table(self):
+        from homm1.compare import runtime_aliases
+        try:
+            table = runtime_aliases.aliases()
+        except FileNotFoundError:
+            self.skipTest("pinned VC4 libraries are not installed")
+        for alias, function in (("_chdir", "__chdir"), ("_lseek", "__lseek"),
+                                ("_strrev", "__strrev"),
+                                ("_stricmp", "__stricmp"),
+                                ("_strcmpi", "__stricmp"),
+                                ("__strcmpi", "__stricmp")):
+            self.assertEqual(table[alias], function, alias)
+        self.assertNotIn("__chdir", table)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,4 @@
-# HoMM1 executable DNA census against VC4 LIBC.LIB/OLDNAMES.LIB.
+# HoMM1 executable DNA census against VC4 LIBCMT.LIB/OLDNAMES.LIB.
 # Exact rows mask relocation fields on both sides; order rows are bracketed by exact anchors.
 rva	size	name	class	source	symbol	detail
 0x00001000	0xa0	FUN_00401000	unknown			-
@@ -1429,464 +1429,464 @@ rva	size	name	class	source	symbol	detail
 0x000801e2	0x6	FUN_004801E2	import-thunk	WING32.dll	WinGStretchBlt	IAT RVA 0xd6738
 0x000801e8	0x6	FUN_004801E8	import-thunk	WING32.dll	WinGBitBlt	IAT RVA 0xd673c
 0x000801ee	0x2	FUN_004801EE	linker-pad			trailing 90/CC alignment fill
-0x000801f0	0x42	FUN_004801F0	crt-prefix	libc.lib:/9022	__global_unwind2	unique masked 24-byte prefix
-0x00080232	0x68	FUN_00480232	crt-exact	libc.lib:/9022	__local_unwind2	-
-0x0008029a	0x23	FUN_0048029A	crt-exact	libc.lib:/9022	__abnormal_termination	-
-0x000802bd	0x9	FUN_004802BD	crt-exact	libc.lib:/9022	__NLG_Notify1	-
-0x000802c6	0x18	FUN_004802C6	crt-exact	libc.lib:/9022	__NLG_Notify	-
+0x000801f0	0x42	FUN_004801F0	crt-prefix	libcmt.lib:/9022	__global_unwind2	unique masked 24-byte prefix
+0x00080232	0x68	FUN_00480232	crt-exact	libcmt.lib:/9022	__local_unwind2	-
+0x0008029a	0x23	FUN_0048029A	crt-exact	libcmt.lib:/9022	__abnormal_termination	-
+0x000802bd	0x9	FUN_004802BD	crt-exact	libcmt.lib:/9022	__NLG_Notify1	-
+0x000802c6	0x18	FUN_004802C6	crt-exact	libcmt.lib:/9022	__NLG_Notify	-
 0x000802de	0x2	FUN_004802DE	linker-pad			trailing 90/CC alignment fill
-0x000802e0	0x35	FUN_004802E0	crt-exact	libc.lib:/1877	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	-
+0x000802e0	0x35	FUN_004802E0	crt-exact	libcmt.lib:/1877	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	-
 0x00080315	0xb	FUN_00480315	linker-pad			trailing 90/CC alignment fill
-0x00080320	0x7	FUN_00480320	crt-order	libc.lib:/1877	?_CallMemberFunction0@@YGXPAX0@Z	between exact anchors 0x802e0,0x80350
+0x00080320	0x7	FUN_00480320	crt-order	libcmt.lib:/1877	?_CallMemberFunction0@@YGXPAX0@Z	between exact anchors 0x802e0,0x80350
 0x00080327	0x9	FUN_00480327	linker-pad			trailing 90/CC alignment fill
-0x00080330	0x7	FUN_00480330	crt-order	libc.lib:/1877	?_CallMemberFunction1@@YGXPAX00@Z	between exact anchors 0x802e0,0x80350
+0x00080330	0x7	FUN_00480330	crt-order	libcmt.lib:/1877	?_CallMemberFunction1@@YGXPAX00@Z	between exact anchors 0x802e0,0x80350
 0x00080337	0x9	FUN_00480337	linker-pad			trailing 90/CC alignment fill
-0x00080340	0x7	FUN_00480340	crt-order	libc.lib:/1877	?_CallMemberFunction2@@YGXPAX00H@Z	between exact anchors 0x802e0,0x80350
+0x00080340	0x7	FUN_00480340	crt-order	libcmt.lib:/1877	?_CallMemberFunction2@@YGXPAX00H@Z	between exact anchors 0x802e0,0x80350
 0x00080347	0x9	FUN_00480347	linker-pad			trailing 90/CC alignment fill
-0x00080350	0x51	FUN_00480350	crt-exact	libc.lib:/1877	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	-
+0x00080350	0x51	FUN_00480350	crt-exact	libcmt.lib:/1877	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	-
 0x000803a1	0xf	FUN_004803A1	linker-pad			trailing 90/CC alignment fill
-0x000803b0	0x3c	FUN_004803B0	crt-exact	libc.lib:/1877	___CxxFrameHandler	-
+0x000803b0	0x3c	FUN_004803B0	crt-exact	libcmt.lib:/1877	___CxxFrameHandler	-
 0x000803ec	0x4	FUN_004803EC	linker-pad			trailing 90/CC alignment fill
-0x000803f0	0x99	FUN_004803F0	crt-prefix	libc.lib:/1877	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	unique masked 24-byte prefix
+0x000803f0	0x99	FUN_004803F0	crt-prefix	libcmt.lib:/1877	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	unique masked 24-byte prefix
 0x00080489	0x7	FUN_00480489	linker-pad			trailing 90/CC alignment fill
-0x00080490	0xd3	FUN_00480490	crt-prefix	libc.lib:/1877	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	unique masked 24-byte prefix
+0x00080490	0xd3	FUN_00480490	crt-exact	libcmt.lib:/1877	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	-
 0x00080563	0xd	FUN_00480563	linker-pad			trailing 90/CC alignment fill
-0x00080570	0x6b	FUN_00480570	crt-exact	libc.lib:/1877	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	-
+0x00080570	0x6b	FUN_00480570	crt-exact	libcmt.lib:/1877	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	-
 0x000805db	0x5	FUN_004805DB	linker-pad			trailing 90/CC alignment fill
-0x000805e0	0xe	FUN_004805E0	crt-band	libc.lib:(link-band)	__crt_004805E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000805e0	0xe	FUN_004805E0	crt-band	libcmt.lib:(link-band)	__crt_004805E0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x000805ee	0x2	FUN_004805EE	linker-pad			trailing 90/CC alignment fill
-0x000805f0	0x7	FUN_004805F0	crt-band	libc.lib:(link-band)	__crt_004805F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000805f0	0x7	FUN_004805F0	crt-band	libcmt.lib:(link-band)	__crt_004805F0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x000805f7	0x1	FUN_004805F7	linker-pad			trailing 90/CC alignment fill
-0x000805f8	0xe0	FUN_004805F8	crt-band	libc.lib:(link-band)	__crt_004805F8	LIBC band 0x801f0..text-end; symbol unresolved
+0x000805f8	0xe0	FUN_004805F8	crt-band	libcmt.lib:(link-band)	__crt_004805F8	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x000806d8	0x8	FUN_004806D8	linker-pad			trailing 90/CC alignment fill
-0x000806e0	0x10	FUN_004806E0	crt-band	libc.lib:(link-band)	__crt_004806E0	LIBC band 0x801f0..text-end; symbol unresolved
-0x000806f0	0x67	FUN_004806F0	crt-exact	libc.lib:/14048	_sprintf	-
+0x000806e0	0x10	FUN_004806E0	crt-band	libcmt.lib:(link-band)	__crt_004806E0	LIBCMT band 0x801f0..text-end; symbol unresolved
+0x000806f0	0x67	FUN_004806F0	crt-exact	libcmt.lib:/14048	_sprintf	-
 0x00080757	0x9	FUN_00480757	linker-pad			trailing 90/CC alignment fill
-0x00080760	0xa4	FUN_00480760	crt-exact	libc.lib:/152	_atol	-
+0x00080760	0xa4	FUN_00480760	crt-exact	libcmt.lib:/152	_atol	-
 0x00080804	0xc	FUN_00480804	linker-pad			trailing 90/CC alignment fill
-0x00080810	0xe	FUN_00480810	crt-band	libc.lib:(link-band)	__crt_00480810	LIBC band 0x801f0..text-end; symbol unresolved
+0x00080810	0xe	FUN_00480810	crt-band	libcmt.lib:(link-band)	__crt_00480810	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x0008081e	0x2	FUN_0048081E	linker-pad			trailing 90/CC alignment fill
-0x00080820	0x58	FUN_00480820	crt-exact	libc.lib:/15134	_memset	-
+0x00080820	0x58	FUN_00480820	crt-exact	libcmt.lib:/15134	_memset	-
 0x00080878	0x8	FUN_00480878	linker-pad			trailing 90/CC alignment fill
-0x00080880	0x18	FUN_00480880	crt-exact	libc.lib:/3760	_free	-
+0x00080880	0x18	FUN_00480880	crt-exact	libcmt.lib:/3760	_free	-
 0x00080898	0x8	FUN_00480898	linker-pad			trailing 90/CC alignment fill
-0x000808a0	0x14e	FUN_004808A0	crt-band	libc.lib:(link-band)	__crt_004808A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000808a0	0x14e	FUN_004808A0	crt-band	libcmt.lib:(link-band)	__crt_004808A0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x000809ee	0x2	FUN_004809EE	linker-pad			trailing 90/CC alignment fill
-0x000809f0	0x14	FUN_004809F0	crt-exact	libc.lib:/4008	_malloc	-
+0x000809f0	0x14	FUN_004809F0	crt-exact	libcmt.lib:/4008	_malloc	-
 0x00080a04	0xc	FUN_00480A04	linker-pad			trailing 90/CC alignment fill
-0x00080a10	0x40	FUN_00480A10	crt-band	libc.lib:(link-band)	__crt_00480A10	LIBC band 0x801f0..text-end; symbol unresolved
-0x00080a50	0x15	FUN_00480A50	crt-band	libc.lib:(link-band)	__crt_00480A50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00080a10	0x40	FUN_00480A10	crt-exact	libcmt.lib:/4008	__nh_malloc	-
+0x00080a50	0x15	FUN_00480A50	crt-band	libcmt.lib:(link-band)	__crt_00480A50	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00080a65	0x3	FUN_00480A65	linker-pad			trailing 90/CC alignment fill
-0x00080a68	0x27	FUN_00480A68	crt-exact	libc.lib:/19928	__ftol	-
+0x00080a68	0x27	FUN_00480A68	crt-exact	libcmt.lib:/19928	__ftol	-
 0x00080a8f	0x1	FUN_00480A8F	linker-pad			trailing 90/CC alignment fill
-0x00080a90	0x21	FUN_00480A90	crt-band	libc.lib:(link-band)	__crt_00480A90	LIBC band 0x801f0..text-end; symbol unresolved
+0x00080a90	0x21	FUN_00480A90	crt-band	libcmt.lib:(link-band)	__crt_00480A90	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00080ab1	0xf	FUN_00480AB1	linker-pad			trailing 90/CC alignment fill
-0x00080ac0	0x38	FUN_00480AC0	crt-exact	libc.lib:/18959	__cfltcvt_init	-
+0x00080ac0	0x38	FUN_00480AC0	crt-exact	libcmt.lib:/18959	__cfltcvt_init	-
 0x00080af8	0x8	FUN_00480AF8	linker-pad			trailing 90/CC alignment fill
-0x00080b00	0x117	FUN_00480B00	crt-exact	libc.lib:/19670	_fdiv_main_routine	-
-0x00080c17	0x49f	FUN_00480C17	crt-exact	libc.lib:/19670	__adj_fdiv_r	-
-0x000810b6	0x13	FUN_004810B6	crt-exact	libc.lib:/19670	__fdivp_sti_st	-
-0x000810c9	0x13	FUN_004810C9	crt-exact	libc.lib:/19670	__fdivrp_sti_st	-
-0x000810dc	0x4c	FUN_004810DC	crt-exact	libc.lib:/19670	__adj_fdiv_m32	-
-0x00081128	0xb4	FUN_00481128	crt-band	libc.lib:(link-band)	__crt_00481128	LIBC band 0x801f0..text-end; symbol unresolved
-0x000811dc	0x4c	FUN_004811DC	crt-exact	libc.lib:/19670	__adj_fdivr_m32	-
-0x00081228	0x663	FUN_00481228	crt-band	libc.lib:(link-band)	__crt_00481228	LIBC band 0x801f0..text-end; symbol unresolved
+0x00080b00	0x117	FUN_00480B00	crt-exact	libcmt.lib:/19670	_fdiv_main_routine	-
+0x00080c17	0x49f	FUN_00480C17	crt-exact	libcmt.lib:/19670	__adj_fdiv_r	-
+0x000810b6	0x13	FUN_004810B6	crt-exact	libcmt.lib:/19670	__fdivp_sti_st	-
+0x000810c9	0x13	FUN_004810C9	crt-exact	libcmt.lib:/19670	__fdivrp_sti_st	-
+0x000810dc	0x4c	FUN_004810DC	crt-exact	libcmt.lib:/19670	__adj_fdiv_m32	-
+0x00081128	0xb4	FUN_00481128	crt-band	libcmt.lib:(link-band)	__crt_00481128	LIBCMT band 0x801f0..text-end; symbol unresolved
+0x000811dc	0x4c	FUN_004811DC	crt-exact	libcmt.lib:/19670	__adj_fdivr_m32	-
+0x00081228	0x663	FUN_00481228	crt-band	libcmt.lib:(link-band)	__crt_00481228	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x0008188b	0x5	FUN_0048188B	linker-pad			trailing 90/CC alignment fill
-0x00081890	0xa	FUN_00481890	crt-band	libc.lib:(link-band)	__crt_00481890	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081890	0xa	FUN_00481890	crt-band	libcmt.lib:(link-band)	__crt_00481890	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x0008189a	0x6	FUN_0048189A	linker-pad			trailing 90/CC alignment fill
-0x000818a0	0x77	FUN_004818A0	crt-exact	libc.lib:/15346	_strlen	-
+0x000818a0	0x77	FUN_004818A0	crt-exact	libcmt.lib:/15346	_strlen	-
 0x00081917	0x9	FUN_00481917	linker-pad			trailing 90/CC alignment fill
-0x00081920	0x1f	FUN_00481920	crt-exact	libc.lib:/15011	_memcmp	-
+0x00081920	0x1f	FUN_00481920	crt-exact	libcmt.lib:/15011	_memcmp	-
 0x0008193f	0x1	FUN_0048193F	linker-pad			trailing 90/CC alignment fill
-0x00081940	0x3f	FUN_00481940	crt-band	libc.lib:(link-band)	__crt_00481940	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081940	0x3f	FUN_00481940	crt-exact	libcmt.lib:/12999	_fclose	-
 0x0008197f	0x1	FUN_0048197F	linker-pad			trailing 90/CC alignment fill
-0x00081980	0x5f	FUN_00481980	crt-band	libc.lib:(link-band)	__crt_00481980	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081980	0x5f	FUN_00481980	crt-exact	libcmt.lib:/12999	__fclose_lk	-
 0x000819df	0x1	FUN_004819DF	linker-pad			trailing 90/CC alignment fill
-0x000819e0	0x64	FUN_004819E0	crt-prefix	libc.lib:/12443	_fputs	unique masked 24-byte prefix
+0x000819e0	0x64	FUN_004819E0	crt-exact	libcmt.lib:/12443	_fputs	-
 0x00081a44	0xc	FUN_00481A44	linker-pad			trailing 90/CC alignment fill
-0x00081a50	0x3a	FUN_00481A50	crt-band	libc.lib:(link-band)	__crt_00481A50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081a50	0x3a	FUN_00481A50	crt-band	libcmt.lib:(link-band)	__crt_00481A50	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00081a8a	0x6	FUN_00481A8A	linker-pad			trailing 90/CC alignment fill
-0x00081a90	0x15	FUN_00481A90	crt-band	libc.lib:(link-band)	__crt_00481A90	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081a90	0x15	FUN_00481A90	crt-band	libcmt.lib:(link-band)	__crt_00481A90	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00081aa5	0xb	FUN_00481AA5	linker-pad			trailing 90/CC alignment fill
-0x00081ab0	0x44	FUN_00481AB0	crt-band	libc.lib:(link-band)	__crt_00481AB0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081ab0	0x44	FUN_00481AB0	crt-band	libcmt.lib:(link-band)	__crt_00481AB0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00081af4	0xc	FUN_00481AF4	linker-pad			trailing 90/CC alignment fill
-0x00081b00	0x14e	FUN_00481B00	crt-band	libc.lib:(link-band)	__crt_00481B00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081b00	0x14e	FUN_00481B00	crt-band	libcmt.lib:(link-band)	__crt_00481B00	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00081c4e	0x2	FUN_00481C4E	linker-pad			trailing 90/CC alignment fill
-0x00081c50	0x84	FUN_00481C50	crt-exact	libc.lib:/15224	_strcmp	-
+0x00081c50	0x84	FUN_00481C50	crt-exact	libcmt.lib:/15224	_strcmp	-
 0x00081cd4	0xc	FUN_00481CD4	linker-pad			trailing 90/CC alignment fill
-0x00081ce0	0x18	FUN_00481CE0	crt-exact	libc.lib:/15194	_strchr	-
+0x00081ce0	0x18	FUN_00481CE0	crt-exact	libcmt.lib:/15194	_strchr	-
 0x00081cf8	0x8	FUN_00481CF8	linker-pad			trailing 90/CC alignment fill
-0x00081d00	0xd	FUN_00481D00	crt-band	libc.lib:(link-band)	__crt_00481D00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081d00	0xd	FUN_00481D00	crt-exact	libcmt.lib:/10636	_srand	-
 0x00081d0d	0x3	FUN_00481D0D	linker-pad			trailing 90/CC alignment fill
-0x00081d10	0x2f	FUN_00481D10	crt-band	libc.lib:(link-band)	__crt_00481D10	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081d10	0x2f	FUN_00481D10	crt-exact	libcmt.lib:/10636	_rand	-
 0x00081d3f	0x1	FUN_00481D3F	linker-pad			trailing 90/CC alignment fill
-0x00081d40	0x30	FUN_00481D40	crt-exact	libc.lib:/11499	__cinit	-
-0x00081d70	0x12	FUN_00481D70	crt-exact	libc.lib:/11499	_exit	-
+0x00081d40	0x30	FUN_00481D40	crt-exact	libcmt.lib:/11499	__cinit	-
+0x00081d70	0x12	FUN_00481D70	crt-exact	libcmt.lib:/11499	_exit	-
 0x00081d82	0xe	FUN_00481D82	linker-pad			trailing 90/CC alignment fill
-0x00081d90	0x12	FUN_00481D90	crt-exact	libc.lib:/11499	__exit	-
+0x00081d90	0x12	FUN_00481D90	crt-exact	libcmt.lib:/11499	__exit	-
 0x00081da2	0xe	FUN_00481DA2	linker-pad			trailing 90/CC alignment fill
-0x00081db0	0x8d	FUN_00481DB0	crt-band	libc.lib:(link-band)	__crt_00481DB0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081db0	0x8d	FUN_00481DB0	crt-exact	libcmt.lib:/11499	_doexit	-
 0x00081e3d	0x3	FUN_00481E3D	linker-pad			trailing 90/CC alignment fill
-0x00081e40	0xb	FUN_00481E40	crt-band	libc.lib:(link-band)	__crt_00481E40	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081e40	0xb	FUN_00481E40	crt-order	libcmt.lib:/11499	__lockexit	between exact anchors 0x81db0,0x81e60
 0x00081e4b	0x5	FUN_00481E4B	linker-pad			trailing 90/CC alignment fill
-0x00081e50	0xb	FUN_00481E50	crt-band	libc.lib:(link-band)	__crt_00481E50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081e50	0xb	FUN_00481E50	crt-order	libcmt.lib:/11499	__unlockexit	between exact anchors 0x81db0,0x81e60
 0x00081e5b	0x5	FUN_00481E5B	linker-pad			trailing 90/CC alignment fill
-0x00081e60	0x20	FUN_00481E60	crt-band	libc.lib:(link-band)	__crt_00481E60	LIBC band 0x801f0..text-end; symbol unresolved
-0x00081e80	0x24	FUN_00481E80	crt-exact	libc.lib:/15438	_strncpy	-
+0x00081e60	0x20	FUN_00481E60	crt-exact	libcmt.lib:/11499	__initterm	-
+0x00081e80	0x24	FUN_00481E80	crt-exact	libcmt.lib:/15438	_strncpy	-
 0x00081ea4	0xc	FUN_00481EA4	linker-pad			trailing 90/CC alignment fill
-0x00081eb0	0x37	FUN_00481EB0	crt-band	libc.lib:(link-band)	__crt_00481EB0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081eb0	0x37	FUN_00481EB0	crt-band	libcmt.lib:(link-band)	__crt_00481EB0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00081ee7	0x9	FUN_00481EE7	linker-pad			trailing 90/CC alignment fill
-0x00081ef0	0x146	FUN_00481EF0	crt-band	libc.lib:(link-band)	__crt_00481EF0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00081ef0	0x146	FUN_00481EF0	crt-exact	libcmt.lib:/13180	__fread_lk	-
 0x00082036	0xa	FUN_00482036	linker-pad			trailing 90/CC alignment fill
-0x00082040	0x32	FUN_00482040	crt-band	libc.lib:(link-band)	__crt_00482040	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082040	0x32	FUN_00482040	crt-exact	libcmt.lib:/13270	_fseek	-
 0x00082072	0xe	FUN_00482072	linker-pad			trailing 90/CC alignment fill
-0x00082080	0x9a	FUN_00482080	crt-band	libc.lib:(link-band)	__crt_00482080	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082080	0x9a	FUN_00482080	crt-exact	libcmt.lib:/13270	__fseek_lk	-
 0x0008211a	0x6	FUN_0048211A	linker-pad			trailing 90/CC alignment fill
-0x00082120	0x28	FUN_00482120	crt-band	libc.lib:(link-band)	__crt_00482120	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082120	0x28	FUN_00482120	crt-exact	libcmt.lib:/13362	_ftell	-
 0x00082148	0x8	FUN_00482148	linker-pad			trailing 90/CC alignment fill
-0x00082150	0x1a1	FUN_00482150	crt-band	libc.lib:(link-band)	__crt_00482150	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082150	0x1a1	FUN_00482150	crt-exact	libcmt.lib:/13362	__ftell_lk	-
 0x000822f1	0xf	FUN_004822F1	linker-pad			trailing 90/CC alignment fill
-0x00082300	0x38	FUN_00482300	crt-exact	libc.lib:/15407	_strncmp	-
+0x00082300	0x38	FUN_00482300	crt-exact	libcmt.lib:/15407	_strncmp	-
 0x00082338	0x8	FUN_00482338	linker-pad			trailing 90/CC alignment fill
-0x00082340	0x37	FUN_00482340	crt-band	libc.lib:(link-band)	__crt_00482340	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082340	0x37	FUN_00482340	crt-band	libcmt.lib:(link-band)	__crt_00482340	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00082377	0x9	FUN_00482377	linker-pad			trailing 90/CC alignment fill
-0x00082380	0x180	FUN_00482380	crt-prefix	libc.lib:/13455	_fwrite	unique masked 24-byte prefix
-0x00082500	0x78	FUN_00482500	crt-band	libc.lib:(link-band)	__crt_00482500	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082380	0x180	FUN_00482380	crt-exact	libcmt.lib:/13455	__fwrite_lk	-
+0x00082500	0x78	FUN_00482500	crt-band	libcmt.lib:(link-band)	__crt_00482500	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00082578	0x8	FUN_00482578	linker-pad			trailing 90/CC alignment fill
-0x00082580	0x82	FUN_00482580	crt-band	libc.lib:(link-band)	__crt_00482580	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082580	0x82	FUN_00482580	crt-exact	libcmt.lib:/6381	__lseek_lk	-
 0x00082602	0xe	FUN_00482602	linker-pad			trailing 90/CC alignment fill
-0x00082610	0xa4	FUN_00482610	crt-exact	libc.lib:/1152	__chdir	-
+0x00082610	0xa4	FUN_00482610	crt-exact	libcmt.lib:/1152	__chdir	-
 0x000826b4	0xc	FUN_004826B4	linker-pad			trailing 90/CC alignment fill
-0x000826c0	0x199	FUN_004826C0	crt-band	libc.lib:(link-band)	__crt_004826C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000826c0	0x199	FUN_004826C0	crt-exact	libcmt.lib:/11957	_WinMainCRTStartup	-
 0x00082859	0x7	FUN_00482859	linker-pad			trailing 90/CC alignment fill
-0x00082860	0x2a	FUN_00482860	crt-exact	libc.lib:/11957	__amsg_exit	2 byte-identical candidates
+0x00082860	0x2a	FUN_00482860	crt-exact	libcmt.lib:/11957	__amsg_exit	2 byte-identical candidates
 0x0008288a	0x6	FUN_0048288A	linker-pad			trailing 90/CC alignment fill
-0x00082890	0x6e	FUN_00482890	crt-band	libc.lib:(link-band)	__crt_00482890	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082890	0x6e	FUN_00482890	crt-exact	libcmt.lib:/5966	__close	-
 0x000828fe	0x2	FUN_004828FE	linker-pad			trailing 90/CC alignment fill
-0x00082900	0x89	FUN_00482900	crt-band	libc.lib:(link-band)	__crt_00482900	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082900	0x89	FUN_00482900	crt-exact	libcmt.lib:/5966	__close_lk	-
 0x00082989	0x7	FUN_00482989	linker-pad			trailing 90/CC alignment fill
-0x00082990	0x78	FUN_00482990	crt-band	libc.lib:(link-band)	__crt_00482990	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082990	0x78	FUN_00482990	crt-band	libcmt.lib:(link-band)	__crt_00482990	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00082a08	0x8	FUN_00482A08	linker-pad			trailing 90/CC alignment fill
-0x00082a10	0x22c	FUN_00482A10	crt-band	libc.lib:(link-band)	__crt_00482A10	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082a10	0x22c	FUN_00482A10	crt-exact	libcmt.lib:/6559	__read_lk	-
 0x00082c3c	0x4	FUN_00482C3C	linker-pad			trailing 90/CC alignment fill
-0x00082c40	0x1a	FUN_00482C40	crt-band	libc.lib:(link-band)	__crt_00482C40	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082c40	0x1a	FUN_00482C40	crt-band	libcmt.lib:(link-band)	__crt_00482C40	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00082c5a	0x6	FUN_00482C5A	linker-pad			trailing 90/CC alignment fill
-0x00082c60	0x45d	FUN_00482C60	crt-band	libc.lib:(link-band)	__crt_00482C60	LIBC band 0x801f0..text-end; symbol unresolved
+0x00082c60	0x45d	FUN_00482C60	crt-exact	libcmt.lib:/6472	__sopen	-
 0x000830bd	0x3	FUN_004830BD	linker-pad			trailing 90/CC alignment fill
-0x000830c0	0x78	FUN_004830C0	crt-band	libc.lib:(link-band)	__crt_004830C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000830c0	0x78	FUN_004830C0	crt-band	libcmt.lib:(link-band)	__crt_004830C0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00083138	0x8	FUN_00483138	linker-pad			trailing 90/CC alignment fill
-0x00083140	0x1fb	FUN_00483140	crt-band	libc.lib:(link-band)	__crt_00483140	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083140	0x1fb	FUN_00483140	crt-exact	libcmt.lib:/6708	__write_lk	-
 0x0008333b	0x5	FUN_0048333B	linker-pad			trailing 90/CC alignment fill
-0x00083340	0xc7	FUN_00483340	crt-band	libc.lib:(link-band)	__crt_00483340	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083340	0xc7	FUN_00483340	crt-exact	libcmt.lib:/15469	__strnicmp	-
 0x00083407	0x9	FUN_00483407	linker-pad			trailing 90/CC alignment fill
-0x00083410	0xa2	FUN_00483410	crt-prefix	libc.lib:/15315	__stricmp	unique masked 24-byte prefix
+0x00083410	0xa2	FUN_00483410	crt-exact	libcmt.lib:/15315	__stricmp	-
 0x000834b2	0xe	FUN_004834B2	linker-pad			trailing 90/CC alignment fill
-0x000834c0	0x5b	FUN_004834C0	crt-band	libc.lib:(link-band)	__crt_004834C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000834c0	0x5b	FUN_004834C0	crt-band	libcmt.lib:(link-band)	__crt_004834C0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x0008351b	0x5	FUN_0048351B	linker-pad			trailing 90/CC alignment fill
-0x00083520	0x6e	FUN_00483520	crt-band	libc.lib:(link-band)	__crt_00483520	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083520	0x6e	FUN_00483520	crt-exact	libcmt.lib:/13804	_rewind	-
 0x0008358e	0x2	FUN_0048358E	linker-pad			trailing 90/CC alignment fill
-0x00083590	0xbc	FUN_00483590	crt-exact	libc.lib:/1973	___InternalCxxFrameHandler	-
+0x00083590	0xbc	FUN_00483590	crt-exact	libcmt.lib:/1973	___InternalCxxFrameHandler	-
 0x0008364c	0x4	FUN_0048364C	linker-pad			trailing 90/CC alignment fill
-0x00083650	0x29e	FUN_00483650	crt-prefix	libc.lib:/1973	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	unique masked 24-byte prefix
+0x00083650	0x29e	FUN_00483650	crt-exact	libcmt.lib:/1973	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	-
 0x000838ee	0x2	FUN_004838EE	linker-pad			trailing 90/CC alignment fill
-0x000838f0	0xd6	FUN_004838F0	crt-band	libc.lib:(link-band)	__crt_004838F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000838f0	0xd6	FUN_004838F0	crt-exact	libcmt.lib:/1973	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	-
 0x000839c6	0xa	FUN_004839C6	linker-pad			trailing 90/CC alignment fill
-0x000839d0	0x9f	FUN_004839D0	crt-prefix	libc.lib:/1973	?GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	unique masked 24-byte prefix
+0x000839d0	0x9f	FUN_004839D0	crt-exact	libcmt.lib:/1973	?GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	-
 0x00083a6f	0x1	FUN_00483A6F	linker-pad			trailing 90/CC alignment fill
-0x00083a70	0xe6	FUN_00483A70	crt-band	libc.lib:(link-band)	__crt_00483A70	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083a70	0xe6	FUN_00483A70	crt-band	libcmt.lib:(link-band)	__crt_00483A70	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00083b56	0xa	FUN_00483B56	linker-pad			trailing 90/CC alignment fill
-0x00083b60	0x94	FUN_00483B60	crt-band	libc.lib:(link-band)	__crt_00483B60	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083b60	0x94	FUN_00483B60	crt-exact	libcmt.lib:/1973	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1@Z	-
 0x00083bf4	0xc	FUN_00483BF4	linker-pad			trailing 90/CC alignment fill
-0x00083c00	0x14c	FUN_00483C00	crt-band	libc.lib:(link-band)	__crt_00483C00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083c00	0x14c	FUN_00483C00	crt-band	libcmt.lib:(link-band)	__crt_00483C00	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00083d4c	0x4	FUN_00483D4C	linker-pad			trailing 90/CC alignment fill
-0x00083d50	0x1fe	FUN_00483D50	crt-band	libc.lib:(link-band)	__crt_00483D50	LIBC band 0x801f0..text-end; symbol unresolved
+0x00083d50	0x1fe	FUN_00483D50	crt-exact	libcmt.lib:/1973	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	-
 0x00083f4e	0x2	FUN_00483F4E	linker-pad			trailing 90/CC alignment fill
-0x00083f50	0x71	FUN_00483F50	crt-exact	libc.lib:/1973	?DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	-
+0x00083f50	0x71	FUN_00483F50	crt-exact	libcmt.lib:/1973	?DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	-
 0x00083fc1	0xf	FUN_00483FC1	linker-pad			trailing 90/CC alignment fill
-0x00083fd0	0x21	FUN_00483FD0	crt-exact	libc.lib:/1973	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	-
+0x00083fd0	0x21	FUN_00483FD0	crt-exact	libcmt.lib:/1973	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	-
 0x00083ff1	0xf	FUN_00483FF1	linker-pad			trailing 90/CC alignment fill
-0x00084000	0x48	FUN_00484000	crt-exact	libc.lib:/1909	__CallSettingFrame@12	-
+0x00084000	0x48	FUN_00484000	crt-exact	libcmt.lib:/1909	__CallSettingFrame@12	-
 0x00084048	0x8	FUN_00484048	linker-pad			trailing 90/CC alignment fill
-0x00084050	0x60	FUN_00484050	crt-band	libc.lib:(link-band)	__crt_00484050	LIBC band 0x801f0..text-end; symbol unresolved
-0x000840b0	0x13	FUN_004840B0	crt-band	libc.lib:(link-band)	__crt_004840B0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00084050	0x60	FUN_00484050	crt-exact	libcmt.lib:/11838	__mtinit	-
+0x000840b0	0x13	FUN_004840B0	crt-exact	libcmt.lib:/11838	__initptd	-
 0x000840c3	0xd	FUN_004840C3	linker-pad			trailing 90/CC alignment fill
-0x000840d0	0x6f	FUN_004840D0	crt-band	libc.lib:(link-band)	__crt_004840D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000840d0	0x6f	FUN_004840D0	crt-exact	libcmt.lib:/11838	__getptd	-
 0x0008413f	0x1	FUN_0048413F	linker-pad			trailing 90/CC alignment fill
-0x00084140	0x14d	FUN_00484140	crt-band	libc.lib:(link-band)	__crt_00484140	LIBC band 0x801f0..text-end; symbol unresolved
+0x00084140	0x14d	FUN_00484140	crt-exact	libcmt.lib:/12688	__flsbuf	-
 0x0008428d	0x3	FUN_0048428D	linker-pad			trailing 90/CC alignment fill
-0x00084290	0x9da	FUN_00484290	crt-prefix	libc.lib:/13630	__output	unique masked 24-byte prefix
+0x00084290	0x9da	FUN_00484290	crt-exact	libcmt.lib:/13630	__output	-
 0x00084c6a	0x6	FUN_00484C6A	linker-pad			trailing 90/CC alignment fill
-0x00084c70	0x41	FUN_00484C70	crt-exact	libc.lib:/13630	_write_char	-
+0x00084c70	0x41	FUN_00484C70	crt-exact	libcmt.lib:/13630	_write_char	-
 0x00084cb1	0xf	FUN_00484CB1	linker-pad			trailing 90/CC alignment fill
-0x00084cc0	0x31	FUN_00484CC0	crt-exact	libc.lib:/13630	_write_multi_char	-
+0x00084cc0	0x31	FUN_00484CC0	crt-exact	libcmt.lib:/13630	_write_multi_char	-
 0x00084cf1	0xf	FUN_00484CF1	linker-pad			trailing 90/CC alignment fill
-0x00084d00	0x37	FUN_00484D00	crt-exact	libc.lib:/13630	_write_string	-
+0x00084d00	0x37	FUN_00484D00	crt-exact	libcmt.lib:/13630	_write_string	-
 0x00084d37	0x9	FUN_00484D37	linker-pad			trailing 90/CC alignment fill
-0x00084d40	0xf	FUN_00484D40	crt-exact	libc.lib:/12938	_get_int_arg	3 byte-identical candidates
+0x00084d40	0xf	FUN_00484D40	crt-exact	libcmt.lib:/13630	_get_int_arg	2 byte-identical candidates
 0x00084d4f	0x1	FUN_00484D4F	linker-pad			trailing 90/CC alignment fill
-0x00084d50	0x15	FUN_00484D50	crt-exact	libc.lib:/12938	_get_int64_arg	3 byte-identical candidates
+0x00084d50	0x15	FUN_00484D50	crt-exact	libcmt.lib:/12938	_get_int64_arg	3 byte-identical candidates
 0x00084d65	0xb	FUN_00484D65	linker-pad			trailing 90/CC alignment fill
-0x00084d70	0x10	FUN_00484D70	crt-exact	libc.lib:/13630	_get_short_arg	-
-0x00084d80	0x91	FUN_00484D80	crt-exact	libc.lib:/236	__isctype	-
+0x00084d70	0x10	FUN_00484D70	crt-exact	libcmt.lib:/12938	_get_short_arg	2 byte-identical candidates
+0x00084d80	0x91	FUN_00484D80	crt-exact	libcmt.lib:/236	__isctype	-
 0x00084e11	0xf	FUN_00484E11	linker-pad			trailing 90/CC alignment fill
-0x00084e20	0x15	FUN_00484E20	crt-band	libc.lib:(link-band)	__crt_00484E20	LIBC band 0x801f0..text-end; symbol unresolved
+0x00084e20	0x15	FUN_00484E20	crt-exact	libcmt.lib:/3850	__heap_init	-
 0x00084e35	0xb	FUN_00484E35	linker-pad			trailing 90/CC alignment fill
-0x00084e40	0x3e	FUN_00484E40	crt-band	libc.lib:(link-band)	__crt_00484E40	LIBC band 0x801f0..text-end; symbol unresolved
+0x00084e40	0x3e	FUN_00484E40	crt-exact	libcmt.lib:/4098	__callnewh	-
 0x00084e7e	0x2	FUN_00484E7E	linker-pad			trailing 90/CC alignment fill
-0x00084e80	0x13	FUN_00484E80	crt-exact	libc.lib:/12144	__setdefaultprecision	-
+0x00084e80	0x13	FUN_00484E80	crt-exact	libcmt.lib:/12144	__setdefaultprecision	-
 0x00084e93	0xd	FUN_00484E93	linker-pad			trailing 90/CC alignment fill
-0x00084ea0	0x4f	FUN_00484EA0	crt-exact	libc.lib:/20119	__ms_p5_test_fdiv	-
+0x00084ea0	0x4f	FUN_00484EA0	crt-exact	libcmt.lib:/20119	__ms_p5_test_fdiv	-
 0x00084eef	0x1	FUN_00484EEF	linker-pad			trailing 90/CC alignment fill
-0x00084ef0	0x25c	FUN_00484EF0	crt-prefix	libc.lib:/20119	__ms_p5_mp_test_fdiv	unique masked 24-byte prefix
+0x00084ef0	0x25c	FUN_00484EF0	crt-prefix	libcmt.lib:/20119	__ms_p5_mp_test_fdiv	unique masked 24-byte prefix
 0x0008514c	0x4	FUN_0048514C	linker-pad			trailing 90/CC alignment fill
-0x00085150	0x77	FUN_00485150	crt-band	libc.lib:(link-band)	__crt_00485150	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085150	0x77	FUN_00485150	crt-exact	libcmt.lib:/18929	__cftoe	-
 0x000851c7	0x9	FUN_004851C7	linker-pad			trailing 90/CC alignment fill
-0x000851d0	0xe4	FUN_004851D0	crt-band	libc.lib:(link-band)	__crt_004851D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000851d0	0xe4	FUN_004851D0	crt-exact	libcmt.lib:/18929	__cftoe2	-
 0x000852b4	0xc	FUN_004852B4	linker-pad			trailing 90/CC alignment fill
-0x000852c0	0x68	FUN_004852C0	crt-band	libc.lib:(link-band)	__crt_004852C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000852c0	0x68	FUN_004852C0	crt-exact	libcmt.lib:/18929	__cftof	-
 0x00085328	0x8	FUN_00485328	linker-pad			trailing 90/CC alignment fill
-0x00085330	0xbe	FUN_00485330	crt-band	libc.lib:(link-band)	__crt_00485330	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085330	0xbe	FUN_00485330	crt-exact	libcmt.lib:/18929	__cftof2	-
 0x000853ee	0x2	FUN_004853EE	linker-pad			trailing 90/CC alignment fill
-0x000853f0	0x115	FUN_004853F0	crt-band	libc.lib:(link-band)	__crt_004853F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000853f0	0x115	FUN_004853F0	crt-prefix	libcmt.lib:/18929	__cftog	unique masked 24-byte prefix
 0x00085505	0xb	FUN_00485505	linker-pad			trailing 90/CC alignment fill
-0x00085510	0x2b	FUN_00485510	crt-exact	libc.lib:/18929	__shift	-
+0x00085510	0x2b	FUN_00485510	crt-exact	libcmt.lib:/18929	__shift	-
 0x0008553b	0x5	FUN_0048553B	linker-pad			trailing 90/CC alignment fill
-0x00085540	0x2a	FUN_00485540	crt-band	libc.lib:(link-band)	__crt_00485540	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085540	0x2a	FUN_00485540	crt-exact	libcmt.lib:/11685	__mtinitlocks	-
 0x0008556a	0x6	FUN_0048556A	linker-pad			trailing 90/CC alignment fill
-0x00085570	0x68	FUN_00485570	crt-band	libc.lib:(link-band)	__crt_00485570	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085570	0x68	FUN_00485570	crt-exact	libcmt.lib:/11685	__lock	-
 0x000855d8	0x8	FUN_004855D8	linker-pad			trailing 90/CC alignment fill
-0x000855e0	0x17	FUN_004855E0	crt-band	libc.lib:(link-band)	__crt_004855E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000855e0	0x17	FUN_004855E0	crt-exact	libcmt.lib:/11685	__unlock	-
 0x000855f7	0x9	FUN_004855F7	linker-pad			trailing 90/CC alignment fill
-0x00085600	0x36	FUN_00485600	crt-band	libc.lib:(link-band)	__crt_00485600	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085600	0x36	FUN_00485600	crt-band	libcmt.lib:(link-band)	__crt_00485600	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00085636	0xa	FUN_00485636	linker-pad			trailing 90/CC alignment fill
-0x00085640	0x28	FUN_00485640	crt-band	libc.lib:(link-band)	__crt_00485640	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085640	0x28	FUN_00485640	crt-band	libcmt.lib:(link-band)	__crt_00485640	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00085668	0x8	FUN_00485668	linker-pad			trailing 90/CC alignment fill
-0x00085670	0x36	FUN_00485670	crt-band	libc.lib:(link-band)	__crt_00485670	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085670	0x36	FUN_00485670	crt-band	libcmt.lib:(link-band)	__crt_00485670	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x000856a6	0xa	FUN_004856A6	linker-pad			trailing 90/CC alignment fill
-0x000856b0	0x28	FUN_004856B0	crt-band	libc.lib:(link-band)	__crt_004856B0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000856b0	0x28	FUN_004856B0	crt-band	libcmt.lib:(link-band)	__crt_004856B0	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x000856d8	0x8	FUN_004856D8	linker-pad			trailing 90/CC alignment fill
-0x000856e0	0x39	FUN_004856E0	crt-exact	libc.lib:/12751	__freebuf	-
+0x000856e0	0x39	FUN_004856E0	crt-exact	libcmt.lib:/12751	__freebuf	-
 0x00085719	0x7	FUN_00485719	linker-pad			trailing 90/CC alignment fill
-0x00085720	0x3c	FUN_00485720	crt-band	libc.lib:(link-band)	__crt_00485720	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085720	0x3c	FUN_00485720	crt-exact	libcmt.lib:/13059	__fflush_lk	-
 0x0008575c	0x4	FUN_0048575C	linker-pad			trailing 90/CC alignment fill
-0x00085760	0x7b	FUN_00485760	crt-prefix	libc.lib:/13059	__flush	unique masked 24-byte prefix
+0x00085760	0x7b	FUN_00485760	crt-prefix	libcmt.lib:/13059	__flush	unique masked 24-byte prefix
 0x000857db	0x5	FUN_004857DB	linker-pad			trailing 90/CC alignment fill
-0x000857e0	0xb9	FUN_004857E0	crt-band	libc.lib:(link-band)	__crt_004857E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000857e0	0xb9	FUN_004857E0	crt-exact	libcmt.lib:/13059	_flsall	-
 0x00085899	0x7	FUN_00485899	linker-pad			trailing 90/CC alignment fill
-0x000858a0	0x92	FUN_004858A0	crt-exact	libc.lib:/12843	__stbuf	-
+0x000858a0	0x92	FUN_004858A0	crt-exact	libcmt.lib:/12843	__stbuf	-
 0x00085932	0xe	FUN_00485932	linker-pad			trailing 90/CC alignment fill
-0x00085940	0x38	FUN_00485940	crt-band	libc.lib:(link-band)	__crt_00485940	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085940	0x38	FUN_00485940	crt-exact	libcmt.lib:/12843	__ftbuf	-
 0x00085978	0x8	FUN_00485978	linker-pad			trailing 90/CC alignment fill
-0x00085980	0x20e	FUN_00485980	crt-exact	libc.lib:/12814	__openfile	-
+0x00085980	0x20e	FUN_00485980	crt-exact	libcmt.lib:/12814	__openfile	-
 0x00085b8e	0x2	FUN_00485B8E	linker-pad			trailing 90/CC alignment fill
-0x00085b90	0x2f7	FUN_00485B90	crt-band	libc.lib:(link-band)	__crt_00485B90	LIBC band 0x801f0..text-end; symbol unresolved
+0x00085b90	0x2f7	FUN_00485B90	crt-prefix	libcmt.lib:/14109	__getstream	unique masked 24-byte prefix
 0x00085e87	0x9	FUN_00485E87	linker-pad			trailing 90/CC alignment fill
-0x00085e90	0x3e	FUN_00485E90	crt-band	libc.lib:(link-band)	__crt_00485E90	LIBC band 0x801f0..text-end; symbol unresolved
-0x00085ece	0x3d	FUN_00485ECE	crt-band	libc.lib:(link-band)	__crt_00485ECE	LIBC band 0x801f0..text-end; symbol unresolved
-0x00085f0b	0x48	FUN_00485F0B	crt-band	libc.lib:(link-band)	__crt_00485F0B	LIBC band 0x801f0..text-end; symbol unresolved
-0x00085f53	0x7	FUN_00485F53	crt-band	libc.lib:(link-band)	__crt_00485F53	LIBC band 0x801f0..text-end; symbol unresolved
-0x00085f5a	0x131	FUN_00485F5A	crt-band	libc.lib:(link-band)	__crt_00485F5A	LIBC band 0x801f0..text-end; symbol unresolved
-0x0008608b	0x33	FUN_0048608B	crt-band	libc.lib:(link-band)	__crt_0048608B	LIBC band 0x801f0..text-end; symbol unresolved
-0x000860be	0x3c	FUN_004860BE	crt-exact	libc.lib:/19196	__fload	-
+0x00085e90	0x3e	FUN_00485E90	crt-exact	libcmt.lib:/19196	__cintrindisp2	-
+0x00085ece	0x3d	FUN_00485ECE	crt-exact	libcmt.lib:/19196	__cintrindisp1	-
+0x00085f0b	0x48	FUN_00485F0B	crt-prefix	libcmt.lib:/19196	__ctrandisp2	unique masked 24-byte prefix
+0x00085f53	0x7	FUN_00485F53	crt-band	libcmt.lib:(link-band)	__crt_00485F53	LIBCMT band 0x801f0..text-end; symbol unresolved
+0x00085f5a	0x131	FUN_00485F5A	crt-band	libcmt.lib:(link-band)	__crt_00485F5A	LIBCMT band 0x801f0..text-end; symbol unresolved
+0x0008608b	0x33	FUN_0048608B	crt-exact	libcmt.lib:/19196	__ctrandisp1	-
+0x000860be	0x3c	FUN_004860BE	crt-exact	libcmt.lib:/19196	__fload	-
 0x000860fa	0x6	FUN_004860FA	linker-pad			trailing 90/CC alignment fill
-0x00086100	0xf5	FUN_00486100	crt-band	libc.lib:(link-band)	__crt_00486100	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086100	0xf5	FUN_00486100	crt-exact	libcmt.lib:/12596	__filbuf	-
 0x000861f5	0xb	FUN_004861F5	linker-pad			trailing 90/CC alignment fill
-0x00086200	0x73	FUN_00486200	crt-band	libc.lib:(link-band)	__crt_00486200	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086200	0x73	FUN_00486200	crt-exact	libcmt.lib:/1181	__dosmaperr	-
 0x00086273	0xd	FUN_00486273	linker-pad			trailing 90/CC alignment fill
-0x00086280	0x9	FUN_00486280	crt-band	libc.lib:(link-band)	__crt_00486280	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086280	0x9	FUN_00486280	crt-exact	libcmt.lib:/1181	__errno	-
 0x00086289	0x7	FUN_00486289	linker-pad			trailing 90/CC alignment fill
-0x00086290	0x9	FUN_00486290	crt-band	libc.lib:(link-band)	__crt_00486290	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086290	0x9	FUN_00486290	crt-exact	libcmt.lib:/1181	___doserrno	-
 0x00086299	0x7	FUN_00486299	linker-pad			trailing 90/CC alignment fill
-0x000862a0	0x1db	FUN_004862A0	crt-band	libc.lib:(link-band)	__crt_004862A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000862a0	0x1db	FUN_004862A0	crt-exact	libcmt.lib:/6290	__ioinit	-
 0x0008647b	0x5	FUN_0048647B	linker-pad			trailing 90/CC alignment fill
-0x00086480	0x146	FUN_00486480	crt-band	libc.lib:(link-band)	__crt_00486480	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086480	0x146	FUN_00486480	crt-exact	libcmt.lib:/6500	__alloc_osfhnd	-
 0x000865c6	0xa	FUN_004865C6	linker-pad			trailing 90/CC alignment fill
-0x000865d0	0xa4	FUN_004865D0	crt-band	libc.lib:(link-band)	__crt_004865D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000865d0	0xa4	FUN_004865D0	crt-exact	libcmt.lib:/6500	__set_osfhnd	-
 0x00086674	0xc	FUN_00486674	linker-pad			trailing 90/CC alignment fill
-0x00086680	0x91	FUN_00486680	crt-band	libc.lib:(link-band)	__crt_00486680	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086680	0x91	FUN_00486680	crt-exact	libcmt.lib:/6500	__free_osfhnd	-
 0x00086711	0xf	FUN_00486711	linker-pad			trailing 90/CC alignment fill
-0x00086720	0x4a	FUN_00486720	crt-band	libc.lib:(link-band)	__crt_00486720	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086720	0x4a	FUN_00486720	crt-exact	libcmt.lib:/6500	__get_osfhandle	-
 0x0008676a	0x6	FUN_0048676A	linker-pad			trailing 90/CC alignment fill
-0x00086770	0x61	FUN_00486770	crt-band	libc.lib:(link-band)	__crt_00486770	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086770	0x61	FUN_00486770	crt-exact	libcmt.lib:/6500	__lock_fhandle	-
 0x000867d1	0xf	FUN_004867D1	linker-pad			trailing 90/CC alignment fill
-0x000867e0	0x28	FUN_004867E0	crt-band	libc.lib:(link-band)	__crt_004867E0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000867e0	0x28	FUN_004867E0	crt-exact	libcmt.lib:/6500	__unlock_fhandle	-
 0x00086808	0x8	FUN_00486808	linker-pad			trailing 90/CC alignment fill
-0x00086810	0x8d	FUN_00486810	crt-exact	libc.lib:/8927	__mbctoupper	-
+0x00086810	0x8d	FUN_00486810	crt-exact	libcmt.lib:/8927	__mbctoupper	-
 0x0008689d	0x3	FUN_0048689D	linker-pad			trailing 90/CC alignment fill
-0x000868a0	0x14f	FUN_004868A0	crt-band	libc.lib:(link-band)	__crt_004868A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000868a0	0x14f	FUN_004868A0	crt-exact	libcmt.lib:/10998	__XcptFilter	-
 0x000869ef	0x1	FUN_004869EF	linker-pad			trailing 90/CC alignment fill
-0x000869f0	0x2f	FUN_004869F0	crt-band	libc.lib:(link-band)	__crt_004869F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000869f0	0x2f	FUN_004869F0	crt-exact	libcmt.lib:/10998	_xcptlookup	-
 0x00086a1f	0x1	FUN_00486A1F	linker-pad			trailing 90/CC alignment fill
-0x00086a20	0x12	FUN_00486A20	crt-exact	libc.lib:/7122	__ismbblead	-
+0x00086a20	0x12	FUN_00486A20	crt-exact	libcmt.lib:/7122	__ismbblead	-
 0x00086a32	0xe	FUN_00486A32	linker-pad			trailing 90/CC alignment fill
-0x00086a40	0x3a	FUN_00486A40	crt-exact	libc.lib:/7122	_x_ismbbtype	-
+0x00086a40	0x3a	FUN_00486A40	crt-exact	libcmt.lib:/7122	_x_ismbbtype	-
 0x00086a7a	0x6	FUN_00486A7A	linker-pad			trailing 90/CC alignment fill
-0x00086a80	0xdb	FUN_00486A80	crt-exact	libc.lib:/11745	__setenvp	-
+0x00086a80	0xdb	FUN_00486A80	crt-exact	libcmt.lib:/11745	__setenvp	-
 0x00086b5b	0x5	FUN_00486B5B	linker-pad			trailing 90/CC alignment fill
-0x00086b60	0x9b	FUN_00486B60	crt-exact	libc.lib:/11714	__setargv	-
+0x00086b60	0x9b	FUN_00486B60	crt-exact	libcmt.lib:/11714	__setargv	-
 0x00086bfb	0x5	FUN_00486BFB	linker-pad			trailing 90/CC alignment fill
-0x00086c00	0x1d2	FUN_00486C00	crt-exact	libc.lib:/11714	_parse_cmdline	-
+0x00086c00	0x1d2	FUN_00486C00	crt-exact	libcmt.lib:/11714	_parse_cmdline	-
 0x00086dd2	0xe	FUN_00486DD2	linker-pad			trailing 90/CC alignment fill
-0x00086de0	0x19b	FUN_00486DE0	crt-exact	libc.lib:/9412	___crtGetEnvironmentStringsA	-
+0x00086de0	0x19b	FUN_00486DE0	crt-exact	libcmt.lib:/9412	___crtGetEnvironmentStringsA	-
 0x00086f7b	0x5	FUN_00486F7B	linker-pad			trailing 90/CC alignment fill
-0x00086f80	0x223	FUN_00486F80	crt-band	libc.lib:(link-band)	__crt_00486F80	LIBC band 0x801f0..text-end; symbol unresolved
+0x00086f80	0x223	FUN_00486F80	crt-exact	libcmt.lib:/7620	__setmbcp	-
 0x000871a3	0xd	FUN_004871A3	linker-pad			trailing 90/CC alignment fill
-0x000871b0	0x4d	FUN_004871B0	crt-exact	libc.lib:/7620	_getSystemCP	-
+0x000871b0	0x4d	FUN_004871B0	crt-exact	libcmt.lib:/7620	_getSystemCP	-
 0x000871fd	0x3	FUN_004871FD	linker-pad			trailing 90/CC alignment fill
-0x00087200	0x5f	FUN_00487200	crt-exact	libc.lib:/7620	_CPtoLCID	-
+0x00087200	0x5f	FUN_00487200	crt-exact	libcmt.lib:/7620	_CPtoLCID	-
 0x0008725f	0x1	FUN_0048725F	linker-pad			trailing 90/CC alignment fill
-0x00087260	0x2c	FUN_00487260	crt-exact	libc.lib:/7620	_setSBCS	-
+0x00087260	0x2c	FUN_00487260	crt-exact	libcmt.lib:/7620	_setSBCS	-
 0x0008728c	0x4	FUN_0048728C	linker-pad			trailing 90/CC alignment fill
-0x00087290	0xd1	FUN_00487290	crt-band	libc.lib:(link-band)	__crt_00487290	LIBC band 0x801f0..text-end; symbol unresolved
-0x00087361	0x1b	FUN_00487361	crt-exact	libc.lib:/9081	__seh_longjmp_unwind@4	-
+0x00087290	0xd1	FUN_00487290	crt-band	libcmt.lib:(link-band)	__crt_00487290	LIBCMT band 0x801f0..text-end; symbol unresolved
+0x00087361	0x1b	FUN_00487361	crt-exact	libcmt.lib:/9081	__seh_longjmp_unwind@4	-
 0x0008737c	0x4	FUN_0048737C	linker-pad			trailing 90/CC alignment fill
-0x00087380	0x3d	FUN_00487380	crt-exact	libc.lib:/11592	__FF_MSGBANNER	-
+0x00087380	0x3d	FUN_00487380	crt-exact	libcmt.lib:/11592	__FF_MSGBANNER	-
 0x000873bd	0x3	FUN_004873BD	linker-pad			trailing 90/CC alignment fill
-0x000873c0	0x1ee	FUN_004873C0	crt-prefix	libc.lib:/11592	__NMSG_WRITE	unique masked 24-byte prefix
+0x000873c0	0x1ee	FUN_004873C0	crt-exact	libcmt.lib:/11592	__NMSG_WRITE	-
 0x000875ae	0x2	FUN_004875AE	linker-pad			trailing 90/CC alignment fill
-0x000875b0	0x132	FUN_004875B0	crt-band	libc.lib:(link-band)	__crt_004875B0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000875b0	0x132	FUN_004875B0	crt-exact	libcmt.lib:/5936	__chsize_lk	-
 0x000876e2	0xe	FUN_004876E2	linker-pad			trailing 90/CC alignment fill
-0x000876f0	0x44	FUN_004876F0	crt-band	libc.lib:(link-band)	__crt_004876F0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000876f0	0x44	FUN_004876F0	crt-exact	libcmt.lib:/478	_tolower	-
 0x00087734	0xc	FUN_00487734	linker-pad			trailing 90/CC alignment fill
-0x00087740	0x18d	FUN_00487740	crt-prefix	libc.lib:/478	_tolower	unique masked 24-byte prefix
+0x00087740	0x18d	FUN_00487740	crt-prefix	libcmt.lib:/478	__tolower_lk	unique masked 24-byte prefix
 0x000878cd	0x3	FUN_004878CD	linker-pad			trailing 90/CC alignment fill
-0x000878d0	0x7b	FUN_004878D0	crt-band	libc.lib:(link-band)	__crt_004878D0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000878d0	0x7b	FUN_004878D0	crt-exact	libcmt.lib:/2002	?terminate@@YAXXZ	-
 0x0008794b	0x5	FUN_0048794B	linker-pad			trailing 90/CC alignment fill
-0x00087950	0x73	FUN_00487950	crt-band	libc.lib:(link-band)	__crt_00487950	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087950	0x73	FUN_00487950	crt-exact	libcmt.lib:/2002	?_inconsistency@@YAXXZ	-
 0x000879c3	0xd	FUN_004879C3	linker-pad			trailing 90/CC alignment fill
-0x000879d0	0x20	FUN_004879D0	crt-band	libc.lib:(link-band)	__crt_004879D0	LIBC band 0x801f0..text-end; symbol unresolved
-0x000879f0	0x20	FUN_004879F0	crt-band	libc.lib:(link-band)	__crt_004879F0	LIBC band 0x801f0..text-end; symbol unresolved
-0x00087a10	0x1b	FUN_00487A10	crt-exact	libc.lib:/2120	?_ValidateExecute@@YAHP6GHXZ@Z	-
+0x000879d0	0x20	FUN_004879D0	crt-band	libcmt.lib:(link-band)	__crt_004879D0	LIBCMT band 0x801f0..text-end; symbol unresolved
+0x000879f0	0x20	FUN_004879F0	crt-band	libcmt.lib:(link-band)	__crt_004879F0	LIBCMT band 0x801f0..text-end; symbol unresolved
+0x00087a10	0x1b	FUN_00487A10	crt-exact	libcmt.lib:/2120	?_ValidateExecute@@YAHP6GHXZ@Z	-
 0x00087a2b	0x5	FUN_00487A2B	linker-pad			trailing 90/CC alignment fill
-0x00087a30	0x52	FUN_00487A30	crt-band	libc.lib:(link-band)	__crt_00487A30	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087a30	0x52	FUN_00487A30	crt-exact	libcmt.lib:/3700	_calloc	-
 0x00087a82	0xe	FUN_00487A82	linker-pad			trailing 90/CC alignment fill
-0x00087a90	0x4b	FUN_00487A90	crt-exact	libc.lib:/12783	__getbuf	-
+0x00087a90	0x4b	FUN_00487A90	crt-exact	libcmt.lib:/12783	__getbuf	-
 0x00087adb	0x5	FUN_00487ADB	linker-pad			trailing 90/CC alignment fill
-0x00087ae0	0x114	FUN_00487AE0	crt-band	libc.lib:(link-band)	__crt_00487AE0	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087ae0	0x114	FUN_00487AE0	crt-prefix	libcmt.lib:/6320	__isatty	unique masked 24-byte prefix
 0x00087bf4	0xc	FUN_00487BF4	linker-pad			trailing 90/CC alignment fill
-0x00087c00	0x2e	FUN_00487C00	crt-band	libc.lib:(link-band)	__crt_00487C00	LIBC band 0x801f0..text-end; symbol unresolved
+0x00087c00	0x2e	FUN_00487C00	crt-exact	libcmt.lib:/696	_wctomb	-
 0x00087c2e	0x2	FUN_00487C2E	linker-pad			trailing 90/CC alignment fill
-0x00087c30	0x94	FUN_00487C30	crt-prefix	libc.lib:/696	_wctomb	unique masked 24-byte prefix
+0x00087c30	0x94	FUN_00487C30	crt-exact	libcmt.lib:/696	__wctomb_lk	-
 0x00087cc4	0xc	FUN_00487CC4	linker-pad			trailing 90/CC alignment fill
-0x00087cd0	0x68	FUN_00487CD0	crt-exact	libc.lib:/4395	__aulldiv	-
+0x00087cd0	0x68	FUN_00487CD0	crt-exact	libcmt.lib:/4395	__aulldiv	-
 0x00087d38	0x8	FUN_00487D38	linker-pad			trailing 90/CC alignment fill
-0x00087d40	0x75	FUN_00487D40	crt-exact	libc.lib:/4425	__aullrem	-
+0x00087d40	0x75	FUN_00487D40	crt-exact	libcmt.lib:/4425	__aullrem	-
 0x00087db5	0xb	FUN_00487DB5	linker-pad			trailing 90/CC alignment fill
-0x00087dc0	0x123	FUN_00487DC0	crt-exact	libc.lib:/9502	___crtGetStringTypeA	-
+0x00087dc0	0x123	FUN_00487DC0	crt-exact	libcmt.lib:/9502	___crtGetStringTypeA	-
 0x00087ee3	0xd	FUN_00487EE3	linker-pad			trailing 90/CC alignment fill
-0x00087ef0	0x3f	FUN_00487EF0	crt-exact	libc.lib:/20022	__control87	-
+0x00087ef0	0x3f	FUN_00487EF0	crt-exact	libcmt.lib:/20022	__control87	-
 0x00087f2f	0x1	FUN_00487F2F	linker-pad			trailing 90/CC alignment fill
-0x00087f30	0x18	FUN_00487F30	crt-exact	libc.lib:/20022	__controlfp	-
+0x00087f30	0x18	FUN_00487F30	crt-exact	libcmt.lib:/20022	__controlfp	-
 0x00087f48	0x8	FUN_00487F48	linker-pad			trailing 90/CC alignment fill
-0x00087f50	0xa1	FUN_00487F50	crt-exact	libc.lib:/20022	__abstract_cw	-
+0x00087f50	0xa1	FUN_00487F50	crt-exact	libcmt.lib:/20022	__abstract_cw	-
 0x00087ff1	0xf	FUN_00487FF1	linker-pad			trailing 90/CC alignment fill
-0x00088000	0x8d	FUN_00488000	crt-exact	libc.lib:/20022	__hw_cw	-
+0x00088000	0x8d	FUN_00488000	crt-exact	libcmt.lib:/20022	__hw_cw	-
 0x0008808d	0x3	FUN_0048808D	linker-pad			trailing 90/CC alignment fill
-0x00088090	0xb	FUN_00488090	crt-exact	libc.lib:/11530	__fptrap	-
+0x00088090	0xb	FUN_00488090	crt-exact	libcmt.lib:/11530	__fptrap	-
 0x0008809b	0x5	FUN_0048809B	linker-pad			trailing 90/CC alignment fill
-0x000880a0	0x64	FUN_004880A0	crt-exact	libc.lib:/18992	__ZeroTail	-
+0x000880a0	0x64	FUN_004880A0	crt-exact	libcmt.lib:/18992	__ZeroTail	-
 0x00088104	0xc	FUN_00488104	linker-pad			trailing 90/CC alignment fill
-0x00088110	0x63	FUN_00488110	crt-exact	libc.lib:/18992	__IncMan	-
+0x00088110	0x63	FUN_00488110	crt-exact	libcmt.lib:/18992	__IncMan	-
 0x00088173	0xd	FUN_00488173	linker-pad			trailing 90/CC alignment fill
-0x00088180	0xac	FUN_00488180	crt-exact	libc.lib:/18992	__RoundMan	-
+0x00088180	0xac	FUN_00488180	crt-exact	libcmt.lib:/18992	__RoundMan	-
 0x0008822c	0x4	FUN_0048822C	linker-pad			trailing 90/CC alignment fill
-0x00088230	0x1d	FUN_00488230	crt-exact	libc.lib:/18992	__CopyMan	-
+0x00088230	0x1d	FUN_00488230	crt-exact	libcmt.lib:/18992	__CopyMan	-
 0x0008824d	0x3	FUN_0048824D	linker-pad			trailing 90/CC alignment fill
-0x00088250	0xf	FUN_00488250	crt-exact	libc.lib:/18992	__FillZeroMan	-
+0x00088250	0xf	FUN_00488250	crt-exact	libcmt.lib:/18992	__FillZeroMan	-
 0x0008825f	0x1	FUN_0048825F	linker-pad			trailing 90/CC alignment fill
-0x00088260	0x1d	FUN_00488260	crt-exact	libc.lib:/18992	__IsZeroMan	-
+0x00088260	0x1d	FUN_00488260	crt-exact	libcmt.lib:/18992	__IsZeroMan	-
 0x0008827d	0x3	FUN_0048827D	linker-pad			trailing 90/CC alignment fill
-0x00088280	0xad	FUN_00488280	crt-exact	libc.lib:/18992	__ShrMan	-
+0x00088280	0xad	FUN_00488280	crt-exact	libcmt.lib:/18992	__ShrMan	-
 0x0008832d	0x3	FUN_0048832D	linker-pad			trailing 90/CC alignment fill
-0x00088330	0x1cb	FUN_00488330	crt-exact	libc.lib:/18992	__ld12cvt	-
+0x00088330	0x1cb	FUN_00488330	crt-exact	libcmt.lib:/18992	__ld12cvt	-
 0x000884fb	0x5	FUN_004884FB	linker-pad			trailing 90/CC alignment fill
-0x00088500	0x18	FUN_00488500	crt-band	libc.lib:(link-band)	__crt_00488500	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088500	0x18	FUN_00488500	crt-band	libcmt.lib:(link-band)	__crt_00488500	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00088518	0x8	FUN_00488518	linker-pad			trailing 90/CC alignment fill
-0x00088520	0x18	FUN_00488520	crt-band	libc.lib:(link-band)	__crt_00488520	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088520	0x18	FUN_00488520	crt-band	libcmt.lib:(link-band)	__crt_00488520	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00088538	0x8	FUN_00488538	linker-pad			trailing 90/CC alignment fill
-0x00088540	0x35	FUN_00488540	crt-band	libc.lib:(link-band)	__crt_00488540	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088540	0x35	FUN_00488540	crt-band	libcmt.lib:(link-band)	__crt_00488540	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00088575	0xb	FUN_00488575	linker-pad			trailing 90/CC alignment fill
-0x00088580	0x35	FUN_00488580	crt-band	libc.lib:(link-band)	__crt_00488580	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088580	0x35	FUN_00488580	crt-band	libcmt.lib:(link-band)	__crt_00488580	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x000885b5	0xb	FUN_004885B5	linker-pad			trailing 90/CC alignment fill
-0x000885c0	0x81	FUN_004885C0	crt-exact	libc.lib:/30	__fptostr	-
+0x000885c0	0x81	FUN_004885C0	crt-exact	libcmt.lib:/30	__fptostr	-
 0x00088641	0xf	FUN_00488641	linker-pad			trailing 90/CC alignment fill
-0x00088650	0x81	FUN_00488650	crt-band	libc.lib:(link-band)	__crt_00488650	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088650	0x81	FUN_00488650	crt-exact	libcmt.lib:/18862	__fltout2	-
 0x000886d1	0xf	FUN_004886D1	linker-pad			trailing 90/CC alignment fill
-0x000886e0	0xbb	FUN_004886E0	crt-exact	libc.lib:/18862	___dtold	-
+0x000886e0	0xbb	FUN_004886E0	crt-exact	libcmt.lib:/18862	___dtold	-
 0x0008879b	0x5	FUN_0048879B	linker-pad			trailing 90/CC alignment fill
-0x000887a0	0xa2	FUN_004887A0	crt-band	libc.lib:(link-band)	__crt_004887A0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000887a0	0xa2	FUN_004887A0	crt-exact	libcmt.lib:/5995	__commit	-
 0x00088842	0xe	FUN_00488842	linker-pad			trailing 90/CC alignment fill
-0x00088850	0x67	FUN_00488850	crt-exact	libc.lib:/19402	__trandisp1	-
-0x000888b7	0x3b1	FUN_004888B7	crt-band	libc.lib:(link-band)	__crt_004888B7	LIBC band 0x801f0..text-end; symbol unresolved
+0x00088850	0x67	FUN_00488850	crt-exact	libcmt.lib:/19402	__trandisp1	-
+0x000888b7	0x3b1	FUN_004888B7	crt-band	libcmt.lib:(link-band)	__crt_004888B7	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00088c68	0x8	FUN_00488C68	linker-pad			trailing 90/CC alignment fill
-0x00088c70	0x7f	FUN_00488C70	crt-exact	libc.lib:/20086	__d_inttype	-
+0x00088c70	0x7f	FUN_00488C70	crt-exact	libcmt.lib:/20086	__d_inttype	-
 0x00088cef	0x1	FUN_00488CEF	linker-pad			trailing 90/CC alignment fill
-0x00088cf0	0x120	FUN_00488CF0	crt-exact	libc.lib:/19435	__87except	-
-0x00088e10	0x22b	FUN_00488E10	crt-exact	libc.lib:/9472	___crtLCMapStringA	-
+0x00088cf0	0x120	FUN_00488CF0	crt-exact	libcmt.lib:/19435	__87except	-
+0x00088e10	0x22b	FUN_00488E10	crt-exact	libcmt.lib:/9472	___crtLCMapStringA	-
 0x0008903b	0x5	FUN_0048903B	linker-pad			trailing 90/CC alignment fill
-0x00089040	0x2c	FUN_00489040	crt-band	libc.lib:(link-band)	__crt_00489040	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089040	0x2c	FUN_00489040	crt-exact	libcmt.lib:/9352	_strncnt	2 byte-identical candidates
 0x0008906c	0x4	FUN_0048906C	linker-pad			trailing 90/CC alignment fill
-0x00089070	0x92	FUN_00489070	crt-prefix	libc.lib:/9626	___crtMessageBoxA	unique masked 24-byte prefix
+0x00089070	0x92	FUN_00489070	crt-exact	libcmt.lib:/9626	___crtMessageBoxA	-
 0x00089102	0xe	FUN_00489102	linker-pad			trailing 90/CC alignment fill
-0x00089110	0x6c	FUN_00489110	crt-band	libc.lib:(link-band)	__crt_00489110	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089110	0x6c	FUN_00489110	crt-exact	libcmt.lib:/6587	__setmode_lk	-
 0x0008917c	0x4	FUN_0048917C	linker-pad			trailing 90/CC alignment fill
-0x00089180	0x116	FUN_00489180	crt-band	libc.lib:(link-band)	__crt_00489180	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089180	0x116	FUN_00489180	crt-band	libcmt.lib:(link-band)	__crt_00489180	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x00089296	0xa	FUN_00489296	linker-pad			trailing 90/CC alignment fill
-0x000892a0	0x1f	FUN_004892A0	crt-exact	libc.lib:/9266	_abort	-
+0x000892a0	0x1f	FUN_004892A0	crt-exact	libcmt.lib:/9266	_abort	-
 0x000892bf	0x1	FUN_004892BF	linker-pad			trailing 90/CC alignment fill
-0x000892c0	0x98	FUN_004892C0	crt-band	libc.lib:(link-band)	__crt_004892C0	LIBC band 0x801f0..text-end; symbol unresolved
+0x000892c0	0x98	FUN_004892C0	crt-exact	libcmt.lib:/12906	__fcloseall	-
 0x00089358	0x8	FUN_00489358	linker-pad			trailing 90/CC alignment fill
-0x00089360	0x1dd	FUN_00489360	crt-band	libc.lib:(link-band)	__crt_00489360	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089360	0x1dd	FUN_00489360	crt-exact	libcmt.lib:/10968	_raise	-
 0x0008953d	0x3	FUN_0048953D	linker-pad			trailing 90/CC alignment fill
-0x00089540	0x31	FUN_00489540	crt-band	libc.lib:(link-band)	__crt_00489540	LIBC band 0x801f0..text-end; symbol unresolved
+0x00089540	0x31	FUN_00489540	crt-exact	libcmt.lib:/10968	_siglookup	-
 0x00089571	0xf	FUN_00489571	linker-pad			trailing 90/CC alignment fill
-0x00089580	0x31	FUN_00489580	crt-exact	libc.lib:/15376	_strncat	-
+0x00089580	0x31	FUN_00489580	crt-exact	libcmt.lib:/15376	_strncat	-
 0x000895b1	0xf	FUN_004895B1	linker-pad			trailing 90/CC alignment fill
-0x000895c0	0x23	FUN_004895C0	crt-exact	libc.lib:/19027	___addl	-
+0x000895c0	0x23	FUN_004895C0	crt-exact	libcmt.lib:/19027	___addl	-
 0x000895e3	0xd	FUN_004895E3	linker-pad			trailing 90/CC alignment fill
-0x000895f0	0x66	FUN_004895F0	crt-exact	libc.lib:/19027	___add_12	-
+0x000895f0	0x66	FUN_004895F0	crt-exact	libcmt.lib:/19027	___add_12	-
 0x00089656	0xa	FUN_00489656	linker-pad			trailing 90/CC alignment fill
-0x00089660	0x3e	FUN_00489660	crt-exact	libc.lib:/19027	___shl_12	-
+0x00089660	0x3e	FUN_00489660	crt-exact	libcmt.lib:/19027	___shl_12	-
 0x0008969e	0x2	FUN_0048969E	linker-pad			trailing 90/CC alignment fill
-0x000896a0	0x36	FUN_004896A0	crt-exact	libc.lib:/19027	___shr_12	-
+0x000896a0	0x36	FUN_004896A0	crt-exact	libcmt.lib:/19027	___shr_12	-
 0x000896d6	0xa	FUN_004896D6	linker-pad			trailing 90/CC alignment fill
-0x000896e0	0xe8	FUN_004896E0	crt-exact	libc.lib:/19027	___mtold12	-
+0x000896e0	0xe8	FUN_004896E0	crt-exact	libcmt.lib:/19027	___mtold12	-
 0x000897c8	0x8	FUN_004897C8	linker-pad			trailing 90/CC alignment fill
-0x000897d0	0x74f	FUN_004897D0	crt-prefix	libc.lib:/19061	___strgtold12	unique masked 24-byte prefix
+0x000897d0	0x74f	FUN_004897D0	crt-exact	libcmt.lib:/19061	___strgtold12	-
 0x00089f1f	0x1	FUN_00489F1F	linker-pad			trailing 90/CC alignment fill
-0x00089f20	0x39b	FUN_00489F20	crt-exact	libc.lib:/19129	_$I10_OUTPUT	-
+0x00089f20	0x39b	FUN_00489F20	crt-exact	libcmt.lib:/19129	_$I10_OUTPUT	-
 0x0008a2bb	0x5	FUN_0048A2BB	linker-pad			trailing 90/CC alignment fill
-0x0008a2c0	0x39	FUN_0048A2C0	crt-exact	libc.lib:/20355	__set_exp	-
+0x0008a2c0	0x39	FUN_0048A2C0	crt-exact	libcmt.lib:/20355	__set_exp	-
 0x0008a2f9	0x7	FUN_0048A2F9	linker-pad			trailing 90/CC alignment fill
-0x0008a300	0x63	FUN_0048A300	crt-exact	libc.lib:/20355	__sptype	-
+0x0008a300	0x63	FUN_0048A300	crt-exact	libcmt.lib:/20355	__sptype	-
 0x0008a363	0xd	FUN_0048A363	linker-pad			trailing 90/CC alignment fill
-0x0008a370	0xee	FUN_0048A370	crt-exact	libc.lib:/20355	__decomp	-
+0x0008a370	0xee	FUN_0048A370	crt-exact	libcmt.lib:/20355	__decomp	-
 0x0008a45e	0x2	FUN_0048A45E	linker-pad			trailing 90/CC alignment fill
-0x0008a460	0x15	FUN_0048A460	crt-exact	libc.lib:/19865	__frnd	-
+0x0008a460	0x15	FUN_0048A460	crt-exact	libcmt.lib:/19865	__frnd	-
 0x0008a475	0xb	FUN_0048A475	linker-pad			trailing 90/CC alignment fill
-0x0008a480	0xa2	FUN_0048A480	crt-exact	libc.lib:/20254	__fpclass	-
+0x0008a480	0xa2	FUN_0048A480	crt-exact	libcmt.lib:/20254	__fpclass	-
 0x0008a522	0xe	FUN_0048A522	linker-pad			trailing 90/CC alignment fill
-0x0008a530	0x36c	FUN_0048A530	crt-prefix	libc.lib:/20187	__raise_exc	unique masked 24-byte prefix
+0x0008a530	0x36c	FUN_0048A530	crt-exact	libcmt.lib:/20187	__raise_exc	-
 0x0008a89c	0x4	FUN_0048A89C	linker-pad			trailing 90/CC alignment fill
-0x0008a8a0	0x2c0	FUN_0048A8A0	crt-exact	libc.lib:/20187	__handle_exc	-
-0x0008ab60	0x2c	FUN_0048AB60	crt-band	libc.lib:(link-band)	__crt_0048AB60	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008a8a0	0x2c0	FUN_0048A8A0	crt-exact	libcmt.lib:/20187	__handle_exc	-
+0x0008ab60	0x2c	FUN_0048AB60	crt-exact	libcmt.lib:/20187	__set_errno	-
 0x0008ab8c	0x4	FUN_0048AB8C	linker-pad			trailing 90/CC alignment fill
-0x0008ab90	0x3	FUN_0048AB90	crt-band	libc.lib:(link-band)	__crt_0048AB90	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008ab90	0x3	FUN_0048AB90	crt-band	libcmt.lib:(link-band)	__crt_0048AB90	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x0008ab93	0xd	FUN_0048AB93	linker-pad			trailing 90/CC alignment fill
-0x0008aba0	0x11	FUN_0048ABA0	crt-exact	libc.lib:/19832	__statfp	-
+0x0008aba0	0x11	FUN_0048ABA0	crt-exact	libcmt.lib:/19832	__statfp	-
 0x0008abb1	0xf	FUN_0048ABB1	linker-pad			trailing 90/CC alignment fill
-0x0008abc0	0x12	FUN_0048ABC0	crt-exact	libc.lib:/19832	__clrfp	-
+0x0008abc0	0x12	FUN_0048ABC0	crt-exact	libcmt.lib:/19832	__clrfp	-
 0x0008abd2	0xe	FUN_0048ABD2	linker-pad			trailing 90/CC alignment fill
-0x0008abe0	0x34	FUN_0048ABE0	crt-exact	libc.lib:/19832	__ctrlfp	-
+0x0008abe0	0x34	FUN_0048ABE0	crt-exact	libcmt.lib:/19832	__ctrlfp	-
 0x0008ac14	0xc	FUN_0048AC14	linker-pad			trailing 90/CC alignment fill
-0x0008ac20	0xe5	FUN_0048AC20	crt-prefix	libc.lib:/19832	__set_statfp	unique masked 24-byte prefix
+0x0008ac20	0xe5	FUN_0048AC20	crt-prefix	libcmt.lib:/19832	__set_statfp	unique masked 24-byte prefix
 0x0008ad05	0xb	FUN_0048AD05	linker-pad			trailing 90/CC alignment fill
-0x0008ad10	0x2a6	FUN_0048AD10	crt-exact	libc.lib:/19096	___ld12mul	-
+0x0008ad10	0x2a6	FUN_0048AD10	crt-exact	libcmt.lib:/19096	___ld12mul	-
 0x0008afb6	0xa	FUN_0048AFB6	linker-pad			trailing 90/CC alignment fill
-0x0008afc0	0x7b	FUN_0048AFC0	crt-exact	libc.lib:/19096	___multtenpow12	-
+0x0008afc0	0x7b	FUN_0048AFC0	crt-exact	libcmt.lib:/19096	___multtenpow12	-
 0x0008b03b	0x1	FUN_0048B03B	linker-pad			trailing 90/CC alignment fill
 0x0008b03c	0x6	FUN_0048B03C	import-thunk	KERNEL32.dll	RtlUnwind	IAT RVA 0xd6548
 0x0008b042	0xe	FUN_0048B042	linker-pad			trailing 90/CC alignment fill
-0x0008b050	0x12	FUN_0048B050	crt-band	libc.lib:(link-band)	__crt_0048B050	LIBC band 0x801f0..text-end; symbol unresolved
+0x0008b050	0x12	FUN_0048B050	crt-band	libcmt.lib:(link-band)	__crt_0048B050	LIBCMT band 0x801f0..text-end; symbol unresolved
 0x0008b062	0xe	FUN_0048B062	linker-pad			trailing 90/CC alignment fill
-0x0008b070	0x30	FUN_0048B070	crt-exact	libc.lib:/15594	__strrev	-
+0x0008b070	0x30	FUN_0048B070	crt-exact	libcmt.lib:/15594	__strrev	-

@@ -166,11 +166,18 @@ def link_main(argv: list[str] | None = None) -> int:
         sys.argv = ["homm1 link", *argv]
         return link_direct()
     configure_if_needed()
+    from homm1.graph.emit import era_rc_available
+    if graph.RESOURCE_RES not in manifest_targets() and era_rc_available():
+        # The rc edge is decided at configure time; installing the pinned
+        # RC/CVTRES later does not move the toolchain identity.
+        configure_if_needed(force=True)
     if not argv:
         return ninja(["candidate"])
     targets = ["link-inputs"]
     if graph.RESOURCE_RES in manifest_targets():
         targets.append(graph.RESOURCE_RES)
+        if not any(a == "--res" or a.startswith("--res=") for a in argv):
+            argv = ["--res", str(REPO / graph.RESOURCE_RES), *argv]
     rc = ninja(targets)
     if rc:
         return rc

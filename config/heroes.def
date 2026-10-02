@@ -1,0 +1,10 @@
+; HEROES.EXE module definition for the candidate link (homm1.graph.link).
+; Retail facts: the export directory at 0x0048d600 names the module
+; "HEROES.EXE" and exports AppAbout (ordinal 1, 0x0045c15c) and AppWndProc
+; (ordinal 2, 0x0045bb45) by their undecorated names; the optional header
+; reserves 0x10240 bytes of stack and commits 0x1000.
+NAME HEROES
+STACKSIZE 0x10240,0x1000
+EXPORTS
+    AppAbout
+    AppWndProc=?AppWndProc@@YGJPAXIIJ@Z

@@ -4,7 +4,8 @@
 
 A driver around `homm1.compare.canonicalize.canonicalize_coff`: for every unit
 it is given it rewrites the compiler-private data names (`$SG`/`$T`/`name$S<n>`),
-resolves COFF weak externals to their default, and rewrites same-function
+resolves COFF weak externals to their default, names OLDNAMES references by
+the runtime function LINK binds them to, and rewrites same-function
 jump-table `DIR32` labels of both the recompiled base obj and its delinked
 target obj into a content-addressed, side-by-side view under `<out-dir>/`.
 `objdiff.json` points at these copies; the real base and target objects are
@@ -31,10 +32,12 @@ from dataclasses import dataclass
 from homm1.core import data_matching
 
 from homm1.compare import canonicalize as canon
+from homm1.compare import runtime_aliases
 from homm1.delink import eh_band
 
 _MODULE_MTIME = max(
     Path(canon.__file__).stat().st_mtime,
+    Path(runtime_aliases.__file__).stat().st_mtime,
     Path(canon.msvc_names.__file__).stat().st_mtime,
     *([data_matching.COMPARE_TOML.stat().st_mtime]
       if data_matching.COMPARE_TOML.is_file() else []),
@@ -325,6 +328,26 @@ def _assert_weak_externals_have_no_strong_definition(paths: list[Path]) -> int:
     return len(weak)
 
 
+def _assert_runtime_aliases_are_not_defined(paths: list[Path]) -> int:
+    """Fail if a compared object strongly defines an OLDNAMES alias name.
+
+    `canonicalize_coff` names a reference to `chdir` by `_chdir`, which is what
+    LINK does only while nothing else defines `chdir`. Like the weak-external
+    check above, that is a whole-link fact, re-proven over the processed set.
+    """
+    table = runtime_aliases.aliases()
+    strong: set[str] = set()
+    for path in paths:
+        strong |= _weak_and_strong_names(path)[1]
+    clash = sorted(strong & set(table))
+    if clash:
+        raise SystemExit(
+            "[normalize] FATAL: %d OLDNAMES alias name(s) are defined by a "
+            "compared object, so the runtime function is no longer what LINK "
+            "binds them to: %s" % (len(clash), ", ".join(clash[:8])))
+    return len(table)
+
+
 def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
               units: list[str], *, stamp: Path | None = None,
               force: bool = False, quiet: bool = False) -> dict:
@@ -355,6 +378,7 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
               for p in (base_dir / f"{unit}.obj", target_object(target_dir, unit))
               if p is not None and p.exists()]
     weak_n = _assert_weak_externals_have_no_strong_definition(inputs)
+    _assert_runtime_aliases_are_not_defined(inputs)
 
     for unit in ordered:
         from homm1.graph.fixed_asm import unit as fixed_asm_unit

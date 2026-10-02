@@ -63,8 +63,9 @@ REPORT_JSON = f"{COMPARE_DIR}/report.json"
 CANDIDATE_EXE = "build/exe/HEROES.candidate.EXE"
 CANDIDATE_MAP = "build/exe/HEROES.candidate.map"
 LINK_OMF_DIR = "build/link/omf"
-RESOURCE_SCRIPT = "src/Heroes/Heroes.rc"
+RESOURCE_SCRIPT = "src/SOURCE/Heroes.rc"
 RESOURCE_RES = "build/gen/heroes.res"
+RESOURCE_REPORT = "build/gen/heroes.res.json"
 
 #: `wine cl` parallelism. Wine serialises far more than it looks under a
 #: shared wineserver, and past ~8 concurrent cl.exe the server thrashes and

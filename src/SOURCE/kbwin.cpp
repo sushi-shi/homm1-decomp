@@ -590,7 +590,7 @@ void ReadPrefsFromFile(void)
     char buffer[100];
 
     sprintf(gText, "%s", "HEROES.CFG");
-    if (_access(gText, 0) == -1) {
+    if (access(gText, 0) == -1) {
         memset(&gConfig, 0, sizeof(gConfig));
         SetGameDefaults();
         WritePrefs();
@@ -782,7 +782,7 @@ int SetupCDDrive(void)
     sprintf(gText, ".\\DATA\\HEROES.AGG");
     fh = open(gText, _O_BINARY);
     if (fh == -1) {
-        if (chdir(gcRegAppPath) == -1)
+        if (_chdir(gcRegAppPath) == -1)
             return CD_SETUP_NO_APP_PATH;
         fh = open(gText, _O_BINARY);
         if (fh == -1)
@@ -833,9 +833,9 @@ int SetupCDDrive(void)
             fh = open(gText, _O_BINARY);
             if (fh == -1)
                 continue;
-            pos = lseek(fh, 0, SEEK_END);
+            pos = _lseek(fh, 0, SEEK_END);
             if (pos != -1) {
-                pos = lseek(fh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
+                pos = _lseek(fh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
                 if (pos != -1)
                     pos = read(fh, szReturn, CD_AUTORUN_TAIL_BYTES);
             }

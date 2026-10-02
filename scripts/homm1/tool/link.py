@@ -35,7 +35,11 @@ def link(args: list[str], *, cwd: Path | None = None,
     if missing or (not expect and rc != 0):
         tail = "\n".join(output.strip().splitlines()[-12:])
         what = missing[0].name if missing else f"rc={rc}"
-        raise ToolError(f"link failed ({what}):\n{tail}")
+        err = ToolError(f"link failed ({what}):\n{tail}")
+        # The message keeps the tail; the full log carries every LNK2001 a
+        # caller needs to classify (a 590-line backlog is not a 12-line tail).
+        err.output = output
+        raise err
     return output
 
 

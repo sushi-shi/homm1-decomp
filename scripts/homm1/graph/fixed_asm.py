@@ -51,13 +51,16 @@ UNITS = {
         claims=(
             FixedAsmClaim(0x00479280, 0xD5,
                           "?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
-        ),
-    ),
-    "BASE/Iconf2b": FixedAsmUnit(
-        source="src/BASE/Iconf2b.asm",
-        claims=(
             FixedAsmClaim(0x00479356, 0xCB,
                           "?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
+            FixedAsmClaim(0x00479422, 0xD5,
+                          "?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z"),
+            FixedAsmClaim(0x004794F8, 0xD3,
+                          "?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z"),
+            FixedAsmClaim(0x004795CC, 0xD9,
+                          "?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
+            FixedAsmClaim(0x004796A6, 0xD6,
+                          "?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
         ),
     ),
     "BASE/Icon2bc": FixedAsmUnit(
@@ -65,41 +68,8 @@ UNITS = {
         claims=(
             FixedAsmClaim(0x0047CA44, 0x25F,
                           "?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
-        ),
-    ),
-    "BASE/Iconf2bc": FixedAsmUnit(
-        source="src/BASE/Iconf2bc.asm",
-        claims=(
             FixedAsmClaim(0x0047CCA4, 0x258,
                           "?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
-        ),
-    ),
-    "BASE/Iconm2b": FixedAsmUnit(
-        source="src/BASE/Iconm2b.asm",
-        claims=(
-            FixedAsmClaim(0x00479422, 0xD5,
-                          "?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z"),
-        ),
-    ),
-    "BASE/Iconmf2b": FixedAsmUnit(
-        source="src/BASE/Iconmf2b.asm",
-        claims=(
-            FixedAsmClaim(0x004794F8, 0xD3,
-                          "?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z"),
-        ),
-    ),
-    "BASE/Icond2b": FixedAsmUnit(
-        source="src/BASE/Icond2b.asm",
-        claims=(
-            FixedAsmClaim(0x004795CC, 0xD9,
-                          "?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
-        ),
-    ),
-    "BASE/Icondf2b": FixedAsmUnit(
-        source="src/BASE/Icondf2b.asm",
-        claims=(
-            FixedAsmClaim(0x004796A6, 0xD6,
-                          "?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
         ),
     ),
     "BASE/TILE": FixedAsmUnit(

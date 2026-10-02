@@ -4,10 +4,20 @@
     python3 -m homm1.graph.implib --list     # report coverage, build nothing
 
 Retail HEROES.EXE load-time-imports nine DLLs. The Win32 set has import libs in
-VC4; WinG and the two RAD-era vendor DLLs do not. Named imports can be rebuilt
-from the retail import table itself. smkwai32's ordinal-only imports remain a
-reported link input gap until its original import library or reviewed map is
-available.
+VC4; WinG and the two RAD-era vendor DLLs do not. Named imports are rebuilt
+from the retail import table itself. Two facts the table cannot state come from
+the reviewed import-thunk rows of config/retail/function_referents.tsv, joined
+to an IAT slot through the thunk's own `jmp [slot]` bytes:
+
+  * the caller-visible decoration of an UNDECORATED export (WinG exports
+    `WinGBitBlt`; its callers and its import lib say `_WinGBitBlt@32`);
+  * the name of an ORDINAL-only import (smkwai32 imports `#14`; the reviewed
+    thunk row names it `_SmackClose`).
+
+Both are expressed through a `.def` the stub link consumes: a bare entry
+`WinGBitBlt` lets LINK bind the decorated stdcall body and emit the import
+under the undecorated name, and `SmackClose @14 NONAME` emits an ordinal
+import whose public symbol is the cdecl `_SmackClose`.
 This module rebuilds the missing `.lib` from the RETAIL IMPORT TABLE, which is
 ground truth: the names stored there (`_AIL_startup@0`) are exactly what the
 original import lib produced, decoration and all.
@@ -79,9 +89,8 @@ def _cstr(pe: Pe, rva: int) -> str:
 def import_table(pe: Pe | None = None) -> dict[str, dict[str, int]]:
     """{dll: {hint/name string: hint}} over the whole import directory.
 
-    ORDINAL-only imports carry no name and are skipped - retail imports every
-    RAD entry by name, and an ordinal one could not be expressed as a stub
-    export anyway (it would need a hand-written .def).
+    ORDINAL-only imports carry no name and are skipped here; `ordinal_imports`
+    lists them and `referent_imports` supplies their reviewed names.
     """
     pe = pe or image()
     d = pe.data
@@ -105,6 +114,63 @@ def import_table(pe: Pe | None = None) -> dict[str, dict[str, int]]:
             t += 4
         out[_cstr(pe, nm)] = names
         o += 20
+    return out
+
+
+def import_slots(pe: Pe | None = None) -> dict[int, tuple[str, str | int]]:
+    """{IAT slot rva: (dll, name or ordinal)} over the whole import directory."""
+    pe = pe or image()
+    d = pe.data
+    opt = struct.unpack_from("<I", d, 0x3C)[0] + 24
+    rva = struct.unpack_from("<I", d, opt + 96 + 1 * 8)[0]
+    out: dict[int, tuple[str, str | int]] = {}
+    o = _off(pe, rva)
+    while True:
+        olt, _ts, _fc, nm, fta = struct.unpack_from("<IIIII", d, o)
+        if not (olt or nm or fta):
+            break
+        dll = _cstr(pe, nm)
+        t = _off(pe, olt or fta)
+        k = 0
+        while True:
+            v = struct.unpack_from("<I", d, t + 4 * k)[0]
+            if v == 0:
+                break
+            out[fta + 4 * k] = (dll, v & 0xFFFF if v & 0x80000000
+                                else _cstr(pe, (v & 0x7FFFFFFF) + 2))
+            k += 1
+        o += 20
+    return out
+
+
+def referent_imports(pe: Pe | None = None
+                     ) -> dict[str, dict[str | int, str]]:
+    """{dll: {retail name or ordinal: reviewed decorated symbol}}.
+
+    Each reviewed row of FUNCTION_REFERENTS whose retail bytes are an import
+    thunk (`FF 25 <slot>`) names what that slot's callers link against. A row
+    whose slot is no import, or two names for one slot, is a review defect and
+    fails rather than being guessed around.
+    """
+    from homm1.core.paths import RETAIL
+    pe = pe or image()
+    slots = import_slots(pe)
+    out: dict[str, dict[str | int, str]] = {}
+    for ln in (RETAIL / "function_referents.tsv").read_text().splitlines():
+        if not ln or ln.startswith("#") or ln.startswith("rva\t"):
+            continue
+        rva_s, sym = ln.split("\t")[:2]
+        code = pe.read(int(rva_s, 16), 6)
+        if not code or code[:2] != b"\xff\x25":
+            continue
+        slot = struct.unpack_from("<I", code, 2)[0] - pe.image_base
+        if slot not in slots:
+            raise ToolError(f"function_referents {rva_s} {sym}: thunk slot "
+                            f"0x{slot:x} is no import-table entry")
+        dll, key = slots[slot]
+        have = out.setdefault(dll, {}).setdefault(key, sym)
+        if have != sym:
+            raise ToolError(f"{dll} {key!r}: reviewed as both {have} and {sym}")
     return out
 
 
@@ -202,35 +268,80 @@ def export_table(names, hints: dict[str, int]) -> list[tuple[str, bool]]:
     return table
 
 
-def stub_source(dll: str, names, hints: dict[str, int] | None = None) -> str:
+def _stdcall_body(name: str, nbytes: int, dll: str, sym: str) -> str:
+    nargs, rem = divmod(nbytes, 4)
+    if rem:
+        raise ToolError(f"{dll}: {sym} has a non-dword argument size - "
+                        "cannot express as a __stdcall prototype")
+    # C definitions need NAMED formals (C2055) though nothing uses them.
+    args = ", ".join(f"int a{i}" for i in range(nargs)) or "void"
+    return f"void __stdcall {name}({args}) {{}}"
+
+
+def def_source(dll: str, entries: list[str]) -> str:
+    """The `.def` naming the exports a C declaration cannot express."""
+    return "\n".join([f"; GENERATED by homm1.graph.implib for {dll}",
+                      f"LIBRARY {Path(dll).stem}", "EXPORTS",
+                      *[f"    {e}" for e in entries]]) + "\n"
+
+
+def stub_source(dll: str, names, hints: dict[str, int] | None = None,
+                decorated: dict[str | int, str] | None = None
+                ) -> tuple[str, list[str]]:
     """C for a stub DLL whose exports decorate to exactly `names`, padded with
-    fillers so each name's sorted-name-table index matches retail's hint."""
+    fillers so each name's sorted-name-table index matches retail's hint,
+    plus the `.def` entries for exports whose caller-visible symbol is not
+    the export name (`decorated`: retail name or ordinal -> reviewed symbol).
+    """
+    decorated = decorated or {}
     lines = [f"/* GENERATED by homm1.graph.implib - stub exports for {dll}.",
              "   Bodies are irrelevant: only the DECORATED export names and their",
              "   sorted-name-table INDICES (the hints) matter, and both come from",
-             "   retail HOMM1.EXE's own import table. */"]
+             "   retail HOMM1.EXE's own import table and its reviewed thunks. */"]
+    entries: list[str] = []
     table = (export_table(names, hints) if hints and all(n in hints for n in names)
              else [(n, False) for n in sorted(names)])
     for n, filler in table:
         if filler:
             lines.append(f"__declspec(dllexport) void {n}(void) {{}}")
             continue
+        sym = decorated.get(n)
+        if sym is not None and sym != n and PLAIN.match(n):
+            # An undecorated export with a decorated caller-side symbol: a
+            # bare .def entry binds `_n@N` and keeps the export name `n`.
+            m = STDCALL.match(sym)
+            if not m or m.group("name") != n:
+                raise ToolError(f"{dll}: reviewed symbol {sym} does not "
+                                f"decorate the export {n}")
+            lines.append(_stdcall_body(n, int(m.group("bytes")), dll, sym))
+            entries.append(n)
+            continue
         m = STDCALL.match(n)
         if m:
-            nargs, rem = divmod(int(m.group("bytes")), 4)
-            if rem:
-                raise ToolError(f"{dll}: {n} has a non-dword argument size - "
-                                "cannot express as a __stdcall prototype")
-            # C definitions need NAMED formals (C2055) though nothing uses them.
-            args = ", ".join(f"int a{i}" for i in range(nargs)) or "void"
-            lines.append(f"__declspec(dllexport) void __stdcall "
-                         f"{m.group('name')}({args}) {{}}")
+            lines.append("__declspec(dllexport) " + _stdcall_body(
+                m.group("name"), int(m.group("bytes")), dll, n))
         elif PLAIN.match(n):
             lines.append(f"__declspec(dllexport) void {n}(void) {{}}")
         else:
             raise ToolError(f"{dll}: cannot synthesise an export for {n!r} "
-                            "(ordinal-only or fastcall needs a hand-written .def)")
-    return "\n".join(lines) + "\n"
+                            "(fastcall needs a hand-written .def)")
+    for ordinal, sym in sorted((k, v) for k, v in decorated.items()
+                               if isinstance(k, int)):
+        # Ordinal-only import: no name reaches the image, so the export name
+        # is the reviewed symbol's undecorated identifier.
+        m = STDCALL.match(sym)
+        if m:
+            lines.append(_stdcall_body(m.group("name"), int(m.group("bytes")),
+                                       dll, sym))
+            name = m.group("name")
+        elif sym.startswith("_") and PLAIN.match(sym[1:]):
+            name = sym[1:]
+            lines.append(f"void {name}(void) {{}}")
+        else:
+            raise ToolError(f"{dll}: ordinal {ordinal} reviewed as {sym!r}, "
+                            "which is no C/stdcall symbol")
+        entries.append(f"{name} @{ordinal} NONAME")
+    return "\n".join(lines) + "\n", entries
 
 
 def _verify_hints(lib: Path, want: dict[str, int]) -> None:
@@ -270,20 +381,80 @@ def _verify_hints(lib: Path, want: dict[str, int]) -> None:
         raise ToolError(f"{lib.name}: hint mismatch after synthesis: {bad}")
 
 
+def _lib_publics(lib: Path) -> set[str]:
+    """Public symbols of an archive, from its first linker member."""
+    data = lib.read_bytes()
+    size = int(data[8 + 48:8 + 58].decode().strip() or "0")
+    m = data[68:68 + size]
+    n = struct.unpack_from(">I", m, 0)[0]
+    names = m[4 + 4 * n:].split(b"\0")[:n]
+    return {x.decode("latin-1") for x in names}
+
+
+def _verify_ordinals(lib: Path, want: dict[int, str]) -> None:
+    """Fail unless each reviewed symbol's member imports exactly its ordinal."""
+    data = lib.read_bytes()
+    got: dict[str, int] = {}
+    off = 8
+    while off + 60 <= len(data):
+        size = int(data[off + 48:off + 58].decode().strip() or "0")
+        m = data[off + 60:off + 60 + size]
+        if len(m) > 20 and m[:4] != b"\xff\xff\0\0":
+            try:
+                nsec = struct.unpack_from("<H", m, 2)[0]
+                symp, nsym = struct.unpack_from("<II", m, 8)
+                ordinal = None
+                for i in range(nsec):
+                    raw = m[20 + 40 * i:20 + 40 * (i + 1)]
+                    if raw[:8].rstrip(b"\0") == b".idata$5":
+                        rsz, rp = struct.unpack_from("<II", raw, 16)
+                        v = struct.unpack_from("<I", m, rp)[0] if rsz >= 4 else 0
+                        if v & 0x80000000:
+                            ordinal = v & 0xFFFF
+                if ordinal is not None and symp and nsym:
+                    strt = symp + nsym * 18
+                    for k in range(nsym):
+                        o = symp + 18 * k
+                        raw = m[o:o + 8]
+                        if raw[:4] == b"\0\0\0\0":
+                            so = strt + struct.unpack_from("<I", raw, 4)[0]
+                            name = m[so:m.index(b"\0", so)].decode("latin-1")
+                        else:
+                            name = raw.rstrip(b"\0").decode("latin-1")
+                        if name in want.values():
+                            got[name] = ordinal
+            except (struct.error, ValueError):
+                pass
+        off = off + 60 + size + (size & 1)
+    bad = {s: (o, got.get(s)) for o, s in want.items() if got.get(s) != o}
+    if bad:
+        raise ToolError(f"{lib.name}: ordinal mismatch after synthesis: {bad}")
+
+
 def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
-               verbose: bool = True) -> Path:
-    """Build `<out_dir>/<stem>.lib` for `dll`; returns the lib path."""
+               verbose: bool = True,
+               decorated: dict[str | int, str] | None = None) -> Path:
+    """Build `<out_dir>/<stem>.lib` for `dll`; returns the lib path.
+
+    `decorated` (from `referent_imports`) supplies the reviewed caller-side
+    symbol of undecorated and ordinal-only imports.
+    """
     from homm1.tool import cl, link
     from homm1.tool.wine import era_tool
 
+    decorated = decorated or {}
     out_dir.mkdir(parents=True, exist_ok=True)
     stem = Path(dll).stem
     names = sorted(hints)
     src, obj = out_dir / f"{stem}_stub.c", out_dir / f"{stem}_stub.obj"
+    deff = out_dir / f"{stem}_stub.def"
     lib, stub_dll = out_dir / f"{stem}.lib", out_dir / dll   # /OUT name == the
-    src.write_text(stub_source(dll, names, hints))           # recorded DLL name
-    for f in (obj, stub_dll):
+    code, entries = stub_source(dll, names, hints, decorated)  # recorded DLL
+    src.write_text(code)
+    for f in (obj, stub_dll, deff):
         f.unlink(missing_ok=True)
+    if entries:
+        deff.write_text(def_source(dll, entries))
     # link into a temp name so a failed synthesis never destroys a good lib
     tmp_lib = lib.with_suffix(".lib.tmp")
     tmp_lib.unlink(missing_ok=True)
@@ -291,6 +462,7 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
     era_tool("cl.exe")                       # fail early with the toolchain hint
     cl.compile(src, obj, ["/nologo", "/c"])
     link.link(["/NOLOGO", "/DLL", "/NOENTRY", "/NODEFAULTLIB",
+               *([f"/DEF:{winepath(deff)}"] if entries else []),
                f"/OUT:{winepath(stub_dll)}",
                f"/IMPLIB:{winepath(tmp_lib)}", winepath(obj)],
               cwd=out_dir, expect=[tmp_lib])
@@ -303,9 +475,17 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
               obj):
         f.unlink(missing_ok=True)
     _verify_hints(lib, hints)
+    _verify_ordinals(lib, {k: v for k, v in decorated.items()
+                           if isinstance(k, int)})
+    publics = _lib_publics(lib)
+    missing = sorted(v for v in decorated.values() if v not in publics)
+    if missing:
+        raise ToolError(f"{lib.name}: reviewed symbol(s) not public after "
+                        f"synthesis: {missing}")
     if verbose:
-        print(f"[implib] {dll}: {len(names)} import(s) -> {lib} "
-              f"(hints verified against retail)")
+        nord = sum(isinstance(k, int) for k in decorated)
+        print(f"[implib] {dll}: {len(names)} named + {nord} ordinal "
+              f"import(s) -> {lib} (hints/ordinals verified against retail)")
     return lib
 
 
@@ -324,24 +504,41 @@ def ensure_all(out_dir: Path = OUT_DIR, verbose: bool = True) -> list[Path]:
 
     Cached: a lib newer than both the retail image and this module is reused.
     """
-    from homm1.core.paths import retail_exe
+    from homm1.core.paths import RETAIL, retail_exe
     stamp = max(p.stat().st_mtime
-                for p in (Path(__file__), retail_exe()) if p.exists())
+                for p in (Path(__file__), retail_exe(),
+                          RETAIL / "function_referents.tsv") if p.exists())
+    referents = referent_imports()
+    ordinals = ordinal_imports()
     libs = []
     for dll, hints, existing in survey():
         if existing:
             continue
-        if not hints:
+        decorated = referents.get(dll, {})
+        unnamed = sorted(o for o in ordinals.get(dll, ()) if o not in decorated)
+        if unnamed and verbose:
+            print(f"[implib] {dll}: ordinal(s) {unnamed} have no reviewed "
+                  "thunk name in function_referents.tsv; left out")
+        if not hints and not any(isinstance(k, int) for k in decorated):
             if verbose:
-                print(f"[implib] {dll}: ordinal-only imports; no names in "
-                      "retail, so synthesis is deferred")
+                print(f"[implib] {dll}: no named or reviewed ordinal imports; "
+                      "synthesis is deferred")
             continue
         lib = out_dir / f"{Path(dll).stem}.lib"
         if lib.exists() and lib.stat().st_mtime >= stamp:
             libs.append(lib)
             continue
-        libs.append(synthesize(dll, hints, out_dir, verbose))
+        libs.append(synthesize(dll, hints, out_dir, verbose, decorated))
     return libs
+
+
+def ordinal_imports(pe: Pe | None = None) -> dict[str, set[int]]:
+    """{dll: {ordinal}} - the ordinal-only entries `import_table` skips."""
+    out: dict[str, set[int]] = {}
+    for dll, key in import_slots(pe).values():
+        if isinstance(key, int):
+            out.setdefault(dll, set()).add(key)
+    return out
 
 
 from homm1.core.usage import logged
@@ -358,9 +555,12 @@ def main() -> int:
     a = ap.parse_args()
     try:
         if a.list:
+            ordinals = ordinal_imports()
             for dll, names, existing in survey():
                 where = existing or "** no lib - synthesised **"
-                print(f"{dll:16s} {len(names):4d} import(s)  {where}")
+                nord = len(ordinals.get(dll, ()))
+                print(f"{dll:16s} {len(names):4d} named + {nord:3d} ordinal "
+                      f"import(s)  {where}")
             return 0
         libs = ensure_all(a.out_dir)
     except (ToolError, RuntimeError) as e:

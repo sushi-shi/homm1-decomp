@@ -114,6 +114,24 @@
         "sha256": "092755d3a488767da3de277c141be7c8144110a156cdbd8ae1391eba64697cee"
       }
     },
+    "resource_files": {
+      "bin/RC.EXE": {
+        "media_path": "MSDEV/BIN/RC.EXE",
+        "sha256": "6c80e9e9067c4d259e37c9d7ea3e602cb0a7b28d6d491c4f4a29be4ff9b877b5"
+      },
+      "bin/RCDLL.DLL": {
+        "media_path": "MSDEV/BIN/RCDLL.DLL",
+        "sha256": "8de3473c07fefa9c7843ae3d47111e342b2346774607d95544551dac0b768400"
+      },
+      "bin/CVTRES.EXE": {
+        "media_path": "MSDEV/BIN/CVTRES.EXE",
+        "sha256": "7d66e9e5437b8d983432d8addedd7ea342bb814a34b1ffdebbc30018485004e8"
+      },
+      "bin/CVTRES.ERR": {
+        "media_path": "MSDEV/BIN/CVTRES.ERR",
+        "sha256": "c2d246a342f3aa9dddbb7145a2c06477a446935bc3d0e92afa31cee4d9d37fbb"
+      }
+    },
     "files": {
       "bin/CL.EXE": {
         "media_path": "MSDEV/BIN/CL.EXE",

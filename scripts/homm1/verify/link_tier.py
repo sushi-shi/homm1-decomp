@@ -1,6 +1,6 @@
 """homm1.verify.link_tier - the candidate-EXE audits (link tier, opt-in).
 
-Needs `homm1 link`'s outputs (HOMM1.candidate.EXE + .map). Three ported
+Needs `homm1 link`'s outputs (HEROES.candidate.EXE + .map). Three ported
 checks folded into one tier module:
 
   LINK DEFECTS   the link must be REAL: 0 unresolved externals (the linker's
@@ -31,9 +31,11 @@ import sys
 
 from homm1.core.paths import BUILD
 
-CAND = BUILD / "exe/HOMM1.candidate.EXE"
-CMAP = BUILD / "exe/HOMM1.candidate.map"
-UNRESOLVED = BUILD / "exe/HOMM1.candidate.unresolved.txt"
+# The paths `homm1 link` writes (homm1.graph.CANDIDATE_EXE/_MAP); the port
+# kept the donor's HOMM1.* spelling and so never found a candidate.
+CAND = BUILD / "exe/HEROES.candidate.EXE"
+CMAP = BUILD / "exe/HEROES.candidate.map"
+UNRESOLVED = BUILD / "exe/HEROES.candidate.unresolved.txt"
 
 _MAP_ROW = re.compile(r"^ (\d{4}):([0-9a-f]{8})\s+(\S+)\s+([0-9a-f]{8})")
 
