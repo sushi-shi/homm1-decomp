@@ -245,22 +245,22 @@ void philAI::CheckBuyStuff(void) {
             BuildBuilding(dockTown, BUILDING_SLOT_SHIPYARD);
             giBuildShipyard[giCurPlayer] = -1;
         } else {
-            gpCurPlayer->m_resources[RESOURCE_GOLD] -= 2000;
-            gpCurPlayer->m_resources[RESOURCE_WOOD] -= 20;
+            gpCurPlayer->m_resources[RESOURCE_GOLD] -= AI_SHIPYARD_GOLD_RESERVE;
+            gpCurPlayer->m_resources[RESOURCE_WOOD] -= AI_SHIPYARD_WOOD_RESERVE;
         }
     }
     if (giBuildBoat[giCurPlayer] >= 0) {
         if ((dockTown->m_buildings & (1 << BUILDING_SLOT_SHIPYARD))
-            && gpCurPlayer->m_resources[RESOURCE_GOLD] >= 1000
-            && gpCurPlayer->m_resources[RESOURCE_WOOD] >= 10) {
+            && gpCurPlayer->m_resources[RESOURCE_GOLD] >= TOWN_BOAT_GOLD_COST
+            && gpCurPlayer->m_resources[RESOURCE_WOOD] >= TOWN_BOAT_WOOD_COST) {
             if (gpGame->CreateBoat(dockTown->m_x - 1, dockTown->m_y + 1) != -1) {
-                gpCurPlayer->m_resources[RESOURCE_GOLD] -= 1000;
-                gpCurPlayer->m_resources[RESOURCE_WOOD] -= 10;
+                gpCurPlayer->m_resources[RESOURCE_GOLD] -= TOWN_BOAT_GOLD_COST;
+                gpCurPlayer->m_resources[RESOURCE_WOOD] -= TOWN_BOAT_WOOD_COST;
             }
             giBuildBoat[giCurPlayer] = -1;
         } else {
-            gpCurPlayer->m_resources[RESOURCE_GOLD] -= 1000;
-            gpCurPlayer->m_resources[RESOURCE_WOOD] -= 10;
+            gpCurPlayer->m_resources[RESOURCE_GOLD] -= TOWN_BOAT_GOLD_COST;
+            gpCurPlayer->m_resources[RESOURCE_WOOD] -= TOWN_BOAT_WOOD_COST;
         }
     }
     DoAllHeroInteractions();
@@ -283,12 +283,12 @@ void philAI::CheckBuyStuff(void) {
             done = 1;
     }
     if (giBuildShipyard[giCurPlayer] >= 0) {
-        gpCurPlayer->m_resources[RESOURCE_GOLD] += 2000;
-        gpCurPlayer->m_resources[RESOURCE_WOOD] += 20;
+        gpCurPlayer->m_resources[RESOURCE_GOLD] += AI_SHIPYARD_GOLD_RESERVE;
+        gpCurPlayer->m_resources[RESOURCE_WOOD] += AI_SHIPYARD_WOOD_RESERVE;
     }
     if (giBuildBoat[giCurPlayer] >= 0) {
-        gpCurPlayer->m_resources[RESOURCE_GOLD] += 1000;
-        gpCurPlayer->m_resources[RESOURCE_WOOD] += 10;
+        gpCurPlayer->m_resources[RESOURCE_GOLD] += TOWN_BOAT_GOLD_COST;
+        gpCurPlayer->m_resources[RESOURCE_WOOD] += TOWN_BOAT_WOOD_COST;
     }
     DoAllHeroInteractions();
     LogInt("CheckBuy End  ", gpCurPlayer->m_resources[RESOURCE_GOLD]);
@@ -1228,7 +1228,8 @@ void philAI::ProbableOutcomeOfBattle(
     outcomeValue = static_cast<int>(outcomeValue * gpCurPlayer->m_aiData.m_upgradeValueWeight);
     if (attackerHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (attackerHero->m_artifacts[artSlot] >= 0 && attackerHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
+            if (attackerHero->m_artifacts[artSlot] >= 0
+                && attackerHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
                 attArts += gArtifactBaseRV[attackerHero->m_artifacts[artSlot]];
         }
         outcomeValue = static_cast<int>(outcomeValue - (attArts + 1400) * (1.0f - winChance));
@@ -1238,7 +1239,8 @@ void philAI::ProbableOutcomeOfBattle(
     }
     if (defenderHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (defenderHero->m_artifacts[artSlot] >= 0 && defenderHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
+            if (defenderHero->m_artifacts[artSlot] >= 0
+                && defenderHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
                 artsD += gArtifactBaseRV[defenderHero->m_artifacts[artSlot]];
         }
         outcomeValue = static_cast<int>(
@@ -3110,16 +3112,16 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
         if (won) {
             switch (cell->m_objectMetadata) {
                 case GHOST_SITE_SMALL:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 1000);
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_SMALL_GOLD);
                     break;
                 case GHOST_SITE_MEDIUM:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_MEDIUM_GOLD);
                     break;
                 case GHOST_SITE_LARGE:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 5000);
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_LARGE_GOLD);
                     break;
                 case GHOST_SITE_HUGE:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_HUGE_GOLD);
                     gpAdvManager->GiveRandomArtifact(heroPointer);
                     break;
             }
@@ -3616,7 +3618,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                     + pHero->m_aiFightValue * 300.0 + gafAITurnCostResource[RESOURCE_GOLD] * -750.0
                 );
                 if (pEventCell->m_objectMetadata == DAEMON_REWARD_RANSOM
-                    && gpCurPlayer->m_resources[RESOURCE_GOLD] < 2500)
+                    && gpCurPlayer->m_resources[RESOURCE_GOLD] < DAEMON_GOLD)
                     iEventRV = -100;
             }
             break;
@@ -3692,10 +3694,11 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = 1000;
             break;
         case MAP_OBJECT_RESOURCE:
-            switch (pEventCell->m_objectIndex - 61) {
+            switch (pEventCell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE) {
                 case RESOURCE_GOLD:
                     iEventRV = static_cast<int>(
-                        pEventCell->m_objectMetadata * 100 * gafAITurnCostResource[RESOURCE_GOLD]
+                        pEventCell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
+                        * gafAITurnCostResource[RESOURCE_GOLD]
                     );
                     break;
                 case RESOURCE_WOOD:
@@ -3735,7 +3738,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = 0;
             } else {
                 memset(costList, 0, sizeof(costList));
-                costList[pEventCell->m_objectMetadata] = 2;
+                costList[pEventCell->m_objectMetadata] = WINDMILL_RESOURCE_AMOUNT;
                 iEventRV = RVConversion(costList);
             }
             break;
@@ -3837,19 +3840,19 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 switch (pEventCell->m_objectMetadata) {
                     case GHOST_SITE_SMALL:
                         guardCount1 = 2;
-                        goldCost = 1000;
+                        goldCost = GHOST_SMALL_GOLD;
                         break;
                     case GHOST_SITE_MEDIUM:
                         guardCount1 = 3;
-                        goldCost = 2000;
+                        goldCost = GHOST_MEDIUM_GOLD;
                         break;
                     case GHOST_SITE_LARGE:
                         guardCount1 = 5;
-                        goldCost = 5000;
+                        goldCost = GHOST_LARGE_GOLD;
                         break;
                     case GHOST_SITE_HUGE:
                         guardCount1 = 10;
-                        goldCost = 2000;
+                        goldCost = GHOST_HUGE_GOLD;
                         break;
                 }
                 for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
@@ -3952,7 +3955,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             break;
         case MAP_OBJECT_WATERWHEEL:
             iEventRV = static_cast<int>(
-                pEventCell->m_objectMetadata * 500 * gafAITurnCostResource[RESOURCE_GOLD]
+                pEventCell->m_objectMetadata * WATERWHEEL_GOLD_MULTIPLIER
+                * gafAITurnCostResource[RESOURCE_GOLD]
             );
             break;
         case MAP_OBJECT_SHIP:

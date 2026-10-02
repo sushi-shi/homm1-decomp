@@ -32,6 +32,14 @@ class mapCell;
 class town;
 // Buka 2.1 purchase record: town, kind, building/dwelling and count.
 // clang-format off
+// DoAI's boat plan holds back the shipyard's price (gNeutralBuildingCosts
+// row BUILDING_SLOT_SHIPYARD: 2000 gold, 20 wood) while it buys other things,
+// as it holds back TOWN_BOAT_GOLD_COST/WOOD_COST for the boat.
+H1_ENUM_CONST_BEGIN(AIBoatPlanConstant)
+    AI_SHIPYARD_GOLD_RESERVE = 2000,
+    AI_SHIPYARD_WOOD_RESERVE = 20
+H1_ENUM_CONST_END(AIBoatPlanConstant)
+
 // BHC::type: what GetBestBHC chose to buy (Buka 2.1 PHILAI.h AIPurchaseType):
 // GetBestBuilding/GetBestHero/GetBestCreature fill BUILDING/HERO/CREATURE,
 // DoAI dispatches BuildBuilding/BuildHero/BuildCreature and CanBuyBHC checks
