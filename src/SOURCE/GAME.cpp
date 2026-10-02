@@ -2296,6 +2296,102 @@ void game::PerDay(void) {
     }
 }
 
+// Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
+// (computer towns grow faster), refreshes the tavern heroes and restocks the
+// map's renewable sites.
+VA(0x00441e09, 0x84b)
+void game::PerWeek(void) {
+    short gain;
+    town* townPointer;
+    short j;
+    short i;
+    short y;
+    short x;
+    int heroClass = 0;
+
+    giWeekType = 0;
+    giWeekSpecial = Random(0, 14);
+    if (m_week != 4) {
+        i = Random(1, 4);
+        if (i == 1) {
+            giWeekType = 1;
+            giWeekSpecial = Random(0, 23);
+        }
+    }
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        townPointer = GetTown(i);
+        for (j = 7; j <= 12; j++) {
+            if (townPointer->m_buildings & (1 << j)) {
+                gain = gMonsterDatabase[gDwellingType[townPointer->m_type][j - 7]].growth;
+                if (townPointer->m_buildings & 0x10)
+                    gain += 2;
+                if (townPointer->m_owner >= 0 && !gbHumanPlayer[townPointer->m_owner]) {
+                    if (gpGame->m_players[townPointer->m_owner].m_color == 3)
+                        gain = gain * 1.24;
+                    if (gpGame->m_players[townPointer->m_owner].m_color == 4)
+                        gain = gain * 1.36;
+                }
+                if (giWeekType == 1 && gDwellingType[townPointer->m_type][j - 7] == giWeekSpecial)
+                    gain += 5;
+                townPointer->m_garrison[j - 7] += gain;
+            }
+        }
+    }
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+        for (j = 0; j < 2; j++) {
+            heroClass = (Random(1, 3) + heroClass) % 4;
+            if (gpGame->m_availableHeroes[gpGame->m_players[i].m_availableHeroIds[j]] == 0x40)
+                gpGame->m_availableHeroes[gpGame->m_players[i].m_availableHeroIds[j]] = -1;
+            gpGame->m_players[i].m_availableHeroIds[j] = gpGame->GetNewHeroId(heroClass);
+        }
+    }
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            switch (m_map[x][y].m_triggerType) {
+                case 0x98:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata != 0xff)
+                        m_map[x][y].m_objectMetadata = 2;
+                    break;
+                case 0xad:
+                    m_map[x][y].m_objectMetadata = Random(1, 5);
+                    break;
+                case 0x8d:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
+                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(3, 6);
+                    break;
+                case 0x8e:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
+                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(5, 10);
+                    break;
+                case 0x8f:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
+                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(2, 4);
+                    break;
+                case 0x90:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
+                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(2, 4);
+                    break;
+                case 0x91:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
+                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(5, 10);
+                    break;
+                case 0xa7:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
+                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(1, 3);
+                    break;
+                case 0xaa:
+                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
+                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(3, 6);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    m_week++;
+    GiveTroopsToNeutralTowns();
+}
+
 // Buka 2.1 game::PerMonth for HoMM1's six dwellings: a normal, creature or
 // plague month, the creature month also seeding wandering monsters.
 VA(0x00442654, 0x2e1)
