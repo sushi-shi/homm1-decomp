@@ -4951,10 +4951,10 @@ void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, 
     if (y > 0 && obj == 0xa8 && gpAdvManager->GetCell(x, y - 1)->m_triggerType != 0x28) {
         cell->m_triggerType = 0;
         cell->m_objectMetadata = 0;
-    } else {
-        cell->m_triggerType = obj;
-        cell->m_objectMetadata = barrier;
+        return;
     }
+    cell->m_triggerType = obj;
+    cell->m_objectMetadata = barrier;
 }
 
 // donor PoL RVA 0x0008c040; preferred Buka symbol ??0armyGroup@@QAE@XZ
