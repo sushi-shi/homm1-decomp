@@ -147,27 +147,27 @@ VA(0x00415a2c, 0x2f0)
 signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
 {
     int unused;
-    army *target = 0;
+    army *target = NULL;
     short newHex;
 
     if (!ValidHex(hex))
         return 0;
-    if (spell != 0 && spell != 17 && m_hexCells[hex].m_occupantSide != -1) {
+    if (spell != SPELL_FIREBALL && spell != SPELL_METEOR_SHOWER && m_hexCells[hex].m_occupantSide != -1) {
         target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-        if (target->m_spellEffect == 12 || target->m_spellEffect == 13 || target->m_creatureType == 0x17)
+        if (target->m_spellEffect == SPELL_ANTI_MAGIC || target->m_spellEffect == SPELL_DISPEL_MAGIC || target->m_creatureType == CREATURE_DRAGON)
             return 0;
     }
     switch (spell) {
-        case 3:
-        case 4:
-        case 5:
-        case 8:
-        case 9:
-        case 12:
+        case SPELL_CURE:
+        case SPELL_RESURRECT:
+        case SPELL_HASTE:
+        case SPELL_BLESS:
+        case SPELL_PROTECTION:
+        case SPELL_ANTI_MAGIC:
             if (m_hexCells[hex].m_occupantSide != m_currentSide)
                 return 0;
             break;
-        case 2:
+        case SPELL_TELEPORT:
             if (bInTeleportGetDest) {
                 newHex = hex;
                 if (newHex == giNextActionGridIndex
@@ -180,23 +180,23 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
                     return 0;
             }
             break;
-        case 1:
-        case 6:
-        case 7:
-        case 10:
-        case 14:
-        case 18:
+        case SPELL_LIGHTNING_BOLT:
+        case SPELL_SLOW:
+        case SPELL_BLIND:
+        case SPELL_CURSE:
+        case SPELL_BERZERKER:
+        case SPELL_PARALYZE:
             if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
                 return 0;
             break;
-        case 11:
+        case SPELL_TURN_UNDEAD:
             if (m_hexCells[hex].m_occupantSide == -1)
                 return 0;
-            if (target->m_creatureType != 0x1a)
+            if (target->m_creatureType != CREATURE_GHOST)
                 return 0;
             break;
-        case 0:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_METEOR_SHOWER:
             if (hex == -1 || hex % 9 == 0 || hex % 9 == 8)
                 return 0;
             break;
@@ -209,13 +209,13 @@ VA(0x00415d1c, 0x128)
 void combatManager::SpellMessage(signed char spell, signed char hex)
 {
     switch (spell) {
-        case SPELL_FIREBALL:
-        case SPELL_ARMAGEDDON:
-        case SPELL_STORM:
-        case SPELL_METEOR_SHOWER:
+        case 0:
+        case 15:
+        case 16:
+        case 17:
             sprintf(gText, "Cast %s", gSpellNames[spell]);
             break;
-        case SPELL_TELEPORT:
+        case 2:
             if (bInTeleportGetDest) {
                 sprintf(gText, "Teleport Here");
                 break;

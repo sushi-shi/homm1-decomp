@@ -329,12 +329,12 @@ void philAI::CheckBerserk(hero* pHero) {
         for (y = 0; y < 72; y++) {
             cell = gpAdvManager->GetCell(x, y);
             switch (cell->m_triggerType) {
-            case 0xa8:
+            case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
                 if (gpGame->m_townOwners[cell->m_objectMetadata] != pHero->m_owner) {
                     if (gpGame->m_townOwners[cell->m_objectMetadata] != -1) {
                         enemy = FightValueOfStack(
                             &gpGame->GetTown(cell->m_objectMetadata)->m_army,
-                            0,
+                            NULL,
                             1,
                             1,
                             cell->m_objectMetadata
@@ -346,14 +346,14 @@ void philAI::CheckBerserk(hero* pHero) {
                     }
                 }
                 break;
-            case 0xbd:
+            case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
                 if (gpGame->m_availableHeroes[cell->m_objectMetadata] != pHero->m_owner) {
                     enemyHero = gpGame->GetHero(cell->m_objectMetadata);
                     enemy = FightValueOfStack(
                         &enemyHero->m_army,
-                        0,
+                        NULL,
                         1,
-                        enemyHero->m_locationType == 0xa8,
+                        enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN),
                         enemyHero->m_occupiedTown
                     );
                     if (enemy * 2 > heroFightValue)
@@ -1150,32 +1150,32 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
     adjustedValue1 = (float)GetBuildingBaseResourceValue(
         currentTownRace4, building, (signed char)(building == 0 ? townPointer->m_buildState : 0)
     );
-    if (building == 0 && townPointer->m_buildState > 0)
+    if (building == BUILDING_SLOT_MAGE_GUILD && townPointer->m_buildState > 0)
         adjustedValue1 -= (float)GetBuildingBaseResourceValue(currentTownRace4, building, townPointer->m_buildState - 1);
     switch (building) {
-    case 6:
+    case BUILDING_SLOT_CASTLE:
         adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33) * adjustedValue1;
         buildingLevel = dwellingTotal7;
         adjustedValue1 = (1.6 - buildingLevel * 0.2) * adjustedValue1;
         break;
-    case 0:
+    case BUILDING_SLOT_MAGE_GUILD:
         adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33) * adjustedValue1;
         adjustedValue1 = (1.33 - gpCurPlayer->BuildingsOwned(currentTownRace4, 0, 0) * 0.33) * adjustedValue1;
         break;
-    case 1:
+    case BUILDING_SLOT_THIEVES_GUILD:
         break;
-    case 3:
+    case BUILDING_SLOT_SHIPYARD:
         adjustedValue1 = 0;
         break;
-    case 4:
+    case BUILDING_SLOT_WELL:
         adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue + 0.66) * adjustedValue1;
         adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase * 2.0f + 0.33) * adjustedValue1;
         adjustedValue1 = (dwellingTotal7 * 0.33 + 0.66) * adjustedValue1;
         break;
-    case 2:
-        adjustedValue1 = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0) / 3000.0f * adjustedValue1;
+    case BUILDING_SLOT_TAVERN:
+        adjustedValue1 = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) / 3000.0f * adjustedValue1;
         break;
-    case 7:
+    case BUILDING_SLOT_DWELLING_FIRST:
     case 8:
     case 9:
     case 10:
@@ -1194,7 +1194,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         adjustedValue1 = (1.0 - gpCurPlayer->BuildingsOwned(currentTownRace4, building, 0) * 0.05) * adjustedValue1;
         if (building - 7 < highestDwellingId)
             adjustedValue1 = (1.66 - dwellingTotal7 * 0.33) * adjustedValue1;
-        if (townPointer->m_buildings & 0x10)
+        if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
             adjustedValue1 = adjustedValue1 * 1.1;
         for (dwellingIndex = 0; dwellingIndex < 6; dwellingIndex++) {
             currentCreatureType = gDwellingType[townPointer->m_type][dwellingIndex];
@@ -1208,7 +1208,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         break;
     }
     LikelihoodOfEnemyAttacking(
-        townPointer, 0, estimatedAttackChance36, enemyStrengthLocal28, currentAttackTurns, projectedAttackValue,
+        townPointer, NULL, estimatedAttackChance36, enemyStrengthLocal28, currentAttackTurns, projectedAttackValue,
         estimatedAttackWeeks8, dangerRating
     );
     adjustedValue1 = (1.0 - dangerRating * 3.0) * adjustedValue1;
@@ -1525,7 +1525,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     best.type = 1;
     best.what = bestHero;
     bestValue = bestCost;
-    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))
+    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == 0xbd)
         bestValue -= 200.0f;
 }
 

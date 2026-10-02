@@ -223,7 +223,7 @@ VA(0x0046c29a, 0x53)
 void hero::RedrawHeroScreen(void) {
     gpResourceManager->GetBackdrop("heroscrn.bmp", gpWindowManager->m_screen);
     heroWin->DrawWindow();
-    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
 // donor PoL RVA 0x0006f354; preferred Buka symbol ?HeroView@@YIHHHH@Z
@@ -405,7 +405,7 @@ void hero::HeroScreenUpdate(void) {
         heroWin->BroadcastMessage(message);
     }
     heroWin->DrawWindow();
-    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
 // donor PoL RVA 0x0006cbdb; preferred Buka symbol ?UpdateArmies@hero@@QAEXXZ
@@ -532,7 +532,7 @@ void hero::Deallocate(void) {
     }
     if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
         || !gpAdvManager->m_heroContextLocked)
-        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, NULL, 1);
+        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, 0, 1);
     if (!gbCombatSurrender) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_army.Dismiss(i);

@@ -351,7 +351,7 @@ void resourceManager::PointToFile(short fileId)
 VA(0x00476380, 0xe4)
 unsigned long resourceManager::GetFileSize(short fileId)
 {
-    if (m_aggregateDir == 0)
+    if (m_aggregateDir == NULL)
         return 0;
     short entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)

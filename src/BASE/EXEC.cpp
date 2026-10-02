@@ -46,7 +46,7 @@ void executive::ShutDownSystem(void)
     gpSoundManager->Close();
     baseManager *next;
     baseManager *manager = m_managerListHead;
-    while (manager != NULL) {
+    while (manager != 0) {
         next = manager->m_next;
         if (manager != gpWindowManager && manager != gpMouseManager)
             RemoveManager(manager);
@@ -72,7 +72,7 @@ short executive::DoDialog(baseManager *manager)
     executive dialogExecutive;
     int count = 0;
     currentManager = m_managerListHead;
-    while (currentManager != NULL) {
+    while (currentManager != 0) {
         savedManagers[count] = currentManager;
         savedPreviousManagers[count] = currentManager->m_prev;
         savedNextManagers[count] = currentManager->m_next;

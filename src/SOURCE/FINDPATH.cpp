@@ -344,12 +344,12 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
         }
 
         if ((1 << gSearchDirection) & 0x83) {
-            if (gSearchCurrentCell->m_objectIndex != 0xff && !(gSearchCurrentCell->m_flags & 0x80)) {
+            if (gSearchCurrentCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchCurrentCell->m_flags & 0x80)) {
                 gSearchTerrain = -1;
                 goto storeDirection;
             }
         } else if ((1 << gSearchDirection) & 0x38) {
-            if (gSearchNextCell->m_objectIndex != 0xff && !(gSearchNextCell->m_flags & 0x80)) {
+            if (gSearchNextCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchNextCell->m_flags & 0x80)) {
                 if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
                     gSearchTriggerType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     if (gSearchTriggerType != MAP_OBJECT_MONSTER && gSearchTriggerType != MAP_OBJECT_RESOURCE && gSearchTriggerType != MAP_OBJECT_TREASURE_CHEST

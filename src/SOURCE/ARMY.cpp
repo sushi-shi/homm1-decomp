@@ -770,13 +770,13 @@ void army::DrawToBuffer(short x, short y) {
     switch (m_unknown08) {
         case 0:
             switch (m_creatureType) {
-                case 22:
+                case CREATURE_HYDRA:
                     if (m_unknown33)
                         m_standIcon->DimToBuffer(x, y, m_unknown09 + 8, m_facing, flip);
                     break;
-                case 11:
-                case 17:
-                case 23:
+                case CREATURE_CYCLOPS:
+                case CREATURE_PHOENIX:
+                case CREATURE_DRAGON:
                     if (m_unknown33)
                         m_standIcon->DimToBuffer(x, y, m_unknown09 + 15, m_facing, flip);
                     break;
@@ -785,19 +785,19 @@ void army::DrawToBuffer(short x, short y) {
                         m_standIcon->DimToBuffer(x, y, m_unknown09 + 9, m_facing, flip);
                     break;
             }
-            if (m_unknown09 > 4 && m_creatureType != 22)
+            if (m_unknown09 > 4 && m_creatureType != CREATURE_HYDRA)
                 m_standIcon->DrawToBuffer(x, y, 5, m_facing, flip);
             m_standIcon->DrawToBuffer(x, y, m_unknown09, m_facing, flip);
             if (m_hex == gpCombatManager->m_limitCreatureHex && gpCombatManager->m_limitCreature == 1) {
                 m_standIcon->FillToBuffer(x, y, 0, 0xe4, m_facing, flip);
                 outlined = 1;
             }
-            if (m_spellEffect != -1) {
+            if (m_spellEffect != SPELL_NONE) {
                 switch (m_spellEffect) {
-                    case 5:
-                    case 8:
-                    case 9:
-                    case 12:
+                    case SPELL_HASTE:
+                    case SPELL_BLESS:
+                    case SPELL_PROTECTION:
+                    case SPELL_ANTI_MAGIC:
                         outlineColor = 0xf7;
                         break;
                     default:
@@ -850,13 +850,13 @@ void army::DrawToBuffer(short x, short y) {
         case 3:
             if (!(m_stats.attributes & 0x10)) {
                 switch (m_creatureType) {
-                    case 22:
+                    case CREATURE_HYDRA:
                         if (m_unknown33)
                             m_standIcon->DimToBuffer(x, y, m_unknown09 + 8, m_facing, flip);
                         break;
-                    case 11:
-                    case 17:
-                    case 23:
+                    case CREATURE_CYCLOPS:
+                    case CREATURE_PHOENIX:
+                    case CREATURE_DRAGON:
                         if (m_unknown33)
                             m_standIcon->DimToBuffer(x, y, m_unknown09 + 15, m_facing, flip);
                         break;
@@ -879,7 +879,7 @@ void army::DrawToBuffer(short x, short y) {
             } else if (m_facing == 1) {
                 x -= 39;
             }
-            if (m_spellEffect != -1)
+            if (m_spellEffect != SPELL_NONE)
                 gpCombatManager->m_combatIcons[8]->DrawToBuffer(x, y - 40, m_spellEffect, 0, 0);
             gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, flip);
             break;

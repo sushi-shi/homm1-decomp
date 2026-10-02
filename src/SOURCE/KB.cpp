@@ -242,8 +242,8 @@ int oldmain(void) {
     gpWindowManager->m_updateFlags = 1;
     gpPhilAI->m_debugFont = gpResourceManager->GetFont("smalfont.fnt");
     if (giShowIntro) {
-        FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
-        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
+        FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
         font = gpResourceManager->GetFont("bigfont.fnt");
         font->DrawString("Loading Heroes of Might and Magic for Windows 95 (version 1.0)", 10, 10, 1);
         gpWindowManager->UpdateScreenRegion(10, 10, 600, 20);
@@ -271,7 +271,7 @@ int oldmain(void) {
         if (!backdropLoaded) {
             if (gGameCommand != 4) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 if (initialMainScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
@@ -360,7 +360,7 @@ int oldmain(void) {
             case 6:
                 gpWindowManager->FadeScreen(1, 8, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 done = 0;
                 gpInputManager->Flush();
@@ -375,7 +375,7 @@ int oldmain(void) {
                 }
                 gpWindowManager->FadeScreen(1, 8, gPalette);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 goto mainMenu;
             case 4:
@@ -426,7 +426,7 @@ int oldmain(void) {
                 if (!backdropLoaded) {
                     gpWindowManager->FadeScreen(1, 8, gPalette);
                     gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                     gpWindowManager->FadeScreen(0, 8, gPalette);
                     backdropLoaded = 1;
                 }
@@ -475,7 +475,7 @@ int oldmain(void) {
                                                   : lowResVideos[giEndSequence]);
                 }
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 gpWindowManager->m_updateFlags = 1;
                 backdropLoaded = 1;
@@ -496,7 +496,7 @@ int oldmain(void) {
                 giHighScoreRank = -1;
                 gpSoundManager->SwitchAmbientMusic(48);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 backdropLoaded = 1;
             }
@@ -1352,7 +1352,7 @@ VA(0x00452e00, 0x99)
 void HandleRemoteDeadPlayerExit(int position) {
     if (position == giThisGamePos) {
         if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
-            ShutDown(NULL);
+            ShutDown(0);
         RemoteCleanup();
     } else if (giNumHumanPlayers == 2) {
         giNumHumanPlayers--;

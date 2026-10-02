@@ -214,7 +214,7 @@ void ComputeUALoc(int player) {
                 heading = 0;
                 tries = 0;
                 while (!(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                         && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
+                         && gpGame->m_map[x][y].m_triggerType == 0
                          && gpGame->m_map[x][y].m_objectIndex == 0xff
                          && gpGame->m_map[x][y].m_overlayIndex == 0xff
                          && gpGame->m_map[x][y].m_tileIndex >= 20)) {
@@ -684,10 +684,10 @@ short NewGameHandler(tag_message& message) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
                 helpIndex = -1;
                 switch (message.id) {
-                    case 0x7802:
+                    case DIALOG_BUTTON_2:
                         helpIndex = 0;
                         break;
-                    case 0x7801:
+                    case DIALOG_BUTTON_1:
                         helpIndex = 1;
                         break;
                     case 0x13:
@@ -730,20 +730,20 @@ short NewGameHandler(tag_message& message) {
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gNewGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog(gNewGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             }
         } else {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 0x7802:
+                        case DIALOG_BUTTON_2:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < 4; i++) {
                                 if (gpGame->m_players[i].m_difficulty > 0)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
-                                NormalDialog("A game requires at least one iPlayer.", 1, 0xb1, 0x3c, -1, 0, -1, 0, -1);
+                                NormalDialog("A game requires at least one iPlayer.", NORMAL_DIALOG_TYPE_OK, 0xb1, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                                 break;
                             } else {
                                 if (!gpGame->m_players[1].m_difficulty) {
@@ -760,7 +760,7 @@ short NewGameHandler(tag_message& message) {
                                     gpGame->m_players[3].m_difficulty = 0;
                                 }
                             }
-                        case 0x7801:
+                        case DIALOG_BUTTON_1:
                             gpWindowManager->m_dialogResult = message.id;
                             message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
@@ -1331,7 +1331,7 @@ void game::NewMap(char* mapName) {
     i = Random(9, 62);
     j = Random(9, 62);
     ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
-    while (m_map[i][j].m_objectIndex != 0xff || m_map[i][j].m_overlayIndex != 0xff || m_map[i][j].m_tileIndex < 20
+    while (m_map[i][j].m_objectIndex != MAP_CELL_NO_FRAME || m_map[i][j].m_overlayIndex != MAP_CELL_NO_FRAME || m_map[i][j].m_tileIndex < 20
            || (giNumHumanPlayers == 1
                && abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
                           + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y)
@@ -1399,7 +1399,7 @@ void game::SettleOverlay(int x, int y) {
     mapCell* cell;
     mapCell* cellEast;
     cell = &m_map[x][y];
-    if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
+    if (cell->m_objectIndex == MAP_CELL_NO_FRAME && cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
         switch (cell->m_triggerType) {
             case 0x35:
             case 0x39:
@@ -1411,7 +1411,7 @@ void game::SettleOverlay(int x, int y) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
-                        cell->m_overlayIndex = 0xff;
+                        cell->m_overlayIndex = MAP_CELL_NO_FRAME;
                     }
                 }
                 break;
@@ -1423,7 +1423,7 @@ void game::SettleOverlay(int x, int y) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
-                        cell->m_overlayIndex = 0xff;
+                        cell->m_overlayIndex = MAP_CELL_NO_FRAME;
                     } else {
                         cell->m_unknown07 |= 0x80;
                     }
@@ -1457,27 +1457,27 @@ void game::RandomizeEvents(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map[x][y];
             switch (cell->m_triggerType) {
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_GAZEBO:
+                case 0x8a:
                     cell->m_objectMetadata = siteNum;
                     siteNum++;
                     break;
-                case MAP_OBJECT_WHIRLPOOL:
-                    cell->m_triggerType |= MAP_TRIGGER_EVENT;
+                case 0x2c:
+                    cell->m_triggerType |= 0x80;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_OBELISK:
+                case 0x9b:
                     cell->m_objectMetadata = obeliskId;
                     obeliskId++;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_STATUE:
+                case 0xa4:
                     cell->m_objectMetadata = 1;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_SKELETON:
+                case 0x84:
                     if (Random(0, 9) == 3)
                         cell->m_objectMetadata = 2;
                     else
                         cell->m_objectMetadata = 1;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_DAEMON_CAVE:
+                case 0x85:
                     switch (Random(0, 99) % 10) {
                         case 0:
                         case 1:
@@ -1499,23 +1499,23 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_TREASURE_CHEST:
+                case 0x86:
                     cell->m_objectMetadata = Random(2, 4);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_CAMPFIRE:
+                case 0x88:
                     cell->m_objectMetadata = Random(4, 6) << 4;
                     cell->m_objectMetadata |= (signed char)Random(0, 5);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_ANCIENT_LAMP:
+                case 0x8b:
                     cell->m_objectMetadata = Random(0, 3) + 2;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_SHIPWRECK) {
-                        cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
+                case 0xa3:
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & 0x7f) != 0x23) {
+                        cell->m_triggerType &= 0x7f;
                         break;
                     }
                     goto treasure;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_GRAVEYARD:
+                case 0x8c:
                 treasure:
                     switch (Random(0, 99) % 10) {
                         case 0:
@@ -1538,32 +1538,32 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
+                case 0x8d:
                     cell->m_objectMetadata = Random(10, 30);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
+                case 0x8e:
                     cell->m_objectMetadata = Random(20, 50);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
+                case 0x8f:
                     cell->m_objectMetadata = Random(0, 127) % 4 + 1;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
+                case 0x90:
                     cell->m_objectMetadata = Random(0, 98) % 3 + 1;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
+                case 0x91:
                     cell->m_objectMetadata = Random(20, 50);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
+                case 0x98:
                     cell->m_objectMetadata = 1;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER:
+                case 0x9a:
                     if (!(unsigned char)cell->m_objectMetadata) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
                         if (Random(0, 99) <= 25 && cell->m_objectIndex != 26)
                             cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata | 0x80;
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE:
+                case 0x9d:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
                         cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata - 61;
@@ -1580,7 +1580,7 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_SPELL_SHRINE:
+                case 0xa2:
                     switch (Random(0, 9)) {
                         case 0:
                         case 1:
@@ -1599,18 +1599,18 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
+                case 0xa7:
                     cell->m_objectMetadata = Random(10, 20);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP
-                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP) {
-                        cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
+                case 0xaa:
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & 0x7f) != 0x2a
+                        || (m_map[x + 1][y].m_triggerType & 0x7f) != 0x2a) {
+                        cell->m_triggerType &= 0x7f;
                         break;
                     }
                     cell->m_objectMetadata = Random(30, 50);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT:
+                case 0xb0:
                     switch (Random(0, 99) % 10) {
                         case 0:
                         case 1:
@@ -1630,7 +1630,7 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+                case 0xa8:
                     id = GetTownId(x, y);
                     for (j = 0; j < 3; j++) {
                         for (i = 0; i < 4; i++) {
@@ -1640,19 +1640,19 @@ void game::RandomizeEvents(void) {
                     }
                     SetupTown(id, 0);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB:
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_MINE:
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
+                case 0x81:
+                case 0x99:
+                case 0xa0:
                     id = GetMineId(x, y);
                     for (j = 0; j < 2; j++) {
                         for (i = 0; i < 2; i++) {
                             if (!(unsigned char)m_map[x + i][y - j].m_objectMetadata
-                                || (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK))
+                                || (cell->m_triggerType & 0x7f) == (m_map[x + i][y - j].m_triggerType & 0x7f))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_WINDMILL:
+                case 0xad:
                     cell->m_objectMetadata = Random(1, 5);
                     break;
             }
@@ -1670,11 +1670,11 @@ void game::RandomizeEvents(void) {
             SettleOverlay(x, y);
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
                 switch (cell->m_triggerType) {
-                    case MAP_OBJECT_MOUNTAINS:
+                    case 0x34:
                     case 0x35:
                     case 0x36:
                     case 0x37:
-                    case MAP_OBJECT_TREES:
+                    case 0x38:
                     case 0x39:
                     case 0x3a:
                     case 0x3b:
@@ -1690,60 +1690,60 @@ void game::RandomizeEvents(void) {
             cell = &m_map[x][y];
             if (cell->m_triggerType == 0x32)
                 cell->m_flags |= 0x80;
-            if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
-                switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
-                    case MAP_OBJECT_ALCHEMIST_LAB:
-                    case MAP_OBJECT_SIGNPOST:
-                    case MAP_OBJECT_BUOY:
-                    case MAP_OBJECT_SKELETON:
-                    case MAP_OBJECT_DAEMON_CAVE:
-                    case MAP_OBJECT_TREASURE_CHEST:
-                    case MAP_OBJECT_FAERIE_RING:
-                    case MAP_OBJECT_CAMPFIRE:
-                    case MAP_OBJECT_FOUNTAIN:
-                    case MAP_OBJECT_GAZEBO:
-                    case MAP_OBJECT_ANCIENT_LAMP:
-                    case MAP_OBJECT_GRAVEYARD:
-                    case MAP_OBJECT_STRAW_HUT:
-                    case MAP_OBJECT_HOUSE:
-                    case MAP_OBJECT_CABIN:
-                    case MAP_OBJECT_DWARF_LOG_CABIN:
-                    case MAP_OBJECT_PEASANT_LOG_CABIN:
-                    case MAP_OBJECT_INN_1:
-                    case MAP_OBJECT_INN_2:
-                    case MAP_OBJECT_INN_3:
-                    case MAP_OBJECT_INN_4:
-                    case MAP_OBJECT_DRAGON_CITY:
-                    case MAP_OBJECT_LIGHTHOUSE:
-                    case MAP_OBJECT_WATERWHEEL:
-                    case MAP_OBJECT_MINE:
-                    case MAP_OBJECT_MONSTER:
-                    case MAP_OBJECT_OBELISK:
-                    case MAP_OBJECT_OASIS:
-                    case MAP_OBJECT_RESOURCE:
-                    case MAP_OBJECT_COAST:
-                    case MAP_OBJECT_SAWMILL:
-                    case MAP_OBJECT_RANKING_SHRINE:
-                    case MAP_OBJECT_SPELL_SHRINE:
-                    case MAP_OBJECT_SHIPWRECK:
-                    case MAP_OBJECT_STATUE:
-                    case MAP_OBJECT_SWAN_POND:
-                    case MAP_OBJECT_DESERT_TENT:
-                    case MAP_OBJECT_TOWN:
-                    case MAP_OBJECT_STONE_LITHS:
-                    case MAP_OBJECT_WAGON_CAMP:
-                    case MAP_OBJECT_WELL:
-                    case MAP_OBJECT_WHIRLPOOL:
-                    case MAP_OBJECT_WINDMILL:
-                    case MAP_OBJECT_MEGALITH:
-                    case MAP_OBJECT_ARTIFACT:
-                    case MAP_OBJECT_NOTHING_HERE:
-                    case MAP_OBJECT_HERO:
-                    case MAP_OBJECT_SHIP:
+            if (cell->m_triggerType & 0x80) {
+                switch (cell->m_triggerType & 0x7f) {
+                    case 0x1:
+                    case 0x2:
+                    case 0x3:
+                    case 0x4:
+                    case 0x5:
+                    case 0x6:
+                    case 0x7:
+                    case 0x8:
+                    case 0x9:
+                    case 0xa:
+                    case 0xb:
+                    case 0xc:
+                    case 0xd:
+                    case 0xe:
+                    case 0xf:
+                    case 0x10:
+                    case 0x11:
+                    case 0x12:
+                    case 0x13:
+                    case 0x14:
+                    case 0x15:
+                    case 0x16:
+                    case 0x17:
+                    case 0x18:
+                    case 0x19:
+                    case 0x1a:
+                    case 0x1b:
+                    case 0x1c:
+                    case 0x1d:
+                    case 0x1f:
+                    case 0x20:
+                    case 0x21:
+                    case 0x22:
+                    case 0x23:
+                    case 0x24:
+                    case 0x26:
+                    case 0x27:
+                    case 0x28:
+                    case 0x29:
+                    case 0x2a:
+                    case 0x2b:
+                    case 0x2c:
+                    case 0x2d:
+                    case 0x2f:
+                    case 0x30:
+                    case 0x31:
+                    case 0x3d:
+                    case 0x3e:
                     case 0x3f:
                         break;
                     default:
-                        cell->m_triggerType -= MAP_TRIGGER_EVENT;
+                        cell->m_triggerType -= 0x80;
                         break;
                 }
             }
@@ -2830,16 +2830,16 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     townNum = GetTownId(x, y);
     for (j = 0; j < 3; j++) {
         for (i = 0; i < 4; i++) {
-            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) > 0
-                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) <= 0x30) {
+            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
+                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
                 m_map[x - 2 + i][y - 2 + j].m_unknown07 |= 0x28;
             } else {
-                m_map[x - 2 + i][y - 2 + j].m_triggerType = 0x28;
+                m_map[x - 2 + i][y - 2 + j].m_triggerType = MAP_OBJECT_TOWN;
                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
             }
         }
     }
-    m_map[x][y].m_triggerType |= 0x80;
+    m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
     town = GetTown(townNum);
     town->m_turnsOwned = 10;
     if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
@@ -2876,14 +2876,14 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
             m_castleRecs[townNum].m_buildings = 0;
     }
     if (isCastle) {
-        m_castleRecs[townNum].m_buildings |= 0xc0;
+        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_FIRST));
         m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
-        if (m_castleRecs[townNum].m_buildings & 0x20)
-            m_castleRecs[townNum].m_buildings -= 0x20;
+        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
+            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
     } else {
-        m_castleRecs[townNum].m_buildings |= 0x20;
-        if (m_castleRecs[townNum].m_buildings & 0x40)
-            m_castleRecs[townNum].m_buildings -= 0x40;
+        m_castleRecs[townNum].m_buildings |= (1 << BUILDING_SLOT_TENT);
+        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_CASTLE))
+            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_CASTLE);
         SetupTown(townNum, 0);
     }
 }
@@ -2908,22 +2908,22 @@ void game::RandomizeMine(signed char x, signed char y) {
     terrain = giGroundToTerrain[m_map[x][y].m_tileIndex];
     for (tries = 0; tries < 30; tries++) {
         switch (terrain) {
-            case TERRAIN_GRASS:
-            case TERRAIN_DIRT:
+            case 1:
+            case 6:
                 type = Random(1, 6);
                 if (type == 1)
                     type = 0;
                 break;
-            case TERRAIN_SNOW:
+            case 2:
                 type = Random(2, 6);
                 break;
-            case TERRAIN_SWAMP:
+            case 3:
                 type = Random(0, 6);
                 break;
-            case TERRAIN_LAVA:
+            case 4:
                 type = 1;
                 break;
-            case TERRAIN_DESERT:
+            case 5:
             default:
                 type = Random(1, 6);
                 break;
@@ -2941,10 +2941,10 @@ void game::RandomizeMine(signed char x, signed char y) {
             break;
         default:
             switch (terrain) {
-                case TERRAIN_GRASS:
+                case 1:
                     upFrame = 0xf;
                     break;
-                case TERRAIN_SNOW:
+                case 2:
                     upFrame = 0x13;
                     break;
                 default:
@@ -2959,10 +2959,10 @@ void game::RandomizeMine(signed char x, signed char y) {
             break;
         case 1:
             switch (terrain) {
-                case TERRAIN_SWAMP:
+                case 3:
                     objFrame = 0x2b;
                     break;
-                case TERRAIN_LAVA:
+                case 4:
                     objFrame = 0x23;
                     break;
                 default:
@@ -2972,16 +2972,16 @@ void game::RandomizeMine(signed char x, signed char y) {
             break;
         default:
             switch (terrain) {
-                case TERRAIN_GRASS:
+                case 1:
                     objFrame = 0x11;
                     break;
-                case TERRAIN_SNOW:
+                case 2:
                     objFrame = 0x15;
                     break;
-                case TERRAIN_SWAMP:
+                case 3:
                     objFrame = 0x17;
                     break;
-                case TERRAIN_DESERT:
+                case 5:
                     objFrame = 0xd;
                     break;
                 default:
@@ -3008,8 +3008,8 @@ void game::RandomizeMine(signed char x, signed char y) {
     mineIdx = GetMineId(x, y);
     for (k = 0; k < 2; k++) {
         for (j = 0; j < 2; j++) {
-            if ((m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
-                && (m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
+            if ((m_map[x + j][y - k].m_triggerType & 0x7f) > 0
+                && (m_map[x + j][y - k].m_triggerType & 0x7f) <= 0x30) {
                 m_map[x + j][y - k].m_unknown07 |= bits;
             } else {
                 m_map[x + j][y - k].m_objectMetadata = mineIdx;
@@ -3017,7 +3017,7 @@ void game::RandomizeMine(signed char x, signed char y) {
             }
         }
     }
-    m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
+    m_map[x][y].m_triggerType |= 0x80;
     m_mines[mineIdx].type = type;
 }
 
@@ -3949,7 +3949,7 @@ void game::ProcessOnMapHeroes(void) {
     for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
-            if ((cell->m_triggerType & 0x7f) == 0x47) {
+            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x47) {
                 extra = (mapHeroExtra*)ppMapExtra[(unsigned char)cell->m_objectMetadata];
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
@@ -3957,7 +3957,7 @@ void game::ProcessOnMapHeroes(void) {
                     if (theHero->m_army.m_creatureCounts[k] > 0)
                         theHero->m_army.m_creatureTypes[k] = extra->troopTypes[k];
                     else
-                        theHero->m_army.m_creatureTypes[k] = -1;
+                        theHero->m_army.m_creatureTypes[k] = CREATURE_NONE;
                 }
                 for (j = 0; j < 4; j++) {
                     if (extra->artifacts[j] >= 0)
@@ -3978,7 +3978,7 @@ void game::ProcessOnMapHeroes(void) {
                 m_players[theHero->m_owner].m_heroCount++;
                 if (mapY > 0) {
                     north = &m_map[mapX][mapY - 1];
-                    if (north->m_triggerType == 0xa8) {
+                    if (north->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         theHero->m_y--;
                         townId = GetTownId(mapX, mapY - 1);
                         town = GetTown(townId);
@@ -3986,11 +3986,11 @@ void game::ProcessOnMapHeroes(void) {
                     }
                 }
                 cell->m_objectTileset = 0;
-                cell->m_objectIndex = 0xff;
+                cell->m_objectIndex = MAP_CELL_NO_FRAME;
                 cell->m_overlayTileset = 0;
-                cell->m_overlayIndex = 0xff;
+                cell->m_overlayIndex = MAP_CELL_NO_FRAME;
                 cell->m_objectMetadata = 0;
-                cell->m_triggerType = 0;
+                cell->m_triggerType = MAP_OBJECT_NONE;
                 SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gClassVisionRange[theHero->m_unknown1c]);
             }
         }
@@ -4135,7 +4135,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
         ((int*)sendPacket)[1] = playerExited;
         status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
         if (!status)
-            ShutDown(NULL);
+            ShutDown(0);
 
         segCount = (fileSize - 1) / 200 + 1;
         numBlocks = (segCount - 1) / 100 + 1;
@@ -4159,7 +4159,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                         memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
                         status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
                         if (!status)
-                            ShutDown(NULL);
+                            ShutDown(0);
                     }
                 }
                 LogStr("PreWait");
@@ -4167,7 +4167,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
                 LogStr("PostWait");
                 if (!status)
-                    ShutDown(NULL);
+                    ShutDown(0);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
                     if (((RemoteMessage*)incoming)->payload.data[sendPacketIndex] > 0)
                         acked[block * 100 + sendPacketIndex] = 1;
@@ -4179,9 +4179,9 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 }
             }
         }
-        status = TransmitRemoteData(NULL, remotePlayer, 0, 6, 1, 1, -1, 1);
+        status = TransmitRemoteData(0, remotePlayer, 0, 6, 1, 1, -1, 1);
         if (!status)
-            ShutDown(NULL);
+            ShutDown(0);
         okay = 1;
     }
 

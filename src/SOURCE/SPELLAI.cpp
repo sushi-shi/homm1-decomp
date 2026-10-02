@@ -44,9 +44,9 @@ int combatManager::DoSpellAI(signed char side)
     bestHexWork = -1;
     if (m_heroes[side] == NULL)
         return 0;
-    if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 1)
+    if (m_heroes[m_currentSide]->m_primaryStats[2] == 1)
         giSpellAIEffectShift = 2;
-    else if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 2)
+    else if (m_heroes[m_currentSide]->m_primaryStats[2] == 2)
         giSpellAIEffectShift = 1;
     else
         giSpellAIEffectShift = 0;

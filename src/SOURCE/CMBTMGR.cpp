@@ -358,7 +358,7 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[1][armyCount].m_hex = i * 9 + 1;
             m_armies[1][armyCount].m_stats.attributes &= 0x3f;
             m_hexCells[i * 9 + 1].m_occupantSide = 1;
@@ -374,7 +374,7 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[0][armyCount].m_hex = i * 9 + 7;
             m_armies[0][armyCount].m_stats.attributes &= 0x3f;
             m_hexCells[i * 9 + 7].m_occupantSide = 0;
@@ -400,7 +400,7 @@ void combatManager::GenerateMap(void)
             }
             m_hexCells[y * 9 + x].m_obstacleType = 2;
             m_hexCells[y * 9 + x].m_obstacleIndex = SRandom(0, 2);
-            if ((m_terrainType == 0 || m_terrainType == 4) && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
+            if ((m_terrainType == TERRAIN_WATER || m_terrainType == TERRAIN_LAVA) && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
                 m_hexCells[y * 9 + x].m_obstacleIndex = 0;
         }
     }

@@ -5,6 +5,7 @@
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
+#include <BASE/display.h>
 #include <H1/Macros.h>
 
 // forward declarations:

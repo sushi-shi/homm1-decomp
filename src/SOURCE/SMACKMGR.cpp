@@ -116,8 +116,8 @@ short smackManager::Main(struct tag_message &msg) {
     smk = SmackOpen(gText, SmackOptions[bSmackNum].openFlags | (gpSoundManager->m_digitalDriver ? 0xfe00 : 0), -1);
     LogStr("SmackM3b");
     if (smk) {
-        FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
-        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
+        FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
         SmackSoundOnOff(smk, gConfig.musicVolume);
         if (gbSkipIntro && (bSmackNum == 2 || bSmackNum == 3)) {
             startFrame = 125;
@@ -135,7 +135,7 @@ short smackManager::Main(struct tag_message &msg) {
         gpWindowManager->m_updateFlags = SmackOptions[bSmackNum].updateFlags;
         if (SmackOptions[bSmackNum].fadeIn)
             gpWindowManager->FadeScreen(1, 8, NULL);
-        SmackToBuffer(smk, 0, 0, 640, 480, gpWindowManager->m_screen->m_pixels, 0);
+        SmackToBuffer(smk, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, gpWindowManager->m_screen->m_pixels, 0);
         for (currentFrame = startFrame; currentFrame <= smk->Frames; currentFrame++) {
             SmackDoFrame(smk);
             if (SmackOptions[bSmackNum].fadeIn && currentFrame == startFrame) {
@@ -225,8 +225,8 @@ short smackManager::Main(struct tag_message &msg) {
             else
                 pPalette->m_data = (signed char *)smk->alternatePalette;
             gpWindowManager->FadeScreen(1, 8, pPalette);
-            FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
-            BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
+            FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+            BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
         }
         SmackClose(smk);
     }
