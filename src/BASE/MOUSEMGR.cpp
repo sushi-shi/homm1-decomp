@@ -242,7 +242,7 @@ void mouseManager::SetPointer(short frame) {
             hbmpColor[cursorIndex] = CreateBitmapIndirect(&bmpColor[cursorIndex]);
         }
 
-        mouseIconInfo[cursorIndex].fIcon = 0;
+        mouseIconInfo[cursorIndex].fIcon = FALSE;
         mouseIconInfo[cursorIndex].xHotspot = iHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
         mouseIconInfo[cursorIndex].yHotspot = iHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
         mouseIconInfo[cursorIndex].hbmMask = hbmpAndMask[cursorIndex];
@@ -319,12 +319,12 @@ void mouseManager::SetColorMice(int) {}
 
 VA(0x00476ee0, 0x9)
 void mouseManager::HideSystemCursor(void) {
-    ShowCursor(0);
+    ShowCursor(FALSE);
 }
 
 VA(0x00476ef0, 0x9)
 void mouseManager::ShowSystemCursor(void) {
-    ShowCursor(1);
+    ShowCursor(TRUE);
 }
 
 // Mouse-manager data, initialized from retail .data (0x004a0e70..) and

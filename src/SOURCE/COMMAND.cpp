@@ -908,8 +908,8 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     int firstX;
 
     for (side = 0; side < 15; side++) {
-        m_winLoseBottomWidgets[side] = 0;
-        m_winLoseBottomTextWidgets[side] = 0;
+        m_winLoseBottomWidgets[side] = NULL;
+        m_winLoseBottomTextWidgets[side] = NULL;
     }
     for (side = 0; side < 2; side++) {
         numLost[side] = 0;
@@ -928,7 +928,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     sprintf(buffer, "Battlefield Casualties");
     m_winLoseBottomTextWidgets[12] =
         new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-    if (m_winLoseBottomTextWidgets[12] == 0)
+    if (m_winLoseBottomTextWidgets[12] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[12], -1);
     for (side = 0; side < 2; side++) {
@@ -940,7 +940,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-        if (m_winLoseBottomTextWidgets[10 + side] == 0)
+        if (m_winLoseBottomTextWidgets[10 + side] == NULL)
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
         if (numLost[side] <= 0) {
@@ -957,7 +957,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5] == 0)
+            if (m_winLoseBottomTextWidgets[side * 5] == NULL)
                 MemError();
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5], -1);
         }
@@ -976,7 +976,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x10,
                 1
             );
-            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
+            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == NULL)
                 MemError();
             buffer = static_cast<char*>(malloc(9));
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
@@ -991,7 +991,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + armyIndex + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == 0)
+            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == NULL)
                 MemError();
             window->AddWidget(m_winLoseBottomWidgets[side * 5 + armyIndex], -1);
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5 + armyIndex], -1);
