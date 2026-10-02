@@ -3561,8 +3561,8 @@ void advManager::DoHeroKnob(void) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + 195)
                 message.y = offset + 195;
-            if (message.y > offset + 268)
-                message.y = offset + 268;
+            if (message.y > offset + 195 + 73)
+                message.y = offset + 195 + 73;
             gpMouseManager->Main(message);
             m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
@@ -3613,8 +3613,8 @@ void advManager::DoTownKnob(void) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + 195)
                 message.y = offset + 195;
-            if (message.y > offset + 268)
-                message.y = offset + 268;
+            if (message.y > offset + 195 + 73)
+                message.y = offset + 195 + 73;
             gpMouseManager->Main(message);
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
