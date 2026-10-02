@@ -167,6 +167,16 @@ extern int gMageBaseResourceValues[];
 extern int gNeutralBaseResourceValues[];
 extern int gDwellingBaseResourceValues[];
 extern char cNetBoxLine[][60];
+// clang-format off
+// ppMapExtra/pwSizeOfMapExtra: the map file's extra records (signs, events,
+// town customizations), addressed by a cell's or town's byte index. Record 0
+// is never allocated, so iMaxMapExtra restarts at FIRST_RECORD (InitVars,
+// ClearMapExtra, game::LoadMap) and ClearMapExtra frees every slot.
+H1_ENUM_CONST_BEGIN(MapExtraConstant)
+    MAP_EXTRA_FIRST_RECORD = 1,
+    MAP_EXTRA_RECORD_CAPACITY = 255
+H1_ENUM_CONST_END(MapExtraConstant)
+// clang-format on
 extern void* ppMapExtra[];
 extern class icon* gBuyBuildIcons;
 extern class icon* gSystemIcons;

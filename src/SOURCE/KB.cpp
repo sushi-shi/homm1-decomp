@@ -1936,14 +1936,14 @@ void InitVars(void) {
     int i;
     NULL_SAMPLE2.pSample = NULL;
     NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
-    iMaxMapExtra = 1;
+    iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
     gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
     gpPhilAI->m_debugFont = NULL;
     gbCombatSurrender = 0;
     gpGame->m_viewArmyResult = 0;
     gbInNewGameSetup = 0;
-    for (i = 0; i < 140; i++)
+    for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
         giTerrainCost[i][0] = TerrainStepCost(i, 0);
@@ -1951,7 +1951,7 @@ void InitVars(void) {
     }
     strcpy(cNetBoxLine[0], "");
     strcpy(cNetBoxLine[1], "");
-    for (i = 0; i < 255; i++)
+    for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++)
         ppMapExtra[i] = NULL;
     hmnuDflt = LoadMenuA((HINSTANCE)hInstApp, "mnuDflt");
     hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
@@ -2121,13 +2121,13 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
 VA(0x004541ef, 0x70)
 void ClearMapExtra(void) {
     int i;
-    for (i = 0; i < 255; i++) {
+    for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++) {
         if (ppMapExtra[i]) {
             free(ppMapExtra[i]);
             ppMapExtra[i] = NULL;
         }
     }
-    iMaxMapExtra = 1;
+    iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
 }
 
 // HoMM1 score-to-monster tables pair a threshold word with a monster word.
