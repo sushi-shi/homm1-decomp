@@ -985,6 +985,71 @@ short ViewArmyHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// Buka 2.1 game::GetRandomNumTroops with HoMM1's 28 creatures.
+VA(0x00440f58, 0x28b)
+signed char game::GetRandomNumTroops(signed char monsterType) {
+    switch (monsterType) {
+        case 0:
+            return Random(30, 80);
+        case 1:
+            return Random(20, 30);
+        case 2:
+            return Random(20, 30);
+        case 3:
+            return Random(12, 25);
+        case 4:
+            return Random(8, 16);
+        case 5:
+            return Random(6, 12);
+        case 6:
+            return Random(25, 40);
+        case 7:
+            return Random(15, 30);
+        case 8:
+            return Random(20, 35);
+        case 9:
+            return Random(10, 20);
+        case 10:
+            return Random(7, 10);
+        case 11:
+            return Random(5, 7);
+        case 12:
+            return Random(20, 40);
+        case 13:
+            return Random(10, 25);
+        case 14:
+            return Random(15, 30);
+        case 15:
+            return Random(10, 25);
+        case 16:
+            return Random(8, 15);
+        case 17:
+            return Random(7, 12);
+        case 18:
+            return Random(20, 50);
+        case 19:
+            return Random(15, 30);
+        case 20:
+            return Random(10, 25);
+        case 21:
+            return Random(10, 16);
+        case 22:
+            return Random(6, 8);
+        case 23:
+            return Random(3, 7);
+        case 24:
+            return Random(20, 40);
+        case 25:
+            return Random(12, 25);
+        case 26:
+            return Random(10, 20);
+        case 27:
+            return Random(4, 9);
+        default:
+            return 3;
+    }
+}
+
 // Buka 2.1 game::TurnOnAIMusic.
 VA(0x004411e3, 0x3d)
 void game::TurnOnAIMusic(void) {

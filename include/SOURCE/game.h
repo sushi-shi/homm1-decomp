@@ -214,7 +214,8 @@ public:
         class army*,
         class armyGroup*
     );
-    int GetRandomNumTroops(int);
+    // HoMM1 retail: byte creature, count returned in AL.
+    signed char GetRandomNumTroops(signed char);
     void TurnOnAIMusic(void);
     void TurnOffAIMusic(void);
     void NextPlayer(void);
