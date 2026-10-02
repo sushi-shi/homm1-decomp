@@ -30,7 +30,7 @@ public:
     // Whole-byte trigger: readers mask the low seven type bits and the
     // 0x80 event bit; DemobilizeCurrHero stores the hero trigger directly.
     unsigned char m_triggerType;
-    signed char m_objectMetadata;
+    unsigned char m_objectMetadata;
 };
 #pragma pack(pop)
 

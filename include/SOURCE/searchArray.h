@@ -12,22 +12,25 @@ class army;
 H1_ENUM_BEGIN(SearchStorageConstant)
     SEARCH_QUEUE_CAPACITY = 1024,
     SEARCH_CELL_CAPACITY = 5184,
+    SEARCH_GRID_SIZE = 72,
     SEARCH_FLAG_BIT_COUNT = 1,
     SEARCH_DIRECTION_BIT_COUNT = 4,
     SEARCH_PATH_CAPACITY = 256
 H1_ENUM_END(SearchStorageConstant)
 
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
+// HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
+// (CheckReload shifts it right four; the path builder masks 0xf).
 #pragma pack(push, 1)
 struct searchNode {
     unsigned char x;
     unsigned char y;
-    unsigned short distance;
+    unsigned short direction : SEARCH_DIRECTION_BIT_COUNT;
+    unsigned short distance : 12;
     unsigned char visited : SEARCH_FLAG_BIT_COUNT;
     unsigned char unknownFlag : SEARCH_FLAG_BIT_COUNT;
     unsigned char rvFlag1 : SEARCH_FLAG_BIT_COUNT;
     unsigned char rvFlag2 : SEARCH_FLAG_BIT_COUNT;
-    unsigned char direction : SEARCH_DIRECTION_BIT_COUNT;
     union {
         struct {
             unsigned char adjacentMonsterX;
@@ -52,7 +55,8 @@ public:
     int m_specialTargetX;
     int m_specialTargetY;
     searchNode m_queue[SEARCH_QUEUE_CAPACITY];
-    searchNode m_cells[SEARCH_CELL_CAPACITY];
+    // Retail indexes the [x][y] grid with a 648-byte row stride.
+    searchNode m_cells[SEARCH_GRID_SIZE][SEARCH_GRID_SIZE];
     // Retail DoDimensionDoor reads the path directions at +0xda54.
     unsigned char m_directions[SEARCH_PATH_CAPACITY];
     // --- constructors ---

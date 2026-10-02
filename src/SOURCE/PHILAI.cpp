@@ -113,7 +113,82 @@ void philAI::DoAllHeroInteractions(void) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.641449;margin=0.572995;shape=0.312;size=0.907;calls=0.824;strings=CheckBuy End  |CheckBuy Start;alternate=pol20:void philAI::CheckBuyStuff(void)@0x00037fdf
 VA(0x0041a2af, 0x445)
-void philAI::CheckBuyStuff(void) {}
+void philAI::CheckBuyStuff(void) {
+    int done = 0;
+    int boughtSomething = 0;
+    BHC bestBHC;
+    town* dockTown;
+
+    gpGame->CheckHeroConsistency();
+    if (gpCurPlayer->m_resources[RESOURCE_GOLD] < 200)
+        return;
+    LogInt("CheckBuy Start", gpCurPlayer->m_resources[RESOURCE_GOLD]);
+    dockTown = 0;
+    if (giBuildShipyard[giCurPlayer] >= 0)
+        dockTown = &gpGame->m_castleRecs[giBuildShipyard[giCurPlayer]];
+    else if (giBuildBoat[giCurPlayer] >= 0)
+        dockTown = &gpGame->m_castleRecs[giBuildBoat[giCurPlayer]];
+    if (giBuildShipyard[giCurPlayer] >= 0)
+        dockTown = gpGame->GetTown(giBuildShipyard[giCurPlayer]);
+    else if (giBuildBoat[giCurPlayer] >= 0)
+        dockTown = gpGame->GetTown(giBuildBoat[giCurPlayer]);
+    if (dockTown && dockTown->m_owner != giCurPlayer) {
+        giBuildShipyard[giCurPlayer] = -1;
+        giBuildBoat[giCurPlayer] = giBuildShipyard[giCurPlayer];
+        dockTown = 0;
+    }
+    if (giBuildShipyard[giCurPlayer] >= 0) {
+        if (CanBuy(dockTown, 3) && CanBuild(dockTown, 3)) {
+            BuildBuilding(dockTown, 3);
+            giBuildShipyard[giCurPlayer] = -1;
+        } else {
+            gpCurPlayer->m_resources[RESOURCE_GOLD] -= 2000;
+            gpCurPlayer->m_resources[RESOURCE_WOOD] -= 20;
+        }
+    }
+    if (giBuildBoat[giCurPlayer] >= 0) {
+        if ((dockTown->m_buildings & 8) && gpCurPlayer->m_resources[RESOURCE_GOLD] >= 1000
+            && gpCurPlayer->m_resources[RESOURCE_WOOD] >= 10) {
+            if (gpGame->CreateBoat(dockTown->m_x - 1, dockTown->m_y + 1) != -1) {
+                gpCurPlayer->m_resources[RESOURCE_GOLD] -= 1000;
+                gpCurPlayer->m_resources[RESOURCE_WOOD] -= 10;
+            }
+            giBuildBoat[giCurPlayer] = -1;
+        } else {
+            gpCurPlayer->m_resources[RESOURCE_GOLD] -= 1000;
+            gpCurPlayer->m_resources[RESOURCE_WOOD] -= 10;
+        }
+    }
+    DoAllHeroInteractions();
+    while (!done) {
+        GetBestBHC(giCurPlayer, bestBHC);
+        if (bestBHC.type >= 0 && CanBuyBHC(bestBHC)) {
+            switch (bestBHC.type) {
+            case 0:
+                BuildBuilding(bestBHC.pTown, bestBHC.what);
+                break;
+            case 1:
+                BuildHero(bestBHC.pTown, bestBHC.what);
+                break;
+            case 2:
+                BuildCreature(bestBHC.pTown, bestBHC.what, bestBHC.num);
+                break;
+            }
+            boughtSomething = 1;
+        } else
+            done = 1;
+    }
+    if (giBuildShipyard[giCurPlayer] >= 0) {
+        gpCurPlayer->m_resources[RESOURCE_GOLD] += 2000;
+        gpCurPlayer->m_resources[RESOURCE_WOOD] += 20;
+    }
+    if (giBuildBoat[giCurPlayer] >= 0) {
+        gpCurPlayer->m_resources[RESOURCE_GOLD] += 1000;
+        gpCurPlayer->m_resources[RESOURCE_WOOD] += 10;
+    }
+    DoAllHeroInteractions();
+    LogInt("CheckBuy End  ", gpCurPlayer->m_resources[RESOURCE_GOLD]);
+}
 
 // donor PoL RVA 0x0003849d; preferred Buka symbol ?GoodAdjacent@philAI@@QAEHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -158,7 +233,75 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.433109;margin=0.377228;shape=0.310;size=0.859;calls=0.417;alternate=pol20:void philAI::CheckReload(void)@0x00038785
 VA(0x0041a89d, 0x473)
-void philAI::CheckReload(void) {}
+void philAI::CheckReload(hero* pHero) {
+    int mapY;
+    int mapX;
+    mapCell* visitedCell;
+    int heroFightValue;
+    int enemy;
+    float enemyPressure;
+    float friendly;
+
+    gbTroopReload = 0;
+    fReduceFactor = 1.0f;
+    friendly = 0.0f;
+    enemyPressure = 0.0f;
+    heroFightValue = FightValueOfStack(&pHero->m_army, pHero, 0, 0, 0);
+    if (heroFightValue < 100)
+        heroFightValue = 100;
+    gpSearchArray->SeedPosition(
+        pHero->m_x,
+        pHero->m_y,
+        pHero->m_direction,
+        pHero->m_mobility << 2,
+        pHero->m_eventFlags & 0x80,
+        0,
+        pHero->m_remainingMobility,
+        pHero->m_unknown1c,
+        -1,
+        -1,
+        0,
+        0
+    );
+    for (mapX = 0; mapX < 72; mapX++) {
+        for (mapY = 0; mapY < 72; mapY++) {
+            if (gpSearchArray->m_cells[mapX][mapY].visited) {
+                visitedCell = gpAdvManager->GetCell(mapX, mapY);
+                switch (visitedCell->m_triggerType) {
+                case 0xa8:
+                    enemy = FightValueOfStack(
+                        &gpGame->GetTown(visitedCell->m_objectMetadata)->m_army, 0, 0, 0, 0
+                    );
+                    if (gpGame->m_townOwners[visitedCell->m_objectMetadata] == pHero->m_owner) {
+                        if (enemy > heroFightValue * 2)
+                            friendly += ((float)enemy / (heroFightValue * 2) - 1.0f)
+                                        * (pHero->m_mobility + 10)
+                                        / (gpSearchArray->m_cells[mapX][mapY].distance + 10);
+                    } else if (enemy > heroFightValue >> 1) {
+                        enemyPressure += ((float)enemy / (heroFightValue >> 1) - 1.0f)
+                                         * (pHero->m_mobility + 30)
+                                         / (gpSearchArray->m_cells[mapX][mapY].distance + 30);
+                    }
+                    break;
+                case 0xbd:
+                    if (gpGame->m_availableHeroes[visitedCell->m_objectMetadata] != pHero->m_owner) {
+                        enemy = FightValueOfStack(
+                            &gpGame->GetHero(visitedCell->m_objectMetadata)->m_army, 0, 0, 0, 0
+                        );
+                        if (enemy > heroFightValue >> 1)
+                            enemyPressure += ((float)enemy / (heroFightValue >> 1) - 1.0f)
+                                             * (pHero->m_mobility + 30)
+                                             / (gpSearchArray->m_cells[mapX][mapY].distance + 30);
+                    }
+                }
+            }
+        }
+    }
+    if (friendly > 1.0f && enemyPressure > 1.0f) {
+        fReduceFactor = 3.0f / (friendly + enemyPressure + 2.0f);
+        gbTroopReload = 1;
+    }
+}
 
 // donor PoL RVA 0x00038c3d; preferred Buka symbol ?CheckBerserk@philAI@@QAEXXZ
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order

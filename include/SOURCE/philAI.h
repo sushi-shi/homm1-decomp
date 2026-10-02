@@ -54,7 +54,7 @@ public:
     void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
     int GoodAdjacent(class hero*, int*);
-    void CheckReload(void);
+    void CheckReload(class hero*);
     void CheckBerserk(class hero*);
     void DimensionDoorTo(int, int);
     int DoAnywhereDDoorTownGate(int);
@@ -172,6 +172,9 @@ extern int gbHumanPlayer[];
 extern int giHumanTownConquered;
 extern int gbBerserk;
 extern float fBerserkFactor;
+// CheckReload's troop-reload verdict and its reduction factor.
+extern int gbTroopReload;
+extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
