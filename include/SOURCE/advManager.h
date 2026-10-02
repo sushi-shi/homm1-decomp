@@ -113,7 +113,8 @@ public:
     class sample* m_cursorSamples[ADVMGR_CURSOR_SAMPLE_COUNT];
     signed char m_identifyHeroActive;
     signed char m_openState;
-    short m_unknown25e;
+    // Main drops message types outside this mask (Open sets 0x32f).
+    short m_messageTypeMask;
     // --- constructors ---
     advManager(void);
     ~advManager();
@@ -359,6 +360,11 @@ extern short gMapX;
 extern short gMapY;
 extern unsigned char giCurWatchPlayerBit;
 extern signed char giCurWatchPlayer;
+// Main: right-click help for the six adventure panel buttons, the typed
+// cheat-digit sequence and the pending menu command.
+extern char* cAdvMenuHelp[];
+extern int giCheatSeq;
+extern int giMenuCommand;
 extern short gGameCommand;
 extern int gbHeroMoving;
 extern unsigned char giCurPlayerBit;

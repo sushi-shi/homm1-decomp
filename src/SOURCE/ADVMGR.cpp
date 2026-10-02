@@ -371,7 +371,7 @@ short advManager::Open(short id) {
         SetNoDialogMenus(1);
     }
     glTimers[0] = KBTickCount() + 120;
-    m_unknown25e = 815;
+    m_messageTypeMask = 815;
     gpMouseManager->NewUpdate(1);
     oldVolume = gConfig.soundVolume;
     if (gConfig.soundVolume != 0)
@@ -615,8 +615,346 @@ class mapCell* advManager::DoAdvCommand(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x00426eee, 0xe10)
-short advManager::Main(struct tag_message&) {
-    return 0;
+short advManager::Main(struct tag_message& message) {
+    int yPos;
+    int xPos;
+    int retVal;
+    mapCell* evtMapCell;
+    hero* curHero;
+    int townIndex;
+    int cmdValue;
+    int bQuit;
+    int moved;
+    signed char bEnded;
+    int helpText;
+    int dir;
+
+    if (KBTickCount() > glTimers[0] && ComboDraw(1))
+        UpdateScreen(1, 0);
+    if (gbGameOver) {
+        message.type = MESSAGE_EXECUTIVE;
+        message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    if (!gbHumanPlayer[giCurPlayer] && (!gbRemoteOn || giHostGamePos == giThisGamePos)) {
+        gpPhilAI->DoAI(giCurPlayer);
+        gpGame->NextPlayer();
+        return MESSAGE_DISPATCH_CONSUME;
+    }
+    CheckHandleNet();
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return CheckHandleNetPlayerWait(message, 0);
+    if (giScreenScroll && gbForegroundApp)
+        CheckScreenScroll();
+    if (!(message.type & m_messageTypeMask)) {
+        if (message.type) {
+            message.type = MESSAGE_NONE;
+            return MESSAGE_DISPATCH_FORWARD;
+        }
+        return MESSAGE_DISPATCH_CONTINUE;
+    }
+    if (!gbNoSound && gConfig.musicVolume && giForceSwitchMusic > 0 && KBTickCount() - giForceSwitchMusic > 6000
+        && gpSoundManager->m_currentTrack == 15) {
+        giForceSwitchMusic = -1;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    retVal = MESSAGE_DISPATCH_CONSUME;
+    bQuit = 0;
+    evtMapCell = 0;
+    if (message.type) {
+        switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.payload.widget.command) {
+            case WIDGET_COMMAND_HOVER:
+                retVal = ProcessHover(&message);
+                break;
+            case WIDGET_NOTIFY_DESELECT:
+                if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
+                    retVal = ProcessDeSelect(&message, &bQuit, &evtMapCell);
+                break;
+            case WIDGET_NOTIFY_SELECT:
+                retVal = ProcessSelect(&message, &evtMapCell);
+                break;
+            case WIDGET_NOTIFY_RIGHT_CLICK:
+                helpText = -1;
+                switch (message.payload.widget.id) {
+                case 1:
+                    helpText = 0;
+                    break;
+                case 2:
+                    helpText = 1;
+                    break;
+                case 3:
+                    helpText = 2;
+                    break;
+                case 4:
+                    helpText = 3;
+                    break;
+                case 5:
+                    helpText = 4;
+                    break;
+                case 6:
+                    helpText = 5;
+                    break;
+                }
+                if (helpText >= 0)
+                    NormalDialog(cAdvMenuHelp[helpText], 4, -1, -1, -1, 0, -1, 0, -1);
+                break;
+            }
+            break;
+        case MESSAGE_KEY_DOWN:
+            dir = -1;
+            if (gpCurPlayer->CurrentHero() != -1)
+                curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+            else
+                curHero = 0;
+            if (giDebugLevel < 1
+                && (message.payload.keyboard.keyCode == 0x3d || message.payload.keyboard.keyCode == 0x3e
+                    || message.payload.keyboard.keyCode == 0x3f || message.payload.keyboard.keyCode == 0x40
+                    || message.payload.keyboard.keyCode == 0x41 || message.payload.keyboard.keyCode == 0x42
+                    || message.payload.keyboard.keyCode == 0x43 || message.payload.keyboard.keyCode == 0x44
+                    || message.payload.keyboard.keyCode == 0x57 || message.payload.keyboard.keyCode == 0x58))
+                break;
+            switch (message.payload.keyboard.keyCode) {
+            case 0x3c:
+                PopNetBox(0);
+                break;
+            case 0x3d:
+                gpGame->m_playerDead[1] = 1;
+                gpGame->m_playerDead[2] = 1;
+                gpGame->m_playerDead[3] = 1;
+                CheckEndGame(1);
+                break;
+            case 0x3f:
+                gpGame->m_playerDead[0] = 1;
+                CheckEndGame(0);
+                break;
+            case 0x40:
+                if (curHero) {
+                    for (cmdValue = 0; cmdValue < HERO_SPELL_SLOT_COUNT; cmdValue++)
+                        curHero->AddSpell(cmdValue, 5, 0);
+                }
+                break;
+            case 0x41:
+                if (curHero)
+                    GiveExperience(curHero, 800, 1);
+                break;
+            case 0x42:
+                if (curHero) {
+                    gpGame->GiveArmy(&curHero->m_army, 23, 1, -1);
+                    gpGame->GiveArmy(&curHero->m_army, 10, 1, -1);
+                }
+                break;
+            case 0x43:
+                for (cmdValue = 0; cmdValue < PLAYER_RESOURCE_COUNT; cmdValue++) {
+                    if (cmdValue == 6)
+                        gpCurPlayer->m_resources[cmdValue] += 1000;
+                    else
+                        gpCurPlayer->m_resources[cmdValue] += 10;
+                }
+                break;
+            case 0x57:
+                if (curHero)
+                    curHero->m_remainingMobility = 2999;
+                break;
+            case 0x58:
+                gpGame->SetVisibility(30, 30, giCurPlayer, 100);
+                UpdateRadar(1, 0);
+                CompleteDraw(0);
+                UpdateScreen(0, 0);
+                break;
+            case 0xb:
+                cmdValue = 0;
+                goto processCheatDigit;
+            case 2:
+                cmdValue = 1;
+                goto processCheatDigit;
+            case 3:
+                cmdValue = 2;
+                goto processCheatDigit;
+            case 4:
+                cmdValue = 3;
+                goto processCheatDigit;
+            case 5:
+                cmdValue = 4;
+                goto processCheatDigit;
+            case 6:
+                cmdValue = 5;
+                goto processCheatDigit;
+            case 7:
+                cmdValue = 6;
+                goto processCheatDigit;
+            case 8:
+                cmdValue = 7;
+                goto processCheatDigit;
+            case 9:
+                cmdValue = 8;
+                goto processCheatDigit;
+            case 0xa:
+                cmdValue = 9;
+                goto processCheatDigit;
+            processCheatDigit:
+                giCheatSeq = giCheatSeq * 10 % 1000000 + cmdValue;
+                if (giCheatSeq == 101495) {
+                    gpGame->SetVisibility(30, 30, 0, 100);
+                    gpGame->SetVisibility(30, 30, 1, 100);
+                    gpGame->SetVisibility(30, 30, 2, 100);
+                    gpGame->SetVisibility(30, 30, 3, 100);
+                    Reseed(0, 0);
+                    UpdateRadar(1, 0);
+                    CompleteDraw(0);
+                    UpdateScreen(0, 0);
+                }
+                break;
+            case 1:
+                break;
+            case 0x48:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(0, 0);
+                else
+                    dir = 0;
+                break;
+            case 0x49:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(1, 0);
+                else
+                    dir = 1;
+                break;
+            case 0x4d:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(2, 0);
+                else
+                    dir = 2;
+                break;
+            case 0x51:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(3, 0);
+                else
+                    dir = 3;
+                break;
+            case 0x50:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(4, 0);
+                else
+                    dir = 4;
+                break;
+            case 0x4f:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(5, 0);
+                else
+                    dir = 5;
+                break;
+            case 0x4b:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(6, 0);
+                else
+                    dir = 6;
+                break;
+            case 0x47:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(7, 0);
+                else
+                    dir = 7;
+                break;
+            case 0x2e:
+                CheckCastSpell();
+                break;
+            case 0x20:
+                ProcessSearch(-1, -1);
+                break;
+            case 0x19:
+                ViewPuzzle();
+                break;
+            case 0x2f:
+                ViewWorld(24, 0, 0);
+                break;
+            case 0x31:
+                cmdValue = 1;
+                strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
+                goto confirmGameCommand;
+            case 0x26:
+                cmdValue = 2;
+                strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
+                goto confirmGameCommand;
+            case 0x10:
+                cmdValue = 4;
+                strcpy(gText, "Are you sure you want to quit?");
+                goto confirmGameCommand;
+            confirmGameCommand:
+                bQuit = 1;
+                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult == 30726)
+                    bQuit = 0;
+                else
+                    gGameCommand = cmdValue;
+                break;
+            case 0x1f:
+                SaveGame();
+                break;
+            case 0x17:
+                if (gpGame->m_campaignType > 0)
+                    gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 1, 0);
+                else
+                    gpGame->ShowScenInfo();
+                break;
+            case 0x14:
+                if (gpCurPlayer->m_townCount >= 0) {
+                    if (gpCurPlayer->CurrentTown() == -1) {
+                        townIndex = gpCurPlayer->m_townIds[0];
+                    } else {
+                        townIndex = 0;
+                        for (cmdValue = 0; cmdValue < gpCurPlayer->m_townCount; cmdValue++) {
+                            if (gpCurPlayer->m_townIds[cmdValue] == gpCurPlayer->CurrentTown()) {
+                                if (cmdValue == gpCurPlayer->m_townCount - 1)
+                                    townIndex = gpCurPlayer->m_townIds[0];
+                                else
+                                    townIndex = gpCurPlayer->m_townIds[cmdValue + 1];
+                            }
+                        }
+                    }
+                    SetTownContext(townIndex);
+                }
+                break;
+            case 0x23:
+                SetHeroContext(gpCurPlayer->NextHero(0), 0);
+                break;
+            case 0x1c:
+                if (gpCurPlayer->CurrentTown() != -1) {
+                    m_selectedCell = 3;
+                    DoAdvCommand();
+                } else if (gpCurPlayer->CurrentHero() != -1) {
+                    m_selectedCell = 2;
+                    DoAdvCommand();
+                }
+                break;
+            }
+            if (gpCurPlayer->m_currentHero != -1 && dir >= 0) {
+                HideRoute(1, 1, 1);
+                gpMouseManager->ReallyHidePointer();
+                evtMapCell = MoveHero(dir, 1, &TrigX, &TrigY, &moved, 0, &bEnded);
+                UpdateHeroLocator(-1, 1, 1);
+                if (evtMapCell) {
+                    StopCursor(1);
+                    DoEvent(evtMapCell, TrigX, TrigY);
+                    evtMapCell = 0;
+                }
+                Reseed(0, 0);
+                ForceNewHover();
+                UpdBottomView(1, 1, 1);
+                CheckDimHero();
+                gpMouseManager->ReallyShowPointer();
+            }
+            break;
+        }
+    }
+    if (evtMapCell)
+        DoEvent(evtMapCell, TrigX, TrigY);
+    if (gbGameOver || bQuit == 1 || giMenuCommand != -1) {
+        message.type = MESSAGE_EXECUTIVE;
+        message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return retVal;
 }
 
 // Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
