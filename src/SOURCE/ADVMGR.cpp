@@ -967,8 +967,278 @@ void advManager::Reseed(int, int) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526004;margin=0.306176;shape=0.329;size=0.923;calls=0.956;alternate=pol20:int advManager::ProcessSelect(struct tag_message *, class mapCell * *)@0x00058d68
 VA(0x00427d20, 0xe39)
-int advManager::ProcessSelect(struct tag_message*, class mapCell**) {
-    return 0;
+int advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
+    short curX;
+    short cellType;
+    short mapIndex;
+    short curY;
+    mapCell* hoverCell;
+    int iPage;
+    int isVisible;
+    tag_message mouseMsg;
+    tag_message inputMessage;
+    hero* hero;
+    signed char mobileResult;
+
+    isVisible = 1;
+    switch (message->payload.widget.id) {
+    case 105:
+    case 112:
+    case 119:
+    case 126:
+        iPage = (message->payload.widget.id - 105) / 7;
+        if (gpCurPlayer->m_heroCount <= iPage)
+            break;
+        cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            HeroQuickView(cellType, iPage, -1, -1);
+        } else if (gpCurPlayer->CurrentHero() == cellType) {
+            m_selectedCell = 2;
+            DoAdvCommand();
+        } else {
+            HideRoute(1, 0, 1);
+            SetHeroContext(cellType, 0);
+        }
+        break;
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+        cellType = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + message->payload.widget.id - 16];
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            TownQuickView(cellType, message->payload.widget.id - 16, -1, -1);
+        } else {
+            HideRoute(1, 0, 1);
+            if (gpCurPlayer->CurrentTown() == cellType) {
+                m_selectedCell = 3;
+                *eventCell = DoAdvCommand();
+            } else {
+                SetTownContext(cellType);
+            }
+        }
+        break;
+    case 20:
+        if (gpCurPlayer->m_heroLocatorPage > 0) {
+            gpCurPlayer->m_heroLocatorPage--;
+            UpdateHeroLocators(1, 1);
+        }
+        break;
+    case 21:
+        if (gpCurPlayer->m_heroLocatorPage + 4 < gpCurPlayer->m_heroCount) {
+            gpCurPlayer->m_heroLocatorPage++;
+            UpdateHeroLocators(1, 1);
+        }
+        break;
+    case 26:
+        DoHeroKnob();
+        break;
+    case 22:
+        gpMouseManager->MouseCoords(curX, curY);
+        curY -= 194;
+        if (gpCurPlayer->m_heroCount > 4) {
+            iPage = curY / (92 / (gpCurPlayer->m_heroCount - 3));
+            if (iPage > gpCurPlayer->m_heroCount - 4)
+                iPage = gpCurPlayer->m_heroCount - 4;
+        } else {
+            iPage = 0;
+        }
+        gpCurPlayer->m_heroLocatorPage = iPage;
+        UpdateHeroLocators(1, 1);
+        break;
+    case 27:
+        DoTownKnob();
+        break;
+    case 25:
+        gpMouseManager->MouseCoords(curX, curY);
+        curY -= 194;
+        if (gpCurPlayer->m_townCount > 4) {
+            iPage = curY / (92 / (gpCurPlayer->m_townCount - 3));
+            if (iPage > gpCurPlayer->m_townCount - 4)
+                iPage = gpCurPlayer->m_townCount - 4;
+        } else {
+            iPage = 0;
+        }
+        gpCurPlayer->m_townLocatorPage = iPage;
+        UpdateTownLocators(1, 1);
+        break;
+    case 23:
+        if (gpCurPlayer->m_townLocatorPage > 0) {
+            gpCurPlayer->m_townLocatorPage--;
+            UpdateTownLocators(1, 1);
+        }
+        break;
+    case 24:
+        if (gpCurPlayer->m_townLocatorPage + 4 < gpCurPlayer->m_townCount) {
+            gpCurPlayer->m_townLocatorPage++;
+            UpdateTownLocators(1, 1);
+        }
+        break;
+    case 10:
+        if (!(gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY] & giCurPlayerBit))
+            isVisible = 0;
+        hoverCell = GetCell(m_lastHoverCell + m_mapOriginX, m_hoverCellY + m_mapOriginY);
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (!isVisible) {
+                QuickInfo(m_lastHoverCell, m_hoverCellY);
+            } else {
+                if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
+                    && m_heroContextLocked) {
+                    cellType = 0x3d;
+                    mapIndex = gpCurPlayer->CurrentHero();
+                } else {
+                    cellType = hoverCell->m_triggerType & 0x7f;
+                    mapIndex = hoverCell->m_objectMetadata;
+                }
+                switch (cellType) {
+                case 0x3d:
+                    curX = m_lastHoverCell * 32 - 73;
+                    if (curX < 16)
+                        curX = 16;
+                    if (curX + 178 > 464)
+                        curX = 286;
+                    curY = m_hoverCellY * 32 - 65;
+                    if (curY < 16)
+                        curY = 16;
+                    if (curY + 162 > 464)
+                        curY = 302;
+                    HeroQuickView(mapIndex, -1, curX, curY);
+                    break;
+                case 0x28:
+                    curX = m_lastHoverCell * 32 - 89;
+                    if (curX < 16)
+                        curX = 16;
+                    if (curX + 210 > 464)
+                        curX = 254;
+                    curY = m_hoverCellY * 32 - 70;
+                    if (curY < 16)
+                        curY = 16;
+                    if (curY + 172 > 464)
+                        curY = 292;
+                    TownQuickView(mapIndex, -1, curX, curY);
+                    break;
+                default:
+                    if (gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY]
+                        & giCurPlayerBit)
+                        QuickInfo(m_lastHoverCell, m_hoverCellY);
+                    break;
+                }
+            }
+        } else if (isVisible) {
+            hero = 0;
+            mobileResult = 0;
+            if (gpCurPlayer->m_currentHero != -1) {
+                hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+                mobileResult = gpGame->IsMobile(hero->m_id);
+            }
+            if (hero) {
+                if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
+                    && m_heroContextLocked) {
+                    m_selectedCell = 2;
+                    DoAdvCommand();
+                } else if ((!mobileResult || (message->payload.widget.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                            || (gConfig.showRoute
+                                && (hero->m_destinationX != m_commandTargetX
+                                    || hero->m_destinationY != m_commandTargetY)))
+                           && gpSearchArray->m_cells[m_commandTargetX][m_commandTargetY].visited) {
+                    hero->m_destinationX = m_commandTargetX;
+                    hero->m_destinationY = m_commandTargetY;
+                    ShowRoute(1, 1, 1);
+                } else {
+                    *eventCell = DoAdvCommand();
+                }
+            } else {
+                cellType = hoverCell->m_triggerType & 0x7f;
+                mapIndex = hoverCell->m_objectMetadata;
+                if (cellType == 0x3d) {
+                    if (gpCurPlayer->CurrentHero() == mapIndex) {
+                        m_selectedCell = 2;
+                        DoAdvCommand();
+                    } else if (gpGame->GetHero(mapIndex)->m_owner == giCurPlayer) {
+                        SetHeroContext(mapIndex, 0);
+                    }
+                }
+                if (cellType == 0x28) {
+                    if (gpCurPlayer->CurrentTown() == mapIndex) {
+                        m_selectedCell = 3;
+                        *eventCell = DoAdvCommand();
+                    } else if (gpGame->GetTown(mapIndex)->m_owner == giCurPlayer) {
+                        SetTownContext(mapIndex);
+                    }
+                }
+            }
+        }
+        break;
+    case 9:
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            NormalDialog("World Map (Left click to move viewing area).", 4, -1, -1, -1, 0, -1, 0, -1);
+            break;
+        }
+        DemobilizeCurrHero();
+        gpMouseManager->MouseCoords(curX, curY);
+        curX = (curX - 480) / 2;
+        curY = (curY - 16) / 2;
+        m_mapOriginX = curX - 7;
+        m_mapOriginY = curY - 7;
+        if (m_mapOriginX < -7)
+            m_mapOriginX = -7;
+        if (m_mapOriginY < -7)
+            m_mapOriginY = -7;
+        if (m_mapOriginX > 64)
+            m_mapOriginX = 64;
+        if (m_mapOriginY > 64)
+            m_mapOriginY = 64;
+        UpdateRadar(1, 0);
+        CompleteDraw(0);
+        UpdateScreen(0, 0);
+        inputMessage.type = MESSAGE_NONE;
+        while (inputMessage.type != MESSAGE_LEFT_BUTTON_UP) {
+            Process1WindowsMessage();
+            inputMessage = gpInputManager->GetEvent();
+            mouseMsg = inputMessage;
+            while (inputMessage.type != MESSAGE_LEFT_BUTTON_UP && inputMessage.type != MESSAGE_NONE) {
+                if (inputMessage.type == MESSAGE_MOUSE_MOVE)
+                    mouseMsg = inputMessage;
+                Process1WindowsMessage();
+                inputMessage = gpInputManager->GetEvent();
+            }
+            if (mouseMsg.type == MESSAGE_MOUSE_MOVE) {
+                if (mouseMsg.payload.mouse.x < 480)
+                    mouseMsg.payload.mouse.x = 480;
+                if (mouseMsg.payload.mouse.x >= 624)
+                    mouseMsg.payload.mouse.x = 623;
+                if (mouseMsg.payload.mouse.y < 16)
+                    mouseMsg.payload.mouse.y = 16;
+                if (mouseMsg.payload.mouse.y >= 160)
+                    mouseMsg.payload.mouse.y = 159;
+                gpMouseManager->Main(mouseMsg);
+                curX = (mouseMsg.payload.mouse.x - 480) / 2;
+                curY = (mouseMsg.payload.mouse.y - 16) / 2;
+                m_mapOriginX = curX - 7;
+                m_mapOriginY = curY - 7;
+                if (m_mapOriginX < -7)
+                    m_mapOriginX = -7;
+                if (m_mapOriginY < -7)
+                    m_mapOriginY = -7;
+                if (m_mapOriginX > 64)
+                    m_mapOriginX = 64;
+                if (m_mapOriginY > 64)
+                    m_mapOriginY = 64;
+                UpdateRadar(1, 0);
+                CompleteDraw(0);
+                UpdateScreen(0, 0);
+                mouseMsg.type = MESSAGE_NONE;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    if ((message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) && message->payload.widget.id >= 2000
+        && message->payload.widget.id <= 2200)
+        NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
+                     "and shows the date.  Left click here to cycle through these windows.",
+                     4, -1, -1, -1, 0, -1, 0, -1);
+    return 1;
 }
 
 // donor PoL RVA 0x00059c19; preferred Buka symbol ?ProcessDeSelect@advManager@@QAEHPAUtag_message@@PAHPAPAVmapCell@@@Z
