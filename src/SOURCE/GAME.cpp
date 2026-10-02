@@ -4,6 +4,7 @@
 
 #include <BASE/BITS.h>
 #include <BASE/Misc.h>
+#include <BASE/LZHUF.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/TILE.h>
 #include <BASE/WINMGR_TYPES.h>
@@ -13,6 +14,7 @@
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/REMOTE.h>
 
 #include <fcntl.h>
 #include <io.h>
@@ -3675,8 +3677,151 @@ void game::CheckHeroConsistency(void) {
 // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
+// The other side's ready flag and the heartbeat-seen flag (REMOTE).
+extern int gbRemoteReady;
+extern int gbHeartbeatSeen;
+void BVResMsg(char*, int, int);
+
+// Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
+// segments, 100 segments per acknowledged block.
 VA(0x004459a5, 0x6e9)
-int game::TransmitSaveGame(int, int) { return 0; }
+int game::TransmitSaveGame(int remotePlayer, int playerExited) {
+    int okay;
+    int prevReady;
+    char pathname[456];
+    char* outData;
+    int numBlocks;
+    int sendPacketIndex;
+    int segCount;
+    int junk3;
+    int oldTrack;
+    int fileHandle;
+    int junk2;
+    int block;
+    char* sendPacket;
+    int blockSize;
+    char* incoming;
+    char acked[500];
+    int junk1;
+    int status;
+    int unk;
+    int fileSize;
+    int len;
+    char* fileData;
+    char finished;
+
+    gpAdvManager->TrimLoopingSounds(8);
+    okay = 0;
+    status = 0;
+    oldTrack = -1;
+    prevReady = gpSoundManager->m_musicReady;
+    gpSoundManager->m_musicReady = 1;
+    oldTrack = gpSoundManager->m_currentTrack;
+    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->m_musicReady = prevReady;
+
+    LogStr("Transmit Game Start");
+    if (gpAdvManager->m_active == 1)
+        BVResMsg("Sending Data", -1, 0);
+    while (!gbHeartbeatSeen) {
+        PollSound();
+        Process1WindowsMessage();
+    }
+    AiPrint("Transmit Start");
+    memset(acked, 0, sizeof(acked));
+    SaveGame("REMOTE.GAM", 0);
+    sprintf(pathname, "%s%s", ".\\DATA\\", "REMOTE.GAM");
+    fileSize = FileSize(pathname);
+    sendPacket = (char*)malloc(0x100);
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        outData = (char*)malloc(fileSize);
+    fileData = (char*)malloc(fileSize);
+    fileHandle = open(pathname, O_BINARY);
+    if (fileHandle == -1)
+        FileError(pathname);
+    if (fileHandle == -1) {
+        goto cleanup;
+    }
+    {
+        read(fileHandle, fileData, fileSize);
+        close(fileHandle);
+        if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+            fileSize = EncodeData(outData, fileData, fileSize);
+        else
+            outData = fileData;
+
+        ((int*)sendPacket)[0] = fileSize;
+        ((int*)sendPacket)[1] = playerExited;
+        status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
+        if (!status)
+            ShutDown(0);
+
+        segCount = (fileSize - 1) / 200 + 1;
+        numBlocks = (segCount - 1) / 100 + 1;
+        for (block = 0; block < numBlocks; block++) {
+            LogInt("Start Seg #", block);
+            if (block + 1 == numBlocks)
+                blockSize = segCount - block * 100;
+            else
+                blockSize = 100;
+            finished = 0;
+            while (!finished) {
+                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                    PollSound();
+                    CheckDoMain(0, 1);
+                    if (!acked[sendPacketIndex]) {
+                        if (sendPacketIndex + 1 == segCount)
+                            len = fileSize - sendPacketIndex * 200;
+                        else
+                            len = 200;
+                        *(short*)sendPacket = (short)sendPacketIndex;
+                        memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
+                        status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
+                        if (!status)
+                            ShutDown(0);
+                    }
+                }
+                LogStr("PreWait");
+                *(short*)sendPacket = (short)(block * 100);
+                status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
+                LogStr("PostWait");
+                if (!status)
+                    ShutDown(0);
+                for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
+                    if (((RemoteMessage*)incoming)->payload.data[sendPacketIndex] > 0)
+                        acked[block * 100 + sendPacketIndex] = 1;
+                }
+                finished = 1;
+                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                    if (!acked[sendPacketIndex])
+                        finished = 0;
+                }
+            }
+        }
+        status = TransmitRemoteData(0, remotePlayer, 0, 6, 1, 1, -1, 1);
+        if (!status)
+            ShutDown(0);
+        okay = 1;
+    }
+
+cleanup:
+    free(sendPacket);
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        free(outData);
+    free(fileData);
+    AiPrint("Transmit End");
+    if (gpAdvManager->m_active == 1) {
+        giBottomViewOverride = 0;
+        gpAdvManager->UpdBottomView(1, 1, 1);
+    }
+    if (oldTrack != -1) {
+        prevReady = gpSoundManager->m_musicReady;
+        gpSoundManager->m_musicReady = 1;
+        gpSoundManager->SwitchAmbientMusic(oldTrack);
+        gpSoundManager->m_musicReady = prevReady;
+    }
+    return okay;
+}
 
 // donor PoL RVA 0x00083937; preferred Buka symbol ?ReceiveSaveGame@game@@QAEHHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
