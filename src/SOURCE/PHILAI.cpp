@@ -1438,8 +1438,128 @@ float philAI::TurnsToBuy(int* const resources) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.513260;margin=0.500427;shape=0.306;size=0.971;calls=0.812;alternate=pol20:int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int)@0x0003e918
 VA(0x0041ed4b, 0x55e)
-int philAI::RVOfPosition(hero*, short, short, signed char, short, short, signed char, short, short, int) {
-    return 0;
+int philAI::RVOfPosition(
+    hero* pHero,
+    short x,
+    short y,
+    signed char hasEvent,
+    short eventX,
+    short eventY,
+    signed char hasStrategicEvent,
+    short strategicX,
+    short strategicY,
+    int eventMode
+) {
+    int eventValue7;
+    int primaryEventChance4;
+    int triggerType2;
+    int adjacentX;
+    int adjacentMonsterEventChance5;
+    int strategicDelta6;
+    int objectType6;
+    int currentLiveChance4;
+    int targetLiveChance1;
+    int currentStrategicValue2;
+    int adjacentY;
+    int totalValue;
+    int strategicLiveChance29;
+    int adjacentEventChance;
+    float distanceFactor1;
+    int strategicEventValue;
+
+    strategicEventValue = 0;
+    targetLiveChance1 = 100;
+    adjacentEventChance = 100;
+    triggerType2 = gpAdvManager->GetCell(x, y)->m_triggerType;
+    objectType6 = triggerType2 & 0x7f;
+    primaryEventChance4 = 100;
+    strategicLiveChance29 = 100;
+    adjacentMonsterEventChance5 = 100;
+    currentStrategicValue2 =
+        StrategicValueOfPosition(pHero, pHero->m_x, pHero->m_y, 0, &currentLiveChance4);
+    strategicDelta6 = StrategicValueOfPosition(pHero, x, y, 0, &targetLiveChance1);
+    if (objectType6 == 0x3e && strategicDelta6 < 0)
+        strategicDelta6 = 0;
+    totalValue = 0;
+    if (hasEvent)
+        totalValue += ValueOfEventAtPosition(pHero, eventX, eventY, 1, &strategicLiveChance29);
+    if (hasStrategicEvent) {
+        strategicEventValue =
+            StrategicValueOfPosition(pHero, strategicX, strategicY, 1, &adjacentEventChance);
+        if (strategicEventValue < 0)
+            totalValue += strategicEventValue;
+    }
+    if (gpAdvManager->FindAdjacentMonster(x, y, &adjacentX, &adjacentY, -1, -1)) {
+        switch (objectType6) {
+        case 2:
+        case 4:
+        case 6:
+        case 8:
+        case 9:
+        case 11:
+        case 26:
+        case 27:
+        case 29:
+        case 36:
+        case 43:
+        case 48:
+            break;
+        default:
+            eventValue7 =
+                ValueOfEventAtPosition(pHero, adjacentX, adjacentY, 1, &adjacentMonsterEventChance5);
+            if (eventValue7 < 0)
+                totalValue += eventValue7;
+            if (strategicLiveChance29 == 100)
+                strategicLiveChance29 = adjacentMonsterEventChance5;
+            else
+                strategicLiveChance29 = strategicLiveChance29 * adjacentMonsterEventChance5 / 100;
+            break;
+        }
+    }
+    if ((triggerType2 & 0x80) || (x == gpCurPlayer->m_unknown53 && y == gpCurPlayer->m_unknown54))
+        eventValue7 = ValueOfEventAtPosition(pHero, x, y, eventMode, &primaryEventChance4);
+    else
+        eventValue7 = 0;
+    if (primaryEventChance4 < 100)
+        strategicDelta6 = strategicDelta6 * primaryEventChance4 / 100;
+    if (targetLiveChance1 < 100) {
+        eventValue7 = eventValue7 * targetLiveChance1 / 100;
+        strategicDelta6 = strategicDelta6 * targetLiveChance1 / 100;
+    }
+    if (adjacentEventChance < 100) {
+        eventValue7 = eventValue7 * adjacentEventChance / 100;
+        strategicDelta6 = strategicDelta6 * adjacentEventChance / 100;
+    }
+    if (strategicLiveChance29 < 100) {
+        if (totalValue > 0)
+            totalValue = (totalValue + eventValue7 + strategicDelta6) * strategicLiveChance29 / 100;
+        else
+            totalValue += (eventValue7 + strategicDelta6) * strategicLiveChance29 / 100;
+    } else {
+        totalValue += eventValue7;
+    }
+    distanceFactor1 = (float)gpSearchArray->m_cells[x][y].distance / pHero->m_mobility;
+    if (pHero->m_eventFlags & 0x80)
+        distanceFactor1 = distanceFactor1 * 0.5 + 0.5;
+    else if (distanceFactor1 > 5.0f)
+        distanceFactor1 *= 3.0f;
+    else if (distanceFactor1 > 4.0f)
+        distanceFactor1 = distanceFactor1 * 2.5;
+    else if (distanceFactor1 > 3.0f)
+        distanceFactor1 = distanceFactor1 * 2.0;
+    else if (distanceFactor1 > 2.0f)
+        distanceFactor1 = distanceFactor1 * 1.7;
+    else if (distanceFactor1 > 1.5)
+        distanceFactor1 = distanceFactor1 * 1.4;
+    else if (distanceFactor1 > 1.0f)
+        distanceFactor1 = distanceFactor1 * 1.2;
+    totalValue = (int)(totalValue / (distanceFactor1 + 0.2));
+    strategicDelta6 = (int)(strategicDelta6 * 2 / (distanceFactor1 + 1.0f));
+    if (strategicLiveChance29 == 100)
+        totalValue += strategicDelta6;
+    if ((pHero->m_eventFlags & 0x80) && triggerType2 == 0x1f)
+        totalValue += 40;
+    return totalValue;
 }
 
 // donor PoL RVA 0x0003ef45; preferred Buka symbol ?StrategicValueOfPosition@philAI@@QAEHHHHHPAHH@Z
