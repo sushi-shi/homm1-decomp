@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/BITS.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
@@ -12,7 +13,7 @@
 #include <string.h>
 
 // Compiler line-base word for TOWNMGR.CPP's ProcessAssert sites.
-DATA(0x0048ed8c) short gTownMgrAssertLine;
+DATA(0x0048ed8c) short gTownMgrAssertLine = 1483;
 
 // donor PoL RVA 0x00013900; preferred Buka symbol ??0townObject@@QAE@HHPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -138,11 +139,13 @@ short townManager::Open(short id)
     for (i = 0; i < TOWN_MANAGER_OBJECT_CAPACITY; i++) {
         buildingType = gTownObjectType[m_town->m_type][i];
         if (buildingType != -1) {
+            // One name table: neutral objects, four town-type prefixes, then
+            // the faction-object suffixes.
             if (buildingType < TOWN_FIRST_FACTION_OBJECT)
-                strcpy(gText, cNeutralObjectName[buildingType]);
+                strcpy(gText, cTownObjectNames[buildingType]);
             else
-                sprintf(gText, "%s%s", cTownPrefix[m_town->m_type],
-                        cTownObjectSuffix[buildingType - TOWN_FIRST_FACTION_OBJECT]);
+                sprintf(gText, "%s%s", cTownObjectNames[TOWN_FIRST_FACTION_OBJECT + m_town->m_type],
+                        cTownObjectNames[buildingType + 4]);
             m_townObjects[m_townObjectCount] = new townObject(gText);
             if (m_townObjects[m_townObjectCount] == 0)
                 MemError();
@@ -158,10 +161,10 @@ short townManager::Open(short id)
     }
     glTimers[0] = KBTickCount() + TOWN_REDRAW_INTERVAL;
     gpWindowManager->AddWindow(m_townWindow, 0, 1);
-    crest = gpCurPlayer->m_unknown11;
+    crest = gpCurPlayer->m_color;
     if (m_town->OccupyingHero() != -1) {
         crest = crest << 2;
-        crest += gpGame->GetHero(m_town->m_occupyingHeroId)->m_unknown1c;
+        crest += gpGame->GetHero(m_town->m_occupyingHeroId)->m_heroClass;
     } else
         crest += TOWN_CREST_NO_HERO_OFFSET;
     sprintf(gText, "crst%04d.icn", crest);
@@ -170,7 +173,7 @@ short townManager::Open(short id)
     if (m_garrisonStrip == 0)
         MemError();
     if (m_town->m_occupyingHeroId != -1) {
-        sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_unknown1d);
+        sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_portrait);
         m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
                                 &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army, 0x16, 1);
         if (m_heroStrip == 0)
@@ -192,7 +195,7 @@ short townManager::Open(short id)
     gpMouseManager->SetPointer("advmice.mse", 0);
     gpMouseManager->ReallyShowPointer();
     gpMouseManager->NewUpdate(1);
-    KBChangeMenu(hmnuDflt);
+    KBChangeMenu(hmnuTown);
     gpWindowManager->FadeScreen(0, 8, 0);
     m_castleDialogActive = 0;
     m_recruitResult = 0;
@@ -923,6 +926,8 @@ void townManager::ResetStrips(void)
 }
 
 // Buka TOWNMGR.cpp:1993-2003.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0040b2c8, 0x95)
 void townManager::Toggle(signed char building)
 {
@@ -1009,7 +1014,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     iMageLevel = 0;
     j = 0;
     curCost = 0;
-    descText = (char *)malloc(300);
+    descText = static_cast<char*>(malloc(300));
     for (j = 0; j < 7; j++)
         resType[j] = prices[j] = -1;
     dwellIndex = -1;
@@ -1175,7 +1180,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                     nEntryWidth = 80;
                 else
                     nEntryWidth = 40;
-                amountText[resIndex] = (char *)malloc(10);
+                amountText[resIndex] = static_cast<char*>(malloc(10));
                 sprintf(amountText[resIndex], "%d", prices[resIndex]);
                 amountWidgets[resIndex] = new textWidget(currX, yPos + 32, nEntryWidth, 12, amountText[resIndex],
                                                          "smalfont.fnt", 1, -1, 8);
@@ -1664,7 +1669,7 @@ void townManager::SetupThievesGuild(class heroWindow *window, short categories)
                     (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH + startPos,
                     categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH, THIEVES_RANK_ICON_HEIGHT, "townwind.icn",
-                    gpGame->m_players[ranking[pos]].m_unknown11 + THIEVES_FLAG_FRAME_BASE,
+                    gpGame->m_players[ranking[pos]].m_color + THIEVES_FLAG_FRAME_BASE,
                     0, -1, 0x10, 1);
                 if (marker == 0)
                     MemError();
@@ -1819,20 +1824,20 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         message.id = TOWN_DIALOG_BUTTON_1;
         m_heroWindow1->BroadcastMessage(message);
     }
-    sprintf(gText, "port%04d.icn", m_recruitHeroes[0]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_recruitHeroes[0]->m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 2;
     message.text = gText;
     m_heroWindow1->BroadcastMessage(message);
-    sprintf(gText, "port%04d.icn", m_recruitHeroes[1]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_recruitHeroes[1]->m_portrait);
     message.id = 3;
     m_heroWindow1->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = 6;
-    message.text = gClassNames[m_recruitHeroes[0]->m_unknown1c];
+    message.text = gClassNames[m_recruitHeroes[0]->m_heroClass];
     m_heroWindow1->BroadcastMessage(message);
     message.id = 7;
-    message.text = gClassNames[m_recruitHeroes[1]->m_unknown1c];
+    message.text = gClassNames[m_recruitHeroes[1]->m_heroClass];
     m_heroWindow1->BroadcastMessage(message);
     m_recruitState = -1;
     if (cannotRecruit) {
@@ -1875,13 +1880,13 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[m_recruitState]] = giCurPlayer;
         delete m_garrisonStrip;
         sprintf(gText, "crst%04d.icn",
-                m_recruitHeroes[m_recruitState]->m_unknown1c + gpCurPlayer->Color() * 4);
+                m_recruitHeroes[m_recruitState]->m_heroClass + gpCurPlayer->Color() * 4);
         m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == -1 ? 4 : 1,
                                     gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 0);
         if (m_garrisonStrip == 0)
             MemError();
         delete m_heroStrip;
-        sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_unknown1d);
+        sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_portrait);
         m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
                                 &m_recruitHeroes[m_recruitState]->m_army, 0x16, 0);
         if (m_heroStrip == 0)
@@ -2195,3 +2200,11 @@ update_amount:
     gpTownManager->m_heroWindow1->DrawWindow();
     return MESSAGE_DISPATCH_CONSUME;
 }
+// TOWNMGR's .rdata: Open's per-type town-object layout.
+DATA(0x0048c028)
+const signed char gTownObjectType[4][16] = {
+    {5, 6, 8, 11, 7, 0, 1, 2, 10, 9, 3, 4, 12, -1, -1, -1},
+    {5, 6, 12, 8, 0, 9, 10, 1, 2, 11, 3, 4, 7, -1, -1, -1},
+    {13, 5, 6, 9, 7, 11, 0, 1, 2, 10, 8, 12, 3, 4, -1, -1},
+    {5, 6, 12, 9, 0, 11, 10, 1, 2, 7, 3, 4, 8, -1, -1, -1},
+};

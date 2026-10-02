@@ -21,6 +21,8 @@ armyGroup::armyGroup(void) {
     memset(m_creatureCounts, 0, sizeof(m_creatureCounts));
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044795c, 0x18)
 void armyGroup::View(int) {}
 
@@ -34,7 +36,7 @@ short armyGroup::GetMorale(hero* h, town* t) {
     alignment = IsHomogeneous(-1);
     morale += alignment;
     if (h) {
-        if (!h->m_unknown1c)
+        if (!h->m_heroClass)
             morale++;
         morale += h->m_morale;
         if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
@@ -188,7 +190,7 @@ void armyGroup::Swap(signed char slot, armyGroup* otherGroup, signed char otherS
 VA(0x00447ec8, 0x14d)
 void armyGroup::DamageGroup(float damagePercent) {
     int killed;
-    int chance = (int)(damagePercent * 100.0f);
+    int chance = static_cast<int>(damagePercent * 100.0f);
     int isFirstTroop = 1;
     int i;
     int j;

@@ -91,7 +91,7 @@ extern int giMainVideoModeWidth;
 extern int gbDDrawAttached;
 extern int gbWinGAttached;
 // Smacker playback owner; SetFullScreenStatus ignores requests while it runs.
-extern int gbInSmackMgr;
+extern int gbInSmacker;
 extern int gbWinGraphBusy;
 extern HPALETTE hpalApp;
 extern HINSTANCE hDDrawLibrary;

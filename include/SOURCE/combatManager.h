@@ -72,7 +72,10 @@ public:
     // LoadIcons indexes the ground and obstacle tables by this terrain;
     // GetBackgroundName forces 6 for a graveyard field.
     signed char m_terrainType;
-    signed char m_unknown260;
+    // army::DoAttack sets it when the strike reaches the stack behind on a
+    // downward diagonal; DrawFrame then grows each limited redraw box 60 rows
+    // down. ResetLimitCreature clears it.
+    signed char m_extendLimitDown;
     // SetupCombat keeps the defending town here as well.
     class town* m_originalCombatTown;
     // Open's small font; army::DrawToBuffer prints stack quantities with it.
@@ -98,7 +101,9 @@ public:
     class armyGroup *m_armyGroups[2];
     // Set by a surrender (ProcessNextAction).
     signed char m_sideDefeated[2];
-    char m_unknown2b8[2];
+    // SetupCombat copies gbHumanPlayer per side; a bad-morale roll may spare
+    // a computer side.
+    char m_humanSide[2];
     signed char m_playerId[2];
     int m_experienceValue[2];
     signed char m_heroCastSpell[2];
@@ -111,7 +116,8 @@ public:
     signed char m_gridSelectionDisabled;
     signed char m_limitCreature;
     signed char m_limitCreatureHex;
-    signed char m_unknown6c0;
+    // Buka m_showArmyQuantities: army::DrawToBuffer draws the quantity box.
+    signed char m_showArmyQuantities;
     signed char m_selectedHex;
     signed char m_directionTargetHex;
     signed char m_previousCommand;
@@ -128,14 +134,21 @@ public:
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
     // mirror the castle art from side 1's flag.
     signed char m_castleSide[2];
-    char m_unknown6df[2];
+    // Buka m_visitingHeroPresent: SetupCombat sets side 0 when the defending
+    // town has a garrisoned hero.
+    char m_visitingHeroPresent[2];
     // CatAttack's target row in the castle wall column.
     short m_catapultTarget;
-    signed char m_unknown6e3;
+    // CatAttack: 1 when the shot only damages the wall, 0 when it falls;
+    // hexcell::DrawObstacle keeps the tower during the impact frames.
+    signed char m_wallSurvives;
     short m_wallFrame;
     short m_wallDamage;
     signed char m_unknown6e8;
-    char m_unknown6e9[4];
+    // Per side: creatures the attacking ghosts (CREATURE_GHOST) killed; the
+    // ghost stack grows by it after the strike. army::DoAttack stores and
+    // reloads it with word moves indexed by side.
+    short m_ghostKills[2];
     // LoadIcons loads the battlefield backdrop GetBackgroundName names;
     // DrawBackground draws it first.
     class bitmap* m_backgroundBitmap;
@@ -150,9 +163,11 @@ public:
     // Per stack draw state: ResetLimitCreature clears it (-1 for the dead)
     // and army::SpellEffect marks the stack it animates.
     int m_limitCreatureCount[2][5];
-    // Set before a full combat redraw.
-    int m_unknown727;
-    int m_unknown72b;
+    // Buka passes these to DrawFrame as computeExtent/redrawExtent: the first
+    // limits the redraw to the boxes of stacks in m_limitCreatureCount, the
+    // second restores only the current extent from the background buffer.
+    int m_computeExtent;
+    int m_redrawExtent;
     // UpdateCombatArea does nothing until the combat window is up.
     int m_combatWindowOpen;
     class widget *m_winLoseBottomWidgets[15];
@@ -357,7 +372,6 @@ public:
 #pragma pack(pop)
 
 int ValidHex(int);
-extern combatManager *gpCombatManager;
 short WinCombatHandler(struct tag_message &);
 short CombatSpecialHandler(struct tag_message &);
 short HandleCastSpell(struct tag_message &);
@@ -365,12 +379,10 @@ short HandleCastSpell(struct tag_message &);
 // teleport second-click state (0x0048f28c).
 extern signed char indexToCastOn;
 extern signed char bInTeleportGetDest;
-// Combat effect icon names (0x004910d8); the loaded effect icon's file id
-// (0x004c6d64) and icon (0x004c709c).
-extern char *gCombatFxNames[];
-extern short gCurLoadedSpellEffect;
-extern class icon *gCurLoadedSpellIcon;
+// The loaded combat effect icon's file id (0x004c6d64).
+extern short gCurLoadedSpellFileId;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
+// Stale alias of giSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
 extern short giCombatFxFrame;
 // Spell-book hover help lines (0x00493a78).
 extern char *cSpellHelp[];
@@ -390,9 +402,8 @@ extern char *cCombatMessage[];
 extern char *cCombatHelp[];
 // ProcessCombatMsg records the hero casting from the combat screen.
 extern int giCurGeneral;
-// A surrender ended the combat (0x004c6720).
-extern signed char gbCombatSurrender;
 // Fallback net player for a combat action broadcast (0x004c6710).
+// Stale alias of giHostGamePos (0x4c6710): unreferenced, kept so later symbol handles stay put.
 extern int giRemoteDefaultPlayer;
 // Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
 extern signed char gCombatAdjacency[45][6];
@@ -401,8 +412,9 @@ extern char *cBattleResults[];
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
-// CheckWin flags a retreat victory (0x004c6d4c).
-extern signed char gbRetreatWin;
 // CheckHandleNet hands combat packets back while a battle is running.
 extern signed char gbInCombat;
+// Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
+// ground and obstacle tables are in X_GLOBAL.h.
+extern char *cCombatBkgNames[];
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

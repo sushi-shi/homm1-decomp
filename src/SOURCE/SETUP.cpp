@@ -2,53 +2,26 @@
 
 #include <match.h>
 
-#include <H1/All.h>
-#include <H1/KB.h>
+#include <SOURCE/SETUP.h>
+
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
+#include <H1/All.h>
+#include <H1/KB.h>
+#include <SOURCE/comwin.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/comwin.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <string.h>
-
-extern signed char gbDirectConnect;
-extern int giMenuCommand;
-extern char* gSetupCampaignGameHelp[];
-extern char* gSetupComPortHelp[];
-extern char* gSetupDCComPortHelp[];
-extern char* gSetupBaudHelp[];
-extern char* gSetupDCBaudHelp[];
-extern char* gSetupHotSeatGameHelp[];
-extern char* gSetupModemGameHelp[];
-extern char* gSetupDCGameHelp[];
-extern char* gSetupMultiPlayerGameHelp[];
-extern char* gSetupNetworkGameHelp[];
-extern char* gSetupGameHelp[];
 
 // clang-format off
 H1_ENUM_BEGIN(SetupDialogResult)
     DIALOG_CANCEL = 0x7801
 H1_ENUM_END(SetupDialogResult)
 // clang-format on
-
-short BaseSetupHandler(tag_message&);
-short SetupBaudHandler(tag_message&);
-short SetupComPortHandler(tag_message&);
-short SetupModemGameHandler(tag_message&);
-short SetupMultiPlayerGameHandler(tag_message&);
-extern int gbDoModemConfig;
-short SetupHotSeatGameHandler(tag_message&);
-short SetupNetworkGameHandler(tag_message&);
-extern signed char iMPExtendedType;
-extern int giNumHumanPlayers;
-void RemoteMain(int);
-
-short SetupCampaignGameHandler(tag_message&);
-// Campaign lord picked on stpcmpgn.bin (1-4); PickLoadGame filters *.CGM on it.
-extern signed char giCampaignChoice;
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
 // game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
@@ -295,11 +268,6 @@ signed char game::SetupMultiPlayerGame(void) {
     return 1;
 }
 
-short SetupGameHandler(tag_message&);
-extern signed char gbWaitForRemoteReceive;
-extern int gbInSetupDialog;
-extern char gLastFilename[];
-
 // Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
 // keep separate restart and load command ids.
 VA(0x004574e1, 0x486)
@@ -401,7 +369,7 @@ signed char game::SetupGame(signed char newGame) {
     gpWindowManager->DoDialog(window, SetupGameHandler, 0);
     delete window;
 
-    switch ((short)gpWindowManager->m_dialogResult) {
+    switch (static_cast<short>(gpWindowManager->m_dialogResult)) {
         case 1:
             break;
         case 2:
@@ -447,12 +415,13 @@ signed char game::PickLoadGame(void) {
         return 0;
     if (gbWaitForRemoteReceive)
         return 1;
+    extern char gcGamePath[];
     request = new fileRequester(
         0x136,
         0xe,
         0,
         giCampaignChoice > 0 ? "*.CGM" : "*.GM*",
-        ".\\GAMES\\",
+        gcGamePath,
         giCampaignChoice > 0 ? ".CGM" : ".GM*"
     );
     if (!request)
@@ -739,3 +708,8 @@ short BaseSetupHandler(tag_message& message) {
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
+
+// Retail's SETUP object ends at 0x00458513; RemoteCleanup starts the REMOTE
+// object at 0x00458520.
+DATA(0x0049f6b0)
+int gbDoModemConfig = 0;

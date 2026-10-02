@@ -170,7 +170,7 @@ short com_rcv(short port, unsigned short requested, void *buffer)
             currentBytesRead = requested;
         if (currentBytesRead) {
             if (ReadFile(gComPorts[port].handle, buffer, currentBytesRead, &nRead, NULL))
-                return (short)nRead;
+                return static_cast<short>(nRead);
         }
     }
     return 0;
@@ -188,7 +188,7 @@ short com_snd(short port, unsigned short, unsigned short length, void *data, int
             ClearCommBreak(gComPorts[port].handle);
             return 0;
         }
-        node = (tag_Node *)malloc(length + COM_NODE_HEADER_SIZE);
+        node = static_cast<tag_Node*>(malloc(length + COM_NODE_HEADER_SIZE));
         if (node) {
             node->len = length;
             memcpy(node->comData, data, length);
@@ -202,12 +202,16 @@ short com_snd(short port, unsigned short, unsigned short length, void *data, int
     return 1;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004732ed, 0x13)
 short __cdecl com_sess(int, int, ...)
 {
     return 0;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00473300, 0x66)
 unsigned char com_stat(short port, unsigned short)
 {
@@ -244,3 +248,7 @@ void comm_wrt_task(void)
         free(node);
     }
 }
+
+// comwin owns retail .bss 0x004ca918-0x004cabb7.
+DATA(0x004ca918)
+ComPortState gComPorts[COM_PORT_COUNT];

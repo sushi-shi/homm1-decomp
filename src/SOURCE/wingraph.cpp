@@ -13,51 +13,79 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Code-required retail identities; initializer/data-byte matching is deferred.
-DATA(0x0048e180)
-int giGraphicsType;
+// wingraph owns retail .data 0x0048e178-0x0048eb17 (definitions below in
+// retail order; initializers are retail bytes) and .bss 0x004a46a0-0x004a4b7f.
+// Retail emits the *LineBase source-line bases among their functions'
+// literals.
 DATA(0x0048e178)
-int gbWinGAttached;
+int gbWinGAttached = 1;
 DATA(0x0048e17c)
-int gbDDrawAttached;
+int gbDDrawAttached = 0;
+DATA(0x0048e180)
+int giGraphicsType = 1;
+DATA(0x0048e184)
+int giMainVideoModeColorDepth = 16;
+DATA(0x0048e188)
+int giMainVideoModeWidth = 1024;
+DATA(0x0048e18c)
+int giMainVideoModeHeight = 768;
+DATA(0x0048e190)
+int Orientation = 1;
+DATA(0x0048e198)
+WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
+DATA(0x0048e59c)
+void* lpInitWin = 0;
+// Buka's image/scroll counters are identified by the retail WinG paint path.
+DATA(0x0048e5a4)
+int giTtlBlts = 0;
 DATA(0x0048e5a8)
-int gbWinGraphBusy;
+int gbWinGraphBusy = 0;
 DATA(0x0048e5ac)
-DirectDrawCreateProc lpDirectDrawCreate;
+DirectDrawCreateProc lpDirectDrawCreate = 0;
 DATA(0x0048e5b0)
-IDirectDraw* lpDD;
+IDirectDraw* lpDD = 0;
 DATA(0x0048e5b4)
-IDirectDrawSurface* lpDDSPrimary;
+IDirectDrawSurface* lpDDSPrimary = 0;
 DATA(0x0048e5b8)
-IDirectDrawSurface* lpDDSOne;
+IDirectDrawSurface* lpDDSOne = 0;
 DATA(0x0048e5bc)
-IDirectDrawClipper* lpClipper;
+IDirectDrawClipper* lpClipper = 0;
 DATA(0x0048e5c0)
-IDirectDrawPalette* lpDDPal;
+IDirectDrawPalette* lpDDPal = 0;
 DATA(0x0048e5c4)
-short gDDRestoreLineBase;
-DATA(0x0048e824)
-short gDDSetPaletteLineBase;
-DATA(0x0048e800)
-short gDDInitializePaletteLineBase;
-DATA(0x0048e8c0)
-short gDDUpdatePaletteLineBase;
-DATA(0x0048e904)
-short gDDCleanUpLineBase;
+short gDDRestoreLineBase = 49;
 DATA(0x0048e5e8)
-short gCreatePrimaryLineBase;
+short gCreatePrimaryLineBase = 71;
 DATA(0x0048e60c)
-short gSetupClipperLineBase;
+short gSetupClipperLineBase = 91;
 DATA(0x0048e670)
-short gDDInitLineBase;
-DATA(0x0048e848)
-short gDDCreateSurfaceLineBase;
-DATA(0x0048e84c)
-int bInDDSD;
-DATA(0x0048e948)
-short gDDSetFullScreenLineBase;
+short gDDInitLineBase = 114;
+DATA(0x0048e674)
+int iBusyRetry = 0;
 DATA(0x0048e6f8)
-short gDDPaintLineBase;
+short gDDPaintLineBase = 161;
+DATA(0x0048e800)
+short gDDInitializePaletteLineBase = 315;
+DATA(0x0048e824)
+short gDDSetPaletteLineBase = 387;
+DATA(0x0048e848)
+short gDDCreateSurfaceLineBase = 417;
+DATA(0x0048e84c)
+int bInDDSD = 0;
+DATA(0x0048e8c0)
+short gDDUpdatePaletteLineBase = 524;
+DATA(0x0048e904)
+short gDDCleanUpLineBase = 550;
+DATA(0x0048e948)
+short gDDSetFullScreenLineBase = 596;
+DATA(0x0048e94c)
+HDC hdcImage = 0;
+DATA(0x0048e950)
+HBITMAP gbmOldMonoBitmap = 0;
+DATA(0x0048e954)
+HPALETTE hpalApp = 0;
+DATA(0x0048e9fc)
+HINSTANCE hDDrawLibrary = 0;
 DATA(0x004a4b70)
 RECT gDDClientRect;
 DATA(0x004a46a8)
@@ -70,39 +98,14 @@ DATA(0x004a46d0)
 _DDSURFACEDESC gDDSurfaceDesc;
 DATA(0x004a46c8)
 long lPaintStart;
-DATA(0x0048e674)
-int iBusyRetry;
-DATA(0x0048e94c)
-HDC hdcImage;
-DATA(0x0048e950)
-HBITMAP gbmOldMonoBitmap;
-DATA(0x0048e954)
-HPALETTE hpalApp;
-DATA(0x0048e9fc)
-HINSTANCE hDDrawLibrary;
-// Buka's image/scroll counters are identified by the retail WinG paint path.
-DATA(0x0048e5a4)
-int giTtlBlts;
-DATA(0x0048e184)
-int giMainVideoModeColorDepth;
-DATA(0x0048e198)
-WingPalette LogicalPalette;
-DATA(0x0048e190)
-int Orientation;
-DATA(0x0048e59c)
-void* lpInitWin;
-DATA(0x00492e08)
-int giScrollX;
-DATA(0x00492e0c)
-int giScrollY;
-DATA(0x00494130)
-int gbFullCombatScreenDrawn;
-DATA(0x00494134)
-int gbLimitedCombatUpdatePalette;
 DATA(0x004a4740)
 WingImage screenImage;
-DATA(0x004c6aa8)
-configStruct gConfig;
+// KB owns these scroll, combat-palette and configuration globals.
+extern int giScrollX;
+extern int giScrollY;
+extern int gbFullCombatScreenDrawn;
+extern int gbLimitedCombatUpdatePalette;
+extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
 VA(0x00403640, 0x59)
@@ -541,7 +544,7 @@ void DDSD(int error, char* file, int line) {
 VA(0x00404673, 0x11c)
 void DDUpdatePalette(signed char* paletteData) {
     int entry;
-    long result0;
+    long res;
 
     if (gbWinGraphBusy != 0)
         return;
@@ -564,14 +567,14 @@ void DDUpdatePalette(signed char* paletteData) {
         "D:\\Heroes\\Source\\wingraph.cpp",
         gDDUpdatePaletteLineBase + 18
     );
-    result0 = lpDDPal->SetEntries(
+    res = lpDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
-    if (result0 != 0)
-        DDSD(result0, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
+    if (res != 0)
+        DDSD(res, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
 }
 
 // donor PoL RVA 0x00036539; preferred Buka symbol ?DDCleanUpWinGraphics@@YIXXZ
@@ -711,7 +714,7 @@ void WGInitGraphics() {
 
     if (hdcImage != 0)
         return;
-    if (WinGRecommendDIBFormat(static_cast<BITMAPINFO*>(static_cast<void*>(&screenImage)))) {
+    if (WinGRecommendDIBFormat(reinterpret_cast<LPBITMAPINFO>(&screenImage))) {
         screenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
         screenImage.header.biCompression = BI_RGB;
         Orientation = screenImage.header.biHeight;
@@ -732,7 +735,7 @@ void WGInitGraphics() {
     screenImage.header.biHeight = -WINGRAPH_HEIGHT;
     bitmap = WinGCreateBitmap(
         hdcImage,
-        static_cast<BITMAPINFO*>(static_cast<void*>(&screenImage)),
+        reinterpret_cast<LPBITMAPINFO>(&screenImage),
         &screenImage.bits
     );
     screenImage.header.biSizeImage = screenImage.header.biHeight * screenImage.header.biWidth;
@@ -770,7 +773,7 @@ void WGUpdatePalette(signed char* paletteData) {
     );
     if (hpalApp != 0)
         DeleteObject(hpalApp);
-    hpalApp = CreatePalette(static_cast<LOGPALETTE*>(static_cast<void*>(&LogicalPalette)));
+    hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
     dc = GetDC(hwndApp);
     if (hpalApp != 0)
         SelectPalette(dc, hpalApp, 0);
@@ -842,7 +845,7 @@ void WGInitializePalette() {
         screenImage.colors[i].rgbReserved = 0;
         LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
     }
-    hpalApp = CreatePalette(static_cast<LOGPALETTE*>(static_cast<void*>(&LogicalPalette)));
+    hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
 }
 
 // Buka 2.1 supplies the WinG paint sequence and local lifetimes. HoMM1's
@@ -1042,7 +1045,7 @@ void CleanUpWinGraphics() {
 // evidence: graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
 VA(0x0040566a, 0xb9)
 void SetFullScreenStatus(int fullScreen) {
-    if (gbInSmackMgr != 0)
+    if (gbInSmacker != 0)
         return;
     if (gConfig.gfx[giCurExe].fullScreen == fullScreen)
         return;

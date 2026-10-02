@@ -4,6 +4,7 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
@@ -17,8 +18,6 @@
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
-
-extern signed char giCampaignChoice;
 
 // Buka 2.1 ShowThisMap; HoMM1 keeps an unreachable rejecting return.
 VA(0x00448020, 0x1c)
@@ -706,7 +705,7 @@ void fileRequester::ShowMapInfo(void) {
     message.id = levelId;
     if (m_selectedIndex != -1)
         message.text =
-            gDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
+            gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
     gpReqExtraWindow->BroadcastMessage(message);
     if (m_selectedIndex != -1)
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
@@ -720,3 +719,7 @@ void fileRequester::ShowMapInfo(void) {
     gpReqExtraWindow->BroadcastMessage(message);
     gpReqExtraWindow->DrawWindow();
 }
+
+// REQUEST owns retail .bss 0x004c5130-0x004c5137.
+DATA(0x004c5130)
+signed char gbRequestingGames;

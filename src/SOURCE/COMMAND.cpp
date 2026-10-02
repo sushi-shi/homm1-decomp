@@ -2,12 +2,11 @@
 
 #include <match.h>
 
+#include <BASE/bmap2.h>
 #include <BASE/INPUTMGR_TYPES.h>
-
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <BASE/Misc.h>
-#include <BASE/bmap2.h>
 #include <SOURCE/PATH.h>
 #include <SOURCE/REMOTE.h>
 
@@ -30,7 +29,7 @@ short combatManager::Main(struct tag_message& message) {
     CheckCastleAttack();
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
-    packet = (CombatRemotePacket*)GetRemoteData(1);
+    packet = reinterpret_cast<CombatRemotePacket*>(GetRemoteData(1)); // API-forced: char* record.
     if (packet && packet->type == 2) {
         switch (packet->command) {
             case 0x17:
@@ -200,7 +199,7 @@ void combatManager::SetCombatDirections(int targetHex) {
         if (dir < 6)
             mapped = (dir + 3) % 6;
         else
-            mapped = (signed char)(dir == 6 ? 7 : 6);
+            mapped = static_cast<signed char>(dir == 6 ? 7 : 6);
         if (hasPath[mapped]) {
             if (target->m_stats.attributes & 1) {
                 if (dir == 0 && m_hexCells[targetHex - 1].m_occupantSide == targetSide
@@ -294,7 +293,7 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
     }
     distX = abs(distX);
     distY = abs(distY);
-    ratio = (float)distX / ((float)distY);
+    ratio = static_cast<float>(distX) / (static_cast<float>(distY));
     if (index == 0 || index == 12) {
         if (ratio > 3.73)
             index += 5;
@@ -875,7 +874,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
     if (m_winLoseBottomWidgets[1] == 0)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[1], -1);
-    artifactName = (char*)malloc(0x3c);
+    artifactName = static_cast<char*>(malloc(0x3c));
     sprintf(artifactName, gArtifactNames[artifact]);
     m_winLoseBottomTextWidgets[0] =
         new textWidget(0, 0x18a, 0x140, 0xc, artifactName, "smalfont.fnt", 1, 0x835, 0x200);
@@ -925,7 +924,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             }
         }
     }
-    buffer = (char*)malloc(0x1e);
+    buffer = static_cast<char*>(malloc(0x1e));
     sprintf(buffer, "Battlefield Casualties");
     m_winLoseBottomTextWidgets[12] =
         new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
@@ -937,7 +936,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             rowY = 0x118;
         else
             rowY = 0x159;
-        buffer = (char*)malloc(0x1e);
+        buffer = static_cast<char*>(malloc(0x1e));
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
@@ -945,7 +944,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
         if (numLost[side] <= 0) {
-            buffer = (char*)malloc(10);
+            buffer = static_cast<char*>(malloc(10));
             sprintf(buffer, "None");
             m_winLoseBottomTextWidgets[side * 5] = new textWidget(
                 0,
@@ -979,7 +978,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             );
             if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
                 MemError();
-            buffer = (char*)malloc(9);
+            buffer = static_cast<char*>(malloc(9));
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
             m_winLoseBottomTextWidgets[side * 5 + armyIndex] = new textWidget(
                 armyIndex * iconSpacing + firstX,
@@ -1242,7 +1241,7 @@ short combatManager::DoSurrender(void) {
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 1;
-    sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_portrait);
     message.text = gText;
     win->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
@@ -1378,12 +1377,12 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
 
         netPos = m_playerId[1 - m_currentSide];
         if (netPos < 0 || !gbHumanPlayer[netPos])
-            netPos = giRemoteDefaultPlayer;
+            netPos = giHostGamePos;
         data[0] = giNextAction;
         data[1] = giNextActionExtra;
         data[2] = giNextActionGridIndex;
         data[3] = giNextActionGridIndex2;
-        result = TransmitRemoteData((char*)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
+        result = TransmitRemoteData(reinterpret_cast<char*>(data), netPos, sizeof(data), 0x17, 1, 1, -1, 1); // API-forced: char* payload.
         if (!result)
             ShutDown(0);
     }
@@ -1453,3 +1452,23 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         gpMouseManager->ReallyHidePointer();
     return MESSAGE_DISPATCH_CONSUME;
 }
+
+// COMMAND owns retail .bss 0x004a4b98-0x004a4bc7.
+DATA(0x004a4b98)
+signed char gbThisNetHasControl;
+DATA(0x004a4b9c)
+int iCurTransferArtifact;
+DATA(0x004a4ba0)
+signed char iMaxTransferArtifacts;
+DATA(0x004a4ba4)
+int giNextActionExtra;
+DATA(0x004a4ba8)
+int giNextActionGridIndex;
+DATA(0x004a4bac)
+int giSurrenderCost;
+DATA(0x004a4bb0)
+signed char iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
+DATA(0x004a4bc0)
+int giNextAction;
+DATA(0x004a4bc4)
+int giNextActionGridIndex2;

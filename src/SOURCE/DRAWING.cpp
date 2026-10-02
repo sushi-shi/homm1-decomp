@@ -7,8 +7,8 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/NOOPT.h>
-#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -25,6 +25,8 @@ void combatManager::UpdateGrid(short hex, int) {
         m_gridUpdateRow = row;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00470a4f, 0x5a)
 void combatManager::UpdateGridForMove(short hex, signed char direction, int attributes) {
     if (direction == 0 || direction == 5)
@@ -116,8 +118,8 @@ void combatManager::ResetLimitCreature(void) {
     int j;
     int side;
 
-    m_unknown727 = 1;
-    m_unknown260 = 0;
+    m_computeExtent = 1;
+    m_extendLimitDown = 0;
     for (side = 0; side < 2; side++) {
         for (j = 0; j < 5; j++) {
             if (m_armies[side][j].m_stats.attributes & 0x10)
@@ -187,7 +189,7 @@ void combatManager::DrawBackground(void) {
 }
 
 // Redraws the battlefield: only the boxes around the stacks marked in
-// m_limitCreatureCount when m_unknown727 is set, else the whole area.
+// m_limitCreatureCount when m_computeExtent is set, else the whole area.
 // Rows draw obstacles, then occupants (right to left while m_gridMode is
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
 VA(0x004711fb, 0xe27)
@@ -205,7 +207,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
 
     if (!m_combatWindowOpen)
         return;
-    if (m_unknown727) {
+    if (m_computeExtent) {
         giMaxExtentX = giMaxExtentY = 0;
         giMinExtentX = 639;
         giMinExtentY = 459;
@@ -218,7 +220,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     row = m_armies[side][i].m_hex / 9;
                     boxTop = row * 80;
                     boxBottom = (row + 2) * 80 + 20;
-                    if (m_unknown260)
+                    if (m_extendLimitDown)
                         boxBottom += 60;
                     if (m_armies[side][i].m_facing == 1) {
                         boxLeft = hexCol * 78 - 110;
@@ -227,8 +229,8 @@ void combatManager::DrawFrame(signed char updateScreen) {
                         boxLeft = hexCol * 78 - 70;
                         boxRight = (hexCol + 1) * 78 + 110;
                     }
-                    if (m_armies[side][i].m_unknown2f == 22 || m_armies[side][i].m_unknown2f == 23
-                        || m_armies[side][i].m_unknown2f == 24 || m_armies[side][i].m_unknown2f == 25)
+                    if (m_armies[side][i].m_effectAnimation == 22 || m_armies[side][i].m_effectAnimation == 23
+                        || m_armies[side][i].m_effectAnimation == 24 || m_armies[side][i].m_effectAnimation == 25)
                         boxTop -= 100;
                     if (m_armies[side][i].m_creatureType == 4)
                         boxTop -= 60;
@@ -268,7 +270,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
             }
         }
         if (!drawn) {
-            m_unknown727 = 0;
+            m_computeExtent = 0;
             return;
         }
         if (giMinExtentX < 0)
@@ -283,7 +285,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
     m_gridUpdateRow = 0;
     if (!gbLimitToExtent) {
         if (m_backgroundDrawn) {
-            if (m_unknown727 || m_unknown72b)
+            if (m_computeExtent || m_redrawExtent)
                 m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY, giMinExtentX,
                                            giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                            giMaxExtentY - giMinExtentY + 1);
@@ -293,7 +295,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
             DrawBackground();
         }
     }
-    if (m_unknown727) {
+    if (m_computeExtent) {
         gbLimitToExtent = 1;
         gbComputeExtent = 1;
     }
@@ -353,9 +355,9 @@ void combatManager::DrawFrame(signed char updateScreen) {
         }
     }
     DrawCombatBorder();
-    if (m_unknown727 || m_unknown72b) {
-        m_unknown727 = 0;
-        m_unknown72b = 0;
+    if (m_computeExtent || m_redrawExtent) {
+        m_computeExtent = 0;
+        m_redrawExtent = 0;
         gbLimitToExtent = 0;
         gbComputeExtent = 0;
         gbFullCombatScreenDrawn = 0;

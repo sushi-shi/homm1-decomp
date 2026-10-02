@@ -9,6 +9,8 @@
 #include <SOURCE/highScoreRuntime.h>
 
 // No direct caller survives in retail; the HoMM2 timer slot names glTimers.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00464430, 0x40)
 void DelayTicks(int ticks)
 {
@@ -21,7 +23,7 @@ void DelayTicks(int ticks)
 VA(0x00464470, 0x54)
 void DelayTil(int *endTime)
 {
-    ProcessAssert(*endTime > 10000, gNooptAssertFile, gNooptAssertLine + 1);
+    ProcessAssert(*endTime > 10000, "D:\\Heroes\\Source\\NOOPT.CPP", gNooptAssertLine + 1);
     while (*endTime > KBTickCount()) {
         Process1WindowsMessage();
         PollSound();
@@ -42,3 +44,8 @@ void DelayTilMilli(long endTime)
         PollSound();
     }
 }
+
+// NOOPT owns retail .data 0x004a0800-0x004a081f: DelayTil's source-line base
+// (15) and its NOOPT.CPP literal.
+DATA(0x004a0800)
+short gNooptAssertLine = 15;

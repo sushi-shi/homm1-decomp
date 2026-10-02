@@ -105,6 +105,8 @@ void strip::DrawIcons(signed char drawWindow) {
         m_stripIcon->DrawToBuffer(m_x + m_selectedSlot * 88 + 112, m_y + 6, 1, 0, 0);
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00463cd0, 0x37)
 void strip::DrawFrame(void) {
     m_stripIcon->DrawToBuffer(m_x, m_y, 0, 0, 0);

@@ -11,9 +11,9 @@
 #include <stdio.h>
 #include <string.h>
 
-// donor PoL RVA 0x00054502; preferred Buka symbol ?Open@swapManager@@UAEHH@Z
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.683274;margin=0.416085;shape=0.517;size=0.729;calls=0.800;strings=port%04d.icn|swapManager|swapbtn.icn;alternate=pol20:int swapManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00054502
+// Buka 2.1 swapManager::swapManager(void).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046ecb0, 0x75)
 swapManager::swapManager(void) {
     m_window = 0;
@@ -50,11 +50,11 @@ short swapManager::Open(short id) {
     SetWinText(m_window, 13);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_ICON;
-    sprintf(gText, "port%04d.icn", m_heroes[1]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[1]->m_portrait);
     message.id = 65;
     message.text = gText;
     m_window->BroadcastMessage(message);
-    sprintf(gText, "port%04d.icn", m_heroes[0]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[0]->m_portrait);
     message.id = 66;
     m_window->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
@@ -437,14 +437,7 @@ void swapManager::ViewMon(void) {
                      m_heroes[m_selectedSide], 0, &m_heroes[m_selectedSide]->m_army);
 }
 
-// donor PoL RVA 0x000556d3; preferred Buka symbol ?ViewMon@swapManager@@QAEXXZ
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.509716;margin=0.520416;shape=0.289;size=0.921;calls=1.000;alternate=pol20:void swapManager::ViewMon(void)@0x000556d3
-
-
-// donor PoL RVA 0x00055b42; preferred Buka symbol ?Update@swapManager@@QAEXXZ
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.575258;margin=0.321463;shape=0.441;size=0.938;calls=0.900;alternate=pol20:void swapManager::Update(void)@0x00055b42
+// Buka 2.1 swapManager::SwapArtifacts.
 VA(0x0046fe18, 0x112)
 void swapManager::SwapArtifacts(void) {
     signed char dstArt;

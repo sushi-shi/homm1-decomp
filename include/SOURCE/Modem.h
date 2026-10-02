@@ -26,7 +26,13 @@ struct inque_t {
     char data[4096];
 };
 extern inque_t inque;
-extern inque_t outque;
+// The transmit queue holds 2K (retail 0x004c9c80-0x004ca487).
+struct outque_t {
+    int readPosition;
+    int writePosition;
+    char data[2048];
+};
+extern outque_t outque;
 extern int iBaudBits;
 extern int inescape;
 extern int newpacket;
@@ -49,5 +55,9 @@ void Connect(void);
 signed char GUIModemResponse(char*, char*);
 int write_buffer(char*, int);
 int read_byte(void);
+// Modem.cpp's wait-loop steps that KB's WaitHandler drives.
+signed char GUIModemCommandExec(void);
+signed char GUIModemResponseExec(void);
+int WaitForDirectConnect(void);
 
 #endif // HOMM1_SOURCE_MODEM_H

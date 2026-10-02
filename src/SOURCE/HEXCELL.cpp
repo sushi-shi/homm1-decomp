@@ -107,12 +107,12 @@ void hexcell::DrawObstacle(void) {
                 DrawTower(m_obstacleIndex);
                 break;
             case 64:
-                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_unknown6e3 == 1)
+                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_wallSurvives == 1)
                     DrawTower(8);
                 DrawWall();
                 break;
             case 65:
-                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_unknown6e3 == 1)
+                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_wallSurvives == 1)
                     DrawTower(10);
                 DrawWall();
                 break;

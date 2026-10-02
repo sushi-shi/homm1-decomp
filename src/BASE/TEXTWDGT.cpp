@@ -51,10 +51,11 @@ void textWidget::Read(void) {
     m_height = gpResourceManager->ReadWord();
     short length = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(length));
+    // byte-evidenced: ReadBlock accepts signed bytes for stored text.
     gpResourceManager->ReadBlock(
         reinterpret_cast<signed char*>(m_text),
         length
-    ); // byte-evidenced: ReadBlock accepts signed bytes for stored text.
+    );
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_font = gpResourceManager->GetFont(

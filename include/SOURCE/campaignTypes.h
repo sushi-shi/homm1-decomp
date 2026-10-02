@@ -11,7 +11,8 @@ struct campaignScenario {
     signed char kingOfTheHill;
     signed char victoryTownX;
     signed char victoryTownY;
-    char unknown03[0x10];
+    // Space-padded name of the campaign town the map renames (not NUL-terminated).
+    char victoryTownName[0x10];
     signed char playerTypes[GAME_PLAYER_COUNT];
     // Opponent crests, indexed by player position.
     short playerCrests[3];
@@ -21,7 +22,5 @@ struct campaignScenario {
 extern campaignScenario gCampaignScenarios[];
 // New-game "King of the Hill" option; campaign scenarios preset it.
 extern signed char gbKingOfTheHill;
-// Days elapsed in the current game (week/month calendar flattened).
-extern int giCurTurn;
 
 #endif // HOMM1_SOURCE_CAMPAIGNTYPES_H

@@ -18,8 +18,6 @@
 
 #pragma intrinsic(memcpy)
 
-extern heroWindowManager* gpWindowManager;
-
 VA(0x0047a6b0, 0x2a)
 VA_COMPGEN(0x0047a6e0, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047a6b0)
 bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, -1, 0) {

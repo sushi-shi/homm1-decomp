@@ -231,11 +231,6 @@ source = "src/SOURCE/KB.cpp"
 flags = "cpp_carcass_eh"
 
 [[unit]]
-unit = "SOURCE/Modem"
-source = "src/SOURCE/Modem.cpp"
-flags = "cpp_carcass"
-
-[[unit]]
 unit = "SOURCE/NOOPT"
 source = "src/SOURCE/NOOPT.cpp"
 flags = "cpp_carcass"

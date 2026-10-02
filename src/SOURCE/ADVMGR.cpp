@@ -3,36 +3,32 @@
 #include <match.h>
 
 #include <BASE/BITS.h>
-#include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/Icon2b.h>
-#include <BASE/TILE.h>
-#include <BASE/Iconm2b.h>
-#include <BASE/Icond2b.h>
-#include <BASE/MISC_TYPES.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <BASE/Misc.h>
 #include <BASE/bmap2.h>
+#include <BASE/Icon2b.h>
+#include <BASE/Icond2b.h>
+#include <BASE/Iconm2b.h>
+#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
+#include <BASE/MISC_TYPES.h>
+#include <BASE/TILE.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <SOURCE/highScoreRuntime.h>
-#include <SOURCE/NOOPT.h>
 #include <SOURCE/fileRequester.h>
+#include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-extern signed char giCampaignChoice;
-extern char gLastFilename[];
-
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
-DATA(0x004c5170)
-int giSeedingValid;
+extern int giSeedingValid;
 
 
 // clang-format off
@@ -491,31 +487,31 @@ VA(0x004268d5, 0x619)
 class mapCell* advManager::DoAdvCommand(void) {
     signed char moveDone;
     town* viewTown;
-    signed char bMoveStopped0;
-    hero* selectedHero15;
+    signed char userStop;
+    hero* pHero;
     int oldMapValid;
-    tag_message messageValue8;
-    signed char newHover3;
-    mapCell* eventCellState16;
+    tag_message evt;
+    signed char hover;
+    mapCell* stopCell;
     int moveChanged;
     short pathIndex;
 
-    eventCellState16 = 0;
-    selectedHero15 = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    bMoveStopped0 = 0;
-    newHover3 = 0;
+    stopCell = 0;
+    pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    userStop = 0;
+    hover = 0;
     switch (m_selectedCell) {
     case 1:
-        selectedHero15->m_destinationX = m_commandTargetX;
-        selectedHero15->m_destinationY = m_commandTargetY;
+        pHero->m_destinationX = m_commandTargetX;
+        pHero->m_destinationY = m_commandTargetY;
         goto continue_route;
     case 7:
     continue_route:
         gpSearchArray->BuildPath(
-            selectedHero15->m_x,
-            selectedHero15->m_y,
-            selectedHero15->m_destinationX,
-            selectedHero15->m_destinationY,
+            pHero->m_x,
+            pHero->m_y,
+            pHero->m_destinationX,
+            pHero->m_destinationY,
             999
         );
         if (gpSearchArray->m_pathLength > 0) {
@@ -528,7 +524,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             gpMouseManager->ReallyHidePointer();
             gpInputManager->Flush();
             for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
-                eventCellState16 = MoveHero(
+                stopCell = MoveHero(
                     gpSearchArray->m_directions[pathIndex],
                     pathIndex == 0,
                     &TrigX,
@@ -538,56 +534,56 @@ class mapCell* advManager::DoAdvCommand(void) {
                     &moveDone
                 );
                 UpdateHeroLocator(-1, 1, 1);
-                if (eventCellState16)
+                if (stopCell)
                     break;
                 if (moveChanged || moveDone)
                     goto movement_done;
-                messageValue8 = gpInputManager->GetEvent();
-                while (messageValue8.type) {
-                    if (messageValue8.type == 1 || messageValue8.type == 8 || messageValue8.type == 0x20
-                        || messageValue8.type == 0x200) {
-                        bMoveStopped0 = 1;
+                evt = gpInputManager->GetEvent();
+                while (evt.type) {
+                    if (evt.type == 1 || evt.type == 8 || evt.type == 0x20
+                        || evt.type == 0x200) {
+                        userStop = 1;
                         StopCursor(1);
                         goto movement_done;
                     }
                     Process1WindowsMessage();
-                    messageValue8 = gpInputManager->GetEvent();
+                    evt = gpInputManager->GetEvent();
                 }
             }
         movement_done:
-            if ((pathIndex <= 0 && selectedHero15->m_x == selectedHero15->m_destinationX
-                 && selectedHero15->m_y == selectedHero15->m_destinationY)
-                || (bMoveStopped0 && !gConfig.showRoute) || eventCellState16)
+            if ((pathIndex <= 0 && pHero->m_x == pHero->m_destinationX
+                 && pHero->m_y == pHero->m_destinationY)
+                || (userStop && !gConfig.showRoute) || stopCell)
                 HideRoute(1, 1, 1);
             else if (m_selectedCell == 7 || gConfig.showRoute)
                 ShowRoute(0, 1, 1);
             gpMouseManager->ReallyShowPointer();
             UpdBottomView(1, 1, 1);
-            if (eventCellState16) {
+            if (stopCell) {
                 StopCursor(1);
-                DoEvent(eventCellState16, TrigX, TrigY);
-                eventCellState16 = 0;
+                DoEvent(stopCell, TrigX, TrigY);
+                stopCell = 0;
             }
             Reseed(0, 0);
-            newHover3 = 1;
+            hover = 1;
             CheckDimHero();
         }
         break;
     case 6:
         DemobilizeCurrHero();
         gpMouseManager->SetPointer(0);
-        viewTown = gpGame->GetTown(selectedHero15->m_occupiedTown);
+        viewTown = gpGame->GetTown(pHero->m_occupiedTown);
         viewTown->View();
-        eventCellState16 = 0;
+        stopCell = 0;
         break;
     case 3:
         DemobilizeCurrHero();
         gpMouseManager->SetPointer(0);
-        eventCellState16 = GetCell(
+        stopCell = GetCell(
             gpGame->GetTown(gpCurPlayer->m_currentTown)->m_x, gpGame->GetTown(gpCurPlayer->m_currentTown)->m_y
         );
         gpGame->GetTown(gpCurPlayer->m_currentTown)->View();
-        eventCellState16 = 0;
+        stopCell = 0;
         break;
     case 2:
         gpMouseManager->SetPointer(0);
@@ -606,9 +602,9 @@ class mapCell* advManager::DoAdvCommand(void) {
     }
     m_selectedCell = -1;
     m_lastHoverCell = m_hoverCellY = -1;
-    if (newHover3)
+    if (hover)
         ForceNewHover();
-    return eventCellState16;
+    return stopCell;
 }
 
 // donor PoL RVA 0x00057d6c; preferred Buka symbol ?Main@advManager@@UAEHAAUtag_message@@@Z
@@ -1381,12 +1377,12 @@ int advManager::ProcessSearch(int x, int y) {
 // defines it ahead of its functions). Declared ahead of ProcessHover: the C1
 // symbol order retail's ProcessHover and GetCloudLookup operand sorts require
 // (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-int s_drawStoneTile;
-int s_drawCovered;
-int s_drawCloudFrame;
-signed char s_drawFlipCloud;
-unsigned short s_drawGroundTile;
-unsigned char s_drawTileset;
+DATA(0x004c50ac) int s_drawStoneTile;
+DATA(0x004c50a8) int s_drawCovered;
+DATA(0x004c4f48) int s_drawCloudFrame;
+DATA(0x004c509c) signed char s_drawFlipCloud;
+DATA(0x004c4f70) unsigned short s_drawGroundTile;
+DATA(0x004c50a4) unsigned char s_drawTileset;
 
 // donor PoL RVA 0x0005a644; preferred Buka symbol ?ProcessHover@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -1458,7 +1454,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                     m_selectedCell = 2;
                     return 1;
                 }
-                if (cell->m_unknown07 & 0x80) {
+                if (cell->m_secondaryTrigger & 0x80) {
                     if ((cell->m_triggerType & 0x7f) == 0x28) {
                         pTown = gpGame->GetTown(cell->m_objectMetadata);
                         if (pTown->m_owner == giCurPlayer && m_commandTargetY >= 1
@@ -1933,7 +1929,7 @@ void advManager::DrawCell(
         if (cell0->m_flags & 0x10)
             IconToBitmap(
                 m_objectIcons[cell0->m_objectTileset >> 4], gpWindowManager->m_screen, pixelX7,
-                pixelY3, cell0->m_unknown05, 0
+                pixelY3, cell0->m_extraFrame, 0
             );
     }
     if (drawMask & 8) {
@@ -1974,11 +1970,11 @@ void advManager::DrawCell(
                 if (drawHero->m_eventFlags & 0x80)
                     flagColor = -1;
                 else
-                    flagColor = gpGame->m_players[drawHero->m_owner].m_unknown11;
+                    flagColor = gpGame->m_players[drawHero->m_owner].m_color;
                 if (drawHero->m_eventFlags & 0x80)
                     iconIndex = 4;
                 else
-                    iconIndex = drawHero->m_unknown1c;
+                    iconIndex = drawHero->m_heroClass;
                 frame = GetCursorBaseFrame(drawHero->m_direction);
                 drawHeroIcon0 = 1;
                 if (drawHero->m_eventFlags & 0x80)
@@ -2059,14 +2055,11 @@ void advManager::DrawCell(
         if (cell0->m_flags & 0x20)
             IconToBitmap(
                 m_objectIcons[cell0->m_overlayTileset >> 4], gpWindowManager->m_screen, pixelX7,
-                pixelY3, cell0->m_unknown05, 0
+                pixelY3, cell0->m_extraFrame, 0
             );
     }
 }
 
-// donor PoL RVA 0x0005e0da; preferred Buka symbol ?UpdateRadar@advManager@@QAEXHH@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:6;base=0.227177;margin=0.921091;shape=0.195;size=0.373;calls=0.222;alternate=pol20:void advManager::UpdateRadar(int, int)@0x0005e0da
 // Buka 2.1 GetCell; HoMM1 returns the map base for any off-grid position.
 VA(0x0042b6cd, 0x7d)
 mapCell* advManager::GetCell(short x, short y) {
@@ -2122,14 +2115,14 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
             if ((cellPtr->m_triggerType & 0x7f) == 0x3d) {
                 owner = gpGame->m_availableHeroes[cellPtr->m_objectMetadata];
                 if (giCurPlayer == owner)
-                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                 else
                     color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
             } else {
                 switch (cellPtr->m_objectTileset & 0xf) {
                 case 10:
                     owner = gpGame->m_townOwners[cellPtr->m_objectMetadata];
-                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                     break;
                 case 11:
                     switch (cellPtr->m_triggerType) {
@@ -2140,7 +2133,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                     case 153:
                     case 160:
                         owner = gpGame->m_mineOwners[cellPtr->m_objectMetadata];
-                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                         break;
                     default:
                         color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
@@ -2820,7 +2813,7 @@ signed char advManager::UpdBottomViewHero(void) {
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
 
-    iCrest = gpCurPlayer->Color() * 4 + targetHero->m_unknown1c;
+    iCrest = gpCurPlayer->Color() * 4 + targetHero->m_heroClass;
     m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, 0,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
     if (!m_bottomViewPrimaryWidgets[1])
@@ -3361,9 +3354,6 @@ void advManager::RedrawAdvScreen(int update) {
         UpdateScreen(0, 0);
 }
 
-// donor PoL RVA 0x00063f3b; preferred Buka symbol ?MobilizeCurrHero@advManager@@QAEXH@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.511468;margin=0.529744;shape=0.406;size=0.742;calls=1.000;alternate=pol20:void advManager::MobilizeCurrHero(int)@0x00063f3b
 // Buka 2.1 DeactivateCurrTown clears the current player's town slot.
 VA(0x0042ff72, 0x1f)
 void advManager::DeactivateCurrTown(void) {
@@ -3490,7 +3480,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
         m_cursorType = 4;
     else
-        m_cursorType = currentHero->m_unknown1c;
+        m_cursorType = currentHero->m_heroClass;
     m_cursorDirection = currentHero->m_direction;
     m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
     cellPtr = GetCell(currentHero->m_x, currentHero->m_y);
@@ -3827,9 +3817,7 @@ void advManager::CastSpell(signed char spell)
         gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(spell);
 }
 
-// donor PoL RVA 0x00064e9f; preferred Buka symbol ?SaveGame@@YIHXZ
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.731974;margin=0.187030;shape=0.477;size=0.957;calls=0.889;strings=.GM%d|.\GAMES\|advmice.mse;alternate=pol20:int SaveGame(void)@0x00064e9f
+// Buka 2.1 advManager::ViewWorld (SOURCE/Viewwrld).
 // HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
 // CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
 VA(0x00431507, 0x1127)
@@ -3904,7 +3892,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xa8) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -3912,7 +3900,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -3923,7 +3911,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     case 32:
                         owner = gpGame->m_mineOwners[cell->m_objectMetadata];
                         if (owner >= 0)
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                         else
                             index = 4;
                         spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -3936,7 +3924,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         case 32:
                             owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                             if (owner >= 0)
-                                index = gpGame->m_players[owner].m_unknown11;
+                                index = gpGame->m_players[owner].m_color;
                             else
                                 index = 4;
                             spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -3950,7 +3938,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xbd) {
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX, screenY, index, 0, 0);
                         }
                     }
@@ -3962,7 +3950,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     case 32:
                         owner = gpGame->m_mineOwners[cell->m_objectMetadata];
                         if (owner >= 0)
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                         else
                             index = 4;
                         spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -3975,7 +3963,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         case 32:
                             owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                             if (owner >= 0)
-                                index = gpGame->m_players[owner].m_unknown11;
+                                index = gpGame->m_players[owner].m_color;
                             else
                                 index = 4;
                             spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -4004,7 +3992,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xa8) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -4012,7 +4000,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -4022,7 +4010,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xbd) {
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX, screenY, index, 0, 0);
                         }
                     }
@@ -4166,10 +4154,6 @@ short advManager::ControlPanel(void) {
     return 0;
 }
 
-extern char *onOffText[];
-extern char *walkSpeedText[];
-extern char *musicQualityText[];
-
 // Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
 VA(0x00432990, 0x227)
 void UpdateCPanel(signed char initialDraw) {
@@ -4220,20 +4204,20 @@ void UpdateCPanel(signed char initialDraw) {
 
 VA(0x00432bb7, 0x232)
 signed char SaveGame(void) {
-    short result6;
-    fileRequester* requester0;
+    short iResult;
+    fileRequester* fileReq;
     char searchMask[16];
     signed char success;
     int humans;
-    int i0;
+    int plIdx;
     char extension[8];
 
     success = 0;
     humans = 0;
     gpAdvManager->DisableButtons();
     gpMouseManager->SetPointer("advmice.mse", 0);
-    for (i0 = 0; i0 < 4; i0++)
-        if (!gpGame->m_playerDead[i0] && gbHumanPlayer[i0])
+    for (plIdx = 0; plIdx < 4; plIdx++)
+        if (!gpGame->m_playerDead[plIdx] && gbHumanPlayer[plIdx])
             humans++;
     if (giCampaignChoice > 0) {
         sprintf(extension, ".CGM");
@@ -4242,23 +4226,22 @@ signed char SaveGame(void) {
         sprintf(extension, ".GM%d", humans);
         sprintf(searchMask, "*.GM*");
     }
-    requester0 = new fileRequester(0xa0, 0x28, 1, searchMask, ".\\GAMES\\", extension);
-    if (!requester0)
+    extern char gcGamePath[];
+    fileReq = new fileRequester(0xa0, 0x28, 1, searchMask, gcGamePath, extension);
+    if (!fileReq)
         MemError();
-    result6 = gpExec->DoDialog(requester0);
-    if (result6 == 0x7802) {
+    iResult = gpExec->DoDialog(fileReq);
+    if (iResult == 0x7802) {
         success = 1;
         bFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
             NormalDialog("Game saved successfully.", 1, 0xb1, -1, -1, 0, -1, 0, -1);
     }
-    delete requester0;
+    delete fileReq;
     gpAdvManager->EnableButtons();
     return success;
 }
-
-extern char *gCPanelHelp[];
 
 // Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
 VA(0x00432de9, 0x54b)
@@ -4477,11 +4460,6 @@ void advManager::AdvPanel(void)
         MobilizeCurrHero(0);
 }
 
-// donor PoL RVA 0x00065191; preferred Buka symbol ?DimensionDoorHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.481967;margin=0.254497;shape=0.313;size=0.765;calls=1.000;alternate=pol20:int DimensionDoorHandler(struct tag_message &)@0x00065191
-extern char *gAPanelHelp[];
-
 // Buka 2.1 APanelHandler; HoMM1 shares the search help text with Close and
 // chains the dialog-select stores.
 VA(0x004335f2, 0x1d3)
@@ -4592,7 +4570,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                                     gpAdvManager->m_mapOriginX + mouseX,
                                     gpAdvManager->m_mapOriginY + mouseY
                                 );
-                                if ((cell->m_triggerType & 0x80) || (cell->m_unknown07 & 0x80)) {
+                                if ((cell->m_triggerType & 0x80) || (cell->m_secondaryTrigger & 0x80)) {
                                     gpWindowManager->m_dialogResult = 0;
                                     gpMouseManager->SetPointer(0);
                                 } else {
@@ -4936,6 +4914,8 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
+// TeleportTo tests the watch player's high bit (0x004be7cc).
+extern unsigned char giCurWatchPlayerHighBit;
 VA(0x00434bd7, 0x340)
 void advManager::TeleportTo(int x, int y, int) {
     int savedShow;
@@ -4960,7 +4940,7 @@ void advManager::TeleportTo(int x, int y, int) {
     CompleteDraw(0);
     if (!gbHumanPlayer[giCurPlayer]) {
         if (!gConfig.blackoutComputer && !gbRemoteOn
-            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurPlayerBit))
+            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurWatchPlayerHighBit))
             bShowIt = 1;
         else
             bShowIt = 0;
@@ -4978,7 +4958,7 @@ void advManager::TeleportTo(int x, int y, int) {
         m_mapOriginX + 7,
         m_mapOriginY + 7,
         giCurPlayer,
-        gHeroScoutRadius[mapHero->m_unknown1c]
+        gHeroScoutRadius[mapHero->m_heroClass]
     );
     if (bShowIt) {
         destinationCell->m_flags |= 0x40;
@@ -5220,7 +5200,7 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
         for (j = gpSearchArray->m_pathLength - 1; j >= 0; --j) {
             dir = gpSearchArray->m_directions[j];
             terr = giGroundToTerrain[GetCell(x, y)->m_tileIndex];
-            remMob -= CalcTerrainCost(terr, dir & 1, remMob, pHero->m_unknown1c);
+            remMob -= CalcTerrainCost(terr, dir & 1, remMob, pHero->m_heroClass);
             x += normalDirTable[dir].x;
             y += normalDirTable[dir].y;
             if (j == 0) {
@@ -5333,16 +5313,13 @@ void advManager::SeedTo(int targetX, int targetY)
     if (!giSeedingValid)
         gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
                                     m_cursorType == 4, 0, currentHero->m_remainingMobility,
-                                    currentHero->m_unknown1c, targetX, targetY, 0, 1);
+                                    currentHero->m_heroClass, targetX, targetY, 0, 1);
     else if (!giFullySeeded)
         gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
                                     m_cursorType == 4, 0, currentHero->m_remainingMobility,
-                                    currentHero->m_unknown1c, targetX, targetY, 1, 1);
+                                    currentHero->m_heroClass, targetX, targetY, 1, 1);
 }
 
-// donor PoL RVA 0x00068ab6; preferred Buka symbol ?ScreenScroll@advManager@@QAEXHH@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.463708;margin=0.069995;shape=0.184;size=0.968;calls=1.000;alternate=pol20:void advManager::ScreenScroll(int, int)@0x00068ab6
 // Buka 2.1 ForceNewHover; HoMM1 routes the hover through a message record.
 VA(0x00435f91, 0x4f)
 void advManager::ForceNewHover(void) {
@@ -5559,6 +5536,7 @@ char* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
     int remotePlayerExited;
 
+    // API-forced: GetRemoteData and DoNetCombat pass queue records as char*.
     receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1));
     if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {
         switch (receivedPacket->command) {
@@ -5575,16 +5553,16 @@ char* advManager::CheckHandleNet(void) {
             break;
         case 21:
             if (gbInCombat)
-                return reinterpret_cast<char*>(receivedPacket);
+                return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
             else
-                DoNetCombat(reinterpret_cast<char*>(receivedPacket));
+                DoNetCombat(reinterpret_cast<char*>(receivedPacket)); // API-forced: char* record.
             break;
         case 30:
             LogStr("receive exit");
             ReceiveRemotePlayerExit(receivedPacket->payload.data[0], receivedPacket->payload.data[1], 0, 0);
             break;
         default:
-            return reinterpret_cast<char*>(receivedPacket);
+            return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
         }
     }
     return 0;
@@ -5669,9 +5647,7 @@ disposeSamples:
     }
 }
 
-// donor PoL RVA 0x00069976; preferred Buka symbol ?SaveAdventureBorder@advManager@@QAEXXZ
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.567475;margin=0.473800;shape=0.423;size=0.969;calls=1.000;alternate=pol20:void advManager::SaveAdventureBorder(void)@0x00069976
+// Buka 2.1 advManager::DisableButtons.
 VA(0x00436bfd, 0xd0)
 void advManager::DisableButtons(void) {
     if (gpAdvManager->m_active != 1)
@@ -5695,7 +5671,7 @@ void advManager::SaveAdventureBorder(void) {
 
     m_adventureBorder = static_cast<unsigned char*>(malloc(BORDER_BUFFER_SIZE));
     unsigned char* savedPixels = m_adventureBorder;
-    unsigned char* src = reinterpret_cast<unsigned char*>(gpWindowManager->m_screen->m_pixels);
+    signed char* src = gpWindowManager->m_screen->m_pixels;
     int row;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(savedPixels, src, ADVENTURE_VIEWPORT_EXTENT);
@@ -5721,7 +5697,7 @@ void advManager::SaveAdventureBorder(void) {
 VA(0x00436ed5, 0x134)
 void advManager::DrawAdventureBorder(void) {
     unsigned char* savedPixels;
-    unsigned char* dest;
+    signed char* dest;
     int row;
 
     if (m_adventureBorder == 0)
@@ -5729,7 +5705,7 @@ void advManager::DrawAdventureBorder(void) {
     if (gbNoBorder != 0)
         return;
 
-    dest = reinterpret_cast<unsigned char*>(gpWindowManager->m_screen->m_pixels);
+    dest = gpWindowManager->m_screen->m_pixels;
     savedPixels = m_adventureBorder;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(dest, savedPixels, ADVENTURE_VIEWPORT_EXTENT);
@@ -5748,3 +5724,60 @@ void advManager::DrawAdventureBorder(void) {
         savedPixels += ADVENTURE_VIEWPORT_EXTENT;
     }
 }
+
+// ADVMGR owns retail .data 0x0048f828-0x004905b7 and .bss 0x004c4f2c-0x004c50c3.
+// Retail emits giCheatSeq, the sand-animation times and giFrameCount among the
+// literals of their users.
+DATA(0x0048f828)
+int giLimitUpdMinX = -1;
+DATA(0x0048f82c)
+long iLastScrollTime = 0;
+DATA(0x0048f830)
+int iSandAnim = 0;
+DATA(0x0048f834)
+long giLastHourGlassUpdateTime = 0;
+DATA(0x0048f838)
+int TrigX = 0;
+DATA(0x0048f83c)
+int TrigY = 0;
+DATA(0x0048f840)
+int iCurBottomView = 0;
+DATA(0x0048f844)
+int iCurBottomViewEnemy = -1;
+DATA(0x0048f848)
+int iCurHourGlassPhase = 0;
+DATA(0x0048f84c)
+int iLastHourGlassPhase = 1;
+DATA(0x0048f850)
+int gbForceUpdate = 0;
+DATA(0x0048fae8)
+int giCheatSeq = 0;
+DATA(0x0048ff4c)
+long iLastSandAnimTime = 0;
+DATA(0x0048ff50)
+long iLastNewSandAnimTime = 0;
+DATA(0x004904a4)
+int giFrameCount = 0;
+DATA(0x004c4f2c)
+class heroWindow* cPanel;
+DATA(0x004c4f4c)
+int giFrameStep;
+DATA(0x004c4f50)
+char cArmySizeName[12];
+DATA(0x004c4f5c)
+int giLimitUpdMaxX;
+DATA(0x004c4f60)
+int giLimitUpdMaxY;
+DATA(0x004c4f6c)
+signed char bPrefsChanged;
+DATA(0x004c4f74)
+int giLimitUpdMinY;
+DATA(0x004c4f78)
+signed char bComboDraw[17][17];
+DATA(0x004c50a0)
+signed char bFreshSave;
+DATA(0x004c50c0)
+int iLastAnimFrame;
+// ADVMGR's .rdata: ambient-sound volume by distance (0x0048c390).
+DATA(0x0048c390)
+const long glEnvironmentVolume[5] = {64, 48, 32, 16, 10};

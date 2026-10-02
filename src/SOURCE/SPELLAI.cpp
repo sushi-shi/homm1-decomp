@@ -24,8 +24,10 @@ static const float SPELL_AI_STONESKIN_MODIFIER = 0.24f;
 static const float SPELL_AI_SHIELD_MODIFIER = 0.15f;
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
+DATA(0x004c50c4)
 int giSpellAIEffectShift;
 // Side of the stack standing on the hex DetermineEffectOfSpell evaluates.
+DATA(0x004c50c8)
 int giSpellAITargetSide;
 
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
@@ -226,7 +228,7 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
         else if (target->m_stats.attributes & 2)
             effect = stackValue * SPELL_AI_SLOW_MODIFIER * 3.0f;
         else
-            effect = (target->m_stats.speed - 1) * (float)stackValue * SPELL_AI_SLOW_MODIFIER;
+            effect = (target->m_stats.speed - 1) * static_cast<float>(stackValue) * SPELL_AI_SLOW_MODIFIER;
         break;
     case 7:
         effect = stackValue * SPELL_AI_BLIND_MODIFIER;

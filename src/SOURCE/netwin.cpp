@@ -8,6 +8,7 @@
 
 #include <windows.h>
 
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <SOURCE/netwinRuntime.h>
 
@@ -16,12 +17,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <BASE/Misc.h>
-
 // Compiler line-base word for netlo.cpp's ProcessAssert sites.
-DATA(0x0048f214) short gNbThrCtlLineBase;
-DATA(0x0048f234) short gNbAddNameDoneLineBase;
-DATA(0x0048f26c) short gNbArmRecvLineBase;
+DATA(0x0048f214) short gNbThrCtlLineBase = 414;
+DATA(0x0048f234) short gNbAddNameDoneLineBase = 538;
+DATA(0x0048f26c) short gNbArmRecvLineBase = 742;
 
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
@@ -111,7 +110,7 @@ H1_C_LINKAGE void __cdecl nb_term(void)
         memset(&ncb, 0, sizeof(ncb));
         ncb.ncb_command = NCBCANCEL;
         ncb.ncb_lana_num = gNetbiosLana;
-        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbCtlNcb);
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbCtlNcb); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
     if (gNetStatus[gNbMaxSess] & static_cast<int>(NETBIOS_SESSION_NAME_REGISTERED)) {
@@ -230,9 +229,8 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
                 memset(&ncb, 0, sizeof(ncb));
                 ncb.ncb_command = NCBCANCEL;
                 ncb.ncb_lana_num = gNetbiosLana;
-                ncb.ncb_buffer = reinterpret_cast<unsigned char*>(
-                    &gNbSessNcb[destinationSession]
-                ); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
+                // API-forced: NCBCANCEL receives the target NCB through ncb_buffer (PUCHAR).
+                ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[destinationSession]);
                 Netbios(&ncb);
             }
             returnCode = nb_recv_any(destinationSession);
@@ -285,9 +283,8 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
                 memset(&ncb, 0, sizeof(ncb));
                 ncb.ncb_command = NCBCANCEL;
                 ncb.ncb_lana_num = gNetbiosLana;
-                ncb.ncb_buffer = reinterpret_cast<unsigned char*>(
-                    &gNbSessNcb[destinationSession]
-                ); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
+                // API-forced: NCBCANCEL receives the target NCB through ncb_buffer (PUCHAR).
+                ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[destinationSession]);
                 Netbios(&ncb);
             }
             nb_close_session(destinationSession);
@@ -391,7 +388,7 @@ VA(0x004149a1, 0xbb)
 void nb_add_name(void)
 {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
-        strcpy(reinterpret_cast<char *>(gNbSessBuf), gNbGroupName);
+        strcpy(reinterpret_cast<char *>(gNbSessBuf), gNbGroupName); // API-forced: NCB name bytes are unsigned.
         memcpy(gNbSessBuf + strlen(gNbGroupName), gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
         memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
         gNbCtlNcb.ncb_command = NCBDGSENDBC | ASYNCH;
@@ -550,7 +547,7 @@ void nb_arm_recv(int session)
     unsigned char result;
 
     while (1) {
-        ProcessAssert(gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING,
+        ProcessAssert(gNbSessNcb[session].ncb_retcode != NRC_PENDING,
                       "D:\\Heroes\\Source\\netlo.cpp", gNbArmRecvLineBase + 5);
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
         gNbSessNcb[session].ncb_command = NCBRECV | ASYNCH;
@@ -584,7 +581,7 @@ void nb_close_session(int session)
         memset(&ncb, 0, sizeof(ncb));
         ncb.ncb_command = NCBCANCEL;
         ncb.ncb_lana_num = gNetbiosLana;
-        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[session]);
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[session]); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
     if (gNbSessLsn[session] != NETBIOS_INVALID_ID) {
@@ -643,3 +640,47 @@ void nb_format_name(char *source, unsigned char *destination)
     for (; i < NCBNAMSZ - 1; i++)
         destination[i] = ' ';
 }
+
+// netwin owns retail .data 0x0048f1e4-0x0048f28b and .bss 0x004a4bc8-0x004acebf.
+DATA(0x0048f1e4)
+unsigned char gNbCallRetries = 0;
+DATA(0x0048f1e8)
+unsigned char gNetbiosAvail = 0;
+DATA(0x0048f1ec)
+unsigned char gNbShutdown = 0;
+DATA(0x0048f1f0)
+unsigned char gNbMaxSess = 255;
+DATA(0x0048f1f4)
+unsigned char gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
+DATA(0x0048f1fc)
+char* gNbGroupName = "Empire Too ";
+DATA(0x0048f200)
+unsigned char* gNbListenName = (unsigned char*)"*";
+DATA(0x004a4bc8)
+tag_Anchor gNbFreeQueue;
+DATA(0x004a4bd0)
+unsigned char gNbSessLsn[7];
+DATA(0x004a4bd8)
+unsigned char gNbRcvData[7][0x1000];
+DATA(0x004abbd8)
+NetbiosName gNbNameBuf[7];
+DATA(0x004abc48)
+unsigned char gNbSessBuf[0xfd0];
+DATA(0x004acc48)
+NCB gNbSessNcb[7];
+DATA(0x004ace08)
+NCB gNbCtlNcb;
+DATA(0x004ace48)
+unsigned char gNbLocalNum;
+DATA(0x004ace50)
+tag_Anchor gNbRcvQueue;
+DATA(0x004ace58)
+tag_Anchor gNbSndQueue;
+DATA(0x004ace60)
+CRITICAL_SECTION gNbRcvLock;
+DATA(0x004ace78)
+HANDLE gNbEvents[9];
+DATA(0x004acea0)
+CRITICAL_SECTION gNbSndLock;
+DATA(0x004aceb8)
+unsigned char gNetbiosLana;

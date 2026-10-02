@@ -4,10 +4,6 @@
 
 #include <match.h>
 
-// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
-// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
-#include <mss.h>
-
 #include <BASE/soundmgr.h>
 
 #include <windows.h>
@@ -19,6 +15,9 @@
 #include <SOURCE/NOOPT.h>
 
 #include <io.h>
+// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
+// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
+#include <mss.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -488,10 +487,11 @@ struct _SAMPLE* soundManager::StartSample(
         if (m_musicStreamOpen != 0) {
             StopSample(m_musicSample);
             m_musicStreamOpen = 0;
+            // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
             ProcessAssert(
                 reinterpret_cast<int>(
                     m_midiFile
-                ), // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
+                ),
                 gStartSampleAssertFile,
                 gStartSampleAssertLine + 37
             );
@@ -576,10 +576,11 @@ void soundManager::StopAllSamples(void) {
         CDStop();
     } else if (m_musicStreamOpen != 0) {
         m_musicStreamOpen = 0;
+        // byte-evidenced: retail passes the FILE pointer as its assertion condition.
         ProcessAssert(
             reinterpret_cast<int>(
                 m_midiFile
-            ), // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+            ),
             gStopAllSamplesAssertFile,
             gStopAllSamplesAssertLine + 27
         );
@@ -779,10 +780,11 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
         && ((m_currentTrack >= 0 && m_currentTrack < MUSIC_POSITION_TRACK_END)
             || m_currentTrack == MUSIC_POSITION_TRACK_1 || m_currentTrack == MUSIC_POSITION_TRACK_2
             || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
+        // byte-evidenced: retail passes the FILE pointer as its assertion condition.
         ProcessAssert(
             reinterpret_cast<int>(
                 m_midiFile
-            ), // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+            ),
             gAmbientMusicAssertFile,
             gAmbientMusicAssertLine + 37
         );

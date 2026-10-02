@@ -24,6 +24,7 @@ int GetBuildingBaseResourceValue(int, int, int);
 extern int iDummy;
 extern int gArtifactBaseRV[];
 extern int gResourceBaseValue[];
+// Stale alias of gfSpellCastNumMod (0x492518): unreferenced, kept so later symbol handles stay put.
 extern float gfStatValue[];
 extern int bHeroBuiltThisTurn;
 extern int iCurHourGlassPhase;
@@ -168,7 +169,6 @@ extern int costTemp[];
 extern int iLastFrameRateTimer;
 extern signed char gbDrawSavedCursor;
 extern int bSpecialHideCursor;
-extern int gbHumanPlayer[];
 extern int giHumanTownConquered;
 extern int gbBerserk;
 extern float fBerserkFactor;
@@ -178,7 +178,7 @@ extern int gbTroopReload;
 extern int giMaxHeroesForThisPlayer;
 // GetBestBHC lets young towns buy during a network game only with this set;
 // TransmitSaveGame tests the same dword for its serial compression path.
-extern int gbSerialCompression;
+extern int gbRemoteReady;
 // GetTurnAIVars' per-cell enemy-hero turn distance for mines.
 extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern float gfHeroInteractionBonus[];
@@ -215,6 +215,7 @@ extern class searchArray SVSearchArray;
 extern float gfStatPower[];
 extern signed char gcSpellAIFlags[];
 extern short giSpellAIValue[];
+// Stale alias of gfBattleStat (0x492470): unreferenced, kept so later symbol handles stay put.
 extern float gfSpellPowerMod[];
 extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
@@ -222,5 +223,15 @@ extern float fReduceFactor;
 extern signed char gTownHeroClass[];
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
 extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+
+// Shared with GAME and EVENTS: the per-cell bitmask of the players whose
+// heroes have stood there and the current/watch players' high bits (all in
+// PHILAI's .bss band), ViewArmy's dismiss flag and the creatures a creature
+// month may feature (Buka PHILAI.h).
+extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern unsigned char giCurPlayerHighBit;
+extern unsigned char giCurWatchPlayerHighBit;
+extern signed char gbDismissArmy;
+extern signed char giMonType[];
 
 #endif // HOMM1_SOURCE_PHILAI_H

@@ -1,2 +1,10 @@
 # Vtable claims; data matching is deferred.
 rva	size	name	kind	note
+0x8c000	0xc	??_7highScoreManager@@6B@	primary	Open/Close/Main
+0x8c010	0xc	??_7recruitUnit@@6B@	primary	Open/Close/Main
+0x8c068	0xc	??_7townManager@@6B@	primary	Open/Close/Main
+0x8c3c8	0xc	??_7advManager@@6B@	primary	Open/Close/Main
+0x8c478	0xc	??_7fileRequester@@6B@	primary	Open/Close/Main
+0x8c498	0xc	??_7combatManager@@6B@	primary	Open/Close/Main
+0x8c4a8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
+0x8c528	0xc	??_7swapManager@@6B@	primary	Open/Close/Main

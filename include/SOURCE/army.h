@@ -21,10 +21,13 @@ public:
     signed char m_moveTargetHex;
     signed char m_creatureType;
     signed char m_hex;
-    signed char m_unknown08;
-    signed char m_unknown09;
+    // DrawToBuffer: pose 0 stand, 1 walk, 2 attack, 3 spell effect
+    // (Buka m_animationSequence) and the frame within it.
+    signed char m_animationSequence;
+    signed char m_animationFrame;
     signed char m_facing;
-    short m_unknown0b;
+    // Walk sets +-16 on diagonal moves; DrawToBuffer shifts y by frame * step.
+    short m_walkYStep;
     short m_initialQuantity;
     short m_quantity;
     short m_hitPointsLost;
@@ -43,8 +46,12 @@ public:
     short m_powFrames;
     signed char m_side;
     signed char m_index;
-    int m_unknown2f;
-    signed char m_unknown33;
+    // SpellEffect's running effect index (-1 none); DrawFrame grows the
+    // redraw box upward for effects 22-25.
+    int m_effectAnimation;
+    // DrawToBuffer adds the shadow frames while set; Walk clears it to
+    // redraw the field under the moving stack.
+    signed char m_drawShadow;
     // combatManager::ResetHitByCreature clears it; DoHydraAttack hits
     // each stack once.
     char m_hitByCreature;
@@ -55,7 +62,9 @@ public:
     class sample* m_samples[4];
     // Active spell; HoMM1 lets a stack carry one timed effect.
     signed char m_spellEffect;
-    signed char m_unknown52;
+    // What breaks m_spellEffect early: 0 the stack moving, 1 its own attack,
+    // 2 taking damage, 3 only the round count; -1 with no spell.
+    signed char m_spellEndCondition;
     // ResetRound counts this down and expires the effect at zero.
     signed char m_spellRounds;
     // --- constructors ---
@@ -146,13 +155,12 @@ public:
 #pragma pack(pop)
 
 short GetAdjacentCellIndexNoArmy(short, short);
-// The combat spell-effect icon cache: army draws and PowEffect share one
-// icon, reloaded when the effect file changes.
-extern class icon* gCurLoadedSpellIcon;
-extern short gCurLoadedSpellFileId;
+// The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
+// and PowEffect share one icon, reloaded when the effect file changes.
+// Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager):
+// unreferenced, kept so later symbol handles stay put.
+extern short gCurLoadedSpellEffect;
 extern short giSpellEffectFrame;
-// Spell-effect icon files by effect (0x004910d8).
-extern char* gCombatFxNames[];
 // Pow (impact) effect icons by effect (0x00491098).
 extern char* gPowEffectNames[];
 // Damage multipliers for attack minus defense, -20..20 (0x00492470).

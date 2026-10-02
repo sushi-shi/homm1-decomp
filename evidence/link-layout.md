@@ -69,10 +69,15 @@ claimed functions from 0x00401000 to 0x00473450 recovers these compositions:
 - RemoteCleanup (0x00458520) starts a new object after SETUP's
   BaseSetupHandler (thirteen `CCh`). Dial (0x00459627) and WriteModemPacket
   (0x0045a16b) start at odd addresses directly after ModemSetup and
-  ReadPacket. REMOTE now holds RemoteCleanup through nbnet_init, as Buka's
-  `REMOTE.cpp` and Netbios code do. Modem holds ModemSetup through
-  TransmitAndWait, in Buka's `Modem.cpp` order. ModemSetup begins on the
-  16-byte boundary at which nbnet_init ends. All 52 functions are at 100.
+  ReadPacket. The object's .data (0x0049f808-0x0049fdb7) and .bss
+  (0x004c7e70-0x004ca487) interleave the variables of the network bring-up,
+  the modem helpers and the packet layer. For example, iNetNameIndex,
+  iIDCtr, packetlen, iInOrderCtr and GameMode are consecutive. So everything
+  from RemoteCleanup to TransmitAndWait is one TU, SOURCE/REMOTE (Buka
+  REMOTE, Netbios and Modem code). Its data is defined after its functions in
+  retail address order. ModemSetup's 16-byte start (where nbnet_init ends) is
+  a coincidence. With the former SETUP, Modem and REMOTE scores carried over,
+  the 52 functions keep 51 exact rows; GUIModemCommandExec stays at 95.81.
 - army::army (0x00466490) starts a new object after WalkTowardArmy (eight
   `CCh`). The thirteen combatManager functions before it are Buka's
   `SOURCE/AI.cpp`, in the same order. Splitting them out of ARMY leaves the

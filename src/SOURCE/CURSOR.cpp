@@ -3,9 +3,9 @@
 
 #include <match.h>
 
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Icon2b.h>
 #include <BASE/Icond2b.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
@@ -39,13 +39,6 @@ void advManager::StartCursor(signed char direction)
     m_mapData[newX][newY].m_flags |= 0x40;
 }
 
-// CURSOR globals: Buka names; HoMM1 keeps byte flags and the last two
-// footstep sample handles (0x0048eb3c/0x0048eb40).
-extern signed char bMoveSoundMade;
-extern signed char EveryOther;
-extern struct _SAMPLE* hPrevMoveSound;
-extern struct _SAMPLE* hLastMoveSound;
-
 // Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
 VA(0x00405ab9, 0x150)
 void advManager::StopCursor(signed char stopSound)
@@ -66,15 +59,6 @@ void advManager::StopCursor(signed char stopSound)
     }
     m_cursorTurning = 0;
 }
-
-extern int bSpecialHideCursor;
-extern signed char gbDrawSavedCursor;
-extern signed char S1cursorDirection;
-extern short S1cursorBaseFrame;
-extern short S1cursorFrameCount;
-extern short S1cursorCycle;
-extern short S1cursorTurning;
-extern signed char giGroundToTerrain[];
 
 // Buka CURSOR.cpp:99 DrawCursor; HoMM1 draws the hero shadow first and
 // counts flag frames with m_updateMaxY.
@@ -108,12 +92,12 @@ void advManager::DrawCursor(void)
         if (m_cursorType == 4) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame & 0x7f;
-            FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen,
+            FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen,
                              drawX, screenY, drawFrame, 0);
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & 3) + (m_cursorFrame & 0x7f) + 0x38;
-            FlipIconToBitmap(m_flagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+            FlipIconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                              screenY, drawFrame, 0);
             m_updateMaxY++;
         }
@@ -126,12 +110,12 @@ void advManager::DrawCursor(void)
         if (m_cursorType == 4) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame;
-            IconToBitmap(m_boatFlagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+            IconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                          screenY, drawFrame, 0);
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & 3) + m_cursorFrame + 0x38;
-            IconToBitmap(m_flagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+            IconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                          screenY, drawFrame, 0);
             m_updateMaxY++;
         }
@@ -189,10 +173,6 @@ short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) directio
     }
 }
 
-extern short giStepDelay[];
-extern short horseFrameFlip[];
-extern short boatFrameFlip[];
-
 // Buka CURSOR.cpp:379 TurnTo; HoMM1 keeps sixteen half-step frames and
 // word-sized step delays.
 VA(0x00406275, 0x261)
@@ -242,28 +222,26 @@ void advManager::TurnTo(signed char direction)
         UpdateScreen(0, 0);
 }
 
-extern unsigned char giCurWatchPlayerBit;
-extern int gbHideComputerMoves;
-
 // Buka CURSOR.cpp:429 GetMoveShowIt; HoMM1 reads the current hero itself
-// and tests the watch bit directly in the map-extra grid.
+// and tests the watch player's high bit (0x004be7cc) directly in the
+// map-extra grid.
 VA(0x004064d6, 0x136)
 int advManager::GetMoveShowIt(signed char direction)
 {
+    short dy;
     hero *movingHero;
     short dirX;
-    short dy;
 
     if (gpCurPlayer->CurrentHero() == -1)
         return 0;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dirX = normalDirTable[direction].x;
     dy = normalDirTable[direction].y;
-    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gbHideComputerMoves))
+    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gbRemoteOn))
         && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y]
-             & giCurWatchPlayerBit)
+             & giCurWatchPlayerHighBit)
             || (gpGame->m_mapExtra[movingHero->m_x + dirX][movingHero->m_y + dy]
-                & giCurWatchPlayerBit)))
+                & giCurWatchPlayerHighBit)))
         return 1;
     else
         return 0;
@@ -271,8 +249,6 @@ int advManager::GetMoveShowIt(signed char direction)
 
 // Buka CURSOR.cpp MoveHero; HoMM1 recomputes the step cost from the hero
 // type, parks the boat on a coast step and has no deferred object draw.
-extern short giPixelsPerStep[];
-extern short startVals[];
 
 VA(0x0040660c, 0xe1e)
 mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, int *eventX, int *eventY,
@@ -306,7 +282,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     bShowIt = GetMoveShowIt(direction);
     terrain = giGroundToTerrain[GetCell(movingHero->m_x, movingHero->m_y)->m_tileIndex];
     nextCell = GetCell(movingHero->m_x + xInc, movingHero->m_y + yInc);
-    if (CalcTerrainCost(terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c)
+    if (CalcTerrainCost(terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass)
         > movingHero->m_remainingMobility) {
         *outOfMobility = 1;
         StopCursor(1);
@@ -384,9 +360,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 UpdateScreen(0, 0);
                 movingHero->m_remainingMobility -= CalcTerrainCost(
-                    terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+                    terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
                 if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
-                                    movingHero->m_unknown1c)
+                                    movingHero->m_heroClass)
                     > movingHero->m_remainingMobility) {
                     movingHero->m_remainingMobility = 0;
                     stopAfterMove = 1;
@@ -400,9 +376,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                     UpdateScreen(0, 0);
                     movingHero->m_remainingMobility -= CalcTerrainCost(
-                        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+                        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
                     if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0,
-                                        movingHero->m_remainingMobility, movingHero->m_unknown1c)
+                                        movingHero->m_remainingMobility, movingHero->m_heroClass)
                         > movingHero->m_remainingMobility) {
                         movingHero->m_remainingMobility = 0;
                         stopAfterMove = 1;
@@ -427,7 +403,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         *(m_visibilityMap + (movingHero->m_x + xInc) + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
     m_updateMinX = m_updateMinY = 0;
     gpGame->SetVisibility(m_mapOriginX + xInc + 7, m_mapOriginY + yInc + 7, giCurPlayer,
-                          gHeroScoutRadius[movingHero->m_unknown1c]);
+                          gHeroScoutRadius[movingHero->m_heroClass]);
     m_forceCompleteDraw = 1;
     pixelsPerStep = giPixelsPerStep[gConfig.walkSpeed];
     msDelay = giStepDelay[gConfig.walkSpeed];
@@ -476,9 +452,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         gbEnlargeScreenBlit = 1;
     }
     movingHero->m_remainingMobility -= CalcTerrainCost(
-        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
     if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
-                        movingHero->m_unknown1c)
+                        movingHero->m_heroClass)
         > movingHero->m_remainingMobility) {
         movingHero->m_remainingMobility = 0;
         stopAfterMove = 1;
@@ -528,7 +504,7 @@ movementDone:
         if (mapExtra[movingHero->m_x][movingHero->m_y] & 0x80) {
             if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                 goto adjacentDone;
-            if (retCell && (char)(retCell->m_triggerType & 0x7f) == 0x3e)
+            if (retCell && static_cast<char>(retCell->m_triggerType & 0x7f) == 0x3e)
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
             if (movingHero->m_owner == -1)
@@ -654,7 +630,7 @@ short advManager::ValidMove(short direction)
     if (newY < -7 || newY > MAP_CELL_GRID_SIZE - 7 - 1)
         return 0;
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
-    if (destCell->m_unknown07 & 0x80)
+    if (destCell->m_secondaryTrigger & 0x80)
         return 0;
     if (giGroundToTerrain[destCell->m_tileIndex] == 0) {
         if (m_cursorType != 4 && destCell->m_triggerType != 0xbe && destCell->m_triggerType != 0xa3)
@@ -709,3 +685,30 @@ void advManager::MoveOrigin(short directionX, short directionY)
     }
     m_forceCompleteDraw = 1;
 }
+
+// CURSOR owns retail .data 0x0048eb18-0x0048eb4f (initialized, before the
+// TOWNMGR band) and .bss 0x004a4b80-0x004a4b97. Initializers are retail bytes.
+DATA(0x0048eb18)
+signed char bMoveSoundMade = 1;
+DATA(0x0048eb20)
+short giPixelsPerStep[5] = {1, 4, 6, 8, 16};
+DATA(0x0048eb30)
+short giStepDelay[5] = {30, 45, 30, 15, 15};
+DATA(0x0048eb3c)
+struct _SAMPLE* hPrevMoveSound = 0;
+DATA(0x0048eb40)
+struct _SAMPLE* hLastMoveSound = 0;
+DATA(0x0048eb44)
+signed char EveryOther = 0;
+DATA(0x0048eb48)
+short startVals[3] = {16, 0, -16};
+DATA(0x004a4b80)
+short S1cursorCycle;
+DATA(0x004a4b84)
+short S1cursorFrameCount;
+DATA(0x004a4b88)
+short S1cursorTurning;
+DATA(0x004a4b8c)
+short S1cursorBaseFrame;
+DATA(0x004a4b90)
+signed char S1cursorDirection;

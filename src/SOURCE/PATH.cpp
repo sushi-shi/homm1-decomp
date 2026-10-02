@@ -4,12 +4,13 @@
 
 #include <SOURCE/PATH.h>
 
-#include <H1/All.h>
 #include <BASE/Misc.h>
+#include <H1/All.h>
+#include <H1/KB.h>
 
 // Compiler line-base words for PATH.CPP's ProcessAssert sites.
-DATA(0x0048f4d4) short gAdjacentCellAssertLine;
-DATA(0x0048f510) short gAdjacentCellNoArmyAssertLine;
+DATA(0x0048f4d4) short gAdjacentCellAssertLine = 311;
+DATA(0x0048f510) short gAdjacentCellNoArmyAssertLine = 328;
 
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.
@@ -248,6 +249,8 @@ short GetAdjacentCellIndexNoArmy(short hex, short direction)
 }
 
 // Buka PATH.cpp ValidRange.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00418aee, 0x4c2)
 short army::ValidRange(short targetHex)
 {

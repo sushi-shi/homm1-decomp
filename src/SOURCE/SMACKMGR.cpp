@@ -3,45 +3,30 @@
 
 #include <match.h>
 
+#include <BASE/bitmap.h>
+#include <BASE/bmap2.h>
 #include <BASE/executive.h>
+#include <BASE/font.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
+#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
+#include <BASE/MISC_TYPES.h>
+#include <BASE/palette.h>
+#include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <BASE/font.h>
-#include <BASE/heroWindowManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/MISC_TYPES.h>
-#include <BASE/inputManager.h>
-#include <BASE/Misc.h>
-#include <BASE/bitmap.h>
-#include <BASE/bmap2.h>
-#include <BASE/palette.h>
-#include <BASE/resourceManager.h>
-#include <SOURCE/NOOPT.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/smack.h>
 #include <SOURCE/smackManager.h>
 #include <SOURCE/wingraph.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// One 0x16-byte row per movie: file name, the window manager's update mode
-// while it plays, the fades around it and its SmackOpen flags.
-#pragma pack(push, 1)
-struct SSmackOptions {
-    char fileName[15];
-    signed char updateFlags;
-    signed char fadeIn;
-    signed char fadeOut;
-    unsigned long openFlags;
-};
-#pragma pack(pop)
-
-extern SSmackOptions SmackOptions[];
-extern signed char gbSkipIntro;
-extern char gcCongratsText[];
 
 // RAD library allocation callbacks; HoMM1 links SMACKW32.DLL, so neither is
 // reached.
@@ -126,9 +111,9 @@ short smackManager::Main(struct tag_message &msg) {
             SmackGoto(smk, startFrame);
             SmackSoundOnOff(smk, gConfig.musicVolume);
             if (smk->paletteSelector == 1)
-                pPalette->m_data = (signed char *)smk->Palette;
+                pPalette->m_data = reinterpret_cast<signed char*>(smk->Palette); // API-forced: Smacker palettes are unsigned bytes.
             else
-                pPalette->m_data = (signed char *)smk->alternatePalette;
+                pPalette->m_data = reinterpret_cast<signed char*>(smk->alternatePalette); // API-forced: Smacker palettes are unsigned bytes.
             SetPalette(pPalette->m_data, 1);
             gbFirstTimeThrough = 1;
         }
@@ -140,9 +125,9 @@ short smackManager::Main(struct tag_message &msg) {
             SmackDoFrame(smk);
             if (SmackOptions[bSmackNum].fadeIn && currentFrame == startFrame) {
                 if (smk->paletteSelector == 1)
-                    pPalette->m_data = (signed char *)smk->Palette;
+                    pPalette->m_data = reinterpret_cast<signed char*>(smk->Palette); // API-forced: Smacker palettes are unsigned bytes.
                 else
-                    pPalette->m_data = (signed char *)smk->alternatePalette;
+                    pPalette->m_data = reinterpret_cast<signed char*>(smk->alternatePalette); // API-forced: Smacker palettes are unsigned bytes.
                 if (giMainVideoModeColorDepth == 8 || gConfig.gfx[giCurExe].fullScreen) {
                     while (SmackToBufferRect(smk, 1))
                         BlitBitmapToScreen(gpWindowManager->m_screen, smk->LastRectx, smk->LastRecty,
@@ -221,9 +206,9 @@ short smackManager::Main(struct tag_message &msg) {
         }
         if (SmackOptions[bSmackNum].fadeOut) {
             if (smk->paletteSelector == 1)
-                pPalette->m_data = (signed char *)smk->Palette;
+                pPalette->m_data = reinterpret_cast<signed char*>(smk->Palette); // API-forced: Smacker palettes are unsigned bytes.
             else
-                pPalette->m_data = (signed char *)smk->alternatePalette;
+                pPalette->m_data = reinterpret_cast<signed char*>(smk->alternatePalette); // API-forced: Smacker palettes are unsigned bytes.
             gpWindowManager->FadeScreen(1, 8, pPalette);
             FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
             BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
@@ -252,3 +237,20 @@ void PlaySmacker(signed char smackNumber) {
     gpExec->RemoveManager(gpSmackManager);
     gbInSmacker = 0;
 }
+
+// SMACKMGR owns retail .data 0x0049fd08-0x0049fe4f and .bss 0x004ca488-0x004ca48f.
+DATA(0x0049fd08)
+SSmackOptions SmackOptions[8] = {
+    {"nwclogo.smk", 0, 1, 0, 32},
+    {"nwclogo1.smk", 0, 1, 0, 32},
+    {"intro02c.smk", 1, 1, 0, 32},
+    {"intro02u.smk", 1, 1, 0, 32},
+    {"win01c.smk", 1, 1, 1, 0},
+    {"win01u.smk", 1, 1, 1, 0},
+    {"win02.smk", 0, 1, 1, 0},
+    {"lose1.smk", 0, 1, 1, 0},
+};
+DATA(0x004ca488)
+signed char bSmackNum;
+DATA(0x004ca48c)
+signed char gbSmackAborted;

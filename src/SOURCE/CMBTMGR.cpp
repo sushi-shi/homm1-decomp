@@ -2,32 +2,28 @@
 
 #include <match.h>
 
+#include <BASE/icon.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
+#include <BASE/mouseManager.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/icon.h>
-#include <BASE/mouseManager.h>
-#include <SOURCE/wingraph.h>
-#include <SOURCE/NOOPT.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/philAI.h>
+#include <SOURCE/wingraph.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Battlefield backdrops (0x00490db0), ground tiles (0x00491058) and
-// obstacle icons (0x00491078) per combat terrain.
-extern char* cCombatBkgNames[];
-extern char* cCombatGroundNames[];
-extern char* cCombatObstacleNames[];
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x00490d50)
-int bInHighMoraleBonus;
+int bInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
 DATA(0x00490d54)
-int giSeed;
+int giSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
@@ -38,7 +34,7 @@ combatManager::combatManager(void)
     m_currentSide = 0;
     m_limitCreatureHex = 0;
     m_limitCreature = 0;
-    m_unknown6c0 = 1;
+    m_showArmyQuantities = 1;
     m_gridUpdateRow = 0;
     m_currentCommand = 0;
     m_unknown6e8 = 0;
@@ -112,15 +108,15 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
     }
     for (i = 0; i < 2; i++) {
         if (m_playerId[i] >= 0)
-            m_unknown2b8[i] = gbHumanPlayer[m_playerId[i]];
+            m_humanSide[i] = gbHumanPlayer[m_playerId[i]];
         else
-            m_unknown2b8[i] = 0;
+            m_humanSide[i] = 0;
         if (i == 1)
             m_heroes[i] = attackerHero;
         else
             m_heroes[i] = defenderHero;
         if (m_heroes[i])
-            m_heroType[i] = m_heroes[i]->m_unknown1c;
+            m_heroType[i] = m_heroes[i]->m_heroClass;
         else
             m_heroType[i] = -1;
         if (i == 1)
@@ -131,7 +127,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         if (m_heroes[i] && m_heroes[i]->HasArtifact(0x11))
             m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
         m_keepAttacksRemaining[i] = 1;
-        m_unknown6df[i] = 0;
+        m_visitingHeroPresent[i] = 0;
         m_heroCastSpell[i] = 0;
     }
     m_castleSide[1] = 0;
@@ -139,9 +135,9 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         if (defenderTown->m_occupyingHeroId != -1) {
             m_armyGroups[0] = &m_heroes[0]->m_army;
             CombineGroups(&defenderTown->m_army, &m_heroes[0]->m_army);
-            m_unknown6df[0] = 1;
+            m_visitingHeroPresent[0] = 1;
         } else {
-            m_unknown6df[0] = 0;
+            m_visitingHeroPresent[0] = 0;
         }
         if (defenderTown->m_buildings & 0x40)
             m_castleSide[0] = 1;
@@ -179,10 +175,10 @@ short combatManager::Open(short priority)
     m_sideRetreated[1] = 0;
     m_combatResult = 3;
     gbUseClippedIconRenderer = 0;
-    m_unknown727 = 0;
-    m_unknown72b = 0;
+    m_computeExtent = 0;
+    m_redrawExtent = 0;
     gCurLoadedSpellIcon = 0;
-    gCurLoadedSpellEffect = 0;
+    gCurLoadedSpellFileId = 0;
     gpMouseManager->SetPointer("cmbtmous.mse", 6);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
@@ -245,7 +241,7 @@ void combatManager::Close(void)
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == 0x9a) {
-        survivor = (signed char)(m_playerId[0] != -1);
+        survivor = static_cast<signed char>(m_playerId[0] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < 5; i++) {
             if (m_armyGroups[survivor]->m_creatureTypes[i] != -1)
@@ -314,7 +310,7 @@ void combatManager::GenerateMap(void)
             m_hexCells[y * 9 + x].m_y = y * 80 + 139;
             m_hexCells[y * 9 + x].m_x = ((y & 1) ? 27 : -12) + x * 78;
             m_hexCells[y * 9 + x].m_groundIcon = 0;
-            m_hexCells[y * 9 + x].m_groundFrame = (signed char)SRandom(0, 3) + 4;
+            m_hexCells[y * 9 + x].m_groundFrame = static_cast<signed char>(SRandom(0, 3)) + 4;
             if (x == 0) {
                 if (m_castleSide[1] == 1)
                     m_hexCells[y * 9 + x].m_groundIcon = 5;
@@ -341,7 +337,7 @@ void combatManager::GenerateMap(void)
     for (i = 0; i < count; i++) {
         randomRow = SRandom(0, 4);
         randomCol = SRandom(1, 7);
-        m_hexCells[randomRow * 9 + randomCol].m_groundFrame = (signed char)SRandom(0, 2) + 8;
+        m_hexCells[randomRow * 9 + randomCol].m_groundFrame = static_cast<signed char>(SRandom(0, 2)) + 8;
     }
     if (m_castleSide[0]) {
         for (x = 6; x < 8; x++) {
@@ -515,7 +511,7 @@ void combatManager::LoadIcons(void)
     m_combatIcons[6] = gpResourceManager->GetIcon("cloud.icn");
     if (m_castleSide[1] || m_castleSide[0]) {
         m_combatIcons[3] = gpResourceManager->GetIcon("catapult.icn");
-        sprintf(gText, "castle%02d.icn", m_combatTowns[(signed char)(m_castleSide[1] == 1)]->m_type);
+        sprintf(gText, "castle%02d.icn", m_combatTowns[static_cast<signed char>(m_castleSide[1] == 1)]->m_type);
         m_combatIcons[5] = gpResourceManager->GetIcon(gText);
         sprintf(gText, "keep%02d.icn", m_combatTowns[0]->m_type);
         m_combatIcons[7] = gpResourceManager->GetIcon(gText);
@@ -583,11 +579,13 @@ void combatManager::FreeArmies(void)
     if (gCurLoadedSpellIcon)
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
     gCurLoadedSpellIcon = 0;
-    gCurLoadedSpellEffect = 0;
+    gCurLoadedSpellFileId = 0;
 }
 
 // HoMM1 retail 0x0044d34c: no callers and an empty body; HoMM2's combat log
 // for unshown battles is the nearest one-argument fit.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044d34c, 0x18)
 void combatManager::NoShowCombatLog(char*)
 {
@@ -674,7 +672,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     morale = theGroup->GetMorale(m_heroes[side], m_combatTowns[side]);
     if (morale >= 0 || SRandom(1, 12) > -morale)
         return 0;
-    if (!m_unknown2b8[side] && SRandom(1, 4) == 1)
+    if (!m_humanSide[side] && SRandom(1, 4) == 1)
         return 0;
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("BADMRLE.82M");
@@ -683,7 +681,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     else
         sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
-    activeArmy->m_unknown09 = 2;
+    activeArmy->m_animationFrame = 2;
     activeArmy->SpellEffect(25, 180);
     activeArmy->Stand(1);
     activeArmy->m_stats.attributes |= 0x80;
@@ -807,7 +805,7 @@ void combatManager::CatAttack(signed char side)
     giMaxExtentY = 420;
     m_catapultFrame[side] = 0;
     while (m_catapultFrame[side] < 8) {
-        m_unknown72b = 1;
+        m_redrawExtent = 1;
         DrawFrame(1);
         m_catapultFrame[side]++;
     }
@@ -843,7 +841,7 @@ void combatManager::CatAttack(signed char side)
         dy = (tgtY - startY) / 12;
         i = 0;
         while (i < 12) {
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             if (i) {
                 giMinExtentX = x - dx - 20;
                 giMaxExtentX = x + 75;
@@ -883,7 +881,7 @@ void combatManager::CatAttack(signed char side)
         dx = (summitX - startX) / 12;
         dy = (summitY - startY) / 78;
         for (i = 0; i < 12; i++) {
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             if (i) {
                 giMinExtentX = x - dx - 20;
                 giMaxExtentX = x + 75;
@@ -912,7 +910,7 @@ void combatManager::CatAttack(signed char side)
         dx = (tgtX - x) / 8;
         dy = (tgtY - y) / 36;
         for (i = 1; i <= 8; i++) {
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             giMinExtentX = x - dx - 20;
             giMaxExtentX = x + 75;
             giMinExtentY = y - 75;
@@ -946,7 +944,7 @@ void combatManager::CatAttack(signed char side)
     if (!gbHumanPlayer[m_playerId[1]])
         force -= 15;
     if (force < 30 || m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 0x41) {
-        m_unknown6e3 = 0;
+        m_wallSurvives = 0;
         m_wallFrame = 0;
         giMinExtentX = 300;
         giMaxExtentX = 490;
@@ -960,7 +958,7 @@ void combatManager::CatAttack(signed char side)
             m_wallDamage = m_wallFrame;
             if (m_wallFrame == 5)
                 m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x42;
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             m_gridUpdateRow = m_catapultTarget - 2;
             if (m_gridUpdateRow < 0)
                 m_gridUpdateRow = 0;
@@ -970,7 +968,7 @@ void combatManager::CatAttack(signed char side)
         m_wallFrame = m_wallDamage = -1;
         m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = -1;
     } else {
-        m_unknown6e3 = 1;
+        m_wallSurvives = 1;
         m_wallFrame = 0;
         giMinExtentX = 300;
         giMaxExtentX = 490;
@@ -983,26 +981,26 @@ void combatManager::CatAttack(signed char side)
         while (m_wallFrame < 10) {
             if (m_wallFrame == 5)
                 m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             DrawFrame(1);
             m_wallFrame++;
         }
         m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 10;
         m_wallFrame = -1;
     }
-    m_unknown72b = 1;
+    m_redrawExtent = 1;
     DrawFrame(1);
     giMinExtentX = 0;
     giMaxExtentX = 200;
     giMinExtentY = 220;
     giMaxExtentY = 420;
     while (m_catapultFrame[side] < 14) {
-        m_unknown72b = 1;
+        m_redrawExtent = 1;
         DrawFrame(1);
         m_catapultFrame[side]++;
     }
     m_catapultFrame[side] = 0;
-    m_unknown72b = 1;
+    m_redrawExtent = 1;
     DrawFrame(1);
     gpResourceManager->Dispose(boulder);
     gpMouseManager->ReallyShowPointer();
@@ -1011,6 +1009,8 @@ void combatManager::CatAttack(signed char side)
 
 // HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
 // the field before a full redraw.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044e7f2, 0x4e)
 void combatManager::RegenerateField(void)
 {
@@ -1117,8 +1117,8 @@ void combatManager::KeepAttack(void)
     startY = 0x19;
     destX = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_x;
     targetY = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_y - 75;
-    xAdvance = (float)(destX - startX) / (float)(distance * 3);
-    yAdvance = (float)(targetY - startY) / (float)(distance * 3);
+    xAdvance = static_cast<float>(destX - startX) / static_cast<float>(distance * 3);
+    yAdvance = static_cast<float>(targetY - startY) / static_cast<float>(distance * 3);
     xRun = startX;
     yRun = startY;
     updRight = 0;
@@ -1180,7 +1180,7 @@ void combatManager::KeepAttack(void)
     hurt = 0;
     for (i = 0; i < dice; i++)
         hurt += SRandom(2, 3);
-    hurt = (int)(hurt * gfStatPower[mod + 20]);
+    hurt = static_cast<int>(hurt * gfBattleStat[mod + 20]);
     if (hurt <= 0)
         hurt = 1;
     numLost = target->Damage(hurt);
@@ -1191,7 +1191,7 @@ void combatManager::KeepAttack(void)
     else
         sprintf(gText, "%s %d %s.", "Garrison does", hurt, "Damage");
     gpCombatManager->CombatMessage(gText, 1);
-    target->PowEffect(target->m_stats.unknown07);
+    target->PowEffect(target->m_stats.powEffect);
     if (!(target->m_stats.attributes & 0x10))
         target->Stand(0);
     WaitEndSample(sample, -1);
@@ -1243,7 +1243,7 @@ VA(0x0044f587, 0x64)
 void combatManager::SaveCombatBorder(void)
 {
     if (!m_savedBorder)
-        m_savedBorder = (char*)malloc(0x3200);
+        m_savedBorder = static_cast<char*>(malloc(0x3200));
     memcpy(m_savedBorder, gpWindowManager->m_screen->m_pixels + 0x47e00, 0x3200);
 }
 
@@ -1255,3 +1255,20 @@ void combatManager::DrawCombatBorder(void)
         return;
     memcpy(gpWindowManager->m_screen->m_pixels + 0x47e00, m_savedBorder, 0x3200);
 }
+
+// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
+// table after Open's literals, followed by its own literals.
+DATA(0x00490db0)
+char* cCombatBkgNames[11] = {
+    "frstwgrs.bkg",
+    "mtnwgrsf.bkg",
+    "snowfrst.bkg",
+    "snowmtnf.bkg",
+    "swamp.bkg",
+    "lava.bkg",
+    "desert.bkg",
+    "frstwdrt.bkg",
+    "mtnwdrtf.bkg",
+    "boat.bkg",
+    "gravyard.bkg",
+};

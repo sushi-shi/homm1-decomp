@@ -40,10 +40,11 @@ void textEntryWidget::Read(int type) {
     m_height = gpResourceManager->ReadWord();
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
+    // byte-evidenced: ReadBlock accepts signed bytes for text storage.
     gpResourceManager->ReadBlock(
         reinterpret_cast<signed char*>(m_text),
         m_maxLength
-    ); // byte-evidenced: ReadBlock accepts signed bytes for text storage.
+    );
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_font = gpResourceManager->GetFont(
@@ -169,16 +170,12 @@ short textEntryWidget::Main(tag_message& message) {
                                     }
                                 } else if (strlen(edit) + 1 < m_maxLength
                                            && event.keyCode != 0) {
-                                    char typed = 0;
+                                    char typed;
                                     strcpy(copy, edit);
+                                    typed = 0;
                                     if (event.keyCode
                                         >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
-                                        switch (static_cast<unsigned char>(
-                                            static_cast<unsigned short>(
-                                                event.keyCode
-                                            )
-                                            >> 8
-                                        )) {
+                                        switch ((event.keyCode >> 8) & 0xff) {
                                             case TEXT_ENTRY_KEYPAD_7:
                                                 typed = '7';
                                                 break;
@@ -217,7 +214,7 @@ short textEntryWidget::Main(tag_message& message) {
                                         strcpy(swap, m_text);
                                         free(m_text);
                                         m_text = static_cast<char*>(
-                                            malloc(strlen(edit) + TEXT_ENTRY_ALLOCATION_PADDING)
+                                            malloc(strlen(edit) + 1 + TEXT_ENTRY_ALLOCATION_PADDING)
                                         );
                                         strcpy(swap, edit);
                                         swap[m_cursorPosition] = typed;
