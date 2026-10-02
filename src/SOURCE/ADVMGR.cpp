@@ -3216,19 +3216,19 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
             MemError();
         viewWin->AddWidget(garrisonWidget, -1);
     } else {
-        short row2;
-        signed char monster;
-        signed char slot;
         short slotIndex;
-        iconWidget* iconWgts[5];
-        char* labels[5];
+        short rowY;
         int xAdjust;
         short offsetX;
+        signed char monster;
         short step;
+        iconWidget* iconWgts[5];
+        short row2;
+        short row1;
         textWidget* texts[5];
         signed char dummy;
-        short rowY;
-        short row1;
+        char* labels[5];
+        signed char slot;
 
         rowY = 75;
         switch (numArmies) {
