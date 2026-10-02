@@ -315,7 +315,7 @@ short fileRequester::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_KEY_DOWN:
             switch (message.keyCode) {
-                case 0x48:
+                case INPUT_SCAN_NUMPAD_8:
                     if (m_selectedIndex > 0) {
                         m_selectedIndex--;
                         if (m_topIndex > m_selectedIndex)
@@ -323,7 +323,7 @@ short fileRequester::Main(tag_message& message) {
                         Update(1);
                     }
                     break;
-                case 0x50:
+                case INPUT_SCAN_NUMPAD_2:
                     if (m_selectedIndex < m_fileCount - 1) {
                         m_selectedIndex++;
                         if (m_topIndex + 10 <= m_selectedIndex)
@@ -337,7 +337,7 @@ short fileRequester::Main(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 0x7802:
+                        case DIALOG_BUTTON_2:
                             if (m_selectedIndex == -1 && !m_filename[0]) {
                                 NormalDialog(
                                     "Please make a selection from the list, or press cancel.", NORMAL_DIALOG_TYPE_OK,
@@ -348,7 +348,7 @@ short fileRequester::Main(tag_message& message) {
                                 finished = 1;
                             }
                             break;
-                        case 0x7801:
+                        case DIALOG_BUTTON_1:
                             message.value = message.id;
                             finished = 1;
                             break;
@@ -423,19 +423,19 @@ short fileRequester::Main(tag_message& message) {
                             DoKnob();
                             break;
                         case firstRowId:
-                        case 5:
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
-                        case 10:
-                        case 11:
-                        case 12:
-                        case 13:
+                        case firstRowId + 1:
+                        case firstRowId + 2:
+                        case firstRowId + 3:
+                        case firstRowId + 4:
+                        case firstRowId + 5:
+                        case firstRowId + 6:
+                        case firstRowId + 7:
+                        case firstRowId + 8:
+                        case firstRowId + 9:
                             if (message.id - firstRowId + m_topIndex
                                 == m_selectedIndex) {
-                                message.value = 0x7802;
-                                message.id = 0x7802;
+                                message.value = DIALOG_BUTTON_2;
+                                message.id = DIALOG_BUTTON_2;
                                 finished = 1;
                                 break;
                             }
