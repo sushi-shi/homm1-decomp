@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
@@ -251,7 +252,7 @@ short swapManager::Main(struct tag_message& message) {
                 Update();
                 m_window->DrawWindow();
                 Reset();
-                gpWindowManager->FadeScreen(0, 8, NULL);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
                 break;
             case CONTROL_RIGHT_HERO:
                 if (quickView)
@@ -261,7 +262,7 @@ short swapManager::Main(struct tag_message& message) {
                 Update();
                 m_window->DrawWindow();
                 Reset();
-                gpWindowManager->FadeScreen(0, 8, NULL);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
                 break;
             case CONTROL_LEFT_ARTIFACT_FIRST:
             case CONTROL_LEFT_ARTIFACT_FIRST + 1:

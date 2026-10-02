@@ -1084,10 +1084,10 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
             giBottomViewOverride = 0;
-            gpWindowManager->FadeScreen(1, 8, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_MANAGER_DIALOG_FADE_STEP, gPalette);
             gpAdvManager->SetInitialMapOrigin();
             gpAdvManager->RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(0, 8, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, gPalette);
         }
     }
 }
@@ -2448,7 +2448,7 @@ void game::Overview(void) {
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
     sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_color);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
@@ -2581,10 +2581,10 @@ void game::Overview(void) {
         smallFont->DrawBoundedString(gText, 100, 465, 400, 12, 1, 0);
         gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
-    gpWindowManager->FadeScreen(0, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
     gpResourceManager->Dispose(ovIcon);
     gpResourceManager->Dispose(smallFont);
     gpResourceManager->Dispose(bigFont);

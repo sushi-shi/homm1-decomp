@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/X_GLOBAL.h>
@@ -82,7 +83,7 @@ void town::View(void) {
 
     townManager *manager = gpTownManager;
     manager->SetTown(this);
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
     gpExec->CallManager(gpTownManager);
     if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);
