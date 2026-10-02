@@ -725,9 +725,9 @@ void army::DoHydraAttack(void) {
     short occSide;
     short i;
     short dir;
+    short armyIndex;
     short attackMask;
     army* pTarget;
-    short armyIndex;
     short targetHex;
     int totalLost;
     int totDmg;
