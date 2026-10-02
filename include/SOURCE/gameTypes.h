@@ -8,6 +8,8 @@
 // per-player records size their town lists and locators with them too.
 H1_ENUM_CONST_BEGIN(GameStorageConstant)
     GAME_PLAYER_COUNT = 4,
+    // NewGameHandler refuses a game with fewer seats in play.
+    GAME_MIN_PLAYER_COUNT = 2,
     GAME_TOWN_COUNT = 36,
     GAME_HERO_COUNT = 36,
     GAME_MINE_COUNT = 36,

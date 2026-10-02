@@ -786,7 +786,7 @@ short NewGameHandler(tag_message& message) {
                                 if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
                                     gpGame->m_playerCount++;
                             }
-                            if (gpGame->m_playerCount < 2) {
+                            if (gpGame->m_playerCount < GAME_MIN_PLAYER_COUNT) {
                                 NormalDialog(
                                     "A game requires at least one iPlayer.",
                                     NORMAL_DIALOG_TYPE_OK,
