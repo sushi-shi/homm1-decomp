@@ -139,11 +139,6 @@ H1_ENUM_CONST_BEGIN(AdventurePanelDialogConstant)
     PANEL_SEARCH = 4
 H1_ENUM_CONST_END(AdventurePanelDialogConstant)
 
-// CastSpell charges Dimension Door and Town Gate this much mobility.
-H1_ENUM_CONST_BEGIN(AdventureSpellConstant)
-    SPELL_TRAVEL_MOBILITY_COST = 12
-H1_ENUM_CONST_END(AdventureSpellConstant)
-
 H1_ENUM_BEGIN(AdventureDrawMask)
     ADVMGR_DRAW_GROUND = 0x01,
     ADVMGR_DRAW_OBJECT = 0x02,

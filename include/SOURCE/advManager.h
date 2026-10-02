@@ -69,6 +69,12 @@ H1_ENUM_BEGIN(AdventureCommand)
     ADVMGR_COMMAND_CONTINUE_ROUTE = 7
 H1_ENUM_END(AdventureCommand)
 
+// CastSpell charges Dimension Door and Town Gate this much mobility, and
+// philAI::DoDimensionDoor the same for the AI's jump.
+H1_ENUM_CONST_BEGIN(AdventureSpellConstant)
+    SPELL_TRAVEL_MOBILITY_COST = 12
+H1_ENUM_CONST_END(AdventureSpellConstant)
+
 // Player colours: playerData::m_color indexes the constructor's flag ICNs
 // (b-/g-/r-/y-flag32.icn and -bflg32.icn) and KB's gColorNames
 // {"blue", "green", "red", "yellow"} (Buka PlayerColor, first four values);

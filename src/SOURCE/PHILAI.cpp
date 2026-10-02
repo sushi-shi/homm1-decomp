@@ -520,10 +520,10 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
     if (bestX == -1 || length <= 4)
         return 0;
     gpAdvManager->TeleportTo(bestX, bestY, 0);
-    if (pHero->m_remainingMobility < 12)
+    if (pHero->m_remainingMobility < SPELL_TRAVEL_MOBILITY_COST)
         pHero->m_remainingMobility = 0;
     else
-        pHero->m_remainingMobility -= 12;
+        pHero->m_remainingMobility -= SPELL_TRAVEL_MOBILITY_COST;
     pHero->UseSpell(SPELL_DIMENSION_DOOR);
     return 1;
 }
