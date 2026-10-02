@@ -13,7 +13,8 @@ public:
     // Attack target (GetCommand clears both to -1).
     signed char m_targetSide;
     signed char m_targetIndex;
-    short m_unknown02;
+    // ValidRange records the chosen attack direction.
+    short m_attackDirection;
     signed char m_unknown04;
     // ValidPath records the reachable target hex here.
     signed char m_moveTargetHex;
@@ -110,21 +111,24 @@ public:
     int OtherArmyAdjacent(int, int);
     int GetPowBaseY(void);
     int CanFit(int, int, int *);
-    int ValidFlight(int, int);
+    short ValidFlight(short, signed char);
     int FlyTo(void);
     int FlyTo(int);
-    int FindPath(int, int, int, int, int);
-    // HoMM1 retail 0x00418242: word hex, word result (ret 8).
-    short ValidPath(short, int);
-    int GetMoveMask(int);
+    // HoMM1 retail 0x004180f0: word hexes, byte speed/flags (ret 0x14).
+    short FindPath(short, short, signed char, signed char, signed char);
+    // HoMM1 retail 0x00418242: word hex, byte path mode, word result (ret 8).
+    short ValidPath(short, signed char);
+    short GetMoveMask(short);
     // HoMM1 retail 0x0041835b: word hex, byte mode and target (ret 0xc).
     short GetAttackMask(short, signed char, signed char);
-    int ValidMove(int);
-    int ValidMove(int, int);
-    int ValidAttack(int, int, int, int, int *);
-    int GetAdjacentCellIndex(int, int);
-    int ValidRange(int);
-    int GetBestDirection(int, int, int);
+    short ValidMove(short);
+    short ValidMove(short, short);
+    short ValidAttack(short, short, short, short, short *);
+    short GetAdjacentCellIndex(short, short);
+    short ValidRange(short);
+    short GetBestDirection(short, short, short);
 };
 #pragma pack(pop)
+
+short GetAdjacentCellIndexNoArmy(short, short);
 #endif // HOMM1_SOURCE_ARMY_H

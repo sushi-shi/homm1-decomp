@@ -68,7 +68,8 @@ public:
     void PushPoint(int, int, int, int, int, int, int, int, int, int, int, int);
     void TestPossibleDirections(int, int, signed char * const, signed char * const, int, int);
     void SeedCombatPosition(class army *);
-    int FindCombatPath(int, int, class army *, int, int);
+    // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
+    short FindCombatPath(short, short, class army *, signed char);
     void PushCombatPoint(int, int, int, int);
 };
 #pragma pack(pop)
