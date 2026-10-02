@@ -129,3 +129,4 @@ rva	name	provenance
 0x00081D70	_exit	LIBC exit: doexit(code, 0, 0) at 0x081db0; EarlySetup calls it on the CD/setup failure exits
 0x000830C0	_write	LIBC write (oldnames write -> _write): fd range check against _nhandle; playerData::Write streams its fields through it
 0x00083340	_strnicmp	fileRequester::Open and game::NewGame call it with (name, prefix, count) cdecl beside _strcmpi at 0x083410
+0x00076EC0	?SetCursorShape@mouseManager@@QAEXH@Z	Empty Windows-build hook (ret 4); fileRequester::DoKnob and advManager::DoHeroKnob pass 4 on entry and 6 on release
