@@ -550,7 +550,7 @@ void nb_arm_recv(int session)
     unsigned char result;
 
     while (1) {
-        ProcessAssert(gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING,
+        ProcessAssert(gNbSessNcb[session].ncb_retcode != NRC_PENDING,
                       "D:\\Heroes\\Source\\netlo.cpp", gNbArmRecvLineBase + 5);
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
         gNbSessNcb[session].ncb_command = NCBRECV | ASYNCH;
@@ -669,7 +669,7 @@ DATA(0x004abbd8)
 NetbiosName gNbNameBuf[7];
 DATA(0x004abc48)
 unsigned char gNbSessBuf[0xfd0];
-DATA(0x004acc18)
+DATA(0x004acc48)
 NCB gNbSessNcb[7];
 DATA(0x004ace08)
 NCB gNbCtlNcb;
