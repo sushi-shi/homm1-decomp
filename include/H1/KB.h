@@ -16,8 +16,13 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_TAVERN = 2,
     BUILDING_SLOT_SHIPYARD = 3,
     BUILDING_SLOT_WELL = 4,
+    // Slots RACE_FIRST.. use per-race build-window frames, the generic ones
+    // before them frame building + 1 (TOWNMGR SetupBuildWindow).
+    BUILDING_SLOT_RACE_FIRST = 5,
     BUILDING_SLOT_TENT = 5,
     BUILDING_SLOT_CASTLE = 6,
+    // The non-dwelling structures end here (TOWNMGR building <= 6 tests).
+    BUILDING_SLOT_STRUCTURE_LAST = 6,
     BUILDING_SLOT_DWELLING_FIRST = 7,
     BUILDING_SLOT_DWELLING_1 = 7,
     BUILDING_SLOT_DWELLING_2 = 8,
@@ -26,6 +31,9 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_DWELLING_5 = 11,
     BUILDING_SLOT_DWELLING_6 = 12,
     BUILDING_SLOT_DWELLING_LAST = 12,
+    // Dwellings per town: gDwellingNames/gDwellingRequirements rows are
+    // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
+    BUILDING_SLOT_DWELLING_COUNT = 6,
     BUILDING_SLOT_COUNT = 13
 H1_ENUM_END(BuildingSlotType)
 

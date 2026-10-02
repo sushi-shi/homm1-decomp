@@ -65,6 +65,9 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_DRAGON_CITY = 0xc,
     MUSIC_TRACK_PUZZLE = 0xd,
     MUSIC_TRACK_STATUE = 0xe,
+    // The local human's turn starting in a network game (game::NewWeek,
+    // advManager/game turn hand-over with giForceSwitchMusic).
+    MUSIC_TRACK_NETWORK_TURN = 0xf,
     MUSIC_TRACK_TELEPORT = 0x10,
     MUSIC_TRACK_WAGON_CAMP = 0x11,
     MUSIC_TRACK_BUOY_OASIS = 0x14,

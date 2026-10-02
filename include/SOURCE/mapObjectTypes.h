@@ -90,7 +90,10 @@ H1_ENUM_BEGIN(MapObjectType)
     MAP_OBJECT_TREES_5 = 60,
     MAP_OBJECT_TREES_LAST = MAP_OBJECT_TREES_5,
     MAP_OBJECT_HERO = 61,
-    MAP_OBJECT_SHIP = 62
+    MAP_OBJECT_SHIP = 62,
+    // Past gObjectNames: the dug-up ultimate artifact (EventSound plays
+    // MUSIC_TRACK_ULTIMATE_ARTIFACT for it; game keeps its event bit).
+    MAP_OBJECT_ULTIMATE_ARTIFACT = 63
 H1_ENUM_END(MapObjectType)
 
 // Map-file object codes that game::ProcessRandomObjects and the hero setup

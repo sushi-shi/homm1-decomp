@@ -28,26 +28,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
-// SmackOptions rows (retail 0x0049fd08), named by their movie files. Rows
-// 0..1 are the publisher logos that draw "Presents...", 2..3 the intro and
-// 4..7 the endings; oldmain and the end sequence pick one of each pair
-// from gConfig.slowVideo.
-H1_ENUM_BEGIN(SmackVideo)
-    SMACK_NWCLOGO = 0,
-    SMACK_NWCLOGO1 = 1,
-    SMACK_LOGO_LAST = SMACK_NWCLOGO1,
-    SMACK_INTRO02C = 2,
-    SMACK_INTRO_FIRST = SMACK_INTRO02C,
-    SMACK_INTRO02U = 3,
-    SMACK_INTRO_LAST = SMACK_INTRO02U,
-    SMACK_WIN01C = 4,
-    SMACK_WIN01U = 5,
-    SMACK_WIN02 = 6,
-    SMACK_LOSE1 = 7
-H1_ENUM_END(SmackVideo)
-// clang-format on
-
 // RAD library allocation callbacks; HoMM1 links SMACKW32.DLL, so neither is
 // reached.
 // @dead-code

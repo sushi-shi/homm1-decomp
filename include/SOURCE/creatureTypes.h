@@ -38,6 +38,12 @@ H1_ENUM_BEGIN(CreatureType)
     CREATURE_COUNT = 28
 H1_ENUM_END(CreatureType)
 
+// Each race's six creatures are consecutive: creature / FACTION_SIZE is the
+// race (philAI's same-race bonus, KB's army alignment test).
+H1_ENUM_CONST_BEGIN(CreatureFactionConstant)
+    CREATURE_FACTION_SIZE = 6
+H1_ENUM_CONST_END(CreatureFactionConstant)
+
 // clang-format off
 // Creature attribute bits (monster record / army::m_stats.attributes), Buka
 // 2.1 KB_TYPES.h MonsterFlags numbering: wide stacks take two hexes, flyers
