@@ -597,7 +597,7 @@ short game::LoadGame(char* filename, int origData, int) {
     read(handle, m_playerDead, sizeof(m_playerDead));
     read(handle, humans, GAME_PLAYER_COUNT);
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        if ((humans[i] || iMPExtendedType >= 2) && numHumans < giNumHumanPlayers) {
+        if ((humans[i] || giDebugLevel >= 2) && numHumans < giNumHumanPlayers) {
             numHumans++;
             gbHumanPlayer[i] = 1;
         } else {
@@ -665,7 +665,7 @@ short game::LoadGame(char* filename, int origData, int) {
     giCurPlayerHighBit = 1 << (giCurPlayer + 4);
     giCurWatchPlayerHighBit = 1 << (giCurWatchPlayer + 4);
     bShowIt = gbThisNetHumanPlayer[giCurPlayer];
-    memset(gMapCellScratch, 0, sizeof(gMapCellScratch));
+    memset(mapExtra, 0, sizeof(mapExtra));
     if (!origData)
         SetupAdjacentMons();
     return 1;
@@ -1275,7 +1275,7 @@ void game::NewMap(char* mapName) {
                 m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_unknown11]);
             else
                 m_players[i].m_heroIds[0] =
-                    GetNewHeroId(gTownTypeHeroClass[m_castleRecs[m_players[i].m_townIds[0]].m_type]);
+                    GetNewHeroId(gTownHeroClass[m_castleRecs[m_players[i].m_townIds[0]].m_type]);
             m_availableHeroes[m_players[i].m_heroIds[0]] = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_owner = i;
             m_heroRecs[m_players[i].m_heroIds[0]].m_x = m_castleRecs[m_players[i].m_townIds[0]].m_x;
@@ -1285,7 +1285,7 @@ void game::NewMap(char* mapName) {
                 m_heroRecs[m_players[i].m_heroIds[0]].m_x,
                 m_heroRecs[m_players[i].m_heroIds[0]].m_y,
                 i,
-                gClassVisionRange[m_heroRecs[m_players[i].m_heroIds[0]].m_unknown1c]
+                gHeroScoutRadius[m_heroRecs[m_players[i].m_heroIds[0]].m_unknown1c]
             );
         }
         if (m_campaignType > 0)
@@ -2343,7 +2343,7 @@ void game::ViewArmy(
         message.text = numText;
         m_viewArmyWindow->BroadcastMessage(message);
     }
-    gViewArmyAnimTimer = KBTickCount() + 90;
+    glTimers[0] = KBTickCount() + 90;
     m_viewArmyResult = 0;
     if (quickView) {
         gpMouseManager->ReallyHidePointer();
@@ -2406,7 +2406,7 @@ short ViewArmyHandler(tag_message& message) {
                 break;
         }
     }
-    if (KBTickCount() > gViewArmyAnimTimer) {
+    if (KBTickCount() > glTimers[0]) {
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = 5;
@@ -2414,7 +2414,7 @@ short ViewArmyHandler(tag_message& message) {
         message.value = gpGame->m_viewArmyResult % 6;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
         gpGame->m_viewArmyWindow->DrawWindow();
-        gViewArmyAnimTimer = KBTickCount() + 90;
+        glTimers[0] = KBTickCount() + 90;
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
@@ -3080,7 +3080,7 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
         do {
             newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
             if (aiOwned)
-                spellValue = gSpellAIValue[newSpell] * (gSpellAttributes[newSpell] & 1 ? 4 : 1) + 50;
+                spellValue = giSpellAIValue[newSpell] * (gcSpellAIFlags[newSpell] & 1 ? 4 : 1) + 50;
             else
                 spellValue = 1500;
             if (newSpell == 27)
@@ -3994,7 +3994,7 @@ void game::ProcessOnMapHeroes(void) {
                 cell->m_overlayIndex = 0xff;
                 cell->m_objectMetadata = 0;
                 cell->m_triggerType = 0;
-                SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gClassVisionRange[theHero->m_unknown1c]);
+                SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gHeroScoutRadius[theHero->m_unknown1c]);
             }
         }
     }
