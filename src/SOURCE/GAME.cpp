@@ -3826,8 +3826,115 @@ cleanup:
 // donor PoL RVA 0x00083937; preferred Buka symbol ?ReceiveSaveGame@game@@QAEHHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.655741;margin=0.222523;shape=0.420;size=0.807;calls=0.714;strings=%s%s|.\DATA\|Receive End;alternate=pol20:int game::ReceiveSaveGame(int, int, int, int)@0x00083937
+// Collects the remote save in 200-byte segments, acknowledging each block
+// of 100, then decodes it and writes REMOTE.GAM.
 VA(0x0044608e, 0x579)
-int game::ReceiveSaveGame(int, int) { return 0; }
+int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
+    int unused1;
+    int okay;
+    int prevReady;
+    char pathname[452];
+    char* inData;
+    int k;
+    int oldTrack;
+    int fileHandle;
+    char done;
+    char* sendPacket;
+    RemoteMessage* receivedPacket;
+    int result;
+    long lastPacketTime;
+    char gotIt[500];
+    int packetStart;
+    char* decodedData;
+
+    gpAdvManager->TrimLoopingSounds(8);
+    fileHandle = 0;
+    done = 0;
+    unused1 = 0;
+    okay = 0;
+    oldTrack = -1;
+    if (gpAdvManager->m_active == 1)
+        BVResMsg("Receiving Data", -1, 0);
+    prevReady = gpSoundManager->m_musicReady;
+    oldTrack = gpSoundManager->m_currentTrack;
+    gpSoundManager->m_musicReady = 1;
+    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->m_musicReady = prevReady;
+    while (!gbHeartbeatSeen) {
+        PollSound();
+        Process1WindowsMessage();
+    }
+    result = TransmitRemoteData(0, remotePlayer, 0, 2, 1, 1, -1, 1);
+    if (!result)
+        ShutDown(0);
+    memset(gotIt, 0, sizeof(gotIt));
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        decodedData = (char*)malloc(0x130b0);
+    sendPacket = (char*)malloc(0x100);
+    inData = (char*)malloc(dataSize + 500);
+    lastPacketTime = KBTickCount();
+    while (!done) {
+        PollSound();
+        CheckDoMain(0, 1);
+        if (lastPacketTime + 20000 < KBTickCount()) {
+            NormalDialog("Error receiving data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == 0x7805)
+                lastPacketTime = KBTickCount();
+            else
+                ShutDown(0);
+        }
+        receivedPacket = (RemoteMessage*)GetRemoteData(1);
+        if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
+            lastPacketTime = KBTickCount();
+            switch (receivedPacket->command) {
+                case 3:
+                    packetStart = receivedPacket->payload.segment.index;
+                    gotIt[packetStart] = 1;
+                    memcpy(inData + packetStart * 200, receivedPacket->payload.segment.data,
+                           receivedPacket->payloadSize - 2);
+                    break;
+                case 4:
+                    packetStart = receivedPacket->payload.segment.index;
+                    for (k = packetStart; k < packetStart + 100; k++)
+                        *(sendPacket + k - packetStart) = gotIt[k];
+                    result = TransmitRemoteData(sendPacket, remotePlayer, 200, 5, 1, 1, -1, 1);
+                    if (!result)
+                        ShutDown(0);
+                    break;
+                case 6:
+                    done = 1;
+                    break;
+            }
+        }
+    }
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        dataSize = DecodeData(decodedData, inData);
+    else
+        decodedData = inData;
+    sprintf(pathname, "%s%s", ".\\DATA\\", "REMOTE.GAM");
+    fileHandle = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
+    if (fileHandle == -1)
+        FileError(pathname);
+    write(fileHandle, decodedData, dataSize);
+    close(fileHandle);
+    okay = 1;
+    free(sendPacket);
+    free(inData);
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        free(decodedData);
+    AiPrint("Receive End");
+    if (gpAdvManager->m_active == 1) {
+        giBottomViewOverride = 0;
+        gpAdvManager->UpdBottomView(1, 1, 1);
+    }
+    if (oldTrack != -1) {
+        prevReady = gpSoundManager->m_musicReady;
+        gpSoundManager->m_musicReady = 1;
+        gpSoundManager->SwitchAmbientMusic(oldTrack);
+        gpSoundManager->m_musicReady = prevReady;
+    }
+    return okay;
+}
 
 // New-turn texts: days-left and last-day warnings, then the month/week banners.
 extern char* gNewTurnText[];
