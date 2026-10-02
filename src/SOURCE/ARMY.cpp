@@ -34,7 +34,7 @@ army::army(void) {
     giSpellEffectFrame = 0;
     m_targetSide = -1;
     m_targetIndex = -1;
-    m_attackDirection = -1;
+    m_attackDirection = COMBAT_DIRECTION_INVALID;
     m_unknown04 = 0;
     m_moveTargetHex = 0;
 }
@@ -377,9 +377,9 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         step = -1;
         reverse = 1;
     }
-    if (direction == 5 || direction == 0)
+    if (direction == COMBAT_DIRECTION_NORTHWEST || direction == COMBAT_DIRECTION_NORTHEAST)
         m_walkYStep = -16;
-    if (direction == 3 || direction == 2)
+    if (direction == COMBAT_DIRECTION_SOUTHWEST || direction == COMBAT_DIRECTION_SOUTHEAST)
         m_walkYStep = 16;
     baseHex = m_hex;
     hexcell tempCell;
@@ -400,9 +400,9 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         }
     } else {
         flag = 0;
-        if (m_facing == 0 && direction == 2)
+        if (m_facing == 0 && direction == COMBAT_DIRECTION_SOUTHEAST)
             flag = 1;
-        else if (m_facing == 1 && direction == 5)
+        else if (m_facing == 1 && direction == COMBAT_DIRECTION_NORTHWEST)
             flag = 1;
         gpCombatManager->SetGridMode(flag);
     }
@@ -751,7 +751,7 @@ void army::DoHydraAttack(void) {
     gpCombatManager->ResetHitByCreature();
     totalLost = 0;
     totDmg = totalLost;
-    for (dir = 0; dir < 8; dir++) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (!(attackMask & (1 << dir))) {
             targetHex = m_hex;
             if ((m_stats.attributes & 1)
@@ -803,7 +803,7 @@ void army::DoHydraAttack(void) {
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
-    for (dir = 0; dir < 8; dir++) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (!(attackMask & (1 << dir))) {
             targetHex = m_hex;
             if ((m_stats.attributes & 1)
@@ -883,9 +883,9 @@ void army::DoAttack(int retaliation) {
         m_facing = 0;
     else if (m_attackDirection <= 5)
         m_facing = 1;
-    if (m_attackDirection == 5 || m_attackDirection == 0 || m_attackDirection == 6)
+    if (m_attackDirection == COMBAT_DIRECTION_NORTHWEST || m_attackDirection == COMBAT_DIRECTION_NORTHEAST || m_attackDirection == COMBAT_DIRECTION_WIDE_WEST)
         frameBase = 6;
-    else if (m_attackDirection == 3 || m_attackDirection == 2 || m_attackDirection == 7)
+    else if (m_attackDirection == COMBAT_DIRECTION_SOUTHWEST || m_attackDirection == COMBAT_DIRECTION_SOUTHEAST || m_attackDirection == COMBAT_DIRECTION_WIDE_EAST)
         frameBase = 8;
     else
         frameBase = 7;
@@ -915,7 +915,7 @@ void army::DoAttack(int retaliation) {
             && gpCombatManager->m_hexCells[behindHex].m_occupantIndex >= 0) {
             gpCombatManager->m_limitCreatureCount[gpCombatManager->m_hexCells[behindHex].m_occupantSide]
                                                   [gpCombatManager->m_hexCells[behindHex].m_occupantIndex]++;
-            if (m_attackDirection == 2 || m_attackDirection == 3)
+            if (m_attackDirection == COMBAT_DIRECTION_SOUTHEAST || m_attackDirection == COMBAT_DIRECTION_SOUTHWEST)
                 gpCombatManager->m_extendLimitDown = 1;
         }
     }
@@ -955,7 +955,7 @@ void army::DoAttack(int retaliation) {
         }
         savedKilled = kills;
         nextHex = GetAdjacentCellIndex(newHex, m_attackDirection);
-        if ((m_stats.attributes & 8) && m_attackDirection < 6 && ValidHex(nextHex)
+        if ((m_stats.attributes & 8) && m_attackDirection < COMBAT_DIRECTION_ADJACENT_COUNT && ValidHex(nextHex)
             && gpCombatManager->m_hexCells[nextHex].m_occupantSide >= 0
             && gpCombatManager->m_hexCells[nextHex].m_occupantIndex >= 0
             && gpCombatManager->m_hexCells[newHex].m_occupantIndex
@@ -1081,12 +1081,12 @@ void army::DoAttack(int retaliation) {
             if (target->m_stats.attributes & 1) {
                 short checkHex;
 
-                checkHex = GetAdjacentCellIndex(target->m_hex, target->m_facing ? 5 : 0);
+                checkHex = GetAdjacentCellIndex(target->m_hex, target->m_facing ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST);
                 if (m_hex == checkHex)
-                    target->m_attackDirection = 6;
-                checkHex = GetAdjacentCellIndex(target->m_hex, static_cast<signed char>(target->m_facing ? 3 : 2));
+                    target->m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
+                checkHex = GetAdjacentCellIndex(target->m_hex, static_cast<signed char>(target->m_facing ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST));
                 if (m_hex == checkHex)
-                    target->m_attackDirection = 7;
+                    target->m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
             }
             target->DoAttack(1);
             target->m_stats.attributes |= 0x40;
@@ -1506,7 +1506,7 @@ void army::GoBerserk(void) {
     short target;
 
     found = 0;
-    dir = 0;
+    dir = COMBAT_DIRECTION_NORTHEAST;
     tryCount = 0;
     while (!found) {
         attackMask = GetAttackMask(m_hex, 2, -1);

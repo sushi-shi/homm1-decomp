@@ -796,51 +796,51 @@ short advManager::Main(struct tag_message& message) {
                 break;
             case INPUT_SCAN_NUMPAD_8:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(0, 0);
+                    ScreenScroll(MAP_DIRECTION_NORTH, 0);
                 else
-                    dir = 0;
+                    dir = MAP_DIRECTION_NORTH;
                 break;
             case INPUT_SCAN_NUMPAD_9:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(1, 0);
+                    ScreenScroll(MAP_DIRECTION_NORTH_EAST, 0);
                 else
-                    dir = 1;
+                    dir = MAP_DIRECTION_NORTH_EAST;
                 break;
             case INPUT_SCAN_NUMPAD_6:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(2, 0);
+                    ScreenScroll(MAP_DIRECTION_EAST, 0);
                 else
-                    dir = 2;
+                    dir = MAP_DIRECTION_EAST;
                 break;
             case INPUT_SCAN_NUMPAD_3:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(3, 0);
+                    ScreenScroll(MAP_DIRECTION_SOUTH_EAST, 0);
                 else
-                    dir = 3;
+                    dir = MAP_DIRECTION_SOUTH_EAST;
                 break;
             case INPUT_SCAN_NUMPAD_2:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(4, 0);
+                    ScreenScroll(MAP_DIRECTION_SOUTH, 0);
                 else
-                    dir = 4;
+                    dir = MAP_DIRECTION_SOUTH;
                 break;
             case INPUT_SCAN_NUMPAD_1:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(5, 0);
+                    ScreenScroll(MAP_DIRECTION_SOUTH_WEST, 0);
                 else
-                    dir = 5;
+                    dir = MAP_DIRECTION_SOUTH_WEST;
                 break;
             case INPUT_SCAN_NUMPAD_4:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(6, 0);
+                    ScreenScroll(MAP_DIRECTION_WEST, 0);
                 else
-                    dir = 6;
+                    dir = MAP_DIRECTION_WEST;
                 break;
             case INPUT_SCAN_NUMPAD_7:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
-                    ScreenScroll(7, 0);
+                    ScreenScroll(MAP_DIRECTION_NORTH_WEST, 0);
                 else
-                    dir = 7;
+                    dir = MAP_DIRECTION_NORTH_WEST;
                 break;
             case INPUT_SCAN_C:
                 CheckCastSpell();

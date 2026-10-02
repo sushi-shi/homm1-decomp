@@ -410,7 +410,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
 
     power = m_heroes[m_currentSide]->m_primaryStats[2] * damagePerPower;
     cell = 0;
-    dir = 0;
+    dir = COMBAT_DIRECTION_NORTHEAST;
     finished = 0;
     if (m_hexCells[targetHex].m_occupantIndex >= 0)
         targetCreature = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
@@ -429,7 +429,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
             break;
         case 0:
         case 17:
-            if (dir < 6) {
+            if (dir < COMBAT_DIRECTION_ADJACENT_COUNT) {
                 cell = GetAdjacentCellIndexNoArmy(targetHex, dir);
                 dir++;
             } else

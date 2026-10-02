@@ -24,7 +24,7 @@ short army::CanFit(short* hex)
         || gpCombatManager->m_hexCells[candidateHex].m_obstacleIndex != -1)
         return 0;
     if (m_stats.attributes & 1) {
-        candidateHex = GetAdjacentCellIndex(*hex, (signed char)(m_facing == 0 ? 1 : 4));
+        candidateHex = GetAdjacentCellIndex(*hex, (signed char)(m_facing == 0 ? COMBAT_DIRECTION_EAST : COMBAT_DIRECTION_WEST));
         if (ValidHex(candidateHex))
             cell = &gpCombatManager->m_hexCells[candidateHex];
         if (ValidHex(candidateHex)
@@ -34,7 +34,7 @@ short army::CanFit(short* hex)
             && cell->m_obstacleIndex == -1) {
             return 1;
         } else {
-            candidateHex = GetAdjacentCellIndex(*hex, (signed char)(m_facing == 0 ? 4 : 1));
+            candidateHex = GetAdjacentCellIndex(*hex, (signed char)(m_facing == 0 ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST));
             if (ValidHex(candidateHex))
                 cell = &gpCombatManager->m_hexCells[candidateHex];
             else

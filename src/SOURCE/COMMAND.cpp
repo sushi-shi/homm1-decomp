@@ -122,19 +122,19 @@ void combatManager::SetCombatDirections(int targetHex) {
     curArmy->m_targetSide = -1;
     curArmy->m_targetIndex = -1;
     target = &m_armies[targetSide][targetIndex];
-    for (dir = 0; dir < 8; dir++) {
-        if (dir == 6 || dir == 7) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
+        if (dir == COMBAT_DIRECTION_WIDE_WEST || dir == COMBAT_DIRECTION_WIDE_EAST) {
             if (curArmy->m_stats.attributes & 1) {
                 if (curArmy->m_facing == 0) {
-                    if (dir == 6)
-                        directionHexes[dir] = gCombatAdjacency[targetHex][5];
-                    if (dir == 7)
-                        directionHexes[dir] = gCombatAdjacency[targetHex][3];
+                    if (dir == COMBAT_DIRECTION_WIDE_WEST)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][COMBAT_DIRECTION_NORTHWEST];
+                    if (dir == COMBAT_DIRECTION_WIDE_EAST)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][COMBAT_DIRECTION_SOUTHWEST];
                 } else {
-                    if (dir == 6)
-                        directionHexes[dir] = gCombatAdjacency[targetHex][0];
-                    if (dir == 7)
-                        directionHexes[dir] = gCombatAdjacency[targetHex][2];
+                    if (dir == COMBAT_DIRECTION_WIDE_WEST)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][COMBAT_DIRECTION_NORTHEAST];
+                    if (dir == COMBAT_DIRECTION_WIDE_EAST)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][COMBAT_DIRECTION_SOUTHEAST];
                 }
             } else
                 directionHexes[dir] = -1;
@@ -142,7 +142,7 @@ void combatManager::SetCombatDirections(int targetHex) {
             directionHexes[dir] = gCombatAdjacency[targetHex][dir];
         if ((curArmy->m_stats.attributes & 1) && directionHexes[dir] != -1) {
             if (curArmy->m_facing == 0) {
-                if (dir == 5 || dir == 4 || dir == 3) {
+                if (dir == COMBAT_DIRECTION_NORTHWEST || dir == COMBAT_DIRECTION_WEST || dir == COMBAT_DIRECTION_SOUTHWEST) {
                     if (directionHexes[dir] % 9 == 1)
                         directionHexes[dir] = -1;
                     else
@@ -153,7 +153,7 @@ void combatManager::SetCombatDirections(int targetHex) {
                 else
                     rear[dir] = directionHexes[dir] + 1;
             } else {
-                if (dir == 0 || dir == 1 || dir == 2) {
+                if (dir == COMBAT_DIRECTION_NORTHEAST || dir == COMBAT_DIRECTION_EAST || dir == COMBAT_DIRECTION_SOUTHEAST) {
                     if (directionHexes[dir] % 9 == 7)
                         directionHexes[dir] = -1;
                     else
@@ -172,10 +172,10 @@ void combatManager::SetCombatDirections(int targetHex) {
             canStand[dir] = 0;
     }
     if (curArmy->m_stats.attributes & 2) {
-        for (dir = 0; dir < 8; dir++)
+        for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++)
             hasPath[dir] = canStand[dir];
     } else {
-        for (dir = 0; dir < 8; dir++) {
+        for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
             if (canStand[dir]) {
                 if (curArmy->m_hex == directionHexes[dir]
                     || curArmy->ValidPath(directionHexes[dir], 1))
@@ -187,37 +187,37 @@ void combatManager::SetCombatDirections(int targetHex) {
         }
     }
     m_validDirectionCount = 0;
-    for (dir = 0; dir < 8; dir++) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (hasPath[dir])
             m_validDirectionCount++;
     }
     if (!m_validDirectionCount)
         hasPath[6] = 1;
     memset(m_directionMap, -1, sizeof(m_directionMap));
-    for (dir = 0; dir < 8; dir++) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         outDir = dir;
-        if (dir < 6)
-            mapped = (dir + 3) % 6;
+        if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
+            mapped = (dir + COMBAT_DIRECTION_OPPOSITE_OFFSET) % COMBAT_DIRECTION_ADJACENT_COUNT;
         else
-            mapped = static_cast<signed char>(dir == 6 ? 7 : 6);
+            mapped = static_cast<signed char>(dir == COMBAT_DIRECTION_WIDE_WEST ? COMBAT_DIRECTION_WIDE_EAST : COMBAT_DIRECTION_WIDE_WEST);
         if (hasPath[mapped]) {
             if (target->m_stats.attributes & 1) {
-                if (dir == 0 && m_hexCells[targetHex - 1].m_occupantSide == targetSide
+                if (dir == COMBAT_DIRECTION_NORTHEAST && m_hexCells[targetHex - 1].m_occupantSide == targetSide
                     && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
-                    outDir = 6;
-                else if (dir == 5 && m_hexCells[targetHex + 1].m_occupantSide == targetSide
+                    outDir = COMBAT_DIRECTION_WIDE_WEST;
+                else if (dir == COMBAT_DIRECTION_NORTHWEST && m_hexCells[targetHex + 1].m_occupantSide == targetSide
                          && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
-                    outDir = 6;
-                else if (dir == 2 && m_hexCells[targetHex - 1].m_occupantSide == targetSide
+                    outDir = COMBAT_DIRECTION_WIDE_WEST;
+                else if (dir == COMBAT_DIRECTION_SOUTHEAST && m_hexCells[targetHex - 1].m_occupantSide == targetSide
                          && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
-                    outDir = 7;
-                else if (dir == 3 && m_hexCells[targetHex + 1].m_occupantSide == targetSide
+                    outDir = COMBAT_DIRECTION_WIDE_EAST;
+                else if (dir == COMBAT_DIRECTION_SOUTHWEST && m_hexCells[targetHex + 1].m_occupantSide == targetSide
                          && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
-                    outDir = 7;
+                    outDir = COMBAT_DIRECTION_WIDE_EAST;
             }
-            if (dir < 6)
+            if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
                 memset(&m_directionMap[mapped * 4], outDir, 4);
-            else if (dir == 6) {
+            else if (dir == COMBAT_DIRECTION_WIDE_WEST) {
                 m_directionMap[11] = outDir;
                 m_directionMap[12] = outDir;
                 m_directionMap[13] = outDir;
@@ -325,36 +325,36 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
     alternate = -1;
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     target = &m_armies[curArmy->m_targetSide][curArmy->m_targetIndex];
-    if (hexDir == 6 || hexDir == 7) {
+    if (hexDir == COMBAT_DIRECTION_WIDE_WEST || hexDir == COMBAT_DIRECTION_WIDE_EAST) {
         if (curArmy->m_stats.attributes & 1) {
-            if (curArmy->m_facing == 0 && hexDir == 6) {
-                hexDir = 5;
+            if (curArmy->m_facing == 0 && hexDir == COMBAT_DIRECTION_WIDE_WEST) {
+                hexDir = COMBAT_DIRECTION_NORTHWEST;
                 alternate = 0;
-            } else if (curArmy->m_facing == 0 && hexDir == 7) {
-                hexDir = 3;
+            } else if (curArmy->m_facing == 0 && hexDir == COMBAT_DIRECTION_WIDE_EAST) {
+                hexDir = COMBAT_DIRECTION_SOUTHWEST;
                 alternate = 2;
-            } else if (curArmy->m_facing == 1 && hexDir == 6) {
-                hexDir = 0;
+            } else if (curArmy->m_facing == 1 && hexDir == COMBAT_DIRECTION_WIDE_WEST) {
+                hexDir = COMBAT_DIRECTION_NORTHEAST;
                 alternate = 5;
             } else {
-                hexDir = 2;
+                hexDir = COMBAT_DIRECTION_SOUTHEAST;
                 alternate = 3;
             }
         } else {
             if (m_hexCells[targetHex - 1].m_occupantSide == curArmy->m_targetSide
                 && m_hexCells[targetHex - 1].m_occupantIndex == curArmy->m_targetIndex)
                 targetHex--;
-            if (hexDir == 6)
-                hexDir = 0;
+            if (hexDir == COMBAT_DIRECTION_WIDE_WEST)
+                hexDir = COMBAT_DIRECTION_NORTHEAST;
             else
-                hexDir = 2;
+                hexDir = COMBAT_DIRECTION_SOUTHEAST;
         }
     } else {
         if (curArmy->m_facing == 0 && (curArmy->m_stats.attributes & 1)) {
-            if (hexDir == 5 || hexDir == 4 || hexDir == 3)
+            if (hexDir == COMBAT_DIRECTION_NORTHWEST || hexDir == COMBAT_DIRECTION_WEST || hexDir == COMBAT_DIRECTION_SOUTHWEST)
                 targetHex--;
         } else if (curArmy->m_facing == 1 && (curArmy->m_stats.attributes & 1)
-                   && (hexDir == 0 || hexDir == 1 || hexDir == 2))
+                   && (hexDir == COMBAT_DIRECTION_NORTHEAST || hexDir == COMBAT_DIRECTION_EAST || hexDir == COMBAT_DIRECTION_SOUTHEAST))
             targetHex++;
     }
     m_directionTargetHex = gCombatAdjacency[targetHex][hexDir];
