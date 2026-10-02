@@ -19,6 +19,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+
+// Calendar specials (week/month type and featured creature or name) and the
+// per-cell visited bits, shared by the save, new-map and calendar code.
+extern signed char giWeekType;
+extern signed char giMonthType;
+extern signed char giWeekSpecial;
+extern signed char giMonthSpecial;
+extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 // donor PoL RVA 0x00088607; preferred Buka symbol ?ClearEffects@combatManager@@QAEXXZ
 // donor Buka TU SOURCE/SPELLAI; HoMM1 owner inferred from contiguous order
@@ -443,8 +452,113 @@ void GenerateStandardFileName(char *source, char *destination) {
 // donor PoL RVA 0x00071eb7; preferred Buka symbol ?SaveGame@game@@QAEHPADHC@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.606443;margin=0.348788;shape=0.410;size=0.678;calls=0.698;strings=%s%s|%s.%s|%s.GM%d;alternate=pol20:int game::SaveGame(char *, int, signed char)@0x00071eb7
+inline void game::ReadWorldMap(int fd) {
+    read(fd, m_map, sizeof(m_map));
+}
+
+inline void game::WriteWorldMap(int fd) {
+    write(fd, m_map, sizeof(m_map));
+}
+
+// SaveGame files the current player through this byte.
+extern signed char gSaveCurPlayer;
+
+// Buka 2.1 game::SaveGame for HoMM1's single save layout: name, globals,
+// campaign state, map header, players, world map, records and visibility.
 VA(0x00439e3d, 0x7b2)
-short game::SaveGame(char *, signed char) { return 0; }
+short game::SaveGame(char* filename, signed char generateName) {
+    int nHumans;
+    int saveFlag;
+    char human[GAME_PLAYER_COUNT];
+    int iFile;
+    int file;
+    int junk[4];
+    char filePath[452];
+    char fileName[460];
+    char buffer[100];
+
+    gpAdvManager->DemobilizeCurrHero();
+    if (generateName) {
+        if (m_campaignType > 0) {
+            sprintf(fileName, "%s.%s", filename, "CGM");
+        } else {
+            nHumans = 0;
+            for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
+                if (!m_playerDead[iFile] && gbHumanPlayer[iFile])
+                    nHumans++;
+            }
+            sprintf(fileName, "%s.GM%d", filename, nHumans);
+        }
+    } else {
+        sprintf(fileName, filename);
+    }
+    if (!strcmpi(fileName, "REMOTE.GAM")) {
+        sprintf(filePath, "%s%s", ".\\DATA\\", fileName);
+    } else {
+        sprintf(filePath, "%s%s", ".\\GAMES\\", fileName);
+        if (strnicmp(fileName, "AUTOSAVE", 8) && strnicmp(fileName, "PLYREXIT", 8))
+            strcpy(gpGame->m_saveName, filename);
+    }
+    file = open(filePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
+    if (file == -1)
+        FileError(filePath);
+    write(file, &gbKingOfTheHill, 1);
+    write(file, this, 2);
+    write(file, &giMonthType, 1);
+    write(file, &giMonthSpecial, 1);
+    write(file, &giWeekType, 1);
+    write(file, &giWeekSpecial, 1);
+    write(file, &m_campaignType, 4);
+    write(file, &m_campaignScenario, 4);
+    write(file, &m_campaignDay, 4);
+    write(file, &m_unknown000b, 4);
+    memset(buffer, 0, 0x2c);
+    write(file, buffer, 0x2c);
+    write(file, m_mapDescription, sizeof(m_mapDescription));
+    write(file, &m_mapSize, 1);
+    write(file, &m_mapDifficulty, 1);
+    write(file, m_mapName, sizeof(m_mapName));
+    GenerateStandardFileName(m_saveName, buffer);
+    write(file, buffer, 0x11);
+    write(file, &m_difficulty, 1);
+    write(file, &m_playerCount, 1);
+    gSaveCurPlayer = giCurPlayer;
+    write(file, &gSaveCurPlayer, 1);
+    write(file, &m_deadPlayerCount, 1);
+    write(file, m_playerDead, sizeof(m_playerDead));
+    for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
+        human[iFile] = gbHumanPlayer[iFile];
+        if (m_playerDead[iFile])
+            human[iFile] = 0;
+    }
+    write(file, human, GAME_PLAYER_COUNT);
+    write(file, &m_day, 2);
+    write(file, &m_week, 2);
+    write(file, &m_month, 2);
+    for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++)
+        m_players[iFile].Write(file);
+    WriteWorldMap(file);
+    write(file, &m_obeliskCount, 1);
+    write(file, m_heroRecs, sizeof(m_heroRecs));
+    write(file, m_availableHeroes, sizeof(m_availableHeroes));
+    write(file, m_castleRecs, sizeof(m_castleRecs));
+    write(file, m_townOwners, sizeof(m_townOwners));
+    write(file, m_townBuiltToday, sizeof(m_townBuiltToday));
+    write(file, m_mines, sizeof(m_mines));
+    write(file, m_mineOwners, sizeof(m_mineOwners));
+    write(file, m_randomArtifacts, sizeof(m_randomArtifacts));
+    write(file, m_boats, sizeof(m_boats));
+    write(file, m_boatSlots, sizeof(m_boatSlots));
+    write(file, m_obeliskVisitors, sizeof(m_obeliskVisitors));
+    write(file, &m_ultimateArtifactX, 1);
+    write(file, &m_ultimateArtifactY, 1);
+    write(file, &m_ultimateArtifactId, 1);
+    write(file, m_mapSounds, sizeof(m_mapSounds));
+    write(file, m_mapExtra, sizeof(m_mapExtra));
+    write(file, mapVisited, sizeof(mapVisited));
+    close(file);
+    return 1;
+}
 
 // donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -952,7 +1066,6 @@ extern signed char gRandomTownTypes[4];
 extern unsigned char giCurPlayerHighBit;
 extern unsigned char giCurWatchPlayerHighBit;
 extern int giCurWatchPlayer;
-extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // Starting hero class of each campaign crest and of each town type, and
 // each hero class's sight radius.
 extern short gCrestHeroClass[];
@@ -1566,8 +1679,7 @@ short game::LoadMap(char* filename) {
     }
     read(handle, &width, 2);
     read(handle, &height, 2);
-    read(handle, m_map, sizeof(m_map));
-    SetMapSize(width, height);
+    ReadWorldMap(handle);
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         read(handle, &x, 1);
         read(handle, &y, 1);
@@ -2502,10 +2614,6 @@ int game::ComputeDailyGold(int player) {
     return gold;
 }
 
-extern signed char giWeekType;
-extern signed char giMonthType;
-extern signed char giWeekSpecial;
-extern signed char giMonthSpecial;
 // Creatures a creature month may feature.
 extern signed char giMonType[];
 

@@ -201,6 +201,10 @@ public:
     int SetupPuzzlePieces(int, int);
     signed char IsMobile(signed char);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
+    // Inline world-map file I/O (LoadMap, SaveGame, LoadGame): each
+    // expansion leaves its jmp $+0 after the read or write call.
+    void ReadWorldMap(int);
+    void WriteWorldMap(int);
     signed char CreateBoat(signed char, signed char);
     signed char Scan(signed char*, signed char, signed char);
     signed char RandomScan(signed char*, signed char, signed char, int);
@@ -296,10 +300,7 @@ public:
     int GetNumThievesGuilds(int);
     int CalcDifficultyRating(void);
     void RestoreCell(int, int, int, int, class mapCell*, int);
-    // HoMM1 maps are always 72x72: LoadMap's call leaves only the inline
-    // expansion's jmp $+0 after reading the world map.
-    void SetMapSize(int, int) {
-    }
+    void SetMapSize(int, int);
     int HeroIDToHeroPos(class playerData*, int);
     int TownIDToTownPos(class playerData*, int);
     void SetupNewRumour(void);
