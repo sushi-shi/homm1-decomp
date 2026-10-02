@@ -208,6 +208,28 @@ H1_ENUM_CONST_BEGIN(TownBuildConstant)
     TOWN_DWELLING_COST_ROWS = 28,
     TOWN_MAGE_GUILD_COST_LEVEL_LAST = 3
 H1_ENUM_CONST_END(TownBuildConstant)
+
+// Town screen layout: the garrison and visiting-hero strips below the
+// 0x100-pixel town view, the bank box beside them, and the empty hero
+// strip's placeholder portrait frame.
+H1_ENUM_CONST_BEGIN(TownScreenConstant)
+    TOWN_GARRISON_STRIP_Y = 0x100,
+    TOWN_HERO_STRIP_Y = 0x163,
+    TOWN_BANK_BOX_X = 0x222,
+    TOWN_BANK_BOX_Y = 0x100,
+    TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8
+H1_ENUM_CONST_END(TownScreenConstant)
+
+// rcrthero.bin widget ids: the two candidates' portraits, class labels and
+// select buttons (dimmed for the cannot-recruit quick view).
+H1_ENUM_BEGIN(TownRecruitHeroControl)
+    RECRUIT_HERO_PORTRAIT_FIRST = 2,
+    RECRUIT_HERO_PORTRAIT_SECOND = 3,
+    RECRUIT_HERO_CLASS_FIRST = 6,
+    RECRUIT_HERO_CLASS_SECOND = 7,
+    RECRUIT_HERO_SELECT_FIRST = 8,
+    RECRUIT_HERO_SELECT_SECOND = 9
+H1_ENUM_END(TownRecruitHeroControl)
 // clang-format on
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close

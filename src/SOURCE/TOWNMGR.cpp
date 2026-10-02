@@ -170,24 +170,24 @@ short townManager::Open(short id)
     } else
         crest += TOWN_CREST_NO_HERO_OFFSET;
     sprintf(gText, "crst%04d.icn", crest);
-    m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
-                                gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 1);
+    m_garrisonStrip = new strip(0, TOWN_GARRISON_STRIP_Y, m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
+                                gpResourceManager->MakeId(gText), 0, &m_town->m_army, TOWN_GARRISON_FIRST_CONTROL, 1);
     if (m_garrisonStrip == NULL)
         MemError();
     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_portrait);
-        m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
-                                &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army, 0x16, 1);
+        m_heroStrip = new strip(0, TOWN_HERO_STRIP_Y, 3, gpResourceManager->MakeId(gText), 0,
+                                &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army, TOWN_HERO_FIRST_CONTROL, 1);
         if (m_heroStrip == NULL)
             MemError();
         if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
             m_town->GiveSpells();
     } else {
-        m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId("strip.icn"), 8, NULL, -1, 1);
+        m_heroStrip = new strip(0, TOWN_HERO_STRIP_Y, 3, gpResourceManager->MakeId("strip.icn"), TOWN_EMPTY_HERO_PORTRAIT_FRAME, NULL, -1, 1);
         if (m_heroStrip == NULL)
             MemError();
     }
-    m_bankBox = new bankBox(0x222, 0x100, gpCurPlayer);
+    m_bankBox = new bankBox(TOWN_BANK_BOX_X, TOWN_BANK_BOX_Y, gpCurPlayer);
     if (m_bankBox == NULL)
         MemError();
     m_selectedStrip = m_swapStrip = m_pendingStrip = NULL;
@@ -1023,7 +1023,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     if (building > TOWN_NEUTRAL_BUILDING_LAST)
         dwellIndex = building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION;
     if (building == BUILDING_SLOT_MAGE_GUILD) {
-        if (m_town->m_buildings & 1)
+        if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
             iMageLevel = gpTownManager->m_town->m_buildState + 1;
         else
             iMageLevel = 0;
@@ -1818,27 +1818,27 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
     message.type = MESSAGE_WIDGET;
     if (cannotRecruit) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
-        message.id = 8;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        message.id = RECRUIT_HERO_SELECT_FIRST;
         m_heroWindow1->BroadcastMessage(message);
-        message.id = 9;
+        message.id = RECRUIT_HERO_SELECT_SECOND;
         m_heroWindow1->BroadcastMessage(message);
         message.id = TOWN_DIALOG_BUTTON_1;
         m_heroWindow1->BroadcastMessage(message);
     }
     sprintf(gText, "port%04d.icn", m_recruitHeroes[0]->m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = 2;
+    message.id = RECRUIT_HERO_PORTRAIT_FIRST;
     message.text = gText;
     m_heroWindow1->BroadcastMessage(message);
     sprintf(gText, "port%04d.icn", m_recruitHeroes[1]->m_portrait);
-    message.id = 3;
+    message.id = RECRUIT_HERO_PORTRAIT_SECOND;
     m_heroWindow1->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 6;
+    message.id = RECRUIT_HERO_CLASS_FIRST;
     message.text = gClassNames[m_recruitHeroes[0]->m_heroClass];
     m_heroWindow1->BroadcastMessage(message);
-    message.id = 7;
+    message.id = RECRUIT_HERO_CLASS_SECOND;
     message.text = gClassNames[m_recruitHeroes[1]->m_heroClass];
     m_heroWindow1->BroadcastMessage(message);
     m_recruitState = -1;
@@ -1865,7 +1865,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         m_recruitHeroes[m_recruitState]->m_x = townX;
         m_recruitHeroes[m_recruitState]->m_y = townY;
         m_recruitHeroes[m_recruitState]->m_eventFlags = 0;
-        m_recruitHeroes[m_recruitState]->m_direction = 2;
+        m_recruitHeroes[m_recruitState]->m_direction = MAP_DIRECTION_EAST;
         m_recruitHeroes[m_recruitState]->m_remainingMobility =
             m_recruitHeroes[m_recruitState]->CalcMobility();
         m_recruitHeroes[m_recruitState]->m_mobility =
@@ -1883,17 +1883,17 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         delete m_garrisonStrip;
         sprintf(gText, "crst%04d.icn",
                 m_recruitHeroes[m_recruitState]->m_heroClass + gpCurPlayer->Color() * 4);
-        m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
-                                    gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 0);
+        m_garrisonStrip = new strip(0, TOWN_GARRISON_STRIP_Y, m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
+                                    gpResourceManager->MakeId(gText), 0, &m_town->m_army, TOWN_GARRISON_FIRST_CONTROL, 0);
         if (m_garrisonStrip == NULL)
             MemError();
         delete m_heroStrip;
         sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_portrait);
-        m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
-                                &m_recruitHeroes[m_recruitState]->m_army, 0x16, 0);
+        m_heroStrip = new strip(0, TOWN_HERO_STRIP_Y, 3, gpResourceManager->MakeId(gText), 0,
+                                &m_recruitHeroes[m_recruitState]->m_army, TOWN_HERO_FIRST_CONTROL, 0);
         if (m_heroStrip == NULL)
             MemError();
-        if (m_town->m_buildings & 1)
+        if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
             m_town->GiveSpells();
         newHeroClass = gpCurPlayer->m_availableHeroIds[1 - m_recruitState] / 9;
         newHeroClass = (newHeroClass + Random(1, 3)) % 4;
