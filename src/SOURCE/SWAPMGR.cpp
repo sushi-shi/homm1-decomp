@@ -501,10 +501,10 @@ void swapManager::SwapMons(void) {
     sourceTroops = &m_heroes[m_selectedSide]->m_army;
     destTroops = &m_heroes[m_targetSide]->m_army;
     if (sourceTroops != destTroops) {
-        if (sourceTroops->GetNumArmies() == 1)
-            if (destTroops->m_creatureTypes[m_targetSlot] == CREATURE_NONE
-                || destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot]))
-                return;
+        if (sourceTroops->GetNumArmies() == 1
+            && (destTroops->m_creatureTypes[m_targetSlot] == CREATURE_NONE
+                || destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot])))
+            return;
         if (destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot])) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (sourceTroops->m_creatureTypes[m_selectedSlot] == destTroops->m_creatureTypes[i])

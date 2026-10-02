@@ -18,7 +18,7 @@ town::town(void) {
     m_x = 0;
     m_y = 0;
     m_occupyingHeroId = -1;
-    m_buildings = (short)(1 << BUILDING_SLOT_TENT);
+    m_buildings = (1 << BUILDING_SLOT_TENT);
     m_buildState = 0;
     m_unknown19 = 0;
 }

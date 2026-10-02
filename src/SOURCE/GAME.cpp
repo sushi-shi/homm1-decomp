@@ -177,10 +177,10 @@ int playerData::NumOfGivenArtifact(int artifact) {
 VA(0x0043933d, 0x386)
 void ComputeUALoc(int player) {
     int y;
+    int tries;
     int x;
     int heading;
     int numObelisks;
-    int tries;
 
     if (player > 0) {
         numObelisks = gpGame->m_players[player].CountVisitedObelisks();
