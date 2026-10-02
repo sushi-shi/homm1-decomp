@@ -587,7 +587,7 @@ void ReadPrefsFromFile(void)
     char buffer[100];
 
     sprintf(gText, "%s", "HEROES.CFG");
-    if (_access(gText, 0) == -1) {
+    if (access(gText, 0) == -1) {
         memset(&gConfig, 0, sizeof(gConfig));
         SetGameDefaults();
         WritePrefs();
