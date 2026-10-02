@@ -2673,6 +2673,232 @@ short ViewArmyHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// Kingdom overview text: the dated title, then Dragon City and Lighthouse.
+extern char* gOverviewText[];
+
+// Kingdom overview: heroes by class, castles and towns by type and mines by
+// resource drawn onto the backdrop, then the date, income and resources.
+VA(0x00440366, 0xbf2)
+void game::Overview(void) {
+    short unusedGY;
+    short townTop;
+    short unusedFVal;
+    short heroNumYW;
+    short incomeWidgetY;
+    font* smallFont;
+    short heroTextH;
+    short townTextWPos;
+    short heroTextW;
+    short castleFrameY;
+    short limitYOff;
+    short dayIdY;
+    short left;
+    short castleIconY;
+    short spacing;
+    signed char mineNums[7];
+    short fieldH;
+    font* bigFont;
+    short textW;
+    short mineRowY;
+    short i;
+    short numMines;
+    short badgeY;
+    short lineH;
+    short mineW;
+    signed char redraw;
+    tag_message message;
+    short totals[4];
+    short numCastles;
+    short numTowns;
+    heroWindow* win;
+    short firstTown;
+    short classCountY;
+    icon* ovIcon;
+    short heroFrame;
+    short mineBase;
+    short badge;
+    short spare1;
+    short heroRowY;
+    short shieldDXX;
+    short one;
+    short nextType;
+
+    gpAdvManager->TrimLoopingSounds(8);
+    gbOverviewShowing = 1;
+    unusedGY = 82;
+    shieldDXX = 49;
+    spare1 = 73;
+    heroTextW = 33;
+    heroTextH = 38;
+    textW = 132;
+    fieldH = 80;
+    townTextWPos = 132;
+    unusedFVal = 80;
+    mineW = 72;
+    badgeY = 66;
+    heroRowY = 32;
+    heroNumYW = 67;
+    castleIconY = 113;
+    townTop = 201;
+    mineRowY = 289;
+    heroFrame = 0;
+    castleFrameY = 4;
+    firstTown = 8;
+    mineBase = 12;
+    badge = 15;
+    lineH = 16;
+    limitYOff = 544;
+    redraw = 1;
+    one = 1;
+    dayIdY = 64;
+    incomeWidgetY = 65;
+
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    bigFont = gpResourceManager->GetFont("bigfont.fnt");
+    smallFont = gpResourceManager->GetFont("smalfont.fnt");
+    gpWindowManager->FadeScreen(1, 8, 0);
+    gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
+    sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_unknown11);
+    gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
+    ovIcon = gpResourceManager->GetIcon("overview.icn");
+
+    memset(totals, 0, sizeof(totals));
+    for (i = 0; i < gpCurPlayer->m_heroCount; i++)
+        totals[m_heroRecs[gpCurPlayer->m_heroIds[i]].m_unknown1c]++;
+    classCountY = 0;
+    for (i = 0; i < 4; i++) {
+        if (totals[i])
+            classCountY++;
+    }
+    spacing = 136;
+    left = 121;
+    nextType = 0;
+    for (i = 0; i < classCountY; i++) {
+        while (!totals[nextType])
+            nextType++;
+        ovIcon->DrawToBuffer(spacing * i + left, 32, nextType, 0, 0);
+        ovIcon->DrawToBuffer(spacing * i + left + 49, 67, 15, 0, 0);
+        sprintf(gText, "%d", totals[nextType]);
+        bigFont->DrawBoundedString(gText, spacing * i + left + 48, 77, 33, 16, 1, 1);
+        nextType++;
+    }
+
+    memset(totals, 0, sizeof(totals));
+    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
+        if (m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & 0x40)
+            totals[m_castleRecs[gpCurPlayer->m_townIds[i]].m_type]++;
+    }
+    numCastles = 0;
+    for (i = 0; i < 4; i++) {
+        if (totals[i])
+            numCastles++;
+    }
+    if (numCastles) {
+        spacing = 136;
+        left = 100;
+        nextType = 0;
+        for (i = 0; i < numCastles; i++) {
+            while (!totals[nextType])
+                nextType++;
+            ovIcon->DrawToBuffer(spacing * i + left, 113, nextType + 4, 0, 0);
+            sprintf(gText, "%d", totals[nextType]);
+            bigFont->DrawBoundedString(gText, spacing * i + left, 173, 132, 16, 1, 1);
+            nextType++;
+        }
+    }
+
+    memset(totals, 0, sizeof(totals));
+    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
+        if (!(m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & 0x40))
+            totals[m_castleRecs[gpCurPlayer->m_townIds[i]].m_type]++;
+    }
+    numTowns = 0;
+    for (i = 0; i < 4; i++) {
+        if (totals[i])
+            numTowns++;
+    }
+    if (numTowns) {
+        spacing = 136;
+        left = 100;
+        nextType = 0;
+        for (i = 0; i < numTowns; i++) {
+            while (!totals[nextType])
+                nextType++;
+            ovIcon->DrawToBuffer(spacing * i + left, 201, nextType + 8, 0, 0);
+            sprintf(gText, "%d", totals[nextType]);
+            bigFont->DrawBoundedString(gText, spacing * i + left, 261, 132, 16, 1, 1);
+            nextType++;
+        }
+    }
+
+    memset(mineNums, 0, sizeof(mineNums));
+    for (i = 2; i < GAME_MINE_COUNT; i++) {
+        if (m_mineOwners[i] == giCurPlayer)
+            mineNums[m_mines[i].type]++;
+    }
+    numMines = 0;
+    for (i = 0; i < 7; i++) {
+        if (mineNums[i])
+            numMines++;
+    }
+    if (numMines) {
+        spacing = 77;
+        left = 100;
+        nextType = 0;
+        for (i = 0; i < numMines; i++) {
+            while (!mineNums[nextType])
+                nextType++;
+            ovIcon->DrawToBuffer(spacing * i + left, 289, (nextType < 2 ? nextType : 2) + 12, 0, 0);
+            if (nextType >= 2)
+                ovIcon->DrawToBuffer(spacing * i + left, 289, nextType + 14, 0, 0);
+            sprintf(gText, "%d", mineNums[nextType]);
+            bigFont->DrawBoundedString(gText, spacing * i + left, 355, 72, 16, 1, 1);
+            nextType++;
+        }
+    }
+
+    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+    win = new heroWindow(0, 0, "overwind.bin");
+    if (!win)
+        MemError();
+    SetWinText(win, 8);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 64;
+    sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+    message.payload.widget.id = 65;
+    sprintf(gText, "%d", ComputeDailyGold(giCurPlayer));
+    win->BroadcastMessage(message);
+    for (i = 0; i < 7; i++) {
+        sprintf(gText, "%d", gpCurPlayer->m_resources[i]);
+        message.payload.widget.id = i + 1;
+        win->BroadcastMessage(message);
+    }
+    gpWindowManager->AddWindow(win, -1, 1);
+    win->DrawWindow();
+    gText[0] = 0;
+    if (m_mineOwners[0] == giCurPlayer) {
+        strcpy(gText, gOverviewText[1]);
+        smallFont->DrawBoundedString(gText, 100, 450, 400, 12, 1, 0);
+        gpWindowManager->UpdateScreenRegion(100, 450, 400, 12);
+    }
+    if (m_mineOwners[1] == giCurPlayer) {
+        strcpy(gText, gOverviewText[2]);
+        smallFont->DrawBoundedString(gText, 100, 465, 400, 12, 1, 0);
+        gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
+    }
+    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
+    delete win;
+    gpWindowManager->FadeScreen(1, 8, 0);
+    gpResourceManager->Dispose(ovIcon);
+    gpResourceManager->Dispose(smallFont);
+    gpResourceManager->Dispose(bigFont);
+    gbOverviewShowing = 0;
+}
+
 // Buka 2.1 game::GetRandomNumTroops with HoMM1's 28 creatures.
 VA(0x00440f58, 0x28b)
 signed char game::GetRandomNumTroops(signed char monsterType) {
