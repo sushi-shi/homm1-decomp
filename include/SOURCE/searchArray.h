@@ -62,7 +62,8 @@ public:
     // --- constructors ---
     searchArray(void);
     // --- methods ---
-    int BuildPath(short, short, short, short, int);
+    // Retail ret 0x14 reads the mobility limit as a word.
+    int BuildPath(short, short, short, short, short);
     void SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int);
     void Init(void);
     void Close(void);

@@ -272,7 +272,7 @@ int advManager::GetMoveShowIt(signed char direction)
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.461867;margin=0.353958;shape=0.281;size=0.831;calls=0.879;alternate=pol20:class mapCell * advManager::MoveHero(int, int, int *, int *, int *, int, int *, int)@0x0000e51f
 VA(0x0040660c, 0xe1e)
-class mapCell * advManager::MoveHero(int, int, int *, int *, int *, int, int *, int) { return 0; }
+class mapCell * advManager::MoveHero(signed char, signed char, int *, int *, int *, signed char, signed char *) { return 0; }
 
 // donor PoL RVA 0x0000f753; preferred Buka symbol ?CheckAdjacentMon@advManager@@QAEXPAH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order

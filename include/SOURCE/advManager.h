@@ -127,7 +127,8 @@ public:
     short GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short));
     void TurnTo(signed char);
     int GetMoveShowIt(signed char);
-    class mapCell* MoveHero(int, int, int*, int*, int*, int, int*, int);
+    // Retail ret 0x1c: byte direction/stop flags and a byte interrupt out-flag.
+    class mapCell* MoveHero(signed char, signed char, int*, int*, int*, signed char, signed char*);
     void CheckAdjacentMon(signed char*);
     short ValidMoveWithEvent(class hero*, short);
     short ValidMove(short);

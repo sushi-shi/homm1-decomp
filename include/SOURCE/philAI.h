@@ -65,7 +65,7 @@ public:
     void GetTurnAIVars(int);
     void GetBestBHC(int, struct BHC&);
     class hero* DetermineHeroToMove(int);
-    int DetermineTargetPosition(int&, int&, int, int&);
+    void DetermineTargetPosition(class hero*, signed char&, signed char&, short);
     void ProbableOutcomeOfBattle(
         class armyGroup*,
         class hero*,
@@ -185,6 +185,12 @@ extern float gfHeroInteractionBonus[];
 extern float gfAttackHumanBonus;
 extern float gfAttackComputerBonus;
 extern signed char gbIAmGreatest;
+// DoAI: the single player the AI may run for, and the places each hero has
+// already started from this turn.
+extern signed char giLimitPlayer;
+extern int iPlacesVisited[30][2];
+extern int iCurPlaceToVisit;
+void ResetHeroRVs(int, int, int);
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];

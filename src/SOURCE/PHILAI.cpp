@@ -410,7 +410,196 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.641984;margin=1.146879;shape=0.398;size=0.795;calls=0.741;strings====================================|DO AI|DO AI 1;alternate=pol20:void philAI::DoAI(int)@0x00039631
 VA(0x0041b144, 0x8f0)
-void philAI::DoAI(int) {}
+void philAI::DoAI(int player) {
+    int moveDone;
+    int bestDirection;
+    int stepMax;
+    mapCell* eventCell;
+    int dummy;
+    signed char stopAfterStep;
+    int oldShowIt;
+    signed char halfShown;
+    int steps;
+    int x;
+    int y;
+    short minRV;
+    int pathIndex;
+    signed char moveInterrupt;
+    hero* aiHero;
+    int flag;
+    int moveResult;
+    int tempArray[4];
+
+    halfShown = 0;
+    LogInt("DO AI 1", player);
+    if (gbGameOver)
+        return;
+    if (giLimitPlayer && giLimitPlayer != player)
+        return;
+    LogInt("DO AI", player);
+    GetTurnAIVars(player);
+    ShowStatus();
+    for (pathIndex = 0; pathIndex < 7; pathIndex++) {
+        sprintf(
+            gText,
+            "RES - %15s  %d  %d",
+            gResourceNames[pathIndex],
+            gpCurPlayer->m_resources[pathIndex],
+            gpCurPlayer->m_aiData.m_income[pathIndex]
+        );
+        LogStr(gText);
+    }
+    CheckBuyStuff();
+    IncrementHourGlass();
+    while ((aiHero = DetermineHeroToMove(player)) != 0) {
+        giHumanTownConquered = -1;
+        iCurPlaceToVisit = 0;
+        if (gbGameOver)
+            return;
+        LogStr("\n\n\n\n");
+        LogStr("===================================");
+        LogInt("Player with HeroTOMOVE", player);
+        LogStr(aiHero->m_name);
+        LogStr("\n");
+        CheckReload(aiHero);
+        CheckBerserk(aiHero);
+        giShowComputerRoute = 0;
+        if (gConfig.blackoutComputer == 0 && gbRemoteOn == 0
+            && (gpGame->m_mapExtra[aiHero->m_x][aiHero->m_y] & giCurWatchPlayerBit)) {
+            bShowIt = 1;
+            gpAdvManager->SetHeroContext(aiHero->m_id, 0);
+        } else {
+            bShowIt = 0;
+            gpAdvManager->SetHeroContext(aiHero->m_id, 0);
+        }
+        moveDone = 0;
+        ResetHeroRVs(0, 0, 0);
+        if (aiHero->m_eventFlags & 0x80)
+            stepMax = 15;
+        else
+            stepMax = 5;
+        minRV = aiHero->m_mobility + 42;
+        stepMax = (int)(stepMax * (1.7 - gpCurPlayer->m_difficulty * 0.1));
+        if (gConfig.slowVideo)
+            stepMax *= 2;
+        if (gConfig.slowVideo)
+            minRV = (short)(minRV * ((gpCurPlayer->m_difficulty - 1) * 0.03 + 0.8));
+        else
+            minRV = (short)(minRV * ((gpCurPlayer->m_difficulty - 1) * 0.06 + 0.8));
+        while (!moveDone && aiHero->m_remainingMobility >= 4) {
+            if (gbGameOver)
+                return;
+            if (aiHero->m_remainingMobility == aiHero->m_mobility && gpCurPlayer->m_unknown52 > 15
+                && gpCurPlayer->m_unknown53 == aiHero->m_x && gpCurPlayer->m_unknown54 == aiHero->m_y)
+                gpAdvManager->ProcessSearch(aiHero->m_x, aiHero->m_y);
+        retarget:
+            DetermineTargetPosition(aiHero, aiHero->m_destinationX, aiHero->m_destinationY, minRV);
+            for (pathIndex = 0; pathIndex < iCurPlaceToVisit; pathIndex++) {
+                if (iPlacesVisited[pathIndex][0] == aiHero->m_destinationX
+                    && iPlacesVisited[pathIndex][1] == aiHero->m_destinationY
+                    && gpAdvManager->GetCell(aiHero->m_destinationX, aiHero->m_destinationY)->m_triggerType
+                           != 0xa8)
+                    aiHero->m_remainingMobility = 0;
+            }
+            if (iCurPlaceToVisit < 30) {
+                iPlacesVisited[iCurPlaceToVisit][0] = aiHero->m_x;
+                iPlacesVisited[iCurPlaceToVisit][1] = aiHero->m_y;
+                iCurPlaceToVisit++;
+            }
+            giShowComputerRoute = 1;
+            if (aiHero->m_mobility == aiHero->m_remainingMobility) {
+                halfShown = 0;
+                IncrementHourGlass();
+            }
+            if (aiHero->m_destinationX != -1 && aiHero->m_destinationY != -1) {
+                eventCell = 0;
+                gpAdvManager->SetHeroContext(aiHero->m_id, 0);
+                gpSearchArray->BuildPath(
+                    aiHero->m_x,
+                    aiHero->m_y,
+                    aiHero->m_destinationX,
+                    aiHero->m_destinationY,
+                    aiHero->m_remainingMobility
+                );
+                if (gpSearchArray->m_pathLength > 0) {
+                    gpAdvManager->UpdateScreen(0, 0);
+                    if (aiHero->HasSpell(27) && DoDimensionDoor(aiHero))
+                        goto retarget;
+                    steps = 0;
+                    pathIndex = gpSearchArray->m_pathLength - 1;
+                    moveResult = 0;
+                    moveInterrupt = 0;
+                    while (pathIndex >= 0 && stepMax > steps) {
+                        stopAfterStep = (steps + 1 == stepMax || pathIndex == 0) ? 1 : 0;
+                        if (pathIndex > 0 && GoodAdjacent(aiHero, &bestDirection)) {
+                            gpSearchArray->m_directions[pathIndex] = bestDirection;
+                            stopAfterStep = 1;
+                        }
+                        if (gpAdvManager->GetMoveShowIt(gpSearchArray->m_directions[pathIndex])) {
+                            oldShowIt = bShowIt;
+                            bShowIt = 1;
+                            gpMouseManager->ReallyHidePointer();
+                            bShowIt = oldShowIt;
+                        }
+                        eventCell = gpAdvManager->MoveHero(
+                            gpSearchArray->m_directions[pathIndex],
+                            stopAfterStep,
+                            &x,
+                            &y,
+                            &moveResult,
+                            1,
+                            &moveInterrupt
+                        );
+                        steps++;
+                        if (eventCell || moveResult || moveInterrupt)
+                            break;
+                        pathIndex--;
+                    }
+                    if (aiHero->m_owner == -1)
+                        goto nextHero;
+                    if (aiHero->m_remainingMobility <= aiHero->m_mobility >> 1 && !halfShown) {
+                        halfShown = 1;
+                        IncrementHourGlass();
+                    }
+                    if (pathIndex < 0 && gpCurPlayer->m_unknown52 > 15
+                        && gpCurPlayer->m_unknown53 == aiHero->m_x
+                        && gpCurPlayer->m_unknown54 == aiHero->m_y) {
+                        if (aiHero->m_mobility == aiHero->m_remainingMobility)
+                            gpAdvManager->ProcessSearch(-1, -1);
+                        else
+                            aiHero->m_remainingMobility = 0;
+                    }
+                    if (pathIndex < 0
+                        && (((aiHero->m_x != aiHero->m_destinationX
+                              || aiHero->m_y != aiHero->m_destinationY)
+                             && !eventCell)
+                            || aiHero->m_remainingMobility < 4 || (moveResult && !eventCell)))
+                        moveDone = 1;
+                    oldShowIt = bShowIt;
+                    bShowIt = 1;
+                    gpMouseManager->ReallyShowPointer();
+                    bShowIt = oldShowIt;
+                    gpAdvManager->UpdateRadar(1, 0);
+                } else {
+                    moveDone = 1;
+                }
+                if (eventCell) {
+                    gpAdvManager->DoAIEvent(eventCell, aiHero, x, y);
+                    if (gpCurPlayer->m_currentHero == -1)
+                        goto nextHero;
+                    ResetHeroRVs(1, aiHero->m_destinationX, aiHero->m_destinationY);
+                }
+            } else {
+                moveDone = 1;
+            }
+        }
+        aiHero->m_remainingMobility = 0;
+        gpAdvManager->DeactivateCurrHero();
+    nextHero:
+        if (aiHero->m_locationType == 0xa8)
+            CheckBuyStuff();
+    }
+}
 
 // Buka 2.1 GetGameAIVars refreshes every player's game attention value.
 VA(0x0041ba34, 0x4b)
@@ -638,9 +827,7 @@ hero* philAI::DetermineHeroToMove(int player) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
 VA(0x0041c83b, 0x932)
-int philAI::DetermineTargetPosition(int&, int&, int, int&) {
-    return 0;
-}
+void philAI::DetermineTargetPosition(hero*, signed char&, signed char&, short) {}
 
 // donor PoL RVA 0x0003c6e2; preferred Buka symbol ?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010HHHAAMAAH3333@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
