@@ -2826,7 +2826,7 @@ signed char advManager::UpdBottomViewHero(void) {
         slotNum = 0;
         for (n = 0; n < 5; n++) {
             creatureType = targetHero->m_army.m_creatureTypes[n];
-            if (creatureType != -1) {
+            if (creatureType != CREATURE_NONE) {
                 countStr[slotNum] = static_cast<char*>(malloc(6));
                 sprintf(countStr[slotNum], "%d", targetHero->m_army.m_creatureCounts[n]);
                 if (slotNum > 2)
@@ -2947,7 +2947,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
 
     numArmies = 0;
     for (j = 0; j < 5; j++) {
-        if (heroPtr->m_army.m_creatureTypes[j] != -1)
+        if (heroPtr->m_army.m_creatureTypes[j] != CREATURE_NONE)
             numArmies++;
     }
 
@@ -2966,7 +2966,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
             startPos = (160 - numArmies * 32) / 2 + 9;
             curIndex = 0;
             for (j = 0; j < numArmies; j++) {
-                while (heroPtr->m_army.m_creatureTypes[curIndex] == -1)
+                while (heroPtr->m_army.m_creatureTypes[curIndex] == CREATURE_NONE)
                     curIndex++;
                 monster = heroPtr->m_army.m_creatureTypes[curIndex];
                 if (monster != -1) {
@@ -3017,7 +3017,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
         step = 160 / firstRow;
         offsetX = (step - 32) / 2 + 9;
         for (j = 0; j < firstRow; j++) {
-            while (heroPtr->m_army.m_creatureTypes[slotIndex] == -1)
+            while (heroPtr->m_army.m_creatureTypes[slotIndex] == CREATURE_NONE)
                 slotIndex++;
             creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
             monWidgets[j] =
@@ -3039,7 +3039,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
             offsetX = (step - 32) / 2 + 9;
             rowY += 44;
             for (j = firstRow; j < firstRow + secondRow; j++) {
-                while (heroPtr->m_army.m_creatureTypes[slotIndex] == -1)
+                while (heroPtr->m_army.m_creatureTypes[slotIndex] == CREATURE_NONE)
                     slotIndex++;
                 creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
                 monWidgets[j] = new iconWidget((j - 2) * step + offsetX, rowY, 32, 32, "mons32.icn",

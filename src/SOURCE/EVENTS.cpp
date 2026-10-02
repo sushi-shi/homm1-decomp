@@ -124,7 +124,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     numDefenders = 20;
                 else
                     numDefenders = 5;
-                if (CombatMonsterEvent(pHero, 0x17, numDefenders, cell, x, y, 0, x, y) == 1) {
+                if (CombatMonsterEvent(pHero, CREATURE_DRAGON, numDefenders, cell, x, y, 0, x, y) == 1) {
                     gpGame->ClaimMine(0, giCurPlayer);
                     EventWindow(0x27, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, -1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
@@ -263,7 +263,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case MAP_OBJECT_ANCIENT_LAMP:
             EventWindow(0x13, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                RecruitEvent(pHero, 0x1b, cell);
+                RecruitEvent(pHero, CREATURE_GENIE, cell);
                 if (!cell->m_objectMetadata) {
                     erase = 1;
                     fizzleMode = 1;
@@ -276,7 +276,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             } else {
                 EventWindow(0x42, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                    RecruitEvent(pHero, 0x18, cell);
+                    RecruitEvent(pHero, CREATURE_ROGUE, cell);
             }
             break;
         case MAP_OBJECT_DESERT_TENT:
@@ -285,7 +285,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             } else {
                 EventWindow(0x40, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                    RecruitEvent(pHero, 0x19, cell);
+                    RecruitEvent(pHero, CREATURE_NOMAD, cell);
             }
             break;
         case MAP_OBJECT_STRAW_HUT:
@@ -393,7 +393,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     break;
                 case 2:
                     EventWindow(0x46, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-                    if (CombatMonsterEvent(pHero, 0x18, 0x32, cell, x, y, 0, x, y) == 1) {
+                    if (CombatMonsterEvent(pHero, CREATURE_ROGUE, 0x32, cell, x, y, 0, x, y) == 1) {
                         sprintf(gText, gEventText[74], gArtifactNames[cell->m_objectIndex]);
                         EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         goto giveArtifact;
@@ -1257,14 +1257,14 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             if (gpGame->m_mineOwners[0] == giCurPlayer)
                 break;
             for (counter = 0; counter < 5; counter++) {
-                gpMonGroup->m_creatureTypes[counter] = 0x17;
+                gpMonGroup->m_creatureTypes[counter] = CREATURE_DRAGON;
                 gpMonGroup->m_creatureCounts[counter] = 1;
             }
             gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonGroup, 0, 0, 0, 500,
                                            win, strength);
             if (win) {
                 counter = 5;
-                victory = gpPhilAI->CombatMonsterEvent(eventHero, 0x17, &counter, cell);
+                victory = gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_DRAGON, &counter, cell);
                 if (victory)
                     gpGame->ClaimMine(0, giCurPlayer);
             }
@@ -1351,35 +1351,35 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case MAP_OBJECT_ANCIENT_LAMP:
-            troopType = 0x1b;
+            troopType = CREATURE_GENIE;
             available = 0;
             goto recruit;
         case MAP_OBJECT_WAGON_CAMP:
-            troopType = 0x18;
+            troopType = CREATURE_ROGUE;
             available = 0;
             goto recruit;
         case MAP_OBJECT_DESERT_TENT:
-            troopType = 0x19;
+            troopType = CREATURE_NOMAD;
             available = 0;
             goto recruit;
         case MAP_OBJECT_STRAW_HUT:
-            troopType = 6;
+            troopType = CREATURE_GOBLIN;
             available = 1;
             goto recruit;
         case MAP_OBJECT_HOUSE:
-            troopType = 0;
+            troopType = CREATURE_PEASANT;
             available = 1;
             goto recruit;
         case MAP_OBJECT_CABIN:
-            troopType = 1;
+            troopType = CREATURE_ARCHER;
             available = 1;
             goto recruit;
         case MAP_OBJECT_DWARF_LOG_CABIN:
-            troopType = 0xd;
+            troopType = CREATURE_DWARF;
             available = 1;
             goto recruit;
         case MAP_OBJECT_PEASANT_LOG_CABIN:
-            troopType = 0;
+            troopType = CREATURE_PEASANT;
             available = 1;
             goto recruit;
         recruit:
@@ -1459,7 +1459,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     break;
                 case 2:
                     counter = 50;
-                    if (gpPhilAI->CombatMonsterEvent(eventHero, 0x18, &counter, cell))
+                    if (gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_ROGUE, &counter, cell))
                         goto giveArtifact;
                     break;
                 case 3:

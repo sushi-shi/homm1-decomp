@@ -285,10 +285,10 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         default:
             if (targetArmy
-                && (targetArmy->m_creatureType == 0x17
-                    || (targetArmy->m_creatureType == 0xd && SRandom(0, 4) == 1))) {
+                && (targetArmy->m_creatureType == CREATURE_DRAGON
+                    || (targetArmy->m_creatureType == CREATURE_DWARF && SRandom(0, 4) == 1))) {
                 sample = LoadPlaySample("RSBRYFZL.82M");
-                if (targetArmy->m_creatureType == 0x17)
+                if (targetArmy->m_creatureType == CREATURE_DRAGON)
                     CombatMessage("Dragons are not affected by magic!", 1);
                 else
                     CombatMessage("The Dwarves' magic resistance canceled the spell!", 1);
@@ -791,8 +791,8 @@ void combatManager::ElementalStorm(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;

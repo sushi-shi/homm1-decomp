@@ -232,10 +232,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     if (m_armies[side][i].m_effectAnimation == 22 || m_armies[side][i].m_effectAnimation == 23
                         || m_armies[side][i].m_effectAnimation == 24 || m_armies[side][i].m_effectAnimation == 25)
                         boxTop -= 100;
-                    if (m_armies[side][i].m_creatureType == 4)
+                    if (m_armies[side][i].m_creatureType == CREATURE_CAVALRY)
                         boxTop -= 60;
-                    if (m_armies[side][i].m_creatureType == 12 || m_armies[side][i].m_creatureType == 7
-                        || m_armies[side][i].m_creatureType == 10) {
+                    if (m_armies[side][i].m_creatureType == CREATURE_SPRITE || m_armies[side][i].m_creatureType == CREATURE_ORC
+                        || m_armies[side][i].m_creatureType == CREATURE_TROLL) {
                         if (m_armies[side][i].m_facing == 1)
                             boxRight += 40;
                         else

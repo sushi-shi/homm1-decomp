@@ -181,13 +181,13 @@ void army::DrawToBuffer(short x, short y) {
     switch (m_animationSequence) {
         case 0:
             switch (m_creatureType) {
-                case 22:
+                case CREATURE_HYDRA:
                     if (m_drawShadow)
                         m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, flip);
                     break;
-                case 11:
-                case 17:
-                case 23:
+                case CREATURE_CYCLOPS:
+                case CREATURE_PHOENIX:
+                case CREATURE_DRAGON:
                     if (m_drawShadow)
                         m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, flip);
                     break;
@@ -196,7 +196,7 @@ void army::DrawToBuffer(short x, short y) {
                         m_standIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, flip);
                     break;
             }
-            if (m_animationFrame > 4 && m_creatureType != 22)
+            if (m_animationFrame > 4 && m_creatureType != CREATURE_HYDRA)
                 m_standIcon->DrawToBuffer(x, y, 5, m_facing, flip);
             m_standIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, flip);
             if (m_hex == gpCombatManager->m_limitCreatureHex && gpCombatManager->m_limitCreature == 1) {
@@ -261,13 +261,13 @@ void army::DrawToBuffer(short x, short y) {
         case 3:
             if (!(m_stats.attributes & 0x10)) {
                 switch (m_creatureType) {
-                    case 22:
+                    case CREATURE_HYDRA:
                         if (m_drawShadow)
                             m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, flip);
                         break;
-                    case 11:
-                    case 17:
-                    case 23:
+                    case CREATURE_CYCLOPS:
+                    case CREATURE_PHOENIX:
+                    case CREATURE_DRAGON:
                         if (m_drawShadow)
                             m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, flip);
                         break;
@@ -710,7 +710,7 @@ void army::SpecialAttack(void) {
     Stand(1);
     if (target->m_quantity > 0)
         target->Stand(1);
-    if (!gbSecondShot && m_creatureType == 14 && target->m_quantity > 0) {
+    if (!gbSecondShot && m_creatureType == CREATURE_ELF && target->m_quantity > 0) {
         gbSecondShot = 1;
         SpecialAttack();
         gbSecondShot = 0;
@@ -870,7 +870,7 @@ void army::DoAttack(int retaliation) {
     didCast = 0;
     if (retaliation)
         gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
-    if (m_creatureType == 22) {
+    if (m_creatureType == CREATURE_HYDRA) {
         DoHydraAttack();
         if (m_spellEndCondition == 1 && !retaliation)
             CancelSpell();
@@ -996,31 +996,31 @@ void army::DoAttack(int retaliation) {
     PowEffect(m_stats.powEffect);
     gpCombatManager->m_extendLimitDown = oldMode;
     switch (m_creatureType) {
-        case 11:
+        case CREATURE_CYCLOPS:
             if (SRandom(1, 5) == 3) {
-                if (target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != 23
-                    && (target->m_creatureType != 13 || SRandom(0, 4) != 1)
+                if (target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != CREATURE_DRAGON
+                    && (target->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
                     && !(target->m_stats.attributes & 0x10)) {
                     gpCombatManager->CastSpell(SPELL_PARALYZE, target->m_hex, 1, -1);
                     didCast = 1;
                 }
             } else if (SRandom(1, 5) == 3 && target2 && target2->m_spellEffect != SPELL_ANTI_MAGIC
-                       && target2->m_creatureType != 23
-                       && (target2->m_creatureType != 13 || SRandom(0, 4) != 1)
+                       && target2->m_creatureType != CREATURE_DRAGON
+                       && (target2->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
                        && !(target2->m_stats.attributes & 0x10)) {
                 gpCombatManager->CastSpell(SPELL_PARALYZE, target2->m_hex, 1, -1);
                 didCast = 1;
             }
             break;
-        case 16:
-            if (SRandom(1, 5) == 3 && target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != 23
-                && (target->m_creatureType != 13 || SRandom(0, 127) % 4 != 1)
+        case CREATURE_UNICORN:
+            if (SRandom(1, 5) == 3 && target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != CREATURE_DRAGON
+                && (target->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(target->m_stats.attributes & 0x10)) {
                 gpCombatManager->CastSpell(SPELL_BLIND, target->m_hex, 1, -1);
                 didCast = 1;
             }
             break;
-        case 26:
+        case CREATURE_GHOST:
             gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[m_hex].m_occupantSide] = kills;
             break;
         default:
@@ -1067,14 +1067,14 @@ void army::DoAttack(int retaliation) {
         CancelSpell();
     gpCombatManager->m_computeExtent = 1;
     Stand(1);
-    if (m_creatureType == 26)
+    if (m_creatureType == CREATURE_GHOST)
         m_quantity += gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[m_hex].m_occupantSide];
     if (target && target->m_quantity > 0) {
         gpCombatManager->m_computeExtent = 1;
         target->Stand(1);
         if (target->m_spellEffect == SPELL_PARALYZE
-            || target->m_creatureType != 20 && (target->m_stats.attributes & 0x40) || m_creatureType == 24
-            || m_creatureType == 12 || didCast || retaliation) {
+            || target->m_creatureType != CREATURE_GRIFFIN && (target->m_stats.attributes & 0x40) || m_creatureType == CREATURE_ROGUE
+            || m_creatureType == CREATURE_SPRITE || didCast || retaliation) {
             goto secondStrike;
         } else {
             target->m_attackDirection = OppositeDirection(m_attackDirection);
@@ -1090,13 +1090,13 @@ void army::DoAttack(int retaliation) {
             }
             target->DoAttack(1);
             target->m_stats.attributes |= 0x40;
-            if (target->m_creatureType == 26)
+            if (target->m_creatureType == CREATURE_GHOST)
                 target->m_quantity +=
                     gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[target->m_hex].m_occupantSide];
         }
     }
 secondStrike:
-    if ((m_creatureType == 8 || m_creatureType == 5) && target && target->m_quantity > 0 && !retaliation
+    if ((m_creatureType == CREATURE_WOLF || m_creatureType == CREATURE_PALADIN) && target && target->m_quantity > 0 && !retaliation
         && m_spellEffect != SPELL_PARALYZE && m_quantity > 0) {
         curDir = m_attackDirection;
         m_attackDirection = attackDir;
@@ -1282,7 +1282,7 @@ void army::DamageEnemy(class army* target, int* damageResult, int* killedResult,
     if (m_damageMode == 2)
         total /= 2;
     damage = static_cast<int>(total + 0.5);
-    if (m_creatureType == 27 && SRandom(1, 5) == 2) {
+    if (m_creatureType == CREATURE_GENIE && SRandom(1, 5) == 2) {
         halfDamage = target->m_stats.hitPoints * ((target->m_quantity + 1) / 2);
         if (damage < halfDamage) {
             gbGenieHalf = 1;

@@ -880,52 +880,52 @@ void game::GiveTroopsToNeutralTowns(void) {
             }
             switch (m_castleRecs[i].m_type + tier) {
                 case 10:
-                    monster = 0;
+                    monster = CREATURE_PEASANT;
                     break;
                 case 20:
-                    monster = 1;
+                    monster = CREATURE_ARCHER;
                     break;
                 case 30:
-                    monster = 2;
+                    monster = CREATURE_PIKEMAN;
                     break;
                 case 40:
-                    monster = 3;
+                    monster = CREATURE_SWORDSMAN;
                     break;
                 case 12:
-                    monster = 6;
+                    monster = CREATURE_GOBLIN;
                     break;
                 case 22:
-                    monster = 7;
+                    monster = CREATURE_ORC;
                     break;
                 case 32:
-                    monster = 8;
+                    monster = CREATURE_WOLF;
                     break;
                 case 42:
-                    monster = 9;
+                    monster = CREATURE_OGRE;
                     break;
                 case 11:
-                    monster = 12;
+                    monster = CREATURE_SPRITE;
                     break;
                 case 21:
-                    monster = 13;
+                    monster = CREATURE_DWARF;
                     break;
                 case 31:
-                    monster = 14;
+                    monster = CREATURE_ELF;
                     break;
                 case 41:
-                    monster = 15;
+                    monster = CREATURE_DRUID;
                     break;
                 case 13:
-                    monster = 18;
+                    monster = CREATURE_CENTAUR;
                     break;
                 case 23:
-                    monster = 19;
+                    monster = CREATURE_GARGOYLE;
                     break;
                 case 33:
-                    monster = 20;
+                    monster = CREATURE_GRIFFIN;
                     break;
                 case 43:
-                    monster = 21;
+                    monster = CREATURE_MINOTAUR;
                     break;
             }
             GiveArmy(&m_castleRecs[i].m_army, monster, howMany, -1);
@@ -3861,7 +3861,7 @@ void game::ProcessOnMapHeroes(void) {
                     if (theHero->m_army.m_creatureCounts[k] > 0)
                         theHero->m_army.m_creatureTypes[k] = extra->troopTypes[k];
                     else
-                        theHero->m_army.m_creatureTypes[k] = -1;
+                        theHero->m_army.m_creatureTypes[k] = CREATURE_NONE;
                 }
                 for (j = 0; j < 4; j++) {
                     if (extra->artifacts[j] >= 0)
@@ -3947,13 +3947,13 @@ void game::CheckHeroConsistency(void) {
     }
     for (i = 0; i < GAME_HERO_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_heroRecs[i].m_army.m_creatureTypes[j] == -1 || m_heroRecs[i].m_army.m_creatureCounts[j] < 0)
+            if (m_heroRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE || m_heroRecs[i].m_army.m_creatureCounts[j] < 0)
                 m_heroRecs[i].m_army.m_creatureCounts[j] = 0;
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_castleRecs[i].m_army.m_creatureTypes[j] == -1 || m_castleRecs[i].m_army.m_creatureCounts[j] < 0)
+            if (m_castleRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE || m_castleRecs[i].m_army.m_creatureCounts[j] < 0)
                 m_castleRecs[i].m_army.m_creatureCounts[j] = 0;
         }
     }

@@ -490,7 +490,7 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         }
         oneBit <<= 1;
     }
-    if (currentArmy->m_creatureType == 26)
+    if (currentArmy->m_creatureType == CREATURE_GHOST)
         target = GetWorstArmy(1 - m_currentSide, enemyMask);
     else
         target = GetBestArmy(1 - m_currentSide, enemyMask);

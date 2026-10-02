@@ -380,7 +380,7 @@ void combatManager::EffectSpellResurrect(int* effect, int hex)
     int num;
 
     targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-    if (targetArmy->m_creatureType == 0x17 || targetArmy->m_spellEffect == SPELL_ANTI_MAGIC) {
+    if (targetArmy->m_creatureType == CREATURE_DRAGON || targetArmy->m_spellEffect == SPELL_ANTI_MAGIC) {
         *effect = 0;
         return;
     }
@@ -447,8 +447,8 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
             if (targetCreature->m_stats.hitPoints > 0
                 && !gArmyEffected[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex] = 1;
-                if (targetCreature->m_creatureType != 0x17 && targetCreature->m_spellEffect != SPELL_ANTI_MAGIC) {
-                    if (targetCreature->m_creatureType == 0xd)
+                if (targetCreature->m_creatureType != CREATURE_DRAGON && targetCreature->m_spellEffect != SPELL_ANTI_MAGIC) {
+                    if (targetCreature->m_creatureType == CREATURE_DWARF)
                         hitDamage = power * 0.75;
                     else
                         hitDamage = power;

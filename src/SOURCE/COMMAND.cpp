@@ -547,7 +547,7 @@ void combatManager::ResetRound(void) {
             curArmy = &m_armies[side][index];
             if (curArmy->m_quantity > 0) {
                 curArmy->m_stats.attributes &= 0x1f;
-                if (curArmy->m_creatureType == 10)
+                if (curArmy->m_creatureType == CREATURE_TROLL)
                     curArmy->m_hitPointsLost = 0;
                 if (curArmy->m_spellRounds > 0) {
                     curArmy->m_spellRounds--;
@@ -914,7 +914,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     for (side = 0; side < 2; side++) {
         numLost[side] = 0;
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
-            if (m_armies[side][armyIndex].m_creatureType != -1
+            if (m_armies[side][armyIndex].m_creatureType != CREATURE_NONE
                 && m_armies[side][armyIndex].m_initialQuantity
                        > m_armies[side][armyIndex].m_quantity) {
                 casualtyType[side][numLost[side]] = m_armies[side][armyIndex].m_creatureType;

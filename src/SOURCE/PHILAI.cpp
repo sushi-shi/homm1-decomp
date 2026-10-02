@@ -2008,7 +2008,7 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
     magicTotal = 0;
     castleValue = 0;
     for (slot = 0; slot < 5; slot++) {
-        if (group->m_creatureTypes[slot] != -1) {
+        if (group->m_creatureTypes[slot] != CREATURE_NONE) {
             worth = gMonsterDatabase[group->m_creatureTypes[slot]].fightValue * group->m_creatureCounts[slot];
             if (useHero) {
                 if (group->m_creatureCounts[slot] > 180)
@@ -2040,9 +2040,9 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
                 else
                     quantityMod = -0.14f;
                 if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes & 4)
-                    || group->m_creatureTypes[slot] == 12 || group->m_creatureTypes[slot] == 24)
+                    || group->m_creatureTypes[slot] == CREATURE_SPRITE || group->m_creatureTypes[slot] == CREATURE_ROGUE)
                     quantityMod = quantityMod * 0.7;
-                else if (group->m_creatureTypes[slot] == 20)
+                else if (group->m_creatureTypes[slot] == CREATURE_GRIFFIN)
                     quantityMod = quantityMod * 1.2;
                 worth = static_cast<int>(worth * (quantityMod + 1.0f));
             }
@@ -2422,7 +2422,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
         if (!toHero) {
             armyCount = 0;
             for (i = 0; i < 5; i++)
-                if (heroPointer->m_army.m_creatureTypes[i] != -1)
+                if (heroPointer->m_army.m_creatureTypes[i] != CREATURE_NONE)
                     armyCount += heroPointer->m_army.m_creatureCounts[i];
             if (armyCount <= 1)
                 return;
@@ -2431,7 +2431,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
         for (i = 0; i < 5; i++) {
             if (pick == -1) {
                 for (j = 0; j < 5; j++) {
-                    if (fromArmy->m_creatureTypes[i] != -1
+                    if (fromArmy->m_creatureTypes[i] != CREATURE_NONE
                         && fromArmy->m_creatureTypes[i] == toArmy->m_creatureTypes[j]) {
                         pick = i;
                         break;
@@ -2446,7 +2446,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             else
                 speedLimit = 3;
             for (i = 0; i < 5; i++) {
-                if (fromArmy->m_creatureTypes[i] != -1) {
+                if (fromArmy->m_creatureTypes[i] != CREATURE_NONE) {
                     stackFV = gMonsterDatabase[fromArmy->m_creatureTypes[i]].fightValue
                               * fromArmy->m_creatureCounts[i];
                     if ((toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed > speedLimit)
@@ -2490,7 +2490,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
                 toArmy->Add(fromArmy->m_creatureTypes[pick], moveNum, -1);
                 fromArmy->m_creatureCounts[pick] -= moveNum;
                 if (fromArmy->m_creatureCounts[pick] == 0)
-                    fromArmy->m_creatureTypes[pick] = -1;
+                    fromArmy->m_creatureTypes[pick] = CREATURE_NONE;
             } else {
                 nRunning = 0;
             }
@@ -3001,7 +3001,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     case MAP_OBJECT_ARTIFACT:
         iArtifactChoice1 = gArtifactBaseRV[pEventCell->m_objectIndex];
         for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
-            gpMonGroup->m_creatureTypes[iEventLoop] = 24;
+            gpMonGroup->m_creatureTypes[iEventLoop] = CREATURE_ROGUE;
             gpMonGroup->m_creatureCounts[iEventLoop] = 10;
         }
         ProbableOutcomeOfBattle(
@@ -3366,7 +3366,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 break;
             }
             for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
-                gpMonGroup->m_creatureTypes[iEventLoop] = 26;
+                gpMonGroup->m_creatureTypes[iEventLoop] = CREATURE_GHOST;
                 gpMonGroup->m_creatureCounts[iEventLoop] = guardCount1;
             }
             ChooseEvaluateBattle(
@@ -3380,7 +3380,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     case MAP_OBJECT_DRAGON_CITY:
         prize5 = static_cast<int>(gaiTurnValueOfMine[x][y] * gafAITurnCostResource[RESOURCE_GOLD] * 1000.0f * 1.5);
         for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
-            gpMonGroup->m_creatureTypes[iEventLoop] = 23;
+            gpMonGroup->m_creatureTypes[iEventLoop] = CREATURE_DRAGON;
             gpMonGroup->m_creatureCounts[iEventLoop] = 1;
         }
         if (gpGame->m_mineOwners[0] == pHero->m_owner)

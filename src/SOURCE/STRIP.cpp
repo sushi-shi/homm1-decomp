@@ -91,7 +91,7 @@ void strip::DrawIcons(signed char drawWindow) {
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         creatureType = m_army->m_creatureTypes[i];
-        if (creatureType != -1) {
+        if (creatureType != CREATURE_NONE) {
             m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, creatureType / 6 + 3, 0, 0);
             m_monsterIcon->DrawToBuffer(m_x + i * 88 + 119, m_y + 19, creatureType, 0, 0);
             sprintf(gText, "%d", m_army->m_creatureCounts[i]);
