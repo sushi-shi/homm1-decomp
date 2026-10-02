@@ -160,14 +160,14 @@ void army::FreeResources(void) {
 VA(0x00466a2c, 0x855)
 void army::DrawToBuffer(short x, short y) {
     short effectX;
-    signed char flip;
+    signed char offsetMode;
     signed char outlined;
     short outlineColor;
     char countText[ARMY_QUANTITY_TEXT_SIZE];
     short iconX;
     short qtyX;
 
-    flip = 0;
+    offsetMode = 0;
     outlined = 0;
     if ((m_animationFrame == 2 || m_animationFrame >= 3)
         && ((m_stats.attributes & MONSTER_FLAGS_WIDE) && (m_hex % COMBAT_GRID_COLUMNS <= 2 || m_hex % COMBAT_GRID_COLUMNS >= 6)
@@ -176,31 +176,31 @@ void army::DrawToBuffer(short x, short y) {
     if (m_walkYStep) {
         y += m_animationFrame * m_walkYStep;
         if (m_animationFrame > 0 && m_animationFrame <= 5)
-            flip = 1;
+            offsetMode = 1;
     }
     switch (m_animationSequence) {
         case ARMY_ANIMATION_STAND:
             switch (m_creatureType) {
                 case CREATURE_HYDRA:
                     if (m_drawShadow)
-                        m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, flip);
+                        m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, offsetMode);
                     break;
                 case CREATURE_CYCLOPS:
                 case CREATURE_PHOENIX:
                 case CREATURE_DRAGON:
                     if (m_drawShadow)
-                        m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, flip);
+                        m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, offsetMode);
                     break;
                 default:
                     if (m_drawShadow)
-                        m_standIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, flip);
+                        m_standIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, offsetMode);
                     break;
             }
             if (m_animationFrame > 4 && m_creatureType != CREATURE_HYDRA)
-                m_standIcon->DrawToBuffer(x, y, 5, m_facing, flip);
-            m_standIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, flip);
+                m_standIcon->DrawToBuffer(x, y, 5, m_facing, offsetMode);
+            m_standIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, offsetMode);
             if (m_hex == gpCombatManager->m_limitCreatureHex && gpCombatManager->m_limitCreature == 1) {
-                m_standIcon->FillToBuffer(x, y, 0, 0xe4, m_facing, flip);
+                m_standIcon->FillToBuffer(x, y, 0, 0xe4, m_facing, offsetMode);
                 outlined = 1;
             }
             if (m_spellEffect != SPELL_NONE) {
@@ -216,7 +216,7 @@ void army::DrawToBuffer(short x, short y) {
                         break;
                 }
                 if (!outlined && m_animationFrame == 1)
-                    m_standIcon->FillToBuffer(x, y, 0, outlineColor, m_facing, flip);
+                    m_standIcon->FillToBuffer(x, y, 0, outlineColor, m_facing, offsetMode);
                 iconX = x;
                 if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
                     if (m_facing == ARMY_FACING_LEFT)
@@ -247,36 +247,36 @@ void army::DrawToBuffer(short x, short y) {
             break;
         case ARMY_ANIMATION_WALK:
             if (m_drawShadow)
-                m_walkIcon->DimToBuffer(x, y, m_animationFrame + 6, m_facing, flip);
-            m_walkIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, flip);
+                m_walkIcon->DimToBuffer(x, y, m_animationFrame + 6, m_facing, offsetMode);
+            m_walkIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, offsetMode);
             break;
         case ARMY_ANIMATION_ATTACK:
             if (m_animationFrame < 5) {
                 if (m_drawShadow)
-                    m_attackIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, flip);
-                m_attackIcon->DrawToBuffer(x, y, 0, m_facing, flip);
+                    m_attackIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, offsetMode);
+                m_attackIcon->DrawToBuffer(x, y, 0, m_facing, offsetMode);
             }
-            m_attackIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, flip);
+            m_attackIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, offsetMode);
             break;
         case ARMY_ANIMATION_EFFECT:
             if (!(m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                 switch (m_creatureType) {
                     case CREATURE_HYDRA:
                         if (m_drawShadow)
-                            m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, flip);
+                            m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, offsetMode);
                         break;
                     case CREATURE_CYCLOPS:
                     case CREATURE_PHOENIX:
                     case CREATURE_DRAGON:
                         if (m_drawShadow)
-                            m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, flip);
+                            m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, offsetMode);
                         break;
                     default:
                         if (m_drawShadow)
-                            m_standIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, flip);
+                            m_standIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, offsetMode);
                         break;
                 }
-                m_standIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, flip);
+                m_standIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, offsetMode);
             }
             effectX = x;
             if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
@@ -292,7 +292,7 @@ void army::DrawToBuffer(short x, short y) {
             }
             if (m_spellEffect != SPELL_NONE)
                 gpCombatManager->m_combatIcons[COMBAT_ICON_SPELLS]->DrawToBuffer(x, y - 40, m_spellEffect, ICON_DRAW_NORMAL, 0);
-            gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, flip);
+            gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, offsetMode);
             break;
     }
     gbUseClippedIconRenderer = 0;

@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/Misc.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/dialogTypes.h>
@@ -310,7 +311,7 @@ signed char hero::HeroView(signed char viewOnly) {
 
     gpAdvManager->TrimLoopingSounds(8);
     gbHeroWindShowing = 1;
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
     heroWin = new heroWindow(0, 0, "herowind.bin");
     if (!heroWin)
         MemError();
@@ -421,10 +422,10 @@ signed char hero::HeroView(signed char viewOnly) {
         }
     }
     RedrawHeroScreen();
-    gpWindowManager->FadeScreen(0, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
     gpHVHero = this;
     gpWindowManager->DoDialog(heroWin, HeroHandler, 0);
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
     delete heroWin;
     gheroWin = NULL;
     if (gpWindowManager->m_dialogResult == HERO_SCREEN_DISMISS) {
@@ -954,7 +955,7 @@ short HeroHandler(struct tag_message& message) {
                 if (!quickView) {
                     gpGame->Overview();
                     gpHVHero->RedrawHeroScreen();
-                    gpWindowManager->FadeScreen(0, 8, NULL);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
                 }
                 break;
             case HERO_SCREEN_ATTACK:
