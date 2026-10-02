@@ -299,15 +299,21 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
 }
 
 // HoMM1 hides the software pointer only when it overlaps the updated region.
+// Declaring top before left and bottom before right reproduces retail's VC4
+// colouring: equal-cost ranges are coloured, and spilled, in declaration order.
 VA(0x004744b0, 0xed)
 void heroWindowManager::UpdateScreenRegion(short x, short y, short width, short height) {
-    short left = x - gpMouseManager->m_savedUnderlying->m_width;
-    short top = y - gpMouseManager->m_savedUnderlying->m_height;
-    short right = x + width;
-    short bottom = y + height;
-    short pointerHidden = 0;
-    short mouseX = gpMouseManager->m_mouseX;
-    short mouseY = gpMouseManager->m_mouseY;
+    short top, left, bottom, right;
+    short pointerHidden;
+    short mouseX, mouseY;
+
+    left = x - gpMouseManager->m_savedUnderlying->m_width;
+    top = y - gpMouseManager->m_savedUnderlying->m_height;
+    right = x + width;
+    bottom = y + height;
+    pointerHidden = 0;
+    mouseX = gpMouseManager->m_mouseX;
+    mouseY = gpMouseManager->m_mouseY;
     if (gpMouseManager->IsVis()) {
         if (left > mouseX || right < mouseX || top > mouseY || bottom < mouseY)
             pointerHidden = 0;
