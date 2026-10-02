@@ -62,7 +62,9 @@ public:
     class sample* m_samples[4];
     // Active spell; HoMM1 lets a stack carry one timed effect.
     signed char m_spellEffect;
-    signed char m_unknown52;
+    // What breaks m_spellEffect early: 0 the stack moving, 1 its own attack,
+    // 2 taking damage, 3 only the round count; -1 with no spell.
+    signed char m_spellEndCondition;
     // ResetRound counts this down and expires the effect at zero.
     signed char m_spellRounds;
     // --- constructors ---

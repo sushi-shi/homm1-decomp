@@ -405,7 +405,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             if (targetArmy->m_stats.attributes & 2)
                 targetArmy->m_stats.attributes -= 2;
             targetArmy->m_spellEffect = 6;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 5:
@@ -415,7 +415,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 4;
             targetArmy->m_spellEffect = 5;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 8:
@@ -424,7 +424,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(8, 0);
             targetArmy->m_damageMode = 3;
             targetArmy->m_spellEffect = 8;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 9:
@@ -432,7 +432,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(9, 0);
             targetArmy->SpellEffect(9, 0);
             targetArmy->m_spellEffect = 9;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->m_stats.defense += 3;
             targetArmy->Stand(1);
             break;
@@ -443,7 +443,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 10;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 14:
@@ -452,7 +452,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(14, 0);
             targetArmy->m_spellEffect = 14;
-            targetArmy->m_unknown52 = 1;
+            targetArmy->m_spellEndCondition = 1;
             targetArmy->Stand(1);
             break;
         case 18:
@@ -462,7 +462,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 18;
-            targetArmy->m_unknown52 = 2;
+            targetArmy->m_spellEndCondition = 2;
             targetArmy->Stand(1);
             break;
         case 7:
@@ -472,7 +472,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_stats.speed = 0;
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 7;
-            targetArmy->m_unknown52 = 2;
+            targetArmy->m_spellEndCondition = 2;
             targetArmy->Stand(1);
             break;
         case 11:
@@ -489,7 +489,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(12, 0);
             targetArmy->m_spellEffect = 12;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 0:
@@ -508,7 +508,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             DefaultSpell(targetHex);
             break;
     }
-    if (targetArmy && targetArmy->m_unknown52 >= 0) {
+    if (targetArmy && targetArmy->m_spellEndCondition >= 0) {
         if (castByCreature)
             targetArmy->m_spellRounds = 3;
         else

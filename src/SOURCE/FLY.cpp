@@ -305,7 +305,7 @@ short army::FlyTo(short destination)
         posX = xStep + posX;
         posY = posY + yStep;
     }
-    if (!m_unknown52)
+    if (!m_spellEndCondition)
         CancelSpell();
     frontCell.m_occupantSide = gpCombatManager->m_currentSide;
     if (m_stats.attributes & 1)

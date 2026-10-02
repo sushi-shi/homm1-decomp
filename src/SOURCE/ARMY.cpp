@@ -657,7 +657,7 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     memcpy(&m_stats, &gMonsterDatabase[type].stats, sizeof(tag_monsterStats));
     m_unknown29 = 6;
     m_spellEffect = -1;
-    m_unknown52 = -1;
+    m_spellEndCondition = -1;
     commander = gpCombatManager->m_heroes[side];
     if (commander) {
         m_stats.attack = commander->m_primaryStats[0] + m_stats.attack;
@@ -1292,7 +1292,7 @@ void army::SpecialAttack(void) {
     PowEffect(m_stats.powEffect);
     if (!(target->m_stats.attributes & 0x10))
         target->Stand(0);
-    if (m_unknown52 == 1)
+    if (m_spellEndCondition == 1)
         CancelSpell();
     WaitSample(3);
     m_facing = facing;
@@ -1461,7 +1461,7 @@ void army::DoAttack(int retaliation) {
         gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
     if (m_creatureType == 22) {
         DoHydraAttack();
-        if (m_unknown52 == 1 && !retaliation)
+        if (m_spellEndCondition == 1 && !retaliation)
             CancelSpell();
         goto secondStrike;
     }
@@ -1652,7 +1652,7 @@ void army::DoAttack(int retaliation) {
     Stand(1);
     m_facing = facing;
     gpCombatManager->m_computeExtent = 1;
-    if (m_unknown52 == 1 && !retaliation)
+    if (m_spellEndCondition == 1 && !retaliation)
         CancelSpell();
     gpCombatManager->m_computeExtent = 1;
     Stand(1);
@@ -1730,7 +1730,7 @@ short army::WalkTo(short destHex) {
         if (moved >= m_stats.speed)
             step = -1;
     }
-    if (!m_unknown52)
+    if (!m_spellEndCondition)
         CancelSpell();
     Stand(1);
     return 0;
@@ -1772,7 +1772,7 @@ short army::AttackTo(short destHex) {
                     return 3;
                 }
             }
-            if (!m_unknown52)
+            if (!m_spellEndCondition)
                 CancelSpell();
             m_attackDirection = gpSearchArray->m_directions[0];
             DoAttack(0);
@@ -1916,7 +1916,7 @@ int army::Damage(long int damage) {
     Wince();
     m_facing = facing;
     gpCombatManager->DrawFrame(1);
-    if (m_unknown52 == 2) {
+    if (m_spellEndCondition == 2) {
         m_stats.attributes |= 0x80;
         if (m_spellEffect != 7)
             m_stats.attributes |= 0x40;
@@ -2081,7 +2081,7 @@ void army::CancelSpell(void) {
             break;
     }
     m_spellEffect = -1;
-    m_unknown52 = -1;
+    m_spellEndCondition = -1;
 }
 
 // A berserk stack attacks a random neighbour, or flies or steps at random.
