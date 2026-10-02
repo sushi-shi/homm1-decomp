@@ -368,35 +368,35 @@ void townManager::SetCommandAndText(struct tag_message &message)
                 }
             }
             break;
-        case 0:
+        case BUILDING_SLOT_MAGE_GUILD:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0]);
             break;
-        case 1:
+        case BUILDING_SLOT_THIEVES_GUILD:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 1]);
             break;
-        case 2:
+        case BUILDING_SLOT_TAVERN:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 2]);
             break;
-        case 3:
+        case BUILDING_SLOT_SHIPYARD:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 3]);
             break;
-        case 4:
+        case BUILDING_SLOT_WELL:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 4]);
             break;
-        case 5:
+        case BUILDING_SLOT_TENT:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 5]);
             break;
-        case 6:
+        case BUILDING_SLOT_CASTLE:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 6]);
             break;
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-        case 12:
+        case BUILDING_SLOT_DWELLING_FIRST:
+        case BUILDING_SLOT_DWELLING_FIRST + 1:
+        case BUILDING_SLOT_DWELLING_FIRST + 2:
+        case BUILDING_SLOT_DWELLING_FIRST + 3:
+        case BUILDING_SLOT_DWELLING_FIRST + 4:
+        case BUILDING_SLOT_DWELLING_FIRST + 5:
             sprintf(m_statusText, cTownCommand[TOWN_TEXT_DWELLING],
-                    gArmyNames[gDwellingType[m_town->m_type][id - 7]]);
+                    gArmyNames[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]);
             break;
     }
     ShowText(m_statusText);
@@ -451,12 +451,12 @@ short townManager::Main(struct tag_message &message)
             switch (message.command) {
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case 7:
-                        case 8:
-                        case 9:
-                        case 10:
-                        case 11:
-                        case 12:
+                        case BUILDING_SLOT_DWELLING_FIRST:
+                        case BUILDING_SLOT_DWELLING_FIRST + 1:
+                        case BUILDING_SLOT_DWELLING_FIRST + 2:
+                        case BUILDING_SLOT_DWELLING_FIRST + 3:
+                        case BUILDING_SLOT_DWELLING_FIRST + 4:
+                        case BUILDING_SLOT_DWELLING_FIRST + 5:
                             if (rightClick) {
                                 QuickViewRecruit(m_town, message.id - 7);
                                 break;
@@ -469,10 +469,10 @@ short townManager::Main(struct tag_message &message)
                             gpExec->DoDialog(recruitMgr);
                             delete recruitMgr;
                             break;
-                        case 0:
-                        case 1:
-                        case 4:
-                        case 6:
+                        case BUILDING_SLOT_MAGE_GUILD:
+                        case BUILDING_SLOT_THIEVES_GUILD:
+                        case BUILDING_SLOT_WELL:
+                        case BUILDING_SLOT_CASTLE:
                             if (rightClick)
                                 break;
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
@@ -482,7 +482,7 @@ short townManager::Main(struct tag_message &message)
                                 MemError();
                             gpWindowManager->AddWindow(m_coverWindow, -1, 1);
                             switch (message.id) {
-                                case 6:
+                                case BUILDING_SLOT_CASTLE:
                                     gpWindowManager->SaveFizzleSource(0, 0x100, 0x228, 0xcc);
                                     m_heroWindow0 = new heroWindow(0, 0, "caslwind.bin");
                                     if (m_heroWindow0 == NULL)
@@ -493,7 +493,7 @@ short townManager::Main(struct tag_message &message)
                                     gpWindowManager->DoDialog(m_heroWindow0, CastleHandler, 0);
                                     m_castleDialogActive = 0;
                                     break;
-                                case 0:
+                                case BUILDING_SLOT_MAGE_GUILD:
                                     if (m_town->m_occupyingHeroId != -1
                                         && !gpGame->GetHero(m_town->m_occupyingHeroId)->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
                                         if (gpGame->GetHero(m_town->m_occupyingHeroId)->NumArtifacts() == 14)
@@ -538,14 +538,14 @@ short townManager::Main(struct tag_message &message)
                                     }
                                     m_town->GiveSpells();
                                     break;
-                                case 4:
+                                case BUILDING_SLOT_WELL:
                                     m_heroWindow0 = new heroWindow(0, 0, "wellwind.bin");
                                     if (m_heroWindow0 == NULL)
                                         MemError();
                                     SetupWell(m_heroWindow0);
                                     gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
                                     break;
-                                case 1:
+                                case BUILDING_SLOT_THIEVES_GUILD:
                                     m_heroWindow0 = new heroWindow(0, 0, "thiefwin.bin");
                                     if (m_heroWindow0 == NULL)
                                         MemError();
@@ -584,20 +584,20 @@ short townManager::Main(struct tag_message &message)
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS,
                                                               TOWN_CLOSE_CONTROL, 0x4008);
                             break;
-                        case 2:
+                        case BUILDING_SLOT_TAVERN:
                             if (rightClick)
                                 break;
                             DoTavern();
                             break;
-                        case 5:
+                        case BUILDING_SLOT_TENT:
                             if (rightClick)
                                 return MESSAGE_DISPATCH_CONSUME;
-                            if (BuyBuild(6, !CanBuy(m_town, 6), rightClick)) {
+                            if (BuyBuild(BUILDING_SLOT_CASTLE, !CanBuy(m_town, BUILDING_SLOT_CASTLE), rightClick)) {
                                 BuildObj(6);
                                 m_town->XformToCastle();
                             }
                             break;
-                        case 3:
+                        case BUILDING_SLOT_SHIPYARD:
                             if (rightClick)
                                 break;
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
@@ -1573,26 +1573,26 @@ short MageGuildHandler(struct tag_message &message)
             case WIDGET_NOTIFY_SELECT:
                 quickView = message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON;
                 switch (message.id) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 1:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 2:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 3:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 4:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 5:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 6:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 7:
+                    case TOWN_MAGE_FIRST_SPELL_CONTROL + 8:
                         spellPos = message.id - TOWN_MAGE_FIRST_SPELL_CONTROL;
                         goto showSpell;
-                    case 10:
-                    case 11:
-                    case 12:
-                    case 13:
-                    case 14:
-                    case 15:
-                    case 16:
-                    case 17:
-                    case 18:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 1:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 2:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 3:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 4:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 5:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 6:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 7:
+                    case TOWN_MAGE_FIRST_ICON_CONTROL + 8:
                         spellPos = message.id - TOWN_MAGE_FIRST_ICON_CONTROL;
                     showSpell:
                         mageLevel = gpTownManager->m_town->m_buildState;
@@ -2012,16 +2012,16 @@ short CastleHandler(struct tag_message &message)
                             strcpy(gText, cCastleInfo[objNum]);
                         }
                         break;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10:
-                    case 11:
-                    case 12:
+                    case BUILDING_SLOT_THIEVES_GUILD:
+                    case BUILDING_SLOT_TAVERN:
+                    case BUILDING_SLOT_SHIPYARD:
+                    case BUILDING_SLOT_WELL:
+                    case BUILDING_SLOT_DWELLING_FIRST:
+                    case BUILDING_SLOT_DWELLING_FIRST + 1:
+                    case BUILDING_SLOT_DWELLING_FIRST + 2:
+                    case BUILDING_SLOT_DWELLING_FIRST + 3:
+                    case BUILDING_SLOT_DWELLING_FIRST + 4:
+                    case BUILDING_SLOT_DWELLING_FIRST + 5:
                         if (gpTownManager->m_town->m_buildings & (1 << message.id))
                             sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_ALREADY_BUILT],
                                     gpTownManager->GetBuildingName(message.id));
@@ -2076,16 +2076,16 @@ short CastleHandler(struct tag_message &message)
                             break;
                         else
                             goto buy_building;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10:
-                    case 11:
-                    case 12:
+                    case BUILDING_SLOT_THIEVES_GUILD:
+                    case BUILDING_SLOT_TAVERN:
+                    case BUILDING_SLOT_SHIPYARD:
+                    case BUILDING_SLOT_WELL:
+                    case BUILDING_SLOT_DWELLING_FIRST:
+                    case BUILDING_SLOT_DWELLING_FIRST + 1:
+                    case BUILDING_SLOT_DWELLING_FIRST + 2:
+                    case BUILDING_SLOT_DWELLING_FIRST + 3:
+                    case BUILDING_SLOT_DWELLING_FIRST + 4:
+                    case BUILDING_SLOT_DWELLING_FIRST + 5:
                         if (!quickFlag
                             && ((gpTownManager->m_town->m_buildings & (1 << message.id))
                                 || !(gpTownManager->m_buildableBuildings
