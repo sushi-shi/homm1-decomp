@@ -170,7 +170,10 @@ SetupCDDrive (`_chdir`, `_lseek`), `sample::sample` (`strrev`), RESMGR
 (`_close`, `_read`, `_open`, `_lseek`) and soundmgr's CDStop, CDIsPlaying and
 CDPlay (`_stricmp`). Every edited function stays at 100. Measured on a
 diagnostic link of the candidate objects, the LIBCMT member order matches
-retail in 97 of 100 positions, up from 85. The simulation gives 99 of 103.
+retail in 97 of 100 positions, up from 85, and the simulation gives 99 of 103.
+Retail's order can also be counted over 112 members, including the referent-
+named `access`, `__purecall` and `write`. On that count the candidate,
+together with the `access` change below, matches 107, up from 95.
 The remaining differences are as follows:
 
 - soundmgr's StartSample still calls `_strrev` directly, so strrev is pulled
