@@ -80,6 +80,14 @@ short CombatSpecialHandler(struct tag_message &message)
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// clang-format off
+// spelmous.mse frames: HandleCastSpell shows the selected SpellType's own
+// frame over a valid target and frame 19, after the combat spells, otherwise.
+H1_ENUM_BEGIN(SpellPointerFrame)
+    SPELL_POINTER_NO_TARGET = 19
+H1_ENUM_END(SpellPointerFrame)
+// clang-format on
+
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
 VA(0x00415797, 0x295)
@@ -93,7 +101,7 @@ short HandleCastSpell(struct tag_message &message)
             if (indexToCastOn != hex) {
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = -1;
-                    gpMouseManager->SetPointer(0x13);
+                    gpMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
                     if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && bInTeleportGetDest)
                         gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
                     else

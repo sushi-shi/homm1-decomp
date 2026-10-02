@@ -51,10 +51,14 @@ H1_ENUM_BEGIN(CombatAction)
     ACTION_ATTACK = 6
 H1_ENUM_END(CombatAction)
 
-// The combat pointer frame GetPointer returns for a command; retail maps
-// the opposing-options command to the view pointer.
+// cmbtmous.mse frames: GetPointer returns the command's own frame (0..4)
+// and maps the opposing-options command to the view pointer; DEFAULT is the
+// plain arrow (hotspot 1,1) and ATTACK_FIRST + CombatHexDirection the sword
+// pointing from that side (Buka COMBAT_POINTER_DEFAULT, POINTER_ATTACK_OFFSET).
 H1_ENUM_BEGIN(CombatPointerCode)
-    COMBAT_POINTER_VIEW = 5
+    COMBAT_POINTER_VIEW = 5,
+    COMBAT_POINTER_DEFAULT = 6,
+    COMBAT_POINTER_ATTACK_FIRST = 7
 H1_ENUM_END(CombatPointerCode)
 
 // clang-format off

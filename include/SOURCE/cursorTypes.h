@@ -21,4 +21,30 @@ H1_ENUM_CONST_BEGIN(CursorFrameConstant)
     CURSOR_BOAT_BASE_FRAME_7 = 0x89
 H1_ENUM_CONST_END(CursorFrameConstant)
 
+// clang-format off
+// advmice.mse frames for mouseManager::SetPointer while the adventure cursor
+// set is loaded (Buka 2.1 ADVMGR.cpp AdventurePointerFrame: same numbering).
+// advManager::ProcessHover picks a role and adds day * DAY_STRIDE for the
+// days of travel (0..DAY_LAST); WATER_ACTION + day marks a buoy or whirlpool
+// reached by boat. WAIT is shown while another (AI or remote) player moves.
+H1_ENUM_BEGIN(AdventurePointerFrame)
+    ADVENTURE_POINTER_DEFAULT = 0,
+    ADVENTURE_POINTER_WAIT = 1,
+    ADVENTURE_POINTER_HERO = 2,
+    ADVENTURE_POINTER_TOWN = 3,
+    ADVENTURE_POINTER_MOVE = 4,
+    ADVENTURE_POINTER_ATTACK = 5,
+    ADVENTURE_POINTER_SAIL = 6,
+    ADVENTURE_POINTER_DISEMBARK = 7,
+    ADVENTURE_POINTER_SELECT_HERO = 8,
+    ADVENTURE_POINTER_ACTION = 9,
+    ADVENTURE_POINTER_WATER_ACTION = 28
+H1_ENUM_END(AdventurePointerFrame)
+
+H1_ENUM_CONST_BEGIN(AdventurePointerConstant)
+    ADVENTURE_POINTER_DAY_STRIDE = 6,
+    ADVENTURE_POINTER_DAY_LAST = 3
+H1_ENUM_CONST_END(AdventurePointerConstant)
+// clang-format on
+
 #endif

@@ -1041,7 +1041,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     heroWindow* window;
     tag_message message;
 
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     window = new heroWindow(105, 96, "campaign.bin");
     if (!window)
         MemError();
@@ -2445,7 +2445,7 @@ void game::Overview(void) {
     dayIdY = 64;
     incomeWidgetY = 65;
 
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
     gpWindowManager->FadeScreen(1, 8, 0);
@@ -2716,7 +2716,7 @@ void game::NextPlayer(void) {
         currentHero->m_remainingMobility = currentHero->m_mobility;
     }
     if (!gbThisNetHumanPlayer[giCurPlayer]) {
-        gpMouseManager->SetPointer(1);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_WAIT);
         gpAdvManager->HideRoute(1, 0, 1);
         gpAdvManager->CheckDimNextHeroBut();
         TurnOnAIMusic();
@@ -3749,7 +3749,7 @@ void game::ShowHeroesLogo(void) {
 VA(0x00444d66, 0x155)
 void game::WaitForPlayer(char* text, int player) {
     if (gbBlackoutPlayer && giNumHumanPlayers > 1 && !gbRemoteOn) {
-        gpMouseManager->SetPointer(0);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         gbAllBlack = 1;
         giBottomViewOverrideEndTime = KBTickCount() + 9999999;
         if (gbThisNetHumanPlayer[giCurPlayer])
@@ -4318,7 +4318,7 @@ void game::DoNewTurn(void) {
                 }
             }
             gpSoundManager->SwitchAmbientMusic(track);
-            gpMouseManager->SetPointer(0);
+            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
         }
@@ -4518,7 +4518,7 @@ void game::ShowScenInfo(void) {
     // Retail reserves one unused slot between the seat counters.
     int pad;
 
-    gpMouseManager->SetPointer(0);
+    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
     scenWindow = new heroWindow(159, 14, "sceninfo.bin");
     if (!scenWindow)
         MemError();

@@ -381,7 +381,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case MAP_OBJECT_RANKING_SHRINE:
             EventWindow(EVENT_TEXT_RANKING_SHRINE, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-            gpMouseManager->SetPointer(0);
+            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             win = new heroWindow(0, 0, "thiefwin.bin");
             if (!win)
                 MemError();

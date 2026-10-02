@@ -180,7 +180,7 @@ short combatManager::Open(short priority)
     m_redrawExtent = 0;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
-    gpMouseManager->SetPointer("cmbtmous.mse", 6);
+    gpMouseManager->SetPointer("cmbtmous.mse", COMBAT_POINTER_DEFAULT);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
         MemError();

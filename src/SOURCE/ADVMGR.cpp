@@ -248,9 +248,9 @@ short advManager::Open(short id) {
             m_adventureWindow->AddWidget(m_panelBackdrops[i], -1);
     }
     if (gbThisNetHumanPlayer[giCurPlayer])
-        gpMouseManager->SetPointer("advmice.mse", 0);
+        gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     else
-        gpMouseManager->SetPointer("advmice.mse", 1);
+        gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_WAIT);
     if (m_visibilityMap == NULL) {
         m_visibilityMap = new signed char[MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE];
         if (m_visibilityMap == NULL)
@@ -561,14 +561,14 @@ class mapCell* advManager::DoAdvCommand(void) {
         break;
     case 6:
         DemobilizeCurrHero();
-        gpMouseManager->SetPointer(0);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         viewTown = gpGame->GetTown(pHero->m_occupiedTown);
         viewTown->View();
         stopCell = NULL;
         break;
     case 3:
         DemobilizeCurrHero();
-        gpMouseManager->SetPointer(0);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         stopCell = GetCell(
             gpGame->GetTown(gpCurPlayer->m_currentTown)->m_x, gpGame->GetTown(gpCurPlayer->m_currentTown)->m_y
         );
@@ -576,7 +576,7 @@ class mapCell* advManager::DoAdvCommand(void) {
         stopCell = NULL;
         break;
     case 2:
-        gpMouseManager->SetPointer(0);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
         RedrawAdvScreen(1);
         gpWindowManager->FadeScreen(0, 8, NULL);
@@ -1394,7 +1394,7 @@ int advManager::ProcessHover(struct tag_message* message) {
     case 10:
         gpMouseManager->MouseCoords(curX, curY);
         if (curX > 480) {
-            gpMouseManager->SetPointer(0);
+            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             return 1;
         }
         curX = curX / 32;
@@ -1416,23 +1416,23 @@ int advManager::ProcessHover(struct tag_message* message) {
             if (m_commandTargetX < 0 || m_commandTargetY < 0 || m_commandTargetX > MAP_CELL_GRID_SIZE - 1
                 || m_commandTargetY > MAP_CELL_GRID_SIZE - 1
                 || !(gpGame->m_mapExtra[m_commandTargetX][m_commandTargetY] & giCurPlayerBit)) {
-                gpMouseManager->SetPointer(0);
+                gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                 return 1;
             }
             cell = GetCell(m_commandTargetX, m_commandTargetY);
             if (gpCurPlayer->m_currentHero == -1) {
                 if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28
                     && gpGame->GetTown(cell->m_objectMetadata)->m_owner == giCurPlayer) {
-                    gpMouseManager->SetPointer(3);
+                    gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                     m_selectedCell = 3;
                     return 1;
                 } else if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x3d
                            && gpGame->GetHero(cell->m_objectMetadata)->m_owner == giCurPlayer) {
-                    gpMouseManager->SetPointer(2);
+                    gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
                     m_selectedCell = 2;
                     return 1;
                 } else {
-                    gpMouseManager->SetPointer(0);
+                    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                     return 1;
                 }
             } else {
@@ -1440,7 +1440,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                 heroPosX = hero->m_x - m_mapOriginX;
                 heroPosY = hero->m_y - m_mapOriginY;
                 if (curX == heroPosX && curY == heroPosY) {
-                    gpMouseManager->SetPointer(2);
+                    gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
                     m_selectedCell = 2;
                     return 1;
                 }
@@ -1451,20 +1451,20 @@ int advManager::ProcessHover(struct tag_message* message) {
                             && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
                             && (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28
                             && (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28) {
-                            gpMouseManager->SetPointer(3);
+                            gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                             m_selectedCell = 5;
                             return 1;
                         }
                     }
                     gpSearchArray->m_pathLength = 0;
-                    gpMouseManager->SetPointer(0);
+                    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                     return 1;
                 }
                 if (!((m_cursorType == 4 || cell->m_tileIndex >= 20 || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                        || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
                       && (m_cursorType != 4 || cell->m_tileIndex < 20 || cell->m_triggerType == MAP_OBJECT_COAST))) {
                     gpSearchArray->m_pathLength = 0;
-                    gpMouseManager->SetPointer(0);
+                    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                     return 1;
                 }
                 SeedTo(m_commandTargetX, m_commandTargetY);
@@ -1477,14 +1477,14 @@ int advManager::ProcessHover(struct tag_message* message) {
                                  - hero->m_remainingMobility)
                                     / hero->m_mobility
                                 + 1;
-                        if (nDays > 3)
-                            nDays = 3;
+                        if (nDays > ADVENTURE_POINTER_DAY_LAST)
+                            nDays = ADVENTURE_POINTER_DAY_LAST;
                     }
-                    baseFrame = nDays * 6;
+                    baseFrame = nDays * ADVENTURE_POINTER_DAY_STRIDE;
                     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                     case MAP_OBJECT_SHIP:
                         if (m_cursorType != 4) {
-                            gpMouseManager->SetPointer(baseFrame + 6);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SAIL);
                             m_selectedCell = 1;
                         } else {
                             gpMouseManager->SetPointer(baseFrame);
@@ -1492,30 +1492,30 @@ int advManager::ProcessHover(struct tag_message* message) {
                         break;
                     case MAP_OBJECT_COAST:
                         if (m_cursorType == 4)
-                            gpMouseManager->SetPointer(baseFrame + 7);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_DISEMBARK);
                         else if (mapExtra[m_commandTargetX][m_commandTargetY] & 0x80)
-                            gpMouseManager->SetPointer(baseFrame + 5);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                         else
-                            gpMouseManager->SetPointer(baseFrame + 4);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
                         m_selectedCell = 1;
                         break;
                     case MAP_OBJECT_MONSTER:
-                        gpMouseManager->SetPointer(baseFrame + 5);
+                        gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                         m_selectedCell = 1;
                         break;
                     case MAP_OBJECT_HERO:
                         if (gpGame->GetHero(cell->m_objectMetadata)->m_owner != giCurPlayer) {
-                            gpMouseManager->SetPointer(baseFrame + 5);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                             m_selectedCell = 1;
                         } else {
-                            gpMouseManager->SetPointer(baseFrame + 8);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SELECT_HERO);
                             m_selectedCell = 1;
                         }
                         break;
                     case MAP_OBJECT_TOWN:
                         pTown = gpGame->GetTown(cell->m_objectMetadata);
                         if ((cell->m_triggerType & MAP_TRIGGER_EVENT) && pTown->m_owner != giCurPlayer && pTown->HasGarrison()) {
-                            gpMouseManager->SetPointer(baseFrame + 5);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                             m_selectedCell = 1;
                             break;
                         }
@@ -1526,7 +1526,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                         if ((mapExtra[m_commandTargetX][m_commandTargetY] & 0x80) && m_cursorType != 4
                             && trigType != MAP_OBJECT_SKELETON && trigType != MAP_OBJECT_TREASURE_CHEST && trigType != MAP_OBJECT_CAMPFIRE && trigType != MAP_OBJECT_ANCIENT_LAMP
                             && trigType != MAP_OBJECT_RESOURCE && trigType != MAP_OBJECT_ARTIFACT) {
-                            gpMouseManager->SetPointer(baseFrame + 5);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                         } else if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
                             if (m_cursorType != 4) {
                                 switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
@@ -1572,37 +1572,37 @@ int advManager::ProcessHover(struct tag_message* message) {
                                 case MAP_OBJECT_OAK_TREE:
                                 case MAP_OBJECT_MEGALITH:
                                 case MAP_OBJECT_ARTIFACT:
-                                    gpMouseManager->SetPointer(baseFrame + 9);
+                                    gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ACTION);
                                     break;
                                 default:
                                     if (mapExtra[m_commandTargetX][m_commandTargetY] & 0x80)
-                                        gpMouseManager->SetPointer(baseFrame + 5);
+                                        gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                                     else
-                                        gpMouseManager->SetPointer(baseFrame + 4);
+                                        gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
                                     break;
                                 }
                             } else {
                                 switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                                 case MAP_OBJECT_BUOY:
                                 case MAP_OBJECT_WHIRLPOOL:
-                                    gpMouseManager->SetPointer(nDays + 28);
+                                    gpMouseManager->SetPointer(nDays + ADVENTURE_POINTER_WATER_ACTION);
                                     break;
                                 default:
-                                    gpMouseManager->SetPointer(baseFrame + 6);
+                                    gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SAIL);
                                     break;
                                 }
                             }
                         } else if (m_cursorType == 4) {
-                            gpMouseManager->SetPointer(baseFrame + 6);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SAIL);
                         } else {
-                            gpMouseManager->SetPointer(baseFrame + 4);
+                            gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
                         }
                         m_selectedCell = 1;
                         break;
                     }
                     return 1;
                 } else {
-                    gpMouseManager->SetPointer(0);
+                    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                     return 1;
                 }
             }
@@ -1610,7 +1610,7 @@ int advManager::ProcessHover(struct tag_message* message) {
         break;
     default:
         if (!(gpMouseManager->m_cursorFrame >= 32 && gpMouseManager->m_cursorFrame < 40 && MouseInScrollZone()))
-            gpMouseManager->SetPointer(0);
+            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         return 1;
     }
     return 1;
@@ -3636,7 +3636,7 @@ void advManager::ViewPuzzle(void) {
 
     visibleCount = 0;
     gpSoundManager->SwitchAmbientMusic(13);
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     puzzlePieces = gpResourceManager->GetIcon("puzzle.icn");
     for (j = 0; j < 48; j++)
         puzzlePieces->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, 0);
@@ -3831,7 +3831,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
     short screenY;
     icon* ground;
 
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     mask = 0x300;
     if (spellType == SPELL_VIEW_TOWNS || spellType == SPELL_VIEW_ALL)
         mask |= 0x400;
@@ -4081,7 +4081,7 @@ short advManager::ControlPanel(void) {
     int n;
 
     TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gameCommand = -1;
     oldSpeed = gConfig.walkSpeed;
     bFreshSave = 0;
@@ -4205,7 +4205,7 @@ signed char SaveGame(void) {
     success = 0;
     humans = 0;
     gpAdvManager->DisableButtons();
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     for (plIdx = 0; plIdx < 4; plIdx++)
         if (!gpGame->m_playerDead[plIdx] && gbHumanPlayer[plIdx])
             humans++;
@@ -4388,7 +4388,7 @@ void advManager::CheckCastSpell(void) {
         CompleteDraw(0);
         UpdateScreen(0, 0);
         GrabScreen();
-        gpMouseManager->SetPointer("advmice.mse", 0);
+        gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
         CastSpell(
             gpGame->ViewSpells(gpGame->GetHero(gpCurPlayer->m_currentHero), 1, NullHandler, 0)
         );
@@ -4406,7 +4406,7 @@ void advManager::AdvPanel(void)
     int mobilized;
 
     TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     mobilized = m_heroContextLocked;
     DemobilizeCurrHero();
 
@@ -4539,7 +4539,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                     switch (message.id) {
                         case 11:
                             gpWindowManager->m_dialogResult = 0;
-                            gpMouseManager->SetPointer(0);
+                            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                             break;
                         case 10:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
@@ -4562,10 +4562,10 @@ short DimensionDoorHandler(struct tag_message& message) {
                                 );
                                 if ((cell->m_triggerType & MAP_TRIGGER_EVENT) || (cell->m_secondaryTrigger & 0x80)) {
                                     gpWindowManager->m_dialogResult = 0;
-                                    gpMouseManager->SetPointer(0);
+                                    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                                 } else {
                                     gpWindowManager->m_dialogResult = 1;
-                                    gpMouseManager->SetPointer(4);
+                                    gpMouseManager->SetPointer(ADVENTURE_POINTER_MOVE);
                                 }
                             }
                             break;
@@ -5427,7 +5427,7 @@ void advManager::CheckScreenScroll(void)
         if (gpMouseManager->m_cursorFrame >= HOVER_SCROLL_FRAME_FIRST
             && gpMouseManager->m_cursorFrame < HOVER_SCROLL_FRAME_END && oldX == m_mapOriginX
             && oldY == m_mapOriginY)
-            gpMouseManager->SetPointer(0);
+            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
     }
 }
 
@@ -5501,7 +5501,7 @@ void advManager::LoadRemote(void)
 {
     gpMouseManager->ReallyHidePointer();
     if (gbThisNetHumanPlayer[giCurPlayer])
-        gpMouseManager->SetPointer("advmice.mse", 0);
+        gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gpGame->LoadGame("REMOTE.GAM", 0, 1);
     if (gbThisNetHumanPlayer[giCurPlayer])
         gpGame->CancelComputerScreen();

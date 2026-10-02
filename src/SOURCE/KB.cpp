@@ -258,7 +258,7 @@ int oldmain(void) {
                     gpWindowManager->FadeScreen(0, 8, gPalette);
                 initialMainScreen = 0;
             }
-            gpMouseManager->SetPointer("advmice.mse", 0);
+            gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
         }
         backdropLoaded = 1;
         if (gGameCommand != 4)
@@ -432,7 +432,7 @@ int oldmain(void) {
         if (gbGameOver) {
             RemoteCleanup();
             bShowIt = 1;
-            gpMouseManager->SetPointer("advmice.mse", 0);
+            gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
             gpMouseManager->ReallyHidePointer();
             sprintf(
                 gcCongratsText,
@@ -1137,9 +1137,9 @@ void NormalDialog(
     }
 
     if (gpAdvManager->m_active == 1)
-        gpMouseManager->SetPointer(0);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
     else if (gpCombatManager->m_active == 1)
-        gpMouseManager->SetPointer(6);
+        gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
 
     if (dialogType == NORMAL_DIALOG_TYPE_WAIT_CANCEL || dialogType == NORMAL_DIALOG_TYPE_WAIT_OK) {
         gpWindowManager->DoDialog(pNormalDialogWindow, WaitHandler, 0);
@@ -2256,7 +2256,7 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
     tag_message message;
     char textBuffer[100];
 
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     cDEDest = destination;
     iDEMaxLen = maximumLength;
     strcpy(cDEDest, "");

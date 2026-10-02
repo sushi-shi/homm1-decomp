@@ -374,7 +374,7 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
                 m_directionTargetHex = gCombatAdjacency[targetHex][alternate];
         }
     }
-    gpMouseManager->SetPointer(m_mouseDirection + 7);
+    gpMouseManager->SetPointer(m_mouseDirection + COMBAT_POINTER_ATTACK_FIRST);
 }
 
 // Buka GetPointer precedes ProcessCombatMsg. HoMM1's sole caller passes one
@@ -434,7 +434,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                                 CombatMessage(cCombatHelp[1], 1);
                             else
                                 CombatMessage(cCombatHelp[2], 1);
-                            gpMouseManager->SetPointer(6);
+                            gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                             m_selectedHex = -1;
                             m_previousCommand = COMBAT_INVALID_COMMAND;
                             break;
@@ -478,13 +478,13 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                     break;
                 case INPUT_SCAN_H:
                     if (m_heroes[m_currentSide]) {
-                        gpMouseManager->SetPointer(6);
+                        gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                         ViewGeneral(m_currentSide, 1, 0);
                         ResetMouse();
                     }
                     break;
                 case INPUT_SCAN_T:
-                    gpMouseManager->SetPointer(6);
+                    gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                     ViewArmy(&m_armies[m_currentSide][m_currentArmyIndex], m_currentSide, 0);
                     ResetMouse();
                     break;
@@ -517,7 +517,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                         );
                         break;
                     }
-                    gpMouseManager->SetPointer(6);
+                    gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                     giCurGeneral = m_currentSide;
                     ViewSpells(0);
                     ResetMouse();
@@ -697,7 +697,7 @@ signed char combatManager::RightClick(signed char hex) {
                 switch (side) {
                     case 0:
                     case 1:
-                        gpMouseManager->SetPointer(6);
+                        gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                         ViewArmy(
                             &m_armies[side][m_hexCells[m_selectedHex].m_occupantIndex],
                             side,
@@ -742,17 +742,17 @@ void combatManager::DoCommand(signed char command) {
             }
             break;
         case COMBAT_MESSAGE_COMMAND_OPTIONS:
-            gpMouseManager->SetPointer(6);
+            gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
             ViewGeneral(m_currentSide, 1, 0);
             ResetMouse();
             break;
         case COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS:
-            gpMouseManager->SetPointer(6);
+            gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
             ViewGeneral(1 - m_currentSide, 1, 0);
             ResetMouse();
             break;
         case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
-            gpMouseManager->SetPointer(6);
+            gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
             ViewArmy(
                 &m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex],
                 m_currentSide,
@@ -1014,7 +1014,7 @@ void combatManager::DoVictory(signed char winningSide) {
     FreeArmies();
     CombatMessage(" ", 1);
     GrabScreenBitmap(gpWindowManager->m_screen, 0, 0);
-    gpMouseManager->SetPointer(6);
+    gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
     switch (winningSide) {
         case -1:
             gpSoundManager->SwitchAmbientMusic(0x2b);
@@ -1312,7 +1312,7 @@ void combatManager::GetControl(void) {
     m_selectedHex = -1;
     m_previousCommand = COMBAT_INVALID_COMMAND;
     m_previousCommand = COMBAT_INVALID_COMMAND;
-    gpMouseManager->SetPointer(6);
+    gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
     CheckChangeSelector();
     if (!gbRemoteOn || m_playerId[1] < 0 || m_playerId[0] < 0 || !gbHumanPlayer[m_playerId[0]]
         || (!gbHumanPlayer[m_playerId[1]] && (gbHumanPlayer[m_playerId[1]] || !m_playerId[0]))) {
@@ -1348,7 +1348,7 @@ void combatManager::ResetMouse(void) {
             message.id = 0x40;
         ProcessCombatMsg(message);
     } else
-        gpMouseManager->SetPointer(6);
+        gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
 }
 
 // Buka COMMAND.cpp ProcessNextAction; HoMM1 hides the pointer around the
