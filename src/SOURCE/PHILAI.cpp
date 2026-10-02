@@ -2971,9 +2971,9 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     int bWon9;
     int costList[7];
     int guardCount1;
-    int bestRV1;
     int exitRV5;
     int gateY28;
+    int bestRV1;
     int gateX1;
     int exitLiveChance;
     int goldCost;
