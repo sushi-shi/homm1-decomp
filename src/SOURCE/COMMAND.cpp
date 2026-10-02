@@ -21,8 +21,8 @@ VA(0x0040f2c0, 0x311)
 short combatManager::Main(struct tag_message &message)
 {
     int result = MESSAGE_DISPATCH_CONSUME;
+    army *thisArmy;
     CombatRemotePacket *packet;
-    army *currentArmy;
 
     if (KBTickCount() > glTimers[0]) {
         PollSound();
@@ -55,9 +55,9 @@ short combatManager::Main(struct tag_message &message)
         }
         return MESSAGE_DISPATCH_CONSUME;
     }
-    currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    if (currentArmy->m_spellEffect == 14) {
-        currentArmy->GoBerserk();
+    thisArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    if (thisArmy->m_spellEffect == 14) {
+        thisArmy->GoBerserk();
         if (CheckWin(&message))
             return MESSAGE_DISPATCH_FORWARD;
     }
@@ -494,17 +494,20 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
                     ResetMouse();
                     break;
                 case 0x2e:
-                    if (!m_heroes[m_currentSide])
+                    if (!m_heroes[m_currentSide]) {
                         NormalDialog("You have no hero to cast a spell.", 1, -1, -1, -1, 0, -1, 0, -1);
-                    else if (m_heroCastSpell[m_currentSide])
-                        NormalDialog("You have already cast a spell this round.", 1, -1, -1, -1, 0, -1, 0, -1);
-                    else {
-                        gpMouseManager->SetPointer(6);
-                        giCurGeneral = m_currentSide;
-                        ViewSpells(0);
-                        ResetMouse();
+                        break;
                     }
+                    if (m_heroCastSpell[m_currentSide]) {
+                        NormalDialog("You have already cast a spell this round.", 1, -1, -1, -1, 0, -1, 0, -1);
+                        break;
+                    }
+                    gpMouseManager->SetPointer(6);
+                    giCurGeneral = m_currentSide;
+                    ViewSpells(0);
+                    ResetMouse();
                     break;
+
             }
             break;
     }

@@ -115,9 +115,6 @@ public:
     void DispelGood(void);
     // HoMM1 retail 0x0046b457: undoes m_spellEffect when it expires.
     void CancelSpell(void);
-    // HoMM1 retail 0x00467281: back to the standing frame, regrid and
-    // optionally redraw (ret 4).
-    void ResetAnimation(signed char);
     void Cure(int);
     int MidX(void);
     int MidY(void);
