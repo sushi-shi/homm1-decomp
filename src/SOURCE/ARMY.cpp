@@ -31,9 +31,9 @@ H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
     ARMY_MISSILE_HALF_WIDTH = 35,
     ARMY_MISSILE_HALF_HEIGHT = 30
 H1_ENUM_CONST_END(ArmyDrawingConstant)
-   // clang-format on
+// clang-format on
 
-   VA(0x00466490, 0xc9)
+VA(0x00466490, 0xc9)
 army::army(void) {
     int i;
 

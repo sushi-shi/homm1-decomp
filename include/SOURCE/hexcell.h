@@ -14,10 +14,10 @@
 H1_ENUM_CONST_BEGIN(HexcellConstant)
     HEXCELL_OCCUPANT_FRAME_NONE = -1
 H1_ENUM_CONST_END(HexcellConstant)
+// clang-format on
 
 #pragma pack(push, 1)
 class hexcell {
-    // clang-format on
 public:
     short m_x;
     short m_y;

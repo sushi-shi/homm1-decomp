@@ -21,6 +21,7 @@ class town;
 struct SBolt;
 struct tag_message;
 
+// clang-format off
 // Buka's CombatMessageCommand: GetCommand derives one from the hovered hex
 // and DoCommand runs it (move, fly, shoot, own and opposing hero options,
 // view, attack, spell book, retreat, surrender).
@@ -61,7 +62,6 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_ATTACK_FIRST = 7
 H1_ENUM_END(CombatPointerCode)
 
-    // clang-format off
 // Two sides (attacker 0, defender 1) index m_armies and m_numArmies.
 // The hex grid is nine columns by five rows (hex = row * 9 + column):
 // DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
