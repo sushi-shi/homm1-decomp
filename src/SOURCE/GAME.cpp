@@ -904,6 +904,31 @@ void game::UpdateNewGameWindow(void) {
     m_newGameWindow->BroadcastMessage(message);
 }
 
+// clang-format off
+// GiveTroopsToNeutralTowns (Buka NeutralTownReinforcementConstant names): a
+// 1..15 roll picks the tier, whose key plus the town type selects the
+// recruit and whose range the count.
+H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
+    REINFORCEMENT_ROLL_MIN = 1,
+    REINFORCEMENT_ROLL_MAX = 15,
+    REINFORCEMENT_TIER_ONE_THRESHOLD = 5,
+    REINFORCEMENT_TIER_TWO_THRESHOLD = 10,
+    REINFORCEMENT_TIER_THREE_THRESHOLD = 13,
+    REINFORCEMENT_TIER_ONE_KEY = 10,
+    REINFORCEMENT_TIER_TWO_KEY = 20,
+    REINFORCEMENT_TIER_THREE_KEY = 30,
+    REINFORCEMENT_TIER_FOUR_KEY = 40,
+    REINFORCEMENT_TIER_ONE_COUNT_MIN = 8,
+    REINFORCEMENT_TIER_ONE_COUNT_MAX = 15,
+    REINFORCEMENT_TIER_TWO_COUNT_MIN = 5,
+    REINFORCEMENT_TIER_TWO_COUNT_MAX = 7,
+    REINFORCEMENT_TIER_THREE_COUNT_MIN = 3,
+    REINFORCEMENT_TIER_THREE_COUNT_MAX = 5,
+    REINFORCEMENT_TIER_FOUR_COUNT_MIN = 1,
+    REINFORCEMENT_TIER_FOUR_COUNT_MAX = 3
+H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
+// clang-format on
+
 // Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
 // unowned town on the map gains a random tier of its own creatures.
 VA(0x0043b7e5, 0x2c3)
@@ -915,67 +940,67 @@ void game::GiveTroopsToNeutralTowns(void) {
     int monster;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         if ((m_castleRecs[i].m_x > 0 || m_castleRecs[i].m_y > 0) && m_castleRecs[i].m_owner < 0) {
-            die = Random(1, 15);
-            if (die <= 5) {
-                tier = 10;
-                howMany = Random(8, 15);
-            } else if (die <= 10) {
-                tier = 20;
-                howMany = Random(5, 7);
-            } else if (die <= 13) {
-                tier = 30;
-                howMany = Random(3, 5);
+            die = Random(REINFORCEMENT_ROLL_MIN, REINFORCEMENT_ROLL_MAX);
+            if (die <= REINFORCEMENT_TIER_ONE_THRESHOLD) {
+                tier = REINFORCEMENT_TIER_ONE_KEY;
+                howMany = Random(REINFORCEMENT_TIER_ONE_COUNT_MIN, REINFORCEMENT_TIER_ONE_COUNT_MAX);
+            } else if (die <= REINFORCEMENT_TIER_TWO_THRESHOLD) {
+                tier = REINFORCEMENT_TIER_TWO_KEY;
+                howMany = Random(REINFORCEMENT_TIER_TWO_COUNT_MIN, REINFORCEMENT_TIER_TWO_COUNT_MAX);
+            } else if (die <= REINFORCEMENT_TIER_THREE_THRESHOLD) {
+                tier = REINFORCEMENT_TIER_THREE_KEY;
+                howMany = Random(REINFORCEMENT_TIER_THREE_COUNT_MIN, REINFORCEMENT_TIER_THREE_COUNT_MAX);
             } else {
-                tier = 40;
-                howMany = Random(1, 3);
+                tier = REINFORCEMENT_TIER_FOUR_KEY;
+                howMany = Random(REINFORCEMENT_TIER_FOUR_COUNT_MIN, REINFORCEMENT_TIER_FOUR_COUNT_MAX);
             }
             switch (m_castleRecs[i].m_type + tier) {
-                case 10:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_PEASANT;
                     break;
-                case 20:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_ARCHER;
                     break;
-                case 30:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_PIKEMAN;
                     break;
-                case 40:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_SWORDSMAN;
                     break;
-                case 12:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_GOBLIN;
                     break;
-                case 22:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_ORC;
                     break;
-                case 32:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_WOLF;
                     break;
-                case 42:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_OGRE;
                     break;
-                case 11:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_SPRITE;
                     break;
-                case 21:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_DWARF;
                     break;
-                case 31:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_ELF;
                     break;
-                case 41:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_DRUID;
                     break;
-                case 13:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_CENTAUR;
                     break;
-                case 23:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_GARGOYLE;
                     break;
-                case 33:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_GRIFFIN;
                     break;
-                case 43:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_MINOTAUR;
                     break;
             }
