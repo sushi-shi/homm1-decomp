@@ -24,7 +24,7 @@ H1_ENUM_CONST_END(SampleLoadConstant)
 
 VA(0x0047fa60, 0x17d)
 sample::sample(char* name, long channelType, long volume, long loopCount)
-    : resource(RESOURCE_CATEGORY_SAMPLE, gpResourceManager->MakeId(name), 1, NULL) {
+    : resource(RESOURCE_CATEGORY_SAMPLE, gpResourceManager->MakeId(name), RESOURCE_REFERENCE_INITIAL, NULL) {
     char fileName[SAMPLE_FILENAME_CAPACITY];
     m_playbackData.channelType = channelType;
     m_playbackData.volume = volume;

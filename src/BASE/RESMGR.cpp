@@ -196,7 +196,7 @@ void resourceManager::Dispose(class resource *resourceToDispose)
         return;
     if (resourceToDispose != NULL) {
         resourceToDispose->m_refCount--;
-        if (resourceToDispose->m_refCount > 0) {
+        if (resourceToDispose->m_refCount > RESOURCE_REFERENCE_EMPTY) {
             return;
         } else {
             RemoveResource(resourceToDispose);
