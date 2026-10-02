@@ -62,14 +62,16 @@ H1_ENUM_CONST_END(SampleWaitConstant)
 // oldmain dispatches it. gGameCommand re-enters the same switch with the
 // adventure screen's new/load/quit commands (advManager::ControlPanel's
 // cpanel.bin ids and the N/L/Q hotkeys in advManager::Main), which share
-// these values; MAIN_MENU_NO_COMMAND is the idle value.
+// these values; MAIN_MENU_NO_COMMAND is the idle value. InitMenuHandler
+// accepts ids 1..MAIN_MENU_LAST.
 H1_ENUM_BEGIN(MainMenuControl)
     MAIN_MENU_NO_COMMAND = -1,
     MAIN_MENU_NEW_GAME = 1,
     MAIN_MENU_LOAD_GAME = 2,
     MAIN_MENU_QUIT = 4,
     MAIN_MENU_HIGH_SCORES = 5,
-    MAIN_MENU_CREDITS = 6
+    MAIN_MENU_CREDITS = 6,
+    MAIN_MENU_LAST = MAIN_MENU_CREDITS
 H1_ENUM_END(MainMenuControl)
 // clang-format on
 
@@ -91,6 +93,16 @@ extern signed char gbShowHighScore;
 // NormalDialog only parks over the adventure map when neither is showing.
 extern signed char gbHeroWindShowing;
 extern signed char gbOverviewShowing;
+// clang-format off
+// giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
+// scores (CAMPAIGN.HS, fewest days first; giScoreCampaignMon) or standard
+// scores (STANDARD.HS, highest first; giScoreMon). highScoreManager shows the
+// matching list.
+H1_ENUM_BEGIN(HighScoreType)
+    HIGH_SCORE_TYPE_CAMPAIGN = 0,
+    HIGH_SCORE_TYPE_STANDARD = 1
+H1_ENUM_END(HighScoreType)
+// clang-format on
 extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.

@@ -486,7 +486,7 @@ int oldmain(void) {
             gMapY = 0;
             if (gpExec->AddManager(gpAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                 ShutDown("Can't add manager!");
-            if (command == 1)
+            if (command == MAIN_MENU_NEW_GAME)
                 gpAdvManager->SetHeroContext(gpGame->m_players[0].NextHero(0), 0);
             gpExec->MainLoop();
             gMapX = gpAdvManager->m_mapOriginX;
@@ -536,7 +536,7 @@ int oldmain(void) {
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(
                     giCurTurn,
-                    0,
+                    HIGH_SCORE_TYPE_CAMPAIGN,
                     "",
                     gCampaignSideNames[gpGame->m_campaignType - 1]
                 );
@@ -547,7 +547,7 @@ int oldmain(void) {
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
-                giHighScoreRank = -1;
+                giHighScoreRank = HIGH_SCORE_EMPTY;
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
@@ -692,7 +692,7 @@ short InitMenuHandler(tag_message& message) {
     } else if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                if (message.id > 0 && message.id <= 6)
+                if (message.id > 0 && message.id <= MAIN_MENU_LAST)
                     handled = 1;
                 break;
             default:
@@ -2135,7 +2135,7 @@ VA(0x0045425f, 0x8e)
 short GetMonType(int score, int highScoreType) {
     int index;
     for (index = 27; index >= 0; index--) {
-        if (highScoreType == 0) {
+        if (highScoreType == HIGH_SCORE_TYPE_CAMPAIGN) {
             if (giScoreCampaignMon[index][0] >= score)
                 return giScoreCampaignMon[index][1];
         } else {
@@ -2151,7 +2151,7 @@ short GetMonType(int score, int highScoreType) {
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
 VA(0x004542ed, 0x3d2)
 int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
-    HighScoreEntry scores[10];
+    HighScoreEntry scores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     int entry;
     int dest;
     int file;
@@ -2160,7 +2160,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     signed char missingFile;
 
     missingFile = 0;
-    if (standard == 1)
+    if (standard == HIGH_SCORE_TYPE_STANDARD)
         sprintf(fileName, "%sSTANDARD.HS", gcDataPath);
     else
         sprintf(fileName, "%sCAMPAIGN.HS", gcDataPath);
@@ -2168,12 +2168,12 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     if (file == -1)
         missingFile = 1;
     if (missingFile) {
-        for (entry = 0; entry < 10; entry++) {
+        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
             memset(&scores[entry], 0, sizeof(HighScoreEntry));
             scores[entry].score = HIGH_SCORE_EMPTY;
         }
     } else {
-        for (entry = 0; entry < 10; entry++)
+        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
             read(file, &scores[entry], sizeof(scores));
         close(file);
     }
@@ -2182,17 +2182,17 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     giHighScoreType = standard;
     giHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
-    for (entry = 0; entry < 10; entry++) {
-        if ((score >= scores[entry].score && standard == 1)
-            || (score <= scores[entry].score && standard == 0)
+    for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
+        if ((score >= scores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
+            || (score <= scores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
             || scores[entry].score == HIGH_SCORE_EMPTY) {
             giHighScoreRank = entry;
             break;
         }
     }
 
-    if (entry < 10) {
-        for (dest = 8; dest >= entry; dest--)
+    if (entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT) {
+        for (dest = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; dest >= entry; dest--)
             scores[dest + 1] = scores[dest];
         GetDataEntry(
             "Please enter your name for the high score list.",
@@ -2206,7 +2206,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
         file = open(fileName, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
         if (file == -1)
             FileError(fileName);
-        for (entry = 0; entry < 10; entry++)
+        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
             write(file, &scores[entry], sizeof(HighScoreEntry));
         close(file);
     }
@@ -2554,7 +2554,7 @@ void ShowCongrats(void) {
         win = new heroWindow(0, 0, "congspre.bin");
         if (!win)
             MemError();
-        sprintf(name, gArmyNames[GetMonType(result, 1)]);
+        sprintf(name, gArmyNames[GetMonType(result, HIGH_SCORE_TYPE_STANDARD)]);
         name[0] -= 32;
         sprintf(gText, "A Glorious Victory!");
         message.id = 100;
@@ -2587,7 +2587,7 @@ void ShowCongrats(void) {
     gpWindowManager->RemoveWindow(win);
     delete win;
     if (gpGame->m_campaignType <= 0)
-        AddScoreToHighScore(result, 1, "", gpGame->m_mapName);
+        AddScoreToHighScore(result, HIGH_SCORE_TYPE_STANDARD, "", gpGame->m_mapName);
 }
 
 // donor PoL RVA 0x0009e900; preferred Buka symbol ?CongratsWait@@YIXXZ
