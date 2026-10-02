@@ -7,6 +7,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <BASE/Misc.h>
+#include <BASE/bmap2.h>
 #include <SOURCE/PATH.h>
 #include <SOURCE/REMOTE.h>
 
@@ -878,11 +879,107 @@ void combatManager::ShowDeadArmies(class heroWindow *) {}
 VA(0x004122d7, 0x7a1)
 void combatManager::DoVictory(signed char) {}
 
-// donor PoL RVA 0x0002f834; preferred Buka symbol ?DoLoseWindow@combatManager@@QAEXXZ
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.434201;margin=0.199849;shape=0.391;size=0.664;calls=0.594;alternate=pol20:void combatManager::DoLoseWindow(void)@0x0002f834
+// Buka COMMAND.cpp DoLoseWindow; HoMM1 walks the defeated hero across a
+// scrolling backdrop until the window's button is released.
 VA(0x00412a78, 0x549)
-void combatManager::DoLoseWindow(void) {}
+void combatManager::DoLoseWindow(void)
+{
+    short walkFrame;
+    short lAnimY;
+    short unusedWalkX;
+    short unusedWalkY;
+    tag_message message;
+    heroWindow *loseWindow;
+    bitmap *bmp;
+    short result;
+    int iDelay;
+    short offset;
+    int losingSide;
+    short width;
+    short animX;
+    short blitHeight;
+    short iAreaWidth;
+    short stop;
+    icon *walkIcon;
+
+    iDelay = 0xb4;
+    animX = 0x31;
+    lAnimY = 0x26;
+    iAreaWidth = 0xdf;
+    blitHeight = 0x7d;
+    width = 0x280;
+    unusedWalkX = 0x6f;
+    unusedWalkY = 0x8a;
+    iMaxTransferArtifacts = 0;
+    walkFrame = 0;
+    offset = 0;
+    stop = 0;
+    if (m_playerId[1] == giCurPlayer && gbThisNetHumanPlayer[m_playerId[1]])
+        losingSide = 1;
+    else if (m_playerId[0] == giCurPlayer && gbThisNetHumanPlayer[m_playerId[0]])
+        losingSide = 0;
+    else if (m_playerId[1] != -1 && gbThisNetHumanPlayer[m_playerId[1]])
+        losingSide = 1;
+    else
+        losingSide = 0;
+    loseWindow = new heroWindow(0x9f, 2, "losecmbt.bin");
+    if (loseWindow == 0)
+        MemError();
+    bmp = gpResourceManager->GetBitmap("losecmbt.bmp");
+    gbLoadingMonoIcon = 1;
+    walkIcon = gpResourceManager->GetIcon("losewalk.icn");
+    gbLoadingMonoIcon = 0;
+    if (m_heroes[losingSide]) {
+        if (gbCombatSurrender)
+            sprintf(gText, cBattleResults[4], m_heroes[losingSide]->m_name);
+        else if (gbRetreatWin)
+            sprintf(gText, cBattleResults[5], m_heroes[losingSide]->m_name);
+        else
+            sprintf(gText, cBattleResults[6], m_heroes[losingSide]->m_name);
+    } else {
+        if (gbCombatSurrender)
+            sprintf(gText, cBattleResults[7]);
+        else if (gbRetreatWin)
+            sprintf(gText, cBattleResults[8]);
+        else
+            sprintf(gText, cBattleResults[9]);
+    }
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 0x65;
+    message.payload.widget.data.text = gText;
+    loseWindow->BroadcastMessage(message);
+    ShowDeadArmies(loseWindow);
+    gpWindowManager->AddWindow(loseWindow, -1, 0);
+    BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
+    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, 0, 0);
+    gpWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
+    glTimers[0] = KBTickCount() + 0xb4;
+    do {
+        if (KBTickCount() > glTimers[0]) {
+            BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
+            walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, 0, 0);
+            gpWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
+            walkFrame++;
+            walkFrame = walkFrame % 8;
+            offset = offset + 2;
+            if (offset > 0x1a0)
+                offset = 0;
+            glTimers[0] = KBTickCount() + 0xb4;
+        }
+        Process1WindowsMessage();
+        message = gpInputManager->GetEvent();
+        gpMouseManager->Main(message);
+        result = gpWindowManager->Main(message);
+        if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
+            && message.payload.widget.command == WIDGET_NOTIFY_DESELECT && message.payload.widget.id == 0x7800)
+            stop = 1;
+    } while (!stop);
+    gpWindowManager->RemoveWindow(loseWindow);
+    delete loseWindow;
+    gpResourceManager->Dispose(walkIcon);
+    gpResourceManager->Dispose(bmp);
+}
 
 // Buka COMMAND.cpp DoSurrender; HoMM1 charges half the stack cost and has
 // no quill or diplomacy discount.

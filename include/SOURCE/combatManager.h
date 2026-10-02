@@ -292,6 +292,8 @@ extern signed char gbCombatSurrender;
 extern int giRemoteDefaultPlayer;
 // Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
 extern signed char gCombatAdjacency[45][6];
+// Victory/defeat window texts (0x00493e48).
+extern char *cBattleResults[];
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
