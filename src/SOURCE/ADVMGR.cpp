@@ -728,7 +728,7 @@ short advManager::Main(struct tag_message& message) {
                     break;
                 }
                 if (helpText >= 0)
-                    NormalDialog(cAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    NormalDialog(cAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW);
                 break;
             }
             break;
@@ -912,7 +912,7 @@ short advManager::Main(struct tag_message& message) {
                 goto confirmGameCommand;
             confirmGameCommand:
                 bQuit = 1;
-                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                     bQuit = 0;
                 else
@@ -1200,7 +1200,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         break;
     case ADVENTURE_CONTROL_RADAR:
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            NormalDialog("World Map (Left click to move viewing area).", NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog("World Map (Left click to move viewing area).", NORMAL_DIALOG_TYPE_QUICK_VIEW);
             break;
         }
         DemobilizeCurrHero();
@@ -1266,8 +1266,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     if ((message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) && message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET
         && message->id <= BOTTOM_VIEW_DRAW_LAST_WIDGET)
         NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
-                     "and shows the date.  Left click here to cycle through these windows.",
-                     NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                     "and shows the date.  Left click here to cycle through these windows.", NORMAL_DIALOG_TYPE_QUICK_VIEW);
     return 1;
 }
 
@@ -1289,10 +1288,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
             break;
         case ADVENTURE_CONTROL_END_TURN:
             if (gpCurPlayer->HasMobileHero()) {
-                NormalDialog(
-                    "One or more Heroes may still move, are you sure you want to end your turn?",
-                    NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog("One or more Heroes may still move, are you sure you want to end your turn?", NORMAL_DIALOG_TYPE_YES_NO);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                     break;
             }
@@ -1337,7 +1333,7 @@ int advManager::ProcessSearch(int x, int y) {
 
     myHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     if (myHero->m_mobility != myHero->m_remainingMobility) {
-        NormalDialog("Digging for artifacts requires a whole day, try again tomorrow.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog("Digging for artifacts requires a whole day, try again tomorrow.", NORMAL_DIALOG_TYPE_OK);
         return 1;
     }
     MobilizeCurrHero(0);
@@ -1349,11 +1345,11 @@ int advManager::ProcessSearch(int x, int y) {
     }
     pCell = GetCell(x, y);
     if (pCell->m_objectIndex != MAP_CELL_NO_FRAME || pCell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-        NormalDialog("Try searching on clear ground.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog("Try searching on clear ground.", NORMAL_DIALOG_TYPE_OK);
         return 1;
     }
     if (pCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
-        NormalDialog("Try looking on land!!!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog("Try looking on land!!!", NORMAL_DIALOG_TYPE_OK);
         return 1;
     }
     if (gbHumanPlayer[giCurPlayer])
@@ -1370,7 +1366,7 @@ int advManager::ProcessSearch(int x, int y) {
     if (gpGame->m_ultimateArtifactX == x && gpGame->m_ultimateArtifactY == y && gpGame->m_ultimateArtifactId != -1) {
         gaveArtifact = GiveArtifact(myHero, gpGame->m_ultimateArtifactId);
         if (gaveArtifact == -1) {
-            NormalDialog("You have no room to carry another artifact!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog("You have no room to carry another artifact!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
         } else {
             if (gbHumanPlayer[giCurPlayer]) {
                 EventSound(0x3f, 0);
@@ -1379,21 +1375,21 @@ int advManager::ProcessSearch(int x, int y) {
                         gArtifactNames[gpGame->m_ultimateArtifactId]);
                 if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
                     sprintf(gText, "After spending many hours digging here, you have uncovered the Eye of Goros!!!!");
-                    NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
                 } else {
-                    NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
                     myHero->ViewArtifact(gpGame->m_ultimateArtifactId, 0);
                 }
                 gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
             } else if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
                 sprintf(gText,
                         "A great tragedy - the enemy has found the Eye of Goros!!!  The people abandon you, all is lost.");
-                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
             }
             gpGame->m_ultimateArtifactId = -1;
         }
     } else if (gbHumanPlayer[giCurPlayer]) {
-        NormalDialog("Nothing here.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog("Nothing here.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
     }
     if (gbHumanPlayer[giCurPlayer])
         WaitEndSample(sampleData, -1);
@@ -3810,7 +3806,7 @@ void advManager::CastSpell(signed char spell)
             break;
         case SPELL_IDENTIFY_HERO:
             m_identifyHeroActive = 1;
-            NormalDialog("Enemy Heroes are now fully identifiable.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog("Enemy Heroes are now fully identifiable.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
             break;
         case SPELL_SUMMON_BOAT:
             SummonBoat();
@@ -3818,8 +3814,7 @@ void advManager::CastSpell(signed char spell)
         case SPELL_DIMENSION_DOOR:
         case SPELL_TOWN_GATE:
             if (caster->m_remainingMobility == 0) {
-                NormalDialog("Your hero is too tired to cast this spell today.  Try again tomorrow.",
-                             NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog("Your hero is too tired to cast this spell today.  Try again tomorrow.", NORMAL_DIALOG_TYPE_OK);
                 return;
             }
             if (caster->m_remainingMobility < SPELL_TRAVEL_MOBILITY_COST)
@@ -4282,7 +4277,7 @@ signed char SaveGame(void) {
         bFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
-            NormalDialog("Game saved successfully.", NORMAL_DIALOG_TYPE_OK, 0xb1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog("Game saved successfully.", NORMAL_DIALOG_TYPE_OK, 0xb1);
     }
     delete fileReq;
     gpAdvManager->EnableButtons();
@@ -4338,7 +4333,7 @@ short CPanelHandler(struct tag_message &message) {
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gCPanelHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    NormalDialog(gCPanelHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1);
             }
         } else {
             switch (message.command) {
@@ -4355,7 +4350,7 @@ short CPanelHandler(struct tag_message &message) {
                         confirm_reset:
                             handled = 1;
                             if (!bFreshSave) {
-                                NormalDialog(question, NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x50, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                                NormalDialog(question, NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x50);
                                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                                     handled = 0;
                             }
@@ -4394,11 +4389,8 @@ short CPanelHandler(struct tag_message &message) {
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
                             } else {
                                 if (gpSoundManager->m_cdStarted == 0) {
-                                    NormalDialog(
-                                        "Unable to set up CD stereo music.  Your CD player might be in use by another "
-                                        "program, or your sound driver might not support CD stereo.",
-                                        NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT
-                                    );
+                                    NormalDialog("Unable to set up CD stereo music.  Your CD player might be in use by another "
+                                        "program, or your sound driver might not support CD stereo.", NORMAL_DIALOG_TYPE_OK);
                                     break;
                                 }
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
@@ -4534,7 +4526,7 @@ short APanelHandler(struct tag_message &message)
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gAPanelHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    NormalDialog(gAPanelHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1);
             }
         } else {
             switch (message.command) {
@@ -5053,7 +5045,7 @@ void advManager::DimensionDoor(void) {
         targetCell = GetCell(x, y);
         if (((heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
             || (!(heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)) {
-            NormalDialog("Dimension Door failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog("Dimension Door failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
             UpdateRadar(1, 0);
         } else {
             gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_TELEPORT);
@@ -5081,10 +5073,7 @@ void advManager::TownGate(void) {
     bestTown = -1;
     heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
     if (heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) {
-        NormalDialog(
-            "Town Gate Failed!!!  You must be on land for this spell to work.",
-            NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog("Town Gate Failed!!!  You must be on land for this spell to work.", NORMAL_DIALOG_TYPE_OK);
         return;
     }
     for (k = 0; k < gpCurPlayer->m_townCount; k++) {
@@ -5096,9 +5085,9 @@ void advManager::TownGate(void) {
         }
     }
     if (bestTown == -1)
-        NormalDialog("No available town.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog("No available town.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK);
     if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
-        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61);
         return;
     }
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_TELEPORT);
@@ -5203,7 +5192,7 @@ summon_done:
     UpdateScreen(0, 0);
     Reseed(0, 0);
     if (!boatFound)
-        NormalDialog("Summon Boat failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog("Summon Boat failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
 }
 
 // donor PoL RVA 0x00068247; preferred Buka symbol ?ShowRoute@advManager@@QAEXHHH@Z

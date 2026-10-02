@@ -262,16 +262,27 @@ void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
 void PopNetBox(char*);
+// clang-format off
+// NormalDialog's x/y: AUTO_POSITION lets it place the window (the adventure
+// screen's NORMAL_DIALOG_ADVENTURE_X or centred; y centred up to
+// NORMAL_DIALOG_MAX_TOP).
+H1_ENUM_CONST_BEGIN(NormalDialogPosition)
+    NORMAL_DIALOG_AUTO_POSITION = -1
+H1_ENUM_CONST_END(NormalDialogPosition)
+// clang-format on
+
+// Buka 2.1 KBDeclarations.h declares the same trailing defaults (HoMM1 has no
+// timeout argument).
 void NormalDialog(
     char*,
     H1_ENUM_PARAM(NormalDialogType, int),
-    int,
-    int,
-    H1_ENUM_PARAM(NormalDialogResourceType, int),
-    int,
-    H1_ENUM_PARAM(NormalDialogResourceType, int),
-    int,
-    H1_ENUM_PARAM(NormalDialogOrText, int)
+    int = NORMAL_DIALOG_AUTO_POSITION,
+    int = NORMAL_DIALOG_AUTO_POSITION,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
+    int = 0,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
+    int = 0,
+    H1_ENUM_PARAM(NormalDialogOrText, int) = NORMAL_DIALOG_NO_OR_TEXT
 );
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
