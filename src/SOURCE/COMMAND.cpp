@@ -19,6 +19,14 @@
 // Buka CombatControlId CONTROL_MAIN_BUTTON; ResetMouse hovers it), the button
 // that stops grid selection and hides the pointer, and the skip-turn button
 // that queues ACTION_SKIP_TURN.
+// cCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
+// over the auto-combat strip (left), the skip strip (right), or neither.
+H1_ENUM_BEGIN(CombatHelpText)
+    COMBAT_HELP_AUTO_COMBAT = 0,
+    COMBAT_HELP_SKIP_UNIT = 1,
+    COMBAT_HELP_NONE = 2
+H1_ENUM_END(CombatHelpText)
+
 H1_ENUM_BEGIN(CombatControlId)
     COMBAT_CONTROL_DISABLE_SELECTION = 2,
     COMBAT_CONTROL_SKIP_TURN = 8,
@@ -34,9 +42,9 @@ short combatManager::Main(struct tag_message& message) {
     army* thisArmy;
     CombatRemotePacket* packet;
 
-    if (KBTickCount() > glTimers[0]) {
+    if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
         PollSound();
-        glTimers[0] = KBTickCount() + 0x4b;
+        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0x4b;
     }
     CheckCastleAttack();
     if (CheckWin(&message))
@@ -441,11 +449,11 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                         default:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
                             if (mouseX <= 0x32)
-                                CombatMessage(cCombatHelp[0], 1);
+                                CombatMessage(cCombatHelp[COMBAT_HELP_AUTO_COMBAT], 1);
                             else if (mouseX >= 0x24e)
-                                CombatMessage(cCombatHelp[1], 1);
+                                CombatMessage(cCombatHelp[COMBAT_HELP_SKIP_UNIT], 1);
                             else
-                                CombatMessage(cCombatHelp[2], 1);
+                                CombatMessage(cCombatHelp[COMBAT_HELP_NONE], 1);
                             gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                             m_selectedHex = -1;
                             m_previousCommand = COMBAT_INVALID_COMMAND;
@@ -830,7 +838,7 @@ short WinCombatHandler(struct tag_message& message) {
                 break;
         }
     }
-    if (KBTickCount() > glTimers[0]) {
+    if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = 1;
@@ -838,7 +846,7 @@ short WinCombatHandler(struct tag_message& message) {
         message.value = gpGame->m_viewArmyResult % 6 + 1;
         gpCombatManager->m_winLoseWindow->BroadcastMessage(message);
         gpCombatManager->m_winLoseWindow->DrawWindow();
-        glTimers[0] = KBTickCount() + 0x5a;
+        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0x5a;
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
@@ -1200,9 +1208,9 @@ void combatManager::DoLoseWindow(void) {
     BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
     walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, 0);
     gpWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
-    glTimers[0] = KBTickCount() + 0xb4;
+    glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
     do {
-        if (KBTickCount() > glTimers[0]) {
+        if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
             BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
             walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
@@ -1211,7 +1219,7 @@ void combatManager::DoLoseWindow(void) {
             offset = offset + 2;
             if (offset > 0x1a0)
                 offset = 0;
-            glTimers[0] = KBTickCount() + 0xb4;
+            glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
         }
         Process1WindowsMessage();
         message = gpInputManager->GetEvent();

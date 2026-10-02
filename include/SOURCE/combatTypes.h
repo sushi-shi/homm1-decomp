@@ -87,6 +87,13 @@ H1_ENUM_BEGIN(CombatEffectAnimation)
     COMBAT_EFFECT_BAD_MORALE = 25
 H1_ENUM_END(CombatEffectAnimation)
 
+// glTimers slot the combat screens pace their animation frames with
+// (combatManager::Open/Main/KeepAttack, the win/lose windows); Buka keeps
+// per-owner slot names the same way (HIGH_SCORE_TIMER_SLOT).
+H1_ENUM_CONST_BEGIN(CombatTimerSlot)
+    COMBAT_FRAME_TIMER_SLOT = 0
+H1_ENUM_CONST_END(CombatTimerSlot)
+
 // hexcell::m_obstacleIndex: a rock's frame in the obstacle icon, or for a
 // castle piece (column 5) the wall state. GenerateMap builds the wall INTACT;
 // Catapult marks the struck piece HIT (from INTACT) or DAMAGED_HIT, then it

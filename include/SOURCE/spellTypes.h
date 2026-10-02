@@ -43,6 +43,19 @@ H1_ENUM_BEGIN(SpellType)
     SPELL_DIMENSION_DOOR = 27,
     SPELL_TOWN_GATE = 28
 H1_ENUM_END(SpellType)
+
+// cSpellHelp rows: the spell book's hover/right-click texts (CombatSpecialHandler
+// in combat, game::ViewSpells on the map).
+H1_ENUM_BEGIN(SpellHelpText)
+    SPELL_HELP_PREVIOUS_PAGE = 0,
+    SPELL_HELP_NEXT_PAGE = 1,
+    SPELL_HELP_ADVENTURE_SPELLS = 2,
+    SPELL_HELP_COMBAT_SPELLS = 3,
+    SPELL_HELP_CLOSE = 4,
+    SPELL_HELP_VIEW_SPELLS = 5,
+    SPELL_HELP_SELECT_SPELL = 6,
+    SPELL_HELP_VIEW_COMBAT_SPELLS = 7
+H1_ENUM_END(SpellHelpText)
 // clang-format on
 
 #endif // HOMM1_SOURCE_SPELLTYPES_H

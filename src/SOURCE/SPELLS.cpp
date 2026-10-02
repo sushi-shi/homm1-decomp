@@ -56,22 +56,22 @@ short CombatSpecialHandler(struct tag_message &message)
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case SPELL_BOOK_PREVIOUS_PAGE:
-                        gpCombatManager->CombatMessage(cSpellHelp[0], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_PREVIOUS_PAGE], 1);
                         break;
                     case SPELL_BOOK_NEXT_PAGE:
-                        gpCombatManager->CombatMessage(cSpellHelp[1], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_NEXT_PAGE], 1);
                         break;
                     case DIALOG_BUTTON_0:
-                        gpCombatManager->CombatMessage(cSpellHelp[4], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_CLOSE], 1);
                         break;
                     case SPELL_BOOK_ENTRY_FIRST:
                     case SPELL_BOOK_ENTRY_FIRST + 1:
                     case SPELL_BOOK_ENTRY_FIRST + 2:
                     case SPELL_BOOK_ENTRY_LAST:
-                        gpCombatManager->CombatMessage(cSpellHelp[6], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_SELECT_SPELL], 1);
                         break;
                     default:
-                        gpCombatManager->CombatMessage(cSpellHelp[7], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS], 1);
                         break;
                 }
                 return MESSAGE_DISPATCH_CONSUME;

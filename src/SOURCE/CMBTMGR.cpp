@@ -202,7 +202,7 @@ short combatManager::Open(short priority)
     m_gridUpdateRow = 0;
     m_combatWindowOpen = 1;
     DrawFrame(1);
-    glTimers[0] = KBTickCount() + 75;
+    glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     m_combatPalette = gpResourceManager->GetPalette("kb.pal");
     KBChangeMenu(hmnuCmbt);
     CombatMessage("", 1);
@@ -227,10 +227,29 @@ short combatManager::Open(short priority)
     return 0;
 }
 
+// clang-format off
+// cCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
+// mountain variant by MoreTreesNear), the boat for water and the graveyard.
+H1_ENUM_BEGIN(CombatBackground)
+    COMBAT_BACKGROUND_GRASS_FOREST = 0,
+    COMBAT_BACKGROUND_GRASS_MOUNTAIN = 1,
+    COMBAT_BACKGROUND_SNOW_FOREST = 2,
+    COMBAT_BACKGROUND_SNOW_MOUNTAIN = 3,
+    COMBAT_BACKGROUND_SWAMP = 4,
+    COMBAT_BACKGROUND_LAVA = 5,
+    COMBAT_BACKGROUND_DESERT = 6,
+    COMBAT_BACKGROUND_DIRT_FOREST = 7,
+    COMBAT_BACKGROUND_DIRT_MOUNTAIN = 8,
+    COMBAT_BACKGROUND_BOAT = 9,
+    COMBAT_BACKGROUND_GRAVEYARD = 10,
+    COMBAT_BACKGROUND_COUNT = 11
+H1_ENUM_END(CombatBackground)
+// clang-format on
+
 // CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
 // table after Open's literals, followed by its own literals.
 DATA(0x00490db0)
-char* cCombatBkgNames[11] = {
+char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
     "frstwgrs.bkg",
     "mtnwgrsf.bkg",
     "snowfrst.bkg",
@@ -434,34 +453,34 @@ char* combatManager::GetBackgroundName(void)
         || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
             && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD)) {
         m_terrainType = TERRAIN_DIRT;
-        return cCombatBkgNames[10];
+        return cCombatBkgNames[COMBAT_BACKGROUND_GRAVEYARD];
     }
     switch (m_terrainType) {
         case TERRAIN_WATER:
-            return cCombatBkgNames[9];
+            return cCombatBkgNames[COMBAT_BACKGROUND_BOAT];
         case TERRAIN_SWAMP:
-            return cCombatBkgNames[4];
+            return cCombatBkgNames[COMBAT_BACKGROUND_SWAMP];
         case TERRAIN_LAVA:
-            return cCombatBkgNames[5];
+            return cCombatBkgNames[COMBAT_BACKGROUND_LAVA];
         case TERRAIN_DESERT:
-            return cCombatBkgNames[6];
+            return cCombatBkgNames[COMBAT_BACKGROUND_DESERT];
         case TERRAIN_GRASS:
             if (MoreTreesNear())
-                return cCombatBkgNames[0];
+                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
             else
-                return cCombatBkgNames[1];
+                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_MOUNTAIN];
         case TERRAIN_SNOW:
             if (MoreTreesNear())
-                return cCombatBkgNames[2];
+                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_FOREST];
             else
-                return cCombatBkgNames[3];
+                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_MOUNTAIN];
         case TERRAIN_DIRT:
             if (MoreTreesNear())
-                return cCombatBkgNames[7];
+                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_FOREST];
             else
-                return cCombatBkgNames[8];
+                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_MOUNTAIN];
     }
-    return cCombatBkgNames[0];
+    return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
 }
 
 // Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
@@ -1168,7 +1187,7 @@ void combatManager::KeepAttack(void)
         m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, 0);
         DelayTil(glTimers);
         gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
-        glTimers[0] = KBTickCount() + 10;
+        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = xRun;
         lastY = yRun;
         xRun = xAdvance + xRun;
