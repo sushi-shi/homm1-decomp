@@ -1,0 +1,320 @@
+// Located from HoMM2 Buka 2.1 FLY.cpp; HoMM1 flies in whole-pixel steps,
+// six frames per hex, and CanFit always tries the other side of a wide hex.
+
+#include <match.h>
+
+#include <H1/All.h>
+#include <H1/KB.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/PATH.h>
+
+// HoMM1: the hex arrives through a word pointer; a two-hex creature that
+// does not fit facing forward moves its hex to the other side.
+VA(0x0044a5e0, 0x267)
+short army::CanFit(short* hex)
+{
+    hexcell* cell;
+    short candidateHex;
+
+    candidateHex = *hex;
+    cell = 0;
+    if (!ValidHex(candidateHex) || candidateHex % 9 == 0 || candidateHex % 9 == 8)
+        return 0;
+    if (gpCombatManager->m_hexCells[candidateHex].m_occupantSide != -1
+        || gpCombatManager->m_hexCells[candidateHex].m_obstacleIndex != -1)
+        return 0;
+    if (m_stats.attributes & 1) {
+        candidateHex = GetAdjacentCellIndex(*hex, (signed char)(m_facing == 0 ? 1 : 4));
+        if (ValidHex(candidateHex))
+            cell = &gpCombatManager->m_hexCells[candidateHex];
+        if (ValidHex(candidateHex)
+            && (cell->m_occupantSide == -1
+                || (gpCombatManager->m_currentSide == cell->m_occupantSide
+                    && gpCombatManager->m_currentArmyIndex == cell->m_occupantIndex))
+            && cell->m_obstacleIndex == -1) {
+            return 1;
+        } else {
+            candidateHex = GetAdjacentCellIndex(*hex, (signed char)(m_facing == 0 ? 4 : 1));
+            if (ValidHex(candidateHex))
+                cell = &gpCombatManager->m_hexCells[candidateHex];
+            else
+                return 0;
+            if ((cell->m_occupantSide == -1
+                 || (gpCombatManager->m_currentSide == cell->m_occupantSide
+                     && gpCombatManager->m_currentArmyIndex == cell->m_occupantIndex))
+                && cell->m_obstacleIndex == -1) {
+                *hex = candidateHex;
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    } else {
+        return 1;
+    }
+}
+
+// Buka FLY.cpp ValidFlight; HoMM1 passes a flag that takes the destination
+// as the enemy hex, and CanFit moves the landing hex in place.
+VA(0x0044a847, 0x468)
+short army::ValidFlight(short destination, signed char useDestination)
+{
+    short directionMask;
+    short temp;
+    short hitHex;
+    short attackDirections;
+    short nextHex;
+    short i;
+    signed char dir;
+    short j;
+    army* opponent;
+    short targetHex;
+    short n;
+    signed char attackDirection;
+
+    if (!ValidHex(destination))
+        return 0;
+    if (m_targetSide < 0 || m_targetSide > 1 || m_targetIndex < 0 || m_targetIndex > 4) {
+        if (CanFit(&destination)) {
+            m_moveTargetHex = destination;
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    opponent = &gpCombatManager->m_armies[m_targetSide][m_targetIndex];
+    if (useDestination)
+        targetHex = destination;
+    else
+        targetHex = opponent->m_hex;
+    if (!ValidHex(targetHex))
+        return 0;
+    attackDirections = GetAttackMask(m_hex, 0, -1);
+    while (attackDirections != 0xff) {
+        attackDirection = GetBestDirection(m_hex, targetHex, attackDirections);
+        if (ValidAttack(m_hex, attackDirection, 0, -1, &hitHex)) {
+            m_attackDirection = attackDirection;
+            m_moveTargetHex = m_hex;
+            return 1;
+        } else {
+            attackDirections |= 1 << attackDirection;
+        }
+    }
+    directionMask = 0;
+    if ((opponent->m_stats.attributes & 1) && !useDestination) {
+        if (opponent->m_facing == 0)
+            targetHex = targetHex + 1;
+        else
+            targetHex = targetHex - 1;
+        if (opponent->m_facing == 0)
+            directionMask = 0x10;
+        else
+            directionMask = 2;
+    }
+    while (directionMask != 0x3f) {
+        dir = GetBestDirection(targetHex, m_hex, directionMask);
+        nextHex = GetAdjacentCellIndex(targetHex, dir);
+        if (ValidHex(nextHex) && CanFit(&nextHex)) {
+            m_moveTargetHex = nextHex;
+            if (!(m_stats.attributes & 1)) {
+                m_attackDirection = OppositeDirection(dir);
+            } else {
+                attackDirections = ~GetAttackMask(m_moveTargetHex, 0, -1);
+                for (n = 0; n < 8; n++) {
+                    if (attackDirections & (1 << n))
+                        m_attackDirection = n;
+                }
+            }
+            return 1;
+        } else {
+            directionMask |= 1 << dir;
+        }
+    }
+    if ((opponent->m_stats.attributes & 1) && !useDestination) {
+        if (opponent->m_facing == 0)
+            targetHex = targetHex - 1;
+        else
+            targetHex = targetHex + 1;
+        if (opponent->m_facing == 0)
+            directionMask = 2;
+        else
+            directionMask = 0x10;
+        while (directionMask != 0x3f) {
+            dir = GetBestDirection(targetHex, m_hex, directionMask);
+            nextHex = GetAdjacentCellIndex(targetHex, dir);
+            if (ValidHex(nextHex) && CanFit(&nextHex)) {
+                m_moveTargetHex = nextHex;
+                m_attackDirection = GetBestDirection(m_moveTargetHex, targetHex, 0);
+                return 1;
+            } else {
+                directionMask |= 1 << dir;
+            }
+        }
+    }
+    return 0;
+}
+
+// Buka FLY.cpp FlyTo(void).
+VA(0x0044acaf, 0x27)
+short army::FlyTo(void)
+{
+    return FlyTo(m_moveTargetHex);
+}
+
+// HoMM1 flies along a straight pixel line: six frames per hex of the longer
+// grid axis, the rounding remainder split over the two ends.
+VA(0x0044acd6, 0x75e)
+short army::FlyTo(short destination)
+{
+    short xOff;
+    int maxExtentX;
+    short centerY;
+    short yLow;
+    int oldMaxY;
+    signed char colFrom;
+    short iFinalY;
+    short posX;
+    signed char curRow;
+    short rowDist;
+    short colCount;
+    short yStep;
+    short posY;
+    short steps;
+    short xStep;
+    signed char backwards;
+    short i;
+    signed char toHexRow;
+    signed char endCol;
+    short yFrom;
+    int oldX;
+    short xFrom;
+    int oldY;
+    short destX;
+    short farX;
+    short firstX;
+    short destY;
+
+    if (!ValidHex(destination))
+        return 0;
+    colFrom = m_hex % 9;
+    curRow = m_hex / 9;
+    endCol = destination % 9;
+    toHexRow = destination / 9;
+    colCount = endCol - colFrom;
+    if (colCount < 0)
+        colCount = -colCount;
+    rowDist = toHexRow - curRow;
+    if (rowDist < 0)
+        rowDist = -rowDist;
+    steps = colCount > rowDist ? colCount : rowDist;
+    destX = gpCombatManager->m_hexCells[destination].m_x;
+    destY = gpCombatManager->m_hexCells[destination].m_y;
+    xFrom = gpCombatManager->m_hexCells[m_hex].m_x;
+    yFrom = gpCombatManager->m_hexCells[m_hex].m_y;
+    if (colCount == 0)
+        xStep = 0;
+    else
+        xStep = (destX - xFrom) / (steps * 6);
+    if (rowDist == 0)
+        yStep = 0;
+    else
+        yStep = (destY - yFrom) / (steps * 6);
+    firstX = xFrom + xStep;
+    farX = destX - steps * xStep * 6;
+    xOff = (firstX + farX) / 2 - firstX;
+    yLow = yStep + yFrom;
+    iFinalY = destY - yStep * steps * 6;
+    centerY = (yLow + iFinalY) / 2 - yLow;
+    backwards = 0;
+    if ((xStep < 0 && m_facing == 0) || (xStep > 0 && m_facing == 1))
+        backwards = 1;
+    hexcell frontCell;
+    hexcell otherCell;
+    frontCell.TakeOccupant(&gpCombatManager->m_hexCells[m_hex]);
+    if (m_stats.attributes & 1)
+        otherCell.TakeOccupant(&gpCombatManager->m_hexCells[(m_facing == 1 ? -1 : 1) + m_hex]);
+    posX = xOff + xFrom;
+    posY = centerY + yFrom;
+    m_unknown08 = 1;
+    if (backwards == 1)
+        m_unknown09 = 5;
+    else
+        m_unknown09 = 0;
+    frontCell.m_occupantSide = -1;
+    if (m_stats.attributes & 1)
+        otherCell.m_occupantSide = -1;
+    gpCombatManager->DrawFrame(0);
+    gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
+    gpCombatManager->m_backgroundDrawn = 0;
+    for (i = 0; i < steps * 6; i++) {
+        if (i % 6 == 1)
+            gpSoundManager->MemorySample(m_samples[0]);
+        if (i) {
+            gpCombatManager->m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY,
+                                                        giMinExtentX, giMinExtentY,
+                                                        giMaxExtentX - giMinExtentX + 1,
+                                                        giMaxExtentY - giMinExtentY + 1);
+            oldX = giMinExtentX;
+            oldY = giMinExtentY;
+            maxExtentX = giMaxExtentX;
+            oldMaxY = giMaxExtentY;
+        } else {
+            oldX = 0;
+            oldY = 0;
+            maxExtentX = 639;
+            oldMaxY = 459;
+        }
+        giMinExtentY = 640;
+        giMinExtentX = giMinExtentY;
+        giMaxExtentY = 0;
+        giMaxExtentX = giMaxExtentY;
+        gbComputeExtent = 1;
+        gbSaveBiggestExtent = 1;
+        DrawToBuffer(posX, posY);
+        gbComputeExtent = 0;
+        gbSaveBiggestExtent = 0;
+        if (giMinExtentX < 0)
+            giMinExtentX = 0;
+        if (giMinExtentY < 0)
+            giMinExtentY = 0;
+        if (giMaxExtentX > 639)
+            giMaxExtentX = 639;
+        if (giMaxExtentY > 459)
+            giMaxExtentY = 459;
+        if (oldX > giMinExtentX)
+            oldX = giMinExtentX;
+        if (oldY > giMinExtentY)
+            oldY = giMinExtentY;
+        if (giMaxExtentX > maxExtentX)
+            maxExtentX = giMaxExtentX;
+        if (giMaxExtentY > oldMaxY)
+            oldMaxY = giMaxExtentY;
+        DelayTil(glTimers);
+        glTimers[0] = KBTickCount() + 75;
+        gpWindowManager->UpdateScreenRegion(oldX, oldY, maxExtentX - oldX + 1, oldMaxY - oldY + 1);
+        if (backwards == 1)
+            m_unknown09 = m_unknown09 - 1;
+        else
+            m_unknown09 = m_unknown09 + 1;
+        if (m_unknown09 > 5)
+            m_unknown09 = 0;
+        else if (m_unknown09 < 0)
+            m_unknown09 = 5;
+        posX = xStep + posX;
+        posY = posY + yStep;
+    }
+    if (!m_unknown52)
+        CancelSpell();
+    frontCell.m_occupantSide = gpCombatManager->m_currentSide;
+    if (m_stats.attributes & 1)
+        otherCell.m_occupantSide = gpCombatManager->m_currentSide;
+    gpCombatManager->m_hexCells[destination].TakeOccupant(&frontCell);
+    if (m_stats.attributes & 1)
+        gpCombatManager->m_hexCells[(m_facing == 1 ? -1 : 1) + destination].TakeOccupant(&otherCell);
+    m_hex = destination;
+    m_unknown08 = 0;
+    m_unknown09 = 1;
+    gpCombatManager->UpdateGrid(destination, m_stats.attributes);
+    gpCombatManager->DrawFrame(1);
+    return 1;
+}

@@ -229,7 +229,8 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/CMBTMGR"
 source = "src/SOURCE/CMBTMGR.cpp"
-flags = "cpp_carcass"
+# Open and KeepAttack register fs:[0] frames.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/COMMAND"
@@ -446,4 +447,10 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/DRAWING"
 source = "src/SOURCE/DRAWING.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/FLY"
+source = "src/SOURCE/FLY.cpp"
+# int3 padding brackets CanFit..FlyTo (0x0044a5e0..0x0044b434) as one object.
 flags = "cpp_carcass"

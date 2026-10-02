@@ -63,7 +63,7 @@ public:
     // knob drag passes 4 on entry and 6 on release.
     void SetCursorShape(int);
     // Empty in the Windows build (retail 0x00476e50, `ret 8`).
-    void WarpPointer(int, int);
+    void WarpPointer(short, short);
     void SetColorMice(int);
     // The quick views hide (retail 0x00476ee0, ShowCursor(0)) and restore
     // (0x00476ef0, ShowCursor(1)) the Windows cursor around QuickViewWait.

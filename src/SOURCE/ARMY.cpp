@@ -1003,12 +1003,12 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         gpCombatManager->DrawFrame(0);
         if (ValidHex(m_hex))
             gpCombatManager->m_hexCells[m_hex].m_occupantSide = gpCombatManager->m_currentSide;
-        gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBitmap, 0, 0, 0, 0, 640, 460);
+        gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
         gpCombatManager->m_unknown299 = 0;
     }
     for (i = 0; i < 6; i++) {
         if (continued || i) {
-            gpCombatManager->m_backgroundBitmap->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY,
+            gpCombatManager->m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY,
                                                         giMinExtentX, giMinExtentY,
                                                         giMaxExtentX - giMinExtentX + 1,
                                                         giMaxExtentY - giMinExtentY + 1);

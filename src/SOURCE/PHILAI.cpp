@@ -1774,6 +1774,9 @@ int philAI::RVOfPosition(
 // by its dynamic initializer between RVOfPosition and its first user.
 searchArray SVSearchArray;
 RVA_DYNINIT(0x0001f2a9, 0x1a, SVSearchArray)
+// Its .CRT$XCU thunk (0x0048e008 -> 0x00419990) opens this retail object:
+// int3 padding precedes it and LogTruncate follows without a gap.
+RVA_DYNINIT(0x00019990, 0x15, SVSearchArray)
 
 // donor PoL RVA 0x0003ef45; preferred Buka symbol ?StrategicValueOfPosition@philAI@@QAEHHHHHPAHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order

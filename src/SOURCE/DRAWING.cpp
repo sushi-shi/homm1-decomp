@@ -172,7 +172,7 @@ void combatManager::DrawBackground(void) {
                                            (signed char)((y & 1) ? 5 : 6), 0, 0);
         wallY = y * 80 + 0x8b;
         if (y == 0) {
-            m_backdropBitmap->DrawToBuffer(0, 0);
+            m_backgroundBitmap->DrawToBuffer(0, 0);
             if (m_castleSide[1] == 1) {
                 m_combatIcons[5]->DrawToBuffer(0, wallY, 7, 1, 0);
                 m_combatIcons[5]->DrawToBuffer(0x6e, wallY, 7, 1, 0);
@@ -182,7 +182,7 @@ void combatManager::DrawBackground(void) {
             }
         }
     }
-    gpWindowManager->m_screen->CopyTo(m_backgroundBitmap, 0, 0, 0, 0, 640, 460);
+    gpWindowManager->m_screen->CopyTo(m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
     m_unknown299 = 1;
 }
 
@@ -284,11 +284,11 @@ void combatManager::DrawFrame(signed char updateScreen) {
     if (!gbLimitToExtent) {
         if (m_unknown299) {
             if (m_unknown727 || m_unknown72b)
-                m_backgroundBitmap->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY, giMinExtentX,
+                m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY, giMinExtentX,
                                            giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                            giMaxExtentY - giMinExtentY + 1);
             else
-                m_backgroundBitmap->CopyTo(gpWindowManager->m_screen, 0, 0, 0, 0, 640, 460);
+                m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, 0, 0, 0, 0, 640, 460);
         } else {
             DrawBackground();
         }
