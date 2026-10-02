@@ -195,7 +195,7 @@ public:
     // HoMM1 retail 0x00470f25: byte mode (ret 4).
     void SetGridMode(signed char);
     void DrawSmallView(int, int);
-    int ViewGeneral(int, int, int);
+    signed char ViewGeneral(int, int, int);
     // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
     void ViewArmy(class army *, int, int);
     int HasValidSpellTarget(int);

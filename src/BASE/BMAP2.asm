@@ -67,6 +67,125 @@ blit_done:
     ret
 ?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z ENDP
 
+?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z PROC NEAR
+    push ebp
+    mov ebp, esp
+    push esi
+    push edi
+    mov esi, DWORD PTR [ebp+8]
+    movzx eax, WORD PTR [esi+10h]
+    mov ebx, eax
+    mov ecx, DWORD PTR [ebp+14h]
+    sub eax, ecx
+    js move_done
+    mov _gBitmapSourceSkip, eax
+    mov eax, DWORD PTR [ebp+10h]
+    cmp eax, DWORD PTR [ebp+20h]
+    jl move_backward
+    jne move_forward
+    mov eax, DWORD PTR [ebp+0ch]
+    cmp eax, DWORD PTR [ebp+20h]
+    jl move_backward
+    je move_done
+move_forward:
+    mul ebx
+    add eax, DWORD PTR [ebp+0ch]
+    mov esi, DWORD PTR [esi+14h]
+    mov edi, esi
+    add esi, eax
+    mov eax, DWORD PTR [ebp+20h]
+    mul ebx
+    add eax, DWORD PTR [ebp+1ch]
+    add edi, eax
+    mov eax, ecx
+    mov ebx, _gBitmapSourceSkip
+    mov edx, DWORD PTR [ebp+18h]
+    cld
+    mov ecx, DWORD PTR [ebp+10h]
+    cmp ecx, DWORD PTR [ebp+20h]
+    je forward_same_row
+forward_row:
+    mov ecx, eax
+    shr ecx, 2
+    rep movsd
+    mov ecx, eax
+    and ecx, 3
+    rep movsb
+    add esi, ebx
+    add edi, ebx
+    dec edx
+    jne forward_row
+move_done:
+    pop edi
+    pop esi
+    pop ebp
+    ret
+forward_same_row:
+    mov ecx, eax
+    rep movsb
+    add esi, ebx
+    add edi, ebx
+    dec edx
+    jne forward_same_row
+    pop edi
+    pop esi
+    pop ebp
+    ret
+move_backward:
+    add eax, DWORD PTR [ebp+18h]
+    dec eax
+    mul ebx
+    add eax, DWORD PTR [ebp+0ch]
+    add eax, DWORD PTR [ebp+14h]
+    dec eax
+    mov esi, DWORD PTR [esi+14h]
+    mov edi, esi
+    add esi, eax
+    mov eax, DWORD PTR [ebp+20h]
+    add eax, DWORD PTR [ebp+18h]
+    dec eax
+    mul ebx
+    add eax, DWORD PTR [ebp+1ch]
+    add eax, DWORD PTR [ebp+14h]
+    dec eax
+    add edi, eax
+    mov eax, ecx
+    mov ebx, _gBitmapSourceSkip
+    mov edx, DWORD PTR [ebp+18h]
+    std
+    mov ecx, DWORD PTR [ebp+10h]
+    cmp ecx, DWORD PTR [ebp+20h]
+    je backward_same_row
+backward_row:
+    mov ecx, eax
+    shr ecx, 2
+    rep movsd
+    mov ecx, eax
+    and ecx, 3
+    rep movsb
+    sub esi, ebx
+    sub edi, ebx
+    dec DWORD PTR [ebp+18h]
+    jne backward_row
+    cld
+    pop edi
+    pop esi
+    pop ebp
+    ret
+backward_same_row:
+    mov ecx, eax
+    rep movsb
+    sub esi, ebx
+    sub edi, ebx
+    dec edx
+    jne backward_same_row
+    cld
+    pop edi
+    pop esi
+    pop ebp
+    ret
+?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z ENDP
+
 ?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp

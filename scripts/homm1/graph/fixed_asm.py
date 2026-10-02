@@ -30,6 +30,8 @@ UNITS = {
         claims=(
             FixedAsmClaim(0x0047C82C, 0x74,
                           "?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z"),
+            FixedAsmClaim(0x0047C8A0, 0xE6,
+                          "?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z"),
             FixedAsmClaim(0x0047C986, 0x4B,
                           "?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z"),
             FixedAsmClaim(0x0047C9D2, 0x43,
