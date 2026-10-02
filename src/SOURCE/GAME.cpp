@@ -2228,6 +2228,67 @@ int game::ComputeDailyGold(int player) {
     return gold;
 }
 
+// Buka 2.1 game::PerDay for HoMM1: records each player's income, pays the
+// mines, towns and computer bonuses, then advances the calendar.
+VA(0x004419a6, 0x463)
+void game::PerDay(void) {
+    short i;
+    short j;
+    short production;
+    // Retail reserves one more unused slot between the counters.
+    short k;
+    signed char resource;
+
+    for (i = 0; i < gpGame->m_playerCount; i++) {
+        for (j = 0; j < PLAYER_RESOURCE_COUNT; j++)
+            gpGame->m_players[i].m_aiData.m_income[j] = -m_players[i].m_resources[j];
+    }
+    memset(m_townBuiltToday, 0, sizeof(m_townBuiltToday));
+    gpAdvManager->m_identifyHeroActive = 0;
+    for (i = 2; i < GAME_MINE_COUNT; i++) {
+        if (m_mines[i].owner != -1) {
+            resource = m_mines[i].type;
+            production = 0;
+            if (resource == 2)
+                production = 2;
+            else if (resource == 0)
+                production = 2;
+            else if (resource != 6)
+                production = 1;
+            if (resource != 6)
+                m_players[m_mines[i].owner].m_resources[resource] += production;
+        }
+    }
+    for (i = 0; i < GAME_TOWN_COUNT; i++)
+        m_castleRecs[i].m_turnsOwned++;
+    for (i = 0; i < m_playerCount; i++)
+        m_players[i].m_resources[6] += ComputeDailyGold(i);
+    for (i = 0; i < m_playerCount; i++) {
+        if (!gbHumanPlayer[i]) {
+            if (gpGame->m_players[i].m_color > 2) {
+                m_players[i].m_resources[0]++;
+                m_players[i].m_resources[2]++;
+            }
+            if (gpGame->m_players[i].m_color > 3 && m_day >= 1 && m_day <= 6)
+                m_players[i].m_resources[m_day - 1]++;
+        }
+    }
+    m_day++;
+    giCurTurn = (m_month - 1) * 28 + (m_week - 1) * 7 + m_day;
+    if (m_day > 7) {
+        m_day = 1;
+        PerWeek();
+    }
+    if (m_week > 4) {
+        m_week = 1;
+        PerMonth();
+    }
+    for (i = 0; i < gpGame->m_playerCount; i++) {
+        for (j = 0; j < PLAYER_RESOURCE_COUNT; j++)
+            gpGame->m_players[i].m_aiData.m_income[j] += m_players[i].m_resources[j];
+    }
+}
+
 // HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
 VA(0x004439c1, 0x79)
 signed char game::GetRandomArtifactId(void) {
