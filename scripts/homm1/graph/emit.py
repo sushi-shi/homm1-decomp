@@ -107,9 +107,10 @@ LABELS_MODS = _mods("retail_labels/", "tool/clang.py", "core/coff.py",
                     "core/tsv.py", "manifest.py", "core/paths.py", "core/msvc_names.py")
 MODEL_MODS = _mods("model.py", "retail_labels/", "core/tsv.py", "core/paths.py")
 DELINK_MODS = _mods("delink/", "tool/delinker.py", "core/pe.py",
-                    "core/coff.py", "model.py", "core/data_matching.py") + TOOL_MODS + ["config/compare.toml"]
+                    "core/coff.py", "model.py", "core/data_matching.py",
+                    "compare/runtime_aliases.py") + TOOL_MODS + ["config/compare.toml"]
 NORMALIZE_MODS = _mods("compare/normalize.py", "compare/canonicalize.py",
-                       "delink/eh_band.py", "core/coff.py", "core/msvc_names.py",
+                       "compare/runtime_aliases.py", "delink/eh_band.py", "core/coff.py", "core/msvc_names.py",
                        "core/data_matching.py") + ["config/compare.toml"]
 PROJECT_MODS = _mods("compare/project.py", "compare/normalize.py", "manifest.py")
 REPORT_MODS = _mods("tool/objdiff.py")
@@ -504,7 +505,8 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                description="normalize base/target objs")
         w.build(graph.NORMALIZE_STAMP, "normalize",
                 inputs=base_objs + [graph.DELINK_STAMP],
-                implicit=[MANIFEST, *NORMALIZE_MODS])
+                # OLDNAMES/LIBCMT alias records come from the pinned toolchain.
+                implicit=[MANIFEST, *NORMALIZE_MODS, graph.TOOLCHAIN_ID])
         w.newline()
 
         w.comment("=== project: the delinked directory -> objdiff.json ===")

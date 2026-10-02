@@ -1412,8 +1412,13 @@ def _assert_only_eh_changes(original: CoffObject, before: bytes, after: bytes,
                 "EH canonicalization changed section bytes outside push operands")
 
 
-def canonicalize_coff(payload: bytes) -> CanonicalizedObject:
-    """Return a normalized comparison copy and its readable rename records."""
+def canonicalize_coff(payload: bytes, *,
+                      runtime_aliases: dict[str, str] | None = None
+                      ) -> CanonicalizedObject:
+    """Return a normalized comparison copy and its readable rename records.
+
+    `runtime_aliases` ({OLDNAMES name: runtime function}) defaults to the
+    pinned VC4 libraries' table (homm1.compare.runtime_aliases)."""
     payload, materialized = materialize_commons(payload)
     coff = CoffObject(payload)
     definitions = _definitions(coff)
@@ -1704,6 +1709,41 @@ def canonicalize_coff(payload: bytes) -> CanonicalizedObject:
             symbol.name, symbol.name, "weak", "undefined", 0, 0, 0, 0, 0, "-",
             "weak-external-resolved-to-" + default.name, "",
         ))
+    # An OLDNAMES name (`chdir`, `strrev`, `strcmpi`) is itself a weak external,
+    # but in OLDNAMES.LIB, not in this object: LINK binds it to the runtime
+    # function its default names (`_chdir`, `_strrev`, `_stricmp`). Both
+    # spellings reach one body in the image, and retail's code cannot tell
+    # which spelling a call used. Name the reference by the runtime function,
+    # as the linker resolves it (homm1.compare.runtime_aliases; normalize
+    # proves that no compared object defines an alias name).
+    if runtime_aliases is None:
+        from homm1.compare.runtime_aliases import aliases
+        runtime_aliases = aliases()
+
+    def plain_undefined(symbol: Symbol) -> bool:
+        return (symbol.section == 0 and symbol.value == 0 and
+                symbol.storage_class == EXTERNAL_STORAGE and
+                symbol.index not in renames and symbol.index not in dup_retargets)
+
+    by_index = sorted(coff.symbols.values(), key=lambda row: row.index)
+    runtime_symbol = {}
+    for symbol in by_index:
+        if plain_undefined(symbol):
+            runtime_symbol.setdefault(symbol.name, symbol.index)
+    for symbol in by_index:
+        function = runtime_aliases.get(symbol.name)
+        if function is None or not plain_undefined(symbol):
+            continue
+        existing = runtime_symbol.get(function)
+        if existing is not None and existing != symbol.index:
+            # The object also spells the runtime name: one reference target.
+            dup_retargets[symbol.index] = existing
+        else:
+            renames[symbol.index] = function
+            runtime_symbol[function] = symbol.index
+        rows.append(CanonicalRow(
+            symbol.name, function, "oldnames", "undefined", 0, 0, 0, 0, 0, "-",
+            "oldnames-alias-resolved-to-" + function, ""))
     # A default may itself be an undefined duplicate that the pass above retargeted.
     for index in list(dup_retargets):
         seen, target = {index}, dup_retargets[index]

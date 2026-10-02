@@ -108,14 +108,36 @@ it scores 87. Retail's order needs these direct LIBCMT spellings:
   reproduces close, read, open and stricmp. Nothing in the current units
   places `write` or `strnicmp` there.
 
-With all of these, the simulation scores 100 of 103. The source still uses the
-other spellings because comparison names each retail call target with one
-reviewed referent (`config/retail/function_referents.tsv`: 0x00082500
-`_lseek`, 0x00082610 `_chdir`, 0x0008b070 `__strrev`). Respelling a call
-changes its relocation symbol and drops SetupCDDrive, `sample::sample` and
-StartSample below their MAX. Callers of one function cannot use different
-alias spellings until comparison treats an OLDNAMES weak external as its
-LIBCMT target.
+With all of these, the simulation scores 100 of 103.
+
+Comparison now resolves an OLDNAMES reference as LINK does. Each OLDNAMES.LIB
+member is a weak external that defaults to the runtime name (`_lseek` to
+`__lseek`). LIBCMT's stricmp.obj defines the function `__stricmp` and the
+untyped label `__strcmpi` at the same offset, so `strcmpi` also reaches
+`__stricmp`. `homm1.compare.runtime_aliases` reads these records from the
+pinned libraries. The canonicalizer then names every undefined OLDNAMES
+reference by its runtime function, and the reviewed referents use the runtime
+symbols (`__lseek`, `__chdir`, `__close`, `__read`, `__open`, `__tell`,
+`__write`, `__stricmp`, `__strnicmp`). The two spellings of one call then
+compare equal.
+
+The source now uses retail's spellings in functions at 100: kbwin's
+SetupCDDrive (`_chdir`, `_lseek`), `sample::sample` (`strrev`), RESMGR
+(`_close`, `_read`, `_open`, `_lseek`) and soundmgr's CDStop, CDIsPlaying and
+CDPlay (`_stricmp`). Every edited function stays at 100. Measured on a
+diagnostic link of the candidate objects, the LIBCMT member order matches
+retail in 97 of 100 positions, up from 85. The simulation gives 99 of 103.
+The remaining differences are as follows:
+
+- soundmgr's StartSample still calls `_strrev` directly, so strrev is pulled
+  early instead of last. Changing the spelling to `strrev` leaves StartSample
+  at its bank (97.77) and raises the simulation to 100 of 103. It is not
+  applied here because StartSample is below 100.
+- `write` and `strnicmp` directly follow `open` in retail. No current unit
+  before soundmgr references `__write` or `__strnicmp`. BASE C++ objects use
+  `/Gy` and retail links with `/OPT:REF`. A function that nothing called would
+  be discarded from the image, but its references would still pull these
+  members. Neither the image nor the donors identify such a function.
 
 ## Resources
 

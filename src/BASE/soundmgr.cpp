@@ -100,7 +100,7 @@ void soundManager::CDStop(void) {
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != 0)
         HandleMCIError(nMCIError, CommandString);
-    if (strcmpi(lpszReturnString, "stopped") != 0) {
+    if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, position, sizeof(position), NULL);
         if (nMCIError != 0)
@@ -119,7 +119,7 @@ inline int soundManager::CDIsPlaying(void) {
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != 0)
         HandleMCIError(nMCIError, CommandString);
-    return strcmpi(lpszReturnString, "playing") == 0;
+    return _stricmp(lpszReturnString, "playing") == 0;
 }
 
 VA(0x00477110, 0xd7)
@@ -204,7 +204,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != 0)
         HandleMCIError(nMCIError, CommandString);
-    if (strcmpi(lpszReturnString, "stopped") != 0) {
+    if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, buffer, sizeof(buffer), NULL);
         if (nMCIError != 0)

@@ -99,19 +99,30 @@ def referent_function_names() -> dict[int, tuple[str, str, int]]:
     unclaimed body whose exact COFF spelling is known from the matching base
     object.  Vostok requires that alias owner to exist at the target RVA.  Keep
     it in the anonymous address bucket: this names the referent without
-    claiming the function for a source unit.
+    claiming the function for a source unit.  A runtime body is named by its
+    LIBCMT symbol (`__chdir`), never by an OLDNAMES alias (`_chdir`) that LINK
+    resolves to it; comparison resolves the alias on the reference side.
     """
     from homm1.core.paths import RETAIL
     from homm1.core.tsv import read as read_tsv
 
+    from homm1.compare.runtime_aliases import aliases
+
     text_lo, text_hi = sections_of()[".text"]
     path = RETAIL / "function_referents.tsv"
     _body, _header, rows = read_tsv(path)
+    oldnames = aliases()
     found: dict[int, tuple[str, str, int]] = {}
     for row in rows:
         rva = int(row["rva"], 16)
         if not text_lo <= rva < text_hi:
             continue
+        if row["name"] in oldnames:
+            # A runtime body has one symbol; OLDNAMES spellings resolve to it.
+            raise ValueError(
+                f"{path} names function 0x{rva:x} by the OLDNAMES alias "
+                f"{row['name']!r}; use the runtime symbol "
+                f"{oldnames[row['name']]!r}")
         value = (row["name"], "", 0)
         previous = found.get(rva)
         if previous is not None and previous[0] != value[0]:

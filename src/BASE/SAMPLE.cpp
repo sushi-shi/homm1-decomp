@@ -31,7 +31,7 @@ sample::sample(char* name, long channelType, long volume, long loopCount)
     m_playbackData.loopCount = loopCount;
     int stereo = SAMPLE_LOAD_STEREO;
     strcpy(fileName, name);
-    _strrev(fileName);
+    strrev(fileName);
     for (int i = 0; i < SAMPLE_FORMAT_SUFFIX_LENGTH; i++) {
         switch (fileName[i]) {
             case '1':
