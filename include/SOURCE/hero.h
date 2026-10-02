@@ -7,6 +7,7 @@
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/spellTypes.h>
 
 // forward declarations:
 class town;

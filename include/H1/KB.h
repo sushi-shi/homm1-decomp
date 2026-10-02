@@ -3,6 +3,8 @@
 
 #include <Domains.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/dialogTypes.h>
+#include <SOURCE/terrainTypes.h>
 
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
 // six dwellings named per race by gDwellingNames. town::m_buildings holds

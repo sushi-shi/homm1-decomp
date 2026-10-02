@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <SOURCE/appMenu.h>
 
 // clang-format off
 H1_ENUM_BEGIN(SetupDialogResult)

@@ -13,6 +13,41 @@
 #include <stdlib.h>
 #include <string.h>
 
+// clang-format off
+// herowind.bin widget ids. Names follow UpdateHeroScreenStatusBar's
+// cHeroScreen texts (0x00493998) and what HeroView, UpdateArmies and
+// HeroHandler send to or do with each id; artifact and army slots are
+// indexed from their first id, primary stats by HeroPrimaryStat.
+H1_ENUM_BEGIN(HeroScreenControl)
+    HERO_SCREEN_TITLE = 2,
+    HERO_SCREEN_ARTIFACT_BACKGROUND_FIRST = 6,
+    HERO_SCREEN_ARTIFACT_FIRST = 20,
+    HERO_SCREEN_PORTRAIT = 65,
+    HERO_SCREEN_STAT_VALUE_FIRST = 76,
+    HERO_SCREEN_ATTACK = 81,
+    HERO_SCREEN_STAT_FIRST = HERO_SCREEN_ATTACK,
+    HERO_SCREEN_DEFENSE = 82,
+    HERO_SCREEN_SPELL_POWER = 83,
+    HERO_SCREEN_KNOWLEDGE = 84,
+    HERO_SCREEN_CHARACTERISTICS = 85,
+    HERO_SCREEN_CREST = 86,
+    HERO_SCREEN_ARMY_BACKGROUND_FIRST = 87,
+    HERO_SCREEN_ARMY_CREATURE_FIRST = 92,
+    HERO_SCREEN_ARMY_COUNT_FIRST = 97,
+    HERO_SCREEN_ARMY_SLOT_FIRST = 102,
+    HERO_SCREEN_MORALE_FIRST = 200,
+    HERO_SCREEN_MORALE_LAST = 202,
+    HERO_SCREEN_LUCK_FIRST = 203,
+    HERO_SCREEN_LUCK_LAST = 205,
+    HERO_SCREEN_EXPERIENCE_ICON = 206,
+    HERO_SCREEN_EXPERIENCE = 207,
+    HERO_SCREEN_STATUS_FIRST = 300,
+    HERO_SCREEN_STATUS_TEXT = 302,
+    HERO_SCREEN_EXIT = DIALOG_BUTTON_0,
+    HERO_SCREEN_DISMISS = DIALOG_BUTTON_3
+H1_ENUM_END(HeroScreenControl)
+// clang-format on
+
 // donor PoL RVA 0x0006c3a0; preferred Buka symbol ??0hero@@QAE@XZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.493986;margin=0.210035;shape=0.273;size=0.962;calls=1.000;alternate=pol20:void hero::constructor(void)@0x0006c3a0

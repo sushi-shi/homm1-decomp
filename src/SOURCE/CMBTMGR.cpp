@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <SOURCE/mapObjectTypes.h>
 
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x00490d50)

@@ -15,6 +15,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <SOURCE/mapObjectTypes.h>
 
 // Pathfinder scratch state shared by PushPoint and TestPossibleDirections.
 DATA(0x004c4f20) static int gSearchNextY;
