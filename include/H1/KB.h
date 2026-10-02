@@ -81,6 +81,11 @@ extern struct tag_monsterInfo gMonsterDatabase[];
 extern char* gArmyNames[];
 extern char* gNeutralBuildingNames[];
 extern char* gDwellingNames[];
+// BuyBuild's building descriptions (0x00493e78, 0x00493908) and per-dwelling
+// prerequisite building masks (0x00491a68).
+extern char* gNeutralBuildingDescriptions[];
+extern char* gDwellingDescriptions[];
+extern unsigned short gDwellingRequirements[];
 extern int gMageBuildingCosts[][7];
 extern int gNeutralBuildingCosts[][7];
 extern int gDwellingCosts[][7];

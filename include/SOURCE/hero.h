@@ -80,4 +80,6 @@ public:
     void CheckAnduranPieces(int);
 };
 #pragma pack(pop)
+// Hero type names, indexed by hero::m_unknown1c (retail 0x00493240).
+extern char *cHeroTypeName[];
 #endif // HOMM1_SOURCE_HERO_H

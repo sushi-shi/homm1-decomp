@@ -10,6 +10,7 @@
 // forward declarations:
 class bankBox;
 class bitmap;
+class hero;
 class heroWindow;
 class icon;
 class strip;
@@ -227,9 +228,9 @@ public:
     heroWindow *m_heroWindow1;
     short m_splitAmount;
     short m_splitMaximum;
-    short m_unknown106;
-    int m_unknown108;
-    int m_unknown10c;
+    // RecruitHero: the chosen tavern slot (-1 if none) and both candidates.
+    short m_recruitState;
+    hero *m_recruitHeroes[2];
     // HoMM1 Main tests this additional mask against message.type.
     short m_dispatchMask;
     // --- constructors ---
@@ -286,5 +287,7 @@ short TavernHandler(struct tag_message &);
 short MageGuildHandler(struct tag_message &);
 short SplitArmyHandler(struct tag_message &);
 short CastleHandler(struct tag_message &);
+// KB's tavern recruit dialog handler (retail 0x0045140e).
+short RecruitHeroHandler(struct tag_message &);
 extern char *cCastleInfo[];
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

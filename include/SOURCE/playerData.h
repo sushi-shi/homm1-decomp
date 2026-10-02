@@ -76,6 +76,10 @@ public:
     signed char CurrentTown(void) {
         return m_currentTown;
     }
+    // Buka Color(); RecruitHero's crest index inlines this byte read.
+    signed char Color(void) {
+        return m_unknown11;
+    }
 };
 #pragma pack(pop)
 
