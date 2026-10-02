@@ -38,7 +38,7 @@ combatManager::combatManager(void)
     m_currentSide = 0;
     m_limitCreatureHex = 0;
     m_limitCreature = 0;
-    m_unknown6c0 = 1;
+    m_showArmyQuantities = 1;
     m_gridUpdateRow = 0;
     m_currentCommand = 0;
     m_unknown6e8 = 0;
@@ -112,9 +112,9 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
     }
     for (i = 0; i < 2; i++) {
         if (m_playerId[i] >= 0)
-            m_unknown2b8[i] = gbHumanPlayer[m_playerId[i]];
+            m_humanSide[i] = gbHumanPlayer[m_playerId[i]];
         else
-            m_unknown2b8[i] = 0;
+            m_humanSide[i] = 0;
         if (i == 1)
             m_heroes[i] = attackerHero;
         else
@@ -131,7 +131,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         if (m_heroes[i] && m_heroes[i]->HasArtifact(0x11))
             m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
         m_keepAttacksRemaining[i] = 1;
-        m_unknown6df[i] = 0;
+        m_visitingHeroPresent[i] = 0;
         m_heroCastSpell[i] = 0;
     }
     m_castleSide[1] = 0;
@@ -139,9 +139,9 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         if (defenderTown->m_occupyingHeroId != -1) {
             m_armyGroups[0] = &m_heroes[0]->m_army;
             CombineGroups(&defenderTown->m_army, &m_heroes[0]->m_army);
-            m_unknown6df[0] = 1;
+            m_visitingHeroPresent[0] = 1;
         } else {
-            m_unknown6df[0] = 0;
+            m_visitingHeroPresent[0] = 0;
         }
         if (defenderTown->m_buildings & 0x40)
             m_castleSide[0] = 1;
@@ -674,7 +674,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     morale = theGroup->GetMorale(m_heroes[side], m_combatTowns[side]);
     if (morale >= 0 || SRandom(1, 12) > -morale)
         return 0;
-    if (!m_unknown2b8[side] && SRandom(1, 4) == 1)
+    if (!m_humanSide[side] && SRandom(1, 4) == 1)
         return 0;
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("BADMRLE.82M");
@@ -1191,7 +1191,7 @@ void combatManager::KeepAttack(void)
     else
         sprintf(gText, "%s %d %s.", "Garrison does", hurt, "Damage");
     gpCombatManager->CombatMessage(gText, 1);
-    target->PowEffect(target->m_stats.unknown07);
+    target->PowEffect(target->m_stats.powEffect);
     if (!(target->m_stats.attributes & 0x10))
         target->Stand(0);
     WaitEndSample(sample, -1);

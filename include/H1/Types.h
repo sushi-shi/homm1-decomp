@@ -83,7 +83,8 @@ struct tag_monsterStats {
     signed char defense;
     signed char damageMin;
     signed char damageMax;
-    signed char unknown07;
+    // army::PowEffect index into gPowEffectNames.
+    signed char powEffect;
     signed char shots;
     char unknown09[6];
     int attributes;

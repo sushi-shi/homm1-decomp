@@ -817,7 +817,7 @@ void army::DrawToBuffer(short x, short y) {
                 }
                 gpCombatManager->m_combatIcons[8]->DrawToBuffer(iconX, y - 40, m_spellEffect, 0, 0);
             }
-            if (m_animationFrame == 1 && gpCombatManager->m_unknown6c0) {
+            if (m_animationFrame == 1 && gpCombatManager->m_showArmyQuantities) {
                 if (m_stats.attributes & 1) {
                     if (m_facing == 0)
                         qtyX = x + 75;
@@ -1289,7 +1289,7 @@ void army::SpecialAttack(void) {
                 m_quantity > 1 ? "do" : "does", dmg, "Damage");
     gText[0] -= 32;
     gpCombatManager->CombatMessage(gText, 1);
-    PowEffect(m_stats.unknown07);
+    PowEffect(m_stats.powEffect);
     if (!(target->m_stats.attributes & 0x10))
         target->Stand(0);
     if (m_unknown52 == 1)
@@ -1378,7 +1378,7 @@ void army::DoHydraAttack(void) {
                 m_quantity > 1 ? "do" : "does", totDmg, "Damage");
     gText[0] -= 32;
     gpCombatManager->CombatMessage(gText, 1);
-    PowEffect(m_stats.unknown07);
+    PowEffect(m_stats.powEffect);
     WaitSample(1);
     m_animationSequence = 0;
     gpCombatManager->ResetLimitCreature();
@@ -1580,7 +1580,7 @@ void army::DoAttack(int retaliation) {
                 m_quantity > 1 ? "do" : "does", dmg, "Damage");
     gText[0] -= 32;
     gpCombatManager->CombatMessage(gText, 1);
-    PowEffect(m_stats.unknown07);
+    PowEffect(m_stats.powEffect);
     gpCombatManager->m_unknown260 = oldMode;
     switch (m_creatureType) {
         case 11:
@@ -1608,7 +1608,7 @@ void army::DoAttack(int retaliation) {
             }
             break;
         case 26:
-            gpCombatManager->m_unknown6e9[gpCombatManager->m_hexCells[m_hex].m_occupantSide] = kills;
+            gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[m_hex].m_occupantSide] = kills;
             break;
         default:
             break;
@@ -1655,7 +1655,7 @@ void army::DoAttack(int retaliation) {
     gpCombatManager->m_computeExtent = 1;
     Stand(1);
     if (m_creatureType == 26)
-        m_quantity += gpCombatManager->m_unknown6e9[gpCombatManager->m_hexCells[m_hex].m_occupantSide];
+        m_quantity += gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[m_hex].m_occupantSide];
     if (target && target->m_quantity > 0) {
         gpCombatManager->m_computeExtent = 1;
         target->Stand(1);
@@ -1679,7 +1679,7 @@ void army::DoAttack(int retaliation) {
             target->m_stats.attributes |= 0x40;
             if (target->m_creatureType == 26)
                 target->m_quantity +=
-                    gpCombatManager->m_unknown6e9[gpCombatManager->m_hexCells[target->m_hex].m_occupantSide];
+                    gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[target->m_hex].m_occupantSide];
         }
     }
 secondStrike:

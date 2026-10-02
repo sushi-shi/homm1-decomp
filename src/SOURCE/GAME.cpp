@@ -559,7 +559,7 @@ short game::LoadGame(char* filename, int origData, int) {
 
     numHumans = 0;
     gbGameOver = 0;
-    m_unknown16e79 = 1;
+    m_noMapHeroes = 1;
     if (origData || !strcmp(filename, "REMOTE.GAM"))
         sprintf(pathName, "%s%s", ".\\DATA\\", filename);
     else
@@ -1261,7 +1261,7 @@ void game::NewMap(char* mapName) {
                     SetupTown(j, !gbHumanPlayer[i]);
             }
         }
-        if (m_unknown16e79
+        if (m_noMapHeroes
             || (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && i == 0)) {
             m_players[i].m_heroCount = 1;
             if (m_campaignType > 0)
@@ -1291,7 +1291,7 @@ void game::NewMap(char* mapName) {
         m_players[i].m_availableHeroIds[1] = GetNewHeroId(k);
         m_availableHeroes[m_players[i].m_availableHeroIds[1]] = 0x40;
     }
-    if (!m_unknown16e79)
+    if (!m_noMapHeroes)
         ProcessOnMapHeroes();
     if (m_campaignType <= 0) {
         for (k = 0; k < 4; k++) {
@@ -3867,7 +3867,7 @@ void game::ProcessMapExtra(void) {
                     cellPtr->m_objectMetadata = townNum;
                     break;
                 case 0xc7:
-                    m_unknown16e79 = 0;
+                    m_noMapHeroes = 0;
                     break;
             }
         }

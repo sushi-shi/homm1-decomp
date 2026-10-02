@@ -98,7 +98,9 @@ public:
     class armyGroup *m_armyGroups[2];
     // Set by a surrender (ProcessNextAction).
     signed char m_sideDefeated[2];
-    char m_unknown2b8[2];
+    // SetupCombat copies gbHumanPlayer per side; a bad-morale roll may spare
+    // a computer side.
+    char m_humanSide[2];
     signed char m_playerId[2];
     int m_experienceValue[2];
     signed char m_heroCastSpell[2];
@@ -111,7 +113,8 @@ public:
     signed char m_gridSelectionDisabled;
     signed char m_limitCreature;
     signed char m_limitCreatureHex;
-    signed char m_unknown6c0;
+    // Buka m_showArmyQuantities: army::DrawToBuffer draws the quantity box.
+    signed char m_showArmyQuantities;
     signed char m_selectedHex;
     signed char m_directionTargetHex;
     signed char m_previousCommand;
@@ -128,14 +131,18 @@ public:
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
     // mirror the castle art from side 1's flag.
     signed char m_castleSide[2];
-    char m_unknown6df[2];
+    // Buka m_visitingHeroPresent: SetupCombat sets side 0 when the defending
+    // town has a garrisoned hero.
+    char m_visitingHeroPresent[2];
     // CatAttack's target row in the castle wall column.
     short m_catapultTarget;
     signed char m_unknown6e3;
     short m_wallFrame;
     short m_wallDamage;
     signed char m_unknown6e8;
-    char m_unknown6e9[4];
+    // Per side: creatures the attacking ghosts (CREATURE_GHOST) killed; the
+    // ghost stack grows by it after the strike.
+    char m_ghostKills[4];
     // LoadIcons loads the battlefield backdrop GetBackgroundName names;
     // DrawBackground draws it first.
     class bitmap* m_backgroundBitmap;

@@ -166,8 +166,10 @@ public:
     short m_viewSpellsTop;
     short (*m_viewSpellsCallback)(struct tag_message&);
     signed char m_viewSpellsReadOnly;
-    // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 trigger cell.
-    signed char m_unknown16e79;
+    // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 (map hero)
+    // trigger cell. While set, every player starts with a town hero;
+    // otherwise the map's heroes are processed.
+    signed char m_noMapHeroes;
     hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
