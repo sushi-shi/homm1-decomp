@@ -134,11 +134,11 @@ short searchArray::FindCombatPath(
     int opposite;
 
     bestDistance = FINDPATH_INITIAL_BEST_DISTANCE;
-    bestHex = -1;
+    bestHex = ARMY_HEX_INVALID;
     if (attackPath)
         attackTargetHex = (signed char)targetHex;
     else
-        attackTargetHex = -1;
+        attackTargetHex = ARMY_HEX_INVALID;
     Clear();
     if (!ValidHex(sourceHex) || !ValidHex(targetHex) || unit == NULL)
         return 0;
@@ -161,9 +161,9 @@ short searchArray::FindCombatPath(
             gpCombatManager->m_hexCells[targetHex].m_x,
             gpCombatManager->m_hexCells[targetHex].m_y
         );
-        if (unit->m_targetSide != -1) {
-            attackMask = unit->GetAttackMask(node.x, 0, attackTargetHex);
-            if (attackMask != 0xff) {
+        if (unit->m_targetSide != COMBAT_SIDE_NONE) {
+            attackMask = unit->GetAttackMask(node.x, ARMY_ATTACK_TARGET_ASSIGNED, attackTargetHex);
+            if (attackMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
                 for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
                     if (!(attackMask & (1 << direction))) {
                         *path++ = (unsigned char)direction;
@@ -192,7 +192,7 @@ short searchArray::FindCombatPath(
                 );
         }
     }
-    if (unit->m_targetSide != -1) {
+    if (unit->m_targetSide != COMBAT_SIDE_NONE) {
         if (m_pathLength == 0)
             return 0;
     } else if (bestHex != targetHex) {
@@ -343,33 +343,33 @@ void searchArray::TestPossibleDirections(
     short allowOccupied,
     int waterMode
 ) {
-    memset(occupied, 0, 8);
+    memset(occupied, 0, MAP_DIRECTION_COUNT);
     gSearchCurrentCell = gpAdvManager->GetCell(x, y);
 
-    for (gSearchDirection = 0; gSearchDirection < 8; gSearchDirection++) {
+    for (gSearchDirection = 0; gSearchDirection < MAP_DIRECTION_COUNT; gSearchDirection++) {
         gSearchNextX = x + normalDirTable[gSearchDirection].x;
         gSearchNextY = y + normalDirTable[gSearchDirection].y;
         if (gSearchNextX <= -7 || gSearchNextX >= MAP_CELL_GRID_SIZE || gSearchNextY <= -7
             || gSearchNextY >= MAP_CELL_GRID_SIZE) {
-            gSearchTerrain = -1;
+            gSearchTerrain = TERRAIN_INVALID;
             goto storeDirection;
         }
 
         gSearchNextCell = gpAdvManager->GetCell(gSearchNextX, gSearchNextY);
-        if (gSearchNextCell->m_secondaryTrigger & 0x80) {
-            gSearchTerrain = -1;
+        if (gSearchNextCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED) {
+            gSearchTerrain = TERRAIN_INVALID;
             goto storeDirection;
         }
         if (gbHumanPlayer[giCurPlayer]
             && !(gpGame->m_mapExtra[gSearchNextX][gSearchNextY] & giCurPlayerBit)) {
-            gSearchTerrain = -1;
+            gSearchTerrain = TERRAIN_INVALID;
             goto storeDirection;
         }
 
         if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
             if (!allowOccupied) {
                 if (gSearchNextX != m_specialTargetX || gSearchNextY != m_specialTargetY) {
-                    gSearchTerrain = -1;
+                    gSearchTerrain = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             } else {
@@ -378,11 +378,11 @@ void searchArray::TestPossibleDirections(
         }
 
         gSearchTerrain = giGroundToTerrain[gSearchNextCell->m_tileIndex];
-        if (gSearchTerrain == 0) {
+        if (gSearchTerrain == TERRAIN_WATER) {
             if (waterMode) {
                 if (gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
                     || gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
-                    gSearchTerrain = -1;
+                    gSearchTerrain = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             } else {
@@ -390,24 +390,24 @@ void searchArray::TestPossibleDirections(
                     && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
                     && gSearchNextCell->m_triggerType
                            != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)) {
-                    gSearchTerrain = -1;
+                    gSearchTerrain = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             }
         } else if (waterMode && gSearchNextCell->m_triggerType != MAP_OBJECT_COAST) {
-            gSearchTerrain = -1;
+            gSearchTerrain = TERRAIN_INVALID;
             goto storeDirection;
         }
 
         if ((1 << gSearchDirection) & SEARCH_DIRECTION_EDGE_OBJECT_MASK) {
             if (gSearchCurrentCell->m_objectIndex != MAP_CELL_NO_FRAME
-                && !(gSearchCurrentCell->m_flags & 0x80)) {
-                gSearchTerrain = -1;
+                && !(gSearchCurrentCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)) {
+                gSearchTerrain = TERRAIN_INVALID;
                 goto storeDirection;
             }
         } else if ((1 << gSearchDirection) & SEARCH_DIRECTION_OBJECT_MASK) {
             if (gSearchNextCell->m_objectIndex != MAP_CELL_NO_FRAME
-                && !(gSearchNextCell->m_flags & 0x80)) {
+                && !(gSearchNextCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)) {
                 if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
                     gSearchTriggerType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     if (gSearchTriggerType != MAP_OBJECT_MONSTER
@@ -424,11 +424,11 @@ void searchArray::TestPossibleDirections(
                         && gSearchTriggerType != MAP_OBJECT_STATUE
                         && gSearchTriggerType != MAP_OBJECT_WHIRLPOOL
                         && gSearchTriggerType != MAP_OBJECT_WELL) {
-                        gSearchTerrain = -1;
+                        gSearchTerrain = TERRAIN_INVALID;
                         goto storeDirection;
                     }
                 } else {
-                    gSearchTerrain = -1;
+                    gSearchTerrain = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             }

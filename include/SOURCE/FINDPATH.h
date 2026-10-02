@@ -5,16 +5,21 @@
 
 // FindCombatPath and combatManager::GetClosestArmy start their best
 // QuickDistance at 640 (Buka FINDPATH.cpp INITIAL_BEST_DISTANCE).
+// clang-format off
 H1_ENUM_CONST_BEGIN(FindPathDistanceConstant)
-DISTANCE_MINOR_DIVISOR = 2,
-    FINDPATH_INITIAL_BEST_DISTANCE = 640 H1_ENUM_CONST_END(FindPathDistanceConstant)
+    DISTANCE_MINOR_DIVISOR = 2,
+    FINDPATH_INITIAL_BEST_DISTANCE = 640
+H1_ENUM_CONST_END(FindPathDistanceConstant)
 
-        H1_ENUM_CONST_BEGIN(FindPathTerrainConstant) FINDPATH_TERRAIN_COUNT = 7,
-    FINDPATH_STEP_COST_COUNT = 2, FINDPATH_WATER_TERRAIN = 1,
-    FINDPATH_WATER_MODE = 1 H1_ENUM_CONST_END(FindPathTerrainConstant)
+H1_ENUM_CONST_BEGIN(FindPathTerrainConstant)
+    FINDPATH_TERRAIN_COUNT = 7,
+    FINDPATH_STEP_COST_COUNT = 2,
+    FINDPATH_WATER_TERRAIN = 1,
+    FINDPATH_WATER_MODE = 1
+H1_ENUM_CONST_END(FindPathTerrainConstant)
+// clang-format on
 
-        int
-        CalcTerrainCost(int, int, int, int);
+int CalcTerrainCost(int, int, int, int);
 short TerrainStepCost(signed char, char);
 // FindNearestObject seeds this word limit; PushPoint marks costlier nodes.
 extern short giCurTempMobility;
