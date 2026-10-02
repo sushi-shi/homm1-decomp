@@ -10,44 +10,30 @@
 #include <stdio.h>
 
 H1_ENUM_CONST_BEGIN(SoundManagerConstant)
-    MUSIC_TRACK_COUNT = 60,
-    MUSIC_POSITION_TRACK_END = 7,
-    MUSIC_POSITION_TRACK_1 = 47,
-    MUSIC_POSITION_TRACK_2 = 48,
-    MUSIC_POSITION_TRACK_3 = 49,
-    MUSIC_FADE_HOLD_LAST = 10,
-    MUSIC_FADE_TOTAL_STEPS = 11,
-    MUSIC_FADE_RISE_STEPS = 6,
-    MUSIC_FADE_STEP_TICKS = 60,
-    SAMPLE_VOLUME_MAX = 64,
-    MIDI_VOLUME_MAX = 127,
-    CD_VOLUME_SCALE_DIVISOR = 640,
-    SOUND_OPERATION_VOLUME = 1,
-    SOUND_OPERATION_START = 5,
-    SOUND_OPERATION_EFFECT_VOLUME = 100,
-    SOUND_OPERATION_MUSIC_VOLUME = 101,
-    MUSIC_STREAM_BUFFER_SIZE = 0x4000,
+MUSIC_TRACK_COUNT = 60,
+    MUSIC_POSITION_TRACK_END = 7, MUSIC_POSITION_TRACK_1 = 47, MUSIC_POSITION_TRACK_2 = 48,
+    MUSIC_POSITION_TRACK_3 = 49, MUSIC_FADE_HOLD_LAST = 10, MUSIC_FADE_TOTAL_STEPS = 11,
+    MUSIC_FADE_RISE_STEPS = 6, MUSIC_FADE_STEP_TICKS = 60, SAMPLE_VOLUME_MAX = 64,
+    MIDI_VOLUME_MAX = 127, CD_VOLUME_SCALE_DIVISOR = 640, SOUND_OPERATION_VOLUME = 1,
+    SOUND_OPERATION_START = 5, SOUND_OPERATION_EFFECT_VOLUME = 100,
+    SOUND_OPERATION_MUSIC_VOLUME = 101, MUSIC_STREAM_BUFFER_SIZE = 0x4000,
     MUSIC_STREAM_RATE = 22050,
-    SAMPLE_STATUS_PLAYING = 4
-H1_ENUM_CONST_END(SoundManagerConstant)
+    SAMPLE_STATUS_PLAYING = 4 H1_ENUM_CONST_END(SoundManagerConstant)
 
-H1_ENUM_CONST_BEGIN(SoundStartupConstant)
-    SOUND_SAMPLE_HANDLE_COUNT = 15,
-    SOUND_MANAGER_PRIORITY = -1,
-    SOUND_DEFAULT_SAMPLE_BITS = 8,
-    SOUND_DEFAULT_SAMPLE_CHANNELS = 1
-H1_ENUM_CONST_END(SoundStartupConstant)
+        H1_ENUM_CONST_BEGIN(SoundStartupConstant) SOUND_SAMPLE_HANDLE_COUNT = 15,
+    SOUND_MANAGER_PRIORITY = -1, SOUND_DEFAULT_SAMPLE_BITS = 8,
+    SOUND_DEFAULT_SAMPLE_CHANNELS = 1 H1_ENUM_CONST_END(SoundStartupConstant)
 
-// gConfig.musicSource ("Sound Quality"; musicQualityText "8 Bit Mono",
-// "8 Bit Stereo", "CD Stereo"): PlayMusic streams heroes%02d.82m for mono and
-// .82s for stereo; CD plays the disc (m_cdReady) and otherwise streams .62s.
-H1_ENUM_BEGIN(SoundMusicSource)
+    // gConfig.musicSource ("Sound Quality"; musicQualityText "8 Bit Mono",
+    // "8 Bit Stereo", "CD Stereo"): PlayMusic streams heroes%02d.82m for mono and
+    // .82s for stereo; CD plays the disc (m_cdReady) and otherwise streams .62s.
+    H1_ENUM_BEGIN(SoundMusicSource)
     SOUND_MUSIC_SOURCE_DIGITAL = 0,
     SOUND_MUSIC_SOURCE_DIGITAL_STEREO = 1,
     SOUND_MUSIC_SOURCE_CD = 2
 H1_ENUM_END(SoundMusicSource)
 
-// clang-format off
+    // clang-format off
 // Logical music tracks for SwitchAmbientMusic/PlayAmbientMusic (CDPlay maps
 // them to disc tracks). 0..6 are the TerrainType themes and the town themes
 // start at TOWN_THEME_MUSIC_BASE; the rest are named by the call sites that
@@ -87,11 +73,14 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_ULTIMATE_ARTIFACT = 0x2e,
     MUSIC_TRACK_MAIN_MENU = 0x30,
     MUSIC_TRACK_AI_TURN = 0x31,
+    // game::NewDay's new-week and new-month announcements.
+    MUSIC_TRACK_NEW_WEEK = 0x32,
+    MUSIC_TRACK_NEW_MONTH = 0x33,
     MUSIC_TRACK_LEVEL_UP = 0x34,
     MUSIC_TRACK_BATTLE_4 = 0x35,
     MUSIC_TRACK_CONGRATULATIONS = 0x36
 H1_ENUM_END(MusicTrack)
-// clang-format on
+    // clang-format on
 
 // forward declarations:
 class sample;

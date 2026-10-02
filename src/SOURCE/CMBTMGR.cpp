@@ -39,7 +39,7 @@ combatManager::combatManager(void) {
     m_gridUpdateRow = 0;
     m_currentCommand = COMBAT_MESSAGE_COMMAND_DEFAULT;
     m_unknown6e8 = 0;
-    m_currentSpeed = 4;
+    m_currentSpeed = CREATURE_SPEED_BLAZING;
     m_savedBorder = NULL;
     m_heroType[COMBAT_DEFENDER_SIDE] = m_heroType[COMBAT_ATTACKER_SIDE] =
         m_catapultFrame[COMBAT_DEFENDER_SIDE] = m_catapultFrame[COMBAT_ATTACKER_SIDE] =
@@ -453,7 +453,7 @@ void combatManager::GenerateMap(void) {
         }
     }
     m_currentSide = COMBAT_DEFENDER_SIDE;
-    m_currentSpeed = 4;
+    m_currentSpeed = CREATURE_SPEED_BLAZING;
     GetNextArmy(0);
     m_gridUpdateRow = 0;
     SRand(giSeed);
@@ -802,7 +802,7 @@ signed char combatManager::GetNextArmy(int checkMorale) {
         if (iSpeed) {
             m_currentSpeed--;
             if (!m_currentSpeed)
-                m_currentSpeed = 4;
+                m_currentSpeed = CREATURE_SPEED_BLAZING;
         }
     }
     GetControl();
@@ -1256,7 +1256,7 @@ void combatManager::KeepAttack(void) {
     delete behind;
     mod = 2;
     if (m_heroes[COMBAT_DEFENDER_SIDE])
-        mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[0];
+        mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[HERO_PRIMARY_ATTACK];
     if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
         mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
     mod -= -(-target->m_stats.defense);
