@@ -102,13 +102,13 @@ palette *resourceManager::GetPalette(char *name)
 VA(0x00475a90, 0x96)
 bitmap *resourceManager::GetBitmap(char *name)
 {
-    short fileId = MakeId(name);
-    resource *resourceEntry = Query(fileId);
+    short id = MakeId(name);
+    resource *resourceEntry = Query(id);
     if (resourceEntry != 0) {
         resourceEntry->m_refCount++;
         return static_cast<bitmap *>(resourceEntry);
     } else {
-        resourceEntry = new bitmap(fileId);
+        resourceEntry = new bitmap(id);
         AddResource(resourceEntry);
         return static_cast<bitmap *>(resourceEntry);
     }

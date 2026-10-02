@@ -36,17 +36,17 @@ font::~font(void)
 VA(0x0047b3f0, 0xd1)
 void font::DrawString(char *text, short x, short y, short color)
 {
-    IconEntry *glyphs = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    IconEntry *entries = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
     signed char glyph = 0;
-    short position = x;
+    short drawX = x;
     short index = 0;
     while (text[index] != 0) {
         glyph = text[index] - ' ';
         if (glyph < 0 || glyph > FONT_GLYPH_INDEX_LAST)
             glyph = FONT_GLYPH_INDEX_LAST;
         if (glyph != 0)
-            m_glyphIcon->FillToBuffer(position, y + m_headerWord, glyph, color, 0, 0);
-        position += glyphs[glyph].w + FONT_GLYPH_ADVANCE_SPACING;
+            m_glyphIcon->FillToBuffer(drawX, y + m_headerWord, glyph, color, 0, 0);
+        drawX += entries[glyph].w + FONT_GLYPH_ADVANCE_SPACING;
         index++;
     }
 }
