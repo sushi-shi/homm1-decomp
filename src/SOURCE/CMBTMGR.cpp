@@ -3,6 +3,38 @@
 #include <match.h>
 
 #include <H1/All.h>
+#include <H1/KB.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Battlefield backdrops (0x00490db0), ground tiles (0x00491058) and
+// obstacle icons (0x00491078) per combat terrain.
+extern char* cCombatBkgNames[];
+extern char* cCombatGroundNames[];
+extern char* cCombatObstacleNames[];
+
+// Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
+VA(0x0044b440, 0x1b8)
+combatManager::combatManager(void)
+{
+    m_unknown25e = 0;
+    m_unknown6f9 = -1;
+    m_currentSide = 0;
+    m_limitCreatureHex = 0;
+    m_limitCreature = 0;
+    m_unknown6c0 = 1;
+    m_unknown25c = 0;
+    m_currentCommand = 0;
+    m_unknown6e8 = 0;
+    m_currentSpeed = 4;
+    m_savedBorder = 0;
+    m_unknown6d5 = m_unknown6d7 = m_unknown6c5 = m_unknown6c7 = m_wallFrame = m_wallDamage = -1;
+    m_unknown6d9 = m_unknown6db = 0;
+    m_castleSide[0] = m_castleSide[1] = 0;
+    m_unknown72f = 0;
+}
 
 // donor PoL RVA 0x0008ff0a; preferred Buka symbol ?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
@@ -50,11 +82,237 @@ short combatManager::Open(short) { return 0; }
 VA(0x0044bf19, 0x1ea)
 void combatManager::Close(void) {}
 
-// donor PoL RVA 0x00092652; preferred Buka symbol ?FreeArmies@combatManager@@QAEXXZ
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.478232;margin=0.494777;shape=0.264;size=0.859;calls=1.000;alternate=pol20:void combatManager::FreeArmies(void)@0x00092652
+// Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
+// side's army group; a dead stack empties its slot.
+VA(0x0044c103, 0x161)
+void combatManager::UpdateArmyGroup(signed char side)
+{
+    short i;
+    short j;
+
+    for (i = 0; i < m_numArmies[side]; i++) {
+        for (j = 0; j < 5; j++) {
+            if (m_armyGroups[side]->m_creatureTypes[j] == m_armies[side][i].m_creatureType)
+                break;
+        }
+        if (j < 5) {
+            if (m_armies[side][i].m_stats.attributes & 0x10) {
+                m_armyGroups[side]->m_creatureTypes[j] = -1;
+                m_armyGroups[side]->m_creatureCounts[j] = 0;
+            } else {
+                m_armyGroups[side]->m_creatureCounts[j] = m_armies[side][i].m_quantity;
+            }
+        }
+    }
+}
+
+// Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
+// one) forces the graveyard field.
+VA(0x0044ca22, 0x18e)
+char* combatManager::GetBackgroundName(void)
+{
+    if ((m_battlefieldCell->m_triggerType & 0x7f) == 0xc
+        || ((m_battlefieldCell->m_triggerType & 0x7f) == 0x3d
+            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & 0x7f) == 0xc)) {
+        m_terrainType = 6;
+        return cCombatBkgNames[10];
+    }
+    switch (m_terrainType) {
+        case 0:
+            return cCombatBkgNames[9];
+        case 3:
+            return cCombatBkgNames[4];
+        case 4:
+            return cCombatBkgNames[5];
+        case 5:
+            return cCombatBkgNames[6];
+        case 1:
+            if (MoreTreesNear())
+                return cCombatBkgNames[0];
+            else
+                return cCombatBkgNames[1];
+        case 2:
+            if (MoreTreesNear())
+                return cCombatBkgNames[2];
+            else
+                return cCombatBkgNames[3];
+        case 6:
+            if (MoreTreesNear())
+                return cCombatBkgNames[7];
+            else
+                return cCombatBkgNames[8];
+    }
+    return cCombatBkgNames[0];
+}
+
+// Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
+// within two cells of the battle.
+VA(0x0044cbb0, 0x1e7)
+signed char combatManager::MoreTreesNear(void)
+{
+    int yPos;
+    int xPos;
+    short numTrees;
+    short step;
+    short homeX;
+    signed char typeTable[3][8];
+    short numMountains;
+    mapCell* nearCell;
+    short homeY;
+    unsigned char nearbyTileset;
+    short k;
+
+    memset(typeTable, -1, sizeof(typeTable));
+    homeX = m_combatX;
+    homeY = m_combatY;
+    for (step = 0; step < 3; step++) {
+        for (k = 0; k < 8; k++) {
+            xPos = normalDirTable[k].x * step + homeX;
+            yPos = normalDirTable[k].y * step + homeY;
+            if (xPos >= 0 && xPos < 72 && yPos >= 0 && yPos < 72) {
+                nearCell = gpAdvManager->GetCell(xPos, yPos);
+                nearbyTileset = nearCell->m_objectTileset & 0xf;
+                if (nearbyTileset == 8)
+                    typeTable[step][k] = 0;
+                else if (nearbyTileset == 9)
+                    typeTable[step][k] = 1;
+            }
+        }
+    }
+    numTrees = 0;
+    numMountains = 0;
+    for (step = 0; step < 3; step++) {
+        for (k = 0; k < 8; k++) {
+            if (typeTable[step][k] == 0)
+                numMountains++;
+            if (typeTable[step][k] == 1)
+                numTrees++;
+        }
+    }
+    if (numTrees > numMountains)
+        return 1;
+    return 0;
+}
+
+// Buka CMBTMGR.cpp LoadIcons.
+VA(0x0044cd97, 0x1d7)
+void combatManager::LoadIcons(void)
+{
+    int i;
+
+    for (i = 0; i < 9; i++)
+        m_combatIcons[i] = 0;
+    m_combatIcons[8] = gpResourceManager->GetIcon("spells.icn");
+    m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
+    m_combatIcons[0] = gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
+    m_combatIcons[2] = gpResourceManager->GetIcon(cCombatObstacleNames[m_terrainType]);
+    m_combatIcons[1] = gpResourceManager->GetIcon("textbar.icn");
+    m_combatIcons[4] = gpResourceManager->GetIcon("tent.icn");
+    m_combatIcons[6] = gpResourceManager->GetIcon("cloud.icn");
+    if (m_castleSide[1] || m_castleSide[0]) {
+        m_combatIcons[3] = gpResourceManager->GetIcon("catapult.icn");
+        sprintf(gText, "castle%02d.icn", m_combatTowns[(signed char)(m_castleSide[1] == 1)]->m_type);
+        m_combatIcons[5] = gpResourceManager->GetIcon(gText);
+        sprintf(gText, "keep%02d.icn", m_combatTowns[0]->m_type);
+        m_combatIcons[7] = gpResourceManager->GetIcon(gText);
+    }
+}
+
+// Buka CMBTMGR.cpp FreeIcons.
+VA(0x0044cf6e, 0x7b)
+void combatManager::FreeIcons(void)
+{
+    short i;
+
+    for (i = 0; i < 9; i++) {
+        if (m_combatIcons[i])
+            gpResourceManager->Dispose(m_combatIcons[i]);
+    }
+    gpResourceManager->Dispose(m_backgroundBitmap);
+}
+
+// Buka CMBTMGR.cpp LoadArmies; HoMM1 places stacks itself after Init.
+VA(0x0044cfe9, 0x287)
+void combatManager::LoadArmies(void)
+{
+    short j;
+    short i;
+
+    m_numArmies[1] = m_numArmies[0] = 0;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 2; j++) {
+            m_armies[j][i].m_quantity = 0;
+            m_armies[j][i].m_creatureType = -1;
+        }
+    }
+    for (j = 0; j < 2; j++) {
+        for (i = 0; i < 5; i++)
+            m_armies[j][i].InitClean();
+    }
+    for (i = 0; i < 5; i++) {
+        if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
+            m_armies[1][m_numArmies[1]].Init(m_armyGroups[1]->m_creatureTypes[i],
+                                             m_armyGroups[1]->m_creatureCounts[i], 1, m_numArmies[1]);
+            m_armies[1][m_numArmies[1]].LoadResources();
+            m_numArmies[1]++;
+        }
+        if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
+            m_armies[0][m_numArmies[0]].Init(m_armyGroups[0]->m_creatureTypes[i],
+                                             m_armyGroups[0]->m_creatureCounts[i], 0, m_numArmies[0]);
+            m_armies[0][m_numArmies[0]].LoadResources();
+            m_numArmies[0]++;
+        }
+    }
+}
+
+// Buka CMBTMGR.cpp FreeArmies; HoMM1 frees the defenders first.
 VA(0x0044d270, 0xdc)
-void combatManager::FreeArmies(void) {}
+void combatManager::FreeArmies(void)
+{
+    short i;
+
+    gpSoundManager->StopAllSamples();
+    for (i = 0; i < m_numArmies[1]; i++)
+        m_armies[1][i].FreeResources();
+    for (i = 0; i < m_numArmies[0]; i++)
+        m_armies[0][i].FreeResources();
+    if (gCurLoadedSpellIcon)
+        gpResourceManager->Dispose(gCurLoadedSpellIcon);
+    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellEffect = 0;
+}
+
+// HoMM1 retail 0x0044d34c: no callers and an empty body; HoMM2's combat log
+// for unshown battles is the nearest one-argument fit.
+VA(0x0044d34c, 0x18)
+void combatManager::NoShowCombatLog(char*)
+{
+}
+
+// Buka CMBTMGR.cpp GetGridIndex over HoMM1's 9x5 grid: rows 80 pixels high
+// from y 60, odd rows indented by 66 and even rows by 27, hexes 78 wide.
+VA(0x0044d364, 0xbe)
+short combatManager::GetGridIndex(short x, short y)
+{
+    y -= 60;
+    y /= 80;
+    if (y & 1) {
+        if (x < 66) {
+            x = -1;
+        } else {
+            x -= 66;
+            x /= 78;
+        }
+    } else {
+        x -= 27;
+        x /= 78;
+    }
+    x++;
+    if (y == 5)
+        return -1;
+    else
+        return y * 9 + x;
+}
 
 // donor PoL RVA 0x0009290f; preferred Buka symbol ?CheckApplyGoodMorale@combatManager@@QAEXHH@Z
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
@@ -74,8 +332,79 @@ int combatManager::CheckApplyBadMorale(int, int) { return 0; }
 VA(0x0044d7c1, 0x209)
 signed char combatManager::GetNextArmy(int) { return 0; }
 
+// Buka CMBTMGR.cpp IsWinner: the other side surrendered, retreated or has
+// no live stack left.
+VA(0x0044d9ca, 0xd3)
+signed char combatManager::IsWinner(signed char side)
+{
+    signed char isWinner;
+    short i;
+
+    if (m_sideDefeated[1 - side])
+        return 1;
+    if (m_sideRetreated[1 - side])
+        return 1;
+    side ^= 1;
+    isWinner = 1;
+    for (i = 0; i < m_numArmies[side]; i++) {
+        if (!(m_armies[side][i].m_stats.attributes & 0x10))
+            isWinner = 0;
+    }
+    return isWinner;
+}
+
+// Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
+// losses, plus 500 for a defeated hero.
+VA(0x0044f3cb, 0x114)
+int combatManager::ExperienceValueOfStack(signed char side)
+{
+    int i;
+    int value;
+
+    value = 0;
+    for (i = 0; i < 5; i++) {
+        if (m_armies[side][i].m_creatureType != -1)
+            value += (m_armies[side][i].m_initialQuantity - m_armies[side][i].m_quantity)
+                     * gMonsterDatabase[m_armies[side][i].m_creatureType].fightValue;
+    }
+    if (m_heroes[side])
+        value += 500;
+    return value;
+}
+
+// Buka CMBTMGR.cpp ResetHitByCreature.
+VA(0x0044f4df, 0x78)
+void combatManager::ResetHitByCreature(void)
+{
+    int i;
+    int j;
+
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 5; j++)
+            m_armies[i][j].m_unknown34 = 0;
+    }
+}
+
 // HoMM1's combat grid is nine columns by five rows.
 VA(0x0044f557, 0x30)
 int ValidHex(int hex) {
     return hex >= 0 && hex <= 44;
+}
+
+// HoMM1 SaveCombatBorder: keep the twenty screen rows under the field.
+VA(0x0044f587, 0x64)
+void combatManager::SaveCombatBorder(void)
+{
+    if (!m_savedBorder)
+        m_savedBorder = (char*)malloc(0x3200);
+    memcpy(m_savedBorder, gpWindowManager->m_screen->m_pixels + 0x47e00, 0x3200);
+}
+
+// HoMM1 DrawCombatBorder: put the saved rows back.
+VA(0x0044f5eb, 0x53)
+void combatManager::DrawCombatBorder(void)
+{
+    if (!m_savedBorder)
+        return;
+    memcpy(gpWindowManager->m_screen->m_pixels + 0x47e00, m_savedBorder, 0x3200);
 }

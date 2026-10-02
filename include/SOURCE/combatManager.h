@@ -64,20 +64,28 @@ public:
     char m_unknown30[0x10];
     hexcell m_hexCells[COMBAT_HEX_COUNT];
     short m_unknown25c;
-    char m_unknown25e[2];
+    signed char m_unknown25e;
+    // LoadIcons indexes the ground and obstacle tables by this terrain;
+    // GetBackgroundName forces 6 for a graveyard field.
+    signed char m_terrainType;
     signed char m_unknown260;
     char m_unknown261[4];
-    // hexcell draws ground (3 + index), obstacles (5), towers (8) and walls (9).
-    class icon* m_combatIcons[12];
+    char m_unknown265[8];
+    // SaveCombatBorder's copy of the twenty screen rows below the field.
+    char* m_savedBorder;
+    // LoadIcons: ground, text bar, obstacles, catapult, tent, castle,
+    // cloud, keep and spell icons; hexcell draws ground (index), obstacles
+    // (2), towers (5) and walls (6).
+    class icon* m_combatIcons[9];
     // FlyTo saves the screen here and restores the flight path from it.
     class bitmap* m_backgroundBuffer;
     signed char m_backgroundDrawn;
-    char m_unknown29a[4];
-    // DoVictory: an attacker winning here earns the castle bonus.
-    class town *m_combatTown;
-    char m_unknown2a2[4];
+    // GetBackgroundName reads the trigger of the cell the battle is on.
+    class mapCell* m_battlefieldCell;
+    // DoVictory: an attacker winning in [0] earns the castle bonus.
+    class town *m_combatTowns[2];
     class hero *m_heroes[2];
-    char m_unknown2ae[8];
+    class armyGroup *m_armyGroups[2];
     // Set by a surrender (ProcessNextAction).
     signed char m_sideDefeated[2];
     char m_unknown2b8[2];
@@ -114,7 +122,12 @@ public:
     signed char m_unknown6e3;
     short m_wallFrame;
     short m_wallDamage;
-    char m_unknown6e8[0x13];
+    signed char m_unknown6e8;
+    char m_unknown6e9[4];
+    // LoadIcons loads the battlefield backdrop GetBackgroundName names.
+    class bitmap* m_backgroundBitmap;
+    char m_unknown6f1[8];
+    short m_unknown6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     short m_messageTypeMask;
     signed char m_sideRetreated[2];
@@ -123,10 +136,12 @@ public:
     // CastMassSpell clears both before the mass animation.
     int m_unknown727;
     int m_unknown72b;
-    char m_unknown72f[4];
+    int m_unknown72f;
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
-    char m_unknown7ab[8];
+    // MoreTreesNear surveys the map around this adventure cell.
+    int m_combatX;
+    int m_combatY;
     // SetCombatDirections: attack direction per 15-degree mouse sector.
     signed char m_directionMap[24];
     signed char m_mouseDirection;
@@ -255,10 +270,11 @@ public:
     void SetupCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int);
     void InitNonVisualVars(void);
     void SetupAdjacencyArray(void);
-    void UpdateArmyGroup(int);
+    // HoMM1 retail 0x0044c103: byte side (ret 4).
+    void UpdateArmyGroup(signed char);
     void GenerateMap(void);
     char * GetBackgroundName(void);
-    int MoreTreesNear(void);
+    signed char MoreTreesNear(void);
     void LoadIcons(void);
     void FreeIcons(void);
     void LoadArmies(void);
@@ -273,7 +289,8 @@ public:
     void CatAttack(signed char);
     // HoMM1 has a single keep (retail 0x0044e840, plain ret).
     void KeepAttack(void);
-    int ExperienceValueOfStack(int);
+    // HoMM1 retail 0x0044f3cb: byte side (ret 4).
+    int ExperienceValueOfStack(signed char);
     void ResetHitByCreature(void);
     void SaveCombatBorder(void);
     void DrawCombatBorder(void);
