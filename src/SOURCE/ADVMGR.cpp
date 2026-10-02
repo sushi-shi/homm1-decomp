@@ -267,6 +267,22 @@ H1_ENUM_CONST_BEGIN(AdventureAnimationPhaseIndex)
     ANIMATION_PHASE_COLUMN_3_INITIAL = 5
 H1_ENUM_CONST_END(AdventureAnimationPhaseIndex)
 
+// ViewPuzzle (Buka 2.1 AdventurePuzzleViewConstant names): puzzle.icn has
+// one piece per obelisk bit (playerData::m_obelisksVisited); the window sits
+// beside the viewport; the view centre is nudged off the artifact by
+// coordinate residues mod 3 (and mod 2), then the uncovered pieces fizzle
+// in over 220 ms.
+H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
+    PUZZLE_PIECE_COUNT = 48,
+    PUZZLE_WINDOW_X = 480,
+    PUZZLE_WINDOW_Y = 16,
+    PUZZLE_ALIGNMENT_DIVISOR = 3,
+    PUZZLE_Y_ADJUST_X_FACTOR = 2,
+    PUZZLE_Y_ADJUST_Y_FACTOR = 5,
+    PUZZLE_PARITY_DIVISOR = 2,
+    PUZZLE_FIZZLE_TIME = 220
+H1_ENUM_CONST_END(AdventurePuzzleViewConstant)
+
 // Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
 // the network-turn music hold, the quick-view "none shown" origin, the walk
 // sample set and volume, the looping-sample budget per high-memory unit and
@@ -4048,11 +4064,11 @@ void advManager::ViewPuzzle(void) {
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_PUZZLE);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     puzzlePieces = gpResourceManager->GetIcon("puzzle.icn");
-    for (j = 0; j < 48; j++)
+    for (j = 0; j < PUZZLE_PIECE_COUNT; j++)
         puzzlePieces->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, 0);
     gpWindowManager->UpdateScreenRegion(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
     gpWindowManager->SaveFizzleSource(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
-    pWin = new heroWindow(480, 16, "viewpuzl.bin");
+    pWin = new heroWindow(PUZZLE_WINDOW_X, PUZZLE_WINDOW_Y, "viewpuzl.bin");
     if (!pWin)
         MemError();
     gpWindowManager->AddWindow(pWin, WINDOW_Z_ORDER_APPEND, 1);
@@ -4061,14 +4077,16 @@ void advManager::ViewPuzzle(void) {
     puzzleY = gpGame->m_ultimateArtifactY - ADVMGR_VIEW_CENTER;
     int biasX = 0;
     int biasY = 0;
-    biasX = (gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % 3 - 1;
-    biasY = (gpGame->m_ultimateArtifactY * 5 + gpGame->m_ultimateArtifactX * 2) % 3 - 1;
-    if ((gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % 3 == 1) {
+    biasX = (gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % PUZZLE_ALIGNMENT_DIVISOR - 1;
+    biasY = (gpGame->m_ultimateArtifactY * PUZZLE_Y_ADJUST_Y_FACTOR + gpGame->m_ultimateArtifactX * PUZZLE_Y_ADJUST_X_FACTOR)
+                % PUZZLE_ALIGNMENT_DIVISOR
+            - 1;
+    if ((gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % PUZZLE_ALIGNMENT_DIVISOR == 1) {
         if (biasX > 0)
             biasX++;
         else if (biasX < 0)
             biasX--;
-    } else if ((gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % 2 == 1) {
+    } else if ((gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % PUZZLE_PARITY_DIVISOR == 1) {
         if (biasY > 0)
             biasY++;
         else if (biasY < 0)
@@ -4078,15 +4096,15 @@ void advManager::ViewPuzzle(void) {
     puzzleY += biasY;
     PuzzleDraw(puzzleX, puzzleY, gpGame->m_ultimateArtifactX, gpGame->m_ultimateArtifactY);
 
-    for (j = 0; j < 48; j++) {
+    for (j = 0; j < PUZZLE_PIECE_COUNT; j++) {
         if (!BitTest(gpCurPlayer->m_obelisksVisited, j)) {
             puzzlePieces->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, 0);
             visibleCount++;
         }
     }
-    if (visibleCount != 48) {
+    if (visibleCount != PUZZLE_PIECE_COUNT) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->FizzleForward(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, 220);
+        gpWindowManager->FizzleForward(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, PUZZLE_FIZZLE_TIME);
         gpMouseManager->ReallyShowPointer();
     } else {
         gpWindowManager->ReleaseFizzleSource();
@@ -4113,16 +4131,16 @@ void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
 
     for (y = 0; y < ADVMGR_VIEW_CELL_COUNT; y++) {
         for (x = 0; x < ADVMGR_VIEW_CELL_COUNT; x++) {
-            DrawCell(x + left, top + y, x, y, 1, 1, 0);
-            screenX = x * 32;
-            screenY = y * 32;
+            DrawCell(x + left, top + y, x, y, ADVMGR_DRAW_GROUND, 1, 0);
+            screenX = x * CELL_PIXELS;
+            screenY = y * CELL_PIXELS;
             cell = GetCell(left + x, top + y);
             if (!(cell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) && cell->m_objectIndex != MAP_CELL_NO_FRAME) {
                 tileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
                 switch (tileset) {
-                case 4:
-                case 8:
-                case 9:
+                case TILESET_OBJ32_04:
+                case TILESET_MTN32:
+                case TILESET_TREE32:
                     IconToBitmap(
                         m_objectIcons[tileset],
                         gpWindowManager->m_screen,
@@ -4139,9 +4157,9 @@ void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
             if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
                 tileset = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
                 switch (tileset) {
-                case 4:
-                case 8:
-                case 9:
+                case TILESET_OBJ32_04:
+                case TILESET_MTN32:
+                case TILESET_TREE32:
                     IconToBitmap(
                         m_objectIcons[tileset],
                         gpWindowManager->m_screen,
@@ -4156,7 +4174,8 @@ void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
                 }
             }
             if (left + x == markX && top + y == markY)
-                IconToBitmap(m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, screenX, screenY + 2, 13, 0);
+                IconToBitmap(m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, screenX, screenY + ROUTE_DRAW_Y_OFFSET,
+                             ROUTE_CELL_DESTINATION - 1, 0);
         }
     }
     DrawAdventureBorder();
