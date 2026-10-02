@@ -566,7 +566,7 @@ int InterpretCommandLine(void) {
         }
     }
 
-    sprintf(cAggPathName, "%s%s", ".\\DATA\\", "heroes.agg");
+    sprintf(cAggPathName, "%s%s", gcDataPath, "heroes.agg");
     DEFAULT_AGGREGATE_NAME = cAggPathName;
     giFrameStep = 6;
     for (i = 0; i < 4; i++) {
