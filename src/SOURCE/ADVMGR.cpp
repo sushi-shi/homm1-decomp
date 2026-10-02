@@ -66,7 +66,15 @@ H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
     LOCATOR_VISIBLE_COUNT = 4,
     LOCATOR_PAGE_THRESHOLD = 5,
     LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
-    LOCATOR_SCROLL_NO_PAGES_Y = 232
+    LOCATOR_SCROLL_NO_PAGES_Y = 232,
+    // The knobs slide from SCROLL_BASE_Y over the hero (73) or town (74)
+    // span; a click on the track maps the 92-pixel strip from 194 to a page
+    // (Buka 2.1 AdventureLocatorConstant names).
+    LOCATOR_SCROLL_BASE_Y = 195,
+    LOCATOR_HERO_SCROLL_SPAN = 73,
+    LOCATOR_TOWN_SCROLL_SPAN = 74,
+    LOCATOR_SCROLL_MOUSE_BASE_Y = LOCATOR_SCROLL_BASE_Y - 1,
+    LOCATOR_SCROLL_MOUSE_SPAN = 92
 H1_ENUM_CONST_END(AdventureLocatorConstant)
 
 // adv_wind.bin hero locator rows: seven widgets per slot from
@@ -288,6 +296,32 @@ H1_ENUM_CONST_BEGIN(ViewWorldConstant)
     VIEW_WORLD_TOWN_FLAG_RIGHT = 3,
     VIEW_WORLD_RESOURCE_X_SHIFT = 3
 H1_ENUM_CONST_END(ViewWorldConstant)
+
+// TeleportTo's fizzle (Buka 2.1 AdventureTeleportConstant names; the
+// computed time is not passed on - FizzleForward gets -1).
+H1_ENUM_CONST_BEGIN(AdventureTeleportConstant)
+    TELEPORT_FIZZLE_TIME = 128,
+    TELEPORT_REMOTE_FIZZLE_ADJUSTMENT = 64
+H1_ENUM_CONST_END(AdventureTeleportConstant)
+
+// SummonBoat (Buka 2.1 AdventureSummonBoatConstant names, HoMM1 values): a
+// boat whose heroId has OCCUPIED_FLAG carries that hero; the old berth is
+// restored with mode 5; the fizzle boxes around the old berth (clamped to
+// the viewport's inner box) and at the hero.
+H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
+    SUMMON_OCCUPIED_FLAG = 0x80,
+    SUMMON_RESTORE_MODE = 5,
+    SUMMON_SCREEN_MARGIN = 16,
+    SUMMON_SCREEN_LIMIT = 464,
+    SUMMON_FIZZLE_X_OFFSET = 32,
+    SUMMON_FIZZLE_Y_OFFSET = 16,
+    SUMMON_FIZZLE_WIDTH = 96,
+    SUMMON_FIZZLE_HEIGHT = 48,
+    SUMMON_TARGET_X = 176,
+    SUMMON_TARGET_Y = 192,
+    SUMMON_TARGET_WIDTH = 128,
+    SUMMON_TARGET_HEIGHT = 96
+H1_ENUM_CONST_END(AdventureSummonBoatConstant)
 
 // ViewPuzzle (Buka 2.1 AdventurePuzzleViewConstant names): puzzle.icn has
 // one piece per obelisk bit (playerData::m_obelisksVisited); the window sits
@@ -1460,9 +1494,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         break;
     case ADVENTURE_CONTROL_HERO_SCROLL:
         gpMouseManager->MouseCoords(curX, curY);
-        curY -= 194;
+        curY -= LOCATOR_SCROLL_MOUSE_BASE_Y;
         if (gpCurPlayer->m_heroCount > LOCATOR_VISIBLE_COUNT) {
-            iPage = curY / (92 / (gpCurPlayer->m_heroCount - (LOCATOR_VISIBLE_COUNT - 1)));
+            iPage = curY / (LOCATOR_SCROLL_MOUSE_SPAN / (gpCurPlayer->m_heroCount - (LOCATOR_VISIBLE_COUNT - 1)));
             if (iPage > gpCurPlayer->m_heroCount - LOCATOR_VISIBLE_COUNT)
                 iPage = gpCurPlayer->m_heroCount - LOCATOR_VISIBLE_COUNT;
         } else {
@@ -1476,9 +1510,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         break;
     case ADVENTURE_CONTROL_TOWN_SCROLL:
         gpMouseManager->MouseCoords(curX, curY);
-        curY -= 194;
+        curY -= LOCATOR_SCROLL_MOUSE_BASE_Y;
         if (gpCurPlayer->m_townCount > LOCATOR_VISIBLE_COUNT) {
-            iPage = curY / (92 / (gpCurPlayer->m_townCount - (LOCATOR_VISIBLE_COUNT - 1)));
+            iPage = curY / (LOCATOR_SCROLL_MOUSE_SPAN / (gpCurPlayer->m_townCount - (LOCATOR_VISIBLE_COUNT - 1)));
             if (iPage > gpCurPlayer->m_townCount - LOCATOR_VISIBLE_COUNT)
                 iPage = gpCurPlayer->m_townCount - LOCATOR_VISIBLE_COUNT;
         } else {
@@ -2123,7 +2157,7 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
 
     for (drawY = 1; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++) {
         PollSound();
-        if (m_cursorDirection > 4) {
+        if (m_cursorDirection > MAP_DIRECTION_SOUTH) {
             for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
                 DrawCell(originX + drawX, originY + drawY - 1, drawX, drawY - 1,
                          ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, forceDraw);
@@ -3990,15 +4024,15 @@ void advManager::DoHeroKnob(void) {
     message = gpInputManager->GetEvent();
     while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
-            if (message.y < offset + 195)
-                message.y = offset + 195;
-            if (message.y > offset + 195 + 73)
-                message.y = offset + 195 + 73;
+            if (message.y < offset + LOCATOR_SCROLL_BASE_Y)
+                message.y = offset + LOCATOR_SCROLL_BASE_Y;
+            if (message.y > offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN)
+                message.y = offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN;
             gpMouseManager->Main(message);
             m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (numHeroes > LOCATOR_VISIBLE_COUNT) {
-                pg = static_cast<short>((m_scrollLeftButton->m_y - 195) / scale);
+                pg = static_cast<short>((m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
                 if (prevPage != pg) {
                     gpCurPlayer->m_heroLocatorPage = pg;
                     if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
@@ -4042,15 +4076,15 @@ void advManager::DoTownKnob(void) {
     message = gpInputManager->GetEvent();
     while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
-            if (message.y < offset + 195)
-                message.y = offset + 195;
-            if (message.y > offset + 195 + 73)
-                message.y = offset + 195 + 73;
+            if (message.y < offset + LOCATOR_SCROLL_BASE_Y)
+                message.y = offset + LOCATOR_SCROLL_BASE_Y;
+            if (message.y > offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN)
+                message.y = offset + LOCATOR_SCROLL_BASE_Y + LOCATOR_HERO_SCROLL_SPAN;
             gpMouseManager->Main(message);
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (numHeroes > LOCATOR_VISIBLE_COUNT) {
-                pg = static_cast<short>((m_scrollRightButton->m_y - 195) / scale);
+                pg = static_cast<short>((m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
                 if (prevPage != pg) {
                     gpCurPlayer->m_townLocatorPage = pg;
                     if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
@@ -5439,9 +5473,9 @@ void advManager::TeleportTo(int x, int y, int) {
         gpWindowManager->SaveFizzleSource(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
         CompleteDraw(0);
         PollSound();
-        fizzle = 128;
+        fizzle = TELEPORT_FIZZLE_TIME;
         if (!gbHumanPlayer[giCurPlayer])
-            fizzle -= 64;
+            fizzle -= TELEPORT_REMOTE_FIZZLE_ADJUSTMENT;
         gpWindowManager->FizzleForward(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, -1);
         PollSound();
         gpMouseManager->ReallyShowPointer();
@@ -5577,14 +5611,14 @@ void advManager::SummonBoat(void) {
     if (foundCell) {
         heroNum = gpCurPlayer->CurrentHero();
         for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
-            if (gpGame->m_boatSlots[slotIndex] != -1 && gpGame->m_boats[slotIndex].heroId == (heroNum | 0x80)) {
+            if (gpGame->m_boatSlots[slotIndex] != -1 && gpGame->m_boats[slotIndex].heroId == (heroNum | SUMMON_OCCUPIED_FLAG)) {
                 boatFound = 1;
                 break;
             }
         }
         if (!boatFound) {
             for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
-                if (gpGame->m_boatSlots[slotIndex] != -1 && (gpGame->m_boats[slotIndex].heroId & 0x80)
+                if (gpGame->m_boatSlots[slotIndex] != -1 && (gpGame->m_boats[slotIndex].heroId & SUMMON_OCCUPIED_FLAG)
                     && gpGame->m_boats[slotIndex].owner == giCurPlayer) {
                     boatFound = 1;
                     break;
@@ -5594,21 +5628,21 @@ void advManager::SummonBoat(void) {
         if (boatFound) {
             thisBoat = &gpGame->m_boats[slotIndex];
             fromCell = GetCell(thisBoat->x, thisBoat->y);
-            gpGame->RestoreCell(thisBoat->x, thisBoat->y, thisBoat->savedTriggerType, thisBoat->savedEventData, NULL, 5);
+            gpGame->RestoreCell(thisBoat->x, thisBoat->y, thisBoat->savedTriggerType, thisBoat->savedEventData, NULL, SUMMON_RESTORE_MODE);
             if (thisBoat->x >= m_mapOriginX && thisBoat->x < m_mapOriginX + ADVMGR_VIEW_CELL_COUNT && thisBoat->y >= m_mapOriginY
                 && thisBoat->y < m_mapOriginY + ADVMGR_VIEW_CELL_COUNT) {
-                drawX = (thisBoat->x - m_mapOriginX) * 32 - 32;
-                if (drawX < 16)
-                    drawX = 16;
-                drawY = (thisBoat->y - m_mapOriginY) * 32 - 16;
-                if (drawY < 16)
-                    drawY = 16;
-                drawWidth = 96;
-                drawHeight = 48;
-                if (drawX + drawWidth >= 464)
-                    drawWidth = 464 - drawX;
-                if (drawY + drawHeight >= 464)
-                    drawHeight = 464 - drawY;
+                drawX = (thisBoat->x - m_mapOriginX) * CELL_PIXELS - SUMMON_FIZZLE_X_OFFSET;
+                if (drawX < SUMMON_SCREEN_MARGIN)
+                    drawX = SUMMON_SCREEN_MARGIN;
+                drawY = (thisBoat->y - m_mapOriginY) * CELL_PIXELS - SUMMON_FIZZLE_Y_OFFSET;
+                if (drawY < SUMMON_SCREEN_MARGIN)
+                    drawY = SUMMON_SCREEN_MARGIN;
+                drawWidth = SUMMON_FIZZLE_WIDTH;
+                drawHeight = SUMMON_FIZZLE_HEIGHT;
+                if (drawX + drawWidth >= SUMMON_SCREEN_LIMIT)
+                    drawWidth = SUMMON_SCREEN_LIMIT - drawX;
+                if (drawY + drawHeight >= SUMMON_SCREEN_LIMIT)
+                    drawHeight = SUMMON_SCREEN_LIMIT - drawY;
                 gpWindowManager->SaveFizzleSource(drawX, drawY, drawWidth, drawHeight);
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 gpWindowManager->FizzleForward(drawX, drawY, drawWidth, drawHeight, -1);
@@ -5621,7 +5655,7 @@ void advManager::SummonBoat(void) {
             pCell->m_objectMetadata = slotIndex;
             gpWindowManager->SaveFizzleSource(176, 192, 128, 96);
             CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-            gpWindowManager->FizzleForward(176, 192, 128, 96, -1);
+            gpWindowManager->FizzleForward(SUMMON_TARGET_X, SUMMON_TARGET_Y, SUMMON_TARGET_WIDTH, SUMMON_TARGET_HEIGHT, -1);
         }
     }
 
