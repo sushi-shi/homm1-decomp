@@ -297,6 +297,21 @@ H1_ENUM_CONST_BEGIN(ViewWorldConstant)
     VIEW_WORLD_RESOURCE_X_SHIFT = 3
 H1_ENUM_CONST_END(ViewWorldConstant)
 
+// The radar panel (Buka 2.1 AdventureScreenConstant/AdventureRadarConstant
+// names, HoMM1 values): 480..624 x 16..160, two pixels per map cell; trees
+// and mountains darken the terrain colour by 3 shades and the viewport box
+// is drawn in colour 0xbe.
+H1_ENUM_CONST_BEGIN(AdventureRadarConstant)
+    RADAR_LEFT = 480,
+    RADAR_RIGHT = 624,
+    RADAR_TOP = 16,
+    RADAR_BOTTOM = 160,
+    RADAR_SIZE = RADAR_RIGHT - RADAR_LEFT,
+    RADAR_CELL_PIXELS = 2,
+    RADAR_TERRAIN_SHADE = 3,
+    RADAR_VIEWPORT_COLOR = 0xbe
+H1_ENUM_CONST_END(AdventureRadarConstant)
+
 // TeleportTo's fizzle (Buka 2.1 AdventureTeleportConstant names; the
 // computed time is not passed on - FizzleForward gets -1).
 H1_ENUM_CONST_BEGIN(AdventureTeleportConstant)
@@ -1635,8 +1650,8 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         }
         DemobilizeCurrHero();
         gpMouseManager->MouseCoords(curX, curY);
-        curX = (curX - 480) / 2;
-        curY = (curY - 16) / 2;
+        curX = (curX - RADAR_LEFT) / RADAR_CELL_PIXELS;
+        curY = (curY - RADAR_TOP) / RADAR_CELL_PIXELS;
         m_mapOriginX = curX - ADVMGR_VIEW_CENTER;
         m_mapOriginY = curY - ADVMGR_VIEW_CENTER;
         if (m_mapOriginX < SCROLL_MIN_ORIGIN)
@@ -1662,17 +1677,17 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 inputMessage = gpInputManager->GetEvent();
             }
             if (mouseMsg.type == MESSAGE_MOUSE_MOVE) {
-                if (mouseMsg.x < 480)
-                    mouseMsg.x = 480;
-                if (mouseMsg.x >= 624)
-                    mouseMsg.x = 623;
-                if (mouseMsg.y < 16)
-                    mouseMsg.y = 16;
-                if (mouseMsg.y >= 160)
-                    mouseMsg.y = 159;
+                if (mouseMsg.x < RADAR_LEFT)
+                    mouseMsg.x = RADAR_LEFT;
+                if (mouseMsg.x >= RADAR_RIGHT)
+                    mouseMsg.x = RADAR_RIGHT - 1;
+                if (mouseMsg.y < RADAR_TOP)
+                    mouseMsg.y = RADAR_TOP;
+                if (mouseMsg.y >= RADAR_BOTTOM)
+                    mouseMsg.y = RADAR_BOTTOM - 1;
                 gpMouseManager->Main(mouseMsg);
-                curX = (mouseMsg.x - 480) / 2;
-                curY = (mouseMsg.y - 16) / 2;
+                curX = (mouseMsg.x - RADAR_LEFT) / RADAR_CELL_PIXELS;
+                curY = (mouseMsg.y - RADAR_TOP) / RADAR_CELL_PIXELS;
                 m_mapOriginX = curX - ADVMGR_VIEW_CENTER;
                 m_mapOriginY = curY - ADVMGR_VIEW_CENTER;
                 if (m_mapOriginX < SCROLL_MIN_ORIGIN)
@@ -1852,12 +1867,12 @@ int advManager::ProcessHover(struct tag_message* message) {
     switch (message->id) {
     case ADVENTURE_CONTROL_MAP_VIEW:
         gpMouseManager->MouseCoords(curX, curY);
-        if (curX > 480) {
+        if (curX > ADVENTURE_VIEWPORT_EXTENT) {
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             return 1;
         }
-        curX = curX / 32;
-        curY = curY / 32;
+        curX = curX / CELL_PIXELS;
+        curY = curY / CELL_PIXELS;
         if (curX < 0)
             curX = 0;
         if (curY < 0)
@@ -2562,7 +2577,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
     for (x = firstX; x <= lastX; x++) {
         for (y = firstY; y <= lastY; y++) {
             if (!(gpGame->m_mapExtra[x][y] & giCurPlayerBit)) {
-                m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, 0, ICON_DRAW_NORMAL, 0);
+                m_puzzleIcon->FillToBuffer(x * RADAR_CELL_PIXELS + RADAR_LEFT, y * RADAR_CELL_PIXELS + RADAR_TOP, 0, 0, ICON_DRAW_NORMAL, 0);
                 continue;
             }
             cellPtr = &m_mapData[x][y];
@@ -2596,20 +2611,22 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                     break;
                 case TILESET_MTN32:
                 case TILESET_TREE32:
-                    color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]] + 3;
+                    color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]] + RADAR_TERRAIN_SHADE;
                     break;
                 default:
                     color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
                     break;
                 }
             }
-            m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, color, ICON_DRAW_NORMAL, 0);
+            m_puzzleIcon->FillToBuffer(x * RADAR_CELL_PIXELS + RADAR_LEFT, y * RADAR_CELL_PIXELS + RADAR_TOP, 0, color, ICON_DRAW_NORMAL, 0);
         }
     }
-    m_puzzleIcon->ClipFillToBuffer(m_mapOriginX * 2 + 480, m_mapOriginY * 2 + 16, 1, 0xbe, ICON_DRAW_NORMAL, 0, 480, 16, 144, 144);
+    m_puzzleIcon->ClipFillToBuffer(m_mapOriginX * RADAR_CELL_PIXELS + RADAR_LEFT, m_mapOriginY * RADAR_CELL_PIXELS + RADAR_TOP, 1,
+                                  RADAR_VIEWPORT_COLOR, ICON_DRAW_NORMAL, 0, RADAR_LEFT, RADAR_TOP, RADAR_SIZE, RADAR_SIZE);
     if (updateScreen)
-        gpWindowManager->UpdateScreenRegion(firstX * 2 + 480, firstY * 2 + 16, (lastX - firstX + 1) * 2,
-                                            (lastY - firstY + 1) * 2);
+        gpWindowManager->UpdateScreenRegion(firstX * RADAR_CELL_PIXELS + RADAR_LEFT, firstY * RADAR_CELL_PIXELS + RADAR_TOP,
+                                            (lastX - firstX + 1) * RADAR_CELL_PIXELS,
+                                            (lastY - firstY + 1) * RADAR_CELL_PIXELS);
 }
 
 // donor PoL RVA 0x0005f127; preferred Buka symbol ?QuickInfo@advManager@@QAEXHH@Z
@@ -5062,8 +5079,8 @@ short DimensionDoorHandler(struct tag_message& message) {
                             break;
                         case ADVENTURE_CONTROL_MAP_VIEW:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
-                            mouseX /= 32;
-                            mouseY /= 32;
+                            mouseX /= CELL_PIXELS;
+                            mouseY /= CELL_PIXELS;
                             if (mouseX < 0)
                                 mouseX = 0;
                             if (mouseY < 0)
