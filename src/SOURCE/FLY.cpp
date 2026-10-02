@@ -166,27 +166,27 @@ short army::FlyTo(void)
 VA(0x0044acd6, 0x75e)
 short army::FlyTo(short destination)
 {
-    short xOff;
-    int maxExtentX;
+    short iFinalY;
     short centerY;
     short yLow;
-    int oldMaxY;
-    signed char colFrom;
-    short iFinalY;
     short posX;
+    short xOff;
     signed char curRow;
     short rowDist;
     short colCount;
     short yStep;
     short posY;
     short steps;
-    short xStep;
-    signed char backwards;
     short i;
+    int maxExtentX;
+    int oldMaxY;
+    signed char colFrom;
+    signed char backwards;
     signed char toHexRow;
     signed char endCol;
     short yFrom;
     int oldX;
+    short xStep;
     short xFrom;
     int oldY;
     short destX;
