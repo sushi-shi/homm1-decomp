@@ -401,32 +401,24 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
             short id = gpResourceManager->MakeId(gText);
             gpResourceManager->PointToFile(id);
             gpResourceManager->ReadBlock(ccycleBuf, 0x10000);
-            int sourceY = y;
-            if (sourceY < y + height) {
-                int screenOffset = y * 640;
-                int workOffset = 0;
-                do {
-                    // Byte access is proven by the retail load/shift sequence.
-                    unsigned char* savePixel =
-                        reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
-                        + m_fizzleSource->m_width * (sourceY - y);
-                    workPixel =
-                        reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
-                        + workOffset;
-                    // Byte access is proven by the retail framebuffer stores.
-                    unsigned char* screenPixel =
-                        reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
-                        + x + screenOffset;
-                    if (x < x + width) {
-                        for (int sourceX = x; sourceX < x + width; sourceX++) {
-                            unsigned short lookup = *workPixel++ | (*savePixel++ << 8);
-                            *screenPixel++ = ccycleBuf[lookup];
-                        }
-                    }
-                    screenOffset += 640;
-                    workOffset += width;
-                    sourceY++;
-                } while (sourceY < y + height);
+            // Buka's row arithmetic: retail strength-reduces sourceY * 640 and
+            // (sourceY - y) * width into the frame's induction slots.
+            for (int sourceY = y; sourceY < y + height; sourceY++) {
+                // Byte access is proven by the retail load/shift sequence.
+                unsigned char* savePixel =
+                    reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
+                    + m_fizzleSource->m_width * (sourceY - y);
+                workPixel =
+                    reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
+                    + (sourceY - y) * width;
+                // Byte access is proven by the retail framebuffer stores.
+                unsigned char* screenPixel =
+                    reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
+                    + sourceY * 640 + x;
+                for (int sourceX = x; sourceX < x + width; sourceX++) {
+                    unsigned short lookup = *workPixel++ | (*savePixel++ << 8);
+                    *screenPixel++ = ccycleBuf[lookup];
+                }
             }
             PollSound();
             DelayTilMilli(delay + tickStart);
