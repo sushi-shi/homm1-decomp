@@ -37,7 +37,7 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_COUNT = 13
 H1_ENUM_END(BuildingSlotType)
 
-    // clang-format off
+// clang-format off
 // giWaitType: which poll WaitHandler runs while a wait dialog is up
 // (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
 // GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect; Buka
@@ -57,7 +57,21 @@ H1_ENUM_END(DialogWaitType)
 H1_ENUM_CONST_BEGIN(SampleWaitConstant)
     SAMPLE_WAIT_DEFAULT = -1
 H1_ENUM_CONST_END(SampleWaitConstant)
-                    // clang-format on
+
+// stpmain.bin buttons: InitMenuHandler returns the id as m_dialogResult and
+// oldmain dispatches it. gGameCommand re-enters the same switch with the
+// adventure screen's new/load/quit commands (advManager::ControlPanel's
+// cpanel.bin ids and the N/L/Q hotkeys in advManager::Main), which share
+// these values; MAIN_MENU_NO_COMMAND is the idle value.
+H1_ENUM_BEGIN(MainMenuControl)
+    MAIN_MENU_NO_COMMAND = -1,
+    MAIN_MENU_NEW_GAME = 1,
+    MAIN_MENU_LOAD_GAME = 2,
+    MAIN_MENU_QUIT = 4,
+    MAIN_MENU_HIGH_SCORES = 5,
+    MAIN_MENU_CREDITS = 6
+H1_ENUM_END(MainMenuControl)
+// clang-format on
 
                     class soundManager;
 class heroWindowManager;
@@ -232,7 +246,7 @@ void CheckEndGame(int);
 void HandleRemoteSuddenExit(void);
 extern signed char gbRetreatWin;
 extern signed char gbGameInitialized;
-extern short gGameCommand;
+extern H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 extern signed char gbCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
 extern int gbInNewGameSetup;

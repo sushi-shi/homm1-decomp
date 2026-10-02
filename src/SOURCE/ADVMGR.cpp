@@ -898,15 +898,15 @@ short advManager::Main(struct tag_message& message) {
                 ViewWorld(SPELL_VIEW_ALL, 0, 0);
                 break;
             case INPUT_SCAN_N:
-                cmdValue = 1;
+                cmdValue = MAIN_MENU_NEW_GAME;
                 strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
                 goto confirmGameCommand;
             case INPUT_SCAN_L:
-                cmdValue = 2;
+                cmdValue = MAIN_MENU_LOAD_GAME;
                 strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
                 goto confirmGameCommand;
             case INPUT_SCAN_Q:
-                cmdValue = 4;
+                cmdValue = MAIN_MENU_QUIT;
                 strcpy(gText, "Are you sure you want to quit?");
                 goto confirmGameCommand;
             confirmGameCommand:
@@ -4137,7 +4137,7 @@ short advManager::ControlPanel(void) {
 
     TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
-    gameCommand = -1;
+    gameCommand = MAIN_MENU_NO_COMMAND;
     oldSpeed = gConfig.walkSpeed;
     bFreshSave = 0;
     mobilized = m_heroContextLocked;
@@ -4192,7 +4192,7 @@ short advManager::ControlPanel(void) {
         WritePrefs();
     if (mobilized)
         MobilizeCurrHero(0);
-    if (gameCommand != -1) {
+    if (gameCommand != MAIN_MENU_NO_COMMAND) {
         gGameCommand = gameCommand;
         return 1;
     }

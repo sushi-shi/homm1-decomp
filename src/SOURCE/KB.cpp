@@ -198,18 +198,6 @@ int EarlySetup(void) {
 }
 
 // clang-format off
-// stpmain.bin buttons: InitMenuHandler returns the id as m_dialogResult and
-// oldmain dispatches it (gGameCommand re-enters with the control panel's
-// new/load/quit ids, which share these values).
-H1_ENUM_BEGIN(MainMenuControl)
-    MAIN_MENU_NO_COMMAND = -1,
-    MAIN_MENU_NEW_GAME = 1,
-    MAIN_MENU_LOAD_GAME = 2,
-    MAIN_MENU_QUIT = 4,
-    MAIN_MENU_HIGH_SCORES = 5,
-    MAIN_MENU_CREDITS = 6
-H1_ENUM_END(MainMenuControl)
-
 // InitMenuHandler's right-click help: the gInitMenuHelp row.
 H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_NONE = -1,
@@ -253,7 +241,7 @@ int oldmain(void) {
     if (bKBDone)
         return 0;
     bKBDone = 1;
-    command = -1;
+    command = MAIN_MENU_NO_COMMAND;
     if (gpExec->InitSystem())
         ShutDown("Initialization failed!");
     CheckMem();
@@ -5101,7 +5089,7 @@ signed char giGroundToTerrain[140];
 DATA(0x004c7950)
 long giCurWindowsStyleFlags;
 DATA(0x004c7954)
-short gGameCommand;
+H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 DATA(0x004c7958)
 signed char giMonthType;
 DATA(0x004c7960)
