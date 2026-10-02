@@ -156,7 +156,7 @@ short smackManager::Main(struct tag_message &msg) {
                 gpWindowManager->FadeScreen(0, 8, pPalette);
             } else {
                 if (bSmackNum == SMACK_WIN02 && currentFrame >= 23)
-                    bigFont->DrawBoundedString(gcCongratsText, 29, 338, 325, 115, 1, 1);
+                    bigFont->DrawBoundedString(gcWinText, 29, 338, 325, 115, 1, 1);
                 if (bSmackNum == SMACK_NWCLOGO) {
                     bigFont->DrawString("Presents...", 280, 440, 255);
                     gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);

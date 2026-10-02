@@ -47,7 +47,7 @@ extern signed char gbShowHighScore;
 // NormalDialog only parks over the adventure map when neither is showing.
 extern signed char gbHeroWindShowing;
 extern signed char gbOverviewShowing;
-extern signed char gbStandardHighScore;
+extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
 extern H1_ENUM_STORAGE(TerrainType, signed char) giGroundToTerrain[];

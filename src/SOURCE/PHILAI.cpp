@@ -800,7 +800,7 @@ void philAI::GetTurnAIVars(int player) {
         gfAttackHumanBonus = gpCurPlayer->m_difficulty * 0.07 + 1.0;
         gfAttackComputerBonus = 1.1 - gpCurPlayer->m_difficulty * 0.12;
     }
-    if (gbKingOfTheHill)
+    if (gbIAmGreatest)
         gfAttackComputerBonus = 0.1f;
     giMaxHeroesForThisPlayer = 3;
     if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == 2)
@@ -3137,7 +3137,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     case MAP_OBJECT_SAWMILL:
         if (gpGame->m_mineOwners[pEventCell->m_objectMetadata] == pHero->m_owner) {
             iEventRV = 0;
-        } else if (gbKingOfTheHill && gpGame->m_mineOwners[pEventCell->m_objectMetadata] >= 0
+        } else if (gbIAmGreatest && gpGame->m_mineOwners[pEventCell->m_objectMetadata] >= 0
                    && !gbHumanPlayer[gpGame->m_mineOwners[pEventCell->m_objectMetadata]]) {
             iEventRV = 0;
         } else {
@@ -3204,7 +3204,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             else
                 iEventRV = -5000;
             *liveChance = 0;
-        } else if (gbKingOfTheHill && !gbHumanPlayer[gpGame->m_availableHeroes[pEventCell->m_objectMetadata]]) {
+        } else if (gbIAmGreatest && !gbHumanPlayer[gpGame->m_availableHeroes[pEventCell->m_objectMetadata]]) {
             iEventRV = 0;
             *liveChance = 100;
         } else {
@@ -3272,7 +3272,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = static_cast<int>(iEventRV * gfHeroInteractionBonus[pHero->m_id]);
             }
             gbReduceByReload = 0;
-        } else if (gbKingOfTheHill && gpGame->m_townOwners[pEventCell->m_objectMetadata] >= 0
+        } else if (gbIAmGreatest && gpGame->m_townOwners[pEventCell->m_objectMetadata] >= 0
                    && !gbHumanPlayer[gpGame->m_townOwners[pEventCell->m_objectMetadata]]) {
             iEventRV = 0;
         } else {

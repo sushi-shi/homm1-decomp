@@ -617,7 +617,7 @@ void ReadPrefsFromFile(void)
             WritePrefs();
         }
     }
-    strcpy(gcRegCDDrive, "");
+    strcpy(gcRegCDRomPath, "");
     strcpy(gcRegAppPath, "");
 }
 
@@ -677,8 +677,8 @@ void ReadPrefsFromRegistry(void)
         cbData = REGISTRY_TEXT_VALUE_SIZE;
         if (RegQueryValueExA(key, "AppPath", NULL, &dataType, reinterpret_cast<LPBYTE>(gcRegAppPath), &cbData) != 0)
             strcpy(gcRegAppPath, "");
-        if (RegQueryValueExA(key, "CDDrive", NULL, &dataType, reinterpret_cast<LPBYTE>(gcRegCDDrive), &cbData) != 0)
-            strcpy(gcRegCDDrive, "");
+        if (RegQueryValueExA(key, "CDDrive", NULL, &dataType, reinterpret_cast<LPBYTE>(gcRegCDRomPath), &cbData) != 0)
+            strcpy(gcRegCDRomPath, "");
         RegCloseKey(key);
     }
 }
@@ -805,8 +805,8 @@ int SetupCDDrive(void)
     giCDDrive = cdDrives[gConfig.cdOffset];
     if (giCDDrive < CD_FIRST_DRIVE_LETTER)
         giCDDrive = cdDrives[0];
-    if (strlen(gcRegCDDrive)) {
-        sprintf(gText, "%s\\_autorun\\autorun.exe", gcRegCDDrive);
+    if (strlen(gcRegCDRomPath)) {
+        sprintf(gText, "%s\\_autorun\\autorun.exe", gcRegCDRomPath);
         fh = open(gText, _O_BINARY);
         if (fh != -1) {
             close(fh);

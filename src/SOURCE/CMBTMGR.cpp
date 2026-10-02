@@ -175,7 +175,7 @@ short combatManager::Open(short priority)
     m_sideRetreated[0] = 0;
     m_sideRetreated[1] = 0;
     m_combatResult = 3;
-    gbUseClippedIconRenderer = 0;
+    gbIconClipOn = 0;
     m_computeExtent = 0;
     m_redrawExtent = 0;
     gCurLoadedSpellIcon = NULL;

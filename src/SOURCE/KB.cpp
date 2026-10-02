@@ -40,7 +40,7 @@
 
 // Retail score-dialog owner byte (.bss).
 DATA(0x004c794c)
-signed char gbStandardHighScore;
+signed char giHighScoreType;
 // InitVars proves seven terrain rows, ordinary/diagonal cost columns.
 DATA(0x004c6d50)
 signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
@@ -458,7 +458,7 @@ int oldmain(void) {
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
             gpMouseManager->ReallyHidePointer();
             sprintf(
-                gcCongratsText,
+                gcWinText,
                 "My heroes, our foes have been scattered, their castles broken and laid bare.  "
                 "The great campaign is now complete, and I stand before you as the undisputed "
                 "High King!\n\nOur victory was achieved in %d days!",
@@ -2189,7 +2189,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     }
 
     gbShowHighScore = 1;
-    gbStandardHighScore = standard;
+    giHighScoreType = standard;
     giHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
     for (entry = 0; entry < 10; entry++) {
@@ -5474,7 +5474,7 @@ char cNetBoxLine[2][60];
 DATA(0x004c66fc)
 heroWindow* DataEntryWin;
 DATA(0x004c6700)
-signed char giWeekSpecial;
+signed char giWeekTypeExtra;
 DATA(0x004c6704)
 philAI* gpPhilAI;
 DATA(0x004c6708)
@@ -5512,7 +5512,7 @@ int gbInNewGameSetup;
 DATA(0x004c6a54)
 palette* gpBufferPalette;
 DATA(0x004c6a58)
-signed char giMonthSpecial;
+signed char giMonthTypeExtra;
 DATA(0x004c6a5c)
 signed char iMPExtendedType;
 DATA(0x004c6a60)
@@ -5558,7 +5558,7 @@ char gcBottomViewText[92];
 DATA(0x004c6f34)
 int giThisNetPos;
 DATA(0x004c6f38)
-char gcRegCDDrive[352];
+char gcRegCDRomPath[352];
 DATA(0x004c7098)
 class heroWindow* heroWin;
 DATA(0x004c709c)
@@ -5572,7 +5572,7 @@ int giThisGamePos;
 DATA(0x004c74a4)
 int giNumHumanPlayers;
 DATA(0x004c74a8)
-signed char gbUseClippedIconRenderer;
+signed char gbIconClipOn;
 DATA(0x004c74b0)
 int pwSizeOfMapExtra[255];
 DATA(0x004c78ac)
@@ -5604,13 +5604,13 @@ class highScoreManager* gpHighScoreManager;
 DATA(0x004c7b4c)
 signed char gbFunctionComplete;
 DATA(0x004c7b50)
-signed char gbKingOfTheHill;
+signed char gbIAmGreatest;
 DATA(0x004c7b58)
 short gMapX;
 DATA(0x004c7b5c)
 short gMapY;
 DATA(0x004c7b60)
-char gcCongratsText[300];
+char gcWinText[300];
 DATA(0x004c7c8c)
 signed char bDataEntryTime;
 DATA(0x004c7c90)
