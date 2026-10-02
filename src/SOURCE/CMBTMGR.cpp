@@ -163,7 +163,8 @@ short combatManager::Open(short priority)
     SAMPLE2 sample;
     int musicList[4];
 
-    m_messageTypeMask = 0x32f;
+    m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE | MESSAGE_LEFT_BUTTON_DOWN
+        | MESSAGE_RIGHT_BUTTON_DOWN | 0x100 | MESSAGE_WIDGET;
     m_combatWindowOpen = 0;
     m_savedBorder = NULL;
     gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);

@@ -99,6 +99,15 @@
 *	*	0	call-argument	_access(* argument 2	_access existence mode 0 (the CRT has no name for it)
 *	*	1	call-argument	fread(void *, size_t, size_t, FILE *) argument [23]	fread's element size / count of one
 *	*	0	call-argument	fseek(FILE *, long, int) argument 2	fseek's zero offset
+*	*	*	call-argument	memcpy(* argument 3	the byte count
+*	*	*	call-argument	memmove(* argument 3	the byte count
+src/BASE/WINMGR.cpp	*	*	call-argument	mem*(* argument [12]	a palette entry offset in the 768-byte palette being rebuilt
+*	*	*	call-argument	wsprintfA(* argument [3-9]	a value formatted into the text
+*	*	*	call-argument	CDSetVolume(* argument [12]	the CD audio channel and volume
+*	*	0	call-argument	waveOutGetDevCapsA(* argument 1	the first wave-out device
+*	*	0	call-argument	widget(short, short, short, short, short, short) argument 5	a default-constructed widget's id 0 (the owning window assigns ids)
+*	*	*	call-argument	sample(char *, long, long, long) argument [234]	the sample's start offset, volume and loop count
+*	*	*	call-argument	ReadBlock(* argument 2	the byte count read from the resource file
 *	*	*	arithmetic	operator + KBTickCount()	a delay in milliseconds after the current time (KBTickCount returns GetTickCount)
 src/*	advManager::ProcessSelect	*	store	store to [xy]	a screen position in pixels
 src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixels
