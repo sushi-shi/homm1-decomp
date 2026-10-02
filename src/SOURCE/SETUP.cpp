@@ -416,7 +416,7 @@ signed char game::SetupGame(signed char newGame) {
     gpWindowManager->DoDialog(window, SetupGameHandler, 0);
     delete window;
 
-    switch ((short)gpWindowManager->m_dialogResult) {
+    switch (static_cast<short>(gpWindowManager->m_dialogResult)) {
         case 1:
             break;
         case 2:
@@ -1045,7 +1045,7 @@ signed char InitNetHost(void) {
 
     switch (iInitNetHostStatus) {
         case 0:
-            if ((short)nb_init(0) == 1) {
+            if (static_cast<short>(nb_init(0)) == 1) {
                 ShutDown("NETBIOS is not loaded.");
             } else {
                 iInitNetHostStatus++;
@@ -1092,7 +1092,7 @@ signed char InitNetGuest(void) {
 
     switch (iInitNetGuestStatus) {
         case 0:
-            if ((short)nb_init(6) == 1) {
+            if (static_cast<short>(nb_init(6)) == 1) {
                 ShutDown("NETBIOS is not loaded.");
             } else {
                 gbRemoteOn = 1;

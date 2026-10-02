@@ -47,7 +47,7 @@ int CPUSpeed(unsigned char cpuType)
         freq = ticks / TimeProcessor() * 66.0;
         break;
     }
-    return (int)((freq + 0.5) * 100.0) / 100;
+    return static_cast<int>((freq + 0.5) * 100.0) / 100;
 }
 
 // Family 3 when EFLAGS.AC cannot toggle, 4 when EFLAGS.ID cannot toggle,

@@ -76,7 +76,7 @@ short hero::CalcMobility(void) {
             result = seaMobility;
         if (HasArtifact(ARTIFACT_SAILORS_ASTROLABE))
             result += astrolabe;
-        result = (int)(result * gfClassNavigationMod[m_heroClass]);
+        result = static_cast<int>(result * gfClassNavigationMod[m_heroClass]);
     } else {
         speed = 3;
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
@@ -581,12 +581,12 @@ int hero::GetExperience(int level) {
     if (level <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
         return gMinExpForLevel[m_heroClass][level - 1];
     stage = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
-    incr = (int)((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+    incr = static_cast<int>((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
                   - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
                  * 1.2);
     experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
     while (stage < level) {
-        incr = (int)(incr * 1.2);
+        incr = static_cast<int>(incr * 1.2);
         experience += incr;
         stage++;
     }
@@ -603,13 +603,13 @@ int hero::GetLevel(int experienceValue) {
         if (gMinExpForLevel[m_heroClass][nLevel - 1] > experienceValue)
             return nLevel - 1;
     }
-    growth = (int)((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+    growth = static_cast<int>((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
                     - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
                    * 1.2);
     experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
     nLevel = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
     while (experience < experienceValue) {
-        growth = (int)(growth * 1.2);
+        growth = static_cast<int>(growth * 1.2);
         experience += growth;
         nLevel++;
     }

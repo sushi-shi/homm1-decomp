@@ -69,8 +69,8 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
         *pathDirection++ = pathNode->direction;
         if (++m_pathLength >= 256)
             break;
-        destinationX += normalDirTable[(short)(pathNode->direction + 4) & 7].x;
-        destinationY += normalDirTable[(short)(pathNode->direction + 4) & 7].y;
+        destinationX += normalDirTable[static_cast<short>(pathNode->direction + 4) & 7].x;
+        destinationY += normalDirTable[static_cast<short>(pathNode->direction + 4) & 7].y;
     }
     return m_pathLength;
 }
@@ -94,8 +94,8 @@ int searchArray::BuildPath(short startX, short startY, short destinationX, short
                 break;
             }
         }
-        destinationX += normalDirTable[(short)(node->direction + 4) & 7].x;
-        destinationY += normalDirTable[(short)(node->direction + 4) & 7].y;
+        destinationX += normalDirTable[static_cast<short>(node->direction + 4) & 7].x;
+        destinationY += normalDirTable[static_cast<short>(node->direction + 4) & 7].y;
     }
     return m_pathLength;
 }
@@ -196,8 +196,8 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == 0x3d
-                    && gpGame->m_availableHeroes[(unsigned char)gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
-                                                     ->m_objectMetadata]
+                    && gpGame->m_availableHeroes[static_cast<unsigned char>(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
+                                                     ->m_objectMetadata)]
                            == giCurPlayer)
                     goto point_complete;
             } else {

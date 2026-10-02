@@ -40,10 +40,11 @@ void textEntryWidget::Read(int type) {
     m_height = gpResourceManager->ReadWord();
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
+    // byte-evidenced: ReadBlock accepts signed bytes for text storage.
     gpResourceManager->ReadBlock(
         reinterpret_cast<signed char*>(m_text),
         m_maxLength
-    ); // byte-evidenced: ReadBlock accepts signed bytes for text storage.
+    );
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_font = gpResourceManager->GetFont(

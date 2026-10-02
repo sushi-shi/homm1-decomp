@@ -245,7 +245,7 @@ void combatManager::Close(void)
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == 0x9a) {
-        survivor = (signed char)(m_playerId[0] != -1);
+        survivor = static_cast<signed char>(m_playerId[0] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < 5; i++) {
             if (m_armyGroups[survivor]->m_creatureTypes[i] != -1)
@@ -314,7 +314,7 @@ void combatManager::GenerateMap(void)
             m_hexCells[y * 9 + x].m_y = y * 80 + 139;
             m_hexCells[y * 9 + x].m_x = ((y & 1) ? 27 : -12) + x * 78;
             m_hexCells[y * 9 + x].m_groundIcon = 0;
-            m_hexCells[y * 9 + x].m_groundFrame = (signed char)SRandom(0, 3) + 4;
+            m_hexCells[y * 9 + x].m_groundFrame = static_cast<signed char>(SRandom(0, 3)) + 4;
             if (x == 0) {
                 if (m_castleSide[1] == 1)
                     m_hexCells[y * 9 + x].m_groundIcon = 5;
@@ -341,7 +341,7 @@ void combatManager::GenerateMap(void)
     for (i = 0; i < count; i++) {
         randomRow = SRandom(0, 4);
         randomCol = SRandom(1, 7);
-        m_hexCells[randomRow * 9 + randomCol].m_groundFrame = (signed char)SRandom(0, 2) + 8;
+        m_hexCells[randomRow * 9 + randomCol].m_groundFrame = static_cast<signed char>(SRandom(0, 2)) + 8;
     }
     if (m_castleSide[0]) {
         for (x = 6; x < 8; x++) {
@@ -515,7 +515,7 @@ void combatManager::LoadIcons(void)
     m_combatIcons[6] = gpResourceManager->GetIcon("cloud.icn");
     if (m_castleSide[1] || m_castleSide[0]) {
         m_combatIcons[3] = gpResourceManager->GetIcon("catapult.icn");
-        sprintf(gText, "castle%02d.icn", m_combatTowns[(signed char)(m_castleSide[1] == 1)]->m_type);
+        sprintf(gText, "castle%02d.icn", m_combatTowns[static_cast<signed char>(m_castleSide[1] == 1)]->m_type);
         m_combatIcons[5] = gpResourceManager->GetIcon(gText);
         sprintf(gText, "keep%02d.icn", m_combatTowns[0]->m_type);
         m_combatIcons[7] = gpResourceManager->GetIcon(gText);
@@ -1121,8 +1121,8 @@ void combatManager::KeepAttack(void)
     startY = 0x19;
     destX = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_x;
     targetY = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_y - 75;
-    xAdvance = (float)(destX - startX) / (float)(distance * 3);
-    yAdvance = (float)(targetY - startY) / (float)(distance * 3);
+    xAdvance = static_cast<float>(destX - startX) / static_cast<float>(distance * 3);
+    yAdvance = static_cast<float>(targetY - startY) / static_cast<float>(distance * 3);
     xRun = startX;
     yRun = startY;
     updRight = 0;
@@ -1184,7 +1184,7 @@ void combatManager::KeepAttack(void)
     hurt = 0;
     for (i = 0; i < dice; i++)
         hurt += SRandom(2, 3);
-    hurt = (int)(hurt * gfStatPower[mod + 20]);
+    hurt = static_cast<int>(hurt * gfStatPower[mod + 20]);
     if (hurt <= 0)
         hurt = 1;
     numLost = target->Damage(hurt);
@@ -1247,7 +1247,7 @@ VA(0x0044f587, 0x64)
 void combatManager::SaveCombatBorder(void)
 {
     if (!m_savedBorder)
-        m_savedBorder = (char*)malloc(0x3200);
+        m_savedBorder = static_cast<char*>(malloc(0x3200));
     memcpy(m_savedBorder, gpWindowManager->m_screen->m_pixels + 0x47e00, 0x3200);
 }
 

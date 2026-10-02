@@ -1011,7 +1011,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     iMageLevel = 0;
     j = 0;
     curCost = 0;
-    descText = (char *)malloc(300);
+    descText = static_cast<char*>(malloc(300));
     for (j = 0; j < 7; j++)
         resType[j] = prices[j] = -1;
     dwellIndex = -1;
@@ -1177,7 +1177,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                     nEntryWidth = 80;
                 else
                     nEntryWidth = 40;
-                amountText[resIndex] = (char *)malloc(10);
+                amountText[resIndex] = static_cast<char*>(malloc(10));
                 sprintf(amountText[resIndex], "%d", prices[resIndex]);
                 amountWidgets[resIndex] = new textWidget(currX, yPos + 32, nEntryWidth, 12, amountText[resIndex],
                                                          "smalfont.fnt", 1, -1, 8);

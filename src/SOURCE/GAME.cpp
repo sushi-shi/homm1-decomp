@@ -1500,7 +1500,7 @@ void game::RandomizeEvents(void) {
                     break;
                 case 0x88:
                     cell->m_objectMetadata = Random(4, 6) << 4;
-                    cell->m_objectMetadata |= (signed char)Random(0, 5);
+                    cell->m_objectMetadata |= static_cast<signed char>(Random(0, 5));
                     break;
                 case 0x8b:
                     cell->m_objectMetadata = Random(0, 3) + 2;
@@ -1553,17 +1553,17 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = 1;
                     break;
                 case 0x9a:
-                    if (!(unsigned char)cell->m_objectMetadata) {
+                    if (!static_cast<unsigned char>(cell->m_objectMetadata)) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
                         if (Random(0, 99) <= 25 && cell->m_objectIndex != 26)
-                            cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata | 0x80;
+                            cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | 0x80;
                     }
                     break;
                 case 0x9d:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
-                        cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata - 61;
-                    switch ((unsigned char)cell->m_objectMetadata) {
+                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - 61;
+                    switch (static_cast<unsigned char>(cell->m_objectMetadata)) {
                         case 0:
                         case 2:
                             cell->m_objectMetadata = Random(8, 16);
@@ -1630,7 +1630,7 @@ void game::RandomizeEvents(void) {
                     id = GetTownId(x, y);
                     for (j = 0; j < 3; j++) {
                         for (i = 0; i < 4; i++) {
-                            if (!(unsigned char)m_map[x - 2 + i][y - 2 + j].m_objectMetadata)
+                            if (!static_cast<unsigned char>(m_map[x - 2 + i][y - 2 + j].m_objectMetadata))
                                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = id;
                         }
                     }
@@ -1642,7 +1642,7 @@ void game::RandomizeEvents(void) {
                     id = GetMineId(x, y);
                     for (j = 0; j < 2; j++) {
                         for (i = 0; i < 2; i++) {
-                            if (!(unsigned char)m_map[x + i][y - j].m_objectMetadata
+                            if (!static_cast<unsigned char>(m_map[x + i][y - j].m_objectMetadata)
                                 || (cell->m_triggerType & 0x7f) == (m_map[x + i][y - j].m_triggerType & 0x7f))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
@@ -2248,7 +2248,7 @@ void game::ViewArmy(
     message.text = fileName;
     m_viewArmyWindow->BroadcastMessage(message);
 
-    statText = (char*)malloc(550);
+    statText = static_cast<char*>(malloc(550));
     if (theGroup)
         morale = theGroup->GetMorale(theHero, castle);
     else
@@ -2297,7 +2297,7 @@ void game::ViewArmy(
         sprintf(gText, "-%d", monsterInfo->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(gText, "\n%s%d", gArmyStatText[4], (unsigned char)monsterInfo->stats.hitPoints);
+    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<unsigned char>(monsterInfo->stats.hitPoints));
     strcat(statText, gText);
     sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfo->stats.speed]);
     strcat(statText, gText);
@@ -3239,39 +3239,39 @@ void game::PerWeek(void) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             switch (m_map[posX][posY].m_triggerType) {
                 case 0x98:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata != 0xff)
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) != 0xff)
                         m_map[posX][posY].m_objectMetadata = 2;
                     break;
                 case 0xad:
                     m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
                 case 0x8d:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
                 case 0x8e:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
                 case 0x8f:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
                 case 0x90:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
                 case 0x91:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
                 case 0xa7:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(1, 3);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(1, 3);
                     break;
                 case 0xaa:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
                 default:
                     break;
@@ -3946,7 +3946,7 @@ void game::ProcessOnMapHeroes(void) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
             if ((cell->m_triggerType & 0x7f) == 0x47) {
-                extra = (mapHeroExtra*)ppMapExtra[(unsigned char)cell->m_objectMetadata];
+                extra = (mapHeroExtra*)ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)];
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
                     theHero->m_army.m_creatureCounts[k] = extra->troopCounts[k];
@@ -4022,7 +4022,7 @@ void game::CheckHeroConsistency(void) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
             if (cell->m_triggerType == 0xbd) {
-                if ((unsigned char)cell->m_objectMetadata >= 0 && (unsigned char)cell->m_objectMetadata < GAME_HERO_COUNT) {
+                if (static_cast<unsigned char>(cell->m_objectMetadata) >= 0 && static_cast<unsigned char>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
                     theHero = GetHero(cell->m_objectMetadata);
                     if (theHero->m_owner < 0 || theHero->m_owner > 3) {
                         if (theHero->m_locationType == 0xa8) {
@@ -4109,10 +4109,10 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     SaveGame("REMOTE.GAM", 0);
     sprintf(pathname, "%s%s", ".\\DATA\\", "REMOTE.GAM");
     fileSize = FileSize(pathname);
-    sendPacket = (char*)malloc(0x100);
+    sendPacket = static_cast<char*>(malloc(0x100));
     if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
-        outData = (char*)malloc(fileSize);
-    fileData = (char*)malloc(fileSize);
+        outData = static_cast<char*>(malloc(fileSize));
+    fileData = static_cast<char*>(malloc(fileSize));
     fileHandle = open(pathname, O_BINARY);
     if (fileHandle == -1)
         FileError(pathname);
@@ -4151,7 +4151,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                             len = fileSize - sendPacketIndex * 200;
                         else
                             len = 200;
-                        *(short*)sendPacket = (short)sendPacketIndex;
+                        *(short*)sendPacket = static_cast<short>(sendPacketIndex);
                         memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
                         status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
                         if (!status)
@@ -4159,7 +4159,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                     }
                 }
                 LogStr("PreWait");
-                *(short*)sendPacket = (short)(block * 100);
+                *(short*)sendPacket = static_cast<short>(block * 100);
                 status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
                 LogStr("PostWait");
                 if (!status)
@@ -4246,9 +4246,9 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         ShutDown(0);
     memset(gotIt, 0, sizeof(gotIt));
     if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
-        decodedData = (char*)malloc(0x130b0);
-    sendPacket = (char*)malloc(0x100);
-    inData = (char*)malloc(dataSize + 500);
+        decodedData = static_cast<char*>(malloc(0x130b0));
+    sendPacket = static_cast<char*>(malloc(0x100));
+    inData = static_cast<char*>(malloc(dataSize + 500));
     lastPacketTime = KBTickCount();
     while (!done) {
         PollSound();
@@ -4871,7 +4871,7 @@ void armyGroup::Swap(signed char slot, armyGroup* otherGroup, signed char otherS
 VA(0x00447ec8, 0x14d)
 void armyGroup::DamageGroup(float damagePercent) {
     int killed;
-    int chance = (int)(damagePercent * 100.0f);
+    int chance = static_cast<int>(damagePercent * 100.0f);
     int isFirstTroop = 1;
     int i;
     int j;

@@ -1042,7 +1042,7 @@ void NormalDialog(
         if (kind[i] == NORMAL_DIALOG_NO_RESOURCE)
             break;
 
-        amountText[i] = (char*)malloc(NORMAL_DIALOG_TEXT_LENGTH);
+        amountText[i] = static_cast<char*>(malloc(NORMAL_DIALOG_TEXT_LENGTH));
         if (kind[i] <= NORMAL_DIALOG_RESOURCE_LAST) {
             if (resourceQty[i] > 0)
                 sprintf(amountText[i], "%d", resourceQty[i]);
@@ -1195,7 +1195,7 @@ void NormalDialog(
     pNormalDialogWindow->BroadcastMessage(message);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
-        szOr = (char*)malloc(3);
+        szOr = static_cast<char*>(malloc(3));
         strcpy(szOr, "or");
         captionWidget = new textWidget(
             width / 2 - 17, resourceYPos + 30, 40, 12, szOr, "smalfont.fnt", 1,
@@ -1521,10 +1521,10 @@ void CheckEndGame(int forced) {
                 PlayerDead(player);
                 sprintf(
                     gText, "%s player has been vanquished!",
-                    gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                    gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                 gText[0] -= 32;
                 NormalDialog(
-                    gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                    gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
                     0, -1);
             } else if (!pd->m_townCount) {
                 if (pd->m_daysLeft == -1) {
@@ -1533,10 +1533,10 @@ void CheckEndGame(int forced) {
                             gText,
                             "%s player, you have lost your last town.  If you do not conquer "
                             "another town in the next week, you will be eliminated.",
-                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                            gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                         NormalDialog(
-                            gText, 1, -1, -1, 9, gpGame->m_players[(signed char)player].Color(),
+                            gText, 1, -1, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(),
                             -1, 0, -1);
                     }
                     pd->m_daysLeft = 7;
@@ -1547,18 +1547,18 @@ void CheckEndGame(int forced) {
                             gText,
                             "%s player, your heroes abandon you, and you are banished from this "
                             "land.",
-                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                            gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                     } else {
                         sprintf(
                             gText,
                             "%s player's Heroes have abandoned him, and he is banished from this "
                             "land.",
-                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                            gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                     }
                     NormalDialog(
-                        gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                        gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
                         0, -1);
                 }
             } else {
@@ -1713,7 +1713,7 @@ void InitVars(void) {
     hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
     hmnuAdv = LoadMenuA((HINSTANCE)hInstApp, "mnuAdv");
     hmnuTown = LoadMenuA((HINSTANCE)hInstApp, "mnuTown");
-    LogStr("LoadMenus", (long)hmnuDflt, (long)hmnuCmbt, (long)hmnuAdv, (long)hmnuTown, (long)hInstApp);
+    LogStr("LoadMenus", reinterpret_cast<long>(hmnuDflt), reinterpret_cast<long>(hmnuCmbt), reinterpret_cast<long>(hmnuAdv), reinterpret_cast<long>(hmnuTown), reinterpret_cast<long>(hInstApp)); // API-forced: LogStr logs handles as long.
 }
 
 // donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
@@ -2079,13 +2079,14 @@ void PopNetBox(char* notice) {
         PollSound();
         data = GetRemoteData(0);
         if (data) {
+            // API-forced: GetRemoteData returns queue records as char*.
             if (reinterpret_cast<RemoteMessage*>(data)->type != REMOTE_MESSAGE_RELIABLE) {
                 data = GetRemoteData(1);
             } else {
-                switch (reinterpret_cast<RemoteMessage*>(data)->command) {
+                switch (reinterpret_cast<RemoteMessage*>(data)->command) { // API-forced: char* record.
                     case 11:
                         data = GetRemoteData(1);
-                        AddNetBoxLine(reinterpret_cast<RemoteMessage*>(data)->payload.data);
+                        AddNetBoxLine(reinterpret_cast<RemoteMessage*>(data)->payload.data); // API-forced: char* record.
                         drawLines = 1;
                         if (msgTime)
                             msgTime = KBTickCount();

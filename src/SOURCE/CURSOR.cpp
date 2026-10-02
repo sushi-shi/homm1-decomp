@@ -528,7 +528,7 @@ movementDone:
         if (mapExtra[movingHero->m_x][movingHero->m_y] & 0x80) {
             if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                 goto adjacentDone;
-            if (retCell && (char)(retCell->m_triggerType & 0x7f) == 0x3e)
+            if (retCell && static_cast<char>(retCell->m_triggerType & 0x7f) == 0x3e)
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
             if (movingHero->m_owner == -1)

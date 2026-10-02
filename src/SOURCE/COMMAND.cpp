@@ -200,7 +200,7 @@ void combatManager::SetCombatDirections(int targetHex) {
         if (dir < 6)
             mapped = (dir + 3) % 6;
         else
-            mapped = (signed char)(dir == 6 ? 7 : 6);
+            mapped = static_cast<signed char>(dir == 6 ? 7 : 6);
         if (hasPath[mapped]) {
             if (target->m_stats.attributes & 1) {
                 if (dir == 0 && m_hexCells[targetHex - 1].m_occupantSide == targetSide
@@ -294,7 +294,7 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
     }
     distX = abs(distX);
     distY = abs(distY);
-    ratio = (float)distX / ((float)distY);
+    ratio = static_cast<float>(distX) / (static_cast<float>(distY));
     if (index == 0 || index == 12) {
         if (ratio > 3.73)
             index += 5;
@@ -875,7 +875,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
     if (m_winLoseBottomWidgets[1] == 0)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[1], -1);
-    artifactName = (char*)malloc(0x3c);
+    artifactName = static_cast<char*>(malloc(0x3c));
     sprintf(artifactName, gArtifactNames[artifact]);
     m_winLoseBottomTextWidgets[0] =
         new textWidget(0, 0x18a, 0x140, 0xc, artifactName, "smalfont.fnt", 1, 0x835, 0x200);
@@ -925,7 +925,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             }
         }
     }
-    buffer = (char*)malloc(0x1e);
+    buffer = static_cast<char*>(malloc(0x1e));
     sprintf(buffer, "Battlefield Casualties");
     m_winLoseBottomTextWidgets[12] =
         new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
@@ -937,7 +937,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             rowY = 0x118;
         else
             rowY = 0x159;
-        buffer = (char*)malloc(0x1e);
+        buffer = static_cast<char*>(malloc(0x1e));
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
@@ -945,7 +945,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
         if (numLost[side] <= 0) {
-            buffer = (char*)malloc(10);
+            buffer = static_cast<char*>(malloc(10));
             sprintf(buffer, "None");
             m_winLoseBottomTextWidgets[side * 5] = new textWidget(
                 0,
@@ -979,7 +979,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             );
             if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
                 MemError();
-            buffer = (char*)malloc(9);
+            buffer = static_cast<char*>(malloc(9));
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
             m_winLoseBottomTextWidgets[side * 5 + armyIndex] = new textWidget(
                 armyIndex * iconSpacing + firstX,

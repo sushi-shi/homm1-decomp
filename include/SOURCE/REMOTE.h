@@ -53,6 +53,8 @@ struct RemotePacketHeader {
 };
 #pragma pack(pop)
 
+// API-forced: PacketSend/packet are byte buffers framed by this header (Buka
+// keeps the same accessor).
 #define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
 
 // Retail TransmitRemoteData fills sender/id/type/command/size at +0/+1/+5/+6/+7

@@ -56,7 +56,7 @@ int combatManager::AICheckRetreat(void) {
                 if (m_armies[side][armyIndex].m_stats.attributes & 0x80)
                     armyPtr->m_creatureCounts[armyIndex] = m_armies[side][armyIndex].m_quantity;
                 else
-                    armyPtr->m_creatureCounts[armyIndex] = (short)(m_armies[side][armyIndex].m_quantity * 1.2);
+                    armyPtr->m_creatureCounts[armyIndex] = static_cast<short>(m_armies[side][armyIndex].m_quantity * 1.2);
             } else {
                 armyPtr->m_creatureTypes[armyIndex] = -1;
                 armyPtr->m_creatureCounts[armyIndex] = 0;
@@ -64,7 +64,7 @@ int combatManager::AICheckRetreat(void) {
         }
         force[side] = gpPhilAI->FightValueOfStack(armyPtr, sideHero, 1, 0, 0);
         if (m_combatTowns[side])
-            force[side] = (int)(force[side] * 1.1);
+            force[side] = static_cast<int>(force[side] * 1.1);
         artifactTotals[side] = 0;
         if (sideHero) {
             for (armyIndex = 0; armyIndex < 14; armyIndex++) {
@@ -73,7 +73,7 @@ int combatManager::AICheckRetreat(void) {
             }
         }
     }
-    force[1 - m_currentSide] = (int)(force[1 - m_currentSide] * 1.1);
+    force[1 - m_currentSide] = static_cast<int>(force[1 - m_currentSide] * 1.1);
     treasureValue = artifactTotals[m_currentSide];
     if (artifactTotals[m_currentSide] < 1000)
         return 0;
@@ -101,7 +101,7 @@ int combatManager::AICheckRetreat(void) {
     if (m_currentSide == 1)
         prob = prob - 0.06;
     prob -= (4 - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_difficulty) * 0.03;
-    retreatRatio = (float)force[m_currentSide] / (force[0] + force[1]);
+    retreatRatio = static_cast<float>(force[m_currentSide]) / (force[0] + force[1]);
     if (retreatRatio < prob) {
         giNextAction = 4;
         return 1;
@@ -1673,7 +1673,7 @@ void army::DoAttack(int retaliation) {
                 checkHex = GetAdjacentCellIndex(target->m_hex, target->m_facing ? 5 : 0);
                 if (m_hex == checkHex)
                     target->m_attackDirection = 6;
-                checkHex = GetAdjacentCellIndex(target->m_hex, (signed char)(target->m_facing ? 3 : 2));
+                checkHex = GetAdjacentCellIndex(target->m_hex, static_cast<signed char>(target->m_facing ? 3 : 2));
                 if (m_hex == checkHex)
                     target->m_attackDirection = 7;
             }
@@ -1870,7 +1870,7 @@ void army::DamageEnemy(class army* target, int* damageResult, int* killedResult,
         total /= 2;
     if (m_damageMode == 2)
         total /= 2;
-    damage = (int)(total + 0.5);
+    damage = static_cast<int>(total + 0.5);
     if (m_creatureType == 27 && SRandom(1, 5) == 2) {
         halfDamage = target->m_stats.hitPoints * ((target->m_quantity + 1) / 2);
         if (damage < halfDamage) {

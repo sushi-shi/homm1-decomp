@@ -111,7 +111,7 @@ H1_C_LINKAGE void __cdecl nb_term(void)
         memset(&ncb, 0, sizeof(ncb));
         ncb.ncb_command = NCBCANCEL;
         ncb.ncb_lana_num = gNetbiosLana;
-        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbCtlNcb);
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbCtlNcb); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
     if (gNetStatus[gNbMaxSess] & static_cast<int>(NETBIOS_SESSION_NAME_REGISTERED)) {
@@ -230,9 +230,8 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
                 memset(&ncb, 0, sizeof(ncb));
                 ncb.ncb_command = NCBCANCEL;
                 ncb.ncb_lana_num = gNetbiosLana;
-                ncb.ncb_buffer = reinterpret_cast<unsigned char*>(
-                    &gNbSessNcb[destinationSession]
-                ); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
+                // API-forced: NCBCANCEL receives the target NCB through ncb_buffer (PUCHAR).
+                ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[destinationSession]);
                 Netbios(&ncb);
             }
             returnCode = nb_recv_any(destinationSession);
@@ -285,9 +284,8 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
                 memset(&ncb, 0, sizeof(ncb));
                 ncb.ncb_command = NCBCANCEL;
                 ncb.ncb_lana_num = gNetbiosLana;
-                ncb.ncb_buffer = reinterpret_cast<unsigned char*>(
-                    &gNbSessNcb[destinationSession]
-                ); // API-forced: NCBCANCEL receives the target NCB through Win32 ncb_buffer (PUCHAR).
+                // API-forced: NCBCANCEL receives the target NCB through ncb_buffer (PUCHAR).
+                ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[destinationSession]);
                 Netbios(&ncb);
             }
             nb_close_session(destinationSession);
@@ -391,7 +389,7 @@ VA(0x004149a1, 0xbb)
 void nb_add_name(void)
 {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
-        strcpy(reinterpret_cast<char *>(gNbSessBuf), gNbGroupName);
+        strcpy(reinterpret_cast<char *>(gNbSessBuf), gNbGroupName); // API-forced: NCB name bytes are unsigned.
         memcpy(gNbSessBuf + strlen(gNbGroupName), gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
         memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
         gNbCtlNcb.ncb_command = NCBDGSENDBC | ASYNCH;
@@ -584,7 +582,7 @@ void nb_close_session(int session)
         memset(&ncb, 0, sizeof(ncb));
         ncb.ncb_command = NCBCANCEL;
         ncb.ncb_lana_num = gNetbiosLana;
-        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[session]);
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[session]); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
     if (gNbSessLsn[session] != NETBIOS_INVALID_ID) {

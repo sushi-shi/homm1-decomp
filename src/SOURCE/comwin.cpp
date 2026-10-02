@@ -170,7 +170,7 @@ short com_rcv(short port, unsigned short requested, void *buffer)
             currentBytesRead = requested;
         if (currentBytesRead) {
             if (ReadFile(gComPorts[port].handle, buffer, currentBytesRead, &nRead, NULL))
-                return (short)nRead;
+                return static_cast<short>(nRead);
         }
     }
     return 0;

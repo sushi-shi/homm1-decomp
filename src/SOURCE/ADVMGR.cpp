@@ -5545,6 +5545,7 @@ char* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
     int remotePlayerExited;
 
+    // API-forced: GetRemoteData and DoNetCombat pass queue records as char*.
     receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1));
     if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {
         switch (receivedPacket->command) {
@@ -5561,16 +5562,16 @@ char* advManager::CheckHandleNet(void) {
             break;
         case 21:
             if (gbInCombat)
-                return reinterpret_cast<char*>(receivedPacket);
+                return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
             else
-                DoNetCombat(reinterpret_cast<char*>(receivedPacket));
+                DoNetCombat(reinterpret_cast<char*>(receivedPacket)); // API-forced: char* record.
             break;
         case 30:
             LogStr("receive exit");
             ReceiveRemotePlayerExit(receivedPacket->payload.data[0], receivedPacket->payload.data[1], 0, 0);
             break;
         default:
-            return reinterpret_cast<char*>(receivedPacket);
+            return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
         }
     }
     return 0;
@@ -5679,7 +5680,7 @@ void advManager::SaveAdventureBorder(void) {
 
     m_adventureBorder = static_cast<unsigned char*>(malloc(BORDER_BUFFER_SIZE));
     unsigned char* savedPixels = m_adventureBorder;
-    unsigned char* src = reinterpret_cast<unsigned char*>(gpWindowManager->m_screen->m_pixels);
+    signed char* src = gpWindowManager->m_screen->m_pixels;
     int row;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(savedPixels, src, ADVENTURE_VIEWPORT_EXTENT);
@@ -5705,7 +5706,7 @@ void advManager::SaveAdventureBorder(void) {
 VA(0x00436ed5, 0x134)
 void advManager::DrawAdventureBorder(void) {
     unsigned char* savedPixels;
-    unsigned char* dest;
+    signed char* dest;
     int row;
 
     if (m_adventureBorder == 0)
@@ -5713,7 +5714,7 @@ void advManager::DrawAdventureBorder(void) {
     if (gbNoBorder != 0)
         return;
 
-    dest = reinterpret_cast<unsigned char*>(gpWindowManager->m_screen->m_pixels);
+    dest = gpWindowManager->m_screen->m_pixels;
     savedPixels = m_adventureBorder;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(dest, savedPixels, ADVENTURE_VIEWPORT_EXTENT);
