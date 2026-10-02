@@ -125,10 +125,10 @@ short smackManager::Main(struct tag_message &msg) {
             SmackSoundOnOff(smk, 0);
             SmackGoto(smk, startFrame);
             SmackSoundOnOff(smk, gConfig.musicVolume);
-            if (smk->PalType == 1)
+            if (smk->paletteSelector == 1)
                 pPalette->m_data = (signed char *)smk->Palette;
             else
-                pPalette->m_data = (signed char *)smk->AltPalette;
+                pPalette->m_data = (signed char *)smk->alternatePalette;
             SetPalette(pPalette->m_data, 1);
             gbFirstTimeThrough = 1;
         }
@@ -139,10 +139,10 @@ short smackManager::Main(struct tag_message &msg) {
         for (currentFrame = startFrame; currentFrame <= smk->Frames; currentFrame++) {
             SmackDoFrame(smk);
             if (SmackOptions[bSmackNum].fadeIn && currentFrame == startFrame) {
-                if (smk->PalType == 1)
+                if (smk->paletteSelector == 1)
                     pPalette->m_data = (signed char *)smk->Palette;
                 else
-                    pPalette->m_data = (signed char *)smk->AltPalette;
+                    pPalette->m_data = (signed char *)smk->alternatePalette;
                 if (giMainVideoModeColorDepth == 8 || gConfig.gfx[giCurExe].fullScreen) {
                     while (SmackToBufferRect(smk, 1))
                         BlitBitmapToScreen(gpWindowManager->m_screen, smk->LastRectx, smk->LastRecty,
@@ -220,10 +220,10 @@ short smackManager::Main(struct tag_message &msg) {
         pressed:;
         }
         if (SmackOptions[bSmackNum].fadeOut) {
-            if (smk->PalType == 1)
+            if (smk->paletteSelector == 1)
                 pPalette->m_data = (signed char *)smk->Palette;
             else
-                pPalette->m_data = (signed char *)smk->AltPalette;
+                pPalette->m_data = (signed char *)smk->alternatePalette;
             gpWindowManager->FadeScreen(1, 8, pPalette);
             FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
             BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);

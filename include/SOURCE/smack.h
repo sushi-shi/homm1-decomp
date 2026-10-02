@@ -6,7 +6,10 @@
 // cleans its own arguments (`add esp, N`), so the period header declared the
 // API __cdecl.  The ordinal -> name map is recorded with its call-site
 // evidence in config/retail/function_referents.tsv.  Only the members the
-// game reads are named; offsets come from retail smackManager::Main.
+// game reads are named; offsets come from retail smackManager::Main.  Frames,
+// Palette and the LastRect fields keep the SDK names their use proves; this
+// older layout's +0x6c palette selector and +0x374 second palette are named
+// from smackManager::Main's use alone.
 
 #pragma pack(push, 1)
 struct Smack {
@@ -15,9 +18,9 @@ struct Smack {
     unsigned long Height;
     unsigned long Frames;
     char unknown10[0x5c];
-    unsigned long PalType;
+    unsigned long paletteSelector;
     unsigned char Palette[0x304];
-    unsigned char AltPalette[0x304];
+    unsigned char alternatePalette[0x304];
     char unknown678[0xc];
     long LastRectx;
     long LastRecty;
