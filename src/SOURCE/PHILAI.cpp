@@ -10,6 +10,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/campaignTypes.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/mapObjectTypes.h>
 
@@ -3055,7 +3056,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     short n;
     int won;
 
-    if (cell->m_objectMetadata == 1)
+    if (cell->m_objectMetadata == GHOST_SITE_EMPTY)
         return;
     guards[0] = 2;
     guards[1] = 3;
@@ -3063,19 +3064,19 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     guards[3] = 10;
     for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
         gpMonGroup->m_creatureTypes[n] = CREATURE_GHOST;
-        gpMonGroup->m_creatureCounts[n] = guards[cell->m_objectMetadata - 2];
+        gpMonGroup->m_creatureCounts[n] = guards[cell->m_objectMetadata - GHOST_SITE_SMALL];
     }
     switch (cell->m_objectMetadata) {
-        case 2:
+        case GHOST_SITE_SMALL:
             rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 1000.0f);
             break;
-        case 3:
+        case GHOST_SITE_MEDIUM:
             rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 2000.0f);
             break;
-        case 4:
+        case GHOST_SITE_LARGE:
             rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 5000.0f);
             break;
-        case 5:
+        case GHOST_SITE_HUGE:
             rewardValue = static_cast<int>(
                 gafAITurnCostResource[RESOURCE_GOLD] * 2000.0f
                 + gpCurPlayer->m_aiData.m_artifactValue
@@ -3108,21 +3109,21 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
         );
         if (won) {
             switch (cell->m_objectMetadata) {
-                case 2:
+                case GHOST_SITE_SMALL:
                     gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 1000);
                     break;
-                case 3:
+                case GHOST_SITE_MEDIUM:
                     gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
                     break;
-                case 4:
+                case GHOST_SITE_LARGE:
                     gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 5000);
                     break;
-                case 5:
+                case GHOST_SITE_HUGE:
                     gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
                     gpAdvManager->GiveRandomArtifact(heroPointer);
                     break;
             }
-            cell->m_objectMetadata = 1;
+            cell->m_objectMetadata = GHOST_SITE_EMPTY;
         }
     }
 }
@@ -3347,13 +3348,13 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iArtifactChoice3 = 0;
             if (bEventSeen) {
                 switch (pEventCell->m_objectMetadata) {
-                    case 1:
+                    case ARTIFACT_EVENT_MODE_PICKUP:
                         iEventRV = iArtifactChoice1;
                         break;
-                    case 2:
+                    case ARTIFACT_EVENT_MODE_GUARDED:
                         iEventRV = iArtifactChoice2;
                         break;
-                    case 3:
+                    case ARTIFACT_EVENT_MODE_GOLD:
                         iEventRV = iArtifactChoice3;
                         break;
                 }
@@ -3393,7 +3394,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = gpCurPlayer->m_aiData.m_obeliskValue;
             break;
         case MAP_OBJECT_MONSTER:
-            iMonsterCount = pEventCell->m_objectMetadata & 0x7f;
+            iMonsterCount = pEventCell->m_objectMetadata & MONSTER_COUNT_MASK;
             memset(gpMonGroup->m_creatureTypes, -1, sizeof(gpMonGroup->m_creatureTypes));
             memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
             if (iMonsterCount / 5 > 0) {
@@ -3431,10 +3432,10 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iAttackerLoss,
                 armySlot2
             );
-            if ((pEventCell->m_objectMetadata & 0x80)
+            if ((pEventCell->m_objectMetadata & MONSTER_WILLING_FLAG)
                 && gpPhilAI->FightValueOfStack(&pHero->m_army, pHero, 0, 0, 0)
                        > gMonsterDatabase[pEventCell->m_objectIndex].fightValue
-                             * (pEventCell->m_objectMetadata & 0x7f) * 1.75) {
+                             * (pEventCell->m_objectMetadata & MONSTER_COUNT_MASK) * 1.75) {
                 *liveChance = 100;
                 *liveChance = static_cast<int>(fWinChance * 60.0f + 40.0f);
                 if (pHero->m_army.CanJoin(pEventCell->m_objectIndex))
@@ -3606,7 +3607,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             }
             break;
         case MAP_OBJECT_DAEMON_CAVE:
-            if (pEventCell->m_objectMetadata == 1) {
+            if (pEventCell->m_objectMetadata == DAEMON_CAVE_EMPTY) {
                 iEventRV = 0;
             } else {
                 iEventRV = static_cast<int>(
@@ -3614,7 +3615,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                     + (gpCurPlayer->m_aiData.m_artifactValue + pHero->m_aiFightValue * 100.0)
                     + pHero->m_aiFightValue * 300.0 + gafAITurnCostResource[RESOURCE_GOLD] * -750.0
                 );
-                if (pEventCell->m_objectMetadata == 5
+                if (pEventCell->m_objectMetadata == DAEMON_REWARD_RANSOM
                     && gpCurPlayer->m_resources[RESOURCE_GOLD] < 2500)
                     iEventRV = -100;
             }
@@ -3730,7 +3731,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             }
             break;
         case MAP_OBJECT_WINDMILL:
-            if (pEventCell->m_objectMetadata == 99) {
+            if (pEventCell->m_objectMetadata == WINDMILL_EMPTY) {
                 iEventRV = 0;
             } else {
                 memset(costList, 0, sizeof(costList));
@@ -3739,7 +3740,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             }
             break;
         case MAP_OBJECT_SKELETON:
-            if (pEventCell->m_objectMetadata == 1)
+            if (pEventCell->m_objectMetadata == SKELETON_EMPTY)
                 iEventRV = 0;
             else
                 iEventRV = static_cast<int>(gpCurPlayer->m_aiData.m_artifactValue * 0.1);
@@ -3830,23 +3831,23 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             break;
         case MAP_OBJECT_GRAVEYARD:
         case MAP_OBJECT_SHIPWRECK:
-            if (pEventCell->m_objectMetadata == 1) {
+            if (pEventCell->m_objectMetadata == GHOST_SITE_EMPTY) {
                 iEventRV = 0;
             } else {
                 switch (pEventCell->m_objectMetadata) {
-                    case 2:
+                    case GHOST_SITE_SMALL:
                         guardCount1 = 2;
                         goldCost = 1000;
                         break;
-                    case 3:
+                    case GHOST_SITE_MEDIUM:
                         guardCount1 = 3;
                         goldCost = 2000;
                         break;
-                    case 4:
+                    case GHOST_SITE_LARGE:
                         guardCount1 = 5;
                         goldCost = 5000;
                         break;
-                    case 5:
+                    case GHOST_SITE_HUGE:
                         guardCount1 = 10;
                         goldCost = 2000;
                         break;
@@ -3864,8 +3865,9 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                     0,
                     static_cast<int>(
                         goldCost * gafAITurnCostResource[RESOURCE_GOLD]
-                        + (pEventCell->m_objectMetadata == 5 ? gpCurPlayer->m_aiData.m_artifactValue
-                                                             : 0)
+                        + (pEventCell->m_objectMetadata == GHOST_SITE_HUGE
+                               ? gpCurPlayer->m_aiData.m_artifactValue
+                               : 0)
                     ),
                     bWon9,
                     iEventRV
