@@ -1069,7 +1069,7 @@ void philAI::ProbableOutcomeOfBattle(
         difficulty8 = gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase + 0.66;
         if (gbHumanPlayer[enemyPlayer])
             outcomeValue =
-                (int)(outcomeValue + defenderRemaining * difficulty8 * difficulty8 * gfAttackHumanBonus);
+                (int)(outcomeValue + (defenderRemaining * difficulty8 * difficulty8) * gfAttackHumanBonus);
         else
             outcomeValue =
                 (int)(outcomeValue + defenderRemaining * gfAttackComputerBonus * difficulty8 * difficulty8);
@@ -1485,9 +1485,9 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     int bestHero;
     float worth;
     int curHero;
-    float bestScore;
     hero* availHero;
     float adjusted;
+    float bestScore;
     float bestCost;
     int cost;
 
@@ -1998,9 +1998,9 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
     int castleValue;
     float countMod0;
     float magicMod8;
+    int spellScore;
     int maxScore3;
     town* pTown;
-    int spellScore;
     int stats;
     int luck;
     int morale;
@@ -2194,9 +2194,9 @@ int philAI::QuickCombat(
     float& attackerDamage,
     float& defenderDamage
 ) {
+    float rnd;
     float fracLost;
     float winChance;
-    float rnd;
     armyGroup* winner;
     int aDead;
     int unused;
@@ -2231,7 +2231,8 @@ int philAI::QuickCombat(
         dLeft,
         res
     );
-    if ((rnd = Random(0, 100) / 100.0) < winChance) {
+    rnd = Random(0, 100) / 100.0;
+    if (rnd < winChance) {
         win = 1;
         wChance = winChance;
         winner = attacker;
@@ -2239,7 +2240,7 @@ int philAI::QuickCombat(
         wChance = 1.0f - winChance;
         winner = defender;
     }
-    diff = static_cast<float>(winChance < rnd ? rnd - winChance : winChance - rnd);
+    diff = (float)(rnd > winChance ? rnd - winChance : winChance - rnd);
     if (win != 0 && winChance > 0.6)
         diff *= winChance + 0.65;
     fracLost = (1.0 - diff) * (1.0 - diff);
@@ -2964,9 +2965,13 @@ int iDefaultEventType;
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
-VA(0x0042278b, 0x2085)
+VA(0x0042278b, 0x2083)
 int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate, int* liveChance) {
     int numToBuy;
+    int bWon9;
+    int costList[7];
+    int guardCount1;
+    int bestRV1;
     int exitRV5;
     int gateY28;
     int gateX1;
@@ -2975,10 +2980,6 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     int armySlot2;
     mapCell* exitCell;
     int positionValue;
-    int bWon9;
-    int costList[7];
-    int guardCount1;
-    int bestRV1;
     int prize5;
     int bBattleWon9;
     int chosenExitY27;

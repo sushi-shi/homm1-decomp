@@ -1,0 +1,265 @@
+// HoMM1 VIEW: the combat hero (general) and creature quick views.
+// Retail int3 padding bounds this object at 0x00438310-0x00438bf1; Buka 2.1
+// SOURCE/VIEW.cpp supplies the family (ViewGeneral, HandleViewGeneral,
+// ViewArmy) in the same order.
+
+#include <match.h>
+
+#include <BASE/INPUTMGR_TYPES.h>
+#include <H1/All.h>
+#include <H1/KB.h>
+
+#include <stdio.h>
+
+// Primary stat, morale and luck labels of the general's stats text.
+extern char* cViewGeneralLabels[];
+// Morale and luck names, indexed from -3.
+extern char* gMoraleText[];
+extern char* gLuckText[];
+// Combat command help lines; HandleViewGeneral shows entries 1-5.
+extern char* cViewGeneralHelp[];
+
+short HandleViewGeneral(tag_message& message);
+
+// Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
+// combat hero window, with Cast Spell, Retreat and Surrender dimmed when
+// the side cannot use them.
+VA(0x00438310, 0x56d)
+signed char combatManager::ViewGeneral(int side, int allowActions, int quickView)
+{
+    short pictureCtrl;
+    short borderId;
+    int morale;
+    int iLuck;
+    short barId;
+    short castSpellControl;
+    tag_message message;
+    short surrenderBtn;
+    short colorControl;
+    heroWindow* wnd;
+    short nameCtrl;
+    short frameWidgetId;
+    short statBoxId;
+    short cornerCtrl;
+    int spare;
+    short captionCtrl;
+    short edgeCtrl;
+    short retreatId;
+    short baseCtrl;
+
+    if (m_heroes[side] == NULL)
+        return 0;
+    // vgenwin.bin widget ids: retail stores the whole block (as Buka does)
+    // though nothing reads it; their slots and the unused spare fix the frame.
+    nameCtrl = 1;
+    pictureCtrl = 2;
+    colorControl = 3;
+    statBoxId = 4;
+    borderId = 0;
+    captionCtrl = 1;
+    cornerCtrl = 7;
+    barId = 8;
+    edgeCtrl = 9;
+    castSpellControl = 10;
+    retreatId = 11;
+    surrenderBtn = 12;
+    baseCtrl = 13;
+    frameWidgetId = 14;
+    giCurGeneral = side;
+    message.type = MESSAGE_WIDGET;
+    wnd = new heroWindow(195, 60, "vgenwin.bin");
+    if (wnd == NULL)
+        MemError();
+    sprintf(gText, "port%04d.icn", m_heroes[side]->m_unknown1d);
+    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
+    message.payload.widget.id = 2;
+    message.payload.widget.data.text = gText;
+    wnd->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = 3;
+    message.payload.widget.data.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
+    wnd->BroadcastMessage(message);
+    sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_unknown1c]);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = gText;
+    wnd->BroadcastMessage(message);
+    morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
+    iLuck = gpGame->GetLuck(m_heroes[side], NULL);
+    sprintf(gText, "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
+            cViewGeneralLabels[0], m_heroes[side]->m_primaryStats[0],
+            cViewGeneralLabels[1], m_heroes[side]->m_primaryStats[1],
+            cViewGeneralLabels[2], m_heroes[side]->m_primaryStats[2],
+            cViewGeneralLabels[3], m_heroes[side]->m_primaryStats[3],
+            cViewGeneralLabels[4], gMoraleText[morale + 3],
+            cViewGeneralLabels[5], gLuckText[iLuck + 3]);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 4;
+    message.payload.widget.data.text = gText;
+    wnd->BroadcastMessage(message);
+    if (m_heroes[side] == NULL || allowActions == 0 || !m_heroes[side]->HasArtifact(37)
+        || m_heroCastSpell[side] != 0 || m_currentSide != giCurGeneral) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = 10;
+        message.payload.widget.data.value = 2;
+        wnd->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 8;
+        wnd->BroadcastMessage(message);
+    }
+    if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || m_currentSide != giCurGeneral) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = 12;
+        message.payload.widget.data.value = 2;
+        wnd->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 8;
+        wnd->BroadcastMessage(message);
+    }
+    if (allowActions == 0 || m_currentSide != giCurGeneral
+        || (giCurGeneral == 0 && m_combatTowns[0] != NULL)
+        || m_sideRetreated[0] != 0 || m_sideRetreated[1] != 0) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = 11;
+        message.payload.widget.data.value = 2;
+        wnd->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 8;
+        wnd->BroadcastMessage(message);
+    }
+    if (quickView) {
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->AddWindow(wnd, -1, 1);
+        QuickViewWait();
+        gpWindowManager->RemoveWindow(wnd);
+        gpMouseManager->ReallyShowPointer();
+    } else
+        gpWindowManager->DoDialog(wnd, HandleViewGeneral, 0);
+    delete wnd;
+    m_gridUpdateRow = 0;
+    DrawFrame(1);
+    if (!quickView)
+        DoCommand(gpWindowManager->m_dialogResult);
+    return 0;
+}
+
+// Buka VIEW.cpp:290-390 without the right-click help: Cast Spell, Retreat,
+// Surrender and Close end the dialog; hovering shows their help line.
+VA(0x0043887d, 0x222)
+short HandleViewGeneral(tag_message& message)
+{
+    int hintIndex;
+    short pictureCtrl;
+    short borderId;
+    short barId;
+    short castSpellControl;
+    short surrenderBtn;
+    signed char retVal;
+    short colorControl;
+    short nameCtrl;
+    short frameWidgetId;
+    short statBoxId;
+    short cornerCtrl;
+    short captionCtrl;
+    short edgeCtrl;
+    short retreatId;
+    short baseCtrl;
+
+    nameCtrl = 1;
+    pictureCtrl = 2;
+    colorControl = 3;
+    statBoxId = 4;
+    borderId = 0;
+    captionCtrl = 1;
+    cornerCtrl = 7;
+    barId = 8;
+    edgeCtrl = 9;
+    castSpellControl = 10;
+    retreatId = 11;
+    surrenderBtn = 12;
+    baseCtrl = 13;
+    frameWidgetId = 14;
+    retVal = 0;
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+        case WIDGET_NOTIFY_DESELECT:
+            switch (message.payload.widget.id) {
+            case 10:
+            case 11:
+            case 12:
+            case 0x7800:
+                if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                    gpWindowManager->m_dialogResult = message.payload.widget.id;
+                    retVal = 1;
+                    break;
+                }
+            }
+            break;
+        case WIDGET_COMMAND_HOVER:
+            if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                return MESSAGE_DISPATCH_CONSUME;
+            gpWindowManager->m_lastHoverId = message.payload.widget.id;
+            switch (message.payload.widget.id) {
+            case 10:
+                hintIndex = 1;
+                break;
+            case 11:
+                hintIndex = 2;
+                break;
+            case 12:
+                hintIndex = 3;
+                break;
+            case 0x7800:
+                hintIndex = 4;
+                break;
+            default:
+                hintIndex = 5;
+                break;
+            }
+            gpCombatManager->CombatMessage(cViewGeneralHelp[hintIndex], 1);
+            return MESSAGE_DISPATCH_CONSUME;
+            break;
+        }
+    }
+    if (retVal) {
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
+// Buka VIEW.cpp:442-488: the creature quick view, placed beside the stack
+// and clamped to the screen.
+VA(0x00438a9f, 0x152)
+void combatManager::ViewArmy(army* viewedArmy, int side, int quickView)
+{
+    short xPos;
+    short yPos;
+    short wndWidth;
+    short viewXOffset;
+    short xAdjust;
+    short viewYOffset;
+    short height;
+
+    if (viewedArmy == NULL)
+        return;
+    wndWidth = 488 - 86;
+    height = 229;
+    viewXOffset = 86;
+    viewYOffset = 164;
+    xPos = m_hexCells[viewedArmy->m_hex].m_x;
+    yPos = m_hexCells[viewedArmy->m_hex].m_y;
+    xAdjust = (viewedArmy->m_facing == 1 ? 43 : 0) + 80;
+    xPos -= xAdjust;
+    if (xPos < 0)
+        xPos = 0;
+    if (xPos + 488 > 640)
+        xPos = 151;
+    yPos -= 164;
+    if (yPos < 0)
+        yPos = 0;
+    if (yPos + 229 > 460)
+        yPos = 230;
+    gpGame->ViewArmy(xPos, yPos, viewedArmy->m_creatureType, viewedArmy->m_quantity, m_combatTowns[side], 1,
+                     viewedArmy->m_facing, quickView, m_heroes[side], viewedArmy, m_armyGroups[side]);
+}
