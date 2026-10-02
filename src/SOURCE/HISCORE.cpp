@@ -36,9 +36,7 @@ highScoreManager::highScoreManager(void) {
 
 // HoMM1 keeps an empty destructor; it only restores this class's vtable.
 VA(0x004010a0, 0x1f)
-highScoreManager::~highScoreManager()
-{
-}
+highScoreManager::~highScoreManager() {}
 
 // donor PoL RVA 0x00089a96; preferred Buka symbol ?Open@highScoreManager@@UAEHH@Z
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
@@ -86,8 +84,9 @@ short highScoreManager::Main(struct tag_message& message) {
     if (gbShowHighScore != 0)
         gbShowHighScore = 0;
 
-    if (glTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
-        glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
+    if (glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
+        glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] =
+            KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
         for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
             m_animationFrames[rank] =
                 (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
@@ -155,8 +154,7 @@ short highScoreManager::Main(struct tag_message& message) {
 // Buka HISCORE.cpp:121-283; HoMM1 reads 0x57-byte records, names the
 // rating creature directly and highlights the new entry by fill colour.
 VA(0x004014ee, 0x667)
-void highScoreManager::Update(void)
-{
+void highScoreManager::Update(void) {
     signed char bNoFile;
     char fileName[350];
     tag_message message;
@@ -220,7 +218,8 @@ void highScoreManager::Update(void)
             m_monsterTypes[i] = 0;
             sprintf(gText, "");
         } else {
-            m_monsterTypes[i] = GetMonType(record.score, static_cast<signed char>(!m_showCampaignScores));
+            m_monsterTypes[i] =
+                GetMonType(record.score, static_cast<signed char>(!m_showCampaignScores));
         }
 
         message.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;
@@ -235,9 +234,8 @@ void highScoreManager::Update(void)
             m_animationFrames[i] = (m_animationFrames[i] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             message.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value =
-                m_monsterTypes[i] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                + m_animationFrames[i] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
+            message.value = m_monsterTypes[i] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                            + m_animationFrames[i] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(message);
         }
 

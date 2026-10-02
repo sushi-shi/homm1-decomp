@@ -12,11 +12,27 @@ H1_ENUM_CONST_BEGIN(PlayerDataConstant)
     PLAYER_TOWN_CAPACITY = 36,
     PLAYER_RESOURCE_COUNT = 7
 H1_ENUM_CONST_END(PlayerDataConstant)
-    // clang-format on
 
-    // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
-    // HoMM2's per-player AI block (without its last float) inside playerData.
-    struct playerAttentionWeights {
+// A computer seat's playerData::m_difficulty, named by gPlayerTypeNames
+// ("None", "Dumb", "Average", "Smart", "Genius"); NONE marks an empty seat.
+// Human seats reuse the field as a gHandicapNames index.
+H1_ENUM_BEGIN(ComputerPlayerType)
+    PLAYER_TYPE_NONE = 0,
+    PLAYER_TYPE_DUMB = 1,
+    PLAYER_TYPE_AVERAGE = 2,
+    PLAYER_TYPE_SMART = 3,
+    PLAYER_TYPE_GENIUS = 4,
+    PLAYER_TYPE_COUNT = 5,
+    // game::PerDay gives types above these daily wood and ore, and above the
+    // second one also the resource of the weekday.
+    PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST = 2,
+    PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST = 3
+H1_ENUM_END(ComputerPlayerType)
+// clang-format on
+
+// TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
+// HoMM2's per-player AI block (without its last float) inside playerData.
+struct playerAttentionWeights {
     float gameWeightA;
     float gameRemainder;
     float gameWeightB;

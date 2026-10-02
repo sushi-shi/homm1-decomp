@@ -4,6 +4,7 @@
 // 12 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
+#include <BASE/dialog.h>
 #include <H1/Macros.h>
 
 // forward declarations:
@@ -19,9 +20,35 @@ H1_ENUM_CONST_BEGIN(FileRequesterStorageConstant)
     FILE_REQUESTER_LOCAL_EXTENSION_SIZE = 208,
     FILE_REQUESTER_MAP_DESCRIPTION_SIZE = 101
 H1_ENUM_CONST_END(FileRequesterStorageConstant)
-// clang-format on
 
-struct FileRequesterName {
+// request.bin widget ids (Buka FileRequesterControlId, HoMM1 layout): the
+// scroll arrows, gutter and knob, the ten list rows from LIST_FIRST, the
+// filename entry and its prompt, and the map-info window's size, level and
+// description fields; OK/CANCEL are the dialog role buttons.
+H1_ENUM_BEGIN(FileRequesterControlId)
+    FILE_REQUESTER_OK = DIALOG_BUTTON_2,
+    FILE_REQUESTER_CANCEL = DIALOG_BUTTON_1,
+    FILE_REQUESTER_SCROLL_UP = 1,
+    FILE_REQUESTER_SCROLL_DOWN = 2,
+    FILE_REQUESTER_SCROLL_GUTTER = 3,
+    FILE_REQUESTER_LIST_FIRST = 4,
+    FILE_REQUESTER_SCROLL_KNOB = 14,
+    FILE_REQUESTER_FILENAME_ENTRY = 15,
+    FILE_REQUESTER_FILENAME_LABEL = 16,
+    FILE_REQUESTER_MAP_SIZE = 100,
+    FILE_REQUESTER_MAP_LEVEL = 101,
+    FILE_REQUESTER_MAP_DESCRIPTION = 102
+H1_ENUM_END(FileRequesterControlId)
+
+H1_ENUM_CONST_BEGIN(FileRequesterListConstant)
+    FILE_REQUESTER_VISIBLE_ROWS = 10,
+    FILE_REQUESTER_LAST_ROW_OFFSET = 9,
+    FILE_REQUESTER_DISPATCH_MASK = 0x32f,
+    FILE_REQUESTER_FILENAME_MAX_LENGTH = 255
+H1_ENUM_CONST_END(FileRequesterListConstant)
+    // clang-format on
+
+    struct FileRequesterName {
     char text[FILE_REQUESTER_NAME_SIZE];
 };
 

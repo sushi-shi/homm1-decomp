@@ -208,8 +208,8 @@ VA(0x004039d6, 0x592)
 int DDAppPaint(void* window, void* paintDC) {
     int ySrc;
     int height;
-    int x;
     int width;
+    int x;
     PAINTSTRUCT ps;
     POINT pt;
 
@@ -733,11 +733,8 @@ void WGInitGraphics() {
     hdcImage = WinGCreateDC();
     screenImage.header.biWidth = WINGRAPH_WIDTH;
     screenImage.header.biHeight = -WINGRAPH_HEIGHT;
-    bitmap = WinGCreateBitmap(
-        hdcImage,
-        reinterpret_cast<LPBITMAPINFO>(&screenImage),
-        &screenImage.bits
-    );
+    bitmap =
+        WinGCreateBitmap(hdcImage, reinterpret_cast<LPBITMAPINFO>(&screenImage), &screenImage.bits);
     screenImage.header.biSizeImage = screenImage.header.biHeight * screenImage.header.biWidth;
     screenImage.header.biSizeImage *= Orientation;
     gbmOldMonoBitmap = static_cast<HBITMAP>(SelectObject(hdcImage, bitmap));
