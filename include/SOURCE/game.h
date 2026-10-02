@@ -71,7 +71,10 @@ public:
     // ControlPanel's scenario-info choice shows the campaign when positive.
     int m_campaignType;
     int m_campaignScenario;
-    char m_unknown000b[0x1f4];
+    char m_unknown000b[0x94];
+    // SaveGame/LoadGame and the save requester's default name; the span
+    // runs to m_playerCount.
+    char m_saveName[0x160];
     signed char m_playerCount;
     char m_unknown200;
     signed char m_deadPlayerCount;
@@ -231,7 +234,8 @@ public:
     int CountShrines(int);
     void ShowMoraleInfo(class hero*, int);
     void ShowLuckInfo(class hero*, int);
-    void GetMap(void);
+    // Retail GetMap never reads ecx; its caller passes no this.
+    static void GetMap(void);
     void ProcessNewMap(struct SMapHeader*);
     void InitNewGame(struct SMapHeader*);
     void SetupNetPlayerNames(void);

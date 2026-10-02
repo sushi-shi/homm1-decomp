@@ -1025,11 +1025,57 @@ int game::GetBoatsBuilt(void) {
     return count;
 }
 
+DATA(0x00490abc)
+signed char gbShowMapInfo = 0;
+
 // donor PoL RVA 0x000b6f40; preferred Buka symbol ?GetMap@game@@QAEXXZ
 // donor Buka TU SOURCE/Newgame; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.547944;margin=0.077231;shape=0.356;size=0.530;calls=0.607;strings=.\MAPS\;alternate=pol20:void game::GetMap(void)@0x000b6f40
+// Buka 2.1 GetMap with HoMM1's player-count file masks and the reqextra.bin
+// map-info window; a cancelled pick restores the previous map's texts.
 VA(0x00446a8a, 0x36f)
-void game::GetMap(void) {}
+void game::GetMap(void) {
+    char saveFullName[20];
+    char oldDescription[124];
+    char oldMapName[16];
+    char mask[16];
+    short result;
+    fileRequester* request;
+
+    strcpy(oldMapName, gMapName);
+    strcpy(saveFullName, gFullMapName);
+    strcpy(oldDescription, gMapDescription);
+    gbShowMapInfo = 1;
+    strcpy(gcCurMapName, "");
+    gpReqExtraWindow = new heroWindow(310, 332, "reqextra.bin");
+    if (!gpReqExtraWindow)
+        MemError();
+    if (giNumHumanPlayers == 1)
+        sprintf(mask, "????1???.MAP");
+    else if (giNumHumanPlayers == 2)
+        sprintf(mask, "?????2??.MAP");
+    else if (giNumHumanPlayers == 3)
+        sprintf(mask, "??????3?.MAP");
+    else if (giNumHumanPlayers == 4)
+        sprintf(mask, "???????4.MAP");
+    request = new fileRequester(310, 14, 0, mask, ".\\MAPS\\", ".MAP");
+    if (!request)
+        MemError();
+    request->ShowMapInfo();
+    result = gpExec->DoDialog(request);
+    gpWindowManager->RemoveWindow(gpReqExtraWindow);
+    if (result == 0x7802) {
+        strcpy(gMapName, gLastFilename);
+        delete request;
+    } else {
+        strcpy(gMapName, oldMapName);
+        strcpy(gFullMapName, saveFullName);
+        strcpy(gMapDescription, oldDescription);
+        delete request;
+    }
+    delete gpReqExtraWindow;
+    gbShowMapInfo = 0;
+}
 
 // donor PoL RVA 0x000333c0; preferred Buka symbol ?ViewWorld@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/Viewwrld; HoMM1 owner inferred from contiguous order
