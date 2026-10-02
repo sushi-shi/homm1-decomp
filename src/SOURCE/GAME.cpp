@@ -9,6 +9,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
 
@@ -463,18 +464,6 @@ void game::UpdateNewGameWindow(void) {}
 VA(0x0043be93, 0x2ad)
 void game::ShowCampaignInfo(int, int, int) {}
 
-// HoMM1's campaign scenario table: 85-byte records with the King of the Hill
-// flag, the three opponents' player types and every player's resources.
-#pragma pack(push, 1)
-struct campaignScenario {
-    signed char kingOfTheHill;
-    char unknown01[0x12];
-    signed char playerTypes[GAME_PLAYER_COUNT];
-    char unknown17[6];
-    unsigned short resources[GAME_PLAYER_COUNT][7];
-};
-#pragma pack(pop)
-extern campaignScenario gCampaignScenarios[];
 // Two bytes per campaign side; the first is the human player's crest.
 extern signed char gCampaignSideCrests[][2];
 extern signed char gbKingOfTheHill;

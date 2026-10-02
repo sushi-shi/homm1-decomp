@@ -12,6 +12,7 @@
 #include <BASE/WINMGR_TYPES.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
@@ -1092,11 +1093,187 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
     }
 }
 
+// Re-entry guard for CheckEndGame.
+extern signed char bInCheckEndGame;
+
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
 VA(0x00453174, 0x7d4)
-void CheckEndGame(int) {}
+void CheckEndGame(int forced) {
+    town* goalTown;
+    hero* artifactHero;
+    signed char ultimateOwner;
+    char text[200];
+    int numLiving;
+    signed char win;
+    playerData* pd;
+    int slot;
+    int player;
+    signed char lost;
+    signed char normalWin;
+    int lastSurvivor;
+    int humansAlive;
+    int lastHumanPos;
+
+    if (gbInNewGameSetup)
+        return;
+    if (gbGameOver)
+        return;
+    if (bInCheckEndGame)
+        return;
+    bInCheckEndGame = 1;
+
+    for (player = 0; player < gpGame->m_playerCount; player++) {
+        if (!gpGame->m_playerDead[player]) {
+            pd = &gpGame->m_players[player];
+            if (!pd->m_heroCount && !pd->m_townCount) {
+                PlayerDead(player);
+                sprintf(
+                    gText, "%s player has been vanquished!",
+                    gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                gText[0] -= 32;
+                NormalDialog(
+                    gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                    0, -1);
+            } else if (!pd->m_townCount) {
+                if (pd->m_unknown55 == -1) {
+                    if (gbThisNetHumanPlayer[player]) {
+                        sprintf(
+                            gText,
+                            "%s player, you have lost your last town.  If you do not conquer "
+                            "another town in the next week, you will be eliminated.",
+                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                        gText[0] -= 32;
+                        NormalDialog(
+                            gText, 1, -1, -1, 9, gpGame->m_players[(signed char)player].Color(),
+                            -1, 0, -1);
+                    }
+                    pd->m_unknown55 = 7;
+                } else if (!pd->m_unknown55) {
+                    PlayerDead(player);
+                    if (gbThisNetHumanPlayer[player]) {
+                        sprintf(
+                            gText,
+                            "%s player, your heroes abandon you, and you are banished from this "
+                            "land.",
+                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                        gText[0] -= 32;
+                    } else {
+                        sprintf(
+                            gText,
+                            "%s player's Heroes have abandoned him, and he is banished from this "
+                            "land.",
+                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                        gText[0] -= 32;
+                    }
+                    NormalDialog(
+                        gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                        0, -1);
+                }
+            } else {
+                pd->m_unknown55 = -1;
+            }
+        }
+    }
+
+    numLiving = 0;
+    lastSurvivor = 0;
+    humansAlive = 0;
+    lastHumanPos = 0;
+    for (player = 0; player < gpGame->m_playerCount; player++) {
+        if (!gpGame->m_playerDead[player]) {
+            numLiving++;
+            lastSurvivor = player;
+            if (gbHumanPlayer[player]) {
+                humansAlive++;
+                lastHumanPos = player;
+            }
+        }
+    }
+
+    win = 0;
+    lost = 0;
+    normalWin = 1;
+    if (gpGame->m_campaignType > 0) {
+        switch (gpGame->m_campaignScenario) {
+            case 0:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                normalWin = 0;
+                goalTown = gpGame->GetTown(gpGame->GetTownId(
+                    gCampaignScenarios[gpGame->m_campaignScenario].victoryTownX,
+                    gCampaignScenarios[gpGame->m_campaignScenario].victoryTownY));
+                if (!goalTown->m_owner)
+                    win = 1;
+                if (gpGame->m_campaignScenario == 0 && goalTown->m_owner > 0) {
+                    lost = 1;
+                    strcpy(text, "The enemy has captured the town of XX!!");
+                }
+                break;
+            case 2:
+                normalWin = 0;
+                ultimateOwner = -1;
+                for (player = 0; player < gpGame->m_playerCount; player++) {
+                    if (!gpGame->m_playerDead[player]) {
+                        for (slot = 0; slot < gpGame->m_players[player].m_heroCount; slot++) {
+                            artifactHero =
+                                gpGame->GetHero(gpGame->m_players[player].m_heroIds[slot]);
+                            if (artifactHero->HasArtifact(0) || artifactHero->HasArtifact(1)
+                                || artifactHero->HasArtifact(2) || artifactHero->HasArtifact(3))
+                                ultimateOwner = player;
+                        }
+                    }
+                }
+                if (!ultimateOwner)
+                    win = 1;
+                if (ultimateOwner > 0) {
+                    lost = 1;
+                    strcpy(text, "The enemy has captured the ultimate artifact!!");
+                }
+                break;
+            case 8:
+                normalWin = 0;
+                if (!gpGame->m_mineOwners[0])
+                    win = 1;
+                if (gpGame->m_mineOwners[0] > 0) {
+                    lost = 1;
+                    strcpy(text, "The enemy has captured the dragon city!!");
+                }
+        }
+    }
+
+    if (lost) {
+        gbGameOver = 1;
+        giEndSequence = 0;
+    }
+    if (win) {
+        gbGameOver = 1;
+        giEndSequence = 1;
+    }
+    if (numLiving == 1 || humansAlive == 0
+        || (humansAlive == 1 && !gbThisNetHumanPlayer[lastHumanPos])) {
+        if (humansAlive == 1 && gbThisNetHumanPlayer[lastHumanPos]) {
+            if (normalWin) {
+                gbGameOver = 1;
+                giEndSequence = 1;
+            }
+        } else {
+            gbGameOver = 1;
+            giEndSequence = 0;
+        }
+    }
+    if (forced) {
+        gbGameOver = 1;
+        giEndSequence = 1;
+    }
+    if (gbGameOver && gpGame->m_campaignType > 0 && giEndSequence == 1
+        && gpGame->m_campaignScenario + 1 == 9)
+        giEndSequence = 2;
+    bInCheckEndGame = 0;
+}
 
 // donor PoL RVA 0x0009c07c; preferred Buka symbol ?QuickViewWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
