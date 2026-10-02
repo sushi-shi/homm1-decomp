@@ -35,8 +35,8 @@ void advManager::StartCursor(signed char direction)
     m_previousCursorMapY = m_cursorMapY;
     m_cursorMapX += directionX;
     m_cursorMapY += directionY;
-    newX = m_mapOriginX + m_cursorMapX;
-    newY = m_mapOriginY + m_cursorMapY;
+    newX = (short)(m_mapOriginX + m_cursorMapX);
+    newY = (short)(m_mapOriginY + m_cursorMapY);
     m_mapData[newX][newY].m_flags |= 0x40;
 }
 
