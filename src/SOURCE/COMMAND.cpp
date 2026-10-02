@@ -867,11 +867,87 @@ void combatManager::ShowWinLoseArtifact(class heroWindow *window, int artifact)
     }
 }
 
-// donor PoL RVA 0x0002e2bf; preferred Buka symbol ?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.669049;margin=0.415746;shape=0.366;size=0.795;calls=0.971;strings=mons32.icn|smalfont.fnt;alternate=pol20:void combatManager::ShowDeadArmies(class heroWindow *)@0x0002e2bf
+// Buka COMMAND.cpp ShowDeadArmies; HoMM1 lays out up to five casualties a
+// side with fixed 40-pixel spacing.
 VA(0x00411b07, 0x7d0)
-void combatManager::ShowDeadArmies(class heroWindow *) {}
+void combatManager::ShowDeadArmies(class heroWindow *window)
+{
+    char *buffer;
+    int casualtyType[2][5];
+    int iconSpacing;
+    short boxWidth = 0x140;
+    short bottom = 0x1ca;
+    int armyIndex;
+    int side;
+    int rowY;
+    tag_message message;
+    int numLost[2];
+    int casualtyCount[2][5];
+    int firstX;
+
+    for (side = 0; side < 15; side++) {
+        m_winLoseBottomWidgets[side] = 0;
+        m_winLoseBottomTextWidgets[side] = 0;
+    }
+    for (side = 0; side < 2; side++) {
+        numLost[side] = 0;
+        for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+            if (m_armies[side][armyIndex].m_creatureType != -1
+                && m_armies[side][armyIndex].m_initialQuantity > m_armies[side][armyIndex].m_quantity) {
+                casualtyType[side][numLost[side]] = m_armies[side][armyIndex].m_creatureType;
+                casualtyCount[side][numLost[side]] =
+                    m_armies[side][armyIndex].m_initialQuantity - m_armies[side][armyIndex].m_quantity;
+                numLost[side]++;
+            }
+        }
+    }
+    buffer = (char *)malloc(0x1e);
+    sprintf(buffer, "Battlefield Casualties");
+    m_winLoseBottomTextWidgets[12] = new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
+    if (m_winLoseBottomTextWidgets[12] == 0)
+        MemError();
+    window->AddWidget(m_winLoseBottomTextWidgets[12], -1);
+    for (side = 0; side < 2; side++) {
+        if (side == 1)
+            rowY = 0x118;
+        else
+            rowY = 0x159;
+        buffer = (char *)malloc(0x1e);
+        sprintf(buffer, side == 1 ? "Attacker" : "Defender");
+        m_winLoseBottomTextWidgets[10 + side] =
+            new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
+        if (m_winLoseBottomTextWidgets[10 + side] == 0)
+            MemError();
+        window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
+        if (numLost[side] <= 0) {
+            buffer = (char *)malloc(10);
+            sprintf(buffer, "None");
+            m_winLoseBottomTextWidgets[side * 5] =
+                new textWidget(0, rowY + 0x12, 0x140, 0x14, buffer, "smalfont.fnt", 1, side * 5 + 0x834, 0x200);
+            if (m_winLoseBottomTextWidgets[side * 5] == 0)
+                MemError();
+            window->AddWidget(m_winLoseBottomTextWidgets[side * 5], -1);
+        }
+        iconSpacing = 0x28;
+        firstX = (0x140 - numLost[side] * iconSpacing) / 2 + 3;
+        for (armyIndex = 0; armyIndex < numLost[side]; armyIndex++) {
+            m_winLoseBottomWidgets[side * 5 + armyIndex] =
+                new iconWidget(armyIndex * iconSpacing + firstX, rowY + 0xf, 0x20, 0x1c, "mons32.icn",
+                               casualtyType[side][armyIndex], 0, side * 5 + armyIndex + 0x7d0, 0x10, 1);
+            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
+                MemError();
+            buffer = (char *)malloc(9);
+            sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
+            m_winLoseBottomTextWidgets[side * 5 + armyIndex] =
+                new textWidget(armyIndex * iconSpacing + firstX, rowY + 0x2e, 0x20, 0xc, buffer, "smalfont.fnt", 1,
+                               side * 5 + armyIndex + 0x834, 0x200);
+            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == 0)
+                MemError();
+            window->AddWidget(m_winLoseBottomWidgets[side * 5 + armyIndex], -1);
+            window->AddWidget(m_winLoseBottomTextWidgets[side * 5 + armyIndex], -1);
+        }
+    }
+}
 
 // Buka COMMAND.cpp DoVictory; HoMM1 has no necromancy or eagle eye and
 // grabs the screen instead of fading it.
