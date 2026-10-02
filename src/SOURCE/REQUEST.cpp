@@ -188,8 +188,8 @@ void fileRequester::Close(void) {
 // slot whose extension digit matches the human player count.
 VA(0x004489c4, 0x431)
 short fileRequester::Open(short priority) {
-    int i;
     const short scrollId = 14;
+    int i;
     const short promptId = 16;
     tag_message message;
     signed char enable;
@@ -511,13 +511,13 @@ char* cFRDummy = "";
 // Buka 2.1 DoKnob with HoMM1's ten-row list and 156-pixel gutter.
 VA(0x004499a8, 0x2b2)
 void fileRequester::DoKnob(void) {
+    short offset;
     int lastTop;
     short index;
     double scale;
     short x;
     short my;
     tag_message event;
-    short offset;
 
     gpMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;
