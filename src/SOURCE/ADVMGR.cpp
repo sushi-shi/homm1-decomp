@@ -113,8 +113,120 @@ H1_ENUM_CONST_BEGIN(BottomViewPanelConstant)
     BOTTOM_VIEW_PANEL_X = 480,
     BOTTOM_VIEW_PANEL_Y = 392,
     BOTTOM_VIEW_PANEL_WIDTH = 143,
-    BOTTOM_VIEW_PANEL_HEIGHT = 71
+    BOTTOM_VIEW_PANEL_HEIGHT = 71,
+    // Buka 2.1 AdventureBottomViewConstant names: the stone backdrop is wider
+    // than the panel; the backdrop/foreground icons and the text widgets take
+    // these ids; the text and count buffers are malloc'd at these sizes.
+    BOTTOM_VIEW_BACKGROUND_WIDTH = 159,
+    BOTTOM_VIEW_BACKGROUND_ID = 2000,
+    BOTTOM_VIEW_FOREGROUND_ID = 2001,
+    BOTTOM_VIEW_TEXT_ID = 2100,
+    BOTTOM_VIEW_TEXT_ID_2 = 2101,
+    BOTTOM_VIEW_TEXT_BUFFER_SIZE = 30,
+    BOTTOM_VIEW_COUNT_BUFFER_SIZE = 8
 H1_ENUM_CONST_END(BottomViewPanelConstant)
+
+// UpdBottomViewEnemyTurn's hourglass panel (Buka 2.1
+// AdventureEnemyTurnViewConstant names, same values): the hourglass,
+// running-sand and crest icons, their widget ids and z-orders, the sand
+// frame cycle and the animation delays.
+H1_ENUM_CONST_BEGIN(AdventureEnemyTurnViewConstant)
+    ENEMY_TURN_HOURGLASS_X = 493,
+    ENEMY_TURN_HOURGLASS_Y = 403,
+    ENEMY_TURN_HOURGLASS_WIDTH = 118,
+    ENEMY_TURN_HOURGLASS_HEIGHT = 51,
+    ENEMY_TURN_CREST_X = 495,
+    ENEMY_TURN_ANIMATION_X = 559,
+    ENEMY_TURN_ANIMATION_Y = 405,
+    ENEMY_TURN_ANIMATION_WIDTH = 50,
+    ENEMY_TURN_ANIMATION_HEIGHT = 47,
+    ENEMY_TURN_CREST_ID = 2002,
+    ENEMY_TURN_SAND_ID = 2003,
+    ENEMY_TURN_PHASE_ID = 2004,
+    ENEMY_TURN_BACKGROUND_Z = 1000,
+    ENEMY_TURN_HOURGLASS_Z = 1010,
+    ENEMY_TURN_SAND_Z = 1020,
+    ENEMY_TURN_CREST_Z = 1030,
+    ENEMY_TURN_PHASE_Z = 1040,
+    ENEMY_TURN_SAND_FRAME_OFFSET = 11,
+    ENEMY_TURN_SAND_FRAME_LIMIT = 20,
+    ENEMY_TURN_SAND_RESTART_FRAME = 16,
+    ENEMY_TURN_PHASE_FRAME_OFFSET = 1,
+    ENEMY_TURN_CREST_SLOT = 0,
+    ENEMY_TURN_SAND_SLOT = 1,
+    ENEMY_TURN_PHASE_SLOT = 2,
+    ENEMY_TURN_ANIMATION_DELAY = 300,
+    ENEMY_TURN_PHASE_DELAY = 700
+H1_ENUM_CONST_END(AdventureEnemyTurnViewConstant)
+
+// UpdBottomViewNewTurn's date texts (Buka AdventureNewTurnViewConstant
+// names; HoMM1 places the week line at 421).
+H1_ENUM_CONST_BEGIN(AdventureNewTurnViewConstant)
+    NEW_TURN_DATE_TEXT_X = 479,
+    NEW_TURN_WEEK_TEXT_Y = 421,
+    NEW_TURN_DAY_TEXT_Y = 438,
+    NEW_TURN_DATE_TEXT_WIDTH = 145,
+    NEW_TURN_WEEK_TEXT_HEIGHT = 12,
+    NEW_TURN_DAY_TEXT_HEIGHT = 25
+H1_ENUM_CONST_END(AdventureNewTurnViewConstant)
+
+// UpdBottomViewResMsg's message and resource layout (Buka
+// AdventureResourceViewConstant names; HoMM1's text starts at 395 and the
+// count at 450).
+H1_ENUM_CONST_BEGIN(AdventureResourceViewConstant)
+    RESOURCE_VIEW_TEXT_BASE_Y = 395,
+    RESOURCE_VIEW_MULTILINE_HEIGHT = 32,
+    RESOURCE_VIEW_LINE_HEIGHT = 6,
+    RESOURCE_VIEW_TEXT_HEIGHT = 36,
+    RESOURCE_VIEW_GOLD_WIDTH = 76,
+    RESOURCE_VIEW_GOLD_HEIGHT = 26,
+    RESOURCE_VIEW_ICON_WIDTH = 38,
+    RESOURCE_VIEW_ICON_HEIGHT = 32,
+    RESOURCE_VIEW_ICON_BOTTOM = 463,
+    RESOURCE_VIEW_ICON_BOTTOM_PADDING = 14,
+    RESOURCE_VIEW_COUNT_X = 511,
+    RESOURCE_VIEW_COUNT_Y = 450,
+    RESOURCE_VIEW_COUNT_WIDTH = 80,
+    RESOURCE_VIEW_COUNT_HEIGHT = 12
+H1_ENUM_CONST_END(AdventureResourceViewConstant)
+
+// UpdBottomViewKingdom's nine counters: the seven resources (ResourceType
+// order), then castles and villages (Buka AdventureKingdomViewConstant
+// names; HoMM1's text rows start at 392).
+H1_ENUM_CONST_BEGIN(AdventureKingdomViewConstant)
+    KINGDOM_VIEW_ENTRY_COUNT = 9,
+    KINGDOM_VIEW_CASTLE_ENTRY = 7,
+    KINGDOM_VIEW_TOWN_ENTRY = 8,
+    KINGDOM_VIEW_ICON_X = 481,
+    KINGDOM_VIEW_ICON_Y = 393,
+    KINGDOM_VIEW_TEXT_X_BASE = 464,
+    KINGDOM_VIEW_TEXT_Y_BASE = 392,
+    KINGDOM_VIEW_TEXT_WIDTH = 32,
+    KINGDOM_VIEW_TEXT_HEIGHT = 12,
+    KINGDOM_VIEW_RESOURCE_TEXT_Y = 59,
+    KINGDOM_VIEW_TOWN_TEXT_Y = 28,
+    KINGDOM_VIEW_WOOD_TEXT_X = 15,
+    KINGDOM_VIEW_MERCURY_TEXT_X = 38,
+    KINGDOM_VIEW_ORE_TEXT_X = 61,
+    KINGDOM_VIEW_SULFUR_TEXT_X = 85,
+    KINGDOM_VIEW_CRYSTAL_TEXT_X = 109,
+    KINGDOM_VIEW_GEMS_TEXT_X = 132,
+    KINGDOM_VIEW_GOLD_TEXT_X = 123,
+    KINGDOM_VIEW_CASTLE_TEXT_X = 27,
+    KINGDOM_VIEW_VILLAGE_TEXT_X = 80
+H1_ENUM_CONST_END(AdventureKingdomViewConstant)
+
+// UpdBottomViewHero's army icons and counts (Buka
+// AdventureBottomHeroViewConstant names).
+H1_ENUM_CONST_BEGIN(AdventureBottomHeroViewConstant)
+    BOTTOM_HERO_LABEL_BYTES = 6,
+    BOTTOM_HERO_ICON_WIDTH = 32,
+    BOTTOM_HERO_ICON_HEIGHT = 28,
+    BOTTOM_HERO_LABEL_HEIGHT = 12,
+    BOTTOM_HERO_CHARACTER_WIDTH = 5,
+    BOTTOM_HERO_FIRST_ICON_ID = 2002,
+    BOTTOM_HERO_FIRST_TEXT_ID = 2101
+H1_ENUM_CONST_END(AdventureBottomHeroViewConstant)
 
 H1_ENUM_CONST_BEGIN(AdventureScrollConstant)
     // The adventure view is ADVMGR_VIEW_CELL_COUNT cells square; the hero
@@ -2566,40 +2678,42 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         ClearBottomView();
         iCurBottomView = BOTTOM_VIEW_ENEMY_TURN;
 
-        m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
+        m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                        BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                       "stonback.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
-        if (!m_bottomViewPrimaryWidgets[0])
+                                                       "stonback.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_BACKGROUND_ID, ICON_WIDGET_DRAW, 1);
+        if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND])
             MemError();
-        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], 1000);
+        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND], ENEMY_TURN_BACKGROUND_Z);
 
-        m_bottomViewPrimaryWidgets[1] = new iconWidget(493, 403, 118, 51, "hourglas.icn", 0, ICON_DRAW_NORMAL,
-                                                       BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
-        if (!m_bottomViewPrimaryWidgets[1])
+        m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] = new iconWidget(ENEMY_TURN_HOURGLASS_X, ENEMY_TURN_HOURGLASS_Y, ENEMY_TURN_HOURGLASS_WIDTH,
+                                                       ENEMY_TURN_HOURGLASS_HEIGHT, "hourglas.icn", 0, ICON_DRAW_NORMAL,
+                                                       BOTTOM_VIEW_FOREGROUND_ID, ICON_WIDGET_DRAW, 1);
+        if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND])
             MemError();
-        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], 1010);
+        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND], ENEMY_TURN_HOURGLASS_Z);
     }
 
-    if (gbForceUpdate || KBTickCount() - iLastSandAnimTime > 300) {
+    if (gbForceUpdate || KBTickCount() - iLastSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
         iLastSandAnimTime = KBTickCount();
         iLastAnimFrame = m_updateMaxX;
-        if (KBTickCount() - iLastNewSandAnimTime > 300) {
+        if (KBTickCount() - iLastNewSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
             iLastNewSandAnimTime = KBTickCount();
             iSandAnim++;
-            if (iSandAnim >= 20)
-                iSandAnim = 16;
+            if (iSandAnim >= ENEMY_TURN_SAND_FRAME_LIMIT)
+                iSandAnim = ENEMY_TURN_SAND_RESTART_FRAME;
             updated = 1;
-            if (m_bottomViewPrimaryWidgets[3]) {
+            if (m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
                 message.command = WIDGET_COMMAND_SET_FRAME;
-                message.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3;
-                message.value = iSandAnim + 11;
+                message.id = ENEMY_TURN_SAND_ID;
+                message.value = iSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET;
                 m_adventureWindow->BroadcastMessage(message);
             } else {
-                m_bottomViewPrimaryWidgets[3] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iSandAnim + 11, ICON_DRAW_NORMAL,
-                                                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3, ICON_WIDGET_DRAW, 1);
-                if (!m_bottomViewPrimaryWidgets[3])
+                m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] = new iconWidget(ENEMY_TURN_ANIMATION_X, ENEMY_TURN_ANIMATION_Y, ENEMY_TURN_ANIMATION_WIDTH,
+                                                               ENEMY_TURN_ANIMATION_HEIGHT, "hourglas.icn", iSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET, ICON_DRAW_NORMAL,
+                                                               ENEMY_TURN_SAND_ID, ICON_WIDGET_DRAW, 1);
+                if (!m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST])
                     MemError();
-                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[3], 1020);
+                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST], ENEMY_TURN_SAND_Z);
             }
         }
     }
@@ -2609,37 +2723,39 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         iCurBottomViewEnemy = giCurPlayer;
         if (iCurBottomViewEnemy != giCurPlayer)
             iCurHourGlassPhase = 0;
-        if (m_bottomViewPrimaryWidgets[2]) {
+        if (m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2;
+            message.id = ENEMY_TURN_CREST_ID;
             message.value = gpGame->m_players[giCurPlayer].Color();
             m_adventureWindow->BroadcastMessage(message);
         } else {
-            m_bottomViewPrimaryWidgets[2] =
-                new iconWidget(495, 405, 50, 47, "brcrest.icn", gpGame->m_players[giCurPlayer].Color(), ICON_DRAW_NORMAL,
-                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2, ICON_WIDGET_DRAW, 1);
-            if (!m_bottomViewPrimaryWidgets[2])
+            m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
+                new iconWidget(ENEMY_TURN_CREST_X, ENEMY_TURN_ANIMATION_Y, ENEMY_TURN_ANIMATION_WIDTH,
+                               ENEMY_TURN_ANIMATION_HEIGHT, "brcrest.icn", gpGame->m_players[giCurPlayer].Color(), ICON_DRAW_NORMAL,
+                               ENEMY_TURN_CREST_ID, ICON_WIDGET_DRAW, 1);
+            if (!m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST])
                 MemError();
-            m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[2], 1030);
+            m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST], ENEMY_TURN_CREST_Z);
         }
     }
 
     if (gbForceUpdate || iCurHourGlassPhase < iLastHourGlassPhase || iLastHourGlassPhase < 0
-        || (iCurHourGlassPhase > iLastHourGlassPhase && KBTickCount() - giLastHourGlassUpdateTime >= 700)) {
+        || (iCurHourGlassPhase > iLastHourGlassPhase && KBTickCount() - giLastHourGlassUpdateTime >= ENEMY_TURN_PHASE_DELAY)) {
         updated = 1;
         iLastHourGlassPhase = iCurHourGlassPhase;
         giLastHourGlassUpdateTime = KBTickCount();
-        if (m_bottomViewPrimaryWidgets[4]) {
+        if (m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4;
-            message.value = iCurHourGlassPhase + 1;
+            message.id = ENEMY_TURN_PHASE_ID;
+            message.value = iCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET;
             m_adventureWindow->BroadcastMessage(message);
         } else {
-            m_bottomViewPrimaryWidgets[4] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iCurHourGlassPhase + 1,
-                                                           ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4, ICON_WIDGET_DRAW, 1);
-            if (!m_bottomViewPrimaryWidgets[4])
+            m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] = new iconWidget(ENEMY_TURN_ANIMATION_X, ENEMY_TURN_ANIMATION_Y, ENEMY_TURN_ANIMATION_WIDTH,
+                                                           ENEMY_TURN_ANIMATION_HEIGHT, "hourglas.icn", iCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET,
+                                                           ICON_DRAW_NORMAL, ENEMY_TURN_PHASE_ID, ICON_WIDGET_DRAW, 1);
+            if (!m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST])
                 MemError();
-            m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[4], 1040);
+            m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST], ENEMY_TURN_PHASE_Z);
         }
     }
     return updated;
@@ -2664,33 +2780,35 @@ signed char advManager::UpdBottomViewNewTurn(void) {
     if (gpGame->m_day == 1 && (gpGame->m_month != 1 || gpGame->m_week != 1 || gpGame->m_day != 1))
         frameIndex = gpGame->m_week;
 
-    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
+    m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, BOTTOM_VIEW_BACKGROUND_WIDTH,
                                                    BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, ICON_DRAW_NORMAL,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
-    if (!m_bottomViewPrimaryWidgets[0])
+                                                   BOTTOM_VIEW_BACKGROUND_ID, ICON_WIDGET_DRAW, 1);
+    if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND], WINDOW_Z_ORDER_APPEND);
 
-    m_bottomViewPrimaryWidgets[1] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
+    m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                    BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
                                                    "sunmoon.icn", frameIndex, ICON_DRAW_NORMAL,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
-    if (!m_bottomViewPrimaryWidgets[1])
+                                                   BOTTOM_VIEW_FOREGROUND_ID, ICON_WIDGET_DRAW, 1);
+    if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND], WINDOW_Z_ORDER_APPEND);
 
-    weekStr = static_cast<char*>(malloc(30));
+    weekStr = static_cast<char*>(malloc(BOTTOM_VIEW_TEXT_BUFFER_SIZE));
     sprintf(weekStr, "%s: %d  %s: %d", "Month", gpGame->m_month, "Week", gpGame->m_week);
     m_bottomViewSecondaryWidgets[0] =
-        new textWidget(479, 421, 145, 12, weekStr, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
+        new textWidget(NEW_TURN_DATE_TEXT_X, NEW_TURN_WEEK_TEXT_Y, NEW_TURN_DATE_TEXT_WIDTH, NEW_TURN_WEEK_TEXT_HEIGHT,
+                       weekStr, "smalfont.fnt", 1, BOTTOM_VIEW_TEXT_ID, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
-    dayStr = static_cast<char*>(malloc(30));
+    dayStr = static_cast<char*>(malloc(BOTTOM_VIEW_TEXT_BUFFER_SIZE));
     sprintf(dayStr, "%s: %d", "Day", gpGame->m_day);
     m_bottomViewSecondaryWidgets[0] =
-        new textWidget(479, 438, 145, 25, dayStr, "bigfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
+        new textWidget(NEW_TURN_DATE_TEXT_X, NEW_TURN_DAY_TEXT_Y, NEW_TURN_DATE_TEXT_WIDTH, NEW_TURN_DAY_TEXT_HEIGHT,
+                       dayStr, "bigfont.fnt", 1, BOTTOM_VIEW_TEXT_ID, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
@@ -2715,49 +2833,52 @@ signed char advManager::UpdBottomViewResMsg(void) {
 
     ClearBottomView();
     iCurBottomView = BOTTOM_VIEW_RESOURCE;
-    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
+    m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, BOTTOM_VIEW_BACKGROUND_WIDTH,
                                                    BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, ICON_DRAW_NORMAL,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
-    if (!m_bottomViewPrimaryWidgets[0])
+                                                   BOTTOM_VIEW_BACKGROUND_ID, ICON_WIDGET_DRAW, 1);
+    if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND], WINDOW_Z_ORDER_APPEND);
 
     y = 0;
     if (giBottomViewResource < 0) {
-        y = 32;
+        y = RESOURCE_VIEW_MULTILINE_HEIGHT;
         smFont = gpResourceManager->GetFont("smalfont.fnt");
         lineCnt = smFont->LineLength(gcBottomViewText, BOTTOM_VIEW_PANEL_WIDTH);
         gpResourceManager->Dispose(smFont);
-        y -= lineCnt * 6;
+        y -= lineCnt * RESOURCE_VIEW_LINE_HEIGHT;
     }
     messageText = static_cast<char*>(malloc(strlen(gcBottomViewText) + 1));
     sprintf(messageText, gcBottomViewText);
-    m_bottomViewSecondaryWidgets[0] = new textWidget(480, y + 395, BOTTOM_VIEW_PANEL_WIDTH, 36,
-                                                     messageText, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
+    m_bottomViewSecondaryWidgets[0] = new textWidget(BOTTOM_VIEW_PANEL_X, y + RESOURCE_VIEW_TEXT_BASE_Y, BOTTOM_VIEW_PANEL_WIDTH, RESOURCE_VIEW_TEXT_HEIGHT,
+                                                     messageText, "smalfont.fnt", 1, BOTTOM_VIEW_TEXT_ID, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     if (giBottomViewResource >= 0) {
         if (giBottomViewResource == RESOURCE_GOLD) {
-            iconW = 76;
-            iconH = 26;
+            iconW = RESOURCE_VIEW_GOLD_WIDTH;
+            iconH = RESOURCE_VIEW_GOLD_HEIGHT;
         } else {
-            iconW = 38;
-            iconH = 32;
+            iconW = RESOURCE_VIEW_ICON_WIDTH;
+            iconH = RESOURCE_VIEW_ICON_HEIGHT;
         }
-        m_bottomViewPrimaryWidgets[1] =
-            new iconWidget((BOTTOM_VIEW_PANEL_WIDTH - iconW) / 2 + 480, 463 - iconH - 14, iconW, iconH,
+        m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] =
+            new iconWidget((BOTTOM_VIEW_PANEL_WIDTH - iconW) / 2 + BOTTOM_VIEW_PANEL_X,
+                           RESOURCE_VIEW_ICON_BOTTOM - iconH - RESOURCE_VIEW_ICON_BOTTOM_PADDING, iconW, iconH,
                            "resource.icn", giBottomViewResource, ICON_DRAW_NORMAL,
-                           BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
-        if (!m_bottomViewPrimaryWidgets[1])
+                           BOTTOM_VIEW_FOREGROUND_ID, ICON_WIDGET_DRAW, 1);
+        if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND])
             MemError();
-        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
+        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND], WINDOW_Z_ORDER_APPEND);
 
-        countString = static_cast<char*>(malloc(8));
+        countString = static_cast<char*>(malloc(BOTTOM_VIEW_COUNT_BUFFER_SIZE));
         sprintf(countString, "%d", giBottomViewResourceQty);
         m_bottomViewSecondaryWidgets[1] =
-            new textWidget(511, 450, 80, 12, countString, "smalfont.fnt", 1, 2101, WIDGET_KIND_TEXT);
+            new textWidget(RESOURCE_VIEW_COUNT_X, RESOURCE_VIEW_COUNT_Y, RESOURCE_VIEW_COUNT_WIDTH,
+                           RESOURCE_VIEW_COUNT_HEIGHT, countString, "smalfont.fnt", 1, BOTTOM_VIEW_TEXT_ID_2,
+                           WIDGET_KIND_TEXT);
         if (!m_bottomViewSecondaryWidgets[1])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[1], WINDOW_Z_ORDER_APPEND);
@@ -2773,49 +2894,49 @@ signed char advManager::UpdBottomViewKingdom(void) {
     int numVillages;
     int i;
     int nCastles;
-    signed char rowY[9];
-    unsigned char colX[9];
-    char* texts[9];
+    signed char rowY[KINGDOM_VIEW_ENTRY_COUNT];
+    unsigned char colX[KINGDOM_VIEW_ENTRY_COUNT];
+    char* texts[KINGDOM_VIEW_ENTRY_COUNT];
 
     if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_KINGDOM)
         return 0;
 
     ClearBottomView();
     iCurBottomView = BOTTOM_VIEW_KINGDOM;
-    rowY[0] = 59;
-    rowY[1] = 59;
-    rowY[2] = 59;
-    rowY[3] = 59;
-    rowY[4] = 59;
-    rowY[5] = 59;
+    rowY[RESOURCE_WOOD] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[RESOURCE_MERCURY] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[RESOURCE_ORE] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[RESOURCE_SULFUR] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[RESOURCE_CRYSTAL] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
+    rowY[RESOURCE_GEMS] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[6] = 28;
-    rowY[7] = 28;
-    rowY[8] = 28;
-    colX[0] = 15;
-    colX[1] = 38;
-    colX[2] = 61;
-    colX[3] = 85;
-    colX[4] = 109;
-    colX[5] = 132;
-    colX[6] = 123;
-    colX[7] = 27;
-    colX[8] = 80;
+    rowY[KINGDOM_VIEW_CASTLE_ENTRY] = KINGDOM_VIEW_TOWN_TEXT_Y;
+    rowY[KINGDOM_VIEW_TOWN_ENTRY] = KINGDOM_VIEW_TOWN_TEXT_Y;
+    colX[RESOURCE_WOOD] = KINGDOM_VIEW_WOOD_TEXT_X;
+    colX[RESOURCE_MERCURY] = KINGDOM_VIEW_MERCURY_TEXT_X;
+    colX[RESOURCE_ORE] = KINGDOM_VIEW_ORE_TEXT_X;
+    colX[RESOURCE_SULFUR] = KINGDOM_VIEW_SULFUR_TEXT_X;
+    colX[RESOURCE_CRYSTAL] = KINGDOM_VIEW_CRYSTAL_TEXT_X;
+    colX[RESOURCE_GEMS] = KINGDOM_VIEW_GEMS_TEXT_X;
+    colX[RESOURCE_GOLD] = KINGDOM_VIEW_GOLD_TEXT_X;
+    colX[KINGDOM_VIEW_CASTLE_ENTRY] = KINGDOM_VIEW_CASTLE_TEXT_X;
+    colX[KINGDOM_VIEW_TOWN_ENTRY] = KINGDOM_VIEW_VILLAGE_TEXT_X;
     numVillages = 0;
     nCastles = 0;
 
-    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
+    m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, BOTTOM_VIEW_BACKGROUND_WIDTH,
                                                    BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, ICON_DRAW_NORMAL,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
-    if (!m_bottomViewPrimaryWidgets[0])
+                                                   BOTTOM_VIEW_BACKGROUND_ID, ICON_WIDGET_DRAW, 1);
+    if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND], WINDOW_Z_ORDER_APPEND);
 
-    m_bottomViewPrimaryWidgets[1] = new iconWidget(481, 393, BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                   "ressmall.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1,
+    m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] = new iconWidget(KINGDOM_VIEW_ICON_X, KINGDOM_VIEW_ICON_Y, BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
+                                                   "ressmall.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_FOREGROUND_ID,
                                                    ICON_WIDGET_DRAW, 1);
-    if (!m_bottomViewPrimaryWidgets[1])
+    if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND], WINDOW_Z_ORDER_APPEND);
 
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
         if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & (1 << BUILDING_SLOT_CASTLE))
@@ -2824,16 +2945,17 @@ signed char advManager::UpdBottomViewKingdom(void) {
             numVillages++;
     }
 
-    for (i = 0; i < 9; i++) {
-        texts[i] = static_cast<char*>(malloc(8));
-        if (i < 7)
+    for (i = 0; i < KINGDOM_VIEW_ENTRY_COUNT; i++) {
+        texts[i] = static_cast<char*>(malloc(BOTTOM_VIEW_COUNT_BUFFER_SIZE));
+        if (i < KINGDOM_VIEW_CASTLE_ENTRY)
             sprintf(texts[i], "%d", gpCurPlayer->m_resources[i]);
-        else if (i == 7)
+        else if (i == KINGDOM_VIEW_CASTLE_ENTRY)
             sprintf(texts[i], "%d", nCastles);
         else
             sprintf(texts[i], "%d", numVillages);
-        m_bottomViewSecondaryWidgets[i] = new textWidget(colX[i] + 464, rowY[i] + 392, 32, 12, texts[i],
-                                                         "smalfont.fnt", 1, i + 2100, WIDGET_KIND_TEXT);
+        m_bottomViewSecondaryWidgets[i] = new textWidget(colX[i] + KINGDOM_VIEW_TEXT_X_BASE, rowY[i] + KINGDOM_VIEW_TEXT_Y_BASE,
+                                                         KINGDOM_VIEW_TEXT_WIDTH, KINGDOM_VIEW_TEXT_HEIGHT, texts[i],
+                                                         "smalfont.fnt", 1, i + BOTTOM_VIEW_TEXT_ID, WIDGET_KIND_TEXT);
         if (!m_bottomViewSecondaryWidgets[i])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[i], WINDOW_Z_ORDER_APPEND);
@@ -2866,24 +2988,24 @@ signed char advManager::UpdBottomViewHero(void) {
     targetHero = gpGame->GetHero(gpCurPlayer->CurrentHero());
     nStacks = 0;
 
-    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
+    m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                    BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                   "stonback.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
-    if (!m_bottomViewPrimaryWidgets[0])
+                                                   "stonback.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_BACKGROUND_ID, ICON_WIDGET_DRAW, 1);
+    if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND], WINDOW_Z_ORDER_APPEND);
 
     iCrest = gpCurPlayer->Color() * HERO_CLASS_COUNT + targetHero->m_heroClass;
-    m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, ICON_DRAW_NORMAL,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
-    if (!m_bottomViewPrimaryWidgets[1])
+    m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, ICON_DRAW_NORMAL,
+                                                   BOTTOM_VIEW_FOREGROUND_ID, ICON_WIDGET_DRAW, 1);
+    if (!m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND], WINDOW_Z_ORDER_APPEND);
 
     heroName = static_cast<char*>(malloc(9));
     strcpy(heroName, targetHero->m_shortName);
     heroName[8] = 0;
-    m_bottomViewSecondaryWidgets[0] = new textWidget(475, 418, 66, 12, heroName, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
+    m_bottomViewSecondaryWidgets[0] = new textWidget(475, 418, 66, 12, heroName, "smalfont.fnt", 1, BOTTOM_VIEW_TEXT_ID, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
@@ -2897,7 +3019,7 @@ signed char advManager::UpdBottomViewHero(void) {
         for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
             creatureType = targetHero->m_army.m_creatureTypes[n];
             if (creatureType != CREATURE_NONE) {
-                countStr[slotNum] = static_cast<char*>(malloc(6));
+                countStr[slotNum] = static_cast<char*>(malloc(BOTTOM_HERO_LABEL_BYTES));
                 sprintf(countStr[slotNum], "%d", targetHero->m_army.m_creatureCounts[n]);
                 if (slotNum > 2)
                     y = 3;
@@ -2923,21 +3045,22 @@ signed char advManager::UpdBottomViewHero(void) {
                 } else {
                     x = 52;
                 }
-                m_bottomViewPrimaryWidgets[slotNum + 2] = new iconWidget(x + 480, y + 392, 32, 28, "mons32.icn",
-                                                                      creatureType, ICON_DRAW_NORMAL, slotNum + 2002, ICON_WIDGET_DRAW, 1);
-                if (!m_bottomViewPrimaryWidgets[slotNum + 2])
+                m_bottomViewPrimaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_ICON_FIRST] = new iconWidget(x + BOTTOM_VIEW_PANEL_X, y + BOTTOM_VIEW_PANEL_Y, BOTTOM_HERO_ICON_WIDTH, BOTTOM_HERO_ICON_HEIGHT, "mons32.icn",
+                                                                      creatureType, ICON_DRAW_NORMAL, slotNum + BOTTOM_HERO_FIRST_ICON_ID, ICON_WIDGET_DRAW, 1);
+                if (!m_bottomViewPrimaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_ICON_FIRST])
                     MemError();
                 if (gMons32Width[creatureType] < 28 && strlen(countStr[slotNum]) <= 2)
                     qtyX = x + 30;
                 else
                     qtyX = gMons32Width[creatureType] + x + 2;
-                m_bottomViewSecondaryWidgets[slotNum + 1] =
-                    new textWidget(qtyX + 480, y + 414, strlen(countStr[slotNum]) * 5, 12, countStr[slotNum], "smalfont.fnt",
-                                   1, slotNum + 2101, WIDGET_KIND_TEXT);
-                if (!m_bottomViewSecondaryWidgets[slotNum + 1])
+                m_bottomViewSecondaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST] =
+                    new textWidget(qtyX + BOTTOM_VIEW_PANEL_X, y + 414, strlen(countStr[slotNum]) * BOTTOM_HERO_CHARACTER_WIDTH,
+                                   BOTTOM_HERO_LABEL_HEIGHT, countStr[slotNum], "smalfont.fnt",
+                                   1, slotNum + BOTTOM_HERO_FIRST_TEXT_ID, WIDGET_KIND_TEXT);
+                if (!m_bottomViewSecondaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST])
                     MemError();
-                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[slotNum + 2], WINDOW_Z_ORDER_APPEND);
-                m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[slotNum + 1], WINDOW_Z_ORDER_APPEND);
+                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_ICON_FIRST], WINDOW_Z_ORDER_APPEND);
+                m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST], WINDOW_Z_ORDER_APPEND);
                 slotNum++;
             }
         }

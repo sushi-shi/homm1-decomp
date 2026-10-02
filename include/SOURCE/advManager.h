@@ -33,6 +33,13 @@ struct tag_message;
 // clang-format off
 H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_BOTTOM_VIEW_WIDGET_COUNT = 12,
+    // m_bottomViewPrimaryWidgets slots (Buka 2.1 names): the stone backdrop,
+    // the view's foreground icon, then its further icons; the secondary
+    // (text) array's army/count labels start at HERO_TEXT_FIRST.
+    ADVMGR_BOTTOM_VIEW_BACKGROUND = 0,
+    ADVMGR_BOTTOM_VIEW_FOREGROUND = 1,
+    ADVMGR_BOTTOM_VIEW_ICON_FIRST = 2,
+    ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST = 1,
     ADVMGR_OBJECT_ICON_COUNT = 21,
     ADVMGR_PANEL_ICON_COUNT = 5,
     ADVMGR_ANIMATION_PHASE_COUNT = 4,
