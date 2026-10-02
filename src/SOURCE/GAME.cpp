@@ -819,8 +819,8 @@ VA(0x004440e9, 0x259)
 void game::SetVisibility(short x, short y, short player, short radius) {
     int i;
     int j;
-    int cutoff;
     int rangeLeft;
+    int cutoff;
     unsigned char viewMask = 1 << player;
     unsigned char outerMask = 1 << (player + 4);
 
