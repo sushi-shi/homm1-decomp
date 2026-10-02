@@ -196,6 +196,13 @@ extern signed char giBestShipyardId;
 extern signed char gbPossibleShipyardFound;
 extern signed char gbActualShipyardFound;
 extern signed char gbActualBoatFound;
+// StrategicValueOfPosition's per-cell cache, hero live chances and the
+// shared search it borrows unless a nested evaluation already holds it.
+extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiHeroLiveChance[];
+extern signed char bSVSearchArrayInUse;
+extern class searchArray SVSearchArray;
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];

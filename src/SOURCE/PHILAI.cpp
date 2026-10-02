@@ -1566,8 +1566,123 @@ int philAI::RVOfPosition(
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
 VA(0x0041f2c3, 0x8bd)
-int philAI::StrategicValueOfPosition(hero*, short, short, signed char, int*) {
-    return 0;
+int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, signed char immediate, int* liveChance) {
+    int gap4;
+    searchArray* pSearch;
+    int inBoat;
+    int extra2;
+    mapCell* cell;
+    int mapY9;
+    int seedDist8;
+    int range9;
+    int x;
+    int heroIndex;
+    int danger;
+    int baseTerrain;
+    int worth29;
+    searchArray* madeSearch;
+    int destTerrain;
+
+    if (!immediate && gaiHeroStrategicRVOfPos[targetX][targetY] != -32001) {
+        *liveChance = gaiLiveChanceOfPos[targetX][targetY];
+        return gaiHeroStrategicRVOfPos[targetX][targetY];
+    }
+    worth29 = 0;
+    madeSearch = 0;
+    *liveChance = 100;
+    if (bSVSearchArrayInUse) {
+        madeSearch = new searchArray;
+        if (!madeSearch)
+            MemError();
+        pSearch = madeSearch;
+    } else {
+        bSVSearchArrayInUse = 1;
+        pSearch = &SVSearchArray;
+    }
+    inBoat = pHero->m_eventFlags & 0x80;
+    if (inBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == 0x1f)
+        inBoat = 0;
+    if (immediate) {
+        seedDist8 = 60;
+    } else {
+        seedDist8 = 36;
+        if (gConfig.slowVideo)
+            seedDist8 = 24;
+    }
+    pSearch->SeedPosition(targetX, targetY, 2, seedDist8, inBoat, 0, 999, pHero->m_unknown1c, -1, -1, 0, 0);
+    pSearch->m_cells[targetX][targetY].visited = 0;
+    for (x = 0; x < 72; x++) {
+        for (mapY9 = 0; mapY9 < 72; mapY9++) {
+            if (pSearch->m_cells[x][mapY9].visited) {
+                cell = gpAdvManager->GetCell(x, mapY9);
+                if ((!immediate && (cell->m_triggerType & 0x80)) || (immediate && cell->m_triggerType == 0xbd)) {
+                    CheckDoMain(0, 0);
+                    worth29 += ValueOfEventAtPosition(pHero, x, mapY9, 0, &iDummy)
+                               / (pSearch->m_cells[x][mapY9].distance + 2.0);
+                }
+                if (cell->m_triggerType == 0xbd) {
+                    if (gaiHeroLiveChance[cell->m_objectMetadata] == -32001)
+                        ValueOfEventAtPosition(pHero, x, mapY9, 0, &iDummy);
+                    if (gaiHeroLiveChance[cell->m_objectMetadata] != -32001
+                        && gaiHeroLiveChance[cell->m_objectMetadata] < 100) {
+                        range9 = gpGame->GetHero(cell->m_objectMetadata)->m_mobility;
+                        if (gbHumanPlayer[gpGame->m_availableHeroes[cell->m_objectMetadata]]) {
+                            if (pSearch->m_cells[x][mapY9].distance <= range9) {
+                                if (pSearch->m_cells[x][mapY9].distance <= 14)
+                                    danger = 100 - gaiHeroLiveChance[cell->m_objectMetadata];
+                                else
+                                    danger = (range9 - pSearch->m_cells[x][mapY9].distance + 10)
+                                             * (100 - gaiHeroLiveChance[cell->m_objectMetadata]) / range9;
+                            } else {
+                                danger = (int)((100 - gaiHeroLiveChance[cell->m_objectMetadata]) * 0.2);
+                            }
+                        } else {
+                            danger = (range9 + 20 - pSearch->m_cells[x][mapY9].distance)
+                                     * (100 - gaiHeroLiveChance[cell->m_objectMetadata]) / (range9 + 20);
+                        }
+                        *liveChance = (100 - danger) * *liveChance / 100;
+                    }
+                }
+                if (pSearch->m_cells[x][mapY9].distance < 32
+                    && gpAdvManager->GetCell(x, mapY9)->m_triggerType == 0xbd
+                    && gpAdvManager->GetCell(x, mapY9)->m_objectMetadata != pHero->m_id
+                    && gpGame->m_availableHeroes[gpAdvManager->GetCell(x, mapY9)->m_objectMetadata]
+                           == pHero->m_owner)
+                    worth29 -= (32 - pSearch->m_cells[x][mapY9].distance) * 1250 >> 5;
+            }
+        }
+    }
+    baseTerrain = giGroundToTerrain[gpAdvManager->GetCell(targetX, targetY)->m_tileIndex];
+    for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
+        if (gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id) {
+            gap4 = abs(gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX - targetX)
+                   + abs(gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY - targetY);
+            if (gap4 < 9) {
+                destTerrain = giGroundToTerrain[gpAdvManager
+                                                    ->GetCell(
+                                                        gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]]
+                                                            .m_destinationX,
+                                                        gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]]
+                                                            .m_destinationY
+                                                    )
+                                                    ->m_tileIndex];
+                if (!((baseTerrain == 0 && destTerrain > 0) || (baseTerrain > 0 && destTerrain == 0)))
+                    worth29 -= (9 - gap4) * 1250 / 9;
+            }
+        }
+    }
+    if (madeSearch)
+        delete madeSearch;
+    else
+        bSVSearchArrayInUse = 0;
+    worth29 = (int)(worth29 * 1.25f);
+    if (worth29 > 32000)
+        worth29 = 32000;
+    if (!immediate) {
+        gaiHeroStrategicRVOfPos[targetX][targetY] = worth29;
+        gaiLiveChanceOfPos[targetX][targetY] = *liveChance;
+    }
+    return worth29;
 }
 
 // Buka 2.1 ValueOfTown without the later scenario-town bonuses: built
