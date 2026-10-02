@@ -825,6 +825,211 @@ void game::InitCampaignMap(int scenario, int) {
     }
 }
 
+// Town type of each crest, and the types already given to the first four
+// random towns.
+extern short gCrestTownTypes[];
+extern signed char gRandomTownTypes[4];
+
+// NewMap's per-player globals beyond Buka's current/watch player bits.
+extern unsigned char giCurPlayerHighBit;
+extern unsigned char giCurWatchPlayerHighBit;
+extern int giCurWatchPlayer;
+extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+// Starting hero class of each campaign crest and of each town type, and
+// each hero class's sight radius.
+extern short gCrestHeroClass[];
+extern signed char gTownTypeHeroClass[];
+extern signed char gClassVisionRange[];
+// Starting resources by difficulty.
+extern int gStartingResources[][7];
+
+// Buka 2.1 game::NewMap for HoMM1: map setup helpers, a starting town and
+// hero per player (campaign crests pick them), two tavern heroes, the
+// ultimate artifact site, starting resources, town threat ranks and the
+// first neutral garrisons.
+VA(0x0043c44b, 0x1009)
+void game::NewMap(char* mapName) {
+    int nextThreat;
+    int anyFree;
+    signed char heroY;
+    signed char heroX;
+    signed char yTown;
+    signed char xTown;
+    int heroIdx;
+    signed char townId;
+    signed char used[GAME_TOWN_COUNT];
+    int k;
+    int j;
+    int spread;
+    int i;
+    signed char allNeutral;
+    int difficulty;
+
+    gbInNewGameSetup = 1;
+    giCurPlayer = 0;
+    gpCurPlayer = &gpGame->m_players[giCurPlayer];
+    giCurPlayerBit = 1 << giCurPlayer;
+    giCurWatchPlayerBit = giCurPlayerBit;
+    giCurPlayerHighBit = 1 << (giCurPlayer + 4);
+    giCurWatchPlayerHighBit = 1 << (giCurPlayer + 4);
+    giCurWatchPlayer = giCurPlayer;
+    for (i = 0; i < m_playerCount; i++) {
+        m_players[i].m_townCount = 0;
+        m_players[i].m_townLocatorPage = 0;
+        m_players[i].m_currentTown = -1;
+        m_players[i].m_heroCount = 0;
+        m_players[i].m_heroLocatorPage = 0;
+        m_players[i].m_currentHero = -1;
+    }
+    memset(m_mapExtra, 0, sizeof(m_mapExtra));
+    memset(mapVisited, 0, sizeof(mapVisited));
+    RandomizeHeroPool();
+    strcpy(gMapName, mapName);
+    LoadMap(gMapName);
+    RandomizeTerrainTiles();
+    RandomizePlayerCrests();
+    ProcessMapExtra();
+    allNeutral = SetupTowns();
+    ProcessRandomObjects(1);
+    ProcessRandomObjects(0);
+    RandomizeEvents();
+    m_deadPlayerCount = 0;
+    for (i = m_playerCount; i < GAME_PLAYER_COUNT; i++)
+        m_playerDead[i] = 1;
+    for (i = 0; i < m_playerCount; i++) {
+        m_players[i].m_ultimateArtifactHintChance = 0;
+        m_players[i].m_ultimateArtifactHintX = -1;
+        m_players[i].m_ultimateArtifactHintY = -1;
+        heroIdx = 0;
+        if (allNeutral) {
+            if (m_campaignType <= 0 || m_campaignScenario < 4 || m_campaignScenario > 7) {
+                if (m_campaignType > 0) {
+                    for (j = 0; j < 4; j++) {
+                        if (gCrestTownTypes[m_players[i].m_unknown11] == GetTown(j)->m_type) {
+                            SetupTown(j, !gbHumanPlayer[i]);
+                            ClaimTown(j, i);
+                        }
+                    }
+                } else {
+                    townId = RandomScan(m_townOwners, 0, 4, 8);
+                    if (townId == -1)
+                        townId = Scan(m_townOwners, 0, 4);
+                    SetupTown(townId, !gbHumanPlayer[i]);
+                    ClaimTown(townId, i);
+                }
+            }
+        } else {
+            for (j = 0; j < GAME_TOWN_COUNT; j++) {
+                if (m_castleRecs[j].m_owner == i)
+                    SetupTown(j, !gbHumanPlayer[i]);
+            }
+        }
+        if (m_unknown16e79
+            || (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && i == 0)) {
+            m_players[i].m_heroCount = 1;
+            if (m_campaignType > 0)
+                m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_unknown11]);
+            else
+                m_players[i].m_heroIds[0] =
+                    GetNewHeroId(gTownTypeHeroClass[m_castleRecs[m_players[i].m_townIds[0]].m_type]);
+            m_availableHeroes[m_players[i].m_heroIds[0]] = i;
+            m_heroRecs[m_players[i].m_heroIds[0]].m_owner = i;
+            m_heroRecs[m_players[i].m_heroIds[0]].m_x = m_castleRecs[m_players[i].m_townIds[0]].m_x;
+            m_heroRecs[m_players[i].m_heroIds[0]].m_y = m_castleRecs[m_players[i].m_townIds[0]].m_y;
+            m_castleRecs[m_players[i].m_townIds[0]].m_occupyingHeroId = m_players[i].m_heroIds[0];
+            SetVisibility(
+                m_heroRecs[m_players[i].m_heroIds[0]].m_x,
+                m_heroRecs[m_players[i].m_heroIds[0]].m_y,
+                i,
+                gClassVisionRange[m_heroRecs[m_players[i].m_heroIds[0]].m_unknown1c]
+            );
+        }
+        if (m_campaignType > 0)
+            k = gCrestHeroClass[m_players[i].m_unknown11];
+        else
+            k = Random(0, 3);
+        m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
+        m_availableHeroes[m_players[i].m_availableHeroIds[0]] = 0x40;
+        k = (Random(1, 3) + k) % 4;
+        m_players[i].m_availableHeroIds[1] = GetNewHeroId(k);
+        m_availableHeroes[m_players[i].m_availableHeroIds[1]] = 0x40;
+    }
+    if (!m_unknown16e79)
+        ProcessOnMapHeroes();
+    if (m_campaignType <= 0) {
+        for (k = 0; k < 4; k++) {
+            if (allNeutral && m_townOwners[k] == -1) {
+                xTown = m_castleRecs[k].m_x;
+                yTown = m_castleRecs[k].m_y;
+                for (i = 0; i < 4; i++) {
+                    m_map[xTown - 2 + i][yTown - 2].m_overlayIndex -= 12;
+                    m_map[xTown - 2 + i][yTown - 1].m_objectIndex -= 12;
+                    m_map[xTown - 2 + i][yTown].m_objectIndex -= 12;
+                }
+                m_castleRecs[k].m_buildings = 0x20;
+                if (m_castleRecs[k].m_type == 2)
+                    m_castleRecs[k].m_buildings |= 0x2000;
+                SetupTown(k, 0);
+            }
+        }
+    }
+    for (i = 0; i < m_playerCount; i++) {
+        for (j = 0; j < m_players[i].m_heroCount; j++) {
+            heroX = m_heroRecs[m_players[i].m_heroIds[j]].m_x;
+            heroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
+            m_heroRecs[m_players[i].m_heroIds[j]].m_locationType = m_map[heroX][heroY].m_triggerType;
+            m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown = m_map[heroX][heroY].m_objectMetadata;
+            m_map[heroX][heroY].m_triggerType = 0xbd;
+            m_map[heroX][heroY].m_objectMetadata = m_players[i].m_heroIds[j];
+        }
+        if (m_players[i].m_heroCount > 0)
+            m_players[i].m_currentHero = m_players[i].m_heroIds[0];
+        else if (m_players[i].m_townCount > 0)
+            m_players[i].m_currentTown = m_players[i].m_townIds[0];
+    }
+    i = Random(9, 62);
+    j = Random(9, 62);
+    spread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+    while (m_map[i][j].m_objectIndex != 0xff || m_map[i][j].m_overlayIndex != 0xff || m_map[i][j].m_tileIndex < 20
+           || (giNumHumanPlayers == 1
+               && abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
+                          + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y)
+                      <= spread)) {
+        spread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+        i = Random(9, 62);
+        j = Random(9, 62);
+    }
+    m_ultimateArtifactX = i;
+    m_ultimateArtifactY = j;
+    m_ultimateArtifactId = Random(0, 3);
+    for (i = 0; i < m_playerCount; i++) {
+        if (gbHumanPlayer[i]) {
+            if (i == 0)
+                difficulty = m_difficulty;
+            else
+                difficulty = m_players[i].m_color - 1;
+        } else {
+            difficulty = 0;
+        }
+        memcpy(m_players[i].m_resources, gStartingResources[difficulty], sizeof(m_players[i].m_resources));
+    }
+    memset(used, -1, sizeof(used));
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        nextThreat = 0;
+        anyFree = Scan(used, 0, GAME_TOWN_COUNT);
+        if (anyFree != -1)
+            nextThreat = RandomScan(used, 0, GAME_TOWN_COUNT, GAME_TOWN_COUNT);
+        anyFree = nextThreat;
+        m_castleRecs[i].m_threat = anyFree;
+        used[anyFree] = 0;
+    }
+    for (i = 0; i < 4; i++)
+        GiveTroopsToNeutralTowns();
+    SetupAdjacentMons();
+    gpPhilAI->GetGameAIVars();
+    gbInNewGameSetup = 0;
+}
+
 // HoMM1 groups the multi-cell object triggers 0x34-0x37 and 0x38-0x3c by
 // their first trigger so neighbouring halves can be compared.
 VA(0x0043d454, 0x6f)
@@ -1470,11 +1675,6 @@ void game::TurnOffAIMusic(void) {
 // evidence: graph:6;base=0.506997;margin=1.216721;shape=0.284;size=0.968;calls=0.889;alternate=pol20:void game::NextPlayer(void)@0x0007bd99
 VA(0x00441245, 0x4e1)
 void game::NextPlayer(void) {}
-
-// Town type of each crest, and the types already given to the first four
-// random towns.
-extern short gCrestTownTypes[];
-extern signed char gRandomTownTypes[4];
 
 // Buka 2.1 game::RandomizeTown for HoMM1's 4x3 town footprint: the town
 // type comes from the campaign crest, a distinct roll for the first four
