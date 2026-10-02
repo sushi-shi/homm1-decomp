@@ -1,0 +1,48 @@
+# Constants work list
+
+`homm1 verify constants` parses every unit with libclang and lists each numeric
+literal in `src/` and `include/` (enumerator values excluded). A literal is
+open until it is spelled as a name (an enumerator, a named macro, `NULL`,
+`TRUE`/`FALSE`) or a row in `config/constants.tsv` keeps it numeric with a
+reason. The committed `#floor` is the open count and only goes down.
+
+```sh
+homm1 verify constants                 # census, build/gen/bare_constants.tsv
+homm1 verify constants --list KB.cpp   # open sites whose file/owner contains KB.cpp
+homm1 verify constants -v              # proven replacements and retail-view units
+homm1 verify constants --gate          # fail on proven replacements, a risen
+                                       # floor or stale/malformed rows
+homm1 verify constants --update-floor  # lower the floor after a batch
+```
+
+The open list is also written to `build/gen/constants_open.tsv` (file, line,
+owner, spelling, group, detail, replacement).
+
+Rows are tab-separated fnmatch globs over file, owner, spelling, review group
+and detail, then a reason; the first matching row wins, so put narrow rows
+before broad ones. A row that keeps nothing is stale and fails the gate. The
+detail column records the context: `argument N` of the callee, `switch on X`
+for case labels, `store to X`, `compound assignment to X`, `initializer of X`
+and the other operand of comparisons and arithmetic, so a row can name the
+field or call it covers. Keep rows for quantities that have no name in the
+game: pixel geometry of the retail layouts, icon frame numbers, random bounds,
+byte widths of saved fields, delays. A value that a domain names is not kept;
+name it.
+
+## VC4 booleans
+
+VC4 has no `bool`, `true` or `false` (C2065). Clang's C++ `bool` contexts
+(conditions, logical operands) are int truthiness in the retail compiler and
+prove nothing. Only Win32 `BOOL` is a boolean domain, and its proven spelling
+is `TRUE`/`FALSE`, offered only where the macros are visible. The gate also
+fails on any `true`/`false` spelling.
+
+## Strict-domain view
+
+Each unit is parsed first with `/std:c++20 /Zc:__cplusplus`, which selects the
+strict view in `include/Domains.h`. There, typed storage, parameters and
+returns carry their enum, so a literal compared with or switched on
+an unscoped (`FLAGS`/`CONST`) domain is proven as its unique enumerator. A
+literal that meets an `enum class` domain is a strict-view error; such units
+fall back to the retail view, are counted in the output (`-v` lists them), and
+the error is itself the site to name.
