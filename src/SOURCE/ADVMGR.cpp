@@ -4066,8 +4066,31 @@ H1_ENUM_CONST_BEGIN(ControlPanelDialogConstant)
     CONTROL_MUSIC_SOURCE = 11,
     CONTROL_SHOW_ROUTE = 12,
     CONTROL_SHOW_ENEMY_MOVES = 13,
-    CONTROL_SCENARIO_INFO = 17
+    CONTROL_SCENARIO_INFO = 17,
+    CONTROL_MUSIC_VOLUME_TEXT = 8,
+    CONTROL_SOUND_VOLUME_TEXT = 9,
+    CONTROL_WALK_SPEED_TEXT = 10,
+    CONTROL_MUSIC_SOURCE_TEXT = 14,
+    CONTROL_SHOW_ROUTE_TEXT = 15,
+    CONTROL_SHOW_ENEMY_MOVES_TEXT = 16
 H1_ENUM_CONST_END(ControlPanelDialogConstant)
+
+// CPanelHandler's right-click help: the gCPanelHelp row for each control.
+H1_ENUM_BEGIN(ControlPanelHelp)
+    CPANEL_HELP_NONE = -1,
+    CPANEL_HELP_NEW_GAME = 0,
+    CPANEL_HELP_LOAD_GAME = 1,
+    CPANEL_HELP_QUIT = 2,
+    CPANEL_HELP_CLOSE = 3,
+    CPANEL_HELP_SAVE_GAME = 4,
+    CPANEL_HELP_MUSIC_VOLUME = 5,
+    CPANEL_HELP_SOUND_VOLUME = 6,
+    CPANEL_HELP_WALK_SPEED = 7,
+    CPANEL_HELP_MUSIC_SOURCE = 8,
+    CPANEL_HELP_SHOW_ROUTE = 9,
+    CPANEL_HELP_SHOW_ENEMY_MOVES = 10,
+    CPANEL_HELP_SCENARIO_INFO = 11
+H1_ENUM_END(ControlPanelHelp)
 // clang-format on
 
 // HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
@@ -4170,22 +4193,22 @@ void UpdateCPanel(signed char initialDraw) {
     message.value = gbRemoteOn ? 23 : 1 - gConfig.blackoutComputer + 23;
     cPanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 8;
+    message.id = CONTROL_MUSIC_VOLUME_TEXT;
     message.text = onOffText[gConfig.musicVolume];
     cPanel->BroadcastMessage(message);
-    message.id = 9;
+    message.id = CONTROL_SOUND_VOLUME_TEXT;
     message.text = onOffText[gConfig.soundVolume];
     cPanel->BroadcastMessage(message);
-    message.id = 10;
+    message.id = CONTROL_WALK_SPEED_TEXT;
     message.text = walkSpeedText[gConfig.walkSpeed];
     cPanel->BroadcastMessage(message);
-    message.id = 14;
+    message.id = CONTROL_MUSIC_SOURCE_TEXT;
     message.text = musicQualityText[gConfig.musicSource];
     cPanel->BroadcastMessage(message);
-    message.id = 15;
+    message.id = CONTROL_SHOW_ROUTE_TEXT;
     message.text = onOffText[gConfig.showRoute];
     cPanel->BroadcastMessage(message);
-    message.id = 16;
+    message.id = CONTROL_SHOW_ENEMY_MOVES_TEXT;
     message.text = onOffText[1 - gConfig.blackoutComputer];
     cPanel->BroadcastMessage(message);
     if (!initialDraw)
@@ -4242,43 +4265,43 @@ short CPanelHandler(struct tag_message &message) {
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
-                int helpIndex = -1;
+                int helpIndex = CPANEL_HELP_NONE;
                 switch (message.id) {
                     case CONTROL_NEW_GAME:
-                        helpIndex = 0;
+                        helpIndex = CPANEL_HELP_NEW_GAME;
                         break;
                     case CONTROL_LOAD_GAME:
-                        helpIndex = 1;
+                        helpIndex = CPANEL_HELP_LOAD_GAME;
                         break;
                     case CONTROL_QUIT:
-                        helpIndex = 2;
+                        helpIndex = CPANEL_HELP_QUIT;
                         break;
                     case PANEL_CLOSE_WIDGET:
-                        helpIndex = 3;
+                        helpIndex = CPANEL_HELP_CLOSE;
                         break;
                     case CONTROL_SAVE_GAME:
-                        helpIndex = 4;
+                        helpIndex = CPANEL_HELP_SAVE_GAME;
                         break;
                     case CONTROL_MUSIC_VOLUME:
-                        helpIndex = 5;
+                        helpIndex = CPANEL_HELP_MUSIC_VOLUME;
                         break;
                     case CONTROL_SOUND_VOLUME:
-                        helpIndex = 6;
+                        helpIndex = CPANEL_HELP_SOUND_VOLUME;
                         break;
                     case CONTROL_WALK_SPEED:
-                        helpIndex = 7;
+                        helpIndex = CPANEL_HELP_WALK_SPEED;
                         break;
                     case CONTROL_MUSIC_SOURCE:
-                        helpIndex = 8;
+                        helpIndex = CPANEL_HELP_MUSIC_SOURCE;
                         break;
                     case CONTROL_SHOW_ROUTE:
-                        helpIndex = 9;
+                        helpIndex = CPANEL_HELP_SHOW_ROUTE;
                         break;
                     case CONTROL_SHOW_ENEMY_MOVES:
-                        helpIndex = 10;
+                        helpIndex = CPANEL_HELP_SHOW_ENEMY_MOVES;
                         break;
                     case CONTROL_SCENARIO_INFO:
-                        helpIndex = 11;
+                        helpIndex = CPANEL_HELP_SCENARIO_INFO;
                         break;
                 }
                 if (helpIndex >= 0)
