@@ -36,10 +36,10 @@ H1_ENUM_CONST_BEGIN(TextEntryConstant)
     TEXT_ENTRY_KEYPAD_3 = 0x51,
     TEXT_ENTRY_KEYPAD_0 = 0x52
 H1_ENUM_CONST_END(TextEntryConstant)
- // clang-format on
+// clang-format on
 
- // forward declarations:
- class icon;
+// forward declarations:
+class icon;
 struct tag_message;
 
 #pragma pack(push, 1)

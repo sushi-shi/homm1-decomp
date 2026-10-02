@@ -11,7 +11,7 @@ H1_ENUM_BEGIN(IconWidgetKind)
     ICON_WIDGET_DRAW = 0x10,
     ICON_WIDGET_FILL = 0x80
 H1_ENUM_END(IconWidgetKind)
-    // clang-format on
+// clang-format on
 
 // forward declarations:
 class icon;

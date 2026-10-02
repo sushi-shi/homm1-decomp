@@ -12,7 +12,7 @@ H1_ENUM_BEGIN(BorderBackgroundKind)
     BORDER_BACKGROUND_SOLID = 0x400,
     BORDER_BACKGROUND_BITMAP = 0x800
 H1_ENUM_END(BorderBackgroundKind)
-    // clang-format on
+// clang-format on
 
 // forward declarations:
 class bitmap;

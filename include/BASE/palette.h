@@ -13,7 +13,7 @@ H1_ENUM_CONST_END(PaletteConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-    class palette : public resource {
+class palette : public resource {
 public:
     signed char* m_data;
     // --- constructors ---
