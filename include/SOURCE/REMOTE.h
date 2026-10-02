@@ -47,7 +47,10 @@ H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_QUEUE_CAPACITY = 7,
     REMOTE_RECENT_ID_COUNT = 30,
     REMOTE_RETRY_COUNT = 7,
-    REMOTE_CONFIRM_POLL_COUNT = 200
+    REMOTE_CONFIRM_POLL_COUNT = 200,
+    // InitNetHost/InitNetGuest try the NetBIOS names HHOST0../HGUEST1.. up to
+    // this suffix before reporting every game slot used.
+    REMOTE_NET_NAME_LAST = 10
 H1_ENUM_CONST_END(RemoteConstant)
 
 H1_ENUM_BEGIN(RemoteGameMode)
@@ -65,6 +68,13 @@ H1_ENUM_BEGIN(MultiplayerBaseType)
     MULTIPLAYER_BASE_HOT_SEAT = 2,
     MULTIPLAYER_BASE_UNSET = 10
 H1_ENUM_END(MultiplayerBaseType)
+
+// UnloadRemoteDriver's driver: the serial (com_*) driver for modem and direct
+// connect games, NetBIOS (nb_*) for network games (RemoteCleanup).
+H1_ENUM_BEGIN(RemoteDriverType)
+    REMOTE_DRIVER_SERIAL = 0,
+    REMOTE_DRIVER_NETBIOS = 1
+H1_ENUM_END(RemoteDriverType)
 
 // DecodePacket/EncodePacket frame every wire packet with this six-byte header.
 #pragma pack(push, 1)
@@ -145,7 +155,7 @@ int TransmitAndWait(char*, int, int, signed char, signed char, char**);
 signed char NetPosToGamePos(int);
 signed char WaitForOtherPlayer(void);
 void RemoteCleanup(void);
-void UnloadRemoteDriver(short);
+void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short));
 long FileSize(char*);
 void WriteModemPacket(char*, int);
 char ReadPacket(void);

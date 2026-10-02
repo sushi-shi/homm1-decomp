@@ -150,16 +150,16 @@ signed char game::SetupBaud(void) {
     delete window;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            gConfig.baudRate[gbDirectConnect] = 2400;
+            gConfig.baudRate[gbDirectConnect] = CBR_2400;
             break;
         case CHOICE_TWO:
-            gConfig.baudRate[gbDirectConnect] = 9600;
+            gConfig.baudRate[gbDirectConnect] = CBR_9600;
             break;
         case CHOICE_THREE:
-            gConfig.baudRate[gbDirectConnect] = 19200;
+            gConfig.baudRate[gbDirectConnect] = CBR_19200;
             break;
         case CHOICE_FOUR:
-            gConfig.baudRate[gbDirectConnect] = 38400;
+            gConfig.baudRate[gbDirectConnect] = CBR_38400;
             break;
         case DIALOG_CANCEL:
             return 0;
