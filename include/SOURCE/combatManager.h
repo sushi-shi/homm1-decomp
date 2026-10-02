@@ -6,6 +6,8 @@
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/army.h>
+#include <SOURCE/hexcell.h>
 
 // forward declarations:
 class army;
@@ -24,27 +26,74 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_VIEW = 5
 H1_ENUM_END(CombatPointerCode)
 
-class combatManager {
+// HoMM1 combat manager, 0x7d3 bytes (InitMainClasses; constructor
+// 0x0044b440). Field names follow Buka where the retail use matches;
+// unrecovered spans stay opaque.
+#pragma pack(push, 1)
+class combatManager : public baseManager {
 public:
+    char m_unknown30[0x10];
+    hexcell m_hexCells[45];
+    short m_unknown25c;
+    char m_unknown25e[0x48];
+    class hero *m_heroes[2];
+    char m_unknown2ae[0xc];
+    signed char m_playerId[2];
+    char m_unknown2bc[8];
+    signed char m_heroCastSpell[2];
+    char m_unknown2c6[4];
+    army m_armies[2][6];
+    signed char m_currentSide;
+    signed char m_currentArmyIndex;
+    signed char m_currentSpeed;
+    signed char m_unknown6bd;
+    signed char m_limitCreature;
+    signed char m_limitCreatureHex;
+    signed char m_unknown6c0;
+    signed char m_selectedHex;
+    signed char m_unknown6c2;
+    signed char m_previousCommand;
+    signed char m_currentCommand;
+    short m_unknown6c5;
+    short m_unknown6c7;
+    short m_catapultAttackCount[2];
+    short m_catapultAttacksRemaining[2];
+    short m_keepAttacksRemaining[2];
+    short m_unknown6d5;
+    short m_unknown6d7;
+    short m_unknown6d9;
+    short m_unknown6db;
+    // Per side: the side fights from a castle.
+    signed char m_castleSide[2];
+    char m_unknown6df[0x1e];
+    signed char m_sideRetreated[2];
+    char m_unknown6ff[0x34];
+    class widget *m_winLoseBottomWidgets[15];
+    class widget *m_winLoseBottomTextWidgets[15];
+    char m_unknown7ab[0x27];
+    signed char m_combatResult;
     // --- constructors ---
     combatManager(void);
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     void NoShowCombatLog(char *);
     void ClearCombatMessages(int);
     void CheckUpdateCombatMessages(void);
-    void CombatMessage(char *, int, int, int);
+    // HoMM1 retail 0x00470aa9: text and a redraw flag (ret 8).
+    void CombatMessage(char *, int);
     void CombatMessage(int);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army *);
-    int UpdateGrid(int, int);
+    // HoMM1 retail 0x004709f0: word first hex, redraw flag (ret 8).
+    void UpdateGrid(short, int);
     void DrawBackground(void);
     void UpdateMouseGrid(int, int);
-    void DrawFrame(int, int, int, int, int, int, int);
+    // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
+    void DrawFrame(int);
     void DrawSmallView(int, int);
     int ViewGeneral(int, int, int);
     void ViewArmy(class army *, int);
@@ -83,7 +132,7 @@ public:
     void ModifyDamageForArtifacts(long int *, int, class hero *, class hero *);
     void Earthquake(void);
     void ShowSpellMessage(int, int, class army *);
-    int ValidHexToStandOn(int);
+    signed char ValidHexToStandOn(int);
     void SetCombatDirections(int);
     void CheckSetMouseDirection(int, int, int);
     H1_ENUM_RETURN(CombatPointerCode, int) GetPointer(H1_ENUM_PARAM(CombatPointerCode, int));
@@ -99,7 +148,7 @@ public:
     void ShowSkeletons(class heroWindow *);
     void ShowEagleEyeSpell(class heroWindow *);
     void ShowDeadArmies(class heroWindow *);
-    void DoVictory(int);
+    void DoVictory(signed char);
     void DoLoseWindow(void);
     int DoSurrender(void);
     void CheckChangeSelector(void);
@@ -107,7 +156,7 @@ public:
     void CheckGetAIMove(void);
     void GetControl(void);
     void ResetMouse(void);
-    int ProcessNextAction(struct tag_message &);
+    short ProcessNextAction(struct tag_message &);
     void ResetCyclingCreatures(void);
     void ResetCycleTimers(void);
     void CycleCombatScreen(void);
@@ -116,7 +165,8 @@ public:
     void AddArmy(int, int, int, int, int, int);
     void SetupSmallView(void);
     void ViewBallista(int);
-    int DoSpellAI(int, int);
+    // HoMM1 retail 0x00437010: byte side (ret 4).
+    int DoSpellAI(signed char);
     void DetermineEffectOfSpell(int, int *, int *);
     int EffectSpellCreateCreature(int, int);
     int RawEffectSpellInfluence(class army *, int);
@@ -143,9 +193,11 @@ public:
     void CheckApplyGoodMorale(int, int);
     int CheckApplyBadMorale(int, int);
     int GetNextArmy(int);
-    int IsWinner(int);
-    void CatAttack(int);
-    void KeepAttack(int);
+    // HoMM1 retail 0x0044d9ca: byte side, byte result.
+    signed char IsWinner(signed char);
+    void CatAttack(signed char);
+    // HoMM1 has a single keep (retail 0x0044e840, plain ret).
+    void KeepAttack(void);
     int ExperienceValueOfStack(int);
     void ResetHitByCreature(void);
     void SaveCombatBorder(void);
@@ -160,7 +212,7 @@ public:
     void ShootMissile(int, int, int, int, float *, class icon *);
     void CombatSystemOptions(void);
     int AICheckRetreat(void);
-    void DoCompAI(int);
+    void DoCompAI(signed char);
     float GetModLichDamage(class army *, float);
     void DoLichShot(class army *);
     int GetShooterMask(int);
@@ -180,5 +232,12 @@ public:
     int WalkTowardArmy(class army *, int, int);
 };
 
+#pragma pack(pop)
+
 int ValidHex(int);
+extern combatManager *gpCombatManager;
+// Network combat: this machine controls the current side (0x004a4b98).
+extern signed char gbThisNetHasControl;
+// CheckWin flags a retreat victory (0x004c6d4c).
+extern signed char gbRetreatWin;
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

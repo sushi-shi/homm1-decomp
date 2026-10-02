@@ -5,8 +5,21 @@
 
 #include <H1/Macros.h>
 
+// 12-byte combat grid cell (retail constructor 0x0046e5b0); the combat
+// manager embeds 45 of them (5 rows of 9) at +0x40.
+#pragma pack(push, 1)
 class hexcell {
 public:
+    char m_unknown00[4];
+    signed char m_unknown04;
+    signed char m_unknown05;
+    char m_unknown06;
+    // ValidHexToStandOn: -1 when no obstacle stands on the hex.
+    signed char m_obstacle;
+    signed char m_occupantSide;
+    signed char m_occupantIndex;
+    signed char m_unknown0a;
+    signed char m_unknown0b;
     // --- constructors ---
     hexcell(void);
     // --- methods ---
@@ -18,4 +31,5 @@ public:
     void DrawClouds(void);
     void DrawObstacle(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_HEXCELL_H

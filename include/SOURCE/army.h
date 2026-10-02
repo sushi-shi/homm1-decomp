@@ -5,8 +5,55 @@
 
 #include <H1/Macros.h>
 
+// HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
+// army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
+#pragma pack(push, 1)
 class army {
 public:
+    signed char m_unknown00;
+    signed char m_unknown01;
+    short m_unknown02;
+    signed char m_unknown04;
+    // ValidPath records the reachable target hex here.
+    signed char m_moveTargetHex;
+    signed char m_creatureType;
+    signed char m_hex;
+    signed char m_unknown08;
+    signed char m_unknown09;
+    signed char m_facing;
+    short m_unknown0b;
+    short m_initialQuantity;
+    short m_quantity;
+    short m_hitPointsLost;
+    signed char m_unknown13;
+    signed char m_baseSpeed;
+    char m_unknown15;
+    signed char m_race;
+    signed char m_speed;
+    signed char m_unknown18;
+    signed char m_unknown19;
+    signed char m_unknown1a;
+    signed char m_unknown1b;
+    signed char m_unknown1c;
+    char m_spriteName[8];
+    // Monster attribute flags; bit 0 is a two-hex creature, bit 1 a flyer.
+    int m_attributes;
+    short m_unknown29;
+    short m_unknown2b;
+    signed char m_side;
+    signed char m_index;
+    int m_unknown2f;
+    signed char m_unknown33;
+    char m_unknown34;
+    int m_unknown35;
+    int m_unknown39;
+    int m_unknown3d;
+    int m_unknown41[4];
+    // Active spell; HoMM1 lets a stack carry one timed effect.
+    signed char m_spellEffect;
+    signed char m_unknown52;
+    // ResetRound counts this down and expires the effect at zero.
+    signed char m_spellRounds;
     // --- constructors ---
     army(void);
     // --- methods ---
@@ -44,6 +91,8 @@ public:
     float SpellCastWorkChance(int);
     int SpellCastWorks(int);
     void DispelGood(void);
+    // HoMM1 retail 0x0046b457: undoes m_spellEffect when it expires.
+    void CancelSpell(void);
     void Cure(int);
     int MidX(void);
     int MidY(void);
@@ -67,4 +116,5 @@ public:
     int ValidRange(int);
     int GetBestDirection(int, int, int);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_ARMY_H
