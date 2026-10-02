@@ -100,7 +100,7 @@ int combatManager::AICheckRetreat(void) {
     prob += expBonus;
     if (m_currentSide == 1)
         prob = prob - 0.06;
-    prob -= (4 - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_color) * 0.03;
+    prob -= (4 - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_difficulty) * 0.03;
     retreatRatio = (float)force[m_currentSide] / (force[0] + force[1]);
     if (retreatRatio < prob) {
         giNextAction = 4;

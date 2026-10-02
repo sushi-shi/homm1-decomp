@@ -422,7 +422,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(8, 0);
             targetArmy->SpellEffect(8, 0);
-            targetArmy->m_unknown13 = 3;
+            targetArmy->m_damageMode = 3;
             targetArmy->m_spellEffect = 8;
             targetArmy->m_unknown52 = 3;
             targetArmy->ResetAnimation(1);
@@ -441,7 +441,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_unknown09 = 2;
             targetArmy->SpellEffect(10, 0);
-            targetArmy->m_unknown13 = 1;
+            targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 10;
             targetArmy->m_unknown52 = 3;
             targetArmy->ResetAnimation(1);
@@ -460,7 +460,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_unknown09 = 2;
             targetArmy->SpellEffect(18, 0);
-            targetArmy->m_unknown13 = 1;
+            targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 18;
             targetArmy->m_unknown52 = 2;
             targetArmy->ResetAnimation(1);
@@ -470,7 +470,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 0;
-            targetArmy->m_unknown13 = 1;
+            targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 7;
             targetArmy->m_unknown52 = 2;
             targetArmy->ResetAnimation(1);
@@ -478,7 +478,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         case 11:
             targetArmy->m_unknown09 = 2;
             targetArmy->SpellEffect(11, 0);
-            targetArmy->m_unknown2b = 5;
+            targetArmy->m_powFrames = 5;
             targetArmy->PowEffect(0);
             targetArmy->m_quantity = 0;
             break;
@@ -579,12 +579,12 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
         }
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
-        m_unknown25c = 0;
+        m_gridUpdateRow = 0;
         giCombatFxFrame = armyIndex;
         DrawFrame(1);
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
-        m_unknown25c = 0;
+        m_gridUpdateRow = 0;
         giCombatFxFrame = armyIndex;
         DrawFrame(1);
     }
@@ -648,7 +648,7 @@ void combatManager::Fireball(signed char targetHex)
     y = m_hexCells[targetHex].m_y - 30;
     for (i = 0; i < 7; i++) {
         glTimers[0] = KBTickCount() + 75;
-        m_unknown25c = 0;
+        m_gridUpdateRow = 0;
         ClippedIconToBitmap(fireballIcon, gpWindowManager->m_screen, x, y, i, 0);
         FlipClippedIconToBitmap(fireballIcon, gpWindowManager->m_screen, x, y, i, 0);
         UpdateCombatArea();
@@ -670,7 +670,7 @@ void combatManager::Fireball(signed char targetHex)
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
-                if (curArmy->m_unknown2b == -1) {
+                if (curArmy->m_powFrames == -1) {
                     curArmy->Damage(damage);
                     hit = 1;
                 }
@@ -714,7 +714,7 @@ void combatManager::MeteorShower(signed char targetHex)
         adjHexes[i + 1] = curArmy->GetAdjacentCellIndex(targetHex, i);
     for (j = 0; j < 10; j++) {
         glTimers[0] = KBTickCount() + 112.5;
-        m_unknown25c = 0;
+        m_gridUpdateRow = 0;
         DrawFrame(0);
         for (i = 0; i < 7; i++) {
             if (adjHexes[i] != -1)
@@ -734,7 +734,7 @@ void combatManager::MeteorShower(signed char targetHex)
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
-                if (curArmy->m_unknown2b == -1) {
+                if (curArmy->m_powFrames == -1) {
                     curArmy->Damage(damage);
                     hit = 1;
                 }
@@ -775,7 +775,7 @@ void combatManager::ElementalStorm(void)
     for (cycle = 0; cycle < 5; cycle++) {
         for (frm = 0; frm < 10; frm++) {
             glTimers[0] = KBTickCount() + 75;
-            m_unknown25c = 0;
+            m_gridUpdateRow = 0;
             DrawFrame(0);
             for (y = 0; y < 7; y++) {
                 for (x = 0; x < 10; x++)
