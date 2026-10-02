@@ -65,7 +65,7 @@ void icon::DrawToBuffer(short x, short y, short frame, H1_ENUM_PARAM(IconDrawOri
     if (gbLimitToExtent != 0 && (gbCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX
         || m_drawRight < giMinExtentX || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
         return;
-    if (gbUseClippedIconRenderer != 0) {
+    if (gbIconClipOn != 0) {
         if (orientation == ICON_DRAW_NORMAL)
             ClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
         else

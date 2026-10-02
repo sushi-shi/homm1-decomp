@@ -43,6 +43,46 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_CURSOR_SAMPLE_COUNT = 7
 H1_ENUM_CONST_END(AdventureManagerStorageConstant)
 
+// m_heroIcons slots and m_cursorType: the four hero-class sprites (the
+// constructor loads kngt32/barb32/sorc32/wrlk32.icn; MobilizeCurrHero and
+// DoEvent store the hero class) and the boat (boat32.icn; set on boarding,
+// tested for water moves and shadows).
+H1_ENUM_BEGIN(AdventureHeroIcon)
+    ADVMGR_HERO_ICON_KNIGHT = 0,
+    ADVMGR_HERO_ICON_BARBARIAN = 1,
+    ADVMGR_HERO_ICON_SORCERESS = 2,
+    ADVMGR_HERO_ICON_WARLOCK = 3,
+    ADVMGR_HERO_ICON_CLASS_END = 4,
+    ADVMGR_HERO_ICON_BOAT = 4
+H1_ENUM_END(AdventureHeroIcon)
+
+// m_selectedCell: the action ProcessSelect queues and advManager::DoSelect
+// runs (Buka 2.1 AdventureCommand, same numbering).
+H1_ENUM_BEGIN(AdventureCommand)
+    ADVMGR_COMMAND_NONE = -1,
+    ADVMGR_COMMAND_MOVE_TO = 1,
+    ADVMGR_COMMAND_HERO_VIEW = 2,
+    ADVMGR_COMMAND_TOWN_VIEW = 3,
+    ADVMGR_COMMAND_SELECT_HERO = 4,
+    ADVMGR_COMMAND_SELECT_TOWN = 5,
+    ADVMGR_COMMAND_OCCUPIED_TOWN_VIEW = 6,
+    ADVMGR_COMMAND_CONTINUE_ROUTE = 7
+H1_ENUM_END(AdventureCommand)
+
+// Player colours: playerData::m_color indexes the constructor's flag ICNs
+// (b-/g-/r-/y-flag32.icn and -bflg32.icn) and KB's gColorNames
+// {"blue", "green", "red", "yellow"} (Buka PlayerColor, first four values);
+// UpdateRadar uses slot 4 of gRadarOwnerColor for unowned towns and mines.
+// Belongs with playerData (W3) if that header takes it.
+H1_ENUM_BEGIN(PlayerColor)
+    PLAYER_COLOR_BLUE = 0,
+    PLAYER_COLOR_GREEN = 1,
+    PLAYER_COLOR_RED = 2,
+    PLAYER_COLOR_YELLOW = 3,
+    PLAYER_COLOR_COUNT = 4,
+    PLAYER_COLOR_NEUTRAL = 4
+H1_ENUM_END(PlayerColor)
+
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand

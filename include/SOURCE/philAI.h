@@ -5,19 +5,16 @@
 
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/game.h>
 #include <SOURCE/resourceTypes.h>
 
 extern signed char gDwellingType[4][6];
 
 extern float gafAITurnCostResource[static_cast<int>(RESOURCE_COUNT)];
 
-H1_ENUM_CONST_BEGIN(AIPlayerConstant)
-AI_PLAYER_COUNT = 4, AI_PLAYER_BEGIN = 0,
-                     AI_PLAYER_END = AI_PLAYER_COUNT H1_ENUM_CONST_END(AIPlayerConstant)
-
-                         extern signed char giBuildShipyard[AI_PLAYER_COUNT];
-extern signed char giBuildBoat[AI_PLAYER_COUNT];
-extern signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
+extern signed char giBuildShipyard[GAME_PLAYER_COUNT];
+extern signed char giBuildBoat[GAME_PLAYER_COUNT];
+extern signed char giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 void ShowStatus();
 void CheckDoMain(int, int);
 int GetBuildingBaseResourceValue(int, int, int);
@@ -212,8 +209,23 @@ extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
+// clang-format off
+// The per-cell/per-hero resource-value caches (gaiHeroStrategicRVOfPos,
+// gaiHeroEventStratRVOfPos, gaiHeroLiveChance) hold RV_UNSET until
+// evaluated; ResetHeroRVs writes it back (Buka's name).
+H1_ENUM_CONST_BEGIN(AIResourceValue)
+    RV_UNSET = -32001
+H1_ENUM_CONST_END(AIResourceValue)
+// clang-format on
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
 extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+// clang-format off
+// mapExtra bit 7: game::SetupAdjacentMons sets it where FindAdjacentMonster
+// finds a guard next to the cell and clears it (mask 0x7f) elsewhere.
+H1_ENUM_BEGIN(MapExtraFlag)
+    MAP_EXTRA_MONSTER_ADJACENT = 0x80
+H1_ENUM_END(MapExtraFlag)
+// clang-format on
 
 // Shared with GAME and EVENTS: the per-cell bitmask of the players whose
 // heroes have stood there and the current/watch players' high bits (all in

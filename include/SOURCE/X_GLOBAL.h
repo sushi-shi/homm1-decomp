@@ -44,8 +44,8 @@ extern armyGroup* gpMonsterGroup;
 // Calendar specials: week/month type and the featured creature or name.
 extern signed char giWeekType;
 extern signed char giMonthType;
-extern signed char giWeekSpecial;
-extern signed char giMonthSpecial;
+extern signed char giWeekTypeExtra;
+extern signed char giMonthTypeExtra;
 // SaveGame files the current player through this byte.
 extern signed char gSaveCurPlayer;
 // Morale and luck names, indexed from -3, and their info-window texts.
@@ -130,7 +130,7 @@ extern signed char gbSkipIntro;
 extern signed char gbWaitForRemoteReceive;
 extern short giLastMapOriginX;
 extern short giLastMapOriginY;
-extern char gcCongratsText[];
+extern char gcWinText[];
 extern char* gInitMenuHelp[];
 // The other side's ready flag and the heartbeat-seen flag (REMOTE).
 extern int gbRemoteReady;

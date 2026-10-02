@@ -37,7 +37,7 @@ void advManager::StartCursor(signed char direction)
     m_cursorMapY += directionY;
     newX = m_mapOriginX + m_cursorMapX;
     newY = m_mapOriginY + m_cursorMapY;
-    m_mapData[newX][newY].m_flags |= 0x40;
+    m_mapData[newX][newY].m_flags |= MAP_CELL_HERO_CURSOR;
 }
 
 // Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
@@ -81,16 +81,16 @@ void advManager::DrawCursor(void)
     }
     drawX = m_updateMinX + 0xe0;
     screenY = m_updateMinY + 0xff;
-    if (m_cursorType == 4)
+    if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
         screenY -= 10;
     if (m_cursorFrame & 0x80) {
         drawX += 0x20;
         drawFrame = (m_cursorFrame & 0x7f) + m_cursorFrameCount;
-        if (m_drawHeroShadows && m_cursorType != 4)
+        if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             FlipDimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, 0);
         FlipIconToBitmap(m_heroIcons[m_cursorType], gpWindowManager->m_screen, drawX, screenY,
                          drawFrame, 0);
-        if (m_cursorType == 4) {
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame & 0x7f;
             FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen,
@@ -104,11 +104,11 @@ void advManager::DrawCursor(void)
         }
     } else {
         drawFrame = m_cursorFrame + m_cursorFrameCount;
-        if (m_drawHeroShadows && m_cursorType != 4)
+        if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, 0);
         IconToBitmap(m_heroIcons[m_cursorType], gpWindowManager->m_screen, drawX, screenY, drawFrame,
                      0);
-        if (m_cursorType == 4) {
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame;
             IconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
@@ -198,7 +198,7 @@ void advManager::TurnTo(signed char direction)
         delayTime = delayTime * 1.5;
     do {
         m_cursorCycle = 1;
-        if (m_cursorType >= 4)
+        if (m_cursorType >= ADVMGR_HERO_ICON_CLASS_END)
             m_cursorFrame = boatFrameFlip[curFrame];
         else
             m_cursorFrame = horseFrameFlip[curFrame];
@@ -398,7 +398,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         town *occupiedTown;
 
         occupiedTown = gpGame->GetTown(movingHero->m_occupiedTown);
-        occupiedTown->m_occupyingHeroId = -1;
+        occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_routeShown)
         *(m_visibilityMap + (movingHero->m_x + xInc) + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
@@ -502,7 +502,7 @@ movementDone:
     UpdateRadar(1, 1);
     gbHeroMoving = 0;
     if (movingHero->m_x != origX || movingHero->m_y != origY) {
-        if (mapExtra[movingHero->m_x][movingHero->m_y] & 0x80) {
+        if (mapExtra[movingHero->m_x][movingHero->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                 goto adjacentDone;
             if (retCell && static_cast<char>(retCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_SHIP)
@@ -576,13 +576,13 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
     cell = &m_mapData[newX][newY];
     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
         case MAP_OBJECT_BUOY:
-            if (!(movingHero->m_eventFlags & 0x80))
+            if (!(movingHero->m_eventFlags & HERO_EVENT_EMBARKED))
                 return 1;
             else
                 return 0;
         case MAP_OBJECT_HERO:
-            if (movingHero->m_eventFlags & 0x80) {
-                if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & 0x80)
+            if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+                if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & HERO_EVENT_EMBARKED)
                     return 1;
                 else
                     return 0;
@@ -600,7 +600,7 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
         case MAP_OBJECT_STATUE:
         case MAP_OBJECT_WELL:
         case MAP_OBJECT_ARTIFACT:
-            if (m_cursorType == 4)
+            if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
                 return 0;
             else
                 return 1;
@@ -631,22 +631,22 @@ short advManager::ValidMove(short direction)
     if (newY < -7 || newY > MAP_CELL_GRID_SIZE - 7 - 1)
         return 0;
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
-    if (destCell->m_secondaryTrigger & 0x80)
+    if (destCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
         return 0;
     if (giGroundToTerrain[destCell->m_tileIndex] == TERRAIN_WATER) {
-        if (m_cursorType != 4 && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
+        if (m_cursorType != ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
             return 0;
     } else {
-        if (m_cursorType == 4 && destCell->m_triggerType != MAP_OBJECT_COAST && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != MAP_OBJECT_COAST && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
             return 0;
     }
     hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
     north = (1 << direction) & 0x83;
     downMask = (1 << direction) & 0x38;
-    if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & 0x80)
+    if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
         && hereCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
-    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME && !(destCell->m_flags & 0x80)
+    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME && !(destCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
         && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;
@@ -673,7 +673,7 @@ void advManager::MoveOrigin(short directionX, short directionY)
         m_cursorMapY += directionY;
         cellX = m_cursorMapX + m_mapOriginX;
         cellY = m_cursorMapY + m_mapOriginY;
-        m_mapData[cellX][cellY].m_flags |= 0x40;
+        m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
         if (m_previousCursorMapX != -1) {
             m_mapData[m_previousCursorMapX + oldOriginX][m_previousCursorMapY + oldOriginY].m_flags &=
                 ~0x40;
@@ -681,7 +681,7 @@ void advManager::MoveOrigin(short directionX, short directionY)
             m_previousCursorMapY += directionY;
             cellX = m_previousCursorMapX + m_mapOriginX;
             cellY = m_previousCursorMapY + m_mapOriginY;
-            m_mapData[cellX][cellY].m_flags |= 0x40;
+            m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
         }
     }
     m_forceCompleteDraw = 1;
@@ -696,9 +696,9 @@ short giPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x0048eb30)
 short giStepDelay[5] = {30, 45, 30, 15, 15};
 DATA(0x0048eb3c)
-struct _SAMPLE* hPrevMoveSound = 0;
+struct _SAMPLE* hPrevMoveSound = NULL;
 DATA(0x0048eb40)
-struct _SAMPLE* hLastMoveSound = 0;
+struct _SAMPLE* hLastMoveSound = NULL;
 DATA(0x0048eb44)
 signed char EveryOther = 0;
 DATA(0x0048eb48)

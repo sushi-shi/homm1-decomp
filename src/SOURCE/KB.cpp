@@ -40,7 +40,7 @@
 
 // Retail score-dialog owner byte (.bss).
 DATA(0x004c794c)
-signed char gbStandardHighScore;
+signed char giHighScoreType;
 // InitVars proves seven terrain rows, ordinary/diagonal cost columns.
 DATA(0x004c6d50)
 signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
@@ -194,6 +194,7 @@ int EarlySetup(void) {
 // oldmain dispatches it (gGameCommand re-enters with the control panel's
 // new/load/quit ids, which share these values).
 H1_ENUM_BEGIN(MainMenuControl)
+    MAIN_MENU_NO_COMMAND = -1,
     MAIN_MENU_NEW_GAME = 1,
     MAIN_MENU_LOAD_GAME = 2,
     MAIN_MENU_QUIT = 4,
@@ -210,6 +211,16 @@ H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_CREDITS = 3,
     MAIN_MENU_HELP_QUIT = 4
 H1_ENUM_END(MainMenuHelp)
+
+// giEndSequence: CheckEndGame sets LOST/WON, and WON becomes CAMPAIGN_COMPLETE
+// after the last campaign scenario; oldmain plays the matching video (the
+// value indexes lowResVideos/hiResVideos), offers a replay after LOST and
+// advances the campaign after WON.
+H1_ENUM_BEGIN(GameEndSequence)
+    GAME_END_LOST = 0,
+    GAME_END_WON = 1,
+    GAME_END_CAMPAIGN_COMPLETE = 2
+H1_ENUM_END(GameEndSequence)
 // clang-format on
 
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
@@ -272,19 +283,19 @@ int oldmain(void) {
     mainMenu:
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
         if (!backdropLoaded) {
-            if (gGameCommand != 4) {
+            if (gGameCommand != MAIN_MENU_QUIT) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 if (initialMainScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
-                    gpWindowManager->FadeScreen(0, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 initialMainScreen = 0;
             }
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
         }
         backdropLoaded = 1;
-        if (gGameCommand != 4)
+        if (gGameCommand != MAIN_MENU_QUIT)
             gpWindowManager->m_updateFlags = 1;
         giCampaignChoice = 0;
         gpMouseManager->ReallyShowPointer();
@@ -326,9 +337,9 @@ int oldmain(void) {
             }
             goto gameSetupComplete;
         } else {
-            if (gGameCommand != -1) {
+            if (gGameCommand != MAIN_MENU_NO_COMMAND) {
                 command = gGameCommand;
-                gGameCommand = -1;
+                gGameCommand = MAIN_MENU_NO_COMMAND;
             } else {
                 mainWin = new heroWindow(400, 35, "stpmain.bin");
                 if (!mainWin)
@@ -361,10 +372,10 @@ int oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_CREDITS:
-                gpWindowManager->FadeScreen(1, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 done = 0;
                 gpInputManager->Flush();
                 while (!done) {
@@ -376,10 +387,10 @@ int oldmain(void) {
                             done = 1;
                     }
                 }
-                gpWindowManager->FadeScreen(1, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 goto mainMenu;
             case MAIN_MENU_QUIT:
                 leave = 1;
@@ -427,10 +438,10 @@ int oldmain(void) {
         playScenario:
             if (gpGame->m_campaignType > 0) {
                 if (!backdropLoaded) {
-                    gpWindowManager->FadeScreen(1, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
                     gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                     gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                    gpWindowManager->FadeScreen(0, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                     backdropLoaded = 1;
                 }
                 gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 0, 0);
@@ -438,7 +449,7 @@ int oldmain(void) {
             gbGameInitialized = 1;
             backdropLoaded = 0;
             gpSoundManager->StopAllSamples();
-            gpWindowManager->FadeScreen(1, 8, 0);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
             gMapX = 0;
             gMapY = 0;
             if (gpExec->AddManager(gpAdvManager, -1))
@@ -449,7 +460,7 @@ int oldmain(void) {
             gMapX = gpAdvManager->m_mapOriginX;
             gMapY = gpAdvManager->m_mapOriginY;
             gpExec->RemoveManager(gpAdvManager);
-            gpWindowManager->FadeScreen(1, 8, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
         }
 
         if (gbGameOver) {
@@ -458,7 +469,7 @@ int oldmain(void) {
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
             gpMouseManager->ReallyHidePointer();
             sprintf(
-                gcCongratsText,
+                gcWinText,
                 "My heroes, our foes have been scattered, their castles broken and laid bare.  "
                 "The great campaign is now complete, and I stand before you as the undisputed "
                 "High King!\n\nOur victory was achieved in %d days!",
@@ -469,8 +480,8 @@ int oldmain(void) {
             hiResVideos[0] = 7;
             hiResVideos[1] = 4;
             hiResVideos[2] = 6;
-            if (giEndSequence != 1) {
-                if (giEndSequence == 2) {
+            if (giEndSequence != GAME_END_WON) {
+                if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
                     PlaySmacker(4);
                     PlaySmacker(6);
                 } else {
@@ -479,14 +490,14 @@ int oldmain(void) {
                 }
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 gpWindowManager->m_updateFlags = 1;
                 backdropLoaded = 1;
             } else {
                 ShowCongrats();
             }
             gbGameOver = 0;
-            if (giEndSequence == 2) {
+            if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(giCurTurn, 0, "", gCampaignSideNames[gpGame->m_campaignType - 1]);
             }
@@ -500,18 +511,18 @@ int oldmain(void) {
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 backdropLoaded = 1;
             }
             if (gpGame->m_campaignType > 0) {
-                if (giEndSequence == 0) {
+                if (giEndSequence == GAME_END_LOST) {
                     sprintf(gText, "Would you like to replay this scenario?");
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
                     }
-                } else if (giEndSequence == 1) {
+                } else if (giEndSequence == GAME_END_WON) {
                     gpGame->m_campaignDay = giCurTurn + 1;
                     gpGame->m_campaignScenario++;
                     gpGame->m_campaignScenariosWon++;
@@ -682,7 +693,7 @@ short RecruitHeroHandler(tag_message& message) {
                         gpTownManager->RedrawTownScreen();
                         gpTownManager->m_heroWindow0->DrawWindow();
                         gpTownManager->m_heroWindow1->DrawWindow();
-                        gpWindowManager->FadeScreen(0, 8, NULL);
+                        gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
                         break;
                     default:
                         break;
@@ -1322,6 +1333,336 @@ void PlayerDead(int player) {
         HandleRemoteDeadPlayerExit(player);
 }
 
+DATA(0x00491058)
+char* cCombatGroundNames[8] = {
+    "boat.xtl",
+    "grass.xtl",
+    "snow.xtl",
+    "swamp.xtl",
+    "lava.xtl",
+    "desert.xtl",
+    "dgrass.xtl",
+    0,
+};
+DATA(0x00491078)
+char* cCombatObstacleNames[8] = {
+    "boat.obj",
+    "grass.obj",
+    "snow.obj",
+    "swamp.obj",
+    "lava.obj",
+    "desert.obj",
+    "dgrass.obj",
+    0,
+};
+DATA(0x00491098)
+char* gPowEffectNames[16] = {
+    "cloud.icn",
+    "physical.icn",
+    "physical.icn",
+    "physical.icn",
+    "physical.icn",
+    "physical.icn",
+    "physical.icn",
+    "redfire.icn",
+    "electric.icn",
+    "redfire.icn",
+    "electric.icn",
+    "redfire.icn",
+    "bluefire.icn",
+    "bluefire.icn",
+    "cloud.icn",
+    "cloud.icn",
+};
+DATA(0x004910d8)
+char* gCombatFxNames[26] = {
+    "redfire.icn",
+    "elecfire.icn",
+    "magic04.icn",
+    "magic01.icn",
+    "magic01.icn",
+    "magic02.icn",
+    "magic02.icn",
+    "magic06.icn",
+    "magic07.icn",
+    "magic01.icn",
+    "magic06.icn",
+    "magic08.icn",
+    "magic07.icn",
+    "magic01.icn",
+    "magic01.icn",
+    "magic02.icn",
+    "reddeath.icn",
+    "magic03.icn",
+    "magic03.icn",
+    "magic06.icn",
+    "magic01.icn",
+    "magic01.icn",
+    "rainbluk.icn",
+    "cloudluk.icn",
+    "moraleg.icn",
+    "moraleb.icn",
+};
+DATA(0x00491140)
+short giSpellAIValue[29] = {
+    500,
+    350,
+    300,
+    400,
+    550,
+    900,
+    400,
+    500,
+    300,
+    350,
+    250,
+    0,
+    100,
+    150,
+    1000,
+    2000,
+    1700,
+    700,
+    700,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1200,
+    0,
+};
+DATA(0x00491180)
+signed char gcSpellAIFlags[29] = {
+    3,
+    3,
+    2,
+    2,
+    3,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+};
+DATA(0x004911a0)
+signed char gMageGuildSpellPool[4][8] = {
+    {9, 13, 6, 8, 10, 20, 19, 8},
+    {1, 5, 3, 7, 11, 21, 26, 12},
+    {0, 18, 14, 16, 22, 25, 23, 2},
+    {27, 4, 15, 17, 28, 24, 28, 27},
+};
+DATA(0x004911c0)
+signed char gCombatAdjacency[45][6] = {
+    {-1, -1, -1, -1, -1, -1},
+    {-1, 2, 10, -1, -1, -1},
+    {-1, 3, 11, 10, 1, -1},
+    {-1, 4, 12, 11, 2, -1},
+    {-1, 5, 13, 12, 3, -1},
+    {-1, 6, 14, 13, 4, -1},
+    {-1, 7, 15, 14, 5, -1},
+    {-1, -1, 16, 15, 6, -1},
+    {-1, -1, -1, -1, -1, -1},
+    {-1, -1, -1, -1, -1, -1},
+    {2, 11, 20, 19, -1, 1},
+    {3, 12, 21, 20, 10, 2},
+    {4, 13, 22, 21, 11, 3},
+    {5, 14, 23, 22, 12, 4},
+    {6, 15, 24, 23, 13, 5},
+    {7, 16, 25, 24, 14, 6},
+    {-1, -1, -1, 25, 15, 7},
+    {-1, -1, -1, -1, -1, -1},
+    {-1, -1, -1, -1, -1, -1},
+    {10, 20, 28, -1, -1, -1},
+    {11, 21, 29, 28, 19, 10},
+    {12, 22, 30, 29, 20, 11},
+    {13, 23, 31, 30, 21, 12},
+    {14, 24, 32, 31, 22, 13},
+    {15, 25, 33, 32, 23, 14},
+    {16, -1, 34, 33, 24, 15},
+    {-1, -1, -1, -1, -1, -1},
+    {-1, -1, -1, -1, -1, -1},
+    {20, 29, 38, 37, -1, 19},
+    {21, 30, 39, 38, 28, 20},
+    {22, 31, 40, 39, 29, 21},
+    {23, 32, 41, 40, 30, 22},
+    {24, 33, 42, 41, 31, 23},
+    {25, 34, 43, 42, 32, 24},
+    {-1, -1, -1, 43, 33, 25},
+    {-1, -1, -1, -1, -1, -1},
+    {-1, -1, -1, -1, -1, -1},
+    {28, 38, -1, -1, -1, -1},
+    {29, 39, -1, -1, 37, 28},
+    {30, 40, -1, -1, 38, 29},
+    {31, 41, -1, -1, 39, 30},
+    {32, 42, -1, -1, 40, 31},
+    {33, 43, -1, -1, 41, 32},
+    {34, -1, -1, -1, 42, 33},
+    {-1, -1, -1, -1, -1, -1},
+};
+DATA(0x004912d0)
+short horseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
+DATA(0x004912f0)
+short boatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
+DATA(0x00491310)
+short gRadarOwnerColor[8] = {79, 105, 200, 129, 10, 0, 0, 0};
+DATA(0x00491320)
+short gRadarTerrainColor[24] = {
+    82,
+    99,
+    7,
+    180,
+    26,
+    123,
+    55,
+    0,
+    16,
+    48,
+    98,
+    160,
+    126,
+    74,
+    110,
+    179,
+    100,
+    218,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+};
+DATA(0x00491350)
+char* cTownObjectNames[20] = {
+    "magegld",
+    "thievesg",
+    "tavern",
+    "dock",
+    "well",
+    "farm",
+    "frst",
+    "plns",
+    "mtn",
+    "tent",
+    "cast",
+    "_d0",
+    "_d1",
+    "_d2",
+    "_d3",
+    "_d4",
+    "_d5",
+    "_e0",
+    "_e1",
+    "_e2",
+};
+DATA(0x004913a0)
+signed char gDwellingType[4][6] = {
+    {0, 1, 2, 3, 4, 5},
+    {12, 13, 14, 15, 16, 17},
+    {6, 7, 8, 9, 10, 11},
+    {18, 19, 20, 21, 22, 23},
+};
+DATA(0x004913b8)
+int gMageBuildingCosts[4][7] = {
+    {5, 0, 5, 0, 0, 0, 2000},
+    {5, 4, 5, 4, 4, 4, 1000},
+    {5, 6, 5, 6, 6, 6, 1000},
+    {5, 10, 5, 10, 10, 10, 1000},
+};
+DATA(0x00491428)
+int gNeutralBuildingCosts[7][7] = {
+    {5, 0, 5, 0, 0, 0, 2000},
+    {5, 0, 0, 0, 0, 0, 750},
+    {5, 0, 0, 0, 0, 0, 500},
+    {20, 0, 0, 0, 0, 0, 2000},
+    {0, 0, 0, 0, 0, 0, 500},
+    {5, 0, 5, 0, 0, 0, 2000},
+    {20, 0, 20, 0, 0, 0, 5000},
+};
+DATA(0x004914f0)
+int gMageBaseResourceValues[4] = {4000, 6500, 8500, 10500};
+DATA(0x00491500)
+int gNeutralBaseResourceValues[7] = {5000, 1500, 500, 2000, 3000, 0, 12000};
+DATA(0x00491520)
+int gDwellingBaseResourceValues[24] = {
+    858,
+    2225,
+    2816,
+    7385,
+    13754,
+    29785,
+    1684,
+    2256,
+    3736,
+    7213,
+    15181,
+    27684,
+    1802,
+    2615,
+    3414,
+    6967,
+    12212,
+    38141,
+    1956,
+    2607,
+    3869,
+    7510,
+    16002,
+    111967,
+};
+DATA(0x00491580)
+int gDwellingCosts[24][7] = {
+    {0, 0, 0, 0, 0, 0, 200},
+    {0, 0, 0, 0, 0, 0, 1000},
+    {0, 0, 5, 0, 0, 0, 1000},
+    {10, 0, 10, 0, 0, 0, 2000},
+    {20, 0, 0, 0, 0, 0, 3000},
+    {20, 0, 0, 0, 20, 0, 5000},
+    {5, 0, 0, 0, 0, 0, 500},
+    {5, 0, 0, 0, 0, 0, 1000},
+    {0, 0, 0, 0, 0, 0, 1500},
+    {0, 10, 10, 0, 0, 0, 2500},
+    {10, 0, 0, 0, 0, 10, 3000},
+    {0, 20, 30, 0, 0, 0, 10000},
+    {0, 0, 0, 0, 0, 0, 300},
+    {5, 0, 0, 0, 0, 0, 800},
+    {0, 0, 0, 0, 0, 0, 1000},
+    {10, 0, 10, 0, 0, 0, 2000},
+    {0, 0, 20, 0, 0, 0, 4000},
+    {0, 0, 20, 0, 20, 0, 6000},
+    {0, 0, 0, 0, 0, 0, 500},
+    {0, 0, 10, 0, 0, 0, 1000},
+    {0, 0, 0, 0, 0, 0, 2000},
+    {0, 0, 0, 0, 0, 10, 3000},
+    {0, 0, 0, 10, 0, 0, 4000},
+    {0, 0, 30, 20, 0, 0, 15000},
+};
+DATA(0x00491820)
+signed char gCastleResources[4] = {0, 2, -1, -1};
+
 // Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
 VA(0x00452e00, 0x99)
 void HandleRemoteDeadPlayerExit(int position) {
@@ -1373,7 +1714,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         RemoteCleanup();
         gbGameOver = 1;
-        giEndSequence = 0;
+        giEndSequence = GAME_END_LOST;
         return;
     }
     if (giNumHumanPlayers <= 2) {
@@ -1568,31 +1909,31 @@ void CheckEndGame(int forced) {
 
     if (lost) {
         gbGameOver = 1;
-        giEndSequence = 0;
+        giEndSequence = GAME_END_LOST;
     }
     if (win) {
         gbGameOver = 1;
-        giEndSequence = 1;
+        giEndSequence = GAME_END_WON;
     }
     if (numLiving == 1 || humansAlive == 0
         || (humansAlive == 1 && !gbThisNetHumanPlayer[lastHumanPos])) {
         if (humansAlive == 1 && gbThisNetHumanPlayer[lastHumanPos]) {
             if (normalWin) {
                 gbGameOver = 1;
-                giEndSequence = 1;
+                giEndSequence = GAME_END_WON;
             }
         } else {
             gbGameOver = 1;
-            giEndSequence = 0;
+            giEndSequence = GAME_END_LOST;
         }
     }
     if (forced) {
         gbGameOver = 1;
-        giEndSequence = 1;
+        giEndSequence = GAME_END_WON;
     }
-    if (gbGameOver && gpGame->m_campaignType > 0 && giEndSequence == 1
+    if (gbGameOver && gpGame->m_campaignType > 0 && giEndSequence == GAME_END_WON
         && gpGame->m_campaignScenario + 1 == 9)
-        giEndSequence = 2;
+        giEndSequence = GAME_END_CAMPAIGN_COMPLETE;
     bInCheckEndGame = 0;
 }
 
@@ -1624,7 +1965,7 @@ void InitVars(void) {
     NULL_SAMPLE2.pSample = NULL;
     NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
     iMaxMapExtra = 1;
-    gGameCommand = -1;
+    gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
     gpPhilAI->m_debugFont = NULL;
     gbCombatSurrender = 0;
@@ -1698,7 +2039,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     alignments = h->m_army.IsHomogeneous(-1);
     if (alignments > 0) {
         faction = 0;
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
                 faction = h->m_army.m_creatureTypes[i] / 6;
         }
@@ -1727,15 +2068,15 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_DISTINCTION]);
     if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
         strcat(gText, gMoraleInfoText[MORALE_INFO_FIZBIN]);
-    if (h->m_eventFlags & 2)
+    if (h->m_eventFlags & HERO_EVENT_BUOY)
         strcat(gText, gMoraleInfoText[MORALE_INFO_BUOY]);
-    if (h->m_eventFlags & 8)
+    if (h->m_eventFlags & HERO_EVENT_OASIS)
         strcat(gText, gMoraleInfoText[MORALE_INFO_OASIS]);
-    if (h->m_eventFlags & 0x100)
+    if (h->m_eventFlags & HERO_EVENT_TEMPLE)
         strcat(gText, gMoraleInfoText[MORALE_INFO_STATUE]);
-    if (h->m_eventFlags & 0x20)
+    if (h->m_eventFlags & HERO_EVENT_GRAVEYARD)
         strcat(gText, gMoraleInfoText[MORALE_INFO_GRAVEYARD]);
-    if (h->m_eventFlags & 0x40)
+    if (h->m_eventFlags & HERO_EVENT_SHIPWRECK)
         strcat(gText, gMoraleInfoText[MORALE_INFO_SHIPWRECK]);
     if (h->m_cowardice) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], h->m_cowardice);
@@ -1789,9 +2130,9 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
         strcat(gText, gLuckInfoText[LUCK_INFO_LUCKY_COIN]);
     if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
         strcat(gText, gLuckInfoText[LUCK_INFO_CLOVER]);
-    if (h->m_eventFlags & 0x10)
+    if (h->m_eventFlags & HERO_EVENT_FAERIE_RING)
         strcat(gText, gLuckInfoText[LUCK_INFO_FAERIE_RING]);
-    if (h->m_eventFlags & 4)
+    if (h->m_eventFlags & HERO_EVENT_FOUNTAIN)
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (strlen(gText) == baseLen)
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
@@ -1859,7 +2200,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     }
 
     gbShowHighScore = 1;
-    gbStandardHighScore = standard;
+    giHighScoreType = standard;
     giHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
     for (entry = 0; entry < 10; entry++) {
@@ -2244,7 +2585,7 @@ void ShowCongrats(void) {
     }
     gpWindowManager->AddWindow(win, -1, 1);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->FadeScreen(0, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
     CongratsWait();
     gpWindowManager->RemoveWindow(win);
     delete win;
@@ -2796,6 +3137,7 @@ void CleanUpMenus(void) {
     hmnuApp = NULL;
 }
 
+
 VA(0x0045679b, 0x24)
 void UpdateAppSpecificMenus(void* hMenu) {
     if (hmnuAdv == hMenu)
@@ -2812,335 +3154,6 @@ void EarlyResizeWindow(int, int, int, int) {
 // address order, followed by their initializer literals (0x00494184-0x0049ea97,
 // emitted in this order). Initializers are retail bytes. Unreferenced storage at
 // 0x00492570 (2 x 16 bytes), 0x0049303c and 0x00494178 is not yet named.
-DATA(0x00491058)
-char* cCombatGroundNames[8] = {
-    "boat.xtl",
-    "grass.xtl",
-    "snow.xtl",
-    "swamp.xtl",
-    "lava.xtl",
-    "desert.xtl",
-    "dgrass.xtl",
-    0,
-};
-DATA(0x00491078)
-char* cCombatObstacleNames[8] = {
-    "boat.obj",
-    "grass.obj",
-    "snow.obj",
-    "swamp.obj",
-    "lava.obj",
-    "desert.obj",
-    "dgrass.obj",
-    0,
-};
-DATA(0x00491098)
-char* gPowEffectNames[16] = {
-    "cloud.icn",
-    "physical.icn",
-    "physical.icn",
-    "physical.icn",
-    "physical.icn",
-    "physical.icn",
-    "physical.icn",
-    "redfire.icn",
-    "electric.icn",
-    "redfire.icn",
-    "electric.icn",
-    "redfire.icn",
-    "bluefire.icn",
-    "bluefire.icn",
-    "cloud.icn",
-    "cloud.icn",
-};
-DATA(0x004910d8)
-char* gCombatFxNames[26] = {
-    "redfire.icn",
-    "elecfire.icn",
-    "magic04.icn",
-    "magic01.icn",
-    "magic01.icn",
-    "magic02.icn",
-    "magic02.icn",
-    "magic06.icn",
-    "magic07.icn",
-    "magic01.icn",
-    "magic06.icn",
-    "magic08.icn",
-    "magic07.icn",
-    "magic01.icn",
-    "magic01.icn",
-    "magic02.icn",
-    "reddeath.icn",
-    "magic03.icn",
-    "magic03.icn",
-    "magic06.icn",
-    "magic01.icn",
-    "magic01.icn",
-    "rainbluk.icn",
-    "cloudluk.icn",
-    "moraleg.icn",
-    "moraleb.icn",
-};
-DATA(0x00491140)
-short giSpellAIValue[29] = {
-    500,
-    350,
-    300,
-    400,
-    550,
-    900,
-    400,
-    500,
-    300,
-    350,
-    250,
-    0,
-    100,
-    150,
-    1000,
-    2000,
-    1700,
-    700,
-    700,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1200,
-    0,
-};
-DATA(0x00491180)
-signed char gcSpellAIFlags[29] = {
-    3,
-    3,
-    2,
-    2,
-    3,
-    2,
-    2,
-    2,
-    2,
-    2,
-    2,
-    2,
-    2,
-    2,
-    2,
-    3,
-    3,
-    3,
-    2,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-};
-DATA(0x004911a0)
-signed char gMageGuildSpellPool[4][8] = {
-    {9, 13, 6, 8, 10, 20, 19, 8},
-    {1, 5, 3, 7, 11, 21, 26, 12},
-    {0, 18, 14, 16, 22, 25, 23, 2},
-    {27, 4, 15, 17, 28, 24, 28, 27},
-};
-DATA(0x004911c0)
-signed char gCombatAdjacency[45][6] = {
-    {-1, -1, -1, -1, -1, -1},
-    {-1, 2, 10, -1, -1, -1},
-    {-1, 3, 11, 10, 1, -1},
-    {-1, 4, 12, 11, 2, -1},
-    {-1, 5, 13, 12, 3, -1},
-    {-1, 6, 14, 13, 4, -1},
-    {-1, 7, 15, 14, 5, -1},
-    {-1, -1, 16, 15, 6, -1},
-    {-1, -1, -1, -1, -1, -1},
-    {-1, -1, -1, -1, -1, -1},
-    {2, 11, 20, 19, -1, 1},
-    {3, 12, 21, 20, 10, 2},
-    {4, 13, 22, 21, 11, 3},
-    {5, 14, 23, 22, 12, 4},
-    {6, 15, 24, 23, 13, 5},
-    {7, 16, 25, 24, 14, 6},
-    {-1, -1, -1, 25, 15, 7},
-    {-1, -1, -1, -1, -1, -1},
-    {-1, -1, -1, -1, -1, -1},
-    {10, 20, 28, -1, -1, -1},
-    {11, 21, 29, 28, 19, 10},
-    {12, 22, 30, 29, 20, 11},
-    {13, 23, 31, 30, 21, 12},
-    {14, 24, 32, 31, 22, 13},
-    {15, 25, 33, 32, 23, 14},
-    {16, -1, 34, 33, 24, 15},
-    {-1, -1, -1, -1, -1, -1},
-    {-1, -1, -1, -1, -1, -1},
-    {20, 29, 38, 37, -1, 19},
-    {21, 30, 39, 38, 28, 20},
-    {22, 31, 40, 39, 29, 21},
-    {23, 32, 41, 40, 30, 22},
-    {24, 33, 42, 41, 31, 23},
-    {25, 34, 43, 42, 32, 24},
-    {-1, -1, -1, 43, 33, 25},
-    {-1, -1, -1, -1, -1, -1},
-    {-1, -1, -1, -1, -1, -1},
-    {28, 38, -1, -1, -1, -1},
-    {29, 39, -1, -1, 37, 28},
-    {30, 40, -1, -1, 38, 29},
-    {31, 41, -1, -1, 39, 30},
-    {32, 42, -1, -1, 40, 31},
-    {33, 43, -1, -1, 41, 32},
-    {34, -1, -1, -1, 42, 33},
-    {-1, -1, -1, -1, -1, -1},
-};
-DATA(0x004912d0)
-short horseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
-DATA(0x004912f0)
-short boatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
-DATA(0x00491310)
-short gRadarOwnerColor[8] = {79, 105, 200, 129, 10, 0, 0, 0};
-DATA(0x00491320)
-short gRadarTerrainColor[24] = {
-    82,
-    99,
-    7,
-    180,
-    26,
-    123,
-    55,
-    0,
-    16,
-    48,
-    98,
-    160,
-    126,
-    74,
-    110,
-    179,
-    100,
-    218,
-    12,
-    12,
-    12,
-    12,
-    12,
-    12,
-};
-DATA(0x00491350)
-char* cTownObjectNames[20] = {
-    "magegld",
-    "thievesg",
-    "tavern",
-    "dock",
-    "well",
-    "farm",
-    "frst",
-    "plns",
-    "mtn",
-    "tent",
-    "cast",
-    "_d0",
-    "_d1",
-    "_d2",
-    "_d3",
-    "_d4",
-    "_d5",
-    "_e0",
-    "_e1",
-    "_e2",
-};
-DATA(0x004913a0)
-signed char gDwellingType[4][6] = {
-    {0, 1, 2, 3, 4, 5},
-    {12, 13, 14, 15, 16, 17},
-    {6, 7, 8, 9, 10, 11},
-    {18, 19, 20, 21, 22, 23},
-};
-DATA(0x004913b8)
-int gMageBuildingCosts[4][7] = {
-    {5, 0, 5, 0, 0, 0, 2000},
-    {5, 4, 5, 4, 4, 4, 1000},
-    {5, 6, 5, 6, 6, 6, 1000},
-    {5, 10, 5, 10, 10, 10, 1000},
-};
-DATA(0x00491428)
-int gNeutralBuildingCosts[7][7] = {
-    {5, 0, 5, 0, 0, 0, 2000},
-    {5, 0, 0, 0, 0, 0, 750},
-    {5, 0, 0, 0, 0, 0, 500},
-    {20, 0, 0, 0, 0, 0, 2000},
-    {0, 0, 0, 0, 0, 0, 500},
-    {5, 0, 5, 0, 0, 0, 2000},
-    {20, 0, 20, 0, 0, 0, 5000},
-};
-DATA(0x004914f0)
-int gMageBaseResourceValues[4] = {4000, 6500, 8500, 10500};
-DATA(0x00491500)
-int gNeutralBaseResourceValues[7] = {5000, 1500, 500, 2000, 3000, 0, 12000};
-DATA(0x00491520)
-int gDwellingBaseResourceValues[24] = {
-    858,
-    2225,
-    2816,
-    7385,
-    13754,
-    29785,
-    1684,
-    2256,
-    3736,
-    7213,
-    15181,
-    27684,
-    1802,
-    2615,
-    3414,
-    6967,
-    12212,
-    38141,
-    1956,
-    2607,
-    3869,
-    7510,
-    16002,
-    111967,
-};
-DATA(0x00491580)
-int gDwellingCosts[24][7] = {
-    {0, 0, 0, 0, 0, 0, 200},
-    {0, 0, 0, 0, 0, 0, 1000},
-    {0, 0, 5, 0, 0, 0, 1000},
-    {10, 0, 10, 0, 0, 0, 2000},
-    {20, 0, 0, 0, 0, 0, 3000},
-    {20, 0, 0, 0, 20, 0, 5000},
-    {5, 0, 0, 0, 0, 0, 500},
-    {5, 0, 0, 0, 0, 0, 1000},
-    {0, 0, 0, 0, 0, 0, 1500},
-    {0, 10, 10, 0, 0, 0, 2500},
-    {10, 0, 0, 0, 0, 10, 3000},
-    {0, 20, 30, 0, 0, 0, 10000},
-    {0, 0, 0, 0, 0, 0, 300},
-    {5, 0, 0, 0, 0, 0, 800},
-    {0, 0, 0, 0, 0, 0, 1000},
-    {10, 0, 10, 0, 0, 0, 2000},
-    {0, 0, 20, 0, 0, 0, 4000},
-    {0, 0, 20, 0, 20, 0, 6000},
-    {0, 0, 0, 0, 0, 0, 500},
-    {0, 0, 10, 0, 0, 0, 1000},
-    {0, 0, 0, 0, 0, 0, 2000},
-    {0, 0, 0, 0, 0, 10, 3000},
-    {0, 0, 0, 10, 0, 0, 4000},
-    {0, 0, 30, 20, 0, 0, 15000},
-};
-DATA(0x00491820)
-signed char gCastleResources[4] = {0, 2, -1, -1};
 DATA(0x00491828)
 short gCastleAmounts[4] = {20, 20, 0, 0};
 DATA(0x00491830)
@@ -4184,13 +4197,13 @@ int gbNoBorder = 0;
 DATA(0x00492e14)
 int gbEnlargeScreenBlit = 1;
 DATA(0x00492e18)
-void* hmnuDflt = 0;
+void* hmnuDflt = NULL;
 DATA(0x00492e1c)
-void* hmnuCmbt = 0;
+void* hmnuCmbt = NULL;
 DATA(0x00492e20)
-void* hmnuAdv = 0;
+void* hmnuAdv = NULL;
 DATA(0x00492e24)
-void* hmnuTown = 0;
+void* hmnuTown = NULL;
 DATA(0x00492e28)
 int gbColorMice = 0;
 DATA(0x00492e2c)
@@ -5472,7 +5485,7 @@ char cNetBoxLine[2][60];
 DATA(0x004c66fc)
 heroWindow* DataEntryWin;
 DATA(0x004c6700)
-signed char giWeekSpecial;
+signed char giWeekTypeExtra;
 DATA(0x004c6704)
 philAI* gpPhilAI;
 DATA(0x004c6708)
@@ -5510,7 +5523,7 @@ int gbInNewGameSetup;
 DATA(0x004c6a54)
 palette* gpBufferPalette;
 DATA(0x004c6a58)
-signed char giMonthSpecial;
+signed char giMonthTypeExtra;
 DATA(0x004c6a5c)
 signed char iMPExtendedType;
 DATA(0x004c6a60)
@@ -5556,7 +5569,7 @@ char gcBottomViewText[92];
 DATA(0x004c6f34)
 int giThisNetPos;
 DATA(0x004c6f38)
-char gcRegCDDrive[352];
+char gcRegCDRomPath[352];
 DATA(0x004c7098)
 class heroWindow* heroWin;
 DATA(0x004c709c)
@@ -5570,7 +5583,7 @@ int giThisGamePos;
 DATA(0x004c74a4)
 int giNumHumanPlayers;
 DATA(0x004c74a8)
-signed char gbUseClippedIconRenderer;
+signed char gbIconClipOn;
 DATA(0x004c74b0)
 int pwSizeOfMapExtra[255];
 DATA(0x004c78ac)
@@ -5602,13 +5615,13 @@ class highScoreManager* gpHighScoreManager;
 DATA(0x004c7b4c)
 signed char gbFunctionComplete;
 DATA(0x004c7b50)
-signed char gbKingOfTheHill;
+signed char gbIAmGreatest;
 DATA(0x004c7b58)
 short gMapX;
 DATA(0x004c7b5c)
 short gMapY;
 DATA(0x004c7b60)
-char gcCongratsText[300];
+char gcWinText[300];
 DATA(0x004c7c8c)
 signed char bDataEntryTime;
 DATA(0x004c7c90)

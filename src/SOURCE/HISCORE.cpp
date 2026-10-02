@@ -27,7 +27,7 @@ highScoreManager::highScoreManager(void) {
         m_animationFrames[rank] = Random(0, HIGH_SCORE_ANIMATION_FRAME_COUNT - 1);
     m_showCampaignScores = 0;
     if (gbShowHighScore) {
-        if (!gbStandardHighScore)
+        if (!giHighScoreType)
             m_showCampaignScores = 1;
         else
             m_showCampaignScores = 0;
@@ -266,8 +266,8 @@ void highScoreManager::Update(void)
         m_window->BroadcastMessage(message);
 
         if (giHighScoreRank == i) {
-            if ((m_showCampaignScores && !gbStandardHighScore)
-                || (!m_showCampaignScores && gbStandardHighScore)) {
+            if ((m_showCampaignScores && !giHighScoreType)
+                || (!m_showCampaignScores && giHighScoreType)) {
                 message.command = WIDGET_COMMAND_SET_FILL_COLOR;
                 message.value = HIGH_SCORE_HIGHLIGHT_COLOR;
             } else {

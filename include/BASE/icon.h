@@ -63,7 +63,7 @@ public:
 
 void PostprocessIcon(icon *);
 
-extern signed char gbUseClippedIconRenderer;
+extern signed char gbIconClipOn;
 extern int gbComputeExtent;
 extern int gbSaveBiggestExtent;
 extern int gbLimitToExtent;
