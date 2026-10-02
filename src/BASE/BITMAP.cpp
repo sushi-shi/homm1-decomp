@@ -77,11 +77,14 @@ void bitmap::GrabBitmap(bitmap* source, short x, short y) {
 }
 
 // Raw screenshot writer: combat palette followed by the pixel plane.
+// Retail colours palette/file/this in that order (esi/edi/ebx); VC4 ties follow
+// symbol order, so the palette pointer is declared before the file handle.
 VA(0x0047a8b0, 0x7f)
 void bitmap::Write(char* filename) {
+    palette* combatPalette;
     int file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
     if (file != -1) {
-        palette* combatPalette = gpResourceManager->GetPalette("combat.pal");
+        combatPalette = gpResourceManager->GetPalette("combat.pal");
         signed char* paletteData = combatPalette->Data();
         write(file, paletteData, PALETTE_RAW_BYTES);
         write(file, m_pixels, m_width * m_height);
