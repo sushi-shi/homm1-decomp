@@ -1157,7 +1157,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
     if (eventHero->m_army.GetNumArmies() > 1) {
         eventHero->m_army.m_creatureCounts[weakest] >>= 1;
         if (!eventHero->m_army.m_creatureCounts[weakest])
-            eventHero->m_army.m_creatureTypes[weakest] = -1;
+            eventHero->m_army.m_creatureTypes[weakest] = CREATURE_NONE;
     } else if (eventHero->m_army.m_creatureCounts[weakest] > 1) {
         eventHero->m_army.m_creatureCounts[weakest] >>= 1;
     }

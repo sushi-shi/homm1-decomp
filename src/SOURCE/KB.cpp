@@ -1725,7 +1725,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     if (alignments > 0) {
         faction = 0;
         for (i = 0; i < 5; i++) {
-            if (h->m_army.m_creatureTypes[i] != -1)
+            if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
                 faction = h->m_army.m_creatureTypes[i] / 6;
         }
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[faction]);

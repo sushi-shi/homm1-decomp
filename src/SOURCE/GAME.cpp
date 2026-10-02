@@ -1839,7 +1839,7 @@ void game::ClaimTown(signed char townId, signed char player) {
     if (m_townOwners[townId] != -1)
         gpGame->GetTown(townId)->Deallocate();
     for (i = 0; i < 5; ++i) {
-        townRec->m_army.m_creatureTypes[i] = -1;
+        townRec->m_army.m_creatureTypes[i] = CREATURE_NONE;
         townRec->m_army.m_creatureCounts[i] = 0;
     }
     if (m_castleRecs[townId].m_owner == -1)
@@ -2213,7 +2213,7 @@ void game::ViewArmy(
     animId = 5;
     message.type = MESSAGE_WIDGET;
 
-    if (monsterType != 3)
+    if (monsterType != CREATURE_SWORDSMAN)
         strcpy(iconName, gArmyNames[monsterType]);
     else
         strcpy(iconName, "swrdsman");
@@ -2353,7 +2353,7 @@ void game::ViewArmy(
         if (gbDismissArmy && theGroup) {
             for (i = 0; i < 5; i++) {
                 if (theGroup->m_creatureTypes[i] == monsterType) {
-                    theGroup->m_creatureTypes[i] = -1;
+                    theGroup->m_creatureTypes[i] = CREATURE_NONE;
                     theGroup->m_creatureCounts[i] = 0;
                 }
             }
@@ -2646,61 +2646,61 @@ void game::Overview(void) {
 VA(0x00440f58, 0x28b)
 signed char game::GetRandomNumTroops(signed char monsterType) {
     switch (monsterType) {
-        case 0:
+        case CREATURE_PEASANT:
             return Random(30, 80);
-        case 1:
+        case CREATURE_ARCHER:
             return Random(20, 30);
-        case 2:
+        case CREATURE_PIKEMAN:
             return Random(20, 30);
-        case 3:
+        case CREATURE_SWORDSMAN:
             return Random(12, 25);
-        case 4:
+        case CREATURE_CAVALRY:
             return Random(8, 16);
-        case 5:
+        case CREATURE_PALADIN:
             return Random(6, 12);
-        case 6:
+        case CREATURE_GOBLIN:
             return Random(25, 40);
-        case 7:
+        case CREATURE_ORC:
             return Random(15, 30);
-        case 8:
+        case CREATURE_WOLF:
             return Random(20, 35);
-        case 9:
+        case CREATURE_OGRE:
             return Random(10, 20);
-        case 10:
+        case CREATURE_TROLL:
             return Random(7, 10);
-        case 11:
+        case CREATURE_CYCLOPS:
             return Random(5, 7);
-        case 12:
+        case CREATURE_SPRITE:
             return Random(20, 40);
-        case 13:
+        case CREATURE_DWARF:
             return Random(10, 25);
-        case 14:
+        case CREATURE_ELF:
             return Random(15, 30);
-        case 15:
+        case CREATURE_DRUID:
             return Random(10, 25);
-        case 16:
+        case CREATURE_UNICORN:
             return Random(8, 15);
-        case 17:
+        case CREATURE_PHOENIX:
             return Random(7, 12);
-        case 18:
+        case CREATURE_CENTAUR:
             return Random(20, 50);
-        case 19:
+        case CREATURE_GARGOYLE:
             return Random(15, 30);
-        case 20:
+        case CREATURE_GRIFFIN:
             return Random(10, 25);
-        case 21:
+        case CREATURE_MINOTAUR:
             return Random(10, 16);
-        case 22:
+        case CREATURE_HYDRA:
             return Random(6, 8);
-        case 23:
+        case CREATURE_DRAGON:
             return Random(3, 7);
-        case 24:
+        case CREATURE_ROGUE:
             return Random(20, 40);
-        case 25:
+        case CREATURE_NOMAD:
             return Random(12, 25);
-        case 26:
+        case CREATURE_GHOST:
             return Random(10, 20);
-        case 27:
+        case CREATURE_GENIE:
             return Random(4, 9);
         default:
             return 3;
@@ -3394,7 +3394,7 @@ void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     if (!present[2])
         present[1] = 1;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        army->m_creatureTypes[i] = -1;
+        army->m_creatureTypes[i] = CREATURE_NONE;
         army->m_creatureCounts[i] = -1;
     }
     for (i = 0; i < 2; i++) {
@@ -3912,7 +3912,7 @@ signed char game::SetupTowns(void) {
                     if (town->m_army.m_creatureCounts[j] > 0)
                         town->m_army.m_creatureTypes[j] = extra->troopTypes[j];
                     else
-                        town->m_army.m_creatureTypes[j] = -1;
+                        town->m_army.m_creatureTypes[j] = CREATURE_NONE;
                 }
                 town->m_buildState = extra->buildState;
                 town->m_buildings = town->m_buildings - (town->m_buildings & mask) + (extra->buildings & mask);
@@ -4747,7 +4747,7 @@ short armyGroup::GetMorale(hero* h, town* t) {
 
 VA(0x00447a8f, 0x31)
 void armyGroup::Dismiss(signed char slot) {
-    m_creatureTypes[slot] = -1;
+    m_creatureTypes[slot] = CREATURE_NONE;
     m_creatureCounts[slot] = 0;
 }
 
@@ -4774,7 +4774,7 @@ signed char armyGroup::IsHomogeneous(signed char countRaces) {
     int numRaces;
     short i;
     for (i = 0; i < 5; ++i) {
-        if (m_creatureTypes[i] != -1) {
+        if (m_creatureTypes[i] != CREATURE_NONE) {
             if (countRaces == -1)
                 ++raceSeen[m_creatureTypes[i] / 6];
             if (m_creatureTypes[i] != previous) {
@@ -4821,7 +4821,7 @@ VA(0x00447cc0, 0x59)
 short armyGroup::GetNumArmies(void) {
     short numArmies = 0;
     for (short i = 0; i < 5; ++i) {
-        if (m_creatureTypes[i] != -1)
+        if (m_creatureTypes[i] != CREATURE_NONE)
             ++numArmies;
     }
     return numArmies;
@@ -4843,7 +4843,7 @@ short armyGroup::Add(signed char creatureType, short quantity, signed char slot)
     }
     if (slot == -1) {
         for (searchSlot = 0; searchSlot < 5; ++searchSlot) {
-            if (m_creatureTypes[searchSlot] == -1 || m_creatureTypes[searchSlot] == creatureType) {
+            if (m_creatureTypes[searchSlot] == CREATURE_NONE || m_creatureTypes[searchSlot] == creatureType) {
                 slot = searchSlot;
                 break;
             }
@@ -4882,7 +4882,7 @@ void armyGroup::DamageGroup(float damagePercent) {
     int j;
 
     for (i = 0; i < 5; ++i) {
-        if (m_creatureTypes[i] != -1) {
+        if (m_creatureTypes[i] != CREATURE_NONE) {
             killed = 0;
             for (j = 0; j < m_creatureCounts[i]; ++j) {
                 if (SRandom(0, 100) < chance)
@@ -4893,7 +4893,7 @@ void armyGroup::DamageGroup(float damagePercent) {
             m_creatureCounts[i] -= killed;
             if (m_creatureCounts[i] <= 0 || damagePercent >= 1.0) {
                 m_creatureCounts[i] = 0;
-                m_creatureTypes[i] = -1;
+                m_creatureTypes[i] = CREATURE_NONE;
             }
             isFirstTroop = 0;
         } else {

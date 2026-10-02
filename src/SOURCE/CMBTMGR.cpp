@@ -68,9 +68,9 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
         }
     }
     for (i = 0; i < 5; i++) {
-        if (from->m_creatureTypes[i] != -1) {
+        if (from->m_creatureTypes[i] != CREATURE_NONE) {
             for (j = 0; j < 5; j++) {
-                if (to->m_creatureTypes[j] == -1) {
+                if (to->m_creatureTypes[j] == CREATURE_NONE) {
                     to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], j);
                     from->Dismiss(i);
                 }
@@ -249,7 +249,7 @@ void combatManager::Close(void)
         survivor = (signed char)(m_playerId[0] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < 5; i++) {
-            if (m_armyGroups[survivor]->m_creatureTypes[i] != -1)
+            if (m_armyGroups[survivor]->m_creatureTypes[i] != CREATURE_NONE)
                 m_battlefieldCell->m_objectMetadata += m_armyGroups[survivor]->m_creatureCounts[i];
         }
     }
@@ -280,7 +280,7 @@ void combatManager::UpdateArmyGroup(signed char side)
         }
         if (j < 5) {
             if (m_armies[side][i].m_stats.attributes & 0x10) {
-                m_armyGroups[side]->m_creatureTypes[j] = -1;
+                m_armyGroups[side]->m_creatureTypes[j] = CREATURE_NONE;
                 m_armyGroups[side]->m_creatureCounts[j] = 0;
             } else {
                 m_armyGroups[side]->m_creatureCounts[j] = m_armies[side][i].m_quantity;
@@ -547,7 +547,7 @@ void combatManager::LoadArmies(void)
     for (i = 0; i < 5; i++) {
         for (j = 0; j < 2; j++) {
             m_armies[j][i].m_quantity = 0;
-            m_armies[j][i].m_creatureType = -1;
+            m_armies[j][i].m_creatureType = CREATURE_NONE;
         }
     }
     for (j = 0; j < 2; j++) {
@@ -555,13 +555,13 @@ void combatManager::LoadArmies(void)
             m_armies[j][i].InitClean();
     }
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[1][m_numArmies[1]].Init(m_armyGroups[1]->m_creatureTypes[i],
                                              m_armyGroups[1]->m_creatureCounts[i], 1, m_numArmies[1]);
             m_armies[1][m_numArmies[1]].LoadResources();
             m_numArmies[1]++;
         }
-        if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[0][m_numArmies[0]].Init(m_armyGroups[0]->m_creatureTypes[i],
                                              m_armyGroups[0]->m_creatureCounts[i], 0, m_numArmies[0]);
             m_armies[0][m_numArmies[0]].LoadResources();
@@ -1211,7 +1211,7 @@ int combatManager::ExperienceValueOfStack(signed char side)
 
     value = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armies[side][i].m_creatureType != -1)
+        if (m_armies[side][i].m_creatureType != CREATURE_NONE)
             value += (m_armies[side][i].m_initialQuantity - m_armies[side][i].m_quantity)
                      * gMonsterDatabase[m_armies[side][i].m_creatureType].hitPoints;
     }

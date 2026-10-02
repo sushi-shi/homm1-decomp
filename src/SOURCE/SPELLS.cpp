@@ -564,7 +564,7 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
     for (side = startSide; side <= last; side++) {
         for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
             if (m_armies[side][armyIndex].m_spellEffect != SPELL_ANTI_MAGIC && m_armies[side][armyIndex].m_spellEffect != SPELL_DISPEL_MAGIC
-                && m_armies[side][armyIndex].m_creatureType != 0x17) {
+                && m_armies[side][armyIndex].m_creatureType != CREATURE_DRAGON) {
                 if (!cureOnly) {
                     if (m_armies[side][armyIndex].m_spellEffect != SPELL_NONE)
                         m_armies[side][armyIndex].m_unknown08 = 3;
@@ -608,7 +608,7 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
         curArmy = &m_armies[side][i];
         curArmy->m_unknown08 = 0;
         curArmy->m_unknown09 = 1;
-        if (curArmy->m_spellEffect != SPELL_ANTI_MAGIC && curArmy->m_spellEffect != SPELL_DISPEL_MAGIC && curArmy->m_creatureType != 0x17) {
+        if (curArmy->m_spellEffect != SPELL_ANTI_MAGIC && curArmy->m_spellEffect != SPELL_DISPEL_MAGIC && curArmy->m_creatureType != CREATURE_DRAGON) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {
                     case SPELL_SLOW:
@@ -666,8 +666,8 @@ void combatManager::Fireball(signed char targetHex)
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
@@ -730,8 +730,8 @@ void combatManager::MeteorShower(signed char targetHex)
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
@@ -791,8 +791,8 @@ void combatManager::ElementalStorm(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;
@@ -835,8 +835,8 @@ void combatManager::Armageddon(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;

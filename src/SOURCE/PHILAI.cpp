@@ -1309,7 +1309,7 @@ void philAI::ValueOfBuyingCreature(
             creatRV = static_cast<int>(creatRV * 1.1f);
         if ((gMonsterDatabase[creature].stats.attributes & 8)) {
             for (n = 0; n < 5; n++) {
-                if (occupant->m_army.m_creatureTypes[n] != -1
+                if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
                     && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & 8))
                     archers++;
             }
@@ -1322,7 +1322,7 @@ void philAI::ValueOfBuyingCreature(
     }
     if ((gMonsterDatabase[creature].stats.attributes & 8)) {
         for (slotNum = 0; slotNum < 5; slotNum++) {
-            if (townPointer->m_army.m_creatureTypes[slotNum] != -1
+            if (townPointer->m_army.m_creatureTypes[slotNum] != CREATURE_NONE
                 && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].stats.attributes & 8))
                 archers++;
         }
@@ -1364,7 +1364,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
             && townPointer->m_garrison[curDwelling] > 0) {
             canAdd = 0;
             for (iArmy = 0; iArmy < 5; iArmy++) {
-                if (townPointer->m_army.m_creatureTypes[iArmy] == -1
+                if (townPointer->m_army.m_creatureTypes[iArmy] == CREATURE_NONE
                     || townPointer->m_army.m_creatureTypes[iArmy] == mon)
                     canAdd = 1;
             }
@@ -2779,7 +2779,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     guards[2] = 5;
     guards[3] = 10;
     for (n = 0; n < 5; n++) {
-        gpMonGroup->m_creatureTypes[n] = 26;
+        gpMonGroup->m_creatureTypes[n] = CREATURE_GHOST;
         gpMonGroup->m_creatureCounts[n] = guards[cell->m_objectMetadata - 2];
     }
     switch (cell->m_objectMetadata) {

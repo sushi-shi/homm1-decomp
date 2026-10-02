@@ -30,7 +30,7 @@ town::town(void) {
 VA(0x00463f7b, 0x55)
 signed char town::HasGarrison(void) {
     for (short slot = 0; slot < 5; ++slot) {
-        if (m_army.m_creatureTypes[slot] != -1)
+        if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
             return 1;
     }
     return 0;

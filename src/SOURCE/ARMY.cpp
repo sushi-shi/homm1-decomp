@@ -422,7 +422,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
     int targetHex;
 
     while (mask) {
-        if (currentArmy->m_creatureType == 26)
+        if (currentArmy->m_creatureType == CREATURE_GHOST)
             targetArmy = GetWorstArmy(side, mask);
         else
             targetArmy = GetBestArmy(side, mask);
@@ -683,7 +683,7 @@ void army::LoadResources(void) {
     int i;
     char buf[16];
 
-    if (m_creatureType != 3)
+    if (m_creatureType != CREATURE_SWORDSMAN)
         strcpy(sprite, gArmyNames[m_creatureType]);
     else
         strcpy(sprite, "swrdsman");

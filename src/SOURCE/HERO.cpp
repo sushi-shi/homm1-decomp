@@ -80,7 +80,7 @@ short hero::CalcMobility(void) {
     } else {
         speed = 3;
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_army.m_creatureTypes[j] != -1
+            if (m_army.m_creatureTypes[j] != CREATURE_NONE
                 && gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed < speed)
                 speed = gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed;
         }
@@ -418,7 +418,7 @@ void hero::UpdateArmies(void) {
 
     message.type = MESSAGE_WIDGET;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        if (m_army.m_creatureTypes[i] == -1) {
+        if (m_army.m_creatureTypes[i] == CREATURE_NONE) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = i + 87;
             message.value = 2;
@@ -782,18 +782,18 @@ void UpdateHeroScreenStatusBar(short widgetId) {
     case 106:
         slot = widgetId - 102;
         if (giHeroScreenSrcIndex == -1) {
-            if (gpHVHero->m_army.m_creatureTypes[slot] != -1)
+            if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                 sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
             else
                 strcpy(gText, cHeroScreen[11]);
         } else if (slot == giHeroScreenSrcIndex) {
             sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
         } else if (gpTownManager->m_castleDialogActive) {
-            if (gpHVHero->m_army.m_creatureTypes[slot] != -1)
+            if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                 sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
             else
                 strcpy(gText, cHeroScreen[11]);
-        } else if (gpHVHero->m_army.m_creatureTypes[slot] == -1) {
+        } else if (gpHVHero->m_army.m_creatureTypes[slot] == CREATURE_NONE) {
             sprintf(gText, cHeroScreen[12],
                     gArmyNames[gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]);
         } else {
@@ -921,11 +921,11 @@ short HeroHandler(struct tag_message& message) {
             case 106:
                 slot = message.id - 102;
                 if (!quickView && giHeroScreenSrcIndex == -1) {
-                    if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
+                    if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
                         giHeroScreenSrcIndex = slot;
                         gpHVHero->HeroScreenUpdate();
                     }
-                } else if ((quickView && gpHVHero->m_army.m_creatureTypes[slot] != -1)
+                } else if ((quickView && gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                            || (!quickView
                                && message.id - 102 == giHeroScreenSrcIndex)) {
                     gpGame->ViewArmy(119, 20, gpHVHero->m_army.m_creatureTypes[slot],
@@ -937,7 +937,7 @@ short HeroHandler(struct tag_message& message) {
                         giHeroScreenSrcIndex = -1;
                     gpHVHero->HeroScreenUpdate();
                 } else if (!quickView && gpTownManager->m_castleDialogActive) {
-                    if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
+                    if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
                         giHeroScreenSrcIndex = slot;
                         gpHVHero->HeroScreenUpdate();
                     }

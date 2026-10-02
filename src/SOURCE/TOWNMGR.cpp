@@ -266,7 +266,7 @@ void townManager::SetArmyCommand(short qualifier)
                         gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
                 m_command = TOWN_ARMY_COMMAND_MERGE;
             }
-        } else if (qualifier && m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == -1) {
+        } else if (qualifier && m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == CREATURE_NONE) {
             sprintf(m_statusText, cTownCommand[TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT],
                     gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
             m_command = TOWN_ARMY_COMMAND_SPLIT;
@@ -279,7 +279,7 @@ void townManager::SetArmyCommand(short qualifier)
 
     if (m_command != TOWN_ARMY_COMMAND_NONE)
         return;
-    if (m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == -1) {
+    if (m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == CREATURE_NONE) {
         if (lastArmy) {
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_CANNOT_MOVE_LAST_ARMY]);
             return;
@@ -330,7 +330,7 @@ void townManager::SetCommandAndText(struct tag_message &message)
             } else {
                 m_selectedStrip = m_garrisonStrip;
                 m_selectedArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
-                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == -1)
+                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == CREATURE_NONE)
                     strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
                 else {
                     sprintf(m_statusText, cTownCommand[TOWN_TEXT_SELECT_ARMY],
@@ -355,7 +355,7 @@ void townManager::SetCommandAndText(struct tag_message &message)
             } else {
                 m_selectedStrip = m_heroStrip;
                 m_selectedArmySlot = id - TOWN_HERO_SLOT_FIRST;
-                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == -1) {
+                if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == CREATURE_NONE) {
                     strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
                     m_command = TOWN_ARMY_COMMAND_NONE;
                 } else {
@@ -567,7 +567,7 @@ short townManager::Main(struct tag_message &message)
                                 theHero = gpGame->GetHero(m_town->m_occupyingHeroId);
                                 width = 0;
                                 for (i = 0; i < 5; i++) {
-                                    if (theHero->m_army.m_creatureTypes[i] != -1)
+                                    if (theHero->m_army.m_creatureTypes[i] != CREATURE_NONE)
                                         width = i + 1;
                                 }
                                 width = width * 88 + 0x70;
@@ -659,7 +659,7 @@ short townManager::Main(struct tag_message &message)
                                     m_selectedArmySlot = message.id - TOWN_HERO_SLOT_FIRST;
                                     found = 1;
                                 }
-                                if (found && m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] != -1) {
+                                if (found && m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] != CREATURE_NONE) {
                                     viewHero = m_heroStrip == m_selectedStrip
                                                    ? gpGame->GetHero(m_town->m_occupyingHeroId)
                                                    : NULL;
@@ -746,7 +746,7 @@ void townManager::DoCommand(signed char command)
                              m_selectedStrip->m_army->m_creatureCounts[m_selectedArmySlot], m_town, single,
                              0, 0, viewedHero, NULL, m_selectedStrip->m_army);
             if (gpWindowManager->m_dialogResult == TOWN_DIALOG_BUTTON_2) {
-                m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] = -1;
+                m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] = CREATURE_NONE;
                 m_selectedStrip->m_army->m_creatureCounts[m_selectedArmySlot] = 0;
             }
             ResetStrips();
@@ -761,7 +761,7 @@ void townManager::DoCommand(signed char command)
                 m_pendingArmySlot = i;
             m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot] +=
                 m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot];
-            m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = -1;
+            m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = CREATURE_NONE;
             m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot] = 0;
             ResetStrips();
             break;
@@ -781,7 +781,7 @@ void townManager::DoCommand(signed char command)
                         && m_pendingArmySlot != temp) {
                         m_pendingStrip->m_army->m_creatureCounts[temp] +=
                             m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot];
-                        m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] = -1;
+                        m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] = CREATURE_NONE;
                         m_pendingStrip->m_army->m_creatureCounts[m_pendingArmySlot] = 0;
                     }
                     if (m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]
@@ -789,7 +789,7 @@ void townManager::DoCommand(signed char command)
                         && m_swapArmySlot != temp) {
                         m_swapStrip->m_army->m_creatureCounts[temp] +=
                             m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot];
-                        m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = -1;
+                        m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot] = CREATURE_NONE;
                         m_swapStrip->m_army->m_creatureCounts[m_swapArmySlot] = 0;
                     }
                 }

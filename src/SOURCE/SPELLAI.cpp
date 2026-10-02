@@ -265,9 +265,9 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
         effect = 0;
         break;
     }
-    if (target->m_creatureType == 0x17 || target->m_spellEffect == SPELL_ANTI_MAGIC)
+    if (target->m_creatureType == CREATURE_DRAGON || target->m_spellEffect == SPELL_ANTI_MAGIC)
         effect = 0;
-    else if (target->m_creatureType == 0xd && effect < 0)
+    else if (target->m_creatureType == CREATURE_DWARF && effect < 0)
         effect = effect * 0.75;
     return effect;
 }
@@ -378,7 +378,7 @@ void combatManager::EffectSpellResurrect(int* effect, int hex)
     int num;
 
     targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-    if (targetArmy->m_creatureType == 0x17 || targetArmy->m_spellEffect == SPELL_ANTI_MAGIC) {
+    if (targetArmy->m_creatureType == CREATURE_DRAGON || targetArmy->m_spellEffect == SPELL_ANTI_MAGIC) {
         *effect = 0;
         return;
     }

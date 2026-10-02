@@ -2828,7 +2828,7 @@ signed char advManager::UpdBottomViewHero(void) {
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
 
     for (n = 0; n < 5; n++) {
-        if (targetHero->m_army.m_creatureTypes[n] != -1)
+        if (targetHero->m_army.m_creatureTypes[n] != CREATURE_NONE)
             nStacks++;
     }
     if (nStacks) {
@@ -3193,7 +3193,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
 
     numArmies = 0;
     for (i = 0; i < 5; i++) {
-        if (townPointer->m_army.m_creatureTypes[i] != -1)
+        if (townPointer->m_army.m_creatureTypes[i] != CREATURE_NONE)
             numArmies++;
     }
 
@@ -3256,7 +3256,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                 else
                     xAdjust = -12;
             }
-            while (townPointer->m_army.m_creatureTypes[slot] == -1)
+            while (townPointer->m_army.m_creatureTypes[slot] == CREATURE_NONE)
                 slot++;
             monster = townPointer->m_army.m_creatureTypes[slot];
             iconWgts[slotIndex] = new iconWidget(step * slotIndex + offsetX + xAdjust, rowY, 32, 32,
@@ -3284,7 +3284,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
             offsetX = (step - 32) / 2 + 9;
             rowY += 44;
             for (i = row1; i < row1 + row2; i++) {
-                while (townPointer->m_army.m_creatureTypes[slot] == -1)
+                while (townPointer->m_army.m_creatureTypes[slot] == CREATURE_NONE)
                     slot++;
                 monster = townPointer->m_army.m_creatureTypes[slot];
                 iconWgts[slotIndex] = new iconWidget((slotIndex - row1) * step + offsetX, rowY, 32, 32,
