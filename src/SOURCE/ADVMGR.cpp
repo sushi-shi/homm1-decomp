@@ -2894,25 +2894,25 @@ signed char advManager::UpdBottomViewHero(void) {
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
 VA(0x0042e411, 0xd46)
 void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, short windowX, short windowY) {
+    short savedOriginX;
     short portraitId;
-    short creatureY;
-    short creatureIconHeight;
+    short width;
     hero* heroPtr;
+    short flagId;
+    char* labelText[5];
+    short armyW;
+    textWidget* sizeTexts[5];
+    short j;
+    short leftEdge;
     tag_message message;
     short numArmies;
-    short j;
-    short enable;
-    char* labelText[5];
+    short creatureY;
     iconWidget* monWidgets[5];
-    short flagId;
-    textWidget* sizeTexts[5];
-    short savedOriginX;
-    short width;
     heroWindow* viewWin;
     short savedOriginY;
+    short creatureIconHeight;
+    short enable;
     short statWidget;
-    short armyW;
-    short leftEdge;
 
     armyW = 160;
     leftEdge = 9;
@@ -3711,10 +3711,10 @@ void advManager::ViewPuzzle(void) {
 // visible object/overlay frames and marking the target cell.
 VA(0x004310df, 0x236)
 void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
-    unsigned char tileset;
+    int y;
     mapCell* cell;
     int x;
-    int y;
+    unsigned char tileset;
     short screenX;
     short screenY;
 
@@ -4936,12 +4936,12 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
 VA(0x00434bd7, 0x340)
 void advManager::TeleportTo(int x, int y, int) {
     int savedShow;
-    hero* mapHero;
-    signed char newTerrain;
+    int fizzle;
+    mapCell* destinationCell;
     mapCell* oldCell;
     int tmp;
-    mapCell* destinationCell;
-    int fizzle;
+    signed char newTerrain;
+    hero* mapHero;
     town* occupiedTown;
 
     savedShow = bShowIt;

@@ -200,8 +200,8 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
     int dirIndex;
     int x;
     int y;
-    int maxValue;
     int value;
+    int maxValue;
     int iChance;
 
     bestDirection = -1;
@@ -236,8 +236,8 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
 VA(0x0041a89d, 0x473)
 void philAI::CheckReload(hero* pHero) {
     int mapY;
-    int mapX;
     mapCell* visitedCell;
+    int mapX;
     int heroFightValue;
     int enemy;
     float enemyPressure;
@@ -309,13 +309,13 @@ void philAI::CheckReload(hero* pHero) {
 // evidence: graph:2;base=0.559466;margin=0.357720;shape=0.362;size=0.984;calls=1.000;alternate=pol20:void philAI::CheckBerserk(void)@0x00038c3d
 VA(0x0041ad10, 0x294)
 void philAI::CheckBerserk(hero* pHero) {
-    int heroFightValue;
+    int enemy;
     int x;
     mapCell* cell;
     int y;
     hero* enemyHero;
     int best = -1;
-    int enemy;
+    int heroFightValue;
 
     gbBerserk = 0;
     fBerserkFactor = 1.0f;
@@ -620,16 +620,16 @@ void philAI::GetTurnAIVars(int player) {
     playerData* pPlayer;
     int yPos;
     int mineValue;
-    int xPos;
-    float fFightVal;
-    hero* heroPointer;
-    int hIndex;
     int i;
+    float fFightVal;
     int y;
-    int x;
-    int artTotal;
+    int xPos;
     int otherIndex;
+    hero* heroPointer;
     int unusedFightValue;
+    int artTotal;
+    int hIndex;
+    int x;
     town* townPointer;
 
     giCurTurn = gpGame->m_day + (gpGame->m_week - 1) * 7 + (gpGame->m_month - 1) * 28;
@@ -1335,18 +1335,18 @@ void philAI::ValueOfBuyingCreature(
 // evidence: graph:2;base=0.467416;margin=0.566378;shape=0.359;size=0.696;calls=1.000;alternate=pol20:void philAI::GetBestCreature(class town *, struct BHC &, float &)@0x0003db58
 VA(0x0041e1ed, 0x211)
 void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
-    int canAdd;
-    int bestBuy;
+    float bestCost;
+    float rand;
     float worth;
     float bestRandScore;
-    float bestCost;
+    int bestBuy;
     int topDwelling;
     int curDwelling;
-    float rand;
     int mon;
+    int canAdd;
     int iArmy;
-    int numUnits;
     int costRV;
+    int numUnits;
 
     topDwelling = -1;
     bestBuy = 0;
@@ -1991,19 +1991,19 @@ float philAI::FutureDeflator(int* const resources) {
 VA(0x0041ff2c, 0x764)
 int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, signed char useTown, signed char townId) {
     int stackWorth5;
-    int slot;
-    int armyValue4;
-    int magicTotal;
-    int numShooters2;
-    int castleValue;
-    float countMod0;
     float magicMod8;
     int spellScore;
-    int maxScore3;
-    town* pTown;
-    int stats;
+    int slot;
+    int numShooters2;
+    int castleValue;
     int luck;
+    int maxScore3;
+    int armyValue4;
+    town* pTown;
+    int magicTotal;
+    int stats;
     int morale;
+    float countMod0;
 
     armyValue4 = 0;
     magicTotal = 0;
