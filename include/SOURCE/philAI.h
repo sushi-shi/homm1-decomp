@@ -217,7 +217,16 @@ extern int gUltArtifactAvgValue;
 // DoAI: the single player the AI may run for, and the places each hero has
 // already started from this turn.
 extern signed char giLimitPlayer;
-extern int iPlacesVisited[30][2];
+// clang-format off
+// DoAI's per-turn visit log: up to 30 positions (x, y) a hero has moved
+// from; a target already in it ends the hero's turn (Buka 2.1 ADVMGR.h
+// names).
+H1_ENUM_CONST_BEGIN(AIPlaceVisitConstant)
+    ADVMGR_PLACE_VISIT_COUNT = 30,
+    ADVMGR_PLACE_COORDINATE_COUNT = 2
+H1_ENUM_CONST_END(AIPlaceVisitConstant)
+// clang-format on
+extern int iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
 extern int iCurPlaceToVisit;
 void ResetHeroRVs(int, int, int);
 // DetermineTargetPosition's shipyard search state.

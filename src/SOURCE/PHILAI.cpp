@@ -108,7 +108,7 @@ short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004c4de0)
 signed char giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 DATA(0x004c4de8)
-int iPlacesVisited[30][2];
+int iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
 DATA(0x004c4ee4)
 int gbTroopReload;
 DATA(0x004c4eec)
@@ -561,7 +561,7 @@ void philAI::DoAI(int player) {
     LogInt("DO AI", player);
     GetTurnAIVars(player);
     ShowStatus();
-    for (pathIndex = 0; pathIndex < 7; pathIndex++) {
+    for (pathIndex = 0; pathIndex < PLAYER_RESOURCE_COUNT; pathIndex++) {
         sprintf(
             gText,
             "RES - %15s  %d  %d",
@@ -626,7 +626,7 @@ void philAI::DoAI(int player) {
                            != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
                     aiHero->m_remainingMobility = 0;
             }
-            if (iCurPlaceToVisit < 30) {
+            if (iCurPlaceToVisit < ADVMGR_PLACE_VISIT_COUNT) {
                 iPlacesVisited[iCurPlaceToVisit][0] = aiHero->m_x;
                 iPlacesVisited[iCurPlaceToVisit][1] = aiHero->m_y;
                 iCurPlaceToVisit++;
