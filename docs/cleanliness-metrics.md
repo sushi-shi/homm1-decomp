@@ -53,13 +53,13 @@ whole tree; the other items cover audited cases.
   and 100 reasoned seams (remote-queue `char*` records, NetBIOS `PUCHAR`
   buffers, Smacker palettes, resource `ReadBlock` signed bytes). Nested
   `static_cast` chains: **0** (was 4 `void*` launderings in `wingraph`).
-- [ ] Review written C-style casts. Board row: **1** (was 198); 485
+- [ ] Review written C-style casts. Board row: **1** (was 198); 480
   `static_cast` spellings. The remaining board cast is required by retail: VC4
   narrows `philAI::QuickCombat`'s double through a stack temporary only for
   the C-style form ([float expression shape](patterns/vc4-float-expression-shape.md)).
-  A wider census (any `(T*)expr`) still finds **39** pointer casts: 30
+  A wider census (any `(T*)expr`) still finds **35** pointer casts: 30
   `combatRemoteMessage`/`heroRemoteMessage` views over `char*` packets in
-  `EVENTS`, 4 save-transfer buffer writes in `game`, and single sites.
+  `EVENTS`, 4 save-transfer buffer writes in `game`, and `NULL_SAMPLE2`.
 - [ ] Review unions: **14 definitions**: 7 DirectDraw SDK, 3 per-message word
   views in the flat `tag_message`, 2 remote payload variants, 1 serial/NetBIOS
   node payload, 1 `searchNode` per-phase overlay. Each models record variants;
@@ -94,14 +94,18 @@ whole tree; the other items cover audited cases.
 
 ### Names and identity
 
-- [ ] Unknown identifiers: board **128** (was 462). Declared `m_unknown*`
-  members **37** (was 54) with **116** spellings (was 444). Remaining used
-  ones without a proven role: `army::m_unknown52` (spell expiry mode),
-  `mapCell::m_unknown05/07`, `combatManager::m_unknown260/6e3`,
-  `mouseManager::m_unknown49/4d`.
-- [ ] Slot-tuned local names: **100** locals carry numeric suffixes chosen to
-  fit retail stack slots (60 in PHILAI, e.g. `attFight7`, `worth29`). A rename
-  must keep each name's `/Od` hash bucket.
+- [ ] Unknown identifiers: board **71** (was 462). Declared `m_unknown*`
+  members **33** (was 54) with **59** spellings (was 444). Most remaining
+  members are opaque spans or constructor-only stores; the only remaining
+  member read without a proven role is `mouseManager::m_unknown49/4d` (the
+  pointer position ComboDraw shifts into map cells).
+- [ ] Slot-tuned local names: **28** numeric-suffixed local declarations
+  (was 86, not counting `junk*`/`unused*` slot holders). 19 sit in open
+  Lane A rows (`ValueOfEventAtPosition`, `DrawCell`, `SpecialAttack`/`DoAttack`);
+  the rest are natural names or slot holders (`row1`/`row2`, `t1`-`t3`,
+  `extra2`). A rename must keep each
+  name's `/Od` identifier-hash bucket (`h = (h << 2) + (h >> 7) + c`,
+  bucket `h & 15`); then stack slots and C1 handles do not move.
 - [x] Donor bootstrap blocks: **287** `donor PoL RVA ...; preferred Buka symbol`
   blocks remain and each names the function that follows (symbol-checked);
   15 blocks that named a different donor function were corrected or removed.
