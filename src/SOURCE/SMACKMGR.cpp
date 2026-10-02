@@ -40,6 +40,26 @@ struct SSmackOptions {
 #pragma pack(pop)
 
 extern SSmackOptions SmackOptions[];
+
+// clang-format off
+// SmackOptions rows (retail 0x0049fd08), named by their movie files. Rows
+// 0..1 are the publisher logos that draw "Presents...", 2..3 the intro and
+// 4..7 the endings; oldmain and the end sequence pick one of each pair
+// from gConfig.slowVideo.
+H1_ENUM_BEGIN(SmackVideo)
+    SMACK_NWCLOGO = 0,
+    SMACK_NWCLOGO1 = 1,
+    SMACK_LOGO_LAST = SMACK_NWCLOGO1,
+    SMACK_INTRO02C = 2,
+    SMACK_INTRO_FIRST = SMACK_INTRO02C,
+    SMACK_INTRO02U = 3,
+    SMACK_INTRO_LAST = SMACK_INTRO02U,
+    SMACK_WIN01C = 4,
+    SMACK_WIN01U = 5,
+    SMACK_WIN02 = 6,
+    SMACK_LOSE1 = 7
+H1_ENUM_END(SmackVideo)
+// clang-format on
 extern signed char gbSkipIntro;
 extern char gcCongratsText[];
 
@@ -119,7 +139,7 @@ short smackManager::Main(struct tag_message &msg) {
         FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
         BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
         SmackSoundOnOff(smk, gConfig.musicVolume);
-        if (gbSkipIntro && (bSmackNum == 2 || bSmackNum == 3)) {
+        if (gbSkipIntro && (bSmackNum == SMACK_INTRO02C || bSmackNum == SMACK_INTRO02U)) {
             startFrame = 125;
             SmackVolumePan(smk, 0x200, 0, 0);
             SmackSoundOnOff(smk, 0);
@@ -150,9 +170,9 @@ short smackManager::Main(struct tag_message &msg) {
                 }
                 gpWindowManager->FadeScreen(0, 8, pPalette);
             } else {
-                if (bSmackNum == 6 && currentFrame >= 23)
+                if (bSmackNum == SMACK_WIN02 && currentFrame >= 23)
                     bigFont->DrawBoundedString(gcCongratsText, 29, 338, 325, 115, 1, 1);
-                if (bSmackNum == 0) {
+                if (bSmackNum == SMACK_NWCLOGO) {
                     bigFont->DrawString("Presents...", 280, 440, 255);
                     gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
                 }
@@ -173,13 +193,13 @@ short smackManager::Main(struct tag_message &msg) {
                     lastTick = KBTickCount();
                 }
             }
-            if (!gbFirstTimeThrough || bSmackNum > 3) {
+            if (!gbFirstTimeThrough || bSmackNum > SMACK_INTRO_LAST) {
                 Process1WindowsMessage();
                 switch (gpInputManager->GetEvent().type) {
                 case MESSAGE_KEY_DOWN:
                 case MESSAGE_LEFT_BUTTON_DOWN:
                 case MESSAGE_RIGHT_BUTTON_DOWN:
-                    if (bSmackNum >= 2)
+                    if (bSmackNum >= SMACK_INTRO_FIRST)
                         break;
                     else {
                         currentFrame = smk->Frames;
@@ -191,7 +211,7 @@ short smackManager::Main(struct tag_message &msg) {
                 }
             }
         }
-        if (bSmackNum <= 1) {
+        if (bSmackNum <= SMACK_LOGO_LAST) {
             SmackVolumePan(smk, 0x200, 0, 0);
             SmackSoundOnOff(smk, 0);
             SmackGoto(smk, 101);
@@ -202,9 +222,9 @@ short smackManager::Main(struct tag_message &msg) {
             bigFont->DrawString("Presents...", 280, 440, 255);
             gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
         }
-        if (bSmackNum == 1)
+        if (bSmackNum == SMACK_NWCLOGO1)
             gbSkipIntro = 1;
-        if (bSmackNum == 6) {
+        if (bSmackNum == SMACK_WIN02) {
             DelayMilli(4500);
             bigFont->DrawString("Press a Key to Continue...", 420, 460, 1);
             gpWindowManager->UpdateScreenRegion(420, 460, 220, 20);
