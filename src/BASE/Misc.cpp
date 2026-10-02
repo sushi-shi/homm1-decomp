@@ -49,7 +49,7 @@ void LogStr(char* text) {
 // HoMM1 keeps the two-value logging form used by its AI call sites.
 VA(0x00419ac4, 0x86)
 void LogInt(char* label, int value) {
-    char logText[100];
+    char logText[MISC_LOG_VALUE_TEXT_CAPACITY];
     FILE* out;
 
     if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)
@@ -65,7 +65,7 @@ void LogInt(char* label, int value) {
 // Prior LZHUF source uses this two-long LogStr overload (evidence/lzhuf-provenance.md).
 VA(0x00419b4a, 0x8a)
 void LogStr(char* label, long value1, long value2) {
-    char logText[100];
+    char logText[MISC_LOG_VALUE_TEXT_CAPACITY];
     FILE* out;
 
     if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)
@@ -81,7 +81,7 @@ void LogStr(char* label, long value1, long value2) {
 // HoMM1's five-value logging form; DDAppPaint logs its blit rectangles here.
 VA(0x00419bd4, 0xab)
 void LogStr(char* label, long value1, long value2, long value3, long value4, long value5) {
-    char logText[130];
+    char logText[MISC_LOG_VALUES_TEXT_CAPACITY];
     FILE* out;
 
     if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)
@@ -115,7 +115,7 @@ void LogStr(
     long value6,
     long value7
 ) {
-    char logText[130];
+    char logText[MISC_LOG_VALUES_TEXT_CAPACITY];
     FILE* out;
 
     if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)

@@ -22,6 +22,18 @@ H1_ENUM_BEGIN(IconDrawOrientation)
     ICON_DRAW_NORMAL = 0,
     ICON_DRAW_FLIPPED = 1
 H1_ENUM_END(IconDrawOrientation)
+
+// The last argument of the icon blitters. Non-zero quarters the frame's x
+// offset (Icon2b.asm: x - ((x - x/2) >> 1) at [ebp+1ch]; DrawToBuffer's
+// extent uses x >> 2); army walk frames 1..5 pass it.
+H1_ENUM_BEGIN(IconDrawOffsetMode)
+    ICON_DRAW_OFFSET_FULL = 0,
+    ICON_DRAW_OFFSET_QUARTER = 1
+H1_ENUM_END(IconDrawOffsetMode)
+
+H1_ENUM_CONST_BEGIN(IconDrawOffsetConstant)
+    ICON_DRAW_QUARTER_OFFSET_SHIFT = 2
+H1_ENUM_CONST_END(IconDrawOffsetConstant)
 // clang-format on
 
 #pragma pack(push, 1)
@@ -37,12 +49,15 @@ public:
     icon(short);
     virtual inline ~icon();
     // --- methods ---
-    void DrawToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
+    void DrawToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char),
+                      H1_ENUM_PARAM(IconDrawOffsetMode, signed char));
     int CombatClipDrawToBuffer(int, int, int, struct SLimitData *, int, int, unsigned char *, signed char *);
-    void ClipFillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char, int, int,
-                          int, int);
-    void FillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
-    void DimToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
+    void ClipFillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char),
+                          H1_ENUM_PARAM(IconDrawOffsetMode, signed char), int, int, int, int);
+    void FillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char),
+                      H1_ENUM_PARAM(IconDrawOffsetMode, signed char));
+    void DimToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char),
+                     H1_ENUM_PARAM(IconDrawOffsetMode, signed char));
 };
 #pragma pack(pop)
 

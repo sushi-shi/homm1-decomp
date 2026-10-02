@@ -35,20 +35,20 @@ icon::~icon(void)
 // tail-merges the two copies and carries the arm's frame-entry address across the join.
 VA(0x00479bd0, 0x22a)
 void icon::DrawToBuffer(short x, short y, short frame, H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
-                        signed char mode)
+                        H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode)
 {
     if (gbComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
-            if (mode != 0)
-                m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2); // byte-evidenced: packed frame entry in resource bytes.
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawRight = x - reinterpret_cast<IconEntry *>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawLeft = m_drawRight - reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
             m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
             m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         } else {
-            if (mode != 0)
-                m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2) + x; // byte-evidenced: packed frame entry in resource bytes.
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT) + x; // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawLeft = reinterpret_cast<IconEntry *>(m_data)[frame].x + x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawRight = m_drawLeft + reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
@@ -80,14 +80,14 @@ void icon::DrawToBuffer(short x, short y, short frame, H1_ENUM_PARAM(IconDrawOri
 
 VA(0x00479e00, 0x51)
 void icon::ClipFillToBuffer(short x, short y, short frame, short color,
-                            H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation, signed char mode, int clipX, int clipY, int clipW, int clipH)
+                            H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation, H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode, int clipX, int clipY, int clipW, int clipH)
 {
     ClippedMonoIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode, clipX, clipY, clipW, clipH);
 }
 
 VA(0x00479e60, 0x132)
 void icon::FillToBuffer(short x, short y, short frame, short color,
-    H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation, signed char mode)
+    H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation, H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode)
 {
     if (orientation == ICON_DRAW_NORMAL) {
         if (gbLimitToExtent) {
@@ -108,20 +108,20 @@ void icon::FillToBuffer(short x, short y, short frame, short color,
 
 VA(0x00479fa0, 0x1c2)
 void icon::DimToBuffer(short x, short y, short frame, H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
-                       signed char mode)
+                       H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode)
 {
     if (gbComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
-            if (mode != 0)
-                m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2); // byte-evidenced: packed frame entry in resource bytes.
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawRight = x - reinterpret_cast<IconEntry *>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawLeft = m_drawRight - reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
             m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
             m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         } else {
-            if (mode != 0)
-                m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2) + x; // byte-evidenced: packed frame entry in resource bytes.
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT) + x; // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawLeft = reinterpret_cast<IconEntry *>(m_data)[frame].x + x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawRight = m_drawLeft + reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.

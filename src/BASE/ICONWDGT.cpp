@@ -133,10 +133,10 @@ void iconWidget::Draw(void) {
     switch (m_kind) {
         case ICON_WIDGET_DRAW:
             PollSound();
-            m_icon->DrawToBuffer(x, y, m_frame, m_orientation, 0);
+            m_icon->DrawToBuffer(x, y, m_frame, m_orientation, ICON_DRAW_OFFSET_FULL);
             break;
         case ICON_WIDGET_FILL:
-            m_icon->FillToBuffer(x, y, m_frame, m_fillColor, m_orientation, 0);
+            m_icon->FillToBuffer(x, y, m_frame, m_fillColor, m_orientation, ICON_DRAW_OFFSET_FULL);
             break;
     }
 }

@@ -245,7 +245,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     if (m_fadeSteps > 0) {
         m_fadeSteps = MUSIC_FADE_TOTAL_STEPS;
         gMusicFadeTimer = KBTickCount() + CD_FADE_DELAY_TICKS;
-        CDSetVolume(10, 0);
+        CDSetVolume(SOUND_VOLUME_LAST, 0);
     } else {
         CDSetVolume(volume, 0);
     }

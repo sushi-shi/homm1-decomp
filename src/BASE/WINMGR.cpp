@@ -121,7 +121,7 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
 
 VA(0x00473fe0, 0xba)
 short heroWindowManager::Open(short managerOrder) {
-    FadeOut(WINDOW_MANAGER_INITIAL_FADE_STEP);
+    FadeOut(WINDOW_FADE_STEPS_NORMAL);
     m_screen = new bitmap();
     if (m_screen == NULL)
         MemError();
@@ -136,7 +136,7 @@ short heroWindowManager::Open(short managerOrder) {
         strcpy(m_name, "heroWindowManager");
         return BASE_MANAGER_SUCCESS;
     }
-    return 1;
+    return WINDOW_MANAGER_OPEN_FAILURE;
 }
 
 VA(0x004740a0, 0x43)
@@ -277,7 +277,7 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
     if (window != NULL)
         AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
     if (fade != 0)
-        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, gPalette);
+        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
     gpInputManager->Flush();
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
     done = 0;

@@ -32,7 +32,8 @@ H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
     MOUSE_INITIAL_X = 320,
     MOUSE_INITIAL_Y = 240,
     MOUSE_SAVED_BITMAP_SIZE = 0x40,
-    MOUSE_MANAGER_MESSAGE_MASK = 0x40
+    MOUSE_MANAGER_MESSAGE_MASK = 0x40,
+    MOUSE_CURSOR_FILENAME_CAPACITY = 16
 H1_ENUM_CONST_END(MouseManagerStateConstant)
 
 VA(0x004766e0, 0xab)
@@ -123,7 +124,7 @@ void mouseManager::SetPointer(short frame) {
     int cursorIndex;
     int x;
     int y;
-    char filename[16];
+    char filename[MOUSE_CURSOR_FILENAME_CAPACITY];
 
     if (frame < 0 || m_active != 1)
         return;
@@ -235,7 +236,7 @@ void mouseManager::SetPointer(short frame) {
             bmpColor[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
             bmpColor[cursorIndex].bmHeight = MOUSE_CURSOR_BITMAP_WIDTH;
             bmpColor[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
-            bmpColor[cursorIndex].bmBitsPixel = 8;
+            bmpColor[cursorIndex].bmBitsPixel = MOUSE_CURSOR_COLOR_BITS_PER_PIXEL;
             bmpColor[cursorIndex].bmWidthBytes = MOUSE_CURSOR_BITMAP_WIDTH;
             bmpColor[cursorIndex].bmBits = cColorBits[cursorIndex];
             hbmpColor[cursorIndex] = CreateBitmapIndirect(&bmpColor[cursorIndex]);
