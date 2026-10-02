@@ -147,9 +147,11 @@ public:
 
 short GetAdjacentCellIndexNoArmy(short, short);
 // The combat spell-effect icon cache: army draws and PowEffect share one
-// icon, reloaded when the effect file changes.
+// icon, reloaded when the effect file (gCurLoadedSpellFileId, declared with
+// combatManager) changes. gCurLoadedSpellEffect is a stale alias of that id,
+// kept declared only so later symbol handles stay put; nothing references it.
 extern class icon* gCurLoadedSpellIcon;
-extern short gCurLoadedSpellFileId;
+extern short gCurLoadedSpellEffect;
 extern short giSpellEffectFrame;
 // Spell-effect icon files by effect (0x004910d8).
 extern char* gCombatFxNames[];

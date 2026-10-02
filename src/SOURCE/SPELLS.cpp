@@ -549,10 +549,10 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
 
     m_unknown727 = m_unknown72b = 0;
     fileId = MAKEFILEID(gCombatFxNames[13]);
-    if (fileId != gCurLoadedSpellEffect) {
+    if (fileId != gCurLoadedSpellFileId) {
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
         gCurLoadedSpellIcon = gpResourceManager->GetIcon(fileId);
-        gCurLoadedSpellEffect = fileId;
+        gCurLoadedSpellFileId = fileId;
     }
     if (castSide == 2) {
         startSide = 0;

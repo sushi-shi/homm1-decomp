@@ -368,7 +368,7 @@ extern signed char bInTeleportGetDest;
 // Combat effect icon names (0x004910d8); the loaded effect icon's file id
 // (0x004c6d64) and icon (0x004c709c).
 extern char *gCombatFxNames[];
-extern short gCurLoadedSpellEffect;
+extern short gCurLoadedSpellFileId;
 extern class icon *gCurLoadedSpellIcon;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
 extern short giCombatFxFrame;
