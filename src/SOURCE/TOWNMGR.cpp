@@ -570,7 +570,7 @@ short townManager::Main(struct tag_message &message)
                                 res = LoadPlaySample("buildtwn.82M");
                                 theHero = gpGame->GetHero(m_town->m_occupyingHeroId);
                                 width = 0;
-                                for (i = 0; i < 5; i++) {
+                                for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                                     if (theHero->m_army.m_creatureTypes[i] != CREATURE_NONE)
                                         width = i + 1;
                                 }

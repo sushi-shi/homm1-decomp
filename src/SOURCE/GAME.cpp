@@ -1804,7 +1804,7 @@ void game::ClaimTown(signed char townId, signed char player) {
         return;
     if (m_townOwners[townId] != -1)
         gpGame->GetTown(townId)->Deallocate();
-    for (i = 0; i < 5; ++i) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         townRec->m_army.m_creatureTypes[i] = CREATURE_NONE;
         townRec->m_army.m_creatureCounts[i] = 0;
     }
@@ -2307,7 +2307,7 @@ void game::ViewArmy(
     } else {
         gpWindowManager->DoDialog(m_viewArmyWindow, ViewArmyHandler, 0);
         if (gbDismissArmy && theGroup) {
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (theGroup->m_creatureTypes[i] == monsterType) {
                     theGroup->m_creatureTypes[i] = CREATURE_NONE;
                     theGroup->m_creatureCounts[i] = 0;
@@ -3469,19 +3469,19 @@ void game::GiveArmy(armyGroup* group, int type, int count, int slot) {
         group->m_creatureTypes[i] = type;
         group->m_creatureCounts[i] = 0;
     } else {
-        for (i = 0; i < 5; ++i) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
             if (group->m_creatureTypes[i] == type)
                 break;
         }
-        if (i >= 5) {
-            for (i = 0; i < 5; ++i) {
+        if (i >= ARMY_GROUP_SLOT_COUNT) {
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
                 if (group->m_creatureTypes[i] < 0) {
                     group->m_creatureCounts[i] = 0;
                     break;
                 }
             }
         }
-        if (i >= 5)
+        if (i >= ARMY_GROUP_SLOT_COUNT)
             return;
     }
     group->m_creatureTypes[i] = type;
@@ -3495,7 +3495,7 @@ VA(0x0044443e, 0x8c)
 int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
     int expValue = 0;
     int i;
-    for (i = 0; i < 5; ++i) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (group->m_creatureCounts[i] > 0)
             expValue += group->m_creatureCounts[i] * gMonsterDatabase[group->m_creatureTypes[i]].hitPoints;
     }

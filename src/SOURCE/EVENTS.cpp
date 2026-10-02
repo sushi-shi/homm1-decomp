@@ -1325,7 +1325,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
         case MAP_OBJECT_DRAGON_CITY:
             if (gpGame->m_mineOwners[0] == giCurPlayer)
                 break;
-            for (counter = 0; counter < 5; counter++) {
+            for (counter = 0; counter < ARMY_GROUP_SLOT_COUNT; counter++) {
                 gpMonGroup->m_creatureTypes[counter] = CREATURE_DRAGON;
                 gpMonGroup->m_creatureCounts[counter] = 1;
             }

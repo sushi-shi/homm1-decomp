@@ -30,7 +30,7 @@ town::town(void) {
 // HoMM1 retail returns in AL; the HoMM2 int return is a later signature.
 VA(0x00463f7b, 0x55)
 signed char town::HasGarrison(void) {
-    for (short slot = 0; slot < 5; ++slot) {
+    for (short slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
             return 1;
     }
