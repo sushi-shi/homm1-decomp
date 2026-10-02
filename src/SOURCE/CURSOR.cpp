@@ -709,3 +709,30 @@ void advManager::MoveOrigin(short directionX, short directionY)
     }
     m_forceCompleteDraw = 1;
 }
+
+// CURSOR owns retail .data 0x0048eb18-0x0048eb4f (initialized, before the
+// TOWNMGR band) and .bss 0x004a4b80-0x004a4b97. Initializers are retail bytes.
+DATA(0x0048eb18)
+signed char bMoveSoundMade = 1;
+DATA(0x0048eb20)
+short giPixelsPerStep[5] = {1, 4, 6, 8, 16};
+DATA(0x0048eb30)
+short giStepDelay[5] = {30, 45, 30, 15, 15};
+DATA(0x0048eb3c)
+struct _SAMPLE* hPrevMoveSound = 0;
+DATA(0x0048eb40)
+struct _SAMPLE* hLastMoveSound = 0;
+DATA(0x0048eb44)
+signed char EveryOther = 0;
+DATA(0x0048eb48)
+short startVals[3] = {16, 0, -16};
+DATA(0x004a4b80)
+short S1cursorCycle;
+DATA(0x004a4b84)
+short S1cursorFrameCount;
+DATA(0x004a4b88)
+short S1cursorTurning;
+DATA(0x004a4b8c)
+short S1cursorBaseFrame;
+DATA(0x004a4b90)
+signed char S1cursorDirection;
