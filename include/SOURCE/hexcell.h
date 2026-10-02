@@ -11,7 +11,7 @@ class hexcell {
 public:
     short m_x;
     short m_y;
-    // DrawGround draws combat icon (3 + this) at this frame.
+    // DrawGround draws this combat icon at this frame.
     signed char m_groundIcon;
     signed char m_groundFrame;
     // Castle pieces (5) draw towers and walls; other obstacles use frame 7.

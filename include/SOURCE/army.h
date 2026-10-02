@@ -28,21 +28,26 @@ public:
     short m_initialQuantity;
     short m_quantity;
     short m_hitPointsLost;
-    signed char m_unknown13;
+    // DamageEnemy: 3 rolls maximum damage, 1 minimum, 2 halves it.
+    signed char m_damageMode;
     // Init copies the creature speed here; m_stats.speed is the current one.
     signed char m_baseSpeed;
-    signed char m_unknown15;
+    // CheckLuck: 1 good luck, -1 bad luck this attack.
+    signed char m_luck;
     // Creature record bytes +0xc..+0x1e (hit points through attributes);
     // Init adds the hero's two primary skills to attack and defense.
     // Attribute bit 0 is a two-hex creature, bit 1 a flyer.
     tag_monsterStats m_stats;
     short m_unknown29;
-    short m_unknown2b;
+    // PowEffect frames left on the stack: 4 hit, 5 killed, -1 none.
+    short m_powFrames;
     signed char m_side;
     signed char m_index;
     int m_unknown2f;
     signed char m_unknown33;
-    char m_unknown34;
+    // combatManager::ResetHitByCreature clears it; DoHydraAttack hits
+    // each stack once.
+    char m_hitByCreature;
     class icon* m_standIcon;
     class icon* m_walkIcon;
     class icon* m_attackIcon;
@@ -68,14 +73,23 @@ public:
     void FreeResources(void);
     // HoMM1 retail: word x/y (ret 8).
     void DrawToBuffer(short, short);
+    // HoMM1 retail 0x00467281: back to the standing frame, optionally
+    // redrawing the combat screen (ret 4).
+    void Stand(signed char);
     void Wince(void);
-    void Walk(int, int, int);
+    // HoMM1 retail 0x00467345: word direction, byte stand-after and
+    // continued-walk flags (ret 0xc).
+    void Walk(short, signed char, signed char);
     void SpecialAttack(void);
-    void DirDoAttack(int);
-    void DoHydraAttack(int);
+    // HoMM1 retail 0x00468fc6: word direction (ret 4).
+    void DirDoAttack(short);
+    // HoMM1 retail 0x00468861 takes no argument.
+    void DoHydraAttack(void);
+    // HoMM1 retail 0x00468ff3: nonzero for a retaliation strike (ret 4).
     void DoAttack(int);
     void ResetPath(void);
     short WalkTo(void);
+    // HoMM1 retail 0x0046a0f0 / 0x0046a213: word hex, word result.
     short WalkTo(short);
     short AttackTo(void);
     short AttackTo(short);
@@ -116,7 +130,8 @@ public:
     short CanFit(short *);
     short ValidFlight(short, signed char);
     int FlyTo(void);
-    int FlyTo(int);
+    // HoMM1 retail 0x0044acd6: word hex, word result.
+    short FlyTo(short);
     // HoMM1 retail 0x004180f0: word hexes, byte speed/flags (ret 0x14).
     short FindPath(short, short, signed char, signed char, signed char);
     // HoMM1 retail 0x00418242: word hex, byte path mode, word result (ret 8).
@@ -134,4 +149,19 @@ public:
 #pragma pack(pop)
 
 short GetAdjacentCellIndexNoArmy(short, short);
+// The combat spell-effect icon cache: army draws and PowEffect share one
+// icon, reloaded when the effect file changes.
+extern class icon* gCurLoadedSpellIcon;
+extern short gCurLoadedSpellFileId;
+extern short giSpellEffectFrame;
+// Spell-effect icon files by effect (0x004910d8).
+extern char* gCombatFxNames[];
+// Pow (impact) effect icons by effect (0x00491098).
+extern char* gPowEffectNames[];
+// Damage multipliers for attack minus defense, -20..20 (0x00492470).
+extern float gfBattleStat[];
+// DamageEnemy flags a genie halving the target stack.
+extern signed char gbGenieHalf;
+// Set while SpecialAttack fires the second shot of a double shooter.
+extern int gbSecondShot;
 #endif // HOMM1_SOURCE_ARMY_H

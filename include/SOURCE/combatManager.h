@@ -63,17 +63,27 @@ class combatManager : public baseManager {
 public:
     char m_unknown30[0x10];
     hexcell m_hexCells[COMBAT_HEX_COUNT];
-    short m_unknown25c;
-    char m_unknown25e[2];
+    // First grid row (0-4) UpdateCombatArea must redraw; 5 when clean.
+    short m_gridUpdateRow;
+    // DrawFrame skips the grid overlay while this is set.
+    signed char m_gridMode;
+    char m_unknown25f;
     signed char m_unknown260;
     char m_unknown261[4];
-    // hexcell draws ground (3 + index), obstacles (5), towers (8) and walls (9).
-    class icon* m_combatIcons[13];
+    // army::DrawToBuffer prints stack quantities with this font.
+    class font* m_smallFont;
+    char m_unknown269[8];
+    // Nine combat icons (retail loops 0..8 from +0x271): hexcell draws
+    // ground (index), obstacles (2), towers (5) and walls (6); armies draw
+    // the quantity box (1) and spell markers (8).
+    class icon* m_combatIcons[9];
+    // Clean combat background; army::Walk restores the screen from it.
+    class bitmap* m_backgroundBitmap;
     signed char m_unknown299;
     char m_unknown29a[4];
-    // DoVictory: an attacker winning here earns the castle bonus.
-    class town *m_combatTown;
-    char m_unknown2a2[4];
+    // Per side: the town fought in. DoVictory gives the defender's winner
+    // the castle bonus; AICheckRetreat never retreats from a town.
+    class town *m_combatTowns[2];
     class hero *m_heroes[2];
     char m_unknown2ae[8];
     // Set by a surrender (ProcessNextAction).
@@ -112,16 +122,25 @@ public:
     signed char m_unknown6e3;
     short m_wallFrame;
     short m_wallDamage;
-    char m_unknown6e8[0x13];
+    signed char m_unknown6e8;
+    short m_unknown6e9[2];
+    // Drawn first by DrawBackground.
+    class bitmap* m_backdropBitmap;
+    // The combat screen window; CombatMessage sets its text widget (0xc).
+    class heroWindow* m_combatWindow;
+    char m_unknown6f5[4];
+    short m_unknown6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     short m_messageTypeMask;
     signed char m_sideRetreated[2];
-    // Per stack: times the limited creature was spent (CastSpell).
+    // Per stack draw state: ResetLimitCreature clears it (-1 for the dead)
+    // and army::SpellEffect marks the stack it animates.
     int m_limitCreatureCount[2][5];
-    // CastMassSpell clears both before the mass animation.
+    // Set before a full combat redraw.
     int m_unknown727;
     int m_unknown72b;
-    char m_unknown72f[4];
+    // UpdateCombatArea does nothing until the combat window is up.
+    int m_combatWindowOpen;
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
     char m_unknown7ab[8];
@@ -150,12 +169,17 @@ public:
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army *);
+    // HoMM1 retail 0x00470a4f: word hex, byte direction, attributes
+    // (ret 0xc); the upward directions also redraw the row above.
+    void UpdateGridForMove(short, signed char, int);
     // HoMM1 retail 0x004709f0: word first hex, redraw flag (ret 8).
     void UpdateGrid(short, int);
     void DrawBackground(void);
     void UpdateMouseGrid(int, int);
     // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
-    void DrawFrame(int);
+    void DrawFrame(signed char);
+    // HoMM1 retail 0x00470f25: byte mode (ret 4).
+    void SetGridMode(signed char);
     void DrawSmallView(int, int);
     int ViewGeneral(int, int, int);
     // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
@@ -288,24 +312,26 @@ public:
     void ShootMissile(int, int, int, int, float *, class icon *);
     void CombatSystemOptions(void);
     int AICheckRetreat(void);
+    // HoMM1 retail 0x00464ca3: byte side (ret 4).
     void DoCompAI(signed char);
     float GetModLichDamage(class army *, float);
     void DoLichShot(class army *);
-    int GetShooterMask(int);
+    // HoMM1 AI masks take a byte side and return word bit masks.
+    short GetShooterMask(signed char);
     int GetMirrorImageMask(int);
-    int GetFlyerMask(int);
+    short GetFlyerMask(signed char);
     int GetAllMask(int);
-    int GetWalkerMask(int);
+    short GetWalkerMask(signed char);
     int GetOutOfItMask(int);
     int GetTraitorMask(int);
-    int GetBestArmy(int, int);
-    int GetWorstArmy(int, int);
-    int GetClosestArmy(class army *, int, int);
-    unsigned long int GetStrength(int, int);
-    int AttemptAttack(class army *, int, int);
-    int AttemptAdjacentAttack(class army *);
-    int WalkTowardArmyFront(class army *, int, int);
-    int WalkTowardArmy(class army *, int, int);
+    short GetBestArmy(signed char, short);
+    short GetWorstArmy(signed char, short);
+    short GetClosestArmy(class army *, signed char, short);
+    unsigned long int GetStrength(signed char, short);
+    signed char AttemptAttack(class army *, signed char, short);
+    signed char AttemptAdjacentAttack(class army *);
+    signed char WalkTowardArmyFront(class army *, signed char, short);
+    signed char WalkTowardArmy(class army *, signed char, short);
 };
 #pragma pack(pop)
 
@@ -337,6 +363,8 @@ extern int giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;
+// Command help lines for CombatMessage(short) (0x00493b38).
+extern char *cCombatMessage[];
 // Combat help lines for the auto-combat, skip and other controls.
 extern char *cCombatHelp[];
 // ProcessCombatMsg records the hero casting from the combat screen.
