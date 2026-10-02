@@ -165,7 +165,7 @@ short combatManager::Open(short priority)
     m_messageTypeMask = 0x32f;
     m_combatWindowOpen = 0;
     m_savedBorder = NULL;
-    gpSoundManager->PlayAmbientMusic(-1, 0, -1);
+    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
     m_backgroundBuffer = new bitmap(0, 640, 460);
     m_backgroundDrawn = 0;
     sample = NULL_SAMPLE2;
@@ -213,10 +213,10 @@ short combatManager::Open(short priority)
     ResetMouse();
     m_gridSelectionDisabled = 0;
     WaitEndSample(sample, -1);
-    musicList[0] = 0x29;
-    musicList[1] = 0x2a;
-    musicList[2] = 0x28;
-    musicList[3] = 0x35;
+    musicList[0] = MUSIC_TRACK_BATTLE_2;
+    musicList[1] = MUSIC_TRACK_BATTLE_3;
+    musicList[2] = MUSIC_TRACK_BATTLE_1;
+    musicList[3] = MUSIC_TRACK_BATTLE_4;
     song = musicList[SRandom(0, 3)];
     gpSoundManager->SwitchAmbientMusic(song);
     m_messageMask = 0x200;
@@ -251,7 +251,7 @@ void combatManager::Close(void)
     int i;
     int survivor;
 
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     DrawCombatBorder();
     gbLimitedCombatUpdatePalette = 0;
     gpWindowManager->FadeScreen(1, 8, NULL);

@@ -711,81 +711,81 @@ void advManager::EventSound(short eventType, short eventData) {
     case MAP_OBJECT_CABIN:
     case MAP_OBJECT_DWARF_LOG_CABIN:
     case MAP_OBJECT_PEASANT_LOG_CABIN:
-        musicTrack = 0x16;
+        musicTrack = MUSIC_TRACK_HOUSE;
         break;
     case 63:
-        musicTrack = 0x2e;
+        musicTrack = MUSIC_TRACK_ULTIMATE_ARTIFACT;
         break;
     case MAP_OBJECT_LIGHTHOUSE:
-        musicTrack = 0x1a;
+        musicTrack = MUSIC_TRACK_LIGHTHOUSE;
         break;
     case MAP_OBJECT_SPELL_SHRINE:
-        musicTrack = 0x1b;
+        musicTrack = MUSIC_TRACK_SPELL_SHRINE;
         break;
     case MAP_OBJECT_ARTIFACT:
         if (eventData == 1)
-            musicTrack = 0x1c;
+            musicTrack = MUSIC_TRACK_TREASURE;
         break;
     case MAP_OBJECT_SKELETON:
     case MAP_OBJECT_TREASURE_CHEST:
     case MAP_OBJECT_CAMPFIRE:
     case MAP_OBJECT_WATERWHEEL:
     case MAP_OBJECT_WINDMILL:
-        musicTrack = 0x1c;
+        musicTrack = MUSIC_TRACK_TREASURE;
         break;
     case MAP_OBJECT_ALCHEMIST_LAB:
     case MAP_OBJECT_MINE:
     case MAP_OBJECT_SAWMILL:
-        musicTrack = 0x17;
+        musicTrack = MUSIC_TRACK_MINE_CAPTURED;
         break;
     case MAP_OBJECT_BUOY:
     case MAP_OBJECT_OASIS:
-        musicTrack = 0x14;
+        musicTrack = MUSIC_TRACK_BUOY_OASIS;
         break;
     case MAP_OBJECT_DAEMON_CAVE:
-        musicTrack = 7;
+        musicTrack = MUSIC_TRACK_DAEMON_CAVE;
         break;
     case MAP_OBJECT_FAERIE_RING:
-        musicTrack = 8;
+        musicTrack = MUSIC_TRACK_FAERIE_RING;
         break;
     case MAP_OBJECT_FOUNTAIN:
-        musicTrack = 0x18;
+        musicTrack = MUSIC_TRACK_FOUNTAIN;
         break;
     case MAP_OBJECT_GAZEBO:
-        musicTrack = 9;
+        musicTrack = MUSIC_TRACK_GAZEBO;
         break;
     case MAP_OBJECT_ANCIENT_LAMP:
-        musicTrack = 0xa;
+        musicTrack = MUSIC_TRACK_ANCIENT_LAMP;
         break;
     case MAP_OBJECT_GRAVEYARD:
-        musicTrack = 0xb;
+        musicTrack = MUSIC_TRACK_GRAVEYARD;
         break;
     case MAP_OBJECT_DRAGON_CITY:
-        musicTrack = 0xc;
+        musicTrack = MUSIC_TRACK_DRAGON_CITY;
         break;
     case MAP_OBJECT_OBELISK:
-        musicTrack = 0x15;
+        musicTrack = MUSIC_TRACK_OBELISK;
         break;
     case MAP_OBJECT_STATUE:
-        musicTrack = 0xe;
+        musicTrack = MUSIC_TRACK_STATUE;
         break;
     case MAP_OBJECT_DESERT_TENT:
         musicTrack = 0xf;
         break;
     case MAP_OBJECT_STONE_LITHS:
-        musicTrack = 0x10;
+        musicTrack = MUSIC_TRACK_TELEPORT;
         break;
     case MAP_OBJECT_WAGON_CAMP:
-        musicTrack = 0x11;
+        musicTrack = MUSIC_TRACK_WAGON_CAMP;
         break;
     case MAP_OBJECT_WHIRLPOOL:
-        musicTrack = 0x19;
+        musicTrack = MUSIC_TRACK_WHIRLPOOL;
         break;
     default:
-        musicTrack = -1;
+        musicTrack = MUSIC_TRACK_NONE;
         break;
     }
-    if (musicTrack != -1) {
+    if (musicTrack != MUSIC_TRACK_NONE) {
         gpSoundManager->SwitchAmbientMusic(musicTrack);
         gbEventMusicPlaying = 1;
     } else {

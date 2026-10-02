@@ -1017,7 +1017,7 @@ void combatManager::DoVictory(signed char winningSide) {
     gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
     switch (winningSide) {
         case -1:
-            gpSoundManager->SwitchAmbientMusic(0x2b);
+            gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_BATTLE_LOST);
             DoLoseWindow();
             break;
         case 0:
@@ -1054,7 +1054,7 @@ void combatManager::DoVictory(signed char winningSide) {
                 || !(
                     m_playerId[winningSide] == -1 || !gbThisNetHumanPlayer[m_playerId[winningSide]]
                 )) {
-                gpSoundManager->SwitchAmbientMusic(0x2c);
+                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_BATTLE_WON);
                 m_winLoseWindow = new heroWindow(0x9f, 2, "wincmbt.bin");
                 if (m_winLoseWindow == NULL)
                     MemError();
@@ -1105,7 +1105,7 @@ void combatManager::DoVictory(signed char winningSide) {
                     m_heroes[winningSide]->ApplyBattleWinTemps();
                 if (m_heroes[1 - winningSide])
                     m_heroes[1 - winningSide]->ApplyBattleLossTemps();
-                gpSoundManager->SwitchAmbientMusic(0x2b);
+                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_BATTLE_LOST);
                 DoLoseWindow();
             }
             break;

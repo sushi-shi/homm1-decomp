@@ -228,7 +228,7 @@ void townManager::Close(void)
     gpResourceManager->Dispose(m_backgroundBitmap);
     gpWindowManager->RemoveWindow(m_townWindow);
     delete m_townWindow;
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpWindowManager->FadeScreen(1, 8, NULL);
     gpMouseManager->SetPointer(-1);
     m_active = 0;

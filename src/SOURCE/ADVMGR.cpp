@@ -398,7 +398,7 @@ void advManager::Close(void) {
 
     ClearBottomView();
     gpMouseManager->SetPointer(-1);
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpSoundManager->StopAllSamples();
     if (m_adventureBorder) {
         free(m_adventureBorder);
@@ -3635,7 +3635,7 @@ void advManager::ViewPuzzle(void) {
     short j;
 
     visibleCount = 0;
-    gpSoundManager->SwitchAmbientMusic(13);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_PUZZLE);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     puzzlePieces = gpResourceManager->GetIcon("puzzle.icn");
     for (j = 0; j < 48; j++)
@@ -5002,7 +5002,7 @@ void advManager::DimensionDoor(void) {
             NormalDialog("Dimension Door failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             UpdateRadar(1, 0);
         } else {
-            gpSoundManager->SwitchAmbientMusic(16);
+            gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_TELEPORT);
             TeleportTo(x, y, 0);
             gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
         }
@@ -5047,7 +5047,7 @@ void advManager::TownGate(void) {
         NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         return;
     }
-    gpSoundManager->SwitchAmbientMusic(16);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_TELEPORT);
     TeleportTo(
         gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_x,
         gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_y,

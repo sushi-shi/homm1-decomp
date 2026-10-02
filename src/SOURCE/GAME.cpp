@@ -1075,7 +1075,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
         window->BroadcastMessage(message);
     }
     if (!fromMenu)
-        gpSoundManager->SwitchAmbientMusic(0x30);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
     if (gpWindowManager->m_dialogResult == 0x385) {
@@ -2660,7 +2660,7 @@ signed char game::GetRandomNumTroops(signed char monsterType) {
 VA(0x004411e3, 0x3d)
 void game::TurnOnAIMusic(void) {
     gpSoundManager->StopAllSamples();
-    gpSoundManager->SwitchAmbientMusic(49);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_AI_TURN);
     gpSoundManager->m_musicReady = 0;
 }
 
@@ -3767,7 +3767,7 @@ void game::WaitForPlayer(char* text, int player) {
         gbAllBlack = 0;
         gpMouseManager->ReallyShowPointer();
         NormalDialog(text, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[player].m_color, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-        gpSoundManager->SwitchAmbientMusic(-1);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     }
 }
 
@@ -4032,7 +4032,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     prevReady = gpSoundManager->m_musicReady;
     gpSoundManager->m_musicReady = 1;
     oldTrack = gpSoundManager->m_currentTrack;
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpSoundManager->m_musicReady = prevReady;
 
     LogStr("Transmit Game Start");
@@ -4174,7 +4174,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     prevReady = gpSoundManager->m_musicReady;
     oldTrack = gpSoundManager->m_currentTrack;
     gpSoundManager->m_musicReady = 1;
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpSoundManager->m_musicReady = prevReady;
     while (!gbHeartbeatSeen) {
         PollSound();

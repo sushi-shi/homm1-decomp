@@ -247,7 +247,7 @@ int oldmain(void) {
 
     while (!leave) {
     mainMenu:
-        gpSoundManager->SwitchAmbientMusic(48);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
         if (!backdropLoaded) {
             if (gGameCommand != 4) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
@@ -464,7 +464,7 @@ int oldmain(void) {
             }
             gbGameOver = 0;
             if (giEndSequence == 2) {
-                gpSoundManager->SwitchAmbientMusic(54);
+                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(giCurTurn, 0, "", gCampaignSideNames[gpGame->m_campaignType - 1]);
             }
             if (gbShowHighScore) {
@@ -474,7 +474,7 @@ int oldmain(void) {
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
                 giHighScoreRank = -1;
-                gpSoundManager->SwitchAmbientMusic(48);
+                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
@@ -2175,7 +2175,7 @@ void ShowCongrats(void) {
 
     daysScore = GetBaseScore(giCurTurn);
     result = gpGame->m_difficultyRating * daysScore / 100;
-    gpSoundManager->SwitchAmbientMusic(54);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
     gpMouseManager->ReallyHidePointer();
     sprintf(gText, "congrats.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
