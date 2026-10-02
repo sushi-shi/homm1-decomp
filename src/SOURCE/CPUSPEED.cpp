@@ -29,12 +29,12 @@ int CPUSpeed(unsigned char cpuType)
     double divNs;
 
     switch (cpuType) {
-    case 3:
+    case CPU_FAMILY_386:
         clockNs = 62.5;
         ticks = (totalNs = (divNs = clockNs * 22.0) * divs) / tickPeriod;
         freq = ticks / TimeProcessor() * 16.0;
         break;
-    case 4:
+    case CPU_FAMILY_486:
         clockNs = 30.303030303030305;
         ticks = (totalNs = (divNs = clockNs * 24.0) * divs) / tickPeriod;
         freq = ticks / TimeProcessor() * 33.0;

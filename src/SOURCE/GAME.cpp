@@ -1084,14 +1084,14 @@ signed char game::NewGame(void) {
                 gMapDescription,
                 "The Griffons will protect you until you are ready to make your move."
             );
-            giMapSize = 0;
-            giMapDifficulty = 0;
+            giMapSize = MAP_SIZE_SMALL;
+            giMapDifficulty = MAP_DIFFICULTY_EASY;
         } else {
             strcpy(gMapName, "CNM51234.map");
             strcpy(gFullMapName, "Around the Bay");
             strcpy(gMapDescription, "A large island of tight passes with a circular feel.");
-            giMapSize = 1;
-            giMapDifficulty = 1;
+            giMapSize = MAP_SIZE_MEDIUM;
+            giMapDifficulty = MAP_DIFFICULTY_NORMAL;
         }
     }
     UpdateNewGameWindow();
@@ -1781,7 +1781,7 @@ void game::RandomizeEvents(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map[x][y];
-            if (cell->m_triggerType == 0x32)
+            if (cell->m_triggerType == MAP_OBJECT_SHADOW)
                 cell->m_flags |= MAP_CELL_OBJECT_SHADOW_ONLY;
             if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
                 switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
@@ -3639,7 +3639,8 @@ void game::RandomizeMine(signed char x, signed char y) {
     for (k = 0; k < MINE_FOOTPRINT_HEIGHT; k++) {
         for (j = 0; j < MINE_FOOTPRINT_WIDTH; j++) {
             if ((m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
-                && (m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
+                && (m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                       <= MAP_OBJECT_EVENT_LAST) {
                 m_map[x + j][y - k].m_secondaryTrigger |= bits;
             } else {
                 m_map[x + j][y - k].m_objectMetadata = mineIdx;
@@ -3789,7 +3790,7 @@ void game::ProcessRandomObjects(int castlesOnly) {
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_ARTIFACT:
                         cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT);
                         cellPtr->m_objectIndex = GetRandomArtifactId();
-                        m_randomArtifacts[cellPtr->m_objectIndex] = 36;
+                        m_randomArtifacts[cellPtr->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
                         break;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE:
                         RandomizeMine(x, y);
@@ -5006,19 +5007,19 @@ int game::CalcDifficultyRating(void) {
             total += 10;
         }
     }
-    if (giMapSize == 0) {
-    } else if (giMapSize == 1) {
+    if (giMapSize == MAP_SIZE_SMALL) {
+    } else if (giMapSize == MAP_SIZE_MEDIUM) {
         total += 10;
-    } else if (giMapSize == 2) {
+    } else if (giMapSize == MAP_SIZE_LARGE) {
         total += 20;
     }
-    if (giMapDifficulty == 0)
+    if (giMapDifficulty == MAP_DIFFICULTY_EASY)
         total += 20;
-    else if (giMapDifficulty == 1)
+    else if (giMapDifficulty == MAP_DIFFICULTY_NORMAL)
         total += 30;
-    else if (giMapDifficulty == 2)
+    else if (giMapDifficulty == MAP_DIFFICULTY_TOUGH)
         total += 40;
-    else if (giMapDifficulty == 3)
+    else if (giMapDifficulty == MAP_DIFFICULTY_IMPOSSIBLE)
         total += 50;
     return total;
 }

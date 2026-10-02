@@ -33,7 +33,11 @@ H1_ENUM_CONST_BEGIN(GamePlayerConstant)
     GAME_MINE_NONE = -1,
     GAME_TABLE_FREE = -1,
     GAME_RANDOM_SCAN_TRIES = 10000,
-    GAME_PLAYER_HIGH_BIT_SHIFT = 4
+    GAME_PLAYER_HIGH_BIT_SHIFT = 4,
+    // game::m_randomArtifacts holds the hero id carrying each random
+    // artifact (EVENTS pickup/trade), FREE when unused, and this past-the-
+    // hero-table id once ProcessRandomObjects has placed it on the map.
+    GAME_ARTIFACT_ON_MAP = 36
 H1_ENUM_CONST_END(GamePlayerConstant)
 
 // The calendar (Buka GameCalendarConstant): four seven-day weeks a month.

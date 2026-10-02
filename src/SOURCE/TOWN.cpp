@@ -82,10 +82,10 @@ void town::XformToCastle(void) {
 // argument and memory-limit calculation belong to its later revision.
 VA(0x0046422d, 0xa5)
 void town::View(void) {
-    if (giHighMemBuffer > 200)
-        gAdvDisposeLevel = 2;
+    if (giHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
+        gAdvDisposeLevel = ADV_DISPOSE_FULL;
     else
-        gAdvDisposeLevel = 1;
+        gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
 
     townManager* manager = gpTownManager;
     manager->SetTown(this);
@@ -93,7 +93,7 @@ void town::View(void) {
     gpExec->CallManager(gpTownManager);
     if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);
-    gAdvDisposeLevel = 0;
+    gAdvDisposeLevel = ADV_DISPOSE_NONE;
 }
 
 VA(0x004642d2, 0x152)

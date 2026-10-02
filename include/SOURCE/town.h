@@ -60,6 +60,12 @@ H1_ENUM_CONST_BEGIN(TownFootprintConstant)
     TOWN_CASTLE_FRAME_OFFSET = 12,
     TOWN_RANDOM_AGE = 10
 H1_ENUM_CONST_END(TownFootprintConstant)
+
+// town::View lets the resource manager release all adventure art
+// (ADV_DISPOSE_FULL) only above this much high memory, else part of it.
+H1_ENUM_CONST_BEGIN(TownViewConstant)
+    TOWN_VIEW_HIGH_MEMORY_LIMIT = 200
+H1_ENUM_CONST_END(TownViewConstant)
 // clang-format on
 
 #pragma pack(push, 1)

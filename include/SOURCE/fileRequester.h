@@ -61,6 +61,25 @@ H1_ENUM_CONST_BEGIN(MapHeaderConstant)
     MAP_EXTRA_VERSION = 1112
 H1_ENUM_CONST_END(MapHeaderConstant)
 
+// SMapHeader::size, giMapSize and game::m_mapSize: retail gMapSizeNames
+// ("Small", "Medium", "Large"); CalcDifficultyRating scores them.
+H1_ENUM_BEGIN(MapSize)
+    MAP_SIZE_SMALL = 0,
+    MAP_SIZE_MEDIUM = 1,
+    MAP_SIZE_LARGE = 2
+H1_ENUM_END(MapSize)
+
+// SMapHeader::difficulty, giMapDifficulty and game::m_mapDifficulty: retail
+// gMapDifficultyNames ("Easy", "Normal", "Tough", "Impossible",
+// "Forget It"); CalcDifficultyRating scores the first four.
+H1_ENUM_BEGIN(MapDifficulty)
+    MAP_DIFFICULTY_EASY = 0,
+    MAP_DIFFICULTY_NORMAL = 1,
+    MAP_DIFFICULTY_TOUGH = 2,
+    MAP_DIFFICULTY_IMPOSSIBLE = 3,
+    MAP_DIFFICULTY_FORGET_IT = 4
+H1_ENUM_END(MapDifficulty)
+
 // request.bin widget ids (Buka FileRequesterControlId, HoMM1 layout): the
 // scroll arrows, gutter and knob, the ten list rows from LIST_FIRST, the
 // filename entry and its prompt, and the map-info window's size, level and

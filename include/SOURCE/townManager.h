@@ -264,7 +264,14 @@ H1_ENUM_CONST_BEGIN(TownScreenConstant)
     TOWN_HERO_STRIP_Y = 0x163,
     TOWN_BANK_BOX_X = 0x222,
     TOWN_BANK_BOX_Y = 0x100,
-    TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8
+    TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8,
+    // strip's type argument (stored in strip::m_stripType, which HoMM1 never
+    // reads): the garrison strip with or without a visiting hero and the
+    // hero strip (Buka TOWN_CREST_FRAME_WITH/WITHOUT_HERO,
+    // TOWN_HERO_STRIP_FRAME_COUNT).
+    TOWN_CREST_FRAME_WITH_HERO = 1,
+    TOWN_CREST_FRAME_WITHOUT_HERO = 4,
+    TOWN_HERO_STRIP_FRAME_COUNT = 3
 H1_ENUM_CONST_END(TownScreenConstant)
 
 // rcrthero.bin widget ids: the two candidates' portraits, class labels and

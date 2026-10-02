@@ -113,7 +113,7 @@ void DDRestoreDisplayMode() {
     long result;
     if (lpDD != NULL) {
         result = lpDD->RestoreDisplayMode();
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDRestoreLineBase + 7);
     }
 }
@@ -140,7 +140,7 @@ void CreatePrimary(void) {
     lpDDSPrimary = DDCreateSurface(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 1);
     if (lpClipper != NULL) {
         result = lpDDSPrimary->SetClipper(NULL);
-        if (result != 0 && result != DDERR_NOCLIPPERATTACHED)
+        if (result != DD_OK && result != DDERR_NOCLIPPERATTACHED)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gCreatePrimaryLineBase + 10);
         lpClipper->Release();
         lpClipper = NULL;
@@ -156,13 +156,13 @@ void SetupClipper(void) {
 
     if (gConfig.gfx[giCurExe].fullScreen == 0) {
         result = lpDD->CreateClipper(0, &lpClipper, NULL);
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gSetupClipperLineBase + 8);
         result = lpClipper->SetHWnd(0, hwndApp);
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gSetupClipperLineBase + 13);
         result = lpDDSPrimary->SetClipper(lpClipper);
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gSetupClipperLineBase + 18);
     }
 }
@@ -177,7 +177,7 @@ void DDInitGraphics(void) {
     if (gbWinGraphBusy != FALSE)
         return;
     result = lpDirectDrawCreate(NULL, &lpDD, NULL);
-    if (result != 0)
+    if (result != DD_OK)
         DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 8);
     if (gConfig.gfx[giCurExe].fullScreen != 0) {
         SetMenuStatus(0);
@@ -185,14 +185,14 @@ void DDInitGraphics(void) {
             hwndApp,
             DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT
         );
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 20);
         result = lpDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 24);
     } else {
         result = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 31);
     }
     CreatePrimary();
@@ -361,7 +361,7 @@ void DDInitializePalette() {
             LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
         }
         ddrval = lpDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &lpDDPal, NULL);
-        if (ddrval != 0)
+        if (ddrval != DD_OK)
             DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitializePaletteLineBase + 63);
         SetPalette();
     }
@@ -378,7 +378,7 @@ BOOL DDSetPalette() {
     if (lpDDPal == NULL || lpDDSPrimary == NULL || lpDD == NULL)
         return TRUE;
     result = lpDDSPrimary->SetPalette(lpDDPal);
-    if (result != 0)
+    if (result != DD_OK)
         DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetPaletteLineBase + 20);
     return FALSE;
 }
@@ -410,11 +410,11 @@ struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long he
         ddsd.dwWidth = width;
     }
     ddrval = lpDD->CreateSurface(&ddsd, &lpSurface, NULL);
-    if (ddrval != 0)
+    if (ddrval != DD_OK)
         DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDCreateSurfaceLineBase + 28);
     if (primary == 0) {
         ddrval = lpSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
-        if (ddrval != 0)
+        if (ddrval != DD_OK)
             DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDCreateSurfaceLineBase + 36);
         if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(ddsd.lpSurface);
@@ -573,7 +573,7 @@ void DDUpdatePalette(signed char* paletteData) {
         WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
-    if (res != 0)
+    if (res != DD_OK)
         DDSD(res, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
 }
 
@@ -591,7 +591,7 @@ void DDCleanUpWinGraphics(void) {
         if (lpClipper != NULL) {
             if (lpDDSPrimary != NULL) {
                 result = lpDDSPrimary->SetClipper(NULL);
-                if (result != 0 && result != DDERR_NOCLIPPERATTACHED)
+                if (result != DD_OK && result != DDERR_NOCLIPPERATTACHED)
                     DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDCleanUpLineBase + 14);
             }
             lpClipper->Release();
@@ -610,7 +610,7 @@ void DDCleanUpWinGraphics(void) {
             lpDDPal = NULL;
         }
         result = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
-        if (result != 0)
+        if (result != DD_OK)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDCleanUpLineBase + 38);
         lpDD->Release();
         lpDD = NULL;
