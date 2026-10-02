@@ -7,6 +7,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <BASE/Misc.h>
+#include <SOURCE/PATH.h>
 #include <SOURCE/REMOTE.h>
 
 #include <stdio.h>
@@ -253,11 +254,131 @@ void combatManager::SetCombatDirections(int targetHex)
     curArmy->m_targetIndex = targetIndex;
 }
 
-// donor PoL RVA 0x0002b45f; preferred Buka symbol ?CheckSetMouseDirection@combatManager@@QAEXHHH@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.473098;margin=0.353023;shape=0.247;size=0.891;calls=0.857;alternate=pol20:void combatManager::CheckSetMouseDirection(int, int, int)@0x0002b45f
+// Buka COMMAND.cpp CheckSetMouseDirection; HoMM1 hexes are 78 by 80 and
+// odd rows shift by 66 pixels.
 VA(0x0040fe90, 0x620)
-void combatManager::CheckSetMouseDirection(int, int, int) {}
+void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex)
+{
+    int hexDir;
+    int savedDir;
+    int alternate;
+    float ratio;
+    int index;
+    army *curArmy;
+    int distX;
+    int distY;
+    army *target;
+    int backHex;
+
+    if (m_gridSelectionDisabled)
+        return;
+    if (m_validDirectionCount <= 1 && m_mouseDirection >= 0)
+        return;
+    distX = mouseX - (targetHex % 9 - 1) * 78;
+    if ((targetHex / 9) & 1)
+        distX -= 0x42;
+    else
+        distX -= 0x1b;
+    distY = mouseY - 0x3c - targetHex / 9 * 80;
+    distX -= 0x27;
+    distY -= 0x28;
+    index = 0;
+    if (distX < 0) {
+        if (distY < 0)
+            index += 18;
+        else
+            index += 12;
+    } else {
+        if (distY < 0)
+            index += 0;
+        else
+            index += 6;
+    }
+    distX = abs(distX);
+    distY = abs(distY);
+    ratio = (float)distX / ((float)distY);
+    if (index == 0 || index == 12) {
+        if (ratio > 3.73)
+            index += 5;
+        else if (ratio > 1.73)
+            index += 4;
+        else if (ratio > 1.0f)
+            index += 3;
+        else if (ratio > 0.58)
+            index += 2;
+        else if (ratio > 0.27)
+            index++;
+    } else {
+        if (ratio < 0.27)
+            index += 5;
+        else if (ratio < 0.58)
+            index += 4;
+        else if (ratio < 1.0f)
+            index += 3;
+        else if (ratio < 1.73)
+            index += 2;
+        else if (ratio < 3.73)
+            index++;
+    }
+    if (m_directionMap[index] == m_mouseDirection)
+        return;
+    m_mouseDirection = m_directionMap[index];
+    hexDir = OppositeDirection(m_directionMap[index]);
+    savedDir = hexDir;
+    alternate = -1;
+    curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    target = &m_armies[curArmy->m_targetSide][curArmy->m_targetIndex];
+    if (hexDir == 6 || hexDir == 7) {
+        if (curArmy->m_attributes & 1) {
+            if (curArmy->m_facing == 0 && hexDir == 6) {
+                hexDir = 5;
+                alternate = 0;
+            } else if (curArmy->m_facing == 0 && hexDir == 7) {
+                hexDir = 3;
+                alternate = 2;
+            } else if (curArmy->m_facing == 1 && hexDir == 6) {
+                hexDir = 0;
+                alternate = 5;
+            } else {
+                hexDir = 2;
+                alternate = 3;
+            }
+        } else {
+            if (m_hexCells[targetHex - 1].m_occupantSide == curArmy->m_targetSide
+                && m_hexCells[targetHex - 1].m_occupantIndex == curArmy->m_targetIndex)
+                targetHex--;
+            if (hexDir == 6)
+                hexDir = 0;
+            else
+                hexDir = 2;
+        }
+    } else {
+        if (curArmy->m_facing == 0 && (curArmy->m_attributes & 1)) {
+            if (hexDir == 5 || hexDir == 4 || hexDir == 3)
+                targetHex--;
+        } else if (curArmy->m_facing == 1 && (curArmy->m_attributes & 1)
+                   && (hexDir == 0 || hexDir == 1 || hexDir == 2))
+            targetHex++;
+    }
+    m_directionTargetHex = gCombatAdjacency[targetHex][hexDir];
+    backHex = -2;
+    if (curArmy->m_facing == 1 && (curArmy->m_attributes & 1))
+        backHex = m_directionTargetHex - 1;
+    if (curArmy->m_facing == 0 && (curArmy->m_attributes & 1))
+        backHex = m_directionTargetHex + 1;
+    if (!ValidHexToStandOn(m_directionTargetHex) || !ValidHexToStandOn(backHex)) {
+        if ((curArmy->m_attributes & 1) && (savedDir == 6 || savedDir == 7)) {
+            if (curArmy->m_facing == 0)
+                m_directionTargetHex += 1;
+            else
+                m_directionTargetHex -= 1;
+        } else {
+            if (alternate != -1)
+                m_directionTargetHex = gCombatAdjacency[targetHex][alternate];
+        }
+    }
+    gpMouseManager->SetPointer(m_mouseDirection + 7);
+}
 
 // Buka GetPointer precedes ProcessCombatMsg. HoMM1's sole caller passes one
 // command and retail maps command 13 to pointer 5, preserving all others.
