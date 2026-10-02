@@ -1248,8 +1248,8 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
 VA(0x0040c478, 0x3a0)
 void townManager::BuildObj(short building)
 {
-    short index;
-    SAMPLE2 buildSample;
+    short i;
+    SAMPLE2 sample;
 
     gpMouseManager->ReallyHidePointer();
     DrawTown(1, 1);
@@ -1264,18 +1264,18 @@ void townManager::BuildObj(short building)
         m_town->m_garrison[building - TOWN_BUILDING_FIRST_DWELLING] =
             gMonsterDatabase[gDwellingType[m_town->m_type][building - TOWN_BUILDING_FIRST_DWELLING]]
                 .growth;
-    for (index = 0; index < m_townObjectCount; index++) {
-        if (m_townObjects[index]->m_buildingId == building) {
-            m_townObjects[index]->m_visible = 1;
-            m_townObjects[index]->m_border->m_flags |= TOWN_OBJECT_ENABLED_FLAG;
+    for (i = 0; i < m_townObjectCount; i++) {
+        if (m_townObjects[i]->m_buildingId == building) {
+            m_townObjects[i]->m_visible = 1;
+            m_townObjects[i]->m_border->m_flags |= TOWN_OBJECT_ENABLED_FLAG;
         }
     }
     if (building == TOWN_BUILDING_CASTLE) {
         m_town->m_buildings &= ~(1 << TOWN_BUILDING_TENT);
-        for (index = 0; index < m_townObjectCount; index++) {
-            if (m_townObjects[index]->m_buildingId == TOWN_BUILDING_TENT) {
-                m_townObjects[index]->m_visible = 0;
-                m_townObjects[index]->m_border->m_flags &= ~TOWN_OBJECT_ENABLED_FLAG;
+        for (i = 0; i < m_townObjectCount; i++) {
+            if (m_townObjects[i]->m_buildingId == TOWN_BUILDING_TENT) {
+                m_townObjects[i]->m_visible = 0;
+                m_townObjects[i]->m_border->m_flags &= ~TOWN_OBJECT_ENABLED_FLAG;
             }
         }
     }
@@ -1284,13 +1284,13 @@ void townManager::BuildObj(short building)
                                       gTownBuildingExtents[m_town->m_type][building].width,
                                       gTownBuildingExtents[m_town->m_type][building].height);
     DrawTown(0, 1);
-    buildSample = NULL_SAMPLE2;
-    buildSample = LoadPlaySample("buildtwn.82M");
+    sample = NULL_SAMPLE2;
+    sample = LoadPlaySample("buildtwn.82M");
     gpWindowManager->FizzleForward(gTownBuildingExtents[m_town->m_type][building].x,
                                    gTownBuildingExtents[m_town->m_type][building].y,
                                    gTownBuildingExtents[m_town->m_type][building].width,
                                    gTownBuildingExtents[m_town->m_type][building].height, -1);
-    WaitEndSample(buildSample, -1);
+    WaitEndSample(sample, -1);
     m_selectedBuilding = -1;
     m_bankBox->Update();
     m_townWindow->DrawWindow();
