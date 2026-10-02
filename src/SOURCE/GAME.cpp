@@ -3194,12 +3194,12 @@ void game::PerDay(void) {
 // map's renewable sites.
 VA(0x00441e09, 0x84b)
 void game::PerWeek(void) {
+    short posY;
+    short posX;
     short gain;
     town* townPointer;
     short j;
     short i;
-    short y;
-    short x;
     int heroClass = 0;
 
     giWeekType = 0;
@@ -3238,43 +3238,43 @@ void game::PerWeek(void) {
             gpGame->m_players[i].m_availableHeroIds[j] = gpGame->GetNewHeroId(heroClass);
         }
     }
-    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
-        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            switch (m_map[x][y].m_triggerType) {
+    for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
+        for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
+            switch (m_map[posX][posY].m_triggerType) {
                 case 0x98:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata != 0xff)
-                        m_map[x][y].m_objectMetadata = 2;
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata != 0xff)
+                        m_map[posX][posY].m_objectMetadata = 2;
                     break;
                 case 0xad:
-                    m_map[x][y].m_objectMetadata = Random(1, 5);
+                    m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
                 case 0x8d:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(3, 6);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
                     break;
                 case 0x8e:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(5, 10);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
                     break;
                 case 0x8f:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(2, 4);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
                     break;
                 case 0x90:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(2, 4);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
                     break;
                 case 0x91:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(5, 10);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
                     break;
                 case 0xa7:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(1, 3);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(1, 3);
                     break;
                 case 0xaa:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(3, 6);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
                     break;
                 default:
                     break;
