@@ -20,8 +20,12 @@
 extern char* cCombatBkgNames[];
 extern char* cCombatGroundNames[];
 extern char* cCombatObstacleNames[];
+// CheckApplyGoodMorale grants one extra turn at a time.
+DATA(0x00490d50)
+int bInHighMoraleBonus;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
-extern int giSeed;
+DATA(0x00490d54)
+int giSeed;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
@@ -612,23 +616,125 @@ short combatManager::GetGridIndex(short x, short y)
         return y * 9 + x;
 }
 
-// donor PoL RVA 0x0009290f; preferred Buka symbol ?CheckApplyGoodMorale@combatManager@@QAEXHH@Z
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.635108;margin=0.421439;shape=0.300;size=0.934;calls=0.800;strings=goodmrle.82M;alternate=pol20:void combatManager::CheckApplyGoodMorale(int, int)@0x0009290f
+// Buka CMBTMGR.cpp CheckApplyGoodMorale; HoMM1 rolls the group's morale.
 VA(0x0044d422, 0x1d9)
-void combatManager::CheckApplyGoodMorale(int, int) {}
+void combatManager::CheckApplyGoodMorale(int side, int index)
+{
+    armyGroup* theGroup;
+    army* activeArmy;
+    SAMPLE2 sample;
+    int morale;
 
-// donor PoL RVA 0x00092afa; preferred Buka symbol ?CheckApplyBadMorale@combatManager@@QAEHHH@Z
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.593667;margin=0.185214;shape=0.274;size=0.824;calls=0.800;strings=BADMRLE.82M;alternate=pol20:int combatManager::CheckApplyBadMorale(int, int)@0x00092afa
+    if (side < 0 || index < 0)
+        return;
+    if (bInHighMoraleBonus) {
+        bInHighMoraleBonus = 0;
+        return;
+    }
+    bInHighMoraleBonus = 0;
+    theGroup = m_armyGroups[side];
+    activeArmy = &m_armies[side][index];
+    if (!activeArmy->m_quantity)
+        return;
+    morale = theGroup->GetMorale(m_heroes[side], m_combatTowns[side]);
+    if (morale <= 0 || SRandom(1, 24) > morale)
+        return;
+    bInHighMoraleBonus = 1;
+    sprintf(gText, "goodmrle.82M");
+    sample = LoadPlaySample(gText);
+    if (activeArmy->m_quantity <= 1)
+        sprintf(gText, "High morale enables the %s to attack again.", gArmyNames[activeArmy->m_creatureType]);
+    else
+        sprintf(gText, "High morale enables the %s to attack again.", gArmyNamesPlural[activeArmy->m_creatureType]);
+    CombatMessage(gText, 1);
+    activeArmy->SpellEffect(24, 180);
+    activeArmy->ResetAnimation(1);
+    if (activeArmy->m_stats.attributes & 0x80)
+        activeArmy->m_stats.attributes -= 0x80;
+    activeArmy->m_stats.attributes |= 0x20;
+    WaitEndSample(sample, -1);
+}
+
+// Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
+// in four.
 VA(0x0044d5fb, 0x1c6)
-int combatManager::CheckApplyBadMorale(int, int) { return 0; }
+int combatManager::CheckApplyBadMorale(int side, int index)
+{
+    armyGroup* theGroup;
+    army* activeArmy;
+    SAMPLE2 sample;
+    int morale;
 
-// donor PoL RVA 0x00092cc7; preferred Buka symbol ?GetNextArmy@combatManager@@QAEHH@Z
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.362089;margin=0.657323;shape=0.226;size=0.622;calls=0.750;alternate=pol20:int combatManager::GetNextArmy(int)@0x00092cc7
+    if (side < 0 || index < 0)
+        return 0;
+    theGroup = m_armyGroups[side];
+    activeArmy = &m_armies[side][index];
+    morale = theGroup->GetMorale(m_heroes[side], m_combatTowns[side]);
+    if (morale >= 0 || SRandom(1, 12) > -morale)
+        return 0;
+    if (!m_unknown2b8[side] && SRandom(1, 4) == 1)
+        return 0;
+    sample = NULL_SAMPLE2;
+    sample = LoadPlaySample("BADMRLE.82M");
+    if (activeArmy->m_quantity <= 1)
+        sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNames[activeArmy->m_creatureType]);
+    else
+        sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNamesPlural[activeArmy->m_creatureType]);
+    CombatMessage(gText, 1);
+    activeArmy->m_unknown09 = 2;
+    activeArmy->SpellEffect(25, 180);
+    activeArmy->ResetAnimation(1);
+    activeArmy->m_stats.attributes |= 0x80;
+    WaitEndSample(sample, -1);
+    return 1;
+}
+
+// Buka CMBTMGR.cpp GetNextArmy: the fastest unspent stack, alternating
+// sides, high-morale stacks first.
 VA(0x0044d7c1, 0x209)
-signed char combatManager::GetNextArmy(int) { return 0; }
+signed char combatManager::GetNextArmy(int checkMorale)
+{
+    army* pArmy;
+    signed char iSpeed;
+    int sideIter;
+    short temp;
+    signed char stackCounter;
+    signed char stackSide;
+    int bSkip;
+
+    stackSide = m_currentSide;
+    for (iSpeed = 0; iSpeed < 5; iSpeed++) {
+        for (sideIter = 0; sideIter < 2; sideIter++) {
+            stackSide ^= 1;
+            for (stackCounter = 0; stackCounter < m_numArmies[stackSide]; stackCounter++) {
+                bSkip = 0;
+                pArmy = &m_armies[stackSide][stackCounter];
+                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == 0x12 || pArmy->m_spellEffect == 7
+                    || (pArmy->m_stats.speed != m_currentSpeed && !(pArmy->m_stats.attributes & 0x20)))
+                    bSkip = 1;
+                if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & 0x20))
+                    bSkip = 1;
+                if (!bSkip && checkMorale && CheckApplyBadMorale(stackSide, stackCounter))
+                    bSkip = 1;
+                if (!bSkip)
+                    break;
+            }
+            if (m_numArmies[stackSide] != stackCounter) {
+                m_currentSide = stackSide;
+                m_currentArmyIndex = stackCounter;
+                GetControl();
+                return 1;
+            }
+        }
+        if (iSpeed) {
+            m_currentSpeed--;
+            if (!m_currentSpeed)
+                m_currentSpeed = 4;
+        }
+    }
+    GetControl();
+    return 0;
+}
 
 // Buka CMBTMGR.cpp IsWinner: the other side surrendered, retreated or has
 // no live stack left.
