@@ -18,6 +18,28 @@ H1_ENUM_BEGIN(RemoteBoxCommand)
     BOX_REMOTE_SETUP = 0x1f
 H1_ENUM_END(RemoteBoxCommand)
 
+// clang-format off
+// RemoteMessage::command values (TransmitRemoteData's command argument and
+// the receivers' switches). The save-game transfer (TransmitSaveGame /
+// ReceiveSaveGame) and the hero/town exchange before a networked battle
+// follow Buka 2.1's GAME.cpp RemoteSaveConstant and EVENTS.cpp
+// CombatRemoteCommand numbering; chat text (PopNetBox), combat actions
+// (ProcessNextAction) and the exit notice (HandleRemote*Exit) complete it.
+// SAVE_INIT and SETUP are the RemoteBoxCommand values.
+H1_ENUM_BEGIN(RemoteCommand)
+    REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
+    REMOTE_COMMAND_SAVE_DATA = 3,
+    REMOTE_COMMAND_SAVE_ACK_REQUEST = 4,
+    REMOTE_COMMAND_SAVE_ACK_RESPONSE = 5,
+    REMOTE_COMMAND_SAVE_FINISH = 6,
+    REMOTE_COMMAND_CHAT = 11,
+    REMOTE_COMMAND_HERO_TOWN_DATA = 0x15,
+    REMOTE_COMMAND_HERO_TOWN_CONFIRM = 0x16,
+    REMOTE_COMMAND_COMBAT_ACTION = 0x17,
+    REMOTE_COMMAND_PLAYER_EXIT = 30
+H1_ENUM_END(RemoteCommand)
+// clang-format on
+
 H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_BROADCAST_PLAYER = 0x7f,
     REMOTE_MESSAGE_HEADER_SIZE = 9,
@@ -25,7 +47,10 @@ H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_QUEUE_CAPACITY = 7,
     REMOTE_RECENT_ID_COUNT = 30,
     REMOTE_RETRY_COUNT = 7,
-    REMOTE_CONFIRM_POLL_COUNT = 200
+    REMOTE_CONFIRM_POLL_COUNT = 200,
+    // InitNetHost/InitNetGuest try the NetBIOS names HHOST0../HGUEST1.. up to
+    // this suffix before reporting every game slot used.
+    REMOTE_NET_NAME_LAST = 10
 H1_ENUM_CONST_END(RemoteConstant)
 
 H1_ENUM_BEGIN(RemoteGameMode)
@@ -33,14 +58,23 @@ H1_ENUM_BEGIN(RemoteGameMode)
     REMOTE_GAME_NETWORK_HOST = 1,
     REMOTE_GAME_NETWORK_GUEST = 2,
     REMOTE_GAME_MODEM_HOST = 3,
-    REMOTE_GAME_MODEM_GUEST = 4
+    REMOTE_GAME_MODEM_GUEST = 4,
+    REMOTE_GAME_UNSET = 10
 H1_ENUM_END(RemoteGameMode)
 
 H1_ENUM_BEGIN(MultiplayerBaseType)
     MULTIPLAYER_BASE_MODEM = 0,
     MULTIPLAYER_BASE_NETWORK = 1,
-    MULTIPLAYER_BASE_HOT_SEAT = 2
+    MULTIPLAYER_BASE_HOT_SEAT = 2,
+    MULTIPLAYER_BASE_UNSET = 10
 H1_ENUM_END(MultiplayerBaseType)
+
+// UnloadRemoteDriver's driver: the serial (com_*) driver for modem and direct
+// connect games, NetBIOS (nb_*) for network games (RemoteCleanup).
+H1_ENUM_BEGIN(RemoteDriverType)
+    REMOTE_DRIVER_SERIAL = 0,
+    REMOTE_DRIVER_NETBIOS = 1
+H1_ENUM_END(RemoteDriverType)
 
 // DecodePacket/EncodePacket frame every wire packet with this six-byte header.
 #pragma pack(push, 1)
@@ -121,7 +155,7 @@ int TransmitAndWait(char*, int, int, signed char, signed char, char**);
 signed char NetPosToGamePos(int);
 signed char WaitForOtherPlayer(void);
 void RemoteCleanup(void);
-void UnloadRemoteDriver(short);
+void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short));
 long FileSize(char*);
 void WriteModemPacket(char*, int);
 char ReadPacket(void);

@@ -10,6 +10,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/combatTypes.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
@@ -142,8 +143,8 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         wnd->BroadcastMessage(message);
     }
     if (allowActions == 0 || m_currentSide != giCurGeneral
-        || (giCurGeneral == 0 && m_combatTowns[0] != NULL)
-        || m_sideRetreated[0] != 0 || m_sideRetreated[1] != 0) {
+        || (giCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
+        || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0 || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = GENERAL_RETREAT;
         message.value = WIDGET_FLAG_ENABLED;
@@ -274,7 +275,7 @@ void combatManager::ViewArmy(army* viewedArmy, int side, int quickView)
     viewYOffset = 164;
     xPos = m_hexCells[viewedArmy->m_hex].m_x;
     yPos = m_hexCells[viewedArmy->m_hex].m_y;
-    xAdjust = (viewedArmy->m_facing == 1 ? 43 : 0) + 80;
+    xAdjust = (viewedArmy->m_facing == ARMY_FACING_LEFT ? 43 : 0) + 80;
     xPos -= xAdjust;
     if (xPos < 0)
         xPos = 0;

@@ -9,7 +9,7 @@ H1_ENUM_BEGIN(SamplePlaybackChannel)
     SAMPLE_PLAYBACK_CHANNEL_NONE = 4
 H1_ENUM_END(SamplePlaybackChannel)
 
-// clang-format off
+    // clang-format off
 // Miles sample settings a resource sample is created with: full AIL sample
 // volume (0..127, MSS.H DEFAULT_DDV) and a loop count of one pass (0 loops forever).
 H1_ENUM_CONST_BEGIN(SampleDefaultConstant)
@@ -19,8 +19,8 @@ H1_ENUM_CONST_END(SampleDefaultConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-// MemorySample addresses these fields through one sub-object pointer.
-struct SamplePlaybackData {
+                       // MemorySample addresses these fields through one sub-object pointer.
+                       struct SamplePlaybackData {
     struct _SAMPLE* activeSample;
     signed char* data;
     long size;

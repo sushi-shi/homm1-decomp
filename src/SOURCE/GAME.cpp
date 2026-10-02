@@ -200,11 +200,13 @@ void ComputeUALoc(int player) {
                 y = -1;
                 heading = 0;
                 tries = 0;
-                while (!(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                         && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
-                         && gpGame->m_map[x][y].m_objectIndex == 0xff
-                         && gpGame->m_map[x][y].m_overlayIndex == 0xff
-                         && gpGame->m_map[x][y].m_tileIndex >= 20)) {
+                while (
+                    !(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
+                      && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
+                      && gpGame->m_map[x][y].m_objectIndex == 0xff
+                      && gpGame->m_map[x][y].m_overlayIndex == 0xff
+                      && gpGame->m_map[x][y].m_tileIndex >= 20)
+                ) {
                     tries++;
                     heading = 0;
                     while (heading == 0)
@@ -269,7 +271,8 @@ signed char game::IsMobile(signed char heroId) {
     if (heroId == -1)
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
-    int terrain = giGroundToTerrain[gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y)->m_tileIndex];
+    int terrain =
+        giGroundToTerrain[gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y)->m_tileIndex];
     return mobileHero->m_remainingMobility >= CalcTerrainCost(
                terrain,
                mobileHero->m_direction & 1,
@@ -280,9 +283,7 @@ signed char game::IsMobile(signed char heroId) {
 
 // Buka 2.1 game::GetWorldMapData.
 VA(0x00439926, 0x1e)
-mapCell (*game::GetWorldMapData(void))[MAP_CELL_GRID_SIZE] {
-    return m_map;
-}
+mapCell (*game::GetWorldMapData(void)) [MAP_CELL_GRID_SIZE] { return m_map; }
 
 // Buka 2.1 game::CreateBoat without the network map-change notice.
 VA(0x00439944, 0xd9)
@@ -380,8 +381,8 @@ signed char game::GetMineId(signed char x, signed char y) {
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.427111;margin=0.052277;shape=0.267;size=0.694;calls=1.000;alternate=pol20:void GenerateStandardFileName(char *, char *)@0x00071d89
 VA(0x00439d14, 0x129)
-void GenerateStandardFileName(char *source, char *destination) {
-    char *extension;
+void GenerateStandardFileName(char* source, char* destination) {
+    char* extension;
     int indexOut;
     int idx;
     char character;
@@ -763,7 +764,17 @@ short NewGameHandler(tag_message& message) {
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gNewGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    NormalDialog(
+                        gNewGameHelp[helpIndex],
+                        NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                        -1,
+                        -1,
+                        NORMAL_DIALOG_NO_RESOURCE,
+                        0,
+                        NORMAL_DIALOG_NO_RESOURCE,
+                        0,
+                        NORMAL_DIALOG_NO_OR_TEXT
+                    );
             }
         } else {
             switch (message.command) {
@@ -776,27 +787,40 @@ short NewGameHandler(tag_message& message) {
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
-                                NormalDialog("A game requires at least one iPlayer.", NORMAL_DIALOG_TYPE_OK, 0xb1, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                                NormalDialog(
+                                    "A game requires at least one iPlayer.",
+                                    NORMAL_DIALOG_TYPE_OK,
+                                    0xb1,
+                                    0x3c,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_OR_TEXT
+                                );
                                 break;
                             } else {
                                 if (!gpGame->m_players[1].m_difficulty) {
                                     if (gpGame->m_players[2].m_difficulty) {
-                                        gpGame->m_players[1].m_difficulty = gpGame->m_players[2].m_difficulty;
+                                        gpGame->m_players[1].m_difficulty =
+                                            gpGame->m_players[2].m_difficulty;
                                         gpGame->m_players[2].m_difficulty = 0;
                                     } else {
-                                        gpGame->m_players[1].m_difficulty = gpGame->m_players[3].m_difficulty;
+                                        gpGame->m_players[1].m_difficulty =
+                                            gpGame->m_players[3].m_difficulty;
                                         gpGame->m_players[3].m_difficulty = 0;
                                     }
                                 }
-                                if (!gpGame->m_players[2].m_difficulty && gpGame->m_players[3].m_difficulty) {
-                                    gpGame->m_players[2].m_difficulty = gpGame->m_players[3].m_difficulty;
+                                if (!gpGame->m_players[2].m_difficulty
+                                    && gpGame->m_players[3].m_difficulty) {
+                                    gpGame->m_players[2].m_difficulty =
+                                        gpGame->m_players[3].m_difficulty;
                                     gpGame->m_players[3].m_difficulty = 0;
                                 }
                             }
                         case NEW_GAME_CANCEL:
                             gpWindowManager->m_dialogResult = message.id;
-                            message.command = message.id =
-                                WIDGET_COMMAND_DIALOG_SELECT;
+                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
                         default:
                             break;
@@ -816,11 +840,13 @@ short NewGameHandler(tag_message& message) {
                             iPlayer = message.id - NEW_GAME_OPPONENT_TOGGLE_BASE;
                             gpGame->m_players[iPlayer].m_difficulty++;
                             gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
-                            if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
+                            if (giNumHumanPlayers > iPlayer
+                                && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
                         case NEW_GAME_COLOR:
-                            gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % GAME_PLAYER_COUNT;
+                            gpGame->m_players[0].m_color =
+                                (gpGame->m_players[0].m_color + 1) % GAME_PLAYER_COUNT;
                             break;
                         case NEW_GAME_KING_OF_THE_HILL:
                             gbIAmGreatest = 1 - gbIAmGreatest;
@@ -896,7 +922,8 @@ void game::UpdateNewGameWindow(void) {
     message.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[0].m_color != -1) {
         message.id = NEW_GAME_COLOR;
-        message.value = m_players[0].m_color * NEW_GAME_FRAME_CREST_STRIDE + NEW_GAME_FRAME_CREST_BASE;
+        message.value =
+            m_players[0].m_color * NEW_GAME_FRAME_CREST_STRIDE + NEW_GAME_FRAME_CREST_BASE;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
@@ -928,11 +955,11 @@ H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
     REINFORCEMENT_TIER_FOUR_COUNT_MIN = 1,
     REINFORCEMENT_TIER_FOUR_COUNT_MAX = 3
 H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
-// clang-format on
+ // clang-format on
 
-// Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
-// unowned town on the map gains a random tier of its own creatures.
-VA(0x0043b7e5, 0x2c3)
+ // Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
+ // unowned town on the map gains a random tier of its own creatures.
+ VA(0x0043b7e5, 0x2c3)
 void game::GiveTroopsToNeutralTowns(void) {
     int howMany;
     int die;
@@ -944,16 +971,20 @@ void game::GiveTroopsToNeutralTowns(void) {
             die = Random(REINFORCEMENT_ROLL_MIN, REINFORCEMENT_ROLL_MAX);
             if (die <= REINFORCEMENT_TIER_ONE_THRESHOLD) {
                 tier = REINFORCEMENT_TIER_ONE_KEY;
-                howMany = Random(REINFORCEMENT_TIER_ONE_COUNT_MIN, REINFORCEMENT_TIER_ONE_COUNT_MAX);
+                howMany =
+                    Random(REINFORCEMENT_TIER_ONE_COUNT_MIN, REINFORCEMENT_TIER_ONE_COUNT_MAX);
             } else if (die <= REINFORCEMENT_TIER_TWO_THRESHOLD) {
                 tier = REINFORCEMENT_TIER_TWO_KEY;
-                howMany = Random(REINFORCEMENT_TIER_TWO_COUNT_MIN, REINFORCEMENT_TIER_TWO_COUNT_MAX);
+                howMany =
+                    Random(REINFORCEMENT_TIER_TWO_COUNT_MIN, REINFORCEMENT_TIER_TWO_COUNT_MAX);
             } else if (die <= REINFORCEMENT_TIER_THREE_THRESHOLD) {
                 tier = REINFORCEMENT_TIER_THREE_KEY;
-                howMany = Random(REINFORCEMENT_TIER_THREE_COUNT_MIN, REINFORCEMENT_TIER_THREE_COUNT_MAX);
+                howMany =
+                    Random(REINFORCEMENT_TIER_THREE_COUNT_MIN, REINFORCEMENT_TIER_THREE_COUNT_MAX);
             } else {
                 tier = REINFORCEMENT_TIER_FOUR_KEY;
-                howMany = Random(REINFORCEMENT_TIER_FOUR_COUNT_MIN, REINFORCEMENT_TIER_FOUR_COUNT_MAX);
+                howMany =
+                    Random(REINFORCEMENT_TIER_FOUR_COUNT_MIN, REINFORCEMENT_TIER_FOUR_COUNT_MAX);
             }
             switch (m_castleRecs[i].m_type + tier) {
                 case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_KNIGHT:
@@ -1043,7 +1074,10 @@ signed char game::NewGame(void) {
         if (giNumHumanPlayers == 1) {
             strcpy(gMapName, "AES31000.map");
             strcpy(gFullMapName, "Claw ( Easy )");
-            strcpy(gMapDescription, "The Griffons will protect you until you are ready to make your move.");
+            strcpy(
+                gMapDescription,
+                "The Griffons will protect you until you are ready to make your move."
+            );
             giMapSize = 0;
             giMapDifficulty = 0;
         } else {
@@ -1134,7 +1168,17 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
     if (gpWindowManager->m_dialogResult == CAMPAIGN_INFO_RESTART) {
-        NormalDialog("Are you sure you want to restart this scenario?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog(
+            "Are you sure you want to restart this scenario?",
+            NORMAL_DIALOG_TYPE_YES_NO,
+            -1,
+            -1,
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_OR_TEXT
+        );
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
@@ -1287,7 +1331,8 @@ void game::NewMap(char* mapName) {
             }
         }
         if (m_noMapHeroes
-            || (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && i == 0)) {
+            || (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7
+                && i == 0)) {
             m_players[i].m_heroCount = 1;
             if (m_campaignType > 0)
                 m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_color]);
@@ -1339,8 +1384,10 @@ void game::NewMap(char* mapName) {
         for (j = 0; j < m_players[i].m_heroCount; j++) {
             heroX = m_heroRecs[m_players[i].m_heroIds[j]].m_x;
             heroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
-            m_heroRecs[m_players[i].m_heroIds[j]].m_locationType = m_map[heroX][heroY].m_triggerType;
-            m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown = m_map[heroX][heroY].m_objectMetadata;
+            m_heroRecs[m_players[i].m_heroIds[j]].m_locationType =
+                m_map[heroX][heroY].m_triggerType;
+            m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown =
+                m_map[heroX][heroY].m_objectMetadata;
             m_map[heroX][heroY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
             m_map[heroX][heroY].m_objectMetadata = m_players[i].m_heroIds[j];
         }
@@ -1352,7 +1399,8 @@ void game::NewMap(char* mapName) {
     i = Random(9, 62);
     j = Random(9, 62);
     ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
-    while (m_map[i][j].m_objectIndex != 0xff || m_map[i][j].m_overlayIndex != 0xff || m_map[i][j].m_tileIndex < 20
+    while (m_map[i][j].m_objectIndex != 0xff || m_map[i][j].m_overlayIndex != 0xff
+           || m_map[i][j].m_tileIndex < 20
            || (giNumHumanPlayers == 1
                && abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
                           + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y)
@@ -1373,7 +1421,11 @@ void game::NewMap(char* mapName) {
         } else {
             difficulty = 0;
         }
-        memcpy(m_players[i].m_resources, gStartingResources[difficulty], sizeof(m_players[i].m_resources));
+        memcpy(
+            m_players[i].m_resources,
+            gStartingResources[difficulty],
+            sizeof(m_players[i].m_resources)
+        );
     }
     memset(used, -1, sizeof(used));
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
@@ -1426,7 +1478,8 @@ void game::SettleOverlay(int x, int y) {
             case MAP_OBJECT_TREES_2:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
-                    if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                    if (GetObjectFamily(cellEast->m_triggerType)
+                        == GetObjectFamily(cell->m_triggerType)) {
                         cell->m_secondaryTrigger |= 0x80;
                     } else {
                         cell->m_objectIndex = cell->m_overlayIndex;
@@ -1440,7 +1493,8 @@ void game::SettleOverlay(int x, int y) {
             case MAP_OBJECT_TREES_4:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
-                    if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                    if (GetObjectFamily(cellEast->m_triggerType)
+                        == GetObjectFamily(cell->m_triggerType)) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
@@ -1531,7 +1585,9 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(0, 3) + 2;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_SHIPWRECK) {
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1
+                        || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                               != MAP_OBJECT_SHIPWRECK) {
                         cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
@@ -1581,13 +1637,16 @@ void game::RandomizeEvents(void) {
                     if (!static_cast<unsigned char>(cell->m_objectMetadata)) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
                         if (Random(0, 99) <= 25 && cell->m_objectIndex != CREATURE_GHOST)
-                            cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | MONSTER_WILLING_FLAG;
+                            cell->m_objectMetadata =
+                                static_cast<unsigned char>(cell->m_objectMetadata)
+                                | MONSTER_WILLING_FLAG;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
-                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - RESOURCE_PILE_OBJECT_BASE;
+                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata)
+                                                 - RESOURCE_PILE_OBJECT_BASE;
                     switch (static_cast<unsigned char>(cell->m_objectMetadata)) {
                         case RESOURCE_WOOD:
                         case RESOURCE_ORE:
@@ -1624,8 +1683,11 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(10, 20);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP
-                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP) {
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1
+                        || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                               != MAP_OBJECT_WAGON_CAMP
+                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                               != MAP_OBJECT_WAGON_CAMP) {
                         cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
@@ -1655,7 +1717,9 @@ void game::RandomizeEvents(void) {
                     id = GetTownId(x, y);
                     for (j = 0; j < 3; j++) {
                         for (i = 0; i < 4; i++) {
-                            if (!static_cast<unsigned char>(m_map[x - 2 + i][y - 2 + j].m_objectMetadata))
+                            if (!static_cast<unsigned char>(
+                                    m_map[x - 2 + i][y - 2 + j].m_objectMetadata
+                                ))
                                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = id;
                         }
                     }
@@ -1668,7 +1732,9 @@ void game::RandomizeEvents(void) {
                     for (j = 0; j < 2; j++) {
                         for (i = 0; i < 2; i++) {
                             if (!static_cast<unsigned char>(m_map[x + i][y - j].m_objectMetadata)
-                                || (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK))
+                                || (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                                       == (m_map[x + i][y - j].m_triggerType
+                                           & MAP_TRIGGER_TYPE_MASK))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
                     }
@@ -1685,7 +1751,8 @@ void game::RandomizeEvents(void) {
             if (cell->m_objectIndex != 0xff && cell->m_overlayIndex != 0xff) {
                 objTileset = cell->m_objectTileset & 0xf;
                 overlayTileset = cell->m_overlayTileset & 0xf;
-                if ((objTileset == 8 || objTileset == 9) && (overlayTileset == 8 || overlayTileset == 9))
+                if ((objTileset == 8 || objTileset == 9)
+                    && (overlayTileset == 8 || overlayTileset == 9))
                     cell->m_secondaryTrigger |= 0x80;
             }
             SettleOverlay(x, y);
@@ -1948,7 +2015,17 @@ signed char game::ViewSpells(
     short winX[3] = {177, 97, 177};
     short winY[3] = {100, 47, 100};
     if (!spellHero->GetNumSpells(spellType)) {
-        NormalDialog("No spells to cast.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog(
+            "No spells to cast.",
+            NORMAL_DIALOG_TYPE_OK,
+            -1,
+            -1,
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_OR_TEXT
+        );
     } else {
         m_viewSpellsCallback = callback;
         m_viewSpellsReadOnly = readOnly;
@@ -2060,21 +2137,72 @@ short ViewSpellsHandler(tag_message& message) {
                         case SPELL_BOOK_ENTRY_FIRST + 1:
                         case SPELL_BOOK_ENTRY_FIRST + 2:
                         case SPELL_BOOK_ENTRY_LAST:
-                            spell = gpGame->m_viewSpellsHero
-                                        ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
-                            NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                            spell =
+                                gpGame->m_viewSpellsHero->m_spells
+                                    [message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
+                            NormalDialog(
+                                gSpellDesc[spell],
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                                -1,
+                                -1,
+                                NORMAL_DIALOG_SPELL,
+                                spell,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_OR_TEXT
+                            );
                             break;
                         case SPELL_BOOK_PREVIOUS_PAGE:
-                            NormalDialog(cSpellHelp[0], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                            NormalDialog(
+                                cSpellHelp[0],
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                                -1,
+                                -1,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_OR_TEXT
+                            );
                             break;
                         case SPELL_BOOK_NEXT_PAGE:
-                            NormalDialog(cSpellHelp[1], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                            NormalDialog(
+                                cSpellHelp[1],
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                                -1,
+                                -1,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_OR_TEXT
+                            );
                             break;
                         case SPELL_BOOK_ADVENTURE_SPELLS:
-                            NormalDialog(cSpellHelp[2], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                            NormalDialog(
+                                cSpellHelp[2],
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                                -1,
+                                -1,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_OR_TEXT
+                            );
                             break;
                         case SPELL_BOOK_COMBAT_SPELLS:
-                            NormalDialog(cSpellHelp[3], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                            NormalDialog(
+                                cSpellHelp[3],
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                                -1,
+                                -1,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_RESOURCE,
+                                0,
+                                NORMAL_DIALOG_NO_OR_TEXT
+                            );
                             break;
                     }
                 } else {
@@ -2084,13 +2212,25 @@ short ViewSpellsHandler(tag_message& message) {
                         case SPELL_BOOK_ENTRY_FIRST + 2:
                         case SPELL_BOOK_ENTRY_LAST:
                             if (gpGame->m_viewSpellsReadOnly) {
-                                spell = gpGame->m_viewSpellsHero
-                                            ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
-                                NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                                spell = gpGame->m_viewSpellsHero->m_spells
+                                            [message.id - SPELL_BOOK_ENTRY_FIRST
+                                             + gpGame->m_viewSpellsTop];
+                                NormalDialog(
+                                    gSpellDesc[spell],
+                                    NORMAL_DIALOG_TYPE_OK,
+                                    -1,
+                                    -1,
+                                    NORMAL_DIALOG_SPELL,
+                                    spell,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_OR_TEXT
+                                );
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
-                            gpGame->m_viewSpell = gpGame->m_viewSpellsHero
-                                                      ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
+                            gpGame->m_viewSpell =
+                                gpGame->m_viewSpellsHero->m_spells
+                                    [message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
                             message.command = WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
                         case SPELL_BOOK_PREVIOUS_PAGE:
@@ -2196,12 +2336,12 @@ H1_ENUM_CONST_BEGIN(ViewArmyConstant)
     VIEW_ARMY_FRAME_DELAY = 90,
     VIEW_ARMY_STAT_TEXT_SIZE = 550
 H1_ENUM_CONST_END(ViewArmyConstant)
-// clang-format on
+ // clang-format on
 
-// donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
-VA(0x0043f8cd, 0x8e1)
+ // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
+ // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
+ // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
+ VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
     short x,
     short y,
@@ -2272,7 +2412,18 @@ void game::ViewArmy(
         sprintf(fileName, "%s.wlk", iconName);
     else
         sprintf(fileName, "%s.wip", iconName);
-    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, VIEW_ARMY_ANIMATION, ICON_WIDGET_DRAW, 1);
+    monsterWidget = new iconWidget(
+        spacing,
+        164,
+        86,
+        149,
+        fileName,
+        0,
+        facing == 1,
+        VIEW_ARMY_ANIMATION,
+        ICON_WIDGET_DRAW,
+        1
+    );
     if (!monsterWidget)
         MemError();
     m_viewArmyWindow->AddWidget(monsterWidget, -1);
@@ -2333,7 +2484,12 @@ void game::ViewArmy(
         sprintf(gText, "-%d", monsterInfo->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<unsigned char>(monsterInfo->stats.hitPoints));
+    sprintf(
+        gText,
+        "\n%s%d",
+        gArmyStatText[4],
+        static_cast<unsigned char>(monsterInfo->stats.hitPoints)
+    );
     strcat(statText, gText);
     sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfo->stats.speed]);
     strcat(statText, gText);
@@ -2411,15 +2567,23 @@ short ViewArmyHandler(tag_message& message) {
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
                         gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id =
-                            WIDGET_COMMAND_DIALOG_SELECT;
+                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
                     case VIEW_ARMY_DISMISS:
-                        NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                        NormalDialog(
+                            "Are you sure you want to dismiss this army?",
+                            NORMAL_DIALOG_TYPE_YES_NO,
+                            0xb1,
+                            0x36,
+                            NORMAL_DIALOG_NO_RESOURCE,
+                            0,
+                            NORMAL_DIALOG_NO_RESOURCE,
+                            0,
+                            NORMAL_DIALOG_NO_OR_TEXT
+                        );
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
-                            message.command = message.id =
-                                WIDGET_COMMAND_DIALOG_SELECT;
+                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
                         }
                         break;
@@ -2625,7 +2789,13 @@ void game::Overview(void) {
         for (i = 0; i < numMines; i++) {
             while (!mineNums[nextType])
                 nextType++;
-            ovIcon->DrawToBuffer(spacing * i + left, 289, (nextType < 2 ? nextType : 2) + 12, ICON_DRAW_NORMAL, 0);
+            ovIcon->DrawToBuffer(
+                spacing * i + left,
+                289,
+                (nextType < 2 ? nextType : 2) + 12,
+                ICON_DRAW_NORMAL,
+                0
+            );
             if (nextType >= 2)
                 ovIcon->DrawToBuffer(spacing * i + left, 289, nextType + 14, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", mineNums[nextType]);
@@ -2795,7 +2965,8 @@ void game::NextPlayer(void) {
     for (i = 0; i < m_players[giCurPlayer].m_heroCount; i++) {
         currentHero = &m_heroRecs[m_players[giCurPlayer].m_heroIds[i]];
         currentHero->m_mobility = currentHero->CalcMobility();
-        if (m_campaignType > 0 && gCampaignScenarios[m_campaignScenario].victoryTownX == currentHero->m_x
+        if (m_campaignType > 0
+            && gCampaignScenarios[m_campaignScenario].victoryTownX == currentHero->m_x
             && gCampaignScenarios[m_campaignScenario].victoryTownY == currentHero->m_y)
             currentHero->m_mobility = 0;
         currentHero->m_remainingMobility = currentHero->m_mobility;
@@ -2921,7 +3092,8 @@ void game::PerDay(void) {
                 m_players[i].m_resources[RESOURCE_WOOD]++;
                 m_players[i].m_resources[RESOURCE_ORE]++;
             }
-            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST && m_day >= 1 && m_day <= 6)
+            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST && m_day >= 1
+                && m_day <= 6)
                 m_players[i].m_resources[m_day - 1]++;
         }
     }
@@ -2957,12 +3129,12 @@ H1_ENUM_CONST_BEGIN(CalendarConstant)
     NEW_TURN_TEXT_WEEK_NORMAL = 5,
     NEW_TURN_TEXT_WEEK_CREATURE = 6
 H1_ENUM_CONST_END(CalendarConstant)
-// clang-format on
+ // clang-format on
 
-// Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
-// (computer towns grow faster), refreshes the tavern heroes and restocks the
-// map's renewable sites.
-VA(0x00441e09, 0x84b)
+ // Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
+ // (computer towns grow faster), refreshes the tavern heroes and restocks the
+ // map's renewable sites.
+ VA(0x00441e09, 0x84b)
 void game::PerWeek(void) {
     short posY;
     short posX;
@@ -2994,7 +3166,8 @@ void game::PerWeek(void) {
                     if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_GENIUS)
                         gain = gain * 1.36;
                 }
-                if (giWeekType == CALENDAR_PERIOD_CREATURE && gDwellingType[townPointer->m_type][j - 7] == giWeekTypeExtra)
+                if (giWeekType == CALENDAR_PERIOD_CREATURE
+                    && gDwellingType[townPointer->m_type][j - 7] == giWeekTypeExtra)
                     gain += 5;
                 townPointer->m_garrison[j - 7] += gain;
             }
@@ -3020,31 +3193,45 @@ void game::PerWeek(void) {
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
-                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
+                        m_map[posX][posY].m_objectMetadata =
+                            static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata)
+                            + Random(3, 6);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
-                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
+                        m_map[posX][posY].m_objectMetadata =
+                            static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata)
+                            + Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
-                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
+                        m_map[posX][posY].m_objectMetadata =
+                            static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata)
+                            + Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
-                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
+                        m_map[posX][posY].m_objectMetadata =
+                            static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata)
+                            + Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
-                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
+                        m_map[posX][posY].m_objectMetadata =
+                            static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata)
+                            + Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
-                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(1, 3);
+                        m_map[posX][posY].m_objectMetadata =
+                            static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata)
+                            + Random(1, 3);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
-                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
+                        m_map[posX][posY].m_objectMetadata =
+                            static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata)
+                            + Random(3, 6);
                     break;
                 default:
                     break;
@@ -3085,7 +3272,8 @@ void game::PerMonth(void) {
                 growth = gMonsterDatabase[gDwellingType[townPointer->m_type][j - 7]].growth;
                 if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                     growth += 2;
-                if (giMonthType == CALENDAR_PERIOD_CREATURE && gDwellingType[townPointer->m_type][j - 7] == giMonthTypeExtra)
+                if (giMonthType == CALENDAR_PERIOD_CREATURE
+                    && gDwellingType[townPointer->m_type][j - 7] == giMonthTypeExtra)
                     townPointer->m_garrison[j - 7] *= 2;
                 if (giMonthType == CALENDAR_PERIOD_PLAGUE) {
                     townPointer->m_garrison[j - 7] -= growth;
@@ -3143,7 +3331,8 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
     town = GetTown(townNum);
     town->m_turnsOwned = 10;
-    if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
+    if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7
+        && town->m_owner == 0) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < 4) {
         unique = 0;
@@ -3168,7 +3357,8 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     }
     m_castleRecs[townNum].m_type = race;
     plain = 1;
-    if (town->m_extraIndex >= 1 && static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex])->customized)
+    if (town->m_extraIndex >= 1
+        && static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex])->customized)
         plain = 0;
     if (plain) {
         if (race == 2)
@@ -3177,7 +3367,8 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
             m_castleRecs[townNum].m_buildings = 0;
     }
     if (isCastle) {
-        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_1));
+        m_castleRecs[townNum].m_buildings |=
+            ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_1));
         m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
         if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
             m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
@@ -3218,7 +3409,8 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
     if (m_castleRecs[townId].m_customized) {
         for (k = 0; k < 6; k++) {
             if (m_castleRecs[townId].m_buildings & (1 << (k + 7)))
-                m_castleRecs[townId].m_garrison[k] = gMonsterDatabase[gDwellingType[townType][k]].growth;
+                m_castleRecs[townId].m_garrison[k] =
+                    gMonsterDatabase[gDwellingType[townType][k]].growth;
         }
     }
     if (!m_castleRecs[townId].m_customized) {
@@ -3228,7 +3420,8 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
             dwellingCount++;
         if (--dwellingCount) {
             m_castleRecs[townId].m_buildings |= 0x100;
-            m_castleRecs[townId].m_garrison[1] = gMonsterDatabase[gDwellingType[townType][1]].growth;
+            m_castleRecs[townId].m_garrison[1] =
+                gMonsterDatabase[gDwellingType[townType][1]].growth;
             dwellingCount--;
         }
     }
@@ -3470,7 +3663,8 @@ void game::ProcessRandomObjects(int castlesOnly) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
-            if (!castlesOnly || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)) {
+            if (!castlesOnly
+                || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)) {
                 switch (cellPtr->m_triggerType) {
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN:
                         RandomizeTown(x, y, 0);
@@ -3600,7 +3794,8 @@ int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
     int i;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (group->m_creatureCounts[i] > 0)
-            expValue += group->m_creatureCounts[i] * gMonsterDatabase[group->m_creatureTypes[i]].hitPoints;
+            expValue +=
+                group->m_creatureCounts[i] * gMonsterDatabase[group->m_creatureTypes[i]].hitPoints;
     }
     if (h)
         expValue += 500;
@@ -3609,8 +3804,7 @@ int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
 
 // Buka 2.1 MiscRuntime seeded generator; HoMM1 keeps it in this TU.
 VA(0x004444ca, 0x92)
-int SGenRand(void)
-{
+int SGenRand(void) {
     int bitMask;
     int value = 0;
     int i;
@@ -3626,8 +3820,7 @@ int SGenRand(void)
 }
 
 VA(0x0044455c, 0x52)
-int SRandom(int low, int high)
-{
+int SRandom(int low, int high) {
     int result;
     SIncRandomize(low, high);
     result = SGenRand();
@@ -3637,8 +3830,7 @@ int SRandom(int low, int high)
 }
 
 VA(0x004445ae, 0x89)
-void SIncRandomize(int x, int y)
-{
+void SIncRandomize(int x, int y) {
     int feedback;
     x *= 13;
     y *= 13;
@@ -3652,8 +3844,7 @@ void SIncRandomize(int x, int y)
 }
 
 VA(0x00444637, 0x24)
-void SRand(int seed)
-{
+void SRand(int seed) {
     iLastSeed = seed;
     srand(seed);
 }
@@ -3666,7 +3857,7 @@ int game::GetLuck(hero* h, army*) {
     int luck;
 
     if (!h)
-    return 0;
+        return 0;
     luck = 0;
     if (h->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
         luck++;
@@ -3685,12 +3876,18 @@ int game::GetLuck(hero* h, army*) {
 }
 
 // Buka 2.1 keeps the scan cursor in file statics.
-DATA(0x004c50fc) static int s_adjacentMonsterEndX;
-DATA(0x004c5100) static int s_adjacentMonsterEndY;
-DATA(0x004c50d4) static int s_adjacentMonsterX;
-DATA(0x004c50d8) static int s_adjacentMonsterY;
-DATA(0x004c50ec) static int s_adjacentMonsterMinX;
-DATA(0x004c50f0) static int s_adjacentMonsterMinY;
+DATA(0x004c50fc)
+static int s_adjacentMonsterEndX;
+DATA(0x004c5100)
+static int s_adjacentMonsterEndY;
+DATA(0x004c50d4)
+static int s_adjacentMonsterX;
+DATA(0x004c50d8)
+static int s_adjacentMonsterY;
+DATA(0x004c50ec)
+static int s_adjacentMonsterMinX;
+DATA(0x004c50f0)
+static int s_adjacentMonsterMinY;
 
 // donor PoL RVA 0x00069bef; preferred Buka symbol ?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -3698,7 +3895,12 @@ DATA(0x004c50f0) static int s_adjacentMonsterMinY;
 // HoMM1 retail returns the found flag in AL (xor al,al / mov al,1).
 VA(0x0044471a, 0x350)
 signed char advManager::FindAdjacentMonster(
-    int originX, int originY, int* monsterX, int* monsterY, int excludedX, int excludedY
+    int originX,
+    int originY,
+    int* monsterX,
+    int* monsterY,
+    int excludedX,
+    int excludedY
 ) {
     s_adjacentMonsterEndX = originX + 2;
     s_adjacentMonsterEndY = originY + 2;
@@ -3709,12 +3911,12 @@ signed char advManager::FindAdjacentMonster(
              ++s_adjacentMonsterX) {
             for (s_adjacentMonsterY = originY - 1; s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
+                    == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
-                            && (s_adjacentMonsterX != excludedX
-                                || s_adjacentMonsterY != excludedY))
+                            && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
                             goto foundAdjacentMonster;
                     } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
                         goto foundAdjacentMonster;
@@ -3735,12 +3937,12 @@ signed char advManager::FindAdjacentMonster(
             for (s_adjacentMonsterY = s_adjacentMonsterMinY;
                  s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
+                    == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
-                            && (s_adjacentMonsterX != excludedX
-                                || s_adjacentMonsterY != excludedY))
+                            && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
                             goto foundAdjacentMonster;
                     } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
                         goto foundAdjacentMonster;
@@ -3863,7 +4065,17 @@ void game::WaitForPlayer(char* text, int player) {
         ShowHeroesLogo();
         gbAllBlack = 0;
         gpMouseManager->ReallyShowPointer();
-        NormalDialog(text, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[player].m_color, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog(
+            text,
+            NORMAL_DIALOG_TYPE_OK,
+            0x61,
+            -1,
+            NORMAL_DIALOG_CREST,
+            gpGame->m_players[player].m_color,
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_OR_TEXT
+        );
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     }
 }
@@ -3950,7 +4162,8 @@ signed char game::SetupTowns(void) {
                         town->m_army.m_creatureTypes[j] = CREATURE_NONE;
                 }
                 town->m_buildState = extra->buildState;
-                town->m_buildings = town->m_buildings - (town->m_buildings & mask) + (extra->buildings & mask);
+                town->m_buildings =
+                    town->m_buildings - (town->m_buildings & mask) + (extra->buildings & mask);
             }
         }
     }
@@ -3985,7 +4198,9 @@ void game::ProcessOnMapHeroes(void) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
             if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x47) {
-                extra = static_cast<mapHeroExtra*>(ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)]);
+                extra = static_cast<mapHeroExtra*>(
+                    ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)]
+                );
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
                     theHero->m_army.m_creatureCounts[k] = extra->troopCounts[k];
@@ -4009,7 +4224,8 @@ void game::ProcessOnMapHeroes(void) {
                     iPlayer = extra->owner;
                 theHero->m_owner = iPlayer;
                 m_availableHeroes[extra->heroId] = iPlayer;
-                m_players[theHero->m_owner].m_heroIds[m_players[theHero->m_owner].m_heroCount] = theHero->m_id;
+                m_players[theHero->m_owner].m_heroIds[m_players[theHero->m_owner].m_heroCount] =
+                    theHero->m_id;
                 m_players[theHero->m_owner].m_heroCount++;
                 if (mapY > 0) {
                     north = &m_map[mapX][mapY - 1];
@@ -4026,7 +4242,12 @@ void game::ProcessOnMapHeroes(void) {
                 cell->m_overlayIndex = 0xff;
                 cell->m_objectMetadata = 0;
                 cell->m_triggerType = MAP_OBJECT_NONE;
-                SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gHeroScoutRadius[theHero->m_heroClass]);
+                SetVisibility(
+                    theHero->m_x,
+                    theHero->m_y,
+                    theHero->m_owner,
+                    gHeroScoutRadius[theHero->m_heroClass]
+                );
             }
         }
     }
@@ -4061,14 +4282,22 @@ void game::CheckHeroConsistency(void) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
             if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
-                if (static_cast<unsigned char>(cell->m_objectMetadata) >= 0 && static_cast<unsigned char>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
+                if (static_cast<unsigned char>(cell->m_objectMetadata) >= 0
+                    && static_cast<unsigned char>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
                     theHero = GetHero(cell->m_objectMetadata);
                     if (theHero->m_owner < 0 || theHero->m_owner > 3) {
                         if (theHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                             town = gpGame->GetTown(theHero->m_occupiedTown);
                             town->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
                         }
-                        RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, NULL, 1);
+                        RestoreCell(
+                            theHero->m_x,
+                            theHero->m_y,
+                            theHero->m_locationType,
+                            theHero->m_occupiedTown,
+                            NULL,
+                            1
+                        );
                     }
                 } else {
                     cell->m_triggerType = MAP_OBJECT_NONE;
@@ -4078,13 +4307,15 @@ void game::CheckHeroConsistency(void) {
     }
     for (i = 0; i < GAME_HERO_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_heroRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE || m_heroRecs[i].m_army.m_creatureCounts[j] < 0)
+            if (m_heroRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE
+                || m_heroRecs[i].m_army.m_creatureCounts[j] < 0)
                 m_heroRecs[i].m_army.m_creatureCounts[j] = 0;
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_castleRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE || m_castleRecs[i].m_army.m_creatureCounts[j] < 0)
+            if (m_castleRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE
+                || m_castleRecs[i].m_army.m_creatureCounts[j] < 0)
                 m_castleRecs[i].m_army.m_creatureCounts[j] = 0;
         }
     }
@@ -4112,15 +4343,15 @@ H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
     REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
     REMOTE_SAVE_TRANSFER_SOUNDS = 8
 H1_ENUM_CONST_END(RemoteSaveConstant)
-// clang-format on
+ // clang-format on
 
-// donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
+ // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
+ // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
+ // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
 
-// Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
-// segments, 100 segments per acknowledged block.
-VA(0x004459a5, 0x6e9)
+ // Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
+ // segments, 100 segments per acknowledged block.
+ VA(0x004459a5, 0x6e9)
 int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     int okay;
     char pathname[456];
@@ -4189,7 +4420,14 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
 
         ((int*)sendPacket)[0] = fileSize;
         ((int*)sendPacket)[1] = playerExited;
-        status = TransmitAndWait(sendPacket, remotePlayer, REMOTE_SAVE_HEADER_SIZE, REMOTE_SAVE_INIT_COMMAND, REMOTE_SAVE_INIT_RESPONSE, &incoming);
+        status = TransmitAndWait(
+            sendPacket,
+            remotePlayer,
+            REMOTE_SAVE_HEADER_SIZE,
+            REMOTE_SAVE_INIT_COMMAND,
+            REMOTE_SAVE_INIT_RESPONSE,
+            &incoming
+        );
         if (!status)
             ShutDown(NULL);
 
@@ -4203,7 +4441,9 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 blockSize = REMOTE_SAVE_BATCH_SIZE;
             finished = 0;
             while (!finished) {
-                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE; sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize; sendPacketIndex++) {
+                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE;
+                     sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize;
+                     sendPacketIndex++) {
                     PollSound();
                     CheckDoMain(0, 1);
                     if (!acked[sendPacketIndex]) {
@@ -4212,30 +4452,62 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                         else
                             len = REMOTE_SAVE_SEGMENT_SIZE;
                         *(short*)sendPacket = static_cast<short>(sendPacketIndex);
-                        memcpy(sendPacket + REMOTE_SAVE_INDEX_SIZE, outData + sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE, len);
-                        status = TransmitRemoteData(sendPacket, remotePlayer, len + REMOTE_SAVE_INDEX_SIZE, REMOTE_SAVE_DATA_COMMAND, 0, 1, REMOTE_MESSAGE_DEFAULT, 1);
+                        memcpy(
+                            sendPacket + REMOTE_SAVE_INDEX_SIZE,
+                            outData + sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE,
+                            len
+                        );
+                        status = TransmitRemoteData(
+                            sendPacket,
+                            remotePlayer,
+                            len + REMOTE_SAVE_INDEX_SIZE,
+                            REMOTE_SAVE_DATA_COMMAND,
+                            0,
+                            1,
+                            REMOTE_MESSAGE_DEFAULT,
+                            1
+                        );
                         if (!status)
                             ShutDown(NULL);
                     }
                 }
                 LogStr("PreWait");
                 *(short*)sendPacket = static_cast<short>(block * REMOTE_SAVE_BATCH_SIZE);
-                status = TransmitAndWait(sendPacket, remotePlayer, REMOTE_SAVE_INDEX_SIZE, REMOTE_SAVE_ACK_REQUEST_COMMAND, REMOTE_SAVE_ACK_RESPONSE_COMMAND, &incoming);
+                status = TransmitAndWait(
+                    sendPacket,
+                    remotePlayer,
+                    REMOTE_SAVE_INDEX_SIZE,
+                    REMOTE_SAVE_ACK_REQUEST_COMMAND,
+                    REMOTE_SAVE_ACK_RESPONSE_COMMAND,
+                    &incoming
+                );
                 LogStr("PostWait");
                 if (!status)
                     ShutDown(NULL);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
-                    if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex] > 0) // API-forced: char* record.
+                    if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex]
+                        > 0) // API-forced: char* record.
                         acked[block * REMOTE_SAVE_BATCH_SIZE + sendPacketIndex] = 1;
                 }
                 finished = 1;
-                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE; sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize; sendPacketIndex++) {
+                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE;
+                     sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize;
+                     sendPacketIndex++) {
                     if (!acked[sendPacketIndex])
                         finished = 0;
                 }
             }
         }
-        status = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_SAVE_FINISH_COMMAND, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
+        status = TransmitRemoteData(
+            NULL,
+            remotePlayer,
+            0,
+            REMOTE_SAVE_FINISH_COMMAND,
+            1,
+            1,
+            REMOTE_MESSAGE_DEFAULT,
+            1
+        );
         if (!status)
             ShutDown(NULL);
         okay = 1;
@@ -4301,7 +4573,16 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         Process1WindowsMessage();
     }
-    result = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_SAVE_INIT_RESPONSE, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
+    result = TransmitRemoteData(
+        NULL,
+        remotePlayer,
+        0,
+        REMOTE_SAVE_INIT_RESPONSE,
+        1,
+        1,
+        REMOTE_MESSAGE_DEFAULT,
+        1
+    );
     if (!result)
         ShutDown(NULL);
     memset(gotIt, 0, sizeof(gotIt));
@@ -4314,27 +4595,52 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         CheckDoMain(0, 1);
         if (lastPacketTime + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
-            NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                "Error receiving data.  Keep trying??",
+                NORMAL_DIALOG_TYPE_YES_NO,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
             else
                 ShutDown(NULL);
         }
-        receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
-        if (receivedPacket && (receivedPacket->type == REMOTE_MESSAGE_RELIABLE || receivedPacket->type == REMOTE_MESSAGE_UNRELIABLE)) {
+        receivedPacket =
+            reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
+        if (receivedPacket
+            && (receivedPacket->type == REMOTE_MESSAGE_RELIABLE
+                || receivedPacket->type == REMOTE_MESSAGE_UNRELIABLE)) {
             lastPacketTime = KBTickCount();
             switch (receivedPacket->command) {
                 case REMOTE_SAVE_DATA_COMMAND:
                     packetStart = receivedPacket->payload.segment.index;
                     gotIt[packetStart] = 1;
-                    memcpy(inData + packetStart * REMOTE_SAVE_SEGMENT_SIZE, receivedPacket->payload.segment.data,
-                           receivedPacket->payloadSize - REMOTE_SAVE_INDEX_SIZE);
+                    memcpy(
+                        inData + packetStart * REMOTE_SAVE_SEGMENT_SIZE,
+                        receivedPacket->payload.segment.data,
+                        receivedPacket->payloadSize - REMOTE_SAVE_INDEX_SIZE
+                    );
                     break;
                 case REMOTE_SAVE_ACK_REQUEST_COMMAND:
                     packetStart = receivedPacket->payload.segment.index;
                     for (k = packetStart; k < packetStart + REMOTE_SAVE_BATCH_SIZE; k++)
                         *(sendPacket + k - packetStart) = gotIt[k];
-                    result = TransmitRemoteData(sendPacket, remotePlayer, REMOTE_SAVE_ACK_MAP_SIZE, REMOTE_SAVE_ACK_RESPONSE_COMMAND, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
+                    result = TransmitRemoteData(
+                        sendPacket,
+                        remotePlayer,
+                        REMOTE_SAVE_ACK_MAP_SIZE,
+                        REMOTE_SAVE_ACK_RESPONSE_COMMAND,
+                        1,
+                        1,
+                        REMOTE_MESSAGE_DEFAULT,
+                        1
+                    );
                     if (!result)
                         ShutDown(NULL);
                     break;
@@ -4395,7 +4701,11 @@ void game::DoNewTurn(void) {
     CheckEndGame(0);
     if (gpCurPlayer->m_daysLeft >= 0) {
         if (gpCurPlayer->m_daysLeft == 1) {
-            sprintf(gText, gNewTurnText[NEW_TURN_TEXT_LAST_DAY], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
+            sprintf(
+                gText,
+                gNewTurnText[NEW_TURN_TEXT_LAST_DAY],
+                gColorNames[gpGame->m_players[giCurPlayer].Color()]
+            );
             gText[0] -= 32;
         } else {
             sprintf(
@@ -4406,7 +4716,17 @@ void game::DoNewTurn(void) {
             );
             gText[0] -= 32;
         }
-        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[giCurPlayer].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        NormalDialog(
+            gText,
+            NORMAL_DIALOG_TYPE_OK,
+            0x61,
+            -1,
+            NORMAL_DIALOG_CREST,
+            gpGame->m_players[giCurPlayer].Color(),
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_OR_TEXT
+        );
     }
     if (gpCurPlayer->m_heroCount > 0)
         gpAdvManager->SetHeroContext(gpCurPlayer->NextHero(0), 0);
@@ -4420,27 +4740,55 @@ void game::DoNewTurn(void) {
             if (m_week == 1) {
                 track = 0x33;
                 if (giMonthType == CALENDAR_PERIOD_NORMAL) {
-                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_NORMAL], gMonthNames[giMonthTypeExtra]);
+                    sprintf(
+                        gText,
+                        gNewTurnText[NEW_TURN_TEXT_MONTH_NORMAL],
+                        gMonthNames[giMonthTypeExtra]
+                    );
                 } else if (giMonthType == CALENDAR_PERIOD_CREATURE) {
                     strcpy(monsterName, gArmyNames[giMonthTypeExtra]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE], gArmyNames[giMonthTypeExtra], monsterName);
+                    sprintf(
+                        gText,
+                        gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE],
+                        gArmyNames[giMonthTypeExtra],
+                        monsterName
+                    );
                 } else {
                     sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_PLAGUE]);
                 }
             } else {
                 track = 0x32;
                 if (giWeekType == CALENDAR_PERIOD_NORMAL) {
-                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_WEEK_NORMAL], gWeekNames[giWeekTypeExtra]);
+                    sprintf(
+                        gText,
+                        gNewTurnText[NEW_TURN_TEXT_WEEK_NORMAL],
+                        gWeekNames[giWeekTypeExtra]
+                    );
                 } else {
                     strcpy(monsterName, gArmyNames[giWeekTypeExtra]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE], gArmyNames[giWeekTypeExtra], monsterName);
+                    sprintf(
+                        gText,
+                        gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE],
+                        gArmyNames[giWeekTypeExtra],
+                        monsterName
+                    );
                 }
             }
             gpSoundManager->SwitchAmbientMusic(track);
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gText,
+                NORMAL_DIALOG_TYPE_OK,
+                0x61,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
         }
     }
@@ -4659,8 +5007,12 @@ void game::ShowScenInfo(void) {
     sprintf(gText, "");
     for (i = 1; i < 4; i++) {
         if (giCurPlayer == 0) {
-            sprintf(line1, "%s\n",
-                    gbHumanPlayer[i] ? gHandicapNames[m_players[i].m_difficulty] : gPlayerTypeNames[m_players[i].m_difficulty]);
+            sprintf(
+                line1,
+                "%s\n",
+                gbHumanPlayer[i] ? gHandicapNames[m_players[i].m_difficulty]
+                                 : gPlayerTypeNames[m_players[i].m_difficulty]
+            );
         } else if (i == 1) {
             sprintf(line1, "%s\n", gHandicapNames[m_difficulty + 1]);
         } else {
@@ -4668,8 +5020,12 @@ void game::ShowScenInfo(void) {
                 idx = i;
             else
                 idx = i - 1;
-            sprintf(line1, "%s\n",
-                    gbHumanPlayer[idx] ? gHandicapNames[m_players[idx].m_difficulty] : gPlayerTypeNames[m_players[idx].m_difficulty]);
+            sprintf(
+                line1,
+                "%s\n",
+                gbHumanPlayer[idx] ? gHandicapNames[m_players[idx].m_difficulty]
+                                   : gPlayerTypeNames[m_players[idx].m_difficulty]
+            );
         }
         strcat(gText, line1);
     }

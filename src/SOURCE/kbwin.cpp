@@ -27,8 +27,8 @@
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
 VA(0x0045b6f0, 0x14e)
-H1_C_LINKAGE int __stdcall WinMain(void *instance, void *previousInstance, char *commandLine, int showCommand)
-{
+H1_C_LINKAGE int __stdcall
+WinMain(void* instance, void* previousInstance, char* commandLine, int showCommand) {
     DWORD error;
     MSG message;
 
@@ -67,8 +67,7 @@ H1_C_LINKAGE int __stdcall WinMain(void *instance, void *previousInstance, char 
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
 VA(0x0045b83e, 0x2d6)
-int AppInit(void *instance, void *previousInstance, int showCommand, char *commandLine)
-{
+int AppInit(void* instance, void* previousInstance, int showCommand, char* commandLine) {
     WNDCLASSA appClass;
     HMENU windowMenu;
     RECT rc;
@@ -104,10 +103,13 @@ int AppInit(void *instance, void *previousInstance, int showCommand, char *comma
         appClass.hIcon = LoadIconA(static_cast<HINSTANCE>(instance), "Heroes");
         appClass.lpszMenuName = NULL;
         appClass.lpszClassName = szAppName;
-        appClass.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
+        appClass.hbrBackground =
+            reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
         appClass.hInstance = static_cast<HINSTANCE>(instance);
         appClass.style = KBWIN_CLASS_STYLE;
-        appClass.lpfnWndProc = reinterpret_cast<WNDPROC>(AppWndProc); // HoMM1 declares the procedure with void* handles.
+        appClass.lpfnWndProc = reinterpret_cast<WNDPROC>(
+            AppWndProc
+        ); // HoMM1 declares the procedure with void* handles.
         appClass.cbWndExtra = 0;
         appClass.cbClsExtra = 0;
         if (RegisterClassA(&appClass) == 0)
@@ -126,10 +128,20 @@ int AppInit(void *instance, void *previousInstance, int showCommand, char *comma
         windowMenu = static_cast<HMENU>(hmnuDflt);
     else
         windowMenu = NULL;
-    hwndApp = CreateWindowExA(0, szAppName, szTitle, giCurWindowsStyleFlags,
-                              gConfig.gfx[giCurExe].x, gConfig.gfx[giCurExe].y,
-                              rc.right - rc.left + 1, rc.bottom - rc.top + 1, NULL, windowMenu,
-                              static_cast<HINSTANCE>(instance), NULL);
+    hwndApp = CreateWindowExA(
+        0,
+        szAppName,
+        szTitle,
+        giCurWindowsStyleFlags,
+        gConfig.gfx[giCurExe].x,
+        gConfig.gfx[giCurExe].y,
+        rc.right - rc.left + 1,
+        rc.bottom - rc.top + 1,
+        NULL,
+        windowMenu,
+        static_cast<HINSTANCE>(instance),
+        NULL
+    );
     if (hwndApp != NULL) {
         ShowWindow(static_cast<HWND>(hwndApp), showCommand);
         SetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE, giCurWindowsStyleFlags);
@@ -157,124 +169,146 @@ int AppIdle(void) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x0045bb45, 0x617)
-long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int messageParam, long int messageData)
-{
+long int __stdcall
+AppWndProc(void* window, unsigned int message, unsigned int messageParam, long int messageData) {
     if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
-        LogStr("AWP", KBTickCount() % KBWIN_TRACE_TICK_MODULUS / KBWIN_TRACE_TICK_DIVISOR,
-               reinterpret_cast<long>(window), message, messageParam, messageData); // API-forced: LogStr logs the handle as a long.
+        LogStr(
+            "AWP",
+            KBTickCount() % KBWIN_TRACE_TICK_MODULUS / KBWIN_TRACE_TICK_DIVISOR,
+            reinterpret_cast<long>(window),
+            message,
+            messageParam,
+            messageData
+        ); // API-forced: LogStr logs the handle as a long.
     if (message > KBWIN_PROCESS_MESSAGE_MAX || bProcessMessage[message] == 0)
         return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
 
     switch (message) {
-    case WM_CREATE:
-        srand(KBTickCount());
-        SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, NULL);
-        GdiSetBatchLimit(1);
-        return 0;
-    case WM_KEYDOWN:
-    case WM_KEYUP:
-        if (KeyboardMessageHandler(window, message, messageParam, messageData) == 0)
+        case WM_CREATE:
+            srand(KBTickCount());
+            SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, NULL);
+            GdiSetBatchLimit(1);
             return 0;
-        break;
-    case WM_MOUSEMOVE:
-    case WM_LBUTTONDOWN:
-    case WM_LBUTTONUP:
-    case WM_LBUTTONDBLCLK:
-    case WM_RBUTTONDOWN:
-    case WM_RBUTTONUP:
-    case WM_RBUTTONDBLCLK:
-        if (MouseMessageHandler(window, message, messageParam, messageData) == 0)
-            return 0;
-        break;
-    case WM_TIMER:
-        lTemp = KBTickCount();
-        if (lLastGTimerTickCount + KBWIN_POLL_INTERVAL < lTemp) {
-            lLastGTimerTickCount = lTemp;
-            SetReady2Poll();
-        }
-        if (lLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
-            lLastCycleTickCount = lTemp;
-            if (giGraphicsType == KBWIN_GRAPHICS_DIRECT_DRAW && giMainVideoModeColorDepth != 8) {
-                lLastCycleTickCount += KBWIN_CYCLE_DIRECT_DRAW_DELAY;
-                if (gbHeroMoving)
-                    return 0;
-            }
-            CycleColors();
-        }
-        return 0;
-    case MM_MCINOTIFY:
-        if (messageParam == MCI_NOTIFY_SUCCESSFUL)
-            gpSoundManager->CDPlay(gpSoundManager->m_cdTrack, 0, gpSoundManager->m_cdPlayFrame, 1);
-        break;
-    case WM_ACTIVATEAPP:
-        gbForegroundApp = messageParam;
-        return 0;
-    case WM_ERASEBKGND:
-        return 1;
-    case WM_MOVE:
-        if (hwndApp == NULL)
-            return 0;
-        lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
-        if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
-            && gConfig.gfx[giCurExe].fullScreen == 0) {
-            GetWindowRect(static_cast<HWND>(window), &rcTemp);
-            gConfig.gfx[giCurExe].x = rcTemp.left;
-            gConfig.gfx[giCurExe].y = rcTemp.top;
-            WritePrefs();
-        }
-        return 0;
-    case WM_SIZE:
-        if (hwndApp != NULL) {
-            lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
-            gbMinimized = lTemp & WS_MINIMIZE;
-            if ((lTemp & WS_MINIMIZE) == 0)
-                EarlyResizeWindow(0, 0, 0, 0);
-            if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0
-                && (LOWORD(messageData) < KBWIN_MIN_WIDTH || HIWORD(messageData) < KBWIN_MIN_HEIGHT)) {
-                iTempX = LOWORD(messageData) > KBWIN_MIN_WIDTH ? LOWORD(messageData) : KBWIN_MIN_WIDTH;
-                iTempY = HIWORD(messageData) > KBWIN_MIN_HEIGHT ? HIWORD(messageData) : KBWIN_MIN_HEIGHT;
-                ResizeWindow(-1, -1, iTempX, iTempY);
+        case WM_KEYDOWN:
+        case WM_KEYUP:
+            if (KeyboardMessageHandler(window, message, messageParam, messageData) == 0)
                 return 0;
-            }
-        }
-        iMainWinScreenWidth = LOWORD(messageData);
-        iMainWinScreenHeight = HIWORD(messageData);
-        if (iMainWinScreenWidth < 1)
-            iMainWinScreenWidth = 1;
-        if (iMainWinScreenHeight < 1)
-            iMainWinScreenHeight = 1;
-        if (hwndApp != NULL && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
-            && gConfig.gfx[giCurExe].fullScreen == 0) {
-            gConfig.gfx[giCurExe].width = iMainWinScreenWidth;
-            gConfig.gfx[giCurExe].height = iMainWinScreenHeight;
-            WritePrefs();
-        }
-        return 0;
-    case WM_COMMAND:
-        return AppCommand(window, message, messageParam, messageData);
-    case WM_PALETTECHANGED:
-        if (reinterpret_cast<unsigned int>(window) == messageParam) // API-forced: WPARAM carries the changing window.
             break;
-    case WM_QUERYNEWPALETTE:
-        return QueryNewPalette();
-    case WM_PAINT:
-        AppPaint(window, NULL);
-        return 0;
-    case WM_CLOSE:
-        if (window == hwndApp) {
-            if (GameUnsaved() != 0) {
-                NormalDialog("Are you sure you want to quit?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                    DestroyWindow(static_cast<HWND>(window));
+        case WM_MOUSEMOVE:
+        case WM_LBUTTONDOWN:
+        case WM_LBUTTONUP:
+        case WM_LBUTTONDBLCLK:
+        case WM_RBUTTONDOWN:
+        case WM_RBUTTONUP:
+        case WM_RBUTTONDBLCLK:
+            if (MouseMessageHandler(window, message, messageParam, messageData) == 0)
                 return 0;
+            break;
+        case WM_TIMER:
+            lTemp = KBTickCount();
+            if (lLastGTimerTickCount + KBWIN_POLL_INTERVAL < lTemp) {
+                lLastGTimerTickCount = lTemp;
+                SetReady2Poll();
             }
-        }
-    case WM_DESTROY:
-        gbClosingApp = 1;
-        PostQuitMessage(0);
-    case WM_QUIT:
-        ShutDown(NULL);
-        break;
+            if (lLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
+                lLastCycleTickCount = lTemp;
+                if (giGraphicsType == KBWIN_GRAPHICS_DIRECT_DRAW
+                    && giMainVideoModeColorDepth != 8) {
+                    lLastCycleTickCount += KBWIN_CYCLE_DIRECT_DRAW_DELAY;
+                    if (gbHeroMoving)
+                        return 0;
+                }
+                CycleColors();
+            }
+            return 0;
+        case MM_MCINOTIFY:
+            if (messageParam == MCI_NOTIFY_SUCCESSFUL)
+                gpSoundManager
+                    ->CDPlay(gpSoundManager->m_cdTrack, 0, gpSoundManager->m_cdPlayFrame, 1);
+            break;
+        case WM_ACTIVATEAPP:
+            gbForegroundApp = messageParam;
+            return 0;
+        case WM_ERASEBKGND:
+            return 1;
+        case WM_MOVE:
+            if (hwndApp == NULL)
+                return 0;
+            lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+            if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
+                && gConfig.gfx[giCurExe].fullScreen == 0) {
+                GetWindowRect(static_cast<HWND>(window), &rcTemp);
+                gConfig.gfx[giCurExe].x = rcTemp.left;
+                gConfig.gfx[giCurExe].y = rcTemp.top;
+                WritePrefs();
+            }
+            return 0;
+        case WM_SIZE:
+            if (hwndApp != NULL) {
+                lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+                gbMinimized = lTemp & WS_MINIMIZE;
+                if ((lTemp & WS_MINIMIZE) == 0)
+                    EarlyResizeWindow(0, 0, 0, 0);
+                if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0
+                    && (LOWORD(messageData) < KBWIN_MIN_WIDTH
+                        || HIWORD(messageData) < KBWIN_MIN_HEIGHT)) {
+                    iTempX = LOWORD(messageData) > KBWIN_MIN_WIDTH ? LOWORD(messageData)
+                                                                   : KBWIN_MIN_WIDTH;
+                    iTempY = HIWORD(messageData) > KBWIN_MIN_HEIGHT ? HIWORD(messageData)
+                                                                    : KBWIN_MIN_HEIGHT;
+                    ResizeWindow(-1, -1, iTempX, iTempY);
+                    return 0;
+                }
+            }
+            iMainWinScreenWidth = LOWORD(messageData);
+            iMainWinScreenHeight = HIWORD(messageData);
+            if (iMainWinScreenWidth < 1)
+                iMainWinScreenWidth = 1;
+            if (iMainWinScreenHeight < 1)
+                iMainWinScreenHeight = 1;
+            if (hwndApp != NULL && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
+                && gConfig.gfx[giCurExe].fullScreen == 0) {
+                gConfig.gfx[giCurExe].width = iMainWinScreenWidth;
+                gConfig.gfx[giCurExe].height = iMainWinScreenHeight;
+                WritePrefs();
+            }
+            return 0;
+        case WM_COMMAND:
+            return AppCommand(window, message, messageParam, messageData);
+        case WM_PALETTECHANGED:
+            if (reinterpret_cast<unsigned int>(window)
+                == messageParam) // API-forced: WPARAM carries the changing window.
+                break;
+        case WM_QUERYNEWPALETTE:
+            return QueryNewPalette();
+        case WM_PAINT:
+            AppPaint(window, NULL);
+            return 0;
+        case WM_CLOSE:
+            if (window == hwndApp) {
+                if (GameUnsaved() != 0) {
+                    NormalDialog(
+                        "Are you sure you want to quit?",
+                        NORMAL_DIALOG_TYPE_YES_NO,
+                        -1,
+                        -1,
+                        NORMAL_DIALOG_NO_RESOURCE,
+                        0,
+                        NORMAL_DIALOG_NO_RESOURCE,
+                        0,
+                        NORMAL_DIALOG_NO_OR_TEXT
+                    );
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                        DestroyWindow(static_cast<HWND>(window));
+                    return 0;
+                }
+            }
+        case WM_DESTROY:
+            gbClosingApp = 1;
+            PostQuitMessage(0);
+        case WM_QUIT:
+            ShutDown(NULL);
+            break;
     }
     return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
 }
@@ -358,14 +392,7 @@ void ResizeWindow(int x, int y, int width, int height) {
     rect.right = width - 1;
     rect.bottom = height - 1;
     AdjustWindowRect(&rect, giCurWindowsStyleFlags, gConfig.gfx[giCurExe].showMenu);
-    MoveWindow(
-        hwndApp,
-        xpos,
-        ypos,
-        rect.right - rect.left + 1,
-        rect.bottom - rect.top + 1,
-        TRUE
-    );
+    MoveWindow(hwndApp, xpos, ypos, rect.right - rect.left + 1, rect.bottom - rect.top + 1, TRUE);
     gConfig.gfx[giCurExe].x = xpos;
     gConfig.gfx[giCurExe].y = ypos;
     gConfig.gfx[giCurExe].width = width;
@@ -377,37 +404,45 @@ void ResizeWindow(int x, int y, int width, int height) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
 VA(0x0045c3f7, 0x185)
-long int AppCommand(void *window, unsigned int message, unsigned int messageParam, long int messageData)
-{
+long int
+AppCommand(void* window, unsigned int message, unsigned int messageParam, long int messageData) {
     DLGPROC appDialogProc;
     int command;
 
     command = LOWORD(messageParam);
     switch (command) {
-    case KBWIN_MENU_ABOUT:
-        appDialogProc = reinterpret_cast<DLGPROC>(AppAbout); // AppAbout is the exported BOOL dialog procedure.
-        DialogBoxParamA(static_cast<HINSTANCE>(hInstApp), "HEROES", static_cast<HWND>(window), appDialogProc, 0);
-        break;
-    case KBWIN_MENU_HELP:
-        WinHelpA(static_cast<HWND>(hwndApp), ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
-        break;
-    case KBWIN_MENU_SIZE_640_480:
-        ResizeWindow(-1, -1, KBWIN_WIDTH_640, KBWIN_HEIGHT_480);
-        break;
-    case KBWIN_MENU_SIZE_800_600:
-        ResizeWindow(-1, -1, KBWIN_WIDTH_800, KBWIN_HEIGHT_600);
-        break;
-    case KBWIN_MENU_SIZE_1024_768:
-        ResizeWindow(-1, -1, KBWIN_WIDTH_1024, KBWIN_HEIGHT_768);
-        break;
-    case KBWIN_MENU_SIZE_1280_1024:
-        ResizeWindow(-1, -1, KBWIN_WIDTH_1280, KBWIN_HEIGHT_1024);
-        break;
-    case KBWIN_MENU_FULLSCREEN:
-        SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
-        break;
-    default:
-        return HandleAppSpecificMenuCommands(command);
+        case KBWIN_MENU_ABOUT:
+            appDialogProc = reinterpret_cast<DLGPROC>(
+                AppAbout
+            ); // AppAbout is the exported BOOL dialog procedure.
+            DialogBoxParamA(
+                static_cast<HINSTANCE>(hInstApp),
+                "HEROES",
+                static_cast<HWND>(window),
+                appDialogProc,
+                0
+            );
+            break;
+        case KBWIN_MENU_HELP:
+            WinHelpA(static_cast<HWND>(hwndApp), ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
+            break;
+        case KBWIN_MENU_SIZE_640_480:
+            ResizeWindow(-1, -1, KBWIN_WIDTH_640, KBWIN_HEIGHT_480);
+            break;
+        case KBWIN_MENU_SIZE_800_600:
+            ResizeWindow(-1, -1, KBWIN_WIDTH_800, KBWIN_HEIGHT_600);
+            break;
+        case KBWIN_MENU_SIZE_1024_768:
+            ResizeWindow(-1, -1, KBWIN_WIDTH_1024, KBWIN_HEIGHT_768);
+            break;
+        case KBWIN_MENU_SIZE_1280_1024:
+            ResizeWindow(-1, -1, KBWIN_WIDTH_1280, KBWIN_HEIGHT_1024);
+            break;
+        case KBWIN_MENU_FULLSCREEN:
+            SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
+            break;
+        default:
+            return HandleAppSpecificMenuCommands(command);
     }
     return 0;
 }
@@ -540,8 +575,7 @@ void SetMenus(void* menu, int enabled) {
 // PoL 2.0 Misc.cpp SetGameDefaults correspondence; HoMM1 picks the walk
 // speed and slow-video default from the detected processor family.
 VA(0x0045c9fe, 0x1a3)
-void SetGameDefaults(void)
-{
+void SetGameDefaults(void) {
     int cpuType;
     int i;
 
@@ -583,9 +617,8 @@ void SetGameDefaults(void)
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0045cba1, 0x20d)
-void ReadPrefsFromFile(void)
-{
-    FILE *fp;
+void ReadPrefsFromFile(void) {
+    FILE* fp;
     int result;
     char buffer[100];
 
@@ -622,8 +655,7 @@ void ReadPrefsFromFile(void)
 }
 
 VA(0x0045cdae, 0x523)
-void ReadPrefsFromRegistry(void)
-{
+void ReadPrefsFromRegistry(void) {
     HKEY key;
     DWORD cbData;
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
@@ -637,64 +669,282 @@ void ReadPrefsFromRegistry(void)
     rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
     if (rc == 0) {
         cbData = REGISTRY_DWORD_BYTES;
-        if (RegQueryValueExA(key, "Music Volume", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicVolume), &cbData) != 0) {
+        if (RegQueryValueExA(
+                key,
+                "Music Volume",
+                NULL,
+                &dataType,
+                reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+                &cbData
+            )
+            != 0) {
             memset(&gConfig, 0, sizeof(gConfig));
             SetGameDefaults();
             RegCloseKey(key);
             WritePrefs();
             return;
         }
-        RegQueryValueExA(key, "Music Volume", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicVolume), &cbData);
-        RegQueryValueExA(key, "Sound Volume", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.soundVolume), &cbData);
-        RegQueryValueExA(key, "Walk Speed", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.walkSpeed), &cbData);
-        RegQueryValueExA(key, "Show Route", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.showRoute), &cbData);
-        RegQueryValueExA(key, "Blackout Computer", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer), &cbData);
-        RegQueryValueExA(key, "Sound Quality", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicSource), &cbData);
-        RegQueryValueExA(key, "Direct Connect Com Port", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]), &cbData);
-        RegQueryValueExA(key, "Direct Connect Baud Rate", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]), &cbData);
-        RegQueryValueExA(key, "Modem Com Port", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]), &cbData);
-        RegQueryValueExA(key, "Modem Baud Rate", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]), &cbData);
+        RegQueryValueExA(
+            key,
+            "Music Volume",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Sound Volume",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.soundVolume),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Walk Speed",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.walkSpeed),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Show Route",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.showRoute),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Blackout Computer",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Sound Quality",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.musicSource),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Direct Connect Com Port",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Direct Connect Baud Rate",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Modem Com Port",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Modem Baud Rate",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]),
+            &cbData
+        );
         cbData = REGISTRY_TEXT_VALUE_SIZE;
-        RegQueryValueExA(key, "Modem Init String", NULL, &dataType, reinterpret_cast<LPBYTE>(gConfig.modemInitString), &cbData);
+        RegQueryValueExA(
+            key,
+            "Modem Init String",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(gConfig.modemInitString),
+            &cbData
+        );
         cbData = REGISTRY_DWORD_BYTES;
-        RegQueryValueExA(key, "Autosave", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.autosave), &cbData);
-        RegQueryValueExA(key, "CD Offset", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.cdOffset), &cbData);
-        RegQueryValueExA(key, "Slow Video", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.slowVideo), &cbData);
-        RegQueryValueExA(key, "First Map Offset", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset), &cbData);
-        RegQueryValueExA(key, "Current Map Offset", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset), &cbData);
-        RegQueryValueExA(key, "Main Game Show Menu", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu), &cbData);
-        RegQueryValueExA(key, "Main Game X", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x), &cbData);
-        RegQueryValueExA(key, "Main Game Y", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y), &cbData);
-        RegQueryValueExA(key, "Main Game Width", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width), &cbData);
-        RegQueryValueExA(key, "Main Game Height", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height), &cbData);
-        RegQueryValueExA(key, "Main Game Full Screen", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen), &cbData);
-        RegQueryValueExA(key, "Editor Show Menu", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu), &cbData);
-        RegQueryValueExA(key, "Editor X", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x), &cbData);
-        RegQueryValueExA(key, "Editor Y", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y), &cbData);
-        RegQueryValueExA(key, "Editor Width", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width), &cbData);
-        RegQueryValueExA(key, "Editor Height", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height), &cbData);
-        RegQueryValueExA(key, "Editor Full Screen", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen), &cbData);
+        RegQueryValueExA(
+            key,
+            "Autosave",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.autosave),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "CD Offset",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.cdOffset),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Slow Video",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.slowVideo),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "First Map Offset",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Current Map Offset",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Show Menu",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game X",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Y",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Width",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Height",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Main Game Full Screen",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Show Menu",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor X",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Y",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Width",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Height",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height),
+            &cbData
+        );
+        RegQueryValueExA(
+            key,
+            "Editor Full Screen",
+            NULL,
+            &dataType,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
+            &cbData
+        );
         cbData = REGISTRY_TEXT_VALUE_SIZE;
-        if (RegQueryValueExA(key, "AppPath", NULL, &dataType, reinterpret_cast<LPBYTE>(gcRegAppPath), &cbData) != 0)
+        if (RegQueryValueExA(
+                key,
+                "AppPath",
+                NULL,
+                &dataType,
+                reinterpret_cast<LPBYTE>(gcRegAppPath),
+                &cbData
+            )
+            != 0)
             strcpy(gcRegAppPath, "");
-        if (RegQueryValueExA(key, "CDDrive", NULL, &dataType, reinterpret_cast<LPBYTE>(gcRegCDRomPath), &cbData) != 0)
+        if (RegQueryValueExA(
+                key,
+                "CDDrive",
+                NULL,
+                &dataType,
+                reinterpret_cast<LPBYTE>(gcRegCDRomPath),
+                &cbData
+            )
+            != 0)
             strcpy(gcRegCDRomPath, "");
         RegCloseKey(key);
     }
 }
 
 VA(0x0045d2d1, 0x15)
-void ReadPrefs(void)
-{
+void ReadPrefs(void) {
     ReadPrefsFromRegistry();
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0045d2e6, 0x8a)
-void WritePrefsToFile(void)
-{
-    FILE *file;
+void WritePrefsToFile(void) {
+    FILE* file;
     char buffer[100];
 
     memset(buffer, 0, sizeof(buffer));
@@ -707,8 +957,7 @@ void WritePrefsToFile(void)
 }
 
 VA(0x0045d370, 0x3d0)
-void WritePrefsToRegistry(void)
-{
+void WritePrefsToRegistry(void) {
     HKEY key;
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
@@ -719,41 +968,236 @@ void WritePrefsToRegistry(void)
     key = NULL;
     rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
     if (rc == 0) {
-        RegSetValueExA(key, "Music Volume", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.musicVolume), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Sound Volume", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.soundVolume), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Walk Speed", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.walkSpeed), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Show Route", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.showRoute), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Blackout Computer", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Sound Quality", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.musicSource), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Direct Connect Com Port", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Direct Connect Baud Rate", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Modem Com Port", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Modem Baud Rate", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Modem Init String", 0, REG_SZ, reinterpret_cast<LPBYTE>(gConfig.modemInitString), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Autosave", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.autosave), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "CD Offset", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.cdOffset), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Slow Video", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.slowVideo), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "First Map Offset", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Current Map Offset", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Main Game Show Menu", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Main Game X", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Main Game Y", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Main Game Width", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Main Game Height", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Main Game Full Screen", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Editor Show Menu", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Editor X", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Editor Y", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Editor Width", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Editor Height", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height), REGISTRY_DWORD_BYTES);
-        RegSetValueExA(key, "Editor Full Screen", 0, REG_DWORD, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen), REGISTRY_DWORD_BYTES);
+        RegSetValueExA(
+            key,
+            "Music Volume",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Sound Volume",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.soundVolume),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Walk Speed",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.walkSpeed),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Show Route",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.showRoute),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Blackout Computer",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Sound Quality",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.musicSource),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Direct Connect Com Port",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Direct Connect Baud Rate",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Modem Com Port",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Modem Baud Rate",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Modem Init String",
+            0,
+            REG_SZ,
+            reinterpret_cast<LPBYTE>(gConfig.modemInitString),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Autosave",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.autosave),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "CD Offset",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.cdOffset),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Slow Video",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.slowVideo),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "First Map Offset",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Current Map Offset",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Show Menu",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game X",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Y",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Width",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Height",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Main Game Full Screen",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Show Menu",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor X",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Y",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Width",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Height",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "Editor Full Screen",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
+            REGISTRY_DWORD_BYTES
+        );
         RegCloseKey(key);
     }
 }
 
 VA(0x0045d740, 0x1a)
-void WritePrefs(void)
-{
+void WritePrefs(void) {
     UpdateSystemOptionsMenu();
     WritePrefsToRegistry();
 }
@@ -761,8 +1205,7 @@ void WritePrefs(void)
 // HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
 // drive's autorun file and remember the first one in the registry.
 VA(0x0045d75a, 0x4c5)
-int SetupCDDrive(void)
-{
+int SetupCDDrive(void) {
     int count;
     unsigned long logicalDrives;
     int cd;
@@ -845,7 +1288,14 @@ int SetupCDDrive(void)
             rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_WRITE, &hRegKey);
             if (rc == 0) {
                 wsprintfA(driveText, "%c:", cdDrives[cd] + 'A');
-                pass = RegSetValueExA(hRegKey, "CDDrive", 0, REG_SZ, reinterpret_cast<LPBYTE>(driveText), lstrlenA(driveText) + 1);
+                pass = RegSetValueExA(
+                    hRegKey,
+                    "CDDrive",
+                    0,
+                    REG_SZ,
+                    reinterpret_cast<LPBYTE>(driveText),
+                    lstrlenA(driveText) + 1
+                );
                 RegCloseKey(hRegKey);
             }
             sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gcSoundPath);

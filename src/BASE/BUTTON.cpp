@@ -153,10 +153,20 @@ short button::Select(tag_message& message) {
 VA(0x0047f620, 0x4d)
 void button::Draw(void) {
     if (m_flags & WIDGET_FLAG_SELECTED) {
-        m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_pressedFrame,
-            ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+        m_icon->DrawToBuffer(
+            m_owner->m_posX + m_x,
+            m_owner->m_posY + m_y,
+            m_pressedFrame,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
         return;
     }
-    m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_normalFrame,
-        ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+    m_icon->DrawToBuffer(
+        m_owner->m_posX + m_x,
+        m_owner->m_posY + m_y,
+        m_normalFrame,
+        ICON_DRAW_NORMAL,
+        ICON_DRAW_OFFSET_FULL
+    );
 }

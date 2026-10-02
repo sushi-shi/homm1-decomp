@@ -47,7 +47,12 @@ H1_ENUM_BEGIN(ArtifactType)
     ARTIFACT_FOUR_LEAF_CLOVER = 34,
     ARTIFACT_TRUE_COMPASS = 35,
     ARTIFACT_SAILORS_ASTROLABE = 36,
-    ARTIFACT_MAGIC_BOOK = 37
+    ARTIFACT_MAGIC_BOOK = 37,
+    // The regular artifacts are [REGULAR_FIRST, REGULAR_END): philAI scans
+    // them from 4, and the AI/philAI hero-artifact tests accept ids below
+    // REGULAR_END (everything but the magic book).
+    ARTIFACT_REGULAR_FIRST = ARTIFACT_ARCANE_NECKLACE,
+    ARTIFACT_REGULAR_END = ARTIFACT_MAGIC_BOOK
 H1_ENUM_END(ArtifactType)
 // clang-format on
 

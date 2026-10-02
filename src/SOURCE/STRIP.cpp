@@ -11,9 +11,16 @@
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.710816;margin=0.058489;shape=0.438;size=0.937;calls=0.800;strings=strip.icn;alternate=pol20:void strip::constructor(int, int, int, unsigned long int, int, class armyGroup *, int, int, int)@0x00032230
 VA(0x00463630, 0x2de)
-strip::strip(short x, short y, signed char stripType, short portraitId,
-             signed char portraitFrame, class armyGroup* army, short firstBorderId,
-             int drawWindow) {
+strip::strip(
+    short x,
+    short y,
+    signed char stripType,
+    short portraitId,
+    signed char portraitFrame,
+    class armyGroup* army,
+    short firstBorderId,
+    int drawWindow
+) {
     short i;
 
     m_selectedSlot = -1;
@@ -30,12 +37,30 @@ strip::strip(short x, short y, signed char stripType, short portraitId,
     if (!m_window)
         MemError();
     if (m_army) {
-        m_borders[0] = new border(STRIP_PORTRAIT_X, STRIP_CONTENT_Y, STRIP_PORTRAIT_BORDER_WIDTH, STRIP_BORDER_HEIGHT, firstBorderId, 1, 0, NULL);
+        m_borders[0] = new border(
+            STRIP_PORTRAIT_X,
+            STRIP_CONTENT_Y,
+            STRIP_PORTRAIT_BORDER_WIDTH,
+            STRIP_BORDER_HEIGHT,
+            firstBorderId,
+            1,
+            0,
+            NULL
+        );
         if (!m_borders[0])
             MemError();
         m_window->AddWidget(m_borders[0], -1);
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            m_borders[i + 1] = new border(i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, STRIP_CONTENT_Y, STRIP_ARMY_BORDER_WIDTH, STRIP_BORDER_HEIGHT, i + firstBorderId + 1, 1, 0, NULL);
+            m_borders[i + 1] = new border(
+                i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
+                STRIP_CONTENT_Y,
+                STRIP_ARMY_BORDER_WIDTH,
+                STRIP_BORDER_HEIGHT,
+                i + firstBorderId + 1,
+                1,
+                0,
+                NULL
+            );
             if (!m_borders[i + 1])
                 MemError();
             m_window->AddWidget(m_borders[i + 1], -1);
@@ -82,27 +107,71 @@ void strip::DrawIcons(signed char drawWindow) {
     short i;
     signed char creatureType;
 
-    m_portraitIcon->DrawToBuffer(m_x + STRIP_PORTRAIT_X, m_y + STRIP_CONTENT_Y, m_portraitFrame, ICON_DRAW_NORMAL, 0);
+    m_portraitIcon->DrawToBuffer(
+        m_x + STRIP_PORTRAIT_X,
+        m_y + STRIP_CONTENT_Y,
+        m_portraitFrame,
+        ICON_DRAW_NORMAL,
+        0
+    );
     if (!m_army) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
-            m_stripIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, STRIP_EMPTY_FRAME, ICON_DRAW_NORMAL, 0);
+            m_stripIcon->DrawToBuffer(
+                m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
+                m_y + STRIP_CONTENT_Y,
+                STRIP_EMPTY_FRAME,
+                ICON_DRAW_NORMAL,
+                0
+            );
         m_window->DrawWindow(drawWindow);
         return;
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         creatureType = m_army->m_creatureTypes[i];
         if (creatureType != CREATURE_NONE) {
-            m_stripIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, creatureType / STRIP_CREATURES_PER_FACTION + STRIP_FACTION_FRAME_OFFSET, ICON_DRAW_NORMAL, 0);
-            m_monsterIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_MONSTER_X, m_y + STRIP_MONSTER_Y, creatureType, ICON_DRAW_NORMAL, 0);
+            m_stripIcon->DrawToBuffer(
+                m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
+                m_y + STRIP_CONTENT_Y,
+                creatureType / STRIP_CREATURES_PER_FACTION + STRIP_FACTION_FRAME_OFFSET,
+                ICON_DRAW_NORMAL,
+                0
+            );
+            m_monsterIcon->DrawToBuffer(
+                m_x + i * STRIP_ARMY_X_STEP + STRIP_MONSTER_X,
+                m_y + STRIP_MONSTER_Y,
+                creatureType,
+                ICON_DRAW_NORMAL,
+                0
+            );
             sprintf(gText, "%d", m_army->m_creatureCounts[i]);
-            m_font->DrawBoundedString(gText, m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_QUANTITY_Y, STRIP_QUANTITY_WIDTH, STRIP_QUANTITY_HEIGHT, 1, 2);
+            m_font->DrawBoundedString(
+                gText,
+                m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
+                m_y + STRIP_QUANTITY_Y,
+                STRIP_QUANTITY_WIDTH,
+                STRIP_QUANTITY_HEIGHT,
+                1,
+                2
+            );
         } else {
-            m_stripIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, STRIP_EMPTY_FRAME, ICON_DRAW_NORMAL, 0);
+            m_stripIcon->DrawToBuffer(
+                m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
+                m_y + STRIP_CONTENT_Y,
+                STRIP_EMPTY_FRAME,
+                ICON_DRAW_NORMAL,
+                0
+            );
         }
     }
     m_window->DrawWindow(drawWindow);
     if (m_selectedSlot != -1)
-        m_stripIcon->DrawToBuffer(m_x + m_selectedSlot * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, STRIP_SELECTED_FRAME, ICON_DRAW_NORMAL, 0);
+        m_stripIcon->DrawToBuffer(
+            m_x + m_selectedSlot * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
+            m_y + STRIP_CONTENT_Y,
+            STRIP_SELECTED_FRAME,
+            ICON_DRAW_NORMAL,
+            0
+        );
 }
 
 // @dead-code

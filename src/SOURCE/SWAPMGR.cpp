@@ -97,7 +97,12 @@ short swapManager::Open(short id) {
     message.id = CONTROL_RIGHT_HERO;
     m_window->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    sprintf(gText, "%s meets %s", m_heroes[SWAP_SIDE_LEFT]->m_name, m_heroes[SWAP_SIDE_RIGHT]->m_name);
+    sprintf(
+        gText,
+        "%s meets %s",
+        m_heroes[SWAP_SIDE_LEFT]->m_name,
+        m_heroes[SWAP_SIDE_RIGHT]->m_name
+    );
     message.text = gText;
     message.id = CONTROL_TITLE;
     m_window->BroadcastMessage(message);
@@ -176,30 +181,30 @@ void swapManager::DrawSelector(void) {
 
     if (m_selectedSide != SWAP_SIDE_NONE && m_selectedSlot != -1) {
         switch (m_selectedSide) {
-        case SWAP_SIDE_LEFT:
-            switch (m_itemType) {
-            case SWAP_ITEM_ARMY:
-                x = m_selectedSlot * armySpacing + leftArmyBase - 1;
-                y = troopTop - 1;
+            case SWAP_SIDE_LEFT:
+                switch (m_itemType) {
+                    case SWAP_ITEM_ARMY:
+                        x = m_selectedSlot * armySpacing + leftArmyBase - 1;
+                        y = troopTop - 1;
+                        break;
+                    case SWAP_ITEM_ARTIFACT:
+                        x = art1 + (m_selectedSlot > 6 ? itemGap : 0) - 1;
+                        y = m_selectedSlot % 7 * itemGap + artTop - 1;
+                        break;
+                }
                 break;
-            case SWAP_ITEM_ARTIFACT:
-                x = art1 + (m_selectedSlot > 6 ? itemGap : 0) - 1;
-                y = m_selectedSlot % 7 * itemGap + artTop - 1;
+            case SWAP_SIDE_RIGHT:
+                switch (m_itemType) {
+                    case SWAP_ITEM_ARMY:
+                        x = m_selectedSlot * armySpacing + rightMonsterBase - 1;
+                        y = troopTop - 1;
+                        break;
+                    case SWAP_ITEM_ARTIFACT:
+                        x = art2 + (m_selectedSlot > 6 ? itemGap : 0) - 1;
+                        y = m_selectedSlot % 7 * itemGap + artTop - 1;
+                        break;
+                }
                 break;
-            }
-            break;
-        case SWAP_SIDE_RIGHT:
-            switch (m_itemType) {
-            case SWAP_ITEM_ARMY:
-                x = m_selectedSlot * armySpacing + rightMonsterBase - 1;
-                y = troopTop - 1;
-                break;
-            case SWAP_ITEM_ARTIFACT:
-                x = art2 + (m_selectedSlot > 6 ? itemGap : 0) - 1;
-                y = m_selectedSlot % 7 * itemGap + artTop - 1;
-                break;
-            }
-            break;
         }
         m_selectorIcon->FillToBuffer(x + 16, y + 16, 2, frameColor, ICON_DRAW_NORMAL, 0);
         gpWindowManager->UpdateScreenRegion(x + 16, y + 16, 36, 36);
@@ -227,238 +232,329 @@ short swapManager::Main(struct tag_message& message) {
         return 0;
     }
     switch (message.type) {
-    case MESSAGE_RIGHT_BUTTON_DOWN:
-        if (quickView)
-            break;
-        Reset();
-        Update();
-        m_window->DrawWindow();
-        break;
-    case MESSAGE_WIDGET:
-        switch (message.command) {
-        case WIDGET_NOTIFY_DESELECT:
+        case MESSAGE_RIGHT_BUTTON_DOWN:
             if (quickView)
                 break;
-            if (message.id == DIALOG_BUTTON_0)
-                closeRequested = 1;
+            Reset();
+            Update();
+            m_window->DrawWindow();
             break;
-        case WIDGET_NOTIFY_SELECT:
-            switch (message.id) {
-            case CONTROL_LEFT_HERO:
-                if (quickView)
-                    break;
-                m_heroes[SWAP_SIDE_LEFT]->HeroView(1);
-                gpAdvManager->RedrawAdvScreen(1);
-                Update();
-                m_window->DrawWindow();
-                Reset();
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-                break;
-            case CONTROL_RIGHT_HERO:
-                if (quickView)
-                    break;
-                m_heroes[SWAP_SIDE_RIGHT]->HeroView(1);
-                gpAdvManager->RedrawAdvScreen(1);
-                Update();
-                m_window->DrawWindow();
-                Reset();
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-                break;
-            case CONTROL_LEFT_ARTIFACT_FIRST:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 1:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 2:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 3:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 4:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 5:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 6:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 7:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 8:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 9:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 10:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 11:
-            case CONTROL_LEFT_ARTIFACT_FIRST + 12:
-            case CONTROL_LEFT_ARTIFACT_LAST:
-                artIndex = message.id - CONTROL_LEFT_ARTIFACT_FIRST;
-                if (!quickView && (m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
-                                   || m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
-                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-                    break;
-                }
-                if (quickView) {
-                    if (m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex] == ARTIFACT_NONE)
+        case MESSAGE_WIDGET:
+            switch (message.command) {
+                case WIDGET_NOTIFY_DESELECT:
+                    if (quickView)
                         break;
-                    m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex], 1);
+                    if (message.id == DIALOG_BUTTON_0)
+                        closeRequested = 1;
                     break;
-                }
-                if (m_itemType != SWAP_ITEM_ARTIFACT) {
-                    if (m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex] != ARTIFACT_NONE) {
-                        m_selectedSide = SWAP_SIDE_LEFT;
-                        m_targetSide = SWAP_SIDE_NONE;
-                        m_itemType = SWAP_ITEM_ARTIFACT;
-                        m_selectedSlot = artIndex;
-                        m_targetSlot = -1;
-                    } else {
-                        Reset();
+                case WIDGET_NOTIFY_SELECT:
+                    switch (message.id) {
+                        case CONTROL_LEFT_HERO:
+                            if (quickView)
+                                break;
+                            m_heroes[SWAP_SIDE_LEFT]->HeroView(1);
+                            gpAdvManager->RedrawAdvScreen(1);
+                            Update();
+                            m_window->DrawWindow();
+                            Reset();
+                            gpWindowManager
+                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                            break;
+                        case CONTROL_RIGHT_HERO:
+                            if (quickView)
+                                break;
+                            m_heroes[SWAP_SIDE_RIGHT]->HeroView(1);
+                            gpAdvManager->RedrawAdvScreen(1);
+                            Update();
+                            m_window->DrawWindow();
+                            Reset();
+                            gpWindowManager
+                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                            break;
+                        case CONTROL_LEFT_ARTIFACT_FIRST:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 1:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 2:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 3:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 4:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 5:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 6:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 7:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 8:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 9:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 10:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 11:
+                        case CONTROL_LEFT_ARTIFACT_FIRST + 12:
+                        case CONTROL_LEFT_ARTIFACT_LAST:
+                            artIndex = message.id - CONTROL_LEFT_ARTIFACT_FIRST;
+                            if (!quickView
+                                && (m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex]
+                                        == ARTIFACT_MAGIC_BOOK
+                                    || m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex]
+                                           == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
+                                NormalDialog(
+                                    "This item can't be traded.",
+                                    NORMAL_DIALOG_TYPE_OK,
+                                    -1,
+                                    -1,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_OR_TEXT
+                                );
+                                break;
+                            }
+                            if (quickView) {
+                                if (m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex]
+                                    == ARTIFACT_NONE)
+                                    break;
+                                m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(
+                                    m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex],
+                                    1
+                                );
+                                break;
+                            }
+                            if (m_itemType != SWAP_ITEM_ARTIFACT) {
+                                if (m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex]
+                                    != ARTIFACT_NONE) {
+                                    m_selectedSide = SWAP_SIDE_LEFT;
+                                    m_targetSide = SWAP_SIDE_NONE;
+                                    m_itemType = SWAP_ITEM_ARTIFACT;
+                                    m_selectedSlot = artIndex;
+                                    m_targetSlot = -1;
+                                } else {
+                                    Reset();
+                                }
+                            } else {
+                                m_targetSide = SWAP_SIDE_LEFT;
+                                m_targetSlot = artIndex;
+                                if (m_selectedSide == SWAP_SIDE_LEFT
+                                    && m_selectedSlot == m_targetSlot) {
+                                    m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(
+                                        m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex],
+                                        0
+                                    );
+                                    Reset();
+                                }
+                                SwapArtifacts();
+                                Reset();
+                            }
+                            break;
+                        case CONTROL_RIGHT_ARTIFACT_FIRST:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 1:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 2:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 3:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 4:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 5:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 6:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 7:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 8:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 9:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 10:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 11:
+                        case CONTROL_RIGHT_ARTIFACT_FIRST + 12:
+                        case CONTROL_RIGHT_ARTIFACT_LAST:
+                            artIndex = message.id - CONTROL_RIGHT_ARTIFACT_FIRST;
+                            if (!quickView
+                                && (m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex]
+                                        == ARTIFACT_MAGIC_BOOK
+                                    || m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex]
+                                           == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
+                                NormalDialog(
+                                    "This item can't be traded.",
+                                    NORMAL_DIALOG_TYPE_OK,
+                                    -1,
+                                    -1,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_OR_TEXT
+                                );
+                                break;
+                            }
+                            if (quickView) {
+                                if (m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex]
+                                    == ARTIFACT_NONE)
+                                    break;
+                                m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(
+                                    m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex],
+                                    1
+                                );
+                                break;
+                            }
+                            if (m_itemType != SWAP_ITEM_ARTIFACT) {
+                                if (m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex]
+                                    != ARTIFACT_NONE) {
+                                    m_selectedSide = SWAP_SIDE_RIGHT;
+                                    m_targetSide = SWAP_SIDE_NONE;
+                                    m_itemType = SWAP_ITEM_ARTIFACT;
+                                    m_selectedSlot = artIndex;
+                                    m_targetSlot = -1;
+                                } else {
+                                    Reset();
+                                }
+                            } else {
+                                m_targetSide = SWAP_SIDE_RIGHT;
+                                m_targetSlot = artIndex;
+                                if (m_selectedSide == SWAP_SIDE_RIGHT
+                                    && m_selectedSlot == m_targetSlot) {
+                                    m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(
+                                        m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex],
+                                        0
+                                    );
+                                    Reset();
+                                }
+                                SwapArtifacts();
+                                Reset();
+                            }
+                            break;
+                        case CONTROL_LEFT_ARMY_FIRST:
+                        case CONTROL_LEFT_ARMY_FIRST + 1:
+                        case CONTROL_LEFT_ARMY_FIRST + 2:
+                        case CONTROL_LEFT_ARMY_FIRST + 3:
+                        case CONTROL_LEFT_ARMY_LAST:
+                            if (quickView) {
+                                if (m_heroes[SWAP_SIDE_LEFT]
+                                        ->m_army
+                                        .m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST]
+                                    != CREATURE_NONE)
+                                    gpGame->ViewArmy(
+                                        TOWN_ARMY_VIEW_X,
+                                        TOWN_ARMY_VIEW_Y,
+                                        m_heroes[SWAP_SIDE_LEFT]
+                                            ->m_army
+                                            .m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST],
+                                        m_heroes[SWAP_SIDE_LEFT]
+                                            ->m_army
+                                            .m_creatureCounts[message.id - CONTROL_LEFT_ARMY_FIRST],
+                                        NULL,
+                                        0,
+                                        0,
+                                        1,
+                                        m_heroes[SWAP_SIDE_LEFT],
+                                        NULL,
+                                        &m_heroes[SWAP_SIDE_LEFT]->m_army
+                                    );
+                                break;
+                            }
+                            if (m_itemType) {
+                                if (m_heroes[SWAP_SIDE_LEFT]
+                                        ->m_army
+                                        .m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST]
+                                    != CREATURE_NONE) {
+                                    m_selectedSide = SWAP_SIDE_LEFT;
+                                    m_targetSide = SWAP_SIDE_NONE;
+                                    m_itemType = SWAP_ITEM_ARMY;
+                                    m_selectedSlot = message.id - CONTROL_LEFT_ARMY_FIRST;
+                                    m_targetSlot = -1;
+                                } else {
+                                    Reset();
+                                }
+                            } else {
+                                m_targetSide = SWAP_SIDE_LEFT;
+                                m_targetSlot = message.id - CONTROL_LEFT_ARMY_FIRST;
+                                if (m_selectedSide == SWAP_SIDE_LEFT
+                                    && m_selectedSlot == m_targetSlot) {
+                                    ViewMon();
+                                    Reset();
+                                }
+                                if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
+                                    && m_selectedSide != m_targetSide
+                                    && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot]
+                                            == CREATURE_NONE
+                                        || m_heroes[m_selectedSide]
+                                                   ->m_army.m_creatureTypes[m_selectedSlot]
+                                               == m_heroes[m_targetSide]
+                                                      ->m_army.m_creatureTypes[m_targetSlot])) {
+                                    SplitMons();
+                                    Reset();
+                                } else {
+                                    SwapMons();
+                                    Reset();
+                                }
+                            }
+                            break;
+                        case CONTROL_RIGHT_ARMY_FIRST:
+                        case CONTROL_RIGHT_ARMY_FIRST + 1:
+                        case CONTROL_RIGHT_ARMY_FIRST + 2:
+                        case CONTROL_RIGHT_ARMY_FIRST + 3:
+                        case CONTROL_RIGHT_ARMY_LAST:
+                            if (quickView) {
+                                if (m_heroes[SWAP_SIDE_RIGHT]
+                                        ->m_army
+                                        .m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST]
+                                    != CREATURE_NONE)
+                                    gpGame->ViewArmy(
+                                        TOWN_ARMY_VIEW_X,
+                                        TOWN_ARMY_VIEW_Y,
+                                        m_heroes[SWAP_SIDE_RIGHT]
+                                            ->m_army
+                                            .m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST],
+                                        m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureCounts
+                                            [message.id - CONTROL_RIGHT_ARMY_FIRST],
+                                        NULL,
+                                        0,
+                                        0,
+                                        1,
+                                        m_heroes[SWAP_SIDE_RIGHT],
+                                        NULL,
+                                        &m_heroes[SWAP_SIDE_RIGHT]->m_army
+                                    );
+                                break;
+                            }
+                            if (m_itemType) {
+                                if (m_heroes[SWAP_SIDE_RIGHT]
+                                        ->m_army
+                                        .m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST]
+                                    != CREATURE_NONE) {
+                                    m_selectedSide = SWAP_SIDE_RIGHT;
+                                    m_targetSide = SWAP_SIDE_NONE;
+                                    m_itemType = SWAP_ITEM_ARMY;
+                                    m_selectedSlot = message.id - CONTROL_RIGHT_ARMY_FIRST;
+                                    m_targetSlot = -1;
+                                } else {
+                                    Reset();
+                                }
+                            } else {
+                                m_targetSide = SWAP_SIDE_RIGHT;
+                                m_targetSlot = message.id - CONTROL_RIGHT_ARMY_FIRST;
+                                if (m_selectedSide == SWAP_SIDE_RIGHT
+                                    && m_selectedSlot == m_targetSlot) {
+                                    ViewMon();
+                                    Reset();
+                                }
+                                if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
+                                    && m_selectedSide != m_targetSide
+                                    && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot]
+                                            == CREATURE_NONE
+                                        || m_heroes[m_selectedSide]
+                                                   ->m_army.m_creatureTypes[m_selectedSlot]
+                                               == m_heroes[m_targetSide]
+                                                      ->m_army.m_creatureTypes[m_targetSlot])) {
+                                    SplitMons();
+                                    Reset();
+                                } else {
+                                    SwapMons();
+                                    Reset();
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                } else {
-                    m_targetSide = SWAP_SIDE_LEFT;
-                    m_targetSlot = artIndex;
-                    if (m_selectedSide == SWAP_SIDE_LEFT && m_selectedSlot == m_targetSlot) {
-                        m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex], 0);
-                        Reset();
+                    if (!quickView) {
+                        Update();
+                        m_window->DrawWindow();
+                        DrawSelector();
                     }
-                    SwapArtifacts();
-                    Reset();
-                }
-                break;
-            case CONTROL_RIGHT_ARTIFACT_FIRST:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 1:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 2:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 3:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 4:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 5:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 6:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 7:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 8:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 9:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 10:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 11:
-            case CONTROL_RIGHT_ARTIFACT_FIRST + 12:
-            case CONTROL_RIGHT_ARTIFACT_LAST:
-                artIndex = message.id - CONTROL_RIGHT_ARTIFACT_FIRST;
-                if (!quickView && (m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
-                                   || m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
-                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
-                }
-                if (quickView) {
-                    if (m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex] == ARTIFACT_NONE)
-                        break;
-                    m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex], 1);
+                default:
                     break;
-                }
-                if (m_itemType != SWAP_ITEM_ARTIFACT) {
-                    if (m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex] != ARTIFACT_NONE) {
-                        m_selectedSide = SWAP_SIDE_RIGHT;
-                        m_targetSide = SWAP_SIDE_NONE;
-                        m_itemType = SWAP_ITEM_ARTIFACT;
-                        m_selectedSlot = artIndex;
-                        m_targetSlot = -1;
-                    } else {
-                        Reset();
-                    }
-                } else {
-                    m_targetSide = SWAP_SIDE_RIGHT;
-                    m_targetSlot = artIndex;
-                    if (m_selectedSide == SWAP_SIDE_RIGHT && m_selectedSlot == m_targetSlot) {
-                        m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex], 0);
-                        Reset();
-                    }
-                    SwapArtifacts();
-                    Reset();
-                }
-                break;
-            case CONTROL_LEFT_ARMY_FIRST:
-            case CONTROL_LEFT_ARMY_FIRST + 1:
-            case CONTROL_LEFT_ARMY_FIRST + 2:
-            case CONTROL_LEFT_ARMY_FIRST + 3:
-            case CONTROL_LEFT_ARMY_LAST:
-                if (quickView) {
-                    if (m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST] != CREATURE_NONE)
-                        gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y,
-                                         m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST],
-                                         m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureCounts[message.id - CONTROL_LEFT_ARMY_FIRST],
-                                         NULL, 0, 0, 1, m_heroes[SWAP_SIDE_LEFT], NULL, &m_heroes[SWAP_SIDE_LEFT]->m_army);
-                    break;
-                }
-                if (m_itemType) {
-                    if (m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST] != CREATURE_NONE) {
-                        m_selectedSide = SWAP_SIDE_LEFT;
-                        m_targetSide = SWAP_SIDE_NONE;
-                        m_itemType = SWAP_ITEM_ARMY;
-                        m_selectedSlot = message.id - CONTROL_LEFT_ARMY_FIRST;
-                        m_targetSlot = -1;
-                    } else {
-                        Reset();
-                    }
-                } else {
-                    m_targetSide = SWAP_SIDE_LEFT;
-                    m_targetSlot = message.id - CONTROL_LEFT_ARMY_FIRST;
-                    if (m_selectedSide == SWAP_SIDE_LEFT && m_selectedSlot == m_targetSlot) {
-                        ViewMon();
-                        Reset();
-                    }
-                    if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
-                        && m_selectedSide != m_targetSide
-                        && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot] == CREATURE_NONE
-                            || m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_selectedSlot]
-                                   == m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot])) {
-                        SplitMons();
-                        Reset();
-                    } else {
-                        SwapMons();
-                        Reset();
-                    }
-                }
-                break;
-            case CONTROL_RIGHT_ARMY_FIRST:
-            case CONTROL_RIGHT_ARMY_FIRST + 1:
-            case CONTROL_RIGHT_ARMY_FIRST + 2:
-            case CONTROL_RIGHT_ARMY_FIRST + 3:
-            case CONTROL_RIGHT_ARMY_LAST:
-                if (quickView) {
-                    if (m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST] != CREATURE_NONE)
-                        gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y,
-                                         m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST],
-                                         m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureCounts[message.id - CONTROL_RIGHT_ARMY_FIRST],
-                                         NULL, 0, 0, 1, m_heroes[SWAP_SIDE_RIGHT], NULL, &m_heroes[SWAP_SIDE_RIGHT]->m_army);
-                    break;
-                }
-                if (m_itemType) {
-                    if (m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST] != CREATURE_NONE) {
-                        m_selectedSide = SWAP_SIDE_RIGHT;
-                        m_targetSide = SWAP_SIDE_NONE;
-                        m_itemType = SWAP_ITEM_ARMY;
-                        m_selectedSlot = message.id - CONTROL_RIGHT_ARMY_FIRST;
-                        m_targetSlot = -1;
-                    } else {
-                        Reset();
-                    }
-                } else {
-                    m_targetSide = SWAP_SIDE_RIGHT;
-                    m_targetSlot = message.id - CONTROL_RIGHT_ARMY_FIRST;
-                    if (m_selectedSide == SWAP_SIDE_RIGHT && m_selectedSlot == m_targetSlot) {
-                        ViewMon();
-                        Reset();
-                    }
-                    if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
-                        && m_selectedSide != m_targetSide
-                        && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot] == CREATURE_NONE
-                            || m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_selectedSlot]
-                                   == m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot])) {
-                        SplitMons();
-                        Reset();
-                    } else {
-                        SwapMons();
-                        Reset();
-                    }
-                }
-                break;
-            default:
-                break;
-            }
-            if (!quickView) {
-                Update();
-                m_window->DrawWindow();
-                DrawSelector();
             }
             break;
         default:
             break;
-        }
-        break;
-    default:
-        break;
     }
     if (closeRequested == 1) {
         message.type = MESSAGE_EXECUTIVE;
@@ -470,10 +566,19 @@ short swapManager::Main(struct tag_message& message) {
 
 VA(0x0046fd73, 0xa5)
 void swapManager::ViewMon(void) {
-    gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y, m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_targetSlot],
-                     m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot], NULL,
-                     m_heroes[m_selectedSide]->m_army.GetNumArmies() == 1, 0, 0,
-                     m_heroes[m_selectedSide], NULL, &m_heroes[m_selectedSide]->m_army);
+    gpGame->ViewArmy(
+        TOWN_ARMY_VIEW_X,
+        TOWN_ARMY_VIEW_Y,
+        m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_targetSlot],
+        m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot],
+        NULL,
+        m_heroes[m_selectedSide]->m_army.GetNumArmies() == 1,
+        0,
+        0,
+        m_heroes[m_selectedSide],
+        NULL,
+        &m_heroes[m_selectedSide]->m_army
+    );
 }
 
 // Buka 2.1 swapManager::SwapArtifacts.
@@ -524,8 +629,10 @@ void swapManager::SwapMons(void) {
             destTroops->m_creatureTypes[m_targetSlot] = CREATURE_NONE;
             destTroops->m_creatureCounts[m_targetSlot] = 0;
             if (m_selectedSlot != j) {
-                destTroops->m_creatureTypes[m_targetSlot] = sourceTroops->m_creatureTypes[m_selectedSlot];
-                destTroops->m_creatureCounts[m_targetSlot] = sourceTroops->m_creatureCounts[m_selectedSlot];
+                destTroops->m_creatureTypes[m_targetSlot] =
+                    sourceTroops->m_creatureTypes[m_selectedSlot];
+                destTroops->m_creatureCounts[m_targetSlot] =
+                    sourceTroops->m_creatureCounts[m_selectedSlot];
                 sourceTroops->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
                 sourceTroops->m_creatureCounts[m_selectedSlot] = 0;
             }
@@ -658,15 +765,20 @@ void swapManager::SplitMons(void) {
     dstTroops = &m_heroes[m_targetSide]->m_army;
     found = 0;
     textId = 1;
-    gpTownManager->m_heroWindow1 = new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
+    gpTownManager->m_heroWindow1 =
+        new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
     if (!gpTownManager->m_heroWindow1)
         MemError();
     gpTownManager->m_splitAmount = 0;
     gpTownManager->m_splitMaximum = selectedArmy->m_creatureCounts[m_selectedSlot];
     message.type = MESSAGE_WIDGET;
-    sprintf(gText, "Move how many %s troops from %s to %s?",
-            gArmyNames[selectedArmy->m_creatureTypes[m_selectedSlot]],
-            m_heroes[m_selectedSide]->m_name, m_heroes[m_targetSide]->m_name);
+    sprintf(
+        gText,
+        "Move how many %s troops from %s to %s?",
+        gArmyNames[selectedArmy->m_creatureTypes[m_selectedSlot]],
+        m_heroes[m_selectedSide]->m_name,
+        m_heroes[m_targetSide]->m_name
+    );
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = TOWN_SPLIT_PROMPT_CONTROL;
     message.text = gText;
@@ -695,7 +807,8 @@ void swapManager::SplitMons(void) {
                 if (i < ARMY_GROUP_SLOT_COUNT)
                     m_targetSlot = i;
             }
-            dstTroops->m_creatureTypes[m_targetSlot] = selectedArmy->m_creatureTypes[m_selectedSlot];
+            dstTroops->m_creatureTypes[m_targetSlot] =
+                selectedArmy->m_creatureTypes[m_selectedSlot];
             dstTroops->m_creatureCounts[m_targetSlot] = gpTownManager->m_splitAmount;
         }
         selectedArmy->m_creatureCounts[m_selectedSlot] -= gpTownManager->m_splitAmount;

@@ -28,11 +28,11 @@ H1_ENUM_BEGIN(ComputerPlayerType)
     PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST = 2,
     PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST = 3
 H1_ENUM_END(ComputerPlayerType)
-    // clang-format on
+// clang-format on
 
-    // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
-    // HoMM2's per-player AI block (without its last float) inside playerData.
-    struct playerAttentionWeights {
+// TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
+// HoMM2's per-player AI block (without its last float) inside playerData.
+struct playerAttentionWeights {
     float gameWeightA;
     float gameRemainder;
     float gameWeightB;

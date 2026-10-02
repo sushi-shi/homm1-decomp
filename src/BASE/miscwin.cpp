@@ -23,29 +23,48 @@
 #pragma intrinsic(memcpy, memset)
 
 VA(0x00473450, 0x199)
-void BlitBitmapToScreen(bitmap *sourceBitmap, int sourceX, int sourceY, int width, int height, int destinationX, int destinationY)
-{
+void BlitBitmapToScreen(
+    bitmap* sourceBitmap,
+    int sourceX,
+    int sourceY,
+    int width,
+    int height,
+    int destinationX,
+    int destinationY
+) {
     if (gpWindowManager->m_screen != sourceBitmap) {
         for (int row = 0; row < height; row++)
-            memcpy(gpWindowManager->m_screen->m_pixels + (destinationY + row) * SCREEN_BLIT_WIDTH + destinationX,
-                sourceBitmap->m_pixels + (row + sourceY) * sourceBitmap->m_width + sourceX, width);
+            memcpy(
+                gpWindowManager->m_screen->m_pixels + (destinationY + row) * SCREEN_BLIT_WIDTH
+                    + destinationX,
+                sourceBitmap->m_pixels + (row + sourceY) * sourceBitmap->m_width + sourceX,
+                width
+            );
     }
     if (gbEnlargeScreenBlit != 0) {
-        if (iMainWinScreenWidth == SCREEN_BLIT_WIDTH && iMainWinScreenHeight == SCREEN_BLIT_HEIGHT) {
-            if (width < SCREEN_BLIT_WIDTH_END) width++;
-            if (height < SCREEN_BLIT_WIDTH_END) height++;
+        if (iMainWinScreenWidth == SCREEN_BLIT_WIDTH
+            && iMainWinScreenHeight == SCREEN_BLIT_HEIGHT) {
+            if (width < SCREEN_BLIT_WIDTH_END)
+                width++;
+            if (height < SCREEN_BLIT_WIDTH_END)
+                height++;
         } else {
-            if (destinationX > 0) destinationX--;
-            if (destinationY > 0) destinationY--;
-            if (width < SCREEN_BLIT_ENLARGE_END) width += SCREEN_BLIT_ENLARGE_PIXELS;
-            if (height < SCREEN_BLIT_ENLARGE_END) height += SCREEN_BLIT_ENLARGE_PIXELS;
+            if (destinationX > 0)
+                destinationX--;
+            if (destinationY > 0)
+                destinationY--;
+            if (width < SCREEN_BLIT_ENLARGE_END)
+                width += SCREEN_BLIT_ENLARGE_PIXELS;
+            if (height < SCREEN_BLIT_ENLARGE_END)
+                height += SCREEN_BLIT_ENLARGE_PIXELS;
         }
     }
     RECT invalidRectangle;
     invalidRectangle.left = destinationX * iMainWinScreenWidth / SCREEN_BLIT_WIDTH;
     invalidRectangle.top = destinationY * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT;
     invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / SCREEN_BLIT_WIDTH - 1;
-    invalidRectangle.bottom = (destinationY + height) * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
+    invalidRectangle.bottom =
+        (destinationY + height) * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
     if (InvalidateRect(hwndApp, &invalidRectangle, FALSE) == FALSE)
         LogStr("InvalidateRect Failed");
     if (UpdateWindow(hwndApp) == FALSE)
@@ -53,27 +72,36 @@ void BlitBitmapToScreen(bitmap *sourceBitmap, int sourceX, int sourceY, int widt
 }
 
 VA(0x004735f0, 0x30)
-void GrabScreenBitmap(bitmap *destination, int x, int y)
-{
-    BlitBitmap(gpWindowManager->m_screen, x, y, destination->m_width, destination->m_height, destination, 0, 0);
+void GrabScreenBitmap(bitmap* destination, int x, int y) {
+    BlitBitmap(
+        gpWindowManager->m_screen,
+        x,
+        y,
+        destination->m_width,
+        destination->m_height,
+        destination,
+        0,
+        0
+    );
 }
 
-
 VA(0x00473620, 0x45)
-void SetPalette(signed char *paletteData, int updateDisplay)
-{
+void SetPalette(signed char* paletteData, int updateDisplay) {
     memcpy(gpBufferPalette->m_data, paletteData, PALETTE_GRAPHICS_BYTES);
-    memcpy(gCyclePal, paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS, sizeof(gCyclePal));
+    memcpy(
+        gCyclePal,
+        paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
+        sizeof(gCyclePal)
+    );
     if (updateDisplay != 0)
         UpdatePalette(gpBufferPalette->m_data);
 }
 
 VA(0x00473670, 0xdd)
-void FadeIn(int increment)
-{
+void FadeIn(int increment) {
     signed char done;
     int i, j, threshold;
-    palette *currentPalette = new palette;
+    palette* currentPalette = new palette;
     if (currentPalette == NULL)
         MemError();
     done = 0;
@@ -103,11 +131,10 @@ void FadeIn(int increment)
 }
 
 VA(0x00473750, 0xcd)
-void FadeOut(int increment)
-{
+void FadeOut(int increment) {
     signed char done;
     int i, j;
-    palette *currentPalette = new palette;
+    palette* currentPalette = new palette;
     if (currentPalette == NULL)
         MemError();
     done = 0;
@@ -146,7 +173,6 @@ void FadeOut(int increment)
 // ---------------------------------------------------------------------------
 
 // HoMM1 OLDASM.CPP helpers; the assert literal names the retail source file.
-
 
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>
@@ -193,7 +219,6 @@ void PostprocessIcon(icon*) {}
 
 // HoMM1's C++ mono clipping path, corresponding to donor Iconm2b.cpp.
 
-
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>
 #include <BASE/IconEntry.h>
@@ -204,12 +229,25 @@ void PostprocessIcon(icon*) {}
 #pragma intrinsic(memcpy, memset)
 
 VA(0x004738e0, 0x1e6)
-void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int frame, int color, int mode, int clipX, int clipY, int clipW, int clipH)
-{
+void ClippedMonoIconToBitmap(
+    icon* sourceIcon,
+    bitmap* destination,
+    int x,
+    int y,
+    int frame,
+    int color,
+    int mode,
+    int clipX,
+    int clipY,
+    int clipW,
+    int clipH
+) {
     int clipRight = clipX + clipW - 1;
     int clipBottom = clipY + clipH - 1;
-    IconEntry *entry = reinterpret_cast<IconEntry *>(sourceIcon->m_data) + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
-    unsigned char *source = sourceIcon->m_data + entry->srcOffset;
+    IconEntry* entry =
+        reinterpret_cast<IconEntry*>(sourceIcon->m_data)
+        + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
+    unsigned char* source = sourceIcon->m_data + entry->srcOffset;
     int position = x + entry->x;
     BOOL drawing = TRUE;
     int row = y + entry->y;
@@ -224,15 +262,24 @@ void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y
             } else
                 drawing = FALSE;
         } else if (run != ICON_MONO_NEWLINE_COMMAND) {
-            if (row >= clipY && row <= clipBottom && position + run >= clipX && position <= clipRight) {
+            if (row >= clipY && row <= clipBottom && position + run >= clipX
+                && position <= clipRight) {
                 if (position >= clipX) {
                     if (position + run <= clipRight)
                         memset(destination->m_pixels + rowOffset + position, color, run);
                     else
-                        memset(destination->m_pixels + rowOffset + position, color, clipRight - position + 1);
+                        memset(
+                            destination->m_pixels + rowOffset + position,
+                            color,
+                            clipRight - position + 1
+                        );
                 } else {
                     if (position + run <= clipRight)
-                        memset(destination->m_pixels + rowOffset + clipX, color, position + run - clipX);
+                        memset(
+                            destination->m_pixels + rowOffset + clipX,
+                            color,
+                            position + run - clipX
+                        );
                     else
                         memset(destination->m_pixels + rowOffset + clipX, color, clipW);
                 }
@@ -257,21 +304,32 @@ static int sClipBottom;
 static int sClipX;
 static unsigned int sClipRun;
 static int sClipRowStart;
-static signed char *sClipRow;
-static IconEntry *sClipEntry;
-static unsigned char *sClipSource;
+static signed char* sClipRow;
+static IconEntry* sClipEntry;
+static unsigned char* sClipSource;
 static int sClipRight;
 static BOOL sClipInside;
 
 VA(0x00473ad0, 0x2ad)
-void ClipIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int frame, int mode, int clipX, int clipY, int clipW, int clipH)
-{
-    sClipEntry = reinterpret_cast<IconEntry *>(sourceIcon->m_data) + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
+void ClipIconToBitmap(
+    icon* sourceIcon,
+    bitmap* destination,
+    int x,
+    int y,
+    int frame,
+    int mode,
+    int clipX,
+    int clipY,
+    int clipW,
+    int clipH
+) {
+    sClipEntry = reinterpret_cast<IconEntry*>(sourceIcon->m_data)
+                 + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
     sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
     sClipX = sClipRowStart = x + sClipEntry->x;
     sClipY = y + sClipEntry->y;
-    if (sClipRowStart < clipX || sClipRowStart + sClipEntry->w > clipX + clipW
-        || sClipY < clipY || sClipY + sClipEntry->h > clipY + clipH) {
+    if (sClipRowStart < clipX || sClipRowStart + sClipEntry->w > clipX + clipW || sClipY < clipY
+        || sClipY + sClipEntry->h > clipY + clipH) {
         sClipInside = FALSE;
         sClipRight = clipX + clipW - 1;
         sClipBottom = clipY + clipH - 1;
@@ -317,7 +375,6 @@ void ClipIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int f
 // int3-delimited single-function TU between Iconm2bClip and BASEMGR; KB's
 // ShutDown calls it. Buka keeps a debug-heap report here; HoMM1 retail ships
 // the empty release body.
-
 
 VA(0x00473d80, 0x1)
 void PrintMemoryLeaks(void) {}

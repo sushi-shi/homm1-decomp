@@ -37,9 +37,9 @@ H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_VIEWPORT_WIDTH = 0x280,
     TOWN_VIEWPORT_HEIGHT = 0x100
 H1_ENUM_CONST_END(TownManagerStorageConstant)
-// clang-format on
+   // clang-format on
 
-// clang-format off
+   // clang-format off
 H1_ENUM_BEGIN(TownArmyCommand)
     TOWN_ARMY_COMMAND_NONE = -1,
     TOWN_ARMY_COMMAND_SELECT = 0,
@@ -237,22 +237,22 @@ H1_ENUM_END(TownRecruitHeroControl)
 #pragma pack(push, 1)
 class townManager : public baseManager {
 public:
-    town *m_town;
-    bitmap *m_backgroundBitmap;
-    townObject *m_townObjects[TOWN_MANAGER_OBJECT_CAPACITY];
+    town* m_town;
+    bitmap* m_backgroundBitmap;
+    townObject* m_townObjects[TOWN_MANAGER_OBJECT_CAPACITY];
     signed char m_townObjectCount;
     // Main covers the town bottom while a building dialog is open.
-    heroWindow *m_coverWindow;
-    heroWindow *m_townWindow;
-    strip *m_garrisonStrip;
-    strip *m_heroStrip;
-    strip *m_selectedStrip;
+    heroWindow* m_coverWindow;
+    heroWindow* m_townWindow;
+    strip* m_garrisonStrip;
+    strip* m_heroStrip;
+    strip* m_selectedStrip;
     short m_selectedArmySlot;
-    strip *m_swapStrip;
+    strip* m_swapStrip;
     short m_swapArmySlot;
-    strip *m_pendingStrip;
+    strip* m_pendingStrip;
     short m_pendingArmySlot;
-    bankBox *m_bankBox;
+    bankBox* m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     short m_lastHoverId;
     H1_ENUM_STORAGE(TownArmyCommand, signed char) m_command;
@@ -262,13 +262,13 @@ public:
     unsigned short m_buildableBuildings;
     signed char m_castleDialogActive;
     short m_selectedBuilding;
-    heroWindow *m_heroWindow0;
-    heroWindow *m_heroWindow1;
+    heroWindow* m_heroWindow0;
+    heroWindow* m_heroWindow1;
     short m_splitAmount;
     short m_splitMaximum;
     // RecruitHero: the chosen tavern slot (-1 if none) and both candidates.
     short m_recruitState;
-    hero *m_recruitHeroes[2];
+    hero* m_recruitHeroes[2];
     // HoMM1 Main tests this additional mask against message.type.
     short m_dispatchMask;
     // --- constructors ---
@@ -276,16 +276,18 @@ public:
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void SetupExtraStuff(void);
-    void SetTown(town *value) { m_town = value; }
+    void SetTown(town* value) {
+        m_town = value;
+    }
     void ChangeTown(void);
     void SetupTown(void);
     void UnloadTown(void);
     void SetArmyCommand(short);
-    void SetCommandAndText(struct tag_message &);
-    void ShowText(char *);
+    void SetCommandAndText(struct tag_message&);
+    void ShowText(char*);
     void DoCommand(signed char);
     void RedrawTownScreen(void);
     void SplitArmy(void);
@@ -295,16 +297,16 @@ public:
     void DrawTown(signed char, int);
     short BuyBuild(short, signed char, signed char);
     void BuildObj(short);
-    void SetupMage(class heroWindow *);
+    void SetupMage(class heroWindow*);
     signed char RecruitHero(signed char);
     void DoTavern(void);
-    void SetupWell(class heroWindow *);
-    void SetupThievesGuild(class heroWindow *, short);
-    void SetupCastle(class heroWindow *);
-    char *GetBuildingName(short);
+    void SetupWell(class heroWindow*);
+    void SetupThievesGuild(class heroWindow*, short);
+    void SetupCastle(class heroWindow*);
+    char* GetBuildingName(short);
     // HoMM1 keeps the thieves-guild helpers as townManager members.
-    void GetCategoryStats(signed char, long *const, signed char *const);
-    void SortStats(long *const, signed char *const);
+    void GetCategoryStats(signed char, long* const, signed char* const);
+    void SortStats(long* const, signed char* const);
 };
 #pragma pack(pop)
 
@@ -317,15 +319,15 @@ struct TownBuildingExtent {
 };
 extern TownBuildingExtent gTownBuildingExtents[4][16];
 
-extern char *cTownCommand[];
+extern char* cTownCommand[];
 extern signed char townTheme[];
 // Open's per-type town-object layout (0x0048c028).
 extern const signed char gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
-short TavernHandler(struct tag_message &);
-short MageGuildHandler(struct tag_message &);
-short SplitArmyHandler(struct tag_message &);
-short CastleHandler(struct tag_message &);
+short TavernHandler(struct tag_message&);
+short MageGuildHandler(struct tag_message&);
+short SplitArmyHandler(struct tag_message&);
+short CastleHandler(struct tag_message&);
 // KB's tavern recruit dialog handler (retail 0x0045140e).
-short RecruitHeroHandler(struct tag_message &);
-extern char *cCastleInfo[];
+short RecruitHeroHandler(struct tag_message&);
+extern char* cCastleInfo[];
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

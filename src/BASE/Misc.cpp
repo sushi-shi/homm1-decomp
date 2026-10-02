@@ -163,8 +163,7 @@ void AbsAiPrint(char* text) {
 
 // Buka ResetHeroRVs; HoMM1 has no off-map guard and indexes [x][y].
 VA(0x00419d9f, 0x177)
-void ResetHeroRVs(int resetAll, int x, int y)
-{
+void ResetHeroRVs(int resetAll, int x, int y) {
     int i;
     int j;
 

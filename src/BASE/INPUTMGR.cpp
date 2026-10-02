@@ -101,8 +101,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F12
                 && (event->modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
                 gpWindowManager->ScreenShot();
-            if (event->type == MESSAGE_KEY_DOWN
-                && event->keyCode == INPUT_SCAN_F1) {
+            if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F1) {
                 SetFullScreenStatus(FALSE);
                 AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
             }
@@ -175,10 +174,8 @@ mouseCoordinates:
 
 mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
-        if (event->x > INPUT_CURSOR_INTERIOR_X_MIN
-            && event->x < INPUT_CURSOR_INTERIOR_X_MAX
-            && event->y > INPUT_CURSOR_INTERIOR_Y_MIN
-            && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
+        if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
+            && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
             gpMouseManager->SetPointer(INPUT_KEEP_CURRENT_MOUSE_FRAME);
     }
 
@@ -282,15 +279,13 @@ VA(0x0047c320, 0x1cb)
 void inputManager::AsciiConvert(tag_message& event) {
     if ((event.keyCode >= INPUT_SCAN_FUNCTION_KEY_FIRST
          && event.keyCode <= INPUT_SCAN_FUNCTION_KEY_LAST)
-        || event.keyCode == INPUT_SCAN_F11
-        || event.keyCode == INPUT_SCAN_F12)
+        || event.keyCode == INPUT_SCAN_F11 || event.keyCode == INPUT_SCAN_F12)
         event.keyCode = m_keyState[event.keyCode];
     else
-        event.keyCode =
-            m_keyState[event.keyCode] & INPUT_SCAN_CODE_MASK;
+        event.keyCode = m_keyState[event.keyCode] & INPUT_SCAN_CODE_MASK;
 
-    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0
-        && event.keyCode > 'A' - 1 && event.keyCode < 'Z' + 1)
+    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0 && event.keyCode > 'A' - 1
+        && event.keyCode < 'Z' + 1)
         event.keyCode += 'a' - 'A';
 
     if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != 0) {

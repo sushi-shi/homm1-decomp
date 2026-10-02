@@ -32,11 +32,11 @@ void RemoteCleanup(void) {
     switch (GameMode) {
         case REMOTE_GAME_NETWORK_HOST:
         case REMOTE_GAME_NETWORK_GUEST:
-            UnloadRemoteDriver(1);
+            UnloadRemoteDriver(REMOTE_DRIVER_NETBIOS);
             break;
         case REMOTE_GAME_MODEM_HOST:
         case REMOTE_GAME_MODEM_GUEST:
-            UnloadRemoteDriver(0);
+            UnloadRemoteDriver(REMOTE_DRIVER_SERIAL);
             break;
         default:
             break;
@@ -129,7 +129,7 @@ void RemoteMain(int gameMode) {
             }
             if (gbDirectConnect) {
                 WFDCStage = 0;
-                giWaitType = 7;
+                giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
                 strcpy(directConnectMessage,
                        "Waiting for other computer to log in to direct connection.");
                 NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -147,12 +147,12 @@ void RemoteMain(int gameMode) {
 }
 
 VA(0x00458916, 0x5b)
-void UnloadRemoteDriver(short networkDriver) {
+void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short) networkDriver) {
     switch (networkDriver) {
-        case 0:
+        case REMOTE_DRIVER_SERIAL:
             com_term(0);
             break;
-        case 1:
+        case REMOTE_DRIVER_NETBIOS:
             nb_term(0);
             break;
     }
@@ -340,7 +340,7 @@ signed char InitNetHost(void) {
         case 2:
             iNetNameIndex = 0;
             sprintf(gText, "HHOST%d", iNetNameIndex);
-            if (nb_sess(0, 0, gText) == 0)
+            if (nb_sess(0, NETBIOS_SESSION_REGISTER, gText) == 0)
                 iInitNetHostStatus++;
             else
                 ShutDown("Network initialization failed");
@@ -351,7 +351,7 @@ signed char InitNetHost(void) {
                 return 1;
             } else if (needName & NETBIOS_SESSION_ERROR) {
                 iNetNameIndex++;
-                if (iNetNameIndex > 10)
+                if (iNetNameIndex > REMOTE_NET_NAME_LAST)
                     ShutDown("Network initialization failed, all game slots used!");
             }
             break;
@@ -385,7 +385,7 @@ signed char InitNetGuest(void) {
             break;
         case 2:
             sprintf(gText, "HGUEST%d", giThisNetPos);
-            if (nb_sess(0, 0, gText) == 0)
+            if (nb_sess(0, NETBIOS_SESSION_REGISTER, gText) == 0)
                 iInitNetGuestStatus++;
             else
                 ShutDown("Network initialization failed");
@@ -396,7 +396,7 @@ signed char InitNetGuest(void) {
             if (unregistered) {
                 if (status & NETBIOS_SESSION_ERROR) {
                     giThisNetPos++;
-                    if (giThisNetPos > 10) {
+                    if (giThisNetPos > REMOTE_NET_NAME_LAST) {
                         sprintf(gText, "Network initialization failed, all game slots used!");
                         ShutDown(gText);
                     } else {
@@ -408,7 +408,7 @@ signed char InitNetGuest(void) {
             }
             break;
         case 4:
-            if (nb_sess(0, 1, 0) != 0) {
+            if (nb_sess(0, NETBIOS_SESSION_RECEIVE_ANY, 0) != 0) {
                 sprintf(gText, "Network initialization failed");
                 ShutDown(gText);
             }
@@ -448,7 +448,7 @@ signed char WaitForGuest(void) {
 
     switch (iWaitForGuestStatus) {
         case 0:
-            status = nb_sess(0, 3, 6);
+            status = nb_sess(0, NETBIOS_SESSION_LISTEN_ANY, 6);
             if (status == 0)
                 iWaitForGuestStatus++;
             return 0;
@@ -461,7 +461,7 @@ signed char WaitForGuest(void) {
                 }
             } else {
                 giNumNetGuests++;
-                nb_sess(0, 5, 6, iNetNameIndex + 1, 1);
+                nb_sess(0, NETBIOS_SESSION_MOVE, 6, iNetNameIndex + 1, 1);
                 return 1;
             }
     }
@@ -477,12 +477,12 @@ int nbnet_init(void) {
     giNumNetGuests = 0;
     switch (GameMode) {
         case REMOTE_GAME_NETWORK_HOST:
-            giWaitType = 4;
+            giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
             sprintf(gText, "Initializing network.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
-            giWaitType = 1;
+            giWaitType = DIALOG_WAIT_NETBIOS_GUEST;
             sprintf(gText, "Waiting On Guest.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
@@ -492,12 +492,12 @@ int nbnet_init(void) {
                 PollSound();
             break;
         case REMOTE_GAME_NETWORK_GUEST:
-            giWaitType = 3;
+            giWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
             sprintf(gText, "Initializing network.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
-            giWaitType = 2;
+            giWaitType = DIALOG_WAIT_NETBIOS_HOST;
             sprintf(gText, "Waiting On Host.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
@@ -514,7 +514,7 @@ void ModemSetup(void) {
     int resetAttempt;
     int i;
 
-    com_init(gConfig.comPort[gbDirectConnect], 4, 0);
+    com_init(gConfig.comPort[gbDirectConnect], COM_BAUD_19200, 0);
     if (!gbDirectConnect) {
         for (resetAttempt = 0; resetAttempt < 2; resetAttempt++) {
             if (gConfig.comPort[gbDirectConnect] >= 1)
@@ -569,7 +569,7 @@ VA(0x00459729, 0x71)
 void GUIModemCommand(char* message, char* command) {
     iLastActionTime = 0;
     iModemCommandPos = 0;
-    giWaitType = 5;
+    giWaitType = DIALOG_WAIT_MODEM_COMMAND;
     strcpy(cModemCommand, command);
     NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     if (!gbFunctionComplete)
@@ -617,7 +617,7 @@ signed char GUIModemResponse(char* message, char* response) {
     memset(GUIMRresponse, 0, 80);
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
-    giWaitType = 6;
+    giWaitType = DIALOG_WAIT_MODEM_RESPONSE;
     NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     if (!gbFunctionComplete)
         ShutDown(NULL);

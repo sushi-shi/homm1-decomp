@@ -11,20 +11,18 @@
 
 VA(0x0047f970, 0xb0)
 tileset::tileset(short id)
-    : resource(RESOURCE_CATEGORY_TILESET, id, RESOURCE_REFERENCE_INITIAL, NULL)
-{
+    : resource(RESOURCE_CATEGORY_TILESET, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
     m_tileCount = gpResourceManager->ReadWord();
     m_tileWidth = gpResourceManager->ReadWord();
     m_tileHeight = gpResourceManager->ReadWord();
     int size = m_tileCount * m_tileWidth * m_tileHeight;
-    m_data = static_cast<signed char *>(malloc(size));
+    m_data = static_cast<signed char*>(malloc(size));
     gpResourceManager->ReadBlock(m_data, size);
     PostprocessBitmap(m_data, m_tileWidth, m_tileCount * m_tileHeight);
 }
 
 VA_COMPGEN(0x0047fa20, 0x33, "??_Gtileset@@UAEPAXI@Z", 0x0047f970)
-tileset::~tileset(void)
-{
+tileset::~tileset(void) {
     free(m_data);
 }

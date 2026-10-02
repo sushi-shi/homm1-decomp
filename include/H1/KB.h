@@ -16,8 +16,13 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_TAVERN = 2,
     BUILDING_SLOT_SHIPYARD = 3,
     BUILDING_SLOT_WELL = 4,
+    // Slots RACE_FIRST.. use per-race build-window frames, the generic ones
+    // before them frame building + 1 (TOWNMGR SetupBuildWindow).
+    BUILDING_SLOT_RACE_FIRST = 5,
     BUILDING_SLOT_TENT = 5,
     BUILDING_SLOT_CASTLE = 6,
+    // The non-dwelling structures end here (TOWNMGR building <= 6 tests).
+    BUILDING_SLOT_STRUCTURE_LAST = 6,
     BUILDING_SLOT_DWELLING_FIRST = 7,
     BUILDING_SLOT_DWELLING_1 = 7,
     BUILDING_SLOT_DWELLING_2 = 8,
@@ -26,10 +31,35 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_DWELLING_5 = 11,
     BUILDING_SLOT_DWELLING_6 = 12,
     BUILDING_SLOT_DWELLING_LAST = 12,
+    // Dwellings per town: gDwellingNames/gDwellingRequirements rows are
+    // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
+    BUILDING_SLOT_DWELLING_COUNT = 6,
     BUILDING_SLOT_COUNT = 13
 H1_ENUM_END(BuildingSlotType)
 
-class soundManager;
+    // clang-format off
+// giWaitType: which poll WaitHandler runs while a wait dialog is up
+// (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
+// GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect; Buka
+// KBDeclarations.h DialogWaitType, same numbering).
+H1_ENUM_BEGIN(DialogWaitType)
+    DIALOG_WAIT_OTHER_PLAYER = 0,
+    DIALOG_WAIT_NETBIOS_GUEST = 1,
+    DIALOG_WAIT_NETBIOS_HOST = 2,
+    DIALOG_WAIT_NETBIOS_INIT_GUEST = 3,
+    DIALOG_WAIT_NETBIOS_INIT_HOST = 4,
+    DIALOG_WAIT_MODEM_COMMAND = 5,
+    DIALOG_WAIT_MODEM_RESPONSE = 6,
+    DIALOG_WAIT_DIRECT_CONNECT = 7
+H1_ENUM_END(DialogWaitType)
+
+// WaitEndSample's waitTime: a negative wait means the default 4000 ms.
+H1_ENUM_CONST_BEGIN(SampleWaitConstant)
+    SAMPLE_WAIT_DEFAULT = -1
+H1_ENUM_CONST_END(SampleWaitConstant)
+                    // clang-format on
+
+                    class soundManager;
 class heroWindowManager;
 class heroWindow;
 class resourceManager;
@@ -53,7 +83,7 @@ extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUN
 extern H1_ENUM_STORAGE(TerrainType, signed char) giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
-extern char *gArmyNames[];
+extern char* gArmyNames[];
 extern char* gArmyNamesPlural[];
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern int gbMinimized;
@@ -217,11 +247,18 @@ void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
-void PopNetBox(char *);
-void NormalDialog(char*, H1_ENUM_PARAM(NormalDialogType, int), int, int,
-                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                  H1_ENUM_PARAM(NormalDialogOrText, int));
+void PopNetBox(char*);
+void NormalDialog(
+    char*,
+    H1_ENUM_PARAM(NormalDialogType, int),
+    int,
+    int,
+    H1_ENUM_PARAM(NormalDialogResourceType, int),
+    int,
+    H1_ENUM_PARAM(NormalDialogResourceType, int),
+    int,
+    H1_ENUM_PARAM(NormalDialogOrText, int)
+);
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 extern char* gSpellDesc[];

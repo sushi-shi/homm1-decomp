@@ -54,7 +54,11 @@ void town::GiveSpells(void) {
         return;
     if (visitingHero->m_owner == m_owner) {
         for (i = 0; i < gMageGuildSpellCount[m_buildState]; i++)
-            visitingHero->AddSpell(m_mageGuildSpells[i], visitingHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
+            visitingHero->AddSpell(
+                m_mageGuildSpells[i],
+                visitingHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
+                0
+            );
     }
 }
 
@@ -81,7 +85,7 @@ void town::View(void) {
     else
         gAdvDisposeLevel = 1;
 
-    townManager *manager = gpTownManager;
+    townManager* manager = gpTownManager;
     manager->SetTown(this);
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpExec->CallManager(gpTownManager);

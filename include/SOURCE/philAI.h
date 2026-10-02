@@ -95,7 +95,18 @@ public:
     void GetTurnAttentionValue(int);
     int RVConversion(int* const);
     float TurnsToBuy(int* const);
-    int RVOfPosition(class hero*, short, short, signed char, short, short, signed char, short, short, int);
+    int RVOfPosition(
+        class hero*,
+        short,
+        short,
+        signed char,
+        short,
+        short,
+        signed char,
+        short,
+        short,
+        int
+    );
     int StrategicValueOfPosition(class hero*, short, short, signed char, int*);
     int ValueOfTown(class town*);
     void TurnCostResource(int);
@@ -216,9 +227,9 @@ extern signed char gTownHeroClass[];
 H1_ENUM_CONST_BEGIN(AIResourceValue)
     RV_UNSET = -32001
 H1_ENUM_CONST_END(AIResourceValue)
-// clang-format on
-// GoodAdjacent skips cells whose adjacency byte carries the monster bit.
-extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+         // clang-format on
+         // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
+         extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // clang-format off
 // mapExtra bit 7: game::SetupAdjacentMons sets it where FindAdjacentMonster
 // finds a guard next to the cell and clears it (mask 0x7f) elsewhere.

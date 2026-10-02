@@ -17,7 +17,7 @@ H1_ENUM_CONST_END(BitmapCopyConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-class bitmap : public resource {
+                               class bitmap : public resource {
 public:
     H1_ENUM_STORAGE(BitmapType, short) m_bitmapType;
     short m_width;

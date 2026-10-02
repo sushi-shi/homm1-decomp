@@ -28,33 +28,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
-// SmackOptions rows (retail 0x0049fd08), named by their movie files. Rows
-// 0..1 are the publisher logos that draw "Presents...", 2..3 the intro and
-// 4..7 the endings; oldmain and the end sequence pick one of each pair
-// from gConfig.slowVideo.
-H1_ENUM_BEGIN(SmackVideo)
-    SMACK_NWCLOGO = 0,
-    SMACK_NWCLOGO1 = 1,
-    SMACK_LOGO_LAST = SMACK_NWCLOGO1,
-    SMACK_INTRO02C = 2,
-    SMACK_INTRO_FIRST = SMACK_INTRO02C,
-    SMACK_INTRO02U = 3,
-    SMACK_INTRO_LAST = SMACK_INTRO02U,
-    SMACK_WIN01C = 4,
-    SMACK_WIN01U = 5,
-    SMACK_WIN02 = 6,
-    SMACK_LOSE1 = 7
-H1_ENUM_END(SmackVideo)
-// clang-format on
-
 // RAD library allocation callbacks; HoMM1 links SMACKW32.DLL, so neither is
 // reached.
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
 VA(0x0045abe0, 0x4c)
-H1_C_LINKAGE void *radmalloc(unsigned long numbytes) {
-    void *mem;
+H1_C_LINKAGE void* radmalloc(unsigned long numbytes) {
+    void* mem;
     if (numbytes == 0)
         return NULL;
     if (numbytes != 0xffffffff)
@@ -67,13 +47,12 @@ H1_C_LINKAGE void *radmalloc(unsigned long numbytes) {
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
 VA(0x0045ac2c, 0x1c)
-H1_C_LINKAGE void radfree(void *ptr) {
+H1_C_LINKAGE void radfree(void* ptr) {
     free(ptr);
 }
 
 VA(0x0045ac48, 0x2a)
-smackManager::smackManager(void) : baseManager() {
-}
+smackManager::smackManager(void) : baseManager() {}
 
 VA(0x0045ac72, 0x53)
 short smackManager::Open(short priority) {
@@ -91,14 +70,14 @@ void smackManager::Close(void) {
 }
 
 VA(0x0045ace4, 0x975)
-short smackManager::Main(struct tag_message &msg) {
+short smackManager::Main(struct tag_message& msg) {
     char savedUpdateFlags;
     int startFrame;
     int currentFrame;
-    palette *pPalette;
-    signed char *savedPal;
-    font *bigFont;
-    Smack *smk;
+    palette* pPalette;
+    signed char* savedPal;
+    font* bigFont;
+    Smack* smk;
     long frameStartTick;
     long lastTick;
 
@@ -118,11 +97,30 @@ short smackManager::Main(struct tag_message &msg) {
     savedUpdateFlags = gpWindowManager->m_updateFlags;
     sprintf(gText, "%s%s", gcAnimPath, SmackOptions[bSmackNum].fileName);
     LogStr("SmackM2b");
-    smk = SmackOpen(gText, SmackOptions[bSmackNum].openFlags | (gpSoundManager->m_digitalDriver ? 0xfe00 : 0), -1);
+    smk = SmackOpen(
+        gText,
+        SmackOptions[bSmackNum].openFlags | (gpSoundManager->m_digitalDriver ? 0xfe00 : 0),
+        -1
+    );
     LogStr("SmackM3b");
     if (smk) {
-        FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
-        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
+        FillBitmapArea(
+            gpWindowManager->m_screen,
+            0,
+            0,
+            LOGICAL_SCREEN_WIDTH,
+            LOGICAL_SCREEN_HEIGHT,
+            0
+        );
+        BlitBitmapToScreen(
+            gpWindowManager->m_screen,
+            0,
+            0,
+            LOGICAL_SCREEN_WIDTH,
+            LOGICAL_SCREEN_HEIGHT,
+            0,
+            0
+        );
         SmackSoundOnOff(smk, gConfig.musicVolume);
         if (gbSkipIntro && (bSmackNum == SMACK_INTRO02C || bSmackNum == SMACK_INTRO02U)) {
             startFrame = 125;
@@ -131,27 +129,50 @@ short smackManager::Main(struct tag_message &msg) {
             SmackGoto(smk, startFrame);
             SmackSoundOnOff(smk, gConfig.musicVolume);
             if (smk->paletteSelector == 1)
-                pPalette->m_data = reinterpret_cast<signed char*>(smk->Palette); // API-forced: Smacker palettes are unsigned bytes.
+                pPalette->m_data = reinterpret_cast<signed char*>(
+                    smk->Palette
+                ); // API-forced: Smacker palettes are unsigned bytes.
             else
-                pPalette->m_data = reinterpret_cast<signed char*>(smk->alternatePalette); // API-forced: Smacker palettes are unsigned bytes.
+                pPalette->m_data = reinterpret_cast<signed char*>(
+                    smk->alternatePalette
+                ); // API-forced: Smacker palettes are unsigned bytes.
             SetPalette(pPalette->m_data, 1);
             gbFirstTimeThrough = 1;
         }
         gpWindowManager->m_updateFlags = SmackOptions[bSmackNum].updateFlags;
         if (SmackOptions[bSmackNum].fadeIn)
             gpWindowManager->FadeScreen(1, 8, NULL);
-        SmackToBuffer(smk, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, gpWindowManager->m_screen->m_pixels, 0);
+        SmackToBuffer(
+            smk,
+            0,
+            0,
+            LOGICAL_SCREEN_WIDTH,
+            LOGICAL_SCREEN_HEIGHT,
+            gpWindowManager->m_screen->m_pixels,
+            0
+        );
         for (currentFrame = startFrame; currentFrame <= smk->Frames; currentFrame++) {
             SmackDoFrame(smk);
             if (SmackOptions[bSmackNum].fadeIn && currentFrame == startFrame) {
                 if (smk->paletteSelector == 1)
-                    pPalette->m_data = reinterpret_cast<signed char*>(smk->Palette); // API-forced: Smacker palettes are unsigned bytes.
+                    pPalette->m_data = reinterpret_cast<signed char*>(
+                        smk->Palette
+                    ); // API-forced: Smacker palettes are unsigned bytes.
                 else
-                    pPalette->m_data = reinterpret_cast<signed char*>(smk->alternatePalette); // API-forced: Smacker palettes are unsigned bytes.
+                    pPalette->m_data = reinterpret_cast<signed char*>(
+                        smk->alternatePalette
+                    ); // API-forced: Smacker palettes are unsigned bytes.
                 if (giMainVideoModeColorDepth == 8 || gConfig.gfx[giCurExe].fullScreen) {
                     while (SmackToBufferRect(smk, 1))
-                        BlitBitmapToScreen(gpWindowManager->m_screen, smk->LastRectx, smk->LastRecty,
-                                           smk->LastRectw, smk->LastRecth, smk->LastRectx, smk->LastRecty);
+                        BlitBitmapToScreen(
+                            gpWindowManager->m_screen,
+                            smk->LastRectx,
+                            smk->LastRecty,
+                            smk->LastRectw,
+                            smk->LastRecth,
+                            smk->LastRectx,
+                            smk->LastRecty
+                        );
                 }
                 gpWindowManager->FadeScreen(0, 8, pPalette);
             } else {
@@ -162,8 +183,15 @@ short smackManager::Main(struct tag_message &msg) {
                     gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
                 }
                 while (SmackToBufferRect(smk, 1))
-                    BlitBitmapToScreen(gpWindowManager->m_screen, smk->LastRectx, smk->LastRecty,
-                                       smk->LastRectw, smk->LastRecth, smk->LastRectx, smk->LastRecty);
+                    BlitBitmapToScreen(
+                        gpWindowManager->m_screen,
+                        smk->LastRectx,
+                        smk->LastRecty,
+                        smk->LastRectw,
+                        smk->LastRecth,
+                        smk->LastRectx,
+                        smk->LastRecty
+                    );
             }
             Process1WindowsMessage();
             if (smk->Frames != currentFrame)
@@ -181,18 +209,18 @@ short smackManager::Main(struct tag_message &msg) {
             if (!gbFirstTimeThrough || bSmackNum > SMACK_INTRO_LAST) {
                 Process1WindowsMessage();
                 switch (gpInputManager->GetEvent().type) {
-                case MESSAGE_KEY_DOWN:
-                case MESSAGE_LEFT_BUTTON_DOWN:
-                case MESSAGE_RIGHT_BUTTON_DOWN:
-                    if (bSmackNum >= SMACK_INTRO_FIRST)
+                    case MESSAGE_KEY_DOWN:
+                    case MESSAGE_LEFT_BUTTON_DOWN:
+                    case MESSAGE_RIGHT_BUTTON_DOWN:
+                        if (bSmackNum >= SMACK_INTRO_FIRST)
+                            break;
+                        else {
+                            currentFrame = smk->Frames;
+                            gbSkipIntro = 1;
+                        }
                         break;
-                    else {
-                        currentFrame = smk->Frames;
-                        gbSkipIntro = 1;
-                    }
-                    break;
-                default:
-                    break;
+                    default:
+                        break;
                 }
             }
         }
@@ -202,8 +230,15 @@ short smackManager::Main(struct tag_message &msg) {
             SmackGoto(smk, 101);
             SmackDoFrame(smk);
             while (SmackToBufferRect(smk, 1))
-                BlitBitmapToScreen(gpWindowManager->m_screen, smk->LastRectx, smk->LastRecty, smk->LastRectw,
-                                   smk->LastRecth, smk->LastRectx, smk->LastRecty);
+                BlitBitmapToScreen(
+                    gpWindowManager->m_screen,
+                    smk->LastRectx,
+                    smk->LastRecty,
+                    smk->LastRectw,
+                    smk->LastRecth,
+                    smk->LastRectx,
+                    smk->LastRecty
+                );
             bigFont->DrawString("Presents...", 280, 440, 255);
             gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
         }
@@ -216,22 +251,41 @@ short smackManager::Main(struct tag_message &msg) {
             for (;;) {
                 Process1WindowsMessage();
                 switch (gpInputManager->GetEvent().type) {
-                case MESSAGE_KEY_DOWN:
-                case MESSAGE_LEFT_BUTTON_DOWN:
-                case MESSAGE_RIGHT_BUTTON_DOWN:
-                    goto pressed;
+                    case MESSAGE_KEY_DOWN:
+                    case MESSAGE_LEFT_BUTTON_DOWN:
+                    case MESSAGE_RIGHT_BUTTON_DOWN:
+                        goto pressed;
                 }
             }
         pressed:;
         }
         if (SmackOptions[bSmackNum].fadeOut) {
             if (smk->paletteSelector == 1)
-                pPalette->m_data = reinterpret_cast<signed char*>(smk->Palette); // API-forced: Smacker palettes are unsigned bytes.
+                pPalette->m_data = reinterpret_cast<signed char*>(
+                    smk->Palette
+                ); // API-forced: Smacker palettes are unsigned bytes.
             else
-                pPalette->m_data = reinterpret_cast<signed char*>(smk->alternatePalette); // API-forced: Smacker palettes are unsigned bytes.
+                pPalette->m_data = reinterpret_cast<signed char*>(
+                    smk->alternatePalette
+                ); // API-forced: Smacker palettes are unsigned bytes.
             gpWindowManager->FadeScreen(1, 8, pPalette);
-            FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
-            BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
+            FillBitmapArea(
+                gpWindowManager->m_screen,
+                0,
+                0,
+                LOGICAL_SCREEN_WIDTH,
+                LOGICAL_SCREEN_HEIGHT,
+                0
+            );
+            BlitBitmapToScreen(
+                gpWindowManager->m_screen,
+                0,
+                0,
+                LOGICAL_SCREEN_WIDTH,
+                LOGICAL_SCREEN_HEIGHT,
+                0,
+                0
+            );
         }
         SmackClose(smk);
     }

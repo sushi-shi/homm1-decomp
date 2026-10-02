@@ -129,10 +129,10 @@ H1_ENUM_CONST_BEGIN(CombatFlowConstant)
 H1_ENUM_CONST_END(CombatFlowConstant)
 // clang-format on
 
-// EVENTS data (Buka EVENTS.h owner): the assertion records (file literals and
-// line base, as in MOUSEMGR), the parked music volume DoEvent and DoCombat
-// restore (-1 when none) and the event-music flag.
-extern short gEventsAssertLine;
+ // EVENTS data (Buka EVENTS.h owner): the assertion records (file literals and
+ // line base, as in MOUSEMGR), the parked music volume DoEvent and DoCombat
+ // restore (-1 when none) and the event-music flag.
+ extern short gEventsAssertLine;
 extern int giEventMusicVolume;
 extern signed char gbEventMusicPlaying;
 

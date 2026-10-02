@@ -140,7 +140,7 @@ struct mapHeroExtra {
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
 // are fixed by retail address arithmetic; unrecovered spans stay opaque.
 #pragma pack(push, 1)
-        class game {
+class game {
 public:
     // ShowCongrats scales the base score by this percentage.
     short m_difficultyRating;
@@ -265,7 +265,7 @@ public:
     signed char GetNewHeroId(signed char);
     signed char GetTownId(signed char, signed char);
     signed char GetMineId(signed char, signed char);
-    short SaveGame(char *, signed char);
+    short SaveGame(char*, signed char);
     void SetupOrigData(void);
     // HoMM1 retail returns 1 in AX (ret 0xc).
     short LoadGame(char*, int, int);
@@ -331,7 +331,9 @@ public:
     int ExperienceValueOfStack(class armyGroup*, class hero*);
     // HoMM1 retail: hero and army only (ret 8).
     int GetLuck(class hero*, class army*);
-    int GetPlayerCrest(int player) { return m_players[player].m_color; }
+    int GetPlayerCrest(int player) {
+        return m_players[player].m_color;
+    }
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
     void ShowComputerScreen(void);
@@ -387,7 +389,6 @@ public:
     int GetSideDesc(char*, int, int);
     // DoEvent's obelisk branch (byte player, ret 4).
     void VisitObelisk(signed char);
-
 };
 #pragma pack(pop)
 

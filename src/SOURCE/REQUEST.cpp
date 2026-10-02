@@ -133,8 +133,12 @@ fileRequester::fileRequester(
     if (gbShowMapInfo) {
         for (index = 0; index < sortedCount; index++) {
             sprintf(
-                fullPath, "%s%s%s", directory, m_fileNames[index].text,
-                m_extensions[index].text);
+                fullPath,
+                "%s%s%s",
+                directory,
+                m_fileNames[index].text,
+                m_extensions[index].text
+            );
             fd = open(fullPath, O_BINARY);
             if (fd == -1)
                 FileError(fullPath);
@@ -199,7 +203,18 @@ short fileRequester::Open(short priority) {
     m_window = new heroWindow(m_x, m_y, "request.bin");
     if (!m_window)
         MemError();
-    m_scrollKnob = new iconWidget(283, 56, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, scrollId, ICON_WIDGET_DRAW, 1);
+    m_scrollKnob = new iconWidget(
+        283,
+        56,
+        8,
+        17,
+        "scroll.icn",
+        4,
+        ICON_DRAW_NORMAL,
+        scrollId,
+        ICON_WIDGET_DRAW,
+        1
+    );
     if (!m_scrollKnob)
         MemError();
     m_window->AddWidget(m_scrollKnob, -1);
@@ -334,8 +349,16 @@ short fileRequester::Main(tag_message& message) {
                         case DIALOG_BUTTON_2:
                             if (m_selectedIndex == -1 && !m_filename[0]) {
                                 NormalDialog(
-                                    "Please make a selection from the list, or press cancel.", NORMAL_DIALOG_TYPE_OK,
-                                    -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                                    "Please make a selection from the list, or press cancel.",
+                                    NORMAL_DIALOG_TYPE_OK,
+                                    -1,
+                                    -1,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_RESOURCE,
+                                    0,
+                                    NORMAL_DIALOG_NO_OR_TEXT
+                                );
                                 break;
                             } else {
                                 message.value = message.id;
@@ -426,8 +449,7 @@ short fileRequester::Main(tag_message& message) {
                         case firstRowId + 7:
                         case firstRowId + 8:
                         case firstRowId + 9:
-                            if (message.id - firstRowId + m_topIndex
-                                == m_selectedIndex) {
+                            if (message.id - firstRowId + m_topIndex == m_selectedIndex) {
                                 message.value = DIALOG_BUTTON_2;
                                 message.id = DIALOG_BUTTON_2;
                                 finished = 1;
@@ -461,8 +483,20 @@ short fileRequester::Main(tag_message& message) {
                     gText,
                     "The game you have chosen only has slots for %d human(s).  You need one "
                     "with room for at least %d humans.",
-                    ch, giNumHumanPlayers);
-                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    ch,
+                    giNumHumanPlayers
+                );
+                NormalDialog(
+                    gText,
+                    NORMAL_DIALOG_TYPE_OK,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
                 finished = 0;
             }
             if (ch > giNumHumanPlayers) {
@@ -470,8 +504,20 @@ short fileRequester::Main(tag_message& message) {
                     gText,
                     "The game you have chosen was being played with %d humans. Is it OK if the "
                     "computer takes the place of the last %d human(s)?",
-                    ch, ch - giNumHumanPlayers);
-                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    ch,
+                    ch - giNumHumanPlayers
+                );
+                NormalDialog(
+                    gText,
+                    NORMAL_DIALOG_TYPE_YES_NO,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     finished = 0;
             }
@@ -664,8 +710,11 @@ char* fileRequester::GetFilename(void) {
         sprintf(gText, "%s%s", m_filename, m_defaultExtension);
     else if (m_mode == 0)
         sprintf(
-            gText, "%s%s", m_fileNames[m_selectedIndex].text,
-            m_extensions[m_selectedIndex].text);
+            gText,
+            "%s%s",
+            m_fileNames[m_selectedIndex].text,
+            m_extensions[m_selectedIndex].text
+        );
     else
         sprintf(gText, "%s%s", m_fileNames[m_selectedIndex].text, m_defaultExtension);
     strcpy(m_filename, gText);
@@ -698,8 +747,7 @@ void fileRequester::ShowMapInfo(void) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = levelId;
     if (m_selectedIndex != -1)
-        message.text =
-            gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
+        message.text = gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
     gpReqExtraWindow->BroadcastMessage(message);
     if (m_selectedIndex != -1)
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);

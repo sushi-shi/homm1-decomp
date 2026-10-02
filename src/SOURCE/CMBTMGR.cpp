@@ -8,6 +8,7 @@
 #include <BASE/mouseManager.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/combatTypes.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
@@ -28,22 +29,23 @@ int giSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
-combatManager::combatManager(void)
-{
+combatManager::combatManager(void) {
     m_gridMode = 0;
     m_unknown6f9 = -1;
-    m_currentSide = 0;
+    m_currentSide = COMBAT_DEFENDER_SIDE;
     m_limitCreatureHex = 0;
     m_limitCreature = 0;
     m_showArmyQuantities = 1;
     m_gridUpdateRow = 0;
     m_currentCommand = COMBAT_MESSAGE_COMMAND_DEFAULT;
     m_unknown6e8 = 0;
-    m_currentSpeed = 4;
+    m_currentSpeed = CREATURE_SPEED_BLAZING;
     m_savedBorder = NULL;
-    m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame = m_wallDamage = -1;
+    m_heroType[COMBAT_DEFENDER_SIDE] = m_heroType[COMBAT_ATTACKER_SIDE] =
+        m_catapultFrame[COMBAT_DEFENDER_SIDE] = m_catapultFrame[COMBAT_ATTACKER_SIDE] =
+            m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
-    m_castleSide[0] = m_castleSide[1] = 0;
+    m_castleSide[COMBAT_DEFENDER_SIDE] = m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
     m_combatWindowOpen = 0;
 }
 
@@ -57,15 +59,15 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
 
     if (!from || !to)
         return;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (to->IsMember(from->m_creatureTypes[i])) {
             to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], -1);
             from->Dismiss(i);
         }
     }
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (from->m_creatureTypes[i] != CREATURE_NONE) {
-            for (j = 0; j < 5; j++) {
+            for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
                 if (to->m_creatureTypes[j] == CREATURE_NONE) {
                     to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], j);
                     from->Dismiss(i);
@@ -77,10 +79,18 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
 
 // Buka CMBTMGR.cpp SetupCombat; HoMM1's attacker is side 1.
 VA(0x0044b730, 0x3db)
-void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGroup* attackerGroup,
-                                town* defenderTown, hero* defenderHero, armyGroup* defenderGroup,
-                                int combatX, int combatY, int randomSeed)
-{
+void combatManager::SetupCombat(
+    int mapX,
+    int mapY,
+    hero* attackerHero,
+    armyGroup* attackerGroup,
+    town* defenderTown,
+    hero* defenderHero,
+    armyGroup* defenderGroup,
+    int combatX,
+    int combatY,
+    int randomSeed
+) {
     int i;
 
     giSeed = randomSeed;
@@ -93,19 +103,19 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         m_battlefieldCell = NULL;
     m_terrainType = giGroundToTerrain[m_battlefieldCell->m_tileIndex];
     if (attackerHero) {
-        m_playerId[1] = attackerHero->m_owner;
+        m_playerId[COMBAT_ATTACKER_SIDE] = attackerHero->m_owner;
         attackerGroup = &attackerHero->m_army;
     } else {
-        m_playerId[1] = -1;
+        m_playerId[COMBAT_ATTACKER_SIDE] = -1;
     }
     if (defenderHero) {
-        m_playerId[0] = defenderHero->m_owner;
+        m_playerId[COMBAT_DEFENDER_SIDE] = defenderHero->m_owner;
         defenderGroup = &defenderHero->m_army;
     } else if (defenderTown) {
-        m_playerId[0] = defenderTown->m_owner;
+        m_playerId[COMBAT_DEFENDER_SIDE] = defenderTown->m_owner;
         defenderGroup = &defenderTown->m_army;
     } else {
-        m_playerId[0] = -1;
+        m_playerId[COMBAT_DEFENDER_SIDE] = -1;
     }
     for (i = 0; i < 2; i++) {
         if (m_playerId[i] >= 0)
@@ -131,38 +141,39 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         m_visitingHeroPresent[i] = 0;
         m_heroCastSpell[i] = 0;
     }
-    m_castleSide[1] = 0;
+    m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
     if (defenderTown) {
-        if (defenderTown->m_occupyingHeroId != -1) {
-            m_armyGroups[0] = &m_heroes[0]->m_army;
-            CombineGroups(&defenderTown->m_army, &m_heroes[0]->m_army);
-            m_visitingHeroPresent[0] = 1;
+        if (defenderTown->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
+            m_armyGroups[COMBAT_DEFENDER_SIDE] = &m_heroes[COMBAT_DEFENDER_SIDE]->m_army;
+            CombineGroups(&defenderTown->m_army, &m_heroes[COMBAT_DEFENDER_SIDE]->m_army);
+            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 1;
         } else {
-            m_visitingHeroPresent[0] = 0;
+            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 0;
         }
         if (defenderTown->m_buildings & 0x40)
-            m_castleSide[0] = 1;
+            m_castleSide[COMBAT_DEFENDER_SIDE] = 1;
         else
-            m_castleSide[0] = 0;
-        m_combatTowns[0] = defenderTown;
-        m_originalCombatTown = m_combatTowns[0];
+            m_castleSide[COMBAT_DEFENDER_SIDE] = 0;
+        m_combatTowns[COMBAT_DEFENDER_SIDE] = defenderTown;
+        m_originalCombatTown = m_combatTowns[COMBAT_DEFENDER_SIDE];
     } else {
-        m_castleSide[0] = 0;
-        m_combatTowns[0] = NULL;
+        m_castleSide[COMBAT_DEFENDER_SIDE] = 0;
+        m_combatTowns[COMBAT_DEFENDER_SIDE] = NULL;
     }
-    m_combatTowns[1] = NULL;
+    m_combatTowns[COMBAT_ATTACKER_SIDE] = NULL;
 }
 
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
 // field, then the fade-in and a random combat theme.
 VA(0x0044bb0b, 0x40e)
-short combatManager::Open(short priority)
-{
+short combatManager::Open(short priority) {
     int song;
     SAMPLE2 sample;
     int musicList[4];
 
-    m_messageTypeMask = 0x32f;
+    m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
+                        | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
+                        | MESSAGE_WIDGET;
     m_combatWindowOpen = 0;
     m_savedBorder = NULL;
     gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
@@ -172,8 +183,8 @@ short combatManager::Open(short priority)
     sample = LoadPlaySample("PREBATTL.82M");
     giNextAction = ACTION_NONE;
     gpWindowManager->FadeScreen(1, 8, NULL);
-    m_sideRetreated[0] = 0;
-    m_sideRetreated[1] = 0;
+    m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
+    m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = 3;
     gbIconClipOn = 0;
     m_computeExtent = 0;
@@ -194,25 +205,28 @@ short combatManager::Open(short priority)
     GenerateMap();
     gbRetreatWin = 0;
     gbCombatSurrender = 0;
-    m_sideDefeated[0] = 0;
-    m_sideDefeated[1] = 0;
+    m_sideDefeated[COMBAT_DEFENDER_SIDE] = 0;
+    m_sideDefeated[COMBAT_ATTACKER_SIDE] = 0;
     m_limitCreature = 1;
     SetGridMode(0);
     m_gridUpdateRow = 0;
     m_combatWindowOpen = 1;
     DrawFrame(1);
-    glTimers[0] = KBTickCount() + 75;
+    glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     m_combatPalette = gpResourceManager->GetPalette("kb.pal");
     KBChangeMenu(hmnuCmbt);
     CombatMessage("", 1);
     gpWindowManager->FadeScreen(0, 8, m_combatPalette);
     gbLimitedCombatUpdatePalette = 1;
     gpMouseManager->NewUpdate(1);
-    gpMouseManager->WarpPointer(m_hexCells[m_limitCreatureHex].m_x, m_hexCells[m_limitCreatureHex].m_y - 50);
+    gpMouseManager->WarpPointer(
+        m_hexCells[m_limitCreatureHex].m_x,
+        m_hexCells[m_limitCreatureHex].m_y - 50
+    );
     gpMouseManager->ReallyShowPointer();
     ResetMouse();
     m_gridSelectionDisabled = 0;
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     musicList[0] = MUSIC_TRACK_BATTLE_2;
     musicList[1] = MUSIC_TRACK_BATTLE_3;
     musicList[2] = MUSIC_TRACK_BATTLE_1;
@@ -226,10 +240,29 @@ short combatManager::Open(short priority)
     return 0;
 }
 
+// clang-format off
+// cCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
+// mountain variant by MoreTreesNear), the boat for water and the graveyard.
+H1_ENUM_BEGIN(CombatBackground)
+    COMBAT_BACKGROUND_GRASS_FOREST = 0,
+    COMBAT_BACKGROUND_GRASS_MOUNTAIN = 1,
+    COMBAT_BACKGROUND_SNOW_FOREST = 2,
+    COMBAT_BACKGROUND_SNOW_MOUNTAIN = 3,
+    COMBAT_BACKGROUND_SWAMP = 4,
+    COMBAT_BACKGROUND_LAVA = 5,
+    COMBAT_BACKGROUND_DESERT = 6,
+    COMBAT_BACKGROUND_DIRT_FOREST = 7,
+    COMBAT_BACKGROUND_DIRT_MOUNTAIN = 8,
+    COMBAT_BACKGROUND_BOAT = 9,
+    COMBAT_BACKGROUND_GRAVEYARD = 10,
+    COMBAT_BACKGROUND_COUNT = 11
+H1_ENUM_END(CombatBackground)
+// clang-format on
+
 // CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
 // table after Open's literals, followed by its own literals.
 DATA(0x00490db0)
-char* cCombatBkgNames[11] = {
+char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
     "frstwgrs.bkg",
     "mtnwgrsf.bkg",
     "snowfrst.bkg",
@@ -246,8 +279,7 @@ char* cCombatBkgNames[11] = {
 // Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
 // count of the side that held it.
 VA(0x0044bf19, 0x1ea)
-void combatManager::Close(void)
-{
+void combatManager::Close(void) {
     int i;
     int survivor;
 
@@ -259,9 +291,9 @@ void combatManager::Close(void)
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-        survivor = static_cast<signed char>(m_playerId[0] != -1);
+        survivor = static_cast<signed char>(m_playerId[COMBAT_DEFENDER_SIDE] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (m_armyGroups[survivor]->m_creatureTypes[i] != CREATURE_NONE)
                 m_battlefieldCell->m_objectMetadata += m_armyGroups[survivor]->m_creatureCounts[i];
         }
@@ -281,18 +313,17 @@ void combatManager::Close(void)
 // Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
 // side's army group; a dead stack empties its slot.
 VA(0x0044c103, 0x161)
-void combatManager::UpdateArmyGroup(signed char side)
-{
+void combatManager::UpdateArmyGroup(signed char side) {
     short i;
     short j;
 
     for (i = 0; i < m_numArmies[side]; i++) {
-        for (j = 0; j < 5; j++) {
+        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
             if (m_armyGroups[side]->m_creatureTypes[j] == m_armies[side][i].m_creatureType)
                 break;
         }
-        if (j < 5) {
-            if (m_armies[side][i].m_stats.attributes & 0x10) {
+        if (j < ARMY_GROUP_SLOT_COUNT) {
+            if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD) {
                 m_armyGroups[side]->m_creatureTypes[j] = CREATURE_NONE;
                 m_armyGroups[side]->m_creatureCounts[j] = 0;
             } else {
@@ -305,8 +336,7 @@ void combatManager::UpdateArmyGroup(signed char side)
 // Buka CMBTMGR.cpp GenerateMap; HoMM1 also places both armies, scatters
 // ground patches and, outside a siege, up to two obstacles.
 VA(0x0044c264, 0x7be)
-void combatManager::GenerateMap(void)
-{
+void combatManager::GenerateMap(void) {
     short x;
     short i;
     short count;
@@ -315,110 +345,115 @@ void combatManager::GenerateMap(void)
     int randomCol;
     short armyCount;
 
-    if (m_castleSide[0] == 1)
-        m_catapultFrame[1] = 0;
+    if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1)
+        m_catapultFrame[COMBAT_ATTACKER_SIDE] = 0;
     else
-        m_catapultFrame[1] = -1;
-    if (m_castleSide[1] == 1)
-        m_catapultFrame[0] = 0;
+        m_catapultFrame[COMBAT_ATTACKER_SIDE] = -1;
+    if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1)
+        m_catapultFrame[COMBAT_DEFENDER_SIDE] = 0;
     else
-        m_catapultFrame[0] = -1;
-    for (y = 0; y < 5; y++) {
-        for (x = 0; x < 9; x++) {
-            m_hexCells[y * 9 + x].m_y = y * 80 + 139;
-            m_hexCells[y * 9 + x].m_x = ((y & 1) ? 27 : -12) + x * 78;
-            m_hexCells[y * 9 + x].m_groundIcon = 0;
-            m_hexCells[y * 9 + x].m_groundFrame = static_cast<signed char>(SRandom(0, 3)) + 4;
+        m_catapultFrame[COMBAT_DEFENDER_SIDE] = -1;
+    for (y = 0; y < COMBAT_GRID_ROWS; y++) {
+        for (x = 0; x < COMBAT_GRID_COLUMNS; x++) {
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y = y * 80 + 139;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_x = ((y & 1) ? 27 : -12) + x * 78;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 0;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame =
+                static_cast<signed char>(SRandom(0, 3)) + 4;
             if (x == 0) {
-                if (m_castleSide[1] == 1)
-                    m_hexCells[y * 9 + x].m_groundIcon = 5;
+                if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1)
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 5;
                 if (y & 1)
-                    m_hexCells[y * 9 + x].m_groundFrame = 0;
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 0;
                 else
-                    m_hexCells[y * 9 + x].m_groundFrame = 1;
-            } else if (x == 8) {
-                if (m_castleSide[0] == 1)
-                    m_hexCells[y * 9 + x].m_groundIcon = 5;
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 1;
+            } else if (x == COMBAT_GRID_LAST_COLUMN) {
+                if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1)
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 5;
                 if (y & 1)
-                    m_hexCells[y * 9 + x].m_groundFrame = 3;
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 3;
                 else
-                    m_hexCells[y * 9 + x].m_groundFrame = 2;
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 2;
             }
-            m_hexCells[y * 9 + x].m_occupantSide = -1;
-            m_hexCells[y * 9 + x].m_occupantIndex = -1;
-            m_hexCells[y * 9 + x].m_occupantFrame = -1;
-            m_hexCells[y * 9 + x].m_obstacleIndex = -1;
-            m_hexCells[y * 9 + x].m_pathFlag = 0;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantSide = COMBAT_SIDE_NONE;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantIndex = -1;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantFrame = -1;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = COMBAT_OBSTACLE_NONE;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_pathFlag = 0;
         }
     }
     count = SRandom(8, 15);
     for (i = 0; i < count; i++) {
         randomRow = SRandom(0, 4);
         randomCol = SRandom(1, 7);
-        m_hexCells[randomRow * 9 + randomCol].m_groundFrame = static_cast<signed char>(SRandom(0, 2)) + 8;
+        m_hexCells[randomRow * COMBAT_GRID_COLUMNS + randomCol].m_groundFrame =
+            static_cast<signed char>(SRandom(0, 2)) + 8;
     }
-    if (m_castleSide[0]) {
+    if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
         for (x = 6; x < 8; x++) {
-            for (y = 0; y < 5; y++) {
-                m_hexCells[y * 9 + x].m_groundIcon = 5;
-                m_hexCells[y * 9 + x].m_groundFrame = 4;
+            for (y = 0; y < COMBAT_GRID_ROWS; y++) {
+                m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 5;
+                m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 4;
             }
         }
-        for (y = 0; y < 5; y++) {
-            m_hexCells[y * 9 + 5].m_obstacleType = 5;
-            m_hexCells[y * 9 + 5].m_obstacleIndex = 8;
+        for (y = 0; y < COMBAT_GRID_ROWS; y++) {
+            m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_obstacleType = 5;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_obstacleIndex = COMBAT_WALL_INTACT;
         }
     }
     armyCount = 0;
-    for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[1][armyCount].m_hex = i * 9 + 1;
-            m_armies[1][armyCount].m_stats.attributes &= 0x3f;
-            m_hexCells[i * 9 + 1].m_occupantSide = 1;
-            m_hexCells[i * 9 + 1].m_occupantIndex = armyCount;
-            if (m_armies[1][armyCount].m_stats.attributes & 1) {
-                m_hexCells[i * 9 + 2].m_occupantSide = 1;
-                m_hexCells[i * 9 + 2].m_occupantIndex = armyCount;
-                m_hexCells[i * 9 + 1].m_occupantFrame = 1;
-                m_hexCells[i * 9 + 2].m_occupantFrame = 0;
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        if (m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_hex = i * COMBAT_GRID_COLUMNS + 1;
+            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes &=
+                MONSTER_FLAGS_BATTLE_START_MASK;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + 1].m_occupantSide = COMBAT_ATTACKER_SIDE;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + 1].m_occupantIndex = armyCount;
+            if (m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes & MONSTER_FLAGS_WIDE) {
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 2].m_occupantSide = COMBAT_ATTACKER_SIDE;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 2].m_occupantIndex = armyCount;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 1].m_occupantFrame = 1;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 2].m_occupantFrame = 0;
             }
             armyCount++;
         }
     }
     armyCount = 0;
-    for (i = 0; i < 5; i++) {
-        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[0][armyCount].m_hex = i * 9 + 7;
-            m_armies[0][armyCount].m_stats.attributes &= 0x3f;
-            m_hexCells[i * 9 + 7].m_occupantSide = 0;
-            m_hexCells[i * 9 + 7].m_occupantIndex = armyCount;
-            if (m_armies[0][armyCount].m_stats.attributes & 1) {
-                m_hexCells[i * 9 + 6].m_occupantSide = 0;
-                m_hexCells[i * 9 + 6].m_occupantIndex = armyCount;
-                m_hexCells[i * 9 + 6].m_occupantFrame = 1;
-                m_hexCells[i * 9 + 7].m_occupantFrame = 0;
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        if (m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_hex = i * COMBAT_GRID_COLUMNS + 7;
+            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes &=
+                MONSTER_FLAGS_BATTLE_START_MASK;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + 7].m_occupantSide = COMBAT_DEFENDER_SIDE;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + 7].m_occupantIndex = armyCount;
+            if (m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes & MONSTER_FLAGS_WIDE) {
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 6].m_occupantSide = COMBAT_DEFENDER_SIDE;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 6].m_occupantIndex = armyCount;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 6].m_occupantFrame = 1;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + 7].m_occupantFrame = 0;
             }
             armyCount++;
         }
     }
     count = 0;
-    if (!m_castleSide[1] && !m_castleSide[0]) {
+    if (!m_castleSide[COMBAT_ATTACKER_SIDE] && !m_castleSide[COMBAT_DEFENDER_SIDE]) {
         count = SRandom(0, 3);
         for (i = 0; i < count; i++) {
             x = SRandom(3, 5);
             y = SRandom(0, 4);
-            while (m_hexCells[y * 9 + x].m_occupantSide != -1) {
+            while (m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantSide != COMBAT_SIDE_NONE) {
                 x = SRandom(3, 5);
                 y = SRandom(0, 4);
             }
-            m_hexCells[y * 9 + x].m_obstacleType = 2;
-            m_hexCells[y * 9 + x].m_obstacleIndex = SRandom(0, 2);
-            if ((m_terrainType == 0 || m_terrainType == 4) && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
-                m_hexCells[y * 9 + x].m_obstacleIndex = 0;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleType = 2;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = SRandom(0, 2);
+            if ((m_terrainType == TERRAIN_WATER || m_terrainType == TERRAIN_LAVA)
+                && m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex == 2)
+                m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = 0;
         }
     }
-    m_currentSide = 0;
-    m_currentSpeed = 4;
+    m_currentSide = COMBAT_DEFENDER_SIDE;
+    m_currentSpeed = CREATURE_SPEED_BLAZING;
     GetNextArmy(0);
     m_gridUpdateRow = 0;
     SRand(giSeed);
@@ -427,47 +462,47 @@ void combatManager::GenerateMap(void)
 // Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
 // one) forces the graveyard field.
 VA(0x0044ca22, 0x18e)
-char* combatManager::GetBackgroundName(void)
-{
+char* combatManager::GetBackgroundName(void) {
     if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
         || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
-            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD)) {
+            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType
+                & MAP_TRIGGER_TYPE_MASK)
+                   == MAP_OBJECT_GRAVEYARD)) {
         m_terrainType = TERRAIN_DIRT;
-        return cCombatBkgNames[10];
+        return cCombatBkgNames[COMBAT_BACKGROUND_GRAVEYARD];
     }
     switch (m_terrainType) {
         case TERRAIN_WATER:
-            return cCombatBkgNames[9];
+            return cCombatBkgNames[COMBAT_BACKGROUND_BOAT];
         case TERRAIN_SWAMP:
-            return cCombatBkgNames[4];
+            return cCombatBkgNames[COMBAT_BACKGROUND_SWAMP];
         case TERRAIN_LAVA:
-            return cCombatBkgNames[5];
+            return cCombatBkgNames[COMBAT_BACKGROUND_LAVA];
         case TERRAIN_DESERT:
-            return cCombatBkgNames[6];
+            return cCombatBkgNames[COMBAT_BACKGROUND_DESERT];
         case TERRAIN_GRASS:
             if (MoreTreesNear())
-                return cCombatBkgNames[0];
+                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
             else
-                return cCombatBkgNames[1];
+                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_MOUNTAIN];
         case TERRAIN_SNOW:
             if (MoreTreesNear())
-                return cCombatBkgNames[2];
+                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_FOREST];
             else
-                return cCombatBkgNames[3];
+                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_MOUNTAIN];
         case TERRAIN_DIRT:
             if (MoreTreesNear())
-                return cCombatBkgNames[7];
+                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_FOREST];
             else
-                return cCombatBkgNames[8];
+                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_MOUNTAIN];
     }
-    return cCombatBkgNames[0];
+    return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
 }
 
 // Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
 // within two cells of the battle.
 VA(0x0044cbb0, 0x1e7)
-signed char combatManager::MoreTreesNear(void)
-{
+signed char combatManager::MoreTreesNear(void) {
     int yPos;
     int xPos;
     short step;
@@ -514,8 +549,7 @@ signed char combatManager::MoreTreesNear(void)
 
 // Buka CMBTMGR.cpp LoadIcons.
 VA(0x0044cd97, 0x1d7)
-void combatManager::LoadIcons(void)
-{
+void combatManager::LoadIcons(void) {
     int i;
 
     for (i = 0; i < 9; i++)
@@ -527,19 +561,22 @@ void combatManager::LoadIcons(void)
     m_combatIcons[1] = gpResourceManager->GetIcon("textbar.icn");
     m_combatIcons[4] = gpResourceManager->GetIcon("tent.icn");
     m_combatIcons[6] = gpResourceManager->GetIcon("cloud.icn");
-    if (m_castleSide[1] || m_castleSide[0]) {
+    if (m_castleSide[COMBAT_ATTACKER_SIDE] || m_castleSide[COMBAT_DEFENDER_SIDE]) {
         m_combatIcons[3] = gpResourceManager->GetIcon("catapult.icn");
-        sprintf(gText, "castle%02d.icn", m_combatTowns[static_cast<signed char>(m_castleSide[1] == 1)]->m_type);
+        sprintf(
+            gText,
+            "castle%02d.icn",
+            m_combatTowns[static_cast<signed char>(m_castleSide[COMBAT_ATTACKER_SIDE] == 1)]->m_type
+        );
         m_combatIcons[5] = gpResourceManager->GetIcon(gText);
-        sprintf(gText, "keep%02d.icn", m_combatTowns[0]->m_type);
+        sprintf(gText, "keep%02d.icn", m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type);
         m_combatIcons[7] = gpResourceManager->GetIcon(gText);
     }
 }
 
 // Buka CMBTMGR.cpp FreeIcons.
 VA(0x0044cf6e, 0x7b)
-void combatManager::FreeIcons(void)
-{
+void combatManager::FreeIcons(void) {
     short i;
 
     for (i = 0; i < 9; i++) {
@@ -551,49 +588,55 @@ void combatManager::FreeIcons(void)
 
 // Buka CMBTMGR.cpp LoadArmies; HoMM1 places stacks itself after Init.
 VA(0x0044cfe9, 0x287)
-void combatManager::LoadArmies(void)
-{
+void combatManager::LoadArmies(void) {
     short j;
     short i;
 
-    m_numArmies[1] = m_numArmies[0] = 0;
-    for (i = 0; i < 5; i++) {
+    m_numArmies[COMBAT_ATTACKER_SIDE] = m_numArmies[COMBAT_DEFENDER_SIDE] = 0;
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         for (j = 0; j < 2; j++) {
             m_armies[j][i].m_quantity = 0;
             m_armies[j][i].m_creatureType = CREATURE_NONE;
         }
     }
     for (j = 0; j < 2; j++) {
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_armies[j][i].InitClean();
     }
-    for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[1][m_numArmies[1]].Init(m_armyGroups[1]->m_creatureTypes[i],
-                                             m_armyGroups[1]->m_creatureCounts[i], 1, m_numArmies[1]);
-            m_armies[1][m_numArmies[1]].LoadResources();
-            m_numArmies[1]++;
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        if (m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_ATTACKER_SIDE][m_numArmies[COMBAT_ATTACKER_SIDE]].Init(
+                m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i],
+                m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureCounts[i],
+                1,
+                m_numArmies[COMBAT_ATTACKER_SIDE]
+            );
+            m_armies[COMBAT_ATTACKER_SIDE][m_numArmies[COMBAT_ATTACKER_SIDE]].LoadResources();
+            m_numArmies[COMBAT_ATTACKER_SIDE]++;
         }
-        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[0][m_numArmies[0]].Init(m_armyGroups[0]->m_creatureTypes[i],
-                                             m_armyGroups[0]->m_creatureCounts[i], 0, m_numArmies[0]);
-            m_armies[0][m_numArmies[0]].LoadResources();
-            m_numArmies[0]++;
+        if (m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_DEFENDER_SIDE][m_numArmies[COMBAT_DEFENDER_SIDE]].Init(
+                m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i],
+                m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureCounts[i],
+                0,
+                m_numArmies[COMBAT_DEFENDER_SIDE]
+            );
+            m_armies[COMBAT_DEFENDER_SIDE][m_numArmies[COMBAT_DEFENDER_SIDE]].LoadResources();
+            m_numArmies[COMBAT_DEFENDER_SIDE]++;
         }
     }
 }
 
 // Buka CMBTMGR.cpp FreeArmies; HoMM1 frees the defenders first.
 VA(0x0044d270, 0xdc)
-void combatManager::FreeArmies(void)
-{
+void combatManager::FreeArmies(void) {
     short i;
 
     gpSoundManager->StopAllSamples();
-    for (i = 0; i < m_numArmies[1]; i++)
-        m_armies[1][i].FreeResources();
-    for (i = 0; i < m_numArmies[0]; i++)
-        m_armies[0][i].FreeResources();
+    for (i = 0; i < m_numArmies[COMBAT_ATTACKER_SIDE]; i++)
+        m_armies[COMBAT_ATTACKER_SIDE][i].FreeResources();
+    for (i = 0; i < m_numArmies[COMBAT_DEFENDER_SIDE]; i++)
+        m_armies[COMBAT_DEFENDER_SIDE][i].FreeResources();
     if (gCurLoadedSpellIcon)
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
     gCurLoadedSpellIcon = NULL;
@@ -605,15 +648,12 @@ void combatManager::FreeArmies(void)
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044d34c, 0x18)
-void combatManager::NoShowCombatLog(char*)
-{
-}
+void combatManager::NoShowCombatLog(char*) {}
 
 // Buka CMBTMGR.cpp GetGridIndex over HoMM1's 9x5 grid: rows 80 pixels high
 // from y 60, odd rows indented by 66 and even rows by 27, hexes 78 wide.
 VA(0x0044d364, 0xbe)
-short combatManager::GetGridIndex(short x, short y)
-{
+short combatManager::GetGridIndex(short x, short y) {
     y -= 60;
     y /= 80;
     if (y & 1) {
@@ -628,16 +668,15 @@ short combatManager::GetGridIndex(short x, short y)
         x /= 78;
     }
     x++;
-    if (y == 5)
+    if (y == COMBAT_GRID_ROWS)
         return -1;
     else
-        return y * 9 + x;
+        return y * COMBAT_GRID_COLUMNS + x;
 }
 
 // Buka CMBTMGR.cpp CheckApplyGoodMorale; HoMM1 rolls the group's morale.
 VA(0x0044d422, 0x1d9)
-void combatManager::CheckApplyGoodMorale(int side, int index)
-{
+void combatManager::CheckApplyGoodMorale(int side, int index) {
     armyGroup* theGroup;
     army* activeArmy;
     SAMPLE2 sample;
@@ -661,23 +700,30 @@ void combatManager::CheckApplyGoodMorale(int side, int index)
     sprintf(gText, "goodmrle.82M");
     sample = LoadPlaySample(gText);
     if (activeArmy->m_quantity <= 1)
-        sprintf(gText, "High morale enables the %s to attack again.", gArmyNames[activeArmy->m_creatureType]);
+        sprintf(
+            gText,
+            "High morale enables the %s to attack again.",
+            gArmyNames[activeArmy->m_creatureType]
+        );
     else
-        sprintf(gText, "High morale enables the %s to attack again.", gArmyNamesPlural[activeArmy->m_creatureType]);
+        sprintf(
+            gText,
+            "High morale enables the %s to attack again.",
+            gArmyNamesPlural[activeArmy->m_creatureType]
+        );
     CombatMessage(gText, 1);
-    activeArmy->SpellEffect(24, 180);
+    activeArmy->SpellEffect(COMBAT_EFFECT_GOOD_MORALE, 180);
     activeArmy->Stand(1);
-    if (activeArmy->m_stats.attributes & 0x80)
+    if (activeArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
         activeArmy->m_stats.attributes -= 0x80;
-    activeArmy->m_stats.attributes |= 0x20;
-    WaitEndSample(sample, -1);
+    activeArmy->m_stats.attributes |= MONSTER_FLAGS_HIGH_MORALE;
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
 }
 
 // Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
 // in four.
 VA(0x0044d5fb, 0x1c6)
-int combatManager::CheckApplyBadMorale(int side, int index)
-{
+int combatManager::CheckApplyBadMorale(int side, int index) {
     armyGroup* theGroup;
     army* activeArmy;
     SAMPLE2 sample;
@@ -695,29 +741,36 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("BADMRLE.82M");
     if (activeArmy->m_quantity <= 1)
-        sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNames[activeArmy->m_creatureType]);
+        sprintf(
+            gText,
+            "Low morale causes the %s to freeze in panic.",
+            gArmyNames[activeArmy->m_creatureType]
+        );
     else
-        sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNamesPlural[activeArmy->m_creatureType]);
+        sprintf(
+            gText,
+            "Low morale causes the %s to freeze in panic.",
+            gArmyNamesPlural[activeArmy->m_creatureType]
+        );
     CombatMessage(gText, 1);
     activeArmy->m_animationFrame = 2;
-    activeArmy->SpellEffect(25, 180);
+    activeArmy->SpellEffect(COMBAT_EFFECT_BAD_MORALE, 180);
     activeArmy->Stand(1);
-    activeArmy->m_stats.attributes |= 0x80;
-    WaitEndSample(sample, -1);
+    activeArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     return 1;
 }
 
 // Buka CMBTMGR.cpp GetNextArmy: the fastest unspent stack, alternating
 // sides, high-morale stacks first.
 VA(0x0044d7c1, 0x209)
-signed char combatManager::GetNextArmy(int checkMorale)
-{
+signed char combatManager::GetNextArmy(int checkMorale) {
     army* pArmy;
     signed char iSpeed;
     int sideIter;
     short temp;
-    signed char stackSide;
     signed char stackCounter;
+    signed char stackSide;
     int bSkip;
 
     stackSide = m_currentSide;
@@ -727,10 +780,12 @@ signed char combatManager::GetNextArmy(int checkMorale)
             for (stackCounter = 0; stackCounter < m_numArmies[stackSide]; stackCounter++) {
                 bSkip = 0;
                 pArmy = &m_armies[stackSide][stackCounter];
-                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == SPELL_PARALYZE || pArmy->m_spellEffect == SPELL_BLIND
-                    || (pArmy->m_stats.speed != m_currentSpeed && !(pArmy->m_stats.attributes & 0x20)))
+                if ((pArmy->m_stats.attributes & (MONSTER_FLAGS_DEAD | MONSTER_FLAGS_TURN_SPENT))
+                    || pArmy->m_spellEffect == SPELL_PARALYZE || pArmy->m_spellEffect == SPELL_BLIND
+                    || (pArmy->m_stats.speed != m_currentSpeed
+                        && !(pArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE)))
                     bSkip = 1;
-                if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & 0x20))
+                if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE))
                     bSkip = 1;
                 if (!bSkip && checkMorale && CheckApplyBadMorale(stackSide, stackCounter))
                     bSkip = 1;
@@ -747,7 +802,7 @@ signed char combatManager::GetNextArmy(int checkMorale)
         if (iSpeed) {
             m_currentSpeed--;
             if (!m_currentSpeed)
-                m_currentSpeed = 4;
+                m_currentSpeed = CREATURE_SPEED_BLAZING;
         }
     }
     GetControl();
@@ -757,8 +812,7 @@ signed char combatManager::GetNextArmy(int checkMorale)
 // Buka CMBTMGR.cpp IsWinner: the other side surrendered, retreated or has
 // no live stack left.
 VA(0x0044d9ca, 0xd3)
-signed char combatManager::IsWinner(signed char side)
-{
+signed char combatManager::IsWinner(signed char side) {
     signed char isWinner;
     short i;
 
@@ -769,7 +823,7 @@ signed char combatManager::IsWinner(signed char side)
     side ^= 1;
     isWinner = 1;
     for (i = 0; i < m_numArmies[side]; i++) {
-        if (!(m_armies[side][i].m_stats.attributes & 0x10))
+        if (!(m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD))
             isWinner = 0;
     }
     return isWinner;
@@ -779,11 +833,10 @@ signed char combatManager::IsWinner(signed char side)
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
 VA(0x0044da9d, 0xd55)
-void combatManager::CatAttack(signed char side)
-{
+void combatManager::CatAttack(signed char side) {
+    short dx;
     icon* boulder;
     short summitX;
-    short dx;
     short x;
     signed char col;
     short i;
@@ -799,16 +852,16 @@ void combatManager::CatAttack(signed char side)
     short startY;
     short summitY;
 
-    if (!m_castleSide[0])
+    if (!m_castleSide[COMBAT_DEFENDER_SIDE])
         return;
     catSample = NULL_SAMPLE2;
-    if (side == 1)
+    if (side == COMBAT_ATTACKER_SIDE)
         col = 5;
     else
         col = 3;
     wallsLeft = 0;
     for (i = 0; i < 5; i++) {
-        if (m_hexCells[i * 9 + col].m_obstacleIndex != -1)
+        if (m_hexCells[i * COMBAT_GRID_COLUMNS + col].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
             wallsLeft = 1;
     }
     if (!wallsLeft)
@@ -827,18 +880,21 @@ void combatManager::CatAttack(signed char side)
         DrawFrame(1);
         m_catapultFrame[side]++;
     }
-    if ((m_hexCells[col + 9].m_obstacleIndex == 10 || m_hexCells[col + 9].m_obstacleIndex == -1)
-        && (m_hexCells[col + 27].m_obstacleIndex == 10 || m_hexCells[col + 27].m_obstacleIndex == -1)) {
+    if ((m_hexCells[col + 9].m_obstacleIndex == COMBAT_WALL_DAMAGED
+         || m_hexCells[col + 9].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
+        && (m_hexCells[col + 27].m_obstacleIndex == COMBAT_WALL_DAMAGED
+            || m_hexCells[col + 27].m_obstacleIndex == COMBAT_OBSTACLE_NONE)) {
         m_catapultTarget = SRandom(0, 4);
-        while (m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == -1)
+        while (m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex
+               == COMBAT_OBSTACLE_NONE)
             m_catapultTarget = SRandom(0, 4);
-    } else if (m_hexCells[col + 9].m_obstacleIndex == -1) {
+    } else if (m_hexCells[col + 9].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
         m_catapultTarget = 3;
-    } else if (m_hexCells[col + 27].m_obstacleIndex == -1) {
+    } else if (m_hexCells[col + 27].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
         m_catapultTarget = 1;
-    } else if (m_hexCells[col + 9].m_obstacleIndex != 8) {
+    } else if (m_hexCells[col + 9].m_obstacleIndex != COMBAT_WALL_INTACT) {
         m_catapultTarget = 3;
-    } else if (m_hexCells[col + 27].m_obstacleIndex != 8) {
+    } else if (m_hexCells[col + 27].m_obstacleIndex != COMBAT_WALL_INTACT) {
         m_catapultTarget = 1;
     } else {
         m_catapultTarget = SRandom(0, 1);
@@ -849,8 +905,8 @@ void combatManager::CatAttack(signed char side)
     }
     startX = 0x75;
     startY = 0x104;
-    tgtX = m_hexCells[m_catapultTarget * 9 + 5].m_x;
-    tgtY = m_hexCells[m_catapultTarget * 9 + 5].m_y - 80;
+    tgtX = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + 5].m_x;
+    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + 5].m_y - 80;
     frm = 0;
     x = startX;
     y = startY;
@@ -876,8 +932,12 @@ void combatManager::CatAttack(signed char side)
             }
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
-            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
-                                                giMaxExtentY - giMinExtentY + 1);
+            gpWindowManager->UpdateScreenRegion(
+                giMinExtentX,
+                giMinExtentY,
+                giMaxExtentX - giMinExtentX + 1,
+                giMaxExtentY - giMinExtentY + 1
+            );
             x = dx + x;
             y = y + dy;
             frm++;
@@ -916,8 +976,12 @@ void combatManager::CatAttack(signed char side)
             }
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
-            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
-                                                giMaxExtentY - giMinExtentY + 1);
+            gpWindowManager->UpdateScreenRegion(
+                giMinExtentX,
+                giMinExtentY,
+                giMaxExtentX - giMinExtentX + 1,
+                giMaxExtentY - giMinExtentY + 1
+            );
             x = dx + x;
             y = (12 - i) * dy + y;
             frm++;
@@ -943,25 +1007,34 @@ void combatManager::CatAttack(signed char side)
                 giMaxExtentY = 459;
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
-            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
-                                                giMaxExtentY - giMinExtentY + 1);
+            gpWindowManager->UpdateScreenRegion(
+                giMinExtentX,
+                giMinExtentY,
+                giMaxExtentX - giMinExtentX + 1,
+                giMaxExtentY - giMinExtentY + 1
+            );
             x = dx + x;
             y = dy * i + y;
             frm++;
             frm %= 3;
         }
     }
-    WaitEndSample(catSample, -1);
+    WaitEndSample(catSample, SAMPLE_WAIT_DEFAULT);
     sprintf(gText, "catsnd%02d.82M", 2);
     catSample = LoadPlaySample(gText);
-    if (m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 10)
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
+    if (m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex
+        == COMBAT_WALL_DAMAGED)
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
+            COMBAT_WALL_DAMAGED_HIT;
     else
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x40;
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
+            COMBAT_WALL_INTACT_HIT;
     force = SRandom(0, 150);
-    if (!gbHumanPlayer[m_playerId[1]])
+    if (!gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
         force -= 15;
-    if (force < 30 || m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 0x41) {
+    if (force < 30
+        || m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex
+               == COMBAT_WALL_DAMAGED_HIT) {
         m_wallSurvives = 0;
         m_wallFrame = 0;
         giMinExtentX = 300;
@@ -975,7 +1048,8 @@ void combatManager::CatAttack(signed char side)
         while (m_wallFrame < 10) {
             m_wallDamage = m_wallFrame;
             if (m_wallFrame == 5)
-                m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x42;
+                m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
+                    COMBAT_WALL_COLLAPSING;
             m_redrawExtent = 1;
             m_gridUpdateRow = m_catapultTarget - 2;
             if (m_gridUpdateRow < 0)
@@ -984,7 +1058,8 @@ void combatManager::CatAttack(signed char side)
             m_wallFrame++;
         }
         m_wallFrame = m_wallDamage = -1;
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = -1;
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
+            COMBAT_OBSTACLE_NONE;
     } else {
         m_wallSurvives = 1;
         m_wallFrame = 0;
@@ -998,12 +1073,14 @@ void combatManager::CatAttack(signed char side)
             giMaxExtentY = 459;
         while (m_wallFrame < 10) {
             if (m_wallFrame == 5)
-                m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
+                m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
+                    COMBAT_WALL_DAMAGED_HIT;
             m_redrawExtent = 1;
             DrawFrame(1);
             m_wallFrame++;
         }
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 10;
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
+            COMBAT_WALL_DAMAGED;
         m_wallFrame = -1;
     }
     m_redrawExtent = 1;
@@ -1022,7 +1099,7 @@ void combatManager::CatAttack(signed char side)
     DrawFrame(1);
     gpResourceManager->Dispose(boulder);
     gpMouseManager->ReallyShowPointer();
-    WaitEndSample(catSample, -1);
+    WaitEndSample(catSample, SAMPLE_WAIT_DEFAULT);
 }
 
 // HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
@@ -1030,8 +1107,7 @@ void combatManager::CatAttack(signed char side)
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044e7f2, 0x4e)
-void combatManager::RegenerateField(void)
-{
+void combatManager::RegenerateField(void) {
     FreeArmies();
     LoadArmies();
     GenerateMap();
@@ -1043,8 +1119,7 @@ void combatManager::RegenerateField(void)
 // HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
 // then flyers, then fight value) with dice from the town's buildings.
 VA(0x0044e840, 0xb8b)
-void combatManager::KeepAttack(void)
-{
+void combatManager::KeepAttack(void) {
     int mod;
     short minX;
     short minY;
@@ -1055,7 +1130,9 @@ void combatManager::KeepAttack(void)
     float yAdvance;
     short lastY;
     signed char targetRow;
-    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                                 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1,
+                                 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     int bestRank;
     signed char srcCol;
     float yRun;
@@ -1069,8 +1146,8 @@ void combatManager::KeepAttack(void)
     short height;
     bitmap* behind;
     int i;
-    int power;
     int bestWorth;
+    int power;
     short startX;
     float xRun;
     short maxY;
@@ -1089,11 +1166,11 @@ void combatManager::KeepAttack(void)
     bestWorth = 0;
     targetIndex = -1;
     for (i = 0; i < 5; i++) {
-        if (m_armies[1][i].IsAlive()) {
-            target = &m_armies[1][i];
-            if (target->m_stats.attributes & 4)
+        if (m_armies[COMBAT_ATTACKER_SIDE][i].IsAlive()) {
+            target = &m_armies[COMBAT_ATTACKER_SIDE][i];
+            if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 priority = 2;
-            else if (target->m_stats.attributes & 2)
+            else if (target->m_stats.attributes & MONSTER_FLAGS_FLYING)
                 priority = 1;
             else
                 priority = 0;
@@ -1108,21 +1185,22 @@ void combatManager::KeepAttack(void)
     if (targetIndex == -1)
         return;
     gpMouseManager->ReallyHidePointer();
-    target = &gpCombatManager->m_armies[1][targetIndex];
-    hexCol = target->m_hex % 9;
-    targetRow = target->m_hex / 9;
+    target = &gpCombatManager->m_armies[COMBAT_ATTACKER_SIDE][targetIndex];
+    hexCol = target->m_hex % COMBAT_GRID_COLUMNS;
+    targetRow = target->m_hex / COMBAT_GRID_COLUMNS;
     srcCol = 8;
     keepY = 0;
     gpCombatManager->SetGridMode(0);
-    if (m_combatTowns[0]->m_type == 3 || m_combatTowns[0]->m_type == 1)
+    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == 3
+        || m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == 1)
         sprintf(gText, "shoot15.82M");
     else
         sprintf(gText, "shoot01.82M");
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample(gText);
     frontCol = hexCol;
-    if (target->m_stats.attributes & 1) {
-        if (target->m_facing == 1)
+    if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
+        if (target->m_facing == ARMY_FACING_LEFT)
             frontCol = frontCol - 1;
         else
             frontCol = frontCol + 1;
@@ -1133,8 +1211,8 @@ void combatManager::KeepAttack(void)
     arrowFrame = shotShape[target->m_hex];
     startX = 0x24d;
     startY = 0x19;
-    destX = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_x;
-    targetY = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_y - 75;
+    destX = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS + frontCol].m_x;
+    targetY = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS + frontCol].m_y - 75;
     xAdvance = static_cast<float>(destX - startX) / static_cast<float>(distance * 3);
     yAdvance = static_cast<float>(targetY - startY) / static_cast<float>(distance * 3);
     xRun = startX;
@@ -1167,7 +1245,7 @@ void combatManager::KeepAttack(void)
         m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, 0);
         DelayTil(glTimers);
         gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
-        glTimers[0] = KBTickCount() + 10;
+        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = xRun;
         lastY = yRun;
         xRun = xAdvance + xRun;
@@ -1177,10 +1255,10 @@ void combatManager::KeepAttack(void)
     gpWindowManager->UpdateScreenRegion(lastX, lastY, w, height);
     delete behind;
     mod = 2;
-    if (m_heroes[0])
-        mod += m_heroes[0]->m_primaryStats[0];
-    if (m_combatTowns[0]->m_buildings & 1)
-        mod += m_combatTowns[0]->m_buildState + 1;
+    if (m_heroes[COMBAT_DEFENDER_SIDE])
+        mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[HERO_PRIMARY_ATTACK];
+    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
+        mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
     mod -= -(-target->m_stats.defense);
     if (mod > 20)
         mod = 20;
@@ -1188,11 +1266,11 @@ void combatManager::KeepAttack(void)
         mod = -20;
     dice = 5;
     for (i = 7; i <= 12; i++) {
-        if (m_combatTowns[0]->m_buildings & (1 << i))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << i))
             dice += 4;
     }
     for (i = 0; i <= 4; i++) {
-        if (m_combatTowns[0]->m_buildings & (1 << i))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << i))
             dice++;
     }
     hurt = 0;
@@ -1203,16 +1281,24 @@ void combatManager::KeepAttack(void)
         hurt = 1;
     numLost = target->Damage(hurt);
     if (numLost > 0)
-        sprintf(gText, "%s %d %s. %d %s %s.", "Garrison does", hurt, "Damage", numLost,
-                numLost > 1 ? gArmyNamesPlural[target->m_creatureType] : gArmyNames[target->m_creatureType],
-                numLost > 1 ? "perish" : "perishes");
+        sprintf(
+            gText,
+            "%s %d %s. %d %s %s.",
+            "Garrison does",
+            hurt,
+            "Damage",
+            numLost,
+            numLost > 1 ? gArmyNamesPlural[target->m_creatureType]
+                        : gArmyNames[target->m_creatureType],
+            numLost > 1 ? "perish" : "perishes"
+        );
     else
         sprintf(gText, "%s %d %s.", "Garrison does", hurt, "Damage");
     gpCombatManager->CombatMessage(gText, 1);
     target->PowEffect(target->m_stats.powEffect);
-    if (!(target->m_stats.attributes & 0x10))
+    if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
         target->Stand(0);
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     if (target->m_quantity > 0)
         target->Stand(1);
     gpMouseManager->ReallyShowPointer();
@@ -1221,8 +1307,7 @@ void combatManager::KeepAttack(void)
 // Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
 // losses, plus 500 for a defeated hero.
 VA(0x0044f3cb, 0x114)
-int combatManager::ExperienceValueOfStack(signed char side)
-{
+int combatManager::ExperienceValueOfStack(signed char side) {
     int i;
     int value;
 
@@ -1239,8 +1324,7 @@ int combatManager::ExperienceValueOfStack(signed char side)
 
 // Buka CMBTMGR.cpp ResetHitByCreature.
 VA(0x0044f4df, 0x78)
-void combatManager::ResetHitByCreature(void)
-{
+void combatManager::ResetHitByCreature(void) {
     int i;
     int j;
 
@@ -1258,8 +1342,7 @@ int ValidHex(int hex) {
 
 // HoMM1 SaveCombatBorder: keep the twenty screen rows under the field.
 VA(0x0044f587, 0x64)
-void combatManager::SaveCombatBorder(void)
-{
+void combatManager::SaveCombatBorder(void) {
     if (!m_savedBorder)
         m_savedBorder = static_cast<char*>(malloc(0x3200));
     memcpy(m_savedBorder, gpWindowManager->m_screen->m_pixels + 0x47e00, 0x3200);
@@ -1267,8 +1350,7 @@ void combatManager::SaveCombatBorder(void)
 
 // HoMM1 DrawCombatBorder: put the saved rows back.
 VA(0x0044f5eb, 0x53)
-void combatManager::DrawCombatBorder(void)
-{
+void combatManager::DrawCombatBorder(void) {
     if (!m_savedBorder)
         return;
     memcpy(gpWindowManager->m_screen->m_pixels + 0x47e00, m_savedBorder, 0x3200);

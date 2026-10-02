@@ -6,8 +6,12 @@
 #include <BASE/resource.h>
 
 VA(0x0047fc20, 0x2f)
-resource::resource(short category, short id, H1_ENUM_PARAM(ResourceReferenceCount, short) refCount, resource *next)
-{
+resource::resource(
+    short category,
+    short id,
+    H1_ENUM_PARAM(ResourceReferenceCount, short) refCount,
+    resource* next
+) {
     m_resourceType = H1_ENUM_CAST(ResourceCategory, short, category);
     m_id = id;
     m_refCount = refCount;
@@ -15,6 +19,4 @@ resource::resource(short category, short id, H1_ENUM_PARAM(ResourceReferenceCoun
 }
 
 VA(0x0047fc50, 0x7)
-resource::~resource(void)
-{
-}
+resource::~resource(void) {}

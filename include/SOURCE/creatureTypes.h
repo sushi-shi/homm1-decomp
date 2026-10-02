@@ -38,4 +38,42 @@ H1_ENUM_BEGIN(CreatureType)
     CREATURE_COUNT = 28
 H1_ENUM_END(CreatureType)
 
+// Each race's six creatures are consecutive: creature / FACTION_SIZE is the
+// race (philAI's same-race bonus, KB's army alignment test).
+// tag_monsterStats::speed, indexing gSpeedText ("", Slow, Medium, Fast,
+// Blazing). Slow sets SLOW, haste BLAZING, blind NONE; combat rounds count
+// m_currentSpeed down from BLAZING.
+H1_ENUM_BEGIN(CreatureSpeed)
+    CREATURE_SPEED_NONE = 0,
+    CREATURE_SPEED_SLOW = 1,
+    CREATURE_SPEED_MEDIUM = 2,
+    CREATURE_SPEED_FAST = 3,
+    CREATURE_SPEED_BLAZING = 4
+H1_ENUM_END(CreatureSpeed)
+
+H1_ENUM_CONST_BEGIN(CreatureFactionConstant)
+CREATURE_FACTION_SIZE = 6 H1_ENUM_CONST_END(CreatureFactionConstant)
+
+    // clang-format off
+// Creature attribute bits (monster record / army::m_stats.attributes), Buka
+// 2.1 KB_TYPES.h MonsterFlags numbering: wide stacks take two hexes, flyers
+// skip the path, shooters spend shots, breath attacks hit the hex behind;
+// DEAD, HIGH_MORALE (a good-morale extra move), RETALIATED and TURN_SPENT are
+// combat state. ResetRound keeps ROUND_PERSISTENT_MASK each round; GenerateMap
+// keeps BATTLE_START_MASK when stacks enter the field.
+H1_ENUM_FLAGS_BEGIN(MonsterFlags, int)
+    MONSTER_FLAGS_NONE = 0x00,
+    MONSTER_FLAGS_WIDE = 0x01,
+    MONSTER_FLAGS_FLYING = 0x02,
+    MONSTER_FLAGS_SHOOTER = 0x04,
+    MONSTER_FLAGS_BREATH_ATTACK = 0x08,
+    MONSTER_FLAGS_DEAD = 0x10,
+    MONSTER_FLAGS_HIGH_MORALE = 0x20,
+    MONSTER_FLAGS_RETALIATED = 0x40,
+    MONSTER_FLAGS_TURN_SPENT = 0x80,
+    MONSTER_FLAGS_ROUND_PERSISTENT_MASK = 0x1f,
+    MONSTER_FLAGS_BATTLE_START_MASK = 0x3f
+H1_ENUM_FLAGS_END(MonsterFlags)
+// clang-format on
+
 #endif

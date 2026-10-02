@@ -23,7 +23,7 @@ class town;
 #define HERO_EVENT_FAERIE_RING 0x10u
 #define HERO_EVENT_GRAVEYARD 0x20u
 #define HERO_EVENT_SHIPWRECK 0x40u
-#define HERO_EVENT_TEMPLE 0x100u
+#define HERO_EVENT_STATUE 0x100u
 
 // clang-format off
 H1_ENUM_CONST_BEGIN(HeroConstant)
@@ -32,19 +32,36 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_COMBAT_SPELL_SLOT_COUNT = 19,
     HERO_SPELL_SLOT_COUNT = 29,
     HERO_ARTIFACT_SLOT_COUNT = 14,
-    HERO_EXPERIENCE_LEVEL_TABLE_COUNT = 12
+    HERO_EXPERIENCE_LEVEL_TABLE_COUNT = 12,
+    // Hero ids run nine per class (GetNewHeroId, RecruitHero's id / 9) over
+    // the four classes.
+    HERO_PER_CLASS_COUNT = 9,
+    HERO_CLASS_COUNT = 4
 H1_ENUM_CONST_END(HeroConstant)
+
+// hero::GetNumSpells' selector (Buka hero.h HeroSpellType): combat slots,
+// adventure slots or both.
+H1_ENUM_BEGIN(HeroSpellType)
+    SPELL_TYPE_COMBAT = 0,
+    SPELL_TYPE_ADVENTURE = 1,
+    SPELL_TYPE_CATEGORY_COUNT = 2,
+    SPELL_TYPE_ALL = SPELL_TYPE_CATEGORY_COUNT
+H1_ENUM_END(HeroSpellType)
 
 // m_primaryStats indices: the order of retail gPrimarySkillNames
 // (0x00493210) and their help texts; army::Init adds 0 and 1 to the
 // stack's attack and defense, and AddSpell receives 3 as the spell count.
+// advManager::GiveTakeArtifactStat also raises the fifth byte (index 4)
+// for the Ballista of Quickness, which no retail code reads (CMBTMGR tests
+// the artifact itself), and uses -1 for artifacts without a stat bonus.
 H1_ENUM_BEGIN(HeroPrimaryStat)
+    HERO_PRIMARY_NONE = -1,
     HERO_PRIMARY_ATTACK = 0,
     HERO_PRIMARY_DEFENSE = 1,
     HERO_PRIMARY_SPELL_POWER = 2,
-    HERO_PRIMARY_KNOWLEDGE = 3
+    HERO_PRIMARY_KNOWLEDGE = 3,
+    HERO_PRIMARY_BALLISTA = 4
 H1_ENUM_END(HeroPrimaryStat)
-
 
 // clang-format on
 
@@ -101,12 +118,12 @@ public:
     // --- methods ---
     void Read(int, signed char);
     void Write(int, signed char);
-    void GetArmyStrengths(unsigned long int * const);
+    void GetArmyStrengths(unsigned long int* const);
     signed char HasArtifact(H1_ENUM_PARAM(ArtifactType, signed char));
     short CalcMobility(void);
     signed char HasSpell(H1_ENUM_PARAM(SpellType, signed char));
     int GetNthSpell(int, int);
-    short GetNumSpells(signed char);
+    short GetNumSpells(H1_ENUM_PARAM(HeroSpellType, signed char));
     void UseSpell(H1_ENUM_PARAM(SpellType, signed char));
     int AddSpell(H1_ENUM_PARAM(SpellType, signed char), signed char, int);
     void HeroScreenUpdate(void);
@@ -129,7 +146,7 @@ public:
     int CreatureTypeCount(int);
     void UpgradeCreatures(int, int);
     int GetNthSS(int);
-    class town * GetOccupiedTown(void);
+    class town* GetOccupiedTown(void);
     signed char Stats(int);
     signed char GetSSLevel(int);
     void DoSSLevelDialog(int, int);

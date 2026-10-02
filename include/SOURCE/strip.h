@@ -30,10 +30,10 @@ H1_ENUM_CONST_BEGIN(StripConstant)
     STRIP_FACTION_FRAME_OFFSET = 3,
     STRIP_CREATURES_PER_FACTION = 6
 H1_ENUM_CONST_END(StripConstant)
-// clang-format on
+ // clang-format on
 
-// forward declarations:
-class armyGroup;
+ // forward declarations:
+ class armyGroup;
 class border;
 class font;
 class heroWindow;

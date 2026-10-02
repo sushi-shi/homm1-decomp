@@ -34,14 +34,13 @@ H1_ENUM_BEGIN(BaseManagerMessageMask)
 H1_ENUM_END(BaseManagerMessageMask)
 
 H1_ENUM_CONST_BEGIN(BaseManagerConstant)
-    BASE_MANAGER_NAME_CAPACITY = 30
-H1_ENUM_CONST_END(BaseManagerConstant)
+BASE_MANAGER_NAME_CAPACITY = 30 H1_ENUM_CONST_END(BaseManagerConstant)
 
 #pragma pack(push, 1)
-class baseManager {
+    class baseManager {
 public:
-    baseManager *m_next;
-    baseManager *m_prev;
+    baseManager* m_next;
+    baseManager* m_prev;
     H1_ENUM_STORAGE(BaseManagerMessageMask, short) m_messageMask;
     short m_priority;
     char m_name[BASE_MANAGER_NAME_CAPACITY];
@@ -54,7 +53,7 @@ public:
     }
     virtual short Open(short) = 0;
     virtual void Close() = 0;
-    virtual short Main(tag_message &) = 0;
+    virtual short Main(tag_message&) = 0;
 };
 #pragma pack(pop)
 

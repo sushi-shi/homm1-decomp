@@ -1,6 +1,18 @@
 #ifndef HOMM1_SOURCE_COMWIN_H
 #define HOMM1_SOURCE_COMWIN_H
 
+#include <Domains.h>
+
+// com_init's baudRate: codes 1..5 select CBR_2400..CBR_38400; any other value
+// is used as the rate itself.
+H1_ENUM_BEGIN(ComBaudCode)
+    COM_BAUD_2400 = 1,
+    COM_BAUD_4800 = 2,
+    COM_BAUD_9600 = 3,
+    COM_BAUD_19200 = 4,
+    COM_BAUD_38400 = 5
+H1_ENUM_END(ComBaudCode)
+
 // Serial packets start their payload at +0xa (com_snd's malloc(len + 10));
 // NetBIOS packets keep a session byte there and their payload at +0xb.
 struct tag_Node {

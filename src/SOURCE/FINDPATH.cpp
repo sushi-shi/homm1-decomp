@@ -2,6 +2,7 @@
 
 #include <SOURCE/FINDPATH.h>
 
+#include <BASE/Misc.h>
 #include <H1/KB.h>
 #include <H1/Types.h>
 #include <SOURCE/advManager.h>
@@ -18,18 +19,30 @@
 #include <string.h>
 
 // Pathfinder scratch state shared by PushPoint and TestPossibleDirections.
-DATA(0x004c4f20) static int gSearchNextY;
-DATA(0x004c4f1c) static int gSearchNextX;
-DATA(0x004c4f18) static short gSearchHigh;
-DATA(0x004c4f14) static mapCell* gSearchCurrentCell;
-DATA(0x004c4f10) static searchNode* gSearchQueueNode;
-DATA(0x004c4f0c) static short gSearchLow;
-DATA(0x004c4f08) static searchNode* gSearchCell;
-DATA(0x004c4f04) static int gSearchTriggerType;
-DATA(0x004c4f00) static int gSearchTerrain;
-DATA(0x004c4ef8) static unsigned int gSearchMiddle;
-DATA(0x004c4ef4) static int gSearchDirection;
-DATA(0x004c4ef0) static mapCell* gSearchNextCell;
+DATA(0x004c4f20)
+static int gSearchNextY;
+DATA(0x004c4f1c)
+static int gSearchNextX;
+DATA(0x004c4f18)
+static short gSearchHigh;
+DATA(0x004c4f14)
+static mapCell* gSearchCurrentCell;
+DATA(0x004c4f10)
+static searchNode* gSearchQueueNode;
+DATA(0x004c4f0c)
+static short gSearchLow;
+DATA(0x004c4f08)
+static searchNode* gSearchCell;
+DATA(0x004c4f04)
+static int gSearchTriggerType;
+DATA(0x004c4f00)
+static int gSearchTerrain;
+DATA(0x004c4ef8)
+static unsigned int gSearchMiddle;
+DATA(0x004c4ef4)
+static int gSearchDirection;
+DATA(0x004c4ef0)
+static mapCell* gSearchNextCell;
 
 // Buka FINDPATH.cpp:48-51 without the heap cell pointer: HoMM1 cells are inline.
 VA(0x00424810, 0xa)
@@ -63,21 +76,21 @@ VA(0x004248a0, 0x54)
 short TerrainStepCost(signed char terrain, char diagonal) {
     short cost = 0;
     switch (terrain) {
-    case TERRAIN_WATER:
-    case TERRAIN_GRASS:
-    case TERRAIN_LAVA:
-    case TERRAIN_DIRT:
-        cost = 4;
-        break;
-    case TERRAIN_SNOW:
-    case TERRAIN_SWAMP:
-        cost = 6;
-        break;
-    case TERRAIN_DESERT:
-        cost = 8;
-        break;
+        case TERRAIN_WATER:
+        case TERRAIN_GRASS:
+        case TERRAIN_LAVA:
+        case TERRAIN_DIRT:
+            cost = 4;
+            break;
+        case TERRAIN_SNOW:
+        case TERRAIN_SWAMP:
+            cost = 6;
+            break;
+        case TERRAIN_DESERT:
+            cost = 8;
+            break;
     }
-    if (diagonal & 1)
+    if (diagonal & SEARCH_DIAGONAL_COST_MASK)
         cost += cost >> 1;
     return cost;
 }
@@ -103,8 +116,12 @@ int CalcTerrainCost(int terrain, int diagonal, int mobility, int waterMode) {
 // Buka FINDPATH.cpp:405-582 without the moat slowdown: HoMM1 has no castle
 // moat, and the retail body inlines Clear and QuickDistance.
 VA(0x00424950, 0x2ff)
-short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, signed char attackPath)
-{
+short searchArray::FindCombatPath(
+    short sourceHex,
+    short targetHex,
+    army* unit,
+    signed char attackPath
+) {
     int bestHex;
     int direction;
     signed char attackTargetHex;
@@ -116,7 +133,7 @@ short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, 
     int bestDistance;
     int opposite;
 
-    bestDistance = 640;
+    bestDistance = FINDPATH_INITIAL_BEST_DISTANCE;
     bestHex = -1;
     if (attackPath)
         attackTargetHex = (signed char)targetHex;
@@ -126,16 +143,24 @@ short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex) || unit == NULL)
         return 0;
     path = m_directions;
-    PushCombatPoint(sourceHex, (signed char)(unit->m_facing == 1 ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST), 0,
-                    unit->m_stats.speed);
+    PushCombatPoint(
+        sourceHex,
+        (signed char)(unit->m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_WEST
+                                                          : COMBAT_DIRECTION_EAST),
+        0,
+        unit->m_stats.speed
+    );
     while (m_queueCount > 0) {
         m_queueCount--;
         node = m_queue[m_queueCount];
         if (node.distance > unit->m_stats.speed)
             continue;
-        distance = QuickDistance(gpCombatManager->m_hexCells[node.x].m_x, gpCombatManager->m_hexCells[node.x].m_y,
-                                 gpCombatManager->m_hexCells[targetHex].m_x,
-                                 gpCombatManager->m_hexCells[targetHex].m_y);
+        distance = QuickDistance(
+            gpCombatManager->m_hexCells[node.x].m_x,
+            gpCombatManager->m_hexCells[node.x].m_y,
+            gpCombatManager->m_hexCells[targetHex].m_x,
+            gpCombatManager->m_hexCells[targetHex].m_y
+        );
         if (unit->m_targetSide != -1) {
             attackMask = unit->GetAttackMask(node.x, 0, attackTargetHex);
             if (attackMask != 0xff) {
@@ -159,8 +184,12 @@ short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, 
         moveMask = unit->GetMoveMask(node.x);
         for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
             if (!(moveMask & (1 << direction)))
-                PushCombatPoint(unit->GetAdjacentCellIndex(node.x, direction), direction, node.distance + 1,
-                                unit->m_stats.speed);
+                PushCombatPoint(
+                    unit->GetAdjacentCellIndex(node.x, direction),
+                    direction,
+                    node.distance + 1,
+                    unit->m_stats.speed
+                );
         }
     }
     if (unit->m_targetSide != -1) {
@@ -184,8 +213,12 @@ short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, 
 
 // Buka FINDPATH.cpp:585-646; combat nodes use the first column of m_cells.
 VA(0x00424c50, 0x13a)
-void searchArray::PushCombatPoint(short hex, short direction, unsigned short distance, unsigned short speed)
-{
+void searchArray::PushCombatPoint(
+    short hex,
+    short direction,
+    unsigned short distance,
+    unsigned short speed
+) {
     int low;
     int high;
     unsigned int middle;
@@ -229,10 +262,20 @@ void searchArray::PushCombatPoint(short hex, short direction, unsigned short dis
 
 // Buka FINDPATH.cpp:113-183; HoMM1 keeps word binary-search bounds.
 VA(0x00424d90, 0x2ab)
-void searchArray::PushPoint(short x, short y, unsigned short direction, unsigned short cost, unsigned short mobility,
-                            char occupied, char rvFlag1, signed char valueX, signed char valueY, char rvFlag2,
-                            signed char previousX, signed char previousY)
-{
+void searchArray::PushPoint(
+    short x,
+    short y,
+    unsigned short direction,
+    unsigned short cost,
+    unsigned short mobility,
+    char occupied,
+    char rvFlag1,
+    signed char valueX,
+    signed char valueY,
+    char rvFlag2,
+    signed char previousX,
+    signed char previousY
+) {
     if (cost > mobility && mobility != 0)
         return;
     if (x < 0 || x > MAP_CELL_GRID_SIZE - 1 || y < 0 || y > MAP_CELL_GRID_SIZE - 1)
@@ -262,7 +305,11 @@ void searchArray::PushPoint(short x, short y, unsigned short direction, unsigned
     }
 
     if (gSearchMiddle < m_queueCount)
-        memmove(gSearchQueueNode + 1, gSearchQueueNode, (m_queueCount - gSearchMiddle) * sizeof(searchNode));
+        memmove(
+            gSearchQueueNode + 1,
+            gSearchQueueNode,
+            (m_queueCount - gSearchMiddle) * sizeof(searchNode)
+        );
     m_queueCount++;
 
     if (cost > giCurTempMobility && rvFlag2 == 0) {
@@ -288,9 +335,14 @@ void searchArray::PushPoint(short x, short y, unsigned short direction, unsigned
 
 // Buka FINDPATH.cpp:186-316 without HoMM2's below-cell object probes.
 VA(0x00425040, 0x280)
-void searchArray::TestPossibleDirections(short x, short y, signed char* const terrain, signed char* const occupied,
-                                         short allowOccupied, int waterMode)
-{
+void searchArray::TestPossibleDirections(
+    short x,
+    short y,
+    signed char* const terrain,
+    signed char* const occupied,
+    short allowOccupied,
+    int waterMode
+) {
     memset(occupied, 0, 8);
     gSearchCurrentCell = gpAdvManager->GetCell(x, y);
 
@@ -308,7 +360,8 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
             gSearchTerrain = -1;
             goto storeDirection;
         }
-        if (gbHumanPlayer[giCurPlayer] && !(gpGame->m_mapExtra[gSearchNextX][gSearchNextY] & giCurPlayerBit)) {
+        if (gbHumanPlayer[giCurPlayer]
+            && !(gpGame->m_mapExtra[gSearchNextX][gSearchNextY] & giCurPlayerBit)) {
             gSearchTerrain = -1;
             goto storeDirection;
         }
@@ -327,13 +380,16 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
         gSearchTerrain = giGroundToTerrain[gSearchNextCell->m_tileIndex];
         if (gSearchTerrain == 0) {
             if (waterMode) {
-                if (gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK) || gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
+                if (gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
+                    || gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     gSearchTerrain = -1;
                     goto storeDirection;
                 }
             } else {
-                if (gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO) && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                    && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)) {
+                if (gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                    && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                    && gSearchNextCell->m_triggerType
+                           != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)) {
                     gSearchTerrain = -1;
                     goto storeDirection;
                 }
@@ -343,20 +399,31 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
             goto storeDirection;
         }
 
-        if ((1 << gSearchDirection) & 0x83) {
-            if (gSearchCurrentCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchCurrentCell->m_flags & 0x80)) {
+        if ((1 << gSearchDirection) & SEARCH_DIRECTION_EDGE_OBJECT_MASK) {
+            if (gSearchCurrentCell->m_objectIndex != MAP_CELL_NO_FRAME
+                && !(gSearchCurrentCell->m_flags & 0x80)) {
                 gSearchTerrain = -1;
                 goto storeDirection;
             }
-        } else if ((1 << gSearchDirection) & 0x38) {
-            if (gSearchNextCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchNextCell->m_flags & 0x80)) {
+        } else if ((1 << gSearchDirection) & SEARCH_DIRECTION_OBJECT_MASK) {
+            if (gSearchNextCell->m_objectIndex != MAP_CELL_NO_FRAME
+                && !(gSearchNextCell->m_flags & 0x80)) {
                 if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
                     gSearchTriggerType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-                    if (gSearchTriggerType != MAP_OBJECT_MONSTER && gSearchTriggerType != MAP_OBJECT_RESOURCE && gSearchTriggerType != MAP_OBJECT_TREASURE_CHEST
-                        && gSearchTriggerType != MAP_OBJECT_CAMPFIRE && gSearchTriggerType != MAP_OBJECT_ANCIENT_LAMP && gSearchTriggerType != MAP_OBJECT_ARTIFACT
-                        && gSearchTriggerType != MAP_OBJECT_SIGNPOST && gSearchTriggerType != MAP_OBJECT_BUOY && gSearchTriggerType != MAP_OBJECT_SKELETON
-                        && gSearchTriggerType != MAP_OBJECT_FOUNTAIN && gSearchTriggerType != MAP_OBJECT_OBELISK && gSearchTriggerType != MAP_OBJECT_STATUE
-                        && gSearchTriggerType != MAP_OBJECT_WHIRLPOOL && gSearchTriggerType != MAP_OBJECT_WELL) {
+                    if (gSearchTriggerType != MAP_OBJECT_MONSTER
+                        && gSearchTriggerType != MAP_OBJECT_RESOURCE
+                        && gSearchTriggerType != MAP_OBJECT_TREASURE_CHEST
+                        && gSearchTriggerType != MAP_OBJECT_CAMPFIRE
+                        && gSearchTriggerType != MAP_OBJECT_ANCIENT_LAMP
+                        && gSearchTriggerType != MAP_OBJECT_ARTIFACT
+                        && gSearchTriggerType != MAP_OBJECT_SIGNPOST
+                        && gSearchTriggerType != MAP_OBJECT_BUOY
+                        && gSearchTriggerType != MAP_OBJECT_SKELETON
+                        && gSearchTriggerType != MAP_OBJECT_FOUNTAIN
+                        && gSearchTriggerType != MAP_OBJECT_OBELISK
+                        && gSearchTriggerType != MAP_OBJECT_STATUE
+                        && gSearchTriggerType != MAP_OBJECT_WHIRLPOOL
+                        && gSearchTriggerType != MAP_OBJECT_WELL) {
                         gSearchTerrain = -1;
                         goto storeDirection;
                     }

@@ -9,6 +9,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/appMenu.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/comwin.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
@@ -37,6 +38,76 @@ H1_ENUM_BEGIN(SetupHelpIndex)
     NO_HELP = -1,
     HELP_FIRST = 0
 H1_ENUM_END(SetupHelpIndex)
+
+// Each setup handler's help row (the gSetup*Help table texts name them); the
+// rows follow CHOICE_ONE.. and end with the cancel row.
+
+// gSetupCampaignGameHelp: the four campaign heroes.
+H1_ENUM_BEGIN(SetupCampaignHelp)
+    SETUP_CAMPAIGN_HELP_IRONFIST = 0,
+    SETUP_CAMPAIGN_HELP_SLAYER = 1,
+    SETUP_CAMPAIGN_HELP_LAMANDA = 2,
+    SETUP_CAMPAIGN_HELP_ALAMAR = 3,
+    SETUP_CAMPAIGN_HELP_CANCEL = 4
+H1_ENUM_END(SetupCampaignHelp)
+
+// gSetupBaudHelp / gSetupDCBaudHelp: the four connection speeds.
+H1_ENUM_BEGIN(SetupBaudHelp)
+    SETUP_BAUD_HELP_2400 = 0,
+    SETUP_BAUD_HELP_9600 = 1,
+    SETUP_BAUD_HELP_19200 = 2,
+    SETUP_BAUD_HELP_38400 = 3,
+    SETUP_BAUD_HELP_CANCEL = 4
+H1_ENUM_END(SetupBaudHelp)
+
+// gSetupComPortHelp / gSetupDCComPortHelp: COM ports 1..4.
+H1_ENUM_BEGIN(SetupComPortHelp)
+    SETUP_COM_PORT_HELP_COM1 = 0,
+    SETUP_COM_PORT_HELP_COM2 = 1,
+    SETUP_COM_PORT_HELP_COM3 = 2,
+    SETUP_COM_PORT_HELP_COM4 = 3,
+    SETUP_COM_PORT_HELP_CANCEL = 4
+H1_ENUM_END(SetupComPortHelp)
+
+// gSetupHotSeatGameHelp: 2..4 human players.
+H1_ENUM_BEGIN(SetupHotSeatHelp)
+    SETUP_HOT_SEAT_HELP_TWO_PLAYERS = 0,
+    SETUP_HOT_SEAT_HELP_THREE_PLAYERS = 1,
+    SETUP_HOT_SEAT_HELP_FOUR_PLAYERS = 2,
+    SETUP_HOT_SEAT_HELP_CANCEL = 3
+H1_ENUM_END(SetupHotSeatHelp)
+
+// gSetupModemGameHelp / gSetupDCGameHelp: host, guest, port configuration.
+H1_ENUM_BEGIN(SetupModemHelp)
+    SETUP_MODEM_HELP_HOST = 0,
+    SETUP_MODEM_HELP_GUEST = 1,
+    SETUP_MODEM_HELP_CONFIGURE = 2,
+    SETUP_MODEM_HELP_CANCEL = 3
+H1_ENUM_END(SetupModemHelp)
+
+// gSetupMultiPlayerGameHelp: the four link kinds.
+H1_ENUM_BEGIN(SetupMultiPlayerHelp)
+    SETUP_MULTIPLAYER_HELP_HOT_SEAT = 0,
+    SETUP_MULTIPLAYER_HELP_NETWORK = 1,
+    SETUP_MULTIPLAYER_HELP_MODEM = 2,
+    SETUP_MULTIPLAYER_HELP_DIRECT_CONNECT = 3,
+    SETUP_MULTIPLAYER_HELP_CANCEL = 4
+H1_ENUM_END(SetupMultiPlayerHelp)
+
+// gSetupNetworkGameHelp: host or guest.
+H1_ENUM_BEGIN(SetupNetworkHelp)
+    SETUP_NETWORK_HELP_HOST = 0,
+    SETUP_NETWORK_HELP_GUEST = 1,
+    SETUP_NETWORK_HELP_CANCEL = 2
+H1_ENUM_END(SetupNetworkHelp)
+
+// gSetupGameHelp: standard, campaign or multi-player game.
+H1_ENUM_BEGIN(SetupGameHelp)
+    SETUP_GAME_HELP_STANDARD = 0,
+    SETUP_GAME_HELP_CAMPAIGN = 1,
+    SETUP_GAME_HELP_MULTIPLAYER = 2,
+    SETUP_GAME_HELP_CANCEL = 3
+H1_ENUM_END(SetupGameHelp)
 // clang-format on
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
@@ -50,16 +121,16 @@ signed char game::SetupCampaignGame(void) {
     delete window;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            giCampaignChoice = 1;
+            giCampaignChoice = CAMPAIGN_IRONFIST;
             break;
         case CHOICE_TWO:
-            giCampaignChoice = 2;
+            giCampaignChoice = CAMPAIGN_SLAYER;
             break;
         case CHOICE_THREE:
-            giCampaignChoice = 3;
+            giCampaignChoice = CAMPAIGN_LAMANDA;
             break;
         case CHOICE_FOUR:
-            giCampaignChoice = 4;
+            giCampaignChoice = CAMPAIGN_ALAMAR;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -79,16 +150,16 @@ signed char game::SetupBaud(void) {
     delete window;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            gConfig.baudRate[gbDirectConnect] = 2400;
+            gConfig.baudRate[gbDirectConnect] = CBR_2400;
             break;
         case CHOICE_TWO:
-            gConfig.baudRate[gbDirectConnect] = 9600;
+            gConfig.baudRate[gbDirectConnect] = CBR_9600;
             break;
         case CHOICE_THREE:
-            gConfig.baudRate[gbDirectConnect] = 19200;
+            gConfig.baudRate[gbDirectConnect] = CBR_19200;
             break;
         case CHOICE_FOUR:
-            gConfig.baudRate[gbDirectConnect] = 38400;
+            gConfig.baudRate[gbDirectConnect] = CBR_38400;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -292,8 +363,8 @@ signed char game::SetupGame(signed char newGame) {
     int result;
 
     result = 1;
-    iMPExtendedType = 10;
-    iMPBaseType = 10;
+    iMPExtendedType = REMOTE_GAME_UNSET;
+    iMPBaseType = MULTIPLAYER_BASE_UNSET;
     giNumHumanPlayers = 1;
     gbWaitForRemoteReceive = 0;
     gbDirectConnect = 0;
@@ -302,22 +373,22 @@ signed char game::SetupGame(signed char newGame) {
     if (giMenuCommand != -1) {
         switch (giMenuCommand) {
             case APP_MENU_NEW_CAMPAIGN_IRONFIST:
-                giCampaignChoice = 1;
+                giCampaignChoice = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_CAMPAIGN_SLAYER:
-                giCampaignChoice = 2;
+                giCampaignChoice = CAMPAIGN_SLAYER;
                 break;
             case APP_MENU_NEW_CAMPAIGN_LAMANDA:
-                giCampaignChoice = 3;
+                giCampaignChoice = CAMPAIGN_LAMANDA;
                 break;
             case APP_MENU_NEW_CAMPAIGN_ALAMAR:
-                giCampaignChoice = 4;
+                giCampaignChoice = CAMPAIGN_ALAMAR;
                 break;
             case APP_MENU_NEW_STANDARD_GAME:
             case APP_MENU_LOAD_STANDARD_GAME:
                 break;
             case APP_MENU_LOAD_CAMPAIGN_GAME:
-                giCampaignChoice = 1;
+                giCampaignChoice = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_HOT_SEAT_2:
             case APP_MENU_LOAD_HOT_SEAT_2:
@@ -386,10 +457,10 @@ signed char game::SetupGame(signed char newGame) {
     delete window;
 
     switch (static_cast<short>(gpWindowManager->m_dialogResult)) {
-        case 1:
+        case CHOICE_ONE:
             break;
-        case 2:
-            giCampaignChoice = 1;
+        case CHOICE_TWO:
+            giCampaignChoice = CAMPAIGN_IRONFIST;
             if (newGame) {
                 if (!SetupCampaignGame()) {
                     result = 0;
@@ -397,7 +468,7 @@ signed char game::SetupGame(signed char newGame) {
                 }
             }
             break;
-        case 3:
+        case CHOICE_THREE:
             if (!SetupMultiPlayerGame()) {
                 result = 0;
                 goto done;
@@ -466,19 +537,19 @@ short SetupCampaignGameHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_CAMPAIGN_HELP_IRONFIST;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_CAMPAIGN_HELP_SLAYER;
                 break;
             case CHOICE_THREE:
-                helpIndex = 2;
+                helpIndex = SETUP_CAMPAIGN_HELP_LAMANDA;
                 break;
             case CHOICE_FOUR:
-                helpIndex = 3;
+                helpIndex = SETUP_CAMPAIGN_HELP_ALAMAR;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 4;
+                helpIndex = SETUP_CAMPAIGN_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST)
@@ -497,19 +568,19 @@ short SetupComPortHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_COM_PORT_HELP_COM1;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_COM_PORT_HELP_COM2;
                 break;
             case CHOICE_THREE:
-                helpIndex = 2;
+                helpIndex = SETUP_COM_PORT_HELP_COM3;
                 break;
             case CHOICE_FOUR:
-                helpIndex = 3;
+                helpIndex = SETUP_COM_PORT_HELP_COM4;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 4;
+                helpIndex = SETUP_COM_PORT_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST) {
@@ -532,19 +603,19 @@ short SetupBaudHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_BAUD_HELP_2400;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_BAUD_HELP_9600;
                 break;
             case CHOICE_THREE:
-                helpIndex = 2;
+                helpIndex = SETUP_BAUD_HELP_19200;
                 break;
             case CHOICE_FOUR:
-                helpIndex = 3;
+                helpIndex = SETUP_BAUD_HELP_38400;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 4;
+                helpIndex = SETUP_BAUD_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST) {
@@ -567,16 +638,16 @@ short SetupHotSeatGameHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_HOT_SEAT_HELP_TWO_PLAYERS;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_HOT_SEAT_HELP_THREE_PLAYERS;
                 break;
             case CHOICE_THREE:
-                helpIndex = 2;
+                helpIndex = SETUP_HOT_SEAT_HELP_FOUR_PLAYERS;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 3;
+                helpIndex = SETUP_HOT_SEAT_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST)
@@ -595,16 +666,16 @@ short SetupModemGameHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_MODEM_HELP_HOST;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_MODEM_HELP_GUEST;
                 break;
             case CHOICE_THREE:
-                helpIndex = 2;
+                helpIndex = SETUP_MODEM_HELP_CONFIGURE;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 3;
+                helpIndex = SETUP_MODEM_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST) {
@@ -627,19 +698,19 @@ short SetupMultiPlayerGameHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_MULTIPLAYER_HELP_HOT_SEAT;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_MULTIPLAYER_HELP_NETWORK;
                 break;
             case CHOICE_THREE:
-                helpIndex = 2;
+                helpIndex = SETUP_MULTIPLAYER_HELP_MODEM;
                 break;
             case CHOICE_FOUR:
-                helpIndex = 3;
+                helpIndex = SETUP_MULTIPLAYER_HELP_DIRECT_CONNECT;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 4;
+                helpIndex = SETUP_MULTIPLAYER_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST)
@@ -658,13 +729,13 @@ short SetupNetworkGameHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_NETWORK_HELP_HOST;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_NETWORK_HELP_GUEST;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 2;
+                helpIndex = SETUP_NETWORK_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST)
@@ -683,16 +754,16 @@ short SetupGameHandler(tag_message& message) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
-                helpIndex = 0;
+                helpIndex = SETUP_GAME_HELP_STANDARD;
                 break;
             case CHOICE_TWO:
-                helpIndex = 1;
+                helpIndex = SETUP_GAME_HELP_CAMPAIGN;
                 break;
             case CHOICE_THREE:
-                helpIndex = 2;
+                helpIndex = SETUP_GAME_HELP_MULTIPLAYER;
                 break;
             case DIALOG_CANCEL:
-                helpIndex = 3;
+                helpIndex = SETUP_GAME_HELP_CANCEL;
                 break;
         }
         if (helpIndex >= HELP_FIRST)

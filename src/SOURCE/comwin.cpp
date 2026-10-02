@@ -92,20 +92,20 @@ short com_init(unsigned char portNumber, int baudRate, int useDtr)
     gComPorts[slot].savedState = state;
     GetCommTimeouts(gComPorts[slot].handle, &gComPorts[slot].savedTimeouts);
     switch (baudRate) {
-    case 1:
-        state.BaudRate = 2400;
+    case COM_BAUD_2400:
+        state.BaudRate = CBR_2400;
         break;
-    case 2:
-        state.BaudRate = 4800;
+    case COM_BAUD_4800:
+        state.BaudRate = CBR_4800;
         break;
-    case 3:
-        state.BaudRate = 9600;
+    case COM_BAUD_9600:
+        state.BaudRate = CBR_9600;
         break;
-    case 4:
-        state.BaudRate = 19200;
+    case COM_BAUD_19200:
+        state.BaudRate = CBR_19200;
         break;
-    case 5:
-        state.BaudRate = 38400;
+    case COM_BAUD_38400:
+        state.BaudRate = CBR_38400;
         break;
     default:
         state.BaudRate = baudRate;

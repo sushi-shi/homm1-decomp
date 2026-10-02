@@ -113,9 +113,9 @@ H1_ENUM_BEGIN(AdventureControl)
     ADVENTURE_CONTROL_HERO_LOCATOR_3 = 119,
     ADVENTURE_CONTROL_HERO_LOCATOR_4 = 126
 H1_ENUM_END(AdventureControl)
- // clang-format on
+// clang-format on
 
- struct adventureSoundCell {
+struct adventureSoundCell {
     int soundId;
     int volume;
 };
@@ -285,7 +285,7 @@ public:
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
     char* CheckHandleNet(void);
-    short CheckHandleNetPlayerWait(struct tag_message &, signed char);
+    short CheckHandleNetPlayerWait(struct tag_message&, signed char);
     void TrimLoopingSounds(int);
     void DisableButtons(void);
     void EnableButtons(void);
@@ -310,10 +310,16 @@ public:
     void JailEvent(class mapCell*, class hero*, int, int);
     void TownEvent(class mapCell*, int, int);
     void EventSound(short, short);
-    void EventWindow(short, H1_ENUM_PARAM(NormalDialogType, int), char*,
-                     H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                     H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                     H1_ENUM_PARAM(NormalDialogOrText, int));
+    void EventWindow(
+        short,
+        H1_ENUM_PARAM(NormalDialogType, int),
+        char*,
+        H1_ENUM_PARAM(NormalDialogResourceType, int),
+        int,
+        H1_ENUM_PARAM(NormalDialogResourceType, int),
+        int,
+        H1_ENUM_PARAM(NormalDialogOrText, int)
+    );
     int GiveRandomArtifact(class hero*);
     int GiveExperience(class hero*, int, signed char);
     // HoMM1 retail: byte resource, word amount (ret 0xc).
@@ -325,8 +331,17 @@ public:
     signed char GhostEvent(class hero*, class mapCell*, int, int, int);
     void HouseEvent(class hero*, class mapCell*);
     // HoMM1 retail: nine arguments (ret 0x24), result in AL.
-    signed char CombatMonsterEvent(class hero*, H1_ENUM_PARAM(CreatureType, signed char), short,
-                                   class mapCell*, int, int, signed char, int, int);
+    signed char CombatMonsterEvent(
+        class hero*,
+        H1_ENUM_PARAM(CreatureType, signed char),
+        short,
+        class mapCell*,
+        int,
+        int,
+        signed char,
+        int,
+        int
+    );
     void TransferArtifacts(class hero*, class hero*);
     void HeroLoses(class hero*);
     void DoWhirlpool(class hero*);
@@ -412,10 +427,10 @@ public:
 };
 #pragma pack(pop)
 
-short APanelHandler(struct tag_message &);
+short APanelHandler(struct tag_message&);
 void UpdateCPanel(signed char);
 signed char SaveGame(void);
-short CPanelHandler(struct tag_message &);
+short CPanelHandler(struct tag_message&);
 
 extern int gbNoBorder;
 extern long giForceSwitchMusic;
@@ -423,7 +438,7 @@ extern long iLastScrollTime;
 extern int gbForceUpdate;
 extern int gbAllBlack;
 extern int giFullySeeded;
-extern class searchArray *gpSearchArray;
+extern class searchArray* gpSearchArray;
 extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
@@ -455,7 +470,7 @@ extern int giLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;
 extern int giLimitUpdMaxY;
-extern class heroWindow *cPanel;
+extern class heroWindow* cPanel;
 extern signed char bPrefsChanged;
 extern signed char bFreshSave;
 extern unsigned char giCloudType[];

@@ -18,8 +18,7 @@
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
 // checks before queueing the cast.
 VA(0x004154f0, 0x147)
-signed char combatManager::ViewSpells(int)
-{
+signed char combatManager::ViewSpells(int) {
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
     if (m_selectedSpell != SPELL_NONE) {
         switch (m_selectedSpell) {
@@ -46,8 +45,7 @@ signed char combatManager::ViewSpells(int)
 
 // Buka SPELLS.cpp CombatSpecialHandler: spell-book hover help.
 VA(0x00415637, 0x160)
-short CombatSpecialHandler(struct tag_message &message)
-{
+short CombatSpecialHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_COMMAND_HOVER:
@@ -56,22 +54,25 @@ short CombatSpecialHandler(struct tag_message &message)
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case SPELL_BOOK_PREVIOUS_PAGE:
-                        gpCombatManager->CombatMessage(cSpellHelp[0], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_PREVIOUS_PAGE], 1);
                         break;
                     case SPELL_BOOK_NEXT_PAGE:
-                        gpCombatManager->CombatMessage(cSpellHelp[1], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_NEXT_PAGE], 1);
                         break;
                     case DIALOG_BUTTON_0:
-                        gpCombatManager->CombatMessage(cSpellHelp[4], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_CLOSE], 1);
                         break;
                     case SPELL_BOOK_ENTRY_FIRST:
                     case SPELL_BOOK_ENTRY_FIRST + 1:
                     case SPELL_BOOK_ENTRY_FIRST + 2:
                     case SPELL_BOOK_ENTRY_LAST:
-                        gpCombatManager->CombatMessage(cSpellHelp[6], 1);
+                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_SELECT_SPELL], 1);
                         break;
                     default:
-                        gpCombatManager->CombatMessage(cSpellHelp[7], 1);
+                        gpCombatManager->CombatMessage(
+                            cSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS],
+                            1
+                        );
                         break;
                 }
                 return MESSAGE_DISPATCH_CONSUME;
@@ -91,8 +92,7 @@ H1_ENUM_END(SpellPointerFrame)
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
 VA(0x00415797, 0x295)
-short HandleCastSpell(struct tag_message &message)
-{
+short HandleCastSpell(struct tag_message& message) {
     short hex;
 
     switch (message.type) {
@@ -152,17 +152,18 @@ short HandleCastSpell(struct tag_message &message)
 // Buka SPELLS.cpp ValidSpellTarget; HoMM1 has no resurrection corpses, and
 // anti-magic, dispel and green dragons stop every spell but the area ones.
 VA(0x00415a2c, 0x2f0)
-signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
-{
+signed char combatManager::ValidSpellTarget(signed char spell, signed char hex) {
     int unused;
-    army *target = NULL;
+    army* target = NULL;
     short newHex;
 
     if (!ValidHex(hex))
         return 0;
-    if (spell != SPELL_FIREBALL && spell != SPELL_METEOR_SHOWER && m_hexCells[hex].m_occupantSide != -1) {
+    if (spell != SPELL_FIREBALL && spell != SPELL_METEOR_SHOWER
+        && m_hexCells[hex].m_occupantSide != COMBAT_SIDE_NONE) {
         target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-        if (target->m_spellEffect == SPELL_ANTI_MAGIC || target->m_spellEffect == SPELL_DISPEL_MAGIC || target->m_creatureType == CREATURE_DRAGON)
+        if (target->m_spellEffect == SPELL_ANTI_MAGIC || target->m_spellEffect == SPELL_DISPEL_MAGIC
+            || target->m_creatureType == CREATURE_DRAGON)
             return 0;
     }
     switch (spell) {
@@ -198,14 +199,14 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
                 return 0;
             break;
         case SPELL_TURN_UNDEAD:
-            if (m_hexCells[hex].m_occupantSide == -1)
+            if (m_hexCells[hex].m_occupantSide == COMBAT_SIDE_NONE)
                 return 0;
             if (target->m_creatureType != CREATURE_GHOST)
                 return 0;
             break;
         case SPELL_FIREBALL:
         case SPELL_METEOR_SHOWER:
-            if (hex == -1 || hex % 9 == 0 || hex % 9 == 8)
+            if (hex == -1 || hex % COMBAT_GRID_COLUMNS == 0 || hex % COMBAT_GRID_COLUMNS == 8)
                 return 0;
             break;
     }
@@ -214,8 +215,7 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
 
 // Buka SPELLS.cpp SpellMessage without the resurrection target.
 VA(0x00415d1c, 0x128)
-void combatManager::SpellMessage(signed char spell, signed char hex)
-{
+void combatManager::SpellMessage(signed char spell, signed char hex) {
     switch (spell) {
         case SPELL_FIREBALL:
         case SPELL_ARMAGEDDON:
@@ -229,8 +229,13 @@ void combatManager::SpellMessage(signed char spell, signed char hex)
                 break;
             }
         default:
-            sprintf(gText, "Cast %s on %s", gSpellNames[spell],
-                    gArmyNames[m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex].m_creatureType]);
+            sprintf(
+                gText,
+                "Cast %s on %s",
+                gSpellNames[spell],
+                gArmyNames[m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex]
+                               .m_creatureType]
+            );
             break;
     }
     CombatMessage(gText, 1);
@@ -239,10 +244,13 @@ void combatManager::SpellMessage(signed char spell, signed char hex)
 // Buka SPELLS.cpp CastSpell; HoMM1 has nineteen spells, a single timed effect
 // per stack and no eagle eye, mirror image or elementals.
 VA(0x00415e44, 0xd69)
-void combatManager::CastSpell(signed char spell, signed char targetHex, signed char castByCreature,
-                              signed char teleportDest)
-{
-    army *targetArmy;
+void combatManager::CastSpell(
+    signed char spell,
+    signed char targetHex,
+    signed char castByCreature,
+    signed char teleportDest
+) {
+    army* targetArmy;
     int damage;
     int targetIndex;
     int side;
@@ -251,7 +259,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     SAMPLE2 sample;
     int quantity;
     short newHex;
-    army *teleportArmy;
+    army* teleportArmy;
 
     sample = NULL_SAMPLE2;
     if (m_limitCreature) {
@@ -266,15 +274,17 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     gpMouseManager->ReallyHidePointer();
     if (!castByCreature && m_heroes[m_currentSide])
         m_heroes[m_currentSide]->UseSpell(spell);
-    targetArmy = 0;
-    if (spell == SPELL_FIREBALL || spell == SPELL_METEOR_SHOWER || spell == SPELL_STORM || spell == SPELL_ARMAGEDDON || spell == SPELL_CURE || spell == SPELL_DISPEL_MAGIC)
-        targetArmy = 0;
+    targetArmy = NULL;
+    if (spell == SPELL_FIREBALL || spell == SPELL_METEOR_SHOWER || spell == SPELL_STORM
+        || spell == SPELL_ARMAGEDDON || spell == SPELL_CURE || spell == SPELL_DISPEL_MAGIC)
+        targetArmy = NULL;
     else if (ValidHex(targetHex) && m_hexCells[targetHex].m_occupantSide >= 0) {
-        targetArmy = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
+        targetArmy =
+            &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
         side = m_hexCells[targetHex].m_occupantSide;
         targetIndex = m_hexCells[targetHex].m_occupantIndex;
     } else
-        targetArmy = 0;
+        targetArmy = NULL;
     if (!castByCreature)
         m_heroCastSpell[m_currentSide] = 1;
     switch (spell) {
@@ -300,7 +310,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                     CombatMessage("Dragons are not affected by magic!", 1);
                 else
                     CombatMessage("The Dwarves' magic resistance canceled the spell!", 1);
-                WaitEndSample(sample, -1);
+                WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
                 goto done;
             }
             break;
@@ -311,43 +321,43 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         case SPELL_TELEPORT:
             teleportArmy = targetArmy;
             targetHex = teleportDest;
-            teleportArmy->SpellEffect(2, 0);
-            m_hexCells[teleportArmy->m_hex].m_occupantSide = -1;
+            teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
+            m_hexCells[teleportArmy->m_hex].m_occupantSide = COMBAT_SIDE_NONE;
             m_hexCells[teleportArmy->m_hex].m_occupantIndex = -1;
             if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 1) {
-                m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = -1;
+                m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = COMBAT_SIDE_NONE;
                 m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = -1;
             } else if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 0) {
-                m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = -1;
+                m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = COMBAT_SIDE_NONE;
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = -1;
             }
-            teleportArmy->SpellEffect(2, 0);
-            WaitEndSample(sample, -1);
+            teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
+            WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
             sprintf(gText, "telein.82m");
             sample = LoadPlaySample(gText);
-            if (teleportArmy->m_stats.attributes & 1) {
+            if (teleportArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 newHex = targetHex;
-                if (teleportArmy->m_facing == 0) {
+                if (teleportArmy->m_facing == ARMY_FACING_RIGHT) {
                     newHex = teleportArmy->GetAdjacentCellIndex(newHex, 1);
                     if (newHex == -1
-                        || (m_hexCells[newHex].m_occupantSide != -1
+                        || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacleIndex != -1)
+                        || m_hexCells[newHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                         targetHex--;
                 }
-                if (teleportArmy->m_facing == 1) {
+                if (teleportArmy->m_facing == ARMY_FACING_LEFT) {
                     newHex = teleportArmy->GetAdjacentCellIndex(newHex, 4);
                     if (newHex == -1
-                        || (m_hexCells[newHex].m_occupantSide != -1
+                        || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacleIndex != -1)
+                        || m_hexCells[newHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                         targetHex++;
                 }
                 teleportArmy->m_hex = targetHex;
                 switch (teleportArmy->m_facing) {
-                    case 0:
+                    case ARMY_FACING_RIGHT:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
                         m_hexCells[teleportArmy->m_hex].m_occupantFrame = 1;
@@ -355,7 +365,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = targetIndex;
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantFrame = 0;
                         break;
-                    case 1:
+                    case ARMY_FACING_LEFT:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
                         m_hexCells[teleportArmy->m_hex].m_occupantFrame = 0;
@@ -364,72 +374,87 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         m_hexCells[teleportArmy->m_hex - 1].m_occupantFrame = 1;
                         break;
                 }
-                teleportArmy->SpellEffect(2, 0);
+                teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             } else {
                 teleportArmy->m_hex = targetHex;
                 m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                 m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
                 m_hexCells[teleportArmy->m_hex].m_occupantFrame = -1;
-                teleportArmy->SpellEffect(2, 0);
+                teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             }
             teleportArmy->Stand(1);
             break;
         case SPELL_LIGHTNING_BOLT:
-            sprintf(gText, "The lightning bolt does %d damage to the %s.",
-                    m_heroes[m_currentSide]->m_primaryStats[2] * 25,
-                    targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
-                                               : gArmyNames[targetArmy->m_creatureType]);
+            sprintf(
+                gText,
+                "The lightning bolt does %d damage to the %s.",
+                m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
+                targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
+                                           : gArmyNames[targetArmy->m_creatureType]
+            );
             CombatMessage(gText, 1);
-            targetArmy->SpellEffect(1, 0);
-            targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
+            targetArmy->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);
+            targetArmy->Damage(
+                m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25
+            );
             targetArmy->PowEffect(7);
-            if (!(targetArmy->m_stats.attributes & 0x10))
+            if (!(targetArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 targetArmy->Stand(1);
             break;
         case SPELL_CURE:
             CastMassSpell(m_currentSide, 1);
             break;
         case SPELL_RESURRECT:
-            targetArmy->SpellEffect(4, 0);
-            targetArmy->SpellEffect(4, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
             quantity = targetArmy->m_quantity;
-            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
+            targetArmy->m_quantity +=
+                m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50
+                / targetArmy->m_stats.hitPoints;
             if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
                 targetArmy->m_quantity = targetArmy->m_initialQuantity;
             if (targetArmy->m_quantity - quantity > 1)
-                sprintf(gText, "%d %s rise from the dead!", targetArmy->m_quantity - quantity,
-                        gArmyNamesPlural[targetArmy->m_creatureType]);
+                sprintf(
+                    gText,
+                    "%d %s rise from the dead!",
+                    targetArmy->m_quantity - quantity,
+                    gArmyNamesPlural[targetArmy->m_creatureType]
+                );
             else
-                sprintf(gText, "%d %s rises from the dead!", targetArmy->m_quantity - quantity,
-                        gArmyNames[targetArmy->m_creatureType]);
+                sprintf(
+                    gText,
+                    "%d %s rises from the dead!",
+                    targetArmy->m_quantity - quantity,
+                    gArmyNames[targetArmy->m_creatureType]
+                );
             CombatMessage(gText, 1);
             targetArmy->Stand(1);
             break;
         case SPELL_SLOW:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->m_stats.speed = 1;
-            if (targetArmy->m_stats.attributes & 2)
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->m_stats.speed = CREATURE_SPEED_SLOW;
+            if (targetArmy->m_stats.attributes & MONSTER_FLAGS_FLYING)
                 targetArmy->m_stats.attributes -= 2;
             targetArmy->m_spellEffect = SPELL_SLOW;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case SPELL_HASTE:
-            gpCombatManager->m_currentSpeed = 4;
+            gpCombatManager->m_currentSpeed = CREATURE_SPEED_BLAZING;
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->m_stats.speed = 4;
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->m_stats.speed = CREATURE_SPEED_BLAZING;
             targetArmy->m_spellEffect = SPELL_HASTE;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case SPELL_BLESS:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(8, 0);
-            targetArmy->SpellEffect(8, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BLESS, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BLESS, 0);
             targetArmy->m_damageMode = 3;
             targetArmy->m_spellEffect = SPELL_BLESS;
             targetArmy->m_spellEndCondition = 3;
@@ -437,8 +462,8 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_PROTECTION:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(9, 0);
-            targetArmy->SpellEffect(9, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
             targetArmy->m_spellEffect = SPELL_PROTECTION;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->m_stats.defense += 3;
@@ -446,9 +471,9 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_CURSE:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(10, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_CURSE, 0);
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(10, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_CURSE, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = SPELL_CURSE;
             targetArmy->m_spellEndCondition = 3;
@@ -456,18 +481,18 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_BERZERKER:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(14, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(14, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
             targetArmy->m_spellEffect = SPELL_BERZERKER;
             targetArmy->m_spellEndCondition = 1;
             targetArmy->Stand(1);
             break;
         case SPELL_PARALYZE:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(18, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(18, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = SPELL_PARALYZE;
             targetArmy->m_spellEndCondition = 2;
@@ -475,9 +500,9 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_BLIND:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->m_stats.speed = 0;
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->m_stats.speed = CREATURE_SPEED_NONE;
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = SPELL_BLIND;
             targetArmy->m_spellEndCondition = 2;
@@ -485,7 +510,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_TURN_UNDEAD:
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(11, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_TURN_UNDEAD, 0);
             targetArmy->m_powFrames = 5;
             targetArmy->PowEffect(0);
             targetArmy->m_quantity = 0;
@@ -495,7 +520,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_ANTI_MAGIC:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(12, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_ANTI_MAGIC, 0);
             targetArmy->m_spellEffect = SPELL_ANTI_MAGIC;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
@@ -520,18 +545,18 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         if (castByCreature)
             targetArmy->m_spellRounds = 3;
         else
-            targetArmy->m_spellRounds = m_heroes[m_currentSide]->m_primaryStats[2];
+            targetArmy->m_spellRounds =
+                m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER];
     }
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
 done:
     CheckChangeSelector();
 }
 
 // Buka SPELLS.cpp DefaultSpell; HoMM1 plays the effect in two frames.
 VA(0x00416bad, 0xcb)
-void combatManager::DefaultSpell(signed char targetHex)
-{
-    army *target;
+void combatManager::DefaultSpell(signed char targetHex) {
+    army* target;
 
     if (!ValidHex(targetHex) || m_hexCells[targetHex].m_occupantSide < 0)
         return;
@@ -546,8 +571,7 @@ void combatManager::DefaultSpell(signed char targetHex)
 // HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
 // spells are cancelled side by side.
 VA(0x00416c78, 0x407)
-void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
-{
+void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
     int last;
     int unused;
     short side;
@@ -571,13 +595,15 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
     }
     for (side = startSide; side <= last; side++) {
         for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
-            if (m_armies[side][armyIndex].m_spellEffect != SPELL_ANTI_MAGIC && m_armies[side][armyIndex].m_spellEffect != SPELL_DISPEL_MAGIC
+            if (m_armies[side][armyIndex].m_spellEffect != SPELL_ANTI_MAGIC
+                && m_armies[side][armyIndex].m_spellEffect != SPELL_DISPEL_MAGIC
                 && m_armies[side][armyIndex].m_creatureType != CREATURE_DRAGON) {
                 if (!cureOnly) {
                     if (m_armies[side][armyIndex].m_spellEffect != SPELL_NONE)
                         m_armies[side][armyIndex].m_animationSequence = 3;
                 } else if (cureOnly == 1) {
-                    if (m_armies[side][armyIndex].m_spellEffect == SPELL_SLOW || m_armies[side][armyIndex].m_spellEffect == SPELL_BLIND
+                    if (m_armies[side][armyIndex].m_spellEffect == SPELL_SLOW
+                        || m_armies[side][armyIndex].m_spellEffect == SPELL_BLIND
                         || m_armies[side][armyIndex].m_spellEffect == SPELL_CURSE
                         || m_armies[side][armyIndex].m_spellEffect == SPELL_BERZERKER
                         || m_armies[side][armyIndex].m_spellEffect == SPELL_PARALYZE)
@@ -607,16 +633,17 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
 // HoMM1: lifts every stack of one side out of the glow and cancels its
 // spell (only the harmful ones for Cure).
 VA(0x0041707f, 0x12e)
-void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
-{
-    army *curArmy;
+void combatManager::CancelSideSpells(signed char side, signed char cureOnly) {
+    army* curArmy;
     short i;
 
     for (i = 0; i < m_numArmies[side]; i++) {
         curArmy = &m_armies[side][i];
         curArmy->m_animationSequence = 0;
         curArmy->m_animationFrame = 1;
-        if (curArmy->m_spellEffect != SPELL_ANTI_MAGIC && curArmy->m_spellEffect != SPELL_DISPEL_MAGIC && curArmy->m_creatureType != CREATURE_DRAGON) {
+        if (curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+            && curArmy->m_spellEffect != SPELL_DISPEL_MAGIC
+            && curArmy->m_creatureType != CREATURE_DRAGON) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {
                     case SPELL_SLOW:
@@ -638,12 +665,11 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
 // Buka SPELLS.cpp Fireball; HoMM1 draws the clipped ball and its mirror and
 // always hits the target hex and its six neighbours.
 VA(0x004171ad, 0x432)
-void combatManager::Fireball(signed char targetHex)
-{
+void combatManager::Fireball(signed char targetHex) {
     int damage;
-    icon *fireballIcon;
+    icon* fireballIcon;
     short x;
-    army *curArmy;
+    army* curArmy;
     short y;
     short i;
     short adjHexes[7];
@@ -672,12 +698,16 @@ void combatManager::Fireball(signed char targetHex)
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
+                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (curArmy->m_creatureType != CREATURE_DRAGON
+                && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
-                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
+                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
+                                 [m_hexCells[adjHexes[i]].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
+                             [m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
                     curArmy->Damage(damage);
                     hit = 1;
@@ -691,9 +721,10 @@ void combatManager::Fireball(signed char targetHex)
     }
     curArmy->PowEffect(7);
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (!(curArmy->m_stats.attributes & 0x10))
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
+                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(1);
         }
     }
@@ -703,12 +734,11 @@ void combatManager::Fireball(signed char targetHex)
 // Buka SPELLS.cpp MeteorShower; HoMM1 drops a meteor on each of the seven
 // hexes in turn.
 VA(0x004175df, 0x439)
-void combatManager::MeteorShower(signed char targetHex)
-{
+void combatManager::MeteorShower(signed char targetHex) {
     short i;
     int damage;
-    icon *rockIcon;
-    army *curArmy;
+    icon* rockIcon;
+    army* curArmy;
     short adjHexes[7];
     short j;
     signed char hit;
@@ -726,7 +756,13 @@ void combatManager::MeteorShower(signed char targetHex)
         DrawFrame(0);
         for (i = 0; i < 7; i++) {
             if (adjHexes[i] != -1)
-                rockIcon->DrawToBuffer(m_hexCells[adjHexes[i]].m_x, m_hexCells[adjHexes[i]].m_y, j, ICON_DRAW_NORMAL, 0);
+                rockIcon->DrawToBuffer(
+                    m_hexCells[adjHexes[i]].m_x,
+                    m_hexCells[adjHexes[i]].m_y,
+                    j,
+                    ICON_DRAW_NORMAL,
+                    0
+                );
         }
         UpdateCombatArea();
         DelayTil(&glTimers[0]);
@@ -736,12 +772,16 @@ void combatManager::MeteorShower(signed char targetHex)
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
+                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (curArmy->m_creatureType != CREATURE_DRAGON
+                && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
-                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
+                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
+                                 [m_hexCells[adjHexes[i]].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
+                             [m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
                     curArmy->Damage(damage);
                     hit = 1;
@@ -755,9 +795,10 @@ void combatManager::MeteorShower(signed char targetHex)
     }
     curArmy->PowEffect(1);
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (!(curArmy->m_stats.attributes & 0x10))
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
+                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(1);
         }
     }
@@ -766,16 +807,15 @@ void combatManager::MeteorShower(signed char targetHex)
 
 // Buka SPELLS.cpp ElementalStorm over HoMM1's 10x7 grid of 64-pixel tiles.
 VA(0x00417a18, 0x2f3)
-void combatManager::ElementalStorm(void)
-{
+void combatManager::ElementalStorm(void) {
     int damage;
     short index;
     short x;
-    army *curArmy;
+    army* curArmy;
     short cycle;
     short frm;
     short y;
-    icon *storm;
+    icon* storm;
     short sideIdx;
     signed char hit;
 
@@ -795,13 +835,14 @@ void combatManager::ElementalStorm(void)
     }
     gpResourceManager->Dispose(storm);
     hit = 0;
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+            if (curArmy->m_creatureType != CREATURE_DRAGON
+                && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
-                && !(curArmy->m_stats.attributes & 0x10)) {
+                && !(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                 curArmy->Damage(damage);
                 hit = 1;
             }
@@ -815,7 +856,7 @@ void combatManager::ElementalStorm(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (!(curArmy->m_stats.attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(0);
         }
     }
@@ -825,17 +866,16 @@ void combatManager::ElementalStorm(void)
 // Buka SPELLS.cpp Armageddon; HoMM1 fades a copy of kb.pal to red instead of
 // shaking the screen.
 VA(0x00417d0b, 0x3dc)
-void combatManager::Armageddon(void)
-{
+void combatManager::Armageddon(void) {
     short sideIdx;
     int damage;
     short index;
-    signed char *palData;
+    signed char* palData;
     short fadeStep;
-    army *curArmy;
-    palette *kbPal;
+    army* curArmy;
+    palette* kbPal;
     short i;
-    palette *workPal;
+    palette* workPal;
     signed char hit;
 
     damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50;
@@ -843,9 +883,10 @@ void combatManager::Armageddon(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+            if (curArmy->m_creatureType != CREATURE_DRAGON
+                && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
-                && !(curArmy->m_stats.attributes & 0x10)) {
+                && !(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                 curArmy->Damage(damage);
                 hit = 1;
             }
@@ -878,7 +919,7 @@ void combatManager::Armageddon(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (!(curArmy->m_stats.attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(0);
         }
     }

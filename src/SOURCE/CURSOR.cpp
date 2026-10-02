@@ -44,23 +44,12 @@ H1_ENUM_CONST_BEGIN(CursorConstant)
     MOVE_TILE_HALF_COUNT = 2
 H1_ENUM_CONST_END(CursorConstant)
 
-// gConfig.walkSpeed: the order of retail walkSpeedText {Walk, Trot, Canter,
-// Gallop, Jump}; Jump moves a whole cell per frame without walking frames.
-H1_ENUM_BEGIN(CursorWalkSpeed)
-    WALK_SPEED_WALK = 0,
-    WALK_SPEED_FIRST = WALK_SPEED_WALK,
-    WALK_SPEED_TROT = 1,
-    WALK_SPEED_CANTER = 2,
-    WALK_SPEED_GALLOP = 3,
-    WALK_SPEED_JUMP = 4
-H1_ENUM_END(CursorWalkSpeed)
 // clang-format on
 
 // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
 // walk speed and indexes the map directly.
 VA(0x00405950, 0x169)
-void advManager::StartCursor(signed char direction)
-{
+void advManager::StartCursor(signed char direction) {
     short directionX;
     short newX;
     short directionY;
@@ -85,8 +74,7 @@ void advManager::StartCursor(signed char direction)
 
 // Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
 VA(0x00405ab9, 0x150)
-void advManager::StopCursor(signed char stopSound)
-{
+void advManager::StopCursor(signed char stopSound) {
     if (stopSound) {
         bMoveSoundMade = 1;
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
@@ -107,8 +95,7 @@ void advManager::StopCursor(signed char stopSound)
 // Buka CURSOR.cpp:99 DrawCursor; HoMM1 draws the hero shadow first and
 // counts flag frames with m_updateMaxY.
 VA(0x00405c09, 0x5e4)
-void advManager::DrawCursor(void)
-{
+void advManager::DrawCursor(void) {
     short drawX;
     short screenY;
     short drawFrame;
@@ -201,8 +188,7 @@ void advManager::DrawCursor(void)
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375377;margin=0.466673;shape=0.186;size=0.574;calls=1.000;alternate=pol20:int advManager::GetCursorBaseFrame(int)@0x0000e198
 VA(0x004061ed, 0x88)
-short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) direction)
-{
+short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) direction) {
     if (static_cast<int>(direction) > static_cast<int>(MAP_DIRECTION_SOUTH)) {
         switch (direction) {
             case MAP_DIRECTION_SOUTH_WEST:
@@ -222,8 +208,7 @@ short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) directio
 // Buka CURSOR.cpp:379 TurnTo; HoMM1 keeps sixteen half-step frames and
 // word-sized step delays.
 VA(0x00406275, 0x261)
-void advManager::TurnTo(signed char direction)
-{
+void advManager::TurnTo(signed char direction) {
     short frameStep = 1;
     short curFrame;
     short directionDifference = direction - m_cursorDirection;
@@ -272,10 +257,9 @@ void advManager::TurnTo(signed char direction)
 // and tests the watch player's high bit (0x004be7cc) directly in the
 // map-extra grid.
 VA(0x004064d6, 0x136)
-int advManager::GetMoveShowIt(signed char direction)
-{
+int advManager::GetMoveShowIt(signed char direction) {
     short dy;
-    hero *movingHero;
+    hero* movingHero;
     short dirX;
 
     if (gpCurPlayer->CurrentHero() == -1)
@@ -284,8 +268,7 @@ int advManager::GetMoveShowIt(signed char direction)
     dirX = normalDirTable[direction].x;
     dy = normalDirTable[direction].y;
     if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gbRemoteOn))
-        && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y]
-             & giCurWatchPlayerHighBit)
+        && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & giCurWatchPlayerHighBit)
             || (gpGame->m_mapExtra[movingHero->m_x + dirX][movingHero->m_y + dy]
                 & giCurWatchPlayerHighBit)))
         return 1;
@@ -297,17 +280,23 @@ int advManager::GetMoveShowIt(signed char direction)
 // type, parks the boat on a coast step and has no deferred object draw.
 
 VA(0x0040660c, 0xe1e)
-mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, int *eventX, int *eventY,
-                              int *outOfMobility, signed char processEvent, signed char *adjacentMonster)
-{
-    mapCell *pCursorCell;
+mapCell* advManager::MoveHero(
+    signed char direction,
+    signed char stopAfterMove,
+    int* eventX,
+    int* eventY,
+    int* outOfMobility,
+    signed char processEvent,
+    signed char* adjacentMonster
+) {
+    mapCell* pCursorCell;
     int step;
     int origX;
-    mapCell *nextCell;
-    hero *movingHero;
+    mapCell* nextCell;
+    hero* movingHero;
     int origY;
     signed char terrain;
-    mapCell *retCell;
+    mapCell* retCell;
     int msDelay;
     short xInc;
     short yInc;
@@ -340,9 +329,10 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     if (m_cursorDirection != direction)
         TurnTo(direction);
     movingHero->m_direction = direction;
-    if ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && nextCell->m_triggerType == MAP_OBJECT_COAST) {
-        boatRecord *boat;
-        mapCell *boatCell;
+    if ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
+        && nextCell->m_triggerType == MAP_OBJECT_COAST) {
+        boatRecord* boat;
+        mapCell* boatCell;
 
         for (step = 0; step < GAME_BOAT_COUNT; step++) {
             if (gpGame->m_boats[step].heroId == movingHero->m_id)
@@ -381,7 +371,8 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                     goto stoppingEvent;
             case MAP_OBJECT_HERO:
                 if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED) {
-                    if (gpGame->GetHero(nextCell->m_objectMetadata)->m_eventFlags & HERO_EVENT_EMBARKED)
+                    if (gpGame->GetHero(nextCell->m_objectMetadata)->m_eventFlags
+                        & HERO_EVENT_EMBARKED)
                         goto stoppingEvent;
                     else
                         goto movementDone;
@@ -440,13 +431,14 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     if (!ValidMove(direction))
         goto movementDone;
     if (movingHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
-        town *occupiedTown;
+        town* occupiedTown;
 
         occupiedTown = gpGame->GetTown(movingHero->m_occupiedTown);
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_routeShown)
-        *(m_visibilityMap + (movingHero->m_x + xInc) + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
+        *(m_visibilityMap + (movingHero->m_x + xInc)
+          + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
     m_updateMinX = m_updateMinY = 0;
     gpGame->SetVisibility(m_mapOriginX + xInc + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + yInc + CURSOR_MAP_DRAW_OFFSET, giCurPlayer,
                           gHeroScoutRadius[movingHero->m_heroClass]);
@@ -519,7 +511,8 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     *eventX = m_cursorMapX + m_mapOriginX;
     *eventY = m_cursorMapY + m_mapOriginY;
     if ((pCursorCell->m_triggerType & MAP_TRIGGER_EVENT)
-        || ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && pCursorCell->m_triggerType == MAP_OBJECT_COAST)) {
+        || ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
+            && pCursorCell->m_triggerType == MAP_OBJECT_COAST)) {
         retCell = pCursorCell;
         switch (pCursorCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
             case MAP_OBJECT_ROSEBUSH:
@@ -550,7 +543,9 @@ movementDone:
         if (mapExtra[movingHero->m_x][movingHero->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                 goto adjacentDone;
-            if (retCell && static_cast<char>(retCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_SHIP)
+            if (retCell
+                && static_cast<char>(retCell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                       == MAP_OBJECT_SHIP)
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
             if (movingHero->m_owner == -1)
@@ -569,14 +564,13 @@ adjacentDone:
 // Buka CURSOR.cpp:907; HoMM1 keeps byte flags and redraws through the
 // three-argument CompleteDraw.
 VA(0x0040742a, 0x181)
-void advManager::CheckAdjacentMon(signed char *adjacentMonster)
-{
+void advManager::CheckAdjacentMon(signed char* adjacentMonster) {
     int monX;
     int monY;
-    hero *theHero;
+    hero* theHero;
     signed char dead;
-    mapCell *heroCell;
-    mapCell *monsterCell;
+    mapCell* heroCell;
+    mapCell* monsterCell;
 
     theHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dead = 0;
@@ -587,8 +581,17 @@ void advManager::CheckAdjacentMon(signed char *adjacentMonster)
         monsterCell = GetCell(monX, monY);
         heroCell = GetCell(theHero->m_x, theHero->m_y);
         if (gbThisNetHumanPlayer[giCurPlayer])
-            PlayerMonsterInteract(monsterCell, heroCell, theHero, &dead, theHero->m_x, theHero->m_y,
-                                  1, monX, monY);
+            PlayerMonsterInteract(
+                monsterCell,
+                heroCell,
+                theHero,
+                &dead,
+                theHero->m_x,
+                theHero->m_y,
+                1,
+                monX,
+                monY
+            );
         else
             ComputerMonsterInteract(monsterCell, theHero, &dead);
         if (dead) {
@@ -604,13 +607,12 @@ void advManager::CheckAdjacentMon(signed char *adjacentMonster)
 // boat, forbids landing a boat on most objects and defers the rest to
 // ValidMove.
 VA(0x004075ab, 0x20a)
-short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
-{
+short advManager::ValidMoveWithEvent(hero* movingHero, short direction) {
     short deltaY;
     short newY;
     short deltaX;
     short newX;
-    mapCell *cell;
+    mapCell* cell;
 
     deltaX = normalDirTable[direction].x;
     deltaY = normalDirTable[direction].y;
@@ -656,12 +658,11 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
 // Buka CURSOR.cpp:1006 ValidMove; HoMM1 indexes from the cursor's map
 // position and tests the north/south object masks directly.
 VA(0x004077b5, 0x2a3)
-short advManager::ValidMove(short direction)
-{
+short advManager::ValidMove(short direction) {
     short directionX;
     short downMask;
-    mapCell *hereCell;
-    mapCell *destCell;
+    mapCell* hereCell;
+    mapCell* destCell;
     short directionY;
     short north;
     short newX;
@@ -679,10 +680,13 @@ short advManager::ValidMove(short direction)
     if (destCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
         return 0;
     if (giGroundToTerrain[destCell->m_tileIndex] == TERRAIN_WATER) {
-        if (m_cursorType != ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
+        if (m_cursorType != ADVMGR_HERO_ICON_BOAT
+            && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+            && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
             return 0;
     } else {
-        if (m_cursorType == ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != MAP_OBJECT_COAST && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != MAP_OBJECT_COAST
+            && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
             return 0;
     }
     hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
@@ -691,7 +695,8 @@ short advManager::ValidMove(short direction)
     if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
         && hereCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
-    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME && !(destCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
+    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME
+        && !(destCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
         && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;
@@ -699,8 +704,7 @@ short advManager::ValidMove(short direction)
 
 // Buka CURSOR.cpp:1099 MoveOrigin; HoMM1 indexes the map directly.
 VA(0x00407a58, 0x329)
-void advManager::MoveOrigin(short directionX, short directionY)
-{
+void advManager::MoveOrigin(short directionX, short directionY) {
     short oldOriginX;
     short oldOriginY;
     short cellX;

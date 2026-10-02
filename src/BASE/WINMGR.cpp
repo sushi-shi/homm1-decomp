@@ -36,10 +36,10 @@ H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
     FIZZLE_LOOKUP_HIGH_BYTE_SHIFT = 8,
     SCREENSHOT_FILENAME_CAPACITY = 16
 H1_ENUM_CONST_END(WindowFizzleConstant)
-// clang-format on
+   // clang-format on
 
-// Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
-VA(0x00473de0, 0x1b0)
+   // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
+   VA(0x00473de0, 0x1b0)
 void CycleColors(void) {
     signed char savedColor[PALETTE_GRAPHICS_CHANNELS];
 
@@ -427,15 +427,18 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
             // (sourceY - y) * width into the frame's induction slots.
             for (sourceY = y; sourceY < y + height; sourceY++) {
                 // Byte access is proven by the retail load/shift sequence.
-                savePixel = reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
+                savePixel =
+                    reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
                     + m_fizzleSource->m_width * (sourceY - y);
-                workPixel = reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
+                workPixel =
+                    reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
                     + (sourceY - y) * width;
                 // Byte access is proven by the retail framebuffer stores.
                 screenPixel = reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
-                    + sourceY * LOGICAL_SCREEN_WIDTH + x;
+                              + sourceY * LOGICAL_SCREEN_WIDTH + x;
                 for (sourceX = x; sourceX < x + width; sourceX++) {
-                    unsigned short lookup = *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
+                    unsigned short lookup =
+                        *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
                     *screenPixel++ = ccycleBuf[lookup];
                 }
             }
@@ -469,8 +472,13 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 
 // Window-manager data, initialized from retail .data (0x004a0c7c..) and
 // zero-filled storage (0x004cac20..).
-DATA(0x004a0c7c) int iDialogNestCount = 0;
-DATA(0x004a0c80) short gWindowFadeAssertLine = 550;
-DATA(0x004a0c84) char gWindowFadeAssertFile[] = "D:\\Heroes\\Base\\WINMGR.CPP";
-DATA(0x004cac20) signed char gWindowFadeSavedUpdate;
-DATA(0x004cac28) signed char gCyclePal[PALETTE_CYCLE_BYTES];
+DATA(0x004a0c7c)
+int iDialogNestCount = 0;
+DATA(0x004a0c80)
+short gWindowFadeAssertLine = 550;
+DATA(0x004a0c84)
+char gWindowFadeAssertFile[] = "D:\\Heroes\\Base\\WINMGR.CPP";
+DATA(0x004cac20)
+signed char gWindowFadeSavedUpdate;
+DATA(0x004cac28)
+signed char gCyclePal[PALETTE_CYCLE_BYTES];

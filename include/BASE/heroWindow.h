@@ -25,7 +25,7 @@ H1_ENUM_BEGIN(WindowState)
     WINDOW_STATE_OPEN = 1
 H1_ENUM_END(WindowState)
 
-// clang-format off
+    // clang-format off
 // heroWindow::Open status (Buka WINDOW.cpp OPEN_FAILURE).
 H1_ENUM_BEGIN(WindowOpenStatus)
     WINDOW_OPEN_SUCCESS = 0,
@@ -34,20 +34,18 @@ H1_ENUM_END(WindowOpenStatus)
 // clang-format on
 
 H1_ENUM_CONST_BEGIN(HeroWindowConstant)
-    HERO_WINDOW_NAME_CAPACITY = 20,
+HERO_WINDOW_NAME_CAPACITY = 20,
     // AddWindow/AddWidget z-order meaning "one above the current top"; unlinked
     // windows and widgets keep it.
-    WINDOW_Z_ORDER_APPEND = -1,
-    WINDOW_ALL_WIDGETS_LOW = -65535,
-    WINDOW_ALL_WIDGETS_HIGH = 65535
-H1_ENUM_CONST_END(HeroWindowConstant)
+    WINDOW_Z_ORDER_APPEND = -1, WINDOW_ALL_WIDGETS_LOW = -65535,
+    WINDOW_ALL_WIDGETS_HIGH = 65535 H1_ENUM_CONST_END(HeroWindowConstant)
 
 #pragma pack(push, 1)
-class heroWindow {
+        class heroWindow {
 public:
     short m_zOrder;
-    heroWindow *m_nextWindow;
-    heroWindow *m_prevWindow;
+    heroWindow* m_nextWindow;
+    heroWindow* m_prevWindow;
     char m_name[HERO_WINDOW_NAME_CAPACITY];
     H1_ENUM_STORAGE(WindowFlag, short) m_winFlags;
     H1_ENUM_STORAGE(WindowState, short) m_winState;
@@ -55,21 +53,21 @@ public:
     short m_posY;
     short m_winWidth;
     short m_winHeight;
-    widget *m_widgetListTail;
-    widget *m_widgetListHead;
-    bitmap *m_savedBackground;
+    widget* m_widgetListTail;
+    widget* m_widgetListHead;
+    bitmap* m_savedBackground;
 
     // --- constructors ---
     heroWindow(void);
     heroWindow(short, short, short, short, short);
-    heroWindow(short, short, char *);
+    heroWindow(short, short, char*);
     // --- methods ---
     short Open(short, signed char);
     void RemoveAndDeleteWidget(int);
     void Close(void);
-    void AddWidget(class widget *, short);
-    void RemoveWidget(class widget *);
-    short BroadcastMessage(struct tag_message &);
+    void AddWidget(class widget*, short);
+    void RemoveWidget(class widget*);
+    short BroadcastMessage(struct tag_message&);
     void DrawWindow(void);
     void DrawWindow(short);
     void DrawWindow(short, int, int);

@@ -17,14 +17,12 @@ H1_ENUM_BEGIN(WindowFadeSteps)
 H1_ENUM_END(WindowFadeSteps)
 
 H1_ENUM_CONST_BEGIN(WindowManagerConstant)
-    WINDOW_MANAGER_NO_DIALOG_RESULT = -1,
-    WINDOW_MANAGER_NO_HOVER_WIDGET = -1,
-    // heroWindowManager::Open when the screen bitmap is missing.
-    WINDOW_MANAGER_OPEN_FAILURE = 1
-H1_ENUM_CONST_END(WindowManagerConstant)
+WINDOW_MANAGER_NO_DIALOG_RESULT = -1, WINDOW_MANAGER_NO_HOVER_WIDGET = -1,
+                                      // heroWindowManager::Open when the screen bitmap is missing.
+    WINDOW_MANAGER_OPEN_FAILURE = 1 H1_ENUM_CONST_END(WindowManagerConstant)
 
-class palette;
-extern palette *gPalette;
+        class palette;
+extern palette* gPalette;
 extern int gbInDialog;
 extern int iDialogNestCount;
 

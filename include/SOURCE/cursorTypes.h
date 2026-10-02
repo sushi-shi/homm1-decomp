@@ -11,17 +11,33 @@ H1_ENUM_BEGIN(MapDirection)
     MAP_DIRECTION_SOUTH = 4,
     MAP_DIRECTION_SOUTH_WEST = 5,
     MAP_DIRECTION_WEST = 6,
-    MAP_DIRECTION_NORTH_WEST = 7
+    MAP_DIRECTION_NORTH_WEST = 7,
+    MAP_DIRECTION_COUNT = 8
 H1_ENUM_END(MapDirection)
 
-H1_ENUM_CONST_BEGIN(CursorFrameConstant)
-    CURSOR_FRAMES_PER_DIRECTION = 9,
-    CURSOR_BOAT_BASE_FRAME_5 = 0x9b,
-    CURSOR_BOAT_BASE_FRAME_6 = 0x92,
-    CURSOR_BOAT_BASE_FRAME_7 = 0x89
-H1_ENUM_CONST_END(CursorFrameConstant)
+// The opposite direction is (d + OPPOSITE_OFFSET) & INDEX_MASK (SEARCH's
+// path walk-back and PushPoint; Buka KB_TYPES.h MapDirectionConstant).
+// gConfig.walkSpeed ("Walk Speed"): the Speed menu's Walk..Jump commands
+// store 0..4; advManager's hero walk indexes giStepDelay by it and skips
+// frames and sounds at JUMP.
+H1_ENUM_BEGIN(WalkSpeed)
+    WALK_SPEED_WALK = 0,
+    WALK_SPEED_FIRST = WALK_SPEED_WALK,
+    WALK_SPEED_TROT = 1,
+    WALK_SPEED_CANTER = 2,
+    WALK_SPEED_GALLOP = 3,
+    WALK_SPEED_JUMP = 4
+H1_ENUM_END(WalkSpeed)
 
-// clang-format off
+H1_ENUM_CONST_BEGIN(MapDirectionConstant)
+MAP_DIRECTION_OPPOSITE_OFFSET = 4,
+    MAP_DIRECTION_INDEX_MASK = 7 H1_ENUM_CONST_END(MapDirectionConstant)
+
+        H1_ENUM_CONST_BEGIN(CursorFrameConstant) CURSOR_FRAMES_PER_DIRECTION = 9,
+    CURSOR_BOAT_BASE_FRAME_5 = 0x9b, CURSOR_BOAT_BASE_FRAME_6 = 0x92,
+    CURSOR_BOAT_BASE_FRAME_7 = 0x89 H1_ENUM_CONST_END(CursorFrameConstant)
+
+    // clang-format off
 // advmice.mse frames for mouseManager::SetPointer while the adventure cursor
 // set is loaded (Buka 2.1 ADVMGR.cpp AdventurePointerFrame: same numbering).
 // advManager::ProcessHover picks a role and adds day * DAY_STRIDE for the
