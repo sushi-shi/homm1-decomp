@@ -594,11 +594,70 @@ short NewGameHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// donor PoL RVA 0x000b88d6; preferred Buka symbol ?UpdateNewGameWindow@game@@QAEXXZ
-// donor Buka TU SOURCE/Newgame; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.454910;margin=0.298327;shape=0.215;size=0.546;calls=0.480;strings=%s %d%%;alternate=pol20:void game::UpdateNewGameWindow(void)@0x000b88d6
+// New-game player-type labels for human and computer seats.
+extern char* gHumanPlayerTypeNames[];
+extern char* gPlayerTypeNames[];
+
+// Buka 2.1 game::UpdateNewGameWindow for HoMM1's new-game screen: map name,
+// difficulty, opponent types and labels, rating, crest and King of the Hill.
 VA(0x0043b522, 0x2c3)
-void game::UpdateNewGameWindow(void) {}
+void game::UpdateNewGameWindow(void) {
+    tag_message message;
+    short i;
+    char* period;
+
+    strcpy(gText, gFullMapName);
+    period = strchr(gText, '.');
+    if (period)
+        *period = 0;
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 0x11;
+    message.payload.widget.data.text = gText;
+    m_newGameWindow->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.payload.widget.data.value = 4;
+    for (i = 0; i < 4; i++) {
+        message.payload.widget.id = i + 13;
+        m_newGameWindow->BroadcastMessage(message);
+    }
+    message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+    message.payload.widget.id = m_difficulty + 13;
+    m_newGameWindow->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    for (i = 1; i < 4; i++) {
+        message.payload.widget.id = i + 1;
+        if (i < giNumHumanPlayers)
+            message.payload.widget.data.value = 0x1a;
+        else
+            message.payload.widget.data.value = m_players[i].m_color + 5;
+        m_newGameWindow->BroadcastMessage(message);
+    }
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    for (i = 1; i < 4; i++) {
+        message.payload.widget.id = i + 4;
+        if (i < giNumHumanPlayers)
+            message.payload.widget.data.text = gHumanPlayerTypeNames[m_players[i].m_color];
+        else
+            message.payload.widget.data.text = gPlayerTypeNames[m_players[i].m_color];
+        m_newGameWindow->BroadcastMessage(message);
+    }
+    gpGame->m_difficultyRating = CalcDifficultyRating();
+    message.payload.widget.id = 0x14;
+    sprintf(gText, "%s %d%%", "Difficulty Rating:", gpGame->m_difficultyRating);
+    message.payload.widget.data.text = gText;
+    m_newGameWindow->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    if (m_players[0].m_unknown11 != -1) {
+        message.payload.widget.id = 8;
+        message.payload.widget.data.value = m_players[0].m_unknown11 * 2 + 11;
+        m_newGameWindow->BroadcastMessage(message);
+    }
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = 0x13;
+    message.payload.widget.data.value = gbKingOfTheHill + 27;
+    m_newGameWindow->BroadcastMessage(message);
+}
 
 // Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
 // unowned town on the map gains a random tier of its own creatures.
@@ -3545,6 +3604,68 @@ int game::GetNumThievesGuilds(int color) {
             ++numGuilds;
     }
     return numGuilds;
+}
+
+// Buka 2.1 game::CalcDifficultyRating for HoMM1: difficulty, opponents
+// (human seats by handicap, computers by level), King of the Hill, map
+// size and map difficulty.
+VA(0x00446e91, 0x30f)
+int game::CalcDifficultyRating(void) {
+    int i;
+    int total;
+
+    total = 0;
+    if (m_difficulty == 0) {
+    } else if (m_difficulty == 1) {
+        total += 10;
+    } else if (m_difficulty == 2) {
+        total += 20;
+    } else if (m_difficulty == 3) {
+        total += 30;
+    }
+    for (i = 1; i < 4; i++) {
+        if (i < giNumHumanPlayers)
+            total += (m_players[i].m_color - 1) * 10;
+        else if (m_players[i].m_color == 0)
+            total -= 10;
+        else if (m_players[i].m_color == 1)
+            total += 5;
+        else if (m_players[i].m_color == 2)
+            total += 10;
+        else if (m_players[i].m_color == 3)
+            total += 15;
+        else if (m_players[i].m_color == 4)
+            total += 20;
+    }
+    gpGame->m_playerCount = 0;
+    for (i = 0; i < 4; i++) {
+        if (gpGame->m_players[i].m_color > 0)
+            gpGame->m_playerCount++;
+    }
+    if (gbKingOfTheHill) {
+        if (m_playerCount - giNumHumanPlayers == 0) {
+        } else if (m_playerCount - giNumHumanPlayers == 1) {
+        } else if (m_playerCount - giNumHumanPlayers == 2) {
+            total += 5;
+        } else if (m_playerCount - giNumHumanPlayers == 3) {
+            total += 10;
+        }
+    }
+    if (giMapSize == 0) {
+    } else if (giMapSize == 1) {
+        total += 10;
+    } else if (giMapSize == 2) {
+        total += 20;
+    }
+    if (giMapDifficulty == 0)
+        total += 20;
+    else if (giMapDifficulty == 1)
+        total += 30;
+    else if (giMapDifficulty == 2)
+        total += 40;
+    else if (giMapDifficulty == 3)
+        total += 50;
+    return total;
 }
 
 // donor PoL RVA 0x0008480a; preferred Buka symbol ?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z
