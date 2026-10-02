@@ -1381,8 +1381,242 @@ int advManager::ProcessSearch(int x, int y) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.464646;margin=0.430920;shape=0.299;size=0.767;calls=0.971;alternate=pol20:int advManager::ProcessHover(int, int)@0x0005a644
 VA(0x004291de, 0xc02)
-int advManager::ProcessHover(struct tag_message*) {
-    return 0;
+int advManager::ProcessHover(struct tag_message* message) {
+    short curX;
+    short heroPosX;
+    short curY;
+    short heroPosY;
+    town* pTown;
+    hero* hero;
+    mapCell* cell;
+    int nDays;
+    signed char trigType;
+    int baseFrame;
+
+    switch (message->payload.widget.id) {
+    case 10:
+        gpMouseManager->MouseCoords(curX, curY);
+        if (curX > 480) {
+            gpMouseManager->SetPointer(0);
+            return 1;
+        }
+        curX = curX / 32;
+        curY = curY / 32;
+        if (curX < 0)
+            curX = 0;
+        if (curY < 0)
+            curY = 0;
+        if (curX > 14)
+            curX = 14;
+        if (curY > 14)
+            curY = 14;
+        if (m_lastHoverCell != curX || m_hoverCellY != curY) {
+            m_selectedCell = -1;
+            m_lastHoverCell = curX;
+            m_hoverCellY = curY;
+            m_commandTargetX = m_mapOriginX + curX;
+            m_commandTargetY = m_mapOriginY + curY;
+            if (m_commandTargetX < 0 || m_commandTargetY < 0 || m_commandTargetX > MAP_CELL_GRID_SIZE - 1
+                || m_commandTargetY > MAP_CELL_GRID_SIZE - 1
+                || !(gpGame->m_mapExtra[m_commandTargetX][m_commandTargetY] & giCurPlayerBit)) {
+                gpMouseManager->SetPointer(0);
+                return 1;
+            }
+            cell = GetCell(m_commandTargetX, m_commandTargetY);
+            if (gpCurPlayer->m_currentHero == -1) {
+                if ((cell->m_triggerType & 0x7f) == 0x28
+                    && gpGame->GetTown(cell->m_objectMetadata)->m_owner == giCurPlayer) {
+                    gpMouseManager->SetPointer(3);
+                    m_selectedCell = 3;
+                    return 1;
+                } else if ((cell->m_triggerType & 0x7f) == 0x3d
+                           && gpGame->GetHero(cell->m_objectMetadata)->m_owner == giCurPlayer) {
+                    gpMouseManager->SetPointer(2);
+                    m_selectedCell = 2;
+                    return 1;
+                } else {
+                    gpMouseManager->SetPointer(0);
+                    return 1;
+                }
+            } else {
+                hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+                heroPosX = hero->m_x - m_mapOriginX;
+                heroPosY = hero->m_y - m_mapOriginY;
+                if (curX == heroPosX && curY == heroPosY) {
+                    gpMouseManager->SetPointer(2);
+                    m_selectedCell = 2;
+                    return 1;
+                }
+                if (cell->m_unknown07 & 0x80) {
+                    if ((cell->m_triggerType & 0x7f) == 0x28) {
+                        pTown = gpGame->GetTown(cell->m_objectMetadata);
+                        if (pTown->m_owner == giCurPlayer && m_commandTargetY >= 1
+                            && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
+                            && (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType & 0x7f) == 0x28
+                            && (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType & 0x7f) == 0x28) {
+                            gpMouseManager->SetPointer(3);
+                            m_selectedCell = 5;
+                            return 1;
+                        }
+                    }
+                    gpSearchArray->m_pathLength = 0;
+                    gpMouseManager->SetPointer(0);
+                    return 1;
+                }
+                if (!((m_cursorType == 4 || cell->m_tileIndex >= 20 || cell->m_triggerType == 0xbd
+                       || cell->m_triggerType == 0xbe || cell->m_triggerType == 0xa3)
+                      && (m_cursorType != 4 || cell->m_tileIndex < 20 || cell->m_triggerType == 0x1f))) {
+                    gpSearchArray->m_pathLength = 0;
+                    gpMouseManager->SetPointer(0);
+                    return 1;
+                }
+                SeedTo(m_commandTargetX, m_commandTargetY);
+                if (gpSearchArray->m_cells[m_commandTargetX][m_commandTargetY].visited) {
+                    if (gpSearchArray->m_cells[m_commandTargetX][m_commandTargetY].distance
+                        <= hero->m_remainingMobility) {
+                        nDays = 0;
+                    } else {
+                        nDays = (gpSearchArray->m_cells[m_commandTargetX][m_commandTargetY].distance
+                                 - hero->m_remainingMobility)
+                                    / hero->m_mobility
+                                + 1;
+                        if (nDays > 3)
+                            nDays = 3;
+                    }
+                    baseFrame = nDays * 6;
+                    switch (cell->m_triggerType & 0x7f) {
+                    case 0x3e:
+                        if (m_cursorType != 4) {
+                            gpMouseManager->SetPointer(baseFrame + 6);
+                            m_selectedCell = 1;
+                        } else {
+                            gpMouseManager->SetPointer(baseFrame);
+                        }
+                        break;
+                    case 0x1f:
+                        if (m_cursorType == 4)
+                            gpMouseManager->SetPointer(baseFrame + 7);
+                        else if (mapExtra[m_commandTargetX][m_commandTargetY] & 0x80)
+                            gpMouseManager->SetPointer(baseFrame + 5);
+                        else
+                            gpMouseManager->SetPointer(baseFrame + 4);
+                        m_selectedCell = 1;
+                        break;
+                    case 0x1a:
+                        gpMouseManager->SetPointer(baseFrame + 5);
+                        m_selectedCell = 1;
+                        break;
+                    case 0x3d:
+                        if (gpGame->GetHero(cell->m_objectMetadata)->m_owner != giCurPlayer) {
+                            gpMouseManager->SetPointer(baseFrame + 5);
+                            m_selectedCell = 1;
+                        } else {
+                            gpMouseManager->SetPointer(baseFrame + 8);
+                            m_selectedCell = 1;
+                        }
+                        break;
+                    case 0x28:
+                        pTown = gpGame->GetTown(cell->m_objectMetadata);
+                        if ((cell->m_triggerType & 0x80) && pTown->m_owner != giCurPlayer && pTown->HasGarrison()) {
+                            gpMouseManager->SetPointer(baseFrame + 5);
+                            m_selectedCell = 1;
+                            break;
+                        }
+                        goto defaultHover;
+                    default:
+                    defaultHover:
+                        trigType = cell->m_triggerType & 0x7f;
+                        if ((mapExtra[m_commandTargetX][m_commandTargetY] & 0x80) && m_cursorType != 4
+                            && trigType != 4 && trigType != 6 && trigType != 8 && trigType != 0xb
+                            && trigType != 0x1d && trigType != 0x30) {
+                            gpMouseManager->SetPointer(baseFrame + 5);
+                        } else if (cell->m_triggerType & 0x80) {
+                            if (m_cursorType != 4) {
+                                switch (cell->m_triggerType & 0x7f) {
+                                case 1:
+                                case 2:
+                                case 4:
+                                case 5:
+                                case 6:
+                                case 7:
+                                case 8:
+                                case 9:
+                                case 10:
+                                case 11:
+                                case 12:
+                                case 13:
+                                case 14:
+                                case 15:
+                                case 16:
+                                case 17:
+                                case 18:
+                                case 19:
+                                case 20:
+                                case 21:
+                                case 22:
+                                case 23:
+                                case 24:
+                                case 25:
+                                case 27:
+                                case 28:
+                                case 29:
+                                case 32:
+                                case 33:
+                                case 34:
+                                case 35:
+                                case 36:
+                                case 39:
+                                case 40:
+                                case 41:
+                                case 42:
+                                case 43:
+                                case 44:
+                                case 45:
+                                case 46:
+                                case 47:
+                                case 48:
+                                    gpMouseManager->SetPointer(baseFrame + 9);
+                                    break;
+                                default:
+                                    if (mapExtra[m_commandTargetX][m_commandTargetY] & 0x80)
+                                        gpMouseManager->SetPointer(baseFrame + 5);
+                                    else
+                                        gpMouseManager->SetPointer(baseFrame + 4);
+                                    break;
+                                }
+                            } else {
+                                switch (cell->m_triggerType & 0x7f) {
+                                case 3:
+                                case 0x2c:
+                                    gpMouseManager->SetPointer(nDays + 28);
+                                    break;
+                                default:
+                                    gpMouseManager->SetPointer(baseFrame + 6);
+                                    break;
+                                }
+                            }
+                        } else if (m_cursorType == 4) {
+                            gpMouseManager->SetPointer(baseFrame + 6);
+                        } else {
+                            gpMouseManager->SetPointer(baseFrame + 4);
+                        }
+                        m_selectedCell = 1;
+                        break;
+                    }
+                    return 1;
+                } else {
+                    gpMouseManager->SetPointer(0);
+                    return 1;
+                }
+            }
+        }
+        break;
+    default:
+        if (!(gpMouseManager->m_cursorFrame >= 32 && gpMouseManager->m_cursorFrame < 40 && MouseInScrollZone()))
+            gpMouseManager->SetPointer(0);
+        return 1;
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x0005b094; preferred Buka symbol ?UpdateScreen@advManager@@QAEXHH@Z
@@ -1395,7 +1629,7 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
             glTimers[0] = KBTickCount() + 120;
         return;
     }
-    gpMouseManager->BeginScreenUpdate(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
+    gpMouseManager->SaveAndDraw(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
     PollSound();
     giScrollX = m_updateMinX;
     giScrollY = m_updateMinY;
@@ -1432,7 +1666,7 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
         }
     }
     giLimitUpdMinX = -1;
-    gpMouseManager->EndScreenUpdate();
+    gpMouseManager->RestoreUnderlying();
     Process1WindowsMessage();
 }
 

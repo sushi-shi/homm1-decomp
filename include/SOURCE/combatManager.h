@@ -61,31 +61,39 @@ struct CombatRemotePacket {
 #pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
-    char m_unknown30[0x10];
+    char m_unknown30[0xc];
+    // Open loads kb.pal here and fades the screen in with it.
+    class palette* m_combatPalette;
     hexcell m_hexCells[COMBAT_HEX_COUNT];
     // First grid row (0-4) UpdateCombatArea must redraw; 5 when clean.
     short m_gridUpdateRow;
-    // DrawFrame skips the grid overlay while this is set.
+    // DrawFrame skips the grid overlay while this is set (SetGridMode).
     signed char m_gridMode;
-    char m_unknown25f;
+    // LoadIcons indexes the ground and obstacle tables by this terrain;
+    // GetBackgroundName forces 6 for a graveyard field.
+    signed char m_terrainType;
     signed char m_unknown260;
-    char m_unknown261[4];
-    // army::DrawToBuffer prints stack quantities with this font.
+    // SetupCombat keeps the defending town here as well.
+    class town* m_originalCombatTown;
+    // Open's small font; army::DrawToBuffer prints stack quantities with it.
     class font* m_smallFont;
-    char m_unknown269[8];
+    char m_unknown269[4];
+    // SaveCombatBorder's copy of the twenty screen rows below the field.
+    char* m_savedBorder;
     // Nine combat icons (retail loops 0..8 from +0x271): hexcell draws
     // ground (index), obstacles (2), towers (5) and walls (6); armies draw
     // the quantity box (1) and spell markers (8).
     class icon* m_combatIcons[9];
-    // Clean combat background; army::Walk restores the screen from it.
-    class bitmap* m_backgroundBitmap;
-    signed char m_unknown299;
-    char m_unknown29a[4];
+    // Clean combat background: FlyTo and army::Walk restore the screen from it.
+    class bitmap* m_backgroundBuffer;
+    signed char m_backgroundDrawn;
+    // GetBackgroundName reads the trigger of the cell the battle is on.
+    class mapCell* m_battlefieldCell;
     // Per side: the town fought in. DoVictory gives the defender's winner
     // the castle bonus; AICheckRetreat never retreats from a town.
     class town *m_combatTowns[2];
     class hero *m_heroes[2];
-    char m_unknown2ae[8];
+    class armyGroup *m_armyGroups[2];
     // Set by a surrender (ProcessNextAction).
     signed char m_sideDefeated[2];
     char m_unknown2b8[2];
@@ -106,27 +114,31 @@ public:
     signed char m_directionTargetHex;
     signed char m_previousCommand;
     signed char m_currentCommand;
-    short m_unknown6c5;
-    short m_unknown6c7;
+    // CatAttack animates the side's catapult through these frames.
+    short m_catapultFrame[2];
     short m_catapultAttackCount[2];
     short m_catapultAttacksRemaining[2];
     short m_keepAttacksRemaining[2];
-    short m_unknown6d5;
-    short m_unknown6d7;
+    // SetupCombat copies each hero's +0x1c byte (-1 without a hero).
+    short m_heroType[2];
     short m_unknown6d9;
     short m_unknown6db;
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
     // mirror the castle art from side 1's flag.
     signed char m_castleSide[2];
-    char m_unknown6df[4];
+    char m_unknown6df[2];
+    // CatAttack's target row in the castle wall column.
+    short m_catapultTarget;
     signed char m_unknown6e3;
     short m_wallFrame;
     short m_wallDamage;
     signed char m_unknown6e8;
-    short m_unknown6e9[2];
-    // Drawn first by DrawBackground.
-    class bitmap* m_backdropBitmap;
-    // The combat screen window; CombatMessage sets its text widget (0xc).
+    char m_unknown6e9[4];
+    // LoadIcons loads the battlefield backdrop GetBackgroundName names;
+    // DrawBackground draws it first.
+    class bitmap* m_backgroundBitmap;
+    // The combat screen window (Open's cmbtwin.bin); CombatMessage sets its
+    // text widget (0xc).
     class heroWindow* m_combatWindow;
     char m_unknown6f5[4];
     short m_unknown6f9;
@@ -143,7 +155,9 @@ public:
     int m_combatWindowOpen;
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
-    char m_unknown7ab[8];
+    // MoreTreesNear surveys the map around this adventure cell.
+    int m_combatX;
+    int m_combatY;
     // SetCombatDirections: attack direction per 15-degree mouse sector.
     signed char m_directionMap[24];
     signed char m_mouseDirection;
@@ -280,10 +294,13 @@ public:
     void SetupCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int);
     void InitNonVisualVars(void);
     void SetupAdjacencyArray(void);
-    void UpdateArmyGroup(int);
+    // HoMM1 retail 0x0044c103: byte side (ret 4).
+    void UpdateArmyGroup(signed char);
     void GenerateMap(void);
     char * GetBackgroundName(void);
-    int MoreTreesNear(void);
+    signed char MoreTreesNear(void);
+    // HoMM1 retail 0x0044e7f2: no callers; rebuilds the field and redraws.
+    void RegenerateField(void);
     void LoadIcons(void);
     void FreeIcons(void);
     void LoadArmies(void);
@@ -298,7 +315,8 @@ public:
     void CatAttack(signed char);
     // HoMM1 has a single keep (retail 0x0044e840, plain ret).
     void KeepAttack(void);
-    int ExperienceValueOfStack(int);
+    // HoMM1 retail 0x0044f3cb: byte side (ret 4).
+    int ExperienceValueOfStack(signed char);
     void ResetHitByCreature(void);
     void SaveCombatBorder(void);
     void DrawCombatBorder(void);

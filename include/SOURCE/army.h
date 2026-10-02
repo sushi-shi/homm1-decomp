@@ -129,8 +129,8 @@ public:
     // HoMM1 retail 0x0044a5e0: hex through a word pointer, word result (ret 4).
     short CanFit(short *);
     short ValidFlight(short, signed char);
-    int FlyTo(void);
-    // HoMM1 retail 0x0044acd6: word hex, word result.
+    // HoMM1 retail 0x0044acaf/0x0044acd6: word destination, word result.
+    short FlyTo(void);
     short FlyTo(short);
     // HoMM1 retail 0x004180f0: word hexes, byte speed/flags (ret 0x14).
     short FindPath(short, short, signed char, signed char, signed char);

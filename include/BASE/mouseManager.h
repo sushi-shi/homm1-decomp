@@ -47,7 +47,7 @@ public:
     void MouseCoords(short&, short&);
     void SaveAndDraw(void);
     // HoMM1 Windows keeps the DOS buffer-pointer hooks as empty stubs.
-    void SaveAndDraw(class bitmap*, int, int, int);
+    void SaveAndDraw(class bitmap*, short, short, short);
     void RestoreUnderlying(void);
     void ReallyHidePointer(void);
     void ReallyShowPointer(void);
@@ -59,15 +59,11 @@ public:
     void CheckUpdateMousePos(void);
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
     void MovePointer(short, short);
-    // Empty Windows-build hooks around advManager::UpdateScreen's blit
-    // (retail 0x00476e10 `ret 0x10` and 0x00476e00 `ret`).
-    void BeginScreenUpdate(class bitmap*, short, short, short);
-    void EndScreenUpdate(void);
     // Empty in the Windows build (retail 0x00476ec0, `ret 4`); the locator
     // knob drag passes 4 on entry and 6 on release.
     void SetCursorShape(int);
     // Empty in the Windows build (retail 0x00476e50, `ret 8`).
-    void WarpPointer(int, int);
+    void WarpPointer(short, short);
     void SetColorMice(int);
     // The quick views hide (retail 0x00476ee0, ShowCursor(0)) and restore
     // (0x00476ef0, ShowCursor(1)) the Windows cursor around QuickViewWait.

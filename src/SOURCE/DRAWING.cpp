@@ -172,7 +172,7 @@ void combatManager::DrawBackground(void) {
                                            (signed char)((y & 1) ? 5 : 6), 0, 0);
         wallY = y * 80 + 0x8b;
         if (y == 0) {
-            m_backdropBitmap->DrawToBuffer(0, 0);
+            m_backgroundBitmap->DrawToBuffer(0, 0);
             if (m_castleSide[1] == 1) {
                 m_combatIcons[5]->DrawToBuffer(0, wallY, 7, 1, 0);
                 m_combatIcons[5]->DrawToBuffer(0x6e, wallY, 7, 1, 0);
@@ -182,8 +182,8 @@ void combatManager::DrawBackground(void) {
             }
         }
     }
-    gpWindowManager->m_screen->CopyTo(m_backgroundBitmap, 0, 0, 0, 0, 640, 460);
-    m_unknown299 = 1;
+    gpWindowManager->m_screen->CopyTo(m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
+    m_backgroundDrawn = 1;
 }
 
 // Redraws the battlefield: only the boxes around the stacks marked in
@@ -282,13 +282,13 @@ void combatManager::DrawFrame(signed char updateScreen) {
     }
     m_gridUpdateRow = 0;
     if (!gbLimitToExtent) {
-        if (m_unknown299) {
+        if (m_backgroundDrawn) {
             if (m_unknown727 || m_unknown72b)
-                m_backgroundBitmap->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY, giMinExtentX,
+                m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY, giMinExtentX,
                                            giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                            giMaxExtentY - giMinExtentY + 1);
             else
-                m_backgroundBitmap->CopyTo(gpWindowManager->m_screen, 0, 0, 0, 0, 640, 460);
+                m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, 0, 0, 0, 0, 640, 460);
         } else {
             DrawBackground();
         }
@@ -299,9 +299,9 @@ void combatManager::DrawFrame(signed char updateScreen) {
     }
     if (!m_gridMode) {
         for (row = 0; row < 5; row++) {
-            if (row == 3 && m_unknown6c7 != -1) {
-                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_unknown6c7, 0, 0);
-                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_unknown6c7 == 7 ? 16 : 15, 0, 0);
+            if (row == 3 && m_catapultFrame[1] != -1) {
+                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], 0, 0);
+                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_catapultFrame[1] == 7 ? 16 : 15, 0, 0);
             }
             for (hexCol = 0; hexCol < 9; hexCol++)
                 if (m_hexCells[row * 9 + hexCol].m_obstacleIndex != -1)
@@ -313,24 +313,24 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     gbCurrArmyDrawn = 1;
                 m_hexCells[row * 9 + hexCol].DrawOccupant();
             }
-            if (row == 2 && m_unknown6d5 != -1) {
-                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_unknown6d5, 1, 0);
+            if (row == 2 && m_heroType[0] != -1) {
+                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_heroType[0], 1, 0);
                 m_combatIcons[4]->DrawToBuffer(0x250, 0xeb, gpGame->m_players[m_playerId[0]].Color() + 4, 1, 0);
-                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_unknown6d5 + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, 0, 0);
             }
-            if (row == 1 && m_unknown6d7 != -1) {
-                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_unknown6d7, 0, 0);
+            if (row == 1 && m_heroType[1] != -1) {
+                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_heroType[1], 0, 0);
                 m_combatIcons[4]->DrawToBuffer(0x2f, 0x9b, gpGame->m_players[m_playerId[1]].Color() + 4, 0, 0);
-                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_unknown6d7 + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, 0, 0);
             }
         }
     } else {
         for (row = 0; row < 5; row++) {
             if (row == 0 && m_castleSide[0])
                 m_combatIcons[7]->DrawToBuffer(0x22d, 0, 0, 0, 0);
-            if (row == 3 && m_unknown6c7 != -1) {
-                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_unknown6c7, 0, 0);
-                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_unknown6c7 == 7 ? 16 : 15, 0, 0);
+            if (row == 3 && m_catapultFrame[1] != -1) {
+                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], 0, 0);
+                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_catapultFrame[1] == 7 ? 16 : 15, 0, 0);
             }
             for (hexCol = 0; hexCol < 9; hexCol++)
                 if (m_hexCells[row * 9 + hexCol].m_obstacleIndex != -1)
@@ -340,15 +340,15 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     gbCurrArmyDrawn = 1;
                 m_hexCells[row * 9 + hexCol].DrawOccupant();
             }
-            if (row == 1 && m_unknown6d7 != -1) {
-                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_unknown6d7, 0, 0);
+            if (row == 1 && m_heroType[1] != -1) {
+                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_heroType[1], 0, 0);
                 m_combatIcons[4]->DrawToBuffer(0x2f, 0x9b, gpGame->m_players[m_playerId[1]].Color() + 4, 0, 0);
-                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_unknown6d7 + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, 0, 0);
             }
-            if (row == 2 && m_unknown6d5 != -1) {
-                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_unknown6d5, 1, 0);
+            if (row == 2 && m_heroType[0] != -1) {
+                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_heroType[0], 1, 0);
                 m_combatIcons[4]->DrawToBuffer(0x250, 0xeb, gpGame->m_players[m_playerId[0]].Color() + 4, 1, 0);
-                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_unknown6d5 + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, 0, 0);
             }
         }
     }

@@ -18,14 +18,18 @@ VA(0x004028b0, 0x23a)
 short searchArray::FindNearestObject(short startX, short startY, short direction, short maximumCost,
                                      unsigned char triggerType)
 {
-    short nodeX;
+    short nodeY;
     searchNode node;
     signed char possibleDirections[8];
     signed char directionCosts[8];
-    short nodeY;
+    short nodeX;
     short i;
     short terrain;
     short cost;
+    short neighborX;
+    short neighborY;
+    short destinationX;
+    short destinationY;
     searchNode *pathNode;
     unsigned char *pathDirection;
 
@@ -49,23 +53,25 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
             terrain = possibleDirections[i];
             if (terrain != -1) {
                 cost = CalcTerrainCost(terrain, i & 1, 999, 0);
-                PushPoint(nodeX + normalDirTable[i].x, nodeY + normalDirTable[i].y, i, node.distance + cost,
-                          maximumCost, 0, 0, 0, 0, node.rvFlag2, node.previousX, node.previousY);
+                neighborX = nodeX + normalDirTable[i].x;
+                neighborY = nodeY + normalDirTable[i].y;
+                PushPoint(neighborX, neighborY, i, node.distance + cost, maximumCost, 0, 0, 0, 0, node.rvFlag2,
+                          node.previousX, node.previousY);
             }
         }
     }
-    nodeX = m_specialTargetX;
-    nodeY = m_specialTargetY;
+    destinationX = m_specialTargetX;
+    destinationY = m_specialTargetY;
     pathDirection = m_directions;
-    if (nodeX < 0)
+    if (destinationX < 0)
         return 0;
-    while (startX != nodeX || startY != nodeY) {
-        pathNode = &m_cells[nodeX][nodeY];
+    while (startX != destinationX || startY != destinationY) {
+        pathNode = &m_cells[destinationX][destinationY];
         *pathDirection++ = pathNode->direction;
         if (++m_pathLength >= 256)
             break;
-        nodeX += normalDirTable[(short)(pathNode->direction + 4) & 7].x;
-        nodeY += normalDirTable[(short)(pathNode->direction + 4) & 7].y;
+        destinationX += normalDirTable[(short)(pathNode->direction + 4) & 7].x;
+        destinationY += normalDirTable[(short)(pathNode->direction + 4) & 7].y;
     }
     return m_pathLength;
 }

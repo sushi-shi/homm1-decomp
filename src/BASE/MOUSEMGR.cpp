@@ -275,8 +275,10 @@ void mouseManager::HideColorPointer(void) {}
 VA(0x00476e00, 0x1)
 void mouseManager::RestoreUnderlying(void) {}
 
+// advManager::UpdateScreen pushes the two origin words and a sign-extended
+// cursor flag word.
 VA(0x00476e10, 0x3)
-void mouseManager::SaveAndDraw(bitmap*, int, int, int) {}
+void mouseManager::SaveAndDraw(bitmap*, short, short, short) {}
 
 // philAI's CheckDoMain still asks for a software pointer move; the Windows
 // build ignores it (`ret 8`).
@@ -292,7 +294,7 @@ VA(0x00476e40, 0x3)
 void mouseManager::NewUpdate(int) {}
 
 VA(0x00476e50, 0x3)
-void mouseManager::WarpPointer(int, int) {}
+void mouseManager::WarpPointer(short, short) {}
 
 // donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
