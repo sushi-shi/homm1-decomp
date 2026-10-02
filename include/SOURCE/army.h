@@ -30,7 +30,8 @@ public:
     signed char m_unknown13;
     signed char m_baseSpeed;
     char m_unknown15;
-    signed char m_unknown16;
+    // Monster hit points; Resurrect divides the raised strength by it.
+    unsigned char m_hitPoints;
     signed char m_speed;
     signed char m_unknown18;
     // army::Init adds the hero's two primary skills here.
@@ -85,12 +86,15 @@ public:
     int AttackTo(int);
     void CheckLuck(void);
     void DamageEnemy(class army *, int *, int *, int, int);
-    int Damage(long int, int);
-    void PowEffect(int, int, int, int);
+    // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
+    int Damage(long int);
+    // HoMM1 retail 0x0046aa49: byte effect index (ret 4).
+    void PowEffect(signed char);
     unsigned long int Strength(void);
     int LeaveNoBody(void);
     void ProcessDeath(int);
-    void SpellEffect(int, int, int);
+    // HoMM1 retail 0x0046b326: word effect, frame delay (ret 8).
+    void SpellEffect(short, int);
     void CancelSpellType(int);
     void CancelIndividualSpell(int);
     int SetSpellInfluence(int, int);
@@ -102,6 +106,9 @@ public:
     void DispelGood(void);
     // HoMM1 retail 0x0046b457: undoes m_spellEffect when it expires.
     void CancelSpell(void);
+    // HoMM1 retail 0x00467281: back to the standing frame, regrid and
+    // optionally redraw (ret 4).
+    void ResetAnimation(signed char);
     void Cure(int);
     int MidX(void);
     int MidY(void);
@@ -110,7 +117,8 @@ public:
     int LeftX(void);
     int OtherArmyAdjacent(int, int);
     int GetPowBaseY(void);
-    int CanFit(int, int, int *);
+    // HoMM1 retail 0x0044a5e0: hex through a word pointer, word result (ret 4).
+    short CanFit(short *);
     short ValidFlight(short, signed char);
     int FlyTo(void);
     int FlyTo(int);

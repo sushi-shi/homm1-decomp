@@ -68,7 +68,8 @@ public:
     signed char m_playerId[2];
     int m_experienceValue[2];
     signed char m_heroCastSpell[2];
-    char m_unknown2c6[4];
+    // Live stacks per side (CastMassSpell walks each side's armies).
+    short m_numArmies[2];
     army m_armies[2][6];
     signed char m_currentSide;
     signed char m_currentArmyIndex;
@@ -96,7 +97,12 @@ public:
     // ProcessCombatMsg ignores message types outside this mask.
     short m_messageTypeMask;
     signed char m_sideRetreated[2];
-    char m_unknown6ff[0x34];
+    // Per stack: times the limited creature was spent (CastSpell).
+    int m_limitCreatureCount[2][5];
+    // CastMassSpell clears both before the mass animation.
+    int m_unknown727;
+    int m_unknown72b;
+    char m_unknown72f[4];
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
     char m_unknown7ab[8];
@@ -137,12 +143,22 @@ public:
     int HasValidSpellTarget(int);
     signed char ViewSpells(int);
     int FindResurrectArmyIndex(int, int, int);
-    int ValidSpellTarget(int, int);
-    void SpellMessage(int, int);
-    void CastSpell(int, int, int, int);
-    void DefaultSpell(int);
-    void Fireball(int, int);
-    void MeteorShower(int);
+    // HoMM1 retail 0x00415a2c: byte spell and hex, byte result (ret 8).
+    signed char ValidSpellTarget(signed char, signed char);
+    // HoMM1 retail 0x00415d1c: byte spell and hex (ret 8).
+    void SpellMessage(signed char, signed char);
+    // HoMM1 retail 0x00415e44: byte spell, hex, creature flag and teleport
+    // destination (ret 0x10).
+    void CastSpell(signed char, signed char, signed char, signed char);
+    void DefaultSpell(signed char);
+    // HoMM1 retail 0x00416c78: Cure (one side) and Dispel (both sides)
+    // animation; byte side (2 = both) and cure-only flag (ret 8).
+    void CastMassSpell(signed char, signed char);
+    // HoMM1 retail 0x0041707f: cancels the side's spells after the mass
+    // animation (ret 8).
+    void CancelSideSpells(signed char, signed char);
+    void Fireball(signed char);
+    void MeteorShower(signed char);
     void ElementalStorm(void);
     void Armageddon(void);
     void TurnToStone(class army *);
@@ -158,7 +174,6 @@ public:
     void VaporizeCreature(int, int);
     void RippleCreature(int, int, int);
     void ShowMassSpell(signed char (* const)[20], int, int);
-    void CastMassSpell(int, int);
     void MirrorImage(int);
     void SummonElemental(int, int);
     void DoLuck(int, int);
@@ -277,6 +292,17 @@ extern combatManager *gpCombatManager;
 short WinCombatHandler(struct tag_message &);
 short CombatSpecialHandler(struct tag_message &);
 short HandleCastSpell(struct tag_message &);
+// HandleCastSpell: the hex under the spell pointer (0x0048f2b0) and the
+// teleport second-click state (0x0048f28c).
+extern signed char indexToCastOn;
+extern signed char bInTeleportGetDest;
+// Combat effect icon names (0x004910d8); the loaded effect icon's file id
+// (0x004c6d64) and icon (0x004c709c).
+extern char *gCombatFxNames[];
+extern short gCurLoadedSpellEffect;
+extern class icon *gCurLoadedSpellIcon;
+// Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
+extern short giCombatFxFrame;
 // Spell-book hover help lines (0x00493a78).
 extern char *cSpellHelp[];
 // Captured artifacts shown page by page on the victory window.

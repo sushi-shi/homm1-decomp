@@ -60,7 +60,7 @@ void army::DamageEnemy(class army *, int *, int *, int, int) {}
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.419408;margin=1.157007;shape=0.216;size=0.693;calls=1.000;alternate=pol20:int army::Damage(long int, int)@0x0005012e
 VA(0x0046a8d3, 0x176)
-int army::Damage(long int, int) { return 0; }
+int army::Damage(long int) { return 0; }
 
 // donor PoL RVA 0x00052ad9; preferred Buka symbol ?MoveAttack@army@@QAEXHH@Z
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order

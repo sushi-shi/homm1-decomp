@@ -5,6 +5,10 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/MAKEFILEID.h>
+#include <BASE/Misc.h>
+
+#include <stdio.h>
 
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
 // checks before queueing the cast.
@@ -71,23 +75,564 @@ short CombatSpecialHandler(struct tag_message &message)
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// donor PoL RVA 0x000217be; preferred Buka symbol ?CastSpell@combatManager@@QAEXHHHH@Z
-// donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.313511;margin=0.551146;shape=0.234;size=0.481;calls=0.596;alternate=pol20:void combatManager::CastSpell(int, int, int, int)@0x000217be
+// Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
+// mouse manager before re-entering for the teleport destination.
+VA(0x00415797, 0x295)
+short HandleCastSpell(struct tag_message &message)
+{
+    short hex;
+
+    switch (message.type) {
+        case MESSAGE_MOUSE_MOVE:
+            hex = gpCombatManager->GetGridIndex(message.payload.mouse.x, message.payload.mouse.y);
+            if (indexToCastOn != hex) {
+                if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
+                    indexToCastOn = -1;
+                    gpMouseManager->SetPointer(0x13);
+                    if (gpCombatManager->m_selectedSpell == 2 && bInTeleportGetDest)
+                        gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
+                    else
+                        gpCombatManager->CombatMessage("Select Spell Target", 1);
+                } else {
+                    indexToCastOn = hex;
+                    gpMouseManager->SetPointer(gpCombatManager->m_selectedSpell);
+                    gpCombatManager->SpellMessage(gpCombatManager->m_selectedSpell, hex);
+                }
+            }
+            break;
+        case MESSAGE_LEFT_BUTTON_DOWN:
+            if (indexToCastOn != -1) {
+                if (bInTeleportGetDest)
+                    giNextActionGridIndex2 = indexToCastOn;
+                else {
+                    giNextActionGridIndex = indexToCastOn;
+                    if (gpCombatManager->m_selectedSpell == 2) {
+                        bInTeleportGetDest = 1;
+                        indexToCastOn = -1;
+                        message.type = MESSAGE_MOUSE_MOVE;
+                        gpMouseManager->MouseCoords(message.payload.mouse.x, message.payload.mouse.y);
+                        HandleCastSpell(message);
+                        gpCombatManager->CombatMessage("Select teleport destination.", 1);
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                }
+                bInTeleportGetDest = 0;
+                message.type = MESSAGE_WIDGET;
+                message.payload.widget.command = WIDGET_COMMAND_DIALOG_SELECT;
+                return MESSAGE_DISPATCH_FORWARD;
+            }
+            break;
+        case MESSAGE_KEY_DOWN:
+            if (message.payload.keyboard.keyCode != 1)
+                break;
+        case MESSAGE_RIGHT_BUTTON_DOWN:
+            gpCombatManager->m_selectedSpell = -1;
+            giNextAction = 0;
+            message.type = MESSAGE_WIDGET;
+            message.payload.widget.command = WIDGET_COMMAND_DIALOG_SELECT;
+            bInTeleportGetDest = 0;
+            return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
+// Buka SPELLS.cpp ValidSpellTarget; HoMM1 has no resurrection corpses, and
+// anti-magic, dispel and green dragons stop every spell but the area ones.
+VA(0x00415a2c, 0x2f0)
+signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
+{
+    int unused;
+    army *target = 0;
+    short newHex;
+
+    if (!ValidHex(hex))
+        return 0;
+    if (spell != 0 && spell != 17 && m_hexCells[hex].m_occupantSide != -1) {
+        target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
+        if (target->m_spellEffect == 12 || target->m_spellEffect == 13 || target->m_creatureType == 0x17)
+            return 0;
+    }
+    switch (spell) {
+        case 3:
+        case 4:
+        case 5:
+        case 8:
+        case 9:
+        case 12:
+            if (m_hexCells[hex].m_occupantSide != m_currentSide)
+                return 0;
+            break;
+        case 2:
+            if (bInTeleportGetDest) {
+                newHex = hex;
+                if (newHex == giNextActionGridIndex
+                    || !m_armies[gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantSide]
+                                [gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantIndex]
+                                    .CanFit(&newHex))
+                    return 0;
+            } else {
+                if (m_hexCells[hex].m_occupantSide != m_currentSide)
+                    return 0;
+            }
+            break;
+        case 1:
+        case 6:
+        case 7:
+        case 10:
+        case 14:
+        case 18:
+            if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
+                return 0;
+            break;
+        case 11:
+            if (m_hexCells[hex].m_occupantSide == -1)
+                return 0;
+            if (target->m_creatureType != 0x1a)
+                return 0;
+            break;
+        case 0:
+        case 17:
+            if (hex == -1 || hex % 9 == 0 || hex % 9 == 8)
+                return 0;
+            break;
+    }
+    return 1;
+}
+
+// Buka SPELLS.cpp SpellMessage without the resurrection target.
+VA(0x00415d1c, 0x128)
+void combatManager::SpellMessage(signed char spell, signed char hex)
+{
+    switch (spell) {
+        case 0:
+        case 15:
+        case 16:
+        case 17:
+            sprintf(gText, "Cast %s", gSpellNames[spell]);
+            break;
+        case 2:
+            if (bInTeleportGetDest) {
+                sprintf(gText, "Teleport Here");
+                break;
+            }
+        default:
+            sprintf(gText, "Cast %s on %s", gSpellNames[spell],
+                    gArmyNames[m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex].m_creatureType]);
+            break;
+    }
+    CombatMessage(gText, 1);
+}
+
+// Buka SPELLS.cpp CastSpell; HoMM1 has nineteen spells, a single timed effect
+// per stack and no eagle eye, mirror image or elementals.
 VA(0x00415e44, 0xd69)
-void combatManager::CastSpell(int, int, int, int) {}
+void combatManager::CastSpell(signed char spell, signed char targetHex, signed char castByCreature,
+                              signed char teleportDest)
+{
+    army *targetArmy;
+    int damage;
+    int targetIndex;
+    int side;
+    int result;
+    int armyIndex;
+    SAMPLE2 sample;
+    int quantity;
+    short newHex;
+    army *teleportArmy;
+
+    sample = NULL_SAMPLE2;
+    if (m_limitCreature) {
+        ResetLimitCreature();
+        if (ValidHex(m_limitCreatureHex) && m_hexCells[m_limitCreatureHex].m_occupantSide >= 0)
+            m_limitCreatureCount[m_hexCells[m_limitCreatureHex].m_occupantSide]
+                                [m_hexCells[m_limitCreatureHex].m_occupantIndex]++;
+        m_limitCreature = 0;
+        m_limitCreatureHex = -1;
+        gpCombatManager->DrawFrame(1);
+    }
+    gpMouseManager->ReallyHidePointer();
+    if (!castByCreature && m_heroes[m_currentSide])
+        m_heroes[m_currentSide]->UseSpell(spell);
+    targetArmy = 0;
+    if (spell == 0 || spell == 17 || spell == 16 || spell == 15 || spell == 3 || spell == 13)
+        targetArmy = 0;
+    else if (ValidHex(targetHex) && m_hexCells[targetHex].m_occupantSide >= 0) {
+        targetArmy = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
+        side = m_hexCells[targetHex].m_occupantSide;
+        targetIndex = m_hexCells[targetHex].m_occupantIndex;
+    } else
+        targetArmy = 0;
+    if (!castByCreature)
+        m_heroCastSpell[m_currentSide] = 1;
+    switch (spell) {
+        case 0:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 7:
+        case 8:
+        case 9:
+        case 12:
+        case 15:
+        case 16:
+        case 17:
+            break;
+        default:
+            if (targetArmy
+                && (targetArmy->m_creatureType == 0x17
+                    || (targetArmy->m_creatureType == 0xd && SRandom(0, 4) == 1))) {
+                sample = LoadPlaySample("RSBRYFZL.82M");
+                if (targetArmy->m_creatureType == 0x17)
+                    CombatMessage("Dragons are not affected by magic!", 1);
+                else
+                    CombatMessage("The Dwarves' magic resistance canceled the spell!", 1);
+                WaitEndSample(sample, -1);
+                goto done;
+            }
+            break;
+    }
+    sprintf(gText, "spell%02d.82M", spell);
+    sample = LoadPlaySample(gText);
+    switch (spell) {
+        case 2:
+            teleportArmy = targetArmy;
+            targetHex = teleportDest;
+            teleportArmy->SpellEffect(2, 0);
+            m_hexCells[teleportArmy->m_hex].m_occupantSide = -1;
+            m_hexCells[teleportArmy->m_hex].m_occupantIndex = -1;
+            if (m_hexCells[teleportArmy->m_hex].m_unknown0a == 1) {
+                m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = -1;
+                m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = -1;
+            } else if (m_hexCells[teleportArmy->m_hex].m_unknown0a == 0) {
+                m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = -1;
+                m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = -1;
+            }
+            teleportArmy->SpellEffect(2, 0);
+            WaitEndSample(sample, -1);
+            sprintf(gText, "telein.82m");
+            sample = LoadPlaySample(gText);
+            if (teleportArmy->m_attributes & 1) {
+                newHex = targetHex;
+                if (teleportArmy->m_facing == 0) {
+                    newHex = teleportArmy->GetAdjacentCellIndex(newHex, 1);
+                    if (newHex == -1
+                        || (m_hexCells[newHex].m_occupantSide != -1
+                            && (m_hexCells[newHex].m_occupantSide != side
+                                || m_hexCells[newHex].m_occupantIndex != targetIndex))
+                        || m_hexCells[newHex].m_obstacle != -1)
+                        targetHex--;
+                }
+                if (teleportArmy->m_facing == 1) {
+                    newHex = teleportArmy->GetAdjacentCellIndex(newHex, 4);
+                    if (newHex == -1
+                        || (m_hexCells[newHex].m_occupantSide != -1
+                            && (m_hexCells[newHex].m_occupantSide != side
+                                || m_hexCells[newHex].m_occupantIndex != targetIndex))
+                        || m_hexCells[newHex].m_obstacle != -1)
+                        targetHex++;
+                }
+                teleportArmy->m_hex = targetHex;
+                switch (teleportArmy->m_facing) {
+                    case 0:
+                        m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
+                        m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
+                        m_hexCells[teleportArmy->m_hex].m_unknown0a = 1;
+                        m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = side;
+                        m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = targetIndex;
+                        m_hexCells[teleportArmy->m_hex + 1].m_unknown0a = 0;
+                        break;
+                    case 1:
+                        m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
+                        m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
+                        m_hexCells[teleportArmy->m_hex].m_unknown0a = 0;
+                        m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = side;
+                        m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = targetIndex;
+                        m_hexCells[teleportArmy->m_hex - 1].m_unknown0a = 1;
+                        break;
+                }
+                teleportArmy->SpellEffect(2, 0);
+            } else {
+                teleportArmy->m_hex = targetHex;
+                m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
+                m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
+                m_hexCells[teleportArmy->m_hex].m_unknown0a = -1;
+                teleportArmy->SpellEffect(2, 0);
+            }
+            teleportArmy->ResetAnimation(1);
+            break;
+        case 1:
+            sprintf(gText, "The lightning bolt does %d damage to the %s.",
+                    m_heroes[m_currentSide]->m_primaryStats[2] * 25,
+                    targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
+                                               : gArmyNames[targetArmy->m_creatureType]);
+            CombatMessage(gText, 1);
+            targetArmy->SpellEffect(1, 0);
+            targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
+            targetArmy->PowEffect(7);
+            if (!(targetArmy->m_attributes & 0x10))
+                targetArmy->ResetAnimation(1);
+            break;
+        case 3:
+            CastMassSpell(m_currentSide, 1);
+            break;
+        case 4:
+            targetArmy->SpellEffect(4, 0);
+            targetArmy->SpellEffect(4, 0);
+            quantity = targetArmy->m_quantity;
+            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_hitPoints;
+            if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
+                targetArmy->m_quantity = targetArmy->m_initialQuantity;
+            if (targetArmy->m_quantity - quantity > 1)
+                sprintf(gText, "%d %s rise from the dead!", targetArmy->m_quantity - quantity,
+                        gArmyNamesPlural[targetArmy->m_creatureType]);
+            else
+                sprintf(gText, "%d %s rises from the dead!", targetArmy->m_quantity - quantity,
+                        gArmyNames[targetArmy->m_creatureType]);
+            CombatMessage(gText, 1);
+            targetArmy->ResetAnimation(1);
+            break;
+        case 6:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(6, 0);
+            targetArmy->SpellEffect(6, 0);
+            targetArmy->m_speed = 1;
+            if (targetArmy->m_attributes & 2)
+                targetArmy->m_attributes -= 2;
+            targetArmy->m_spellEffect = 6;
+            targetArmy->m_unknown52 = 3;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 5:
+            gpCombatManager->m_currentSpeed = 4;
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(6, 0);
+            targetArmy->SpellEffect(6, 0);
+            targetArmy->m_speed = 4;
+            targetArmy->m_spellEffect = 5;
+            targetArmy->m_unknown52 = 3;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 8:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(8, 0);
+            targetArmy->SpellEffect(8, 0);
+            targetArmy->m_unknown13 = 3;
+            targetArmy->m_spellEffect = 8;
+            targetArmy->m_unknown52 = 3;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 9:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(9, 0);
+            targetArmy->SpellEffect(9, 0);
+            targetArmy->m_spellEffect = 9;
+            targetArmy->m_unknown52 = 3;
+            targetArmy->m_defense += 3;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 10:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(10, 0);
+            targetArmy->m_unknown09 = 2;
+            targetArmy->SpellEffect(10, 0);
+            targetArmy->m_unknown13 = 1;
+            targetArmy->m_spellEffect = 10;
+            targetArmy->m_unknown52 = 3;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 14:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(14, 0);
+            targetArmy->m_unknown09 = 2;
+            targetArmy->SpellEffect(14, 0);
+            targetArmy->m_spellEffect = 14;
+            targetArmy->m_unknown52 = 1;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 18:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(18, 0);
+            targetArmy->m_unknown09 = 2;
+            targetArmy->SpellEffect(18, 0);
+            targetArmy->m_unknown13 = 1;
+            targetArmy->m_spellEffect = 18;
+            targetArmy->m_unknown52 = 2;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 7:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(6, 0);
+            targetArmy->SpellEffect(6, 0);
+            targetArmy->m_speed = 0;
+            targetArmy->m_unknown13 = 1;
+            targetArmy->m_spellEffect = 7;
+            targetArmy->m_unknown52 = 2;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 11:
+            targetArmy->m_unknown09 = 2;
+            targetArmy->SpellEffect(11, 0);
+            targetArmy->m_unknown2b = 5;
+            targetArmy->PowEffect(0);
+            targetArmy->m_quantity = 0;
+            break;
+        case 13:
+            CastMassSpell(2, 0);
+            break;
+        case 12:
+            targetArmy->CancelSpell();
+            targetArmy->SpellEffect(12, 0);
+            targetArmy->m_spellEffect = 12;
+            targetArmy->m_unknown52 = 3;
+            targetArmy->ResetAnimation(1);
+            break;
+        case 0:
+            Fireball(targetHex);
+            break;
+        case 17:
+            MeteorShower(targetHex);
+            break;
+        case 16:
+            ElementalStorm();
+            break;
+        case 15:
+            Armageddon();
+            break;
+        default:
+            DefaultSpell(targetHex);
+            break;
+    }
+    if (targetArmy && targetArmy->m_unknown52 >= 0) {
+        if (castByCreature)
+            targetArmy->m_spellRounds = 3;
+        else
+            targetArmy->m_spellRounds = m_heroes[m_currentSide]->m_primaryStats[2];
+    }
+    WaitEndSample(sample, -1);
+done:
+    CheckChangeSelector();
+}
+
+// Buka SPELLS.cpp DefaultSpell; HoMM1 plays the effect in two frames.
+VA(0x00416bad, 0xcb)
+void combatManager::DefaultSpell(signed char targetHex)
+{
+    army *target;
+
+    if (!ValidHex(targetHex) || m_hexCells[targetHex].m_occupantSide < 0)
+        return;
+    target = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
+    target->m_unknown09 = 1;
+    target->SpellEffect(m_selectedSpell, 0);
+    target->m_unknown09 = 2;
+    target->SpellEffect(m_selectedSpell, 0);
+    target->ResetAnimation(1);
+}
+
+// HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
+// spells are cancelled side by side.
+VA(0x00416c78, 0x407)
+void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
+{
+    int last;
+    int unused;
+    short side;
+    short armyIndex;
+    short fileId;
+    int startSide;
+
+    m_unknown727 = m_unknown72b = 0;
+    fileId = MAKEFILEID(gCombatFxNames[13]);
+    if (fileId != gCurLoadedSpellEffect) {
+        gpResourceManager->Dispose(gCurLoadedSpellIcon);
+        gCurLoadedSpellIcon = gpResourceManager->GetIcon(fileId);
+        gCurLoadedSpellEffect = fileId;
+    }
+    if (castSide == 2) {
+        startSide = 0;
+        last = 1;
+    } else {
+        startSide = m_currentSide;
+        last = m_currentSide;
+    }
+    for (side = startSide; side <= last; side++) {
+        for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
+            if (m_armies[side][armyIndex].m_spellEffect != 12 && m_armies[side][armyIndex].m_spellEffect != 13
+                && m_armies[side][armyIndex].m_creatureType != 0x17) {
+                if (!cureOnly) {
+                    if (m_armies[side][armyIndex].m_spellEffect != -1)
+                        m_armies[side][armyIndex].m_unknown08 = 3;
+                } else if (cureOnly == 1) {
+                    if (m_armies[side][armyIndex].m_spellEffect == 6 || m_armies[side][armyIndex].m_spellEffect == 7
+                        || m_armies[side][armyIndex].m_spellEffect == 10
+                        || m_armies[side][armyIndex].m_spellEffect == 14
+                        || m_armies[side][armyIndex].m_spellEffect == 18)
+                        m_armies[side][armyIndex].m_unknown08 = 3;
+                }
+            }
+        }
+    }
+    for (armyIndex = 0; armyIndex < 10; armyIndex++) {
+        m_unknown25c = 0;
+        giCombatFxFrame = armyIndex;
+        DrawFrame(1);
+    }
+    for (armyIndex = 0; armyIndex < 10; armyIndex++) {
+        m_unknown25c = 0;
+        giCombatFxFrame = armyIndex;
+        DrawFrame(1);
+    }
+    if (castSide == 2) {
+        CancelSideSpells(0, cureOnly);
+        CancelSideSpells(1, cureOnly);
+    } else
+        CancelSideSpells(castSide, cureOnly);
+    DrawFrame(1);
+}
+
+// HoMM1: lifts every stack of one side out of the glow and cancels its
+// spell (only the harmful ones for Cure).
+VA(0x0041707f, 0x12e)
+void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
+{
+    army *curArmy;
+    short i;
+
+    for (i = 0; i < m_numArmies[side]; i++) {
+        curArmy = &m_armies[side][i];
+        curArmy->m_unknown08 = 0;
+        curArmy->m_unknown09 = 1;
+        if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13 && curArmy->m_creatureType != 0x17) {
+            if (cureOnly == 1) {
+                switch (curArmy->m_spellEffect) {
+                    case 6:
+                    case 7:
+                    case 10:
+                    case 14:
+                    case 18:
+                        curArmy->CancelSpell();
+                        break;
+                    default:
+                        break;
+                }
+            } else
+                curArmy->CancelSpell();
+        }
+    }
+}
 
 // donor PoL RVA 0x00023762; preferred Buka symbol ?Fireball@combatManager@@QAEXHH@Z
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.573325;margin=0.154314;shape=0.268;size=0.794;calls=0.643;strings=fireball.icn;alternate=pol20:void combatManager::Fireball(int, int)@0x00023762
 VA(0x004171ad, 0x432)
-void combatManager::Fireball(int, int) {}
+void combatManager::Fireball(signed char) {}
 
 // donor PoL RVA 0x00023d85; preferred Buka symbol ?MeteorShower@combatManager@@QAEXH@Z
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.570305;margin=0.151054;shape=0.232;size=0.755;calls=0.889;strings=meteor.icn;alternate=pol20:void combatManager::MeteorShower(int)@0x00023d85
 VA(0x004175df, 0x439)
-void combatManager::MeteorShower(int) {}
+void combatManager::MeteorShower(signed char) {}
 
 // donor PoL RVA 0x0002414e; preferred Buka symbol ?ElementalStorm@combatManager@@QAEXXZ
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
@@ -98,5 +643,5 @@ void combatManager::ElementalStorm(void) {}
 // donor PoL RVA 0x00024449; preferred Buka symbol ?Armageddon@combatManager@@QAEXXZ
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.422058;margin=0.013140;shape=0.223;size=0.375;calls=0.500;strings=kb.pal;alternate=pol20:void combatManager::Armageddon(void)@0x00024449
-VA(0x00417d0b, 0x3e5)
+VA(0x00417d0b, 0x3c4)
 void combatManager::Armageddon(void) {}
