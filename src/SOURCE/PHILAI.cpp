@@ -2965,6 +2965,10 @@ int iDefaultEventType;
 VA(0x0042278b, 0x2083)
 int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate, int* liveChance) {
     int numToBuy;
+    int bWon9;
+    int costList[7];
+    int guardCount1;
+    int bestRV1;
     int exitRV5;
     int gateY28;
     int gateX1;
@@ -2973,10 +2977,6 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     int armySlot2;
     mapCell* exitCell;
     int positionValue;
-    int bWon9;
-    int costList[7];
-    int guardCount1;
-    int bestRV1;
     int prize5;
     int bBattleWon9;
     int chosenExitY27;
