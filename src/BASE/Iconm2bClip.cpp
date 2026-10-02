@@ -57,17 +57,19 @@ void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y
 }
 
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
-// working value in file statics, as in the assembly renderers.
-static int sClipRight;
-static signed char *sClipRow;
-static IconEntry *sClipEntry;
-static unsigned int sClipRun;
+// working value in file statics, as in the assembly renderers. Their
+// declaration order sets the compare operand sort keys; the .bss layout
+// follows the names, not this order.
+static int sClipY;
 static int sClipBottom;
 static int sClipX;
-static int sClipY;
-static unsigned char *sClipSource;
-static int sClipInside;
+static unsigned int sClipRun;
 static int sClipRowStart;
+static signed char *sClipRow;
+static IconEntry *sClipEntry;
+static unsigned char *sClipSource;
+static int sClipRight;
+static int sClipInside;
 
 VA(0x00473ad0, 0x2ad)
 void ClipIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int frame, int mode, int clipX, int clipY, int clipW, int clipH)
