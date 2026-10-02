@@ -237,8 +237,8 @@ extern signed char bKBDone;
 extern signed char gbSkipIntro;
 extern signed char gbWaitForRemoteReceive;
 extern signed char gbDirectConnect;
-extern short giLastMapOriginX;
-extern short giLastMapOriginY;
+extern int iMaxMapExtra;
+extern char* gTownNames[];
 extern char gcCongratsText[];
 extern char* gCampaignSideNames[];
 extern signed char giCampaignChoice;
@@ -437,8 +437,8 @@ int oldmain(void) {
                 }
                 for (idx = 0; idx < 4; idx++)
                     memcpy(gText, gbGamePosToNetPos, 4);
-                giThisGamePos = NetPosToGamePos(0);
-                giHostGamePos = giThisGamePos;
+                giHostGamePos = NetPosToGamePos(0);
+                giThisGamePos = giHostGamePos;
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
                     result = TransmitRemoteData(gText, idx, 4, BOX_REMOTE_SETUP, 1, 1, -1, 0);
                     if (!result)
@@ -474,15 +474,15 @@ int oldmain(void) {
             backdropLoaded = 0;
             gpSoundManager->StopAllSamples();
             gpWindowManager->FadeScreen(1, 8, 0);
-            giLastMapOriginX = 0;
-            giLastMapOriginY = 0;
+            gMapX = 0;
+            gMapY = 0;
             if (gpExec->AddManager(gpAdvManager, -1))
                 ShutDown("Can't add manager!");
             if (command == 1)
                 gpAdvManager->SetHeroContext(gpGame->m_players[0].NextHero(0), 0);
             gpExec->MainLoop();
-            giLastMapOriginX = gpAdvManager->m_mapOriginX;
-            giLastMapOriginY = gpAdvManager->m_mapOriginY;
+            gMapX = gpAdvManager->m_mapOriginX;
+            gMapY = gpAdvManager->m_mapOriginY;
             gpExec->RemoveManager(gpAdvManager);
             gpWindowManager->FadeScreen(1, 8, gPalette);
         }
@@ -523,7 +523,7 @@ int oldmain(void) {
             gbGameOver = 0;
             if (giEndSequence == 2) {
                 gpSoundManager->SwitchAmbientMusic(54);
-                AddScoreToHighScore(giCurTurn, 0, "", gCampaignSideNames[gpGame->m_campaignType]);
+                AddScoreToHighScore(giCurTurn, 0, "", gCampaignSideNames[gpGame->m_campaignType - 1]);
             }
             if (gbShowHighScore) {
                 gpMouseManager->ReallyShowPointer();
@@ -594,7 +594,7 @@ int InterpretCommandLine(void) {
     gbColorMice = 0;
     gbSpecialMouseMasks = 1;
     giScreenScroll = 1;
-    gbCheatMenus = 0;
+    giLimitPlayer = 0;
     gbBlackoutPlayer = 1;
     strcpy(gMapName, "AES31000.map");
     strcpy(gFullMapName, "Claw ( Easy )");
@@ -1367,7 +1367,8 @@ void PlayerDead(int player) {
         HandleRemoteDeadPlayerExit(player);
 }
 
-// HoMM1's three-byte exit notice: game position, control hand-off, next player.
+// HoMM1's three-byte exit notice, which retail builds byte-wise in gText
+// (0x004c6750): game position, control hand-off, next player.
 #pragma pack(push, 1)
 struct playerExitMessage {
     signed char gamePosition;
@@ -1375,7 +1376,7 @@ struct playerExitMessage {
     signed char nextPlayer;
 };
 #pragma pack(pop)
-extern playerExitMessage gPlayerExitMessage;
+extern char* gScoreLabels[];
 extern int giHostGamePos;
 
 // Player colour names for the exit notices, CheckEndGame's re-entry guard
@@ -1394,9 +1395,9 @@ void HandleRemoteDeadPlayerExit(int position) {
         RemoteCleanup();
     } else if (giNumHumanPlayers == 2) {
         giNumHumanPlayers--;
-        gPlayerExitMessage.gamePosition = position;
-        gPlayerExitMessage.takesControl = 0;
-        TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+        gText[0] = position;
+        gText[1] = 0;
+        TransmitRemoteData(gText, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
         RemoteCleanup();
         gbHumanPlayer[position] = 0;
     }
@@ -1408,19 +1409,19 @@ void HandleRemoteSuddenExit(void) {
     int next;
     if (!gbGameInitialized)
         return;
-    gPlayerExitMessage.gamePosition = giThisGamePos;
+    gText[0] = giThisGamePos;
     if (gbThisNetHumanPlayer[giCurPlayer]
         || (!gbHumanPlayer[giCurPlayer] && giHostGamePos == giThisGamePos)) {
-        gPlayerExitMessage.takesControl = 1;
+        gText[1] = 1;
         next = giCurPlayer;
         next = (next + 1) % gpGame->m_playerCount;
         while (!gbHumanPlayer[next])
             next = (next + 1) % gpGame->m_playerCount;
-        gPlayerExitMessage.nextPlayer = next;
+        gText[2] = next;
     } else {
-        gPlayerExitMessage.takesControl = 0;
+        gText[1] = 0;
     }
-    TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+    TransmitRemoteData(gText, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
 }
 
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
@@ -1686,7 +1687,7 @@ void InitVars(void) {
     int i;
     NULL_SAMPLE2.pSample = 0;
     NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
-    gbMapExtraCleared = 1;
+    iMaxMapExtra = 1;
     gGameCommand = -1;
     gPalette = 0;
     gpPhilAI->m_debugFont = 0;
@@ -1872,7 +1873,7 @@ void ClearMapExtra(void) {
             ppMapExtra[i] = 0;
         }
     }
-    gbMapExtraCleared = 1;
+    iMaxMapExtra = 1;
 }
 
 // HoMM1 score-to-monster tables pair a threshold word with a monster word.
@@ -2261,8 +2262,6 @@ void FileError(char* filename) {
 
 // Campaign-text and score-label tables and the score-to-rank creature names.
 extern char* gCampaignWinTexts[];
-extern char* gScoreLabels[];
-extern char* gScoreRankNames[];
 int GetBaseScore(int);
 void CongratsWait(void);
 
@@ -2298,7 +2297,7 @@ void ShowCongrats(void) {
         win = new heroWindow(0, 0, "congspre.bin");
         if (!win)
             MemError();
-        sprintf(name, gScoreRankNames[GetMonType(result, 1)]);
+        sprintf(name, gArmyNames[GetMonType(result, 1)]);
         name[0] -= 32;
         sprintf(gText, "A Glorious Victory!");
         message.id = 100;
@@ -2503,16 +2502,7 @@ signed char CheckMem(void) {
     return 1;
 }
 
-// Campaign maps rename the town at a fixed position (x, y, then the name).
-#pragma pack(push, 1)
-struct campaignTownName {
-    signed char x;
-    signed char y;
-    char name[83];
-};
-#pragma pack(pop)
-extern campaignTownName gCampaignTownNames[];
-extern char* gTownNames[];
+// Campaign maps rename the town at their victory position.
 
 // Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
 // override one town by position.
@@ -2520,10 +2510,10 @@ VA(0x00455aaf, 0xdc)
 char* GetTownName(int i) {
     town* townPointer = gpGame->GetTown(i);
     if (gpGame->m_campaignType > 0
-        && gCampaignTownNames[gpGame->m_campaignScenario].x >= 0
-        && gCampaignTownNames[gpGame->m_campaignScenario].x == townPointer->m_x
-        && gCampaignTownNames[gpGame->m_campaignScenario].y == townPointer->m_y)
-        return gCampaignTownNames[gpGame->m_campaignScenario].name;
+        && gCampaignScenarios[gpGame->m_campaignScenario].victoryTownX >= 0
+        && gCampaignScenarios[gpGame->m_campaignScenario].victoryTownX == townPointer->m_x
+        && gCampaignScenarios[gpGame->m_campaignScenario].victoryTownY == townPointer->m_y)
+        return gCampaignScenarios[gpGame->m_campaignScenario].victoryTownName;
     return gTownNames[townPointer->m_threat];
 }
 
