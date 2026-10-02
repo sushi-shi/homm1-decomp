@@ -4318,7 +4318,6 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
 
 // New-turn texts: days-left and last-day warnings, then the month/week banners.
 extern char* gNewTurnText[];
-extern char* gMonsterNames[];
 extern char* gMonthNames[];
 extern char* gWeekNames[];
 
@@ -4370,9 +4369,9 @@ void game::DoNewTurn(void) {
                 if (giMonthType == 0) {
                     sprintf(gText, gNewTurnText[2], gMonthNames[giMonthSpecial]);
                 } else if (giMonthType == 1) {
-                    strcpy(monsterName, gMonsterNames[giMonthSpecial]);
+                    strcpy(monsterName, gArmyNames[giMonthSpecial]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[3], gMonsterNames[giMonthSpecial], monsterName);
+                    sprintf(gText, gNewTurnText[3], gArmyNames[giMonthSpecial], monsterName);
                 } else {
                     sprintf(gText, gNewTurnText[4]);
                 }
@@ -4381,9 +4380,9 @@ void game::DoNewTurn(void) {
                 if (giWeekType == 0) {
                     sprintf(gText, gNewTurnText[5], gWeekNames[giWeekSpecial]);
                 } else {
-                    strcpy(monsterName, gMonsterNames[giWeekSpecial]);
+                    strcpy(monsterName, gArmyNames[giWeekSpecial]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[6], gMonsterNames[giWeekSpecial], monsterName);
+                    sprintf(gText, gNewTurnText[6], gArmyNames[giWeekSpecial], monsterName);
                 }
             }
             gpSoundManager->SwitchAmbientMusic(track);
