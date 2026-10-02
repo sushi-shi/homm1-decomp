@@ -155,9 +155,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case MAP_OBJECT_MINE:
             if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
-            if (gpGame->m_mines[cell->m_objectMetadata].type == 6)
+            if (gpGame->m_mines[cell->m_objectMetadata].type == RESOURCE_GOLD)
                 income = 1000;
-            else if (gpGame->m_mines[cell->m_objectMetadata].type == 2)
+            else if (gpGame->m_mines[cell->m_objectMetadata].type == RESOURCE_ORE)
                 income = 2;
             else
                 income = 1;
@@ -309,13 +309,13 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case MAP_OBJECT_RESOURCE:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(pHero, resType,
-                         resType == 6 ? cell->m_objectMetadata * 100
+                         resType == RESOURCE_GOLD ? cell->m_objectMetadata * 100
                                            : cell->m_objectMetadata);
             strcpy(resourceName, gResourceNames[resType]);
             resourceName[0] += 32;
             sprintf(gText, gEventText[EVENT_TEXT_RESOURCE_PICKUP], resourceName);
             BVResMsg(gText, resType,
-                     resType == 6 ? cell->m_objectMetadata * 100
+                     resType == RESOURCE_GOLD ? cell->m_objectMetadata * 100
                                        : cell->m_objectMetadata);
             erase = 1;
             fizzleMode = 1;
@@ -878,7 +878,7 @@ int advManager::GiveExperience(class hero* eventHero, int experience, signed cha
 
 VA(0x00460636, 0x5a)
 void advManager::GiveResource(class hero* eventHero, signed char resource, short amount) {
-    if (resource >= 0 && resource <= 6)
+    if (resource >= RESOURCE_WOOD && resource <= RESOURCE_GOLD)
         gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
 }
 
@@ -965,7 +965,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     if (!cell->m_objectMetadata) {
         EventWindow(houseIndex * 3 + EVENT_TEXT_HOUSE_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     } else {
-        signed char creatures[5] = {6, 0, 1, 13, 0};
+        signed char creatures[5] = {CREATURE_GOBLIN, CREATURE_PEASANT, CREATURE_ARCHER, CREATURE_DWARF, CREATURE_PEASANT};
 
         EventWindow(houseIndex * 3 + EVENT_TEXT_HOUSE_RECRUIT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
@@ -1271,7 +1271,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     signed char tx;
     signed char teleportCount;
     int res;
-    int cost[7];
+    int cost[RESOURCE_COUNT];
     int victory;
     signed char adjacentMonster;
     hero* enemyHero;
@@ -1409,7 +1409,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
         case MAP_OBJECT_RESOURCE:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(eventHero, resType,
-                         resType == 6 ? cell->m_objectMetadata * 100
+                         resType == RESOURCE_GOLD ? cell->m_objectMetadata * 100
                                            : cell->m_objectMetadata);
             erase = 1;
             break;
@@ -1462,7 +1462,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     cell->m_objectMetadata = cell->m_objectMetadata - numHired;
                     if (!available) {
                         GetMonsterCost(troopType, cost);
-                        for (counter = 0; counter < 7; counter++)
+                        for (counter = 0; counter < RESOURCE_COUNT; counter++)
                             gpCurPlayer->m_resources[counter] -= -(-(cost[counter] * numHired));
                     }
                 }

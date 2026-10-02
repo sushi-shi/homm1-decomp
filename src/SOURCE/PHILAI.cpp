@@ -238,8 +238,8 @@ void philAI::CheckBuyStuff(void) {
         dockTown = NULL;
     }
     if (giBuildShipyard[giCurPlayer] >= 0) {
-        if (CanBuy(dockTown, BUILDING_SLOT_SHIPYARD) && CanBuild(dockTown, 3)) {
-            BuildBuilding(dockTown, 3);
+        if (CanBuy(dockTown, BUILDING_SLOT_SHIPYARD) && CanBuild(dockTown, BUILDING_SLOT_SHIPYARD)) {
+            BuildBuilding(dockTown, BUILDING_SLOT_SHIPYARD);
             giBuildShipyard[giCurPlayer] = -1;
         } else {
             gpCurPlayer->m_resources[RESOURCE_GOLD] -= 2000;
@@ -1203,7 +1203,7 @@ float philAI::GetOddsOfWinning(int) {
 // enemy threat and the purchase deflator.
 VA(0x0041d7d8, 0x59b)
 void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourceValue, float& benefitCost) {
-    int buildingCost[7];
+    int buildingCost[RESOURCE_COUNT];
     int attackWeek;
     int dwellingsOwned;
     int projectedAttackValue;
@@ -1225,7 +1225,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
     dwellingsOwned = 0;
     highestDwellingId = -1;
     for (i = 0; i < 6; i++) {
-        if (townPointer->m_buildings & (1 << (i + 7))) {
+        if (townPointer->m_buildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))) {
             dwellingsOwned++;
             highestDwellingId = i;
         }
@@ -1235,7 +1235,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         if (townPointer->m_army.m_creatureCounts[i] > 0)
             numFilledSlots++;
     curBenefit = static_cast<float>(GetBuildingBaseResourceValue(
-        factionId, building, static_cast<signed char>(building == 0 ? townPointer->m_buildState : 0)
+        factionId, building, static_cast<signed char>(building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0)
     ));
     if (building == BUILDING_SLOT_MAGE_GUILD && townPointer->m_buildState > 0)
         curBenefit -= static_cast<float>(GetBuildingBaseResourceValue(factionId, building, townPointer->m_buildState - 1));
@@ -1285,7 +1285,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
             curBenefit = curBenefit * 1.1;
         for (dwellingIndex = 0; dwellingIndex < 6; dwellingIndex++) {
             currentCreatureType = gDwellingType[townPointer->m_type][dwellingIndex];
-            if ((townPointer->m_buildings & (1 << (dwellingIndex + 7))) && townPointer->m_garrison[dwellingIndex] > 0
+            if ((townPointer->m_buildings & (1 << (dwellingIndex + BUILDING_SLOT_DWELLING_FIRST))) && townPointer->m_garrison[dwellingIndex] > 0
                 && gMonsterDatabase[gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST]].iconIndex
                        < gMonsterDatabase[currentCreatureType].iconIndex * 1.2) {
                 curBenefit = 0;
@@ -1302,7 +1302,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
     if (curBenefit < 0.0f)
         curBenefit = 0;
     GetBuildingCost(
-        factionId, building, buildingCost, static_cast<signed char>(building == 0 ? townPointer->m_buildState : 0)
+        factionId, building, buildingCost, static_cast<signed char>(building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0)
     );
     curBenefit = FutureDeflator(buildingCost) * curBenefit;
     resourceValue = static_cast<int>(curBenefit);
@@ -1325,7 +1325,7 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
     bestCost = -99.0f;
     bestScore = -99.0f;
     bestBuilding = -1;
-    for (curBuilding = 0; curBuilding <= 12; curBuilding++) {
+    for (curBuilding = BUILDING_SLOT_MAGE_GUILD; curBuilding <= BUILDING_SLOT_DWELLING_LAST; curBuilding++) {
         if (!(townPointer->m_buildings & (1 << curBuilding))
             || (curBuilding == 0 && townPointer->m_buildState < 3)) {
             if (CanBuild(townPointer, curBuilding)) {
@@ -1447,7 +1447,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
     bestRandScore = -99.0f;
     for (curDwelling = 0; curDwelling < 6; curDwelling++) {
         mon = gDwellingType[townPointer->m_type][curDwelling];
-        if ((townPointer->m_buildings & (1 << (curDwelling + 7)))
+        if ((townPointer->m_buildings & (1 << (curDwelling + BUILDING_SLOT_DWELLING_FIRST)))
             && townPointer->m_garrison[curDwelling] > 0) {
             canAdd = 0;
             for (iArmy = 0; iArmy < ARMY_GROUP_SLOT_COUNT; iArmy++) {
@@ -1551,7 +1551,7 @@ void philAI::ValueOfBuyingHero(town* townPointer, hero* heroPointer, int& resour
     heroCost[RESOURCE_GOLD] = 2500;
     costRV = RVConversion(heroCost);
     heroRV = heroPointer->m_experience + 2000;
-    for (i = 0; i < 14; i++) {
+    for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         if (heroPointer->m_artifacts[i] >= 0 && heroPointer->m_artifacts[i] < 37)
             heroRV += gArtifactBaseRV[heroPointer->m_artifacts[i]];
     }
@@ -2151,10 +2151,10 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
     if (useTown) {
         nArrows = 5;
         pTown = gpGame->GetTown(townId);
-        for (slot = 7; slot <= 12; slot++)
+        for (slot = BUILDING_SLOT_DWELLING_FIRST; slot <= BUILDING_SLOT_DWELLING_LAST; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows += 4;
-        for (slot = 0; slot <= 4; slot++)
+        for (slot = BUILDING_SLOT_MAGE_GUILD; slot <= BUILDING_SLOT_WELL; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows++;
         castleValue = nArrows * 120;
@@ -2410,7 +2410,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
 
     *value = 0;
     if (doInteraction) {
-        if ((townPointer->m_buildings & 8) && townPointer->m_id != giBestShipyardId) {
+        if ((townPointer->m_buildings & (1 << BUILDING_SLOT_SHIPYARD)) && townPointer->m_id != giBestShipyardId) {
             i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
             if (gbActualShipyardFound) {
                 if (giBestShipyardDist > i) {
@@ -2423,7 +2423,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             }
             gbPossibleShipyardFound = 1;
             gbActualShipyardFound = 1;
-        } else if ((townPointer->m_buildings & 0x40)
+        } else if ((townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))
                    && gpAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1)->m_tileIndex < 20
                    && !gbActualShipyardFound && townPointer->m_id != giBestShipyardId) {
             i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
@@ -2439,15 +2439,15 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             gbPossibleShipyardFound = 1;
         }
     } else if (heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] > 0 && !heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK)
-               && (townPointer->m_buildings & 1)) {
+               && (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))) {
         if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= 500) {
-            gpAdvManager->GiveArtifact(heroPointer, 37);
+            gpAdvManager->GiveArtifact(heroPointer, ARTIFACT_MAGIC_BOOK);
             gpCurPlayer->m_resources[RESOURCE_GOLD] -= 500;
         } else {
             heroPointer->m_remainingMobility = 0;
         }
     }
-    if ((townPointer->m_buildings & 1) && (doInteraction || heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK))) {
+    if ((townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)) && (doInteraction || heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK))) {
         for (i = 0; i < gMageGuildSpellCount[townPointer->m_buildState]; i++) {
             newLearned = heroPointer->AddSpell(
                 townPointer->m_mageGuildSpells[i], heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], doInteraction
@@ -2465,7 +2465,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
     statSum = heroPointer->m_primaryStats[HERO_PRIMARY_ATTACK] + heroPointer->m_primaryStats[HERO_PRIMARY_DEFENSE];
     if (statSum > 10)
         statSum = 10;
-    if (townPointer->m_buildings & 0x40)
+    if (townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))
         myTargetShare = 0.54 - statSum * 0.02;
     else
         myTargetShare = 0.33 - statSum * 0.01;
@@ -2709,7 +2709,7 @@ void philAI::BuildBuilding(town* townPointer, short building) {
         townPointer->m_garrison[building - BUILDING_SLOT_DWELLING_FIRST] =
             gMonsterDatabase[gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST]].growth;
     if (building == BUILDING_SLOT_CASTLE) {
-        townPointer->m_buildings &= ~0x20;
+        townPointer->m_buildings &= ~(1 << BUILDING_SLOT_TENT);
         townPointer->XformToCastle();
     }
     BitSet(gpGame->m_townBuiltToday, townPointer->m_id);
@@ -3073,7 +3073,7 @@ VA(0x0042278b, 0x2083)
 int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate, int* liveChance) {
     int numToBuy;
     int bWon9;
-    int costList[7];
+    int costList[RESOURCE_COUNT];
     int guardCount1;
     int exitRV5;
     mapCell* exitCell;
@@ -3418,31 +3418,31 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             iEventRV = static_cast<int>(gpCurPlayer->m_aiData.m_artifactValue * 0.1);
         break;
     case MAP_OBJECT_ANCIENT_LAMP:
-        EvaluateOneTimeCreaturePurchase(pHero, 27, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
+        EvaluateOneTimeCreaturePurchase(pHero, CREATURE_GENIE, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
     case MAP_OBJECT_STRAW_HUT:
-        EvaluateOneTimeCreaturePurchase(pHero, 6, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
+        EvaluateOneTimeCreaturePurchase(pHero, CREATURE_GOBLIN, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         break;
     case MAP_OBJECT_HOUSE:
     case MAP_OBJECT_PEASANT_LOG_CABIN:
-        EvaluateOneTimeCreaturePurchase(pHero, 0, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
+        EvaluateOneTimeCreaturePurchase(pHero, CREATURE_PEASANT, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
     case MAP_OBJECT_CABIN:
-        EvaluateOneTimeCreaturePurchase(pHero, 1, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
+        EvaluateOneTimeCreaturePurchase(pHero, CREATURE_ARCHER, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
     case MAP_OBJECT_DWARF_LOG_CABIN:
-        EvaluateOneTimeCreaturePurchase(pHero, 13, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
+        EvaluateOneTimeCreaturePurchase(pHero, CREATURE_DWARF, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
     case MAP_OBJECT_DESERT_TENT:
-        EvaluateOneTimeCreaturePurchase(pHero, 25, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
+        EvaluateOneTimeCreaturePurchase(pHero, CREATURE_NOMAD, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
     case MAP_OBJECT_WAGON_CAMP:
-        EvaluateOneTimeCreaturePurchase(pHero, 24, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
+        EvaluateOneTimeCreaturePurchase(pHero, CREATURE_ROGUE, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
     case MAP_OBJECT_GRAVEYARD:
