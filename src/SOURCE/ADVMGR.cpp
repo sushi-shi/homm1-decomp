@@ -31,6 +31,15 @@
 // Code-use identity only; no initializer-byte coverage is asserted.
 extern int giSeedingValid;
 
+// DrawCell's per-call drawing state, kept in module storage as in Buka, which
+// defines it ahead of its functions (retail address order).
+DATA(0x004c4f48) int s_drawCloudFrame;
+DATA(0x004c4f70) unsigned short s_drawGroundTile;
+DATA(0x004c509c) signed char s_drawFlipCloud;
+DATA(0x004c50a4) unsigned char s_drawTileset;
+DATA(0x004c50a8) int s_drawCovered;
+DATA(0x004c50ac) int s_drawStoneTile;
+
 
 // clang-format off
 H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
@@ -1362,17 +1371,6 @@ int advManager::ProcessSearch(int x, int y) {
     CheckEndGame(0);
     return 1;
 }
-
-// DrawCell's per-call drawing state, kept in module storage as in Buka (which
-// defines it ahead of its functions). Declared ahead of ProcessHover: the C1
-// symbol order retail's ProcessHover and GetCloudLookup operand sorts require
-// (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-DATA(0x004c50ac) int s_drawStoneTile;
-DATA(0x004c50a8) int s_drawCovered;
-DATA(0x004c4f48) int s_drawCloudFrame;
-DATA(0x004c509c) signed char s_drawFlipCloud;
-DATA(0x004c4f70) unsigned short s_drawGroundTile;
-DATA(0x004c50a4) unsigned char s_drawTileset;
 
 // donor PoL RVA 0x0005a644; preferred Buka symbol ?ProcessHover@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -4904,8 +4902,6 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
-// TeleportTo tests the watch player's high bit (0x004be7cc).
-extern unsigned char giCurWatchPlayerHighBit;
 VA(0x00434bd7, 0x340)
 void advManager::TeleportTo(int x, int y, int) {
     int savedShow;
