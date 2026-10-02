@@ -379,6 +379,8 @@ H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
     ENVIRONMENT_SOUND_LAYER_COUNT = 2,
     ENVIRONMENT_SOUND_CHANNEL_TYPE = 3,
     ENVIRONMENT_SOUND_EDGE_SPAN = 2,
+    // SetEnvironmentOrigin's rings around the origin (radius 0..COUNT-1).
+    ENVIRONMENT_SOUND_RADIUS_COUNT = 4,
     // InsertSound found no slot to take over.
     ENVIRONMENT_SOUND_NO_SLOT = -1
 H1_ENUM_CONST_END(AdventureEnvironmentSoundConstant)
@@ -2707,7 +2709,7 @@ void advManager::DrawCell(
                         pixelY3 - MONSTER_DRAW_Y_OFFSET,
                         cell0->m_objectIndex * MONSTER_FRAME_STRIDE
                             + m_animationPhases[mapX & (ADVMGR_ANIMATION_PHASE_COUNT - 1)],
-                        0,
+                        ICON_DRAW_OFFSET_FULL,
                         0,
                         0,
                         ADVENTURE_VIEWPORT_EXTENT,
@@ -6052,6 +6054,21 @@ short APanelHandler(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// clang-format off
+// DimensionDoor's dimdoor.bin dialog (Buka 2.1 AdventureTravelSpellConstant
+// names): hovering the map view (FIRST_BUTTON) sets m_dialogResult to
+// ACCEPT over a free cell, else REJECT, as does the other area (LAST_BUTTON);
+// a click with ACCEPT closes the dialog. TownGate starts its nearest-town
+// search at DISTANCE_LIMIT.
+H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
+    TRAVEL_DIALOG_REJECT = 0,
+    TRAVEL_DIALOG_ACCEPT = 1,
+    DIMENSION_DOOR_FIRST_BUTTON = ADVENTURE_CONTROL_MAP_VIEW,
+    DIMENSION_DOOR_LAST_BUTTON = 11,
+    TOWN_PORTAL_DISTANCE_LIMIT = 1000
+H1_ENUM_CONST_END(AdventureTravelSpellConstant)
+// clang-format on
+
 VA(0x004337c5, 0x34b)
 short DimensionDoorHandler(struct tag_message& message) {
     signed char result;
@@ -6069,10 +6086,10 @@ short DimensionDoorHandler(struct tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case ADVENTURE_CONTROL_MAP_VIEW:
-                        case 11:
+                        case DIMENSION_DOOR_FIRST_BUTTON:
+                        case DIMENSION_DOOR_LAST_BUTTON:
                             if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-                            } else if (gpWindowManager->m_dialogResult == 1) {
+                            } else if (gpWindowManager->m_dialogResult == TRAVEL_DIALOG_ACCEPT) {
                                 result = 1;
                             }
                             break;
@@ -6082,8 +6099,8 @@ short DimensionDoorHandler(struct tag_message& message) {
                     break;
                 case WIDGET_COMMAND_HOVER:
                     switch (message.id) {
-                        case 11:
-                            gpWindowManager->m_dialogResult = 0;
+                        case DIMENSION_DOOR_LAST_BUTTON:
+                            gpWindowManager->m_dialogResult = TRAVEL_DIALOG_REJECT;
                             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                             break;
                         case ADVENTURE_CONTROL_MAP_VIEW:
@@ -6108,10 +6125,10 @@ short DimensionDoorHandler(struct tag_message& message) {
                                 );
                                 if ((cell->m_triggerType & MAP_TRIGGER_EVENT)
                                     || (cell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)) {
-                                    gpWindowManager->m_dialogResult = 0;
+                                    gpWindowManager->m_dialogResult = TRAVEL_DIALOG_REJECT;
                                     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                                 } else {
-                                    gpWindowManager->m_dialogResult = 1;
+                                    gpWindowManager->m_dialogResult = TRAVEL_DIALOG_ACCEPT;
                                     gpMouseManager->SetPointer(ADVENTURE_POINTER_MOVE);
                                 }
                             }
@@ -6123,7 +6140,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
                         case PANEL_CLOSE_WIDGET:
-                            gpWindowManager->m_dialogResult = 0;
+                            gpWindowManager->m_dialogResult = TRAVEL_DIALOG_REJECT;
                             result = 1;
                             break;
                     }
@@ -6389,7 +6406,7 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
         for (layer = ENVIRONMENT_SOUND_FIRST_LAYER; layer <= ENVIRONMENT_SOUND_LAYER_COUNT;
              ++layer) {
             InsertSound(originX, originY, 0, layer);
-            for (soundRadius = 0; soundRadius < 4; ++soundRadius) {
+            for (soundRadius = 0; soundRadius < ENVIRONMENT_SOUND_RADIUS_COUNT; ++soundRadius) {
                 for (edgeOffset = 0; edgeOffset < soundRadius * ENVIRONMENT_SOUND_EDGE_SPAN;
                      ++edgeOffset) {
                     InsertSound(
@@ -6604,7 +6621,7 @@ void advManager::DimensionDoor(void) {
     gpWindowManager->DoDialog(win, DimensionDoorHandler, 0);
     delete win;
     heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    if (gpWindowManager->m_dialogResult == 1) {
+    if (gpWindowManager->m_dialogResult == TRAVEL_DIALOG_ACCEPT) {
         x = m_mapOriginX + m_lastHoverCell;
         y = m_mapOriginY + m_hoverCellY;
         targetCell = GetCell(x, y);
@@ -6636,7 +6653,7 @@ void advManager::TownGate(void) {
     hero* heroPointer;
     int distance;
 
-    bestDist = 1000;
+    bestDist = TOWN_PORTAL_DISTANCE_LIMIT;
     bestTown = -1;
     heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
     if (heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) {
