@@ -450,6 +450,149 @@ short game::SaveGame(char *, signed char) { return 0; }
 VA(0x0043a5ef, 0x9b2)
 void game::LoadGame(char*, int, int) {}
 
+// Right-click help text for the new-game screen.
+extern char* gNewGameHelp[];
+
+// Buka 2.1 NewGameHandler without HoMM2's remote chat and player races:
+// right clicks show help, the player toggles cycle the opponents and OK
+// packs the chosen opponents before closing the dialog.
+VA(0x0043afa1, 0x581)
+short NewGameHandler(tag_message& message) {
+    int i;
+    int helpIndex;
+    int iPlayer;
+    if (message.type == MESSAGE_WIDGET) {
+        if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (IS_WIDGET_SELECTION_NOTIFICATION(message.payload.widget.command)) {
+                helpIndex = -1;
+                switch (message.payload.widget.id) {
+                    case 0x7802:
+                        helpIndex = 0;
+                        break;
+                    case 0x7801:
+                        helpIndex = 1;
+                        break;
+                    case 0x13:
+                        helpIndex = 2;
+                        break;
+                    case 0x11:
+                        helpIndex = 3;
+                        break;
+                    case 0x12:
+                        helpIndex = 3;
+                        break;
+                    case 0xc:
+                        helpIndex = 3;
+                        break;
+                    case 0xd:
+                        helpIndex = 4;
+                        break;
+                    case 0xe:
+                        helpIndex = 4;
+                        break;
+                    case 0xf:
+                        helpIndex = 4;
+                        break;
+                    case 0x10:
+                        helpIndex = 4;
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        if (message.payload.widget.id - 1 < giNumHumanPlayers)
+                            helpIndex = 8;
+                        else
+                            helpIndex = 5;
+                        break;
+                    case 8:
+                        helpIndex = 6;
+                        break;
+                    case 0x14:
+                        helpIndex = 7;
+                        break;
+                }
+                if (helpIndex >= 0)
+                    NormalDialog(gNewGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            }
+        } else {
+            switch (message.payload.widget.command) {
+                case WIDGET_NOTIFY_DESELECT:
+                    switch (message.payload.widget.id) {
+                        case 0x7802:
+                            gpGame->m_playerCount = 0;
+                            for (i = 0; i < 4; i++) {
+                                if (gpGame->m_players[i].m_color > 0)
+                                    gpGame->m_playerCount++;
+                            }
+                            if (gpGame->m_playerCount < 2) {
+                                NormalDialog("A game requires at least one iPlayer.", 1, 0xb1, 0x3c, -1, 0, -1, 0, -1);
+                                break;
+                            } else {
+                                if (!gpGame->m_players[1].m_color) {
+                                    if (gpGame->m_players[2].m_color) {
+                                        gpGame->m_players[1].m_color = gpGame->m_players[2].m_color;
+                                        gpGame->m_players[2].m_color = 0;
+                                    } else {
+                                        gpGame->m_players[1].m_color = gpGame->m_players[3].m_color;
+                                        gpGame->m_players[3].m_color = 0;
+                                    }
+                                }
+                                if (!gpGame->m_players[2].m_color && gpGame->m_players[3].m_color) {
+                                    gpGame->m_players[2].m_color = gpGame->m_players[3].m_color;
+                                    gpGame->m_players[3].m_color = 0;
+                                }
+                            }
+                        case 0x7801:
+                            gpWindowManager->m_dialogResult = message.payload.widget.id;
+                            message.payload.widget.command = message.payload.widget.id =
+                                WIDGET_COMMAND_DIALOG_SELECT;
+                            return MESSAGE_DISPATCH_FORWARD;
+                        default:
+                            break;
+                    }
+                    break;
+                case WIDGET_NOTIFY_SELECT:
+                    switch (message.payload.widget.id) {
+                        case 0xd:
+                        case 0xe:
+                        case 0xf:
+                        case 0x10:
+                            gpGame->m_difficulty = message.payload.widget.id - 0xd;
+                            break;
+                        case 2:
+                        case 3:
+                        case 4:
+                            iPlayer = message.payload.widget.id - 1;
+                            gpGame->m_players[iPlayer].m_color++;
+                            gpGame->m_players[iPlayer].m_color %= 5;
+                            if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_color)
+                                gpGame->m_players[iPlayer].m_color = 1;
+                            break;
+                        case 8:
+                            gpGame->m_players[0].m_unknown11 = (gpGame->m_players[0].m_unknown11 + 1) % 4;
+                            break;
+                        case 0x13:
+                            gbKingOfTheHill = 1 - gbKingOfTheHill;
+                            break;
+                        case 0xc:
+                        case 0x11:
+                        case 0x12:
+                            game::GetMap();
+                            break;
+                        default:
+                            break;
+                    }
+                    gpGame->UpdateNewGameWindow();
+                    gpGame->m_newGameWindow->DrawWindow();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
 // donor PoL RVA 0x000b88d6; preferred Buka symbol ?UpdateNewGameWindow@game@@QAEXXZ
 // donor Buka TU SOURCE/Newgame; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.454910;margin=0.298327;shape=0.215;size=0.546;calls=0.480;strings=%s %d%%;alternate=pol20:void game::UpdateNewGameWindow(void)@0x000b88d6
@@ -466,7 +609,6 @@ extern signed char gbWaitForRemoteReceive;
 extern signed char giCampaignChoice;
 extern int giMapSize;
 extern int giMapDifficulty;
-short NewGameHandler(tag_message&);
 
 // Buka 2.1 game::NewGame: HoMM1 starts campaigns directly, restores the
 // previous setup choices and falls back to a default map when the remembered
