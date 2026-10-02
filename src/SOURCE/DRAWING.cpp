@@ -257,7 +257,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     boxBottom = (row + 2) * 80 + 20;
                     if (m_extendLimitDown)
                         boxBottom += 60;
-                    if (m_armies[side][i].m_facing == ARMY_FACING_RIGHT) {
+                    if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
                         boxLeft = hexCol * 78 - 110;
                         boxRight = (hexCol + 1) * 78 + 70;
                     } else {
@@ -274,7 +274,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     if (m_armies[side][i].m_creatureType == CREATURE_SPRITE
                         || m_armies[side][i].m_creatureType == CREATURE_ORC
                         || m_armies[side][i].m_creatureType == CREATURE_TROLL) {
-                        if (m_armies[side][i].m_facing == ARMY_FACING_RIGHT)
+                        if (m_armies[side][i].m_facing == ARMY_FACING_LEFT)
                             boxRight += 40;
                         else
                             boxLeft -= 40;
@@ -292,7 +292,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
                             sideDelta = -1;
                         else
                             sideDelta = 1;
-                        if (m_armies[side][i].m_facing == ARMY_FACING_RIGHT) {
+                        if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
                             boxLeft = (hexCol + sideDelta) * 78 - 110;
                             boxRight = (hexCol + sideDelta + 1) * 78 + 70;
                         } else {

@@ -5,28 +5,11 @@
 
 #include <H1/Macros.h>
 #include <H1/Types.h>
+#include <SOURCE/combatTypes.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/spellTypes.h>
 
 // clang-format off
-// tag_monsterStats::attributes bits, which army::Init copies into each
-// stack's m_stats. Buka 2.1 KB_TYPES.h MonsterFlags numbering; HoMM1 uses
-// each bit as Buka does: LoadResources loads .atk/shoot sounds only for
-// shooters, FLY tests flyers, the breath bit selects the two-hex DoAttack
-// path (dragons, phoenixes), army::Damage/PowEffect set DEAD, CMBTMGR's
-// good-morale bonus sets HIGH_MORALE, DoAttack sets RETALIATED (griffins
-// excepted) and the turn code sets TURN_SPENT.
-H1_ENUM_FLAGS_BEGIN(MonsterFlags, int)
-    MONSTER_FLAGS_NONE = 0x0,
-    MONSTER_FLAGS_WIDE = 0x1,
-    MONSTER_FLAGS_FLYING = 0x2,
-    MONSTER_FLAGS_SHOOTER = 0x4,
-    MONSTER_FLAGS_BREATH_ATTACK = 0x8,
-    MONSTER_FLAGS_DEAD = 0x10,
-    MONSTER_FLAGS_HIGH_MORALE = 0x20,
-    MONSTER_FLAGS_RETALIATED = 0x40,
-    MONSTER_FLAGS_TURN_SPENT = 0x80
-H1_ENUM_FLAGS_END(MonsterFlags)
 
 // army::m_animationSequence: the pose army::DrawToBuffer draws. 0 stands
 // (std icon), 1 walks (wlk icon, Walk and FlyTo), 2 attacks (atk/std
@@ -48,13 +31,6 @@ H1_ENUM_BEGIN(ArmySampleType)
     ARMY_SAMPLE_COUNT = 4
 H1_ENUM_END(ArmySampleType)
 
-// army::m_facing, passed as the icon mirror flag. Init sets side ^ 1, so
-// attackers face right; a wide stack facing right has its tail at hex - 1
-// (Buka combatTypes.h ArmyFacing).
-H1_ENUM_BEGIN(ArmyFacing)
-    ARMY_FACING_LEFT = 0,
-    ARMY_FACING_RIGHT = 1
-H1_ENUM_END(ArmyFacing)
 
 // army::m_spellEndCondition: what ends m_spellEffect early (Buka
 // ArmySpellCancelType numbering); Init and CancelSpell store NONE.

@@ -114,7 +114,8 @@ H1_ENUM_END(CombatObstacleIndex)
 H1_ENUM_CONST_BEGIN(CombatGridDimension)
     COMBAT_GRID_COLUMNS = 9,
     COMBAT_GRID_ROWS = 5,
-    COMBAT_GRID_LAST_COLUMN = 8
+    COMBAT_GRID_LAST_COLUMN = 8,
+    COMBAT_GRID_LAST_ROW = 4
 H1_ENUM_CONST_END(CombatGridDimension)
 // clang-format on
 

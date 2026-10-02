@@ -62,6 +62,7 @@ CREATURE_FACTION_SIZE = 6 H1_ENUM_CONST_END(CreatureFactionConstant)
 // combat state. ResetRound keeps ROUND_PERSISTENT_MASK each round; GenerateMap
 // keeps BATTLE_START_MASK when stacks enter the field.
 H1_ENUM_FLAGS_BEGIN(MonsterFlags, int)
+    MONSTER_FLAGS_NONE = 0x00,
     MONSTER_FLAGS_WIDE = 0x01,
     MONSTER_FLAGS_FLYING = 0x02,
     MONSTER_FLAGS_SHOOTER = 0x04,

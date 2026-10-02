@@ -2101,7 +2101,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         strcat(gText, gMoraleInfoText[MORALE_INFO_BUOY]);
     if (h->m_eventFlags & HERO_EVENT_OASIS)
         strcat(gText, gMoraleInfoText[MORALE_INFO_OASIS]);
-    if (h->m_eventFlags & HERO_EVENT_TEMPLE)
+    if (h->m_eventFlags & HERO_EVENT_STATUE)
         strcat(gText, gMoraleInfoText[MORALE_INFO_STATUE]);
     if (h->m_eventFlags & HERO_EVENT_GRAVEYARD)
         strcat(gText, gMoraleInfoText[MORALE_INFO_GRAVEYARD]);

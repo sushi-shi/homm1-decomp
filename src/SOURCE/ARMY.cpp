@@ -222,11 +222,11 @@ void army::DrawToBuffer(short x, short y) {
                     m_standIcon->FillToBuffer(x, y, 0, outlineColor, m_facing, offsetMode);
                 iconX = x;
                 if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                    if (m_facing == ARMY_FACING_LEFT)
+                    if (m_facing == ARMY_FACING_RIGHT)
                         iconX += 75;
                     else
                         iconX -= 95;
-                } else if (m_facing == ARMY_FACING_RIGHT) {
+                } else if (m_facing == ARMY_FACING_LEFT) {
                     iconX -= 39;
                 }
                 gpCombatManager->m_combatIcons[COMBAT_ICON_SPELLS]
@@ -234,12 +234,12 @@ void army::DrawToBuffer(short x, short y) {
             }
             if (m_animationFrame == 1 && gpCombatManager->m_showArmyQuantities) {
                 if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                    if (m_facing == ARMY_FACING_LEFT)
+                    if (m_facing == ARMY_FACING_RIGHT)
                         qtyX = x + 75;
                     else
                         qtyX = x - 95;
                 } else {
-                    if (m_facing == ARMY_FACING_LEFT)
+                    if (m_facing == ARMY_FACING_RIGHT)
                         qtyX = x + 8;
                     else
                         qtyX = x - 39;
@@ -289,14 +289,14 @@ void army::DrawToBuffer(short x, short y) {
             }
             effectX = x;
             if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                if (m_facing == ARMY_FACING_LEFT) {
+                if (m_facing == ARMY_FACING_RIGHT) {
                     effectX += 39;
                     x += 75;
                 } else {
                     effectX -= 39;
                     x -= 95;
                 }
-            } else if (m_facing == ARMY_FACING_RIGHT) {
+            } else if (m_facing == ARMY_FACING_LEFT) {
                 x -= 39;
             }
             if (m_spellEffect != SPELL_NONE)
@@ -324,7 +324,7 @@ void army::Wince(void) {
     m_animationFrame = 2;
     m_walkYStep = 0;
     gpCombatManager->UpdateGrid(m_hex, m_stats.attributes);
-    gpCombatManager->SetGridMode(m_facing != ARMY_FACING_LEFT);
+    gpCombatManager->SetGridMode(m_facing != ARMY_FACING_RIGHT);
 }
 
 // One hex of walking: six frames redrawn inside the union of the old and
@@ -374,7 +374,7 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
     reverse = 0;
     m_walkYStep = 0;
     if (direction < 3) {
-        if (m_facing == ARMY_FACING_LEFT) {
+        if (m_facing == ARMY_FACING_RIGHT) {
             startFrame = 0;
             step = 1;
         } else {
@@ -382,7 +382,7 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
             step = -1;
             reverse = 1;
         }
-    } else if (m_facing == ARMY_FACING_RIGHT) {
+    } else if (m_facing == ARMY_FACING_LEFT) {
         startFrame = 0;
         step = 1;
     } else {
@@ -413,9 +413,9 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         }
     } else {
         flag = 0;
-        if (m_facing == ARMY_FACING_LEFT && direction == COMBAT_DIRECTION_SOUTHEAST)
+        if (m_facing == ARMY_FACING_RIGHT && direction == COMBAT_DIRECTION_SOUTHEAST)
             flag = 1;
-        else if (m_facing == ARMY_FACING_RIGHT && direction == COMBAT_DIRECTION_NORTHWEST)
+        else if (m_facing == ARMY_FACING_LEFT && direction == COMBAT_DIRECTION_NORTHWEST)
             flag = 1;
         gpCombatManager->SetGridMode(flag);
     }
@@ -578,7 +578,7 @@ void army::SpecialAttack(void) {
         m_facing = 0;
     else
         m_facing = 1;
-    gpCombatManager->SetGridMode(m_facing == ARMY_FACING_LEFT);
+    gpCombatManager->SetGridMode(m_facing == ARMY_FACING_RIGHT);
     CheckLuck();
     m_animationSequence = ARMY_ANIMATION_ATTACK;
     gpSoundManager->MemorySample(m_samples[ARMY_SAMPLE_SHOOT]);
@@ -589,7 +589,7 @@ void army::SpecialAttack(void) {
     }
     targetHexCol = tgtCol;
     if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-        if (target->m_facing == ARMY_FACING_RIGHT)
+        if (target->m_facing == ARMY_FACING_LEFT)
             targetHexCol--;
         else
             targetHexCol++;
@@ -623,7 +623,7 @@ void army::SpecialAttack(void) {
     yOffset[2] = 0;
     yOffset[3] = 15;
     yOffset[4] = 20;
-    startX = gpCombatManager->m_hexCells[m_hex].m_x + (m_facing == ARMY_FACING_LEFT ? 80 : -80);
+    startX = gpCombatManager->m_hexCells[m_hex].m_x + (m_facing == ARMY_FACING_RIGHT ? 80 : -80);
     startY = gpCombatManager->m_hexCells[m_hex].m_y - 90 + yOffset[arrowFrame - 5];
     destX = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS + targetHexCol].m_x;
     destY = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS].m_y - 90;
@@ -807,9 +807,9 @@ void army::DoHydraAttack(void) {
         if (!(attackMask & (1 << dir))) {
             targetHex = m_hex;
             if ((m_stats.attributes & MONSTER_FLAGS_WIDE)
-                && (m_facing == ARMY_FACING_RIGHT && dir > 2
-                    || m_facing == ARMY_FACING_LEFT && (dir < 3 || dir > 5))) {
-                if (m_facing == ARMY_FACING_RIGHT)
+                && (m_facing == ARMY_FACING_LEFT && dir > 2
+                    || m_facing == ARMY_FACING_RIGHT && (dir < 3 || dir > 5))) {
+                if (m_facing == ARMY_FACING_LEFT)
                     targetHex = m_hex - 1;
                 else
                     targetHex = m_hex + 1;
@@ -872,9 +872,9 @@ void army::DoHydraAttack(void) {
         if (!(attackMask & (1 << dir))) {
             targetHex = m_hex;
             if ((m_stats.attributes & MONSTER_FLAGS_WIDE)
-                && (m_facing == ARMY_FACING_RIGHT && dir > 2
-                    || m_facing == ARMY_FACING_LEFT && (dir < 3 || dir > 5))) {
-                if (m_facing == ARMY_FACING_RIGHT)
+                && (m_facing == ARMY_FACING_LEFT && dir > 2
+                    || m_facing == ARMY_FACING_RIGHT && (dir < 3 || dir > 5))) {
+                if (m_facing == ARMY_FACING_LEFT)
                     targetHex = m_hex - 1;
                 else
                     targetHex = m_hex + 1;
@@ -947,9 +947,9 @@ void army::DoAttack(int retaliation) {
     facing = m_facing;
     m_walkYStep = 0;
     if (m_attackDirection <= 2)
-        m_facing = ARMY_FACING_LEFT;
-    else if (m_attackDirection <= 5)
         m_facing = ARMY_FACING_RIGHT;
+    else if (m_attackDirection <= 5)
+        m_facing = ARMY_FACING_LEFT;
     if (m_attackDirection == COMBAT_DIRECTION_NORTHWEST
         || m_attackDirection == COMBAT_DIRECTION_NORTHEAST
         || m_attackDirection == COMBAT_DIRECTION_WIDE_WEST)
@@ -960,13 +960,13 @@ void army::DoAttack(int retaliation) {
         frameBase = 8;
     else
         frameBase = 7;
-    gpCombatManager->SetGridMode(m_facing == ARMY_FACING_LEFT);
+    gpCombatManager->SetGridMode(m_facing == ARMY_FACING_RIGHT);
     CheckLuck();
     newHex = m_hex;
     if ((m_stats.attributes & MONSTER_FLAGS_WIDE)
-        && (facing == ARMY_FACING_RIGHT && m_attackDirection >= 3
-            || facing == ARMY_FACING_LEFT && (m_attackDirection <= 2 || m_attackDirection >= 6))) {
-        if (facing == ARMY_FACING_RIGHT)
+        && (facing == ARMY_FACING_LEFT && m_attackDirection >= 3
+            || facing == ARMY_FACING_RIGHT && (m_attackDirection <= 2 || m_attackDirection >= 6))) {
+        if (facing == ARMY_FACING_LEFT)
             newHex = m_hex - 1;
         else
             newHex = m_hex + 1;
@@ -1723,14 +1723,14 @@ void army::MoveAttack(int hex, int moveOnly) {
             for (dirIndex = 0; dirIndex < 8; dirIndex++) {
                 if (dirIndex < 6 || (m_stats.attributes & MONSTER_FLAGS_WIDE)) {
                     baseHex = m_hex;
-                    if ((m_stats.attributes & MONSTER_FLAGS_WIDE) && m_facing == ARMY_FACING_LEFT
+                    if ((m_stats.attributes & MONSTER_FLAGS_WIDE) && m_facing == ARMY_FACING_RIGHT
                         && dirIndex >= 0 && dirIndex <= 2)
                         baseHex++;
-                    if ((m_stats.attributes & MONSTER_FLAGS_WIDE) && m_facing == ARMY_FACING_RIGHT
+                    if ((m_stats.attributes & MONSTER_FLAGS_WIDE) && m_facing == ARMY_FACING_LEFT
                         && dirIndex >= 3 && dirIndex <= 5)
                         baseHex--;
                     if (dirIndex >= 6) {
-                        if (m_facing == ARMY_FACING_LEFT)
+                        if (m_facing == ARMY_FACING_RIGHT)
                             baseHex++;
                         else
                             baseHex--;

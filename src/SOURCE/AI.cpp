@@ -455,7 +455,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
             return 1;
         }
         if (m_armies[side][targetArmy].m_stats.attributes & MONSTER_FLAGS_WIDE) {
-            if (m_armies[side][targetArmy].m_facing == ARMY_FACING_RIGHT)
+            if (m_armies[side][targetArmy].m_facing == ARMY_FACING_LEFT)
                 targetHex--;
             else
                 targetHex++;
@@ -493,7 +493,7 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
                     && m_hexCells[hex].m_occupantSide != 1 - m_currentSide
                 || m_hexCells[hex].m_occupantIndex == m_currentArmyIndex
                        && m_hexCells[hex].m_occupantSide == m_currentSide) {
-                if (currentArmy->m_facing == ARMY_FACING_LEFT)
+                if (currentArmy->m_facing == ARMY_FACING_RIGHT)
                     otherHex = currentArmy->m_hex + 1;
                 else
                     otherHex = currentArmy->m_hex - 1;
@@ -541,7 +541,7 @@ combatManager::WalkTowardArmyFront(class army* currentArmy, signed char side, sh
     frontHex = m_armies[side][armyIndex].m_hex;
     if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_WIDE)
         frontDelta = 2;
-    if (currentArmy->m_facing == ARMY_FACING_LEFT)
+    if (currentArmy->m_facing == ARMY_FACING_RIGHT)
         frontHex = frontHex + frontDelta;
     else
         frontHex = frontHex + -frontDelta;
@@ -599,10 +599,10 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
     routeGot = gpSearchArray->FindCombatPath(currentArmy->m_hex, goalHex, currentArmy, -1);
     if (!routeGot && (targetPtr->m_stats.attributes & MONSTER_FLAGS_WIDE)) {
         switch (targetPtr->m_facing) {
-            case ARMY_FACING_RIGHT:
+            case ARMY_FACING_LEFT:
                 goalHex = goalHex - 1;
                 break;
-            case ARMY_FACING_LEFT:
+            case ARMY_FACING_RIGHT:
                 goalHex = goalHex + 1;
                 break;
         }

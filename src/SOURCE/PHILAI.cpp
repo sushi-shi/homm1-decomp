@@ -3626,7 +3626,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = static_cast<int>(pHero->m_aiFightValue * 200.0f);
             break;
         case MAP_OBJECT_STATUE:
-            if (!(pHero->m_eventFlags & HERO_EVENT_TEMPLE))
+            if (!(pHero->m_eventFlags & HERO_EVENT_STATUE))
                 iEventRV = static_cast<int>(pHero->m_aiFightValue * 400.0f);
             break;
         case MAP_OBJECT_FAERIE_RING:
