@@ -104,12 +104,6 @@ WingImage screenImage;
 DATA(0x004c6aa8)
 configStruct gConfig;
 
-// donor PoL RVA 0x000a26a0; preferred Buka symbol ?SeedPosition@searchArray@@QAEXHHHHHHHHHHHH@Z
-// donor Buka TU SOURCE/SEARCH; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.418459;margin=0.401354;shape=0.193;size=0.813;calls=0.875;alternate=pol20:void searchArray::SeedPosition(int, int, int, int, int, int, int, int, int, int, int, int)@0x000a26a0
-VA(0x00402be0, 0xa60)
-void searchArray::SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int) {}
-
 // PoL retains the source-line-base expression, matching HoMM1's word load.
 VA(0x00403640, 0x59)
 void DDRestoreDisplayMode() {

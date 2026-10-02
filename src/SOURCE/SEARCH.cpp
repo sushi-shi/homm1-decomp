@@ -1,0 +1,293 @@
+// Located from HoMM2 Buka 2.1 SEARCH.cpp; HoMM1 builds this TU with /O2.
+
+#include <match.h>
+
+#include <H1/All.h>
+#include <H1/KB.h>
+#include <SOURCE/FINDPATH.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/searchArray.h>
+
+// SeedPosition's working mobility, read back by PushPoint.
+short giCurTempMobility;
+
+// Buka's persistent search scratch; each owner is independently addressed.
+static short s_direction;
+static int s_terrain;
+static int s_mapX;
+static int s_mapY;
+static int s_adjacentMonsterX;
+static int s_adjacentMonsterY;
+static int s_stepCost[2];
+static signed char s_possibleDirections[8];
+static int s_currentCost;
+static int s_hasTarget;
+static hero *s_currentHero;
+static int s_neighborX;
+static int s_neighborY;
+static unsigned char s_directionCosts[8];
+static searchNode s_currentNode;
+static int s_directionBlocked;
+static mapCell *s_targetCell;
+static signed char s_hasAdjacentMonster;
+static int s_triggerType;
+static int s_adjacentX;
+static int s_adjacentY;
+static int s_adjacentCost;
+static int s_bestTargetCost;
+static short s_processedPointCount;
+
+// HoMM1: flood from the hero until a cell carrying the trigger type turns
+// up, then walk the directions back into the path buffer.
+VA(0x004028b0, 0x23a)
+short searchArray::FindNearestObject(short startX, short startY, short direction, short maximumCost,
+                                     unsigned char triggerType)
+{
+    short nodeX;
+    searchNode node;
+    signed char possibleDirections[8];
+    signed char directionCosts[8];
+    short nodeY;
+    short i;
+    short terrain;
+    short cost;
+    searchNode *pathNode;
+    unsigned char *pathDirection;
+
+    giCurTempMobility = 500;
+    m_specialTargetX = -1;
+    Clear();
+    PushPoint(startX, startY, direction, 0, maximumCost, 0, 0, 0, 0, 0, 0, 0);
+    while (m_queueCount) {
+        node = m_queue[--m_queueCount];
+        if (maximumCost > 0 && node.distance > maximumCost)
+            continue;
+        nodeX = node.x;
+        nodeY = node.y;
+        if (gpGame->m_map[nodeX][nodeY].m_triggerType == triggerType && (startX != nodeX || startY != nodeY)) {
+            m_specialTargetX = node.x;
+            m_specialTargetY = node.y;
+            break;
+        }
+        TestPossibleDirections(nodeX, nodeY, possibleDirections, directionCosts, 1, 0);
+        for (i = 0; i < 8; i++) {
+            terrain = possibleDirections[i];
+            if (terrain != -1) {
+                cost = CalcTerrainCost(terrain, i & 1, 999, 0);
+                PushPoint(nodeX + normalDirTable[i].x, nodeY + normalDirTable[i].y, i, node.distance + cost,
+                          maximumCost, 0, 0, 0, 0, node.rvFlag2, node.previousX, node.previousY);
+            }
+        }
+    }
+    nodeX = m_specialTargetX;
+    nodeY = m_specialTargetY;
+    pathDirection = m_directions;
+    if (nodeX < 0)
+        return 0;
+    while (startX != nodeX || startY != nodeY) {
+        pathNode = &m_cells[nodeX * 72 + nodeY];
+        *pathDirection++ = pathNode->direction;
+        if (++m_pathLength >= 256)
+            break;
+        nodeX += normalDirTable[(short)(pathNode->direction + 4) & 7].x;
+        nodeY += normalDirTable[(short)(pathNode->direction + 4) & 7].y;
+    }
+    return m_pathLength;
+}
+
+// Buka SEARCH.cpp BuildPath over HoMM1's packed node word.
+VA(0x00402af0, 0xe4)
+int searchArray::BuildPath(short startX, short startY, short destinationX, short destinationY, short maximumCost)
+{
+    unsigned char *pathDirection = m_directions;
+    m_pathLength = 0;
+    while (startX != destinationX || startY != destinationY) {
+        searchNode *node = &m_cells[destinationX * 72 + destinationY];
+        if (node->x != destinationX && node->y != destinationY)
+            return 0;
+        if (node->distance <= maximumCost) {
+            *pathDirection = node->direction;
+            ++pathDirection;
+            ++m_pathLength;
+            if (m_pathLength >= 256) {
+                m_pathLength = 0;
+                break;
+            }
+        }
+        destinationX += normalDirTable[(short)(node->direction + 4) & 7].x;
+        destinationY += normalDirTable[(short)(node->direction + 4) & 7].y;
+    }
+    return m_pathLength;
+}
+
+// Buka SEARCH.cpp SeedPosition; HoMM1 has no roads or pathfinding skill and
+// precomputes the straight and diagonal step costs once per node.
+VA(0x00402be0, 0xa53)
+void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, short maximumCost, int waterMode,
+                               int findAdjacentMonster, int mobility, int costMode, int targetX, int targetY,
+                               int continueSeed, int scanMap)
+{
+    if (!continueSeed) {
+        giFullySeeded = 0;
+        giCurTempMobility = mobility;
+        Clear();
+        m_specialTargetY = -1;
+        m_specialTargetX = -1;
+        s_currentCost = 0;
+    }
+    giSeedingValid = 1;
+    if (targetX >= 0) {
+        if (!(gpGame->m_mapExtra[targetX][targetY] & giCurPlayerBit))
+            return;
+        s_targetCell = gpAdvManager->GetCell(targetX, targetY);
+        if (s_targetCell->m_unknown07 & 0x80)
+            return;
+        if (!giGroundToTerrain[s_targetCell->m_tileIndex]) {
+            if (waterMode) {
+                if (s_targetCell->m_triggerType == 0xa3 || s_targetCell->m_triggerType == 0xbe)
+                    return;
+            } else {
+                if (s_targetCell->m_triggerType != 0xbd && s_targetCell->m_triggerType != 0xbe
+                    && s_targetCell->m_triggerType != 0xa3)
+                    return;
+            }
+        }
+        s_hasTarget = 1;
+        s_bestTargetCost = 9999;
+    } else
+        s_hasTarget = 0;
+    if (s_hasTarget && continueSeed) {
+        s_currentNode = m_cells[targetX * 72 + targetY];
+        if (s_currentNode.visited && s_currentNode.distance <= s_currentCost + 4)
+            return;
+    }
+    if (!continueSeed)
+        PushPoint(seedX, seedY, seedDirection, 0, maximumCost, 0, 0, 0, 0, 0, 0, 0);
+    s_currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    while (m_queueCount > 0) {
+        --m_queueCount;
+        s_currentNode = m_queue[m_queueCount];
+        if (s_hasTarget && s_bestTargetCost < 9999 && s_currentNode.distance + 4 >= s_bestTargetCost) {
+            s_currentCost = s_currentNode.distance;
+            ++m_queueCount;
+            return;
+        }
+        if (s_currentNode.distance > maximumCost && maximumCost > 0)
+            goto point_complete;
+        if (s_currentNode.rvFlag1) {
+            s_hasAdjacentMonster = 1;
+            s_adjacentMonsterX = s_currentNode.adjacentMonsterX;
+            s_adjacentMonsterY = s_currentNode.adjacentMonsterY;
+        } else
+            s_hasAdjacentMonster = 0;
+        if (s_currentNode.unknownFlag) {
+            s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType & 0x7f;
+            if (s_triggerType == 0x1a || s_triggerType == 0x29 || s_triggerType == 0x3d || s_triggerType == 0x3e) {
+                if (!findAdjacentMonster || s_currentNode.rvFlag1)
+                    goto point_complete;
+                s_hasAdjacentMonster = 1;
+                s_adjacentMonsterX = s_currentNode.x;
+                s_adjacentMonsterY = s_currentNode.y;
+                if (s_triggerType == 0x3d
+                    && gpGame->m_availableHeroes[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
+                                                     ->m_objectMetadata]
+                           == giCurPlayer)
+                    goto point_complete;
+            } else {
+                if (!findAdjacentMonster)
+                    goto point_complete;
+                if (s_triggerType == 0x1d || s_triggerType == 0x28 || s_triggerType == 6 || s_triggerType == 8
+                    || s_triggerType == 0xb || s_triggerType == 0x30 || s_triggerType == 2 || s_triggerType == 3
+                    || s_triggerType == 4 || s_triggerType == 9 || s_triggerType == 0x1b || s_triggerType == 0x24
+                    || s_triggerType == 0x2b)
+                    goto point_complete;
+            }
+        }
+        if (waterMode) {
+            s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType;
+            if (s_triggerType == 0x1f)
+                goto point_complete;
+        } else {
+            if ((mapExtra[s_currentNode.x][s_currentNode.y] & 0x80)
+                && (s_currentNode.x != seedX || s_currentNode.y != seedY)) {
+                if (!findAdjacentMonster)
+                    goto point_complete;
+                if (s_currentNode.rvFlag1) {
+                    if (gpAdvManager->FindAdjacentMonster(s_currentNode.x, s_currentNode.y, &s_adjacentMonsterX,
+                                                          &s_adjacentMonsterY, s_currentNode.adjacentMonsterX,
+                                                          s_currentNode.adjacentMonsterY))
+                        goto point_complete;
+                } else if (gpAdvManager->FindAdjacentMonster(s_currentNode.x, s_currentNode.y, &s_adjacentMonsterX,
+                                                             &s_adjacentMonsterY, -1, -1))
+                    s_hasAdjacentMonster = 1;
+            }
+        }
+        TestPossibleDirections(s_currentNode.x, s_currentNode.y, s_possibleDirections,
+                               (signed char *)s_directionCosts, 1, waterMode);
+        s_terrain = giGroundToTerrain[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_tileIndex];
+        s_stepCost[0] = s_currentNode.distance
+                        + CalcTerrainCost(s_terrain, 0, giCurTempMobility - s_currentNode.distance, costMode);
+        s_stepCost[1] = s_currentNode.distance
+                        + CalcTerrainCost(s_terrain, 1, giCurTempMobility - s_currentNode.distance, costMode);
+        for (s_direction = 0; s_direction < 8; s_direction++) {
+            if (s_possibleDirections[s_direction] == -1)
+                continue;
+            s_neighborX = s_currentNode.x + normalDirTable[s_direction].x;
+            s_neighborY = s_currentNode.y + normalDirTable[s_direction].y;
+            if (findAdjacentMonster && (mapExtra[s_neighborX][s_neighborY] & 0x80)
+                && m_cells[s_neighborX * 72 + s_neighborY].visited && m_cells[s_neighborX * 72 + s_neighborY].rvFlag1
+                && s_currentNode.distance + 12 > m_cells[s_neighborX * 72 + s_neighborY].distance
+                && gpAdvManager->FindAdjacentMonster(s_neighborX, s_neighborY, &s_adjacentMonsterX,
+                                                     &s_adjacentMonsterY, -1, -1)
+                && m_cells[s_neighborX * 72 + s_neighborY].adjacentMonsterX == s_adjacentMonsterX
+                && m_cells[s_neighborX * 72 + s_neighborY].adjacentMonsterY == s_adjacentMonsterY)
+                continue;
+            PushPoint(s_neighborX, s_neighborY, s_direction, s_stepCost[s_direction & 1], maximumCost,
+                      s_directionCosts[s_direction], s_hasAdjacentMonster, s_adjacentMonsterX, s_adjacentMonsterY,
+                      s_currentNode.rvFlag2, s_currentNode.previousX, s_currentNode.previousY);
+            if (s_hasTarget && s_currentNode.x + normalDirTable[s_direction].x == targetX
+                && s_currentNode.y + normalDirTable[s_direction].y == targetY && !s_currentNode.rvFlag1) {
+                if (s_currentNode.distance
+                        + CalcTerrainCost(s_possibleDirections[s_direction], s_direction & 1,
+                                          giCurTempMobility - s_currentNode.distance, costMode)
+                    < s_bestTargetCost)
+                    s_bestTargetCost = s_currentNode.distance
+                                       + CalcTerrainCost(s_possibleDirections[s_direction], s_direction & 1,
+                                                         giCurTempMobility - s_currentNode.distance, costMode);
+            }
+        }
+    point_complete:
+        s_processedPointCount++;
+    }
+    if (scanMap) {
+        for (s_mapX = 0; s_mapX < 72; s_mapX++) {
+            for (s_mapY = 0; s_mapY < 72; s_mapY++) {
+                if ((gpAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType & 0x7f) == 0x1a) {
+                    for (s_direction = 0; s_direction < 8; s_direction++) {
+                        s_adjacentX = s_mapX + normalDirTable[s_direction].x;
+                        s_adjacentY = s_mapY + normalDirTable[s_direction].y;
+                        s_targetCell = gpAdvManager->GetCell(s_adjacentX, s_adjacentY);
+                        s_directionBlocked = 1;
+                        if (((1 << s_direction) & 0x38) && s_targetCell->m_objectIndex != 0xff
+                            && !(s_targetCell->m_flags & 0x80))
+                            s_directionBlocked = 0;
+                        if (s_directionBlocked && m_cells[s_adjacentX * 72 + s_adjacentY].visited
+                            && !(s_targetCell->m_triggerType & 0x80)) {
+                            s_terrain = giGroundToTerrain[s_targetCell->m_tileIndex];
+                            s_adjacentCost = m_cells[s_adjacentX * 72 + s_adjacentY].distance;
+                            s_stepCost[0] = s_adjacentCost
+                                            + CalcTerrainCost(s_terrain, 0, giCurTempMobility - s_adjacentCost,
+                                                              costMode);
+                            s_stepCost[1] = s_adjacentCost
+                                            + CalcTerrainCost(s_terrain, 1, giCurTempMobility - s_adjacentCost,
+                                                              costMode);
+                            PushPoint(s_mapX, s_mapY, (s_direction + 4) & 7, s_stepCost[s_direction & 1],
+                                      maximumCost, 1, 0, -1, -1, 0, -1, -1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    giFullySeeded = 1;
+}

@@ -298,6 +298,13 @@ source = "src/SOURCE/RECRUIT.cpp"
 # recruitUnit::Open and QuickViewRecruit register fs:[0] frames for new heroWindow.
 flags = "cpp_carcass_eh"
 
+# Retail SEARCH (0x4028b0..0x403631) is int3-separated from RECRUIT and
+# aligned like FINDPATH: register-allocated /O2 code with no frames.
+[[unit]]
+unit = "SOURCE/SEARCH"
+source = "src/SOURCE/SEARCH.cpp"
+flags = "cpp_o2"
+
 [[unit]]
 unit = "SOURCE/REMOTE"
 source = "src/SOURCE/REMOTE.cpp"

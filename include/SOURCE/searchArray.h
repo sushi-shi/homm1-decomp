@@ -17,31 +17,22 @@ H1_ENUM_BEGIN(SearchStorageConstant)
     SEARCH_PATH_CAPACITY = 256
 H1_ENUM_END(SearchStorageConstant)
 
-// Donor searchNode's real packed record; HoMM1 stores nodes inline.
+// HoMM1 search node, nine bytes. PushPoint packs the direction into the low
+// four bits of the cost word and the reseed flags above the flag bits.
 #pragma pack(push, 1)
 struct searchNode {
-    unsigned char x;
-    unsigned char y;
-    unsigned short distance;
+    signed char x;
+    signed char y;
+    unsigned short direction : SEARCH_DIRECTION_BIT_COUNT;
+    unsigned short distance : 12;
     unsigned char visited : SEARCH_FLAG_BIT_COUNT;
     unsigned char unknownFlag : SEARCH_FLAG_BIT_COUNT;
     unsigned char rvFlag1 : SEARCH_FLAG_BIT_COUNT;
-    unsigned char rvFlag2 : SEARCH_FLAG_BIT_COUNT;
-    unsigned char direction : SEARCH_DIRECTION_BIT_COUNT;
-    union {
-        struct {
-            unsigned char adjacentMonsterX;
-            unsigned char adjacentMonsterY;
-            unsigned char previousFlags;
-            unsigned char terrain;
-        };
-        struct {
-            signed char valueX;
-            signed char valueY;
-            signed char previousX;
-            signed char previousY;
-        };
-    };
+    unsigned char rvFlag2 : 5;
+    signed char adjacentMonsterX;
+    signed char adjacentMonsterY;
+    signed char previousX;
+    signed char previousY;
 };
 
 class searchArray {
@@ -58,18 +49,31 @@ public:
     // --- constructors ---
     searchArray(void);
     // --- methods ---
-    int BuildPath(short, short, short, short, int);
-    void SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int);
+    // HoMM1 retail 0x00402af0: word coordinates and cost cap (ret 0x14).
+    int BuildPath(short, short, short, short, short);
+    // HoMM1 retail 0x00402be0: word seed and cost cap (ret 0x30).
+    void SeedPosition(short, short, short, short, int, int, int, int, int, int, int, int);
+    // HoMM1 retail 0x004028b0: seeds from a hero and builds the path to the
+    // nearest cell carrying the trigger type (EVENTS finds a town with 0xa8).
+    short FindNearestObject(short, short, short, short, unsigned char);
     void Init(void);
     void Close(void);
     void Clear(void);
     short QuickDistance(short, short, short, short);
-    void PushPoint(int, int, int, int, int, int, int, int, int, int, int, int);
-    void TestPossibleDirections(int, int, signed char * const, signed char * const, int, int);
+    // HoMM1 retail 0x00424d90: word point, direction and costs, byte flags
+    // and neighbour coordinates (ret 0x30).
+    void PushPoint(short, short, unsigned short, unsigned short, unsigned short, unsigned char, signed char,
+                   signed char, signed char, unsigned char, signed char, signed char);
+    // HoMM1 retail 0x00425040: word coordinates (ret 0x18).
+    void TestPossibleDirections(short, short, signed char * const, signed char * const, int, int);
     void SeedCombatPosition(class army *);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
     short FindCombatPath(short, short, class army *, signed char);
     void PushCombatPoint(int, int, int, int);
 };
 #pragma pack(pop)
+
+// SeedPosition's working mobility (0x004c4efc) and seeding state.
+extern short giCurTempMobility;
+extern int giSeedingValid;
 #endif // HOMM1_SOURCE_SEARCHARRAY_H
