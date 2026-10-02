@@ -2424,7 +2424,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             gbPossibleShipyardFound = 1;
             gbActualShipyardFound = 1;
         } else if ((townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))
-                   && gpAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1)->m_tileIndex < 20
+                   && gpAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1)->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
                    && !gbActualShipyardFound && townPointer->m_id != giBestShipyardId) {
             i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
             if (gbPossibleShipyardFound) {
