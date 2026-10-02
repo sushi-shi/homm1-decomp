@@ -710,7 +710,7 @@ void philAI::DoAI(int player) {
                 }
                 if (eventCell) {
                     gpAdvManager->DoAIEvent(eventCell, aiHero, x, y);
-                    if (gpCurPlayer->m_currentHero == -1)
+                    if (gpCurPlayer->m_currentHero == INVALID_HERO)
                         goto nextHero;
                     ResetHeroRVs(1, aiHero->m_destinationX, aiHero->m_destinationY);
                 }
@@ -946,7 +946,7 @@ hero* philAI::DetermineHeroToMove(int player) {
     }
     if (bestHero >= 0)
         return &gpGame->m_heroRecs[gpGame->m_players[player].m_heroIds[bestHero]];
-    gpGame->m_players[player].m_currentHero = -1;
+    gpGame->m_players[player].m_currentHero = INVALID_HERO;
     return NULL;
 }
 

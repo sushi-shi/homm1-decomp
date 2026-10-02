@@ -297,6 +297,13 @@ H1_ENUM_CONST_BEGIN(ViewWorldConstant)
     VIEW_WORLD_RESOURCE_X_SHIFT = 3
 H1_ENUM_CONST_END(ViewWorldConstant)
 
+// ProcessSearch marks a dug cell with obj32-07.icn frame 1 as a shadow-only
+// object; DrawCell hides that hole on the puzzle map (Buka 2.1
+// AdventureSearchConstant DIG_HOLE_FRAME, HoMM1 frame).
+H1_ENUM_CONST_BEGIN(AdventureSearchConstant)
+    DIG_HOLE_FRAME = 1
+H1_ENUM_CONST_END(AdventureSearchConstant)
+
 // The radar panel (Buka 2.1 AdventureScreenConstant/AdventureRadarConstant
 // names, HoMM1 values): 480..624 x 16..160, two pixels per map cell; trees
 // and mountains darken the terrain colour by 3 shades and the viewport box
@@ -831,7 +838,7 @@ short advManager::Open(short id) {
         m_loopingSamples[i] = NULL;
     for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; i++) {
         m_activeSounds[i].soundId = -1;
-        m_activeSounds[i].volume = 127;
+        m_activeSounds[i].volume = ENVIRONMENT_SOUND_DEFAULT_VOLUME;
         m_activeSoundMask = 0;
     }
     GetCursorSampleSet(gConfig.walkSpeed);
@@ -1177,7 +1184,7 @@ short advManager::Main(struct tag_message& message) {
             break;
         case MESSAGE_KEY_DOWN:
             dir = -1;
-            if (gpCurPlayer->CurrentHero() != -1)
+            if (gpCurPlayer->CurrentHero() != INVALID_HERO)
                 curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
             else
                 curHero = NULL;
@@ -1395,13 +1402,13 @@ short advManager::Main(struct tag_message& message) {
                 if (gpCurPlayer->CurrentTown() != -1) {
                     m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                     DoAdvCommand();
-                } else if (gpCurPlayer->CurrentHero() != -1) {
+                } else if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
                     m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                     DoAdvCommand();
                 }
                 break;
             }
-            if (gpCurPlayer->m_currentHero != -1 && dir >= 0) {
+            if (gpCurPlayer->m_currentHero != INVALID_HERO && dir >= 0) {
                 HideRoute(1, 1, 1);
                 gpMouseManager->ReallyHidePointer();
                 evtMapCell = MoveHero(dir, 1, &TrigX, &TrigY, &moved, 0, &bEnded);
@@ -1556,7 +1563,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             if (!isVisible) {
                 QuickInfo(m_lastHoverCell, m_hoverCellY);
             } else {
-                if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER && gpCurPlayer->CurrentHero() != -1
+                if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER && gpCurPlayer->CurrentHero() != INVALID_HERO
                     && m_heroContextLocked) {
                     cellType = MAP_OBJECT_HERO;
                     mapIndex = gpCurPlayer->CurrentHero();
@@ -1601,12 +1608,12 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         } else if (isVisible) {
             hero = NULL;
             mobileResult = 0;
-            if (gpCurPlayer->m_currentHero != -1) {
+            if (gpCurPlayer->m_currentHero != INVALID_HERO) {
                 hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
                 mobileResult = gpGame->IsMobile(hero->m_id);
             }
             if (hero) {
-                if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER && gpCurPlayer->CurrentHero() != -1
+                if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER && gpCurPlayer->CurrentHero() != INVALID_HERO
                     && m_heroContextLocked) {
                     m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                     DoAdvCommand();
@@ -1801,7 +1808,7 @@ int advManager::ProcessSearch(int x, int y) {
         sampleData = LoadPlaySample("DIGSOUND.82M");
     if (pCell->m_objectIndex == MAP_CELL_NO_FRAME) {
         pCell->m_objectTileset = TILESET_OBJ32_07;
-        pCell->m_objectIndex = 1;
+        pCell->m_objectIndex = DIG_HOLE_FRAME;
         pCell->m_flags |= MAP_CELL_OBJECT_SHADOW_ONLY;
     }
     CompleteDraw(0);
@@ -1894,7 +1901,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                 return 1;
             }
             cell = GetCell(m_commandTargetX, m_commandTargetY);
-            if (gpCurPlayer->m_currentHero == -1) {
+            if (gpCurPlayer->m_currentHero == INVALID_HERO) {
                 if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
                     && gpGame->GetTown(cell->m_objectMetadata)->m_owner == giCurPlayer) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
@@ -2004,7 +2011,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                         } else if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
                             if (m_cursorType != ADVMGR_HERO_ICON_BOAT) {
                                 switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
-                                case 1:
+                                case MAP_OBJECT_ALCHEMIST_LAB:
                                 case MAP_OBJECT_SIGNPOST:
                                 case MAP_OBJECT_SKELETON:
                                 case MAP_OBJECT_DAEMON_CAVE:
@@ -2372,7 +2379,7 @@ void advManager::DrawCell(
         TileToBitmap(m_groundTiles, s_drawGroundTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         if (cell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) {
             s_drawTileset = cell0->m_objectTileset & MAP_CELL_TILESET_MASK;
-            if (!drawingPuzzle || s_drawTileset != TILESET_OBJ32_07 || cell0->m_objectIndex != 1)
+            if (!drawingPuzzle || s_drawTileset != TILESET_OBJ32_07 || cell0->m_objectIndex != DIG_HOLE_FRAME)
                 IconToBitmap(
                     m_objectIcons[s_drawTileset], gpWindowManager->m_screen, pixelX7, pixelY3,
                     cell0->m_objectIndex, 0
@@ -2733,7 +2740,7 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
         return;
     if (locatorSlot == -1) {
         activeHero = gpCurPlayer->CurrentHero();
-        if (activeHero == -1)
+        if (activeHero == INVALID_HERO)
             return;
         for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
             if (gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + i] == activeHero)
@@ -2748,11 +2755,11 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
     message.command = WIDGET_COMMAND_SET_COLOR;
     message.id = wBase + HERO_LOCATOR_HIGHLIGHT;
     message.value =
-        (gpCurPlayer->m_currentHero == whichHero && gpCurPlayer->m_currentHero != -1 && !gbAllBlack)
+        (gpCurPlayer->m_currentHero == whichHero && gpCurPlayer->m_currentHero != INVALID_HERO && !gbAllBlack)
             ? LOCATOR_HIGHLIGHT_COLOR
             : 0;
     m_adventureWindow->BroadcastMessage(message);
-    if (whichHero == -1 || gbAllBlack) {
+    if (whichHero == INVALID_HERO || gbAllBlack) {
         message.id = wBase + HERO_LOCATOR_BUTTON;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.value = locatorSlot;
@@ -2918,7 +2925,7 @@ void advManager::UpdBottomView(signed char forceUpdate, signed char drawWindow, 
 
     if (!gbThisNetHumanPlayer[giCurPlayer] || gbAllBlack)
         updated = UpdBottomViewEnemyTurn();
-    else if (gpCurPlayer->CurrentHero() == -1)
+    else if (gpCurPlayer->CurrentHero() == INVALID_HERO)
         updated = UpdBottomViewKingdom();
     else
         updated = UpdBottomViewHero();
@@ -3402,7 +3409,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     statWidget = QUICK_VIEW_STAT_FIRST;
     flagId = QUICK_VIEW_FLAG;
     message.type = MESSAGE_WIDGET;
-    if (heroId == -1)
+    if (heroId == INVALID_HERO)
         return;
     heroPtr = gpGame->GetHero(heroId);
     if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
@@ -3853,12 +3860,12 @@ void advManager::DeactivateCurrTown(void) {
 VA(0x0042ff91, 0x27)
 void advManager::DeactivateCurrHero(void) {
     DemobilizeCurrHero();
-    gpCurPlayer->m_currentHero = -1;
+    gpCurPlayer->m_currentHero = INVALID_HERO;
 }
 
 VA(0x0042ffb8, 0x59)
 void advManager::MobilizeCurrHero(int update) {
-    if (gpCurPlayer->m_currentHero == -1)
+    if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
     if (m_heroContextLocked)
         return;
@@ -3871,7 +3878,7 @@ void advManager::MobilizeCurrHero(int update) {
 VA(0x00430011, 0x199)
 void advManager::DemobilizeCurrHero(void)
 {
-    if (gpCurPlayer->m_currentHero == -1)
+    if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
     if (!m_heroContextLocked)
         return;
@@ -3952,7 +3959,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     mapCell* cellPtr;
     hero* currentHero;
 
-    if (heroId == -1)
+    if (heroId == INVALID_HERO)
         return;
     wasVisible = gpMouseManager->IsVis();
     gpMouseManager->ReallyHidePointer();
@@ -4263,7 +4270,7 @@ void advManager::CastSpell(signed char spell)
     hero *caster;
     int guardianCount;
 
-    if (gpCurPlayer->CurrentHero() != -1)
+    if (gpCurPlayer->CurrentHero() != INVALID_HERO)
         caster = gpGame->GetHero(gpCurPlayer->m_currentHero);
     else
         caster = NULL;
@@ -4346,7 +4353,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
     tilesets[TILESET_TREE32] = gpResourceManager->GetIcon("tree6.icn");
     tilesets[TILESET_MTN32] = gpResourceManager->GetIcon("mtn6.icn");
     tilesets[TILESET_TOWN32] = gpResourceManager->GetIcon("town6.icn");
-    if (gpCurPlayer->CurrentHero() != -1)
+    if (gpCurPlayer->CurrentHero() != INVALID_HERO)
         curHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     FillBitmapArea(gpWindowManager->m_screen, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, 0);
 
@@ -4919,7 +4926,7 @@ short CPanelHandler(struct tag_message &message) {
 // evidence: graph:2;base=0.587490;margin=0.208808;shape=0.255;size=0.813;calls=0.857;strings=advmice.mse;alternate=pol20:void advManager::CheckCastSpell(void)@0x000650eb
 VA(0x00433334, 0xab)
 void advManager::CheckCastSpell(void) {
-    if (gpCurPlayer->CurrentHero() != -1) {
+    if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
         MobilizeCurrHero(0);
         CompleteDraw(0);
         UpdateScreen(0, 0);
@@ -4949,7 +4956,7 @@ void advManager::AdvPanel(void)
     adventurePanel = new heroWindow(160, 40, "apanel.bin");
     if (adventurePanel == NULL)
         MemError();
-    if (gpCurPlayer->CurrentHero() == -1) {
+    if (gpCurPlayer->CurrentHero() == INVALID_HERO) {
         message.type = MESSAGE_WIDGET;
         message.id = PANEL_SEARCH;
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -5702,7 +5709,7 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
     canReach = 0;
     if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
         return;
-    if (gpCurPlayer->m_currentHero == -1) {
+    if (gpCurPlayer->m_currentHero == INVALID_HERO) {
         HideRoute(redraw, 0, 1);
         return;
     }
@@ -5770,7 +5777,7 @@ void advManager::HideRoute(int redraw, int clearDestination, int updateButton) {
             WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
 
-    if (clearDestination && gpCurPlayer->m_currentHero != -1) {
+    if (clearDestination && gpCurPlayer->m_currentHero != INVALID_HERO) {
         currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
         currentHero->m_destinationX = -1;
         currentHero->m_destinationY = -1;
@@ -5791,7 +5798,7 @@ void advManager::HideRoute(int redraw, int clearDestination, int updateButton) {
 // evidence: graph:2;base=0.465466;margin=0.233620;shape=0.306;size=0.738;calls=1.000;alternate=pol20:void advManager::CheckDimHero(void)@0x00068827
 VA(0x00435d40, 0x91)
 void advManager::CheckDimHero(void) {
-    if (!gbThisNetHumanPlayer[giCurPlayer] || gpCurPlayer->CurrentHero() == -1)
+    if (!gbThisNetHumanPlayer[giCurPlayer] || gpCurPlayer->CurrentHero() == INVALID_HERO)
         return;
     if (!gpGame->IsMobile(gpCurPlayer->CurrentHero())) {
         ShowRoute(1, 0, 0);
@@ -5829,7 +5836,7 @@ void advManager::SeedTo(int targetX, int targetY)
 
     if (!gbThisNetHumanPlayer[giCurPlayer])
         return;
-    if (gpCurPlayer->m_currentHero == -1)
+    if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
 
     currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -6005,7 +6012,7 @@ void advManager::SetInitialMapOrigin(void) {
         townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
         m_mapOriginX = townPointer->m_x - ADVMGR_VIEW_CENTER;
         m_mapOriginY = townPointer->m_y - ADVMGR_VIEW_CENTER;
-    } else if (gpCurPlayer->CurrentHero() != -1) {
+    } else if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
         MobilizeCurrHero(0);
     } else if (gpCurPlayer->m_heroCount > 0) {
         initialHero = &gpGame->m_heroRecs[gpCurPlayer->m_heroIds[0]];

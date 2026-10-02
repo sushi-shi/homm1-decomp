@@ -50,6 +50,13 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_CURSOR_SAMPLE_COUNT = 7
 H1_ENUM_CONST_END(AdventureManagerStorageConstant)
 
+// No hero: playerData::m_currentHero/CurrentHero() with nothing selected,
+// an empty locator slot, a quick view of nobody (Buka 2.1 ADVMGR
+// INVALID_HERO).
+H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
+    INVALID_HERO = -1
+H1_ENUM_CONST_END(AdventureHeroConstant)
+
 // m_heroIcons slots and m_cursorType: the four hero-class sprites (the
 // constructor loads kngt32/barb32/sorc32/wrlk32.icn; MobilizeCurrHero and
 // DoEvent store the hero class) and the boat (boat32.icn; set on boarding,
