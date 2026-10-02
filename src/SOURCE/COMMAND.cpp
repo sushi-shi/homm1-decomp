@@ -873,11 +873,102 @@ void combatManager::ShowWinLoseArtifact(class heroWindow *window, int artifact)
 VA(0x00411b07, 0x7d0)
 void combatManager::ShowDeadArmies(class heroWindow *) {}
 
-// donor PoL RVA 0x0002ec8b; preferred Buka symbol ?DoVictory@combatManager@@QAEXH@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.616103;margin=0.112225;shape=0.417;size=0.688;calls=0.762;strings=wincmbt.bin;alternate=pol20:void combatManager::DoVictory(int)@0x0002ec8b
+// Buka COMMAND.cpp DoVictory; HoMM1 has no necromancy or eagle eye and
+// grabs the screen instead of fading it.
 VA(0x004122d7, 0x7a1)
-void combatManager::DoVictory(signed char) {}
+void combatManager::DoVictory(signed char winningSide)
+{
+    int levelsGained;
+    tag_message message;
+    int i;
+    char expText[156];
+
+    levelsGained = 0;
+    iMaxTransferArtifacts = 0;
+    iCurTransferArtifact = -1;
+    FreeArmies();
+    CombatMessage(" ", 1);
+    GrabScreenBitmap(gpWindowManager->m_screen, 0, 0);
+    gpMouseManager->SetPointer(6);
+    switch (winningSide) {
+        case -1:
+            gpSoundManager->SwitchAmbientMusic(0x2b);
+            DoLoseWindow();
+            break;
+        case 0:
+        case 1:
+            if (m_heroes[winningSide]) {
+                m_experienceValue[1 - winningSide] = ExperienceValueOfStack(1 - winningSide);
+                if (gbRetreatWin)
+                    m_experienceValue[1 - winningSide] -= 500;
+                if (m_combatTown && winningSide == 1)
+                    m_experienceValue[1 - winningSide] += 500;
+                levelsGained = gpAdvManager->GiveExperience(m_heroes[winningSide], m_experienceValue[1 - winningSide],
+                                                            !gbThisNetHumanPlayer[m_heroes[winningSide]->m_owner]);
+                if (!gbRetreatWin && m_heroes[1] && m_heroes[0]) {
+                    for (i = 0; i < 14; i++) {
+                        if (m_heroes[1 - winningSide]->m_artifacts[i] >= 4
+                            && m_heroes[1 - winningSide]->m_artifacts[i] != 0x25) {
+                            iTransferArtifacts[iMaxTransferArtifacts] = m_heroes[1 - winningSide]->m_artifacts[i];
+                            iMaxTransferArtifacts++;
+                        }
+                    }
+                }
+            }
+            if (!(giCurPlayer == -1 || !gbThisNetHumanPlayer[giCurPlayer] || m_playerId[winningSide] != giCurPlayer)
+                || !(giCurPlayer == -1 || m_playerId[winningSide] == -1 || gbThisNetHumanPlayer[giCurPlayer]
+                     || !gbThisNetHumanPlayer[m_playerId[winningSide]])
+                || !(m_playerId[winningSide] == -1 || !gbThisNetHumanPlayer[m_playerId[winningSide]])) {
+                gpSoundManager->SwitchAmbientMusic(0x2c);
+                m_winLoseWindow = new heroWindow(0x9f, 2, "wincmbt.bin");
+                if (m_winLoseWindow == 0)
+                    MemError();
+                if (m_heroes[winningSide]) {
+                    if (gbCombatSurrender)
+                        sprintf(gText, cBattleResults[0]);
+                    else if (gbRetreatWin)
+                        sprintf(gText, cBattleResults[1]);
+                    else
+                        sprintf(gText, cBattleResults[2]);
+                    if (levelsGained > 0 && winningSide == 0 && giNumHumanPlayers > 1)
+                        sprintf(expText, cBattleResults[10], m_heroes[winningSide]->m_name,
+                                m_experienceValue[1 - winningSide], levelsGained);
+                    else
+                        sprintf(expText, cBattleResults[3], m_heroes[winningSide]->m_name,
+                                m_experienceValue[1 - winningSide]);
+                    strcat(gText, expText);
+                    m_heroes[winningSide]->ApplyBattleWinTemps();
+                } else {
+                    if (gbCombatSurrender)
+                        sprintf(gText, cBattleResults[0]);
+                    else if (gbRetreatWin)
+                        sprintf(gText, cBattleResults[1]);
+                    else
+                        sprintf(gText, cBattleResults[2]);
+                }
+                message.type = MESSAGE_WIDGET;
+                message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+                message.payload.widget.id = 0x65;
+                message.payload.widget.data.text = gText;
+                m_winLoseWindow->BroadcastMessage(message);
+                ShowDeadArmies(m_winLoseWindow);
+                gpWindowManager->DoDialog(m_winLoseWindow, WinCombatHandler, 0);
+                delete m_winLoseWindow;
+                if (m_heroes[1 - winningSide])
+                    m_heroes[1 - winningSide]->ApplyBattleLossTemps();
+            } else {
+                if (m_heroes[winningSide])
+                    m_heroes[winningSide]->ApplyBattleWinTemps();
+                if (m_heroes[1 - winningSide])
+                    m_heroes[1 - winningSide]->ApplyBattleLossTemps();
+                gpSoundManager->SwitchAmbientMusic(0x2b);
+                DoLoseWindow();
+            }
+            break;
+    }
+    gMapX = gpAdvManager->m_mapOriginX;
+    gMapY = gpAdvManager->m_mapOriginY;
+}
 
 // Buka COMMAND.cpp DoLoseWindow; HoMM1 walks the defeated hero across a
 // scrolling backdrop until the window's button is released.

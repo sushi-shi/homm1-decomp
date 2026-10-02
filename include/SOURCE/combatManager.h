@@ -56,14 +56,17 @@ public:
     char m_unknown30[0x10];
     hexcell m_hexCells[45];
     short m_unknown25c;
-    char m_unknown25e[0x48];
+    char m_unknown25e[0x40];
+    // DoVictory: an attacker winning here earns the castle bonus.
+    class town *m_combatTown;
+    char m_unknown2a2[4];
     class hero *m_heroes[2];
     char m_unknown2ae[8];
     // Set by a surrender (ProcessNextAction).
     signed char m_sideDefeated[2];
     char m_unknown2b8[2];
     signed char m_playerId[2];
-    char m_unknown2bc[8];
+    int m_experienceValue[2];
     signed char m_heroCastSpell[2];
     char m_unknown2c6[4];
     army m_armies[2][6];
