@@ -6,12 +6,15 @@
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
+#include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/message.h>
+#include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/textEntryWidget.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdlib.h>
 #include <string.h>
