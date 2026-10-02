@@ -6,8 +6,18 @@
 #include <SOURCE/terrainTypes.h>
 #include <Domains.h>
 
+// Town building ids: the order of retail gBuildingNames (0x004933a8), then
+// six dwellings named per race by gDwellingNames. town::m_buildings holds
+// bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
+// at the dock cell, 5 is never built and 0 has mage-guild levels.
 H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_MAGE_GUILD = 0,
+    BUILDING_SLOT_THIEVES_GUILD = 1,
+    BUILDING_SLOT_TAVERN = 2,
+    BUILDING_SLOT_SHIPYARD = 3,
+    BUILDING_SLOT_WELL = 4,
+    BUILDING_SLOT_TENT = 5,
+    BUILDING_SLOT_CASTLE = 6,
     BUILDING_SLOT_DWELLING_FIRST = 7
 H1_ENUM_END(BuildingSlotType)
 

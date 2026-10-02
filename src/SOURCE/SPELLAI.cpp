@@ -90,32 +90,32 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
     target = NULL;
     *bestEffect = 0;
     switch (spell) {
-    case SPELL_CURE:
-    case SPELL_DISPEL_MAGIC:
-    case SPELL_ARMAGEDDON:
-    case SPELL_STORM:
+    case 3:
+    case 13:
+    case 15:
+    case 16:
         spellMode = 0;
         break;
-    case SPELL_FIREBALL:
-    case SPELL_METEOR_SHOWER:
+    case 0:
+    case 17:
         spellMode = 1;
         break;
-    case SPELL_TELEPORT:
-    case SPELL_RESURRECT:
-    case SPELL_HASTE:
-    case SPELL_BLESS:
-    case SPELL_PROTECTION:
-    case SPELL_ANTI_MAGIC:
+    case 2:
+    case 4:
+    case 5:
+    case 8:
+    case 9:
+    case 12:
         spellMode = 2;
         side = m_currentSide;
         break;
-    case SPELL_LIGHTNING_BOLT:
-    case SPELL_SLOW:
-    case SPELL_BLIND:
-    case SPELL_CURSE:
-    case SPELL_TURN_UNDEAD:
-    case SPELL_BERZERKER:
-    case SPELL_PARALYZE:
+    case 1:
+    case 6:
+    case 7:
+    case 10:
+    case 11:
+    case 14:
+    case 18:
         spellMode = 3;
         side = 1 - m_currentSide;
         break;
@@ -131,54 +131,54 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
             giSpellAITargetSide = m_hexCells[curHex].m_occupantSide;
         }
         switch (spell) {
-        case SPELL_CURE:
+        case 3:
             EffectSpellCure(&spellEffect, m_currentSide, 1);
             break;
-        case SPELL_DISPEL_MAGIC:
+        case 13:
             EffectSpellCure(&spellEffect, 2, 0);
             break;
-        case SPELL_RESURRECT:
+        case 4:
             EffectSpellResurrect(&spellEffect, curHex);
             break;
-        case SPELL_ARMAGEDDON:
+        case 15:
             EffectSpellDamage(&spellEffect, spell, 50, curHex);
             break;
-        case SPELL_STORM:
+        case 16:
             EffectSpellDamage(&spellEffect, spell, 25, curHex);
             break;
-        case SPELL_FIREBALL:
+        case 0:
             EffectSpellDamage(&spellEffect, spell, 10, curHex);
             break;
-        case SPELL_METEOR_SHOWER:
+        case 17:
             EffectSpellDamage(&spellEffect, spell, 25, curHex);
             break;
-        case SPELL_LIGHTNING_BOLT:
+        case 1:
             EffectSpellDamage(&spellEffect, spell, 25, curHex);
             break;
-        case SPELL_HASTE:
-        case SPELL_BLESS:
-        case SPELL_PROTECTION:
-        case SPELL_ANTI_MAGIC:
-            if (spell == SPELL_ANTI_MAGIC && m_heroes[1 - m_currentSide] == NULL)
+        case 5:
+        case 8:
+        case 9:
+        case 12:
+            if (spell == 12 && m_heroes[1 - m_currentSide] == NULL)
                 spellEffect = 0;
             else
                 spellEffect = RawEffectSpellInfluence(target, spell) >> giSpellAIEffectShift;
             if (target->m_spellEffect >= 0)
                 spellEffect -= RawEffectSpellInfluence(target, target->m_spellEffect);
             break;
-        case SPELL_SLOW:
-        case SPELL_BLIND:
-        case SPELL_CURSE:
-        case SPELL_BERZERKER:
-        case SPELL_PARALYZE:
+        case 6:
+        case 7:
+        case 10:
+        case 14:
+        case 18:
             spellEffect = -(RawEffectSpellInfluence(target, spell) >> giSpellAIEffectShift);
             if (target->m_spellEffect >= 0)
                 spellEffect += RawEffectSpellInfluence(target, target->m_spellEffect);
             break;
-        case SPELL_TELEPORT:
+        case 2:
             spellEffect = 0;
             break;
-        case SPELL_TURN_UNDEAD:
+        case 11:
             if (target->m_creatureType == 0x1a)
                 spellEffect = gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
             else
@@ -378,11 +378,11 @@ void combatManager::EffectSpellResurrect(int* effect, int hex)
     int num;
 
     targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-    if (targetArmy->m_creatureType == 0x17 || targetArmy->m_spellEffect == 12) {
+    if (targetArmy->m_creatureType == 0x17 || targetArmy->m_spellEffect == SPELL_ANTI_MAGIC) {
         *effect = 0;
         return;
     }
-    num = m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
+    num = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50 / targetArmy->m_stats.hitPoints;
     if (targetArmy->m_quantity + num > targetArmy->m_initialQuantity)
         num = targetArmy->m_initialQuantity - targetArmy->m_quantity;
     *effect = gMonsterDatabase[targetArmy->m_creatureType].fightValue * num;

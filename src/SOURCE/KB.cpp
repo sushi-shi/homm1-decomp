@@ -778,9 +778,9 @@ signed char CanBuild(town* t, short building) {
     unsigned short required;
     if (BitTest(gpGame->m_townBuiltToday, t->m_id))
         return 0;
-    if (building != 6 && !(t->m_buildings & 0x40))
+    if (building != BUILDING_SLOT_CASTLE && !(t->m_buildings & (1 << BUILDING_SLOT_CASTLE)))
         return 0;
-    if (building == 3) {
+    if (building == BUILDING_SLOT_SHIPYARD) {
         cell = gpAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
         if (cell->m_tileIndex < 20)
             return 1;
@@ -789,7 +789,7 @@ signed char CanBuild(town* t, short building) {
     }
     if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= 3)
         return 0;
-    if (building == 5)
+    if (building == BUILDING_SLOT_TENT)
         return 0;
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
@@ -812,7 +812,7 @@ signed char CanBuy(town* t, short type) {
         t->m_type,
         type,
         cost,
-        (t->m_buildings & 1) ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1) : 0
+        (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)) ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1) : 0
     );
     rec = &gpGame->m_players[giCurPlayer];
     for (i = 0; i < RESOURCE_COUNT; ++i) {
@@ -1352,7 +1352,7 @@ VA(0x00452e00, 0x99)
 void HandleRemoteDeadPlayerExit(int position) {
     if (position == giThisGamePos) {
         if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
-            ShutDown(0);
+            ShutDown(NULL);
         RemoteCleanup();
     } else if (giNumHumanPlayers == 2) {
         giNumHumanPlayers--;
@@ -1480,7 +1480,7 @@ void CheckEndGame(int forced) {
                     gColorNames[gpGame->m_players[(signed char)player].Color()]);
                 gText[0] -= 32;
                 NormalDialog(
-                    gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                    gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[(signed char)player].Color(), NORMAL_DIALOG_NO_RESOURCE,
                     0, -1);
             } else if (!pd->m_townCount) {
                 if (pd->m_unknown55 == -1) {
@@ -1492,8 +1492,8 @@ void CheckEndGame(int forced) {
                             gColorNames[gpGame->m_players[(signed char)player].Color()]);
                         gText[0] -= 32;
                         NormalDialog(
-                            gText, 1, -1, -1, 9, gpGame->m_players[(signed char)player].Color(),
-                            -1, 0, -1);
+                            gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_CREST, gpGame->m_players[(signed char)player].Color(),
+                            NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                     }
                     pd->m_unknown55 = 7;
                 } else if (!pd->m_unknown55) {
@@ -1514,7 +1514,7 @@ void CheckEndGame(int forced) {
                         gText[0] -= 32;
                     }
                     NormalDialog(
-                        gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                        gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[(signed char)player].Color(), NORMAL_DIALOG_NO_RESOURCE,
                         0, -1);
                 }
             } else {
@@ -1567,8 +1567,8 @@ void CheckEndGame(int forced) {
                         for (slot = 0; slot < gpGame->m_players[player].m_heroCount; slot++) {
                             artifactHero =
                                 gpGame->GetHero(gpGame->m_players[player].m_heroIds[slot]);
-                            if (artifactHero->HasArtifact(0) || artifactHero->HasArtifact(1)
-                                || artifactHero->HasArtifact(2) || artifactHero->HasArtifact(3))
+                            if (artifactHero->HasArtifact(ARTIFACT_ULTIMATE_BOOK) || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_SWORD)
+                                || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_CLOAK) || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_WAND))
                                 ultimateOwner = player;
                         }
                     }

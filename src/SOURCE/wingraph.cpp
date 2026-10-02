@@ -861,7 +861,7 @@ int WGAppPaint(void* window, void* paintDC) {
     char unused;
 
     unused = 0;
-    if (screenImage.bits != 0) {
+    if (screenImage.bits != NULL) {
         paintDC = BeginPaint(static_cast<HWND>(window), &paintStruct);
         SelectPalette(static_cast<HDC>(paintDC), hpalApp, 0);
         RealizePalette(static_cast<HDC>(paintDC));

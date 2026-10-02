@@ -690,7 +690,7 @@ short advManager::Main(struct tag_message& message) {
                     break;
                 }
                 if (helpText >= 0)
-                    NormalDialog(cAdvMenuHelp[helpText], 4, -1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog(cAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 break;
             }
             break;
@@ -874,7 +874,7 @@ short advManager::Main(struct tag_message& message) {
                 goto confirmGameCommand;
             confirmGameCommand:
                 bQuit = 1;
-                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                     bQuit = 0;
                 else
@@ -1075,14 +1075,14 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             } else {
                 if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
                     && m_heroContextLocked) {
-                    cellType = MAP_OBJECT_HERO;
+                    cellType = 0x3d;
                     mapIndex = gpCurPlayer->CurrentHero();
                 } else {
-                    cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                    cellType = hoverCell->m_triggerType & 0x7f;
                     mapIndex = hoverCell->m_objectMetadata;
                 }
                 switch (cellType) {
-                case MAP_OBJECT_HERO:
+                case 0x3d:
                     curX = m_lastHoverCell * 32 - 73;
                     if (curX < 16)
                         curX = 16;
@@ -1095,7 +1095,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         curY = 302;
                     HeroQuickView(mapIndex, -1, curX, curY);
                     break;
-                case MAP_OBJECT_TOWN:
+                case 0x28:
                     curX = m_lastHoverCell * 32 - 89;
                     if (curX < 16)
                         curX = 16;
@@ -1116,7 +1116,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 }
             }
         } else if (isVisible) {
-            hero = NULL;
+            hero = 0;
             mobileResult = 0;
             if (gpCurPlayer->m_currentHero != -1) {
                 hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -1139,9 +1139,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     *eventCell = DoAdvCommand();
                 }
             } else {
-                cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                cellType = hoverCell->m_triggerType & 0x7f;
                 mapIndex = hoverCell->m_objectMetadata;
-                if (cellType == MAP_OBJECT_HERO) {
+                if (cellType == 0x3d) {
                     if (gpCurPlayer->CurrentHero() == mapIndex) {
                         m_selectedCell = 2;
                         DoAdvCommand();
@@ -1149,7 +1149,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         SetHeroContext(mapIndex, 0);
                     }
                 }
-                if (cellType == MAP_OBJECT_TOWN) {
+                if (cellType == 0x28) {
                     if (gpCurPlayer->CurrentTown() == mapIndex) {
                         m_selectedCell = 3;
                         *eventCell = DoAdvCommand();
@@ -1162,7 +1162,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         break;
     case 9:
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            NormalDialog("World Map (Left click to move viewing area).", NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog("World Map (Left click to move viewing area).", 4, -1, -1, -1, 0, -1, 0, -1);
             break;
         }
         DemobilizeCurrHero();
@@ -1229,7 +1229,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         && message->id <= 2200)
         NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
                      "and shows the date.  Left click here to cycle through these windows.",
-                     NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                     4, -1, -1, -1, 0, -1, 0, -1);
     return 1;
 }
 
@@ -2397,7 +2397,7 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
             m_adventureWindow->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = gpGame->GetTown(whichTown)->m_type + 12;
-            if (gpGame->GetTown(whichTown)->m_buildings & 0x40)
+            if (gpGame->GetTown(whichTown)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
                 message.value += 4;
             m_adventureWindow->BroadcastMessage(message);
         }
@@ -2757,7 +2757,7 @@ signed char advManager::UpdBottomViewKingdom(void) {
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
 
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
-        if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & 0x40)
+        if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & (1 << BUILDING_SLOT_CASTLE))
             nCastles++;
         else
             numVillages++;
@@ -3166,13 +3166,13 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     message.command = WIDGET_COMMAND_SET_FRAME;
     message.id = 2;
     message.value = townPointer->m_type + 12;
-    if (gpGame->GetTown(townId)->m_buildings & 0x40)
+    if (gpGame->GetTown(townId)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
         message.value += 4;
     viewWin->BroadcastMessage(message);
     if (townPointer->m_owner == -1) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = 8;
-        message.value = 4;
+        message.value = WIDGET_FLAG_DRAW;
         viewWin->BroadcastMessage(message);
         message.id++;
         viewWin->BroadcastMessage(message);
@@ -5643,7 +5643,7 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
     if (loaded < maxSamples) {
         for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-            if (keep[i] == 0 && m_loopingSamples[i] != NULL) {
+            if (keep[i] == 0 && m_loopingSamples[i] != 0) {
                 ++keep[i];
                 ++loaded;
                 if (loaded >= maxSamples)
@@ -5654,9 +5654,9 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
 disposeSamples:
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-        if (m_loopingSamples[i] != NULL && keep[i] == 0) {
+        if (m_loopingSamples[i] != 0 && keep[i] == 0) {
             gpResourceManager->Dispose(m_loopingSamples[i]);
-            m_loopingSamples[i] = NULL;
+            m_loopingSamples[i] = 0;
         }
     }
 }

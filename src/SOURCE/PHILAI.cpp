@@ -149,7 +149,7 @@ void philAI::CheckBuyStuff(void) {
         }
     }
     if (giBuildBoat[giCurPlayer] >= 0) {
-        if ((dockTown->m_buildings & 8) && gpCurPlayer->m_resources[RESOURCE_GOLD] >= 1000
+        if ((dockTown->m_buildings & (1 << BUILDING_SLOT_SHIPYARD)) && gpCurPlayer->m_resources[RESOURCE_GOLD] >= 1000
             && gpCurPlayer->m_resources[RESOURCE_WOOD] >= 10) {
             if (gpGame->CreateBoat(dockTown->m_x - 1, dockTown->m_y + 1) != -1) {
                 gpCurPlayer->m_resources[RESOURCE_GOLD] -= 1000;
@@ -207,15 +207,15 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
 
     bestDirection = -1;
     maxValue = 100;
-    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_STONE_LITHS)
+    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & 0x7f) == 0x29)
         return 0;
     for (dirIndex = 0; dirIndex < 8; dirIndex++) {
         if (gpAdvManager->ValidMoveWithEvent(pHero, dirIndex)) {
             x = normalDirTable[dirIndex].x + pHero->m_x;
             y = normalDirTable[dirIndex].y + pHero->m_y;
-            if ((gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_EVENT) && !(mapExtra[x][y] & 0x80)
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_STONE_LITHS
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WHIRLPOOL) {
+            if ((gpAdvManager->GetCell(x, y)->m_triggerType & 0x80) && !(mapExtra[x][y] & 0x80)
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x29
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x2c) {
                 value = ValueOfEventAtPosition(pHero, x, y, 2, &iChance);
                 if (iChance > 80 && value > maxValue) {
                     maxValue = value;
@@ -329,12 +329,12 @@ void philAI::CheckBerserk(hero* pHero) {
         for (y = 0; y < 72; y++) {
             cell = gpAdvManager->GetCell(x, y);
             switch (cell->m_triggerType) {
-            case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+            case 0xa8:
                 if (gpGame->m_townOwners[cell->m_objectMetadata] != pHero->m_owner) {
                     if (gpGame->m_townOwners[cell->m_objectMetadata] != -1) {
                         enemy = FightValueOfStack(
                             &gpGame->GetTown(cell->m_objectMetadata)->m_army,
-                            NULL,
+                            0,
                             1,
                             1,
                             cell->m_objectMetadata
@@ -346,14 +346,14 @@ void philAI::CheckBerserk(hero* pHero) {
                     }
                 }
                 break;
-            case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
+            case 0xbd:
                 if (gpGame->m_availableHeroes[cell->m_objectMetadata] != pHero->m_owner) {
                     enemyHero = gpGame->GetHero(cell->m_objectMetadata);
                     enemy = FightValueOfStack(
                         &enemyHero->m_army,
-                        NULL,
+                        0,
                         1,
-                        enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN),
+                        enemyHero->m_locationType == 0xa8,
                         enemyHero->m_occupiedTown
                     );
                     if (enemy * 2 > heroFightValue)
@@ -390,7 +390,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         y += normalDirTable[gpSearchArray->m_directions[i]].y;
         if (abs(x - pHero->m_x) <= 7 && abs(y - pHero->m_y) <= 7) {
             cell = gpAdvManager->GetCell(x, y);
-            if (!(cell->m_triggerType & 0x80) && !(cell->m_unknown07 & 0x80)) {
+            if (!(cell->m_triggerType & MAP_TRIGGER_EVENT) && !(cell->m_unknown07 & 0x80)) {
                 bestX = x;
                 bestY = y;
                 length = gpSearchArray->m_pathLength - i;
@@ -404,7 +404,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         pHero->m_remainingMobility = 0;
     else
         pHero->m_remainingMobility -= 12;
-    pHero->UseSpell(27);
+    pHero->UseSpell(SPELL_DIMENSION_DOOR);
     return 1;
 }
 
@@ -732,9 +732,9 @@ void philAI::GetBestBHC(int, BHC& best) {
 
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
-        strengths[townNo] = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0) + 400;
+        strengths[townNo] = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) + 400;
         total += strengths[townNo];
-        if (townPointer->m_buildings & 0x40)
+        if (townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))
             totalWeights += 10;
         else
             totalWeights += 7;
@@ -744,7 +744,7 @@ void philAI::GetBestBHC(int, BHC& best) {
     meanStrength = total / totalWeights;
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
-        ideal[townNo] = meanStrength * ((townPointer->m_buildings & 0x40) ? 10 : 7) + 400;
+        ideal[townNo] = meanStrength * ((townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE)) ? 10 : 7) + 400;
     }
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
@@ -767,7 +767,7 @@ void philAI::GetBestBHC(int, BHC& best) {
             best = choice;
         }
         CheckDoMain(0, 0);
-        if (gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer && (townPointer->m_buildings & 0x40)) {
+        if (gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer && (townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))) {
             GetBestHero(townPointer, choice, fValue);
             fValue = fValue * ((100 - Random(0, 10)) / 100.0);
             if (!bHeroBuiltThisTurn && giCurTurn > 5 && fValue > 0.0f) {
@@ -896,21 +896,21 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                     if (gpSearchArray->m_cells[x][y].distance > mobility * 2)
                         valid = 0;
                     else
-                        valid = thisCell->m_triggerType == 0xa8 || thisCell->m_triggerType == 0xbd
-                                || (thisCell->m_triggerType == 0xbe && !(pHero->m_eventFlags & 0x80));
+                        valid = thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) || thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                                || (thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && !(pHero->m_eventFlags & 0x80));
                 } else {
-                    valid = (thisCell->m_triggerType & 0x80)
-                            || (thisCell->m_triggerType == 0x1f && (pHero->m_eventFlags & 0x80))
+                    valid = (thisCell->m_triggerType & MAP_TRIGGER_EVENT)
+                            || (thisCell->m_triggerType == MAP_OBJECT_COAST && (pHero->m_eventFlags & 0x80))
                             || (x % spacing == 0 && y % spacing == 0
                                 && (((pHero->m_eventFlags & 0x80)
-                                     && giGroundToTerrain[thisCell->m_tileIndex] == 0)
+                                     && giGroundToTerrain[thisCell->m_tileIndex] == TERRAIN_WATER)
                                     || (!(pHero->m_eventFlags & 0x80)
-                                        && giGroundToTerrain[thisCell->m_tileIndex] != 0)))
+                                        && giGroundToTerrain[thisCell->m_tileIndex] != TERRAIN_WATER)))
                             || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
                 if (valid) {
                     for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
-                        if (thisCell->m_triggerType != 0xa8 && thisCell->m_triggerType != 0xbd
+                        if (thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) && thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                             && gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id
                             && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX == x
                             && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY == y) {
@@ -1173,7 +1173,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         adjustedValue1 = (dwellingTotal7 * 0.33 + 0.66) * adjustedValue1;
         break;
     case 2:
-        adjustedValue1 = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) / 3000.0f * adjustedValue1;
+        adjustedValue1 = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0) / 3000.0f * adjustedValue1;
         break;
     case 7:
     case 8:
@@ -1208,7 +1208,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         break;
     }
     LikelihoodOfEnemyAttacking(
-        townPointer, NULL, estimatedAttackChance36, enemyStrengthLocal28, currentAttackTurns, projectedAttackValue,
+        townPointer, 0, estimatedAttackChance36, enemyStrengthLocal28, currentAttackTurns, projectedAttackValue,
         estimatedAttackWeeks8, dangerRating
     );
     adjustedValue1 = (1.0 - dangerRating * 3.0) * adjustedValue1;
@@ -1525,7 +1525,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     best.type = 1;
     best.what = bestHero;
     bestValue = bestCost;
-    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == 0xbd)
+    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))
         bestValue -= 200.0f;
 }
 
@@ -1814,7 +1814,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
         return gaiHeroStrategicRVOfPos[targetX][targetY];
     }
     worth29 = 0;
-    madeSearch = 0;
+    madeSearch = NULL;
     *liveChance = 100;
     if (bSVSearchArrayInUse) {
         madeSearch = new searchArray;
@@ -1826,7 +1826,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
         pSearch = &SVSearchArray;
     }
     inBoat = pHero->m_eventFlags & 0x80;
-    if (inBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == 0x1f)
+    if (inBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == MAP_OBJECT_COAST)
         inBoat = 0;
     if (immediate) {
         seedDist8 = 60;
@@ -1841,12 +1841,12 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
         for (mapY9 = 0; mapY9 < 72; mapY9++) {
             if (pSearch->m_cells[x][mapY9].visited) {
                 cell = gpAdvManager->GetCell(x, mapY9);
-                if ((!immediate && (cell->m_triggerType & 0x80)) || (immediate && cell->m_triggerType == 0xbd)) {
+                if ((!immediate && (cell->m_triggerType & MAP_TRIGGER_EVENT)) || (immediate && cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))) {
                     CheckDoMain(0, 0);
                     worth29 += ValueOfEventAtPosition(pHero, x, mapY9, 0, &iDummy)
                                / (pSearch->m_cells[x][mapY9].distance + 2.0);
                 }
-                if (cell->m_triggerType == 0xbd) {
+                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                     if (gaiHeroLiveChance[cell->m_objectMetadata] == -32001)
                         ValueOfEventAtPosition(pHero, x, mapY9, 0, &iDummy);
                     if (gaiHeroLiveChance[cell->m_objectMetadata] != -32001
@@ -1870,7 +1870,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
                     }
                 }
                 if (pSearch->m_cells[x][mapY9].distance < 32
-                    && gpAdvManager->GetCell(x, mapY9)->m_triggerType == 0xbd
+                    && gpAdvManager->GetCell(x, mapY9)->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                     && gpAdvManager->GetCell(x, mapY9)->m_objectMetadata != pHero->m_id
                     && gpGame->m_availableHeroes[gpAdvManager->GetCell(x, mapY9)->m_objectMetadata]
                            == pHero->m_owner)
@@ -1917,7 +1917,7 @@ VA(0x0041fb80, 0xb1)
 int philAI::ValueOfTown(town* townPointer) {
     int sum = 0;
     int building;
-    for (building = 0; building < 13; building++) {
+    for (building = BUILDING_SLOT_MAGE_GUILD; building < 13; building++) {
         if (townPointer->m_buildings & (1 << building))
             sum += GetBuildingBaseResourceValue(
                 townPointer->m_type,
@@ -2608,8 +2608,8 @@ void philAI::BuildBuilding(town* townPointer, short building) {
     GetBuildingCost(townPointer->m_type, building, cost, townPointer->m_buildState);
     for (i = 0; i < PLAYER_RESOURCE_COUNT; i++)
         gpCurPlayer->m_resources[i] -= cost[i];
-    if (building == 0) {
-        if (townPointer->m_buildings & 1)
+    if (building == BUILDING_SLOT_MAGE_GUILD) {
+        if (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
             townPointer->m_buildState++;
         if (townPointer->m_occupyingHeroId != -1)
             townPointer->GiveSpells();
@@ -2618,7 +2618,7 @@ void philAI::BuildBuilding(town* townPointer, short building) {
     if (building >= 7 && building <= 12)
         townPointer->m_garrison[building - 7] =
             gMonsterDatabase[gDwellingType[townPointer->m_type][building - 7]].growth;
-    if (building == 6) {
+    if (building == BUILDING_SLOT_CASTLE) {
         townPointer->m_buildings &= ~0x20;
         townPointer->XformToCastle();
     }

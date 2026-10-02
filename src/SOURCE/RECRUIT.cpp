@@ -96,7 +96,7 @@ short recruitUnit::Open(short priority) {
         RECRUIT_WINDOW_Y,
         const_cast<char*>(m_resourceType == RECRUIT_NO_RESOURCE ? "recruit0.bin" : "recruit1.bin")
     );
-    if (m_window == NULL)
+    if (m_window == 0)
         MemError();
     m_quantity = 0;
     m_goldTotal = 0;

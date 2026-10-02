@@ -56,8 +56,8 @@ void advManager::StopCursor(signed char stopSound)
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
         m_cursorFrameCount = 0;
         EveryOther = 0;
-        hPrevMoveSound = NULL;
-        hLastMoveSound = NULL;
+        hPrevMoveSound = 0;
+        hLastMoveSound = 0;
     }
     m_cursorCycle = 0;
     if (m_previousCursorMapX != -1) {
@@ -75,7 +75,7 @@ extern short S1cursorBaseFrame;
 extern short S1cursorFrameCount;
 extern short S1cursorCycle;
 extern short S1cursorTurning;
-extern H1_ENUM_STORAGE(TerrainType, signed char) giGroundToTerrain[];
+extern signed char giGroundToTerrain[];
 
 // Buka CURSOR.cpp:99 DrawCursor; HoMM1 draws the hero shadow first and
 // counts flag frames with m_updateMaxY.
@@ -598,32 +598,32 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
     if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
         return 0;
     cell = &m_mapData[newX][newY];
-    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
-        case MAP_OBJECT_BUOY:
+    switch (cell->m_triggerType & 0x7f) {
+        case 3:
             if (!(movingHero->m_eventFlags & 0x80))
                 return 1;
             else
                 return 0;
-        case MAP_OBJECT_HERO:
+        case 61:
             if (movingHero->m_eventFlags & 0x80) {
                 if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & 0x80)
                     return 1;
                 else
                     return 0;
             }
-        case MAP_OBJECT_SIGNPOST:
-        case MAP_OBJECT_SKELETON:
-        case MAP_OBJECT_TREASURE_CHEST:
-        case MAP_OBJECT_CAMPFIRE:
-        case MAP_OBJECT_FOUNTAIN:
-        case MAP_OBJECT_ANCIENT_LAMP:
-        case MAP_OBJECT_MONSTER:
-        case MAP_OBJECT_OBELISK:
-        case MAP_OBJECT_OASIS:
-        case MAP_OBJECT_RESOURCE:
-        case MAP_OBJECT_STATUE:
-        case MAP_OBJECT_WELL:
-        case MAP_OBJECT_ARTIFACT:
+        case 2:
+        case 4:
+        case 6:
+        case 8:
+        case 9:
+        case 11:
+        case 26:
+        case 27:
+        case 28:
+        case 29:
+        case 36:
+        case 43:
+        case 48:
             if (m_cursorType == 4)
                 return 0;
             else
