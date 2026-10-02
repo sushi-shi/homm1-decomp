@@ -1987,12 +1987,12 @@ void advManager::DrawCell(
                 if (screenX == 0 || screenY <= 1 || screenX == 14 || screenY == 14) {
                     FlipClippedIconToBitmap(
                         m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
                     if (flagColor != -1)
                         FlipClippedIconToBitmap(
                             m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
-                            pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                         );
                 } else {
                     if (m_drawHeroShadows && iconIndex != 4)
@@ -2002,35 +2002,35 @@ void advManager::DrawCell(
                         );
                     FlipIconToBitmap(
                         m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
                     if (flagColor != -1)
                         FlipIconToBitmap(
                             m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
-                            pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                         );
                 }
             } else if (screenX == 0 || screenY <= 1 || screenX == 14 || screenY == 14) {
                 ClippedIconToBitmap(
-                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 31 + heroYOffset6,
+                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 32 - 1 + heroYOffset6,
                     frame, 0
                 );
                 if (flagColor != -1)
                     ClippedIconToBitmap(
                         m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
             } else {
                 if (m_drawHeroShadows && iconIndex != 4)
                     DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, pixelX7, pixelY3 + 31, frame, 0);
                 IconToBitmap(
-                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 31 + heroYOffset6,
+                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 32 - 1 + heroYOffset6,
                     frame, 0
                 );
                 if (flagColor != -1)
                     IconToBitmap(
                         m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
             }
         }
@@ -2075,13 +2075,13 @@ mapCell* advManager::GetCell(short x, short y) {
 
 VA(0x0042b74a, 0x57e)
 void advManager::UpdateRadar(signed char updateScreen, int partial) {
-    short color;
-    int lastX;
-    int lastY;
-    short x;
-    short owner;
     short y;
     int firstX;
+    int lastY;
+    short x;
+    short color;
+    short owner;
+    int lastX;
     int firstY;
     mapCell* cellPtr;
 
@@ -2256,8 +2256,8 @@ VA(0x0042c25e, 0x3c8)
 void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, signed char updateScreen) {
     tag_message message;
     signed char whichHero;
-    int i;
     int wBase;
+    int i;
     int activeHero;
     hero* hPtr;
     int moveFrame;
@@ -2894,25 +2894,25 @@ signed char advManager::UpdBottomViewHero(void) {
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
 VA(0x0042e411, 0xd46)
 void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, short windowX, short windowY) {
+    short savedOriginX;
     short portraitId;
-    short creatureY;
-    short creatureIconHeight;
+    short width;
     hero* heroPtr;
+    short flagId;
+    char* labelText[5];
+    short armyW;
+    textWidget* sizeTexts[5];
+    short j;
+    short leftEdge;
     tag_message message;
     short numArmies;
-    short j;
-    short enable;
-    char* labelText[5];
+    short creatureY;
     iconWidget* monWidgets[5];
-    short flagId;
-    textWidget* sizeTexts[5];
-    short savedOriginX;
-    short width;
     heroWindow* viewWin;
     short savedOriginY;
+    short creatureIconHeight;
+    short enable;
     short statWidget;
-    short armyW;
-    short leftEdge;
 
     armyW = 160;
     leftEdge = 9;
@@ -3216,19 +3216,19 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
             MemError();
         viewWin->AddWidget(garrisonWidget, -1);
     } else {
-        short row2;
-        signed char monster;
-        signed char slot;
         short slotIndex;
-        iconWidget* iconWgts[5];
-        char* labels[5];
+        short rowY;
         int xAdjust;
         short offsetX;
+        signed char monster;
         short step;
+        iconWidget* iconWgts[5];
+        short row2;
+        short row1;
         textWidget* texts[5];
         signed char dummy;
-        short rowY;
-        short row1;
+        char* labels[5];
+        signed char slot;
 
         rowY = 75;
         switch (numArmies) {
@@ -3561,8 +3561,8 @@ void advManager::DoHeroKnob(void) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + 195)
                 message.y = offset + 195;
-            if (message.y > offset + 268)
-                message.y = offset + 268;
+            if (message.y > offset + 195 + 73)
+                message.y = offset + 195 + 73;
             gpMouseManager->Main(message);
             m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
@@ -3613,8 +3613,8 @@ void advManager::DoTownKnob(void) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
             if (message.y < offset + 195)
                 message.y = offset + 195;
-            if (message.y > offset + 268)
-                message.y = offset + 268;
+            if (message.y > offset + 195 + 73)
+                message.y = offset + 195 + 73;
             gpMouseManager->Main(message);
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
@@ -3711,10 +3711,10 @@ void advManager::ViewPuzzle(void) {
 // visible object/overlay frames and marking the target cell.
 VA(0x004310df, 0x236)
 void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
-    unsigned char tileset;
+    int y;
     mapCell* cell;
     int x;
-    int y;
+    unsigned char tileset;
     short screenX;
     short screenY;
 
@@ -4627,8 +4627,8 @@ short DimensionDoorHandler(struct tag_message& message) {
 VA(0x00433b10, 0xaf6)
 signed char advManager::ComboDraw(short originX, short originY, signed char animate) {
     int updateCount;
-    int drawX;
     int drawY;
+    int drawX;
     mapCell* cellPtr;
 
     PollSound();
@@ -4936,12 +4936,12 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
 VA(0x00434bd7, 0x340)
 void advManager::TeleportTo(int x, int y, int) {
     int savedShow;
-    hero* mapHero;
-    signed char newTerrain;
+    int fizzle;
+    mapCell* destinationCell;
     mapCell* oldCell;
     int tmp;
-    mapCell* destinationCell;
-    int fizzle;
+    signed char newTerrain;
+    hero* mapHero;
     town* occupiedTown;
 
     savedShow = bShowIt;

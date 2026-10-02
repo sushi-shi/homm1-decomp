@@ -48,8 +48,11 @@ void searchArray::Clear(void) {
 // Buka FINDPATH.cpp:83-88; retail retains short parameters/locals/return.
 VA(0x00424850, 0x4c)
 short searchArray::QuickDistance(short x1, short y1, short x2, short y2) {
-    short xDistance = abs(x1 - x2);
-    short yDistance = abs(y1 - y2);
+    short yDistance;
+    short xDistance;
+
+    xDistance = abs(x1 - x2);
+    yDistance = abs(y1 - y2);
     return ApproximateGridDistance(xDistance, yDistance);
 }
 
@@ -101,15 +104,15 @@ int CalcTerrainCost(int terrain, int diagonal, int mobility, int waterMode) {
 VA(0x00424950, 0x2ff)
 short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, signed char attackPath)
 {
-    int bestDistance;
     int bestHex;
+    int direction;
     signed char attackTargetHex;
     unsigned char* path;
     searchNode node;
     int distance;
     short attackMask;
     int moveMask;
-    int direction;
+    int bestDistance;
     int opposite;
 
     bestDistance = 640;
