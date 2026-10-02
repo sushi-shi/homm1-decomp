@@ -2099,8 +2099,8 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
                 spellScore = (int)(giSpellAIValue[heroPointer->m_spells[slot]]
                                    * ((gcSpellAIFlags[heroPointer->m_spells[slot]] & 1)
                                           ? (heroPointer->m_primaryStats[2] > 40
-                                                 ? gfSpellPowerMod[40]
-                                                 : gfSpellPowerMod[heroPointer->m_primaryStats[2]])
+                                                 ? gfBattleStat[40]
+                                                 : gfBattleStat[heroPointer->m_primaryStats[2]])
                                           : magicMod8));
                 magicTotal += spellScore
                               * gfSpellCastNumMod[heroPointer->m_spellCharges[slot] < 20
@@ -2849,13 +2849,13 @@ float philAI::StatChangeValue(int oldValue, int newValue) {
     float oldRV;
 
     if (newValue > 20)
-        newRV = gfStatValue[20];
+        newRV = gfSpellCastNumMod[20];
     else
-        newRV = gfStatValue[newValue];
+        newRV = gfSpellCastNumMod[newValue];
     if (oldValue > 20)
-        oldRV = gfStatValue[20];
+        oldRV = gfSpellCastNumMod[20];
     else
-        oldRV = gfStatValue[oldValue];
+        oldRV = gfSpellCastNumMod[oldValue];
     return newRV - oldRV;
 }
 
