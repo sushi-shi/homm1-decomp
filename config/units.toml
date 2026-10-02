@@ -206,7 +206,9 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/WIDGET"
 source = "src/BASE/WIDGET.cpp"
-flags = "cpp_o2"
+# Main expands widget::Dim twice (DimBitmapArea calls) while retail keeps the
+# out-of-line 0x0047f930 body: automatic inlining.
+flags = "cpp_o2_inline"
 
 [[unit]]
 unit = "BASE/WINMGR"
