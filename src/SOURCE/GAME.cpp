@@ -13,6 +13,7 @@
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
@@ -1489,33 +1490,33 @@ void game::RandomizeEvents(void) {
                     obeliskId++;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_STATUE:
-                    cell->m_objectMetadata = 1;
+                    cell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SKELETON:
                     if (Random(0, 9) == 3)
-                        cell->m_objectMetadata = 2;
+                        cell->m_objectMetadata = SKELETON_ARTIFACT;
                     else
-                        cell->m_objectMetadata = 1;
+                        cell->m_objectMetadata = SKELETON_EMPTY;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DAEMON_CAVE:
                     switch (Random(0, 99) % 10) {
                         case 0:
                         case 1:
                         case 2:
-                            cell->m_objectMetadata = 2;
+                            cell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE;
                             break;
                         case 3:
-                            cell->m_objectMetadata = 3;
+                            cell->m_objectMetadata = DAEMON_REWARD_ARTIFACT;
                             break;
                         case 4:
                         case 5:
                         case 6:
-                            cell->m_objectMetadata = 4;
+                            cell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE_GOLD;
                             break;
                         case 7:
                         case 8:
                         case 9:
-                            cell->m_objectMetadata = 5;
+                            cell->m_objectMetadata = DAEMON_REWARD_RANSOM;
                             break;
                     }
                     break;
@@ -1523,14 +1524,14 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CAMPFIRE:
-                    cell->m_objectMetadata = Random(4, 6) << 4;
+                    cell->m_objectMetadata = Random(4, 6) << CAMPFIRE_AMOUNT_SHIFT;
                     cell->m_objectMetadata |= static_cast<signed char>(Random(0, 5));
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_ANCIENT_LAMP:
                     cell->m_objectMetadata = Random(0, 3) + 2;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x23) {
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_SHIPWRECK) {
                         cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
@@ -1541,20 +1542,20 @@ void game::RandomizeEvents(void) {
                         case 0:
                         case 1:
                         case 2:
-                            cell->m_objectMetadata = 2;
+                            cell->m_objectMetadata = GHOST_SITE_SMALL;
                             break;
                         case 3:
                         case 4:
                         case 5:
-                            cell->m_objectMetadata = 3;
+                            cell->m_objectMetadata = GHOST_SITE_MEDIUM;
                             break;
                         case 6:
                         case 7:
                         case 8:
-                            cell->m_objectMetadata = 4;
+                            cell->m_objectMetadata = GHOST_SITE_LARGE;
                             break;
                         case 9:
-                            cell->m_objectMetadata = 5;
+                            cell->m_objectMetadata = GHOST_SITE_HUGE;
                             break;
                     }
                     break;
@@ -1574,25 +1575,25 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(20, 50);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
-                    cell->m_objectMetadata = 1;
+                    cell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER:
                     if (!static_cast<unsigned char>(cell->m_objectMetadata)) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
-                        if (Random(0, 99) <= 25 && cell->m_objectIndex != 26)
-                            cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | 0x80;
+                        if (Random(0, 99) <= 25 && cell->m_objectIndex != CREATURE_GHOST)
+                            cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | MONSTER_WILLING_FLAG;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
-                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - 61;
+                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - RESOURCE_PILE_OBJECT_BASE;
                     switch (static_cast<unsigned char>(cell->m_objectMetadata)) {
-                        case 0:
-                        case 2:
+                        case RESOURCE_WOOD:
+                        case RESOURCE_ORE:
                             cell->m_objectMetadata = Random(8, 16);
                             break;
-                        case 6:
+                        case RESOURCE_GOLD:
                             cell->m_objectMetadata = Random(5, 10);
                             break;
                         default:
@@ -1623,8 +1624,8 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(10, 20);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x2a
-                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x2a) {
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP
+                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP) {
                         cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
@@ -1638,15 +1639,15 @@ void game::RandomizeEvents(void) {
                         case 3:
                         case 4:
                         case 5:
-                            cell->m_objectMetadata = 1;
+                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_PICKUP;
                             break;
                         case 6:
                         case 7:
-                            cell->m_objectMetadata = 2;
+                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_GUARDED;
                             break;
                         case 8:
                         case 9:
-                            cell->m_objectMetadata = 3;
+                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_GOLD;
                             break;
                     }
                     break;

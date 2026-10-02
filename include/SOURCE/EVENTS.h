@@ -11,6 +11,7 @@
 // and the wandering monster's willing-to-join flag over its count.
 H1_ENUM_CONST_BEGIN(MapObjectEncodingConstant)
     MAP_EVENT_DATA_EMPTY = 0,
+    MAP_EVENT_DATA_AVAILABLE = 1,
     CAMPFIRE_RESOURCE_MASK = 0xf,
     CAMPFIRE_AMOUNT_SHIFT = 4,
     SKELETON_EMPTY = 1,
@@ -27,6 +28,7 @@ H1_ENUM_CONST_BEGIN(MapObjectEncodingConstant)
     GHOST_SITE_SMALL = 2,
     GHOST_SITE_MEDIUM = 3,
     GHOST_SITE_LARGE = 4,
+    GHOST_SITE_HUGE = 5,
     WINDMILL_RESOURCE_LAST = 6,
     WINDMILL_EMPTY = 99,
     RESOURCE_PILE_OBJECT_BASE = 0x3d,
