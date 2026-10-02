@@ -391,7 +391,9 @@ short advManager::Open(short id) {
         SetNoDialogMenus(1);
     }
     glTimers[0] = KBTickCount() + 120;
-    m_messageTypeMask = 815;
+    // 0x100 has no known producer (no MessageType member); retail keeps it.
+    m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE | MESSAGE_LEFT_BUTTON_DOWN
+                        | MESSAGE_RIGHT_BUTTON_DOWN | 0x100 | MESSAGE_WIDGET;
     gpMouseManager->NewUpdate(1);
     oldVolume = gConfig.soundVolume;
     if (gConfig.soundVolume != 0)
