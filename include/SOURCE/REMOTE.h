@@ -85,7 +85,11 @@ struct RemoteMessage {
 
 extern signed char gbInNetSetup;
 extern int giThisNetPos;
-extern int giThisGamePos;
+// WaitForOtherPlayer stores the game position of net position zero here
+// (0x004c6710). Declared ahead of giThisGamePos (0x004c74a0): only this order
+// gives the host/this compares in advManager::Main, game::NextPlayer,
+// PollRemote and HandleRemoteSuddenExit retail's load order.
+extern int giHostGamePos;
 extern int iIDCtr;
 extern unsigned char GameMode;
 extern signed char iMPBaseType;
@@ -95,8 +99,7 @@ extern char PacketSend[];
 extern int giNumNetGuests;
 extern int giLastConfirm;
 extern signed char gbGamePosToNetPos[];
-// WaitForOtherPlayer stores the game position of net position zero here.
-extern int giHostGamePos;
+extern int giThisGamePos;
 extern int iInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern char rcvBufOut[REMOTE_MESSAGE_SIZE];

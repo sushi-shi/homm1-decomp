@@ -19,9 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Alias: retail reaches KB's NULL_SAMPLE2 (0x004c5180); rename at the uses.
-extern SAMPLE2 gNullSample;
-
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
@@ -1166,7 +1163,7 @@ void advManager::FizzleCenter(int fizzleType) {
     default:
         return;
     }
-    fizzleSample = gNullSample;
+    fizzleSample = NULL_SAMPLE2;
     fizzleSample = LoadPlaySample(gText);
     gpWindowManager->SaveFizzleSource(180, 172, 120, 120);
     CompleteDraw(0);

@@ -419,7 +419,6 @@ inline void game::WriteWorldMap(int fd) {
     write(fd, m_map, sizeof(m_map));
 }
 
-
 // Buka 2.1 game::SaveGame for HoMM1's single save layout: name, globals,
 // campaign state, map header, players, world map, records and visibility.
 VA(0x00439e3d, 0x7b2)
@@ -1111,9 +1110,6 @@ void game::InitCampaignMap(int scenario, int) {
             m_players[i].m_resources[j] = gCampaignScenarios[scenario].resources[i][j];
     }
 }
-
-// Alias: retail reaches philAI.h's giSpellAIValue (0x00491140); rename at the use.
-extern short gSpellAIValue[];
 
 // Buka 2.1 game::NewMap for HoMM1: map setup helpers, a starting town and
 // hero per player (campaign crests pick them), two tavern heroes, the
@@ -2090,9 +2086,6 @@ short ViewSpecialHandler(tag_message& message) {
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
-// Alias: retail reaches KB's glTimers[0] (0x004c6a80); rename at the uses.
-extern long gViewArmyAnimTimer;
-
 VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
     short x,
@@ -2264,7 +2257,7 @@ void game::ViewArmy(
         message.text = numText;
         m_viewArmyWindow->BroadcastMessage(message);
     }
-    gViewArmyAnimTimer = KBTickCount() + 90;
+    glTimers[0] = KBTickCount() + 90;
     m_viewArmyResult = 0;
     if (quickView) {
         gpMouseManager->ReallyHidePointer();
@@ -2323,7 +2316,7 @@ short ViewArmyHandler(tag_message& message) {
                 break;
         }
     }
-    if (KBTickCount() > gViewArmyAnimTimer) {
+    if (KBTickCount() > glTimers[0]) {
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = 5;
@@ -2331,7 +2324,7 @@ short ViewArmyHandler(tag_message& message) {
         message.value = gpGame->m_viewArmyResult % 6;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
         gpGame->m_viewArmyWindow->DrawWindow();
-        gViewArmyAnimTimer = KBTickCount() + 90;
+        glTimers[0] = KBTickCount() + 90;
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
@@ -2986,7 +2979,7 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
         do {
             newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
             if (aiOwned)
-                spellValue = gSpellAIValue[newSpell] * (gSpellAttributes[newSpell] & 1 ? 4 : 1) + 50;
+                spellValue = giSpellAIValue[newSpell] * (gSpellAttributes[newSpell] & 1 ? 4 : 1) + 50;
             else
                 spellValue = 1500;
             if (newSpell == 27)
@@ -3973,8 +3966,8 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     char pathname[456];
     char* outData;
     int block;
-    int numBlocks;
     int prevReady;
+    int numBlocks;
     int junk3;
     int oldTrack;
     char* sendPacket;
@@ -4219,9 +4212,6 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     return okay;
 }
 
-// Alias: retail reaches KB's gArmyNames (0x00493250); rename at the use.
-extern char* gMonsterNames[];
-
 // donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.487826;margin=0.297906;shape=0.344;size=0.836;calls=0.867;alternate=pol20:void game::DoNewTurn(void)@0x00083fc4
@@ -4270,9 +4260,9 @@ void game::DoNewTurn(void) {
                 if (giMonthType == 0) {
                     sprintf(gText, gNewTurnText[2], gMonthNames[giMonthSpecial]);
                 } else if (giMonthType == 1) {
-                    strcpy(monsterName, gMonsterNames[giMonthSpecial]);
+                    strcpy(monsterName, gArmyNames[giMonthSpecial]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[3], gMonsterNames[giMonthSpecial], monsterName);
+                    sprintf(gText, gNewTurnText[3], gArmyNames[giMonthSpecial], monsterName);
                 } else {
                     sprintf(gText, gNewTurnText[4]);
                 }
@@ -4281,9 +4271,9 @@ void game::DoNewTurn(void) {
                 if (giWeekType == 0) {
                     sprintf(gText, gNewTurnText[5], gWeekNames[giWeekSpecial]);
                 } else {
-                    strcpy(monsterName, gMonsterNames[giWeekSpecial]);
+                    strcpy(monsterName, gArmyNames[giWeekSpecial]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[6], gMonsterNames[giWeekSpecial], monsterName);
+                    sprintf(gText, gNewTurnText[6], gArmyNames[giWeekSpecial], monsterName);
                 }
             }
             gpSoundManager->SwitchAmbientMusic(track);
@@ -4395,6 +4385,7 @@ done:
 
 VA(0x004472d8, 0x44e)
 void game::ShowScenInfo(void) {
+    short i;
     const char sizeId = 100;
     const char mapLevelId = 101;
     const char mapDescId = 102;
@@ -4408,7 +4399,6 @@ void game::ShowScenInfo(void) {
     int difficulty;
     heroWindow* scenWindow;
     tag_message message;
-    short i;
     short idx;
     // Retail reserves one unused slot between the seat counters.
     int pad;

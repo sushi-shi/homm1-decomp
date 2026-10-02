@@ -239,10 +239,6 @@ H1_ENUM_BEGIN(AppMenuCommand)
 H1_ENUM_END(AppMenuCommand)
 // clang-format on
 
-// Alias: retail reaches this machine's net position (0x004c6f34,
-// giThisNetPos), not SETUP's byte gbDirectConnect (SETUP.h); rename at the use.
-extern int gbDirectConnect;
-
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
 // handshake and the campaign replay/next-scenario loop.
@@ -421,7 +417,7 @@ int oldmain(void) {
         if (giMenuCommand != -1)
             goto processMenuCommand;
         if (!leave) {
-            if (gbRemoteOn && !gbDirectConnect) {
+            if (gbRemoteOn && !giThisNetPos) {
                 n = 0;
                 for (idx = 0; idx < 4; idx++) {
                     if (gbHumanPlayer[idx]) {
@@ -433,8 +429,8 @@ int oldmain(void) {
                 }
                 for (idx = 0; idx < 4; idx++)
                     memcpy(gText, gbGamePosToNetPos, 4);
-                giThisGamePos = NetPosToGamePos(0);
-                giHostGamePos = giThisGamePos;
+                giHostGamePos = NetPosToGamePos(0);
+                giThisGamePos = giHostGamePos;
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
                     result = TransmitRemoteData(gText, idx, 4, BOX_REMOTE_SETUP, 1, 1, -1, 0);
                     if (!result)
@@ -581,9 +577,9 @@ char toupper(char character) {
 // Buka 2.1 InterpretCommandLine reduced to HoMM1's /I, /C, /S and /B switches.
 VA(0x00450fbc, 0x288)
 int InterpretCommandLine(void) {
+    int size;
     int i;
     int helpRequested = 0;
-    int size;
 
     giDebugLevel = 0;
     giShowIntro = 1;
@@ -2215,10 +2211,6 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// Alias: the score-to-rank creature names are KB's gArmyNames (0x00493250);
-// rename at the use.
-extern char* gScoreRankNames[];
-
 // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
 // scenario's win text; standard games score the days played, rank the result
 // as a creature and file it with the high scores.
@@ -2251,7 +2243,7 @@ void ShowCongrats(void) {
         win = new heroWindow(0, 0, "congspre.bin");
         if (!win)
             MemError();
-        sprintf(name, gScoreRankNames[GetMonType(result, 1)]);
+        sprintf(name, gArmyNames[GetMonType(result, 1)]);
         name[0] -= 32;
         sprintf(gText, "A Glorious Victory!");
         message.id = 100;
