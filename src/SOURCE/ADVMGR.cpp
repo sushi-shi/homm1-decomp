@@ -15,6 +15,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/appMenu.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
@@ -2275,7 +2276,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
                 sprintf(gText, "\n\n%s", gResourceNames[curCell->m_objectIndex + 2]);
                 break;
             case MAP_OBJECT_MONSTER:
-                sprintf(gText, "\n\n%s %s", GetArmySizeName(curCell->m_objectMetadata & 0x7f, 1),
+                sprintf(gText, "\n\n%s %s", GetArmySizeName(curCell->m_objectMetadata & MONSTER_COUNT_MASK, 1),
                         gArmyNamesPlural[curCell->m_objectIndex]);
                 break;
             default:
@@ -3971,7 +3972,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         if (owner >= 0)
                             index = gpGame->m_players[owner].m_color;
                         else
-                            index = 4;
+                            index = PLAYER_COLOR_NEUTRAL;
                         spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
                         letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL, 0);
                         break;
@@ -3984,7 +3985,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                             if (owner >= 0)
                                 index = gpGame->m_players[owner].m_color;
                             else
-                                index = 4;
+                                index = PLAYER_COLOR_NEUTRAL;
                             spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
                             letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL,
                                                      0);
@@ -4010,7 +4011,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         if (owner >= 0)
                             index = gpGame->m_players[owner].m_color;
                         else
-                            index = 4;
+                            index = PLAYER_COLOR_NEUTRAL;
                         spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
                         letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL, 0);
                         break;
@@ -4023,7 +4024,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                             if (owner >= 0)
                                 index = gpGame->m_players[owner].m_color;
                             else
-                                index = 4;
+                                index = PLAYER_COLOR_NEUTRAL;
                             spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
                             letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL,
                                                      0);
@@ -4038,8 +4039,8 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     break;
                 case SPELL_VIEW_RESOURCES:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE)) {
-                        spheres->DrawToBuffer(screenX - 3, screenY, 4, ICON_DRAW_NORMAL, 0);
-                        letters->DrawToBuffer(screenX - 3, screenY, cell->m_objectIndex - 0x3d, ICON_DRAW_NORMAL, 0);
+                        spheres->DrawToBuffer(screenX - 3, screenY, PLAYER_COLOR_NEUTRAL, ICON_DRAW_NORMAL, 0);
+                        letters->DrawToBuffer(screenX - 3, screenY, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE, ICON_DRAW_NORMAL, 0);
                     }
                     break;
                 case SPELL_VIEW_ARTIFACTS:
