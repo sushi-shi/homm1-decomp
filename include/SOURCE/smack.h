@@ -11,6 +11,24 @@
 // older layout's +0x6c palette selector and +0x374 second palette are named
 // from smackManager::Main's use alone.
 
+#include <Domains.h>
+
+// clang-format off
+// Flags and sentinels of this SDK generation as smackManager::Main passes
+// them. SmackOpen's audio-track bits sit four bits lower than in the 3.0g
+// SDK HoMM2 ships (SMACKTRACK1 0x2000, Buka AUDIO_OPEN_FLAGS 0xfe000): the
+// seven tracks are 0x200..0x8000, and SmackVolumePan addresses track 1 by its
+// bit. SMACK_AUTO_EXTRA is SmackOpen's automatic extra-buffer sentinel and
+// SMACK_SURFACE_SLOW the SmackToBufferRect copy mode (3.0g SMACKAUTOEXTRA /
+// SMACKSURFACESLOW, as Buka's SMACKMGR spells the same calls).
+H1_ENUM_CONST_BEGIN(SmackApiConstant)
+    SMACK_TRACK_1 = 0x200,
+    SMACK_TRACKS = 0xfe00,
+    SMACK_AUTO_EXTRA = -1,
+    SMACK_SURFACE_SLOW = 1
+H1_ENUM_CONST_END(SmackApiConstant)
+// clang-format on
+
 #pragma pack(push, 1)
 struct Smack {
     unsigned long Version;

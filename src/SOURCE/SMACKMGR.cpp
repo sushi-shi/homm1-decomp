@@ -15,6 +15,8 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
+#include <BASE/soundmgr.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
@@ -61,7 +63,7 @@ short smackManager::Open(short priority) {
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "smackManager");
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 VA(0x0045acc5, 0x1f)
@@ -84,7 +86,7 @@ short smackManager::Main(struct tag_message& msg) {
     startFrame = 1;
     KBChangeMenu(hmnuDflt);
     if (gbSmackAborted)
-        return 1;
+        return MESSAGE_DISPATCH_CONSUME;
     gbSmackAborted = 1;
     LogStr("SmackM1");
     pPalette = new palette;
@@ -99,8 +101,8 @@ short smackManager::Main(struct tag_message& msg) {
     LogStr("SmackM2b");
     smk = SmackOpen(
         gText,
-        SmackOptions[bSmackNum].openFlags | (gpSoundManager->m_digitalDriver ? 0xfe00 : 0),
-        -1
+        SmackOptions[bSmackNum].openFlags | (gpSoundManager->m_digitalDriver ? SMACK_TRACKS : 0),
+        SMACK_AUTO_EXTRA
     );
     LogStr("SmackM3b");
     if (smk) {
@@ -124,7 +126,7 @@ short smackManager::Main(struct tag_message& msg) {
         SmackSoundOnOff(smk, gConfig.musicVolume);
         if (gbSkipIntro && (bSmackNum == SMACK_INTRO02C || bSmackNum == SMACK_INTRO02U)) {
             startFrame = 125;
-            SmackVolumePan(smk, 0x200, 0, 0);
+            SmackVolumePan(smk, SMACK_TRACK_1, 0, 0);
             SmackSoundOnOff(smk, 0);
             SmackGoto(smk, startFrame);
             SmackSoundOnOff(smk, gConfig.musicVolume);
@@ -141,7 +143,7 @@ short smackManager::Main(struct tag_message& msg) {
         }
         gpWindowManager->m_updateFlags = SmackOptions[bSmackNum].updateFlags;
         if (SmackOptions[bSmackNum].fadeIn)
-            gpWindowManager->FadeScreen(1, 8, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
         SmackToBuffer(
             smk,
             0,
@@ -163,7 +165,7 @@ short smackManager::Main(struct tag_message& msg) {
                         smk->alternatePalette
                     ); // API-forced: Smacker palettes are unsigned bytes.
                 if (giMainVideoModeColorDepth == 8 || gConfig.gfx[giCurExe].fullScreen) {
-                    while (SmackToBufferRect(smk, 1))
+                    while (SmackToBufferRect(smk, SMACK_SURFACE_SLOW))
                         BlitBitmapToScreen(
                             gpWindowManager->m_screen,
                             smk->LastRectx,
@@ -174,15 +176,15 @@ short smackManager::Main(struct tag_message& msg) {
                             smk->LastRecty
                         );
                 }
-                gpWindowManager->FadeScreen(0, 8, pPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, pPalette);
             } else {
                 if (bSmackNum == SMACK_WIN02 && currentFrame >= 23)
-                    bigFont->DrawBoundedString(gcWinText, 29, 338, 325, 115, 1, 1);
+                    bigFont->DrawBoundedString(gcWinText, 29, 338, 325, 115, 1, FONT_ALIGN_CENTER);
                 if (bSmackNum == SMACK_NWCLOGO) {
                     bigFont->DrawString("Presents...", 280, 440, 255);
                     gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
                 }
-                while (SmackToBufferRect(smk, 1))
+                while (SmackToBufferRect(smk, SMACK_SURFACE_SLOW))
                     BlitBitmapToScreen(
                         gpWindowManager->m_screen,
                         smk->LastRectx,
@@ -225,11 +227,11 @@ short smackManager::Main(struct tag_message& msg) {
             }
         }
         if (bSmackNum <= SMACK_LOGO_LAST) {
-            SmackVolumePan(smk, 0x200, 0, 0);
+            SmackVolumePan(smk, SMACK_TRACK_1, 0, 0);
             SmackSoundOnOff(smk, 0);
             SmackGoto(smk, 101);
             SmackDoFrame(smk);
-            while (SmackToBufferRect(smk, 1))
+            while (SmackToBufferRect(smk, SMACK_SURFACE_SLOW))
                 BlitBitmapToScreen(
                     gpWindowManager->m_screen,
                     smk->LastRectx,
@@ -268,7 +270,7 @@ short smackManager::Main(struct tag_message& msg) {
                 pPalette->m_data = reinterpret_cast<signed char*>(
                     smk->alternatePalette
                 ); // API-forced: Smacker palettes are unsigned bytes.
-            gpWindowManager->FadeScreen(1, 8, pPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, pPalette);
             FillBitmapArea(
                 gpWindowManager->m_screen,
                 0,
@@ -296,14 +298,14 @@ short smackManager::Main(struct tag_message& msg) {
         gpWindowManager->m_updateFlags = savedUpdateFlags;
     msg.type = MESSAGE_EXECUTIVE;
     msg.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
-    return 2;
+    return MESSAGE_DISPATCH_FORWARD;
 }
 
 VA(0x0045b659, 0x93)
 void PlaySmacker(H1_ENUM_PARAM(SmackVideo, signed char) smackNumber) {
     gbInSmacker = 1;
     gpSoundManager->m_musicReady = 1;
-    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
+    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, SOUND_VOLUME_FROM_CONFIG);
     bSmackNum = smackNumber;
     if (gpExec->AddManager(gpSmackManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
         ShutDown("Can't add manager!");
