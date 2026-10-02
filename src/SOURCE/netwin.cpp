@@ -19,9 +19,9 @@
 #include <BASE/Misc.h>
 
 // Compiler line-base word for netlo.cpp's ProcessAssert sites.
-DATA(0x0048f214) short gNbThrCtlLineBase;
-DATA(0x0048f234) short gNbAddNameDoneLineBase;
-DATA(0x0048f26c) short gNbArmRecvLineBase;
+DATA(0x0048f214) short gNbThrCtlLineBase = 414;
+DATA(0x0048f234) short gNbAddNameDoneLineBase = 538;
+DATA(0x0048f26c) short gNbArmRecvLineBase = 742;
 
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
@@ -643,3 +643,47 @@ void nb_format_name(char *source, unsigned char *destination)
     for (; i < NCBNAMSZ - 1; i++)
         destination[i] = ' ';
 }
+
+// netwin owns retail .data 0x0048f1e4-0x0048f28b and .bss 0x004a4bc8-0x004acebf.
+DATA(0x0048f1e4)
+unsigned char gNbCallRetries = 0;
+DATA(0x0048f1e8)
+unsigned char gNetbiosAvail = 0;
+DATA(0x0048f1ec)
+unsigned char gNbShutdown = 0;
+DATA(0x0048f1f0)
+unsigned char gNbMaxSess = 255;
+DATA(0x0048f1f4)
+unsigned char gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
+DATA(0x0048f1fc)
+char* gNbGroupName = "Empire Too ";
+DATA(0x0048f200)
+unsigned char* gNbListenName = (unsigned char*)"*";
+DATA(0x004a4bc8)
+tag_Anchor gNbFreeQueue;
+DATA(0x004a4bd0)
+unsigned char gNbSessLsn[7];
+DATA(0x004a4bd8)
+unsigned char gNbRcvData[7][0x1000];
+DATA(0x004abbd8)
+NetbiosName gNbNameBuf[7];
+DATA(0x004abc48)
+unsigned char gNbSessBuf[0xfd0];
+DATA(0x004acc18)
+NCB gNbSessNcb[7];
+DATA(0x004ace08)
+NCB gNbCtlNcb;
+DATA(0x004ace48)
+unsigned char gNbLocalNum;
+DATA(0x004ace50)
+tag_Anchor gNbRcvQueue;
+DATA(0x004ace58)
+tag_Anchor gNbSndQueue;
+DATA(0x004ace60)
+CRITICAL_SECTION gNbRcvLock;
+DATA(0x004ace78)
+HANDLE gNbEvents[9];
+DATA(0x004acea0)
+CRITICAL_SECTION gNbSndLock;
+DATA(0x004aceb8)
+unsigned char gNetbiosLana;
