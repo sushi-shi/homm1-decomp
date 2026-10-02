@@ -71,7 +71,7 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
     while (startX != destinationX || startY != destinationY) {
         pathNode = &m_cells[destinationX][destinationY];
         *pathDirection++ = pathNode->direction;
-        if (++m_pathLength >= 256)
+        if (++m_pathLength >= SEARCH_PATH_CAPACITY)
             break;
         destinationX += normalDirTable[static_cast<short>(pathNode->direction + 4) & 7].x;
         destinationY += normalDirTable[static_cast<short>(pathNode->direction + 4) & 7].y;
@@ -93,7 +93,7 @@ int searchArray::BuildPath(short startX, short startY, short destinationX, short
             *pathDirection = node->direction;
             ++pathDirection;
             ++m_pathLength;
-            if (m_pathLength >= 256) {
+            if (m_pathLength >= SEARCH_PATH_CAPACITY) {
                 m_pathLength = 0;
                 break;
             }
@@ -280,7 +280,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                         s_adjacentY = s_mapY + normalDirTable[s_direction].y;
                         s_targetCell = gpAdvManager->GetCell(s_adjacentX, s_adjacentY);
                         s_directionBlocked = 1;
-                        if (((1 << s_direction) & 0x38) && s_targetCell->m_objectIndex != 0xff
+                        if (((1 << s_direction) & SEARCH_DIRECTION_OBJECT_MASK) && s_targetCell->m_objectIndex != MAP_CELL_NO_FRAME
                             && !(s_targetCell->m_flags & 0x80))
                             s_directionBlocked = 0;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited

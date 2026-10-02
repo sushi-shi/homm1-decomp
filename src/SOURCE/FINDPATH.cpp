@@ -78,7 +78,7 @@ short TerrainStepCost(signed char terrain, char diagonal) {
         cost = 8;
         break;
     }
-    if (diagonal & 1)
+    if (diagonal & SEARCH_DIAGONAL_COST_MASK)
         cost += cost >> 1;
     return cost;
 }
@@ -344,12 +344,12 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
             goto storeDirection;
         }
 
-        if ((1 << gSearchDirection) & 0x83) {
+        if ((1 << gSearchDirection) & SEARCH_DIRECTION_EDGE_OBJECT_MASK) {
             if (gSearchCurrentCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchCurrentCell->m_flags & 0x80)) {
                 gSearchTerrain = -1;
                 goto storeDirection;
             }
-        } else if ((1 << gSearchDirection) & 0x38) {
+        } else if ((1 << gSearchDirection) & SEARCH_DIRECTION_OBJECT_MASK) {
             if (gSearchNextCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchNextCell->m_flags & 0x80)) {
                 if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
                     gSearchTriggerType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;

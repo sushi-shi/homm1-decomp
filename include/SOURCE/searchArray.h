@@ -18,6 +18,19 @@ H1_ENUM_CONST_BEGIN(SearchStorageConstant)
     SEARCH_PATH_CAPACITY = 256
 H1_ENUM_CONST_END(SearchStorageConstant)
 
+// clang-format off
+// Direction bit masks over MapDirection (1 << direction): north, north-east
+// and north-west steps test the current cell's object, south-east, south and
+// south-west the next cell's (TestPossibleDirections, SeedPosition; Buka
+// searchArray.h numbering). A step is diagonal when bit 0 of its direction
+// kind is set (TerrainStepCost).
+H1_ENUM_CONST_BEGIN(SearchDirectionConstant)
+    SEARCH_DIAGONAL_COST_MASK = 1,
+    SEARCH_DIRECTION_EDGE_OBJECT_MASK = 0x83,
+    SEARCH_DIRECTION_OBJECT_MASK = 0x38
+H1_ENUM_CONST_END(SearchDirectionConstant)
+// clang-format on
+
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
 // (CheckReload shifts it right four; the path builder masks 0xf).
