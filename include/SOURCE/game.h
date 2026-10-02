@@ -67,11 +67,26 @@ struct boatRecord {
 #pragma pack(push, 1)
         class game {
 public:
-    char m_unknown0000[3];
+    // ShowCongrats scales the base score by this percentage.
+    short m_difficultyRating;
+    char m_unknown0002;
     // ControlPanel's scenario-info choice shows the campaign when positive.
     int m_campaignType;
     int m_campaignScenario;
-    char m_unknown000b[0x1f4];
+    int m_unknown000b;
+    // InitEntireCampaign starts it at 1; InitCampaignMap derives the
+    // calendar from it.
+    int m_campaignDay;
+    // NewGame copies the chosen map's size, difficulty, title and
+    // description; ShowCongrats files the title with the high score.
+    signed char m_mapSize;
+    signed char m_mapDifficulty;
+    char m_mapName[0x11];
+    char m_mapDescription[0x79];
+    // SaveGame/LoadGame and the save requester's default name.
+    char m_saveName[0x15f];
+    // InitEntireCampaign stores 3 here.
+    signed char m_difficulty;
     signed char m_playerCount;
     char m_unknown200;
     signed char m_deadPlayerCount;
@@ -96,7 +111,8 @@ public:
     signed char m_randomArtifacts[0x25];
     boatRecord m_boats[GAME_BOAT_COUNT];
     signed char m_boatSlots[GAME_BOAT_COUNT];
-    char m_unknown145a6[0x30];
+    // Obelisk events test and set the visiting player bit, one byte per obelisk.
+    signed char m_obeliskVisitors[0x30];
     // InsertSound reads the environment sound id per [x][y] cell.
     signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.
@@ -104,7 +120,9 @@ public:
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
-    char m_unknown16e59[5];
+    // NewGame's newgame.bin window.
+    class heroWindow* m_newGameWindow;
+    char m_unknown16e5d;
     // ViewArmy's open army window; ViewArmyHandler animates it.
     class heroWindow* m_viewArmyWindow;
     // TavernHandler advances this word as its animation counter (Buka name).
@@ -140,7 +158,8 @@ public:
     void ShowCampaignInfo(int, int, int);
     void CampaignInfoUpdate(int);
     void InitEntireCampaign(int);
-    void InitCampaignMap(void);
+    // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
+    void InitCampaignMap(int, int);
     int MineTypesOwned(int, int);
     int SetupPuzzlePieces(int, int);
     signed char IsMobile(signed char);
@@ -202,7 +221,7 @@ public:
     void MakeAllWaterVisible(int);
     void GiveArmy(class armyGroup*, int, int, int);
     int ExperienceValueOfStack(class armyGroup*, class hero*);
-    // HoMM1 retail: two arguments (ret 8).
+    // HoMM1 retail: hero and army only (ret 8).
     int GetLuck(class hero*, class army*);
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
@@ -213,6 +232,9 @@ public:
     void ConvertFlagToLateOverlay(int, int);
     int HasObjectTilesetIndex(int, int, int, int);
     void ConvertAllToLateOverlay(int, int);
+    // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
+    // pulls its overlay frame down into the object layer.
+    void SettleOverlay(int, int);
     void ProcessMapExtra(void);
     void SetupTowns(void);
     void ProcessOnMapHeroes(void);
@@ -232,11 +254,13 @@ public:
     int CountShrines(int);
     void ShowMoraleInfo(class hero*, int);
     void ShowLuckInfo(class hero*, int);
-    void GetMap(void);
+    // Retail GetMap never reads ecx; its caller passes no this.
+    static void GetMap(void);
     void ProcessNewMap(struct SMapHeader*);
     void InitNewGame(struct SMapHeader*);
     void SetupNetPlayerNames(void);
-    int NewGame(void);
+    // Retail returns the started flag in AL.
+    signed char NewGame(void);
     void CleanUpNewGameWindow(void);
     void InitNewGameWindow(void);
     void UpdateNewGameWindow(void);
@@ -247,8 +271,13 @@ public:
     void GetLossConditionText(char*);
     void GetVictoryConditionText(char*);
     int GetSideDesc(char*, int, int);
+    // DoEvent's obelisk branch (byte player, ret 4).
+    void VisitObelisk(signed char);
+
 };
 #pragma pack(pop)
 
 extern game* gpGame;
+// Recomputes a player's ultimate-artifact hint (cdecl, int player).
+void ComputeUALoc(int);
 #endif // HOMM1_SOURCE_GAME_H

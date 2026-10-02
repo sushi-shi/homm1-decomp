@@ -26,6 +26,13 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_VIEW = 5
 H1_ENUM_END(CombatPointerCode)
 
+// clang-format off
+H1_ENUM_BEGIN(CombatGridConstant)
+    COMBAT_HEX_COUNT = 45,
+    COMBAT_SIDE_ARMY_COUNT = 6
+H1_ENUM_END(CombatGridConstant)
+// clang-format on
+
 // Buka CombatRemotePacket: the combat action relayed through
 // GetRemoteData (command 0x17) or a net chat line (command 0xb).
 #pragma pack(push, 1)
@@ -49,14 +56,21 @@ struct CombatRemotePacket {
 
 // HoMM1 combat manager, 0x7d3 bytes (InitMainClasses; constructor
 // 0x0044b440). Field names follow Buka where the retail use matches;
-// unrecovered spans stay opaque.
+// unrecovered spans stay opaque. GameUnsaved reads the baseManager m_active
+// word through gpCombatManager.
 #pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
     char m_unknown30[0x10];
-    hexcell m_hexCells[45];
+    hexcell m_hexCells[COMBAT_HEX_COUNT];
     short m_unknown25c;
-    char m_unknown25e[0x40];
+    char m_unknown25e[2];
+    signed char m_unknown260;
+    char m_unknown261[4];
+    // hexcell draws ground (3 + index), obstacles (5), towers (8) and walls (9).
+    class icon* m_combatIcons[13];
+    signed char m_unknown299;
+    char m_unknown29a[4];
     // DoVictory: an attacker winning here earns the castle bonus.
     class town *m_combatTown;
     char m_unknown2a2[4];
@@ -70,7 +84,7 @@ public:
     signed char m_heroCastSpell[2];
     // Live stacks per side (CastMassSpell walks each side's armies).
     short m_numArmies[2];
-    army m_armies[2][6];
+    army m_armies[2][COMBAT_SIDE_ARMY_COUNT];
     signed char m_currentSide;
     signed char m_currentArmyIndex;
     signed char m_currentSpeed;
@@ -91,9 +105,14 @@ public:
     short m_unknown6d7;
     short m_unknown6d9;
     short m_unknown6db;
-    // Per side: the side fights from a castle.
+    // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
+    // mirror the castle art from side 1's flag.
     signed char m_castleSide[2];
-    char m_unknown6df[0x1c];
+    char m_unknown6df[4];
+    signed char m_unknown6e3;
+    short m_wallFrame;
+    short m_wallDamage;
+    char m_unknown6e8[0x13];
     // ProcessCombatMsg ignores message types outside this mask.
     short m_messageTypeMask;
     signed char m_sideRetreated[2];
@@ -112,6 +131,7 @@ public:
     signed char m_validDirectionCount;
     class heroWindow *m_winLoseWindow;
     signed char m_selectedSpell;
+    // advManager::DoCombat returns and hands on this outcome byte.
     signed char m_combatResult;
     // --- constructors ---
     combatManager(void);
@@ -284,7 +304,6 @@ public:
     int WalkTowardArmyFront(class army *, int, int);
     int WalkTowardArmy(class army *, int, int);
 };
-
 #pragma pack(pop)
 
 int ValidHex(int);

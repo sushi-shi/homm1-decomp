@@ -91,7 +91,7 @@ signed char combatManager::ValidHexToStandOn(int hex)
 {
     if (hex == -2)
         return 1;
-    if (hex != -1 && hex % 9 != 8 && hex % 9 != 0 && m_hexCells[hex].m_obstacle == -1
+    if (hex != -1 && hex % 9 != 8 && hex % 9 != 0 && m_hexCells[hex].m_obstacleIndex == -1
         && (m_hexCells[hex].m_occupantSide == -1
             || (m_hexCells[hex].m_occupantSide == m_currentSide
                 && m_hexCells[hex].m_occupantIndex == m_currentArmyIndex)))
@@ -128,7 +128,7 @@ void combatManager::SetCombatDirections(int targetHex)
     target = &m_armies[targetSide][targetIndex];
     for (dir = 0; dir < 8; dir++) {
         if (dir == 6 || dir == 7) {
-            if (curArmy->m_attributes & 1) {
+            if (curArmy->m_stats.attributes & 1) {
                 if (curArmy->m_facing == 0) {
                     if (dir == 6)
                         directionHexes[dir] = gCombatAdjacency[targetHex][5];
@@ -144,7 +144,7 @@ void combatManager::SetCombatDirections(int targetHex)
                 directionHexes[dir] = -1;
         } else
             directionHexes[dir] = gCombatAdjacency[targetHex][dir];
-        if ((curArmy->m_attributes & 1) && directionHexes[dir] != -1) {
+        if ((curArmy->m_stats.attributes & 1) && directionHexes[dir] != -1) {
             if (curArmy->m_facing == 0) {
                 if (dir == 5 || dir == 4 || dir == 3) {
                     if (directionHexes[dir] % 9 == 1)
@@ -175,7 +175,7 @@ void combatManager::SetCombatDirections(int targetHex)
         else
             canStand[dir] = 0;
     }
-    if (curArmy->m_attributes & 2) {
+    if (curArmy->m_stats.attributes & 2) {
         for (dir = 0; dir < 8; dir++)
             hasPath[dir] = canStand[dir];
     } else {
@@ -204,7 +204,7 @@ void combatManager::SetCombatDirections(int targetHex)
         else
             mapped = (signed char)(dir == 6 ? 7 : 6);
         if (hasPath[mapped]) {
-            if (target->m_attributes & 1) {
+            if (target->m_stats.attributes & 1) {
                 if (dir == 0 && m_hexCells[targetHex - 1].m_occupantSide == targetSide
                     && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
                     outDir = 6;
@@ -330,7 +330,7 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     target = &m_armies[curArmy->m_targetSide][curArmy->m_targetIndex];
     if (hexDir == 6 || hexDir == 7) {
-        if (curArmy->m_attributes & 1) {
+        if (curArmy->m_stats.attributes & 1) {
             if (curArmy->m_facing == 0 && hexDir == 6) {
                 hexDir = 5;
                 alternate = 0;
@@ -354,21 +354,21 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
                 hexDir = 2;
         }
     } else {
-        if (curArmy->m_facing == 0 && (curArmy->m_attributes & 1)) {
+        if (curArmy->m_facing == 0 && (curArmy->m_stats.attributes & 1)) {
             if (hexDir == 5 || hexDir == 4 || hexDir == 3)
                 targetHex--;
-        } else if (curArmy->m_facing == 1 && (curArmy->m_attributes & 1)
+        } else if (curArmy->m_facing == 1 && (curArmy->m_stats.attributes & 1)
                    && (hexDir == 0 || hexDir == 1 || hexDir == 2))
             targetHex++;
     }
     m_directionTargetHex = gCombatAdjacency[targetHex][hexDir];
     backHex = -2;
-    if (curArmy->m_facing == 1 && (curArmy->m_attributes & 1))
+    if (curArmy->m_facing == 1 && (curArmy->m_stats.attributes & 1))
         backHex = m_directionTargetHex - 1;
-    if (curArmy->m_facing == 0 && (curArmy->m_attributes & 1))
+    if (curArmy->m_facing == 0 && (curArmy->m_stats.attributes & 1))
         backHex = m_directionTargetHex + 1;
     if (!ValidHexToStandOn(m_directionTargetHex) || !ValidHexToStandOn(backHex)) {
-        if ((curArmy->m_attributes & 1) && (savedDir == 6 || savedDir == 7)) {
+        if ((curArmy->m_stats.attributes & 1) && (savedDir == 6 || savedDir == 7)) {
             if (curArmy->m_facing == 0)
                 m_directionTargetHex += 1;
             else
@@ -530,7 +530,7 @@ void combatManager::ResetRound(void)
         for (index = 0; index < 5; index++) {
             curArmy = &m_armies[side][index];
             if (curArmy->m_quantity > 0) {
-                curArmy->m_attributes &= 0x1f;
+                curArmy->m_stats.attributes &= 0x1f;
                 if (curArmy->m_creatureType == 10)
                     curArmy->m_hitPointsLost = 0;
                 if (curArmy->m_spellRounds > 0) {
@@ -617,7 +617,7 @@ signed char combatManager::GetCommand(short hex)
             currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
             currentArmy->m_targetSide = -1;
             currentArmy->m_targetIndex = -1;
-            if (m_hexCells[hex].m_obstacle != -1)
+            if (m_hexCells[hex].m_obstacleIndex != -1)
                 return 0;
             else if (enemySide != -1) {
                 switch (enemySide) {
@@ -628,7 +628,7 @@ signed char combatManager::GetCommand(short hex)
                         else {
                             currentArmy->m_targetSide = enemySide;
                             currentArmy->m_targetIndex = targetIndex;
-                            if (currentArmy->m_shots > 0
+                            if (currentArmy->m_stats.shots > 0
                                 && currentArmy->GetAttackMask(currentArmy->m_hex, 1, -1) == 0xff)
                                 return 3;
                             if (currentArmy->ValidPath(hex, 1) == 1)
@@ -642,7 +642,7 @@ signed char combatManager::GetCommand(short hex)
                 }
             } else {
                 if (m_armies[m_currentSide][m_currentArmyIndex].ValidPath(hex, 0) == 1)
-                    return (m_armies[m_currentSide][m_currentArmyIndex].m_attributes & 2) ? 2 : 1;
+                    return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes & 2) ? 2 : 1;
             }
             break;
     }
@@ -677,7 +677,7 @@ signed char combatManager::RightClick(signed char hex)
                 return 0;
             signed char side = m_hexCells[hex].m_occupantSide;
             signed char armyIndex = m_hexCells[hex].m_occupantIndex;
-            if (m_hexCells[hex].m_obstacle != -1)
+            if (m_hexCells[hex].m_obstacleIndex != -1)
                 return 0;
             else if (side != -1) {
                 switch (side) {
@@ -1327,7 +1327,7 @@ short combatManager::ProcessNextAction(struct tag_message &message)
         case 2:
             gpMouseManager->ReallyHidePointer();
             actingArmy->MoveAttack(giNextActionGridIndex, 0);
-            actingArmy->m_attributes |= 0x80;
+            actingArmy->m_stats.attributes |= 0x80;
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
@@ -1338,7 +1338,7 @@ short combatManager::ProcessNextAction(struct tag_message &message)
             if (giNextActionExtra != -1 && actingArmy->m_hex != giNextActionExtra)
                 actingArmy->MoveAttack(giNextActionExtra, 1);
             actingArmy->MoveAttack(giNextActionGridIndex, 0);
-            actingArmy->m_attributes |= 0x80;
+            actingArmy->m_stats.attributes |= 0x80;
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
@@ -1356,7 +1356,7 @@ short combatManager::ProcessNextAction(struct tag_message &message)
             gpGame->m_players[m_playerId[1 - m_currentSide]].m_resources[RESOURCE_GOLD] += giNextActionExtra;
             break;
         case 3:
-            actingArmy->m_attributes |= 0x80;
+            actingArmy->m_stats.attributes |= 0x80;
             advance = 1;
             break;
     }

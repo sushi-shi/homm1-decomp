@@ -12,15 +12,18 @@ class army;
 H1_ENUM_BEGIN(SearchStorageConstant)
     SEARCH_QUEUE_CAPACITY = 1024,
     SEARCH_CELL_CAPACITY = 5184,
+    SEARCH_GRID_SIZE = 72,
     SEARCH_FLAG_BIT_COUNT = 1,
     SEARCH_DIRECTION_BIT_COUNT = 4,
     SEARCH_PATH_CAPACITY = 256
 H1_ENUM_END(SearchStorageConstant)
 
-// HoMM1 search node, nine bytes. PushPoint packs the direction into the low
-// four bits of the cost word and the reseed flags above the flag bits.
+// Donor searchNode's real packed record; HoMM1 stores nodes inline.
+// HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
+// (CheckReload shifts it right four; the path builder masks 0xf).
 #pragma pack(push, 1)
 struct searchNode {
+    // BuildPath sign-extends both coordinates.
     signed char x;
     signed char y;
     unsigned short direction : SEARCH_DIRECTION_BIT_COUNT;
@@ -28,11 +31,23 @@ struct searchNode {
     unsigned char visited : SEARCH_FLAG_BIT_COUNT;
     unsigned char unknownFlag : SEARCH_FLAG_BIT_COUNT;
     unsigned char rvFlag1 : SEARCH_FLAG_BIT_COUNT;
+    // DetermineTargetPosition passes bits 3..7 to RVOfPosition as a byte.
     unsigned char rvFlag2 : 5;
-    signed char adjacentMonsterX;
-    signed char adjacentMonsterY;
-    signed char previousX;
-    signed char previousY;
+    union {
+        // SeedPosition sign-extends the adjacent monster coordinates.
+        struct {
+            signed char adjacentMonsterX;
+            signed char adjacentMonsterY;
+            unsigned char previousFlags;
+            unsigned char terrain;
+        };
+        struct {
+            signed char valueX;
+            signed char valueY;
+            signed char previousX;
+            signed char previousY;
+        };
+    };
 };
 
 class searchArray {
@@ -43,7 +58,8 @@ public:
     int m_specialTargetX;
     int m_specialTargetY;
     searchNode m_queue[SEARCH_QUEUE_CAPACITY];
-    searchNode m_cells[SEARCH_CELL_CAPACITY];
+    // Retail indexes the [x][y] grid with a 648-byte row stride.
+    searchNode m_cells[SEARCH_GRID_SIZE][SEARCH_GRID_SIZE];
     // Retail DoDimensionDoor reads the path directions at +0xda54.
     unsigned char m_directions[SEARCH_PATH_CAPACITY];
     // --- constructors ---

@@ -4,6 +4,7 @@
 // 57 methods, 0 own-virtual, 0 static data.
 
 #include <H1/Macros.h>
+#include <H1/Types.h>
 
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
@@ -28,22 +29,13 @@ public:
     short m_quantity;
     short m_hitPointsLost;
     signed char m_unknown13;
+    // Init copies the creature speed here; m_stats.speed is the current one.
     signed char m_baseSpeed;
-    char m_unknown15;
-    // Monster hit points; Resurrect divides the raised strength by it.
-    unsigned char m_hitPoints;
-    signed char m_speed;
-    signed char m_unknown18;
-    // army::Init adds the hero's two primary skills here.
-    signed char m_attack;
-    signed char m_defense;
-    signed char m_damageMin;
-    signed char m_damageMax;
-    signed char m_unknown1d;
-    signed char m_shots;
-    char m_unknown1f[6];
-    // Monster attribute flags; bit 0 is a two-hex creature, bit 1 a flyer.
-    int m_attributes;
+    signed char m_unknown15;
+    // Creature record bytes +0xc..+0x1e (hit points through attributes);
+    // Init adds the hero's two primary skills to attack and defense.
+    // Attribute bit 0 is a two-hex creature, bit 1 a flyer.
+    tag_monsterStats m_stats;
     short m_unknown29;
     short m_unknown2b;
     signed char m_side;
@@ -51,10 +43,11 @@ public:
     int m_unknown2f;
     signed char m_unknown33;
     char m_unknown34;
-    int m_unknown35;
-    int m_unknown39;
-    int m_unknown3d;
-    int m_unknown41[4];
+    class icon* m_standIcon;
+    class icon* m_walkIcon;
+    class icon* m_attackIcon;
+    // move, attack, wince and shoot sounds.
+    class sample* m_samples[4];
     // Active spell; HoMM1 lets a stack carry one timed effect.
     signed char m_spellEffect;
     signed char m_unknown52;
@@ -69,10 +62,12 @@ public:
     // --- methods ---
     void WaitSample(int);
     void InitClean(void);
-    void Init(int, int, int, int, int, int);
+    // HoMM1 retail: byte type, word count, byte side and index (ret 0x10).
+    void Init(signed char, short, signed char, signed char);
     void LoadResources(void);
     void FreeResources(void);
-    void DrawToBuffer(int, int, int);
+    // HoMM1 retail: word x/y (ret 8).
+    void DrawToBuffer(short, short);
     void Wince(void);
     void Walk(int, int, int);
     void SpecialAttack(void);
@@ -80,10 +75,10 @@ public:
     void DoHydraAttack(int);
     void DoAttack(int);
     void ResetPath(void);
-    int WalkTo(void);
-    int WalkTo(int);
-    int AttackTo(void);
-    int AttackTo(int);
+    short WalkTo(void);
+    short WalkTo(short);
+    short AttackTo(void);
+    short AttackTo(short);
     void CheckLuck(void);
     void DamageEnemy(class army *, int *, int *, int, int);
     // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).

@@ -306,10 +306,10 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             teleportArmy->SpellEffect(2, 0);
             m_hexCells[teleportArmy->m_hex].m_occupantSide = -1;
             m_hexCells[teleportArmy->m_hex].m_occupantIndex = -1;
-            if (m_hexCells[teleportArmy->m_hex].m_unknown0a == 1) {
+            if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 1) {
                 m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = -1;
                 m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = -1;
-            } else if (m_hexCells[teleportArmy->m_hex].m_unknown0a == 0) {
+            } else if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 0) {
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = -1;
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = -1;
             }
@@ -317,7 +317,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             WaitEndSample(sample, -1);
             sprintf(gText, "telein.82m");
             sample = LoadPlaySample(gText);
-            if (teleportArmy->m_attributes & 1) {
+            if (teleportArmy->m_stats.attributes & 1) {
                 newHex = targetHex;
                 if (teleportArmy->m_facing == 0) {
                     newHex = teleportArmy->GetAdjacentCellIndex(newHex, 1);
@@ -325,7 +325,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         || (m_hexCells[newHex].m_occupantSide != -1
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacle != -1)
+                        || m_hexCells[newHex].m_obstacleIndex != -1)
                         targetHex--;
                 }
                 if (teleportArmy->m_facing == 1) {
@@ -334,7 +334,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         || (m_hexCells[newHex].m_occupantSide != -1
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacle != -1)
+                        || m_hexCells[newHex].m_obstacleIndex != -1)
                         targetHex++;
                 }
                 teleportArmy->m_hex = targetHex;
@@ -342,18 +342,18 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                     case 0:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex].m_unknown0a = 1;
+                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = 1;
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex + 1].m_unknown0a = 0;
+                        m_hexCells[teleportArmy->m_hex + 1].m_occupantFrame = 0;
                         break;
                     case 1:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex].m_unknown0a = 0;
+                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = 0;
                         m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex - 1].m_unknown0a = 1;
+                        m_hexCells[teleportArmy->m_hex - 1].m_occupantFrame = 1;
                         break;
                 }
                 teleportArmy->SpellEffect(2, 0);
@@ -361,7 +361,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                 teleportArmy->m_hex = targetHex;
                 m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                 m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                m_hexCells[teleportArmy->m_hex].m_unknown0a = -1;
+                m_hexCells[teleportArmy->m_hex].m_occupantFrame = -1;
                 teleportArmy->SpellEffect(2, 0);
             }
             teleportArmy->ResetAnimation(1);
@@ -375,7 +375,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(1, 0);
             targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
             targetArmy->PowEffect(7);
-            if (!(targetArmy->m_attributes & 0x10))
+            if (!(targetArmy->m_stats.attributes & 0x10))
                 targetArmy->ResetAnimation(1);
             break;
         case 3:
@@ -385,7 +385,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(4, 0);
             targetArmy->SpellEffect(4, 0);
             quantity = targetArmy->m_quantity;
-            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_hitPoints;
+            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
             if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
                 targetArmy->m_quantity = targetArmy->m_initialQuantity;
             if (targetArmy->m_quantity - quantity > 1)
@@ -401,9 +401,9 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
-            targetArmy->m_speed = 1;
-            if (targetArmy->m_attributes & 2)
-                targetArmy->m_attributes -= 2;
+            targetArmy->m_stats.speed = 1;
+            if (targetArmy->m_stats.attributes & 2)
+                targetArmy->m_stats.attributes -= 2;
             targetArmy->m_spellEffect = 6;
             targetArmy->m_unknown52 = 3;
             targetArmy->ResetAnimation(1);
@@ -413,7 +413,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
-            targetArmy->m_speed = 4;
+            targetArmy->m_stats.speed = 4;
             targetArmy->m_spellEffect = 5;
             targetArmy->m_unknown52 = 3;
             targetArmy->ResetAnimation(1);
@@ -433,7 +433,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(9, 0);
             targetArmy->m_spellEffect = 9;
             targetArmy->m_unknown52 = 3;
-            targetArmy->m_defense += 3;
+            targetArmy->m_stats.defense += 3;
             targetArmy->ResetAnimation(1);
             break;
         case 10:
@@ -469,7 +469,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
-            targetArmy->m_speed = 0;
+            targetArmy->m_stats.speed = 0;
             targetArmy->m_unknown13 = 1;
             targetArmy->m_spellEffect = 7;
             targetArmy->m_unknown52 = 2;
@@ -685,7 +685,7 @@ void combatManager::Fireball(signed char targetHex)
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (!(curArmy->m_attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->ResetAnimation(1);
         }
     }
@@ -749,7 +749,7 @@ void combatManager::MeteorShower(signed char targetHex)
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (!(curArmy->m_attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->ResetAnimation(1);
         }
     }
@@ -793,7 +793,7 @@ void combatManager::ElementalStorm(void)
             curArmy = &m_armies[sideIdx][index];
             if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
-                && !(curArmy->m_attributes & 0x10)) {
+                && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;
             }
@@ -807,7 +807,7 @@ void combatManager::ElementalStorm(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (!(curArmy->m_attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->ResetAnimation(0);
         }
     }
@@ -837,7 +837,7 @@ void combatManager::Armageddon(void)
             curArmy = &m_armies[sideIdx][index];
             if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
-                && !(curArmy->m_attributes & 0x10)) {
+                && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;
             }
@@ -870,7 +870,7 @@ void combatManager::Armageddon(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (!(curArmy->m_attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->ResetAnimation(0);
         }
     }

@@ -5,6 +5,9 @@
 #include <BASE/BITS.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Icon2b.h>
+#include <BASE/TILE.h>
+#include <BASE/Iconm2b.h>
+#include <BASE/Icond2b.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/bmap2.h>
@@ -12,6 +15,7 @@
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/fileRequester.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
@@ -20,36 +24,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern signed char giCampaignChoice;
+extern char gLastFilename[];
+
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
 DATA(0x004c5170)
 int giSeedingValid;
 
-// UpdBottomViewHero's per-creature mons32.icn frame width.
-extern signed char gMons32Width[];
-// ComboDraw's per-view-cell redraw marks and its animation frame clock.
-extern signed char bComboDraw[][17];
-extern int giFrameCount;
-
-// UpdateRadar's per-owner and per-terrain radar pixel colours.
-extern short gRadarOwnerColor[];
-extern short gRadarTerrainColor[];
-// QuickInfo's name tables.
-extern char* gTerrainNames[];
-extern char* gResourceNames[];
-extern char* gSpellNames[];
-extern char* gArmyNamesPlural[];
-extern char* gObjectNames[];
-// HoMM1 town-name lookup by town id (retail 0x00455aaf).
-char* GetTownName(int);
-// Buka TrueFalseDialogHandler (retail 0x00452c78), the plain dialog dispatcher.
-short TrueFalseDialogHandler(struct tag_message&);
-// KB/GAME entry points ProcessSearch reaches.
-SAMPLE2 LoadPlaySample(char*);
-void WaitEndSample(SAMPLE2, int);
-extern SAMPLE2 NULL_SAMPLE2;
-void CheckEndGame(int);
-void ComputeUALoc(int);
 
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)
@@ -321,7 +303,126 @@ void advManager::GetCursorSampleSet(int sampleSet) {
 // evidence: graph:7;base=0.528946;margin=1.360342;shape=0.339;size=0.921;calls=0.947;alternate=pol20:class mapCell * advManager::DoAdvCommand(void)@0x0005751b
 VA(0x004268d5, 0x619)
 class mapCell* advManager::DoAdvCommand(void) {
-    return 0;
+    signed char moveDone;
+    town* viewTown;
+    signed char bMoveStopped0;
+    hero* selectedHero15;
+    int oldMapValid;
+    tag_message messageValue8;
+    signed char newHover3;
+    mapCell* eventCellState16;
+    int moveChanged;
+    short pathIndex;
+
+    eventCellState16 = 0;
+    selectedHero15 = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    bMoveStopped0 = 0;
+    newHover3 = 0;
+    switch (m_selectedCell) {
+    case 1:
+        selectedHero15->m_destinationX = m_commandTargetX;
+        selectedHero15->m_destinationY = m_commandTargetY;
+        goto continue_route;
+    case 7:
+    continue_route:
+        gpSearchArray->BuildPath(
+            selectedHero15->m_x,
+            selectedHero15->m_y,
+            selectedHero15->m_destinationX,
+            selectedHero15->m_destinationY,
+            999
+        );
+        if (gpSearchArray->m_pathLength > 0) {
+            oldMapValid = m_routeShown;
+            MobilizeCurrHero(1);
+            if (gConfig.showRoute || oldMapValid)
+                ShowRoute(0, 0, 0);
+            else if (m_routeShown && m_selectedCell != 7)
+                HideRoute(1, 0, 1);
+            gpMouseManager->ReallyHidePointer();
+            gpInputManager->Flush();
+            for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
+                eventCellState16 = MoveHero(
+                    gpSearchArray->m_directions[pathIndex],
+                    pathIndex == 0,
+                    &TrigX,
+                    &TrigY,
+                    &moveChanged,
+                    0,
+                    &moveDone
+                );
+                UpdateHeroLocator(-1, 1, 1);
+                if (eventCellState16)
+                    break;
+                if (moveChanged || moveDone)
+                    goto movement_done;
+                messageValue8 = gpInputManager->GetEvent();
+                while (messageValue8.type) {
+                    if (messageValue8.type == 1 || messageValue8.type == 8 || messageValue8.type == 0x20
+                        || messageValue8.type == 0x200) {
+                        bMoveStopped0 = 1;
+                        StopCursor(1);
+                        goto movement_done;
+                    }
+                    Process1WindowsMessage();
+                    messageValue8 = gpInputManager->GetEvent();
+                }
+            }
+        movement_done:
+            if ((pathIndex <= 0 && selectedHero15->m_x == selectedHero15->m_destinationX
+                 && selectedHero15->m_y == selectedHero15->m_destinationY)
+                || (bMoveStopped0 && !gConfig.showRoute) || eventCellState16)
+                HideRoute(1, 1, 1);
+            else if (m_selectedCell == 7 || gConfig.showRoute)
+                ShowRoute(0, 1, 1);
+            gpMouseManager->ReallyShowPointer();
+            UpdBottomView(1, 1, 1);
+            if (eventCellState16) {
+                StopCursor(1);
+                DoEvent(eventCellState16, TrigX, TrigY);
+                eventCellState16 = 0;
+            }
+            Reseed(0, 0);
+            newHover3 = 1;
+            CheckDimHero();
+        }
+        break;
+    case 6:
+        DemobilizeCurrHero();
+        gpMouseManager->SetPointer(0);
+        viewTown = gpGame->GetTown(selectedHero15->m_occupiedTown);
+        viewTown->View();
+        eventCellState16 = 0;
+        break;
+    case 3:
+        DemobilizeCurrHero();
+        gpMouseManager->SetPointer(0);
+        eventCellState16 = GetCell(
+            gpGame->GetTown(gpCurPlayer->m_currentTown)->m_x, gpGame->GetTown(gpCurPlayer->m_currentTown)->m_y
+        );
+        gpGame->GetTown(gpCurPlayer->m_currentTown)->View();
+        eventCellState16 = 0;
+        break;
+    case 2:
+        gpMouseManager->SetPointer(0);
+        gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
+        RedrawAdvScreen(1);
+        gpWindowManager->FadeScreen(0, 8, 0);
+        break;
+    case 4:
+        SetHeroContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata, 0);
+        break;
+    case 5:
+        SetTownContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata);
+        break;
+    case -1:
+        break;
+    }
+    m_selectedCell = -1;
+    m_lastHoverCell = m_hoverCellY = -1;
+    if (newHover3)
+        ForceNewHover();
+    return eventCellState16;
 }
 
 // donor PoL RVA 0x00057d6c; preferred Buka symbol ?Main@advManager@@UAEHAAUtag_message@@@Z
@@ -656,11 +757,281 @@ int advManager::GetCloudLookup(int x, int y) {
     return giCloudType[cloudMask];
 }
 
+// DrawCell's per-call drawing state, kept in module storage as in Buka.
+int s_drawStoneTile;
+int s_drawCovered;
+int s_drawCloudFrame;
+signed char s_drawFlipCloud;
+unsigned short s_drawGroundTile;
+unsigned char s_drawTileset;
+
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
 VA(0x0042a7e5, 0xee8)
-void advManager::DrawCell(short, short, short, short, signed char, signed char, signed char) {}
+void advManager::DrawCell(
+    short mapX,
+    short mapY,
+    short screenX,
+    short screenY,
+    signed char drawMask,
+    signed char drawingPuzzle,
+    signed char forceDraw
+) {
+    signed char frame;
+    int heroYOffset6;
+    int cursorSuppressed;
+    short pixelY3;
+    short pixelX7;
+    mapCell* cell0;
+    hero* drawHero;
+    signed char iconIndex;
+    signed char flagColor;
+    signed char drawHeroIcon0;
+
+    if (!forceDraw && !bShowIt)
+        return;
+    pixelX7 = screenX << 5;
+    pixelY3 = screenY << 5;
+    cell0 = GetCell(mapX, mapY);
+    if (!gbAllBlack && (mapX < 0 || mapY < 0 || mapX >= 72 || mapY >= 72)) {
+        s_drawStoneTile = -1;
+        if (mapX == -1) {
+            if (mapY == -1)
+                s_drawStoneTile = 16;
+            else if (mapY == 72)
+                s_drawStoneTile = 19;
+            else if (mapY >= 0 && mapY < 72)
+                s_drawStoneTile = (mapY & 3) + 32;
+        } else if (mapX == 72) {
+            if (mapY == -1)
+                s_drawStoneTile = 17;
+            else if (mapY == 72)
+                s_drawStoneTile = 18;
+            else if (mapY >= 0 && mapY < 72)
+                s_drawStoneTile = (mapY & 3) + 24;
+        } else if (mapY == -1) {
+            if (mapX >= 0 && mapX < 72)
+                s_drawStoneTile = (mapX & 3) + 20;
+        } else if (mapY == 72 && mapX >= 0 && mapX < 72) {
+            s_drawStoneTile = (mapX & 3) + 28;
+        }
+        if (s_drawStoneTile == -1)
+            s_drawStoneTile = (mapX + 16) % 4 + ((mapY + 16) % 4) * 4;
+        TileToBitmap(m_stoneTiles, s_drawStoneTile, gpWindowManager->m_screen, pixelX7, pixelY3);
+        return;
+    } else {
+        if (!((!gbAllBlack && (gpGame->m_mapExtra[mapX][mapY] & giCurWatchPlayerBit)) || drawingPuzzle)) {
+            s_drawCovered = 1;
+            if (gbAllBlack)
+                s_drawCloudFrame = 0;
+            else
+                s_drawCloudFrame = GetCloudLookup(mapX, mapY);
+            if (s_drawCloudFrame == 0) {
+                if (drawMask & 0x20)
+                    TileToBitmap(m_cloudTiles, (mapX + mapY) & 3, gpWindowManager->m_screen, pixelX7, pixelY3);
+                return;
+            }
+            if (s_drawCloudFrame >= 100) {
+                s_drawFlipCloud = 1;
+                s_drawCloudFrame -= 100;
+            } else {
+                s_drawFlipCloud = 0;
+            }
+            if ((s_drawCloudFrame == 1 || s_drawCloudFrame == 5) && (mapX & 1))
+                s_drawCloudFrame++;
+            if (s_drawCloudFrame == 3 && (mapY & 1))
+                s_drawCloudFrame++;
+        } else {
+            s_drawCovered = 0;
+        }
+        if (drawMask & 0x20) {
+            if (s_drawCovered) {
+                if (s_drawFlipCloud)
+                    FlipIconToBitmap(
+                        m_cloudOverlayIcon, gpWindowManager->m_screen, pixelX7 + 31, pixelY3, s_drawCloudFrame - 1, 0
+                    );
+                else
+                    IconToBitmap(
+                        m_cloudOverlayIcon, gpWindowManager->m_screen, pixelX7, pixelY3, s_drawCloudFrame - 1, 0
+                    );
+            } else if (m_routeShown && m_visibilityMap[mapY * 72 + mapX]) {
+                if (m_visibilityMap[mapY * 72 + mapX] & 0x20)
+                    FlipIconToBitmap(
+                        m_objectIcons[17], gpWindowManager->m_screen, pixelX7 + 31, pixelY3 + 2,
+                        (m_visibilityMap[mapY * 72 + mapX] & 0x1f) - 1, 0
+                    );
+                else
+                    IconToBitmap(
+                        m_objectIcons[17], gpWindowManager->m_screen, pixelX7, pixelY3 + 2,
+                        (m_visibilityMap[mapY * 72 + mapX] & 0x1f) - 1, 0
+                    );
+            }
+        } else {
+            if (drawMask & 1) {
+                s_drawGroundTile = cell0->m_flags;
+                s_drawGroundTile <<= 14;
+                s_drawGroundTile |= cell0->m_tileIndex;
+                TileToBitmap(m_groundTiles, s_drawGroundTile, gpWindowManager->m_screen, pixelX7, pixelY3);
+                if (cell0->m_flags & 0x80) {
+                    s_drawTileset = cell0->m_objectTileset & 0xf;
+                    if (!drawingPuzzle || s_drawTileset != 7 || cell0->m_objectIndex != 1)
+                        IconToBitmap(
+                            m_objectIcons[s_drawTileset], gpWindowManager->m_screen, pixelX7, pixelY3,
+                            cell0->m_objectIndex, 0
+                        );
+                }
+            }
+            if (drawMask & 2) {
+                if (!(cell0->m_flags & 0x80) && cell0->m_objectIndex != 0xff) {
+                    s_drawTileset = cell0->m_objectTileset & 0xf;
+                    if (s_drawTileset != 12) {
+                        IconToBitmap(
+                            m_objectIcons[s_drawTileset], gpWindowManager->m_screen, pixelX7, pixelY3,
+                            cell0->m_objectIndex, 0
+                        );
+                        if (cell0->m_flags & 4)
+                            IconToBitmap(
+                                m_objectIcons[s_drawTileset], gpWindowManager->m_screen, pixelX7, pixelY3,
+                                cell0->m_objectIndex + m_updateMaxX + 1, 0
+                            );
+                    }
+                }
+                if (cell0->m_flags & 0x10)
+                    IconToBitmap(
+                        m_objectIcons[cell0->m_objectTileset >> 4], gpWindowManager->m_screen, pixelX7,
+                        pixelY3, cell0->m_unknown05, 0
+                    );
+            }
+            if (drawMask & 8) {
+                drawHeroIcon0 = 0;
+                drawHero = 0;
+                if (!(cell0->m_flags & 0x80) && cell0->m_objectIndex != 0xff) {
+                    s_drawTileset = cell0->m_objectTileset & 0xf;
+                    if (s_drawTileset == 12 && cell0->m_objectIndex <= 27) {
+                        if (m_lastQuickViewX == mapX && m_lastQuickViewY == mapY) {
+                            if (m_mineGuardianFacingLeft)
+                                FlipIconToBitmap(
+                                    m_objectIcons[20], gpWindowManager->m_screen, pixelX7 + 36, pixelY3 - 5,
+                                    cell0->m_objectIndex * 7 + 6, 0
+                                );
+                            else
+                                IconToBitmap(
+                                    m_objectIcons[20], gpWindowManager->m_screen, pixelX7, pixelY3 - 5,
+                                    cell0->m_objectIndex * 7 + 6, 0
+                                );
+                        } else {
+                            ClipIconToBitmap(
+                                m_objectIcons[20], gpWindowManager->m_screen, pixelX7, pixelY3 - 5,
+                                cell0->m_objectIndex * 7 + m_animationPhases[mapX & 3], 0, 0, 0, 480, 480
+                            );
+                        }
+                    }
+                }
+                if (cell0->m_triggerType == 0xbe) {
+                    flagColor = -1;
+                    iconIndex = 4;
+                    frame = GetCursorBaseFrame(gpGame->m_boats[cell0->m_objectMetadata].direction);
+                    drawHeroIcon0 = 1;
+                    heroYOffset6 = -10;
+                } else {
+                    heroYOffset6 = 0;
+                    if (cell0->m_triggerType == 0xbd) {
+                        drawHero = gpGame->GetHero(cell0->m_objectMetadata);
+                        if (drawHero->m_eventFlags & 0x80)
+                            flagColor = -1;
+                        else
+                            flagColor = gpGame->m_players[drawHero->m_owner].m_unknown11;
+                        if (drawHero->m_eventFlags & 0x80)
+                            iconIndex = 4;
+                        else
+                            iconIndex = drawHero->m_unknown1c;
+                        frame = GetCursorBaseFrame(drawHero->m_direction);
+                        drawHeroIcon0 = 1;
+                        if (drawHero->m_eventFlags & 0x80)
+                            heroYOffset6 = -10;
+                    }
+                }
+                if (drawHeroIcon0) {
+                    if (frame & 0x80) {
+                        if (screenX == 0 || screenY <= 1 || screenX == 14 || screenY == 14) {
+                            FlipClippedIconToBitmap(
+                                m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
+                                pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            );
+                            if (flagColor != -1)
+                                FlipClippedIconToBitmap(
+                                    m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
+                                    pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                                );
+                        } else {
+                            if (m_drawHeroShadows && iconIndex != 4)
+                                FlipDimIconToBitmap(
+                                    m_boatShadowIcon, gpWindowManager->m_screen, pixelX7 + 32, pixelY3 + 31,
+                                    frame & 0x7f, 0
+                                );
+                            FlipIconToBitmap(
+                                m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
+                                pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            );
+                            if (flagColor != -1)
+                                FlipIconToBitmap(
+                                    m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
+                                    pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                                );
+                        }
+                    } else if (screenX == 0 || screenY <= 1 || screenX == 14 || screenY == 14) {
+                        ClippedIconToBitmap(
+                            m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 31 + heroYOffset6,
+                            frame, 0
+                        );
+                        if (flagColor != -1)
+                            ClippedIconToBitmap(
+                                m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
+                                pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            );
+                    } else {
+                        if (m_drawHeroShadows && iconIndex != 4)
+                            DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, pixelX7, pixelY3 + 31, frame, 0);
+                        IconToBitmap(
+                            m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 31 + heroYOffset6,
+                            frame, 0
+                        );
+                        if (flagColor != -1)
+                            IconToBitmap(
+                                m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
+                                pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            );
+                    }
+                }
+                if (m_cursorActive && (cell0->m_flags & 0x40) && !m_comboHeroDrawn && m_mapOriginX + 7 == mapX
+                    && m_mapOriginY + 7 == mapY) {
+                    DrawCursor();
+                    m_comboHeroDrawn = 1;
+                }
+            }
+            if (drawMask & 4) {
+                if (cell0->m_overlayIndex != 0xff) {
+                    s_drawTileset = cell0->m_overlayTileset & 0xf;
+                    IconToBitmap(
+                        m_objectIcons[s_drawTileset], gpWindowManager->m_screen, pixelX7, pixelY3,
+                        cell0->m_overlayIndex, 0
+                    );
+                    if (cell0->m_flags & 8)
+                        IconToBitmap(
+                            m_objectIcons[s_drawTileset], gpWindowManager->m_screen, pixelX7, pixelY3,
+                            cell0->m_overlayIndex + m_updateMaxX + 1, 0
+                        );
+                }
+                if (cell0->m_flags & 0x20)
+                    IconToBitmap(
+                        m_objectIcons[cell0->m_overlayTileset >> 4], gpWindowManager->m_screen, pixelX7,
+                        pixelY3, cell0->m_unknown05, 0
+                    );
+            }
+        }
+    }
+}
 
 // donor PoL RVA 0x0005e0da; preferred Buka symbol ?UpdateRadar@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -2817,8 +3188,43 @@ void UpdateCPanel(signed char initialDraw) {
 }
 
 VA(0x00432bb7, 0x232)
-int SaveGame(void) {
-    return 0;
+signed char SaveGame(void) {
+    short result6;
+    fileRequester* requester0;
+    char searchMask[16];
+    signed char success;
+    int humans;
+    int i0;
+    char extension[8];
+
+    success = 0;
+    humans = 0;
+    gpAdvManager->DisableButtons();
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    for (i0 = 0; i0 < 4; i0++)
+        if (!gpGame->m_playerDead[i0] && gbHumanPlayer[i0])
+            humans++;
+    if (giCampaignChoice > 0) {
+        sprintf(extension, ".CGM");
+        sprintf(searchMask, "*.CGM");
+    } else {
+        sprintf(extension, ".GM%d", humans);
+        sprintf(searchMask, "*.GM*");
+    }
+    requester0 = new fileRequester(0xa0, 0x28, 1, searchMask, ".\\GAMES\\", extension);
+    if (!requester0)
+        MemError();
+    result6 = gpExec->DoDialog(requester0);
+    if (result6 == 0x7802) {
+        success = 1;
+        bFreshSave = 1;
+        success = gpGame->SaveGame(gLastFilename, 0);
+        if (success)
+            NormalDialog("Game saved successfully.", 1, 0xb1, -1, -1, 0, -1, 0, -1);
+    }
+    delete requester0;
+    gpAdvManager->EnableButtons();
+    return success;
 }
 
 extern char *gCPanelHelp[];

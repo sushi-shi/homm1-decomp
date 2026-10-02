@@ -455,14 +455,14 @@ done:
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
 VA(0x00457967, 0x1e7)
 signed char game::PickLoadGame(void) {
-    fileRequester* requester;
+    fileRequester* request;
     short result;
 
     if (!SetupGame(0))
         return 0;
     if (gbWaitForRemoteReceive)
         return 1;
-    requester = new fileRequester(
+    request = new fileRequester(
         0x136,
         0xe,
         0,
@@ -470,17 +470,17 @@ signed char game::PickLoadGame(void) {
         ".\\GAMES\\",
         giCampaignChoice > 0 ? ".CGM" : ".GM*"
     );
-    if (!requester)
+    if (!request)
         MemError();
     gpMouseManager->ReallyShowPointer();
-    result = gpExec->DoDialog(requester);
+    result = gpExec->DoDialog(request);
     gpMouseManager->ReallyHidePointer();
     if (result == 0x7802) {
         gpGame->LoadGame(gLastFilename, 0, 0);
-        delete requester;
+        delete request;
         return 1;
     } else {
-        delete requester;
+        delete request;
         return 0;
     }
 }

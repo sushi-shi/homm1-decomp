@@ -1,36 +1,36 @@
 #ifndef HOMM1_SOURCE_HEXCELL_H
 #define HOMM1_SOURCE_HEXCELL_H
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 8 methods, 0 own-virtual, 0 static data.
+// HoMM1 keeps 12-byte cells: combatManager strides its 45 hexes by twelve
+// bytes from +0x40.
 
 #include <H1/Macros.h>
 
-// 12-byte combat grid cell (retail constructor 0x0046e5b0); the combat
-// manager embeds 45 of them (5 rows of 9) at +0x40.
 #pragma pack(push, 1)
 class hexcell {
 public:
-    // Screen position of the hex centre (Fireball draws from here).
     short m_x;
     short m_y;
-    signed char m_unknown04;
-    signed char m_unknown05;
-    char m_unknown06;
-    // ValidHexToStandOn: -1 when no obstacle stands on the hex.
-    signed char m_obstacle;
+    // DrawGround draws combat icon (3 + this) at this frame.
+    signed char m_groundIcon;
+    signed char m_groundFrame;
+    // Castle pieces (5) draw towers and walls; other obstacles use frame 7.
+    signed char m_obstacleType;
+    // -1 when no obstacle stands on the hex (ValidHexToStandOn).
+    signed char m_obstacleIndex;
     signed char m_occupantSide;
     signed char m_occupantIndex;
-    signed char m_unknown0a;
-    signed char m_unknown0b;
+    signed char m_occupantFrame;
+    // army::ResetPath clears the per-cell path mark.
+    signed char m_pathFlag;
     // --- constructors ---
     hexcell(void);
     // --- methods ---
+    hexcell* TakeOccupant(hexcell*);
     void DrawGround(void);
-    void DrawLowerDeadOccupants(void);
-    void DrawUpperDeadOccupant(void);
-    void DrawOccupant(int, int);
-    void DrawTower(int);
-    void DrawClouds(void);
+    void DrawOccupant(void);
+    void DrawTower(signed char);
+    void DrawWall(void);
     void DrawObstacle(void);
 };
 #pragma pack(pop)

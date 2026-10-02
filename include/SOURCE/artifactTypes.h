@@ -1,0 +1,27 @@
+#ifndef HOMM1_SOURCE_ARTIFACTTYPES_H
+#define HOMM1_SOURCE_ARTIFACTTYPES_H
+
+#include <Domains.h>
+
+// clang-format off
+// Artifact ids follow HoMM1's artifact table order; the morale and luck
+// modifier texts KB lists prove the medal and luck-charm ids.
+H1_ENUM_BEGIN(ArtifactType)
+    ARTIFACT_MEDAL_OF_VALOR = 8,
+    ARTIFACT_MEDAL_OF_COURAGE = 9,
+    ARTIFACT_MEDAL_OF_HONOR = 10,
+    ARTIFACT_MEDAL_OF_DISTINCTION = 11,
+    ARTIFACT_FIZBIN_OF_MISFORTUNE = 12,
+    ARTIFACT_NOMAD_BOOTS = 29,
+    ARTIFACT_TRAVELER_BOOTS = 30,
+    ARTIFACT_LUCKY_RABBITS_FOOT = 31,
+    ARTIFACT_GOLDEN_HORSESHOE = 32,
+    ARTIFACT_GAMBLERS_LUCKY_COIN = 33,
+    ARTIFACT_FOUR_LEAF_CLOVER = 34,
+    ARTIFACT_TRUE_COMPASS = 35,
+    ARTIFACT_SAILORS_ASTROLABE = 36,
+    ARTIFACT_MAGIC_BOOK = 37
+H1_ENUM_END(ArtifactType)
+// clang-format on
+
+#endif // HOMM1_SOURCE_ARTIFACTTYPES_H

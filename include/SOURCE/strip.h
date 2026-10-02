@@ -31,7 +31,7 @@ public:
     armyGroup* m_army;
     // --- constructors ---
     // HoMM1 retail: eight arguments (ret 0x20).
-    strip(short, short, signed char, unsigned long int, signed char, class armyGroup*, short, int);
+    strip(short, short, signed char, short, signed char, class armyGroup*, short, int);
     ~strip();
     // --- methods ---
     void Draw(void);

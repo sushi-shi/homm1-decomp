@@ -246,7 +246,8 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/GAME"
 source = "src/SOURCE/GAME.cpp"
-flags = "cpp_carcass"
+# GetMap registers fs:[0] around its heroWindow/fileRequester news.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/HERO"
@@ -300,6 +301,7 @@ flags = "cpp_carcass_eh"
 
 # Retail SEARCH (0x4028b0..0x403631) is int3-separated from RECRUIT and
 # aligned like FINDPATH: register-allocated /O2 code with no frames.
+
 [[unit]]
 unit = "SOURCE/SEARCH"
 source = "src/SOURCE/SEARCH.cpp"
@@ -313,7 +315,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/REQUEST"
 source = "src/SOURCE/REQUEST.cpp"
-flags = "cpp_carcass"
+# fileRequester::Open registers fs:[0] around its heroWindow/iconWidget news.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/SETUP"
@@ -405,3 +408,28 @@ flags = "cpp_carcass"
 unit = "BASE/PrintMemoryLeaks"
 source = "src/BASE/PrintMemoryLeaks.cpp"
 flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/Icon2bc"
+source = "src/BASE/Icon2bc.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Iconf2bc"
+source = "src/BASE/Iconf2bc.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/ARMY"
+source = "src/SOURCE/ARMY.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/HEXCELL"
+source = "src/SOURCE/HEXCELL.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/CPUSPEED"
+source = "src/SOURCE/CPUSPEED.cpp"
+flags = "cpp_carcass"

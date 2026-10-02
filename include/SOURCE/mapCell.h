@@ -23,14 +23,15 @@ public:
     unsigned char m_objectIndex;
     unsigned char m_overlayTileset;
     unsigned char m_overlayIndex;
-    char m_unknown05;
+    // DrawCell draws this overlay frame zero-extended.
+    unsigned char m_unknown05;
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
     unsigned char m_flags;
     unsigned char m_unknown07;
     // Whole-byte trigger: readers mask the low seven type bits and the
     // 0x80 event bit; DemobilizeCurrHero stores the hero trigger directly.
     unsigned char m_triggerType;
-    signed char m_objectMetadata;
+    unsigned char m_objectMetadata;
 };
 #pragma pack(pop)
 

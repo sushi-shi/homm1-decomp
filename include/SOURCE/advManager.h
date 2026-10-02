@@ -262,7 +262,7 @@ public:
         signed char*,
         int,
         int,
-        int,
+        signed char,
         int,
         int
     );
@@ -279,7 +279,7 @@ public:
         int,
         int,
         int,
-        int
+        signed char
     );
     void SendHeroTownData(
         int,
@@ -292,10 +292,10 @@ public:
         int,
         int,
         int,
-        int,
-        int,
-        int,
-        int
+        signed char,
+        signed char,
+        signed char,
+        signed char
     );
     void ReceiveHeroTownData(
         char*,
@@ -332,7 +332,7 @@ public:
 
 short APanelHandler(struct tag_message &);
 void UpdateCPanel(signed char);
-int SaveGame(void);
+signed char SaveGame(void);
 short CPanelHandler(struct tag_message &);
 
 extern int gbNoBorder;
@@ -373,4 +373,16 @@ extern class heroWindow *cPanel;
 extern signed char bPrefsChanged;
 extern signed char bFreshSave;
 extern unsigned char giCloudType[];
+// UpdBottomViewHero's per-creature mons32.icn frame width.
+extern signed char gMons32Width[];
+// ComboDraw's per-view-cell redraw marks and its animation frame clock.
+extern signed char bComboDraw[][17];
+extern int giFrameCount;
+// UpdateRadar's per-owner and per-terrain radar pixel colours.
+extern short gRadarOwnerColor[];
+extern short gRadarTerrainColor[];
+void ComputeUALoc(int);
+// DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
+extern int TrigX;
+extern int TrigY;
 #endif // HOMM1_SOURCE_ADVMANAGER_H

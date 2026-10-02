@@ -73,21 +73,28 @@ struct SAMPLE2 {
 #pragma pack(push, 1)
 // HoMM1 monster records are 0x1f bytes: GetMonsterCost reads the cost word at
 // +0, retail readers use a dword at +8 and test attribute bits at +0x1b.
+// army::Init copies these 0x13 bytes from record +0xc into each combat stack.
+struct tag_monsterStats {
+    // army::Resurrect divides by this byte zero-extended.
+    unsigned char hitPoints;
+    signed char speed;
+    signed char missileType;
+    signed char attack;
+    signed char defense;
+    signed char damageMin;
+    signed char damageMax;
+    signed char unknown07;
+    signed char shots;
+    char unknown09[6];
+    int attributes;
+};
 struct tag_monsterInfo {
     short cost;
     int fightValue;
     signed char iconIndex;
     signed char growth;
     int hitPoints;
-    signed char race;
-    signed char speed;
-    signed char attack;
-    signed char defense;
-    signed char damageMin;
-    signed char damageMax;
-    signed char shots;
-    char spriteName[8];
-    int attributes;
+    tag_monsterStats stats;
 };
 struct monsterRV {
     int rv;

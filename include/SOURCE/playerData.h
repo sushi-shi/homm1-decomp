@@ -31,12 +31,14 @@ public:
     char m_unknown18[0x1c];
     int m_income[PLAYER_RESOURCE_COUNT];
     int m_obeliskValue;
-    int m_totalObeliskValue;
+    // GetTurnAIVars stores MeanRVOfUnexploredTerritory here (+0xf5).
+    int m_unexploredValue;
     // EvaluateOneTimeCreaturePurchase weights fight value by the float at +0xf9;
     // FightEvent adds the artifact float at +0xfd.
     float m_upgradeValueWeight;
     float m_artifactValue;
-    int m_unexploredValue;
+    // GetTurnAIVars' float share 1/(players + dead players) per player.
+    float m_artifactPoolShare;
 };
 
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at
@@ -47,7 +49,9 @@ public:
     char m_unknown00[0x11];
     // SetupThievesGuild adds this byte to the town-window flag frame base.
     signed char m_unknown11;
-    signed char m_color;
+    // Computer-player difficulty: GetTurnAIVars scales the attack bonuses by
+    // it and hero::CalcMobility grants computer heroes +3 from level 3.
+    signed char m_difficulty;
     signed char m_heroCount;
     signed char m_currentHero;
     signed char m_heroLocatorPage;
@@ -55,9 +59,9 @@ public:
     signed char m_availableHeroIds[2];
     char m_unknown20[0x32];
     // Saved one byte at a time between the hero and town blocks.
-    signed char m_unknown52;
-    signed char m_unknown53;
-    signed char m_unknown54;
+    signed char m_ultimateArtifactHintChance;
+    signed char m_ultimateArtifactHintX;
+    signed char m_ultimateArtifactHintY;
     signed char m_unknown55;
     signed char m_townCount;
     signed char m_currentTown;

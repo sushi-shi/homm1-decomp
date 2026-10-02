@@ -60,7 +60,7 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
     if (nodeX < 0)
         return 0;
     while (startX != nodeX || startY != nodeY) {
-        pathNode = &m_cells[nodeX * 72 + nodeY];
+        pathNode = &m_cells[nodeX][nodeY];
         *pathDirection++ = pathNode->direction;
         if (++m_pathLength >= 256)
             break;
@@ -77,7 +77,7 @@ int searchArray::BuildPath(short startX, short startY, short destinationX, short
     unsigned char *pathDirection = m_directions;
     m_pathLength = 0;
     while (startX != destinationX || startY != destinationY) {
-        searchNode *node = &m_cells[destinationX * 72 + destinationY];
+        searchNode *node = &m_cells[destinationX][destinationY];
         if (node->x != destinationX && node->y != destinationY)
             return 0;
         if (node->distance <= maximumCost) {
@@ -159,7 +159,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
     } else
         s_hasTarget = 0;
     if (s_hasTarget && continueSeed) {
-        s_currentNode = m_cells[targetX * 72 + targetY];
+        s_currentNode = m_cells[targetX][targetY];
         if (s_currentNode.visited && s_currentNode.distance <= s_currentCost + 4)
             return;
     }
@@ -237,12 +237,12 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
             s_neighborX = s_currentNode.x + normalDirTable[s_direction].x;
             s_neighborY = s_currentNode.y + normalDirTable[s_direction].y;
             if (findAdjacentMonster && (mapExtra[s_neighborX][s_neighborY] & 0x80)
-                && m_cells[s_neighborX * 72 + s_neighborY].visited && m_cells[s_neighborX * 72 + s_neighborY].rvFlag1
-                && m_cells[s_neighborX * 72 + s_neighborY].distance < s_currentNode.distance + 12
+                && m_cells[s_neighborX][s_neighborY].visited && m_cells[s_neighborX][s_neighborY].rvFlag1
+                && m_cells[s_neighborX][s_neighborY].distance < s_currentNode.distance + 12
                 && gpAdvManager->FindAdjacentMonster(s_neighborX, s_neighborY, &s_adjacentMonsterX,
                                                      &s_adjacentMonsterY, -1, -1)
-                && m_cells[s_neighborX * 72 + s_neighborY].adjacentMonsterX == s_adjacentMonsterX
-                && m_cells[s_neighborX * 72 + s_neighborY].adjacentMonsterY == s_adjacentMonsterY)
+                && m_cells[s_neighborX][s_neighborY].adjacentMonsterX == s_adjacentMonsterX
+                && m_cells[s_neighborX][s_neighborY].adjacentMonsterY == s_adjacentMonsterY)
                 continue;
             PushPoint(s_neighborX, s_neighborY, s_direction, s_stepCost[s_direction & 1], maximumCost,
                       s_directionCosts[s_direction], s_hasAdjacentMonster, s_adjacentMonsterX, s_adjacentMonsterY,
@@ -273,10 +273,10 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                         if (((1 << s_direction) & 0x38) && s_targetCell->m_objectIndex != 0xff
                             && !(s_targetCell->m_flags & 0x80))
                             s_directionBlocked = 0;
-                        if (s_directionBlocked && m_cells[s_adjacentX * 72 + s_adjacentY].visited
+                        if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited
                             && !(s_targetCell->m_triggerType & 0x80)) {
                             s_terrain = giGroundToTerrain[s_targetCell->m_tileIndex];
-                            s_adjacentCost = m_cells[s_adjacentX * 72 + s_adjacentY].distance;
+                            s_adjacentCost = m_cells[s_adjacentX][s_adjacentY].distance;
                             s_stepCost[0] = s_adjacentCost
                                             + CalcTerrainCost(s_terrain, 0, giCurTempMobility - s_adjacentCost,
                                                               costMode);
