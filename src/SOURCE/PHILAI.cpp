@@ -2167,7 +2167,224 @@ int philAI::QuickCombat(
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.484024;margin=0.235954;shape=0.394;size=0.661;calls=0.952;alternate=pol20:void philAI::HeroInteractionAtTown(class hero *, class town *, int, int *)@0x0004183b
 VA(0x00420c11, 0xbae)
-void philAI::HeroInteractionAtTown(class hero*, class town*, int, int*) {}
+void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doInteraction, int* value) {
+    int keepGoing2;
+    int heroFV4;
+    int armyCount;
+    int moveCount9;
+    int transferRating;
+    int toHero;
+    float townShare4;
+    int statSum;
+    float transferShare6;
+    armyGroup* toArmy;
+    armyGroup* fromArmy;
+    int slot6;
+    int i;
+    int garrisonFV;
+    int j;
+    int speedLimit;
+    int stackFV;
+    int bestValue15;
+    float transferFactor2;
+    float curveTerm;
+    int room;
+    int learned8;
+    float wantShare3;
+    int moveNum;
+
+    *value = 0;
+    if (doInteraction) {
+        if ((townPointer->m_buildings & 8) && townPointer->m_id != giBestShipyardId) {
+            i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
+            if (gbActualShipyardFound) {
+                if (giBestShipyardDist > i) {
+                    giBestShipyardDist = i;
+                    giBestShipyardId = townPointer->m_id;
+                }
+            } else {
+                giBestShipyardDist = i;
+                giBestShipyardId = townPointer->m_id;
+            }
+            gbPossibleShipyardFound = 1;
+            gbActualShipyardFound = 1;
+        } else if ((townPointer->m_buildings & 0x40)
+                   && gpAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1)->m_tileIndex < 20
+                   && !gbActualShipyardFound && townPointer->m_id != giBestShipyardId) {
+            i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
+            if (gbPossibleShipyardFound) {
+                if (giBestShipyardDist > i) {
+                    giBestShipyardDist = i;
+                    giBestShipyardId = townPointer->m_id;
+                }
+            } else {
+                giBestShipyardDist = i;
+                giBestShipyardId = townPointer->m_id;
+            }
+            gbPossibleShipyardFound = 1;
+        }
+    } else if (heroPointer->m_primaryStats[3] > 0 && !heroPointer->HasArtifact(37)
+               && (townPointer->m_buildings & 1)) {
+        if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= 500) {
+            gpAdvManager->GiveArtifact(heroPointer, 37);
+            gpCurPlayer->m_resources[RESOURCE_GOLD] -= 500;
+        } else {
+            heroPointer->m_remainingMobility = 0;
+        }
+    }
+    if ((townPointer->m_buildings & 1) && (doInteraction || heroPointer->HasArtifact(37))) {
+        for (i = 0; i < gMageGuildSpellCount[townPointer->m_buildState]; i++) {
+            learned8 = heroPointer->AddSpell(
+                townPointer->m_mageGuildSpells[i], heroPointer->m_primaryStats[3], doInteraction
+            );
+            *value += StatChangeValue(heroPointer->m_primaryStats[3] - learned8, heroPointer->m_primaryStats[3])
+                      * giSpellAIValue[townPointer->m_mageGuildSpells[i]]
+                      * ((gcSpellAIFlags[townPointer->m_mageGuildSpells[i]] & 1) ? heroPointer->m_primaryStats[3]
+                                                                                 : 1);
+        }
+    }
+    heroFV4 = FightValueOfStack(&heroPointer->m_army, 0, 0, 0, 0);
+    garrisonFV = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0);
+    townShare4 = (float)garrisonFV / (heroFV4 + garrisonFV);
+    statSum = 0;
+    statSum = heroPointer->m_primaryStats[0] + heroPointer->m_primaryStats[1];
+    if (statSum > 10)
+        statSum = 10;
+    if (townPointer->m_buildings & 0x40)
+        wantShare3 = 0.54 - statSum * 0.02;
+    else
+        wantShare3 = 0.33 - statSum * 0.01;
+    transferShare6 = (wantShare3 < townShare4 ? townShare4 - wantShare3 : wantShare3 - townShare4);
+    if (wantShare3 * 0.15 > transferShare6)
+        return;
+    toHero = 0;
+    if (townShare4 > wantShare3)
+        toHero = 1;
+    if (doInteraction) {
+        if (heroFV4 < garrisonFV)
+            transferFactor2 = 0.25f;
+        else
+            transferFactor2 = 0.13f;
+        curveTerm = transferShare6 + 1.0f - 0.22;
+        transferRating = (int)((curveTerm * curveTerm - 1.0f) * (heroFV4 + garrisonFV)
+                               * gpCurPlayer->m_aiData.m_upgradeValueWeight * transferFactor2);
+        if (transferRating < 0)
+            transferRating = 0;
+        room = 0;
+        if (toHero) {
+            for (i = 0; i < 5; i++)
+                if (heroPointer->m_army.m_creatureCounts[i] <= 0)
+                    room = 1;
+        } else {
+            for (i = 0; i < 5; i++)
+                if (townPointer->m_army.m_creatureCounts[i] <= 0)
+                    room = 1;
+        }
+        if (!room) {
+            for (i = 0; i < 5; i++) {
+                for (j = 0; j < 5; j++) {
+                    if (townPointer->m_army.m_creatureTypes[i] == heroPointer->m_army.m_creatureTypes[j]) {
+                        room = 1;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!room)
+            transferRating = 0;
+        *value += transferRating;
+        return;
+    }
+    if (toHero)
+        transferShare6 = transferShare6 + 0.04;
+    moveCount9 = (int)((heroFV4 + garrisonFV) * transferShare6);
+    fromArmy = toHero ? &townPointer->m_army : &heroPointer->m_army;
+    toArmy = toHero ? &heroPointer->m_army : &townPointer->m_army;
+    keepGoing2 = 1;
+    gbTroopReload = 0;
+    while (keepGoing2) {
+        if (!toHero) {
+            armyCount = 0;
+            for (i = 0; i < 5; i++)
+                if (heroPointer->m_army.m_creatureTypes[i] != -1)
+                    armyCount += heroPointer->m_army.m_creatureCounts[i];
+            if (armyCount <= 1)
+                return;
+        }
+        slot6 = -1;
+        for (i = 0; i < 5; i++) {
+            if (slot6 == -1) {
+                for (j = 0; j < 5; j++) {
+                    if (fromArmy->m_creatureTypes[i] != -1
+                        && fromArmy->m_creatureTypes[i] == toArmy->m_creatureTypes[j]) {
+                        slot6 = i;
+                        break;
+                    }
+                }
+            }
+        }
+        if (slot6 == -1) {
+            bestValue15 = -9999;
+            if (toHero)
+                speedLimit = 1;
+            else
+                speedLimit = 3;
+            for (i = 0; i < 5; i++) {
+                if (fromArmy->m_creatureTypes[i] != -1) {
+                    stackFV = gMonsterDatabase[fromArmy->m_creatureTypes[i]].fightValue
+                              * fromArmy->m_creatureCounts[i];
+                    if ((toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed > speedLimit)
+                        || (!toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed < speedLimit)) {
+                        speedLimit = gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed;
+                        bestValue15 = stackFV;
+                        slot6 = i;
+                    } else if (gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed == speedLimit
+                               && bestValue15 < stackFV) {
+                        bestValue15 = stackFV;
+                        slot6 = i;
+                    }
+                }
+            }
+        }
+        if (slot6 == -1) {
+            keepGoing2 = 0;
+        } else if (toArmy->CanJoin(fromArmy->m_creatureTypes[slot6])) {
+            moveNum = (int)((float)moveCount9 / gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue + 0.5);
+            if (moveNum > 0) {
+                if (fromArmy->m_creatureCounts[slot6] < moveNum) {
+                    moveNum = fromArmy->m_creatureCounts[slot6];
+                } else {
+                    keepGoing2 = 0;
+                    if (moveNum >= fromArmy->m_creatureCounts[slot6] * 0.65
+                        || moveNum >= fromArmy->m_creatureCounts[slot6] - 1) {
+                        if (((toHero ? garrisonFV : heroFV4) - moveCount9) * 0.2
+                            > gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue
+                                  * (fromArmy->m_creatureCounts[slot6] - moveNum))
+                            moveNum = fromArmy->m_creatureCounts[slot6];
+                    }
+                }
+                if (!toHero && moveNum >= armyCount) {
+                    moveNum = armyCount - 1;
+                    keepGoing2 = 0;
+                }
+                if (moveCount9 < gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue * moveNum * 1.2)
+                    keepGoing2 = 0;
+                else
+                    moveCount9 -= gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue * moveNum;
+                toArmy->Add(fromArmy->m_creatureTypes[slot6], moveNum, -1);
+                fromArmy->m_creatureCounts[slot6] -= moveNum;
+                if (fromArmy->m_creatureCounts[slot6] == 0)
+                    fromArmy->m_creatureTypes[slot6] = -1;
+            } else {
+                keepGoing2 = 0;
+            }
+        } else {
+            keepGoing2 = 0;
+        }
+    }
+    if (!doInteraction && townPointer->m_id == giHumanTownConquered && heroPointer->m_remainingMobility <= 20)
+        heroPointer->m_remainingMobility = 0;
+}
 
 // Buka 2.1 ChooseGoldOrExperience; HoMM1 weighs the experience by the
 // hero's AI fight value instead of a fixed gold threshold.

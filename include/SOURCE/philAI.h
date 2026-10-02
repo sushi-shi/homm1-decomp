@@ -196,6 +196,7 @@ extern signed char giBestShipyardId;
 extern signed char gbPossibleShipyardFound;
 extern signed char gbActualShipyardFound;
 extern signed char gbActualBoatFound;
+extern signed char giBestShipyardDist;
 // StrategicValueOfPosition's per-cell cache, hero live chances and the
 // shared search it borrows unless a nested evaluation already holds it.
 extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
