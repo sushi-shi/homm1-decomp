@@ -2190,6 +2190,44 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
     }
 }
 
+// Buka 2.1 game::ComputeDailyGold for HoMM1: the first mine and gold mines
+// pay 1000, towns 250 (castles 1000), three treasure artifacts add more,
+// and computer players' gold scales with their level.
+VA(0x00441726, 0x280)
+int game::ComputeDailyGold(int player) {
+    int gold;
+    int i;
+    gold = 0;
+    if (m_mines[0].owner == player)
+        gold += 1000;
+    for (i = 2; i < GAME_MINE_COUNT; i++) {
+        if (m_mines[i].owner == player && m_mines[i].type == 6)
+            gold += 1000;
+    }
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        if (m_castleRecs[i].m_owner == player) {
+            if (m_castleRecs[i].m_buildings & 0x20)
+                gold += 250;
+            else
+                gold += 1000;
+        }
+    }
+    gold += m_players[player].NumOfGivenArtifact(26) * 1000;
+    gold += m_players[player].NumOfGivenArtifact(27) * 750;
+    gold += m_players[player].NumOfGivenArtifact(28) * 500;
+    if (!gbHumanPlayer[player]) {
+        if (gpGame->m_players[player].m_color == 1)
+            gold = gold * 0.75;
+        if (gpGame->m_players[player].m_color == 2) {
+        }
+        if (gpGame->m_players[player].m_color == 3)
+            gold = gold * 1.29;
+        if (gpGame->m_players[player].m_color == 4)
+            gold = gold * 1.45;
+    }
+    return gold;
+}
+
 // HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
 VA(0x004439c1, 0x79)
 signed char game::GetRandomArtifactId(void) {
