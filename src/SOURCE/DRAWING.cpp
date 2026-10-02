@@ -6,6 +6,7 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/combatTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/X_GLOBAL.h>
@@ -29,11 +30,24 @@ void combatManager::UpdateGrid(short hex, int) {
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00470a4f, 0x5a)
 void combatManager::UpdateGridForMove(short hex, signed char direction, int attributes) {
-    if (direction == 0 || direction == 5)
+    if (direction == COMBAT_DIRECTION_NORTHEAST || direction == COMBAT_DIRECTION_NORTHWEST)
         UpdateGrid(hex - COMBAT_GRID_COLUMNS, attributes);
     else
         UpdateGrid(hex, attributes);
 }
+
+// clang-format off
+// cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),
+// redraws widgets 2..12 of the text bar and blits the bar's screen rectangle.
+H1_ENUM_CONST_BEGIN(CombatStatusLineConstant)
+    COMBAT_STATUS_FIRST_CONTROL = 2,
+    COMBAT_STATUS_TEXT_CONTROL = 0xc,
+    COMBAT_STATUS_X = 0x30,
+    COMBAT_STATUS_Y = 0x1cc,
+    COMBAT_STATUS_WIDTH = 0x21f,
+    COMBAT_STATUS_HEIGHT = 0x14
+H1_ENUM_CONST_END(CombatStatusLineConstant)
+// clang-format on
 
 // Sets the combat window's text line and redraws it outside the extent
 // bookkeeping.
@@ -45,23 +59,23 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 0xc;
+    message.id = COMBAT_STATUS_TEXT_CONTROL;
     message.text = text;
     m_combatWindow->BroadcastMessage(message);
     oldCompute = gbComputeExtent;
     prevLimit = gbLimitToExtent;
     gbComputeExtent = gbLimitToExtent = 0;
-    m_combatWindow->DrawWindow(0, 2, 0xc);
+    m_combatWindow->DrawWindow(0, COMBAT_STATUS_FIRST_CONTROL, COMBAT_STATUS_TEXT_CONTROL);
     SaveCombatBorder();
     if (updateScreen)
-        gpWindowManager->UpdateScreenRegion(0x30, 0x1cc, 0x21f, 0x14);
+        gpWindowManager->UpdateScreenRegion(COMBAT_STATUS_X, COMBAT_STATUS_Y, COMBAT_STATUS_WIDTH, COMBAT_STATUS_HEIGHT);
     gbComputeExtent = oldCompute;
     gbLimitToExtent = prevLimit;
 }
 
 // The help line for the current mouse command.
 VA(0x00470b5e, 0x2f3)
-void combatManager::CombatMessage(short messageType) {
+void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) messageType) {
     army* currentArmy;
     short targetMonster;
     army* target;
@@ -76,35 +90,35 @@ void combatManager::CombatMessage(short messageType) {
         targetMonster = target->m_creatureType;
     }
     switch (messageType) {
-        case 0:
+        case COMBAT_MESSAGE_COMMAND_DEFAULT:
             if ((currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) && currentArmy->m_stats.shots == 0 && target)
-                strcpy(gText, cCombatMessage[8]);
+                strcpy(gText, cCombatMessage[COMBAT_TEXT_NO_SHOTS]);
             else
-                strcpy(gText, cCombatMessage[0]);
+                strcpy(gText, cCombatMessage[COMBAT_TEXT_NONE]);
             break;
-        case 1:
-            sprintf(gText, cCombatMessage[1], gArmyNames[actingType]);
+        case COMBAT_MESSAGE_COMMAND_MOVE:
+            sprintf(gText, cCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingType]);
             break;
-        case 2:
-            sprintf(gText, cCombatMessage[2], gArmyNames[actingType]);
+        case COMBAT_MESSAGE_COMMAND_FLY:
+            sprintf(gText, cCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingType]);
             break;
-        case 7:
-            sprintf(gText, cCombatMessage[3], gArmyNames[targetMonster]);
+        case COMBAT_MESSAGE_COMMAND_ATTACK:
+            sprintf(gText, cCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonster]);
             break;
-        case 3:
-            sprintf(gText, cCombatMessage[4], gArmyNames[targetMonster], currentArmy->m_stats.shots,
+        case COMBAT_MESSAGE_COMMAND_SHOOT:
+            sprintf(gText, cCombatMessage[COMBAT_TEXT_SHOOT], gArmyNames[targetMonster], currentArmy->m_stats.shots,
                     currentArmy->m_stats.shots > 1 ? "s" : "");
             break;
-        case 4:
-            strcpy(gText, cCombatMessage[5]);
+        case COMBAT_MESSAGE_COMMAND_OPTIONS:
+            strcpy(gText, cCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
             break;
-        case 13:
-            strcpy(gText, cCombatMessage[6]);
+        case COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS:
+            strcpy(gText, cCombatMessage[COMBAT_TEXT_VIEW_OPPOSING_GENERAL]);
             break;
-        case 5:
+        case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
             actingType = m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex].m_creatureType;
             if (actingType >= 0)
-                sprintf(gText, cCombatMessage[7], gArmyNames[actingType]);
+                sprintf(gText, cCombatMessage[COMBAT_TEXT_VIEW_INFO], gArmyNames[actingType]);
             else
                 sprintf(gText, "");
             break;
@@ -150,8 +164,8 @@ void combatManager::UpdateCombatArea(void) {
         y = 0;
         height += 60;
     }
-    if (y + height > 460)
-        height = 460 - y;
+    if (y + height > COMBAT_VIEW_HEIGHT)
+        height = COMBAT_VIEW_HEIGHT - y;
     gbEnlargeScreenBlit = 0;
     gpWindowManager->UpdateScreenRegion(0, y, LOGICAL_SCREEN_WIDTH, height);
     gbEnlargeScreenBlit = 1;
@@ -170,7 +184,7 @@ void combatManager::DrawBackground(void) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++)
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].DrawGround();
         if (m_castleSide[0])
-            m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_x, m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_y,
+            m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x, m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y,
                                            (signed char)((y & 1) ? 5 : 6), ICON_DRAW_NORMAL, 0);
         wallY = y * 80 + 0x8b;
         if (y == 0) {
@@ -229,8 +243,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
                         boxLeft = hexCol * 78 - 70;
                         boxRight = (hexCol + 1) * 78 + 110;
                     }
-                    if (m_armies[side][i].m_effectAnimation == 22 || m_armies[side][i].m_effectAnimation == 23
-                        || m_armies[side][i].m_effectAnimation == 24 || m_armies[side][i].m_effectAnimation == 25)
+                    if (m_armies[side][i].m_effectAnimation == ARMY_EFFECT_GOOD_LUCK
+                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_BAD_LUCK
+                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_GOOD_MORALE
+                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_BAD_MORALE)
                         boxTop -= 100;
                     if (m_armies[side][i].m_creatureType == CREATURE_CAVALRY)
                         boxTop -= 60;

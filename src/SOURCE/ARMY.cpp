@@ -27,7 +27,7 @@ army::army(void) {
     m_hex = 0;
     for (i = 0; i < ARMY_SAMPLE_COUNT; i++)
         m_samples[i] = NULL;
-    m_effectAnimation = -1;
+    m_effectAnimation = ARMY_EFFECT_NONE;
     m_drawShadow = 1;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
@@ -51,7 +51,7 @@ void army::InitClean(void) {
 
     for (i = 0; i < ARMY_SAMPLE_COUNT; i++)
         m_samples[i] = NULL;
-    m_effectAnimation = -1;
+    m_effectAnimation = ARMY_EFFECT_NONE;
     m_drawShadow = 1;
     m_attackIcon = NULL;
     m_walkIcon = NULL;
@@ -650,7 +650,8 @@ void army::SpecialAttack(void) {
     delete saved;
     m_stats.shots--;
     inCastle = 0;
-    if (gpCombatManager->m_castleSide[0] && m_hex % COMBAT_GRID_COLUMNS <= 4 && target->m_hex % COMBAT_GRID_COLUMNS >= 6) {
+    if (gpCombatManager->m_castleSide[0] && m_hex % COMBAT_GRID_COLUMNS <= COMBAT_CASTLE_WALL_COLUMN - 1
+        && target->m_hex % COMBAT_GRID_COLUMNS >= COMBAT_CASTLE_WALL_COLUMN + 1) {
         int targetR;
         int wallDist;
         int gateHex;
@@ -662,10 +663,10 @@ void army::SpecialAttack(void) {
 
         sCol = m_hex % COMBAT_GRID_COLUMNS;
         myR = m_hex / COMBAT_GRID_COLUMNS;
-        colDist = sCol - 5;
+        colDist = sCol - COMBAT_CASTLE_WALL_COLUMN;
         tgtC = target->m_hex % COMBAT_GRID_COLUMNS;
         targetR = target->m_hex / COMBAT_GRID_COLUMNS;
-        wallDist = 5 - sCol;
+        wallDist = COMBAT_CASTLE_WALL_COLUMN - sCol;
         hitRow = targetR;
         if (abs(targetR - myR) >= 2)
             hitRow -= -(-((targetR - myR) / 2));
@@ -677,12 +678,12 @@ void army::SpecialAttack(void) {
                     hitRow++;
             }
         }
-        if (hitRow > 4)
-            hitRow = 4;
+        if (hitRow > COMBAT_GRID_LAST_ROW)
+            hitRow = COMBAT_GRID_LAST_ROW;
         if (hitRow < 0)
             hitRow = 0;
-        if (gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + 5].m_obstacleIndex == 10
-            || gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + 5].m_obstacleIndex == 8)
+        if (gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleIndex == 10
+            || gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleIndex == 8)
             inCastle = 1;
         else
             inCastle = 0;
@@ -1220,13 +1221,13 @@ void army::CheckLuck(void) {
                     m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType]);
             gpCombatManager->CombatMessage(gText, 1);
             Wince();
-            SpellEffect(23, 180);
+            SpellEffect(ARMY_EFFECT_BAD_LUCK, 180);
         } else {
             sprintf(gText, "Good luck shines on the %s",
                     m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType]);
             gpCombatManager->CombatMessage(gText, 1);
             Stand(1);
-            SpellEffect(22, 180);
+            SpellEffect(ARMY_EFFECT_GOOD_LUCK, 180);
         }
         Stand(1);
         WaitEndSample(sample, -1);
@@ -1470,7 +1471,7 @@ void army::SpellEffect(short effect, int frameDelay) {
         gpCombatManager->DrawFrame(1);
         DelayTil(glTimers + 1);
     }
-    m_effectAnimation = -1;
+    m_effectAnimation = ARMY_EFFECT_NONE;
 }
 
 // Slow (and the other speed spells) restore the base speed and flight;

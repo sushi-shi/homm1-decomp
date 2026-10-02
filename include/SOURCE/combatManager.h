@@ -65,14 +65,19 @@ H1_ENUM_END(CombatPointerCode)
 // Two sides (attacker 0, defender 1) index m_armies and m_numArmies.
 // The hex grid is nine columns by five rows (hex = row * 9 + column):
 // DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
-// m_hex with % and / 9 and treats columns 0 and 8 as the side edges.
+// m_hex with % and / 9 and treats columns 0 and 8 as the side edges. In a
+// siege the town wall stands in column 5 (DrawBackground draws it there,
+// SpecialAttack tests shots across it, DoCompAI moves defenders to the
+// column inside it).
 H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6,
     COMBAT_GRID_COLUMNS = 9,
     COMBAT_GRID_LAST_COLUMN = 8,
     COMBAT_GRID_ROWS = 5,
-    COMBAT_SIDE_COUNT = 2
+    COMBAT_GRID_LAST_ROW = 4,
+    COMBAT_SIDE_COUNT = 2,
+    COMBAT_CASTLE_WALL_COLUMN = 5
 H1_ENUM_CONST_END(CombatGridConstant)
 
 // The battlefield view is the logical screen less SaveCombatBorder's
@@ -83,6 +88,39 @@ H1_ENUM_CONST_BEGIN(CombatViewConstant)
     COMBAT_VIEW_HEIGHT = 460,
     COMBAT_EXTENT_MIN_START = 640
 H1_ENUM_CONST_END(CombatViewConstant)
+
+// Combat AI tuning thresholds (Buka combatManager.h CombatAIConstant names
+// with HoMM1's values): AICheckRetreat's artifact-value and army-strength
+// tiers, experience divisor and difficulty scale; DoCompAI's rounded
+// one-fifth strength; GetWorstArmy's starting strength; the unlimited
+// speed WalkTowardArmy/WalkTowardArmyFront give a stack for path probes.
+H1_ENUM_CONST_BEGIN(CombatAIConstant)
+    COMBAT_AI_MAX_DIFFICULTY = 4,
+    COMBAT_AI_STRENGTH_ROUNDING = 4,
+    COMBAT_AI_STRENGTH_FRACTION = 5,
+    COMBAT_AI_UNLIMITED_PATH_SPEED = 0x7f,
+    COMBAT_AI_WORST_STRENGTH_LIMIT = 999999999,
+    COMBAT_AI_MIN_ARTIFACT_VALUE = 1000,
+    COMBAT_AI_MEDIUM_ARTIFACT_VALUE = 5000,
+    COMBAT_AI_HIGH_ARTIFACT_VALUE = 10000,
+    COMBAT_AI_RETREAT_TIER_1_THRESHOLD = 2500,
+    COMBAT_AI_RETREAT_TIER_2_THRESHOLD = 5000,
+    COMBAT_AI_RETREAT_TIER_3_THRESHOLD = 15000,
+    COMBAT_AI_RETREAT_STRENGTH_DIVISOR = 20000,
+    COMBAT_AI_RETREAT_TIER_4_THRESHOLD = 30000,
+    COMBAT_AI_RETREAT_SCALED_PENALTY_THRESHOLD = 40000,
+    COMBAT_AI_EXPERIENCE_DIVISOR = 200000
+H1_ENUM_CONST_END(CombatAIConstant)
+
+// DoCompAI's plan for the acting stack (Buka CombatAIConstant
+// COMBAT_AI_ATTACK_*): shooters with shots left shoot, flyers fly, the rest
+// walk.
+H1_ENUM_BEGIN(CombatAIAttackPlan)
+    COMBAT_AI_ATTACK_NONE = 0,
+    COMBAT_AI_ATTACK_SHOOT = 1,
+    COMBAT_AI_ATTACK_FLY = 2,
+    COMBAT_AI_ATTACK_WALK = 3
+H1_ENUM_END(CombatAIAttackPlan)
 
 // combatManager::m_combatIcons slots, as LoadCombatResources fills them:
 // the terrain's ground and obstacle icons, textbar.icn, catapult.icn,
@@ -264,7 +302,7 @@ public:
     // HoMM1 retail 0x00470aa9: text and a redraw flag (ret 8).
     void CombatMessage(char *, int);
     // HoMM1 retail 0x00470b5e: command help line (ret 4).
-    void CombatMessage(short);
+    void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short));
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army *);
@@ -464,6 +502,24 @@ extern H1_ENUM_STORAGE(CombatAction, int) giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;
+// clang-format off
+// cCombatMessage indices, the command help lines CombatMessage(short)
+// prints: "", "Move %s here.", "Fly %s here.", "Attack %s", "Shoot %s(%d
+// shot%s left)", "General's Options", "View Opposing General", "View %s
+// info." and "No shots left!".
+H1_ENUM_BEGIN(CombatMessageText)
+    COMBAT_TEXT_NONE = 0,
+    COMBAT_TEXT_MOVE = 1,
+    COMBAT_TEXT_FLY = 2,
+    COMBAT_TEXT_ATTACK = 3,
+    COMBAT_TEXT_SHOOT = 4,
+    COMBAT_TEXT_GENERALS_OPTIONS = 5,
+    COMBAT_TEXT_VIEW_OPPOSING_GENERAL = 6,
+    COMBAT_TEXT_VIEW_INFO = 7,
+    COMBAT_TEXT_NO_SHOTS = 8,
+    COMBAT_TEXT_COUNT = 9
+H1_ENUM_END(CombatMessageText)
+// clang-format on
 // Command help lines for CombatMessage(short) (0x00493b38).
 extern char *cCombatMessage[];
 // Combat help lines for the auto-combat, skip and other controls.

@@ -66,6 +66,19 @@ H1_ENUM_BEGIN(ArmySpellCancelType)
     ARMY_CANCEL_SPELLS_ROUNDS_ONLY = 3
 H1_ENUM_END(ArmySpellCancelType)
 
+// army::SpellEffect's effect index into gCombatFxNames (and
+// m_effectAnimation): 0..21 follow the spell that casts them; the luck and
+// morale effects come after (rainbluk, cloudluk, moraleg, moraleb.icn).
+// DrawFrame grows the redraw box upward for these four.
+H1_ENUM_CONST_BEGIN(ArmyEffectAnimationConstant)
+    ARMY_EFFECT_NONE = -1,
+    ARMY_EFFECT_GOOD_LUCK = 22,
+    ARMY_EFFECT_BAD_LUCK = 23,
+    ARMY_EFFECT_GOOD_MORALE = 24,
+    ARMY_EFFECT_BAD_MORALE = 25,
+    ARMY_EFFECT_COUNT = 26
+H1_ENUM_CONST_END(ArmyEffectAnimationConstant)
+
 // army::m_damageMode, how DamageEnemy rolls each creature's damage:
 // random by default, the minimum or maximum roll (SPELLS' curse/bless
 // set them) or a halved total.
