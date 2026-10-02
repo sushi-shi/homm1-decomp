@@ -224,8 +224,8 @@ int oldmain(void) {
     heroWindow* mainWin;
     font* font;
     signed char backdropLoaded;
-    int idx;
     signed char initialMainScreen;
+    int idx;
     signed char done;
     signed char leave;
     int result;
@@ -589,7 +589,7 @@ int InterpretCommandLine(void) {
         }
     }
 
-    sprintf(cAggPathName, "%s%s", ".\\DATA\\", "heroes.agg");
+    sprintf(cAggPathName, "%s%s", gcDataPath, "heroes.agg");
     DEFAULT_AGGREGATE_NAME = cAggPathName;
     giFrameStep = 6;
     for (i = 0; i < 4; i++) {
@@ -1430,10 +1430,10 @@ void CheckEndGame(int forced) {
     signed char win;
     playerData* pd;
     int slot;
-    int player;
     signed char lost;
     signed char normalWin;
     int lastSurvivor;
+    int player;
     int humansAlive;
     int lastHumanPos;
 

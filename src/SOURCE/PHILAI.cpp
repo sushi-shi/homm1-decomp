@@ -375,8 +375,9 @@ void philAI::CheckBerserk(hero* pHero) {
 // HoMM1 teleports with three arguments and returns a byte flag.
 VA(0x0041afa4, 0x1a0)
 signed char philAI::DoDimensionDoor(hero* pHero) {
+    int x;
     int i;
-    int x, y;
+    int y;
     int length;
     int bestX, bestY;
     mapCell* cell;
@@ -413,19 +414,19 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
 // evidence: graph:5;base=0.641984;margin=1.146879;shape=0.398;size=0.795;calls=0.741;strings====================================|DO AI|DO AI 1;alternate=pol20:void philAI::DoAI(int)@0x00039631
 VA(0x0041b144, 0x8f0)
 void philAI::DoAI(int player) {
+    int pathIndex;
     int moveDone;
     int bestDirection;
     int stepMax;
+    int steps;
     mapCell* eventCell;
     int dummy;
     signed char stopAfterStep;
     int oldShowIt;
     signed char halfShown;
-    int steps;
     int x;
     int y;
     short minRV;
-    int pathIndex;
     signed char moveInterrupt;
     hero* aiHero;
     int flag;
@@ -612,6 +613,9 @@ void philAI::GetGameAIVars(void) {
         GetGameAttentionValue(i);
 }
 
+// KB's King of the Hill flag (Buka gbIAmGreatest): only the top player is fair game.
+extern signed char gbKingOfTheHill;
+
 // donor PoL RVA 0x0003a329; preferred Buka symbol ?GetTurnAIVars@philAI@@QAEXH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.345425;margin=0.144973;shape=0.282;size=0.515;calls=0.667;alternate=pol20:void philAI::GetTurnAIVars(int)@0x0003a329
@@ -621,10 +625,10 @@ void philAI::GetTurnAIVars(int player) {
     playerData* pPlayer;
     int yPos;
     int mineValue;
+    int xPos;
     int i;
     float fFightVal;
     int y;
-    int xPos;
     int otherIndex;
     hero* heroPointer;
     int unusedFightValue;
@@ -701,7 +705,7 @@ void philAI::GetTurnAIVars(int player) {
         gfAttackHumanBonus = gpCurPlayer->m_difficulty * 0.07 + 1.0;
         gfAttackComputerBonus = 1.1 - gpCurPlayer->m_difficulty * 0.12;
     }
-    if (gbIAmGreatest)
+    if (gbKingOfTheHill)
         gfAttackComputerBonus = 0.1f;
     giMaxHeroesForThisPlayer = 3;
     if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == 2)
@@ -818,6 +822,13 @@ hero* philAI::DetermineHeroToMove(int player) {
     gpGame->m_players[player].m_currentHero = -1;
     return 0;
 }
+
+// ValueOfEventAtPosition's artifact-event choices, declared ahead of
+// DetermineTargetPosition: C1 numbers file-scope symbols in declaration order
+// (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
+DATA(0x004af7d0) int iArtifactChoice1;
+DATA(0x004af7d4) int iArtifactChoice2;
+DATA(0x004af7d8) int iArtifactChoice3;
 
 // donor PoL RVA 0x0003b865; preferred Buka symbol ?DetermineTargetPosition@philAI@@QAEHAAH0H0@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -1783,6 +1794,10 @@ RVA_DYNINIT(0x0001f2a9, 0x1a, SVSearchArray)
 // int3 padding precedes it and LogTruncate follows without a gap.
 RVA_DYNINIT(0x00019990, 0x15, SVSearchArray)
 
+// ValueOfEventAtPosition's default event type, declared ahead of
+// StrategicValueOfPosition for the same C1 symbol order.
+DATA(0x004bfc20) int iDefaultEventType;
+
 // donor PoL RVA 0x0003ef45; preferred Buka symbol ?StrategicValueOfPosition@philAI@@QAEHHHHHPAHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
@@ -1925,6 +1940,11 @@ int philAI::ValueOfTown(town* townPointer) {
     return sum;
 }
 
+// ValueOfEventAtPosition's creature-purchase state, declared ahead of
+// TurnCostResource for the same C1 symbol order.
+DATA(0x004be7a8) int iPurchaseNum;
+DATA(0x004be7d4) int iPurchaseSlot;
+
 // Buka 2.1 TurnCostResource: each resource's turn cost scales its base
 // value against the player's relative stock-plus-income share.
 VA(0x0041fc31, 0x176)
@@ -1992,16 +2012,16 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
     int worth;
     float fPowerMod;
     int spellScore;
-    int slot;
-    int nArrows;
-    int castleValue;
-    int luck;
     int bestValue;
+    int slot;
     int armyWorth;
+    int nArrows;
+    int luck;
+    int castleValue;
     town* pTown;
-    int magicTotal;
     int stats;
     int morale;
+    int magicTotal;
     float quantityMod;
 
     armyWorth = 0;
@@ -2284,19 +2304,19 @@ int philAI::QuickCombat(
 // evidence: graph:3;base=0.484024;margin=0.235954;shape=0.394;size=0.661;calls=0.952;alternate=pol20:void philAI::HeroInteractionAtTown(class hero *, class town *, int, int *)@0x0004183b
 VA(0x00420c11, 0xbae)
 void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doInteraction, int* value) {
-    int garrisonFV;
     int transferRating;
     int pick;
-    int j;
     int speedLimit;
     int stackFV;
     int nRunning;
     float fTownShare;
     int curBest;
+    int garrisonFV;
     int heroStrength;
     int statSum;
     int armyCount;
-    int i;
+    int moveNum;
+    int j;
     float estWeight;
     int estTransferValue;
     int toHero;
@@ -2305,9 +2325,9 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
     int room;
     float fShareDiff;
     int newLearned;
-    armyGroup* toArmy;
-    int moveNum;
     float myTargetShare;
+    armyGroup* toArmy;
+    int i;
 
     *value = 0;
     if (doInteraction) {
@@ -2954,14 +2974,8 @@ DATA(0x004af7bc) int iDefenderLoss;
 DATA(0x004af7c0) int iAttackerRemaining;
 DATA(0x004af7c4) int iDefenderRemaining;
 DATA(0x004af7cc) int iOutcome;
-DATA(0x004af7d0) int iArtifactChoice1;
-DATA(0x004af7d4) int iArtifactChoice2;
-DATA(0x004af7d8) int iArtifactChoice3;
-DATA(0x004be7a8) int iPurchaseNum;
-DATA(0x004be7d4) int iPurchaseSlot;
 DATA(0x0048f824)
 int bEvaluatingTravelGates = 1;
-DATA(0x004bfc20) int iDefaultEventType;
 
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -2993,7 +3007,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     *liveChance = 100;
     iEventRV = 0;
     pEventCell = gpAdvManager->GetCell(x, y);
-    if (gaiEnemyHeroReachable[x][y] && giCurPlayerBit)
+    if (mapVisited[x][y] && giCurPlayerBit)
         bEventSeen = 1;
     else
         bEventSeen = 0;
@@ -3034,7 +3048,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     case MAP_OBJECT_SAWMILL:
         if (gpGame->m_mineOwners[pEventCell->m_objectMetadata] == pHero->m_owner) {
             iEventRV = 0;
-        } else if (gbIAmGreatest && gpGame->m_mineOwners[pEventCell->m_objectMetadata] >= 0
+        } else if (gbKingOfTheHill && gpGame->m_mineOwners[pEventCell->m_objectMetadata] >= 0
                    && !gbHumanPlayer[gpGame->m_mineOwners[pEventCell->m_objectMetadata]]) {
             iEventRV = 0;
         } else {
@@ -3101,7 +3115,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             else
                 iEventRV = -5000;
             *liveChance = 0;
-        } else if (gbIAmGreatest && !gbHumanPlayer[gpGame->m_availableHeroes[pEventCell->m_objectMetadata]]) {
+        } else if (gbKingOfTheHill && !gbHumanPlayer[gpGame->m_availableHeroes[pEventCell->m_objectMetadata]]) {
             iEventRV = 0;
             *liveChance = 100;
         } else {
@@ -3169,7 +3183,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = static_cast<int>(iEventRV * gfHeroInteractionBonus[pHero->m_id]);
             }
             gbReduceByReload = 0;
-        } else if (gbIAmGreatest && gpGame->m_townOwners[pEventCell->m_objectMetadata] >= 0
+        } else if (gbKingOfTheHill && gpGame->m_townOwners[pEventCell->m_objectMetadata] >= 0
                    && !gbHumanPlayer[gpGame->m_townOwners[pEventCell->m_objectMetadata]]) {
             iEventRV = 0;
         } else {
