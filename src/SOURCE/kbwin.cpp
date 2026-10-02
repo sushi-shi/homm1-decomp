@@ -921,3 +921,49 @@ char* FindLastToken(char* text, char token) {
     }
     return 0;
 }
+
+// kbwin owns retail .data 0x0049fe50-0x004a0503 and .bss 0x004ca490-0x004ca903.
+DATA(0x0049fe50)
+char szAppName[] = "Heroes";
+DATA(0x0049fe58)
+char szTitle[] = "Heroes of Might and Magic";
+DATA(0x0049fe74)
+void* hwndApp = 0;
+DATA(0x0049fe78)
+int gbForegroundApp = 0;
+DATA(0x0049fe7c)
+void* hmnuApp = 0;
+DATA(0x0049fe80)
+void* gEventHandle = 0;
+DATA(0x0049fef4)
+long lLastGTimerTickCount = 0;
+DATA(0x0049fef8)
+long lLastCycleTickCount = 0;
+DATA(0x0049fefc)
+int gbClosingApp = 0;
+DATA(0x0049ff2c)
+long lLastGetMessage = 0;
+DATA(0x0049ff30)
+long lLastAilServe = 0;
+DATA(0x0049ff50)
+int gbNoDialogMenusOn = 0;
+DATA(0x004ca490)
+void* hInstApp;
+DATA(0x004ca498)
+struct tagRECT rcTemp;
+DATA(0x004ca4a8)
+int iMainWinScreenHeight;
+DATA(0x004ca4ac)
+void* hmnuCurrent;
+DATA(0x004ca4b0)
+int iTempX;
+DATA(0x004ca4b4)
+int iTempY;
+DATA(0x004ca4b8)
+long lTemp;
+DATA(0x004ca4c0)
+unsigned char bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
+DATA(0x004ca8c0)
+char gcCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
+DATA(0x004ca900)
+int iMainWinScreenWidth;
