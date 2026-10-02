@@ -110,6 +110,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                                int continueSeed, int scanMap)
 {
     static short s_direction;
+    static searchNode s_currentNode;
     static int s_terrain;
     static int s_mapX;
     static int s_mapY;
@@ -123,7 +124,6 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
     static int s_neighborX;
     static int s_neighborY;
     static unsigned char s_directionCosts[8];
-    static searchNode s_currentNode;
     static int s_directionBlocked;
     static mapCell *s_targetCell;
     static signed char s_hasAdjacentMonster;
