@@ -158,14 +158,15 @@ short armyGroup::Add(signed char creatureType, short quantity, signed char slot)
     }
     if (slot == ARMY_GROUP_ANY_SLOT) {
         for (searchSlot = 0; searchSlot < ARMY_GROUP_SLOT_COUNT; ++searchSlot) {
-            if (m_creatureTypes[searchSlot] == CREATURE_NONE || m_creatureTypes[searchSlot] == creatureType) {
+            if (m_creatureTypes[searchSlot] == CREATURE_NONE
+                || m_creatureTypes[searchSlot] == creatureType) {
                 slot = searchSlot;
                 break;
             }
         }
     }
     if (slot >= 5)
-    return 0;
+        return 0;
 
     m_creatureTypes[slot] = creatureType;
     if (m_creatureCounts[slot] < 0)

@@ -61,7 +61,6 @@
 *	*	*	call-argument	NormalDialog(* argument [34]	dialog window x and y in pixels (-1 centres it, Buka's default)
 *	*	0	call-argument	NormalDialog(* argument [68]	unused resource quantity: the slot shows no amount (NORMAL_DIALOG_NO_RESOURCE, luck/morale icons)
 *	*	0	call-argument	EventWindow(* argument [57]	unused resource quantity forwarded to NormalDialog (same slots)
-*	*	*	call-argument	EventWindow(* argument [57]	the resource quantity an event shows beside its icon (the reward amount)
 *	*	*	call-argument	GiveResource(* argument 3	the resource amount an event gives
 *	*	*	call-argument	GiveExperience(* argument 2	the experience an event gives
 *	*	*	call-argument	DDSD(* argument 3	the source line the DirectDraw error report names (line base + offset)

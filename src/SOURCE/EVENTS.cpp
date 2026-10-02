@@ -141,9 +141,20 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 m_cursorType = pHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
-                gpWindowManager->SaveFizzleSource(COAST_FIZZLE_X, COAST_FIZZLE_Y, COAST_FIZZLE_WIDTH, COAST_FIZZLE_HEIGHT);
+                gpWindowManager->SaveFizzleSource(
+                    COAST_FIZZLE_X,
+                    COAST_FIZZLE_Y,
+                    COAST_FIZZLE_WIDTH,
+                    COAST_FIZZLE_HEIGHT
+                );
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-                gpWindowManager->FizzleForward(COAST_FIZZLE_X, COAST_FIZZLE_Y, COAST_FIZZLE_WIDTH, COAST_FIZZLE_HEIGHT, -1);
+                gpWindowManager->FizzleForward(
+                    COAST_FIZZLE_X,
+                    COAST_FIZZLE_Y,
+                    COAST_FIZZLE_WIDTH,
+                    COAST_FIZZLE_HEIGHT,
+                    -1
+                );
                 CheckAdjacentMon(&adjacentMonster);
             }
             break;
@@ -497,8 +508,13 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             );
             erase = 1;
             fizzleMode = EVENT_FIZZLE_PICKUP;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
-            SetEnvironmentOrigin(m_mapOriginX + ENVIRONMENT_BORDER, m_mapOriginY + ENVIRONMENT_BORDER, 1);
+            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER]
+                               [m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
+            SetEnvironmentOrigin(
+                m_mapOriginX + ENVIRONMENT_BORDER,
+                m_mapOriginY + ENVIRONMENT_BORDER,
+                1
+            );
             break;
         case MAP_OBJECT_GAZEBO:
             if (pHero->m_visitedSites & (1 << cell->m_objectMetadata)) {
@@ -745,12 +761,28 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             RedrawAdvScreen(1);
             break;
         case MAP_OBJECT_SPELL_SHRINE:
-            sprintf(gText, "%s'%s'.", gEventText[EVENT_TEXT_SPELL_SHRINE],
-                    gSpellNames[cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET]);
+            sprintf(
+                gText,
+                "%s'%s'.",
+                gEventText[EVENT_TEXT_SPELL_SHRINE],
+                gSpellNames[cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET]
+            );
             if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
-                pHero->AddSpell(cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
-                                    pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
-                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_SPELL, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                pHero->AddSpell(
+                    cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
+                    pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
+                    0
+                );
+                EventWindow(
+                    EVENT_TEXT_CUSTOM,
+                    NORMAL_DIALOG_TYPE_OK,
+                    gText,
+                    NORMAL_DIALOG_SPELL,
+                    cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
             } else {
                 strcat(gText, "  Unfortunately, you have no Magic Book to record the spell with.");
                 EventWindow(
@@ -779,7 +811,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE))
+                        && abs(tx - x) + abs(ty - y)
+                               > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
+                                                                    : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
                 }
             }
@@ -790,7 +824,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE)) {
+                            && abs(tx - x) + abs(ty - y)
+                                   > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
+                                                                        : WHIRLPOOL_MIN_DISTANCE)) {
                             if (--teleportCount <= 0)
                                 goto teleport;
                         }
@@ -936,8 +972,19 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     occupiedTown = gpGame->GetTown(enemyHero->m_occupiedTown);
                     occupiedTown->m_occupyingHeroId = enemyHero->m_id;
                 }
-                res = DoCombat(x, y, pHero, &pHero->m_army, occupiedTown,
-                                            enemyHero, &enemyHero->m_army, x, y, COMBAT_RANDOM_SEED_NEW, 1);
+                res = DoCombat(
+                    x,
+                    y,
+                    pHero,
+                    &pHero->m_army,
+                    occupiedTown,
+                    enemyHero,
+                    &enemyHero->m_army,
+                    x,
+                    y,
+                    COMBAT_RANDOM_SEED_NEW,
+                    1
+                );
                 if (res == 1 && occupiedTown)
                     gpGame->ClaimTown(occupiedTown->m_id, giCurPlayer);
             }
@@ -1209,7 +1256,11 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
     if (gpGame->m_mapSounds[x][y] != MAP_SOUND_NONE) {
         gpGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
         if (bShowIt)
-            SetEnvironmentOrigin(m_mapOriginX + ENVIRONMENT_BORDER, m_mapOriginY + ENVIRONMENT_BORDER, 1);
+            SetEnvironmentOrigin(
+                m_mapOriginX + ENVIRONMENT_BORDER,
+                m_mapOriginY + ENVIRONMENT_BORDER,
+                1
+            );
     }
     gpGame->SetupAdjacentMons();
 }
@@ -1245,9 +1296,22 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
         townRec->m_occupyingHeroId = gpCurPlayer->CurrentHero();
         townRec->View();
     } else if (townRec->HasGarrison()) {
-        defender = townRec->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? NULL : gpGame->GetHero(townRec->m_occupyingHeroId);
-        result = DoCombat(x, y, curHero, &curHero->m_army, townRec, defender, &townRec->m_army, x, y,
-                          COMBAT_RANDOM_SEED_NEW, 1);
+        defender = townRec->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
+                       ? NULL
+                       : gpGame->GetHero(townRec->m_occupyingHeroId);
+        result = DoCombat(
+            x,
+            y,
+            curHero,
+            &curHero->m_army,
+            townRec,
+            defender,
+            &townRec->m_army,
+            x,
+            y,
+            COMBAT_RANDOM_SEED_NEW,
+            1
+        );
         if (result == 1)
             gpGame->ClaimTown(townRec->m_id, giCurPlayer);
     } else {
@@ -1641,7 +1705,8 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
         );
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
-                eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, ARMY_GROUP_ANY_SLOT);
+                eventHero->m_army
+                    .Add(creatures[houseIndex], cell->m_objectMetadata, ARMY_GROUP_ANY_SLOT);
                 cell->m_objectMetadata = MAP_EVENT_DATA_EMPTY;
             } else {
                 EventWindow(
@@ -1702,11 +1767,33 @@ signed char advManager::CombatMonsterEvent(
         gpMonGroup->m_creatureCounts[i]++;
     }
     if (heroDefends)
-        res = DoCombat(fromX, fromY, NULL, gpMonGroup, NULL, eventHero, &eventHero->m_army, x, y,
-                          COMBAT_RANDOM_SEED_NEW, 1);
+        res = DoCombat(
+            fromX,
+            fromY,
+            NULL,
+            gpMonGroup,
+            NULL,
+            eventHero,
+            &eventHero->m_army,
+            x,
+            y,
+            COMBAT_RANDOM_SEED_NEW,
+            1
+        );
     else
-        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, NULL, NULL, gpMonGroup, x, y,
-                          COMBAT_RANDOM_SEED_NEW, 1);
+        res = DoCombat(
+            fromX,
+            fromY,
+            eventHero,
+            &eventHero->m_army,
+            NULL,
+            NULL,
+            gpMonGroup,
+            x,
+            y,
+            COMBAT_RANDOM_SEED_NEW,
+            1
+        );
     MobilizeCurrHero(0);
     return res;
 }
@@ -1858,11 +1945,19 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                         }
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = -1;
                     } else {
-                        GiveTakeArtifactStat(destHero, sourceHero->m_artifacts[j], EVENT_ARTIFACT_GIVE);
+                        GiveTakeArtifactStat(
+                            destHero,
+                            sourceHero->m_artifacts[j],
+                            EVENT_ARTIFACT_GIVE
+                        );
                         destHero->m_artifacts[i] = sourceHero->m_artifacts[j];
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
-                    GiveTakeArtifactStat(sourceHero, sourceHero->m_artifacts[j], EVENT_ARTIFACT_TAKE);
+                    GiveTakeArtifactStat(
+                        sourceHero,
+                        sourceHero->m_artifacts[j],
+                        EVENT_ARTIFACT_TAKE
+                    );
                     sourceHero->m_artifacts[j] = ARTIFACT_NONE;
                     break;
                 }
@@ -1899,7 +1994,8 @@ void advManager::DoWhirlpool(class hero* eventHero) {
 
     if (!gbHumanPlayer[eventHero->m_owner])
         return;
-    if (Random(EVENT_WHIRLPOOL_TRIGGER_ROLL, EVENT_WHIRLPOOL_TRIGGER_MAX) != EVENT_WHIRLPOOL_TRIGGER_ROLL)
+    if (Random(EVENT_WHIRLPOOL_TRIGGER_ROLL, EVENT_WHIRLPOOL_TRIGGER_MAX)
+        != EVENT_WHIRLPOOL_TRIGGER_ROLL)
         return;
     lowestValue = EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT;
     weakest = -1;
@@ -1932,21 +2028,27 @@ void advManager::FizzleCenter(int fizzleType) {
     if (!bShowIt)
         return;
     switch (fizzleType) {
-    case EVENT_FIZZLE_HERO_LOSS:
-        sprintf(gText, "killfade.82M");
-        break;
-    case EVENT_FIZZLE_PICKUP:
-        sprintf(gText, "pickup%02d.82M", Random(1, 5));
-        break;
-    default:
-        return;
+        case EVENT_FIZZLE_HERO_LOSS:
+            sprintf(gText, "killfade.82M");
+            break;
+        case EVENT_FIZZLE_PICKUP:
+            sprintf(gText, "pickup%02d.82M", Random(1, 5));
+            break;
+        default:
+            return;
     }
     fizzleSample = NULL_SAMPLE2;
     fizzleSample = LoadPlaySample(gText);
-    gpWindowManager->SaveFizzleSource(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT);
+    gpWindowManager
+        ->SaveFizzleSource(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT);
     CompleteDraw(0);
-    gpWindowManager->FizzleForward(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT,
-                                   EVENT_FIZZLE_STEPS);
+    gpWindowManager->FizzleForward(
+        EVENT_FIZZLE_X,
+        EVENT_FIZZLE_Y,
+        EVENT_FIZZLE_WIDTH,
+        EVENT_FIZZLE_HEIGHT,
+        EVENT_FIZZLE_STEPS
+    );
     WaitEndSample(fizzleSample, -1);
 }
 
@@ -2127,7 +2229,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
             erase = 1;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
+            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER]
+                               [m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
@@ -2230,8 +2333,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             break;
         case MAP_OBJECT_SPELL_SHRINE:
             if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
-                eventHero->AddSpell(cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
-                                    eventHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
+                eventHero->AddSpell(
+                    cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
+                    eventHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
+                    0
+                );
             break;
         case MAP_OBJECT_TOWN:
             gpPhilAI->TownEvent(cell, eventHero, x, y);
@@ -2244,7 +2350,9 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE))
+                        && abs(tx - x) + abs(ty - y)
+                               > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
+                                                                      : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
                 }
             }
@@ -2255,7 +2363,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE)) {
+                            && abs(tx - x) + abs(ty - y)
+                                   > (eventType == MAP_OBJECT_STONE_LITHS
+                                          ? STONE_LITHS_MIN_DISTANCE
+                                          : WHIRLPOOL_MIN_DISTANCE)) {
                             if (--teleportCount <= 0)
                                 goto teleport;
                         }
@@ -2325,8 +2436,19 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             } else {
                 if (theCastle)
                     theCastle->m_occupyingHeroId = enemyHero->m_id;
-                res = DoCombat(x, y, eventHero, &eventHero->m_army, theCastle,
-                                            enemyHero, &enemyHero->m_army, x, y, COMBAT_RANDOM_SEED_NEW, 1);
+                res = DoCombat(
+                    x,
+                    y,
+                    eventHero,
+                    &eventHero->m_army,
+                    theCastle,
+                    enemyHero,
+                    &enemyHero->m_army,
+                    x,
+                    y,
+                    COMBAT_RANDOM_SEED_NEW,
+                    1
+                );
                 if (res == 1 && theCastle)
                     gpGame->ClaimTown(theCastle->m_id, giCurPlayer);
             }
@@ -2716,8 +2838,14 @@ int advManager::DoCombat(
             if (!gbHumanPlayer[attackPlayer]) {
                 while (1) {
                     PollSound();
-                    FillBitmapArea(gpWindowManager->m_screen, COMBAT_NETWORK_POLL_X, COMBAT_NETWORK_POLL_Y,
-                                   COMBAT_NETWORK_POLL_WIDTH, COMBAT_NETWORK_POLL_HEIGHT, 0);
+                    FillBitmapArea(
+                        gpWindowManager->m_screen,
+                        COMBAT_NETWORK_POLL_X,
+                        COMBAT_NETWORK_POLL_Y,
+                        COMBAT_NETWORK_POLL_WIDTH,
+                        COMBAT_NETWORK_POLL_HEIGHT,
+                        0
+                    );
                     receivedPacket = CheckHandleNet();
                     if (receivedPacket) {
                         switch (((combatRemoteMessage*)receivedPacket)->command) {
@@ -2771,9 +2899,12 @@ int advManager::DoCombat(
         } else if (!gbThisNetHumanPlayer[attackPlayer]) {
             bShowIt = 1;
             gpGame->TurnOffAIMusic();
-            sprintf(gText, "%s player\'s %s is under attack!",
-                    gColorNames[gpGame->m_players[defendPlayer].m_color],
-                    combatTown ? "Town" : "Hero");
+            sprintf(
+                gText,
+                "%s player\'s %s is under attack!",
+                gColorNames[gpGame->m_players[defendPlayer].m_color],
+                combatTown ? "Town" : "Hero"
+            );
             gText[0] -= 'a' - 'A';
             gpGame->WaitForPlayer(gText, defendPlayer);
         }
@@ -2783,8 +2914,18 @@ int advManager::DoCombat(
     if (giEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
         gConfig.musicVolume = giEventMusicVolume;
     giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
-    gpCombatManager->SetupCombat(x, y, firstHero, firstArmy, combatTown, secondHero, secondArmy,
-                                 x, y, randomSeed);
+    gpCombatManager->SetupCombat(
+        x,
+        y,
+        firstHero,
+        firstArmy,
+        combatTown,
+        secondHero,
+        secondArmy,
+        x,
+        y,
+        randomSeed
+    );
     if (giHighMemBuffer > COMBAT_HIGH_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_FULL;
     else if (giHighMemBuffer > COMBAT_LOW_MEMORY_LIMIT)
