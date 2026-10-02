@@ -398,7 +398,7 @@ flags = "cpp_o2"
 [[unit]]
 unit = "SOURCE/SMACKMGR"
 source = "src/SOURCE/SMACKMGR.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/CURSOR"
