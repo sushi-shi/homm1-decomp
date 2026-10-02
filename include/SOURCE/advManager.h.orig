@@ -153,10 +153,10 @@ public:
     void CompleteDraw(short, short, int);
     void CompleteDraw(int);
     int GetCloudLookup(int, int);
-    void DrawCell(short, short, short, short, signed char, signed char, signed char);
+    void DrawCell(int, int, int, int, int, int, int);
     class mapCell* GetCell(short, short);
-    void UpdateRadar(signed char, int);
-    void QuickInfo(short, short);
+    void UpdateRadar(int, int);
+    void QuickInfo(int, int);
     void UpdateHeroLocator(int, signed char, signed char);
     void UpdateHeroLocators(signed char, signed char);
     void UpdateTownLocators(signed char, signed char);
@@ -167,9 +167,9 @@ public:
     signed char UpdBottomViewResMsg(void);
     signed char UpdBottomViewKingdom(void);
     signed char UpdBottomViewHero(void);
-    void HeroQuickView(signed char, signed char, short, short);
+    void HeroQuickView(int, int, int, int);
     char* GetArmySizeName(short, H1_ENUM_PARAM(ArmySizeNameVariant, signed char));
-    void TownQuickView(signed char, signed char, short, short);
+    void TownQuickView(int, int, int, int);
     void RedrawAdvScreen(int);
     void GiveTakeArtifactStat(class hero*, signed char, signed char);
     void DeactivateCurrTown(void);
@@ -345,12 +345,6 @@ extern class searchArray *gpSearchArray;
 extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
-// UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
-extern long iLastSandAnimTime;
-extern long iLastNewSandAnimTime;
-extern int iSandAnim;
-extern int iLastHourGlassPhase;
-extern long giLastHourGlassUpdateTime;
 extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;

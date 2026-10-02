@@ -38,6 +38,12 @@ extern char* gArmyNamesPlural[];
 extern char* gObjectNames[];
 // HoMM1 town-name lookup by town id (retail 0x00455aaf).
 char* GetTownName(int);
+// KB/GAME entry points ProcessSearch reaches.
+SAMPLE2 LoadPlaySample(char*);
+void WaitEndSample(SAMPLE2, int);
+extern SAMPLE2 NULL_SAMPLE2;
+void CheckEndGame(int);
+void ComputeUALoc(int);
 
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)
@@ -390,8 +396,84 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.676641;margin=0.529889;shape=0.365;size=0.904;calls=0.935;strings=%s%s|DIGSOUND.82M;alternate=pol20:int advManager::ProcessSearch(int, int)@0x0005a07c
 VA(0x00428d43, 0x49b)
-int advManager::ProcessSearch(int, int) {
-    return 0;
+int advManager::ProcessSearch(int x, int y) {
+    SAMPLE2 sampleData = NULL_SAMPLE2;
+    int gaveArtifact;
+    hero* myHero;
+    mapCell* pCell;
+    tag_message message;
+    int i;
+
+    myHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
+    if (myHero->m_mobility != myHero->m_remainingMobility) {
+        NormalDialog("Digging for artifacts requires a whole day, try again tomorrow.", 1, -1, -1, -1, 0, -1, 0, -1);
+        return 1;
+    }
+    MobilizeCurrHero(0);
+    CompleteDraw(0);
+    UpdateScreen(0, 0);
+    if (x == -1) {
+        x = m_mapOriginX + 7;
+        y = m_mapOriginY + 7;
+    }
+    pCell = GetCell(x, y);
+    if (pCell->m_objectIndex != 0xff || pCell->m_overlayIndex != 0xff) {
+        NormalDialog("Try searching on clear ground.", 1, -1, -1, -1, 0, -1, 0, -1);
+        return 1;
+    }
+    if (pCell->m_tileIndex < 20) {
+        NormalDialog("Try looking on land!!!", 1, -1, -1, -1, 0, -1, 0, -1);
+        return 1;
+    }
+    if (gbHumanPlayer[giCurPlayer])
+        sampleData = LoadPlaySample("DIGSOUND.82M");
+    if (pCell->m_objectIndex == 0xff) {
+        pCell->m_objectTileset = 7;
+        pCell->m_objectIndex = 1;
+        pCell->m_flags |= 0x80;
+    }
+    CompleteDraw(0);
+    UpdateScreen(0, 0);
+    GrabScreen();
+
+    if (gpGame->m_ultimateArtifactX == x && gpGame->m_ultimateArtifactY == y && gpGame->m_ultimateArtifactId != -1) {
+        gaveArtifact = GiveArtifact(myHero, gpGame->m_ultimateArtifactId);
+        if (gaveArtifact == -1) {
+            NormalDialog("You have no room to carry another artifact!", 1, 0x61, 0x28, -1, 0, -1, 0, -1);
+        } else {
+            if (gbHumanPlayer[giCurPlayer]) {
+                EventSound(0x3f, 0);
+                sprintf(gText, "%s%s",
+                        "Congratulations! After spending many hours digging here, you have uncovered the ",
+                        gArtifactNames[gpGame->m_ultimateArtifactId]);
+                if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
+                    sprintf(gText, "After spending many hours digging here, you have uncovered the Eye of Goros!!!!");
+                    NormalDialog(gText, 1, 0xb1, 0x1c, -1, 0, -1, 0, -1);
+                } else {
+                    NormalDialog(gText, 1, 0xb1, 0x1c, -1, 0, -1, 0, -1);
+                    myHero->ViewArtifact(gpGame->m_ultimateArtifactId, 0);
+                }
+                gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+            } else if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
+                sprintf(gText,
+                        "A great tragedy - the enemy has found the Eye of Goros!!!  The people abandon you, all is lost.");
+                NormalDialog(gText, 1, 0xb1, 0x1c, -1, 0, -1, 0, -1);
+            }
+            gpGame->m_ultimateArtifactId = -1;
+        }
+    } else if (gbHumanPlayer[giCurPlayer]) {
+        NormalDialog("Nothing here.", 1, 0x61, 0x28, -1, 0, -1, 0, -1);
+    }
+    if (gbHumanPlayer[giCurPlayer])
+        WaitEndSample(sampleData, -1);
+    for (i = 0; i < gpGame->m_playerCount; i++)
+        ComputeUALoc(i);
+    myHero->m_remainingMobility = 0;
+    UpdBottomView(1, 1, 1);
+    CheckDimHero();
+    Reseed(0, 0);
+    CheckEndGame(0);
+    return 1;
 }
 
 // donor PoL RVA 0x0005a644; preferred Buka symbol ?ProcessHover@advManager@@QAEHHH@Z
