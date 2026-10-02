@@ -602,14 +602,14 @@ void SetGameDefaults(void) {
     gConfig.currentMapOffset = 0;
     gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
     gConfig.cdOffset = 0;
-    gConfig.musicSource = CONFIG_MUSIC_SOURCE_CD;
+    gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
     gbFirstTimeThrough = 1;
     cpuType = GetCPUType();
     if ((cpuType & 0xff) >= CPU_FAMILY_PENTIUM) {
-        gConfig.walkSpeed = CONFIG_WALK_SPEED_FAST;
+        gConfig.walkSpeed = WALK_SPEED_CANTER;
         gConfig.slowVideo = 0;
     } else {
-        gConfig.walkSpeed = CONFIG_WALK_SPEED_SLOW;
+        gConfig.walkSpeed = WALK_SPEED_GALLOP;
         gConfig.slowVideo = 1;
     }
 }
@@ -1205,7 +1205,7 @@ void WritePrefs(void) {
 // HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
 // drive's autorun file and remember the first one in the registry.
 VA(0x0045d75a, 0x4c5)
-int SetupCDDrive(void) {
+H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
     int count;
     unsigned long logicalDrives;
     int cd;

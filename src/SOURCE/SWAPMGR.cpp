@@ -128,7 +128,9 @@ short swapManager::Open(short id) {
     m_selectorIcon = gpResourceManager->GetIcon("swapbtn.icn");
     giMonoIconSkip = -1;
     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-    m_messageFilter = 0x32f;
+    m_messageFilter = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
+                      | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
+                      | MESSAGE_WIDGET;
     m_messageMask = BASE_MANAGER_ACCEPT_SWAP;
     m_priority = id;
     m_active = 1;

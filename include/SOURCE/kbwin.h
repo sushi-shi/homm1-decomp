@@ -3,12 +3,14 @@
 
 #include <Domains.h>
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(WindowTextConstant)
-WINDOW_TEXT_ENTRY_COUNT = 68 H1_ENUM_CONST_END(WindowTextConstant)
+    WINDOW_TEXT_ENTRY_COUNT = 68
+H1_ENUM_CONST_END(WindowTextConstant)
 
-    // SetWinText's window id: which gWinSetup rows (widget, gWinSetupText) fill a
-    // window's static labels; each caller passes the id of the .bin it opened.
-    H1_ENUM_BEGIN(WindowTextId)
+// SetWinText's window id: which gWinSetup rows (widget, gWinSetupText) fill a
+// window's static labels; each caller passes the id of the .bin it opened.
+H1_ENUM_BEGIN(WindowTextId)
     WINDOW_TEXT_BUY_SPELL_BOOK = 0,
     WINDOW_TEXT_BUILD = 1,
     WINDOW_TEXT_CASTLE = 2,
@@ -28,25 +30,46 @@ WINDOW_TEXT_ENTRY_COUNT = 68 H1_ENUM_CONST_END(WindowTextConstant)
 H1_ENUM_END(WindowTextId)
 
 H1_ENUM_CONST_BEGIN(KbwinMenuConstant)
-KBWIN_WIDTH_640 = 640,
-    KBWIN_WIDTH_800 = 800, KBWIN_WIDTH_1024 = 1024, KBWIN_WIDTH_1280 = 1280,
-    KBWIN_MENU_SIZE_640_480 = 0x9c45, KBWIN_MENU_SIZE_800_600 = 0x9c46,
-    KBWIN_MENU_SIZE_1024_768 = 0x9c47, KBWIN_MENU_SIZE_1280_1024 = 0x9c48,
-    KBWIN_MENU_FULLSCREEN = 0x9c49, KBWIN_MENU_ENTRY_COUNT = 70, KBWIN_MENU_HELP = 0x9c74,
-    KBWIN_MENU_ABOUT = 0x9c75, KBWIN_HEIGHT_480 = 480, KBWIN_HEIGHT_600 = 600,
+    KBWIN_WIDTH_640 = 640,
+    KBWIN_WIDTH_800 = 800,
+    KBWIN_WIDTH_1024 = 1024,
+    KBWIN_WIDTH_1280 = 1280,
+    KBWIN_MENU_SIZE_640_480 = 0x9c45,
+    KBWIN_MENU_SIZE_800_600 = 0x9c46,
+    KBWIN_MENU_SIZE_1024_768 = 0x9c47,
+    KBWIN_MENU_SIZE_1280_1024 = 0x9c48,
+    KBWIN_MENU_FULLSCREEN = 0x9c49,
+    KBWIN_MENU_ENTRY_COUNT = 70,
+    KBWIN_MENU_HELP = 0x9c74,
+    KBWIN_MENU_ABOUT = 0x9c75,
+    KBWIN_HEIGHT_480 = 480,
+    KBWIN_HEIGHT_600 = 600,
     KBWIN_HEIGHT_768 = 768,
-    KBWIN_HEIGHT_1024 = 1024 H1_ENUM_CONST_END(KbwinMenuConstant)
+    KBWIN_HEIGHT_1024 = 1024
+H1_ENUM_CONST_END(KbwinMenuConstant)
 
-    // clang-format off
+// gConfig.comPort/baudRate rows: the modem's and the direct (null-modem)
+// connection's settings (the "Modem"/"Direct" registry values).
+H1_ENUM_BEGIN(ConfigConnection)
+    CONFIG_CONNECTION_MODEM = 0,
+    CONFIG_CONNECTION_DIRECT = 1
+H1_ENUM_END(ConfigConnection)
+
+// SetupCDDrive's result, which KB keeps in iCDRomErr: READY when the CD is
+// found, else why not (no CD-ROM drive, no HEROES CD in any drive, no
+// registered application path, no data directory).
+H1_ENUM_BEGIN(CdSetupResult)
+    CD_SETUP_READY = 0,
+    CD_SETUP_NO_DRIVE = 1,
+    CD_SETUP_NOT_FOUND = 2,
+    CD_SETUP_NO_APP_PATH = 3,
+    CD_SETUP_NO_DATA = 4
+H1_ENUM_END(CdSetupResult)
+
 H1_ENUM_CONST_BEGIN(PrefsConstant)
     CONFIG_EXECUTABLE_GAME = 0,
     CONFIG_EXECUTABLE_EDITOR_RECORD = 1,
     CONFIG_EXECUTABLE_COUNT = 2,
-    CONFIG_CONNECTION_MODEM = 0,
-    CONFIG_CONNECTION_DIRECT = 1,
-    CONFIG_MUSIC_SOURCE_CD = 2,
-    CONFIG_WALK_SPEED_FAST = 2,
-    CONFIG_WALK_SPEED_SLOW = 3,
     CONFIG_UNINITIALIZED = 99,
     CPU_FAMILY_PENTIUM = 5,
     DEFAULT_WINDOW_ORIGIN = 10,
@@ -63,11 +86,6 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     REGISTRY_DWORD_BYTES = 4,
     CD_DRIVE_LETTER_COUNT = 26,
     CD_FIRST_DRIVE_LETTER = 2,
-    CD_SETUP_READY = 0,
-    CD_SETUP_NO_DRIVE = 1,
-    CD_SETUP_NOT_FOUND = 2,
-    CD_SETUP_NO_APP_PATH = 3,
-    CD_SETUP_NO_DATA = 4,
     CD_SETUP_ATTEMPTS = 2,
     CD_SETUP_RETRY_DELAY = 3000,
     CD_AUTORUN_TAIL_BYTES = 100,
@@ -91,9 +109,9 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_WIDTH = 240,
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
-    // clang-format on
+// clang-format on
 
-    extern char gcRegAppPath[];
+extern char gcRegAppPath[];
 extern char gcRegCDRomPath[];
 extern signed char gbFirstTimeThrough;
 extern char gcAnimPath[];
@@ -150,7 +168,7 @@ void WritePrefsToFile(void);
 void WritePrefsToRegistry(void);
 void FileError(char*);
 int IsCDDrive(int);
-int SetupCDDrive(void);
+H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void);
 int EarlySetup(void);
 int AppInit(void*, void*, int, char*);
 int oldmain(void);

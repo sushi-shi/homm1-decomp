@@ -4095,7 +4095,7 @@ void game::RandomizeTerrainTiles(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
-            if (cellPtr->m_tileIndex % 20 >= 4)
+            if (cellPtr->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN >= 4)
                 cellPtr->m_tileIndex = cellPtr->m_tileIndex / 4 * 4 + Random(0, 3);
         }
     }
