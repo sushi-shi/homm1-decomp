@@ -3,9 +3,9 @@
 
 #include <match.h>
 
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Icon2b.h>
 #include <BASE/Icond2b.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>

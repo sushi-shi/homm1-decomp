@@ -5,10 +5,9 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/dialogTypes.h>
-
 #include <SOURCE/kbwin.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

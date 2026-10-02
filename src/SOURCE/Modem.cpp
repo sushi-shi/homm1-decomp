@@ -3,12 +3,12 @@
 #include <match.h>
 
 #include <SOURCE/Modem.h>
-#include <SOURCE/comwin.h>
-#include <SOURCE/NOOPT.h>
-#include <SOURCE/REMOTE.h>
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/comwin.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/REMOTE.h>
 
 #include <stdio.h>
 #include <string.h>

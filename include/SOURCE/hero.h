@@ -4,9 +4,9 @@
 // 34 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
-#include <SOURCE/artifactTypes.h>
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/artifactTypes.h>
 
 // forward declarations:
 class town;

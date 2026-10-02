@@ -3,24 +3,24 @@
 #include <match.h>
 
 #include <BASE/BITS.h>
-#include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/Icon2b.h>
-#include <BASE/TILE.h>
-#include <BASE/Iconm2b.h>
-#include <BASE/Icond2b.h>
-#include <BASE/MISC_TYPES.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <BASE/Misc.h>
 #include <BASE/bmap2.h>
+#include <BASE/Icon2b.h>
+#include <BASE/Icond2b.h>
+#include <BASE/Iconm2b.h>
+#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
+#include <BASE/MISC_TYPES.h>
+#include <BASE/TILE.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <SOURCE/highScoreRuntime.h>
-#include <SOURCE/NOOPT.h>
 #include <SOURCE/fileRequester.h>
+#include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

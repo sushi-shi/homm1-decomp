@@ -2,15 +2,15 @@
 
 #include <match.h>
 
-#include <H1/All.h>
-#include <H1/KB.h>
+#include <BASE/Icon2b.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
-#include <BASE/Icon2b.h>
 #include <BASE/palette.h>
-#include <SOURCE/NOOPT.h>
+#include <H1/All.h>
+#include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/NOOPT.h>
 
 #include <stdio.h>
 #include <string.h>

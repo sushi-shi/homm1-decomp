@@ -1,8 +1,8 @@
 #ifndef HOMM1_H1_KB_H
 #define HOMM1_H1_KB_H
 
-#include <SOURCE/FINDPATH.h>
 #include <Domains.h>
+#include <SOURCE/FINDPATH.h>
 
 H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_MAGE_GUILD = 0,

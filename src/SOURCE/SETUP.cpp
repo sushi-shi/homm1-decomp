@@ -4,15 +4,15 @@
 
 #include <SOURCE/SETUP.h>
 
-#include <H1/All.h>
-#include <H1/KB.h>
-#include <SOURCE/X_GLOBAL.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
+#include <H1/All.h>
+#include <H1/KB.h>
+#include <SOURCE/comwin.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/comwin.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <string.h>

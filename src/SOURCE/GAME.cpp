@@ -3,19 +3,19 @@
 #include <match.h>
 
 #include <BASE/BITS.h>
-#include <BASE/Misc.h>
-#include <BASE/LZHUF.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/LZHUF.h>
+#include <BASE/Misc.h>
 #include <BASE/TILE.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <fcntl.h>
 #include <io.h>

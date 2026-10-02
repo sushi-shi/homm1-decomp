@@ -4,10 +4,6 @@
 
 #include <match.h>
 
-// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
-// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
-#include <mss.h>
-
 #include <BASE/soundmgr.h>
 
 #include <windows.h>
@@ -19,6 +15,9 @@
 #include <SOURCE/NOOPT.h>
 
 #include <io.h>
+// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
+// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
+#include <mss.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

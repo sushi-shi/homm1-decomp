@@ -5,8 +5,8 @@
 #include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
 #include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/Misc.h>
+#include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>

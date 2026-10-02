@@ -2,12 +2,11 @@
 
 #include <match.h>
 
+#include <BASE/bmap2.h>
 #include <BASE/INPUTMGR_TYPES.h>
-
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <BASE/Misc.h>
-#include <BASE/bmap2.h>
 #include <SOURCE/PATH.h>
 #include <SOURCE/REMOTE.h>
 

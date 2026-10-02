@@ -8,6 +8,7 @@
 
 #include <windows.h>
 
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <SOURCE/netwinRuntime.h>
 
@@ -15,8 +16,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <BASE/Misc.h>
 
 // Compiler line-base word for netlo.cpp's ProcessAssert sites.
 DATA(0x0048f214) short gNbThrCtlLineBase;

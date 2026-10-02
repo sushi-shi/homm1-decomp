@@ -2,15 +2,16 @@
 
 #include <match.h>
 
+#include <SOURCE/REMOTE.h>
+
 #include <H1/All.h>
 #include <H1/KB.h>
-#include <SOURCE/X_GLOBAL.h>
-#include <SOURCE/Modem.h>
-#include <SOURCE/NOOPT.h>
-#include <SOURCE/REMOTE.h>
 #include <SOURCE/comwin.h>
-#include <SOURCE/netwinRuntime.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/Modem.h>
+#include <SOURCE/netwinRuntime.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <string.h>
 

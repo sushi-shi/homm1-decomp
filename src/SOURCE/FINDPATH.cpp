@@ -4,12 +4,12 @@
 
 #include <H1/KB.h>
 #include <H1/Types.h>
-#include <SOURCE/PATH.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/game.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/PATH.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 

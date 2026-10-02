@@ -6,8 +6,8 @@
 #include <BASE/bmap2.h>
 #include <BASE/border.h>
 #include <BASE/heroWindow.h>
-#include <BASE/icon.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
 #include <BASE/message.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/resourceManager.h>
