@@ -2953,7 +2953,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
         viewWin = new heroWindow(windowX, windowY, "qhero0.bin");
         if (!viewWin)
             MemError();
-        SetWinText(viewWin, 9);
+        SetWinText(viewWin, WINDOW_TEXT_HERO_QUICK_VIEW);
     } else {
         viewWin = new heroWindow(windowX, windowY, "qhero1.bin");
         if (!viewWin)
@@ -3182,7 +3182,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
         if (detailLevel > 2)
             detailLevel = 2;
     }
-    SetWinText(viewWin, 10);
+    SetWinText(viewWin, WINDOW_TEXT_TOWN_QUICK_VIEW);
 
     numArmies = 0;
     message.type = MESSAGE_WIDGET;
@@ -4146,7 +4146,7 @@ short advManager::ControlPanel(void) {
     cPanel = new heroWindow(160, 10, "cpanel.bin");
     if (cPanel == NULL)
         MemError();
-    SetWinText(cPanel, 3);
+    SetWinText(cPanel, WINDOW_TEXT_CONTROL_PANEL);
     if (gbRemoteOn) {
         message.type = MESSAGE_WIDGET;
         message.id = CONTROL_NEW_GAME;
@@ -5042,7 +5042,7 @@ void advManager::DimensionDoor(void) {
     win = new heroWindow(0, 0, "dimdoor.bin");
     if (win == NULL)
         MemError();
-    SetWinText(win, 4);
+    SetWinText(win, WINDOW_TEXT_DIMENSION_DOOR);
     gpWindowManager->DoDialog(win, DimensionDoorHandler, 0);
     delete win;
     heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
