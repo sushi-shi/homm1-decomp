@@ -9,7 +9,9 @@
 #include <BASE/icon.h>
 #include <BASE/mouseManager.h>
 #include <SOURCE/wingraph.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/philAI.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1020,6 +1022,184 @@ void combatManager::RegenerateField(void)
     DrawFrame(1);
 }
 
+// HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
+// then flyers, then fight value) with dice from the town's buildings.
+VA(0x0044e840, 0xb8b)
+void combatManager::KeepAttack(void)
+{
+    int bestRank;
+    short minX;
+    short minY;
+    short lastX;
+    signed char hexCol;
+    signed char keepY;
+    short lastY;
+    signed char targetRow;
+    signed char srcCol;
+    int mod;
+    short gapX;
+    float yAdvance;
+    float yRun;
+    short distance;
+    float xAdvance;
+    float xRun;
+    short gapY;
+    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    int targetIndex;
+    SAMPLE2 sample;
+    short updRight;
+    short w;
+    int power;
+    short height;
+    bitmap* behind;
+    int i;
+    int bestWorth;
+    short startX;
+    short maxY;
+    short startY;
+    short destX;
+    int numLost;
+    army* target;
+    int priority;
+    short frontCol;
+    int hurt;
+    signed char arrowFrame;
+    int dice;
+    short targetY;
+
+    bestRank = -1;
+    bestWorth = 0;
+    targetIndex = -1;
+    for (i = 0; i < 5; i++) {
+        if (m_armies[1][i].IsAlive()) {
+            target = &m_armies[1][i];
+            if (target->m_stats.attributes & 4)
+                priority = 2;
+            else if (target->m_stats.attributes & 2)
+                priority = 1;
+            else
+                priority = 0;
+            power = gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
+            if (priority > bestRank || (priority == bestRank && power > bestWorth)) {
+                bestWorth = power;
+                bestRank = priority;
+                targetIndex = i;
+            }
+        }
+    }
+    if (targetIndex == -1)
+        return;
+    gpMouseManager->ReallyHidePointer();
+    target = &gpCombatManager->m_armies[1][targetIndex];
+    hexCol = target->m_hex % 9;
+    targetRow = target->m_hex / 9;
+    srcCol = 8;
+    keepY = 0;
+    gpCombatManager->SetUnknown25e(0);
+    if (m_combatTowns[0]->m_type == 3 || m_combatTowns[0]->m_type == 1)
+        sprintf(gText, "shoot15.82M");
+    else
+        sprintf(gText, "shoot01.82M");
+    sample = NULL_SAMPLE2;
+    sample = LoadPlaySample(gText);
+    frontCol = hexCol;
+    if (target->m_stats.attributes & 1) {
+        if (target->m_facing == 1)
+            frontCol = frontCol - 1;
+        else
+            frontCol = frontCol + 1;
+    }
+    gapX = abs(frontCol - srcCol);
+    gapY = abs(targetRow - keepY);
+    distance = gapX > gapY ? gapX : gapY;
+    arrowFrame = shotShape[target->m_hex];
+    startX = 0x24d;
+    startY = 0x19;
+    destX = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_x;
+    targetY = gpCombatManager->m_hexCells[targetRow * 9 + frontCol].m_y - 75;
+    xAdvance = (float)(destX - startX) / (float)(distance * 3);
+    yAdvance = (float)(targetY - startY) / (float)(distance * 3);
+    xRun = startX;
+    yRun = startY;
+    updRight = 0;
+    minX = 639;
+    maxY = 0;
+    minY = 479;
+    if (arrowFrame == 0) {
+        w = 0x43;
+        height = 0x12;
+    } else if (arrowFrame == 1) {
+        w = 0x37;
+        height = 0x2b;
+    } else {
+        w = 0x12;
+        height = 0x43;
+    }
+    behind = new bitmap(0x21, w, height);
+    behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
+    lastX = xRun;
+    lastY = yRun;
+    for (i = 0; i < distance * 3; i++) {
+        minX = xRun;
+        minY = lastY;
+        updRight = lastX + w;
+        maxY = height + yRun;
+        behind->DrawToBuffer(lastX, lastY);
+        behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
+        m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, 0, 0);
+        DelayTil(glTimers);
+        gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
+        glTimers[0] = KBTickCount() + 10;
+        lastX = xRun;
+        lastY = yRun;
+        xRun = xAdvance + xRun;
+        yRun = yAdvance + yRun;
+    }
+    behind->DrawToBuffer(lastX, lastY);
+    gpWindowManager->UpdateScreenRegion(lastX, lastY, w, height);
+    delete behind;
+    mod = 2;
+    if (m_heroes[0])
+        mod += m_heroes[0]->m_primaryStats[0];
+    if (m_combatTowns[0]->m_buildings & 1)
+        mod += m_combatTowns[0]->m_buildState + 1;
+    mod -= -(-target->m_stats.defense);
+    if (mod > 20)
+        mod = 20;
+    if (mod < -20)
+        mod = -20;
+    dice = 5;
+    for (i = 7; i <= 12; i++) {
+        if (m_combatTowns[0]->m_buildings & (1 << i))
+            dice += 4;
+    }
+    for (i = 0; i <= 4; i++) {
+        if (m_combatTowns[0]->m_buildings & (1 << i))
+            dice++;
+    }
+    hurt = 0;
+    for (i = 0; i < dice; i++)
+        hurt += SRandom(2, 3);
+    hurt = (int)(hurt * gfStatPower[mod + 20]);
+    if (hurt <= 0)
+        hurt = 1;
+    numLost = target->Damage(hurt);
+    if (numLost > 0)
+        sprintf(gText, "%s %d %s. %d %s %s.", "Garrison does", hurt, "Damage", numLost,
+                numLost > 1 ? gArmyNamesPlural[target->m_creatureType] : gArmyNames[target->m_creatureType],
+                numLost > 1 ? "perish" : "perishes");
+    else
+        sprintf(gText, "%s %d %s.", "Garrison does", hurt, "Damage");
+    gpCombatManager->CombatMessage(gText, 1);
+    target->PowEffect(target->m_stats.unknown07);
+    if (!(target->m_stats.attributes & 0x10))
+        target->ResetAnimation(0);
+    WaitEndSample(sample, -1);
+    if (target->m_quantity > 0)
+        target->ResetAnimation(1);
+    gpMouseManager->ReallyShowPointer();
+}
+
 // Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
 // losses, plus 500 for a defeated hero.
 VA(0x0044f3cb, 0x114)
@@ -1032,7 +1212,7 @@ int combatManager::ExperienceValueOfStack(signed char side)
     for (i = 0; i < 5; i++) {
         if (m_armies[side][i].m_creatureType != -1)
             value += (m_armies[side][i].m_initialQuantity - m_armies[side][i].m_quantity)
-                     * gMonsterDatabase[m_armies[side][i].m_creatureType].fightValue;
+                     * gMonsterDatabase[m_armies[side][i].m_creatureType].hitPoints;
     }
     if (m_heroes[side])
         value += 500;
