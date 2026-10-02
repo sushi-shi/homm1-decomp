@@ -146,8 +146,9 @@ public:
     short m_wallDamage;
     signed char m_unknown6e8;
     // Per side: creatures the attacking ghosts (CREATURE_GHOST) killed; the
-    // ghost stack grows by it after the strike.
-    char m_ghostKills[4];
+    // ghost stack grows by it after the strike. army::DoAttack stores and
+    // reloads it with word moves indexed by side.
+    short m_ghostKills[2];
     // LoadIcons loads the battlefield backdrop GetBackgroundName names;
     // DrawBackground draws it first.
     class bitmap* m_backgroundBitmap;
