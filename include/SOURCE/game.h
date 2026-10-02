@@ -96,7 +96,8 @@ public:
     signed char m_randomArtifacts[0x25];
     boatRecord m_boats[GAME_BOAT_COUNT];
     signed char m_boatSlots[GAME_BOAT_COUNT];
-    char m_unknown145a6[0x30];
+    // Per-obelisk visiting-player bits tested against giCurPlayerBit.
+    signed char m_obeliskVisitors[0x30];
     // InsertSound reads the environment sound id per [x][y] cell.
     signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.

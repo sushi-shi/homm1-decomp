@@ -185,6 +185,12 @@ extern float gfHeroInteractionBonus[];
 extern float gfAttackHumanBonus;
 extern float gfAttackComputerBonus;
 extern signed char gbIAmGreatest;
+// ValueOfEventAtPosition: cells an enemy hero can reach this turn, the event
+// cache, per-resource mine income and the ultimate artifact's average value.
+extern signed char gaiEnemyHeroReachable[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern int giMineIncome[];
+extern int gUltArtifactAvgValue;
 // DoAI: the single player the AI may run for, and the places each hero has
 // already started from this turn.
 extern signed char giLimitPlayer;
