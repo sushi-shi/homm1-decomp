@@ -68,10 +68,14 @@ public:
     void FreeResources(void);
     // HoMM1 retail: word x/y (ret 8).
     void DrawToBuffer(short, short);
+    // HoMM1 retail 0x00467281: back to the standing frame, optionally
+    // redrawing the combat screen (ret 4).
+    void Stand(signed char);
     void Wince(void);
     void Walk(int, int, int);
     void SpecialAttack(void);
-    void DirDoAttack(int);
+    // HoMM1 retail 0x00468fc6: word direction (ret 4).
+    void DirDoAttack(short);
     void DoHydraAttack(int);
     void DoAttack(int);
     void ResetPath(void);
@@ -127,4 +131,9 @@ public:
 #pragma pack(pop)
 
 short GetAdjacentCellIndexNoArmy(short, short);
+// The combat spell-effect icon cache: army draws and PowEffect share one
+// icon, reloaded when the effect file changes.
+extern class icon* gCurLoadedSpellIcon;
+extern short gCurLoadedSpellFileId;
+extern short giSpellEffectFrame;
 #endif // HOMM1_SOURCE_ARMY_H

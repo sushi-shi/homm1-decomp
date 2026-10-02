@@ -64,11 +64,19 @@ public:
     char m_unknown30[0x10];
     hexcell m_hexCells[COMBAT_HEX_COUNT];
     short m_unknown25c;
-    char m_unknown25e[2];
+    // DrawFrame skips the grid overlay while this is set.
+    signed char m_gridMode;
+    char m_unknown25f;
     signed char m_unknown260;
     char m_unknown261[4];
-    // hexcell draws ground (3 + index), obstacles (5), towers (8) and walls (9).
-    class icon* m_combatIcons[13];
+    // army::DrawToBuffer prints stack quantities with this font.
+    class font* m_smallFont;
+    char m_unknown269[8];
+    // Nine combat icons (retail loops 0..8 from +0x271): hexcell draws
+    // ground (index), obstacles (2), towers (5) and walls (6); armies draw
+    // the quantity box (1) and spell markers (8).
+    class icon* m_combatIcons[9];
+    char m_unknown295[4];
     signed char m_unknown299;
     char m_unknown29a[4];
     // DoVictory: an attacker winning here earns the castle bonus.
@@ -82,7 +90,8 @@ public:
     signed char m_playerId[2];
     int m_experienceValue[2];
     signed char m_heroCastSpell[2];
-    char m_unknown2c6[4];
+    // Stacks per side; the AI mask helpers loop over these.
+    short m_numArmies[2];
     army m_armies[2][COMBAT_SIDE_ARMY_COUNT];
     signed char m_currentSide;
     signed char m_currentArmyIndex;
@@ -150,6 +159,8 @@ public:
     void UpdateMouseGrid(int, int);
     // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
     void DrawFrame(int);
+    // HoMM1 retail 0x00470f25: byte mode (ret 4).
+    void SetGridMode(signed char);
     void DrawSmallView(int, int);
     int ViewGeneral(int, int, int);
     // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
@@ -273,21 +284,22 @@ public:
     void DoCompAI(signed char);
     float GetModLichDamage(class army *, float);
     void DoLichShot(class army *);
-    int GetShooterMask(int);
+    // HoMM1 AI masks take a byte side and return word bit masks.
+    short GetShooterMask(signed char);
     int GetMirrorImageMask(int);
-    int GetFlyerMask(int);
+    short GetFlyerMask(signed char);
     int GetAllMask(int);
-    int GetWalkerMask(int);
+    short GetWalkerMask(signed char);
     int GetOutOfItMask(int);
     int GetTraitorMask(int);
-    int GetBestArmy(int, int);
-    int GetWorstArmy(int, int);
-    int GetClosestArmy(class army *, int, int);
-    unsigned long int GetStrength(int, int);
-    int AttemptAttack(class army *, int, int);
-    int AttemptAdjacentAttack(class army *);
-    int WalkTowardArmyFront(class army *, int, int);
-    int WalkTowardArmy(class army *, int, int);
+    short GetBestArmy(signed char, short);
+    short GetWorstArmy(signed char, short);
+    short GetClosestArmy(class army *, signed char, short);
+    unsigned long int GetStrength(signed char, short);
+    signed char AttemptAttack(class army *, signed char, short);
+    signed char AttemptAdjacentAttack(class army *);
+    signed char WalkTowardArmyFront(class army *, signed char, short);
+    signed char WalkTowardArmy(class army *, signed char, short);
 };
 #pragma pack(pop)
 
