@@ -18,4 +18,5 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [Call arguments](call-argument-evaluated-before-pushes-means-a-temporary.md) — an inner call evaluated before the other pushes went through a local.
 - [Translation-unit context](tu-state-probe-family-decides-reachability.md) — unchanged function text can emit different code.
 - [Signed remainder](signed-modulo-pow2-abs-restore.md) — sign correction around a power-of-two mask.
+- [VC4 float expression shape](vc4-float-expression-shape.md) — store/compare order follows declarations; parentheses stop product reassociation; C-style float casts add a temporary (HoMM1-measured).
 
