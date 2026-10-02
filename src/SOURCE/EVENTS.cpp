@@ -120,7 +120,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
     fizzleMode = 0;
     gbEventMusicPlaying = 1;
     gpMouseManager->ReallyHidePointer();
-    EventSound(objType, (unsigned char)cell->m_objectMetadata);
+    EventSound(objType, cell->m_objectMetadata);
     switch (objType) {
         case 31:
             if (pHero->m_eventFlags & HERO_EVENT_EMBARKED) {
@@ -137,7 +137,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case 62:
-            ship = &gpGame->m_boats[(unsigned char)cell->m_objectMetadata];
+            ship = &gpGame->m_boats[cell->m_objectMetadata];
             gpGame->RestoreCell(-1, -1, ship->savedTriggerType, ship->savedEventData, cell, 2);
             pHero->m_eventFlags |= HERO_EVENT_EMBARKED;
             pHero->m_remainingMobility = 0;
@@ -151,25 +151,25 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             UpdateScreen(0, 0);
             break;
         case 25:
-            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
-            if (gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type == 6)
+            if (gpGame->m_mines[cell->m_objectMetadata].type == 6)
                 income = 1000;
-            else if (gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type == 2)
+            else if (gpGame->m_mines[cell->m_objectMetadata].type == 2)
                 income = 2;
             else
                 income = 1;
-            EventWindow(gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type + 0x29, 1, "",
-                        gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type, -income, -1,
+            EventWindow(gpGame->m_mines[cell->m_objectMetadata].type + 0x29, 1, "",
+                        gpGame->m_mines[cell->m_objectMetadata].type, -income, -1,
                         0, -1);
             goto claimMine;
         case 1:
-            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
             EventWindow(0, 1, "", 1, -1, -1, 0, -1);
             goto claimMine;
         case 32:
-            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
             EventWindow(0x37, 1, "", 0, -2, -1, 0, -1);
             goto claimMine;
@@ -200,12 +200,12 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case 6:
-            EventWindow(0xb, 2, "", 6, (unsigned char)cell->m_objectMetadata * 500, 0xe,
-                        ((unsigned char)cell->m_objectMetadata - 1) * 500, 1);
+            EventWindow(0xb, 2, "", 6, cell->m_objectMetadata * 500, 0xe,
+                        (cell->m_objectMetadata - 1) * 500, 1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                GiveResource(pHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+                GiveResource(pHero, 6, cell->m_objectMetadata * 500);
             else
-                GiveExperience(pHero, ((unsigned char)cell->m_objectMetadata - 1) * 500, 0);
+                GiveExperience(pHero, (cell->m_objectMetadata - 1) * 500, 0);
             erase = 1;
             fizzleMode = 1;
             pHero->CheckLevel();
@@ -256,7 +256,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case 4:
-            switch ((unsigned char)cell->m_objectMetadata) {
+            switch (cell->m_objectMetadata) {
                 case 1:
                     EventWindow(0x4b, 1, "", -1, 0, -1, 0, -1);
                     break;
@@ -274,12 +274,12 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case 8:
-            EventWindow(0xe, 1, "", 6, ((unsigned char)cell->m_objectMetadata >> 4) * 100,
-                        (unsigned char)cell->m_objectMetadata & 0xf,
-                        (unsigned char)cell->m_objectMetadata >> 4, -1);
-            GiveResource(pHero, 6, ((unsigned char)cell->m_objectMetadata >> 4) * 100);
-            GiveResource(pHero, (unsigned char)cell->m_objectMetadata & 0xf,
-                         (unsigned char)cell->m_objectMetadata >> 4);
+            EventWindow(0xe, 1, "", 6, (cell->m_objectMetadata >> 4) * 100,
+                        cell->m_objectMetadata & 0xf,
+                        cell->m_objectMetadata >> 4, -1);
+            GiveResource(pHero, 6, (cell->m_objectMetadata >> 4) * 100);
+            GiveResource(pHero, cell->m_objectMetadata & 0xf,
+                         cell->m_objectMetadata >> 4);
             erase = 1;
             fizzleMode = 1;
             gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
@@ -296,31 +296,31 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case 24:
-            if (!(unsigned char)cell->m_objectMetadata) {
+            if (!cell->m_objectMetadata) {
                 EventWindow(0x29, 1, "", -1, 0, -1, 0, -1);
             } else {
-                EventWindow(0x2a, 1, "", 6, (unsigned char)cell->m_objectMetadata * 500, -1, 0, -1);
-                GiveResource(pHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+                EventWindow(0x2a, 1, "", 6, cell->m_objectMetadata * 500, -1, 0, -1);
+                GiveResource(pHero, 6, cell->m_objectMetadata * 500);
                 cell->m_objectMetadata = 0;
             }
             break;
         case 29:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(pHero, resType,
-                         resType == 6 ? (unsigned char)cell->m_objectMetadata * 100
-                                           : (unsigned char)cell->m_objectMetadata);
+                         resType == 6 ? cell->m_objectMetadata * 100
+                                           : cell->m_objectMetadata);
             strcpy(resourceName, gResourceNames[resType]);
             resourceName[0] += 32;
             sprintf(gText, gEventText[54], resourceName);
             BVResMsg(gText, resType,
-                     resType == 6 ? (unsigned char)cell->m_objectMetadata * 100
-                                       : (unsigned char)cell->m_objectMetadata);
+                     resType == 6 ? cell->m_objectMetadata * 100
+                                       : cell->m_objectMetadata);
             erase = 1;
             fizzleMode = 1;
             break;
         case 45:
-            if ((unsigned char)cell->m_objectMetadata <= 6) {
-                EventWindow(0x45, 1, "", (unsigned char)cell->m_objectMetadata, 2, -1, 0, -1);
+            if (cell->m_objectMetadata <= 6) {
+                EventWindow(0x45, 1, "", cell->m_objectMetadata, 2, -1, 0, -1);
                 GiveResource(pHero, cell->m_objectMetadata, 2);
                 cell->m_objectMetadata = 99;
             } else {
@@ -331,14 +331,14 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             EventWindow(0x13, 2, "", -1, 0, -1, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 RecruitEvent(pHero, 0x1b, cell);
-                if (!(unsigned char)cell->m_objectMetadata) {
+                if (!cell->m_objectMetadata) {
                     erase = 1;
                     fizzleMode = 1;
                 }
             }
             break;
         case 42:
-            if (!(unsigned char)cell->m_objectMetadata) {
+            if (!cell->m_objectMetadata) {
                 EventWindow(0x41, 1, "", -1, 0, -1, 0, -1);
             } else {
                 EventWindow(0x42, 2, "", -1, 0, -1, 0, -1);
@@ -347,7 +347,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case 39:
-            if (!(unsigned char)cell->m_objectMetadata) {
+            if (!cell->m_objectMetadata) {
                 EventWindow(0x3f, 1, "", -1, 0, -1, 0, -1);
             } else {
                 EventWindow(0x40, 2, "", -1, 0, -1, 0, -1);
@@ -366,10 +366,10 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             PlayerMonsterInteract(cell, cell, pHero, &erase, x, y, 0, x, y);
             break;
         case 27:
-            if (!(gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1]
+            if (!(gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1]
                   & (1 << pHero->m_owner))) {
                 gpGame->ComputeUALoc(pHero->m_owner);
-                gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1] |=
+                gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |=
                     1 << pHero->m_owner;
                 EventWindow(0x32, 1, "", -1, 0, -1, 0, -1);
                 ViewPuzzle();
@@ -397,11 +397,11 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case 34:
             sprintf(gText, "%s'%s'.", gEventText[57],
-                    gSpellNames[(unsigned char)cell->m_objectMetadata - 1]);
+                    gSpellNames[cell->m_objectMetadata - 1]);
             if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
-                pHero->AddSpell((unsigned char)cell->m_objectMetadata - 1,
+                pHero->AddSpell(cell->m_objectMetadata - 1,
                                     pHero->m_primaryStats[3], 0);
-                EventWindow(-1, 1, gText, 8, (unsigned char)cell->m_objectMetadata - 1, -1, 0, -1);
+                EventWindow(-1, 1, gText, 8, cell->m_objectMetadata - 1, -1, 0, -1);
             } else {
                 strcat(gText, "  Unfortunately, you have no Magic Book to record the spell with.");
                 EventWindow(-1, 1, gText, -1, 0, -1, 0, -1);
@@ -449,7 +449,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                              -1, -1, 0, -1, 0, -1);
                 break;
             }
-            switch ((unsigned char)cell->m_objectMetadata) {
+            switch (cell->m_objectMetadata) {
                 case 1:
                     EventWindow(-1, 1, gArtifactDesc[cell->m_objectIndex], 7, cell->m_objectIndex, -1,
                                 0, -1);
@@ -516,7 +516,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             EventWindow(0xa, 2, "", -1, 0, -1, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                 break;
-            switch ((unsigned char)cell->m_objectMetadata) {
+            switch (cell->m_objectMetadata) {
                 case 1:
                     EventWindow(4, 1, "", -1, 0, -1, 0, -1);
                     cell->m_objectMetadata = 1;
@@ -564,7 +564,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case 12:
             EventWindow(0x14, 2, "", -1, 0, -1, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                switch ((unsigned char)cell->m_objectMetadata) {
+                switch (cell->m_objectMetadata) {
                     case 1:
                         EventWindow(0x15, 1, "", 0xd, 0, -1, 0, -1);
                         if (!(pHero->m_eventFlags & HERO_EVENT_GRAVEYARD)) {
@@ -581,7 +581,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case 35:
             EventWindow(0x3a, 2, "", -1, 0, -1, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                switch ((unsigned char)cell->m_objectMetadata) {
+                switch (cell->m_objectMetadata) {
                     case 1:
                         EventWindow(0x3b, 1, "", 0xd, 0, -1, 0, -1);
                         if (!(pHero->m_eventFlags & HERO_EVENT_SHIPWRECK)) {
@@ -888,7 +888,7 @@ void advManager::RecruitEvent(class hero* eventHero, int creatureType, class map
     recruitUnit* recruitWindow;
     int result;
 
-    availableCount = (unsigned char)cell->m_objectMetadata;
+    availableCount = cell->m_objectMetadata;
     recruitWindow = new recruitUnit(&eventHero->m_army, creatureType, &availableCount);
     if (!recruitWindow)
         MemError();
@@ -905,7 +905,7 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
                                    int y) {
     int artifact;
 
-    switch ((unsigned char)cell->m_objectMetadata) {
+    switch (cell->m_objectMetadata) {
     case 2:
         if (CombatMonsterEvent(eventHero, 26, 10, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
@@ -958,7 +958,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     short houseIndex;
 
     houseIndex = (cell->m_triggerType & 0x7f) - 13;
-    if (!(unsigned char)cell->m_objectMetadata) {
+    if (!cell->m_objectMetadata) {
         EventWindow(houseIndex * 3 + 25, 1, "", -1, 0, -1, 0, -1);
     } else {
         signed char creatures[5] = {6, 0, 1, 13, 0};
@@ -966,7 +966,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
         EventWindow(houseIndex * 3 + 23, 2, "", -1, 0, -1, 0, -1);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
-                eventHero->m_army.Add(creatures[houseIndex], (unsigned char)cell->m_objectMetadata, -1);
+                eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, -1);
                 cell->m_objectMetadata = 0;
             } else {
                 EventWindow(houseIndex * 3 + 24, 1, "", -1, 0, -1, 0, -1);
@@ -1295,7 +1295,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case 62:
-            ship = &gpGame->m_boats[(unsigned char)cell->m_objectMetadata];
+            ship = &gpGame->m_boats[cell->m_objectMetadata];
             gpGame->RestoreCell(-1, -1, ship->savedTriggerType, ship->savedEventData, cell, 3);
             eventHero->m_eventFlags |= HERO_EVENT_EMBARKED;
             eventHero->m_remainingMobility = 0;
@@ -1309,7 +1309,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
         case 1:
         case 25:
         case 32:
-            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
             gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
             break;
@@ -1336,11 +1336,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             break;
         case 6:
             if (gpPhilAI->ChooseGoldOrExperience(eventHero,
-                                                 (unsigned char)cell->m_objectMetadata * 500,
-                                                 ((unsigned char)cell->m_objectMetadata - 1) * 500))
-                GiveResource(eventHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+                                                 cell->m_objectMetadata * 500,
+                                                 (cell->m_objectMetadata - 1) * 500))
+                GiveResource(eventHero, 6, cell->m_objectMetadata * 500);
             else
-                GiveExperience(eventHero, ((unsigned char)cell->m_objectMetadata - 1) * 500, 1);
+                GiveExperience(eventHero, (cell->m_objectMetadata - 1) * 500, 1);
             erase = 1;
             break;
         case 3:
@@ -1374,7 +1374,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case 4:
-            switch ((unsigned char)cell->m_objectMetadata) {
+            switch (cell->m_objectMetadata) {
                 case 1:
                     break;
                 case 2:
@@ -1384,9 +1384,9 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case 8:
-            GiveResource(eventHero, 6, ((unsigned char)cell->m_objectMetadata >> 4) * 100);
-            GiveResource(eventHero, (unsigned char)cell->m_objectMetadata & 0xf,
-                         (unsigned char)cell->m_objectMetadata >> 4);
+            GiveResource(eventHero, 6, (cell->m_objectMetadata >> 4) * 100);
+            GiveResource(eventHero, cell->m_objectMetadata & 0xf,
+                         cell->m_objectMetadata >> 4);
             erase = 1;
             gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
             break;
@@ -1397,20 +1397,20 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case 24:
-            if ((unsigned char)cell->m_objectMetadata) {
-                GiveResource(eventHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+            if (cell->m_objectMetadata) {
+                GiveResource(eventHero, 6, cell->m_objectMetadata * 500);
                 cell->m_objectMetadata = 0;
             }
             break;
         case 29:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(eventHero, resType,
-                         resType == 6 ? (unsigned char)cell->m_objectMetadata * 100
-                                           : (unsigned char)cell->m_objectMetadata);
+                         resType == 6 ? cell->m_objectMetadata * 100
+                                           : cell->m_objectMetadata);
             erase = 1;
             break;
         case 45:
-            if ((unsigned char)cell->m_objectMetadata != 99) {
+            if (cell->m_objectMetadata != 99) {
                 GiveResource(eventHero, cell->m_objectMetadata, 2);
                 cell->m_objectMetadata = 99;
             }
@@ -1448,14 +1448,14 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             available = 1;
             goto recruit;
         recruit:
-            if ((unsigned char)cell->m_objectMetadata) {
+            if (cell->m_objectMetadata) {
                 gpPhilAI->EvaluateOneTimeCreaturePurchase(
-                    eventHero, troopType, (unsigned char)cell->m_objectMetadata, available,
+                    eventHero, troopType, cell->m_objectMetadata, available,
                     numHired, purchaseValue, bestSlot);
                 if (numHired > 0) {
                     gpGame->GiveArmy(&eventHero->m_army, troopType, numHired,
                                      bestSlot);
-                    cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata - numHired;
+                    cell->m_objectMetadata = cell->m_objectMetadata - numHired;
                     if (!available) {
                         GetMonsterCost(troopType, cost);
                         for (counter = 0; counter < 7; counter++)
@@ -1463,23 +1463,23 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     }
                 }
             }
-            if (!(unsigned char)cell->m_objectMetadata && eventType == 11)
+            if (!cell->m_objectMetadata && eventType == 11)
                 erase = 1;
             break;
         case 26:
             ComputerMonsterInteract(cell, eventHero, &erase);
             break;
         case 27:
-            if (!(gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1] & giCurPlayerBit)) {
+            if (!(gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] & giCurPlayerBit)) {
                 gpGame->ComputeUALoc(eventHero->m_owner);
-                gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1] |= giCurPlayerBit;
+                gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |= giCurPlayerBit;
             }
             break;
         case 33:
             break;
         case 34:
             if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
-                eventHero->AddSpell((unsigned char)cell->m_objectMetadata - 1,
+                eventHero->AddSpell(cell->m_objectMetadata - 1,
                                     eventHero->m_primaryStats[3], 0);
             break;
         case 40:
@@ -1516,7 +1516,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case 48:
-            switch ((unsigned char)cell->m_objectMetadata) {
+            switch (cell->m_objectMetadata) {
                 case 1:
                 giveArtifact:
                     GiveArtifact(eventHero, cell->m_objectIndex);
@@ -1565,7 +1565,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
         case 2:
             break;
         case 5:
-            switch ((unsigned char)cell->m_objectMetadata) {
+            switch (cell->m_objectMetadata) {
                 case 1:
                     break;
                 case 2:
@@ -1616,16 +1616,16 @@ void advManager::PlayerMonsterInteract(class mapCell* cell, class mapCell* comba
     int result;
 
     unused = 0;
-    if ((unsigned char)cell->m_objectMetadata & 0x80) {
+    if (cell->m_objectMetadata & 0x80) {
         if (gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
             > gMonsterDatabase[cell->m_objectIndex].fightValue
-                  * ((unsigned char)cell->m_objectMetadata & 0x7f) * 1.75) {
+                  * (cell->m_objectMetadata & 0x7f) * 1.75) {
             if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
                 sprintf(gText, gEventText[48], gArmyNamesPlural[cell->m_objectIndex]);
                 EventWindow(-1, 2, gText, -1, 0, -1, 0, -1);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                     eventHero->m_army.Add(cell->m_objectIndex,
-                                          (unsigned char)cell->m_objectMetadata & 0x7f, -1);
+                                          cell->m_objectMetadata & 0x7f, -1);
                     *handled = 1;
                     return;
                 } else {
@@ -1635,7 +1635,7 @@ void advManager::PlayerMonsterInteract(class mapCell* cell, class mapCell* comba
         }
     }
     result = CombatMonsterEvent(eventHero, cell->m_objectIndex,
-                                (unsigned char)cell->m_objectMetadata & 0x7f, combatCell, x, y,
+                                cell->m_objectMetadata & 0x7f, combatCell, x, y,
                                 unused, combatX, combatY);
     if (result == 1 || result == -1)
         *handled = 1;
@@ -1652,22 +1652,22 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
     int result;
     int creatureCount;
 
-    if ((unsigned char)cell->m_objectMetadata & 0x80
+    if (cell->m_objectMetadata & 0x80
         && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
                > gMonsterDatabase[cell->m_objectIndex].fightValue
-                     * ((unsigned char)cell->m_objectMetadata & 0x7f) * 1.75) {
+                     * (cell->m_objectMetadata & 0x7f) * 1.75) {
         gpPhilAI->EvaluateOneTimeCreaturePurchase(
-            eventHero, cell->m_objectIndex, (unsigned char)cell->m_objectMetadata & 0x7f, 1,
+            eventHero, cell->m_objectIndex, cell->m_objectMetadata & 0x7f, 1,
             numToBuy, purchaseValue, bestSlot);
         if (numToBuy > 0) {
             gpGame->GiveArmy(&eventHero->m_army, cell->m_objectIndex,
-                             (unsigned char)cell->m_objectMetadata & 0x7f, bestSlot);
+                             cell->m_objectMetadata & 0x7f, bestSlot);
             *handled = 1;
         }
     } else {
-        creatureCount = (unsigned char)cell->m_objectMetadata & 0x7f;
+        creatureCount = cell->m_objectMetadata & 0x7f;
         result = gpPhilAI->CombatMonsterEvent(eventHero, cell->m_objectIndex, &creatureCount, cell);
-        cell->m_objectMetadata = ((unsigned char)cell->m_objectMetadata & 0x80) + creatureCount;
+        cell->m_objectMetadata = (cell->m_objectMetadata & 0x80) + creatureCount;
         if (result)
             *handled = 1;
     }
