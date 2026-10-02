@@ -39,12 +39,15 @@ public:
     // Attribute bit 0 is a two-hex creature, bit 1 a flyer.
     tag_monsterStats m_stats;
     short m_unknown29;
-    short m_unknown2b;
+    // PowEffect frames left on the stack: 4 hit, 5 killed, -1 none.
+    short m_powFrames;
     signed char m_side;
     signed char m_index;
     int m_unknown2f;
     signed char m_unknown33;
-    char m_unknown34;
+    // combatManager::ResetHitByCreature clears it; DoHydraAttack hits
+    // each stack once.
+    char m_hitByCreature;
     class icon* m_standIcon;
     class icon* m_walkIcon;
     class icon* m_attackIcon;
@@ -74,12 +77,14 @@ public:
     // redrawing the combat screen (ret 4).
     void Stand(signed char);
     void Wince(void);
-    // HoMM1 retail 0x00467345: word direction, byte flag (ret 0xc).
-    void Walk(short, int, signed char);
+    // HoMM1 retail 0x00467345: word direction, byte stand-after and
+    // continued-walk flags (ret 0xc).
+    void Walk(short, signed char, signed char);
     void SpecialAttack(void);
     // HoMM1 retail 0x00468fc6: word direction (ret 4).
     void DirDoAttack(short);
-    void DoHydraAttack(int);
+    // HoMM1 retail 0x00468861 takes no argument.
+    void DoHydraAttack(void);
     void DoAttack(int);
     void ResetPath(void);
     short WalkTo(void);
@@ -91,7 +96,8 @@ public:
     void DamageEnemy(class army *, int *, int *, int, int);
     // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
     int Damage(long int);
-    void PowEffect(int, int, int, int);
+    // HoMM1 retail 0x0046aa49: byte effect (ret 4).
+    void PowEffect(signed char);
     unsigned long int Strength(void);
     int LeaveNoBody(void);
     void ProcessDeath(int);
@@ -145,6 +151,8 @@ extern short gCurLoadedSpellFileId;
 extern short giSpellEffectFrame;
 // Spell-effect icon files by effect (0x004910d8).
 extern char* gCombatFxNames[];
+// Pow (impact) effect icons by effect (0x00491098).
+extern char* gPowEffectNames[];
 // Damage multipliers for attack minus defense, -20..20 (0x00492470).
 extern float gfBattleStat[];
 // DamageEnemy flags a genie halving the target stack.

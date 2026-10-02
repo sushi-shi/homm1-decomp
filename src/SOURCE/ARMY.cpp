@@ -414,7 +414,7 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     m_initialQuantity = m_quantity;
     m_hitPointsLost = 0;
     m_damageMode = 0;
-    m_unknown2b = -1;
+    m_powFrames = -1;
     m_side = side;
     m_index = index;
 }
@@ -648,11 +648,299 @@ void army::Wince(void) {
     gpCombatManager->SetGridMode(m_facing != 0);
 }
 
+// One hex of walking: six frames redrawn inside the union of the old and
+// new extents; a stack turned away from the step moves before animating.
+VA(0x00467345, 0x852)
+void army::Walk(short direction, signed char standAfter, signed char continued) {
+    int rectMaxX;
+    int rectMaxY;
+    short moveDist;
+    short startFrame;
+    short step;
+    short reverse;
+    short i;
+    short baseHex;
+    int rectMinX;
+    short flag;
+    int partnerHex;
+    short targetHex;
+    int rectMinY;
+    int nextTail;
+
+    if (!continued) {
+        giMinExtentX = giMinExtentY = 640;
+        giMaxExtentX = giMaxExtentY = 0;
+        gbComputeExtent = 1;
+        gbSaveBiggestExtent = 1;
+        DrawToBuffer(gpCombatManager->m_hexCells[m_hex].m_x, gpCombatManager->m_hexCells[m_hex].m_y);
+        gbSaveBiggestExtent = 0;
+        gbComputeExtent = 0;
+    }
+    if (giMinExtentX < 0)
+        giMinExtentX = 0;
+    if (giMinExtentY < 0)
+        giMinExtentY = 0;
+    if (giMaxExtentX > 639)
+        giMaxExtentX = 639;
+    if (giMaxExtentY > 459)
+        giMaxExtentY = 459;
+    rectMinX = giMinExtentX - 5;
+    rectMinY = giMinExtentY - 5;
+    rectMaxX = giMaxExtentX + 5;
+    rectMaxY = giMaxExtentY + 5;
+    moveDist = 16;
+    reverse = 0;
+    m_unknown0b = 0;
+    if (direction < 3) {
+        if (m_facing == 0) {
+            startFrame = 0;
+            step = 1;
+        } else {
+            startFrame = 5;
+            step = -1;
+            reverse = 1;
+        }
+    } else if (m_facing == 1) {
+        startFrame = 0;
+        step = 1;
+    } else {
+        startFrame = 5;
+        step = -1;
+        reverse = 1;
+    }
+    if (direction == 5 || direction == 0)
+        m_unknown0b = -16;
+    if (direction == 3 || direction == 2)
+        m_unknown0b = 16;
+    baseHex = m_hex;
+    hexcell tempCell;
+    hexcell tailCell;
+    if (reverse) {
+        targetHex = GetAdjacentCellIndex(m_hex, direction);
+        if (ValidHex(targetHex)) {
+            tempCell.TakeOccupant(&gpCombatManager->m_hexCells[m_hex]);
+            if (m_stats.attributes & 1)
+                tailCell.TakeOccupant(&gpCombatManager->m_hexCells[m_hex + (m_facing ? -1 : 1)]);
+            gpCombatManager->m_hexCells[targetHex].TakeOccupant(&tempCell);
+            partnerHex = targetHex + (m_facing ? -1 : 1);
+            if (ValidHex(partnerHex) && (m_stats.attributes & 1))
+                gpCombatManager->m_hexCells[partnerHex].TakeOccupant(&tailCell);
+            m_hex = targetHex;
+            if (m_unknown0b)
+                m_unknown0b = -m_unknown0b;
+        }
+    } else {
+        flag = 0;
+        if (m_facing == 0 && direction == 2)
+            flag = 1;
+        else if (m_facing == 1 && direction == 5)
+            flag = 1;
+        gpCombatManager->SetGridMode(flag);
+    }
+    m_unknown08 = 1;
+    m_unknown09 = startFrame;
+    gpSoundManager->MemorySample(m_samples[0]);
+    if (!continued) {
+        if (ValidHex(m_hex))
+            gpCombatManager->m_hexCells[m_hex].m_occupantSide = -1;
+        gpCombatManager->DrawFrame(0);
+        if (ValidHex(m_hex))
+            gpCombatManager->m_hexCells[m_hex].m_occupantSide = gpCombatManager->m_currentSide;
+        gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBitmap, 0, 0, 0, 0, 640, 460);
+        gpCombatManager->m_unknown299 = 0;
+    }
+    for (i = 0; i < 6; i++) {
+        if (continued || i) {
+            gpCombatManager->m_backgroundBitmap->CopyTo(gpWindowManager->m_screen, giMinExtentX, giMinExtentY,
+                                                        giMinExtentX, giMinExtentY,
+                                                        giMaxExtentX - giMinExtentX + 1,
+                                                        giMaxExtentY - giMinExtentY + 1);
+            rectMinX = giMinExtentX;
+            rectMinY = giMinExtentY;
+            rectMaxX = giMaxExtentX;
+            rectMaxY = giMaxExtentY;
+        }
+        giMinExtentX = giMinExtentY = 640;
+        giMaxExtentX = giMaxExtentY = 0;
+        gbComputeExtent = 1;
+        gbSaveBiggestExtent = 1;
+        DrawToBuffer(gpCombatManager->m_hexCells[m_hex].m_x, gpCombatManager->m_hexCells[m_hex].m_y);
+        gbComputeExtent = 0;
+        gbSaveBiggestExtent = 0;
+        if (giMinExtentX < 0)
+            giMinExtentX = 0;
+        if (giMinExtentY < 0)
+            giMinExtentY = 0;
+        if (giMaxExtentX > 639)
+            giMaxExtentX = 639;
+        if (giMaxExtentY > 459)
+            giMaxExtentY = 459;
+        gbCurrArmyDrawn = 0;
+        gbComputeExtent = 1;
+        gbLimitToExtent = 1;
+        m_unknown33 = 0;
+        gpCombatManager->DrawFrame(0);
+        m_unknown33 = 1;
+        gbLimitToExtent = 0;
+        gbComputeExtent = 0;
+        gbCurrArmyDrawn = 1;
+        if (giMinExtentX < rectMinX)
+            rectMinX = giMinExtentX;
+        if (giMinExtentY < rectMinY)
+            rectMinY = giMinExtentY;
+        if (giMaxExtentX > rectMaxX)
+            rectMaxX = giMaxExtentX;
+        if (giMaxExtentY > rectMaxY)
+            rectMaxY = giMaxExtentY;
+        DelayTil(glTimers);
+        glTimers[0] = KBTickCount() + 75;
+        gpWindowManager->UpdateScreenRegion(rectMinX, rectMinY, rectMaxX - rectMinX + 1, rectMaxY - rectMinY + 1);
+        m_unknown09 += step;
+    }
+    if (!reverse) {
+        targetHex = GetAdjacentCellIndex(m_hex, direction);
+        if (ValidHex(targetHex)) {
+            tempCell.TakeOccupant(&gpCombatManager->m_hexCells[m_hex]);
+            nextTail = m_hex + (m_facing ? -1 : 1);
+            if ((m_stats.attributes & 1) && ValidHex(nextTail))
+                tailCell.TakeOccupant(&gpCombatManager->m_hexCells[nextTail]);
+            gpCombatManager->m_hexCells[targetHex].TakeOccupant(&tempCell);
+            nextTail = targetHex + (m_facing ? -1 : 1);
+            if ((m_stats.attributes & 1) && ValidHex(nextTail))
+                gpCombatManager->m_hexCells[nextTail].TakeOccupant(&tailCell);
+            m_hex = targetHex;
+        }
+    }
+    if (standAfter == 1)
+        Stand(1);
+}
+
 // donor PoL RVA 0x0004c7e5; preferred Buka symbol ?SpecialAttack@army@@QAEXXZ
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.357822;margin=0.373223;shape=0.266;size=0.572;calls=0.585;alternate=pol20:void army::SpecialAttack(void)@0x0004c7e5
 VA(0x00467b97, 0xcca)
 void army::SpecialAttack(void) {}
+
+// Attacks every enemy next to the stack (the hydra), then turns them back.
+VA(0x00468861, 0x765)
+void army::DoHydraAttack(void) {
+    int killedNow;
+    int damage;
+    short armyIndex;
+    short i;
+    short dir;
+    short attackMask;
+    short occSide;
+    army* pTarget;
+    short targetHex;
+    int totalLost;
+    int totDmg;
+    army* eachArmy;
+
+    m_unknown0b = 0;
+    CheckLuck();
+    gpSoundManager->MemorySample(m_samples[1]);
+    m_unknown08 = 0;
+    gpCombatManager->ResetLimitCreature();
+    gpCombatManager->m_limitCreatureCount[m_side][m_index]++;
+    for (i = 0; i < 5; i++) {
+        gpCombatManager->m_unknown727 = 1;
+        m_unknown09 = i + 3;
+        gpCombatManager->DrawFrame(1);
+    }
+    if (m_spellEffect == 14)
+        attackMask = GetAttackMask(m_hex, 2, -1);
+    else
+        attackMask = GetAttackMask(m_hex, 1, -1);
+    gpCombatManager->ResetHitByCreature();
+    totalLost = 0;
+    totDmg = totalLost;
+    for (dir = 0; dir < 8; dir++) {
+        if (!(attackMask & (1 << dir))) {
+            targetHex = m_hex;
+            if ((m_stats.attributes & 1)
+                && (m_facing == 1 && dir > 2 || m_facing == 0 && (dir < 3 || dir > 5))) {
+                if (m_facing == 1)
+                    targetHex = m_hex - 1;
+                else
+                    targetHex = m_hex + 1;
+            }
+            targetHex = GetAdjacentCellIndex(targetHex, dir);
+            if (ValidHex(targetHex)) {
+                occSide = gpCombatManager->m_hexCells[targetHex].m_occupantSide;
+                armyIndex = gpCombatManager->m_hexCells[targetHex].m_occupantIndex;
+                if (occSide >= 0 && armyIndex >= 0) {
+                    gpCombatManager->m_limitCreatureCount[occSide][armyIndex]++;
+                    pTarget = &gpCombatManager->m_armies[occSide][armyIndex];
+                    if (!pTarget->m_hitByCreature) {
+                        pTarget->m_hitByCreature = 1;
+                        DamageEnemy(pTarget, &damage, &killedNow, 0, 0);
+                        totDmg += damage;
+                        totalLost += killedNow;
+                    }
+                }
+            }
+        }
+    }
+    if (totalLost > 0)
+        sprintf(gText, "%s %s %d %s.  %d %s %s.",
+                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+                m_quantity > 1 ? "do" : "does", totDmg, "Damage", totalLost,
+                totalLost > 1 ? "creatures" : "creature", totalLost > 1 ? "perish" : "perishes");
+    else
+        sprintf(gText, "%s %s %d %s.",
+                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+                m_quantity > 1 ? "do" : "does", totDmg, "Damage");
+    gText[0] -= 32;
+    gpCombatManager->CombatMessage(gText, 1);
+    PowEffect(m_stats.unknown07);
+    WaitSample(1);
+    m_unknown08 = 0;
+    gpCombatManager->ResetLimitCreature();
+    gpCombatManager->m_limitCreatureCount[m_side][m_index]++;
+    for (i = 4; i >= 0; i--) {
+        gpCombatManager->m_unknown727 = 1;
+        m_unknown09 = i + 3;
+        gpCombatManager->DrawFrame(1);
+    }
+    if (m_spellEffect == 14)
+        attackMask = GetAttackMask(m_hex, 2, -1);
+    else
+        attackMask = GetAttackMask(m_hex, 1, -1);
+    for (dir = 0; dir < 8; dir++) {
+        if (!(attackMask & (1 << dir))) {
+            targetHex = m_hex;
+            if ((m_stats.attributes & 1)
+                && (m_facing == 1 && dir > 2 || m_facing == 0 && (dir < 3 || dir > 5))) {
+                if (m_facing == 1)
+                    targetHex = m_hex - 1;
+                else
+                    targetHex = m_hex + 1;
+            }
+            targetHex = GetAdjacentCellIndex(targetHex, dir);
+            if (ValidHex(targetHex)) {
+                occSide = gpCombatManager->m_hexCells[targetHex].m_occupantSide;
+                armyIndex = gpCombatManager->m_hexCells[targetHex].m_occupantIndex;
+                if (occSide >= 0 && armyIndex >= 0) {
+                    gpCombatManager->m_limitCreatureCount[occSide][armyIndex]++;
+                    pTarget = &gpCombatManager->m_armies[occSide][armyIndex];
+                    if (!(pTarget->m_stats.attributes & 0x10))
+                        pTarget->Stand(0);
+                }
+            }
+        }
+    }
+    m_targetSide = targetHex = -1;
+    gpCombatManager->m_unknown727 = 0;
+    for (occSide = 0; occSide < 2; occSide++) {
+        for (armyIndex = 0; armyIndex < gpCombatManager->m_numArmies[occSide]; armyIndex++) {
+            eachArmy = &gpCombatManager->m_armies[occSide][armyIndex];
+            if (!(eachArmy->m_stats.attributes & 0x10) || eachArmy->m_powFrames == -1)
+                eachArmy->Stand(0);
+        }
+    }
+    gpCombatManager->DrawFrame(1);
+}
 
 VA(0x00468fc6, 0x2d)
 void army::DirDoAttack(short direction) {
@@ -868,14 +1156,14 @@ int army::Damage(long int damage) {
     if (minKilled == 0)
         minKilled = 1;
     if (kills > 0)
-        m_unknown2b = 4;
+        m_powFrames = 4;
     else
-        m_unknown2b = -1;
+        m_powFrames = -1;
     if (m_quantity < kills)
         kills = m_quantity;
     m_quantity = m_quantity - kills;
     if (m_quantity <= 0)
-        m_unknown2b = 5;
+        m_powFrames = 5;
     facing = m_facing;
     m_facing = gpCombatManager->m_armies[gpCombatManager->m_currentSide][gpCombatManager->m_currentArmyIndex].m_facing ^ 1;
     Wince();
@@ -888,6 +1176,110 @@ int army::Damage(long int damage) {
         CancelSpell();
     }
     return kills;
+}
+
+// Plays the impact effect on every stack hit this attack (m_powFrames),
+// fading the killed ones out, then restores the grid.
+VA(0x0046aa49, 0x8a9)
+void army::PowEffect(signed char effect) {
+    short frames;
+    short stackIndex;
+    short armyNum;
+    short step;
+    short longest;
+    short side;
+    int cellHex;
+    army* curArmy;
+
+    longest = 0;
+    for (armyNum = 0; armyNum < gpCombatManager->m_numArmies[1]; armyNum++)
+        if (gpCombatManager->m_armies[1][armyNum].m_powFrames > longest)
+            longest = gpCombatManager->m_armies[1][armyNum].m_powFrames;
+    for (armyNum = 0; armyNum < gpCombatManager->m_numArmies[0]; armyNum++)
+        if (gpCombatManager->m_armies[0][armyNum].m_powFrames > longest)
+            longest = gpCombatManager->m_armies[0][armyNum].m_powFrames;
+    if (longest >= 5)
+        frames = 10;
+    else
+        frames = longest;
+    if (effect != gCurLoadedSpellFileId) {
+        gpResourceManager->Dispose(gCurLoadedSpellIcon);
+        gCurLoadedSpellIcon = gpResourceManager->GetIcon(gPowEffectNames[effect]);
+        gCurLoadedSpellFileId = effect;
+    }
+    for (side = 0; side < 2; side++)
+        for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++)
+            if (gpCombatManager->m_armies[side][stackIndex].m_powFrames > 0)
+                gpSoundManager->MemorySample(gpCombatManager->m_armies[side][stackIndex].m_samples[2]);
+    step = 0;
+    gpCombatManager->ResetLimitCreature();
+    while (step < frames && step < 5) {
+        gpCombatManager->m_unknown727 = 1;
+        glTimers[1] = KBTickCount() + 30;
+        for (side = 0; side < 2; side++) {
+            for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
+                if (gpCombatManager->m_armies[side][stackIndex].m_powFrames >= step) {
+                    gpCombatManager->m_armies[side][stackIndex].m_unknown08 = 3;
+                    if (!gpCombatManager->m_limitCreatureCount[side][stackIndex])
+                        gpCombatManager->m_limitCreatureCount[side][stackIndex]++;
+                } else if (gpCombatManager->m_armies[side][stackIndex].m_unknown08 != 2) {
+                    if (!gpCombatManager->m_limitCreatureCount[side][stackIndex]
+                        && gpCombatManager->m_armies[side][stackIndex].m_unknown08)
+                        gpCombatManager->m_limitCreatureCount[side][stackIndex]++;
+                    gpCombatManager->m_armies[side][stackIndex].m_unknown08 = 0;
+                }
+            }
+        }
+        giSpellEffectFrame = step;
+        gpCombatManager->DrawFrame(1);
+        step++;
+    }
+    while (step < frames && step < 10) {
+        gpCombatManager->m_unknown727 = 1;
+        glTimers[1] = KBTickCount() + 30;
+        for (side = 0; side < 2; side++) {
+            for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
+                if (gpCombatManager->m_armies[side][stackIndex].m_powFrames >= 5) {
+                    gpCombatManager->m_armies[side][stackIndex].m_unknown08 = 3;
+                    gpCombatManager->m_armies[side][stackIndex].m_stats.attributes |= 0x10;
+                    if (!gpCombatManager->m_limitCreatureCount[side][stackIndex])
+                        gpCombatManager->m_limitCreatureCount[side][stackIndex]++;
+                } else if (gpCombatManager->m_armies[side][stackIndex].m_unknown08 != 2) {
+                    if (!gpCombatManager->m_limitCreatureCount[side][stackIndex]
+                        && gpCombatManager->m_armies[side][stackIndex].m_unknown08)
+                        gpCombatManager->m_limitCreatureCount[side][stackIndex]++;
+                    gpCombatManager->m_armies[side][stackIndex].m_unknown08 = 0;
+                }
+            }
+        }
+        giSpellEffectFrame = step;
+        gpCombatManager->DrawFrame(1);
+        step++;
+    }
+    while (++step < 10)
+        DelayMilli(15);
+    for (side = 0; side < 2; side++) {
+        for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
+            curArmy = &gpCombatManager->m_armies[side][stackIndex];
+            if ((curArmy->m_stats.attributes & 0x10) && curArmy->m_powFrames != -1) {
+                cellHex = curArmy->m_hex;
+                if (ValidHex(cellHex))
+                    gpCombatManager->m_hexCells[cellHex].m_occupantSide = -1;
+                if (curArmy->m_stats.attributes & 1) {
+                    cellHex = curArmy->m_hex + (curArmy->m_facing ? -1 : 1);
+                    gpCombatManager->m_hexCells[cellHex].m_occupantSide = -1;
+                }
+            } else if (curArmy->m_unknown08 != 2) {
+                curArmy->m_unknown08 = 0;
+            }
+            curArmy->m_powFrames = -1;
+            gpCombatManager->UpdateGrid(curArmy->m_hex, curArmy->m_stats.attributes);
+        }
+    }
+    gpCombatManager->DrawFrame(1);
+    for (side = 0; side < 2; side++)
+        for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++)
+            gpCombatManager->m_armies[side][stackIndex].WaitSample(2);
 }
 
 VA(0x0046b2f2, 0x34)
@@ -997,9 +1389,74 @@ void army::GoBerserk(void) {
     }
 }
 
-// donor PoL RVA 0x00052ad9; preferred Buka symbol ?MoveAttack@army@@QAEXHH@Z
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.522810;margin=0.525862;shape=0.325;size=0.919;calls=0.929;alternate=pol20:void army::MoveAttack(int, int)@0x00052ad9
-VA(0x0046b6e7, 0x3a9)
-void army::MoveAttack(int, int) {}
+// Attacks the stack on the hex (flying, shooting or picking the adjacent
+// direction) or moves there; a second argument forbids attacking.
+VA(0x0046b6e7, 0x3a3)
+void army::MoveAttack(int hex, int moveOnly) {
+    hexcell* pCell;
+    int baseHex;
+    short meleeMask;
+    short atkMask;
+    int adjHex;
+    int dirIndex;
+
+    gpCombatManager->m_limitCreature = 0;
+    m_targetSide = -1;
+    m_targetIndex = -1;
+    if (!ValidHex(hex))
+        return;
+    if (gpCombatManager->m_hexCells[hex].m_occupantSide != -1
+        && (gpCombatManager->m_hexCells[hex].m_occupantSide != gpCombatManager->m_currentSide
+            || gpCombatManager->m_hexCells[hex].m_occupantIndex != gpCombatManager->m_currentArmyIndex)) {
+        if (moveOnly)
+            return;
+        m_targetSide = gpCombatManager->m_hexCells[hex].m_occupantSide;
+        m_targetIndex = gpCombatManager->m_hexCells[hex].m_occupantIndex;
+        m_moveTargetHex = hex;
+        meleeMask = GetAttackMask(m_hex, 0, -1);
+        if ((m_stats.attributes & 2) && meleeMask == 0xff && m_moveTargetHex != m_hex
+            && !ValidFlight(m_moveTargetHex, 0))
+            return;
+        if (m_spellEffect == 14)
+            atkMask = GetAttackMask(m_hex, 2, -1);
+        else
+            atkMask = GetAttackMask(m_hex, 1, -1);
+        if (atkMask == 0xff && m_stats.shots > 0) {
+            SpecialAttack();
+        } else if (meleeMask == 0xff) {
+            AttackTo();
+        } else {
+            for (dirIndex = 0; dirIndex < 8; dirIndex++) {
+                if (dirIndex < 6 || (m_stats.attributes & 1)) {
+                    baseHex = m_hex;
+                    if ((m_stats.attributes & 1) && m_facing == 0 && dirIndex >= 0 && dirIndex <= 2)
+                        baseHex++;
+                    if ((m_stats.attributes & 1) && m_facing == 1 && dirIndex >= 3 && dirIndex <= 5)
+                        baseHex--;
+                    if (dirIndex >= 6) {
+                        if (m_facing == 0)
+                            baseHex++;
+                        else
+                            baseHex--;
+                    }
+                    adjHex = GetAdjacentCellIndex(baseHex, dirIndex);
+                    if (ValidHex(adjHex)) {
+                        pCell = &gpCombatManager->m_hexCells[adjHex];
+                        if (pCell->m_occupantSide == m_targetSide && pCell->m_occupantIndex == m_targetIndex)
+                            m_attackDirection = dirIndex;
+                    }
+                }
+            }
+            DoAttack(0);
+        }
+    } else if (m_stats.attributes & 2) {
+        m_moveTargetHex = hex;
+        if (!ValidFlight(m_moveTargetHex, 0))
+            return;
+        FlyTo(m_moveTargetHex);
+    } else {
+        WalkTo(hex);
+    }
+    gpCombatManager->m_limitCreature = 1;
+}
 

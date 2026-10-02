@@ -76,7 +76,8 @@ public:
     // ground (index), obstacles (2), towers (5) and walls (6); armies draw
     // the quantity box (1) and spell markers (8).
     class icon* m_combatIcons[9];
-    char m_unknown295[4];
+    // Clean combat background; army::Walk restores the screen from it.
+    class bitmap* m_backgroundBitmap;
     signed char m_unknown299;
     char m_unknown29a[4];
     // DoVictory: an attacker winning here earns the castle bonus.
