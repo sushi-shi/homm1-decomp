@@ -130,38 +130,38 @@ void advManager::DrawCursor(void)
         drawX += CURSOR_SHADOW_FLIP_X_ADJUST;
         drawFrame = (m_cursorFrame & CURSOR_FRAME_MASK) + m_cursorFrameCount;
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
-            FlipDimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, 0);
+            FlipDimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, ICON_DRAW_OFFSET_FULL);
         FlipIconToBitmap(m_heroIcons[m_cursorType], gpWindowManager->m_screen, drawX, screenY,
-                         drawFrame, 0);
+                         drawFrame, ICON_DRAW_OFFSET_FULL);
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame & CURSOR_FRAME_MASK;
             FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen,
-                             drawX, screenY, drawFrame, 0);
+                             drawX, screenY, drawFrame, ICON_DRAW_OFFSET_FULL);
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK) + (m_cursorFrame & CURSOR_FRAME_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
             FlipIconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
-                             screenY, drawFrame, 0);
+                             screenY, drawFrame, ICON_DRAW_OFFSET_FULL);
             m_updateMaxY++;
         }
     } else {
         drawFrame = m_cursorFrame + m_cursorFrameCount;
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
-            DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, 0);
+            DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, ICON_DRAW_OFFSET_FULL);
         IconToBitmap(m_heroIcons[m_cursorType], gpWindowManager->m_screen, drawX, screenY, drawFrame,
-                     0);
+                     ICON_DRAW_OFFSET_FULL);
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame;
             IconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
-                         screenY, drawFrame, 0);
+                         screenY, drawFrame, ICON_DRAW_OFFSET_FULL);
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK) + m_cursorFrame + CURSOR_FLAG_FRAME_BASE;
             IconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
-                         screenY, drawFrame, 0);
+                         screenY, drawFrame, ICON_DRAW_OFFSET_FULL);
             m_updateMaxY++;
         }
     }
@@ -671,9 +671,9 @@ short advManager::ValidMove(short direction)
     directionY = normalDirTable[direction].y;
     newX = m_mapOriginX + directionX;
     newY = m_mapOriginY + directionY;
-    if (newX < -7 || newX > MAP_CELL_GRID_SIZE - 7 - 1)
+    if (newX < -CURSOR_MAP_DRAW_OFFSET || newX > MAP_CELL_GRID_SIZE - CURSOR_MAP_DRAW_OFFSET - 1)
         return 0;
-    if (newY < -7 || newY > MAP_CELL_GRID_SIZE - 7 - 1)
+    if (newY < -CURSOR_MAP_DRAW_OFFSET || newY > MAP_CELL_GRID_SIZE - CURSOR_MAP_DRAW_OFFSET - 1)
         return 0;
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
     if (destCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
@@ -720,8 +720,7 @@ void advManager::MoveOrigin(short directionX, short directionY)
         cellY = m_cursorMapY + m_mapOriginY;
         m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
         if (m_previousCursorMapX != -1) {
-            m_mapData[m_previousCursorMapX + oldOriginX][m_previousCursorMapY + oldOriginY].m_flags &=
-                ~0x40;
+            m_mapData[m_previousCursorMapX + oldOriginX][m_previousCursorMapY + oldOriginY].m_flags &= ~MAP_CELL_HERO_CURSOR;
             m_previousCursorMapX += directionX;
             m_previousCursorMapY += directionY;
             cellX = m_previousCursorMapX + m_mapOriginX;
