@@ -4,7 +4,7 @@ The slice takes two directories of COFF objects, normalizes both sides into a
 disposable content-addressed view, pairs them BY NAME in an objdiff project,
 runs objdiff-cli, and prints what moved. It measures; it never decides.
 
-INPUT SURFACE (exactly four things, deliberately narrow):
+INPUT SURFACE (exactly five things, deliberately narrow):
 
   1. `config/units.toml` via `homm1.manifest.units` - the unit census, and the
      `[build]` platform/compiler strings the project file carries.
@@ -14,6 +14,9 @@ INPUT SURFACE (exactly four things, deliberately narrow):
      `build/objdiff/target-new/`). Which units HAVE a target is read off this
      directory, never predicted.
   4. For a reference diff only: a previous objdiff `report.json`.
+  5. The pinned VC4 OLDNAMES.LIB and LIBCMT.LIB, read only for their alias
+     records (`runtime_aliases.py`): a reference to `chdir` is named by the
+     runtime function `_chdir` that LINK binds it to.
 
 Compare consumes NO retail labels, NO providers, NO extraction fragments, NO
 Model / bindings.tsv, NO `config/retail/` tables, and it never opens the retail
@@ -32,6 +35,7 @@ invariant break, objdiff-cli failing - is nonzero.
 
 Modules:
     canonicalize.py  one object -> disposable comparison copy (+ sidecar)
+    runtime_aliases.py  OLDNAMES name -> runtime function, from the pinned libs
     normalize.py     the batch driver over a unit list (stale-skip, stamp)
     project.py       objdiff.json pairing normalized base <-> normalized target
     run.py           the verb: normalize -> project -> objdiff-cli -> summary

@@ -2,40 +2,22 @@
 
 #include <match.h>
 
-#include <BASE/Misc.h>
+#include <SOURCE/EVENTS.h>
+
 #include <BASE/bmap2.h>
 #include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
-#include <SOURCE/X_GLOBAL.h>
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/dialogTypes.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/REMOTE.h>
-
-#include <SOURCE/dialogTypes.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// EVENTS assertion records (file literals and line base), as in MOUSEMGR.
-extern short gEventsAssertLine;
-extern char* gEventText[];
-extern signed char gbEventMusicPlaying;
-extern char* gArtifactNames[];
-// Stale alias of NULL_SAMPLE2 (0x4c5180): unreferenced, kept so later symbol handles stay put.
-extern SAMPLE2 gNullSample;
-// Stale alias of gpMonGroup (0x4c6aa0): unreferenced, kept so later symbol handles stay put.
-extern armyGroup* gpMonsterGroup;
-extern char* gResourceNames[];
-extern char* gArtifactDesc[];
-extern char* gSpellNames[];
-void BVResMsg(char*, int, int);
-extern signed char gbInCombat;
-// DoEvent and DoCombat restore a music volume parked here (-1 when none).
-extern int giEventMusicVolume;
-// Per-cell bitmask of the players whose heroes have stood there.
-extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -77,7 +59,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 pHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 pHero->m_remainingMobility = 0;
                 pHero->m_direction = m_cursorDirection;
-                m_cursorType = pHero->m_unknown1c;
+                m_cursorType = pHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
                 gpWindowManager->SaveFizzleSource(0xc0, 0xc0, 0x60, 0x60);
@@ -579,9 +561,9 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
     erased = 1;
     cell->m_triggerType = 0;
     cell->m_objectIndex = 0xff;
-    if ((cell->m_unknown07 & 0x7f) > 0 && (cell->m_unknown07 & 0x7f) < 0x7f) {
-        cell->m_triggerType = cell->m_unknown07 & 0x7f;
-        cell->m_unknown07 = cell->m_unknown07 - cell->m_triggerType;
+    if ((cell->m_secondaryTrigger & 0x7f) > 0 && (cell->m_secondaryTrigger & 0x7f) < 0x7f) {
+        cell->m_triggerType = cell->m_secondaryTrigger & 0x7f;
+        cell->m_secondaryTrigger = cell->m_secondaryTrigger - cell->m_triggerType;
         for (i = x - 1; i <= x + 1; i++) {
             for (j = y - 1; j <= y + 1; j++) {
                 if (i >= 0 && i < MAP_CELL_GRID_SIZE && j >= 0 && j < MAP_CELL_GRID_SIZE
@@ -1238,7 +1220,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 eventHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 eventHero->m_remainingMobility = 0;
                 eventHero->m_direction = m_cursorDirection;
-                m_cursorType = eventHero->m_unknown1c;
+                m_cursorType = eventHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
                 CheckAdjacentMon(&adjacentMonster);
@@ -1673,10 +1655,6 @@ int advManager::DoNetCombat(char* packet) {
     return 1;
 }
 
-// Declared at first use: this C1 symbol order gives DoAIEvent retail's operand
-// order (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-extern char* gColorNames[];
-
 // SendHeroTownData's payload after the remote-message header, as in Buka's
 // combatRemoteData; hero records follow one fragment byte.
 #pragma pack(push, 1)
@@ -1814,7 +1792,7 @@ int advManager::DoCombat(int x, int y, class hero* firstHero, class armyGroup* f
             bShowIt = 1;
             gpGame->TurnOffAIMusic();
             sprintf(gText, "%s player\'s %s is under attack!",
-                    gColorNames[gpGame->m_players[defendPlayer].m_unknown11],
+                    gColorNames[gpGame->m_players[defendPlayer].m_color],
                     combatTown ? "Town" : "Hero");
             gText[0] -= 32;
             gpGame->WaitForPlayer(gText, defendPlayer);
@@ -1889,7 +1867,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     int result;
     combatRemoteData* buf = 0;
 
-    buf = (combatRemoteData*)malloc(0xff);
+    buf = static_cast<combatRemoteData*>(malloc(0xff));
     reply = 0;
     buf->fragment = 0;
     buf->x = x;
@@ -1912,7 +1890,8 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     if (combatTown)
         memcpy(&buf->combatTown, combatTown, sizeof(town));
 
-    result = TransmitAndWait((char*)buf, remotePlayer, sizeof(combatRemoteData), 0x15, 0x16,
+    // API-forced: TransmitAndWait/TransmitRemoteData take char* payloads.
+    result = TransmitAndWait(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteData), 0x15, 0x16,
                              &reply);
     if (!result)
         ShutDown(0);
@@ -1920,7 +1899,8 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     if (firstHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 1;
         memcpy(((combatRemoteHeroFragment*)buf)->data, firstHero, sizeof(hero));
-        result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
+        // API-forced: TransmitRemoteData takes a char* payload.
+        result = TransmitRemoteData(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
             ShutDown(0);
@@ -1928,7 +1908,8 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     if (secondHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 2;
         memcpy(((combatRemoteHeroFragment*)buf)->data, secondHero, sizeof(hero));
-        result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
+        // API-forced: TransmitRemoteData takes a char* payload.
+        result = TransmitRemoteData(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
             ShutDown(0);
@@ -1980,12 +1961,12 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
         gpGame->m_players[defenderOwner].m_resources[6] =
             ((combatRemoteMessage*)packet)->combat.secondGold;
 
-    *firstArmy = (armyGroup*)malloc(sizeof(armyGroup));
+    *firstArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
     memcpy(*firstArmy, &((combatRemoteMessage*)packet)->combat.firstArmy, sizeof(armyGroup));
-    *secondArmy = (armyGroup*)malloc(sizeof(armyGroup));
+    *secondArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
     memcpy(*secondArmy, &((combatRemoteMessage*)packet)->combat.secondArmy, sizeof(armyGroup));
     if (hasTown) {
-        *combatTown = (town*)malloc(sizeof(town));
+        *combatTown = static_cast<town*>(malloc(sizeof(town)));
         memcpy(*combatTown, &((combatRemoteMessage*)packet)->combat.combatTown, sizeof(town));
     }
 
@@ -2008,11 +1989,11 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
             && ((combatRemoteMessage*)packet)->command == 0x15) {
             lastPacketTime = KBTickCount();
             if (((heroRemoteMessage*)packet)->heroFragment.fragment == 1) {
-                *firstHero = (hero*)malloc(sizeof(hero));
+                *firstHero = static_cast<hero*>(malloc(sizeof(hero)));
                 memcpy(*firstHero, ((heroRemoteMessage*)packet)->heroFragment.data, sizeof(hero));
             }
             if (((heroRemoteMessage*)packet)->heroFragment.fragment == 2) {
-                *secondHero = (hero*)malloc(sizeof(hero));
+                *secondHero = static_cast<hero*>(malloc(sizeof(hero)));
                 memcpy(*secondHero, ((heroRemoteMessage*)packet)->heroFragment.data,
                        sizeof(hero));
             }

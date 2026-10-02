@@ -21,9 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern heroWindowManager *gpWindowManager;
-extern mouseManager *gpMouseManager;
-
 char gDynamicConstruct[] = "Dynamic Construct";
 
 H1_ENUM_BEGIN(WindowWidgetRecordType)

@@ -5,21 +5,14 @@
 
 #include <match.h>
 
+#include <SOURCE/VIEW.h>
+
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
-
-// Primary stat, morale and luck labels of the general's stats text.
-extern char* cViewGeneralLabels[];
-// Morale and luck names, indexed from -3.
-extern char* gMoraleText[];
-extern char* gLuckText[];
-// Combat command help lines; HandleViewGeneral shows entries 1-5.
-extern char* cViewGeneralHelp[];
-
-short HandleViewGeneral(tag_message& message);
 
 // Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when
@@ -70,7 +63,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     wnd = new heroWindow(195, 60, "vgenwin.bin");
     if (wnd == NULL)
         MemError();
-    sprintf(gText, "port%04d.icn", m_heroes[side]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[side]->m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 2;
     message.text = gText;
@@ -79,7 +72,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     message.id = 3;
     message.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
     wnd->BroadcastMessage(message);
-    sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_unknown1c]);
+    sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = 1;
     message.text = gText;

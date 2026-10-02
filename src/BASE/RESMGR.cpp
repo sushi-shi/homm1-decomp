@@ -296,7 +296,7 @@ void resourceManager::Close(void)
     if (m_aggregateDir != 0)
         free(m_aggregateDir);
     if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE) {
-        close(m_aggregateFd);
+        _close(m_aggregateFd);
         m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
     }
     m_active = 0;
@@ -307,21 +307,21 @@ VA(0x00476180, 0x100)
 short resourceManager::LoadAggregateHeader(char *aggregateName)
 {
     short directoryBytes;
-    int aggregateFp = open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
+    int aggregateFp = _open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
     if (aggregateFp == RESOURCE_MANAGER_INVALID_FILE) {
         sprintf(gText, "Can't open file: %s", aggregateName);
         ShutDown(gText);
         return RESOURCE_MANAGER_LOAD_ERROR;
     }
     if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE)
-        close(m_aggregateFd);
+        _close(m_aggregateFd);
     if (m_aggregateDir != 0)
         free(m_aggregateDir);
     m_aggregateFd = aggregateFp;
-    read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
+    _read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
     directoryBytes = m_aggregateEntryCount * sizeof(aggEntry);
     m_aggregateDir = static_cast<aggEntry *>(malloc(directoryBytes));
-    read(m_aggregateFd, m_aggregateDir, directoryBytes);
+    _read(m_aggregateFd, m_aggregateDir, directoryBytes);
     return 0;
 }
 
@@ -344,7 +344,7 @@ void resourceManager::PointToFile(short fileId)
             m_lastFileName);
         ShutDown(gText);
     }
-    lseek(m_aggregateFd, m_aggregateDir[entry].offset, 0);
+    _lseek(m_aggregateFd, m_aggregateDir[entry].offset, 0);
 }
 
 // Single-aggregate variant of the Buka 2.1 directory lookup.
@@ -381,7 +381,7 @@ void resourceManager::SavePosition(void)
 VA(0x004764a0, 0x2e)
 void resourceManager::RestorePosition(void)
 {
-    lseek(m_aggregateFd, m_savedPosition, 0);
+    _lseek(m_aggregateFd, m_savedPosition, 0);
 }
 
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
@@ -393,7 +393,7 @@ signed char resourceManager::ReadByte(void)
         gReadByteAssertFile,
         gReadByteAssertLine + 1);
     signed char value = 0;
-    read(m_aggregateFd, &value, sizeof(value));
+    _read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
 
@@ -408,7 +408,7 @@ short int resourceManager::ReadWord(void)
         gReadWordAssertFile,
         gReadWordAssertLine + 1);
     short value = 0;
-    read(m_aggregateFd, &value, sizeof(value));
+    _read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
 
@@ -421,7 +421,7 @@ long resourceManager::ReadLong(void)
         gReadLongAssertFile,
         gReadLongAssertLine + 1);
     long value = 0;
-    read(m_aggregateFd, &value, sizeof(value));
+    _read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
 
@@ -451,6 +451,6 @@ void resourceManager::ReadBlock(signed char *destination, unsigned long size)
         gReadBlockAssertFile,
         gReadBlockAssertLine + 1);
     PollSound();
-    int bytesRead = read(m_aggregateFd, destination, size);
+    int bytesRead = _read(m_aggregateFd, destination, size);
     PollSound();
 }

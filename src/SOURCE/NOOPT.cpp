@@ -9,6 +9,8 @@
 #include <SOURCE/highScoreRuntime.h>
 
 // No direct caller survives in retail; the HoMM2 timer slot names glTimers.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00464430, 0x40)
 void DelayTicks(int ticks)
 {

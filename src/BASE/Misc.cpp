@@ -7,6 +7,7 @@
 
 #include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
+#include <H1/KB.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -144,6 +145,8 @@ void AiPrint(char* text) {
     gpPhilAI->ShowDebugText(text);
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00419d51, 0x4e)
 void AbsAiPrint(char* text) {
     int saved;
@@ -156,10 +159,7 @@ void AbsAiPrint(char* text) {
     giDebugLevel = saved;
 }
 
-// AI strategic-value maps reset by philAI::DoAI (Buka PHILAI.cpp ResetHeroRVs).
-extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern short gaiHeroLiveChance[GAME_HERO_COUNT];
+// philAI.h: the AI strategic-value maps philAI::DoAI resets through ResetHeroRVs.
 
 // Buka ResetHeroRVs; HoMM1 has no off-map guard and indexes [x][y].
 VA(0x00419d9f, 0x177)

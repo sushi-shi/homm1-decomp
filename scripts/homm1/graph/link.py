@@ -13,7 +13,8 @@ There is no `/FORCE`: unresolved externals and duplicate definitions are the
 link phase's findings. The current pilot is expected to fail until its missing
 definitions and program entry point are reconstructed.
 
-The VC4 objects request LIBC and OLDNAMES. Win32 libraries are passed in retail
+The VC4 objects request LIBC and OLDNAMES; retail's runtime is LIBCMT, which
+replaces LIBC after the Win32 libraries. Win32 libraries are passed in retail
 import-descriptor order; missing named vendor libraries are synthesized from
 the retail import table by `homm1.graph.implib`.
 
@@ -33,17 +34,43 @@ from homm1.core.paths import REPO
 from homm1.tool import ToolError
 from homm1.tool.wine import winepath
 
-#: HoMM1's explicit library line, in retail import-descriptor order. The RAD
-#: libraries are synthesized from the retail import table when they carry
-#: named exports. smkwai32 is ordinal-only and therefore awaits its original
-#: import library or reviewed symbol map; it is unnecessary until a matching
-#: source object references one of those functions.
-LINK_LIBS = ["libc.lib", "oldnames.lib", "kernel32.lib", "user32.lib",
-             "gdi32.lib", "advapi32.lib", "winmm.lib", "netapi32.lib",
-             "wing32.lib", "wail32.lib"]
+#: HoMM1's explicit library line, in retail import-descriptor order (WINMM,
+#: KERNEL32, USER32, GDI32, ADVAPI32, NETAPI32, smkwai32, WING32, wail32).
+#: LINK searches libraries in this order before the objects' default
+#: libraries (OLDNAMES) and the CRT, so the descriptors and the smkwai32/WING32
+#: jump thunks land ahead of the CRT, exactly where retail has them
+#: (thunks at 0x00480188, LIBCMT from 0x004801f0). The vendor libraries are
+#: synthesized by `homm1.graph.implib` from the retail import table plus the
+#: reviewed import-thunk names in function_referents.tsv.
+LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
+             "advapi32.lib", "netapi32.lib", "smkwai32.lib", "wing32.lib",
+             "wail32.lib"]
 
-#: LIBC defines _WinMainCRTStartup and calls the program's _WinMain@16.
-ENTRY = "WinMainCRTStartup"
+#: Retail's C runtime is the VC4.0 multithreaded LIBCMT.LIB, not the
+#: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's
+#: _mtinit/_getptd (TlsAlloc, TlsGetValue, TlsSetValue, GetCurrentThreadId,
+#: SetLastError), _lock/_unlock and the *_lk stream/file variants. Against
+#: LIBCMT the DNA census finds 189 exact CRT bodies (35052 of 44700 band
+#: bytes); against LIBC only 106 (14686). See evidence/link-layout.md. It
+#: follows the import libraries, the position of the objects' default
+#: library, so the import thunks still precede the CRT.
+CRT_LIBRARY = "libcmt.lib"
+CRT_REPLACES = "libc.lib"
+
+#: The module definition: export directory (AppAbout, AppWndProc), module
+#: name and stack reserve - see the file's own header.
+MODULE_DEF = REPO / "config/heroes.def"
+
+#: Retail .text has NETAPI32's `Netbios` jump thunk at 0x0047343c, between
+#: comwin (the last game object of the SOURCE run) and the BASE run starting
+#: at 0x00473450. A thunk is an import-library member, and LINK places
+#: library members after every object on the line, in the order it pulls
+#: them; so everything from here on was itself pulled from a library searched
+#: after netapi32.lib - the BASE library. Its member order is VC4 LINK's pull
+#: order (first reference in the undefined-symbol list), not a list we choose.
+BASE_LIBRARY_FROM = 0x00073450
+BASE_LIBRARY = "base.lib"
+BASE_LIBRARY_AFTER = "netapi32.lib"
 
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.
@@ -128,12 +155,55 @@ def collect_objs(objs_dir: Path, *, order: Path | None = None,
     return objs
 
 
+def _unit_of(obj: Path) -> str | None:
+    """`BASE/WINMGR` for build/objdiff/base/BASE/WINMGR.obj or the MASM OMF
+    twin under build/link/omf - the last two path components, sans suffix."""
+    parts = Path(obj).with_suffix("").parts
+    return "/".join(parts[-2:]) if len(parts) >= 2 else None
+
+
+def first_claimed_rva(obj: Path, claims_dir: Path | None = None) -> int | None:
+    """The unit's lowest claimed function RVA (dynamic initializers excluded)."""
+    from homm1 import graph
+    claims_dir = Path(claims_dir or REPO / graph.CLAIMS_DIR)
+    unit = _unit_of(obj)
+    f = claims_dir / f"{unit}.tsv" if unit else None
+    lo = None
+    if f is not None and f.is_file():
+        for ln in f.read_text().splitlines():
+            c = ln.split("\t")
+            if (len(c) > 4 and c[0].startswith("0x") and c[3] == "func"
+                    and c[4] != "src_dyninit"):
+                rva = int(c[0], 16)
+                lo = rva if lo is None else min(lo, rva)
+    return lo
+
+
+def retail_code_order(objs: list[Path], claims_dir: Path | None = None
+                      ) -> tuple[list[Path], list[Path]]:
+    """`objs` sorted by each unit's lowest claimed retail function RVA.
+
+    LINK lays .text out in object order, so the order in which retail places
+    each TU's first function IS the original link order (intra-TU order is
+    source order). Dynamic-initializer pins are excluded from the key: they
+    are compiler-emitted and their TU position is a separate question.
+    Returns (ordered, unplaced) - objects with no claim keep their relative
+    order and follow the placed ones.
+    """
+    keyed, unplaced = [], []
+    for i, obj in enumerate(objs):
+        lo = first_claimed_rva(obj, claims_dir)
+        (keyed.append((lo, i, obj)) if lo is not None else unplaced.append(obj))
+    return [o for _lo, _i, o in sorted(keyed)] + unplaced, unplaced
+
+
 def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
               res: Path | None = None, order: Path | None = None,
               explicit: list[str] = (), extra_libs: list[str] = (),
               incremental: bool = False,
-              base: str = "0x400000", keep_all: bool = True,
-              extra_flags: list[str] = (), dry_run: bool = False) -> dict:
+              base: str = "0x400000", keep_all: bool = False,
+              extra_flags: list[str] = (), dry_run: bool = False,
+              retail_order: bool = True, base_library: bool = True) -> dict:
     """Link the candidate image; returns {objs, libs, unresolved, duplicates}.
 
     `dry_run` assembles the response file and stops before link.exe - the way
@@ -149,17 +219,36 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     objs = collect_objs(Path(objs_dir), order=order, explicit=explicit)
     if not objs:
         raise ToolError("no objects to link")
+    members: list[Path] = []
+    if order is None and retail_order:
+        objs, unplaced = retail_code_order(objs)
+        print(f"[link] object order: retail code order of each unit's first "
+              f"claimed function ({len(objs) - len(unplaced)} placed"
+              + (f", {len(unplaced)} unclaimed appended" if unplaced else "")
+              + ")")
+        if base_library:
+            members = [o for o in objs
+                       if (first_claimed_rva(o) or -1) >= BASE_LIBRARY_FROM]
+            objs = [o for o in objs if o not in members]
+            print(f"[link] {len(objs)} explicit object(s); {len(members)} "
+                  f"BASE member(s) in {BASE_LIBRARY}, searched after "
+                  f"{BASE_LIBRARY_AFTER}")
 
+    # No /ENTRY: LINK's default for /SUBSYSTEM:WINDOWS is the CRT's
+    # WinMainCRTStartup, and naming it up front pulls wincrt0.obj to the head
+    # of the CRT, whereas retail's CRT begins with exsup.obj.
     rsp_lines = [
         f"/OUT:{winepath(out)}", f"/MAP:{winepath(mapf)}",
         "/NOLOGO", "/SUBSYSTEM:WINDOWS", f"/BASE:{base}",
         "/INCREMENTAL:YES" if incremental else "/INCREMENTAL:NO",
-        f"/ENTRY:{ENTRY}",
+        f"/DEF:{winepath(MODULE_DEF)}",
     ]
     if keep_all:
-        # Keep every function so the map is complete. VC4's linker predates
-        # /OPT:NOICF; it performs no identical-COMDAT folding by default.
+        # Keep every unreferenced COMDAT/thunk so the map is complete. Retail
+        # was linked with the default /OPT:REF: of the 196 import slots only
+        # the 17 smkwai32/WING32 thunks that code calls directly survive.
         rsp_lines.append("/OPT:NOREF")
+    rsp_lines.append(f"/NODEFAULTLIB:{CRT_REPLACES}")
     rsp_lines += list(extra_flags)
 
     libs = list(extra_libs)
@@ -167,12 +256,27 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     available = {p.name.lower(): str(p) for p in made}
     available.update({p.name.lower(): str(p)
                       for _dll, _names, p in implib.survey() if p is not None})
-    for name in LINK_LIBS:
+    for name in (*LINK_LIBS, CRT_LIBRARY):
         if name not in available:
             path = implib.toolchain_lib(Path(name).stem)
             if path is not None:
                 available[name] = str(path)
-    libs += [available.get(n, n) for n in LINK_LIBS]       # substitute IN PLACE
+    libs += [available.get(n, n) for n in (*LINK_LIBS, CRT_LIBRARY)]  # substitute IN PLACE
+    if members:
+        base_lib = out.parent / BASE_LIBRARY
+        at = next((i + 1 for i, x in enumerate(libs)
+                   if Path(x).name.lower() == BASE_LIBRARY_AFTER), len(libs))
+        libs.insert(at, str(base_lib))
+        lib_rsp = out.parent / f"{out.stem}.lib.rsp"
+        lib_rsp.write_text("\n".join(["/NOLOGO", f"/OUT:{winepath(base_lib)}",
+                                      *[f'"{winepath(o)}"' for o in members]])
+                           + "\n")
+        if not dry_run:
+            base_lib.unlink(missing_ok=True)
+            # `-lib` must be LINK's first argument; inside a response file
+            # it is read as a link option.
+            link_tool.link(["-lib", f"@{winepath(lib_rsp)}"], cwd=out.parent,
+                           expect=[base_lib])
     rsp_lines += [winepath(x) if Path(x).exists() else x for x in libs]
     rsp_lines += [f'"{winepath(o)}"' for o in objs]
     if res is not None:
@@ -193,22 +297,31 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         output = link_tool.link([f"@{winepath(rsp)}"], cwd=out.parent,
                                 expect=[out, mapf])
     except ToolError as e:
-        logf.write_text(str(e))
+        full = getattr(e, "output", None) or str(e)
+        logf.write_text(full)
+        unres = sorted(unresolved(full))
+        (out.parent / f"{out.stem}.unresolved.txt").write_text(
+            "".join(f"{s}\n" for s in unres))
+        if unres:
+            print(f"[link] {len(unres)} unresolved external(s) -> "
+                  f"{out.stem}.unresolved.txt")
+            for bucket, n in sorted(collections.Counter(
+                    classify(s) for s in unres).items(), key=lambda kv: -kv[1]):
+                print(f"[link]   {n:5d}  {bucket}")
         raise
     logf.write_text(output)
 
     if res is not None and not has_rsrc(out):
         raise ToolError(
             f"{out.name} has no .rsrc although --res {res} was on the link "
-            "line. Every MFC dialog is created from a DIALOG resource, so this "
-            "binary has no working settings/multiplayer/save screens.")
+            "line: the game window would have no icon, menus or About box.")
     if res is None:
         # The image is knowingly incomplete and nothing else says so: the
         # configure-time explanation lives in a generated manifest nobody
         # reads, and the .map - which is what phase 2 is for - is unaffected.
-        print(f"[link] no .res on the link line, so {out.name} has NO .rsrc: "
-              "every MFC dialog is created from a DIALOG resource, so the "
-              "image is a link-ORDER artifact (the .map), not a runnable game.")
+        print(f"[link] no .res on the link line, so {out.name} has NO .rsrc "
+              "(icon, MNU* menus, HEROES About dialog): the image is a "
+              "link-ORDER artifact (the .map), not a runnable game.")
 
     # No /FORCE: an unresolved extern or a duplicate FAILS the link above, so
     # reaching here means both are zero. They are still reported (and asserted)
@@ -254,8 +367,17 @@ def main() -> int:
     ap.add_argument("--incremental", action="store_true",
                     help="experiment with /INCREMENTAL:YES (retail is NO)")
     ap.add_argument("--base", default="0x400000", help="image base (/BASE)")
-    ap.add_argument("--opt-ref", dest="keep_all", action="store_false",
-                    help="let the linker strip/fold unreferenced COMDATs")
+    ap.add_argument("--keep-all", dest="keep_all", action="store_true",
+                    help="/OPT:NOREF: keep unreferenced COMDATs and import "
+                         "thunks (a complete map; retail used /OPT:REF)")
+    ap.add_argument("--manifest-order", dest="retail_order",
+                    action="store_false",
+                    help="keep the given object order instead of sorting by "
+                         "each unit's first claimed retail RVA")
+    ap.add_argument("--no-base-library", dest="base_library",
+                    action="store_false",
+                    help="link the BASE units as explicit objects instead of "
+                         "the retail BASE library")
     ap.add_argument("--dry-run", action="store_true",
                     help="assemble the response file and stop before link.exe")
     ap.add_argument("flags", nargs=argparse.REMAINDER,
@@ -266,7 +388,8 @@ def main() -> int:
         candidate(a.out, a.objs_dir, mapfile=a.mapfile, res=a.res, order=a.order,
                   explicit=a.obj, extra_libs=a.lib,
                   incremental=a.incremental, base=a.base,
-                  keep_all=a.keep_all, extra_flags=extra, dry_run=a.dry_run)
+                  keep_all=a.keep_all, extra_flags=extra, dry_run=a.dry_run,
+                  retail_order=a.retail_order, base_library=a.base_library)
     except (ToolError, OSError) as e:
         print(f"[link] {e}", file=sys.stderr)
         return 1

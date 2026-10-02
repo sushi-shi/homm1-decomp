@@ -107,14 +107,16 @@ LABELS_MODS = _mods("retail_labels/", "tool/clang.py", "core/coff.py",
                     "core/tsv.py", "manifest.py", "core/paths.py", "core/msvc_names.py")
 MODEL_MODS = _mods("model.py", "retail_labels/", "core/tsv.py", "core/paths.py")
 DELINK_MODS = _mods("delink/", "tool/delinker.py", "core/pe.py",
-                    "core/coff.py", "model.py", "core/data_matching.py") + TOOL_MODS + ["config/compare.toml"]
+                    "core/coff.py", "model.py", "core/data_matching.py",
+                    "compare/runtime_aliases.py") + TOOL_MODS + ["config/compare.toml"]
 NORMALIZE_MODS = _mods("compare/normalize.py", "compare/canonicalize.py",
-                       "delink/eh_band.py", "core/coff.py", "core/msvc_names.py",
+                       "compare/runtime_aliases.py", "delink/eh_band.py", "core/coff.py", "core/msvc_names.py",
                        "core/data_matching.py") + ["config/compare.toml"]
 PROJECT_MODS = _mods("compare/project.py", "compare/normalize.py", "manifest.py")
 REPORT_MODS = _mods("tool/objdiff.py")
 LINK_MODS = _mods("graph/link.py", "graph/implib.py", "tool/link.py",
-                  "core/pe.py") + TOOL_MODS
+                  "core/pe.py") + TOOL_MODS + [
+    "config/heroes.def", "config/retail/function_referents.tsv"]
 VERIFY_MODS = _mods("verify/", "model.py", "core/tsv.py", "core/paths.py")
 #: committed inputs of the default-tier verify gates (fast+normal): the MAX
 #: ledger and every gate's own baseline/allowlist. Named so a bless re-runs
@@ -244,10 +246,13 @@ def prune_orphan_artifacts(units: list[dict]) -> int:
 # the graph
 # --------------------------------------------------------------------------- #
 def era_rc_available() -> bool:
-    """Whether the installed VC4 tree can compile the optional resources."""
+    """Whether the installed VC4 tree carries the pinned RC/CVTRES and the
+    resource script exists, so the candidate can link its `.rsrc`."""
     try:
-        from homm1.tool.wine import find_ci
-        return find_ci(msvc_dir() / "bin", "rc.exe") is not None
+        from homm1 import toolchain
+        from homm1.tool.rc import RESOURCE_TOOLCHAIN
+        return ((REPO / graph.RESOURCE_SCRIPT).is_file()
+                and toolchain.resources_installed(RESOURCE_TOOLCHAIN, msvc_dir()))
     except OSError:
         return False
 
@@ -312,12 +317,19 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
 
     with_res = era_rc_available()
     if with_res:
-        w.rule("rc", command="$py -m homm1.tool.rc --out $out --src $in",
+        # The retail image supplies the icon (staged, never committed) and
+        # is the payload gate.
+        w.rule("rc", command=(f"$py -m homm1.tool.rc --out $out --src $in "
+                              f"--verify-exe {RETAIL_EXE} "
+                              f"--report {graph.RESOURCE_REPORT}"),
                description="rc $out")
         w.build(graph.RESOURCE_RES, "rc", inputs=graph.RESOURCE_SCRIPT,
-                implicit=_mods("tool/rc.py") + TOOL_MODS)
+                implicit=[RETAIL_EXE, graph.TOOLCHAIN_ID]
+                         + _mods("tool/rc.py", "core/pe.py", "toolchain.py")
+                         + TOOL_MODS)
     else:
-        w.comment("VC4 tree has no RC.EXE; candidate links without resources")
+        w.comment("VC4 tree has no pinned RC.EXE/CVTRES.EXE; candidate links "
+                  "without resources")
     res_flag = f" --res {graph.RESOURCE_RES}" if with_res else ""
     w.rule("link",
            command=(f"$py -m homm1.graph.link --out {graph.CANDIDATE_EXE} "
@@ -493,7 +505,8 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                description="normalize base/target objs")
         w.build(graph.NORMALIZE_STAMP, "normalize",
                 inputs=base_objs + [graph.DELINK_STAMP],
-                implicit=[MANIFEST, *NORMALIZE_MODS])
+                # OLDNAMES/LIBCMT alias records come from the pinned toolchain.
+                implicit=[MANIFEST, *NORMALIZE_MODS, graph.TOOLCHAIN_ID])
         w.newline()
 
         w.comment("=== project: the delinked directory -> objdiff.json ===")

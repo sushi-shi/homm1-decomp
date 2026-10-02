@@ -3,12 +3,12 @@
 #include <match.h>
 
 #include <SOURCE/Modem.h>
-#include <SOURCE/comwin.h>
-#include <SOURCE/NOOPT.h>
-#include <SOURCE/REMOTE.h>
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/comwin.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/REMOTE.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -148,6 +148,8 @@ int read_byte(void) {
         return -1;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00459a68, 0x24)
 void write_byte(int value) {
     com_snd(0, 0, 1, &value, 0);

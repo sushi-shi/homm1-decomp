@@ -4,6 +4,7 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
@@ -17,8 +18,6 @@
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
-
-extern signed char giCampaignChoice;
 
 // Buka 2.1 ShowThisMap; HoMM1 keeps an unreachable rejecting return.
 VA(0x00448020, 0x1c)

@@ -42,8 +42,8 @@
 #include <SOURCE/game.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/hexcell.h>
-#include <SOURCE/mapCell.h>
 #include <SOURCE/highScoreManager.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/recruitUnit.h>

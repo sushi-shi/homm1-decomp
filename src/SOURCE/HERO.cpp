@@ -6,19 +6,12 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/dialogTypes.h>
-
 #include <SOURCE/kbwin.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-extern char* cHeroLevel[];
-extern signed char gHeroSkillBonus[][9][HERO_PRIMARY_STAT_COUNT];
-extern int gbInNewGameSetup;
-void SRand(int);
-short ViewSpecialHandler(struct tag_message&);
-int SRandom(int, int);
 
 // donor PoL RVA 0x0006c3a0; preferred Buka symbol ??0hero@@QAE@XZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
@@ -29,16 +22,16 @@ hero::hero(void) {
     m_owner = 0;
     m_x = 0;
     m_y = 0;
-    m_unknown1c = 0;
-    m_unknown1d = 0;
+    m_heroClass = 0;
+    m_portrait = 0;
     m_name[0] = 0;
     heroWin = 0;
     giHeroScreenSrcIndex = -1;
 }
 
-// donor PoL RVA 0x0006c4cd; preferred Buka symbol ?HasArtifact@hero@@QAEHH@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.403615;margin=0.791427;shape=0.171;size=0.731;calls=1.000;alternate=pol20:int hero::HasArtifact(int)@0x0006c4cd
+// Buka 2.1 hero::GetArmyStrengths: an empty body in both games.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046baf8, 0x18)
 void hero::GetArmyStrengths(unsigned long int* const) {}
 
@@ -76,7 +69,7 @@ short hero::CalcMobility(void) {
             result = seaMobility;
         if (HasArtifact(ARTIFACT_SAILORS_ASTROLABE))
             result += astrolabe;
-        result = (int)(result * gfClassNavigationMod[m_unknown1c]);
+        result = static_cast<int>(result * gfClassNavigationMod[m_heroClass]);
     } else {
         speed = 3;
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
@@ -246,7 +239,7 @@ signed char hero::HeroView(signed char viewOnly) {
     gheroWin = heroWin;
     SetWinText(heroWin, 5);
     message.type = MESSAGE_WIDGET;
-    sprintf(gText, "%s the %s", m_name, gClassNames[m_unknown1c]);
+    sprintf(gText, "%s the %s", m_name, gClassNames[m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = 2;
     message.text = gText;
@@ -265,7 +258,7 @@ signed char hero::HeroView(signed char viewOnly) {
         message.value = 6;
         heroWin->BroadcastMessage(message);
     }
-    sprintf(gText, "port%04d.icn", m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 65;
     message.text = gText;
@@ -324,7 +317,7 @@ signed char hero::HeroView(signed char viewOnly) {
     message.id = 207;
     message.text = gText;
     heroWin->BroadcastMessage(message);
-    sprintf(gText, "crst%04d.icn", m_unknown1c + gpCurPlayer->Color() * 4);
+    sprintf(gText, "crst%04d.icn", m_heroClass + gpCurPlayer->Color() * 4);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 86;
     heroWin->BroadcastMessage(message);
@@ -571,9 +564,7 @@ void hero::Deallocate(void) {
     CheckEndGame(0);
 }
 
-// donor PoL RVA 0x0006d50d; preferred Buka symbol ?GetLevel@hero@@QAEHH@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.411151;margin=0.242527;shape=0.205;size=0.711;calls=1.000;alternate=pol20:int hero::GetLevel(int)@0x0006d50d
+// Buka 2.1 hero::GetExperience.
 VA(0x0046d334, 0xd0)
 int hero::GetExperience(int level) {
     int experience;
@@ -581,14 +572,14 @@ int hero::GetExperience(int level) {
     int incr;
 
     if (level <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
-        return gMinExpForLevel[m_unknown1c][level - 1];
+        return gMinExpForLevel[m_heroClass][level - 1];
     stage = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
-    incr = (int)((gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
-                  - gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+    incr = static_cast<int>((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+                  - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
                  * 1.2);
-    experience = gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
+    experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
     while (stage < level) {
-        incr = (int)(incr * 1.2);
+        incr = static_cast<int>(incr * 1.2);
         experience += incr;
         stage++;
     }
@@ -602,16 +593,16 @@ int hero::GetLevel(int experienceValue) {
     int growth;
 
     for (nLevel = 1; nLevel <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT; nLevel++) {
-        if (gMinExpForLevel[m_unknown1c][nLevel - 1] > experienceValue)
+        if (gMinExpForLevel[m_heroClass][nLevel - 1] > experienceValue)
             return nLevel - 1;
     }
-    growth = (int)((gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
-                    - gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+    growth = static_cast<int>((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+                    - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
                    * 1.2);
-    experience = gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
+    experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
     nLevel = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
     while (experience < experienceValue) {
-        growth = (int)(growth * 1.2);
+        growth = static_cast<int>(growth * 1.2);
         experience += growth;
         nLevel++;
     }
@@ -688,15 +679,15 @@ void hero::CheckLevel(void) {
             highIndex = 8;
         SRand(m_randomSeed + i * 30);
         roll = SRandom(1, 100);
-        if (gHeroSkillBonus[m_unknown1c][highIndex][0] > roll) {
+        if (gHeroSkillBonus[m_heroClass][highIndex][0] > roll) {
             stats[0]++;
         } else {
-            roll -= gHeroSkillBonus[m_unknown1c][highIndex][0];
-            if (gHeroSkillBonus[m_unknown1c][highIndex][1] > roll) {
+            roll -= gHeroSkillBonus[m_heroClass][highIndex][0];
+            if (gHeroSkillBonus[m_heroClass][highIndex][1] > roll) {
                 stats[1]++;
             } else {
-                roll -= gHeroSkillBonus[m_unknown1c][highIndex][1];
-                if (gHeroSkillBonus[m_unknown1c][highIndex][2] > roll)
+                roll -= gHeroSkillBonus[m_heroClass][highIndex][1];
+                if (gHeroSkillBonus[m_heroClass][highIndex][2] > roll)
                     stats[2]++;
                 else
                     stats[3]++;
@@ -718,9 +709,7 @@ void hero::CheckLevel(void) {
     }
 }
 
-// donor PoL RVA 0x0006e0be; preferred Buka symbol ?UpdateHeroScreenStatusBar@@YIXAAUtag_message@@@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.389885;margin=0.637226;shape=0.282;size=0.714;calls=0.718;alternate=pol20:void UpdateHeroScreenStatusBar(struct tag_message &)@0x0006e0be
+// Buka 2.1 hero::NumArtifacts.
 VA(0x0046d957, 0x57)
 int hero::NumArtifacts(void) {
     int count = 0;
@@ -824,7 +813,7 @@ void UpdateHeroScreenStatusBar(short widgetId) {
             sprintf(gText, cHeroScreen[15], gArtifactNames[gpHVHero->m_artifacts[widgetId - 20]]);
         break;
     case 0x7803:
-        sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_unknown1c]);
+        sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_heroClass]);
         break;
     case 0x7800:
         strcpy(gText, cHeroScreen[17]);

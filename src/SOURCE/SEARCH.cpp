@@ -69,8 +69,8 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
         *pathDirection++ = pathNode->direction;
         if (++m_pathLength >= 256)
             break;
-        destinationX += normalDirTable[(short)(pathNode->direction + 4) & 7].x;
-        destinationY += normalDirTable[(short)(pathNode->direction + 4) & 7].y;
+        destinationX += normalDirTable[static_cast<short>(pathNode->direction + 4) & 7].x;
+        destinationY += normalDirTable[static_cast<short>(pathNode->direction + 4) & 7].y;
     }
     return m_pathLength;
 }
@@ -94,8 +94,8 @@ int searchArray::BuildPath(short startX, short startY, short destinationX, short
                 break;
             }
         }
-        destinationX += normalDirTable[(short)(node->direction + 4) & 7].x;
-        destinationY += normalDirTable[(short)(node->direction + 4) & 7].y;
+        destinationX += normalDirTable[static_cast<short>(node->direction + 4) & 7].x;
+        destinationY += normalDirTable[static_cast<short>(node->direction + 4) & 7].y;
     }
     return m_pathLength;
 }
@@ -123,7 +123,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
     static hero *s_currentHero;
     static int s_neighborX;
     static int s_neighborY;
-    static unsigned char s_directionCosts[8];
+    static unsigned char s_directionOccupied[8];
     static int s_directionBlocked;
     static mapCell *s_targetCell;
     static signed char s_hasAdjacentMonster;
@@ -147,7 +147,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
         if (!(gpGame->m_mapExtra[targetX][targetY] & giCurPlayerBit))
             return;
         s_targetCell = gpAdvManager->GetCell(targetX, targetY);
-        if (s_targetCell->m_unknown07 & 0x80)
+        if (s_targetCell->m_secondaryTrigger & 0x80)
             return;
         if (!giGroundToTerrain[s_targetCell->m_tileIndex]) {
             if (waterMode) {
@@ -187,7 +187,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
             s_adjacentMonsterY = s_currentNode.adjacentMonsterY;
         } else
             s_hasAdjacentMonster = 0;
-        if (s_currentNode.unknownFlag) {
+        if (s_currentNode.occupied) {
             s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType & 0x7f;
             if (s_triggerType == 0x1a || s_triggerType == 0x29 || s_triggerType == 0x3d || s_triggerType == 0x3e) {
                 if (!findAdjacentMonster || s_currentNode.rvFlag1)
@@ -196,8 +196,8 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == 0x3d
-                    && gpGame->m_availableHeroes[(unsigned char)gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
-                                                     ->m_objectMetadata]
+                    && gpGame->m_availableHeroes[static_cast<unsigned char>(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
+                                                     ->m_objectMetadata)]
                            == giCurPlayer)
                     goto point_complete;
             } else {
@@ -229,8 +229,9 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                     s_hasAdjacentMonster = 1;
             }
         }
+        // byte-evidenced: read back zero-extended, filled as signed bytes.
         TestPossibleDirections(s_currentNode.x, s_currentNode.y, s_possibleDirections,
-                               (signed char *)s_directionCosts, 1, waterMode);
+                               reinterpret_cast<signed char*>(s_directionOccupied), 1, waterMode);
         s_terrain = giGroundToTerrain[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_tileIndex];
         s_stepCost[0] = s_currentNode.distance
                         + CalcTerrainCost(s_terrain, 0, giCurTempMobility - s_currentNode.distance, costMode);
@@ -250,7 +251,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                 && m_cells[s_neighborX][s_neighborY].adjacentMonsterY == s_adjacentMonsterY)
                 continue;
             PushPoint(s_neighborX, s_neighborY, s_direction, s_stepCost[s_direction & 1], maximumCost,
-                      s_directionCosts[s_direction], s_hasAdjacentMonster, s_adjacentMonsterX, s_adjacentMonsterY,
+                      s_directionOccupied[s_direction], s_hasAdjacentMonster, s_adjacentMonsterX, s_adjacentMonsterY,
                       s_currentNode.rvFlag2, s_currentNode.previousX, s_currentNode.previousY);
             if (s_hasTarget && s_currentNode.x + normalDirTable[s_direction].x == targetX
                 && s_currentNode.y + normalDirTable[s_direction].y == targetY && !s_currentNode.rvFlag1) {

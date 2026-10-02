@@ -228,7 +228,7 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
         else if (target->m_stats.attributes & 2)
             effect = stackValue * SPELL_AI_SLOW_MODIFIER * 3.0f;
         else
-            effect = (target->m_stats.speed - 1) * (float)stackValue * SPELL_AI_SLOW_MODIFIER;
+            effect = (target->m_stats.speed - 1) * static_cast<float>(stackValue) * SPELL_AI_SLOW_MODIFIER;
         break;
     case 7:
         effect = stackValue * SPELL_AI_BLIND_MODIFIER;

@@ -339,7 +339,6 @@ signed char SaveGame(void);
 short CPanelHandler(struct tag_message &);
 
 extern int gbNoBorder;
-extern int gbRemoteOn;
 extern long giForceSwitchMusic;
 extern long iLastScrollTime;
 extern int gbForceUpdate;
@@ -366,8 +365,6 @@ extern int giCurWatchPlayer;
 extern char* cAdvMenuHelp[];
 extern int giCheatSeq;
 extern int giMenuCommand;
-extern short gGameCommand;
-extern int gbHeroMoving;
 extern unsigned char giCurPlayerBit;
 // Volume per environment-sound distance step.
 extern const long glEnvironmentVolume[];
@@ -395,4 +392,19 @@ void ComputeUALoc(int);
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
 extern int TrigX;
 extern int TrigY;
+// CURSOR globals (Buka advManager.h names, CURSOR data): HoMM1 keeps byte
+// flags and the last two footstep sample handles (0x0048eb3c/0x0048eb40).
+extern signed char bMoveSoundMade;
+extern signed char EveryOther;
+extern struct _SAMPLE* hPrevMoveSound;
+extern struct _SAMPLE* hLastMoveSound;
+extern signed char S1cursorDirection;
+extern short S1cursorBaseFrame;
+extern short S1cursorFrameCount;
+extern short S1cursorCycle;
+extern short S1cursorTurning;
+extern short giStepDelay[];
+// MoveHero's pixels per walk step by speed and the step offsets.
+extern short giPixelsPerStep[];
+extern short startVals[];
 #endif // HOMM1_SOURCE_ADVMANAGER_H

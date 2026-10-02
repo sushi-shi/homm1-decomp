@@ -37,7 +37,10 @@ OUTPUT = BUILD / "gen/homm1-dna-bands.tsv"
 EVIDENCE = REPO / "evidence/homm1-dna-bands.tsv"
 STATIC_LIBS = RETAIL / "functions_static_libs.tsv"
 BANDS_EVIDENCE = REPO / "evidence/homm1-code-link-bands.tsv"
-RUNTIME_LIBS = ("libc.lib", "oldnames.lib")
+#: Retail links VC4.0 LIBCMT.LIB (multithreaded), not LIBC.LIB: its _mtinit,
+#: _getptd and _lock/*_lk bodies match retail exactly (189 exact CRT bodies
+#: against LIBCMT, 106 against LIBC). See evidence/link-layout.md.
+RUNTIME_LIBS = ("libcmt.lib", "oldnames.lib")
 PREFIX = 24
 PRIVATE = re.compile(r"^(?:_?\$E\d+|\?\?_[EG])")
 
@@ -300,8 +303,8 @@ def run_census():
                        "detail": f"between exact anchors 0x{lo_rva:x},0x{hi_rva:x}"})
 
     # Exact identities make the link boundary visible.  In this image the
-    # final vendor import-thunk block is immediately followed by LIBC and all
-    # later non-thunk text has dense LIBC anchors through the section end.
+    # final vendor import-thunk block is immediately followed by LIBCMT and
+    # all later non-thunk text has dense LIBCMT anchors through the section end.
     # Preserve ambiguous names as address labels while still assigning their
     # proven band ownership; those rows leave the game reconstruction target.
     crt_anchors = sorted(row["rva"] for row in rows
@@ -315,9 +318,9 @@ def run_census():
                              and row["class"] != "linker-pad"), crt_anchors[0])
             for row in rows:
                 if row["rva"] >= boundary and row["class"] == "unknown":
-                    row.update(**{"class": "crt-band", "source": "libc.lib:(link-band)",
+                    row.update(**{"class": "crt-band", "source": "libcmt.lib:(link-band)",
                                   "symbol": f"__crt_{row['rva'] + 0x400000:08X}",
-                                  "detail": (f"LIBC band 0x{boundary:x}..text-end; "
+                                  "detail": (f"LIBCMT band 0x{boundary:x}..text-end; "
                                              "symbol unresolved")})
     return rows
 
@@ -431,7 +434,7 @@ def write_config(rows) -> dict[str, int]:
 def write_report(rows, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="") as stream:
-        stream.write("# HoMM1 executable DNA census against VC4 LIBC.LIB/OLDNAMES.LIB.\n")
+        stream.write("# HoMM1 executable DNA census against VC4 LIBCMT.LIB/OLDNAMES.LIB.\n")
         stream.write("# Exact rows mask relocation fields on both sides; order rows are bracketed by exact anchors.\n")
         writer = csv.DictWriter(stream, HEADER, delimiter="\t", lineterminator="\n")
         writer.writeheader()

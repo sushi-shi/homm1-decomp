@@ -3,9 +3,9 @@
 #include <match.h>
 
 #include <BASE/BITS.h>
-#include <BASE/Misc.h>
-#include <BASE/LZHUF.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/LZHUF.h>
+#include <BASE/Misc.h>
 #include <BASE/TILE.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
@@ -15,6 +15,7 @@
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <fcntl.h>
 #include <io.h>
@@ -22,22 +23,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-
-// Calendar specials (week/month type and featured creature or name) and the
-// per-cell visited bits, shared by the save, new-map and calendar code.
-extern signed char giWeekType;
-extern signed char giMonthType;
-extern signed char giWeekSpecial;
-extern signed char giMonthSpecial;
-extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-// SaveGame files the current player through this byte.
-extern signed char gSaveCurPlayer;
-extern unsigned char giCurPlayerHighBit;
-extern unsigned char giCurWatchPlayerHighBit;
-extern int giCurWatchPlayer;
-// Morale and luck names, indexed from -3.
-extern char* gMoraleText[];
-extern char* gLuckText[];
 
 // donor PoL RVA 0x000708b0; preferred Buka symbol ?Write@playerData@@QAEXH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -47,7 +32,7 @@ void playerData::Write(int file) {
     char unused[52];
 
     write(file, m_unknown00, sizeof(m_unknown00));
-    write(file, &m_unknown11, 1);
+    write(file, &m_color, 1);
     write(file, &m_difficulty, 1);
     write(file, &m_heroCount, 1);
     write(file, &m_currentHero, 1);
@@ -59,7 +44,7 @@ void playerData::Write(int file) {
     write(file, &m_ultimateArtifactHintChance, 1);
     write(file, &m_ultimateArtifactHintX, 1);
     write(file, &m_ultimateArtifactHintY, 1);
-    write(file, &m_unknown55, 1);
+    write(file, &m_daysLeft, 1);
     write(file, &m_townCount, 1);
     write(file, &m_currentTown, 1);
     write(file, &m_townLocatorPage, 1);
@@ -79,7 +64,7 @@ void playerData::Read(int file) {
     char unused[52];
 
     read(file, m_unknown00, sizeof(m_unknown00));
-    read(file, &m_unknown11, 1);
+    read(file, &m_color, 1);
     read(file, &m_difficulty, 1);
     read(file, &m_heroCount, 1);
     read(file, &m_currentHero, 1);
@@ -90,7 +75,7 @@ void playerData::Read(int file) {
     read(file, &m_ultimateArtifactHintChance, 1);
     read(file, &m_ultimateArtifactHintX, 1);
     read(file, &m_ultimateArtifactHintY, 1);
-    read(file, &m_unknown55, 1);
+    read(file, &m_daysLeft, 1);
     read(file, &m_townCount, 1);
     read(file, &m_currentTown, 1);
     read(file, &m_townLocatorPage, 1);
@@ -286,7 +271,7 @@ signed char game::IsMobile(signed char heroId) {
                terrain,
                mobileHero->m_direction & 1,
                mobileHero->m_remainingMobility,
-               mobileHero->m_unknown1c
+               mobileHero->m_heroClass
            );
 }
 
@@ -434,7 +419,6 @@ inline void game::WriteWorldMap(int fd) {
     write(fd, m_map, sizeof(m_map));
 }
 
-
 // Buka 2.1 game::SaveGame for HoMM1's single save layout: name, globals,
 // campaign state, map header, players, world map, records and visibility.
 VA(0x00439e3d, 0x7b2)
@@ -485,7 +469,7 @@ short game::SaveGame(char* filename, signed char generateName) {
     write(file, &m_campaignType, 4);
     write(file, &m_campaignScenario, 4);
     write(file, &m_campaignDay, 4);
-    write(file, &m_unknown000b, 4);
+    write(file, &m_campaignScenariosWon, 4);
     memset(buffer, 0, 0x2c);
     write(file, buffer, 0x2c);
     write(file, m_mapDescription, sizeof(m_mapDescription));
@@ -537,15 +521,9 @@ short game::SaveGame(char* filename, signed char generateName) {
 // donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.668603;margin=0.422052;shape=0.401;size=0.926;calls=0.741;strings=%s%s|.\DATA\|.\GAMES\;alternate=pol20:void game::LoadGame(char *, int, int)@0x000735bf
-// Default hero names (name, short name) restored with the original data,
-// the multiplayer game type, this machine's seat and a per-cell scratch map
-// cleared on every load.
-extern char* gHeroNames[][2];
-// Stale alias of giDebugLevel (0x4c7c94) in LoadGame: unreferenced, kept so later symbol handles stay put.
+// Alias: retail reaches the debug-level dword (0x004c7c94, giDebugLevel), not
+// SETUP's byte iMPExtendedType (SETUP.h); rename at the use.
 extern int iMPExtendedType;
-extern int giThisGamePos;
-// Stale alias of mapExtra (0x4c5230): unreferenced, kept so later symbol handles stay put.
-extern char gMapCellScratch[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 // Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
 // the default hero names and blank visibility, and the seats are re-dealt
@@ -563,7 +541,7 @@ short game::LoadGame(char* filename, int origData, int) {
 
     numHumans = 0;
     gbGameOver = 0;
-    m_unknown16e79 = 1;
+    m_noMapHeroes = 1;
     extern char gcDataPath[];
     extern char gcGamePath[];
     if (origData || !strcmp(filename, "REMOTE.GAM"))
@@ -583,7 +561,7 @@ short game::LoadGame(char* filename, int origData, int) {
     read(handle, &m_campaignType, 4);
     read(handle, &m_campaignScenario, 4);
     read(handle, &m_campaignDay, 4);
-    read(handle, &m_unknown000b, 4);
+    read(handle, &m_campaignScenariosWon, 4);
     read(handle, buffer, 0x2c);
     read(handle, m_mapDescription, sizeof(m_mapDescription));
     read(handle, &m_mapSize, 1);
@@ -672,9 +650,6 @@ short game::LoadGame(char* filename, int origData, int) {
         SetupAdjacentMons();
     return 1;
 }
-
-// Right-click help text for the new-game screen.
-extern char* gNewGameHelp[];
 
 // Buka 2.1 NewGameHandler without HoMM2's remote chat and player races:
 // right clicks show help, the player toggles cycle the opponents and OK
@@ -792,7 +767,7 @@ short NewGameHandler(tag_message& message) {
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
                         case 8:
-                            gpGame->m_players[0].m_unknown11 = (gpGame->m_players[0].m_unknown11 + 1) % 4;
+                            gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % 4;
                             break;
                         case 0x13:
                             gbKingOfTheHill = 1 - gbKingOfTheHill;
@@ -815,10 +790,6 @@ short NewGameHandler(tag_message& message) {
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
-
-// New-game player-type labels for human and computer seats.
-extern char* gHumanPlayerTypeNames[];
-extern char* gPlayerTypeNames[];
 
 // Buka 2.1 game::UpdateNewGameWindow for HoMM1's new-game screen: map name,
 // difficulty, opponent types and labels, rating, crest and King of the Hill.
@@ -870,9 +841,9 @@ void game::UpdateNewGameWindow(void) {
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_players[0].m_unknown11 != -1) {
+    if (m_players[0].m_color != -1) {
         message.id = 8;
-        message.value = m_players[0].m_unknown11 * 2 + 11;
+        message.value = m_players[0].m_color * 2 + 11;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
@@ -961,17 +932,6 @@ void game::GiveTroopsToNeutralTowns(void) {
     }
 }
 
-// NewGame remembers the last new-game settings for the next setup screen.
-extern signed char gbNewGameSettingsSaved;
-extern signed char gcSavedDifficulty;
-extern signed char gcSavedPlayerTypes[];
-extern signed char gbSavedKingOfTheHill;
-extern signed char gcSavedCrest;
-extern signed char gbWaitForRemoteReceive;
-extern signed char giCampaignChoice;
-extern int giMapSize;
-extern int giMapDifficulty;
-
 // Buka 2.1 game::NewGame: HoMM1 starts campaigns directly, restores the
 // previous setup choices and falls back to a default map when the remembered
 // one does not fit the human player count.
@@ -996,7 +956,7 @@ signed char game::NewGame(void) {
         m_players[2].m_difficulty = gcSavedPlayerTypes[2];
         m_players[3].m_difficulty = gcSavedPlayerTypes[3];
         gbKingOfTheHill = gbSavedKingOfTheHill;
-        m_players[0].m_unknown11 = gcSavedCrest;
+        m_players[0].m_color = gcSavedCrest;
     }
     if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
         || (giNumHumanPlayers == 2 && gMapName[5] != '2')
@@ -1033,19 +993,13 @@ signed char game::NewGame(void) {
     gcSavedPlayerTypes[2] = m_players[2].m_difficulty;
     gcSavedPlayerTypes[3] = m_players[3].m_difficulty;
     gbSavedKingOfTheHill = gbKingOfTheHill;
-    gcSavedCrest = m_players[0].m_unknown11;
+    gcSavedCrest = m_players[0].m_color;
     NewMap(gMapName);
     return 1;
 }
 
-// donor PoL RVA 0x000bc00e; preferred Buka symbol ?ShowInfo@ExpCampaign@@QAEXHH@Z
-// donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
-// Campaign scenario titles and briefings.
-extern char* gCampaignScenarioNames[];
-extern char* gCampaignScenarioText[];
 
 VA(0x0043be93, 0x2ad)
 void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
@@ -1071,7 +1025,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     message.type = MESSAGE_WIDGET;
     message.id = 3;
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.value = gpGame->m_unknown000b + 4;
+    message.value = gpGame->m_campaignScenariosWon + 4;
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1103,9 +1057,6 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     }
 }
 
-// Two bytes per campaign side; the first is the human player's crest.
-extern signed char gCampaignSideCrests[][2];
-
 // Buka 2.1 game::InitEntireCampaign; HoMM1 reloads origdata.bin first and
 // starts the campaign calendar on day 1.
 VA(0x0043c140, 0x7f)
@@ -1115,26 +1066,10 @@ void game::InitEntireCampaign(int side) {
     gpGame->m_difficulty = 3;
     m_campaignType = side;
     m_campaignScenario = 0;
-    m_unknown000b = 0;
+    m_campaignScenariosWon = 0;
     m_campaignDay = 1;
     InitCampaignMap(m_campaignScenario, 0);
 }
-
-// Town type of each crest, and the types already given to the first four
-// random towns.
-extern short gCrestTownTypes[];
-extern signed char gRandomTownTypes[4];
-
-// NewMap's per-player globals beyond Buka's current/watch player bits.
-// Starting hero class of each campaign crest and of each town type, and
-// each hero class's sight radius.
-extern short gCrestHeroClass[];
-// Stale alias of gTownHeroClass (0x492cf8): unreferenced, kept so later symbol handles stay put.
-extern signed char gTownTypeHeroClass[];
-// Stale alias of gHeroScoutRadius (0x492030): unreferenced, kept so later symbol handles stay put.
-extern signed char gClassVisionRange[];
-// Starting resources by difficulty.
-extern int gStartingResources[][7];
 
 // Buka 2.1 game::InitCampaignMap reduced to HoMM1's CAMP%d.CMP maps: the
 // calendar continues from m_campaignDay and the scenario table seeds the
@@ -1150,12 +1085,12 @@ void game::InitCampaignMap(int scenario, int) {
 
     saveType = m_campaignType;
     savedScenario = m_campaignScenario;
-    savedState = m_unknown000b;
+    savedState = m_campaignScenariosWon;
     savedDay = m_campaignDay;
     LoadGame("origdata.bin", 1, 0);
     m_campaignType = saveType;
     m_campaignScenario = savedScenario;
-    m_unknown000b = savedState;
+    m_campaignScenariosWon = savedState;
     m_campaignDay = savedDay;
     m_month = (m_campaignDay - 1) / 28 + 1;
     m_week = (m_campaignDay - 1 - (m_month - 1) * 28) / 7 + 1;
@@ -1164,7 +1099,7 @@ void game::InitCampaignMap(int scenario, int) {
     gbKingOfTheHill = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
     m_players[0].m_difficulty = 4;
-    m_players[0].m_unknown11 = gCampaignSideCrests[m_campaignType - 1][0];
+    m_players[0].m_color = gCampaignSideCrests[m_campaignType - 1][0];
     m_playerCount = 1;
     for (i = 1; i < 4; i++) {
         m_players[i].m_difficulty = gCampaignScenarios[scenario].playerTypes[i];
@@ -1179,19 +1114,6 @@ void game::InitCampaignMap(int scenario, int) {
             m_players[i].m_resources[j] = gCampaignScenarios[scenario].resources[i][j];
     }
 }
-
-// Spell AI values, attribute bits and the mage-guild pool by spell level.
-// Stale alias of giSpellAIValue (0x491140): unreferenced, kept so later symbol handles stay put.
-extern short gSpellAIValue[];
-// Stale alias of gcSpellAIFlags (0x491180): unreferenced, kept so later symbol handles stay put.
-extern signed char gSpellAttributes[];
-extern signed char gMageGuildSpellPool[4][8];
-
-// Map-extra record count and sizes read from the map file.
-extern int iMaxMapExtra;
-extern int pwSizeOfMapExtra[];
-// Vision radius a claimed town grants its new owner.
-extern signed char giVisRangeTown;
 
 // Buka 2.1 game::NewMap for HoMM1: map setup helpers, a starting town and
 // hero per player (campaign crests pick them), two tavern heroes, the
@@ -1255,7 +1177,7 @@ void game::NewMap(char* mapName) {
             if (m_campaignType <= 0 || m_campaignScenario < 4 || m_campaignScenario > 7) {
                 if (m_campaignType > 0) {
                     for (j = 0; j < 4; j++) {
-                        if (gCrestTownTypes[m_players[i].m_unknown11] == GetTown(j)->m_type) {
+                        if (gCrestTownTypes[m_players[i].m_color] == GetTown(j)->m_type) {
                             SetupTown(j, !gbHumanPlayer[i]);
                             ClaimTown(j, i);
                         }
@@ -1274,11 +1196,11 @@ void game::NewMap(char* mapName) {
                     SetupTown(j, !gbHumanPlayer[i]);
             }
         }
-        if (m_unknown16e79
+        if (m_noMapHeroes
             || (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && i == 0)) {
             m_players[i].m_heroCount = 1;
             if (m_campaignType > 0)
-                m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_unknown11]);
+                m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_color]);
             else
                 m_players[i].m_heroIds[0] =
                     GetNewHeroId(gTownHeroClass[m_castleRecs[m_players[i].m_townIds[0]].m_type]);
@@ -1291,11 +1213,11 @@ void game::NewMap(char* mapName) {
                 m_heroRecs[m_players[i].m_heroIds[0]].m_x,
                 m_heroRecs[m_players[i].m_heroIds[0]].m_y,
                 i,
-                gHeroScoutRadius[m_heroRecs[m_players[i].m_heroIds[0]].m_unknown1c]
+                gHeroScoutRadius[m_heroRecs[m_players[i].m_heroIds[0]].m_heroClass]
             );
         }
         if (m_campaignType > 0)
-            k = gCrestHeroClass[m_players[i].m_unknown11];
+            k = gCrestHeroClass[m_players[i].m_color];
         else
             k = Random(0, 3);
         m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
@@ -1304,7 +1226,7 @@ void game::NewMap(char* mapName) {
         m_players[i].m_availableHeroIds[1] = GetNewHeroId(k);
         m_availableHeroes[m_players[i].m_availableHeroIds[1]] = 0x40;
     }
-    if (!m_unknown16e79)
+    if (!m_noMapHeroes)
         ProcessOnMapHeroes();
     if (m_campaignType <= 0) {
         for (k = 0; k < 4; k++) {
@@ -1415,7 +1337,7 @@ void game::SettleOverlay(int x, int y) {
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
                     if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
-                        cell->m_unknown07 |= 0x80;
+                        cell->m_secondaryTrigger |= 0x80;
                     } else {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
@@ -1434,7 +1356,7 @@ void game::SettleOverlay(int x, int y) {
                         cell->m_overlayTileset = 0;
                         cell->m_overlayIndex = 0xff;
                     } else {
-                        cell->m_unknown07 |= 0x80;
+                        cell->m_secondaryTrigger |= 0x80;
                     }
                 }
                 break;
@@ -1513,7 +1435,7 @@ void game::RandomizeEvents(void) {
                     break;
                 case 0x88:
                     cell->m_objectMetadata = Random(4, 6) << 4;
-                    cell->m_objectMetadata |= (signed char)Random(0, 5);
+                    cell->m_objectMetadata |= static_cast<signed char>(Random(0, 5));
                     break;
                 case 0x8b:
                     cell->m_objectMetadata = Random(0, 3) + 2;
@@ -1566,17 +1488,17 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = 1;
                     break;
                 case 0x9a:
-                    if (!(unsigned char)cell->m_objectMetadata) {
+                    if (!static_cast<unsigned char>(cell->m_objectMetadata)) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
                         if (Random(0, 99) <= 25 && cell->m_objectIndex != 26)
-                            cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata | 0x80;
+                            cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | 0x80;
                     }
                     break;
                 case 0x9d:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
-                        cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata - 61;
-                    switch ((unsigned char)cell->m_objectMetadata) {
+                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - 61;
+                    switch (static_cast<unsigned char>(cell->m_objectMetadata)) {
                         case 0:
                         case 2:
                             cell->m_objectMetadata = Random(8, 16);
@@ -1643,7 +1565,7 @@ void game::RandomizeEvents(void) {
                     id = GetTownId(x, y);
                     for (j = 0; j < 3; j++) {
                         for (i = 0; i < 4; i++) {
-                            if (!(unsigned char)m_map[x - 2 + i][y - 2 + j].m_objectMetadata)
+                            if (!static_cast<unsigned char>(m_map[x - 2 + i][y - 2 + j].m_objectMetadata))
                                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = id;
                         }
                     }
@@ -1655,7 +1577,7 @@ void game::RandomizeEvents(void) {
                     id = GetMineId(x, y);
                     for (j = 0; j < 2; j++) {
                         for (i = 0; i < 2; i++) {
-                            if (!(unsigned char)m_map[x + i][y - j].m_objectMetadata
+                            if (!static_cast<unsigned char>(m_map[x + i][y - j].m_objectMetadata)
                                 || (cell->m_triggerType & 0x7f) == (m_map[x + i][y - j].m_triggerType & 0x7f))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
@@ -1674,7 +1596,7 @@ void game::RandomizeEvents(void) {
                 objTileset = cell->m_objectTileset & 0xf;
                 overlayTileset = cell->m_overlayTileset & 0xf;
                 if ((objTileset == 8 || objTileset == 9) && (overlayTileset == 8 || overlayTileset == 9))
-                    cell->m_unknown07 |= 0x80;
+                    cell->m_secondaryTrigger |= 0x80;
             }
             SettleOverlay(x, y);
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
@@ -1688,7 +1610,7 @@ void game::RandomizeEvents(void) {
                     case 0x3a:
                     case 0x3b:
                     case 0x3c:
-                        cell->m_unknown07 |= 0x80;
+                        cell->m_secondaryTrigger |= 0x80;
                         break;
                 }
             }
@@ -1863,11 +1785,11 @@ void game::ClaimTown(signed char townId, signed char player) {
     cell = &m_map[m_castleRecs[townId].m_x - 1][m_castleRecs[townId].m_y];
     cell->m_flags |= 0x10;
     cell->m_objectTileset |= 0xe0;
-    cell->m_unknown05 = m_players[player].Color() * 2;
+    cell->m_extraFrame = m_players[player].Color() * 2;
     cell = &m_map[m_castleRecs[townId].m_x + 1][m_castleRecs[townId].m_y];
     cell->m_flags |= 0x10;
     cell->m_objectTileset |= 0xe0;
-    cell->m_unknown05 = m_players[player].Color() * 2 + 1;
+    cell->m_extraFrame = m_players[player].Color() * 2 + 1;
     SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, giVisRangeTown);
     CheckEndGame(0);
 }
@@ -1916,11 +1838,9 @@ void game::ClaimMine(signed char mineId, signed char player) {
     } else {
         cell->m_flags |= 0x20;
         cell->m_overlayTileset |= 0xe0;
-        cell->m_unknown05 = m_players[player].Color() + frame;
+        cell->m_extraFrame = m_players[player].Color() + frame;
     }
 }
-
-short ViewSpellsHandler(tag_message&);
 
 // Buka 2.1 game::ViewSpells for HoMM1's spell book: combat (0) and
 // adventure (1) books each have their own window position; type 2 shows
@@ -2170,15 +2090,6 @@ short ViewSpecialHandler(tag_message& message) {
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
-// Army info strings: attack, defense, shots (combat), damage, hit points,
-// speed, morale, luck, shots (adventure).
-extern char* gArmyStatText[];
-extern char* gSpeedText[];
-extern signed char gbDismissArmy;
-// Stale alias of glTimers[0] (0x4c6a80): unreferenced, kept so later symbol handles stay put.
-extern long gViewArmyAnimTimer;
-short ViewArmyHandler(tag_message&);
-
 VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
     short x,
@@ -2262,7 +2173,7 @@ void game::ViewArmy(
     message.text = fileName;
     m_viewArmyWindow->BroadcastMessage(message);
 
-    statText = (char*)malloc(550);
+    statText = static_cast<char*>(malloc(550));
     if (theGroup)
         morale = theGroup->GetMorale(theHero, castle);
     else
@@ -2311,7 +2222,7 @@ void game::ViewArmy(
         sprintf(gText, "-%d", monsterInfo->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(gText, "\n%s%d", gArmyStatText[4], (unsigned char)monsterInfo->stats.hitPoints);
+    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<unsigned char>(monsterInfo->stats.hitPoints));
     strcat(statText, gText);
     sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfo->stats.speed]);
     strcat(statText, gText);
@@ -2373,10 +2284,6 @@ void game::ViewArmy(
     delete m_viewArmyWindow;
 }
 
-
-extern signed char gbDismissArmy;
-extern long gViewArmyAnimTimer;
-
 // donor PoL RVA 0x0007b2cf; preferred Buka symbol ?ViewArmyHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.308927;margin=0.170943;shape=0.232;size=0.493;calls=0.556;alternate=pol20:int ViewArmyHandler(struct tag_message &)@0x0007b2cf
@@ -2425,9 +2332,6 @@ short ViewArmyHandler(tag_message& message) {
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
-
-// Kingdom overview text: the dated title, then Dragon City and Lighthouse.
-extern char* gOverviewText[];
 
 // Kingdom overview: heroes by class, castles and towns by type and mines by
 // resource drawn onto the backdrop, then the date, income and resources.
@@ -2511,13 +2415,13 @@ void game::Overview(void) {
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
     gpWindowManager->FadeScreen(1, 8, 0);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
-    sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_unknown11);
+    sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_color);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
     ovIcon = gpResourceManager->GetIcon("overview.icn");
 
     memset(totals, 0, sizeof(totals));
     for (i = 0; i < gpCurPlayer->m_heroCount; i++)
-        totals[m_heroRecs[gpCurPlayer->m_heroIds[i]].m_unknown1c]++;
+        totals[m_heroRecs[gpCurPlayer->m_heroIds[i]].m_heroClass]++;
     classCountY = 0;
     for (i = 0; i < 4; i++) {
         if (totals[i])
@@ -2731,11 +2635,6 @@ void game::TurnOffAIMusic(void) {
     gpSoundManager->m_musicReady = 1;
 }
 
-extern char* gColorNames[];
-// The host's and this machine's game positions in a network game.
-extern int giHostGamePos;
-extern int giThisGamePos;
-
 // Buka 2.1 game::NextPlayer for HoMM1: autosaves, advances to the next
 // living player (a new day after the last), restores hero movement (none
 // on the campaign's goal town) and hands the turn to the computer or the
@@ -2758,8 +2657,8 @@ void game::NextPlayer(void) {
         }
         SaveGame("AUTOSAVE", 1);
     }
-    if (gpGame->m_players[giCurPlayer].m_unknown55 > 0)
-        gpGame->m_players[giCurPlayer].m_unknown55--;
+    if (gpGame->m_players[giCurPlayer].m_daysLeft > 0)
+        gpGame->m_players[giCurPlayer].m_daysLeft--;
     CheckEndGame(0);
     gpAdvManager->DeactivateCurrTown();
     gpAdvManager->DeactivateCurrHero();
@@ -2804,7 +2703,7 @@ void game::NextPlayer(void) {
         SetNoDialogMenus(1);
         gpInputManager->Flush();
         if (gbBlackoutPlayer && giNumHumanPlayers > 1) {
-            sprintf(gText, "%s player turn.", gColorNames[gpGame->m_players[giCurPlayer].m_unknown11]);
+            sprintf(gText, "%s player turn.", gColorNames[gpGame->m_players[giCurPlayer].m_color]);
             gText[0] -= 32;
             WaitForPlayer(gText, giCurPlayer);
         }
@@ -2842,7 +2741,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
         for (i = 0; i < 4; i++) {
             if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) > 0
                 && (m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) <= 0x30) {
-                m_map[x - 2 + i][y - 2 + j].m_unknown07 |= 0x28;
+                m_map[x - 2 + i][y - 2 + j].m_secondaryTrigger |= 0x28;
             } else {
                 m_map[x - 2 + i][y - 2 + j].m_triggerType = 0x28;
                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
@@ -2853,7 +2752,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     town = GetTown(townNum);
     town->m_turnsOwned = 10;
     if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
-        race = gCrestTownTypes[m_players[0].m_unknown11];
+        race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < 4) {
         unique = 0;
         race = 0;
@@ -2877,7 +2776,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     }
     m_castleRecs[townNum].m_type = race;
     plain = 1;
-    if (town->m_extraIndex >= 1 && ((mapTownExtra*)ppMapExtra[town->m_extraIndex])->customized)
+    if (town->m_extraIndex >= 1 && static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex])->customized)
         plain = 0;
     if (plain) {
         if (race == 2)
@@ -2897,9 +2796,6 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
         SetupTown(townNum, 0);
     }
 }
-
-// Mines of each type placed so far.
-extern short giMineTypeCount[];
 
 // Buka 2.1 game::RandomizeMine for HoMM1's 2x2 mines: the terrain picks
 // the mine type (unused types first) and the object and shadow frames.
@@ -3012,7 +2908,7 @@ void game::RandomizeMine(signed char x, signed char y) {
     } else {
         m_map[x + 1][y].m_flags |= 0x10;
         m_map[x + 1][y].m_objectTileset |= 0xb0;
-        m_map[x + 1][y].m_unknown05 = type - 2;
+        m_map[x + 1][y].m_extraFrame = type - 2;
         bits = 0x19;
     }
     mineIdx = GetMineId(x, y);
@@ -3020,7 +2916,7 @@ void game::RandomizeMine(signed char x, signed char y) {
         for (j = 0; j < 2; j++) {
             if ((m_map[x + j][y - k].m_triggerType & 0x7f) > 0
                 && (m_map[x + j][y - k].m_triggerType & 0x7f) <= 0x30) {
-                m_map[x + j][y - k].m_unknown07 |= bits;
+                m_map[x + j][y - k].m_secondaryTrigger |= bits;
             } else {
                 m_map[x + j][y - k].m_objectMetadata = mineIdx;
                 m_map[x + j][y - k].m_triggerType = bits;
@@ -3136,9 +3032,6 @@ int game::ComputeDailyGold(int player) {
     return gold;
 }
 
-// Creatures a creature month may feature.
-extern signed char giMonType[];
-
 // Buka 2.1 game::PerDay for HoMM1: records each player's income, pays the
 // mines, towns and computer bonuses, then advances the calendar.
 VA(0x004419a6, 0x463)
@@ -3253,39 +3146,39 @@ void game::PerWeek(void) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             switch (m_map[posX][posY].m_triggerType) {
                 case 0x98:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata != 0xff)
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) != 0xff)
                         m_map[posX][posY].m_objectMetadata = 2;
                     break;
                 case 0xad:
                     m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
                 case 0x8d:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
                 case 0x8e:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
                 case 0x8f:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
                 case 0x90:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
                 case 0x91:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
                 case 0xa7:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(1, 3);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(1, 3);
                     break;
                 case 0xaa:
-                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
-                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
+                    if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
+                        m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
                 default:
                     break;
@@ -3409,9 +3302,9 @@ void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     }
     for (i = 0; i < 2; i++) {
         if (present[i]) {
-            army->m_creatureTypes[slot] = armyTable[m_heroRecs[heroId].m_unknown1c][i][0];
-            minNum = armyTable[m_heroRecs[heroId].m_unknown1c][i][1] * 10;
-            max = armyTable[m_heroRecs[heroId].m_unknown1c][i][2] * 10 + 9;
+            army->m_creatureTypes[slot] = armyTable[m_heroRecs[heroId].m_heroClass][i][0];
+            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][1] * 10;
+            max = armyTable[m_heroRecs[heroId].m_heroClass][i][2] * 10 + 9;
             if (strongArmy)
                 minNum = (minNum + max) / 2;
             army->m_creatureCounts[slot] = Random(minNum, max) / 10;
@@ -3838,7 +3731,7 @@ void game::WaitForPlayer(char* text, int player) {
         ShowHeroesLogo();
         gbAllBlack = 0;
         gpMouseManager->ReallyShowPointer();
-        NormalDialog(text, 1, 0x61, -1, 9, gpGame->m_players[player].m_unknown11, -1, 0, -1);
+        NormalDialog(text, 1, 0x61, -1, 9, gpGame->m_players[player].m_color, -1, 0, -1);
         gpSoundManager->SwitchAmbientMusic(-1);
     }
 }
@@ -3881,7 +3774,7 @@ void game::ProcessMapExtra(void) {
                     cellPtr->m_objectMetadata = townNum;
                     break;
                 case 0xc7:
-                    m_unknown16e79 = 0;
+                    m_noMapHeroes = 0;
                     break;
             }
         }
@@ -3905,7 +3798,7 @@ signed char game::SetupTowns(void) {
         town = GetTown(i);
         town->m_customized = 0;
         if (town->m_extraIndex >= 1) {
-            extra = (mapTownExtra*)ppMapExtra[town->m_extraIndex];
+            extra = static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex]);
             if (extra->customized && extra->owner != -2) {
                 if (gpGame->m_playerCount <= extra->owner)
                     own = gpGame->m_playerCount - 1;
@@ -3960,7 +3853,7 @@ void game::ProcessOnMapHeroes(void) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
             if ((cell->m_triggerType & 0x7f) == 0x47) {
-                extra = (mapHeroExtra*)ppMapExtra[(unsigned char)cell->m_objectMetadata];
+                extra = static_cast<mapHeroExtra*>(ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)]);
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
                     theHero->m_army.m_creatureCounts[k] = extra->troopCounts[k];
@@ -4001,7 +3894,7 @@ void game::ProcessOnMapHeroes(void) {
                 cell->m_overlayIndex = 0xff;
                 cell->m_objectMetadata = 0;
                 cell->m_triggerType = 0;
-                SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gHeroScoutRadius[theHero->m_unknown1c]);
+                SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gHeroScoutRadius[theHero->m_heroClass]);
             }
         }
     }
@@ -4036,7 +3929,7 @@ void game::CheckHeroConsistency(void) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
             if (cell->m_triggerType == 0xbd) {
-                if ((unsigned char)cell->m_objectMetadata >= 0 && (unsigned char)cell->m_objectMetadata < GAME_HERO_COUNT) {
+                if (static_cast<unsigned char>(cell->m_objectMetadata) >= 0 && static_cast<unsigned char>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
                     theHero = GetHero(cell->m_objectMetadata);
                     if (theHero->m_owner < 0 || theHero->m_owner > 3) {
                         if (theHero->m_locationType == 0xa8) {
@@ -4068,10 +3961,6 @@ void game::CheckHeroConsistency(void) {
 // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
-// The other side's ready flag and the heartbeat-seen flag (REMOTE).
-extern int gbRemoteReady;
-extern int gbHeartbeatSeen;
-void BVResMsg(char*, int, int);
 
 // Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
 // segments, 100 segments per acknowledged block.
@@ -4081,8 +3970,8 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     char pathname[456];
     char* outData;
     int block;
-    int numBlocks;
     int prevReady;
+    int numBlocks;
     int junk3;
     int oldTrack;
     char* sendPacket;
@@ -4124,10 +4013,10 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     extern char gcDataPath[];
     sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
     fileSize = FileSize(pathname);
-    sendPacket = (char*)malloc(0x100);
+    sendPacket = static_cast<char*>(malloc(0x100));
     if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
-        outData = (char*)malloc(fileSize);
-    fileData = (char*)malloc(fileSize);
+        outData = static_cast<char*>(malloc(fileSize));
+    fileData = static_cast<char*>(malloc(fileSize));
     fileHandle = open(pathname, O_BINARY);
     if (fileHandle == -1)
         FileError(pathname);
@@ -4166,7 +4055,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                             len = fileSize - sendPacketIndex * 200;
                         else
                             len = 200;
-                        *(short*)sendPacket = (short)sendPacketIndex;
+                        *(short*)sendPacket = static_cast<short>(sendPacketIndex);
                         memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
                         status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
                         if (!status)
@@ -4174,13 +4063,13 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                     }
                 }
                 LogStr("PreWait");
-                *(short*)sendPacket = (short)(block * 100);
+                *(short*)sendPacket = static_cast<short>(block * 100);
                 status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
                 LogStr("PostWait");
                 if (!status)
                     ShutDown(0);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
-                    if (((RemoteMessage*)incoming)->payload.data[sendPacketIndex] > 0)
+                    if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex] > 0) // API-forced: char* record.
                         acked[block * 100 + sendPacketIndex] = 1;
                 }
                 finished = 1;
@@ -4261,9 +4150,9 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         ShutDown(0);
     memset(gotIt, 0, sizeof(gotIt));
     if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
-        decodedData = (char*)malloc(0x130b0);
-    sendPacket = (char*)malloc(0x100);
-    inData = (char*)malloc(dataSize + 500);
+        decodedData = static_cast<char*>(malloc(0x130b0));
+    sendPacket = static_cast<char*>(malloc(0x100));
+    inData = static_cast<char*>(malloc(dataSize + 500));
     lastPacketTime = KBTickCount();
     while (!done) {
         PollSound();
@@ -4275,7 +4164,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
             else
                 ShutDown(0);
         }
-        receivedPacket = (RemoteMessage*)GetRemoteData(1);
+        receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
         if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
             lastPacketTime = KBTickCount();
             switch (receivedPacket->command) {
@@ -4329,11 +4218,6 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     return okay;
 }
 
-// New-turn texts: days-left and last-day warnings, then the month/week banners.
-extern char* gNewTurnText[];
-extern char* gMonthNames[];
-extern char* gWeekNames[];
-
 // donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.487826;margin=0.297906;shape=0.344;size=0.836;calls=0.867;alternate=pol20:void game::DoNewTurn(void)@0x00083fc4
@@ -4353,8 +4237,8 @@ void game::DoNewTurn(void) {
     gpAdvManager->CompleteDraw(0);
     gpAdvManager->UpdateScreen(0, 0);
     CheckEndGame(0);
-    if (gpCurPlayer->m_unknown55 >= 0) {
-        if (gpCurPlayer->m_unknown55 == 1) {
+    if (gpCurPlayer->m_daysLeft >= 0) {
+        if (gpCurPlayer->m_daysLeft == 1) {
             sprintf(gText, gNewTurnText[1], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
             gText[0] -= 32;
         } else {
@@ -4362,7 +4246,7 @@ void game::DoNewTurn(void) {
                 gText,
                 gNewTurnText[0],
                 gColorNames[gpGame->m_players[giCurPlayer].Color()],
-                gpCurPlayer->m_unknown55
+                gpCurPlayer->m_daysLeft
             );
             gText[0] -= 32;
         }
@@ -4502,20 +4386,12 @@ done:
     return score;
 }
 
-// donor PoL RVA 0x000333c0; preferred Buka symbol ?ViewWorld@advManager@@QAEXHHH@Z
-// donor Buka TU SOURCE/Viewwrld; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.364493;margin=0.061615;shape=0.277;size=0.633;calls=0.682;alternate=pol20:void advManager::ViewWorld(int, int, int)@0x000333c0
 // Retail loads sceninfo.bin and is called on gpGame with no arguments:
 // Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
-// Scenario-info labels: difficulty, human seat handicap, map size and map
-// difficulty names.
-extern char* gDifficultyNames[];
-extern char* gHandicapNames[];
-extern char* gMapSizeNames[];
-extern char* gMapDifficultyNames[];
 
 VA(0x004472d8, 0x44e)
 void game::ShowScenInfo(void) {
+    short i;
     const char sizeId = 100;
     const char mapLevelId = 101;
     const char mapDescId = 102;
@@ -4529,7 +4405,6 @@ void game::ShowScenInfo(void) {
     int difficulty;
     heroWindow* scenWindow;
     tag_message message;
-    short i;
     short idx;
     // Retail reserves one unused slot between the seat counters.
     int pad;
@@ -4587,9 +4462,9 @@ void game::ShowScenInfo(void) {
     message.text = m_mapDescription;
     scenWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_players[giCurPlayer].m_unknown11 != -1) {
+    if (m_players[giCurPlayer].m_color != -1) {
         message.id = crestId;
-        message.value = m_players[giCurPlayer].m_unknown11 * 2 + 11;
+        message.value = m_players[giCurPlayer].m_color * 2 + 11;
         scenWindow->BroadcastMessage(message);
     }
     gpWindowManager->DoDialog(scenWindow, EventWindowHandler, 0);
@@ -4605,16 +4480,16 @@ void game::RandomizePlayerCrests(void) {
     taken[1] = 0;
     taken[2] = 0;
     taken[3] = 0;
-    taken[m_players[0].m_unknown11] = 1;
+    taken[m_players[0].m_color] = 1;
     for (i = 1; i < m_playerCount; i++) {
         do {
             if (m_campaignType > 0 && gCampaignScenarios[m_campaignScenario].playerCrests[i] < 4
                 && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
-                m_players[i].m_unknown11 = gCampaignScenarios[m_campaignScenario].playerCrests[i];
+                m_players[i].m_color = gCampaignScenarios[m_campaignScenario].playerCrests[i];
             else
-                m_players[i].m_unknown11 = Random(0, 3);
-        } while (taken[m_players[i].m_unknown11] == 1);
-        taken[m_players[i].m_unknown11] = 1;
+                m_players[i].m_color = Random(0, 3);
+        } while (taken[m_players[i].m_color] == 1);
+        taken[m_players[i].m_color] = 1;
     }
 }
 
@@ -4720,6 +4595,8 @@ armyGroup::armyGroup(void) {
     memset(m_creatureCounts, 0, sizeof(m_creatureCounts));
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044795c, 0x18)
 void armyGroup::View(int) {}
 
@@ -4733,7 +4610,7 @@ short armyGroup::GetMorale(hero* h, town* t) {
     alignment = IsHomogeneous(-1);
     morale += alignment;
     if (h) {
-        if (!h->m_unknown1c)
+        if (!h->m_heroClass)
             morale++;
         morale += h->m_morale;
         if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
@@ -4887,7 +4764,7 @@ void armyGroup::Swap(signed char slot, armyGroup* otherGroup, signed char otherS
 VA(0x00447ec8, 0x14d)
 void armyGroup::DamageGroup(float damagePercent) {
     int killed;
-    int chance = (int)(damagePercent * 100.0f);
+    int chance = static_cast<int>(damagePercent * 100.0f);
     int isFirstTroop = 1;
     int i;
     int j;

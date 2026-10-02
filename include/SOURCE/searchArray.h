@@ -29,7 +29,9 @@ struct searchNode {
     unsigned short direction : SEARCH_DIRECTION_BIT_COUNT;
     unsigned short distance : 12;
     unsigned char visited : SEARCH_FLAG_BIT_COUNT;
-    unsigned char unknownFlag : SEARCH_FLAG_BIT_COUNT;
+    // Buka unknownFlag: TestPossibleDirections' occupancy for the step that
+    // pushed the node; SeedPosition then inspects the cell's trigger.
+    unsigned char occupied : SEARCH_FLAG_BIT_COUNT;
     unsigned char rvFlag1 : SEARCH_FLAG_BIT_COUNT;
     // DetermineTargetPosition passes bits 3..7 to RVOfPosition as a byte.
     unsigned char rvFlag2 : 5;
@@ -91,7 +93,6 @@ public:
 };
 #pragma pack(pop)
 
-// SeedPosition's working mobility (0x004c4efc) and seeding state.
-extern short giCurTempMobility;
+// SeedPosition's seeding state.
 extern int giSeedingValid;
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

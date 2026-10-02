@@ -4,12 +4,12 @@
 
 #include <H1/KB.h>
 #include <H1/Types.h>
-#include <SOURCE/PATH.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/game.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/PATH.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
@@ -229,7 +229,7 @@ void searchArray::PushCombatPoint(short hex, short direction, unsigned short dis
 // Buka FINDPATH.cpp:113-183; HoMM1 keeps word binary-search bounds.
 VA(0x00424d90, 0x2ab)
 void searchArray::PushPoint(short x, short y, unsigned short direction, unsigned short cost, unsigned short mobility,
-                            char unknownFlag, char rvFlag1, signed char valueX, signed char valueY, char rvFlag2,
+                            char occupied, char rvFlag1, signed char valueX, signed char valueY, char rvFlag2,
                             signed char previousX, signed char previousY)
 {
     if (cost > mobility && mobility != 0)
@@ -277,7 +277,7 @@ void searchArray::PushPoint(short x, short y, unsigned short direction, unsigned
     gSearchQueueNode->y = (signed char)y;
     gSearchQueueNode->direction = direction;
     gSearchQueueNode->distance = cost;
-    gSearchQueueNode->unknownFlag = unknownFlag;
+    gSearchQueueNode->occupied = occupied;
     gSearchQueueNode->rvFlag1 = rvFlag1;
     gSearchQueueNode->valueX = valueX;
     gSearchQueueNode->valueY = valueY;
@@ -303,7 +303,7 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
         }
 
         gSearchNextCell = gpAdvManager->GetCell(gSearchNextX, gSearchNextY);
-        if (gSearchNextCell->m_unknown07 & 0x80) {
+        if (gSearchNextCell->m_secondaryTrigger & 0x80) {
             gSearchTerrain = -1;
             goto storeDirection;
         }

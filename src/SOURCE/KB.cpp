@@ -8,6 +8,7 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/WINMGR_TYPES.h>
@@ -17,6 +18,7 @@
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/Modem.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
@@ -44,7 +46,7 @@ signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 
 // HoMM2 KB.cpp confirms the identity and behavior. HoMM1 differs in the timer
 // comparison and placement of the re-entry guard.
-extern "C" VA(0x0044f640, 0x72)
+VA(0x0044f640, 0x72)
 void PollSound() {
     if (KBTickCount() < gNextSoundPollTick)
         return;
@@ -230,23 +232,6 @@ H1_ENUM_BEGIN(AppMenuCommand)
     APP_MENU_SEARCH = 0x9c4f
 H1_ENUM_END(AppMenuCommand)
 // clang-format on
-
-// oldmain's re-entry guard and the intro, end-sequence and campaign state it
-// shares with the game screens.
-extern signed char bKBDone;
-extern signed char gbSkipIntro;
-extern signed char gbWaitForRemoteReceive;
-extern signed char gbDirectConnect;
-extern int iMaxMapExtra;
-extern char* gTownNames[];
-extern char* gCampaignWinTexts[];
-extern char gcCongratsText[];
-extern char* gCampaignSideNames[];
-extern signed char giCampaignChoice;
-extern int giMenuCommand;
-void ShowCongrats(void);
-short InitMenuHandler(tag_message&);
-int AddScoreToHighScore(int, int, char*, char*);
 
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
@@ -550,11 +535,11 @@ int oldmain(void) {
                 } else if (giEndSequence == 1) {
                     gpGame->m_campaignDay = giCurTurn + 1;
                     gpGame->m_campaignScenario++;
-                    gpGame->m_unknown000b++;
+                    gpGame->m_campaignScenariosWon++;
                     if (gpGame->m_campaignScenario - 4 == gpGame->m_campaignType - 1)
                         gpGame->m_campaignScenario++;
                     gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
-                    sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_unknown000b);
+                    sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_campaignScenariosWon);
                     gpGame->SaveGame(saveBuf, 1);
                     sprintf(
                         gText,
@@ -586,9 +571,9 @@ char toupper(char character) {
 // Buka 2.1 InterpretCommandLine reduced to HoMM1's /I, /C, /S and /B switches.
 VA(0x00450fbc, 0x288)
 int InterpretCommandLine(void) {
+    int size;
     int i;
     int helpRequested = 0;
-    int size;
 
     giDebugLevel = 0;
     giShowIntro = 1;
@@ -639,9 +624,6 @@ int InterpretCommandLine(void) {
     helpRequested = 0;
     return 1;
 }
-
-extern char* gInitMenuHelp[];
-extern int giMenuCommand;
 
 // Buka 2.1 InitMenuHandler reduced to HoMM1's right-click help and button
 // release; the main menu draws its own hover frames.
@@ -874,8 +856,6 @@ int GetBuildingBaseResourceValue(int race, int building, int level) {
     }
 }
 
-short WaitHandler(tag_message&);
-
 // Buka 2.1 NormalDialog without HoMM2's timeout, saved resource globals,
 // primary-skill/monster/secondary-skill slots and centered x; HoMM1 measures
 // the text with a temporary bigfont.fnt and frames heroes with port%04d.icn.
@@ -1037,7 +1017,7 @@ void NormalDialog(
         if (kind[i] == NORMAL_DIALOG_NO_RESOURCE)
             break;
 
-        amountText[i] = (char*)malloc(NORMAL_DIALOG_TEXT_LENGTH);
+        amountText[i] = static_cast<char*>(malloc(NORMAL_DIALOG_TEXT_LENGTH));
         if (kind[i] <= NORMAL_DIALOG_RESOURCE_LAST) {
             if (resourceQty[i] > 0)
                 sprintf(amountText[i], "%d", resourceQty[i]);
@@ -1190,7 +1170,7 @@ void NormalDialog(
     pNormalDialogWindow->BroadcastMessage(message);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
-        szOr = (char*)malloc(3);
+        szOr = static_cast<char*>(malloc(3));
         strcpy(szOr, "or");
         captionWidget = new textWidget(
             width / 2 - 17, resourceYPos + 30, 40, 12, szOr, "smalfont.fnt", 1,
@@ -1240,11 +1220,6 @@ void UpdateNormalDialog(char* text) {
     }
 }
 
-// Modem.cpp's wait-loop steps; Modem.h does not export them (declaring them
-// there ahead of their definitions reorders Modem's own compare operands).
-signed char GUIModemCommandExec(void);
-signed char GUIModemResponseExec(void);
-int WaitForDirectConnect(void);
 
 // donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -1367,25 +1342,6 @@ void PlayerDead(int player) {
     if (gbRemoteOn && gbHumanPlayer[player])
         HandleRemoteDeadPlayerExit(player);
 }
-
-// HoMM1's three-byte exit notice, which retail builds byte-wise in gText
-// (0x004c6750): game position, control hand-off, next player.
-#pragma pack(push, 1)
-struct playerExitMessage {
-    signed char gamePosition;
-    signed char takesControl;
-    signed char nextPlayer;
-};
-#pragma pack(pop)
-extern char* gScoreLabels[];
-extern int giHostGamePos;
-
-// Player colour names for the exit notices, CheckEndGame's re-entry guard
-// and last offered score, and the creature alignment names (by type / 6).
-extern char* gColorNames[];
-extern signed char bInCheckEndGame;
-extern char* gAlignmentNames[];
-extern int giScore;
 
 // Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
 VA(0x00452e00, 0x99)
@@ -1517,48 +1473,48 @@ void CheckEndGame(int forced) {
                 PlayerDead(player);
                 sprintf(
                     gText, "%s player has been vanquished!",
-                    gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                    gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                 gText[0] -= 32;
                 NormalDialog(
-                    gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                    gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
                     0, -1);
             } else if (!pd->m_townCount) {
-                if (pd->m_unknown55 == -1) {
+                if (pd->m_daysLeft == -1) {
                     if (gbThisNetHumanPlayer[player]) {
                         sprintf(
                             gText,
                             "%s player, you have lost your last town.  If you do not conquer "
                             "another town in the next week, you will be eliminated.",
-                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                            gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                         NormalDialog(
-                            gText, 1, -1, -1, 9, gpGame->m_players[(signed char)player].Color(),
+                            gText, 1, -1, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(),
                             -1, 0, -1);
                     }
-                    pd->m_unknown55 = 7;
-                } else if (!pd->m_unknown55) {
+                    pd->m_daysLeft = 7;
+                } else if (!pd->m_daysLeft) {
                     PlayerDead(player);
                     if (gbThisNetHumanPlayer[player]) {
                         sprintf(
                             gText,
                             "%s player, your heroes abandon you, and you are banished from this "
                             "land.",
-                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                            gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                     } else {
                         sprintf(
                             gText,
                             "%s player's Heroes have abandoned him, and he is banished from this "
                             "land.",
-                            gColorNames[gpGame->m_players[(signed char)player].Color()]);
+                            gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                     }
                     NormalDialog(
-                        gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
+                        gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
                         0, -1);
                 }
             } else {
-                pd->m_unknown55 = -1;
+                pd->m_daysLeft = -1;
             }
         }
     }
@@ -1709,7 +1665,7 @@ void InitVars(void) {
     hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
     hmnuAdv = LoadMenuA((HINSTANCE)hInstApp, "mnuAdv");
     hmnuTown = LoadMenuA((HINSTANCE)hInstApp, "mnuTown");
-    LogStr("LoadMenus", (long)hmnuDflt, (long)hmnuCmbt, (long)hmnuAdv, (long)hmnuTown, (long)hInstApp);
+    LogStr("LoadMenus", reinterpret_cast<long>(hmnuDflt), reinterpret_cast<long>(hmnuCmbt), reinterpret_cast<long>(hmnuAdv), reinterpret_cast<long>(hmnuTown), reinterpret_cast<long>(hInstApp)); // API-forced: LogStr logs handles as long.
 }
 
 // donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
@@ -1741,7 +1697,6 @@ H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_FIVE_ALIGNMENTS = 20
 H1_ENUM_END(MoraleInfoText)
 // clang-format on
-extern char* gMoraleInfoText[];
 
 VA(0x00453ba8, 0x450)
 void game::ShowMoraleInfo(hero* h, int dialogType) {
@@ -1759,7 +1714,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_BAD]);
     sprintf(gText, gMoraleInfoText[MORALE_INFO_HEADER], buffer);
     baseLen = strlen(gText);
-    if (!h->m_unknown1c)
+    if (!h->m_heroClass)
         strcat(gText, gMoraleInfoText[MORALE_INFO_KNIGHT]);
     alignments = h->m_army.IsHomogeneous(-1);
     if (alignments > 0) {
@@ -1829,7 +1784,6 @@ H1_ENUM_BEGIN(LuckInfoText)
     LUCK_INFO_NONE = 10
 H1_ENUM_END(LuckInfoText)
 // clang-format on
-extern char* gLuckInfoText[];
 
 // donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -1975,9 +1929,6 @@ void GOut(char* text) {
         AiPrint(text);
 }
 
-// donor PoL RVA 0x0009d3a7; preferred Buka symbol ?WaitForOtherPlayer@@YIHXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.581419;margin=0.608732;shape=0.409;size=0.995;calls=1.000;alternate=pol20:int WaitForOtherPlayer(void)@0x0009d3a7
 // HoMM1 maps every remote position other than the host to the one opponent slot.
 VA(0x00454748, 0x39)
 signed char NetPosToGamePos(int netPos) {
@@ -1993,7 +1944,7 @@ signed char WaitForOtherPlayer(void) {
     int result = 0;
     RemoteMessage* data;
     PollSound();
-    data = (RemoteMessage*)GetRemoteData(1);
+    data = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
     if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
         switch (data->command) {
             case BOX_REMOTE_SETUP:
@@ -2078,13 +2029,14 @@ void PopNetBox(char* notice) {
         PollSound();
         data = GetRemoteData(0);
         if (data) {
+            // API-forced: GetRemoteData returns queue records as char*.
             if (reinterpret_cast<RemoteMessage*>(data)->type != REMOTE_MESSAGE_RELIABLE) {
                 data = GetRemoteData(1);
             } else {
-                switch (reinterpret_cast<RemoteMessage*>(data)->command) {
+                switch (reinterpret_cast<RemoteMessage*>(data)->command) { // API-forced: char* record.
                     case 11:
                         data = GetRemoteData(1);
-                        AddNetBoxLine(reinterpret_cast<RemoteMessage*>(data)->payload.data);
+                        AddNetBoxLine(reinterpret_cast<RemoteMessage*>(data)->payload.data); // API-forced: char* record.
                         drawLines = 1;
                         if (msgTime)
                             msgTime = KBTickCount();
@@ -2252,18 +2204,6 @@ void FileError(char* filename) {
     sprintf(message, "Error opening file %s!", filename);
     ShutDown(message);
 }
-
-// @early-stop
-// tu-cumulative: logic + all 14 frame slots byte-exact (od_oracle-verified). The only
-// residual (coffcmp: 40 bytes, all in the two brightness averages + the minDist test)
-// is a /Od operand-evaluation-order difference this cl renders vs retail: the 3-term
-// sum `p[2]+p[0]+p[1]` reads +2,+1,+0 here but +2,+0,+1 in retail, and the `d>p`
-// compare loads the other operand first. Not source-steerable (probed every term
-// ordering, explicit grouping, `|0`, and an inline helper — all identical here).
-
-// Campaign-text and score-label tables and the score-to-rank creature names.
-int GetBaseScore(int);
-void CongratsWait(void);
 
 // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
 // scenario's win text; standard games score the days played, rank the result
@@ -2502,7 +2442,6 @@ signed char CheckMem(void) {
     return 1;
 }
 
-// Campaign maps rename the town at their victory position.
 
 // Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
 // override one town by position.

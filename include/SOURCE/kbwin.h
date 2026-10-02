@@ -93,16 +93,12 @@ extern char gcCommandLine[];
 extern unsigned char bProcessMessage[];
 extern char szAppName[];
 extern char szTitle[];
-extern void *hmnuDflt;
-extern void *hmnuAdv;
 extern long lTemp;
 extern struct tagRECT rcTemp;
 extern int iTempX;
 extern int iTempY;
 extern long lLastGTimerTickCount;
 extern long lLastCycleTickCount;
-extern int gbClosingApp;
-extern int gbHeroMoving;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {
@@ -114,7 +110,6 @@ struct SMenuEnableStatus {
 #pragma pack(pop)
 
 extern SMenuEnableStatus gsMenuEnableStatus[KBWIN_MENU_ENTRY_COUNT];
-extern int gbInSetupDialog;
 
 #pragma pack(push, 1)
 struct WindowTextEntry {
@@ -134,6 +129,8 @@ void AppExit(void);
 void CleanUpMenus(void);
 void UpdateSystemOptionsMenu(void);
 short GetCPUType(void);
+// CPUSpeed's PIT-timed divide loop (CPUSPEED.cpp).
+short TimeProcessor(void);
 void SetGameDefaults(void);
 void ReadPrefsFromFile(void);
 void ReadPrefsFromRegistry(void);

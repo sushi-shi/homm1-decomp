@@ -2,15 +2,15 @@
 
 #include <match.h>
 
-#include <H1/All.h>
-#include <H1/KB.h>
+#include <BASE/Icon2b.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
-#include <BASE/Icon2b.h>
 #include <BASE/palette.h>
-#include <SOURCE/NOOPT.h>
+#include <H1/All.h>
+#include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/NOOPT.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -405,7 +405,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             if (targetArmy->m_stats.attributes & 2)
                 targetArmy->m_stats.attributes -= 2;
             targetArmy->m_spellEffect = 6;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 5:
@@ -415,7 +415,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 4;
             targetArmy->m_spellEffect = 5;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 8:
@@ -424,7 +424,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(8, 0);
             targetArmy->m_damageMode = 3;
             targetArmy->m_spellEffect = 8;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 9:
@@ -432,37 +432,37 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(9, 0);
             targetArmy->SpellEffect(9, 0);
             targetArmy->m_spellEffect = 9;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->m_stats.defense += 3;
             targetArmy->Stand(1);
             break;
         case 10:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(10, 0);
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 10;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 14:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(14, 0);
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(14, 0);
             targetArmy->m_spellEffect = 14;
-            targetArmy->m_unknown52 = 1;
+            targetArmy->m_spellEndCondition = 1;
             targetArmy->Stand(1);
             break;
         case 18:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(18, 0);
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 18;
-            targetArmy->m_unknown52 = 2;
+            targetArmy->m_spellEndCondition = 2;
             targetArmy->Stand(1);
             break;
         case 7:
@@ -472,11 +472,11 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_stats.speed = 0;
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 7;
-            targetArmy->m_unknown52 = 2;
+            targetArmy->m_spellEndCondition = 2;
             targetArmy->Stand(1);
             break;
         case 11:
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(11, 0);
             targetArmy->m_powFrames = 5;
             targetArmy->PowEffect(0);
@@ -489,7 +489,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(12, 0);
             targetArmy->m_spellEffect = 12;
-            targetArmy->m_unknown52 = 3;
+            targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
         case 0:
@@ -508,7 +508,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             DefaultSpell(targetHex);
             break;
     }
-    if (targetArmy && targetArmy->m_unknown52 >= 0) {
+    if (targetArmy && targetArmy->m_spellEndCondition >= 0) {
         if (castByCreature)
             targetArmy->m_spellRounds = 3;
         else
@@ -528,9 +528,9 @@ void combatManager::DefaultSpell(signed char targetHex)
     if (!ValidHex(targetHex) || m_hexCells[targetHex].m_occupantSide < 0)
         return;
     target = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
-    target->m_unknown09 = 1;
+    target->m_animationFrame = 1;
     target->SpellEffect(m_selectedSpell, 0);
-    target->m_unknown09 = 2;
+    target->m_animationFrame = 2;
     target->SpellEffect(m_selectedSpell, 0);
     target->Stand(1);
 }
@@ -547,7 +547,7 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
     short fileId;
     int startSide;
 
-    m_unknown727 = m_unknown72b = 0;
+    m_computeExtent = m_redrawExtent = 0;
     fileId = MAKEFILEID(gCombatFxNames[13]);
     if (fileId != gCurLoadedSpellFileId) {
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
@@ -567,13 +567,13 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
                 && m_armies[side][armyIndex].m_creatureType != 0x17) {
                 if (!cureOnly) {
                     if (m_armies[side][armyIndex].m_spellEffect != -1)
-                        m_armies[side][armyIndex].m_unknown08 = 3;
+                        m_armies[side][armyIndex].m_animationSequence = 3;
                 } else if (cureOnly == 1) {
                     if (m_armies[side][armyIndex].m_spellEffect == 6 || m_armies[side][armyIndex].m_spellEffect == 7
                         || m_armies[side][armyIndex].m_spellEffect == 10
                         || m_armies[side][armyIndex].m_spellEffect == 14
                         || m_armies[side][armyIndex].m_spellEffect == 18)
-                        m_armies[side][armyIndex].m_unknown08 = 3;
+                        m_armies[side][armyIndex].m_animationSequence = 3;
                 }
             }
         }
@@ -606,8 +606,8 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
 
     for (i = 0; i < m_numArmies[side]; i++) {
         curArmy = &m_armies[side][i];
-        curArmy->m_unknown08 = 0;
-        curArmy->m_unknown09 = 1;
+        curArmy->m_animationSequence = 0;
+        curArmy->m_animationFrame = 1;
         if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13 && curArmy->m_creatureType != 0x17) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {

@@ -31,7 +31,7 @@ sample::sample(char* name, long channelType, long volume, long loopCount)
     m_playbackData.loopCount = loopCount;
     int stereo = SAMPLE_LOAD_STEREO;
     strcpy(fileName, name);
-    _strrev(fileName);
+    strrev(fileName);
     for (int i = 0; i < SAMPLE_FORMAT_SUFFIX_LENGTH; i++) {
         switch (fileName[i]) {
             case '1':
@@ -61,4 +61,14 @@ sample::sample(char* name, long channelType, long volume, long loopCount)
     m_playbackData.size = size;
     gpResourceManager->PointToFile(m_id);
     gpResourceManager->ReadBlock(m_playbackData.data, size);
+}
+
+// Retail has no out-of-line ~sample: the scalar deleting destructor at
+// 0x0047fbe0 expands this body between the vptr reset and ~resource.
+VA_COMPGEN(0x0047fbe0, 0x3b, "??_Gsample@@UAEPAXI@Z", 0x0047fa60)
+inline sample::~sample()
+{
+    free(m_playbackData.data);
+    m_playbackData.size = 0;
+    m_playbackData.volume = 0;
 }

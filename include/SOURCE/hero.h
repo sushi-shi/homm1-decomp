@@ -4,9 +4,9 @@
 // 34 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
-#include <SOURCE/artifactTypes.h>
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/artifactTypes.h>
 
 // forward declarations:
 class town;
@@ -48,8 +48,11 @@ public:
     char m_name[0x11];
     // UpdBottomViewHero copies this 8-character label into its name widget.
     char m_shortName[9];
-    signed char m_unknown1c;
-    char m_unknown1d;
+    // Indexes gClassNames, gMinExpForLevel and the class crest frames;
+    // combat copies it to m_heroType.
+    signed char m_heroClass;
+    // port%04d.icn portrait number.
+    char m_portrait;
     signed char m_x;
     signed char m_y;
     signed char m_destinationX;
@@ -134,7 +137,6 @@ extern char* gStatNames[];
 extern char* gStatDesc[];
 extern char* gArtifactDesc[];
 extern char* gClassNames[];
-extern char* gArtifactNames[];
 extern char* cHeroScreen[];
 void UpdateHeroScreenStatusBar(short);
 extern class hero* gpHVHero;

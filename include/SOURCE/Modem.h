@@ -55,5 +55,9 @@ void Connect(void);
 signed char GUIModemResponse(char*, char*);
 int write_buffer(char*, int);
 int read_byte(void);
+// Modem.cpp's wait-loop steps that KB's WaitHandler drives.
+signed char GUIModemCommandExec(void);
+signed char GUIModemResponseExec(void);
+int WaitForDirectConnect(void);
 
 #endif // HOMM1_SOURCE_MODEM_H

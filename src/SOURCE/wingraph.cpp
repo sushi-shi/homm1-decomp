@@ -544,7 +544,7 @@ void DDSD(int error, char* file, int line) {
 VA(0x00404673, 0x11c)
 void DDUpdatePalette(signed char* paletteData) {
     int entry;
-    long result0;
+    long res;
 
     if (gbWinGraphBusy != 0)
         return;
@@ -567,14 +567,14 @@ void DDUpdatePalette(signed char* paletteData) {
         "D:\\Heroes\\Source\\wingraph.cpp",
         gDDUpdatePaletteLineBase + 18
     );
-    result0 = lpDDPal->SetEntries(
+    res = lpDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
-    if (result0 != 0)
-        DDSD(result0, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
+    if (res != 0)
+        DDSD(res, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
 }
 
 // donor PoL RVA 0x00036539; preferred Buka symbol ?DDCleanUpWinGraphics@@YIXXZ
@@ -714,7 +714,7 @@ void WGInitGraphics() {
 
     if (hdcImage != 0)
         return;
-    if (WinGRecommendDIBFormat(static_cast<BITMAPINFO*>(static_cast<void*>(&screenImage)))) {
+    if (WinGRecommendDIBFormat(reinterpret_cast<LPBITMAPINFO>(&screenImage))) {
         screenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
         screenImage.header.biCompression = BI_RGB;
         Orientation = screenImage.header.biHeight;
@@ -735,7 +735,7 @@ void WGInitGraphics() {
     screenImage.header.biHeight = -WINGRAPH_HEIGHT;
     bitmap = WinGCreateBitmap(
         hdcImage,
-        static_cast<BITMAPINFO*>(static_cast<void*>(&screenImage)),
+        reinterpret_cast<LPBITMAPINFO>(&screenImage),
         &screenImage.bits
     );
     screenImage.header.biSizeImage = screenImage.header.biHeight * screenImage.header.biWidth;
@@ -773,7 +773,7 @@ void WGUpdatePalette(signed char* paletteData) {
     );
     if (hpalApp != 0)
         DeleteObject(hpalApp);
-    hpalApp = CreatePalette(static_cast<LOGPALETTE*>(static_cast<void*>(&LogicalPalette)));
+    hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
     dc = GetDC(hwndApp);
     if (hpalApp != 0)
         SelectPalette(dc, hpalApp, 0);
@@ -845,7 +845,7 @@ void WGInitializePalette() {
         screenImage.colors[i].rgbReserved = 0;
         LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
     }
-    hpalApp = CreatePalette(static_cast<LOGPALETTE*>(static_cast<void*>(&LogicalPalette)));
+    hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
 }
 
 // Buka 2.1 supplies the WinG paint sequence and local lifetimes. HoMM1's

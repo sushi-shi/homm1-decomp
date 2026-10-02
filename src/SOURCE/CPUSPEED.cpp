@@ -6,8 +6,6 @@
 
 #include <SOURCE/kbwin.h>
 
-short TimeProcessor(void);
-
 // The 800-instruction divide loop TimeProcessor clocks against PIT channel 2.
 #define DIV_BX __asm div bx
 #define DIV_BX_10 DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX
@@ -17,6 +15,8 @@ short TimeProcessor(void);
 
 // Expected PIT ticks for 800 divides at the family's reference clock, scaled
 // by the measured ticks to MHz.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00472030, 0x1c9)
 int CPUSpeed(unsigned char cpuType)
 {
@@ -45,7 +45,7 @@ int CPUSpeed(unsigned char cpuType)
         freq = ticks / TimeProcessor() * 66.0;
         break;
     }
-    return (int)((freq + 0.5) * 100.0) / 100;
+    return static_cast<int>((freq + 0.5) * 100.0) / 100;
 }
 
 // Family 3 when EFLAGS.AC cannot toggle, 4 when EFLAGS.ID cannot toggle,

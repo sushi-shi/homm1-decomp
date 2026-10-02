@@ -4,10 +4,6 @@
 
 #include <match.h>
 
-// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
-// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
-#include <mss.h>
-
 #include <BASE/soundmgr.h>
 
 #include <windows.h>
@@ -19,6 +15,9 @@
 #include <SOURCE/NOOPT.h>
 
 #include <io.h>
+// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
+// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
+#include <mss.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -100,7 +99,7 @@ void soundManager::CDStop(void) {
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != 0)
         HandleMCIError(nMCIError, CommandString);
-    if (strcmpi(lpszReturnString, "stopped") != 0) {
+    if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, position, sizeof(position), NULL);
         if (nMCIError != 0)
@@ -119,7 +118,7 @@ inline int soundManager::CDIsPlaying(void) {
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != 0)
         HandleMCIError(nMCIError, CommandString);
-    return strcmpi(lpszReturnString, "playing") == 0;
+    return _stricmp(lpszReturnString, "playing") == 0;
 }
 
 VA(0x00477110, 0xd7)
@@ -204,7 +203,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != 0)
         HandleMCIError(nMCIError, CommandString);
-    if (strcmpi(lpszReturnString, "stopped") != 0) {
+    if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, buffer, sizeof(buffer), NULL);
         if (nMCIError != 0)
@@ -488,10 +487,11 @@ struct _SAMPLE* soundManager::StartSample(
         if (m_musicStreamOpen != 0) {
             StopSample(m_musicSample);
             m_musicStreamOpen = 0;
+            // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
             ProcessAssert(
                 reinterpret_cast<int>(
                     m_midiFile
-                ), // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
+                ),
                 gStartSampleAssertFile,
                 gStartSampleAssertLine + 37
             );
@@ -576,10 +576,11 @@ void soundManager::StopAllSamples(void) {
         CDStop();
     } else if (m_musicStreamOpen != 0) {
         m_musicStreamOpen = 0;
+        // byte-evidenced: retail passes the FILE pointer as its assertion condition.
         ProcessAssert(
             reinterpret_cast<int>(
                 m_midiFile
-            ), // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+            ),
             gStopAllSamplesAssertFile,
             gStopAllSamplesAssertLine + 27
         );
@@ -779,10 +780,11 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
         && ((m_currentTrack >= 0 && m_currentTrack < MUSIC_POSITION_TRACK_END)
             || m_currentTrack == MUSIC_POSITION_TRACK_1 || m_currentTrack == MUSIC_POSITION_TRACK_2
             || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
+        // byte-evidenced: retail passes the FILE pointer as its assertion condition.
         ProcessAssert(
             reinterpret_cast<int>(
                 m_midiFile
-            ), // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+            ),
             gAmbientMusicAssertFile,
             gAmbientMusicAssertLine + 37
         );
@@ -1110,3 +1112,43 @@ int soundManager::MusicPlaying(void) {
         return CDIsPlaying();
     return DigitalReport(m_musicSample, SAMPLE_REPORT_PLAYING);
 }
+
+// Sound-manager data, initialized from retail .data (0x004a0fd0..) and
+// zero-filled MCI/AIL work storage (0x004cc668..).
+DATA(0x004a0fd0) SampleChannelStruct SCS[4] = {
+    {0, 1, 0},
+    {1, 2, 1},
+    {2, 6, 2},
+    {6, 16, 6}
+};
+DATA(0x004a1000) char CDPreviousPosition[60][CD_POSITION_CAPACITY] = {0};
+DATA(0x004a1384) int CDPlayOnce = 0;
+DATA(0x004a138c) int CDPlaying = 0;
+DATA(0x004a1390) signed char CDTrackMap[100] = {
+    2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+    34, 99, 99, 99, 99, 99, 99, 99, 35, 36, 37, 38, 39, 40, 41, 42,
+    43, 44, 45, 46, 47, 48, 49, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+    99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+    99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+    99, 99, 99, 50
+};
+DATA(0x004a14f8) short gCDPositionAssertLine = 52;
+DATA(0x004a14fc) char gCDPositionAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a1620) int giCDDrive = 0;
+DATA(0x004a1694) short gStartSampleAssertLine = 605;
+DATA(0x004a1698) char gStartSampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a16c8) short gStopAllSamplesAssertLine = 740;
+DATA(0x004a16cc) char gStopAllSamplesAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a16e8) short gModifySampleAssertLine = 808;
+DATA(0x004a16ec) char gModifySampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a1708) short gAdjustMusicAssertLine = 900;
+DATA(0x004a170c) char gAdjustMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a1728) short gAmbientMusicAssertLine = 1008;
+DATA(0x004a172c) char gAmbientMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004cc668) char lpszReturnString[CD_MCI_RESULT_LAST + 1];
+DATA(0x004cc768) unsigned long nMCIError;
+DATA(0x004cc770) short gSampleVolumes[SAMPLE_VOLUME_TABLE_BYTES / sizeof(short)];
+DATA(0x004cc7b0) char CommandString[256];
+DATA(0x004cc8b0) AUXCAPSA gAuxCaps;
+DATA(0x004cc8e0) PCMWAVEFORMAT gWaveFormat;

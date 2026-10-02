@@ -99,7 +99,9 @@ public:
     // ControlPanel's scenario-info choice shows the campaign when positive.
     int m_campaignType;
     int m_campaignScenario;
-    int m_unknown000b;
+    // Incremented per campaign victory; names the SCENWN%02d save and picks
+    // the campaign-info frame.
+    int m_campaignScenariosWon;
     // InitEntireCampaign starts it at 1; InitCampaignMap derives the
     // calendar from it.
     int m_campaignDay;
@@ -164,8 +166,10 @@ public:
     short m_viewSpellsTop;
     short (*m_viewSpellsCallback)(struct tag_message&);
     signed char m_viewSpellsReadOnly;
-    // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 trigger cell.
-    signed char m_unknown16e79;
+    // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 (map hero)
+    // trigger cell. While set, every player starts with a town hero;
+    // otherwise the map's heroes are processed.
+    signed char m_noMapHeroes;
     hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
@@ -277,7 +281,7 @@ public:
     int ExperienceValueOfStack(class armyGroup*, class hero*);
     // HoMM1 retail: hero and army only (ret 8).
     int GetLuck(class hero*, class army*);
-    int GetPlayerCrest(int player) { return m_players[player].m_unknown11; }
+    int GetPlayerCrest(int player) { return m_players[player].m_color; }
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
     void ShowComputerScreen(void);
@@ -337,7 +341,11 @@ public:
 };
 #pragma pack(pop)
 
-extern game* gpGame;
 // Recomputes a player's ultimate-artifact hint (cdecl, int player).
 void ComputeUALoc(int);
+// GAME's dialog handlers and the standard-game day score ShowCongrats files.
+short ViewSpellsHandler(struct tag_message&);
+short ViewSpecialHandler(struct tag_message&);
+short ViewArmyHandler(struct tag_message&);
+int GetBaseScore(int);
 #endif // HOMM1_SOURCE_GAME_H

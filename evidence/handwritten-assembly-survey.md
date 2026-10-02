@@ -137,10 +137,11 @@ The six small icon bodies are strongly corroborated by calls from cursor
 and map rendering and the icon wrappers. They share scratch identities
 `0xa1808` through `0xa1818`. The dimming pair reads destination pixels
 through the palette table and advances rows by a literal `0x280` (640).
-The reconstructed `Icon2b`, `Iconf2b`, `Iconm2b`, `Iconmf2b`, `Icond2b`, and
-`Icondf2b` modules match all six retail bodies and their relocations exactly.
-Their claims end at the final `ret`; the following `NOP`/`INT3` bytes remain
-linker partition padding outside the functions.
+The reconstructed `Icon2b` module (formerly six modules) matches all six
+retail bodies and their relocations exactly. Their claims end at the final
+`ret`. The single `NOP` between bodies is the module's own `EVEN` fill, and the
+`INT3` after the last body is linker fill. That object composition is recorded
+in [link layout](link-layout.md).
 The clipped pair is a later priority: about 600 bytes each and 41 HIGHLOW
 sites per body, with additional shared clipping state.
 
