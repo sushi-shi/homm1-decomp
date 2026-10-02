@@ -296,7 +296,126 @@ void advManager::GetCursorSampleSet(int sampleSet) {
 // evidence: graph:7;base=0.528946;margin=1.360342;shape=0.339;size=0.921;calls=0.947;alternate=pol20:class mapCell * advManager::DoAdvCommand(void)@0x0005751b
 VA(0x004268d5, 0x619)
 class mapCell* advManager::DoAdvCommand(void) {
-    return 0;
+    signed char moveDone;
+    town* viewTown;
+    signed char bMoveStopped0;
+    hero* selectedHero15;
+    int oldMapValid;
+    tag_message messageValue8;
+    signed char newHover3;
+    mapCell* eventCellState16;
+    int moveChanged;
+    short pathIndex;
+
+    eventCellState16 = 0;
+    selectedHero15 = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    bMoveStopped0 = 0;
+    newHover3 = 0;
+    switch (m_selectedCell) {
+    case 1:
+        selectedHero15->m_destinationX = m_commandTargetX;
+        selectedHero15->m_destinationY = m_commandTargetY;
+        goto continue_route;
+    case 7:
+    continue_route:
+        gpSearchArray->BuildPath(
+            selectedHero15->m_x,
+            selectedHero15->m_y,
+            selectedHero15->m_destinationX,
+            selectedHero15->m_destinationY,
+            999
+        );
+        if (gpSearchArray->m_pathLength > 0) {
+            oldMapValid = m_routeShown;
+            MobilizeCurrHero(1);
+            if (gConfig.showRoute || oldMapValid)
+                ShowRoute(0, 0, 0);
+            else if (m_routeShown && m_selectedCell != 7)
+                HideRoute(1, 0, 1);
+            gpMouseManager->ReallyHidePointer();
+            gpInputManager->Flush();
+            for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
+                eventCellState16 = MoveHero(
+                    gpSearchArray->m_directions[pathIndex],
+                    pathIndex == 0,
+                    &TrigX,
+                    &TrigY,
+                    &moveChanged,
+                    0,
+                    &moveDone
+                );
+                UpdateHeroLocator(-1, 1, 1);
+                if (eventCellState16)
+                    break;
+                if (moveChanged || moveDone)
+                    goto movement_done;
+                messageValue8 = gpInputManager->GetEvent();
+                while (messageValue8.type) {
+                    if (messageValue8.type == 1 || messageValue8.type == 8 || messageValue8.type == 0x20
+                        || messageValue8.type == 0x200) {
+                        bMoveStopped0 = 1;
+                        StopCursor(1);
+                        goto movement_done;
+                    }
+                    Process1WindowsMessage();
+                    messageValue8 = gpInputManager->GetEvent();
+                }
+            }
+        movement_done:
+            if ((pathIndex <= 0 && selectedHero15->m_x == selectedHero15->m_destinationX
+                 && selectedHero15->m_y == selectedHero15->m_destinationY)
+                || (bMoveStopped0 && !gConfig.showRoute) || eventCellState16)
+                HideRoute(1, 1, 1);
+            else if (m_selectedCell == 7 || gConfig.showRoute)
+                ShowRoute(0, 1, 1);
+            gpMouseManager->ReallyShowPointer();
+            UpdBottomView(1, 1, 1);
+            if (eventCellState16) {
+                StopCursor(1);
+                DoEvent(eventCellState16, TrigX, TrigY);
+                eventCellState16 = 0;
+            }
+            Reseed(0, 0);
+            newHover3 = 1;
+            CheckDimHero();
+        }
+        break;
+    case 6:
+        DemobilizeCurrHero();
+        gpMouseManager->SetPointer(0);
+        viewTown = gpGame->GetTown(selectedHero15->m_occupiedTown);
+        viewTown->View();
+        eventCellState16 = 0;
+        break;
+    case 3:
+        DemobilizeCurrHero();
+        gpMouseManager->SetPointer(0);
+        eventCellState16 = GetCell(
+            gpGame->GetTown(gpCurPlayer->m_currentTown)->m_x, gpGame->GetTown(gpCurPlayer->m_currentTown)->m_y
+        );
+        gpGame->GetTown(gpCurPlayer->m_currentTown)->View();
+        eventCellState16 = 0;
+        break;
+    case 2:
+        gpMouseManager->SetPointer(0);
+        gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
+        RedrawAdvScreen(1);
+        gpWindowManager->FadeScreen(0, 8, 0);
+        break;
+    case 4:
+        SetHeroContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata, 0);
+        break;
+    case 5:
+        SetTownContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata);
+        break;
+    case -1:
+        break;
+    }
+    m_selectedCell = -1;
+    m_lastHoverCell = m_hoverCellY = -1;
+    if (newHover3)
+        ForceNewHover();
+    return eventCellState16;
 }
 
 // donor PoL RVA 0x00057d6c; preferred Buka symbol ?Main@advManager@@UAEHAAUtag_message@@@Z

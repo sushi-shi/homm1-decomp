@@ -382,4 +382,7 @@ extern int giFrameCount;
 extern short gRadarOwnerColor[];
 extern short gRadarTerrainColor[];
 void ComputeUALoc(int);
+// DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
+extern int TrigX;
+extern int TrigY;
 #endif // HOMM1_SOURCE_ADVMANAGER_H
