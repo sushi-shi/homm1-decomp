@@ -488,9 +488,9 @@ signed char game::NewGame(void) {
     SetWinText(m_newGameWindow, 7);
     if (gbNewGameSettingsSaved) {
         gpGame->m_difficulty = gcSavedDifficulty;
-        m_players[1].m_color = gcSavedPlayerTypes[1];
-        m_players[2].m_color = gcSavedPlayerTypes[2];
-        m_players[3].m_color = gcSavedPlayerTypes[3];
+        m_players[1].m_difficulty = gcSavedPlayerTypes[1];
+        m_players[2].m_difficulty = gcSavedPlayerTypes[2];
+        m_players[3].m_difficulty = gcSavedPlayerTypes[3];
         gbKingOfTheHill = gbSavedKingOfTheHill;
         m_players[0].m_unknown11 = gcSavedCrest;
     }
@@ -525,9 +525,9 @@ signed char game::NewGame(void) {
     strcpy(m_mapName, gFullMapName);
     gbNewGameSettingsSaved = 1;
     gcSavedDifficulty = gpGame->m_difficulty;
-    gcSavedPlayerTypes[1] = m_players[1].m_color;
-    gcSavedPlayerTypes[2] = m_players[2].m_color;
-    gcSavedPlayerTypes[3] = m_players[3].m_color;
+    gcSavedPlayerTypes[1] = m_players[1].m_difficulty;
+    gcSavedPlayerTypes[2] = m_players[2].m_difficulty;
+    gcSavedPlayerTypes[3] = m_players[3].m_difficulty;
     gbSavedKingOfTheHill = gbKingOfTheHill;
     gcSavedCrest = m_players[0].m_unknown11;
     NewMap(gMapName);
@@ -586,12 +586,12 @@ void game::InitCampaignMap(int scenario, int) {
     giCurTurn = (m_month - 1) * 28 + (m_week - 1) * 7 + m_day;
     gbKingOfTheHill = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
-    m_players[0].m_color = 4;
+    m_players[0].m_difficulty = 4;
     m_players[0].m_unknown11 = gCampaignSideCrests[m_campaignType][0];
     m_playerCount = 1;
     for (i = 1; i < 4; i++) {
-        m_players[i].m_color = gCampaignScenarios[scenario].playerTypes[i];
-        if (m_players[i].m_color)
+        m_players[i].m_difficulty = gCampaignScenarios[scenario].playerTypes[i];
+        if (m_players[i].m_difficulty)
             m_playerCount++;
     }
     giNumHumanPlayers = 1;

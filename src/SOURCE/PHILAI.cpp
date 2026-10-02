@@ -490,8 +490,8 @@ void philAI::DoAI(int player) {
         while (!moveDone && aiHero->m_remainingMobility >= 4) {
             if (gbGameOver)
                 return;
-            if (aiHero->m_remainingMobility == aiHero->m_mobility && gpCurPlayer->m_unknown52 > 15
-                && gpCurPlayer->m_unknown53 == aiHero->m_x && gpCurPlayer->m_unknown54 == aiHero->m_y)
+            if (aiHero->m_remainingMobility == aiHero->m_mobility && gpCurPlayer->m_ultimateArtifactHintChance > 15
+                && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x && gpCurPlayer->m_ultimateArtifactHintY == aiHero->m_y)
                 gpAdvManager->ProcessSearch(aiHero->m_x, aiHero->m_y);
         retarget:
             DetermineTargetPosition(aiHero, aiHero->m_destinationX, aiHero->m_destinationY, minRV);
@@ -562,9 +562,9 @@ void philAI::DoAI(int player) {
                         halfShown = 1;
                         IncrementHourGlass();
                     }
-                    if (pathIndex < 0 && gpCurPlayer->m_unknown52 > 15
-                        && gpCurPlayer->m_unknown53 == aiHero->m_x
-                        && gpCurPlayer->m_unknown54 == aiHero->m_y) {
+                    if (pathIndex < 0 && gpCurPlayer->m_ultimateArtifactHintChance > 15
+                        && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x
+                        && gpCurPlayer->m_ultimateArtifactHintY == aiHero->m_y) {
                         if (aiHero->m_mobility == aiHero->m_remainingMobility)
                             gpAdvManager->ProcessSearch(-1, -1);
                         else
@@ -905,7 +905,7 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                                      && giGroundToTerrain[thisCell->m_tileIndex] == 0)
                                     || (!(pHero->m_eventFlags & 0x80)
                                         && giGroundToTerrain[thisCell->m_tileIndex] != 0)))
-                            || (x == gpCurPlayer->m_unknown53 && y == gpCurPlayer->m_unknown54);
+                            || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
                 if (valid) {
                     for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
@@ -1724,7 +1724,7 @@ int philAI::RVOfPosition(
             break;
         }
     }
-    if ((triggerType2 & 0x80) || (x == gpCurPlayer->m_unknown53 && y == gpCurPlayer->m_unknown54))
+    if ((triggerType2 & 0x80) || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY))
         eventValue7 = ValueOfEventAtPosition(pHero, x, y, eventMode, &primaryEventChance4);
     else
         eventValue7 = 0;
@@ -2037,7 +2037,7 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
                     countMod0 = -0.1f;
                 else
                     countMod0 = -0.14f;
-                if ((gMonsterDatabase[group->m_creatureTypes[slot]].attributes & 4)
+                if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes & 4)
                     || group->m_creatureTypes[slot] == 12 || group->m_creatureTypes[slot] == 24)
                     countMod0 = countMod0 * 0.7;
                 else if (group->m_creatureTypes[slot] == 20)
@@ -2444,12 +2444,12 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
                 if (fromArmy->m_creatureTypes[i] != -1) {
                     stackFV = gMonsterDatabase[fromArmy->m_creatureTypes[i]].fightValue
                               * fromArmy->m_creatureCounts[i];
-                    if ((toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed > speedLimit)
-                        || (!toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed < speedLimit)) {
-                        speedLimit = gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed;
+                    if ((toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed > speedLimit)
+                        || (!toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed < speedLimit)) {
+                        speedLimit = gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed;
                         bestValue15 = stackFV;
                         slot6 = i;
-                    } else if (gMonsterDatabase[fromArmy->m_creatureTypes[i]].speed == speedLimit
+                    } else if (gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed == speedLimit
                                && bestValue15 < stackFV) {
                         bestValue15 = stackFV;
                         slot6 = i;
@@ -3440,8 +3440,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         iEventRV = 0;
         break;
     default:
-        if (gpCurPlayer->m_unknown52 > 15 && gpCurPlayer->m_unknown53 == x && gpCurPlayer->m_unknown54 == y) {
-            iEventRV = (gpCurPlayer->m_unknown52 - 15) * gUltArtifactAvgValue / 100;
+        if (gpCurPlayer->m_ultimateArtifactHintChance > 15 && gpCurPlayer->m_ultimateArtifactHintX == x && gpCurPlayer->m_ultimateArtifactHintY == y) {
+            iEventRV = (gpCurPlayer->m_ultimateArtifactHintChance - 15) * gUltArtifactAvgValue / 100;
         } else {
             iDefaultEventType = pEventCell->m_triggerType & 0x7f;
             if (iDefaultEventType >= 49 && iDefaultEventType <= 60)

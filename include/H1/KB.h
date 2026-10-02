@@ -172,6 +172,9 @@ void GetDataEntry(char*, char*, int, char*);
 short DataEntryWindowHandler(struct tag_message&);
 short EventWindowHandler(struct tag_message&);
 short TrueFalseDialogHandler(struct tag_message&);
+// HoMM1 town-name lookup by town id (retail 0x00455aaf); the inline
+// game::GetTown narrows the id, hence retail's movsx after jmp $+5.
+char* GetTownName(int);
 void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char);
 void ShutDown(char*);
 void HandleRemoteDeadPlayerExit(int);
