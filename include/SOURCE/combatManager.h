@@ -21,10 +21,39 @@ class town;
 struct SBolt;
 struct tag_message;
 
-// Buka's combat command/pointer domain, narrowed to the two values used by
-// HoMM1 GetPointer; retail compares command 13 and returns pointer 5.
+// Buka's CombatMessageCommand: GetCommand derives one from the hovered hex
+// and DoCommand runs it (move, fly, shoot, own and opposing hero options,
+// view, attack, spell book, retreat, surrender).
+H1_ENUM_BEGIN(CombatMessageCommand)
+    COMBAT_INVALID_COMMAND = -99,
+    COMBAT_MESSAGE_COMMAND_DEFAULT = 0,
+    COMBAT_MESSAGE_COMMAND_MOVE = 1,
+    COMBAT_MESSAGE_COMMAND_FLY = 2,
+    COMBAT_MESSAGE_COMMAND_SHOOT = 3,
+    COMBAT_MESSAGE_COMMAND_OPTIONS = 4,
+    COMBAT_MESSAGE_COMMAND_VIEW_INFO = 5,
+    COMBAT_MESSAGE_COMMAND_ATTACK = 7,
+    COMBAT_MESSAGE_COMMAND_CAST_SPELL = 10,
+    COMBAT_MESSAGE_COMMAND_RETREAT = 11,
+    COMBAT_MESSAGE_COMMAND_SURRENDER = 12,
+    COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13
+H1_ENUM_END(CombatMessageCommand)
+
+// Buka's CombatAction: the queued giNextAction that the combat loop
+// executes; DoCommand, the spell book and the skip button set it.
+H1_ENUM_BEGIN(CombatAction)
+    ACTION_NONE = 0,
+    ACTION_CAST_SPELL = 1,
+    ACTION_MOVE = 2,
+    ACTION_SKIP_TURN = 3,
+    ACTION_RETREAT = 4,
+    ACTION_SURRENDER = 5,
+    ACTION_ATTACK = 6
+H1_ENUM_END(CombatAction)
+
+// The combat pointer frame GetPointer returns for a command; retail maps
+// the opposing-options command to the view pointer.
 H1_ENUM_BEGIN(CombatPointerCode)
-    COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13,
     COMBAT_POINTER_VIEW = 5
 H1_ENUM_END(CombatPointerCode)
 
@@ -250,7 +279,7 @@ public:
     signed char ValidHexToStandOn(int);
     void SetCombatDirections(int);
     void CheckSetMouseDirection(int, int, int);
-    H1_ENUM_RETURN(CombatPointerCode, int) GetPointer(H1_ENUM_PARAM(CombatPointerCode, int));
+    H1_ENUM_RETURN(CombatPointerCode, int) GetPointer(H1_ENUM_PARAM(CombatMessageCommand, int));
     int ProcessCombatMsg(struct tag_message &);
     int IsNegationSphereInEffect(void);
     void ResetRound(void);
@@ -382,7 +411,7 @@ extern int iCurTransferArtifact;
 // DoSurrender: gold the enemy hero asks for (0x004a4bac).
 extern int giSurrenderCost;
 // The queued combat action and its grid/extra arguments (0x004a4bc0..).
-extern int giNextAction;
+extern H1_ENUM_STORAGE(CombatAction, int) giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;

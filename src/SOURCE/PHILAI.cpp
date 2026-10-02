@@ -207,15 +207,15 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
 
     bestDirection = -1;
     maxValue = 100;
-    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & 0x7f) == 0x29)
+    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_STONE_LITHS)
         return 0;
     for (dirIndex = 0; dirIndex < 8; dirIndex++) {
         if (gpAdvManager->ValidMoveWithEvent(pHero, dirIndex)) {
             x = normalDirTable[dirIndex].x + pHero->m_x;
             y = normalDirTable[dirIndex].y + pHero->m_y;
-            if ((gpAdvManager->GetCell(x, y)->m_triggerType & 0x80) && !(mapExtra[x][y] & 0x80)
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x29
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x2c) {
+            if ((gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_EVENT) && !(mapExtra[x][y] & 0x80)
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_STONE_LITHS
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WHIRLPOOL) {
                 value = ValueOfEventAtPosition(pHero, x, y, 2, &iChance);
                 if (iChance > 80 && value > maxValue) {
                     maxValue = value;
@@ -329,12 +329,12 @@ void philAI::CheckBerserk(hero* pHero) {
         for (y = 0; y < 72; y++) {
             cell = gpAdvManager->GetCell(x, y);
             switch (cell->m_triggerType) {
-            case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+            case 0xa8:
                 if (gpGame->m_townOwners[cell->m_objectMetadata] != pHero->m_owner) {
                     if (gpGame->m_townOwners[cell->m_objectMetadata] != -1) {
                         enemy = FightValueOfStack(
                             &gpGame->GetTown(cell->m_objectMetadata)->m_army,
-                            NULL,
+                            0,
                             1,
                             1,
                             cell->m_objectMetadata
@@ -346,14 +346,14 @@ void philAI::CheckBerserk(hero* pHero) {
                     }
                 }
                 break;
-            case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
+            case 0xbd:
                 if (gpGame->m_availableHeroes[cell->m_objectMetadata] != pHero->m_owner) {
                     enemyHero = gpGame->GetHero(cell->m_objectMetadata);
                     enemy = FightValueOfStack(
                         &enemyHero->m_army,
-                        NULL,
+                        0,
                         1,
-                        enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN),
+                        enemyHero->m_locationType == 0xa8,
                         enemyHero->m_occupiedTown
                     );
                     if (enemy * 2 > heroFightValue)
@@ -390,7 +390,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         y += normalDirTable[gpSearchArray->m_directions[i]].y;
         if (abs(x - pHero->m_x) <= 7 && abs(y - pHero->m_y) <= 7) {
             cell = gpAdvManager->GetCell(x, y);
-            if (!(cell->m_triggerType & MAP_TRIGGER_EVENT) && !(cell->m_unknown07 & 0x80)) {
+            if (!(cell->m_triggerType & 0x80) && !(cell->m_unknown07 & 0x80)) {
                 bestX = x;
                 bestY = y;
                 length = gpSearchArray->m_pathLength - i;
@@ -404,7 +404,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         pHero->m_remainingMobility = 0;
     else
         pHero->m_remainingMobility -= 12;
-    pHero->UseSpell(SPELL_DIMENSION_DOOR);
+    pHero->UseSpell(27);
     return 1;
 }
 
@@ -896,21 +896,21 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                     if (gpSearchArray->m_cells[x][y].distance > mobility * 2)
                         valid = 0;
                     else
-                        valid = thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) || thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                                || (thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && !(pHero->m_eventFlags & 0x80));
+                        valid = thisCell->m_triggerType == 0xa8 || thisCell->m_triggerType == 0xbd
+                                || (thisCell->m_triggerType == 0xbe && !(pHero->m_eventFlags & 0x80));
                 } else {
-                    valid = (thisCell->m_triggerType & MAP_TRIGGER_EVENT)
-                            || (thisCell->m_triggerType == MAP_OBJECT_COAST && (pHero->m_eventFlags & 0x80))
+                    valid = (thisCell->m_triggerType & 0x80)
+                            || (thisCell->m_triggerType == 0x1f && (pHero->m_eventFlags & 0x80))
                             || (x % spacing == 0 && y % spacing == 0
                                 && (((pHero->m_eventFlags & 0x80)
-                                     && giGroundToTerrain[thisCell->m_tileIndex] == TERRAIN_WATER)
+                                     && giGroundToTerrain[thisCell->m_tileIndex] == 0)
                                     || (!(pHero->m_eventFlags & 0x80)
-                                        && giGroundToTerrain[thisCell->m_tileIndex] != TERRAIN_WATER)))
+                                        && giGroundToTerrain[thisCell->m_tileIndex] != 0)))
                             || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
                 if (valid) {
                     for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
-                        if (thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) && thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                        if (thisCell->m_triggerType != 0xa8 && thisCell->m_triggerType != 0xbd
                             && gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id
                             && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX == x
                             && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY == y) {
@@ -1525,7 +1525,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     best.type = 1;
     best.what = bestHero;
     bestValue = bestCost;
-    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == 0xbd)
+    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))
         bestValue -= 200.0f;
 }
 
@@ -2224,16 +2224,16 @@ int philAI::QuickCombat(
     atkExp = gpGame->ExperienceValueOfStack(attacker, attackerHero);
     defenderExp = gpGame->ExperienceValueOfStack(defender, defenderHero);
     win = 0;
-    winner = NULL;
+    winner = 0;
     ProbableOutcomeOfBattle(
         attacker,
         attackerHero,
         defender,
         defenderHero,
-        NULL,
+        0,
         townBattle,
         townId,
-        defenderHero != NULL ? defenderHero->m_owner : -1,
+        defenderHero != 0 ? defenderHero->m_owner : -1,
         winChance,
         aDead,
         dDead,
@@ -2259,22 +2259,22 @@ int philAI::QuickCombat(
     if (wChance > 0.96 && fracLost > (1.0f - wChance) / 2.0f)
         fracLost = (1.0f - wChance) / 2.0f;
     if (win != 0) {
-        if (attackerHero != NULL) {
+        if (attackerHero != 0) {
             gpAdvManager->GiveExperience(attackerHero, defenderExp, 1);
             attackerHero->ApplyBattleWinTemps();
         }
         defenderDamage = 1.0f;
         attackerDamage = fracLost;
     } else {
-        if (attackerHero != NULL) {
+        if (attackerHero != 0) {
             attackerHero->m_remainingMobility = 0;
             attackerHero->ApplyBattleLossTemps();
         }
-        if (defenderHero != NULL)
+        if (defenderHero != 0)
             attackerHero->ApplyBattleWinTemps();
         defenderDamage = diff * fracLost;
         attackerDamage = 1.0f;
-        if (attackerDamage >= 0.99 && defenderHero != NULL)
+        if (attackerDamage >= 0.99 && defenderHero != 0)
             gpAdvManager->GiveExperience(defenderHero, defenderExp, 1);
     }
     if (attackerDamage > 0.99)

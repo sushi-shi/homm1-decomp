@@ -1016,8 +1016,8 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     dwellIndex = -1;
     if (building > 6)
         dwellIndex = building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * 6;
-    if (building == BUILDING_SLOT_MAGE_GUILD) {
-        if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+    if (building == 0) {
+        if (m_town->m_buildings & 1)
             iMageLevel = gpTownManager->m_town->m_buildState + 1;
         else
             iMageLevel = 0;
@@ -1121,7 +1121,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         binSize = 7;
     sprintf(gText, "buybuil%d.bin", binSize);
     nBuildWindow = new heroWindow(0xb1, 0x10, gText);
-    if (nBuildWindow == NULL)
+    if (nBuildWindow == 0)
         MemError();
     SetWinText(nBuildWindow, 1);
     iEvt.type = MESSAGE_WIDGET;
@@ -1132,7 +1132,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     else
         iEvt.value = building + 1;
     nBuildWindow->BroadcastMessage(iEvt);
-    if (building == BUILDING_SLOT_MAGE_GUILD)
+    if (building == 0)
         sprintf(gText, "Mage Guild, Level %d", iMageLevel + 1);
     else
         strcpy(gText, GetBuildingName(building));
@@ -1141,7 +1141,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     iEvt.text = gText;
     nBuildWindow->BroadcastMessage(iEvt);
     descWidget = new textWidget(0x18, baseY, 0xee, (numLines << 4) + 6, descText, "bigfont.fnt", 1, -1, 8);
-    if (descWidget == NULL)
+    if (descWidget == 0)
         MemError();
     nBuildWindow->AddWidget(descWidget, -1);
     resIndex = 0;
@@ -1180,11 +1180,11 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                 sprintf(amountText[resIndex], "%d", prices[resIndex]);
                 amountWidgets[resIndex] = new textWidget(currX, yPos + 32, nEntryWidth, 12, amountText[resIndex],
                                                          "smalfont.fnt", 1, -1, 8);
-                if (amountWidgets[resIndex] == NULL)
+                if (amountWidgets[resIndex] == 0)
                     MemError();
                 resWidgets[resIndex] = new iconWidget(currX, yPos, nEntryWidth, 12, "resource.icn",
                                                       resType[resIndex], 0, -1, 16, 1);
-                if (resWidgets[resIndex] == NULL)
+                if (resWidgets[resIndex] == 0)
                     MemError();
                 nBuildWindow->AddWidget(amountWidgets[resIndex], -1);
                 nBuildWindow->AddWidget(resWidgets[resIndex], -1);
@@ -1198,15 +1198,15 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     m_selectedBuilding = -1;
     if (quickView) {
         iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        iEvt.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        iEvt.value = 6;
         iEvt.id = TOWN_DIALOG_BUTTON_2;
         nBuildWindow->BroadcastMessage(iEvt);
         iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        iEvt.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        iEvt.value = 6;
         iEvt.id = TOWN_DIALOG_BUTTON_1;
         nBuildWindow->BroadcastMessage(iEvt);
         iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        iEvt.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        iEvt.value = 6;
         iEvt.id = 0;
         nBuildWindow->BroadcastMessage(iEvt);
         gpMouseManager->ReallyHidePointer();
@@ -1218,7 +1218,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         if (cannotBuy) {
             iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
             iEvt.id = TOWN_DIALOG_BUTTON_2;
-            iEvt.value = WIDGET_FLAG_ENABLED;
+            iEvt.value = 2;
             nBuildWindow->BroadcastMessage(iEvt);
             iEvt.command = WIDGET_COMMAND_SET_FLAGS;
             iEvt.id = TOWN_DIALOG_BUTTON_2;

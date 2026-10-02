@@ -684,10 +684,10 @@ short NewGameHandler(tag_message& message) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
                 helpIndex = -1;
                 switch (message.id) {
-                    case DIALOG_BUTTON_2:
+                    case 0x7802:
                         helpIndex = 0;
                         break;
-                    case DIALOG_BUTTON_1:
+                    case 0x7801:
                         helpIndex = 1;
                         break;
                     case 0x13:
@@ -730,20 +730,20 @@ short NewGameHandler(tag_message& message) {
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gNewGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog(gNewGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
             }
         } else {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case DIALOG_BUTTON_2:
+                        case 0x7802:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < 4; i++) {
                                 if (gpGame->m_players[i].m_difficulty > 0)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
-                                NormalDialog("A game requires at least one iPlayer.", NORMAL_DIALOG_TYPE_OK, 0xb1, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                                NormalDialog("A game requires at least one iPlayer.", 1, 0xb1, 0x3c, -1, 0, -1, 0, -1);
                                 break;
                             } else {
                                 if (!gpGame->m_players[1].m_difficulty) {
@@ -760,7 +760,7 @@ short NewGameHandler(tag_message& message) {
                                     gpGame->m_players[3].m_difficulty = 0;
                                 }
                             }
-                        case DIALOG_BUTTON_1:
+                        case 0x7801:
                             gpWindowManager->m_dialogResult = message.id;
                             message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
@@ -1307,7 +1307,7 @@ void game::NewMap(char* mapName) {
                     m_map[xTown - 2 + i][yTown - 1].m_objectIndex -= 12;
                     m_map[xTown - 2 + i][yTown].m_objectIndex -= 12;
                 }
-                m_castleRecs[k].m_buildings = (1 << BUILDING_SLOT_TENT);
+                m_castleRecs[k].m_buildings = 0x20;
                 if (m_castleRecs[k].m_type == 2)
                     m_castleRecs[k].m_buildings |= 0x2000;
                 SetupTown(k, 0);
@@ -1320,7 +1320,7 @@ void game::NewMap(char* mapName) {
             heroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
             m_heroRecs[m_players[i].m_heroIds[j]].m_locationType = m_map[heroX][heroY].m_triggerType;
             m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown = m_map[heroX][heroY].m_objectMetadata;
-            m_map[heroX][heroY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
+            m_map[heroX][heroY].m_triggerType = 0xbd;
             m_map[heroX][heroY].m_objectMetadata = m_players[i].m_heroIds[j];
         }
         if (m_players[i].m_heroCount > 0)
@@ -1331,7 +1331,7 @@ void game::NewMap(char* mapName) {
     i = Random(9, 62);
     j = Random(9, 62);
     ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
-    while (m_map[i][j].m_objectIndex != MAP_CELL_NO_FRAME || m_map[i][j].m_overlayIndex != MAP_CELL_NO_FRAME || m_map[i][j].m_tileIndex < 20
+    while (m_map[i][j].m_objectIndex != 0xff || m_map[i][j].m_overlayIndex != 0xff || m_map[i][j].m_tileIndex < 20
            || (giNumHumanPlayers == 1
                && abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
                           + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y)
@@ -1399,7 +1399,7 @@ void game::SettleOverlay(int x, int y) {
     mapCell* cell;
     mapCell* cellEast;
     cell = &m_map[x][y];
-    if (cell->m_objectIndex == MAP_CELL_NO_FRAME && cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
+    if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
         switch (cell->m_triggerType) {
             case 0x35:
             case 0x39:
@@ -1411,7 +1411,7 @@ void game::SettleOverlay(int x, int y) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
-                        cell->m_overlayIndex = MAP_CELL_NO_FRAME;
+                        cell->m_overlayIndex = 0xff;
                     }
                 }
                 break;
@@ -1423,7 +1423,7 @@ void game::SettleOverlay(int x, int y) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
-                        cell->m_overlayIndex = MAP_CELL_NO_FRAME;
+                        cell->m_overlayIndex = 0xff;
                     } else {
                         cell->m_unknown07 |= 0x80;
                     }
@@ -3163,12 +3163,12 @@ void game::PerDay(void) {
     for (i = 0; i < GAME_TOWN_COUNT; i++)
         m_castleRecs[i].m_turnsOwned++;
     for (i = 0; i < m_playerCount; i++)
-        m_players[i].m_resources[6] += ComputeDailyGold(i);
+        m_players[i].m_resources[RESOURCE_GOLD] += ComputeDailyGold(i);
     for (i = 0; i < m_playerCount; i++) {
         if (!gbHumanPlayer[i]) {
             if (gpGame->m_players[i].m_difficulty > 2) {
-                m_players[i].m_resources[0]++;
-                m_players[i].m_resources[2]++;
+                m_players[i].m_resources[RESOURCE_WOOD]++;
+                m_players[i].m_resources[RESOURCE_ORE]++;
             }
             if (gpGame->m_players[i].m_difficulty > 3 && m_day >= 1 && m_day <= 6)
                 m_players[i].m_resources[m_day - 1]++;
@@ -3217,7 +3217,7 @@ void game::PerWeek(void) {
         for (j = 7; j <= 12; j++) {
             if (townPointer->m_buildings & (1 << j)) {
                 gain = gMonsterDatabase[gDwellingType[townPointer->m_type][j - 7]].growth;
-                if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
+                if (townPointer->m_buildings & 0x10)
                     gain += 2;
                 if (townPointer->m_owner >= 0 && !gbHumanPlayer[townPointer->m_owner]) {
                     if (gpGame->m_players[townPointer->m_owner].m_difficulty == 3)
@@ -3242,38 +3242,38 @@ void game::PerWeek(void) {
     for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             switch (m_map[posX][posY].m_triggerType) {
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
+                case 0x98:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata != 0xff)
                         m_map[posX][posY].m_objectMetadata = 2;
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_WINDMILL:
+                case 0xad:
                     m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
+                case 0x8d:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
                         m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
+                case 0x8e:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
                         m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
+                case 0x8f:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
                         m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
+                case 0x90:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
                         m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
+                case 0x91:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
                         m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
+                case 0xa7:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
                         m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(1, 3);
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
+                case 0xaa:
                     if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
                         m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
                     break;
@@ -3949,7 +3949,7 @@ void game::ProcessOnMapHeroes(void) {
     for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
-            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x47) {
+            if ((cell->m_triggerType & 0x7f) == 0x47) {
                 extra = (mapHeroExtra*)ppMapExtra[(unsigned char)cell->m_objectMetadata];
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
@@ -3957,7 +3957,7 @@ void game::ProcessOnMapHeroes(void) {
                     if (theHero->m_army.m_creatureCounts[k] > 0)
                         theHero->m_army.m_creatureTypes[k] = extra->troopTypes[k];
                     else
-                        theHero->m_army.m_creatureTypes[k] = CREATURE_NONE;
+                        theHero->m_army.m_creatureTypes[k] = -1;
                 }
                 for (j = 0; j < 4; j++) {
                     if (extra->artifacts[j] >= 0)
@@ -3978,7 +3978,7 @@ void game::ProcessOnMapHeroes(void) {
                 m_players[theHero->m_owner].m_heroCount++;
                 if (mapY > 0) {
                     north = &m_map[mapX][mapY - 1];
-                    if (north->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                    if (north->m_triggerType == 0xa8) {
                         theHero->m_y--;
                         townId = GetTownId(mapX, mapY - 1);
                         town = GetTown(townId);
@@ -3986,11 +3986,11 @@ void game::ProcessOnMapHeroes(void) {
                     }
                 }
                 cell->m_objectTileset = 0;
-                cell->m_objectIndex = MAP_CELL_NO_FRAME;
+                cell->m_objectIndex = 0xff;
                 cell->m_overlayTileset = 0;
-                cell->m_overlayIndex = MAP_CELL_NO_FRAME;
+                cell->m_overlayIndex = 0xff;
                 cell->m_objectMetadata = 0;
-                cell->m_triggerType = MAP_OBJECT_NONE;
+                cell->m_triggerType = 0;
                 SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gClassVisionRange[theHero->m_unknown1c]);
             }
         }
@@ -4135,7 +4135,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
         ((int*)sendPacket)[1] = playerExited;
         status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
         if (!status)
-            ShutDown(0);
+            ShutDown(NULL);
 
         segCount = (fileSize - 1) / 200 + 1;
         numBlocks = (segCount - 1) / 100 + 1;
@@ -4159,7 +4159,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                         memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
                         status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
                         if (!status)
-                            ShutDown(0);
+                            ShutDown(NULL);
                     }
                 }
                 LogStr("PreWait");
@@ -4167,7 +4167,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
                 LogStr("PostWait");
                 if (!status)
-                    ShutDown(0);
+                    ShutDown(NULL);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
                     if (((RemoteMessage*)incoming)->payload.data[sendPacketIndex] > 0)
                         acked[block * 100 + sendPacketIndex] = 1;
@@ -4179,9 +4179,9 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 }
             }
         }
-        status = TransmitRemoteData(0, remotePlayer, 0, 6, 1, 1, -1, 1);
+        status = TransmitRemoteData(NULL, remotePlayer, 0, 6, 1, 1, -1, 1);
         if (!status)
-            ShutDown(0);
+            ShutDown(NULL);
         okay = 1;
     }
 

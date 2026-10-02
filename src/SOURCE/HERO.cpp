@@ -567,7 +567,7 @@ void hero::Deallocate(void) {
     }
     if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
         || !gpAdvManager->m_heroContextLocked)
-        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, 0, 1);
+        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, NULL, 1);
     if (!gbCombatSurrender) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_army.Dismiss(i);

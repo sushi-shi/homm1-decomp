@@ -30,12 +30,12 @@ strip::strip(short x, short y, signed char stripType, short portraitId,
     if (!m_window)
         MemError();
     if (m_army) {
-        m_borders[0] = new border(5, 6, 101, 93, firstBorderId, 1, 0, NULL);
+        m_borders[0] = new border(5, 6, 101, 93, firstBorderId, 1, 0, 0);
         if (!m_borders[0])
             MemError();
         m_window->AddWidget(m_borders[0], -1);
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            m_borders[i + 1] = new border(i * 88 + 112, 6, 82, 93, i + firstBorderId + 1, 1, 0, NULL);
+            m_borders[i + 1] = new border(i * 88 + 112, 6, 82, 93, i + firstBorderId + 1, 1, 0, 0);
             if (!m_borders[i + 1])
                 MemError();
             m_window->AddWidget(m_borders[i + 1], -1);

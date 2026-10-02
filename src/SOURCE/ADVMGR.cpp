@@ -1073,14 +1073,14 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             } else {
                 if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
                     && m_heroContextLocked) {
-                    cellType = MAP_OBJECT_HERO;
+                    cellType = 0x3d;
                     mapIndex = gpCurPlayer->CurrentHero();
                 } else {
-                    cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                    cellType = hoverCell->m_triggerType & 0x7f;
                     mapIndex = hoverCell->m_objectMetadata;
                 }
                 switch (cellType) {
-                case MAP_OBJECT_HERO:
+                case 0x3d:
                     curX = m_lastHoverCell * 32 - 73;
                     if (curX < 16)
                         curX = 16;
@@ -1093,7 +1093,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         curY = 302;
                     HeroQuickView(mapIndex, -1, curX, curY);
                     break;
-                case MAP_OBJECT_TOWN:
+                case 0x28:
                     curX = m_lastHoverCell * 32 - 89;
                     if (curX < 16)
                         curX = 16;
@@ -1114,7 +1114,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 }
             }
         } else if (isVisible) {
-            hero = NULL;
+            hero = 0;
             mobileResult = 0;
             if (gpCurPlayer->m_currentHero != -1) {
                 hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -1137,9 +1137,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     *eventCell = DoAdvCommand();
                 }
             } else {
-                cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                cellType = hoverCell->m_triggerType & 0x7f;
                 mapIndex = hoverCell->m_objectMetadata;
-                if (cellType == MAP_OBJECT_HERO) {
+                if (cellType == 0x3d) {
                     if (gpCurPlayer->CurrentHero() == mapIndex) {
                         m_selectedCell = 2;
                         DoAdvCommand();
@@ -1147,7 +1147,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         SetHeroContext(mapIndex, 0);
                     }
                 }
-                if (cellType == MAP_OBJECT_TOWN) {
+                if (cellType == 0x28) {
                     if (gpCurPlayer->CurrentTown() == mapIndex) {
                         m_selectedCell = 3;
                         *eventCell = DoAdvCommand();
@@ -1160,7 +1160,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         break;
     case 9:
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            NormalDialog("World Map (Left click to move viewing area).", NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog("World Map (Left click to move viewing area).", 4, -1, -1, -1, 0, -1, 0, -1);
             break;
         }
         DemobilizeCurrHero();
@@ -1227,7 +1227,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         && message->id <= 2200)
         NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
                      "and shows the date.  Left click here to cycle through these windows.",
-                     NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                     4, -1, -1, -1, 0, -1, 0, -1);
     return 1;
 }
 
@@ -3717,7 +3717,7 @@ void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
             screenX = x * 32;
             screenY = y * 32;
             cell = GetCell(left + x, top + y);
-            if (!(cell->m_flags & 0x80) && cell->m_objectIndex != MAP_CELL_NO_FRAME) {
+            if (!(cell->m_flags & 0x80) && cell->m_objectIndex != 0xff) {
                 tileset = cell->m_objectTileset & 0xf;
                 switch (tileset) {
                 case 4:
@@ -3736,7 +3736,7 @@ void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
                     break;
                 }
             }
-            if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
+            if (cell->m_overlayIndex != 0xff) {
                 tileset = cell->m_overlayTileset & 0xf;
                 switch (tileset) {
                 case 4:
@@ -5049,7 +5049,7 @@ void advManager::TownGate(void) {
     if (heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) {
         NormalDialog(
             "Town Gate Failed!!!  You must be on land for this spell to work.",
-            NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1
+            1, -1, -1, -1, 0, -1, 0, -1
         );
         return;
     }
@@ -5062,9 +5062,9 @@ void advManager::TownGate(void) {
         }
     }
     if (bestTown == -1)
-        NormalDialog("No available town.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog("No available town.  Town Gate Failed!!!", 1, -1, -1, -1, 0, -1, 0, -1);
     if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId != -1) {
-        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", 1, 0x61, -1, -1, 0, -1, 0, -1);
         return;
     }
     gpSoundManager->SwitchAmbientMusic(16);
@@ -5076,7 +5076,7 @@ void advManager::TownGate(void) {
     heroPointer->UseSpell(SPELL_TOWN_GATE);
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId = heroPointer->m_id;
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
-    heroPointer->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
+    heroPointer->m_locationType = 0xa8;
     heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
     gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
 }
@@ -5109,7 +5109,7 @@ void advManager::SummonBoat(void) {
     for (iDirection = 0; iDirection < 8; iDirection++) {
         pCell = GetCell(normalDirTable[iDirection].x + m_mapOriginX + 7,
                                   normalDirTable[iDirection].y + m_mapOriginY + 7);
-        if (pCell->m_objectIndex == MAP_CELL_NO_FRAME && pCell->m_tileIndex < 20) {
+        if (pCell->m_objectIndex == 0xff && pCell->m_tileIndex < 20) {
             foundCell = 1;
             break;
         }
@@ -5134,7 +5134,7 @@ void advManager::SummonBoat(void) {
         if (boatFound) {
             thisBoat = &gpGame->m_boats[slotIndex];
             fromCell = GetCell(thisBoat->x, thisBoat->y);
-            gpGame->RestoreCell(thisBoat->x, thisBoat->y, thisBoat->savedTriggerType, thisBoat->savedEventData, NULL, 5);
+            gpGame->RestoreCell(thisBoat->x, thisBoat->y, thisBoat->savedTriggerType, thisBoat->savedEventData, 0, 5);
             if (thisBoat->x >= m_mapOriginX && thisBoat->x < m_mapOriginX + 15 && thisBoat->y >= m_mapOriginY
                 && thisBoat->y < m_mapOriginY + 15) {
                 drawX = (thisBoat->x - m_mapOriginX) * 32 - 32;
@@ -5157,7 +5157,7 @@ void advManager::SummonBoat(void) {
             thisBoat->y = normalDirTable[iDirection].y + m_mapOriginY + 7;
             thisBoat->savedTriggerType = pCell->m_triggerType;
             thisBoat->savedEventData = pCell->m_objectMetadata;
-            pCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
+            pCell->m_triggerType = 0xbe;
             pCell->m_objectMetadata = slotIndex;
             gpWindowManager->SaveFizzleSource(176, 192, 128, 96);
             CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
@@ -5169,7 +5169,7 @@ summon_done:
     UpdateScreen(0, 0);
     Reseed(0, 0);
     if (!boatFound)
-        NormalDialog("Summon Boat failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog("Summon Boat failed!!!", 1, 0x61, 0x91, -1, 0, -1, 0, -1);
 }
 
 // donor PoL RVA 0x00068247; preferred Buka symbol ?ShowRoute@advManager@@QAEXHHH@Z

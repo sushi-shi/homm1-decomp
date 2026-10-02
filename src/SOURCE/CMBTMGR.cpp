@@ -41,7 +41,7 @@ combatManager::combatManager(void)
     m_limitCreature = 0;
     m_unknown6c0 = 1;
     m_gridUpdateRow = 0;
-    m_currentCommand = 0;
+    m_currentCommand = COMBAT_MESSAGE_COMMAND_DEFAULT;
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
     m_savedBorder = NULL;
@@ -174,7 +174,7 @@ short combatManager::Open(short priority)
     m_backgroundDrawn = 0;
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("PREBATTL.82M");
-    giNextAction = 0;
+    giNextAction = ACTION_NONE;
     gpWindowManager->FadeScreen(1, 8, NULL);
     m_sideRetreated[0] = 0;
     m_sideRetreated[1] = 0;
@@ -358,7 +358,7 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
+        if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
             m_armies[1][armyCount].m_hex = i * 9 + 1;
             m_armies[1][armyCount].m_stats.attributes &= 0x3f;
             m_hexCells[i * 9 + 1].m_occupantSide = 1;
@@ -374,7 +374,7 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
+        if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
             m_armies[0][armyCount].m_hex = i * 9 + 7;
             m_armies[0][armyCount].m_stats.attributes &= 0x3f;
             m_hexCells[i * 9 + 7].m_occupantSide = 0;
@@ -400,7 +400,7 @@ void combatManager::GenerateMap(void)
             }
             m_hexCells[y * 9 + x].m_obstacleType = 2;
             m_hexCells[y * 9 + x].m_obstacleIndex = SRandom(0, 2);
-            if ((m_terrainType == TERRAIN_WATER || m_terrainType == TERRAIN_LAVA) && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
+            if ((m_terrainType == 0 || m_terrainType == 4) && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
                 m_hexCells[y * 9 + x].m_obstacleIndex = 0;
         }
     }

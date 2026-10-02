@@ -382,7 +382,7 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
 // command and retail maps command 13 to pointer 5, preserving all others.
 VA(0x004104b0, 0x34)
 H1_ENUM_RETURN(CombatPointerCode, int)
-combatManager::GetPointer(H1_ENUM_PARAM(CombatPointerCode, int) command) {
+combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, int) command) {
     if (command == COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS)
         return COMBAT_POINTER_VIEW;
     else
@@ -412,15 +412,15 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                             selectedHex = GetGridIndex(mouseX, mouseY);
                             if (m_selectedHex != selectedHex || selectedHex == -1) {
                                 m_selectedHex = selectedHex;
-                                m_previousCommand = -99;
+                                m_previousCommand = COMBAT_INVALID_COMMAND;
                                 m_currentCommand = GetCommand(m_selectedHex);
                                 m_mouseDirection = -1;
-                                if (m_currentCommand == 7) {
+                                if (m_currentCommand == COMBAT_MESSAGE_COMMAND_ATTACK) {
                                     SetCombatDirections(selectedHex);
                                     CheckSetMouseDirection(mouseX, mouseY, selectedHex);
                                 } else
                                     gpMouseManager->SetPointer(GetPointer(m_currentCommand));
-                            } else if (m_currentCommand == 7)
+                            } else if (m_currentCommand == COMBAT_MESSAGE_COMMAND_ATTACK)
                                 CheckSetMouseDirection(mouseX, mouseY, selectedHex);
                             if (m_previousCommand != m_currentCommand) {
                                 m_previousCommand = m_currentCommand;
@@ -437,7 +437,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                                 CombatMessage(cCombatHelp[2], 1);
                             gpMouseManager->SetPointer(6);
                             m_selectedHex = -1;
-                            m_previousCommand = -99;
+                            m_previousCommand = COMBAT_INVALID_COMMAND;
                             break;
                     }
                     break;
@@ -463,7 +463,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                             break;
                         case 8:
                             if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
-                                giNextAction = 3;
+                                giNextAction = ACTION_SKIP_TURN;
                             break;
                     }
                     break;
@@ -475,7 +475,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                     PopNetBox(NULL);
                     break;
                 case INPUT_SCAN_SPACE:
-                    giNextAction = 3;
+                    giNextAction = ACTION_SKIP_TURN;
                     break;
                 case INPUT_SCAN_H:
                     if (m_heroes[m_currentSide]) {
@@ -606,63 +606,63 @@ signed char combatManager::GetCommand(short hex) {
     signed char enemySide;
 
     if (hex == -1)
-        return 0;
+        return COMBAT_MESSAGE_COMMAND_DEFAULT;
     switch (hex) {
         case 26:
             if (m_heroes[0]) {
                 if (m_currentSide == 0)
-                    return 4;
+                    return COMBAT_MESSAGE_COMMAND_OPTIONS;
                 else
-                    return 13;
+                    return COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS;
             } else
-                return 0;
+                return COMBAT_MESSAGE_COMMAND_DEFAULT;
         case 9:
             if (m_heroes[1]) {
                 if (m_currentSide == 1)
-                    return 4;
+                    return COMBAT_MESSAGE_COMMAND_OPTIONS;
                 else
-                    return 13;
+                    return COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS;
             } else
-                return 0;
+                return COMBAT_MESSAGE_COMMAND_DEFAULT;
         default:
             if (hex % 9 == 8)
-                return 0;
+                return COMBAT_MESSAGE_COMMAND_DEFAULT;
             enemySide = m_hexCells[hex].m_occupantSide;
             targetIndex = m_hexCells[hex].m_occupantIndex;
             currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
             currentArmy->m_targetSide = -1;
             currentArmy->m_targetIndex = -1;
             if (m_hexCells[hex].m_obstacleIndex != -1)
-                return 0;
+                return COMBAT_MESSAGE_COMMAND_DEFAULT;
             else if (enemySide != -1) {
                 switch (enemySide) {
                     case 0:
                     case 1:
                         if (m_currentSide == enemySide)
-                            return 5;
+                            return COMBAT_MESSAGE_COMMAND_VIEW_INFO;
                         else {
                             currentArmy->m_targetSide = enemySide;
                             currentArmy->m_targetIndex = targetIndex;
                             if (currentArmy->m_stats.shots > 0
                                 && currentArmy->GetAttackMask(currentArmy->m_hex, 1, -1) == 0xff)
-                                return 3;
+                                return COMBAT_MESSAGE_COMMAND_SHOOT;
                             if (currentArmy->ValidPath(hex, 1) == 1)
-                                return 7;
+                                return COMBAT_MESSAGE_COMMAND_ATTACK;
                             else {
                                 currentArmy->m_targetSide = -1;
                                 currentArmy->m_targetIndex = -1;
-                                return 0;
+                                return COMBAT_MESSAGE_COMMAND_DEFAULT;
                             }
                         }
                 }
             } else {
                 if (m_armies[m_currentSide][m_currentArmyIndex].ValidPath(hex, 0) == 1)
-                    return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes & 2) ? 2
-                                                                                                : 1;
+                    return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes & 2) ? COMBAT_MESSAGE_COMMAND_FLY
+                                                                                                : COMBAT_MESSAGE_COMMAND_MOVE;
             }
             break;
     }
-    return 0;
+    return COMBAT_MESSAGE_COMMAND_DEFAULT;
 }
 
 // Buka COMMAND.cpp RightClick; HoMM1 hero hexes are 26 and 9 and the
@@ -723,36 +723,36 @@ void combatManager::DoCommand(signed char command) {
     army* currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
 
     switch (command) {
-        case 0:
+        case COMBAT_MESSAGE_COMMAND_DEFAULT:
             break;
-        case 1:
-        case 2:
-        case 3:
-            giNextAction = 2, giNextActionGridIndex = m_selectedHex;
+        case COMBAT_MESSAGE_COMMAND_MOVE:
+        case COMBAT_MESSAGE_COMMAND_FLY:
+        case COMBAT_MESSAGE_COMMAND_SHOOT:
+            giNextAction = ACTION_MOVE, giNextActionGridIndex = m_selectedHex;
             giNextActionExtra = -1;
             break;
-        case 7:
+        case COMBAT_MESSAGE_COMMAND_ATTACK:
             giNextActionGridIndex = m_selectedHex;
             if (m_playerId[m_currentSide] == -1 || !gbHumanPlayer[m_playerId[m_currentSide]]
                 || m_gridSelectionDisabled) {
-                giNextAction = 2;
+                giNextAction = ACTION_MOVE;
                 giNextActionExtra = -1;
             } else {
-                giNextAction = 6;
+                giNextAction = ACTION_ATTACK;
                 giNextActionExtra = m_directionTargetHex;
             }
             break;
-        case 4:
+        case COMBAT_MESSAGE_COMMAND_OPTIONS:
             gpMouseManager->SetPointer(6);
             ViewGeneral(m_currentSide, 1, 0);
             ResetMouse();
             break;
-        case 13:
+        case COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS:
             gpMouseManager->SetPointer(6);
             ViewGeneral(1 - m_currentSide, 1, 0);
             ResetMouse();
             break;
-        case 5:
+        case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
             gpMouseManager->SetPointer(6);
             ViewArmy(
                 &m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex],
@@ -761,23 +761,23 @@ void combatManager::DoCommand(signed char command) {
             );
             ResetMouse();
             break;
-        case 10:
+        case COMBAT_MESSAGE_COMMAND_CAST_SPELL:
             ViewSpells(0);
             ResetMouse();
             break;
-        case 11:
+        case COMBAT_MESSAGE_COMMAND_RETREAT:
             NormalDialog("Are you sure you want to retreat?", NORMAL_DIALOG_TYPE_YES_NO, 0xc3, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                giNextAction = 4;
+                giNextAction = ACTION_RETREAT;
             ResetMouse();
             break;
-        case 12:
+        case COMBAT_MESSAGE_COMMAND_SURRENDER:
             if (DoSurrender() == 1) {
                 if (gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD]
                     < giSurrenderCost)
                     NormalDialog("You don't have enough gold!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 else {
-                    giNextAction = 5;
+                    giNextAction = ACTION_SURRENDER;
                     giNextActionExtra = giSurrenderCost;
                 }
             }
@@ -909,13 +909,13 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     int firstX;
 
     for (side = 0; side < 15; side++) {
-        m_winLoseBottomWidgets[side] = NULL;
-        m_winLoseBottomTextWidgets[side] = NULL;
+        m_winLoseBottomWidgets[side] = 0;
+        m_winLoseBottomTextWidgets[side] = 0;
     }
     for (side = 0; side < 2; side++) {
         numLost[side] = 0;
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
-            if (m_armies[side][armyIndex].m_creatureType != CREATURE_NONE
+            if (m_armies[side][armyIndex].m_creatureType != -1
                 && m_armies[side][armyIndex].m_initialQuantity
                        > m_armies[side][armyIndex].m_quantity) {
                 casualtyType[side][numLost[side]] = m_armies[side][armyIndex].m_creatureType;
@@ -929,7 +929,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     sprintf(buffer, "Battlefield Casualties");
     m_winLoseBottomTextWidgets[12] =
         new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-    if (m_winLoseBottomTextWidgets[12] == NULL)
+    if (m_winLoseBottomTextWidgets[12] == 0)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[12], -1);
     for (side = 0; side < 2; side++) {
@@ -941,7 +941,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-        if (m_winLoseBottomTextWidgets[10 + side] == NULL)
+        if (m_winLoseBottomTextWidgets[10 + side] == 0)
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
         if (numLost[side] <= 0) {
@@ -958,7 +958,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5] == NULL)
+            if (m_winLoseBottomTextWidgets[side * 5] == 0)
                 MemError();
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5], -1);
         }
@@ -977,7 +977,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x10,
                 1
             );
-            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == NULL)
+            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
                 MemError();
             buffer = (char*)malloc(9);
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
@@ -992,7 +992,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + armyIndex + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == NULL)
+            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == 0)
                 MemError();
             window->AddWidget(m_winLoseBottomWidgets[side * 5 + armyIndex], -1);
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5 + armyIndex], -1);
@@ -1311,8 +1311,8 @@ void combatManager::CheckGetAIMove(void) {
 VA(0x004134a1, 0x16a)
 void combatManager::GetControl(void) {
     m_selectedHex = -1;
-    m_previousCommand = -99;
-    m_previousCommand = -99;
+    m_previousCommand = COMBAT_INVALID_COMMAND;
+    m_previousCommand = COMBAT_INVALID_COMMAND;
     gpMouseManager->SetPointer(6);
     CheckChangeSelector();
     if (!gbRemoteOn || m_playerId[1] < 0 || m_playerId[0] < 0 || !gbHumanPlayer[m_playerId[0]]
@@ -1392,15 +1392,15 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
     switch (giNextAction) {
-        case 0:
+        case ACTION_NONE:
             break;
-        case 1:
+        case ACTION_CAST_SPELL:
             gpMouseManager->ReallyHidePointer();
             CastSpell(giNextActionExtra, giNextActionGridIndex, 0, giNextActionGridIndex2);
             if (m_armies[m_currentSide][m_currentArmyIndex].m_quantity <= 0)
                 advance = 1;
             break;
-        case 2:
+        case ACTION_MOVE:
             gpMouseManager->ReallyHidePointer();
             actingArmy->MoveAttack(giNextActionGridIndex, 0);
             actingArmy->m_stats.attributes |= 0x80;
@@ -1409,7 +1409,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
             advance = 1;
             break;
-        case 6:
+        case ACTION_ATTACK:
             gpMouseManager->ReallyHidePointer();
             if (giNextActionExtra != -1 && actingArmy->m_hex != giNextActionExtra)
                 actingArmy->MoveAttack(giNextActionExtra, 1);
@@ -1420,11 +1420,11 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
             advance = 1;
             break;
-        case 4:
+        case ACTION_RETREAT:
             m_sideRetreated[m_currentSide] = 1;
             gbRetreatWin = 1;
             break;
-        case 5:
+        case ACTION_SURRENDER:
             gbCombatSurrender = 1;
             gbRetreatWin = 1;
             m_sideDefeated[m_currentSide] = 1;
@@ -1433,12 +1433,12 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
             gpGame->m_players[m_playerId[1 - m_currentSide]].m_resources[RESOURCE_GOLD] +=
                 giNextActionExtra;
             break;
-        case 3:
+        case ACTION_SKIP_TURN:
             actingArmy->m_stats.attributes |= 0x80;
             advance = 1;
             break;
     }
-    giNextAction = 0;
+    giNextAction = ACTION_NONE;
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
     if (advance && !GetNextArmy(1)) {

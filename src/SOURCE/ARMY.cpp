@@ -48,7 +48,7 @@ int combatManager::AICheckRetreat(void) {
             armyPtr = &sideHero->m_army;
         } else {
             armyPtr = &bareGroup;
-            sideHero = 0;
+            sideHero = NULL;
         }
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
             if (m_armies[side][armyIndex].IsAlive()) {
@@ -58,7 +58,7 @@ int combatManager::AICheckRetreat(void) {
                 else
                     armyPtr->m_creatureCounts[armyIndex] = (short)(m_armies[side][armyIndex].m_quantity * 1.2);
             } else {
-                armyPtr->m_creatureTypes[armyIndex] = -1;
+                armyPtr->m_creatureTypes[armyIndex] = CREATURE_NONE;
                 armyPtr->m_creatureCounts[armyIndex] = 0;
             }
         }
@@ -103,7 +103,7 @@ int combatManager::AICheckRetreat(void) {
     prob -= (4 - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_difficulty) * 0.03;
     retreatRatio = (float)force[m_currentSide] / (force[0] + force[1]);
     if (retreatRatio < prob) {
-        giNextAction = 4;
+        giNextAction = ACTION_RETREAT;
         return 1;
     }
     return 0;
@@ -433,7 +433,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
         targetHex = m_armies[side][targetArmy].m_hex;
         currentArmy->m_moveTargetHex = targetHex;
         if (currentArmy->ValidPath(targetHex, 0)) {
-            giNextAction = 2;
+            giNextAction = ACTION_MOVE;
             giNextActionGridIndex = targetHex;
             return 1;
         }
@@ -444,7 +444,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
                 targetHex++;
             currentArmy->m_moveTargetHex = targetHex;
             if (currentArmy->ValidPath(targetHex, 0)) {
-                giNextAction = 2;
+                giNextAction = ACTION_MOVE;
                 giNextActionGridIndex = targetHex;
                 return 1;
             }
@@ -569,7 +569,7 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
     currentArmy->m_targetIndex = armyIndex;
     attackMask = currentArmy->GetAttackMask(currentArmy->m_hex, 0, -1);
     if (attackMask != 0xff) {
-        giNextAction = 3;
+        giNextAction = ACTION_SKIP_TURN;
         return 1;
     }
     savedSpeed = currentArmy->m_stats.speed;
@@ -589,7 +589,7 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
     }
     currentArmy->m_stats.speed = savedSpeed;
     if (gpSearchArray->m_pathLength > 1) {
-        giNextAction = 2;
+        giNextAction = ACTION_MOVE;
         left = currentArmy->m_stats.speed;
         pathNdx = gpSearchArray->m_pathLength - 1;
         giNextActionGridIndex = currentArmy->m_hex;
@@ -770,13 +770,13 @@ void army::DrawToBuffer(short x, short y) {
     switch (m_unknown08) {
         case 0:
             switch (m_creatureType) {
-                case CREATURE_HYDRA:
+                case 22:
                     if (m_unknown33)
                         m_standIcon->DimToBuffer(x, y, m_unknown09 + 8, m_facing, flip);
                     break;
-                case CREATURE_CYCLOPS:
-                case CREATURE_PHOENIX:
-                case CREATURE_DRAGON:
+                case 11:
+                case 17:
+                case 23:
                     if (m_unknown33)
                         m_standIcon->DimToBuffer(x, y, m_unknown09 + 15, m_facing, flip);
                     break;
@@ -785,19 +785,19 @@ void army::DrawToBuffer(short x, short y) {
                         m_standIcon->DimToBuffer(x, y, m_unknown09 + 9, m_facing, flip);
                     break;
             }
-            if (m_unknown09 > 4 && m_creatureType != CREATURE_HYDRA)
+            if (m_unknown09 > 4 && m_creatureType != 22)
                 m_standIcon->DrawToBuffer(x, y, 5, m_facing, flip);
             m_standIcon->DrawToBuffer(x, y, m_unknown09, m_facing, flip);
             if (m_hex == gpCombatManager->m_limitCreatureHex && gpCombatManager->m_limitCreature == 1) {
                 m_standIcon->FillToBuffer(x, y, 0, 0xe4, m_facing, flip);
                 outlined = 1;
             }
-            if (m_spellEffect != SPELL_NONE) {
+            if (m_spellEffect != -1) {
                 switch (m_spellEffect) {
-                    case SPELL_HASTE:
-                    case SPELL_BLESS:
-                    case SPELL_PROTECTION:
-                    case SPELL_ANTI_MAGIC:
+                    case 5:
+                    case 8:
+                    case 9:
+                    case 12:
                         outlineColor = 0xf7;
                         break;
                     default:
@@ -850,13 +850,13 @@ void army::DrawToBuffer(short x, short y) {
         case 3:
             if (!(m_stats.attributes & 0x10)) {
                 switch (m_creatureType) {
-                    case CREATURE_HYDRA:
+                    case 22:
                         if (m_unknown33)
                             m_standIcon->DimToBuffer(x, y, m_unknown09 + 8, m_facing, flip);
                         break;
-                    case CREATURE_CYCLOPS:
-                    case CREATURE_PHOENIX:
-                    case CREATURE_DRAGON:
+                    case 11:
+                    case 17:
+                    case 23:
                         if (m_unknown33)
                             m_standIcon->DimToBuffer(x, y, m_unknown09 + 15, m_facing, flip);
                         break;
@@ -879,7 +879,7 @@ void army::DrawToBuffer(short x, short y) {
             } else if (m_facing == 1) {
                 x -= 39;
             }
-            if (m_spellEffect != SPELL_NONE)
+            if (m_spellEffect != -1)
                 gpCombatManager->m_combatIcons[8]->DrawToBuffer(x, y - 40, m_spellEffect, 0, 0);
             gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, flip);
             break;
@@ -1333,7 +1333,7 @@ void army::DoHydraAttack(void) {
         m_unknown09 = i + 3;
         gpCombatManager->DrawFrame(1);
     }
-    if (m_spellEffect == 14)
+    if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
@@ -1388,7 +1388,7 @@ void army::DoHydraAttack(void) {
         m_unknown09 = i + 3;
         gpCombatManager->DrawFrame(1);
     }
-    if (m_spellEffect == 14)
+    if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
@@ -2097,7 +2097,7 @@ void army::GoBerserk(void) {
             while (!found) {
                 dir = Random(0, 7);
                 if (!(attackMask & (1 << dir))) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     ValidAttack(m_hex, dir, 2, -1, &targetHex);
                     giNextActionGridIndex = targetHex;
                     found = 1;
@@ -2109,18 +2109,18 @@ void army::GoBerserk(void) {
                 m_targetSide = gpCombatManager->m_hexCells[target].m_occupantSide;
                 m_targetIndex = gpCombatManager->m_hexCells[target].m_occupantIndex;
                 if (ValidFlight(target, 0)) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     giNextActionGridIndex = target;
                     found++;
                 }
             } else {
-                giNextAction = 2;
+                giNextAction = ACTION_MOVE;
                 giNextActionGridIndex = target;
             }
         } else {
             dir = Random(0, 5);
             if (ValidMove(dir)) {
-                giNextAction = 2;
+                giNextAction = ACTION_MOVE;
                 giNextActionGridIndex = m_hex;
                 giNextActionGridIndex = GetAdjacentCellIndex(giNextActionGridIndex, dir);
             }

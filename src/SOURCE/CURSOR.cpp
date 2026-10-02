@@ -598,32 +598,32 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
     if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
         return 0;
     cell = &m_mapData[newX][newY];
-    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
-        case MAP_OBJECT_BUOY:
+    switch (cell->m_triggerType & 0x7f) {
+        case 3:
             if (!(movingHero->m_eventFlags & 0x80))
                 return 1;
             else
                 return 0;
-        case MAP_OBJECT_HERO:
+        case 61:
             if (movingHero->m_eventFlags & 0x80) {
                 if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & 0x80)
                     return 1;
                 else
                     return 0;
             }
-        case MAP_OBJECT_SIGNPOST:
-        case MAP_OBJECT_SKELETON:
-        case MAP_OBJECT_TREASURE_CHEST:
-        case MAP_OBJECT_CAMPFIRE:
-        case MAP_OBJECT_FOUNTAIN:
-        case MAP_OBJECT_ANCIENT_LAMP:
-        case MAP_OBJECT_MONSTER:
-        case MAP_OBJECT_OBELISK:
-        case MAP_OBJECT_OASIS:
-        case MAP_OBJECT_RESOURCE:
-        case MAP_OBJECT_STATUE:
-        case MAP_OBJECT_WELL:
-        case MAP_OBJECT_ARTIFACT:
+        case 2:
+        case 4:
+        case 6:
+        case 8:
+        case 9:
+        case 11:
+        case 26:
+        case 27:
+        case 28:
+        case 29:
+        case 36:
+        case 43:
+        case 48:
             if (m_cursorType == 4)
                 return 0;
             else
@@ -657,21 +657,21 @@ short advManager::ValidMove(short direction)
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
     if (destCell->m_unknown07 & 0x80)
         return 0;
-    if (giGroundToTerrain[destCell->m_tileIndex] == 0) {
-        if (m_cursorType != 4 && destCell->m_triggerType != 0xbe && destCell->m_triggerType != 0xa3)
+    if (giGroundToTerrain[destCell->m_tileIndex] == TERRAIN_WATER) {
+        if (m_cursorType != 4 && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
             return 0;
     } else {
-        if (m_cursorType == 4 && destCell->m_triggerType != 0x1f && destCell->m_triggerType != 0xac)
+        if (m_cursorType == 4 && destCell->m_triggerType != MAP_OBJECT_COAST && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
             return 0;
     }
     hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
     north = (1 << direction) & 0x83;
     downMask = (1 << direction) & 0x38;
-    if (north && hereCell->m_objectIndex != 0xff && !(hereCell->m_flags & 0x80)
-        && hereCell->m_triggerType != 0xac)
+    if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & 0x80)
+        && hereCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
-    if (downMask && destCell->m_objectIndex != 0xff && !(destCell->m_flags & 0x80)
-        && destCell->m_triggerType != 0xac)
+    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME && !(destCell->m_flags & 0x80)
+        && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;
 }

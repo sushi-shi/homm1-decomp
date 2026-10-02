@@ -27,11 +27,11 @@ signed char combatManager::ViewSpells(int)
             case SPELL_DISPEL_MAGIC:
             case SPELL_ARMAGEDDON:
             case SPELL_STORM:
-                giNextAction = 1;
+                giNextAction = ACTION_CAST_SPELL;
                 giNextActionExtra = m_selectedSpell;
                 break;
             default:
-                giNextAction = 1;
+                giNextAction = ACTION_CAST_SPELL;
                 giNextActionExtra = m_selectedSpell;
                 gpMouseManager->SetPointer("spelmous.mse", m_selectedSpell);
                 gpWindowManager->DoDialog(NULL, HandleCastSpell, 0);
@@ -132,7 +132,7 @@ short HandleCastSpell(struct tag_message &message)
                 break;
         case MESSAGE_RIGHT_BUTTON_DOWN:
             gpCombatManager->m_selectedSpell = SPELL_NONE;
-            giNextAction = 0;
+            giNextAction = ACTION_NONE;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_DIALOG_SELECT;
             bInTeleportGetDest = 0;
@@ -209,13 +209,13 @@ VA(0x00415d1c, 0x128)
 void combatManager::SpellMessage(signed char spell, signed char hex)
 {
     switch (spell) {
-        case 0:
-        case 15:
-        case 16:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_ARMAGEDDON:
+        case SPELL_STORM:
+        case SPELL_METEOR_SHOWER:
             sprintf(gText, "Cast %s", gSpellNames[spell]);
             break;
-        case 2:
+        case SPELL_TELEPORT:
             if (bInTeleportGetDest) {
                 sprintf(gText, "Teleport Here");
                 break;
@@ -787,12 +787,12 @@ void combatManager::ElementalStorm(void)
     }
     gpResourceManager->Dispose(storm);
     hit = 0;
-    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
+    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
-                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;
