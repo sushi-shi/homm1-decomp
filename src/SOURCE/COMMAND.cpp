@@ -906,7 +906,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
         SAMPLE2 sample = NULL_SAMPLE2;
         sprintf(gText, "pickup%02d.82M", SRandom(1, 5));
         sample = LoadPlaySample(gText);
-        WaitEndSample(sample, -1);
+        WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     }
 }
 

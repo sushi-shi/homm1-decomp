@@ -52,6 +52,11 @@ H1_ENUM_BEGIN(DialogWaitType)
     DIALOG_WAIT_MODEM_RESPONSE = 6,
     DIALOG_WAIT_DIRECT_CONNECT = 7
 H1_ENUM_END(DialogWaitType)
+
+// WaitEndSample's waitTime: a negative wait means the default 4000 ms.
+H1_ENUM_CONST_BEGIN(SampleWaitConstant)
+    SAMPLE_WAIT_DEFAULT = -1
+H1_ENUM_CONST_END(SampleWaitConstant)
 // clang-format on
 
 class soundManager;

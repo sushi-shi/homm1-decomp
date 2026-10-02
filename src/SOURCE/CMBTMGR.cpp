@@ -134,7 +134,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
     }
     m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
     if (defenderTown) {
-        if (defenderTown->m_occupyingHeroId != -1) {
+        if (defenderTown->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
             m_armyGroups[COMBAT_DEFENDER_SIDE] = &m_heroes[COMBAT_DEFENDER_SIDE]->m_army;
             CombineGroups(&defenderTown->m_army, &m_heroes[COMBAT_DEFENDER_SIDE]->m_army);
             m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 1;
@@ -213,7 +213,7 @@ short combatManager::Open(short priority)
     gpMouseManager->ReallyShowPointer();
     ResetMouse();
     m_gridSelectionDisabled = 0;
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     musicList[0] = MUSIC_TRACK_BATTLE_2;
     musicList[1] = MUSIC_TRACK_BATTLE_3;
     musicList[2] = MUSIC_TRACK_BATTLE_1;
@@ -690,7 +690,7 @@ void combatManager::CheckApplyGoodMorale(int side, int index)
     if (activeArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
         activeArmy->m_stats.attributes -= 0x80;
     activeArmy->m_stats.attributes |= MONSTER_FLAGS_HIGH_MORALE;
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
 }
 
 // Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
@@ -723,7 +723,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     activeArmy->SpellEffect(COMBAT_EFFECT_BAD_MORALE, 180);
     activeArmy->Stand(1);
     activeArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     return 1;
 }
 
@@ -971,7 +971,7 @@ void combatManager::CatAttack(signed char side)
             frm %= 3;
         }
     }
-    WaitEndSample(catSample, -1);
+    WaitEndSample(catSample, SAMPLE_WAIT_DEFAULT);
     sprintf(gText, "catsnd%02d.82M", 2);
     catSample = LoadPlaySample(gText);
     if (m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex == COMBAT_WALL_DAMAGED)
@@ -1042,7 +1042,7 @@ void combatManager::CatAttack(signed char side)
     DrawFrame(1);
     gpResourceManager->Dispose(boulder);
     gpMouseManager->ReallyShowPointer();
-    WaitEndSample(catSample, -1);
+    WaitEndSample(catSample, SAMPLE_WAIT_DEFAULT);
 }
 
 // HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
@@ -1232,7 +1232,7 @@ void combatManager::KeepAttack(void)
     target->PowEffect(target->m_stats.powEffect);
     if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
         target->Stand(0);
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     if (target->m_quantity > 0)
         target->Stand(1);
     gpMouseManager->ReallyShowPointer();

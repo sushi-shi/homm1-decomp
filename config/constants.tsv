@@ -83,6 +83,22 @@
 *	*	[01]	call-argument	HeroView(* argument 1	hero::HeroView's view-only flag
 *	*	[01]	call-argument	ViewArtifact(* argument 2	hero::ViewArtifact's quick-view flag
 *	*	[01]	call-argument	GiveExperience(* argument 3	advManager::GiveExperience's check-level flag
+*	*	[01]	call-argument	DoAttack(* argument 1	army::DoAttack's retaliation flag
+*	*	*	call-argument	SpellEffect(short, int) argument 2	army::SpellEffect's frame delay in ticks
+*	*	[01]	call-argument	ViewArmy(* argument [6-8]	game::ViewArmy's view-only / dismiss / upgrade flags
+*	*	[01]	call-argument	ViewSpells(* argument *	the spell book's view-only / mode flags
+*	*	[01]	call-argument	DrawWindow(* argument *	heroWindow::DrawWindow's update flag and widget id range
+*	*	*	call-argument	DelayMilli(long) argument 1	a delay in milliseconds
+*	*	*	call-argument	DelayTil(* argument 1	a tick deadline
+*	*	*	call-argument	BlitBitmap(* argument [2-8]	source and destination rectangle in pixels
+*	*	*	call-argument	nb_*(* argument *	a NetBIOS driver (netwin) session slot, adapter or length argument
+*	*	*	call-argument	com_*(* argument *	a serial driver (comwin) port, length or flag argument
+*	*	*	call-argument	init_anchor(* argument [23]	the queue anchor's lock and count flags
+*	*	*	call-argument	write_buffer(* argument 2	the byte count written to the modem
+*	*	*	call-argument	strncmp(* argument 3	the number of characters compared
+*	*	0	call-argument	_access(* argument 2	_access existence mode 0 (the CRT has no name for it)
+*	*	1	call-argument	fread(void *, size_t, size_t, FILE *) argument [23]	fread's element size / count of one
+*	*	0	call-argument	fseek(FILE *, long, int) argument 2	fseek's zero offset
 *	*	*	arithmetic	operator + KBTickCount()	a delay in milliseconds after the current time (KBTickCount returns GetTickCount)
 src/*	advManager::ProcessSelect	*	store	store to [xy]	a screen position in pixels
 src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixels

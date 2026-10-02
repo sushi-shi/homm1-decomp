@@ -300,7 +300,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                     CombatMessage("Dragons are not affected by magic!", 1);
                 else
                     CombatMessage("The Dwarves' magic resistance canceled the spell!", 1);
-                WaitEndSample(sample, -1);
+                WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
                 goto done;
             }
             break;
@@ -322,7 +322,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = -1;
             }
             teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
-            WaitEndSample(sample, -1);
+            WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
             sprintf(gText, "telein.82m");
             sample = LoadPlaySample(gText);
             if (teleportArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
@@ -522,7 +522,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         else
             targetArmy->m_spellRounds = m_heroes[m_currentSide]->m_primaryStats[2];
     }
-    WaitEndSample(sample, -1);
+    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
 done:
     CheckChangeSelector();
 }
