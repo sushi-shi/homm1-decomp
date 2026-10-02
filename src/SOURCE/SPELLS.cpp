@@ -55,19 +55,19 @@ short CombatSpecialHandler(struct tag_message &message)
                     return MESSAGE_DISPATCH_CONSUME;
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
-                    case 2:
+                    case SPELL_BOOK_PREVIOUS_PAGE:
                         gpCombatManager->CombatMessage(cSpellHelp[0], 1);
                         break;
-                    case 3:
+                    case SPELL_BOOK_NEXT_PAGE:
                         gpCombatManager->CombatMessage(cSpellHelp[1], 1);
                         break;
                     case DIALOG_BUTTON_0:
                         gpCombatManager->CombatMessage(cSpellHelp[4], 1);
                         break;
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
+                    case SPELL_BOOK_ENTRY_FIRST:
+                    case SPELL_BOOK_ENTRY_FIRST + 1:
+                    case SPELL_BOOK_ENTRY_FIRST + 2:
+                    case SPELL_BOOK_ENTRY_LAST:
                         gpCombatManager->CombatMessage(cSpellHelp[6], 1);
                         break;
                     default:

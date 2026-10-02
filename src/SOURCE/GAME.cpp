@@ -1955,17 +1955,17 @@ void game::UpdateSpellWidgets(void) {
     for (i = 0; i < 4; i++) {
         if (m_viewSpellsTop + i > m_spellLast) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.id = i + 6;
+            message.id = i + SPELL_BOOK_ENTRY_FIRST;
             message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
-            message.id = i + 10;
+            message.id = i + SPELL_BOOK_LABEL_FIRST;
             m_viewSpellsWindow->BroadcastMessage(message);
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.id = i + 10;
+            message.id = i + SPELL_BOOK_LABEL_FIRST;
             message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
-            message.id = i + 6;
+            message.id = i + SPELL_BOOK_ENTRY_FIRST;
             m_viewSpellsWindow->BroadcastMessage(message);
             if (m_viewSpellsReadOnly) {
                 message.command = WIDGET_COMMAND_SET_FLAGS;
@@ -1982,7 +1982,7 @@ void game::UpdateSpellWidgets(void) {
                 m_viewSpellsHero->m_spellCharges[m_viewSpellsTop + i]
             );
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = i + 10;
+            message.id = i + SPELL_BOOK_LABEL_FIRST;
             message.text = gText;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
@@ -2001,44 +2001,44 @@ short ViewSpellsHandler(tag_message& message) {
                 if (message.command == WIDGET_NOTIFY_RIGHT_CLICK
                     || (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                     switch (message.id) {
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
+                        case SPELL_BOOK_ENTRY_FIRST:
+                        case SPELL_BOOK_ENTRY_FIRST + 1:
+                        case SPELL_BOOK_ENTRY_FIRST + 2:
+                        case SPELL_BOOK_ENTRY_LAST:
                             spell = gpGame->m_viewSpellsHero
-                                        ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
+                                        ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
                             NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 2:
+                        case SPELL_BOOK_PREVIOUS_PAGE:
                             NormalDialog(cSpellHelp[0], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 3:
+                        case SPELL_BOOK_NEXT_PAGE:
                             NormalDialog(cSpellHelp[1], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 4:
+                        case SPELL_BOOK_ADVENTURE_SPELLS:
                             NormalDialog(cSpellHelp[2], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 5:
+                        case SPELL_BOOK_COMBAT_SPELLS:
                             NormalDialog(cSpellHelp[3], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
                     }
                 } else {
                     switch (message.id) {
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
+                        case SPELL_BOOK_ENTRY_FIRST:
+                        case SPELL_BOOK_ENTRY_FIRST + 1:
+                        case SPELL_BOOK_ENTRY_FIRST + 2:
+                        case SPELL_BOOK_ENTRY_LAST:
                             if (gpGame->m_viewSpellsReadOnly) {
                                 spell = gpGame->m_viewSpellsHero
-                                            ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
+                                            ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
                                 NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
                             gpGame->m_viewSpell = gpGame->m_viewSpellsHero
-                                                      ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
+                                                      ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
                             message.command = WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
-                        case 2:
+                        case SPELL_BOOK_PREVIOUS_PAGE:
                             if (gpGame->m_viewSpellsTop == gpGame->m_spellFirst)
                                 break;
                             gpGame->m_viewSpellsTop -= 4;
@@ -2047,7 +2047,7 @@ short ViewSpellsHandler(tag_message& message) {
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
-                        case 3:
+                        case SPELL_BOOK_NEXT_PAGE:
                             if (gpGame->m_viewSpellsTop + 4 <= gpGame->m_spellLast)
                                 gpGame->m_viewSpellsTop += 4;
                             if (gpGame->m_viewSpellsTop < gpGame->m_spellFirst)
@@ -2055,13 +2055,13 @@ short ViewSpellsHandler(tag_message& message) {
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
-                        case 4:
+                        case SPELL_BOOK_ADVENTURE_SPELLS:
                             gpGame->SetupSpellRange(1);
                             gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
-                        case 5:
+                        case SPELL_BOOK_COMBAT_SPELLS:
                             gpGame->SetupSpellRange(0);
                             gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
@@ -2096,16 +2096,16 @@ short ViewSpecialHandler(tag_message& message) {
                     return MESSAGE_DISPATCH_CONSUME;
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
-                    case 2:
+                    case SPELL_BOOK_PREVIOUS_PAGE:
                         strcpy(gText, cSpellHelp[0]);
                         break;
-                    case 3:
+                    case SPELL_BOOK_NEXT_PAGE:
                         strcpy(gText, cSpellHelp[1]);
                         break;
-                    case 4:
+                    case SPELL_BOOK_ADVENTURE_SPELLS:
                         strcpy(gText, cSpellHelp[2]);
                         break;
-                    case 5:
+                    case SPELL_BOOK_COMBAT_SPELLS:
                         strcpy(gText, cSpellHelp[3]);
                         break;
                     case DIALOG_BUTTON_0:
