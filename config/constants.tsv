@@ -61,6 +61,28 @@
 *	*	*	call-argument	NormalDialog(* argument [34]	dialog window x and y in pixels (-1 centres it, Buka's default)
 *	*	0	call-argument	NormalDialog(* argument [68]	unused resource quantity: the slot shows no amount (NORMAL_DIALOG_NO_RESOURCE, luck/morale icons)
 *	*	0	call-argument	EventWindow(* argument [57]	unused resource quantity forwarded to NormalDialog (same slots)
+*	*	*	call-argument	EventWindow(* argument [57]	the resource quantity an event shows beside its icon (the reward amount)
+*	*	*	call-argument	GiveResource(* argument 3	the resource amount an event gives
+*	*	*	call-argument	GiveExperience(* argument 2	the experience an event gives
+*	*	*	call-argument	DDSD(* argument 3	the source line the DirectDraw error report names (line base + offset)
+*	*	0	call-argument	RegSetValueExA(* argument 3	RegSetValueExA's Reserved argument, which must be 0
+*	*	[01]	call-argument	DoDialog(* argument 3	heroWindowManager::DoDialog's fade-in flag
+*	*	[01]	call-argument	DrawFrame(signed char) argument 1	combatManager::DrawFrame's update-screen flag
+*	*	[01]	call-argument	Stand(signed char) argument 1	army::Stand's redraw flag
+*	*	[01]	call-argument	CombatMessage(char *, int) argument 2	combatManager::CombatMessage's update-screen flag
+*	*	[01]	call-argument	UpdateScreen(signed char, signed char) argument [12]	advManager::UpdateScreen's cursor-update / force-update flags
+*	*	[01]	call-argument	UpdateRadar(signed char, int) argument [12]	advManager::UpdateRadar's update-screen / partial flags
+*	*	[01]	call-argument	CompleteDraw(int) argument 1	advManager::CompleteDraw's update flag
+*	*	[01]	call-argument	CompleteDraw(short, short, int) argument 3	advManager::CompleteDraw's force-draw flag
+*	*	[01]	call-argument	UpdBottomView(* argument [123]	advManager::UpdBottomView's force / draw-window / update-screen flags
+*	*	[01]	call-argument	Update[HT]*Locators(* argument [12]	the hero/town locators' draw-window / update-screen flags
+*	*	[01]	call-argument	StopCursor(* argument 1	advManager::StopCursor's stop-sound flag
+*	*	[01]	call-argument	HideRoute(* argument [123]	advManager::HideRoute's redraw / clear-destination / update-button flags
+*	*	[01]	call-argument	RedrawAdvScreen(* argument 1	advManager::RedrawAdvScreen's update flag
+*	*	[01]	call-argument	NewUpdate(* argument 1	mouseManager::NewUpdate's force flag (ignored by HoMM1)
+*	*	[01]	call-argument	HeroView(* argument 1	hero::HeroView's view-only flag
+*	*	[01]	call-argument	ViewArtifact(* argument 2	hero::ViewArtifact's quick-view flag
+*	*	[01]	call-argument	GiveExperience(* argument 3	advManager::GiveExperience's check-level flag
 *	*	*	arithmetic	operator + KBTickCount()	a delay in milliseconds after the current time (KBTickCount returns GetTickCount)
 src/*	advManager::ProcessSelect	*	store	store to [xy]	a screen position in pixels
 src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixels
