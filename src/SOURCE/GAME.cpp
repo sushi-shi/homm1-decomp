@@ -28,6 +28,11 @@ extern signed char giMonthType;
 extern signed char giWeekSpecial;
 extern signed char giMonthSpecial;
 extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+// SaveGame files the current player through this byte.
+extern signed char gSaveCurPlayer;
+extern unsigned char giCurPlayerHighBit;
+extern unsigned char giCurWatchPlayerHighBit;
+extern int giCurWatchPlayer;
 
 // donor PoL RVA 0x00088607; preferred Buka symbol ?ClearEffects@combatManager@@QAEXXZ
 // donor Buka TU SOURCE/SPELLAI; HoMM1 owner inferred from contiguous order
@@ -460,8 +465,6 @@ inline void game::WriteWorldMap(int fd) {
     write(fd, m_map, sizeof(m_map));
 }
 
-// SaveGame files the current player through this byte.
-extern signed char gSaveCurPlayer;
 
 // Buka 2.1 game::SaveGame for HoMM1's single save layout: name, globals,
 // campaign state, map header, players, world map, records and visibility.
@@ -563,8 +566,137 @@ short game::SaveGame(char* filename, signed char generateName) {
 // donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.668603;margin=0.422052;shape=0.401;size=0.926;calls=0.741;strings=%s%s|.\DATA\|.\GAMES\;alternate=pol20:void game::LoadGame(char *, int, int)@0x000735bf
+// Default hero names (name, short name) restored with the original data,
+// the multiplayer game type, this machine's seat and a per-cell scratch map
+// cleared on every load.
+extern char* gHeroNames[][2];
+extern int iMPExtendedType;
+extern int giThisGamePos;
+extern char gMapCellScratch[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+
+// Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
+// the default hero names and blank visibility, and the seats are re-dealt
+// to this session's human players.
 VA(0x0043a5ef, 0x9b2)
-void game::LoadGame(char*, int, int) {}
+short game::LoadGame(char* filename, int origData, int) {
+    int junk2;
+    int numHumans;
+    int i;
+    int handle;
+    char pathName[452];
+    signed char humans[GAME_PLAYER_COUNT];
+    int junk;
+    char buffer[0x2c];
+
+    numHumans = 0;
+    gbGameOver = 0;
+    m_unknown16e79 = 1;
+    if (origData || !strcmp(filename, "REMOTE.GAM"))
+        sprintf(pathName, "%s%s", ".\\DATA\\", filename);
+    else
+        sprintf(pathName, "%s%s", ".\\GAMES\\", filename);
+    handle = open(pathName, O_BINARY);
+    if (handle == -1)
+        FileError(pathName);
+    ClearMapExtra();
+    read(handle, &gbKingOfTheHill, 1);
+    read(handle, this, 2);
+    read(handle, &giMonthType, 1);
+    read(handle, &giMonthSpecial, 1);
+    read(handle, &giWeekType, 1);
+    read(handle, &giWeekSpecial, 1);
+    read(handle, &m_campaignType, 4);
+    read(handle, &m_campaignScenario, 4);
+    read(handle, &m_campaignDay, 4);
+    read(handle, &m_unknown000b, 4);
+    read(handle, buffer, 0x2c);
+    read(handle, m_mapDescription, sizeof(m_mapDescription));
+    read(handle, &m_mapSize, 1);
+    read(handle, &m_mapDifficulty, 1);
+    read(handle, m_mapName, sizeof(m_mapName));
+    read(handle, m_saveName, 0x11);
+    sprintf(m_saveName, filename);
+    read(handle, &m_difficulty, 1);
+    read(handle, &m_playerCount, 1);
+    read(handle, &gSaveCurPlayer, 1);
+    giCurPlayer = gSaveCurPlayer;
+    read(handle, &m_deadPlayerCount, 1);
+    read(handle, m_playerDead, sizeof(m_playerDead));
+    read(handle, humans, GAME_PLAYER_COUNT);
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+        if ((humans[i] || iMPExtendedType >= 2) && numHumans < giNumHumanPlayers) {
+            numHumans++;
+            gbHumanPlayer[i] = 1;
+        } else {
+            gbHumanPlayer[i] = 0;
+        }
+    }
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+        if (gbHumanPlayer[i]) {
+            if (!gbRemoteOn || i == giThisGamePos)
+                gbThisNetHumanPlayer[i] = 1;
+            else
+                gbThisNetHumanPlayer[i] = 0;
+        } else {
+            gbThisNetHumanPlayer[i] = 0;
+        }
+    }
+    read(handle, &m_day, 2);
+    read(handle, &m_week, 2);
+    read(handle, &m_month, 2);
+    giCurTurn = (m_month - 1) * 28 + (m_week - 1) * 7 + m_day;
+    for (i = 0; i < GAME_PLAYER_COUNT; i++)
+        m_players[i].Read(handle);
+    ReadWorldMap(handle);
+    read(handle, &m_obeliskCount, 1);
+    read(handle, m_heroRecs, sizeof(m_heroRecs));
+    if (origData) {
+        for (i = 0; i < GAME_HERO_COUNT; i++) {
+            strcpy(m_heroRecs[i].m_name, gHeroNames[i][0]);
+            strcpy(m_heroRecs[i].m_shortName, gHeroNames[i][1]);
+        }
+    }
+    read(handle, m_availableHeroes, sizeof(m_availableHeroes));
+    read(handle, m_castleRecs, sizeof(m_castleRecs));
+    read(handle, m_townOwners, sizeof(m_townOwners));
+    read(handle, m_townBuiltToday, sizeof(m_townBuiltToday));
+    read(handle, m_mines, sizeof(m_mines));
+    read(handle, m_mineOwners, sizeof(m_mineOwners));
+    read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
+    read(handle, m_boats, sizeof(m_boats));
+    read(handle, m_boatSlots, sizeof(m_boatSlots));
+    read(handle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
+    read(handle, &m_ultimateArtifactX, 1);
+    read(handle, &m_ultimateArtifactY, 1);
+    read(handle, &m_ultimateArtifactId, 1);
+    if (origData) {
+        memset(m_mapSounds, -1, sizeof(m_mapSounds));
+        memset(m_mapExtra, 0, sizeof(m_mapExtra));
+        memset(mapVisited, 0, sizeof(mapVisited));
+        strcpy(gpGame->m_saveName, "NEWGAME");
+    } else {
+        read(handle, m_mapSounds, sizeof(m_mapSounds));
+        read(handle, m_mapExtra, sizeof(m_mapExtra));
+        read(handle, mapVisited, sizeof(mapVisited));
+        if (strcmp(filename, "REMOTE.GAM"))
+            strcpy(gpGame->m_saveName, filename);
+    }
+    close(handle);
+    gpAdvManager->m_heroContextLocked = 0;
+    gpCurPlayer = &gpGame->m_players[giCurPlayer];
+    giCurPlayerBit = 1 << giCurPlayer;
+    giCurWatchPlayer = giCurPlayer;
+    while (!gbThisNetHumanPlayer[giCurWatchPlayer])
+        giCurWatchPlayer = (giCurWatchPlayer + 1) % m_playerCount;
+    giCurWatchPlayerBit = 1 << giCurWatchPlayer;
+    giCurPlayerHighBit = 1 << (giCurPlayer + 4);
+    giCurWatchPlayerHighBit = 1 << (giCurWatchPlayer + 4);
+    bShowIt = gbThisNetHumanPlayer[giCurPlayer];
+    memset(gMapCellScratch, 0, sizeof(gMapCellScratch));
+    if (!origData)
+        SetupAdjacentMons();
+    return 1;
+}
 
 // Right-click help text for the new-game screen.
 extern char* gNewGameHelp[];
@@ -1063,9 +1195,6 @@ extern short gCrestTownTypes[];
 extern signed char gRandomTownTypes[4];
 
 // NewMap's per-player globals beyond Buka's current/watch player bits.
-extern unsigned char giCurPlayerHighBit;
-extern unsigned char giCurWatchPlayerHighBit;
-extern int giCurWatchPlayer;
 // Starting hero class of each campaign crest and of each town type, and
 // each hero class's sight radius.
 extern short gCrestHeroClass[];

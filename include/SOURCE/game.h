@@ -213,7 +213,8 @@ public:
     signed char GetMineId(signed char, signed char);
     short SaveGame(char *, signed char);
     void SetupOrigData(void);
-    void LoadGame(char*, int, int);
+    // HoMM1 retail returns 1 in AX (ret 0xc).
+    short LoadGame(char*, int, int);
     void GiveTroopsToNeutralTown(int);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char*);
