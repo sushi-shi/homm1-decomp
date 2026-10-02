@@ -36,6 +36,8 @@ extern char* gResourceNames[];
 extern char* gSpellNames[];
 extern char* gArmyNamesPlural[];
 extern char* gObjectNames[];
+// HoMM1 town-name lookup by town id (retail 0x00455aaf).
+char* GetTownName(int);
 
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)
@@ -1634,7 +1636,219 @@ char* advManager::GetArmySizeName(
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.675336;margin=0.051432;shape=0.330;size=0.961;calls=0.941;strings=mons32.icn|qtown1.bin|smalfont.fnt;alternate=pol20:void advManager::TownQuickView(int, int, int, int)@0x000631ad
 VA(0x0042f239, 0xc51)
-void advManager::TownQuickView(int, int, int, int) {}
+void advManager::TownQuickView(signed char townId, signed char, short windowX, short windowY) {
+    short portraitId;
+    short creatureIconHeight;
+    short numArmies;
+    tag_message message;
+    short i;
+    short flag;
+    short flagId;
+    short savedOriginX;
+    short width;
+    heroWindow* viewWin;
+    town* townPointer;
+    short savedOriginY;
+    int detailLevel;
+    short armyW;
+    short leftEdge;
+
+    armyW = 192;
+    leftEdge = 9;
+    width = 32;
+    creatureIconHeight = 32;
+    flag = 1;
+    portraitId = 2;
+    flagId = 8;
+    if (townId == -1)
+        return;
+    townPointer = gpGame->GetTown(townId);
+    if (windowX == -1) {
+        windowX = 342;
+        windowY = 176;
+    }
+    viewWin = new heroWindow(windowX, windowY, "qtown1.bin");
+    if (!viewWin)
+        MemError();
+    if (townPointer->m_owner == giCurPlayer) {
+        detailLevel = 3;
+    } else {
+        detailLevel = gpGame->GetNumThievesGuilds(giCurPlayer);
+        if (detailLevel > 2)
+            detailLevel = 2;
+    }
+    SetWinText(viewWin, 10);
+
+    numArmies = 0;
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = 2;
+    message.payload.widget.data.value = townPointer->m_type + 12;
+    if (gpGame->GetTown(townId)->m_buildings & 0x40)
+        message.payload.widget.data.value += 4;
+    viewWin->BroadcastMessage(message);
+    if (townPointer->m_owner == -1) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = 8;
+        message.payload.widget.data.value = 4;
+        viewWin->BroadcastMessage(message);
+        message.payload.widget.id++;
+        viewWin->BroadcastMessage(message);
+    } else {
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.id = 8;
+        message.payload.widget.data.value = gpGame->m_players[townPointer->m_owner].Color() * 2;
+        viewWin->BroadcastMessage(message);
+        message.payload.widget.id++;
+        message.payload.widget.data.value++;
+        viewWin->BroadcastMessage(message);
+    }
+    sprintf(gText, GetTownName(townPointer->m_id));
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = gText;
+    viewWin->BroadcastMessage(message);
+
+    numArmies = 0;
+    for (i = 0; i < 5; i++) {
+        if (townPointer->m_army.m_creatureTypes[i] != -1)
+            numArmies++;
+    }
+
+    if (!detailLevel || !numArmies) {
+        char* garrisonStr;
+        textWidget* garrisonWidget;
+
+        garrisonStr = static_cast<char*>(malloc(20));
+        if (!detailLevel)
+            sprintf(garrisonStr, "Unknown");
+        else
+            sprintf(garrisonStr, "None");
+        garrisonWidget = new textWidget(0, 100, 210, 12, garrisonStr, "smalfont.fnt", 1, -1, 512);
+        if (!garrisonWidget)
+            MemError();
+        viewWin->AddWidget(garrisonWidget, -1);
+    } else {
+        short row2;
+        signed char monster;
+        signed char slot;
+        short slotIndex;
+        iconWidget* iconWgts[5];
+        char* labels[5];
+        int xAdjust;
+        short offsetX;
+        short step;
+        textWidget* texts[5];
+        signed char dummy;
+        short rowY;
+        short row1;
+
+        rowY = 75;
+        switch (numArmies) {
+        case 1:
+        case 2:
+        case 3:
+            rowY += 22;
+            row1 = numArmies;
+            row2 = 0;
+            break;
+        case 4:
+            row1 = 2;
+            row2 = 2;
+            break;
+        default:
+            row1 = 2;
+            row2 = 3;
+            break;
+        }
+        dummy = 0;
+        slotIndex = 0;
+        slot = 0;
+        step = 192 / row1;
+        offsetX = (step - 32) / 2 + 9;
+        xAdjust = 0;
+        for (i = 0; i < row1; i++) {
+            if (numArmies == 5) {
+                if (i == 0)
+                    xAdjust = 12;
+                else
+                    xAdjust = -12;
+            }
+            while (townPointer->m_army.m_creatureTypes[slot] == -1)
+                slot++;
+            monster = townPointer->m_army.m_creatureTypes[slot];
+            iconWgts[slotIndex] = new iconWidget(step * slotIndex + offsetX + xAdjust, rowY, 32, 32,
+                                                      "mons32.icn", monster, 0, -1, 16, 1);
+            if (!iconWgts[slotIndex])
+                MemError();
+            labels[slotIndex] = static_cast<char*>(malloc(15));
+            if (detailLevel == 3)
+                sprintf(labels[slotIndex], "%d", townPointer->m_army.m_creatureCounts[slot]);
+            else if (detailLevel == 2)
+                strcpy(labels[slotIndex], GetArmySizeName(townPointer->m_army.m_creatureCounts[slot], 0));
+            else
+                strcpy(labels[slotIndex], "?");
+            texts[slotIndex] = new textWidget(step * slotIndex + offsetX + xAdjust - 14, rowY + 30, 60,
+                                                       12, labels[slotIndex], "smalfont.fnt", 1, -1, 512);
+            if (!texts[slotIndex])
+                MemError();
+            viewWin->AddWidget(iconWgts[slotIndex], -1);
+            viewWin->AddWidget(texts[slotIndex], -1);
+            slotIndex++;
+            slot++;
+        }
+        if (row2) {
+            step = 192 / row2;
+            offsetX = (step - 32) / 2 + 9;
+            rowY += 44;
+            for (i = row1; i < row1 + row2; i++) {
+                while (townPointer->m_army.m_creatureTypes[slot] == -1)
+                    slot++;
+                monster = townPointer->m_army.m_creatureTypes[slot];
+                iconWgts[slotIndex] = new iconWidget((slotIndex - row1) * step + offsetX, rowY, 32, 32,
+                                                          "mons32.icn", monster, 0, -1, 16, 1);
+                if (!iconWgts[slotIndex])
+                    MemError();
+                labels[slotIndex] = static_cast<char*>(malloc(15));
+                if (detailLevel == 3)
+                    sprintf(labels[slotIndex], "%d", townPointer->m_army.m_creatureCounts[slot]);
+                else if (detailLevel == 2)
+                    strcpy(labels[slotIndex], GetArmySizeName(townPointer->m_army.m_creatureCounts[slot], 0));
+                else
+                    strcpy(labels[slotIndex], "?");
+                texts[slotIndex] = new textWidget((slotIndex - row1) * step + offsetX - 14,
+                                                           rowY + 30, 60, 12, labels[slotIndex], "smalfont.fnt",
+                                                           1, -1, 512);
+                if (!texts[slotIndex])
+                    MemError();
+                viewWin->AddWidget(iconWgts[slotIndex], -1);
+                viewWin->AddWidget(texts[slotIndex], -1);
+                slotIndex++;
+                slot++;
+            }
+        }
+    }
+
+    GrabScreen();
+    gpWindowManager->AddWindow(viewWin, -1, 1);
+    savedOriginX = m_mapOriginX;
+    savedOriginY = m_mapOriginY;
+    m_mapOriginX = townPointer->m_x - 7;
+    m_mapOriginY = townPointer->m_y - 7;
+    UpdateRadar(1, 0);
+    gpMouseManager->HideSystemCursor();
+    QuickViewWait();
+    gpWindowManager->RemoveWindow(viewWin);
+    delete viewWin;
+    gpMouseManager->ShowSystemCursor();
+    m_mapOriginX = savedOriginX;
+    m_mapOriginY = savedOriginY;
+    UpdateRadar(1, 0);
+    CompleteDraw(0);
+    UpdateScreen(0, 0);
+    if (message.type == MESSAGE_LEFT_BUTTON_DOWN && townPointer->m_owner == giCurPlayer)
+        SetTownContext(townPointer->m_id);
+}
 
 // donor PoL RVA 0x00063dd6; preferred Buka symbol ?RedrawAdvScreen@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

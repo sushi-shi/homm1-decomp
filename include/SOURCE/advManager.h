@@ -169,7 +169,7 @@ public:
     signed char UpdBottomViewHero(void);
     void HeroQuickView(signed char, signed char, short, short);
     char* GetArmySizeName(short, H1_ENUM_PARAM(ArmySizeNameVariant, signed char));
-    void TownQuickView(int, int, int, int);
+    void TownQuickView(signed char, signed char, short, short);
     void RedrawAdvScreen(int);
     void DeactivateCurrTown(void);
     void DeactivateCurrHero(void);
