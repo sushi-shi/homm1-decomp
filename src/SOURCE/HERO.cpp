@@ -81,8 +81,8 @@ short hero::CalcMobility(void) {
         speed = 3;
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
             if (m_army.m_creatureTypes[j] != -1
-                && gMonsterDatabase[m_army.m_creatureTypes[j]].speed < speed)
-                speed = gMonsterDatabase[m_army.m_creatureTypes[j]].speed;
+                && gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed < speed)
+                speed = gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed;
         }
         result = mobility[speed - 1];
         if (HasArtifact(ARTIFACT_NOMAD_BOOTS))

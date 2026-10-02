@@ -448,7 +448,7 @@ void philAI::ValueOfBuyingCreature(
         if ((gMonsterDatabase[creature].stats.attributes & 8)) {
             for (n = 0; n < 5; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != -1
-                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].attributes & 8))
+                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & 8))
                     archers++;
             }
             creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
@@ -461,7 +461,7 @@ void philAI::ValueOfBuyingCreature(
     if ((gMonsterDatabase[creature].stats.attributes & 8)) {
         for (slotNum = 0; slotNum < 5; slotNum++) {
             if (townPointer->m_army.m_creatureTypes[slotNum] != -1
-                && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].attributes & 8))
+                && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].stats.attributes & 8))
                 archers++;
         }
         creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
