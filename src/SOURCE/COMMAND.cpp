@@ -18,11 +18,10 @@
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.
 VA(0x0040f2c0, 0x311)
-short combatManager::Main(struct tag_message &message)
-{
+short combatManager::Main(struct tag_message& message) {
     int result = MESSAGE_DISPATCH_CONSUME;
-    CombatRemotePacket *packet;
-    army *currentArmy;
+    army* thisArmy;
+    CombatRemotePacket* packet;
 
     if (KBTickCount() > glTimers[0]) {
         PollSound();
@@ -31,7 +30,7 @@ short combatManager::Main(struct tag_message &message)
     CheckCastleAttack();
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
-    packet = (CombatRemotePacket *)GetRemoteData(1);
+    packet = (CombatRemotePacket*)GetRemoteData(1);
     if (packet && packet->type == 2) {
         switch (packet->command) {
             case 0x17:
@@ -55,9 +54,9 @@ short combatManager::Main(struct tag_message &message)
         }
         return MESSAGE_DISPATCH_CONSUME;
     }
-    currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    if (currentArmy->m_spellEffect == 14) {
-        currentArmy->GoBerserk();
+    thisArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    if (thisArmy->m_spellEffect == 14) {
+        thisArmy->GoBerserk();
         if (CheckWin(&message))
             return MESSAGE_DISPATCH_FORWARD;
     }
@@ -87,8 +86,7 @@ processAction:
 // Buka COMMAND.cpp ValidHexToStandOn; HoMM1 rows are nine hexes wide and
 // the edge columns are never standable.
 VA(0x0040f5d1, 0xd6)
-signed char combatManager::ValidHexToStandOn(int hex)
-{
+signed char combatManager::ValidHexToStandOn(int hex) {
     if (hex == -2)
         return 1;
     if (hex != -1 && hex % 9 != 8 && hex % 9 != 0 && m_hexCells[hex].m_obstacleIndex == -1
@@ -103,8 +101,7 @@ signed char combatManager::ValidHexToStandOn(int hex)
 // Buka COMMAND.cpp SetCombatDirections; HoMM1 reads the global adjacency
 // table and keeps the 24-sector map as bytes.
 VA(0x0040f6a7, 0x7e9)
-void combatManager::SetCombatDirections(int targetHex)
-{
+void combatManager::SetCombatDirections(int targetHex) {
     int mapped;
     int numUnset;
     signed char hasPath[8];
@@ -114,9 +111,9 @@ void combatManager::SetCombatDirections(int targetHex)
     int outDir;
     int dir;
     int directionHexes[8];
-    army *curArmy;
+    army* curArmy;
     int targetIndex;
-    army *target;
+    army* target;
     int targetSide;
     signed char canStand[8];
 
@@ -181,7 +178,8 @@ void combatManager::SetCombatDirections(int targetHex)
     } else {
         for (dir = 0; dir < 8; dir++) {
             if (canStand[dir]) {
-                if (curArmy->m_hex == directionHexes[dir] || curArmy->ValidPath(directionHexes[dir], 1))
+                if (curArmy->m_hex == directionHexes[dir]
+                    || curArmy->ValidPath(directionHexes[dir], 1))
                     hasPath[dir] = 1;
                 else
                     hasPath[dir] = 0;
@@ -258,17 +256,16 @@ void combatManager::SetCombatDirections(int targetHex)
 // Buka COMMAND.cpp CheckSetMouseDirection; HoMM1 hexes are 78 by 80 and
 // odd rows shift by 66 pixels.
 VA(0x0040fe90, 0x620)
-void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex)
-{
+void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex) {
     int hexDir;
     int savedDir;
     int alternate;
     float ratio;
     int index;
-    army *curArmy;
+    army* curArmy;
     int distX;
     int distY;
-    army *target;
+    army* target;
     int backHex;
 
     if (m_gridSelectionDisabled)
@@ -385,8 +382,7 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
 // command and retail maps command 13 to pointer 5, preserving all others.
 VA(0x004104b0, 0x34)
 H1_ENUM_RETURN(CombatPointerCode, int)
-combatManager::GetPointer(H1_ENUM_PARAM(CombatPointerCode, int) command)
-{
+combatManager::GetPointer(H1_ENUM_PARAM(CombatPointerCode, int) command) {
     if (command == COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS)
         return COMBAT_POINTER_VIEW;
     else
@@ -396,8 +392,7 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatPointerCode, int) command)
 // Buka COMMAND.cpp ProcessCombatMsg; HoMM1 hovers the combat field as
 // widget 0x40 and handles F1, space, H, T and C keys.
 VA(0x004104e4, 0x5bb)
-int combatManager::ProcessCombatMsg(struct tag_message &message)
-{
+int combatManager::ProcessCombatMsg(struct tag_message& message) {
     short mouseX = message.payload.mouse.x;
     short mouseY = message.payload.mouse.y;
     signed char unused = 0;
@@ -460,7 +455,8 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.payload.widget.id) {
                         case 2:
-                            if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                            if (!(message.payload.widget.modifiers
+                                  & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                                 m_gridSelectionDisabled = 1;
                                 gpMouseManager->ReallyHidePointer();
                             }
@@ -494,16 +490,38 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
                     ResetMouse();
                     break;
                 case 0x2e:
-                    if (!m_heroes[m_currentSide])
-                        NormalDialog("You have no hero to cast a spell.", 1, -1, -1, -1, 0, -1, 0, -1);
-                    else if (m_heroCastSpell[m_currentSide])
-                        NormalDialog("You have already cast a spell this round.", 1, -1, -1, -1, 0, -1, 0, -1);
-                    else {
-                        gpMouseManager->SetPointer(6);
-                        giCurGeneral = m_currentSide;
-                        ViewSpells(0);
-                        ResetMouse();
+                    if (!m_heroes[m_currentSide]) {
+                        NormalDialog(
+                            "You have no hero to cast a spell.",
+                            1,
+                            -1,
+                            -1,
+                            -1,
+                            0,
+                            -1,
+                            0,
+                            -1
+                        );
+                        break;
                     }
+                    if (m_heroCastSpell[m_currentSide]) {
+                        NormalDialog(
+                            "You have already cast a spell this round.",
+                            1,
+                            -1,
+                            -1,
+                            -1,
+                            0,
+                            -1,
+                            0,
+                            -1
+                        );
+                        break;
+                    }
+                    gpMouseManager->SetPointer(6);
+                    giCurGeneral = m_currentSide;
+                    ViewSpells(0);
+                    ResetMouse();
                     break;
             }
             break;
@@ -514,12 +532,11 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
 // Buka COMMAND.cpp ResetRound; HoMM1 has five stacks a side, one keep and
 // a byte spell-round counter.
 VA(0x00410a9f, 0x139)
-void combatManager::ResetRound(void)
-{
+void combatManager::ResetRound(void) {
     int unusedRoundWord;
     int index;
     int side;
-    army *curArmy;
+    army* curArmy;
 
     m_catapultAttacksRemaining[1] = m_catapultAttackCount[1];
     m_catapultAttacksRemaining[0] = m_catapultAttackCount[0];
@@ -547,8 +564,7 @@ void combatManager::ResetRound(void)
 // Buka COMMAND.cpp CheckWin; HoMM1 returns the byte flag and names the
 // winning side directly (-1 for a draw).
 VA(0x00410bd8, 0x15d)
-int combatManager::CheckWin(struct tag_message *message)
-{
+int combatManager::CheckWin(struct tag_message* message) {
     int armyIndex;
     signed char combatEnded;
     int unusedWinWord;
@@ -582,11 +598,10 @@ int combatManager::CheckWin(struct tag_message *message)
 // Buka COMMAND.cpp GetCommand; HoMM1 returns each command directly, has no
 // small view or ballista and clears the target through the current stack.
 VA(0x00410d35, 0x316)
-signed char combatManager::GetCommand(short hex)
-{
+signed char combatManager::GetCommand(short hex) {
     signed char unusedCol = hex % 9;
     signed char rowIndex = hex / 9;
-    army *currentArmy;
+    army* currentArmy;
     signed char targetIndex;
     signed char enemySide;
 
@@ -642,7 +657,8 @@ signed char combatManager::GetCommand(short hex)
                 }
             } else {
                 if (m_armies[m_currentSide][m_currentArmyIndex].ValidPath(hex, 0) == 1)
-                    return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes & 2) ? 2 : 1;
+                    return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes & 2) ? 2
+                                                                                                : 1;
             }
             break;
     }
@@ -652,8 +668,7 @@ signed char combatManager::GetCommand(short hex)
 // Buka COMMAND.cpp RightClick; HoMM1 hero hexes are 26 and 9 and the
 // army view also takes the side.
 VA(0x0041104b, 0x1dc)
-signed char combatManager::RightClick(signed char hex)
-{
+signed char combatManager::RightClick(signed char hex) {
     signed char unusedColumn = hex % 9;
     signed char row = hex / 9;
 
@@ -684,7 +699,11 @@ signed char combatManager::RightClick(signed char hex)
                     case 0:
                     case 1:
                         gpMouseManager->SetPointer(6);
-                        ViewArmy(&m_armies[side][m_hexCells[m_selectedHex].m_occupantIndex], side, 1);
+                        ViewArmy(
+                            &m_armies[side][m_hexCells[m_selectedHex].m_occupantIndex],
+                            side,
+                            1
+                        );
                         ResetMouse();
                         return 0;
                 }
@@ -698,11 +717,10 @@ signed char combatManager::RightClick(signed char hex)
 // Buka COMMAND.cpp DoCommand; HoMM1 has no ballista or negation sphere and
 // views the army at the selected hex on the current side.
 VA(0x00411227, 0x333)
-void combatManager::DoCommand(signed char command)
-{
+void combatManager::DoCommand(signed char command) {
     int unusedValue1;
     int unusedValue2;
-    army *currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    army* currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
 
     switch (command) {
         case 0:
@@ -736,7 +754,11 @@ void combatManager::DoCommand(signed char command)
             break;
         case 5:
             gpMouseManager->SetPointer(6);
-            ViewArmy(&m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex], m_currentSide, 0);
+            ViewArmy(
+                &m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex],
+                m_currentSide,
+                0
+            );
             ResetMouse();
             break;
         case 10:
@@ -751,7 +773,8 @@ void combatManager::DoCommand(signed char command)
             break;
         case 12:
             if (DoSurrender() == 1) {
-                if (gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD] < giSurrenderCost)
+                if (gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD]
+                    < giSurrenderCost)
                     NormalDialog("You don't have enough gold!", 1, -1, -1, -1, 0, -1, 0, -1);
                 else {
                     giNextAction = 5;
@@ -766,8 +789,7 @@ void combatManager::DoCommand(signed char command)
 // Buka COMMAND.cpp WinCombatHandler; HoMM1 pages captured artifacts and
 // cycles a single six-frame animation.
 VA(0x0041155a, 0x1a3)
-short WinCombatHandler(struct tag_message &message)
-{
+short WinCombatHandler(struct tag_message& message) {
     int finalDelay = 0x5a;
     short frame = 1;
 
@@ -779,8 +801,10 @@ short WinCombatHandler(struct tag_message &message)
                         if (iMaxTransferArtifacts > iCurTransferArtifact + 1) {
                             gpCombatManager->ClearWinLoseBottom(gpCombatManager->m_winLoseWindow);
                             iCurTransferArtifact++;
-                            gpCombatManager->ShowWinLoseArtifact(gpCombatManager->m_winLoseWindow,
-                                                                 iTransferArtifacts[iCurTransferArtifact]);
+                            gpCombatManager->ShowWinLoseArtifact(
+                                gpCombatManager->m_winLoseWindow,
+                                iTransferArtifacts[iCurTransferArtifact]
+                            );
                         } else {
                             gpWindowManager->m_dialogResult = message.payload.widget.id;
                             message.payload.widget.command = message.payload.widget.id = 10;
@@ -810,8 +834,7 @@ short WinCombatHandler(struct tag_message &message)
 
 // Buka COMMAND.cpp ClearWinLoseBottom (fifteen icon/text widget pairs).
 VA(0x004116fd, 0x110)
-void combatManager::ClearWinLoseBottom(class heroWindow *window)
-{
+void combatManager::ClearWinLoseBottom(class heroWindow* window) {
     int i;
 
     for (i = 0; i < 15; i++) {
@@ -830,9 +853,8 @@ void combatManager::ClearWinLoseBottom(class heroWindow *window)
 
 // Buka COMMAND.cpp ShowWinLoseArtifact.
 VA(0x0041180d, 0x2fa)
-void combatManager::ShowWinLoseArtifact(class heroWindow *window, int artifact)
-{
-    char *artifactName;
+void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) {
+    char* artifactName;
     short boxWidth = 0x140;
     short bottom = 0x1ca;
     tag_message message;
@@ -843,15 +865,17 @@ void combatManager::ShowWinLoseArtifact(class heroWindow *window, int artifact)
     message.payload.widget.id = 0x65;
     message.payload.widget.data.text = gText;
     m_winLoseWindow->BroadcastMessage(message);
-    m_winLoseBottomWidgets[0] = new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, 0x10, 1);
+    m_winLoseBottomWidgets[0] =
+        new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, 0x10, 1);
     if (m_winLoseBottomWidgets[0] == 0)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[0], -1);
-    m_winLoseBottomWidgets[1] = new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, 0, 0x7d2, 0x10, 1);
+    m_winLoseBottomWidgets[1] =
+        new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, 0, 0x7d2, 0x10, 1);
     if (m_winLoseBottomWidgets[1] == 0)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[1], -1);
-    artifactName = (char *)malloc(0x3c);
+    artifactName = (char*)malloc(0x3c);
     sprintf(artifactName, gArtifactNames[artifact]);
     m_winLoseBottomTextWidgets[0] =
         new textWidget(0, 0x18a, 0x140, 0xc, artifactName, "smalfont.fnt", 1, 0x835, 0x200);
@@ -870,9 +894,8 @@ void combatManager::ShowWinLoseArtifact(class heroWindow *window, int artifact)
 // Buka COMMAND.cpp ShowDeadArmies; HoMM1 lays out up to five casualties a
 // side with fixed 40-pixel spacing.
 VA(0x00411b07, 0x7d0)
-void combatManager::ShowDeadArmies(class heroWindow *window)
-{
-    char *buffer;
+void combatManager::ShowDeadArmies(class heroWindow* window) {
+    char* buffer;
     int casualtyType[2][5];
     int iconSpacing;
     short boxWidth = 0x140;
@@ -893,17 +916,19 @@ void combatManager::ShowDeadArmies(class heroWindow *window)
         numLost[side] = 0;
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
             if (m_armies[side][armyIndex].m_creatureType != -1
-                && m_armies[side][armyIndex].m_initialQuantity > m_armies[side][armyIndex].m_quantity) {
+                && m_armies[side][armyIndex].m_initialQuantity
+                       > m_armies[side][armyIndex].m_quantity) {
                 casualtyType[side][numLost[side]] = m_armies[side][armyIndex].m_creatureType;
-                casualtyCount[side][numLost[side]] =
-                    m_armies[side][armyIndex].m_initialQuantity - m_armies[side][armyIndex].m_quantity;
+                casualtyCount[side][numLost[side]] = m_armies[side][armyIndex].m_initialQuantity
+                                                     - m_armies[side][armyIndex].m_quantity;
                 numLost[side]++;
             }
         }
     }
-    buffer = (char *)malloc(0x1e);
+    buffer = (char*)malloc(0x1e);
     sprintf(buffer, "Battlefield Casualties");
-    m_winLoseBottomTextWidgets[12] = new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
+    m_winLoseBottomTextWidgets[12] =
+        new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
     if (m_winLoseBottomTextWidgets[12] == 0)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[12], -1);
@@ -912,7 +937,7 @@ void combatManager::ShowDeadArmies(class heroWindow *window)
             rowY = 0x118;
         else
             rowY = 0x159;
-        buffer = (char *)malloc(0x1e);
+        buffer = (char*)malloc(0x1e);
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
@@ -920,10 +945,19 @@ void combatManager::ShowDeadArmies(class heroWindow *window)
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
         if (numLost[side] <= 0) {
-            buffer = (char *)malloc(10);
+            buffer = (char*)malloc(10);
             sprintf(buffer, "None");
-            m_winLoseBottomTextWidgets[side * 5] =
-                new textWidget(0, rowY + 0x12, 0x140, 0x14, buffer, "smalfont.fnt", 1, side * 5 + 0x834, 0x200);
+            m_winLoseBottomTextWidgets[side * 5] = new textWidget(
+                0,
+                rowY + 0x12,
+                0x140,
+                0x14,
+                buffer,
+                "smalfont.fnt",
+                1,
+                side * 5 + 0x834,
+                0x200
+            );
             if (m_winLoseBottomTextWidgets[side * 5] == 0)
                 MemError();
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5], -1);
@@ -931,16 +965,33 @@ void combatManager::ShowDeadArmies(class heroWindow *window)
         iconSpacing = 0x28;
         firstX = (0x140 - numLost[side] * iconSpacing) / 2 + 3;
         for (armyIndex = 0; armyIndex < numLost[side]; armyIndex++) {
-            m_winLoseBottomWidgets[side * 5 + armyIndex] =
-                new iconWidget(armyIndex * iconSpacing + firstX, rowY + 0xf, 0x20, 0x1c, "mons32.icn",
-                               casualtyType[side][armyIndex], 0, side * 5 + armyIndex + 0x7d0, 0x10, 1);
+            m_winLoseBottomWidgets[side * 5 + armyIndex] = new iconWidget(
+                armyIndex * iconSpacing + firstX,
+                rowY + 0xf,
+                0x20,
+                0x1c,
+                "mons32.icn",
+                casualtyType[side][armyIndex],
+                0,
+                side * 5 + armyIndex + 0x7d0,
+                0x10,
+                1
+            );
             if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
                 MemError();
-            buffer = (char *)malloc(9);
+            buffer = (char*)malloc(9);
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
-            m_winLoseBottomTextWidgets[side * 5 + armyIndex] =
-                new textWidget(armyIndex * iconSpacing + firstX, rowY + 0x2e, 0x20, 0xc, buffer, "smalfont.fnt", 1,
-                               side * 5 + armyIndex + 0x834, 0x200);
+            m_winLoseBottomTextWidgets[side * 5 + armyIndex] = new textWidget(
+                armyIndex * iconSpacing + firstX,
+                rowY + 0x2e,
+                0x20,
+                0xc,
+                buffer,
+                "smalfont.fnt",
+                1,
+                side * 5 + armyIndex + 0x834,
+                0x200
+            );
             if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == 0)
                 MemError();
             window->AddWidget(m_winLoseBottomWidgets[side * 5 + armyIndex], -1);
@@ -952,8 +1003,7 @@ void combatManager::ShowDeadArmies(class heroWindow *window)
 // Buka COMMAND.cpp DoVictory; HoMM1 has no necromancy or eagle eye and
 // grabs the screen instead of fading it.
 VA(0x004122d7, 0x7a1)
-void combatManager::DoVictory(signed char winningSide)
-{
+void combatManager::DoVictory(signed char winningSide) {
     int levelsGained;
     tag_message message;
     int i;
@@ -979,22 +1029,32 @@ void combatManager::DoVictory(signed char winningSide)
                     m_experienceValue[1 - winningSide] -= 500;
                 if (m_combatTowns[0] && winningSide == 1)
                     m_experienceValue[1 - winningSide] += 500;
-                levelsGained = gpAdvManager->GiveExperience(m_heroes[winningSide], m_experienceValue[1 - winningSide],
-                                                            !gbThisNetHumanPlayer[m_heroes[winningSide]->m_owner]);
+                levelsGained = gpAdvManager->GiveExperience(
+                    m_heroes[winningSide],
+                    m_experienceValue[1 - winningSide],
+                    !gbThisNetHumanPlayer[m_heroes[winningSide]->m_owner]
+                );
                 if (!gbRetreatWin && m_heroes[1] && m_heroes[0]) {
                     for (i = 0; i < 14; i++) {
                         if (m_heroes[1 - winningSide]->m_artifacts[i] >= 4
                             && m_heroes[1 - winningSide]->m_artifacts[i] != 0x25) {
-                            iTransferArtifacts[iMaxTransferArtifacts] = m_heroes[1 - winningSide]->m_artifacts[i];
+                            iTransferArtifacts[iMaxTransferArtifacts] =
+                                m_heroes[1 - winningSide]->m_artifacts[i];
                             iMaxTransferArtifacts++;
                         }
                     }
                 }
             }
-            if (!(giCurPlayer == -1 || !gbThisNetHumanPlayer[giCurPlayer] || m_playerId[winningSide] != giCurPlayer)
-                || !(giCurPlayer == -1 || m_playerId[winningSide] == -1 || gbThisNetHumanPlayer[giCurPlayer]
-                     || !gbThisNetHumanPlayer[m_playerId[winningSide]])
-                || !(m_playerId[winningSide] == -1 || !gbThisNetHumanPlayer[m_playerId[winningSide]])) {
+            if (!(giCurPlayer == -1 || !gbThisNetHumanPlayer[giCurPlayer]
+                  || m_playerId[winningSide] != giCurPlayer)
+                || !(
+                    giCurPlayer == -1 || m_playerId[winningSide] == -1
+                    || gbThisNetHumanPlayer[giCurPlayer]
+                    || !gbThisNetHumanPlayer[m_playerId[winningSide]]
+                )
+                || !(
+                    m_playerId[winningSide] == -1 || !gbThisNetHumanPlayer[m_playerId[winningSide]]
+                )) {
                 gpSoundManager->SwitchAmbientMusic(0x2c);
                 m_winLoseWindow = new heroWindow(0x9f, 2, "wincmbt.bin");
                 if (m_winLoseWindow == 0)
@@ -1007,11 +1067,20 @@ void combatManager::DoVictory(signed char winningSide)
                     else
                         sprintf(gText, cBattleResults[2]);
                     if (levelsGained > 0 && winningSide == 0 && giNumHumanPlayers > 1)
-                        sprintf(expText, cBattleResults[10], m_heroes[winningSide]->m_name,
-                                m_experienceValue[1 - winningSide], levelsGained);
+                        sprintf(
+                            expText,
+                            cBattleResults[10],
+                            m_heroes[winningSide]->m_name,
+                            m_experienceValue[1 - winningSide],
+                            levelsGained
+                        );
                     else
-                        sprintf(expText, cBattleResults[3], m_heroes[winningSide]->m_name,
-                                m_experienceValue[1 - winningSide]);
+                        sprintf(
+                            expText,
+                            cBattleResults[3],
+                            m_heroes[winningSide]->m_name,
+                            m_experienceValue[1 - winningSide]
+                        );
                     strcat(gText, expText);
                     m_heroes[winningSide]->ApplyBattleWinTemps();
                 } else {
@@ -1049,15 +1118,14 @@ void combatManager::DoVictory(signed char winningSide)
 // Buka COMMAND.cpp DoLoseWindow; HoMM1 walks the defeated hero across a
 // scrolling backdrop until the window's button is released.
 VA(0x00412a78, 0x549)
-void combatManager::DoLoseWindow(void)
-{
+void combatManager::DoLoseWindow(void) {
     short walkFrame;
     short lAnimY;
     short unusedWalkX;
     short unusedWalkY;
     tag_message message;
-    heroWindow *loseWindow;
-    bitmap *bmp;
+    heroWindow* loseWindow;
+    bitmap* bmp;
     short result;
     int iDelay;
     short offset;
@@ -1067,7 +1135,7 @@ void combatManager::DoLoseWindow(void)
     short blitHeight;
     short iAreaWidth;
     short stop;
-    icon *walkIcon;
+    icon* walkIcon;
 
     iDelay = 0xb4;
     animX = 0x31;
@@ -1139,7 +1207,8 @@ void combatManager::DoLoseWindow(void)
         gpMouseManager->Main(message);
         result = gpWindowManager->Main(message);
         if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
-            && message.payload.widget.command == WIDGET_NOTIFY_DESELECT && message.payload.widget.id == 0x7800)
+            && message.payload.widget.command == WIDGET_NOTIFY_DESELECT
+            && message.payload.widget.id == 0x7800)
             stop = 1;
     } while (!stop);
     gpWindowManager->RemoveWindow(loseWindow);
@@ -1151,9 +1220,8 @@ void combatManager::DoLoseWindow(void)
 // Buka COMMAND.cpp DoSurrender; HoMM1 charges half the stack cost and has
 // no quill or diplomacy discount.
 VA(0x00412fc1, 0x2c6)
-short combatManager::DoSurrender(void)
-{
-    heroWindow *win;
+short combatManager::DoSurrender(void) {
+    heroWindow* win;
     short unusedResult;
     int armyIndex;
     tag_message message;
@@ -1162,8 +1230,9 @@ short combatManager::DoSurrender(void)
     giSurrenderCost = 0;
     for (armyIndex = 0; armyIndex < 5; armyIndex++) {
         if (m_armies[m_currentSide][armyIndex].IsAlive())
-            giSurrenderCost += gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2
-                               * m_armies[m_currentSide][armyIndex].m_quantity;
+            giSurrenderCost +=
+                gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2
+                * m_armies[m_currentSide][armyIndex].m_quantity;
     }
     unusedType = 1;
     unusedResult = 2;
@@ -1178,10 +1247,14 @@ short combatManager::DoSurrender(void)
     win->BroadcastMessage(message);
     message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
     message.payload.widget.id = 2;
-    sprintf(gText,
-            "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage for the "
-            "price of %d gold.",
-            m_heroes[1 - m_currentSide]->m_name, giSurrenderCost);
+    sprintf(
+        gText,
+        "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage "
+        "for the "
+        "price of %d gold.",
+        m_heroes[1 - m_currentSide]->m_name,
+        giSurrenderCost
+    );
     win->BroadcastMessage(message);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
@@ -1191,13 +1264,15 @@ short combatManager::DoSurrender(void)
 // Buka COMMAND.cpp CheckChangeSelector; HoMM1 redraws the grid from the
 // lower of the old and new selector hexes.
 VA(0x00413287, 0xc2)
-void combatManager::CheckChangeSelector(void)
-{
-    army *currentArmy;
+void combatManager::CheckChangeSelector(void) {
+    army* currentArmy;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     if (!m_limitCreature || m_limitCreatureHex != currentArmy->m_hex) {
-        UpdateGrid(m_limitCreatureHex > currentArmy->m_hex ? currentArmy->m_hex : m_limitCreatureHex, 1);
+        UpdateGrid(
+            m_limitCreatureHex > currentArmy->m_hex ? currentArmy->m_hex : m_limitCreatureHex,
+            1
+        );
         m_limitCreatureHex = currentArmy->m_hex;
         m_limitCreature = 1;
         DrawFrame(1);
@@ -1206,8 +1281,7 @@ void combatManager::CheckChangeSelector(void)
 
 // Buka COMMAND.cpp CheckCastleAttack; HoMM1 keys both on the castle side.
 VA(0x00413349, 0xdf)
-void combatManager::CheckCastleAttack(void)
-{
+void combatManager::CheckCastleAttack(void) {
     if (m_castleSide[1 - m_currentSide]) {
         while (m_catapultAttacksRemaining[m_currentSide] > 0) {
             CatAttack(m_currentSide);
@@ -1222,13 +1296,9 @@ void combatManager::CheckCastleAttack(void)
     }
 }
 
-
-
-
 // Buka COMMAND.cpp CheckGetAIMove; HoMM1 tries the retreat first.
 VA(0x00413428, 0x79)
-void combatManager::CheckGetAIMove(void)
-{
+void combatManager::CheckGetAIMove(void) {
     if (AICheckRetreat())
         return;
     if (!m_heroCastSpell[m_currentSide] && DoSpellAI(m_currentSide))
@@ -1239,8 +1309,7 @@ void combatManager::CheckGetAIMove(void)
 // Buka COMMAND.cpp GetControl; HoMM1 always resets the pointer and has no
 // small view.
 VA(0x004134a1, 0x16a)
-void combatManager::GetControl(void)
-{
+void combatManager::GetControl(void) {
     m_selectedHex = -1;
     m_previousCommand = -99;
     m_previousCommand = -99;
@@ -1262,13 +1331,13 @@ resetMouse:
 
 // Buka COMMAND.cpp ResetMouse; HoMM1 sends a hover over the combat field.
 VA(0x0041360b, 0xdb)
-void combatManager::ResetMouse(void)
-{
+void combatManager::ResetMouse(void) {
     tag_message message;
     short x;
     short y;
 
-    if (gbThisNetHasControl && m_playerId[m_currentSide] >= 0 && gbHumanPlayer[m_playerId[m_currentSide]]) {
+    if (gbThisNetHasControl && m_playerId[m_currentSide] >= 0
+        && gbHumanPlayer[m_playerId[m_currentSide]]) {
         m_selectedHex = -1;
         CombatMessage("", 1);
         gpMouseManager->MouseCoords(x, y);
@@ -1286,16 +1355,23 @@ void combatManager::ResetMouse(void)
 // Buka COMMAND.cpp ProcessNextAction; HoMM1 hides the pointer around the
 // action, broadcasts it to a human net opponent and has no door or cycling.
 VA(0x004136e6, 0x552)
-short combatManager::ProcessNextAction(struct tag_message &message)
-{
-    army *actingArmy;
+short combatManager::ProcessNextAction(struct tag_message& message) {
+    army* actingArmy;
     signed char advance;
     int result;
     int data[4];
 
     if (giNextAction)
-        LogStr("Process Act", giNextAction, giNextActionGridIndex, giNextActionGridIndex2, giNextActionExtra,
-               m_currentSide, m_currentArmyIndex, m_armies[m_currentSide][m_currentArmyIndex].m_hex);
+        LogStr(
+            "Process Act",
+            giNextAction,
+            giNextActionGridIndex,
+            giNextActionGridIndex2,
+            giNextActionExtra,
+            m_currentSide,
+            m_currentArmyIndex,
+            m_armies[m_currentSide][m_currentArmyIndex].m_hex
+        );
     if (gbThisNetHasControl && gbRemoteOn && m_playerId[1] >= 0 && m_playerId[0] >= 0
         && gbHumanPlayer[m_playerId[0]] && gbHumanPlayer[m_playerId[1]]) {
         int netPos;
@@ -1307,7 +1383,7 @@ short combatManager::ProcessNextAction(struct tag_message &message)
         data[1] = giNextActionExtra;
         data[2] = giNextActionGridIndex;
         data[3] = giNextActionGridIndex2;
-        result = TransmitRemoteData((char *)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
+        result = TransmitRemoteData((char*)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
         if (!result)
             ShutDown(0);
     }
@@ -1352,8 +1428,10 @@ short combatManager::ProcessNextAction(struct tag_message &message)
             gbCombatSurrender = 1;
             gbRetreatWin = 1;
             m_sideDefeated[m_currentSide] = 1;
-            gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD] -= giNextActionExtra;
-            gpGame->m_players[m_playerId[1 - m_currentSide]].m_resources[RESOURCE_GOLD] += giNextActionExtra;
+            gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD] -=
+                giNextActionExtra;
+            gpGame->m_players[m_playerId[1 - m_currentSide]].m_resources[RESOURCE_GOLD] +=
+                giNextActionExtra;
             break;
         case 3:
             actingArmy->m_stats.attributes |= 0x80;
