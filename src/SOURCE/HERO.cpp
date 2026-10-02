@@ -1178,7 +1178,7 @@ short HeroHandler(struct tag_message& message) {
                             if (!quickView
                                 && gpHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST]
                                        == ARTIFACT_MAGIC_BOOK)
-                                gpGame->ViewSpells(gpHVHero, 2, ViewSpecialHandler, 1);
+                                gpGame->ViewSpells(gpHVHero, SPELL_TYPE_ALL, ViewSpecialHandler, 1);
                             else
                                 gpHVHero->ViewArtifact(
                                     gpHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST],
