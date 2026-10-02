@@ -204,7 +204,8 @@ public:
     void InitializePasswords(void);
     void RandomizeBarrier(class mapCell*);
     void RandomizePassword(class mapCell*);
-    int LoadMap(char*);
+    // HoMM1 retail returns 0 in AX.
+    short LoadMap(char*);
     void ClaimTown(signed char, signed char);
     void ClaimMine(signed char, signed char);
     // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
@@ -282,7 +283,10 @@ public:
     int GetNumThievesGuilds(int);
     int CalcDifficultyRating(void);
     void RestoreCell(int, int, int, int, class mapCell*, int);
-    void SetMapSize(int, int);
+    // HoMM1 maps are always 72x72: LoadMap's call leaves only the inline
+    // expansion's jmp $+0 after reading the world map.
+    void SetMapSize(int, int) {
+    }
     int HeroIDToHeroPos(class playerData*, int);
     int TownIDToTownPos(class playerData*, int);
     void SetupNewRumour(void);

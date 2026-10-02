@@ -13,6 +13,7 @@
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
 
+#include <fcntl.h>
 #include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1415,11 +1416,81 @@ void game::RandomizeEvents(void) {
     }
 }
 
-// donor PoL RVA 0x00078b72; preferred Buka symbol ?LoadMap@game@@QAEHPAD@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.657346;margin=0.109543;shape=0.244;size=0.995;calls=1.000;strings=%s%s|.\MAPS\;alternate=pol20:int game::LoadMap(char *)@0x00078b72
+// Map-extra record count and sizes read from the map file.
+extern int iMaxMapExtra;
+extern int pwSizeOfMapExtra[];
+
+// Buka 2.1 game::LoadMap for HoMM1's .MAP files: an optional old header,
+// the world map, town and mine records, artifacts, obelisks, sounds and
+// (from version 1112) the map extras.
 VA(0x0043e30a, 0x43a)
-int game::LoadMap(char*) {
+short game::LoadMap(char* filename) {
+    void* buf;
+    short width;
+    signed char y;
+    short height;
+    short i;
+    int handle;
+    signed char x;
+    signed char type;
+    int unused;
+    short version;
+
+    sprintf(gText, "%s%s", ".\\MAPS\\", filename);
+    handle = open(gText, O_BINARY);
+    if (handle == -1)
+        FileError(gText);
+    read(handle, &version, 2);
+    if (version == 1000) {
+        buf = malloc(0x554);
+        read(handle, buf, 0x552);
+        read(handle, &version, 2);
+        free(buf);
+    }
+    read(handle, &width, 2);
+    read(handle, &height, 2);
+    read(handle, m_map, sizeof(m_map));
+    SetMapSize(width, height);
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        read(handle, &x, 1);
+        read(handle, &y, 1);
+        read(handle, &type, 1);
+        if (x >= 0) {
+            m_castleRecs[i].m_x = x;
+            m_castleRecs[i].m_y = y;
+            m_castleRecs[i].m_type = type & 0x7f;
+            if ((type & 0x7f) == 2)
+                m_castleRecs[i].m_buildings |= 0x2000;
+            if (type < 0)
+                m_castleRecs[i].m_buildings |= 0x40;
+            else
+                m_castleRecs[i].m_buildings |= 0x20;
+        }
+    }
+    for (i = 0; i < GAME_MINE_COUNT; i++) {
+        read(handle, &x, 1);
+        read(handle, &y, 1);
+        read(handle, &type, 1);
+        if (x >= 0) {
+            m_mines[i].x = x;
+            m_mines[i].y = y;
+            m_mines[i].type = type;
+        }
+    }
+    read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
+    read(handle, &m_obeliskCount, 1);
+    read(handle, m_mapSounds, sizeof(m_mapSounds));
+    if (version >= 1112) {
+        read(handle, &iMaxMapExtra, 4);
+        for (i = 1; i < iMaxMapExtra; i++) {
+            read(handle, &pwSizeOfMapExtra[i], 4);
+            ppMapExtra[i] = malloc(pwSizeOfMapExtra[i]);
+            read(handle, ppMapExtra[i], pwSizeOfMapExtra[i]);
+        }
+    } else {
+        iMaxMapExtra = 1;
+    }
+    close(handle);
     return 0;
 }
 
