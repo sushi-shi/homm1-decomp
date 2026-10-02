@@ -177,10 +177,10 @@ int playerData::NumOfGivenArtifact(int artifact) {
 VA(0x0043933d, 0x386)
 void ComputeUALoc(int player) {
     int y;
-    int tries;
     int x;
     int heading;
     int numObelisks;
+    int tries;
 
     if (player > 0) {
         numObelisks = gpGame->m_players[player].CountVisitedObelisks();
@@ -3590,14 +3590,8 @@ signed char advManager::FindAdjacentMonster(
             s_adjacentMonsterEndX = originX + 1;
         if (originY == MAP_CELL_GRID_SIZE - 1)
             s_adjacentMonsterEndY = originY + 1;
-        if (originX == 0)
-            s_adjacentMonsterMinX = 0;
-        else
-            s_adjacentMonsterMinX = originX - 1;
-        if (originY == 0)
-            s_adjacentMonsterMinY = 0;
-        else
-            s_adjacentMonsterMinY = originY - 1;
+        s_adjacentMonsterMinX = originX == 0 ? 0 : originX - 1;
+        s_adjacentMonsterMinY = originY == 0 ? 0 : originY - 1;
 
         for (s_adjacentMonsterX = s_adjacentMonsterMinX; s_adjacentMonsterX < s_adjacentMonsterEndX;
              ++s_adjacentMonsterX) {
@@ -3631,11 +3625,11 @@ foundAdjacentMonster:
 // evidence: graph:3;base=0.519474;margin=0.741945;shape=0.279;size=0.996;calls=1.000;alternate=pol20:void game::SetupAdjacentMons(void)@0x0008111f
 VA(0x00444a6a, 0xde)
 void game::SetupAdjacentMons(void) {
-    int monX;
-    int monY;
     int x;
-    int mask = 0x7f;
     int y;
+    int mask = 0x7f;
+    int monY;
+    int monX;
 
     for (x = 0; x < MAP_CELL_GRID_SIZE; ++x) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; ++y) {
