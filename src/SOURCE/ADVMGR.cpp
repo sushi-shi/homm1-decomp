@@ -1404,7 +1404,206 @@ signed char advManager::UpdBottomViewHero(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
 VA(0x0042e411, 0xd46)
-void advManager::HeroQuickView(int, int, int, int) {}
+void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, short windowX, short windowY) {
+    short portraitId;
+    short creatureY;
+    short creatureIconHeight;
+    hero* heroPtr;
+    tag_message message;
+    short numArmies;
+    short enable;
+    char* labelText[5];
+    short j;
+    iconWidget* monWidgets[5];
+    short flagId;
+    textWidget* sizeTexts[5];
+    short savedOriginX;
+    short width;
+    heroWindow* viewWin;
+    short savedOriginY;
+    short statWidget;
+    short armyW;
+    short leftEdge;
+
+    armyW = 160;
+    leftEdge = 9;
+    creatureY = 110;
+    width = 32;
+    creatureIconHeight = 32;
+    enable = 1;
+    portraitId = 2;
+    statWidget = 3;
+    flagId = 8;
+    message.type = MESSAGE_WIDGET;
+    if (heroId == -1)
+        return;
+    heroPtr = gpGame->GetHero(heroId);
+    if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
+        if (windowX == -1) {
+            windowX = 302;
+            windowY = locatorSlot * 30 + 111;
+        }
+        viewWin = new heroWindow(windowX, windowY, "qhero0.bin");
+        if (!viewWin)
+            MemError();
+        SetWinText(viewWin, 9);
+    } else {
+        viewWin = new heroWindow(windowX, windowY, "qhero1.bin");
+        if (!viewWin)
+            MemError();
+    }
+
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = 2;
+    message.payload.widget.data.value = heroPtr->m_id;
+    viewWin->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = 8;
+    message.payload.widget.data.value = gpGame->m_players[heroPtr->m_owner].Color() * 2;
+    viewWin->BroadcastMessage(message);
+    message.payload.widget.id++;
+    message.payload.widget.data.value++;
+    viewWin->BroadcastMessage(message);
+    sprintf(gText, "%s", heroPtr->m_name);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = gText;
+    viewWin->BroadcastMessage(message);
+
+    numArmies = 0;
+    for (j = 0; j < 5; j++) {
+        if (heroPtr->m_army.m_creatureTypes[j] != -1)
+            numArmies++;
+    }
+
+    if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
+        for (j = 0; j < 4; j++) {
+            sprintf(gText, "%d", heroPtr->m_primaryStats[j]);
+            message.payload.widget.id = j + 3;
+            message.payload.widget.data.text = gText;
+            viewWin->BroadcastMessage(message);
+        }
+        if (numArmies) {
+            signed char monster;
+            short curIndex;
+            short startPos;
+
+            startPos = (160 - numArmies * 32) / 2 + 9;
+            curIndex = 0;
+            for (j = 0; numArmies > j; j++) {
+                while (heroPtr->m_army.m_creatureTypes[curIndex] == -1)
+                    curIndex++;
+                monster = heroPtr->m_army.m_creatureTypes[curIndex];
+                if (monster != -1) {
+                    monWidgets[j] = new iconWidget(j * 32 + startPos, 110, 32, 32, "mons32.icn", monster, 0,
+                                                       -1, 16, 1);
+                    if (!monWidgets[j])
+                        MemError();
+                    labelText[j] = static_cast<char*>(malloc(5));
+                    sprintf(labelText[j], "%d", heroPtr->m_army.m_creatureCounts[curIndex]);
+                    sizeTexts[j] = new textWidget(j * 32 + startPos, 140, 32, 12, labelText[j],
+                                                        "smalfont.fnt", 1, -1, 512);
+                    if (!sizeTexts[j])
+                        MemError();
+                    viewWin->AddWidget(monWidgets[j], -1);
+                    viewWin->AddWidget(sizeTexts[j], -1);
+                }
+                curIndex++;
+            }
+        }
+    } else if (numArmies) {
+        short slotIndex;
+        signed char creatureId;
+        short secondRow;
+        short offsetX;
+        short step;
+        short rowY;
+        short firstRow;
+
+        rowY = 65;
+        switch (numArmies) {
+        case 1:
+        case 2:
+        case 3:
+            rowY += 22;
+            firstRow = numArmies;
+            secondRow = 0;
+            break;
+        case 4:
+            firstRow = 2;
+            secondRow = 2;
+            break;
+        default:
+            firstRow = 2;
+            secondRow = 3;
+            break;
+        }
+        slotIndex = 0;
+        step = 160 / firstRow;
+        offsetX = (step - 32) / 2 + 9;
+        for (j = 0; firstRow > j; j++) {
+            while (heroPtr->m_army.m_creatureTypes[slotIndex] == -1)
+                slotIndex++;
+            creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
+            monWidgets[j] =
+                new iconWidget(j * step + offsetX, rowY, 32, 32, "mons32.icn", creatureId, 0, -1, 16, 1);
+            if (!monWidgets[j])
+                MemError();
+            labelText[j] = static_cast<char*>(malloc(15));
+            strcpy(labelText[j], GetArmySizeName(heroPtr->m_army.m_creatureCounts[slotIndex], 0));
+            sizeTexts[j] = new textWidget(j * step + 9, rowY + 30, step, 12, labelText[j],
+                                                "smalfont.fnt", 1, -1, 512);
+            if (!sizeTexts[j])
+                MemError();
+            viewWin->AddWidget(monWidgets[j], -1);
+            viewWin->AddWidget(sizeTexts[j], -1);
+            slotIndex++;
+        }
+        if (secondRow) {
+            step = 160 / secondRow;
+            offsetX = (step - 32) / 2 + 9;
+            rowY += 44;
+            for (j = firstRow; j < firstRow + secondRow; j++) {
+                while (heroPtr->m_army.m_creatureTypes[slotIndex] == -1)
+                    slotIndex++;
+                creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
+                monWidgets[j] = new iconWidget((j - 2) * step + offsetX, rowY, 32, 32, "mons32.icn",
+                                                   creatureId, 0, -1, 16, 1);
+                if (!monWidgets[j])
+                    MemError();
+                labelText[j] = static_cast<char*>(malloc(15));
+                strcpy(labelText[j], GetArmySizeName(heroPtr->m_army.m_creatureCounts[slotIndex], 0));
+                sizeTexts[j] = new textWidget((j - 2) * step + 9, rowY + 30, step, 12,
+                                                    labelText[j], "smalfont.fnt", 1, -1, 512);
+                if (!sizeTexts[j])
+                    MemError();
+                viewWin->AddWidget(monWidgets[j], -1);
+                viewWin->AddWidget(sizeTexts[j], -1);
+                slotIndex++;
+            }
+        }
+    }
+
+    savedOriginX = m_mapOriginX;
+    savedOriginY = m_mapOriginY;
+    m_mapOriginX = heroPtr->m_x - 7;
+    m_mapOriginY = heroPtr->m_y - 7;
+    UpdateRadar(1, 0);
+    GrabScreen();
+    gpWindowManager->AddWindow(viewWin, -1, 1);
+    gpMouseManager->HideSystemCursor();
+    QuickViewWait();
+    gpWindowManager->RemoveWindow(viewWin);
+    delete viewWin;
+    gpMouseManager->ShowSystemCursor();
+    m_mapOriginX = savedOriginX;
+    m_mapOriginY = savedOriginY;
+    UpdateRadar(1, 0);
+    CompleteDraw(0);
+    UpdateScreen(0, 0);
+    if (message.type == MESSAGE_LEFT_BUTTON_DOWN && heroPtr->m_owner == giCurPlayer)
+        SetHeroContext(heroPtr->m_id, 0);
+}
 
 // donor PoL RVA 0x0006308d; preferred Buka symbol ?GetArmySizeName@advManager@@QAEPADHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
