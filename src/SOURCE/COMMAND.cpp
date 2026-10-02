@@ -44,13 +44,13 @@ short combatManager::Main(struct tag_message& message) {
     packet = reinterpret_cast<CombatRemotePacket*>(GetRemoteData(1)); // API-forced: char* record.
     if (packet && packet->type == 2) {
         switch (packet->command) {
-            case 0x17:
+            case REMOTE_COMMAND_COMBAT_ACTION:
                 giNextAction = packet->nextAction;
                 giNextActionExtra = packet->nextActionExtra;
                 giNextActionGridIndex = packet->nextActionGridIndex;
                 giNextActionGridIndex2 = packet->nextActionGridIndex2;
                 goto processAction;
-            case 0xb:
+            case REMOTE_COMMAND_CHAT:
                 PopNetBox(packet->text);
                 break;
         }
@@ -1394,7 +1394,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         data[1] = giNextActionExtra;
         data[2] = giNextActionGridIndex;
         data[3] = giNextActionGridIndex2;
-        result = TransmitRemoteData(reinterpret_cast<char*>(data), netPos, sizeof(data), 0x17, 1, 1, -1, 1); // API-forced: char* payload.
+        result = TransmitRemoteData(reinterpret_cast<char*>(data), netPos, sizeof(data), REMOTE_COMMAND_COMBAT_ACTION, 1, 1, REMOTE_MESSAGE_DEFAULT, 1); // API-forced: char* payload.
         if (!result)
             ShutDown(NULL);
     }
