@@ -329,7 +329,7 @@ void philAI::CheckBerserk(hero* pHero) {
         for (y = 0; y < 72; y++) {
             cell = gpAdvManager->GetCell(x, y);
             switch (cell->m_triggerType) {
-            case 0xa8:
+            case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
                 if (gpGame->m_townOwners[cell->m_objectMetadata] != pHero->m_owner) {
                     if (gpGame->m_townOwners[cell->m_objectMetadata] != -1) {
                         enemy = FightValueOfStack(
@@ -346,7 +346,7 @@ void philAI::CheckBerserk(hero* pHero) {
                     }
                 }
                 break;
-            case 0xbd:
+            case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
                 if (gpGame->m_availableHeroes[cell->m_objectMetadata] != pHero->m_owner) {
                     enemyHero = gpGame->GetHero(cell->m_objectMetadata);
                     enemy = FightValueOfStack(
@@ -390,7 +390,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         y += normalDirTable[gpSearchArray->m_directions[i]].y;
         if (abs(x - pHero->m_x) <= 7 && abs(y - pHero->m_y) <= 7) {
             cell = gpAdvManager->GetCell(x, y);
-            if (!(cell->m_triggerType & 0x80) && !(cell->m_secondaryTrigger & 0x80)) {
+            if (!(cell->m_triggerType & MAP_TRIGGER_EVENT) && !(cell->m_secondaryTrigger & 0x80)) {
                 bestX = x;
                 bestY = y;
                 length = gpSearchArray->m_pathLength - i;
@@ -500,7 +500,7 @@ void philAI::DoAI(int player) {
                 if (iPlacesVisited[pathIndex][0] == aiHero->m_destinationX
                     && iPlacesVisited[pathIndex][1] == aiHero->m_destinationY
                     && gpAdvManager->GetCell(aiHero->m_destinationX, aiHero->m_destinationY)->m_triggerType
-                           != 0xa8)
+                           != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
                     aiHero->m_remainingMobility = 0;
             }
             if (iCurPlaceToVisit < 30) {
@@ -598,7 +598,7 @@ void philAI::DoAI(int player) {
         aiHero->m_remainingMobility = 0;
         gpAdvManager->DeactivateCurrHero();
     nextHero:
-        if (aiHero->m_locationType == 0xa8)
+        if (aiHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
             CheckBuyStuff();
     }
 }
@@ -890,11 +890,11 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                     if (gpSearchArray->m_cells[x][y].distance > mobility * 2)
                         valid = 0;
                     else
-                        valid = thisCell->m_triggerType == 0xa8 || thisCell->m_triggerType == 0xbd
-                                || (thisCell->m_triggerType == 0xbe && !(pHero->m_eventFlags & 0x80));
+                        valid = thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) || thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                                || (thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && !(pHero->m_eventFlags & 0x80));
                 } else {
-                    valid = (thisCell->m_triggerType & 0x80)
-                            || (thisCell->m_triggerType == 0x1f && (pHero->m_eventFlags & 0x80))
+                    valid = (thisCell->m_triggerType & MAP_TRIGGER_EVENT)
+                            || (thisCell->m_triggerType == MAP_OBJECT_COAST && (pHero->m_eventFlags & 0x80))
                             || (x % spacing == 0 && y % spacing == 0
                                 && (((pHero->m_eventFlags & 0x80)
                                      && giGroundToTerrain[thisCell->m_tileIndex] == 0)
@@ -904,7 +904,7 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                 }
                 if (valid) {
                     for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
-                        if (thisCell->m_triggerType != 0xa8 && thisCell->m_triggerType != 0xbd
+                        if (thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) && thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                             && gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id
                             && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX == x
                             && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY == y) {
@@ -1683,14 +1683,14 @@ int philAI::RVOfPosition(
     theTargetLiveChance = 100;
     adjacentEventChance = 100;
     curTriggerType = gpAdvManager->GetCell(x, y)->m_triggerType;
-    curLocType = curTriggerType & 0x7f;
+    curLocType = curTriggerType & MAP_TRIGGER_TYPE_MASK;
     curEventChance = 100;
     estLiveChance = 100;
     iMonsterChance = 100;
     curStrategicValue =
         StrategicValueOfPosition(pHero, pHero->m_x, pHero->m_y, 0, &heroLiveChance);
     delta = StrategicValueOfPosition(pHero, x, y, 0, &theTargetLiveChance);
-    if (curLocType == 0x3e && delta < 0)
+    if (curLocType == MAP_OBJECT_SHIP && delta < 0)
         delta = 0;
     totalValue = 0;
     if (hasEvent)
@@ -1703,18 +1703,18 @@ int philAI::RVOfPosition(
     }
     if (gpAdvManager->FindAdjacentMonster(x, y, &adjacentX, &adjacentY, -1, -1)) {
         switch (curLocType) {
-        case 2:
-        case 4:
-        case 6:
-        case 8:
-        case 9:
-        case 11:
-        case 26:
-        case 27:
-        case 29:
-        case 36:
-        case 43:
-        case 48:
+        case MAP_OBJECT_SIGNPOST:
+        case MAP_OBJECT_SKELETON:
+        case MAP_OBJECT_TREASURE_CHEST:
+        case MAP_OBJECT_CAMPFIRE:
+        case MAP_OBJECT_FOUNTAIN:
+        case MAP_OBJECT_ANCIENT_LAMP:
+        case MAP_OBJECT_MONSTER:
+        case MAP_OBJECT_OBELISK:
+        case MAP_OBJECT_RESOURCE:
+        case MAP_OBJECT_STATUE:
+        case MAP_OBJECT_WELL:
+        case MAP_OBJECT_ARTIFACT:
             break;
         default:
             curEventVal =
@@ -1728,7 +1728,7 @@ int philAI::RVOfPosition(
             break;
         }
     }
-    if ((curTriggerType & 0x80) || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY))
+    if ((curTriggerType & MAP_TRIGGER_EVENT) || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY))
         curEventVal = ValueOfEventAtPosition(pHero, x, y, eventMode, &curEventChance);
     else
         curEventVal = 0;
@@ -1769,7 +1769,7 @@ int philAI::RVOfPosition(
     delta = static_cast<int>(delta * 2 / (estTurns + 1.0f));
     if (estLiveChance == 100)
         totalValue += delta;
-    if ((pHero->m_eventFlags & 0x80) && curTriggerType == 0x1f)
+    if ((pHero->m_eventFlags & 0x80) && curTriggerType == MAP_OBJECT_COAST)
         totalValue += 40;
     return totalValue;
 }
@@ -1836,7 +1836,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
         for (thisY = 0; thisY < 72; thisY++) {
             if (pSearch->m_cells[x][thisY].visited) {
                 cell = gpAdvManager->GetCell(x, thisY);
-                if ((!immediate && (cell->m_triggerType & 0x80)) || (immediate && cell->m_triggerType == 0xbd)) {
+                if ((!immediate && (cell->m_triggerType & MAP_TRIGGER_EVENT)) || (immediate && cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))) {
                     CheckDoMain(0, 0);
                     myValue += ValueOfEventAtPosition(pHero, x, thisY, 0, &iDummy)
                                / (pSearch->m_cells[x][thisY].distance + 2.0);
@@ -1865,7 +1865,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
                     }
                 }
                 if (pSearch->m_cells[x][thisY].distance < 32
-                    && gpAdvManager->GetCell(x, thisY)->m_triggerType == 0xbd
+                    && gpAdvManager->GetCell(x, thisY)->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                     && gpAdvManager->GetCell(x, thisY)->m_objectMetadata != pHero->m_id
                     && gpGame->m_availableHeroes[gpAdvManager->GetCell(x, thisY)->m_objectMetadata]
                            == pHero->m_owner)
@@ -2997,8 +2997,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         bEventSeen = 1;
     else
         bEventSeen = 0;
-    switch (pEventCell->m_triggerType & 0x7f) {
-    case 48:
+    switch (pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+    case MAP_OBJECT_ARTIFACT:
         iArtifactChoice1 = gArtifactBaseRV[pEventCell->m_objectIndex];
         for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
             gpMonGroup->m_creatureTypes[iEventLoop] = 24;
@@ -3030,8 +3030,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         }
         break;
     case 1:
-    case 25:
-    case 32:
+    case MAP_OBJECT_MINE:
+    case MAP_OBJECT_SAWMILL:
         if (gpGame->m_mineOwners[pEventCell->m_objectMetadata] == pHero->m_owner) {
             iEventRV = 0;
         } else if (gbIAmGreatest && gpGame->m_mineOwners[pEventCell->m_objectMetadata] >= 0
@@ -3048,13 +3048,13 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                                         : gfAttackComputerBonus));
         }
         break;
-    case 27:
+    case MAP_OBJECT_OBELISK:
         if (gpGame->m_obeliskVisitors[pEventCell->m_objectMetadata - 1] & giCurPlayerBit)
             iEventRV = 0;
         else
             iEventRV = gpCurPlayer->m_aiData.m_obeliskValue;
         break;
-    case 26:
+    case MAP_OBJECT_MONSTER:
         iMonsterCount = pEventCell->m_objectMetadata & 0x7f;
         memset(gpMonGroup->m_creatureTypes, -1, sizeof(gpMonGroup->m_creatureTypes));
         memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
@@ -3093,7 +3093,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         if (iEventRV < 0)
             gbReduceByReload = 0;
         break;
-    case 61:
+    case MAP_OBJECT_HERO:
         if (gpGame->m_availableHeroes[pEventCell->m_objectMetadata] == pHero->m_owner) {
             gaiHeroLiveChance[pEventCell->m_objectMetadata] = 100;
             if (!immediate || gbTroopReload)
@@ -3109,7 +3109,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             pEventTown = 0;
             pEventTownArmy = 0;
             pEventHero = gpGame->GetHero(pEventCell->m_objectMetadata);
-            if (pEventHero->m_locationType == 0xa8) {
+            if (pEventHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                 pEventTown = gpGame->GetTown(pEventHero->m_occupiedTown);
                 pEventTownArmy = &pEventTown->m_army;
                 iTownValue = ValueOfTown(pEventTown);
@@ -3158,7 +3158,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     gbReduceByBerserk = 0;
         }
         break;
-    case 40:
+    case MAP_OBJECT_TOWN:
         pEventTown = gpGame->GetTown(pEventCell->m_objectMetadata);
         if (gpGame->m_townOwners[pEventCell->m_objectMetadata] == pHero->m_owner) {
             if (pEventTown->m_occupyingHeroId != -1) {
@@ -3206,7 +3206,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 gbReduceByBerserk = 0;
         }
         break;
-    case 5:
+    case MAP_OBJECT_DAEMON_CAVE:
         if (pEventCell->m_objectMetadata == 1) {
             iEventRV = 0;
         } else {
@@ -3218,37 +3218,37 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = -100;
         }
         break;
-    case 28:
+    case MAP_OBJECT_OASIS:
         if (!(pHero->m_eventFlags & 8))
             iEventRV = static_cast<int>(pHero->m_aiFightValue * 200.0f);
         break;
-    case 3:
+    case MAP_OBJECT_BUOY:
         if (!(pHero->m_eventFlags & 2))
             iEventRV = static_cast<int>(pHero->m_aiFightValue * 200.0f);
         break;
-    case 36:
+    case MAP_OBJECT_STATUE:
         if (!(pHero->m_eventFlags & 0x100))
             iEventRV = static_cast<int>(pHero->m_aiFightValue * 400.0f);
         break;
-    case 7:
+    case MAP_OBJECT_FAERIE_RING:
         if (!(pHero->m_eventFlags & 0x10))
             iEventRV = static_cast<int>(pHero->m_aiFightValue * 200.0f);
         break;
-    case 9:
+    case MAP_OBJECT_FOUNTAIN:
         if (!(pHero->m_eventFlags & 4))
             iEventRV = static_cast<int>(pHero->m_aiFightValue * 200.0f);
         break;
-    case 6:
+    case MAP_OBJECT_TREASURE_CHEST:
         iEventRV = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 1500.0f);
         break;
-    case 8:
+    case MAP_OBJECT_CAMPFIRE:
         iEventRV = static_cast<int>((gafAITurnCostResource[RESOURCE_GEMS] + gafAITurnCostResource[RESOURCE_MERCURY]
                           + gafAITurnCostResource[RESOURCE_ORE] + gafAITurnCostResource[RESOURCE_SULFUR]
                           + gafAITurnCostResource[RESOURCE_CRYSTAL] + gafAITurnCostResource[RESOURCE_WOOD])
                              / 6.0f * 5.0f
                          + gafAITurnCostResource[RESOURCE_GOLD] * 500.0f);
         break;
-    case 34:
+    case MAP_OBJECT_SPELL_SHRINE:
         if (pHero->m_primaryStats[3] > 0 && pHero->HasArtifact(37)) {
             iEventLoop = pHero->AddSpell(pEventCell->m_objectMetadata - 1, pHero->m_primaryStats[3], 1);
             iEventRV = giSpellAIValue[pEventCell->m_objectMetadata - 1];
@@ -3262,19 +3262,19 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             iEventRV = 0;
         }
         break;
-    case 10:
+    case MAP_OBJECT_GAZEBO:
         if (pHero->m_visitedSites & (1 << pEventCell->m_objectMetadata))
             iEventRV = 0;
         else
             iEventRV = static_cast<int>(pHero->m_aiFightValue * 1000.0f);
         break;
-    case 23:
+    case MAP_OBJECT_LIGHTHOUSE:
         if (gpGame->m_mines[1].owner == pHero->m_owner)
             iEventRV = 0;
         else
             iEventRV = 1000;
         break;
-    case 29:
+    case MAP_OBJECT_RESOURCE:
         switch (pEventCell->m_objectIndex - 61) {
         case RESOURCE_GOLD:
             iEventRV = static_cast<int>(pEventCell->m_objectMetadata * 100 * gafAITurnCostResource[RESOURCE_GOLD]);
@@ -3299,7 +3299,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             break;
         }
         break;
-    case 45:
+    case MAP_OBJECT_WINDMILL:
         if (pEventCell->m_objectMetadata == 99) {
             iEventRV = 0;
         } else {
@@ -3308,42 +3308,42 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             iEventRV = RVConversion(costList);
         }
         break;
-    case 4:
+    case MAP_OBJECT_SKELETON:
         if (pEventCell->m_objectMetadata == 1)
             iEventRV = 0;
         else
             iEventRV = static_cast<int>(gpCurPlayer->m_aiData.m_artifactValue * 0.1);
         break;
-    case 11:
+    case MAP_OBJECT_ANCIENT_LAMP:
         EvaluateOneTimeCreaturePurchase(pHero, 27, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
-    case 13:
+    case MAP_OBJECT_STRAW_HUT:
         EvaluateOneTimeCreaturePurchase(pHero, 6, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         break;
-    case 14:
-    case 17:
+    case MAP_OBJECT_HOUSE:
+    case MAP_OBJECT_PEASANT_LOG_CABIN:
         EvaluateOneTimeCreaturePurchase(pHero, 0, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
-    case 15:
+    case MAP_OBJECT_CABIN:
         EvaluateOneTimeCreaturePurchase(pHero, 1, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
-    case 16:
+    case MAP_OBJECT_DWARF_LOG_CABIN:
         EvaluateOneTimeCreaturePurchase(pHero, 13, pEventCell->m_objectMetadata, 1, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
-    case 39:
+    case MAP_OBJECT_DESERT_TENT:
         EvaluateOneTimeCreaturePurchase(pHero, 25, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
-    case 42:
+    case MAP_OBJECT_WAGON_CAMP:
         EvaluateOneTimeCreaturePurchase(pHero, 24, pEventCell->m_objectMetadata, 0, iPurchaseNum, iEventRV, iPurchaseSlot);
         gbReduceByReload = 0;
         break;
-    case 12:
-    case 35:
+    case MAP_OBJECT_GRAVEYARD:
+    case MAP_OBJECT_SHIPWRECK:
         if (pEventCell->m_objectMetadata == 1) {
             iEventRV = 0;
         } else {
@@ -3377,7 +3377,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             );
         }
         break;
-    case 22:
+    case MAP_OBJECT_DRAGON_CITY:
         prize5 = static_cast<int>(gaiTurnValueOfMine[x][y] * gafAITurnCostResource[RESOURCE_GOLD] * 1000.0f * 1.5);
         for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
             gpMonGroup->m_creatureTypes[iEventLoop] = 23;
@@ -3394,8 +3394,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         else
             ChooseEvaluateBattle(&pHero->m_army, pHero, gpMonGroup, 0, 0, 0, prize5, bBattleWon9, iEventRV);
         break;
-    case 41:
-    case 44:
+    case MAP_OBJECT_STONE_LITHS:
+    case MAP_OBJECT_WHIRLPOOL:
         if (!bEvaluatingTravelGates) {
             iEventRV = 0;
             break;
@@ -3405,7 +3405,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         for (gateY28 = 0; gateY28 < 72; gateY28++) {
             for (gateX1 = 0; gateX1 < 72; gateX1++) {
                 exitCell = gpAdvManager->GetCell(gateX1, gateY28);
-                if (abs(gateX1 - x) + abs(gateY28 - y) > ((pEventCell->m_triggerType & 0x7f) == 41 ? 1 : 3)
+                if (abs(gateX1 - x) + abs(gateY28 - y) > ((pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 41 ? 1 : 3)
                     && exitCell->m_triggerType == pEventCell->m_triggerType) {
                     exitRV5 = StrategicValueOfPosition(pHero, gateX1, gateY28, 0, &exitLiveChance);
                     exitRV5 = static_cast<int>(exitRV5 * 0.85);
@@ -3425,28 +3425,28 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         bEvaluatingTravelGates = 1;
         gbReduceByReload = 0;
         break;
-    case 24:
+    case MAP_OBJECT_WATERWHEEL:
         iEventRV = static_cast<int>(pEventCell->m_objectMetadata * 500 * gafAITurnCostResource[RESOURCE_GOLD]);
         break;
-    case 62:
+    case MAP_OBJECT_SHIP:
         gbActualBoatFound = 1;
         iEventRV = 100;
         break;
-    case 2:
-    case 33:
+    case MAP_OBJECT_SIGNPOST:
+    case MAP_OBJECT_RANKING_SHRINE:
         iEventRV = 0;
         break;
-    case 30:
-    case 31:
-    case 37:
-    case 46:
+    case MAP_OBJECT_ROSEBUSH:
+    case MAP_OBJECT_COAST:
+    case MAP_OBJECT_TREE_STUMP:
+    case MAP_OBJECT_OAK_TREE:
         iEventRV = 0;
         break;
     default:
         if (gpCurPlayer->m_ultimateArtifactHintChance > 15 && gpCurPlayer->m_ultimateArtifactHintX == x && gpCurPlayer->m_ultimateArtifactHintY == y) {
             iEventRV = (gpCurPlayer->m_ultimateArtifactHintChance - 15) * gUltArtifactAvgValue / 100;
         } else {
-            iDefaultEventType = pEventCell->m_triggerType & 0x7f;
+            iDefaultEventType = pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
             if (iDefaultEventType >= 49 && iDefaultEventType <= 60)
                 iEventRV = 0;
         }
@@ -3457,9 +3457,9 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     if (gbBerserk && gbReduceByBerserk)
         iEventRV = static_cast<int>(iEventRV * fBerserkFactor);
     if (!immediate) {
-        if (iEventRV > 0 && (mapExtra[x][y] & 0x80) && (pEventCell->m_triggerType & 0x7f) != 26)
+        if (iEventRV > 0 && (mapExtra[x][y] & 0x80) && (pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) != 26)
             iEventRV = 0;
-        if (iEventRV < 0 && (pEventCell->m_triggerType & 0x7f) != 61)
+        if (iEventRV < 0 && (pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) != 61)
             iEventRV = 0;
         else if (iEventRV > 32000)
             iEventRV = 32000;

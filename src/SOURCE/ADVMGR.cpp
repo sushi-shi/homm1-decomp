@@ -1069,14 +1069,14 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             } else {
                 if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
                     && m_heroContextLocked) {
-                    cellType = 0x3d;
+                    cellType = MAP_OBJECT_HERO;
                     mapIndex = gpCurPlayer->CurrentHero();
                 } else {
-                    cellType = hoverCell->m_triggerType & 0x7f;
+                    cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     mapIndex = hoverCell->m_objectMetadata;
                 }
                 switch (cellType) {
-                case 0x3d:
+                case MAP_OBJECT_HERO:
                     curX = m_lastHoverCell * 32 - 73;
                     if (curX < 16)
                         curX = 16;
@@ -1089,7 +1089,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         curY = 302;
                     HeroQuickView(mapIndex, -1, curX, curY);
                     break;
-                case 0x28:
+                case MAP_OBJECT_TOWN:
                     curX = m_lastHoverCell * 32 - 89;
                     if (curX < 16)
                         curX = 16;
@@ -1133,9 +1133,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     *eventCell = DoAdvCommand();
                 }
             } else {
-                cellType = hoverCell->m_triggerType & 0x7f;
+                cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                 mapIndex = hoverCell->m_objectMetadata;
-                if (cellType == 0x3d) {
+                if (cellType == MAP_OBJECT_HERO) {
                     if (gpCurPlayer->CurrentHero() == mapIndex) {
                         m_selectedCell = 2;
                         DoAdvCommand();
@@ -1143,7 +1143,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         SetHeroContext(mapIndex, 0);
                     }
                 }
-                if (cellType == 0x28) {
+                if (cellType == MAP_OBJECT_TOWN) {
                     if (gpCurPlayer->CurrentTown() == mapIndex) {
                         m_selectedCell = 3;
                         *eventCell = DoAdvCommand();
@@ -1421,12 +1421,12 @@ int advManager::ProcessHover(struct tag_message* message) {
             }
             cell = GetCell(m_commandTargetX, m_commandTargetY);
             if (gpCurPlayer->m_currentHero == -1) {
-                if ((cell->m_triggerType & 0x7f) == 0x28
+                if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28
                     && gpGame->GetTown(cell->m_objectMetadata)->m_owner == giCurPlayer) {
                     gpMouseManager->SetPointer(3);
                     m_selectedCell = 3;
                     return 1;
-                } else if ((cell->m_triggerType & 0x7f) == 0x3d
+                } else if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x3d
                            && gpGame->GetHero(cell->m_objectMetadata)->m_owner == giCurPlayer) {
                     gpMouseManager->SetPointer(2);
                     m_selectedCell = 2;
@@ -1445,12 +1445,12 @@ int advManager::ProcessHover(struct tag_message* message) {
                     return 1;
                 }
                 if (cell->m_secondaryTrigger & 0x80) {
-                    if ((cell->m_triggerType & 0x7f) == 0x28) {
+                    if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28) {
                         pTown = gpGame->GetTown(cell->m_objectMetadata);
                         if (pTown->m_owner == giCurPlayer && m_commandTargetY >= 1
                             && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
-                            && (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType & 0x7f) == 0x28
-                            && (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType & 0x7f) == 0x28) {
+                            && (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28
+                            && (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28) {
                             gpMouseManager->SetPointer(3);
                             m_selectedCell = 5;
                             return 1;
@@ -1460,9 +1460,9 @@ int advManager::ProcessHover(struct tag_message* message) {
                     gpMouseManager->SetPointer(0);
                     return 1;
                 }
-                if (!((m_cursorType == 4 || cell->m_tileIndex >= 20 || cell->m_triggerType == 0xbd
-                       || cell->m_triggerType == 0xbe || cell->m_triggerType == 0xa3)
-                      && (m_cursorType != 4 || cell->m_tileIndex < 20 || cell->m_triggerType == 0x1f))) {
+                if (!((m_cursorType == 4 || cell->m_tileIndex >= 20 || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                       || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
+                      && (m_cursorType != 4 || cell->m_tileIndex < 20 || cell->m_triggerType == MAP_OBJECT_COAST))) {
                     gpSearchArray->m_pathLength = 0;
                     gpMouseManager->SetPointer(0);
                     return 1;
@@ -1481,8 +1481,8 @@ int advManager::ProcessHover(struct tag_message* message) {
                             nDays = 3;
                     }
                     baseFrame = nDays * 6;
-                    switch (cell->m_triggerType & 0x7f) {
-                    case 0x3e:
+                    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                    case MAP_OBJECT_SHIP:
                         if (m_cursorType != 4) {
                             gpMouseManager->SetPointer(baseFrame + 6);
                             m_selectedCell = 1;
@@ -1490,7 +1490,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                             gpMouseManager->SetPointer(baseFrame);
                         }
                         break;
-                    case 0x1f:
+                    case MAP_OBJECT_COAST:
                         if (m_cursorType == 4)
                             gpMouseManager->SetPointer(baseFrame + 7);
                         else if (mapExtra[m_commandTargetX][m_commandTargetY] & 0x80)
@@ -1499,11 +1499,11 @@ int advManager::ProcessHover(struct tag_message* message) {
                             gpMouseManager->SetPointer(baseFrame + 4);
                         m_selectedCell = 1;
                         break;
-                    case 0x1a:
+                    case MAP_OBJECT_MONSTER:
                         gpMouseManager->SetPointer(baseFrame + 5);
                         m_selectedCell = 1;
                         break;
-                    case 0x3d:
+                    case MAP_OBJECT_HERO:
                         if (gpGame->GetHero(cell->m_objectMetadata)->m_owner != giCurPlayer) {
                             gpMouseManager->SetPointer(baseFrame + 5);
                             m_selectedCell = 1;
@@ -1512,9 +1512,9 @@ int advManager::ProcessHover(struct tag_message* message) {
                             m_selectedCell = 1;
                         }
                         break;
-                    case 0x28:
+                    case MAP_OBJECT_TOWN:
                         pTown = gpGame->GetTown(cell->m_objectMetadata);
-                        if ((cell->m_triggerType & 0x80) && pTown->m_owner != giCurPlayer && pTown->HasGarrison()) {
+                        if ((cell->m_triggerType & MAP_TRIGGER_EVENT) && pTown->m_owner != giCurPlayer && pTown->HasGarrison()) {
                             gpMouseManager->SetPointer(baseFrame + 5);
                             m_selectedCell = 1;
                             break;
@@ -1522,56 +1522,56 @@ int advManager::ProcessHover(struct tag_message* message) {
                         goto defaultHover;
                     default:
                     defaultHover:
-                        trigType = cell->m_triggerType & 0x7f;
+                        trigType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                         if ((mapExtra[m_commandTargetX][m_commandTargetY] & 0x80) && m_cursorType != 4
-                            && trigType != 4 && trigType != 6 && trigType != 8 && trigType != 0xb
-                            && trigType != 0x1d && trigType != 0x30) {
+                            && trigType != MAP_OBJECT_SKELETON && trigType != MAP_OBJECT_TREASURE_CHEST && trigType != MAP_OBJECT_CAMPFIRE && trigType != MAP_OBJECT_ANCIENT_LAMP
+                            && trigType != MAP_OBJECT_RESOURCE && trigType != MAP_OBJECT_ARTIFACT) {
                             gpMouseManager->SetPointer(baseFrame + 5);
-                        } else if (cell->m_triggerType & 0x80) {
+                        } else if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
                             if (m_cursorType != 4) {
-                                switch (cell->m_triggerType & 0x7f) {
+                                switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                                 case 1:
-                                case 2:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                case 9:
-                                case 10:
-                                case 11:
-                                case 12:
-                                case 13:
-                                case 14:
-                                case 15:
-                                case 16:
-                                case 17:
-                                case 18:
-                                case 19:
-                                case 20:
-                                case 21:
-                                case 22:
-                                case 23:
-                                case 24:
-                                case 25:
-                                case 27:
-                                case 28:
-                                case 29:
-                                case 32:
-                                case 33:
-                                case 34:
-                                case 35:
-                                case 36:
-                                case 39:
-                                case 40:
-                                case 41:
-                                case 42:
-                                case 43:
-                                case 44:
-                                case 45:
-                                case 46:
-                                case 47:
-                                case 48:
+                                case MAP_OBJECT_SIGNPOST:
+                                case MAP_OBJECT_SKELETON:
+                                case MAP_OBJECT_DAEMON_CAVE:
+                                case MAP_OBJECT_TREASURE_CHEST:
+                                case MAP_OBJECT_FAERIE_RING:
+                                case MAP_OBJECT_CAMPFIRE:
+                                case MAP_OBJECT_FOUNTAIN:
+                                case MAP_OBJECT_GAZEBO:
+                                case MAP_OBJECT_ANCIENT_LAMP:
+                                case MAP_OBJECT_GRAVEYARD:
+                                case MAP_OBJECT_STRAW_HUT:
+                                case MAP_OBJECT_HOUSE:
+                                case MAP_OBJECT_CABIN:
+                                case MAP_OBJECT_DWARF_LOG_CABIN:
+                                case MAP_OBJECT_PEASANT_LOG_CABIN:
+                                case MAP_OBJECT_INN_1:
+                                case MAP_OBJECT_INN_2:
+                                case MAP_OBJECT_INN_3:
+                                case MAP_OBJECT_INN_4:
+                                case MAP_OBJECT_DRAGON_CITY:
+                                case MAP_OBJECT_LIGHTHOUSE:
+                                case MAP_OBJECT_WATERWHEEL:
+                                case MAP_OBJECT_MINE:
+                                case MAP_OBJECT_OBELISK:
+                                case MAP_OBJECT_OASIS:
+                                case MAP_OBJECT_RESOURCE:
+                                case MAP_OBJECT_SAWMILL:
+                                case MAP_OBJECT_RANKING_SHRINE:
+                                case MAP_OBJECT_SPELL_SHRINE:
+                                case MAP_OBJECT_SHIPWRECK:
+                                case MAP_OBJECT_STATUE:
+                                case MAP_OBJECT_DESERT_TENT:
+                                case MAP_OBJECT_TOWN:
+                                case MAP_OBJECT_STONE_LITHS:
+                                case MAP_OBJECT_WAGON_CAMP:
+                                case MAP_OBJECT_WELL:
+                                case MAP_OBJECT_WHIRLPOOL:
+                                case MAP_OBJECT_WINDMILL:
+                                case MAP_OBJECT_OAK_TREE:
+                                case MAP_OBJECT_MEGALITH:
+                                case MAP_OBJECT_ARTIFACT:
                                     gpMouseManager->SetPointer(baseFrame + 9);
                                     break;
                                 default:
@@ -1582,9 +1582,9 @@ int advManager::ProcessHover(struct tag_message* message) {
                                     break;
                                 }
                             } else {
-                                switch (cell->m_triggerType & 0x7f) {
-                                case 3:
-                                case 0x2c:
+                                switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                                case MAP_OBJECT_BUOY:
+                                case MAP_OBJECT_WHIRLPOOL:
                                     gpMouseManager->SetPointer(nDays + 28);
                                     break;
                                 default:
@@ -1947,7 +1947,7 @@ void advManager::DrawCell(
                 }
             }
         }
-        if (cell0->m_triggerType == 0xbe) {
+        if (cell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
             flagColor = -1;
             iconIndex = 4;
             frame = GetCursorBaseFrame(gpGame->m_boats[cell0->m_objectMetadata].direction);
@@ -1955,7 +1955,7 @@ void advManager::DrawCell(
             heroYOffset6 = -10;
         } else {
             heroYOffset6 = 0;
-            if (cell0->m_triggerType == 0xbd) {
+            if (cell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                 drawHero = gpGame->GetHero(cell0->m_objectMetadata);
                 if (drawHero->m_eventFlags & 0x80)
                     flagColor = -1;
@@ -4633,7 +4633,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
                 cellPtr = GetCell(originX + drawX, originY + drawY);
                 if (cellPtr->m_flags & 0xc)
                     ++bComboDraw[drawX][drawY];
-                if (cellPtr->m_triggerType == 0x9a) {
+                if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(originX + drawX, originY + drawY)) {
                         bComboDraw[drawX + 1][drawY] += 10;
@@ -4649,7 +4649,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
                         }
                     }
                 }
-                if (cellPtr->m_triggerType == 0xbd || cellPtr->m_triggerType == 0xbe) {
+                if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO) || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(originX + drawX, originY + drawY)) {
                         bComboDraw[drawX + 1][drawY] += 10;
@@ -4921,7 +4921,7 @@ void advManager::TeleportTo(int x, int y, int) {
     mapHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     destinationCell = GetCell(x, y);
     oldCell = GetCell(m_mapOriginX + 7, m_mapOriginY + 7);
-    if (mapHero->m_locationType == 0xa8) {
+    if (mapHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
         occupiedTown = gpGame->GetTown(mapHero->m_occupiedTown);
         occupiedTown->m_occupyingHeroId = -1;
     }
@@ -5056,7 +5056,7 @@ void advManager::TownGate(void) {
     heroPointer->UseSpell(SPELL_TOWN_GATE);
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId = heroPointer->m_id;
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
-    heroPointer->m_locationType = 0xa8;
+    heroPointer->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
     heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
     gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
 }
@@ -5137,7 +5137,7 @@ void advManager::SummonBoat(void) {
             thisBoat->y = normalDirTable[iDirection].y + m_mapOriginY + 7;
             thisBoat->savedTriggerType = pCell->m_triggerType;
             thisBoat->savedEventData = pCell->m_objectMetadata;
-            pCell->m_triggerType = 0xbe;
+            pCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
             pCell->m_objectMetadata = slotIndex;
             gpWindowManager->SaveFizzleSource(176, 192, 128, 96);
             CompleteDraw(m_mapOriginX, m_mapOriginY, 0);

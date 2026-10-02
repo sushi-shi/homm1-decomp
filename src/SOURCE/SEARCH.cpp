@@ -155,11 +155,11 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
             return;
         if (!giGroundToTerrain[s_targetCell->m_tileIndex]) {
             if (waterMode) {
-                if (s_targetCell->m_triggerType == 0xa3 || s_targetCell->m_triggerType == 0xbe)
+                if (s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK) || s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP))
                     return;
             } else {
-                if (s_targetCell->m_triggerType != 0xbd && s_targetCell->m_triggerType != 0xbe
-                    && s_targetCell->m_triggerType != 0xa3)
+                if (s_targetCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO) && s_targetCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                    && s_targetCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
                     return;
             }
         }
@@ -192,14 +192,14 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
         } else
             s_hasAdjacentMonster = 0;
         if (s_currentNode.occupied) {
-            s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType & 0x7f;
-            if (s_triggerType == 0x1a || s_triggerType == 0x29 || s_triggerType == 0x3d || s_triggerType == 0x3e) {
+            s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+            if (s_triggerType == MAP_OBJECT_MONSTER || s_triggerType == MAP_OBJECT_STONE_LITHS || s_triggerType == MAP_OBJECT_HERO || s_triggerType == MAP_OBJECT_SHIP) {
                 if (!findAdjacentMonster || s_currentNode.rvFlag1)
                     goto point_complete;
                 s_hasAdjacentMonster = 1;
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
-                if (s_triggerType == 0x3d
+                if (s_triggerType == MAP_OBJECT_HERO
                     && gpGame->m_availableHeroes[static_cast<unsigned char>(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
                                                      ->m_objectMetadata)]
                            == giCurPlayer)
@@ -207,16 +207,16 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
             } else {
                 if (!findAdjacentMonster)
                     goto point_complete;
-                if (s_triggerType == 0x1d || s_triggerType == 0x28 || s_triggerType == 6 || s_triggerType == 8
-                    || s_triggerType == 0xb || s_triggerType == 0x30 || s_triggerType == 2 || s_triggerType == 3
-                    || s_triggerType == 4 || s_triggerType == 9 || s_triggerType == 0x1b || s_triggerType == 0x24
-                    || s_triggerType == 0x2b)
+                if (s_triggerType == MAP_OBJECT_RESOURCE || s_triggerType == MAP_OBJECT_TOWN || s_triggerType == MAP_OBJECT_TREASURE_CHEST || s_triggerType == MAP_OBJECT_CAMPFIRE
+                    || s_triggerType == MAP_OBJECT_ANCIENT_LAMP || s_triggerType == MAP_OBJECT_ARTIFACT || s_triggerType == MAP_OBJECT_SIGNPOST || s_triggerType == MAP_OBJECT_BUOY
+                    || s_triggerType == MAP_OBJECT_SKELETON || s_triggerType == MAP_OBJECT_FOUNTAIN || s_triggerType == MAP_OBJECT_OBELISK || s_triggerType == MAP_OBJECT_STATUE
+                    || s_triggerType == MAP_OBJECT_WELL)
                     goto point_complete;
             }
         }
         if (waterMode) {
             s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType;
-            if (s_triggerType == 0x1f)
+            if (s_triggerType == MAP_OBJECT_COAST)
                 goto point_complete;
         } else {
             if ((mapExtra[s_currentNode.x][s_currentNode.y] & 0x80)
@@ -274,7 +274,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
     if (scanMap) {
         for (s_mapX = 0; s_mapX < 72; s_mapX++) {
             for (s_mapY = 0; s_mapY < 72; s_mapY++) {
-                if ((gpAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType & 0x7f) == 0x1a) {
+                if ((gpAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x1a) {
                     for (s_direction = 0; s_direction < 8; s_direction++) {
                         s_adjacentX = s_mapX + normalDirTable[s_direction].x;
                         s_adjacentY = s_mapY + normalDirTable[s_direction].y;
@@ -284,7 +284,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                             && !(s_targetCell->m_flags & 0x80))
                             s_directionBlocked = 0;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited
-                            && !(s_targetCell->m_triggerType & 0x80)) {
+                            && !(s_targetCell->m_triggerType & MAP_TRIGGER_EVENT)) {
                             s_terrain = giGroundToTerrain[s_targetCell->m_tileIndex];
                             s_adjacentCost = m_cells[s_adjacentX][s_adjacentY].distance;
                             s_stepCost[0] = s_adjacentCost

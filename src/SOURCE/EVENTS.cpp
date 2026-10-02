@@ -48,14 +48,14 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
     town* occupiedTown;
 
     pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    objType = cell->m_triggerType & 0x7f;
+    objType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
     erase = 0;
     fizzleMode = 0;
     gbEventMusicPlaying = 1;
     gpMouseManager->ReallyHidePointer();
     EventSound(objType, cell->m_objectMetadata);
     switch (objType) {
-        case 31:
+        case MAP_OBJECT_COAST:
             if (pHero->m_eventFlags & HERO_EVENT_EMBARKED) {
                 pHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 pHero->m_remainingMobility = 0;
@@ -69,7 +69,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 CheckAdjacentMon(&adjacentMonster);
             }
             break;
-        case 62:
+        case MAP_OBJECT_SHIP:
             ship = &gpGame->m_boats[cell->m_objectMetadata];
             gpGame->RestoreCell(-1, -1, ship->savedTriggerType, ship->savedEventData, cell, 2);
             pHero->m_eventFlags |= HERO_EVENT_EMBARKED;
@@ -83,7 +83,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
             UpdateScreen(0, 0);
             break;
-        case 25:
+        case MAP_OBJECT_MINE:
             if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
             if (gpGame->m_mines[cell->m_objectMetadata].type == 6)
@@ -101,7 +101,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 break;
             EventWindow(0, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_MERCURY, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             goto claimMine;
-        case 32:
+        case MAP_OBJECT_SAWMILL:
             if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
             EventWindow(0x37, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_WOOD, -2, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -109,13 +109,13 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         claimMine:
             gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
             break;
-        case 23:
+        case MAP_OBJECT_LIGHTHOUSE:
             if (gpGame->m_mineOwners[1] == giCurPlayer)
                 break;
             gpGame->ClaimMine(1, giCurPlayer);
             EventWindow(0x28, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             break;
-        case 22:
+        case MAP_OBJECT_DRAGON_CITY:
             if (gpGame->m_mineOwners[0] == giCurPlayer)
                 break;
             EventWindow(0x26, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -132,7 +132,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 pHero->CheckLevel();
             }
             break;
-        case 6:
+        case MAP_OBJECT_TREASURE_CHEST:
             EventWindow(0xb, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_RESOURCE_GOLD, cell->m_objectMetadata * 500, NORMAL_DIALOG_EXPERIENCE,
                         (cell->m_objectMetadata - 1) * 500, NORMAL_DIALOG_SHOW_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
@@ -143,7 +143,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             fizzleMode = 1;
             pHero->CheckLevel();
             break;
-        case 3:
+        case MAP_OBJECT_BUOY:
             if (pHero->m_eventFlags & HERO_EVENT_BUOY) {
                 EventWindow(2, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -152,7 +152,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(3, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 7:
+        case MAP_OBJECT_FAERIE_RING:
             if (pHero->m_eventFlags & HERO_EVENT_FAERIE_RING) {
                 EventWindow(0xc, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -161,7 +161,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(0xd, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_LUCK_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 9:
+        case MAP_OBJECT_FOUNTAIN:
             if (pHero->m_eventFlags & HERO_EVENT_FOUNTAIN) {
                 EventWindow(0xf, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -170,7 +170,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(0x10, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_LUCK_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 28:
+        case MAP_OBJECT_OASIS:
             if (pHero->m_eventFlags & HERO_EVENT_OASIS) {
                 EventWindow(0x34, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -179,7 +179,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(0x35, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 36:
+        case MAP_OBJECT_STATUE:
             if (pHero->m_eventFlags & HERO_EVENT_TEMPLE) {
                 EventWindow(0x3e, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -188,7 +188,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(0x3d, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 4:
+        case MAP_OBJECT_SKELETON:
             switch (cell->m_objectMetadata) {
                 case 1:
                     EventWindow(0x4b, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -206,7 +206,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     break;
             }
             break;
-        case 8:
+        case MAP_OBJECT_CAMPFIRE:
             EventWindow(0xe, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, (cell->m_objectMetadata >> 4) * 100,
                         cell->m_objectMetadata & 0xf,
                         cell->m_objectMetadata >> 4, NORMAL_DIALOG_NO_OR_TEXT);
@@ -218,7 +218,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
             SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
             break;
-        case 10:
+        case MAP_OBJECT_GAZEBO:
             if (pHero->m_visitedSites & (1 << cell->m_objectMetadata)) {
                 EventWindow(0x11, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -228,7 +228,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 pHero->CheckLevel();
             }
             break;
-        case 24:
+        case MAP_OBJECT_WATERWHEEL:
             if (!cell->m_objectMetadata) {
                 EventWindow(0x29, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -237,7 +237,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 cell->m_objectMetadata = 0;
             }
             break;
-        case 29:
+        case MAP_OBJECT_RESOURCE:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(pHero, resType,
                          resType == 6 ? cell->m_objectMetadata * 100
@@ -251,7 +251,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             erase = 1;
             fizzleMode = 1;
             break;
-        case 45:
+        case MAP_OBJECT_WINDMILL:
             if (cell->m_objectMetadata <= 6) {
                 EventWindow(0x45, NORMAL_DIALOG_TYPE_OK, "", cell->m_objectMetadata, 2, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 GiveResource(pHero, cell->m_objectMetadata, 2);
@@ -260,7 +260,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(0x44, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 11:
+        case MAP_OBJECT_ANCIENT_LAMP:
             EventWindow(0x13, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 RecruitEvent(pHero, 0x1b, cell);
@@ -270,7 +270,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 }
             }
             break;
-        case 42:
+        case MAP_OBJECT_WAGON_CAMP:
             if (!cell->m_objectMetadata) {
                 EventWindow(0x41, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -279,7 +279,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     RecruitEvent(pHero, 0x18, cell);
             }
             break;
-        case 39:
+        case MAP_OBJECT_DESERT_TENT:
             if (!cell->m_objectMetadata) {
                 EventWindow(0x3f, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
@@ -288,17 +288,17 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     RecruitEvent(pHero, 0x19, cell);
             }
             break;
-        case 13:
-        case 14:
-        case 15:
-        case 16:
-        case 17:
+        case MAP_OBJECT_STRAW_HUT:
+        case MAP_OBJECT_HOUSE:
+        case MAP_OBJECT_CABIN:
+        case MAP_OBJECT_DWARF_LOG_CABIN:
+        case MAP_OBJECT_PEASANT_LOG_CABIN:
             HouseEvent(pHero, cell);
             break;
-        case 26:
+        case MAP_OBJECT_MONSTER:
             PlayerMonsterInteract(cell, cell, pHero, &erase, x, y, 0, x, y);
             break;
-        case 27:
+        case MAP_OBJECT_OBELISK:
             if (!(gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1]
                   & (1 << pHero->m_owner))) {
                 gpGame->VisitObelisk(pHero->m_owner);
@@ -310,7 +310,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(0x33, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 33:
+        case MAP_OBJECT_RANKING_SHRINE:
             EventWindow(0x38, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             gpMouseManager->SetPointer(0);
             win = new heroWindow(0, 0, "thiefwin.bin");
@@ -328,7 +328,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             delete win;
             RedrawAdvScreen(1);
             break;
-        case 34:
+        case MAP_OBJECT_SPELL_SHRINE:
             sprintf(gText, "%s'%s'.", gEventText[57],
                     gSpellNames[cell->m_objectMetadata - 1]);
             if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
@@ -340,21 +340,21 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 40:
+        case MAP_OBJECT_TOWN:
             if (giEventMusicVolume != -1)
                 gConfig.musicVolume = giEventMusicVolume;
             giEventMusicVolume = -1;
             TownEvent(cell, x, y);
             break;
-        case 44:
+        case MAP_OBJECT_WHIRLPOOL:
             DoWhirlpool(pHero);
-        case 41:
+        case MAP_OBJECT_STONE_LITHS:
             teleportCount = 0;
             for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
-                            == (unsigned char)(objType | 0x80)
-                        && abs(tx - x) + abs(ty - y) > (objType == 41 ? 1 : 3))
+                            == (unsigned char)(objType | MAP_TRIGGER_EVENT)
+                        && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? 1 : 3))
                         teleportCount++;
                 }
             }
@@ -364,8 +364,8 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
-                                == (unsigned char)(objType | 0x80)
-                            && abs(tx - x) + abs(ty - y) > (objType == 41 ? 1 : 3)) {
+                                == (unsigned char)(objType | MAP_TRIGGER_EVENT)
+                            && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? 1 : 3)) {
                             if (--teleportCount <= 0)
                                 goto teleport;
                         }
@@ -376,7 +376,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 gpAdvManager->TeleportTo(tx, ty, 1);
             }
             break;
-        case 48:
+        case MAP_OBJECT_ARTIFACT:
             if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
                 NormalDialog("You cannot pick up this artifactId, you already have a full load!", NORMAL_DIALOG_TYPE_OK, -1,
                              -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -417,14 +417,14 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             pHero->CheckLevel();
             break;
-        case 61:
+        case MAP_OBJECT_HERO:
             DemobilizeCurrHero();
             enemyHero = gpGame->GetHero(cell->m_objectMetadata);
             if (enemyHero->m_owner == giCurPlayer) {
                 HeroSwap(pHero, enemyHero);
             } else {
                 occupiedTown = 0;
-                if (enemyHero->m_locationType == 0xa8) {
+                if (enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                     occupiedTown = gpGame->GetTown(enemyHero->m_occupiedTown);
                     occupiedTown->m_occupyingHeroId = enemyHero->m_id;
                 }
@@ -434,18 +434,18 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     gpGame->ClaimTown(occupiedTown->m_id, giCurPlayer);
             }
             break;
-        case 2:
+        case MAP_OBJECT_SIGNPOST:
             gpSearchArray->FindNearestObject(pHero->m_x, pHero->m_y, pHero->m_direction,
                                              -1, 0xa8);
             if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)->m_triggerType
-                == 0xa8) {
+                == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                 sprintf(gText, gEventText[1],
                         GetTownName(gpGame->GetTownId(gpSearchArray->m_specialTargetX,
                                                       gpSearchArray->m_specialTargetY)));
                 EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
-        case 5:
+        case MAP_OBJECT_DAEMON_CAVE:
             EventWindow(0xa, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                 break;
@@ -494,7 +494,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     break;
             }
             break;
-        case 12:
+        case MAP_OBJECT_GRAVEYARD:
             EventWindow(0x14, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 switch (cell->m_objectMetadata) {
@@ -511,7 +511,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 }
             }
             break;
-        case 35:
+        case MAP_OBJECT_SHIPWRECK:
             EventWindow(0x3a, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 switch (cell->m_objectMetadata) {
@@ -560,7 +560,7 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
     int j;
 
     erased = 1;
-    cell->m_triggerType = 0;
+    cell->m_triggerType = MAP_OBJECT_NONE;
     cell->m_objectIndex = 0xff;
     if ((cell->m_secondaryTrigger & 0x7f) > 0 && (cell->m_secondaryTrigger & 0x7f) < 0x7f) {
         cell->m_triggerType = cell->m_secondaryTrigger & 0x7f;
@@ -1210,7 +1210,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     float theirLosses;
 
     theCastle = 0;
-    eventType = cell->m_triggerType & 0x7f;
+    eventType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
     erase = 0;
     handled = 0;
     savedPlayer = giCurPlayer;
@@ -1218,7 +1218,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     --eventHero->m_remainingMobility;
     mapVisited[x][y] |= giCurPlayerBit;
     switch (eventType) {
-        case 31:
+        case MAP_OBJECT_COAST:
             if (eventHero->m_eventFlags & HERO_EVENT_EMBARKED) {
                 eventHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 eventHero->m_remainingMobility = 0;
@@ -1229,7 +1229,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 CheckAdjacentMon(&adjacentMonster);
             }
             break;
-        case 62:
+        case MAP_OBJECT_SHIP:
             ship = &gpGame->m_boats[cell->m_objectMetadata];
             gpGame->RestoreCell(-1, -1, ship->savedTriggerType, ship->savedEventData, cell, 3);
             eventHero->m_eventFlags |= HERO_EVENT_EMBARKED;
@@ -1242,18 +1242,18 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             m_cursorActive = 1;
             break;
         case 1:
-        case 25:
-        case 32:
+        case MAP_OBJECT_MINE:
+        case MAP_OBJECT_SAWMILL:
             if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
             gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
             break;
-        case 23:
+        case MAP_OBJECT_LIGHTHOUSE:
             if (gpGame->m_mineOwners[1] == giCurPlayer)
                 break;
             gpGame->ClaimMine(1, giCurPlayer);
             break;
-        case 22:
+        case MAP_OBJECT_DRAGON_CITY:
             if (gpGame->m_mineOwners[0] == giCurPlayer)
                 break;
             for (counter = 0; counter < 5; counter++) {
@@ -1269,7 +1269,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     gpGame->ClaimMine(0, giCurPlayer);
             }
             break;
-        case 6:
+        case MAP_OBJECT_TREASURE_CHEST:
             if (gpPhilAI->ChooseGoldOrExperience(eventHero,
                                                  cell->m_objectMetadata * 500,
                                                  (cell->m_objectMetadata - 1) * 500))
@@ -1278,37 +1278,37 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 GiveExperience(eventHero, (cell->m_objectMetadata - 1) * 500, 1);
             erase = 1;
             break;
-        case 3:
+        case MAP_OBJECT_BUOY:
             if (!(eventHero->m_eventFlags & HERO_EVENT_BUOY)) {
                 eventHero->m_eventFlags |= HERO_EVENT_BUOY;
                 eventHero->m_morale++;
             }
             break;
-        case 7:
+        case MAP_OBJECT_FAERIE_RING:
             if (!(eventHero->m_eventFlags & HERO_EVENT_FAERIE_RING)) {
                 eventHero->m_eventFlags |= HERO_EVENT_FAERIE_RING;
                 eventHero->m_luck++;
             }
             break;
-        case 9:
+        case MAP_OBJECT_FOUNTAIN:
             if (!(eventHero->m_eventFlags & HERO_EVENT_FOUNTAIN)) {
                 eventHero->m_eventFlags |= HERO_EVENT_FOUNTAIN;
                 eventHero->m_luck++;
             }
             break;
-        case 28:
+        case MAP_OBJECT_OASIS:
             if (!(eventHero->m_eventFlags & HERO_EVENT_OASIS)) {
                 eventHero->m_eventFlags |= HERO_EVENT_OASIS;
                 eventHero->m_morale++;
             }
             break;
-        case 36:
+        case MAP_OBJECT_STATUE:
             if (!(eventHero->m_eventFlags & HERO_EVENT_TEMPLE)) {
                 eventHero->m_eventFlags |= HERO_EVENT_TEMPLE;
                 eventHero->m_morale += 2;
             }
             break;
-        case 4:
+        case MAP_OBJECT_SKELETON:
             switch (cell->m_objectMetadata) {
                 case 1:
                     break;
@@ -1318,67 +1318,67 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     break;
             }
             break;
-        case 8:
+        case MAP_OBJECT_CAMPFIRE:
             GiveResource(eventHero, 6, (cell->m_objectMetadata >> 4) * 100);
             GiveResource(eventHero, cell->m_objectMetadata & 0xf,
                          cell->m_objectMetadata >> 4);
             erase = 1;
             gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
             break;
-        case 10:
+        case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
                 GiveExperience(eventHero, 1000, 1);
                 eventHero->m_visitedSites |= 1 << cell->m_objectMetadata;
             }
             break;
-        case 24:
+        case MAP_OBJECT_WATERWHEEL:
             if (cell->m_objectMetadata) {
                 GiveResource(eventHero, 6, cell->m_objectMetadata * 500);
                 cell->m_objectMetadata = 0;
             }
             break;
-        case 29:
+        case MAP_OBJECT_RESOURCE:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(eventHero, resType,
                          resType == 6 ? cell->m_objectMetadata * 100
                                            : cell->m_objectMetadata);
             erase = 1;
             break;
-        case 45:
+        case MAP_OBJECT_WINDMILL:
             if (cell->m_objectMetadata != 99) {
                 GiveResource(eventHero, cell->m_objectMetadata, 2);
                 cell->m_objectMetadata = 99;
             }
             break;
-        case 11:
+        case MAP_OBJECT_ANCIENT_LAMP:
             troopType = 0x1b;
             available = 0;
             goto recruit;
-        case 42:
+        case MAP_OBJECT_WAGON_CAMP:
             troopType = 0x18;
             available = 0;
             goto recruit;
-        case 39:
+        case MAP_OBJECT_DESERT_TENT:
             troopType = 0x19;
             available = 0;
             goto recruit;
-        case 13:
+        case MAP_OBJECT_STRAW_HUT:
             troopType = 6;
             available = 1;
             goto recruit;
-        case 14:
+        case MAP_OBJECT_HOUSE:
             troopType = 0;
             available = 1;
             goto recruit;
-        case 15:
+        case MAP_OBJECT_CABIN:
             troopType = 1;
             available = 1;
             goto recruit;
-        case 16:
+        case MAP_OBJECT_DWARF_LOG_CABIN:
             troopType = 0xd;
             available = 1;
             goto recruit;
-        case 17:
+        case MAP_OBJECT_PEASANT_LOG_CABIN:
             troopType = 0;
             available = 1;
             goto recruit;
@@ -1398,37 +1398,37 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     }
                 }
             }
-            if (!cell->m_objectMetadata && eventType == 11)
+            if (!cell->m_objectMetadata && eventType == MAP_OBJECT_ANCIENT_LAMP)
                 erase = 1;
             break;
-        case 26:
+        case MAP_OBJECT_MONSTER:
             ComputerMonsterInteract(cell, eventHero, &erase);
             break;
-        case 27:
+        case MAP_OBJECT_OBELISK:
             if (!(gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] & giCurPlayerBit)) {
                 gpGame->VisitObelisk(eventHero->m_owner);
                 gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |= giCurPlayerBit;
             }
             break;
-        case 33:
+        case MAP_OBJECT_RANKING_SHRINE:
             break;
-        case 34:
+        case MAP_OBJECT_SPELL_SHRINE:
             if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
                 eventHero->AddSpell(cell->m_objectMetadata - 1,
                                     eventHero->m_primaryStats[3], 0);
             break;
-        case 40:
+        case MAP_OBJECT_TOWN:
             gpPhilAI->TownEvent(cell, eventHero, x, y);
             break;
-        case 44:
+        case MAP_OBJECT_WHIRLPOOL:
             DoWhirlpool(eventHero);
-        case 41:
+        case MAP_OBJECT_STONE_LITHS:
             teleportCount = 0;
             for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
-                            == (unsigned char)(eventType | 0x80)
-                        && abs(tx - x) + abs(ty - y) > (eventType == 41 ? 1 : 3))
+                            == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
+                        && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? 1 : 3))
                         teleportCount++;
                 }
             }
@@ -1438,8 +1438,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
-                                == (unsigned char)(eventType | 0x80)
-                            && abs(tx - x) + abs(ty - y) > (eventType == 41 ? 1 : 3)) {
+                                == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
+                            && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? 1 : 3)) {
                             if (--teleportCount <= 0)
                                 goto teleport;
                         }
@@ -1450,7 +1450,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 gpAdvManager->TeleportTo(tx, ty, 0);
             }
             break;
-        case 48:
+        case MAP_OBJECT_ARTIFACT:
             switch (cell->m_objectMetadata) {
                 case 1:
                 giveArtifact:
@@ -1472,12 +1472,12 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     break;
             }
             break;
-        case 61:
+        case MAP_OBJECT_HERO:
             enemyHero = gpGame->GetHero(cell->m_objectMetadata);
             oldShowIt = bShowIt;
             if (enemyHero->m_owner == giCurPlayer)
                 return;
-            if (enemyHero->m_locationType == 0xa8)
+            if (enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
                 theCastle = gpGame->GetTown(enemyHero->m_occupiedTown);
             if (!gbHumanPlayer[enemyHero->m_owner]) {
                 battleResult = gpPhilAI->QuickCombat(&eventHero->m_army, eventHero, &enemyHero->m_army,
@@ -1497,9 +1497,9 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             CompleteDraw(0);
             break;
-        case 2:
+        case MAP_OBJECT_SIGNPOST:
             break;
-        case 5:
+        case MAP_OBJECT_DAEMON_CAVE:
             switch (cell->m_objectMetadata) {
                 case 1:
                     break;
@@ -1527,8 +1527,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             cell->m_objectMetadata = 1;
             break;
-        case 12:
-        case 35:
+        case MAP_OBJECT_GRAVEYARD:
+        case MAP_OBJECT_SHIPWRECK:
             gpPhilAI->FightEvent(eventHero, cell);
             break;
         default:

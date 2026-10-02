@@ -1873,7 +1873,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
             gpGame->m_map[townX][townY].m_triggerType;
         m_recruitHeroes[m_recruitState]->m_occupiedTown =
             gpGame->m_map[townX][townY].m_objectMetadata;
-        gpGame->m_map[townX][townY].m_triggerType = 0xbd;
+        gpGame->m_map[townX][townY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
         gpGame->m_map[townX][townY].m_objectMetadata =
             gpCurPlayer->m_availableHeroIds[m_recruitState];
         m_recruitResult = 1;
