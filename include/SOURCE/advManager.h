@@ -33,6 +33,13 @@ struct tag_message;
 // clang-format off
 H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_BOTTOM_VIEW_WIDGET_COUNT = 12,
+    // m_bottomViewPrimaryWidgets slots (Buka 2.1 names): the stone backdrop,
+    // the view's foreground icon, then its further icons; the secondary
+    // (text) array's army/count labels start at HERO_TEXT_FIRST.
+    ADVMGR_BOTTOM_VIEW_BACKGROUND = 0,
+    ADVMGR_BOTTOM_VIEW_FOREGROUND = 1,
+    ADVMGR_BOTTOM_VIEW_ICON_FIRST = 2,
+    ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST = 1,
     ADVMGR_OBJECT_ICON_COUNT = 21,
     ADVMGR_PANEL_ICON_COUNT = 5,
     ADVMGR_ANIMATION_PHASE_COUNT = 4,
@@ -42,6 +49,13 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_ENVIRONMENT_SOUND_COUNT = 22,
     ADVMGR_CURSOR_SAMPLE_COUNT = 7
 H1_ENUM_CONST_END(AdventureManagerStorageConstant)
+
+// No hero: playerData::m_currentHero/CurrentHero() with nothing selected,
+// an empty locator slot, a quick view of nobody (Buka 2.1 ADVMGR
+// INVALID_HERO).
+H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
+    INVALID_HERO = -1
+H1_ENUM_CONST_END(AdventureHeroConstant)
 
 // m_heroIcons slots and m_cursorType: the four hero-class sprites (the
 // constructor loads kngt32/barb32/sorc32/wrlk32.icn; MobilizeCurrHero and
@@ -68,6 +82,12 @@ H1_ENUM_BEGIN(AdventureCommand)
     ADVMGR_COMMAND_OCCUPIED_TOWN_VIEW = 6,
     ADVMGR_COMMAND_CONTINUE_ROUTE = 7
 H1_ENUM_END(AdventureCommand)
+
+// CastSpell charges Dimension Door and Town Gate this much mobility, and
+// philAI::DoDimensionDoor the same for the AI's jump.
+H1_ENUM_CONST_BEGIN(AdventureSpellConstant)
+    SPELL_TRAVEL_MOBILITY_COST = 12
+H1_ENUM_CONST_END(AdventureSpellConstant)
 
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
@@ -425,6 +445,21 @@ extern int gbForceUpdate;
 extern int gbAllBlack;
 extern int giFullySeeded;
 extern class searchArray* gpSearchArray;
+// clang-format off
+// The adventure screen's bottom-right panel: iCurBottomView is the view
+// UpdBottomView last drew, giBottomViewOverride (KB.h) a temporary one that
+// wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
+// resource message, and game's DISABLED hold while the AI moves.
+H1_ENUM_BEGIN(BottomViewMode)
+    BOTTOM_VIEW_NONE = 0,
+    BOTTOM_VIEW_NEW_TURN = 1,
+    BOTTOM_VIEW_KINGDOM = 2,
+    BOTTOM_VIEW_HERO = 3,
+    BOTTOM_VIEW_ENEMY_TURN = 4,
+    BOTTOM_VIEW_RESOURCE = 5,
+    BOTTOM_VIEW_OVERRIDE_DISABLED = 6
+H1_ENUM_END(BottomViewMode)
+// clang-format on
 extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;

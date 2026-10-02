@@ -160,11 +160,11 @@ int EarlySetup(void) {
         return 1;
     LogTruncate();
     iCDRomErr = SetupCDDrive();
-    if (iCDRomErr == 1) {
+    if (iCDRomErr == CD_SETUP_NO_DRIVE) {
         MessageBoxA((HWND)hwndApp, "Unable to access CD Drive.", "Startup Error", MB_ICONHAND);
         exit(0);
     }
-    if (iCDRomErr == 2) {
+    if (iCDRomErr == CD_SETUP_NOT_FOUND) {
         MessageBoxA(
             (HWND)hwndApp,
             "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of "
@@ -174,7 +174,7 @@ int EarlySetup(void) {
         );
         exit(0);
     }
-    if (iCDRomErr == 3) {
+    if (iCDRomErr == CD_SETUP_NO_APP_PATH) {
         MessageBoxA(
             (HWND)hwndApp,
             "Unable to change to the Heroes directory.  Please run the installation "
@@ -184,7 +184,7 @@ int EarlySetup(void) {
         );
         exit(0);
     }
-    if (iCDRomErr == 4) {
+    if (iCDRomErr == CD_SETUP_NO_DATA) {
         MessageBoxA(
             (HWND)hwndApp,
             "Unable to find the Heroes data files.  Please run the installation program.",
@@ -198,18 +198,6 @@ int EarlySetup(void) {
 }
 
 // clang-format off
-// stpmain.bin buttons: InitMenuHandler returns the id as m_dialogResult and
-// oldmain dispatches it (gGameCommand re-enters with the control panel's
-// new/load/quit ids, which share these values).
-H1_ENUM_BEGIN(MainMenuControl)
-    MAIN_MENU_NO_COMMAND = -1,
-    MAIN_MENU_NEW_GAME = 1,
-    MAIN_MENU_LOAD_GAME = 2,
-    MAIN_MENU_QUIT = 4,
-    MAIN_MENU_HIGH_SCORES = 5,
-    MAIN_MENU_CREDITS = 6
-H1_ENUM_END(MainMenuControl)
-
 // InitMenuHandler's right-click help: the gInitMenuHelp row.
 H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_NONE = -1,
@@ -237,8 +225,8 @@ H1_ENUM_END(GameEndSequence)
 VA(0x0045015c, 0xe22)
 int oldmain(void) {
     char saveBuf[20];
-    char hiResVideos[3];
-    char lowResVideos[3];
+    H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[3];
+    H1_ENUM_STORAGE(SmackVideo, char) lowResVideos[3];
     int n;
     heroWindow* mainWin;
     font* font;
@@ -253,7 +241,7 @@ int oldmain(void) {
     if (bKBDone)
         return 0;
     bKBDone = 1;
-    command = -1;
+    command = MAIN_MENU_NO_COMMAND;
     if (gpExec->InitSystem())
         ShutDown("Initialization failed!");
     CheckMem();
@@ -292,17 +280,17 @@ int oldmain(void) {
         gpResourceManager->Dispose(font);
         if (!gbSkipIntro) {
             if (gConfig.slowVideo)
-                PlaySmacker(1);
+                PlaySmacker(SMACK_NWCLOGO1);
             else
-                PlaySmacker(0);
+                PlaySmacker(SMACK_NWCLOGO);
         }
         if (gConfig.slowVideo)
-            PlaySmacker(2);
+            PlaySmacker(SMACK_INTRO02C);
         else
-            PlaySmacker(3);
+            PlaySmacker(SMACK_INTRO02U);
     }
     LoadSystemwideIcons();
-    memset(gbThisNetHumanPlayer, 0, 4);
+    memset(gbThisNetHumanPlayer, 0, GAME_PLAYER_COUNT);
     leave = 0;
     backdropLoaded = 0;
     initialMainScreen = 1;
@@ -318,7 +306,7 @@ int oldmain(void) {
                 if (initialMainScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
-                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
                 initialMainScreen = 0;
             }
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -329,7 +317,7 @@ int oldmain(void) {
         giCampaignChoice = 0;
         gpMouseManager->ReallyShowPointer();
 
-        if (giMenuCommand != -1) {
+        if (giMenuCommand != APP_MENU_NONE) {
         processMenuCommand:
             switch (giMenuCommand) {
                 case APP_MENU_LOAD_STANDARD_GAME:
@@ -380,7 +368,7 @@ int oldmain(void) {
                 gbInSetupDialog = 0;
             }
         }
-        if (giMenuCommand != -1)
+        if (giMenuCommand != APP_MENU_NONE)
             goto processMenuCommand;
 
         gpMouseManager->ReallyHidePointer();
@@ -390,7 +378,7 @@ int oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_HIGH_SCORES:
-                if (gpExec->AddManager(gpHighScoreManager, -1))
+                if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
@@ -401,11 +389,11 @@ int oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_CREDITS:
-                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
                 done = 0;
                 gpInputManager->Flush();
                 while (!done) {
@@ -417,11 +405,11 @@ int oldmain(void) {
                             done = 1;
                     }
                 }
-                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
                 goto mainMenu;
             case MAIN_MENU_QUIT:
                 leave = 1;
@@ -429,12 +417,12 @@ int oldmain(void) {
         }
 
     gameSetupComplete:
-        if (giMenuCommand != -1)
+        if (giMenuCommand != APP_MENU_NONE)
             goto processMenuCommand;
         if (!leave) {
             if (gbRemoteOn && !giThisNetPos) {
                 n = 0;
-                for (idx = 0; idx < 4; idx++) {
+                for (idx = 0; idx < GAME_PLAYER_COUNT; idx++) {
                     if (gbHumanPlayer[idx]) {
                         gbGamePosToNetPos[idx] = n;
                         n++;
@@ -442,12 +430,21 @@ int oldmain(void) {
                         gbGamePosToNetPos[idx] = -1;
                     }
                 }
-                for (idx = 0; idx < 4; idx++)
-                    memcpy(gText, gbGamePosToNetPos, 4);
+                for (idx = 0; idx < GAME_PLAYER_COUNT; idx++)
+                    memcpy(gText, gbGamePosToNetPos, GAME_PLAYER_COUNT);
                 giHostGamePos = NetPosToGamePos(0);
                 giThisGamePos = giHostGamePos;
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
-                    result = TransmitRemoteData(gText, idx, 4, BOX_REMOTE_SETUP, 1, 1, -1, 0);
+                    result = TransmitRemoteData(
+                        gText,
+                        idx,
+                        4,
+                        BOX_REMOTE_SETUP,
+                        1,
+                        1,
+                        REMOTE_MESSAGE_DEFAULT,
+                        0
+                    );
                     if (!result)
                         ShutDown(NULL);
                 }
@@ -459,17 +456,10 @@ int oldmain(void) {
                 }
             }
             if (gbRemoteOn && gbWaitForRemoteReceive) {
-                giWaitType = 0;
+                giWaitType = DIALOG_WAIT_OTHER_PLAYER;
                 NormalDialog(
                     "Waiting for other remote player to set up game.",
-                    NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
+                    NORMAL_DIALOG_TYPE_WAIT_CANCEL
                 );
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
@@ -479,11 +469,11 @@ int oldmain(void) {
         playScenario:
             if (gpGame->m_campaignType > 0) {
                 if (!backdropLoaded) {
-                    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
                     gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                     gpWindowManager
                         ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
                     backdropLoaded = 1;
                 }
                 gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 0, 0);
@@ -491,18 +481,18 @@ int oldmain(void) {
             gbGameInitialized = 1;
             backdropLoaded = 0;
             gpSoundManager->StopAllSamples();
-            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
             gMapX = 0;
             gMapY = 0;
-            if (gpExec->AddManager(gpAdvManager, -1))
+            if (gpExec->AddManager(gpAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                 ShutDown("Can't add manager!");
-            if (command == 1)
+            if (command == MAIN_MENU_NEW_GAME)
                 gpAdvManager->SetHeroContext(gpGame->m_players[0].NextHero(0), 0);
             gpExec->MainLoop();
             gMapX = gpAdvManager->m_mapOriginX;
             gMapY = gpAdvManager->m_mapOriginY;
             gpExec->RemoveManager(gpAdvManager);
-            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
         }
 
         if (gbGameOver) {
@@ -517,16 +507,16 @@ int oldmain(void) {
                 "High King!\n\nOur victory was achieved in %d days!",
                 giCurTurn
             );
-            lowResVideos[0] = 7;
-            lowResVideos[1] = 5;
-            lowResVideos[2] = 6;
-            hiResVideos[0] = 7;
-            hiResVideos[1] = 4;
-            hiResVideos[2] = 6;
+            lowResVideos[GAME_END_LOST] = SMACK_LOSE1;
+            lowResVideos[GAME_END_WON] = SMACK_WIN01U;
+            lowResVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN02;
+            hiResVideos[GAME_END_LOST] = SMACK_LOSE1;
+            hiResVideos[GAME_END_WON] = SMACK_WIN01C;
+            hiResVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN02;
             if (giEndSequence != GAME_END_WON) {
                 if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
-                    PlaySmacker(4);
-                    PlaySmacker(6);
+                    PlaySmacker(SMACK_WIN01C);
+                    PlaySmacker(SMACK_WIN02);
                 } else {
                     PlaySmacker(
                         gConfig.slowVideo ? hiResVideos[giEndSequence] : lowResVideos[giEndSequence]
@@ -535,7 +525,7 @@ int oldmain(void) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
                 gpWindowManager->m_updateFlags = 1;
                 backdropLoaded = 1;
             } else {
@@ -546,39 +536,29 @@ int oldmain(void) {
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(
                     giCurTurn,
-                    0,
+                    HIGH_SCORE_TYPE_CAMPAIGN,
                     "",
                     gCampaignSideNames[gpGame->m_campaignType - 1]
                 );
             }
             if (gbShowHighScore) {
                 gpMouseManager->ReallyShowPointer();
-                if (gpExec->AddManager(gpHighScoreManager, -1))
+                if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
-                giHighScoreRank = -1;
+                giHighScoreRank = HIGH_SCORE_EMPTY;
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
                 backdropLoaded = 1;
             }
             if (gpGame->m_campaignType > 0) {
                 if (giEndSequence == GAME_END_LOST) {
                     sprintf(gText, "Would you like to replay this scenario?");
-                    NormalDialog(
-                        gText,
-                        NORMAL_DIALOG_TYPE_YES_NO,
-                        -1,
-                        -1,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_OR_TEXT
-                    );
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
@@ -598,17 +578,7 @@ int oldmain(void) {
                         "scenario?",
                         saveBuf
                     );
-                    NormalDialog(
-                        gText,
-                        NORMAL_DIALOG_TYPE_YES_NO,
-                        -1,
-                        -1,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_OR_TEXT
-                    );
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                         goto playScenario;
                 }
@@ -675,7 +645,7 @@ int InterpretCommandLine(void) {
     sprintf(cAggPathName, "%s%s", gcDataPath, "heroes.agg");
     DEFAULT_AGGREGATE_NAME = cAggPathName;
     giFrameStep = 6;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         if (giNumHumanPlayers > i)
             gbHumanPlayer[i] = 1;
         else
@@ -717,22 +687,12 @@ short InitMenuHandler(tag_message& message) {
                     break;
             }
             if (helpIndex >= 0)
-                NormalDialog(
-                    gInitMenuHelp[helpIndex],
-                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gInitMenuHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
         }
     } else if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                if (message.id > 0 && message.id <= 6)
+                if (message.id > 0 && message.id <= MAIN_MENU_LAST)
                     handled = 1;
                 break;
             default:
@@ -740,7 +700,7 @@ short InitMenuHandler(tag_message& message) {
         }
     }
 
-    if (handled || giMenuCommand != -1) {
+    if (handled || giMenuCommand != APP_MENU_NONE) {
         gpWindowManager->m_dialogResult = message.id;
         message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
@@ -775,7 +735,7 @@ short RecruitHeroHandler(tag_message& message) {
                         gpTownManager->RedrawTownScreen();
                         gpTownManager->m_heroWindow0->DrawWindow();
                         gpTownManager->m_heroWindow1->DrawWindow();
-                        gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
+                        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
                         break;
                     default:
                         break;
@@ -812,7 +772,8 @@ char* GetBuildingName(int race, short building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return gNeutralBuildingNames[building];
     else
-        return gDwellingNames[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
+        return gDwellingNames
+            [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
 }
 
 VA(0x00451620, 0x9f)
@@ -825,7 +786,8 @@ void GetBuildingCost(int race, short building, int* const destination, int mageL
     } else {
         memcpy(
             destination,
-            gDwellingCosts[building - BUILDING_SLOT_DWELLING_FIRST + race * 6],
+            gDwellingCosts
+                [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT],
             RESOURCE_COUNT * sizeof(int)
         );
     }
@@ -880,13 +842,14 @@ signed char CanBuild(town* t, short building) {
         else
             return 0;
     }
-    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= 3)
+    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
         return 0;
     if (building == BUILDING_SLOT_TENT)
         return 0;
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
-    required = gDwellingRequirements[building - BUILDING_SLOT_DWELLING_FIRST + t->m_type * 6];
+    required = gDwellingRequirements
+        [building - BUILDING_SLOT_DWELLING_FIRST + t->m_type * BUILDING_SLOT_DWELLING_COUNT];
     if ((t->m_buildings & required) == required)
         return 1;
     return 0;
@@ -906,7 +869,8 @@ signed char CanBuy(town* t, short type) {
         type,
         cost,
         (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1)
+            ? (t->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST ? TOWN_MAGE_GUILD_COST_LEVEL_LAST
+                                                                  : t->m_buildState + 1)
             : 0
     );
     rec = &gpGame->m_players[giCurPlayer];
@@ -926,7 +890,8 @@ int GetBuildingBaseResourceValue(int race, int building, int level) {
         else
             return gNeutralBaseResourceValues[building];
     } else {
-        return gDwellingBaseResourceValues[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
+        return gDwellingBaseResourceValues
+            [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
     }
 }
 
@@ -1049,14 +1014,14 @@ void NormalDialog(
     width = NORMAL_DIALOG_WINDOW_WIDTH;
     height = heightIndex * NORMAL_DIALOG_WINDOW_ROW_HEIGHT + NORMAL_DIALOG_WINDOW_BASE_HEIGHT;
 
-    if (x == -1 || x + width >= 639) {
+    if (x == NORMAL_DIALOG_AUTO_POSITION || x + width >= LOGICAL_SCREEN_WIDTH - 1) {
         if (gpAdvManager->m_active == 1 && !gbHeroWindShowing && !gbOverviewShowing)
             x = NORMAL_DIALOG_ADVENTURE_X;
         else
-            x = (640 - width) / 2;
+            x = (LOGICAL_SCREEN_WIDTH - width) / 2;
     }
-    if (y == -1 || y + height >= 479) {
-        y = (480 - height) / 2;
+    if (y == NORMAL_DIALOG_AUTO_POSITION || y + height >= LOGICAL_SCREEN_HEIGHT - 1) {
+        y = (LOGICAL_SCREEN_HEIGHT - height) / 2;
         if (y > NORMAL_DIALOG_MAX_TOP)
             y = NORMAL_DIALOG_MAX_TOP;
     }
@@ -1210,7 +1175,7 @@ void NormalDialog(
         );
         if (!iconPanel)
             MemError();
-        pNormalDialogWindow->AddWidget(iconPanel, -1);
+        pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         if (kind[i] == NORMAL_DIALOG_ARTIFACT) {
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 + 6,
@@ -1226,7 +1191,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, -1);
+            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         if (kind[i] == NORMAL_DIALOG_CREST) {
             iconPanel = new iconWidget(
@@ -1243,7 +1208,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, -1);
+            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         if (kind[i] == NORMAL_DIALOG_HERO) {
             sprintf(szFilename, "port%04d.icn", resourceQty[i]);
@@ -1261,7 +1226,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, -1);
+            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         captionWidget = new textWidget(
             resCenterX - 50,
@@ -1276,7 +1241,7 @@ void NormalDialog(
         );
         if (!captionWidget)
             MemError();
-        pNormalDialogWindow->AddWidget(captionWidget, -1);
+        pNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
     }
 
     message.type = MESSAGE_WIDGET;
@@ -1301,7 +1266,7 @@ void NormalDialog(
         );
         if (!captionWidget)
             MemError();
-        pNormalDialogWindow->AddWidget(captionWidget, -1);
+        pNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
     }
 
     if (gpAdvManager->m_active == 1)
@@ -1313,7 +1278,7 @@ void NormalDialog(
         gpWindowManager->DoDialog(pNormalDialogWindow, WaitHandler, 0);
     } else if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(pNormalDialogWindow, -1, 1);
+        gpWindowManager->AddWindow(pNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
         gpWindowManager->RemoveWindow(pNormalDialogWindow);
         gpMouseManager->ReallyShowPointer();
@@ -1335,7 +1300,7 @@ void UpdateNormalDialog(char* text) {
         short show = 1; // Retained from donor and retail stack frame.
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_TEXT;
-        message.id = 1;
+        message.id = NORMAL_DIALOG_TEXT_WIDGET_ID;
         message.text = text;
         pNormalDialogWindow->BroadcastMessage(message);
         pNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
@@ -1369,28 +1334,28 @@ short WaitHandler(tag_message& message) {
     }
     if (!result) {
         switch (giWaitType) {
-            case 0:
+            case DIALOG_WAIT_OTHER_PLAYER:
                 result = WaitForOtherPlayer();
                 break;
-            case 2:
+            case DIALOG_WAIT_NETBIOS_HOST:
                 result = WaitForHost();
                 break;
-            case 1:
+            case DIALOG_WAIT_NETBIOS_GUEST:
                 result = WaitForGuest();
                 break;
-            case 3:
+            case DIALOG_WAIT_NETBIOS_INIT_GUEST:
                 result = InitNetGuest();
                 break;
-            case 4:
+            case DIALOG_WAIT_NETBIOS_INIT_HOST:
                 result = InitNetHost();
                 break;
-            case 5:
+            case DIALOG_WAIT_MODEM_COMMAND:
                 result = GUIModemCommandExec();
                 break;
-            case 6:
+            case DIALOG_WAIT_MODEM_RESPONSE:
                 result = GUIModemResponseExec();
                 break;
-            case 7:
+            case DIALOG_WAIT_DIRECT_CONNECT:
                 result = WaitForDirectConnect();
                 break;
         }
@@ -1622,7 +1587,16 @@ void HandleRemoteDeadPlayerExit(int position) {
         giNumHumanPlayers--;
         gText[0] = position;
         gText[1] = 0;
-        TransmitRemoteData(gText, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+        TransmitRemoteData(
+            gText,
+            REMOTE_BROADCAST_PLAYER,
+            3,
+            REMOTE_COMMAND_PLAYER_EXIT,
+            0,
+            0,
+            REMOTE_MESSAGE_RELIABLE,
+            1
+        );
         RemoteCleanup();
         gbHumanPlayer[position] = 0;
     }
@@ -1646,7 +1620,16 @@ void HandleRemoteSuddenExit(void) {
     } else {
         gText[1] = 0;
     }
-    TransmitRemoteData(gText, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+    TransmitRemoteData(
+        gText,
+        REMOTE_BROADCAST_PLAYER,
+        3,
+        REMOTE_COMMAND_PLAYER_EXIT,
+        0,
+        0,
+        REMOTE_MESSAGE_RELIABLE,
+        1
+    );
 }
 
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
@@ -1664,17 +1647,7 @@ void ReceiveRemotePlayerExit(
 ) {
     if (position == giThisGamePos) {
         sprintf(gText, "You have been eliminated from the game!!!");
-        NormalDialog(
-            gText,
-            NORMAL_DIALOG_TYPE_OK,
-            -1,
-            -1,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
         RemoteCleanup();
         gbGameOver = 1;
         giEndSequence = GAME_END_LOST;
@@ -1693,12 +1666,9 @@ void ReceiveRemotePlayerExit(
                 gText,
                 NORMAL_DIALOG_TYPE_OK,
                 0x61,
-                -1,
+                NORMAL_DIALOG_AUTO_POSITION,
                 NORMAL_DIALOG_CREST,
-                gpGame->m_players[position].Color(),
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
+                gpGame->m_players[position].Color()
             );
             goto dropPlayer;
         } else {
@@ -1722,17 +1692,7 @@ void ReceiveRemotePlayerExit(
                     position + 1,
                     position + 1
                 );
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_YES_NO,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
         }
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         dropPlayer:
@@ -1791,12 +1751,9 @@ void CheckEndGame(int forced) {
                     gText,
                     NORMAL_DIALOG_TYPE_OK,
                     0x61,
-                    -1,
+                    NORMAL_DIALOG_AUTO_POSITION,
                     NORMAL_DIALOG_CREST,
-                    gpGame->m_players[static_cast<signed char>(player)].Color(),
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
+                    gpGame->m_players[static_cast<signed char>(player)].Color()
                 );
             } else if (!pd->m_townCount) {
                 if (pd->m_daysLeft == -1) {
@@ -1811,13 +1768,10 @@ void CheckEndGame(int forced) {
                         NormalDialog(
                             gText,
                             NORMAL_DIALOG_TYPE_OK,
-                            -1,
-                            -1,
+                            NORMAL_DIALOG_AUTO_POSITION,
+                            NORMAL_DIALOG_AUTO_POSITION,
                             NORMAL_DIALOG_CREST,
-                            gpGame->m_players[static_cast<signed char>(player)].Color(),
-                            NORMAL_DIALOG_NO_RESOURCE,
-                            0,
-                            NORMAL_DIALOG_NO_OR_TEXT
+                            gpGame->m_players[static_cast<signed char>(player)].Color()
                         );
                     }
                     pd->m_daysLeft = 7;
@@ -1844,12 +1798,9 @@ void CheckEndGame(int forced) {
                         gText,
                         NORMAL_DIALOG_TYPE_OK,
                         0x61,
-                        -1,
+                        NORMAL_DIALOG_AUTO_POSITION,
                         NORMAL_DIALOG_CREST,
-                        gpGame->m_players[static_cast<signed char>(player)].Color(),
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_OR_TEXT
+                        gpGame->m_players[static_cast<signed char>(player)].Color()
                     );
                 }
             } else {
@@ -1986,14 +1937,14 @@ void InitVars(void) {
     int i;
     NULL_SAMPLE2.pSample = NULL;
     NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
-    iMaxMapExtra = 1;
+    iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
     gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
     gpPhilAI->m_debugFont = NULL;
     gbCombatSurrender = 0;
     gpGame->m_viewArmyResult = 0;
     gbInNewGameSetup = 0;
-    for (i = 0; i < 140; i++)
+    for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
         giTerrainCost[i][0] = TerrainStepCost(i, 0);
@@ -2001,7 +1952,7 @@ void InitVars(void) {
     }
     strcpy(cNetBoxLine[0], "");
     strcpy(cNetBoxLine[1], "");
-    for (i = 0; i < 255; i++)
+    for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++)
         ppMapExtra[i] = NULL;
     hmnuDflt = LoadMenuA((HINSTANCE)hInstApp, "mnuDflt");
     hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
@@ -2070,7 +2021,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         faction = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
-                faction = h->m_army.m_creatureTypes[i] / 6;
+                faction = h->m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE;
         }
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[faction]);
         strcat(gText, buffer);
@@ -2113,17 +2064,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     }
     if (strlen(gText) == baseLen)
         strcat(gText, gMoraleInfoText[MORALE_INFO_NONE]);
-    NormalDialog(
-        gText,
-        dialogType,
-        -1,
-        -1,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
-    );
+    NormalDialog(gText, dialogType);
 }
 
 // clang-format off
@@ -2175,29 +2116,19 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (strlen(gText) == baseLen)
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
-    NormalDialog(
-        gText,
-        dialogType,
-        -1,
-        -1,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
-    );
+    NormalDialog(gText, dialogType);
 }
 
 VA(0x004541ef, 0x70)
 void ClearMapExtra(void) {
     int i;
-    for (i = 0; i < 255; i++) {
+    for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++) {
         if (ppMapExtra[i]) {
             free(ppMapExtra[i]);
             ppMapExtra[i] = NULL;
         }
     }
-    iMaxMapExtra = 1;
+    iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
 }
 
 // HoMM1 score-to-monster tables pair a threshold word with a monster word.
@@ -2205,7 +2136,7 @@ VA(0x0045425f, 0x8e)
 short GetMonType(int score, int highScoreType) {
     int index;
     for (index = 27; index >= 0; index--) {
-        if (highScoreType == 0) {
+        if (highScoreType == HIGH_SCORE_TYPE_CAMPAIGN) {
             if (giScoreCampaignMon[index][0] >= score)
                 return giScoreCampaignMon[index][1];
         } else {
@@ -2221,7 +2152,7 @@ short GetMonType(int score, int highScoreType) {
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
 VA(0x004542ed, 0x3d2)
 int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
-    HighScoreEntry scores[10];
+    HighScoreEntry scores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     int entry;
     int dest;
     int file;
@@ -2230,7 +2161,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     signed char missingFile;
 
     missingFile = 0;
-    if (standard == 1)
+    if (standard == HIGH_SCORE_TYPE_STANDARD)
         sprintf(fileName, "%sSTANDARD.HS", gcDataPath);
     else
         sprintf(fileName, "%sCAMPAIGN.HS", gcDataPath);
@@ -2238,12 +2169,12 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     if (file == -1)
         missingFile = 1;
     if (missingFile) {
-        for (entry = 0; entry < 10; entry++) {
+        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
             memset(&scores[entry], 0, sizeof(HighScoreEntry));
             scores[entry].score = HIGH_SCORE_EMPTY;
         }
     } else {
-        for (entry = 0; entry < 10; entry++)
+        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
             read(file, &scores[entry], sizeof(scores));
         close(file);
     }
@@ -2252,17 +2183,17 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     giHighScoreType = standard;
     giHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
-    for (entry = 0; entry < 10; entry++) {
-        if ((score >= scores[entry].score && standard == 1)
-            || (score <= scores[entry].score && standard == 0)
+    for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
+        if ((score >= scores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
+            || (score <= scores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
             || scores[entry].score == HIGH_SCORE_EMPTY) {
             giHighScoreRank = entry;
             break;
         }
     }
 
-    if (entry < 10) {
-        for (dest = 8; dest >= entry; dest--)
+    if (entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT) {
+        for (dest = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; dest >= entry; dest--)
             scores[dest + 1] = scores[dest];
         GetDataEntry(
             "Please enter your name for the high score list.",
@@ -2276,7 +2207,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
         file = open(fileName, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
         if (file == -1)
             FileError(fileName);
-        for (entry = 0; entry < 10; entry++)
+        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
             write(file, &scores[entry], sizeof(HighScoreEntry));
         close(file);
     }
@@ -2288,7 +2219,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
 // evidence: graph:2;base=0.598508;margin=0.532475;shape=0.481;size=0.968;calls=1.000;alternate=pol20:void BVResMsg(char *, int, int)@0x0009d2c0
 VA(0x004546bf, 0x5b)
 void BVResMsg(char* s, int res, int qty) {
-    giBottomViewOverride = 5;
+    giBottomViewOverride = BOTTOM_VIEW_RESOURCE;
     giBottomViewOverrideEndTime = KBTickCount() + 5000;
     giBottomViewResource = res;
     giBottomViewResourceQty = qty;
@@ -2322,7 +2253,7 @@ signed char WaitForOtherPlayer(void) {
     if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
         switch (data->command) {
             case BOX_REMOTE_SETUP:
-                memcpy(gbGamePosToNetPos, data->payload.data, 4);
+                memcpy(gbGamePosToNetPos, data->payload.data, GAME_PLAYER_COUNT);
                 giThisGamePos = NetPosToGamePos(giThisNetPos);
                 giHostGamePos = NetPosToGamePos(0);
                 break;
@@ -2333,6 +2264,16 @@ signed char WaitForOtherPlayer(void) {
     }
     return result;
 }
+
+// clang-format off
+// netbox.bin text widgets: the two scrolled chat lines (cNetBoxLine) and the
+// line being typed.
+H1_ENUM_BEGIN(NetBoxControl)
+    NET_BOX_LINE_PREVIOUS = 1,
+    NET_BOX_LINE_LATEST = 2,
+    NET_BOX_INPUT = 3
+H1_ENUM_END(NetBoxControl)
+// clang-format on
 
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -2382,13 +2323,13 @@ void PopNetBox(char* notice) {
         MemError();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = NET_BOX_LINE_PREVIOUS;
     message.text = cNetBoxLine[0];
     netWin->BroadcastMessage(message);
-    message.id = 2;
+    message.id = NET_BOX_LINE_LATEST;
     message.text = cNetBoxLine[1];
     netWin->BroadcastMessage(message);
-    gpWindowManager->AddWindow(netWin, -1, 1);
+    gpWindowManager->AddWindow(netWin, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->ReallyHidePointer();
     exitForIncomingData = 0;
     bClose = 0;
@@ -2397,7 +2338,7 @@ void PopNetBox(char* notice) {
     sendText = 0;
     drawLines = 1;
     strcpy(text, "");
-    gpInputManager->SetKeyCodeType(0);
+    gpInputManager->SetKeyCodeType(INPUT_KEY_CODE_ASCII);
 
     while (!bClose) {
         PollSound();
@@ -2410,7 +2351,7 @@ void PopNetBox(char* notice) {
                 switch (
                     reinterpret_cast<RemoteMessage*>(data)->command
                 ) { // API-forced: char* record.
-                    case 11:
+                    case REMOTE_COMMAND_CHAT:
                         data = GetRemoteData(1);
                         AddNetBoxLine(
                             reinterpret_cast<RemoteMessage*>(data)->payload.data
@@ -2434,17 +2375,17 @@ void PopNetBox(char* notice) {
             case MESSAGE_KEY_DOWN:
                 msgTime = 0;
                 switch (incoming.keyCode) {
-                    case 0x1b:
-                    case 0x3b00:
+                    case INPUT_ASCII_ESCAPE:
+                    case INPUT_SCAN_F1 << INPUT_KEY_SCAN_SHIFT:
                         bClose = 1;
                         break;
-                    case 0x7f:
+                    case INPUT_ASCII_DELETE:
                         if (len > 0)
                             len--;
                         updateInput = 1;
                         blinkState = 1;
                         break;
-                    case 10:
+                    case '\n':
                         sendText = 1;
                         break;
                     default:
@@ -2473,10 +2414,10 @@ void PopNetBox(char* notice) {
                 text,
                 REMOTE_BROADCAST_PLAYER,
                 strlen(text) + 1,
-                11,
+                REMOTE_COMMAND_CHAT,
                 1,
                 1,
-                -1,
+                REMOTE_MESSAGE_DEFAULT,
                 1
             );
             if (!success)
@@ -2490,10 +2431,10 @@ void PopNetBox(char* notice) {
             drawLines = 0;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = 1;
+            message.id = NET_BOX_LINE_PREVIOUS;
             message.text = cNetBoxLine[0];
             netWin->BroadcastMessage(message);
-            message.id = 2;
+            message.id = NET_BOX_LINE_LATEST;
             message.text = cNetBoxLine[1];
             netWin->BroadcastMessage(message);
             netWin->DrawWindow();
@@ -2509,7 +2450,7 @@ void PopNetBox(char* notice) {
             text[len + 1] = 0;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = 3;
+            message.id = NET_BOX_INPUT;
             message.text = text;
             netWin->BroadcastMessage(message);
             netWin->DrawWindow();
@@ -2525,7 +2466,7 @@ void PopNetBox(char* notice) {
             bClose = 1;
         }
     }
-    gpInputManager->SetKeyCodeType(1);
+    gpInputManager->SetKeyCodeType(INPUT_KEY_CODE_SCAN);
     gpWindowManager->RemoveWindow(netWin);
     bShowIt = oldShowIt;
     if (shown)
@@ -2592,10 +2533,29 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
-// scenario's win text; standard games score the days played, rank the result
-// as a creature and file it with the high scores.
-VA(0x00455123, 0x3be)
+// clang-format off
+// congspre.bin / congrats.bin text widgets: the title (or the campaign's win
+// text), the five gScoreLabels captions, and the standard game's days, base
+// score, difficulty, final score and creature rating.
+H1_ENUM_BEGIN(CongratsControl)
+    CONGRATS_TITLE = 100,
+    CONGRATS_SCORE_LABEL_FIRST = 101,
+    CONGRATS_DAYS = 106,
+    CONGRATS_BASE_SCORE = 107,
+    CONGRATS_DIFFICULTY = 108,
+    CONGRATS_FINAL_SCORE = 109,
+    CONGRATS_RATING = 110
+H1_ENUM_END(CongratsControl)
+
+H1_ENUM_CONST_BEGIN(CongratsConstant)
+    CONGRATS_SCORE_LABEL_COUNT = 5
+H1_ENUM_CONST_END(CongratsConstant)
+    // clang-format on
+
+    // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
+    // scenario's win text; standard games score the days played, rank the result
+    // as a creature and file it with the high scores.
+    VA(0x00455123, 0x3be)
 void ShowCongrats(void) {
     char name[32];
     int i;
@@ -2618,46 +2578,46 @@ void ShowCongrats(void) {
         if (!win)
             MemError();
         sprintf(gText, gCampaignWinTexts[gpGame->m_campaignScenario]);
-        message.id = 100;
+        message.id = CONGRATS_TITLE;
         win->BroadcastMessage(message);
     } else {
         win = new heroWindow(0, 0, "congspre.bin");
         if (!win)
             MemError();
-        sprintf(name, gArmyNames[GetMonType(result, 1)]);
+        sprintf(name, gArmyNames[GetMonType(result, HIGH_SCORE_TYPE_STANDARD)]);
         name[0] -= 32;
         sprintf(gText, "A Glorious Victory!");
-        message.id = 100;
+        message.id = CONGRATS_TITLE;
         win->BroadcastMessage(message);
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < CONGRATS_SCORE_LABEL_COUNT; i++) {
             sprintf(gText, gScoreLabels[i]);
-            message.id = i + 101;
+            message.id = i + CONGRATS_SCORE_LABEL_FIRST;
             win->BroadcastMessage(message);
         }
         sprintf(gText, "%d", giCurTurn);
-        message.id = 106;
+        message.id = CONGRATS_DAYS;
         win->BroadcastMessage(message);
         sprintf(gText, "%d", daysScore);
-        message.id = 107;
+        message.id = CONGRATS_BASE_SCORE;
         win->BroadcastMessage(message);
         sprintf(gText, "%d%%", gpGame->m_difficultyRating);
-        message.id = 108;
+        message.id = CONGRATS_DIFFICULTY;
         win->BroadcastMessage(message);
         sprintf(gText, "%d", result);
-        message.id = 109;
+        message.id = CONGRATS_FINAL_SCORE;
         win->BroadcastMessage(message);
         sprintf(gText, "%s", name);
-        message.id = 110;
+        message.id = CONGRATS_RATING;
         win->BroadcastMessage(message);
     }
-    gpWindowManager->AddWindow(win, -1, 1);
+    gpWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
     CongratsWait();
     gpWindowManager->RemoveWindow(win);
     delete win;
     if (gpGame->m_campaignType <= 0)
-        AddScoreToHighScore(result, 1, "", gpGame->m_mapName);
+        AddScoreToHighScore(result, HIGH_SCORE_TYPE_STANDARD, "", gpGame->m_mapName);
 }
 
 // donor PoL RVA 0x0009e900; preferred Buka symbol ?CongratsWait@@YIXXZ
@@ -2680,10 +2640,18 @@ void CongratsWait(void) {
     }
 }
 
+// clang-format off
+// dataentr.bin widgets: the prompt text and the edit field.
+H1_ENUM_BEGIN(DataEntryControl)
+    DATA_ENTRY_PROMPT = 1,
+    DATA_ENTRY_TEXT = 10
+H1_ENUM_END(DataEntryControl)
+    // clang-format on
+
 // Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
 VA(0x00455592, 0x1c7)
 void GetDataEntry(char* prompt, char* destination, int maximumLength, char* initialText) {
-    short widgetId = 10;
+    short widgetId = DATA_ENTRY_TEXT;
     tag_message message;
     char textBuffer[100];
 
@@ -2696,14 +2664,14 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
         MemError();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = DATA_ENTRY_PROMPT;
     message.text = prompt;
     DataEntryWin->BroadcastMessage(message);
     if (initialText)
         strcpy(textBuffer, initialText);
     else
         strcpy(textBuffer, "");
-    message.id = 10;
+    message.id = DATA_ENTRY_TEXT;
     message.text = textBuffer;
     DataEntryWin->BroadcastMessage(message);
     strcpy(destination, textBuffer);
@@ -2714,7 +2682,7 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
 
 VA(0x00455759, 0x1d9)
 short DataEntryWindowHandler(tag_message& message) {
-    short widgetId = 10;
+    short widgetId = DATA_ENTRY_TEXT;
 
     if (bDataEntryTime == 0) {
         ++bDataEntryTime;
@@ -2733,10 +2701,10 @@ short DataEntryWindowHandler(tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
                 switch (message.id) {
-                    case 10:
+                    case DATA_ENTRY_TEXT:
                     gotText:
                         message.type = MESSAGE_WIDGET;
-                        message.id = 10;
+                        message.id = DATA_ENTRY_TEXT;
                         message.command = WIDGET_COMMAND_GET_TEXT;
                         DataEntryWin->BroadcastMessage(message);
                         if (strlen(message.text) == 0) {
@@ -2747,10 +2715,10 @@ short DataEntryWindowHandler(tag_message& message) {
                         }
                         message.type = MESSAGE_WIDGET;
                         message.command = WIDGET_COMMAND_SET_TEXT;
-                        message.id = 10;
+                        message.id = DATA_ENTRY_TEXT;
                         message.text = cDEDest;
                         DataEntryWin->BroadcastMessage(message);
-                        DataEntryWin->DrawWindow(1, 10, 10);
+                        DataEntryWin->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
                         gpWindowManager->m_dialogResult = message.id;
                         message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
@@ -2922,17 +2890,7 @@ int HandleAppSpecificMenuCommands(int command) {
             );
         confirmMenuCommand:
             if (gpAdvManager->m_active == 1) {
-                NormalDialog(
-                    gText,
-                    NORMAL_DIALOG_TYPE_YES_NO,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     break;
             }
@@ -3019,43 +2977,36 @@ int HandleAppSpecificMenuCommands(int command) {
             menuChanged = 1;
             break;
         case APP_MENU_SPEED_JUMP:
-            gConfig.walkSpeed = 4;
+            gConfig.walkSpeed = WALK_SPEED_JUMP;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_GALLOP:
-            gConfig.walkSpeed = 3;
+            gConfig.walkSpeed = WALK_SPEED_GALLOP;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_CANTER:
-            gConfig.walkSpeed = 2;
+            gConfig.walkSpeed = WALK_SPEED_CANTER;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_TROT:
-            gConfig.walkSpeed = 1;
+            gConfig.walkSpeed = WALK_SPEED_TROT;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_WALK:
-            gConfig.walkSpeed = 0;
+            gConfig.walkSpeed = WALK_SPEED_WALK;
             goto walkSpeedChanged;
         walkSpeedChanged:
             menuChanged = 1;
             break;
         case APP_MENU_CD_STEREO:
             if (gConfig.musicSource) {
-                gConfig.musicSource = 0;
+                gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
             } else {
                 if (!gpSoundManager->m_cdStarted) {
                     NormalDialog(
                         "Unable to set up CD stereo music.  Your CD player might be in use by "
                         "another program, or your sound driver might not support CD stereo.",
-                        NORMAL_DIALOG_TYPE_OK,
-                        -1,
-                        -1,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_OR_TEXT
+                        NORMAL_DIALOG_TYPE_OK
                     );
                     break;
                 }
-                gConfig.musicSource = 2;
+                gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
             }
             gpSoundManager->SetMusicQuality(gConfig.musicSource);
             menuChanged = 1;
@@ -3183,16 +3134,16 @@ void UpdateSystemOptionsMenu(void) {
     for (menuCommand = APP_MENU_SPEED_FIRST; menuCommand <= APP_MENU_SPEED_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.walkSpeed) {
-        case 4:
+        case WALK_SPEED_JUMP:
             checkedCommand = APP_MENU_SPEED_JUMP;
             break;
-        case 3:
+        case WALK_SPEED_GALLOP:
             checkedCommand = APP_MENU_SPEED_GALLOP;
             break;
-        case 2:
+        case WALK_SPEED_CANTER:
             checkedCommand = APP_MENU_SPEED_CANTER;
             break;
-        case 1:
+        case WALK_SPEED_TROT:
             checkedCommand = APP_MENU_SPEED_TROT;
             break;
         default:
@@ -3679,7 +3630,7 @@ int gbSpecialMouseMasks = 0;
 DATA(0x00492e30)
 int giCurExe = 0;
 DATA(0x00492e34)
-int giMenuCommand = -1;
+int giMenuCommand = APP_MENU_NONE;
 DATA(0x00492e38)
 int gbInDialog = 0;
 DATA(0x00492e40)
@@ -4773,7 +4724,7 @@ char* gDifficultyNames[4] = {"Easy", "Normal", "Hard", "Expert"};
 DATA(0x00493fa0)
 char* gCampaignSideNames[4] = {"Lord Ironfist", "Lord Slayer", "Queen Lamanda", "Lord Alamar"};
 DATA(0x00493fb0)
-char* gScoreLabels[5] =
+char* gScoreLabels[CONGRATS_SCORE_LABEL_COUNT] =
     {"Days Spent:", "Base Score:", "Difficulty Rating:", "Final Score:", "Ranking:"};
 DATA(0x00493fc8)
 char* gHumanPlayerTypeNames[5] =
@@ -5028,7 +4979,7 @@ class game* gpGame;
 DATA(0x004c6d4c)
 signed char gbRetreatWin;
 DATA(0x004c6d60)
-signed char giWaitType;
+H1_ENUM_STORAGE(DialogWaitType, signed char) giWaitType;
 DATA(0x004c6d64)
 short gCurLoadedSpellFileId;
 DATA(0x004c6d68)
@@ -5074,7 +5025,7 @@ signed char giGroundToTerrain[140];
 DATA(0x004c7950)
 long giCurWindowsStyleFlags;
 DATA(0x004c7954)
-short gGameCommand;
+H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 DATA(0x004c7958)
 signed char giMonthType;
 DATA(0x004c7960)

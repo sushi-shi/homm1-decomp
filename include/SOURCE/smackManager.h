@@ -37,18 +37,18 @@ public:
     smackManager(void);
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
 };
 #pragma pack(pop)
 
-extern smackManager *gpSmackManager;
+extern smackManager* gpSmackManager;
 extern signed char bSmackNum;
 extern signed char gbSmackAborted;
 extern int gbInSmacker;
 
-H1_C_LINKAGE void *radmalloc(unsigned long);
-H1_C_LINKAGE void radfree(void *);
-void PlaySmacker(signed char);
+H1_C_LINKAGE void* radmalloc(unsigned long);
+H1_C_LINKAGE void radfree(void*);
+void PlaySmacker(H1_ENUM_PARAM(SmackVideo, signed char));
 
 // One 0x16-byte row per movie: file name, the window manager's update mode
 // while it plays, the fades around it and its SmackOpen flags (Buka

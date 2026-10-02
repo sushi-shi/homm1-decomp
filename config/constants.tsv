@@ -61,7 +61,6 @@
 *	*	*	call-argument	NormalDialog(* argument [34]	dialog window x and y in pixels (-1 centres it, Buka's default)
 *	*	0	call-argument	NormalDialog(* argument [68]	unused resource quantity: the slot shows no amount (NORMAL_DIALOG_NO_RESOURCE, luck/morale icons)
 *	*	0	call-argument	EventWindow(* argument [57]	unused resource quantity forwarded to NormalDialog (same slots)
-*	*	*	call-argument	GiveResource(* argument 3	the resource amount an event gives
 *	*	*	call-argument	GiveExperience(* argument 2	the experience an event gives
 *	*	*	call-argument	DDSD(* argument 3	the source line the DirectDraw error report names (line base + offset)
 *	*	0	call-argument	RegSetValueExA(* argument 3	RegSetValueExA's Reserved argument, which must be 0
@@ -125,7 +124,6 @@
 *	*	*	call-argument	GetDataEntry(* argument 3	the entry field's character limit
 *	*	*	call-argument	SRand(* argument 1	the seed (battle position mixed into one number)
 *	*	*	call-argument	EffectSpellDamage(* argument 3	the spell's damage per spell-power point (CastSpell's multipliers)
-*	*	*	call-argument	PlaySmacker(* argument 1	a SmackOptions row (SmackVideo)
 src/SOURCE/FINDPATH.cpp	TerrainStepCost	*	store	store to cost	the movement cost of one step on that terrain (Buka TerrainStepCost table)
 src/SOURCE/ARMY.cpp	army::DamageEnemy	*20	*	*	the attack/defence difference clamp (+-20) and gfBattleStat offset
 src/SOURCE/ARMY.cpp	army::DamageEnemy	32000	*	*	the damage cap (stays within the short quantity arithmetic)
@@ -157,7 +155,6 @@ src/SOURCE/KB.cpp	CheckEndGame	*	case-label	switch on m_campaignScenario	a campa
 src/SOURCE/EVENTS.cpp	advManager::GiveTakeArtifactStat	*	store	store to amount	the artifact's primary-stat bonus
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	arithmetic	operator % Random()	a random roll's range
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	case-label	switch on Random()	a random roll's outcome
-src/SOURCE/ADVMGR.cpp	advManager::advManager	*	*	*m_animationPhases*	the adventure animation phase counters' initial values
 *	*	*.*	arithmetic	*	a floating-point tuning factor (AI weight, damage or value scale)
 *	*	*.*	comparison-or-bound	*	a floating-point tuning threshold
 *	*	[01]	call-argument	DoAttack(* argument 1	army::DoAttack's retaliation flag
@@ -184,14 +181,12 @@ src/BASE/WINMGR.cpp	*	*	call-argument	mem*(* argument [12]	a palette entry offse
 *	*	0	call-argument	waveOutGetDevCapsA(* argument 1	the first wave-out device
 *	*	0	call-argument	widget(short, short, short, short, short, short) argument 5	a default-constructed widget's id 0 (the owning window assigns ids)
 *	*	*	arithmetic	operator + KBTickCount()	a delay in milliseconds after the current time (KBTickCount returns GetTickCount)
-src/*	advManager::ProcessSelect	*	store	store to [xy]	a screen position in pixels
 src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixels
 src/*	DataEntryWindowHandler	*	store	store to [xy]	a screen position in pixels
 src/*	fileRequester::Update	*	store	store to m_[xy]	a screen position in pixels
 *	*	*	store	store to sizingHeight	a dialog or bottom-panel row height in pixels
 *	*	*	store	store to resWidth	a dialog or bottom-panel column width in pixels
 *	*	*	store	store to rowY[]	a dialog or bottom-panel row y in pixels
-*	*	*	store	store to colX[]	a dialog or bottom-panel column x in pixels
 src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
 src/SOURCE/AI.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
 src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count

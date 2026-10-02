@@ -6,6 +6,7 @@
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/terrainTypes.h>
 
+// clang-format off
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
 // six dwellings named per race by gDwellingNames. town::m_buildings holds
 // bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
@@ -16,6 +17,9 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_TAVERN = 2,
     BUILDING_SLOT_SHIPYARD = 3,
     BUILDING_SLOT_WELL = 4,
+    // The generic structures every town type shares (philAI's castle arrow
+    // count adds one per built slot up to here).
+    BUILDING_SLOT_GENERIC_LAST = 4,
     // Slots RACE_FIRST.. use per-race build-window frames, the generic ones
     // before them frame building + 1 (TOWNMGR SetupBuildWindow).
     BUILDING_SLOT_RACE_FIRST = 5,
@@ -36,6 +40,7 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_DWELLING_COUNT = 6,
     BUILDING_SLOT_COUNT = 13
 H1_ENUM_END(BuildingSlotType)
+    // clang-format on
 
     // clang-format off
 // giWaitType: which poll WaitHandler runs while a wait dialog is up
@@ -57,9 +62,25 @@ H1_ENUM_END(DialogWaitType)
 H1_ENUM_CONST_BEGIN(SampleWaitConstant)
     SAMPLE_WAIT_DEFAULT = -1
 H1_ENUM_CONST_END(SampleWaitConstant)
-                    // clang-format on
 
-                    class soundManager;
+// stpmain.bin buttons: InitMenuHandler returns the id as m_dialogResult and
+// oldmain dispatches it. gGameCommand re-enters the same switch with the
+// adventure screen's new/load/quit commands (advManager::ControlPanel's
+// cpanel.bin ids and the N/L/Q hotkeys in advManager::Main), which share
+// these values; MAIN_MENU_NO_COMMAND is the idle value. InitMenuHandler
+// accepts ids 1..MAIN_MENU_LAST.
+H1_ENUM_BEGIN(MainMenuControl)
+    MAIN_MENU_NO_COMMAND = -1,
+    MAIN_MENU_NEW_GAME = 1,
+    MAIN_MENU_LOAD_GAME = 2,
+    MAIN_MENU_QUIT = 4,
+    MAIN_MENU_HIGH_SCORES = 5,
+    MAIN_MENU_CREDITS = 6,
+    MAIN_MENU_LAST = MAIN_MENU_CREDITS
+H1_ENUM_END(MainMenuControl)
+// clang-format on
+
+class soundManager;
 class heroWindowManager;
 class heroWindow;
 class resourceManager;
@@ -77,6 +98,16 @@ extern signed char gbShowHighScore;
 // NormalDialog only parks over the adventure map when neither is showing.
 extern signed char gbHeroWindShowing;
 extern signed char gbOverviewShowing;
+// clang-format off
+// giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
+// scores (CAMPAIGN.HS, fewest days first; giScoreCampaignMon) or standard
+// scores (STANDARD.HS, highest first; giScoreMon). highScoreManager shows the
+// matching list.
+H1_ENUM_BEGIN(HighScoreType)
+    HIGH_SCORE_TYPE_CAMPAIGN = 0,
+    HIGH_SCORE_TYPE_STANDARD = 1
+H1_ENUM_END(HighScoreType)
+// clang-format on
 extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
@@ -132,7 +163,7 @@ extern heroWindow* DataEntryWin;
 extern char* cDEDest;
 extern int iDEMaxLen;
 extern signed char bDataEntryTime;
-extern signed char giWaitType;
+extern H1_ENUM_STORAGE(DialogWaitType, signed char) giWaitType;
 extern signed char gbFunctionComplete;
 extern long lLastGetMessage;
 extern long lLastAilServe;
@@ -153,7 +184,17 @@ extern int gMageBaseResourceValues[];
 extern int gNeutralBaseResourceValues[];
 extern int gDwellingBaseResourceValues[];
 extern char cNetBoxLine[][60];
-extern void* ppMapExtra[];
+// clang-format off
+// ppMapExtra/pwSizeOfMapExtra: the map file's extra records (signs, events,
+// town customizations), addressed by a cell's or town's byte index. Record 0
+// is never allocated, so iMaxMapExtra restarts at FIRST_RECORD (InitVars,
+// ClearMapExtra, game::LoadMap) and ClearMapExtra frees every slot.
+H1_ENUM_CONST_BEGIN(MapExtraConstant)
+    MAP_EXTRA_FIRST_RECORD = 1,
+    MAP_EXTRA_RECORD_CAPACITY = 255
+H1_ENUM_CONST_END(MapExtraConstant)
+                         // clang-format on
+                         extern void* ppMapExtra[];
 extern class icon* gBuyBuildIcons;
 extern class icon* gSystemIcons;
 extern class font* bigFont;
@@ -232,7 +273,7 @@ void CheckEndGame(int);
 void HandleRemoteSuddenExit(void);
 extern signed char gbRetreatWin;
 extern signed char gbGameInitialized;
-extern short gGameCommand;
+extern H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 extern signed char gbCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
 extern int gbInNewGameSetup;
@@ -248,17 +289,28 @@ void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
 void PopNetBox(char*);
-void NormalDialog(
-    char*,
-    H1_ENUM_PARAM(NormalDialogType, int),
-    int,
-    int,
-    H1_ENUM_PARAM(NormalDialogResourceType, int),
-    int,
-    H1_ENUM_PARAM(NormalDialogResourceType, int),
-    int,
-    H1_ENUM_PARAM(NormalDialogOrText, int)
-);
+// clang-format off
+// NormalDialog's x/y: AUTO_POSITION lets it place the window (the adventure
+// screen's NORMAL_DIALOG_ADVENTURE_X or centred; y centred up to
+// NORMAL_DIALOG_MAX_TOP).
+H1_ENUM_CONST_BEGIN(NormalDialogPosition)
+    NORMAL_DIALOG_AUTO_POSITION = -1
+H1_ENUM_CONST_END(NormalDialogPosition)
+    // clang-format on
+
+    // Buka 2.1 KBDeclarations.h declares the same trailing defaults (HoMM1 has no
+    // timeout argument).
+    void NormalDialog(
+        char*,
+        H1_ENUM_PARAM(NormalDialogType, int),
+        int = NORMAL_DIALOG_AUTO_POSITION,
+        int = NORMAL_DIALOG_AUTO_POSITION,
+        H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
+        int = 0,
+        H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
+        int = 0,
+        H1_ENUM_PARAM(NormalDialogOrText, int) = NORMAL_DIALOG_NO_OR_TEXT
+    );
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 extern char* gSpellDesc[];
