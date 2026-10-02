@@ -5,8 +5,58 @@
 
 #include <H1/Macros.h>
 
+// HoMM1 combat stacks are 0x54 bytes: combatManager strides sides by six
+// armies (0x1f8) from +0x2ca, and Init copies 0x13 bytes of the creature
+// record from +0xc.
+#pragma pack(push, 1)
 class army {
 public:
+    signed char m_unknown00;
+    signed char m_unknown01;
+    short m_unknown02;
+    signed char m_unknown04;
+    // WalkTo()/AttackTo() forward this hex to their one-argument forms.
+    signed char m_targetHex;
+    signed char m_monsterType;
+    signed char m_hex;
+    signed char m_unknown08;
+    signed char m_unknown09;
+    // hexcell::DrawOccupant redraws the stack when its cached frame differs.
+    signed char m_facing;
+    short m_unknown0b;
+    short m_initialQuantity;
+    short m_quantity;
+    short m_hitPointsLost;
+    signed char m_unknown13;
+    signed char m_speed;
+    signed char m_unknown15;
+    // Creature record bytes +0xc..+0x1e: hit points, speed, missile,
+    // attack, defense, damage range, shots and the attribute dword.
+    signed char m_hitPoints;
+    signed char m_baseSpeed;
+    signed char m_missileType;
+    signed char m_attack;
+    signed char m_defense;
+    signed char m_damageMin;
+    signed char m_damageMax;
+    signed char m_unknown1d;
+    signed char m_shots;
+    char m_unknown1f[6];
+    int m_attributes;
+    short m_unknown29;
+    short m_unknown2b;
+    signed char m_side;
+    signed char m_index;
+    int m_unknown2f;
+    signed char m_unknown33;
+    char m_unknown34;
+    int m_unknown35;
+    int m_unknown39;
+    int m_unknown3d;
+    void* m_resources[4];
+    signed char m_unknown51;
+    signed char m_unknown52;
+    char m_unknown53;
     // --- constructors ---
     army(void);
     // --- methods ---
@@ -15,7 +65,8 @@ public:
     void Init(int, int, int, int, int, int);
     void LoadResources(void);
     void FreeResources(void);
-    void DrawToBuffer(int, int, int);
+    // HoMM1 retail: word x/y (ret 8).
+    void DrawToBuffer(short, short);
     void Wince(void);
     void Walk(int, int, int);
     void SpecialAttack(void);
@@ -67,4 +118,5 @@ public:
     int ValidRange(int);
     int GetBestDirection(int, int, int);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_ARMY_H

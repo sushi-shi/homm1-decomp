@@ -6,6 +6,8 @@
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/army.h>
+#include <SOURCE/hexcell.h>
 
 // forward declarations:
 class army;
@@ -24,11 +26,39 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_VIEW = 5
 H1_ENUM_END(CombatPointerCode)
 
+// clang-format off
+H1_ENUM_BEGIN(CombatGridConstant)
+    COMBAT_HEX_COUNT = 45,
+    COMBAT_SIDE_ARMY_COUNT = 6
+H1_ENUM_END(CombatGridConstant)
+// clang-format on
+
 // GameUnsaved reads the baseManager m_active word through gpCombatManager.
+#pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
-    // InitMainClasses allocates 0x7d3 bytes; the fields stay opaque here.
-    char m_unknown30[0x7a2];
+    // InitMainClasses allocates 0x7d3 bytes; most fields stay opaque here.
+    char m_unknown30[0x10];
+    hexcell m_hexCells[COMBAT_HEX_COUNT];
+    char m_unknown25c[4];
+    signed char m_unknown260;
+    char m_unknown261[4];
+    // hexcell draws ground (3 + index), obstacles (5), towers (8) and walls (9).
+    class icon* m_combatIcons[13];
+    signed char m_unknown299;
+    char m_unknown29a[0xc];
+    class hero* m_heroes[2];
+    char m_unknown2ae[0x18];
+    short m_unknown2c6[2];
+    army m_armies[2][COMBAT_SIDE_ARMY_COUNT];
+    char m_unknown6ba[0x24];
+    // DrawTower/DrawWall mirror the castle art when this is 1.
+    signed char m_castleSide;
+    char m_unknown6df[4];
+    signed char m_unknown6e3;
+    short m_wallFrame;
+    short m_wallDamage;
+    char m_unknown6e8[0xea];
     // advManager::DoCombat returns and hands on this outcome byte.
     signed char m_combatResult;
     // --- constructors ---
@@ -184,6 +214,7 @@ public:
     int WalkTowardArmyFront(class army *, int, int);
     int WalkTowardArmy(class army *, int, int);
 };
+#pragma pack(pop)
 
 int ValidHex(int);
 #endif // HOMM1_SOURCE_COMBATMANAGER_H
