@@ -28,10 +28,10 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
     short cost;
     short neighborX;
     short neighborY;
-    short destinationX;
-    short destinationY;
     searchNode *pathNode;
     unsigned char *pathDirection;
+    short destinationY;
+    short destinationX;
 
     giCurTempMobility = 500;
     m_specialTargetX = -1;
