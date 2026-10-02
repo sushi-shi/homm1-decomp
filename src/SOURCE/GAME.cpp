@@ -3878,10 +3878,10 @@ int game::GetLuck(hero* h, army*) {
     if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
         luck++;
     luck += h->m_luck;
-    if (luck < -3)
-        luck = -3;
-    if (luck > 3)
-        luck = 3;
+    if (luck < GAME_LUCK_MIN)
+        luck = GAME_LUCK_MIN;
+    if (luck > GAME_LUCK_MAX)
+        luck = GAME_LUCK_MAX;
     return luck;
 }
 
@@ -3924,8 +3924,8 @@ signed char advManager::FindAdjacentMonster(
                 if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
                     == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
-                        if ((GetCell(originX, originY)->m_objectIndex == 0xff
-                             || (GetCell(originX, originY)->m_flags & 0x80))
+                        if ((GetCell(originX, originY)->m_objectIndex == MAP_CELL_NO_FRAME
+                             || (GetCell(originX, originY)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
                             && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
                             goto foundAdjacentMonster;
                     } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
@@ -3950,8 +3950,8 @@ signed char advManager::FindAdjacentMonster(
                 if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
                     == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
-                        if ((GetCell(originX, originY)->m_objectIndex == 0xff
-                             || (GetCell(originX, originY)->m_flags & 0x80))
+                        if ((GetCell(originX, originY)->m_objectIndex == MAP_CELL_NO_FRAME
+                             || (GetCell(originX, originY)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
                             && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
                             goto foundAdjacentMonster;
                     } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
@@ -3983,7 +3983,7 @@ void game::SetupAdjacentMons(void) {
     for (x = 0; x < MAP_CELL_GRID_SIZE; ++x) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; ++y) {
             if (gpAdvManager->FindAdjacentMonster(x, y, &monX, &monY, -1, -1))
-                mapExtra[x][y] |= 0x80;
+                mapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
             else
                 mapExtra[x][y] &= mask;
         }
@@ -4066,7 +4066,7 @@ void game::WaitForPlayer(char* text, int player) {
         else
             giBottomViewOverride = 0;
         gpSoundManager->m_musicReady = 1;
-        gpSoundManager->SwitchAmbientMusic(15);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
         gpMouseManager->ReallyHidePointer();
         gpAdvManager->CompleteDraw(1);
         gpAdvManager->UpdateHeroLocators(1, 1);
@@ -4247,9 +4247,9 @@ void game::ProcessOnMapHeroes(void) {
                     }
                 }
                 cell->m_objectTileset = 0;
-                cell->m_objectIndex = 0xff;
+                cell->m_objectIndex = MAP_CELL_NO_FRAME;
                 cell->m_overlayTileset = 0;
-                cell->m_overlayIndex = 0xff;
+                cell->m_overlayIndex = MAP_CELL_NO_FRAME;
                 cell->m_objectMetadata = 0;
                 cell->m_triggerType = MAP_OBJECT_NONE;
                 SetVisibility(
@@ -4279,11 +4279,11 @@ void game::CheckHeroConsistency(void) {
 
     for (i = 0; i < m_playerCount; i++) {
         if (!m_playerDead[i]) {
-            for (j = 0; j < 2; j++) {
+            for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
                 if (m_availableHeroes[m_players[i].m_availableHeroIds[j]] >= 0
-                    && m_availableHeroes[m_players[i].m_availableHeroIds[j]] <= 3) {
+                    && m_availableHeroes[m_players[i].m_availableHeroIds[j]] <= GAME_PLAYER_COUNT - 1) {
                     m_players[i].m_availableHeroIds[j] = GetNewHeroId(0);
-                    m_availableHeroes[m_players[i].m_availableHeroIds[j]] = 0x40;
+                    m_availableHeroes[m_players[i].m_availableHeroIds[j]] = HERO_AVAILABILITY_RETREATED;
                 }
             }
         }
@@ -4295,7 +4295,7 @@ void game::CheckHeroConsistency(void) {
                 if (static_cast<unsigned char>(cell->m_objectMetadata) >= 0
                     && static_cast<unsigned char>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
                     theHero = GetHero(cell->m_objectMetadata);
-                    if (theHero->m_owner < 0 || theHero->m_owner > 3) {
+                    if (theHero->m_owner < 0 || theHero->m_owner > GAME_PLAYER_COUNT - 1) {
                         if (theHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                             town = gpGame->GetTown(theHero->m_occupiedTown);
                             town->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
@@ -4741,9 +4741,9 @@ void game::DoNewTurn(void) {
     gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     if (m_day == 1) {
         if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != CALENDAR_PERIOD_NONE) {
-            track = -1;
+            track = MUSIC_TRACK_NONE;
             if (m_week == 1) {
-                track = 0x33;
+                track = MUSIC_TRACK_NEW_MONTH;
                 if (giMonthType == CALENDAR_PERIOD_NORMAL) {
                     sprintf(
                         gText,
@@ -4763,7 +4763,7 @@ void game::DoNewTurn(void) {
                     sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_PLAGUE]);
                 }
             } else {
-                track = 0x32;
+                track = MUSIC_TRACK_NEW_WEEK;
                 if (giWeekType == CALENDAR_PERIOD_NORMAL) {
                     sprintf(
                         gText,
@@ -4869,7 +4869,7 @@ int game::GetNumThievesGuilds(int color) {
     int numGuilds = 0;
     int i;
     for (i = 0; i < m_players[color].m_townCount; ++i) {
-        if (gpGame->m_castleRecs[m_players[color].m_townIds[i]].m_buildings & 2)
+        if (gpGame->m_castleRecs[m_players[color].m_townIds[i]].m_buildings & (1 << BUILDING_SLOT_THIEVES_GUILD))
             ++numGuilds;
     }
     return numGuilds;
@@ -4892,7 +4892,7 @@ int game::CalcDifficultyRating(void) {
     } else if (m_difficulty == DIFFICULTY_EXPERT) {
         total += 30;
     }
-    for (i = 1; i < 4; i++) {
+    for (i = 1; i < GAME_PLAYER_COUNT; i++) {
         if (i < giNumHumanPlayers)
             total += (m_players[i].m_difficulty - 1) * 10;
         else if (m_players[i].m_difficulty == PLAYER_TYPE_NONE)
@@ -4907,7 +4907,7 @@ int game::CalcDifficultyRating(void) {
             total += 20;
     }
     gpGame->m_playerCount = 0;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
             gpGame->m_playerCount++;
     }
@@ -5010,7 +5010,7 @@ void game::ShowScenInfo(void) {
     message.id = playersId;
     message.text = gText;
     sprintf(gText, "");
-    for (i = 1; i < 4; i++) {
+    for (i = 1; i < GAME_PLAYER_COUNT; i++) {
         if (giCurPlayer == 0) {
             sprintf(
                 line1,
@@ -5066,7 +5066,7 @@ void game::ShowScenInfo(void) {
 VA(0x00447726, 0x14f)
 void game::RandomizePlayerCrests(void) {
     int i;
-    signed char taken[4];
+    signed char taken[PLAYER_COLOR_COUNT];
     taken[0] = 0;
     taken[1] = 0;
     taken[2] = 0;
@@ -5074,7 +5074,7 @@ void game::RandomizePlayerCrests(void) {
     taken[m_players[0].m_color] = 1;
     for (i = 1; i < m_playerCount; i++) {
         do {
-            if (m_campaignType > 0 && gCampaignScenarios[m_campaignScenario].playerCrests[i] < 4
+            if (m_campaignType > 0 && gCampaignScenarios[m_campaignScenario].playerCrests[i] < PLAYER_COLOR_COUNT
                 && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
                 m_players[i].m_color = gCampaignScenarios[m_campaignScenario].playerCrests[i];
             else

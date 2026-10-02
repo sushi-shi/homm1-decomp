@@ -133,6 +133,12 @@ H1_ENUM_CONST_BEGIN(GameRandomHeroConstant)
     RANDOM_HERO_EMPTY_COUNT = -1
 H1_ENUM_CONST_END(GameRandomHeroConstant)
 
+// game::GetLuck clamps a hero's luck to -3..3.
+H1_ENUM_CONST_BEGIN(GameLuckConstant)
+    GAME_LUCK_MIN = -3,
+    GAME_LUCK_MAX = 3
+H1_ENUM_CONST_END(GameLuckConstant)
+
 // Save files: GenerateStandardFileName keeps an 8.3 base name (stopping its
 // scan by jumping the index to SCAN_STOP); SaveGame keeps the save name
 // unless the file is the 8-character AUTOSAVE or PLYREXIT.
