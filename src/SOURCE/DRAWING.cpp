@@ -194,14 +194,14 @@ VA(0x004711fb, 0xe27)
 void combatManager::DrawFrame(signed char updateScreen) {
     short hexCol;
     int side;
+    int i;
+    signed char drawn;
+    int boxBottom;
+    int boxRight;
     int boxTop;
     int boxLeft;
     int sideDelta;
     short row;
-    int i;
-    int boxRight;
-    signed char drawn;
-    int boxBottom;
 
     if (!m_combatWindowOpen)
         return;
