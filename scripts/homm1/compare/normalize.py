@@ -5,7 +5,8 @@
 A driver around `homm1.compare.canonicalize.canonicalize_coff`: for every unit
 it is given it rewrites the compiler-private data names (`$SG`/`$T`/`name$S<n>`),
 resolves COFF weak externals to their default, names OLDNAMES references by
-the runtime function LINK binds them to, and rewrites same-function
+the runtime function LINK binds them to, relocates a reviewed assembler
+module's resolved in-object calls, and rewrites same-function
 jump-table `DIR32` labels of both the recompiled base obj and its delinked
 target obj into a content-addressed, side-by-side view under `<out-dir>/`.
 `objdiff.json` points at these copies; the real base and target objects are
@@ -268,6 +269,7 @@ def _normalize_one(src: Path, out_obj: Path, out_sidecar: Path, *,
     if not force and not _stale(src, out_obj) and not _stale(src, out_sidecar):
         return "skip"
     data, rows = comparison_copy(src.read_bytes())
+    data = canon.relocate_in_object_calls(data, function_claims)
     data = canon.add_function_padding_boundaries(data, function_claims)
     canon._atomic_write(out_obj, data)
     canon._atomic_write(out_sidecar, canon.sidecar_bytes(rows))

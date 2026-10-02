@@ -46,11 +46,12 @@ object compositions:
   LINK's fill between objects is `CCh`.
 - The six LZHUF decoder routines are one object. They are byte-contiguous with
   odd starts. LZHUF references only `Decode`, yet retail begins the group with
-  `LzhufMemmove`. Merging the MASM units resolves their mutual calls without
-  relocations, while the delinked targets keep call relocations. Four
-  functions then score below 100 in the per-function comparison. The units
-  remain separate until the comparison treats an in-object MASM call as its
-  relocated equivalent.
+  `LzhufMemmove`. They are now assembled as one module
+  (`vendor/lzhuf/decoder/Decoder.asm`, unit BASE/LZHUFDEC). MASM resolves
+  their seven mutual calls without relocations. The comparison gives each of
+  these calls the REL32 relocation that the delinked target carries, and all
+  six functions stay at 100. As separate DWORD-aligned objects they had added
+  12 bytes of fill and the wrong order.
 
 ## Object boundaries in the SOURCE run
 

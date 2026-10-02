@@ -325,6 +325,121 @@ class CoffObject:
         return self.data[section.raw_offset:section.raw_offset + section.raw_size]
 
 
+REL32 = 0x0014
+CALL_REL32 = 0xE8
+
+
+def relocate_in_object_calls(
+        payload: bytes, claims: tuple[tuple[str, int], ...]) -> bytes:
+    """Give an assembler's resolved in-object calls their REL32 relocations.
+
+    MASM resolves a `call` between two procedures of one module at assembly
+    time: the object holds the final displacement and no relocation. The
+    delinked target always relocates the call against the callee's symbol. In
+    a linked image the two forms are identical. For each reviewed procedure
+    (`claims`), this function decodes the instructions and finds every
+    `E8 rel32` whose target is the start of another claimed procedure in the
+    same section and whose operand has no relocation. Each such call receives
+    the REL32 relocation that a separate-module call would carry: the callee's
+    symbol with a zero addend field. No other byte, symbol or relocation
+    changes.
+    """
+    if not claims:
+        return payload
+    from capstone import CS_ARCH_X86, CS_MODE_32, Cs
+
+    coff = CoffObject(payload)
+    claimed = dict(claims)
+    starts: dict[tuple[int, int], Symbol] = {}
+    for symbol in coff.symbols.values():
+        if (symbol.name in claimed and symbol.section > 0 and
+                symbol.storage_class == EXTERNAL_STORAGE and
+                coff.sections[symbol.section - 1].characteristics & MEM_EXECUTE):
+            if (symbol.section, symbol.value) in starts:
+                raise ValueError(f"two claimed procedures at {symbol.name}")
+            starts[(symbol.section, symbol.value)] = symbol
+    covered: dict[int, set[int]] = defaultdict(set)
+    for relocation in coff.relocations:
+        width = RELOCATION_WIDTHS.get(relocation.typ, 4)
+        covered[relocation.section].update(
+            range(relocation.site, relocation.site + width))
+
+    disassembler = Cs(CS_ARCH_X86, CS_MODE_32)
+    added: dict[int, list[tuple[int, int]]] = defaultdict(list)
+    for (section_index, start), symbol in sorted(starts.items()):
+        section = coff.sections[section_index - 1]
+        body = coff.section_bytes(section)
+        end = start + claimed[symbol.name]
+        if end > section.raw_size:
+            raise ValueError(f"{symbol.name} claim runs past its section")
+        for instruction in disassembler.disasm(body[start:end], start):
+            if instruction.size != 5 or instruction.bytes[0] != CALL_REL32:
+                continue
+            site = instruction.address + 1
+            if covered[section_index] & set(range(site, site + 4)):
+                continue
+            target = (site + 4 + struct.unpack_from("<i", body, site)[0]) & 0xFFFFFFFF
+            callee = starts.get((section_index, target))
+            if callee is not None:
+                added[section_index].append((site, callee.index))
+    if not added:
+        return payload
+
+    # New relocation tables go where the symbol table starts; the symbol and
+    # string tables move up by their size.
+    tail = coff.symbol_offset
+    for section in coff.sections:
+        if section.raw_offset and section.raw_offset + section.raw_size > tail:
+            raise ValueError("section data follows the COFF symbol table")
+        if section.reloc_count and section.reloc_offset + 10 * section.reloc_count > tail:
+            raise ValueError("relocations follow the COFF symbol table")
+    result = bytearray(payload[:tail])
+    for section_index, calls in sorted(added.items()):
+        section = coff.sections[section_index - 1]
+        if section.characteristics & LNK_NRELOC_OVFL:
+            raise ValueError("relocation overflow sections are not rewritten")
+        rows = [(r.site, r.symbol_index, r.typ) for r in coff.relocations
+                if r.section == section_index]
+        rows += [(site, index, REL32) for site, index in calls]
+        rows.sort()
+        if len(rows) > 0xFFFF:
+            raise ValueError("too many relocations for one section")
+        table = len(result)
+        for site, index, typ in rows:
+            result += struct.pack("<IIH", site, index, typ)
+        for site, _index in calls:
+            struct.pack_into("<i", result, section.raw_offset + site, 0)
+        struct.pack_into("<I", result, section.header_offset + 24, table)
+        struct.pack_into("<H", result, section.header_offset + 32, len(rows))
+    shift = len(result) - tail
+    result += payload[tail:]
+    struct.pack_into("<I", result, 8, tail + shift)
+
+    reparsed = CoffObject(bytes(result))
+    for before, after in zip(coff.sections, reparsed.sections):
+        old = bytearray(coff.section_bytes(before))
+        for site, index in added.get(before.index, ()):
+            callee = coff.symbols[index]
+            if struct.unpack_from("<i", old, site)[0] != callee.value - (site + 4):
+                raise RuntimeError("in-object call relocation changed a target")
+            old[site:site + 4] = bytes(4)
+        if bytes(old) != reparsed.section_bytes(after):
+            raise RuntimeError("in-object call relocation changed section bytes")
+    if reparsed.symbols != {
+            index: Symbol(s.index, s.offset + shift, s.name, s.value, s.section,
+                          s.typ, s.storage_class, s.aux_count)
+            for index, s in coff.symbols.items()}:
+        raise RuntimeError("in-object call relocation changed the symbol table")
+    expected = sorted(
+        [(r.section, r.site, r.symbol_index, r.typ) for r in coff.relocations]
+        + [(section, site, index, REL32)
+           for section, calls in added.items() for site, index in calls])
+    if sorted((r.section, r.site, r.symbol_index, r.typ)
+              for r in reparsed.relocations) != expected:
+        raise RuntimeError("in-object call relocation postcondition failed")
+    return bytes(result)
+
+
 def add_function_padding_boundaries(
         payload: bytes, claims: tuple[tuple[str, int], ...]) -> bytes:
     """Append donor-style local symbols at reviewed function ends.
