@@ -185,16 +185,29 @@ struct boatRecord {
 };
 #pragma pack(pop)
 
-// SetupTowns and RandomizeTown read a town's map-extra record: custom flag, owner, buildings, mage-guild
-// level and garrison.
+// The map file's town records (LoadMap): a type byte whose low seven bits
+// are the TownType and whose sign bit marks a castle. A customized
+// mapTownExtra's owner is UNSET (-2) when the map leaves it open; SetupTowns
+// copies only the buildings in EXTRA_BUILDING_MASK (every slot but the tent
+// and castle bits, which the record's castle flag decides).
+// clang-format off
+H1_ENUM_CONST_BEGIN(MapTownRecordConstant)
+    MAP_TOWN_TYPE_MASK = 0x7f,
+    MAP_TOWN_OWNER_UNSET = -2,
+    MAP_TOWN_EXTRA_BUILDING_MASK = 0x1f9f
+H1_ENUM_CONST_END(MapTownRecordConstant)
+// clang-format on
+
+// SetupTowns and RandomizeTown read a town's map-extra record: custom flag,
+// owner, buildings, mage-guild level and garrison.
 #pragma pack(push, 1)
 struct mapTownExtra {
     signed char customized;
     signed char owner;
     short buildings;
     signed char buildState;
-    signed char troopTypes[5];
-    short troopCounts[5];
+    signed char troopTypes[ARMY_GROUP_SLOT_COUNT];
+    short troopCounts[ARMY_GROUP_SLOT_COUNT];
 };
 #pragma pack(pop)
 
@@ -203,8 +216,8 @@ struct mapTownExtra {
 #pragma pack(push, 1)
 struct mapHeroExtra {
     signed char owner;
-    signed char troopTypes[5];
-    short troopCounts[5];
+    signed char troopTypes[ARMY_GROUP_SLOT_COUNT];
+    short troopCounts[ARMY_GROUP_SLOT_COUNT];
     signed char heroId;
     signed char artifacts[4];
     int experience;

@@ -1866,8 +1866,8 @@ short game::LoadMap(char* filename) {
         FileError(gText);
     read(handle, &version, 2);
     if (version == MAP_HEADER_ID) {
-        buf = malloc(0x554);
-        read(handle, buf, 0x552);
+        buf = malloc(sizeof(SMapHeader));
+        read(handle, buf, sizeof(SMapHeader) - sizeof(version));
         read(handle, &version, 2);
         free(buf);
     }
@@ -1881,8 +1881,8 @@ short game::LoadMap(char* filename) {
         if (x >= 0) {
             m_castleRecs[i].m_x = x;
             m_castleRecs[i].m_y = y;
-            m_castleRecs[i].m_type = type & 0x7f;
-            if ((type & 0x7f) == 2)
+            m_castleRecs[i].m_type = type & MAP_TOWN_TYPE_MASK;
+            if ((type & MAP_TOWN_TYPE_MASK) == TOWN_TYPE_BARBARIAN)
                 m_castleRecs[i].m_buildings |= 0x2000;
             if (type < 0)
                 m_castleRecs[i].m_buildings |= (1 << BUILDING_SLOT_CASTLE);
@@ -4149,19 +4149,19 @@ signed char game::SetupTowns(void) {
     int i;
     int mask;
     noOwners = 1;
-    mask = 0x1f9f;
+    mask = MAP_TOWN_EXTRA_BUILDING_MASK;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         town = GetTown(i);
         town->m_customized = 0;
         if (town->m_extraIndex >= 1) {
             extra = static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex]);
-            if (extra->customized && extra->owner != -2) {
+            if (extra->customized && extra->owner != MAP_TOWN_OWNER_UNSET) {
                 if (gpGame->m_playerCount <= extra->owner)
                     own = gpGame->m_playerCount - 1;
                 else
                     own = extra->owner;
                 noOwners = 0;
-                if (own != -1)
+                if (own != GAME_PLAYER_NONE)
                     ClaimTown(i, own);
             }
             if (extra->customized) {
@@ -4182,8 +4182,8 @@ signed char game::SetupTowns(void) {
     if (!noOwners) {
         for (i = 0; i < GAME_TOWN_COUNT; i++) {
             town = GetTown(i);
-            if (town->m_owner == -2)
-                town->m_owner = -1;
+            if (town->m_owner == MAP_TOWN_OWNER_UNSET)
+                town->m_owner = GAME_PLAYER_NONE;
         }
     }
     return noOwners;
