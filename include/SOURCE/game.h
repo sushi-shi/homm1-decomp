@@ -227,7 +227,8 @@ public:
     void ConvertObject(int, int, int, int, int, int, int, int, int, int, int);
     // HoMM1 retail: byte x, y and castle flag (ret 0xc).
     void RandomizeTown(signed char, signed char, signed char);
-    void RandomizeMine(int, int);
+    // HoMM1 retail: byte x and y (ret 8).
+    void RandomizeMine(signed char, signed char);
     // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
     void SetupTown(signed char, signed char);
     void InitRandomArtifacts(void);

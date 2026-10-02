@@ -1085,6 +1085,139 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     }
 }
 
+// Mines of each type placed so far.
+extern short giMineTypeCount[];
+
+// Buka 2.1 game::RandomizeMine for HoMM1's 2x2 mines: the terrain picks
+// the mine type (unused types first) and the object and shadow frames.
+VA(0x00443368, 0x659)
+void game::RandomizeMine(signed char x, signed char y) {
+    unsigned char bits;
+    unsigned char upFrame;
+    signed char k;
+    int tries;
+    signed char j;
+    signed char terrain;
+    signed char type;
+    signed char mineIdx;
+    unsigned char objFrame;
+
+    terrain = giGroundToTerrain[m_map[x][y].m_tileIndex];
+    for (tries = 0; tries < 30; tries++) {
+        switch (terrain) {
+            case 1:
+            case 6:
+                type = Random(1, 6);
+                if (type == 1)
+                    type = 0;
+                break;
+            case 2:
+                type = Random(2, 6);
+                break;
+            case 3:
+                type = Random(0, 6);
+                break;
+            case 4:
+                type = 1;
+                break;
+            case 5:
+            default:
+                type = Random(1, 6);
+                break;
+        }
+        if (!giMineTypeCount[type])
+            tries = 30;
+    }
+    giMineTypeCount[type]++;
+    switch (type) {
+        case 0:
+            upFrame = 5;
+            break;
+        case 1:
+            upFrame = 0x19;
+            break;
+        default:
+            switch (terrain) {
+                case 1:
+                    upFrame = 0xf;
+                    break;
+                case 2:
+                    upFrame = 0x13;
+                    break;
+                default:
+                    upFrame = 9;
+                    break;
+            }
+            break;
+    }
+    switch (type) {
+        case 0:
+            objFrame = 7;
+            break;
+        case 1:
+            switch (terrain) {
+                case 3:
+                    objFrame = 0x2b;
+                    break;
+                case 4:
+                    objFrame = 0x23;
+                    break;
+                default:
+                    objFrame = 0x1b;
+                    break;
+            }
+            break;
+        default:
+            switch (terrain) {
+                case 1:
+                    objFrame = 0x11;
+                    break;
+                case 2:
+                    objFrame = 0x15;
+                    break;
+                case 3:
+                    objFrame = 0x17;
+                    break;
+                case 5:
+                    objFrame = 0xd;
+                    break;
+                default:
+                    objFrame = 0xb;
+                    break;
+            }
+            break;
+    }
+    m_map[x][y].m_objectIndex = objFrame;
+    m_map[x + 1][y].m_objectIndex = objFrame + 1;
+    m_map[x][y - 1].m_overlayIndex = upFrame;
+    m_map[x + 1][y - 1].m_overlayIndex = upFrame + 1;
+    if (type == 1) {
+        m_map[x + 1][y].m_flags |= 4;
+        bits = 1;
+    } else if (type == 0) {
+        bits = 0x20;
+    } else {
+        m_map[x + 1][y].m_flags |= 0x10;
+        m_map[x + 1][y].m_objectTileset |= 0xb0;
+        m_map[x + 1][y].m_unknown05 = type - 2;
+        bits = 0x19;
+    }
+    mineIdx = GetMineId(x, y);
+    for (k = 0; k < 2; k++) {
+        for (j = 0; j < 2; j++) {
+            if ((m_map[x + j][y - k].m_triggerType & 0x7f) > 0
+                && (m_map[x + j][y - k].m_triggerType & 0x7f) <= 0x30) {
+                m_map[x + j][y - k].m_unknown07 |= bits;
+            } else {
+                m_map[x + j][y - k].m_objectMetadata = mineIdx;
+                m_map[x + j][y - k].m_triggerType = bits;
+            }
+        }
+    }
+    m_map[x][y].m_triggerType |= 0x80;
+    m_mines[mineIdx].type = type;
+}
+
 // Spell AI values, attribute bits and the mage-guild pool by spell level.
 extern short gSpellAIValue[];
 extern signed char gSpellAttributes[];
