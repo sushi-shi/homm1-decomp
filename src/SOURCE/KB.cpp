@@ -3069,7 +3069,7 @@ int HandleAppSpecificMenuCommands(int command) {
             menuChanged = 1;
             break;
         case APP_MENU_VIEW_WORLD:
-            gpAdvManager->ViewWorld(24, 0, 0);
+            gpAdvManager->ViewWorld(SPELL_VIEW_ALL, 0, 0);
             break;
         case APP_MENU_VIEW_PUZZLE:
             gpAdvManager->ViewPuzzle();
