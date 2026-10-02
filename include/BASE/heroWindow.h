@@ -35,6 +35,9 @@ H1_ENUM_END(WindowOpenStatus)
 
 H1_ENUM_CONST_BEGIN(HeroWindowConstant)
     HERO_WINDOW_NAME_CAPACITY = 20,
+    // AddWindow/AddWidget z-order meaning "one above the current top"; unlinked
+    // windows and widgets keep it.
+    WINDOW_Z_ORDER_APPEND = -1,
     WINDOW_ALL_WIDGETS_LOW = -65535,
     WINDOW_ALL_WIDGETS_HIGH = 65535
 H1_ENUM_CONST_END(HeroWindowConstant)

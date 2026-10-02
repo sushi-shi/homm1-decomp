@@ -47,7 +47,7 @@ heroWindow::heroWindow(
     strcpy(m_name, gDynamicConstruct);
     m_prevWindow = NULL;
     m_nextWindow = m_prevWindow;
-    m_zOrder = -1;
+    m_zOrder = WINDOW_Z_ORDER_APPEND;
     m_posX = x;
     m_posY = y;
     m_winWidth = width;
@@ -84,7 +84,7 @@ heroWindow::heroWindow(short x, short y, char *resourceName)
     m_prevWindow = NULL;
     m_nextWindow = m_prevWindow;
     m_winState = WINDOW_STATE_CLOSED;
-    m_zOrder = -1;
+    m_zOrder = WINDOW_Z_ORDER_APPEND;
     m_posX = x;
     m_posY = y;
     m_winWidth = gpResourceManager->ReadWord();
@@ -150,7 +150,7 @@ heroWindow::heroWindow(short x, short y, char *resourceName)
             break;
         }
         if (i == 0 && pWidget != NULL)
-            AddWidget(pWidget, -1);
+            AddWidget(pWidget, WINDOW_Z_ORDER_APPEND);
     }
 }
 
@@ -201,7 +201,7 @@ VA(0x004750d0, 0x145)
 void heroWindow::AddWidget(widget *newWidget, short zOrder)
 {
     widget *currentWidget = m_widgetListHead;
-    if (zOrder == -1) {
+    if (zOrder == WINDOW_Z_ORDER_APPEND) {
         if (currentWidget == NULL)
             zOrder = 0;
         else

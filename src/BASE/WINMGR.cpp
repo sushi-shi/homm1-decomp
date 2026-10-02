@@ -33,7 +33,8 @@ H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
     CYCLE_FRAME_COUNT = 8,
     FIZZLE_DEFAULT_DELAY = 150,
     FIZZLE_CYCLE_TABLE_BYTES = 0x10000,
-    FIZZLE_LOOKUP_HIGH_BYTE_SHIFT = 8
+    FIZZLE_LOOKUP_HIGH_BYTE_SHIFT = 8,
+    SCREENSHOT_FILENAME_CAPACITY = 16
 H1_ENUM_CONST_END(WindowFizzleConstant)
 // clang-format on
 
@@ -190,7 +191,7 @@ void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlag
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = 0;
-    if (zOrder == -1) {
+    if (zOrder == WINDOW_Z_ORDER_APPEND) {
         if (currentWindow == NULL)
             zOrder = 0;
         else
@@ -274,7 +275,7 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
     iDialogNestCount++;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     if (window != NULL)
-        AddWindow(window, -1, 1);
+        AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
     if (fade != 0)
         gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, gPalette);
     gpInputManager->Flush();
@@ -372,7 +373,7 @@ void heroWindowManager::FadeScreen(short direction, short steps, palette* curren
 
 VA(0x00474660, 0x4e)
 void heroWindowManager::ScreenShot(void) {
-    char filename[16];
+    char filename[SCREENSHOT_FILENAME_CAPACITY];
     sprintf(filename, "shot%04d.raw", m_screenshotIndex);
     GrabScreenBitmap(m_screen, 0, 0);
     m_screen->Write(filename);
