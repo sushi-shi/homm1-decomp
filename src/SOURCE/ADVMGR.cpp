@@ -4494,7 +4494,7 @@ void advManager::CheckCastSpell(void) {
         GrabScreen();
         gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
         CastSpell(
-            gpGame->ViewSpells(gpGame->GetHero(gpCurPlayer->m_currentHero), 1, NullHandler, 0)
+            gpGame->ViewSpells(gpGame->GetHero(gpCurPlayer->m_currentHero), SPELL_TYPE_ADVENTURE, NullHandler, 0)
         );
     }
 }
