@@ -12,6 +12,7 @@
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/fileRequester.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
@@ -19,6 +20,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+extern signed char giCampaignChoice;
+extern char gLastFilename[];
 
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
@@ -2911,8 +2915,43 @@ void UpdateCPanel(signed char initialDraw) {
 }
 
 VA(0x00432bb7, 0x232)
-int SaveGame(void) {
-    return 0;
+signed char SaveGame(void) {
+    short result6;
+    fileRequester* requester0;
+    char searchMask[16];
+    signed char success;
+    int humans;
+    int i0;
+    char extension[8];
+
+    success = 0;
+    humans = 0;
+    gpAdvManager->DisableButtons();
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    for (i0 = 0; i0 < 4; i0++)
+        if (!gpGame->m_playerDead[i0] && gbHumanPlayer[i0])
+            humans++;
+    if (giCampaignChoice > 0) {
+        sprintf(extension, ".CGM");
+        sprintf(searchMask, "*.CGM");
+    } else {
+        sprintf(extension, ".GM%d", humans);
+        sprintf(searchMask, "*.GM*");
+    }
+    requester0 = new fileRequester(0xa0, 0x28, 1, searchMask, ".\\GAMES\\", extension);
+    if (!requester0)
+        MemError();
+    result6 = gpExec->DoDialog(requester0);
+    if (result6 == 0x7802) {
+        success = 1;
+        bFreshSave = 1;
+        success = gpGame->SaveGame(gLastFilename, 0);
+        if (success)
+            NormalDialog("Game saved successfully.", 1, 0xb1, -1, -1, 0, -1, 0, -1);
+    }
+    delete requester0;
+    gpAdvManager->EnableButtons();
+    return success;
 }
 
 extern char *gCPanelHelp[];

@@ -332,7 +332,7 @@ public:
 
 short APanelHandler(struct tag_message &);
 void UpdateCPanel(signed char);
-int SaveGame(void);
+signed char SaveGame(void);
 short CPanelHandler(struct tag_message &);
 
 extern int gbNoBorder;
