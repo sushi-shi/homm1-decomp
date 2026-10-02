@@ -1272,7 +1272,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         numPrereqs = 0;
         requirements = gDwellingRequirements
             [building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION];
-        for (j = 0; j < 12; j++) {
+        for (j = 0; j < BUILDING_SLOT_REQUIREMENT_END; j++) {
             if (requirements & (1 << j)) {
                 if (numPrereqs == 0)
                     strcat(descText, "\n\nRequires:");

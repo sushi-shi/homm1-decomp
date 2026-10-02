@@ -1314,9 +1314,9 @@ void game::NewMap(char* mapName) {
                         }
                     }
                 } else {
-                    townId = RandomScan(m_townOwners, 0, 4, 8);
+                    townId = RandomScan(m_townOwners, 0, GAME_PLAYER_COUNT, 8);
                     if (townId == GAME_TABLE_FREE)
-                        townId = Scan(m_townOwners, 0, 4);
+                        townId = Scan(m_townOwners, 0, GAME_PLAYER_COUNT);
                     SetupTown(townId, !gbHumanPlayer[i]);
                     ClaimTown(townId, i);
                 }

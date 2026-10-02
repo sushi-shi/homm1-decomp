@@ -35,6 +35,9 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_DWELLING_5 = 11,
     BUILDING_SLOT_DWELLING_6 = 12,
     BUILDING_SLOT_DWELLING_LAST = 12,
+    // gDwellingRequirements masks name only slots before the sixth dwelling
+    // (nothing requires it); BuyBuild lists the prerequisites below this.
+    BUILDING_SLOT_REQUIREMENT_END = 12,
     // Dwellings per town: gDwellingNames/gDwellingRequirements rows are
     // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
     BUILDING_SLOT_DWELLING_COUNT = 6,
