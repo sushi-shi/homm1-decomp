@@ -39,6 +39,14 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_CLASS_COUNT = 4
 H1_ENUM_CONST_END(HeroConstant)
 
+// game::m_availableHeroes per hero id: the owning player, UNAVAILABLE, or
+// RETREATED for a hero that retreated or surrendered and waits in its
+// owner's tavern (Dismiss; Buka hero.h HeroConstant numbering).
+H1_ENUM_CONST_BEGIN(HeroAvailability)
+    HERO_AVAILABILITY_UNAVAILABLE = -1,
+    HERO_AVAILABILITY_RETREATED = 0x40
+H1_ENUM_CONST_END(HeroAvailability)
+
 // hero::GetNumSpells' selector (Buka hero.h HeroSpellType): combat slots,
 // adventure slots or both.
 H1_ENUM_BEGIN(HeroSpellType)

@@ -67,7 +67,7 @@ WinMain(void* instance, void* previousInstance, char* commandLine, int showComma
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
 VA(0x0045b83e, 0x2d6)
-int AppInit(void* instance, void* previousInstance, int showCommand, char* commandLine) {
+BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* commandLine) {
     WNDCLASSA appClass;
     HMENU windowMenu;
     RECT rc;
@@ -113,7 +113,7 @@ int AppInit(void* instance, void* previousInstance, int showCommand, char* comma
         appClass.cbWndExtra = 0;
         appClass.cbClsExtra = 0;
         if (RegisterClassA(&appClass) == 0)
-            return 0;
+            return FALSE;
     }
 
     if (gConfig.gfx[giCurExe].showMenu != 0)
@@ -150,19 +150,19 @@ int AppInit(void* instance, void* previousInstance, int showCommand, char* comma
         InitGraphics();
         SetCursor(LoadCursorA(NULL, IDC_ARROW));
         oldmain();
-        return 1;
+        return TRUE;
     } else {
-        return 0;
+        return FALSE;
     }
 }
 
 // PoL 2.0 AppIdle correspondence: both foreground states report idle work.
 VA(0x0045bb14, 0x31)
-int AppIdle(void) {
+BOOL AppIdle(void) {
     if (gbForegroundApp != 0)
-        return 1;
+        return TRUE;
     else
-        return 1;
+        return TRUE;
 }
 
 // donor PoL RVA 0x0001c190; preferred Buka symbol ?AppWndProc@@YGJPAXIIJ@Z
@@ -212,9 +212,9 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
             }
             if (lLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
                 lLastCycleTickCount = lTemp;
-                if (giGraphicsType == KBWIN_GRAPHICS_DIRECT_DRAW
-                    && giMainVideoModeColorDepth != 8) {
-                    lLastCycleTickCount += KBWIN_CYCLE_DIRECT_DRAW_DELAY;
+                if (giGraphicsType == WINGRAPH_GRAPHICS_WING
+                    && giMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
+                    lLastCycleTickCount += KBWIN_CYCLE_WING_DELAY;
                     if (gbHeroMoving)
                         return 0;
                 }
@@ -463,7 +463,7 @@ void UpdateDfltMenu(void* menu) {
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1024_768, MF_GRAYED);
     if (giMainVideoModeWidth <= KBWIN_WIDTH_1280)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1280_1024, MF_GRAYED);
-    if (gbDDrawAttached == 0)
+    if (gbDDrawAttached == FALSE)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_FULLSCREEN, MF_GRAYED);
 }
 

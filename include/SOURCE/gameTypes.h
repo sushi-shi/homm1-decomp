@@ -33,13 +33,6 @@ H1_ENUM_CONST_BEGIN(GamePlayerConstant)
     GAME_PLAYER_HIGH_BIT_SHIFT = 4
 H1_ENUM_CONST_END(GamePlayerConstant)
 
-// game::m_availableHeroes[hero]: the owning player, FREE (no owner) or
-// IN_TAVERN while a player's tavern offers the hero (Buka
-// WEEKLY_AVAILABLE_HERO 64).
-H1_ENUM_CONST_BEGIN(GameHeroAvailability)
-    GAME_HERO_IN_TAVERN = 0x40
-H1_ENUM_CONST_END(GameHeroAvailability)
-
 // The calendar (Buka GameCalendarConstant): four seven-day weeks a month.
 H1_ENUM_CONST_BEGIN(GameCalendarConstant)
     CALENDAR_DAYS_PER_WEEK = 7,

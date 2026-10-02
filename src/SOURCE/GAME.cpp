@@ -346,7 +346,7 @@ signed char game::GetNewHeroId(signed char heroClass) {
             id = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
         } else {
             for (i = 0; i < GAME_HERO_COUNT; ++i) {
-                if (m_availableHeroes[i] == GAME_HERO_IN_TAVERN)
+                if (m_availableHeroes[i] == HERO_AVAILABILITY_RETREATED)
                     id = i;
             }
         }
@@ -1356,10 +1356,10 @@ void game::NewMap(char* mapName) {
         else
             k = Random(0, 3);
         m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[0]] = GAME_HERO_IN_TAVERN;
+        m_availableHeroes[m_players[i].m_availableHeroIds[0]] = HERO_AVAILABILITY_RETREATED;
         k = (Random(1, 3) + k) % HERO_CLASS_COUNT;
         m_players[i].m_availableHeroIds[1] = GetNewHeroId(k);
-        m_availableHeroes[m_players[i].m_availableHeroIds[1]] = GAME_HERO_IN_TAVERN;
+        m_availableHeroes[m_players[i].m_availableHeroIds[1]] = HERO_AVAILABILITY_RETREATED;
     }
     if (!m_noMapHeroes)
         ProcessOnMapHeroes();
@@ -3181,8 +3181,10 @@ void game::PerWeek(void) {
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         for (j = 0; j < PLAYER_TAVERN_HERO_COUNT; j++) {
             heroClass = (Random(1, 3) + heroClass) % HERO_CLASS_COUNT;
-            if (gpGame->m_availableHeroes[gpGame->m_players[i].m_availableHeroIds[j]] == GAME_HERO_IN_TAVERN)
-                gpGame->m_availableHeroes[gpGame->m_players[i].m_availableHeroIds[j]] = GAME_TABLE_FREE;
+            if (gpGame->m_availableHeroes[gpGame->m_players[i].m_availableHeroIds[j]]
+                == HERO_AVAILABILITY_RETREATED)
+                gpGame->m_availableHeroes[gpGame->m_players[i].m_availableHeroIds[j]] =
+                    HERO_AVAILABILITY_UNAVAILABLE;
             gpGame->m_players[i].m_availableHeroIds[j] = gpGame->GetNewHeroId(heroClass);
         }
     }
@@ -3602,8 +3604,8 @@ VA(0x00443a3a, 0x102)
 void game::RandomizeHeroPool(void) {
     short heroId;
     for (heroId = 0; heroId < GAME_HERO_COUNT; heroId++) {
-        m_heroRecs[heroId].m_experience = Random(0, 50) + 40;
-        SetRandomHeroArmies(heroId, 0);
+        m_heroRecs[heroId].m_experience = Random(0, 50) + RANDOM_HERO_EXPERIENCE_BASE;
+        SetRandomHeroArmies(heroId, RANDOM_HERO_NORMAL_ARMY);
         m_heroRecs[heroId].m_remainingMobility = m_heroRecs[heroId].CalcMobility();
         m_heroRecs[heroId].m_mobility = m_heroRecs[heroId].m_remainingMobility;
         m_heroRecs[heroId].m_randomSeed = Random(1, 16000);
@@ -3616,34 +3618,37 @@ VA(0x00443b3c, 0x2e0)
 void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     armyGroup* army = &m_heroRecs[heroId].m_army;
     short slot = 0;
-    short armyTable[4][3][3] = {
+    short armyTable[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT]
+                   [RANDOM_HERO_ARMY_FIELD_COUNT] = {
         {{0, 30, 50}, {1, 3, 5}, {2, 2, 4}},
         {{6, 15, 25}, {7, 3, 5}, {8, 2, 3}},
         {{12, 10, 20}, {13, 2, 4}, {14, 1, 2}},
         {{18, 6, 10}, {19, 2, 4}, {20, 1, 2}}
     };
-    int present[3];
+    int present[RANDOM_HERO_ARMY_OPTION_COUNT];
     int i;
     int max;
     int minNum;
 
     present[0] = 1;
-    present[1] = Random(0, 99) < 50 + (strongArmy ? 30 : 0);
-    present[2] = Random(0, 99) < 25 + (strongArmy ? 40 : 0);
+    present[1] = Random(0, 99) < RANDOM_HERO_FIRST_STACK_CHANCE
+                 + (strongArmy ? RANDOM_HERO_FIRST_STACK_BONUS_CHANCE : 0);
+    present[2] = Random(0, 99) < RANDOM_HERO_SECOND_STACK_CHANCE
+                 + (strongArmy ? RANDOM_HERO_SECOND_STACK_BONUS_CHANCE : 0);
     if (!present[2])
         present[1] = 1;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         army->m_creatureTypes[i] = CREATURE_NONE;
-        army->m_creatureCounts[i] = -1;
+        army->m_creatureCounts[i] = RANDOM_HERO_EMPTY_COUNT;
     }
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < RANDOM_HERO_ARMY_SELECTION_COUNT; i++) {
         if (present[i]) {
             army->m_creatureTypes[slot] = armyTable[m_heroRecs[heroId].m_heroClass][i][0];
-            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][1] * 10;
-            max = armyTable[m_heroRecs[heroId].m_heroClass][i][2] * 10 + 9;
+            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][1] * RANDOM_HERO_COUNT_SCALE;
+            max = armyTable[m_heroRecs[heroId].m_heroClass][i][2] * RANDOM_HERO_COUNT_SCALE + RANDOM_HERO_COUNT_ROUNDING;
             if (strongArmy)
                 minNum = (minNum + max) / 2;
-            army->m_creatureCounts[slot] = Random(minNum, max) / 10;
+            army->m_creatureCounts[slot] = Random(minNum, max) / RANDOM_HERO_COUNT_SCALE;
             slot++;
         }
     }

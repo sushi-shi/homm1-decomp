@@ -2150,7 +2150,8 @@ signed char townManager::RecruitHero(signed char cannotRecruit) {
         newHeroClass = gpCurPlayer->m_availableHeroIds[1 - m_recruitState] / HERO_PER_CLASS_COUNT;
         newHeroClass = (newHeroClass + Random(1, 3)) % HERO_CLASS_COUNT;
         gpCurPlayer->m_availableHeroIds[m_recruitState] = gpGame->GetNewHeroId(newHeroClass);
-        gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[m_recruitState]] = GAME_HERO_IN_TAVERN;
+        gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[m_recruitState]] =
+            HERO_AVAILABILITY_RETREATED;
     } else {
         if (m_castleDialogActive)
             SetupCastle(m_heroWindow0);

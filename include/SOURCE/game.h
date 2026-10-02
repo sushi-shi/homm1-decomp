@@ -111,6 +111,28 @@ H1_ENUM_CONST_BEGIN(UltimateHintConstant)
     OBELISK_PIECE_PICK_TRIES = 100
 H1_ENUM_CONST_END(UltimateHintConstant)
 
+// RandomizeHeroPool / SetRandomHeroArmies (Buka GameRandomHeroConstant):
+// starting experience 40 + 0..50, the strong-army flag (PHILAI's hires), the
+// chance of the second and third table stacks (50/25 percent, +30/+40 for a
+// strong army) and the counts drawn in tenths (min * 10 .. max * 10 + 9).
+// armyTable rows: per hero class three (creature, min, max) options, of
+// which the first two are drawn; unused slots get count -1.
+H1_ENUM_CONST_BEGIN(GameRandomHeroConstant)
+    RANDOM_HERO_NORMAL_ARMY = 0,
+    RANDOM_HERO_STRONG_ARMY = 1,
+    RANDOM_HERO_EXPERIENCE_BASE = 40,
+    RANDOM_HERO_FIRST_STACK_CHANCE = 50,
+    RANDOM_HERO_FIRST_STACK_BONUS_CHANCE = 30,
+    RANDOM_HERO_SECOND_STACK_CHANCE = 25,
+    RANDOM_HERO_SECOND_STACK_BONUS_CHANCE = 40,
+    RANDOM_HERO_ARMY_SELECTION_COUNT = 2,
+    RANDOM_HERO_ARMY_OPTION_COUNT = 3,
+    RANDOM_HERO_ARMY_FIELD_COUNT = 3,
+    RANDOM_HERO_COUNT_SCALE = 10,
+    RANDOM_HERO_COUNT_ROUNDING = 9,
+    RANDOM_HERO_EMPTY_COUNT = -1
+H1_ENUM_CONST_END(GameRandomHeroConstant)
+
 // Save files: GenerateStandardFileName keeps an 8.3 base name (stopping its
 // scan by jumping the index to SCAN_STOP); SaveGame keeps the save name
 // unless the file is the 8-character AUTOSAVE or PLYREXIT.
