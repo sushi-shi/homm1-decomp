@@ -61,7 +61,7 @@ short armyGroup::GetMorale(hero* h, town* t) {
 
 VA(0x00447a8f, 0x31)
 void armyGroup::Dismiss(signed char slot) {
-    m_creatureTypes[slot] = -1;
+    m_creatureTypes[slot] = CREATURE_NONE;
     m_creatureCounts[slot] = 0;
 }
 
@@ -88,7 +88,7 @@ signed char armyGroup::IsHomogeneous(signed char countRaces) {
     int numRaces;
     short i;
     for (i = 0; i < 5; ++i) {
-        if (m_creatureTypes[i] != -1) {
+        if (m_creatureTypes[i] != CREATURE_NONE) {
             if (countRaces == -1)
                 ++raceSeen[m_creatureTypes[i] / 6];
             if (m_creatureTypes[i] != previous) {
@@ -135,7 +135,7 @@ VA(0x00447cc0, 0x59)
 short armyGroup::GetNumArmies(void) {
     short numArmies = 0;
     for (short i = 0; i < 5; ++i) {
-        if (m_creatureTypes[i] != -1)
+        if (m_creatureTypes[i] != CREATURE_NONE)
             ++numArmies;
     }
     return numArmies;
@@ -157,7 +157,7 @@ short armyGroup::Add(signed char creatureType, short quantity, signed char slot)
     }
     if (slot == -1) {
         for (searchSlot = 0; searchSlot < 5; ++searchSlot) {
-            if (m_creatureTypes[searchSlot] == -1 || m_creatureTypes[searchSlot] == creatureType) {
+            if (m_creatureTypes[searchSlot] == CREATURE_NONE || m_creatureTypes[searchSlot] == creatureType) {
                 slot = searchSlot;
                 break;
             }
@@ -196,7 +196,7 @@ void armyGroup::DamageGroup(float damagePercent) {
     int j;
 
     for (i = 0; i < 5; ++i) {
-        if (m_creatureTypes[i] != -1) {
+        if (m_creatureTypes[i] != CREATURE_NONE) {
             killed = 0;
             for (j = 0; j < m_creatureCounts[i]; ++j) {
                 if (SRandom(0, 100) < chance)
@@ -207,7 +207,7 @@ void armyGroup::DamageGroup(float damagePercent) {
             m_creatureCounts[i] -= killed;
             if (m_creatureCounts[i] <= 0 || damagePercent >= 1.0) {
                 m_creatureCounts[i] = 0;
-                m_creatureTypes[i] = -1;
+                m_creatureTypes[i] = CREATURE_NONE;
             }
             isFirstTroop = 0;
         } else {

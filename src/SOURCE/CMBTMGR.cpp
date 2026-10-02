@@ -178,7 +178,7 @@ short combatManager::Open(short priority)
     gbUseClippedIconRenderer = 0;
     m_computeExtent = 0;
     m_redrawExtent = 0;
-    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
     gpMouseManager->SetPointer("cmbtmous.mse", 6);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
@@ -241,7 +241,7 @@ void combatManager::Close(void)
     delete m_backgroundBuffer;
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
-    if (m_battlefieldCell->m_triggerType == 0x9a) {
+    if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
         survivor = static_cast<signed char>(m_playerId[0] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < 5; i++) {
@@ -579,7 +579,7 @@ void combatManager::FreeArmies(void)
         m_armies[0][i].FreeResources();
     if (gCurLoadedSpellIcon)
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
-    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
 }
 

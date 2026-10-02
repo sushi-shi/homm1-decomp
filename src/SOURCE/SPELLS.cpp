@@ -608,7 +608,7 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
         curArmy = &m_armies[side][i];
         curArmy->m_animationSequence = 0;
         curArmy->m_animationFrame = 1;
-        if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13 && curArmy->m_creatureType != 0x17) {
+        if (curArmy->m_spellEffect != SPELL_ANTI_MAGIC && curArmy->m_spellEffect != SPELL_DISPEL_MAGIC && curArmy->m_creatureType != CREATURE_DRAGON) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {
                     case SPELL_SLOW:

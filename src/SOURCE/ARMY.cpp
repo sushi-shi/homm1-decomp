@@ -610,15 +610,15 @@ army::army(void) {
 
     m_animationSequence = 0;
     m_animationFrame = 0;
-    m_attackIcon = 0;
-    m_walkIcon = 0;
-    m_standIcon = 0;
+    m_attackIcon = NULL;
+    m_walkIcon = NULL;
+    m_standIcon = NULL;
     m_hex = 0;
     for (i = 0; i < 4; i++)
-        m_samples[i] = 0;
+        m_samples[i] = NULL;
     m_effectAnimation = -1;
     m_drawShadow = 1;
-    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
     giSpellEffectFrame = 0;
     m_targetSide = -1;
@@ -639,12 +639,12 @@ void army::InitClean(void) {
     int i;
 
     for (i = 0; i < 4; i++)
-        m_samples[i] = 0;
+        m_samples[i] = NULL;
     m_effectAnimation = -1;
     m_drawShadow = 1;
-    m_attackIcon = 0;
-    m_walkIcon = 0;
-    m_standIcon = 0;
+    m_attackIcon = NULL;
+    m_walkIcon = NULL;
+    m_standIcon = NULL;
 }
 
 // The commanding hero's attack and defense raise the copied creature stats.
@@ -2080,7 +2080,7 @@ void army::CancelSpell(void) {
             m_stats.defense -= 3;
             break;
     }
-    m_spellEffect = -1;
+    m_spellEffect = SPELL_NONE;
     m_spellEndCondition = -1;
 }
 
