@@ -384,38 +384,44 @@ void heroWindowManager::SaveFizzleSource(short x, short y, short width, short he
 // evidence: same cycle-table loop and CCYCLE%02d.BIN resource sequence in both donors
 VA(0x00474740, 0x320)
 void heroWindowManager::FizzleForward(short x, short y, short width, short height, int delay) {
+    // Buka keeps C-style function-scope locals; their declaration order sets
+    // the retail register colouring of the row pointers.
+    int sourceX;
+    int sourceY;
+    long tickStart;
+    unsigned char* screenPixel;
     unsigned char* workPixel;
+    int frame;
+    int saveFlags;
+    unsigned char* savePixel;
+    signed char* ccycleBuf;
     if (bShowIt != 0) {
         gbEnlargeScreenBlit = 0;
-        long tickStart = 0;
-        int saveFlags = gpWindowManager->m_updateFlags;
+        tickStart = 0;
+        saveFlags = gpWindowManager->m_updateFlags;
         gpWindowManager->m_updateFlags = 0;
         if (delay == -1)
             delay = 150;
         m_fizzleWork = new bitmap(0, width, height);
-        signed char* ccycleBuf = static_cast<signed char*>(malloc(0x10000));
+        ccycleBuf = static_cast<signed char*>(malloc(0x10000));
         BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
 
-        for (int frame = 0; frame < 8; frame++) {
+        for (frame = 0; frame < 8; frame++) {
             sprintf(gText, "CCYCLE%02d.BIN", frame);
-            short id = gpResourceManager->MakeId(gText);
-            gpResourceManager->PointToFile(id);
+            gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
             gpResourceManager->ReadBlock(ccycleBuf, 0x10000);
             // Buka's row arithmetic: retail strength-reduces sourceY * 640 and
             // (sourceY - y) * width into the frame's induction slots.
-            for (int sourceY = y; sourceY < y + height; sourceY++) {
+            for (sourceY = y; sourceY < y + height; sourceY++) {
                 // Byte access is proven by the retail load/shift sequence.
-                unsigned char* savePixel =
-                    reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
+                savePixel = reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
                     + m_fizzleSource->m_width * (sourceY - y);
-                workPixel =
-                    reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
+                workPixel = reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
                     + (sourceY - y) * width;
                 // Byte access is proven by the retail framebuffer stores.
-                unsigned char* screenPixel =
-                    reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
+                screenPixel = reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
                     + sourceY * 640 + x;
-                for (int sourceX = x; sourceX < x + width; sourceX++) {
+                for (sourceX = x; sourceX < x + width; sourceX++) {
                     unsigned short lookup = *workPixel++ | (*savePixel++ << 8);
                     *screenPixel++ = ccycleBuf[lookup];
                 }

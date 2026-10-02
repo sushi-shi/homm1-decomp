@@ -80,11 +80,11 @@ claimed functions from 0x00401000 to 0x00473450 recovers these compositions:
   the 52 functions keep 51 exact rows; GUIModemCommandExec stays at 95.81.
 - army::army (0x00466490) starts a new object after WalkTowardArmy (eight
   `CCh`). The thirteen combatManager functions before it are Buka's
-  `SOURCE/AI.cpp`, in the same order. Splitting them out of ARMY leaves the
-  AI functions' scores unchanged. However, the TU state of ARMY changes:
-  DoAttack, SpecialAttack and DamageEnemy improve, while AttackTo, SpellEffect,
-  PowEffect, DoHydraAttack and Walk regress. The exact CUR count falls from 27
-  to 26, so the split is not applied.
+  `SOURCE/AI.cpp`, in the same order, and are now the SOURCE/AI unit with
+  ARMY's profile. The AI functions keep their scores (their TU prefix is
+  unchanged). The ARMY TU state changes: PowEffect and Walk are re-tuned to
+  100 by local declaration order, while MoveAttack and SpecialAttack reach
+  100 only as audited TU-state closures (`tu_state_noise` trials 1 and 7).
 - One object begins at 0x00419990. Its first function is a 0x15-byte dynamic
   initializer that calls the 0x1a-byte initializer at 0x0041f2a9, which
   constructs SVSearchArray. Next come Misc's nine logging functions, starting

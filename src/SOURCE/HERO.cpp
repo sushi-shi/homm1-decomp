@@ -1023,4 +1023,4 @@ short HeroHandler(struct tag_message& message) {
 
 // HERO owns retail .data 0x004a0a58-0x004a0b2b.
 DATA(0x004a0a58)
-class heroWindow* gheroWin = 0;
+class heroWindow* gheroWin = NULL;
