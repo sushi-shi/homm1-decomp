@@ -90,7 +90,7 @@ public:
     // each memorized spell keeps its remaining casts in the parallel array.
     H1_ENUM_STORAGE(SpellType, signed char) m_spells[HERO_SPELL_SLOT_COUNT];
     signed char m_spellCharges[HERO_SPELL_SLOT_COUNT];
-    signed char m_artifacts[HERO_ARTIFACT_SLOT_COUNT];
+    H1_ENUM_STORAGE(ArtifactType, signed char) m_artifacts[HERO_ARTIFACT_SLOT_COUNT];
     int m_eventFlags;
     float m_aiFightValue;
     // --- constructors ---

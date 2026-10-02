@@ -187,7 +187,7 @@ short HandleViewGeneral(tag_message& message)
             case 10:
             case 11:
             case 12:
-            case 0x7800:
+            case DIALOG_BUTTON_0:
                 if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                     gpWindowManager->m_dialogResult = message.id;
                     retVal = 1;
@@ -209,7 +209,7 @@ short HandleViewGeneral(tag_message& message)
             case 12:
                 hintIndex = 3;
                 break;
-            case 0x7800:
+            case DIALOG_BUTTON_0:
                 hintIndex = 4;
                 break;
             default:

@@ -1333,7 +1333,7 @@ void army::DoHydraAttack(void) {
         m_unknown09 = i + 3;
         gpCombatManager->DrawFrame(1);
     }
-    if (m_spellEffect == 14)
+    if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
@@ -1388,7 +1388,7 @@ void army::DoHydraAttack(void) {
         m_unknown09 = i + 3;
         gpCombatManager->DrawFrame(1);
     }
-    if (m_spellEffect == 14)
+    if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
@@ -2158,7 +2158,7 @@ void army::MoveAttack(int hex, int moveOnly) {
         if ((m_stats.attributes & 2) && meleeMask == 0xff && m_moveTargetHex != m_hex
             && !ValidFlight(m_moveTargetHex, 0))
             return;
-        if (m_spellEffect == 14)
+        if (m_spellEffect == SPELL_BERZERKER)
             atkMask = GetAttackMask(m_hex, 2, -1);
         else
             atkMask = GetAttackMask(m_hex, 1, -1);

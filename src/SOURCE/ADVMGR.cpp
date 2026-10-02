@@ -652,7 +652,7 @@ short advManager::Main(struct tag_message& message) {
     }
     retVal = MESSAGE_DISPATCH_CONSUME;
     bQuit = 0;
-    evtMapCell = 0;
+    evtMapCell = NULL;
     if (message.type) {
         switch (message.type) {
         case MESSAGE_WIDGET:
@@ -699,45 +699,45 @@ short advManager::Main(struct tag_message& message) {
             if (gpCurPlayer->CurrentHero() != -1)
                 curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
             else
-                curHero = 0;
+                curHero = NULL;
             if (giDebugLevel < 1
-                && (message.keyCode == 0x3d || message.keyCode == 0x3e
-                    || message.keyCode == 0x3f || message.keyCode == 0x40
-                    || message.keyCode == 0x41 || message.keyCode == 0x42
-                    || message.keyCode == 0x43 || message.keyCode == 0x44
-                    || message.keyCode == 0x57 || message.keyCode == 0x58))
+                && (message.keyCode == INPUT_SCAN_F3 || message.keyCode == INPUT_SCAN_F4
+                    || message.keyCode == INPUT_SCAN_F5 || message.keyCode == INPUT_SCAN_F6
+                    || message.keyCode == INPUT_SCAN_F7 || message.keyCode == INPUT_SCAN_F8
+                    || message.keyCode == INPUT_SCAN_F9 || message.keyCode == INPUT_SCAN_F10
+                    || message.keyCode == INPUT_SCAN_F11 || message.keyCode == INPUT_SCAN_F12))
                 break;
             switch (message.keyCode) {
-            case 0x3c:
-                PopNetBox(0);
+            case INPUT_SCAN_F2:
+                PopNetBox(NULL);
                 break;
-            case 0x3d:
+            case INPUT_SCAN_F3:
                 gpGame->m_playerDead[1] = 1;
                 gpGame->m_playerDead[2] = 1;
                 gpGame->m_playerDead[3] = 1;
                 CheckEndGame(1);
                 break;
-            case 0x3f:
+            case INPUT_SCAN_F5:
                 gpGame->m_playerDead[0] = 1;
                 CheckEndGame(0);
                 break;
-            case 0x40:
+            case INPUT_SCAN_F6:
                 if (curHero) {
                     for (cmdValue = 0; cmdValue < HERO_SPELL_SLOT_COUNT; cmdValue++)
                         curHero->AddSpell(cmdValue, 5, 0);
                 }
                 break;
-            case 0x41:
+            case INPUT_SCAN_F7:
                 if (curHero)
                     GiveExperience(curHero, 800, 1);
                 break;
-            case 0x42:
+            case INPUT_SCAN_F8:
                 if (curHero) {
                     gpGame->GiveArmy(&curHero->m_army, 23, 1, -1);
                     gpGame->GiveArmy(&curHero->m_army, 10, 1, -1);
                 }
                 break;
-            case 0x43:
+            case INPUT_SCAN_F9:
                 for (cmdValue = 0; cmdValue < PLAYER_RESOURCE_COUNT; cmdValue++) {
                     if (cmdValue == 6)
                         gpCurPlayer->m_resources[cmdValue] += 1000;
@@ -745,44 +745,44 @@ short advManager::Main(struct tag_message& message) {
                         gpCurPlayer->m_resources[cmdValue] += 10;
                 }
                 break;
-            case 0x57:
+            case INPUT_SCAN_F11:
                 if (curHero)
                     curHero->m_remainingMobility = 2999;
                 break;
-            case 0x58:
+            case INPUT_SCAN_F12:
                 gpGame->SetVisibility(30, 30, giCurPlayer, 100);
                 UpdateRadar(1, 0);
                 CompleteDraw(0);
                 UpdateScreen(0, 0);
                 break;
-            case 0xb:
+            case INPUT_SCAN_0:
                 cmdValue = 0;
                 goto processCheatDigit;
-            case 2:
+            case INPUT_SCAN_1:
                 cmdValue = 1;
                 goto processCheatDigit;
-            case 3:
+            case INPUT_SCAN_2:
                 cmdValue = 2;
                 goto processCheatDigit;
-            case 4:
+            case INPUT_SCAN_3:
                 cmdValue = 3;
                 goto processCheatDigit;
-            case 5:
+            case INPUT_SCAN_4:
                 cmdValue = 4;
                 goto processCheatDigit;
-            case 6:
+            case INPUT_SCAN_5:
                 cmdValue = 5;
                 goto processCheatDigit;
-            case 7:
+            case INPUT_SCAN_6:
                 cmdValue = 6;
                 goto processCheatDigit;
-            case 8:
+            case INPUT_SCAN_7:
                 cmdValue = 7;
                 goto processCheatDigit;
-            case 9:
+            case INPUT_SCAN_8:
                 cmdValue = 8;
                 goto processCheatDigit;
-            case 0xa:
+            case INPUT_SCAN_9:
                 cmdValue = 9;
                 goto processCheatDigit;
             processCheatDigit:
@@ -798,98 +798,98 @@ short advManager::Main(struct tag_message& message) {
                     UpdateScreen(0, 0);
                 }
                 break;
-            case 1:
+            case INPUT_SCAN_ESCAPE:
                 break;
-            case 0x48:
+            case INPUT_SCAN_NUMPAD_8:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(0, 0);
                 else
                     dir = 0;
                 break;
-            case 0x49:
+            case INPUT_SCAN_NUMPAD_9:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(1, 0);
                 else
                     dir = 1;
                 break;
-            case 0x4d:
+            case INPUT_SCAN_NUMPAD_6:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(2, 0);
                 else
                     dir = 2;
                 break;
-            case 0x51:
+            case INPUT_SCAN_NUMPAD_3:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(3, 0);
                 else
                     dir = 3;
                 break;
-            case 0x50:
+            case INPUT_SCAN_NUMPAD_2:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(4, 0);
                 else
                     dir = 4;
                 break;
-            case 0x4f:
+            case INPUT_SCAN_NUMPAD_1:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(5, 0);
                 else
                     dir = 5;
                 break;
-            case 0x4b:
+            case INPUT_SCAN_NUMPAD_4:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(6, 0);
                 else
                     dir = 6;
                 break;
-            case 0x47:
+            case INPUT_SCAN_NUMPAD_7:
                 if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(7, 0);
                 else
                     dir = 7;
                 break;
-            case 0x2e:
+            case INPUT_SCAN_C:
                 CheckCastSpell();
                 break;
-            case 0x20:
+            case INPUT_SCAN_D:
                 ProcessSearch(-1, -1);
                 break;
-            case 0x19:
+            case INPUT_SCAN_P:
                 ViewPuzzle();
                 break;
-            case 0x2f:
+            case INPUT_SCAN_V:
                 ViewWorld(24, 0, 0);
                 break;
-            case 0x31:
+            case INPUT_SCAN_N:
                 cmdValue = 1;
                 strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
                 goto confirmGameCommand;
-            case 0x26:
+            case INPUT_SCAN_L:
                 cmdValue = 2;
                 strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
                 goto confirmGameCommand;
-            case 0x10:
+            case INPUT_SCAN_Q:
                 cmdValue = 4;
                 strcpy(gText, "Are you sure you want to quit?");
                 goto confirmGameCommand;
             confirmGameCommand:
                 bQuit = 1;
                 NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
-                if (gpWindowManager->m_dialogResult == 30726)
+                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                     bQuit = 0;
                 else
                     gGameCommand = cmdValue;
                 break;
-            case 0x1f:
+            case INPUT_SCAN_S:
                 SaveGame();
                 break;
-            case 0x17:
+            case INPUT_SCAN_I:
                 if (gpGame->m_campaignType > 0)
                     gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 1, 0);
                 else
                     gpGame->ShowScenInfo();
                 break;
-            case 0x14:
+            case INPUT_SCAN_T:
                 if (gpCurPlayer->m_townCount >= 0) {
                     if (gpCurPlayer->CurrentTown() == -1) {
                         townIndex = gpCurPlayer->m_townIds[0];
@@ -907,10 +907,10 @@ short advManager::Main(struct tag_message& message) {
                     SetTownContext(townIndex);
                 }
                 break;
-            case 0x23:
+            case INPUT_SCAN_H:
                 SetHeroContext(gpCurPlayer->NextHero(0), 0);
                 break;
-            case 0x1c:
+            case INPUT_SCAN_ENTER:
                 if (gpCurPlayer->CurrentTown() != -1) {
                     m_selectedCell = 3;
                     DoAdvCommand();
@@ -928,7 +928,7 @@ short advManager::Main(struct tag_message& message) {
                 if (evtMapCell) {
                     StopCursor(1);
                     DoEvent(evtMapCell, TrigX, TrigY);
-                    evtMapCell = 0;
+                    evtMapCell = NULL;
                 }
                 Reseed(0, 0);
                 ForceNewHover();
@@ -4238,7 +4238,7 @@ signed char SaveGame(void) {
     if (!requester0)
         MemError();
     result6 = gpExec->DoDialog(requester0);
-    if (result6 == 0x7802) {
+    if (result6 == DIALOG_BUTTON_2) {
         success = 1;
         bFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
@@ -5643,7 +5643,7 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
     if (loaded < maxSamples) {
         for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-            if (keep[i] == 0 && m_loopingSamples[i] != 0) {
+            if (keep[i] == 0 && m_loopingSamples[i] != NULL) {
                 ++keep[i];
                 ++loaded;
                 if (loaded >= maxSamples)
@@ -5654,9 +5654,9 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
 disposeSamples:
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-        if (m_loopingSamples[i] != 0 && keep[i] == 0) {
+        if (m_loopingSamples[i] != NULL && keep[i] == 0) {
             gpResourceManager->Dispose(m_loopingSamples[i]);
-            m_loopingSamples[i] = 0;
+            m_loopingSamples[i] = NULL;
         }
     }
 }

@@ -330,7 +330,7 @@ short resourceManager::LoadAggregateHeader(char *aggregateName)
 VA(0x00476280, 0xf2)
 void resourceManager::PointToFile(short fileId)
 {
-    if (m_aggregateDir == NULL)
+    if (m_aggregateDir == 0)
         ShutDown("File Error: .AGG File not valid");
     short entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)

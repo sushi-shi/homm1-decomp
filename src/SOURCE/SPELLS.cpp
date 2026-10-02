@@ -61,7 +61,7 @@ short CombatSpecialHandler(struct tag_message &message)
                     case 3:
                         gpCombatManager->CombatMessage(cSpellHelp[1], 1);
                         break;
-                    case 0x7800:
+                    case DIALOG_BUTTON_0:
                         gpCombatManager->CombatMessage(cSpellHelp[4], 1);
                         break;
                     case 6:
@@ -660,13 +660,13 @@ void combatManager::Fireball(signed char targetHex)
     adjHexes[0] = targetHex;
     for (i = 0; i < 6; i++)
         adjHexes[i + 1] = curArmy->GetAdjacentCellIndex(targetHex, i);
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 10;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 10;
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;

@@ -167,7 +167,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
     switch (message) {
     case WM_CREATE:
         srand(KBTickCount());
-        SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, 0);
+        SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, NULL);
         GdiSetBatchLimit(1);
         return 0;
     case WM_KEYDOWN:
@@ -211,7 +211,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
     case WM_ERASEBKGND:
         return 1;
     case WM_MOVE:
-        if (hwndApp == 0)
+        if (hwndApp == NULL)
             return 0;
         lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
         if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
@@ -223,7 +223,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
         }
         return 0;
     case WM_SIZE:
-        if (hwndApp != 0) {
+        if (hwndApp != NULL) {
             lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
             gbMinimized = lTemp & WS_MINIMIZE;
             if ((lTemp & WS_MINIMIZE) == 0)
@@ -242,7 +242,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
             iMainWinScreenWidth = 1;
         if (iMainWinScreenHeight < 1)
             iMainWinScreenHeight = 1;
-        if (hwndApp != 0 && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
+        if (hwndApp != NULL && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
             && gConfig.gfx[giCurExe].fullScreen == 0) {
             gConfig.gfx[giCurExe].width = iMainWinScreenWidth;
             gConfig.gfx[giCurExe].height = iMainWinScreenHeight;
@@ -257,12 +257,12 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
     case WM_QUERYNEWPALETTE:
         return QueryNewPalette();
     case WM_PAINT:
-        AppPaint(window, 0);
+        AppPaint(window, NULL);
         return 0;
     case WM_CLOSE:
         if (window == hwndApp) {
             if (GameUnsaved() != 0) {
-                NormalDialog("Are you sure you want to quit?", 2, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog("Are you sure you want to quit?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                     DestroyWindow(static_cast<HWND>(window));
                 return 0;
@@ -272,7 +272,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
         gbClosingApp = 1;
         PostQuitMessage(0);
     case WM_QUIT:
-        ShutDown(0);
+        ShutDown(NULL);
         break;
     }
     return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);

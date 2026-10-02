@@ -270,7 +270,7 @@ void fileRequester::SetOK(signed char enabled) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     else
         message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.id = 0x7802;
+    message.id = DIALOG_BUTTON_2;
     message.value = WIDGET_FLAG_DIMMED;
     m_window->BroadcastMessage(message);
     if (enabled)
@@ -338,7 +338,7 @@ short fileRequester::Main(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 0x7802:
+                        case DIALOG_BUTTON_2:
                             if (m_selectedIndex == -1 && !m_filename[0]) {
                                 NormalDialog(
                                     "Please make a selection from the list, or press cancel.", NORMAL_DIALOG_TYPE_OK,
@@ -349,7 +349,7 @@ short fileRequester::Main(tag_message& message) {
                                 finished = 1;
                             }
                             break;
-                        case 0x7801:
+                        case DIALOG_BUTTON_1:
                             message.value = message.id;
                             finished = 1;
                             break;
@@ -435,8 +435,8 @@ short fileRequester::Main(tag_message& message) {
                         case 13:
                             if (message.id - firstRowId + m_topIndex
                                 == m_selectedIndex) {
-                                message.value = 0x7802;
-                                message.id = 0x7802;
+                                message.value = DIALOG_BUTTON_2;
+                                message.id = DIALOG_BUTTON_2;
                                 finished = 1;
                                 break;
                             }
@@ -461,7 +461,7 @@ short fileRequester::Main(tag_message& message) {
 
     if (finished == 1) {
         if (giCampaignChoice <= 0 && m_mode == 0 && m_selectedIndex >= 0 && gbRequestingGames
-            && message.value != 0x7801) {
+            && message.value != DIALOG_BUTTON_1) {
             ch = m_extensions[m_selectedIndex].text[3] - '0';
             if (ch < giNumHumanPlayers && giDebugLevel < 2) {
                 sprintf(

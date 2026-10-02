@@ -4,6 +4,7 @@
 // 17 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
+#include <BASE/dialog.h>
 #include <H1/Macros.h>
 
 // forward declarations:

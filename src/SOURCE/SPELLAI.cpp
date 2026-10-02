@@ -336,17 +336,17 @@ void combatManager::EffectSpellCure(int* effect, int targetSide, signed char cur
                 armyPtr = &m_armies[curSide][index];
                 fightValue = gMonsterDatabase[armyPtr->m_creatureType].fightValue * armyPtr->m_quantity;
                 switch (armyPtr->m_spellEffect) {
-                case 6:
-                case 7:
-                case 10:
-                case 14:
-                case 18:
+                case SPELL_SLOW:
+                case SPELL_BLIND:
+                case SPELL_CURSE:
+                case SPELL_BERZERKER:
+                case SPELL_PARALYZE:
                     negEffect += -RawEffectSpellInfluence(armyPtr, armyPtr->m_spellEffect);
                     break;
-                case 5:
-                case 8:
-                case 9:
-                case 12:
+                case SPELL_HASTE:
+                case SPELL_BLESS:
+                case SPELL_PROTECTION:
+                case SPELL_ANTI_MAGIC:
                     posEffect += RawEffectSpellInfluence(armyPtr, armyPtr->m_spellEffect);
                     break;
                 }

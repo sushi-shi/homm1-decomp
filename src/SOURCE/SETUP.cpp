@@ -476,7 +476,7 @@ signed char game::PickLoadGame(void) {
     gpMouseManager->ReallyShowPointer();
     result = gpExec->DoDialog(request);
     gpMouseManager->ReallyHidePointer();
-    if (result == 0x7802) {
+    if (result == DIALOG_BUTTON_2) {
         gpGame->LoadGame(gLastFilename, 0, 0);
         delete request;
         return 1;

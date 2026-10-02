@@ -214,7 +214,7 @@ void ComputeUALoc(int player) {
                 heading = 0;
                 tries = 0;
                 while (!(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                         && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
+                         && gpGame->m_map[x][y].m_triggerType == 0
                          && gpGame->m_map[x][y].m_objectIndex == 0xff
                          && gpGame->m_map[x][y].m_overlayIndex == 0xff
                          && gpGame->m_map[x][y].m_tileIndex >= 20)) {
@@ -684,10 +684,10 @@ short NewGameHandler(tag_message& message) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
                 helpIndex = -1;
                 switch (message.id) {
-                    case 0x7802:
+                    case DIALOG_BUTTON_2:
                         helpIndex = 0;
                         break;
-                    case 0x7801:
+                    case DIALOG_BUTTON_1:
                         helpIndex = 1;
                         break;
                     case 0x13:
@@ -730,20 +730,20 @@ short NewGameHandler(tag_message& message) {
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gNewGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog(gNewGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             }
         } else {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 0x7802:
+                        case DIALOG_BUTTON_2:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < 4; i++) {
                                 if (gpGame->m_players[i].m_difficulty > 0)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
-                                NormalDialog("A game requires at least one iPlayer.", 1, 0xb1, 0x3c, -1, 0, -1, 0, -1);
+                                NormalDialog("A game requires at least one iPlayer.", NORMAL_DIALOG_TYPE_OK, 0xb1, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                                 break;
                             } else {
                                 if (!gpGame->m_players[1].m_difficulty) {
@@ -760,7 +760,7 @@ short NewGameHandler(tag_message& message) {
                                     gpGame->m_players[3].m_difficulty = 0;
                                 }
                             }
-                        case 0x7801:
+                        case DIALOG_BUTTON_1:
                             gpWindowManager->m_dialogResult = message.id;
                             message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
@@ -1015,7 +1015,7 @@ signed char game::NewGame(void) {
     gpMouseManager->ReallyShowPointer();
     gpWindowManager->DoDialog(m_newGameWindow, NewGameHandler, 0);
     delete m_newGameWindow;
-    if (gpWindowManager->m_dialogResult == 0x7801)
+    if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_1)
         return 0;
     strcpy(m_mapName, gFullMapName);
     strcpy(m_mapDescription, gMapDescription);
@@ -1072,10 +1072,10 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
     if (fromMenu) {
-        message.id = 0x7802;
+        message.id = DIALOG_BUTTON_2;
         window->BroadcastMessage(message);
     } else {
-        message.id = 0x7800;
+        message.id = DIALOG_BUTTON_0;
         window->BroadcastMessage(message);
         message.id = 0x385;
         window->BroadcastMessage(message);
@@ -2144,7 +2144,7 @@ short ViewSpecialHandler(tag_message& message) {
                     case 5:
                         strcpy(gText, cSpellHelp[3]);
                         break;
-                    case 0x7800:
+                    case DIALOG_BUTTON_0:
                         strcpy(gText, cSpellHelp[4]);
                         break;
                     default:
@@ -2380,13 +2380,13 @@ short ViewArmyHandler(tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x7800:
-                    case 0x7801:
+                    case DIALOG_BUTTON_0:
+                    case DIALOG_BUTTON_1:
                         gpWindowManager->m_dialogResult = message.id;
                         message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
-                    case 0x7803:
+                    case DIALOG_BUTTON_3:
                         NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
@@ -3668,7 +3668,7 @@ signed char advManager::FindAdjacentMonster(
              ++s_adjacentMonsterX) {
             for (s_adjacentMonsterY = originY - 1; s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
@@ -3700,7 +3700,7 @@ signed char advManager::FindAdjacentMonster(
             for (s_adjacentMonsterY = s_adjacentMonsterMinY;
                  s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
@@ -4446,7 +4446,7 @@ void game::GetMap(void) {
     request->ShowMapInfo();
     result = gpExec->DoDialog(request);
     gpWindowManager->RemoveWindow(gpReqExtraWindow);
-    if (result == 0x7802) {
+    if (result == DIALOG_BUTTON_2) {
         strcpy(gMapName, gLastFilename);
         delete request;
     } else {

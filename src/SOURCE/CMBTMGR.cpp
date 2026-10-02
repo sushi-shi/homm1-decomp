@@ -129,7 +129,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         else
             m_armyGroups[i] = defenderGroup;
         m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 1;
-        if (m_heroes[i] && m_heroes[i]->HasArtifact(0x11))
+        if (m_heroes[i] && m_heroes[i]->HasArtifact(ARTIFACT_BALLISTA))
             m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
         m_keepAttacksRemaining[i] = 1;
         m_unknown6df[i] = 0;

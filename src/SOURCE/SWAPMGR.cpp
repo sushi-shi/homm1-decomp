@@ -200,7 +200,7 @@ short swapManager::Main(struct tag_message& message) {
         case WIDGET_NOTIFY_DESELECT:
             if (quickView)
                 break;
-            if (message.id == 0x7800)
+            if (message.id == DIALOG_BUTTON_0)
                 closeRequested = 1;
             break;
         case WIDGET_NOTIFY_SELECT:
@@ -213,7 +213,7 @@ short swapManager::Main(struct tag_message& message) {
                 Update();
                 m_window->DrawWindow();
                 Reset();
-                gpWindowManager->FadeScreen(0, 8, 0);
+                gpWindowManager->FadeScreen(0, 8, NULL);
                 break;
             case 66:
                 if (quickView)
@@ -223,7 +223,7 @@ short swapManager::Main(struct tag_message& message) {
                 Update();
                 m_window->DrawWindow();
                 Reset();
-                gpWindowManager->FadeScreen(0, 8, 0);
+                gpWindowManager->FadeScreen(0, 8, NULL);
                 break;
             case 88:
             case 89:
@@ -241,18 +241,18 @@ short swapManager::Main(struct tag_message& message) {
             case 101:
                 artIndex = message.id - 88;
                 if (!quickView && (m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
-                                   || m_heroes[1]->m_artifacts[artIndex] == 12)) {
+                                   || m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                     NormalDialog("This item can't be traded.", 1, -1, -1, -1, 0, -1, 0, -1);
                     break;
                 }
                 if (quickView) {
-                    if (m_heroes[1]->m_artifacts[artIndex] == -1)
+                    if (m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_NONE)
                         break;
                     m_heroes[1]->ViewArtifact(m_heroes[1]->m_artifacts[artIndex], 1);
                     break;
                 }
                 if (m_itemType != 1) {
-                    if (m_heroes[1]->m_artifacts[artIndex] != -1) {
+                    if (m_heroes[1]->m_artifacts[artIndex] != ARTIFACT_NONE) {
                         m_selectedSide = 1;
                         m_targetSide = -1;
                         m_itemType = 1;
@@ -288,18 +288,18 @@ short swapManager::Main(struct tag_message& message) {
             case 115:
                 artIndex = message.id - 102;
                 if (!quickView && (m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
-                                   || m_heroes[0]->m_artifacts[artIndex] == 12)) {
+                                   || m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                     NormalDialog("This item can't be traded.", 1, -1, -1, -1, 0, -1, 0, -1);
                     break;
                 }
                 if (quickView) {
-                    if (m_heroes[0]->m_artifacts[artIndex] == -1)
+                    if (m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_NONE)
                         break;
                     m_heroes[0]->ViewArtifact(m_heroes[0]->m_artifacts[artIndex], 1);
                     break;
                 }
                 if (m_itemType != 1) {
-                    if (m_heroes[0]->m_artifacts[artIndex] != -1) {
+                    if (m_heroes[0]->m_artifacts[artIndex] != ARTIFACT_NONE) {
                         m_selectedSide = 0;
                         m_targetSide = -1;
                         m_itemType = 1;
@@ -329,7 +329,7 @@ short swapManager::Main(struct tag_message& message) {
                         gpGame->ViewArmy(119, 20,
                                          m_heroes[1]->m_army.m_creatureTypes[message.id - 78],
                                          m_heroes[1]->m_army.m_creatureCounts[message.id - 78],
-                                         0, 0, 0, 1, m_heroes[1], 0, &m_heroes[1]->m_army);
+                                         NULL, 0, 0, 1, m_heroes[1], NULL, &m_heroes[1]->m_army);
                     break;
                 }
                 if (m_itemType) {
@@ -372,7 +372,7 @@ short swapManager::Main(struct tag_message& message) {
                         gpGame->ViewArmy(119, 20,
                                          m_heroes[0]->m_army.m_creatureTypes[message.id - 83],
                                          m_heroes[0]->m_army.m_creatureCounts[message.id - 83],
-                                         0, 0, 0, 1, m_heroes[0], 0, &m_heroes[0]->m_army);
+                                         NULL, 0, 0, 1, m_heroes[0], NULL, &m_heroes[0]->m_army);
                     break;
                 }
                 if (m_itemType) {
@@ -523,10 +523,10 @@ void swapManager::Update(void) {
         message.id = i + 78;
         if (m_heroes[1]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[1]->m_army.m_creatureTypes[i];
@@ -537,10 +537,10 @@ void swapManager::Update(void) {
         message.id = i + 116;
         if (m_heroes[1]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
             sprintf(gText, "%d", m_heroes[1]->m_army.m_creatureCounts[i]);
@@ -552,10 +552,10 @@ void swapManager::Update(void) {
         message.id = i + 83;
         if (m_heroes[0]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[0]->m_army.m_creatureTypes[i];
@@ -566,10 +566,10 @@ void swapManager::Update(void) {
         message.id = i + 121;
         if (m_heroes[0]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
             sprintf(gText, "%d", m_heroes[0]->m_army.m_creatureCounts[i]);
@@ -581,10 +581,10 @@ void swapManager::Update(void) {
         message.id = i + 88;
         if (m_heroes[1]->m_artifacts[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[1]->m_artifacts[i];
@@ -595,10 +595,10 @@ void swapManager::Update(void) {
         message.id = i + 102;
         if (m_heroes[0]->m_artifacts[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_FLAG_DRAW;
+            message.value = 4;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[0]->m_artifacts[i];
@@ -645,7 +645,7 @@ void swapManager::SplitMons(void) {
     gpTownManager->m_heroWindow1->BroadcastMessage(message);
     gpWindowManager->DoDialog(gpTownManager->m_heroWindow1, SplitArmyHandler, 0);
     delete gpTownManager->m_heroWindow1;
-    if (gpWindowManager->m_dialogResult == 0x7802) {
+    if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (selectedArmy->m_creatureTypes[m_selectedSlot] == dstTroops->m_creatureTypes[i]) {
                 found = 1;

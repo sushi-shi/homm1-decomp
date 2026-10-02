@@ -46,7 +46,7 @@ void executive::ShutDownSystem(void)
     gpSoundManager->Close();
     baseManager *next;
     baseManager *manager = m_managerListHead;
-    while (manager != NULL) {
+    while (manager != 0) {
         next = manager->m_next;
         if (manager != gpWindowManager && manager != gpMouseManager)
             RemoveManager(manager);
@@ -137,29 +137,29 @@ short executive::AddManager(baseManager *manager, short priority)
 VA(0x0047a4b0, 0x76)
 void executive::RemoveManager(baseManager *manager)
 {
-    if (manager == NULL)
+    if (manager == 0)
         return;
     manager->Close();
     baseManager *previous = manager->m_prev;
-    if (previous == NULL) {
+    if (previous == 0) {
         if (m_managerListTail == m_managerListHead) {
-            m_managerListTail = NULL;
-            m_managerListHead = NULL;
+            m_managerListTail = 0;
+            m_managerListHead = 0;
         } else {
             m_managerListHead = manager->m_next;
-            m_managerListHead->m_prev = NULL;
+            m_managerListHead->m_prev = 0;
         }
-        manager->m_prev = NULL;
-        manager->m_next = NULL;
+        manager->m_prev = 0;
+        manager->m_next = 0;
         return;
     }
     previous->m_next = manager->m_next;
-    if (previous->m_next == NULL)
+    if (previous->m_next == 0)
         m_managerListTail = previous;
     else
         previous->m_next->m_prev = previous;
-    manager->m_prev = NULL;
-    manager->m_next = NULL;
+    manager->m_prev = 0;
+    manager->m_next = 0;
 }
 
 VA(0x0047a530, 0x62)

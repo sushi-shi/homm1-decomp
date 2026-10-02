@@ -471,25 +471,25 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
             break;
         case MESSAGE_KEY_DOWN:
             switch (message.keyCode) {
-                case 0x3b:
+                case INPUT_SCAN_F1:
                     PopNetBox(NULL);
                     break;
-                case 0x39:
+                case INPUT_SCAN_SPACE:
                     giNextAction = 3;
                     break;
-                case 0x23:
+                case INPUT_SCAN_H:
                     if (m_heroes[m_currentSide]) {
                         gpMouseManager->SetPointer(6);
                         ViewGeneral(m_currentSide, 1, 0);
                         ResetMouse();
                     }
                     break;
-                case 0x14:
+                case INPUT_SCAN_T:
                     gpMouseManager->SetPointer(6);
                     ViewArmy(&m_armies[m_currentSide][m_currentArmyIndex], m_currentSide, 0);
                     ResetMouse();
                     break;
-                case 0x2e:
+                case INPUT_SCAN_C:
                     if (!m_heroes[m_currentSide]) {
                         NormalDialog(
                             "You have no hero to cast a spell.",
@@ -797,7 +797,7 @@ short WinCombatHandler(struct tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x7800:
+                    case DIALOG_BUTTON_0:
                         if (iMaxTransferArtifacts > iCurTransferArtifact + 1) {
                             gpCombatManager->ClearWinLoseBottom(gpCombatManager->m_winLoseWindow);
                             iCurTransferArtifact++;
@@ -909,8 +909,8 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     int firstX;
 
     for (side = 0; side < 15; side++) {
-        m_winLoseBottomWidgets[side] = NULL;
-        m_winLoseBottomTextWidgets[side] = NULL;
+        m_winLoseBottomWidgets[side] = 0;
+        m_winLoseBottomTextWidgets[side] = 0;
     }
     for (side = 0; side < 2; side++) {
         numLost[side] = 0;
@@ -929,7 +929,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     sprintf(buffer, "Battlefield Casualties");
     m_winLoseBottomTextWidgets[12] =
         new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-    if (m_winLoseBottomTextWidgets[12] == NULL)
+    if (m_winLoseBottomTextWidgets[12] == 0)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[12], -1);
     for (side = 0; side < 2; side++) {
@@ -941,7 +941,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-        if (m_winLoseBottomTextWidgets[10 + side] == NULL)
+        if (m_winLoseBottomTextWidgets[10 + side] == 0)
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
         if (numLost[side] <= 0) {
@@ -958,7 +958,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5] == NULL)
+            if (m_winLoseBottomTextWidgets[side * 5] == 0)
                 MemError();
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5], -1);
         }
@@ -977,7 +977,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x10,
                 1
             );
-            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == NULL)
+            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
                 MemError();
             buffer = (char*)malloc(9);
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
@@ -992,7 +992,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + armyIndex + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == NULL)
+            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == 0)
                 MemError();
             window->AddWidget(m_winLoseBottomWidgets[side * 5 + armyIndex], -1);
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5 + armyIndex], -1);
@@ -1037,7 +1037,7 @@ void combatManager::DoVictory(signed char winningSide) {
                 if (!gbRetreatWin && m_heroes[1] && m_heroes[0]) {
                     for (i = 0; i < 14; i++) {
                         if (m_heroes[1 - winningSide]->m_artifacts[i] >= 4
-                            && m_heroes[1 - winningSide]->m_artifacts[i] != 0x25) {
+                            && m_heroes[1 - winningSide]->m_artifacts[i] != ARTIFACT_MAGIC_BOOK) {
                             iTransferArtifacts[iMaxTransferArtifacts] =
                                 m_heroes[1 - winningSide]->m_artifacts[i];
                             iMaxTransferArtifacts++;
@@ -1208,7 +1208,7 @@ void combatManager::DoLoseWindow(void) {
         result = gpWindowManager->Main(message);
         if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
             && message.command == WIDGET_NOTIFY_DESELECT
-            && message.id == 0x7800)
+            && message.id == DIALOG_BUTTON_0)
             stop = 1;
     } while (!stop);
     gpWindowManager->RemoveWindow(loseWindow);
@@ -1258,7 +1258,7 @@ short combatManager::DoSurrender(void) {
     win->BroadcastMessage(message);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
-    return gpWindowManager->m_dialogResult == 0x7802;
+    return gpWindowManager->m_dialogResult == DIALOG_BUTTON_2;
 }
 
 // Buka COMMAND.cpp CheckChangeSelector; HoMM1 redraws the grid from the
@@ -1385,7 +1385,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         data[3] = giNextActionGridIndex2;
         result = TransmitRemoteData((char*)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
         if (!result)
-            ShutDown(0);
+            ShutDown(NULL);
     }
     actingArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     advance = 0;

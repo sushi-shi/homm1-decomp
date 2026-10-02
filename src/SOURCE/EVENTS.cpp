@@ -775,7 +775,7 @@ short advManager::GiveArtifact(class hero* eventHero, signed char artifact) {
     short slot;
 
     for (slot = 0; slot < HERO_ARTIFACT_SLOT_COUNT; slot++) {
-        if (eventHero->m_artifacts[slot] == -1)
+        if (eventHero->m_artifacts[slot] == ARTIFACT_NONE)
             break;
     }
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
@@ -979,86 +979,86 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
     int i;
 
     switch (artifact) {
-    case 0:
+    case ARTIFACT_ULTIMATE_BOOK:
         stat = 3;
         amount = 12;
         break;
-    case 1:
+    case ARTIFACT_ULTIMATE_SWORD:
         stat = 0;
         amount = 12;
         break;
-    case 2:
+    case ARTIFACT_ULTIMATE_CLOAK:
         stat = 1;
         amount = 12;
         break;
-    case 3:
+    case ARTIFACT_ULTIMATE_WAND:
         stat = 2;
         amount = 12;
         break;
-    case 4:
+    case ARTIFACT_ARCANE_NECKLACE:
         stat = 2;
         amount = 4;
         break;
-    case 5:
-    case 6:
+    case ARTIFACT_CASTERS_BRACELET:
+    case ARTIFACT_MAGES_RING:
         stat = 2;
         amount = 2;
         break;
-    case 7:
+    case ARTIFACT_WITCHS_BROACH:
         stat = 2;
         amount = 3;
         break;
-    case 13:
-    case 16:
+    case ARTIFACT_THUNDER_MACE:
+    case ARTIFACT_GIANT_FLAIL:
         stat = 0;
         amount = 1;
         break;
-    case 14:
-    case 15:
+    case ARTIFACT_ARMORED_GAUNTLETS:
+    case ARTIFACT_DEFENDER_HELM:
         stat = 1;
         amount = 1;
         break;
-    case 17:
+    case ARTIFACT_BALLISTA:
         stat = 4;
         amount = 3;
         break;
-    case 18:
+    case ARTIFACT_STEALTH_SHIELD:
         stat = 1;
         amount = 2;
         break;
-    case 19:
+    case ARTIFACT_DRAGON_SWORD:
         stat = 0;
         amount = 3;
         break;
-    case 20:
+    case ARTIFACT_POWER_AXE:
         stat = 0;
         amount = 2;
         break;
-    case 21:
+    case ARTIFACT_DIVINE_BREASTPLATE:
         stat = 1;
         amount = 3;
         break;
-    case 22:
+    case ARTIFACT_MINOR_SCROLL:
         stat = 3;
         amount = 2;
         break;
-    case 23:
+    case ARTIFACT_MAJOR_SCROLL:
         stat = 3;
         amount = 3;
         break;
-    case 24:
+    case ARTIFACT_SUPERIOR_SCROLL:
         stat = 3;
         amount = 4;
         break;
-    case 25:
+    case ARTIFACT_FOREMOST_SCROLL:
         stat = 3;
         amount = 5;
         break;
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
+    case ARTIFACT_MEDAL_OF_VALOR:
+    case ARTIFACT_MEDAL_OF_COURAGE:
+    case ARTIFACT_MEDAL_OF_HONOR:
+    case ARTIFACT_MEDAL_OF_DISTINCTION:
+    case ARTIFACT_FIZBIN_OF_MISFORTUNE:
         break;
     }
     if (take == 1)
@@ -1085,9 +1085,9 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
     if (!sourceHero || !destHero)
         return;
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        if (destHero->m_artifacts[i] == -1) {
+        if (destHero->m_artifacts[i] == ARTIFACT_NONE) {
             for (j = 0; j < HERO_ARTIFACT_SLOT_COUNT; j++) {
-                if (sourceHero->m_artifacts[j] != -1
+                if (sourceHero->m_artifacts[j] != ARTIFACT_NONE
                     && sourceHero->m_artifacts[j] != ARTIFACT_MAGIC_BOOK) {
                     if (sourceHero->m_artifacts[j] <= 3) {
                         if (gbThisNetHumanPlayer[sourceHero->m_owner]
@@ -1104,7 +1104,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
                     GiveTakeArtifactStat(sourceHero, sourceHero->m_artifacts[j], 1);
-                    sourceHero->m_artifacts[j] = -1;
+                    sourceHero->m_artifacts[j] = ARTIFACT_NONE;
                     break;
                 }
             }

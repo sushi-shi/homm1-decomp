@@ -690,7 +690,7 @@ short RecruitHeroHandler(tag_message& message) {
                 break;
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x7801:
+                    case DIALOG_BUTTON_1:
                         gpTownManager->m_recruitState = -1;
                         shouldClose = 1;
                         break;
@@ -1221,9 +1221,9 @@ short WaitHandler(tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x7800:
-                    case 0x7801:
-                    case 0x7802:
+                    case DIALOG_BUTTON_0:
+                    case DIALOG_BUTTON_1:
+                    case DIALOG_BUTTON_2:
                         gbFunctionComplete = 0;
                         result = 1;
                         break;
@@ -1259,7 +1259,7 @@ short WaitHandler(tag_message& message) {
         }
     }
     if (result) {
-        gpWindowManager->m_dialogResult = 0x7801;
+        gpWindowManager->m_dialogResult = DIALOG_BUTTON_1;
         message.type = MESSAGE_WIDGET;
         message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
@@ -1277,12 +1277,12 @@ short EventWindowHandler(tag_message& message) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
                     case 0x385:
-                    case 0x7800:
-                    case 0x7801:
-                    case 0x7802:
-                    case 0x7803:
-                    case 0x7805:
-                    case 0x7806:
+                    case DIALOG_BUTTON_0:
+                    case DIALOG_BUTTON_1:
+                    case DIALOG_BUTTON_2:
+                    case DIALOG_BUTTON_3:
+                    case DIALOG_BUTTON_5:
+                    case DIALOG_BUTTON_6:
                         gpWindowManager->m_dialogResult = message.id;
                         message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
@@ -1480,7 +1480,7 @@ void CheckEndGame(int forced) {
                     gColorNames[gpGame->m_players[(signed char)player].Color()]);
                 gText[0] -= 32;
                 NormalDialog(
-                    gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[(signed char)player].Color(), NORMAL_DIALOG_NO_RESOURCE,
+                    gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
                     0, -1);
             } else if (!pd->m_townCount) {
                 if (pd->m_unknown55 == -1) {
@@ -1492,8 +1492,8 @@ void CheckEndGame(int forced) {
                             gColorNames[gpGame->m_players[(signed char)player].Color()]);
                         gText[0] -= 32;
                         NormalDialog(
-                            gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_CREST, gpGame->m_players[(signed char)player].Color(),
-                            NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                            gText, 1, -1, -1, 9, gpGame->m_players[(signed char)player].Color(),
+                            -1, 0, -1);
                     }
                     pd->m_unknown55 = 7;
                 } else if (!pd->m_unknown55) {
@@ -1514,7 +1514,7 @@ void CheckEndGame(int forced) {
                         gText[0] -= 32;
                     }
                     NormalDialog(
-                        gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[(signed char)player].Color(), NORMAL_DIALOG_NO_RESOURCE,
+                        gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
                         0, -1);
                 }
             } else {

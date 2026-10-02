@@ -261,7 +261,7 @@ signed char hero::HeroView(signed char viewOnly) {
     }
     if (viewOnly || gpTownManager->m_castleDialogActive
         || (!gpCurPlayer->m_townCount && gpCurPlayer->m_heroCount == 1)) {
-        message.id = 0x7803;
+        message.id = DIALOG_BUTTON_3;
         message.value = 6;
         heroWin->BroadcastMessage(message);
     }
@@ -331,7 +331,7 @@ signed char hero::HeroView(signed char viewOnly) {
     UpdateArmies();
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         message.id = i + 20;
-        if (m_artifacts[i] != -1) {
+        if (m_artifacts[i] != ARTIFACT_NONE) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_artifacts[i];
             heroWin->BroadcastMessage(message);
@@ -356,7 +356,7 @@ signed char hero::HeroView(signed char viewOnly) {
     gpWindowManager->FadeScreen(1, 8, NULL);
     delete heroWin;
     gheroWin = NULL;
-    if (gpWindowManager->m_dialogResult == 0x7803) {
+    if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_3) {
         return 1;
     } else {
         m_mobility = CalcMobility();
@@ -713,7 +713,7 @@ void hero::CheckLevel(void) {
     m_level = lvl;
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
         gpSoundManager->SwitchAmbientMusic(52);
-        NormalDialog(gText, 1, -1, -1, 15, m_id, -1, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     }
 }
@@ -816,7 +816,7 @@ void UpdateHeroScreenStatusBar(short widgetId) {
     case 31:
     case 32:
     case 33:
-        if (gpHVHero->m_artifacts[widgetId - 20] == -1)
+        if (gpHVHero->m_artifacts[widgetId - 20] == ARTIFACT_NONE)
             sprintf(gText, cHeroScreen[11]);
         else if (gpHVHero->m_artifacts[widgetId - 20] == ARTIFACT_MAGIC_BOOK)
             strcpy(gText, cHeroScreen[14]);
@@ -869,11 +869,11 @@ short HeroHandler(struct tag_message& message) {
         case WIDGET_NOTIFY_DESELECT:
             if (!quickView) {
                 switch (message.id) {
-                case 0x7803:
+                case DIALOG_BUTTON_3:
                     if (gpHVHero->Dismiss())
                         finished = 1;
                     break;
-                case 0x7800:
+                case DIALOG_BUTTON_0:
                     finished = 1;
                     break;
                 default:
@@ -972,7 +972,7 @@ short HeroHandler(struct tag_message& message) {
             case 31:
             case 32:
             case 33:
-                if (gpHVHero->m_artifacts[message.id - 20] != -1) {
+                if (gpHVHero->m_artifacts[message.id - 20] != ARTIFACT_NONE) {
                     if (!quickView
                         && gpHVHero->m_artifacts[message.id - 20]
                                == ARTIFACT_MAGIC_BOOK)
