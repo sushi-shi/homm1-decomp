@@ -5747,3 +5747,57 @@ void advManager::DrawAdventureBorder(void) {
         savedPixels += ADVENTURE_VIEWPORT_EXTENT;
     }
 }
+
+// ADVMGR owns retail .data 0x0048f828-0x004905b7 and .bss 0x004c4f2c-0x004c50c3.
+// Retail emits giCheatSeq, the sand-animation times and giFrameCount among the
+// literals of their users.
+DATA(0x0048f828)
+int giLimitUpdMinX = -1;
+DATA(0x0048f82c)
+long iLastScrollTime = 0;
+DATA(0x0048f830)
+int iSandAnim = 0;
+DATA(0x0048f834)
+long giLastHourGlassUpdateTime = 0;
+DATA(0x0048f838)
+int TrigX = 0;
+DATA(0x0048f83c)
+int TrigY = 0;
+DATA(0x0048f840)
+int iCurBottomView = 0;
+DATA(0x0048f844)
+int iCurBottomViewEnemy = -1;
+DATA(0x0048f848)
+int iCurHourGlassPhase = 0;
+DATA(0x0048f84c)
+int iLastHourGlassPhase = 1;
+DATA(0x0048f850)
+int gbForceUpdate = 0;
+DATA(0x0048fae8)
+int giCheatSeq = 0;
+DATA(0x0048ff4c)
+long iLastSandAnimTime = 0;
+DATA(0x0048ff50)
+long iLastNewSandAnimTime = 0;
+DATA(0x004904a4)
+int giFrameCount = 0;
+DATA(0x004c4f2c)
+class heroWindow* cPanel;
+DATA(0x004c4f4c)
+int giFrameStep;
+DATA(0x004c4f50)
+char cArmySizeName[12];
+DATA(0x004c4f5c)
+int giLimitUpdMaxX;
+DATA(0x004c4f60)
+int giLimitUpdMaxY;
+DATA(0x004c4f6c)
+signed char bPrefsChanged;
+DATA(0x004c4f74)
+int giLimitUpdMinY;
+DATA(0x004c4f78)
+signed char bComboDraw[17][17];
+DATA(0x004c50a0)
+signed char bFreshSave;
+DATA(0x004c50c0)
+int iLastAnimFrame;
