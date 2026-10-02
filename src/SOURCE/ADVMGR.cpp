@@ -173,7 +173,7 @@ advManager::advManager(void) {
     m_updateMinY = 0;
     m_updateMaxX = 0;
     m_updateMaxY = 0;
-    m_selectedCell = -1;
+    m_selectedCell = ADVMGR_COMMAND_NONE;
     m_cursorActive = 0;
     m_identifyHeroActive = 0;
     m_drawHeroShadows = 1;
@@ -513,11 +513,11 @@ class mapCell* advManager::DoAdvCommand(void) {
     userStop = 0;
     hover = 0;
     switch (m_selectedCell) {
-    case 1:
+    case ADVMGR_COMMAND_MOVE_TO:
         pHero->m_destinationX = m_commandTargetX;
         pHero->m_destinationY = m_commandTargetY;
         goto continue_route;
-    case 7:
+    case ADVMGR_COMMAND_CONTINUE_ROUTE:
     continue_route:
         gpSearchArray->BuildPath(
             pHero->m_x,
@@ -531,7 +531,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             MobilizeCurrHero(1);
             if (gConfig.showRoute || oldMapValid)
                 ShowRoute(0, 0, 0);
-            else if (m_routeShown && m_selectedCell != 7)
+            else if (m_routeShown && m_selectedCell != ADVMGR_COMMAND_CONTINUE_ROUTE)
                 HideRoute(1, 0, 1);
             gpMouseManager->ReallyHidePointer();
             gpInputManager->Flush();
@@ -567,7 +567,7 @@ class mapCell* advManager::DoAdvCommand(void) {
                  && pHero->m_y == pHero->m_destinationY)
                 || (userStop && !gConfig.showRoute) || stopCell)
                 HideRoute(1, 1, 1);
-            else if (m_selectedCell == 7 || gConfig.showRoute)
+            else if (m_selectedCell == ADVMGR_COMMAND_CONTINUE_ROUTE || gConfig.showRoute)
                 ShowRoute(0, 1, 1);
             gpMouseManager->ReallyShowPointer();
             UpdBottomView(1, 1, 1);
@@ -581,14 +581,14 @@ class mapCell* advManager::DoAdvCommand(void) {
             CheckDimHero();
         }
         break;
-    case 6:
+    case ADVMGR_COMMAND_OCCUPIED_TOWN_VIEW:
         DemobilizeCurrHero();
         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         viewTown = gpGame->GetTown(pHero->m_occupiedTown);
         viewTown->View();
         stopCell = NULL;
         break;
-    case 3:
+    case ADVMGR_COMMAND_TOWN_VIEW:
         DemobilizeCurrHero();
         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         stopCell = GetCell(
@@ -597,22 +597,22 @@ class mapCell* advManager::DoAdvCommand(void) {
         gpGame->GetTown(gpCurPlayer->m_currentTown)->View();
         stopCell = NULL;
         break;
-    case 2:
+    case ADVMGR_COMMAND_HERO_VIEW:
         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
         RedrawAdvScreen(1);
         gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
         break;
-    case 4:
+    case ADVMGR_COMMAND_SELECT_HERO:
         SetHeroContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata, 0);
         break;
-    case 5:
+    case ADVMGR_COMMAND_SELECT_TOWN:
         SetTownContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata);
         break;
-    case -1:
+    case ADVMGR_COMMAND_NONE:
         break;
     }
-    m_selectedCell = -1;
+    m_selectedCell = ADVMGR_COMMAND_NONE;
     m_lastHoverCell = m_hoverCellY = -1;
     if (hover)
         ForceNewHover();
@@ -928,10 +928,10 @@ short advManager::Main(struct tag_message& message) {
                 break;
             case INPUT_SCAN_ENTER:
                 if (gpCurPlayer->CurrentTown() != -1) {
-                    m_selectedCell = 3;
+                    m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                     DoAdvCommand();
                 } else if (gpCurPlayer->CurrentHero() != -1) {
-                    m_selectedCell = 2;
+                    m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                     DoAdvCommand();
                 }
                 break;
@@ -1001,7 +1001,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             HeroQuickView(cellType, iPage, -1, -1);
         } else if (gpCurPlayer->CurrentHero() == cellType) {
-            m_selectedCell = 2;
+            m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
             DoAdvCommand();
         } else {
             HideRoute(1, 0, 1);
@@ -1018,7 +1018,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         } else {
             HideRoute(1, 0, 1);
             if (gpCurPlayer->CurrentTown() == cellType) {
-                m_selectedCell = 3;
+                m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                 *eventCell = DoAdvCommand();
             } else {
                 SetTownContext(cellType);
@@ -1141,7 +1141,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             if (hero) {
                 if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
                     && m_heroContextLocked) {
-                    m_selectedCell = 2;
+                    m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                     DoAdvCommand();
                 } else if ((!mobileResult || (message->modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                             || (gConfig.showRoute
@@ -1159,7 +1159,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 mapIndex = hoverCell->m_objectMetadata;
                 if (cellType == MAP_OBJECT_HERO) {
                     if (gpCurPlayer->CurrentHero() == mapIndex) {
-                        m_selectedCell = 2;
+                        m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                         DoAdvCommand();
                     } else if (gpGame->GetHero(mapIndex)->m_owner == giCurPlayer) {
                         SetHeroContext(mapIndex, 0);
@@ -1167,7 +1167,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 }
                 if (cellType == MAP_OBJECT_TOWN) {
                     if (gpCurPlayer->CurrentTown() == mapIndex) {
-                        m_selectedCell = 3;
+                        m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                         *eventCell = DoAdvCommand();
                     } else if (gpGame->GetTown(mapIndex)->m_owner == giCurPlayer) {
                         SetTownContext(mapIndex);
@@ -1256,7 +1256,7 @@ VA(0x00428b59, 0x1ea)
 int advManager::ProcessDeSelect(struct tag_message* message, int* result, class mapCell** eventCell) {
     switch (message->id) {
         case ADVENTURE_CONTROL_CONTINUE_ROUTE:
-            m_selectedCell = 7;
+            m_selectedCell = ADVMGR_COMMAND_CONTINUE_ROUTE;
             *eventCell = DoAdvCommand();
             break;
         case ADVENTURE_CONTROL_ADVENTURE_OPTIONS:
@@ -1419,7 +1419,7 @@ int advManager::ProcessHover(struct tag_message* message) {
         if (curY > 14)
             curY = 14;
         if (m_lastHoverCell != curX || m_hoverCellY != curY) {
-            m_selectedCell = -1;
+            m_selectedCell = ADVMGR_COMMAND_NONE;
             m_lastHoverCell = curX;
             m_hoverCellY = curY;
             m_commandTargetX = m_mapOriginX + curX;
@@ -1435,12 +1435,12 @@ int advManager::ProcessHover(struct tag_message* message) {
                 if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
                     && gpGame->GetTown(cell->m_objectMetadata)->m_owner == giCurPlayer) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
-                    m_selectedCell = 3;
+                    m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                     return 1;
                 } else if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
                            && gpGame->GetHero(cell->m_objectMetadata)->m_owner == giCurPlayer) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
-                    m_selectedCell = 2;
+                    m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                     return 1;
                 } else {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
@@ -1452,7 +1452,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                 heroPosY = hero->m_y - m_mapOriginY;
                 if (curX == heroPosX && curY == heroPosY) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
-                    m_selectedCell = 2;
+                    m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                     return 1;
                 }
                 if (cell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED) {
@@ -1463,7 +1463,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                             && (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
                             && (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN) {
                             gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
-                            m_selectedCell = 5;
+                            m_selectedCell = ADVMGR_COMMAND_SELECT_TOWN;
                             return 1;
                         }
                     }
@@ -1496,7 +1496,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                     case MAP_OBJECT_SHIP:
                         if (m_cursorType != ADVMGR_HERO_ICON_BOAT) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SAIL);
-                            m_selectedCell = 1;
+                            m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                         } else {
                             gpMouseManager->SetPointer(baseFrame);
                         }
@@ -1508,26 +1508,26 @@ int advManager::ProcessHover(struct tag_message* message) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                         else
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
-                        m_selectedCell = 1;
+                        m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                         break;
                     case MAP_OBJECT_MONSTER:
                         gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
-                        m_selectedCell = 1;
+                        m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                         break;
                     case MAP_OBJECT_HERO:
                         if (gpGame->GetHero(cell->m_objectMetadata)->m_owner != giCurPlayer) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
-                            m_selectedCell = 1;
+                            m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                         } else {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SELECT_HERO);
-                            m_selectedCell = 1;
+                            m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                         }
                         break;
                     case MAP_OBJECT_TOWN:
                         pTown = gpGame->GetTown(cell->m_objectMetadata);
                         if ((cell->m_triggerType & MAP_TRIGGER_EVENT) && pTown->m_owner != giCurPlayer && pTown->HasGarrison()) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
-                            m_selectedCell = 1;
+                            m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                             break;
                         }
                         goto defaultHover;
@@ -1608,7 +1608,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                         } else {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
                         }
-                        m_selectedCell = 1;
+                        m_selectedCell = ADVMGR_COMMAND_MOVE_TO;
                         break;
                     }
                     return 1;

@@ -56,6 +56,19 @@ H1_ENUM_BEGIN(AdventureHeroIcon)
     ADVMGR_HERO_ICON_BOAT = 4
 H1_ENUM_END(AdventureHeroIcon)
 
+// m_selectedCell: the action ProcessSelect queues and advManager::DoSelect
+// runs (Buka 2.1 AdventureCommand, same numbering).
+H1_ENUM_BEGIN(AdventureCommand)
+    ADVMGR_COMMAND_NONE = -1,
+    ADVMGR_COMMAND_MOVE_TO = 1,
+    ADVMGR_COMMAND_HERO_VIEW = 2,
+    ADVMGR_COMMAND_TOWN_VIEW = 3,
+    ADVMGR_COMMAND_SELECT_HERO = 4,
+    ADVMGR_COMMAND_SELECT_TOWN = 5,
+    ADVMGR_COMMAND_OCCUPIED_TOWN_VIEW = 6,
+    ADVMGR_COMMAND_CONTINUE_ROUTE = 7
+H1_ENUM_END(AdventureCommand)
+
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand
