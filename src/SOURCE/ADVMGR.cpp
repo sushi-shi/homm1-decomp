@@ -2286,7 +2286,7 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
         message.value = locatorSlot;
         m_adventureWindow->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 4;
+        message.value = WIDGET_FLAG_DRAW;
         for (i = 0; i <= 4; i++) {
             message.id = i + wBase;
             m_adventureWindow->BroadcastMessage(message);
@@ -2298,7 +2298,7 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
         message.value = 8;
         m_adventureWindow->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         for (i = 0; i <= 6; i++) {
             message.id = i + wBase;
             m_adventureWindow->BroadcastMessage(message);
@@ -2322,11 +2322,11 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
         m_adventureWindow->BroadcastMessage(message);
         message.id = wBase + 3;
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         m_adventureWindow->BroadcastMessage(message);
         message.id = wBase + 4;
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         m_adventureWindow->BroadcastMessage(message);
     }
     if (drawWindow) {

@@ -101,19 +101,19 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         || m_heroCastSpell[side] != 0 || m_currentSide != giCurGeneral) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = 10;
-        message.value = 2;
+        message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = 8;
+        message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
     if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || m_currentSide != giCurGeneral) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = 12;
-        message.value = 2;
+        message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = 8;
+        message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
     if (allowActions == 0 || m_currentSide != giCurGeneral
@@ -121,10 +121,10 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         || m_sideRetreated[0] != 0 || m_sideRetreated[1] != 0) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = 11;
-        message.value = 2;
+        message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = 8;
+        message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
     if (quickView) {

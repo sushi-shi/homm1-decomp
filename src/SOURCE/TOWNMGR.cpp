@@ -509,10 +509,10 @@ short townManager::Main(struct tag_message &message)
                                                 message.type = MESSAGE_WIDGET;
                                                 message.command = WIDGET_COMMAND_SET_FLAGS;
                                                 message.id = TOWN_DIALOG_BUTTON_2;
-                                                message.value = 8;
+                                                message.value = WIDGET_FLAG_DIMMED;
                                                 m_heroWindow0->BroadcastMessage(message);
                                                 message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-                                                message.value = 2;
+                                                message.value = WIDGET_FLAG_ENABLED;
                                                 m_heroWindow0->BroadcastMessage(message);
                                             }
                                             gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
@@ -612,10 +612,10 @@ short townManager::Main(struct tag_message &message)
                                     message.type = MESSAGE_WIDGET;
                                     message.command = WIDGET_COMMAND_SET_FLAGS;
                                     message.id = TOWN_DIALOG_BUTTON_2;
-                                    message.value = 8;
+                                    message.value = WIDGET_FLAG_DIMMED;
                                     m_heroWindow0->BroadcastMessage(message);
                                     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-                                    message.value = 2;
+                                    message.value = WIDGET_FLAG_ENABLED;
                                     m_heroWindow0->BroadcastMessage(message);
                                 }
                                 gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
@@ -1812,7 +1812,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
     message.type = MESSAGE_WIDGET;
     if (cannotRecruit) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         message.id = 8;
         m_heroWindow1->BroadcastMessage(message);
         message.id = 9;

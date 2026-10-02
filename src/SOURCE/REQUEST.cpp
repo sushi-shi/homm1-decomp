@@ -271,13 +271,13 @@ void fileRequester::SetOK(signed char enabled) {
     else
         message.command = WIDGET_COMMAND_SET_FLAGS;
     message.id = 0x7802;
-    message.value = 8;
+    message.value = WIDGET_FLAG_DIMMED;
     m_window->BroadcastMessage(message);
     if (enabled)
         message.command = WIDGET_COMMAND_SET_FLAGS;
     else
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 2;
+    message.value = WIDGET_FLAG_ENABLED;
     m_window->BroadcastMessage(message);
 }
 
@@ -586,10 +586,10 @@ void fileRequester::Update(signed char drawWindow) {
         event.id = row + firstId;
         if (m_topIndex + row >= m_fileCount) {
             event.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            event.value = 4;
+            event.value = WIDGET_FLAG_DRAW;
         } else {
             event.command = WIDGET_COMMAND_SET_FLAGS;
-            event.value = 4;
+            event.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(event);
             event.command = WIDGET_COMMAND_SET_TEXT;
             if (gbShowMapInfo)
@@ -626,7 +626,7 @@ void fileRequester::Update(signed char drawWindow) {
 
     event.id = nameId;
     event.command = WIDGET_COMMAND_SET_FLAGS;
-    event.value = 2;
+    event.value = WIDGET_FLAG_ENABLED;
     m_window->BroadcastMessage(event);
     if (m_selectedIndex != -1) {
         event.command = WIDGET_COMMAND_SET_TEXT;
@@ -639,7 +639,7 @@ void fileRequester::Update(signed char drawWindow) {
     }
     if (m_mode == 0) {
         event.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        event.value = 2;
+        event.value = WIDGET_FLAG_ENABLED;
         m_window->BroadcastMessage(event);
     }
     if (m_fileCount <= 10) {

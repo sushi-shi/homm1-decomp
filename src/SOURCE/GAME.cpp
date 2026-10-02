@@ -833,7 +833,7 @@ void game::UpdateNewGameWindow(void) {
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 4;
+    message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < 4; i++) {
         message.id = i + 13;
         m_newGameWindow->BroadcastMessage(message);
@@ -1070,7 +1070,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 6;
+    message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
     if (fromMenu) {
         message.id = 0x7802;
         window->BroadcastMessage(message);
@@ -1952,7 +1952,7 @@ signed char game::ViewSpells(
                 message.id = 4;
             else
                 message.id = 5;
-            message.value = 6;
+            message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
         UpdateSpellWidgets();
@@ -1992,20 +1992,20 @@ void game::UpdateSpellWidgets(void) {
         if (m_viewSpellsTop + i > m_spellLast) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.id = i + 6;
-            message.value = 6;
+            message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
             message.id = i + 10;
             m_viewSpellsWindow->BroadcastMessage(message);
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
             message.id = i + 10;
-            message.value = 6;
+            message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
             message.id = i + 6;
             m_viewSpellsWindow->BroadcastMessage(message);
             if (m_viewSpellsReadOnly) {
                 message.command = WIDGET_COMMAND_SET_FLAGS;
-                message.value = 2;
+                message.value = WIDGET_FLAG_ENABLED;
                 m_viewSpellsWindow->BroadcastMessage(message);
             }
             message.command = WIDGET_COMMAND_SET_FRAME;

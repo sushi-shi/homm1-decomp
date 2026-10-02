@@ -64,7 +64,7 @@ short swapManager::Open(short id) {
     m_window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 2;
+    message.value = WIDGET_FLAG_ENABLED;
     message.id = 1;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     message.id = 2;
@@ -106,7 +106,7 @@ void swapManager::Close(void) {
     gpAdvManager->Activate();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.value = 2;
+    message.value = WIDGET_FLAG_ENABLED;
     message.id = 1;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     message.id = 2;
@@ -523,10 +523,10 @@ void swapManager::Update(void) {
         message.id = i + 78;
         if (m_heroes[1]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[1]->m_army.m_creatureTypes[i];
@@ -537,10 +537,10 @@ void swapManager::Update(void) {
         message.id = i + 116;
         if (m_heroes[1]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
             sprintf(gText, "%d", m_heroes[1]->m_army.m_creatureCounts[i]);
@@ -552,10 +552,10 @@ void swapManager::Update(void) {
         message.id = i + 83;
         if (m_heroes[0]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[0]->m_army.m_creatureTypes[i];
@@ -566,10 +566,10 @@ void swapManager::Update(void) {
         message.id = i + 121;
         if (m_heroes[0]->m_army.m_creatureTypes[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
             sprintf(gText, "%d", m_heroes[0]->m_army.m_creatureCounts[i]);
@@ -581,10 +581,10 @@ void swapManager::Update(void) {
         message.id = i + 88;
         if (m_heroes[1]->m_artifacts[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[1]->m_artifacts[i];
@@ -595,10 +595,10 @@ void swapManager::Update(void) {
         message.id = i + 102;
         if (m_heroes[0]->m_artifacts[i] == -1) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[0]->m_artifacts[i];

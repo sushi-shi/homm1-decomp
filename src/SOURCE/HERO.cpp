@@ -252,7 +252,7 @@ signed char hero::HeroView(signed char viewOnly) {
     message.text = gText;
     heroWin->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 4;
+    message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         message.id = i + 81;
         heroWin->BroadcastMessage(message);
@@ -295,7 +295,7 @@ signed char hero::HeroView(signed char viewOnly) {
     for (i = 3; i > shown; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + 202;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
     armyMoraleLevel = m_army.GetMorale(this, NULL);
@@ -316,7 +316,7 @@ signed char hero::HeroView(signed char viewOnly) {
     for (i = 3; i > shown; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + 199;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
     sprintf(gText, "%ld", m_experience);
@@ -338,12 +338,12 @@ signed char hero::HeroView(signed char viewOnly) {
             if (m_artifacts[i] >= 4) {
                 message.command = WIDGET_COMMAND_CLEAR_FLAGS;
                 message.id = i + 6;
-                message.value = 4;
+                message.value = WIDGET_FLAG_DRAW;
                 heroWin->BroadcastMessage(message);
             }
         } else {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
             message.id = i + 6;
             heroWin->BroadcastMessage(message);
@@ -400,7 +400,7 @@ void hero::HeroScreenUpdate(void) {
             message.command = WIDGET_COMMAND_SET_FLAGS;
         else
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 4;
+        message.value = WIDGET_FLAG_DRAW;
         message.id = i + 102;
         heroWin->BroadcastMessage(message);
     }
@@ -425,7 +425,7 @@ void hero::UpdateArmies(void) {
             heroWin->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.id = i + 92;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
             message.id = i + 97;
             heroWin->BroadcastMessage(message);
@@ -440,7 +440,7 @@ void hero::UpdateArmies(void) {
             message.value = m_army.m_creatureTypes[i];
             heroWin->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
             sprintf(gText, "%d", m_army.m_creatureCounts[i]);
             message.command = WIDGET_COMMAND_SET_TEXT;
@@ -448,7 +448,7 @@ void hero::UpdateArmies(void) {
             message.text = gText;
             heroWin->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
         }
     }
