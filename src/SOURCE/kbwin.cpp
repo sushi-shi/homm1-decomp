@@ -60,7 +60,7 @@ H1_C_LINKAGE int __stdcall WinMain(void *instance, void *previousInstance, char 
         }
     }
     ShutDown(NULL);
-    return message.wParam;
+    return static_cast<int>(message.wParam);
 }
 
 // donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
