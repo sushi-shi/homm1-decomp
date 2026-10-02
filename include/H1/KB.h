@@ -132,7 +132,7 @@ extern heroWindow* DataEntryWin;
 extern char* cDEDest;
 extern int iDEMaxLen;
 extern signed char bDataEntryTime;
-extern signed char giWaitType;
+extern H1_ENUM_STORAGE(DialogWaitType, signed char) giWaitType;
 extern signed char gbFunctionComplete;
 extern long lLastGetMessage;
 extern long lLastAilServe;

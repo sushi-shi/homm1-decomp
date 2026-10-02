@@ -459,7 +459,7 @@ int oldmain(void) {
                 }
             }
             if (gbRemoteOn && gbWaitForRemoteReceive) {
-                giWaitType = 0;
+                giWaitType = DIALOG_WAIT_OTHER_PLAYER;
                 NormalDialog(
                     "Waiting for other remote player to set up game.",
                     NORMAL_DIALOG_TYPE_WAIT_CANCEL,
@@ -1369,28 +1369,28 @@ short WaitHandler(tag_message& message) {
     }
     if (!result) {
         switch (giWaitType) {
-            case 0:
+            case DIALOG_WAIT_OTHER_PLAYER:
                 result = WaitForOtherPlayer();
                 break;
-            case 2:
+            case DIALOG_WAIT_NETBIOS_HOST:
                 result = WaitForHost();
                 break;
-            case 1:
+            case DIALOG_WAIT_NETBIOS_GUEST:
                 result = WaitForGuest();
                 break;
-            case 3:
+            case DIALOG_WAIT_NETBIOS_INIT_GUEST:
                 result = InitNetGuest();
                 break;
-            case 4:
+            case DIALOG_WAIT_NETBIOS_INIT_HOST:
                 result = InitNetHost();
                 break;
-            case 5:
+            case DIALOG_WAIT_MODEM_COMMAND:
                 result = GUIModemCommandExec();
                 break;
-            case 6:
+            case DIALOG_WAIT_MODEM_RESPONSE:
                 result = GUIModemResponseExec();
                 break;
-            case 7:
+            case DIALOG_WAIT_DIRECT_CONNECT:
                 result = WaitForDirectConnect();
                 break;
         }
@@ -5028,7 +5028,7 @@ class game* gpGame;
 DATA(0x004c6d4c)
 signed char gbRetreatWin;
 DATA(0x004c6d60)
-signed char giWaitType;
+H1_ENUM_STORAGE(DialogWaitType, signed char) giWaitType;
 DATA(0x004c6d64)
 short gCurLoadedSpellFileId;
 DATA(0x004c6d68)
