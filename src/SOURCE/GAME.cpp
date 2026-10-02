@@ -2194,20 +2194,210 @@ short ViewSpecialHandler(tag_message& message) {
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
+// Army info strings: attack, defense, shots (combat), damage, hit points,
+// speed, morale, luck, shots (adventure).
+extern char* gArmyStatText[];
+extern char* gSpeedText[];
+extern char* gMoraleText[];
+extern char* gLuckText[];
+extern signed char gbDismissArmy;
+extern long gViewArmyAnimTimer;
+short ViewArmyHandler(tag_message&);
+
 VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
-    int,
-    int,
-    signed char,
-    short,
-    class town*,
-    signed char,
-    signed char,
-    signed char,
-    class hero*,
-    class army*,
-    class armyGroup*
-) {}
+    int x,
+    int y,
+    signed char monsterType,
+    short numTroops,
+    class town* castle,
+    signed char disableDismiss,
+    signed char facing,
+    signed char quickView,
+    class hero* theHero,
+    class army* theArmy,
+    class armyGroup* theGroup
+) {
+    char numText[12];
+    int shotCount;
+    short baseX;
+    short spacing;
+    short topY;
+    short animId;
+    int morale;
+    tag_monsterInfo* monsterInfo;
+    short numId;
+    int i;
+    char* statText;
+    int luck;
+    tag_message message;
+    char iconName[16];
+    iconWidget* monsterWidget;
+    short statsMessage;
+    short titleLabel;
+    int mod;
+    short blankBtn;
+    char fileName[13];
+
+    baseX = 86;
+    topY = 164;
+    blankBtn = 1;
+    numId = 2;
+    titleLabel = 3;
+    statsMessage = 4;
+    animId = 5;
+    message.type = MESSAGE_WIDGET;
+
+    if (monsterType != 3)
+        strcpy(iconName, gArmyNames[monsterType]);
+    else
+        strcpy(iconName, "swrdsman");
+    monsterInfo = &gMonsterDatabase[monsterType];
+    m_viewArmyWindow = new heroWindow(x, y, "armywin.bin");
+    if (!m_viewArmyWindow)
+        MemError();
+    spacing = 30;
+    if (monsterInfo->stats.attributes & 1) {
+        switch (facing) {
+            case 0:
+                spacing += 43;
+                break;
+            case 1:
+                spacing += 119;
+                break;
+        }
+    } else if (facing == 1) {
+        spacing += 76;
+    } else {
+        spacing += 86;
+    }
+    if (monsterInfo->stats.attributes & 2)
+        sprintf(fileName, "%s.wlk", iconName);
+    else
+        sprintf(fileName, "%s.wip", iconName);
+    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, 16, 1);
+    if (!monsterWidget)
+        MemError();
+    m_viewArmyWindow->AddWidget(monsterWidget, -1);
+
+    strcpy(fileName, gArmyNames[monsterType]);
+    fileName[0] -= 32;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 3;
+    message.payload.widget.data.text = fileName;
+    m_viewArmyWindow->BroadcastMessage(message);
+
+    statText = (char*)malloc(550);
+    if (theGroup)
+        morale = theGroup->GetMorale(theHero, castle);
+    else
+        morale = 0;
+    sprintf(statText, "");
+
+    mod = 0;
+    sprintf(gText, "%s%d", gArmyStatText[0], monsterInfo->stats.attack);
+    strcat(statText, gText);
+    if (theHero)
+        mod += theHero->m_primaryStats[0];
+    if (mod) {
+        sprintf(gText, " (%d)", monsterInfo->stats.attack + mod);
+        strcat(statText, gText);
+    }
+
+    mod = 0;
+    sprintf(gText, "\n%s%d", gArmyStatText[1], monsterInfo->stats.defense);
+    strcat(statText, gText);
+    if (theHero)
+        mod += theHero->m_primaryStats[1];
+    if (theArmy && theArmy->m_spellEffect == 9)
+        mod += 3;
+    if (mod) {
+        sprintf(gText, " (%d)", monsterInfo->stats.defense + mod);
+        strcat(statText, gText);
+    }
+
+    if (monsterInfo->stats.attributes & 4) {
+        if (theArmy)
+            shotCount = theArmy->m_stats.shots;
+        else
+            shotCount = monsterInfo->stats.shots;
+        if (shotCount > 0) {
+            if (gpCombatManager->m_active == 1)
+                sprintf(gText, "\n%s%d", gArmyStatText[2], shotCount);
+            else
+                sprintf(gText, "\n%s%d", gArmyStatText[8], shotCount);
+            strcat(statText, gText);
+        }
+    }
+
+    sprintf(gText, "\n%s%d", gArmyStatText[3], monsterInfo->stats.damageMin);
+    strcat(statText, gText);
+    if (monsterInfo->stats.damageMin != monsterInfo->stats.damageMax) {
+        sprintf(gText, "-%d", monsterInfo->stats.damageMax);
+        strcat(statText, gText);
+    }
+    sprintf(gText, "\n%s%d", gArmyStatText[4], (unsigned char)monsterInfo->stats.hitPoints);
+    strcat(statText, gText);
+    sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfo->stats.speed]);
+    strcat(statText, gText);
+    sprintf(gText, "\n%s%s", gArmyStatText[6], gMoraleText[morale + 3]);
+    strcat(statText, gText);
+    luck = GetLuck(theHero, theArmy);
+    sprintf(gText, "\n%s%s", gArmyStatText[7], gLuckText[luck + 3]);
+    strcat(statText, gText);
+
+    message.payload.widget.id = 4;
+    message.payload.widget.data.text = statText;
+    m_viewArmyWindow->BroadcastMessage(message);
+    if (disableDismiss) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        message.payload.widget.id = 0x7803;
+        m_viewArmyWindow->BroadcastMessage(message);
+    }
+    if (quickView) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        message.payload.widget.id = 0x7800;
+        m_viewArmyWindow->BroadcastMessage(message);
+    }
+    if (numTroops < 1) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        message.payload.widget.id = 1;
+        m_viewArmyWindow->BroadcastMessage(message);
+        message.payload.widget.id = 2;
+        m_viewArmyWindow->BroadcastMessage(message);
+    } else {
+        sprintf(numText, "%d", numTroops);
+        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+        message.payload.widget.id = 2;
+        message.payload.widget.data.text = numText;
+        m_viewArmyWindow->BroadcastMessage(message);
+    }
+    gViewArmyAnimTimer = KBTickCount() + 90;
+    m_viewArmyResult = 0;
+    if (quickView) {
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->AddWindow(m_viewArmyWindow, -1, 1);
+        QuickViewWait();
+        gpWindowManager->RemoveWindow(m_viewArmyWindow);
+        gpMouseManager->ReallyShowPointer();
+    } else {
+        gpWindowManager->DoDialog(m_viewArmyWindow, ViewArmyHandler, 0);
+        if (gbDismissArmy && theGroup) {
+            for (i = 0; i < 5; i++) {
+                if (theGroup->m_creatureTypes[i] == monsterType) {
+                    theGroup->m_creatureTypes[i] = -1;
+                    theGroup->m_creatureCounts[i] = 0;
+                }
+            }
+        }
+    }
+    free(statText);
+    delete m_viewArmyWindow;
+}
+
 
 extern signed char gbDismissArmy;
 extern long gViewArmyAnimTimer;
