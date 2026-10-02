@@ -32,8 +32,21 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_COMBAT_SPELL_SLOT_COUNT = 19,
     HERO_SPELL_SLOT_COUNT = 29,
     HERO_ARTIFACT_SLOT_COUNT = 14,
-    HERO_EXPERIENCE_LEVEL_TABLE_COUNT = 12
+    HERO_EXPERIENCE_LEVEL_TABLE_COUNT = 12,
+    // Hero ids run nine per class (GetNewHeroId, RecruitHero's id / 9) over
+    // the four classes.
+    HERO_PER_CLASS_COUNT = 9,
+    HERO_CLASS_COUNT = 4
 H1_ENUM_CONST_END(HeroConstant)
+
+// hero::GetNumSpells' selector (Buka hero.h HeroSpellType): combat slots,
+// adventure slots or both.
+H1_ENUM_BEGIN(HeroSpellType)
+    SPELL_TYPE_COMBAT = 0,
+    SPELL_TYPE_ADVENTURE = 1,
+    SPELL_TYPE_CATEGORY_COUNT = 2,
+    SPELL_TYPE_ALL = SPELL_TYPE_CATEGORY_COUNT
+H1_ENUM_END(HeroSpellType)
 
 // m_primaryStats indices: the order of retail gPrimarySkillNames
 // (0x00493210) and their help texts; army::Init adds 0 and 1 to the
@@ -111,7 +124,7 @@ public:
     short CalcMobility(void);
     signed char HasSpell(H1_ENUM_PARAM(SpellType, signed char));
     int GetNthSpell(int, int);
-    short GetNumSpells(signed char);
+    short GetNumSpells(H1_ENUM_PARAM(HeroSpellType, signed char));
     void UseSpell(H1_ENUM_PARAM(SpellType, signed char));
     int AddSpell(H1_ENUM_PARAM(SpellType, signed char), signed char, int);
     void HeroScreenUpdate(void);

@@ -182,7 +182,7 @@ signed char hero::HasSpell(signed char spell) {
 }
 
 VA(0x0046bdb0, 0xf0)
-short hero::GetNumSpells(signed char type) {
+short hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, signed char) type) {
     short combat = 0;
     short adventure = 0;
     short i;
@@ -196,11 +196,11 @@ short hero::GetNumSpells(signed char type) {
             adventure++;
     }
     switch (type) {
-    case 0:
+    case SPELL_TYPE_COMBAT:
         return combat;
-    case 1:
+    case SPELL_TYPE_ADVENTURE:
         return adventure;
-    case 2:
+    case SPELL_TYPE_ALL:
         return adventure + combat;
     }
     return 0;
