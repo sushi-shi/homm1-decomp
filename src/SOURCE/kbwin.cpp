@@ -579,6 +579,8 @@ void SetGameDefaults(void)
     }
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0045cba1, 0x20d)
 void ReadPrefsFromFile(void)
 {
@@ -686,6 +688,8 @@ void ReadPrefs(void)
     ReadPrefsFromRegistry();
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0045d2e6, 0x8a)
 void WritePrefsToFile(void)
 {

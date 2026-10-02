@@ -923,6 +923,8 @@ void townManager::ResetStrips(void)
 }
 
 // Buka TOWNMGR.cpp:1993-2003.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0040b2c8, 0x95)
 void townManager::Toggle(signed char building)
 {

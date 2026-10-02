@@ -37,6 +37,8 @@ hero::hero(void) {
 }
 
 // Buka 2.1 hero::GetArmyStrengths: an empty body in both games.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046baf8, 0x18)
 void hero::GetArmyStrengths(unsigned long int* const) {}
 

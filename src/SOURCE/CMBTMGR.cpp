@@ -588,6 +588,8 @@ void combatManager::FreeArmies(void)
 
 // HoMM1 retail 0x0044d34c: no callers and an empty body; HoMM2's combat log
 // for unshown battles is the nearest one-argument fit.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044d34c, 0x18)
 void combatManager::NoShowCombatLog(char*)
 {
@@ -1011,6 +1013,8 @@ void combatManager::CatAttack(signed char side)
 
 // HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
 // the field before a full redraw.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044e7f2, 0x4e)
 void combatManager::RegenerateField(void)
 {

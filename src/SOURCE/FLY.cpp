@@ -155,6 +155,8 @@ short army::ValidFlight(short destination, signed char useDestination)
 }
 
 // Buka FLY.cpp FlyTo(void).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044acaf, 0x27)
 short army::FlyTo(void)
 {

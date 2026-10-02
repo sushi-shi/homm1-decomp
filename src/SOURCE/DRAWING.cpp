@@ -25,6 +25,8 @@ void combatManager::UpdateGrid(short hex, int) {
         m_gridUpdateRow = row;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00470a4f, 0x5a)
 void combatManager::UpdateGridForMove(short hex, signed char direction, int attributes) {
     if (direction == 0 || direction == 5)

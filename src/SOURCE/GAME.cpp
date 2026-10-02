@@ -4702,6 +4702,8 @@ armyGroup::armyGroup(void) {
     memset(m_creatureCounts, 0, sizeof(m_creatureCounts));
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044795c, 0x18)
 void armyGroup::View(int) {}
 

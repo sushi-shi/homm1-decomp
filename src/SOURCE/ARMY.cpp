@@ -1427,6 +1427,8 @@ void army::DoHydraAttack(void) {
     gpCombatManager->DrawFrame(1);
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00468fc6, 0x2d)
 void army::DirDoAttack(short direction) {
     m_attackDirection = direction;
@@ -1695,6 +1697,8 @@ secondStrike:
         gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046a080, 0x49)
 void army::ResetPath(void) {
     short i;
@@ -1703,6 +1707,8 @@ void army::ResetPath(void) {
         gpCombatManager->m_hexCells[i].m_pathFlag = 0;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046a0c9, 0x27)
 short army::WalkTo(void) {
     return WalkTo(m_moveTargetHex);

@@ -248,6 +248,8 @@ short GetAdjacentCellIndexNoArmy(short hex, short direction)
 }
 
 // Buka PATH.cpp ValidRange.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00418aee, 0x4c2)
 short army::ValidRange(short targetHex)
 {

@@ -17,6 +17,8 @@ short TimeProcessor(void);
 
 // Expected PIT ticks for 800 divides at the family's reference clock, scaled
 // by the measured ticks to MHz.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00472030, 0x1c9)
 int CPUSpeed(unsigned char cpuType)
 {

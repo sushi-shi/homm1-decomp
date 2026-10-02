@@ -12,6 +12,8 @@
 #include <string.h>
 
 // Buka 2.1 swapManager::swapManager(void).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046ecb0, 0x75)
 swapManager::swapManager(void) {
     m_window = 0;

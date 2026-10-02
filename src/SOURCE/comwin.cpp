@@ -202,12 +202,16 @@ short com_snd(short port, unsigned short, unsigned short length, void *data, int
     return 1;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004732ed, 0x13)
 short __cdecl com_sess(int, int, ...)
 {
     return 0;
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00473300, 0x66)
 unsigned char com_stat(short port, unsigned short)
 {

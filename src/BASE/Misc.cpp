@@ -144,6 +144,8 @@ void AiPrint(char* text) {
     gpPhilAI->ShowDebugText(text);
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00419d51, 0x4e)
 void AbsAiPrint(char* text) {
     int saved;
