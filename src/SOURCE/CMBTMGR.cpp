@@ -716,8 +716,8 @@ signed char combatManager::GetNextArmy(int checkMorale)
     signed char iSpeed;
     int sideIter;
     short temp;
-    signed char stackSide;
     signed char stackCounter;
+    signed char stackSide;
     int bSkip;
 
     stackSide = m_currentSide;
@@ -781,9 +781,9 @@ signed char combatManager::IsWinner(signed char side)
 VA(0x0044da9d, 0xd55)
 void combatManager::CatAttack(signed char side)
 {
+    short dx;
     icon* boulder;
     short summitX;
-    short dx;
     short x;
     signed char col;
     short i;
@@ -1069,8 +1069,8 @@ void combatManager::KeepAttack(void)
     short height;
     bitmap* behind;
     int i;
-    int power;
     int bestWorth;
+    int power;
     short startX;
     float xRun;
     short maxY;
