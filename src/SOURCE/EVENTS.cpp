@@ -20,8 +20,6 @@
 
 // EVENTS assertion records (file literals and line base), as in MOUSEMGR.
 extern short gEventsAssertLine;
-extern char gEventsAssertFile1[];
-extern char gEventsAssertFile2[];
 extern char* gEventText[];
 extern signed char gbEventMusicPlaying;
 extern char* gArtifactNames[];
@@ -814,8 +812,8 @@ int advManager::GiveExperience(class hero* eventHero, int experience, signed cha
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
     eventHero->m_level = prevLevel;
     eventHero->m_experience += experience;
-    ProcessAssert(experience >= 0, gEventsAssertFile1, gEventsAssertLine + 8);
-    ProcessAssert(eventHero->m_experience >= 0, gEventsAssertFile2, gEventsAssertLine + 9);
+    ProcessAssert(experience >= 0, "D:\\Heroes\\Source\\EVENTS.CPP", gEventsAssertLine + 8);
+    ProcessAssert(eventHero->m_experience >= 0, "D:\\Heroes\\Source\\EVENTS.CPP", gEventsAssertLine + 9);
     newLevel = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)
         eventHero->CheckLevel();
@@ -2019,3 +2017,12 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
         }
     }
 }
+
+// EVENTS owns retail .data 0x004a0504-0x004a07bb and .bss 0x004ca904. Retail
+// emits gEventsAssertLine (source-line base 1110) among GiveExperience's literals.
+DATA(0x004a0504)
+int giEventMusicVolume = -1;
+DATA(0x004a06a0)
+short gEventsAssertLine = 1110;
+DATA(0x004ca904)
+signed char gbEventMusicPlaying;
