@@ -43,7 +43,7 @@ border::border(
 
 VA(0x00479850, 0xc3)
 void border::Read(void) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();

@@ -36,7 +36,7 @@ textEntryWidget::~textEntryWidget(void) {
 
 VA(0x0047e170, 0x1e8)
 void textEntryWidget::Read(int type) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();

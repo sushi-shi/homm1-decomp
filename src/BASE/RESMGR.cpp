@@ -261,7 +261,7 @@ VA(0x00475fd0, 0x8e)
 short resourceManager::Open(short priority)
 {
     if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
-        return 3;
+        return RESOURCE_MANAGER_LOAD_ERROR;
     m_messageMask = BASE_MANAGER_ACCEPT_RESOURCE;
     m_priority = priority;
     m_active = 1;
@@ -348,7 +348,7 @@ void resourceManager::PointToFile(short fileId)
             m_lastFileName);
         ShutDown(gText);
     }
-    _lseek(m_aggregateFd, m_aggregateDir[entry].offset, 0);
+    _lseek(m_aggregateFd, m_aggregateDir[entry].offset, SEEK_SET);
 }
 
 // Single-aggregate variant of the Buka 2.1 directory lookup.
@@ -385,7 +385,7 @@ void resourceManager::SavePosition(void)
 VA(0x004764a0, 0x2e)
 void resourceManager::RestorePosition(void)
 {
-    _lseek(m_aggregateFd, m_savedPosition, 0);
+    _lseek(m_aggregateFd, m_savedPosition, SEEK_SET);
 }
 
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
@@ -443,7 +443,7 @@ short resourceManager::MakeId(char *name)
 VA(0x00476650, 0x26)
 void resourceManager::Read13(signed char *destination)
 {
-    ReadBlock(destination, 13);
+    ReadBlock(destination, RESOURCE_NAME_CAPACITY);
 }
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch

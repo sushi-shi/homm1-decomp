@@ -16,7 +16,7 @@ VA(0x0047b2c0, 0xa1)
 font::font(short id)
     : resource(RESOURCE_CATEGORY_FONT, id, 1, NULL)
 {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     gpResourceManager->PointToFile(id);
     m_height = gpResourceManager->ReadWord();
     m_headerWord = gpResourceManager->ReadWord();

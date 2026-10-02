@@ -45,7 +45,7 @@ iconWidget::iconWidget(
 
 VA(0x0047aad0, 0xce)
 void iconWidget::Read(void) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();

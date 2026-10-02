@@ -44,7 +44,7 @@ textWidget::textWidget(
 
 VA(0x0047aed0, 0xeb)
 void textWidget::Read(void) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
