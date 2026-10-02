@@ -400,7 +400,7 @@ short advManager::Open(short id) {
         gpGame->ShowComputerScreen();
     gpMouseManager->ReallyShowPointer();
     KBChangeMenu(hmnuAdv);
-    gpWindowManager->FadeScreen(0, 8, gPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
     giBottomViewOverride = 0;
     gConfig.soundVolume = oldVolume;
     gpSoundManager->AdjustSoundVolumes();
@@ -601,7 +601,7 @@ class mapCell* advManager::DoAdvCommand(void) {
         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
         RedrawAdvScreen(1);
-        gpWindowManager->FadeScreen(0, 8, NULL);
+        gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
         break;
     case 4:
         SetHeroContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata, 0);
@@ -1283,7 +1283,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
         case ADVENTURE_CONTROL_OVERVIEW:
             gpGame->Overview();
             RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(0, 8, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
             break;
     }
     if (message->id >= 2000 && message->id <= 2200) {
@@ -4955,7 +4955,7 @@ void advManager::TeleportTo(int x, int y, int) {
     oldCell = GetCell(m_mapOriginX + 7, m_mapOriginY + 7);
     if (mapHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
         occupiedTown = gpGame->GetTown(mapHero->m_occupiedTown);
-        occupiedTown->m_occupyingHeroId = -1;
+        occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (oldCell->m_flags & 0x40)
         oldCell->m_flags -= 0x40;
@@ -5075,7 +5075,7 @@ void advManager::TownGate(void) {
     }
     if (bestTown == -1)
         NormalDialog("No available town.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-    if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId != -1) {
+    if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         return;
     }

@@ -204,7 +204,7 @@ void philAI::DoAllHeroInteractions(void) {
 
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
         town* pTown = gpGame->GetTown(gpCurPlayer->m_townIds[i]);
-        if (pTown->m_occupyingHeroId != -1)
+        if (pTown->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
             HeroInteractionAtTown(gpGame->GetHero(pTown->m_occupyingHeroId), pTown, 0, &iDummy);
     }
 }
@@ -1389,7 +1389,7 @@ void philAI::ValueOfBuyingCreature(
         purchaseCount * gMonsterDatabase[creature].fightValue
         * gpCurPlayer->m_aiData.m_upgradeValueWeight
     );
-    if (townPointer->m_occupyingHeroId != -1) {
+    if (townPointer->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         occupant = gpGame->GetHero(townPointer->m_occupyingHeroId);
         creatRV = static_cast<int>(creatRV * 1.1);
         if (occupant->m_heroClass == creature / 6)
@@ -2701,7 +2701,7 @@ void philAI::BuildBuilding(town* townPointer, short building) {
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
             townPointer->m_buildState++;
-        if (townPointer->m_occupyingHeroId != -1)
+        if (townPointer->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
             townPointer->GiveSpells();
     }
     townPointer->m_buildings |= 1 << building;
@@ -2796,7 +2796,7 @@ int philAI::CanBuyBHC(BHC& purchase) {
         break;
     case 1:
         if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
-            && purchase.pTown->m_occupyingHeroId == -1 && bHeroBuiltThisTurn == 0)
+            && purchase.pTown->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE && bHeroBuiltThisTurn == 0)
             return 1;
         break;
     case 2:
@@ -2999,7 +2999,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
                     attackerLoss
                 );
             } else {
-                defendingHero = townPointer->m_occupyingHeroId == -1
+                defendingHero = townPointer->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
                                     ? NULL
                                     : gpGame->GetHero(townPointer->m_occupyingHeroId);
                 outcome = gpAdvManager->DoCombat(
@@ -3264,7 +3264,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     case MAP_OBJECT_TOWN:
         pEventTown = gpGame->GetTown(pEventCell->m_objectMetadata);
         if (gpGame->m_townOwners[pEventCell->m_objectMetadata] == pHero->m_owner) {
-            if (pEventTown->m_occupyingHeroId != -1) {
+            if (pEventTown->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
                 iEventRV = 0;
             } else {
                 iEventRV = 0;
@@ -3279,7 +3279,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             iTownValue = ValueOfTown(pEventTown);
             if (immediate && giDebugLevel == 5 && x == 15)
                 giDebugLevel = 9;
-            if (gpGame->GetTown(pEventCell->m_objectMetadata)->m_occupyingHeroId != -1)
+            if (gpGame->GetTown(pEventCell->m_objectMetadata)->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
                 ProbableOutcomeOfBattle(
                     &pHero->m_army, pHero, &gpGame->m_heroRecs[pEventTown->OccupyingHero()].m_army,
                     &gpGame->m_heroRecs[pEventTown->OccupyingHero()], &pEventTown->m_army, 1,

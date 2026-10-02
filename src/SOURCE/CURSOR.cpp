@@ -398,7 +398,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         town *occupiedTown;
 
         occupiedTown = gpGame->GetTown(movingHero->m_occupiedTown);
-        occupiedTown->m_occupyingHeroId = -1;
+        occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_routeShown)
         *(m_visibilityMap + (movingHero->m_x + xInc) + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;

@@ -278,7 +278,7 @@ int oldmain(void) {
                 if (initialMainScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
-                    gpWindowManager->FadeScreen(0, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 initialMainScreen = 0;
             }
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -361,10 +361,10 @@ int oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_CREDITS:
-                gpWindowManager->FadeScreen(1, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 done = 0;
                 gpInputManager->Flush();
                 while (!done) {
@@ -376,10 +376,10 @@ int oldmain(void) {
                             done = 1;
                     }
                 }
-                gpWindowManager->FadeScreen(1, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 goto mainMenu;
             case MAIN_MENU_QUIT:
                 leave = 1;
@@ -427,10 +427,10 @@ int oldmain(void) {
         playScenario:
             if (gpGame->m_campaignType > 0) {
                 if (!backdropLoaded) {
-                    gpWindowManager->FadeScreen(1, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
                     gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                     gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                    gpWindowManager->FadeScreen(0, 8, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                     backdropLoaded = 1;
                 }
                 gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 0, 0);
@@ -438,7 +438,7 @@ int oldmain(void) {
             gbGameInitialized = 1;
             backdropLoaded = 0;
             gpSoundManager->StopAllSamples();
-            gpWindowManager->FadeScreen(1, 8, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
             gMapX = 0;
             gMapY = 0;
             if (gpExec->AddManager(gpAdvManager, -1))
@@ -449,7 +449,7 @@ int oldmain(void) {
             gMapX = gpAdvManager->m_mapOriginX;
             gMapY = gpAdvManager->m_mapOriginY;
             gpExec->RemoveManager(gpAdvManager);
-            gpWindowManager->FadeScreen(1, 8, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, gPalette);
         }
 
         if (gbGameOver) {
@@ -479,7 +479,7 @@ int oldmain(void) {
                 }
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 gpWindowManager->m_updateFlags = 1;
                 backdropLoaded = 1;
             } else {
@@ -500,7 +500,7 @@ int oldmain(void) {
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
                 backdropLoaded = 1;
             }
             if (gpGame->m_campaignType > 0) {
@@ -682,7 +682,7 @@ short RecruitHeroHandler(tag_message& message) {
                         gpTownManager->RedrawTownScreen();
                         gpTownManager->m_heroWindow0->DrawWindow();
                         gpTownManager->m_heroWindow1->DrawWindow();
-                        gpWindowManager->FadeScreen(0, 8, NULL);
+                        gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
                         break;
                     default:
                         break;
@@ -2574,7 +2574,7 @@ void ShowCongrats(void) {
     }
     gpWindowManager->AddWindow(win, -1, 1);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->FadeScreen(0, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
     CongratsWait();
     gpWindowManager->RemoveWindow(win);
     delete win;
