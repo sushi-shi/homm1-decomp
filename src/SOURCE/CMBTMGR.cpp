@@ -14,7 +14,29 @@ int army::ValidFlight(int, int) { return 0; }
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.491936;margin=0.502339;shape=0.296;size=0.801;calls=1.000;alternate=pol20:void combatManager::CombineGroups(class armyGroup *, class armyGroup *)@0x0008ff0a
 VA(0x0044b5f8, 0x138)
-void combatManager::CombineGroups(class armyGroup *, class armyGroup *) {}
+void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
+    short i;
+    short j;
+
+    if (!from || !to)
+        return;
+    for (i = 0; i < 5; i++) {
+        if (to->IsMember(from->m_creatureTypes[i])) {
+            to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], -1);
+            from->Dismiss(i);
+        }
+    }
+    for (i = 0; i < 5; i++) {
+        if (from->m_creatureTypes[i] != -1) {
+            for (j = 0; j < 5; j++) {
+                if (to->m_creatureTypes[j] == -1) {
+                    to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], j);
+                    from->Dismiss(i);
+                }
+            }
+        }
+    }
+}
 
 // donor PoL RVA 0x00090032; preferred Buka symbol ?SetupCombat@combatManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHH@Z
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
