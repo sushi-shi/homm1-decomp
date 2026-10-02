@@ -258,7 +258,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 else
                     numDefenders = DRAGON_CITY_DRAGON_COUNT;
                 if (CombatMonsterEvent(pHero, CREATURE_DRAGON, numDefenders, cell, x, y, 0, x, y)
-                    == 1) {
+                    == COMBAT_RESULT_ATTACKER) {
                     gpGame->ClaimMine(MINE_SLOT_DRAGON_CITY, giCurPlayer);
                     EventWindow(
                         EVENT_TEXT_DRAGON_CITY_CONQUERED,
@@ -891,7 +891,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                             x,
                             y
                         )
-                        == 1) {
+                        == COMBAT_RESULT_ATTACKER) {
                         sprintf(
                             gText,
                             gEventText[EVENT_TEXT_ARTIFACT_RECOVERED],
@@ -1559,7 +1559,7 @@ advManager::GhostEvent(class hero* eventHero, class mapCell* cell, int textId, i
                     x,
                     y
                 )
-                == 1) {
+                == COMBAT_RESULT_ATTACKER) {
                 sprintf(gText, "%s", gEventText[textId]);
                 EventWindow(
                     EVENT_TEXT_CUSTOM,
@@ -1588,7 +1588,7 @@ advManager::GhostEvent(class hero* eventHero, class mapCell* cell, int textId, i
                     x,
                     y
                 )
-                == 1) {
+                == COMBAT_RESULT_ATTACKER) {
                 sprintf(gText, "%s", gEventText[textId]);
                 EventWindow(
                     EVENT_TEXT_CUSTOM,
@@ -1617,7 +1617,7 @@ advManager::GhostEvent(class hero* eventHero, class mapCell* cell, int textId, i
                     x,
                     y
                 )
-                == 1) {
+                == COMBAT_RESULT_ATTACKER) {
                 sprintf(gText, "%s", gEventText[textId]);
                 EventWindow(
                     EVENT_TEXT_CUSTOM,
@@ -1636,7 +1636,7 @@ advManager::GhostEvent(class hero* eventHero, class mapCell* cell, int textId, i
             break;
         default:
             if (CombatMonsterEvent(eventHero, CREATURE_GHOST, GHOST_HUGE_COUNT, cell, x, y, 0, x, y)
-                == 1) {
+                == COMBAT_RESULT_ATTACKER) {
                 artifact = GiveRandomArtifact(eventHero);
                 sprintf(gText, "%s", gEventText[textId]);
                 if (artifact != ARTIFACT_NONE)
