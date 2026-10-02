@@ -491,31 +491,31 @@ VA(0x004268d5, 0x619)
 class mapCell* advManager::DoAdvCommand(void) {
     signed char moveDone;
     town* viewTown;
-    signed char bMoveStopped0;
-    hero* selectedHero15;
+    signed char userStop;
+    hero* pHero;
     int oldMapValid;
-    tag_message messageValue8;
-    signed char newHover3;
-    mapCell* eventCellState16;
+    tag_message evt;
+    signed char hover;
+    mapCell* stopCell;
     int moveChanged;
     short pathIndex;
 
-    eventCellState16 = 0;
-    selectedHero15 = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    bMoveStopped0 = 0;
-    newHover3 = 0;
+    stopCell = 0;
+    pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    userStop = 0;
+    hover = 0;
     switch (m_selectedCell) {
     case 1:
-        selectedHero15->m_destinationX = m_commandTargetX;
-        selectedHero15->m_destinationY = m_commandTargetY;
+        pHero->m_destinationX = m_commandTargetX;
+        pHero->m_destinationY = m_commandTargetY;
         goto continue_route;
     case 7:
     continue_route:
         gpSearchArray->BuildPath(
-            selectedHero15->m_x,
-            selectedHero15->m_y,
-            selectedHero15->m_destinationX,
-            selectedHero15->m_destinationY,
+            pHero->m_x,
+            pHero->m_y,
+            pHero->m_destinationX,
+            pHero->m_destinationY,
             999
         );
         if (gpSearchArray->m_pathLength > 0) {
@@ -528,7 +528,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             gpMouseManager->ReallyHidePointer();
             gpInputManager->Flush();
             for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
-                eventCellState16 = MoveHero(
+                stopCell = MoveHero(
                     gpSearchArray->m_directions[pathIndex],
                     pathIndex == 0,
                     &TrigX,
@@ -538,56 +538,56 @@ class mapCell* advManager::DoAdvCommand(void) {
                     &moveDone
                 );
                 UpdateHeroLocator(-1, 1, 1);
-                if (eventCellState16)
+                if (stopCell)
                     break;
                 if (moveChanged || moveDone)
                     goto movement_done;
-                messageValue8 = gpInputManager->GetEvent();
-                while (messageValue8.type) {
-                    if (messageValue8.type == 1 || messageValue8.type == 8 || messageValue8.type == 0x20
-                        || messageValue8.type == 0x200) {
-                        bMoveStopped0 = 1;
+                evt = gpInputManager->GetEvent();
+                while (evt.type) {
+                    if (evt.type == 1 || evt.type == 8 || evt.type == 0x20
+                        || evt.type == 0x200) {
+                        userStop = 1;
                         StopCursor(1);
                         goto movement_done;
                     }
                     Process1WindowsMessage();
-                    messageValue8 = gpInputManager->GetEvent();
+                    evt = gpInputManager->GetEvent();
                 }
             }
         movement_done:
-            if ((pathIndex <= 0 && selectedHero15->m_x == selectedHero15->m_destinationX
-                 && selectedHero15->m_y == selectedHero15->m_destinationY)
-                || (bMoveStopped0 && !gConfig.showRoute) || eventCellState16)
+            if ((pathIndex <= 0 && pHero->m_x == pHero->m_destinationX
+                 && pHero->m_y == pHero->m_destinationY)
+                || (userStop && !gConfig.showRoute) || stopCell)
                 HideRoute(1, 1, 1);
             else if (m_selectedCell == 7 || gConfig.showRoute)
                 ShowRoute(0, 1, 1);
             gpMouseManager->ReallyShowPointer();
             UpdBottomView(1, 1, 1);
-            if (eventCellState16) {
+            if (stopCell) {
                 StopCursor(1);
-                DoEvent(eventCellState16, TrigX, TrigY);
-                eventCellState16 = 0;
+                DoEvent(stopCell, TrigX, TrigY);
+                stopCell = 0;
             }
             Reseed(0, 0);
-            newHover3 = 1;
+            hover = 1;
             CheckDimHero();
         }
         break;
     case 6:
         DemobilizeCurrHero();
         gpMouseManager->SetPointer(0);
-        viewTown = gpGame->GetTown(selectedHero15->m_occupiedTown);
+        viewTown = gpGame->GetTown(pHero->m_occupiedTown);
         viewTown->View();
-        eventCellState16 = 0;
+        stopCell = 0;
         break;
     case 3:
         DemobilizeCurrHero();
         gpMouseManager->SetPointer(0);
-        eventCellState16 = GetCell(
+        stopCell = GetCell(
             gpGame->GetTown(gpCurPlayer->m_currentTown)->m_x, gpGame->GetTown(gpCurPlayer->m_currentTown)->m_y
         );
         gpGame->GetTown(gpCurPlayer->m_currentTown)->View();
-        eventCellState16 = 0;
+        stopCell = 0;
         break;
     case 2:
         gpMouseManager->SetPointer(0);
@@ -606,9 +606,9 @@ class mapCell* advManager::DoAdvCommand(void) {
     }
     m_selectedCell = -1;
     m_lastHoverCell = m_hoverCellY = -1;
-    if (newHover3)
+    if (hover)
         ForceNewHover();
-    return eventCellState16;
+    return stopCell;
 }
 
 // donor PoL RVA 0x00057d6c; preferred Buka symbol ?Main@advManager@@UAEHAAUtag_message@@@Z
@@ -4212,20 +4212,20 @@ void UpdateCPanel(signed char initialDraw) {
 
 VA(0x00432bb7, 0x232)
 signed char SaveGame(void) {
-    short result6;
-    fileRequester* requester0;
+    short iResult;
+    fileRequester* fileReq;
     char searchMask[16];
     signed char success;
     int humans;
-    int i0;
+    int plIdx;
     char extension[8];
 
     success = 0;
     humans = 0;
     gpAdvManager->DisableButtons();
     gpMouseManager->SetPointer("advmice.mse", 0);
-    for (i0 = 0; i0 < 4; i0++)
-        if (!gpGame->m_playerDead[i0] && gbHumanPlayer[i0])
+    for (plIdx = 0; plIdx < 4; plIdx++)
+        if (!gpGame->m_playerDead[plIdx] && gbHumanPlayer[plIdx])
             humans++;
     if (giCampaignChoice > 0) {
         sprintf(extension, ".CGM");
@@ -4234,18 +4234,18 @@ signed char SaveGame(void) {
         sprintf(extension, ".GM%d", humans);
         sprintf(searchMask, "*.GM*");
     }
-    requester0 = new fileRequester(0xa0, 0x28, 1, searchMask, ".\\GAMES\\", extension);
-    if (!requester0)
+    fileReq = new fileRequester(0xa0, 0x28, 1, searchMask, ".\\GAMES\\", extension);
+    if (!fileReq)
         MemError();
-    result6 = gpExec->DoDialog(requester0);
-    if (result6 == 0x7802) {
+    iResult = gpExec->DoDialog(fileReq);
+    if (iResult == 0x7802) {
         success = 1;
         bFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
             NormalDialog("Game saved successfully.", 1, 0xb1, -1, -1, 0, -1, 0, -1);
     }
-    delete requester0;
+    delete fileReq;
     gpAdvManager->EnableButtons();
     return success;
 }
