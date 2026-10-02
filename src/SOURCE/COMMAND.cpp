@@ -157,7 +157,7 @@ void combatManager::SetCombatDirections(int targetHex) {
     targetSide = curArmy->m_targetSide;
     targetIndex = curArmy->m_targetIndex;
     curArmy->m_targetSide = COMBAT_SIDE_NONE;
-    curArmy->m_targetIndex = -1;
+    curArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
     target = &m_armies[targetSide][targetIndex];
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (dir == COMBAT_DIRECTION_WIDE_WEST || dir == COMBAT_DIRECTION_WIDE_EAST) {
@@ -321,12 +321,12 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
         return;
     if (m_validDirectionCount <= 1 && m_mouseDirection >= 0)
         return;
-    distX = mouseX - (targetHex % COMBAT_GRID_COLUMNS - 1) * 78;
+    distX = mouseX - (targetHex % COMBAT_GRID_COLUMNS - 1) * COMBAT_HEX_WIDTH;
     if ((targetHex / COMBAT_GRID_COLUMNS) & 1)
         distX -= 0x42;
     else
         distX -= 0x1b;
-    distY = mouseY - 0x3c - targetHex / COMBAT_GRID_COLUMNS * 80;
+    distY = mouseY - COMBAT_FIELD_TOP - targetHex / COMBAT_GRID_COLUMNS * COMBAT_HEX_HEIGHT;
     distX -= 0x27;
     distY -= 0x28;
     index = 0;
@@ -687,7 +687,7 @@ signed char combatManager::GetCommand(short hex) {
             targetIndex = m_hexCells[hex].m_occupantIndex;
             currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
             currentArmy->m_targetSide = COMBAT_SIDE_NONE;
-            currentArmy->m_targetIndex = -1;
+            currentArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
             if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
             else if (enemySide != COMBAT_SIDE_NONE) {
@@ -707,7 +707,7 @@ signed char combatManager::GetCommand(short hex) {
                                 return COMBAT_MESSAGE_COMMAND_ATTACK;
                             else {
                                 currentArmy->m_targetSide = COMBAT_SIDE_NONE;
-                                currentArmy->m_targetIndex = -1;
+                                currentArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
                                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
                             }
                         }

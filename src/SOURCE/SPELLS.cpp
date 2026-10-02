@@ -324,13 +324,13 @@ void combatManager::CastSpell(
             targetHex = teleportDest;
             teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             m_hexCells[teleportArmy->m_hex].m_occupantSide = COMBAT_SIDE_NONE;
-            m_hexCells[teleportArmy->m_hex].m_occupantIndex = -1;
+            m_hexCells[teleportArmy->m_hex].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 1) {
                 m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = COMBAT_SIDE_NONE;
-                m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = -1;
+                m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             } else if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 0) {
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = COMBAT_SIDE_NONE;
-                m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = -1;
+                m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             }
             teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
@@ -467,7 +467,7 @@ void combatManager::CastSpell(
             targetArmy->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
             targetArmy->m_spellEffect = SPELL_PROTECTION;
             targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            targetArmy->m_stats.defense += 3;
+            targetArmy->m_stats.defense += ARMY_PROTECTION_DEFENSE_BONUS;
             targetArmy->Stand(1);
             break;
         case SPELL_CURSE:

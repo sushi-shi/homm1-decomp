@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	7805
+#floor	6732
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -135,11 +135,8 @@ src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*20	*	*	the attack/defence diff
 src/SOURCE/ARMY.cpp	army::DrawToBuffer	*	arithmetic	*	the quantity box / spell icon pixel offsets beside the sprite
 src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	arithmetic	*	the hex grid's pixel geometry (field origin, row height 80, column step 78, odd-row offset 27)
 src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	comparison-or-bound	*	the hex grid's left pixel edge
-src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	80	arithmetic	*	the hex row height in pixels
-src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	139	arithmetic	*	the first hex row's y in pixels
 src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	27	arithmetic	*	the odd-row x offset in pixels
 src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	-12	arithmetic	*	the even-row x offset in pixels
-src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	78	arithmetic	*	the hex column step in pixels
 src/SOURCE/COMMAND.cpp	combatManager::CheckSetMouseDirection	*	arithmetic	*	the hex grid's pixel geometry and the 24-sector pointer index
 src/SOURCE/COMMAND.cpp	combatManager::CheckSetMouseDirection	*	comparison-or-bound	operator [<>] ratio	the tan() thresholds of the pointer's direction sectors
 src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	*	store	store to gi*Extent*	the catapult animation's redraw extents in pixels
@@ -197,3 +194,179 @@ src/*	fileRequester::Update	*	store	store to m_[xy]	a screen position in pixels
 *	*	*	store	store to resWidth	a dialog or bottom-panel column width in pixels
 *	*	*	store	store to rowY[]	a dialog or bottom-panel row y in pixels
 *	*	*	store	store to colX[]	a dialog or bottom-panel column x in pixels
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
+src/SOURCE/AI.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
+src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
+src/SOURCE/HERO.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
+src/SOURCE/SEARCH.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
+src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] return	a zero/one int result: false/true (VC4 has no bool) or an empty path/count
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
+src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
+src/SOURCE/FLY.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
+src/SOURCE/SEARCH.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
+src/SOURCE/FINDPATH.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
+src/SOURCE/HEXCELL.cpp	*	1	trivial-function-literal	1 bitwise	the single bit (1 << n) of a bit mask or set
+src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 initializer	a bit mask's first bit or a run counter starting at one
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store gb*	a global int flag (gb prefix, BOOL-like; windows.h is not in scope) set or cleared
+src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] store gb*	a global int flag (gb prefix, BOOL-like; windows.h is not in scope) set or cleared
+src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store gb*	a global int flag (gb prefix, BOOL-like; windows.h is not in scope) set or cleared
+src/SOURCE/HERO.cpp	*	[01]	trivial-function-literal	[01] store gb*	a global int flag (gb prefix, BOOL-like; windows.h is not in scope) set or cleared
+src/SOURCE/SEARCH.cpp	*	[01]	trivial-function-literal	[01] store gi[A-Z]*[a-z]Seeded	SeedPosition's seeded flag set or cleared
+src/SOURCE/SEARCH.cpp	*	[01]	trivial-function-literal	[01] store giSeedingValid	SeedPosition's seeding-valid flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_computeExtent	combatManager's limited-redraw flag (DrawFrame computeExtent)
+src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store m_computeExtent	combatManager's limited-redraw flag (DrawFrame computeExtent)
+src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store m_redrawExtent	combatManager's redraw-extent flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_limitCreature	combatManager's limit-creature highlight flag
+src/SOURCE/AI.cpp	*	[01]	trivial-function-literal	[01] store m_limitCreature	combatManager's limit-creature highlight flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_backgroundDrawn	combatManager's clean-background flag
+src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] store m_backgroundDrawn	combatManager's clean-background flag
+src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store m_backgroundDrawn	combatManager's clean-background flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_extendLimitDown	combatManager's extend-redraw-down flag
+src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store m_extendLimitDown	combatManager's extend-redraw-down flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_drawShadow	army's draw-shadow flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_hitByCreature	army's hit-this-attack flag
+src/SOURCE/HERO.cpp	*	[01]	trivial-function-literal	[01] store m_cursorActive	advManager's hero-cursor flag
+src/SOURCE/HERO.cpp	*	[01]	trivial-function-literal	[01] store m_heroContextLocked	advManager's hero-context flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_limitCreatureCount[]	a stack marked (1) or cleared (0) for the limited redraw
+src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store m_limitCreatureCount[]	a stack marked (1) or cleared (0) for the limited redraw
+src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store visited	a search node's visited bit
+src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store rvFlag2	a search node's beyond-mobility bit
+src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store occupied[]	TestPossibleDirections' occupied-direction flag
+src/SOURCE/SEARCH.cpp	*	[01]	trivial-function-literal	[01] store s_[a-z]*[A-Z]*	SeedPosition's static flags (target, adjacent monster, direction blocked)
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store didCast	a local BOOL-like flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store flag	a local BOOL-like flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store reverse	a local BOOL-like flag
+src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] store backwards	a local BOOL-like flag
+src/SOURCE/HERO.cpp	*	[01]	trivial-function-literal	[01] store finished	a local BOOL-like flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store found	a local BOOL-like flag
+src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store drawn	a local BOOL-like flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store outlined	a local BOOL-like flag
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store inCastle	a local BOOL-like flag
+src/SOURCE/AI.cpp	*	[01]	trivial-function-literal	[01] store canOutshoot	a local BOOL-like flag
+src/SOURCE/AI.cpp	*	[01]	trivial-function-literal	[01] store stronger	a local BOOL-like flag
+src/SOURCE/HERO.cpp	*	[01]	trivial-function-literal	[01] store quickView	a local BOOL-like flag
+src/SOURCE/DRAWING.cpp	*	1	trivial-function-literal	1 equality m_castleSide[]	combatManager::m_castleSide's set flag
+src/SOURCE/HEXCELL.cpp	*	1	trivial-function-literal	1 equality m_castleSide[]	combatManager::m_castleSide's set flag
+src/SOURCE/HEXCELL.cpp	*	1	trivial-function-literal	1 equality m_wallSurvives	CatAttack's wall-survives flag
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 equality m_limitCreature	the limit-creature highlight flag
+src/SOURCE/DRAWING.cpp	*	1	trivial-function-literal	1 equality updateScreen	DrawFrame's update-screen flag
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 equality standAfter	army::Walk's stand-after flag
+src/SOURCE/FLY.cpp	*	1	trivial-function-literal	1 equality backwards	FlyTo's backwards flag
+src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 equality rvFlag2	a search node's beyond-mobility bit clear
+src/SOURCE/ARMY.cpp	*	[-1]*	trivial-function-literal	-1 conditional	a one-hex (or one-step) offset chosen by facing or direction
+src/SOURCE/FLY.cpp	*	[-1]*	trivial-function-literal	-1 conditional	a one-hex (or one-step) offset chosen by facing or direction
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 conditional	a one-hex (or one-step) offset chosen by facing or direction
+src/SOURCE/FLY.cpp	*	1	trivial-function-literal	1 conditional	a one-hex (or one-step) offset chosen by facing or direction
+src/SOURCE/DRAWING.cpp	*	-1	trivial-function-literal	-1 store sideDelta	a one-hex offset toward the side's rear
+src/SOURCE/DRAWING.cpp	*	1	trivial-function-literal	1 store sideDelta	a one-hex offset toward the side's rear
+src/SOURCE/ARMY.cpp	*	-1	trivial-function-literal	-1 store step	a backward frame or path step (or a loop exit)
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 store step	a forward frame step
+src/SOURCE/ARMY.cpp	*	[-1]*	trivial-function-literal	-1 store pitchSign	SpecialAttack's missile pitch sign
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 store pitchSign	SpecialAttack's missile pitch sign
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store pitchSign	SpecialAttack's missile pitch sign
+src/SOURCE/SEARCH.cpp	*	0	trivial-function-literal	0 store m_pathLength	an empty path
+src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 store m_pathLength	an empty path
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store gi*Extent[XY]	a redraw extent reset before it grows
+src/SOURCE/FLY.cpp	*	0	trivial-function-literal	0 store gi*Extent[XY]	a redraw extent reset before it grows
+src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store gi*Extent[XY]	a redraw extent reset before it grows
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_walkYStep	no vertical walk step
+src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_animationFrame	an icon frame number in the .icn resource (frames have no names)
+src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] store m_animationFrame	an icon frame number in the .icn resource (frames have no names)
+src/SOURCE/ARMY.cpp	*	*	*	* m_animationFrame	an icon frame number in the army's .icn resources (frames have no names)
+src/SOURCE/ARMY.cpp	*	*	*	* frameBase	DoAttack's attack-frame base in the .icn resource (frames have no names)
+src/SOURCE/FLY.cpp	*	*	*	* m_animationFrame	an icon frame number in the army's walk .icn (frames have no names)
+src/SOURCE/ARMY.cpp	army::DamageEnemy	*	*	*	DamageEnemy's attack-defense clamp to gfBattleStat's -20..20 range, the 32000 damage cap, luck/shooter halving and rounding
+src/SOURCE/ARMY.cpp	*	*	call-argument	DamageEnemy(* argument [45]	DamageEnemy's ranged flag and defense modifier
+src/SOURCE/ARMY.cpp	*	*	call-argument	Walk(* argument [23]	army::Walk's stand-after / continued flags
+src/SOURCE/ARMY.cpp	*	*	call-argument	FindPath(* argument 4	army::FindPath's ignore-speed flag
+src/SOURCE/ARMY.cpp	*	*	call-argument	TakeOccupant(* argument 1	the tail hex one step behind a two-hex stack
+src/SOURCE/FLY.cpp	*	*	call-argument	TakeOccupant(* argument 1	the tail hex one step behind a two-hex stack
+src/SOURCE/ARMY.cpp	army::SpecialAttack	*	*	*	SpecialAttack's missile path geometry: launch offset 80/90, pitch y offsets, two steps per hex, midpoint halving, row parity of the wall test
+src/SOURCE/ARMY.cpp	army::DrawToBuffer	*	*	*	DrawToBuffer's sprite offsets, quantity-box geometry, clip columns and frame thresholds
+src/SOURCE/ARMY.cpp	army::Walk	*	*	*	Walk's six-frame step: start frame 5 backwards, 16-pixel diagonal y step, 5-pixel extent margin
+src/SOURCE/ARMY.cpp	army::PowEffect	*	*	*	PowEffect's ten effect frames (five shared, five for the killed)
+src/SOURCE/ARMY.cpp	army::SpellEffect	10	store	*	SpellEffect's ten effect frames
+src/SOURCE/ARMY.cpp	army::DoHydraAttack	*	*	*	DoHydraAttack's five attack frames (3..7)
+src/SOURCE/ARMY.cpp	army::Damage	5	arithmetic	*	Damage's one-fifth minimum kill
+src/SOURCE/ARMY.cpp	army::Init	6	store	*	m_unknown29's initial 6 (Buka ArmyInitialStateConstant INITIAL_UNKNOWN_D4)
+src/SOURCE/ARMY.cpp	army::LoadResources	16	store	*	the creature sprite-name buffer size
+src/SOURCE/FLY.cpp	army::FlyTo	*	*	*	FlyTo's straight pixel line: six frames per hex, walk frames 0..5, midpoint halving
+src/SOURCE/DRAWING.cpp	combatManager::DrawFrame	*	arithmetic	*	DrawFrame's redraw-box sprite margins around a stack (pixels)
+src/SOURCE/HEXCELL.cpp	hexcell::Draw*	*	*	*	hexcell's tower/wall sprite offsets and the catapult impact frame threshold
+src/SOURCE/HERO.cpp	*	*	arithmetic	operator + HERO_SCREEN_*_FIRST	one case label per control in a contiguous herowind.bin id run
+src/SOURCE/HERO.cpp	hero::CalcMobility	*	*	*	CalcMobility's named mobility amounts (land 40/50/60 by slowest speed, sea 60, lighthouse/astrolabe/compass/boot bonuses, expert-AI +3)
+src/SOURCE/HERO.cpp	hero::GetExperience	*	*	*	the 1.2 growth of experience past the level table
+src/SOURCE/HERO.cpp	hero::GetLevel	*	*	*	the 1.2 growth of experience past the level table
+src/SOURCE/HERO.cpp	hero::CheckLevel	50	store	*	the level-up text buffer size
+src/SOURCE/HERO.cpp	hero::ApplyBattleWinTemps	2	arithmetic	*	the statue's two morale points
+src/SOURCE/AI.cpp	combatManager::AICheckRetreat	*	*	*	AICheckRetreat's float retreat weights and probabilities
+src/SOURCE/AI.cpp	combatManager::DoCompAI	43	comparison-or-bound	*	DoCompAI's nudge only targets hexes 1..43
+src/SOURCE/SEARCH.cpp	*	*	call-argument	PushPoint(* argument *	PushPoint's zero cost seed, occupancy/monster flags and zero value bytes
+src/SOURCE/SEARCH.cpp	*	*	call-argument	TestPossibleDirections(* argument [56]	TestPossibleDirections' allow-occupied / water-mode flags
+src/SOURCE/SEARCH.cpp	*	*	call-argument	CalcTerrainCost(* argument 4	CalcTerrainCost's water-mode flag (land 0)
+src/SOURCE/FINDPATH.cpp	*	-7	comparison-or-bound	*	TestPossibleDirections' off-grid test (retail compares against -7)
+src/SOURCE/FINDPATH.cpp	*	*	call-argument	PushCombatPoint(* argument 3	a combat path's zero starting distance
+src/SOURCE/FINDPATH.cpp	*	1	call-argument	memmove(* argument 1	the queue slot after the insertion point
+src/SOURCE/FINDPATH.cpp	*	2	arithmetic	*	the binary search midpoint
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 equality*	an equality test against zero (no distance or steps, first row, neutral luck/morale, no shots)
+src/SOURCE/AI.cpp	*	0	trivial-function-literal	0 equality*	an equality test against zero (no distance or steps, first row, neutral luck/morale, no shots)
+src/SOURCE/FLY.cpp	*	0	trivial-function-literal	0 equality*	an equality test against zero (no distance or steps, first row, neutral luck/morale, no shots)
+src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 equality*	an equality test against zero (no distance or steps, first row, neutral luck/morale, no shots)
+src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 equality*	an equality test against zero (no distance or steps, first row, neutral luck/morale, no shots)
+src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 equality*	an equality test against zero (no distance or steps, first row, neutral luck/morale, no shots)
+src/SOURCE/AI.cpp	*	0	trivial-function-literal	0 store [a-z]*Mask	an empty bit mask
+src/SOURCE/FLY.cpp	*	0	trivial-function-literal	0 store [a-z]*Mask	an empty bit mask
+src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 store stats[]	a cleared per-stat counter
+src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 store m_spellCharges[]	a cleared spell charge count
+src/SOURCE/HERO.cpp	*	1	trivial-function-literal	1 bound m_spellCharges[]	the last remaining spell charge
+src/SOURCE/ARMY.cpp	*	32	arithmetic	compound assignment to gText[]	the ASCII lower-to-upper case offset (capitalise the first letter)
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 array-index gText	the first character of the text buffer
+src/SOURCE/ARMY.cpp	*	*	comparison-or-bound	operator == SRandom()	the chosen face of a random roll
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 equality SRandom()	the chosen face of a random roll
+src/SOURCE/ARMY.cpp	*	*	arithmetic	operator % SRandom()	a random roll folded into a smaller range
+src/SOURCE/HERO.cpp	*	*	call-argument	ViewArmy(* argument [12]	the army view window's x and y in pixels
+src/SOURCE/HERO.cpp	*	*	call-argument	TrimLoopingSounds(* argument 1	the number of looping environment sounds kept
+src/SOURCE/AI.cpp	*	1	call-argument	Get[BW]*Army(* argument 1	the opposing side (1 - m_currentSide)
+src/SOURCE/HERO.cpp	*	1	call-argument	GetExperience(* argument 1	the next level
+src/SOURCE/FLY.cpp	*	0	call-argument	GetBestDirection(* argument 3	no blocked directions
+src/SOURCE/HERO.cpp	*	0	call-argument	NormalDialog(* argument 2	the quick-view test that picks the dialog type
+src/SOURCE/HERO.cpp	*	0	call-argument	Show*Info(* argument 2	the quick-view test that picks the dialog type
+src/SOURCE/HERO.cpp	*	[01]	call-argument	RestoreCell(* argument 6	game::RestoreCell's redraw flag
+src/SOURCE/HERO.cpp	hero::hero	0	trivial-function-literal	0 store*	constructor zero-initialisation
+src/SOURCE/ARMY.cpp	army::army	0	trivial-function-literal	0 store*	constructor zero-initialisation
+src/SOURCE/HEXCELL.cpp	hexcell::hexcell	0	trivial-function-literal	0 store*	constructor zero-initialisation
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store dmg	a damage/kill accumulator reset
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store kills	a damage/kill accumulator reset
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store moved	a hex counter reset
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store step	a frame/path step counter reset
+src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 store low	the binary search's low bound
+src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 store gSearchLow	the binary search's low bound
+src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store row	the first grid row
+src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	the first grid row
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a cleared per-hex path mark
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store m_hitPointsLost	no damage carried on the top creature
+src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 store m_heroLocatorPage	the hero locator's first page
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 store oldMode	a saved flag reset
+src/SOURCE/DRAWING.cpp	*	0	trivial-function-literal	0 store targetMonster	creature type 0 as the no-target default
+src/SOURCE/ARMY.cpp	*	0	trivial-function-literal	0 array-index m_directions	the path's first step (the one next to the target)
+src/SOURCE/FINDPATH.cpp	*	0	trivial-function-literal	0 array-index m_cells	combat nodes in the first column of m_cells
+src/SOURCE/HERO.cpp	*	0	trivial-function-literal	0 array-index m_name	the name's first character (NUL: empty name)
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 * m_pathLength	a one-step path
+src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 * m_pathLength	a one-step path
+src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 bound pathNdx	the last path step before the target
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 store minKilled	at least one creature killed
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 store loopCount	a sample played once
+src/SOURCE/HERO.cpp	*	1	trivial-function-literal	1 store shown	at least one mood icon shown
+src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 store oneBit	a bit mask's first bit
+src/SOURCE/AI.cpp	*	[12]	*	* frontDelta	a stack's front hex one (two for a wide stack) hexes ahead
+src/SOURCE/ARMY.cpp	*	1	trivial-function-literal	1 equality step	the path step next to the target
+src/SOURCE/HERO.cpp	*	1	trivial-function-literal	1 equality levelCount	a single gained level
+src/SOURCE/HERO.cpp	*	1	trivial-function-literal	1 equality m_heroCount	the player's last hero
+src/SOURCE/DRAWING.cpp	*	1	trivial-function-literal	1 for-init	a loop starting at the first inner column/slot
+src/SOURCE/DRAWING.cpp	*	1	trivial-function-literal	1 bound hexCol	the first inner column
+src/SOURCE/HERO.cpp	*	-1	trivial-function-literal	-1 store heroNum	no matching hero-list index found
+src/SOURCE/ARMY.cpp	army::DoAttack	1	trivial-function-literal	1 equality	the dwarves' magic-resistance roll outcome
+src/SOURCE/SPELLS.cpp	*	4	arithmetic	operator % SRandom()	the dwarves' magic-resistance roll (one in four)
+src/SOURCE/ARMY.cpp	*	*	*	* store giMonoIconSkip	giMonoIconSkip writes; retail never reads the variable
+src/SOURCE/SWAPMGR.cpp	*	*	*	store to giMonoIconSkip	giMonoIconSkip writes; retail never reads the variable
+src/SOURCE/SWAPMGR.cpp	*	*	*	* store giMonoIconSkip	giMonoIconSkip writes; retail never reads the variable

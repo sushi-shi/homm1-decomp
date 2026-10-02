@@ -356,8 +356,8 @@ void combatManager::GenerateMap(void) {
         m_catapultFrame[COMBAT_DEFENDER_SIDE] = -1;
     for (y = 0; y < COMBAT_GRID_ROWS; y++) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++) {
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y = y * 80 + 139;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_x = ((y & 1) ? 27 : -12) + x * 78;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y = y * COMBAT_HEX_HEIGHT + COMBAT_HEX_ORIGIN_Y;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_x = ((y & 1) ? 27 : -12) + x * COMBAT_HEX_WIDTH;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_GROUND;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame =
                 static_cast<signed char>(SRandom(0, 3)) + 4;
@@ -377,7 +377,7 @@ void combatManager::GenerateMap(void) {
                     m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 2;
             }
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantSide = COMBAT_SIDE_NONE;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantIndex = -1;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantFrame = -1;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = COMBAT_OBSTACLE_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_pathFlag = 0;
@@ -655,18 +655,18 @@ void combatManager::NoShowCombatLog(char*) {}
 // from y 60, odd rows indented by 66 and even rows by 27, hexes 78 wide.
 VA(0x0044d364, 0xbe)
 short combatManager::GetGridIndex(short x, short y) {
-    y -= 60;
-    y /= 80;
+    y -= COMBAT_FIELD_TOP;
+    y /= COMBAT_HEX_HEIGHT;
     if (y & 1) {
         if (x < 66) {
             x = -1;
         } else {
             x -= 66;
-            x /= 78;
+            x /= COMBAT_HEX_WIDTH;
         }
     } else {
         x -= 27;
-        x /= 78;
+        x /= COMBAT_HEX_WIDTH;
     }
     x++;
     if (y == COMBAT_GRID_ROWS)
@@ -907,7 +907,7 @@ void combatManager::CatAttack(signed char side) {
     startX = 0x75;
     startY = 0x104;
     tgtX = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x;
-    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y - 80;
+    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y - COMBAT_HEX_HEIGHT;
     frm = 0;
     x = startX;
     y = startY;
@@ -1040,8 +1040,8 @@ void combatManager::CatAttack(signed char side) {
         m_wallFrame = 0;
         giMinExtentX = 300;
         giMaxExtentX = 490;
-        giMinExtentY = m_catapultTarget * 80 - 30;
-        giMaxExtentY = (m_catapultTarget + 2) * 80 + 30;
+        giMinExtentY = m_catapultTarget * COMBAT_HEX_HEIGHT - 30;
+        giMaxExtentY = (m_catapultTarget + 2) * COMBAT_HEX_HEIGHT + 30;
         if (giMinExtentY < 0)
             giMinExtentY = 0;
         if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
@@ -1066,8 +1066,8 @@ void combatManager::CatAttack(signed char side) {
         m_wallFrame = 0;
         giMinExtentX = 300;
         giMaxExtentX = 490;
-        giMinExtentY = m_catapultTarget * 80 - 30;
-        giMaxExtentY = (m_catapultTarget + 2) * 80 + 30;
+        giMinExtentY = m_catapultTarget * COMBAT_HEX_HEIGHT - 30;
+        giMaxExtentY = (m_catapultTarget + 2) * COMBAT_HEX_HEIGHT + 30;
         if (giMinExtentY < 0)
             giMinExtentY = 0;
         if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
