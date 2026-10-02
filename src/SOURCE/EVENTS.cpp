@@ -20,6 +20,75 @@
 #include <string.h>
 #include <SOURCE/mapObjectTypes.h>
 
+// clang-format off
+// advManager::EventWindow's eventId: the gEventText row it prints, or
+// EVENT_TEXT_CUSTOM for caller text (Buka 2.1 EVENTS.h MapEventTextId; HoMM1
+// numbers its own rows). The five houses use RECRUIT/RANKS_FULL/EMPTY of the
+// first house plus three rows per house.
+H1_ENUM_BEGIN(MapEventTextId)
+    EVENT_TEXT_CUSTOM = -1,
+    EVENT_TEXT_ALCHEMIST_CAPTURED = 0,
+    EVENT_TEXT_SIGNPOST = 1,
+    EVENT_TEXT_BUOY_VISITED = 2,
+    EVENT_TEXT_BUOY_REWARD = 3,
+    EVENT_TEXT_DAEMON_CAVE_EMPTY = 4,
+    EVENT_TEXT_DAEMON_CAVE_EXPERIENCE = 5,
+    EVENT_TEXT_DAEMON_CAVE_ARTIFACT = 6,
+    EVENT_TEXT_DAEMON_CAVE_GOLD = 7,
+    EVENT_TEXT_DAEMON_CAVE_RANSOM = 8,
+    EVENT_TEXT_DAEMON_CAVE_DEATH = 9,
+    EVENT_TEXT_DAEMON_CAVE_PROMPT = 10,
+    EVENT_TEXT_TREASURE_CHEST = 11,
+    EVENT_TEXT_FAERIE_RING_VISITED = 12,
+    EVENT_TEXT_FAERIE_RING_REWARD = 13,
+    EVENT_TEXT_CAMPFIRE = 14,
+    EVENT_TEXT_FOUNTAIN_VISITED = 15,
+    EVENT_TEXT_FOUNTAIN_REWARD = 16,
+    EVENT_TEXT_GAZEBO_VISITED = 17,
+    EVENT_TEXT_GAZEBO_REWARD = 18,
+    EVENT_TEXT_GENIE_LAMP = 19,
+    EVENT_TEXT_GRAVEYARD_PROMPT = 20,
+    EVENT_TEXT_GRAVEYARD_EMPTY = 21,
+    EVENT_TEXT_GRAVEYARD_REWARD = 22,
+    EVENT_TEXT_HOUSE_RECRUIT = 23,
+    EVENT_TEXT_HOUSE_RANKS_FULL = 24,
+    EVENT_TEXT_HOUSE_EMPTY = 25,
+    EVENT_TEXT_DRAGON_CITY_PROMPT = 38,
+    EVENT_TEXT_DRAGON_CITY_CONQUERED = 39,
+    EVENT_TEXT_LIGHTHOUSE_CAPTURED = 40,
+    EVENT_TEXT_WATERWHEEL_EMPTY = 41,
+    EVENT_TEXT_WATERWHEEL_REWARD = 42,
+    EVENT_TEXT_FOLLOWERS = 48,
+    EVENT_TEXT_MONSTER_REFUSAL = 49,
+    EVENT_TEXT_OBELISK_REWARD = 50,
+    EVENT_TEXT_OBELISK_VISITED = 51,
+    EVENT_TEXT_OASIS_VISITED = 52,
+    EVENT_TEXT_OASIS_REWARD = 53,
+    EVENT_TEXT_RESOURCE_PICKUP = 54,
+    EVENT_TEXT_SAWMILL_CAPTURED = 55,
+    EVENT_TEXT_RANKING_SHRINE = 56,
+    EVENT_TEXT_SPELL_SHRINE = 57,
+    EVENT_TEXT_SHIPWRECK_PROMPT = 58,
+    EVENT_TEXT_SHIPWRECK_EMPTY = 59,
+    EVENT_TEXT_SHIPWRECK_REWARD = 60,
+    EVENT_TEXT_STATUE_REWARD = 61,
+    EVENT_TEXT_STATUE_VISITED = 62,
+    EVENT_TEXT_DESERT_TENT_EMPTY = 63,
+    EVENT_TEXT_DESERT_TENT_RECRUIT = 64,
+    EVENT_TEXT_WAGON_EMPTY = 65,
+    EVENT_TEXT_WAGON_RECRUIT = 66,
+    EVENT_TEXT_WINDMILL_EMPTY = 68,
+    EVENT_TEXT_WINDMILL_REWARD = 69,
+    EVENT_TEXT_ARTIFACT_GUARDED = 70,
+    EVENT_TEXT_LEPRECHAUN_OFFER = 71,
+    EVENT_TEXT_LEPRECHAUN_REFUSAL = 72,
+    EVENT_TEXT_LEPRECHAUN_NO_GOLD = 73,
+    EVENT_TEXT_ARTIFACT_RECOVERED = 74,
+    EVENT_TEXT_SKELETON_EMPTY = 75,
+    EVENT_TEXT_SKELETON_ARTIFACT = 76
+H1_ENUM_END(MapEventTextId)
+// clang-format on
+
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
@@ -99,12 +168,12 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case 1:
             if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
-            EventWindow(0, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_MERCURY, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_ALCHEMIST_CAPTURED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_MERCURY, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             goto claimMine;
         case MAP_OBJECT_SAWMILL:
             if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
                 break;
-            EventWindow(0x37, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_WOOD, -2, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_SAWMILL_CAPTURED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_WOOD, -2, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             goto claimMine;
         claimMine:
             gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
@@ -113,12 +182,12 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             if (gpGame->m_mineOwners[1] == giCurPlayer)
                 break;
             gpGame->ClaimMine(1, giCurPlayer);
-            EventWindow(0x28, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_LIGHTHOUSE_CAPTURED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             break;
         case MAP_OBJECT_DRAGON_CITY:
             if (gpGame->m_mineOwners[0] == giCurPlayer)
                 break;
-            EventWindow(0x26, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_DRAGON_CITY_PROMPT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 8)
                     numDefenders = 20;
@@ -126,14 +195,14 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     numDefenders = 5;
                 if (CombatMonsterEvent(pHero, CREATURE_DRAGON, numDefenders, cell, x, y, 0, x, y) == 1) {
                     gpGame->ClaimMine(0, giCurPlayer);
-                    EventWindow(0x27, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, -1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_DRAGON_CITY_CONQUERED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, -1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
                 }
                 pHero->CheckLevel();
             }
             break;
         case MAP_OBJECT_TREASURE_CHEST:
-            EventWindow(0xb, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_RESOURCE_GOLD, cell->m_objectMetadata * 500, NORMAL_DIALOG_EXPERIENCE,
+            EventWindow(EVENT_TEXT_TREASURE_CHEST, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_RESOURCE_GOLD, cell->m_objectMetadata * 500, NORMAL_DIALOG_EXPERIENCE,
                         (cell->m_objectMetadata - 1) * 500, NORMAL_DIALOG_SHOW_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 GiveResource(pHero, RESOURCE_GOLD, cell->m_objectMetadata * 500);
@@ -145,69 +214,69 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case MAP_OBJECT_BUOY:
             if (pHero->m_eventFlags & HERO_EVENT_BUOY) {
-                EventWindow(2, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_BUOY_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 pHero->m_eventFlags |= HERO_EVENT_BUOY;
                 pHero->m_morale++;
-                EventWindow(3, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_BUOY_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_FAERIE_RING:
             if (pHero->m_eventFlags & HERO_EVENT_FAERIE_RING) {
-                EventWindow(0xc, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_FAERIE_RING_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 pHero->m_eventFlags |= HERO_EVENT_FAERIE_RING;
                 pHero->m_luck++;
-                EventWindow(0xd, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_LUCK_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_FAERIE_RING_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_LUCK_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_FOUNTAIN:
             if (pHero->m_eventFlags & HERO_EVENT_FOUNTAIN) {
-                EventWindow(0xf, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_FOUNTAIN_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 pHero->m_eventFlags |= HERO_EVENT_FOUNTAIN;
                 pHero->m_luck++;
-                EventWindow(0x10, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_LUCK_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_FOUNTAIN_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_LUCK_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_OASIS:
             if (pHero->m_eventFlags & HERO_EVENT_OASIS) {
-                EventWindow(0x34, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_OASIS_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 pHero->m_eventFlags |= HERO_EVENT_OASIS;
                 pHero->m_morale++;
-                EventWindow(0x35, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_OASIS_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_STATUE:
             if (pHero->m_eventFlags & HERO_EVENT_TEMPLE) {
-                EventWindow(0x3e, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_STATUE_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 pHero->m_eventFlags |= HERO_EVENT_TEMPLE;
                 pHero->m_morale += 2;
-                EventWindow(0x3d, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_STATUE_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_SKELETON:
             switch (cell->m_objectMetadata) {
                 case 1:
-                    EventWindow(0x4b, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_SKELETON_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
                 case 2:
                     if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
                         sprintf(gText, "%s.", "Treasure");
-                        EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                        EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     } else {
                         artifactId = GiveRandomArtifact(pHero);
-                        sprintf(gText, "%s %s", gEventText[76], gArtifactNames[artifactId]);
-                        EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_ARTIFACT, artifactId, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                        sprintf(gText, "%s %s", gEventText[EVENT_TEXT_SKELETON_ARTIFACT], gArtifactNames[artifactId]);
+                        EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_ARTIFACT, artifactId, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     }
                     cell->m_objectMetadata = 1;
                     break;
             }
             break;
         case MAP_OBJECT_CAMPFIRE:
-            EventWindow(0xe, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, (cell->m_objectMetadata >> 4) * 100,
+            EventWindow(EVENT_TEXT_CAMPFIRE, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, (cell->m_objectMetadata >> 4) * 100,
                         cell->m_objectMetadata & 0xf,
                         cell->m_objectMetadata >> 4, NORMAL_DIALOG_NO_OR_TEXT);
             GiveResource(pHero, RESOURCE_GOLD, (cell->m_objectMetadata >> 4) * 100);
@@ -220,9 +289,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case MAP_OBJECT_GAZEBO:
             if (pHero->m_visitedSites & (1 << cell->m_objectMetadata)) {
-                EventWindow(0x11, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_GAZEBO_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
-                EventWindow(0x12, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_GAZEBO_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 GiveExperience(pHero, 1000, 0);
                 pHero->m_visitedSites |= 1 << cell->m_objectMetadata;
                 pHero->CheckLevel();
@@ -230,9 +299,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case MAP_OBJECT_WATERWHEEL:
             if (!cell->m_objectMetadata) {
-                EventWindow(0x29, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_WATERWHEEL_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
-                EventWindow(0x2a, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, cell->m_objectMetadata * 500, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_WATERWHEEL_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, cell->m_objectMetadata * 500, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 GiveResource(pHero, RESOURCE_GOLD, cell->m_objectMetadata * 500);
                 cell->m_objectMetadata = 0;
             }
@@ -244,7 +313,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                                            : cell->m_objectMetadata);
             strcpy(resourceName, gResourceNames[resType]);
             resourceName[0] += 32;
-            sprintf(gText, gEventText[54], resourceName);
+            sprintf(gText, gEventText[EVENT_TEXT_RESOURCE_PICKUP], resourceName);
             BVResMsg(gText, resType,
                      resType == 6 ? cell->m_objectMetadata * 100
                                        : cell->m_objectMetadata);
@@ -253,15 +322,15 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case MAP_OBJECT_WINDMILL:
             if (cell->m_objectMetadata <= 6) {
-                EventWindow(0x45, NORMAL_DIALOG_TYPE_OK, "", cell->m_objectMetadata, 2, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_WINDMILL_REWARD, NORMAL_DIALOG_TYPE_OK, "", cell->m_objectMetadata, 2, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 GiveResource(pHero, cell->m_objectMetadata, 2);
                 cell->m_objectMetadata = 99;
             } else {
-                EventWindow(0x44, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_WINDMILL_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_ANCIENT_LAMP:
-            EventWindow(0x13, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_GENIE_LAMP, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 RecruitEvent(pHero, CREATURE_GENIE, cell);
                 if (!cell->m_objectMetadata) {
@@ -272,18 +341,18 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case MAP_OBJECT_WAGON_CAMP:
             if (!cell->m_objectMetadata) {
-                EventWindow(0x41, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_WAGON_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
-                EventWindow(0x42, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_WAGON_RECRUIT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                     RecruitEvent(pHero, CREATURE_ROGUE, cell);
             }
             break;
         case MAP_OBJECT_DESERT_TENT:
             if (!cell->m_objectMetadata) {
-                EventWindow(0x3f, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_DESERT_TENT_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
-                EventWindow(0x40, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_DESERT_TENT_RECRUIT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                     RecruitEvent(pHero, CREATURE_NOMAD, cell);
             }
@@ -304,14 +373,14 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 gpGame->VisitObelisk(pHero->m_owner);
                 gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |=
                     1 << pHero->m_owner;
-                EventWindow(0x32, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_OBELISK_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 ViewPuzzle();
             } else {
-                EventWindow(0x33, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_OBELISK_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_RANKING_SHRINE:
-            EventWindow(0x38, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_RANKING_SHRINE, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             gpMouseManager->SetPointer(0);
             win = new heroWindow(0, 0, "thiefwin.bin");
             if (!win)
@@ -329,15 +398,15 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             RedrawAdvScreen(1);
             break;
         case MAP_OBJECT_SPELL_SHRINE:
-            sprintf(gText, "%s'%s'.", gEventText[57],
+            sprintf(gText, "%s'%s'.", gEventText[EVENT_TEXT_SPELL_SHRINE],
                     gSpellNames[cell->m_objectMetadata - 1]);
             if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
                 pHero->AddSpell(cell->m_objectMetadata - 1,
                                     pHero->m_primaryStats[3], 0);
-                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_SPELL, cell->m_objectMetadata - 1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_SPELL, cell->m_objectMetadata - 1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 strcat(gText, "  Unfortunately, you have no Magic Book to record the spell with.");
-                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_TOWN:
@@ -384,7 +453,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             switch (cell->m_objectMetadata) {
                 case 1:
-                    EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gArtifactDesc[cell->m_objectIndex], NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE,
+                    EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gArtifactDesc[cell->m_objectIndex], NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE,
                                 0, NORMAL_DIALOG_NO_OR_TEXT);
                 giveArtifact:
                     GiveArtifact(pHero, cell->m_objectIndex);
@@ -392,25 +461,25 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     fizzleMode = 1;
                     break;
                 case 2:
-                    EventWindow(0x46, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_ARTIFACT_GUARDED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (CombatMonsterEvent(pHero, CREATURE_ROGUE, 0x32, cell, x, y, 0, x, y) == 1) {
-                        sprintf(gText, gEventText[74], gArtifactNames[cell->m_objectIndex]);
-                        EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                        sprintf(gText, gEventText[EVENT_TEXT_ARTIFACT_RECOVERED], gArtifactNames[cell->m_objectIndex]);
+                        EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         goto giveArtifact;
                     }
                     break;
                 case 3:
-                    sprintf(gText, gEventText[71], gArtifactNames[cell->m_objectIndex]);
-                    EventWindow(-1, NORMAL_DIALOG_TYPE_YES_NO, gText, NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    sprintf(gText, gEventText[EVENT_TEXT_LEPRECHAUN_OFFER], gArtifactNames[cell->m_objectIndex]);
+                    EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_YES_NO, gText, NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         if (gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] >= 2000) {
                             gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] -= 2000;
                             goto giveArtifact;
                         } else {
-                            EventWindow(0x49, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                            EventWindow(EVENT_TEXT_LEPRECHAUN_NO_GOLD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         }
                     } else {
-                        EventWindow(0x48, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                        EventWindow(EVENT_TEXT_LEPRECHAUN_REFUSAL, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         erase = 1;
                     }
                     break;
@@ -439,24 +508,24 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                                              -1, 0xa8);
             if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)->m_triggerType
                 == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
-                sprintf(gText, gEventText[1],
+                sprintf(gText, gEventText[EVENT_TEXT_SIGNPOST],
                         GetTownName(gpGame->GetTownId(gpSearchArray->m_specialTargetX,
                                                       gpSearchArray->m_specialTargetY)));
-                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
             break;
         case MAP_OBJECT_DAEMON_CAVE:
-            EventWindow(0xa, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_DAEMON_CAVE_PROMPT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                 break;
             switch (cell->m_objectMetadata) {
                 case 1:
-                    EventWindow(4, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_DAEMON_CAVE_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     cell->m_objectMetadata = 1;
                     break;
                 case 2:
                     GiveExperience(pHero, 1000, 0);
-                    EventWindow(5, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_DAEMON_CAVE_EXPERIENCE, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     cell->m_objectMetadata = 1;
                     pHero->CheckLevel();
                     break;
@@ -467,23 +536,23 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                         goto goldReward;
                     GiveExperience(pHero, 1000, 0);
                     artifactId = GiveRandomArtifact(pHero);
-                    EventWindow(6, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_ARTIFACT, artifactId, NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_DAEMON_CAVE_ARTIFACT, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_ARTIFACT, artifactId, NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_OR_TEXT);
                     cell->m_objectMetadata = 1;
                     pHero->CheckLevel();
                     break;
                 case 4:
                 goldReward:
-                    EventWindow(7, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, 2500, NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_DAEMON_CAVE_GOLD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, 2500, NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_OR_TEXT);
                     GiveExperience(pHero, 1000, 0);
                     GiveResource(pHero, RESOURCE_GOLD, 2500);
                     cell->m_objectMetadata = 1;
                     pHero->CheckLevel();
                     break;
                 case 5:
-                    EventWindow(8, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_DAEMON_CAVE_RANSOM, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         if (gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] < 2500) {
-                            EventWindow(9, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                            EventWindow(EVENT_TEXT_DAEMON_CAVE_DEATH, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             HeroLoses(pHero);
                         } else {
                             gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] -= 2500;
@@ -495,28 +564,28 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case MAP_OBJECT_GRAVEYARD:
-            EventWindow(0x14, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_GRAVEYARD_PROMPT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 switch (cell->m_objectMetadata) {
                     case 1:
-                        EventWindow(0x15, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_PENALTY, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                        EventWindow(EVENT_TEXT_GRAVEYARD_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_PENALTY, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         if (!(pHero->m_eventFlags & HERO_EVENT_GRAVEYARD)) {
                             pHero->m_eventFlags |= HERO_EVENT_GRAVEYARD;
                             pHero->m_morale--;
                         }
                         break;
                     default:
-                        if (GhostEvent(pHero, cell, 0x16, x, y))
+                        if (GhostEvent(pHero, cell, EVENT_TEXT_GRAVEYARD_REWARD, x, y))
                             cell->m_objectMetadata = 1;
                 }
             }
             break;
         case MAP_OBJECT_SHIPWRECK:
-            EventWindow(0x3a, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_SHIPWRECK_PROMPT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 switch (cell->m_objectMetadata) {
                     case 1:
-                        EventWindow(0x3b, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_PENALTY, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                        EventWindow(EVENT_TEXT_SHIPWRECK_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_PENALTY, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         if (!(pHero->m_eventFlags & HERO_EVENT_SHIPWRECK)) {
                             pHero->m_eventFlags |= HERO_EVENT_SHIPWRECK;
                             pHero->m_morale--;
@@ -525,7 +594,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     default:
                         prevCell = GetCell(x - normalDirTable[pHero->m_direction].x,
                                             y - normalDirTable[pHero->m_direction].y);
-                        if (GhostEvent(pHero, prevCell, 0x3c, x, y))
+                        if (GhostEvent(pHero, prevCell, EVENT_TEXT_SHIPWRECK_REWARD, x, y))
                             cell->m_objectMetadata = 1;
                         break;
                 }
@@ -747,7 +816,7 @@ void advManager::EventWindow(short eventId, H1_ENUM_PARAM(NormalDialogType, int)
     unusedStyle = 1;
     if (eventId >= 0 && eventId < 76)
         sprintf(eventText, gEventText[eventId]);
-    else if (eventId == -1)
+    else if (eventId == EVENT_TEXT_CUSTOM)
         sprintf(eventText, text);
     else
         sprintf(eventText, "Event ID %d", eventId);
@@ -844,7 +913,7 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
     case 2:
         if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 10, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             GiveResource(eventHero, RESOURCE_GOLD, 1000);
             eventHero->CheckLevel();
             return 1;
@@ -853,7 +922,7 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
     case 3:
         if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 15, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             GiveResource(eventHero, RESOURCE_GOLD, 2000);
             eventHero->CheckLevel();
             return 1;
@@ -862,7 +931,7 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
     case 4:
         if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 25, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 5000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 5000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             GiveResource(eventHero, RESOURCE_GOLD, 5000);
             eventHero->CheckLevel();
             return 1;
@@ -873,9 +942,9 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
             artifact = GiveRandomArtifact(eventHero);
             sprintf(gText, "%s", gEventText[textId]);
             if (artifact != ARTIFACT_NONE)
-                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_ARTIFACT, artifact, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_ARTIFACT, artifact, NORMAL_DIALOG_NO_OR_TEXT);
             else
-                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             GiveResource(eventHero, RESOURCE_GOLD, 2000);
             eventHero->CheckLevel();
             return 1;
@@ -894,17 +963,17 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
 
     houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - 13;
     if (!cell->m_objectMetadata) {
-        EventWindow(houseIndex * 3 + 25, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        EventWindow(houseIndex * 3 + EVENT_TEXT_HOUSE_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     } else {
         signed char creatures[5] = {6, 0, 1, 13, 0};
 
-        EventWindow(houseIndex * 3 + 23, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        EventWindow(houseIndex * 3 + EVENT_TEXT_HOUSE_RECRUIT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
                 eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, -1);
                 cell->m_objectMetadata = 0;
             } else {
-                EventWindow(houseIndex * 3 + 24, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(houseIndex * 3 + EVENT_TEXT_HOUSE_RANKS_FULL, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
         }
     }
@@ -1556,15 +1625,15 @@ void advManager::PlayerMonsterInteract(class mapCell* cell, class mapCell* comba
             > gMonsterDatabase[cell->m_objectIndex].fightValue
                   * (cell->m_objectMetadata & 0x7f) * 1.75) {
             if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
-                sprintf(gText, gEventText[48], gArmyNamesPlural[cell->m_objectIndex]);
-                EventWindow(-1, NORMAL_DIALOG_TYPE_YES_NO, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                sprintf(gText, gEventText[EVENT_TEXT_FOLLOWERS], gArmyNamesPlural[cell->m_objectIndex]);
+                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_YES_NO, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                     eventHero->m_army.Add(cell->m_objectIndex,
                                           cell->m_objectMetadata & 0x7f, -1);
                     *handled = 1;
                     return;
                 } else {
-                    EventWindow(49, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                    EventWindow(EVENT_TEXT_MONSTER_REFUSAL, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 }
             }
         }
