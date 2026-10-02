@@ -456,6 +456,84 @@ void game::LoadGame(char*, int, int) {}
 VA(0x0043b522, 0x2c3)
 void game::UpdateNewGameWindow(void) {}
 
+// NewGame remembers the last new-game settings for the next setup screen.
+extern signed char gbNewGameSettingsSaved;
+extern signed char gcSavedDifficulty;
+extern signed char gcSavedPlayerTypes[];
+extern signed char gbSavedKingOfTheHill;
+extern signed char gcSavedCrest;
+extern signed char gbWaitForRemoteReceive;
+extern signed char giCampaignChoice;
+extern int giMapSize;
+extern int giMapDifficulty;
+short NewGameHandler(tag_message&);
+
+// Buka 2.1 game::NewGame: HoMM1 starts campaigns directly, restores the
+// previous setup choices and falls back to a default map when the remembered
+// one does not fit the human player count.
+VA(0x0043baa8, 0x3eb)
+signed char game::NewGame(void) {
+    if (!SetupGame(1))
+        return 0;
+    if (giCampaignChoice > 0) {
+        InitEntireCampaign(giCampaignChoice);
+        return 1;
+    }
+    if (gbWaitForRemoteReceive)
+        return 1;
+    LoadGame("origdata.bin", 1, 0);
+    m_newGameWindow = new heroWindow(310, 14, "newgame.bin");
+    if (!m_newGameWindow)
+        MemError();
+    SetWinText(m_newGameWindow, 7);
+    if (gbNewGameSettingsSaved) {
+        gpGame->m_difficulty = gcSavedDifficulty;
+        m_players[1].m_color = gcSavedPlayerTypes[1];
+        m_players[2].m_color = gcSavedPlayerTypes[2];
+        m_players[3].m_color = gcSavedPlayerTypes[3];
+        gbKingOfTheHill = gbSavedKingOfTheHill;
+        m_players[0].m_unknown11 = gcSavedCrest;
+    }
+    if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
+        || (giNumHumanPlayers == 2 && gMapName[5] != '2')
+        || (giNumHumanPlayers == 3 && gMapName[6] != '3')
+        || (giNumHumanPlayers == 4 && gMapName[7] != '4')) {
+        if (giNumHumanPlayers == 1) {
+            strcpy(gMapName, "AES31000.map");
+            strcpy(gFullMapName, "Claw ( Easy )");
+            strcpy(gMapDescription, "The Griffons will protect you until you are ready to make your move.");
+            giMapSize = 0;
+            giMapDifficulty = 0;
+        } else {
+            strcpy(gMapName, "CNM51234.map");
+            strcpy(gFullMapName, "Around the Bay");
+            strcpy(gMapDescription, "A large island of tight passes with a circular feel.");
+            giMapSize = 1;
+            giMapDifficulty = 1;
+        }
+    }
+    UpdateNewGameWindow();
+    gpMouseManager->ReallyShowPointer();
+    gpWindowManager->DoDialog(m_newGameWindow, NewGameHandler, 0);
+    delete m_newGameWindow;
+    if (gpWindowManager->m_dialogResult == 0x7801)
+        return 0;
+    strcpy(m_mapName, gFullMapName);
+    strcpy(m_mapDescription, gMapDescription);
+    m_mapSize = giMapSize;
+    m_mapDifficulty = giMapDifficulty;
+    strcpy(m_mapName, gFullMapName);
+    gbNewGameSettingsSaved = 1;
+    gcSavedDifficulty = gpGame->m_difficulty;
+    gcSavedPlayerTypes[1] = m_players[1].m_color;
+    gcSavedPlayerTypes[2] = m_players[2].m_color;
+    gcSavedPlayerTypes[3] = m_players[3].m_color;
+    gbSavedKingOfTheHill = gbKingOfTheHill;
+    gcSavedCrest = m_players[0].m_unknown11;
+    NewMap(gMapName);
+    return 1;
+}
+
 // donor PoL RVA 0x000bc00e; preferred Buka symbol ?ShowInfo@ExpCampaign@@QAEXHH@Z
 // donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
@@ -466,8 +544,6 @@ void game::ShowCampaignInfo(int, int, int) {}
 
 // Two bytes per campaign side; the first is the human player's crest.
 extern signed char gCampaignSideCrests[][2];
-extern signed char gbKingOfTheHill;
-extern int giCurTurn;
 
 // Buka 2.1 game::InitEntireCampaign; HoMM1 reloads origdata.bin first and
 // starts the campaign calendar on day 1.
@@ -1256,6 +1332,38 @@ void game::GetMap(void) {
     }
     delete gpReqExtraWindow;
     gbShowMapInfo = 0;
+}
+
+// ShowCongrats' base score: 200 less a day per day for two months, then a
+// half, a quarter and an eighth per day, never below 20.
+VA(0x004471a0, 0x138)
+int GetBaseScore(int days) {
+    int score;
+
+    score = 200;
+    if (days <= 60) {
+        score -= days;
+        goto done;
+    } else {
+        score -= 60;
+    }
+    if (days <= 120) {
+        score -= (days - 60) * 0.5;
+        goto done;
+    } else {
+        score -= 30.0;
+    }
+    if (days <= 360) {
+        score -= (days - 120) * 0.25;
+        goto done;
+    } else {
+        score -= 60.0;
+    }
+    score -= (days - 360) * 0.125;
+done:
+    if (score < 20)
+        score = 20;
+    return score;
 }
 
 // donor PoL RVA 0x000333c0; preferred Buka symbol ?ViewWorld@advManager@@QAEXHHH@Z

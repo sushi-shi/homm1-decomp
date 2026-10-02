@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/BITS.h>
+#include <BASE/BMAP2.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
@@ -188,6 +189,394 @@ int EarlySetup(void) {
     }
     InitVars();
     return 1;
+}
+
+// clang-format off
+// HoMM1 menu command ids; each menu bar repeats Restart and New Game.
+H1_ENUM_BEGIN(AppMenuCommand)
+    APP_MENU_RESTART_0 = 0x9ca6,
+    APP_MENU_RESTART_1 = 0x9ca8,
+    APP_MENU_RESTART_2 = 0x9ca9,
+    APP_MENU_RESTART_3 = 0x9caa,
+    APP_MENU_RESTART_4 = 0x9cab,
+    APP_MENU_RESTART_5 = 0x9cae,
+    APP_MENU_RESTART_6 = 0x9caf,
+    APP_MENU_RESTART_7 = 0x9cb0,
+    APP_MENU_RESTART_8 = 0x9cb2,
+    APP_MENU_RESTART_9 = 0x9cb3,
+    APP_MENU_RESTART_10 = 0x9cb5,
+    APP_MENU_RESTART_11 = 0x9cb6,
+    APP_MENU_RESTART_12 = 0x9cb8,
+    APP_MENU_RESTART_13 = 0x9cb9,
+    APP_MENU_LOAD_0 = 0x9cbb,
+    APP_MENU_LOAD_1 = 0x9cbc,
+    APP_MENU_LOAD_2 = 0x9cbf,
+    APP_MENU_LOAD_3 = 0x9cc0,
+    APP_MENU_LOAD_4 = 0x9cc1,
+    APP_MENU_LOAD_5 = 0x9cc3,
+    APP_MENU_LOAD_6 = 0x9cc4,
+    APP_MENU_LOAD_7 = 0x9cc6,
+    APP_MENU_LOAD_8 = 0x9cc7,
+    APP_MENU_LOAD_9 = 0x9cc9,
+    APP_MENU_LOAD_10 = 0x9cca,
+    APP_MENU_SAVE = 0x9ccb,
+    APP_MENU_EXIT = 0x9ccc,
+    APP_MENU_MUSIC_FIRST = 0x9c50,
+    APP_MENU_MUSIC_LAST = 0x9c5a,
+    APP_MENU_SOUND_FIRST = 0x9c5c,
+    APP_MENU_SOUND_LAST = 0x9c66,
+    APP_MENU_WALK_FASTEST = 0x9c68,
+    APP_MENU_WALK_SLOWEST = 0x9c6c,
+    APP_MENU_CD_MUSIC = 0x9c6d,
+    APP_MENU_TOGGLE_ROUTE = 0x9c6e,
+    APP_MENU_TOGGLE_BLACKOUT = 0x9c6f,
+    APP_MENU_VIEW_WORLD = 0x9c4c,
+    APP_MENU_VIEW_PUZZLE = 0x9c4d,
+    APP_MENU_CAST_SPELL = 0x9c4e,
+    APP_MENU_SEARCH = 0x9c4f
+H1_ENUM_END(AppMenuCommand)
+// clang-format on
+
+// oldmain's re-entry guard and the intro, end-sequence and campaign state it
+// shares with the game screens.
+extern signed char bKBDone;
+extern signed char gbSkipIntro;
+extern signed char gbWaitForRemoteReceive;
+extern int gbDirectConnect;
+extern short giLastMapOriginX;
+extern short giLastMapOriginY;
+extern char gcCongratsText[];
+extern char* gCampaignSideNames[];
+extern signed char giCampaignChoice;
+extern int giMenuCommand;
+void ShowCongrats(void);
+short InitMenuHandler(tag_message&);
+int AddScoreToHighScore(int, int, char*, char*);
+
+// Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
+// menu (new, load, campaign, high scores, credits, quit), one network
+// handshake and the campaign replay/next-scenario loop.
+VA(0x0045015c, 0xe22)
+int oldmain(void) {
+    char saveBuf[20];
+    char hiResVideos[3];
+    char lowResVideos[3];
+    int n;
+    heroWindow* mainWin;
+    font* font;
+    signed char backdropLoaded;
+    int idx;
+    signed char initialMainScreen;
+    signed char done;
+    signed char leave;
+    int result;
+    short command;
+
+    if (bKBDone)
+        return 0;
+    bKBDone = 1;
+    command = -1;
+    if (gpExec->InitSystem())
+        ShutDown("Initialization failed!");
+    CheckMem();
+    KBChangeMenu(hmnuDflt);
+    gPalette = gpResourceManager->GetPalette("kb.pal");
+    PostprocessPalette(gPalette->m_data);
+    SetPalette(gPalette->m_data, 1);
+    gpWindowManager->m_updateFlags = 1;
+    gpPhilAI->m_debugFont = gpResourceManager->GetFont("smalfont.fnt");
+    if (giShowIntro) {
+        FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
+        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
+        font = gpResourceManager->GetFont("bigfont.fnt");
+        font->DrawString("Loading Heroes of Might and Magic for Windows 95 (version 1.0)", 10, 10, 1);
+        gpWindowManager->UpdateScreenRegion(10, 10, 600, 20);
+        gpResourceManager->Dispose(font);
+        if (!gbSkipIntro) {
+            if (gConfig.slowVideo)
+                PlaySmacker(1);
+            else
+                PlaySmacker(0);
+        }
+        if (gConfig.slowVideo)
+            PlaySmacker(2);
+        else
+            PlaySmacker(3);
+    }
+    LoadSystemwideIcons();
+    memset(gbThisNetHumanPlayer, 0, 4);
+    leave = 0;
+    backdropLoaded = 0;
+    initialMainScreen = 1;
+
+    while (!leave) {
+    mainMenu:
+        gpSoundManager->SwitchAmbientMusic(48);
+        if (!backdropLoaded) {
+            if (gGameCommand != 4) {
+                gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
+                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                if (initialMainScreen)
+                    SetPalette(gPalette->m_data, 0);
+                else
+                    gpWindowManager->FadeScreen(0, 8, gPalette);
+                initialMainScreen = 0;
+            }
+            gpMouseManager->SetPointer("advmice.mse", 0);
+        }
+        backdropLoaded = 1;
+        if (gGameCommand != 4)
+            gpWindowManager->m_updateFlags = 1;
+        giCampaignChoice = 0;
+        gpMouseManager->ReallyShowPointer();
+
+        if (giMenuCommand != -1) {
+        processMenuCommand:
+            switch (giMenuCommand) {
+                case APP_MENU_LOAD_0:
+                case APP_MENU_LOAD_1:
+                case APP_MENU_LOAD_2:
+                case APP_MENU_LOAD_3:
+                case APP_MENU_LOAD_4:
+                case APP_MENU_LOAD_5:
+                case APP_MENU_LOAD_6:
+                case APP_MENU_LOAD_7:
+                case APP_MENU_LOAD_8:
+                case APP_MENU_LOAD_9:
+                case APP_MENU_LOAD_10:
+                    if (!gpGame->PickLoadGame())
+                        goto mainMenu;
+                    break;
+                case APP_MENU_RESTART_0:
+                case APP_MENU_RESTART_1:
+                case APP_MENU_RESTART_2:
+                case APP_MENU_RESTART_3:
+                case APP_MENU_RESTART_4:
+                case APP_MENU_RESTART_5:
+                case APP_MENU_RESTART_6:
+                case APP_MENU_RESTART_7:
+                case APP_MENU_RESTART_8:
+                case APP_MENU_RESTART_9:
+                case APP_MENU_RESTART_10:
+                case APP_MENU_RESTART_11:
+                case APP_MENU_RESTART_12:
+                case APP_MENU_RESTART_13:
+                    if (!gpGame->NewGame())
+                        goto mainMenu;
+                    break;
+            }
+            goto gameSetupComplete;
+        } else {
+            if (gGameCommand != -1) {
+                command = gGameCommand;
+                gGameCommand = -1;
+            } else {
+                mainWin = new heroWindow(400, 35, "stpmain.bin");
+                if (!mainWin)
+                    MemError();
+                gbInSetupDialog = 1;
+                gpWindowManager->DoDialog(mainWin, InitMenuHandler, 0);
+                delete mainWin;
+                command = gpWindowManager->m_dialogResult;
+                gbInSetupDialog = 0;
+            }
+        }
+        if (giMenuCommand != -1)
+            goto processMenuCommand;
+
+        gpMouseManager->ReallyHidePointer();
+        switch (command) {
+            case 2:
+                if (!gpGame->PickLoadGame())
+                    goto mainMenu;
+                break;
+            case 5:
+                if (gpExec->AddManager(gpHighScoreManager, -1))
+                    ShutDown("Can't add manager!");
+                gpExec->MainLoop();
+                gpExec->RemoveManager(gpHighScoreManager);
+                backdropLoaded = 0;
+                goto mainMenu;
+            case 1:
+                if (!gpGame->NewGame())
+                    goto mainMenu;
+                break;
+            case 6:
+                gpWindowManager->FadeScreen(1, 8, gPalette);
+                gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
+                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->FadeScreen(0, 8, gPalette);
+                done = 0;
+                gpInputManager->Flush();
+                while (!done) {
+                    Process1WindowsMessage();
+                    switch (gpInputManager->GetEvent().type) {
+                        case MESSAGE_KEY_DOWN:
+                        case MESSAGE_LEFT_BUTTON_DOWN:
+                        case MESSAGE_RIGHT_BUTTON_DOWN:
+                            done = 1;
+                    }
+                }
+                gpWindowManager->FadeScreen(1, 8, gPalette);
+                gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
+                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->FadeScreen(0, 8, gPalette);
+                goto mainMenu;
+            case 4:
+                leave = 1;
+                break;
+        }
+
+    gameSetupComplete:
+        if (giMenuCommand != -1)
+            goto processMenuCommand;
+        if (!leave) {
+            if (gbRemoteOn && !gbDirectConnect) {
+                n = 0;
+                for (idx = 0; idx < 4; idx++) {
+                    if (gbHumanPlayer[idx]) {
+                        gbGamePosToNetPos[idx] = n;
+                        n++;
+                    } else {
+                        gbGamePosToNetPos[idx] = -1;
+                    }
+                }
+                for (idx = 0; idx < 4; idx++)
+                    memcpy(gText, gbGamePosToNetPos, 4);
+                giThisGamePos = NetPosToGamePos(0);
+                giHostGamePos = giThisGamePos;
+                for (idx = 1; idx < giNumHumanPlayers; idx++) {
+                    result = TransmitRemoteData(gText, idx, 4, BOX_REMOTE_SETUP, 1, 1, -1, 0);
+                    if (!result)
+                        ShutDown(0);
+                }
+                for (idx = 0; idx < gpGame->m_playerCount; idx++) {
+                    if (gbHumanPlayer[idx] && !gbThisNetHumanPlayer[idx]) {
+                        if (!gpGame->TransmitSaveGame(idx, 0))
+                            ShutDown(0);
+                    }
+                }
+            }
+            if (gbRemoteOn && gbWaitForRemoteReceive) {
+                giWaitType = 0;
+                NormalDialog("Waiting for other remote player to set up game.", 6, -1, -1, -1, 0, -1, 0, -1);
+                if (!gbFunctionComplete)
+                    ShutDown(0);
+                gpGame->LoadGame("REMOTE.GAM", 0, 1);
+                goto playScenario;
+            }
+        playScenario:
+            if (gpGame->m_campaignType > 0) {
+                if (!backdropLoaded) {
+                    gpWindowManager->FadeScreen(1, 8, gPalette);
+                    gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
+                    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                    gpWindowManager->FadeScreen(0, 8, gPalette);
+                    backdropLoaded = 1;
+                }
+                gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 0, 0);
+            }
+            gbGameInitialized = 1;
+            backdropLoaded = 0;
+            gpSoundManager->StopAllSamples();
+            gpWindowManager->FadeScreen(1, 8, 0);
+            giLastMapOriginX = 0;
+            giLastMapOriginY = 0;
+            if (gpExec->AddManager(gpAdvManager, -1))
+                ShutDown("Can't add manager!");
+            if (command == 1)
+                gpAdvManager->SetHeroContext(gpGame->m_players[0].NextHero(0), 0);
+            gpExec->MainLoop();
+            giLastMapOriginX = gpAdvManager->m_mapOriginX;
+            giLastMapOriginY = gpAdvManager->m_mapOriginY;
+            gpExec->RemoveManager(gpAdvManager);
+            gpWindowManager->FadeScreen(1, 8, gPalette);
+        }
+
+        if (gbGameOver) {
+            RemoteCleanup();
+            bShowIt = 1;
+            gpMouseManager->SetPointer("advmice.mse", 0);
+            gpMouseManager->ReallyHidePointer();
+            sprintf(
+                gcCongratsText,
+                "My heroes, our foes have been scattered, their castles broken and laid bare.  "
+                "The great campaign is now complete, and I stand before you as the undisputed "
+                "High King!\n\nOur victory was achieved in %d days!",
+                giCurTurn);
+            lowResVideos[0] = 7;
+            lowResVideos[1] = 5;
+            lowResVideos[2] = 6;
+            hiResVideos[0] = 7;
+            hiResVideos[1] = 4;
+            hiResVideos[2] = 6;
+            if (giEndSequence != 1) {
+                if (giEndSequence == 2) {
+                    PlaySmacker(4);
+                    PlaySmacker(6);
+                } else {
+                    PlaySmacker(gConfig.slowVideo ? hiResVideos[giEndSequence]
+                                                  : lowResVideos[giEndSequence]);
+                }
+                gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
+                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->FadeScreen(0, 8, gPalette);
+                gpWindowManager->m_updateFlags = 1;
+                backdropLoaded = 1;
+            } else {
+                ShowCongrats();
+            }
+            gbGameOver = 0;
+            if (giEndSequence == 2) {
+                gpSoundManager->SwitchAmbientMusic(54);
+                AddScoreToHighScore(giCurTurn, 0, "", gCampaignSideNames[gpGame->m_campaignType]);
+            }
+            if (gbShowHighScore) {
+                gpMouseManager->ReallyShowPointer();
+                if (gpExec->AddManager(gpHighScoreManager, -1))
+                    ShutDown("Can't add manager!");
+                gpExec->MainLoop();
+                gpExec->RemoveManager(gpHighScoreManager);
+                giHighScoreRank = -1;
+                gpSoundManager->SwitchAmbientMusic(48);
+                gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
+                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->FadeScreen(0, 8, gPalette);
+                backdropLoaded = 1;
+            }
+            if (gpGame->m_campaignType > 0) {
+                if (giEndSequence == 0) {
+                    sprintf(gText, "Would you like to replay this scenario?");
+                    NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                    if (gpWindowManager->m_dialogResult == 0x7805) {
+                        gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
+                        goto playScenario;
+                    }
+                } else if (giEndSequence == 1) {
+                    gpGame->m_campaignDay = giCurTurn + 1;
+                    gpGame->m_campaignScenario++;
+                    gpGame->m_unknown000b++;
+                    if (gpGame->m_campaignScenario - 4 == gpGame->m_campaignType - 1)
+                        gpGame->m_campaignScenario++;
+                    gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
+                    sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_unknown000b);
+                    gpGame->SaveGame(saveBuf, 1);
+                    sprintf(
+                        gText,
+                        "Your campaign has been saved as %s.  Would you like to start the next "
+                        "scenario?",
+                        saveBuf);
+                    NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                    if (gpWindowManager->m_dialogResult == 0x7805)
+                        goto playScenario;
+                }
+            }
+        }
+        if (gbRemoteOn)
+            leave = 1;
+    }
+    ShutDown(0);
+    return 0;
 }
 
 // Buka 2.1 toupper; HoMM1 keeps the narrow character form.
@@ -1880,11 +2269,80 @@ void FileError(char* filename) {
 // compare loads the other operand first. Not source-steerable (probed every term
 // ordering, explicit grouping, `|0`, and an inline helper — all identical here).
 
-// donor PoL RVA 0x00009e89; preferred Buka symbol ?Overview@game@@QAEXXZ
-// donor Buka TU SOURCE/Overview; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.482449;margin=0.238001;shape=0.359;size=0.797;calls=0.763;alternate=pol20:void game::Overview(void)@0x00009e89
+// Campaign-text and score-label tables and the score-to-rank creature names.
+extern char* gCampaignWinTexts[];
+extern char* gScoreLabels[];
+extern char* gScoreRankNames[];
+int GetBaseScore(int);
+void CongratsWait(void);
+
+// HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
+// scenario's win text; standard games score the days played, rank the result
+// as a creature and file it with the high scores.
 VA(0x00455123, 0x3be)
-void game::Overview(void) {}
+void ShowCongrats(void) {
+    char name[32];
+    int i;
+    int result;
+    tag_message message;
+    int daysScore;
+    heroWindow* win;
+
+    daysScore = GetBaseScore(giCurTurn);
+    result = gpGame->m_difficultyRating * daysScore / 100;
+    gpSoundManager->SwitchAmbientMusic(54);
+    gpMouseManager->ReallyHidePointer();
+    sprintf(gText, "congrats.bmp");
+    gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.data.text = gText;
+    if (gpGame->m_campaignType > 0) {
+        win = new heroWindow(0, 0, "congrats.bin");
+        if (!win)
+            MemError();
+        sprintf(gText, gCampaignWinTexts[gpGame->m_campaignScenario]);
+        message.payload.widget.id = 100;
+        win->BroadcastMessage(message);
+    } else {
+        win = new heroWindow(0, 0, "congspre.bin");
+        if (!win)
+            MemError();
+        sprintf(name, gScoreRankNames[GetMonType(result, 1)]);
+        name[0] -= 32;
+        sprintf(gText, "A Glorious Victory!");
+        message.payload.widget.id = 100;
+        win->BroadcastMessage(message);
+        for (i = 0; i < 5; i++) {
+            sprintf(gText, gScoreLabels[i]);
+            message.payload.widget.id = i + 101;
+            win->BroadcastMessage(message);
+        }
+        sprintf(gText, "%d", giCurTurn);
+        message.payload.widget.id = 106;
+        win->BroadcastMessage(message);
+        sprintf(gText, "%d", daysScore);
+        message.payload.widget.id = 107;
+        win->BroadcastMessage(message);
+        sprintf(gText, "%d%%", gpGame->m_difficultyRating);
+        message.payload.widget.id = 108;
+        win->BroadcastMessage(message);
+        sprintf(gText, "%d", result);
+        message.payload.widget.id = 109;
+        win->BroadcastMessage(message);
+        sprintf(gText, "%s", name);
+        message.payload.widget.id = 110;
+        win->BroadcastMessage(message);
+    }
+    gpWindowManager->AddWindow(win, -1, 1);
+    gpMouseManager->ReallyHidePointer();
+    gpWindowManager->FadeScreen(0, 8, 0);
+    CongratsWait();
+    gpWindowManager->RemoveWindow(win);
+    delete win;
+    if (gpGame->m_campaignType <= 0)
+        AddScoreToHighScore(result, 1, "", gpGame->m_mapName);
+}
 
 // donor PoL RVA 0x0009e900; preferred Buka symbol ?CongratsWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -2118,51 +2576,6 @@ int GameUnsaved(void) {
         return 0;
 }
 
-// clang-format off
-// HoMM1 menu command ids; each menu bar repeats Restart and New Game.
-H1_ENUM_BEGIN(AppMenuCommand)
-    APP_MENU_RESTART_0 = 0x9ca6,
-    APP_MENU_RESTART_1 = 0x9ca8,
-    APP_MENU_RESTART_2 = 0x9ca9,
-    APP_MENU_RESTART_3 = 0x9caa,
-    APP_MENU_RESTART_4 = 0x9cab,
-    APP_MENU_RESTART_5 = 0x9cae,
-    APP_MENU_RESTART_6 = 0x9caf,
-    APP_MENU_RESTART_7 = 0x9cb0,
-    APP_MENU_RESTART_8 = 0x9cb2,
-    APP_MENU_RESTART_9 = 0x9cb3,
-    APP_MENU_RESTART_10 = 0x9cb5,
-    APP_MENU_RESTART_11 = 0x9cb6,
-    APP_MENU_RESTART_12 = 0x9cb8,
-    APP_MENU_RESTART_13 = 0x9cb9,
-    APP_MENU_LOAD_0 = 0x9cbb,
-    APP_MENU_LOAD_1 = 0x9cbc,
-    APP_MENU_LOAD_2 = 0x9cbf,
-    APP_MENU_LOAD_3 = 0x9cc0,
-    APP_MENU_LOAD_4 = 0x9cc1,
-    APP_MENU_LOAD_5 = 0x9cc3,
-    APP_MENU_LOAD_6 = 0x9cc4,
-    APP_MENU_LOAD_7 = 0x9cc6,
-    APP_MENU_LOAD_8 = 0x9cc7,
-    APP_MENU_LOAD_9 = 0x9cc9,
-    APP_MENU_LOAD_10 = 0x9cca,
-    APP_MENU_SAVE = 0x9ccb,
-    APP_MENU_EXIT = 0x9ccc,
-    APP_MENU_MUSIC_FIRST = 0x9c50,
-    APP_MENU_MUSIC_LAST = 0x9c5a,
-    APP_MENU_SOUND_FIRST = 0x9c5c,
-    APP_MENU_SOUND_LAST = 0x9c66,
-    APP_MENU_WALK_FASTEST = 0x9c68,
-    APP_MENU_WALK_SLOWEST = 0x9c6c,
-    APP_MENU_CD_MUSIC = 0x9c6d,
-    APP_MENU_TOGGLE_ROUTE = 0x9c6e,
-    APP_MENU_TOGGLE_BLACKOUT = 0x9c6f,
-    APP_MENU_VIEW_WORLD = 0x9c4c,
-    APP_MENU_VIEW_PUZZLE = 0x9c4d,
-    APP_MENU_CAST_SPELL = 0x9c4e,
-    APP_MENU_SEARCH = 0x9c4f
-H1_ENUM_END(AppMenuCommand)
-// clang-format on
 
 // donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
