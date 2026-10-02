@@ -20,37 +20,37 @@ short army::CanFit(short* hex) {
     if (!ValidHex(candidateHex) || candidateHex % COMBAT_GRID_COLUMNS == 0
         || candidateHex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
         return 0;
-    if (gpCombatManager->m_hexCells[candidateHex].m_occupantSide != -1
-        || gpCombatManager->m_hexCells[candidateHex].m_obstacleIndex != -1)
+    if (gpCombatManager->m_hexCells[candidateHex].m_occupantSide != COMBAT_SIDE_NONE
+        || gpCombatManager->m_hexCells[candidateHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
         return 0;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         candidateHex = GetAdjacentCellIndex(
             *hex,
             (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_EAST
-                                                       : COMBAT_DIRECTION_WEST)
+                                                        : COMBAT_DIRECTION_WEST)
         );
         if (ValidHex(candidateHex))
             cell = &gpCombatManager->m_hexCells[candidateHex];
         if (ValidHex(candidateHex)
-            && (cell->m_occupantSide == -1
+            && (cell->m_occupantSide == COMBAT_SIDE_NONE
                 || (gpCombatManager->m_currentSide == cell->m_occupantSide
                     && gpCombatManager->m_currentArmyIndex == cell->m_occupantIndex))
-            && cell->m_obstacleIndex == -1) {
+            && cell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
             return 1;
         } else {
             candidateHex = GetAdjacentCellIndex(
                 *hex,
                 (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_WEST
-                                                           : COMBAT_DIRECTION_EAST)
+                                                            : COMBAT_DIRECTION_EAST)
             );
             if (ValidHex(candidateHex))
                 cell = &gpCombatManager->m_hexCells[candidateHex];
             else
                 return 0;
-            if ((cell->m_occupantSide == -1
+            if ((cell->m_occupantSide == COMBAT_SIDE_NONE
                  || (gpCombatManager->m_currentSide == cell->m_occupantSide
                      && gpCombatManager->m_currentArmyIndex == cell->m_occupantIndex))
-                && cell->m_obstacleIndex == -1) {
+                && cell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
                 *hex = candidateHex;
                 return 1;
             } else {
@@ -81,7 +81,8 @@ short army::ValidFlight(short destination, signed char useDestination) {
 
     if (!ValidHex(destination))
         return 0;
-    if (m_targetSide < 0 || m_targetSide > 1 || m_targetIndex < 0 || m_targetIndex > 4) {
+    if (m_targetSide < 0 || m_targetSide > COMBAT_SIDE_COUNT - 1 || m_targetIndex < 0
+        || m_targetIndex > ARMY_GROUP_SLOT_COUNT - 1) {
         if (CanFit(&destination)) {
             m_moveTargetHex = destination;
             return 1;
@@ -96,10 +97,16 @@ short army::ValidFlight(short destination, signed char useDestination) {
         targetHex = opponent->m_hex;
     if (!ValidHex(targetHex))
         return 0;
-    attackDirections = GetAttackMask(m_hex, 0, -1);
-    while (attackDirections != 0xff) {
+    attackDirections = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
+    while (attackDirections != COMBAT_ALL_DIRECTIONS_BLOCKED) {
         attackDirection = GetBestDirection(m_hex, targetHex, attackDirections);
-        if (ValidAttack(m_hex, attackDirection, 0, -1, &hitHex)) {
+        if (ValidAttack(
+                m_hex,
+                attackDirection,
+                ARMY_ATTACK_TARGET_ASSIGNED,
+                ARMY_HEX_INVALID,
+                &hitHex
+            )) {
             m_attackDirection = attackDirection;
             m_moveTargetHex = m_hex;
             return 1;
@@ -114,9 +121,9 @@ short army::ValidFlight(short destination, signed char useDestination) {
         else
             targetHex = targetHex - 1;
         if (opponent->m_facing == ARMY_FACING_RIGHT)
-            directionMask = 1 << COMBAT_DIRECTION_WEST;
+            directionMask = COMBAT_DIRECTION_BIT_WEST;
         else
-            directionMask = 1 << COMBAT_DIRECTION_EAST;
+            directionMask = COMBAT_DIRECTION_BIT_EAST;
     }
     while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
         dir = GetBestDirection(targetHex, m_hex, directionMask);
@@ -126,7 +133,8 @@ short army::ValidFlight(short destination, signed char useDestination) {
             if (!(m_stats.attributes & MONSTER_FLAGS_WIDE)) {
                 m_attackDirection = OppositeDirection(dir);
             } else {
-                attackDirections = ~GetAttackMask(m_moveTargetHex, 0, -1);
+                attackDirections =
+                    ~GetAttackMask(m_moveTargetHex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
                 for (n = 0; n < COMBAT_DIRECTION_COUNT; n++) {
                     if (attackDirections & (1 << n))
                         m_attackDirection = n;
@@ -143,9 +151,9 @@ short army::ValidFlight(short destination, signed char useDestination) {
         else
             targetHex = targetHex + 1;
         if (opponent->m_facing == ARMY_FACING_RIGHT)
-            directionMask = 1 << COMBAT_DIRECTION_EAST;
+            directionMask = COMBAT_DIRECTION_BIT_EAST;
         else
-            directionMask = 1 << COMBAT_DIRECTION_WEST;
+            directionMask = COMBAT_DIRECTION_BIT_WEST;
         while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
             dir = GetBestDirection(targetHex, m_hex, directionMask);
             nextHex = GetAdjacentCellIndex(targetHex, dir);
@@ -249,9 +257,9 @@ short army::FlyTo(short destination) {
         m_animationFrame = 5;
     else
         m_animationFrame = 0;
-    frontCell.m_occupantSide = -1;
+    frontCell.m_occupantSide = COMBAT_SIDE_NONE;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
-        otherCell.m_occupantSide = -1;
+        otherCell.m_occupantSide = COMBAT_SIDE_NONE;
     gpCombatManager->DrawFrame(0);
     gpWindowManager->m_screen->CopyTo(
         gpCombatManager->m_backgroundBuffer,
@@ -312,7 +320,7 @@ short army::FlyTo(short destination) {
         if (giMaxExtentY > oldMaxY)
             oldMaxY = giMaxExtentY;
         DelayTil(glTimers);
-        glTimers[0] = KBTickCount() + 75;
+        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         gpWindowManager->UpdateScreenRegion(oldX, oldY, maxExtentX - oldX + 1, oldMaxY - oldY + 1);
         if (backwards == 1)
             m_animationFrame = m_animationFrame - 1;

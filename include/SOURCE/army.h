@@ -42,19 +42,6 @@ H1_ENUM_BEGIN(ArmySpellCancelType)
     ARMY_CANCEL_SPELLS_ROUNDS_ONLY = 3
 H1_ENUM_END(ArmySpellCancelType)
 
-// army::SpellEffect's effect index into gCombatFxNames (and
-// m_effectAnimation): 0..21 follow the spell that casts them; the luck and
-// morale effects come after (rainbluk, cloudluk, moraleg, moraleb.icn).
-// DrawFrame grows the redraw box upward for these four.
-H1_ENUM_CONST_BEGIN(ArmyEffectAnimationConstant)
-    ARMY_EFFECT_NONE = -1,
-    ARMY_EFFECT_GOOD_LUCK = 22,
-    ARMY_EFFECT_BAD_LUCK = 23,
-    ARMY_EFFECT_GOOD_MORALE = 24,
-    ARMY_EFFECT_BAD_MORALE = 25,
-    ARMY_EFFECT_COUNT = 26
-H1_ENUM_CONST_END(ArmyEffectAnimationConstant)
-
 // army::m_damageMode, how DamageEnemy rolls each creature's damage:
 // random by default, the minimum or maximum roll (SPELLS' curse/bless
 // set them) or a halved total.
@@ -81,14 +68,28 @@ H1_ENUM_CONST_BEGIN(ArmyCombatConstant)
     ARMY_SAMPLE_CHANNEL = 3,
     ARMY_QUANTITY_TEXT_SIZE = 12,
     // WalkTo/AttackTo when no path reaches the target (Buka ARMY_PATH_BLOCKED).
-    ARMY_PATH_BLOCKED = 3
+    ARMY_PATH_BLOCKED = 3,
+    // SpecialAttack: a shot across an intact or damaged castle wall adds
+    // this to the target's defense (DamageEnemy's defense modifier).
+    ARMY_CASTLE_WALL_DEFENSE_BONUS = 4,
+    // Protection's defense bonus; CancelSpell takes it back (Buka
+    // ArmySpellStatConstant STONESKIN_DEFENSE_BONUS, the same +3).
+    ARMY_PROTECTION_DEFENSE_BONUS = 3
 H1_ENUM_CONST_END(ArmyCombatConstant)
+
+// army::m_luck: CheckLuck rolls good or bad luck for this attack;
+// DamageEnemy doubles or halves the damage and resets it.
+H1_ENUM_BEGIN(ArmyLuck)
+    ARMY_LUCK_BAD = -1,
+    ARMY_LUCK_NONE = 0,
+    ARMY_LUCK_GOOD = 1
+H1_ENUM_END(ArmyLuck)
 // clang-format on
 
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
 #pragma pack(push, 1)
-        class army {
+class army {
 public:
     // Attack target (GetCommand clears both to -1).
     signed char m_targetSide;
@@ -115,7 +116,7 @@ public:
     // Init copies the creature speed here; m_stats.speed is the current one.
     signed char m_baseSpeed;
     // CheckLuck: 1 good luck, -1 bad luck this attack.
-    signed char m_luck;
+    H1_ENUM_STORAGE(ArmyLuck, signed char) m_luck;
     // Creature record bytes +0xc..+0x1e (hit points through attributes);
     // Init adds the hero's two primary skills to attack and defense.
     // Attribute bit 0 is a two-hex creature, bit 1 a flyer.

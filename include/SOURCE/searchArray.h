@@ -9,13 +9,16 @@
 // forward declarations:
 class army;
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(SearchStorageConstant)
-SEARCH_QUEUE_CAPACITY = 1024,
-    SEARCH_CELL_CAPACITY = 5184, SEARCH_GRID_SIZE = 72, SEARCH_FLAG_BIT_COUNT = 1,
+    SEARCH_QUEUE_CAPACITY = 1024,
+    SEARCH_CELL_CAPACITY = 5184,
+    SEARCH_GRID_SIZE = 72,
+    SEARCH_FLAG_BIT_COUNT = 1,
     SEARCH_DIRECTION_BIT_COUNT = 4,
-    SEARCH_PATH_CAPACITY = 256 H1_ENUM_CONST_END(SearchStorageConstant)
+    SEARCH_PATH_CAPACITY = 256
+H1_ENUM_CONST_END(SearchStorageConstant)
 
-    // clang-format off
 // Direction bit masks over MapDirection (1 << direction): north, north-east
 // and north-west steps test the current cell's object, south-east, south and
 // south-west the next cell's (TestPossibleDirections, SeedPosition; Buka
@@ -26,13 +29,33 @@ H1_ENUM_CONST_BEGIN(SearchDirectionConstant)
     SEARCH_DIRECTION_EDGE_OBJECT_MASK = 0x83,
     SEARCH_DIRECTION_OBJECT_MASK = 0x38
 H1_ENUM_CONST_END(SearchDirectionConstant)
+
+// SeedPosition's cost bookkeeping (Buka searchArray.h SearchConstant names,
+// HoMM1 values on its 4/6/8 step-cost scale): MAX_COST starts the best cost
+// to an explicit target, TARGET_COST_WINDOW (one straight step) stops the
+// flood once nothing cheaper can reach it and lets a continued seed return
+// early, MONSTER_RESEED_WINDOW (three straight steps) skips neighbours an
+// adjacent-monster node already reached that cheaply. INVALID_COORDINATE is
+// the no-target / no-monster coordinate (m_specialTargetX/Y, PushPoint's
+// value/previous bytes, FindAdjacentMonster's excluded monster).
+// FindNearestObject floods with a working mobility of NEAREST_OBJECT_MOBILITY
+// and prices each step with UNLIMITED_STEP_MOBILITY, so CalcTerrainCost
+// always charges the full diagonal cost.
+H1_ENUM_CONST_BEGIN(SearchConstant)
+    SEARCH_INVALID_COORDINATE = -1,
+    SEARCH_TARGET_COST_WINDOW = 4,
+    SEARCH_MONSTER_RESEED_WINDOW = 12,
+    SEARCH_NEAREST_OBJECT_MOBILITY = 500,
+    SEARCH_UNLIMITED_STEP_MOBILITY = 999,
+    SEARCH_MAX_COST = 9999
+H1_ENUM_CONST_END(SearchConstant)
 // clang-format on
 
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
 // (CheckReload shifts it right four; the path builder masks 0xf).
 #pragma pack(push, 1)
-        struct searchNode {
+struct searchNode {
     // BuildPath sign-extends both coordinates.
     signed char x;
     signed char y;
@@ -108,6 +131,7 @@ public:
     void TestPossibleDirections(short, short, signed char* const, signed char* const, short, int);
     void SeedCombatPosition(class army*);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
+    // attackPath is an ArmyPathTarget (PATH.h).
     short FindCombatPath(short, short, class army*, signed char);
     // HoMM1 retail 0x00424c50 (ret 0x10): word hex/direction and unsigned
     // word distance/speed.

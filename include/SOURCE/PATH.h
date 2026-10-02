@@ -13,12 +13,15 @@ H1_ENUM_BEGIN(ArmyAttackTarget)
     ARMY_ATTACK_TARGET_OCCUPIED = 2
 H1_ENUM_END(ArmyAttackTarget)
 
-// army::ValidPath/FindPath pathMode, forwarded to searchArray::FindCombatPath
-// as attackPath: EXACT routes to attack the stack standing on the target hex
-// (GetAttackMask gets that hex), ANY lets the assigned target be attacked
-// from any hex (GetAttackMask gets ARMY_HEX_INVALID); plain moves pass ANY
-// (Buka army.h ArmyPathTarget, same values).
+// army::FindPath/ValidPath/ValidFlight path mode, forwarded to
+// searchArray::FindCombatPath's attackPath: nonzero passes the target hex to
+// GetAttackMask and stops at the first hex from which the target can be
+// attacked instead of routing onto it; ANY (0) passes ARMY_HEX_INVALID.
+// COMMAND moves pass ANY and attack routes EXACT; the combat AI passes EXACT
+// walking to a stack's front and ASSIGNED closing on its target (Buka
+// ArmyPathTarget numbering; HoMM1 treats every nonzero mode alike).
 H1_ENUM_BEGIN(ArmyPathTarget)
+    ARMY_PATH_ASSIGNED_TARGET_HEX = -1,
     ARMY_PATH_ANY_TARGET_HEX = 0,
     ARMY_PATH_EXACT_TARGET_HEX = 1
 H1_ENUM_END(ArmyPathTarget)

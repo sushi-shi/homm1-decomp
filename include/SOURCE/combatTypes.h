@@ -15,8 +15,11 @@ H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_ADJACENT_LAST = 5,
     COMBAT_DIRECTION_WIDE_WEST = 6,
     COMBAT_DIRECTION_WIDE_EAST = 7,
+    COMBAT_DIRECTION_EASTERN_FIRST = 0,
     COMBAT_DIRECTION_EASTERN_LAST = 2,
     COMBAT_DIRECTION_WESTERN_FIRST = 3,
+    COMBAT_DIRECTION_WESTERN_LAST = 5,
+    COMBAT_DIRECTION_WIDE_FIRST = 6,
     COMBAT_DIRECTION_OPPOSITE_OFFSET = 3,
     COMBAT_DIRECTION_ADJACENT_COUNT = 6,
     COMBAT_DIRECTION_COUNT = 8
@@ -93,8 +96,11 @@ H1_ENUM_END(CombatEffectAnimation)
 // glTimers slot the combat screens pace their animation frames with
 // (combatManager::Open/Main/KeepAttack, the win/lose windows); Buka keeps
 // per-owner slot names the same way (HIGH_SCORE_TIMER_SLOT).
+// army::PowEffect and SpellEffect pace their effect frames on the second
+// slot.
 H1_ENUM_CONST_BEGIN(CombatTimerSlot)
-    COMBAT_FRAME_TIMER_SLOT = 0
+    COMBAT_FRAME_TIMER_SLOT = 0,
+    COMBAT_EFFECT_TIMER_SLOT = 1
 H1_ENUM_CONST_END(CombatTimerSlot)
 
 // hexcell::m_obstacleIndex: a rock's frame in the obstacle icon, or for a

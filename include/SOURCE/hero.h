@@ -36,8 +36,30 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     // Hero ids run nine per class (GetNewHeroId, RecruitHero's id / 9) over
     // the four classes.
     HERO_PER_CLASS_COUNT = 9,
-    HERO_CLASS_COUNT = 4
+    HERO_CLASS_COUNT = 4,
+    // Dismiss clears m_owner and the destination; playerData's hero lists
+    // (m_heroIds, m_currentHero) and the boat records mark an empty entry
+    // with HERO_ID_NONE (Buka hero.h HERO_OWNER_NONE / HERO_DESTINATION_NONE).
+    HERO_OWNER_NONE = -1,
+    HERO_DESTINATION_NONE = -1,
+    HERO_ID_NONE = -1,
+    // playerData::m_availableHeroIds: the tavern's two heroes for hire.
+    HERO_AVAILABLE_SLOT_COUNT = 2,
+    // CheckLevel seeds SRand with m_randomSeed + level * SEED_FACTOR and
+    // reads gHeroSkillBonus row level - FIRST_LEVEL, clamped to ROW_LAST
+    // (Buka HERO_LEVEL_RANDOM_SEED_FACTOR).
+    HERO_LEVEL_RANDOM_SEED_FACTOR = 30,
+    HERO_SKILL_BONUS_FIRST_LEVEL = 2,
+    HERO_SKILL_BONUS_ROW_LAST = 8
 H1_ENUM_CONST_END(HeroConstant)
+
+// game::m_availableHeroes per hero id: the owning player, UNAVAILABLE, or
+// RETREATED for a hero that retreated or surrendered and waits in its
+// owner's tavern (Dismiss; Buka hero.h HeroConstant numbering).
+H1_ENUM_CONST_BEGIN(HeroAvailability)
+    HERO_AVAILABILITY_UNAVAILABLE = -1,
+    HERO_AVAILABILITY_RETREATED = 0x40
+H1_ENUM_CONST_END(HeroAvailability)
 
 // hero::GetNumSpells' selector (Buka hero.h HeroSpellType): combat slots,
 // adventure slots or both.

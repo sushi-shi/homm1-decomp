@@ -21,6 +21,7 @@ class town;
 struct SBolt;
 struct tag_message;
 
+// clang-format off
 // Buka's CombatMessageCommand: GetCommand derives one from the hovered hex
 // and DoCommand runs it (move, fly, shoot, own and opposing hero options,
 // view, attack, spell book, retreat, surrender).
@@ -61,7 +62,6 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_ATTACK_FIRST = 7
 H1_ENUM_END(CombatPointerCode)
 
-    // clang-format off
 // Two sides (attacker 0, defender 1) index m_armies and m_numArmies.
 // The hex grid is nine columns by five rows (hex = row * 9 + column):
 // DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
@@ -72,17 +72,45 @@ H1_ENUM_END(CombatPointerCode)
 H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6,
-    COMBAT_CASTLE_WALL_COLUMN = 5
+    COMBAT_CASTLE_WALL_COLUMN = 5,
+    // No stack slot: hexcell::m_occupantIndex of an empty hex and
+    // army::m_targetIndex without a target (Buka COMBAT_AI_NO_ARMY).
+    COMBAT_ARMY_INDEX_NONE = -1
 H1_ENUM_CONST_END(CombatGridConstant)
 
 // The battlefield view is the logical screen less SaveCombatBorder's
 // twenty-row text bar: the background buffer copies 640x460 and the redraw
 // extents clamp to its last row. Walk and FlyTo start the minimum extents
 // at 640, past every view coordinate.
+// Hexes are HEX_WIDTH x HEX_HEIGHT pixels; grid rows start FIELD_TOP pixels
+// down and a hex's anchor y is row * HEX_HEIGHT + HEX_ORIGIN_Y (combatManager
+// constructor, GetGridIndex, UpdateCombatArea, DrawBackground's wall strip,
+// hexcell::DrawTower). DrawFrame draws the catapult with grid row
+// CATAPULT_ROW and the attacker's and defender's tents with rows
+// ATTACKER_HERO_ROW and DEFENDER_HERO_ROW.
 H1_ENUM_CONST_BEGIN(CombatViewConstant)
     COMBAT_VIEW_HEIGHT = 460,
-    COMBAT_EXTENT_MIN_START = 640
+    COMBAT_EXTENT_MIN_START = 640,
+    COMBAT_HEX_WIDTH = 78,
+    COMBAT_HEX_HEIGHT = 80,
+    COMBAT_FIELD_TOP = 60,
+    COMBAT_HEX_ORIGIN_Y = 139,
+    COMBAT_ATTACKER_HERO_ROW = 1,
+    COMBAT_DEFENDER_HERO_ROW = 2,
+    COMBAT_CATAPULT_ROW = 3
 H1_ENUM_CONST_END(CombatViewConstant)
+
+// Per-side draw sentinels: m_heroType and m_catapultFrame hold -1 for a side
+// without a hero or catapult (DrawFrame skips the tent / catapult);
+// ResetLimitCreature marks a dead stack's m_limitCreatureCount HIDDEN so
+// DrawFrame never grows the redraw box for it.
+H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
+    COMBAT_HERO_TYPE_NONE = -1,
+    COMBAT_CATAPULT_FRAME_NONE = -1,
+    COMBAT_LIMIT_CREATURE_HIDDEN = -1,
+    // m_wallDamage without damage frames to draw (hexcell::DrawWall).
+    COMBAT_WALL_DAMAGE_NONE = -1
+H1_ENUM_CONST_END(CombatDrawStateConstant)
 
 // Combat AI tuning thresholds (Buka combatManager.h CombatAIConstant names
 // with HoMM1's values): AICheckRetreat's artifact-value and army-strength
@@ -104,7 +132,13 @@ H1_ENUM_CONST_BEGIN(CombatAIConstant)
     COMBAT_AI_RETREAT_STRENGTH_DIVISOR = 20000,
     COMBAT_AI_RETREAT_TIER_4_THRESHOLD = 30000,
     COMBAT_AI_RETREAT_SCALED_PENALTY_THRESHOLD = 40000,
-    COMBAT_AI_EXPERIENCE_DIVISOR = 200000
+    COMBAT_AI_EXPERIENCE_DIVISOR = 200000,
+    // DoCompAI's castle shooting estimate: the town's archers start at
+    // BASE_ARCHERS, add ARCHERS_PER_DWELLING per dwelling and one per other
+    // built structure, each worth ARCHER_STRENGTH to the defender.
+    COMBAT_AI_CASTLE_BASE_ARCHERS = 5,
+    COMBAT_AI_CASTLE_ARCHERS_PER_DWELLING = 4,
+    COMBAT_AI_CASTLE_ARCHER_STRENGTH = 100
 H1_ENUM_CONST_END(CombatAIConstant)
 
 // DoCompAI's plan for the acting stack (Buka CombatAIConstant

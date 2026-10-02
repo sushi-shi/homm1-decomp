@@ -47,11 +47,11 @@ H1_ENUM_CONST_BEGIN(CombatStatusLineConstant)
     COMBAT_STATUS_WIDTH = 0x21f,
     COMBAT_STATUS_HEIGHT = 0x14
 H1_ENUM_CONST_END(CombatStatusLineConstant)
-   // clang-format on
 
-   // Sets the combat window's text line and redraws it outside the extent
-   // bookkeeping.
-   VA(0x00470aa9, 0xb5)
+// Sets the combat window's text line and redraws it outside the extent
+// bookkeeping.
+VA(0x00470aa9, 0xb5)
+// clang-format on
 void combatManager::CombatMessage(char* text, int updateScreen) {
     int oldCompute;
     tag_message message;
@@ -149,7 +149,7 @@ void combatManager::ResetLimitCreature(void) {
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
             if (m_armies[side][j].m_stats.attributes & MONSTER_FLAGS_DEAD)
-                m_limitCreatureCount[side][j] = -1;
+                m_limitCreatureCount[side][j] = COMBAT_LIMIT_CREATURE_HIDDEN;
             else
                 m_limitCreatureCount[side][j] = 0;
         }
@@ -170,11 +170,11 @@ void combatManager::UpdateCombatArea(void) {
 
     if (!m_combatWindowOpen)
         return;
-    y = m_gridUpdateRow * 80 + 60;
-    height = (COMBAT_GRID_ROWS - m_gridUpdateRow) * 80;
+    y = m_gridUpdateRow * COMBAT_HEX_HEIGHT + COMBAT_FIELD_TOP;
+    height = (COMBAT_GRID_ROWS - m_gridUpdateRow) * COMBAT_HEX_HEIGHT;
     if (!m_gridUpdateRow) {
         y = 0;
-        height += 60;
+        height += COMBAT_FIELD_TOP;
     }
     if (y + height > COMBAT_VIEW_HEIGHT)
         height = COMBAT_VIEW_HEIGHT - y;
@@ -195,26 +195,27 @@ void combatManager::DrawBackground(void) {
     for (y = 0; y < COMBAT_GRID_ROWS; y++) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++)
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].DrawGround();
-        if (m_castleSide[0])
+        if (m_castleSide[COMBAT_DEFENDER_SIDE])
             m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x,
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y,
                 (signed char)((y & 1) ? 5 : 6),
                 ICON_DRAW_NORMAL,
-                0
+                ICON_DRAW_OFFSET_FULL
             );
-        wallY = y * 80 + 0x8b;
+        wallY = y * COMBAT_HEX_HEIGHT + COMBAT_HEX_ORIGIN_Y;
         if (y == 0) {
             m_backgroundBitmap->DrawToBuffer(0, 0);
-            if (m_castleSide[1] == 1) {
-                m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(0, wallY, 7, ICON_DRAW_FLIPPED, 0);
+            if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1) {
                 m_combatIcons[COMBAT_ICON_CASTLE]
-                    ->DrawToBuffer(0x6e, wallY, 7, ICON_DRAW_FLIPPED, 0);
-            } else if (m_castleSide[0] == 1) {
+                    ->DrawToBuffer(0, wallY, 7, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
                 m_combatIcons[COMBAT_ICON_CASTLE]
-                    ->DrawToBuffer(0x27f, wallY, 7, ICON_DRAW_NORMAL, 0);
+                    ->DrawToBuffer(0x6e, wallY, 7, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
+            } else if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1) {
                 m_combatIcons[COMBAT_ICON_CASTLE]
-                    ->DrawToBuffer(0x211, wallY, 7, ICON_DRAW_NORMAL, 0);
+                    ->DrawToBuffer(0x27f, wallY, 7, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+                m_combatIcons[COMBAT_ICON_CASTLE]
+                    ->DrawToBuffer(0x211, wallY, 7, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             }
         }
     }
@@ -253,21 +254,21 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     drawn = 1;
                     hexCol = m_armies[side][i].m_hex % COMBAT_GRID_COLUMNS;
                     row = m_armies[side][i].m_hex / COMBAT_GRID_COLUMNS;
-                    boxTop = row * 80;
-                    boxBottom = (row + 2) * 80 + 20;
+                    boxTop = row * COMBAT_HEX_HEIGHT;
+                    boxBottom = (row + 2) * COMBAT_HEX_HEIGHT + 20;
                     if (m_extendLimitDown)
                         boxBottom += 60;
                     if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
-                        boxLeft = hexCol * 78 - 110;
-                        boxRight = (hexCol + 1) * 78 + 70;
+                        boxLeft = hexCol * COMBAT_HEX_WIDTH - 110;
+                        boxRight = (hexCol + 1) * COMBAT_HEX_WIDTH + 70;
                     } else {
-                        boxLeft = hexCol * 78 - 70;
-                        boxRight = (hexCol + 1) * 78 + 110;
+                        boxLeft = hexCol * COMBAT_HEX_WIDTH - 70;
+                        boxRight = (hexCol + 1) * COMBAT_HEX_WIDTH + 110;
                     }
-                    if (m_armies[side][i].m_effectAnimation == ARMY_EFFECT_GOOD_LUCK
-                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_BAD_LUCK
-                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_GOOD_MORALE
-                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_BAD_MORALE)
+                    if (m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_GOOD_LUCK
+                        || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_BAD_LUCK
+                        || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_GOOD_MORALE
+                        || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_BAD_MORALE)
                         boxTop -= 100;
                     if (m_armies[side][i].m_creatureType == CREATURE_CAVALRY)
                         boxTop -= 60;
@@ -288,16 +289,16 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     if (boxRight > giMaxExtentX)
                         giMaxExtentX = boxRight;
                     if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                        if (side == 0)
+                        if (side == COMBAT_DEFENDER_SIDE)
                             sideDelta = -1;
                         else
                             sideDelta = 1;
                         if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
-                            boxLeft = (hexCol + sideDelta) * 78 - 110;
-                            boxRight = (hexCol + sideDelta + 1) * 78 + 70;
+                            boxLeft = (hexCol + sideDelta) * COMBAT_HEX_WIDTH - 110;
+                            boxRight = (hexCol + sideDelta + 1) * COMBAT_HEX_WIDTH + 70;
                         } else {
-                            boxLeft = (hexCol + sideDelta) * 78 - 70;
-                            boxRight = (hexCol + sideDelta + 1) * 78 + 110;
+                            boxLeft = (hexCol + sideDelta) * COMBAT_HEX_WIDTH - 70;
+                            boxRight = (hexCol + sideDelta + 1) * COMBAT_HEX_WIDTH + 110;
                         }
                     }
                     if (boxLeft < giMinExtentX)
@@ -353,106 +354,166 @@ void combatManager::DrawFrame(signed char updateScreen) {
     }
     if (!m_gridMode) {
         for (row = 0; row < COMBAT_GRID_ROWS; row++) {
-            if (row == 3 && m_catapultFrame[1] != -1) {
-                m_combatIcons[COMBAT_ICON_CATAPULT]
-                    ->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], ICON_DRAW_NORMAL, 0);
+            if (row == COMBAT_CATAPULT_ROW
+                && m_catapultFrame[COMBAT_ATTACKER_SIDE] != COMBAT_CATAPULT_FRAME_NONE) {
+                m_combatIcons[COMBAT_ICON_CATAPULT]->DrawToBuffer(
+                    0x1b,
+                    0x17b,
+                    m_catapultFrame[COMBAT_ATTACKER_SIDE],
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
                 m_combatIcons[COMBAT_ICON_CATAPULT]->DimToBuffer(
                     0x1b,
                     0x17b,
-                    m_catapultFrame[1] == 7 ? 16 : 15,
+                    m_catapultFrame[COMBAT_ATTACKER_SIDE] == 7 ? 16 : 15,
                     ICON_DRAW_NORMAL,
-                    0
+                    ICON_DRAW_OFFSET_FULL
                 );
             }
             for (hexCol = 0; hexCol < COMBAT_GRID_COLUMNS; hexCol++)
-                if (m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].m_obstacleIndex != -1)
+                if (m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].m_obstacleIndex
+                    != COMBAT_OBSTACLE_NONE)
                     m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawObstacle();
-            if (row == 0 && m_castleSide[0])
-                m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, 0);
-            for (hexCol = 1; hexCol <= 7; hexCol++) {
+            if (row == 0 && m_castleSide[COMBAT_DEFENDER_SIDE])
+                m_combatIcons[COMBAT_ICON_KEEP]
+                    ->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+            for (hexCol = 1; hexCol <= COMBAT_GRID_LAST_COLUMN - 1; hexCol++) {
                 if (gbLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + hexCol)
                     gbCurrArmyDrawn = 1;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawOccupant();
             }
-            if (row == 2 && m_heroType[0] != -1) {
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0x27f, 0xa9, m_heroType[0], ICON_DRAW_FLIPPED, 0);
+            if (row == COMBAT_DEFENDER_HERO_ROW
+                && m_heroType[COMBAT_DEFENDER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0x27f,
+                    0xa9,
+                    m_heroType[COMBAT_DEFENDER_SIDE],
+                    ICON_DRAW_FLIPPED,
+                    ICON_DRAW_OFFSET_FULL
+                );
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x250,
                     0xeb,
-                    gpGame->m_players[m_playerId[0]].Color() + 4,
+                    gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
                     ICON_DRAW_FLIPPED,
-                    0
+                    ICON_DRAW_OFFSET_FULL
                 );
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, ICON_DRAW_NORMAL, 0);
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0x238,
+                    0xfd,
+                    m_heroType[COMBAT_DEFENDER_SIDE] + 8,
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
             }
-            if (row == 1 && m_heroType[1] != -1) {
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0, 0x59, m_heroType[1], ICON_DRAW_NORMAL, 0);
+            if (row == COMBAT_ATTACKER_HERO_ROW
+                && m_heroType[COMBAT_ATTACKER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0,
+                    0x59,
+                    m_heroType[COMBAT_ATTACKER_SIDE],
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x2f,
                     0x9b,
-                    gpGame->m_players[m_playerId[1]].Color() + 4,
+                    gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
                     ICON_DRAW_NORMAL,
-                    0
+                    ICON_DRAW_OFFSET_FULL
                 );
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, ICON_DRAW_NORMAL, 0);
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0x36,
+                    0xad,
+                    m_heroType[COMBAT_ATTACKER_SIDE] + 8,
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
             }
         }
     } else {
         for (row = 0; row < COMBAT_GRID_ROWS; row++) {
-            if (row == 0 && m_castleSide[0])
-                m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, 0);
-            if (row == 3 && m_catapultFrame[1] != -1) {
-                m_combatIcons[COMBAT_ICON_CATAPULT]
-                    ->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], ICON_DRAW_NORMAL, 0);
+            if (row == 0 && m_castleSide[COMBAT_DEFENDER_SIDE])
+                m_combatIcons[COMBAT_ICON_KEEP]
+                    ->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+            if (row == COMBAT_CATAPULT_ROW
+                && m_catapultFrame[COMBAT_ATTACKER_SIDE] != COMBAT_CATAPULT_FRAME_NONE) {
+                m_combatIcons[COMBAT_ICON_CATAPULT]->DrawToBuffer(
+                    0x1b,
+                    0x17b,
+                    m_catapultFrame[COMBAT_ATTACKER_SIDE],
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
                 m_combatIcons[COMBAT_ICON_CATAPULT]->DimToBuffer(
                     0x1b,
                     0x17b,
-                    m_catapultFrame[1] == 7 ? 16 : 15,
+                    m_catapultFrame[COMBAT_ATTACKER_SIDE] == 7 ? 16 : 15,
                     ICON_DRAW_NORMAL,
-                    0
+                    ICON_DRAW_OFFSET_FULL
                 );
             }
             for (hexCol = 0; hexCol < COMBAT_GRID_COLUMNS; hexCol++)
-                if (m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].m_obstacleIndex != -1)
+                if (m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].m_obstacleIndex
+                    != COMBAT_OBSTACLE_NONE)
                     m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawObstacle();
-            for (hexCol = 7; hexCol >= 1; hexCol--) {
+            for (hexCol = COMBAT_GRID_LAST_COLUMN - 1; hexCol >= 1; hexCol--) {
                 if (gbLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + hexCol)
                     gbCurrArmyDrawn = 1;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawOccupant();
             }
-            if (row == 1 && m_heroType[1] != -1) {
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0, 0x59, m_heroType[1], ICON_DRAW_NORMAL, 0);
+            if (row == COMBAT_ATTACKER_HERO_ROW
+                && m_heroType[COMBAT_ATTACKER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0,
+                    0x59,
+                    m_heroType[COMBAT_ATTACKER_SIDE],
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x2f,
                     0x9b,
-                    gpGame->m_players[m_playerId[1]].Color() + 4,
+                    gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color() + 4,
                     ICON_DRAW_NORMAL,
-                    0
+                    ICON_DRAW_OFFSET_FULL
                 );
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, ICON_DRAW_NORMAL, 0);
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0x36,
+                    0xad,
+                    m_heroType[COMBAT_ATTACKER_SIDE] + 8,
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
             }
-            if (row == 2 && m_heroType[0] != -1) {
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0x27f, 0xa9, m_heroType[0], ICON_DRAW_FLIPPED, 0);
+            if (row == COMBAT_DEFENDER_HERO_ROW
+                && m_heroType[COMBAT_DEFENDER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0x27f,
+                    0xa9,
+                    m_heroType[COMBAT_DEFENDER_SIDE],
+                    ICON_DRAW_FLIPPED,
+                    ICON_DRAW_OFFSET_FULL
+                );
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x250,
                     0xeb,
-                    gpGame->m_players[m_playerId[0]].Color() + 4,
+                    gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color() + 4,
                     ICON_DRAW_FLIPPED,
-                    0
+                    ICON_DRAW_OFFSET_FULL
                 );
-                m_combatIcons[COMBAT_ICON_TENT]
-                    ->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, ICON_DRAW_NORMAL, 0);
+                m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
+                    0x238,
+                    0xfd,
+                    m_heroType[COMBAT_DEFENDER_SIDE] + 8,
+                    ICON_DRAW_NORMAL,
+                    ICON_DRAW_OFFSET_FULL
+                );
             }
         }
     }
@@ -464,10 +525,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
         gbComputeExtent = 0;
         gbFullCombatScreenDrawn = 0;
         DelayTil(glTimers);
-        glTimers[0] = KBTickCount() + 75;
+        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         if (updateScreen == 1) {
-            if (giMaxExtentY > 460)
-                giMaxExtentY = 460;
+            if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
+                giMaxExtentY = COMBAT_VIEW_HEIGHT;
             gbEnlargeScreenBlit = 0;
             gpWindowManager->UpdateScreenRegion(
                 giMinExtentX,
@@ -481,7 +542,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
     } else if (updateScreen == 1) {
         gbFullCombatScreenDrawn = 1;
         DelayTil(glTimers);
-        glTimers[0] = KBTickCount() + 75;
+        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UpdateCombatArea();
     }
 }
