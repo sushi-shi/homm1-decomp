@@ -1893,16 +1893,16 @@ void game::ClaimMine(signed char mineId, signed char player) {
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
     switch (m_mines[mineId].type) {
-        case 0x16:
+        case MAP_OBJECT_DRAGON_CITY:
             frame = 0x14;
             break;
-        case 0x17:
+        case MAP_OBJECT_LIGHTHOUSE:
             frame = 0x18;
             break;
-        case 0:
+        case RESOURCE_WOOD:
             frame = 0x10;
             break;
-        case 1:
+        case RESOURCE_MERCURY:
             frame = 0xc;
             break;
         default:
@@ -1910,13 +1910,13 @@ void game::ClaimMine(signed char mineId, signed char player) {
             break;
     }
     switch (m_mines[mineId].type) {
-        case 1:
+        case RESOURCE_MERCURY:
             cell = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
             break;
-        case 0x16:
+        case MAP_OBJECT_DRAGON_CITY:
             cell = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
             break;
-        case 0x17:
+        case MAP_OBJECT_LIGHTHOUSE:
             cell = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
             break;
         default:
