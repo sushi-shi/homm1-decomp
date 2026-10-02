@@ -47,7 +47,8 @@ public:
     void Read(int, signed char);
     void Write(int, signed char);
     void GetArmyStrengths(unsigned long int * const);
-    int HasArtifact(int);
+    // HoMM1 returns the flag in AL (townManager::Main sign-extends it).
+    signed char HasArtifact(int);
     int CalcMobility(void);
     int HasSpell(int);
     int GetNthSpell(int, int);

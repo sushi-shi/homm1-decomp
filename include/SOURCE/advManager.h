@@ -155,6 +155,8 @@ public:
     int GetCloudLookup(int, int);
     void DrawCell(int, int, int, int, int, int, int);
     class mapCell* GetCell(short, short);
+    // HoMM1 retail 0x0046047e: first free artifact slot, word result (ret 8).
+    short GiveArtifact(class hero*, signed char);
     void UpdateRadar(int, int);
     void QuickInfo(int, int);
     void UpdateHeroLocator(int, signed char, signed char);

@@ -102,7 +102,8 @@ public:
     int SetupPuzzlePieces(int, int);
     signed char IsMobile(signed char);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
-    int CreateBoat(int, int, int);
+    // HoMM1 retail 0x00439944: byte coordinates, byte result (ret 8).
+    signed char CreateBoat(signed char, signed char);
     int Scan(signed char*, int, int);
     int RandomScan(signed char*, int, int, int, signed char);
     signed char GetNewHeroId(signed char);

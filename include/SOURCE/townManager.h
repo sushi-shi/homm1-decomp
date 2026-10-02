@@ -204,7 +204,8 @@ public:
     bitmap *m_backgroundBitmap;
     townObject *m_townObjects[TOWN_MANAGER_OBJECT_CAPACITY];
     signed char m_townObjectCount;
-    int m_unknown79;
+    // Main covers the town bottom while a building dialog is open.
+    heroWindow *m_coverWindow;
     heroWindow *m_townWindow;
     strip *m_garrisonStrip;
     strip *m_heroStrip;

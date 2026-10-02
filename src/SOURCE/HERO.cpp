@@ -64,7 +64,7 @@ hero::hero(void) {}
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.403615;margin=0.791427;shape=0.171;size=0.731;calls=1.000;alternate=pol20:int hero::HasArtifact(int)@0x0006c4cd
 VA(0x0046bb10, 0x5d)
-int hero::HasArtifact(int) { return 0; }
+signed char hero::HasArtifact(int) { return 0; }
 
 // donor PoL RVA 0x0006c526; preferred Buka symbol ?CalcMobility@hero@@QAEHXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order

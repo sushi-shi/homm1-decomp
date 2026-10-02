@@ -100,7 +100,7 @@ townManager::townManager(void)
     m_town = 0;
     m_townObjectCount = 0;
     m_heroWindow0 = 0;
-    m_unknown79 = 0;
+    m_coverWindow = 0;
     m_selectedBuilding = -1;
     m_castleDialogActive = 0;
     m_dispatchMask = TOWN_MANAGER_DISPATCH_MASK;
@@ -416,11 +416,303 @@ void townManager::ShowText(char *)
                                         TOWN_STATUS_REGION_HEIGHT);
 }
 
-// donor PoL RVA 0x0001595d; preferred Buka symbol ?Main@townManager@@UAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.513026;margin=0.490356;shape=0.272;size=0.823;calls=0.467;strings=caslwind.bin|magewind.bin|thiefwin.bin;alternate=pol20:int townManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0001595d
+// Buka TOWNMGR.cpp Main; HoMM1 opens the castle, mage guild, well and thieves
+// guild over a bottom cover window, sells the spell book and builds boats.
 VA(0x004093ae, 0x131f)
-short townManager::Main(struct tag_message &) { return 0; }
+short townManager::Main(struct tag_message &message)
+{
+    int exitTown;
+    signed char rightClick;
+    SAMPLE2 res;
+    recruitUnit *recruitMgr;
+
+    exitTown = 0;
+    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        rightClick = 1;
+    else
+        rightClick = 0;
+    if (KBTickCount() > glTimers[0]) {
+        DrawTown(1, 1);
+        glTimers[0] = KBTickCount() + TOWN_REDRAW_INTERVAL;
+    }
+    if ((message.type & m_dispatchMask) == 0) {
+        if (message.type) {
+            message.type = MESSAGE_NONE;
+            return MESSAGE_DISPATCH_FORWARD;
+        }
+        return MESSAGE_DISPATCH_CONTINUE;
+    }
+    switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.payload.widget.command) {
+                case WIDGET_NOTIFY_SELECT:
+                    switch (message.payload.widget.id) {
+                        case 7:
+                        case 8:
+                        case 9:
+                        case 10:
+                        case 11:
+                        case 12:
+                            if (rightClick) {
+                                QuickViewRecruit(m_town, message.payload.widget.id - 7);
+                                break;
+                            }
+                            gpMouseManager->ReallyHidePointer();
+                            DrawTown(1, 1);
+                            recruitMgr = new recruitUnit(m_town, message.payload.widget.id - 7);
+                            if (recruitMgr == 0)
+                                MemError();
+                            gpExec->DoDialog(recruitMgr);
+                            delete recruitMgr;
+                            break;
+                        case 0:
+                        case 1:
+                        case 4:
+                        case 6:
+                            if (rightClick)
+                                break;
+                            gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
+                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                            m_coverWindow = new heroWindow(0, 0x100, 0x280, 6, 2);
+                            if (m_coverWindow == 0)
+                                MemError();
+                            gpWindowManager->AddWindow(m_coverWindow, -1, 1);
+                            switch (message.payload.widget.id) {
+                                case 6:
+                                    gpWindowManager->SaveFizzleSource(0, 0x100, 0x228, 0xcc);
+                                    m_heroWindow0 = new heroWindow(0, 0, "caslwind.bin");
+                                    if (m_heroWindow0 == 0)
+                                        MemError();
+                                    SetWinText(m_heroWindow0, 2);
+                                    SetupCastle(m_heroWindow0);
+                                    m_castleDialogActive = 1;
+                                    gpWindowManager->DoDialog(m_heroWindow0, CastleHandler, 0);
+                                    m_castleDialogActive = 0;
+                                    break;
+                                case 0:
+                                    if (m_town->m_occupyingHeroId != -1
+                                        && !gpGame->GetHero(m_town->m_occupyingHeroId)->HasArtifact(0x25)) {
+                                        if (gpGame->GetHero(m_town->m_occupyingHeroId)->NumArtifacts() == 14)
+                                            NormalDialog("You must purchase a spell book to use the mage guild, but "
+                                                         "you currently have no room for a spell book.  Try giving "
+                                                         "one of your artifacts to another hero.",
+                                                         1, -1, -1, -1, 0, -1, 0, -1);
+                                        else {
+                                            m_heroWindow0 = new heroWindow(0xb1, 0x14, "buybook.bin");
+                                            if (m_heroWindow0 == 0)
+                                                MemError();
+                                            SetWinText(m_heroWindow0, 0);
+                                            if (gpGame->m_players[gpGame->GetHero(m_town->m_occupyingHeroId)->m_owner]
+                                                    .m_resources[RESOURCE_GOLD]
+                                                < 500) {
+                                                message.type = MESSAGE_WIDGET;
+                                                message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+                                                message.payload.widget.id = TOWN_DIALOG_BUTTON_2;
+                                                message.payload.widget.data.value = 8;
+                                                m_heroWindow0->BroadcastMessage(message);
+                                                message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+                                                message.payload.widget.data.value = 2;
+                                                m_heroWindow0->BroadcastMessage(message);
+                                            }
+                                            gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                            if (gpWindowManager->m_dialogResult == TOWN_DIALOG_BUTTON_2) {
+                                                gpAdvManager->GiveArtifact(gpGame->GetHero(m_town->m_occupyingHeroId),
+                                                                           0x25);
+                                                gpCurPlayer->m_resources[RESOURCE_GOLD] -= 500;
+                                                m_bankBox->Update();
+                                                m_townWindow->DrawWindow();
+                                                m_town->GiveSpells();
+                                            }
+                                        }
+                                    } else {
+                                        m_heroWindow0 = new heroWindow(0, 0, "magewind.bin");
+                                        if (m_heroWindow0 == 0)
+                                            MemError();
+                                        SetWinText(m_heroWindow0, 6);
+                                        SetupMage(m_heroWindow0);
+                                        gpWindowManager->DoDialog(m_heroWindow0, MageGuildHandler, 0);
+                                    }
+                                    m_town->GiveSpells();
+                                    break;
+                                case 4:
+                                    m_heroWindow0 = new heroWindow(0, 0, "wellwind.bin");
+                                    if (m_heroWindow0 == 0)
+                                        MemError();
+                                    SetupWell(m_heroWindow0);
+                                    gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                    break;
+                                case 1:
+                                    m_heroWindow0 = new heroWindow(0, 0, "thiefwin.bin");
+                                    if (m_heroWindow0 == 0)
+                                        MemError();
+                                    SetWinText(m_heroWindow0, 0xf);
+                                    SetupThievesGuild(m_heroWindow0, -1);
+                                    gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                    break;
+                            }
+                            delete m_heroWindow0;
+                            gpWindowManager->RemoveWindow(m_coverWindow);
+                            delete m_coverWindow;
+                            if (m_selectedBuilding != -1)
+                                BuildObj(m_selectedBuilding);
+                            if (m_recruitResult) {
+                                hero *theHero;
+                                int i;
+                                int width;
+
+                                gpMouseManager->ReallyHidePointer();
+                                res = NULL_SAMPLE2;
+                                res = LoadPlaySample("buildtwn.82M");
+                                theHero = gpGame->GetHero(m_town->m_occupyingHeroId);
+                                width = 0;
+                                for (i = 0; i < 5; i++) {
+                                    if (theHero->m_army.m_creatureTypes[i] != -1)
+                                        width = i + 1;
+                                }
+                                width = width * 88 + 0x70;
+                                DrawTown(1, 1);
+                                gpWindowManager->FizzleForward(0, 0x100, width, 0xcc, -1);
+                                WaitEndSample(res, -1);
+                                m_recruitResult = 0;
+                                gpMouseManager->ReallyShowPointer();
+                            }
+                            gpWindowManager->ReleaseFizzleSource();
+                            gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS,
+                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                            break;
+                        case 2:
+                            if (rightClick)
+                                break;
+                            DoTavern();
+                            break;
+                        case 5:
+                            if (rightClick)
+                                return MESSAGE_DISPATCH_CONSUME;
+                            if (BuyBuild(6, !CanBuy(m_town, 6), rightClick)) {
+                                BuildObj(6);
+                                m_town->XformToCastle();
+                            }
+                            break;
+                        case 3:
+                            if (rightClick)
+                                break;
+                            gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
+                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                            if (gpGame->GetBoatsBuilt() < 32
+                                && gpAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)->m_triggerType == 0
+                                && m_town->m_x - 1 != gpAdvManager->m_cursorMapX
+                                && m_town->m_y + 1 != gpAdvManager->m_cursorMapY) {
+                                m_heroWindow0 = new heroWindow(0xb1, 0x14, "shipwind.bin");
+                                if (m_heroWindow0 == 0)
+                                    MemError();
+                                SetWinText(m_heroWindow0, 0xc);
+                                if (gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] < 1000
+                                    || gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] < 10) {
+                                    message.type = MESSAGE_WIDGET;
+                                    message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+                                    message.payload.widget.id = TOWN_DIALOG_BUTTON_2;
+                                    message.payload.widget.data.value = 8;
+                                    m_heroWindow0->BroadcastMessage(message);
+                                    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+                                    message.payload.widget.data.value = 2;
+                                    m_heroWindow0->BroadcastMessage(message);
+                                }
+                                gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
+                                delete m_heroWindow0;
+                                if (gpWindowManager->m_dialogResult == TOWN_DIALOG_BUTTON_2) {
+                                    if (gpGame->CreateBoat(m_town->m_x - 1, m_town->m_y + 1) != -1) {
+                                        res = NULL_SAMPLE2;
+                                        res = LoadPlaySample("buildtwn.82M");
+                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] -= 1000;
+                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] -= 10;
+                                        m_bankBox->Update();
+                                        WaitEndSample(res, -1);
+                                    } else
+                                        LogStr("Can't create boat!");
+                                }
+                            } else
+                                NormalDialog("Cannot build another boat.", 1, 0xd0, 0x28, -1, 0, -1, 0, -1);
+                            gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS,
+                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                            break;
+                        case TOWN_CLOSE_CONTROL:
+                            if (rightClick)
+                                break;
+                            exitTown++;
+                            break;
+                        default:
+                            if (rightClick) {
+                                int found;
+                                hero *viewHero;
+
+                                found = 0;
+                                if (message.payload.widget.id >= TOWN_GARRISON_SLOT_FIRST
+                                    && message.payload.widget.id <= TOWN_GARRISON_SLOT_FIRST + 4) {
+                                    m_selectedStrip = m_garrisonStrip;
+                                    m_selectedArmySlot = message.payload.widget.id - TOWN_GARRISON_SLOT_FIRST;
+                                    found = 1;
+                                }
+                                if (message.payload.widget.id >= TOWN_HERO_SLOT_FIRST
+                                    && message.payload.widget.id <= TOWN_HERO_SLOT_FIRST + 4) {
+                                    m_selectedStrip = m_heroStrip;
+                                    m_selectedArmySlot = message.payload.widget.id - TOWN_HERO_SLOT_FIRST;
+                                    found = 1;
+                                }
+                                if (found && m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] != -1) {
+                                    viewHero = m_heroStrip == m_selectedStrip
+                                                   ? gpGame->GetHero(m_town->m_occupyingHeroId)
+                                                   : 0;
+                                    gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y,
+                                                     m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot],
+                                                     m_selectedStrip->m_army->m_creatureCounts[m_selectedArmySlot],
+                                                     m_town, 1, 0, 1, viewHero, 0, m_selectedStrip->m_army);
+                                }
+                            } else {
+                                DoCommand(m_command);
+                                SetCommandAndText(message);
+                            }
+                            break;
+                    }
+                    break;
+                case WIDGET_COMMAND_HOVER:
+                    if (message.payload.widget.id == m_lastHoverId)
+                        return MESSAGE_DISPATCH_CONSUME;
+                    else
+                        m_lastHoverId = message.payload.widget.id;
+                    SetCommandAndText(message);
+                    return MESSAGE_DISPATCH_CONSUME;
+                    break;
+            }
+            break;
+        case MESSAGE_KEY_UP:
+            switch (message.payload.keyboard.keyCode) {
+                case 0x2a:
+                case 0x36:
+                    ShiftQualChange();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case MESSAGE_KEY_DOWN:
+            switch (message.payload.keyboard.keyCode) {
+                case 0x2a:
+                case 0x36:
+                    ShiftQualChange();
+                    break;
+                case 1:
+                    exitTown++;
+                    break;
+            }
+            break;
+    }
+    if (exitTown == 1) {
+        message.type = MESSAGE_EXECUTIVE;
+        message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
 
 // Buka TOWNMGR.cpp:1817-1902; HoMM1 merges duplicate stacks after a swap
 // and opens the kingdom overview from the town.
