@@ -2417,6 +2417,15 @@ short ViewArmyHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// clang-format off
+// overwind.bin widget ids: resource r's count is RESOURCE_BASE + r.
+H1_ENUM_BEGIN(OverviewControl)
+    OVERVIEW_RESOURCE_BASE = 1,
+    OVERVIEW_DATE = 64,
+    OVERVIEW_DAILY_GOLD = 65
+H1_ENUM_END(OverviewControl)
+// clang-format on
+
 // Kingdom overview: heroes by class, castles and towns by type and mines by
 // resource drawn onto the backdrop, then the date, income and resources.
 VA(0x00440366, 0xbf2)
@@ -2605,16 +2614,16 @@ void game::Overview(void) {
     SetWinText(win, 8);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 64;
+    message.id = OVERVIEW_DATE;
     sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
     message.text = gText;
     win->BroadcastMessage(message);
-    message.id = 65;
+    message.id = OVERVIEW_DAILY_GOLD;
     sprintf(gText, "%d", ComputeDailyGold(giCurPlayer));
     win->BroadcastMessage(message);
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < RESOURCE_COUNT; i++) {
         sprintf(gText, "%d", gpCurPlayer->m_resources[i]);
-        message.id = i + 1;
+        message.id = i + OVERVIEW_RESOURCE_BASE;
         win->BroadcastMessage(message);
     }
     gpWindowManager->AddWindow(win, -1, 1);
@@ -4036,6 +4045,30 @@ void game::CheckHeroConsistency(void) {
     }
 }
 
+// clang-format off
+// REMOTE.GAM transfer (Buka RemoteSaveConstant): the sender announces the
+// size (INIT, answered by INIT_RESPONSE), streams SEGMENT_SIZE-byte segments
+// (DATA), asks for each BATCH_SIZE-segment block's acknowledgement map
+// (ACK_REQUEST / ACK_RESPONSE) and closes with FINISH.
+H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
+    REMOTE_SAVE_INIT_COMMAND = 1,
+    REMOTE_SAVE_INIT_RESPONSE = 2,
+    REMOTE_SAVE_DATA_COMMAND = 3,
+    REMOTE_SAVE_ACK_REQUEST_COMMAND = 4,
+    REMOTE_SAVE_ACK_RESPONSE_COMMAND = 5,
+    REMOTE_SAVE_FINISH_COMMAND = 6,
+    REMOTE_SAVE_SEGMENT_SIZE = 200,
+    REMOTE_SAVE_BATCH_SIZE = 100,
+    REMOTE_SAVE_HEADER_SIZE = 8,
+    REMOTE_SAVE_ACK_MAP_SIZE = 200,
+    REMOTE_SAVE_INDEX_SIZE = 2,
+    REMOTE_SAVE_RECEIVE_TIMEOUT = 20000,
+    REMOTE_SAVE_BUFFER_EXTRA = 500,
+    REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
+    REMOTE_SAVE_TRANSFER_SOUNDS = 8
+H1_ENUM_CONST_END(RemoteSaveConstant)
+// clang-format on
+
 // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
@@ -4068,7 +4101,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     char* fileData;
     char finished;
 
-    gpAdvManager->TrimLoopingSounds(8);
+    gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     okay = 0;
     status = 0;
     oldTrack = -1;
@@ -4091,7 +4124,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     extern char gcDataPath[];
     sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
     fileSize = FileSize(pathname);
-    sendPacket = static_cast<char*>(malloc(0x100));
+    sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         outData = static_cast<char*>(malloc(fileSize));
     fileData = static_cast<char*>(malloc(fileSize));
@@ -4111,53 +4144,53 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
 
         ((int*)sendPacket)[0] = fileSize;
         ((int*)sendPacket)[1] = playerExited;
-        status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
+        status = TransmitAndWait(sendPacket, remotePlayer, REMOTE_SAVE_HEADER_SIZE, REMOTE_SAVE_INIT_COMMAND, REMOTE_SAVE_INIT_RESPONSE, &incoming);
         if (!status)
             ShutDown(NULL);
 
-        segCount = (fileSize - 1) / 200 + 1;
-        numBlocks = (segCount - 1) / 100 + 1;
+        segCount = (fileSize - 1) / REMOTE_SAVE_SEGMENT_SIZE + 1;
+        numBlocks = (segCount - 1) / REMOTE_SAVE_BATCH_SIZE + 1;
         for (block = 0; block < numBlocks; block++) {
             LogInt("Start Seg #", block);
             if (block + 1 == numBlocks)
-                blockSize = segCount - block * 100;
+                blockSize = segCount - block * REMOTE_SAVE_BATCH_SIZE;
             else
-                blockSize = 100;
+                blockSize = REMOTE_SAVE_BATCH_SIZE;
             finished = 0;
             while (!finished) {
-                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE; sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize; sendPacketIndex++) {
                     PollSound();
                     CheckDoMain(0, 1);
                     if (!acked[sendPacketIndex]) {
                         if (sendPacketIndex + 1 == segCount)
-                            len = fileSize - sendPacketIndex * 200;
+                            len = fileSize - sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE;
                         else
-                            len = 200;
+                            len = REMOTE_SAVE_SEGMENT_SIZE;
                         *(short*)sendPacket = static_cast<short>(sendPacketIndex);
-                        memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
-                        status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
+                        memcpy(sendPacket + REMOTE_SAVE_INDEX_SIZE, outData + sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE, len);
+                        status = TransmitRemoteData(sendPacket, remotePlayer, len + REMOTE_SAVE_INDEX_SIZE, REMOTE_SAVE_DATA_COMMAND, 0, 1, REMOTE_MESSAGE_DEFAULT, 1);
                         if (!status)
                             ShutDown(NULL);
                     }
                 }
                 LogStr("PreWait");
-                *(short*)sendPacket = static_cast<short>(block * 100);
-                status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
+                *(short*)sendPacket = static_cast<short>(block * REMOTE_SAVE_BATCH_SIZE);
+                status = TransmitAndWait(sendPacket, remotePlayer, REMOTE_SAVE_INDEX_SIZE, REMOTE_SAVE_ACK_REQUEST_COMMAND, REMOTE_SAVE_ACK_RESPONSE_COMMAND, &incoming);
                 LogStr("PostWait");
                 if (!status)
                     ShutDown(NULL);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
                     if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex] > 0) // API-forced: char* record.
-                        acked[block * 100 + sendPacketIndex] = 1;
+                        acked[block * REMOTE_SAVE_BATCH_SIZE + sendPacketIndex] = 1;
                 }
                 finished = 1;
-                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE; sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize; sendPacketIndex++) {
                     if (!acked[sendPacketIndex])
                         finished = 0;
                 }
             }
         }
-        status = TransmitRemoteData(NULL, remotePlayer, 0, 6, 1, 1, -1, 1);
+        status = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_SAVE_FINISH_COMMAND, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
         if (!status)
             ShutDown(NULL);
         okay = 1;
@@ -4206,7 +4239,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     int packetStart;
     char* decodedData;
 
-    gpAdvManager->TrimLoopingSounds(8);
+    gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     fileHandle = 0;
     done = 0;
     unused1 = 0;
@@ -4223,19 +4256,19 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         Process1WindowsMessage();
     }
-    result = TransmitRemoteData(NULL, remotePlayer, 0, 2, 1, 1, -1, 1);
+    result = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_SAVE_INIT_RESPONSE, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
     if (!result)
         ShutDown(NULL);
     memset(gotIt, 0, sizeof(gotIt));
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
-        decodedData = static_cast<char*>(malloc(0x130b0));
-    sendPacket = static_cast<char*>(malloc(0x100));
-    inData = static_cast<char*>(malloc(dataSize + 500));
+        decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
+    sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
+    inData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
     lastPacketTime = KBTickCount();
     while (!done) {
         PollSound();
         CheckDoMain(0, 1);
-        if (lastPacketTime + 20000 < KBTickCount()) {
+        if (lastPacketTime + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
             NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
@@ -4243,24 +4276,24 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                 ShutDown(NULL);
         }
         receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
-        if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
+        if (receivedPacket && (receivedPacket->type == REMOTE_MESSAGE_RELIABLE || receivedPacket->type == REMOTE_MESSAGE_UNRELIABLE)) {
             lastPacketTime = KBTickCount();
             switch (receivedPacket->command) {
-                case 3:
+                case REMOTE_SAVE_DATA_COMMAND:
                     packetStart = receivedPacket->payload.segment.index;
                     gotIt[packetStart] = 1;
-                    memcpy(inData + packetStart * 200, receivedPacket->payload.segment.data,
-                           receivedPacket->payloadSize - 2);
+                    memcpy(inData + packetStart * REMOTE_SAVE_SEGMENT_SIZE, receivedPacket->payload.segment.data,
+                           receivedPacket->payloadSize - REMOTE_SAVE_INDEX_SIZE);
                     break;
-                case 4:
+                case REMOTE_SAVE_ACK_REQUEST_COMMAND:
                     packetStart = receivedPacket->payload.segment.index;
-                    for (k = packetStart; k < packetStart + 100; k++)
+                    for (k = packetStart; k < packetStart + REMOTE_SAVE_BATCH_SIZE; k++)
                         *(sendPacket + k - packetStart) = gotIt[k];
-                    result = TransmitRemoteData(sendPacket, remotePlayer, 200, 5, 1, 1, -1, 1);
+                    result = TransmitRemoteData(sendPacket, remotePlayer, REMOTE_SAVE_ACK_MAP_SIZE, REMOTE_SAVE_ACK_RESPONSE_COMMAND, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
                     if (!result)
                         ShutDown(NULL);
                     break;
-                case 6:
+                case REMOTE_SAVE_FINISH_COMMAND:
                     done = 1;
                     break;
             }
