@@ -863,7 +863,7 @@ void townManager::SplitArmy(void)
             m_swapStrip == m_heroStrip ? "Hero's Army" : "Garrison",
             m_pendingStrip == m_heroStrip ? "Hero's Army" : "Garrison");
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = TOWN_SPLIT_PROMPT_CONTROL;
     message.text = gText;
     m_heroWindow1->BroadcastMessage(message);
     sprintf(gText, "%d", m_splitAmount);

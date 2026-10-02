@@ -14,7 +14,7 @@
 
 // clang-format off
 // swapwin.bin widget ids (Buka 2.1 SWAPMGR.cpp SwapManagerControl; HoMM1 has
-// no secondary skills). LEFT is the constructor's first hero, m_heroes[1].
+// no secondary skills). LEFT is the constructor's first hero, m_heroes[SWAP_SIDE_LEFT].
 H1_ENUM_BEGIN(SwapManagerControl)
     CONTROL_LEFT_HERO = 65,
     CONTROL_RIGHT_HERO = 66,
@@ -89,15 +89,15 @@ short swapManager::Open(short id) {
     SetWinText(m_window, WINDOW_TEXT_SWAP);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_ICON;
-    sprintf(gText, "port%04d.icn", m_heroes[1]->m_portrait);
+    sprintf(gText, "port%04d.icn", m_heroes[SWAP_SIDE_LEFT]->m_portrait);
     message.id = CONTROL_LEFT_HERO;
     message.text = gText;
     m_window->BroadcastMessage(message);
-    sprintf(gText, "port%04d.icn", m_heroes[0]->m_portrait);
+    sprintf(gText, "port%04d.icn", m_heroes[SWAP_SIDE_RIGHT]->m_portrait);
     message.id = CONTROL_RIGHT_HERO;
     m_window->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    sprintf(gText, "%s meets %s", m_heroes[1]->m_name, m_heroes[0]->m_name);
+    sprintf(gText, "%s meets %s", m_heroes[SWAP_SIDE_LEFT]->m_name, m_heroes[SWAP_SIDE_RIGHT]->m_name);
     message.text = gText;
     message.id = CONTROL_TITLE;
     m_window->BroadcastMessage(message);
@@ -287,7 +287,7 @@ short swapManager::Main(struct tag_message& message) {
                 if (quickView) {
                     if (m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex] == ARTIFACT_NONE)
                         break;
-                    m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(m_heroes[1]->m_artifacts[artIndex], 1);
+                    m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex], 1);
                     break;
                 }
                 if (m_itemType != SWAP_ITEM_ARTIFACT) {
@@ -304,7 +304,7 @@ short swapManager::Main(struct tag_message& message) {
                     m_targetSide = SWAP_SIDE_LEFT;
                     m_targetSlot = artIndex;
                     if (m_selectedSide == SWAP_SIDE_LEFT && m_selectedSlot == m_targetSlot) {
-                        m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(m_heroes[1]->m_artifacts[artIndex], 0);
+                        m_heroes[SWAP_SIDE_LEFT]->ViewArtifact(m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex], 0);
                         Reset();
                     }
                     SwapArtifacts();
@@ -334,7 +334,7 @@ short swapManager::Main(struct tag_message& message) {
                 if (quickView) {
                     if (m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex] == ARTIFACT_NONE)
                         break;
-                    m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(m_heroes[0]->m_artifacts[artIndex], 1);
+                    m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex], 1);
                     break;
                 }
                 if (m_itemType != SWAP_ITEM_ARTIFACT) {
@@ -351,7 +351,7 @@ short swapManager::Main(struct tag_message& message) {
                     m_targetSide = SWAP_SIDE_RIGHT;
                     m_targetSlot = artIndex;
                     if (m_selectedSide == SWAP_SIDE_RIGHT && m_selectedSlot == m_targetSlot) {
-                        m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(m_heroes[0]->m_artifacts[artIndex], 0);
+                        m_heroes[SWAP_SIDE_RIGHT]->ViewArtifact(m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex], 0);
                         Reset();
                     }
                     SwapArtifacts();
@@ -365,10 +365,10 @@ short swapManager::Main(struct tag_message& message) {
             case CONTROL_LEFT_ARMY_LAST:
                 if (quickView) {
                     if (m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST] != CREATURE_NONE)
-                        gpGame->ViewArmy(119, 20,
-                                         m_heroes[1]->m_army.m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST],
-                                         m_heroes[1]->m_army.m_creatureCounts[message.id - CONTROL_LEFT_ARMY_FIRST],
-                                         NULL, 0, 0, 1, m_heroes[1], NULL, &m_heroes[1]->m_army);
+                        gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y,
+                                         m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST],
+                                         m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureCounts[message.id - CONTROL_LEFT_ARMY_FIRST],
+                                         NULL, 0, 0, 1, m_heroes[SWAP_SIDE_LEFT], NULL, &m_heroes[SWAP_SIDE_LEFT]->m_army);
                     break;
                 }
                 if (m_itemType) {
@@ -408,10 +408,10 @@ short swapManager::Main(struct tag_message& message) {
             case CONTROL_RIGHT_ARMY_LAST:
                 if (quickView) {
                     if (m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST] != CREATURE_NONE)
-                        gpGame->ViewArmy(119, 20,
-                                         m_heroes[0]->m_army.m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST],
-                                         m_heroes[0]->m_army.m_creatureCounts[message.id - CONTROL_RIGHT_ARMY_FIRST],
-                                         NULL, 0, 0, 1, m_heroes[0], NULL, &m_heroes[0]->m_army);
+                        gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y,
+                                         m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST],
+                                         m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureCounts[message.id - CONTROL_RIGHT_ARMY_FIRST],
+                                         NULL, 0, 0, 1, m_heroes[SWAP_SIDE_RIGHT], NULL, &m_heroes[SWAP_SIDE_RIGHT]->m_army);
                     break;
                 }
                 if (m_itemType) {
@@ -470,7 +470,7 @@ short swapManager::Main(struct tag_message& message) {
 
 VA(0x0046fd73, 0xa5)
 void swapManager::ViewMon(void) {
-    gpGame->ViewArmy(119, 20, m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_targetSlot],
+    gpGame->ViewArmy(TOWN_ARMY_VIEW_X, TOWN_ARMY_VIEW_Y, m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_targetSlot],
                      m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot], NULL,
                      m_heroes[m_selectedSide]->m_army.GetNumArmies() == 1, 0, 0,
                      m_heroes[m_selectedSide], NULL, &m_heroes[m_selectedSide]->m_army);
@@ -545,10 +545,10 @@ void swapManager::Update(void) {
     message.text = gText;
     for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
         message.id = i + CONTROL_LEFT_PRIMARY_SKILL_FIRST;
-        sprintf(gText, "%d", m_heroes[1]->m_primaryStats[i]);
+        sprintf(gText, "%d", m_heroes[SWAP_SIDE_LEFT]->m_primaryStats[i]);
         m_window->BroadcastMessage(message);
         message.id = i + CONTROL_RIGHT_PRIMARY_SKILL_FIRST;
-        sprintf(gText, "%d", m_heroes[0]->m_primaryStats[i]);
+        sprintf(gText, "%d", m_heroes[SWAP_SIDE_RIGHT]->m_primaryStats[i]);
         m_window->BroadcastMessage(message);
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -575,7 +575,7 @@ void swapManager::Update(void) {
             message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
-            sprintf(gText, "%d", m_heroes[1]->m_army.m_creatureCounts[i]);
+            sprintf(gText, "%d", m_heroes[SWAP_SIDE_LEFT]->m_army.m_creatureCounts[i]);
             message.text = gText;
         }
         m_window->BroadcastMessage(message);
@@ -604,7 +604,7 @@ void swapManager::Update(void) {
             message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
-            sprintf(gText, "%d", m_heroes[0]->m_army.m_creatureCounts[i]);
+            sprintf(gText, "%d", m_heroes[SWAP_SIDE_RIGHT]->m_army.m_creatureCounts[i]);
             message.text = gText;
         }
         m_window->BroadcastMessage(message);
@@ -652,13 +652,13 @@ void swapManager::SplitMons(void) {
     short found;
     short i;
 
-    amountWidget = 68;
+    amountWidget = TOWN_SPLIT_AMOUNT_CONTROL;
     found = 0;
     selectedArmy = &m_heroes[m_selectedSide]->m_army;
     dstTroops = &m_heroes[m_targetSide]->m_army;
     found = 0;
     textId = 1;
-    gpTownManager->m_heroWindow1 = new heroWindow(177, 20, "splitwin.bin");
+    gpTownManager->m_heroWindow1 = new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
     if (!gpTownManager->m_heroWindow1)
         MemError();
     gpTownManager->m_splitAmount = 0;
@@ -668,11 +668,11 @@ void swapManager::SplitMons(void) {
             gArmyNames[selectedArmy->m_creatureTypes[m_selectedSlot]],
             m_heroes[m_selectedSide]->m_name, m_heroes[m_targetSide]->m_name);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = TOWN_SPLIT_PROMPT_CONTROL;
     message.text = gText;
     gpTownManager->m_heroWindow1->BroadcastMessage(message);
     sprintf(gText, "%d", gpTownManager->m_splitAmount);
-    message.id = 68;
+    message.id = TOWN_SPLIT_AMOUNT_CONTROL;
     message.text = gText;
     gpTownManager->m_heroWindow1->BroadcastMessage(message);
     gpWindowManager->DoDialog(gpTownManager->m_heroWindow1, SplitArmyHandler, 0);
