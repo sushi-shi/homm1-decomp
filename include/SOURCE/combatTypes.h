@@ -12,6 +12,7 @@ H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_SOUTHWEST = 3,
     COMBAT_DIRECTION_WEST = 4,
     COMBAT_DIRECTION_NORTHWEST = 5,
+    COMBAT_DIRECTION_ADJACENT_LAST = 5,
     COMBAT_DIRECTION_WIDE_WEST = 6,
     COMBAT_DIRECTION_WIDE_EAST = 7,
     COMBAT_DIRECTION_EASTERN_LAST = 2,
@@ -108,6 +109,44 @@ H1_ENUM_BEGIN(CombatObstacleIndex)
     COMBAT_WALL_DAMAGED_HIT = 0x41,
     COMBAT_WALL_COLLAPSING = 0x42
 H1_ENUM_END(CombatObstacleIndex)
+
+// GetGridIndex hexes of the hero portraits beside the field: GetCommand and
+// RightClick open the defender's (row 2, last column) or the attacker's
+// (row 1, column 0) general.
+H1_ENUM_CONST_BEGIN(CombatHeroHex)
+    COMBAT_ATTACKER_HERO_HEX = 9,
+    COMBAT_DEFENDER_HERO_HEX = 26
+H1_ENUM_CONST_END(CombatHeroHex)
+
+// combatManager::m_combatResult, the side that won (CheckWin; a retreating
+// side loses to the other), DRAW when both sides fall, PENDING from Open
+// until the battle ends; advManager::DoCombat switches on it for losses
+// (Buka CombatResult names, HoMM1 side numbering).
+H1_ENUM_BEGIN(CombatResult)
+    COMBAT_RESULT_DRAW = -1,
+    COMBAT_RESULT_DEFENDER = 0,
+    COMBAT_RESULT_ATTACKER = 1,
+    COMBAT_RESULT_PENDING = 3
+H1_ENUM_END(CombatResult)
+
+// A side argument meaning both sides: CastMassSpell's castSide (mass dispel)
+// and the spell AI's FirstArmy/EffectSpellCure target side (Buka SPELLAI
+// SPELL_AI_ANY_SIDE).
+H1_ENUM_CONST_BEGIN(CombatSideSelection)
+    COMBAT_SIDE_ANY = 2
+H1_ENUM_CONST_END(CombatSideSelection)
+
+// gPowEffectNames rows army::PowEffect loads for the hit animation, named by
+// their icon files (cloud.icn, physical.icn, redfire.icn, electric.icn).
+// Creature records pick their own row; the damage spells use these: turn
+// undead CLOUD, meteor shower PHYSICAL, fireball/lightning/armageddon
+// RED_FIRE, storm ELECTRIC.
+H1_ENUM_BEGIN(CombatPowEffect)
+    COMBAT_POW_CLOUD = 0,
+    COMBAT_POW_PHYSICAL = 1,
+    COMBAT_POW_RED_FIRE = 7,
+    COMBAT_POW_ELECTRIC = 8
+H1_ENUM_END(CombatPowEffect)
 
 // The combat field: hex = row * COLUMNS + column (GenerateMap, GetGridIndex);
 // columns 0 and LAST_COLUMN are the castle/edge columns.

@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	9113
+#floor	7815
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -82,6 +82,88 @@
 *	*	[01]	call-argument	HeroView(* argument 1	hero::HeroView's view-only flag
 *	*	[01]	call-argument	ViewArtifact(* argument 2	hero::ViewArtifact's quick-view flag
 *	*	[01]	call-argument	GiveExperience(* argument 3	advManager::GiveExperience's check-level flag
+*	*	0x100	bitwise-or-packing	operator |	the input-filter bit 0x100 retail sets in manager message masks (no producer posts it; Buka lacks it too)
+*	*	[01]	call-argument	MobilizeCurrHero(* argument 1	advManager::MobilizeCurrHero's update flag
+*	*	[01]	call-argument	CheckEndGame(* argument 1	CheckEndGame's forced flag
+*	*	[01]	call-argument	SetNoDialogMenus(* argument 1	SetNoDialogMenus's menus-enabled flag
+*	*	[01]	call-argument	SetHeroContext(* argument 2	advManager::SetHeroContext's update flag
+*	*	[01]	call-argument	ScreenScroll(* argument 2	advManager::ScreenScroll's update-pointer flag
+*	*	[01]	call-argument	ComboDraw(int) argument 1	advManager::ComboDraw's update flag
+*	*	[01]	call-argument	SetEnvironmentOrigin(* argument 3	advManager::SetEnvironmentOrigin's stop-sounds flag
+*	*	[01]	call-argument	GetRemoteData(* argument 1	GetRemoteData's remove-from-queue flag
+*	*	[01]	call-argument	TransmitRemoteData(* argument [568]	TransmitRemoteData's reliable / retry-dialog / game-position-destination flags
+*	*	[01]	call-argument	FightValueOfStack(* argument [34]	philAI::FightValueOfStack's use-hero / use-town flags
+*	*	[01]	call-argument	EvaluateOneTimeCreaturePurchase(* argument 4	philAI::EvaluateOneTimeCreaturePurchase's use-available-count flag
+*	*	[01]	call-argument	DoCombat(* argument 11	advManager::DoCombat's process-losses flag
+*	*	*	call-argument	DoCombat(* argument 10	the battle's random seed
+*	*	[01]	call-argument	CombatMonsterEvent(* argument 7	advManager::CombatMonsterEvent's hero-defends flag
+*	*	[01]	call-argument	GiveTakeArtifactStat(* argument 3	advManager::GiveTakeArtifactStat's take flag
+*	*	[01]	call-argument	AddWindow(* argument 3	the window's draw flag (heroWindow::Open forwards it to DrawWindow)
+*	*	[01]	call-argument	ViewGeneral(* argument [23]	combatManager::ViewGeneral's allow-actions / quick-view flags
+*	*	[01]	call-argument	ViewArmy(class army *, int, int) argument [23]	combatManager::ViewArmy's view flags
+*	*	[01]	call-argument	MoveAttack(* argument 2	army::MoveAttack's move-only flag
+*	*	[01]	call-argument	GetNextArmy(* argument 1	combatManager::GetNextArmy's check-morale flag
+*	*	[01]	call-argument	SetGridMode(* argument 1	combatManager::SetGridMode's grid flag
+*	*	[01]	call-argument	UpdateGrid(* argument 2	combatManager::UpdateGrid's redraw flag
+*	*	[01]	call-argument	CastMassSpell(* argument 2	combatManager::CastMassSpell's cure-only flag
+*	*	[01]	call-argument	CastSpell(* argument 3	combatManager::CastSpell's flag argument
+*	*	[01]	call-argument	SetPalette(* argument 2	SetPalette's update flag
+*	*	[01]	call-argument	Update(signed char) argument 1	fileRequester::Update's draw-window flag
+*	*	[01]	call-argument	TeleportTo(* argument 3	advManager::TeleportTo's flag argument
+*	*	[01]	call-argument	LoadGame(char *, int, int) argument [23]	game::LoadGame's original-data / mode flags
+*	*	[01]	call-argument	DrawCell(* argument [67]	advManager::DrawCell's drawing-puzzle / force-draw flags
+*	*	*	call-argument	SetVisibility(* argument [124]	map coordinates and the scouting radius in cells
+*	*	*	call-argument	GetCell(short, short) argument [12]	map coordinates in cells
+*	*	*	call-argument	MoveWindow(short, short) argument [12]	a window offset in pixels
+*	*	*	call-argument	ResizeWindow(* argument [1-4]	the window rectangle in pixels
+*	*	*	call-argument	FillBitmapArea(* argument [2-6]	the filled rectangle in pixels and its palette colour
+*	*	*	call-argument	DimToBuffer(* argument 3	an icon frame number in the .icn resource (frames have no names)
+*	*	*	call-argument	textWidget(* argument 7	the text widget's font colour index
+*	*	*	call-argument	iconWidget(* argument 10	the icon widget's fill colour index
+*	*	*	call-argument	DrawBoundedString(* argument 6	the text colour index
+*	*	*	call-argument	GrabScreenBitmap(* argument [23]	the screen origin in pixels
+*	*	*	call-argument	WarpPointer(* argument [12]	a pointer position in pixels
+*	*	*	call-argument	GetDataEntry(* argument 3	the entry field's character limit
+*	*	*	call-argument	SRand(* argument 1	the seed (battle position mixed into one number)
+*	*	*	call-argument	EffectSpellDamage(* argument 3	the spell's damage per spell-power point (CastSpell's multipliers)
+*	*	*	call-argument	PlaySmacker(* argument 1	a SmackOptions row (SmackVideo)
+src/SOURCE/FINDPATH.cpp	TerrainStepCost	*	store	store to cost	the movement cost of one step on that terrain (Buka TerrainStepCost table)
+src/SOURCE/ARMY.cpp	army::DamageEnemy	*20	*	*	the attack/defence difference clamp (+-20) and gfBattleStat offset
+src/SOURCE/ARMY.cpp	army::DamageEnemy	32000	*	*	the damage cap (stays within the short quantity arithmetic)
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*20	*	*	the attack/defence difference clamp (+-20) and gfBattleStat offset (as DamageEnemy)
+src/SOURCE/ARMY.cpp	army::DrawToBuffer	*	arithmetic	*	the quantity box / spell icon pixel offsets beside the sprite
+src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	arithmetic	*	the hex grid's pixel geometry (field origin, row height 80, column step 78, odd-row offset 27)
+src/SOURCE/CMBTMGR.cpp	combatManager::GetGridIndex	*	comparison-or-bound	*	the hex grid's left pixel edge
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	80	arithmetic	*	the hex row height in pixels
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	139	arithmetic	*	the first hex row's y in pixels
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	27	arithmetic	*	the odd-row x offset in pixels
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	-12	arithmetic	*	the even-row x offset in pixels
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	78	arithmetic	*	the hex column step in pixels
+src/SOURCE/COMMAND.cpp	combatManager::CheckSetMouseDirection	*	arithmetic	*	the hex grid's pixel geometry and the 24-sector pointer index
+src/SOURCE/COMMAND.cpp	combatManager::CheckSetMouseDirection	*	comparison-or-bound	operator [<>] ratio	the tan() thresholds of the pointer's direction sectors
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	*	store	store to gi*Extent*	the catapult animation's redraw extents in pixels
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	*	store	store to start[XY]	the catapult's launch point in pixels
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	*	store	store to summitY	the boulder arc's summit in pixels
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	*	arithmetic	*	the boulder arc's pixel path and step counts
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	*	comparison-or-bound	*	the boulder/wall animation frame counts and the wall-damage roll
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*	store	store to *	the keep shot's pixel geometry and rolls
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*	arithmetic	*	the keep shot's pixel path
+src/SOURCE/COMMAND.cpp	combatManager::DoLoseWindow	*	store	store to *	the lose window's animation geometry in pixels and frame delay
+src/SOURCE/COMMAND.cpp	combatManager::ShowDeadArmies	*	store	store to *	the casualty panel's pixel layout
+src/SOURCE/VIEW.cpp	combatManager::ViewArmy	*	*	*	the army view window's pixel geometry
+src/SOURCE/REMOTE.cpp	InitNet*	*	case-label	*	the NetBIOS initialisation state machine's steps
+src/SOURCE/REMOTE.cpp	InitNetGuest	3	arithmetic	*	the NetBIOS initialisation state machine's step skip
+src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	arithmetic	*	the decimal digits of the direct-connect id
+src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	array-index	array subscript idstr	the direct-connect id's digit positions
+src/SOURCE/KB.cpp	CheckEndGame	*	case-label	switch on m_campaignScenario	a campaign scenario index (the campaign's map order)
+*	*	*	comparison-or-bound	operator [=<>]* giDebugLevel	a giDebugLevel verbosity threshold
+*	*	*	store	store to giDebugLevel	a giDebugLevel verbosity level
+src/SOURCE/EVENTS.cpp	advManager::GiveTakeArtifactStat	*	store	store to amount	the artifact's primary-stat bonus
+src/SOURCE/GAME.cpp	game::RandomizeEvents	*	arithmetic	operator % Random()	a random roll's range
+src/SOURCE/GAME.cpp	game::RandomizeEvents	*	case-label	switch on Random()	a random roll's outcome
+src/SOURCE/ADVMGR.cpp	advManager::advManager	*	*	*m_animationPhases*	the adventure animation phase counters' initial values
+*	*	*.*	arithmetic	*	a floating-point tuning factor (AI weight, damage or value scale)
+*	*	*.*	comparison-or-bound	*	a floating-point tuning threshold
 *	*	[01]	call-argument	DoAttack(* argument 1	army::DoAttack's retaliation flag
 *	*	*	call-argument	SpellEffect(short, int) argument 2	army::SpellEffect's frame delay in ticks
 *	*	[01]	call-argument	ViewArmy(* argument [6-8]	game::ViewArmy's view-only / dismiss / upgrade flags

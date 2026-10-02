@@ -8,6 +8,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/PATH.h>
 
 #include <stdlib.h>
 
@@ -53,7 +54,7 @@ int combatManager::DoSpellAI(signed char side) {
         giSpellAIEffectShift = 0;
     for (slotIndex = 0; slotIndex < HERO_SPELL_SLOT_COUNT; slotIndex++) {
         if (m_heroes[side]->m_spells[slotIndex] >= 0
-            && (gcSpellAIFlags[m_heroes[side]->m_spells[slotIndex]] & 2)
+            && (gcSpellAIFlags[m_heroes[side]->m_spells[slotIndex]] & SPELL_AI_FLAG_COMBAT)
             && m_heroes[side]->m_spellCharges[slotIndex] > 0) {
             DetermineEffectOfSpell(m_heroes[side]->m_spells[slotIndex], &spellEffect, &candHex);
             if (spellEffect > bestEffect) {
@@ -149,7 +150,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
                 EffectSpellCure(&spellEffect, m_currentSide, 1);
                 break;
             case SPELL_DISPEL_MAGIC:
-                EffectSpellCure(&spellEffect, 2, 0);
+                EffectSpellCure(&spellEffect, COMBAT_SIDE_ANY, 0);
                 break;
             case SPELL_RESURRECT:
                 EffectSpellResurrect(&spellEffect, curHex);
@@ -313,13 +314,13 @@ VA(0x00437a1a, 0x87)
 int combatManager::FirstArmy(int startHex, int side, int* hex) {
     while (startHex <= 0x2b) {
         if (m_hexCells[startHex].m_occupantSide == side
-            || (side == 2 && m_hexCells[startHex].m_occupantSide >= 0)) {
+            || (side == COMBAT_SIDE_ANY && m_hexCells[startHex].m_occupantSide >= 0)) {
             *hex = startHex;
             return 0;
         }
         NextPos(&startHex);
     }
-    *hex = -1;
+    *hex = ARMY_HEX_INVALID;
     return 1;
 }
 
@@ -337,14 +338,14 @@ void combatManager::EffectSpellCure(int* effect, int targetSide, signed char cur
 
     *effect = 0;
     finished = 0;
-    if (targetSide == 2)
+    if (targetSide == COMBAT_SIDE_ANY)
         curSide = m_currentSide;
     else
         curSide = targetSide;
     while (!finished) {
         negEffect = 0;
         posEffect = 0;
-        for (index = 0; index < 5; index++) {
+        for (index = 0; index < ARMY_GROUP_SLOT_COUNT; index++) {
             if (m_armies[curSide][index].IsAlive()) {
                 armyPtr = &m_armies[curSide][index];
                 fightValue =
@@ -368,14 +369,14 @@ void combatManager::EffectSpellCure(int* effect, int targetSide, signed char cur
         }
         if (cure == 1)
             posEffect = 0;
-        if (targetSide == 2) {
+        if (targetSide == COMBAT_SIDE_ANY) {
             if (m_currentSide == curSide)
                 *effect += negEffect - posEffect;
             else
                 *effect += posEffect - negEffect;
         } else
             *effect += negEffect;
-        if (targetSide == 2 && m_currentSide == curSide)
+        if (targetSide == COMBAT_SIDE_ANY && m_currentSide == curSide)
             curSide = 1 - m_currentSide;
         else
             finished = 1;
@@ -407,13 +408,13 @@ void combatManager::EffectSpellResurrect(int* effect, int hex) {
 // or a decisive value when it wipes out a side.
 VA(0x00437e0d, 0x501)
 void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower, int targetHex) {
-    int partValue[2];
+    int partValue[COMBAT_SIDE_COUNT];
     int killed;
-    int stacksKilled[2];
+    int stacksKilled[COMBAT_SIDE_COUNT];
     int extra;
     int finished;
     army* targetCreature;
-    int combatValue[2];
+    int combatValue[COMBAT_SIDE_COUNT];
     int side;
     int hitDamage;
     int cell;
@@ -495,8 +496,8 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
             }
         }
     }
-    if (stacksKilled[0] >= m_numArmies[COMBAT_DEFENDER_SIDE]
-        || stacksKilled[1] >= m_numArmies[COMBAT_ATTACKER_SIDE]) {
+    if (stacksKilled[COMBAT_DEFENDER_SIDE] >= m_numArmies[COMBAT_DEFENDER_SIDE]
+        || stacksKilled[COMBAT_ATTACKER_SIDE] >= m_numArmies[COMBAT_ATTACKER_SIDE]) {
         if (combatValue[m_currentSide] <= 0)
             *effect = 100000000 - giSpellAIValue[spell];
         else

@@ -370,7 +370,7 @@ signed char game::SetupGame(signed char newGame) {
     gbDirectConnect = 0;
     gbInSetupDialog = 1;
 
-    if (giMenuCommand != -1) {
+    if (giMenuCommand != APP_MENU_NONE) {
         switch (giMenuCommand) {
             case APP_MENU_NEW_CAMPAIGN_IRONFIST:
                 giCampaignChoice = CAMPAIGN_IRONFIST;
@@ -445,7 +445,7 @@ signed char game::SetupGame(signed char newGame) {
                     gbWaitForRemoteReceive = 1;
                 break;
         }
-        giMenuCommand = -1;
+        giMenuCommand = APP_MENU_NONE;
         result = 1;
         goto done;
     }
@@ -786,10 +786,10 @@ short BaseSetupHandler(tag_message& message) {
         }
     }
 
-    if (handled || giMenuCommand != -1) {
+    if (handled || giMenuCommand != APP_MENU_NONE) {
         gpWindowManager->m_dialogResult = message.id;
         message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
-        if (giMenuCommand != -1)
+        if (giMenuCommand != APP_MENU_NONE)
             gpWindowManager->m_dialogResult = DIALOG_CANCEL;
         return MESSAGE_DISPATCH_FORWARD;
     }

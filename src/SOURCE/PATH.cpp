@@ -84,7 +84,7 @@ short army::GetMoveMask(short sourceHex)
 
     blockedMask = 0;
     mask = 1;
-    for (direction = 0; direction <= 5; direction++) {
+    for (direction = 0; direction <= COMBAT_DIRECTION_ADJACENT_LAST; direction++) {
         if (!ValidMove(sourceHex, direction))
             blockedMask |= mask;
         mask <<= 1;
