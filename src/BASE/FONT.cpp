@@ -54,14 +54,31 @@ void font::DrawString(char *text, short x, short y, short color)
 VA(0x0047b4d0, 0x2d0)
 void font::DrawBoundedString(char *str, short x, short y, short w, short h, short color, short align)
 {
-    short s = strlen(str);
+    short s;
     signed char q;
-    IconEntry *u = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
-    char aa = ' ';
-    short t = 0, yOff = 0, r = 0, lineEnd = 0, p = 0, width = 0;
-    char *line = str;
-    short drawColor = color;
+    IconEntry *u;
+    char aa;
+    short yOff;
+    short r;
+    short lineEnd;
+    short t;
+    short p;
+    short width;
+    char *line;
+    short drawColor;
     char v;
+
+    s = strlen(str);
+    u = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    aa = ' ';
+    t = 0;
+    yOff = 0;
+    r = 0;
+    lineEnd = 0;
+    p = 0;
+    width = 0;
+    line = str;
+    drawColor = color;
     while (p < s && line[p] != 0 && m_height + yOff <= h) {
         while (line[p] != 0 && line[p] != '\n' && width <= w) {
             q = line[p] - ' ';
