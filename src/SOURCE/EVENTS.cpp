@@ -153,7 +153,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
                     COAST_FIZZLE_HEIGHT,
-                    -1
+                    FIZZLE_USE_DEFAULT_DELAY
                 );
                 CheckAdjacentMon(&adjacentMonster);
             }
@@ -1851,7 +1851,7 @@ void advManager::GiveTakeArtifactStat(
             amount = 1;
             break;
         case ARTIFACT_BALLISTA:
-            stat = 4;
+            stat = HERO_PRIMARY_BALLISTA;
             amount = 3;
             break;
         case ARTIFACT_STEALTH_SHIELD:
@@ -2049,7 +2049,7 @@ void advManager::FizzleCenter(int fizzleType) {
         EVENT_FIZZLE_HEIGHT,
         EVENT_FIZZLE_STEPS
     );
-    WaitEndSample(fizzleSample, -1);
+    WaitEndSample(fizzleSample, SAMPLE_WAIT_DEFAULT);
 }
 
 // donor PoL RVA 0x000b1e43; preferred Buka symbol ?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z

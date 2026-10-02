@@ -434,7 +434,7 @@ mapCell* advManager::MoveHero(
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
                     COAST_FIZZLE_HEIGHT,
-                    -1
+                    FIZZLE_USE_DEFAULT_DELAY
                 );
                 break;
             case MAP_OBJECT_BUOY:
@@ -680,7 +680,7 @@ void advManager::CheckAdjacentMon(signed char* adjacentMonster) {
 
     theHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dead = 0;
-    if (FindAdjacentMonster(theHero->m_x, theHero->m_y, &monX, &monY, -1, -1)) {
+    if (FindAdjacentMonster(theHero->m_x, theHero->m_y, &monX, &monY, SEARCH_INVALID_COORDINATE, SEARCH_INVALID_COORDINATE)) {
         StopCursor(1);
         CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
         UpdateScreen(0, 0);

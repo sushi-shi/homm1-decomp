@@ -30,6 +30,12 @@ H1_ENUM_BEGIN(WidgetKind)
     WIDGET_KIND_TRACK_PRESS = 0x2000,
     WIDGET_KIND_TEXT_ENTRY = 0x4000
 H1_ENUM_END(WidgetKind)
+
+// widget::m_id of a widget that issues no command (decorative icons and text
+// built into a window; Buka TOWN_WIDGET_ID_NONE).
+H1_ENUM_CONST_BEGIN(WidgetIdConstant)
+    WIDGET_ID_NONE = -1
+H1_ENUM_CONST_END(WidgetIdConstant)
 // clang-format on
 
 #pragma pack(push, 1)
