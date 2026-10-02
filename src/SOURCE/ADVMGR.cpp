@@ -2658,7 +2658,92 @@ void advManager::TownGate(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.502597;margin=0.051626;shape=0.294;size=0.965;calls=0.867;alternate=pol20:void advManager::SummonBoat(void)@0x00067c9b
 VA(0x00435403, 0x51c)
-void advManager::SummonBoat(void) {}
+void advManager::SummonBoat(void) {
+    hero* pHero;
+    signed char boatFound;
+    mapCell* pCell;
+    short iDirection;
+    signed char foundCell;
+    boatRecord* thisBoat;
+    short slotIndex;
+    signed char heroNum;
+    mapCell* fromCell;
+    short drawX;
+    short drawY;
+    short drawHeight;
+    short drawWidth;
+
+    pHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
+    foundCell = 0;
+    boatFound = 0;
+    pCell = GetCell(m_mapOriginX + 7, m_mapOriginY + 7);
+    if (pCell->m_tileIndex < 20)
+        goto summon_done;
+    for (iDirection = 0; iDirection < 8; iDirection++) {
+        pCell = GetCell(normalDirTable[iDirection].x + m_mapOriginX + 7,
+                                  normalDirTable[iDirection].y + m_mapOriginY + 7);
+        if (pCell->m_objectIndex == 0xff && pCell->m_tileIndex < 20) {
+            foundCell = 1;
+            break;
+        }
+    }
+    if (foundCell) {
+        heroNum = gpCurPlayer->CurrentHero();
+        for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
+            if (gpGame->m_boatSlots[slotIndex] != -1 && gpGame->m_boats[slotIndex].heroId == (heroNum | 0x80)) {
+                boatFound = 1;
+                break;
+            }
+        }
+        if (!boatFound) {
+            for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
+                if (gpGame->m_boatSlots[slotIndex] != -1 && (gpGame->m_boats[slotIndex].heroId & 0x80)
+                    && gpGame->m_boats[slotIndex].owner == giCurPlayer) {
+                    boatFound = 1;
+                    break;
+                }
+            }
+        }
+        if (boatFound) {
+            thisBoat = &gpGame->m_boats[slotIndex];
+            fromCell = GetCell(thisBoat->x, thisBoat->y);
+            gpGame->RestoreCell(thisBoat->x, thisBoat->y, thisBoat->savedTriggerType, thisBoat->savedEventData, 0, 5);
+            if (thisBoat->x >= m_mapOriginX && thisBoat->x < m_mapOriginX + 15 && thisBoat->y >= m_mapOriginY
+                && thisBoat->y < m_mapOriginY + 15) {
+                drawX = (thisBoat->x - m_mapOriginX) * 32 - 32;
+                if (drawX < 16)
+                    drawX = 16;
+                drawY = (thisBoat->y - m_mapOriginY) * 32 - 16;
+                if (drawY < 16)
+                    drawY = 16;
+                drawWidth = 96;
+                drawHeight = 48;
+                if (drawX + drawWidth >= 464)
+                    drawWidth = 464 - drawX;
+                if (drawY + drawHeight >= 464)
+                    drawHeight = 464 - drawY;
+                gpWindowManager->SaveFizzleSource(drawX, drawY, drawWidth, drawHeight);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+                gpWindowManager->FizzleForward(drawX, drawY, drawWidth, drawHeight, -1);
+            }
+            thisBoat->x = normalDirTable[iDirection].x + m_mapOriginX + 7;
+            thisBoat->y = normalDirTable[iDirection].y + m_mapOriginY + 7;
+            thisBoat->savedTriggerType = pCell->m_triggerType;
+            thisBoat->savedEventData = pCell->m_objectMetadata;
+            pCell->m_triggerType = 0xbe;
+            pCell->m_objectMetadata = slotIndex;
+            gpWindowManager->SaveFizzleSource(176, 192, 128, 96);
+            CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+            gpWindowManager->FizzleForward(176, 192, 128, 96, -1);
+        }
+    }
+
+summon_done:
+    UpdateScreen(0, 0);
+    Reseed(0, 0);
+    if (!boatFound)
+        NormalDialog("Summon Boat failed!!!", 1, 0x61, 0x91, -1, 0, -1, 0, -1);
+}
 
 // donor PoL RVA 0x00068247; preferred Buka symbol ?ShowRoute@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
