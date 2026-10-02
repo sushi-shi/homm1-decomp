@@ -1257,7 +1257,6 @@ void combatManager::DrawCombatBorder(void)
 }
 
 // CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
-// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
 // table after Open's literals, followed by its own literals.
 DATA(0x00490db0)
 char* cCombatBkgNames[11] = {
