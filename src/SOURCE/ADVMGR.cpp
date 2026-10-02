@@ -1008,7 +1008,8 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     case ADVENTURE_CONTROL_HERO_LOCATOR_2:
     case ADVENTURE_CONTROL_HERO_LOCATOR_3:
     case ADVENTURE_CONTROL_HERO_LOCATOR_4:
-        iPage = (message->id - ADVENTURE_CONTROL_HERO_LOCATOR_1) / 7;
+        iPage = (message->id - ADVENTURE_CONTROL_HERO_LOCATOR_1)
+                / (ADVENTURE_CONTROL_HERO_LOCATOR_2 - ADVENTURE_CONTROL_HERO_LOCATOR_1);
         if (gpCurPlayer->m_heroCount <= iPage)
             break;
         cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
@@ -1046,7 +1047,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         }
         break;
     case ADVENTURE_CONTROL_HERO_PAGE_NEXT:
-        if (gpCurPlayer->m_heroLocatorPage + 4 < gpCurPlayer->m_heroCount) {
+        if (gpCurPlayer->m_heroLocatorPage + LOCATOR_VISIBLE_COUNT < gpCurPlayer->m_heroCount) {
             gpCurPlayer->m_heroLocatorPage++;
             UpdateHeroLocators(1, 1);
         }
@@ -1058,9 +1059,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         gpMouseManager->MouseCoords(curX, curY);
         curY -= 194;
         if (gpCurPlayer->m_heroCount > LOCATOR_VISIBLE_COUNT) {
-            iPage = curY / (92 / (gpCurPlayer->m_heroCount - 3));
-            if (iPage > gpCurPlayer->m_heroCount - 4)
-                iPage = gpCurPlayer->m_heroCount - 4;
+            iPage = curY / (92 / (gpCurPlayer->m_heroCount - (LOCATOR_VISIBLE_COUNT - 1)));
+            if (iPage > gpCurPlayer->m_heroCount - LOCATOR_VISIBLE_COUNT)
+                iPage = gpCurPlayer->m_heroCount - LOCATOR_VISIBLE_COUNT;
         } else {
             iPage = 0;
         }
@@ -1074,9 +1075,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         gpMouseManager->MouseCoords(curX, curY);
         curY -= 194;
         if (gpCurPlayer->m_townCount > LOCATOR_VISIBLE_COUNT) {
-            iPage = curY / (92 / (gpCurPlayer->m_townCount - 3));
-            if (iPage > gpCurPlayer->m_townCount - 4)
-                iPage = gpCurPlayer->m_townCount - 4;
+            iPage = curY / (92 / (gpCurPlayer->m_townCount - (LOCATOR_VISIBLE_COUNT - 1)));
+            if (iPage > gpCurPlayer->m_townCount - LOCATOR_VISIBLE_COUNT)
+                iPage = gpCurPlayer->m_townCount - LOCATOR_VISIBLE_COUNT;
         } else {
             iPage = 0;
         }
@@ -1090,7 +1091,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         }
         break;
     case ADVENTURE_CONTROL_TOWN_PAGE_NEXT:
-        if (gpCurPlayer->m_townLocatorPage + 4 < gpCurPlayer->m_townCount) {
+        if (gpCurPlayer->m_townLocatorPage + LOCATOR_VISIBLE_COUNT < gpCurPlayer->m_townCount) {
             gpCurPlayer->m_townLocatorPage++;
             UpdateTownLocators(1, 1);
         }
@@ -2395,7 +2396,7 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
                 ? 0xc5
                 : 0;
         m_adventureWindow->BroadcastMessage(message);
-        message.id = i + 16;
+        message.id = i + ADVENTURE_CONTROL_TOWN_LOCATOR_1;
         if (whichTown == -1 || gbAllBlack) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = i + 4;
@@ -2417,7 +2418,7 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
     if (gpCurPlayer->m_townCount < LOCATOR_PAGE_THRESHOLD) {
         m_scrollRightButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
-        scrollStep = 74.0 / (gpCurPlayer->m_townCount - 4);
+        scrollStep = 74.0 / (gpCurPlayer->m_townCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
         m_scrollRightButton->m_y = static_cast<short>(gpCurPlayer->m_townLocatorPage * scrollStep + 195.0);
     }
     if (drawWindow)
@@ -3442,8 +3443,8 @@ void advManager::SetTownContext(signed char townId) {
     }
     if (gpCurPlayer->m_townLocatorPage > townNo)
         gpCurPlayer->m_townLocatorPage = townNo;
-    else if (gpCurPlayer->m_townLocatorPage + 3 < townNo)
-        gpCurPlayer->m_townLocatorPage = townNo - 3;
+    else if (gpCurPlayer->m_townLocatorPage + (LOCATOR_VISIBLE_COUNT - 1) < townNo)
+        gpCurPlayer->m_townLocatorPage = townNo - (LOCATOR_VISIBLE_COUNT - 1);
     UpdateHeroLocators(1, 1);
     UpdateTownLocators(1, 1);
     HideRoute(0, 0, 1);
@@ -3511,8 +3512,8 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     }
     if (gpCurPlayer->m_heroLocatorPage > heroSlot)
         gpCurPlayer->m_heroLocatorPage = heroSlot;
-    else if (gpCurPlayer->m_heroLocatorPage + 3 < heroSlot)
-        gpCurPlayer->m_heroLocatorPage = heroSlot - 3;
+    else if (gpCurPlayer->m_heroLocatorPage + (LOCATOR_VISIBLE_COUNT - 1) < heroSlot)
+        gpCurPlayer->m_heroLocatorPage = heroSlot - (LOCATOR_VISIBLE_COUNT - 1);
     UpdateHeroLocators(1, 1);
     UpdateTownLocators(1, 1);
     if (!update && (m_active == 1 || gbThisNetHumanPlayer[giCurPlayer])) {
@@ -3556,7 +3557,7 @@ void advManager::DoHeroKnob(void) {
     gpMouseManager->SetCursorShape(4);
     prevPage = gpCurPlayer->m_heroLocatorPage;
     numHeroes = gpCurPlayer->m_heroCount;
-    scale = 73.0 / (numHeroes - 4);
+    scale = 73.0 / (numHeroes - LOCATOR_PAGE_DENOMINATOR_OFFSET);
     gpMouseManager->MouseCoords(x, my);
     offset = my - m_scrollLeftButton->m_y;
     gpInputManager->Flush();
@@ -3570,12 +3571,12 @@ void advManager::DoHeroKnob(void) {
             gpMouseManager->Main(message);
             m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
-            if (numHeroes > 4) {
+            if (numHeroes > LOCATOR_VISIBLE_COUNT) {
                 pg = static_cast<short>((m_scrollLeftButton->m_y - 195) / scale);
                 if (prevPage != pg) {
                     gpCurPlayer->m_heroLocatorPage = pg;
-                    if (numHeroes - 3 < pg)
-                        pg = numHeroes - 3;
+                    if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
+                        pg = numHeroes - (LOCATOR_VISIBLE_COUNT - 1);
                     UpdateHeroLocators(0, 1);
                     m_scrollLeftButton->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
@@ -3608,7 +3609,7 @@ void advManager::DoTownKnob(void) {
     gpMouseManager->SetCursorShape(4);
     prevPage = gpCurPlayer->m_townLocatorPage;
     numHeroes = gpCurPlayer->m_townCount;
-    scale = 73.0 / (numHeroes - 4);
+    scale = 73.0 / (numHeroes - LOCATOR_PAGE_DENOMINATOR_OFFSET);
     gpMouseManager->MouseCoords(x, my);
     offset = my - m_scrollRightButton->m_y;
     gpInputManager->Flush();
@@ -3622,12 +3623,12 @@ void advManager::DoTownKnob(void) {
             gpMouseManager->Main(message);
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
-            if (numHeroes > 4) {
+            if (numHeroes > LOCATOR_VISIBLE_COUNT) {
                 pg = static_cast<short>((m_scrollRightButton->m_y - 195) / scale);
                 if (prevPage != pg) {
                     gpCurPlayer->m_townLocatorPage = pg;
-                    if (numHeroes - 3 < pg)
-                        pg = numHeroes - 3;
+                    if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
+                        pg = numHeroes - (LOCATOR_VISIBLE_COUNT - 1);
                     UpdateTownLocators(0, 1);
                     m_scrollRightButton->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
