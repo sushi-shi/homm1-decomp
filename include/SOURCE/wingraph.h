@@ -12,6 +12,7 @@ struct IDirectDraw;
 struct IUnknown;
 typedef long(__stdcall* DirectDrawCreateProc)(GUID*, IDirectDraw**, IUnknown*);
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
     WINGRAPH_WIDTH = 640,
     WINGRAPH_HEIGHT = 480,
@@ -63,6 +64,7 @@ H1_ENUM_BEGIN(DirectDrawReportCode)
     DDSD_REPORT_NOCLIPPERATTACHED = 28,
     DDSD_REPORT_UNKNOWN = 100
 H1_ENUM_END(DirectDrawReportCode)
+// clang-format on
 
 struct WingPalette {
     WORD version;

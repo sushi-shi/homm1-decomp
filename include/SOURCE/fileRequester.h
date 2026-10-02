@@ -46,9 +46,9 @@ H1_ENUM_CONST_BEGIN(FileRequesterListConstant)
     FILE_REQUESTER_DISPATCH_MASK = 0x32f,
     FILE_REQUESTER_FILENAME_MAX_LENGTH = 255
 H1_ENUM_CONST_END(FileRequesterListConstant)
-    // clang-format on
+// clang-format on
 
-    struct FileRequesterName {
+struct FileRequesterName {
     char text[FILE_REQUESTER_NAME_SIZE];
 };
 

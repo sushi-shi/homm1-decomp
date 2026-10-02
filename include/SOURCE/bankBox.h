@@ -12,7 +12,7 @@ H1_ENUM_BEGIN(BankBoxControl)
     BANK_BOX_RESOURCE_FIRST = 30,
     BANK_BOX_GOLD = 36
 H1_ENUM_END(BankBoxControl)
-    // clang-format on
+// clang-format on
 
 // forward declarations:
 class playerData;

@@ -40,9 +40,9 @@ H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_VIEWPORT_WIDTH = 0x280,
     TOWN_VIEWPORT_HEIGHT = 0x100
 H1_ENUM_CONST_END(TownManagerStorageConstant)
-   // clang-format on
+// clang-format on
 
-   // clang-format off
+// clang-format off
 H1_ENUM_BEGIN(TownArmyCommand)
     TOWN_ARMY_COMMAND_NONE = -1,
     TOWN_ARMY_COMMAND_SELECT = 0,
