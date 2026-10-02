@@ -59,6 +59,8 @@
 *	*	*	call-argument	FlipIconToBitmap(* argument 5	an icon frame number in the .icn resource (frames have no names)
 *	*	*	call-argument	DrawBoundedString(* argument [2-5]	text box x, y, width and height in pixels
 *	*	*	call-argument	NormalDialog(* argument [34]	dialog window x and y in pixels (-1 centres it, Buka's default)
+*	*	0	call-argument	NormalDialog(* argument [68]	unused resource quantity: the slot shows no amount (NORMAL_DIALOG_NO_RESOURCE, luck/morale icons)
+*	*	0	call-argument	EventWindow(* argument [57]	unused resource quantity forwarded to NormalDialog (same slots)
 *	*	*	arithmetic	operator + KBTickCount()	a delay in milliseconds after the current time (KBTickCount returns GetTickCount)
 src/*	advManager::ProcessSelect	*	store	store to [xy]	a screen position in pixels
 src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixels
