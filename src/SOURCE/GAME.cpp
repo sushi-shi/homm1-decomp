@@ -2745,9 +2745,9 @@ int game::ComputeDailyGold(int player) {
                 gold += 1000;
         }
     }
-    gold += m_players[player].NumOfGivenArtifact(26) * 1000;
-    gold += m_players[player].NumOfGivenArtifact(27) * 750;
-    gold += m_players[player].NumOfGivenArtifact(28) * 500;
+    gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_SACK_OF_GOLD) * 1000;
+    gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_BAG_OF_GOLD) * 750;
+    gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_PURSE_OF_GOLD) * 500;
     if (!gbHumanPlayer[player]) {
         if (gpGame->m_players[player].m_difficulty == 1)
             gold = gold * 0.75;
@@ -2782,13 +2782,13 @@ void game::PerDay(void) {
         if (m_mines[i].owner != -1) {
             resource = m_mines[i].type;
             production = 0;
-            if (resource == 2)
+            if (resource == RESOURCE_ORE)
                 production = 2;
-            else if (resource == 0)
+            else if (resource == RESOURCE_WOOD)
                 production = 2;
-            else if (resource != 6)
+            else if (resource != RESOURCE_GOLD)
                 production = 1;
-            if (resource != 6)
+            if (resource != RESOURCE_GOLD)
                 m_players[m_mines[i].owner].m_resources[resource] += production;
         }
     }
@@ -3136,22 +3136,22 @@ void game::RandomizeMine(signed char x, signed char y) {
     terrain = giGroundToTerrain[m_map[x][y].m_tileIndex];
     for (tries = 0; tries < 30; tries++) {
         switch (terrain) {
-            case 1:
-            case 6:
+            case TERRAIN_GRASS:
+            case TERRAIN_DIRT:
                 type = Random(1, 6);
-                if (type == 1)
-                    type = 0;
+                if (type == RESOURCE_MERCURY)
+                    type = RESOURCE_WOOD;
                 break;
-            case 2:
+            case TERRAIN_SNOW:
                 type = Random(2, 6);
                 break;
-            case 3:
+            case TERRAIN_SWAMP:
                 type = Random(0, 6);
                 break;
-            case 4:
-                type = 1;
+            case TERRAIN_LAVA:
+                type = RESOURCE_MERCURY;
                 break;
-            case 5:
+            case TERRAIN_DESERT:
             default:
                 type = Random(1, 6);
                 break;
@@ -3161,18 +3161,18 @@ void game::RandomizeMine(signed char x, signed char y) {
     }
     giMineTypeCount[type]++;
     switch (type) {
-        case 0:
+        case RESOURCE_WOOD:
             upFrame = 5;
             break;
-        case 1:
+        case RESOURCE_MERCURY:
             upFrame = 0x19;
             break;
         default:
             switch (terrain) {
-                case 1:
+                case TERRAIN_GRASS:
                     upFrame = 0xf;
                     break;
-                case 2:
+                case TERRAIN_SNOW:
                     upFrame = 0x13;
                     break;
                 default:
@@ -3182,15 +3182,15 @@ void game::RandomizeMine(signed char x, signed char y) {
             break;
     }
     switch (type) {
-        case 0:
+        case RESOURCE_WOOD:
             objFrame = 7;
             break;
-        case 1:
+        case RESOURCE_MERCURY:
             switch (terrain) {
-                case 3:
+                case TERRAIN_SWAMP:
                     objFrame = 0x2b;
                     break;
-                case 4:
+                case TERRAIN_LAVA:
                     objFrame = 0x23;
                     break;
                 default:
@@ -3200,16 +3200,16 @@ void game::RandomizeMine(signed char x, signed char y) {
             break;
         default:
             switch (terrain) {
-                case 1:
+                case TERRAIN_GRASS:
                     objFrame = 0x11;
                     break;
-                case 2:
+                case TERRAIN_SNOW:
                     objFrame = 0x15;
                     break;
-                case 3:
+                case TERRAIN_SWAMP:
                     objFrame = 0x17;
                     break;
-                case 5:
+                case TERRAIN_DESERT:
                     objFrame = 0xd;
                     break;
                 default:
@@ -3222,16 +3222,16 @@ void game::RandomizeMine(signed char x, signed char y) {
     m_map[x + 1][y].m_objectIndex = objFrame + 1;
     m_map[x][y - 1].m_overlayIndex = upFrame;
     m_map[x + 1][y - 1].m_overlayIndex = upFrame + 1;
-    if (type == 1) {
+    if (type == RESOURCE_MERCURY) {
         m_map[x + 1][y].m_flags |= 4;
-        bits = 1;
-    } else if (type == 0) {
-        bits = 0x20;
+        bits = MAP_OBJECT_ALCHEMIST_LAB;
+    } else if (type == RESOURCE_WOOD) {
+        bits = MAP_OBJECT_SAWMILL;
     } else {
         m_map[x + 1][y].m_flags |= 0x10;
         m_map[x + 1][y].m_objectTileset |= 0xb0;
         m_map[x + 1][y].m_extraFrame = type - 2;
-        bits = 0x19;
+        bits = MAP_OBJECT_MINE;
     }
     mineIdx = GetMineId(x, y);
     for (k = 0; k < 2; k++) {
@@ -3256,7 +3256,7 @@ signed char game::GetRandomArtifactId(void) {
     if (freeSlot == -1)
         return -1;
     signed char artifact = RandomScan(m_randomArtifacts, 4, 33, 37);
-    if (artifact == -1)
+    if (artifact == ARTIFACT_NONE)
         return freeSlot;
     else
         return artifact;

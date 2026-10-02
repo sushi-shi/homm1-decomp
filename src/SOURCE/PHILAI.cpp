@@ -849,11 +849,11 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
     spacing = pHero->m_mobility / 6;
     thisCell = gpAdvManager->GetCell(pHero->m_x, pHero->m_y);
     heroTerrainType = giGroundToTerrain[thisCell->m_tileIndex];
-    if (heroTerrainType == 2 || heroTerrainType == 3) {
+    if (heroTerrainType == TERRAIN_SNOW || heroTerrainType == TERRAIN_SWAMP) {
         spacing--;
         mobility = static_cast<short>(mobility * 1.25);
     }
-    if (heroTerrainType == 5) {
+    if (heroTerrainType == TERRAIN_DESERT) {
         spacing -= 2;
         mobility = static_cast<short>(mobility * 1.5);
     }
@@ -897,9 +897,9 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                             || (thisCell->m_triggerType == MAP_OBJECT_COAST && (pHero->m_eventFlags & 0x80))
                             || (x % spacing == 0 && y % spacing == 0
                                 && (((pHero->m_eventFlags & 0x80)
-                                     && giGroundToTerrain[thisCell->m_tileIndex] == 0)
+                                     && giGroundToTerrain[thisCell->m_tileIndex] == TERRAIN_WATER)
                                     || (!(pHero->m_eventFlags & 0x80)
-                                        && giGroundToTerrain[thisCell->m_tileIndex] != 0)))
+                                        && giGroundToTerrain[thisCell->m_tileIndex] != TERRAIN_WATER)))
                             || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
                 if (valid) {
@@ -2339,7 +2339,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             }
             gbPossibleShipyardFound = 1;
         }
-    } else if (heroPointer->m_primaryStats[3] > 0 && !heroPointer->HasArtifact(37)
+    } else if (heroPointer->m_primaryStats[3] > 0 && !heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK)
                && (townPointer->m_buildings & 1)) {
         if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= 500) {
             gpAdvManager->GiveArtifact(heroPointer, 37);
@@ -2348,7 +2348,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             heroPointer->m_remainingMobility = 0;
         }
     }
-    if ((townPointer->m_buildings & 1) && (doInteraction || heroPointer->HasArtifact(37))) {
+    if ((townPointer->m_buildings & 1) && (doInteraction || heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK))) {
         for (i = 0; i < gMageGuildSpellCount[townPointer->m_buildState]; i++) {
             newLearned = heroPointer->AddSpell(
                 townPointer->m_mageGuildSpells[i], heroPointer->m_primaryStats[3], doInteraction
@@ -3249,7 +3249,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                          + gafAITurnCostResource[RESOURCE_GOLD] * 500.0f);
         break;
     case MAP_OBJECT_SPELL_SHRINE:
-        if (pHero->m_primaryStats[3] > 0 && pHero->HasArtifact(37)) {
+        if (pHero->m_primaryStats[3] > 0 && pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
             iEventLoop = pHero->AddSpell(pEventCell->m_objectMetadata - 1, pHero->m_primaryStats[3], 1);
             iEventRV = giSpellAIValue[pEventCell->m_objectMetadata - 1];
             iEventRV = static_cast<int>(StatChangeValue(pHero->m_primaryStats[3] - iEventLoop, pHero->m_primaryStats[3])

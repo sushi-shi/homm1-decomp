@@ -136,7 +136,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             EventWindow(0xb, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_RESOURCE_GOLD, cell->m_objectMetadata * 500, NORMAL_DIALOG_EXPERIENCE,
                         (cell->m_objectMetadata - 1) * 500, NORMAL_DIALOG_SHOW_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                GiveResource(pHero, 6, cell->m_objectMetadata * 500);
+                GiveResource(pHero, RESOURCE_GOLD, cell->m_objectMetadata * 500);
             else
                 GiveExperience(pHero, (cell->m_objectMetadata - 1) * 500, 0);
             erase = 1;
@@ -210,7 +210,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             EventWindow(0xe, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, (cell->m_objectMetadata >> 4) * 100,
                         cell->m_objectMetadata & 0xf,
                         cell->m_objectMetadata >> 4, NORMAL_DIALOG_NO_OR_TEXT);
-            GiveResource(pHero, 6, (cell->m_objectMetadata >> 4) * 100);
+            GiveResource(pHero, RESOURCE_GOLD, (cell->m_objectMetadata >> 4) * 100);
             GiveResource(pHero, cell->m_objectMetadata & 0xf,
                          cell->m_objectMetadata >> 4);
             erase = 1;
@@ -233,7 +233,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 EventWindow(0x29, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 EventWindow(0x2a, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, cell->m_objectMetadata * 500, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-                GiveResource(pHero, 6, cell->m_objectMetadata * 500);
+                GiveResource(pHero, RESOURCE_GOLD, cell->m_objectMetadata * 500);
                 cell->m_objectMetadata = 0;
             }
             break;
@@ -403,8 +403,8 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     sprintf(gText, gEventText[71], gArtifactNames[cell->m_objectIndex]);
                     EventWindow(-1, NORMAL_DIALOG_TYPE_YES_NO, gText, NORMAL_DIALOG_ARTIFACT, cell->m_objectIndex, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                        if (gpGame->m_players[pHero->m_owner].m_resources[6] >= 2000) {
-                            gpGame->m_players[pHero->m_owner].m_resources[6] -= 2000;
+                        if (gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] >= 2000) {
+                            gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] -= 2000;
                             goto giveArtifact;
                         } else {
                             EventWindow(0x49, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -475,18 +475,18 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 goldReward:
                     EventWindow(7, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_RESOURCE_GOLD, 2500, NORMAL_DIALOG_EXPERIENCE, 1000, NORMAL_DIALOG_NO_OR_TEXT);
                     GiveExperience(pHero, 1000, 0);
-                    GiveResource(pHero, 6, 2500);
+                    GiveResource(pHero, RESOURCE_GOLD, 2500);
                     cell->m_objectMetadata = 1;
                     pHero->CheckLevel();
                     break;
                 case 5:
                     EventWindow(8, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                        if (gpGame->m_players[pHero->m_owner].m_resources[6] < 2500) {
+                        if (gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] < 2500) {
                             EventWindow(9, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             HeroLoses(pHero);
                         } else {
-                            gpGame->m_players[pHero->m_owner].m_resources[6] -= 2500;
+                            gpGame->m_players[pHero->m_owner].m_resources[RESOURCE_GOLD] -= 2500;
                         }
                     } else {
                         HeroLoses(pHero);
@@ -778,7 +778,7 @@ int advManager::GiveRandomArtifact(class hero* eventHero) {
     signed char artifact;
 
     artifact = gpGame->GetRandomArtifactId();
-    if (artifact == -1)
+    if (artifact == ARTIFACT_NONE)
         GiveResource(eventHero, RESOURCE_GOLD, 1000);
     else
         GiveArtifact(eventHero, artifact);
@@ -872,7 +872,7 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
         if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 50, cell, x, y, 0, x, y) == 1) {
             artifact = GiveRandomArtifact(eventHero);
             sprintf(gText, "%s", gEventText[textId]);
-            if (artifact != -1)
+            if (artifact != ARTIFACT_NONE)
                 EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_ARTIFACT, artifact, NORMAL_DIALOG_NO_OR_TEXT);
             else
                 EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -1273,7 +1273,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             if (gpPhilAI->ChooseGoldOrExperience(eventHero,
                                                  cell->m_objectMetadata * 500,
                                                  (cell->m_objectMetadata - 1) * 500))
-                GiveResource(eventHero, 6, cell->m_objectMetadata * 500);
+                GiveResource(eventHero, RESOURCE_GOLD, cell->m_objectMetadata * 500);
             else
                 GiveExperience(eventHero, (cell->m_objectMetadata - 1) * 500, 1);
             erase = 1;
@@ -1319,7 +1319,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case MAP_OBJECT_CAMPFIRE:
-            GiveResource(eventHero, 6, (cell->m_objectMetadata >> 4) * 100);
+            GiveResource(eventHero, RESOURCE_GOLD, (cell->m_objectMetadata >> 4) * 100);
             GiveResource(eventHero, cell->m_objectMetadata & 0xf,
                          cell->m_objectMetadata >> 4);
             erase = 1;
@@ -1333,7 +1333,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             break;
         case MAP_OBJECT_WATERWHEEL:
             if (cell->m_objectMetadata) {
-                GiveResource(eventHero, 6, cell->m_objectMetadata * 500);
+                GiveResource(eventHero, RESOURCE_GOLD, cell->m_objectMetadata * 500);
                 cell->m_objectMetadata = 0;
             }
             break;
@@ -1464,7 +1464,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     break;
                 case 3:
                     if (gpPhilAI->ChooseToBuyArtifact(eventHero, cell->m_objectIndex, 2000)) {
-                        gpGame->m_players[eventHero->m_owner].m_resources[6] -= 2000;
+                        gpGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] -= 2000;
                         goto giveArtifact;
                     } else {
                         erase = 1;
@@ -1512,12 +1512,12 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     break;
                 case 4:
                     GiveExperience(eventHero, 1000, 1);
-                    GiveResource(eventHero, 6, 2500);
+                    GiveResource(eventHero, RESOURCE_GOLD, 2500);
                     break;
                 case 5:
-                    if (gpGame->m_players[eventHero->m_owner].m_resources[6] >= 2500) {
+                    if (gpGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] >= 2500) {
                         if (gpPhilAI->ChooseToPayRansomOnHero(eventHero, 2500))
-                            gpGame->m_players[eventHero->m_owner].m_resources[6] += -2500;
+                            gpGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] += -2500;
                         else
                             HeroLoses(eventHero);
                     } else {
