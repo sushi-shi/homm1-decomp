@@ -1172,6 +1172,17 @@ void game::InitCampaignMap(int scenario, int) {
     }
 }
 
+// Spell AI values, attribute bits and the mage-guild pool by spell level.
+extern short gSpellAIValue[];
+extern signed char gSpellAttributes[];
+extern signed char gMageGuildSpellPool[4][8];
+
+// Map-extra record count and sizes read from the map file.
+extern int iMaxMapExtra;
+extern int pwSizeOfMapExtra[];
+// Vision radius a claimed town grants its new owner.
+extern signed char giVisRangeTown;
+
 // Buka 2.1 game::NewMap for HoMM1: map setup helpers, a starting town and
 // hero per player (campaign crests pick them), two tavern heroes, the
 // ultimate artifact site, starting resources, town threat ranks and the
@@ -1185,12 +1196,12 @@ void game::NewMap(char* mapName) {
     signed char yTown;
     signed char xTown;
     int heroIdx;
+    int i;
+    int j;
     signed char townId;
     signed char used[GAME_TOWN_COUNT];
     int k;
-    int j;
-    int spread;
-    int i;
+    int ultimateSpread;
     signed char allNeutral;
     int difficulty;
 
@@ -1318,13 +1329,13 @@ void game::NewMap(char* mapName) {
     }
     i = Random(9, 62);
     j = Random(9, 62);
-    spread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+    ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
     while (m_map[i][j].m_objectIndex != 0xff || m_map[i][j].m_overlayIndex != 0xff || m_map[i][j].m_tileIndex < 20
            || (giNumHumanPlayers == 1
                && abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
                           + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y)
-                      <= spread)) {
-        spread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+                      <= ultimateSpread)) {
+        ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
         i = Random(9, 62);
         j = Random(9, 62);
     }
@@ -1380,11 +1391,6 @@ int GetObjectFamily(int trigger) {
     }
 }
 
-// Spell AI values, attribute bits and the mage-guild pool by spell level.
-extern short gSpellAIValue[];
-extern signed char gSpellAttributes[];
-extern signed char gMageGuildSpellPool[4][8];
-
 // HoMM1: once a cell's object frame is gone, its overlay drops into the
 // object slot unless the eastern neighbour continues the same object.
 VA(0x0043d4c3, 0x1e4)
@@ -1434,8 +1440,8 @@ void game::SettleOverlay(int x, int y) {
 VA(0x0043d6a7, 0xc63)
 void game::RandomizeEvents(void) {
     unsigned char overlayTileset;
-    unsigned char objTileset;
     short y;
+    unsigned char objTileset;
     short i;
     short j;
     signed char id;
@@ -1744,10 +1750,6 @@ void game::RandomizeEvents(void) {
     }
 }
 
-// Map-extra record count and sizes read from the map file.
-extern int iMaxMapExtra;
-extern int pwSizeOfMapExtra[];
-
 // Buka 2.1 game::LoadMap for HoMM1's .MAP files: an optional old header,
 // the world map, town and mine records, artifacts, obelisks, sounds and
 // (from version 1112) the map extras.
@@ -1820,9 +1822,6 @@ short game::LoadMap(char* filename) {
     close(handle);
     return 0;
 }
-
-// Vision radius a claimed town grants its new owner.
-extern signed char giVisRangeTown;
 
 // donor PoL RVA 0x00078fea; preferred Buka symbol ?ClaimTown@game@@QAEXHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
