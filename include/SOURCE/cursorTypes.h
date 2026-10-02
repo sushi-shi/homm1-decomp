@@ -17,6 +17,17 @@ H1_ENUM_END(MapDirection)
 
 // The opposite direction is (d + OPPOSITE_OFFSET) & INDEX_MASK (SEARCH's
 // path walk-back and PushPoint; Buka KB_TYPES.h MapDirectionConstant).
+// gConfig.walkSpeed ("Walk Speed"): the Speed menu's Walk..Jump commands
+// store 0..4; advManager's hero walk indexes giStepDelay by it and skips
+// frames and sounds at JUMP.
+H1_ENUM_BEGIN(WalkSpeed)
+    WALK_SPEED_WALK = 0,
+    WALK_SPEED_TROT = 1,
+    WALK_SPEED_CANTER = 2,
+    WALK_SPEED_GALLOP = 3,
+    WALK_SPEED_JUMP = 4
+H1_ENUM_END(WalkSpeed)
+
 H1_ENUM_CONST_BEGIN(MapDirectionConstant)
     MAP_DIRECTION_OPPOSITE_OFFSET = 4,
     MAP_DIRECTION_INDEX_MASK = 7

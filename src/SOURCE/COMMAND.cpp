@@ -577,7 +577,7 @@ void combatManager::ResetRound(void) {
             }
         }
     }
-    m_currentSpeed = 4;
+    m_currentSpeed = CREATURE_SPEED_BLAZING;
 }
 
 // Buka COMMAND.cpp CheckWin; HoMM1 returns the byte flag and names the

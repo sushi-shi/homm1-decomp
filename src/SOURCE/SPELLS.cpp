@@ -376,12 +376,12 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_LIGHTNING_BOLT:
             sprintf(gText, "The lightning bolt does %d damage to the %s.",
-                    m_heroes[m_currentSide]->m_primaryStats[2] * 25,
+                    m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
                     targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
                                                : gArmyNames[targetArmy->m_creatureType]);
             CombatMessage(gText, 1);
             targetArmy->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);
-            targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
+            targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25);
             targetArmy->PowEffect(7);
             if (!(targetArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 targetArmy->Stand(1);
@@ -393,7 +393,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
             targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
             quantity = targetArmy->m_quantity;
-            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
+            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50 / targetArmy->m_stats.hitPoints;
             if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
                 targetArmy->m_quantity = targetArmy->m_initialQuantity;
             if (targetArmy->m_quantity - quantity > 1)
@@ -409,7 +409,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
             targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->m_stats.speed = 1;
+            targetArmy->m_stats.speed = CREATURE_SPEED_SLOW;
             if (targetArmy->m_stats.attributes & MONSTER_FLAGS_FLYING)
                 targetArmy->m_stats.attributes -= 2;
             targetArmy->m_spellEffect = SPELL_SLOW;
@@ -417,11 +417,11 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->Stand(1);
             break;
         case SPELL_HASTE:
-            gpCombatManager->m_currentSpeed = 4;
+            gpCombatManager->m_currentSpeed = CREATURE_SPEED_BLAZING;
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
             targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->m_stats.speed = 4;
+            targetArmy->m_stats.speed = CREATURE_SPEED_BLAZING;
             targetArmy->m_spellEffect = SPELL_HASTE;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
@@ -477,7 +477,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
             targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->m_stats.speed = 0;
+            targetArmy->m_stats.speed = CREATURE_SPEED_NONE;
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = SPELL_BLIND;
             targetArmy->m_spellEndCondition = 2;
@@ -520,7 +520,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         if (castByCreature)
             targetArmy->m_spellRounds = 3;
         else
-            targetArmy->m_spellRounds = m_heroes[m_currentSide]->m_primaryStats[2];
+            targetArmy->m_spellRounds = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER];
     }
     WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
 done:
@@ -795,7 +795,7 @@ void combatManager::ElementalStorm(void)
     }
     gpResourceManager->Dispose(storm);
     hit = 0;
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];

@@ -40,6 +40,17 @@ H1_ENUM_END(CreatureType)
 
 // Each race's six creatures are consecutive: creature / FACTION_SIZE is the
 // race (philAI's same-race bonus, KB's army alignment test).
+// tag_monsterStats::speed, indexing gSpeedText ("", Slow, Medium, Fast,
+// Blazing). Slow sets SLOW, haste BLAZING, blind NONE; combat rounds count
+// m_currentSpeed down from BLAZING.
+H1_ENUM_BEGIN(CreatureSpeed)
+    CREATURE_SPEED_NONE = 0,
+    CREATURE_SPEED_SLOW = 1,
+    CREATURE_SPEED_MEDIUM = 2,
+    CREATURE_SPEED_FAST = 3,
+    CREATURE_SPEED_BLAZING = 4
+H1_ENUM_END(CreatureSpeed)
+
 H1_ENUM_CONST_BEGIN(CreatureFactionConstant)
     CREATURE_FACTION_SIZE = 6
 H1_ENUM_CONST_END(CreatureFactionConstant)

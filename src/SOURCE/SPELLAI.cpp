@@ -396,7 +396,7 @@ void combatManager::EffectSpellResurrect(int* effect, int hex)
         *effect = 0;
         return;
     }
-    num = m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
+    num = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50 / targetArmy->m_stats.hitPoints;
     if (targetArmy->m_quantity + num > targetArmy->m_initialQuantity)
         num = targetArmy->m_initialQuantity - targetArmy->m_quantity;
     *effect = gMonsterDatabase[targetArmy->m_creatureType].fightValue * num;
@@ -420,7 +420,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
     int power;
     int dir;
 
-    power = m_heroes[m_currentSide]->m_primaryStats[2] * damagePerPower;
+    power = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * damagePerPower;
     cell = 0;
     dir = COMBAT_DIRECTION_NORTHEAST;
     finished = 0;
