@@ -144,3 +144,4 @@ rva	name	provenance
 0x00002AF0	?BuildPath@searchArray@@QAEHFFFFF@Z	advManager::DoAdvCommand and philAI::DoAI call it on gpSearchArray with hero x/y, destination x/y and a word mobility limit (ret 0x14), then read m_pathLength; HoMM2 Buka 2.1 searchArray::BuildPath
 0x00081C50	_strcmp	evidence/homm1-dna-bands.tsv crt-exact libc.lib:/15224 _strcmp; game::LoadGame and UpdateNewGameWindow call it cdecl with two strings
 0x00081CE0	_strchr	evidence/homm1-dna-bands.tsv crt-exact libc.lib:/15194 _strchr; game::UpdateNewGameWindow calls it cdecl
+0x00081920	_memcmp	evidence/homm1-dna-bands.tsv crt-exact libc.lib:/15011 _memcmp; netwin nb_recv_any_done compares the received name cdecl
