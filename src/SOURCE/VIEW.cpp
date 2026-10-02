@@ -155,7 +155,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     }
     if (quickView) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(wnd, -1, 1);
+        gpWindowManager->AddWindow(wnd, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
         gpWindowManager->RemoveWindow(wnd);
         gpMouseManager->ReallyShowPointer();
@@ -279,12 +279,12 @@ void combatManager::ViewArmy(army* viewedArmy, int side, int quickView)
     xPos -= xAdjust;
     if (xPos < 0)
         xPos = 0;
-    if (xPos + 488 > 640)
+    if (xPos + 488 > LOGICAL_SCREEN_WIDTH)
         xPos = 151;
     yPos -= 164;
     if (yPos < 0)
         yPos = 0;
-    if (yPos + 229 > 460)
+    if (yPos + 229 > COMBAT_VIEW_HEIGHT)
         yPos = 230;
     gpGame->ViewArmy(xPos, yPos, viewedArmy->m_creatureType, viewedArmy->m_quantity, m_combatTowns[side], 1,
                      viewedArmy->m_facing, quickView, m_heroes[side], viewedArmy, m_armyGroups[side]);

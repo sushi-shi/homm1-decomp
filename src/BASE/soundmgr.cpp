@@ -390,7 +390,7 @@ short soundManager::Open(short) {
     }
 managerReady:
     m_messageMask = BASE_MANAGER_ACCEPT_LEFT_BUTTON_UP;
-    m_priority = SOUND_MANAGER_PRIORITY;
+    m_priority = BASE_MANAGER_PRIORITY_UNASSIGNED;
     m_active = 1;
     strcpy(m_name, "soundManager");
     return 0;

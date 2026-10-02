@@ -24,6 +24,9 @@ struct tag_message;
 // clang-format off
 H1_ENUM_CONST_BEGIN(GameStorageConstant)
     GAME_PLAYER_COUNT = 4,
+    // A player id slot with no player (combatManager::m_playerId for a
+    // neutral side; tested before gbHumanPlayer[] lookups).
+    GAME_PLAYER_NONE = -1,
     GAME_TOWN_COUNT = 36,
     GAME_HERO_COUNT = 36,
     GAME_MINE_COUNT = 36,

@@ -38,8 +38,7 @@ H1_ENUM_BEGIN(CreatureType)
     CREATURE_COUNT = 28
 H1_ENUM_END(CreatureType)
 
-// Each race's six creatures are consecutive: creature / FACTION_SIZE is the
-// race (philAI's same-race bonus, KB's army alignment test).
+// clang-format off
 // tag_monsterStats::speed, indexing gSpeedText ("", Slow, Medium, Fast,
 // Blazing). Slow sets SLOW, haste BLAZING, blind NONE; combat rounds count
 // m_currentSpeed down from BLAZING.
@@ -51,10 +50,12 @@ H1_ENUM_BEGIN(CreatureSpeed)
     CREATURE_SPEED_BLAZING = 4
 H1_ENUM_END(CreatureSpeed)
 
+// Each race's six creatures are consecutive: creature / FACTION_SIZE is the
+// race (philAI's same-race bonus, KB's army alignment test).
 H1_ENUM_CONST_BEGIN(CreatureFactionConstant)
-CREATURE_FACTION_SIZE = 6 H1_ENUM_CONST_END(CreatureFactionConstant)
+    CREATURE_FACTION_SIZE = 6
+H1_ENUM_CONST_END(CreatureFactionConstant)
 
-    // clang-format off
 // Creature attribute bits (monster record / army::m_stats.attributes), Buka
 // 2.1 KB_TYPES.h MonsterFlags numbering: wide stacks take two hexes, flyers
 // skip the path, shooters spend shots, breath attacks hit the hex behind;

@@ -8,6 +8,9 @@
 // Names follow each item's menu path and text. The Display and Help items
 // keep their kbwin.h names (KbwinMenuConstant).
 H1_ENUM_BEGIN(AppMenuCommand)
+    // giMenuCommand when no menu command is queued (SETUP/KB/ADVMGR reset
+    // and test it).
+    APP_MENU_NONE = -1,
     APP_MENU_VIEW_WORLD = 0x9c4c,
     APP_MENU_VIEW_PUZZLE = 0x9c4d,
     APP_MENU_CAST_SPELL = 0x9c4e,

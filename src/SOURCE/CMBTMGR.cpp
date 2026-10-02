@@ -6,6 +6,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
@@ -106,7 +107,7 @@ void combatManager::SetupCombat(
         m_playerId[COMBAT_ATTACKER_SIDE] = attackerHero->m_owner;
         attackerGroup = &attackerHero->m_army;
     } else {
-        m_playerId[COMBAT_ATTACKER_SIDE] = -1;
+        m_playerId[COMBAT_ATTACKER_SIDE] = GAME_PLAYER_NONE;
     }
     if (defenderHero) {
         m_playerId[COMBAT_DEFENDER_SIDE] = defenderHero->m_owner;
@@ -115,9 +116,9 @@ void combatManager::SetupCombat(
         m_playerId[COMBAT_DEFENDER_SIDE] = defenderTown->m_owner;
         defenderGroup = &defenderTown->m_army;
     } else {
-        m_playerId[COMBAT_DEFENDER_SIDE] = -1;
+        m_playerId[COMBAT_DEFENDER_SIDE] = GAME_PLAYER_NONE;
     }
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < COMBAT_SIDE_COUNT; i++) {
         if (m_playerId[i] >= 0)
             m_humanSide[i] = gbHumanPlayer[m_playerId[i]];
         else
@@ -150,7 +151,7 @@ void combatManager::SetupCombat(
         } else {
             m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 0;
         }
-        if (defenderTown->m_buildings & 0x40)
+        if (defenderTown->m_buildings & (1 << BUILDING_SLOT_CASTLE))
             m_castleSide[COMBAT_DEFENDER_SIDE] = 1;
         else
             m_castleSide[COMBAT_DEFENDER_SIDE] = 0;
@@ -177,15 +178,15 @@ short combatManager::Open(short priority) {
     m_combatWindowOpen = 0;
     m_savedBorder = NULL;
     gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
-    m_backgroundBuffer = new bitmap(0, 640, 460);
+    m_backgroundBuffer = new bitmap(BITMAP_TYPE_NONE, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 0;
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("PREBATTL.82M");
     giNextAction = ACTION_NONE;
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
     m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
-    m_combatResult = 3;
+    m_combatResult = COMBAT_RESULT_PENDING;
     gbIconClipOn = 0;
     m_computeExtent = 0;
     m_redrawExtent = 0;
@@ -195,7 +196,7 @@ short combatManager::Open(short priority) {
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
         MemError();
-    gpWindowManager->AddWindow(m_combatWindow, -1, 1);
+    gpWindowManager->AddWindow(m_combatWindow, WINDOW_Z_ORDER_APPEND, 1);
     m_smallFont = gpResourceManager->GetFont("smalfont.fnt");
     LoadIcons();
     LoadArmies();
@@ -216,7 +217,7 @@ short combatManager::Open(short priority) {
     m_combatPalette = gpResourceManager->GetPalette("kb.pal");
     KBChangeMenu(hmnuCmbt);
     CombatMessage("", 1);
-    gpWindowManager->FadeScreen(0, 8, m_combatPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
     gbLimitedCombatUpdatePalette = 1;
     gpMouseManager->NewUpdate(1);
     gpMouseManager->WarpPointer(
@@ -237,7 +238,7 @@ short combatManager::Open(short priority) {
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "combatManager");
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // clang-format off
@@ -286,12 +287,12 @@ void combatManager::Close(void) {
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     DrawCombatBorder();
     gbLimitedCombatUpdatePalette = 0;
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     delete m_backgroundBuffer;
-    for (i = 0; i < 2; i++)
+    for (i = 0; i < COMBAT_SIDE_COUNT; i++)
         UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-        survivor = static_cast<signed char>(m_playerId[COMBAT_DEFENDER_SIDE] != -1);
+        survivor = static_cast<signed char>(m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (m_armyGroups[survivor]->m_creatureTypes[i] != CREATURE_NONE)
@@ -357,19 +358,19 @@ void combatManager::GenerateMap(void) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++) {
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y = y * 80 + 139;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_x = ((y & 1) ? 27 : -12) + x * 78;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 0;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_GROUND;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame =
                 static_cast<signed char>(SRandom(0, 3)) + 4;
             if (x == 0) {
                 if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1)
-                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 5;
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_CASTLE;
                 if (y & 1)
                     m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 0;
                 else
                     m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 1;
             } else if (x == COMBAT_GRID_LAST_COLUMN) {
                 if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1)
-                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 5;
+                    m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_CASTLE;
                 if (y & 1)
                     m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 3;
                 else
@@ -392,13 +393,13 @@ void combatManager::GenerateMap(void) {
     if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
         for (x = 6; x < 8; x++) {
             for (y = 0; y < COMBAT_GRID_ROWS; y++) {
-                m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = 5;
+                m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_CASTLE;
                 m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame = 4;
             }
         }
         for (y = 0; y < COMBAT_GRID_ROWS; y++) {
-            m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_obstacleType = 5;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_obstacleIndex = COMBAT_WALL_INTACT;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleType = COMBAT_ICON_CASTLE;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleIndex = COMBAT_WALL_INTACT;
         }
     }
     armyCount = 0;
@@ -445,7 +446,7 @@ void combatManager::GenerateMap(void) {
                 x = SRandom(3, 5);
                 y = SRandom(0, 4);
             }
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleType = 2;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleType = COMBAT_ICON_OBSTACLES;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = SRandom(0, 2);
             if ((m_terrainType == TERRAIN_WATER || m_terrainType == TERRAIN_LAVA)
                 && m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex == 2)
@@ -507,7 +508,7 @@ signed char combatManager::MoreTreesNear(void) {
     int xPos;
     short step;
     short homeX;
-    signed char typeTable[3][8];
+    signed char typeTable[3][MAP_DIRECTION_COUNT];
     short numMountains;
     short numTrees;
     mapCell* nearCell;
@@ -519,15 +520,15 @@ signed char combatManager::MoreTreesNear(void) {
     homeX = m_combatX;
     homeY = m_combatY;
     for (step = 0; step < 3; step++) {
-        for (k = 0; k < 8; k++) {
+        for (k = 0; k < MAP_DIRECTION_COUNT; k++) {
             xPos = normalDirTable[k].x * step + homeX;
             yPos = normalDirTable[k].y * step + homeY;
-            if (xPos >= 0 && xPos < 72 && yPos >= 0 && yPos < 72) {
+            if (xPos >= 0 && xPos < MAP_CELL_GRID_SIZE && yPos >= 0 && yPos < MAP_CELL_GRID_SIZE) {
                 nearCell = gpAdvManager->GetCell(xPos, yPos);
-                nearbyTileset = nearCell->m_objectTileset & 0xf;
-                if (nearbyTileset == 8)
+                nearbyTileset = nearCell->m_objectTileset & MAP_CELL_TILESET_MASK;
+                if (nearbyTileset == TILESET_MTN32)
                     typeTable[step][k] = 0;
-                else if (nearbyTileset == 9)
+                else if (nearbyTileset == TILESET_TREE32)
                     typeTable[step][k] = 1;
             }
         }
@@ -535,7 +536,7 @@ signed char combatManager::MoreTreesNear(void) {
     numTrees = 0;
     numMountains = 0;
     for (step = 0; step < 3; step++) {
-        for (k = 0; k < 8; k++) {
+        for (k = 0; k < MAP_DIRECTION_COUNT; k++) {
             if (typeTable[step][k] == 0)
                 numMountains++;
             if (typeTable[step][k] == 1)
@@ -552,25 +553,25 @@ VA(0x0044cd97, 0x1d7)
 void combatManager::LoadIcons(void) {
     int i;
 
-    for (i = 0; i < 9; i++)
+    for (i = 0; i < COMBAT_ICON_COUNT; i++)
         m_combatIcons[i] = NULL;
-    m_combatIcons[8] = gpResourceManager->GetIcon("spells.icn");
+    m_combatIcons[COMBAT_ICON_SPELLS] = gpResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
-    m_combatIcons[0] = gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
-    m_combatIcons[2] = gpResourceManager->GetIcon(cCombatObstacleNames[m_terrainType]);
-    m_combatIcons[1] = gpResourceManager->GetIcon("textbar.icn");
-    m_combatIcons[4] = gpResourceManager->GetIcon("tent.icn");
-    m_combatIcons[6] = gpResourceManager->GetIcon("cloud.icn");
+    m_combatIcons[COMBAT_ICON_GROUND] = gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
+    m_combatIcons[COMBAT_ICON_OBSTACLES] = gpResourceManager->GetIcon(cCombatObstacleNames[m_terrainType]);
+    m_combatIcons[COMBAT_ICON_TEXTBAR] = gpResourceManager->GetIcon("textbar.icn");
+    m_combatIcons[COMBAT_ICON_TENT] = gpResourceManager->GetIcon("tent.icn");
+    m_combatIcons[COMBAT_ICON_CLOUD] = gpResourceManager->GetIcon("cloud.icn");
     if (m_castleSide[COMBAT_ATTACKER_SIDE] || m_castleSide[COMBAT_DEFENDER_SIDE]) {
-        m_combatIcons[3] = gpResourceManager->GetIcon("catapult.icn");
+        m_combatIcons[COMBAT_ICON_CATAPULT] = gpResourceManager->GetIcon("catapult.icn");
         sprintf(
             gText,
             "castle%02d.icn",
             m_combatTowns[static_cast<signed char>(m_castleSide[COMBAT_ATTACKER_SIDE] == 1)]->m_type
         );
-        m_combatIcons[5] = gpResourceManager->GetIcon(gText);
+        m_combatIcons[COMBAT_ICON_CASTLE] = gpResourceManager->GetIcon(gText);
         sprintf(gText, "keep%02d.icn", m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type);
-        m_combatIcons[7] = gpResourceManager->GetIcon(gText);
+        m_combatIcons[COMBAT_ICON_KEEP] = gpResourceManager->GetIcon(gText);
     }
 }
 
@@ -579,7 +580,7 @@ VA(0x0044cf6e, 0x7b)
 void combatManager::FreeIcons(void) {
     short i;
 
-    for (i = 0; i < 9; i++) {
+    for (i = 0; i < COMBAT_ICON_COUNT; i++) {
         if (m_combatIcons[i])
             gpResourceManager->Dispose(m_combatIcons[i]);
     }
@@ -594,12 +595,12 @@ void combatManager::LoadArmies(void) {
 
     m_numArmies[COMBAT_ATTACKER_SIDE] = m_numArmies[COMBAT_DEFENDER_SIDE] = 0;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        for (j = 0; j < 2; j++) {
+        for (j = 0; j < COMBAT_SIDE_COUNT; j++) {
             m_armies[j][i].m_quantity = 0;
             m_armies[j][i].m_creatureType = CREATURE_NONE;
         }
     }
-    for (j = 0; j < 2; j++) {
+    for (j = 0; j < COMBAT_SIDE_COUNT; j++) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_armies[j][i].InitClean();
     }
@@ -715,7 +716,7 @@ void combatManager::CheckApplyGoodMorale(int side, int index) {
     activeArmy->SpellEffect(COMBAT_EFFECT_GOOD_MORALE, 180);
     activeArmy->Stand(1);
     if (activeArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
-        activeArmy->m_stats.attributes -= 0x80;
+        activeArmy->m_stats.attributes -= MONSTER_FLAGS_TURN_SPENT;
     activeArmy->m_stats.attributes |= MONSTER_FLAGS_HIGH_MORALE;
     WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
 }
@@ -856,11 +857,11 @@ void combatManager::CatAttack(signed char side) {
         return;
     catSample = NULL_SAMPLE2;
     if (side == COMBAT_ATTACKER_SIDE)
-        col = 5;
+        col = COMBAT_CASTLE_WALL_COLUMN;
     else
-        col = 3;
+        col = COMBAT_GRID_LAST_COLUMN - COMBAT_CASTLE_WALL_COLUMN;
     wallsLeft = 0;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < COMBAT_GRID_ROWS; i++) {
         if (m_hexCells[i * COMBAT_GRID_COLUMNS + col].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
             wallsLeft = 1;
     }
@@ -880,21 +881,21 @@ void combatManager::CatAttack(signed char side) {
         DrawFrame(1);
         m_catapultFrame[side]++;
     }
-    if ((m_hexCells[col + 9].m_obstacleIndex == COMBAT_WALL_DAMAGED
-         || m_hexCells[col + 9].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
-        && (m_hexCells[col + 27].m_obstacleIndex == COMBAT_WALL_DAMAGED
-            || m_hexCells[col + 27].m_obstacleIndex == COMBAT_OBSTACLE_NONE)) {
+    if ((m_hexCells[col + COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_WALL_DAMAGED
+         || m_hexCells[col + COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
+        && (m_hexCells[col + 3 * COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_WALL_DAMAGED
+            || m_hexCells[col + 3 * COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_OBSTACLE_NONE)) {
         m_catapultTarget = SRandom(0, 4);
         while (m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex
                == COMBAT_OBSTACLE_NONE)
             m_catapultTarget = SRandom(0, 4);
-    } else if (m_hexCells[col + 9].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
+    } else if (m_hexCells[col + COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
         m_catapultTarget = 3;
-    } else if (m_hexCells[col + 27].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
+    } else if (m_hexCells[col + 3 * COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
         m_catapultTarget = 1;
-    } else if (m_hexCells[col + 9].m_obstacleIndex != COMBAT_WALL_INTACT) {
+    } else if (m_hexCells[col + COMBAT_GRID_COLUMNS].m_obstacleIndex != COMBAT_WALL_INTACT) {
         m_catapultTarget = 3;
-    } else if (m_hexCells[col + 27].m_obstacleIndex != COMBAT_WALL_INTACT) {
+    } else if (m_hexCells[col + 3 * COMBAT_GRID_COLUMNS].m_obstacleIndex != COMBAT_WALL_INTACT) {
         m_catapultTarget = 1;
     } else {
         m_catapultTarget = SRandom(0, 1);
@@ -905,8 +906,8 @@ void combatManager::CatAttack(signed char side) {
     }
     startX = 0x75;
     startY = 0x104;
-    tgtX = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + 5].m_x;
-    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + 5].m_y - 80;
+    tgtX = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x;
+    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y - 80;
     frm = 0;
     x = startX;
     y = startY;
@@ -925,10 +926,10 @@ void combatManager::CatAttack(signed char side) {
                     giMinExtentX = 0;
                 if (giMinExtentY < 0)
                     giMinExtentY = 0;
-                if (giMaxExtentX > 639)
-                    giMaxExtentX = 639;
-                if (giMaxExtentY > 459)
-                    giMaxExtentY = 459;
+                if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+                    giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+                if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+                    giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
@@ -969,10 +970,10 @@ void combatManager::CatAttack(signed char side) {
                     giMinExtentX = 0;
                 if (giMinExtentY < 0)
                     giMinExtentY = 0;
-                if (giMaxExtentX > 639)
-                    giMaxExtentX = 639;
-                if (giMaxExtentY > 459)
-                    giMaxExtentY = 459;
+                if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+                    giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+                if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+                    giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
@@ -1001,10 +1002,10 @@ void combatManager::CatAttack(signed char side) {
                 giMinExtentX = 0;
             if (giMinExtentY < 0)
                 giMinExtentY = 0;
-            if (giMaxExtentX > 639)
-                giMaxExtentX = 639;
-            if (giMaxExtentY > 459)
-                giMaxExtentY = 459;
+            if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+                giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+            if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+                giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(
@@ -1043,8 +1044,8 @@ void combatManager::CatAttack(signed char side) {
         giMaxExtentY = (m_catapultTarget + 2) * 80 + 30;
         if (giMinExtentY < 0)
             giMinExtentY = 0;
-        if (giMaxExtentY > 459)
-            giMaxExtentY = 459;
+        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
         while (m_wallFrame < 10) {
             m_wallDamage = m_wallFrame;
             if (m_wallFrame == 5)
@@ -1069,8 +1070,8 @@ void combatManager::CatAttack(signed char side) {
         giMaxExtentY = (m_catapultTarget + 2) * 80 + 30;
         if (giMinExtentY < 0)
             giMinExtentY = 0;
-        if (giMaxExtentY > 459)
-            giMaxExtentY = 459;
+        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
         while (m_wallFrame < 10) {
             if (m_wallFrame == 5)
                 m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex =
@@ -1165,7 +1166,7 @@ void combatManager::KeepAttack(void) {
     bestRank = -1;
     bestWorth = 0;
     targetIndex = -1;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (m_armies[COMBAT_ATTACKER_SIDE][i].IsAlive()) {
             target = &m_armies[COMBAT_ATTACKER_SIDE][i];
             if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
@@ -1188,11 +1189,11 @@ void combatManager::KeepAttack(void) {
     target = &gpCombatManager->m_armies[COMBAT_ATTACKER_SIDE][targetIndex];
     hexCol = target->m_hex % COMBAT_GRID_COLUMNS;
     targetRow = target->m_hex / COMBAT_GRID_COLUMNS;
-    srcCol = 8;
+    srcCol = COMBAT_GRID_LAST_COLUMN;
     keepY = 0;
     gpCombatManager->SetGridMode(0);
-    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == 3
-        || m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == 1)
+    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == TOWN_TYPE_WARLOCK
+        || m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == TOWN_TYPE_SORCERESS)
         sprintf(gText, "shoot15.82M");
     else
         sprintf(gText, "shoot01.82M");
@@ -1218,9 +1219,9 @@ void combatManager::KeepAttack(void) {
     xRun = startX;
     yRun = startY;
     updRight = 0;
-    minX = 639;
+    minX = LOGICAL_SCREEN_WIDTH - 1;
     maxY = 0;
-    minY = 479;
+    minY = LOGICAL_SCREEN_HEIGHT - 1;
     if (arrowFrame == 0) {
         w = 0x43;
         height = 0x12;
@@ -1231,7 +1232,7 @@ void combatManager::KeepAttack(void) {
         w = 0x12;
         height = 0x43;
     }
-    behind = new bitmap(0x21, w, height);
+    behind = new bitmap(BITMAP_TYPE_MEMORY, w, height);
     behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
     lastX = xRun;
     lastY = yRun;
@@ -1242,7 +1243,7 @@ void combatManager::KeepAttack(void) {
         maxY = height + yRun;
         behind->DrawToBuffer(lastX, lastY);
         behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
-        m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, 0);
+        m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, 0);
         DelayTil(glTimers);
         gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
@@ -1312,7 +1313,7 @@ int combatManager::ExperienceValueOfStack(signed char side) {
     int value;
 
     value = 0;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (m_armies[side][i].m_creatureType != CREATURE_NONE)
             value += (m_armies[side][i].m_initialQuantity - m_armies[side][i].m_quantity)
                      * gMonsterDatabase[m_armies[side][i].m_creatureType].hitPoints;
@@ -1328,8 +1329,8 @@ void combatManager::ResetHitByCreature(void) {
     int i;
     int j;
 
-    for (i = 0; i < 2; i++) {
-        for (j = 0; j < 5; j++)
+    for (i = 0; i < COMBAT_SIDE_COUNT; i++) {
+        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++)
             m_armies[i][j].m_hitByCreature = 0;
     }
 }
@@ -1337,7 +1338,7 @@ void combatManager::ResetHitByCreature(void) {
 // HoMM1's combat grid is nine columns by five rows.
 VA(0x0044f557, 0x30)
 int ValidHex(int hex) {
-    return hex >= 0 && hex <= 44;
+    return hex >= 0 && hex <= COMBAT_HEX_COUNT - 1;
 }
 
 // HoMM1 SaveCombatBorder: keep the twenty screen rows under the field.
