@@ -881,9 +881,9 @@ void army::DoAttack(int retaliation) {
     facing = m_facing;
     m_walkYStep = 0;
     if (m_attackDirection <= 2)
-        m_facing = 0;
+        m_facing = ARMY_FACING_LEFT;
     else if (m_attackDirection <= 5)
-        m_facing = 1;
+        m_facing = ARMY_FACING_RIGHT;
     if (m_attackDirection == COMBAT_DIRECTION_NORTHWEST || m_attackDirection == COMBAT_DIRECTION_NORTHEAST || m_attackDirection == COMBAT_DIRECTION_WIDE_WEST)
         frameBase = 6;
     else if (m_attackDirection == COMBAT_DIRECTION_SOUTHWEST || m_attackDirection == COMBAT_DIRECTION_SOUTHEAST || m_attackDirection == COMBAT_DIRECTION_WIDE_EAST)
@@ -894,9 +894,10 @@ void army::DoAttack(int retaliation) {
     CheckLuck();
     newHex = m_hex;
     if ((m_stats.attributes & MONSTER_FLAGS_WIDE)
-        && (facing == 1 && m_attackDirection >= 3
-            || facing == 0 && (m_attackDirection <= 2 || m_attackDirection >= 6))) {
-        if (facing == 1)
+        && (facing == ARMY_FACING_RIGHT && m_attackDirection >= 3
+            || facing == ARMY_FACING_LEFT
+                && (m_attackDirection <= 2 || m_attackDirection >= 6))) {
+        if (facing == ARMY_FACING_RIGHT)
             newHex = m_hex - 1;
         else
             newHex = m_hex + 1;
@@ -1134,7 +1135,7 @@ short army::WalkTo(short destHex) {
 
     m_targetSide = m_targetIndex = -1;
     if (!FindPath(m_hex, destHex, m_stats.speed, 1, 0))
-        return 3;
+        return ARMY_PATH_BLOCKED;
     moved = 0;
     for (step = gpSearchArray->m_pathLength - 1; step >= 0; step--) {
         Walk(gpSearchArray->m_directions[step], 0, gpSearchArray->m_pathLength - 1 != step);
@@ -1181,7 +1182,7 @@ short army::AttackTo(short destHex) {
                 moved++;
                 if (moved >= m_stats.speed && step != 1) {
                     Stand(1);
-                    return 3;
+                    return ARMY_PATH_BLOCKED;
                 }
             }
             if (!m_spellEndCondition)
@@ -1191,7 +1192,7 @@ short army::AttackTo(short destHex) {
         }
         return 0;
     }
-    return 3;
+    return ARMY_PATH_BLOCKED;
 }
 
 // donor PoL RVA 0x0004f93e; preferred Buka symbol ?CheckLuck@army@@QAEXXZ

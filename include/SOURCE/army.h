@@ -103,7 +103,9 @@ H1_ENUM_CONST_END(ArmyPowConstant)
 H1_ENUM_CONST_BEGIN(ArmyCombatConstant)
     ARMY_SAMPLE_VOLUME = 0x40,
     ARMY_SAMPLE_CHANNEL = 3,
-    ARMY_QUANTITY_TEXT_SIZE = 12
+    ARMY_QUANTITY_TEXT_SIZE = 12,
+    // WalkTo/AttackTo when no path reaches the target (Buka ARMY_PATH_BLOCKED).
+    ARMY_PATH_BLOCKED = 3
 H1_ENUM_CONST_END(ArmyCombatConstant)
 // clang-format on
 
