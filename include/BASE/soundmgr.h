@@ -46,7 +46,9 @@ H1_ENUM_CONST_BEGIN(SampleStreamConstant)
     SOUND_VOLUME_LAST = 10,
     SOUND_VOLUME_EFFECT = 100,
     SOUND_VOLUME_MUSIC = 101,
-    PCM_BITS_PER_BYTE_SHIFT = 3
+    PCM_BITS_PER_BYTE_SHIFT = 3,
+    // Volume argument meaning "use the configured music volume".
+    SOUND_VOLUME_FROM_CONFIG = -1
 H1_ENUM_CONST_END(SampleStreamConstant)
 
 H1_ENUM_BEGIN(SampleReportQuery)

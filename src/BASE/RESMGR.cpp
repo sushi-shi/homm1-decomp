@@ -180,7 +180,7 @@ class sample *resourceManager::GetSample(char *name)
         resourceEntry->m_refCount++;
         return static_cast<sample *>(resourceEntry);
     } else {
-        resourceEntry = new sample(name, 0, 127, 1);
+        resourceEntry = new sample(name, SAMPLE_PLAYBACK_CHANNEL_MUSIC, 127, 1);
         AddResource(resourceEntry);
         return static_cast<sample *>(resourceEntry);
     }

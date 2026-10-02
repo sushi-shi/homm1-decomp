@@ -71,7 +71,7 @@ inline void soundManager::CDSetVolume(int volume, int fadeScale) {
     unsigned long stereoVolume;
     if (gbNoSound != 0 || m_auxDevice == -1)
         return;
-    if (volume == -1)
+    if (volume == SOUND_VOLUME_FROM_CONFIG)
         level = gConfig.musicVolume;
     else
         level = volume;
@@ -172,7 +172,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
         return;
     Process1WindowsMessage();
     ServiceSound();
-    if (volume == -1) {
+    if (volume == SOUND_VOLUME_FROM_CONFIG) {
         if (gConfig.musicVolume != 0) {
             if (m_fadeSteps == 0)
                 volume = gConfig.musicVolume;
@@ -482,7 +482,7 @@ struct _SAMPLE* soundManager::StartSample(
     if (m_samplesReady == 0)
         return NULL;
     Process1WindowsMessage();
-    if (channelType == 0) {
+    if (channelType == SAMPLE_PLAYBACK_CHANNEL_MUSIC) {
         channel = 0;
         if (m_musicStreamOpen != 0) {
             StopSample(m_musicSample);
@@ -699,17 +699,17 @@ void soundManager::AdjustMusicVolumes(void) {
         savePosition = 1;
     if (gConfig.musicVolume != 0) {
         if (m_cdReady != 0)
-            CDSetVolume(-1, 0);
+            CDSetVolume(SOUND_VOLUME_FROM_CONFIG, 0);
         else
             ModifySample(m_sampleHandles[0], SOUND_OPERATION_MUSIC_VOLUME, SAMPLE_VOLUME_MAX);
         PlayAmbientMusic(
             m_currentTrack,
             savePosition ? m_savedTrackPositions[m_currentTrack] : 0,
-            -1
+            SOUND_VOLUME_FROM_CONFIG
         );
     } else {
         if (m_cdReady != 0) {
-            CDSetVolume(-1, 0);
+            CDSetVolume(SOUND_VOLUME_FROM_CONFIG, 0);
         } else {
             if (savePosition != 0) {
                 ProcessAssert(
@@ -752,7 +752,7 @@ void soundManager::SetMusicQuality(int musicSource) {
     gConfig.musicSource = musicSource;
     m_cdReady = musicSource == SOUND_MUSIC_SOURCE_CD;
     if (track >= 0)
-        PlayAmbientMusic(track, 0, -1);
+        PlayAmbientMusic(track, 0, SOUND_VOLUME_FROM_CONFIG);
 }
 
 VA(0x004786d0, 0x26e)
@@ -822,7 +822,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
             sprintf(filename, "heroes%02d.82s", track);
         else
             sprintf(filename, "heroes%02d.62s", track);
-        if (volume == -1) {
+        if (volume == SOUND_VOLUME_FROM_CONFIG) {
             if (gConfig.musicVolume != 0) {
                 if (m_fadeSteps == 0)
                     volume = SAMPLE_VOLUME_MAX;
@@ -832,7 +832,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
                 volume = 0;
             }
         }
-        m_activeSample = StartSample(filename, &data, 1, loop, volume, 0, resume);
+        m_activeSample = StartSample(filename, &data, 1, loop, volume, SAMPLE_PLAYBACK_CHANNEL_MUSIC, resume);
     }
     m_currentTrack = static_cast<char>(track);
 }
@@ -885,9 +885,11 @@ void soundManager::PollSound(void) {
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_1
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_2
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_3)
-                PlayAmbientMusic(m_fadeTargetTrack, m_savedTrackPositions[m_fadeTargetTrack], -1);
+                PlayAmbientMusic(
+                    m_fadeTargetTrack, m_savedTrackPositions[m_fadeTargetTrack], SOUND_VOLUME_FROM_CONFIG
+                );
             else
-                PlayAmbientMusic(m_fadeTargetTrack, 0, -1);
+                PlayAmbientMusic(m_fadeTargetTrack, 0, SOUND_VOLUME_FROM_CONFIG);
             delta = gMusicFadeTimer - KBTickCount();
             m_fadeSteps = delta / MUSIC_FADE_STEP_TICKS;
             if (m_fadeSteps < 1)
@@ -917,7 +919,7 @@ void soundManager::PollSound(void) {
                 volume = 0;
 
             if (gbNoSound == 0 && m_auxDevice != -1) {
-                if (volume == -1)
+                if (volume == SOUND_VOLUME_FROM_CONFIG)
                     volume = gConfig.musicVolume;
                 unsigned long stereoVolume;
                 if (volume != 0) {
@@ -975,9 +977,9 @@ void soundManager::PollSound(void) {
                 AIL_set_sample_playback_rate(m_musicSample, MUSIC_STREAM_RATE);
 
                 volume = 0;
-                if (gConfig.musicVolume >= 1 && gConfig.musicVolume <= 10) {
+                if (gConfig.musicVolume >= SOUND_VOLUME_FIRST && gConfig.musicVolume <= SOUND_VOLUME_LAST) {
                     volume =
-                        (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume) * SAMPLE_VOLUME_MAX / 10;
+                        (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume) * SAMPLE_VOLUME_MAX / SOUND_VOLUME_LAST;
                     if (volume < 1)
                         volume = 1;
                 }
@@ -1031,7 +1033,7 @@ void soundManager::SwitchAmbientMusic(int track) {
         return;
     }
     if (MusicPlaying() == 0) {
-        PlayAmbientMusic(track, 0, -1);
+        PlayAmbientMusic(track, 0, SOUND_VOLUME_FROM_CONFIG);
         return;
     }
     Process1WindowsMessage();
