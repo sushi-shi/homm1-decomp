@@ -275,6 +275,7 @@ public:
     int ExperienceValueOfStack(class armyGroup*, class hero*);
     // HoMM1 retail: hero and army only (ret 8).
     int GetLuck(class hero*, class army*);
+    int GetPlayerCrest(int player) { return m_players[player].m_unknown11; }
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
     void ShowComputerScreen(void);

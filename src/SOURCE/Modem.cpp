@@ -140,10 +140,10 @@ int write_buffer(char* buffer, int length) {
 
 VA(0x00459a21, 0x47)
 int read_byte(void) {
-    unsigned char value;
-    int received = com_rcv(0, 1, &value);
+    unsigned char ch;
+    int received = com_rcv(0, 1, &ch);
     if (received == 1)
-        return value;
+        return ch;
     else
         return -1;
 }
@@ -274,6 +274,8 @@ int WaitForDirectConnect(void) {
 VA(0x0045a062, 0x109)
 char ReadPacket(void) {
     int input;
+    // Unused; retail reserves 0x20 bytes with the input below it.
+    char buffer[28];
     if (inque.writePosition > 4092) {
         inque.writePosition = 0;
         newpacket = 1;

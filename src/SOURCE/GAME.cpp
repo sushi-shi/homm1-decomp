@@ -4,6 +4,7 @@
 
 #include <BASE/BITS.h>
 #include <BASE/Misc.h>
+#include <BASE/LZHUF.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/TILE.h>
 #include <BASE/WINMGR_TYPES.h>
@@ -13,6 +14,7 @@
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/REMOTE.h>
 
 #include <fcntl.h>
 #include <io.h>
@@ -33,6 +35,9 @@ extern signed char gSaveCurPlayer;
 extern unsigned char giCurPlayerHighBit;
 extern unsigned char giCurWatchPlayerHighBit;
 extern int giCurWatchPlayer;
+// Morale and luck names, indexed from -3.
+extern char* gMoraleText[];
+extern char* gLuckText[];
 
 // donor PoL RVA 0x00088607; preferred Buka symbol ?ClearEffects@combatManager@@QAEXXZ
 // donor Buka TU SOURCE/SPELLAI; HoMM1 owner inferred from contiguous order
@@ -56,12 +61,233 @@ void combatManager::NextPos(int* hex) {
         (*hex)++;
 }
 
+// Buka 2.1 FirstArmy over HoMM1's 44-hex field; side 2 accepts either side.
+VA(0x00437a1a, 0x87)
+int combatManager::FirstArmy(int startHex, int side, int* hex) {
+    while (startHex <= 43) {
+        if (m_hexCells[startHex].m_occupantSide == side
+            || (side == 2 && m_hexCells[startHex].m_occupantSide >= 0)) {
+            *hex = startHex;
+            return 0;
+        }
+        NextPos(&startHex);
+    }
+    *hex = -1;
+    return 1;
+}
+
+// The side ViewGeneral shows, its stat labels and its status-line help.
+extern int giCurGeneral;
+extern char* gViewGeneralLabels[];
+extern char* gViewGeneralHelp[];
+short HandleViewGeneral(tag_message&);
+
 // donor PoL RVA 0x0000bd60; preferred Buka symbol ?ViewGeneral@combatManager@@QAEHHHH@Z
 // donor Buka TU SOURCE/VIEW; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.677383;margin=0.274305;shape=0.458;size=0.778;calls=0.853;strings=port%04d.icn|vgenwin.bin;alternate=pol20:int combatManager::ViewGeneral(int, int, int)@0x0000bd60
 VA(0x00438310, 0x56d)
-int combatManager::ViewGeneral(int, int, int) {
+signed char combatManager::ViewGeneral(int side, int allowActions, int quickView) {
+    short face;
+    short zero;
+    int morale;
+    int luck;
+    short ctl8;
+    short castSpell;
+    tag_message message;
+    short idSurrender;
+    short flagIcon;
+    heroWindow* win;
+    short widgetName;
+    short ctlFourteen;
+    short ctlStats;
+    short wSeven;
+    int junk;
+    short heroName;
+    short ninth;
+    short idRetreat;
+    short thirteenth;
+
+    if (!m_heroes[side])
     return 0;
+    widgetName = 1;
+    face = 2;
+    flagIcon = 3;
+    ctlStats = 4;
+    zero = 0;
+    heroName = 1;
+    wSeven = 7;
+    ctl8 = 8;
+    ninth = 9;
+    castSpell = 10;
+    idRetreat = 11;
+    idSurrender = 12;
+    thirteenth = 13;
+    ctlFourteen = 14;
+    giCurGeneral = side;
+    message.type = MESSAGE_WIDGET;
+    win = new heroWindow(195, 60, "vgenwin.bin");
+    if (!win)
+        MemError();
+    sprintf(gText, "port%04d.icn", m_heroes[side]->m_unknown1d);
+    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
+    message.payload.widget.id = 2;
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.id = 3;
+    message.payload.widget.data.value = gpGame->GetPlayerCrest(m_heroes[side]->m_owner) + 1;
+    win->BroadcastMessage(message);
+
+    sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_unknown1c]);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+
+    morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], 0);
+    luck = gpGame->GetLuck(m_heroes[side], 0);
+    sprintf(gText, "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
+            gViewGeneralLabels[0], m_heroes[side]->m_primaryStats[0],
+            gViewGeneralLabels[1], m_heroes[side]->m_primaryStats[1],
+            gViewGeneralLabels[2], m_heroes[side]->m_primaryStats[2],
+            gViewGeneralLabels[3], m_heroes[side]->m_primaryStats[3],
+            gViewGeneralLabels[4], gMoraleText[morale + 3],
+            gViewGeneralLabels[5], gLuckText[luck + 3]);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 4;
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+
+    if (!m_heroes[side] || !allowActions || !m_heroes[side]->HasArtifact(37) || m_heroCastSpell[side]
+        || giCurGeneral != m_currentSide) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = 10;
+        message.payload.widget.data.value = 2;
+        win->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 8;
+        win->BroadcastMessage(message);
+    }
+    if (!allowActions || !m_heroes[1 - m_currentSide] || giCurGeneral != m_currentSide) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = 12;
+        message.payload.widget.data.value = 2;
+        win->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 8;
+        win->BroadcastMessage(message);
+    }
+    if (!allowActions || giCurGeneral != m_currentSide || (giCurGeneral == 0 && m_combatTown)
+        || m_sideRetreated[0] || m_sideRetreated[1]) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.id = 11;
+        message.payload.widget.data.value = 2;
+        win->BroadcastMessage(message);
+        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+        message.payload.widget.data.value = 8;
+        win->BroadcastMessage(message);
+    }
+
+    if (quickView) {
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->AddWindow(win, -1, 1);
+        QuickViewWait();
+        gpWindowManager->RemoveWindow(win);
+        gpMouseManager->ReallyShowPointer();
+    } else {
+        gpWindowManager->DoDialog(win, HandleViewGeneral, 0);
+    }
+    delete win;
+    m_unknown25c = 0;
+    DrawFrame(1);
+    if (!quickView)
+        DoCommand(gpWindowManager->m_dialogResult);
+    return 0;
+}
+
+// Close, spell, retreat and surrender buttons end the dialog; hovering names
+// the control on the combat status line.
+VA(0x0043887d, 0x222)
+short HandleViewGeneral(tag_message& message) {
+    int hint;
+    short face;
+    short zero;
+    short ctl8;
+    short castSpell;
+    short idSurrender;
+    signed char handled;
+    short crest;
+    short heroName;
+    short ctlFourteen;
+    short ctlStats;
+    short wSeven;
+    short nameId;
+    short buttonNine;
+    short idRetreat;
+    short thirteenth;
+    heroName = 1;
+    face = 2;
+    crest = 3;
+    ctlStats = 4;
+    zero = 0;
+    nameId = 1;
+    wSeven = 7;
+    ctl8 = 8;
+    buttonNine = 9;
+    castSpell = 10;
+    idRetreat = 11;
+    idSurrender = 12;
+    thirteenth = 13;
+    ctlFourteen = 14;
+    handled = 0;
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 10:
+                    case 11:
+                    case 12:
+                    case 0x7800:
+                        if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                            gpWindowManager->m_dialogResult = message.payload.widget.id;
+                            handled = 1;
+                            break;
+                        }
+                }
+                break;
+            case WIDGET_COMMAND_HOVER:
+                if (gpWindowManager->m_lastHoverId == message.payload.widget.id)
+                    return 1;
+                gpWindowManager->m_lastHoverId = (signed char)message.payload.widget.id;
+                switch (message.payload.widget.id) {
+                    case 10:
+                        hint = 1;
+                        break;
+                    case 11:
+                        hint = 2;
+                        break;
+                    case 12:
+                        hint = 3;
+                        break;
+                    case 0x7800:
+                        hint = 4;
+                        break;
+                    default:
+                        hint = 5;
+                        break;
+                }
+                gpCombatManager->CombatMessage(gViewGeneralHelp[hint], 1);
+                return 1;
+                break;
+        }
+    }
+    if (handled) {
+        message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.payload.widget.command = message.payload.widget.id;
+        return 2;
+    }
+    return 1;
 }
 
 // donor PoL RVA 0x0000c784; preferred Buka symbol ?ViewArmy@combatManager@@QAEXPAVarmy@@H@Z
@@ -2192,20 +2418,208 @@ short ViewSpecialHandler(tag_message& message) {
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
+// Army info strings: attack, defense, shots (combat), damage, hit points,
+// speed, morale, luck, shots (adventure).
+extern char* gArmyStatText[];
+extern char* gSpeedText[];
+extern signed char gbDismissArmy;
+extern long gViewArmyAnimTimer;
+short ViewArmyHandler(tag_message&);
+
 VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
-    int,
-    int,
-    signed char,
-    short,
-    class town*,
-    signed char,
-    signed char,
-    signed char,
-    class hero*,
-    class army*,
-    class armyGroup*
-) {}
+    int x,
+    int y,
+    signed char monsterType,
+    short numTroops,
+    class town* castle,
+    signed char disableDismiss,
+    signed char facing,
+    signed char quickView,
+    class hero* theHero,
+    class army* theArmy,
+    class armyGroup* theGroup
+) {
+    char numText[12];
+    int shotCount;
+    short baseX;
+    short spacing;
+    short topY;
+    short animId;
+    int morale;
+    tag_monsterInfo* monsterInfo;
+    short numId;
+    int i;
+    char* statText;
+    int luck;
+    tag_message message;
+    char iconName[16];
+    iconWidget* monsterWidget;
+    short statsMessage;
+    short titleLabel;
+    int mod;
+    short blankBtn;
+    char fileName[13];
+
+    baseX = 86;
+    topY = 164;
+    blankBtn = 1;
+    numId = 2;
+    titleLabel = 3;
+    statsMessage = 4;
+    animId = 5;
+    message.type = MESSAGE_WIDGET;
+
+    if (monsterType != 3)
+        strcpy(iconName, gArmyNames[monsterType]);
+    else
+        strcpy(iconName, "swrdsman");
+    monsterInfo = &gMonsterDatabase[monsterType];
+    m_viewArmyWindow = new heroWindow(x, y, "armywin.bin");
+    if (!m_viewArmyWindow)
+        MemError();
+    spacing = 30;
+    if (monsterInfo->stats.attributes & 1) {
+        switch (facing) {
+            case 0:
+                spacing += 43;
+                break;
+            case 1:
+                spacing += 119;
+                break;
+        }
+    } else if (facing == 1) {
+        spacing += 76;
+    } else {
+        spacing += 86;
+    }
+    if (monsterInfo->stats.attributes & 2)
+        sprintf(fileName, "%s.wlk", iconName);
+    else
+        sprintf(fileName, "%s.wip", iconName);
+    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, 16, 1);
+    if (!monsterWidget)
+        MemError();
+    m_viewArmyWindow->AddWidget(monsterWidget, -1);
+
+    strcpy(fileName, gArmyNames[monsterType]);
+    fileName[0] -= 32;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 3;
+    message.payload.widget.data.text = fileName;
+    m_viewArmyWindow->BroadcastMessage(message);
+
+    statText = (char*)malloc(550);
+    if (theGroup)
+        morale = theGroup->GetMorale(theHero, castle);
+    else
+        morale = 0;
+    sprintf(statText, "");
+
+    mod = 0;
+    sprintf(gText, "%s%d", gArmyStatText[0], monsterInfo->stats.attack);
+    strcat(statText, gText);
+    if (theHero)
+        mod += theHero->m_primaryStats[0];
+    if (mod) {
+        sprintf(gText, " (%d)", monsterInfo->stats.attack + mod);
+        strcat(statText, gText);
+    }
+
+    mod = 0;
+    sprintf(gText, "\n%s%d", gArmyStatText[1], monsterInfo->stats.defense);
+    strcat(statText, gText);
+    if (theHero)
+        mod += theHero->m_primaryStats[1];
+    if (theArmy && theArmy->m_spellEffect == 9)
+        mod += 3;
+    if (mod) {
+        sprintf(gText, " (%d)", monsterInfo->stats.defense + mod);
+        strcat(statText, gText);
+    }
+
+    if (monsterInfo->stats.attributes & 4) {
+        if (theArmy)
+            shotCount = theArmy->m_stats.shots;
+        else
+            shotCount = monsterInfo->stats.shots;
+        if (shotCount > 0) {
+            if (gpCombatManager->m_active == 1)
+                sprintf(gText, "\n%s%d", gArmyStatText[2], shotCount);
+            else
+                sprintf(gText, "\n%s%d", gArmyStatText[8], shotCount);
+            strcat(statText, gText);
+        }
+    }
+
+    sprintf(gText, "\n%s%d", gArmyStatText[3], monsterInfo->stats.damageMin);
+    strcat(statText, gText);
+    if (monsterInfo->stats.damageMin != monsterInfo->stats.damageMax) {
+        sprintf(gText, "-%d", monsterInfo->stats.damageMax);
+        strcat(statText, gText);
+    }
+    sprintf(gText, "\n%s%d", gArmyStatText[4], (unsigned char)monsterInfo->stats.hitPoints);
+    strcat(statText, gText);
+    sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfo->stats.speed]);
+    strcat(statText, gText);
+    sprintf(gText, "\n%s%s", gArmyStatText[6], gMoraleText[morale + 3]);
+    strcat(statText, gText);
+    luck = GetLuck(theHero, theArmy);
+    sprintf(gText, "\n%s%s", gArmyStatText[7], gLuckText[luck + 3]);
+    strcat(statText, gText);
+
+    message.payload.widget.id = 4;
+    message.payload.widget.data.text = statText;
+    m_viewArmyWindow->BroadcastMessage(message);
+    if (disableDismiss) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        message.payload.widget.id = 0x7803;
+        m_viewArmyWindow->BroadcastMessage(message);
+    }
+    if (quickView) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        message.payload.widget.id = 0x7800;
+        m_viewArmyWindow->BroadcastMessage(message);
+    }
+    if (numTroops < 1) {
+        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.payload.widget.data.value = 6;
+        message.payload.widget.id = 1;
+        m_viewArmyWindow->BroadcastMessage(message);
+        message.payload.widget.id = 2;
+        m_viewArmyWindow->BroadcastMessage(message);
+    } else {
+        sprintf(numText, "%d", numTroops);
+        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+        message.payload.widget.id = 2;
+        message.payload.widget.data.text = numText;
+        m_viewArmyWindow->BroadcastMessage(message);
+    }
+    gViewArmyAnimTimer = KBTickCount() + 90;
+    m_viewArmyResult = 0;
+    if (quickView) {
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->AddWindow(m_viewArmyWindow, -1, 1);
+        QuickViewWait();
+        gpWindowManager->RemoveWindow(m_viewArmyWindow);
+        gpMouseManager->ReallyShowPointer();
+    } else {
+        gpWindowManager->DoDialog(m_viewArmyWindow, ViewArmyHandler, 0);
+        if (gbDismissArmy && theGroup) {
+            for (i = 0; i < 5; i++) {
+                if (theGroup->m_creatureTypes[i] == monsterType) {
+                    theGroup->m_creatureTypes[i] = -1;
+                    theGroup->m_creatureCounts[i] = 0;
+                }
+            }
+        }
+    }
+    free(statText);
+    delete m_viewArmyWindow;
+}
+
 
 extern signed char gbDismissArmy;
 extern long gViewArmyAnimTimer;
@@ -2257,6 +2671,232 @@ short ViewArmyHandler(tag_message& message) {
         gViewArmyAnimTimer = KBTickCount() + 90;
     }
     return MESSAGE_DISPATCH_CONSUME;
+}
+
+// Kingdom overview text: the dated title, then Dragon City and Lighthouse.
+extern char* gOverviewText[];
+
+// Kingdom overview: heroes by class, castles and towns by type and mines by
+// resource drawn onto the backdrop, then the date, income and resources.
+VA(0x00440366, 0xbf2)
+void game::Overview(void) {
+    short unusedGY;
+    short townTop;
+    short unusedFVal;
+    short heroNumYW;
+    short incomeWidgetY;
+    font* smallFont;
+    short heroTextH;
+    short townTextWPos;
+    short heroTextW;
+    short castleFrameY;
+    short limitYOff;
+    short dayIdY;
+    short left;
+    short castleIconY;
+    short spacing;
+    signed char mineNums[7];
+    short fieldH;
+    font* bigFont;
+    short textW;
+    short mineRowY;
+    short i;
+    short numMines;
+    short badgeY;
+    short lineH;
+    short mineW;
+    signed char redraw;
+    tag_message message;
+    short totals[4];
+    short numCastles;
+    short numTowns;
+    heroWindow* win;
+    short firstTown;
+    short classCountY;
+    icon* ovIcon;
+    short heroFrame;
+    short mineBase;
+    short badge;
+    short spare1;
+    short heroRowY;
+    short shieldDXX;
+    short one;
+    short nextType;
+
+    gpAdvManager->TrimLoopingSounds(8);
+    gbOverviewShowing = 1;
+    unusedGY = 82;
+    shieldDXX = 49;
+    spare1 = 73;
+    heroTextW = 33;
+    heroTextH = 38;
+    textW = 132;
+    fieldH = 80;
+    townTextWPos = 132;
+    unusedFVal = 80;
+    mineW = 72;
+    badgeY = 66;
+    heroRowY = 32;
+    heroNumYW = 67;
+    castleIconY = 113;
+    townTop = 201;
+    mineRowY = 289;
+    heroFrame = 0;
+    castleFrameY = 4;
+    firstTown = 8;
+    mineBase = 12;
+    badge = 15;
+    lineH = 16;
+    limitYOff = 544;
+    redraw = 1;
+    one = 1;
+    dayIdY = 64;
+    incomeWidgetY = 65;
+
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    bigFont = gpResourceManager->GetFont("bigfont.fnt");
+    smallFont = gpResourceManager->GetFont("smalfont.fnt");
+    gpWindowManager->FadeScreen(1, 8, 0);
+    gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
+    sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_unknown11);
+    gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
+    ovIcon = gpResourceManager->GetIcon("overview.icn");
+
+    memset(totals, 0, sizeof(totals));
+    for (i = 0; i < gpCurPlayer->m_heroCount; i++)
+        totals[m_heroRecs[gpCurPlayer->m_heroIds[i]].m_unknown1c]++;
+    classCountY = 0;
+    for (i = 0; i < 4; i++) {
+        if (totals[i])
+            classCountY++;
+    }
+    spacing = 136;
+    left = 121;
+    nextType = 0;
+    for (i = 0; i < classCountY; i++) {
+        while (!totals[nextType])
+            nextType++;
+        ovIcon->DrawToBuffer(spacing * i + left, 32, nextType, 0, 0);
+        ovIcon->DrawToBuffer(spacing * i + left + 49, 67, 15, 0, 0);
+        sprintf(gText, "%d", totals[nextType]);
+        bigFont->DrawBoundedString(gText, spacing * i + left + 48, 77, 33, 16, 1, 1);
+        nextType++;
+    }
+
+    memset(totals, 0, sizeof(totals));
+    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
+        if (m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & 0x40)
+            totals[m_castleRecs[gpCurPlayer->m_townIds[i]].m_type]++;
+    }
+    numCastles = 0;
+    for (i = 0; i < 4; i++) {
+        if (totals[i])
+            numCastles++;
+    }
+    if (numCastles) {
+        spacing = 136;
+        left = 100;
+        nextType = 0;
+        for (i = 0; i < numCastles; i++) {
+            while (!totals[nextType])
+                nextType++;
+            ovIcon->DrawToBuffer(spacing * i + left, 113, nextType + 4, 0, 0);
+            sprintf(gText, "%d", totals[nextType]);
+            bigFont->DrawBoundedString(gText, spacing * i + left, 173, 132, 16, 1, 1);
+            nextType++;
+        }
+    }
+
+    memset(totals, 0, sizeof(totals));
+    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
+        if (!(m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & 0x40))
+            totals[m_castleRecs[gpCurPlayer->m_townIds[i]].m_type]++;
+    }
+    numTowns = 0;
+    for (i = 0; i < 4; i++) {
+        if (totals[i])
+            numTowns++;
+    }
+    if (numTowns) {
+        spacing = 136;
+        left = 100;
+        nextType = 0;
+        for (i = 0; i < numTowns; i++) {
+            while (!totals[nextType])
+                nextType++;
+            ovIcon->DrawToBuffer(spacing * i + left, 201, nextType + 8, 0, 0);
+            sprintf(gText, "%d", totals[nextType]);
+            bigFont->DrawBoundedString(gText, spacing * i + left, 261, 132, 16, 1, 1);
+            nextType++;
+        }
+    }
+
+    memset(mineNums, 0, sizeof(mineNums));
+    for (i = 2; i < GAME_MINE_COUNT; i++) {
+        if (m_mineOwners[i] == giCurPlayer)
+            mineNums[m_mines[i].type]++;
+    }
+    numMines = 0;
+    for (i = 0; i < 7; i++) {
+        if (mineNums[i])
+            numMines++;
+    }
+    if (numMines) {
+        spacing = 77;
+        left = 100;
+        nextType = 0;
+        for (i = 0; i < numMines; i++) {
+            while (!mineNums[nextType])
+                nextType++;
+            ovIcon->DrawToBuffer(spacing * i + left, 289, (nextType < 2 ? nextType : 2) + 12, 0, 0);
+            if (nextType >= 2)
+                ovIcon->DrawToBuffer(spacing * i + left, 289, nextType + 14, 0, 0);
+            sprintf(gText, "%d", mineNums[nextType]);
+            bigFont->DrawBoundedString(gText, spacing * i + left, 355, 72, 16, 1, 1);
+            nextType++;
+        }
+    }
+
+    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+    win = new heroWindow(0, 0, "overwind.bin");
+    if (!win)
+        MemError();
+    SetWinText(win, 8);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 64;
+    sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+    message.payload.widget.id = 65;
+    sprintf(gText, "%d", ComputeDailyGold(giCurPlayer));
+    win->BroadcastMessage(message);
+    for (i = 0; i < 7; i++) {
+        sprintf(gText, "%d", gpCurPlayer->m_resources[i]);
+        message.payload.widget.id = i + 1;
+        win->BroadcastMessage(message);
+    }
+    gpWindowManager->AddWindow(win, -1, 1);
+    win->DrawWindow();
+    gText[0] = 0;
+    if (m_mineOwners[0] == giCurPlayer) {
+        strcpy(gText, gOverviewText[1]);
+        smallFont->DrawBoundedString(gText, 100, 450, 400, 12, 1, 0);
+        gpWindowManager->UpdateScreenRegion(100, 450, 400, 12);
+    }
+    if (m_mineOwners[1] == giCurPlayer) {
+        strcpy(gText, gOverviewText[2]);
+        smallFont->DrawBoundedString(gText, 100, 465, 400, 12, 1, 0);
+        gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
+    }
+    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
+    delete win;
+    gpWindowManager->FadeScreen(1, 8, 0);
+    gpResourceManager->Dispose(ovIcon);
+    gpResourceManager->Dispose(smallFont);
+    gpResourceManager->Dispose(bigFont);
+    gbOverviewShowing = 0;
 }
 
 // Buka 2.1 game::GetRandomNumTroops with HoMM1's 28 creatures.
@@ -3675,14 +4315,264 @@ void game::CheckHeroConsistency(void) {
 // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
+// The other side's ready flag and the heartbeat-seen flag (REMOTE).
+extern int gbRemoteReady;
+extern int gbHeartbeatSeen;
+void BVResMsg(char*, int, int);
+
+// Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
+// segments, 100 segments per acknowledged block.
 VA(0x004459a5, 0x6e9)
-int game::TransmitSaveGame(int, int) { return 0; }
+int game::TransmitSaveGame(int remotePlayer, int playerExited) {
+    int okay;
+    int prevReady;
+    char pathname[456];
+    char* outData;
+    int numBlocks;
+    int sendPacketIndex;
+    int segCount;
+    int junk3;
+    int oldTrack;
+    int fileHandle;
+    int junk2;
+    int block;
+    char* sendPacket;
+    int blockSize;
+    char* incoming;
+    char acked[500];
+    int junk1;
+    int status;
+    int unk;
+    int fileSize;
+    int len;
+    char* fileData;
+    char finished;
+
+    gpAdvManager->TrimLoopingSounds(8);
+    okay = 0;
+    status = 0;
+    oldTrack = -1;
+    prevReady = gpSoundManager->m_musicReady;
+    gpSoundManager->m_musicReady = 1;
+    oldTrack = gpSoundManager->m_currentTrack;
+    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->m_musicReady = prevReady;
+
+    LogStr("Transmit Game Start");
+    if (gpAdvManager->m_active == 1)
+        BVResMsg("Sending Data", -1, 0);
+    while (!gbHeartbeatSeen) {
+        PollSound();
+        Process1WindowsMessage();
+    }
+    AiPrint("Transmit Start");
+    memset(acked, 0, sizeof(acked));
+    SaveGame("REMOTE.GAM", 0);
+    sprintf(pathname, "%s%s", ".\\DATA\\", "REMOTE.GAM");
+    fileSize = FileSize(pathname);
+    sendPacket = (char*)malloc(0x100);
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        outData = (char*)malloc(fileSize);
+    fileData = (char*)malloc(fileSize);
+    fileHandle = open(pathname, O_BINARY);
+    if (fileHandle == -1)
+        FileError(pathname);
+    if (fileHandle == -1) {
+        goto cleanup;
+    }
+    {
+        read(fileHandle, fileData, fileSize);
+        close(fileHandle);
+        if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+            fileSize = EncodeData(outData, fileData, fileSize);
+        else
+            outData = fileData;
+
+        ((int*)sendPacket)[0] = fileSize;
+        ((int*)sendPacket)[1] = playerExited;
+        status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
+        if (!status)
+            ShutDown(0);
+
+        segCount = (fileSize - 1) / 200 + 1;
+        numBlocks = (segCount - 1) / 100 + 1;
+        for (block = 0; block < numBlocks; block++) {
+            LogInt("Start Seg #", block);
+            if (block + 1 == numBlocks)
+                blockSize = segCount - block * 100;
+            else
+                blockSize = 100;
+            finished = 0;
+            while (!finished) {
+                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                    PollSound();
+                    CheckDoMain(0, 1);
+                    if (!acked[sendPacketIndex]) {
+                        if (sendPacketIndex + 1 == segCount)
+                            len = fileSize - sendPacketIndex * 200;
+                        else
+                            len = 200;
+                        *(short*)sendPacket = (short)sendPacketIndex;
+                        memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
+                        status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
+                        if (!status)
+                            ShutDown(0);
+                    }
+                }
+                LogStr("PreWait");
+                *(short*)sendPacket = (short)(block * 100);
+                status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
+                LogStr("PostWait");
+                if (!status)
+                    ShutDown(0);
+                for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
+                    if (((RemoteMessage*)incoming)->payload.data[sendPacketIndex] > 0)
+                        acked[block * 100 + sendPacketIndex] = 1;
+                }
+                finished = 1;
+                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                    if (!acked[sendPacketIndex])
+                        finished = 0;
+                }
+            }
+        }
+        status = TransmitRemoteData(0, remotePlayer, 0, 6, 1, 1, -1, 1);
+        if (!status)
+            ShutDown(0);
+        okay = 1;
+    }
+
+cleanup:
+    free(sendPacket);
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        free(outData);
+    free(fileData);
+    AiPrint("Transmit End");
+    if (gpAdvManager->m_active == 1) {
+        giBottomViewOverride = 0;
+        gpAdvManager->UpdBottomView(1, 1, 1);
+    }
+    if (oldTrack != -1) {
+        prevReady = gpSoundManager->m_musicReady;
+        gpSoundManager->m_musicReady = 1;
+        gpSoundManager->SwitchAmbientMusic(oldTrack);
+        gpSoundManager->m_musicReady = prevReady;
+    }
+    return okay;
+}
 
 // donor PoL RVA 0x00083937; preferred Buka symbol ?ReceiveSaveGame@game@@QAEHHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.655741;margin=0.222523;shape=0.420;size=0.807;calls=0.714;strings=%s%s|.\DATA\|Receive End;alternate=pol20:int game::ReceiveSaveGame(int, int, int, int)@0x00083937
+// Collects the remote save in 200-byte segments, acknowledging each block
+// of 100, then decodes it and writes REMOTE.GAM.
 VA(0x0044608e, 0x579)
-int game::ReceiveSaveGame(int, int) { return 0; }
+int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
+    int unused1;
+    int okay;
+    int prevReady;
+    char pathname[452];
+    char* inData;
+    int k;
+    int oldTrack;
+    int fileHandle;
+    char done;
+    char* sendPacket;
+    RemoteMessage* receivedPacket;
+    int result;
+    long lastPacketTime;
+    char gotIt[500];
+    int packetStart;
+    char* decodedData;
+
+    gpAdvManager->TrimLoopingSounds(8);
+    fileHandle = 0;
+    done = 0;
+    unused1 = 0;
+    okay = 0;
+    oldTrack = -1;
+    if (gpAdvManager->m_active == 1)
+        BVResMsg("Receiving Data", -1, 0);
+    prevReady = gpSoundManager->m_musicReady;
+    oldTrack = gpSoundManager->m_currentTrack;
+    gpSoundManager->m_musicReady = 1;
+    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->m_musicReady = prevReady;
+    while (!gbHeartbeatSeen) {
+        PollSound();
+        Process1WindowsMessage();
+    }
+    result = TransmitRemoteData(0, remotePlayer, 0, 2, 1, 1, -1, 1);
+    if (!result)
+        ShutDown(0);
+    memset(gotIt, 0, sizeof(gotIt));
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        decodedData = (char*)malloc(0x130b0);
+    sendPacket = (char*)malloc(0x100);
+    inData = (char*)malloc(dataSize + 500);
+    lastPacketTime = KBTickCount();
+    while (!done) {
+        PollSound();
+        CheckDoMain(0, 1);
+        if (lastPacketTime + 20000 < KBTickCount()) {
+            NormalDialog("Error receiving data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == 0x7805)
+                lastPacketTime = KBTickCount();
+            else
+                ShutDown(0);
+        }
+        receivedPacket = (RemoteMessage*)GetRemoteData(1);
+        if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
+            lastPacketTime = KBTickCount();
+            switch (receivedPacket->command) {
+                case 3:
+                    packetStart = receivedPacket->payload.segment.index;
+                    gotIt[packetStart] = 1;
+                    memcpy(inData + packetStart * 200, receivedPacket->payload.segment.data,
+                           receivedPacket->payloadSize - 2);
+                    break;
+                case 4:
+                    packetStart = receivedPacket->payload.segment.index;
+                    for (k = packetStart; k < packetStart + 100; k++)
+                        *(sendPacket + k - packetStart) = gotIt[k];
+                    result = TransmitRemoteData(sendPacket, remotePlayer, 200, 5, 1, 1, -1, 1);
+                    if (!result)
+                        ShutDown(0);
+                    break;
+                case 6:
+                    done = 1;
+                    break;
+            }
+        }
+    }
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        dataSize = DecodeData(decodedData, inData);
+    else
+        decodedData = inData;
+    sprintf(pathname, "%s%s", ".\\DATA\\", "REMOTE.GAM");
+    fileHandle = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
+    if (fileHandle == -1)
+        FileError(pathname);
+    write(fileHandle, decodedData, dataSize);
+    close(fileHandle);
+    okay = 1;
+    free(sendPacket);
+    free(inData);
+    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        free(decodedData);
+    AiPrint("Receive End");
+    if (gpAdvManager->m_active == 1) {
+        giBottomViewOverride = 0;
+        gpAdvManager->UpdBottomView(1, 1, 1);
+    }
+    if (oldTrack != -1) {
+        prevReady = gpSoundManager->m_musicReady;
+        gpSoundManager->m_musicReady = 1;
+        gpSoundManager->SwitchAmbientMusic(oldTrack);
+        gpSoundManager->m_musicReady = prevReady;
+    }
+    return okay;
+}
 
 // New-turn texts: days-left and last-day warnings, then the month/week banners.
 extern char* gNewTurnText[];

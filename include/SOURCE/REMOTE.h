@@ -72,6 +72,11 @@ struct RemoteMessage {
             int saveSize;
             int playerExited;
         };
+        // Save-game transfer segments: segment index, then segment bytes.
+        struct {
+            short index;
+            char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
+        } segment;
     } payload;
 };
 #pragma pack(pop)
