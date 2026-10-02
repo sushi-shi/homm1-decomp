@@ -1105,6 +1105,117 @@ float philAI::GetOddsOfWinning(int) {
     return 1.0f;
 }
 
+// Buka 2.1 ValueOfBuyingBuilding without the HoMM2 special buildings: the
+// base value, scaled per slot by attention weights and dwelling counts, the
+// enemy threat and the purchase deflator.
+VA(0x0041d7d8, 0x59b)
+void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourceValue, float& benefitCost) {
+    int costsByResource1[7];
+    int estimatedAttackWeeks8;
+    int dwellingTotal7;
+    int projectedAttackValue;
+    int highestDwellingId;
+    int dwellingIndex;
+    float dangerRating;
+    int creatureLocated;
+    int i;
+    int currentAttackTurns;
+    int currentOccupiedSlots10;
+    float enemyStrengthLocal28;
+    int currentCreatureType;
+    float estimatedAttackChance36;
+    short currentTownRace4;
+    float adjustedValue1;
+    int buildingLevel;
+
+    currentTownRace4 = townPointer->m_type;
+    dwellingTotal7 = 0;
+    highestDwellingId = -1;
+    for (i = 0; i < 6; i++) {
+        if (townPointer->m_buildings & (1 << (i + 7))) {
+            dwellingTotal7++;
+            highestDwellingId = i;
+        }
+    }
+    currentOccupiedSlots10 = 0;
+    for (i = 0; i < 5; i++)
+        if (townPointer->m_army.m_creatureCounts[i] > 0)
+            currentOccupiedSlots10++;
+    adjustedValue1 = (float)GetBuildingBaseResourceValue(
+        currentTownRace4, building, (signed char)(building == 0 ? townPointer->m_buildState : 0)
+    );
+    if (building == 0 && townPointer->m_buildState > 0)
+        adjustedValue1 -= (float)GetBuildingBaseResourceValue(currentTownRace4, building, townPointer->m_buildState - 1);
+    switch (building) {
+    case 6:
+        adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33) * adjustedValue1;
+        buildingLevel = dwellingTotal7;
+        adjustedValue1 = (1.6 - buildingLevel * 0.2) * adjustedValue1;
+        break;
+    case 0:
+        adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33) * adjustedValue1;
+        adjustedValue1 = (1.33 - gpCurPlayer->BuildingsOwned(currentTownRace4, 0, 0) * 0.33) * adjustedValue1;
+        break;
+    case 1:
+        break;
+    case 3:
+        adjustedValue1 = 0;
+        break;
+    case 4:
+        adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue + 0.66) * adjustedValue1;
+        adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase * 2.0f + 0.33) * adjustedValue1;
+        adjustedValue1 = (dwellingTotal7 * 0.33 + 0.66) * adjustedValue1;
+        break;
+    case 2:
+        adjustedValue1 = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0) / 3000.0f * adjustedValue1;
+        break;
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+        if (currentOccupiedSlots10 == 5) {
+            creatureLocated = 0;
+            for (i = 0; i < 5; i++)
+                if (gDwellingType[townPointer->m_type][building - 7] == townPointer->m_army.m_creatureTypes[i])
+                    creatureLocated = 1;
+            if (!creatureLocated)
+                break;
+        }
+        adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue + 0.66) * adjustedValue1;
+        adjustedValue1 = (gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase * 2.0f + 0.33) * adjustedValue1;
+        adjustedValue1 = (1.0 - gpCurPlayer->BuildingsOwned(currentTownRace4, building, 0) * 0.05) * adjustedValue1;
+        if (building - 7 < highestDwellingId)
+            adjustedValue1 = (1.66 - dwellingTotal7 * 0.33) * adjustedValue1;
+        if (townPointer->m_buildings & 0x10)
+            adjustedValue1 = adjustedValue1 * 1.1;
+        for (dwellingIndex = 0; dwellingIndex < 6; dwellingIndex++) {
+            currentCreatureType = gDwellingType[townPointer->m_type][dwellingIndex];
+            if ((townPointer->m_buildings & (1 << (dwellingIndex + 7))) && townPointer->m_garrison[dwellingIndex] > 0
+                && gMonsterDatabase[gDwellingType[townPointer->m_type][building - 7]].iconIndex
+                       < gMonsterDatabase[currentCreatureType].iconIndex * 1.2) {
+                adjustedValue1 = 0;
+                break;
+            }
+        }
+        break;
+    }
+    LikelihoodOfEnemyAttacking(
+        townPointer, 0, estimatedAttackChance36, enemyStrengthLocal28, currentAttackTurns, projectedAttackValue,
+        estimatedAttackWeeks8, dangerRating
+    );
+    adjustedValue1 = (1.0 - dangerRating * 3.0) * adjustedValue1;
+    if (adjustedValue1 < 0.0f)
+        adjustedValue1 = 0;
+    GetBuildingCost(
+        currentTownRace4, building, costsByResource1, (signed char)(building == 0 ? townPointer->m_buildState : 0)
+    );
+    adjustedValue1 = FutureDeflator(costsByResource1) * adjustedValue1;
+    resourceValue = (int)adjustedValue1;
+    benefitCost = adjustedValue1 / RVConversion(costsByResource1);
+}
+
 // donor PoL RVA 0x0003d6b7; preferred Buka symbol ?GetBestBuilding@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526596;margin=0.075083;shape=0.323;size=0.949;calls=1.000;alternate=pol20:void philAI::GetBestBuilding(class town *, struct BHC &, float &)@0x0003d6b7
