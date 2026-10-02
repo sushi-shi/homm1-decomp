@@ -898,10 +898,10 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     char* buffer;
     int casualtyType[2][5];
     int iconSpacing;
-    short boxWidth = 0x140;
-    short bottom = 0x1ca;
     int armyIndex;
     int side;
+    short boxWidth = 0x140;
+    short bottom = 0x1ca;
     int rowY;
     tag_message message;
     int numLost[2];
