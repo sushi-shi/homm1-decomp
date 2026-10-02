@@ -6,6 +6,7 @@
 #include <H1/KB.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
+#include <SOURCE/appMenu.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
@@ -332,67 +333,67 @@ signed char game::SetupGame(signed char newGame) {
 
     if (giMenuCommand != -1) {
         switch (giMenuCommand) {
-            case 0x9ca8:
+            case APP_MENU_NEW_CAMPAIGN_IRONFIST:
                 giCampaignChoice = 1;
                 break;
-            case 0x9ca9:
+            case APP_MENU_NEW_CAMPAIGN_SLAYER:
                 giCampaignChoice = 2;
                 break;
-            case 0x9caa:
+            case APP_MENU_NEW_CAMPAIGN_LAMANDA:
                 giCampaignChoice = 3;
                 break;
-            case 0x9cab:
+            case APP_MENU_NEW_CAMPAIGN_ALAMAR:
                 giCampaignChoice = 4;
                 break;
-            case 0x9ca6:
-            case 0x9cbb:
+            case APP_MENU_NEW_STANDARD_GAME:
+            case APP_MENU_LOAD_STANDARD_GAME:
                 break;
-            case 0x9cbc:
+            case APP_MENU_LOAD_CAMPAIGN_GAME:
                 giCampaignChoice = 1;
                 break;
-            case 0x9cae:
-            case 0x9cbf:
+            case APP_MENU_NEW_HOT_SEAT_2:
+            case APP_MENU_LOAD_HOT_SEAT_2:
                 giNumHumanPlayers = 2;
                 iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
-            case 0x9caf:
-            case 0x9cc0:
+            case APP_MENU_NEW_HOT_SEAT_3:
+            case APP_MENU_LOAD_HOT_SEAT_3:
                 giNumHumanPlayers = 3;
                 iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
-            case 0x9cb0:
-            case 0x9cc1:
+            case APP_MENU_NEW_HOT_SEAT_4:
+            case APP_MENU_LOAD_HOT_SEAT_4:
                 giNumHumanPlayers = 4;
                 iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
-            case 0x9cb2:
-            case 0x9cc3:
+            case APP_MENU_NEW_NETWORK_HOST:
+            case APP_MENU_LOAD_NETWORK_HOST:
                 iMPBaseType = MULTIPLAYER_BASE_NETWORK;
                 iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
                 goto remoteSetup;
-            case 0x9cb3:
-            case 0x9cc4:
+            case APP_MENU_NEW_NETWORK_GUEST:
+            case APP_MENU_LOAD_NETWORK_GUEST:
                 iMPBaseType = MULTIPLAYER_BASE_NETWORK;
                 iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
                 goto remoteSetup;
-            case 0x9cb5:
-            case 0x9cc6:
+            case APP_MENU_NEW_MODEM_HOST:
+            case APP_MENU_LOAD_MODEM_HOST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_HOST;
                 goto remoteSetup;
-            case 0x9cb6:
-            case 0x9cc7:
+            case APP_MENU_NEW_MODEM_GUEST:
+            case APP_MENU_LOAD_MODEM_GUEST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
                 goto remoteSetup;
-            case 0x9cb8:
-            case 0x9cc9:
+            case APP_MENU_NEW_DIRECT_HOST:
+            case APP_MENU_LOAD_DIRECT_HOST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_HOST;
                 gbDirectConnect = 1;
                 goto remoteSetup;
-            case 0x9cb9:
-            case 0x9cca:
+            case APP_MENU_NEW_DIRECT_GUEST:
+            case APP_MENU_LOAD_DIRECT_GUEST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
                 gbDirectConnect = 1;

@@ -128,7 +128,7 @@ short HandleCastSpell(struct tag_message &message)
             }
             break;
         case MESSAGE_KEY_DOWN:
-            if (message.keyCode != 1)
+            if (message.keyCode != INPUT_SCAN_ESCAPE)
                 break;
         case MESSAGE_RIGHT_BUTTON_DOWN:
             gpCombatManager->m_selectedSpell = SPELL_NONE;

@@ -713,7 +713,7 @@ void hero::CheckLevel(void) {
     m_level = lvl;
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
         gpSoundManager->SwitchAmbientMusic(52);
-        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog(gText, 1, -1, -1, 15, m_id, -1, 0, -1);
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     }
 }

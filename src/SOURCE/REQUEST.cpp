@@ -316,7 +316,7 @@ short fileRequester::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_KEY_DOWN:
             switch (message.keyCode) {
-                case 0x48:
+                case INPUT_SCAN_NUMPAD_8:
                     if (m_selectedIndex > 0) {
                         m_selectedIndex--;
                         if (m_topIndex > m_selectedIndex)
@@ -324,7 +324,7 @@ short fileRequester::Main(tag_message& message) {
                         Update(1);
                     }
                     break;
-                case 0x50:
+                case INPUT_SCAN_NUMPAD_2:
                     if (m_selectedIndex < m_fileCount - 1) {
                         m_selectedIndex++;
                         if (m_topIndex + 10 <= m_selectedIndex)

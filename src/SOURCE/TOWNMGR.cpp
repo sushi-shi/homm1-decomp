@@ -687,8 +687,8 @@ short townManager::Main(struct tag_message &message)
             break;
         case MESSAGE_KEY_UP:
             switch (message.keyCode) {
-                case 0x2a:
-                case 0x36:
+                case INPUT_SCAN_LEFT_SHIFT:
+                case INPUT_SCAN_RIGHT_SHIFT:
                     ShiftQualChange();
                     break;
                 default:
@@ -697,11 +697,11 @@ short townManager::Main(struct tag_message &message)
             break;
         case MESSAGE_KEY_DOWN:
             switch (message.keyCode) {
-                case 0x2a:
-                case 0x36:
+                case INPUT_SCAN_LEFT_SHIFT:
+                case INPUT_SCAN_RIGHT_SHIFT:
                     ShiftQualChange();
                     break;
-                case 1:
+                case INPUT_SCAN_ESCAPE:
                     exitTown++;
                     break;
             }

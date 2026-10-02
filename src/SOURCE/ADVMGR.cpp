@@ -652,7 +652,7 @@ short advManager::Main(struct tag_message& message) {
     }
     retVal = MESSAGE_DISPATCH_CONSUME;
     bQuit = 0;
-    evtMapCell = NULL;
+    evtMapCell = 0;
     if (message.type) {
         switch (message.type) {
         case MESSAGE_WIDGET:
@@ -690,7 +690,7 @@ short advManager::Main(struct tag_message& message) {
                     break;
                 }
                 if (helpText >= 0)
-                    NormalDialog(cAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog(cAdvMenuHelp[helpText], 4, -1, -1, -1, 0, -1, 0, -1);
                 break;
             }
             break;
@@ -699,7 +699,7 @@ short advManager::Main(struct tag_message& message) {
             if (gpCurPlayer->CurrentHero() != -1)
                 curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
             else
-                curHero = NULL;
+                curHero = 0;
             if (giDebugLevel < 1
                 && (message.keyCode == 0x3d || message.keyCode == 0x3e
                     || message.keyCode == 0x3f || message.keyCode == 0x40
@@ -709,7 +709,7 @@ short advManager::Main(struct tag_message& message) {
                 break;
             switch (message.keyCode) {
             case 0x3c:
-                PopNetBox(NULL);
+                PopNetBox(0);
                 break;
             case 0x3d:
                 gpGame->m_playerDead[1] = 1;
@@ -874,8 +874,8 @@ short advManager::Main(struct tag_message& message) {
                 goto confirmGameCommand;
             confirmGameCommand:
                 bQuit = 1;
-                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
+                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult == 30726)
                     bQuit = 0;
                 else
                     gGameCommand = cmdValue;
@@ -928,7 +928,7 @@ short advManager::Main(struct tag_message& message) {
                 if (evtMapCell) {
                     StopCursor(1);
                     DoEvent(evtMapCell, TrigX, TrigY);
-                    evtMapCell = NULL;
+                    evtMapCell = 0;
                 }
                 Reseed(0, 0);
                 ForceNewHover();
@@ -5594,11 +5594,11 @@ short advManager::CheckHandleNetPlayerWait(struct tag_message &message, signed c
     CheckDoMain(1, doMain);
     if (message.type == MESSAGE_KEY_DOWN) {
         switch (message.keyCode) {
-            case 0x3b:
+            case INPUT_SCAN_F1:
                 PopNetBox(NULL);
                 break;
 
-            case 0x10:
+            case INPUT_SCAN_Q:
                 if (message.modifiers & 0xc) {
                     message.type = MESSAGE_EXECUTIVE;
                     message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;

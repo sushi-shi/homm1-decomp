@@ -12,6 +12,7 @@
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <BASE/soundmgr.h>
+#include <SOURCE/appMenu.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/creatureTypes.h>
@@ -191,51 +192,6 @@ int EarlySetup(void) {
     return 1;
 }
 
-// clang-format off
-// HoMM1 menu command ids; each menu bar repeats Restart and New Game.
-H1_ENUM_BEGIN(AppMenuCommand)
-    APP_MENU_RESTART_0 = 0x9ca6,
-    APP_MENU_RESTART_1 = 0x9ca8,
-    APP_MENU_RESTART_2 = 0x9ca9,
-    APP_MENU_RESTART_3 = 0x9caa,
-    APP_MENU_RESTART_4 = 0x9cab,
-    APP_MENU_RESTART_5 = 0x9cae,
-    APP_MENU_RESTART_6 = 0x9caf,
-    APP_MENU_RESTART_7 = 0x9cb0,
-    APP_MENU_RESTART_8 = 0x9cb2,
-    APP_MENU_RESTART_9 = 0x9cb3,
-    APP_MENU_RESTART_10 = 0x9cb5,
-    APP_MENU_RESTART_11 = 0x9cb6,
-    APP_MENU_RESTART_12 = 0x9cb8,
-    APP_MENU_RESTART_13 = 0x9cb9,
-    APP_MENU_LOAD_0 = 0x9cbb,
-    APP_MENU_LOAD_1 = 0x9cbc,
-    APP_MENU_LOAD_2 = 0x9cbf,
-    APP_MENU_LOAD_3 = 0x9cc0,
-    APP_MENU_LOAD_4 = 0x9cc1,
-    APP_MENU_LOAD_5 = 0x9cc3,
-    APP_MENU_LOAD_6 = 0x9cc4,
-    APP_MENU_LOAD_7 = 0x9cc6,
-    APP_MENU_LOAD_8 = 0x9cc7,
-    APP_MENU_LOAD_9 = 0x9cc9,
-    APP_MENU_LOAD_10 = 0x9cca,
-    APP_MENU_SAVE = 0x9ccb,
-    APP_MENU_EXIT = 0x9ccc,
-    APP_MENU_MUSIC_FIRST = 0x9c50,
-    APP_MENU_MUSIC_LAST = 0x9c5a,
-    APP_MENU_SOUND_FIRST = 0x9c5c,
-    APP_MENU_SOUND_LAST = 0x9c66,
-    APP_MENU_WALK_FASTEST = 0x9c68,
-    APP_MENU_WALK_SLOWEST = 0x9c6c,
-    APP_MENU_CD_MUSIC = 0x9c6d,
-    APP_MENU_TOGGLE_ROUTE = 0x9c6e,
-    APP_MENU_TOGGLE_BLACKOUT = 0x9c6f,
-    APP_MENU_VIEW_WORLD = 0x9c4c,
-    APP_MENU_VIEW_PUZZLE = 0x9c4d,
-    APP_MENU_CAST_SPELL = 0x9c4e,
-    APP_MENU_SEARCH = 0x9c4f
-H1_ENUM_END(AppMenuCommand)
-// clang-format on
 
 // oldmain's re-entry guard and the intro, end-sequence and campaign state it
 // shares with the game screens.
@@ -333,34 +289,34 @@ int oldmain(void) {
         if (giMenuCommand != -1) {
         processMenuCommand:
             switch (giMenuCommand) {
-                case APP_MENU_LOAD_0:
-                case APP_MENU_LOAD_1:
-                case APP_MENU_LOAD_2:
-                case APP_MENU_LOAD_3:
-                case APP_MENU_LOAD_4:
-                case APP_MENU_LOAD_5:
-                case APP_MENU_LOAD_6:
-                case APP_MENU_LOAD_7:
-                case APP_MENU_LOAD_8:
-                case APP_MENU_LOAD_9:
-                case APP_MENU_LOAD_10:
+                case APP_MENU_LOAD_STANDARD_GAME:
+                case APP_MENU_LOAD_CAMPAIGN_GAME:
+                case APP_MENU_LOAD_HOT_SEAT_2:
+                case APP_MENU_LOAD_HOT_SEAT_3:
+                case APP_MENU_LOAD_HOT_SEAT_4:
+                case APP_MENU_LOAD_NETWORK_HOST:
+                case APP_MENU_LOAD_NETWORK_GUEST:
+                case APP_MENU_LOAD_MODEM_HOST:
+                case APP_MENU_LOAD_MODEM_GUEST:
+                case APP_MENU_LOAD_DIRECT_HOST:
+                case APP_MENU_LOAD_DIRECT_GUEST:
                     if (!gpGame->PickLoadGame())
                         goto mainMenu;
                     break;
-                case APP_MENU_RESTART_0:
-                case APP_MENU_RESTART_1:
-                case APP_MENU_RESTART_2:
-                case APP_MENU_RESTART_3:
-                case APP_MENU_RESTART_4:
-                case APP_MENU_RESTART_5:
-                case APP_MENU_RESTART_6:
-                case APP_MENU_RESTART_7:
-                case APP_MENU_RESTART_8:
-                case APP_MENU_RESTART_9:
-                case APP_MENU_RESTART_10:
-                case APP_MENU_RESTART_11:
-                case APP_MENU_RESTART_12:
-                case APP_MENU_RESTART_13:
+                case APP_MENU_NEW_STANDARD_GAME:
+                case APP_MENU_NEW_CAMPAIGN_IRONFIST:
+                case APP_MENU_NEW_CAMPAIGN_SLAYER:
+                case APP_MENU_NEW_CAMPAIGN_LAMANDA:
+                case APP_MENU_NEW_CAMPAIGN_ALAMAR:
+                case APP_MENU_NEW_HOT_SEAT_2:
+                case APP_MENU_NEW_HOT_SEAT_3:
+                case APP_MENU_NEW_HOT_SEAT_4:
+                case APP_MENU_NEW_NETWORK_HOST:
+                case APP_MENU_NEW_NETWORK_GUEST:
+                case APP_MENU_NEW_MODEM_HOST:
+                case APP_MENU_NEW_MODEM_GUEST:
+                case APP_MENU_NEW_DIRECT_HOST:
+                case APP_MENU_NEW_DIRECT_GUEST:
                     if (!gpGame->NewGame())
                         goto mainMenu;
                     break;
@@ -2582,33 +2538,33 @@ int HandleAppSpecificMenuCommands(int command) {
 
     menuChanged = 0;
     switch (command) {
-        case APP_MENU_RESTART_0:
-        case APP_MENU_RESTART_1:
-        case APP_MENU_RESTART_2:
-        case APP_MENU_RESTART_3:
-        case APP_MENU_RESTART_4:
-        case APP_MENU_RESTART_5:
-        case APP_MENU_RESTART_6:
-        case APP_MENU_RESTART_7:
-        case APP_MENU_RESTART_8:
-        case APP_MENU_RESTART_9:
-        case APP_MENU_RESTART_10:
-        case APP_MENU_RESTART_11:
-        case APP_MENU_RESTART_12:
-        case APP_MENU_RESTART_13:
+        case APP_MENU_NEW_STANDARD_GAME:
+        case APP_MENU_NEW_CAMPAIGN_IRONFIST:
+        case APP_MENU_NEW_CAMPAIGN_SLAYER:
+        case APP_MENU_NEW_CAMPAIGN_LAMANDA:
+        case APP_MENU_NEW_CAMPAIGN_ALAMAR:
+        case APP_MENU_NEW_HOT_SEAT_2:
+        case APP_MENU_NEW_HOT_SEAT_3:
+        case APP_MENU_NEW_HOT_SEAT_4:
+        case APP_MENU_NEW_NETWORK_HOST:
+        case APP_MENU_NEW_NETWORK_GUEST:
+        case APP_MENU_NEW_MODEM_HOST:
+        case APP_MENU_NEW_MODEM_GUEST:
+        case APP_MENU_NEW_DIRECT_HOST:
+        case APP_MENU_NEW_DIRECT_GUEST:
             strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
             goto confirmMenuCommand;
-        case APP_MENU_LOAD_0:
-        case APP_MENU_LOAD_1:
-        case APP_MENU_LOAD_2:
-        case APP_MENU_LOAD_3:
-        case APP_MENU_LOAD_4:
-        case APP_MENU_LOAD_5:
-        case APP_MENU_LOAD_6:
-        case APP_MENU_LOAD_7:
-        case APP_MENU_LOAD_8:
-        case APP_MENU_LOAD_9:
-        case APP_MENU_LOAD_10:
+        case APP_MENU_LOAD_STANDARD_GAME:
+        case APP_MENU_LOAD_CAMPAIGN_GAME:
+        case APP_MENU_LOAD_HOT_SEAT_2:
+        case APP_MENU_LOAD_HOT_SEAT_3:
+        case APP_MENU_LOAD_HOT_SEAT_4:
+        case APP_MENU_LOAD_NETWORK_HOST:
+        case APP_MENU_LOAD_NETWORK_GUEST:
+        case APP_MENU_LOAD_MODEM_HOST:
+        case APP_MENU_LOAD_MODEM_GUEST:
+        case APP_MENU_LOAD_DIRECT_HOST:
+        case APP_MENU_LOAD_DIRECT_GUEST:
             strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
         confirmMenuCommand:
             if (gpAdvManager->m_active == 1) {
@@ -2618,105 +2574,105 @@ int HandleAppSpecificMenuCommands(int command) {
             }
             giMenuCommand = command;
             break;
-        case APP_MENU_SAVE:
+        case APP_MENU_SAVE_GAME:
             SaveGame();
             break;
-        case APP_MENU_EXIT:
+        case APP_MENU_QUIT:
             PostMessage((HWND)hwndApp, WM_CLOSE, 0, 0);
             break;
-        case APP_MENU_MUSIC_FIRST:
+        case APP_MENU_MUSIC_OFF:
             gConfig.musicVolume = 0;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 1:
+        case APP_MENU_MUSIC_100:
             gConfig.musicVolume = 1;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 2:
+        case APP_MENU_MUSIC_90:
             gConfig.musicVolume = 2;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 3:
+        case APP_MENU_MUSIC_80:
             gConfig.musicVolume = 3;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 4:
+        case APP_MENU_MUSIC_70:
             gConfig.musicVolume = 4;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 5:
+        case APP_MENU_MUSIC_60:
             gConfig.musicVolume = 5;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 6:
+        case APP_MENU_MUSIC_50:
             gConfig.musicVolume = 6;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 7:
+        case APP_MENU_MUSIC_40:
             gConfig.musicVolume = 7;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 8:
+        case APP_MENU_MUSIC_30:
             gConfig.musicVolume = 8;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 9:
+        case APP_MENU_MUSIC_20:
             gConfig.musicVolume = 9;
             goto adjustMusic;
-        case APP_MENU_MUSIC_LAST:
+        case APP_MENU_MUSIC_10:
             gConfig.musicVolume = 10;
             goto adjustMusic;
         adjustMusic:
             gpSoundManager->AdjustMusicVolumes();
             menuChanged = 1;
             break;
-        case APP_MENU_SOUND_FIRST:
+        case APP_MENU_SOUND_OFF:
             gConfig.soundVolume = 0;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 1:
+        case APP_MENU_SOUND_100:
             gConfig.soundVolume = 1;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 2:
+        case APP_MENU_SOUND_90:
             gConfig.soundVolume = 2;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 3:
+        case APP_MENU_SOUND_80:
             gConfig.soundVolume = 3;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 4:
+        case APP_MENU_SOUND_70:
             gConfig.soundVolume = 4;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 5:
+        case APP_MENU_SOUND_60:
             gConfig.soundVolume = 5;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 6:
+        case APP_MENU_SOUND_50:
             gConfig.soundVolume = 6;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 7:
+        case APP_MENU_SOUND_40:
             gConfig.soundVolume = 7;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 8:
+        case APP_MENU_SOUND_30:
             gConfig.soundVolume = 8;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 9:
+        case APP_MENU_SOUND_20:
             gConfig.soundVolume = 9;
             goto adjustSound;
-        case APP_MENU_SOUND_LAST:
+        case APP_MENU_SOUND_10:
             gConfig.soundVolume = 10;
             goto adjustSound;
         adjustSound:
             gpSoundManager->AdjustSoundVolumes();
             menuChanged = 1;
             break;
-        case APP_MENU_WALK_FASTEST:
+        case APP_MENU_SPEED_JUMP:
             gConfig.walkSpeed = 4;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_FASTEST + 1:
+        case APP_MENU_SPEED_GALLOP:
             gConfig.walkSpeed = 3;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_FASTEST + 2:
+        case APP_MENU_SPEED_CANTER:
             gConfig.walkSpeed = 2;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_FASTEST + 3:
+        case APP_MENU_SPEED_TROT:
             gConfig.walkSpeed = 1;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_SLOWEST:
+        case APP_MENU_SPEED_WALK:
             gConfig.walkSpeed = 0;
             goto walkSpeedChanged;
         walkSpeedChanged:
             menuChanged = 1;
             break;
-        case APP_MENU_CD_MUSIC:
+        case APP_MENU_CD_STEREO:
             if (gConfig.musicSource) {
                 gConfig.musicSource = 0;
             } else {
@@ -2732,11 +2688,11 @@ int HandleAppSpecificMenuCommands(int command) {
             gpSoundManager->SetMusicQuality(gConfig.musicSource);
             menuChanged = 1;
             break;
-        case APP_MENU_TOGGLE_ROUTE:
+        case APP_MENU_SHOW_PATH:
             gConfig.showRoute = 1 - gConfig.showRoute;
             menuChanged = 1;
             break;
-        case APP_MENU_TOGGLE_BLACKOUT:
+        case APP_MENU_VIEW_ENEMY_MOVES:
             gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
             menuChanged = 1;
             break;
@@ -2749,7 +2705,7 @@ int HandleAppSpecificMenuCommands(int command) {
         case APP_MENU_CAST_SPELL:
             gpAdvManager->CheckCastSpell();
             break;
-        case APP_MENU_SEARCH:
+        case APP_MENU_DIG:
             gpAdvManager->ProcessSearch(-1, -1);
             break;
         default:
@@ -2760,8 +2716,8 @@ int HandleAppSpecificMenuCommands(int command) {
     return 0;
 }
 
-// HoMM1 menu ids: music 0x9c50-0x9c5a, sound 0x9c5c-0x9c66, walk speed
-// 0x9c68-0x9c6c, then the music-source, route and blackout toggles.
+// Checks the music, sound and walk-speed radio groups, then the CD,
+// route and enemy-move toggles.
 VA(0x0045634b, 0x3b7)
 void UpdateSystemOptionsMenu(void) {
     int checkedCommand;
@@ -2774,107 +2730,107 @@ void UpdateSystemOptionsMenu(void) {
     if (hmnuApp != hmnuAdv)
         return;
 
-    for (menuCommand = 0x9c50; menuCommand <= 0x9c5a; menuCommand++)
+    for (menuCommand = APP_MENU_MUSIC_FIRST; menuCommand <= APP_MENU_MUSIC_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.musicVolume) {
         case 1:
-            checkedCommand = 0x9c51;
+            checkedCommand = APP_MENU_MUSIC_100;
             break;
         case 2:
-            checkedCommand = 0x9c52;
+            checkedCommand = APP_MENU_MUSIC_90;
             break;
         case 3:
-            checkedCommand = 0x9c53;
+            checkedCommand = APP_MENU_MUSIC_80;
             break;
         case 4:
-            checkedCommand = 0x9c54;
+            checkedCommand = APP_MENU_MUSIC_70;
             break;
         case 5:
-            checkedCommand = 0x9c55;
+            checkedCommand = APP_MENU_MUSIC_60;
             break;
         case 6:
-            checkedCommand = 0x9c56;
+            checkedCommand = APP_MENU_MUSIC_50;
             break;
         case 7:
-            checkedCommand = 0x9c57;
+            checkedCommand = APP_MENU_MUSIC_40;
             break;
         case 8:
-            checkedCommand = 0x9c58;
+            checkedCommand = APP_MENU_MUSIC_30;
             break;
         case 9:
-            checkedCommand = 0x9c59;
+            checkedCommand = APP_MENU_MUSIC_20;
             break;
         case 10:
-            checkedCommand = 0x9c5a;
+            checkedCommand = APP_MENU_MUSIC_10;
             break;
         default:
-            checkedCommand = 0x9c50;
+            checkedCommand = APP_MENU_MUSIC_OFF;
             break;
     }
     CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
 
-    for (menuCommand = 0x9c5c; menuCommand <= 0x9c66; menuCommand++)
+    for (menuCommand = APP_MENU_SOUND_FIRST; menuCommand <= APP_MENU_SOUND_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.soundVolume) {
         case 1:
-            checkedCommand = 0x9c5d;
+            checkedCommand = APP_MENU_SOUND_100;
             break;
         case 2:
-            checkedCommand = 0x9c5e;
+            checkedCommand = APP_MENU_SOUND_90;
             break;
         case 3:
-            checkedCommand = 0x9c5f;
+            checkedCommand = APP_MENU_SOUND_80;
             break;
         case 4:
-            checkedCommand = 0x9c60;
+            checkedCommand = APP_MENU_SOUND_70;
             break;
         case 5:
-            checkedCommand = 0x9c61;
+            checkedCommand = APP_MENU_SOUND_60;
             break;
         case 6:
-            checkedCommand = 0x9c62;
+            checkedCommand = APP_MENU_SOUND_50;
             break;
         case 7:
-            checkedCommand = 0x9c63;
+            checkedCommand = APP_MENU_SOUND_40;
             break;
         case 8:
-            checkedCommand = 0x9c64;
+            checkedCommand = APP_MENU_SOUND_30;
             break;
         case 9:
-            checkedCommand = 0x9c65;
+            checkedCommand = APP_MENU_SOUND_20;
             break;
         case 10:
-            checkedCommand = 0x9c66;
+            checkedCommand = APP_MENU_SOUND_10;
             break;
         default:
-            checkedCommand = 0x9c5c;
+            checkedCommand = APP_MENU_SOUND_OFF;
             break;
     }
     CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
 
-    for (menuCommand = 0x9c68; menuCommand <= 0x9c6c; menuCommand++)
+    for (menuCommand = APP_MENU_SPEED_FIRST; menuCommand <= APP_MENU_SPEED_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.walkSpeed) {
         case 4:
-            checkedCommand = 0x9c68;
+            checkedCommand = APP_MENU_SPEED_JUMP;
             break;
         case 3:
-            checkedCommand = 0x9c69;
+            checkedCommand = APP_MENU_SPEED_GALLOP;
             break;
         case 2:
-            checkedCommand = 0x9c6a;
+            checkedCommand = APP_MENU_SPEED_CANTER;
             break;
         case 1:
-            checkedCommand = 0x9c6b;
+            checkedCommand = APP_MENU_SPEED_TROT;
             break;
         default:
-            checkedCommand = 0x9c6c;
+            checkedCommand = APP_MENU_SPEED_WALK;
             break;
     }
     CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
-    CheckMenuItem((HMENU)hmnuApp, 0x9c6d, gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED);
-    CheckMenuItem((HMENU)hmnuApp, 0x9c6e, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
-    CheckMenuItem((HMENU)hmnuApp, 0x9c6f,
+    CheckMenuItem((HMENU)hmnuApp, APP_MENU_CD_STEREO, gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, APP_MENU_SHOW_PATH, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, APP_MENU_VIEW_ENEMY_MOVES,
                   1 - gConfig.blackoutComputer ? MF_CHECKED : MF_UNCHECKED);
 }
 
