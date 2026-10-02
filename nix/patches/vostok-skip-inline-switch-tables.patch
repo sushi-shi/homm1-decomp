@@ -1,0 +1,73 @@
+diff --git a/src/object_files.rs b/src/object_files.rs
+index 859bdf5..baef922 100644
+--- a/src/object_files.rs
++++ b/src/object_files.rs
+@@ -560,7 +560,52 @@ fn resolve_relative_relocations<'s>(
+     let mut decoder = Decoder::with_ip(32, code, fun_va as u64, DecoderOptions::NONE);
+     let mut ix = Instruction::default();
+ 
++    // Inline switch tables: absolute (.reloc) sites inside this function whose
++    // target is a label of this same function. The absolute pass already
++    // rewrote each entry to the label's offset from the function start. A
++    // linear sweep must not decode them as code: the table's trailing bytes
++    // can swallow the next instruction's opcode and hide its call relocation.
++    let own_overloads = symbols.functions.get(&fun_rva).map(|v| v.as_ptr());
++    // Offset of each candidate entry site -> the label offset it holds. An
++    // instruction operand that addresses data inside the function (e.g. a
++    // switch's byte index table) also lands here, but the sweep only treats a
++    // site as data when it reaches it at an instruction boundary.
++    let mut table_sites: std::collections::BTreeMap<usize, usize> = std::collections::BTreeMap::new();
++    let mut labels: std::collections::BTreeSet<usize> = std::collections::BTreeSet::new();
++    for (site_rva, kind) in relocs_rva.range(fun_rva..fun_rva + fun_size) {
++        if let RelocKind::Function { overloads, relative: false, .. } = kind {
++            if Some(overloads.as_ptr()) != own_overloads || site_rva + 4 > fun_rva + fun_size {
++                continue;
++            }
++            let entry = u32::from_le_bytes(
++                coff_data[*site_rva..*site_rva + 4].try_into().expect("four bytes"),
++            )
++            .to_usize();
++            if entry < fun_size {
++                table_sites.insert(site_rva - fun_rva, entry);
++            }
++        }
++    }
++
+     while decoder.can_decode() {
++        let position = decoder.position();
++        if table_sites.contains_key(&position) {
++            let mut end = position;
++            while let Some(entry) = table_sites.get(&end) {
++                labels.insert(*entry);
++                end += 4;
++            }
++            // A byte index table may follow; code resumes at the next label
++            // that some table entry or earlier branch targets.
++            let resume = labels.range(end..).next().copied().unwrap_or(end);
++            if resume >= fun_size {
++                break;
++            }
++            decoder.set_position(resume)?;
++            decoder.set_ip((fun_va + resume) as u64);
++            continue;
++        }
++
+         decoder.decode_out(&mut ix);
+ 
+         let offset_in_fun = (ix.ip() - fun_va as u64) as usize + ix.len();
+@@ -581,8 +626,14 @@ fn resolve_relative_relocations<'s>(
+ 
+         let target_rva = target_va - u64::from(env.image_base);
+ 
+-        let internal_branch = (fun_rva..fun_rva + fun_size).contains(&(target_rva.to_usize()));
++        // A call to the function's own entry is a recursive call, not an
++        // internal branch: it needs a relocation to the function symbol.
++        let self_call =
++            ix.flow_control() == FlowControl::Call && target_rva.to_usize() == fun_rva;
++        let internal_branch =
++            !self_call && (fun_rva..fun_rva + fun_size).contains(&(target_rva.to_usize()));
+         if internal_branch {
++            labels.insert(target_rva.to_usize() - fun_rva);
+             continue;
+         }
+ 
