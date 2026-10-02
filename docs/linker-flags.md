@@ -23,7 +23,9 @@ Units from the BASE run (0x00473450 onward) are archived into `base.lib` and
 searched after `netapi32.lib`, as retail's `Netbios` thunk at 0x0047343c
 requires. Their order is LINK's pull order. `--no-base-library` links them as
 explicit objects. `config/heroes.def` supplies the export directory, module
-name and stack reserve. There is no `/ENTRY`, and retail's `/OPT:REF` is the
+name and stack reserve. The C runtime is VC4.0 LIBCMT: `/NODEFAULTLIB:libc.lib`
+drops the LIBC the objects request, and `libcmt.lib` follows the Win32
+libraries. There is no `/ENTRY`, and retail's `/OPT:REF` is the
 default (`--keep-all` restores `/OPT:NOREF`). See
 [link layout](../evidence/link-layout.md). When a link fails, the full log and
 the decorated unresolved list stay in `build/exe/`.

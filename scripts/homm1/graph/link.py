@@ -13,7 +13,8 @@ There is no `/FORCE`: unresolved externals and duplicate definitions are the
 link phase's findings. The current pilot is expected to fail until its missing
 definitions and program entry point are reconstructed.
 
-The VC4 objects request LIBC and OLDNAMES. Win32 libraries are passed in retail
+The VC4 objects request LIBC and OLDNAMES; retail's runtime is LIBCMT, which
+replaces LIBC after the Win32 libraries. Win32 libraries are passed in retail
 import-descriptor order; missing named vendor libraries are synthesized from
 the retail import table by `homm1.graph.implib`.
 
@@ -36,14 +37,25 @@ from homm1.tool.wine import winepath
 #: HoMM1's explicit library line, in retail import-descriptor order (WINMM,
 #: KERNEL32, USER32, GDI32, ADVAPI32, NETAPI32, smkwai32, WING32, wail32).
 #: LINK searches libraries in this order before the objects' default
-#: libraries (LIBC, OLDNAMES), so the descriptors and the smkwai32/WING32
+#: libraries (OLDNAMES) and the CRT, so the descriptors and the smkwai32/WING32
 #: jump thunks land ahead of the CRT, exactly where retail has them
-#: (thunks at 0x00480188, LIBC from 0x004801f0). The vendor libraries are
+#: (thunks at 0x00480188, LIBCMT from 0x004801f0). The vendor libraries are
 #: synthesized by `homm1.graph.implib` from the retail import table plus the
 #: reviewed import-thunk names in function_referents.tsv.
 LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
              "advapi32.lib", "netapi32.lib", "smkwai32.lib", "wing32.lib",
              "wail32.lib"]
+
+#: Retail's C runtime is the VC4.0 multithreaded LIBCMT.LIB, not the
+#: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's
+#: _mtinit/_getptd (TlsAlloc, TlsGetValue, TlsSetValue, GetCurrentThreadId,
+#: SetLastError), _lock/_unlock and the *_lk stream/file variants. Against
+#: LIBCMT the DNA census finds 189 exact CRT bodies (35052 of 44700 band
+#: bytes); against LIBC only 106 (14686). See evidence/link-layout.md. It
+#: follows the import libraries, the position of the objects' default
+#: library, so the import thunks still precede the CRT.
+CRT_LIBRARY = "libcmt.lib"
+CRT_REPLACES = "libc.lib"
 
 #: The module definition: export directory (AppAbout, AppWndProc), module
 #: name and stack reserve - see the file's own header.
@@ -222,7 +234,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
                   f"BASE member(s) in {BASE_LIBRARY}, searched after "
                   f"{BASE_LIBRARY_AFTER}")
 
-    # No /ENTRY: LINK's default for /SUBSYSTEM:WINDOWS is LIBC's
+    # No /ENTRY: LINK's default for /SUBSYSTEM:WINDOWS is the CRT's
     # WinMainCRTStartup, and naming it up front pulls wincrt0.obj to the head
     # of the CRT, whereas retail's CRT begins with exsup.obj.
     rsp_lines = [
@@ -236,6 +248,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         # was linked with the default /OPT:REF: of the 196 import slots only
         # the 17 smkwai32/WING32 thunks that code calls directly survive.
         rsp_lines.append("/OPT:NOREF")
+    rsp_lines.append(f"/NODEFAULTLIB:{CRT_REPLACES}")
     rsp_lines += list(extra_flags)
 
     libs = list(extra_libs)
@@ -243,12 +256,12 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     available = {p.name.lower(): str(p) for p in made}
     available.update({p.name.lower(): str(p)
                       for _dll, _names, p in implib.survey() if p is not None})
-    for name in LINK_LIBS:
+    for name in (*LINK_LIBS, CRT_LIBRARY):
         if name not in available:
             path = implib.toolchain_lib(Path(name).stem)
             if path is not None:
                 available[name] = str(path)
-    libs += [available.get(n, n) for n in LINK_LIBS]       # substitute IN PLACE
+    libs += [available.get(n, n) for n in (*LINK_LIBS, CRT_LIBRARY)]  # substitute IN PLACE
     if members:
         base_lib = out.parent / BASE_LIBRARY
         at = next((i + 1 for i, x in enumerate(libs)

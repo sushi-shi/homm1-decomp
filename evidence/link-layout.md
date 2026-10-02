@@ -15,9 +15,9 @@ The candidate link itself (`homm1 link`) never uses `/FORCE`.
 - Only 17 jump thunks survive in the game band (smkwai32 x11 and WING32 x6 at
   0x00480188). Thunks for the other 179 import slots are absent, so retail was
   linked with the default `/OPT:REF`.
-- LIBC starts with exsup.obj at 0x004801f0. Naming `/ENTRY` pulls wincrt0.obj
-  first. Retail has wincrt0 after the CRT members that SOURCE references, so
-  the entry point was LINK's default.
+- The CRT starts with exsup.obj at 0x004801f0. Naming `/ENTRY` pulls
+  wincrt0.obj first. Retail has wincrt0 after the CRT members that SOURCE
+  references, so the entry point was LINK's default.
 
 ## SOURCE objects, then the BASE library
 
@@ -60,9 +60,38 @@ Every BASE C++ function begins on a 16-byte boundary with int3 fill. The
 constructor and `~font`, as in retail. The object comparison also gains five
 exact functions and loses one operand-order row (`GetBackdropAtLoc`).
 
+## C runtime: LIBCMT
+
+Retail links the VC4.0 multithreaded LIBCMT.LIB, not the single-threaded
+LIBC.LIB that the objects request. The pinned VC4.0 LIBC's tidtable.obj is
+empty, while retail carries LIBCMT's `_mtinit` (0x00484050: `_mtinitlocks`,
+`TlsAlloc`, a 0x74-byte `calloc`'d per-thread block, `TlsSetValue`,
+`GetCurrentThreadId`), `_initptd` and `_getptd` (`GetLastError`,
+`TlsGetValue`, ..., `SetLastError`). No `TlsFree` is imported: `_mtterm` has no
+caller in an executable. The DNA census masks relocations and compares
+retail's CRT band (0x004801f0 to the end of `.text`, 44700 bytes) with each
+library:
+
+| Library | exact bodies | exact bytes |
+| --- | --- | --- |
+| VC4.0 LIBC.LIB | 106 | 14686 |
+| VC4.0 LIBCMT.LIB | 189 | 35052 |
+
+The LIBCMT matches include `_lock`/`_unlock`, `_mtinitlocks`, the `*_lk`
+stream and low-level I/O variants and `_isctype`. Every `_isctype` caller is
+inside the CRT. No game function uses an `_MT`-dependent macro, so the game
+code cannot distinguish `/MT` objects from `/ML` objects linked with
+`/NODEFAULTLIB:libc.lib libcmt.lib`. The candidate link uses the latter
+and leaves compiler profiles unchanged. VC 2.x media hold only older LIBC
+revisions, and VC 4.1/4.2 postdate the February 1996 build, so no other CRT
+revision is needed. The evidence census rows carry the LIBCMT identities.
+
+With LIBCMT, the candidate imports exactly retail's 0x334-byte IAT.
+
 ## CRT member order
 
-The CRT member order matches retail, except where source spellings differ.
+With LIBC, the CRT member order matched retail except where source spellings
+differed.
 Under the measured pull rule, retail references `__chdir` directly before the
 entry point (kbwin uses `_chdir`, not OLDNAMES `chdir`) and `__stricmp`
 directly (from BASE). It reaches `_strrev` only through OLDNAMES, because
