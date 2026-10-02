@@ -3626,8 +3626,93 @@ done:
 // evidence: graph:4;base=0.364493;margin=0.061615;shape=0.277;size=0.633;calls=0.682;alternate=pol20:void advManager::ViewWorld(int, int, int)@0x000333c0
 // Retail loads sceninfo.bin and is called on gpGame with no arguments:
 // Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
+// Scenario-info labels: difficulty, human seat handicap, map size and map
+// difficulty names.
+extern char* gDifficultyNames[];
+extern char* gHandicapNames[];
+extern char* gMapSizeNames[];
+extern char* gMapDifficultyNames[];
+
 VA(0x004472d8, 0x44e)
-void game::ShowScenInfo(void) {}
+void game::ShowScenInfo(void) {
+    const char sizeId = 100;
+    const char mapLevelId = 101;
+    const char mapDescId = 102;
+    const char crestId = 103;
+    const char nameId = 104;
+    const char levelId = 105;
+    const char playersId = 106;
+    const char kingOfHillId = 107;
+    const char ratingId = 108;
+    char line1[20];
+    int difficulty;
+    heroWindow* scenWindow;
+    tag_message message;
+    short i;
+    short idx;
+    // Retail reserves one unused slot between the seat counters.
+    int pad;
+
+    gpMouseManager->SetPointer(0);
+    scenWindow = new heroWindow(159, 14, "sceninfo.bin");
+    if (!scenWindow)
+        MemError();
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = nameId;
+    message.payload.widget.data.text = m_mapName;
+    scenWindow->BroadcastMessage(message);
+    difficulty = m_difficulty;
+    if (giCurPlayer > 0)
+        difficulty = gpCurPlayer->m_color - 1;
+    message.payload.widget.id = levelId;
+    message.payload.widget.data.text = gDifficultyNames[difficulty];
+    scenWindow->BroadcastMessage(message);
+    message.payload.widget.id = playersId;
+    message.payload.widget.data.text = gText;
+    sprintf(gText, "");
+    for (i = 1; i < 4; i++) {
+        if (giCurPlayer == 0) {
+            sprintf(line1, "%s\n",
+                    gbHumanPlayer[i] ? gHandicapNames[m_players[i].m_color] : gPlayerTypeNames[m_players[i].m_color]);
+        } else if (i == 1) {
+            sprintf(line1, "%s\n", gHandicapNames[m_difficulty + 1]);
+        } else {
+            if (i - 1 >= giCurPlayer)
+                idx = i;
+            else
+                idx = i - 1;
+            sprintf(line1, "%s\n",
+                    gbHumanPlayer[idx] ? gHandicapNames[m_players[idx].m_color] : gPlayerTypeNames[m_players[idx].m_color]);
+        }
+        strcat(gText, line1);
+    }
+    scenWindow->BroadcastMessage(message);
+    message.payload.widget.id = kingOfHillId;
+    message.payload.widget.data.text = gText;
+    sprintf(gText, gbKingOfTheHill ? "Yes" : "No");
+    scenWindow->BroadcastMessage(message);
+    message.payload.widget.id = ratingId;
+    sprintf(gText, "%d%%", gpGame->m_difficultyRating);
+    message.payload.widget.data.text = gText;
+    scenWindow->BroadcastMessage(message);
+    message.payload.widget.id = sizeId;
+    message.payload.widget.data.text = gMapSizeNames[m_mapSize];
+    scenWindow->BroadcastMessage(message);
+    message.payload.widget.id = mapLevelId;
+    message.payload.widget.data.text = gMapDifficultyNames[m_mapDifficulty];
+    scenWindow->BroadcastMessage(message);
+    message.payload.widget.id = mapDescId;
+    message.payload.widget.data.text = m_mapDescription;
+    scenWindow->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    if (m_players[giCurPlayer].m_unknown11 != -1) {
+        message.payload.widget.id = crestId;
+        message.payload.widget.data.value = m_players[giCurPlayer].m_unknown11 * 2 + 11;
+        scenWindow->BroadcastMessage(message);
+    }
+    gpWindowManager->DoDialog(scenWindow, EventWindowHandler, 0);
+}
 
 // HoMM1 keeps the human's crest and gives each opponent a free one: the
 // campaign scenario's crest when it names one, else a random draw.
