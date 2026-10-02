@@ -1033,42 +1033,42 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
 
     switch (artifact) {
     case ARTIFACT_ULTIMATE_BOOK:
-        stat = 3;
+        stat = HERO_PRIMARY_KNOWLEDGE;
         amount = 12;
         break;
     case ARTIFACT_ULTIMATE_SWORD:
-        stat = 0;
+        stat = HERO_PRIMARY_ATTACK;
         amount = 12;
         break;
     case ARTIFACT_ULTIMATE_CLOAK:
-        stat = 1;
+        stat = HERO_PRIMARY_DEFENSE;
         amount = 12;
         break;
     case ARTIFACT_ULTIMATE_WAND:
-        stat = 2;
+        stat = HERO_PRIMARY_SPELL_POWER;
         amount = 12;
         break;
     case ARTIFACT_ARCANE_NECKLACE:
-        stat = 2;
+        stat = HERO_PRIMARY_SPELL_POWER;
         amount = 4;
         break;
     case ARTIFACT_CASTERS_BRACELET:
     case ARTIFACT_MAGES_RING:
-        stat = 2;
+        stat = HERO_PRIMARY_SPELL_POWER;
         amount = 2;
         break;
     case ARTIFACT_WITCHS_BROACH:
-        stat = 2;
+        stat = HERO_PRIMARY_SPELL_POWER;
         amount = 3;
         break;
     case ARTIFACT_THUNDER_MACE:
     case ARTIFACT_GIANT_FLAIL:
-        stat = 0;
+        stat = HERO_PRIMARY_ATTACK;
         amount = 1;
         break;
     case ARTIFACT_ARMORED_GAUNTLETS:
     case ARTIFACT_DEFENDER_HELM:
-        stat = 1;
+        stat = HERO_PRIMARY_DEFENSE;
         amount = 1;
         break;
     case ARTIFACT_BALLISTA:
@@ -1076,35 +1076,35 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
         amount = 3;
         break;
     case ARTIFACT_STEALTH_SHIELD:
-        stat = 1;
+        stat = HERO_PRIMARY_DEFENSE;
         amount = 2;
         break;
     case ARTIFACT_DRAGON_SWORD:
-        stat = 0;
+        stat = HERO_PRIMARY_ATTACK;
         amount = 3;
         break;
     case ARTIFACT_POWER_AXE:
-        stat = 0;
+        stat = HERO_PRIMARY_ATTACK;
         amount = 2;
         break;
     case ARTIFACT_DIVINE_BREASTPLATE:
-        stat = 1;
+        stat = HERO_PRIMARY_DEFENSE;
         amount = 3;
         break;
     case ARTIFACT_MINOR_SCROLL:
-        stat = 3;
+        stat = HERO_PRIMARY_KNOWLEDGE;
         amount = 2;
         break;
     case ARTIFACT_MAJOR_SCROLL:
-        stat = 3;
+        stat = HERO_PRIMARY_KNOWLEDGE;
         amount = 3;
         break;
     case ARTIFACT_SUPERIOR_SCROLL:
-        stat = 3;
+        stat = HERO_PRIMARY_KNOWLEDGE;
         amount = 4;
         break;
     case ARTIFACT_FOREMOST_SCROLL:
-        stat = 3;
+        stat = HERO_PRIMARY_KNOWLEDGE;
         amount = 5;
         break;
     case ARTIFACT_MEDAL_OF_VALOR:
@@ -1118,7 +1118,7 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
         amount = -amount;
     if (stat != -1) {
         targetHero->m_primaryStats[stat] += amount;
-        if (amount < 0 && stat == 3) {
+        if (amount < 0 && stat == HERO_PRIMARY_KNOWLEDGE) {
             for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
                 if (targetHero->m_spellCharges[i] > targetHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE])
                     targetHero->m_spellCharges[i] = targetHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE];
