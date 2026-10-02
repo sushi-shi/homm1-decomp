@@ -680,7 +680,7 @@ void philAI::DoAI(int player) {
                             break;
                         pathIndex--;
                     }
-                    if (aiHero->m_owner == -1)
+                    if (aiHero->m_owner == HERO_OWNER_NONE)
                         goto nextHero;
                     if (aiHero->m_remainingMobility <= aiHero->m_mobility >> 1 && !halfShown) {
                         halfShown = 1;
@@ -756,7 +756,8 @@ void philAI::GetTurnAIVars(int player) {
     int x;
     town* townPointer;
 
-    giCurTurn = gpGame->m_day + (gpGame->m_week - 1) * 7 + (gpGame->m_month - 1) * 28;
+    giCurTurn = gpGame->m_day + (gpGame->m_week - 1) * CALENDAR_DAYS_PER_WEEK
+        + (gpGame->m_month - 1) * CALENDAR_DAYS_PER_MONTH;
     GetTurnAttentionValue(player);
     TurnCostResource(player);
     iCurHourGlassPhase = 0;
@@ -2779,7 +2780,7 @@ void philAI::HeroInteractionAtTown(
                 else
                     estTransferValue -=
                         gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue * moveNum;
-                toArmy->Add(fromArmy->m_creatureTypes[pick], moveNum, -1);
+                toArmy->Add(fromArmy->m_creatureTypes[pick], moveNum, ARMY_GROUP_EMPTY_SLOT);
                 fromArmy->m_creatureCounts[pick] -= moveNum;
                 if (fromArmy->m_creatureCounts[pick] == 0)
                     fromArmy->m_creatureTypes[pick] = CREATURE_NONE;
@@ -2946,7 +2947,8 @@ void philAI::BuildHero(town* townPointer, short availableHeroIndex) {
     townPointer->m_occupyingHeroId = newHero->m_id;
     townPointer->GiveSpells();
     gpCurPlayer->m_availableHeroIds[availableHeroIndex] = gpGame->GetNewHeroId(Random(0, 3));
-    gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[availableHeroIndex]] = 0x40;
+    gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[availableHeroIndex]] =
+        HERO_AVAILABILITY_RETREATED;
     bHeroBuiltThisTurn = 1;
     ShowStatus();
 }
@@ -2973,7 +2975,7 @@ void philAI::BuildCreature(town* townPointer, int dwelling, int purchaseCount) {
     for (i = 0; i < RESOURCE_COUNT; i++)
         gpCurPlayer->m_resources[i] -= cost[i] * purchaseCount;
     townPointer->m_garrison[dwelling] -= purchaseCount;
-    townPointer->m_army.Add(creature, purchaseCount, -1);
+    townPointer->m_army.Add(creature, purchaseCount, ARMY_GROUP_EMPTY_SLOT);
     ShowStatus();
 }
 

@@ -25,11 +25,13 @@ H1_ENUM_CONST_END(ArmyGroupConstant)
 
 // IsHomogeneous' morale modifier by the number of races in the group (Buka
 // ArmyGroupAlignmentResult, same numbering); two races give no modifier.
+// Results above NO_BONUS_LAST are the one-race bonus (KB's morale help).
 H1_ENUM_BEGIN(ArmyGroupAlignmentResult)
     ARMY_GROUP_ALIGNMENT_FIVE_OR_MORE = -3,
     ARMY_GROUP_ALIGNMENT_FOUR = -2,
     ARMY_GROUP_ALIGNMENT_THREE = -1,
     ARMY_GROUP_ALIGNMENT_NO_MODIFIER = 0,
+    ARMY_GROUP_ALIGNMENT_NO_BONUS_LAST = 0,
     ARMY_GROUP_ALIGNMENT_SAME = 1
 H1_ENUM_END(ArmyGroupAlignmentResult)
 // clang-format on

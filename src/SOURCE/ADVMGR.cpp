@@ -67,21 +67,6 @@ H1_ENUM_CONST_BEGIN(AdventureBorderConstant)
     BORDER_BUFFER_SIZE = 0x7400
 H1_ENUM_CONST_END(AdventureBorderConstant)
 
-H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
-    LOCATOR_VISIBLE_COUNT = 4,
-    LOCATOR_PAGE_THRESHOLD = 5,
-    LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
-    LOCATOR_SCROLL_NO_PAGES_Y = 232,
-    // The knobs slide from SCROLL_BASE_Y over the hero (73) or town (74)
-    // span; a click on the track maps the 92-pixel strip from 194 to a page
-    // (Buka 2.1 AdventureLocatorConstant names).
-    LOCATOR_SCROLL_BASE_Y = 195,
-    LOCATOR_HERO_SCROLL_SPAN = 73,
-    LOCATOR_TOWN_SCROLL_SPAN = 74,
-    LOCATOR_SCROLL_MOUSE_BASE_Y = LOCATOR_SCROLL_BASE_Y - 1,
-    LOCATOR_SCROLL_MOUSE_SPAN = 92
-H1_ENUM_CONST_END(AdventureLocatorConstant)
-
 // adv_wind.bin hero locator rows: seven widgets per slot from
 // HERO_LOCATOR_WIDGET_BASE + slot * HERO_LOCATOR_WIDGET_STRIDE (UpdateHeroLocator);
 // +1 is the mobility bar, +2 the portrait, +5 the clickable
@@ -580,11 +565,6 @@ H1_ENUM_BEGIN(CloudNeighborMask)
     CLOUD_NORTH_EDGE = 0x91,
     CLOUD_WEST_EDGE = 0xc8
 H1_ENUM_END(CloudNeighborMask)
-
-H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
-    ADVMGR_PANEL_BUTTON_FIRST = 1,
-    ADVMGR_PANEL_BUTTON_LAST = 6
-H1_ENUM_CONST_END(AdventurePanelButtonConstant)
 
 // advManager::Main's right-click help on the six panel buttons: the
 // cAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,
@@ -1448,7 +1428,7 @@ short advManager::Main(struct tag_message& message) {
                         break;
                     case INPUT_SCAN_T:
                         if (gpCurPlayer->m_townCount >= 0) {
-                            if (gpCurPlayer->CurrentTown() == -1) {
+                            if (gpCurPlayer->CurrentTown() == GAME_TOWN_NONE) {
                                 townIndex = gpCurPlayer->m_townIds[0];
                             } else {
                                 townIndex = 0;
@@ -1470,7 +1450,7 @@ short advManager::Main(struct tag_message& message) {
                         SetHeroContext(gpCurPlayer->NextHero(0), 0);
                         break;
                     case INPUT_SCAN_ENTER:
-                        if (gpCurPlayer->CurrentTown() != -1) {
+                        if (gpCurPlayer->CurrentTown() != GAME_TOWN_NONE) {
                             m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                             DoAdvCommand();
                         } else if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
@@ -4384,7 +4364,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     if (gpGame->GetTown(townId)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
         message.value += TOWN_QUICK_CASTLE_FRAME_OFFSET;
     viewWin->BroadcastMessage(message);
-    if (townPointer->m_owner == -1) {
+    if (townPointer->m_owner == GAME_PLAYER_NONE) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = QUICK_VIEW_FLAG;
         message.value = WIDGET_FLAG_DRAW;
@@ -5726,7 +5706,7 @@ signed char SaveGame(void) {
         sprintf(searchMask, "*.GM*");
     }
     extern char gcGamePath[];
-    fileReq = new fileRequester(0xa0, 0x28, 1, searchMask, gcGamePath, extension);
+    fileReq = new fileRequester(0xa0, 0x28, FILE_REQUESTER_SAVE, searchMask, gcGamePath, extension);
     if (!fileReq)
         MemError();
     iResult = gpExec->DoDialog(fileReq);
@@ -7106,7 +7086,7 @@ void advManager::SetInitialMapOrigin(void) {
     m_lastHoverCell = m_hoverCellY = 0;
     m_cursorActive = 0;
     gbHeroMoving = 0;
-    if (gpCurPlayer->CurrentTown() != -1) {
+    if (gpCurPlayer->CurrentTown() != GAME_TOWN_NONE) {
         townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
         m_mapOriginX = townPointer->m_x - ADVMGR_VIEW_CENTER;
         m_mapOriginY = townPointer->m_y - ADVMGR_VIEW_CENTER;
