@@ -4043,7 +4043,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
     fileSize = FileSize(pathname);
     sendPacket = static_cast<char*>(malloc(0x100));
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         outData = static_cast<char*>(malloc(fileSize));
     fileData = static_cast<char*>(malloc(fileSize));
     fileHandle = open(pathname, O_BINARY);
@@ -4055,7 +4055,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     {
         read(fileHandle, fileData, fileSize);
         close(fileHandle);
-        if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
             fileSize = EncodeData(outData, fileData, fileSize);
         else
             outData = fileData;
@@ -4116,7 +4116,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
 
 cleanup:
     free(sendPacket);
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         free(outData);
     free(fileData);
     AiPrint("Transmit End");
@@ -4178,7 +4178,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     if (!result)
         ShutDown(NULL);
     memset(gotIt, 0, sizeof(gotIt));
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         decodedData = static_cast<char*>(malloc(0x130b0));
     sendPacket = static_cast<char*>(malloc(0x100));
     inData = static_cast<char*>(malloc(dataSize + 500));
@@ -4217,7 +4217,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
             }
         }
     }
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         dataSize = DecodeData(decodedData, inData);
     else
         decodedData = inData;
@@ -4231,7 +4231,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     okay = 1;
     free(sendPacket);
     free(inData);
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         free(decodedData);
     AiPrint("Receive End");
     if (gpAdvManager->m_active == 1) {
