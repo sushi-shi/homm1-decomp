@@ -9,6 +9,7 @@
 #include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/mapObjectTypes.h>
 
@@ -623,9 +624,6 @@ void philAI::GetGameAIVars(void) {
     for (i = 0; i < gpGame->m_playerCount; i++)
         GetGameAttentionValue(i);
 }
-
-// KB's King of the Hill flag (Buka gbIAmGreatest): only the top player is fair game.
-extern signed char gbKingOfTheHill;
 
 // donor PoL RVA 0x0003a329; preferred Buka symbol ?GetTurnAIVars@philAI@@QAEXH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
