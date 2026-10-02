@@ -47,11 +47,11 @@ float fWinChance;
 DATA(0x004af750)
 int iEventLoop;
 DATA(0x004af754)
-signed char giBuildShipyard[AI_PLAYER_COUNT];
+signed char giBuildShipyard[GAME_PLAYER_COUNT];
 DATA(0x004af758)
 int giMaxHeroesForThisPlayer;
 DATA(0x004af75c)
-signed char giBuildBoat[AI_PLAYER_COUNT];
+signed char giBuildBoat[GAME_PLAYER_COUNT];
 DATA(0x004af760)
 float fReduceFactor;
 DATA(0x004af764)
@@ -105,7 +105,7 @@ unsigned char giCurPlayerHighBit;
 DATA(0x004c2560)
 short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004c4de0)
-signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
+signed char giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 DATA(0x004c4de8)
 int iPlacesVisited[30][2];
 DATA(0x004c4ee4)
@@ -188,7 +188,7 @@ philAI::philAI() {
     int i;
 
     m_debugFont = NULL;
-    for (i = AI_PLAYER_BEGIN; i < AI_PLAYER_END; i++) {
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         giBuildShipyard[i] = -1;
         giBuildBoat[i] = -1;
         giBuildBoatStuffTurn[i] = 0;
@@ -311,7 +311,7 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
         if (gpAdvManager->ValidMoveWithEvent(pHero, dirIndex)) {
             x = normalDirTable[dirIndex].x + pHero->m_x;
             y = normalDirTable[dirIndex].y + pHero->m_y;
-            if ((gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_EVENT) && !(mapExtra[x][y] & 0x80)
+            if ((gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_EVENT) && !(mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
                 && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_STONE_LITHS
                 && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WHIRLPOOL) {
                 value = ValueOfEventAtPosition(pHero, x, y, 2, &iChance);
@@ -3560,7 +3560,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     if (gbBerserk && gbReduceByBerserk)
         iEventRV = static_cast<int>(iEventRV * fBerserkFactor);
     if (!immediate) {
-        if (iEventRV > 0 && (mapExtra[x][y] & 0x80) && (pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_MONSTER)
+        if (iEventRV > 0 && (mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT) && (pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_MONSTER)
             iEventRV = 0;
         if (iEventRV < 0 && (pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_HERO)
             iEventRV = 0;

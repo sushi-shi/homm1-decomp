@@ -502,7 +502,7 @@ movementDone:
     UpdateRadar(1, 1);
     gbHeroMoving = 0;
     if (movingHero->m_x != origX || movingHero->m_y != origY) {
-        if (mapExtra[movingHero->m_x][movingHero->m_y] & 0x80) {
+        if (mapExtra[movingHero->m_x][movingHero->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                 goto adjacentDone;
             if (retCell && static_cast<char>(retCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_SHIP)

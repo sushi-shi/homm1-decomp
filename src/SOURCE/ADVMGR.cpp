@@ -1504,7 +1504,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                     case MAP_OBJECT_COAST:
                         if (m_cursorType == 4)
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_DISEMBARK);
-                        else if (mapExtra[m_commandTargetX][m_commandTargetY] & 0x80)
+                        else if (mapExtra[m_commandTargetX][m_commandTargetY] & MAP_EXTRA_MONSTER_ADJACENT)
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                         else
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
@@ -1534,7 +1534,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                     default:
                     defaultHover:
                         trigType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-                        if ((mapExtra[m_commandTargetX][m_commandTargetY] & 0x80) && m_cursorType != 4
+                        if ((mapExtra[m_commandTargetX][m_commandTargetY] & MAP_EXTRA_MONSTER_ADJACENT) && m_cursorType != 4
                             && trigType != MAP_OBJECT_SKELETON && trigType != MAP_OBJECT_TREASURE_CHEST && trigType != MAP_OBJECT_CAMPFIRE && trigType != MAP_OBJECT_ANCIENT_LAMP
                             && trigType != MAP_OBJECT_RESOURCE && trigType != MAP_OBJECT_ARTIFACT) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
@@ -1586,7 +1586,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                                     gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ACTION);
                                     break;
                                 default:
-                                    if (mapExtra[m_commandTargetX][m_commandTargetY] & 0x80)
+                                    if (mapExtra[m_commandTargetX][m_commandTargetY] & MAP_EXTRA_MONSTER_ADJACENT)
                                         gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                                     else
                                         gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
