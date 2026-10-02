@@ -82,10 +82,10 @@ void advManager::StopCursor(signed char stopSound) {
         hLastMoveSound = NULL;
     }
     m_cursorCycle = 0;
-    if (m_previousCursorMapX != -1) {
+    if (m_previousCursorMapX != CURSOR_CELL_NONE) {
         m_mapData[m_mapOriginX + m_previousCursorMapX][m_mapOriginY + m_previousCursorMapY]
             .m_flags &= ~MAP_CELL_HERO_CURSOR;
-        m_previousCursorMapX = m_previousCursorMapY = -1;
+        m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
     }
     m_cursorTurning = 0;
 }
@@ -317,7 +317,7 @@ int advManager::GetMoveShowIt(signed char direction) {
     hero* movingHero;
     short dirX;
 
-    if (gpCurPlayer->CurrentHero() == -1)
+    if (gpCurPlayer->CurrentHero() == INVALID_HERO)
         return 0;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dirX = normalDirTable[direction].x;
@@ -570,7 +570,7 @@ mapCell* advManager::MoveHero(
                 m_updateMinY += yInc * pixelsPerStep;
             }
             if (ComboDraw(0)) {
-                giLimitUpdMinX = -1;
+                giLimitUpdMinX = UPDATE_NONE;
                 UpdateScreen(0, 0);
             }
             if (bShowIt)
@@ -652,7 +652,7 @@ movementDone:
                        == MAP_OBJECT_SHIP)
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
-            if (movingHero->m_owner == -1)
+            if (movingHero->m_owner == GAME_PLAYER_NONE)
                 retCell = NULL;
         }
     }
@@ -678,7 +678,14 @@ void advManager::CheckAdjacentMon(signed char* adjacentMonster) {
 
     theHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dead = 0;
-    if (FindAdjacentMonster(theHero->m_x, theHero->m_y, &monX, &monY, SEARCH_INVALID_COORDINATE, SEARCH_INVALID_COORDINATE)) {
+    if (FindAdjacentMonster(
+            theHero->m_x,
+            theHero->m_y,
+            &monX,
+            &monY,
+            SEARCH_INVALID_COORDINATE,
+            SEARCH_INVALID_COORDINATE
+        )) {
         StopCursor(1);
         CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
         UpdateScreen(0, 0);
@@ -829,7 +836,7 @@ void advManager::MoveOrigin(short directionX, short directionY) {
         cellX = m_cursorMapX + m_mapOriginX;
         cellY = m_cursorMapY + m_mapOriginY;
         m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
-        if (m_previousCursorMapX != -1) {
+        if (m_previousCursorMapX != CURSOR_CELL_NONE) {
             m_mapData[m_previousCursorMapX + oldOriginX][m_previousCursorMapY + oldOriginY]
                 .m_flags &= ~MAP_CELL_HERO_CURSOR;
             m_previousCursorMapX += directionX;

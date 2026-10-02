@@ -32,7 +32,9 @@ H1_ENUM_CONST_BEGIN(CDPlaybackConstant)
     SAMPLE_STATUS_DONE = 2,
     SAMPLE_VOLUME_TABLE_BYTES = 0x40,
     SOUND_STATE_RESET_SPAN = 0xae,
-    MUSIC_STOP_WAIT_MILLISECONDS = 5
+    MUSIC_STOP_WAIT_MILLISECONDS = 5,
+    // soundManager::m_auxDevice before CDStartup finds a CD-audio aux device.
+    CD_AUX_DEVICE_NONE = -1
 H1_ENUM_CONST_END(CDPlaybackConstant)
 
 H1_ENUM_CONST_BEGIN(SampleStreamConstant)

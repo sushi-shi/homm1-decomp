@@ -250,7 +250,6 @@ H1_ENUM_CONST_END(AdventureDrawConstant)
 // no limit box means the whole 448-pixel viewport at 16,16; odd steps
 // advance columns 1 and 3, even ones 0 and 2, each modulo 6 frames.
 H1_ENUM_CONST_BEGIN(AdventureUpdateScreenConstant)
-    UPDATE_NONE = -1,
     UPDATE_VIEWPORT_ORIGIN = 16,
     UPDATE_VIEWPORT_SIZE = 448,
     UPDATE_ANIMATION_PHASES = 6,
@@ -4746,7 +4745,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     m_mapOriginX = currentHero->m_x - ADVMGR_VIEW_CENTER;
     m_mapOriginY = currentHero->m_y - ADVMGR_VIEW_CENTER;
     m_cursorMapX = m_cursorMapY = ADVMGR_VIEW_CENTER;
-    m_previousCursorMapX = m_previousCursorMapY = CURSOR_INVALID_POSITION;
+    m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
     if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
         m_cursorType = ADVMGR_HERO_ICON_BOAT;
     else
@@ -6067,9 +6066,9 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
     DIMENSION_DOOR_LAST_BUTTON = 11,
     TOWN_PORTAL_DISTANCE_LIMIT = 1000
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
-// clang-format on
+ // clang-format on
 
-VA(0x004337c5, 0x34b)
+ VA(0x004337c5, 0x34b)
 short DimensionDoorHandler(struct tag_message& message) {
     signed char result;
     short mouseX;

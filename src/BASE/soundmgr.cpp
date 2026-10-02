@@ -69,7 +69,7 @@ inline void soundManager::ValidatePreviousPosition(int track) {
 inline void soundManager::CDSetVolume(int volume, int fadeScale) {
     int level;
     unsigned long stereoVolume;
-    if (gbNoSound != 0 || m_auxDevice == -1)
+    if (gbNoSound != 0 || m_auxDevice == CD_AUX_DEVICE_NONE)
         return;
     if (volume == SOUND_VOLUME_FROM_CONFIG)
         level = gConfig.musicVolume;
@@ -138,7 +138,7 @@ unsigned long soundManager::CDStartup(void) {
     }
     m_cdStarted = 1;
     numDevices = auxGetNumDevs();
-    m_auxDevice = -1;
+    m_auxDevice = CD_AUX_DEVICE_NONE;
     for (device = 0; device < numDevices; device++) {
         memset(&gAuxCaps, 0, sizeof(gAuxCaps));
         auxGetDevCapsA(device, &gAuxCaps, sizeof(gAuxCaps));
@@ -164,7 +164,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     HWND newWindow;
     if (gbNoSound != 0 || gConfig.musicVolume == 0)
         return;
-    if (track == -1) {
+    if (track == MUSIC_TRACK_NONE) {
         CDStop();
         return;
     }
@@ -353,7 +353,7 @@ short soundManager::Open(short) {
         WritePrefs();
     }
     m_cdReady = gConfig.musicSource == SOUND_MUSIC_SOURCE_CD;
-    m_currentTrack = -1;
+    m_currentTrack = MUSIC_TRACK_NONE;
     if (gbNoSound != 0)
         goto managerReady;
     m_pollToggle = m_pollDue = m_pollRequested = 0;
@@ -742,7 +742,7 @@ void soundManager::SetMusicQuality(int musicSource) {
             fclose(m_midiFile);
         m_midiFile = NULL;
     } else {
-        track = -1;
+        track = MUSIC_TRACK_NONE;
     }
     memset(m_savedTrackPositions, 0, sizeof(m_savedTrackPositions));
     gConfig.musicSource = musicSource;
@@ -915,7 +915,7 @@ void soundManager::PollSound(void) {
             if (volume < 0)
                 volume = 0;
 
-            if (gbNoSound == 0 && m_auxDevice != -1) {
+            if (gbNoSound == 0 && m_auxDevice != CD_AUX_DEVICE_NONE) {
                 if (volume == SOUND_VOLUME_FROM_CONFIG)
                     volume = gConfig.musicVolume;
                 unsigned long stereoVolume;

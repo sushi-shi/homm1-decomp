@@ -176,9 +176,9 @@ H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
 H1_ENUM_CONST_END(AdventurePanelButtonConstant)
-// clang-format on
+                            // clang-format on
 
-struct adventureSoundCell {
+                            struct adventureSoundCell {
     int soundId;
     int volume;
 };
@@ -502,8 +502,8 @@ extern int gbNoBorder;
 H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
     FORCED_MUSIC_IDLE = -1
 H1_ENUM_CONST_END(ForcedMusicConstant)
-// clang-format on
-extern long giForceSwitchMusic;
+                  // clang-format on
+                  extern long giForceSwitchMusic;
 extern long iLastScrollTime;
 extern int gbForceUpdate;
 extern int gbAllBlack;
@@ -551,7 +551,17 @@ extern const long glEnvironmentVolume[];
 extern signed char gRouteFrame[][8];
 // Per hero type scouting radius used by TeleportTo.
 extern signed char gHeroScoutRadius[];
-extern int giLimitUpdMinX;
+// clang-format off
+// giLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
+// whole viewport), and m_previousCursorMapX/Y with no hero-cursor cell to
+// clear (Buka 2.1 AdventureUpdateScreenConstant UPDATE_NONE).
+H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
+    UPDATE_NONE = -1,
+    CURSOR_CELL_NONE = -1
+H1_ENUM_CONST_END(AdventureUpdateLimitConstant)
+                                // clang-format on
+
+                                extern int giLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;
 extern int giLimitUpdMaxY;
