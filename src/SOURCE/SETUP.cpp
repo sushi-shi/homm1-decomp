@@ -462,12 +462,13 @@ signed char game::PickLoadGame(void) {
         return 0;
     if (gbWaitForRemoteReceive)
         return 1;
+    extern char gcGamePath[];
     request = new fileRequester(
         0x136,
         0xe,
         0,
         giCampaignChoice > 0 ? "*.CGM" : "*.GM*",
-        ".\\GAMES\\",
+        gcGamePath,
         giCampaignChoice > 0 ? ".CGM" : ".GM*"
     );
     if (!request)
