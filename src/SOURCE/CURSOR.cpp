@@ -242,11 +242,11 @@ void advManager::TurnTo(signed char direction)
         UpdateScreen(0, 0);
 }
 
-extern unsigned char giCurWatchPlayerBit;
-extern int gbHideComputerMoves;
+extern unsigned char giCurWatchPlayerHighBit;
 
 // Buka CURSOR.cpp:429 GetMoveShowIt; HoMM1 reads the current hero itself
-// and tests the watch bit directly in the map-extra grid.
+// and tests the watch player's high bit (0x004be7cc) directly in the
+// map-extra grid.
 VA(0x004064d6, 0x136)
 int advManager::GetMoveShowIt(signed char direction)
 {
@@ -259,11 +259,11 @@ int advManager::GetMoveShowIt(signed char direction)
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dirX = normalDirTable[direction].x;
     dy = normalDirTable[direction].y;
-    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gbHideComputerMoves))
+    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gbRemoteOn))
         && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y]
-             & giCurWatchPlayerBit)
+             & giCurWatchPlayerHighBit)
             || (gpGame->m_mapExtra[movingHero->m_x + dirX][movingHero->m_y + dy]
-                & giCurWatchPlayerBit)))
+                & giCurWatchPlayerHighBit)))
         return 1;
     else
         return 0;
