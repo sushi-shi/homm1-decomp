@@ -985,7 +985,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     COMBAT_RANDOM_SEED_NEW,
                     1
                 );
-                if (res == COMBAT_ATTACKER_SIDE && occupiedTown)
+                if (res == COMBAT_RESULT_ATTACKER && occupiedTown)
                     gpGame->ClaimTown(occupiedTown->m_id, giCurPlayer);
             }
             break;
@@ -1312,7 +1312,7 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
             COMBAT_RANDOM_SEED_NEW,
             1
         );
-        if (result == COMBAT_ATTACKER_SIDE)
+        if (result == COMBAT_RESULT_ATTACKER)
             gpGame->ClaimTown(townRec->m_id, giCurPlayer);
     } else {
         gpGame->ClaimTown(townRec->m_id, giCurPlayer);
@@ -2449,7 +2449,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     COMBAT_RANDOM_SEED_NEW,
                     1
                 );
-                if (res == COMBAT_ATTACKER_SIDE && theCastle)
+                if (res == COMBAT_RESULT_ATTACKER && theCastle)
                     gpGame->ClaimTown(theCastle->m_id, giCurPlayer);
             }
             CompleteDraw(0);
@@ -2569,7 +2569,7 @@ void advManager::PlayerMonsterInteract(
         combatX,
         combatY
     );
-    if (result == COMBAT_ATTACKER_SIDE || result == COMBAT_SIDE_NONE)
+    if (result == COMBAT_RESULT_ATTACKER || result == COMBAT_RESULT_DRAW)
         *handled = 1;
 }
 
@@ -2940,21 +2940,21 @@ combatFinished:
         secondHero->CheckLevel();
     if (processLosses) {
         switch (gpCombatManager->m_combatResult) {
-            case COMBAT_ATTACKER_SIDE:
+            case COMBAT_RESULT_ATTACKER:
                 if (!gbRetreatWin)
                     TransferArtifacts(secondHero, firstHero);
                 HeroLoses(secondHero);
                 break;
-            case COMBAT_DEFENDER_SIDE:
+            case COMBAT_RESULT_DEFENDER:
                 if (!gbRetreatWin)
                     TransferArtifacts(firstHero, secondHero);
                 HeroLoses(firstHero);
                 break;
-            case COMBAT_SIDE_NONE:
+            case COMBAT_RESULT_DRAW:
                 HeroLoses(firstHero);
                 HeroLoses(secondHero);
                 break;
-            case 3:
+            case COMBAT_RESULT_PENDING:
                 break;
         }
     }
