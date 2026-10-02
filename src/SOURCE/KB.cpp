@@ -16,6 +16,7 @@
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/smackManager.h>
@@ -1454,7 +1455,186 @@ signed char WaitForOtherPlayer(void) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
 VA(0x0045485b, 0x6f4)
-void PopNetBox(char *) {}
+void PopNetBox(char* notice) {
+    char* data;
+    signed char blinkState;
+    signed char drawLines;
+    signed char bClose;
+    int firstId;
+    font* font;
+    signed char shown;
+    int pause;
+    int lineTextLimit;
+    signed char exitForIncomingData;
+    signed char sendText;
+    tag_message incoming;
+    tag_message message;
+    int len;
+    char text[80];
+    signed char oldShowIt;
+    signed char updateInput;
+    int lineHeight;
+    long msgTime;
+    heroWindow* netWin;
+    int success;
+    int textWidth;
+
+    if (!gbRemoteOn)
+        return;
+    lineTextLimit = 60;
+    firstId = 1;
+    lineHeight = 42;
+    font = gpResourceManager->GetFont("bigfont.fnt");
+    msgTime = 0;
+    if (notice) {
+        AddNetBoxLine(notice);
+        msgTime = KBTickCount();
+    }
+    len = 0;
+    shown = gpMouseManager->IsVis();
+    oldShowIt = bShowIt;
+    bShowIt = 1;
+    netWin = new heroWindow(0, 418, "netbox.bin");
+    if (!netWin)
+        MemError();
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = cNetBoxLine[0];
+    netWin->BroadcastMessage(message);
+    message.payload.widget.id = 2;
+    message.payload.widget.data.text = cNetBoxLine[1];
+    netWin->BroadcastMessage(message);
+    gpWindowManager->AddWindow(netWin, -1, 1);
+    gpMouseManager->ReallyHidePointer();
+    exitForIncomingData = 0;
+    bClose = 0;
+    updateInput = 1;
+    blinkState = 0;
+    sendText = 0;
+    drawLines = 1;
+    strcpy(text, "");
+    gpInputManager->SetKeyCodeType(0);
+
+    while (!bClose) {
+        PollSound();
+        data = GetRemoteData(0);
+        if (data) {
+            if (reinterpret_cast<RemoteMessage*>(data)->type != REMOTE_MESSAGE_RELIABLE) {
+                data = GetRemoteData(1);
+            } else {
+                switch (reinterpret_cast<RemoteMessage*>(data)->command) {
+                    case 11:
+                        data = GetRemoteData(1);
+                        AddNetBoxLine(reinterpret_cast<RemoteMessage*>(data)->payload.data);
+                        drawLines = 1;
+                        if (msgTime)
+                            msgTime = KBTickCount();
+                        break;
+                    default:
+                        AddNetBoxLine("[ Incoming data, must exit... ]");
+                        drawLines = 1;
+                        exitForIncomingData = 1;
+                        break;
+                }
+            }
+        }
+
+        Process1WindowsMessage();
+        incoming = gpInputManager->GetEvent();
+        switch (incoming.type) {
+            case MESSAGE_KEY_DOWN:
+                msgTime = 0;
+                switch (incoming.payload.keyboard.keyCode) {
+                    case 0x1b:
+                    case 0x3b00:
+                        bClose = 1;
+                        break;
+                    case 0x7f:
+                        if (len > 0)
+                            len--;
+                        updateInput = 1;
+                        blinkState = 1;
+                        break;
+                    case 10:
+                        sendText = 1;
+                        break;
+                    default:
+                        if (len < 58 && incoming.payload.keyboard.keyCode) {
+                            text[len] = 0;
+                            textWidth = font->LineWidth(text);
+                            if (textWidth + 30 < 610) {
+                                text[len] = incoming.payload.keyboard.keyCode;
+                                len++;
+                                updateInput = 1;
+                                blinkState = 0;
+                            }
+                        }
+                }
+        }
+
+        if (!updateInput && KBTickCount() > glTimers[0]) {
+            blinkState = 1 - blinkState;
+            updateInput = 1;
+        }
+        if (sendText) {
+            sendText = 0;
+            text[len] = 0;
+            AddNetBoxLine(text);
+            success = TransmitRemoteData(text, REMOTE_BROADCAST_PLAYER, strlen(text) + 1, 11, 1, 1, -1, 1);
+            if (!success)
+                ShutDown(0);
+            len = 0;
+            strcpy(text, "");
+            updateInput = 1;
+            drawLines = 1;
+        }
+        if (drawLines) {
+            drawLines = 0;
+            message.type = MESSAGE_WIDGET;
+            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+            message.payload.widget.id = 1;
+            message.payload.widget.data.text = cNetBoxLine[0];
+            netWin->BroadcastMessage(message);
+            message.payload.widget.id = 2;
+            message.payload.widget.data.text = cNetBoxLine[1];
+            netWin->BroadcastMessage(message);
+            netWin->DrawWindow();
+            gpWindowManager->UpdateScreenRegion(0, 418, 639, 61);
+        }
+        if (updateInput) {
+            updateInput = 0;
+            glTimers[0] = KBTickCount() + 360;
+            if (blinkState)
+                text[len] = '_';
+            else
+                text[len] = ' ';
+            text[len + 1] = 0;
+            message.type = MESSAGE_WIDGET;
+            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+            message.payload.widget.id = 3;
+            message.payload.widget.data.text = text;
+            netWin->BroadcastMessage(message);
+            netWin->DrawWindow();
+            gpWindowManager->UpdateScreenRegion(0, 460, 639, 16);
+        }
+        if (msgTime && KBTickCount() > msgTime + 6000)
+            bClose = 1;
+        if (exitForIncomingData) {
+            for (pause = 0; pause < 30; pause++) {
+                PollSound();
+                DelayMilli(90);
+            }
+            bClose = 1;
+        }
+    }
+    gpInputManager->SetKeyCodeType(1);
+    gpWindowManager->RemoveWindow(netWin);
+    bShowIt = oldShowIt;
+    if (shown)
+        gpMouseManager->ReallyShowPointer();
+    gpResourceManager->Dispose(font);
+}
 
 // Buka 2.1 AddNetBoxLine reduced to HoMM1's two uncoloured lines.
 VA(0x00454f4f, 0x3b)
