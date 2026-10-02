@@ -245,10 +245,13 @@ def prune_orphan_artifacts(units: list[dict]) -> int:
 # the graph
 # --------------------------------------------------------------------------- #
 def era_rc_available() -> bool:
-    """Whether the installed VC4 tree can compile the optional resources."""
+    """Whether the installed VC4 tree carries the pinned RC/CVTRES and the
+    resource script exists, so the candidate can link its `.rsrc`."""
     try:
-        from homm1.tool.wine import find_ci
-        return find_ci(msvc_dir() / "bin", "rc.exe") is not None
+        from homm1 import toolchain
+        from homm1.tool.rc import RESOURCE_TOOLCHAIN
+        return ((REPO / graph.RESOURCE_SCRIPT).is_file()
+                and toolchain.resources_installed(RESOURCE_TOOLCHAIN, msvc_dir()))
     except OSError:
         return False
 
@@ -313,12 +316,19 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
 
     with_res = era_rc_available()
     if with_res:
-        w.rule("rc", command="$py -m homm1.tool.rc --out $out --src $in",
+        # The retail image supplies the icon (staged, never committed) and
+        # is the payload gate.
+        w.rule("rc", command=(f"$py -m homm1.tool.rc --out $out --src $in "
+                              f"--verify-exe {RETAIL_EXE} "
+                              f"--report {graph.RESOURCE_REPORT}"),
                description="rc $out")
         w.build(graph.RESOURCE_RES, "rc", inputs=graph.RESOURCE_SCRIPT,
-                implicit=_mods("tool/rc.py") + TOOL_MODS)
+                implicit=[RETAIL_EXE, graph.TOOLCHAIN_ID]
+                         + _mods("tool/rc.py", "core/pe.py", "toolchain.py")
+                         + TOOL_MODS)
     else:
-        w.comment("VC4 tree has no RC.EXE; candidate links without resources")
+        w.comment("VC4 tree has no pinned RC.EXE/CVTRES.EXE; candidate links "
+                  "without resources")
     res_flag = f" --res {graph.RESOURCE_RES}" if with_res else ""
     w.rule("link",
            command=(f"$py -m homm1.graph.link --out {graph.CANDIDATE_EXE} "

@@ -301,15 +301,14 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     if res is not None and not has_rsrc(out):
         raise ToolError(
             f"{out.name} has no .rsrc although --res {res} was on the link "
-            "line. Every MFC dialog is created from a DIALOG resource, so this "
-            "binary has no working settings/multiplayer/save screens.")
+            "line: the game window would have no icon, menus or About box.")
     if res is None:
         # The image is knowingly incomplete and nothing else says so: the
         # configure-time explanation lives in a generated manifest nobody
         # reads, and the .map - which is what phase 2 is for - is unaffected.
-        print(f"[link] no .res on the link line, so {out.name} has NO .rsrc: "
-              "every MFC dialog is created from a DIALOG resource, so the "
-              "image is a link-ORDER artifact (the .map), not a runnable game.")
+        print(f"[link] no .res on the link line, so {out.name} has NO .rsrc "
+              "(icon, MNU* menus, HEROES About dialog): the image is a "
+              "link-ORDER artifact (the .map), not a runnable game.")
 
     # No /FORCE: an unresolved extern or a duplicate FAILS the link above, so
     # reaching here means both are zero. They are still reported (and asserted)

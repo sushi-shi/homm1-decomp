@@ -52,6 +52,30 @@ def verify(name, directory=None):
     return _verify_entries(name, directory, _entries(config))
 
 
+def resource_entries(name):
+    """The resource compiler pair (RC.EXE + RCDLL.DLL) and CVTRES.EXE, which
+    LINK runs on a .res input. They come from the same pinned media but are
+    not part of the compiler release bundle, so the compiler verification
+    does not require them."""
+    return dict(pins()[name].get('resource_files', {}))
+
+
+def verify_resources(name, directory=None):
+    entries = resource_entries(name)
+    if not entries:
+        raise ValueError(f'{name}: no resource compiler is pinned')
+    return _verify_entries(name, directory or root(name), entries)
+
+
+def resources_installed(name, directory=None):
+    """True when every pinned resource tool is present with its pinned hash."""
+    try:
+        verify_resources(name, directory)
+    except (KeyError, ValueError):
+        return False
+    return True
+
+
 def install(name, media):
     config = pins()[name]
     if digest(media) != config['media']['sha256']:
@@ -61,22 +85,23 @@ def install(name, media):
         raise ValueError('7z is required to extract compiler media; enter nix develop .#build')
     destination = root(name)
     destination.parent.mkdir(parents=True, exist_ok=True)
+    files = {**config['files'], **config.get('resource_files', {})}
     # Extract only known compiler components; installation media is never executed.
     with tempfile.TemporaryDirectory(prefix=f'.{name}-', dir=destination.parent) as scratch:
         scratch = Path(scratch)
         extraction = scratch / 'media'
         subprocess.run([sevenzip, 'x', '-y', f'-o{extraction}', str(media.resolve()),
-                        *[entry['media_path'] for entry in config['files'].values()]],
+                        *[entry['media_path'] for entry in files.values()]],
                        check=True, stdout=subprocess.DEVNULL)
         staged = scratch / 'toolchain'
-        for relative, entry in config['files'].items():
+        for relative, entry in files.items():
             target = staged / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(extraction / entry['media_path'], target)
-        _verify_entries(name, staged, config['files'])
+        _verify_entries(name, staged, files)
         if destination.exists():
             # Repair individual files atomically; never remove unrelated files.
-            for relative in config['files']:
+            for relative in files:
                 target = destination / relative
                 target.parent.mkdir(parents=True, exist_ok=True)
                 os.replace(staged / relative, target)
@@ -142,6 +167,11 @@ def install_release(archive=None):
             if previous.exists():
                 shutil.rmtree(previous)
     print(f'toolchain release {RELEASE_TAG} verified and installed')
+    for name in RELEASE_COMPONENTS:
+        if resource_entries(name) and not resources_installed(name):
+            print(f'{name}: the release carries no resource compiler; '
+                  f'`homm1 toolchain install {name} --media <iso>` adds the '
+                  'pinned RC.EXE/CVTRES.EXE for the candidate .rsrc')
 
 
 def command(args):
@@ -156,6 +186,10 @@ def command(args):
     else:
         verify(args.id)
         print(f'{args.id}: all pinned compiler files verified')
+        if resource_entries(args.id):
+            state = ('verified' if resources_installed(args.id) else
+                     'not installed (install from the media to link .rsrc)')
+            print(f'{args.id}: resource compiler and CVTRES {state}')
 
 
 def library_symbols(name):

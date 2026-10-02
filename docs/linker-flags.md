@@ -27,3 +27,18 @@ name and stack reserve. There is no `/ENTRY`, and retail's `/OPT:REF` is the
 default (`--keep-all` restores `/OPT:NOREF`). See
 [link layout](../evidence/link-layout.md). When a link fails, the full log and
 the decorated unresolved list stay in `build/exe/`.
+
+## Resources
+
+`src/SOURCE/Heroes.rc` holds all seven retail resource payloads: the icon,
+the `HEROES` About dialog and the menus `MNUADV`, `MNUDFLT`, `MNUCMBT` and
+`MNUTOWN`, in retail payload order. The `rc` edge compiles it with the pinned
+VC4 `RC.EXE` to `build/gen/heroes.res`. The icon is rebuilt from the user's
+retail image in a temporary stage, and every payload is compared with retail
+(report: `build/gen/heroes.res.json`). LINK converts the `.res` with
+`CVTRES.EXE`, which it finds on the wine `PATH` beside `LINK.EXE`.
+
+The edge exists only when the vc40 `resource_files` are installed. The
+compiler release bundle does not carry them, so run
+`homm1 toolchain install --id vc40 --media build/downloads/MSVC40.iso`.
+`homm1 toolchain check` reports their state.

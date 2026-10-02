@@ -67,3 +67,18 @@ Under the measured pull rule, retail references `__chdir` directly before the
 entry point (kbwin uses `_chdir`, not OLDNAMES `chdir`) and `__stricmp`
 directly (from BASE). It reaches `_strrev` only through OLDNAMES, because
 `strrev` is pulled last.
+
+## Resources
+
+Retail `.rsrc` (0x000d8000, 0x1728 bytes) holds seven payloads, all language
+1033, in this data order: `RT_ICON` 1 (32x32, 16 colors), `RT_GROUP_ICON`
+`HEROES`, `RT_DIALOG` `HEROES`, and the `RT_MENU` resources `MNUADV`,
+`MNUDFLT`, `MNUCMBT` and `MNUTOWN`. LINK/CVTRES place data in `.res` record
+order. The directories sort names alphabetically, so the data order is the
+resource-script statement order. `src/SOURCE/Heroes.rc` compiled by the VC4
+RC.EXE reproduces all seven payloads. Linked into a diagnostic image, its
+`.rsrc` has retail's size and equals retail byte-for-byte once data-entry
+RVAs are taken relative to the section, except the 12 directory
+`TimeDateStamp` fields. CVTRES writes its conversion time there, and retail's
+0x31104c71 lies 4 seconds before the PE header stamp 0x31104c75, so these
+fields are build-time values like the header stamp.
