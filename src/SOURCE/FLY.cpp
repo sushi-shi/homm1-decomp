@@ -17,7 +17,7 @@ short army::CanFit(short* hex)
     short candidateHex;
 
     candidateHex = *hex;
-    cell = 0;
+    cell = NULL;
     if (!ValidHex(candidateHex) || candidateHex % 9 == 0 || candidateHex % 9 == 8)
         return 0;
     if (gpCombatManager->m_hexCells[candidateHex].m_occupantSide != -1

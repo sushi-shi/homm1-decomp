@@ -5,22 +5,23 @@
 
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/creatureTypes.h>
 
 // forward declarations:
 class hero;
 class town;
 
 // clang-format off
-H1_ENUM_BEGIN(ArmyGroupConstant)
+H1_ENUM_CONST_BEGIN(ArmyGroupConstant)
     ARMY_GROUP_SLOT_COUNT = 5
-H1_ENUM_END(ArmyGroupConstant)
+H1_ENUM_CONST_END(ArmyGroupConstant)
 // clang-format on
 
 #pragma pack(push, 1)
 class armyGroup {
 public:
     // Retail constructor clears five signed type bytes, then five short counts.
-    signed char m_creatureTypes[5];
+    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureTypes[5];
     short m_creatureCounts[5];
     // --- constructors ---
     armyGroup(void);

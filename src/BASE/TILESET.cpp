@@ -11,7 +11,7 @@
 
 VA(0x0047f970, 0xb0)
 tileset::tileset(short id)
-    : resource(RESOURCE_CATEGORY_TILESET, id, 1, 0)
+    : resource(RESOURCE_CATEGORY_TILESET, id, 1, NULL)
 {
     gpResourceManager->PointToFile(id);
     m_tileCount = gpResourceManager->ReadWord();

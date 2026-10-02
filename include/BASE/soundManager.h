@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-H1_ENUM_BEGIN(SoundManagerConstant)
+H1_ENUM_CONST_BEGIN(SoundManagerConstant)
     MUSIC_TRACK_COUNT = 60,
     MUSIC_POSITION_TRACK_END = 7,
     MUSIC_POSITION_TRACK_1 = 47,
@@ -29,16 +29,16 @@ H1_ENUM_BEGIN(SoundManagerConstant)
     MUSIC_STREAM_BUFFER_SIZE = 0x4000,
     MUSIC_STREAM_RATE = 22050,
     SAMPLE_STATUS_PLAYING = 4
-H1_ENUM_END(SoundManagerConstant)
+H1_ENUM_CONST_END(SoundManagerConstant)
 
-H1_ENUM_BEGIN(SoundStartupConstant)
+H1_ENUM_CONST_BEGIN(SoundStartupConstant)
     SOUND_SAMPLE_HANDLE_COUNT = 15,
     SOUND_MANAGER_PRIORITY = -1,
     SOUND_MUSIC_SOURCE_DIGITAL = 0,
     SOUND_MUSIC_SOURCE_CD = 2,
     SOUND_DEFAULT_SAMPLE_BITS = 8,
     SOUND_DEFAULT_SAMPLE_CHANNELS = 1
-H1_ENUM_END(SoundStartupConstant)
+H1_ENUM_CONST_END(SoundStartupConstant)
 
 // forward declarations:
 class sample;

@@ -4,7 +4,9 @@
 #include <Domains.h>
 
 // HoMM1 creature order: six per faction, then the four neutral types.
+// armyGroup and army slots mark an empty stack with -1.
 H1_ENUM_BEGIN(CreatureType)
+    CREATURE_NONE = -1,
     CREATURE_PEASANT = 0,
     CREATURE_ARCHER = 1,
     CREATURE_PIKEMAN = 2,

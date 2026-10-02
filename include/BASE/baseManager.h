@@ -19,9 +19,9 @@ H1_ENUM_BEGIN(BaseManagerMessageMask)
     BASE_MANAGER_ACCEPT_EXECUTIVE = 0x4000
 H1_ENUM_END(BaseManagerMessageMask)
 
-H1_ENUM_BEGIN(BaseManagerConstant)
+H1_ENUM_CONST_BEGIN(BaseManagerConstant)
     BASE_MANAGER_NAME_CAPACITY = 30
-H1_ENUM_END(BaseManagerConstant)
+H1_ENUM_CONST_END(BaseManagerConstant)
 
 #pragma pack(push, 1)
 class baseManager {

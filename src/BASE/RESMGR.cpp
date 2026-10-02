@@ -33,8 +33,8 @@ VA(0x00475830, 0x9b)
 resourceManager::resourceManager(void) : baseManager()
 {
     m_active = 0;
-    m_resourceListHead = 0;
-    m_aggregateDir = 0;
+    m_resourceListHead = NULL;
+    m_aggregateDir = NULL;
     m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
     m_aggregateEntryCount = 0;
     m_expunging = 0;
@@ -89,7 +89,7 @@ palette *resourceManager::GetPalette(char *name)
 {
     short fileId = MakeId(name);
     resource *resourceEntry = Query(fileId);
-    if (resourceEntry != 0) {
+    if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
         return static_cast<palette *>(resourceEntry);
     } else {
@@ -104,7 +104,7 @@ bitmap *resourceManager::GetBitmap(char *name)
 {
     short id = MakeId(name);
     resource *resourceEntry = Query(id);
-    if (resourceEntry != 0) {
+    if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
         return static_cast<bitmap *>(resourceEntry);
     } else {
@@ -127,7 +127,7 @@ VA(0x00475b70, 0x86)
 icon *resourceManager::GetIcon(short fileId)
 {
     icon *iconEntry = static_cast<icon *>(Query(fileId));
-    if (iconEntry != 0) {
+    if (iconEntry != NULL) {
         iconEntry->m_refCount++;
         return iconEntry;
     } else {
@@ -142,7 +142,7 @@ tileset *resourceManager::GetTileset(char *name)
 {
     short fileId = MakeId(name);
     resource *resourceEntry = Query(fileId);
-    if (resourceEntry != 0) {
+    if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
         return static_cast<tileset *>(resourceEntry);
     } else {
@@ -157,7 +157,7 @@ font *resourceManager::GetFont(char *name)
 {
     short resourceId = MakeId(name);
     resource *fontEntry = Query(resourceId);
-    if (fontEntry != 0) {
+    if (fontEntry != NULL) {
         fontEntry->m_refCount++;
         return static_cast<font *>(fontEntry);
     } else {
@@ -173,7 +173,7 @@ class sample *resourceManager::GetSample(char *name)
 {
     short fileId = MakeId(name);
     resource *resourceEntry = Query(fileId);
-    if (resourceEntry != 0) {
+    if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
         return static_cast<sample *>(resourceEntry);
     } else {
@@ -191,7 +191,7 @@ void resourceManager::Dispose(class resource *resourceToDispose)
 {
     if (m_expunging != 0)
         return;
-    if (resourceToDispose != 0) {
+    if (resourceToDispose != NULL) {
         resourceToDispose->m_refCount--;
         if (resourceToDispose->m_refCount > 0) {
             return;
@@ -208,9 +208,9 @@ void resourceManager::Dispose(class resource *resourceToDispose)
 VA(0x00475e70, 0x55)
 void resourceManager::AddResource(class resource *newResource)
 {
-    if (m_resourceListHead == 0) {
+    if (m_resourceListHead == NULL) {
         m_resourceListHead = newResource;
-        m_resourceListHead->m_next = 0;
+        m_resourceListHead->m_next = NULL;
     } else {
         newResource->m_next = m_resourceListHead;
         m_resourceListHead = newResource;
@@ -224,8 +224,8 @@ void resourceManager::Expunge(void)
     m_expunging = 1;
     resource *cursor[2];
     cursor[1] = m_resourceListHead;
-    cursor[0] = 0;
-    while (cursor[1] != 0) {
+    cursor[0] = NULL;
+    while (cursor[1] != NULL) {
         cursor[0] = cursor[1]->m_next;
         RemoveResource(cursor[1]);
         delete cursor[1];
@@ -241,7 +241,7 @@ VA(0x00475f60, 0x4f)
 class resource *resourceManager::Query(short resourceId)
 {
     resource *cursorResource = m_resourceListHead;
-    while (cursorResource != 0 && cursorResource->m_id != resourceId)
+    while (cursorResource != NULL && cursorResource->m_id != resourceId)
         cursorResource = cursorResource->m_next;
     return cursorResource;
 }
@@ -263,7 +263,7 @@ short resourceManager::Open(short priority)
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "resourceManager");
-    m_resourceListHead = 0;
+    m_resourceListHead = NULL;
     return 0;
 }
 
@@ -276,9 +276,9 @@ void resourceManager::RemoveResource(class resource *resourceToRemove)
         return;
     }
     resource *previousResource = m_resourceListHead;
-    while (previousResource != 0 && previousResource->m_next != resourceToRemove)
+    while (previousResource != NULL && previousResource->m_next != resourceToRemove)
         previousResource = previousResource->m_next;
-    if (previousResource == 0) {
+    if (previousResource == NULL) {
         return;
     } else {
         previousResource->m_next = resourceToRemove->m_next;
@@ -292,8 +292,8 @@ void resourceManager::Close(void)
     if (m_active != 1)
         return;
     Expunge();
-    m_resourceListHead = 0;
-    if (m_aggregateDir != 0)
+    m_resourceListHead = NULL;
+    if (m_aggregateDir != NULL)
         free(m_aggregateDir);
     if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE) {
         _close(m_aggregateFd);
@@ -330,7 +330,7 @@ short resourceManager::LoadAggregateHeader(char *aggregateName)
 VA(0x00476280, 0xf2)
 void resourceManager::PointToFile(short fileId)
 {
-    if (m_aggregateDir == 0)
+    if (m_aggregateDir == NULL)
         ShutDown("File Error: .AGG File not valid");
     short entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
@@ -351,7 +351,7 @@ void resourceManager::PointToFile(short fileId)
 VA(0x00476380, 0xe4)
 unsigned long resourceManager::GetFileSize(short fileId)
 {
-    if (m_aggregateDir == 0)
+    if (m_aggregateDir == NULL)
         return 0;
     short entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)

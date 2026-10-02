@@ -864,7 +864,7 @@ void soundManager::PollSound(void) {
             m_fadeSteps = 0;
 
         if (m_fadeSteps <= MUSIC_FADE_HOLD_LAST && m_currentTrack != m_fadeTargetTrack) {
-            if (m_midiFile != 0
+            if (m_midiFile != NULL
                 && ((m_currentTrack >= 0 && m_currentTrack < MUSIC_POSITION_TRACK_END)
                     || m_currentTrack == MUSIC_POSITION_TRACK_1
                     || m_currentTrack == MUSIC_POSITION_TRACK_2
@@ -1013,7 +1013,7 @@ void soundManager::PollSound(void) {
                     gSoundManagerAssertLine + 153
                 );
                 fclose(m_midiFile);
-                m_midiFile = 0;
+                m_midiFile = NULL;
             }
         }
     }

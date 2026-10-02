@@ -5,6 +5,8 @@
 
 #include <H1/Macros.h>
 #include <H1/Types.h>
+#include <SOURCE/creatureTypes.h>
+#include <SOURCE/spellTypes.h>
 
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
@@ -19,7 +21,7 @@ public:
     signed char m_unknown04;
     // ValidPath records the reachable target hex here.
     signed char m_moveTargetHex;
-    signed char m_creatureType;
+    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureType;
     signed char m_hex;
     // DrawToBuffer: pose 0 stand, 1 walk, 2 attack, 3 spell effect
     // (Buka m_animationSequence) and the frame within it.

@@ -19,7 +19,7 @@
 VA(0x0047e100, 0x2d)
 textEntryWidget::textEntryWidget(void) : textWidget() {
     m_cursorPosition = 0;
-    m_icon = 0;
+    m_icon = NULL;
     m_kind = 0x4000;
     m_maxLength = 0;
     m_iconFrame = 0;

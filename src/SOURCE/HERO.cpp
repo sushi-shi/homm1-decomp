@@ -25,7 +25,7 @@ hero::hero(void) {
     m_heroClass = 0;
     m_portrait = 0;
     m_name[0] = 0;
-    heroWin = 0;
+    heroWin = NULL;
     giHeroScreenSrcIndex = -1;
 }
 
@@ -73,7 +73,7 @@ short hero::CalcMobility(void) {
     } else {
         speed = 3;
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_army.m_creatureTypes[j] != -1
+            if (m_army.m_creatureTypes[j] != CREATURE_NONE
                 && gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed < speed)
                 speed = gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed;
         }
@@ -216,7 +216,7 @@ VA(0x0046c29a, 0x53)
 void hero::RedrawHeroScreen(void) {
     gpResourceManager->GetBackdrop("heroscrn.bmp", gpWindowManager->m_screen);
     heroWin->DrawWindow();
-    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
 // donor PoL RVA 0x0006f354; preferred Buka symbol ?HeroView@@YIHHHH@Z
@@ -241,39 +241,39 @@ signed char hero::HeroView(signed char viewOnly) {
     message.type = MESSAGE_WIDGET;
     sprintf(gText, "%s the %s", m_name, gClassNames[m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 2;
+    message.id = HERO_SCREEN_TITLE;
     message.text = gText;
     heroWin->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 4;
+    message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        message.id = i + 81;
+        message.id = i + HERO_SCREEN_STAT_FIRST;
         heroWin->BroadcastMessage(message);
-        message.id = i + 102;
+        message.id = i + HERO_SCREEN_ARMY_SLOT_FIRST;
         heroWin->BroadcastMessage(message);
     }
     if (viewOnly || gpTownManager->m_castleDialogActive
         || (!gpCurPlayer->m_townCount && gpCurPlayer->m_heroCount == 1)) {
-        message.id = 0x7803;
-        message.value = 6;
+        message.id = HERO_SCREEN_DISMISS;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
     sprintf(gText, "port%04d.icn", m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = 65;
+    message.id = HERO_SCREEN_PORTRAIT;
     message.text = gText;
     heroWin->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
         sprintf(gText, "%d", m_primaryStats[i]);
-        message.id = i + 76;
+        message.id = i + HERO_SCREEN_STAT_VALUE_FIRST;
         message.text = gText;
         heroWin->BroadcastMessage(message);
     }
-    armyLuckLevel = gpGame->GetLuck(this, 0);
+    armyLuckLevel = gpGame->GetLuck(this, NULL);
     for (i = 0; i < 3; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = i + 203;
+        message.id = i + HERO_SCREEN_LUCK_FIRST;
         if (armyLuckLevel < 0)
             message.value = 12;
         else if (armyLuckLevel == 0)
@@ -287,14 +287,14 @@ signed char hero::HeroView(signed char viewOnly) {
         shown = 1;
     for (i = 3; i > shown; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = i + 202;
-        message.value = 6;
+        message.id = i + (HERO_SCREEN_LUCK_FIRST - 1);
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
-    armyMoraleLevel = m_army.GetMorale(this, 0);
+    armyMoraleLevel = m_army.GetMorale(this, NULL);
     for (i = 0; i < 3; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = i + 200;
+        message.id = i + HERO_SCREEN_MORALE_FIRST;
         if (armyMoraleLevel < 0)
             message.value = 14;
         else if (armyMoraleLevel == 0)
@@ -308,48 +308,48 @@ signed char hero::HeroView(signed char viewOnly) {
         shown = 1;
     for (i = 3; i > shown; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = i + 199;
-        message.value = 6;
+        message.id = i + (HERO_SCREEN_MORALE_FIRST - 1);
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
     sprintf(gText, "%ld", m_experience);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 207;
+    message.id = HERO_SCREEN_EXPERIENCE;
     message.text = gText;
     heroWin->BroadcastMessage(message);
     sprintf(gText, "crst%04d.icn", m_heroClass + gpCurPlayer->Color() * 4);
     message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = 86;
+    message.id = HERO_SCREEN_CREST;
     heroWin->BroadcastMessage(message);
     UpdateArmies();
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        message.id = i + 20;
-        if (m_artifacts[i] != -1) {
+        message.id = i + HERO_SCREEN_ARTIFACT_FIRST;
+        if (m_artifacts[i] != ARTIFACT_NONE) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_artifacts[i];
             heroWin->BroadcastMessage(message);
             if (m_artifacts[i] >= 4) {
                 message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-                message.id = i + 6;
-                message.value = 4;
+                message.id = i + HERO_SCREEN_ARTIFACT_BACKGROUND_FIRST;
+                message.value = WIDGET_FLAG_DRAW;
                 heroWin->BroadcastMessage(message);
             }
         } else {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
-            message.id = i + 6;
+            message.id = i + HERO_SCREEN_ARTIFACT_BACKGROUND_FIRST;
             heroWin->BroadcastMessage(message);
         }
     }
     RedrawHeroScreen();
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(0, 8, NULL);
     gpHVHero = this;
     gpWindowManager->DoDialog(heroWin, HeroHandler, 0);
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     delete heroWin;
-    gheroWin = 0;
-    if (gpWindowManager->m_dialogResult == 0x7803) {
+    gheroWin = NULL;
+    if (gpWindowManager->m_dialogResult == HERO_SCREEN_DISMISS) {
         return 1;
     } else {
         m_mobility = CalcMobility();
@@ -371,10 +371,10 @@ void HeroMessageUpdate(char* text) {
         return;
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 302;
+    message.id = HERO_SCREEN_STATUS_TEXT;
     message.text = text;
     gheroWin->BroadcastMessage(message);
-    gheroWin->DrawWindow(0, 300, 302);
+    gheroWin->DrawWindow(0, HERO_SCREEN_STATUS_FIRST, HERO_SCREEN_STATUS_TEXT);
     gpWindowManager->UpdateScreenRegion(0, 459, 640, 20);
 }
 
@@ -393,12 +393,12 @@ void hero::HeroScreenUpdate(void) {
             message.command = WIDGET_COMMAND_SET_FLAGS;
         else
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 4;
-        message.id = i + 102;
+        message.value = WIDGET_FLAG_DRAW;
+        message.id = i + HERO_SCREEN_ARMY_SLOT_FIRST;
         heroWin->BroadcastMessage(message);
     }
     heroWin->DrawWindow();
-    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
 // donor PoL RVA 0x0006cbdb; preferred Buka symbol ?UpdateArmies@hero@@QAEXXZ
@@ -411,37 +411,37 @@ void hero::UpdateArmies(void) {
 
     message.type = MESSAGE_WIDGET;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        if (m_army.m_creatureTypes[i] == -1) {
+        if (m_army.m_creatureTypes[i] == CREATURE_NONE) {
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.id = i + 87;
+            message.id = i + HERO_SCREEN_ARMY_BACKGROUND_FIRST;
             message.value = 2;
             heroWin->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.id = i + 92;
-            message.value = 4;
+            message.id = i + HERO_SCREEN_ARMY_CREATURE_FIRST;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
-            message.id = i + 97;
+            message.id = i + HERO_SCREEN_ARMY_COUNT_FIRST;
             heroWin->BroadcastMessage(message);
-            message.id = i + 102;
+            message.id = i + HERO_SCREEN_ARMY_SLOT_FIRST;
             heroWin->BroadcastMessage(message);
         } else {
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.id = i + 87;
+            message.id = i + HERO_SCREEN_ARMY_BACKGROUND_FIRST;
             message.value = m_army.m_creatureTypes[i] / 6 + 3;
             heroWin->BroadcastMessage(message);
-            message.id = i + 92;
+            message.id = i + HERO_SCREEN_ARMY_CREATURE_FIRST;
             message.value = m_army.m_creatureTypes[i];
             heroWin->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
             sprintf(gText, "%d", m_army.m_creatureCounts[i]);
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = i + 97;
+            message.id = i + HERO_SCREEN_ARMY_COUNT_FIRST;
             message.text = gText;
             heroWin->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             heroWin->BroadcastMessage(message);
         }
     }
@@ -454,7 +454,7 @@ void hero::ViewStat(signed char stat, signed char quickView) {
 
     if (quickView) {
         sprintf(gText, "%s\n\n%s", gStatNames[stat], gStatDesc[stat]);
-        NormalDialog(gText, 4, 0xb1, 0x19, -1, 0, -1, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, 0x19, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         return;
     }
     win = new heroWindow(0xb1, 0x19, "vstat.bin");
@@ -478,7 +478,7 @@ void hero::ViewStat(signed char stat, signed char quickView) {
 
 VA(0x0046ce3f, 0x4a)
 void hero::ViewArtifact(signed char artifact, signed char quickView) {
-    NormalDialog(gArtifactDesc[artifact], quickView == 0 ? 1 : 4, -1, 0x1c, -1, 0, -1, 0, -1);
+    NormalDialog(gArtifactDesc[artifact], quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
 }
 
 // donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
@@ -486,8 +486,8 @@ void hero::ViewArtifact(signed char artifact, signed char quickView) {
 // evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
 VA(0x0046ce89, 0x59)
 signed char hero::Dismiss(void) {
-    NormalDialog("Are you sure you want to dismiss this Hero?", 2, 0xb1, 0x1c,
-                 -1, 0, -1, 0, -1);
+    NormalDialog("Are you sure you want to dismiss this Hero?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x1c,
+                 NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         Deallocate();
         return 1;
@@ -525,7 +525,7 @@ void hero::Deallocate(void) {
     }
     if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
         || !gpAdvManager->m_heroContextLocked)
-        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, 0, 1);
+        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, NULL, 1);
     if (!gbCombatSurrender) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_army.Dismiss(i);
@@ -704,7 +704,7 @@ void hero::CheckLevel(void) {
     m_level = lvl;
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
         gpSoundManager->SwitchAmbientMusic(52);
-        NormalDialog(gText, 1, -1, -1, 15, m_id, -1, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     }
 }
@@ -728,61 +728,61 @@ void UpdateHeroScreenStatusBar(short widgetId) {
     short slot;
 
     switch (widgetId) {
-    case 86:
+    case HERO_SCREEN_CREST:
         strcpy(gText, cHeroScreen[0]);
         break;
-    case 81:
-    case 82:
-    case 83:
-    case 84:
-        sprintf(gText, cHeroScreen[1], gStatNames[widgetId - 81]);
+    case HERO_SCREEN_ATTACK:
+    case HERO_SCREEN_DEFENSE:
+    case HERO_SCREEN_SPELL_POWER:
+    case HERO_SCREEN_KNOWLEDGE:
+        sprintf(gText, cHeroScreen[1], gStatNames[widgetId - HERO_SCREEN_STAT_FIRST]);
         break;
-    case 85:
+    case HERO_SCREEN_CHARACTERISTICS:
         sprintf(gText, cHeroScreen[2]);
         break;
-    case 200:
-    case 201:
-    case 202:
-        if (gpHVHero->m_army.GetMorale(gpHVHero, 0) > 0)
+    case HERO_SCREEN_MORALE_FIRST:
+    case HERO_SCREEN_MORALE_FIRST + 1:
+    case HERO_SCREEN_MORALE_LAST:
+        if (gpHVHero->m_army.GetMorale(gpHVHero, NULL) > 0)
             sprintf(gText, cHeroScreen[3]);
-        else if (gpHVHero->m_army.GetMorale(gpHVHero, 0) == 0)
+        else if (gpHVHero->m_army.GetMorale(gpHVHero, NULL) == 0)
             sprintf(gText, cHeroScreen[4]);
         else
             sprintf(gText, cHeroScreen[5]);
         break;
-    case 203:
-    case 204:
-    case 205:
-        if (gpGame->GetLuck(gpHVHero, 0) > 0)
+    case HERO_SCREEN_LUCK_FIRST:
+    case HERO_SCREEN_LUCK_FIRST + 1:
+    case HERO_SCREEN_LUCK_LAST:
+        if (gpGame->GetLuck(gpHVHero, NULL) > 0)
             sprintf(gText, cHeroScreen[6]);
-        else if (gpGame->GetLuck(gpHVHero, 0) == 0)
+        else if (gpGame->GetLuck(gpHVHero, NULL) == 0)
             sprintf(gText, cHeroScreen[7]);
         else
             sprintf(gText, cHeroScreen[8]);
         break;
-    case 206:
-    case 207:
+    case HERO_SCREEN_EXPERIENCE_ICON:
+    case HERO_SCREEN_EXPERIENCE:
         sprintf(gText, cHeroScreen[9]);
         break;
-    case 102:
-    case 103:
-    case 104:
-    case 105:
-    case 106:
-        slot = widgetId - 102;
+    case HERO_SCREEN_ARMY_SLOT_FIRST:
+    case HERO_SCREEN_ARMY_SLOT_FIRST + 1:
+    case HERO_SCREEN_ARMY_SLOT_FIRST + 2:
+    case HERO_SCREEN_ARMY_SLOT_FIRST + 3:
+    case HERO_SCREEN_ARMY_SLOT_FIRST + 4:
+        slot = widgetId - HERO_SCREEN_ARMY_SLOT_FIRST;
         if (giHeroScreenSrcIndex == -1) {
-            if (gpHVHero->m_army.m_creatureTypes[slot] != -1)
+            if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                 sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
             else
                 strcpy(gText, cHeroScreen[11]);
         } else if (slot == giHeroScreenSrcIndex) {
             sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
         } else if (gpTownManager->m_castleDialogActive) {
-            if (gpHVHero->m_army.m_creatureTypes[slot] != -1)
+            if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                 sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
             else
                 strcpy(gText, cHeroScreen[11]);
-        } else if (gpHVHero->m_army.m_creatureTypes[slot] == -1) {
+        } else if (gpHVHero->m_army.m_creatureTypes[slot] == CREATURE_NONE) {
             sprintf(gText, cHeroScreen[12],
                     gArmyNames[gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]);
         } else {
@@ -791,31 +791,31 @@ void UpdateHeroScreenStatusBar(short widgetId) {
                     gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
         }
         break;
-    case 20:
-    case 21:
-    case 22:
-    case 23:
-    case 24:
-    case 25:
-    case 26:
-    case 27:
-    case 28:
-    case 29:
-    case 30:
-    case 31:
-    case 32:
-    case 33:
-        if (gpHVHero->m_artifacts[widgetId - 20] == -1)
+    case HERO_SCREEN_ARTIFACT_FIRST:
+    case HERO_SCREEN_ARTIFACT_FIRST + 1:
+    case HERO_SCREEN_ARTIFACT_FIRST + 2:
+    case HERO_SCREEN_ARTIFACT_FIRST + 3:
+    case HERO_SCREEN_ARTIFACT_FIRST + 4:
+    case HERO_SCREEN_ARTIFACT_FIRST + 5:
+    case HERO_SCREEN_ARTIFACT_FIRST + 6:
+    case HERO_SCREEN_ARTIFACT_FIRST + 7:
+    case HERO_SCREEN_ARTIFACT_FIRST + 8:
+    case HERO_SCREEN_ARTIFACT_FIRST + 9:
+    case HERO_SCREEN_ARTIFACT_FIRST + 10:
+    case HERO_SCREEN_ARTIFACT_FIRST + 11:
+    case HERO_SCREEN_ARTIFACT_FIRST + 12:
+    case HERO_SCREEN_ARTIFACT_FIRST + 13:
+        if (gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST] == ARTIFACT_NONE)
             sprintf(gText, cHeroScreen[11]);
-        else if (gpHVHero->m_artifacts[widgetId - 20] == ARTIFACT_MAGIC_BOOK)
+        else if (gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST] == ARTIFACT_MAGIC_BOOK)
             strcpy(gText, cHeroScreen[14]);
         else
-            sprintf(gText, cHeroScreen[15], gArtifactNames[gpHVHero->m_artifacts[widgetId - 20]]);
+            sprintf(gText, cHeroScreen[15], gArtifactNames[gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]]);
         break;
     case 0x7803:
         sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_heroClass]);
         break;
-    case 0x7800:
+    case HERO_SCREEN_EXIT:
         strcpy(gText, cHeroScreen[17]);
         break;
     default:
@@ -858,11 +858,11 @@ short HeroHandler(struct tag_message& message) {
         case WIDGET_NOTIFY_DESELECT:
             if (!quickView) {
                 switch (message.id) {
-                case 0x7803:
+                case HERO_SCREEN_DISMISS:
                     if (gpHVHero->Dismiss())
                         finished = 1;
                     break;
-                case 0x7800:
+                case HERO_SCREEN_EXIT:
                     finished = 1;
                     break;
                 default:
@@ -872,61 +872,61 @@ short HeroHandler(struct tag_message& message) {
             break;
         case WIDGET_NOTIFY_SELECT:
             switch (message.id) {
-            case 86:
+            case HERO_SCREEN_CREST:
                 if (!quickView) {
                     gpGame->Overview();
                     gpHVHero->RedrawHeroScreen();
-                    gpWindowManager->FadeScreen(0, 8, 0);
+                    gpWindowManager->FadeScreen(0, 8, NULL);
                 }
                 break;
-            case 81:
-            case 82:
-            case 83:
-            case 84:
-                gpHVHero->ViewStat(message.id - 81, quickView);
+            case HERO_SCREEN_ATTACK:
+            case HERO_SCREEN_DEFENSE:
+            case HERO_SCREEN_SPELL_POWER:
+            case HERO_SCREEN_KNOWLEDGE:
+                gpHVHero->ViewStat(message.id - HERO_SCREEN_STAT_FIRST, quickView);
                 break;
-            case 200:
-            case 201:
-            case 202:
+            case HERO_SCREEN_MORALE_FIRST:
+            case HERO_SCREEN_MORALE_FIRST + 1:
+            case HERO_SCREEN_MORALE_LAST:
                 gpGame->ShowMoraleInfo(gpHVHero, quickView == 0 ? 1 : 4);
                 break;
-            case 203:
-            case 204:
-            case 205:
+            case HERO_SCREEN_LUCK_FIRST:
+            case HERO_SCREEN_LUCK_FIRST + 1:
+            case HERO_SCREEN_LUCK_LAST:
                 gpGame->ShowLuckInfo(gpHVHero, quickView == 0 ? 1 : 4);
                 break;
-            case 206:
-            case 207:
+            case HERO_SCREEN_EXPERIENCE_ICON:
+            case HERO_SCREEN_EXPERIENCE:
                 heroLevel = gpHVHero->GetLevel(gpHVHero->m_experience);
                 nextLevelExp = gpHVHero->GetExperience(heroLevel + 1);
                 sprintf(gText, "Level %d\n\nExperience %d\n\nNext level %d", heroLevel,
                         gpHVHero->m_experience, nextLevelExp);
-                NormalDialog(gText, quickView == 0 ? 1 : 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 break;
-            case 102:
-            case 103:
-            case 104:
-            case 105:
-            case 106:
-                slot = message.id - 102;
+            case HERO_SCREEN_ARMY_SLOT_FIRST:
+            case HERO_SCREEN_ARMY_SLOT_FIRST + 1:
+            case HERO_SCREEN_ARMY_SLOT_FIRST + 2:
+            case HERO_SCREEN_ARMY_SLOT_FIRST + 3:
+            case HERO_SCREEN_ARMY_SLOT_FIRST + 4:
+                slot = message.id - HERO_SCREEN_ARMY_SLOT_FIRST;
                 if (!quickView && giHeroScreenSrcIndex == -1) {
-                    if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
+                    if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
                         giHeroScreenSrcIndex = slot;
                         gpHVHero->HeroScreenUpdate();
                     }
-                } else if ((quickView && gpHVHero->m_army.m_creatureTypes[slot] != -1)
+                } else if ((quickView && gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                            || (!quickView
-                               && message.id - 102 == giHeroScreenSrcIndex)) {
+                               && message.id - HERO_SCREEN_ARMY_SLOT_FIRST == giHeroScreenSrcIndex)) {
                     gpGame->ViewArmy(119, 20, gpHVHero->m_army.m_creatureTypes[slot],
-                                     gpHVHero->m_army.m_creatureCounts[slot], 0,
+                                     gpHVHero->m_army.m_creatureCounts[slot], NULL,
                                      quickView || gpTownManager->m_castleDialogActive == 1
                                          || gpHVHero->m_army.GetNumArmies() == 1,
-                                     0, quickView, gpHVHero, 0, &gpHVHero->m_army);
+                                     0, quickView, gpHVHero, NULL, &gpHVHero->m_army);
                     if (!quickView)
                         giHeroScreenSrcIndex = -1;
                     gpHVHero->HeroScreenUpdate();
                 } else if (!quickView && gpTownManager->m_castleDialogActive) {
-                    if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
+                    if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
                         giHeroScreenSrcIndex = slot;
                         gpHVHero->HeroScreenUpdate();
                     }
@@ -947,27 +947,27 @@ short HeroHandler(struct tag_message& message) {
                     UpdateHeroScreenStatusBar(message.id);
                 }
                 break;
-            case 20:
-            case 21:
-            case 22:
-            case 23:
-            case 24:
-            case 25:
-            case 26:
-            case 27:
-            case 28:
-            case 29:
-            case 30:
-            case 31:
-            case 32:
-            case 33:
-                if (gpHVHero->m_artifacts[message.id - 20] != -1) {
+            case HERO_SCREEN_ARTIFACT_FIRST:
+            case HERO_SCREEN_ARTIFACT_FIRST + 1:
+            case HERO_SCREEN_ARTIFACT_FIRST + 2:
+            case HERO_SCREEN_ARTIFACT_FIRST + 3:
+            case HERO_SCREEN_ARTIFACT_FIRST + 4:
+            case HERO_SCREEN_ARTIFACT_FIRST + 5:
+            case HERO_SCREEN_ARTIFACT_FIRST + 6:
+            case HERO_SCREEN_ARTIFACT_FIRST + 7:
+            case HERO_SCREEN_ARTIFACT_FIRST + 8:
+            case HERO_SCREEN_ARTIFACT_FIRST + 9:
+            case HERO_SCREEN_ARTIFACT_FIRST + 10:
+            case HERO_SCREEN_ARTIFACT_FIRST + 11:
+            case HERO_SCREEN_ARTIFACT_FIRST + 12:
+            case HERO_SCREEN_ARTIFACT_FIRST + 13:
+                if (gpHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST] != ARTIFACT_NONE) {
                     if (!quickView
-                        && gpHVHero->m_artifacts[message.id - 20]
+                        && gpHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST]
                                == ARTIFACT_MAGIC_BOOK)
                         gpGame->ViewSpells(gpHVHero, 2, ViewSpecialHandler, 1);
                     else
-                        gpHVHero->ViewArtifact(gpHVHero->m_artifacts[message.id - 20],
+                        gpHVHero->ViewArtifact(gpHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST],
                                                quickView);
                 }
                 break;

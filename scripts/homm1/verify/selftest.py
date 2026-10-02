@@ -369,16 +369,16 @@ class EnumDomainControls(unittest.TestCase):
 
     def test_split_width_disagreement_is_fatal(self):
         fatal, _w, _d = self._audit({
-            "A.h": "GZ_ENUM_BEGIN_SPLIT(Tool, u8)\nTOOL_GAUNTLETZ = 0,\n"
-                   "GZ_ENUM_END_SPLIT(Tool)\n",
-            "B.h": "GZ_ENUM_STORAGE(Tool, i32) m_tool;\n"})
+            "A.h": "H1_ENUM_BEGIN_SPLIT(Tool, u8)\nTOOL_GAUNTLETZ = 0,\n"
+                   "H1_ENUM_END_SPLIT(Tool)\n",
+            "B.h": "H1_ENUM_STORAGE(Tool, i32) m_tool;\n"})
         self.assertTrue(any("two beliefs" in f for f in fatal))
 
     def test_matching_split_width_passes(self):
         fatal, _w, _d = self._audit({
-            "A.h": "GZ_ENUM_BEGIN_SPLIT(Tool, u8)\nTOOL_GAUNTLETZ = 0,\n"
-                   "GZ_ENUM_END_SPLIT(Tool)\n",
-            "B.h": "GZ_ENUM_STORAGE(Tool, u8) m_tool;\n"})
+            "A.h": "H1_ENUM_BEGIN_SPLIT(Tool, u8)\nTOOL_GAUNTLETZ = 0,\n"
+                   "H1_ENUM_END_SPLIT(Tool)\n",
+            "B.h": "H1_ENUM_STORAGE(Tool, u8) m_tool;\n"})
         self.assertEqual(fatal, [])
 
     def test_bare_header_enum_is_fatal_and_tag_type_exempt(self):
@@ -391,8 +391,8 @@ class EnumDomainControls(unittest.TestCase):
 
     def test_range_test_against_a_member_is_fatal(self):
         fatal, _w, _d = self._audit({
-            "A.h": "GZ_ENUM_BEGIN(Pickup)\nPICKUP_WINGZ = 22,\n"
-                   "GZ_ENUM_END(Pickup)\n",
+            "A.h": "H1_ENUM_BEGIN(Pickup)\nPICKUP_WINGZ = 22,\n"
+                   "H1_ENUM_END(Pickup)\n",
             "B.cpp": "if (n > PICKUP_WINGZ) return 0;\n"})
         self.assertTrue(any("names a MEMBER" in f for f in fatal))
 
@@ -472,6 +472,23 @@ class EnumReuseControls(unittest.TestCase):
             [("FIRST", 10), ("SECOND", 11)],
         )
 
+    def test_role_pairs_need_two_equal_values_with_equal_member_roles(self):
+        from homm1.verify import enum_reuse
+        constants, _blocks, _ms, _ma, errors = self._scan({
+            "src/Probe.cpp": (
+                "enum Luck { LUCK_GOOD = 0, LUCK_BAD = 1, LUCK_HEADER = 2 };\n"
+                "enum Morale { MORALE_GOOD = 0, MORALE_BAD = 1, MORALE_X = 2 };\n"
+                "enum Other { OTHER_GOOD = 0, OTHER_ODD = 1 };\n"
+            ),
+        })
+        self.assertEqual(errors, [])
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "roles.tsv"
+            enum_reuse.write_role_pair_report(path, constants)
+            rows = path.read_text().splitlines()[1:]
+        self.assertEqual(len(rows), 1)
+        self.assertIn("0:LUCK_GOOD=MORALE_GOOD;1:LUCK_BAD=MORALE_BAD", rows[0])
+
     def test_ledger_rejects_pending_and_unclaimed_members(self):
         from homm1.verify import enum_reuse
         constants, blocks, _missing_source, _missing_ast, _errors = self._scan({
@@ -539,13 +556,15 @@ class ConstantControls(unittest.TestCase):
             with patch:
                 return constants.scan_entries([entry], repo=root, jobs=1)
 
+    _WIN_BOOL = "#define FALSE 0\n#define TRUE 1\ntypedef int BOOL;\n"
+
     def test_typed_pointer_bool_and_enum_sites_are_proven(self):
-        source = ("#define NULL 0\n"
+        source = ("#define NULL 0\n" + self._WIN_BOOL +
                   "enum Kind { KIND_NONE = 0, KIND_ONE = 1 };\n"
-                  "bool BoolReturn() { return 0; }\n"
+                  "BOOL BoolReturn() { return 0; }\n"
                   "int* PtrReturn() { return 0; }\n"
-                  "void Takes(bool b, int* p);\n"
-                  "void Probe(Kind kind) { bool b = 1; int* p = 0; "
+                  "void Takes(BOOL b, int* p);\n"
+                  "void Probe(Kind kind) { BOOL b = 1; int* p = 0; "
                   "Takes(0, 0); if (p == 0) {} if (b == 0) {} "
                   "if (kind == 0) {} }\n"
                   "int Arithmetic(int n) { return n + 0; }\n")
@@ -553,18 +572,35 @@ class ConstantControls(unittest.TestCase):
         self.assertEqual(errors, [])
         replacements = [s.replacement for s in sites if s.proven]
         self.assertEqual(replacements.count("NULL"), 4)
-        self.assertEqual(replacements.count("false"), 3)
-        self.assertEqual(replacements.count("true"), 1)
+        self.assertEqual(replacements.count("FALSE"), 3)
+        self.assertEqual(replacements.count("TRUE"), 1)
         self.assertEqual(replacements.count("KIND_NONE"), 1)
         arithmetic = [s for s in sites
                       if s.function.startswith("Arithmetic") and s.spelling == "0"]
         self.assertEqual(len(arithmetic), 1)
         self.assertFalse(arithmetic[0].proven)
 
+    def test_cxx_bool_conditions_are_not_vc4_booleans(self):
+        # VC4 has no bool/true/false (C2065); Clang's C++ bool contexts are
+        # int truthiness in the retail compiler.
+        source = ("void Spin(int n) { while (1) { if (n) return; } }\n"
+                  "bool Cxx() { return 0; }\n"
+                  "void Takes(bool b);\n"
+                  "void Probe() { Takes(1); }\n")
+        sites, errors = self._scan(source)
+        self.assertEqual(errors, [])
+        self.assertEqual([s for s in sites if s.proven], [])
+
+    def test_win_bool_without_visible_macros_is_not_a_fix(self):
+        sites, errors = self._scan("typedef int BOOL; BOOL F() { return 1; }\n")
+        self.assertEqual(errors, [])
+        self.assertEqual([s for s in sites if s.proven], [])
+        self.assertTrue(any("TRUE is not visible" in s.reason for s in sites))
+
     def test_named_spellings_and_explicit_ingest_cast_pass(self):
         source = ("enum Kind { KIND_NONE = 0 };\n"
-                  "#define NULL 0\n"
-                  "bool B() { return false; }\n"
+                  "#define NULL 0\n" + self._WIN_BOOL +
+                  "BOOL B() { return FALSE; }\n"
                   "int* P() { return NULL; }\n"
                   "Kind K(int n) { return static_cast<Kind>(0); }\n"
                   "Kind KN(int n) { return static_cast<Kind>(-1); }\n")
@@ -602,9 +638,10 @@ class ConstantControls(unittest.TestCase):
         self.assertEqual([s for s in comparisons if s.proven], [])
 
     def test_direct_enum_and_bool_operands_survive_expression_wrappers(self):
-        source = ("enum Kind { KIND_NONE = 0, KIND_ONE = 1 };\n"
+        source = (self._WIN_BOOL +
+                  "enum Kind { KIND_NONE = 0, KIND_ONE = 1 };\n"
                   "Kind KindResult();\n"
-                  "bool BoolResult();\n"
+                  "BOOL BoolResult();\n"
                   "void Probe(Kind kind, int value) {\n"
                   "  if (KindResult() == 0) {}\n"
                   "  if ((kind) != 1) {}\n"
@@ -617,7 +654,7 @@ class ConstantControls(unittest.TestCase):
                         if s.function.startswith("Probe") and s.proven]
         self.assertEqual(replacements.count("KIND_NONE"), 2)
         self.assertEqual(replacements.count("KIND_ONE"), 1)
-        self.assertEqual(replacements.count("false"), 1)
+        self.assertEqual(replacements.count("FALSE"), 1)
 
     def test_pointer_zero_without_visible_null_is_not_a_fix(self):
         sites, errors = self._scan("int* P() { return 0; }\n")
@@ -625,21 +662,19 @@ class ConstantControls(unittest.TestCase):
         self.assertEqual([s for s in sites if s.proven], [])
         self.assertTrue(any("NULL is not visible" in s.reason for s in sites))
 
-    def test_conditional_pointer_and_integer_boolean_aliases_are_proven(self):
-        source = ("#define NULL 0\n"
-                  "typedef int BOOL;\n"
-                  "typedef int b32;\n"
-                  "int* Pick(bool use, int* value) { return use ? value : 0; }\n"
+    def test_conditional_pointer_and_win_bool_sites_are_proven(self):
+        source = ("#define NULL 0\n" + self._WIN_BOOL +
+                  "int* Pick(int use, int* value) { return use ? value : 0; }\n"
                   "BOOL WinBool() { return 1; }\n"
-                  "void Takes(BOOL win, b32 project);\n"
-                  "void Probe(BOOL win) { b32 project = 0; Takes(0, 1); "
-                  "if (win == 0) {} project = 1; }\n")
+                  "void Takes(BOOL win, BOOL other);\n"
+                  "void Probe(BOOL win) { BOOL other = 0; Takes(0, 1); "
+                  "if (win == 0) {} other = 1; }\n")
         sites, errors = self._scan(source)
         self.assertEqual(errors, [])
         replacements = [s.replacement for s in sites if s.proven]
         self.assertEqual(replacements.count("NULL"), 1)
-        self.assertEqual(replacements.count("false"), 3)
-        self.assertEqual(replacements.count("true"), 3)
+        self.assertEqual(replacements.count("FALSE"), 3)
+        self.assertEqual(replacements.count("TRUE"), 3)
 
     def test_expected_type_does_not_retype_nested_numeric_expressions(self):
         source = ("typedef int BOOL;\n"
@@ -654,7 +689,7 @@ class ConstantControls(unittest.TestCase):
         from homm1.verify import constants
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
-            source = "typedef int BOOL; BOOL F() { return 0; }\n"
+            source = "#define FALSE 0\ntypedef int BOOL; BOOL F() { return 0; }\n"
             sites, errors = self._scan(source)
             self.assertEqual(errors, [])
             path = root / "src/Probe.cpp"
@@ -663,20 +698,49 @@ class ConstantControls(unittest.TestCase):
             applied = constants.apply_proven(sites, repo=root)
             self.assertEqual(applied, 1)
             self.assertEqual(path.read_text(),
-                             "typedef int BOOL; BOOL F() { return false; }\n")
+                             "#define FALSE 0\ntypedef int BOOL; BOOL F() { return FALSE; }\n")
             with self.assertRaises(RuntimeError):
                 constants.apply_proven(sites, repo=root)
 
-    def test_legacy_boolean_macro_gate_ignores_comments_and_strings(self):
+    def test_bool_keyword_gate_ignores_comments_and_strings(self):
         from homm1.verify import constants
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
             path = root / "src/Probe.cpp"
             path.parent.mkdir(parents=True)
-            path.write_text("int a = TRUE; // FALSE\nconst char* s = \"TRUE\";\n")
+            path.write_text("int a = true; // false\nconst char* s = \"true\";\n"
+                            "int b = TRUE;\n")
             self.assertEqual(
-                constants.legacy_boolean_spellings(repo=root),
-                ["src/Probe.cpp:1:9: TRUE -> true"])
+                constants.cxx_boolean_spellings(repo=root),
+                ["src/Probe.cpp:1:9: true -> TRUE (VC4 has no bool keywords)"])
+
+    def test_worklist_first_match_stale_rows_and_floor(self):
+        from homm1.verify import constants
+        source = ("void Sink(int value);\n"
+                  "void Probe(int value) { Sink(30); Sink(40); switch (value) "
+                  "{ case 7: break; } }\n")
+        sites, errors = self._scan(source)
+        self.assertEqual(errors, [])
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "constants.tsv"
+            path.write_text(
+                "# comment\n#floor\t5\n"
+                "src/*\tProbe*\t30\tcall-argument\t*\tthe first row wins\n"
+                "*\t*\t30\t*\t*\tshadowed by the first row\n"
+                "*\t*\t7\tcase-label\tswitch on value\tcase labels record "
+                "their switch subject\n"
+                "*\t*\t99\t*\t*\tkeeps nothing\n"
+                "*\t*\t1\t*\t*\t*\n")
+            keeps, floor, bad = constants.load_worklist(path)
+            self.assertEqual(floor, 5)
+            self.assertEqual(len(keeps), 4)
+            self.assertEqual(len(bad), 1)
+            remaining, stale = constants.open_sites(sites, keeps)
+            self.assertEqual([s.spelling for s in remaining], ["40"])
+            self.assertEqual(sorted(k.spelling for k in stale), ["30", "99"])
+            constants.write_floor(path, len(remaining))
+            self.assertEqual(constants.load_worklist(path)[1], 1)
+            self.assertIn("# comment", path.read_text())
 
     def test_numeric_review_groups_preserve_context_without_claiming_semantics(self):
         source = ("void Sink(int value);\n"

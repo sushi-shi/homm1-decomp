@@ -111,7 +111,7 @@ extern configStruct gConfig;
 VA(0x00403640, 0x59)
 void DDRestoreDisplayMode() {
     long result;
-    if (lpDD != 0) {
+    if (lpDD != NULL) {
         result = lpDD->RestoreDisplayMode();
         if (result != 0)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDRestoreLineBase + 7);
@@ -138,12 +138,12 @@ void CreatePrimary(void) {
     long result;
 
     lpDDSPrimary = DDCreateSurface(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 1);
-    if (lpClipper != 0) {
-        result = lpDDSPrimary->SetClipper(0);
+    if (lpClipper != NULL) {
+        result = lpDDSPrimary->SetClipper(NULL);
         if (result != 0 && result != DDERR_NOCLIPPERATTACHED)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gCreatePrimaryLineBase + 10);
         lpClipper->Release();
-        lpClipper = 0;
+        lpClipper = NULL;
     }
 }
 
@@ -155,7 +155,7 @@ void SetupClipper(void) {
     long result;
 
     if (gConfig.gfx[giCurExe].fullScreen == 0) {
-        result = lpDD->CreateClipper(0, &lpClipper, 0);
+        result = lpDD->CreateClipper(0, &lpClipper, NULL);
         if (result != 0)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gSetupClipperLineBase + 8);
         result = lpClipper->SetHWnd(0, hwndApp);
@@ -176,7 +176,7 @@ void DDInitGraphics(void) {
 
     if (gbWinGraphBusy != 0)
         return;
-    result = lpDirectDrawCreate(0, &lpDD, 0);
+    result = lpDirectDrawCreate(NULL, &lpDD, NULL);
     if (result != 0)
         DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 8);
     if (gConfig.gfx[giCurExe].fullScreen != 0) {
@@ -217,7 +217,7 @@ int DDAppPaint(void* window, void* paintDC) {
         return 1;
     if (gbMinimized != 0)
         return 1;
-    if (lpDD == 0)
+    if (lpDD == NULL)
         return 1;
     {
         gbWinGraphBusy = 1;
@@ -254,7 +254,7 @@ int DDAppPaint(void* window, void* paintDC) {
         pt.x = pt.y;
         ClientToScreen(hwndApp, &pt);
         OffsetRect(&gDDDestinationRect, pt.x, pt.y);
-        gDDResult = lpDDSOne->Unlock(0);
+        gDDResult = lpDDSOne->Unlock(NULL);
         if (gDDResult != DD_OK)
             DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 72);
 
@@ -286,7 +286,7 @@ int DDAppPaint(void* window, void* paintDC) {
                 0
             );
             gDDResult =
-                lpDDSPrimary->Blt(&gDDDestinationRect, lpDDSOne, &gDDSourceRect, DDBLT_WAIT, 0);
+                lpDDSPrimary->Blt(&gDDDestinationRect, lpDDSOne, &gDDSourceRect, DDBLT_WAIT, NULL);
             if (gDDResult == DDERR_SURFACELOST) {
                 gDDResult = lpDDSPrimary->Restore();
                 if (gDDResult == DDERR_WRONGMODE) {
@@ -314,10 +314,10 @@ int DDAppPaint(void* window, void* paintDC) {
 
         memset(&gDDSurfaceDesc, 0, sizeof(gDDSurfaceDesc));
         gDDSurfaceDesc.dwSize = sizeof(gDDSurfaceDesc);
-        gDDResult = lpDDSOne->Lock(0, &gDDSurfaceDesc, DDLOCK_WAIT, 0);
+        gDDResult = lpDDSOne->Lock(NULL, &gDDSurfaceDesc, DDLOCK_WAIT, NULL);
         if (gDDResult != DD_OK)
             DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 133);
-        if (gpWindowManager->m_screen != 0) {
+        if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels =
                 static_cast<signed char*>(gDDSurfaceDesc.lpSurface);
             lpInitWin = gDDSurfaceDesc.lpSurface;
@@ -341,7 +341,7 @@ void DDInitializePalette() {
     if (gbWinGraphBusy != 0)
         return;
     {
-        hdc = GetDC(0);
+        hdc = GetDC(NULL);
         GetSystemPaletteEntries(hdc, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
         GetSystemPaletteEntries(
             hdc,
@@ -349,7 +349,7 @@ void DDInitializePalette() {
             WINGRAPH_SYSTEM_PALETTE_SIZE,
             &LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
         );
-        ReleaseDC(0, hdc);
+        ReleaseDC(NULL, hdc);
         for (i = 0; i < WINGRAPH_SYSTEM_PALETTE_END; i++) {
             LogicalPalette.entries[i].peFlags = 0;
             LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
@@ -360,7 +360,7 @@ void DDInitializePalette() {
             LogicalPalette.entries[i].peBlue = 0;
             LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
         }
-        ddrval = lpDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &lpDDPal, 0);
+        ddrval = lpDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &lpDDPal, NULL);
         if (ddrval != 0)
             DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitializePaletteLineBase + 63);
         SetPalette();
@@ -375,7 +375,7 @@ int DDSetPalette() {
         return 1;
     if (gbForegroundApp == 0)
         return 1;
-    if (lpDDPal == 0 || lpDDSPrimary == 0 || lpDD == 0)
+    if (lpDDPal == NULL || lpDDSPrimary == NULL || lpDD == NULL)
         return 1;
     result = lpDDSPrimary->SetPalette(lpDDPal);
     if (result != 0)
@@ -409,14 +409,14 @@ struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long he
         ddsd.dwHeight = height;
         ddsd.dwWidth = width;
     }
-    ddrval = lpDD->CreateSurface(&ddsd, &lpSurface, 0);
+    ddrval = lpDD->CreateSurface(&ddsd, &lpSurface, NULL);
     if (ddrval != 0)
         DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDCreateSurfaceLineBase + 28);
     if (primary == 0) {
-        ddrval = lpSurface->Lock(0, &ddsd, DDLOCK_WAIT, 0);
+        ddrval = lpSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
         if (ddrval != 0)
             DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDCreateSurfaceLineBase + 36);
-        if (gpWindowManager->m_screen != 0) {
+        if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(ddsd.lpSurface);
             lpInitWin = ddsd.lpSurface;
         } else {
@@ -586,34 +586,34 @@ void DDCleanUpWinGraphics(void) {
     long restoreVal;
     long result;
 
-    if (lpDD != 0) {
+    if (lpDD != NULL) {
         restoreVal = lpDD->RestoreDisplayMode();
-        if (lpClipper != 0) {
-            if (lpDDSPrimary != 0) {
-                result = lpDDSPrimary->SetClipper(0);
+        if (lpClipper != NULL) {
+            if (lpDDSPrimary != NULL) {
+                result = lpDDSPrimary->SetClipper(NULL);
                 if (result != 0 && result != DDERR_NOCLIPPERATTACHED)
                     DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDCleanUpLineBase + 14);
             }
             lpClipper->Release();
-            lpClipper = 0;
+            lpClipper = NULL;
         }
-        if (lpDDSPrimary != 0) {
+        if (lpDDSPrimary != NULL) {
             lpDDSPrimary->Release();
-            lpDDSPrimary = 0;
+            lpDDSPrimary = NULL;
         }
-        if (lpDDSOne != 0) {
+        if (lpDDSOne != NULL) {
             lpDDSOne->Release();
-            lpDDSOne = 0;
+            lpDDSOne = NULL;
         }
-        if (lpDDPal != 0) {
+        if (lpDDPal != NULL) {
             lpDDPal->Release();
-            lpDDPal = 0;
+            lpDDPal = NULL;
         }
         result = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
         if (result != 0)
             DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDCleanUpLineBase + 38);
         lpDD->Release();
-        lpDD = 0;
+        lpDD = NULL;
     }
 }
 
@@ -660,9 +660,9 @@ void DDSetFullScreenStatus(int fullScreen) {
             if (ddrval != DD_OK)
                 DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetFullScreenLineBase + 39);
         }
-        if (lpDDSPrimary != 0) {
+        if (lpDDSPrimary != NULL) {
             lpDDSPrimary->Release();
-            lpDDSPrimary = 0;
+            lpDDSPrimary = NULL;
         }
         CreatePrimary();
         ddrval = lpDDSPrimary->SetPalette(lpDDPal);
@@ -691,13 +691,13 @@ int WGQueryNewPalette() {
         HDC hdc;
 
         hdc = GetDC(hwndApp);
-        if (hpalApp != 0)
+        if (hpalApp != NULL)
             SelectPalette(hdc, hpalApp, 0);
         paletteChanges = RealizePalette(hdc);
         ReleaseDC(hwndApp, hdc);
     }
     if (paletteChanges > 0) {
-        InvalidateRect(hwndApp, 0, 1);
+        InvalidateRect(hwndApp, NULL, 1);
         return 1;
     } else {
         return 0;
@@ -712,7 +712,7 @@ VA(0x00404c81, 0x151)
 void WGInitGraphics() {
     HBITMAP bitmap;
 
-    if (hdcImage != 0)
+    if (hdcImage != NULL)
         return;
     if (WinGRecommendDIBFormat(reinterpret_cast<LPBITMAPINFO>(&screenImage))) {
         screenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
@@ -771,11 +771,11 @@ void WGUpdatePalette(signed char* paletteData) {
         WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &screenImage.colors[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
-    if (hpalApp != 0)
+    if (hpalApp != NULL)
         DeleteObject(hpalApp);
     hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
     dc = GetDC(hwndApp);
-    if (hpalApp != 0)
+    if (hpalApp != NULL)
         SelectPalette(dc, hpalApp, 0);
     result = RealizePalette(dc);
     ReleaseDC(hwndApp, dc);
@@ -812,9 +812,9 @@ void WGInitializePalette() {
     HDC hdc;
     int i;
 
-    if (hpalApp != 0)
+    if (hpalApp != NULL)
         return;
-    hdc = GetDC(0);
+    hdc = GetDC(NULL);
     GetSystemPaletteEntries(hdc, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
     GetSystemPaletteEntries(
         hdc,
@@ -822,7 +822,7 @@ void WGInitializePalette() {
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         &LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
     );
-    ReleaseDC(0, hdc);
+    ReleaseDC(NULL, hdc);
     for (i = 0; i < WINGRAPH_SYSTEM_PALETTE_END; i++) {
         screenImage.colors[i].rgbRed = LogicalPalette.entries[i].peRed;
         screenImage.colors[i].rgbGreen = LogicalPalette.entries[i].peGreen;
@@ -864,7 +864,7 @@ int WGAppPaint(void* window, void* paintDC) {
     char unused;
 
     unused = 0;
-    if (screenImage.bits != 0) {
+    if (screenImage.bits != NULL) {
         paintDC = BeginPaint(static_cast<HWND>(window), &paintStruct);
         SelectPalette(static_cast<HDC>(paintDC), hpalApp, 0);
         RealizePalette(static_cast<HDC>(paintDC));
@@ -920,15 +920,15 @@ VA(0x00405344, 0x78)
 void WGCleanUpWinGraphics() {
     HGDIOBJ bitmap;
 
-    if (hdcImage != 0) {
+    if (hdcImage != NULL) {
         bitmap = SelectObject(hdcImage, gbmOldMonoBitmap);
         DeleteObject(bitmap);
         DeleteDC(hdcImage);
-        hdcImage = 0;
+        hdcImage = NULL;
     }
-    if (hpalApp != 0) {
+    if (hpalApp != NULL) {
         DeleteObject(hpalApp);
-        hpalApp = 0;
+        hpalApp = NULL;
     }
 }
 
@@ -942,7 +942,7 @@ void ConnectToDLLs() {
         lpDirectDrawCreate = reinterpret_cast<DirectDrawCreateProc>(
             GetProcAddress(hDDrawLibrary, "DirectDrawCreate")
         );
-        if (lpDirectDrawCreate != 0)
+        if (lpDirectDrawCreate != NULL)
             gbDDrawAttached = 1;
         else
             ShutDown("Error loading DDRAW.DLL");

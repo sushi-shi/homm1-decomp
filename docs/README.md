@@ -7,7 +7,8 @@
 - [Score tracking](match-status.md), [permutation](permuter.md),
   [donor compiler patterns](patterns/INDEX.md), [clangd](clangd.md).
 - [Data attribution](data-attribution.md), [candidate-image checks](image-diff.md),
-  [cleanliness](cleanliness-metrics.md), [markers](comment-markers.md).
+  [cleanliness](cleanliness-metrics.md), [markers](comment-markers.md),
+  [constants work list](constants.md), [enum reuse review](enum-reuse.md).
 - [Inheritance and validation](tooling-inheritance.md),
   [retail evidence](../evidence/README.md), [script maintenance](../scripts/README.md).
 

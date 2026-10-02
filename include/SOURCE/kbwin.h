@@ -3,11 +3,11 @@
 
 #include <Domains.h>
 
-H1_ENUM_BEGIN(WindowTextConstant)
+H1_ENUM_CONST_BEGIN(WindowTextConstant)
     WINDOW_TEXT_ENTRY_COUNT = 68
-H1_ENUM_END(WindowTextConstant)
+H1_ENUM_CONST_END(WindowTextConstant)
 
-H1_ENUM_BEGIN(KbwinMenuConstant)
+H1_ENUM_CONST_BEGIN(KbwinMenuConstant)
     KBWIN_WIDTH_640 = 640,
     KBWIN_WIDTH_800 = 800,
     KBWIN_WIDTH_1024 = 1024,
@@ -24,10 +24,10 @@ H1_ENUM_BEGIN(KbwinMenuConstant)
     KBWIN_HEIGHT_600 = 600,
     KBWIN_HEIGHT_768 = 768,
     KBWIN_HEIGHT_1024 = 1024
-H1_ENUM_END(KbwinMenuConstant)
+H1_ENUM_CONST_END(KbwinMenuConstant)
 
 // clang-format off
-H1_ENUM_BEGIN(PrefsConstant)
+H1_ENUM_CONST_BEGIN(PrefsConstant)
     CONFIG_EXECUTABLE_GAME = 0,
     CONFIG_EXECUTABLE_EDITOR_RECORD = 1,
     CONFIG_EXECUTABLE_COUNT = 2,
@@ -79,7 +79,7 @@ H1_ENUM_BEGIN(PrefsConstant)
     KBWIN_GRAPHICS_DIRECT_DRAW = 1,
     KBWIN_MIN_WIDTH = 240,
     KBWIN_MIN_HEIGHT = 160
-H1_ENUM_END(PrefsConstant)
+H1_ENUM_CONST_END(PrefsConstant)
 // clang-format on
 
 extern char gcRegAppPath[];

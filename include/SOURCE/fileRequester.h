@@ -12,13 +12,13 @@ class heroWindow;
 class iconWidget;
 
 // clang-format off
-H1_ENUM_BEGIN(FileRequesterStorageConstant)
+H1_ENUM_CONST_BEGIN(FileRequesterStorageConstant)
     FILE_REQUESTER_NAME_SIZE = 0x15f,
     FILE_REQUESTER_EXTENSION_SIZE = 5,
     FILE_REQUESTER_LOCAL_NAME_SIZE = 352,
     FILE_REQUESTER_LOCAL_EXTENSION_SIZE = 208,
     FILE_REQUESTER_MAP_DESCRIPTION_SIZE = 101
-H1_ENUM_END(FileRequesterStorageConstant)
+H1_ENUM_CONST_END(FileRequesterStorageConstant)
 // clang-format on
 
 struct FileRequesterName {

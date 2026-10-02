@@ -3,7 +3,7 @@
 
 #include <Domains.h>
 
-H1_ENUM_BEGIN(HighScoreRuntimeConstant)
+H1_ENUM_CONST_BEGIN(HighScoreRuntimeConstant)
     HIGH_SCORE_FADE_IN = 0,
     HIGH_SCORE_ANIMATION_DELAY = 120,
     HIGH_SCORE_TIMER_SLOT = 0,
@@ -33,7 +33,7 @@ H1_ENUM_BEGIN(HighScoreRuntimeConstant)
     WIDGET_COMMAND_SET_FILL_COLOR = 8,
     HIGH_SCORE_HIGHLIGHT_COLOR = -65,
     HIGH_SCORE_NORMAL_COLOR = 1
-H1_ENUM_END(HighScoreRuntimeConstant)
+H1_ENUM_CONST_END(HighScoreRuntimeConstant)
 
 // HoMM1 score files hold 0x57-byte records; Update reads name, scenario and
 // score from the fixed prefix.

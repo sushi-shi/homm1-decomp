@@ -15,9 +15,9 @@
 VA(0x0047a170, 0x10)
 executive::executive(void)
 {
-    m_managerListHead = 0;
-    m_managerListTail = 0;
-    m_activeManager = 0;
+    m_managerListHead = NULL;
+    m_managerListTail = NULL;
+    m_activeManager = NULL;
     m_result = 0;
 }
 
@@ -99,10 +99,10 @@ short executive::DoDialog(baseManager *manager)
 VA(0x0047a3d0, 0xd2)
 short executive::AddManager(baseManager *manager, short priority)
 {
-    if (manager == 0)
+    if (manager == NULL)
         return 3;
     if (priority == -1) {
-        if (m_managerListTail == 0)
+        if (m_managerListTail == NULL)
             priority = 0;
         else
             priority = m_managerListTail->m_priority + 1;
@@ -110,19 +110,19 @@ short executive::AddManager(baseManager *manager, short priority)
     if (!manager->m_active && manager->Open(priority) != 0)
         return 3;
     baseManager *current = m_managerListTail;
-    while (current != 0 && current->m_priority > priority)
+    while (current != NULL && current->m_priority > priority)
         current = current->m_prev;
-    if (current == 0) {
+    if (current == NULL) {
         manager->m_next = m_managerListHead;
-        manager->m_prev = 0;
-        if (m_managerListHead != 0)
+        manager->m_prev = NULL;
+        if (m_managerListHead != NULL)
             m_managerListHead->m_prev = manager;
         m_managerListHead = manager;
-        if (m_managerListTail == 0)
+        if (m_managerListTail == NULL)
             m_managerListTail = manager;
-    } else if (current->m_next == 0) {
+    } else if (current->m_next == NULL) {
         manager->m_prev = m_managerListTail;
-        manager->m_next = 0;
+        manager->m_next = NULL;
         m_managerListTail->m_next = manager;
         m_managerListTail = manager;
     } else {
@@ -183,7 +183,7 @@ void executive::MainLoop(void)
     signed char done = 0;
     tag_message message;
     signed char dispatch = 1;
-    if (m_managerListHead == 0)
+    if (m_managerListHead == NULL)
         return;
     gpInputManager->Flush();
     while (!done) {
@@ -191,9 +191,9 @@ void executive::MainLoop(void)
         message = gpInputManager->GetEvent();
         dispatch = 1;
         m_activeManager = m_managerListHead;
-        if (m_activeManager == 0)
+        if (m_activeManager == NULL)
             return;
-        while (m_activeManager != 0 && dispatch && !done) {
+        while (m_activeManager != NULL && dispatch && !done) {
             if (m_activeManager->m_active == 1) {
                 switch (m_activeManager->Main(message)) {
                 case MESSAGE_DISPATCH_CONSUME:
@@ -211,14 +211,14 @@ void executive::MainLoop(void)
                             break;
                         case EXECUTIVE_COMMAND_REMOVE_MANAGER:
                             RemoveManager(m_activeManager);
-                            m_activeManager = 0;
+                            m_activeManager = NULL;
                             break;
                         }
                     }
                     break;
                 }
             }
-            if (m_activeManager != 0)
+            if (m_activeManager != NULL)
                 m_activeManager = m_activeManager->m_next;
         }
     }

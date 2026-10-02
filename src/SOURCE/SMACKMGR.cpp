@@ -36,11 +36,11 @@ VA(0x0045abe0, 0x4c)
 H1_C_LINKAGE void *radmalloc(unsigned long numbytes) {
     void *mem;
     if (numbytes == 0)
-        return 0;
+        return NULL;
     if (numbytes != 0xffffffff)
         mem = malloc(numbytes);
     else
-        mem = 0;
+        mem = NULL;
     return mem;
 }
 
@@ -101,10 +101,10 @@ short smackManager::Main(struct tag_message &msg) {
     smk = SmackOpen(gText, SmackOptions[bSmackNum].openFlags | (gpSoundManager->m_digitalDriver ? 0xfe00 : 0), -1);
     LogStr("SmackM3b");
     if (smk) {
-        FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
-        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
+        FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
         SmackSoundOnOff(smk, gConfig.musicVolume);
-        if (gbSkipIntro && (bSmackNum == 2 || bSmackNum == 3)) {
+        if (gbSkipIntro && (bSmackNum == SMACK_INTRO02C || bSmackNum == SMACK_INTRO02U)) {
             startFrame = 125;
             SmackVolumePan(smk, 0x200, 0, 0);
             SmackSoundOnOff(smk, 0);
@@ -119,8 +119,8 @@ short smackManager::Main(struct tag_message &msg) {
         }
         gpWindowManager->m_updateFlags = SmackOptions[bSmackNum].updateFlags;
         if (SmackOptions[bSmackNum].fadeIn)
-            gpWindowManager->FadeScreen(1, 8, 0);
-        SmackToBuffer(smk, 0, 0, 640, 480, gpWindowManager->m_screen->m_pixels, 0);
+            gpWindowManager->FadeScreen(1, 8, NULL);
+        SmackToBuffer(smk, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, gpWindowManager->m_screen->m_pixels, 0);
         for (currentFrame = startFrame; currentFrame <= smk->Frames; currentFrame++) {
             SmackDoFrame(smk);
             if (SmackOptions[bSmackNum].fadeIn && currentFrame == startFrame) {
@@ -135,9 +135,9 @@ short smackManager::Main(struct tag_message &msg) {
                 }
                 gpWindowManager->FadeScreen(0, 8, pPalette);
             } else {
-                if (bSmackNum == 6 && currentFrame >= 23)
+                if (bSmackNum == SMACK_WIN02 && currentFrame >= 23)
                     bigFont->DrawBoundedString(gcCongratsText, 29, 338, 325, 115, 1, 1);
-                if (bSmackNum == 0) {
+                if (bSmackNum == SMACK_NWCLOGO) {
                     bigFont->DrawString("Presents...", 280, 440, 255);
                     gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
                 }
@@ -158,13 +158,13 @@ short smackManager::Main(struct tag_message &msg) {
                     lastTick = KBTickCount();
                 }
             }
-            if (!gbFirstTimeThrough || bSmackNum > 3) {
+            if (!gbFirstTimeThrough || bSmackNum > SMACK_INTRO_LAST) {
                 Process1WindowsMessage();
                 switch (gpInputManager->GetEvent().type) {
                 case MESSAGE_KEY_DOWN:
                 case MESSAGE_LEFT_BUTTON_DOWN:
                 case MESSAGE_RIGHT_BUTTON_DOWN:
-                    if (bSmackNum >= 2)
+                    if (bSmackNum >= SMACK_INTRO_FIRST)
                         break;
                     else {
                         currentFrame = smk->Frames;
@@ -176,7 +176,7 @@ short smackManager::Main(struct tag_message &msg) {
                 }
             }
         }
-        if (bSmackNum <= 1) {
+        if (bSmackNum <= SMACK_LOGO_LAST) {
             SmackVolumePan(smk, 0x200, 0, 0);
             SmackSoundOnOff(smk, 0);
             SmackGoto(smk, 101);
@@ -187,9 +187,9 @@ short smackManager::Main(struct tag_message &msg) {
             bigFont->DrawString("Presents...", 280, 440, 255);
             gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
         }
-        if (bSmackNum == 1)
+        if (bSmackNum == SMACK_NWCLOGO1)
             gbSkipIntro = 1;
-        if (bSmackNum == 6) {
+        if (bSmackNum == SMACK_WIN02) {
             DelayMilli(4500);
             bigFont->DrawString("Press a Key to Continue...", 420, 460, 1);
             gpWindowManager->UpdateScreenRegion(420, 460, 220, 20);
@@ -210,8 +210,8 @@ short smackManager::Main(struct tag_message &msg) {
             else
                 pPalette->m_data = reinterpret_cast<signed char*>(smk->alternatePalette); // API-forced: Smacker palettes are unsigned bytes.
             gpWindowManager->FadeScreen(1, 8, pPalette);
-            FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
-            BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
+            FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+            BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
         }
         SmackClose(smk);
     }

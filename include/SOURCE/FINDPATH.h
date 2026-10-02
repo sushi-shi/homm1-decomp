@@ -3,16 +3,16 @@
 
 #include <Domains.h>
 
-H1_ENUM_BEGIN(FindPathDistanceConstant)
+H1_ENUM_CONST_BEGIN(FindPathDistanceConstant)
     DISTANCE_MINOR_DIVISOR = 2
-H1_ENUM_END(FindPathDistanceConstant)
+H1_ENUM_CONST_END(FindPathDistanceConstant)
 
-H1_ENUM_BEGIN(FindPathTerrainConstant)
+H1_ENUM_CONST_BEGIN(FindPathTerrainConstant)
     FINDPATH_TERRAIN_COUNT = 7,
     FINDPATH_STEP_COST_COUNT = 2,
     FINDPATH_WATER_TERRAIN = 1,
     FINDPATH_WATER_MODE = 1
-H1_ENUM_END(FindPathTerrainConstant)
+H1_ENUM_CONST_END(FindPathTerrainConstant)
 
 int CalcTerrainCost(int, int, int, int);
 short TerrainStepCost(signed char, char);

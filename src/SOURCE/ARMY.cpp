@@ -48,7 +48,7 @@ int combatManager::AICheckRetreat(void) {
             armyPtr = &sideHero->m_army;
         } else {
             armyPtr = &bareGroup;
-            sideHero = 0;
+            sideHero = NULL;
         }
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
             if (m_armies[side][armyIndex].IsAlive()) {
@@ -58,7 +58,7 @@ int combatManager::AICheckRetreat(void) {
                 else
                     armyPtr->m_creatureCounts[armyIndex] = static_cast<short>(m_armies[side][armyIndex].m_quantity * 1.2);
             } else {
-                armyPtr->m_creatureTypes[armyIndex] = -1;
+                armyPtr->m_creatureTypes[armyIndex] = CREATURE_NONE;
                 armyPtr->m_creatureCounts[armyIndex] = 0;
             }
         }
@@ -103,7 +103,7 @@ int combatManager::AICheckRetreat(void) {
     prob -= (4 - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_difficulty) * 0.03;
     retreatRatio = static_cast<float>(force[m_currentSide]) / (force[0] + force[1]);
     if (retreatRatio < prob) {
-        giNextAction = 4;
+        giNextAction = ACTION_RETREAT;
         return 1;
     }
     return 0;
@@ -422,7 +422,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
     int targetHex;
 
     while (mask) {
-        if (currentArmy->m_creatureType == 26)
+        if (currentArmy->m_creatureType == CREATURE_GHOST)
             targetArmy = GetWorstArmy(side, mask);
         else
             targetArmy = GetBestArmy(side, mask);
@@ -433,7 +433,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
         targetHex = m_armies[side][targetArmy].m_hex;
         currentArmy->m_moveTargetHex = targetHex;
         if (currentArmy->ValidPath(targetHex, 0)) {
-            giNextAction = 2;
+            giNextAction = ACTION_MOVE;
             giNextActionGridIndex = targetHex;
             return 1;
         }
@@ -444,7 +444,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
                 targetHex++;
             currentArmy->m_moveTargetHex = targetHex;
             if (currentArmy->ValidPath(targetHex, 0)) {
-                giNextAction = 2;
+                giNextAction = ACTION_MOVE;
                 giNextActionGridIndex = targetHex;
                 return 1;
             }
@@ -569,7 +569,7 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
     currentArmy->m_targetIndex = armyIndex;
     attackMask = currentArmy->GetAttackMask(currentArmy->m_hex, 0, -1);
     if (attackMask != 0xff) {
-        giNextAction = 3;
+        giNextAction = ACTION_SKIP_TURN;
         return 1;
     }
     savedSpeed = currentArmy->m_stats.speed;
@@ -589,7 +589,7 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
     }
     currentArmy->m_stats.speed = savedSpeed;
     if (gpSearchArray->m_pathLength > 1) {
-        giNextAction = 2;
+        giNextAction = ACTION_MOVE;
         left = currentArmy->m_stats.speed;
         pathNdx = gpSearchArray->m_pathLength - 1;
         giNextActionGridIndex = currentArmy->m_hex;
@@ -683,7 +683,7 @@ void army::LoadResources(void) {
     int i;
     char buf[16];
 
-    if (m_creatureType != 3)
+    if (m_creatureType != CREATURE_SWORDSMAN)
         strcpy(sprite, gArmyNames[m_creatureType]);
     else
         strcpy(sprite, "swrdsman");
@@ -705,8 +705,8 @@ void army::LoadResources(void) {
         sprintf(gText, "shoot%02d.82M", m_creatureType);
         m_samples[3] = gpResourceManager->GetSample(gText);
     } else {
-        m_attackIcon = 0;
-        m_samples[3] = 0;
+        m_attackIcon = NULL;
+        m_samples[3] = NULL;
     }
     for (i = 0; i < 4; i++) {
         if (m_samples[i]) {
@@ -726,20 +726,20 @@ void army::FreeResources(void) {
 
     if (m_standIcon) {
         gpResourceManager->Dispose(m_standIcon);
-        m_standIcon = 0;
+        m_standIcon = NULL;
     }
     if (m_walkIcon) {
         gpResourceManager->Dispose(m_walkIcon);
-        m_walkIcon = 0;
+        m_walkIcon = NULL;
     }
     if ((m_stats.attributes & 4) && m_attackIcon) {
         gpResourceManager->Dispose(m_attackIcon);
-        m_attackIcon = 0;
+        m_attackIcon = NULL;
     }
     for (i = 0; i < 4; i++) {
         if (m_samples[i]) {
             gpResourceManager->Dispose(m_samples[i]);
-            m_samples[i] = 0;
+            m_samples[i] = NULL;
         }
     }
 }
@@ -1333,7 +1333,7 @@ void army::DoHydraAttack(void) {
         m_animationFrame = i + 3;
         gpCombatManager->DrawFrame(1);
     }
-    if (m_spellEffect == 14)
+    if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
@@ -1388,7 +1388,7 @@ void army::DoHydraAttack(void) {
         m_animationFrame = i + 3;
         gpCombatManager->DrawFrame(1);
     }
-    if (m_spellEffect == 14)
+    if (m_spellEffect == SPELL_BERZERKER)
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
@@ -1918,7 +1918,7 @@ int army::Damage(long int damage) {
     gpCombatManager->DrawFrame(1);
     if (m_spellEndCondition == 2) {
         m_stats.attributes |= 0x80;
-        if (m_spellEffect != 7)
+        if (m_spellEffect != SPELL_BLIND)
             m_stats.attributes |= 0x40;
         CancelSpell();
     }
@@ -2067,16 +2067,16 @@ void army::SpellEffect(short effect, int frameDelay) {
 VA(0x0046b457, 0xb2)
 void army::CancelSpell(void) {
     switch (m_spellEffect) {
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 10:
+        case SPELL_HASTE:
+        case SPELL_SLOW:
+        case SPELL_BLIND:
+        case SPELL_BLESS:
+        case SPELL_CURSE:
             m_damageMode = 0;
             m_stats.speed = m_baseSpeed;
             m_stats.attributes |= gMonsterDatabase[m_creatureType].stats.attributes & 2;
             break;
-        case 9:
+        case SPELL_PROTECTION:
             m_stats.defense -= 3;
             break;
     }
@@ -2103,7 +2103,7 @@ void army::GoBerserk(void) {
             while (!found) {
                 dir = Random(0, 7);
                 if (!(attackMask & (1 << dir))) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     ValidAttack(m_hex, dir, 2, -1, &targetHex);
                     giNextActionGridIndex = targetHex;
                     found = 1;
@@ -2115,18 +2115,18 @@ void army::GoBerserk(void) {
                 m_targetSide = gpCombatManager->m_hexCells[target].m_occupantSide;
                 m_targetIndex = gpCombatManager->m_hexCells[target].m_occupantIndex;
                 if (ValidFlight(target, 0)) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     giNextActionGridIndex = target;
                     found++;
                 }
             } else {
-                giNextAction = 2;
+                giNextAction = ACTION_MOVE;
                 giNextActionGridIndex = target;
             }
         } else {
             dir = Random(0, 5);
             if (ValidMove(dir)) {
-                giNextAction = 2;
+                giNextAction = ACTION_MOVE;
                 giNextActionGridIndex = m_hex;
                 giNextActionGridIndex = GetAdjacentCellIndex(giNextActionGridIndex, dir);
             }
@@ -2164,7 +2164,7 @@ void army::MoveAttack(int hex, int moveOnly) {
         if ((m_stats.attributes & 2) && meleeMask == 0xff && m_moveTargetHex != m_hex
             && !ValidFlight(m_moveTargetHex, 0))
             return;
-        if (m_spellEffect == 14)
+        if (m_spellEffect == SPELL_BERZERKER)
             atkMask = GetAttackMask(m_hex, 2, -1);
         else
             atkMask = GetAttackMask(m_hex, 1, -1);

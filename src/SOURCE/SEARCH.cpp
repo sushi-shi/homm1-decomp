@@ -5,6 +5,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/philAI.h>
 #include <SOURCE/searchArray.h>
 

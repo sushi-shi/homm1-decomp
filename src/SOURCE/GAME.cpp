@@ -14,6 +14,7 @@
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
 
@@ -143,7 +144,7 @@ int playerData::BuildingsOwned(int townType, int buildingIndex, int buildState) 
         town* ownedTown = &gpGame->m_castleRecs[m_townIds[i]];
         if (buildingIndex < 7 || ownedTown->m_type == townType) {
             if (buildingIndex == 0) {
-                if (ownedTown->m_buildings & 1) {
+                if (ownedTown->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)) {
                     if (ownedTown->m_buildState == buildState)
                         ++count;
                 }
@@ -296,7 +297,7 @@ signed char game::CreateBoat(signed char x, signed char y) {
         mapCell* square = &m_map[x][y];
         boat->savedTriggerType = square->m_triggerType;
         boat->savedEventData = square->m_objectMetadata;
-        square->m_triggerType = 0xbe;
+        square->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
         square->m_objectMetadata = boatIdx;
     }
     return boatIdx;
@@ -809,7 +810,7 @@ void game::UpdateNewGameWindow(void) {
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 4;
+    message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < 4; i++) {
         message.id = i + 13;
         m_newGameWindow->BroadcastMessage(message);
@@ -980,7 +981,7 @@ signed char game::NewGame(void) {
     gpMouseManager->ReallyShowPointer();
     gpWindowManager->DoDialog(m_newGameWindow, NewGameHandler, 0);
     delete m_newGameWindow;
-    if (gpWindowManager->m_dialogResult == 0x7801)
+    if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_1)
         return 0;
     strcpy(m_mapName, gFullMapName);
     strcpy(m_mapDescription, gMapDescription);
@@ -1029,12 +1030,12 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 6;
+    message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
     if (fromMenu) {
-        message.id = 0x7802;
+        message.id = DIALOG_BUTTON_2;
         window->BroadcastMessage(message);
     } else {
-        message.id = 0x7800;
+        message.id = DIALOG_BUTTON_0;
         window->BroadcastMessage(message);
         message.id = 0x385;
         window->BroadcastMessage(message);
@@ -1044,8 +1045,8 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
     if (gpWindowManager->m_dialogResult == 0x385) {
-        NormalDialog("Are you sure you want to restart this scenario?", 2, -1, -1, -1, 0, -1, 0, -1);
-        if (gpWindowManager->m_dialogResult == 0x7805) {
+        NormalDialog("Are you sure you want to restart this scenario?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
             giBottomViewOverride = 0;
@@ -1723,9 +1724,9 @@ short game::LoadMap(char* filename) {
             if ((type & 0x7f) == 2)
                 m_castleRecs[i].m_buildings |= 0x2000;
             if (type < 0)
-                m_castleRecs[i].m_buildings |= 0x40;
+                m_castleRecs[i].m_buildings |= (1 << BUILDING_SLOT_CASTLE);
             else
-                m_castleRecs[i].m_buildings |= 0x20;
+                m_castleRecs[i].m_buildings |= (1 << BUILDING_SLOT_TENT);
         }
     }
     for (i = 0; i < GAME_MINE_COUNT; i++) {
@@ -1770,7 +1771,7 @@ void game::ClaimTown(signed char townId, signed char player) {
     if (m_townOwners[townId] != -1)
         gpGame->GetTown(townId)->Deallocate();
     for (i = 0; i < 5; ++i) {
-        townRec->m_army.m_creatureTypes[i] = -1;
+        townRec->m_army.m_creatureTypes[i] = CREATURE_NONE;
         townRec->m_army.m_creatureCounts[i] = 0;
     }
     if (m_castleRecs[townId].m_owner == -1)
@@ -1858,7 +1859,7 @@ signed char game::ViewSpells(
     short winX[3] = {177, 97, 177};
     short winY[3] = {100, 47, 100};
     if (!spellHero->GetNumSpells(spellType)) {
-        NormalDialog("No spells to cast.", 1, -1, -1, -1, 0, -1, 0, -1);
+        NormalDialog("No spells to cast.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     } else {
         m_viewSpellsCallback = callback;
         m_viewSpellsReadOnly = readOnly;
@@ -1881,7 +1882,7 @@ signed char game::ViewSpells(
                 message.id = 4;
             else
                 message.id = 5;
-            message.value = 6;
+            message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
         UpdateSpellWidgets();
@@ -1921,20 +1922,20 @@ void game::UpdateSpellWidgets(void) {
         if (m_viewSpellsTop + i > m_spellLast) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.id = i + 6;
-            message.value = 6;
+            message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
             message.id = i + 10;
             m_viewSpellsWindow->BroadcastMessage(message);
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
             message.id = i + 10;
-            message.value = 6;
+            message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
             message.id = i + 6;
             m_viewSpellsWindow->BroadcastMessage(message);
             if (m_viewSpellsReadOnly) {
                 message.command = WIDGET_COMMAND_SET_FLAGS;
-                message.value = 2;
+                message.value = WIDGET_FLAG_ENABLED;
                 m_viewSpellsWindow->BroadcastMessage(message);
             }
             message.command = WIDGET_COMMAND_SET_FRAME;
@@ -1972,19 +1973,19 @@ short ViewSpellsHandler(tag_message& message) {
                         case 9:
                             spell = gpGame->m_viewSpellsHero
                                         ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
-                            NormalDialog(gSpellDesc[spell], 4, -1, -1, 8, spell, -1, 0, -1);
+                            NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                             break;
                         case 2:
-                            NormalDialog(cSpellHelp[0], 4, -1, -1, -1, 0, -1, 0, -1);
+                            NormalDialog(cSpellHelp[0], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                             break;
                         case 3:
-                            NormalDialog(cSpellHelp[1], 4, -1, -1, -1, 0, -1, 0, -1);
+                            NormalDialog(cSpellHelp[1], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                             break;
                         case 4:
-                            NormalDialog(cSpellHelp[2], 4, -1, -1, -1, 0, -1, 0, -1);
+                            NormalDialog(cSpellHelp[2], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                             break;
                         case 5:
-                            NormalDialog(cSpellHelp[3], 4, -1, -1, -1, 0, -1, 0, -1);
+                            NormalDialog(cSpellHelp[3], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                             break;
                     }
                 } else {
@@ -1996,7 +1997,7 @@ short ViewSpellsHandler(tag_message& message) {
                             if (gpGame->m_viewSpellsReadOnly) {
                                 spell = gpGame->m_viewSpellsHero
                                             ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
-                                NormalDialog(gSpellDesc[spell], 1, -1, -1, 8, spell, -1, 0, -1);
+                                NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
                             gpGame->m_viewSpell = gpGame->m_viewSpellsHero
@@ -2073,7 +2074,7 @@ short ViewSpecialHandler(tag_message& message) {
                     case 5:
                         strcpy(gText, cSpellHelp[3]);
                         break;
-                    case 0x7800:
+                    case DIALOG_BUTTON_0:
                         strcpy(gText, cSpellHelp[4]);
                         break;
                     default:
@@ -2134,7 +2135,7 @@ void game::ViewArmy(
     animId = 5;
     message.type = MESSAGE_WIDGET;
 
-    if (monsterType != 3)
+    if (monsterType != CREATURE_SWORDSMAN)
         strcpy(iconName, gArmyNames[monsterType]);
     else
         strcpy(iconName, "swrdsman");
@@ -2184,7 +2185,7 @@ void game::ViewArmy(
     sprintf(gText, "%s%d", gArmyStatText[0], monsterInfo->stats.attack);
     strcat(statText, gText);
     if (theHero)
-        mod += theHero->m_primaryStats[0];
+        mod += theHero->m_primaryStats[HERO_PRIMARY_ATTACK];
     if (mod) {
         sprintf(gText, " (%d)", monsterInfo->stats.attack + mod);
         strcat(statText, gText);
@@ -2194,8 +2195,8 @@ void game::ViewArmy(
     sprintf(gText, "\n%s%d", gArmyStatText[1], monsterInfo->stats.defense);
     strcat(statText, gText);
     if (theHero)
-        mod += theHero->m_primaryStats[1];
-    if (theArmy && theArmy->m_spellEffect == 9)
+        mod += theHero->m_primaryStats[HERO_PRIMARY_DEFENSE];
+    if (theArmy && theArmy->m_spellEffect == SPELL_PROTECTION)
         mod += 3;
     if (mod) {
         sprintf(gText, " (%d)", monsterInfo->stats.defense + mod);
@@ -2237,19 +2238,19 @@ void game::ViewArmy(
     m_viewArmyWindow->BroadcastMessage(message);
     if (disableDismiss) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
-        message.id = 0x7803;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        message.id = DIALOG_BUTTON_3;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (quickView) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
-        message.id = 0x7800;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        message.id = DIALOG_BUTTON_0;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (numTroops < 1) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         message.id = 1;
         m_viewArmyWindow->BroadcastMessage(message);
         message.id = 2;
@@ -2274,7 +2275,7 @@ void game::ViewArmy(
         if (gbDismissArmy && theGroup) {
             for (i = 0; i < 5; i++) {
                 if (theGroup->m_creatureTypes[i] == monsterType) {
-                    theGroup->m_creatureTypes[i] = -1;
+                    theGroup->m_creatureTypes[i] = CREATURE_NONE;
                     theGroup->m_creatureCounts[i] = 0;
                 }
             }
@@ -2297,15 +2298,15 @@ short ViewArmyHandler(tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x7800:
-                    case 0x7801:
+                    case DIALOG_BUTTON_0:
+                    case DIALOG_BUTTON_1:
                         gpWindowManager->m_dialogResult = message.id;
                         message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
-                    case 0x7803:
-                        NormalDialog("Are you sure you want to dismiss this army?", 2, 0xb1, 0x36, -1, 0, -1, 0, -1);
-                        if (gpWindowManager->m_dialogResult == 0x7805) {
+                    case DIALOG_BUTTON_3:
+                        NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
                             message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
@@ -2560,61 +2561,61 @@ void game::Overview(void) {
 VA(0x00440f58, 0x28b)
 signed char game::GetRandomNumTroops(signed char monsterType) {
     switch (monsterType) {
-        case 0:
+        case CREATURE_PEASANT:
             return Random(30, 80);
-        case 1:
+        case CREATURE_ARCHER:
             return Random(20, 30);
-        case 2:
+        case CREATURE_PIKEMAN:
             return Random(20, 30);
-        case 3:
+        case CREATURE_SWORDSMAN:
             return Random(12, 25);
-        case 4:
+        case CREATURE_CAVALRY:
             return Random(8, 16);
-        case 5:
+        case CREATURE_PALADIN:
             return Random(6, 12);
-        case 6:
+        case CREATURE_GOBLIN:
             return Random(25, 40);
-        case 7:
+        case CREATURE_ORC:
             return Random(15, 30);
-        case 8:
+        case CREATURE_WOLF:
             return Random(20, 35);
-        case 9:
+        case CREATURE_OGRE:
             return Random(10, 20);
-        case 10:
+        case CREATURE_TROLL:
             return Random(7, 10);
-        case 11:
+        case CREATURE_CYCLOPS:
             return Random(5, 7);
-        case 12:
+        case CREATURE_SPRITE:
             return Random(20, 40);
-        case 13:
+        case CREATURE_DWARF:
             return Random(10, 25);
-        case 14:
+        case CREATURE_ELF:
             return Random(15, 30);
-        case 15:
+        case CREATURE_DRUID:
             return Random(10, 25);
-        case 16:
+        case CREATURE_UNICORN:
             return Random(8, 15);
-        case 17:
+        case CREATURE_PHOENIX:
             return Random(7, 12);
-        case 18:
+        case CREATURE_CENTAUR:
             return Random(20, 50);
-        case 19:
+        case CREATURE_GARGOYLE:
             return Random(15, 30);
-        case 20:
+        case CREATURE_GRIFFIN:
             return Random(10, 25);
-        case 21:
+        case CREATURE_MINOTAUR:
             return Random(10, 16);
-        case 22:
+        case CREATURE_HYDRA:
             return Random(6, 8);
-        case 23:
+        case CREATURE_DRAGON:
             return Random(3, 7);
-        case 24:
+        case CREATURE_ROGUE:
             return Random(20, 40);
-        case 25:
+        case CREATURE_NOMAD:
             return Random(12, 25);
-        case 26:
+        case CREATURE_GHOST:
             return Random(10, 20);
-        case 27:
+        case CREATURE_GENIE:
             return Random(4, 9);
         default:
             return 3;
@@ -2695,7 +2696,7 @@ void game::NextPlayer(void) {
             else
                 remote = giCurPlayer;
             if (!gpGame->TransmitSaveGame(remote, 0))
-                ShutDown(0);
+                ShutDown(NULL);
         }
         if (giBottomViewOverride == 6)
             giBottomViewOverride = 0;
@@ -2743,12 +2744,12 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
                 && (m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) <= 0x30) {
                 m_map[x - 2 + i][y - 2 + j].m_secondaryTrigger |= 0x28;
             } else {
-                m_map[x - 2 + i][y - 2 + j].m_triggerType = 0x28;
+                m_map[x - 2 + i][y - 2 + j].m_triggerType = MAP_OBJECT_TOWN;
                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
             }
         }
     }
-    m_map[x][y].m_triggerType |= 0x80;
+    m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
     town = GetTown(townNum);
     town->m_turnsOwned = 10;
     if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
@@ -2785,14 +2786,14 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
             m_castleRecs[townNum].m_buildings = 0;
     }
     if (isCastle) {
-        m_castleRecs[townNum].m_buildings |= 0xc0;
+        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_FIRST));
         m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
-        if (m_castleRecs[townNum].m_buildings & 0x20)
-            m_castleRecs[townNum].m_buildings -= 0x20;
+        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
+            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
     } else {
-        m_castleRecs[townNum].m_buildings |= 0x20;
-        if (m_castleRecs[townNum].m_buildings & 0x40)
-            m_castleRecs[townNum].m_buildings -= 0x40;
+        m_castleRecs[townNum].m_buildings |= (1 << BUILDING_SLOT_TENT);
+        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_CASTLE))
+            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_CASTLE);
         SetupTown(townNum, 0);
     }
 }
@@ -2960,7 +2961,7 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
         }
     }
     if (!m_castleRecs[townId].m_customized) {
-        m_castleRecs[townId].m_buildings |= 0x80;
+        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_FIRST);
         m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[townType][0]].growth;
         if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
             dwellingCount++;
@@ -2986,7 +2987,7 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
                 spellValue = giSpellAIValue[newSpell] * (gcSpellAIFlags[newSpell] & 1 ? 4 : 1) + 50;
             else
                 spellValue = 1500;
-            if (newSpell == 27)
+            if (newSpell == SPELL_DIMENSION_DOOR)
                 spellValue = 1500;
         } while (used[newSpell] || Random(1, 1500) >= spellValue);
         m_castleRecs[townId].m_mageGuildSpells[k] = newSpell;
@@ -3010,7 +3011,7 @@ int game::ComputeDailyGold(int player) {
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         if (m_castleRecs[i].m_owner == player) {
-            if (m_castleRecs[i].m_buildings & 0x20)
+            if (m_castleRecs[i].m_buildings & (1 << BUILDING_SLOT_TENT))
                 gold += 250;
             else
                 gold += 1000;
@@ -3066,12 +3067,12 @@ void game::PerDay(void) {
     for (i = 0; i < GAME_TOWN_COUNT; i++)
         m_castleRecs[i].m_turnsOwned++;
     for (i = 0; i < m_playerCount; i++)
-        m_players[i].m_resources[6] += ComputeDailyGold(i);
+        m_players[i].m_resources[RESOURCE_GOLD] += ComputeDailyGold(i);
     for (i = 0; i < m_playerCount; i++) {
         if (!gbHumanPlayer[i]) {
             if (gpGame->m_players[i].m_difficulty > 2) {
-                m_players[i].m_resources[0]++;
-                m_players[i].m_resources[2]++;
+                m_players[i].m_resources[RESOURCE_WOOD]++;
+                m_players[i].m_resources[RESOURCE_ORE]++;
             }
             if (gpGame->m_players[i].m_difficulty > 3 && m_day >= 1 && m_day <= 6)
                 m_players[i].m_resources[m_day - 1]++;
@@ -3217,7 +3218,7 @@ void game::PerMonth(void) {
             townPointer = GetTown(i);
             if (townPointer->m_buildings & (1 << j)) {
                 growth = gMonsterDatabase[gDwellingType[townPointer->m_type][j - 7]].growth;
-                if (townPointer->m_buildings & 0x10)
+                if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                     growth += 2;
                 if (giMonthType == 1 && gDwellingType[townPointer->m_type][j - 7] == giMonthSpecial)
                     townPointer->m_garrison[j - 7] *= 2;
@@ -3236,7 +3237,7 @@ void game::PerMonth(void) {
                 spot = gpAdvManager->GetCell(x, y);
                 if (!spot->m_triggerType && giGroundToTerrain[spot->m_tileIndex]) {
                     if (Random(0, 360) == 10) {
-                        spot->m_triggerType = 0x9a;
+                        spot->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
                         spot->m_objectTileset = 0xc;
                         spot->m_objectIndex = giMonthSpecial;
                         spot->m_objectMetadata = GetRandomNumTroops(giMonthSpecial);
@@ -3297,7 +3298,7 @@ void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     if (!present[2])
         present[1] = 1;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        army->m_creatureTypes[i] = -1;
+        army->m_creatureTypes[i] = CREATURE_NONE;
         army->m_creatureCounts[i] = -1;
     }
     for (i = 0; i < 2; i++) {
@@ -3815,7 +3816,7 @@ signed char game::SetupTowns(void) {
                     if (town->m_army.m_creatureCounts[j] > 0)
                         town->m_army.m_creatureTypes[j] = extra->troopTypes[j];
                     else
-                        town->m_army.m_creatureTypes[j] = -1;
+                        town->m_army.m_creatureTypes[j] = CREATURE_NONE;
                 }
                 town->m_buildState = extra->buildState;
                 town->m_buildings = town->m_buildings - (town->m_buildings & mask) + (extra->buildings & mask);
@@ -4035,7 +4036,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
         ((int*)sendPacket)[1] = playerExited;
         status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
         if (!status)
-            ShutDown(0);
+            ShutDown(NULL);
 
         segCount = (fileSize - 1) / 200 + 1;
         numBlocks = (segCount - 1) / 100 + 1;
@@ -4059,7 +4060,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                         memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
                         status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
                         if (!status)
-                            ShutDown(0);
+                            ShutDown(NULL);
                     }
                 }
                 LogStr("PreWait");
@@ -4067,7 +4068,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
                 LogStr("PostWait");
                 if (!status)
-                    ShutDown(0);
+                    ShutDown(NULL);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
                     if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex] > 0) // API-forced: char* record.
                         acked[block * 100 + sendPacketIndex] = 1;
@@ -4079,9 +4080,9 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 }
             }
         }
-        status = TransmitRemoteData(0, remotePlayer, 0, 6, 1, 1, -1, 1);
+        status = TransmitRemoteData(NULL, remotePlayer, 0, 6, 1, 1, -1, 1);
         if (!status)
-            ShutDown(0);
+            ShutDown(NULL);
         okay = 1;
     }
 
@@ -4145,9 +4146,9 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         Process1WindowsMessage();
     }
-    result = TransmitRemoteData(0, remotePlayer, 0, 2, 1, 1, -1, 1);
+    result = TransmitRemoteData(NULL, remotePlayer, 0, 2, 1, 1, -1, 1);
     if (!result)
-        ShutDown(0);
+        ShutDown(NULL);
     memset(gotIt, 0, sizeof(gotIt));
     if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
         decodedData = static_cast<char*>(malloc(0x130b0));
@@ -4158,11 +4159,11 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         CheckDoMain(0, 1);
         if (lastPacketTime + 20000 < KBTickCount()) {
-            NormalDialog("Error receiving data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
-            if (gpWindowManager->m_dialogResult == 0x7805)
+            NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
             else
-                ShutDown(0);
+                ShutDown(NULL);
         }
         receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
         if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
@@ -4180,7 +4181,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                         *(sendPacket + k - packetStart) = gotIt[k];
                     result = TransmitRemoteData(sendPacket, remotePlayer, 200, 5, 1, 1, -1, 1);
                     if (!result)
-                        ShutDown(0);
+                        ShutDown(NULL);
                     break;
                 case 6:
                     done = 1;
@@ -4250,7 +4251,7 @@ void game::DoNewTurn(void) {
             );
             gText[0] -= 32;
         }
-        NormalDialog(gText, 1, 0x61, -1, 9, gpGame->m_players[giCurPlayer].Color(), -1, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[giCurPlayer].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     if (gpCurPlayer->m_heroCount > 0)
         gpAdvManager->SetHeroContext(gpCurPlayer->NextHero(0), 0);
@@ -4284,7 +4285,7 @@ void game::DoNewTurn(void) {
             }
             gpSoundManager->SwitchAmbientMusic(track);
             gpMouseManager->SetPointer(0);
-            NormalDialog(gText, 1, 0x61, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
         }
     }
@@ -4341,7 +4342,7 @@ void game::GetMap(void) {
     request->ShowMapInfo();
     result = gpExec->DoDialog(request);
     gpWindowManager->RemoveWindow(gpReqExtraWindow);
-    if (result == 0x7802) {
+    if (result == DIALOG_BUTTON_2) {
         strcpy(gMapName, gLastFilename);
         delete request;
     } else {
@@ -4577,8 +4578,8 @@ void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, 
         cell = passedCell;
     else
         cell = gpAdvManager->GetCell(x, y);
-    if (y > 0 && obj == 0xa8 && gpAdvManager->GetCell(x, y - 1)->m_triggerType != 0x28) {
-        cell->m_triggerType = 0;
+    if (y > 0 && obj == 0xa8 && gpAdvManager->GetCell(x, y - 1)->m_triggerType != MAP_OBJECT_TOWN) {
+        cell->m_triggerType = MAP_OBJECT_NONE;
         cell->m_objectMetadata = 0;
         return;
     }

@@ -927,7 +927,7 @@ int TransmitRemoteData(
             DelayMilli(1000);
         }
         if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && retval == 0) {
-            NormalDialog("Error sending data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 tries = -1;
         }
@@ -946,7 +946,7 @@ char* GetRemoteData(signed char remove) {
     int index;
 
     if (!gbRemoteOn || gbInNetSetup)
-        return 0;
+        return NULL;
     oldest = 999999999;
     index = -1;
     for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
@@ -962,7 +962,7 @@ char* GetRemoteData(signed char remove) {
         rcvBuf[index].sender = NetPosToGamePos(rcvBuf[index].sender);
         return rcvBufOut;
     }
-    return 0;
+    return NULL;
 }
 
 // donor PoL RVA 0x000a41ec; preferred Buka symbol ?PollRemote@@YIXXZ
@@ -999,8 +999,8 @@ void PollRemote(void) {
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
         NormalDialog(
             "The other player's computer is not responding.  Do you wish to wait longer?",
-            2, -1, -1, -1, 0, -1, 0, -1);
-        if (gpWindowManager->m_dialogResult == 0x7805) {
+            NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             lLastHeartbeatReceive = KBTickCount();
         } else {
             bInTimeoutFail = 1;
@@ -1097,7 +1097,7 @@ int TransmitAndWait(
 
     if (!gbRemoteOn || gbInNetSetup)
         return 1;
-    received = 0;
+    received = NULL;
     result =
         TransmitRemoteData(bytes, destination, length, command, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
     if (result == 0)
@@ -1106,7 +1106,7 @@ int TransmitAndWait(
     complete = 0;
     while (!complete) {
         if (KBTickCount() > start + 20000) {
-            NormalDialog("Error sending data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 start = KBTickCount();
             } else {

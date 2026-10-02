@@ -12,7 +12,7 @@ struct IDirectDraw;
 struct IUnknown;
 typedef long(__stdcall* DirectDrawCreateProc)(GUID*, IDirectDraw**, IUnknown*);
 
-H1_ENUM_BEGIN(WingraphPaintConstant)
+H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
     WINGRAPH_WIDTH = 640,
     WINGRAPH_HEIGHT = 480,
     WINGRAPH_PAINT_ALIGN_MASK = 0xfffc,
@@ -29,7 +29,7 @@ H1_ENUM_BEGIN(WingraphPaintConstant)
     WINGRAPH_PAINT_TIMEOUT = 10000,
     WINGRAPH_PAINT_X_END = WINGRAPH_WIDTH,
     WINGRAPH_PAINT_Y_END = WINGRAPH_HEIGHT
-H1_ENUM_END(WingraphPaintConstant)
+H1_ENUM_CONST_END(WingraphPaintConstant)
 
 H1_ENUM_BEGIN(DirectDrawReportCode)
     DDSD_REPORT_NONE = 0,

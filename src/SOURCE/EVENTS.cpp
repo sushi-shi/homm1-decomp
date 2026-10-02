@@ -612,7 +612,7 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
         townRec->m_occupyingHeroId = gpCurPlayer->CurrentHero();
         townRec->View();
     } else if (townRec->HasGarrison()) {
-        defender = townRec->m_occupyingHeroId == -1 ? 0 : gpGame->GetHero(townRec->m_occupyingHeroId);
+        defender = townRec->m_occupyingHeroId == -1 ? NULL : gpGame->GetHero(townRec->m_occupyingHeroId);
         result = DoCombat(x, y, curHero, &curHero->m_army, townRec, defender, &townRec->m_army, x, y,
                           -1, 1);
         if (result == 1)
@@ -636,79 +636,79 @@ void advManager::EventSound(short eventType, short eventData) {
     int musicTrack = -1;
 
     switch (eventType) {
-    case 13:
-    case 14:
-    case 15:
-    case 16:
-    case 17:
+    case MAP_OBJECT_STRAW_HUT:
+    case MAP_OBJECT_HOUSE:
+    case MAP_OBJECT_CABIN:
+    case MAP_OBJECT_DWARF_LOG_CABIN:
+    case MAP_OBJECT_PEASANT_LOG_CABIN:
         musicTrack = 0x16;
         break;
     case 63:
         musicTrack = 0x2e;
         break;
-    case 23:
+    case MAP_OBJECT_LIGHTHOUSE:
         musicTrack = 0x1a;
         break;
-    case 34:
+    case MAP_OBJECT_SPELL_SHRINE:
         musicTrack = 0x1b;
         break;
-    case 48:
+    case MAP_OBJECT_ARTIFACT:
         if (eventData == 1)
             musicTrack = 0x1c;
         break;
-    case 4:
-    case 6:
-    case 8:
-    case 24:
-    case 45:
+    case MAP_OBJECT_SKELETON:
+    case MAP_OBJECT_TREASURE_CHEST:
+    case MAP_OBJECT_CAMPFIRE:
+    case MAP_OBJECT_WATERWHEEL:
+    case MAP_OBJECT_WINDMILL:
         musicTrack = 0x1c;
         break;
-    case 1:
-    case 25:
-    case 32:
+    case MAP_OBJECT_ALCHEMIST_LAB:
+    case MAP_OBJECT_MINE:
+    case MAP_OBJECT_SAWMILL:
         musicTrack = 0x17;
         break;
-    case 3:
-    case 28:
+    case MAP_OBJECT_BUOY:
+    case MAP_OBJECT_OASIS:
         musicTrack = 0x14;
         break;
-    case 5:
+    case MAP_OBJECT_DAEMON_CAVE:
         musicTrack = 7;
         break;
-    case 7:
+    case MAP_OBJECT_FAERIE_RING:
         musicTrack = 8;
         break;
-    case 9:
+    case MAP_OBJECT_FOUNTAIN:
         musicTrack = 0x18;
         break;
-    case 10:
+    case MAP_OBJECT_GAZEBO:
         musicTrack = 9;
         break;
-    case 11:
+    case MAP_OBJECT_ANCIENT_LAMP:
         musicTrack = 0xa;
         break;
-    case 12:
+    case MAP_OBJECT_GRAVEYARD:
         musicTrack = 0xb;
         break;
-    case 22:
+    case MAP_OBJECT_DRAGON_CITY:
         musicTrack = 0xc;
         break;
-    case 27:
+    case MAP_OBJECT_OBELISK:
         musicTrack = 0x15;
         break;
-    case 36:
+    case MAP_OBJECT_STATUE:
         musicTrack = 0xe;
         break;
-    case 39:
+    case MAP_OBJECT_DESERT_TENT:
         musicTrack = 0xf;
         break;
-    case 41:
+    case MAP_OBJECT_STONE_LITHS:
         musicTrack = 0x10;
         break;
-    case 42:
+    case MAP_OBJECT_WAGON_CAMP:
         musicTrack = 0x11;
         break;
-    case 44:
+    case MAP_OBJECT_WHIRLPOOL:
         musicTrack = 0x19;
         break;
     default:
@@ -756,7 +756,7 @@ short advManager::GiveArtifact(class hero* eventHero, signed char artifact) {
     short slot;
 
     for (slot = 0; slot < HERO_ARTIFACT_SLOT_COUNT; slot++) {
-        if (eventHero->m_artifacts[slot] == -1)
+        if (eventHero->m_artifacts[slot] == ARTIFACT_NONE)
             break;
     }
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
@@ -776,7 +776,7 @@ int advManager::GiveRandomArtifact(class hero* eventHero) {
 
     artifact = gpGame->GetRandomArtifactId();
     if (artifact == -1)
-        GiveResource(eventHero, 6, 1000);
+        GiveResource(eventHero, RESOURCE_GOLD, 1000);
     else
         GiveArtifact(eventHero, artifact);
     return artifact;
@@ -839,41 +839,41 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
 
     switch (cell->m_objectMetadata) {
     case 2:
-        if (CombatMonsterEvent(eventHero, 26, 10, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 10, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, 1, gText, 6, 1000, -1, 0, -1);
-            GiveResource(eventHero, 6, 1000);
+            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 1000);
             eventHero->CheckLevel();
             return 1;
         }
         break;
     case 3:
-        if (CombatMonsterEvent(eventHero, 26, 15, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 15, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, 1, gText, 6, 2000, -1, 0, -1);
-            GiveResource(eventHero, 6, 2000);
+            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 2000);
             eventHero->CheckLevel();
             return 1;
         }
         break;
     case 4:
-        if (CombatMonsterEvent(eventHero, 26, 25, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 25, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, 1, gText, 6, 5000, -1, 0, -1);
-            GiveResource(eventHero, 6, 5000);
+            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 5000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 5000);
             eventHero->CheckLevel();
             return 1;
         }
         break;
     default:
-        if (CombatMonsterEvent(eventHero, 26, 50, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 50, cell, x, y, 0, x, y) == 1) {
             artifact = GiveRandomArtifact(eventHero);
             sprintf(gText, "%s", gEventText[textId]);
             if (artifact != -1)
-                EventWindow(-1, 1, gText, 6, 2000, 7, artifact, -1);
+                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 2000, NORMAL_DIALOG_ARTIFACT, artifact, -1);
             else
-                EventWindow(-1, 1, gText, 6, 2000, -1, 0, -1);
-            GiveResource(eventHero, 6, 2000);
+                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 2000);
             eventHero->CheckLevel();
             return 1;
         }
@@ -889,19 +889,19 @@ VA(0x00460a5c, 0x11e)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     short houseIndex;
 
-    houseIndex = (cell->m_triggerType & 0x7f) - 13;
+    houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - 13;
     if (!cell->m_objectMetadata) {
-        EventWindow(houseIndex * 3 + 25, 1, "", -1, 0, -1, 0, -1);
+        EventWindow(houseIndex * 3 + 25, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     } else {
         signed char creatures[5] = {6, 0, 1, 13, 0};
 
-        EventWindow(houseIndex * 3 + 23, 2, "", -1, 0, -1, 0, -1);
+        EventWindow(houseIndex * 3 + 23, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
                 eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, -1);
                 cell->m_objectMetadata = 0;
             } else {
-                EventWindow(houseIndex * 3 + 24, 1, "", -1, 0, -1, 0, -1);
+                EventWindow(houseIndex * 3 + 24, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             }
         }
     }
@@ -960,86 +960,86 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
     int i;
 
     switch (artifact) {
-    case 0:
+    case ARTIFACT_ULTIMATE_BOOK:
         stat = 3;
         amount = 12;
         break;
-    case 1:
+    case ARTIFACT_ULTIMATE_SWORD:
         stat = 0;
         amount = 12;
         break;
-    case 2:
+    case ARTIFACT_ULTIMATE_CLOAK:
         stat = 1;
         amount = 12;
         break;
-    case 3:
+    case ARTIFACT_ULTIMATE_WAND:
         stat = 2;
         amount = 12;
         break;
-    case 4:
+    case ARTIFACT_ARCANE_NECKLACE:
         stat = 2;
         amount = 4;
         break;
-    case 5:
-    case 6:
+    case ARTIFACT_CASTERS_BRACELET:
+    case ARTIFACT_MAGES_RING:
         stat = 2;
         amount = 2;
         break;
-    case 7:
+    case ARTIFACT_WITCHS_BROACH:
         stat = 2;
         amount = 3;
         break;
-    case 13:
-    case 16:
+    case ARTIFACT_THUNDER_MACE:
+    case ARTIFACT_GIANT_FLAIL:
         stat = 0;
         amount = 1;
         break;
-    case 14:
-    case 15:
+    case ARTIFACT_ARMORED_GAUNTLETS:
+    case ARTIFACT_DEFENDER_HELM:
         stat = 1;
         amount = 1;
         break;
-    case 17:
+    case ARTIFACT_BALLISTA:
         stat = 4;
         amount = 3;
         break;
-    case 18:
+    case ARTIFACT_STEALTH_SHIELD:
         stat = 1;
         amount = 2;
         break;
-    case 19:
+    case ARTIFACT_DRAGON_SWORD:
         stat = 0;
         amount = 3;
         break;
-    case 20:
+    case ARTIFACT_POWER_AXE:
         stat = 0;
         amount = 2;
         break;
-    case 21:
+    case ARTIFACT_DIVINE_BREASTPLATE:
         stat = 1;
         amount = 3;
         break;
-    case 22:
+    case ARTIFACT_MINOR_SCROLL:
         stat = 3;
         amount = 2;
         break;
-    case 23:
+    case ARTIFACT_MAJOR_SCROLL:
         stat = 3;
         amount = 3;
         break;
-    case 24:
+    case ARTIFACT_SUPERIOR_SCROLL:
         stat = 3;
         amount = 4;
         break;
-    case 25:
+    case ARTIFACT_FOREMOST_SCROLL:
         stat = 3;
         amount = 5;
         break;
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
+    case ARTIFACT_MEDAL_OF_VALOR:
+    case ARTIFACT_MEDAL_OF_COURAGE:
+    case ARTIFACT_MEDAL_OF_HONOR:
+    case ARTIFACT_MEDAL_OF_DISTINCTION:
+    case ARTIFACT_FIZBIN_OF_MISFORTUNE:
         break;
     }
     if (take == 1)
@@ -1048,8 +1048,8 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
         targetHero->m_primaryStats[stat] += amount;
         if (amount < 0 && stat == 3) {
             for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
-                if (targetHero->m_spellCharges[i] > targetHero->m_primaryStats[3])
-                    targetHero->m_spellCharges[i] = targetHero->m_primaryStats[3];
+                if (targetHero->m_spellCharges[i] > targetHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE])
+                    targetHero->m_spellCharges[i] = targetHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE];
             }
         }
     }
@@ -1066,9 +1066,9 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
     if (!sourceHero || !destHero)
         return;
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        if (destHero->m_artifacts[i] == -1) {
+        if (destHero->m_artifacts[i] == ARTIFACT_NONE) {
             for (j = 0; j < HERO_ARTIFACT_SLOT_COUNT; j++) {
-                if (sourceHero->m_artifacts[j] != -1
+                if (sourceHero->m_artifacts[j] != ARTIFACT_NONE
                     && sourceHero->m_artifacts[j] != ARTIFACT_MAGIC_BOOK) {
                     if (sourceHero->m_artifacts[j] <= 3) {
                         if (gbThisNetHumanPlayer[sourceHero->m_owner]
@@ -1076,7 +1076,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                             sprintf(gText,
                                     "As you reach for the %s, it mysteriously disappears.",
                                     gArtifactNames[sourceHero->m_artifacts[j]]);
-                            NormalDialog(gText, 1, -1, -1, 7, sourceHero->m_artifacts[j], -1, 0, -1);
+                            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_ARTIFACT, sourceHero->m_artifacts[j], NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                         }
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = -1;
                     } else {
@@ -1085,7 +1085,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
                     GiveTakeArtifactStat(sourceHero, sourceHero->m_artifacts[j], 1);
-                    sourceHero->m_artifacts[j] = -1;
+                    sourceHero->m_artifacts[j] = ARTIFACT_NONE;
                     break;
                 }
             }
@@ -1138,7 +1138,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
     if (eventHero->m_army.GetNumArmies() > 1) {
         eventHero->m_army.m_creatureCounts[weakest] >>= 1;
         if (!eventHero->m_army.m_creatureCounts[weakest])
-            eventHero->m_army.m_creatureTypes[weakest] = -1;
+            eventHero->m_army.m_creatureTypes[weakest] = CREATURE_NONE;
     } else if (eventHero->m_army.m_creatureCounts[weakest] > 1) {
         eventHero->m_army.m_creatureCounts[weakest] >>= 1;
     }
@@ -1554,14 +1554,14 @@ void advManager::PlayerMonsterInteract(class mapCell* cell, class mapCell* comba
                   * (cell->m_objectMetadata & 0x7f) * 1.75) {
             if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
                 sprintf(gText, gEventText[48], gArmyNamesPlural[cell->m_objectIndex]);
-                EventWindow(-1, 2, gText, -1, 0, -1, 0, -1);
+                EventWindow(-1, NORMAL_DIALOG_TYPE_YES_NO, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                     eventHero->m_army.Add(cell->m_objectIndex,
                                           cell->m_objectMetadata & 0x7f, -1);
                     *handled = 1;
                     return;
                 } else {
-                    EventWindow(49, 1, "", -1, 0, -1, 0, -1);
+                    EventWindow(49, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 }
             }
         }
@@ -1626,11 +1626,11 @@ int advManager::DoNetCombat(char* packet) {
     int unused;
     int unused2;
 
-    attackingHero = 0;
-    attArmy = 0;
-    siegeTown = 0;
-    defendingHero = 0;
-    defendArmy = 0;
+    attackingHero = NULL;
+    attArmy = NULL;
+    siegeTown = NULL;
+    defendingHero = NULL;
+    defendArmy = NULL;
     ReceiveHeroTownData(packet, &opponent, &cellX, &cellY, &attackingHero, &attArmy, &siegeTown,
                         &defendingHero, &defendArmy, &srcX, &srcY, &seed, &result, &gbRetreatWin,
                         &gbCombatSurrender);
@@ -1865,16 +1865,16 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
                                   signed char combatSurrender) {
     char* reply;
     int result;
-    combatRemoteData* buf = 0;
+    combatRemoteData* buf = NULL;
 
     buf = static_cast<combatRemoteData*>(malloc(0xff));
     reply = 0;
     buf->fragment = 0;
     buf->x = x;
     buf->y = y;
-    buf->hasFirstHero = firstHero != 0;
-    buf->hasTown = combatTown != 0;
-    buf->hasSecondHero = secondHero != 0;
+    buf->hasFirstHero = firstHero != NULL;
+    buf->hasTown = combatTown != NULL;
+    buf->hasSecondHero = secondHero != NULL;
     buf->setupCombatX = setupCombatX;
     buf->setupCombatY = setupCombatY;
     buf->randomSeed = randomSeed;
@@ -1882,9 +1882,9 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     buf->retreatWin = retreatWin;
     buf->combatSurrender = combatSurrender;
     buf->firstOwner = firstHero ? firstHero->m_owner : -1;
-    buf->firstGold = firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[6] : 0;
+    buf->firstGold = firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     buf->secondOwner = secondHero ? secondHero->m_owner : -1;
-    buf->secondGold = secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[6] : 0;
+    buf->secondGold = secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     memcpy(&buf->firstArmy, firstArmy, sizeof(armyGroup));
     memcpy(&buf->secondArmy, secondArmy, sizeof(armyGroup));
     if (combatTown)
@@ -1894,7 +1894,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     result = TransmitAndWait(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteData), 0x15, 0x16,
                              &reply);
     if (!result)
-        ShutDown(0);
+        ShutDown(NULL);
 
     if (firstHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 1;
@@ -1903,7 +1903,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
         result = TransmitRemoteData(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
-            ShutDown(0);
+            ShutDown(NULL);
     }
     if (secondHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 2;
@@ -1912,7 +1912,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
         result = TransmitRemoteData(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
-            ShutDown(0);
+            ShutDown(NULL);
     }
     free(buf);
 }
@@ -1935,11 +1935,11 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
     signed char bFirstHero;
     signed char hasSecondHero;
 
-    *firstHero = 0;
-    *firstArmy = 0;
-    *combatTown = 0;
-    *secondHero = 0;
-    *secondArmy = 0;
+    *firstHero = NULL;
+    *firstArmy = NULL;
+    *combatTown = NULL;
+    *secondHero = NULL;
+    *secondArmy = NULL;
     bFirstHero = hasSecondHero = hasTown = 0;
     *remotePlayer = ((combatRemoteMessage*)packet)->sender;
     *x = ((combatRemoteMessage*)packet)->combat.x;
@@ -1955,10 +1955,10 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
     *combatSurrender = ((combatRemoteMessage*)packet)->combat.combatSurrender;
     firstOwner = ((combatRemoteMessage*)packet)->combat.firstOwner;
     if (firstOwner > 0)
-        gpGame->m_players[firstOwner].m_resources[6] = ((combatRemoteMessage*)packet)->combat.firstGold;
+        gpGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] = ((combatRemoteMessage*)packet)->combat.firstGold;
     defenderOwner = ((combatRemoteMessage*)packet)->combat.secondOwner;
     if (defenderOwner > 0)
-        gpGame->m_players[defenderOwner].m_resources[6] =
+        gpGame->m_players[defenderOwner].m_resources[RESOURCE_GOLD] =
             ((combatRemoteMessage*)packet)->combat.secondGold;
 
     *firstArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
@@ -1970,15 +1970,15 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
         memcpy(*combatTown, &((combatRemoteMessage*)packet)->combat.combatTown, sizeof(town));
     }
 
-    result = TransmitRemoteData(0, *remotePlayer, 0, 0x16, 1, 1, -1, 1);
+    result = TransmitRemoteData(NULL, *remotePlayer, 0, 0x16, 1, 1, -1, 1);
     if (!result)
-        ShutDown(0);
+        ShutDown(NULL);
 
     lastPacketTime = KBTickCount();
     while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
         PollSound();
         if (KBTickCount() > lastPacketTime + 20000) {
-            NormalDialog("Error receiving data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
             else

@@ -4,8 +4,18 @@
 #include <Domains.h>
 #include <SOURCE/FINDPATH.h>
 
+// Town building ids: the order of retail gBuildingNames (0x004933a8), then
+// six dwellings named per race by gDwellingNames. town::m_buildings holds
+// bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
+// at the dock cell, 5 is never built and 0 has mage-guild levels.
 H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_MAGE_GUILD = 0,
+    BUILDING_SLOT_THIEVES_GUILD = 1,
+    BUILDING_SLOT_TAVERN = 2,
+    BUILDING_SLOT_SHIPYARD = 3,
+    BUILDING_SLOT_WELL = 4,
+    BUILDING_SLOT_TENT = 5,
+    BUILDING_SLOT_CASTLE = 6,
     BUILDING_SLOT_DWELLING_FIRST = 7
 H1_ENUM_END(BuildingSlotType)
 
@@ -30,7 +40,7 @@ extern signed char gbOverviewShowing;
 extern signed char gbStandardHighScore;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
-extern signed char giGroundToTerrain[];
+extern H1_ENUM_STORAGE(TerrainType, signed char) giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];
@@ -202,7 +212,9 @@ void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
 void PopNetBox(char *);
-void NormalDialog(char*, int, int, int, int, int, int, int, int);
+void NormalDialog(char*, H1_ENUM_PARAM(NormalDialogType, int), int, int,
+                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
+                  H1_ENUM_PARAM(NormalDialogResourceType, int), int, int);
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 // Stale alias of cTownObjectNames (0x491350): unreferenced, kept so later symbol handles stay put.

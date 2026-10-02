@@ -201,7 +201,7 @@ signed char game::SetupModemGame(void) {
                     return 0;
             }
             if (!gbDirectConnect)
-                GetDataEntry("Please enter the telephone number.", numbuf, 35, 0);
+                GetDataEntry("Please enter the telephone number.", numbuf, 35, NULL);
             break;
         case 2:
             iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
@@ -285,67 +285,67 @@ signed char game::SetupGame(signed char newGame) {
 
     if (giMenuCommand != -1) {
         switch (giMenuCommand) {
-            case 0x9ca8:
+            case APP_MENU_NEW_CAMPAIGN_IRONFIST:
                 giCampaignChoice = 1;
                 break;
-            case 0x9ca9:
+            case APP_MENU_NEW_CAMPAIGN_SLAYER:
                 giCampaignChoice = 2;
                 break;
-            case 0x9caa:
+            case APP_MENU_NEW_CAMPAIGN_LAMANDA:
                 giCampaignChoice = 3;
                 break;
-            case 0x9cab:
+            case APP_MENU_NEW_CAMPAIGN_ALAMAR:
                 giCampaignChoice = 4;
                 break;
-            case 0x9ca6:
-            case 0x9cbb:
+            case APP_MENU_NEW_STANDARD_GAME:
+            case APP_MENU_LOAD_STANDARD_GAME:
                 break;
-            case 0x9cbc:
+            case APP_MENU_LOAD_CAMPAIGN_GAME:
                 giCampaignChoice = 1;
                 break;
-            case 0x9cae:
-            case 0x9cbf:
+            case APP_MENU_NEW_HOT_SEAT_2:
+            case APP_MENU_LOAD_HOT_SEAT_2:
                 giNumHumanPlayers = 2;
                 iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
-            case 0x9caf:
-            case 0x9cc0:
+            case APP_MENU_NEW_HOT_SEAT_3:
+            case APP_MENU_LOAD_HOT_SEAT_3:
                 giNumHumanPlayers = 3;
                 iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
-            case 0x9cb0:
-            case 0x9cc1:
+            case APP_MENU_NEW_HOT_SEAT_4:
+            case APP_MENU_LOAD_HOT_SEAT_4:
                 giNumHumanPlayers = 4;
                 iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
-            case 0x9cb2:
-            case 0x9cc3:
+            case APP_MENU_NEW_NETWORK_HOST:
+            case APP_MENU_LOAD_NETWORK_HOST:
                 iMPBaseType = MULTIPLAYER_BASE_NETWORK;
                 iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
                 goto remoteSetup;
-            case 0x9cb3:
-            case 0x9cc4:
+            case APP_MENU_NEW_NETWORK_GUEST:
+            case APP_MENU_LOAD_NETWORK_GUEST:
                 iMPBaseType = MULTIPLAYER_BASE_NETWORK;
                 iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
                 goto remoteSetup;
-            case 0x9cb5:
-            case 0x9cc6:
+            case APP_MENU_NEW_MODEM_HOST:
+            case APP_MENU_LOAD_MODEM_HOST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_HOST;
                 goto remoteSetup;
-            case 0x9cb6:
-            case 0x9cc7:
+            case APP_MENU_NEW_MODEM_GUEST:
+            case APP_MENU_LOAD_MODEM_GUEST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
                 goto remoteSetup;
-            case 0x9cb8:
-            case 0x9cc9:
+            case APP_MENU_NEW_DIRECT_HOST:
+            case APP_MENU_LOAD_DIRECT_HOST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_HOST;
                 gbDirectConnect = 1;
                 goto remoteSetup;
-            case 0x9cb9:
-            case 0x9cca:
+            case APP_MENU_NEW_DIRECT_GUEST:
+            case APP_MENU_LOAD_DIRECT_GUEST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
                 gbDirectConnect = 1;
@@ -429,7 +429,7 @@ signed char game::PickLoadGame(void) {
     gpMouseManager->ReallyShowPointer();
     result = gpExec->DoDialog(request);
     gpMouseManager->ReallyHidePointer();
-    if (result == 0x7802) {
+    if (result == DIALOG_BUTTON_2) {
         gpGame->LoadGame(gLastFilename, 0, 0);
         delete request;
         return 1;
@@ -466,7 +466,7 @@ short SetupCampaignGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupCampaignGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupCampaignGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -498,9 +498,9 @@ short SetupComPortHandler(tag_message& message) {
         }
         if (helpIndex >= 0) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCComPortHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupDCComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             else
-                NormalDialog(gSetupComPortHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
     }
     return BaseSetupHandler(message);
@@ -533,9 +533,9 @@ short SetupBaudHandler(tag_message& message) {
         }
         if (helpIndex >= 0) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCBaudHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupDCBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             else
-                NormalDialog(gSetupBaudHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
     }
     return BaseSetupHandler(message);
@@ -564,7 +564,7 @@ short SetupHotSeatGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupHotSeatGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupHotSeatGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -593,9 +593,9 @@ short SetupModemGameHandler(tag_message& message) {
         }
         if (helpIndex >= 0) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupDCGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             else
-                NormalDialog(gSetupModemGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupModemGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
     }
     return BaseSetupHandler(message);
@@ -627,7 +627,7 @@ short SetupMultiPlayerGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -652,7 +652,7 @@ short SetupNetworkGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupNetworkGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupNetworkGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -680,7 +680,7 @@ short SetupGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }

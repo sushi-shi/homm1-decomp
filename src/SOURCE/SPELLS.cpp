@@ -21,24 +21,24 @@ VA(0x004154f0, 0x147)
 signed char combatManager::ViewSpells(int)
 {
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
-    if (m_selectedSpell != -1) {
+    if (m_selectedSpell != SPELL_NONE) {
         switch (m_selectedSpell) {
-            case 3:
-            case 13:
-            case 15:
-            case 16:
-                giNextAction = 1;
+            case SPELL_CURE:
+            case SPELL_DISPEL_MAGIC:
+            case SPELL_ARMAGEDDON:
+            case SPELL_STORM:
+                giNextAction = ACTION_CAST_SPELL;
                 giNextActionExtra = m_selectedSpell;
                 break;
             default:
-                giNextAction = 1;
+                giNextAction = ACTION_CAST_SPELL;
                 giNextActionExtra = m_selectedSpell;
                 gpMouseManager->SetPointer("spelmous.mse", m_selectedSpell);
-                gpWindowManager->DoDialog(0, HandleCastSpell, 0);
+                gpWindowManager->DoDialog(NULL, HandleCastSpell, 0);
                 break;
         }
         gpMouseManager->SetPointer("cmbtmous.mse", 0);
-        if (m_selectedSpell != -1)
+        if (m_selectedSpell != SPELL_NONE)
             return 1;
     }
     return 0;
@@ -61,7 +61,7 @@ short CombatSpecialHandler(struct tag_message &message)
                     case 3:
                         gpCombatManager->CombatMessage(cSpellHelp[1], 1);
                         break;
-                    case 0x7800:
+                    case DIALOG_BUTTON_0:
                         gpCombatManager->CombatMessage(cSpellHelp[4], 1);
                         break;
                     case 6:
@@ -94,7 +94,7 @@ short HandleCastSpell(struct tag_message &message)
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = -1;
                     gpMouseManager->SetPointer(0x13);
-                    if (gpCombatManager->m_selectedSpell == 2 && bInTeleportGetDest)
+                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && bInTeleportGetDest)
                         gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
                     else
                         gpCombatManager->CombatMessage("Select Spell Target", 1);
@@ -111,7 +111,7 @@ short HandleCastSpell(struct tag_message &message)
                     giNextActionGridIndex2 = indexToCastOn;
                 else {
                     giNextActionGridIndex = indexToCastOn;
-                    if (gpCombatManager->m_selectedSpell == 2) {
+                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT) {
                         bInTeleportGetDest = 1;
                         indexToCastOn = -1;
                         message.type = MESSAGE_MOUSE_MOVE;
@@ -128,11 +128,11 @@ short HandleCastSpell(struct tag_message &message)
             }
             break;
         case MESSAGE_KEY_DOWN:
-            if (message.keyCode != 1)
+            if (message.keyCode != INPUT_SCAN_ESCAPE)
                 break;
         case MESSAGE_RIGHT_BUTTON_DOWN:
-            gpCombatManager->m_selectedSpell = -1;
-            giNextAction = 0;
+            gpCombatManager->m_selectedSpell = SPELL_NONE;
+            giNextAction = ACTION_NONE;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_DIALOG_SELECT;
             bInTeleportGetDest = 0;
@@ -147,27 +147,27 @@ VA(0x00415a2c, 0x2f0)
 signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
 {
     int unused;
-    army *target = 0;
+    army *target = NULL;
     short newHex;
 
     if (!ValidHex(hex))
         return 0;
-    if (spell != 0 && spell != 17 && m_hexCells[hex].m_occupantSide != -1) {
+    if (spell != SPELL_FIREBALL && spell != SPELL_METEOR_SHOWER && m_hexCells[hex].m_occupantSide != -1) {
         target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-        if (target->m_spellEffect == 12 || target->m_spellEffect == 13 || target->m_creatureType == 0x17)
+        if (target->m_spellEffect == SPELL_ANTI_MAGIC || target->m_spellEffect == SPELL_DISPEL_MAGIC || target->m_creatureType == CREATURE_DRAGON)
             return 0;
     }
     switch (spell) {
-        case 3:
-        case 4:
-        case 5:
-        case 8:
-        case 9:
-        case 12:
+        case SPELL_CURE:
+        case SPELL_RESURRECT:
+        case SPELL_HASTE:
+        case SPELL_BLESS:
+        case SPELL_PROTECTION:
+        case SPELL_ANTI_MAGIC:
             if (m_hexCells[hex].m_occupantSide != m_currentSide)
                 return 0;
             break;
-        case 2:
+        case SPELL_TELEPORT:
             if (bInTeleportGetDest) {
                 newHex = hex;
                 if (newHex == giNextActionGridIndex
@@ -180,23 +180,23 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
                     return 0;
             }
             break;
-        case 1:
-        case 6:
-        case 7:
-        case 10:
-        case 14:
-        case 18:
+        case SPELL_LIGHTNING_BOLT:
+        case SPELL_SLOW:
+        case SPELL_BLIND:
+        case SPELL_CURSE:
+        case SPELL_BERZERKER:
+        case SPELL_PARALYZE:
             if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
                 return 0;
             break;
-        case 11:
+        case SPELL_TURN_UNDEAD:
             if (m_hexCells[hex].m_occupantSide == -1)
                 return 0;
-            if (target->m_creatureType != 0x1a)
+            if (target->m_creatureType != CREATURE_GHOST)
                 return 0;
             break;
-        case 0:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_METEOR_SHOWER:
             if (hex == -1 || hex % 9 == 0 || hex % 9 == 8)
                 return 0;
             break;
@@ -209,13 +209,13 @@ VA(0x00415d1c, 0x128)
 void combatManager::SpellMessage(signed char spell, signed char hex)
 {
     switch (spell) {
-        case 0:
-        case 15:
-        case 16:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_ARMAGEDDON:
+        case SPELL_STORM:
+        case SPELL_METEOR_SHOWER:
             sprintf(gText, "Cast %s", gSpellNames[spell]);
             break;
-        case 2:
+        case SPELL_TELEPORT:
             if (bInTeleportGetDest) {
                 sprintf(gText, "Teleport Here");
                 break;
@@ -563,8 +563,8 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
     }
     for (side = startSide; side <= last; side++) {
         for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
-            if (m_armies[side][armyIndex].m_spellEffect != 12 && m_armies[side][armyIndex].m_spellEffect != 13
-                && m_armies[side][armyIndex].m_creatureType != 0x17) {
+            if (m_armies[side][armyIndex].m_spellEffect != SPELL_ANTI_MAGIC && m_armies[side][armyIndex].m_spellEffect != SPELL_DISPEL_MAGIC
+                && m_armies[side][armyIndex].m_creatureType != CREATURE_DRAGON) {
                 if (!cureOnly) {
                     if (m_armies[side][armyIndex].m_spellEffect != -1)
                         m_armies[side][armyIndex].m_animationSequence = 3;
@@ -611,11 +611,11 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
         if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13 && curArmy->m_creatureType != 0x17) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {
-                    case 6:
-                    case 7:
-                    case 10:
-                    case 14:
-                    case 18:
+                    case SPELL_SLOW:
+                    case SPELL_BLIND:
+                    case SPELL_CURSE:
+                    case SPELL_BERZERKER:
+                    case SPELL_PARALYZE:
                         curArmy->CancelSpell();
                         break;
                     default:
@@ -660,14 +660,14 @@ void combatManager::Fireball(signed char targetHex)
     adjHexes[0] = targetHex;
     for (i = 0; i < 6; i++)
         adjHexes[i + 1] = curArmy->GetAdjacentCellIndex(targetHex, i);
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 10;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 10;
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
@@ -724,14 +724,14 @@ void combatManager::MeteorShower(signed char targetHex)
         DelayTil(&glTimers[0]);
     }
     gpResourceManager->Dispose(rockIcon);
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
@@ -830,13 +830,13 @@ void combatManager::Armageddon(void)
     palette *workPal;
     signed char hit;
 
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 50;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50;
     hit = 0;
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;

@@ -16,15 +16,15 @@
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046ecb0, 0x75)
 swapManager::swapManager(void) {
-    m_window = 0;
-    m_selectorIcon = 0;
+    m_window = NULL;
+    m_selectorIcon = NULL;
     m_selectedSide = -1;
     m_targetSide = -1;
     m_itemType = -1;
     m_selectedSlot = -1;
     m_targetSlot = -1;
-    m_heroes[1] = 0;
-    m_heroes[0] = 0;
+    m_heroes[1] = NULL;
+    m_heroes[0] = NULL;
 }
 
 VA(0x0046ed25, 0x3e)
@@ -64,7 +64,7 @@ short swapManager::Open(short id) {
     m_window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = 2;
+    message.value = WIDGET_FLAG_ENABLED;
     message.id = 1;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     message.id = 2;
@@ -106,7 +106,7 @@ void swapManager::Close(void) {
     gpAdvManager->Activate();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.value = 2;
+    message.value = WIDGET_FLAG_ENABLED;
     message.id = 1;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     message.id = 2;
@@ -200,7 +200,7 @@ short swapManager::Main(struct tag_message& message) {
         case WIDGET_NOTIFY_DESELECT:
             if (quickView)
                 break;
-            if (message.id == 0x7800)
+            if (message.id == DIALOG_BUTTON_0)
                 closeRequested = 1;
             break;
         case WIDGET_NOTIFY_SELECT:
@@ -213,7 +213,7 @@ short swapManager::Main(struct tag_message& message) {
                 Update();
                 m_window->DrawWindow();
                 Reset();
-                gpWindowManager->FadeScreen(0, 8, 0);
+                gpWindowManager->FadeScreen(0, 8, NULL);
                 break;
             case 66:
                 if (quickView)
@@ -223,7 +223,7 @@ short swapManager::Main(struct tag_message& message) {
                 Update();
                 m_window->DrawWindow();
                 Reset();
-                gpWindowManager->FadeScreen(0, 8, 0);
+                gpWindowManager->FadeScreen(0, 8, NULL);
                 break;
             case 88:
             case 89:
@@ -241,18 +241,18 @@ short swapManager::Main(struct tag_message& message) {
             case 101:
                 artIndex = message.id - 88;
                 if (!quickView && (m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
-                                   || m_heroes[1]->m_artifacts[artIndex] == 12)) {
-                    NormalDialog("This item can't be traded.", 1, -1, -1, -1, 0, -1, 0, -1);
+                                   || m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
+                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                     break;
                 }
                 if (quickView) {
-                    if (m_heroes[1]->m_artifacts[artIndex] == -1)
+                    if (m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_NONE)
                         break;
                     m_heroes[1]->ViewArtifact(m_heroes[1]->m_artifacts[artIndex], 1);
                     break;
                 }
                 if (m_itemType != 1) {
-                    if (m_heroes[1]->m_artifacts[artIndex] != -1) {
+                    if (m_heroes[1]->m_artifacts[artIndex] != ARTIFACT_NONE) {
                         m_selectedSide = 1;
                         m_targetSide = -1;
                         m_itemType = 1;
@@ -288,18 +288,18 @@ short swapManager::Main(struct tag_message& message) {
             case 115:
                 artIndex = message.id - 102;
                 if (!quickView && (m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
-                                   || m_heroes[0]->m_artifacts[artIndex] == 12)) {
-                    NormalDialog("This item can't be traded.", 1, -1, -1, -1, 0, -1, 0, -1);
+                                   || m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
+                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                     break;
                 }
                 if (quickView) {
-                    if (m_heroes[0]->m_artifacts[artIndex] == -1)
+                    if (m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_NONE)
                         break;
                     m_heroes[0]->ViewArtifact(m_heroes[0]->m_artifacts[artIndex], 1);
                     break;
                 }
                 if (m_itemType != 1) {
-                    if (m_heroes[0]->m_artifacts[artIndex] != -1) {
+                    if (m_heroes[0]->m_artifacts[artIndex] != ARTIFACT_NONE) {
                         m_selectedSide = 0;
                         m_targetSide = -1;
                         m_itemType = 1;
@@ -325,15 +325,15 @@ short swapManager::Main(struct tag_message& message) {
             case 81:
             case 82:
                 if (quickView) {
-                    if (m_heroes[1]->m_army.m_creatureTypes[message.id - 78] != -1)
+                    if (m_heroes[1]->m_army.m_creatureTypes[message.id - 78] != CREATURE_NONE)
                         gpGame->ViewArmy(119, 20,
                                          m_heroes[1]->m_army.m_creatureTypes[message.id - 78],
                                          m_heroes[1]->m_army.m_creatureCounts[message.id - 78],
-                                         0, 0, 0, 1, m_heroes[1], 0, &m_heroes[1]->m_army);
+                                         NULL, 0, 0, 1, m_heroes[1], NULL, &m_heroes[1]->m_army);
                     break;
                 }
                 if (m_itemType) {
-                    if (m_heroes[1]->m_army.m_creatureTypes[message.id - 78] != -1) {
+                    if (m_heroes[1]->m_army.m_creatureTypes[message.id - 78] != CREATURE_NONE) {
                         m_selectedSide = 1;
                         m_targetSide = -1;
                         m_itemType = 0;
@@ -351,7 +351,7 @@ short swapManager::Main(struct tag_message& message) {
                     }
                     if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
                         && m_selectedSide != m_targetSide
-                        && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot] == -1
+                        && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot] == CREATURE_NONE
                             || m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_selectedSlot]
                                    == m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot])) {
                         SplitMons();
@@ -368,15 +368,15 @@ short swapManager::Main(struct tag_message& message) {
             case 86:
             case 87:
                 if (quickView) {
-                    if (m_heroes[0]->m_army.m_creatureTypes[message.id - 83] != -1)
+                    if (m_heroes[0]->m_army.m_creatureTypes[message.id - 83] != CREATURE_NONE)
                         gpGame->ViewArmy(119, 20,
                                          m_heroes[0]->m_army.m_creatureTypes[message.id - 83],
                                          m_heroes[0]->m_army.m_creatureCounts[message.id - 83],
-                                         0, 0, 0, 1, m_heroes[0], 0, &m_heroes[0]->m_army);
+                                         NULL, 0, 0, 1, m_heroes[0], NULL, &m_heroes[0]->m_army);
                     break;
                 }
                 if (m_itemType) {
-                    if (m_heroes[0]->m_army.m_creatureTypes[message.id - 83] != -1) {
+                    if (m_heroes[0]->m_army.m_creatureTypes[message.id - 83] != CREATURE_NONE) {
                         m_selectedSide = 0;
                         m_targetSide = -1;
                         m_itemType = 0;
@@ -394,7 +394,7 @@ short swapManager::Main(struct tag_message& message) {
                     }
                     if ((message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
                         && m_selectedSide != m_targetSide
-                        && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot] == -1
+                        && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot] == CREATURE_NONE
                             || m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_selectedSlot]
                                    == m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot])) {
                         SplitMons();
@@ -432,9 +432,9 @@ short swapManager::Main(struct tag_message& message) {
 VA(0x0046fd73, 0xa5)
 void swapManager::ViewMon(void) {
     gpGame->ViewArmy(119, 20, m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_targetSlot],
-                     m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot], 0,
+                     m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot], NULL,
                      m_heroes[m_selectedSide]->m_army.GetNumArmies() == 1, 0, 0,
-                     m_heroes[m_selectedSide], 0, &m_heroes[m_selectedSide]->m_army);
+                     m_heroes[m_selectedSide], NULL, &m_heroes[m_selectedSide]->m_army);
 }
 
 // Buka 2.1 swapManager::SwapArtifacts.
@@ -464,7 +464,7 @@ void swapManager::SwapMons(void) {
     destTroops = &m_heroes[m_targetSide]->m_army;
     if (sourceTroops != destTroops) {
         if (sourceTroops->GetNumArmies() == 1
-            && (destTroops->m_creatureTypes[m_targetSlot] == -1
+            && (destTroops->m_creatureTypes[m_targetSlot] == CREATURE_NONE
                 || destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot])))
             return;
         if (destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot])) {
@@ -473,7 +473,7 @@ void swapManager::SwapMons(void) {
                     break;
             }
             destTroops->m_creatureCounts[i] += sourceTroops->m_creatureCounts[m_selectedSlot];
-            sourceTroops->m_creatureTypes[m_selectedSlot] = -1;
+            sourceTroops->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
             sourceTroops->m_creatureCounts[m_selectedSlot] = 0;
             return;
         } else if (sourceTroops->IsMember(destTroops->m_creatureTypes[m_targetSlot])) {
@@ -482,12 +482,12 @@ void swapManager::SwapMons(void) {
                     break;
             }
             sourceTroops->m_creatureCounts[j] += destTroops->m_creatureCounts[m_targetSlot];
-            destTroops->m_creatureTypes[m_targetSlot] = -1;
+            destTroops->m_creatureTypes[m_targetSlot] = CREATURE_NONE;
             destTroops->m_creatureCounts[m_targetSlot] = 0;
             if (m_selectedSlot != j) {
                 destTroops->m_creatureTypes[m_targetSlot] = sourceTroops->m_creatureTypes[m_selectedSlot];
                 destTroops->m_creatureCounts[m_targetSlot] = sourceTroops->m_creatureCounts[m_selectedSlot];
-                sourceTroops->m_creatureTypes[m_selectedSlot] = -1;
+                sourceTroops->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
                 sourceTroops->m_creatureCounts[m_selectedSlot] = 0;
             }
             return;
@@ -514,12 +514,12 @@ void swapManager::Update(void) {
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         message.id = i + 78;
-        if (m_heroes[1]->m_army.m_creatureTypes[i] == -1) {
+        if (m_heroes[1]->m_army.m_creatureTypes[i] == CREATURE_NONE) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[1]->m_army.m_creatureTypes[i];
@@ -528,12 +528,12 @@ void swapManager::Update(void) {
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         message.id = i + 116;
-        if (m_heroes[1]->m_army.m_creatureTypes[i] == -1) {
+        if (m_heroes[1]->m_army.m_creatureTypes[i] == CREATURE_NONE) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
             sprintf(gText, "%d", m_heroes[1]->m_army.m_creatureCounts[i]);
@@ -543,12 +543,12 @@ void swapManager::Update(void) {
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         message.id = i + 83;
-        if (m_heroes[0]->m_army.m_creatureTypes[i] == -1) {
+        if (m_heroes[0]->m_army.m_creatureTypes[i] == CREATURE_NONE) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[0]->m_army.m_creatureTypes[i];
@@ -557,12 +557,12 @@ void swapManager::Update(void) {
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         message.id = i + 121;
-        if (m_heroes[0]->m_army.m_creatureTypes[i] == -1) {
+        if (m_heroes[0]->m_army.m_creatureTypes[i] == CREATURE_NONE) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
             sprintf(gText, "%d", m_heroes[0]->m_army.m_creatureCounts[i]);
@@ -572,12 +572,12 @@ void swapManager::Update(void) {
     }
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         message.id = i + 88;
-        if (m_heroes[1]->m_artifacts[i] == -1) {
+        if (m_heroes[1]->m_artifacts[i] == ARTIFACT_NONE) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[1]->m_artifacts[i];
@@ -586,12 +586,12 @@ void swapManager::Update(void) {
     }
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         message.id = i + 102;
-        if (m_heroes[0]->m_artifacts[i] == -1) {
+        if (m_heroes[0]->m_artifacts[i] == ARTIFACT_NONE) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = 4;
+            message.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = m_heroes[0]->m_artifacts[i];
@@ -638,7 +638,7 @@ void swapManager::SplitMons(void) {
     gpTownManager->m_heroWindow1->BroadcastMessage(message);
     gpWindowManager->DoDialog(gpTownManager->m_heroWindow1, SplitArmyHandler, 0);
     delete gpTownManager->m_heroWindow1;
-    if (gpWindowManager->m_dialogResult == 0x7802) {
+    if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (selectedArmy->m_creatureTypes[m_selectedSlot] == dstTroops->m_creatureTypes[i]) {
                 found = 1;
@@ -648,9 +648,9 @@ void swapManager::SplitMons(void) {
         if (found) {
             dstTroops->m_creatureCounts[i] += gpTownManager->m_splitAmount;
         } else {
-            if (dstTroops->m_creatureTypes[m_targetSlot] != -1) {
+            if (dstTroops->m_creatureTypes[m_targetSlot] != CREATURE_NONE) {
                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                    if (dstTroops->m_creatureTypes[i] == -1)
+                    if (dstTroops->m_creatureTypes[i] == CREATURE_NONE)
                         break;
                 }
                 if (i < ARMY_GROUP_SLOT_COUNT)
@@ -661,6 +661,6 @@ void swapManager::SplitMons(void) {
         }
         selectedArmy->m_creatureCounts[m_selectedSlot] -= gpTownManager->m_splitAmount;
         if (selectedArmy->m_creatureCounts[m_selectedSlot] == 0)
-            selectedArmy->m_creatureTypes[m_selectedSlot] = -1;
+            selectedArmy->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
     }
 }

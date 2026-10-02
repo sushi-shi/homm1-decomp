@@ -19,7 +19,7 @@ class townObject;
 struct tag_message;
 
 // clang-format off
-H1_ENUM_BEGIN(TownManagerStorageConstant)
+H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_MANAGER_OBJECT_CAPACITY = 16,
     TOWN_MANAGER_STATUS_TEXT_SIZE = 0x50,
     TOWN_MANAGER_DISPATCH_MASK = 0x32f,
@@ -36,7 +36,7 @@ H1_ENUM_BEGIN(TownManagerStorageConstant)
     TOWN_REDRAW_LAST_CONTROL = 0x25,
     TOWN_VIEWPORT_WIDTH = 0x280,
     TOWN_VIEWPORT_HEIGHT = 0x100
-H1_ENUM_END(TownManagerStorageConstant)
+H1_ENUM_CONST_END(TownManagerStorageConstant)
 // clang-format on
 
 // clang-format off
@@ -106,7 +106,7 @@ H1_ENUM_BEGIN(TownThievesCategory)
     THIEVES_RANK_COUNT = 4
 H1_ENUM_END(TownThievesCategory)
 
-H1_ENUM_BEGIN(TownWellConstant)
+H1_ENUM_CONST_BEGIN(TownWellConstant)
     TOWN_WELL_DWELLING_COUNT = 6,
     TOWN_WELL_FIRST_ICON_CONTROL = 1,
     TOWN_WELL_FIRST_NAME_CONTROL = 7,
@@ -115,9 +115,9 @@ H1_ENUM_BEGIN(TownWellConstant)
     TOWN_WELL_FIRST_AVAILABLE_CONTROL = 0x19,
     TOWN_WELL_FRAMES_PER_TYPE = 7,
     TOWN_WELL_FIRST_DWELLING_BUILDING = 7
-H1_ENUM_END(TownWellConstant)
+H1_ENUM_CONST_END(TownWellConstant)
 
-H1_ENUM_BEGIN(TownMageConstant)
+H1_ENUM_CONST_BEGIN(TownMageConstant)
     TOWN_MAGE_FIRST_SPELL_CONTROL = 1,
     TOWN_MAGE_FIRST_ICON_CONTROL = 10,
     TOWN_MAGE_FIRST_NAME_CONTROL = 0x13,
@@ -126,9 +126,9 @@ H1_ENUM_BEGIN(TownMageConstant)
     TOWN_MAGE_SPELL_COUNT = 9,
     TOWN_MAGE_TOWER_FRAME_COUNT = 8,
     TOWN_MAGE_WIDGET_VISIBLE_FLAG = 4
-H1_ENUM_END(TownMageConstant)
+H1_ENUM_CONST_END(TownMageConstant)
 
-H1_ENUM_BEGIN(TownSplitConstant)
+H1_ENUM_CONST_BEGIN(TownSplitConstant)
     TOWN_SPLIT_AMOUNT_CONTROL = 0x44,
     TOWN_SPLIT_INCREASE_CONTROL = 0x45,
     TOWN_SPLIT_DECREASE_CONTROL = 0x46,
@@ -176,9 +176,9 @@ H1_ENUM_BEGIN(TownSplitConstant)
     TOWN_BUILDING_FIRST_DWELLING = 7,
     TOWN_BUILDING_LAST_DWELLING = 12,
     TOWN_OBJECT_ENABLED_FLAG = 2
-H1_ENUM_END(TownSplitConstant)
+H1_ENUM_CONST_END(TownSplitConstant)
 
-H1_ENUM_BEGIN(TownTavernConstant)
+H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,
     TOWN_TAVERN_WINDOW_TEXT = 0xe,
@@ -192,7 +192,7 @@ H1_ENUM_BEGIN(TownTavernConstant)
     TOWN_DIALOG_BUTTON_0 = 0x7800,
     TOWN_DIALOG_BUTTON_1 = 0x7801,
     TOWN_DIALOG_BUTTON_2 = 0x7802
-H1_ENUM_END(TownTavernConstant)
+H1_ENUM_CONST_END(TownTavernConstant)
 // clang-format on
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close

@@ -18,7 +18,7 @@ town::town(void) {
     m_x = 0;
     m_y = 0;
     m_occupyingHeroId = -1;
-    m_buildings = 0x20;
+    m_buildings = (1 << BUILDING_SLOT_TENT);
     m_buildState = 0;
     m_unknown19 = 0;
 }
@@ -30,7 +30,7 @@ town::town(void) {
 VA(0x00463f7b, 0x55)
 signed char town::HasGarrison(void) {
     for (short slot = 0; slot < 5; ++slot) {
-        if (m_army.m_creatureTypes[slot] != -1)
+        if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
             return 1;
     }
     return 0;
@@ -49,11 +49,11 @@ void town::GiveSpells(void) {
     visitingHero = gpGame->GetHero(m_occupyingHeroId);
     if (!visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
         return;
-    if (!(m_buildings & 1))
+    if (!(m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)))
         return;
     if (visitingHero->m_owner == m_owner) {
         for (i = 0; i < gMageGuildSpellCount[m_buildState]; i++)
-            visitingHero->AddSpell(m_mageGuildSpells[i], visitingHero->m_primaryStats[3], 0);
+            visitingHero->AddSpell(m_mageGuildSpells[i], visitingHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
     }
 }
 
@@ -82,7 +82,7 @@ void town::View(void) {
 
     townManager *manager = gpTownManager;
     manager->SetTown(this);
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     gpExec->CallManager(gpTownManager);
     if (m_occupyingHeroId != -1)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);

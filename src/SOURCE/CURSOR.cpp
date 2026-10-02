@@ -9,6 +9,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/X_GLOBAL.h>
 
@@ -48,8 +49,8 @@ void advManager::StopCursor(signed char stopSound)
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
         m_cursorFrameCount = 0;
         EveryOther = 0;
-        hPrevMoveSound = 0;
-        hLastMoveSound = 0;
+        hPrevMoveSound = NULL;
+        hLastMoveSound = NULL;
     }
     m_cursorCycle = 0;
     if (m_previousCursorMapX != -1) {
@@ -273,7 +274,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     *adjacentMonster = 0;
     *outOfMobility = 0;
     gbHeroMoving = 1;
-    retCell = 0;
+    retCell = NULL;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     origX = movingHero->m_x;
     origY = movingHero->m_y;
@@ -294,7 +295,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     if (m_cursorDirection != direction)
         TurnTo(direction);
     movingHero->m_direction = direction;
-    if ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && nextCell->m_triggerType == 0x1f) {
+    if ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && nextCell->m_triggerType == MAP_OBJECT_COAST) {
         boatRecord *boat;
         mapCell *boatCell;
 
@@ -308,7 +309,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         boat->savedEventData = boatCell->m_objectMetadata;
         boat->direction = m_cursorDirection;
         boat->heroId |= 0x80;
-        boatCell->m_triggerType = 0xbe;
+        boatCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
         boatCell->m_objectMetadata = step;
         boat->x = movingHero->m_x;
         boat->y = movingHero->m_y;
@@ -317,9 +318,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         UpdateScreen(0, 0);
         m_cursorActive = 0;
     }
-    if (nextCell->m_triggerType & 0x80) {
-        switch (nextCell->m_triggerType & 0x7f) {
-            case 62:
+    if (nextCell->m_triggerType & MAP_TRIGGER_EVENT) {
+        switch (nextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+            case MAP_OBJECT_SHIP:
                 if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     goto movementDone;
                 StopCursor(1);
@@ -328,31 +329,31 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 gpWindowManager->FizzleForward(0xc0, 0xc0, 0x60, 0x60, -1);
                 break;
-            case 3:
+            case MAP_OBJECT_BUOY:
                 if (!(movingHero->m_eventFlags & HERO_EVENT_EMBARKED))
                     goto movementDone;
                 else
                     goto stoppingEvent;
-            case 61:
+            case MAP_OBJECT_HERO:
                 if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED) {
                     if (gpGame->GetHero(nextCell->m_objectMetadata)->m_eventFlags & HERO_EVENT_EMBARKED)
                         goto stoppingEvent;
                     else
                         goto movementDone;
                 }
-            case 2:
-            case 4:
-            case 6:
-            case 8:
-            case 9:
-            case 11:
-            case 26:
-            case 27:
-            case 28:
-            case 29:
-            case 36:
-            case 43:
-            case 48:
+            case MAP_OBJECT_SIGNPOST:
+            case MAP_OBJECT_SKELETON:
+            case MAP_OBJECT_TREASURE_CHEST:
+            case MAP_OBJECT_CAMPFIRE:
+            case MAP_OBJECT_FOUNTAIN:
+            case MAP_OBJECT_ANCIENT_LAMP:
+            case MAP_OBJECT_MONSTER:
+            case MAP_OBJECT_OBELISK:
+            case MAP_OBJECT_OASIS:
+            case MAP_OBJECT_RESOURCE:
+            case MAP_OBJECT_STATUE:
+            case MAP_OBJECT_WELL:
+            case MAP_OBJECT_ARTIFACT:
                 if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     goto movementDone;
             stoppingEvent:
@@ -369,7 +370,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 }
                 retCell = nextCell;
                 goto movementDone;
-            case 40:
+            case MAP_OBJECT_TOWN:
                 if (gpGame->GetTown(nextCell->m_objectMetadata)->m_owner != giCurPlayer
                     && gpGame->GetTown(nextCell->m_objectMetadata)->HasGarrison()) {
                     StopCursor(1);
@@ -393,7 +394,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     }
     if (!ValidMove(direction))
         goto movementDone;
-    if (movingHero->m_locationType == 0xa8) {
+    if (movingHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
         town *occupiedTown;
 
         occupiedTown = gpGame->GetTown(movingHero->m_occupiedTown);
@@ -472,26 +473,26 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     pCursorCell = GetCell(m_cursorMapX + m_mapOriginX, m_cursorMapY + m_mapOriginY);
     *eventX = m_cursorMapX + m_mapOriginX;
     *eventY = m_cursorMapY + m_mapOriginY;
-    if ((pCursorCell->m_triggerType & 0x80)
-        || ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && pCursorCell->m_triggerType == 0x1f)) {
+    if ((pCursorCell->m_triggerType & MAP_TRIGGER_EVENT)
+        || ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && pCursorCell->m_triggerType == MAP_OBJECT_COAST)) {
         retCell = pCursorCell;
-        switch (pCursorCell->m_triggerType & 0x7f) {
-            case 30:
-            case 37:
-            case 46:
-            case 49:
+        switch (pCursorCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+            case MAP_OBJECT_ROSEBUSH:
+            case MAP_OBJECT_TREE_STUMP:
+            case MAP_OBJECT_OAK_TREE:
+            case MAP_OBJECT_NOTHING_HERE:
             case 50:
             case 51:
-            case 52:
+            case MAP_OBJECT_MOUNTAINS:
             case 53:
             case 54:
             case 55:
-            case 56:
+            case MAP_OBJECT_TREES:
             case 57:
             case 58:
             case 59:
             case 60:
-                retCell = 0;
+                retCell = NULL;
                 break;
         }
         goto movementDone;
@@ -508,7 +509,7 @@ movementDone:
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
             if (movingHero->m_owner == -1)
-                retCell = 0;
+                retCell = NULL;
         }
     }
 adjacentDone:
@@ -632,21 +633,21 @@ short advManager::ValidMove(short direction)
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
     if (destCell->m_secondaryTrigger & 0x80)
         return 0;
-    if (giGroundToTerrain[destCell->m_tileIndex] == 0) {
-        if (m_cursorType != 4 && destCell->m_triggerType != 0xbe && destCell->m_triggerType != 0xa3)
+    if (giGroundToTerrain[destCell->m_tileIndex] == TERRAIN_WATER) {
+        if (m_cursorType != 4 && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
             return 0;
     } else {
-        if (m_cursorType == 4 && destCell->m_triggerType != 0x1f && destCell->m_triggerType != 0xac)
+        if (m_cursorType == 4 && destCell->m_triggerType != MAP_OBJECT_COAST && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
             return 0;
     }
     hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
     north = (1 << direction) & 0x83;
     downMask = (1 << direction) & 0x38;
-    if (north && hereCell->m_objectIndex != 0xff && !(hereCell->m_flags & 0x80)
-        && hereCell->m_triggerType != 0xac)
+    if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & 0x80)
+        && hereCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
-    if (downMask && destCell->m_objectIndex != 0xff && !(destCell->m_flags & 0x80)
-        && destCell->m_triggerType != 0xac)
+    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME && !(destCell->m_flags & 0x80)
+        && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;
 }

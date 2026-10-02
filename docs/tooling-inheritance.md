@@ -3,6 +3,7 @@
 | Donor | Reviewed revision | Role |
 | --- | --- | --- |
 | Giten | `39384dc6726478357b5efd42c66522781e8310fe` | Active workflow and comparison donor |
+| Giten (giten-enums) | `94435eff949d6190fa0b1b697caae9f21c53bb6b` | Constants work list and enum-domain/reuse review |
 | Gruntz | `b1de0e555576a215898907b8ec8ed5423368883e` | Original pipeline ancestry and cross-review |
 | HoMM2 Buka | `299514f88900c0cf30ba03422c72830a38fc1cb7` | Initial capability review |
 | HoMM2 Buka | `e0689d3f71b2942b544fd677cb54085a13503d7b` | Exact-overload fingerprint review |
@@ -22,6 +23,7 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 | State/source experiments | Adapted complete-TU trials, restoration, timeout and exact-score/extent/ordered-relocation audits. `state --record-max` retains exact peaks only for unchanged fingerprints and matching ledger mode. Nested unit paths are supported. |
 | Walls/navigation | Ported semantic, stack and relocation diagnostics and clangd consumers. Hover was smoke-tested; rename still needs end-to-end validation. Donor heuristic tables need VC4 calibration. |
 | Source/identity gates | Retained normal source gates, review-claims and contradictory-data-identity checks even in code mode. Data coverage/placement checks remain in the explicit later data tier. |
+| Constants/enum review | Ported from giten-enums into the existing `verify` modules: `constants` gains the `config/constants.tsv` glob work list (first match wins, stale rows fail), committed floor (`--update-floor`), `--list`, `build/gen/constants_open.tsv`, strict-domain parse with retail fallback, switch-subject/store-target review details and float literals; `enum-reuse` gains the role-pair report and the `config/reviews/enum-reuse.tsv` ledger; `enum-domains` gains constant groups as non-storage and LOCAL/PARAM/RETURN width exemption; `board` reads `H1_ENUM_*` blocks and declarators. Adapted: `H1_ENUM_*`/`include/Domains.h` instead of `GZ_ENUM_*`/`EnumDomain.h`, strict view via `/std:c++20 /Zc:__cplusplus` instead of `GZ_STRICT_ENUMS`, and VC4 booleans: only Win32 `BOOL` is a boolean domain, its proven spelling is `TRUE`/`FALSE`, and `true`/`false` spellings fail (C2065; Giten's TRUE->true check is inverted). See [constants](constants.md) and [enum reuse](enum-reuse.md). Deferred: Giten's handoff evidence notes are game-specific. |
 | Skills/editor/workflow | Adapted all four skills, canonical instruction symlinks, Neovim VA/binding navigation, safe staged formatting and unit-block merge driver. See [workflow](workflow.md). |
 | Negative controls | Retained applicable tests in `homm1 test`. The larger imported `verify selftest` has compiler/project-specific failures and missing APIs; it is a separate validation backlog. |
 | Gruntz-only scanners | Deferred: `walls/calibrate`, `ehactions`, `escapescan`, `framescan`, `jccscan`, `loopscan`, `offsetscan`, `reloadscan`, `residue`, `retscan`, `signscan`, `storescan`, `thisscan`, `uninitscan`, `vptrscan` need separate applicability review and VC4 controls; the Giten diagnostic port does not establish their parity. |

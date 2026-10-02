@@ -62,17 +62,17 @@ VA(0x004248a0, 0x54)
 short TerrainStepCost(signed char terrain, char diagonal) {
     short cost = 0;
     switch (terrain) {
-    case 0:
-    case 1:
-    case 4:
-    case 6:
+    case TERRAIN_WATER:
+    case TERRAIN_GRASS:
+    case TERRAIN_LAVA:
+    case TERRAIN_DIRT:
         cost = 4;
         break;
-    case 2:
-    case 3:
+    case TERRAIN_SNOW:
+    case TERRAIN_SWAMP:
         cost = 6;
         break;
-    case 5:
+    case TERRAIN_DESERT:
         cost = 8;
         break;
     }
@@ -312,7 +312,7 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
             goto storeDirection;
         }
 
-        if (gSearchNextCell->m_triggerType & 0x80) {
+        if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
             if (!allowOccupied) {
                 if (gSearchNextX != m_specialTargetX || gSearchNextY != m_specialTargetY) {
                     gSearchTerrain = -1;
@@ -326,36 +326,36 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
         gSearchTerrain = giGroundToTerrain[gSearchNextCell->m_tileIndex];
         if (gSearchTerrain == 0) {
             if (waterMode) {
-                if (gSearchNextCell->m_triggerType == 0xa3 || gSearchNextCell->m_triggerType == 0xbe) {
+                if (gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK) || gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     gSearchTerrain = -1;
                     goto storeDirection;
                 }
             } else {
-                if (gSearchNextCell->m_triggerType != 0xbd && gSearchNextCell->m_triggerType != 0xbe
-                    && gSearchNextCell->m_triggerType != 0xa3) {
+                if (gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO) && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                    && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)) {
                     gSearchTerrain = -1;
                     goto storeDirection;
                 }
             }
-        } else if (waterMode && gSearchNextCell->m_triggerType != 0x1f) {
+        } else if (waterMode && gSearchNextCell->m_triggerType != MAP_OBJECT_COAST) {
             gSearchTerrain = -1;
             goto storeDirection;
         }
 
         if ((1 << gSearchDirection) & 0x83) {
-            if (gSearchCurrentCell->m_objectIndex != 0xff && !(gSearchCurrentCell->m_flags & 0x80)) {
+            if (gSearchCurrentCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchCurrentCell->m_flags & 0x80)) {
                 gSearchTerrain = -1;
                 goto storeDirection;
             }
         } else if ((1 << gSearchDirection) & 0x38) {
-            if (gSearchNextCell->m_objectIndex != 0xff && !(gSearchNextCell->m_flags & 0x80)) {
-                if (gSearchNextCell->m_triggerType & 0x80) {
-                    gSearchTriggerType = gSearchNextCell->m_triggerType & 0x7f;
-                    if (gSearchTriggerType != 0x1a && gSearchTriggerType != 0x1d && gSearchTriggerType != 6
-                        && gSearchTriggerType != 8 && gSearchTriggerType != 0xb && gSearchTriggerType != 0x30
-                        && gSearchTriggerType != 2 && gSearchTriggerType != 3 && gSearchTriggerType != 4
-                        && gSearchTriggerType != 9 && gSearchTriggerType != 0x1b && gSearchTriggerType != 0x24
-                        && gSearchTriggerType != 0x2c && gSearchTriggerType != 0x2b) {
+            if (gSearchNextCell->m_objectIndex != MAP_CELL_NO_FRAME && !(gSearchNextCell->m_flags & 0x80)) {
+                if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
+                    gSearchTriggerType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                    if (gSearchTriggerType != MAP_OBJECT_MONSTER && gSearchTriggerType != MAP_OBJECT_RESOURCE && gSearchTriggerType != MAP_OBJECT_TREASURE_CHEST
+                        && gSearchTriggerType != MAP_OBJECT_CAMPFIRE && gSearchTriggerType != MAP_OBJECT_ANCIENT_LAMP && gSearchTriggerType != MAP_OBJECT_ARTIFACT
+                        && gSearchTriggerType != MAP_OBJECT_SIGNPOST && gSearchTriggerType != MAP_OBJECT_BUOY && gSearchTriggerType != MAP_OBJECT_SKELETON
+                        && gSearchTriggerType != MAP_OBJECT_FOUNTAIN && gSearchTriggerType != MAP_OBJECT_OBELISK && gSearchTriggerType != MAP_OBJECT_STATUE
+                        && gSearchTriggerType != MAP_OBJECT_WHIRLPOOL && gSearchTriggerType != MAP_OBJECT_WELL) {
                         gSearchTerrain = -1;
                         goto storeDirection;
                     }

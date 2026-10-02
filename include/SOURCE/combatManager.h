@@ -8,6 +8,8 @@
 #include <H1/Macros.h>
 #include <SOURCE/army.h>
 #include <SOURCE/hexcell.h>
+#include <SOURCE/spellTypes.h>
+#include <SOURCE/terrainTypes.h>
 
 // forward declarations:
 class army;
@@ -19,18 +21,47 @@ class town;
 struct SBolt;
 struct tag_message;
 
-// Buka's combat command/pointer domain, narrowed to the two values used by
-// HoMM1 GetPointer; retail compares command 13 and returns pointer 5.
+// Buka's CombatMessageCommand: GetCommand derives one from the hovered hex
+// and DoCommand runs it (move, fly, shoot, own and opposing hero options,
+// view, attack, spell book, retreat, surrender).
+H1_ENUM_BEGIN(CombatMessageCommand)
+    COMBAT_INVALID_COMMAND = -99,
+    COMBAT_MESSAGE_COMMAND_DEFAULT = 0,
+    COMBAT_MESSAGE_COMMAND_MOVE = 1,
+    COMBAT_MESSAGE_COMMAND_FLY = 2,
+    COMBAT_MESSAGE_COMMAND_SHOOT = 3,
+    COMBAT_MESSAGE_COMMAND_OPTIONS = 4,
+    COMBAT_MESSAGE_COMMAND_VIEW_INFO = 5,
+    COMBAT_MESSAGE_COMMAND_ATTACK = 7,
+    COMBAT_MESSAGE_COMMAND_CAST_SPELL = 10,
+    COMBAT_MESSAGE_COMMAND_RETREAT = 11,
+    COMBAT_MESSAGE_COMMAND_SURRENDER = 12,
+    COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13
+H1_ENUM_END(CombatMessageCommand)
+
+// Buka's CombatAction: the queued giNextAction that the combat loop
+// executes; DoCommand, the spell book and the skip button set it.
+H1_ENUM_BEGIN(CombatAction)
+    ACTION_NONE = 0,
+    ACTION_CAST_SPELL = 1,
+    ACTION_MOVE = 2,
+    ACTION_SKIP_TURN = 3,
+    ACTION_RETREAT = 4,
+    ACTION_SURRENDER = 5,
+    ACTION_ATTACK = 6
+H1_ENUM_END(CombatAction)
+
+// The combat pointer frame GetPointer returns for a command; retail maps
+// the opposing-options command to the view pointer.
 H1_ENUM_BEGIN(CombatPointerCode)
-    COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13,
     COMBAT_POINTER_VIEW = 5
 H1_ENUM_END(CombatPointerCode)
 
 // clang-format off
-H1_ENUM_BEGIN(CombatGridConstant)
+H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6
-H1_ENUM_END(CombatGridConstant)
+H1_ENUM_CONST_END(CombatGridConstant)
 // clang-format on
 
 // Buka CombatRemotePacket: the combat action relayed through
@@ -220,12 +251,12 @@ public:
     signed char ViewSpells(int);
     int FindResurrectArmyIndex(int, int, int);
     // HoMM1 retail 0x00415a2c: byte spell and hex, byte result (ret 8).
-    signed char ValidSpellTarget(signed char, signed char);
+    signed char ValidSpellTarget(H1_ENUM_PARAM(SpellType, signed char), signed char);
     // HoMM1 retail 0x00415d1c: byte spell and hex (ret 8).
-    void SpellMessage(signed char, signed char);
+    void SpellMessage(H1_ENUM_PARAM(SpellType, signed char), signed char);
     // HoMM1 retail 0x00415e44: byte spell, hex, creature flag and teleport
     // destination (ret 0x10).
-    void CastSpell(signed char, signed char, signed char, signed char);
+    void CastSpell(H1_ENUM_PARAM(SpellType, signed char), signed char, signed char, signed char);
     void DefaultSpell(signed char);
     // HoMM1 retail 0x00416c78: Cure (one side) and Dispel (both sides)
     // animation; byte side (2 = both) and cure-only flag (ret 8).
@@ -263,7 +294,7 @@ public:
     signed char ValidHexToStandOn(int);
     void SetCombatDirections(int);
     void CheckSetMouseDirection(int, int, int);
-    H1_ENUM_RETURN(CombatPointerCode, int) GetPointer(H1_ENUM_PARAM(CombatPointerCode, int));
+    H1_ENUM_RETURN(CombatPointerCode, int) GetPointer(H1_ENUM_PARAM(CombatMessageCommand, int));
     int ProcessCombatMsg(struct tag_message &);
     int IsNegationSphereInEffect(void);
     void ResetRound(void);
@@ -392,7 +423,7 @@ extern int iCurTransferArtifact;
 // DoSurrender: gold the enemy hero asks for (0x004a4bac).
 extern int giSurrenderCost;
 // The queued combat action and its grid/extra arguments (0x004a4bc0..).
-extern int giNextAction;
+extern H1_ENUM_STORAGE(CombatAction, int) giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;

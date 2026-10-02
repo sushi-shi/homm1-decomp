@@ -8,7 +8,7 @@
 #include <BASE/MISC_TYPES.h>
 #include <BASE/mouseManager.h>
 
-H1_ENUM_BEGIN(MouseManagerConstant)
+H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_COUNT = 75,
     MOUSE_CURSOR_AXIS_COUNT = 2,
     MOUSE_CURSOR_HORIZONTAL = 0,
@@ -31,7 +31,7 @@ H1_ENUM_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_SPELL = 2,
     MOUSE_KEEP_CURRENT_FRAME = 1000,
     CONFIG_EXECUTABLE_EDITOR = 1
-H1_ENUM_END(MouseManagerConstant)
+H1_ENUM_CONST_END(MouseManagerConstant)
 
 extern int gbColorMice;
 extern int gbSpecialMouseMasks;

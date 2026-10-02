@@ -7,11 +7,11 @@
 #include <H1/Macros.h>
 
 // clang-format off
-H1_ENUM_BEGIN(PlayerDataConstant)
+H1_ENUM_CONST_BEGIN(PlayerDataConstant)
     PLAYER_HERO_CAPACITY = 8,
     PLAYER_TOWN_CAPACITY = 36,
     PLAYER_RESOURCE_COUNT = 7
-H1_ENUM_END(PlayerDataConstant)
+H1_ENUM_CONST_END(PlayerDataConstant)
     // clang-format on
 
     // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place

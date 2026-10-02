@@ -27,19 +27,19 @@ char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
 char gMouseManagerAssertFile2[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
 char gMouseManagerAssertFile3[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
 
-H1_ENUM_BEGIN(MouseManagerStateConstant)
+H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
     MOUSE_INITIAL_POINTER_FLAGS = 6,
     MOUSE_INITIAL_X = 320,
     MOUSE_INITIAL_Y = 240,
     MOUSE_SAVED_BITMAP_TYPE = 0x21,
     MOUSE_SAVED_BITMAP_SIZE = 0x40,
     MOUSE_MANAGER_MESSAGE_MASK = 0x40
-H1_ENUM_END(MouseManagerStateConstant)
+H1_ENUM_CONST_END(MouseManagerStateConstant)
 
 VA(0x004766e0, 0xab)
 mouseManager::mouseManager(void) {
-    m_savedUnderlying = 0;
-    m_cursorImage = 0;
+    m_savedUnderlying = NULL;
+    m_cursorImage = NULL;
     m_pointerFlags = MOUSE_INITIAL_POINTER_FLAGS;
     m_mouseX = MOUSE_INITIAL_X;
     m_mouseY = MOUSE_INITIAL_Y;
@@ -50,7 +50,7 @@ mouseManager::mouseManager(void) {
     m_unknown49 = 0;
     m_unknown4d = 0;
     m_unknown51 = 0;
-    m_savedUnderlying = 0;
+    m_savedUnderlying = NULL;
     memset(hbmpColor, 0, sizeof(hbmpColor));
     memset(hbmpAndMask, 0, sizeof(hbmpAndMask));
     memset(cColorBits, 0, sizeof(cColorBits));
@@ -151,7 +151,7 @@ void mouseManager::SetPointer(short frame) {
         gMouseManagerAssertLine + 34
     );
 
-    if (hMouseCursor[cursorIndex] == 0) {
+    if (hMouseCursor[cursorIndex] == NULL) {
         cColorBits[cursorIndex] = static_cast<signed char*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
         if (gbColorMice)
             cAndBits[cursorIndex] =
@@ -246,7 +246,7 @@ void mouseManager::SetPointer(short frame) {
         mouseIconInfo[cursorIndex].xHotspot = iHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
         mouseIconInfo[cursorIndex].yHotspot = iHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
         mouseIconInfo[cursorIndex].hbmMask = hbmpAndMask[cursorIndex];
-        mouseIconInfo[cursorIndex].hbmColor = gbColorMice ? hbmpColor[cursorIndex] : 0;
+        mouseIconInfo[cursorIndex].hbmColor = gbColorMice ? hbmpColor[cursorIndex] : NULL;
         hMouseCursor[cursorIndex] = CreateIconIndirect(&mouseIconInfo[cursorIndex]);
         ProcessAssert(
             reinterpret_cast<int>(hMouseCursor[cursorIndex]), // API-forced handle value.

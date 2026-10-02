@@ -36,10 +36,10 @@ combatManager::combatManager(void)
     m_limitCreature = 0;
     m_showArmyQuantities = 1;
     m_gridUpdateRow = 0;
-    m_currentCommand = 0;
+    m_currentCommand = COMBAT_MESSAGE_COMMAND_DEFAULT;
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
-    m_savedBorder = 0;
+    m_savedBorder = NULL;
     m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
     m_castleSide[0] = m_castleSide[1] = 0;
@@ -63,9 +63,9 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
         }
     }
     for (i = 0; i < 5; i++) {
-        if (from->m_creatureTypes[i] != -1) {
+        if (from->m_creatureTypes[i] != CREATURE_NONE) {
             for (j = 0; j < 5; j++) {
-                if (to->m_creatureTypes[j] == -1) {
+                if (to->m_creatureTypes[j] == CREATURE_NONE) {
                     to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], j);
                     from->Dismiss(i);
                 }
@@ -89,7 +89,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
     if (mapX >= 0 && mapY >= 0)
         m_battlefieldCell = gpAdvManager->GetCell(mapX, mapY);
     else
-        m_battlefieldCell = 0;
+        m_battlefieldCell = NULL;
     m_terrainType = giGroundToTerrain[m_battlefieldCell->m_tileIndex];
     if (attackerHero) {
         m_playerId[1] = attackerHero->m_owner;
@@ -124,7 +124,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         else
             m_armyGroups[i] = defenderGroup;
         m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 1;
-        if (m_heroes[i] && m_heroes[i]->HasArtifact(0x11))
+        if (m_heroes[i] && m_heroes[i]->HasArtifact(ARTIFACT_BALLISTA))
             m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
         m_keepAttacksRemaining[i] = 1;
         m_visitingHeroPresent[i] = 0;
@@ -147,9 +147,9 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         m_originalCombatTown = m_combatTowns[0];
     } else {
         m_castleSide[0] = 0;
-        m_combatTowns[0] = 0;
+        m_combatTowns[0] = NULL;
     }
-    m_combatTowns[1] = 0;
+    m_combatTowns[1] = NULL;
 }
 
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
@@ -163,14 +163,14 @@ short combatManager::Open(short priority)
 
     m_messageTypeMask = 0x32f;
     m_combatWindowOpen = 0;
-    m_savedBorder = 0;
+    m_savedBorder = NULL;
     gpSoundManager->PlayAmbientMusic(-1, 0, -1);
     m_backgroundBuffer = new bitmap(0, 640, 460);
     m_backgroundDrawn = 0;
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("PREBATTL.82M");
-    giNextAction = 0;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    giNextAction = ACTION_NONE;
+    gpWindowManager->FadeScreen(1, 8, NULL);
     m_sideRetreated[0] = 0;
     m_sideRetreated[1] = 0;
     m_combatResult = 3;
@@ -236,7 +236,7 @@ void combatManager::Close(void)
     gpSoundManager->SwitchAmbientMusic(-1);
     DrawCombatBorder();
     gbLimitedCombatUpdatePalette = 0;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     delete m_backgroundBuffer;
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
@@ -244,7 +244,7 @@ void combatManager::Close(void)
         survivor = static_cast<signed char>(m_playerId[0] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < 5; i++) {
-            if (m_armyGroups[survivor]->m_creatureTypes[i] != -1)
+            if (m_armyGroups[survivor]->m_creatureTypes[i] != CREATURE_NONE)
                 m_battlefieldCell->m_objectMetadata += m_armyGroups[survivor]->m_creatureCounts[i];
         }
     }
@@ -275,7 +275,7 @@ void combatManager::UpdateArmyGroup(signed char side)
         }
         if (j < 5) {
             if (m_armies[side][i].m_stats.attributes & 0x10) {
-                m_armyGroups[side]->m_creatureTypes[j] = -1;
+                m_armyGroups[side]->m_creatureTypes[j] = CREATURE_NONE;
                 m_armyGroups[side]->m_creatureCounts[j] = 0;
             } else {
                 m_armyGroups[side]->m_creatureCounts[j] = m_armies[side][i].m_quantity;
@@ -411,32 +411,32 @@ void combatManager::GenerateMap(void)
 VA(0x0044ca22, 0x18e)
 char* combatManager::GetBackgroundName(void)
 {
-    if ((m_battlefieldCell->m_triggerType & 0x7f) == 0xc
-        || ((m_battlefieldCell->m_triggerType & 0x7f) == 0x3d
-            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & 0x7f) == 0xc)) {
-        m_terrainType = 6;
+    if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
+        || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
+            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD)) {
+        m_terrainType = TERRAIN_DIRT;
         return cCombatBkgNames[10];
     }
     switch (m_terrainType) {
-        case 0:
+        case TERRAIN_WATER:
             return cCombatBkgNames[9];
-        case 3:
+        case TERRAIN_SWAMP:
             return cCombatBkgNames[4];
-        case 4:
+        case TERRAIN_LAVA:
             return cCombatBkgNames[5];
-        case 5:
+        case TERRAIN_DESERT:
             return cCombatBkgNames[6];
-        case 1:
+        case TERRAIN_GRASS:
             if (MoreTreesNear())
                 return cCombatBkgNames[0];
             else
                 return cCombatBkgNames[1];
-        case 2:
+        case TERRAIN_SNOW:
             if (MoreTreesNear())
                 return cCombatBkgNames[2];
             else
                 return cCombatBkgNames[3];
-        case 6:
+        case TERRAIN_DIRT:
             if (MoreTreesNear())
                 return cCombatBkgNames[7];
             else
@@ -501,7 +501,7 @@ void combatManager::LoadIcons(void)
     int i;
 
     for (i = 0; i < 9; i++)
-        m_combatIcons[i] = 0;
+        m_combatIcons[i] = NULL;
     m_combatIcons[8] = gpResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
     m_combatIcons[0] = gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
@@ -542,7 +542,7 @@ void combatManager::LoadArmies(void)
     for (i = 0; i < 5; i++) {
         for (j = 0; j < 2; j++) {
             m_armies[j][i].m_quantity = 0;
-            m_armies[j][i].m_creatureType = -1;
+            m_armies[j][i].m_creatureType = CREATURE_NONE;
         }
     }
     for (j = 0; j < 2; j++) {
@@ -550,13 +550,13 @@ void combatManager::LoadArmies(void)
             m_armies[j][i].InitClean();
     }
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[1][m_numArmies[1]].Init(m_armyGroups[1]->m_creatureTypes[i],
                                              m_armyGroups[1]->m_creatureCounts[i], 1, m_numArmies[1]);
             m_armies[1][m_numArmies[1]].LoadResources();
             m_numArmies[1]++;
         }
-        if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[0][m_numArmies[0]].Init(m_armyGroups[0]->m_creatureTypes[i],
                                              m_armyGroups[0]->m_creatureCounts[i], 0, m_numArmies[0]);
             m_armies[0][m_numArmies[0]].LoadResources();
@@ -709,7 +709,7 @@ signed char combatManager::GetNextArmy(int checkMorale)
             for (stackCounter = 0; stackCounter < m_numArmies[stackSide]; stackCounter++) {
                 bSkip = 0;
                 pArmy = &m_armies[stackSide][stackCounter];
-                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == 0x12 || pArmy->m_spellEffect == 7
+                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == SPELL_PARALYZE || pArmy->m_spellEffect == SPELL_BLIND
                     || (pArmy->m_stats.speed != m_currentSpeed && !(pArmy->m_stats.attributes & 0x20)))
                     bSkip = 1;
                 if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & 0x20))
@@ -1210,7 +1210,7 @@ int combatManager::ExperienceValueOfStack(signed char side)
 
     value = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armies[side][i].m_creatureType != -1)
+        if (m_armies[side][i].m_creatureType != CREATURE_NONE)
             value += (m_armies[side][i].m_initialQuantity - m_armies[side][i].m_quantity)
                      * gMonsterDatabase[m_armies[side][i].m_creatureType].hitPoints;
     }

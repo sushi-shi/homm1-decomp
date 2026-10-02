@@ -12,14 +12,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-H1_ENUM_BEGIN(RecruitConstant)
+H1_ENUM_CONST_BEGIN(RecruitConstant)
 RECRUIT_RESOURCE_COUNT = 6,
     RECRUIT_GOLD_RESOURCE = 6, RECRUIT_NO_RESOURCE = -1, RECRUIT_WINDOW_X = 0xa0,
     RECRUIT_WINDOW_Y = 0x10, RECRUIT_VIEW_ARMY_X = 0x77, RECRUIT_VIEW_ARMY_Y = 0x20,
     RECRUIT_NO_ROOM_DIALOG_X = 0xb1, RECRUIT_NO_ROOM_DIALOG_Y = 0x64, RECRUIT_MANAGER_OPEN_OK = 0,
     RECRUIT_WIDGET_FLAGS_DIMMED = 0x4008, RECRUIT_WIDGET_FLAG_ENABLED = 2,
     RECRUIT_NOTIFY_SELECT = 12,
-    RECRUIT_COMMAND_GET_TEXT = 7 H1_ENUM_END(RecruitConstant)
+    RECRUIT_COMMAND_GET_TEXT = 7 H1_ENUM_CONST_END(RecruitConstant)
 
         H1_ENUM_BEGIN(RecruitControl) RECRUIT_CLOSE_CONTROL = 0x7800,
     RECRUIT_CANCEL_CONTROL = 0x7801, RECRUIT_CONFIRM_CONTROL = 0x7802, RECRUIT_TITLE_CONTROL = 0x40,
@@ -96,7 +96,7 @@ short recruitUnit::Open(short priority) {
         RECRUIT_WINDOW_Y,
         const_cast<char*>(m_resourceType == RECRUIT_NO_RESOURCE ? "recruit0.bin" : "recruit1.bin")
     );
-    if (m_window == 0)
+    if (m_window == NULL)
         MemError();
     m_quantity = 0;
     m_goldTotal = 0;
@@ -159,12 +159,12 @@ void recruitUnit::Close(void) {
     if (m_noRoom)
         NormalDialog(
             "There is no room in the garrison for this army.",
-            1,
+            NORMAL_DIALOG_TYPE_OK,
             RECRUIT_NO_ROOM_DIALOG_X,
             RECRUIT_NO_ROOM_DIALOG_Y,
-            -1,
+            NORMAL_DIALOG_NO_RESOURCE,
             0,
-            -1,
+            NORMAL_DIALOG_NO_RESOURCE,
             0,
             -1
         );
@@ -258,13 +258,13 @@ short recruitUnit::Main(struct tag_message& message) {
                             RECRUIT_VIEW_ARMY_Y,
                             m_creatureType,
                             0,
-                            0,
+                            NULL,
                             1,
                             0,
                             quickView,
-                            0,
-                            0,
-                            0
+                            NULL,
+                            NULL,
+                            NULL
                         );
                         break;
                     default:
@@ -408,7 +408,7 @@ void QuickViewRecruit(town* townData, signed char dwelling) {
         RECRUIT_WINDOW_Y,
         const_cast<char*>(resourceType == RECRUIT_NO_RESOURCE ? "recruiq0.bin" : "recruiq1.bin")
     );
-    if (win == 0)
+    if (win == NULL)
         MemError();
     SetupRecruitWin(win, iMonsterType, iGoldCost, resourceType, resourcePrice, avail);
     gpMouseManager->ReallyHidePointer();

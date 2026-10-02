@@ -80,33 +80,33 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
     iLuck = gpGame->GetLuck(m_heroes[side], NULL);
     sprintf(gText, "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
-            cViewGeneralLabels[0], m_heroes[side]->m_primaryStats[0],
-            cViewGeneralLabels[1], m_heroes[side]->m_primaryStats[1],
-            cViewGeneralLabels[2], m_heroes[side]->m_primaryStats[2],
-            cViewGeneralLabels[3], m_heroes[side]->m_primaryStats[3],
+            cViewGeneralLabels[0], m_heroes[side]->m_primaryStats[HERO_PRIMARY_ATTACK],
+            cViewGeneralLabels[1], m_heroes[side]->m_primaryStats[HERO_PRIMARY_DEFENSE],
+            cViewGeneralLabels[2], m_heroes[side]->m_primaryStats[HERO_PRIMARY_SPELL_POWER],
+            cViewGeneralLabels[3], m_heroes[side]->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
             cViewGeneralLabels[4], gMoraleText[morale + 3],
             cViewGeneralLabels[5], gLuckText[iLuck + 3]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = 4;
     message.text = gText;
     wnd->BroadcastMessage(message);
-    if (m_heroes[side] == NULL || allowActions == 0 || !m_heroes[side]->HasArtifact(37)
+    if (m_heroes[side] == NULL || allowActions == 0 || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK)
         || m_heroCastSpell[side] != 0 || m_currentSide != giCurGeneral) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = 10;
-        message.value = 2;
+        message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = 8;
+        message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
     if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || m_currentSide != giCurGeneral) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = 12;
-        message.value = 2;
+        message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = 8;
+        message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
     if (allowActions == 0 || m_currentSide != giCurGeneral
@@ -114,10 +114,10 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         || m_sideRetreated[0] != 0 || m_sideRetreated[1] != 0) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = 11;
-        message.value = 2;
+        message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = 8;
+        message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
     if (quickView) {
@@ -180,7 +180,7 @@ short HandleViewGeneral(tag_message& message)
             case 10:
             case 11:
             case 12:
-            case 0x7800:
+            case DIALOG_BUTTON_0:
                 if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                     gpWindowManager->m_dialogResult = message.id;
                     retVal = 1;
@@ -202,7 +202,7 @@ short HandleViewGeneral(tag_message& message)
             case 12:
                 hintIndex = 3;
                 break;
-            case 0x7800:
+            case DIALOG_BUTTON_0:
                 hintIndex = 4;
                 break;
             default:

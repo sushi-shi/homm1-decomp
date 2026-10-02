@@ -14,7 +14,7 @@
 
 VA(0x0047b2c0, 0xa1)
 font::font(short id)
-    : resource(RESOURCE_CATEGORY_FONT, id, 1, 0)
+    : resource(RESOURCE_CATEGORY_FONT, id, 1, NULL)
 {
     signed char name[13];
     gpResourceManager->PointToFile(id);

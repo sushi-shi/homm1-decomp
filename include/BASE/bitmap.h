@@ -4,10 +4,10 @@
 #include <BASE/resource.h>
 #include <H1/Macros.h>
 
-H1_ENUM_BEGIN(BitmapCopyConstant)
+H1_ENUM_CONST_BEGIN(BitmapCopyConstant)
     BITMAP_COPY_STRIDE = 640,
     PALETTE_RAW_BYTES = 0x300
-H1_ENUM_END(BitmapCopyConstant)
+H1_ENUM_CONST_END(BitmapCopyConstant)
 
 #pragma pack(push, 1)
 class bitmap : public resource {

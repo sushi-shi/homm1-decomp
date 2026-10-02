@@ -69,7 +69,7 @@ void combatManager::CombatMessage(short messageType) {
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     actingType = currentArmy->m_creatureType;
-    target = 0;
+    target = NULL;
     targetMonster = 0;
     if (currentArmy->m_targetSide >= 0 && currentArmy->m_targetIndex >= 0) {
         target = &m_armies[currentArmy->m_targetSide][currentArmy->m_targetIndex];

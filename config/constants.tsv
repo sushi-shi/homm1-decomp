@@ -1,0 +1,69 @@
+# homm1 constants work list - numeric constants kept on purpose, one row each,
+# with the reason. Every other numeric spelling in src/ and include/ is open
+# until it is written as a name (enumerator, named macro, NULL, TRUE/FALSE;
+# VC4 has no bool keywords). `homm1 verify constants --list [FILTER]` prints
+# the open ones; the floor never rises (`--update-floor` lowers it). Columns
+# (tab-separated; every field is an fnmatch glob, `*` matches anything; the
+# first matching row wins): file owner spelling group detail reason.
+# group/detail are the census' review_group/review_context columns.
+#floor	14891
+*	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
+*	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
+*	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
+*	*	1	trivial-function-literal	1 compound-assignment*	a one-step increment or decrement
+*	*	0	trivial-function-literal	0 bound*	sign test against zero (retail keeps the >= 0 / < 0 form)
+*	*	0	trivial-function-literal	0 equality str*cmp*()	a C string comparison (strcmp, strncmp, strcmpi) returns 0 for equal strings
+*	*	0	trivial-function-literal	0 store [xy]	a coordinate reset to the origin
+*	*	0	trivial-function-literal	0 store m_[xy]	a coordinate reset to the origin
+*	*	0	trivial-function-literal	0 store *[Cc]ount	a count reset to zero
+*	*	0	trivial-function-literal	0 store total	a running total reset to zero
+*	*	0	trivial-function-literal	0 store i	an index back at the first entry
+*	*	0	trivial-function-literal	0 store index	an index back at the first entry
+*	*	*	data-or-extent	array extent	the element count of an array, written in its declaration
+*	*	*	call-argument	Random(int, int) argument 1	the low bound of a random roll
+*	*	*	call-argument	Random(int, int) argument 2	the high bound of a random roll
+*	*	*	call-argument	SRandom(int, int) argument 1	the low bound of a seeded random roll
+*	*	*	call-argument	SRandom(int, int) argument 2	the high bound of a seeded random roll
+*	*	*	call-argument	memset(void *, int, size_t) argument 2	the fill byte
+*	*	*	call-argument	memset(void *, int, size_t) argument 3	the byte count
+*	*	*	call-argument	read(int, void *, unsigned int) argument 3	the byte width of a saved field read back from a file
+*	*	*	call-argument	write(int, const void *, unsigned int) argument 3	the byte width of a field written to a save file
+*	*	*	call-argument	malloc(size_t) argument 1	the byte size of an allocation
+*	*	*	call-argument	sprintf(char *, const char *, ...) argument [3-9]	a value formatted into the text
+*	*	*	call-argument	ProcessAssert(int, char *, int) argument 1	a forced assertion failure (condition 0)
+*	*	*	call-argument	ProcessAssert(int, char *, int) argument 3	the source line the assertion reports
+*	*	*	call-argument	TransmitRemoteData(* argument 3	the payload length in bytes
+*	*	*	call-argument	FadeScreen(short, short, class palette *) argument 2	the number of palette fade steps
+*	*	*	call-argument	iconWidget(* argument [1-4]	widget x, y, width and height in pixels (retail window layout)
+*	*	*	call-argument	iconWidget(* argument 6	an icon frame number in the .icn resource (frames have no names)
+*	*	*	call-argument	textWidget(* argument [1-4]	widget x, y, width and height in pixels (retail window layout)
+*	*	*	call-argument	widget(* argument [1-4]	widget x, y, width and height in pixels (retail window layout)
+*	*	*	call-argument	backdropWidget(* argument [1-4]	widget x, y, width and height in pixels (retail window layout)
+*	*	*	call-argument	heroWindow(short, short, char *) argument [12]	window x and y in pixels
+*	*	*	call-argument	UpdateScreenRegion(* argument [1-4]	screen region x, y, width and height in pixels
+*	*	*	call-argument	SaveFizzleSource(* argument [1-4]	screen region x, y, width and height in pixels
+*	*	*	call-argument	FizzleForward(* argument [1-4]	screen region x, y, width and height in pixels
+*	*	*	call-argument	DrawToBuffer(short, short, short, signed char, signed char) argument [12]	icon x and y in pixels
+*	*	*	call-argument	DrawToBuffer(short, short, short, signed char, signed char) argument 3	an icon frame number in the .icn resource (frames have no names)
+*	*	*	call-argument	DrawToBuffer(short, short) argument [12]	bitmap x and y in pixels
+*	*	*	call-argument	FillToBuffer(* argument [12]	icon x and y in pixels
+*	*	*	call-argument	FillToBuffer(* argument 3	an icon frame number in the .icn resource (frames have no names)
+*	*	*	call-argument	DimToBuffer(* argument [12]	icon x and y in pixels
+*	*	*	call-argument	BlitBitmapToScreen(* argument [2-7]	source and destination rectangle in pixels
+*	*	*	call-argument	CopyTo(* argument [2-7]	source and destination rectangle in pixels
+*	*	*	call-argument	IconToBitmap(* argument [34]	icon x and y in pixels
+*	*	*	call-argument	IconToBitmap(* argument 5	an icon frame number in the .icn resource (frames have no names)
+*	*	*	call-argument	FlipIconToBitmap(* argument [34]	icon x and y in pixels
+*	*	*	call-argument	FlipIconToBitmap(* argument 5	an icon frame number in the .icn resource (frames have no names)
+*	*	*	call-argument	DrawBoundedString(* argument [2-5]	text box x, y, width and height in pixels
+*	*	*	call-argument	NormalDialog(* argument [34]	dialog window x and y in pixels (-1 centres it, Buka's default)
+*	*	*	arithmetic	operator + KBTickCount()	a delay in milliseconds after the current time (KBTickCount returns GetTickCount)
+src/*	advManager::ProcessSelect	*	store	store to [xy]	a screen position in pixels
+src/*	advManager::UpdBottomView*	*	store	store to [xy]	a screen position in pixels
+src/*	advManager::Update*Locators	*	store	store to m_[xy]	a screen position in pixels
+src/*	DataEntryWindowHandler	*	store	store to [xy]	a screen position in pixels
+src/*	fileRequester::Update	*	store	store to m_[xy]	a screen position in pixels
+*	*	*	store	store to sizingHeight	a dialog or bottom-panel row height in pixels
+*	*	*	store	store to resWidth	a dialog or bottom-panel column width in pixels
+*	*	*	store	store to rowY[]	a dialog or bottom-panel row y in pixels
+*	*	*	store	store to colX[]	a dialog or bottom-panel column x in pixels

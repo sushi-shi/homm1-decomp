@@ -13,6 +13,7 @@
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <BASE/soundmgr.h>
+#include <SOURCE/appMenu.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/creatureTypes.h>
@@ -95,52 +96,52 @@ VA(0x0044fcd9, 0x36d)
 void DeleteMainClasses(void) {
     if (gpBufferPalette)
         delete gpBufferPalette;
-    gpBufferPalette = 0;
+    gpBufferPalette = NULL;
     if (gpMonGroup)
         delete gpMonGroup;
-    gpMonGroup = 0;
+    gpMonGroup = NULL;
     if (gpPhilAI)
         delete gpPhilAI;
-    gpPhilAI = 0;
+    gpPhilAI = NULL;
     if (gpSearchArray)
         delete gpSearchArray;
-    gpSearchArray = 0;
+    gpSearchArray = NULL;
     if (gpTownManager)
         delete gpTownManager;
-    gpTownManager = 0;
+    gpTownManager = NULL;
     if (gpCombatManager)
         delete gpCombatManager;
-    gpCombatManager = 0;
+    gpCombatManager = NULL;
     if (gpAdvManager)
         delete gpAdvManager;
-    gpAdvManager = 0;
+    gpAdvManager = NULL;
     if (gpGame)
         delete gpGame;
-    gpGame = 0;
+    gpGame = NULL;
     if (gpHighScoreManager)
         delete gpHighScoreManager;
-    gpHighScoreManager = 0;
+    gpHighScoreManager = NULL;
     if (gpSmackManager)
         delete gpSmackManager;
-    gpSmackManager = 0;
+    gpSmackManager = NULL;
     if (gpSoundManager)
         delete gpSoundManager;
-    gpSoundManager = 0;
+    gpSoundManager = NULL;
     if (gpResourceManager)
         delete gpResourceManager;
-    gpResourceManager = 0;
+    gpResourceManager = NULL;
     if (gpWindowManager)
         delete gpWindowManager;
-    gpWindowManager = 0;
+    gpWindowManager = NULL;
     if (gpMouseManager)
         delete gpMouseManager;
-    gpMouseManager = 0;
+    gpMouseManager = NULL;
     if (gpInputManager)
         delete gpInputManager;
-    gpInputManager = 0;
+    gpInputManager = NULL;
     if (gpExec)
         delete gpExec;
-    gpExec = 0;
+    gpExec = NULL;
 }
 
 // donor PoL RVA 0x00096e21; preferred Buka symbol ?EarlySetup@@YIHXZ
@@ -187,51 +188,6 @@ int EarlySetup(void) {
     return 1;
 }
 
-// clang-format off
-// HoMM1 menu command ids; each menu bar repeats Restart and New Game.
-H1_ENUM_BEGIN(AppMenuCommand)
-    APP_MENU_RESTART_0 = 0x9ca6,
-    APP_MENU_RESTART_1 = 0x9ca8,
-    APP_MENU_RESTART_2 = 0x9ca9,
-    APP_MENU_RESTART_3 = 0x9caa,
-    APP_MENU_RESTART_4 = 0x9cab,
-    APP_MENU_RESTART_5 = 0x9cae,
-    APP_MENU_RESTART_6 = 0x9caf,
-    APP_MENU_RESTART_7 = 0x9cb0,
-    APP_MENU_RESTART_8 = 0x9cb2,
-    APP_MENU_RESTART_9 = 0x9cb3,
-    APP_MENU_RESTART_10 = 0x9cb5,
-    APP_MENU_RESTART_11 = 0x9cb6,
-    APP_MENU_RESTART_12 = 0x9cb8,
-    APP_MENU_RESTART_13 = 0x9cb9,
-    APP_MENU_LOAD_0 = 0x9cbb,
-    APP_MENU_LOAD_1 = 0x9cbc,
-    APP_MENU_LOAD_2 = 0x9cbf,
-    APP_MENU_LOAD_3 = 0x9cc0,
-    APP_MENU_LOAD_4 = 0x9cc1,
-    APP_MENU_LOAD_5 = 0x9cc3,
-    APP_MENU_LOAD_6 = 0x9cc4,
-    APP_MENU_LOAD_7 = 0x9cc6,
-    APP_MENU_LOAD_8 = 0x9cc7,
-    APP_MENU_LOAD_9 = 0x9cc9,
-    APP_MENU_LOAD_10 = 0x9cca,
-    APP_MENU_SAVE = 0x9ccb,
-    APP_MENU_EXIT = 0x9ccc,
-    APP_MENU_MUSIC_FIRST = 0x9c50,
-    APP_MENU_MUSIC_LAST = 0x9c5a,
-    APP_MENU_SOUND_FIRST = 0x9c5c,
-    APP_MENU_SOUND_LAST = 0x9c66,
-    APP_MENU_WALK_FASTEST = 0x9c68,
-    APP_MENU_WALK_SLOWEST = 0x9c6c,
-    APP_MENU_CD_MUSIC = 0x9c6d,
-    APP_MENU_TOGGLE_ROUTE = 0x9c6e,
-    APP_MENU_TOGGLE_BLACKOUT = 0x9c6f,
-    APP_MENU_VIEW_WORLD = 0x9c4c,
-    APP_MENU_VIEW_PUZZLE = 0x9c4d,
-    APP_MENU_CAST_SPELL = 0x9c4e,
-    APP_MENU_SEARCH = 0x9c4f
-H1_ENUM_END(AppMenuCommand)
-// clang-format on
 
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
@@ -266,8 +222,8 @@ int oldmain(void) {
     gpWindowManager->m_updateFlags = 1;
     gpPhilAI->m_debugFont = gpResourceManager->GetFont("smalfont.fnt");
     if (giShowIntro) {
-        FillBitmapArea(gpWindowManager->m_screen, 0, 0, 640, 480, 0);
-        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, 640, 480, 0, 0);
+        FillBitmapArea(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0);
+        BlitBitmapToScreen(gpWindowManager->m_screen, 0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, 0, 0);
         font = gpResourceManager->GetFont("bigfont.fnt");
         font->DrawString("Loading Heroes of Might and Magic for Windows 95 (version 1.0)", 10, 10, 1);
         gpWindowManager->UpdateScreenRegion(10, 10, 600, 20);
@@ -295,7 +251,7 @@ int oldmain(void) {
         if (!backdropLoaded) {
             if (gGameCommand != 4) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 if (initialMainScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
@@ -313,34 +269,34 @@ int oldmain(void) {
         if (giMenuCommand != -1) {
         processMenuCommand:
             switch (giMenuCommand) {
-                case APP_MENU_LOAD_0:
-                case APP_MENU_LOAD_1:
-                case APP_MENU_LOAD_2:
-                case APP_MENU_LOAD_3:
-                case APP_MENU_LOAD_4:
-                case APP_MENU_LOAD_5:
-                case APP_MENU_LOAD_6:
-                case APP_MENU_LOAD_7:
-                case APP_MENU_LOAD_8:
-                case APP_MENU_LOAD_9:
-                case APP_MENU_LOAD_10:
+                case APP_MENU_LOAD_STANDARD_GAME:
+                case APP_MENU_LOAD_CAMPAIGN_GAME:
+                case APP_MENU_LOAD_HOT_SEAT_2:
+                case APP_MENU_LOAD_HOT_SEAT_3:
+                case APP_MENU_LOAD_HOT_SEAT_4:
+                case APP_MENU_LOAD_NETWORK_HOST:
+                case APP_MENU_LOAD_NETWORK_GUEST:
+                case APP_MENU_LOAD_MODEM_HOST:
+                case APP_MENU_LOAD_MODEM_GUEST:
+                case APP_MENU_LOAD_DIRECT_HOST:
+                case APP_MENU_LOAD_DIRECT_GUEST:
                     if (!gpGame->PickLoadGame())
                         goto mainMenu;
                     break;
-                case APP_MENU_RESTART_0:
-                case APP_MENU_RESTART_1:
-                case APP_MENU_RESTART_2:
-                case APP_MENU_RESTART_3:
-                case APP_MENU_RESTART_4:
-                case APP_MENU_RESTART_5:
-                case APP_MENU_RESTART_6:
-                case APP_MENU_RESTART_7:
-                case APP_MENU_RESTART_8:
-                case APP_MENU_RESTART_9:
-                case APP_MENU_RESTART_10:
-                case APP_MENU_RESTART_11:
-                case APP_MENU_RESTART_12:
-                case APP_MENU_RESTART_13:
+                case APP_MENU_NEW_STANDARD_GAME:
+                case APP_MENU_NEW_CAMPAIGN_IRONFIST:
+                case APP_MENU_NEW_CAMPAIGN_SLAYER:
+                case APP_MENU_NEW_CAMPAIGN_LAMANDA:
+                case APP_MENU_NEW_CAMPAIGN_ALAMAR:
+                case APP_MENU_NEW_HOT_SEAT_2:
+                case APP_MENU_NEW_HOT_SEAT_3:
+                case APP_MENU_NEW_HOT_SEAT_4:
+                case APP_MENU_NEW_NETWORK_HOST:
+                case APP_MENU_NEW_NETWORK_GUEST:
+                case APP_MENU_NEW_MODEM_HOST:
+                case APP_MENU_NEW_MODEM_GUEST:
+                case APP_MENU_NEW_DIRECT_HOST:
+                case APP_MENU_NEW_DIRECT_GUEST:
                     if (!gpGame->NewGame())
                         goto mainMenu;
                     break;
@@ -384,7 +340,7 @@ int oldmain(void) {
             case 6:
                 gpWindowManager->FadeScreen(1, 8, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 done = 0;
                 gpInputManager->Flush();
@@ -399,7 +355,7 @@ int oldmain(void) {
                 }
                 gpWindowManager->FadeScreen(1, 8, gPalette);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 goto mainMenu;
             case 4:
@@ -428,20 +384,20 @@ int oldmain(void) {
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
                     result = TransmitRemoteData(gText, idx, 4, BOX_REMOTE_SETUP, 1, 1, -1, 0);
                     if (!result)
-                        ShutDown(0);
+                        ShutDown(NULL);
                 }
                 for (idx = 0; idx < gpGame->m_playerCount; idx++) {
                     if (gbHumanPlayer[idx] && !gbThisNetHumanPlayer[idx]) {
                         if (!gpGame->TransmitSaveGame(idx, 0))
-                            ShutDown(0);
+                            ShutDown(NULL);
                     }
                 }
             }
             if (gbRemoteOn && gbWaitForRemoteReceive) {
                 giWaitType = 0;
-                NormalDialog("Waiting for other remote player to set up game.", 6, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog("Waiting for other remote player to set up game.", NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (!gbFunctionComplete)
-                    ShutDown(0);
+                    ShutDown(NULL);
                 gpGame->LoadGame("REMOTE.GAM", 0, 1);
                 goto playScenario;
             }
@@ -450,7 +406,7 @@ int oldmain(void) {
                 if (!backdropLoaded) {
                     gpWindowManager->FadeScreen(1, 8, gPalette);
                     gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                     gpWindowManager->FadeScreen(0, 8, gPalette);
                     backdropLoaded = 1;
                 }
@@ -499,7 +455,7 @@ int oldmain(void) {
                                                   : lowResVideos[giEndSequence]);
                 }
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 gpWindowManager->m_updateFlags = 1;
                 backdropLoaded = 1;
@@ -520,15 +476,15 @@ int oldmain(void) {
                 giHighScoreRank = -1;
                 gpSoundManager->SwitchAmbientMusic(48);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
-                gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+                gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 backdropLoaded = 1;
             }
             if (gpGame->m_campaignType > 0) {
                 if (giEndSequence == 0) {
                     sprintf(gText, "Would you like to replay this scenario?");
-                    NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
-                    if (gpWindowManager->m_dialogResult == 0x7805) {
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
                     }
@@ -546,8 +502,8 @@ int oldmain(void) {
                         "Your campaign has been saved as %s.  Would you like to start the next "
                         "scenario?",
                         saveBuf);
-                    NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
-                    if (gpWindowManager->m_dialogResult == 0x7805)
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                         goto playScenario;
                 }
             }
@@ -555,7 +511,7 @@ int oldmain(void) {
         if (gbRemoteOn)
             leave = 1;
     }
-    ShutDown(0);
+    ShutDown(NULL);
     return 0;
 }
 
@@ -655,7 +611,7 @@ short InitMenuHandler(tag_message& message) {
                     break;
             }
             if (helpIndex >= 0)
-                NormalDialog(gInitMenuHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gInitMenuHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
     } else if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -703,7 +659,7 @@ short RecruitHeroHandler(tag_message& message) {
                         gpTownManager->RedrawTownScreen();
                         gpTownManager->m_heroWindow0->DrawWindow();
                         gpTownManager->m_heroWindow1->DrawWindow();
-                        gpWindowManager->FadeScreen(0, 8, 0);
+                        gpWindowManager->FadeScreen(0, 8, NULL);
                         break;
                     default:
                         break;
@@ -711,7 +667,7 @@ short RecruitHeroHandler(tag_message& message) {
                 break;
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x7801:
+                    case DIALOG_BUTTON_1:
                         gpTownManager->m_recruitState = -1;
                         shouldClose = 1;
                         break;
@@ -799,9 +755,9 @@ signed char CanBuild(town* t, short building) {
     unsigned short required;
     if (BitTest(gpGame->m_townBuiltToday, t->m_id))
         return 0;
-    if (building != 6 && !(t->m_buildings & 0x40))
+    if (building != BUILDING_SLOT_CASTLE && !(t->m_buildings & (1 << BUILDING_SLOT_CASTLE)))
         return 0;
-    if (building == 3) {
+    if (building == BUILDING_SLOT_SHIPYARD) {
         cell = gpAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
         if (cell->m_tileIndex < 20)
             return 1;
@@ -810,7 +766,7 @@ signed char CanBuild(town* t, short building) {
     }
     if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= 3)
         return 0;
-    if (building == 5)
+    if (building == BUILDING_SLOT_TENT)
         return 0;
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
@@ -833,7 +789,7 @@ signed char CanBuy(town* t, short type) {
         t->m_type,
         type,
         cost,
-        (t->m_buildings & 1) ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1) : 0
+        (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)) ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1) : 0
     );
     rec = &gpGame->m_players[giCurPlayer];
     for (i = 0; i < RESOURCE_COUNT; ++i) {
@@ -1012,8 +968,8 @@ void NormalDialog(
     }
 
     for (i = 0; i < NORMAL_DIALOG_RESOURCE_COUNT; i++) {
-        iconPanel = 0;
-        captionWidget = 0;
+        iconPanel = NULL;
+        captionWidget = NULL;
         if (kind[i] == NORMAL_DIALOG_NO_RESOURCE)
             break;
 
@@ -1235,9 +1191,9 @@ short WaitHandler(tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x7800:
-                    case 0x7801:
-                    case 0x7802:
+                    case DIALOG_BUTTON_0:
+                    case DIALOG_BUTTON_1:
+                    case DIALOG_BUTTON_2:
                         gbFunctionComplete = 0;
                         result = 1;
                         break;
@@ -1273,7 +1229,7 @@ short WaitHandler(tag_message& message) {
         }
     }
     if (result) {
-        gpWindowManager->m_dialogResult = 0x7801;
+        gpWindowManager->m_dialogResult = DIALOG_BUTTON_1;
         message.type = MESSAGE_WIDGET;
         message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
@@ -1291,12 +1247,12 @@ short EventWindowHandler(tag_message& message) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
                     case 0x385:
-                    case 0x7800:
-                    case 0x7801:
-                    case 0x7802:
-                    case 0x7803:
-                    case 0x7805:
-                    case 0x7806:
+                    case DIALOG_BUTTON_0:
+                    case DIALOG_BUTTON_1:
+                    case DIALOG_BUTTON_2:
+                    case DIALOG_BUTTON_3:
+                    case DIALOG_BUTTON_5:
+                    case DIALOG_BUTTON_6:
                         gpWindowManager->m_dialogResult = message.id;
                         message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
@@ -1348,7 +1304,7 @@ VA(0x00452e00, 0x99)
 void HandleRemoteDeadPlayerExit(int position) {
     if (position == giThisGamePos) {
         if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
-            ShutDown(0);
+            ShutDown(NULL);
         RemoteCleanup();
     } else if (giNumHumanPlayers == 2) {
         giNumHumanPlayers--;
@@ -1391,7 +1347,7 @@ VA(0x00452f8a, 0x1ea)
 void ReceiveRemotePlayerExit(signed char position, signed char, signed char eliminated, signed char timedOut) {
     if (position == giThisGamePos) {
         sprintf(gText, "You have been eliminated from the game!!!");
-        NormalDialog(gText, 1, -1, -1, -1, 0, -1, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         RemoteCleanup();
         gbGameOver = 1;
         giEndSequence = 0;
@@ -1402,7 +1358,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
         if (eliminated) {
             sprintf(gText, "%s player has been vanquished!", gColorNames[gpGame->m_players[position].Color()]);
             gText[0] -= 32;
-            NormalDialog(gText, 1, 0x61, -1, 9, gpGame->m_players[position].Color(), -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[position].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             goto dropPlayer;
         } else {
             if (timedOut)
@@ -1422,7 +1378,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
                     position + 1,
                     position + 1
                 );
-            NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         dropPlayer:
@@ -1433,7 +1389,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
             }
         } else {
             RemoteCleanup();
-            ShutDown(0);
+            ShutDown(NULL);
         }
     }
 }
@@ -1563,8 +1519,8 @@ void CheckEndGame(int forced) {
                         for (slot = 0; slot < gpGame->m_players[player].m_heroCount; slot++) {
                             artifactHero =
                                 gpGame->GetHero(gpGame->m_players[player].m_heroIds[slot]);
-                            if (artifactHero->HasArtifact(0) || artifactHero->HasArtifact(1)
-                                || artifactHero->HasArtifact(2) || artifactHero->HasArtifact(3))
+                            if (artifactHero->HasArtifact(ARTIFACT_ULTIMATE_BOOK) || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_SWORD)
+                                || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_CLOAK) || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_WAND))
                                 ultimateOwner = player;
                         }
                     }
@@ -1642,12 +1598,12 @@ void QuickViewWait(void) {
 VA(0x004539dd, 0x1cb)
 void InitVars(void) {
     int i;
-    NULL_SAMPLE2.pSample = 0;
+    NULL_SAMPLE2.pSample = NULL;
     NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
     iMaxMapExtra = 1;
     gGameCommand = -1;
-    gPalette = 0;
-    gpPhilAI->m_debugFont = 0;
+    gPalette = NULL;
+    gpPhilAI->m_debugFont = NULL;
     gbCombatSurrender = 0;
     gpGame->m_viewArmyResult = 0;
     gbInNewGameSetup = 0;
@@ -1660,7 +1616,7 @@ void InitVars(void) {
     strcpy(cNetBoxLine[0], "");
     strcpy(cNetBoxLine[1], "");
     for (i = 0; i < 255; i++)
-        ppMapExtra[i] = 0;
+        ppMapExtra[i] = NULL;
     hmnuDflt = LoadMenuA((HINSTANCE)hInstApp, "mnuDflt");
     hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
     hmnuAdv = LoadMenuA((HINSTANCE)hInstApp, "mnuAdv");
@@ -1706,9 +1662,9 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     int baseLen;
     char buffer[200];
 
-    if (h->m_army.GetMorale(h, 0) > 0)
+    if (h->m_army.GetMorale(h, NULL) > 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_GOOD]);
-    else if (h->m_army.GetMorale(h, 0) == 0)
+    else if (h->m_army.GetMorale(h, NULL) == 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_NEUTRAL]);
     else
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_BAD]);
@@ -1720,7 +1676,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     if (alignments > 0) {
         faction = 0;
         for (i = 0; i < 5; i++) {
-            if (h->m_army.m_creatureTypes[i] != -1)
+            if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
                 faction = h->m_army.m_creatureTypes[i] / 6;
         }
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[faction]);
@@ -1764,7 +1720,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     }
     if (strlen(gText) == baseLen)
         strcat(gText, gMoraleInfoText[MORALE_INFO_NONE]);
-    NormalDialog(gText, dialogType, -1, -1, -1, 0, -1, 0, -1);
+    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
 }
 
 // clang-format off
@@ -1794,9 +1750,9 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
     int baseLen;
     char buffer[200];
 
-    if (gpGame->GetLuck(h, 0) > 0)
+    if (gpGame->GetLuck(h, NULL) > 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_GOOD]);
-    else if (gpGame->GetLuck(h, 0) == 0)
+    else if (gpGame->GetLuck(h, NULL) == 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_NEUTRAL]);
     else
         sprintf(buffer, gLuckInfoText[LUCK_INFO_BAD]);
@@ -1816,7 +1772,7 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (strlen(gText) == baseLen)
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
-    NormalDialog(gText, dialogType, -1, -1, -1, 0, -1, 0, -1);
+    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
 }
 
 VA(0x004541ef, 0x70)
@@ -1825,7 +1781,7 @@ void ClearMapExtra(void) {
     for (i = 0; i < 255; i++) {
         if (ppMapExtra[i]) {
             free(ppMapExtra[i]);
-            ppMapExtra[i] = 0;
+            ppMapExtra[i] = NULL;
         }
     }
     iMaxMapExtra = 1;
@@ -1895,7 +1851,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     if (entry < 10) {
         for (dest = 8; dest >= entry; dest--)
             scores[dest + 1] = scores[dest];
-        GetDataEntry("Please enter your name for the high score list.", enteredPlayerName, 16, 0);
+        GetDataEntry("Please enter your name for the high score list.", enteredPlayerName, 16, NULL);
         strcpy(scores[entry].playerName, enteredPlayerName);
         strcpy(scores[entry].scenarioName, scenarioName);
         scores[entry].score = score;
@@ -2093,7 +2049,7 @@ void PopNetBox(char* notice) {
             AddNetBoxLine(text);
             success = TransmitRemoteData(text, REMOTE_BROADCAST_PLAYER, strlen(text) + 1, 11, 1, 1, -1, 1);
             if (!success)
-                ShutDown(0);
+                ShutDown(NULL);
             len = 0;
             strcpy(text, "");
             updateInput = 1;
@@ -2176,17 +2132,17 @@ void ShutDown(char* message) {
         HandleRemoteSuddenExit();
     if (gPalette) {
         gpResourceManager->Dispose(gPalette);
-        gPalette = 0;
+        gPalette = NULL;
     }
     if (gpPhilAI->m_debugFont) {
         gpResourceManager->Dispose(gpPhilAI->m_debugFont);
-        gpPhilAI->m_debugFont = 0;
+        gpPhilAI->m_debugFont = NULL;
     }
     gpExec->ShutDownSystem();
     RemoteCleanup();
     if (gEventHandle) {
         CloseHandle(gEventHandle);
-        gEventHandle = 0;
+        gEventHandle = NULL;
     }
     DeleteMainClasses();
     AppExit();
@@ -2265,7 +2221,7 @@ void ShowCongrats(void) {
     }
     gpWindowManager->AddWindow(win, -1, 1);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(0, 8, NULL);
     CongratsWait();
     gpWindowManager->RemoveWindow(win);
     delete win;
@@ -2505,141 +2461,141 @@ int HandleAppSpecificMenuCommands(int command) {
 
     menuChanged = 0;
     switch (command) {
-        case APP_MENU_RESTART_0:
-        case APP_MENU_RESTART_1:
-        case APP_MENU_RESTART_2:
-        case APP_MENU_RESTART_3:
-        case APP_MENU_RESTART_4:
-        case APP_MENU_RESTART_5:
-        case APP_MENU_RESTART_6:
-        case APP_MENU_RESTART_7:
-        case APP_MENU_RESTART_8:
-        case APP_MENU_RESTART_9:
-        case APP_MENU_RESTART_10:
-        case APP_MENU_RESTART_11:
-        case APP_MENU_RESTART_12:
-        case APP_MENU_RESTART_13:
+        case APP_MENU_NEW_STANDARD_GAME:
+        case APP_MENU_NEW_CAMPAIGN_IRONFIST:
+        case APP_MENU_NEW_CAMPAIGN_SLAYER:
+        case APP_MENU_NEW_CAMPAIGN_LAMANDA:
+        case APP_MENU_NEW_CAMPAIGN_ALAMAR:
+        case APP_MENU_NEW_HOT_SEAT_2:
+        case APP_MENU_NEW_HOT_SEAT_3:
+        case APP_MENU_NEW_HOT_SEAT_4:
+        case APP_MENU_NEW_NETWORK_HOST:
+        case APP_MENU_NEW_NETWORK_GUEST:
+        case APP_MENU_NEW_MODEM_HOST:
+        case APP_MENU_NEW_MODEM_GUEST:
+        case APP_MENU_NEW_DIRECT_HOST:
+        case APP_MENU_NEW_DIRECT_GUEST:
             strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
             goto confirmMenuCommand;
-        case APP_MENU_LOAD_0:
-        case APP_MENU_LOAD_1:
-        case APP_MENU_LOAD_2:
-        case APP_MENU_LOAD_3:
-        case APP_MENU_LOAD_4:
-        case APP_MENU_LOAD_5:
-        case APP_MENU_LOAD_6:
-        case APP_MENU_LOAD_7:
-        case APP_MENU_LOAD_8:
-        case APP_MENU_LOAD_9:
-        case APP_MENU_LOAD_10:
+        case APP_MENU_LOAD_STANDARD_GAME:
+        case APP_MENU_LOAD_CAMPAIGN_GAME:
+        case APP_MENU_LOAD_HOT_SEAT_2:
+        case APP_MENU_LOAD_HOT_SEAT_3:
+        case APP_MENU_LOAD_HOT_SEAT_4:
+        case APP_MENU_LOAD_NETWORK_HOST:
+        case APP_MENU_LOAD_NETWORK_GUEST:
+        case APP_MENU_LOAD_MODEM_HOST:
+        case APP_MENU_LOAD_MODEM_GUEST:
+        case APP_MENU_LOAD_DIRECT_HOST:
+        case APP_MENU_LOAD_DIRECT_GUEST:
             strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
         confirmMenuCommand:
             if (gpAdvManager->m_active == 1) {
-                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
-                if (gpWindowManager->m_dialogResult != 0x7805)
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     break;
             }
             giMenuCommand = command;
             break;
-        case APP_MENU_SAVE:
+        case APP_MENU_SAVE_GAME:
             SaveGame();
             break;
-        case APP_MENU_EXIT:
+        case APP_MENU_QUIT:
             PostMessage((HWND)hwndApp, WM_CLOSE, 0, 0);
             break;
-        case APP_MENU_MUSIC_FIRST:
+        case APP_MENU_MUSIC_OFF:
             gConfig.musicVolume = 0;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 1:
+        case APP_MENU_MUSIC_100:
             gConfig.musicVolume = 1;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 2:
+        case APP_MENU_MUSIC_90:
             gConfig.musicVolume = 2;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 3:
+        case APP_MENU_MUSIC_80:
             gConfig.musicVolume = 3;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 4:
+        case APP_MENU_MUSIC_70:
             gConfig.musicVolume = 4;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 5:
+        case APP_MENU_MUSIC_60:
             gConfig.musicVolume = 5;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 6:
+        case APP_MENU_MUSIC_50:
             gConfig.musicVolume = 6;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 7:
+        case APP_MENU_MUSIC_40:
             gConfig.musicVolume = 7;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 8:
+        case APP_MENU_MUSIC_30:
             gConfig.musicVolume = 8;
             goto adjustMusic;
-        case APP_MENU_MUSIC_FIRST + 9:
+        case APP_MENU_MUSIC_20:
             gConfig.musicVolume = 9;
             goto adjustMusic;
-        case APP_MENU_MUSIC_LAST:
+        case APP_MENU_MUSIC_10:
             gConfig.musicVolume = 10;
             goto adjustMusic;
         adjustMusic:
             gpSoundManager->AdjustMusicVolumes();
             menuChanged = 1;
             break;
-        case APP_MENU_SOUND_FIRST:
+        case APP_MENU_SOUND_OFF:
             gConfig.soundVolume = 0;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 1:
+        case APP_MENU_SOUND_100:
             gConfig.soundVolume = 1;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 2:
+        case APP_MENU_SOUND_90:
             gConfig.soundVolume = 2;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 3:
+        case APP_MENU_SOUND_80:
             gConfig.soundVolume = 3;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 4:
+        case APP_MENU_SOUND_70:
             gConfig.soundVolume = 4;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 5:
+        case APP_MENU_SOUND_60:
             gConfig.soundVolume = 5;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 6:
+        case APP_MENU_SOUND_50:
             gConfig.soundVolume = 6;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 7:
+        case APP_MENU_SOUND_40:
             gConfig.soundVolume = 7;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 8:
+        case APP_MENU_SOUND_30:
             gConfig.soundVolume = 8;
             goto adjustSound;
-        case APP_MENU_SOUND_FIRST + 9:
+        case APP_MENU_SOUND_20:
             gConfig.soundVolume = 9;
             goto adjustSound;
-        case APP_MENU_SOUND_LAST:
+        case APP_MENU_SOUND_10:
             gConfig.soundVolume = 10;
             goto adjustSound;
         adjustSound:
             gpSoundManager->AdjustSoundVolumes();
             menuChanged = 1;
             break;
-        case APP_MENU_WALK_FASTEST:
+        case APP_MENU_SPEED_JUMP:
             gConfig.walkSpeed = 4;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_FASTEST + 1:
+        case APP_MENU_SPEED_GALLOP:
             gConfig.walkSpeed = 3;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_FASTEST + 2:
+        case APP_MENU_SPEED_CANTER:
             gConfig.walkSpeed = 2;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_FASTEST + 3:
+        case APP_MENU_SPEED_TROT:
             gConfig.walkSpeed = 1;
             goto walkSpeedChanged;
-        case APP_MENU_WALK_SLOWEST:
+        case APP_MENU_SPEED_WALK:
             gConfig.walkSpeed = 0;
             goto walkSpeedChanged;
         walkSpeedChanged:
             menuChanged = 1;
             break;
-        case APP_MENU_CD_MUSIC:
+        case APP_MENU_CD_STEREO:
             if (gConfig.musicSource) {
                 gConfig.musicSource = 0;
             } else {
@@ -2647,7 +2603,7 @@ int HandleAppSpecificMenuCommands(int command) {
                     NormalDialog(
                         "Unable to set up CD stereo music.  Your CD player might be in use by "
                         "another program, or your sound driver might not support CD stereo.",
-                        1, -1, -1, -1, 0, -1, 0, -1);
+                        NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                     break;
                 }
                 gConfig.musicSource = 2;
@@ -2655,11 +2611,11 @@ int HandleAppSpecificMenuCommands(int command) {
             gpSoundManager->SetMusicQuality(gConfig.musicSource);
             menuChanged = 1;
             break;
-        case APP_MENU_TOGGLE_ROUTE:
+        case APP_MENU_SHOW_PATH:
             gConfig.showRoute = 1 - gConfig.showRoute;
             menuChanged = 1;
             break;
-        case APP_MENU_TOGGLE_BLACKOUT:
+        case APP_MENU_VIEW_ENEMY_MOVES:
             gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
             menuChanged = 1;
             break;
@@ -2672,7 +2628,7 @@ int HandleAppSpecificMenuCommands(int command) {
         case APP_MENU_CAST_SPELL:
             gpAdvManager->CheckCastSpell();
             break;
-        case APP_MENU_SEARCH:
+        case APP_MENU_DIG:
             gpAdvManager->ProcessSearch(-1, -1);
             break;
         default:
@@ -2683,8 +2639,8 @@ int HandleAppSpecificMenuCommands(int command) {
     return 0;
 }
 
-// HoMM1 menu ids: music 0x9c50-0x9c5a, sound 0x9c5c-0x9c66, walk speed
-// 0x9c68-0x9c6c, then the music-source, route and blackout toggles.
+// Checks the music, sound and walk-speed radio groups, then the CD,
+// route and enemy-move toggles.
 VA(0x0045634b, 0x3b7)
 void UpdateSystemOptionsMenu(void) {
     int checkedCommand;
@@ -2697,114 +2653,114 @@ void UpdateSystemOptionsMenu(void) {
     if (hmnuApp != hmnuAdv)
         return;
 
-    for (menuCommand = 0x9c50; menuCommand <= 0x9c5a; menuCommand++)
+    for (menuCommand = APP_MENU_MUSIC_FIRST; menuCommand <= APP_MENU_MUSIC_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.musicVolume) {
         case 1:
-            checkedCommand = 0x9c51;
+            checkedCommand = APP_MENU_MUSIC_100;
             break;
         case 2:
-            checkedCommand = 0x9c52;
+            checkedCommand = APP_MENU_MUSIC_90;
             break;
         case 3:
-            checkedCommand = 0x9c53;
+            checkedCommand = APP_MENU_MUSIC_80;
             break;
         case 4:
-            checkedCommand = 0x9c54;
+            checkedCommand = APP_MENU_MUSIC_70;
             break;
         case 5:
-            checkedCommand = 0x9c55;
+            checkedCommand = APP_MENU_MUSIC_60;
             break;
         case 6:
-            checkedCommand = 0x9c56;
+            checkedCommand = APP_MENU_MUSIC_50;
             break;
         case 7:
-            checkedCommand = 0x9c57;
+            checkedCommand = APP_MENU_MUSIC_40;
             break;
         case 8:
-            checkedCommand = 0x9c58;
+            checkedCommand = APP_MENU_MUSIC_30;
             break;
         case 9:
-            checkedCommand = 0x9c59;
+            checkedCommand = APP_MENU_MUSIC_20;
             break;
         case 10:
-            checkedCommand = 0x9c5a;
+            checkedCommand = APP_MENU_MUSIC_10;
             break;
         default:
-            checkedCommand = 0x9c50;
+            checkedCommand = APP_MENU_MUSIC_OFF;
             break;
     }
     CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
 
-    for (menuCommand = 0x9c5c; menuCommand <= 0x9c66; menuCommand++)
+    for (menuCommand = APP_MENU_SOUND_FIRST; menuCommand <= APP_MENU_SOUND_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.soundVolume) {
         case 1:
-            checkedCommand = 0x9c5d;
+            checkedCommand = APP_MENU_SOUND_100;
             break;
         case 2:
-            checkedCommand = 0x9c5e;
+            checkedCommand = APP_MENU_SOUND_90;
             break;
         case 3:
-            checkedCommand = 0x9c5f;
+            checkedCommand = APP_MENU_SOUND_80;
             break;
         case 4:
-            checkedCommand = 0x9c60;
+            checkedCommand = APP_MENU_SOUND_70;
             break;
         case 5:
-            checkedCommand = 0x9c61;
+            checkedCommand = APP_MENU_SOUND_60;
             break;
         case 6:
-            checkedCommand = 0x9c62;
+            checkedCommand = APP_MENU_SOUND_50;
             break;
         case 7:
-            checkedCommand = 0x9c63;
+            checkedCommand = APP_MENU_SOUND_40;
             break;
         case 8:
-            checkedCommand = 0x9c64;
+            checkedCommand = APP_MENU_SOUND_30;
             break;
         case 9:
-            checkedCommand = 0x9c65;
+            checkedCommand = APP_MENU_SOUND_20;
             break;
         case 10:
-            checkedCommand = 0x9c66;
+            checkedCommand = APP_MENU_SOUND_10;
             break;
         default:
-            checkedCommand = 0x9c5c;
+            checkedCommand = APP_MENU_SOUND_OFF;
             break;
     }
     CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
 
-    for (menuCommand = 0x9c68; menuCommand <= 0x9c6c; menuCommand++)
+    for (menuCommand = APP_MENU_SPEED_FIRST; menuCommand <= APP_MENU_SPEED_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.walkSpeed) {
         case 4:
-            checkedCommand = 0x9c68;
+            checkedCommand = APP_MENU_SPEED_JUMP;
             break;
         case 3:
-            checkedCommand = 0x9c69;
+            checkedCommand = APP_MENU_SPEED_GALLOP;
             break;
         case 2:
-            checkedCommand = 0x9c6a;
+            checkedCommand = APP_MENU_SPEED_CANTER;
             break;
         case 1:
-            checkedCommand = 0x9c6b;
+            checkedCommand = APP_MENU_SPEED_TROT;
             break;
         default:
-            checkedCommand = 0x9c6c;
+            checkedCommand = APP_MENU_SPEED_WALK;
             break;
     }
     CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
-    CheckMenuItem((HMENU)hmnuApp, 0x9c6d, gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED);
-    CheckMenuItem((HMENU)hmnuApp, 0x9c6e, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
-    CheckMenuItem((HMENU)hmnuApp, 0x9c6f,
+    CheckMenuItem((HMENU)hmnuApp, APP_MENU_CD_STEREO, gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, APP_MENU_SHOW_PATH, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem((HMENU)hmnuApp, APP_MENU_VIEW_ENEMY_MOVES,
                   1 - gConfig.blackoutComputer ? MF_CHECKED : MF_UNCHECKED);
 }
 
 VA(0x00456702, 0x99)
 void CleanUpMenus(void) {
     if (hmnuApp) {
-        SetMenu((HWND)hwndApp, 0);
+        SetMenu((HWND)hwndApp, NULL);
         if (hmnuAdv)
             DestroyMenu((HMENU)hmnuAdv);
         if (hmnuDflt)
@@ -2814,7 +2770,7 @@ void CleanUpMenus(void) {
         if (hmnuTown)
             DestroyMenu((HMENU)hmnuTown);
     }
-    hmnuApp = 0;
+    hmnuApp = NULL;
 }
 
 VA(0x0045679b, 0x24)
