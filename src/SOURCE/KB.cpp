@@ -1979,9 +1979,6 @@ void GOut(char* text) {
         AiPrint(text);
 }
 
-// donor PoL RVA 0x0009d3a7; preferred Buka symbol ?WaitForOtherPlayer@@YIHXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.581419;margin=0.608732;shape=0.409;size=0.995;calls=1.000;alternate=pol20:int WaitForOtherPlayer(void)@0x0009d3a7
 // HoMM1 maps every remote position other than the host to the one opponent slot.
 VA(0x00454748, 0x39)
 signed char NetPosToGamePos(int netPos) {
@@ -2256,14 +2253,6 @@ void FileError(char* filename) {
     sprintf(message, "Error opening file %s!", filename);
     ShutDown(message);
 }
-
-// @early-stop
-// tu-cumulative: logic + all 14 frame slots byte-exact (od_oracle-verified). The only
-// residual (coffcmp: 40 bytes, all in the two brightness averages + the minDist test)
-// is a /Od operand-evaluation-order difference this cl renders vs retail: the 3-term
-// sum `p[2]+p[0]+p[1]` reads +2,+1,+0 here but +2,+0,+1 in retail, and the `d>p`
-// compare loads the other operand first. Not source-steerable (probed every term
-// ordering, explicit grouping, `|0`, and an inline helper — all identical here).
 
 // Campaign-text and score-label tables and the score-to-rank creature names.
 extern char* gCampaignWinTexts[];

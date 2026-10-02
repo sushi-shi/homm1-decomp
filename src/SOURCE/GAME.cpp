@@ -1032,9 +1032,6 @@ signed char game::NewGame(void) {
     return 1;
 }
 
-// donor PoL RVA 0x000bc00e; preferred Buka symbol ?ShowInfo@ExpCampaign@@QAEXHH@Z
-// donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
 // Campaign scenario titles and briefings.
@@ -4490,9 +4487,6 @@ done:
     return score;
 }
 
-// donor PoL RVA 0x000333c0; preferred Buka symbol ?ViewWorld@advManager@@QAEXHHH@Z
-// donor Buka TU SOURCE/Viewwrld; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.364493;margin=0.061615;shape=0.277;size=0.633;calls=0.682;alternate=pol20:void advManager::ViewWorld(int, int, int)@0x000333c0
 // Retail loads sceninfo.bin and is called on gpGame with no arguments:
 // Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
 // Scenario-info labels: difficulty, human seat handicap, map size and map

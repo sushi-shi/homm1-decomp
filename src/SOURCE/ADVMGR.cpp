@@ -2064,9 +2064,6 @@ void advManager::DrawCell(
     }
 }
 
-// donor PoL RVA 0x0005e0da; preferred Buka symbol ?UpdateRadar@advManager@@QAEXHH@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:6;base=0.227177;margin=0.921091;shape=0.195;size=0.373;calls=0.222;alternate=pol20:void advManager::UpdateRadar(int, int)@0x0005e0da
 // Buka 2.1 GetCell; HoMM1 returns the map base for any off-grid position.
 VA(0x0042b6cd, 0x7d)
 mapCell* advManager::GetCell(short x, short y) {
@@ -3361,9 +3358,6 @@ void advManager::RedrawAdvScreen(int update) {
         UpdateScreen(0, 0);
 }
 
-// donor PoL RVA 0x00063f3b; preferred Buka symbol ?MobilizeCurrHero@advManager@@QAEXH@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.511468;margin=0.529744;shape=0.406;size=0.742;calls=1.000;alternate=pol20:void advManager::MobilizeCurrHero(int)@0x00063f3b
 // Buka 2.1 DeactivateCurrTown clears the current player's town slot.
 VA(0x0042ff72, 0x1f)
 void advManager::DeactivateCurrTown(void) {
@@ -3827,9 +3821,7 @@ void advManager::CastSpell(signed char spell)
         gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(spell);
 }
 
-// donor PoL RVA 0x00064e9f; preferred Buka symbol ?SaveGame@@YIHXZ
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.731974;margin=0.187030;shape=0.477;size=0.957;calls=0.889;strings=.GM%d|.\GAMES\|advmice.mse;alternate=pol20:int SaveGame(void)@0x00064e9f
+// Buka 2.1 advManager::ViewWorld (SOURCE/Viewwrld).
 // HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
 // CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
 VA(0x00431507, 0x1127)
@@ -4477,9 +4469,6 @@ void advManager::AdvPanel(void)
         MobilizeCurrHero(0);
 }
 
-// donor PoL RVA 0x00065191; preferred Buka symbol ?DimensionDoorHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.481967;margin=0.254497;shape=0.313;size=0.765;calls=1.000;alternate=pol20:int DimensionDoorHandler(struct tag_message &)@0x00065191
 extern char *gAPanelHelp[];
 
 // Buka 2.1 APanelHandler; HoMM1 shares the search help text with Close and
@@ -5340,9 +5329,6 @@ void advManager::SeedTo(int targetX, int targetY)
                                     currentHero->m_unknown1c, targetX, targetY, 1, 1);
 }
 
-// donor PoL RVA 0x00068ab6; preferred Buka symbol ?ScreenScroll@advManager@@QAEXHH@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.463708;margin=0.069995;shape=0.184;size=0.968;calls=1.000;alternate=pol20:void advManager::ScreenScroll(int, int)@0x00068ab6
 // Buka 2.1 ForceNewHover; HoMM1 routes the hover through a message record.
 VA(0x00435f91, 0x4f)
 void advManager::ForceNewHover(void) {
@@ -5669,9 +5655,7 @@ disposeSamples:
     }
 }
 
-// donor PoL RVA 0x00069976; preferred Buka symbol ?SaveAdventureBorder@advManager@@QAEXXZ
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.567475;margin=0.473800;shape=0.423;size=0.969;calls=1.000;alternate=pol20:void advManager::SaveAdventureBorder(void)@0x00069976
+// Buka 2.1 advManager::DisableButtons.
 VA(0x00436bfd, 0xd0)
 void advManager::DisableButtons(void) {
     if (gpAdvManager->m_active != 1)

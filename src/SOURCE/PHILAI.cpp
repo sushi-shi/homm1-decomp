@@ -817,13 +817,6 @@ hero* philAI::DetermineHeroToMove(int player) {
     return 0;
 }
 
-// @early-stop
-// Complete & correct; two residuals are /Od codegen-shape picks (verified via scratch cl,
-// not source-steerable): (1) the hero-slot 2D access gpGame[0x4a0+player*283+i] — cl emits
-// the full player*283 then `+i`; retail strength-reduces to (i-player)+player*284 (identical
-// address). (2) the fight-value max `cmp` loads the fresh value where retail loads the
-// accumulator (the same operand-memory pick parked on SetupRelativeHeroStrengths).
-
 // donor PoL RVA 0x0003b865; preferred Buka symbol ?DetermineTargetPosition@philAI@@QAEHAAH0H0@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
@@ -1974,12 +1967,6 @@ float philAI::TurnValueOfObelisk(int player) {
     );
     return playerAI->m_obeliskValue;
 }
-
-// @early-stop
-// Complete & correct except the two castle-match `==` compares: cl unconditionally loads
-// the byte operand (town castleX/Y) before the word operand (game field); retail evaluates
-// left-to-right (word first). Verified via scratch cl: byte-first is hard-wired, not
-// source-steerable. Same equality result.
 
 // donor PoL RVA 0x0003fe81; preferred Buka symbol ?FutureDeflator@philAI@@QAEMQAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order

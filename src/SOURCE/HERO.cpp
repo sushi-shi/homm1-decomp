@@ -36,9 +36,7 @@ hero::hero(void) {
     giHeroScreenSrcIndex = -1;
 }
 
-// donor PoL RVA 0x0006c4cd; preferred Buka symbol ?HasArtifact@hero@@QAEHH@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.403615;margin=0.791427;shape=0.171;size=0.731;calls=1.000;alternate=pol20:int hero::HasArtifact(int)@0x0006c4cd
+// Buka 2.1 hero::GetArmyStrengths: an empty body in both games.
 VA(0x0046baf8, 0x18)
 void hero::GetArmyStrengths(unsigned long int* const) {}
 
@@ -571,9 +569,7 @@ void hero::Deallocate(void) {
     CheckEndGame(0);
 }
 
-// donor PoL RVA 0x0006d50d; preferred Buka symbol ?GetLevel@hero@@QAEHH@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.411151;margin=0.242527;shape=0.205;size=0.711;calls=1.000;alternate=pol20:int hero::GetLevel(int)@0x0006d50d
+// Buka 2.1 hero::GetExperience.
 VA(0x0046d334, 0xd0)
 int hero::GetExperience(int level) {
     int experience;
@@ -718,9 +714,7 @@ void hero::CheckLevel(void) {
     }
 }
 
-// donor PoL RVA 0x0006e0be; preferred Buka symbol ?UpdateHeroScreenStatusBar@@YIXAAUtag_message@@@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.389885;margin=0.637226;shape=0.282;size=0.714;calls=0.718;alternate=pol20:void UpdateHeroScreenStatusBar(struct tag_message &)@0x0006e0be
+// Buka 2.1 hero::NumArtifacts.
 VA(0x0046d957, 0x57)
 int hero::NumArtifacts(void) {
     int count = 0;
