@@ -28,18 +28,18 @@ int combatManager::AICheckRetreat(void) {
     if (!gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_townCount)
         return 0;
 
-    float prob;
-    int treasureValue;
     hero heroCopy;
     armyGroup* armyPtr;
-    int armyIndex;
     hero* sideHero;
+    float retreatRatio;
+    float prob;
+    int treasureValue;
+    int armyIndex;
     int side;
     armyGroup bareGroup;
     int artifactTotals[2];
     float expBonus;
     int force[2];
-    float retreatRatio;
 
     for (side = 0; side < 2; side++) {
         if (m_heroes[side]) {
@@ -1092,19 +1092,17 @@ void army::SpecialAttack(void) {
     int maxY;
     bitmap* saved;
     int iMaxX;
-    int j;
     signed char faceLeft;
     int facing;
-    int dy;
-    int i;
     int dx;
+    int dy;
     int yStep;
     int posY;
     int steps;
+    int j;
     int yOffset[5];
-    int xStep;
+    int i;
     int y2;
-    int posX;
     signed char myRow;
     int y0;
     int prevY;
@@ -1117,6 +1115,8 @@ void army::SpecialAttack(void) {
     signed char tgtCol;
     int offX;
     int minX;
+    int xStep;
+    int posX;
     signed char inCastle;
 
     facing = m_facing;
@@ -1240,14 +1240,14 @@ void army::SpecialAttack(void) {
     m_stats.shots--;
     inCastle = 0;
     if (gpCombatManager->m_castleSide[0] && m_hex % 9 <= 4 && target->m_hex % 9 >= 6) {
+        int targetR;
+        int wallDist;
         int gateHex;
         int hitRow;
         int colDist;
         int myR;
         int sCol;
-        int targetR;
         int tgtC;
-        int wallDist;
 
         sCol = m_hex % 9;
         myR = m_hex / 9;
@@ -1830,11 +1830,11 @@ void army::DamageEnemy(class army* target, int* damageResult, int* killedResult,
                        int defenseModifier) {
     float total;
     short delta;
+    int halfDamage;
     int damage;
     short defenseBonus;
     short index;
     short attBonus;
-    int halfDamage;
 
     if (!target)
         return;
@@ -1930,13 +1930,13 @@ int army::Damage(long int damage) {
 VA(0x0046aa49, 0x8a9)
 void army::PowEffect(signed char effect) {
     short frames;
-    short stackIndex;
     short armyNum;
     short step;
     short longest;
-    short side;
     int cellHex;
     army* curArmy;
+    short side;
+    short stackIndex;
 
     longest = 0;
     for (armyNum = 0; armyNum < gpCombatManager->m_numArmies[1]; armyNum++)
