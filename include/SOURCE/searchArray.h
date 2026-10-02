@@ -38,15 +38,18 @@ H1_ENUM_CONST_END(SearchDirectionConstant)
 // adjacent-monster node already reached that cheaply. INVALID_COORDINATE is
 // the no-target / no-monster coordinate (m_specialTargetX/Y, PushPoint's
 // value/previous bytes, FindAdjacentMonster's excluded monster).
-// FindNearestObject floods with a working mobility of NEAREST_OBJECT_MOBILITY
-// and prices each step with UNLIMITED_STEP_MOBILITY, so CalcTerrainCost
-// always charges the full diagonal cost.
+// FindNearestObject floods with a working mobility of NEAREST_OBJECT_MOBILITY.
+// UNLIMITED_COST (999) is a cost cap or mobility no route reaches: the
+// maximumCost advManager passes to SeedPosition/BuildPath for the cursor
+// route, philAI's seed mobility, and FindNearestObject's per-step mobility
+// (CalcTerrainCost then always charges the full diagonal cost). Buka's
+// ADVMGR ROUTE_PATH_COST_LIMIT (59999) plays the same role.
 H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_INVALID_COORDINATE = -1,
     SEARCH_TARGET_COST_WINDOW = 4,
     SEARCH_MONSTER_RESEED_WINDOW = 12,
     SEARCH_NEAREST_OBJECT_MOBILITY = 500,
-    SEARCH_UNLIMITED_STEP_MOBILITY = 999,
+    SEARCH_UNLIMITED_COST = 999,
     SEARCH_MAX_COST = 9999
 H1_ENUM_CONST_END(SearchConstant)
 // clang-format on
