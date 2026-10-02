@@ -541,7 +541,7 @@ void DDSD(int error, char* file, int line) {
 VA(0x00404673, 0x11c)
 void DDUpdatePalette(signed char* paletteData) {
     int entry;
-    long result0;
+    long res;
 
     if (gbWinGraphBusy != 0)
         return;
@@ -564,14 +564,14 @@ void DDUpdatePalette(signed char* paletteData) {
         "D:\\Heroes\\Source\\wingraph.cpp",
         gDDUpdatePaletteLineBase + 18
     );
-    result0 = lpDDPal->SetEntries(
+    res = lpDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
-    if (result0 != 0)
-        DDSD(result0, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
+    if (res != 0)
+        DDSD(res, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
 }
 
 // donor PoL RVA 0x00036539; preferred Buka symbol ?DDCleanUpWinGraphics@@YIXXZ
