@@ -34,7 +34,13 @@ public:
     short m_mobility;
     short m_remainingMobility;
     int m_experience;
-    char m_unknown2d[0x2a];
+    char m_unknown2d[8];
+    // armyGroup::GetMorale and game::GetLuck add these signed bytes;
+    // ShowMoraleInfo reports the cowardice byte separately.
+    signed char m_morale;
+    signed char m_luck;
+    signed char m_cowardice;
+    char m_unknown38[0x1f];
     // philAI::CombatMonsterEvent passes &m_army to QuickCombat.
     armyGroup m_army;
     char m_unknown66[0x3a];
@@ -47,7 +53,8 @@ public:
     void Read(int, signed char);
     void Write(int, signed char);
     void GetArmyStrengths(unsigned long int * const);
-    int HasArtifact(int);
+    // HoMM1 retail: byte artifact id, found flag in AL (ret 4).
+    signed char HasArtifact(signed char);
     int CalcMobility(void);
     int HasSpell(int);
     int GetNthSpell(int, int);

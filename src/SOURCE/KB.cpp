@@ -10,6 +10,7 @@
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/WINMGR_TYPES.h>
+#include <SOURCE/artifactTypes.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
@@ -1092,14 +1093,157 @@ void InitVars(void) {
 // donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.469331;margin=0.613523;shape=0.400;size=0.774;calls=0.649;alternate=pol20:void game::ShowMoraleInfo(class hero *, int)@0x0009c312
+// clang-format off
+// KB's morale-screen text table; the five-alignment line was appended last.
+H1_ENUM_BEGIN(MoraleInfoText)
+    MORALE_INFO_GOOD = 0,
+    MORALE_INFO_NEUTRAL = 1,
+    MORALE_INFO_BAD = 2,
+    MORALE_INFO_HEADER = 3,
+    MORALE_INFO_KNIGHT = 4,
+    MORALE_INFO_ALL_TROOPS = 5,
+    MORALE_INFO_THREE_ALIGNMENTS = 6,
+    MORALE_INFO_FOUR_ALIGNMENTS = 7,
+    MORALE_INFO_MEDAL_OF_VALOR = 8,
+    MORALE_INFO_MEDAL_OF_COURAGE = 9,
+    MORALE_INFO_MEDAL_OF_HONOR = 10,
+    MORALE_INFO_MEDAL_OF_DISTINCTION = 11,
+    MORALE_INFO_FIZBIN = 12,
+    MORALE_INFO_BUOY = 13,
+    MORALE_INFO_OASIS = 14,
+    MORALE_INFO_STATUE = 15,
+    MORALE_INFO_GRAVEYARD = 16,
+    MORALE_INFO_SHIPWRECK = 17,
+    MORALE_INFO_COWARDICE = 18,
+    MORALE_INFO_NONE = 19,
+    MORALE_INFO_FIVE_ALIGNMENTS = 20
+H1_ENUM_END(MoraleInfoText)
+// clang-format on
+extern char* gMoraleInfoText[];
+// Creature alignment names indexed by creature type / 6.
+extern char* gAlignmentNames[];
+
 VA(0x00453ba8, 0x450)
-void game::ShowMoraleInfo(class hero*, int) {}
+void game::ShowMoraleInfo(hero* h, int dialogType) {
+    int faction;
+    int i;
+    int alignments;
+    int baseLen;
+    char buffer[200];
+
+    if (h->m_army.GetMorale(h, 0) > 0)
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_GOOD]);
+    else if (h->m_army.GetMorale(h, 0) == 0)
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_NEUTRAL]);
+    else
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_BAD]);
+    sprintf(gText, gMoraleInfoText[MORALE_INFO_HEADER], buffer);
+    baseLen = strlen(gText);
+    if (!h->m_unknown1c)
+        strcat(gText, gMoraleInfoText[MORALE_INFO_KNIGHT]);
+    alignments = h->m_army.IsHomogeneous(-1);
+    if (alignments > 0) {
+        faction = 0;
+        for (i = 0; i < 5; i++) {
+            if (h->m_army.m_creatureTypes[i] != -1)
+                faction = h->m_army.m_creatureTypes[i] / 6;
+        }
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[faction]);
+        strcat(gText, buffer);
+    }
+    if (alignments == -1) {
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_THREE_ALIGNMENTS]);
+        strcat(gText, buffer);
+    }
+    if (alignments == -2) {
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_FOUR_ALIGNMENTS]);
+        strcat(gText, buffer);
+    }
+    if (alignments == -3) {
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_FIVE_ALIGNMENTS]);
+        strcat(gText, buffer);
+    }
+    if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
+        strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_VALOR]);
+    if (h->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
+        strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_COURAGE]);
+    if (h->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
+        strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_HONOR]);
+    if (h->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
+        strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_DISTINCTION]);
+    if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+        strcat(gText, gMoraleInfoText[MORALE_INFO_FIZBIN]);
+    if (h->m_eventFlags & 2)
+        strcat(gText, gMoraleInfoText[MORALE_INFO_BUOY]);
+    if (h->m_eventFlags & 8)
+        strcat(gText, gMoraleInfoText[MORALE_INFO_OASIS]);
+    if (h->m_eventFlags & 0x100)
+        strcat(gText, gMoraleInfoText[MORALE_INFO_STATUE]);
+    if (h->m_eventFlags & 0x20)
+        strcat(gText, gMoraleInfoText[MORALE_INFO_GRAVEYARD]);
+    if (h->m_eventFlags & 0x40)
+        strcat(gText, gMoraleInfoText[MORALE_INFO_SHIPWRECK]);
+    if (h->m_cowardice) {
+        sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], h->m_cowardice);
+        strcat(gText, buffer);
+    }
+    if (strlen(gText) == baseLen)
+        strcat(gText, gMoraleInfoText[MORALE_INFO_NONE]);
+    NormalDialog(gText, dialogType, -1, -1, -1, 0, -1, 0, -1);
+}
+
+// clang-format off
+// KB's luck-screen text table: three verdicts, a header, then one line per
+// luck source in the order ShowLuckInfo appends them.
+H1_ENUM_BEGIN(LuckInfoText)
+    LUCK_INFO_GOOD = 0,
+    LUCK_INFO_NEUTRAL = 1,
+    LUCK_INFO_BAD = 2,
+    LUCK_INFO_HEADER = 3,
+    LUCK_INFO_RABBITS_FOOT = 4,
+    LUCK_INFO_HORSESHOE = 5,
+    LUCK_INFO_LUCKY_COIN = 6,
+    LUCK_INFO_CLOVER = 7,
+    LUCK_INFO_FAERIE_RING = 8,
+    LUCK_INFO_FOUNTAIN = 9,
+    LUCK_INFO_NONE = 10
+H1_ENUM_END(LuckInfoText)
+// clang-format on
+extern char* gLuckInfoText[];
 
 // donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.456267;margin=0.157936;shape=0.493;size=0.606;calls=0.556;alternate=pol20:void game::ShowLuckInfo(class hero *, int)@0x0009c92d
 VA(0x00453ff8, 0x1f7)
-void game::ShowLuckInfo(class hero*, int) {}
+void game::ShowLuckInfo(hero* h, int dialogType) {
+    int alignments;
+    int baseLen;
+    char buffer[200];
+
+    if (gpGame->GetLuck(h, 0) > 0)
+        sprintf(buffer, gLuckInfoText[LUCK_INFO_GOOD]);
+    else if (gpGame->GetLuck(h, 0) == 0)
+        sprintf(buffer, gLuckInfoText[LUCK_INFO_NEUTRAL]);
+    else
+        sprintf(buffer, gLuckInfoText[LUCK_INFO_BAD]);
+    sprintf(gText, gLuckInfoText[LUCK_INFO_HEADER], buffer);
+    baseLen = strlen(gText);
+    if (h->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
+        strcat(gText, gLuckInfoText[LUCK_INFO_RABBITS_FOOT]);
+    if (h->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
+        strcat(gText, gLuckInfoText[LUCK_INFO_HORSESHOE]);
+    if (h->HasArtifact(ARTIFACT_GAMBLERS_LUCKY_COIN))
+        strcat(gText, gLuckInfoText[LUCK_INFO_LUCKY_COIN]);
+    if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
+        strcat(gText, gLuckInfoText[LUCK_INFO_CLOVER]);
+    if (h->m_eventFlags & 0x10)
+        strcat(gText, gLuckInfoText[LUCK_INFO_FAERIE_RING]);
+    if (h->m_eventFlags & 4)
+        strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
+    if (strlen(gText) == baseLen)
+        strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
+    NormalDialog(gText, dialogType, -1, -1, -1, 0, -1, 0, -1);
+}
 
 VA(0x004541ef, 0x70)
 void ClearMapExtra(void) {

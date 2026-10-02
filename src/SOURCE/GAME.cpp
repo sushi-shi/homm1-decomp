@@ -8,6 +8,7 @@
 #include <BASE/TILE.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/artifactTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
 
@@ -712,8 +713,26 @@ void SRand(int seed)
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.340271;margin=0.529148;shape=0.188;size=0.654;calls=0.667;alternate=pol20:int game::GetLuck(class hero *, class army *, class town *)@0x00080ff9
 VA(0x0044465b, 0xbf)
-int game::GetLuck(class hero*, class army*, class town*) {
-    return 0;
+int game::GetLuck(hero* h, army*) {
+    int luck;
+
+    if (!h)
+        return 0;
+    luck = 0;
+    if (h->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
+        luck++;
+    if (h->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
+        luck++;
+    if (h->HasArtifact(ARTIFACT_GAMBLERS_LUCKY_COIN))
+        luck++;
+    if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
+        luck++;
+    luck += h->m_luck;
+    if (luck < -3)
+        luck = -3;
+    if (luck > 3)
+        luck = 3;
+    return luck;
 }
 
 // Buka 2.1 keeps the scan cursor in file statics.
@@ -1127,6 +1146,39 @@ armyGroup::armyGroup(void) {
 
 VA(0x0044795c, 0x18)
 void armyGroup::View(int) {}
+
+// HoMM1 adds the town's building bit 4 and clamps to -3..3 in AX.
+VA(0x00447974, 0x11b)
+short armyGroup::GetMorale(hero* h, town* t) {
+    int morale;
+    int alignment;
+
+    morale = 0;
+    alignment = IsHomogeneous(-1);
+    morale += alignment;
+    if (h) {
+        if (!h->m_unknown1c)
+            morale++;
+        morale += h->m_morale;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+            morale -= 2;
+    }
+    if (t && (t->m_buildings & 4))
+        morale++;
+    if (morale < -3)
+        morale = -3;
+    else if (morale > 3)
+        morale = 3;
+    return morale;
+}
 
 VA(0x00447a8f, 0x31)
 void armyGroup::Dismiss(signed char slot) {
