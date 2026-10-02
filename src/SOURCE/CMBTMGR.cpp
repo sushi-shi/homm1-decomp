@@ -24,10 +24,10 @@ extern char* cCombatGroundNames[];
 extern char* cCombatObstacleNames[];
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x00490d50)
-int bInHighMoraleBonus;
+int bInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
 DATA(0x00490d54)
-int giSeed;
+int giSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
@@ -1255,3 +1255,21 @@ void combatManager::DrawCombatBorder(void)
         return;
     memcpy(gpWindowManager->m_screen->m_pixels + 0x47e00, m_savedBorder, 0x3200);
 }
+
+// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
+// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
+// table after Open's literals, followed by its own literals.
+DATA(0x00490db0)
+char* cCombatBkgNames[11] = {
+    "frstwgrs.bkg",
+    "mtnwgrsf.bkg",
+    "snowfrst.bkg",
+    "snowmtnf.bkg",
+    "swamp.bkg",
+    "lava.bkg",
+    "desert.bkg",
+    "frstwdrt.bkg",
+    "mtnwdrtf.bkg",
+    "boat.bkg",
+    "gravyard.bkg",
+};
