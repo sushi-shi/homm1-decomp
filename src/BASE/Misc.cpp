@@ -172,17 +172,17 @@ void ResetHeroRVs(int resetAll, int x, int y)
         for (j = 0; j < MAP_CELL_GRID_SIZE; j++) {
             if (resetAll) {
                 if (abs(x - i) + abs(y - j) < 10)
-                    gaiHeroStrategicRVOfPos[i][j] = -32001;
+                    gaiHeroStrategicRVOfPos[i][j] = RV_UNSET;
             } else {
-                gaiHeroStrategicRVOfPos[i][j] = -32001;
-                gaiHeroEventStratRVOfPos[i][j] = -32001;
+                gaiHeroStrategicRVOfPos[i][j] = RV_UNSET;
+                gaiHeroEventStratRVOfPos[i][j] = RV_UNSET;
             }
         }
     }
-    gaiHeroEventStratRVOfPos[x][y] = -32001;
+    gaiHeroEventStratRVOfPos[x][y] = RV_UNSET;
     for (i = 0; i < GAME_HERO_COUNT; i++) {
         if (!resetAll
             || abs(y - gpGame->m_heroRecs[i].m_x) + abs(x - gpGame->m_heroRecs[i].m_x) < 10)
-            gaiHeroLiveChance[i] = -32001;
+            gaiHeroLiveChance[i] = RV_UNSET;
     }
 }
