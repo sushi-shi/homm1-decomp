@@ -1355,6 +1355,78 @@ void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     }
 }
 
+// Buka 2.1 game::ProcessRandomObjects for HoMM1's random towns, castles,
+// monsters by strength band, resources, artifacts and mines; NewMap runs
+// the castles-only pass first.
+VA(0x00443e1c, 0x2cd)
+void game::ProcessRandomObjects(int castlesOnly) {
+    mapCell* cellPtr;
+    int lowFV;
+    int y;
+    int i;
+    int x;
+    int highFV;
+
+    for (i = 0; i < 7; i++)
+        giMineTypeCount[i] = 0;
+    for (i = 0; i < 4; i++)
+        gRandomTownTypes[i] = -1;
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            cellPtr = &m_map[x][y];
+            if (!castlesOnly || cellPtr->m_triggerType == 0xc1) {
+                switch (cellPtr->m_triggerType) {
+                    case 0xc0:
+                        RandomizeTown(x, y, 0);
+                        break;
+                    case 0xc1:
+                        RandomizeTown(x, y, 1);
+                        break;
+                    case 0xbf:
+                        lowFV = 80;
+                        highFV = 2000;
+                        goto pickMonster;
+                    case 0xc3:
+                        lowFV = 0;
+                        highFV = 400;
+                        goto pickMonster;
+                    case 0xc4:
+                        lowFV = 80;
+                        highFV = 1000;
+                        goto pickMonster;
+                    case 0xc5:
+                        lowFV = 500;
+                        highFV = 2500;
+                        goto pickMonster;
+                    case 0xc6:
+                        lowFV = 2000;
+                        highFV = 100000;
+                        goto pickMonster;
+                    pickMonster:
+                        cellPtr->m_triggerType = 0x9a;
+                        cellPtr->m_objectIndex = Random(0, 27);
+                        while (gMonsterDatabase[cellPtr->m_objectIndex].fightValue <= lowFV
+                               || gMonsterDatabase[cellPtr->m_objectIndex].fightValue >= highFV)
+                            cellPtr->m_objectIndex = Random(0, 27);
+                        break;
+                    case 0xbe:
+                        cellPtr->m_triggerType = 0x9d;
+                        cellPtr->m_objectIndex = Random(61, 67);
+                        break;
+                    case 0xbd:
+                        cellPtr->m_triggerType = 0xb0;
+                        cellPtr->m_objectIndex = GetRandomArtifactId();
+                        m_randomArtifacts[cellPtr->m_objectIndex] = 36;
+                        break;
+                    case 0xc2:
+                        RandomizeMine(x, y);
+                        break;
+                }
+            }
+        }
+    }
+}
+
 // donor PoL RVA 0x00080b64; preferred Buka symbol ?SetVisibility@game@@QAEXHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64

@@ -235,7 +235,8 @@ public:
     signed char GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(short, int);
-    void ProcessRandomObjects(void);
+    // HoMM1 retail: towns-only pass flag (ret 4).
+    void ProcessRandomObjects(int);
     void SetVisibility(short, short, short, short);
     void MakeAllWaterVisible(int);
     void GiveArmy(class armyGroup*, int, int, int);
