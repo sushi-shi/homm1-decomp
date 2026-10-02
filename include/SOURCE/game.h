@@ -74,6 +74,19 @@ struct mapTownExtra {
 };
 #pragma pack(pop)
 
+// ProcessOnMapHeroes reads a placed hero's map-extra record: owner,
+// garrison, hero id, four artifacts and starting experience.
+#pragma pack(push, 1)
+struct mapHeroExtra {
+    signed char owner;
+    signed char troopTypes[5];
+    short troopCounts[5];
+    signed char heroId;
+    signed char artifacts[4];
+    int experience;
+};
+#pragma pack(pop)
+
 // Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
 // are fixed by retail address arithmetic; unrecovered spans stay opaque.
