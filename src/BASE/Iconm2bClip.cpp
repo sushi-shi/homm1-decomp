@@ -26,12 +26,11 @@ void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y
         unsigned char run = *source;
         if (static_cast<signed char>(run) < 0) {
             run &= ICON_MONO_SKIP_MASK;
-            if (run != 0)
+            if (run != 0) {
                 position += run;
-            else {
+                source++;
+            } else
                 drawing = 0;
-                continue;
-            }
         } else if (run != ICON_MONO_NEWLINE_COMMAND) {
             if (row >= clipY && row <= clipBottom && position + run >= clipX && position <= clipRight) {
                 if (position >= clipX) {
@@ -47,12 +46,13 @@ void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y
                 }
             }
             position += *source;
+            source++;
         } else {
             position = x + entry->x;
-            row++;
             rowOffset += ICON_SCREEN_ROW_BYTES;
+            row++;
+            source++;
         }
-        source++;
     }
 }
 
