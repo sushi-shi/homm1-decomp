@@ -146,7 +146,7 @@ VA(0x004740f0, 0x31)
 short heroWindowManager::Main(tag_message& message) {
     short result = MESSAGE_DISPATCH_CONTINUE;
     heroWindow* window = m_windowListTail;
-    while (window != 0) {
+    while (window != NULL) {
         switch (result = window->BroadcastMessage(message)) {
             case MESSAGE_DISPATCH_CONTINUE:
                 break;
@@ -179,28 +179,28 @@ void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlag
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = 0;
     if (zOrder == -1) {
-        if (currentWindow == 0)
+        if (currentWindow == NULL)
             zOrder = 0;
         else
             zOrder = currentWindow->m_zOrder + 1;
     }
-    if (zOrder == 0 && m_windowListHead != 0)
+    if (zOrder == 0 && m_windowListHead != NULL)
         return;
-    if (zOrder != 0 && m_windowListHead == 0)
+    if (zOrder != 0 && m_windowListHead == NULL)
         return;
     if (window->Open(zOrder, openFlags) != 0)
         return;
-    while (currentWindow != 0 && currentWindow->m_zOrder > zOrder)
+    while (currentWindow != NULL && currentWindow->m_zOrder > zOrder)
         currentWindow = currentWindow->m_prevWindow;
-    if (currentWindow == 0) {
+    if (currentWindow == NULL) {
         window->m_nextWindow = m_windowListHead;
-        window->m_prevWindow = 0;
+        window->m_prevWindow = NULL;
         m_windowListHead = window;
-        if (m_windowListTail == 0)
+        if (m_windowListTail == NULL)
             m_windowListTail = window;
-    } else if (currentWindow->m_nextWindow == 0) {
+    } else if (currentWindow->m_nextWindow == NULL) {
         window->m_prevWindow = m_windowListTail;
-        window->m_nextWindow = 0;
+        window->m_nextWindow = NULL;
         m_windowListTail->m_nextWindow = window;
         m_windowListTail = window;
     } else {
@@ -436,12 +436,12 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
         BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
         gbEnlargeScreenBlit = 1;
         gpWindowManager->m_updateFlags = saveFlags;
-        if (m_fizzleSource != 0)
+        if (m_fizzleSource != NULL)
             delete m_fizzleSource;
-        m_fizzleSource = 0;
-        if (m_fizzleWork != 0)
+        m_fizzleSource = NULL;
+        if (m_fizzleWork != NULL)
             delete m_fizzleWork;
-        m_fizzleWork = 0;
+        m_fizzleWork = NULL;
         free(ccycleBuf);
     }
 }

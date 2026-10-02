@@ -45,9 +45,9 @@ void BlitBitmapToScreen(bitmap *sourceBitmap, int sourceX, int sourceY, int widt
     invalidRectangle.top = destinationY * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT;
     invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / SCREEN_BLIT_WIDTH - 1;
     invalidRectangle.bottom = (destinationY + height) * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
-    if (InvalidateRect(hwndApp, &invalidRectangle, 0) == 0)
+    if (InvalidateRect(hwndApp, &invalidRectangle, FALSE) == FALSE)
         LogStr("InvalidateRect Failed");
-    if (UpdateWindow(hwndApp) == 0)
+    if (UpdateWindow(hwndApp) == FALSE)
         LogStr("UpdateWindow Failed");
 }
 
@@ -73,7 +73,7 @@ void FadeIn(int increment)
     signed char done;
     int i, j, threshold;
     palette *currentPalette = new palette;
-    if (currentPalette == 0)
+    if (currentPalette == NULL)
         MemError();
     done = 0;
     memset(currentPalette->m_data, 0, PALETTE_GRAPHICS_BYTES);

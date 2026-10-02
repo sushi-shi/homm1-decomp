@@ -142,7 +142,7 @@ int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageD
             goto mouseCoordinates;
         case WM_LBUTTONUP:
             event->type = MESSAGE_LEFT_BUTTON_UP;
-            if (ReleaseCapture() == 0)
+            if (ReleaseCapture() == FALSE)
                 LogStr(gLeftReleaseCaptureFailure);
             goto mouseCoordinates;
         case WM_LBUTTONDBLCLK:
@@ -154,7 +154,7 @@ int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageD
             goto mouseCoordinates;
         case WM_RBUTTONUP:
             event->type = MESSAGE_RIGHT_BUTTON_UP;
-            if (ReleaseCapture() == 0)
+            if (ReleaseCapture() == FALSE)
                 LogStr(gRightReleaseCaptureFailure);
             goto mouseCoordinates;
         case WM_RBUTTONDBLCLK:
