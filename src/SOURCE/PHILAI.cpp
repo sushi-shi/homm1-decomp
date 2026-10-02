@@ -1649,7 +1649,7 @@ float philAI::TurnsToBuy(int* const resources) {
 // ValueOfEventAtPosition's reload-reduction flag, defined ahead of
 // RVOfPosition: the symbol order retail's RVOfPosition operand sort requires.
 // VC4 lays out .bss independently of this definition order.
-int gbReduceByReload;
+DATA(0x004c2550) int gbReduceByReload;
 
 // donor PoL RVA 0x0003e918; preferred Buka symbol ?RVOfPosition@philAI@@QAEHHHHHHHHHHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -2946,31 +2946,31 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
 
 // ValueOfEventAtPosition's working state: HoMM1 keeps the event value, the
 // evaluated cell and the battle forecast in module globals.
-int gbReduceByBerserk;
-int iEventRV;
-mapCell* pEventCell;
-int bEventSeen;
-int iEventLoop;
-int iMonsterCount;
-int iTownValue;
-hero* pEventHero;
-town* pEventTown;
-armyGroup* pEventTownArmy;
-int iEventTownId;
-float fWinChance;
-int iAttackerLoss;
-int iDefenderLoss;
-int iAttackerRemaining;
-int iDefenderRemaining;
-int iOutcome;
-int iArtifactChoice1;
-int iArtifactChoice2;
-int iArtifactChoice3;
-int iPurchaseNum;
-int iPurchaseSlot;
+DATA(0x004c2554) int gbReduceByBerserk;
+DATA(0x004c4ed8) int iEventRV;
+DATA(0x004c254c) mapCell* pEventCell;
+DATA(0x004be7a4) int bEventSeen;
+DATA(0x004af750) int iEventLoop;
+DATA(0x004c4edc) int iMonsterCount;
+DATA(0x004c4ee0) int iTownValue;
+DATA(0x004c4ee8) hero* pEventHero;
+DATA(0x004c2558) town* pEventTown;
+DATA(0x004be7d8) armyGroup* pEventTownArmy;
+DATA(0x004af7e0) int iEventTownId;
+DATA(0x004af74c) float fWinChance;
+DATA(0x004af7b8) int iAttackerLoss;
+DATA(0x004af7bc) int iDefenderLoss;
+DATA(0x004af7c0) int iAttackerRemaining;
+DATA(0x004af7c4) int iDefenderRemaining;
+DATA(0x004af7cc) int iOutcome;
+DATA(0x004af7d0) int iArtifactChoice1;
+DATA(0x004af7d4) int iArtifactChoice2;
+DATA(0x004af7d8) int iArtifactChoice3;
+DATA(0x004be7a8) int iPurchaseNum;
+DATA(0x004be7d4) int iPurchaseSlot;
 DATA(0x0048f824)
 int bEvaluatingTravelGates = 1;
-int iDefaultEventType;
+DATA(0x004bfc20) int iDefaultEventType;
 
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
