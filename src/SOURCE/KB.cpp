@@ -317,7 +317,7 @@ int oldmain(void) {
         giCampaignChoice = 0;
         gpMouseManager->ReallyShowPointer();
 
-        if (giMenuCommand != -1) {
+        if (giMenuCommand != APP_MENU_NONE) {
         processMenuCommand:
             switch (giMenuCommand) {
                 case APP_MENU_LOAD_STANDARD_GAME:
@@ -368,7 +368,7 @@ int oldmain(void) {
                 gbInSetupDialog = 0;
             }
         }
-        if (giMenuCommand != -1)
+        if (giMenuCommand != APP_MENU_NONE)
             goto processMenuCommand;
 
         gpMouseManager->ReallyHidePointer();
@@ -417,7 +417,7 @@ int oldmain(void) {
         }
 
     gameSetupComplete:
-        if (giMenuCommand != -1)
+        if (giMenuCommand != APP_MENU_NONE)
             goto processMenuCommand;
         if (!leave) {
             if (gbRemoteOn && !giThisNetPos) {
@@ -737,7 +737,7 @@ short InitMenuHandler(tag_message& message) {
         }
     }
 
-    if (handled || giMenuCommand != -1) {
+    if (handled || giMenuCommand != APP_MENU_NONE) {
         gpWindowManager->m_dialogResult = message.id;
         message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
@@ -3694,7 +3694,7 @@ int gbSpecialMouseMasks = 0;
 DATA(0x00492e30)
 int giCurExe = 0;
 DATA(0x00492e34)
-int giMenuCommand = -1;
+int giMenuCommand = APP_MENU_NONE;
 DATA(0x00492e38)
 int gbInDialog = 0;
 DATA(0x00492e40)

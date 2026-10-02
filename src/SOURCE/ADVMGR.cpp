@@ -14,6 +14,7 @@
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/appMenu.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
@@ -978,7 +979,7 @@ short advManager::Main(struct tag_message& message) {
     }
     if (evtMapCell)
         DoEvent(evtMapCell, TrigX, TrigY);
-    if (gbGameOver || bQuit == 1 || giMenuCommand != -1) {
+    if (gbGameOver || bQuit == 1 || giMenuCommand != APP_MENU_NONE) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
