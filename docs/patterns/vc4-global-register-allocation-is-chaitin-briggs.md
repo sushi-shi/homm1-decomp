@@ -87,9 +87,15 @@ Consequences:
    `esi` before `edi`, and makes it the survivor of a spill tie. If the
    initializers must keep their statement order, put a plain declaration block
    first and the assignments after it. An initialized declaration also fixes the
-   statement order. Example: `heroWindowManager::UpdateScreenRegion` went from
-   81 to 100 by declaring `top, left, bottom, right` before assigning
-   `left, top, right, bottom`.
+   statement order. Examples:
+   - `heroWindowManager::UpdateScreenRegion` went from 81 to 100 by declaring
+     `top, left, bottom, right` before assigning `left, top, right, bottom`.
+   - `soundManager::CDStartup` reached 100 by declaring `device` before
+     `numDevices`.
+   - Some retail orders are reachable only with one declaration order. For
+     example, `bitmap::Write` needs its palette pointer declared before the file
+     handle. Even then the right handle & 31 rotation is TU state, so record that
+     with `permute state`.
 3. **A different spill or register winner by a margin:** count references times
    `5^depth` for the competing ranges. Retail usually had a different number of
    references, so look for duplicated statements that VC4 tail-merges. Examples:
