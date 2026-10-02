@@ -176,9 +176,9 @@ extern float fBerserkFactor;
 extern int gbTroopReload;
 // GetBestBHC's per-player hero ceiling (GetTurnAIVars sets it).
 extern int giMaxHeroesForThisPlayer;
-// GetBestBHC lets young towns buy during a network game only with this set;
-// TransmitSaveGame tests the same dword for its serial compression path.
-extern int gbRemoteReady;
+// Stale alias of gbRemoteReady (0x493040, X_GLOBAL.h), which GetBestBHC now
+// names: unreferenced, kept so later symbol handles stay put.
+extern int gbSerialCompression;
 // GetTurnAIVars' per-cell enemy-hero turn distance for mines.
 extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern float gfHeroInteractionBonus[];

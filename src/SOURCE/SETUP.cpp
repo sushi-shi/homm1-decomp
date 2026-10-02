@@ -767,6 +767,13 @@ long FileSize(char* filename) {
     return length;
 }
 
+// Modem's 2K transmit queue (retail 0x004c9c80-0x004ca487), defined below.
+struct outque_t {
+    int readPosition;
+    int writePosition;
+    char data[2048];
+};
+
 // Buka 2.1 RemoteMain merged with the HoMM2 ModemSetup mode switch; HoMM1
 // keeps the modem reset sequence in ModemSetup (0x459530).
 VA(0x0045869c, 0x27a)

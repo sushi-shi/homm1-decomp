@@ -5,8 +5,6 @@
 // line base, as in MOUSEMGR), the parked music volume DoEvent and DoCombat
 // restore (-1 when none) and the event-music flag.
 extern short gEventsAssertLine;
-extern char gEventsAssertFile1[];
-extern char gEventsAssertFile2[];
 extern int giEventMusicVolume;
 extern signed char gbEventMusicPlaying;
 

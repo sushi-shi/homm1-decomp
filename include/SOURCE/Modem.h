@@ -26,13 +26,9 @@ struct inque_t {
     char data[4096];
 };
 extern inque_t inque;
-// The transmit queue holds 2K (retail 0x004c9c80-0x004ca487).
-struct outque_t {
-    int readPosition;
-    int writePosition;
-    char data[2048];
-};
-extern outque_t outque;
+// The transmit queue holds 2K (retail 0x004c9c80-0x004ca487); SETUP.cpp
+// completes its type.
+extern struct outque_t outque;
 extern int iBaudBits;
 extern int inescape;
 extern int newpacket;

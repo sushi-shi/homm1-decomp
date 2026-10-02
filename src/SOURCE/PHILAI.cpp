@@ -748,6 +748,7 @@ void philAI::GetBestBHC(int, BHC& best) {
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
         LogInt("Turns Owned", townPointer->m_turnsOwned);
+        extern int gbRemoteReady;
         if (giCurTurn > 3 && (!gbRemoteOn || gbRemoteReady) && townPointer->m_turnsOwned < 3)
             continue;
         CheckDoMain(0, 0);
