@@ -2723,278 +2723,6 @@ void game::NextPlayer(void) {
     }
 }
 
-// Buka 2.1 game::RandomizeTown for HoMM1's 4x3 town footprint: the town
-// type comes from the campaign crest, a distinct roll for the first four
-// towns or a plain roll, and shifts every town frame to that type.
-VA(0x00442935, 0x67f)
-void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
-    signed char unique;
-    town* town;
-    signed char j;
-    signed char i;
-    unsigned char frameShift;
-    signed char townNum;
-    signed char race;
-    signed char plain;
-
-    townNum = GetTownId(x, y);
-    for (j = 0; j < 3; j++) {
-        for (i = 0; i < 4; i++) {
-            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
-                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
-                m_map[x - 2 + i][y - 2 + j].m_secondaryTrigger |= 0x28;
-            } else {
-                m_map[x - 2 + i][y - 2 + j].m_triggerType = MAP_OBJECT_TOWN;
-                m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
-            }
-        }
-    }
-    m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
-    town = GetTown(townNum);
-    town->m_turnsOwned = 10;
-    if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
-        race = gCrestTownTypes[m_players[0].m_color];
-    } else if (townNum < 4) {
-        unique = 0;
-        race = 0;
-        while (!unique) {
-            race = Random(0, 3);
-            unique = 1;
-            for (i = 0; i < 4; i++) {
-                if (gRandomTownTypes[i] == race)
-                    unique = 0;
-            }
-        }
-        gRandomTownTypes[townNum] = race;
-    } else {
-        race = Random(0, 3);
-    }
-    frameShift = (4 - race) * 24;
-    for (i = 0; i < 4; i++) {
-        m_map[x - 2 + i][y - 2].m_overlayIndex -= frameShift;
-        m_map[x - 2 + i][y - 1].m_objectIndex -= frameShift;
-        m_map[x - 2 + i][y].m_objectIndex -= frameShift;
-    }
-    m_castleRecs[townNum].m_type = race;
-    plain = 1;
-    if (town->m_extraIndex >= 1 && static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex])->customized)
-        plain = 0;
-    if (plain) {
-        if (race == 2)
-            m_castleRecs[townNum].m_buildings = 0x2000;
-        else
-            m_castleRecs[townNum].m_buildings = 0;
-    }
-    if (isCastle) {
-        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_FIRST));
-        m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
-        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
-            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
-    } else {
-        m_castleRecs[townNum].m_buildings |= (1 << BUILDING_SLOT_TENT);
-        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_CASTLE))
-            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_CASTLE);
-        SetupTown(townNum, 0);
-    }
-}
-
-// Buka 2.1 game::RandomizeMine for HoMM1's 2x2 mines: the terrain picks
-// the mine type (unused types first) and the object and shadow frames.
-VA(0x00443368, 0x659)
-void game::RandomizeMine(signed char x, signed char y) {
-    unsigned char bits;
-    unsigned char upFrame;
-    signed char k;
-    int tries;
-    signed char j;
-    signed char terrain;
-    signed char type;
-    signed char mineIdx;
-    unsigned char objFrame;
-
-    terrain = giGroundToTerrain[m_map[x][y].m_tileIndex];
-    for (tries = 0; tries < 30; tries++) {
-        switch (terrain) {
-            case 1:
-            case 6:
-                type = Random(1, 6);
-                if (type == 1)
-                    type = 0;
-                break;
-            case 2:
-                type = Random(2, 6);
-                break;
-            case 3:
-                type = Random(0, 6);
-                break;
-            case 4:
-                type = 1;
-                break;
-            case 5:
-            default:
-                type = Random(1, 6);
-                break;
-        }
-        if (!giMineTypeCount[type])
-            tries = 30;
-    }
-    giMineTypeCount[type]++;
-    switch (type) {
-        case 0:
-            upFrame = 5;
-            break;
-        case 1:
-            upFrame = 0x19;
-            break;
-        default:
-            switch (terrain) {
-                case 1:
-                    upFrame = 0xf;
-                    break;
-                case 2:
-                    upFrame = 0x13;
-                    break;
-                default:
-                    upFrame = 9;
-                    break;
-            }
-            break;
-    }
-    switch (type) {
-        case 0:
-            objFrame = 7;
-            break;
-        case 1:
-            switch (terrain) {
-                case 3:
-                    objFrame = 0x2b;
-                    break;
-                case 4:
-                    objFrame = 0x23;
-                    break;
-                default:
-                    objFrame = 0x1b;
-                    break;
-            }
-            break;
-        default:
-            switch (terrain) {
-                case 1:
-                    objFrame = 0x11;
-                    break;
-                case 2:
-                    objFrame = 0x15;
-                    break;
-                case 3:
-                    objFrame = 0x17;
-                    break;
-                case 5:
-                    objFrame = 0xd;
-                    break;
-                default:
-                    objFrame = 0xb;
-                    break;
-            }
-            break;
-    }
-    m_map[x][y].m_objectIndex = objFrame;
-    m_map[x + 1][y].m_objectIndex = objFrame + 1;
-    m_map[x][y - 1].m_overlayIndex = upFrame;
-    m_map[x + 1][y - 1].m_overlayIndex = upFrame + 1;
-    if (type == 1) {
-        m_map[x + 1][y].m_flags |= 4;
-        bits = 1;
-    } else if (type == 0) {
-        bits = 0x20;
-    } else {
-        m_map[x + 1][y].m_flags |= 0x10;
-        m_map[x + 1][y].m_objectTileset |= 0xb0;
-        m_map[x + 1][y].m_extraFrame = type - 2;
-        bits = 0x19;
-    }
-    mineIdx = GetMineId(x, y);
-    for (k = 0; k < 2; k++) {
-        for (j = 0; j < 2; j++) {
-            if ((m_map[x + j][y - k].m_triggerType & 0x7f) > 0
-                && (m_map[x + j][y - k].m_triggerType & 0x7f) <= 0x30) {
-                m_map[x + j][y - k].m_secondaryTrigger |= bits;
-            } else {
-                m_map[x + j][y - k].m_objectMetadata = mineIdx;
-                m_map[x + j][y - k].m_triggerType = bits;
-            }
-        }
-    }
-    m_map[x][y].m_triggerType |= 0x80;
-    m_mines[mineIdx].type = type;
-}
-
-// Buka 2.1 game::SetupTowns' per-town tail: default dwellings for towns the
-// map leaves uncustomized, then nine distinct mage-guild spells; computer
-// owners favour the stronger spells.
-VA(0x00442fb4, 0x3b4)
-void game::SetupTown(signed char townId, signed char aiOwned) {
-    short dwellingCount;
-    char dwellingRoll[10];
-    int k;
-    signed char used[29];
-    signed char townType;
-    short newSpell;
-    short spellValue;
-    int spellLevel;
-
-    dwellingRoll[0] = 1;
-    dwellingRoll[1] = 1;
-    dwellingRoll[2] = 1;
-    dwellingRoll[3] = 2;
-    dwellingRoll[4] = 1;
-    dwellingRoll[5] = 1;
-    dwellingRoll[6] = 1;
-    dwellingRoll[7] = 2;
-    dwellingRoll[8] = 1;
-    dwellingRoll[9] = 3;
-    dwellingCount = dwellingRoll[Random(0, 99) / 10];
-    townType = m_castleRecs[townId].m_type;
-    if (m_castleRecs[townId].m_customized) {
-        for (k = 0; k < 6; k++) {
-            if (m_castleRecs[townId].m_buildings & (1 << (k + 7)))
-                m_castleRecs[townId].m_garrison[k] = gMonsterDatabase[gDwellingType[townType][k]].growth;
-        }
-    }
-    if (!m_castleRecs[townId].m_customized) {
-        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_FIRST);
-        m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[townType][0]].growth;
-        if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
-            dwellingCount++;
-        if (--dwellingCount) {
-            m_castleRecs[townId].m_buildings |= 0x100;
-            m_castleRecs[townId].m_garrison[1] = gMonsterDatabase[gDwellingType[townType][1]].growth;
-            dwellingCount--;
-        }
-    }
-    memset(used, 0, 29);
-    for (k = 0; k < 9; k++) {
-        if (k <= 2)
-            spellLevel = 0;
-        else if (k <= 4)
-            spellLevel = 1;
-        else if (k <= 6)
-            spellLevel = 2;
-        else
-            spellLevel = 3;
-        do {
-            newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
-            if (aiOwned)
-                spellValue = giSpellAIValue[newSpell] * (gcSpellAIFlags[newSpell] & 1 ? 4 : 1) + 50;
-            else
-                spellValue = 1500;
-            if (newSpell == SPELL_DIMENSION_DOOR)
-                spellValue = 1500;
-        } while (used[newSpell] || Random(1, 1500) >= spellValue);
-        m_castleRecs[townId].m_mageGuildSpells[k] = newSpell;
-        used[newSpell] = 1;
-    }
-}
-
 // Buka 2.1 game::ComputeDailyGold for HoMM1: the first mine and gold mines
 // pay 1000, towns 250 (castles 1000), three treasure artifacts add more,
 // and computer players' gold scales with their level.
@@ -3247,6 +2975,278 @@ void game::PerMonth(void) {
         }
     }
     gpAdvManager->CompleteDraw(0);
+}
+
+// Buka 2.1 game::RandomizeTown for HoMM1's 4x3 town footprint: the town
+// type comes from the campaign crest, a distinct roll for the first four
+// towns or a plain roll, and shifts every town frame to that type.
+VA(0x00442935, 0x67f)
+void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
+    signed char j;
+    signed char unique;
+    town* town;
+    signed char i;
+    unsigned char frameShift;
+    signed char townNum;
+    signed char race;
+    signed char plain;
+
+    townNum = GetTownId(x, y);
+    for (j = 0; j < 3; j++) {
+        for (i = 0; i < 4; i++) {
+            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
+                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
+                m_map[x - 2 + i][y - 2 + j].m_secondaryTrigger |= 0x28;
+            } else {
+                m_map[x - 2 + i][y - 2 + j].m_triggerType = MAP_OBJECT_TOWN;
+                m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
+            }
+        }
+    }
+    m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
+    town = GetTown(townNum);
+    town->m_turnsOwned = 10;
+    if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
+        race = gCrestTownTypes[m_players[0].m_color];
+    } else if (townNum < 4) {
+        unique = 0;
+        race = 0;
+        while (!unique) {
+            race = Random(0, 3);
+            unique = 1;
+            for (i = 0; i < 4; i++) {
+                if (gRandomTownTypes[i] == race)
+                    unique = 0;
+            }
+        }
+        gRandomTownTypes[townNum] = race;
+    } else {
+        race = Random(0, 3);
+    }
+    frameShift = (4 - race) * 24;
+    for (i = 0; i < 4; i++) {
+        m_map[x - 2 + i][y - 2].m_overlayIndex -= frameShift;
+        m_map[x - 2 + i][y - 1].m_objectIndex -= frameShift;
+        m_map[x - 2 + i][y].m_objectIndex -= frameShift;
+    }
+    m_castleRecs[townNum].m_type = race;
+    plain = 1;
+    if (town->m_extraIndex >= 1 && static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex])->customized)
+        plain = 0;
+    if (plain) {
+        if (race == 2)
+            m_castleRecs[townNum].m_buildings = 0x2000;
+        else
+            m_castleRecs[townNum].m_buildings = 0;
+    }
+    if (isCastle) {
+        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_FIRST));
+        m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
+        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
+            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
+    } else {
+        m_castleRecs[townNum].m_buildings |= (1 << BUILDING_SLOT_TENT);
+        if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_CASTLE))
+            m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_CASTLE);
+        SetupTown(townNum, 0);
+    }
+}
+
+// Buka 2.1 game::SetupTowns' per-town tail: default dwellings for towns the
+// map leaves uncustomized, then nine distinct mage-guild spells; computer
+// owners favour the stronger spells.
+VA(0x00442fb4, 0x3b4)
+void game::SetupTown(signed char townId, signed char aiOwned) {
+    short dwellingCount;
+    char dwellingRoll[10];
+    int k;
+    signed char used[29];
+    signed char townType;
+    short newSpell;
+    short spellValue;
+    int spellLevel;
+
+    dwellingRoll[0] = 1;
+    dwellingRoll[1] = 1;
+    dwellingRoll[2] = 1;
+    dwellingRoll[3] = 2;
+    dwellingRoll[4] = 1;
+    dwellingRoll[5] = 1;
+    dwellingRoll[6] = 1;
+    dwellingRoll[7] = 2;
+    dwellingRoll[8] = 1;
+    dwellingRoll[9] = 3;
+    dwellingCount = dwellingRoll[Random(0, 99) / 10];
+    townType = m_castleRecs[townId].m_type;
+    if (m_castleRecs[townId].m_customized) {
+        for (k = 0; k < 6; k++) {
+            if (m_castleRecs[townId].m_buildings & (1 << (k + 7)))
+                m_castleRecs[townId].m_garrison[k] = gMonsterDatabase[gDwellingType[townType][k]].growth;
+        }
+    }
+    if (!m_castleRecs[townId].m_customized) {
+        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_FIRST);
+        m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[townType][0]].growth;
+        if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
+            dwellingCount++;
+        if (--dwellingCount) {
+            m_castleRecs[townId].m_buildings |= 0x100;
+            m_castleRecs[townId].m_garrison[1] = gMonsterDatabase[gDwellingType[townType][1]].growth;
+            dwellingCount--;
+        }
+    }
+    memset(used, 0, 29);
+    for (k = 0; k < 9; k++) {
+        if (k <= 2)
+            spellLevel = 0;
+        else if (k <= 4)
+            spellLevel = 1;
+        else if (k <= 6)
+            spellLevel = 2;
+        else
+            spellLevel = 3;
+        do {
+            newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
+            if (aiOwned)
+                spellValue = giSpellAIValue[newSpell] * (gcSpellAIFlags[newSpell] & 1 ? 4 : 1) + 50;
+            else
+                spellValue = 1500;
+            if (newSpell == SPELL_DIMENSION_DOOR)
+                spellValue = 1500;
+        } while (used[newSpell] || Random(1, 1500) >= spellValue);
+        m_castleRecs[townId].m_mageGuildSpells[k] = newSpell;
+        used[newSpell] = 1;
+    }
+}
+
+// Buka 2.1 game::RandomizeMine for HoMM1's 2x2 mines: the terrain picks
+// the mine type (unused types first) and the object and shadow frames.
+VA(0x00443368, 0x659)
+void game::RandomizeMine(signed char x, signed char y) {
+    unsigned char bits;
+    unsigned char upFrame;
+    signed char k;
+    int tries;
+    signed char j;
+    signed char terrain;
+    signed char type;
+    signed char mineIdx;
+    unsigned char objFrame;
+
+    terrain = giGroundToTerrain[m_map[x][y].m_tileIndex];
+    for (tries = 0; tries < 30; tries++) {
+        switch (terrain) {
+            case 1:
+            case 6:
+                type = Random(1, 6);
+                if (type == 1)
+                    type = 0;
+                break;
+            case 2:
+                type = Random(2, 6);
+                break;
+            case 3:
+                type = Random(0, 6);
+                break;
+            case 4:
+                type = 1;
+                break;
+            case 5:
+            default:
+                type = Random(1, 6);
+                break;
+        }
+        if (!giMineTypeCount[type])
+            tries = 30;
+    }
+    giMineTypeCount[type]++;
+    switch (type) {
+        case 0:
+            upFrame = 5;
+            break;
+        case 1:
+            upFrame = 0x19;
+            break;
+        default:
+            switch (terrain) {
+                case 1:
+                    upFrame = 0xf;
+                    break;
+                case 2:
+                    upFrame = 0x13;
+                    break;
+                default:
+                    upFrame = 9;
+                    break;
+            }
+            break;
+    }
+    switch (type) {
+        case 0:
+            objFrame = 7;
+            break;
+        case 1:
+            switch (terrain) {
+                case 3:
+                    objFrame = 0x2b;
+                    break;
+                case 4:
+                    objFrame = 0x23;
+                    break;
+                default:
+                    objFrame = 0x1b;
+                    break;
+            }
+            break;
+        default:
+            switch (terrain) {
+                case 1:
+                    objFrame = 0x11;
+                    break;
+                case 2:
+                    objFrame = 0x15;
+                    break;
+                case 3:
+                    objFrame = 0x17;
+                    break;
+                case 5:
+                    objFrame = 0xd;
+                    break;
+                default:
+                    objFrame = 0xb;
+                    break;
+            }
+            break;
+    }
+    m_map[x][y].m_objectIndex = objFrame;
+    m_map[x + 1][y].m_objectIndex = objFrame + 1;
+    m_map[x][y - 1].m_overlayIndex = upFrame;
+    m_map[x + 1][y - 1].m_overlayIndex = upFrame + 1;
+    if (type == 1) {
+        m_map[x + 1][y].m_flags |= 4;
+        bits = 1;
+    } else if (type == 0) {
+        bits = 0x20;
+    } else {
+        m_map[x + 1][y].m_flags |= 0x10;
+        m_map[x + 1][y].m_objectTileset |= 0xb0;
+        m_map[x + 1][y].m_extraFrame = type - 2;
+        bits = 0x19;
+    }
+    mineIdx = GetMineId(x, y);
+    for (k = 0; k < 2; k++) {
+        for (j = 0; j < 2; j++) {
+            if ((m_map[x + j][y - k].m_triggerType & 0x7f) > 0
+                && (m_map[x + j][y - k].m_triggerType & 0x7f) <= 0x30) {
+                m_map[x + j][y - k].m_secondaryTrigger |= bits;
+            } else {
+                m_map[x + j][y - k].m_objectMetadata = mineIdx;
+                m_map[x + j][y - k].m_triggerType = bits;
+            }
+        }
+    }
+    m_map[x][y].m_triggerType |= 0x80;
+    m_mines[mineIdx].type = type;
 }
 
 // HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
@@ -4355,6 +4355,80 @@ void game::GetMap(void) {
     gbShowMapInfo = 0;
 }
 
+// Buka 2.1 game::GetNumThievesGuilds.
+VA(0x00446df9, 0x98)
+int game::GetNumThievesGuilds(int color) {
+    int numGuilds = 0;
+    int i;
+    for (i = 0; i < m_players[color].m_townCount; ++i) {
+        if (gpGame->m_castleRecs[m_players[color].m_townIds[i]].m_buildings & 2)
+            ++numGuilds;
+    }
+    return numGuilds;
+}
+
+// Buka 2.1 game::CalcDifficultyRating for HoMM1: difficulty, opponents
+// (human seats by handicap, computers by level), King of the Hill, map
+// size and map difficulty.
+VA(0x00446e91, 0x30f)
+int game::CalcDifficultyRating(void) {
+    int i;
+    int total;
+
+    total = 0;
+    if (m_difficulty == 0) {
+    } else if (m_difficulty == 1) {
+        total += 10;
+    } else if (m_difficulty == 2) {
+        total += 20;
+    } else if (m_difficulty == 3) {
+        total += 30;
+    }
+    for (i = 1; i < 4; i++) {
+        if (i < giNumHumanPlayers)
+            total += (m_players[i].m_difficulty - 1) * 10;
+        else if (m_players[i].m_difficulty == 0)
+            total -= 10;
+        else if (m_players[i].m_difficulty == 1)
+            total += 5;
+        else if (m_players[i].m_difficulty == 2)
+            total += 10;
+        else if (m_players[i].m_difficulty == 3)
+            total += 15;
+        else if (m_players[i].m_difficulty == 4)
+            total += 20;
+    }
+    gpGame->m_playerCount = 0;
+    for (i = 0; i < 4; i++) {
+        if (gpGame->m_players[i].m_difficulty > 0)
+            gpGame->m_playerCount++;
+    }
+    if (gbKingOfTheHill) {
+        if (m_playerCount - giNumHumanPlayers == 0) {
+        } else if (m_playerCount - giNumHumanPlayers == 1) {
+        } else if (m_playerCount - giNumHumanPlayers == 2) {
+            total += 5;
+        } else if (m_playerCount - giNumHumanPlayers == 3) {
+            total += 10;
+        }
+    }
+    if (giMapSize == 0) {
+    } else if (giMapSize == 1) {
+        total += 10;
+    } else if (giMapSize == 2) {
+        total += 20;
+    }
+    if (giMapDifficulty == 0)
+        total += 20;
+    else if (giMapDifficulty == 1)
+        total += 30;
+    else if (giMapDifficulty == 2)
+        total += 40;
+    else if (giMapDifficulty == 3)
+        total += 50;
+    return total;
+}
+
 // ShowCongrats' base score: 200 less a day per day for two months, then a
 // half, a quarter and an eighth per day, never below 20.
 VA(0x004471a0, 0x138)
@@ -4492,80 +4566,6 @@ void game::RandomizePlayerCrests(void) {
         } while (taken[m_players[i].m_color] == 1);
         taken[m_players[i].m_color] = 1;
     }
-}
-
-// Buka 2.1 game::GetNumThievesGuilds.
-VA(0x00446df9, 0x98)
-int game::GetNumThievesGuilds(int color) {
-    int numGuilds = 0;
-    int i;
-    for (i = 0; i < m_players[color].m_townCount; ++i) {
-        if (gpGame->m_castleRecs[m_players[color].m_townIds[i]].m_buildings & 2)
-            ++numGuilds;
-    }
-    return numGuilds;
-}
-
-// Buka 2.1 game::CalcDifficultyRating for HoMM1: difficulty, opponents
-// (human seats by handicap, computers by level), King of the Hill, map
-// size and map difficulty.
-VA(0x00446e91, 0x30f)
-int game::CalcDifficultyRating(void) {
-    int i;
-    int total;
-
-    total = 0;
-    if (m_difficulty == 0) {
-    } else if (m_difficulty == 1) {
-        total += 10;
-    } else if (m_difficulty == 2) {
-        total += 20;
-    } else if (m_difficulty == 3) {
-        total += 30;
-    }
-    for (i = 1; i < 4; i++) {
-        if (i < giNumHumanPlayers)
-            total += (m_players[i].m_difficulty - 1) * 10;
-        else if (m_players[i].m_difficulty == 0)
-            total -= 10;
-        else if (m_players[i].m_difficulty == 1)
-            total += 5;
-        else if (m_players[i].m_difficulty == 2)
-            total += 10;
-        else if (m_players[i].m_difficulty == 3)
-            total += 15;
-        else if (m_players[i].m_difficulty == 4)
-            total += 20;
-    }
-    gpGame->m_playerCount = 0;
-    for (i = 0; i < 4; i++) {
-        if (gpGame->m_players[i].m_difficulty > 0)
-            gpGame->m_playerCount++;
-    }
-    if (gbKingOfTheHill) {
-        if (m_playerCount - giNumHumanPlayers == 0) {
-        } else if (m_playerCount - giNumHumanPlayers == 1) {
-        } else if (m_playerCount - giNumHumanPlayers == 2) {
-            total += 5;
-        } else if (m_playerCount - giNumHumanPlayers == 3) {
-            total += 10;
-        }
-    }
-    if (giMapSize == 0) {
-    } else if (giMapSize == 1) {
-        total += 10;
-    } else if (giMapSize == 2) {
-        total += 20;
-    }
-    if (giMapDifficulty == 0)
-        total += 20;
-    else if (giMapDifficulty == 1)
-        total += 30;
-    else if (giMapDifficulty == 2)
-        total += 40;
-    else if (giMapDifficulty == 3)
-        total += 50;
-    return total;
 }
 
 // donor PoL RVA 0x0008480a; preferred Buka symbol ?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z

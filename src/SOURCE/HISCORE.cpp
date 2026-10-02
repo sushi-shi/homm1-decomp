@@ -163,12 +163,13 @@ void highScoreManager::Update(void)
     HighScoreEntry record;
     int handle;
     int i;
+    extern char gcDataPath[];
 
     bNoFile = 0;
     if (m_showCampaignScores)
-        sprintf(fileName, "%sCAMPAIGN.HS", ".\\DATA\\");
+        sprintf(fileName, "%sCAMPAIGN.HS", gcDataPath);
     else
-        sprintf(fileName, "%sSTANDARD.HS", ".\\DATA\\");
+        sprintf(fileName, "%sSTANDARD.HS", gcDataPath);
     handle = open(fileName, _O_BINARY);
     if (handle == -1)
         bNoFile = 1;

@@ -363,6 +363,12 @@ source = "src/BASE/Icon2bc.asm"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "SOURCE/AI"
+source = "src/SOURCE/AI.cpp"
+# Split from ARMY at retail's int3-padded object boundary; same profile.
+flags = "cpp_carcass_eh"
+
+[[unit]]
 unit = "SOURCE/ARMY"
 source = "src/SOURCE/ARMY.cpp"
 # SpecialAttack's fs:[0] frame around new bitmap proves /GX.
