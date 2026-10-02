@@ -364,16 +364,16 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, short) direction)
 
 // Buka PATH.cpp GetBestDirection with HoMM1's nine-hex rows and byte
 // row/column flags.
-VA(0x00419008, 0x988)
+VA(0x00419008, 0x984)
 short army::GetBestDirection(short sourceHex, short targetHex, short blockedMask)
 {
+    signed char targetCol;
+    signed char targetRowVal;
     signed char sourceColumnCheck;
     signed char iIsMovingDown;
     signed char movingUp;
     signed char sourceRowVal;
-    signed char targetCol;
     signed char iLeftFl;
-    signed char targetRowVal;
     signed char rightFl;
 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex))

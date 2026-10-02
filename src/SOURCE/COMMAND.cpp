@@ -1285,7 +1285,7 @@ void combatManager::ResetMouse(void)
 
 // Buka COMMAND.cpp ProcessNextAction; HoMM1 hides the pointer around the
 // action, broadcasts it to a human net opponent and has no door or cycling.
-VA(0x004136e6, 0x55a)
+VA(0x004136e6, 0x552)
 short combatManager::ProcessNextAction(struct tag_message &message)
 {
     army *actingArmy;
