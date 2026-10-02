@@ -61,32 +61,7 @@ flags = "cpp_carcass"
 
 [[unit]]
 unit = "BASE/LZHUFDEC"
-source = "vendor/lzhuf/decoder/LzhufMemmove.asm"
-flags = "cpp_carcass"
-
-[[unit]]
-unit = "BASE/LZHUFDEC_GetBit"
-source = "vendor/lzhuf/decoder/GetBit.asm"
-flags = "cpp_carcass"
-
-[[unit]]
-unit = "BASE/LZHUFDEC_DecodePosition"
-source = "vendor/lzhuf/decoder/DecodePosition.asm"
-flags = "cpp_carcass"
-
-[[unit]]
-unit = "BASE/LZHUFDEC_Update"
-source = "vendor/lzhuf/decoder/UpdateDecoderTree.asm"
-flags = "cpp_carcass"
-
-[[unit]]
-unit = "BASE/LZHUFDEC_Reconstruct"
-source = "vendor/lzhuf/decoder/ReconstructDecoderTree.asm"
-flags = "cpp_carcass"
-
-[[unit]]
-unit = "BASE/LZHUFDEC_Decode"
-source = "vendor/lzhuf/decoder/Decode.asm"
+source = "vendor/lzhuf/decoder/Decoder.asm"
 flags = "cpp_carcass"
 
 [[unit]]
@@ -235,6 +210,11 @@ source = "src/SOURCE/GAME.cpp"
 flags = "cpp_carcass_eh"
 
 [[unit]]
+unit = "SOURCE/ARMYGRP"
+source = "src/SOURCE/ARMYGRP.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "SOURCE/HERO"
 source = "src/SOURCE/HERO.cpp"
 # ViewStat's fs:[0] frame around new heroWindow proves /GX.
@@ -249,11 +229,6 @@ flags = "cpp_carcass_eh"
 unit = "SOURCE/KB"
 source = "src/SOURCE/KB.cpp"
 flags = "cpp_carcass_eh"
-
-[[unit]]
-unit = "SOURCE/Modem"
-source = "src/SOURCE/Modem.cpp"
-flags = "cpp_carcass"
 
 [[unit]]
 unit = "SOURCE/NOOPT"

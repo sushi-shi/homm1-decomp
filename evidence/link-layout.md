@@ -46,11 +46,60 @@ object compositions:
   LINK's fill between objects is `CCh`.
 - The six LZHUF decoder routines are one object. They are byte-contiguous with
   odd starts. LZHUF references only `Decode`, yet retail begins the group with
-  `LzhufMemmove`. Merging the MASM units resolves their mutual calls without
-  relocations, while the delinked targets keep call relocations. Four
-  functions then score below 100 in the per-function comparison. The units
-  remain separate until the comparison treats an in-object MASM call as its
-  relocated equivalent.
+  `LzhufMemmove`. They are now assembled as one module
+  (`vendor/lzhuf/decoder/Decoder.asm`, unit BASE/LZHUFDEC). MASM resolves
+  their seven mutual calls without relocations. The comparison gives each of
+  these calls the REL32 relocation that the delinked target carries, and all
+  six functions stay at 100. As separate DWORD-aligned objects they had added
+  12 bytes of fill and the wrong order.
+
+## Object boundaries in the SOURCE run
+
+The `/Od` SOURCE objects are packed: their functions follow each other with no
+fill, and each object's `.text` is 16-byte aligned. LINK pads between objects
+with `CCh`. In retail, int3 fill before a 16-byte boundary therefore ends an
+object. A function that starts at an unaligned address immediately after its
+predecessor must share that predecessor's object. Applying both rules to the
+claimed functions from 0x00401000 to 0x00473450 recovers these compositions:
+
+- armyGroup (0x00447920) starts a new object after GAME's RestoreCell (ten
+  `CCh`). Buka 2.1 keeps the same eleven methods, in the same order, in
+  `SOURCE/ARMYGRP.cpp`. They are now a separate SOURCE/ARMYGRP unit, and all
+  eleven are at 100.
+- RemoteCleanup (0x00458520) starts a new object after SETUP's
+  BaseSetupHandler (thirteen `CCh`). Dial (0x00459627) and WriteModemPacket
+  (0x0045a16b) start at odd addresses directly after ModemSetup and
+  ReadPacket. The object's .data (0x0049f808-0x0049fdb7) and .bss
+  (0x004c7e70-0x004ca487) interleave the variables of the network bring-up,
+  the modem helpers and the packet layer. For example, iNetNameIndex,
+  iIDCtr, packetlen, iInOrderCtr and GameMode are consecutive. So everything
+  from RemoteCleanup to TransmitAndWait is one TU, SOURCE/REMOTE (Buka
+  REMOTE, Netbios and Modem code). Its data is defined after its functions in
+  retail address order. ModemSetup's 16-byte start (where nbnet_init ends) is
+  a coincidence. With the former SETUP, Modem and REMOTE scores carried over,
+  the 52 functions keep 51 exact rows; GUIModemCommandExec stays at 95.81.
+- army::army (0x00466490) starts a new object after WalkTowardArmy (eight
+  `CCh`). The thirteen combatManager functions before it are Buka's
+  `SOURCE/AI.cpp`, in the same order. Splitting them out of ARMY leaves the
+  AI functions' scores unchanged. However, the TU state of ARMY changes:
+  DoAttack, SpecialAttack and DamageEnemy improve, while AttackTo, SpellEffect,
+  PowEffect, DoHydraAttack and Walk regress. The exact CUR count falls from 27
+  to 26, so the split is not applied.
+- One object begins at 0x00419990. Its first function is a 0x15-byte dynamic
+  initializer that calls the 0x1a-byte initializer at 0x0041f2a9, which
+  constructs SVSearchArray. Next come Misc's nine logging functions, starting
+  at the odd address 0x004199a5, and then PHILAI from 0x00419f16, also odd.
+  Misc and PHILAI are therefore one TU. VC4 emits the two initializer
+  functions next to each other at the global's definition (`_$E2` and then
+  `_$E1`, confirmed by test compiles with and without `/Z7` and `/GX`). The
+  outer function at the start of the object is not reproduced by any source
+  order tried so far. Merging Misc into the top of PHILAI keeps the nine
+  logging functions at 100. However, ten PHILAI functions regress and three
+  reach 100, so the exact count falls from 60 to 53 and the merge is not
+  applied. With the current split, PHILAI ends 13 bytes late and FINDPATH
+  starts 16 bytes late. This 16-byte shift persists through HERO and into the
+  BASE run. The SOURCE-run alignment no longer absorbs it, because ARMYGRP
+  and REMOTE now begin on their own boundaries.
 
 ## Function-level linking in BASE
 
@@ -126,13 +175,24 @@ SetupCDDrive (`_chdir`, `_lseek`), `sample::sample` (`strrev`), RESMGR
 (`_close`, `_read`, `_open`, `_lseek`) and soundmgr's CDStop, CDIsPlaying and
 CDPlay (`_stricmp`). Every edited function stays at 100. Measured on a
 diagnostic link of the candidate objects, the LIBCMT member order matches
-retail in 97 of 100 positions, up from 85. The simulation gives 99 of 103.
+retail in 97 of 100 positions, up from 85, and the simulation gives 99 of 103.
+Retail's order can also be counted over 112 members, including the referent-
+named `access`, `__purecall` and `write`. On that count the candidate,
+together with the `access` change below, matches 107, up from 95.
 The remaining differences are as follows:
 
 - soundmgr's StartSample still calls `_strrev` directly, so strrev is pulled
   early instead of last. Changing the spelling to `strrev` leaves StartSample
   at its bank (97.77) and raises the simulation to 100 of 103. It is not
   applied here because StartSample is below 100.
+- `access` (0x004834c0) follows stricmp in retail, where soundmgr's direct
+  `_access` pulls it. kbwin's ReadPrefsFromFile spelled `_access` and pulled
+  it ahead of fwrite (80 bytes early). It now calls `access`, as HoMM2's
+  ReadPrefsFromFile does, and stays at 100.
+- `__purecall` (0x00483510) follows access in retail. The candidate pulls it
+  directly after wincrt0, because BASEMGR's constructor stores baseManager's
+  vtable, whose three slots are `__purecall` in retail too (0x0048c5a0). Why
+  retail's BASEMGR object did not insert `__purecall` that early is open.
 - `write` and `strnicmp` directly follow `open` in retail. No current unit
   before soundmgr references `__write` or `__strnicmp`. BASE C++ objects use
   `/Gy` and retail links with `/OPT:REF`. A function that nothing called would

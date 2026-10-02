@@ -232,5 +232,39 @@ class RuntimeAliasTest(unittest.TestCase):
         self.assertNotIn("__chdir", table)
 
 
+class InObjectCallTest(unittest.TestCase):
+    """An assembler's resolved in-object call gets its REL32 relocation."""
+
+    # f1: call f2 (resolved, E8 rel32 = 6 - 5 = 1); ret
+    # f2 at 6: call g (relocated external); ret
+    TEXT = bytes.fromhex("e801000000c3" "e800000000c3")
+    SYMBOLS = [("_f1", 0, 1, 0x20, 2), ("_f2", 6, 1, 0x20, 2),
+               ("_g", 0, 0, 0x20, 2)]
+
+    def payload(self) -> bytes:
+        return coff(self.TEXT, [(7, 2, REL32)], bytes(4), [], self.SYMBOLS)
+
+    def test_resolved_call_is_relocated_against_its_callee(self):
+        out = canon.relocate_in_object_calls(
+            self.payload(), (("_f1", 6), ("_f2", 6)))
+        self.assertEqual(targets(out), {(1, 1): ("_f2", 0), (1, 7): ("_g", 0)})
+        obj = canon.CoffObject(out)
+        self.assertEqual(obj.section_bytes(obj.sections[0]),
+                         bytes.fromhex("e800000000c3e800000000c3"))
+
+    def test_unclaimed_callee_and_no_claims_leave_the_object(self):
+        payload = self.payload()
+        self.assertEqual(canon.relocate_in_object_calls(payload, ()), payload)
+        self.assertEqual(
+            canon.relocate_in_object_calls(payload, (("_f1", 6),)), payload)
+
+    def test_delinked_form_is_unchanged(self):
+        relocated = coff(bytes.fromhex("e800000000c3e800000000c3"),
+                         [(1, 1, REL32), (7, 2, REL32)], bytes(4), [],
+                         self.SYMBOLS)
+        self.assertEqual(canon.relocate_in_object_calls(
+            relocated, (("_f1", 6), ("_f2", 6))), relocated)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -13,8 +13,7 @@ short SetupModemGameHandler(struct tag_message&);
 short SetupMultiPlayerGameHandler(struct tag_message&);
 short SetupNetworkGameHandler(struct tag_message&);
 short SetupGameHandler(struct tag_message&);
-// HoMM1 SETUP.cpp defines the transport bring-up Buka keeps in REMOTE and
-// Netbios.
+// HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
 void RemoteMain(int);
 int nbnet_init(void);
 

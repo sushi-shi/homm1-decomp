@@ -6,7 +6,7 @@ locations:
 | Path | Build role |
 | --- | --- |
 | `encoder.cpp` | Compiled as the single `BASE/LZHUF` object with the optimized VC4 codec profile. It contains the game-facing wrappers, encoder, shared globals, and initialized Huffman tables. |
-| `decoder/*.asm` | Assembled as six separate decoder objects: one private memory-move helper and five decoder routines. |
+| `decoder/Decoder.asm` | Assembled as the single `BASE/LZHUFDEC` object: one private memory-move helper and five decoder routines, in retail order. |
 | `reference/decoder_correspondence.c` | Readable ordinary-C reconstruction used for type and compiler experiments. It is not a build input. |
 | `reference/paul-edwards-1990-lzhuf.c` | Unmodified historical source snapshot used only as provenance evidence. It is not a build input. |
 | `reference/jnos-1.11f-lzhuf.c` | Unmodified historical source snapshot used only as provenance evidence. It is not a build input. |
@@ -22,13 +22,16 @@ and 10.5 variants. The files in `decoder/` are therefore manual MASM
 reconstructions from the pinned retail bytes; they are not recovered original
 vendor assembly source.
 
-The six reconstructed members remain separate because calls between them carry
-external relocations in retail. Combining the same exact instruction bodies
-into one assembler module resolves those calls internally and no longer matches
-the retail object topology. Their register convention and instruction bodies
-match the Watcom-built DOS family, while their byte-aligned layout and retained
-nested saves were not reproduced by the tested Watcom C compilers from ordinary
-C.
+The six reconstructed procedures form one module. In retail they are
+byte-contiguous with odd starts and no fill, while LINK separates objects with
+`CCh` fill. LINK also pulls the group starting with `LzhufMemmove`, although
+LZHUF references only `Decode`. The assembler resolves calls between the
+procedures without relocations. The comparison gives each such call the REL32
+relocation that the delinked target carries
+(`homm1.compare.canonicalize.relocate_in_object_calls`). Their register
+convention and instruction bodies match the Watcom-built DOS family. The
+tested Watcom C compilers did not reproduce, from ordinary C, the byte-aligned
+layout or the retained nested saves.
 
 `reference/decoder_correspondence.c` establishes types, algorithm
 correspondence, and compiler provenance. Watcom C/386 10.0a reproduces the

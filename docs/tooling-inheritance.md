@@ -48,6 +48,16 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 - VC4 inline EH groups stay within their full owner; packed groups retain
   separate records. Resolved offsets, handler and FuncInfo/map identities remain
   protected. Unsupported continuations fail closed. See [retail controls](../evidence/vc4-inline-eh.md).
+- Comparison resolves OLDNAMES references as LINK does. `runtime_aliases`
+  reads the pinned OLDNAMES.LIB weak externals and LIBCMT label aliases, and
+  `canonicalize_coff` names each undefined alias reference by its runtime
+  function. `normalize` proves that no compared object defines an alias.
+  Reviewed referents use the runtime symbols. HoMM1 adds this capability; it
+  does not come from a donor.
+- For reviewed fixed-asm units, `relocate_in_object_calls` gives each call
+  that MASM resolved inside one module the REL32 relocation that the delinked
+  target carries. A postcondition proves that the call target is unchanged.
+  This lets one retail module stay a single object (`BASE/LZHUFDEC`).
 - HoMM2's build-time README refresh, worktree-local editor roots and VA workflow
   informed the port. Its VC6 worker/compiler settings and C++11 strict-enum
   hook are not HoMM1 build controls.
