@@ -2228,6 +2228,13 @@ int game::ComputeDailyGold(int player) {
     return gold;
 }
 
+extern signed char giWeekType;
+extern signed char giMonthType;
+extern signed char giWeekSpecial;
+extern signed char giMonthSpecial;
+// Creatures a creature month may feature.
+extern signed char giMonType[];
+
 // Buka 2.1 game::PerDay for HoMM1: records each player's income, pays the
 // mines, towns and computer bonuses, then advances the calendar.
 VA(0x004419a6, 0x463)
@@ -2287,6 +2294,65 @@ void game::PerDay(void) {
         for (j = 0; j < PLAYER_RESOURCE_COUNT; j++)
             gpGame->m_players[i].m_aiData.m_income[j] += m_players[i].m_resources[j];
     }
+}
+
+// Buka 2.1 game::PerMonth for HoMM1's six dwellings: a normal, creature or
+// plague month, the creature month also seeding wandering monsters.
+VA(0x00442654, 0x2e1)
+void game::PerMonth(void) {
+    town* townPointer;
+    short growth;
+    short j;
+    short i;
+    int y;
+    int x;
+    mapCell* spot;
+
+    m_month++;
+    i = Random(1, 10);
+    if (i <= 5) {
+        giMonthType = 0;
+        giMonthSpecial = Random(0, 9);
+    } else if (i <= 9) {
+        giMonthType = 1;
+        giMonthSpecial = giMonType[Random(0, 11)];
+    } else {
+        giMonthType = 2;
+    }
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        for (j = 7; j <= 12; j++) {
+            townPointer = GetTown(i);
+            if (townPointer->m_buildings & (1 << j)) {
+                growth = gMonsterDatabase[gDwellingType[townPointer->m_type][j - 7]].growth;
+                if (townPointer->m_buildings & 0x10)
+                    growth += 2;
+                if (giMonthType == 1 && gDwellingType[townPointer->m_type][j - 7] == giMonthSpecial)
+                    townPointer->m_garrison[j - 7] *= 2;
+                if (giMonthType == 2) {
+                    townPointer->m_garrison[j - 7] -= growth;
+                    if (townPointer->m_garrison[j - 7] < 0)
+                        townPointer->m_garrison[j - 7] = 0;
+                    townPointer->m_garrison[j - 7] = townPointer->m_garrison[j - 7] >> 1;
+                }
+            }
+        }
+    }
+    if (giMonthType == 1) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+                spot = gpAdvManager->GetCell(x, y);
+                if (!spot->m_triggerType && giGroundToTerrain[spot->m_tileIndex]) {
+                    if (Random(0, 360) == 10) {
+                        spot->m_triggerType = 0x9a;
+                        spot->m_objectTileset = 0xc;
+                        spot->m_objectIndex = giMonthSpecial;
+                        spot->m_objectMetadata = GetRandomNumTroops(giMonthSpecial);
+                    }
+                }
+            }
+        }
+    }
+    gpAdvManager->CompleteDraw(0);
 }
 
 // HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
@@ -2903,10 +2969,6 @@ extern char* gColorNames[];
 extern char* gMonsterNames[];
 extern char* gMonthNames[];
 extern char* gWeekNames[];
-extern signed char giWeekType;
-extern signed char giMonthType;
-extern signed char giWeekSpecial;
-extern signed char giMonthSpecial;
 
 // donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
