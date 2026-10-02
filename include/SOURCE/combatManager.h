@@ -61,7 +61,9 @@ struct CombatRemotePacket {
 #pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
-    char m_unknown30[0x10];
+    char m_unknown30[0xc];
+    // Open loads kb.pal here and fades the screen in with it.
+    class palette* m_combatPalette;
     hexcell m_hexCells[COMBAT_HEX_COUNT];
     short m_unknown25c;
     signed char m_unknown25e;
@@ -69,8 +71,11 @@ public:
     // GetBackgroundName forces 6 for a graveyard field.
     signed char m_terrainType;
     signed char m_unknown260;
-    char m_unknown261[4];
-    char m_unknown265[8];
+    // SetupCombat keeps the defending town here as well.
+    class town* m_originalCombatTown;
+    // Open's small font.
+    class font* m_font;
+    char m_unknown269[4];
     // SaveCombatBorder's copy of the twenty screen rows below the field.
     char* m_savedBorder;
     // LoadIcons: ground, text bar, obstacles, catapult, tent, castle,
@@ -111,8 +116,8 @@ public:
     short m_catapultAttackCount[2];
     short m_catapultAttacksRemaining[2];
     short m_keepAttacksRemaining[2];
-    short m_unknown6d5;
-    short m_unknown6d7;
+    // SetupCombat copies each hero's +0x1c byte (-1 without a hero).
+    short m_heroType[2];
     short m_unknown6d9;
     short m_unknown6db;
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
@@ -126,7 +131,9 @@ public:
     char m_unknown6e9[4];
     // LoadIcons loads the battlefield backdrop GetBackgroundName names.
     class bitmap* m_backgroundBitmap;
-    char m_unknown6f1[8];
+    // Open's cmbtwin.bin window.
+    class heroWindow* m_combatWindow;
+    char m_unknown6f5[4];
     short m_unknown6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     short m_messageTypeMask;
@@ -275,6 +282,10 @@ public:
     void GenerateMap(void);
     char * GetBackgroundName(void);
     signed char MoreTreesNear(void);
+    // HoMM1 retail 0x0044e7f2: no callers; rebuilds the field and redraws.
+    void RegenerateField(void);
+    // HoMM1 retail 0x00470f25: stores its byte at +0x25e (ret 4).
+    void SetUnknown25e(signed char);
     void LoadIcons(void);
     void FreeIcons(void);
     void LoadArmies(void);

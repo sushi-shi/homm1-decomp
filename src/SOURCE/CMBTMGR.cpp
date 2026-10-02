@@ -5,6 +5,11 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/icon.h>
+#include <BASE/mouseManager.h>
+#include <SOURCE/wingraph.h>
+#include <SOURCE/kbwin.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,7 +38,7 @@ combatManager::combatManager(void)
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
     m_savedBorder = 0;
-    m_unknown6d5 = m_unknown6d7 = m_unknown6c5 = m_unknown6c7 = m_wallFrame = m_wallDamage = -1;
+    m_heroType[0] = m_heroType[1] = m_unknown6c5 = m_unknown6c7 = m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
     m_castleSide[0] = m_castleSide[1] = 0;
     m_unknown72f = 0;
@@ -67,17 +72,156 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
     }
 }
 
-// donor PoL RVA 0x00090032; preferred Buka symbol ?SetupCombat@combatManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHH@Z
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.451835;margin=0.439518;shape=0.448;size=0.718;calls=0.400;alternate=pol20:void combatManager::SetupCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int)@0x00090032
+// Buka CMBTMGR.cpp SetupCombat; HoMM1's attacker is side 1.
 VA(0x0044b730, 0x3db)
-void combatManager::SetupCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int) {}
+void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGroup* attackerGroup,
+                                town* defenderTown, hero* defenderHero, armyGroup* defenderGroup,
+                                int combatX, int combatY, int randomSeed)
+{
+    int i;
 
-// donor PoL RVA 0x00090aa0; preferred Buka symbol ?Open@combatManager@@UAEHH@Z
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:1;base=0.748451;margin=0.311399;shape=0.506;size=0.976;calls=0.795;strings=PREBATTL.82M|cmbtmous.mse|cmbtwin.bin;alternate=pol20:int combatManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00090aa0
+    giSeed = randomSeed;
+    SRand(combatX * 100 + combatY);
+    m_combatX = combatX;
+    m_combatY = combatY;
+    if (mapX >= 0 && mapY >= 0)
+        m_battlefieldCell = gpAdvManager->GetCell(mapX, mapY);
+    else
+        m_battlefieldCell = 0;
+    m_terrainType = giGroundToTerrain[m_battlefieldCell->m_tileIndex];
+    if (attackerHero) {
+        m_playerId[1] = attackerHero->m_owner;
+        attackerGroup = &attackerHero->m_army;
+    } else {
+        m_playerId[1] = -1;
+    }
+    if (defenderHero) {
+        m_playerId[0] = defenderHero->m_owner;
+        defenderGroup = &defenderHero->m_army;
+    } else if (defenderTown) {
+        m_playerId[0] = defenderTown->m_owner;
+        defenderGroup = &defenderTown->m_army;
+    } else {
+        m_playerId[0] = -1;
+    }
+    for (i = 0; i < 2; i++) {
+        if (m_playerId[i] >= 0)
+            m_unknown2b8[i] = gbHumanPlayer[m_playerId[i]];
+        else
+            m_unknown2b8[i] = 0;
+        if (i == 1)
+            m_heroes[i] = attackerHero;
+        else
+            m_heroes[i] = defenderHero;
+        if (m_heroes[i])
+            m_heroType[i] = m_heroes[i]->m_unknown1c;
+        else
+            m_heroType[i] = -1;
+        if (i == 1)
+            m_armyGroups[i] = attackerGroup;
+        else
+            m_armyGroups[i] = defenderGroup;
+        m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 1;
+        if (m_heroes[i] && m_heroes[i]->HasArtifact(0x11))
+            m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
+        m_keepAttacksRemaining[i] = 1;
+        m_unknown6df[i] = 0;
+        m_heroCastSpell[i] = 0;
+    }
+    m_castleSide[1] = 0;
+    if (defenderTown) {
+        if (defenderTown->m_occupyingHeroId != -1) {
+            m_armyGroups[0] = &m_heroes[0]->m_army;
+            CombineGroups(&defenderTown->m_army, &m_heroes[0]->m_army);
+            m_unknown6df[0] = 1;
+        } else {
+            m_unknown6df[0] = 0;
+        }
+        if (defenderTown->m_buildings & 0x40)
+            m_castleSide[0] = 1;
+        else
+            m_castleSide[0] = 0;
+        m_combatTowns[0] = defenderTown;
+        m_originalCombatTown = m_combatTowns[0];
+    } else {
+        m_castleSide[0] = 0;
+        m_combatTowns[0] = 0;
+    }
+    m_combatTowns[1] = 0;
+}
+
+// Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
+// field, then the fade-in and a random combat theme.
 VA(0x0044bb0b, 0x40e)
-short combatManager::Open(short) { return 0; }
+short combatManager::Open(short priority)
+{
+    int song;
+    SAMPLE2 sample;
+    int musicList[4];
+
+    m_messageTypeMask = 0x32f;
+    m_unknown72f = 0;
+    m_savedBorder = 0;
+    gpSoundManager->PlayAmbientMusic(-1, 0, -1);
+    m_backgroundBuffer = new bitmap(0, 640, 460);
+    m_backgroundDrawn = 0;
+    sample = NULL_SAMPLE2;
+    sample = LoadPlaySample("PREBATTL.82M");
+    giNextAction = 0;
+    gpWindowManager->FadeScreen(1, 8, 0);
+    m_sideRetreated[0] = 0;
+    m_sideRetreated[1] = 0;
+    m_combatResult = 3;
+    gbUseClippedIconRenderer = 0;
+    m_unknown727 = 0;
+    m_unknown72b = 0;
+    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellEffect = 0;
+    gpMouseManager->SetPointer("cmbtmous.mse", 6);
+    m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
+    if (!m_combatWindow)
+        MemError();
+    gpWindowManager->AddWindow(m_combatWindow, -1, 1);
+    m_font = gpResourceManager->GetFont("smalfont.fnt");
+    LoadIcons();
+    LoadArmies();
+    m_selectedHex = -1;
+    m_limitCreatureHex = -1;
+    m_previousCommand = 0x9d;
+    GenerateMap();
+    gbRetreatWin = 0;
+    gbCombatSurrender = 0;
+    m_sideDefeated[0] = 0;
+    m_sideDefeated[1] = 0;
+    m_limitCreature = 1;
+    SetUnknown25e(0);
+    m_unknown25c = 0;
+    m_unknown72f = 1;
+    DrawFrame(1);
+    glTimers[0] = KBTickCount() + 75;
+    m_combatPalette = gpResourceManager->GetPalette("kb.pal");
+    KBChangeMenu(hmnuCmbt);
+    CombatMessage("", 1);
+    gpWindowManager->FadeScreen(0, 8, m_combatPalette);
+    gbLimitedCombatUpdatePalette = 1;
+    gpMouseManager->NewUpdate(1);
+    gpMouseManager->WarpPointer(m_hexCells[m_limitCreatureHex].m_x, m_hexCells[m_limitCreatureHex].m_y - 50);
+    gpMouseManager->ReallyShowPointer();
+    ResetMouse();
+    m_gridSelectionDisabled = 0;
+    WaitEndSample(sample, -1);
+    musicList[0] = 0x29;
+    musicList[1] = 0x2a;
+    musicList[2] = 0x28;
+    musicList[3] = 0x35;
+    song = musicList[SRandom(0, 3)];
+    gpSoundManager->SwitchAmbientMusic(song);
+    m_messageMask = 0x200;
+    m_priority = priority;
+    m_active = 1;
+    strcpy(m_name, "combatManager");
+    return 0;
+}
 
 // donor PoL RVA 0x00090edf; preferred Buka symbol ?Close@combatManager@@UAEXXZ
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
@@ -476,6 +620,19 @@ signed char combatManager::IsWinner(signed char side)
             isWinner = 0;
     }
     return isWinner;
+}
+
+// HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
+// the field before a full redraw.
+VA(0x0044e7f2, 0x4e)
+void combatManager::RegenerateField(void)
+{
+    FreeArmies();
+    LoadArmies();
+    GenerateMap();
+    SetUnknown25e(0);
+    m_unknown25c = 0;
+    DrawFrame(1);
 }
 
 // Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's

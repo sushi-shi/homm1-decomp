@@ -292,7 +292,7 @@ VA(0x00476e40, 0x3)
 void mouseManager::NewUpdate(int) {}
 
 VA(0x00476e50, 0x3)
-void mouseManager::WarpPointer(int, int) {}
+void mouseManager::WarpPointer(short, short) {}
 
 // donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
