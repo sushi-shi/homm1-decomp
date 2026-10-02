@@ -1970,81 +1970,6 @@ void townManager::DoTavern(void)
     gpSoundManager->SwitchAmbientMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
 }
 
-// Buka TOWNMGR.cpp:3034 SplitArmyHandler; HoMM1 handles the amount
-// buttons on selection and redraws the whole split window.
-VA(0x0040ef8c, 0x32d)
-short SplitArmyHandler(struct tag_message &message)
-{
-    short plusControl = TOWN_SPLIT_INCREASE_CONTROL;
-    int unusedAction;
-    short minusButton = TOWN_SPLIT_DECREASE_CONTROL;
-    short amountText = TOWN_SPLIT_AMOUNT_CONTROL;
-    int handled = 0;
-
-    if (message.type == MESSAGE_WIDGET) {
-        switch (message.command) {
-            case WIDGET_NOTIFY_SELECT:
-                switch (message.id) {
-                    case TOWN_SPLIT_INCREASE_CONTROL:
-                        ++gpTownManager->m_splitAmount;
-                        if (gpTownManager->m_splitAmount >= gpTownManager->m_splitMaximum)
-                            gpTownManager->m_splitAmount = gpTownManager->m_splitMaximum - 1;
-                        goto update_amount;
-                    case TOWN_SPLIT_DECREASE_CONTROL:
-                        --gpTownManager->m_splitAmount;
-                        if (gpTownManager->m_splitAmount < 0)
-                            gpTownManager->m_splitAmount = 0;
-                        goto update_amount;
-                    case TOWN_SPLIT_AMOUNT_CONTROL:
-                        message.command = WIDGET_COMMAND_GET_TEXT;
-                        gpTownManager->m_heroWindow1->BroadcastMessage(message);
-                        gpTownManager->m_splitAmount = atoi(message.text);
-                        if (gpTownManager->m_splitAmount < 0)
-                            gpTownManager->m_splitAmount = 0;
-                        if (gpTownManager->m_splitAmount >= gpTownManager->m_splitMaximum)
-                            gpTownManager->m_splitAmount = gpTownManager->m_splitMaximum - 1;
-                        goto update_amount;
-                }
-                break;
-            case WIDGET_NOTIFY_DESELECT:
-                switch (message.id) {
-                    case TOWN_DIALOG_BUTTON_0:
-                    case TOWN_DIALOG_BUTTON_1:
-                        gpTownManager->m_splitAmount = 0;
-                        gpWindowManager->m_dialogResult = message.id;
-                        handled = 1;
-                        break;
-                    case TOWN_DIALOG_BUTTON_2:
-                        if (gpTownManager->m_splitAmount == 0)
-                            gpWindowManager->m_dialogResult = TOWN_DIALOG_BUTTON_1;
-                        else
-                            gpWindowManager->m_dialogResult = TOWN_DIALOG_BUTTON_2;
-                        handled = 1;
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    if (handled == 1) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
-        return MESSAGE_DISPATCH_FORWARD;
-    }
-    return MESSAGE_DISPATCH_CONSUME;
-
-update_amount:
-    sprintf(gText, "%d", gpTownManager->m_splitAmount);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = TOWN_SPLIT_AMOUNT_CONTROL;
-    message.text = gText;
-    gpTownManager->m_heroWindow1->BroadcastMessage(message);
-    gpTownManager->m_heroWindow1->DrawWindow();
-    return MESSAGE_DISPATCH_CONSUME;
-}
-
 // Buka Castle.cpp CastleHandler; HoMM1 hovers by widget id, has no
 // captain or formation controls and recruits a single hero (control 0x30).
 VA(0x0040e866, 0x726)
@@ -2194,4 +2119,79 @@ short CastleHandler(struct tag_message &message)
         return MESSAGE_DISPATCH_FORWARD;
     }
     return TrueFalseDialogHandler(message);
+}
+
+// Buka TOWNMGR.cpp:3034 SplitArmyHandler; HoMM1 handles the amount
+// buttons on selection and redraws the whole split window.
+VA(0x0040ef8c, 0x32d)
+short SplitArmyHandler(struct tag_message &message)
+{
+    short plusControl = TOWN_SPLIT_INCREASE_CONTROL;
+    int unusedAction;
+    short minusButton = TOWN_SPLIT_DECREASE_CONTROL;
+    short amountText = TOWN_SPLIT_AMOUNT_CONTROL;
+    int handled = 0;
+
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.command) {
+            case WIDGET_NOTIFY_SELECT:
+                switch (message.id) {
+                    case TOWN_SPLIT_INCREASE_CONTROL:
+                        ++gpTownManager->m_splitAmount;
+                        if (gpTownManager->m_splitAmount >= gpTownManager->m_splitMaximum)
+                            gpTownManager->m_splitAmount = gpTownManager->m_splitMaximum - 1;
+                        goto update_amount;
+                    case TOWN_SPLIT_DECREASE_CONTROL:
+                        --gpTownManager->m_splitAmount;
+                        if (gpTownManager->m_splitAmount < 0)
+                            gpTownManager->m_splitAmount = 0;
+                        goto update_amount;
+                    case TOWN_SPLIT_AMOUNT_CONTROL:
+                        message.command = WIDGET_COMMAND_GET_TEXT;
+                        gpTownManager->m_heroWindow1->BroadcastMessage(message);
+                        gpTownManager->m_splitAmount = atoi(message.text);
+                        if (gpTownManager->m_splitAmount < 0)
+                            gpTownManager->m_splitAmount = 0;
+                        if (gpTownManager->m_splitAmount >= gpTownManager->m_splitMaximum)
+                            gpTownManager->m_splitAmount = gpTownManager->m_splitMaximum - 1;
+                        goto update_amount;
+                }
+                break;
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.id) {
+                    case TOWN_DIALOG_BUTTON_0:
+                    case TOWN_DIALOG_BUTTON_1:
+                        gpTownManager->m_splitAmount = 0;
+                        gpWindowManager->m_dialogResult = message.id;
+                        handled = 1;
+                        break;
+                    case TOWN_DIALOG_BUTTON_2:
+                        if (gpTownManager->m_splitAmount == 0)
+                            gpWindowManager->m_dialogResult = TOWN_DIALOG_BUTTON_1;
+                        else
+                            gpWindowManager->m_dialogResult = TOWN_DIALOG_BUTTON_2;
+                        handled = 1;
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (handled == 1) {
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+
+update_amount:
+    sprintf(gText, "%d", gpTownManager->m_splitAmount);
+    message.type = MESSAGE_WIDGET;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = TOWN_SPLIT_AMOUNT_CONTROL;
+    message.text = gText;
+    gpTownManager->m_heroWindow1->BroadcastMessage(message);
+    gpTownManager->m_heroWindow1->DrawWindow();
+    return MESSAGE_DISPATCH_CONSUME;
 }
