@@ -1377,14 +1377,25 @@ int advManager::ProcessSearch(int x, int y) {
     return 1;
 }
 
+// DrawCell's per-call drawing state, kept in module storage as in Buka (which
+// defines it ahead of its functions). Declared ahead of ProcessHover: the C1
+// symbol order retail's ProcessHover and GetCloudLookup operand sorts require
+// (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
+int s_drawStoneTile;
+int s_drawCovered;
+int s_drawCloudFrame;
+signed char s_drawFlipCloud;
+unsigned short s_drawGroundTile;
+unsigned char s_drawTileset;
+
 // donor PoL RVA 0x0005a644; preferred Buka symbol ?ProcessHover@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.464646;margin=0.430920;shape=0.299;size=0.767;calls=0.971;alternate=pol20:int advManager::ProcessHover(int, int)@0x0005a644
 VA(0x004291de, 0xc02)
 int advManager::ProcessHover(struct tag_message* message) {
     short curX;
-    short heroPosX;
     short curY;
+    short heroPosX;
     short heroPosY;
     town* pTown;
     hero* hero;
@@ -1784,14 +1795,6 @@ int advManager::GetCloudLookup(int x, int y) {
     }
     return giCloudType[cloudMask];
 }
-
-// DrawCell's per-call drawing state, kept in module storage as in Buka.
-int s_drawStoneTile;
-int s_drawCovered;
-int s_drawCloudFrame;
-signed char s_drawFlipCloud;
-unsigned short s_drawGroundTile;
-unsigned char s_drawTileset;
 
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
