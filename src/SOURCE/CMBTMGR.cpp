@@ -293,12 +293,12 @@ void combatManager::UpdateArmyGroup(signed char side)
 VA(0x0044c264, 0x7be)
 void combatManager::GenerateMap(void)
 {
+    short count;
     short x;
     short i;
     short y;
     int randomRow;
     int randomCol;
-    short count;
     short armyCount;
 
     if (m_castleSide[0] == 1)
@@ -459,8 +459,8 @@ signed char combatManager::MoreTreesNear(void)
     short step;
     short homeX;
     signed char typeTable[3][8];
-    short numTrees;
     short numMountains;
+    short numTrees;
     mapCell* nearCell;
     short homeY;
     unsigned char nearbyTileset;

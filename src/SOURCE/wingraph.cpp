@@ -203,11 +203,11 @@ void DDInitGraphics(void) {
 // evidence: graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
 VA(0x004039d6, 0x592)
 int DDAppPaint(void* window, void* paintDC) {
+    int width;
     int ySrc;
     int height;
     int x;
     PAINTSTRUCT ps;
-    int width;
     POINT pt;
 
     if (gbWinGraphBusy != 0)
@@ -849,14 +849,14 @@ void WGInitializePalette() {
 // client-to-game transform uses its pinned 640x480 viewport.
 VA(0x00405184, 0x1c0)
 int WGAppPaint(void* window, void* paintDC) {
+    int nDestY;
+    int destX;
     int srcX;
     int iSrcY;
     int dstW;
     RECT rect;
     int destHeight;
     int padding;
-    int destX;
-    int nDestY;
     PAINTSTRUCT paintStruct;
     char unused;
 

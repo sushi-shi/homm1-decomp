@@ -251,8 +251,8 @@ VA(0x004064d6, 0x136)
 int advManager::GetMoveShowIt(signed char direction)
 {
     hero *movingHero;
-    short dy;
     short dirX;
+    short dy;
 
     if (gpCurPlayer->CurrentHero() == -1)
         return 0;

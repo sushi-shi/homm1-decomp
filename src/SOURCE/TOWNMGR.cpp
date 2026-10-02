@@ -967,12 +967,12 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
 {
     int yPos;
     int resIndex;
+    unsigned short requirements;
     char *descText;
     textWidget *amountWidgets[7];
     int nRowTypes[4];
     int row;
     short currX;
-    int space;
     short unusedTop;
     int totalWidth;
     int numLines;
@@ -981,6 +981,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     short unusedField;
     short unusedControl;
     short firstRow;
+    int space;
     tag_message iEvt;
     signed char resType[7];
     int binSize;
@@ -993,7 +994,6 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     int inRow;
     short pResourceCount;
     int j;
-    unsigned short requirements;
     textWidget *descWidget;
     int iTotalHeight;
     short prices[7];
@@ -1682,7 +1682,6 @@ VA(0x0040d6bd, 0x484)
 void townManager::GetCategoryStats(signed char category, long *const stats,
                                    signed char *const order)
 {
-    short player;
     short townIndex;
     short index;
     long strength;
@@ -1690,6 +1689,7 @@ void townManager::GetCategoryStats(signed char category, long *const stats,
     short numCastles;
     hero *playerHero;
     town *theTown;
+    short player;
 
     for (player = 0; player < gpGame->m_playerCount; player++) {
         numTowns = 0;
@@ -1761,8 +1761,8 @@ VA(0x0040db41, 0xea)
 void townManager::SortStats(long *const stats, signed char *const order)
 {
     long temp;
-    short firstPlayer;
     short secondPlayer;
+    short firstPlayer;
     signed char tempColor;
 
     for (firstPlayer = 0; firstPlayer < gpGame->m_playerCount - 1; firstPlayer++) {
@@ -1845,9 +1845,9 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         gpWindowManager->DoDialog(m_heroWindow1, RecruitHeroHandler, 0);
     delete m_heroWindow1;
     if (m_recruitState != -1) {
-        int newHeroClass;
         short townX;
         short townY;
+        int newHeroClass;
 
         gpCurPlayer->m_resources[RESOURCE_GOLD] -= gHeroGoldCost;
         gpCurPlayer->m_heroIds[gpCurPlayer->m_heroCount] =
