@@ -88,8 +88,8 @@ short army::GetAttackMask(short sourceHex, signed char targetMode, signed char t
     short hex;
     short dirBit;
     short blockedMask;
-    short direction;
     short nDirectionCount;
+    short direction;
 
     if (m_stats.attributes & 1)
         blockedMask = 0;
@@ -376,8 +376,8 @@ short army::GetBestDirection(short sourceHex, short targetHex, short blockedMask
     signed char iIsMovingDown;
     signed char movingUp;
     signed char sourceRowVal;
-    signed char iLeftFl;
     signed char rightFl;
+    signed char iLeftFl;
 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex))
         return -1;
