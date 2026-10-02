@@ -1659,6 +1659,11 @@ int philAI::RVOfPosition(
     return totalValue;
 }
 
+// Buka SVSearchArray: StrategicValueOfPosition's shared search, constructed
+// by its dynamic initializer between RVOfPosition and its first user.
+searchArray SVSearchArray;
+RVA_DYNINIT(0x0001f2a9, 0x1a, SVSearchArray)
+
 // donor PoL RVA 0x0003ef45; preferred Buka symbol ?StrategicValueOfPosition@philAI@@QAEHHHHHPAHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
