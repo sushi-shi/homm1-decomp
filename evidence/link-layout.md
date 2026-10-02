@@ -90,12 +90,32 @@ With LIBCMT, the candidate imports exactly retail's 0x334-byte IAT.
 
 ## CRT member order
 
-With LIBC, the CRT member order matched retail except where source spellings
-differed.
-Under the measured pull rule, retail references `__chdir` directly before the
-entry point (kbwin uses `_chdir`, not OLDNAMES `chdir`) and `__stricmp`
-directly (from BASE). It reaches `_strrev` only through OLDNAMES, because
-`strrev` is pulled last.
+LINK searches each library over the undefined-symbol list in insertion order.
+Explicit objects come first, then the entry symbol, then the members of
+`base.lib`. OLDNAMES is searched after LIBCMT, so a call spelled with an
+OLDNAMES alias (`chdir`, `close`) reaches its LIBCMT member only in a later
+pass. A simulation of this rule over the candidate's objects reproduces the
+candidate's LIBCMT member order. Measured against retail's 103-member order,
+it scores 87. Retail's order needs these direct LIBCMT spellings:
+
+- kbwin calls `_lseek` and `_chdir` (lseek and chdir precede wincrt0). HoMM2's
+  matching CD-drive code spells both with the underscore.
+- SAMPLE and soundmgr call `strrev` through OLDNAMES (strrev is the last
+  member). HoMM2's SAMPLE spells `strrev`.
+- `close`, `read`, `open`, `write`, `strnicmp` and `stricmp` directly follow
+  wincrt0, ahead of soundmgr's `rewind`. RESMGR calling `_close`, `_read`,
+  `_open` and `_lseek`, plus soundmgr calling a direct `stricmp` spelling,
+  reproduces close, read, open and stricmp. Nothing in the current units
+  places `write` or `strnicmp` there.
+
+With all of these, the simulation scores 100 of 103. The source still uses the
+other spellings because comparison names each retail call target with one
+reviewed referent (`config/retail/function_referents.tsv`: 0x00082500
+`_lseek`, 0x00082610 `_chdir`, 0x0008b070 `__strrev`). Respelling a call
+changes its relocation symbol and drops SetupCDDrive, `sample::sample` and
+StartSample below their MAX. Callers of one function cannot use different
+alias spellings until comparison treats an OLDNAMES weak external as its
+LIBCMT target.
 
 ## Resources
 
