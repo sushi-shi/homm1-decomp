@@ -75,7 +75,7 @@ short CombatSpecialHandler(struct tag_message &message)
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.313511;margin=0.551146;shape=0.234;size=0.481;calls=0.596;alternate=pol20:void combatManager::CastSpell(int, int, int, int)@0x000217be
 VA(0x00415e44, 0xd69)
-void combatManager::CastSpell(int, int, int, int) {}
+void combatManager::CastSpell(signed char, signed char, signed char, signed char) {}
 
 // donor PoL RVA 0x00023762; preferred Buka symbol ?Fireball@combatManager@@QAEXHH@Z
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order

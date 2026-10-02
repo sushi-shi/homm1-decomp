@@ -85,6 +85,7 @@ public:
     void DirDoAttack(short);
     // HoMM1 retail 0x00468861 takes no argument.
     void DoHydraAttack(void);
+    // HoMM1 retail 0x00468ff3: nonzero for a retaliation strike (ret 4).
     void DoAttack(int);
     void ResetPath(void);
     short WalkTo(void);

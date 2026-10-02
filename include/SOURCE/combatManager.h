@@ -189,7 +189,8 @@ public:
     int FindResurrectArmyIndex(int, int, int);
     int ValidSpellTarget(int, int);
     void SpellMessage(int, int);
-    void CastSpell(int, int, int, int);
+    // HoMM1 retail 0x00415e44 reads all four arguments as bytes.
+    void CastSpell(signed char, signed char, signed char, signed char);
     void DefaultSpell(int);
     void Fireball(int, int);
     void MeteorShower(int);

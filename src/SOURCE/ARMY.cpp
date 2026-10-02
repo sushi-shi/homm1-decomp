@@ -10,6 +10,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/PATH.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1431,11 +1432,267 @@ void army::DirDoAttack(short direction) {
     DoAttack(0);
 }
 
-// donor PoL RVA 0x0004e1a1; preferred Buka symbol ?DoAttack@army@@QAEXH@Z
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.427643;margin=0.977018;shape=0.217;size=0.817;calls=0.724;alternate=pol20:void army::DoAttack(int)@0x0004e1a1
+// A melee strike in m_attackDirection: breath attackers (attribute 8) also
+// hit the hex behind, some creatures cast on the target, the target
+// retaliates once, and creatures 5 and 8 strike twice.
 VA(0x00468ff3, 0x108d)
-void army::DoAttack(int) {}
+void army::DoAttack(int retaliation) {
+    int unused;
+    int oldMode;
+    short frameBase;
+    army* target2;
+    int curDir;
+    short facing;
+    int attackDir;
+    int didCast;
+    army* target;
+    int dmg;
+    short newHex;
+    int kills;
+
+    oldMode = 0;
+    dmg = 0;
+    kills = 0;
+    didCast = 0;
+    if (retaliation)
+        gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
+    if (m_creatureType == 22) {
+        DoHydraAttack();
+        if (m_unknown52 == 1 && !retaliation)
+            CancelSpell();
+        goto secondStrike;
+    }
+    attackDir = m_attackDirection;
+    facing = m_facing;
+    m_unknown0b = 0;
+    if (m_attackDirection <= 2)
+        m_facing = 0;
+    else if (m_attackDirection <= 5)
+        m_facing = 1;
+    if (m_attackDirection == 5 || m_attackDirection == 0 || m_attackDirection == 6)
+        frameBase = 6;
+    else if (m_attackDirection == 3 || m_attackDirection == 2 || m_attackDirection == 7)
+        frameBase = 8;
+    else
+        frameBase = 7;
+    gpCombatManager->SetGridMode(m_facing == 0);
+    CheckLuck();
+    newHex = m_hex;
+    if ((m_stats.attributes & 1)
+        && (facing == 1 && m_attackDirection >= 3
+            || facing == 0 && (m_attackDirection <= 2 || m_attackDirection >= 6))) {
+        if (facing == 1)
+            newHex = m_hex - 1;
+        else
+            newHex = m_hex + 1;
+    }
+    newHex = GetAdjacentCellIndex(newHex, m_attackDirection);
+    gpCombatManager->ResetLimitCreature();
+    gpCombatManager->m_limitCreatureCount[m_side][m_index]++;
+    if (m_stats.attributes & 8) {
+        short behindHex;
+
+        if (ValidHex(newHex) && gpCombatManager->m_hexCells[newHex].m_occupantSide >= 0
+            && gpCombatManager->m_hexCells[newHex].m_occupantIndex >= 0)
+            gpCombatManager->m_limitCreatureCount[gpCombatManager->m_hexCells[newHex].m_occupantSide]
+                                                  [gpCombatManager->m_hexCells[newHex].m_occupantIndex]++;
+        behindHex = GetAdjacentCellIndex(newHex, m_attackDirection);
+        if (ValidHex(behindHex) && gpCombatManager->m_hexCells[behindHex].m_occupantSide >= 0
+            && gpCombatManager->m_hexCells[behindHex].m_occupantIndex >= 0) {
+            gpCombatManager->m_limitCreatureCount[gpCombatManager->m_hexCells[behindHex].m_occupantSide]
+                                                  [gpCombatManager->m_hexCells[behindHex].m_occupantIndex]++;
+            if (m_attackDirection == 2 || m_attackDirection == 3)
+                gpCombatManager->m_unknown260 = 1;
+        }
+    }
+    oldMode = gpCombatManager->m_unknown260;
+    m_unknown08 = 0;
+    m_unknown09 = 3;
+    gpCombatManager->DrawFrame(1);
+    glTimers[0] = KBTickCount() + 105;
+    gpSoundManager->MemorySample(m_samples[1]);
+    m_unknown09 = 4;
+    gpCombatManager->m_unknown727 = 1;
+    gpCombatManager->DrawFrame(1);
+    glTimers[0] = KBTickCount() + 105;
+    m_unknown09 = frameBase;
+    gpCombatManager->m_unknown727 = 1;
+    gpCombatManager->DrawFrame(1);
+    glTimers[0] = KBTickCount() + 105;
+    if (m_stats.attributes & 8) {
+        m_unknown09 = frameBase + 3;
+        gpCombatManager->m_unknown727 = 1;
+        gpCombatManager->DrawFrame(1);
+        glTimers[0] = KBTickCount() + 105;
+    }
+    target2 = 0;
+    target = 0;
+    if (ValidHex(newHex)) {
+        int savedKilled;
+        short nextHex;
+
+        if (gpCombatManager->m_hexCells[newHex].m_occupantSide >= 0
+            && gpCombatManager->m_hexCells[newHex].m_occupantIndex >= 0) {
+            target = &gpCombatManager->m_armies[gpCombatManager->m_hexCells[newHex].m_occupantSide]
+                                               [gpCombatManager->m_hexCells[newHex].m_occupantIndex];
+            gpCombatManager->m_limitCreatureCount[target->m_side][target->m_index]++;
+            gpCombatManager->m_unknown727 = 1;
+            DamageEnemy(target, &dmg, &kills, 0, 0);
+        }
+        savedKilled = kills;
+        nextHex = GetAdjacentCellIndex(newHex, m_attackDirection);
+        if ((m_stats.attributes & 8) && m_attackDirection < 6 && ValidHex(nextHex)
+            && gpCombatManager->m_hexCells[nextHex].m_occupantSide >= 0
+            && gpCombatManager->m_hexCells[nextHex].m_occupantIndex >= 0
+            && gpCombatManager->m_hexCells[newHex].m_occupantIndex
+                   != gpCombatManager->m_hexCells[nextHex].m_occupantIndex) {
+            gpCombatManager->m_limitCreatureCount[gpCombatManager->m_hexCells[nextHex].m_occupantSide]
+                                                  [gpCombatManager->m_hexCells[nextHex].m_occupantIndex]++;
+            newHex = nextHex;
+            if (ValidHex(newHex) && gpCombatManager->m_hexCells[newHex].m_occupantSide != -1
+                && gpCombatManager->m_hexCells[newHex].m_occupantIndex != -1) {
+                m_unknown09 = frameBase + 6;
+                gpCombatManager->m_unknown727 = 1;
+                gpCombatManager->DrawFrame(1);
+                target2 = &gpCombatManager->m_armies[gpCombatManager->m_hexCells[newHex].m_occupantSide]
+                                                    [gpCombatManager->m_hexCells[newHex].m_occupantIndex];
+                DamageEnemy(target2, &dmg, &kills, 0, 0);
+                if (target2->m_quantity > 0)
+                    target2->Stand(1);
+            }
+        }
+        kills = savedKilled;
+    }
+    if (gbGenieHalf)
+        sprintf(gText, "%s %s half the enemy troops!",
+                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+                m_quantity > 1 ? "destroy" : "destroys");
+    else if (kills > 0)
+        sprintf(gText, "%s %s %d %s.  %d %s %s.",
+                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+                m_quantity > 1 ? "do" : "does", dmg, "Damage", kills,
+                kills > 1 ? gArmyNamesPlural[target->m_creatureType] : gArmyNames[target->m_creatureType],
+                kills > 1 ? "perish" : "perishes");
+    else
+        sprintf(gText, "%s %s %d %s.",
+                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+                m_quantity > 1 ? "do" : "does", dmg, "Damage");
+    gText[0] -= 32;
+    gpCombatManager->CombatMessage(gText, 1);
+    PowEffect(m_stats.unknown07);
+    gpCombatManager->m_unknown260 = oldMode;
+    switch (m_creatureType) {
+        case 11:
+            if (SRandom(1, 5) == 3) {
+                if (target && target->m_spellEffect != 12 && target->m_creatureType != 23
+                    && (target->m_creatureType != 13 || SRandom(0, 4) != 1)
+                    && !(target->m_stats.attributes & 0x10)) {
+                    gpCombatManager->CastSpell(18, target->m_hex, 1, -1);
+                    didCast = 1;
+                }
+            } else if (SRandom(1, 5) == 3 && target2 && target2->m_spellEffect != 12
+                       && target2->m_creatureType != 23
+                       && (target2->m_creatureType != 13 || SRandom(0, 4) != 1)
+                       && !(target2->m_stats.attributes & 0x10)) {
+                gpCombatManager->CastSpell(18, target2->m_hex, 1, -1);
+                didCast = 1;
+            }
+            break;
+        case 16:
+            if (SRandom(1, 5) == 3 && target && target->m_spellEffect != 12 && target->m_creatureType != 23
+                && (target->m_creatureType != 13 || SRandom(0, 127) % 4 != 1)
+                && !(target->m_stats.attributes & 0x10)) {
+                gpCombatManager->CastSpell(7, target->m_hex, 1, -1);
+                didCast = 1;
+            }
+            break;
+        case 26:
+            gpCombatManager->m_unknown6e9[gpCombatManager->m_hexCells[m_hex].m_occupantSide] = kills;
+            break;
+        default:
+            break;
+    }
+    gpCombatManager->ResetLimitCreature();
+    gpCombatManager->m_unknown260 = oldMode;
+    gpCombatManager->m_limitCreatureCount[m_side][m_index] = 1;
+    if (target) {
+        gpCombatManager->m_limitCreatureCount[target->m_side][target->m_index] = 1;
+        if (!(target->m_stats.attributes & 0x10))
+            target->Stand(0);
+    }
+    if (target2) {
+        gpCombatManager->m_limitCreatureCount[target2->m_side][target2->m_index] = 1;
+        if (!(target2->m_stats.attributes & 0x10))
+            target2->Stand(0);
+    }
+    WaitSample(1);
+    if (m_stats.attributes & 8) {
+        if (target2) {
+            m_unknown09 = frameBase + 6;
+            gpCombatManager->m_unknown727 = 1;
+            gpCombatManager->DrawFrame(1);
+        }
+        m_unknown09 = frameBase + 3;
+        gpCombatManager->m_unknown727 = 1;
+        gpCombatManager->DrawFrame(1);
+        m_unknown09 = frameBase;
+        gpCombatManager->m_unknown727 = 1;
+        gpCombatManager->DrawFrame(1);
+    }
+    m_unknown09 = 4;
+    gpCombatManager->m_unknown727 = 1;
+    gpCombatManager->DrawFrame(1);
+    m_unknown09 = 3;
+    gpCombatManager->m_unknown727 = 1;
+    gpCombatManager->DrawFrame(1);
+    gpCombatManager->m_unknown727 = 1;
+    Stand(1);
+    m_facing = facing;
+    gpCombatManager->m_unknown727 = 1;
+    if (m_unknown52 == 1 && !retaliation)
+        CancelSpell();
+    gpCombatManager->m_unknown727 = 1;
+    Stand(1);
+    if (m_creatureType == 26)
+        m_quantity += gpCombatManager->m_unknown6e9[gpCombatManager->m_hexCells[m_hex].m_occupantSide];
+    if (target && target->m_quantity > 0) {
+        gpCombatManager->m_unknown727 = 1;
+        target->Stand(1);
+        if (target->m_spellEffect == 18
+            || target->m_creatureType != 20 && (target->m_stats.attributes & 0x40) || m_creatureType == 24
+            || m_creatureType == 12 || didCast || retaliation) {
+            goto secondStrike;
+        } else {
+            target->m_attackDirection = OppositeDirection(m_attackDirection);
+            if (target->m_stats.attributes & 1) {
+                short checkHex;
+
+                checkHex = GetAdjacentCellIndex(target->m_hex, target->m_facing ? 5 : 0);
+                if (m_hex == checkHex)
+                    target->m_attackDirection = 6;
+                checkHex = GetAdjacentCellIndex(target->m_hex, (signed char)(target->m_facing ? 3 : 2));
+                if (m_hex == checkHex)
+                    target->m_attackDirection = 7;
+            }
+            target->DoAttack(1);
+            target->m_stats.attributes |= 0x40;
+            if (target->m_creatureType == 26)
+                target->m_quantity +=
+                    gpCombatManager->m_unknown6e9[gpCombatManager->m_hexCells[target->m_hex].m_occupantSide];
+        }
+    }
+secondStrike:
+    if ((m_creatureType == 8 || m_creatureType == 5) && target && target->m_quantity > 0 && !retaliation
+        && m_spellEffect != 18 && m_quantity > 0) {
+        curDir = m_attackDirection;
+        m_attackDirection = attackDir;
+        DoAttack(1);
+        m_attackDirection = curDir;
+    }
+    m_targetSide = newHex = -1;
+    if (retaliation)
+        gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
+}
 
 VA(0x0046a080, 0x49)
 void army::ResetPath(void) {
