@@ -664,22 +664,22 @@ short advManager::Main(struct tag_message& message) {
             case WIDGET_NOTIFY_RIGHT_CLICK:
                 helpText = -1;
                 switch (message.id) {
-                case 1:
+                case ADVENTURE_CONTROL_NEXT_HERO:
                     helpText = 0;
                     break;
-                case 2:
+                case ADVENTURE_CONTROL_CONTINUE_ROUTE:
                     helpText = 1;
                     break;
-                case 3:
+                case ADVENTURE_CONTROL_OVERVIEW:
                     helpText = 2;
                     break;
-                case 4:
+                case ADVENTURE_CONTROL_END_TURN:
                     helpText = 3;
                     break;
-                case 5:
+                case ADVENTURE_CONTROL_ADVENTURE_OPTIONS:
                     helpText = 4;
                     break;
-                case 6:
+                case ADVENTURE_CONTROL_SYSTEM_OPTIONS:
                     helpText = 5;
                     break;
                 }
@@ -968,11 +968,11 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
 
     isVisible = 1;
     switch (message->id) {
-    case 105:
-    case 112:
-    case 119:
-    case 126:
-        iPage = (message->id - 105) / 7;
+    case ADVENTURE_CONTROL_HERO_LOCATOR_1:
+    case ADVENTURE_CONTROL_HERO_LOCATOR_2:
+    case ADVENTURE_CONTROL_HERO_LOCATOR_3:
+    case ADVENTURE_CONTROL_HERO_LOCATOR_4:
+        iPage = (message->id - ADVENTURE_CONTROL_HERO_LOCATOR_1) / 7;
         if (gpCurPlayer->m_heroCount <= iPage)
             break;
         cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
@@ -986,13 +986,13 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             SetHeroContext(cellType, 0);
         }
         break;
-    case 16:
-    case 17:
-    case 18:
-    case 19:
-        cellType = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + message->id - 16];
+    case ADVENTURE_CONTROL_TOWN_LOCATOR_1:
+    case ADVENTURE_CONTROL_TOWN_LOCATOR_2:
+    case ADVENTURE_CONTROL_TOWN_LOCATOR_3:
+    case ADVENTURE_CONTROL_TOWN_LOCATOR_4:
+        cellType = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + message->id - ADVENTURE_CONTROL_TOWN_LOCATOR_1];
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            TownQuickView(cellType, message->id - 16, -1, -1);
+            TownQuickView(cellType, message->id - ADVENTURE_CONTROL_TOWN_LOCATOR_1, -1, -1);
         } else {
             HideRoute(1, 0, 1);
             if (gpCurPlayer->CurrentTown() == cellType) {
@@ -1003,22 +1003,22 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             }
         }
         break;
-    case 20:
+    case ADVENTURE_CONTROL_HERO_PAGE_PREVIOUS:
         if (gpCurPlayer->m_heroLocatorPage > 0) {
             gpCurPlayer->m_heroLocatorPage--;
             UpdateHeroLocators(1, 1);
         }
         break;
-    case 21:
+    case ADVENTURE_CONTROL_HERO_PAGE_NEXT:
         if (gpCurPlayer->m_heroLocatorPage + 4 < gpCurPlayer->m_heroCount) {
             gpCurPlayer->m_heroLocatorPage++;
             UpdateHeroLocators(1, 1);
         }
         break;
-    case 26:
+    case ADVENTURE_CONTROL_HERO_KNOB:
         DoHeroKnob();
         break;
-    case 22:
+    case ADVENTURE_CONTROL_HERO_SCROLL:
         gpMouseManager->MouseCoords(curX, curY);
         curY -= 194;
         if (gpCurPlayer->m_heroCount > 4) {
@@ -1031,10 +1031,10 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         gpCurPlayer->m_heroLocatorPage = iPage;
         UpdateHeroLocators(1, 1);
         break;
-    case 27:
+    case ADVENTURE_CONTROL_TOWN_KNOB:
         DoTownKnob();
         break;
-    case 25:
+    case ADVENTURE_CONTROL_TOWN_SCROLL:
         gpMouseManager->MouseCoords(curX, curY);
         curY -= 194;
         if (gpCurPlayer->m_townCount > 4) {
@@ -1047,19 +1047,19 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         gpCurPlayer->m_townLocatorPage = iPage;
         UpdateTownLocators(1, 1);
         break;
-    case 23:
+    case ADVENTURE_CONTROL_TOWN_PAGE_PREVIOUS:
         if (gpCurPlayer->m_townLocatorPage > 0) {
             gpCurPlayer->m_townLocatorPage--;
             UpdateTownLocators(1, 1);
         }
         break;
-    case 24:
+    case ADVENTURE_CONTROL_TOWN_PAGE_NEXT:
         if (gpCurPlayer->m_townLocatorPage + 4 < gpCurPlayer->m_townCount) {
             gpCurPlayer->m_townLocatorPage++;
             UpdateTownLocators(1, 1);
         }
         break;
-    case 10:
+    case ADVENTURE_CONTROL_MAP_VIEW:
         if (!(gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY] & giCurPlayerBit))
             isVisible = 0;
         hoverCell = GetCell(m_lastHoverCell + m_mapOriginX, m_hoverCellY + m_mapOriginY);
@@ -1154,7 +1154,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             }
         }
         break;
-    case 9:
+    case ADVENTURE_CONTROL_RADAR:
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             NormalDialog("World Map (Left click to move viewing area).", NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             break;
@@ -1233,17 +1233,17 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
 VA(0x00428b59, 0x1ea)
 int advManager::ProcessDeSelect(struct tag_message* message, int* result, class mapCell** eventCell) {
     switch (message->id) {
-        case 2:
+        case ADVENTURE_CONTROL_CONTINUE_ROUTE:
             m_selectedCell = 7;
             *eventCell = DoAdvCommand();
             break;
-        case 5:
+        case ADVENTURE_CONTROL_ADVENTURE_OPTIONS:
             AdvPanel();
             break;
-        case 6:
+        case ADVENTURE_CONTROL_SYSTEM_OPTIONS:
             *result = ControlPanel();
             break;
-        case 4:
+        case ADVENTURE_CONTROL_END_TURN:
             if (gpCurPlayer->HasMobileHero()) {
                 NormalDialog(
                     "One or more Heroes may still move, are you sure you want to end your turn?",
@@ -1254,11 +1254,11 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
             }
             gpGame->NextPlayer();
             break;
-        case 1:
+        case ADVENTURE_CONTROL_NEXT_HERO:
             HideRoute(1, 0, 1);
             SetHeroContext(gpCurPlayer->NextHero(1), 0);
             break;
-        case 3:
+        case ADVENTURE_CONTROL_OVERVIEW:
             gpGame->Overview();
             RedrawAdvScreen(1);
             gpWindowManager->FadeScreen(0, 8, NULL);
@@ -1391,7 +1391,7 @@ int advManager::ProcessHover(struct tag_message* message) {
     int baseFrame;
 
     switch (message->id) {
-    case 10:
+    case ADVENTURE_CONTROL_MAP_VIEW:
         gpMouseManager->MouseCoords(curX, curY);
         if (curX > 480) {
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
@@ -4524,7 +4524,7 @@ short DimensionDoorHandler(struct tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case 10:
+                        case ADVENTURE_CONTROL_MAP_VIEW:
                         case 11:
                             if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                             } else if (gpWindowManager->m_dialogResult == 1) {
@@ -4541,7 +4541,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                             gpWindowManager->m_dialogResult = 0;
                             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                             break;
-                        case 10:
+                        case ADVENTURE_CONTROL_MAP_VIEW:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
                             mouseX /= 32;
                             mouseY /= 32;
@@ -5318,7 +5318,7 @@ void advManager::ForceNewHover(void) {
     if (!gbThisNetHumanPlayer[giCurPlayer])
         return;
     m_lastHoverCell = -1;
-    msg.id = 10;
+    msg.id = ADVENTURE_CONTROL_MAP_VIEW;
     ProcessHover(&msg);
 }
 

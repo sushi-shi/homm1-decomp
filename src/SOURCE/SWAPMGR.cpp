@@ -103,17 +103,17 @@ short swapManager::Open(short id) {
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_ENABLED;
-    message.id = 1;
+    message.id = ADVENTURE_CONTROL_NEXT_HERO;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 2;
+    message.id = ADVENTURE_CONTROL_CONTINUE_ROUTE;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 3;
+    message.id = ADVENTURE_CONTROL_OVERVIEW;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 4;
+    message.id = ADVENTURE_CONTROL_END_TURN;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 5;
+    message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 6;
+    message.id = ADVENTURE_CONTROL_SYSTEM_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     Update();
     gpWindowManager->AddWindow(m_window, -1, 1);
@@ -145,17 +145,17 @@ void swapManager::Close(void) {
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_FLAGS;
     message.value = WIDGET_FLAG_ENABLED;
-    message.id = 1;
+    message.id = ADVENTURE_CONTROL_NEXT_HERO;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 2;
+    message.id = ADVENTURE_CONTROL_CONTINUE_ROUTE;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 3;
+    message.id = ADVENTURE_CONTROL_OVERVIEW;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 4;
+    message.id = ADVENTURE_CONTROL_END_TURN;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 5;
+    message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = 6;
+    message.id = ADVENTURE_CONTROL_SYSTEM_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
 }
 
