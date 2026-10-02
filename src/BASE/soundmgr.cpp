@@ -71,7 +71,7 @@ inline void soundManager::CDSetVolume(int volume, int fadeScale) {
     unsigned long stereoVolume;
     if (gbNoSound != 0 || m_auxDevice == -1)
         return;
-    if (volume == -1)
+    if (volume == SOUND_VOLUME_FROM_CONFIG)
         level = gConfig.musicVolume;
     else
         level = volume;
@@ -97,12 +97,12 @@ void soundManager::CDStop(void) {
         return;
     wsprintfA(CommandString, "stop CD");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, position, sizeof(position), NULL);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
         strcpy(CDPreviousPosition[CDTrackMap[m_currentTrack]], position);
         ValidatePreviousPosition(CDTrackMap[m_currentTrack]);
@@ -116,7 +116,7 @@ inline int soundManager::CDIsPlaying(void) {
         return 0;
     wsprintfA(CommandString, "status CD mode");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     return _stricmp(lpszReturnString, "playing") == 0;
 }
@@ -129,7 +129,7 @@ unsigned long soundManager::CDStartup(void) {
         return 0;
     wsprintfA(CommandString, "open %c: type cdaudio alias CD shareable", gcSoundPath[0]);
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0) {
+    if (nMCIError != MMSYSERR_NOERROR) {
         m_cdStarted = 0;
         gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
         m_cdReady = 0;
@@ -172,7 +172,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
         return;
     Process1WindowsMessage();
     ServiceSound();
-    if (volume == -1) {
+    if (volume == SOUND_VOLUME_FROM_CONFIG) {
         if (gConfig.musicVolume != 0) {
             if (m_fadeSteps == 0)
                 volume = gConfig.musicVolume;
@@ -197,16 +197,16 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     cdTrack = CDTrackMap[track];
     wsprintfA(CommandString, "set CD time format tmsf");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     wsprintfA(CommandString, "status CD mode");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, buffer, sizeof(buffer), NULL);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
         strcpy(CDPreviousPosition[CDTrackMap[m_currentTrack]], buffer);
         ValidatePreviousPosition(CDTrackMap[m_currentTrack]);
@@ -223,7 +223,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
         );
         window = notify ? hwndApp : NULL;
         nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, window);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
     } else {
         wsprintfA(
@@ -235,7 +235,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
         );
         newWindow = notify ? hwndApp : NULL;
         nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, newWindow);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
     }
     CDPlaying = 1;
@@ -245,7 +245,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     if (m_fadeSteps > 0) {
         m_fadeSteps = MUSIC_FADE_TOTAL_STEPS;
         gMusicFadeTimer = KBTickCount() + CD_FADE_DELAY_TICKS;
-        CDSetVolume(10, 0);
+        CDSetVolume(SOUND_VOLUME_LAST, 0);
     } else {
         CDSetVolume(volume, 0);
     }
@@ -300,7 +300,7 @@ struct _DIG_DRIVER* WAVE_init_driver(
             hwndApp,
             "Sound initialization error!  No wave devices found.",
             "Startup Error",
-            0
+            MB_OK
         );
         drvr = NULL;
         return NULL;
@@ -315,7 +315,7 @@ struct _DIG_DRIVER* WAVE_init_driver(
     rc = AIL_waveOutOpen(&drvr, NULL, 0, &gWaveFormat.wf);
     if (rc != 0) {
         if (showErrors != 0)
-            MessageBoxA(hwndApp, AIL_last_error(), "Sound initialization error!", 0);
+            MessageBoxA(hwndApp, AIL_last_error(), "Sound initialization error!", MB_OK);
         drvr = NULL;
         return NULL;
     }
@@ -403,11 +403,11 @@ inline void soundManager::CDShutdown(void) {
         return;
     wsprintfA(CommandString, "stop CD");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     wsprintfA(CommandString, "close CD");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
 }
 
@@ -482,16 +482,14 @@ struct _SAMPLE* soundManager::StartSample(
     if (m_samplesReady == 0)
         return NULL;
     Process1WindowsMessage();
-    if (channelType == 0) {
+    if (channelType == SAMPLE_PLAYBACK_CHANNEL_MUSIC) {
         channel = 0;
         if (m_musicStreamOpen != 0) {
             StopSample(m_musicSample);
             m_musicStreamOpen = 0;
             // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
             ProcessAssert(
-                reinterpret_cast<int>(
-                    m_midiFile
-                ),
+                reinterpret_cast<int>(m_midiFile),
                 gStartSampleAssertFile,
                 gStartSampleAssertLine + 37
             );
@@ -533,7 +531,7 @@ struct _SAMPLE* soundManager::StartSample(
     sampleType += stereo;
     filename = _strrev(filename);
     AIL_init_sample(sample);
-    AIL_set_sample_type(sample, sampleType, 1);
+    AIL_set_sample_type(sample, sampleType, DIG_PCM_SIGN);
     AIL_set_sample_playback_rate(sample, sampleRate);
     Process1WindowsMessage();
     sprintf(path, "%s%s", gcSoundPath, filename);
@@ -578,9 +576,7 @@ void soundManager::StopAllSamples(void) {
         m_musicStreamOpen = 0;
         // byte-evidenced: retail passes the FILE pointer as its assertion condition.
         ProcessAssert(
-            reinterpret_cast<int>(
-                m_midiFile
-            ),
+            reinterpret_cast<int>(m_midiFile),
             gStopAllSamplesAssertFile,
             gStopAllSamplesAssertLine + 27
         );
@@ -699,17 +695,17 @@ void soundManager::AdjustMusicVolumes(void) {
         savePosition = 1;
     if (gConfig.musicVolume != 0) {
         if (m_cdReady != 0)
-            CDSetVolume(-1, 0);
+            CDSetVolume(SOUND_VOLUME_FROM_CONFIG, 0);
         else
             ModifySample(m_sampleHandles[0], SOUND_OPERATION_MUSIC_VOLUME, SAMPLE_VOLUME_MAX);
         PlayAmbientMusic(
             m_currentTrack,
             savePosition ? m_savedTrackPositions[m_currentTrack] : 0,
-            -1
+            SOUND_VOLUME_FROM_CONFIG
         );
     } else {
         if (m_cdReady != 0) {
-            CDSetVolume(-1, 0);
+            CDSetVolume(SOUND_VOLUME_FROM_CONFIG, 0);
         } else {
             if (savePosition != 0) {
                 ProcessAssert(
@@ -752,7 +748,7 @@ void soundManager::SetMusicQuality(int musicSource) {
     gConfig.musicSource = musicSource;
     m_cdReady = musicSource == SOUND_MUSIC_SOURCE_CD;
     if (track >= 0)
-        PlayAmbientMusic(track, 0, -1);
+        PlayAmbientMusic(track, 0, SOUND_VOLUME_FROM_CONFIG);
 }
 
 VA(0x004786d0, 0x26e)
@@ -782,9 +778,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
             || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
         // byte-evidenced: retail passes the FILE pointer as its assertion condition.
         ProcessAssert(
-            reinterpret_cast<int>(
-                m_midiFile
-            ),
+            reinterpret_cast<int>(m_midiFile),
             gAmbientMusicAssertFile,
             gAmbientMusicAssertLine + 37
         );
@@ -822,7 +816,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
             sprintf(filename, "heroes%02d.82s", track);
         else
             sprintf(filename, "heroes%02d.62s", track);
-        if (volume == -1) {
+        if (volume == SOUND_VOLUME_FROM_CONFIG) {
             if (gConfig.musicVolume != 0) {
                 if (m_fadeSteps == 0)
                     volume = SAMPLE_VOLUME_MAX;
@@ -832,7 +826,8 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
                 volume = 0;
             }
         }
-        m_activeSample = StartSample(filename, &data, 1, loop, volume, 0, resume);
+        m_activeSample =
+            StartSample(filename, &data, 1, loop, volume, SAMPLE_PLAYBACK_CHANNEL_MUSIC, resume);
     }
     m_currentTrack = static_cast<char>(track);
 }
@@ -885,9 +880,13 @@ void soundManager::PollSound(void) {
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_1
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_2
                 || m_fadeTargetTrack == MUSIC_POSITION_TRACK_3)
-                PlayAmbientMusic(m_fadeTargetTrack, m_savedTrackPositions[m_fadeTargetTrack], -1);
+                PlayAmbientMusic(
+                    m_fadeTargetTrack,
+                    m_savedTrackPositions[m_fadeTargetTrack],
+                    SOUND_VOLUME_FROM_CONFIG
+                );
             else
-                PlayAmbientMusic(m_fadeTargetTrack, 0, -1);
+                PlayAmbientMusic(m_fadeTargetTrack, 0, SOUND_VOLUME_FROM_CONFIG);
             delta = gMusicFadeTimer - KBTickCount();
             m_fadeSteps = delta / MUSIC_FADE_STEP_TICKS;
             if (m_fadeSteps < 1)
@@ -917,13 +916,13 @@ void soundManager::PollSound(void) {
                 volume = 0;
 
             if (gbNoSound == 0 && m_auxDevice != -1) {
-                if (volume == -1)
+                if (volume == SOUND_VOLUME_FROM_CONFIG)
                     volume = gConfig.musicVolume;
                 unsigned long stereoVolume;
                 if (volume != 0) {
-                    volume = volume / 12 + 1;
-                    volume <<= 12;
-                    stereoVolume = volume << 16 | volume;
+                    volume = volume / CD_VOLUME_LEVEL_COUNT + 1;
+                    volume <<= CD_VOLUME_LEVEL_SHIFT;
+                    stereoVolume = volume << CD_STEREO_CHANNEL_SHIFT | volume;
                 } else
                     stereoVolume = 0;
                 auxSetVolume(m_auxDevice, stereoVolume);
@@ -965,19 +964,21 @@ void soundManager::PollSound(void) {
                 Process1WindowsMessage();
                 AIL_init_sample(m_musicSample);
                 int format;
-                if (m_currentTrack == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL)
-                    format = 0;
+                if (m_currentTrack == MUSIC_POSITION_TRACK_1
+                    || gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL)
+                    format = DIG_F_MONO_8;
                 else if (gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL_STEREO)
-                    format = 2;
+                    format = DIG_F_STEREO_8;
                 else
-                    format = 3;
-                AIL_set_sample_type(m_musicSample, format, 1);
+                    format = DIG_F_STEREO_16;
+                AIL_set_sample_type(m_musicSample, format, DIG_PCM_SIGN);
                 AIL_set_sample_playback_rate(m_musicSample, MUSIC_STREAM_RATE);
 
                 volume = 0;
-                if (gConfig.musicVolume >= 1 && gConfig.musicVolume <= 10) {
-                    volume =
-                        (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume) * SAMPLE_VOLUME_MAX / 10;
+                if (gConfig.musicVolume >= SOUND_VOLUME_FIRST
+                    && gConfig.musicVolume <= SOUND_VOLUME_LAST) {
+                    volume = (MUSIC_FADE_TOTAL_STEPS - gConfig.musicVolume) * SAMPLE_VOLUME_MAX
+                             / SOUND_VOLUME_LAST;
                     if (volume < 1)
                         volume = 1;
                 }
@@ -1031,7 +1032,7 @@ void soundManager::SwitchAmbientMusic(int track) {
         return;
     }
     if (MusicPlaying() == 0) {
-        PlayAmbientMusic(track, 0, -1);
+        PlayAmbientMusic(track, 0, SOUND_VOLUME_FROM_CONFIG);
         return;
     }
     Process1WindowsMessage();
@@ -1082,7 +1083,7 @@ struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
     m_channelVolumes[channel] = static_cast<char>(playback->volume);
     gSampleVolumes[channel] = static_cast<short>(playback->volume);
     AIL_init_sample(handle);
-    AIL_set_sample_type(handle, playback->format, 1);
+    AIL_set_sample_type(handle, playback->format, DIG_PCM_SIGN);
     AIL_set_sample_playback_rate(handle, playback->sampleRate);
     AIL_set_sample_loop_count(handle, playback->loopCount);
     AIL_set_sample_address(handle, playback->data, playback->size);
@@ -1115,40 +1116,56 @@ int soundManager::MusicPlaying(void) {
 
 // Sound-manager data, initialized from retail .data (0x004a0fd0..) and
 // zero-filled MCI/AIL work storage (0x004cc668..).
-DATA(0x004a0fd0) SampleChannelStruct SCS[4] = {
-    {0, 1, 0},
-    {1, 2, 1},
-    {2, 6, 2},
-    {6, 16, 6}
-};
-DATA(0x004a1000) char CDPreviousPosition[60][CD_POSITION_CAPACITY] = {0};
-DATA(0x004a1384) int CDPlayOnce = 0;
-DATA(0x004a138c) int CDPlaying = 0;
-DATA(0x004a1390) signed char CDTrackMap[100] = {
-    2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-    34, 99, 99, 99, 99, 99, 99, 99, 35, 36, 37, 38, 39, 40, 41, 42,
-    43, 44, 45, 46, 47, 48, 49, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-    99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-    99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-    99, 99, 99, 50
-};
-DATA(0x004a14f8) short gCDPositionAssertLine = 52;
-DATA(0x004a14fc) char gCDPositionAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a1620) int giCDDrive = 0;
-DATA(0x004a1694) short gStartSampleAssertLine = 605;
-DATA(0x004a1698) char gStartSampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a16c8) short gStopAllSamplesAssertLine = 740;
-DATA(0x004a16cc) char gStopAllSamplesAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a16e8) short gModifySampleAssertLine = 808;
-DATA(0x004a16ec) char gModifySampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a1708) short gAdjustMusicAssertLine = 900;
-DATA(0x004a170c) char gAdjustMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a1728) short gAmbientMusicAssertLine = 1008;
-DATA(0x004a172c) char gAmbientMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004cc668) char lpszReturnString[CD_MCI_RESULT_LAST + 1];
-DATA(0x004cc768) unsigned long nMCIError;
-DATA(0x004cc770) short gSampleVolumes[SAMPLE_VOLUME_TABLE_BYTES / sizeof(short)];
-DATA(0x004cc7b0) char CommandString[256];
-DATA(0x004cc8b0) AUXCAPSA gAuxCaps;
-DATA(0x004cc8e0) PCMWAVEFORMAT gWaveFormat;
+DATA(0x004a0fd0)
+SampleChannelStruct SCS[4] = {{0, 1, 0}, {1, 2, 1}, {2, 6, 2}, {6, 16, 6}};
+DATA(0x004a1000)
+char CDPreviousPosition[60][CD_POSITION_CAPACITY] = {0};
+DATA(0x004a1384)
+int CDPlayOnce = 0;
+DATA(0x004a138c)
+int CDPlaying = 0;
+DATA(0x004a1390)
+signed char CDTrackMap[100] = {2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18,
+                               19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 99,
+                               99, 99, 99, 99, 99, 99, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+                               46, 47, 48, 49, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+                               99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+                               99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 50};
+DATA(0x004a14f8)
+short gCDPositionAssertLine = 52;
+DATA(0x004a14fc)
+char gCDPositionAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a1620)
+int giCDDrive = 0;
+DATA(0x004a1694)
+short gStartSampleAssertLine = 605;
+DATA(0x004a1698)
+char gStartSampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a16c8)
+short gStopAllSamplesAssertLine = 740;
+DATA(0x004a16cc)
+char gStopAllSamplesAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a16e8)
+short gModifySampleAssertLine = 808;
+DATA(0x004a16ec)
+char gModifySampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a1708)
+short gAdjustMusicAssertLine = 900;
+DATA(0x004a170c)
+char gAdjustMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004a1728)
+short gAmbientMusicAssertLine = 1008;
+DATA(0x004a172c)
+char gAmbientMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+DATA(0x004cc668)
+char lpszReturnString[CD_MCI_RESULT_LAST + 1];
+DATA(0x004cc768)
+unsigned long nMCIError;
+DATA(0x004cc770)
+short gSampleVolumes[SAMPLE_VOLUME_TABLE_BYTES / sizeof(short)];
+DATA(0x004cc7b0)
+char CommandString[256];
+DATA(0x004cc8b0)
+AUXCAPSA gAuxCaps;
+DATA(0x004cc8e0)
+PCMWAVEFORMAT gWaveFormat;

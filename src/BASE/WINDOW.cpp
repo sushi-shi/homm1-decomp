@@ -7,6 +7,7 @@
 #include <BASE/border.h>
 #include <BASE/button.h>
 #include <BASE/dimmerWidget.h>
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/iconWidget.h>
@@ -40,13 +41,11 @@ H1_ENUM_END(WindowWidgetRecordType)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651321;margin=0.357646;shape=0.346;size=0.852;calls=1.000;strings=Dynamic Construct;alternate=pol20:void heroWindow::constructor(int, int, int, int, int)@0x000cec20
 VA(0x00474a80, 0xad)
-heroWindow::heroWindow(
-    short x, short y, short width, short height, short flags)
-{
+heroWindow::heroWindow(short x, short y, short width, short height, short flags) {
     strcpy(m_name, gDynamicConstruct);
     m_prevWindow = NULL;
     m_nextWindow = m_prevWindow;
-    m_zOrder = -1;
+    m_zOrder = WINDOW_Z_ORDER_APPEND;
     m_posX = x;
     m_posY = y;
     m_winWidth = width;
@@ -62,19 +61,18 @@ heroWindow::heroWindow(
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.375549;margin=0.549564;shape=0.254;size=0.606;calls=0.800;alternate=pol20:void heroWindow::constructor(int, int, char *)@0x000cecd0
 VA(0x00474b30, 0x448)
-heroWindow::heroWindow(short x, short y, char *resourceName)
-{
+heroWindow::heroWindow(short x, short y, char* resourceName) {
     short jb;
     short i;
-    dimmerWidget *pDimmer;
-    border *pBorder;
-    widget *pWidget;
-    iconWidget *pic;
-    button *but;
-    textWidget *ptw;
+    dimmerWidget* pDimmer;
+    border* pBorder;
+    widget* pWidget;
+    iconWidget* pic;
+    button* but;
+    textWidget* ptw;
     H1_ENUM_STORAGE(WindowWidgetRecordType, short) rec;
-    textEntryWidget *pEntry;
-    backdropWidget *pBack;
+    textEntryWidget* pEntry;
+    backdropWidget* pBack;
 
     strcpy(m_name, resourceName);
     jb = gpResourceManager->MakeId(resourceName);
@@ -83,7 +81,7 @@ heroWindow::heroWindow(short x, short y, char *resourceName)
     m_prevWindow = NULL;
     m_nextWindow = m_prevWindow;
     m_winState = WINDOW_STATE_CLOSED;
-    m_zOrder = -1;
+    m_zOrder = WINDOW_Z_ORDER_APPEND;
     m_posX = x;
     m_posY = y;
     m_winWidth = gpResourceManager->ReadWord();
@@ -95,61 +93,60 @@ heroWindow::heroWindow(short x, short y, char *resourceName)
     i = 0;
     while (i == 0) {
         PollSound();
-        rec = H1_ENUM_CAST(WindowWidgetRecordType, short,
-                            gpResourceManager->ReadWord());
+        rec = H1_ENUM_CAST(WindowWidgetRecordType, short, gpResourceManager->ReadWord());
         pWidget = NULL;
         switch (rec) {
-        case WIDGET_RECORD_END:
-            i++;
-            break;
-        case WIDGET_RECORD_BORDER:
-            pBorder = new border();
-            pBorder->Read();
-            pWidget = pBorder;
-            break;
-        case WIDGET_RECORD_BUTTON:
-            but = new button();
-            but->Read();
-            pWidget = but;
-            break;
-        case WIDGET_RECORD_ICON:
-            pic = new iconWidget();
-            pic->Read();
-            pWidget = pic;
-            break;
-        case WIDGET_RECORD_DIMMER:
-            pDimmer = new dimmerWidget();
-            pDimmer->Read();
-            pWidget = pDimmer;
-            break;
-        case WIDGET_RECORD_BACKDROP:
-            pBack = new backdropWidget();
-            pBack->Read();
-            pWidget = pBack;
-            break;
-        case WIDGET_RECORD_TEXT:
-            ptw = new textWidget();
-            ptw->Read();
-            pWidget = ptw;
-            break;
-        case WIDGET_RECORD_TEXT_ENTRY:
-            pEntry = new textEntryWidget();
-            pEntry->Read(1);
-            pWidget = pEntry;
-            break;
-        case WIDGET_RECORD_TEXT_ENTRY_RECT:
-            pEntry = new textEntryWidget();
-            pEntry->Read(2);
-            pWidget = pEntry;
-            break;
-        case WIDGET_RECORD_TEXT_ENTRY_MULTILINE:
-            pEntry = new textEntryWidget();
-            pEntry->Read(3);
-            pWidget = pEntry;
-            break;
+            case WIDGET_RECORD_END:
+                i++;
+                break;
+            case WIDGET_RECORD_BORDER:
+                pBorder = new border();
+                pBorder->Read();
+                pWidget = pBorder;
+                break;
+            case WIDGET_RECORD_BUTTON:
+                but = new button();
+                but->Read();
+                pWidget = but;
+                break;
+            case WIDGET_RECORD_ICON:
+                pic = new iconWidget();
+                pic->Read();
+                pWidget = pic;
+                break;
+            case WIDGET_RECORD_DIMMER:
+                pDimmer = new dimmerWidget();
+                pDimmer->Read();
+                pWidget = pDimmer;
+                break;
+            case WIDGET_RECORD_BACKDROP:
+                pBack = new backdropWidget();
+                pBack->Read();
+                pWidget = pBack;
+                break;
+            case WIDGET_RECORD_TEXT:
+                ptw = new textWidget();
+                ptw->Read();
+                pWidget = ptw;
+                break;
+            case WIDGET_RECORD_TEXT_ENTRY:
+                pEntry = new textEntryWidget();
+                pEntry->Read(TEXT_ENTRY_READ_DEFAULT);
+                pWidget = pEntry;
+                break;
+            case WIDGET_RECORD_TEXT_ENTRY_RECT:
+                pEntry = new textEntryWidget();
+                pEntry->Read(TEXT_ENTRY_READ_RECT);
+                pWidget = pEntry;
+                break;
+            case WIDGET_RECORD_TEXT_ENTRY_MULTILINE:
+                pEntry = new textEntryWidget();
+                pEntry->Read(TEXT_ENTRY_READ_MULTILINE);
+                pWidget = pEntry;
+                break;
         }
         if (i == 0 && pWidget != NULL)
-            AddWidget(pWidget, -1);
+            AddWidget(pWidget, WINDOW_Z_ORDER_APPEND);
     }
 }
 
@@ -157,30 +154,26 @@ heroWindow::heroWindow(short x, short y, char *resourceName)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.353009;margin=0.367120;shape=0.216;size=0.638;calls=0.500;alternate=pol20:int heroWindow::Open(int, int)@0x000cf200
 VA(0x00474f80, 0x9d)
-short heroWindow::Open(short zOrder, signed char flags)
-{
+short heroWindow::Open(short zOrder, signed char flags) {
     if ((m_winState & WINDOW_STATE_OPEN) != 0)
-        return 3;
+        return WINDOW_OPEN_FAILURE;
     gpMouseManager->ReallyHidePointer();
-    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0
-        && SaveBackground() != 0)
-        return 3;
+    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0 && SaveBackground() != 0)
+        return WINDOW_OPEN_FAILURE;
     m_zOrder = zOrder;
     DrawWindow(flags);
     gpMouseManager->ReallyShowPointer();
     m_winState = H1_ENUM_CAST(WindowState, short, m_winState | WINDOW_STATE_OPEN);
-    return 0;
+    return WINDOW_OPEN_SUCCESS;
 }
 
 // donor PoL RVA 0x000cf310; preferred Buka symbol ?Close@heroWindow@@QAEXXZ
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.586039;margin=0.311864;shape=0.455;size=0.909;calls=1.000;alternate=pol20:void heroWindow::Close(void)@0x000cf310
 VA(0x00475020, 0xb0)
-void heroWindow::Close(void)
-{
+void heroWindow::Close(void) {
     widget *current, *next;
-    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0
-        && (m_winState & WINDOW_STATE_OPEN) != 0)
+    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0 && (m_winState & WINDOW_STATE_OPEN) != 0)
         RestoreBackground();
     current = m_widgetListHead;
     while (current != NULL) {
@@ -197,10 +190,9 @@ void heroWindow::Close(void)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.553676;margin=0.412288;shape=0.475;size=0.789;calls=1.000;alternate=pol20:void heroWindow::AddWidget(class widget *, int)@0x000cf3c0
 VA(0x004750d0, 0x145)
-void heroWindow::AddWidget(widget *newWidget, short zOrder)
-{
-    widget *currentWidget = m_widgetListHead;
-    if (zOrder == -1) {
+void heroWindow::AddWidget(widget* newWidget, short zOrder) {
+    widget* currentWidget = m_widgetListHead;
+    if (zOrder == WINDOW_Z_ORDER_APPEND) {
         if (currentWidget == NULL)
             zOrder = 0;
         else
@@ -233,8 +225,7 @@ void heroWindow::AddWidget(widget *newWidget, short zOrder)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.565639;margin=0.542930;shape=0.500;size=0.802;calls=1.000;alternate=pol20:void heroWindow::RemoveWidget(class widget *)@0x000cf500
 VA(0x00475220, 0x116)
-void heroWindow::RemoveWidget(widget *w)
-{
+void heroWindow::RemoveWidget(widget* w) {
     if (w == NULL)
         return;
     w->Close();
@@ -251,7 +242,7 @@ void heroWindow::RemoveWidget(widget *w)
         w->m_next->m_prev = w->m_prev;
         w->m_prev->m_next = w->m_next;
     }
-    widget *nextWidget = w->m_next;
+    widget* nextWidget = w->m_next;
     if (nextWidget == NULL) {
         m_widgetListHead = NULL;
         m_widgetListTail = m_widgetListHead;
@@ -266,17 +257,16 @@ void heroWindow::RemoveWidget(widget *w)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.435923;margin=0.333583;shape=0.340;size=0.588;calls=1.000;alternate=pol20:int heroWindow::BroadcastMessage(struct tag_message &)@0x000cf620
 VA(0x00475340, 0x98)
-short heroWindow::BroadcastMessage(tag_message &message)
-{
+short heroWindow::BroadcastMessage(tag_message& message) {
     short dispatchResult = MESSAGE_DISPATCH_CONTINUE;
-    widget *currentWidget = m_widgetListHead;
+    widget* currentWidget = m_widgetListHead;
     while (currentWidget != NULL) {
         switch (dispatchResult = currentWidget->Main(message)) {
-        case MESSAGE_DISPATCH_CONTINUE:
-            break;
-        case MESSAGE_DISPATCH_CONSUME:
-        case MESSAGE_DISPATCH_FORWARD:
-            return dispatchResult;
+            case MESSAGE_DISPATCH_CONTINUE:
+                break;
+            case MESSAGE_DISPATCH_CONSUME:
+            case MESSAGE_DISPATCH_FORWARD:
+                return dispatchResult;
         }
         currentWidget = currentWidget->m_next;
     }
@@ -284,8 +274,7 @@ short heroWindow::BroadcastMessage(tag_message &message)
 }
 
 VA(0x004753e0, 0x20)
-void heroWindow::DrawWindow(void)
-{
+void heroWindow::DrawWindow(void) {
     DrawWindow(1);
 }
 
@@ -293,8 +282,7 @@ void heroWindow::DrawWindow(void)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.418036;margin=0.971201;shape=0.250;size=0.729;calls=1.000;alternate=pol20:void heroWindow::DrawWindow(int)@0x000cf6e0
 VA(0x00475400, 0x2e)
-void heroWindow::DrawWindow(short flags)
-{
+void heroWindow::DrawWindow(short flags) {
     DrawWindow(flags, WINDOW_ALL_WIDGETS_LOW, WINDOW_ALL_WIDGETS_HIGH);
 }
 
@@ -302,18 +290,15 @@ void heroWindow::DrawWindow(short flags)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.624064;margin=0.444596;shape=0.548;size=0.926;calls=1.000;alternate=pol20:void heroWindow::DrawWindow(int, int, int)@0x000cf710
 VA(0x00475430, 0xfd)
-void heroWindow::DrawWindow(short update, int firstId, int lastId)
-{
+void heroWindow::DrawWindow(short update, int firstId, int lastId) {
     tag_message windowWidgetMessage;
-    widget *current = m_widgetListTail;
+    widget* current = m_widgetListTail;
     windowWidgetMessage.type = MESSAGE_WIDGET;
     windowWidgetMessage.command = WIDGET_COMMAND_DRAW;
     while (current != NULL) {
         PollSound();
-        if (firstId != WINDOW_ALL_WIDGETS_LOW
-            || lastId != WINDOW_ALL_WIDGETS_HIGH) {
-            if (current->m_id >= firstId
-                && current->m_id <= lastId)
+        if (firstId != WINDOW_ALL_WIDGETS_LOW || lastId != WINDOW_ALL_WIDGETS_HIGH) {
+            if (current->m_id >= firstId && current->m_id <= lastId)
                 current->Main(windowWidgetMessage);
         } else {
             current->Main(windowWidgetMessage);
@@ -321,11 +306,8 @@ void heroWindow::DrawWindow(short update, int firstId, int lastId)
         current = current->m_prev;
     }
     PollSound();
-    if (update != 0
-        && (m_winFlags & WINDOW_UPDATE_SUPPRESS_MASK)
-            != WINDOW_FLAG_FIXED_LAYER) {
-        gpWindowManager->UpdateScreenRegion(
-            m_posX, m_posY, m_winWidth, m_winHeight);
+    if (update != 0 && (m_winFlags & WINDOW_UPDATE_SUPPRESS_MASK) != WINDOW_FLAG_FIXED_LAYER) {
+        gpWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
         PollSound();
     }
 }
@@ -334,9 +316,8 @@ void heroWindow::DrawWindow(short update, int firstId, int lastId)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.570741;margin=0.294707;shape=0.467;size=0.852;calls=1.000;alternate=pol20:int heroWindow::SaveBackground(void)@0x000cf830
 VA(0x00475530, 0x84)
-short heroWindow::SaveBackground(void)
-{
-    m_savedBackground = new bitmap(33, m_winWidth, m_winHeight);
+short heroWindow::SaveBackground(void) {
+    m_savedBackground = new bitmap(BITMAP_TYPE_MEMORY, m_winWidth, m_winHeight);
     PollSound();
     m_savedBackground->GrabScreen(m_posX, m_posY);
     PollSound();
@@ -347,11 +328,9 @@ short heroWindow::SaveBackground(void)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.579338;margin=0.220950;shape=0.412;size=0.993;calls=1.000;alternate=pol20:void heroWindow::RestoreBackground(void)@0x000cf8b0
 VA(0x004755c0, 0x90)
-void heroWindow::RestoreBackground(void)
-{
+void heroWindow::RestoreBackground(void) {
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
-    gpWindowManager->UpdateScreenRegion(
-        m_posX, m_posY, m_winWidth, m_winHeight);
+    gpWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
     delete m_savedBackground;
     m_savedBackground = NULL;
 }
@@ -360,8 +339,7 @@ void heroWindow::RestoreBackground(void)
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.486346;margin=0.742274;shape=0.333;size=0.777;calls=1.000;alternate=pol20:void heroWindow::MoveWindow(int, int)@0x000cf950
 VA(0x00475650, 0x1d4)
-void heroWindow::MoveWindow(short dx, short dy)
-{
+void heroWindow::MoveWindow(short dx, short dy) {
     short x = m_posX;
     short y = m_posY;
     short initialWidth = m_winWidth;
@@ -372,15 +350,14 @@ void heroWindow::MoveWindow(short dx, short dy)
         targetX = 0;
     if (targetY < 0)
         targetY = 0;
-    if (targetX + m_winWidth > 640)
-        targetX = 640 - m_winWidth;
-    if (targetY + m_winHeight > 480)
-        targetY = 480 - m_winHeight;
+    if (targetX + m_winWidth > LOGICAL_SCREEN_WIDTH)
+        targetX = LOGICAL_SCREEN_WIDTH - m_winWidth;
+    if (targetY + m_winHeight > LOGICAL_SCREEN_HEIGHT)
+        targetY = LOGICAL_SCREEN_HEIGHT - m_winHeight;
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
     m_posX = targetX;
     m_posY = targetY;
-    m_savedBackground->GrabBitmap(
-        gpWindowManager->m_screen, m_posX, m_posY);
+    m_savedBackground->GrabBitmap(gpWindowManager->m_screen, m_posX, m_posY);
     DrawWindow(0);
     initialWidth += abs(m_posX - x);
     startHeight += abs(m_posY - y);
@@ -388,6 +365,5 @@ void heroWindow::MoveWindow(short dx, short dy)
         x = m_posX;
     if (m_posY < y)
         y = m_posY;
-    gpWindowManager->UpdateScreenRegion(
-        x, y, initialWidth, startHeight);
+    gpWindowManager->UpdateScreenRegion(x, y, initialWidth, startHeight);
 }

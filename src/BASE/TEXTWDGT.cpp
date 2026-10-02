@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
 #include <BASE/font.h>
 #include <BASE/heroWindow.h>
 #include <BASE/message.h>
@@ -14,12 +15,12 @@
 
 VA(0x0047add0, 0x3e)
 VA_COMPGEN(0x0047ae10, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x0047add0)
-textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, 0) {
+textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
     m_color = 1;
-    m_alignment = 1;
-    m_kind = 0x200;
+    m_alignment = FONT_ALIGN_CENTER;
+    m_kind = WIDGET_KIND_TEXT;
 }
 
 VA(0x0047ae60, 0x61)
@@ -37,14 +38,14 @@ textWidget::textWidget(
     : widget(x, y, width, height, id, kind) {
     m_font = gpResourceManager->GetFont(fontName);
     m_text = text;
-    m_alignment = 1;
+    m_alignment = FONT_ALIGN_CENTER;
     m_kind = WIDGET_KIND_TEXT;
     m_color = color;
 }
 
 VA(0x0047aed0, 0xeb)
 void textWidget::Read(void) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
@@ -52,21 +53,18 @@ void textWidget::Read(void) {
     short length = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(length));
     // byte-evidenced: ReadBlock accepts signed bytes for stored text.
-    gpResourceManager->ReadBlock(
-        reinterpret_cast<signed char*>(m_text),
-        length
-    );
+    gpResourceManager->ReadBlock(reinterpret_cast<signed char*>(m_text), length);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_font = gpResourceManager->GetFont(
         reinterpret_cast<char*>(name)
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
-    m_color = gpResourceManager->ReadWord() & 0xff;
+    m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord());
     m_id = gpResourceManager->ReadWord();
     gpResourceManager->ReadWord();
-    m_kind = 0x200;
+    m_kind = WIDGET_KIND_TEXT;
 }
 
 VA(0x0047afc0, 0x2d)

@@ -258,7 +258,7 @@ short swapManager::Main(struct tag_message& message) {
                             m_window->DrawWindow();
                             Reset();
                             gpWindowManager
-                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
+                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
                             break;
                         case CONTROL_RIGHT_HERO:
                             if (quickView)
@@ -269,7 +269,7 @@ short swapManager::Main(struct tag_message& message) {
                             m_window->DrawWindow();
                             Reset();
                             gpWindowManager
-                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
+                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
                             break;
                         case CONTROL_LEFT_ARTIFACT_FIRST:
                         case CONTROL_LEFT_ARTIFACT_FIRST + 1:

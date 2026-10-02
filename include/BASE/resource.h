@@ -12,16 +12,26 @@ H1_ENUM_BEGIN(ResourceCategory)
     RESOURCE_CATEGORY_SAMPLE = 6
 H1_ENUM_END(ResourceCategory)
 
+    // clang-format off
+// resource::m_refCount seeds (Buka resource.h): -1 marks a bitmap the resource
+// manager does not own, 1 the first reference of a loaded resource.
+H1_ENUM_BEGIN(ResourceReferenceCount)
+    RESOURCE_REFERENCE_UNMANAGED = -1,
+    RESOURCE_REFERENCE_EMPTY = 0,
+    RESOURCE_REFERENCE_INITIAL = 1
+H1_ENUM_END(ResourceReferenceCount)
+// clang-format on
+
 #pragma pack(push, 1)
 class resource {
 public:
     H1_ENUM_STORAGE(ResourceCategory, short) m_resourceType;
     short m_refCount;
     short m_id;
-    resource *m_next;
+    resource* m_next;
 
     resource();
-    resource(short, short, short, resource *);
+    resource(short, short, H1_ENUM_PARAM(ResourceReferenceCount, short), resource*);
     virtual ~resource() = 0;
 };
 #pragma pack(pop)

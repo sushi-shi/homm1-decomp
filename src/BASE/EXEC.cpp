@@ -7,14 +7,55 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
+#include <SOURCE/X_GLOBAL.h>
+
+// Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
+DATA(0x004a1820)
+char gResourceManagerInitError[] = "Unable to initialize resources - possible disk problem.";
+DATA(0x004a1858)
+char gInputManagerInitError[] =
+    "Unable to initialize input devices - possible problem with mouse or keyboard.";
+DATA(0x004a18a8)
+char gSoundManagerInitError[] = "Unable to initialize sound.";
+DATA(0x004a18c4)
+char gMouseManagerInitError[] = "Unable to initialize mouse.";
+DATA(0x004a18e0)
+char gWindowManagerInitError[] = "Unable to initialize windows - possible memory or disk error.";
+DATA(0x004a1920)
+char gDialogManagerError1[] = "Can't add manager!";
+DATA(0x004a1934)
+char gDialogManagerError2[] = "Can't add manager!";
+DATA(0x004a1948)
+char gDialogManagerError3[] = "Can't add manager!";
+DATA(0x004a195c)
+char gDialogManagerError4[] = "Can't add manager!";
+// Retail keeps the manager-list dump texts (PoL SExecutiveText names) between the
+// dialog and call-manager errors; HoMM1 code no longer references them.
+DATA(0x004a1970)
+char gManagerListStart[] = "-----Manager List Start-----";
+DATA(0x004a1990)
+char gManagerListDivider1[] = "-----";
+DATA(0x004a1998)
+char gManagerListHeaderFormat[] = "Head %d   Tail %d";
+DATA(0x004a19ac)
+char gManagerListDivider2[] = "-----";
+DATA(0x004a19b4)
+char gManagerListEntryFormat[] = "Manager %20s  this %d   prev %d  next %d";
+DATA(0x004a19e0)
+char gManagerListStop[] = "--*--Manager List Stop --*--\n\n";
+DATA(0x004a1a00)
+char gCallManagerError1[] = "Can't add manager!";
+DATA(0x004a1a14)
+char gCallManagerError2[] = "Can't add manager!";
 
 VA(0x0047a170, 0x10)
-executive::executive(void)
-{
+executive::executive(void) {
     m_managerListHead = NULL;
     m_managerListTail = NULL;
     m_activeManager = NULL;
@@ -23,29 +64,27 @@ executive::executive(void)
 
 // Retail opens sound unconditionally and returns AX.
 VA(0x0047a180, 0xa9)
-short executive::InitSystem(void)
-{
-    if (gpResourceManager->Open(-1) != 0)
+short executive::InitSystem(void) {
+    if (gpResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gResourceManagerInitError);
-    if (gpInputManager->Open(-1) != 0)
+    if (gpInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gInputManagerInitError);
-    if (gpSoundManager->Open(-1) != 0)
+    if (gpSoundManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gSoundManagerInitError);
-    if (AddManager(gpMouseManager, -1) != 0)
+    if (AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gMouseManagerInitError);
-    if (AddManager(gpWindowManager, -1) != 0)
+    if (AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gWindowManagerInitError);
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // Retail preserves next before removing a manager, then closes resources/input.
 VA(0x0047a230, 0x84)
-void executive::ShutDownSystem(void)
-{
+void executive::ShutDownSystem(void) {
     EarlyShutDownSystem();
     gpSoundManager->Close();
-    baseManager *next;
-    baseManager *manager = m_managerListHead;
+    baseManager* next;
+    baseManager* manager = m_managerListHead;
     while (manager != NULL) {
         next = manager->m_next;
         if (manager != gpWindowManager && manager != gpMouseManager)
@@ -62,13 +101,12 @@ void executive::ShutDownSystem(void)
 
 // Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
 VA(0x0047a2c0, 0x10c)
-short executive::DoDialog(baseManager *manager)
-{
-    baseManager *savedPreviousManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+short executive::DoDialog(baseManager* manager) {
+    baseManager* savedPreviousManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     int index;
-    baseManager *currentManager;
-    baseManager *savedManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    baseManager *savedNextManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    baseManager* currentManager;
+    baseManager* savedManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    baseManager* savedNextManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     executive dialogExecutive;
     int count = 0;
     currentManager = m_managerListHead;
@@ -79,13 +117,16 @@ short executive::DoDialog(baseManager *manager)
         currentManager = currentManager->m_next;
         count++;
     }
-    if (AddManager(manager, -1) != 0)
+    if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError1);
-    if (dialogExecutive.AddManager(gpMouseManager, -1) != 0)
+    if (dialogExecutive.AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+        != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError2);
-    if (dialogExecutive.AddManager(gpWindowManager, -1) != 0)
+    if (dialogExecutive.AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+        != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError3);
-    if (dialogExecutive.AddManager(manager, -1) != 0)
+    if (dialogExecutive.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+        != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError4);
     dialogExecutive.MainLoop();
     RemoveManager(manager);
@@ -97,19 +138,18 @@ short executive::DoDialog(baseManager *manager)
 }
 
 VA(0x0047a3d0, 0xd2)
-short executive::AddManager(baseManager *manager, short priority)
-{
+short executive::AddManager(baseManager* manager, short priority) {
     if (manager == NULL)
-        return 3;
-    if (priority == -1) {
+        return BASE_MANAGER_ERROR;
+    if (priority == BASE_MANAGER_PRIORITY_UNASSIGNED) {
         if (m_managerListTail == NULL)
             priority = 0;
         else
             priority = m_managerListTail->m_priority + 1;
     }
-    if (!manager->m_active && manager->Open(priority) != 0)
-        return 3;
-    baseManager *current = m_managerListTail;
+    if (!manager->m_active && manager->Open(priority) != BASE_MANAGER_SUCCESS)
+        return BASE_MANAGER_ERROR;
+    baseManager* current = m_managerListTail;
     while (current != NULL && current->m_priority > priority)
         current = current->m_prev;
     if (current == NULL) {
@@ -131,16 +171,15 @@ short executive::AddManager(baseManager *manager, short priority)
         current->m_next->m_prev = manager;
         current->m_next = manager;
     }
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 VA(0x0047a4b0, 0x76)
-void executive::RemoveManager(baseManager *manager)
-{
+void executive::RemoveManager(baseManager* manager) {
     if (manager == NULL)
         return;
     manager->Close();
-    baseManager *previous = manager->m_prev;
+    baseManager* previous = manager->m_prev;
     if (previous == NULL) {
         if (m_managerListTail == m_managerListHead) {
             m_managerListTail = NULL;
@@ -163,23 +202,21 @@ void executive::RemoveManager(baseManager *manager)
 }
 
 VA(0x0047a530, 0x62)
-void executive::CallManager(baseManager *manager)
-{
-    baseManager *saved = m_activeManager;
+void executive::CallManager(baseManager* manager) {
+    baseManager* saved = m_activeManager;
     RemoveManager(saved);
-    if (AddManager(manager, -1) != 0)
+    if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gCallManagerError1);
     MainLoop();
     RemoveManager(manager);
-    if (AddManager(saved, -1) != 0)
+    if (AddManager(saved, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gCallManagerError2);
     m_activeManager = saved;
 }
 
 // Retail 0x47a5a0 event loop; Buka BASE/EXEC MainLoop correspondence.
 VA(0x0047a5a0, 0x108)
-void executive::MainLoop(void)
-{
+void executive::MainLoop(void) {
     signed char done = 0;
     tag_message message;
     signed char dispatch = 1;
@@ -196,26 +233,26 @@ void executive::MainLoop(void)
         while (m_activeManager != NULL && dispatch && !done) {
             if (m_activeManager->m_active == 1) {
                 switch (m_activeManager->Main(message)) {
-                case MESSAGE_DISPATCH_CONSUME:
-                    dispatch = 0;
-                    break;
-                case MESSAGE_DISPATCH_FORWARD:
-                    if ((message.type & MESSAGE_EXECUTIVE) != 0) {
-                        switch (message.executiveCommand) {
-                        case EXECUTIVE_COMMAND_TERMINATE_LOOP:
-                            done++;
-                            break;
-                        case EXECUTIVE_COMMAND_RETURN_RESULT:
-                            m_result = message.result;
-                            done++;
-                            break;
-                        case EXECUTIVE_COMMAND_REMOVE_MANAGER:
-                            RemoveManager(m_activeManager);
-                            m_activeManager = NULL;
-                            break;
+                    case MESSAGE_DISPATCH_CONSUME:
+                        dispatch = 0;
+                        break;
+                    case MESSAGE_DISPATCH_FORWARD:
+                        if ((message.type & MESSAGE_EXECUTIVE) != 0) {
+                            switch (message.executiveCommand) {
+                                case EXECUTIVE_COMMAND_TERMINATE_LOOP:
+                                    done++;
+                                    break;
+                                case EXECUTIVE_COMMAND_RETURN_RESULT:
+                                    m_result = message.result;
+                                    done++;
+                                    break;
+                                case EXECUTIVE_COMMAND_REMOVE_MANAGER:
+                                    RemoveManager(m_activeManager);
+                                    m_activeManager = NULL;
+                                    break;
+                            }
                         }
-                    }
-                    break;
+                        break;
                 }
             }
             if (m_activeManager != NULL)
@@ -223,18 +260,3 @@ void executive::MainLoop(void)
         }
     }
 }
-
-// Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
-DATA(0x004a1820) char gResourceManagerInitError[] = "Unable to initialize resources - possible disk problem.";
-DATA(0x004a1858) char gInputManagerInitError[] =
-    "Unable to initialize input devices - possible problem with mouse or keyboard.";
-DATA(0x004a18a8) char gSoundManagerInitError[] = "Unable to initialize sound.";
-DATA(0x004a18c4) char gMouseManagerInitError[] = "Unable to initialize mouse.";
-DATA(0x004a18e0) char gWindowManagerInitError[] =
-    "Unable to initialize windows - possible memory or disk error.";
-DATA(0x004a1920) char gDialogManagerError1[] = "Can't add manager!";
-DATA(0x004a1934) char gDialogManagerError2[] = "Can't add manager!";
-DATA(0x004a1948) char gDialogManagerError3[] = "Can't add manager!";
-DATA(0x004a195c) char gDialogManagerError4[] = "Can't add manager!";
-DATA(0x004a1a00) char gCallManagerError1[] = "Can't add manager!";
-DATA(0x004a1a14) char gCallManagerError2[] = "Can't add manager!";

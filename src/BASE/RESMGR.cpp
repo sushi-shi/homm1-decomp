@@ -2,17 +2,20 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/font.h>
 #include <BASE/icon.h>
 #include <BASE/MAKEFILEID.h>
+#include <BASE/MIDIWrap.h>
 #include <BASE/Misc.h>
 #include <BASE/palette.h>
+#include <BASE/resource.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <BASE/tileset.h>
-#include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <io.h>
 #include <stdio.h>
@@ -30,8 +33,7 @@ char gReadBlockAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 
 // HoMM1 owns one aggregate descriptor rather than Buka's descriptor array.
 VA(0x00475830, 0x9b)
-resourceManager::resourceManager(void) : baseManager()
-{
+resourceManager::resourceManager(void) : baseManager() {
     m_active = 0;
     m_resourceListHead = NULL;
     m_aggregateDir = NULL;
@@ -44,8 +46,7 @@ resourceManager::resourceManager(void) : baseManager()
 
 // HoMM1 has only the raw-backdrop path of the Buka donor overload.
 VA(0x004758d0, 0x85)
-void resourceManager::GetBackdrop(char *name, class bitmap *backdrop)
-{
+void resourceManager::GetBackdrop(char* name, class bitmap* backdrop) {
     PointToFile(MakeId(name));
     ReadWord();
     ReadWord();
@@ -57,11 +58,11 @@ void resourceManager::GetBackdrop(char *name, class bitmap *backdrop)
 // HoMM1 likewise omits Buka's useIcon branch and keeps its row-copy loop.
 VA(0x00475960, 0x90)
 void resourceManager::GetBackdropAtLoc(
-    char *filename,
-    class bitmap *destination,
+    char* filename,
+    class bitmap* destination,
     int destinationX,
-    int destinationY)
-{
+    int destinationY
+) {
     int curRow;
     {
         short imageHeight;
@@ -73,10 +74,10 @@ void resourceManager::GetBackdropAtLoc(
             imageHeight = ReadWord();
             for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
                 ReadBlock(
-                    destination->m_pixels
-                        + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
+                    destination->m_pixels + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
                         + destinationX,
-                    width);
+                    width
+                );
             }
         }
     }
@@ -85,48 +86,44 @@ void resourceManager::GetBackdropAtLoc(
 // The resource cache and its miss path follow Buka 2.1 RESMGR. Retail's
 // 16-bit MakeId/Query pair and the derived constructors identify each member.
 VA(0x004759f0, 0x96)
-palette *resourceManager::GetPalette(char *name)
-{
+palette* resourceManager::GetPalette(char* name) {
     short fileId = MakeId(name);
-    resource *resourceEntry = Query(fileId);
+    resource* resourceEntry = Query(fileId);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
-        return static_cast<palette *>(resourceEntry);
+        return static_cast<palette*>(resourceEntry);
     } else {
         resourceEntry = new palette(fileId);
         AddResource(resourceEntry);
-        return static_cast<palette *>(resourceEntry);
+        return static_cast<palette*>(resourceEntry);
     }
 }
 
 VA(0x00475a90, 0x96)
-bitmap *resourceManager::GetBitmap(char *name)
-{
+bitmap* resourceManager::GetBitmap(char* name) {
     short id = MakeId(name);
-    resource *resourceEntry = Query(id);
+    resource* resourceEntry = Query(id);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
-        return static_cast<bitmap *>(resourceEntry);
+        return static_cast<bitmap*>(resourceEntry);
     } else {
         resourceEntry = new bitmap(id);
         AddResource(resourceEntry);
-        return static_cast<bitmap *>(resourceEntry);
+        return static_cast<bitmap*>(resourceEntry);
     }
 }
 
 // Retail forwards the 16-bit name ID to the cache overload below.
 VA(0x00475b30, 0x34)
-icon *resourceManager::GetIcon(char *name)
-{
+icon* resourceManager::GetIcon(char* name) {
     short fileId = MakeId(name);
     return GetIcon(fileId);
 }
 
 // Same cache/refcount path as the neighboring palette and tileset getters.
 VA(0x00475b70, 0x86)
-icon *resourceManager::GetIcon(short fileId)
-{
-    icon *iconEntry = static_cast<icon *>(Query(fileId));
+icon* resourceManager::GetIcon(short fileId) {
+    icon* iconEntry = static_cast<icon*>(Query(fileId));
     if (iconEntry != NULL) {
         iconEntry->m_refCount++;
         return iconEntry;
@@ -138,48 +135,46 @@ icon *resourceManager::GetIcon(short fileId)
 }
 
 VA(0x00475c00, 0x96)
-tileset *resourceManager::GetTileset(char *name)
-{
+tileset* resourceManager::GetTileset(char* name) {
     short fileId = MakeId(name);
-    resource *resourceEntry = Query(fileId);
+    resource* resourceEntry = Query(fileId);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
-        return static_cast<tileset *>(resourceEntry);
+        return static_cast<tileset*>(resourceEntry);
     } else {
         resourceEntry = new tileset(fileId);
         AddResource(resourceEntry);
-        return static_cast<tileset *>(resourceEntry);
+        return static_cast<tileset*>(resourceEntry);
     }
 }
 
 VA(0x00475ca0, 0x96)
-font *resourceManager::GetFont(char *name)
-{
+font* resourceManager::GetFont(char* name) {
     short resourceId = MakeId(name);
-    resource *fontEntry = Query(resourceId);
+    resource* fontEntry = Query(resourceId);
     if (fontEntry != NULL) {
         fontEntry->m_refCount++;
-        return static_cast<font *>(fontEntry);
+        return static_cast<font*>(fontEntry);
     } else {
         fontEntry = new font(resourceId);
         AddResource(fontEntry);
-        return static_cast<font *>(fontEntry);
+        return static_cast<font*>(fontEntry);
     }
 }
 
 // The Buka cache path is source-identical; HoMM1 passes its three playback defaults.
 VA(0x00475d40, 0x9c)
-class sample *resourceManager::GetSample(char *name)
-{
+class sample* resourceManager::GetSample(char* name) {
     short fileId = MakeId(name);
-    resource *resourceEntry = Query(fileId);
+    resource* resourceEntry = Query(fileId);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
-        return static_cast<sample *>(resourceEntry);
+        return static_cast<sample*>(resourceEntry);
     } else {
-        resourceEntry = new sample(name, 0, 127, 1);
+        resourceEntry =
+            new sample(name, SAMPLE_PLAYBACK_CHANNEL_MUSIC, SAMPLE_VOLUME_FULL, SAMPLE_LOOP_ONCE);
         AddResource(resourceEntry);
-        return static_cast<sample *>(resourceEntry);
+        return static_cast<sample*>(resourceEntry);
     }
 }
 
@@ -187,13 +182,12 @@ class sample *resourceManager::GetSample(char *name)
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520865;margin=0.403030;shape=0.400;size=0.812;calls=1.000;alternate=pol20:void resourceManager::Dispose(class resource *)@0x000c86b0
 VA(0x00475de0, 0x87)
-void resourceManager::Dispose(class resource *resourceToDispose)
-{
+void resourceManager::Dispose(class resource* resourceToDispose) {
     if (m_expunging != 0)
         return;
     if (resourceToDispose != NULL) {
         resourceToDispose->m_refCount--;
-        if (resourceToDispose->m_refCount > 0) {
+        if (resourceToDispose->m_refCount > RESOURCE_REFERENCE_EMPTY) {
             return;
         } else {
             RemoveResource(resourceToDispose);
@@ -206,8 +200,7 @@ void resourceManager::Dispose(class resource *resourceToDispose)
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.451638;margin=0.545401;shape=0.346;size=0.698;calls=1.000;alternate=pol20:void resourceManager::AddResource(class resource *)@0x000c8740
 VA(0x00475e70, 0x55)
-void resourceManager::AddResource(class resource *newResource)
-{
+void resourceManager::AddResource(class resource* newResource) {
     if (m_resourceListHead == NULL) {
         m_resourceListHead = newResource;
         m_resourceListHead->m_next = NULL;
@@ -219,10 +212,9 @@ void resourceManager::AddResource(class resource *newResource)
 
 // donor Buka RVA 0x000b8740; PoL 2.0 has the same list walk and deletion order
 VA(0x00475ed0, 0x8b)
-void resourceManager::Expunge(void)
-{
+void resourceManager::Expunge(void) {
     m_expunging = 1;
-    resource *cursor[2];
+    resource* cursor[2];
     cursor[1] = m_resourceListHead;
     cursor[0] = NULL;
     while (cursor[1] != NULL) {
@@ -238,9 +230,8 @@ void resourceManager::Expunge(void)
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.434784;margin=0.589664;shape=0.276;size=0.688;calls=1.000;alternate=pol20:class resource * resourceManager::Query(unsigned long int)@0x000c8830
 VA(0x00475f60, 0x4f)
-class resource *resourceManager::Query(short resourceId)
-{
-    resource *cursorResource = m_resourceListHead;
+class resource* resourceManager::Query(short resourceId) {
+    resource* cursorResource = m_resourceListHead;
     while (cursorResource != NULL && cursorResource->m_id != resourceId)
         cursorResource = cursorResource->m_next;
     return cursorResource;
@@ -248,34 +239,31 @@ class resource *resourceManager::Query(short resourceId)
 
 // donor Buka RVA 0x000b8800; HoMM1 returns its dispatch result through AX
 VA(0x00475fb0, 0x1b)
-short resourceManager::Main(tag_message &)
-{
+short resourceManager::Main(tag_message&) {
     return 0;
 }
 
 // donor Buka RVA 0x000b8810; HoMM1 loads only the default aggregate
 VA(0x00475fd0, 0x8e)
-short resourceManager::Open(short priority)
-{
+short resourceManager::Open(short priority) {
     if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
-        return 3;
+        return RESOURCE_MANAGER_LOAD_ERROR;
     m_messageMask = BASE_MANAGER_ACCEPT_RESOURCE;
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "resourceManager");
     m_resourceListHead = NULL;
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // donor Buka RVA 0x000b8890; PoL 2.0 is source-identical
 VA(0x00476060, 0x88)
-void resourceManager::RemoveResource(class resource *resourceToRemove)
-{
+void resourceManager::RemoveResource(class resource* resourceToRemove) {
     if (m_resourceListHead == resourceToRemove) {
         m_resourceListHead = resourceToRemove->m_next;
         return;
     }
-    resource *previousResource = m_resourceListHead;
+    resource* previousResource = m_resourceListHead;
     while (previousResource != NULL && previousResource->m_next != resourceToRemove)
         previousResource = previousResource->m_next;
     if (previousResource == NULL) {
@@ -287,8 +275,7 @@ void resourceManager::RemoveResource(class resource *resourceToRemove)
 
 // HoMM1 has one aggregate, while Buka's later Close loops over several.
 VA(0x004760f0, 0x88)
-void resourceManager::Close(void)
-{
+void resourceManager::Close(void) {
     if (m_active != 1)
         return;
     Expunge();
@@ -304,8 +291,7 @@ void resourceManager::Close(void)
 
 // donor Buka RVA 0x000b89b0; HoMM1 replaces one packed aggregate directory
 VA(0x00476180, 0x100)
-short resourceManager::LoadAggregateHeader(char *aggregateName)
-{
+short resourceManager::LoadAggregateHeader(char* aggregateName) {
     short directoryBytes;
     int aggregateFp = _open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
     if (aggregateFp == RESOURCE_MANAGER_INVALID_FILE) {
@@ -320,7 +306,7 @@ short resourceManager::LoadAggregateHeader(char *aggregateName)
     m_aggregateFd = aggregateFp;
     _read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
     directoryBytes = m_aggregateEntryCount * sizeof(aggEntry);
-    m_aggregateDir = static_cast<aggEntry *>(malloc(directoryBytes));
+    m_aggregateDir = static_cast<aggEntry*>(malloc(directoryBytes));
     _read(m_aggregateFd, m_aggregateDir, directoryBytes);
     return 0;
 }
@@ -328,8 +314,7 @@ short resourceManager::LoadAggregateHeader(char *aggregateName)
 // donor Buka uses the same lookup and failure path across multiple aggregates;
 // HoMM1 has one packed directory and a signed 16-bit resource ID.
 VA(0x00476280, 0xf2)
-void resourceManager::PointToFile(short fileId)
-{
+void resourceManager::PointToFile(short fileId) {
     short entry;
     if (m_aggregateDir == NULL)
         ShutDown("File Error: .AGG File not valid");
@@ -342,25 +327,30 @@ void resourceManager::PointToFile(short fileId)
             "ResMgr::PointToFile failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s",
             fileId,
             m_lastFileId,
-            m_lastFileName);
+            m_lastFileName
+        );
         ShutDown(gText);
     }
-    _lseek(m_aggregateFd, m_aggregateDir[entry].offset, 0);
+    _lseek(m_aggregateFd, m_aggregateDir[entry].offset, SEEK_SET);
 }
 
 // Single-aggregate variant of the Buka 2.1 directory lookup.
 VA(0x00476380, 0xe4)
-unsigned long resourceManager::GetFileSize(short fileId)
-{
+unsigned long resourceManager::GetFileSize(short fileId) {
     if (m_aggregateDir == NULL)
         return 0;
     short entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;
     if (m_aggregateDir[entry].id != fileId) {
-        sprintf(gText,
-                "ResMgr::PointToFile(GetFileSize) failure!  ThisFileId:%d  LastFileId:%d  LastFileName:%s",
-                fileId, m_lastFileId, m_lastFileName);
+        sprintf(
+            gText,
+            "ResMgr::PointToFile(GetFileSize) failure!  ThisFileId:%d  LastFileId:%d  "
+            "LastFileName:%s",
+            fileId,
+            m_lastFileId,
+            m_lastFileName
+        );
         ShutDown(gText);
         return RESOURCE_MANAGER_LOAD_ERROR;
     }
@@ -371,8 +361,7 @@ unsigned long resourceManager::GetFileSize(short fileId)
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.435067;margin=0.395891;shape=0.259;size=0.600;calls=1.000;alternate=pol20:void resourceManager::SavePosition(void)@0x000c8e20
 VA(0x00476470, 0x2b)
-void resourceManager::SavePosition(void)
-{
+void resourceManager::SavePosition(void) {
     m_savedPosition = tell(m_aggregateFd);
 }
 
@@ -380,19 +369,18 @@ void resourceManager::SavePosition(void)
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.425713;margin=0.238867;shape=0.231;size=0.593;calls=1.000;alternate=pol20:void resourceManager::RestorePosition(void)@0x000c8e80
 VA(0x004764a0, 0x2e)
-void resourceManager::RestorePosition(void)
-{
-    _lseek(m_aggregateFd, m_savedPosition, 0);
+void resourceManager::RestorePosition(void) {
+    _lseek(m_aggregateFd, m_savedPosition, SEEK_SET);
 }
 
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
 VA(0x004764d0, 0x55)
-signed char resourceManager::ReadByte(void)
-{
+signed char resourceManager::ReadByte(void) {
     ProcessAssert(
         m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
         gReadByteAssertFile,
-        gReadByteAssertLine + 1);
+        gReadByteAssertLine + 1
+    );
     signed char value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -402,12 +390,12 @@ signed char resourceManager::ReadByte(void)
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
 VA(0x00476530, 0x58)
-short int resourceManager::ReadWord(void)
-{
+short int resourceManager::ReadWord(void) {
     ProcessAssert(
         m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
         gReadWordAssertFile,
-        gReadWordAssertLine + 1);
+        gReadWordAssertLine + 1
+    );
     short value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -415,12 +403,12 @@ short int resourceManager::ReadWord(void)
 
 // donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
 VA(0x00476590, 0x58)
-long resourceManager::ReadLong(void)
-{
+long resourceManager::ReadLong(void) {
     ProcessAssert(
         m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
         gReadLongAssertFile,
-        gReadLongAssertLine + 1);
+        gReadLongAssertLine + 1
+    );
     long value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -428,8 +416,7 @@ long resourceManager::ReadLong(void)
 
 // donor Buka RVA 0x000b8ea0; HoMM1 has no translation argument and uses 16-bit IDs
 VA(0x004765f0, 0x5f)
-short resourceManager::MakeId(char *name)
-{
+short resourceManager::MakeId(char* name) {
     unsigned long result = MAKEFILEID(name);
     strcpy(m_lastFileName, name);
     m_lastFileId = result;
@@ -438,19 +425,18 @@ short resourceManager::MakeId(char *name)
 
 // donor Buka RVA 0x000b8f40; constant and call shape are identical in HoMM1
 VA(0x00476650, 0x26)
-void resourceManager::Read13(signed char *destination)
-{
-    ReadBlock(destination, 13);
+void resourceManager::Read13(signed char* destination) {
+    ReadBlock(destination, RESOURCE_NAME_CAPACITY);
 }
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
 VA(0x00476680, 0x5f)
-void resourceManager::ReadBlock(signed char *destination, unsigned long size)
-{
+void resourceManager::ReadBlock(signed char* destination, unsigned long size) {
     ProcessAssert(
         m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
         gReadBlockAssertFile,
-        gReadBlockAssertLine + 1);
+        gReadBlockAssertLine + 1
+    );
     PollSound();
     int bytesRead = _read(m_aggregateFd, destination, size);
     PollSound();

@@ -4,15 +4,22 @@
 #include <BASE/resource.h>
 #include <H1/Macros.h>
 
+// clang-format off
+// bitmap::m_bitmapType: 0x21 marks a plain off-screen memory bitmap (Buka bitmap.h).
+H1_ENUM_BEGIN_SPLIT(BitmapType, short)
+    BITMAP_TYPE_NONE = 0,
+    BITMAP_TYPE_MEMORY = 0x21
+H1_ENUM_END_SPLIT(BitmapType)
+
 H1_ENUM_CONST_BEGIN(BitmapCopyConstant)
-    BITMAP_COPY_STRIDE = 640,
-    PALETTE_RAW_BYTES = 0x300
+    BITMAP_COPY_STRIDE = 640
 H1_ENUM_CONST_END(BitmapCopyConstant)
+// clang-format on
 
 #pragma pack(push, 1)
-class bitmap : public resource {
+                               class bitmap : public resource {
 public:
-    short m_bitmapType;
+    H1_ENUM_STORAGE(BitmapType, short) m_bitmapType;
     short m_width;
     short m_height;
     signed char* m_pixels;

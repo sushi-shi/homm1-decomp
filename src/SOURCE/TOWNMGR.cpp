@@ -226,7 +226,7 @@ short townManager::Open(short id) {
     gpMouseManager->ReallyShowPointer();
     gpMouseManager->NewUpdate(1);
     KBChangeMenu(hmnuTown);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
     m_castleDialogActive = 0;
     m_recruitResult = 0;
     m_lastHoverId = -1;
@@ -257,7 +257,7 @@ void townManager::Close(void) {
     gpWindowManager->RemoveWindow(m_townWindow);
     delete m_townWindow;
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpMouseManager->SetPointer(-1);
     m_active = 0;
 }
@@ -947,12 +947,12 @@ void townManager::DoCommand(signed char command) {
             visitor = gpGame->GetHero(m_town->m_occupyingHeroId);
             visitor->HeroView(1);
             RedrawTownScreen();
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_GARRISON:
             gpGame->Overview();
             RedrawTownScreen();
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_SPLIT:
             SplitArmy();

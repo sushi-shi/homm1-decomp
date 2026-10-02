@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 VA(0x00479b20, 0x6d)
-icon::icon(short id) : resource(RESOURCE_CATEGORY_ICON, id, 1, NULL) {
+icon::icon(short id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
     m_frameCount = gpResourceManager->ReadWord();
     unsigned long length = gpResourceManager->ReadLong();
@@ -39,14 +39,15 @@ void icon::DrawToBuffer(
     short y,
     short frame,
     H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
-    signed char mode
+    H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode
 ) {
     if (gbComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
-            if (mode != 0)
-                m_drawRight = x
-                              - (reinterpret_cast<IconEntry*>(m_data)[frame].x
-                                 >> 2); // byte-evidenced: packed frame entry in resource bytes.
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawRight =
+                    x
+                    - (reinterpret_cast<IconEntry*>(m_data)[frame].x
+                       >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawRight = x
                               - reinterpret_cast<IconEntry*>(m_data)[frame]
@@ -59,8 +60,9 @@ void icon::DrawToBuffer(
             m_drawBottom = reinterpret_cast<IconEntry*>(m_data)[frame].h
                            + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         } else {
-            if (mode != 0)
-                m_drawLeft = (reinterpret_cast<IconEntry*>(m_data)[frame].x >> 2)
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawLeft = (reinterpret_cast<IconEntry*>(m_data)[frame].x
+                              >> ICON_DRAW_QUARTER_OFFSET_SHIFT)
                              + x; // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawLeft = reinterpret_cast<IconEntry*>(m_data)[frame].x
@@ -108,7 +110,7 @@ void icon::ClipFillToBuffer(
     short frame,
     short color,
     H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
-    signed char mode,
+    H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode,
     int clipX,
     int clipY,
     int clipW,
@@ -136,7 +138,7 @@ void icon::FillToBuffer(
     short frame,
     short color,
     H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
-    signed char mode
+    H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode
 ) {
     if (orientation == ICON_DRAW_NORMAL) {
         if (gbLimitToExtent) {
@@ -171,14 +173,15 @@ void icon::DimToBuffer(
     short y,
     short frame,
     H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
-    signed char mode
+    H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode
 ) {
     if (gbComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
-            if (mode != 0)
-                m_drawRight = x
-                              - (reinterpret_cast<IconEntry*>(m_data)[frame].x
-                                 >> 2); // byte-evidenced: packed frame entry in resource bytes.
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawRight =
+                    x
+                    - (reinterpret_cast<IconEntry*>(m_data)[frame].x
+                       >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawRight = x
                               - reinterpret_cast<IconEntry*>(m_data)[frame]
@@ -191,8 +194,9 @@ void icon::DimToBuffer(
             m_drawBottom = reinterpret_cast<IconEntry*>(m_data)[frame].h
                            + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         } else {
-            if (mode != 0)
-                m_drawLeft = (reinterpret_cast<IconEntry*>(m_data)[frame].x >> 2)
+            if (mode != ICON_DRAW_OFFSET_FULL)
+                m_drawLeft = (reinterpret_cast<IconEntry*>(m_data)[frame].x
+                              >> ICON_DRAW_QUARTER_OFFSET_SHIFT)
                              + x; // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawLeft = reinterpret_cast<IconEntry*>(m_data)[frame].x

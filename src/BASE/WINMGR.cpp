@@ -4,6 +4,7 @@
 
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
@@ -25,8 +26,20 @@
 
 #pragma intrinsic(memcpy, strcpy)
 
-// Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
-VA(0x00473de0, 0x1b0)
+// clang-format off
+// FizzleForward's colour-cycle transition (Buka WINMGR.cpp WindowFizzleConstant,
+// CYCLE_FRAME_COUNT): eight CCYCLE tables of 64K word-indexed lookups.
+H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
+    CYCLE_FRAME_COUNT = 8,
+    FIZZLE_DEFAULT_DELAY = 150,
+    FIZZLE_CYCLE_TABLE_BYTES = 0x10000,
+    FIZZLE_LOOKUP_HIGH_BYTE_SHIFT = 8,
+    SCREENSHOT_FILENAME_CAPACITY = 16
+H1_ENUM_CONST_END(WindowFizzleConstant)
+   // clang-format on
+
+   // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
+   VA(0x00473de0, 0x1b0)
 void CycleColors(void) {
     signed char savedColor[PALETTE_GRAPHICS_CHANNELS];
 
@@ -108,11 +121,11 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
 
 VA(0x00473fe0, 0xba)
 short heroWindowManager::Open(short managerOrder) {
-    FadeOut(WINDOW_MANAGER_INITIAL_FADE_STEP);
+    FadeOut(WINDOW_FADE_STEPS_NORMAL);
     m_screen = new bitmap();
     if (m_screen == NULL)
         MemError();
-    m_screen->m_bitmapType = WINDOW_MANAGER_SCREEN_BITMAP_TYPE;
+    m_screen->m_bitmapType = BITMAP_TYPE_MEMORY;
     m_screen->m_width = SCREEN_BLIT_WIDTH;
     m_screen->m_height = SCREEN_BLIT_HEIGHT;
     m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
@@ -121,9 +134,9 @@ short heroWindowManager::Open(short managerOrder) {
         m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_DOWN;
         m_active = 1;
         strcpy(m_name, "heroWindowManager");
-        return 0;
+        return BASE_MANAGER_SUCCESS;
     }
-    return 1;
+    return WINDOW_MANAGER_OPEN_FAILURE;
 }
 
 VA(0x004740a0, 0x43)
@@ -178,7 +191,7 @@ void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlag
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = 0;
-    if (zOrder == -1) {
+    if (zOrder == WINDOW_Z_ORDER_APPEND) {
         if (currentWindow == NULL)
             zOrder = 0;
         else
@@ -188,7 +201,7 @@ void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlag
         return;
     if (zOrder != 0 && m_windowListHead == NULL)
         return;
-    if (window->Open(zOrder, openFlags) != 0)
+    if (window->Open(zOrder, openFlags) != WINDOW_OPEN_SUCCESS)
         return;
     while (currentWindow != NULL && currentWindow->m_zOrder > zOrder)
         currentWindow = currentWindow->m_prevWindow;
@@ -262,9 +275,9 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
     iDialogNestCount++;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     if (window != NULL)
-        AddWindow(window, -1, 1);
+        AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
     if (fade != 0)
-        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, gPalette);
+        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
     gpInputManager->Flush();
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
     done = 0;
@@ -360,7 +373,7 @@ void heroWindowManager::FadeScreen(short direction, short steps, palette* curren
 
 VA(0x00474660, 0x4e)
 void heroWindowManager::ScreenShot(void) {
-    char filename[16];
+    char filename[SCREENSHOT_FILENAME_CAPACITY];
     sprintf(filename, "shot%04d.raw", m_screenshotIndex);
     GrabScreenBitmap(m_screen, 0, 0);
     m_screen->Write(filename);
@@ -375,7 +388,7 @@ void heroWindowManager::SaveFizzleSource(short x, short y, short width, short he
         return;
     if (m_fizzleSource != NULL)
         delete m_fizzleSource;
-    m_fizzleSource = new bitmap(0, width, height);
+    m_fizzleSource = new bitmap(BITMAP_TYPE_NONE, width, height);
     BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleSource, 0, 0);
 }
 
@@ -401,28 +414,31 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
         saveFlags = gpWindowManager->m_updateFlags;
         gpWindowManager->m_updateFlags = 0;
         if (delay == -1)
-            delay = 150;
-        m_fizzleWork = new bitmap(0, width, height);
-        ccycleBuf = static_cast<signed char*>(malloc(0x10000));
+            delay = FIZZLE_DEFAULT_DELAY;
+        m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
+        ccycleBuf = static_cast<signed char*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
         BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
 
-        for (frame = 0; frame < 8; frame++) {
+        for (frame = 0; frame < CYCLE_FRAME_COUNT; frame++) {
             sprintf(gText, "CCYCLE%02d.BIN", frame);
             gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
-            gpResourceManager->ReadBlock(ccycleBuf, 0x10000);
+            gpResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
             // Buka's row arithmetic: retail strength-reduces sourceY * 640 and
             // (sourceY - y) * width into the frame's induction slots.
             for (sourceY = y; sourceY < y + height; sourceY++) {
                 // Byte access is proven by the retail load/shift sequence.
-                savePixel = reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
+                savePixel =
+                    reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
                     + m_fizzleSource->m_width * (sourceY - y);
-                workPixel = reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
+                workPixel =
+                    reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
                     + (sourceY - y) * width;
                 // Byte access is proven by the retail framebuffer stores.
                 screenPixel = reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
-                    + sourceY * 640 + x;
+                              + sourceY * LOGICAL_SCREEN_WIDTH + x;
                 for (sourceX = x; sourceX < x + width; sourceX++) {
-                    unsigned short lookup = *workPixel++ | (*savePixel++ << 8);
+                    unsigned short lookup =
+                        *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
                     *screenPixel++ = ccycleBuf[lookup];
                 }
             }
@@ -456,8 +472,13 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 
 // Window-manager data, initialized from retail .data (0x004a0c7c..) and
 // zero-filled storage (0x004cac20..).
-DATA(0x004a0c7c) int iDialogNestCount = 0;
-DATA(0x004a0c80) short gWindowFadeAssertLine = 550;
-DATA(0x004a0c84) char gWindowFadeAssertFile[] = "D:\\Heroes\\Base\\WINMGR.CPP";
-DATA(0x004cac20) signed char gWindowFadeSavedUpdate;
-DATA(0x004cac28) signed char gCyclePal[PALETTE_CYCLE_BYTES];
+DATA(0x004a0c7c)
+int iDialogNestCount = 0;
+DATA(0x004a0c80)
+short gWindowFadeAssertLine = 550;
+DATA(0x004a0c84)
+char gWindowFadeAssertFile[] = "D:\\Heroes\\Base\\WINMGR.CPP";
+DATA(0x004cac20)
+signed char gWindowFadeSavedUpdate;
+DATA(0x004cac28)
+signed char gCyclePal[PALETTE_CYCLE_BYTES];

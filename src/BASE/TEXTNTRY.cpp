@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
 #include <BASE/font.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
@@ -23,7 +24,7 @@ VA(0x0047e100, 0x2d)
 textEntryWidget::textEntryWidget(void) : textWidget() {
     m_cursorPosition = 0;
     m_icon = NULL;
-    m_kind = 0x4000;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
     m_maxLength = 0;
     m_iconFrame = 0;
     m_displayOffset = 0;
@@ -35,8 +36,8 @@ textEntryWidget::~textEntryWidget(void) {
 }
 
 VA(0x0047e170, 0x1e8)
-void textEntryWidget::Read(int type) {
-    signed char name[13];
+void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, int) type) {
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
@@ -44,17 +45,14 @@ void textEntryWidget::Read(int type) {
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
     // byte-evidenced: ReadBlock accepts signed bytes for text storage.
-    gpResourceManager->ReadBlock(
-        reinterpret_cast<signed char*>(m_text),
-        m_maxLength
-    );
+    gpResourceManager->ReadBlock(reinterpret_cast<signed char*>(m_text), m_maxLength);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_font = gpResourceManager->GetFont(
         reinterpret_cast<char*>(name)
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
-    m_color = gpResourceManager->ReadWord() & 0xff;
+    m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord());
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
@@ -84,7 +82,7 @@ void textEntryWidget::Read(int type) {
     m_iconFrame = gpResourceManager->ReadWord();
     m_id = gpResourceManager->ReadWord();
     gpResourceManager->ReadWord();
-    m_kind = 0x4000;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
 VA(0x0047e360, 0x7f4)
@@ -162,8 +160,7 @@ short textEntryWidget::Main(tag_message& message) {
                                 gpInputManager->AsciiConvert(event);
                                 if (event.keyCode == TEXT_ENTRY_KEY_ACCEPT) {
                                     done++;
-                                } else if (event.keyCode
-                                           == TEXT_ENTRY_KEY_BACKSPACE) {
+                                } else if (event.keyCode == TEXT_ENTRY_KEY_BACKSPACE) {
                                     if (m_cursorPosition > 0) {
                                         strcpy(swap, edit + m_cursorPosition);
                                         strcpy(edit + m_cursorPosition - 1, swap);
@@ -171,14 +168,13 @@ short textEntryWidget::Main(tag_message& message) {
                                         if (m_displayOffset > m_cursorPosition)
                                             m_displayOffset = m_cursorPosition;
                                     }
-                                } else if (strlen(edit) + 1 < m_maxLength
-                                           && event.keyCode != 0) {
+                                } else if (strlen(edit) + 1 < m_maxLength && event.keyCode != 0) {
                                     char typed;
                                     strcpy(copy, edit);
                                     typed = 0;
-                                    if (event.keyCode
-                                        >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
-                                        switch ((event.keyCode >> 8) & 0xff) {
+                                    if (event.keyCode >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
+                                        switch ((event.keyCode >> INPUT_KEY_SCAN_SHIFT)
+                                                & INPUT_SCAN_CODE_MASK) {
                                             case TEXT_ENTRY_KEYPAD_7:
                                                 typed = '7';
                                                 break;
@@ -286,8 +282,13 @@ void textEntryWidget::Draw(void) {
         unsigned int length = strlen(display);
         while (m_font->LineWidth(display) > m_width)
             display[--length] = 0;
-        m_icon
-            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, ICON_DRAW_NORMAL, 0);
+        m_icon->DrawToBuffer(
+            m_rectX + m_owner->m_posX,
+            m_owner->m_posY + m_rectY,
+            m_iconFrame,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
         m_font->DrawBoundedString(
             display,
             m_x + m_owner->m_posX,
@@ -298,8 +299,13 @@ void textEntryWidget::Draw(void) {
             m_alignment
         );
     } else {
-        m_icon
-            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, ICON_DRAW_NORMAL, 0);
+        m_icon->DrawToBuffer(
+            m_rectX + m_owner->m_posX,
+            m_owner->m_posY + m_rectY,
+            m_iconFrame,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
         textWidget::Draw();
     }
 }

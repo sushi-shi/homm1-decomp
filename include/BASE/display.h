@@ -10,6 +10,13 @@ H1_ENUM_CONST_BEGIN(LogicalScreenConstant)
     LOGICAL_SCREEN_WIDTH = 640,
     LOGICAL_SCREEN_HEIGHT = 480
 H1_ENUM_CONST_END(LogicalScreenConstant)
+
+// The 256-entry palette and the byte mask that keeps a value a palette index
+// (Buka display.h PALETTE_COLOR_COUNT; BORDER/ICONWDGT COLOR_INDEX_MASK).
+H1_ENUM_CONST_BEGIN(PaletteFormatConstant)
+    PALETTE_COLOR_COUNT = 256,
+    COLOR_INDEX_MASK = 0xff
+H1_ENUM_CONST_END(PaletteFormatConstant)
 // clang-format on
 
 #endif // HOMM1_BASE_DISPLAY_H

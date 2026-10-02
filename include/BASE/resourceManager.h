@@ -13,15 +13,14 @@ class palette;
 class sample;
 class tileset;
 H1_ENUM_CONST_BEGIN(ResourceManagerConstant)
-    RESOURCE_MANAGER_INVALID_FILE = -1,
-    RESOURCE_MANAGER_LOAD_ERROR = 3,
-    RESOURCE_MANAGER_BINARY_OPEN_MODE = 0x8000,
-    RESOURCE_MANAGER_BACKDROP_ROW_BYTES = 640,
-    RESOURCE_MANAGER_FILENAME_CAPACITY = 60
-H1_ENUM_CONST_END(ResourceManagerConstant)
+RESOURCE_MANAGER_INVALID_FILE = -1,
+    RESOURCE_MANAGER_LOAD_ERROR = 3, RESOURCE_MANAGER_BINARY_OPEN_MODE = 0x8000,
+    RESOURCE_MANAGER_BACKDROP_ROW_BYTES = 640, RESOURCE_MANAGER_FILENAME_CAPACITY = 60,
+    // Read13's fixed-width resource name field (name plus terminator).
+    RESOURCE_NAME_CAPACITY = 13 H1_ENUM_CONST_END(ResourceManagerConstant)
 
 #pragma pack(push, 1)
-struct aggEntry {
+        struct aggEntry {
     short id;
     long offset;
     unsigned long size;
@@ -30,9 +29,9 @@ struct aggEntry {
 
 class resourceManager : public baseManager {
 public:
-    resource *m_resourceListHead;
+    resource* m_resourceListHead;
     int m_aggregateFd;
-    aggEntry *m_aggregateDir;
+    aggEntry* m_aggregateDir;
     short m_aggregateEntryCount;
     int m_expunging;
     long m_savedPosition;
@@ -42,24 +41,24 @@ public:
     resourceManager();
     virtual short Open(short);
     virtual void Close();
-    virtual short Main(tag_message &);
-    void GetBackdrop(char *, bitmap *);
-    void GetBackdropAtLoc(char *, bitmap *, int, int);
-    palette *GetPalette(char *);
-    bitmap *GetBitmap(char *);
-    icon *GetIcon(char *);
-    icon *GetIcon(short);
-    tileset *GetTileset(char *);
-    mouse *GetMouse(char *);
-    font *GetFont(char *);
-    sample *GetSample(char *);
-    MIDIWrap *GetMIDIWrap(char *);
-    void Dispose(resource *);
-    void AddResource(resource *);
+    virtual short Main(tag_message&);
+    void GetBackdrop(char*, bitmap*);
+    void GetBackdropAtLoc(char*, bitmap*, int, int);
+    palette* GetPalette(char*);
+    bitmap* GetBitmap(char*);
+    icon* GetIcon(char*);
+    icon* GetIcon(short);
+    tileset* GetTileset(char*);
+    mouse* GetMouse(char*);
+    font* GetFont(char*);
+    sample* GetSample(char*);
+    MIDIWrap* GetMIDIWrap(char*);
+    void Dispose(resource*);
+    void AddResource(resource*);
     void Expunge();
-    resource *Query(short);
-    void RemoveResource(resource *);
-    short LoadAggregateHeader(char *);
+    resource* Query(short);
+    void RemoveResource(resource*);
+    short LoadAggregateHeader(char*);
     void PointToFile(short);
     unsigned long GetFileSize(short);
     void SavePosition();
@@ -67,9 +66,9 @@ public:
     signed char ReadByte();
     short ReadWord();
     long ReadLong();
-    short MakeId(char *);
-    void Read13(signed char *);
-    void ReadBlock(signed char *, unsigned long);
+    short MakeId(char*);
+    void Read13(signed char*);
+    void ReadBlock(signed char*, unsigned long);
 };
 #pragma pack(pop)
 

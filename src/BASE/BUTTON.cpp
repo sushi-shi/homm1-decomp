@@ -17,12 +17,12 @@ long gButtonRepeatTimer;
 int iLeftRightSave;
 
 VA(0x0047eef0, 0x31)
-button::button(void) : widget(0, 0, 0, 0, 0, 0) {
+button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_normalFrame = 0;
     m_pressedFrame = 0;
     m_selectMode = 0;
     m_icon = NULL;
-    m_hotkey = -1;
+    m_hotkey = BUTTON_NO_HOTKEY;
 }
 
 VA_COMPGEN(0x0047ef30, 0x36, "??_Gbutton@@UAEPAXI@Z", 0x0047eef0)
@@ -32,7 +32,7 @@ button::~button(void) {
 
 VA(0x0047ef70, 0xda)
 void button::Read(void) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
@@ -136,7 +136,7 @@ VA(0x0047f580, 0x92)
 short button::Select(tag_message& message) {
     short x = m_owner->m_posX + m_x;
     short y = m_owner->m_posY + m_y;
-    m_icon->DrawToBuffer(x, y, m_pressedFrame, ICON_DRAW_NORMAL, 0);
+    m_icon->DrawToBuffer(x, y, m_pressedFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
     m_flags |= WIDGET_FLAG_SELECTED;
     message.type = MESSAGE_WIDGET;
@@ -153,8 +153,20 @@ short button::Select(tag_message& message) {
 VA(0x0047f620, 0x4d)
 void button::Draw(void) {
     if (m_flags & WIDGET_FLAG_SELECTED) {
-        m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_pressedFrame, ICON_DRAW_NORMAL, 0);
+        m_icon->DrawToBuffer(
+            m_owner->m_posX + m_x,
+            m_owner->m_posY + m_y,
+            m_pressedFrame,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
         return;
     }
-    m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_normalFrame, ICON_DRAW_NORMAL, 0);
+    m_icon->DrawToBuffer(
+        m_owner->m_posX + m_x,
+        m_owner->m_posY + m_y,
+        m_normalFrame,
+        ICON_DRAW_NORMAL,
+        ICON_DRAW_OFFSET_FULL
+    );
 }

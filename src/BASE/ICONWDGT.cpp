@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/icon.h>
 #include <BASE/iconWidget.h>
@@ -10,11 +11,11 @@
 #include <H1/KB.h>
 
 VA(0x0047a9f0, 0x2a)
-iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, 0) {
+iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_frame = 0;
     m_icon = 0;
     m_fillColor = 0;
-    m_orientation = 0;
+    m_orientation = ICON_DRAW_NORMAL;
 }
 
 VA_COMPGEN(0x0047aa20, 0x36, "??_GiconWidget@@UAEPAXI@Z", 0x0047a9f0)
@@ -45,7 +46,7 @@ iconWidget::iconWidget(
 
 VA(0x0047aad0, 0xce)
 void iconWidget::Read(void) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
@@ -60,7 +61,7 @@ void iconWidget::Read(void) {
     m_orientation = static_cast<signed char>(gpResourceManager->ReadWord());
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
-    m_fillColor = gpResourceManager->ReadWord() & 0xff;
+    m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
 VA(0x0047aba0, 0x1bc)
@@ -106,7 +107,7 @@ short iconWidget::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_SET_COLOR:
                     if (m_id == message.id) {
-                        m_fillColor = message.value & 0xff;
+                        m_fillColor = message.value & COLOR_INDEX_MASK;
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;
@@ -132,10 +133,10 @@ void iconWidget::Draw(void) {
     switch (m_kind) {
         case ICON_WIDGET_DRAW:
             PollSound();
-            m_icon->DrawToBuffer(x, y, m_frame, m_orientation, 0);
+            m_icon->DrawToBuffer(x, y, m_frame, m_orientation, ICON_DRAW_OFFSET_FULL);
             break;
         case ICON_WIDGET_FILL:
-            m_icon->FillToBuffer(x, y, m_frame, m_fillColor, m_orientation, 0);
+            m_icon->FillToBuffer(x, y, m_frame, m_fillColor, m_orientation, ICON_DRAW_OFFSET_FULL);
             break;
     }
 }

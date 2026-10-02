@@ -6,14 +6,16 @@
 
 #include <windows.h>
 
+#include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/mouseManager.h>
-#include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/wingraph.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <io.h>
 #include <string.h>
@@ -99,9 +101,8 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F12
                 && (event->modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
                 gpWindowManager->ScreenShot();
-            if (event->type == MESSAGE_KEY_DOWN
-                && event->keyCode == INPUT_SCAN_F1) {
-                SetFullScreenStatus(0);
+            if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F1) {
+                SetFullScreenStatus(FALSE);
                 AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
@@ -173,10 +174,8 @@ mouseCoordinates:
 
 mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
-        if (event->x > INPUT_CURSOR_INTERIOR_X_MIN
-            && event->x < INPUT_CURSOR_INTERIOR_X_MAX
-            && event->y > INPUT_CURSOR_INTERIOR_Y_MIN
-            && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
+        if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
+            && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
             gpMouseManager->SetPointer(INPUT_KEEP_CURRENT_MOUSE_FRAME);
     }
 
@@ -219,11 +218,11 @@ short inputManager::Open(short priority) {
     m_modifiers = MESSAGE_MODIFIER_NONE;
     MakeScanCodeTable();
     m_messageMask = BASE_MANAGER_ACCEPT_MOUSE_MOVE;
-    m_priority = -1;
+    m_priority = BASE_MANAGER_PRIORITY_UNASSIGNED;
     m_field_0x23a = 1;
     m_active = 1;
     strcpy(m_name, "inputManager");
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 VA(0x0047c1b0, 0x3b)
@@ -280,15 +279,13 @@ VA(0x0047c320, 0x1cb)
 void inputManager::AsciiConvert(tag_message& event) {
     if ((event.keyCode >= INPUT_SCAN_FUNCTION_KEY_FIRST
          && event.keyCode <= INPUT_SCAN_FUNCTION_KEY_LAST)
-        || event.keyCode == INPUT_SCAN_F11
-        || event.keyCode == INPUT_SCAN_F12)
+        || event.keyCode == INPUT_SCAN_F11 || event.keyCode == INPUT_SCAN_F12)
         event.keyCode = m_keyState[event.keyCode];
     else
-        event.keyCode =
-            m_keyState[event.keyCode] & INPUT_SCAN_CODE_MASK;
+        event.keyCode = m_keyState[event.keyCode] & INPUT_SCAN_CODE_MASK;
 
-    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0
-        && event.keyCode > 'A' - 1 && event.keyCode < 'Z' + 1)
+    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0 && event.keyCode > 'A' - 1
+        && event.keyCode < 'Z' + 1)
         event.keyCode += 'a' - 'A';
 
     if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != 0) {

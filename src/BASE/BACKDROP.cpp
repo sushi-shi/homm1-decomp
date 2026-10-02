@@ -9,7 +9,7 @@
 #include <H1/KB.h>
 
 VA(0x0047cfe0, 0x1e)
-backdropWidget::backdropWidget(void) : widget(0, 0, 0, 0, 0, 0) {}
+backdropWidget::backdropWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}
 
 VA_COMPGEN(0x0047d000, 0x25, "??_GbackdropWidget@@UAEPAXI@Z", 0x0047cfe0)
 backdropWidget::~backdropWidget(void) {}

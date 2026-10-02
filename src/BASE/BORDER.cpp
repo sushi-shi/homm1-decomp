@@ -5,6 +5,7 @@
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/border.h>
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
@@ -14,7 +15,7 @@
 #include <H1/KB.h>
 
 VA(0x00479780, 0x2b)
-border::border(void) : widget(0, 0, 0, 0, 0, 0), m_background(0), m_fillColor(0) {}
+border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE), m_background(0), m_fillColor(0) {}
 
 VA_COMPGEN(0x004797b0, 0x3a, "??_Gborder@@UAEPAXI@Z", 0x00479780)
 border::~border(void) {
@@ -43,7 +44,7 @@ border::border(
 
 VA(0x00479850, 0xc3)
 void border::Read(void) {
-    signed char name[13];
+    signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();
@@ -61,7 +62,7 @@ void border::Read(void) {
     }
     short color = gpResourceManager->ReadWord();
     m_background = 0;
-    m_fillColor = color & 0xff;
+    m_fillColor = color & COLOR_INDEX_MASK;
 }
 
 VA(0x00479920, 0x15d)

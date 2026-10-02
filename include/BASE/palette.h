@@ -5,16 +5,23 @@
 
 #include <BASE/resource.h>
 
+// clang-format off
+// The raw 256-colour, 3-byte palette block (Buka palette.h).
+H1_ENUM_CONST_BEGIN(PaletteConstant)
+    PALETTE_DATA_SIZE = 0x300
+H1_ENUM_CONST_END(PaletteConstant)
+// clang-format on
+
 #pragma pack(push, 1)
-class palette : public resource {
+    class palette : public resource {
 public:
-    signed char *m_data;
+    signed char* m_data;
     // --- constructors ---
     palette(void);
     palette(short);
     virtual inline ~palette();
     // --- methods ---
-    signed char * Data(void);
+    signed char* Data(void);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_PALETTE_H
