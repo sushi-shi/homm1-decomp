@@ -61,7 +61,7 @@ short searchArray::FindNearestObject(
                 cost = CalcTerrainCost(
                     terrain,
                     i & SEARCH_DIAGONAL_COST_MASK,
-                    SEARCH_UNLIMITED_STEP_MOBILITY,
+                    SEARCH_UNLIMITED_COST,
                     0
                 );
                 neighborX = node.x + normalDirTable[i].x;
