@@ -69,7 +69,7 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned
         init_anchor(&gNbSndQueue, 1, 0);
         init_anchor(&gNbFreeQueue, 1, 0);
         for (i = 0; i < static_cast<int>(NETBIOS_THREAD_EVENT_COUNT); i++)
-            gNbEvents[i] = CreateEventA(NULL, 1, 0, NULL);
+            gNbEvents[i] = CreateEventA(NULL, TRUE, FALSE, NULL);
         memset(&ncb, 0, sizeof(ncb));
         statusBuf = static_cast<unsigned char*>(
             GlobalAlloc(GPTR, static_cast<int>(NETBIOS_ADAPTER_STATUS_SIZE))
@@ -331,7 +331,7 @@ void nb_thr_ctl(void)
     int sendComplete;
 
     keepRunning = 1;
-    if (WaitForMultipleObjects(NETBIOS_THREAD_EVENT_COUNT, gNbEvents, 0, 0) == WAIT_TIMEOUT)
+    if (WaitForMultipleObjects(NETBIOS_THREAD_EVENT_COUNT, gNbEvents, FALSE, 0) == WAIT_TIMEOUT)
         return;
     if (WaitForSingleObject(gNbEvents[0], 0) == WAIT_OBJECT_0)
         ResetEvent(gNbEvents[0]);
