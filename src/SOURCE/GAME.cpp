@@ -1049,6 +1049,18 @@ signed char game::NewGame(void) {
     return 1;
 }
 
+// clang-format off
+// campaign.bin widget ids (Buka CampaignControlId spells RESTART 0x385); the
+// progress icon shows scenarios won + PROGRESS_FRAME_BASE.
+H1_ENUM_BEGIN(CampaignInfoControl)
+    CAMPAIGN_INFO_NAME = 1,
+    CAMPAIGN_INFO_TEXT = 2,
+    CAMPAIGN_INFO_PROGRESS = 3,
+    CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
+    CAMPAIGN_INFO_RESTART = 0x385
+H1_ENUM_END(CampaignInfoControl)
+// clang-format on
+
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
 
@@ -1063,20 +1075,20 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
         MemError();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = CAMPAIGN_INFO_NAME;
     strcpy(gText, gCampaignScenarioNames[scenario]);
     message.text = gText;
     window->BroadcastMessage(message);
-    message.id = 2;
+    message.id = CAMPAIGN_INFO_TEXT;
     strcpy(gText, gCampaignScenarioText[scenario]);
     message.text = gText;
     window->BroadcastMessage(message);
     message.text = gText;
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
-    message.id = 3;
+    message.id = CAMPAIGN_INFO_PROGRESS;
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.value = gpGame->m_campaignScenariosWon + 4;
+    message.value = gpGame->m_campaignScenariosWon + CAMPAIGN_INFO_PROGRESS_FRAME_BASE;
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1087,14 +1099,14 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     } else {
         message.id = DIALOG_BUTTON_0;
         window->BroadcastMessage(message);
-        message.id = 0x385;
+        message.id = CAMPAIGN_INFO_RESTART;
         window->BroadcastMessage(message);
     }
     if (!fromMenu)
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
-    if (gpWindowManager->m_dialogResult == 0x385) {
+    if (gpWindowManager->m_dialogResult == CAMPAIGN_INFO_RESTART) {
         NormalDialog("Are you sure you want to restart this scenario?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
@@ -1929,9 +1941,9 @@ signed char game::ViewSpells(
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             if (spellType == 0)
-                message.id = 4;
+                message.id = SPELL_BOOK_ADVENTURE_SPELLS;
             else
-                message.id = 5;
+                message.id = SPELL_BOOK_COMBAT_SPELLS;
             message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
@@ -2138,6 +2150,27 @@ short ViewSpecialHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// clang-format off
+// armywin.bin widget ids; Buka ViewArmyControlId names the dismiss (DIALOG_BUTTON_3)
+// and close (DIALOG_BUTTON_0) buttons. The animation icon cycles
+// VIEW_ARMY_ANIMATION_FRAMES frames every VIEW_ARMY_FRAME_DELAY ticks.
+H1_ENUM_BEGIN(ViewArmyControl)
+    VIEW_ARMY_COUNT_FRAME = 1,
+    VIEW_ARMY_COUNT_TEXT = 2,
+    VIEW_ARMY_TITLE = 3,
+    VIEW_ARMY_STATS = 4,
+    VIEW_ARMY_ANIMATION = 5,
+    VIEW_ARMY_DISMISS = DIALOG_BUTTON_3,
+    VIEW_ARMY_CLOSE = DIALOG_BUTTON_0
+H1_ENUM_END(ViewArmyControl)
+
+H1_ENUM_CONST_BEGIN(ViewArmyConstant)
+    VIEW_ARMY_ANIMATION_FRAMES = 6,
+    VIEW_ARMY_FRAME_DELAY = 90,
+    VIEW_ARMY_STAT_TEXT_SIZE = 550
+H1_ENUM_CONST_END(ViewArmyConstant)
+// clang-format on
+
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
@@ -2178,11 +2211,11 @@ void game::ViewArmy(
 
     baseX = 86;
     topY = 164;
-    blankBtn = 1;
-    numId = 2;
-    titleLabel = 3;
-    statsMessage = 4;
-    animId = 5;
+    blankBtn = VIEW_ARMY_COUNT_FRAME;
+    numId = VIEW_ARMY_COUNT_TEXT;
+    titleLabel = VIEW_ARMY_TITLE;
+    statsMessage = VIEW_ARMY_STATS;
+    animId = VIEW_ARMY_ANIMATION;
     message.type = MESSAGE_WIDGET;
 
     if (monsterType != CREATURE_SWORDSMAN)
@@ -2212,7 +2245,7 @@ void game::ViewArmy(
         sprintf(fileName, "%s.wlk", iconName);
     else
         sprintf(fileName, "%s.wip", iconName);
-    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, ICON_WIDGET_DRAW, 1);
+    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, VIEW_ARMY_ANIMATION, ICON_WIDGET_DRAW, 1);
     if (!monsterWidget)
         MemError();
     m_viewArmyWindow->AddWidget(monsterWidget, -1);
@@ -2220,11 +2253,11 @@ void game::ViewArmy(
     strcpy(fileName, gArmyNames[monsterType]);
     fileName[0] -= 32;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 3;
+    message.id = VIEW_ARMY_TITLE;
     message.text = fileName;
     m_viewArmyWindow->BroadcastMessage(message);
 
-    statText = static_cast<char*>(malloc(550));
+    statText = static_cast<char*>(malloc(VIEW_ARMY_STAT_TEXT_SIZE));
     if (theGroup)
         morale = theGroup->GetMorale(theHero, castle);
     else
@@ -2283,36 +2316,36 @@ void game::ViewArmy(
     sprintf(gText, "\n%s%s", gArmyStatText[7], gLuckText[luck + 3]);
     strcat(statText, gText);
 
-    message.id = 4;
+    message.id = VIEW_ARMY_STATS;
     message.text = statText;
     m_viewArmyWindow->BroadcastMessage(message);
     if (disableDismiss) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = DIALOG_BUTTON_3;
+        message.id = VIEW_ARMY_DISMISS;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (quickView) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = DIALOG_BUTTON_0;
+        message.id = VIEW_ARMY_CLOSE;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (numTroops < 1) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = 1;
+        message.id = VIEW_ARMY_COUNT_FRAME;
         m_viewArmyWindow->BroadcastMessage(message);
-        message.id = 2;
+        message.id = VIEW_ARMY_COUNT_TEXT;
         m_viewArmyWindow->BroadcastMessage(message);
     } else {
         sprintf(numText, "%d", numTroops);
         message.command = WIDGET_COMMAND_SET_TEXT;
-        message.id = 2;
+        message.id = VIEW_ARMY_COUNT_TEXT;
         message.text = numText;
         m_viewArmyWindow->BroadcastMessage(message);
     }
-    glTimers[0] = KBTickCount() + 90;
+    glTimers[0] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
     m_viewArmyResult = 0;
     if (quickView) {
         gpMouseManager->ReallyHidePointer();
@@ -2354,7 +2387,7 @@ short ViewArmyHandler(tag_message& message) {
                         message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
-                    case DIALOG_BUTTON_3:
+                    case VIEW_ARMY_DISMISS:
                         NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
@@ -2374,12 +2407,12 @@ short ViewArmyHandler(tag_message& message) {
     if (KBTickCount() > glTimers[0]) {
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = 5;
+        message.id = VIEW_ARMY_ANIMATION;
         gpGame->m_viewArmyResult++;
-        message.value = gpGame->m_viewArmyResult % 6;
+        message.value = gpGame->m_viewArmyResult % VIEW_ARMY_ANIMATION_FRAMES;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
         gpGame->m_viewArmyWindow->DrawWindow();
-        glTimers[0] = KBTickCount() + 90;
+        glTimers[0] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
