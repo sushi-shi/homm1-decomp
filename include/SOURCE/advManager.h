@@ -359,7 +359,8 @@ extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;
 extern unsigned char giCurWatchPlayerBit;
-extern signed char giCurWatchPlayer;
+// GAME stores and reloads it as a dword (retail 0x4c7ca0).
+extern int giCurWatchPlayer;
 // Main: right-click help for the six adventure panel buttons, the typed
 // cheat-digit sequence and the pending menu command.
 extern char* cAdvMenuHelp[];

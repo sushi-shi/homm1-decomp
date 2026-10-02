@@ -769,25 +769,25 @@ short NewGameHandler(tag_message& message) {
                         case 0x7802:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < 4; i++) {
-                                if (gpGame->m_players[i].m_color > 0)
+                                if (gpGame->m_players[i].m_difficulty > 0)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
                                 NormalDialog("A game requires at least one iPlayer.", 1, 0xb1, 0x3c, -1, 0, -1, 0, -1);
                                 break;
                             } else {
-                                if (!gpGame->m_players[1].m_color) {
-                                    if (gpGame->m_players[2].m_color) {
-                                        gpGame->m_players[1].m_color = gpGame->m_players[2].m_color;
-                                        gpGame->m_players[2].m_color = 0;
+                                if (!gpGame->m_players[1].m_difficulty) {
+                                    if (gpGame->m_players[2].m_difficulty) {
+                                        gpGame->m_players[1].m_difficulty = gpGame->m_players[2].m_difficulty;
+                                        gpGame->m_players[2].m_difficulty = 0;
                                     } else {
-                                        gpGame->m_players[1].m_color = gpGame->m_players[3].m_color;
-                                        gpGame->m_players[3].m_color = 0;
+                                        gpGame->m_players[1].m_difficulty = gpGame->m_players[3].m_difficulty;
+                                        gpGame->m_players[3].m_difficulty = 0;
                                     }
                                 }
-                                if (!gpGame->m_players[2].m_color && gpGame->m_players[3].m_color) {
-                                    gpGame->m_players[2].m_color = gpGame->m_players[3].m_color;
-                                    gpGame->m_players[3].m_color = 0;
+                                if (!gpGame->m_players[2].m_difficulty && gpGame->m_players[3].m_difficulty) {
+                                    gpGame->m_players[2].m_difficulty = gpGame->m_players[3].m_difficulty;
+                                    gpGame->m_players[3].m_difficulty = 0;
                                 }
                             }
                         case 0x7801:
@@ -811,10 +811,10 @@ short NewGameHandler(tag_message& message) {
                         case 3:
                         case 4:
                             iPlayer = message.payload.widget.id - 1;
-                            gpGame->m_players[iPlayer].m_color++;
-                            gpGame->m_players[iPlayer].m_color %= 5;
-                            if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_color)
-                                gpGame->m_players[iPlayer].m_color = 1;
+                            gpGame->m_players[iPlayer].m_difficulty++;
+                            gpGame->m_players[iPlayer].m_difficulty %= 5;
+                            if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
+                                gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
                         case 8:
                             gpGame->m_players[0].m_unknown11 = (gpGame->m_players[0].m_unknown11 + 1) % 4;
@@ -877,16 +877,16 @@ void game::UpdateNewGameWindow(void) {
         if (i < giNumHumanPlayers)
             message.payload.widget.data.value = 0x1a;
         else
-            message.payload.widget.data.value = m_players[i].m_color + 5;
+            message.payload.widget.data.value = m_players[i].m_difficulty + 5;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 1; i < 4; i++) {
         message.payload.widget.id = i + 4;
         if (i < giNumHumanPlayers)
-            message.payload.widget.data.text = gHumanPlayerTypeNames[m_players[i].m_color];
+            message.payload.widget.data.text = gHumanPlayerTypeNames[m_players[i].m_difficulty];
         else
-            message.payload.widget.data.text = gPlayerTypeNames[m_players[i].m_color];
+            message.payload.widget.data.text = gPlayerTypeNames[m_players[i].m_difficulty];
         m_newGameWindow->BroadcastMessage(message);
     }
     gpGame->m_difficultyRating = CalcDifficultyRating();
@@ -1367,7 +1367,7 @@ void game::NewMap(char* mapName) {
             if (i == 0)
                 difficulty = m_difficulty;
             else
-                difficulty = m_players[i].m_color - 1;
+                difficulty = m_players[i].m_difficulty - 1;
         } else {
             difficulty = 0;
         }
@@ -2731,13 +2731,13 @@ int game::ComputeDailyGold(int player) {
     gold += m_players[player].NumOfGivenArtifact(27) * 750;
     gold += m_players[player].NumOfGivenArtifact(28) * 500;
     if (!gbHumanPlayer[player]) {
-        if (gpGame->m_players[player].m_color == 1)
+        if (gpGame->m_players[player].m_difficulty == 1)
             gold = gold * 0.75;
-        if (gpGame->m_players[player].m_color == 2) {
+        if (gpGame->m_players[player].m_difficulty == 2) {
         }
-        if (gpGame->m_players[player].m_color == 3)
+        if (gpGame->m_players[player].m_difficulty == 3)
             gold = gold * 1.29;
-        if (gpGame->m_players[player].m_color == 4)
+        if (gpGame->m_players[player].m_difficulty == 4)
             gold = gold * 1.45;
     }
     return gold;
@@ -2783,11 +2783,11 @@ void game::PerDay(void) {
         m_players[i].m_resources[6] += ComputeDailyGold(i);
     for (i = 0; i < m_playerCount; i++) {
         if (!gbHumanPlayer[i]) {
-            if (gpGame->m_players[i].m_color > 2) {
+            if (gpGame->m_players[i].m_difficulty > 2) {
                 m_players[i].m_resources[0]++;
                 m_players[i].m_resources[2]++;
             }
-            if (gpGame->m_players[i].m_color > 3 && m_day >= 1 && m_day <= 6)
+            if (gpGame->m_players[i].m_difficulty > 3 && m_day >= 1 && m_day <= 6)
                 m_players[i].m_resources[m_day - 1]++;
         }
     }
@@ -2837,9 +2837,9 @@ void game::PerWeek(void) {
                 if (townPointer->m_buildings & 0x10)
                     gain += 2;
                 if (townPointer->m_owner >= 0 && !gbHumanPlayer[townPointer->m_owner]) {
-                    if (gpGame->m_players[townPointer->m_owner].m_color == 3)
+                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == 3)
                         gain = gain * 1.24;
-                    if (gpGame->m_players[townPointer->m_owner].m_color == 4)
+                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == 4)
                         gain = gain * 1.36;
                 }
                 if (giWeekType == 1 && gDwellingType[townPointer->m_type][j - 7] == giWeekSpecial)
@@ -3901,7 +3901,7 @@ void game::ShowScenInfo(void) {
     scenWindow->BroadcastMessage(message);
     difficulty = m_difficulty;
     if (giCurPlayer > 0)
-        difficulty = gpCurPlayer->m_color - 1;
+        difficulty = gpCurPlayer->m_difficulty - 1;
     message.payload.widget.id = levelId;
     message.payload.widget.data.text = gDifficultyNames[difficulty];
     scenWindow->BroadcastMessage(message);
@@ -3911,7 +3911,7 @@ void game::ShowScenInfo(void) {
     for (i = 1; i < 4; i++) {
         if (giCurPlayer == 0) {
             sprintf(line1, "%s\n",
-                    gbHumanPlayer[i] ? gHandicapNames[m_players[i].m_color] : gPlayerTypeNames[m_players[i].m_color]);
+                    gbHumanPlayer[i] ? gHandicapNames[m_players[i].m_difficulty] : gPlayerTypeNames[m_players[i].m_difficulty]);
         } else if (i == 1) {
             sprintf(line1, "%s\n", gHandicapNames[m_difficulty + 1]);
         } else {
@@ -3920,7 +3920,7 @@ void game::ShowScenInfo(void) {
             else
                 idx = i - 1;
             sprintf(line1, "%s\n",
-                    gbHumanPlayer[idx] ? gHandicapNames[m_players[idx].m_color] : gPlayerTypeNames[m_players[idx].m_color]);
+                    gbHumanPlayer[idx] ? gHandicapNames[m_players[idx].m_difficulty] : gPlayerTypeNames[m_players[idx].m_difficulty]);
         }
         strcat(gText, line1);
     }
@@ -4005,21 +4005,21 @@ int game::CalcDifficultyRating(void) {
     }
     for (i = 1; i < 4; i++) {
         if (i < giNumHumanPlayers)
-            total += (m_players[i].m_color - 1) * 10;
-        else if (m_players[i].m_color == 0)
+            total += (m_players[i].m_difficulty - 1) * 10;
+        else if (m_players[i].m_difficulty == 0)
             total -= 10;
-        else if (m_players[i].m_color == 1)
+        else if (m_players[i].m_difficulty == 1)
             total += 5;
-        else if (m_players[i].m_color == 2)
+        else if (m_players[i].m_difficulty == 2)
             total += 10;
-        else if (m_players[i].m_color == 3)
+        else if (m_players[i].m_difficulty == 3)
             total += 15;
-        else if (m_players[i].m_color == 4)
+        else if (m_players[i].m_difficulty == 4)
             total += 20;
     }
     gpGame->m_playerCount = 0;
     for (i = 0; i < 4; i++) {
-        if (gpGame->m_players[i].m_color > 0)
+        if (gpGame->m_players[i].m_difficulty > 0)
             gpGame->m_playerCount++;
     }
     if (gbKingOfTheHill) {
