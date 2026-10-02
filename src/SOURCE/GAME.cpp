@@ -190,9 +190,9 @@ int playerData::NumOfGivenArtifact(int artifact) {
 // ten) and skips player 0's hint.
 VA(0x0043933d, 0x386)
 void ComputeUALoc(int player) {
+    int y;
     int tries;
     int x;
-    int y;
     int heading;
     int numObelisks;
 
@@ -675,9 +675,9 @@ extern char* gNewGameHelp[];
 // packs the chosen opponents before closing the dialog.
 VA(0x0043afa1, 0x581)
 short NewGameHandler(tag_message& message) {
+    int iPlayer;
     int i;
     int helpIndex;
-    int iPlayer;
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
@@ -1435,9 +1435,9 @@ VA(0x0043d6a7, 0xc63)
 void game::RandomizeEvents(void) {
     unsigned char overlayTileset;
     unsigned char objTileset;
-    short j;
     short y;
     short i;
+    short j;
     signed char id;
     short x;
     mapCell* cell;
@@ -3570,9 +3570,9 @@ int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
 VA(0x004444ca, 0x92)
 int SGenRand(void)
 {
+    int bitMask;
     int value = 0;
     int i;
-    int bitMask;
     iLastSeed &= 0xfff;
     iLastSeed *= 7;
     iLastSeed += (iLastSeed & 0xff0) >> 4;
@@ -3855,8 +3855,8 @@ void game::RandomizeTerrainTiles(void) {
 // no late overlays.
 VA(0x00444f6d, 0x129)
 void game::ProcessMapExtra(void) {
-    mapCell* cellPtr;
     int y;
+    mapCell* cellPtr;
     int x;
     signed char townNum;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
@@ -3882,13 +3882,13 @@ void game::ProcessMapExtra(void) {
 // buildings; a map whose towns all lack owners leaves the placeholder -2.
 VA(0x00445096, 0x213)
 signed char game::SetupTowns(void) {
+    mapTownExtra* extra;
     int own;
     signed char noOwners;
     town* town;
     int j;
     int i;
     int mask;
-    mapTownExtra* extra;
     noOwners = 1;
     mask = 0x1f9f;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
@@ -3934,16 +3934,16 @@ signed char game::SetupTowns(void) {
 // town gate occupies the town.
 VA(0x004452a9, 0x347)
 void game::ProcessOnMapHeroes(void) {
+    int mapY;
+    mapHeroExtra* extra;
     town* town;
     int townId;
     int iPlayer;
     int k;
-    int mapY;
     int j;
     int mapX;
     mapCell* north;
     mapCell* cell;
-    mapHeroExtra* extra;
     hero* theHero;
 
     for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
@@ -4068,19 +4068,19 @@ void BVResMsg(char*, int, int);
 VA(0x004459a5, 0x6e9)
 int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     int okay;
-    int prevReady;
     char pathname[456];
     char* outData;
+    int block;
     int numBlocks;
-    int sendPacketIndex;
-    int segCount;
+    int prevReady;
     int junk3;
     int oldTrack;
-    int fileHandle;
-    int junk2;
-    int block;
     char* sendPacket;
     int blockSize;
+    int sendPacketIndex;
+    int segCount;
+    int fileHandle;
+    int junk2;
     char* incoming;
     char acked[500];
     int junk1;
