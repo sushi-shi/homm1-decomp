@@ -127,7 +127,7 @@ short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex) || unit == NULL)
         return 0;
     path = m_directions;
-    PushCombatPoint(sourceHex, (signed char)(unit->m_facing == 1 ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST), 0,
+    PushCombatPoint(sourceHex, (signed char)(unit->m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST), 0,
                     unit->m_stats.speed);
     while (m_queueCount > 0) {
         m_queueCount--;

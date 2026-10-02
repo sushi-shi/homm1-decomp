@@ -62,10 +62,32 @@ H1_ENUM_BEGIN(CombatPointerCode)
 H1_ENUM_END(CombatPointerCode)
 
 // clang-format off
+// The hex grid is nine columns by five rows (hex = row * 9 + column):
+// DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
+// m_hex with % and / 9 and treats columns 0 and 8 as the side edges.
 H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
-    COMBAT_SIDE_ARMY_COUNT = 6
+    COMBAT_SIDE_ARMY_COUNT = 6,
+    COMBAT_GRID_COLUMNS = 9,
+    COMBAT_GRID_LAST_COLUMN = 8,
+    COMBAT_GRID_ROWS = 5
 H1_ENUM_CONST_END(CombatGridConstant)
+
+// combatManager::m_combatIcons slots, as LoadCombatResources fills them:
+// the terrain's ground and obstacle icons, textbar.icn, catapult.icn,
+// tent.icn, castle%02d.icn, cloud.icn, keep%02d.icn and spells.icn.
+H1_ENUM_BEGIN(CombatIconSlot)
+    COMBAT_ICON_GROUND = 0,
+    COMBAT_ICON_TEXTBAR = 1,
+    COMBAT_ICON_OBSTACLES = 2,
+    COMBAT_ICON_CATAPULT = 3,
+    COMBAT_ICON_TENT = 4,
+    COMBAT_ICON_CASTLE = 5,
+    COMBAT_ICON_CLOUD = 6,
+    COMBAT_ICON_KEEP = 7,
+    COMBAT_ICON_SPELLS = 8,
+    COMBAT_ICON_COUNT = 9
+H1_ENUM_END(CombatIconSlot)
 // clang-format on
 
 // Buka CombatRemotePacket: the combat action relayed through
@@ -121,7 +143,7 @@ public:
     // Nine combat icons (retail loops 0..8 from +0x271): hexcell draws
     // ground (index), obstacles (2), towers (5) and walls (6); armies draw
     // the quantity box (1) and spell markers (8).
-    class icon* m_combatIcons[9];
+    class icon* m_combatIcons[COMBAT_ICON_COUNT];
     // Clean combat background: FlyTo and army::Walk restore the screen from it.
     class bitmap* m_backgroundBuffer;
     signed char m_backgroundDrawn;

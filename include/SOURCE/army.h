@@ -8,6 +8,74 @@
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/spellTypes.h>
 
+// clang-format off
+// tag_monsterStats::attributes bits, which army::Init copies into each
+// stack's m_stats. Buka 2.1 KB_TYPES.h MonsterFlags numbering; HoMM1 uses
+// each bit as Buka does: LoadResources loads .atk/shoot sounds only for
+// shooters, FLY tests flyers, the breath bit selects the two-hex DoAttack
+// path (dragons, phoenixes), army::Damage/PowEffect set DEAD, CMBTMGR's
+// good-morale bonus sets HIGH_MORALE, DoAttack sets RETALIATED (griffins
+// excepted) and the turn code sets TURN_SPENT.
+H1_ENUM_FLAGS_BEGIN(MonsterFlags, int)
+    MONSTER_FLAGS_NONE = 0x0,
+    MONSTER_FLAGS_WIDE = 0x1,
+    MONSTER_FLAGS_FLYING = 0x2,
+    MONSTER_FLAGS_SHOOTER = 0x4,
+    MONSTER_FLAGS_BREATH_ATTACK = 0x8,
+    MONSTER_FLAGS_DEAD = 0x10,
+    MONSTER_FLAGS_HIGH_MORALE = 0x20,
+    MONSTER_FLAGS_RETALIATED = 0x40,
+    MONSTER_FLAGS_TURN_SPENT = 0x80
+H1_ENUM_FLAGS_END(MonsterFlags)
+
+// army::m_animationSequence: the pose army::DrawToBuffer draws. 0 stands
+// (std icon), 1 walks (wlk icon, Walk and FlyTo), 2 attacks (atk/std
+// icon, SpecialAttack), 3 shows a PowEffect/SpellEffect hit.
+H1_ENUM_BEGIN(ArmyAnimationSequence)
+    ARMY_ANIMATION_STAND = 0,
+    ARMY_ANIMATION_WALK = 1,
+    ARMY_ANIMATION_ATTACK = 2,
+    ARMY_ANIMATION_EFFECT = 3
+H1_ENUM_END(ArmyAnimationSequence)
+
+// army::m_samples slots loaded by LoadResources from move%02d, atksnd%02d,
+// wince%02d and (shooters only) shoot%02d .82M files.
+H1_ENUM_BEGIN(ArmySampleType)
+    ARMY_SAMPLE_MOVE = 0,
+    ARMY_SAMPLE_ATTACK = 1,
+    ARMY_SAMPLE_WINCE = 2,
+    ARMY_SAMPLE_SHOOT = 3,
+    ARMY_SAMPLE_COUNT = 4
+H1_ENUM_END(ArmySampleType)
+
+// army::m_facing, passed as the icon mirror flag. Init sets side ^ 1, so
+// attackers face right; a wide stack facing right has its tail at hex - 1
+// (Buka combatTypes.h ArmyFacing).
+H1_ENUM_BEGIN(ArmyFacing)
+    ARMY_FACING_LEFT = 0,
+    ARMY_FACING_RIGHT = 1
+H1_ENUM_END(ArmyFacing)
+
+// army::m_spellEndCondition: what ends m_spellEffect early (Buka
+// ArmySpellCancelType numbering); Init and CancelSpell store NONE.
+H1_ENUM_BEGIN(ArmySpellCancelType)
+    ARMY_CANCEL_SPELLS_NONE = -1,
+    ARMY_CANCEL_SPELLS_AFTER_MOVE = 0,
+    ARMY_CANCEL_SPELLS_AFTER_ATTACK = 1,
+    ARMY_CANCEL_SPELLS_AFTER_DAMAGE = 2,
+    ARMY_CANCEL_SPELLS_ROUNDS_ONLY = 3
+H1_ENUM_END(ArmySpellCancelType)
+
+// LoadResources' sample playback settings and DrawToBuffer's quantity text
+// buffer (Buka ArmyCombatConstant ARMY_SAMPLE_VOLUME/CHANNEL and
+// ARMY_QUANTITY_TEXT_SIZE).
+H1_ENUM_CONST_BEGIN(ArmyCombatConstant)
+    ARMY_SAMPLE_VOLUME = 0x40,
+    ARMY_SAMPLE_CHANNEL = 3,
+    ARMY_QUANTITY_TEXT_SIZE = 12
+H1_ENUM_CONST_END(ArmyCombatConstant)
+// clang-format on
+
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
 #pragma pack(push, 1)
@@ -25,9 +93,9 @@ public:
     signed char m_hex;
     // DrawToBuffer: pose 0 stand, 1 walk, 2 attack, 3 spell effect
     // (Buka m_animationSequence) and the frame within it.
-    signed char m_animationSequence;
+    H1_ENUM_STORAGE(ArmyAnimationSequence, signed char) m_animationSequence;
     signed char m_animationFrame;
-    signed char m_facing;
+    H1_ENUM_STORAGE(ArmyFacing, signed char) m_facing;
     // Walk sets +-16 on diagonal moves; DrawToBuffer shifts y by frame * step.
     short m_walkYStep;
     short m_initialQuantity;
@@ -61,12 +129,12 @@ public:
     class icon* m_walkIcon;
     class icon* m_attackIcon;
     // move, attack, wince and shoot sounds.
-    class sample* m_samples[4];
+    class sample* m_samples[ARMY_SAMPLE_COUNT];
     // Active spell; HoMM1 lets a stack carry one timed effect.
     signed char m_spellEffect;
     // What breaks m_spellEffect early: 0 the stack moving, 1 its own attack,
     // 2 taking damage, 3 only the round count; -1 with no spell.
-    signed char m_spellEndCondition;
+    H1_ENUM_STORAGE(ArmySpellCancelType, signed char) m_spellEndCondition;
     // ResetRound counts this down and expires the effect at zero.
     signed char m_spellRounds;
     // --- constructors ---

@@ -53,7 +53,7 @@ int combatManager::AICheckRetreat(void) {
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
             if (m_armies[side][armyIndex].IsAlive()) {
                 armyPtr->m_creatureTypes[armyIndex] = m_armies[side][armyIndex].m_creatureType;
-                if (m_armies[side][armyIndex].m_stats.attributes & 0x80)
+                if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
                     armyPtr->m_creatureCounts[armyIndex] = m_armies[side][armyIndex].m_quantity;
                 else
                     armyPtr->m_creatureCounts[armyIndex] = static_cast<short>(m_armies[side][armyIndex].m_quantity * 1.2);
@@ -176,12 +176,12 @@ void combatManager::DoCompAI(signed char) {
         canOutshoot = 1;
     if (foeShooters > myShootPower)
         stronger = 1;
-    if (currentArmy->m_stats.attributes & 4) {
+    if (currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) {
         if (currentArmy->m_stats.shots > 0)
             plan = 1;
         else
             plan = 3;
-    } else if (currentArmy->m_stats.attributes & 2) {
+    } else if (currentArmy->m_stats.attributes & MONSTER_FLAGS_FLYING) {
         plan = 2;
     } else {
         plan = 3;
@@ -251,8 +251,8 @@ void combatManager::DoCompAI(signed char) {
                     goto finish;
                 else if (WalkTowardArmy(currentArmy, sideEnemy, flyerMasks[sideEnemy]))
                     goto finish;
-                if (m_currentSide == 1 && m_castleSide[0] && currentArmy->m_hex % 9 < 4) {
-                    targetHex = currentArmy->m_hex / 9 * 9 + 4;
+                if (m_currentSide == 1 && m_castleSide[0] && currentArmy->m_hex % COMBAT_GRID_COLUMNS < 4) {
+                    targetHex = currentArmy->m_hex / COMBAT_GRID_COLUMNS * COMBAT_GRID_COLUMNS + 4;
                     hexCell = &gpCombatManager->m_hexCells[targetHex];
                     if (ValidHex(targetHex) && hexCell->m_occupantSide == -1 && hexCell->m_obstacleIndex == -1) {
                         giNextAction = 2;
@@ -288,7 +288,7 @@ short combatManager::GetShooterMask(signed char side) {
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & 0x10) && (army->m_stats.attributes & 4)
+        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD) && (army->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
             && army->m_stats.shots > 0)
             armyMask |= bitMask;
         bitMask <<= 1;
@@ -306,7 +306,7 @@ short combatManager::GetFlyerMask(signed char side) {
     armyMask = 0;
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & 0x10) && (army->m_stats.attributes & 2))
+        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD) && (army->m_stats.attributes & MONSTER_FLAGS_FLYING))
             armyMask |= bitMask;
         bitMask <<= 1;
     }
@@ -322,8 +322,8 @@ short combatManager::GetWalkerMask(signed char side) {
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & 0x10) && !(army->m_stats.attributes & 2)
-            && (!(army->m_stats.attributes & 4) || army->m_stats.shots <= 0))
+        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD) && !(army->m_stats.attributes & MONSTER_FLAGS_FLYING)
+            && (!(army->m_stats.attributes & MONSTER_FLAGS_SHOOTER) || army->m_stats.shots <= 0))
             armyMask |= bitMask;
         bitMask <<= 1;
     }
@@ -406,7 +406,7 @@ unsigned long int combatManager::GetStrength(signed char side, short mask) {
     for (index = 0; index < m_numArmies[side]; index++) {
         if (mask & bitMask) {
             army = &m_armies[side][index];
-            if (army && !(army->m_stats.attributes & 0x10))
+            if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 total += army->Strength();
         }
         bitMask <<= 1;
@@ -437,8 +437,8 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
             giNextActionGridIndex = targetHex;
             return 1;
         }
-        if (m_armies[side][targetArmy].m_stats.attributes & 1) {
-            if (m_armies[side][targetArmy].m_facing == 1)
+        if (m_armies[side][targetArmy].m_stats.attributes & MONSTER_FLAGS_WIDE) {
+            if (m_armies[side][targetArmy].m_facing == ARMY_FACING_RIGHT)
                 targetHex--;
             else
                 targetHex++;
@@ -472,15 +472,15 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (openMask & oneBit) {
             hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, dir);
-            if (ValidHex(hex) && (currentArmy->m_stats.attributes & 1)
+            if (ValidHex(hex) && (currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
                     && m_hexCells[hex].m_occupantSide != 1 - m_currentSide
                 || m_hexCells[hex].m_occupantIndex == m_currentArmyIndex
                     && m_hexCells[hex].m_occupantSide == m_currentSide) {
-                if (currentArmy->m_facing == 0)
+                if (currentArmy->m_facing == ARMY_FACING_LEFT)
                     otherHex = currentArmy->m_hex + 1;
                 else
                     otherHex = currentArmy->m_hex - 1;
-                if (hex % 9 != 0 && hex % 9 != 8)
+                if (hex % COMBAT_GRID_COLUMNS != 0 && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN)
                     hex = currentArmy->GetAdjacentCellIndex(otherHex, dir);
                 if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
                     hex = -1;
@@ -520,13 +520,13 @@ signed char combatManager::WalkTowardArmyFront(class army* currentArmy, signed c
         return 0;
     frontDelta = 1;
     frontHex = m_armies[side][armyIndex].m_hex;
-    if (m_armies[side][armyIndex].m_stats.attributes & 1)
+    if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_WIDE)
         frontDelta = 2;
-    if (currentArmy->m_facing == 0)
+    if (currentArmy->m_facing == ARMY_FACING_LEFT)
         frontHex = frontHex + frontDelta;
     else
         frontHex = frontHex + -frontDelta;
-    if (frontHex % 9 == 8 || frontHex % 9 == 0)
+    if (frontHex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN || frontHex % COMBAT_GRID_COLUMNS == 0)
         return WalkTowardArmy(currentArmy, side, mask);
     oldSpeed = currentArmy->m_stats.speed;
     currentArmy->m_stats.speed = 127;
@@ -575,12 +575,12 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
     savedSpeed = currentArmy->m_stats.speed;
     currentArmy->m_stats.speed = 127;
     routeGot = gpSearchArray->FindCombatPath(currentArmy->m_hex, goalHex, currentArmy, -1);
-    if (!routeGot && (targetPtr->m_stats.attributes & 1)) {
+    if (!routeGot && (targetPtr->m_stats.attributes & MONSTER_FLAGS_WIDE)) {
         switch (targetPtr->m_facing) {
-            case 1:
+            case ARMY_FACING_RIGHT:
                 goalHex = goalHex - 1;
                 break;
-            case 0:
+            case ARMY_FACING_LEFT:
                 goalHex = goalHex + 1;
                 break;
         }
