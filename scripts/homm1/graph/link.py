@@ -49,6 +49,17 @@ LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
 #: name and stack reserve - see the file's own header.
 MODULE_DEF = REPO / "config/heroes.def"
 
+#: Retail .text has NETAPI32's `Netbios` jump thunk at 0x0047343c, between
+#: comwin (the last game object of the SOURCE run) and the BASE run starting
+#: at 0x00473450. A thunk is an import-library member, and LINK places
+#: library members after every object on the line, in the order it pulls
+#: them; so everything from here on was itself pulled from a library searched
+#: after netapi32.lib - the BASE library. Its member order is VC4 LINK's pull
+#: order (first reference in the undefined-symbol list), not a list we choose.
+BASE_LIBRARY_FROM = 0x00073450
+BASE_LIBRARY = "base.lib"
+BASE_LIBRARY_AFTER = "netapi32.lib"
+
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.
 
@@ -139,6 +150,23 @@ def _unit_of(obj: Path) -> str | None:
     return "/".join(parts[-2:]) if len(parts) >= 2 else None
 
 
+def first_claimed_rva(obj: Path, claims_dir: Path | None = None) -> int | None:
+    """The unit's lowest claimed function RVA (dynamic initializers excluded)."""
+    from homm1 import graph
+    claims_dir = Path(claims_dir or REPO / graph.CLAIMS_DIR)
+    unit = _unit_of(obj)
+    f = claims_dir / f"{unit}.tsv" if unit else None
+    lo = None
+    if f is not None and f.is_file():
+        for ln in f.read_text().splitlines():
+            c = ln.split("\t")
+            if (len(c) > 4 and c[0].startswith("0x") and c[3] == "func"
+                    and c[4] != "src_dyninit"):
+                rva = int(c[0], 16)
+                lo = rva if lo is None else min(lo, rva)
+    return lo
+
+
 def retail_code_order(objs: list[Path], claims_dir: Path | None = None
                       ) -> tuple[list[Path], list[Path]]:
     """`objs` sorted by each unit's lowest claimed retail function RVA.
@@ -150,20 +178,9 @@ def retail_code_order(objs: list[Path], claims_dir: Path | None = None
     Returns (ordered, unplaced) - objects with no claim keep their relative
     order and follow the placed ones.
     """
-    from homm1 import graph
-    claims_dir = Path(claims_dir or REPO / graph.CLAIMS_DIR)
     keyed, unplaced = [], []
     for i, obj in enumerate(objs):
-        unit = _unit_of(obj)
-        f = claims_dir / f"{unit}.tsv" if unit else None
-        lo = None
-        if f is not None and f.is_file():
-            for ln in f.read_text().splitlines():
-                c = ln.split("\t")
-                if (len(c) > 4 and c[0].startswith("0x") and c[3] == "func"
-                        and c[4] != "src_dyninit"):
-                    rva = int(c[0], 16)
-                    lo = rva if lo is None else min(lo, rva)
+        lo = first_claimed_rva(obj, claims_dir)
         (keyed.append((lo, i, obj)) if lo is not None else unplaced.append(obj))
     return [o for _lo, _i, o in sorted(keyed)] + unplaced, unplaced
 
@@ -174,7 +191,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
               incremental: bool = False,
               base: str = "0x400000", keep_all: bool = False,
               extra_flags: list[str] = (), dry_run: bool = False,
-              retail_order: bool = True) -> dict:
+              retail_order: bool = True, base_library: bool = True) -> dict:
     """Link the candidate image; returns {objs, libs, unresolved, duplicates}.
 
     `dry_run` assembles the response file and stops before link.exe - the way
@@ -190,12 +207,20 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     objs = collect_objs(Path(objs_dir), order=order, explicit=explicit)
     if not objs:
         raise ToolError("no objects to link")
+    members: list[Path] = []
     if order is None and retail_order:
         objs, unplaced = retail_code_order(objs)
         print(f"[link] object order: retail code order of each unit's first "
               f"claimed function ({len(objs) - len(unplaced)} placed"
               + (f", {len(unplaced)} unclaimed appended" if unplaced else "")
               + ")")
+        if base_library:
+            members = [o for o in objs
+                       if (first_claimed_rva(o) or -1) >= BASE_LIBRARY_FROM]
+            objs = [o for o in objs if o not in members]
+            print(f"[link] {len(objs)} explicit object(s); {len(members)} "
+                  f"BASE member(s) in {BASE_LIBRARY}, searched after "
+                  f"{BASE_LIBRARY_AFTER}")
 
     # No /ENTRY: LINK's default for /SUBSYSTEM:WINDOWS is LIBC's
     # WinMainCRTStartup, and naming it up front pulls wincrt0.obj to the head
@@ -224,6 +249,21 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
             if path is not None:
                 available[name] = str(path)
     libs += [available.get(n, n) for n in LINK_LIBS]       # substitute IN PLACE
+    if members:
+        base_lib = out.parent / BASE_LIBRARY
+        at = next((i + 1 for i, x in enumerate(libs)
+                   if Path(x).name.lower() == BASE_LIBRARY_AFTER), len(libs))
+        libs.insert(at, str(base_lib))
+        lib_rsp = out.parent / f"{out.stem}.lib.rsp"
+        lib_rsp.write_text("\n".join(["/NOLOGO", f"/OUT:{winepath(base_lib)}",
+                                      *[f'"{winepath(o)}"' for o in members]])
+                           + "\n")
+        if not dry_run:
+            base_lib.unlink(missing_ok=True)
+            # `-lib` must be LINK's first argument; inside a response file
+            # it is read as a link option.
+            link_tool.link(["-lib", f"@{winepath(lib_rsp)}"], cwd=out.parent,
+                           expect=[base_lib])
     rsp_lines += [winepath(x) if Path(x).exists() else x for x in libs]
     rsp_lines += [f'"{winepath(o)}"' for o in objs]
     if res is not None:
@@ -322,6 +362,10 @@ def main() -> int:
                     action="store_false",
                     help="keep the given object order instead of sorting by "
                          "each unit's first claimed retail RVA")
+    ap.add_argument("--no-base-library", dest="base_library",
+                    action="store_false",
+                    help="link the BASE units as explicit objects instead of "
+                         "the retail BASE library")
     ap.add_argument("--dry-run", action="store_true",
                     help="assemble the response file and stop before link.exe")
     ap.add_argument("flags", nargs=argparse.REMAINDER,
@@ -333,7 +377,7 @@ def main() -> int:
                   explicit=a.obj, extra_libs=a.lib,
                   incremental=a.incremental, base=a.base,
                   keep_all=a.keep_all, extra_flags=extra, dry_run=a.dry_run,
-                  retail_order=a.retail_order)
+                  retail_order=a.retail_order, base_library=a.base_library)
     except (ToolError, OSError) as e:
         print(f"[link] {e}", file=sys.stderr)
         return 1
