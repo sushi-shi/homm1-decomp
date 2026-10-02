@@ -79,7 +79,7 @@ void townObject::Draw(signed char advanceAnimation)
     if (!m_visible)
         return;
     m_icon->DrawToBuffer(0, 0, 0, ICON_DRAW_NORMAL, 0);
-    if (m_buildingId == 0) {
+    if (m_buildingId == BUILDING_SLOT_MAGE_GUILD) {
         for (level = 0; level < gpTownManager->m_town->m_buildState; level++)
             m_icon->DrawToBuffer(0, 0, (level + 1) * 2, ICON_DRAW_NORMAL, 0);
         m_icon->DrawToBuffer(0, 0, gpTownManager->m_town->m_buildState * 2 + 1, ICON_DRAW_NORMAL, 0);
@@ -389,12 +389,12 @@ void townManager::SetCommandAndText(struct tag_message &message)
         case BUILDING_SLOT_CASTLE:
             strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + 6]);
             break;
-        case BUILDING_SLOT_DWELLING_FIRST:
-        case BUILDING_SLOT_DWELLING_FIRST + 1:
-        case BUILDING_SLOT_DWELLING_FIRST + 2:
-        case BUILDING_SLOT_DWELLING_FIRST + 3:
-        case BUILDING_SLOT_DWELLING_FIRST + 4:
-        case BUILDING_SLOT_DWELLING_FIRST + 5:
+        case BUILDING_SLOT_DWELLING_1:
+        case BUILDING_SLOT_DWELLING_2:
+        case BUILDING_SLOT_DWELLING_3:
+        case BUILDING_SLOT_DWELLING_4:
+        case BUILDING_SLOT_DWELLING_5:
+        case BUILDING_SLOT_DWELLING_6:
             sprintf(m_statusText, cTownCommand[TOWN_TEXT_DWELLING],
                     gArmyNames[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]);
             break;
@@ -451,12 +451,12 @@ short townManager::Main(struct tag_message &message)
             switch (message.command) {
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case BUILDING_SLOT_DWELLING_FIRST:
-                        case BUILDING_SLOT_DWELLING_FIRST + 1:
-                        case BUILDING_SLOT_DWELLING_FIRST + 2:
-                        case BUILDING_SLOT_DWELLING_FIRST + 3:
-                        case BUILDING_SLOT_DWELLING_FIRST + 4:
-                        case BUILDING_SLOT_DWELLING_FIRST + 5:
+                        case BUILDING_SLOT_DWELLING_1:
+                        case BUILDING_SLOT_DWELLING_2:
+                        case BUILDING_SLOT_DWELLING_3:
+                        case BUILDING_SLOT_DWELLING_4:
+                        case BUILDING_SLOT_DWELLING_5:
+                        case BUILDING_SLOT_DWELLING_6:
                             if (rightClick) {
                                 QuickViewRecruit(m_town, message.id - 7);
                                 break;
@@ -1021,7 +1021,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     dwellIndex = -1;
     if (building > 6)
         dwellIndex = building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * 6;
-    if (building == 0) {
+    if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & 1)
             iMageLevel = gpTownManager->m_town->m_buildState + 1;
         else
@@ -1137,7 +1137,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     else
         iEvt.value = building + 1;
     nBuildWindow->BroadcastMessage(iEvt);
-    if (building == 0)
+    if (building == BUILDING_SLOT_MAGE_GUILD)
         sprintf(gText, "Mage Guild, Level %d", iMageLevel + 1);
     else
         strcpy(gText, GetBuildingName(building));
@@ -2016,12 +2016,12 @@ short CastleHandler(struct tag_message &message)
                     case BUILDING_SLOT_TAVERN:
                     case BUILDING_SLOT_SHIPYARD:
                     case BUILDING_SLOT_WELL:
-                    case BUILDING_SLOT_DWELLING_FIRST:
-                    case BUILDING_SLOT_DWELLING_FIRST + 1:
-                    case BUILDING_SLOT_DWELLING_FIRST + 2:
-                    case BUILDING_SLOT_DWELLING_FIRST + 3:
-                    case BUILDING_SLOT_DWELLING_FIRST + 4:
-                    case BUILDING_SLOT_DWELLING_FIRST + 5:
+                    case BUILDING_SLOT_DWELLING_1:
+                    case BUILDING_SLOT_DWELLING_2:
+                    case BUILDING_SLOT_DWELLING_3:
+                    case BUILDING_SLOT_DWELLING_4:
+                    case BUILDING_SLOT_DWELLING_5:
+                    case BUILDING_SLOT_DWELLING_6:
                         if (gpTownManager->m_town->m_buildings & (1 << message.id))
                             sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_ALREADY_BUILT],
                                     gpTownManager->GetBuildingName(message.id));
@@ -2080,12 +2080,12 @@ short CastleHandler(struct tag_message &message)
                     case BUILDING_SLOT_TAVERN:
                     case BUILDING_SLOT_SHIPYARD:
                     case BUILDING_SLOT_WELL:
-                    case BUILDING_SLOT_DWELLING_FIRST:
-                    case BUILDING_SLOT_DWELLING_FIRST + 1:
-                    case BUILDING_SLOT_DWELLING_FIRST + 2:
-                    case BUILDING_SLOT_DWELLING_FIRST + 3:
-                    case BUILDING_SLOT_DWELLING_FIRST + 4:
-                    case BUILDING_SLOT_DWELLING_FIRST + 5:
+                    case BUILDING_SLOT_DWELLING_1:
+                    case BUILDING_SLOT_DWELLING_2:
+                    case BUILDING_SLOT_DWELLING_3:
+                    case BUILDING_SLOT_DWELLING_4:
+                    case BUILDING_SLOT_DWELLING_5:
+                    case BUILDING_SLOT_DWELLING_6:
                         if (!quickFlag
                             && ((gpTownManager->m_town->m_buildings & (1 << message.id))
                                 || !(gpTownManager->m_buildableBuildings

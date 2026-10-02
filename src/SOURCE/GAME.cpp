@@ -142,8 +142,8 @@ int playerData::BuildingsOwned(int townType, int buildingIndex, int buildState) 
     int i;
     for (i = 0; i < m_townCount; ++i) {
         town* ownedTown = &gpGame->m_castleRecs[m_townIds[i]];
-        if (buildingIndex < 7 || ownedTown->m_type == townType) {
-            if (buildingIndex == 0) {
+        if (buildingIndex < BUILDING_SLOT_DWELLING_FIRST || ownedTown->m_type == townType) {
+            if (buildingIndex == BUILDING_SLOT_MAGE_GUILD) {
                 if (ownedTown->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)) {
                     if (ownedTown->m_buildState == buildState)
                         ++count;
@@ -3074,7 +3074,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
             m_castleRecs[townNum].m_buildings = 0;
     }
     if (isCastle) {
-        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_FIRST));
+        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_1));
         m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
         if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
             m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
@@ -3119,7 +3119,7 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
         }
     }
     if (!m_castleRecs[townId].m_customized) {
-        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_FIRST);
+        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_1);
         m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[townType][0]].growth;
         if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
             dwellingCount++;

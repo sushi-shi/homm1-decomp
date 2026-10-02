@@ -140,7 +140,7 @@ void philAI::CheckBuyStuff(void) {
         dockTown = NULL;
     }
     if (giBuildShipyard[giCurPlayer] >= 0) {
-        if (CanBuy(dockTown, 3) && CanBuild(dockTown, 3)) {
+        if (CanBuy(dockTown, BUILDING_SLOT_SHIPYARD) && CanBuild(dockTown, 3)) {
             BuildBuilding(dockTown, 3);
             giBuildShipyard[giCurPlayer] = -1;
         } else {
@@ -1169,16 +1169,16 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
     case BUILDING_SLOT_TAVERN:
         curBenefit = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) / 3000.0f * curBenefit;
         break;
-    case BUILDING_SLOT_DWELLING_FIRST:
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
+    case BUILDING_SLOT_DWELLING_1:
+    case BUILDING_SLOT_DWELLING_2:
+    case BUILDING_SLOT_DWELLING_3:
+    case BUILDING_SLOT_DWELLING_4:
+    case BUILDING_SLOT_DWELLING_5:
+    case BUILDING_SLOT_DWELLING_6:
         if (numFilledSlots == 5) {
             creatureLocated = 0;
             for (i = 0; i < 5; i++)
-                if (gDwellingType[townPointer->m_type][building - 7] == townPointer->m_army.m_creatureTypes[i])
+                if (gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST] == townPointer->m_army.m_creatureTypes[i])
                     creatureLocated = 1;
             if (!creatureLocated)
                 break;
@@ -1186,14 +1186,14 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         curBenefit = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue + 0.66) * curBenefit;
         curBenefit = (gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase * 2.0f + 0.33) * curBenefit;
         curBenefit = (1.0 - gpCurPlayer->BuildingsOwned(factionId, building, 0) * 0.05) * curBenefit;
-        if (building - 7 < highestDwellingId)
+        if (building - BUILDING_SLOT_DWELLING_FIRST < highestDwellingId)
             curBenefit = (1.66 - dwellingsOwned * 0.33) * curBenefit;
         if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
             curBenefit = curBenefit * 1.1;
         for (dwellingIndex = 0; dwellingIndex < 6; dwellingIndex++) {
             currentCreatureType = gDwellingType[townPointer->m_type][dwellingIndex];
             if ((townPointer->m_buildings & (1 << (dwellingIndex + 7))) && townPointer->m_garrison[dwellingIndex] > 0
-                && gMonsterDatabase[gDwellingType[townPointer->m_type][building - 7]].iconIndex
+                && gMonsterDatabase[gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST]].iconIndex
                        < gMonsterDatabase[currentCreatureType].iconIndex * 1.2) {
                 curBenefit = 0;
                 break;
@@ -1912,7 +1912,7 @@ VA(0x0041fb80, 0xb1)
 int philAI::ValueOfTown(town* townPointer) {
     int sum = 0;
     int building;
-    for (building = BUILDING_SLOT_MAGE_GUILD; building < 13; building++) {
+    for (building = BUILDING_SLOT_MAGE_GUILD; building < BUILDING_SLOT_COUNT; building++) {
         if (townPointer->m_buildings & (1 << building))
             sum += GetBuildingBaseResourceValue(
                 townPointer->m_type,
@@ -2606,9 +2606,9 @@ void philAI::BuildBuilding(town* townPointer, short building) {
             townPointer->GiveSpells();
     }
     townPointer->m_buildings |= 1 << building;
-    if (building >= 7 && building <= 12)
-        townPointer->m_garrison[building - 7] =
-            gMonsterDatabase[gDwellingType[townPointer->m_type][building - 7]].growth;
+    if (building >= BUILDING_SLOT_DWELLING_FIRST && building <= BUILDING_SLOT_DWELLING_LAST)
+        townPointer->m_garrison[building - BUILDING_SLOT_DWELLING_FIRST] =
+            gMonsterDatabase[gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST]].growth;
     if (building == BUILDING_SLOT_CASTLE) {
         townPointer->m_buildings &= ~0x20;
         townPointer->XformToCastle();
