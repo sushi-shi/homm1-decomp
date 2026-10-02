@@ -22,6 +22,21 @@
 H1_ENUM_BEGIN(SetupDialogResult)
     DIALOG_CANCEL = 0x7801
 H1_ENUM_END(SetupDialogResult)
+
+// The setup dialogs' numbered choice buttons (BaseSetupHandler accepts ids
+// 1..1000): each game::Setup* maps CHOICE_n to its option and the handlers
+// show help row n - 1 (Buka 2.1 SETUP.cpp SetupDialogChoice/SetupHelpIndex).
+H1_ENUM_BEGIN(SetupDialogChoice)
+    CHOICE_ONE = 1,
+    CHOICE_TWO = 2,
+    CHOICE_THREE = 3,
+    CHOICE_FOUR = 4
+H1_ENUM_END(SetupDialogChoice)
+
+H1_ENUM_BEGIN(SetupHelpIndex)
+    NO_HELP = -1,
+    HELP_FIRST = 0
+H1_ENUM_END(SetupHelpIndex)
 // clang-format on
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
@@ -34,16 +49,16 @@ signed char game::SetupCampaignGame(void) {
     gpWindowManager->DoDialog(window, SetupCampaignGameHandler, 0);
     delete window;
     switch (gpWindowManager->m_dialogResult) {
-        case 1:
+        case CHOICE_ONE:
             giCampaignChoice = 1;
             break;
-        case 2:
+        case CHOICE_TWO:
             giCampaignChoice = 2;
             break;
-        case 3:
+        case CHOICE_THREE:
             giCampaignChoice = 3;
             break;
-        case 4:
+        case CHOICE_FOUR:
             giCampaignChoice = 4;
             break;
         case DIALOG_CANCEL:
@@ -63,16 +78,16 @@ signed char game::SetupBaud(void) {
     gpWindowManager->DoDialog(window, SetupBaudHandler, 0);
     delete window;
     switch (gpWindowManager->m_dialogResult) {
-        case 1:
+        case CHOICE_ONE:
             gConfig.baudRate[gbDirectConnect] = 2400;
             break;
-        case 2:
+        case CHOICE_TWO:
             gConfig.baudRate[gbDirectConnect] = 9600;
             break;
-        case 3:
+        case CHOICE_THREE:
             gConfig.baudRate[gbDirectConnect] = 19200;
             break;
-        case 4:
+        case CHOICE_FOUR:
             gConfig.baudRate[gbDirectConnect] = 38400;
             break;
         case DIALOG_CANCEL:
@@ -94,16 +109,16 @@ signed char game::SetupComPort(void) {
     gpWindowManager->DoDialog(window, SetupComPortHandler, 0);
     delete window;
     switch (gpWindowManager->m_dialogResult) {
-        case 1:
+        case CHOICE_ONE:
             gConfig.comPort[gbDirectConnect] = 1;
             break;
-        case 2:
+        case CHOICE_TWO:
             gConfig.comPort[gbDirectConnect] = 2;
             break;
-        case 3:
+        case CHOICE_THREE:
             gConfig.comPort[gbDirectConnect] = 3;
             break;
-        case 4:
+        case CHOICE_FOUR:
             gConfig.comPort[gbDirectConnect] = 4;
             break;
         case DIALOG_CANCEL:
@@ -134,13 +149,13 @@ signed char game::SetupHotSeatGame(void) {
     gpWindowManager->DoDialog(window, SetupHotSeatGameHandler, 0);
     delete window;
     switch (gpWindowManager->m_dialogResult) {
-        case 1:
+        case CHOICE_ONE:
             giNumHumanPlayers = 2;
             break;
-        case 2:
+        case CHOICE_TWO:
             giNumHumanPlayers = 3;
             break;
-        case 3:
+        case CHOICE_THREE:
             giNumHumanPlayers = 4;
             break;
         case DIALOG_CANCEL:
@@ -160,10 +175,10 @@ signed char game::SetupNetworkGame(void) {
     gpWindowManager->DoDialog(window, SetupNetworkGameHandler, 0);
     delete window;
     switch (gpWindowManager->m_dialogResult) {
-        case 1:
+        case CHOICE_ONE:
             iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
             break;
-        case 2:
+        case CHOICE_TWO:
             iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
             break;
         case DIALOG_CANCEL:
@@ -195,7 +210,7 @@ signed char game::SetupModemGame(void) {
     gpWindowManager->DoDialog(window, SetupModemGameHandler, 0);
     delete window;
     switch (gpWindowManager->m_dialogResult) {
-        case 1:
+        case CHOICE_ONE:
             iMPExtendedType = REMOTE_GAME_MODEM_HOST;
             if (gConfig.comPort[gbDirectConnect] == 0) {
                 if (!SetupComPort())
@@ -204,12 +219,12 @@ signed char game::SetupModemGame(void) {
             if (!gbDirectConnect)
                 GetDataEntry("Please enter the telephone number.", numbuf, 35, NULL);
             break;
-        case 2:
+        case CHOICE_TWO:
             iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
             if (gConfig.comPort[gbDirectConnect] == 0 && !SetupComPort())
                 return 0;
             break;
-        case 3:
+        case CHOICE_THREE:
             gbDoModemConfig = 1;
             break;
         case DIALOG_CANCEL:
@@ -233,20 +248,20 @@ signed char game::SetupMultiPlayerGame(void) {
 
     gbDirectConnect = 0;
     switch (gpWindowManager->m_dialogResult) {
-        case 1:
+        case CHOICE_ONE:
             iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
             if (!SetupHotSeatGame())
                 return 0;
             break;
-        case 2:
+        case CHOICE_TWO:
             iMPBaseType = MULTIPLAYER_BASE_NETWORK;
             if (!SetupNetworkGame())
                 return 0;
             break;
-        case 4:
+        case CHOICE_FOUR:
             gbDirectConnect = 1;
             goto setupModem;
-        case 3:
+        case CHOICE_THREE:
             gbDirectConnect = 0;
         setupModem:
             iMPBaseType = MULTIPLAYER_BASE_MODEM;
@@ -448,25 +463,25 @@ short SetupCampaignGameHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
-            case 3:
+            case CHOICE_THREE:
                 helpIndex = 2;
                 break;
-            case 4:
+            case CHOICE_FOUR:
                 helpIndex = 3;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 4;
                 break;
         }
-        if (helpIndex >= 0)
+        if (helpIndex >= HELP_FIRST)
             NormalDialog(gSetupCampaignGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     }
     return BaseSetupHandler(message);
@@ -479,25 +494,25 @@ short SetupComPortHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
-            case 3:
+            case CHOICE_THREE:
                 helpIndex = 2;
                 break;
-            case 4:
+            case CHOICE_FOUR:
                 helpIndex = 3;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 4;
                 break;
         }
-        if (helpIndex >= 0) {
+        if (helpIndex >= HELP_FIRST) {
             if (gbDirectConnect)
                 NormalDialog(gSetupDCComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             else
@@ -514,25 +529,25 @@ short SetupBaudHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
-            case 3:
+            case CHOICE_THREE:
                 helpIndex = 2;
                 break;
-            case 4:
+            case CHOICE_FOUR:
                 helpIndex = 3;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 4;
                 break;
         }
-        if (helpIndex >= 0) {
+        if (helpIndex >= HELP_FIRST) {
             if (gbDirectConnect)
                 NormalDialog(gSetupDCBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             else
@@ -549,22 +564,22 @@ short SetupHotSeatGameHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
-            case 3:
+            case CHOICE_THREE:
                 helpIndex = 2;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 3;
                 break;
         }
-        if (helpIndex >= 0)
+        if (helpIndex >= HELP_FIRST)
             NormalDialog(gSetupHotSeatGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     }
     return BaseSetupHandler(message);
@@ -577,22 +592,22 @@ short SetupModemGameHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
-            case 3:
+            case CHOICE_THREE:
                 helpIndex = 2;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 3;
                 break;
         }
-        if (helpIndex >= 0) {
+        if (helpIndex >= HELP_FIRST) {
             if (gbDirectConnect)
                 NormalDialog(gSetupDCGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             else
@@ -609,25 +624,25 @@ short SetupMultiPlayerGameHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
-            case 3:
+            case CHOICE_THREE:
                 helpIndex = 2;
                 break;
-            case 4:
+            case CHOICE_FOUR:
                 helpIndex = 3;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 4;
                 break;
         }
-        if (helpIndex >= 0)
+        if (helpIndex >= HELP_FIRST)
             NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     }
     return BaseSetupHandler(message);
@@ -640,19 +655,19 @@ short SetupNetworkGameHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 2;
                 break;
         }
-        if (helpIndex >= 0)
+        if (helpIndex >= HELP_FIRST)
             NormalDialog(gSetupNetworkGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     }
     return BaseSetupHandler(message);
@@ -665,22 +680,22 @@ short SetupGameHandler(tag_message& message) {
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
-        helpIndex = -1;
+        helpIndex = NO_HELP;
         switch (message.id) {
-            case 1:
+            case CHOICE_ONE:
                 helpIndex = 0;
                 break;
-            case 2:
+            case CHOICE_TWO:
                 helpIndex = 1;
                 break;
-            case 3:
+            case CHOICE_THREE:
                 helpIndex = 2;
                 break;
             case DIALOG_CANCEL:
                 helpIndex = 3;
                 break;
         }
-        if (helpIndex >= 0)
+        if (helpIndex >= HELP_FIRST)
             NormalDialog(gSetupGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     }
     return BaseSetupHandler(message);
