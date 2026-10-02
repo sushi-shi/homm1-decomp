@@ -456,10 +456,10 @@ signed char combatManager::MoreTreesNear(void)
 {
     int yPos;
     int xPos;
-    short numTrees;
     short step;
     short homeX;
     signed char typeTable[3][8];
+    short numTrees;
     short numMountains;
     mapCell* nearCell;
     short homeY;
@@ -765,9 +765,11 @@ signed char combatManager::IsWinner(signed char side)
 VA(0x0044da9d, 0xd55)
 void combatManager::CatAttack(signed char side)
 {
-    icon* boulder;
     short dx;
     short x;
+    icon* boulder;
+    short summitX;
+    signed char col;
     short i;
     short frm;
     short dy;
@@ -776,8 +778,6 @@ void combatManager::CatAttack(signed char side)
     short force;
     short startX;
     SAMPLE2 catSample;
-    short summitX;
-    signed char col;
     short tgtY;
     signed char wallsLeft;
     short startY;
@@ -1027,33 +1027,33 @@ void combatManager::RegenerateField(void)
 VA(0x0044e840, 0xb8b)
 void combatManager::KeepAttack(void)
 {
-    int bestRank;
+    int mod;
     short minX;
     short minY;
     short lastX;
+    short gapX;
+    float yAdvance;
     signed char hexCol;
     signed char keepY;
     short lastY;
     signed char targetRow;
-    signed char srcCol;
-    int mod;
-    short gapX;
-    float yAdvance;
+    int bestRank;
     float yRun;
+    signed char srcCol;
     short distance;
     float xAdvance;
-    float xRun;
     short gapY;
     signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     int targetIndex;
     SAMPLE2 sample;
     short updRight;
     short w;
-    int power;
     short height;
     bitmap* behind;
     int i;
+    float xRun;
     int bestWorth;
+    int power;
     short startX;
     short maxY;
     short startY;

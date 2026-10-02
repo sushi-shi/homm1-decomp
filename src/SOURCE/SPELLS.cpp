@@ -819,6 +819,7 @@ void combatManager::ElementalStorm(void)
 VA(0x00417d0b, 0x3dc)
 void combatManager::Armageddon(void)
 {
+    short sideIdx;
     int damage;
     short index;
     signed char *palData;
@@ -826,7 +827,6 @@ void combatManager::Armageddon(void)
     army *curArmy;
     palette *kbPal;
     short i;
-    short sideIdx;
     palette *workPal;
     signed char hit;
 
