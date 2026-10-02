@@ -130,6 +130,35 @@ H1_ENUM_CONST_END(BottomViewPanelConstant)
 // AdventureEnemyTurnViewConstant names, same values): the hourglass,
 // running-sand and crest icons, their widget ids and z-orders, the sand
 // frame cycle and the animation delays.
+// Right-click quick views over the map: the window is offset from the
+// clicked cell and clamped inside the viewport's inner box (Buka 2.1
+// AdventureQuickViewPlacementConstant / AdventureQuickInfoObject names,
+// HoMM1 sizes; the right/bottom limits are the box edge minus the size).
+H1_ENUM_CONST_BEGIN(AdventureQuickViewPlacementConstant)
+    QUICK_VIEW_MIN_X = 16,
+    QUICK_VIEW_MIN_Y = 16,
+    QUICK_VIEW_RIGHT = 464,
+    QUICK_VIEW_BOTTOM = 464,
+    HERO_QUICK_VIEW_X_OFFSET = 73,
+    HERO_QUICK_VIEW_Y_OFFSET = 65,
+    HERO_QUICK_VIEW_WIDTH = 178,
+    HERO_QUICK_VIEW_HEIGHT = 162,
+    HERO_QUICK_VIEW_RIGHT_X = QUICK_VIEW_RIGHT - HERO_QUICK_VIEW_WIDTH,
+    HERO_QUICK_VIEW_BOTTOM_Y = QUICK_VIEW_BOTTOM - HERO_QUICK_VIEW_HEIGHT,
+    TOWN_QUICK_VIEW_X_OFFSET = 89,
+    TOWN_QUICK_VIEW_Y_OFFSET = 70,
+    TOWN_QUICK_VIEW_WIDTH = 210,
+    TOWN_QUICK_VIEW_HEIGHT = 172,
+    TOWN_QUICK_VIEW_RIGHT_X = QUICK_VIEW_RIGHT - TOWN_QUICK_VIEW_WIDTH,
+    TOWN_QUICK_VIEW_BOTTOM_Y = QUICK_VIEW_BOTTOM - TOWN_QUICK_VIEW_HEIGHT,
+    QUICK_INFO_X_OFFSET = 57,
+    QUICK_INFO_Y_OFFSET = 25,
+    QUICK_INFO_WIDTH = 146,
+    QUICK_INFO_HEIGHT = 82,
+    QUICK_INFO_RIGHT_X = QUICK_VIEW_RIGHT - QUICK_INFO_WIDTH,
+    QUICK_INFO_BOTTOM_Y = QUICK_VIEW_BOTTOM - QUICK_INFO_HEIGHT
+H1_ENUM_CONST_END(AdventureQuickViewPlacementConstant)
+
 // DrawCell's sprite layout (Buka 2.1 AdventureDrawConstant names, HoMM1
 // values): cell pixels, the stone border tiles around the map (corners, then
 // four-tile runs per side picked by the coordinate's low bits, the inner
@@ -398,7 +427,9 @@ H1_ENUM_CONST_BEGIN(QuickViewWidget)
     QUICK_VIEW_PORTRAIT = 2,
     QUICK_VIEW_STAT_FIRST = 3,
     QUICK_VIEW_FLAG = 8,
-    QUICK_VIEW_AT_LOCATOR = -1
+    QUICK_VIEW_AT_LOCATOR = -1,
+    // The map-click views pass no locator slot.
+    QUICK_VIEW_NO_LOCATOR = -1
 H1_ENUM_CONST_END(QuickViewWidget)
 // clang-format on
 
@@ -1365,30 +1396,30 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 }
                 switch (cellType) {
                 case MAP_OBJECT_HERO:
-                    curX = m_lastHoverCell * 32 - 73;
-                    if (curX < 16)
-                        curX = 16;
-                    if (curX + 178 > 464)
-                        curX = 286;
-                    curY = m_hoverCellY * 32 - 65;
-                    if (curY < 16)
-                        curY = 16;
-                    if (curY + 162 > 464)
-                        curY = 302;
-                    HeroQuickView(mapIndex, -1, curX, curY);
+                    curX = m_lastHoverCell * CELL_PIXELS - HERO_QUICK_VIEW_X_OFFSET;
+                    if (curX < QUICK_VIEW_MIN_X)
+                        curX = QUICK_VIEW_MIN_X;
+                    if (curX + HERO_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                        curX = HERO_QUICK_VIEW_RIGHT_X;
+                    curY = m_hoverCellY * CELL_PIXELS - HERO_QUICK_VIEW_Y_OFFSET;
+                    if (curY < QUICK_VIEW_MIN_Y)
+                        curY = QUICK_VIEW_MIN_Y;
+                    if (curY + HERO_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                        curY = HERO_QUICK_VIEW_BOTTOM_Y;
+                    HeroQuickView(mapIndex, QUICK_VIEW_NO_LOCATOR, curX, curY);
                     break;
                 case MAP_OBJECT_TOWN:
-                    curX = m_lastHoverCell * 32 - 89;
-                    if (curX < 16)
-                        curX = 16;
-                    if (curX + 210 > 464)
-                        curX = 254;
-                    curY = m_hoverCellY * 32 - 70;
-                    if (curY < 16)
-                        curY = 16;
-                    if (curY + 172 > 464)
-                        curY = 292;
-                    TownQuickView(mapIndex, -1, curX, curY);
+                    curX = m_lastHoverCell * CELL_PIXELS - TOWN_QUICK_VIEW_X_OFFSET;
+                    if (curX < QUICK_VIEW_MIN_X)
+                        curX = QUICK_VIEW_MIN_X;
+                    if (curX + TOWN_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                        curX = TOWN_QUICK_VIEW_RIGHT_X;
+                    curY = m_hoverCellY * CELL_PIXELS - TOWN_QUICK_VIEW_Y_OFFSET;
+                    if (curY < QUICK_VIEW_MIN_Y)
+                        curY = QUICK_VIEW_MIN_Y;
+                    if (curY + TOWN_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                        curY = TOWN_QUICK_VIEW_BOTTOM_Y;
+                    TownQuickView(mapIndex, QUICK_VIEW_NO_LOCATOR, curX, curY);
                     break;
                 default:
                     if (gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY]
@@ -2438,16 +2469,16 @@ void advManager::QuickInfo(short cellX, short cellY) {
 
     flag = 1;
     curCell = NULL;
-    posX = cellX * 32 - 57;
-    if (posX < 16)
-        posX = 16;
-    if (posX + 146 > 464)
-        posX = 318;
-    posY = cellY * 32 - 25;
-    if (posY < 16)
-        posY = 16;
-    if (posY + 82 > 464)
-        posY = 382;
+    posX = cellX * CELL_PIXELS - QUICK_INFO_X_OFFSET;
+    if (posX < QUICK_VIEW_MIN_X)
+        posX = QUICK_VIEW_MIN_X;
+    if (posX + QUICK_INFO_WIDTH > QUICK_VIEW_RIGHT)
+        posX = QUICK_INFO_RIGHT_X;
+    posY = cellY * CELL_PIXELS - QUICK_INFO_Y_OFFSET;
+    if (posY < QUICK_VIEW_MIN_Y)
+        posY = QUICK_VIEW_MIN_Y;
+    if (posY + QUICK_INFO_HEIGHT > QUICK_VIEW_BOTTOM)
+        posY = QUICK_INFO_BOTTOM_Y;
 
     window = new heroWindow(posX, posY, "qwikinfo.bin");
     if (!window)
