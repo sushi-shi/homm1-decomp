@@ -656,7 +656,7 @@ void philAI::GetTurnAIVars(int player) {
     }
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
         townPointer = gpGame->GetTown(gpCurPlayer->m_townIds[i]);
-        fFightVal = static_cast<float>(FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0));
+        fFightVal = static_cast<float>(FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0));
         totalFightValue = static_cast<int>(totalFightValue + fFightVal);
     }
     gpCurPlayer->m_aiData.m_upgradeValueWeight =
@@ -1144,30 +1144,30 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
     curBenefit = static_cast<float>(GetBuildingBaseResourceValue(
         factionId, building, static_cast<signed char>(building == 0 ? townPointer->m_buildState : 0)
     ));
-    if (building == 0 && townPointer->m_buildState > 0)
+    if (building == BUILDING_SLOT_MAGE_GUILD && townPointer->m_buildState > 0)
         curBenefit -= static_cast<float>(GetBuildingBaseResourceValue(factionId, building, townPointer->m_buildState - 1));
     switch (building) {
-    case 6:
+    case BUILDING_SLOT_CASTLE:
         curBenefit = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33) * curBenefit;
         buildingLevel = dwellingsOwned;
         curBenefit = (1.6 - buildingLevel * 0.2) * curBenefit;
         break;
-    case 0:
+    case BUILDING_SLOT_MAGE_GUILD:
         curBenefit = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue * 2.0f + 0.33) * curBenefit;
         curBenefit = (1.33 - gpCurPlayer->BuildingsOwned(factionId, 0, 0) * 0.33) * curBenefit;
         break;
     case BUILDING_SLOT_THIEVES_GUILD:
         break;
-    case 3:
+    case BUILDING_SLOT_SHIPYARD:
         curBenefit = 0;
         break;
-    case 4:
+    case BUILDING_SLOT_WELL:
         curBenefit = (gpCurPlayer->m_aiData.m_attentionWeights.buildingValue + 0.66) * curBenefit;
         curBenefit = (gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase * 2.0f + 0.33) * curBenefit;
         curBenefit = (dwellingsOwned * 0.33 + 0.66) * curBenefit;
         break;
-    case 2:
-        curBenefit = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0) / 3000.0f * curBenefit;
+    case BUILDING_SLOT_TAVERN:
+        curBenefit = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) / 3000.0f * curBenefit;
         break;
     case BUILDING_SLOT_DWELLING_FIRST:
     case 8:
@@ -1188,7 +1188,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         curBenefit = (1.0 - gpCurPlayer->BuildingsOwned(factionId, building, 0) * 0.05) * curBenefit;
         if (building - 7 < highestDwellingId)
             curBenefit = (1.66 - dwellingsOwned * 0.33) * curBenefit;
-        if (townPointer->m_buildings & 0x10)
+        if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
             curBenefit = curBenefit * 1.1;
         for (dwellingIndex = 0; dwellingIndex < 6; dwellingIndex++) {
             currentCreatureType = gDwellingType[townPointer->m_type][dwellingIndex];
@@ -1202,7 +1202,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         break;
     }
     LikelihoodOfEnemyAttacking(
-        townPointer, 0, fAttackOdds, totalEnemyStrength, currentAttackTurns, projectedAttackValue,
+        townPointer, NULL, fAttackOdds, totalEnemyStrength, currentAttackTurns, projectedAttackValue,
         attackWeek, dangerRating
     );
     curBenefit = (1.0 - dangerRating * 3.0) * curBenefit;

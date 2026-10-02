@@ -197,7 +197,7 @@ short townManager::Open(short id)
     gpMouseManager->ReallyShowPointer();
     gpMouseManager->NewUpdate(1);
     KBChangeMenu(hmnuTown);
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(0, 8, NULL);
     m_castleDialogActive = 0;
     m_recruitResult = 0;
     m_lastHoverId = -1;

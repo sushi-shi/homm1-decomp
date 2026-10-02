@@ -2740,8 +2740,8 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     townNum = GetTownId(x, y);
     for (j = 0; j < 3; j++) {
         for (i = 0; i < 4; i++) {
-            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) > 0
-                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) <= 0x30) {
+            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
+                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
                 m_map[x - 2 + i][y - 2 + j].m_secondaryTrigger |= 0x28;
             } else {
                 m_map[x - 2 + i][y - 2 + j].m_triggerType = MAP_OBJECT_TOWN;
@@ -3732,7 +3732,7 @@ void game::WaitForPlayer(char* text, int player) {
         ShowHeroesLogo();
         gbAllBlack = 0;
         gpMouseManager->ReallyShowPointer();
-        NormalDialog(text, 1, 0x61, -1, 9, gpGame->m_players[player].m_color, -1, 0, -1);
+        NormalDialog(text, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[player].m_color, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         gpSoundManager->SwitchAmbientMusic(-1);
     }
 }

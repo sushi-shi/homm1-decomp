@@ -943,10 +943,10 @@ signed char advManager::CombatMonsterEvent(class hero* eventHero, signed char mo
         gpMonGroup->m_creatureCounts[i]++;
     }
     if (heroDefends)
-        res = DoCombat(fromX, fromY, 0, gpMonGroup, 0, eventHero, &eventHero->m_army, x, y,
+        res = DoCombat(fromX, fromY, NULL, gpMonGroup, NULL, eventHero, &eventHero->m_army, x, y,
                           -1, 1);
     else
-        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, 0, 0, gpMonGroup, x, y,
+        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, NULL, NULL, gpMonGroup, x, y,
                           -1, 1);
     MobilizeCurrHero(0);
     return res;
@@ -1869,7 +1869,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     combatRemoteData* buf = NULL;
 
     buf = static_cast<combatRemoteData*>(malloc(0xff));
-    reply = 0;
+    reply = NULL;
     buf->fragment = 0;
     buf->x = x;
     buf->y = y;

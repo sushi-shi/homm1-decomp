@@ -267,7 +267,7 @@ signed char hero::HeroView(signed char viewOnly) {
 
     gpAdvManager->TrimLoopingSounds(8);
     gbHeroWindShowing = 1;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     heroWin = new heroWindow(0, 0, "herowind.bin");
     if (!heroWin)
         MemError();
@@ -847,7 +847,7 @@ void UpdateHeroScreenStatusBar(short widgetId) {
         else
             sprintf(gText, cHeroScreen[15], gArtifactNames[gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]]);
         break;
-    case 0x7803:
+    case HERO_SCREEN_DISMISS:
         sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_heroClass]);
         break;
     case HERO_SCREEN_EXIT:

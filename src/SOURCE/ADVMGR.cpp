@@ -486,7 +486,7 @@ class mapCell* advManager::DoAdvCommand(void) {
     int moveChanged;
     short pathIndex;
 
-    stopCell = 0;
+    stopCell = NULL;
     pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     userStop = 0;
     hover = 0;
@@ -552,7 +552,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             if (stopCell) {
                 StopCursor(1);
                 DoEvent(stopCell, TrigX, TrigY);
-                stopCell = 0;
+                stopCell = NULL;
             }
             Reseed(0, 0);
             hover = 1;
@@ -564,7 +564,7 @@ class mapCell* advManager::DoAdvCommand(void) {
         gpMouseManager->SetPointer(0);
         viewTown = gpGame->GetTown(pHero->m_occupiedTown);
         viewTown->View();
-        stopCell = 0;
+        stopCell = NULL;
         break;
     case 3:
         DemobilizeCurrHero();
@@ -573,7 +573,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             gpGame->GetTown(gpCurPlayer->m_currentTown)->m_x, gpGame->GetTown(gpCurPlayer->m_currentTown)->m_y
         );
         gpGame->GetTown(gpCurPlayer->m_currentTown)->View();
-        stopCell = 0;
+        stopCell = NULL;
         break;
     case 2:
         gpMouseManager->SetPointer(0);
@@ -4221,7 +4221,7 @@ signed char SaveGame(void) {
     if (!fileReq)
         MemError();
     iResult = gpExec->DoDialog(fileReq);
-    if (iResult == 0x7802) {
+    if (iResult == DIALOG_BUTTON_2) {
         success = 1;
         bFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
@@ -4560,7 +4560,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                                     gpAdvManager->m_mapOriginX + mouseX,
                                     gpAdvManager->m_mapOriginY + mouseY
                                 );
-                                if ((cell->m_triggerType & 0x80) || (cell->m_secondaryTrigger & 0x80)) {
+                                if ((cell->m_triggerType & MAP_TRIGGER_EVENT) || (cell->m_secondaryTrigger & 0x80)) {
                                     gpWindowManager->m_dialogResult = 0;
                                     gpMouseManager->SetPointer(0);
                                 } else {
