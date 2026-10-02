@@ -103,7 +103,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
                 gpWindowManager->ScreenShot();
             if (event->type == MESSAGE_KEY_DOWN
                 && event->keyCode == INPUT_SCAN_F1) {
-                SetFullScreenStatus(0);
+                SetFullScreenStatus(FALSE);
                 AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
