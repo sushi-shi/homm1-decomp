@@ -96,9 +96,11 @@ public:
     char m_unknown6ff[0x34];
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
-    char m_unknown7ab[0x20];
+    char m_unknown7ab[8];
+    // SetCombatDirections: attack direction per 15-degree mouse sector.
+    signed char m_directionMap[24];
     signed char m_mouseDirection;
-    char m_unknown7cc;
+    signed char m_validDirectionCount;
     class heroWindow *m_winLoseWindow;
     char m_unknown7d1;
     signed char m_combatResult;
@@ -288,6 +290,8 @@ extern int giCurGeneral;
 extern signed char gbCombatSurrender;
 // Fallback net player for a combat action broadcast (0x004c6710).
 extern int giRemoteDefaultPlayer;
+// Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
+extern signed char gCombatAdjacency[45][6];
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.
@@ -97,11 +98,160 @@ signed char combatManager::ValidHexToStandOn(int hex)
         return 0;
 }
 
-// donor PoL RVA 0x0002abbe; preferred Buka symbol ?SetCombatDirections@combatManager@@QAEXH@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.555396;margin=0.346771;shape=0.387;size=0.928;calls=1.000;alternate=pol20:void combatManager::SetCombatDirections(int)@0x0002abbe
+// Buka COMMAND.cpp SetCombatDirections; HoMM1 reads the global adjacency
+// table and keeps the 24-sector map as bytes.
 VA(0x0040f6a7, 0x7e9)
-void combatManager::SetCombatDirections(int) {}
+void combatManager::SetCombatDirections(int targetHex)
+{
+    int mapped;
+    int numUnset;
+    signed char hasPath[8];
+    int targetIndex;
+    int after;
+    int rear[8];
+    army *curArmy;
+    int before;
+    int outDir;
+    int dir;
+    int directionHexes[8];
+    army *target;
+    int targetSide;
+    signed char canStand[8];
+
+    curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    targetSide = curArmy->m_targetSide;
+    targetIndex = curArmy->m_targetIndex;
+    curArmy->m_targetSide = -1;
+    curArmy->m_targetIndex = -1;
+    target = &m_armies[targetSide][targetIndex];
+    for (dir = 0; dir < 8; dir++) {
+        if (dir == 6 || dir == 7) {
+            if (curArmy->m_attributes & 1) {
+                if (curArmy->m_facing == 0) {
+                    if (dir == 6)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][5];
+                    if (dir == 7)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][3];
+                } else {
+                    if (dir == 6)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][0];
+                    if (dir == 7)
+                        directionHexes[dir] = gCombatAdjacency[targetHex][2];
+                }
+            } else
+                directionHexes[dir] = -1;
+        } else
+            directionHexes[dir] = gCombatAdjacency[targetHex][dir];
+        if ((curArmy->m_attributes & 1) && directionHexes[dir] != -1) {
+            if (curArmy->m_facing == 0) {
+                if (dir == 5 || dir == 4 || dir == 3) {
+                    if (directionHexes[dir] % 9 == 1)
+                        directionHexes[dir] = -1;
+                    else
+                        directionHexes[dir]--;
+                }
+                if (directionHexes[dir] % 9 == 7)
+                    rear[dir] = -1;
+                else
+                    rear[dir] = directionHexes[dir] + 1;
+            } else {
+                if (dir == 0 || dir == 1 || dir == 2) {
+                    if (directionHexes[dir] % 9 == 7)
+                        directionHexes[dir] = -1;
+                    else
+                        directionHexes[dir]++;
+                }
+                if (directionHexes[dir] % 9 == 1)
+                    rear[dir] = -1;
+                else
+                    rear[dir] = directionHexes[dir] - 1;
+            }
+        } else
+            rear[dir] = -2;
+        if (ValidHexToStandOn(directionHexes[dir]) && ValidHexToStandOn(rear[dir]))
+            canStand[dir] = 1;
+        else
+            canStand[dir] = 0;
+    }
+    if (curArmy->m_attributes & 2) {
+        for (dir = 0; dir < 8; dir++)
+            hasPath[dir] = canStand[dir];
+    } else {
+        for (dir = 0; dir < 8; dir++) {
+            if (canStand[dir]) {
+                if (curArmy->m_hex == directionHexes[dir] || curArmy->ValidPath(directionHexes[dir], 1))
+                    hasPath[dir] = 1;
+                else
+                    hasPath[dir] = 0;
+            } else
+                hasPath[dir] = 0;
+        }
+    }
+    m_validDirectionCount = 0;
+    for (dir = 0; dir < 8; dir++) {
+        if (hasPath[dir])
+            m_validDirectionCount++;
+    }
+    if (!m_validDirectionCount)
+        hasPath[6] = 1;
+    memset(m_directionMap, -1, sizeof(m_directionMap));
+    for (dir = 0; dir < 8; dir++) {
+        outDir = dir;
+        if (dir < 6)
+            mapped = (dir + 3) % 6;
+        else
+            mapped = (signed char)(dir == 6 ? 7 : 6);
+        if (hasPath[mapped]) {
+            if (target->m_attributes & 1) {
+                if (dir == 0 && m_hexCells[targetHex - 1].m_occupantSide == targetSide
+                    && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
+                    outDir = 6;
+                else if (dir == 5 && m_hexCells[targetHex + 1].m_occupantSide == targetSide
+                         && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
+                    outDir = 6;
+                else if (dir == 2 && m_hexCells[targetHex - 1].m_occupantSide == targetSide
+                         && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
+                    outDir = 7;
+                else if (dir == 3 && m_hexCells[targetHex + 1].m_occupantSide == targetSide
+                         && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
+                    outDir = 7;
+            }
+            if (dir < 6)
+                memset(&m_directionMap[mapped * 4], outDir, 4);
+            else if (dir == 6) {
+                m_directionMap[11] = outDir;
+                m_directionMap[12] = outDir;
+                m_directionMap[13] = outDir;
+            } else {
+                m_directionMap[0] = outDir;
+                m_directionMap[1] = outDir;
+                m_directionMap[23] = outDir;
+            }
+        }
+    }
+    numUnset = 24;
+    while (numUnset > 0) {
+        for (dir = 0; dir < 24; dir++) {
+            if (m_directionMap[dir] == -1) {
+                after = (dir + 1) % 24;
+                before = (dir + 23) % 24;
+                if (m_directionMap[after] >= 0 && m_directionMap[after] <= 7)
+                    m_directionMap[dir] = m_directionMap[after] + 10;
+                else if (m_directionMap[before] >= 0 && m_directionMap[before] <= 7)
+                    m_directionMap[dir] = m_directionMap[before] + 10;
+            }
+        }
+        numUnset = 0;
+        for (dir = 0; dir < 24; dir++) {
+            if (m_directionMap[dir] >= 10)
+                m_directionMap[dir] -= 10;
+            else if (m_directionMap[dir] == -1)
+                numUnset++;
+        }
+    }
+    curArmy->m_targetSide = targetSide;
+    curArmy->m_targetIndex = targetIndex;
+}
 
 // donor PoL RVA 0x0002b45f; preferred Buka symbol ?CheckSetMouseDirection@combatManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
