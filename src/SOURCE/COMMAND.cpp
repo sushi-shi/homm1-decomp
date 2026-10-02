@@ -30,7 +30,7 @@ short combatManager::Main(struct tag_message& message) {
     CheckCastleAttack();
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
-    packet = (CombatRemotePacket*)GetRemoteData(1);
+    packet = reinterpret_cast<CombatRemotePacket*>(GetRemoteData(1)); // API-forced: char* record.
     if (packet && packet->type == 2) {
         switch (packet->command) {
             case 0x17:

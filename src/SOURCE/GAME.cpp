@@ -2863,7 +2863,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     }
     m_castleRecs[townNum].m_type = race;
     plain = 1;
-    if (town->m_extraIndex >= 1 && ((mapTownExtra*)ppMapExtra[town->m_extraIndex])->customized)
+    if (town->m_extraIndex >= 1 && static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex])->customized)
         plain = 0;
     if (plain) {
         if (race == 2)
@@ -3891,7 +3891,7 @@ signed char game::SetupTowns(void) {
         town = GetTown(i);
         town->m_customized = 0;
         if (town->m_extraIndex >= 1) {
-            extra = (mapTownExtra*)ppMapExtra[town->m_extraIndex];
+            extra = static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex]);
             if (extra->customized && extra->owner != -2) {
                 if (gpGame->m_playerCount <= extra->owner)
                     own = gpGame->m_playerCount - 1;
@@ -3946,7 +3946,7 @@ void game::ProcessOnMapHeroes(void) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
             if ((cell->m_triggerType & 0x7f) == 0x47) {
-                extra = (mapHeroExtra*)ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)];
+                extra = static_cast<mapHeroExtra*>(ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)]);
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
                     theHero->m_army.m_creatureCounts[k] = extra->troopCounts[k];
