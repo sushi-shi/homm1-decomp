@@ -30,7 +30,8 @@ struct searchNode {
     unsigned char visited : SEARCH_FLAG_BIT_COUNT;
     unsigned char unknownFlag : SEARCH_FLAG_BIT_COUNT;
     unsigned char rvFlag1 : SEARCH_FLAG_BIT_COUNT;
-    unsigned char rvFlag2 : SEARCH_FLAG_BIT_COUNT;
+    // DetermineTargetPosition passes bits 3..7 to RVOfPosition as a byte.
+    unsigned char rvFlag2 : 5;
     union {
         struct {
             unsigned char adjacentMonsterX;

@@ -827,7 +827,157 @@ hero* philAI::DetermineHeroToMove(int player) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
 VA(0x0041c83b, 0x932)
-void philAI::DetermineTargetPosition(hero*, signed char&, signed char&, short) {}
+void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed char& targetY, short mobility) {
+    int bestRV;
+    int cellValue;
+    int colPhase;
+    int rowCnt;
+    short x;
+    int heroIndex;
+    mapCell* thisCell;
+    short y;
+    short bestX;
+    int valid;
+    short bestY;
+    int spacing;
+    int heroTerrainType;
+    town* portTown;
+
+    bestX = -1;
+    bestY = -1;
+    bestRV = -999999;
+    giBestShipyardId = -1;
+    gbPossibleShipyardFound = 0;
+    gbActualShipyardFound = 0;
+    gbActualBoatFound = 0;
+    spacing = pHero->m_mobility / 6;
+    thisCell = gpAdvManager->GetCell(pHero->m_x, pHero->m_y);
+    heroTerrainType = giGroundToTerrain[thisCell->m_tileIndex];
+    if (heroTerrainType == 2 || heroTerrainType == 3) {
+        spacing--;
+        mobility = (short)(mobility * 1.25);
+    }
+    if (heroTerrainType == 5) {
+        spacing -= 2;
+        mobility = (short)(mobility * 1.5);
+    }
+    if (spacing < 3)
+        spacing = 3;
+    gpSearchArray->SeedPosition(
+        pHero->m_x,
+        pHero->m_y,
+        pHero->m_direction,
+        mobility * 3,
+        pHero->m_eventFlags & 0x80,
+        1,
+        pHero->m_remainingMobility,
+        pHero->m_unknown1c,
+        -1,
+        -1,
+        0,
+        0
+    );
+    gpSearchArray->m_cells[pHero->m_x][pHero->m_y].visited = 0;
+    colPhase = -1;
+    for (x = 0; x < 72; x++) {
+        rowCnt = -1;
+        colPhase++;
+        if (colPhase >= spacing)
+            colPhase = 0;
+        for (y = 0; y < 72; y++) {
+            rowCnt++;
+            if (rowCnt >= spacing)
+                rowCnt = 0;
+            if (gpSearchArray->m_cells[x][y].visited) {
+                thisCell = gpAdvManager->GetCell(x, y);
+                if (gpSearchArray->m_cells[x][y].distance > mobility) {
+                    if (gpSearchArray->m_cells[x][y].distance > mobility * 2)
+                        valid = 0;
+                    else
+                        valid = thisCell->m_triggerType == 0xa8 || thisCell->m_triggerType == 0xbd
+                                || (thisCell->m_triggerType == 0xbe && !(pHero->m_eventFlags & 0x80));
+                } else {
+                    valid = (thisCell->m_triggerType & 0x80)
+                            || (thisCell->m_triggerType == 0x1f && (pHero->m_eventFlags & 0x80))
+                            || (x % spacing == 0 && y % spacing == 0
+                                && (((pHero->m_eventFlags & 0x80)
+                                     && giGroundToTerrain[thisCell->m_tileIndex] == 0)
+                                    || (!(pHero->m_eventFlags & 0x80)
+                                        && giGroundToTerrain[thisCell->m_tileIndex] != 0)))
+                            || (x == gpCurPlayer->m_unknown53 && y == gpCurPlayer->m_unknown54);
+                }
+                if (valid) {
+                    for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
+                        if (thisCell->m_triggerType != 0xa8 && thisCell->m_triggerType != 0xbd
+                            && gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id
+                            && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX == x
+                            && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY == y) {
+                            cellValue = -2000;
+                            goto scored;
+                        }
+                    }
+                    CheckDoMain(0, 0);
+                    cellValue = RVOfPosition(
+                        pHero,
+                        x,
+                        y,
+                        gpSearchArray->m_cells[x][y].rvFlag1,
+                        gpSearchArray->m_cells[x][y].valueX,
+                        gpSearchArray->m_cells[x][y].valueY,
+                        gpSearchArray->m_cells[x][y].rvFlag2,
+                        gpSearchArray->m_cells[x][y].previousX,
+                        gpSearchArray->m_cells[x][y].previousY,
+                        2
+                    );
+                    cellValue = cellValue * (Random(1, 50) + 75);
+                    cellValue /= 100;
+                } else {
+                    cellValue = -100;
+                }
+                if (x == targetX && y == targetY) {
+                    cellValue = (int)(cellValue * 1.5f);
+                    if (abs(x - pHero->m_x) + abs(y - pHero->m_y) > 3)
+                        cellValue++;
+                }
+            scored:
+                if (cellValue > bestRV) {
+                    bestX = x;
+                    bestY = y;
+                    bestRV = cellValue;
+                } else if (cellValue == bestRV && cellValue == 0) {
+                    if (abs(bestY - pHero->m_y) + abs(bestX - pHero->m_x)
+                        < abs(x - pHero->m_x) + abs(y - pHero->m_y)) {
+                        bestX = x;
+                        bestY = y;
+                    }
+                }
+            }
+        }
+    }
+    if (bestRV < 75 && (gbPossibleShipyardFound || gbActualShipyardFound) && !gbActualBoatFound
+        && giCurTurn > 3) {
+        if ((gbActualShipyardFound || giBuildShipyard[giCurPlayer] < 0
+             || giBuildShipyard[giCurPlayer] == giBestShipyardId)
+            && gpCurPlayer->m_resources[RESOURCE_WOOD] + gpCurPlayer->m_aiData.m_income[RESOURCE_WOOD] * 6
+                   >= (!gbActualShipyardFound ? 20 : 0) + 10) {
+            if (!gbActualShipyardFound)
+                giBuildShipyard[giCurPlayer] = giBestShipyardId;
+            giBuildBoat[giCurPlayer] = giBestShipyardId;
+            giBuildBoatStuffTurn[giCurPlayer] = giCurTurn;
+            portTown = gpGame->GetTown(giBestShipyardId);
+            bestRV = 123;
+            bestX = portTown->m_x;
+            bestY = portTown->m_y;
+            if (pHero->m_x == bestX && pHero->m_y == bestY)
+                pHero->m_remainingMobility = 0;
+        }
+        CheckBuyStuff();
+    }
+    targetX = bestX;
+    targetY = bestY;
+    LogStr("Hero, Best RV", pHero->m_owner, bestRV, targetX * 1000 + targetY, pHero->m_x * 1000 + pHero->m_y, 0);
+    LogStr("\n\n****");
+}
 
 // donor PoL RVA 0x0003c6e2; preferred Buka symbol ?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010HHHAAMAAH3333@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -1288,7 +1438,7 @@ float philAI::TurnsToBuy(int* const resources) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.513260;margin=0.500427;shape=0.306;size=0.971;calls=0.812;alternate=pol20:int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int)@0x0003e918
 VA(0x0041ed4b, 0x55e)
-int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int) {
+int philAI::RVOfPosition(hero*, short, short, signed char, short, short, signed char, short, short, int) {
     return 0;
 }
 
@@ -1992,6 +2142,6 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
 VA(0x0042278b, 0x2085)
-int philAI::ValueOfEventAtPosition(hero*, int, int, int, int*) {
+int philAI::ValueOfEventAtPosition(hero*, short, short, int, int*) {
     return 0;
 }

@@ -99,7 +99,7 @@ public:
     void GetTurnAttentionValue(int);
     int RVConversion(int* const);
     float TurnsToBuy(int* const);
-    int RVOfPosition(int, int, int, int, int, int, int, int, int, int);
+    int RVOfPosition(class hero*, short, short, signed char, short, short, signed char, short, short, int);
     int StrategicValueOfPosition(class hero*, short, short, signed char, int*);
     int ValueOfTown(class town*);
     void TurnCostResource(int);
@@ -150,7 +150,7 @@ public:
     int ComputeValueOfSS(class hero*, int, int);
     int ComputeValueOfFreeSS(class hero*, int);
     int ManaRefreshValue(class hero*, int);
-    int ValueOfEventAtPosition(class hero*, int, int, int, int*);
+    int ValueOfEventAtPosition(class hero*, short, short, int, int*);
     int EvaluateGenericSite(class mapCell*);
     int EvaluateBarrier(class mapCell*);
     int EvaluatePassword(class mapCell*);
@@ -191,6 +191,11 @@ extern signed char giLimitPlayer;
 extern int iPlacesVisited[30][2];
 extern int iCurPlaceToVisit;
 void ResetHeroRVs(int, int, int);
+// DetermineTargetPosition's shipyard search state.
+extern signed char giBestShipyardId;
+extern signed char gbPossibleShipyardFound;
+extern signed char gbActualShipyardFound;
+extern signed char gbActualBoatFound;
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
