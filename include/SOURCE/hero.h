@@ -38,11 +38,16 @@ H1_ENUM_CONST_END(HeroConstant)
 // m_primaryStats indices: the order of retail gPrimarySkillNames
 // (0x00493210) and their help texts; army::Init adds 0 and 1 to the
 // stack's attack and defense, and AddSpell receives 3 as the spell count.
+// advManager::GiveTakeArtifactStat also raises the fifth byte (index 4)
+// for the Ballista of Quickness, which no retail code reads (CMBTMGR tests
+// the artifact itself), and uses -1 for artifacts without a stat bonus.
 H1_ENUM_BEGIN(HeroPrimaryStat)
+    HERO_PRIMARY_NONE = -1,
     HERO_PRIMARY_ATTACK = 0,
     HERO_PRIMARY_DEFENSE = 1,
     HERO_PRIMARY_SPELL_POWER = 2,
-    HERO_PRIMARY_KNOWLEDGE = 3
+    HERO_PRIMARY_KNOWLEDGE = 3,
+    HERO_PRIMARY_BALLISTA = 4
 H1_ENUM_END(HeroPrimaryStat)
 
 

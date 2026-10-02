@@ -599,7 +599,7 @@ void hero::Deallocate(void) {
     }
     if (m_locationType == 0xa8) {
         townRec = gpGame->GetTown(m_occupiedTown);
-        townRec->m_occupyingHeroId = -1;
+        townRec->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
     if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
         || !gpAdvManager->m_heroContextLocked)
