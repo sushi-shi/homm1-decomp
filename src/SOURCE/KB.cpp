@@ -2905,7 +2905,7 @@ void EarlyResizeWindow(int, int, int, int) {
 // emitted in this order). Initializers are retail bytes. Unreferenced storage at
 // 0x00492570 (2 x 16 bytes), 0x0049303c and 0x00494178 is not yet named.
 DATA(0x00491058)
-char* gTilesetFiles[8] = {
+char* cCombatGroundNames[8] = {
     "boat.xtl",
     "grass.xtl",
     "snow.xtl",
@@ -2916,7 +2916,7 @@ char* gTilesetFiles[8] = {
     0,
 };
 DATA(0x00491078)
-char* gTilesetObjectFiles[8] = {
+char* cCombatObstacleNames[8] = {
     "boat.obj",
     "grass.obj",
     "snow.obj",
@@ -2927,7 +2927,7 @@ char* gTilesetObjectFiles[8] = {
     0,
 };
 DATA(0x00491098)
-char* gPowEffectFiles[16] = {
+char* gPowEffectNames[16] = {
     "cloud.icn",
     "physical.icn",
     "physical.icn",
@@ -4375,9 +4375,9 @@ int gbHeroMoving = 0;
 DATA(0x00493038)
 int gbInSmacker = 0;
 DATA(0x00493040)
-int gbSerialCompression = 0;
-DATA(0x00493044)
 int gbRemoteReady = 0;
+DATA(0x00493044)
+int gbHeartbeatSeen = 0;
 DATA(0x00493048)
 char* gArtifactNames[38] = {
     "Ultimate Book of Knowledge",
@@ -5063,7 +5063,7 @@ char* gArmyStatText[9] = {
     "Shots: ",
 };
 DATA(0x00493ad8)
-char* cKingdomOverview[3] = {
+char* gOverviewText[3] = {
     "Kingdom Overview     Month %d, Week %d, Day %d",
     "You own Dragon City.",
     "You own the Lighthouse.",
