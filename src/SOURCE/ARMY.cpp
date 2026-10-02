@@ -1004,7 +1004,7 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         if (ValidHex(m_hex))
             gpCombatManager->m_hexCells[m_hex].m_occupantSide = gpCombatManager->m_currentSide;
         gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
-        gpCombatManager->m_unknown299 = 0;
+        gpCombatManager->m_backgroundDrawn = 0;
     }
     for (i = 0; i < 6; i++) {
         if (continued || i) {

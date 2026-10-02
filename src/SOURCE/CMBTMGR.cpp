@@ -39,7 +39,7 @@ combatManager::combatManager(void)
     m_limitCreatureHex = 0;
     m_limitCreature = 0;
     m_unknown6c0 = 1;
-    m_unknown25c = 0;
+    m_gridUpdateRow = 0;
     m_currentCommand = 0;
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
@@ -47,7 +47,7 @@ combatManager::combatManager(void)
     m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
     m_castleSide[0] = m_castleSide[1] = 0;
-    m_unknown72f = 0;
+    m_combatWindowOpen = 0;
 }
 
 // donor PoL RVA 0x0008ff0a; preferred Buka symbol ?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z
@@ -166,7 +166,7 @@ short combatManager::Open(short priority)
     int musicList[4];
 
     m_messageTypeMask = 0x32f;
-    m_unknown72f = 0;
+    m_combatWindowOpen = 0;
     m_savedBorder = 0;
     gpSoundManager->PlayAmbientMusic(-1, 0, -1);
     m_backgroundBuffer = new bitmap(0, 640, 460);
@@ -201,8 +201,8 @@ short combatManager::Open(short priority)
     m_sideDefeated[1] = 0;
     m_limitCreature = 1;
     SetGridMode(0);
-    m_unknown25c = 0;
-    m_unknown72f = 1;
+    m_gridUpdateRow = 0;
+    m_combatWindowOpen = 1;
     DrawFrame(1);
     glTimers[0] = KBTickCount() + 75;
     m_combatPalette = gpResourceManager->GetPalette("kb.pal");
@@ -261,7 +261,7 @@ void combatManager::Close(void)
     if (m_savedBorder)
         free(m_savedBorder);
     m_active = 0;
-    m_unknown72f = 0;
+    m_combatWindowOpen = 0;
 }
 
 // Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
@@ -406,7 +406,7 @@ void combatManager::GenerateMap(void)
     m_currentSide = 0;
     m_currentSpeed = 4;
     GetNextArmy(0);
-    m_unknown25c = 0;
+    m_gridUpdateRow = 0;
     SRand(giSeed);
 }
 
@@ -961,9 +961,9 @@ void combatManager::CatAttack(signed char side)
             if (m_wallFrame == 5)
                 m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x42;
             m_unknown72b = 1;
-            m_unknown25c = m_catapultTarget - 2;
-            if (m_unknown25c < 0)
-                m_unknown25c = 0;
+            m_gridUpdateRow = m_catapultTarget - 2;
+            if (m_gridUpdateRow < 0)
+                m_gridUpdateRow = 0;
             DrawFrame(1);
             m_wallFrame++;
         }
@@ -1018,7 +1018,7 @@ void combatManager::RegenerateField(void)
     LoadArmies();
     GenerateMap();
     SetGridMode(0);
-    m_unknown25c = 0;
+    m_gridUpdateRow = 0;
     DrawFrame(1);
 }
 
@@ -1228,7 +1228,7 @@ void combatManager::ResetHitByCreature(void)
 
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 5; j++)
-            m_armies[i][j].m_unknown34 = 0;
+            m_armies[i][j].m_hitByCreature = 0;
     }
 }
 
