@@ -243,11 +243,11 @@ short advManager::Open(short id) {
         m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
         if (m_adventureWindow == NULL)
             MemError();
-        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, 26, ICON_WIDGET_DRAW, 1);
+        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, ADVENTURE_CONTROL_HERO_KNOB, ICON_WIDGET_DRAW, 1);
         if (m_scrollLeftButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollLeftButton, -1);
-        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, 27, ICON_WIDGET_DRAW, 1);
+        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, ADVENTURE_CONTROL_TOWN_KNOB, ICON_WIDGET_DRAW, 1);
         if (m_scrollRightButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollRightButton, -1);
@@ -401,10 +401,10 @@ short advManager::Open(short id) {
     gpMouseManager->ReallyShowPointer();
     KBChangeMenu(hmnuAdv);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
-    giBottomViewOverride = 0;
+    giBottomViewOverride = BOTTOM_VIEW_NONE;
     gConfig.soundVolume = oldVolume;
     gpSoundManager->AdjustSoundVolumes();
-    m_messageMask = 0x400;
+    m_messageMask = BASE_MANAGER_ACCEPT_ADVENTURE;
     m_priority = id;
     m_active = 1;
     strcpy(m_name, "advManager");
@@ -552,8 +552,8 @@ class mapCell* advManager::DoAdvCommand(void) {
                     goto movement_done;
                 evt = gpInputManager->GetEvent();
                 while (evt.type) {
-                    if (evt.type == 1 || evt.type == 8 || evt.type == 0x20
-                        || evt.type == 0x200) {
+                    if (evt.type == MESSAGE_KEY_DOWN || evt.type == MESSAGE_LEFT_BUTTON_DOWN || evt.type == MESSAGE_RIGHT_BUTTON_DOWN
+                        || evt.type == MESSAGE_WIDGET) {
                         userStop = 1;
                         StopCursor(1);
                         goto movement_done;
@@ -749,8 +749,8 @@ short advManager::Main(struct tag_message& message) {
                 break;
             case INPUT_SCAN_F8:
                 if (curHero) {
-                    gpGame->GiveArmy(&curHero->m_army, 23, 1, -1);
-                    gpGame->GiveArmy(&curHero->m_army, 10, 1, -1);
+                    gpGame->GiveArmy(&curHero->m_army, CREATURE_DRAGON, 1, -1);
+                    gpGame->GiveArmy(&curHero->m_army, CREATURE_TROLL, 1, -1);
                 }
                 break;
             case INPUT_SCAN_F9:
@@ -1187,14 +1187,14 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         curY = (curY - 16) / 2;
         m_mapOriginX = curX - 7;
         m_mapOriginY = curY - 7;
-        if (m_mapOriginX < -7)
-            m_mapOriginX = -7;
-        if (m_mapOriginY < -7)
-            m_mapOriginY = -7;
-        if (m_mapOriginX > 64)
-            m_mapOriginX = 64;
-        if (m_mapOriginY > 64)
-            m_mapOriginY = 64;
+        if (m_mapOriginX < SCROLL_MIN_ORIGIN)
+            m_mapOriginX = SCROLL_MIN_ORIGIN;
+        if (m_mapOriginY < SCROLL_MIN_ORIGIN)
+            m_mapOriginY = SCROLL_MIN_ORIGIN;
+        if (m_mapOriginX > SCROLL_MAX_ORIGIN)
+            m_mapOriginX = SCROLL_MAX_ORIGIN;
+        if (m_mapOriginY > SCROLL_MAX_ORIGIN)
+            m_mapOriginY = SCROLL_MAX_ORIGIN;
         UpdateRadar(1, 0);
         CompleteDraw(0);
         UpdateScreen(0, 0);
@@ -1223,14 +1223,14 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 curY = (mouseMsg.y - 16) / 2;
                 m_mapOriginX = curX - 7;
                 m_mapOriginY = curY - 7;
-                if (m_mapOriginX < -7)
-                    m_mapOriginX = -7;
-                if (m_mapOriginY < -7)
-                    m_mapOriginY = -7;
-                if (m_mapOriginX > 64)
-                    m_mapOriginX = 64;
-                if (m_mapOriginY > 64)
-                    m_mapOriginY = 64;
+                if (m_mapOriginX < SCROLL_MIN_ORIGIN)
+                    m_mapOriginX = SCROLL_MIN_ORIGIN;
+                if (m_mapOriginY < SCROLL_MIN_ORIGIN)
+                    m_mapOriginY = SCROLL_MIN_ORIGIN;
+                if (m_mapOriginX > SCROLL_MAX_ORIGIN)
+                    m_mapOriginX = SCROLL_MAX_ORIGIN;
+                if (m_mapOriginY > SCROLL_MAX_ORIGIN)
+                    m_mapOriginY = SCROLL_MAX_ORIGIN;
                 UpdateRadar(1, 0);
                 CompleteDraw(0);
                 UpdateScreen(0, 0);
@@ -1241,8 +1241,8 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     default:
         break;
     }
-    if ((message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) && message->id >= 2000
-        && message->id <= 2200)
+    if ((message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) && message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET
+        && message->id <= BOTTOM_VIEW_DRAW_LAST_WIDGET)
         NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
                      "and shows the date.  Left click here to cycle through these windows.",
                      NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -1286,15 +1286,15 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
             gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
             break;
     }
-    if (message->id >= 2000 && message->id <= 2200) {
-        if (giBottomViewOverride == 2)
-            giBottomViewOverride = 1;
-        else if (giBottomViewOverride != 0)
-            giBottomViewOverride = 0;
-        else if (iCurBottomView == 2)
-            giBottomViewOverride = 1;
+    if (message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET && message->id <= BOTTOM_VIEW_DRAW_LAST_WIDGET) {
+        if (giBottomViewOverride == BOTTOM_VIEW_KINGDOM)
+            giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
+        else if (giBottomViewOverride != BOTTOM_VIEW_NONE)
+            giBottomViewOverride = BOTTOM_VIEW_NONE;
+        else if (iCurBottomView == BOTTOM_VIEW_KINGDOM)
+            giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
         else
-            giBottomViewOverride = 2;
+            giBottomViewOverride = BOTTOM_VIEW_KINGDOM;
         giBottomViewOverrideEndTime = KBTickCount() + 3000;
         UpdBottomView(1, 1, 1);
     }
@@ -1620,7 +1620,7 @@ int advManager::ProcessHover(struct tag_message* message) {
         }
         break;
     default:
-        if (!(gpMouseManager->m_cursorFrame >= 32 && gpMouseManager->m_cursorFrame < 40 && MouseInScrollZone()))
+        if (!(gpMouseManager->m_cursorFrame >= HOVER_SCROLL_FRAME_FIRST && gpMouseManager->m_cursorFrame < HOVER_SCROLL_FRAME_END && MouseInScrollZone()))
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         return 1;
     }
@@ -1856,7 +1856,7 @@ void advManager::DrawCell(
             else
                 s_drawCloudFrame = GetCloudLookup(mapX, mapY);
             if (s_drawCloudFrame == 0) {
-                if (drawMask & 0x20)
+                if (drawMask & ADVMGR_DRAW_CLOUD)
                     TileToBitmap(m_cloudTiles, (mapX + mapY) & 3, gpWindowManager->m_screen, pixelX7, pixelY3);
                 return;
             }
@@ -1874,7 +1874,7 @@ void advManager::DrawCell(
             s_drawCovered = 0;
         }
     }
-    if (drawMask & 0x20) {
+    if (drawMask & ADVMGR_DRAW_CLOUD) {
         if (s_drawCovered) {
             if (s_drawFlipCloud)
                 FlipIconToBitmap(
@@ -1898,7 +1898,7 @@ void advManager::DrawCell(
         }
         return;
     }
-    if (drawMask & 1) {
+    if (drawMask & ADVMGR_DRAW_GROUND) {
         s_drawGroundTile = cell0->m_flags;
         s_drawGroundTile <<= 14;
         s_drawGroundTile |= cell0->m_tileIndex;
@@ -1912,7 +1912,7 @@ void advManager::DrawCell(
                 );
         }
     }
-    if (drawMask & 2) {
+    if (drawMask & ADVMGR_DRAW_OBJECT) {
         if (!(cell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) && cell0->m_objectIndex != MAP_CELL_NO_FRAME) {
             s_drawTileset = cell0->m_objectTileset & MAP_CELL_TILESET_MASK;
             if (s_drawTileset != TILESET_MONS32) {
@@ -1933,7 +1933,7 @@ void advManager::DrawCell(
                 pixelY3, cell0->m_extraFrame, 0
             );
     }
-    if (drawMask & 8) {
+    if (drawMask & ADVMGR_DRAW_HERO) {
         drawHeroIcon0 = 0;
         drawHero = NULL;
         if (!(cell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) && cell0->m_objectIndex != MAP_CELL_NO_FRAME) {
@@ -2040,7 +2040,7 @@ void advManager::DrawCell(
             m_comboHeroDrawn = 1;
         }
     }
-    if (drawMask & 4) {
+    if (drawMask & ADVMGR_DRAW_OVERLAY) {
         if (cell0->m_overlayIndex != MAP_CELL_NO_FRAME) {
             s_drawTileset = cell0->m_overlayTileset & MAP_CELL_TILESET_MASK;
             IconToBitmap(
@@ -5763,7 +5763,7 @@ int TrigX = 0;
 DATA(0x0048f83c)
 int TrigY = 0;
 DATA(0x0048f840)
-int iCurBottomView = 0;
+int iCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x0048f844)
 int iCurBottomViewEnemy = -1;
 DATA(0x0048f848)
