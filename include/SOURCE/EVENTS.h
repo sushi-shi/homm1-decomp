@@ -30,6 +30,7 @@ H1_ENUM_CONST_BEGIN(MapObjectEncodingConstant)
     GHOST_SITE_LARGE = 4,
     GHOST_SITE_HUGE = 5,
     WINDMILL_RESOURCE_LAST = 6,
+    MAP_EVENT_SPELL_OFFSET = 1,
     WINDMILL_EMPTY = 99,
     RESOURCE_PILE_OBJECT_BASE = 0x3d,
     MONSTER_WILLING_FLAG = 0x80,
@@ -72,6 +73,43 @@ H1_ENUM_CONST_BEGIN(MapEventRewardConstant)
     GHOST_HUGE_COUNT = 50,
     GHOST_HUGE_GOLD = 2000
 H1_ENUM_CONST_END(MapEventRewardConstant)
+
+// FizzleCenter's sample: the hero-loss fade or the pickup chime (Buka
+// EVENT_FIZZLE_HERO_LOSS / EVENT_FIZZLE_ARTIFACT; HoMM1 plays "pickup%02d"
+// for every erased pickup).
+H1_ENUM_BEGIN(EventFizzleType)
+    EVENT_FIZZLE_HERO_LOSS = 0,
+    EVENT_FIZZLE_PICKUP = 1
+H1_ENUM_END(EventFizzleType)
+
+// GiveTakeArtifactStat's direction (Buka EVENT_ARTIFACT_TAKE).
+H1_ENUM_BEGIN(EventArtifactStat)
+    EVENT_ARTIFACT_GIVE = 0,
+    EVENT_ARTIFACT_TAKE = 1
+H1_ENUM_END(EventArtifactStat)
+
+// Screen and distance constants of the event effects (Buka EVENTS.h
+// MapEventDisplayConstant / MapEventSpatialConstant / EventEffectConstant,
+// HoMM1 values).
+H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
+    COAST_FIZZLE_X = 0xc0,
+    COAST_FIZZLE_Y = 0xc0,
+    COAST_FIZZLE_WIDTH = 0x60,
+    COAST_FIZZLE_HEIGHT = 0x60,
+    EVENT_FIZZLE_X = 180,
+    EVENT_FIZZLE_Y = 172,
+    EVENT_FIZZLE_WIDTH = 120,
+    EVENT_FIZZLE_HEIGHT = 120,
+    EVENT_FIZZLE_STEPS = 65,
+    STONE_LITHS_MIN_DISTANCE = 1,
+    WHIRLPOOL_MIN_DISTANCE = 3,
+    ENVIRONMENT_BORDER = 7,
+    EVENT_WHIRLPOOL_TRIGGER_ROLL = 1,
+    EVENT_WHIRLPOOL_TRIGGER_MAX = 3,
+    EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT = 99999999,
+    EVENT_TEXT_BUFFER_SIZE = 500,
+    EVENT_TEXT_WINDOW_END = 76
+H1_ENUM_CONST_END(MapEventDisplayConstant)
 // clang-format on
 
 // EVENTS data (Buka EVENTS.h owner): the assertion records (file literals and

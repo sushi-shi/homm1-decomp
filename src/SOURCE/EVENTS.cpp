@@ -128,7 +128,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
     pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     objType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
     erase = 0;
-    fizzleMode = 0;
+    fizzleMode = EVENT_FIZZLE_HERO_LOSS;
     gbEventMusicPlaying = 1;
     gpMouseManager->ReallyHidePointer();
     EventSound(objType, cell->m_objectMetadata);
@@ -141,9 +141,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 m_cursorType = pHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
-                gpWindowManager->SaveFizzleSource(0xc0, 0xc0, 0x60, 0x60);
+                gpWindowManager->SaveFizzleSource(COAST_FIZZLE_X, COAST_FIZZLE_Y, COAST_FIZZLE_WIDTH, COAST_FIZZLE_HEIGHT);
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-                gpWindowManager->FizzleForward(0xc0, 0xc0, 0x60, 0x60, -1);
+                gpWindowManager->FizzleForward(COAST_FIZZLE_X, COAST_FIZZLE_Y, COAST_FIZZLE_WIDTH, COAST_FIZZLE_HEIGHT, -1);
                 CheckAdjacentMon(&adjacentMonster);
             }
             break;
@@ -218,7 +218,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             else
                 GiveExperience(pHero, (cell->m_objectMetadata - CHEST_EXPERIENCE_LEVEL_OFFSET) * CHEST_EXPERIENCE_MULTIPLIER, 0);
             erase = 1;
-            fizzleMode = 1;
+            fizzleMode = EVENT_FIZZLE_PICKUP;
             pHero->CheckLevel();
             break;
         case MAP_OBJECT_BUOY:
@@ -292,9 +292,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             GiveResource(pHero, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK,
                          cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT);
             erase = 1;
-            fizzleMode = 1;
-            gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
-            SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+            fizzleMode = EVENT_FIZZLE_PICKUP;
+            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = -1;
+            SetEnvironmentOrigin(m_mapOriginX + ENVIRONMENT_BORDER, m_mapOriginY + ENVIRONMENT_BORDER, 1);
             break;
         case MAP_OBJECT_GAZEBO:
             if (pHero->m_visitedSites & (1 << cell->m_objectMetadata)) {
@@ -321,13 +321,13 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                          resType == RESOURCE_GOLD ? cell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
                                            : cell->m_objectMetadata);
             strcpy(resourceName, gResourceNames[resType]);
-            resourceName[0] += 32;
+            resourceName[0] += 'a' - 'A';
             sprintf(gText, gEventText[EVENT_TEXT_RESOURCE_PICKUP], resourceName);
             BVResMsg(gText, resType,
                      resType == RESOURCE_GOLD ? cell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
                                        : cell->m_objectMetadata);
             erase = 1;
-            fizzleMode = 1;
+            fizzleMode = EVENT_FIZZLE_PICKUP;
             break;
         case MAP_OBJECT_WINDMILL:
             if (cell->m_objectMetadata <= WINDMILL_RESOURCE_LAST) {
@@ -344,7 +344,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 RecruitEvent(pHero, CREATURE_GENIE, cell);
                 if (!cell->m_objectMetadata) {
                     erase = 1;
-                    fizzleMode = 1;
+                    fizzleMode = EVENT_FIZZLE_PICKUP;
                 }
             }
             break;
@@ -408,11 +408,11 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             break;
         case MAP_OBJECT_SPELL_SHRINE:
             sprintf(gText, "%s'%s'.", gEventText[EVENT_TEXT_SPELL_SHRINE],
-                    gSpellNames[cell->m_objectMetadata - 1]);
+                    gSpellNames[cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET]);
             if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
-                pHero->AddSpell(cell->m_objectMetadata - 1,
+                pHero->AddSpell(cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
                                     pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
-                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_SPELL, cell->m_objectMetadata - 1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_SPELL, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 strcat(gText, "  Unfortunately, you have no Magic Book to record the spell with.");
                 EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -432,7 +432,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? 1 : 3))
+                        && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
                 }
             }
@@ -443,7 +443,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? 1 : 3)) {
+                            && abs(tx - x) + abs(ty - y) > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE)) {
                             if (--teleportCount <= 0)
                                 goto teleport;
                         }
@@ -467,7 +467,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 giveArtifact:
                     GiveArtifact(pHero, cell->m_objectIndex);
                     erase = 1;
-                    fizzleMode = 1;
+                    fizzleMode = EVENT_FIZZLE_PICKUP;
                     break;
                 case ARTIFACT_EVENT_MODE_GUARDED:
                     EventWindow(EVENT_TEXT_ARTIFACT_GUARDED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -655,7 +655,7 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
     if (gpGame->m_mapSounds[x][y] != -1) {
         gpGame->m_mapSounds[x][y] = -1;
         if (bShowIt)
-            SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+            SetEnvironmentOrigin(m_mapOriginX + ENVIRONMENT_BORDER, m_mapOriginY + ENVIRONMENT_BORDER, 1);
     }
     gpGame->SetupAdjacentMons();
 }
@@ -817,13 +817,13 @@ void advManager::EventWindow(short eventId, H1_ENUM_PARAM(NormalDialogType, int)
     int unusedValue9;
     int unusedValue11;
     int unusedValue12;
-    char eventText[500];
+    char eventText[EVENT_TEXT_BUFFER_SIZE];
     short unusedStyle;
 
     finished = 0;
     GrabScreen();
     unusedStyle = 1;
-    if (eventId >= 0 && eventId < 76)
+    if (eventId >= 0 && eventId < EVENT_TEXT_WINDOW_END)
         sprintf(eventText, gEventText[eventId]);
     else if (eventId == EVENT_TEXT_CUSTOM)
         sprintf(eventText, text);
@@ -844,7 +844,7 @@ short advManager::GiveArtifact(class hero* eventHero, signed char artifact) {
         return -1;
     eventHero->m_artifacts[slot] = artifact;
     gpGame->m_randomArtifacts[artifact] = eventHero->m_id;
-    GiveTakeArtifactStat(eventHero, artifact, 0);
+    GiveTakeArtifactStat(eventHero, artifact, EVENT_ARTIFACT_GIVE);
     return slot;
 }
 
@@ -857,7 +857,7 @@ int advManager::GiveRandomArtifact(class hero* eventHero) {
 
     artifact = gpGame->GetRandomArtifactId();
     if (artifact == ARTIFACT_NONE)
-        GiveResource(eventHero, RESOURCE_GOLD, 1000);
+        GiveResource(eventHero, RESOURCE_GOLD, EVENT_RANDOM_ARTIFACT_GOLD);
     else
         GiveArtifact(eventHero, artifact);
     return artifact;
@@ -887,7 +887,7 @@ int advManager::GiveExperience(class hero* eventHero, int experience, signed cha
 
 VA(0x00460636, 0x5a)
 void advManager::GiveResource(class hero* eventHero, signed char resource, short amount) {
-    if (resource >= 0 && resource <= 6)
+    if (resource >= 0 && resource <= RESOURCE_LAST)
         gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
 }
 
@@ -1010,15 +1010,15 @@ signed char advManager::CombatMonsterEvent(class hero* eventHero, signed char mo
             UpdateScreen(0, 0);
         m_lastQuickViewX = -1;
     }
-    memset(gpMonGroup->m_creatureTypes, -1, 5);
-    memset(gpMonGroup->m_creatureCounts, 0, 10);
-    if (count / 5 > 0) {
+    memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, ARMY_GROUP_SLOT_COUNT);
+    memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+    if (count / ARMY_GROUP_SLOT_COUNT > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             gpMonGroup->m_creatureTypes[i] = monsterType;
-            gpMonGroup->m_creatureCounts[i] = count / 5;
+            gpMonGroup->m_creatureCounts[i] = count / ARMY_GROUP_SLOT_COUNT;
         }
     }
-    for (i = count % 5 - 1; i >= 0; i--) {
+    for (i = count % ARMY_GROUP_SLOT_COUNT - 1; i >= 0; i--) {
         gpMonGroup->m_creatureTypes[i] = monsterType;
         gpMonGroup->m_creatureCounts[i]++;
     }
@@ -1123,7 +1123,7 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
     case ARTIFACT_FIZBIN_OF_MISFORTUNE:
         break;
     }
-    if (take == 1)
+    if (take == EVENT_ARTIFACT_TAKE)
         amount = -amount;
     if (stat != -1) {
         targetHero->m_primaryStats[stat] += amount;
@@ -1151,7 +1151,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
             for (j = 0; j < HERO_ARTIFACT_SLOT_COUNT; j++) {
                 if (sourceHero->m_artifacts[j] != ARTIFACT_NONE
                     && sourceHero->m_artifacts[j] != ARTIFACT_MAGIC_BOOK) {
-                    if (sourceHero->m_artifacts[j] <= 3) {
+                    if (sourceHero->m_artifacts[j] <= ARTIFACT_ULTIMATE_LAST) {
                         if (gbThisNetHumanPlayer[sourceHero->m_owner]
                             || gbThisNetHumanPlayer[destHero->m_owner]) {
                             sprintf(gText,
@@ -1161,11 +1161,11 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                         }
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = -1;
                     } else {
-                        GiveTakeArtifactStat(destHero, sourceHero->m_artifacts[j], 0);
+                        GiveTakeArtifactStat(destHero, sourceHero->m_artifacts[j], EVENT_ARTIFACT_GIVE);
                         destHero->m_artifacts[i] = sourceHero->m_artifacts[j];
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
-                    GiveTakeArtifactStat(sourceHero, sourceHero->m_artifacts[j], 1);
+                    GiveTakeArtifactStat(sourceHero, sourceHero->m_artifacts[j], EVENT_ARTIFACT_TAKE);
                     sourceHero->m_artifacts[j] = ARTIFACT_NONE;
                     break;
                 }
@@ -1184,7 +1184,7 @@ void advManager::HeroLoses(class hero* lostHero) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     lostHero->Deallocate();
-    FizzleCenter(0);
+    FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
     UpdateRadar(1, 0);
     UpdateHeroLocators(1, 1);
 }
@@ -1202,9 +1202,9 @@ void advManager::DoWhirlpool(class hero* eventHero) {
 
     if (!gbHumanPlayer[eventHero->m_owner])
         return;
-    if (Random(1, 3) != 1)
+    if (Random(EVENT_WHIRLPOOL_TRIGGER_ROLL, EVENT_WHIRLPOOL_TRIGGER_MAX) != EVENT_WHIRLPOOL_TRIGGER_ROLL)
         return;
-    lowestValue = 99999999;
+    lowestValue = EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT;
     weakest = -1;
     for (slotNo = 0; slotNo < ARMY_GROUP_SLOT_COUNT; slotNo++) {
         if (eventHero->m_army.m_creatureCounts[slotNo] > 0) {
@@ -1235,10 +1235,10 @@ void advManager::FizzleCenter(int fizzleType) {
     if (!bShowIt)
         return;
     switch (fizzleType) {
-    case 0:
+    case EVENT_FIZZLE_HERO_LOSS:
         sprintf(gText, "killfade.82M");
         break;
-    case 1:
+    case EVENT_FIZZLE_PICKUP:
         sprintf(gText, "pickup%02d.82M", Random(1, 5));
         break;
     default:
@@ -1246,9 +1246,10 @@ void advManager::FizzleCenter(int fizzleType) {
     }
     fizzleSample = NULL_SAMPLE2;
     fizzleSample = LoadPlaySample(gText);
-    gpWindowManager->SaveFizzleSource(180, 172, 120, 120);
+    gpWindowManager->SaveFizzleSource(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT);
     CompleteDraw(0);
-    gpWindowManager->FizzleForward(180, 172, 120, 120, 65);
+    gpWindowManager->FizzleForward(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT,
+                                   EVENT_FIZZLE_STEPS);
     WaitEndSample(fizzleSample, -1);
 }
 
@@ -1401,7 +1402,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             GiveResource(eventHero, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK,
                          cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT);
             erase = 1;
-            gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
+            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = -1;
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
@@ -1492,7 +1493,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             break;
         case MAP_OBJECT_SPELL_SHRINE:
             if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
-                eventHero->AddSpell(cell->m_objectMetadata - 1,
+                eventHero->AddSpell(cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET,
                                     eventHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
             break;
         case MAP_OBJECT_TOWN:
@@ -1506,7 +1507,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? 1 : 3))
+                        && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
                 }
             }
@@ -1517,7 +1518,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? 1 : 3)) {
+                            && abs(tx - x) + abs(ty - y) > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE : WHIRLPOOL_MIN_DISTANCE)) {
                             if (--teleportCount <= 0)
                                 goto teleport;
                         }
@@ -1890,7 +1891,7 @@ int advManager::DoCombat(int x, int y, class hero* firstHero, class armyGroup* f
             sprintf(gText, "%s player\'s %s is under attack!",
                     gColorNames[gpGame->m_players[defendPlayer].m_color],
                     combatTown ? "Town" : "Hero");
-            gText[0] -= 32;
+            gText[0] -= 'a' - 'A';
             gpGame->WaitForPlayer(gText, defendPlayer);
         }
     }
