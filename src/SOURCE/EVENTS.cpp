@@ -23,7 +23,9 @@ extern short gEventsAssertLine;
 extern char* gEventText[];
 extern signed char gbEventMusicPlaying;
 extern char* gArtifactNames[];
+// Stale alias of NULL_SAMPLE2 (0x4c5180): unreferenced, kept so later symbol handles stay put.
 extern SAMPLE2 gNullSample;
+// Stale alias of gpMonGroup (0x4c6aa0): unreferenced, kept so later symbol handles stay put.
 extern armyGroup* gpMonsterGroup;
 extern char* gResourceNames[];
 extern char* gArtifactDesc[];

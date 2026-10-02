@@ -371,6 +371,7 @@ extern char *gCombatFxNames[];
 extern short gCurLoadedSpellFileId;
 extern class icon *gCurLoadedSpellIcon;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
+// Stale alias of giSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
 extern short giCombatFxFrame;
 // Spell-book hover help lines (0x00493a78).
 extern char *cSpellHelp[];
@@ -393,6 +394,7 @@ extern int giCurGeneral;
 // A surrender ended the combat (0x004c6720).
 extern signed char gbCombatSurrender;
 // Fallback net player for a combat action broadcast (0x004c6710).
+// Stale alias of giHostGamePos (0x4c6710): unreferenced, kept so later symbol handles stay put.
 extern int giRemoteDefaultPlayer;
 // Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
 extern signed char gCombatAdjacency[45][6];

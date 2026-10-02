@@ -541,8 +541,10 @@ short game::SaveGame(char* filename, signed char generateName) {
 // the multiplayer game type, this machine's seat and a per-cell scratch map
 // cleared on every load.
 extern char* gHeroNames[][2];
+// Stale alias of giDebugLevel (0x4c7c94) in LoadGame: unreferenced, kept so later symbol handles stay put.
 extern int iMPExtendedType;
 extern int giThisGamePos;
+// Stale alias of mapExtra (0x4c5230): unreferenced, kept so later symbol handles stay put.
 extern char gMapCellScratch[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 // Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
@@ -1127,7 +1129,9 @@ extern signed char gRandomTownTypes[4];
 // Starting hero class of each campaign crest and of each town type, and
 // each hero class's sight radius.
 extern short gCrestHeroClass[];
+// Stale alias of gTownHeroClass (0x492cf8): unreferenced, kept so later symbol handles stay put.
 extern signed char gTownTypeHeroClass[];
+// Stale alias of gHeroScoutRadius (0x492030): unreferenced, kept so later symbol handles stay put.
 extern signed char gClassVisionRange[];
 // Starting resources by difficulty.
 extern int gStartingResources[][7];
@@ -1177,7 +1181,9 @@ void game::InitCampaignMap(int scenario, int) {
 }
 
 // Spell AI values, attribute bits and the mage-guild pool by spell level.
+// Stale alias of giSpellAIValue (0x491140): unreferenced, kept so later symbol handles stay put.
 extern short gSpellAIValue[];
+// Stale alias of gcSpellAIFlags (0x491180): unreferenced, kept so later symbol handles stay put.
 extern signed char gSpellAttributes[];
 extern signed char gMageGuildSpellPool[4][8];
 
@@ -2169,6 +2175,7 @@ short ViewSpecialHandler(tag_message& message) {
 extern char* gArmyStatText[];
 extern char* gSpeedText[];
 extern signed char gbDismissArmy;
+// Stale alias of glTimers[0] (0x4c6a80): unreferenced, kept so later symbol handles stay put.
 extern long gViewArmyAnimTimer;
 short ViewArmyHandler(tag_message&);
 

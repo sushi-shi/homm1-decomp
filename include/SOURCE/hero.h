@@ -138,6 +138,7 @@ extern char* gArtifactNames[];
 extern char* cHeroScreen[];
 void UpdateHeroScreenStatusBar(short);
 extern class hero* gpHVHero;
+// Stale alias of gbHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
 extern signed char gbHeroScreenActive;
 short HeroHandler(struct tag_message&);
 extern int giHeroScreenSrcIndex;

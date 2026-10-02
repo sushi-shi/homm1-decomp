@@ -24,6 +24,7 @@ int GetBuildingBaseResourceValue(int, int, int);
 extern int iDummy;
 extern int gArtifactBaseRV[];
 extern int gResourceBaseValue[];
+// Stale alias of gfSpellCastNumMod (0x492518): unreferenced, kept so later symbol handles stay put.
 extern float gfStatValue[];
 extern int bHeroBuiltThisTurn;
 extern int iCurHourGlassPhase;
@@ -215,6 +216,7 @@ extern class searchArray SVSearchArray;
 extern float gfStatPower[];
 extern signed char gcSpellAIFlags[];
 extern short giSpellAIValue[];
+// Stale alias of gfBattleStat (0x492470): unreferenced, kept so later symbol handles stay put.
 extern float gfSpellPowerMod[];
 extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
