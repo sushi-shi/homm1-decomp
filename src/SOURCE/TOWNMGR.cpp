@@ -706,7 +706,7 @@ short townManager::Main(struct tag_message& message) {
                                     !CanBuy(m_town, BUILDING_SLOT_CASTLE),
                                     rightClick
                                 )) {
-                                BuildObj(6);
+                                BuildObj(BUILDING_SLOT_CASTLE);
                                 m_town->XformToCastle();
                             }
                             break;

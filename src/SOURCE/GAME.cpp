@@ -1036,7 +1036,7 @@ void game::GiveTroopsToNeutralTowns(void) {
                     monster = CREATURE_MINOTAUR;
                     break;
             }
-            GiveArmy(&m_castleRecs[i].m_army, monster, howMany, -1);
+            GiveArmy(&m_castleRecs[i].m_army, monster, howMany, ARMY_GROUP_EMPTY_SLOT);
         }
     }
 }
@@ -3591,10 +3591,19 @@ void game::RandomizeMine(signed char x, signed char y) {
 // HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
 VA(0x004439c1, 0x79)
 signed char game::GetRandomArtifactId(void) {
-    signed char freeSlot = Scan(m_randomArtifacts, 4, 33);
-    if (freeSlot == -1)
-        return -1;
-    signed char artifact = RandomScan(m_randomArtifacts, 4, 33, 37);
+    signed char freeSlot = Scan(
+        m_randomArtifacts,
+        ARTIFACT_REGULAR_FIRST,
+        ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST
+    );
+    if (freeSlot == GAME_TABLE_FREE)
+        return ARTIFACT_NONE;
+    signed char artifact = RandomScan(
+        m_randomArtifacts,
+        ARTIFACT_REGULAR_FIRST,
+        ARTIFACT_REGULAR_END - ARTIFACT_REGULAR_FIRST,
+        ARTIFACT_REGULAR_END
+    );
     if (artifact == ARTIFACT_NONE)
         return freeSlot;
     else
@@ -4209,7 +4218,7 @@ void game::ProcessOnMapHeroes(void) {
     for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
-            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x47) {
+            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
                 extra = static_cast<mapHeroExtra*>(
                     ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)]
                 );
