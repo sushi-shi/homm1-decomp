@@ -222,4 +222,14 @@ extern signed char gTownHeroClass[];
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
 extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
+// Shared with GAME and EVENTS: the per-cell bitmask of the players whose
+// heroes have stood there and the current/watch players' high bits (all in
+// PHILAI's .bss band), ViewArmy's dismiss flag and the creatures a creature
+// month may feature (Buka PHILAI.h).
+extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern unsigned char giCurPlayerHighBit;
+extern unsigned char giCurWatchPlayerHighBit;
+extern signed char gbDismissArmy;
+extern signed char giMonType[];
+
 #endif // HOMM1_SOURCE_PHILAI_H

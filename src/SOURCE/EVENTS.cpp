@@ -2,6 +2,8 @@
 
 #include <match.h>
 
+#include <SOURCE/EVENTS.h>
+
 #include <BASE/Misc.h>
 #include <BASE/bmap2.h>
 #include <BASE/inputManager.h>
@@ -18,24 +20,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// EVENTS assertion records (file literals and line base), as in MOUSEMGR.
-extern short gEventsAssertLine;
-extern char gEventsAssertFile1[];
-extern char gEventsAssertFile2[];
-extern char* gEventText[];
-extern signed char gbEventMusicPlaying;
-extern char* gArtifactNames[];
+// Alias: retail reaches KB's NULL_SAMPLE2 (0x004c5180); rename at the uses.
 extern SAMPLE2 gNullSample;
-extern armyGroup* gpMonsterGroup;
-extern char* gResourceNames[];
-extern char* gArtifactDesc[];
-extern char* gSpellNames[];
-void BVResMsg(char*, int, int);
-extern signed char gbInCombat;
-// DoEvent and DoCombat restore a music volume parked here (-1 when none).
-extern int giEventMusicVolume;
-// Per-cell bitmask of the players whose heroes have stood there.
-extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -1672,10 +1658,6 @@ int advManager::DoNetCombat(char* packet) {
     gbRetreatWin = 0;
     return 1;
 }
-
-// Declared at first use: this C1 symbol order gives DoAIEvent retail's operand
-// order (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-extern char* gColorNames[];
 
 // SendHeroTownData's payload after the remote-message header, as in Buka's
 // combatRemoteData; hero records follow one fragment byte.

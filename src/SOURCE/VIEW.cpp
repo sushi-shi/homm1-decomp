@@ -5,21 +5,14 @@
 
 #include <match.h>
 
+#include <SOURCE/VIEW.h>
+
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
-
-// Primary stat, morale and luck labels of the general's stats text.
-extern char* cViewGeneralLabels[];
-// Morale and luck names, indexed from -3.
-extern char* gMoraleText[];
-extern char* gLuckText[];
-// Combat command help lines; HandleViewGeneral shows entries 1-5.
-extern char* cViewGeneralHelp[];
-
-short HandleViewGeneral(tag_message& message);
 
 // Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when

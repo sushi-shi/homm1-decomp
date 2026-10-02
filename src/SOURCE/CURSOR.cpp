@@ -39,13 +39,6 @@ void advManager::StartCursor(signed char direction)
     m_mapData[newX][newY].m_flags |= 0x40;
 }
 
-// CURSOR globals: Buka names; HoMM1 keeps byte flags and the last two
-// footstep sample handles (0x0048eb3c/0x0048eb40).
-extern signed char bMoveSoundMade;
-extern signed char EveryOther;
-extern struct _SAMPLE* hPrevMoveSound;
-extern struct _SAMPLE* hLastMoveSound;
-
 // Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
 VA(0x00405ab9, 0x150)
 void advManager::StopCursor(signed char stopSound)
@@ -66,15 +59,6 @@ void advManager::StopCursor(signed char stopSound)
     }
     m_cursorTurning = 0;
 }
-
-extern int bSpecialHideCursor;
-extern signed char gbDrawSavedCursor;
-extern signed char S1cursorDirection;
-extern short S1cursorBaseFrame;
-extern short S1cursorFrameCount;
-extern short S1cursorCycle;
-extern short S1cursorTurning;
-extern signed char giGroundToTerrain[];
 
 // Buka CURSOR.cpp:99 DrawCursor; HoMM1 draws the hero shadow first and
 // counts flag frames with m_updateMaxY.
@@ -189,10 +173,6 @@ short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) directio
     }
 }
 
-extern short giStepDelay[];
-extern short horseFrameFlip[];
-extern short boatFrameFlip[];
-
 // Buka CURSOR.cpp:379 TurnTo; HoMM1 keeps sixteen half-step frames and
 // word-sized step delays.
 VA(0x00406275, 0x261)
@@ -242,7 +222,7 @@ void advManager::TurnTo(signed char direction)
         UpdateScreen(0, 0);
 }
 
-extern unsigned char giCurWatchPlayerBit;
+// Alias: retail reaches KB's gbRemoteOn (0x00494164); rename at the use.
 extern int gbHideComputerMoves;
 
 // Buka CURSOR.cpp:429 GetMoveShowIt; HoMM1 reads the current hero itself
@@ -271,8 +251,6 @@ int advManager::GetMoveShowIt(signed char direction)
 
 // Buka CURSOR.cpp MoveHero; HoMM1 recomputes the step cost from the hero
 // type, parks the boat on a coast step and has no deferred object draw.
-extern short giPixelsPerStep[];
-extern short startVals[];
 
 VA(0x0040660c, 0xe1e)
 mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, int *eventX, int *eventY,

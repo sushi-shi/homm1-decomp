@@ -7,6 +7,7 @@
 #include <BASE/soundManager.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
@@ -26,22 +27,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// One 0x16-byte row per movie: file name, the window manager's update mode
-// while it plays, the fades around it and its SmackOpen flags.
-#pragma pack(push, 1)
-struct SSmackOptions {
-    char fileName[15];
-    signed char updateFlags;
-    signed char fadeIn;
-    signed char fadeOut;
-    unsigned long openFlags;
-};
-#pragma pack(pop)
-
-extern SSmackOptions SmackOptions[];
-extern signed char gbSkipIntro;
-extern char gcCongratsText[];
 
 // RAD library allocation callbacks; HoMM1 links SMACKW32.DLL, so neither is
 // reached.

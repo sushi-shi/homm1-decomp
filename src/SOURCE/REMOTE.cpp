@@ -4,6 +4,7 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
@@ -148,19 +149,6 @@ char* GetRemoteData(signed char remove) {
 // donor PoL RVA 0x000a41ec; preferred Buka symbol ?PollRemote@@YIXXZ
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:void PollRemote(void)@0x000a41ec
-// PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
-// incoming/outgoing message buffers.
-extern long lLastHeartbeatSend;
-extern long lLastHeartbeatReceive;
-extern signed char bInTimeoutFail;
-extern RemoteMessage sndBuf;
-extern RemoteMessage rcvBufIn;
-extern int iLastIds[REMOTE_RECENT_ID_COUNT];
-extern int iInOrderCtr;
-extern int iCurLastID;
-// The other side's ready flag and the heartbeat-seen flag.
-extern int gbRemoteReady;
-extern int gbHeartbeatSeen;
 
 VA(0x0045a584, 0x4fe)
 void PollRemote(void) {

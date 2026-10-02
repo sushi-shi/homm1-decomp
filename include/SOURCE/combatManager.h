@@ -411,4 +411,7 @@ extern signed char iTransferArtifacts[];
 extern signed char gbThisNetHasControl;
 // CheckHandleNet hands combat packets back while a battle is running.
 extern signed char gbInCombat;
+// Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
+// ground and obstacle tables are in X_GLOBAL.h.
+extern char *cCombatBkgNames[];
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

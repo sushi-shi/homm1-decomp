@@ -343,4 +343,9 @@ public:
 
 // Recomputes a player's ultimate-artifact hint (cdecl, int player).
 void ComputeUALoc(int);
+// GAME's dialog handlers and the standard-game day score ShowCongrats files.
+short ViewSpellsHandler(struct tag_message&);
+short ViewSpecialHandler(struct tag_message&);
+short ViewArmyHandler(struct tag_message&);
+int GetBaseScore(int);
 #endif // HOMM1_SOURCE_GAME_H

@@ -26,9 +26,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern signed char giCampaignChoice;
-extern char gLastFilename[];
-
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
 DATA(0x004c5170)
@@ -4158,10 +4155,6 @@ short advManager::ControlPanel(void) {
     return 0;
 }
 
-extern char *onOffText[];
-extern char *walkSpeedText[];
-extern char *musicQualityText[];
-
 // Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
 VA(0x00432990, 0x227)
 void UpdateCPanel(signed char initialDraw) {
@@ -4249,8 +4242,6 @@ signed char SaveGame(void) {
     gpAdvManager->EnableButtons();
     return success;
 }
-
-extern char *gCPanelHelp[];
 
 // Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
 VA(0x00432de9, 0x54b)
@@ -4468,8 +4459,6 @@ void advManager::AdvPanel(void)
     if (mobilized)
         MobilizeCurrHero(0);
 }
-
-extern char *gAPanelHelp[];
 
 // Buka 2.1 APanelHandler; HoMM1 shares the search help text with Close and
 // chains the dialog-select stores.

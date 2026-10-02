@@ -5,6 +5,7 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/dialogTypes.h>
 
 #include <SOURCE/kbwin.h>
@@ -12,13 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-extern char* cHeroLevel[];
-extern signed char gHeroSkillBonus[][9][HERO_PRIMARY_STAT_COUNT];
-extern int gbInNewGameSetup;
-void SRand(int);
-short ViewSpecialHandler(struct tag_message&);
-int SRandom(int, int);
 
 // donor PoL RVA 0x0006c3a0; preferred Buka symbol ??0hero@@QAE@XZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order

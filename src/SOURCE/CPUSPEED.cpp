@@ -6,8 +6,6 @@
 
 #include <SOURCE/kbwin.h>
 
-short TimeProcessor(void);
-
 // The 800-instruction divide loop TimeProcessor clocks against PIT channel 2.
 #define DIV_BX __asm div bx
 #define DIV_BX_10 DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX

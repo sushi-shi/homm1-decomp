@@ -2,8 +2,11 @@
 
 #include <match.h>
 
+#include <SOURCE/SETUP.h>
+
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <SOURCE/Modem.h>
@@ -22,48 +25,11 @@ H1_ENUM_END(NetbiosSessionStatus)
 
 #define NETBIOS_SESSION_ACTIVE NETBIOS_SESSION_ACTIVE_FLAG
 
-extern signed char iInitNetHostStatus;
-extern signed char iInitNetGuestStatus;
-extern signed char iWaitForHostStatus;
-extern signed char iWaitForGuestStatus;
-extern long iLastBroadcastTime;
-extern signed char gbDirectConnect;
-extern int giMenuCommand;
-extern char* gSetupCampaignGameHelp[];
-extern char* gSetupComPortHelp[];
-extern char* gSetupDCComPortHelp[];
-extern char* gSetupBaudHelp[];
-extern char* gSetupDCBaudHelp[];
-extern char* gSetupHotSeatGameHelp[];
-extern char* gSetupModemGameHelp[];
-extern char* gSetupDCGameHelp[];
-extern char* gSetupMultiPlayerGameHelp[];
-extern char* gSetupNetworkGameHelp[];
-extern char* gSetupGameHelp[];
-
 // clang-format off
 H1_ENUM_BEGIN(SetupDialogResult)
     DIALOG_CANCEL = 0x7801
 H1_ENUM_END(SetupDialogResult)
 // clang-format on
-
-short BaseSetupHandler(tag_message&);
-short SetupBaudHandler(tag_message&);
-short SetupComPortHandler(tag_message&);
-short SetupModemGameHandler(tag_message&);
-short SetupMultiPlayerGameHandler(tag_message&);
-extern int gbDoModemConfig;
-short SetupHotSeatGameHandler(tag_message&);
-short SetupNetworkGameHandler(tag_message&);
-extern signed char iMPExtendedType;
-extern int giNumHumanPlayers;
-int nbnet_init(void);
-void RemoteMain(int);
-extern int iLastIds[];
-
-short SetupCampaignGameHandler(tag_message&);
-// Campaign lord picked on stpcmpgn.bin (1-4); PickLoadGame filters *.CGM on it.
-extern signed char giCampaignChoice;
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
 // game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
@@ -309,11 +275,6 @@ signed char game::SetupMultiPlayerGame(void) {
     }
     return 1;
 }
-
-short SetupGameHandler(tag_message&);
-extern signed char gbWaitForRemoteReceive;
-extern int gbInSetupDialog;
-extern char gLastFilename[];
 
 // Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
 // keep separate restart and load command ids.

@@ -8,6 +8,7 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/WINMGR_TYPES.h>
@@ -17,6 +18,7 @@
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/Modem.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
@@ -50,7 +52,7 @@ signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 
 // HoMM2 KB.cpp confirms the identity and behavior. HoMM1 differs in the timer
 // comparison and placement of the re-entry guard.
-extern "C" VA(0x0044f640, 0x72)
+VA(0x0044f640, 0x72)
 void PollSound() {
     if (KBTickCount() < gNextSoundPollTick)
         return;
@@ -237,21 +239,9 @@ H1_ENUM_BEGIN(AppMenuCommand)
 H1_ENUM_END(AppMenuCommand)
 // clang-format on
 
-// oldmain's re-entry guard and the intro, end-sequence and campaign state it
-// shares with the game screens.
-extern signed char bKBDone;
-extern signed char gbSkipIntro;
-extern signed char gbWaitForRemoteReceive;
+// Alias: retail reaches this machine's net position (0x004c6f34,
+// giThisNetPos), not SETUP's byte gbDirectConnect (SETUP.h); rename at the use.
 extern int gbDirectConnect;
-extern short giLastMapOriginX;
-extern short giLastMapOriginY;
-extern char gcCongratsText[];
-extern char* gCampaignSideNames[];
-extern signed char giCampaignChoice;
-extern int giMenuCommand;
-void ShowCongrats(void);
-short InitMenuHandler(tag_message&);
-int AddScoreToHighScore(int, int, char*, char*);
 
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
@@ -645,9 +635,6 @@ int InterpretCommandLine(void) {
     return 1;
 }
 
-extern char* gInitMenuHelp[];
-extern int giMenuCommand;
-
 // Buka 2.1 InitMenuHandler reduced to HoMM1's right-click help and button
 // release; the main menu draws its own hover frames.
 VA(0x00451244, 0x1b6)
@@ -878,8 +865,6 @@ int GetBuildingBaseResourceValue(int race, int building, int level) {
         return gDwellingBaseResourceValues[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
     }
 }
-
-short WaitHandler(tag_message&);
 
 // Buka 2.1 NormalDialog without HoMM2's timeout, saved resource globals,
 // primary-skill/monster/secondary-skill slots and centered x; HoMM1 measures
@@ -1245,11 +1230,6 @@ void UpdateNormalDialog(char* text) {
     }
 }
 
-// Modem.cpp's wait-loop steps; Modem.h does not export them (declaring them
-// there ahead of their definitions reorders Modem's own compare operands).
-signed char GUIModemCommandExec(void);
-signed char GUIModemResponseExec(void);
-int WaitForDirectConnect(void);
 
 // donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -1372,24 +1352,6 @@ void PlayerDead(int player) {
     if (gbRemoteOn && gbHumanPlayer[player])
         HandleRemoteDeadPlayerExit(player);
 }
-
-// HoMM1's three-byte exit notice: game position, control hand-off, next player.
-#pragma pack(push, 1)
-struct playerExitMessage {
-    signed char gamePosition;
-    signed char takesControl;
-    signed char nextPlayer;
-};
-#pragma pack(pop)
-extern playerExitMessage gPlayerExitMessage;
-extern int giHostGamePos;
-
-// Player colour names for the exit notices, CheckEndGame's re-entry guard
-// and last offered score, and the creature alignment names (by type / 6).
-extern char* gColorNames[];
-extern signed char bInCheckEndGame;
-extern char* gAlignmentNames[];
-extern int giScore;
 
 // Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
 VA(0x00452e00, 0x99)
@@ -1745,7 +1707,6 @@ H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_FIVE_ALIGNMENTS = 20
 H1_ENUM_END(MoraleInfoText)
 // clang-format on
-extern char* gMoraleInfoText[];
 
 VA(0x00453ba8, 0x450)
 void game::ShowMoraleInfo(hero* h, int dialogType) {
@@ -1833,7 +1794,6 @@ H1_ENUM_BEGIN(LuckInfoText)
     LUCK_INFO_NONE = 10
 H1_ENUM_END(LuckInfoText)
 // clang-format on
-extern char* gLuckInfoText[];
 
 // donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -2255,12 +2215,9 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// Campaign-text and score-label tables and the score-to-rank creature names.
-extern char* gCampaignWinTexts[];
-extern char* gScoreLabels[];
+// Alias: the score-to-rank creature names are KB's gArmyNames (0x00493250);
+// rename at the use.
 extern char* gScoreRankNames[];
-int GetBaseScore(int);
-void CongratsWait(void);
 
 // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
 // scenario's win text; standard games score the days played, rank the result
@@ -2499,16 +2456,6 @@ signed char CheckMem(void) {
     return 1;
 }
 
-// Campaign maps rename the town at a fixed position (x, y, then the name).
-#pragma pack(push, 1)
-struct campaignTownName {
-    signed char x;
-    signed char y;
-    char name[83];
-};
-#pragma pack(pop)
-extern campaignTownName gCampaignTownNames[];
-extern char* gTownNames[];
 
 // Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
 // override one town by position.

@@ -29,4 +29,19 @@ H1_C_LINKAGE void *radmalloc(unsigned long);
 H1_C_LINKAGE void radfree(void *);
 void PlaySmacker(signed char);
 
+// One 0x16-byte row per movie: file name, the window manager's update mode
+// while it plays, the fades around it and its SmackOpen flags (Buka
+// SMACKMGR.h).
+#pragma pack(push, 1)
+struct SSmackOptions {
+    char fileName[15];
+    signed char updateFlags;
+    signed char fadeIn;
+    signed char fadeOut;
+    unsigned long openFlags;
+};
+#pragma pack(pop)
+
+extern SSmackOptions SmackOptions[];
+
 #endif

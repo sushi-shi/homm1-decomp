@@ -10,6 +10,7 @@
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
@@ -22,22 +23,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-
-// Calendar specials (week/month type and featured creature or name) and the
-// per-cell visited bits, shared by the save, new-map and calendar code.
-extern signed char giWeekType;
-extern signed char giMonthType;
-extern signed char giWeekSpecial;
-extern signed char giMonthSpecial;
-extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-// SaveGame files the current player through this byte.
-extern signed char gSaveCurPlayer;
-extern unsigned char giCurPlayerHighBit;
-extern unsigned char giCurWatchPlayerHighBit;
-extern int giCurWatchPlayer;
-// Morale and luck names, indexed from -3.
-extern char* gMoraleText[];
-extern char* gLuckText[];
 
 // donor PoL RVA 0x000708b0; preferred Buka symbol ?Write@playerData@@QAEXH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -535,13 +520,9 @@ short game::SaveGame(char* filename, signed char generateName) {
 // donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.668603;margin=0.422052;shape=0.401;size=0.926;calls=0.741;strings=%s%s|.\DATA\|.\GAMES\;alternate=pol20:void game::LoadGame(char *, int, int)@0x000735bf
-// Default hero names (name, short name) restored with the original data,
-// the multiplayer game type, this machine's seat and a per-cell scratch map
-// cleared on every load.
-extern char* gHeroNames[][2];
+// Alias: retail reaches the debug-level dword (0x004c7c94, giDebugLevel), not
+// SETUP's byte iMPExtendedType (SETUP.h); rename at the use.
 extern int iMPExtendedType;
-extern int giThisGamePos;
-extern char gMapCellScratch[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 // Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
 // the default hero names and blank visibility, and the seats are re-dealt
@@ -666,9 +647,6 @@ short game::LoadGame(char* filename, int origData, int) {
         SetupAdjacentMons();
     return 1;
 }
-
-// Right-click help text for the new-game screen.
-extern char* gNewGameHelp[];
 
 // Buka 2.1 NewGameHandler without HoMM2's remote chat and player races:
 // right clicks show help, the player toggles cycle the opponents and OK
@@ -809,10 +787,6 @@ short NewGameHandler(tag_message& message) {
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
-
-// New-game player-type labels for human and computer seats.
-extern char* gHumanPlayerTypeNames[];
-extern char* gPlayerTypeNames[];
 
 // Buka 2.1 game::UpdateNewGameWindow for HoMM1's new-game screen: map name,
 // difficulty, opponent types and labels, rating, crest and King of the Hill.
@@ -955,17 +929,6 @@ void game::GiveTroopsToNeutralTowns(void) {
     }
 }
 
-// NewGame remembers the last new-game settings for the next setup screen.
-extern signed char gbNewGameSettingsSaved;
-extern signed char gcSavedDifficulty;
-extern signed char gcSavedPlayerTypes[];
-extern signed char gbSavedKingOfTheHill;
-extern signed char gcSavedCrest;
-extern signed char gbWaitForRemoteReceive;
-extern signed char giCampaignChoice;
-extern int giMapSize;
-extern int giMapDifficulty;
-
 // Buka 2.1 game::NewGame: HoMM1 starts campaigns directly, restores the
 // previous setup choices and falls back to a default map when the remembered
 // one does not fit the human player count.
@@ -1034,9 +997,6 @@ signed char game::NewGame(void) {
 
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
-// Campaign scenario titles and briefings.
-extern char* gCampaignScenarioNames[];
-extern char* gCampaignScenarioText[];
 
 VA(0x0043be93, 0x2ad)
 void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
@@ -1094,9 +1054,6 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     }
 }
 
-// Two bytes per campaign side; the first is the human player's crest.
-extern signed char gCampaignSideCrests[][2];
-
 // Buka 2.1 game::InitEntireCampaign; HoMM1 reloads origdata.bin first and
 // starts the campaign calendar on day 1.
 VA(0x0043c140, 0x7f)
@@ -1110,20 +1067,6 @@ void game::InitEntireCampaign(int side) {
     m_campaignDay = 1;
     InitCampaignMap(m_campaignScenario, 0);
 }
-
-// Town type of each crest, and the types already given to the first four
-// random towns.
-extern short gCrestTownTypes[];
-extern signed char gRandomTownTypes[4];
-
-// NewMap's per-player globals beyond Buka's current/watch player bits.
-// Starting hero class of each campaign crest and of each town type, and
-// each hero class's sight radius.
-extern short gCrestHeroClass[];
-extern signed char gTownTypeHeroClass[];
-extern signed char gClassVisionRange[];
-// Starting resources by difficulty.
-extern int gStartingResources[][7];
 
 // Buka 2.1 game::InitCampaignMap reduced to HoMM1's CAMP%d.CMP maps: the
 // calendar continues from m_campaignDay and the scenario table seeds the
@@ -1169,16 +1112,8 @@ void game::InitCampaignMap(int scenario, int) {
     }
 }
 
-// Spell AI values, attribute bits and the mage-guild pool by spell level.
+// Alias: retail reaches philAI.h's giSpellAIValue (0x00491140); rename at the use.
 extern short gSpellAIValue[];
-extern signed char gSpellAttributes[];
-extern signed char gMageGuildSpellPool[4][8];
-
-// Map-extra record count and sizes read from the map file.
-extern int iMaxMapExtra;
-extern int pwSizeOfMapExtra[];
-// Vision radius a claimed town grants its new owner.
-extern signed char giVisRangeTown;
 
 // Buka 2.1 game::NewMap for HoMM1: map setup helpers, a starting town and
 // hero per player (campaign crests pick them), two tavern heroes, the
@@ -1907,8 +1842,6 @@ void game::ClaimMine(signed char mineId, signed char player) {
     }
 }
 
-short ViewSpellsHandler(tag_message&);
-
 // Buka 2.1 game::ViewSpells for HoMM1's spell book: combat (0) and
 // adventure (1) books each have their own window position; type 2 shows
 // both tabs.
@@ -2157,13 +2090,8 @@ short ViewSpecialHandler(tag_message& message) {
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
-// Army info strings: attack, defense, shots (combat), damage, hit points,
-// speed, morale, luck, shots (adventure).
-extern char* gArmyStatText[];
-extern char* gSpeedText[];
-extern signed char gbDismissArmy;
+// Alias: retail reaches KB's glTimers[0] (0x004c6a80); rename at the uses.
 extern long gViewArmyAnimTimer;
-short ViewArmyHandler(tag_message&);
 
 VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
@@ -2359,10 +2287,6 @@ void game::ViewArmy(
     delete m_viewArmyWindow;
 }
 
-
-extern signed char gbDismissArmy;
-extern long gViewArmyAnimTimer;
-
 // donor PoL RVA 0x0007b2cf; preferred Buka symbol ?ViewArmyHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.308927;margin=0.170943;shape=0.232;size=0.493;calls=0.556;alternate=pol20:int ViewArmyHandler(struct tag_message &)@0x0007b2cf
@@ -2411,9 +2335,6 @@ short ViewArmyHandler(tag_message& message) {
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
-
-// Kingdom overview text: the dated title, then Dragon City and Lighthouse.
-extern char* gOverviewText[];
 
 // Kingdom overview: heroes by class, castles and towns by type and mines by
 // resource drawn onto the backdrop, then the date, income and resources.
@@ -2717,11 +2638,6 @@ void game::TurnOffAIMusic(void) {
     gpSoundManager->m_musicReady = 1;
 }
 
-extern char* gColorNames[];
-// The host's and this machine's game positions in a network game.
-extern int giHostGamePos;
-extern int giThisGamePos;
-
 // Buka 2.1 game::NextPlayer for HoMM1: autosaves, advances to the next
 // living player (a new day after the last), restores hero movement (none
 // on the campaign's goal town) and hands the turn to the computer or the
@@ -2883,9 +2799,6 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
         SetupTown(townNum, 0);
     }
 }
-
-// Mines of each type placed so far.
-extern short giMineTypeCount[];
 
 // Buka 2.1 game::RandomizeMine for HoMM1's 2x2 mines: the terrain picks
 // the mine type (unused types first) and the object and shadow frames.
@@ -3121,9 +3034,6 @@ int game::ComputeDailyGold(int player) {
     }
     return gold;
 }
-
-// Creatures a creature month may feature.
-extern signed char giMonType[];
 
 // Buka 2.1 game::PerDay for HoMM1: records each player's income, pays the
 // mines, towns and computer bonuses, then advances the calendar.
@@ -4054,10 +3964,6 @@ void game::CheckHeroConsistency(void) {
 // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
-// The other side's ready flag and the heartbeat-seen flag (REMOTE).
-extern int gbRemoteReady;
-extern int gbHeartbeatSeen;
-void BVResMsg(char*, int, int);
 
 // Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
 // segments, 100 segments per acknowledged block.
@@ -4313,11 +4219,8 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     return okay;
 }
 
-// New-turn texts: days-left and last-day warnings, then the month/week banners.
-extern char* gNewTurnText[];
+// Alias: retail reaches KB's gArmyNames (0x00493250); rename at the use.
 extern char* gMonsterNames[];
-extern char* gMonthNames[];
-extern char* gWeekNames[];
 
 // donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -4489,12 +4392,6 @@ done:
 
 // Retail loads sceninfo.bin and is called on gpGame with no arguments:
 // Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
-// Scenario-info labels: difficulty, human seat handicap, map size and map
-// difficulty names.
-extern char* gDifficultyNames[];
-extern char* gHandicapNames[];
-extern char* gMapSizeNames[];
-extern char* gMapDifficultyNames[];
 
 VA(0x004472d8, 0x44e)
 void game::ShowScenInfo(void) {

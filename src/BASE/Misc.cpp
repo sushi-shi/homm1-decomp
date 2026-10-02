@@ -159,10 +159,7 @@ void AbsAiPrint(char* text) {
     giDebugLevel = saved;
 }
 
-// AI strategic-value maps reset by philAI::DoAI (Buka PHILAI.cpp ResetHeroRVs).
-extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern short gaiHeroLiveChance[GAME_HERO_COUNT];
+// philAI.h: the AI strategic-value maps philAI::DoAI resets through ResetHeroRVs.
 
 // Buka ResetHeroRVs; HoMM1 has no off-map guard and indexes [x][y].
 VA(0x00419d9f, 0x177)

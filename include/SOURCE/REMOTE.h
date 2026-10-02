@@ -139,5 +139,22 @@ H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short, void*);
 H1_C_LINKAGE short __cdecl nb_snd(int, unsigned short, unsigned short, void*, int);
 H1_C_LINKAGE short __cdecl nb_sess(int, int, ...);
 H1_C_LINKAGE unsigned char __cdecl nb_stat(int, unsigned short);
+// PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
+// incoming/outgoing message buffers (Buka REMOTE.h).
+extern long lLastHeartbeatSend;
+extern long lLastHeartbeatReceive;
+extern signed char bInTimeoutFail;
+extern RemoteMessage sndBuf;
+extern RemoteMessage rcvBufIn;
+extern int iLastIds[REMOTE_RECENT_ID_COUNT];
+extern int iInOrderCtr;
+extern int iCurLastID;
+// The network setup's host/guest handshake states and broadcast clock (Buka
+// Netbios.h; retail places them inside REMOTE's data, 0x0049f954-0x0049fa70).
+extern signed char iInitNetHostStatus;
+extern signed char iInitNetGuestStatus;
+extern signed char iWaitForHostStatus;
+extern signed char iWaitForGuestStatus;
+extern long iLastBroadcastTime;
 
 #endif

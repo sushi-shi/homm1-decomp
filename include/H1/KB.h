@@ -55,6 +55,7 @@ extern char* DEFAULT_AGGREGATE_NAME;
 extern resourceManager* gpResourceManager;
 extern soundManager* gpSoundManager;
 extern heroWindowManager* gpWindowManager;
+extern class mouseManager* gpMouseManager;
 extern heroWindow* pNormalDialogWindow;
 extern advManager* gpAdvManager;
 extern signed char gbThisNetHumanPlayer[];
@@ -210,5 +211,16 @@ extern char* gSpellNames[];
 extern char* gTerrainNames[];
 extern char* gResourceNames[];
 extern char* gObjectNames[];
+// KB's map-extra record count and sizes (Buka KBDeclarations).
+extern int iMaxMapExtra;
+extern int pwSizeOfMapExtra[];
+// KB's adventure status-bar resource message and its menu, wait and victory
+// screens.
+void BVResMsg(char*, int, int);
+short InitMenuHandler(struct tag_message&);
+short WaitHandler(struct tag_message&);
+void ShowCongrats(void);
+void CongratsWait(void);
+int AddScoreToHighScore(int, int, char*, char*);
 
 #endif

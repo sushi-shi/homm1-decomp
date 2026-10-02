@@ -5,6 +5,7 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/icon.h>
 #include <BASE/mouseManager.h>
@@ -17,11 +18,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Battlefield backdrops (0x00490db0), ground tiles (0x00491058) and
-// obstacle icons (0x00491078) per combat terrain.
-extern char* cCombatBkgNames[];
-extern char* cCombatGroundNames[];
-extern char* cCombatObstacleNames[];
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x00490d50)
 int bInHighMoraleBonus;
