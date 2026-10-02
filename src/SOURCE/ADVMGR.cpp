@@ -27,6 +27,9 @@ int giSeedingValid;
 
 // UpdBottomViewHero's per-creature mons32.icn frame width.
 extern signed char gMons32Width[];
+// UpdateRadar's per-owner and per-terrain radar pixel colours.
+extern short gRadarOwnerColor[];
+extern short gRadarTerrainColor[];
 
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)
@@ -576,7 +579,93 @@ mapCell* advManager::GetCell(short x, short y) {
 }
 
 VA(0x0042b74a, 0x57e)
-void advManager::UpdateRadar(int, int) {}
+void advManager::UpdateRadar(signed char updateScreen, int partial) {
+    short color;
+    int lastX;
+    int lastY;
+    short x;
+    short owner;
+    short y;
+    int firstX;
+    int firstY;
+    mapCell* cellPtr;
+
+    if (!partial) {
+        firstX = 0;
+        firstY = 0;
+        lastX = 71;
+        lastY = 71;
+    } else {
+        firstX = m_mapOriginX - 1;
+        firstY = m_mapOriginY - 1;
+        lastX = m_mapOriginX + 15;
+        lastY = m_mapOriginY + 15;
+        if (firstX < 0)
+            firstX = 0;
+        if (firstY < 0)
+            firstY = 0;
+        if (lastX > 71)
+            lastX = 71;
+        if (lastY > 71)
+            lastY = 71;
+    }
+
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return;
+
+    gpAdvManager->m_openState = 0;
+    for (x = firstX; x <= lastX; x++) {
+        for (y = firstY; y <= lastY; y++) {
+            if (!(gpGame->m_mapExtra[x][y] & giCurPlayerBit)) {
+                m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, 0, 0, 0);
+                continue;
+            }
+            cellPtr = &m_mapData[x][y];
+            if ((cellPtr->m_triggerType & 0x7f) == 0x3d) {
+                owner = gpGame->m_availableHeroes[cellPtr->m_objectMetadata];
+                if (giCurPlayer == owner)
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                else
+                    color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+            } else {
+                switch (cellPtr->m_objectTileset & 0xf) {
+                case 10:
+                    owner = gpGame->m_townOwners[cellPtr->m_objectMetadata];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                    break;
+                case 11:
+                    switch (cellPtr->m_triggerType) {
+                    case 1:
+                    case 25:
+                    case 32:
+                    case 129:
+                    case 153:
+                    case 160:
+                        owner = gpGame->m_mineOwners[cellPtr->m_objectMetadata];
+                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                        break;
+                    default:
+                        color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                        break;
+                    }
+                    break;
+                case 8:
+                case 9:
+                    color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]] + 3;
+                    break;
+                default:
+                    color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                    break;
+                }
+            }
+            m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, color, 0, 0);
+        }
+    }
+    m_puzzleIcon->ClipFillToBuffer(m_mapOriginX * 2 + 480, m_mapOriginY * 2 + 16, 1, 0xbe, 0, 0, 480, 16, 144, 144);
+    if (updateScreen)
+        gpWindowManager->UpdateScreenRegion(firstX * 2 + 480, firstY * 2 + 16, (lastX - firstX + 1) * 2,
+                                            (lastY - firstY + 1) * 2);
+}
 
 // donor PoL RVA 0x0005f127; preferred Buka symbol ?QuickInfo@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

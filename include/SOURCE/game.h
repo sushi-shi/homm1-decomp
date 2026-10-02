@@ -25,9 +25,41 @@ struct tag_message;
 H1_ENUM_BEGIN(GameStorageConstant)
     GAME_PLAYER_COUNT = 4,
     GAME_TOWN_COUNT = 36,
-    GAME_HERO_COUNT = 36
+    GAME_HERO_COUNT = 36,
+    GAME_MINE_COUNT = 36,
+    GAME_BOAT_COUNT = 32
 H1_ENUM_END(GameStorageConstant)
 // clang-format on
+
+// ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
+// owner at +1 and the type at +2, as in HoMM2's mineRecord.
+#pragma pack(push, 1)
+struct mineRecord {
+    signed char id;
+    signed char owner;
+    signed char type;
+    signed char guardianType;
+    unsigned char guardianCount;
+    // GetMineId sign-extends both coordinates.
+    signed char x;
+    signed char y;
+};
+#pragma pack(pop)
+
+// CreateBoat fills eight-byte records from game+0x14486 in HoMM2's
+// boatRecord order (direction 2, owner at +7).
+#pragma pack(push, 1)
+struct boatRecord {
+    signed char id;
+    signed char x;
+    signed char y;
+    signed char direction;
+    unsigned char savedTriggerType;
+    unsigned char savedEventData;
+    signed char heroId;
+    signed char owner;
+};
+#pragma pack(pop)
 
 // Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
@@ -55,7 +87,14 @@ public:
     unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
-    char m_unknown14341[0x295];
+    mineRecord m_mines[GAME_MINE_COUNT];
+    // ClaimMine mirrors each mine owner into this byte array.
+    signed char m_mineOwners[GAME_MINE_COUNT];
+    // GetRandomArtifactId scans artifacts 4..36 for a free (-1) entry.
+    signed char m_randomArtifacts[0x25];
+    boatRecord m_boats[GAME_BOAT_COUNT];
+    signed char m_boatSlots[GAME_BOAT_COUNT];
+    char m_unknown145a6[0x30];
     // InsertSound reads the environment sound id per [x][y] cell.
     signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.

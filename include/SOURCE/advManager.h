@@ -155,7 +155,7 @@ public:
     int GetCloudLookup(int, int);
     void DrawCell(short, short, short, short, signed char, signed char, signed char);
     class mapCell* GetCell(short, short);
-    void UpdateRadar(int, int);
+    void UpdateRadar(signed char, int);
     void QuickInfo(int, int);
     void UpdateHeroLocator(int, signed char, signed char);
     void UpdateHeroLocators(signed char, signed char);
