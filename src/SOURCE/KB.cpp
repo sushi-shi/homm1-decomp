@@ -189,6 +189,29 @@ int EarlySetup(void) {
 }
 
 
+// clang-format off
+// stpmain.bin buttons: InitMenuHandler returns the id as m_dialogResult and
+// oldmain dispatches it (gGameCommand re-enters with the control panel's
+// new/load/quit ids, which share these values).
+H1_ENUM_BEGIN(MainMenuControl)
+    MAIN_MENU_NEW_GAME = 1,
+    MAIN_MENU_LOAD_GAME = 2,
+    MAIN_MENU_QUIT = 4,
+    MAIN_MENU_HIGH_SCORES = 5,
+    MAIN_MENU_CREDITS = 6
+H1_ENUM_END(MainMenuControl)
+
+// InitMenuHandler's right-click help: the gInitMenuHelp row.
+H1_ENUM_BEGIN(MainMenuHelp)
+    MAIN_MENU_HELP_NONE = -1,
+    MAIN_MENU_HELP_NEW_GAME = 0,
+    MAIN_MENU_HELP_LOAD_GAME = 1,
+    MAIN_MENU_HELP_HIGH_SCORES = 2,
+    MAIN_MENU_HELP_CREDITS = 3,
+    MAIN_MENU_HELP_QUIT = 4
+H1_ENUM_END(MainMenuHelp)
+// clang-format on
+
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
 // handshake and the campaign replay/next-scenario loop.
@@ -322,22 +345,22 @@ int oldmain(void) {
 
         gpMouseManager->ReallyHidePointer();
         switch (command) {
-            case 2:
+            case MAIN_MENU_LOAD_GAME:
                 if (!gpGame->PickLoadGame())
                     goto mainMenu;
                 break;
-            case 5:
+            case MAIN_MENU_HIGH_SCORES:
                 if (gpExec->AddManager(gpHighScoreManager, -1))
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
                 backdropLoaded = 0;
                 goto mainMenu;
-            case 1:
+            case MAIN_MENU_NEW_GAME:
                 if (!gpGame->NewGame())
                     goto mainMenu;
                 break;
-            case 6:
+            case MAIN_MENU_CREDITS:
                 gpWindowManager->FadeScreen(1, 8, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
@@ -358,7 +381,7 @@ int oldmain(void) {
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 goto mainMenu;
-            case 4:
+            case MAIN_MENU_QUIT:
                 leave = 1;
                 break;
         }
@@ -592,22 +615,22 @@ short InitMenuHandler(tag_message& message) {
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
         if (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK) {
-            helpIndex = -1;
+            helpIndex = MAIN_MENU_HELP_NONE;
             switch (message.id) {
-                case 1:
-                    helpIndex = 0;
+                case MAIN_MENU_NEW_GAME:
+                    helpIndex = MAIN_MENU_HELP_NEW_GAME;
                     break;
-                case 2:
-                    helpIndex = 1;
+                case MAIN_MENU_LOAD_GAME:
+                    helpIndex = MAIN_MENU_HELP_LOAD_GAME;
                     break;
-                case 5:
-                    helpIndex = 2;
+                case MAIN_MENU_HIGH_SCORES:
+                    helpIndex = MAIN_MENU_HELP_HIGH_SCORES;
                     break;
-                case 6:
-                    helpIndex = 3;
+                case MAIN_MENU_CREDITS:
+                    helpIndex = MAIN_MENU_HELP_CREDITS;
                     break;
-                case 4:
-                    helpIndex = 4;
+                case MAIN_MENU_QUIT:
+                    helpIndex = MAIN_MENU_HELP_QUIT;
                     break;
             }
             if (helpIndex >= 0)
