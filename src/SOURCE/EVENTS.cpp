@@ -27,7 +27,6 @@ extern signed char gbEventMusicPlaying;
 extern char* gArtifactNames[];
 extern SAMPLE2 gNullSample;
 extern armyGroup* gpMonsterGroup;
-extern char* gColorNames[];
 extern char* gResourceNames[];
 extern char* gArtifactDesc[];
 extern char* gSpellNames[];
@@ -37,55 +36,6 @@ extern signed char gbInCombat;
 extern int giEventMusicVolume;
 // Per-cell bitmask of the players whose heroes have stood there.
 extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-
-// SendHeroTownData's payload after the remote-message header, as in Buka's
-// combatRemoteData; hero records follow one fragment byte.
-#pragma pack(push, 1)
-struct combatRemoteData {
-    signed char fragment;
-    signed char x;
-    signed char y;
-    signed char hasFirstHero;
-    signed char hasTown;
-    signed char hasSecondHero;
-    signed char setupCombatX;
-    signed char setupCombatY;
-    int randomSeed;
-    signed char combatResult;
-    signed char retreatWin;
-    signed char combatSurrender;
-    signed char firstOwner;
-    int firstGold;
-    signed char secondOwner;
-    int secondGold;
-    armyGroup firstArmy;
-    armyGroup secondArmy;
-    town combatTown;
-};
-
-struct combatRemoteHeroFragment {
-    signed char fragment;
-    char data[sizeof(hero)];
-};
-
-struct combatRemoteMessage {
-    signed char sender;
-    int id;
-    signed char type;
-    signed char command;
-    short payloadSize;
-    combatRemoteData combat;
-};
-
-struct heroRemoteMessage {
-    signed char sender;
-    int id;
-    signed char type;
-    signed char command;
-    short payloadSize;
-    combatRemoteHeroFragment heroFragment;
-};
-#pragma pack(pop)
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -1263,9 +1213,9 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     signed char oldShowIt;
     int strength;
     int resType;
+    signed char ty;
     signed char tx;
     signed char teleportCount;
-    signed char ty;
     int res;
     int cost[7];
     int victory;
@@ -1722,6 +1672,59 @@ int advManager::DoNetCombat(char* packet) {
     gbRetreatWin = 0;
     return 1;
 }
+
+// Declared at first use: this C1 symbol order gives DoAIEvent retail's operand
+// order (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
+extern char* gColorNames[];
+
+// SendHeroTownData's payload after the remote-message header, as in Buka's
+// combatRemoteData; hero records follow one fragment byte.
+#pragma pack(push, 1)
+struct combatRemoteData {
+    signed char fragment;
+    signed char x;
+    signed char y;
+    signed char hasFirstHero;
+    signed char hasTown;
+    signed char hasSecondHero;
+    signed char setupCombatX;
+    signed char setupCombatY;
+    int randomSeed;
+    signed char combatResult;
+    signed char retreatWin;
+    signed char combatSurrender;
+    signed char firstOwner;
+    int firstGold;
+    signed char secondOwner;
+    int secondGold;
+    armyGroup firstArmy;
+    armyGroup secondArmy;
+    town combatTown;
+};
+
+struct combatRemoteHeroFragment {
+    signed char fragment;
+    char data[sizeof(hero)];
+};
+
+struct combatRemoteMessage {
+    signed char sender;
+    int id;
+    signed char type;
+    signed char command;
+    short payloadSize;
+    combatRemoteData combat;
+};
+
+struct heroRemoteMessage {
+    signed char sender;
+    int id;
+    signed char type;
+    signed char command;
+    short payloadSize;
+    combatRemoteHeroFragment heroFragment;
+};
+#pragma pack(pop)
 
 // donor PoL RVA 0x000b5e10; preferred Buka symbol ?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
