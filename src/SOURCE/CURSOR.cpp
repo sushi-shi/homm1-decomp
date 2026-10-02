@@ -576,13 +576,13 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
     cell = &m_mapData[newX][newY];
     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
         case MAP_OBJECT_BUOY:
-            if (!(movingHero->m_eventFlags & 0x80))
+            if (!(movingHero->m_eventFlags & HERO_EVENT_EMBARKED))
                 return 1;
             else
                 return 0;
         case MAP_OBJECT_HERO:
-            if (movingHero->m_eventFlags & 0x80) {
-                if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & 0x80)
+            if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+                if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & HERO_EVENT_EMBARKED)
                     return 1;
                 else
                     return 0;

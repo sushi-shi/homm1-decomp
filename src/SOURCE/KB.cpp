@@ -2057,15 +2057,15 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         strcat(gText, gMoraleInfoText[MORALE_INFO_MEDAL_OF_DISTINCTION]);
     if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
         strcat(gText, gMoraleInfoText[MORALE_INFO_FIZBIN]);
-    if (h->m_eventFlags & 2)
+    if (h->m_eventFlags & HERO_EVENT_BUOY)
         strcat(gText, gMoraleInfoText[MORALE_INFO_BUOY]);
-    if (h->m_eventFlags & 8)
+    if (h->m_eventFlags & HERO_EVENT_OASIS)
         strcat(gText, gMoraleInfoText[MORALE_INFO_OASIS]);
-    if (h->m_eventFlags & 0x100)
+    if (h->m_eventFlags & HERO_EVENT_TEMPLE)
         strcat(gText, gMoraleInfoText[MORALE_INFO_STATUE]);
-    if (h->m_eventFlags & 0x20)
+    if (h->m_eventFlags & HERO_EVENT_GRAVEYARD)
         strcat(gText, gMoraleInfoText[MORALE_INFO_GRAVEYARD]);
-    if (h->m_eventFlags & 0x40)
+    if (h->m_eventFlags & HERO_EVENT_SHIPWRECK)
         strcat(gText, gMoraleInfoText[MORALE_INFO_SHIPWRECK]);
     if (h->m_cowardice) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], h->m_cowardice);
@@ -2119,9 +2119,9 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
         strcat(gText, gLuckInfoText[LUCK_INFO_LUCKY_COIN]);
     if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
         strcat(gText, gLuckInfoText[LUCK_INFO_CLOVER]);
-    if (h->m_eventFlags & 0x10)
+    if (h->m_eventFlags & HERO_EVENT_FAERIE_RING)
         strcat(gText, gLuckInfoText[LUCK_INFO_FAERIE_RING]);
-    if (h->m_eventFlags & 4)
+    if (h->m_eventFlags & HERO_EVENT_FOUNTAIN)
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (strlen(gText) == baseLen)
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
