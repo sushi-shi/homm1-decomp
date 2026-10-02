@@ -632,7 +632,7 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
     cell->m_triggerType = MAP_OBJECT_NONE;
     cell->m_objectIndex = 0xff;
     if ((cell->m_secondaryTrigger & 0x7f) > 0 && (cell->m_secondaryTrigger & 0x7f) < 0x7f) {
-        cell->m_triggerType = cell->m_secondaryTrigger & 0x7f;
+        cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
         cell->m_secondaryTrigger = cell->m_secondaryTrigger - cell->m_triggerType;
         for (i = x - 1; i <= x + 1; i++) {
             for (j = y - 1; j <= y + 1; j++) {
@@ -961,7 +961,7 @@ VA(0x00460a5c, 0x11e)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     short houseIndex;
 
-    houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - 13;
+    houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - MAP_OBJECT_HOUSE_FIRST;
     if (!cell->m_objectMetadata) {
         EventWindow(houseIndex * 3 + EVENT_TEXT_HOUSE_EMPTY, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     } else {

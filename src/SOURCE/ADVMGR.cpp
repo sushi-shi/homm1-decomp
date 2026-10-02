@@ -1432,12 +1432,12 @@ int advManager::ProcessHover(struct tag_message* message) {
             }
             cell = GetCell(m_commandTargetX, m_commandTargetY);
             if (gpCurPlayer->m_currentHero == -1) {
-                if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28
+                if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
                     && gpGame->GetTown(cell->m_objectMetadata)->m_owner == giCurPlayer) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                     m_selectedCell = 3;
                     return 1;
-                } else if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x3d
+                } else if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
                            && gpGame->GetHero(cell->m_objectMetadata)->m_owner == giCurPlayer) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
                     m_selectedCell = 2;
@@ -1455,13 +1455,13 @@ int advManager::ProcessHover(struct tag_message* message) {
                     m_selectedCell = 2;
                     return 1;
                 }
-                if (cell->m_secondaryTrigger & 0x80) {
-                    if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28) {
+                if (cell->m_secondaryTrigger & MAP_TRIGGER_EVENT) {
+                    if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN) {
                         pTown = gpGame->GetTown(cell->m_objectMetadata);
                         if (pTown->m_owner == giCurPlayer && m_commandTargetY >= 1
                             && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
-                            && (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28
-                            && (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x28) {
+                            && (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
+                            && (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN) {
                             gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                             m_selectedCell = 5;
                             return 1;
@@ -1968,17 +1968,17 @@ void advManager::DrawCell(
             heroYOffset6 = 0;
             if (cell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                 drawHero = gpGame->GetHero(cell0->m_objectMetadata);
-                if (drawHero->m_eventFlags & 0x80)
+                if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     flagColor = -1;
                 else
                     flagColor = gpGame->m_players[drawHero->m_owner].m_color;
-                if (drawHero->m_eventFlags & 0x80)
+                if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     iconIndex = 4;
                 else
                     iconIndex = drawHero->m_heroClass;
                 frame = GetCursorBaseFrame(drawHero->m_direction);
                 drawHeroIcon0 = 1;
-                if (drawHero->m_eventFlags & 0x80)
+                if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     heroYOffset6 = -10;
             }
         }
@@ -4594,7 +4594,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                                     gpAdvManager->m_mapOriginX + mouseX,
                                     gpAdvManager->m_mapOriginY + mouseY
                                 );
-                                if ((cell->m_triggerType & MAP_TRIGGER_EVENT) || (cell->m_secondaryTrigger & 0x80)) {
+                                if ((cell->m_triggerType & MAP_TRIGGER_EVENT) || (cell->m_secondaryTrigger & MAP_TRIGGER_EVENT)) {
                                     gpWindowManager->m_dialogResult = 0;
                                     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                                 } else {
