@@ -385,7 +385,6 @@ public:
     void ChainLightning(int, int);
     void VaporizeCreature(int, int);
     void RippleCreature(int, int, int);
-    void ShowMassSpell(signed char (*const)[20], int, int);
     void MirrorImage(int);
     void SummonElemental(int, int);
     void DoLuck(int, int);
