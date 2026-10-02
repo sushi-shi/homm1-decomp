@@ -227,9 +227,9 @@ public:
     heroWindow *m_heroWindow1;
     short m_splitAmount;
     short m_splitMaximum;
-    short m_unknown106;
-    int m_unknown108;
-    int m_unknown10c;
+    // RecruitHeroHandler: -1 cancelled, else the chosen recruit (0 or 1).
+    short m_recruitState;
+    class hero* m_recruitHeroes[2];
     // HoMM1 Main tests this additional mask against message.type.
     short m_dispatchMask;
     // --- constructors ---

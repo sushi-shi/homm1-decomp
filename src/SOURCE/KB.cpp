@@ -310,6 +310,59 @@ short NullHandler(tag_message&) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// Buka 2.1 RecruitHeroHandler: HoMM1 offers two heroes, each with its own
+// view (ids 2-3) and recruit (ids 8-9) button.
+VA(0x0045140e, 0x1cb)
+short RecruitHeroHandler(tag_message& message) {
+    const short viewButton1 = 2;
+    const short viewButton2 = 3;
+    const short recruitButton1 = 8;
+    const short recruitButton2 = 9;
+    int shouldClose = 0;
+    int index;
+
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_SELECT:
+                switch (message.payload.widget.id) {
+                    case viewButton1:
+                    case viewButton2:
+                        index = message.payload.widget.id - viewButton1;
+                        gpTownManager->m_recruitHeroes[index]->HeroView(0);
+                        gpTownManager->RedrawTownScreen();
+                        gpTownManager->m_heroWindow0->DrawWindow();
+                        gpTownManager->m_heroWindow1->DrawWindow();
+                        gpWindowManager->FadeScreen(0, 8, 0);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 0x7801:
+                        gpTownManager->m_recruitState = -1;
+                        shouldClose = 1;
+                        break;
+                    case recruitButton1:
+                    case recruitButton2:
+                        gpTownManager->m_recruitState = message.payload.widget.id - recruitButton1;
+                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        shouldClose = 1;
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (shouldClose == 1) {
+        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
 // HoMM1 has seven neutral building slots before six per-faction dwellings.
 VA(0x004515d9, 0x47)
 char* GetBuildingName(int race, short building) {
