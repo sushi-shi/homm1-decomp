@@ -652,6 +652,40 @@ short game::LoadGame(char* filename, int origData, int) {
     return 1;
 }
 
+// clang-format off
+// newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);
+// difficulty buttons are FIRST + game::m_difficulty. OK and CANCEL are role
+// names on the reserved dialog slots (gNewGameHelp: 0x7802 accepts, 0x7801
+// returns to the main menu).
+H1_ENUM_BEGIN(NewGameControl)
+    NEW_GAME_OPPONENT_FIRST = 2,
+    NEW_GAME_OPPONENT_LAST = 4,
+    NEW_GAME_COLOR = 8,
+    NEW_GAME_SCENARIO_SELECT = 0xc,
+    NEW_GAME_DIFFICULTY_FIRST = 0xd,
+    NEW_GAME_DIFFICULTY_LAST = 0x10,
+    NEW_GAME_SCENARIO_NAME = 0x11,
+    NEW_GAME_KING_OF_THE_HILL = 0x13,
+    NEW_GAME_RATING = 0x14,
+    NEW_GAME_CANCEL = DIALOG_BUTTON_1,
+    NEW_GAME_OK = DIALOG_BUTTON_2
+H1_ENUM_END(NewGameControl)
+
+// NewGameHandler's right-click help: the gNewGameHelp row shown.
+H1_ENUM_BEGIN(NewGameHelp)
+    NEW_GAME_HELP_NONE = -1,
+    NEW_GAME_HELP_ACCEPT = 0,
+    NEW_GAME_HELP_MAIN_MENU = 1,
+    NEW_GAME_HELP_KING_OF_THE_HILL = 2,
+    NEW_GAME_HELP_SCENARIO = 3,
+    NEW_GAME_HELP_DIFFICULTY = 4,
+    NEW_GAME_HELP_OPPONENT = 5,
+    NEW_GAME_HELP_COLOR = 6,
+    NEW_GAME_HELP_RATING = 7,
+    NEW_GAME_HELP_HUMAN_OPPONENT = 8
+H1_ENUM_END(NewGameHelp)
+// clang-format on
+
 // Buka 2.1 NewGameHandler without HoMM2's remote chat and player races:
 // right clicks show help, the player toggles cycle the opponents and OK
 // packs the chosen opponents before closing the dialog.
@@ -663,51 +697,51 @@ short NewGameHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
-                helpIndex = -1;
+                helpIndex = NEW_GAME_HELP_NONE;
                 switch (message.id) {
-                    case 0x7802:
-                        helpIndex = 0;
+                    case NEW_GAME_OK:
+                        helpIndex = NEW_GAME_HELP_ACCEPT;
                         break;
-                    case 0x7801:
-                        helpIndex = 1;
+                    case NEW_GAME_CANCEL:
+                        helpIndex = NEW_GAME_HELP_MAIN_MENU;
                         break;
-                    case 0x13:
-                        helpIndex = 2;
+                    case NEW_GAME_KING_OF_THE_HILL:
+                        helpIndex = NEW_GAME_HELP_KING_OF_THE_HILL;
                         break;
-                    case 0x11:
-                        helpIndex = 3;
+                    case NEW_GAME_SCENARIO_NAME:
+                        helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
                     case 0x12:
-                        helpIndex = 3;
+                        helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
-                    case 0xc:
-                        helpIndex = 3;
+                    case NEW_GAME_SCENARIO_SELECT:
+                        helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
-                    case 0xd:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_FIRST:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 0xe:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_FIRST + 1:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 0xf:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_FIRST + 2:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 0x10:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_LAST:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 2:
-                    case 3:
-                    case 4:
+                    case NEW_GAME_OPPONENT_FIRST:
+                    case NEW_GAME_OPPONENT_FIRST + 1:
+                    case NEW_GAME_OPPONENT_LAST:
                         if (message.id - 1 < giNumHumanPlayers)
-                            helpIndex = 8;
+                            helpIndex = NEW_GAME_HELP_HUMAN_OPPONENT;
                         else
-                            helpIndex = 5;
+                            helpIndex = NEW_GAME_HELP_OPPONENT;
                         break;
-                    case 8:
-                        helpIndex = 6;
+                    case NEW_GAME_COLOR:
+                        helpIndex = NEW_GAME_HELP_COLOR;
                         break;
-                    case 0x14:
-                        helpIndex = 7;
+                    case NEW_GAME_RATING:
+                        helpIndex = NEW_GAME_HELP_RATING;
                         break;
                 }
                 if (helpIndex >= 0)
@@ -717,7 +751,7 @@ short NewGameHandler(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 0x7802:
+                        case NEW_GAME_OK:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < 4; i++) {
                                 if (gpGame->m_players[i].m_difficulty > 0)
@@ -741,7 +775,7 @@ short NewGameHandler(tag_message& message) {
                                     gpGame->m_players[3].m_difficulty = 0;
                                 }
                             }
-                        case 0x7801:
+                        case NEW_GAME_CANCEL:
                             gpWindowManager->m_dialogResult = message.id;
                             message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
@@ -752,29 +786,29 @@ short NewGameHandler(tag_message& message) {
                     break;
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case 0xd:
-                        case 0xe:
-                        case 0xf:
-                        case 0x10:
-                            gpGame->m_difficulty = message.id - 0xd;
+                        case NEW_GAME_DIFFICULTY_FIRST:
+                        case NEW_GAME_DIFFICULTY_FIRST + 1:
+                        case NEW_GAME_DIFFICULTY_FIRST + 2:
+                        case NEW_GAME_DIFFICULTY_LAST:
+                            gpGame->m_difficulty = message.id - NEW_GAME_DIFFICULTY_FIRST;
                             break;
-                        case 2:
-                        case 3:
-                        case 4:
+                        case NEW_GAME_OPPONENT_FIRST:
+                        case NEW_GAME_OPPONENT_FIRST + 1:
+                        case NEW_GAME_OPPONENT_LAST:
                             iPlayer = message.id - 1;
                             gpGame->m_players[iPlayer].m_difficulty++;
                             gpGame->m_players[iPlayer].m_difficulty %= 5;
                             if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
-                        case 8:
+                        case NEW_GAME_COLOR:
                             gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % 4;
                             break;
-                        case 0x13:
+                        case NEW_GAME_KING_OF_THE_HILL:
                             gbKingOfTheHill = 1 - gbKingOfTheHill;
                             break;
-                        case 0xc:
-                        case 0x11:
+                        case NEW_GAME_SCENARIO_SELECT:
+                        case NEW_GAME_SCENARIO_NAME:
                         case 0x12:
                             game::GetMap();
                             break;
@@ -806,17 +840,17 @@ void game::UpdateNewGameWindow(void) {
         *period = 0;
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 0x11;
+    message.id = NEW_GAME_SCENARIO_NAME;
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < 4; i++) {
-        message.id = i + 13;
+        message.id = i + NEW_GAME_DIFFICULTY_FIRST;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.id = m_difficulty + 13;
+    message.id = m_difficulty + NEW_GAME_DIFFICULTY_FIRST;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 1; i < 4; i++) {
@@ -837,18 +871,18 @@ void game::UpdateNewGameWindow(void) {
         m_newGameWindow->BroadcastMessage(message);
     }
     gpGame->m_difficultyRating = CalcDifficultyRating();
-    message.id = 0x14;
+    message.id = NEW_GAME_RATING;
     sprintf(gText, "%s %d%%", "Difficulty Rating:", gpGame->m_difficultyRating);
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[0].m_color != -1) {
-        message.id = 8;
+        message.id = NEW_GAME_COLOR;
         message.value = m_players[0].m_color * 2 + 11;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = 0x13;
+    message.id = NEW_GAME_KING_OF_THE_HILL;
     message.value = gbKingOfTheHill + 27;
     m_newGameWindow->BroadcastMessage(message);
 }
