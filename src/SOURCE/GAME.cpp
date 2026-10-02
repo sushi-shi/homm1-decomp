@@ -465,9 +465,11 @@ short game::SaveGame(char* filename, signed char generateName) {
         sprintf(fileName, filename);
     }
     if (!strcmpi(fileName, "REMOTE.GAM")) {
-        sprintf(filePath, "%s%s", ".\\DATA\\", fileName);
+        extern char gcDataPath[];
+        sprintf(filePath, "%s%s", gcDataPath, fileName);
     } else {
-        sprintf(filePath, "%s%s", ".\\GAMES\\", fileName);
+        extern char gcGamePath[];
+        sprintf(filePath, "%s%s", gcGamePath, fileName);
         if (strnicmp(fileName, "AUTOSAVE", 8) && strnicmp(fileName, "PLYREXIT", 8))
             strcpy(gpGame->m_saveName, filename);
     }
@@ -560,10 +562,12 @@ short game::LoadGame(char* filename, int origData, int) {
     numHumans = 0;
     gbGameOver = 0;
     m_unknown16e79 = 1;
+    extern char gcDataPath[];
+    extern char gcGamePath[];
     if (origData || !strcmp(filename, "REMOTE.GAM"))
-        sprintf(pathName, "%s%s", ".\\DATA\\", filename);
+        sprintf(pathName, "%s%s", gcDataPath, filename);
     else
-        sprintf(pathName, "%s%s", ".\\GAMES\\", filename);
+        sprintf(pathName, "%s%s", gcGamePath, filename);
     handle = open(pathName, O_BINARY);
     if (handle == -1)
         FileError(pathName);
@@ -4110,7 +4114,8 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     AiPrint("Transmit Start");
     memset(acked, 0, sizeof(acked));
     SaveGame("REMOTE.GAM", 0);
-    sprintf(pathname, "%s%s", ".\\DATA\\", "REMOTE.GAM");
+    extern char gcDataPath[];
+    sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
     fileSize = FileSize(pathname);
     sendPacket = (char*)malloc(0x100);
     if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
@@ -4291,7 +4296,8 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         dataSize = DecodeData(decodedData, inData);
     else
         decodedData = inData;
-    sprintf(pathname, "%s%s", ".\\DATA\\", "REMOTE.GAM");
+    extern char gcDataPath[];
+    sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
     fileHandle = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
     if (fileHandle == -1)
         FileError(pathname);
