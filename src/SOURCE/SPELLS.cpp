@@ -160,7 +160,7 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
 
     if (!ValidHex(hex))
         return 0;
-    if (spell != SPELL_FIREBALL && spell != SPELL_METEOR_SHOWER && m_hexCells[hex].m_occupantSide != -1) {
+    if (spell != SPELL_FIREBALL && spell != SPELL_METEOR_SHOWER && m_hexCells[hex].m_occupantSide != COMBAT_SIDE_NONE) {
         target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
         if (target->m_spellEffect == SPELL_ANTI_MAGIC || target->m_spellEffect == SPELL_DISPEL_MAGIC || target->m_creatureType == CREATURE_DRAGON)
             return 0;
@@ -198,7 +198,7 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
                 return 0;
             break;
         case SPELL_TURN_UNDEAD:
-            if (m_hexCells[hex].m_occupantSide == -1)
+            if (m_hexCells[hex].m_occupantSide == COMBAT_SIDE_NONE)
                 return 0;
             if (target->m_creatureType != CREATURE_GHOST)
                 return 0;
@@ -312,13 +312,13 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             teleportArmy = targetArmy;
             targetHex = teleportDest;
             teleportArmy->SpellEffect(2, 0);
-            m_hexCells[teleportArmy->m_hex].m_occupantSide = -1;
+            m_hexCells[teleportArmy->m_hex].m_occupantSide = COMBAT_SIDE_NONE;
             m_hexCells[teleportArmy->m_hex].m_occupantIndex = -1;
             if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 1) {
-                m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = -1;
+                m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = COMBAT_SIDE_NONE;
                 m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = -1;
             } else if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 0) {
-                m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = -1;
+                m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = COMBAT_SIDE_NONE;
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = -1;
             }
             teleportArmy->SpellEffect(2, 0);
@@ -327,19 +327,19 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             sample = LoadPlaySample(gText);
             if (teleportArmy->m_stats.attributes & 1) {
                 newHex = targetHex;
-                if (teleportArmy->m_facing == 0) {
+                if (teleportArmy->m_facing == ARMY_FACING_RIGHT) {
                     newHex = teleportArmy->GetAdjacentCellIndex(newHex, 1);
                     if (newHex == -1
-                        || (m_hexCells[newHex].m_occupantSide != -1
+                        || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
                         || m_hexCells[newHex].m_obstacleIndex != -1)
                         targetHex--;
                 }
-                if (teleportArmy->m_facing == 1) {
+                if (teleportArmy->m_facing == ARMY_FACING_LEFT) {
                     newHex = teleportArmy->GetAdjacentCellIndex(newHex, 4);
                     if (newHex == -1
-                        || (m_hexCells[newHex].m_occupantSide != -1
+                        || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
                         || m_hexCells[newHex].m_obstacleIndex != -1)
@@ -347,7 +347,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                 }
                 teleportArmy->m_hex = targetHex;
                 switch (teleportArmy->m_facing) {
-                    case 0:
+                    case ARMY_FACING_RIGHT:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
                         m_hexCells[teleportArmy->m_hex].m_occupantFrame = 1;
@@ -355,7 +355,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = targetIndex;
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantFrame = 0;
                         break;
-                    case 1:
+                    case ARMY_FACING_LEFT:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
                         m_hexCells[teleportArmy->m_hex].m_occupantFrame = 0;
@@ -672,7 +672,7 @@ void combatManager::Fireball(signed char targetHex)
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
@@ -691,7 +691,7 @@ void combatManager::Fireball(signed char targetHex)
     }
     curArmy->PowEffect(7);
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->Stand(1);
@@ -736,7 +736,7 @@ void combatManager::MeteorShower(signed char targetHex)
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
@@ -755,7 +755,7 @@ void combatManager::MeteorShower(signed char targetHex)
     }
     curArmy->PowEffect(1);
     for (i = 0; i < 7; i++) {
-        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->Stand(1);

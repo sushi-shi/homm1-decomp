@@ -8,6 +8,7 @@
 #include <BASE/mouseManager.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/combatTypes.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
@@ -32,7 +33,7 @@ combatManager::combatManager(void)
 {
     m_gridMode = 0;
     m_unknown6f9 = -1;
-    m_currentSide = 0;
+    m_currentSide = COMBAT_DEFENDER_SIDE;
     m_limitCreatureHex = 0;
     m_limitCreature = 0;
     m_showArmyQuantities = 1;
@@ -41,9 +42,9 @@ combatManager::combatManager(void)
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
     m_savedBorder = NULL;
-    m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame = m_wallDamage = -1;
+    m_heroType[COMBAT_DEFENDER_SIDE] = m_heroType[COMBAT_ATTACKER_SIDE] = m_catapultFrame[COMBAT_DEFENDER_SIDE] = m_catapultFrame[COMBAT_ATTACKER_SIDE] = m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
-    m_castleSide[0] = m_castleSide[1] = 0;
+    m_castleSide[COMBAT_DEFENDER_SIDE] = m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
     m_combatWindowOpen = 0;
 }
 
@@ -93,19 +94,19 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         m_battlefieldCell = NULL;
     m_terrainType = giGroundToTerrain[m_battlefieldCell->m_tileIndex];
     if (attackerHero) {
-        m_playerId[1] = attackerHero->m_owner;
+        m_playerId[COMBAT_ATTACKER_SIDE] = attackerHero->m_owner;
         attackerGroup = &attackerHero->m_army;
     } else {
-        m_playerId[1] = -1;
+        m_playerId[COMBAT_ATTACKER_SIDE] = -1;
     }
     if (defenderHero) {
-        m_playerId[0] = defenderHero->m_owner;
+        m_playerId[COMBAT_DEFENDER_SIDE] = defenderHero->m_owner;
         defenderGroup = &defenderHero->m_army;
     } else if (defenderTown) {
-        m_playerId[0] = defenderTown->m_owner;
+        m_playerId[COMBAT_DEFENDER_SIDE] = defenderTown->m_owner;
         defenderGroup = &defenderTown->m_army;
     } else {
-        m_playerId[0] = -1;
+        m_playerId[COMBAT_DEFENDER_SIDE] = -1;
     }
     for (i = 0; i < 2; i++) {
         if (m_playerId[i] >= 0)
@@ -131,26 +132,26 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         m_visitingHeroPresent[i] = 0;
         m_heroCastSpell[i] = 0;
     }
-    m_castleSide[1] = 0;
+    m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
     if (defenderTown) {
         if (defenderTown->m_occupyingHeroId != -1) {
-            m_armyGroups[0] = &m_heroes[0]->m_army;
-            CombineGroups(&defenderTown->m_army, &m_heroes[0]->m_army);
-            m_visitingHeroPresent[0] = 1;
+            m_armyGroups[COMBAT_DEFENDER_SIDE] = &m_heroes[COMBAT_DEFENDER_SIDE]->m_army;
+            CombineGroups(&defenderTown->m_army, &m_heroes[COMBAT_DEFENDER_SIDE]->m_army);
+            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 1;
         } else {
-            m_visitingHeroPresent[0] = 0;
+            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 0;
         }
         if (defenderTown->m_buildings & 0x40)
-            m_castleSide[0] = 1;
+            m_castleSide[COMBAT_DEFENDER_SIDE] = 1;
         else
-            m_castleSide[0] = 0;
-        m_combatTowns[0] = defenderTown;
-        m_originalCombatTown = m_combatTowns[0];
+            m_castleSide[COMBAT_DEFENDER_SIDE] = 0;
+        m_combatTowns[COMBAT_DEFENDER_SIDE] = defenderTown;
+        m_originalCombatTown = m_combatTowns[COMBAT_DEFENDER_SIDE];
     } else {
-        m_castleSide[0] = 0;
-        m_combatTowns[0] = NULL;
+        m_castleSide[COMBAT_DEFENDER_SIDE] = 0;
+        m_combatTowns[COMBAT_DEFENDER_SIDE] = NULL;
     }
-    m_combatTowns[1] = NULL;
+    m_combatTowns[COMBAT_ATTACKER_SIDE] = NULL;
 }
 
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
@@ -172,8 +173,8 @@ short combatManager::Open(short priority)
     sample = LoadPlaySample("PREBATTL.82M");
     giNextAction = ACTION_NONE;
     gpWindowManager->FadeScreen(1, 8, NULL);
-    m_sideRetreated[0] = 0;
-    m_sideRetreated[1] = 0;
+    m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
+    m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = 3;
     gbUseClippedIconRenderer = 0;
     m_computeExtent = 0;
@@ -194,8 +195,8 @@ short combatManager::Open(short priority)
     GenerateMap();
     gbRetreatWin = 0;
     gbCombatSurrender = 0;
-    m_sideDefeated[0] = 0;
-    m_sideDefeated[1] = 0;
+    m_sideDefeated[COMBAT_DEFENDER_SIDE] = 0;
+    m_sideDefeated[COMBAT_ATTACKER_SIDE] = 0;
     m_limitCreature = 1;
     SetGridMode(0);
     m_gridUpdateRow = 0;
@@ -259,7 +260,7 @@ void combatManager::Close(void)
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-        survivor = static_cast<signed char>(m_playerId[0] != -1);
+        survivor = static_cast<signed char>(m_playerId[COMBAT_DEFENDER_SIDE] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < 5; i++) {
             if (m_armyGroups[survivor]->m_creatureTypes[i] != CREATURE_NONE)
@@ -315,14 +316,14 @@ void combatManager::GenerateMap(void)
     int randomCol;
     short armyCount;
 
-    if (m_castleSide[0] == 1)
-        m_catapultFrame[1] = 0;
+    if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1)
+        m_catapultFrame[COMBAT_ATTACKER_SIDE] = 0;
     else
-        m_catapultFrame[1] = -1;
-    if (m_castleSide[1] == 1)
-        m_catapultFrame[0] = 0;
+        m_catapultFrame[COMBAT_ATTACKER_SIDE] = -1;
+    if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1)
+        m_catapultFrame[COMBAT_DEFENDER_SIDE] = 0;
     else
-        m_catapultFrame[0] = -1;
+        m_catapultFrame[COMBAT_DEFENDER_SIDE] = -1;
     for (y = 0; y < 5; y++) {
         for (x = 0; x < 9; x++) {
             m_hexCells[y * 9 + x].m_y = y * 80 + 139;
@@ -330,21 +331,21 @@ void combatManager::GenerateMap(void)
             m_hexCells[y * 9 + x].m_groundIcon = 0;
             m_hexCells[y * 9 + x].m_groundFrame = static_cast<signed char>(SRandom(0, 3)) + 4;
             if (x == 0) {
-                if (m_castleSide[1] == 1)
+                if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1)
                     m_hexCells[y * 9 + x].m_groundIcon = 5;
                 if (y & 1)
                     m_hexCells[y * 9 + x].m_groundFrame = 0;
                 else
                     m_hexCells[y * 9 + x].m_groundFrame = 1;
             } else if (x == 8) {
-                if (m_castleSide[0] == 1)
+                if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1)
                     m_hexCells[y * 9 + x].m_groundIcon = 5;
                 if (y & 1)
                     m_hexCells[y * 9 + x].m_groundFrame = 3;
                 else
                     m_hexCells[y * 9 + x].m_groundFrame = 2;
             }
-            m_hexCells[y * 9 + x].m_occupantSide = -1;
+            m_hexCells[y * 9 + x].m_occupantSide = COMBAT_SIDE_NONE;
             m_hexCells[y * 9 + x].m_occupantIndex = -1;
             m_hexCells[y * 9 + x].m_occupantFrame = -1;
             m_hexCells[y * 9 + x].m_obstacleIndex = -1;
@@ -357,7 +358,7 @@ void combatManager::GenerateMap(void)
         randomCol = SRandom(1, 7);
         m_hexCells[randomRow * 9 + randomCol].m_groundFrame = static_cast<signed char>(SRandom(0, 2)) + 8;
     }
-    if (m_castleSide[0]) {
+    if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
         for (x = 6; x < 8; x++) {
             for (y = 0; y < 5; y++) {
                 m_hexCells[y * 9 + x].m_groundIcon = 5;
@@ -371,13 +372,13 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[1][armyCount].m_hex = i * 9 + 1;
-            m_armies[1][armyCount].m_stats.attributes &= 0x3f;
-            m_hexCells[i * 9 + 1].m_occupantSide = 1;
+        if (m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_hex = i * 9 + 1;
+            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes &= 0x3f;
+            m_hexCells[i * 9 + 1].m_occupantSide = COMBAT_ATTACKER_SIDE;
             m_hexCells[i * 9 + 1].m_occupantIndex = armyCount;
-            if (m_armies[1][armyCount].m_stats.attributes & 1) {
-                m_hexCells[i * 9 + 2].m_occupantSide = 1;
+            if (m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes & 1) {
+                m_hexCells[i * 9 + 2].m_occupantSide = COMBAT_ATTACKER_SIDE;
                 m_hexCells[i * 9 + 2].m_occupantIndex = armyCount;
                 m_hexCells[i * 9 + 1].m_occupantFrame = 1;
                 m_hexCells[i * 9 + 2].m_occupantFrame = 0;
@@ -387,13 +388,13 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[0][armyCount].m_hex = i * 9 + 7;
-            m_armies[0][armyCount].m_stats.attributes &= 0x3f;
-            m_hexCells[i * 9 + 7].m_occupantSide = 0;
+        if (m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_hex = i * 9 + 7;
+            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes &= 0x3f;
+            m_hexCells[i * 9 + 7].m_occupantSide = COMBAT_DEFENDER_SIDE;
             m_hexCells[i * 9 + 7].m_occupantIndex = armyCount;
-            if (m_armies[0][armyCount].m_stats.attributes & 1) {
-                m_hexCells[i * 9 + 6].m_occupantSide = 0;
+            if (m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes & 1) {
+                m_hexCells[i * 9 + 6].m_occupantSide = COMBAT_DEFENDER_SIDE;
                 m_hexCells[i * 9 + 6].m_occupantIndex = armyCount;
                 m_hexCells[i * 9 + 6].m_occupantFrame = 1;
                 m_hexCells[i * 9 + 7].m_occupantFrame = 0;
@@ -402,12 +403,12 @@ void combatManager::GenerateMap(void)
         }
     }
     count = 0;
-    if (!m_castleSide[1] && !m_castleSide[0]) {
+    if (!m_castleSide[COMBAT_ATTACKER_SIDE] && !m_castleSide[COMBAT_DEFENDER_SIDE]) {
         count = SRandom(0, 3);
         for (i = 0; i < count; i++) {
             x = SRandom(3, 5);
             y = SRandom(0, 4);
-            while (m_hexCells[y * 9 + x].m_occupantSide != -1) {
+            while (m_hexCells[y * 9 + x].m_occupantSide != COMBAT_SIDE_NONE) {
                 x = SRandom(3, 5);
                 y = SRandom(0, 4);
             }
@@ -417,7 +418,7 @@ void combatManager::GenerateMap(void)
                 m_hexCells[y * 9 + x].m_obstacleIndex = 0;
         }
     }
-    m_currentSide = 0;
+    m_currentSide = COMBAT_DEFENDER_SIDE;
     m_currentSpeed = 4;
     GetNextArmy(0);
     m_gridUpdateRow = 0;
@@ -527,11 +528,11 @@ void combatManager::LoadIcons(void)
     m_combatIcons[1] = gpResourceManager->GetIcon("textbar.icn");
     m_combatIcons[4] = gpResourceManager->GetIcon("tent.icn");
     m_combatIcons[6] = gpResourceManager->GetIcon("cloud.icn");
-    if (m_castleSide[1] || m_castleSide[0]) {
+    if (m_castleSide[COMBAT_ATTACKER_SIDE] || m_castleSide[COMBAT_DEFENDER_SIDE]) {
         m_combatIcons[3] = gpResourceManager->GetIcon("catapult.icn");
-        sprintf(gText, "castle%02d.icn", m_combatTowns[static_cast<signed char>(m_castleSide[1] == 1)]->m_type);
+        sprintf(gText, "castle%02d.icn", m_combatTowns[static_cast<signed char>(m_castleSide[COMBAT_ATTACKER_SIDE] == 1)]->m_type);
         m_combatIcons[5] = gpResourceManager->GetIcon(gText);
-        sprintf(gText, "keep%02d.icn", m_combatTowns[0]->m_type);
+        sprintf(gText, "keep%02d.icn", m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type);
         m_combatIcons[7] = gpResourceManager->GetIcon(gText);
     }
 }
@@ -556,7 +557,7 @@ void combatManager::LoadArmies(void)
     short j;
     short i;
 
-    m_numArmies[1] = m_numArmies[0] = 0;
+    m_numArmies[COMBAT_ATTACKER_SIDE] = m_numArmies[COMBAT_DEFENDER_SIDE] = 0;
     for (i = 0; i < 5; i++) {
         for (j = 0; j < 2; j++) {
             m_armies[j][i].m_quantity = 0;
@@ -568,17 +569,17 @@ void combatManager::LoadArmies(void)
             m_armies[j][i].InitClean();
     }
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[1][m_numArmies[1]].Init(m_armyGroups[1]->m_creatureTypes[i],
-                                             m_armyGroups[1]->m_creatureCounts[i], 1, m_numArmies[1]);
-            m_armies[1][m_numArmies[1]].LoadResources();
-            m_numArmies[1]++;
+        if (m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_ATTACKER_SIDE][m_numArmies[COMBAT_ATTACKER_SIDE]].Init(m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i],
+                                             m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureCounts[i], 1, m_numArmies[COMBAT_ATTACKER_SIDE]);
+            m_armies[COMBAT_ATTACKER_SIDE][m_numArmies[COMBAT_ATTACKER_SIDE]].LoadResources();
+            m_numArmies[COMBAT_ATTACKER_SIDE]++;
         }
-        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[0][m_numArmies[0]].Init(m_armyGroups[0]->m_creatureTypes[i],
-                                             m_armyGroups[0]->m_creatureCounts[i], 0, m_numArmies[0]);
-            m_armies[0][m_numArmies[0]].LoadResources();
-            m_numArmies[0]++;
+        if (m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
+            m_armies[COMBAT_DEFENDER_SIDE][m_numArmies[COMBAT_DEFENDER_SIDE]].Init(m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i],
+                                             m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureCounts[i], 0, m_numArmies[COMBAT_DEFENDER_SIDE]);
+            m_armies[COMBAT_DEFENDER_SIDE][m_numArmies[COMBAT_DEFENDER_SIDE]].LoadResources();
+            m_numArmies[COMBAT_DEFENDER_SIDE]++;
         }
     }
 }
@@ -590,10 +591,10 @@ void combatManager::FreeArmies(void)
     short i;
 
     gpSoundManager->StopAllSamples();
-    for (i = 0; i < m_numArmies[1]; i++)
-        m_armies[1][i].FreeResources();
-    for (i = 0; i < m_numArmies[0]; i++)
-        m_armies[0][i].FreeResources();
+    for (i = 0; i < m_numArmies[COMBAT_ATTACKER_SIDE]; i++)
+        m_armies[COMBAT_ATTACKER_SIDE][i].FreeResources();
+    for (i = 0; i < m_numArmies[COMBAT_DEFENDER_SIDE]; i++)
+        m_armies[COMBAT_DEFENDER_SIDE][i].FreeResources();
     if (gCurLoadedSpellIcon)
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
     gCurLoadedSpellIcon = NULL;
@@ -799,10 +800,10 @@ void combatManager::CatAttack(signed char side)
     short startY;
     short summitY;
 
-    if (!m_castleSide[0])
+    if (!m_castleSide[COMBAT_DEFENDER_SIDE])
         return;
     catSample = NULL_SAMPLE2;
-    if (side == 1)
+    if (side == COMBAT_ATTACKER_SIDE)
         col = 5;
     else
         col = 3;
@@ -959,7 +960,7 @@ void combatManager::CatAttack(signed char side)
     else
         m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x40;
     force = SRandom(0, 150);
-    if (!gbHumanPlayer[m_playerId[1]])
+    if (!gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
         force -= 15;
     if (force < 30 || m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 0x41) {
         m_wallSurvives = 0;
@@ -1089,8 +1090,8 @@ void combatManager::KeepAttack(void)
     bestWorth = 0;
     targetIndex = -1;
     for (i = 0; i < 5; i++) {
-        if (m_armies[1][i].IsAlive()) {
-            target = &m_armies[1][i];
+        if (m_armies[COMBAT_ATTACKER_SIDE][i].IsAlive()) {
+            target = &m_armies[COMBAT_ATTACKER_SIDE][i];
             if (target->m_stats.attributes & 4)
                 priority = 2;
             else if (target->m_stats.attributes & 2)
@@ -1108,13 +1109,13 @@ void combatManager::KeepAttack(void)
     if (targetIndex == -1)
         return;
     gpMouseManager->ReallyHidePointer();
-    target = &gpCombatManager->m_armies[1][targetIndex];
+    target = &gpCombatManager->m_armies[COMBAT_ATTACKER_SIDE][targetIndex];
     hexCol = target->m_hex % 9;
     targetRow = target->m_hex / 9;
     srcCol = 8;
     keepY = 0;
     gpCombatManager->SetGridMode(0);
-    if (m_combatTowns[0]->m_type == 3 || m_combatTowns[0]->m_type == 1)
+    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == 3 || m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == 1)
         sprintf(gText, "shoot15.82M");
     else
         sprintf(gText, "shoot01.82M");
@@ -1122,7 +1123,7 @@ void combatManager::KeepAttack(void)
     sample = LoadPlaySample(gText);
     frontCol = hexCol;
     if (target->m_stats.attributes & 1) {
-        if (target->m_facing == 1)
+        if (target->m_facing == ARMY_FACING_LEFT)
             frontCol = frontCol - 1;
         else
             frontCol = frontCol + 1;
@@ -1177,10 +1178,10 @@ void combatManager::KeepAttack(void)
     gpWindowManager->UpdateScreenRegion(lastX, lastY, w, height);
     delete behind;
     mod = 2;
-    if (m_heroes[0])
-        mod += m_heroes[0]->m_primaryStats[0];
-    if (m_combatTowns[0]->m_buildings & 1)
-        mod += m_combatTowns[0]->m_buildState + 1;
+    if (m_heroes[COMBAT_DEFENDER_SIDE])
+        mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[0];
+    if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
+        mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
     mod -= -(-target->m_stats.defense);
     if (mod > 20)
         mod = 20;
@@ -1188,11 +1189,11 @@ void combatManager::KeepAttack(void)
         mod = -20;
     dice = 5;
     for (i = 7; i <= 12; i++) {
-        if (m_combatTowns[0]->m_buildings & (1 << i))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << i))
             dice += 4;
     }
     for (i = 0; i <= 4; i++) {
-        if (m_combatTowns[0]->m_buildings & (1 << i))
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << i))
             dice++;
     }
     hurt = 0;

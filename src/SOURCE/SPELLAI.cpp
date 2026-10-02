@@ -98,7 +98,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
     int curHex;
 
     bDone = 0;
-    side = 0;
+    side = COMBAT_DEFENDER_SIDE;
     curHex = 1;
     spellEffect = 0;
     target = NULL;
@@ -426,7 +426,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
     finished = 0;
     if (m_hexCells[targetHex].m_occupantIndex >= 0)
         targetCreature = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
-    for (side = 0; side < 2; side++) {
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         stacksKilled[side] = 0;
         partValue[side] = 0;
         combatValue[side] = 0;
@@ -487,7 +487,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
             }
         }
     }
-    if (stacksKilled[0] >= m_numArmies[0] || stacksKilled[1] >= m_numArmies[1]) {
+    if (stacksKilled[0] >= m_numArmies[COMBAT_DEFENDER_SIDE] || stacksKilled[1] >= m_numArmies[COMBAT_ATTACKER_SIDE]) {
         if (combatValue[m_currentSide] <= 0)
             *effect = 100000000 - giSpellAIValue[spell];
         else

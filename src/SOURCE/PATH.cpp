@@ -39,10 +39,10 @@ short army::FindPath(short sourceHex, short targetHex, signed char, signed char 
     pathResult = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
     if (!pathResult && (m_stats.attributes & 1) && !pathMode) {
         switch (m_facing) {
-            case 1:
+            case ARMY_FACING_LEFT:
                 targetHex = GetAdjacentCellIndex(targetHex, COMBAT_DIRECTION_EAST);
                 break;
-            case 0:
+            case ARMY_FACING_RIGHT:
                 targetHex = GetAdjacentCellIndex(targetHex, COMBAT_DIRECTION_WEST);
                 break;
         }
@@ -141,18 +141,18 @@ short army::ValidMove(short sourceHex, short direction)
     if (!ValidHex(dest))
         return 0;
     frontValid = 0;
-    if (gpCombatManager->m_hexCells[dest].m_occupantSide == -1 && gpCombatManager->m_hexCells[dest].m_obstacleIndex == -1)
+    if (gpCombatManager->m_hexCells[dest].m_occupantSide == COMBAT_SIDE_NONE && gpCombatManager->m_hexCells[dest].m_obstacleIndex == -1)
         frontValid = 1;
     if (m_stats.attributes & 1) {
         backHex = -1;
         switch (m_facing) {
-            case 1:
+            case ARMY_FACING_LEFT:
                 if (direction == COMBAT_DIRECTION_EAST)
                     return frontValid;
                 else
                     backHex = GetAdjacentCellIndex(dest, COMBAT_DIRECTION_WEST);
                 break;
-            case 0:
+            case ARMY_FACING_RIGHT:
                 if (direction == COMBAT_DIRECTION_WEST)
                     return frontValid;
                 else
@@ -160,7 +160,7 @@ short army::ValidMove(short sourceHex, short direction)
                 break;
         }
         rearValid = 0;
-        if (ValidHex(backHex) && gpCombatManager->m_hexCells[backHex].m_occupantSide == -1
+        if (ValidHex(backHex) && gpCombatManager->m_hexCells[backHex].m_occupantSide == COMBAT_SIDE_NONE
             && gpCombatManager->m_hexCells[backHex].m_obstacleIndex == -1)
             rearValid = 1;
         if (direction == COMBAT_DIRECTION_EAST || direction == COMBAT_DIRECTION_WEST)
@@ -192,11 +192,11 @@ short army::ValidAttack(short sourceHex, short direction, short targetMode, shor
             *attackHex = GetAdjacentCellIndex(sourceHex, (signed char)(m_facing == 1 ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST));
         else {
             switch (m_facing) {
-                case 1:
+                case ARMY_FACING_LEFT:
                     if (direction >= 3)
                         adjacentHex = GetAdjacentCellIndex(sourceHex, COMBAT_DIRECTION_WEST);
                     break;
-                case 0:
+                case ARMY_FACING_RIGHT:
                     if (direction <= 2)
                         adjacentHex = GetAdjacentCellIndex(sourceHex, COMBAT_DIRECTION_EAST);
                     break;
@@ -236,9 +236,9 @@ short army::GetAdjacentCellIndex(short hex, short direction)
     if (hex == -1)
         return -1;
     if (direction == COMBAT_DIRECTION_WIDE_WEST)
-        direction = (signed char)(m_facing == 0 ? 5 : 0);
+        direction = (signed char)(m_facing == ARMY_FACING_RIGHT ? 5 : 0);
     else if (direction == COMBAT_DIRECTION_WIDE_EAST)
-        direction = (signed char)(m_facing == 0 ? 3 : 2);
+        direction = (signed char)(m_facing == ARMY_FACING_RIGHT ? 3 : 2);
     ProcessAssert(direction >= 0 && direction < 6, "D:\\Heroes\\Source\\PATH.CPP", gAdjacentCellAssertLine + 11);
     ProcessAssert(hex >= 0 && hex < 45, "D:\\Heroes\\Source\\PATH.CPP", gAdjacentCellAssertLine + 12);
     return gCombatAdjacency[hex][direction];
@@ -281,7 +281,7 @@ short army::ValidRange(short targetHex)
             return 1;
     } else {
         switch (m_facing) {
-            case 0:
+            case ARMY_FACING_RIGHT:
                 directionResult = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
                 if (directionResult > 2) {
                     m_attackDirection = directionResult;
@@ -315,7 +315,7 @@ short army::ValidRange(short targetHex)
                 if (adjacentHex == targetHex)
                     return 1;
                 break;
-            case 1:
+            case ARMY_FACING_LEFT:
                 directionResult = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
                 if (directionResult < 3) {
                     m_attackDirection = directionResult;
