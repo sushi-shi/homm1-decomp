@@ -16,6 +16,8 @@ H1_ENUM_END(FindPathTerrainConstant)
 
 int CalcTerrainCost(int, int, int, int);
 short TerrainStepCost(signed char, char);
+// FindNearestObject seeds this word limit; PushPoint marks costlier nodes.
+extern short giCurTempMobility;
 
 // PoL FINDPATH.cpp:32-36 retains this inline approximation helper.
 inline short ApproximateGridDistance(short xDistance, short yDistance) {

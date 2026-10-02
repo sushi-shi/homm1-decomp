@@ -9,6 +9,7 @@
 #include <BASE/Iconm2b.h>
 #include <BASE/Icond2b.h>
 #include <BASE/MISC_TYPES.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/bmap2.h>
 #include <H1/All.h>
@@ -16,6 +17,7 @@
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/fileRequester.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
@@ -213,7 +215,191 @@ advManager::~advManager() {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.608500;margin=0.280356;shape=0.449;size=0.637;calls=0.611;strings=advManager|adv_wind.bin|advmice.mse;alternate=pol20:int advManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0005665f
 VA(0x004255ab, 0xea6)
-short advManager::Open(short) {
+short advManager::Open(short id) {
+    int savedShowIt;
+    int firstTime;
+    int oldPlayer;
+    int oldVolume;
+    int i;
+
+    firstTime = 1;
+    iCurBottomView = BOTTOM_VIEW_NONE;
+    m_openState = 0;
+    bShowIt = 0;
+    m_adventureBorder = 0;
+    for (i = 0; i < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; i++) {
+        m_bottomViewPrimaryWidgets[i] = 0;
+        m_bottomViewSecondaryWidgets[i] = 0;
+    }
+    if (m_adventureWindow == 0) {
+        m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
+        if (m_adventureWindow == 0)
+            MemError();
+        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, 0, 26, 16, 1);
+        if (m_scrollLeftButton == 0)
+            MemError();
+        m_adventureWindow->AddWidget(m_scrollLeftButton, -1);
+        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, 0, 27, 16, 1);
+        if (m_scrollRightButton == 0)
+            MemError();
+        m_adventureWindow->AddWidget(m_scrollRightButton, -1);
+        m_panelBackdrops[0] = new backdropWidget(480, 176, 56, 128, -1, 32);
+        if (m_panelBackdrops[0] == 0)
+            MemError();
+        m_panelBackdrops[1] = new backdropWidget(552, 176, 56, 128, -1, 32);
+        if (m_panelBackdrops[1] == 0)
+            MemError();
+        m_panelBackdrops[2] = new backdropWidget(539, 194, 10, 92, -1, 32);
+        if (m_panelBackdrops[2] == 0)
+            MemError();
+        m_panelBackdrops[3] = new backdropWidget(611, 194, 10, 92, -1, 32);
+        if (m_panelBackdrops[3] == 0)
+            MemError();
+        m_panelBackdrops[4] = new backdropWidget(480, 320, 144, 144, -1, 32);
+        if (m_panelBackdrops[4] == 0)
+            MemError();
+        for (i = 0; i < ADVMGR_PANEL_ICON_COUNT; i++)
+            m_adventureWindow->AddWidget(m_panelBackdrops[i], -1);
+    }
+    if (gbThisNetHumanPlayer[giCurPlayer])
+        gpMouseManager->SetPointer("advmice.mse", 0);
+    else
+        gpMouseManager->SetPointer("advmice.mse", 1);
+    if (m_visibilityMap == 0) {
+        m_visibilityMap = new signed char[MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE];
+        if (m_visibilityMap == 0)
+            MemError();
+    }
+    m_routeShown = 0;
+    gpWindowManager->AddWindow(m_adventureWindow, 0, 1);
+    if (m_groundTiles == 0)
+        m_groundTiles = gpResourceManager->GetTileset("ground32.til");
+    if (m_cloudTiles == 0)
+        m_cloudTiles = gpResourceManager->GetTileset("clof32.til");
+    if (m_stoneTiles == 0)
+        m_stoneTiles = gpResourceManager->GetTileset("ston.til");
+    if (m_cloudOverlayIcon == 0)
+        m_cloudOverlayIcon = gpResourceManager->GetIcon("clop32.icn");
+    if (m_objectIcons[0] == 0)
+        m_objectIcons[0] = gpResourceManager->GetIcon("obj32-00.icn");
+    if (m_objectIcons[1] == 0)
+        m_objectIcons[1] = gpResourceManager->GetIcon("obj32-01.icn");
+    if (m_objectIcons[2] == 0)
+        m_objectIcons[2] = gpResourceManager->GetIcon("obj32-02.icn");
+    if (m_objectIcons[3] == 0)
+        m_objectIcons[3] = gpResourceManager->GetIcon("obj32-03.icn");
+    if (m_objectIcons[4] == 0)
+        m_objectIcons[4] = gpResourceManager->GetIcon("obj32-04.icn");
+    if (m_objectIcons[5] == 0)
+        m_objectIcons[5] = gpResourceManager->GetIcon("obj32-05.icn");
+    if (m_objectIcons[6] == 0)
+        m_objectIcons[6] = gpResourceManager->GetIcon("obj32-06.icn");
+    if (m_objectIcons[7] == 0)
+        m_objectIcons[7] = gpResourceManager->GetIcon("obj32-07.icn");
+    if (m_objectIcons[8] == 0)
+        m_objectIcons[8] = gpResourceManager->GetIcon("mtn32.icn");
+    if (m_objectIcons[9] == 0)
+        m_objectIcons[9] = gpResourceManager->GetIcon("tree32.icn");
+    if (m_objectIcons[10] == 0)
+        m_objectIcons[10] = gpResourceManager->GetIcon("town32.icn");
+    if (m_objectIcons[11] == 0)
+        m_objectIcons[11] = gpResourceManager->GetIcon("rsrc32.icn");
+    if (m_objectIcons[12] == 0)
+        m_objectIcons[12] = gpResourceManager->GetIcon("mons32.icn");
+    if (m_objectIcons[13] == 0)
+        m_objectIcons[13] = gpResourceManager->GetIcon("art32.icn");
+    if (m_objectIcons[14] == 0)
+        m_objectIcons[14] = gpResourceManager->GetIcon("flag32.icn");
+    if (m_objectIcons[15] == 0)
+        m_objectIcons[15] = gpResourceManager->GetIcon("ressmall.icn");
+    if (m_objectIcons[16] == 0)
+        m_objectIcons[16] = gpResourceManager->GetIcon("hourglas.icn");
+    if (m_objectIcons[17] == 0)
+        m_objectIcons[17] = gpResourceManager->GetIcon("route.icn");
+    if (m_objectIcons[18] == 0)
+        m_objectIcons[18] = gpResourceManager->GetIcon("smcrest.icn");
+    if (m_objectIcons[19] == 0)
+        m_objectIcons[19] = gpResourceManager->GetIcon("stonback.icn");
+    if (m_objectIcons[20] == 0)
+        m_objectIcons[20] = gpResourceManager->GetIcon("minimon.icn");
+    if (m_heroIcons[0] == 0)
+        m_heroIcons[0] = gpResourceManager->GetIcon("kngt32.icn");
+    if (m_heroIcons[1] == 0)
+        m_heroIcons[1] = gpResourceManager->GetIcon("barb32.icn");
+    if (m_heroIcons[2] == 0)
+        m_heroIcons[2] = gpResourceManager->GetIcon("sorc32.icn");
+    if (m_heroIcons[3] == 0)
+        m_heroIcons[3] = gpResourceManager->GetIcon("wrlk32.icn");
+    if (m_heroIcons[4] == 0)
+        m_heroIcons[4] = gpResourceManager->GetIcon("boat32.icn");
+    gbLoadingMonoIcon = 1;
+    if (m_boatShadowIcon == 0)
+        m_boatShadowIcon = gpResourceManager->GetIcon("shadow32.icn");
+    gbLoadingMonoIcon = 0;
+    if (m_flagIcons[0] == 0)
+        m_flagIcons[0] = gpResourceManager->GetIcon("b-flag32.icn");
+    if (m_flagIcons[1] == 0)
+        m_flagIcons[1] = gpResourceManager->GetIcon("g-flag32.icn");
+    if (m_flagIcons[2] == 0)
+        m_flagIcons[2] = gpResourceManager->GetIcon("r-flag32.icn");
+    if (m_flagIcons[3] == 0)
+        m_flagIcons[3] = gpResourceManager->GetIcon("y-flag32.icn");
+    if (m_boatFlagIcons[0] == 0)
+        m_boatFlagIcons[0] = gpResourceManager->GetIcon("b-bflg32.icn");
+    if (m_boatFlagIcons[1] == 0)
+        m_boatFlagIcons[1] = gpResourceManager->GetIcon("g-bflg32.icn");
+    if (m_boatFlagIcons[2] == 0)
+        m_boatFlagIcons[2] = gpResourceManager->GetIcon("r-bflg32.icn");
+    if (m_boatFlagIcons[3] == 0)
+        m_boatFlagIcons[3] = gpResourceManager->GetIcon("y-bflg32.icn");
+    gbLoadingMonoIcon = 1;
+    if (m_puzzleIcon == 0)
+        m_puzzleIcon = gpResourceManager->GetIcon("radar.icn");
+    gbLoadingMonoIcon = 0;
+    for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
+        m_loopingSamples[i] = 0;
+    for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; i++) {
+        m_activeSounds[i].soundId = -1;
+        m_activeSounds[i].volume = 127;
+        m_activeSoundMask = 0;
+    }
+    GetCursorSampleSet(gConfig.walkSpeed);
+    if (!gbThisNetHumanPlayer[giCurPlayer]) {
+        gpGame->TurnOnAIMusic();
+        SetNoDialogMenus(0);
+    } else {
+        SetNoDialogMenus(1);
+    }
+    glTimers[0] = KBTickCount() + 120;
+    m_messageTypeMask = 815;
+    gpMouseManager->NewUpdate(1);
+    oldVolume = gConfig.soundVolume;
+    if (gConfig.soundVolume != 0)
+        gConfig.soundVolume = 10;
+    SetInitialMapOrigin();
+    bShowIt = gbThisNetHumanPlayer[giCurPlayer];
+    gpMouseManager->SetColorMice(0);
+    oldPlayer = giCurPlayer;
+    savedShowIt = bShowIt;
+    giCurPlayer = giCurWatchPlayer;
+    gpCurPlayer = &gpGame->m_players[giCurPlayer];
+    bShowIt = 1;
+    RedrawAdvScreen(1);
+    giCurPlayer = oldPlayer;
+    bShowIt = savedShowIt;
+    gpCurPlayer = &gpGame->m_players[giCurPlayer];
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        gpGame->ShowComputerScreen();
+    gpMouseManager->ReallyShowPointer();
+    KBChangeMenu(hmnuAdv);
+    gpWindowManager->FadeScreen(0, 8, gPalette);
+    giBottomViewOverride = 0;
+    gConfig.soundVolume = oldVolume;
+    gpSoundManager->AdjustSoundVolumes();
+    m_messageMask = 0x400;
+    m_priority = id;
+    m_active = 1;
+    strcpy(m_name, "advManager");
     return 0;
 }
 
@@ -429,8 +615,346 @@ class mapCell* advManager::DoAdvCommand(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x00426eee, 0xe10)
-short advManager::Main(struct tag_message&) {
-    return 0;
+short advManager::Main(struct tag_message& message) {
+    int yPos;
+    int xPos;
+    int retVal;
+    mapCell* evtMapCell;
+    hero* curHero;
+    int townIndex;
+    int cmdValue;
+    int bQuit;
+    int moved;
+    signed char bEnded;
+    int helpText;
+    int dir;
+
+    if (KBTickCount() > glTimers[0] && ComboDraw(1))
+        UpdateScreen(1, 0);
+    if (gbGameOver) {
+        message.type = MESSAGE_EXECUTIVE;
+        message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    if (!gbHumanPlayer[giCurPlayer] && (!gbRemoteOn || giHostGamePos == giThisGamePos)) {
+        gpPhilAI->DoAI(giCurPlayer);
+        gpGame->NextPlayer();
+        return MESSAGE_DISPATCH_CONSUME;
+    }
+    CheckHandleNet();
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        return CheckHandleNetPlayerWait(message, 0);
+    if (giScreenScroll && gbForegroundApp)
+        CheckScreenScroll();
+    if (!(message.type & m_messageTypeMask)) {
+        if (message.type) {
+            message.type = MESSAGE_NONE;
+            return MESSAGE_DISPATCH_FORWARD;
+        }
+        return MESSAGE_DISPATCH_CONTINUE;
+    }
+    if (!gbNoSound && gConfig.musicVolume && giForceSwitchMusic > 0 && KBTickCount() - giForceSwitchMusic > 6000
+        && gpSoundManager->m_currentTrack == 15) {
+        giForceSwitchMusic = -1;
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    retVal = MESSAGE_DISPATCH_CONSUME;
+    bQuit = 0;
+    evtMapCell = 0;
+    if (message.type) {
+        switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.payload.widget.command) {
+            case WIDGET_COMMAND_HOVER:
+                retVal = ProcessHover(&message);
+                break;
+            case WIDGET_NOTIFY_DESELECT:
+                if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
+                    retVal = ProcessDeSelect(&message, &bQuit, &evtMapCell);
+                break;
+            case WIDGET_NOTIFY_SELECT:
+                retVal = ProcessSelect(&message, &evtMapCell);
+                break;
+            case WIDGET_NOTIFY_RIGHT_CLICK:
+                helpText = -1;
+                switch (message.payload.widget.id) {
+                case 1:
+                    helpText = 0;
+                    break;
+                case 2:
+                    helpText = 1;
+                    break;
+                case 3:
+                    helpText = 2;
+                    break;
+                case 4:
+                    helpText = 3;
+                    break;
+                case 5:
+                    helpText = 4;
+                    break;
+                case 6:
+                    helpText = 5;
+                    break;
+                }
+                if (helpText >= 0)
+                    NormalDialog(cAdvMenuHelp[helpText], 4, -1, -1, -1, 0, -1, 0, -1);
+                break;
+            }
+            break;
+        case MESSAGE_KEY_DOWN:
+            dir = -1;
+            if (gpCurPlayer->CurrentHero() != -1)
+                curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+            else
+                curHero = 0;
+            if (giDebugLevel < 1
+                && (message.payload.keyboard.keyCode == 0x3d || message.payload.keyboard.keyCode == 0x3e
+                    || message.payload.keyboard.keyCode == 0x3f || message.payload.keyboard.keyCode == 0x40
+                    || message.payload.keyboard.keyCode == 0x41 || message.payload.keyboard.keyCode == 0x42
+                    || message.payload.keyboard.keyCode == 0x43 || message.payload.keyboard.keyCode == 0x44
+                    || message.payload.keyboard.keyCode == 0x57 || message.payload.keyboard.keyCode == 0x58))
+                break;
+            switch (message.payload.keyboard.keyCode) {
+            case 0x3c:
+                PopNetBox(0);
+                break;
+            case 0x3d:
+                gpGame->m_playerDead[1] = 1;
+                gpGame->m_playerDead[2] = 1;
+                gpGame->m_playerDead[3] = 1;
+                CheckEndGame(1);
+                break;
+            case 0x3f:
+                gpGame->m_playerDead[0] = 1;
+                CheckEndGame(0);
+                break;
+            case 0x40:
+                if (curHero) {
+                    for (cmdValue = 0; cmdValue < HERO_SPELL_SLOT_COUNT; cmdValue++)
+                        curHero->AddSpell(cmdValue, 5, 0);
+                }
+                break;
+            case 0x41:
+                if (curHero)
+                    GiveExperience(curHero, 800, 1);
+                break;
+            case 0x42:
+                if (curHero) {
+                    gpGame->GiveArmy(&curHero->m_army, 23, 1, -1);
+                    gpGame->GiveArmy(&curHero->m_army, 10, 1, -1);
+                }
+                break;
+            case 0x43:
+                for (cmdValue = 0; cmdValue < PLAYER_RESOURCE_COUNT; cmdValue++) {
+                    if (cmdValue == 6)
+                        gpCurPlayer->m_resources[cmdValue] += 1000;
+                    else
+                        gpCurPlayer->m_resources[cmdValue] += 10;
+                }
+                break;
+            case 0x57:
+                if (curHero)
+                    curHero->m_remainingMobility = 2999;
+                break;
+            case 0x58:
+                gpGame->SetVisibility(30, 30, giCurPlayer, 100);
+                UpdateRadar(1, 0);
+                CompleteDraw(0);
+                UpdateScreen(0, 0);
+                break;
+            case 0xb:
+                cmdValue = 0;
+                goto processCheatDigit;
+            case 2:
+                cmdValue = 1;
+                goto processCheatDigit;
+            case 3:
+                cmdValue = 2;
+                goto processCheatDigit;
+            case 4:
+                cmdValue = 3;
+                goto processCheatDigit;
+            case 5:
+                cmdValue = 4;
+                goto processCheatDigit;
+            case 6:
+                cmdValue = 5;
+                goto processCheatDigit;
+            case 7:
+                cmdValue = 6;
+                goto processCheatDigit;
+            case 8:
+                cmdValue = 7;
+                goto processCheatDigit;
+            case 9:
+                cmdValue = 8;
+                goto processCheatDigit;
+            case 0xa:
+                cmdValue = 9;
+                goto processCheatDigit;
+            processCheatDigit:
+                giCheatSeq = giCheatSeq * 10 % 1000000 + cmdValue;
+                if (giCheatSeq == 101495) {
+                    gpGame->SetVisibility(30, 30, 0, 100);
+                    gpGame->SetVisibility(30, 30, 1, 100);
+                    gpGame->SetVisibility(30, 30, 2, 100);
+                    gpGame->SetVisibility(30, 30, 3, 100);
+                    Reseed(0, 0);
+                    UpdateRadar(1, 0);
+                    CompleteDraw(0);
+                    UpdateScreen(0, 0);
+                }
+                break;
+            case 1:
+                break;
+            case 0x48:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(0, 0);
+                else
+                    dir = 0;
+                break;
+            case 0x49:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(1, 0);
+                else
+                    dir = 1;
+                break;
+            case 0x4d:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(2, 0);
+                else
+                    dir = 2;
+                break;
+            case 0x51:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(3, 0);
+                else
+                    dir = 3;
+                break;
+            case 0x50:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(4, 0);
+                else
+                    dir = 4;
+                break;
+            case 0x4f:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(5, 0);
+                else
+                    dir = 5;
+                break;
+            case 0x4b:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(6, 0);
+                else
+                    dir = 6;
+                break;
+            case 0x47:
+                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                    ScreenScroll(7, 0);
+                else
+                    dir = 7;
+                break;
+            case 0x2e:
+                CheckCastSpell();
+                break;
+            case 0x20:
+                ProcessSearch(-1, -1);
+                break;
+            case 0x19:
+                ViewPuzzle();
+                break;
+            case 0x2f:
+                ViewWorld(24, 0, 0);
+                break;
+            case 0x31:
+                cmdValue = 1;
+                strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
+                goto confirmGameCommand;
+            case 0x26:
+                cmdValue = 2;
+                strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
+                goto confirmGameCommand;
+            case 0x10:
+                cmdValue = 4;
+                strcpy(gText, "Are you sure you want to quit?");
+                goto confirmGameCommand;
+            confirmGameCommand:
+                bQuit = 1;
+                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult == 30726)
+                    bQuit = 0;
+                else
+                    gGameCommand = cmdValue;
+                break;
+            case 0x1f:
+                SaveGame();
+                break;
+            case 0x17:
+                if (gpGame->m_campaignType > 0)
+                    gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 1, 0);
+                else
+                    gpGame->ShowScenInfo();
+                break;
+            case 0x14:
+                if (gpCurPlayer->m_townCount >= 0) {
+                    if (gpCurPlayer->CurrentTown() == -1) {
+                        townIndex = gpCurPlayer->m_townIds[0];
+                    } else {
+                        townIndex = 0;
+                        for (cmdValue = 0; cmdValue < gpCurPlayer->m_townCount; cmdValue++) {
+                            if (gpCurPlayer->m_townIds[cmdValue] == gpCurPlayer->CurrentTown()) {
+                                if (cmdValue == gpCurPlayer->m_townCount - 1)
+                                    townIndex = gpCurPlayer->m_townIds[0];
+                                else
+                                    townIndex = gpCurPlayer->m_townIds[cmdValue + 1];
+                            }
+                        }
+                    }
+                    SetTownContext(townIndex);
+                }
+                break;
+            case 0x23:
+                SetHeroContext(gpCurPlayer->NextHero(0), 0);
+                break;
+            case 0x1c:
+                if (gpCurPlayer->CurrentTown() != -1) {
+                    m_selectedCell = 3;
+                    DoAdvCommand();
+                } else if (gpCurPlayer->CurrentHero() != -1) {
+                    m_selectedCell = 2;
+                    DoAdvCommand();
+                }
+                break;
+            }
+            if (gpCurPlayer->m_currentHero != -1 && dir >= 0) {
+                HideRoute(1, 1, 1);
+                gpMouseManager->ReallyHidePointer();
+                evtMapCell = MoveHero(dir, 1, &TrigX, &TrigY, &moved, 0, &bEnded);
+                UpdateHeroLocator(-1, 1, 1);
+                if (evtMapCell) {
+                    StopCursor(1);
+                    DoEvent(evtMapCell, TrigX, TrigY);
+                    evtMapCell = 0;
+                }
+                Reseed(0, 0);
+                ForceNewHover();
+                UpdBottomView(1, 1, 1);
+                CheckDimHero();
+                gpMouseManager->ReallyShowPointer();
+            }
+            break;
+        }
+    }
+    if (evtMapCell)
+        DoEvent(evtMapCell, TrigX, TrigY);
+    if (gbGameOver || bQuit == 1 || giMenuCommand != -1) {
+        message.type = MESSAGE_EXECUTIVE;
+        message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        return MESSAGE_DISPATCH_FORWARD;
+    }
+    return retVal;
 }
 
 // Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
@@ -443,8 +967,278 @@ void advManager::Reseed(int, int) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526004;margin=0.306176;shape=0.329;size=0.923;calls=0.956;alternate=pol20:int advManager::ProcessSelect(struct tag_message *, class mapCell * *)@0x00058d68
 VA(0x00427d20, 0xe39)
-int advManager::ProcessSelect(struct tag_message*, class mapCell**) {
-    return 0;
+int advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
+    short curX;
+    short cellType;
+    short mapIndex;
+    short curY;
+    mapCell* hoverCell;
+    int iPage;
+    int isVisible;
+    tag_message mouseMsg;
+    tag_message inputMessage;
+    hero* hero;
+    signed char mobileResult;
+
+    isVisible = 1;
+    switch (message->payload.widget.id) {
+    case 105:
+    case 112:
+    case 119:
+    case 126:
+        iPage = (message->payload.widget.id - 105) / 7;
+        if (gpCurPlayer->m_heroCount <= iPage)
+            break;
+        cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            HeroQuickView(cellType, iPage, -1, -1);
+        } else if (gpCurPlayer->CurrentHero() == cellType) {
+            m_selectedCell = 2;
+            DoAdvCommand();
+        } else {
+            HideRoute(1, 0, 1);
+            SetHeroContext(cellType, 0);
+        }
+        break;
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+        cellType = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + message->payload.widget.id - 16];
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            TownQuickView(cellType, message->payload.widget.id - 16, -1, -1);
+        } else {
+            HideRoute(1, 0, 1);
+            if (gpCurPlayer->CurrentTown() == cellType) {
+                m_selectedCell = 3;
+                *eventCell = DoAdvCommand();
+            } else {
+                SetTownContext(cellType);
+            }
+        }
+        break;
+    case 20:
+        if (gpCurPlayer->m_heroLocatorPage > 0) {
+            gpCurPlayer->m_heroLocatorPage--;
+            UpdateHeroLocators(1, 1);
+        }
+        break;
+    case 21:
+        if (gpCurPlayer->m_heroLocatorPage + 4 < gpCurPlayer->m_heroCount) {
+            gpCurPlayer->m_heroLocatorPage++;
+            UpdateHeroLocators(1, 1);
+        }
+        break;
+    case 26:
+        DoHeroKnob();
+        break;
+    case 22:
+        gpMouseManager->MouseCoords(curX, curY);
+        curY -= 194;
+        if (gpCurPlayer->m_heroCount > 4) {
+            iPage = curY / (92 / (gpCurPlayer->m_heroCount - 3));
+            if (iPage > gpCurPlayer->m_heroCount - 4)
+                iPage = gpCurPlayer->m_heroCount - 4;
+        } else {
+            iPage = 0;
+        }
+        gpCurPlayer->m_heroLocatorPage = iPage;
+        UpdateHeroLocators(1, 1);
+        break;
+    case 27:
+        DoTownKnob();
+        break;
+    case 25:
+        gpMouseManager->MouseCoords(curX, curY);
+        curY -= 194;
+        if (gpCurPlayer->m_townCount > 4) {
+            iPage = curY / (92 / (gpCurPlayer->m_townCount - 3));
+            if (iPage > gpCurPlayer->m_townCount - 4)
+                iPage = gpCurPlayer->m_townCount - 4;
+        } else {
+            iPage = 0;
+        }
+        gpCurPlayer->m_townLocatorPage = iPage;
+        UpdateTownLocators(1, 1);
+        break;
+    case 23:
+        if (gpCurPlayer->m_townLocatorPage > 0) {
+            gpCurPlayer->m_townLocatorPage--;
+            UpdateTownLocators(1, 1);
+        }
+        break;
+    case 24:
+        if (gpCurPlayer->m_townLocatorPage + 4 < gpCurPlayer->m_townCount) {
+            gpCurPlayer->m_townLocatorPage++;
+            UpdateTownLocators(1, 1);
+        }
+        break;
+    case 10:
+        if (!(gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY] & giCurPlayerBit))
+            isVisible = 0;
+        hoverCell = GetCell(m_lastHoverCell + m_mapOriginX, m_hoverCellY + m_mapOriginY);
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (!isVisible) {
+                QuickInfo(m_lastHoverCell, m_hoverCellY);
+            } else {
+                if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
+                    && m_heroContextLocked) {
+                    cellType = 0x3d;
+                    mapIndex = gpCurPlayer->CurrentHero();
+                } else {
+                    cellType = hoverCell->m_triggerType & 0x7f;
+                    mapIndex = hoverCell->m_objectMetadata;
+                }
+                switch (cellType) {
+                case 0x3d:
+                    curX = m_lastHoverCell * 32 - 73;
+                    if (curX < 16)
+                        curX = 16;
+                    if (curX + 178 > 464)
+                        curX = 286;
+                    curY = m_hoverCellY * 32 - 65;
+                    if (curY < 16)
+                        curY = 16;
+                    if (curY + 162 > 464)
+                        curY = 302;
+                    HeroQuickView(mapIndex, -1, curX, curY);
+                    break;
+                case 0x28:
+                    curX = m_lastHoverCell * 32 - 89;
+                    if (curX < 16)
+                        curX = 16;
+                    if (curX + 210 > 464)
+                        curX = 254;
+                    curY = m_hoverCellY * 32 - 70;
+                    if (curY < 16)
+                        curY = 16;
+                    if (curY + 172 > 464)
+                        curY = 292;
+                    TownQuickView(mapIndex, -1, curX, curY);
+                    break;
+                default:
+                    if (gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY]
+                        & giCurPlayerBit)
+                        QuickInfo(m_lastHoverCell, m_hoverCellY);
+                    break;
+                }
+            }
+        } else if (isVisible) {
+            hero = 0;
+            mobileResult = 0;
+            if (gpCurPlayer->m_currentHero != -1) {
+                hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+                mobileResult = gpGame->IsMobile(hero->m_id);
+            }
+            if (hero) {
+                if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
+                    && m_heroContextLocked) {
+                    m_selectedCell = 2;
+                    DoAdvCommand();
+                } else if ((!mobileResult || (message->payload.widget.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                            || (gConfig.showRoute
+                                && (hero->m_destinationX != m_commandTargetX
+                                    || hero->m_destinationY != m_commandTargetY)))
+                           && gpSearchArray->m_cells[m_commandTargetX][m_commandTargetY].visited) {
+                    hero->m_destinationX = m_commandTargetX;
+                    hero->m_destinationY = m_commandTargetY;
+                    ShowRoute(1, 1, 1);
+                } else {
+                    *eventCell = DoAdvCommand();
+                }
+            } else {
+                cellType = hoverCell->m_triggerType & 0x7f;
+                mapIndex = hoverCell->m_objectMetadata;
+                if (cellType == 0x3d) {
+                    if (gpCurPlayer->CurrentHero() == mapIndex) {
+                        m_selectedCell = 2;
+                        DoAdvCommand();
+                    } else if (gpGame->GetHero(mapIndex)->m_owner == giCurPlayer) {
+                        SetHeroContext(mapIndex, 0);
+                    }
+                }
+                if (cellType == 0x28) {
+                    if (gpCurPlayer->CurrentTown() == mapIndex) {
+                        m_selectedCell = 3;
+                        *eventCell = DoAdvCommand();
+                    } else if (gpGame->GetTown(mapIndex)->m_owner == giCurPlayer) {
+                        SetTownContext(mapIndex);
+                    }
+                }
+            }
+        }
+        break;
+    case 9:
+        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            NormalDialog("World Map (Left click to move viewing area).", 4, -1, -1, -1, 0, -1, 0, -1);
+            break;
+        }
+        DemobilizeCurrHero();
+        gpMouseManager->MouseCoords(curX, curY);
+        curX = (curX - 480) / 2;
+        curY = (curY - 16) / 2;
+        m_mapOriginX = curX - 7;
+        m_mapOriginY = curY - 7;
+        if (m_mapOriginX < -7)
+            m_mapOriginX = -7;
+        if (m_mapOriginY < -7)
+            m_mapOriginY = -7;
+        if (m_mapOriginX > 64)
+            m_mapOriginX = 64;
+        if (m_mapOriginY > 64)
+            m_mapOriginY = 64;
+        UpdateRadar(1, 0);
+        CompleteDraw(0);
+        UpdateScreen(0, 0);
+        inputMessage.type = MESSAGE_NONE;
+        while (inputMessage.type != MESSAGE_LEFT_BUTTON_UP) {
+            Process1WindowsMessage();
+            inputMessage = gpInputManager->GetEvent();
+            mouseMsg = inputMessage;
+            while (inputMessage.type != MESSAGE_LEFT_BUTTON_UP && inputMessage.type != MESSAGE_NONE) {
+                if (inputMessage.type == MESSAGE_MOUSE_MOVE)
+                    mouseMsg = inputMessage;
+                Process1WindowsMessage();
+                inputMessage = gpInputManager->GetEvent();
+            }
+            if (mouseMsg.type == MESSAGE_MOUSE_MOVE) {
+                if (mouseMsg.payload.mouse.x < 480)
+                    mouseMsg.payload.mouse.x = 480;
+                if (mouseMsg.payload.mouse.x >= 624)
+                    mouseMsg.payload.mouse.x = 623;
+                if (mouseMsg.payload.mouse.y < 16)
+                    mouseMsg.payload.mouse.y = 16;
+                if (mouseMsg.payload.mouse.y >= 160)
+                    mouseMsg.payload.mouse.y = 159;
+                gpMouseManager->Main(mouseMsg);
+                curX = (mouseMsg.payload.mouse.x - 480) / 2;
+                curY = (mouseMsg.payload.mouse.y - 16) / 2;
+                m_mapOriginX = curX - 7;
+                m_mapOriginY = curY - 7;
+                if (m_mapOriginX < -7)
+                    m_mapOriginX = -7;
+                if (m_mapOriginY < -7)
+                    m_mapOriginY = -7;
+                if (m_mapOriginX > 64)
+                    m_mapOriginX = 64;
+                if (m_mapOriginY > 64)
+                    m_mapOriginY = 64;
+                UpdateRadar(1, 0);
+                CompleteDraw(0);
+                UpdateScreen(0, 0);
+                mouseMsg.type = MESSAGE_NONE;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    if ((message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) && message->payload.widget.id >= 2000
+        && message->payload.widget.id <= 2200)
+        NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
+                     "and shows the date.  Left click here to cycle through these windows.",
+                     4, -1, -1, -1, 0, -1, 0, -1);
+    return 1;
 }
 
 // donor PoL RVA 0x00059c19; preferred Buka symbol ?ProcessDeSelect@advManager@@QAEHPAUtag_message@@PAHPAPAVmapCell@@@Z

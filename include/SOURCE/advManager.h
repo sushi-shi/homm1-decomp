@@ -11,6 +11,7 @@
 
 // forward declarations:
 class armyGroup;
+class backdropWidget;
 class hero;
 class heroWindow;
 class icon;
@@ -60,7 +61,8 @@ public:
     class mapCell (*m_mapData)[MAP_CELL_GRID_SIZE];
     class iconWidget* m_scrollLeftButton;
     class iconWidget* m_scrollRightButton;
-    class icon* m_panelIcons[ADVMGR_PANEL_ICON_COUNT];
+    // Open adds these five panel backdrops to the adventure window.
+    class backdropWidget* m_panelBackdrops[ADVMGR_PANEL_ICON_COUNT];
     unsigned char* m_adventureBorder;
     char m_unknownc3[4];
     class tileset* m_groundTiles;
@@ -111,7 +113,8 @@ public:
     class sample* m_cursorSamples[ADVMGR_CURSOR_SAMPLE_COUNT];
     signed char m_identifyHeroActive;
     signed char m_openState;
-    short m_unknown25e;
+    // Main drops message types outside this mask (Open sets 0x32f).
+    short m_messageTypeMask;
     // --- constructors ---
     advManager(void);
     ~advManager();
@@ -356,6 +359,12 @@ extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;
 extern unsigned char giCurWatchPlayerBit;
+extern signed char giCurWatchPlayer;
+// Main: right-click help for the six adventure panel buttons, the typed
+// cheat-digit sequence and the pending menu command.
+extern char* cAdvMenuHelp[];
+extern int giCheatSeq;
+extern int giMenuCommand;
 extern short gGameCommand;
 extern int gbHeroMoving;
 extern unsigned char giCurPlayerBit;

@@ -76,16 +76,18 @@ public:
     void Close(void);
     void Clear(void);
     short QuickDistance(short, short, short, short);
-    // HoMM1 retail 0x00424d90: word point, direction and costs, byte flags
-    // and neighbour coordinates (ret 0x30).
-    void PushPoint(short, short, unsigned short, unsigned short, unsigned short, unsigned char, signed char,
-                   signed char, signed char, unsigned char, signed char, signed char);
-    // HoMM1 retail 0x00425040: word coordinates (ret 0x18).
-    void TestPossibleDirections(short, short, signed char * const, signed char * const, int, int);
+    // HoMM1 retail 0x00424d90 (ret 0x30): word x/y, unsigned word
+    // direction/cost/mobility and byte flags and coordinates.
+    void PushPoint(short, short, unsigned short, unsigned short, unsigned short, char, char, signed char,
+                   signed char, char, signed char, signed char);
+    // HoMM1 retail 0x00425040 (ret 0x18): word coordinates and occupancy flag.
+    void TestPossibleDirections(short, short, signed char * const, signed char * const, short, int);
     void SeedCombatPosition(class army *);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
     short FindCombatPath(short, short, class army *, signed char);
-    void PushCombatPoint(int, int, int, int);
+    // HoMM1 retail 0x00424c50 (ret 0x10): word hex/direction and unsigned
+    // word distance/speed.
+    void PushCombatPoint(short, short, unsigned short, unsigned short);
 };
 #pragma pack(pop)
 

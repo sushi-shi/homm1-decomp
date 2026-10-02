@@ -246,9 +246,12 @@ public:
     void NextPos(int *);
     int FirstArmy(int, int, int *);
     int FirstResurrectable(int, int *, int);
-    void EffectSpellCure(int *, int, int, int);
-    void EffectSpellResurrect(int *, int, int);
-    void EffectSpellDamage(int *, int, int);
+    // HoMM1 retail 0x00437aa1 (ret 0xc), 0x00437d14 (ret 8) and 0x00437e0d
+    // (ret 0x10): DetermineEffectOfSpell passes the effect, then a side and
+    // flag, a hex, or the spell, base damage and hex.
+    void EffectSpellCure(int *, int, int);
+    void EffectSpellResurrect(int *, int);
+    void EffectSpellDamage(int *, int, int, int);
     void CombineGroups(class armyGroup *, class armyGroup *);
     void SetupCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int);
     void InitNonVisualVars(void);
