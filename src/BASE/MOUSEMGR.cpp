@@ -137,7 +137,7 @@ void mouseManager::SetPointer(short frame) {
 
     if (gbInSetPointer)
         return;
-    gbInSetPointer = 1;
+    gbInSetPointer = TRUE;
 
     if (frame == MOUSE_KEEP_CURRENT_FRAME)
         frame = m_cursorFrame;
@@ -256,7 +256,7 @@ void mouseManager::SetPointer(short frame) {
     }
 
     SetCursor(hMouseCursor[cursorIndex]);
-    gbInSetPointer = 0;
+    gbInSetPointer = FALSE;
 }
 
 // The Windows build leaves the software-pointer hooks empty; these names
@@ -343,7 +343,7 @@ DATA(0x004a0e80) unsigned char iHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_CO
     {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23},
     {22, 23}, {22, 23}, {22, 23}
 };
-DATA(0x004a0f28) int gbInSetPointer = 0;
+DATA(0x004a0f28) BOOL gbInSetPointer = FALSE;
 DATA(0x004cac88) HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
 DATA(0x004cadb8) BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
 DATA(0x004cb4c0) HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];

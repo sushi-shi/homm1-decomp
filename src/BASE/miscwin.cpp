@@ -211,10 +211,10 @@ void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y
     IconEntry *entry = reinterpret_cast<IconEntry *>(sourceIcon->m_data) + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
     unsigned char *source = sourceIcon->m_data + entry->srcOffset;
     int position = x + entry->x;
-    int drawing = 1;
+    BOOL drawing = TRUE;
     int row = y + entry->y;
     int rowOffset = row * ICON_SCREEN_ROW_BYTES;
-    while (drawing != 0) {
+    while (drawing) {
         unsigned char run = *source;
         if (static_cast<signed char>(run) < 0) {
             run &= ICON_MONO_SKIP_MASK;
@@ -222,7 +222,7 @@ void ClippedMonoIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y
                 position += run;
                 source++;
             } else
-                drawing = 0;
+                drawing = FALSE;
         } else if (run != ICON_MONO_NEWLINE_COMMAND) {
             if (row >= clipY && row <= clipBottom && position + run >= clipX && position <= clipRight) {
                 if (position >= clipX) {
@@ -261,7 +261,7 @@ static signed char *sClipRow;
 static IconEntry *sClipEntry;
 static unsigned char *sClipSource;
 static int sClipRight;
-static int sClipInside;
+static BOOL sClipInside;
 
 VA(0x00473ad0, 0x2ad)
 void ClipIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int frame, int mode, int clipX, int clipY, int clipW, int clipH)
@@ -272,11 +272,11 @@ void ClipIconToBitmap(icon *sourceIcon, bitmap *destination, int x, int y, int f
     sClipY = y + sClipEntry->y;
     if (sClipRowStart < clipX || sClipRowStart + sClipEntry->w > clipX + clipW
         || sClipY < clipY || sClipY + sClipEntry->h > clipY + clipH) {
-        sClipInside = 0;
+        sClipInside = FALSE;
         sClipRight = clipX + clipW - 1;
         sClipBottom = clipY + clipH - 1;
     } else {
-        sClipInside = 1;
+        sClipInside = TRUE;
     }
     sClipRow = destination->m_pixels + destination->m_width * sClipY;
     for (;;) {
