@@ -137,7 +137,9 @@ flags = "cpp_o2"
 [[unit]]
 unit = "BASE/EXEC"
 source = "src/BASE/EXEC.cpp"
-flags = "cpp_o2"
+# DoDialog expands executive::executive inline while retail keeps the
+# out-of-line 0x0047a170 body for InitMainClasses: automatic inlining.
+flags = "cpp_o2_inline"
 
 [[unit]]
 unit = "BASE/INPUTMGR"
