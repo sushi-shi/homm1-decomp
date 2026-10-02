@@ -235,6 +235,11 @@ source = "src/SOURCE/GAME.cpp"
 flags = "cpp_carcass_eh"
 
 [[unit]]
+unit = "SOURCE/ARMYGRP"
+source = "src/SOURCE/ARMYGRP.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "SOURCE/HERO"
 source = "src/SOURCE/HERO.cpp"
 # ViewStat's fs:[0] frame around new heroWindow proves /GX.
