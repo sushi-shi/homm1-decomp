@@ -162,7 +162,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     int cdTrack;
     HWND window;
     HWND newWindow;
-    if (gbNoSound != 0 || gConfig.musicVolume == 0)
+    if (gbNoSound != 0 || gConfig.musicVolume == SOUND_VOLUME_OFF)
         return;
     if (track == MUSIC_TRACK_NONE) {
         CDStop();
@@ -173,13 +173,13 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     Process1WindowsMessage();
     ServiceSound();
     if (volume == SOUND_VOLUME_FROM_CONFIG) {
-        if (gConfig.musicVolume != 0) {
+        if (gConfig.musicVolume != SOUND_VOLUME_OFF) {
             if (m_fadeSteps == 0)
                 volume = gConfig.musicVolume;
             else
-                volume = 1;
+                volume = SOUND_VOLUME_FIRST;
         } else {
-            volume = 0;
+            volume = SOUND_VOLUME_OFF;
         }
     }
     m_cdTrack = track;
@@ -667,7 +667,7 @@ void soundManager::AdjustSoundVolumes(void) {
         return;
     for (sampleIndex = 1; sampleIndex < m_numSampleHandles; sampleIndex++) {
         sampleHandle = m_sampleHandles[sampleIndex];
-        if (gConfig.soundVolume != 0) {
+        if (gConfig.soundVolume != SOUND_VOLUME_OFF) {
             if (DigitalReport(sampleHandle, SAMPLE_REPORT_PLAYING) != 0)
                 ModifySample(
                     sampleHandle,
@@ -693,7 +693,7 @@ void soundManager::AdjustMusicVolumes(void) {
     if (m_currentTrack < MUSIC_POSITION_TRACK_END || m_currentTrack == MUSIC_POSITION_TRACK_1
         || m_currentTrack == MUSIC_POSITION_TRACK_3)
         savePosition = 1;
-    if (gConfig.musicVolume != 0) {
+    if (gConfig.musicVolume != SOUND_VOLUME_OFF) {
         if (m_cdReady != 0)
             CDSetVolume(SOUND_VOLUME_FROM_CONFIG, 0);
         else
@@ -727,7 +727,7 @@ void soundManager::SetMusicQuality(int musicSource) {
         return;
     if (m_samplesReady == 0)
         return;
-    if (gConfig.musicVolume == 0)
+    if (gConfig.musicVolume == SOUND_VOLUME_OFF)
         return;
     if (m_cdStarted == 0)
         return;
@@ -764,7 +764,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
     if (m_samplesReady == 0)
         return;
     if (m_cdReady != 0) {
-        if (gConfig.musicVolume == 0) {
+        if (gConfig.musicVolume == SOUND_VOLUME_OFF) {
             m_currentTrack = static_cast<char>(track);
             return;
         }
@@ -785,7 +785,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
         m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
     }
     m_currentTrack = static_cast<char>(track);
-    if (gConfig.musicVolume == 0)
+    if (gConfig.musicVolume == SOUND_VOLUME_OFF)
         return;
     m_fadeSteps = 0;
     m_fadeTargetTrack = track;
@@ -817,7 +817,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
         else
             sprintf(filename, "heroes%02d.62s", track);
         if (volume == SOUND_VOLUME_FROM_CONFIG) {
-            if (gConfig.musicVolume != 0) {
+            if (gConfig.musicVolume != SOUND_VOLUME_OFF) {
                 if (m_fadeSteps == 0)
                     volume = SAMPLE_VOLUME_MAX;
                 else
@@ -846,7 +846,7 @@ void soundManager::PollSound(void) {
         return;
     if (m_pollRequested == 0 && m_fadeSteps == 0)
         return;
-    if (gConfig.musicVolume == 0)
+    if (gConfig.musicVolume == SOUND_VOLUME_OFF)
         return;
 
     if (m_fadeSteps > 0) {
@@ -1027,7 +1027,7 @@ void soundManager::SwitchAmbientMusic(int track) {
         return;
     if (m_musicReady == 0)
         return;
-    if (gConfig.musicVolume == 0) {
+    if (gConfig.musicVolume == SOUND_VOLUME_OFF) {
         m_currentTrack = static_cast<char>(track);
         return;
     }
@@ -1057,7 +1057,7 @@ struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
         return NULL;
     if (m_musicReady == 0)
         return NULL;
-    if (gConfig.soundVolume == 0)
+    if (gConfig.soundVolume == SOUND_VOLUME_OFF)
         return NULL;
     playback = &sampleResource->m_playbackData;
     if (m_samplesReady == 0 || playback->volume == 0)
@@ -1087,7 +1087,7 @@ struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
     AIL_set_sample_playback_rate(handle, playback->sampleRate);
     AIL_set_sample_loop_count(handle, playback->loopCount);
     AIL_set_sample_address(handle, playback->data, playback->size);
-    if (gConfig.soundVolume != 0)
+    if (gConfig.soundVolume != SOUND_VOLUME_OFF)
         AIL_set_sample_volume(handle, ConvertVolume(playback->volume, SOUND_VOLUME_EFFECT));
     else
         AIL_set_sample_volume(handle, 0);
