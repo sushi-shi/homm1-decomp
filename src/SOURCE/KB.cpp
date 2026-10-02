@@ -3034,19 +3034,19 @@ int HandleAppSpecificMenuCommands(int command) {
             menuChanged = 1;
             break;
         case APP_MENU_SPEED_JUMP:
-            gConfig.walkSpeed = 4;
+            gConfig.walkSpeed = WALK_SPEED_JUMP;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_GALLOP:
-            gConfig.walkSpeed = 3;
+            gConfig.walkSpeed = WALK_SPEED_GALLOP;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_CANTER:
-            gConfig.walkSpeed = 2;
+            gConfig.walkSpeed = WALK_SPEED_CANTER;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_TROT:
-            gConfig.walkSpeed = 1;
+            gConfig.walkSpeed = WALK_SPEED_TROT;
             goto walkSpeedChanged;
         case APP_MENU_SPEED_WALK:
-            gConfig.walkSpeed = 0;
+            gConfig.walkSpeed = WALK_SPEED_WALK;
             goto walkSpeedChanged;
         walkSpeedChanged:
             menuChanged = 1;
@@ -3198,16 +3198,16 @@ void UpdateSystemOptionsMenu(void) {
     for (menuCommand = APP_MENU_SPEED_FIRST; menuCommand <= APP_MENU_SPEED_LAST; menuCommand++)
         CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.walkSpeed) {
-        case 4:
+        case WALK_SPEED_JUMP:
             checkedCommand = APP_MENU_SPEED_JUMP;
             break;
-        case 3:
+        case WALK_SPEED_GALLOP:
             checkedCommand = APP_MENU_SPEED_GALLOP;
             break;
-        case 2:
+        case WALK_SPEED_CANTER:
             checkedCommand = APP_MENU_SPEED_CANTER;
             break;
-        case 1:
+        case WALK_SPEED_TROT:
             checkedCommand = APP_MENU_SPEED_TROT;
             break;
         default:
