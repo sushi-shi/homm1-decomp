@@ -265,15 +265,15 @@ void philAI::CheckBuyStuff(void) {
     DoAllHeroInteractions();
     while (!done) {
         GetBestBHC(giCurPlayer, bestBHC);
-        if (bestBHC.type >= 0 && CanBuyBHC(bestBHC)) {
+        if (bestBHC.type >= PURCHASE_BUILDING && CanBuyBHC(bestBHC)) {
             switch (bestBHC.type) {
-                case 0:
+                case PURCHASE_BUILDING:
                     BuildBuilding(bestBHC.pTown, bestBHC.what);
                     break;
-                case 1:
+                case PURCHASE_HERO:
                     BuildHero(bestBHC.pTown, bestBHC.what);
                     break;
-                case 2:
+                case PURCHASE_CREATURE:
                     BuildCreature(bestBHC.pTown, bestBHC.what, bestBHC.num);
                     break;
             }
@@ -919,7 +919,7 @@ void philAI::GetBestBHC(int, BHC& best) {
     }
     LogStr("BestBHC ", best.type, static_cast<int>(bestBHCValue * 100.0f), best.what, 0, 0);
     if (bestBHCValue < 0.02)
-        best.type = -1;
+        best.type = PURCHASE_NONE;
 }
 
 // Buka 2.1 DetermineHeroToMove: the current player's hero with the most
@@ -1447,7 +1447,7 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
         }
     }
     purchase.pTown = townPointer;
-    purchase.type = 0;
+    purchase.type = PURCHASE_BUILDING;
     purchase.what = bestBuilding;
     benefitCost = bestCost;
 }
@@ -1590,7 +1590,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
         }
     }
     best.pTown = townPointer;
-    best.type = 2;
+    best.type = PURCHASE_CREATURE;
     best.what = topDwelling;
     best.num = bestBuy;
     bestValue = bestCost;
@@ -1732,7 +1732,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
         }
     }
     best.pTown = townPointer;
-    best.type = 1;
+    best.type = PURCHASE_HERO;
     best.what = bestHero;
     bestValue = bestCost;
     if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType
@@ -2982,17 +2982,17 @@ int philAI::CanBuyBHC(BHC& purchase) {
     int j;
     int cost[PLAYER_RESOURCE_COUNT];
     switch (purchase.type) {
-        case 0:
+        case PURCHASE_BUILDING:
             if (CanBuy(purchase.pTown, purchase.what))
                 return 1;
             break;
-        case 1:
+        case PURCHASE_HERO:
             if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
                 && purchase.pTown->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
                 && bHeroBuiltThisTurn == 0)
                 return 1;
             break;
-        case 2:
+        case PURCHASE_CREATURE:
             j = gDwellingType[purchase.pTown->m_type][purchase.what];
             if (purchase.num > purchase.pTown->m_garrison[purchase.what])
                 return 0;

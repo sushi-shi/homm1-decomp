@@ -31,6 +31,19 @@ class hero;
 class mapCell;
 class town;
 // Buka 2.1 purchase record: town, kind, building/dwelling and count.
+// clang-format off
+// BHC::type: what GetBestBHC chose to buy (Buka 2.1 PHILAI.h AIPurchaseType):
+// GetBestBuilding/GetBestHero/GetBestCreature fill BUILDING/HERO/CREATURE,
+// DoAI dispatches BuildBuilding/BuildHero/BuildCreature and CanBuyBHC checks
+// each; NONE when nothing is worth buying.
+H1_ENUM_BEGIN(AIPurchaseType)
+    PURCHASE_NONE = -1,
+    PURCHASE_BUILDING = 0,
+    PURCHASE_HERO = 1,
+    PURCHASE_CREATURE = 2
+H1_ENUM_END(AIPurchaseType)
+// clang-format on
+
 struct BHC {
     town* pTown;
     int type;
