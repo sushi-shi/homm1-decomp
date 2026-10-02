@@ -8,6 +8,17 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 
+// clang-format off
+// Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two
+// wide-creature directions, the speed FindPath grants when speed is ignored,
+// and the second hex of a wide creature.
+H1_ENUM_CONST_BEGIN(CombatPathConstant)
+    SPECIAL_DIRECTION_MASK = 0xc0,
+    IGNORE_SPEED = 99,
+    WIDE_HEX_OFFSET = 1
+H1_ENUM_CONST_END(CombatPathConstant)
+// clang-format on
+
 // Compiler line-base words for PATH.CPP's ProcessAssert sites.
 DATA(0x0048f4d4) short gAdjacentCellAssertLine = 311;
 DATA(0x0048f510) short gAdjacentCellNoArmyAssertLine = 328;
@@ -24,7 +35,7 @@ short army::FindPath(short sourceHex, short targetHex, signed char, signed char 
         return 0;
     savedSpeed = m_stats.speed;
     if (ignoreSpeed)
-        m_stats.speed = 99;
+        m_stats.speed = IGNORE_SPEED;
     pathResult = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
     if (!pathResult && (m_stats.attributes & 1) && !pathMode) {
         switch (m_facing) {
@@ -78,23 +89,23 @@ short army::GetMoveMask(short sourceHex)
             blockedMask |= mask;
         mask <<= 1;
     }
-    return blockedMask | 0xc0;
+    return blockedMask | SPECIAL_DIRECTION_MASK;
 }
 
 // Buka PATH.cpp GetAttackMask.
 VA(0x0041835b, 0xbf)
 short army::GetAttackMask(short sourceHex, signed char targetMode, signed char targetHex)
 {
+    short direction;
     short hex;
     short dirBit;
     short blockedMask;
     short nDirectionCount;
-    short direction;
 
     if (m_stats.attributes & 1)
         blockedMask = 0;
     else
-        blockedMask = 0xc0;
+        blockedMask = SPECIAL_DIRECTION_MASK;
     dirBit = 1;
     if (m_stats.attributes & 1)
         nDirectionCount = 8;
@@ -261,7 +272,7 @@ short army::ValidRange(short targetHex)
         return 0;
     m_moveTargetHex = m_hex;
     if (!(m_stats.attributes & 1)) {
-        m_attackDirection = GetBestDirection(m_hex, targetHex, 0xc0);
+        m_attackDirection = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
         adjacentHex = GetAdjacentCellIndex(m_hex, m_attackDirection);
         if (adjacentHex == targetHex)
             return 1;
@@ -271,7 +282,7 @@ short army::ValidRange(short targetHex)
     } else {
         switch (m_facing) {
             case 0:
-                directionResult = GetBestDirection(m_hex, targetHex, 0xc0);
+                directionResult = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
                 if (directionResult > 2) {
                     m_attackDirection = directionResult;
                     adjacentHex = GetAdjacentCellIndex(m_hex, directionResult);
@@ -281,10 +292,10 @@ short army::ValidRange(short targetHex)
                     if (adjacentHex == targetHex)
                         return 1;
                 }
-                directionResult = GetBestDirection(m_hex + 1, targetHex, 0xc0);
+                directionResult = GetBestDirection(m_hex + WIDE_HEX_OFFSET, targetHex, SPECIAL_DIRECTION_MASK);
                 if (directionResult < 3) {
                     m_attackDirection = directionResult;
-                    adjacentHex = GetAdjacentCellIndex(m_hex + 1, directionResult);
+                    adjacentHex = GetAdjacentCellIndex(m_hex + WIDE_HEX_OFFSET, directionResult);
                     if (adjacentHex == targetHex)
                         return 1;
                     adjacentHex = GetAdjacentCellIndex(adjacentHex, directionResult);
@@ -297,7 +308,7 @@ short army::ValidRange(short targetHex)
                     m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
                 else if (directionResult == COMBAT_DIRECTION_SOUTHWEST)
                     m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
-                adjacentHex = GetAdjacentCellIndex(m_hex + 1, directionResult);
+                adjacentHex = GetAdjacentCellIndex(m_hex + WIDE_HEX_OFFSET, directionResult);
                 if (adjacentHex == targetHex)
                     return 1;
                 adjacentHex = GetAdjacentCellIndex(adjacentHex, directionResult);
@@ -305,7 +316,7 @@ short army::ValidRange(short targetHex)
                     return 1;
                 break;
             case 1:
-                directionResult = GetBestDirection(m_hex, targetHex, 0xc0);
+                directionResult = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
                 if (directionResult < 3) {
                     m_attackDirection = directionResult;
                     adjacentHex = GetAdjacentCellIndex(m_hex, directionResult);
@@ -316,10 +327,10 @@ short army::ValidRange(short targetHex)
                         return 1;
                     return 0;
                 }
-                directionResult = GetBestDirection(m_hex - 1, targetHex, 0xc0);
+                directionResult = GetBestDirection(m_hex - WIDE_HEX_OFFSET, targetHex, SPECIAL_DIRECTION_MASK);
                 if (directionResult > 2) {
                     m_attackDirection = directionResult;
-                    adjacentHex = GetAdjacentCellIndex(m_hex - 1, directionResult);
+                    adjacentHex = GetAdjacentCellIndex(m_hex - WIDE_HEX_OFFSET, directionResult);
                     if (adjacentHex == targetHex)
                         return 1;
                     adjacentHex = GetAdjacentCellIndex(adjacentHex, directionResult);
@@ -333,7 +344,7 @@ short army::ValidRange(short targetHex)
                     m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
                 else if (directionResult == COMBAT_DIRECTION_SOUTHEAST)
                     m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
-                adjacentHex = GetAdjacentCellIndex(m_hex - 1, directionResult);
+                adjacentHex = GetAdjacentCellIndex(m_hex - WIDE_HEX_OFFSET, directionResult);
                 if (adjacentHex == targetHex)
                     return 1;
                 adjacentHex = GetAdjacentCellIndex(adjacentHex, directionResult);
