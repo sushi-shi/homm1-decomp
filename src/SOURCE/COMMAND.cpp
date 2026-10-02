@@ -108,14 +108,14 @@ void combatManager::SetCombatDirections(int targetHex)
     int mapped;
     int numUnset;
     signed char hasPath[8];
-    int targetIndex;
     int after;
     int rear[8];
-    army *curArmy;
     int before;
     int outDir;
     int dir;
     int directionHexes[8];
+    army *curArmy;
+    int targetIndex;
     army *target;
     int targetSide;
     signed char canStand[8];
