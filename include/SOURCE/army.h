@@ -21,10 +21,13 @@ public:
     signed char m_moveTargetHex;
     signed char m_creatureType;
     signed char m_hex;
-    signed char m_unknown08;
-    signed char m_unknown09;
+    // DrawToBuffer: pose 0 stand, 1 walk, 2 attack, 3 spell effect
+    // (Buka m_animationSequence) and the frame within it.
+    signed char m_animationSequence;
+    signed char m_animationFrame;
     signed char m_facing;
-    short m_unknown0b;
+    // Walk sets +-16 on diagonal moves; DrawToBuffer shifts y by frame * step.
+    short m_walkYStep;
     short m_initialQuantity;
     short m_quantity;
     short m_hitPointsLost;
@@ -43,8 +46,12 @@ public:
     short m_powFrames;
     signed char m_side;
     signed char m_index;
-    int m_unknown2f;
-    signed char m_unknown33;
+    // SpellEffect's running effect index (-1 none); DrawFrame grows the
+    // redraw box upward for effects 22-25.
+    int m_effectAnimation;
+    // DrawToBuffer adds the shadow frames while set; Walk clears it to
+    // redraw the field under the moving stack.
+    signed char m_drawShadow;
     // combatManager::ResetHitByCreature clears it; DoHydraAttack hits
     // each stack once.
     char m_hitByCreature;

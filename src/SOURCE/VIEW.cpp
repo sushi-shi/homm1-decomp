@@ -70,7 +70,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     wnd = new heroWindow(195, 60, "vgenwin.bin");
     if (wnd == NULL)
         MemError();
-    sprintf(gText, "port%04d.icn", m_heroes[side]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[side]->m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 2;
     message.text = gText;
@@ -79,7 +79,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     message.id = 3;
     message.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
     wnd->BroadcastMessage(message);
-    sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_unknown1c]);
+    sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = 1;
     message.text = gText;

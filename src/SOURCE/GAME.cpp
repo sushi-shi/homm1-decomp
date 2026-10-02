@@ -47,7 +47,7 @@ void playerData::Write(int file) {
     char unused[52];
 
     write(file, m_unknown00, sizeof(m_unknown00));
-    write(file, &m_unknown11, 1);
+    write(file, &m_color, 1);
     write(file, &m_difficulty, 1);
     write(file, &m_heroCount, 1);
     write(file, &m_currentHero, 1);
@@ -59,7 +59,7 @@ void playerData::Write(int file) {
     write(file, &m_ultimateArtifactHintChance, 1);
     write(file, &m_ultimateArtifactHintX, 1);
     write(file, &m_ultimateArtifactHintY, 1);
-    write(file, &m_unknown55, 1);
+    write(file, &m_daysLeft, 1);
     write(file, &m_townCount, 1);
     write(file, &m_currentTown, 1);
     write(file, &m_townLocatorPage, 1);
@@ -79,7 +79,7 @@ void playerData::Read(int file) {
     char unused[52];
 
     read(file, m_unknown00, sizeof(m_unknown00));
-    read(file, &m_unknown11, 1);
+    read(file, &m_color, 1);
     read(file, &m_difficulty, 1);
     read(file, &m_heroCount, 1);
     read(file, &m_currentHero, 1);
@@ -90,7 +90,7 @@ void playerData::Read(int file) {
     read(file, &m_ultimateArtifactHintChance, 1);
     read(file, &m_ultimateArtifactHintX, 1);
     read(file, &m_ultimateArtifactHintY, 1);
-    read(file, &m_unknown55, 1);
+    read(file, &m_daysLeft, 1);
     read(file, &m_townCount, 1);
     read(file, &m_currentTown, 1);
     read(file, &m_townLocatorPage, 1);
@@ -286,7 +286,7 @@ signed char game::IsMobile(signed char heroId) {
                terrain,
                mobileHero->m_direction & 1,
                mobileHero->m_remainingMobility,
-               mobileHero->m_unknown1c
+               mobileHero->m_heroClass
            );
 }
 
@@ -483,7 +483,7 @@ short game::SaveGame(char* filename, signed char generateName) {
     write(file, &m_campaignType, 4);
     write(file, &m_campaignScenario, 4);
     write(file, &m_campaignDay, 4);
-    write(file, &m_unknown000b, 4);
+    write(file, &m_campaignScenariosWon, 4);
     memset(buffer, 0, 0x2c);
     write(file, buffer, 0x2c);
     write(file, m_mapDescription, sizeof(m_mapDescription));
@@ -577,7 +577,7 @@ short game::LoadGame(char* filename, int origData, int) {
     read(handle, &m_campaignType, 4);
     read(handle, &m_campaignScenario, 4);
     read(handle, &m_campaignDay, 4);
-    read(handle, &m_unknown000b, 4);
+    read(handle, &m_campaignScenariosWon, 4);
     read(handle, buffer, 0x2c);
     read(handle, m_mapDescription, sizeof(m_mapDescription));
     read(handle, &m_mapSize, 1);
@@ -786,7 +786,7 @@ short NewGameHandler(tag_message& message) {
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
                         case 8:
-                            gpGame->m_players[0].m_unknown11 = (gpGame->m_players[0].m_unknown11 + 1) % 4;
+                            gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % 4;
                             break;
                         case 0x13:
                             gbKingOfTheHill = 1 - gbKingOfTheHill;
@@ -864,9 +864,9 @@ void game::UpdateNewGameWindow(void) {
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_players[0].m_unknown11 != -1) {
+    if (m_players[0].m_color != -1) {
         message.id = 8;
-        message.value = m_players[0].m_unknown11 * 2 + 11;
+        message.value = m_players[0].m_color * 2 + 11;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
@@ -990,7 +990,7 @@ signed char game::NewGame(void) {
         m_players[2].m_difficulty = gcSavedPlayerTypes[2];
         m_players[3].m_difficulty = gcSavedPlayerTypes[3];
         gbKingOfTheHill = gbSavedKingOfTheHill;
-        m_players[0].m_unknown11 = gcSavedCrest;
+        m_players[0].m_color = gcSavedCrest;
     }
     if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
         || (giNumHumanPlayers == 2 && gMapName[5] != '2')
@@ -1027,7 +1027,7 @@ signed char game::NewGame(void) {
     gcSavedPlayerTypes[2] = m_players[2].m_difficulty;
     gcSavedPlayerTypes[3] = m_players[3].m_difficulty;
     gbSavedKingOfTheHill = gbKingOfTheHill;
-    gcSavedCrest = m_players[0].m_unknown11;
+    gcSavedCrest = m_players[0].m_color;
     NewMap(gMapName);
     return 1;
 }
@@ -1062,7 +1062,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     message.type = MESSAGE_WIDGET;
     message.id = 3;
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.value = gpGame->m_unknown000b + 4;
+    message.value = gpGame->m_campaignScenariosWon + 4;
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1106,7 +1106,7 @@ void game::InitEntireCampaign(int side) {
     gpGame->m_difficulty = 3;
     m_campaignType = side;
     m_campaignScenario = 0;
-    m_unknown000b = 0;
+    m_campaignScenariosWon = 0;
     m_campaignDay = 1;
     InitCampaignMap(m_campaignScenario, 0);
 }
@@ -1139,12 +1139,12 @@ void game::InitCampaignMap(int scenario, int) {
 
     saveType = m_campaignType;
     savedScenario = m_campaignScenario;
-    savedState = m_unknown000b;
+    savedState = m_campaignScenariosWon;
     savedDay = m_campaignDay;
     LoadGame("origdata.bin", 1, 0);
     m_campaignType = saveType;
     m_campaignScenario = savedScenario;
-    m_unknown000b = savedState;
+    m_campaignScenariosWon = savedState;
     m_campaignDay = savedDay;
     m_month = (m_campaignDay - 1) / 28 + 1;
     m_week = (m_campaignDay - 1 - (m_month - 1) * 28) / 7 + 1;
@@ -1153,7 +1153,7 @@ void game::InitCampaignMap(int scenario, int) {
     gbKingOfTheHill = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
     m_players[0].m_difficulty = 4;
-    m_players[0].m_unknown11 = gCampaignSideCrests[m_campaignType][0];
+    m_players[0].m_color = gCampaignSideCrests[m_campaignType][0];
     m_playerCount = 1;
     for (i = 1; i < 4; i++) {
         m_players[i].m_difficulty = gCampaignScenarios[scenario].playerTypes[i];
@@ -1242,7 +1242,7 @@ void game::NewMap(char* mapName) {
             if (m_campaignType <= 0 || m_campaignScenario < 4 || m_campaignScenario > 7) {
                 if (m_campaignType > 0) {
                     for (j = 0; j < 4; j++) {
-                        if (gCrestTownTypes[m_players[i].m_unknown11] == GetTown(j)->m_type) {
+                        if (gCrestTownTypes[m_players[i].m_color] == GetTown(j)->m_type) {
                             SetupTown(j, !gbHumanPlayer[i]);
                             ClaimTown(j, i);
                         }
@@ -1265,7 +1265,7 @@ void game::NewMap(char* mapName) {
             || (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && i == 0)) {
             m_players[i].m_heroCount = 1;
             if (m_campaignType > 0)
-                m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_unknown11]);
+                m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_color]);
             else
                 m_players[i].m_heroIds[0] =
                     GetNewHeroId(gTownTypeHeroClass[m_castleRecs[m_players[i].m_townIds[0]].m_type]);
@@ -1278,11 +1278,11 @@ void game::NewMap(char* mapName) {
                 m_heroRecs[m_players[i].m_heroIds[0]].m_x,
                 m_heroRecs[m_players[i].m_heroIds[0]].m_y,
                 i,
-                gClassVisionRange[m_heroRecs[m_players[i].m_heroIds[0]].m_unknown1c]
+                gClassVisionRange[m_heroRecs[m_players[i].m_heroIds[0]].m_heroClass]
             );
         }
         if (m_campaignType > 0)
-            k = gCrestHeroClass[m_players[i].m_unknown11];
+            k = gCrestHeroClass[m_players[i].m_color];
         else
             k = Random(0, 3);
         m_players[i].m_availableHeroIds[0] = GetNewHeroId(k);
@@ -2497,13 +2497,13 @@ void game::Overview(void) {
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
     gpWindowManager->FadeScreen(1, 8, 0);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
-    sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_unknown11);
+    sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_color);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
     ovIcon = gpResourceManager->GetIcon("overview.icn");
 
     memset(totals, 0, sizeof(totals));
     for (i = 0; i < gpCurPlayer->m_heroCount; i++)
-        totals[m_heroRecs[gpCurPlayer->m_heroIds[i]].m_unknown1c]++;
+        totals[m_heroRecs[gpCurPlayer->m_heroIds[i]].m_heroClass]++;
     classCountY = 0;
     for (i = 0; i < 4; i++) {
         if (totals[i])
@@ -2744,8 +2744,8 @@ void game::NextPlayer(void) {
         }
         SaveGame("AUTOSAVE", 1);
     }
-    if (gpGame->m_players[giCurPlayer].m_unknown55 > 0)
-        gpGame->m_players[giCurPlayer].m_unknown55--;
+    if (gpGame->m_players[giCurPlayer].m_daysLeft > 0)
+        gpGame->m_players[giCurPlayer].m_daysLeft--;
     CheckEndGame(0);
     gpAdvManager->DeactivateCurrTown();
     gpAdvManager->DeactivateCurrHero();
@@ -2790,7 +2790,7 @@ void game::NextPlayer(void) {
         SetNoDialogMenus(1);
         gpInputManager->Flush();
         if (gbBlackoutPlayer && giNumHumanPlayers > 1) {
-            sprintf(gText, "%s player turn.", gColorNames[gpGame->m_players[giCurPlayer].m_unknown11]);
+            sprintf(gText, "%s player turn.", gColorNames[gpGame->m_players[giCurPlayer].m_color]);
             gText[0] -= 32;
             WaitForPlayer(gText, giCurPlayer);
         }
@@ -2839,7 +2839,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     town = GetTown(townNum);
     town->m_turnsOwned = 10;
     if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
-        race = gCrestTownTypes[m_players[0].m_unknown11];
+        race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < 4) {
         unique = 0;
         race = 0;
@@ -3395,9 +3395,9 @@ void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     }
     for (i = 0; i < 2; i++) {
         if (present[i]) {
-            army->m_creatureTypes[slot] = armyTable[m_heroRecs[heroId].m_unknown1c][i][0];
-            minNum = armyTable[m_heroRecs[heroId].m_unknown1c][i][1] * 10;
-            max = armyTable[m_heroRecs[heroId].m_unknown1c][i][2] * 10 + 9;
+            army->m_creatureTypes[slot] = armyTable[m_heroRecs[heroId].m_heroClass][i][0];
+            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][1] * 10;
+            max = armyTable[m_heroRecs[heroId].m_heroClass][i][2] * 10 + 9;
             if (strongArmy)
                 minNum = (minNum + max) / 2;
             army->m_creatureCounts[slot] = Random(minNum, max) / 10;
@@ -3824,7 +3824,7 @@ void game::WaitForPlayer(char* text, int player) {
         ShowHeroesLogo();
         gbAllBlack = 0;
         gpMouseManager->ReallyShowPointer();
-        NormalDialog(text, 1, 0x61, -1, 9, gpGame->m_players[player].m_unknown11, -1, 0, -1);
+        NormalDialog(text, 1, 0x61, -1, 9, gpGame->m_players[player].m_color, -1, 0, -1);
         gpSoundManager->SwitchAmbientMusic(-1);
     }
 }
@@ -3987,7 +3987,7 @@ void game::ProcessOnMapHeroes(void) {
                 cell->m_overlayIndex = 0xff;
                 cell->m_objectMetadata = 0;
                 cell->m_triggerType = 0;
-                SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gClassVisionRange[theHero->m_unknown1c]);
+                SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gClassVisionRange[theHero->m_heroClass]);
             }
         }
     }
@@ -4338,8 +4338,8 @@ void game::DoNewTurn(void) {
     gpAdvManager->CompleteDraw(0);
     gpAdvManager->UpdateScreen(0, 0);
     CheckEndGame(0);
-    if (gpCurPlayer->m_unknown55 >= 0) {
-        if (gpCurPlayer->m_unknown55 == 1) {
+    if (gpCurPlayer->m_daysLeft >= 0) {
+        if (gpCurPlayer->m_daysLeft == 1) {
             sprintf(gText, gNewTurnText[1], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
             gText[0] -= 32;
         } else {
@@ -4347,7 +4347,7 @@ void game::DoNewTurn(void) {
                 gText,
                 gNewTurnText[0],
                 gColorNames[gpGame->m_players[giCurPlayer].Color()],
-                gpCurPlayer->m_unknown55
+                gpCurPlayer->m_daysLeft
             );
             gText[0] -= 32;
         }
@@ -4569,9 +4569,9 @@ void game::ShowScenInfo(void) {
     message.text = m_mapDescription;
     scenWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_players[giCurPlayer].m_unknown11 != -1) {
+    if (m_players[giCurPlayer].m_color != -1) {
         message.id = crestId;
-        message.value = m_players[giCurPlayer].m_unknown11 * 2 + 11;
+        message.value = m_players[giCurPlayer].m_color * 2 + 11;
         scenWindow->BroadcastMessage(message);
     }
     gpWindowManager->DoDialog(scenWindow, EventWindowHandler, 0);
@@ -4587,16 +4587,16 @@ void game::RandomizePlayerCrests(void) {
     taken[1] = 0;
     taken[2] = 0;
     taken[3] = 0;
-    taken[m_players[0].m_unknown11] = 1;
+    taken[m_players[0].m_color] = 1;
     for (i = 1; i < m_playerCount; i++) {
         do {
             if (m_campaignType > 0 && gCampaignScenarios[m_campaignScenario].playerCrests[i] < 4
                 && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
-                m_players[i].m_unknown11 = gCampaignScenarios[m_campaignScenario].playerCrests[i];
+                m_players[i].m_color = gCampaignScenarios[m_campaignScenario].playerCrests[i];
             else
-                m_players[i].m_unknown11 = Random(0, 3);
-        } while (taken[m_players[i].m_unknown11] == 1);
-        taken[m_players[i].m_unknown11] = 1;
+                m_players[i].m_color = Random(0, 3);
+        } while (taken[m_players[i].m_color] == 1);
+        taken[m_players[i].m_color] = 1;
     }
 }
 
@@ -4715,7 +4715,7 @@ short armyGroup::GetMorale(hero* h, town* t) {
     alignment = IsHomogeneous(-1);
     morale += alignment;
     if (h) {
-        if (!h->m_unknown1c)
+        if (!h->m_heroClass)
             morale++;
         morale += h->m_morale;
         if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))

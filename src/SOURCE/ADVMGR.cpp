@@ -1974,11 +1974,11 @@ void advManager::DrawCell(
                 if (drawHero->m_eventFlags & 0x80)
                     flagColor = -1;
                 else
-                    flagColor = gpGame->m_players[drawHero->m_owner].m_unknown11;
+                    flagColor = gpGame->m_players[drawHero->m_owner].m_color;
                 if (drawHero->m_eventFlags & 0x80)
                     iconIndex = 4;
                 else
-                    iconIndex = drawHero->m_unknown1c;
+                    iconIndex = drawHero->m_heroClass;
                 frame = GetCursorBaseFrame(drawHero->m_direction);
                 drawHeroIcon0 = 1;
                 if (drawHero->m_eventFlags & 0x80)
@@ -2119,14 +2119,14 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
             if ((cellPtr->m_triggerType & 0x7f) == 0x3d) {
                 owner = gpGame->m_availableHeroes[cellPtr->m_objectMetadata];
                 if (giCurPlayer == owner)
-                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                 else
                     color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
             } else {
                 switch (cellPtr->m_objectTileset & 0xf) {
                 case 10:
                     owner = gpGame->m_townOwners[cellPtr->m_objectMetadata];
-                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                     break;
                 case 11:
                     switch (cellPtr->m_triggerType) {
@@ -2137,7 +2137,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                     case 153:
                     case 160:
                         owner = gpGame->m_mineOwners[cellPtr->m_objectMetadata];
-                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
+                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                         break;
                     default:
                         color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
@@ -2817,7 +2817,7 @@ signed char advManager::UpdBottomViewHero(void) {
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
 
-    iCrest = gpCurPlayer->Color() * 4 + targetHero->m_unknown1c;
+    iCrest = gpCurPlayer->Color() * 4 + targetHero->m_heroClass;
     m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, 0,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
     if (!m_bottomViewPrimaryWidgets[1])
@@ -3484,7 +3484,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
         m_cursorType = 4;
     else
-        m_cursorType = currentHero->m_unknown1c;
+        m_cursorType = currentHero->m_heroClass;
     m_cursorDirection = currentHero->m_direction;
     m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
     cellPtr = GetCell(currentHero->m_x, currentHero->m_y);
@@ -3896,7 +3896,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xa8) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -3904,7 +3904,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -3915,7 +3915,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     case 32:
                         owner = gpGame->m_mineOwners[cell->m_objectMetadata];
                         if (owner >= 0)
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                         else
                             index = 4;
                         spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -3928,7 +3928,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         case 32:
                             owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                             if (owner >= 0)
-                                index = gpGame->m_players[owner].m_unknown11;
+                                index = gpGame->m_players[owner].m_color;
                             else
                                 index = 4;
                             spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -3942,7 +3942,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xbd) {
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX, screenY, index, 0, 0);
                         }
                     }
@@ -3954,7 +3954,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     case 32:
                         owner = gpGame->m_mineOwners[cell->m_objectMetadata];
                         if (owner >= 0)
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                         else
                             index = 4;
                         spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -3967,7 +3967,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         case 32:
                             owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                             if (owner >= 0)
-                                index = gpGame->m_players[owner].m_unknown11;
+                                index = gpGame->m_players[owner].m_color;
                             else
                                 index = 4;
                             spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
@@ -3996,7 +3996,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xa8) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -4004,7 +4004,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
@@ -4014,7 +4014,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     if (cell->m_triggerType == 0xbd) {
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
-                            index = gpGame->m_players[owner].m_unknown11;
+                            index = gpGame->m_players[owner].m_color;
                             flags->DrawToBuffer(screenX, screenY, index, 0, 0);
                         }
                     }
@@ -4967,7 +4967,7 @@ void advManager::TeleportTo(int x, int y, int) {
         m_mapOriginX + 7,
         m_mapOriginY + 7,
         giCurPlayer,
-        gHeroScoutRadius[mapHero->m_unknown1c]
+        gHeroScoutRadius[mapHero->m_heroClass]
     );
     if (bShowIt) {
         destinationCell->m_flags |= 0x40;
@@ -5209,7 +5209,7 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
         for (j = gpSearchArray->m_pathLength - 1; j >= 0; --j) {
             dir = gpSearchArray->m_directions[j];
             terr = giGroundToTerrain[GetCell(x, y)->m_tileIndex];
-            remMob -= CalcTerrainCost(terr, dir & 1, remMob, pHero->m_unknown1c);
+            remMob -= CalcTerrainCost(terr, dir & 1, remMob, pHero->m_heroClass);
             x += normalDirTable[dir].x;
             y += normalDirTable[dir].y;
             if (j == 0) {
@@ -5322,11 +5322,11 @@ void advManager::SeedTo(int targetX, int targetY)
     if (!giSeedingValid)
         gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
                                     m_cursorType == 4, 0, currentHero->m_remainingMobility,
-                                    currentHero->m_unknown1c, targetX, targetY, 0, 1);
+                                    currentHero->m_heroClass, targetX, targetY, 0, 1);
     else if (!giFullySeeded)
         gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
                                     m_cursorType == 4, 0, currentHero->m_remainingMobility,
-                                    currentHero->m_unknown1c, targetX, targetY, 1, 1);
+                                    currentHero->m_heroClass, targetX, targetY, 1, 1);
 }
 
 // Buka 2.1 ForceNewHover; HoMM1 routes the hover through a message record.

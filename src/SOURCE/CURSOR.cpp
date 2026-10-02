@@ -108,12 +108,12 @@ void advManager::DrawCursor(void)
         if (m_cursorType == 4) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame & 0x7f;
-            FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen,
+            FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen,
                              drawX, screenY, drawFrame, 0);
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & 3) + (m_cursorFrame & 0x7f) + 0x38;
-            FlipIconToBitmap(m_flagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+            FlipIconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                              screenY, drawFrame, 0);
             m_updateMaxY++;
         }
@@ -126,12 +126,12 @@ void advManager::DrawCursor(void)
         if (m_cursorType == 4) {
             if (m_cursorCycle == 0)
                 drawFrame = m_cursorFrame;
-            IconToBitmap(m_boatFlagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+            IconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                          screenY, drawFrame, 0);
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & 3) + m_cursorFrame + 0x38;
-            IconToBitmap(m_flagIcons[gpCurPlayer->m_unknown11], gpWindowManager->m_screen, drawX,
+            IconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                          screenY, drawFrame, 0);
             m_updateMaxY++;
         }
@@ -306,7 +306,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     bShowIt = GetMoveShowIt(direction);
     terrain = giGroundToTerrain[GetCell(movingHero->m_x, movingHero->m_y)->m_tileIndex];
     nextCell = GetCell(movingHero->m_x + xInc, movingHero->m_y + yInc);
-    if (CalcTerrainCost(terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c)
+    if (CalcTerrainCost(terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass)
         > movingHero->m_remainingMobility) {
         *outOfMobility = 1;
         StopCursor(1);
@@ -384,9 +384,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 UpdateScreen(0, 0);
                 movingHero->m_remainingMobility -= CalcTerrainCost(
-                    terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+                    terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
                 if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
-                                    movingHero->m_unknown1c)
+                                    movingHero->m_heroClass)
                     > movingHero->m_remainingMobility) {
                     movingHero->m_remainingMobility = 0;
                     stopAfterMove = 1;
@@ -400,9 +400,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                     UpdateScreen(0, 0);
                     movingHero->m_remainingMobility -= CalcTerrainCost(
-                        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+                        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
                     if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0,
-                                        movingHero->m_remainingMobility, movingHero->m_unknown1c)
+                                        movingHero->m_remainingMobility, movingHero->m_heroClass)
                         > movingHero->m_remainingMobility) {
                         movingHero->m_remainingMobility = 0;
                         stopAfterMove = 1;
@@ -427,7 +427,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         *(m_visibilityMap + (movingHero->m_x + xInc) + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
     m_updateMinX = m_updateMinY = 0;
     gpGame->SetVisibility(m_mapOriginX + xInc + 7, m_mapOriginY + yInc + 7, giCurPlayer,
-                          gHeroScoutRadius[movingHero->m_unknown1c]);
+                          gHeroScoutRadius[movingHero->m_heroClass]);
     m_forceCompleteDraw = 1;
     pixelsPerStep = giPixelsPerStep[gConfig.walkSpeed];
     msDelay = giStepDelay[gConfig.walkSpeed];
@@ -476,9 +476,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         gbEnlargeScreenBlit = 1;
     }
     movingHero->m_remainingMobility -= CalcTerrainCost(
-        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
     if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
-                        movingHero->m_unknown1c)
+                        movingHero->m_heroClass)
         > movingHero->m_remainingMobility) {
         movingHero->m_remainingMobility = 0;
         stopAfterMove = 1;

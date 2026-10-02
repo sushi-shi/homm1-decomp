@@ -47,8 +47,9 @@ public:
 class playerData {
 public:
     char m_unknown00[0x11];
-    // SetupThievesGuild adds this byte to the town-window flag frame base.
-    signed char m_unknown11;
+    // Buka m_color (Color()); SetupThievesGuild adds it to the town-window
+    // flag frame base.
+    signed char m_color;
     // Computer-player difficulty: GetTurnAIVars scales the attack bonuses by
     // it and hero::CalcMobility grants computer heroes +3 from level 3.
     signed char m_difficulty;
@@ -62,7 +63,9 @@ public:
     signed char m_ultimateArtifactHintChance;
     signed char m_ultimateArtifactHintX;
     signed char m_ultimateArtifactHintY;
-    signed char m_unknown55;
+    // Buka m_daysLeft: 7 when the last town falls, -1 when a town is held;
+    // the turn counts it down.
+    signed char m_daysLeft;
     signed char m_townCount;
     signed char m_currentTown;
     signed char m_townLocatorPage;
@@ -87,7 +90,7 @@ public:
     }
     // Buka Color(); RecruitHero's crest index inlines this byte read.
     signed char Color(void) {
-        return m_unknown11;
+        return m_color;
     }
 };
 #pragma pack(pop)

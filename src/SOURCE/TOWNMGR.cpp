@@ -158,10 +158,10 @@ short townManager::Open(short id)
     }
     glTimers[0] = KBTickCount() + TOWN_REDRAW_INTERVAL;
     gpWindowManager->AddWindow(m_townWindow, 0, 1);
-    crest = gpCurPlayer->m_unknown11;
+    crest = gpCurPlayer->m_color;
     if (m_town->OccupyingHero() != -1) {
         crest = crest << 2;
-        crest += gpGame->GetHero(m_town->m_occupyingHeroId)->m_unknown1c;
+        crest += gpGame->GetHero(m_town->m_occupyingHeroId)->m_heroClass;
     } else
         crest += TOWN_CREST_NO_HERO_OFFSET;
     sprintf(gText, "crst%04d.icn", crest);
@@ -170,7 +170,7 @@ short townManager::Open(short id)
     if (m_garrisonStrip == 0)
         MemError();
     if (m_town->m_occupyingHeroId != -1) {
-        sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_unknown1d);
+        sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_portrait);
         m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
                                 &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army, 0x16, 1);
         if (m_heroStrip == 0)
@@ -1664,7 +1664,7 @@ void townManager::SetupThievesGuild(class heroWindow *window, short categories)
                     (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH + startPos,
                     categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH, THIEVES_RANK_ICON_HEIGHT, "townwind.icn",
-                    gpGame->m_players[ranking[pos]].m_unknown11 + THIEVES_FLAG_FRAME_BASE,
+                    gpGame->m_players[ranking[pos]].m_color + THIEVES_FLAG_FRAME_BASE,
                     0, -1, 0x10, 1);
                 if (marker == 0)
                     MemError();
@@ -1819,20 +1819,20 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         message.id = TOWN_DIALOG_BUTTON_1;
         m_heroWindow1->BroadcastMessage(message);
     }
-    sprintf(gText, "port%04d.icn", m_recruitHeroes[0]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_recruitHeroes[0]->m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 2;
     message.text = gText;
     m_heroWindow1->BroadcastMessage(message);
-    sprintf(gText, "port%04d.icn", m_recruitHeroes[1]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_recruitHeroes[1]->m_portrait);
     message.id = 3;
     m_heroWindow1->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = 6;
-    message.text = gClassNames[m_recruitHeroes[0]->m_unknown1c];
+    message.text = gClassNames[m_recruitHeroes[0]->m_heroClass];
     m_heroWindow1->BroadcastMessage(message);
     message.id = 7;
-    message.text = gClassNames[m_recruitHeroes[1]->m_unknown1c];
+    message.text = gClassNames[m_recruitHeroes[1]->m_heroClass];
     m_heroWindow1->BroadcastMessage(message);
     m_recruitState = -1;
     if (cannotRecruit) {
@@ -1875,13 +1875,13 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         gpGame->m_availableHeroes[gpCurPlayer->m_availableHeroIds[m_recruitState]] = giCurPlayer;
         delete m_garrisonStrip;
         sprintf(gText, "crst%04d.icn",
-                m_recruitHeroes[m_recruitState]->m_unknown1c + gpCurPlayer->Color() * 4);
+                m_recruitHeroes[m_recruitState]->m_heroClass + gpCurPlayer->Color() * 4);
         m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == -1 ? 4 : 1,
                                     gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 0);
         if (m_garrisonStrip == 0)
             MemError();
         delete m_heroStrip;
-        sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_unknown1d);
+        sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_portrait);
         m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
                                 &m_recruitHeroes[m_recruitState]->m_army, 0x16, 0);
         if (m_heroStrip == 0)

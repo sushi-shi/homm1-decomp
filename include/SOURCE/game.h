@@ -99,7 +99,9 @@ public:
     // ControlPanel's scenario-info choice shows the campaign when positive.
     int m_campaignType;
     int m_campaignScenario;
-    int m_unknown000b;
+    // Incremented per campaign victory; names the SCENWN%02d save and picks
+    // the campaign-info frame.
+    int m_campaignScenariosWon;
     // InitEntireCampaign starts it at 1; InitCampaignMap derives the
     // calendar from it.
     int m_campaignDay;
@@ -277,7 +279,7 @@ public:
     int ExperienceValueOfStack(class armyGroup*, class hero*);
     // HoMM1 retail: hero and army only (ret 8).
     int GetLuck(class hero*, class army*);
-    int GetPlayerCrest(int player) { return m_players[player].m_unknown11; }
+    int GetPlayerCrest(int player) { return m_players[player].m_color; }
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
     void ShowComputerScreen(void);

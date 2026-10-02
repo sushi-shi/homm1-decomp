@@ -439,7 +439,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         case 10:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(10, 0);
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 10;
@@ -449,7 +449,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         case 14:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(14, 0);
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(14, 0);
             targetArmy->m_spellEffect = 14;
             targetArmy->m_unknown52 = 1;
@@ -458,7 +458,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         case 18:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(18, 0);
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 18;
@@ -476,7 +476,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->Stand(1);
             break;
         case 11:
-            targetArmy->m_unknown09 = 2;
+            targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(11, 0);
             targetArmy->m_powFrames = 5;
             targetArmy->PowEffect(0);
@@ -528,9 +528,9 @@ void combatManager::DefaultSpell(signed char targetHex)
     if (!ValidHex(targetHex) || m_hexCells[targetHex].m_occupantSide < 0)
         return;
     target = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
-    target->m_unknown09 = 1;
+    target->m_animationFrame = 1;
     target->SpellEffect(m_selectedSpell, 0);
-    target->m_unknown09 = 2;
+    target->m_animationFrame = 2;
     target->SpellEffect(m_selectedSpell, 0);
     target->Stand(1);
 }
@@ -547,7 +547,7 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
     short fileId;
     int startSide;
 
-    m_unknown727 = m_unknown72b = 0;
+    m_computeExtent = m_redrawExtent = 0;
     fileId = MAKEFILEID(gCombatFxNames[13]);
     if (fileId != gCurLoadedSpellEffect) {
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
@@ -567,13 +567,13 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
                 && m_armies[side][armyIndex].m_creatureType != 0x17) {
                 if (!cureOnly) {
                     if (m_armies[side][armyIndex].m_spellEffect != -1)
-                        m_armies[side][armyIndex].m_unknown08 = 3;
+                        m_armies[side][armyIndex].m_animationSequence = 3;
                 } else if (cureOnly == 1) {
                     if (m_armies[side][armyIndex].m_spellEffect == 6 || m_armies[side][armyIndex].m_spellEffect == 7
                         || m_armies[side][armyIndex].m_spellEffect == 10
                         || m_armies[side][armyIndex].m_spellEffect == 14
                         || m_armies[side][armyIndex].m_spellEffect == 18)
-                        m_armies[side][armyIndex].m_unknown08 = 3;
+                        m_armies[side][armyIndex].m_animationSequence = 3;
                 }
             }
         }
@@ -606,8 +606,8 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
 
     for (i = 0; i < m_numArmies[side]; i++) {
         curArmy = &m_armies[side][i];
-        curArmy->m_unknown08 = 0;
-        curArmy->m_unknown09 = 1;
+        curArmy->m_animationSequence = 0;
+        curArmy->m_animationFrame = 1;
         if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13 && curArmy->m_creatureType != 0x17) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {

@@ -29,8 +29,8 @@ hero::hero(void) {
     m_owner = 0;
     m_x = 0;
     m_y = 0;
-    m_unknown1c = 0;
-    m_unknown1d = 0;
+    m_heroClass = 0;
+    m_portrait = 0;
     m_name[0] = 0;
     heroWin = 0;
     giHeroScreenSrcIndex = -1;
@@ -74,7 +74,7 @@ short hero::CalcMobility(void) {
             result = seaMobility;
         if (HasArtifact(ARTIFACT_SAILORS_ASTROLABE))
             result += astrolabe;
-        result = (int)(result * gfClassNavigationMod[m_unknown1c]);
+        result = (int)(result * gfClassNavigationMod[m_heroClass]);
     } else {
         speed = 3;
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
@@ -244,7 +244,7 @@ signed char hero::HeroView(signed char viewOnly) {
     gheroWin = heroWin;
     SetWinText(heroWin, 5);
     message.type = MESSAGE_WIDGET;
-    sprintf(gText, "%s the %s", m_name, gClassNames[m_unknown1c]);
+    sprintf(gText, "%s the %s", m_name, gClassNames[m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = 2;
     message.text = gText;
@@ -263,7 +263,7 @@ signed char hero::HeroView(signed char viewOnly) {
         message.value = 6;
         heroWin->BroadcastMessage(message);
     }
-    sprintf(gText, "port%04d.icn", m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 65;
     message.text = gText;
@@ -322,7 +322,7 @@ signed char hero::HeroView(signed char viewOnly) {
     message.id = 207;
     message.text = gText;
     heroWin->BroadcastMessage(message);
-    sprintf(gText, "crst%04d.icn", m_unknown1c + gpCurPlayer->Color() * 4);
+    sprintf(gText, "crst%04d.icn", m_heroClass + gpCurPlayer->Color() * 4);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 86;
     heroWin->BroadcastMessage(message);
@@ -577,12 +577,12 @@ int hero::GetExperience(int level) {
     int incr;
 
     if (level <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
-        return gMinExpForLevel[m_unknown1c][level - 1];
+        return gMinExpForLevel[m_heroClass][level - 1];
     stage = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
-    incr = (int)((gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
-                  - gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+    incr = (int)((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+                  - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
                  * 1.2);
-    experience = gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
+    experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
     while (stage < level) {
         incr = (int)(incr * 1.2);
         experience += incr;
@@ -598,13 +598,13 @@ int hero::GetLevel(int experienceValue) {
     int growth;
 
     for (nLevel = 1; nLevel <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT; nLevel++) {
-        if (gMinExpForLevel[m_unknown1c][nLevel - 1] > experienceValue)
+        if (gMinExpForLevel[m_heroClass][nLevel - 1] > experienceValue)
             return nLevel - 1;
     }
-    growth = (int)((gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
-                    - gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+    growth = (int)((gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+                    - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
                    * 1.2);
-    experience = gMinExpForLevel[m_unknown1c][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
+    experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
     nLevel = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
     while (experience < experienceValue) {
         growth = (int)(growth * 1.2);
@@ -684,15 +684,15 @@ void hero::CheckLevel(void) {
             highIndex = 8;
         SRand(m_randomSeed + i * 30);
         roll = SRandom(1, 100);
-        if (gHeroSkillBonus[m_unknown1c][highIndex][0] > roll) {
+        if (gHeroSkillBonus[m_heroClass][highIndex][0] > roll) {
             stats[0]++;
         } else {
-            roll -= gHeroSkillBonus[m_unknown1c][highIndex][0];
-            if (gHeroSkillBonus[m_unknown1c][highIndex][1] > roll) {
+            roll -= gHeroSkillBonus[m_heroClass][highIndex][0];
+            if (gHeroSkillBonus[m_heroClass][highIndex][1] > roll) {
                 stats[1]++;
             } else {
-                roll -= gHeroSkillBonus[m_unknown1c][highIndex][1];
-                if (gHeroSkillBonus[m_unknown1c][highIndex][2] > roll)
+                roll -= gHeroSkillBonus[m_heroClass][highIndex][1];
+                if (gHeroSkillBonus[m_heroClass][highIndex][2] > roll)
                     stats[2]++;
                 else
                     stats[3]++;
@@ -818,7 +818,7 @@ void UpdateHeroScreenStatusBar(short widgetId) {
             sprintf(gText, cHeroScreen[15], gArtifactNames[gpHVHero->m_artifacts[widgetId - 20]]);
         break;
     case 0x7803:
-        sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_unknown1c]);
+        sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_heroClass]);
         break;
     case 0x7800:
         strcpy(gText, cHeroScreen[17]);

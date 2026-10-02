@@ -1242,7 +1242,7 @@ short combatManager::DoSurrender(void) {
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = 1;
-    sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_portrait);
     message.text = gText;
     win->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;

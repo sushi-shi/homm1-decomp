@@ -235,11 +235,11 @@ short army::FlyTo(short destination)
         otherCell.TakeOccupant(&gpCombatManager->m_hexCells[(m_facing == 1 ? -1 : 1) + m_hex]);
     posX = xOff + xFrom;
     posY = centerY + yFrom;
-    m_unknown08 = 1;
+    m_animationSequence = 1;
     if (backwards == 1)
-        m_unknown09 = 5;
+        m_animationFrame = 5;
     else
-        m_unknown09 = 0;
+        m_animationFrame = 0;
     frontCell.m_occupantSide = -1;
     if (m_stats.attributes & 1)
         otherCell.m_occupantSide = -1;
@@ -293,13 +293,13 @@ short army::FlyTo(short destination)
         glTimers[0] = KBTickCount() + 75;
         gpWindowManager->UpdateScreenRegion(oldX, oldY, maxExtentX - oldX + 1, oldMaxY - oldY + 1);
         if (backwards == 1)
-            m_unknown09 = m_unknown09 - 1;
+            m_animationFrame = m_animationFrame - 1;
         else
-            m_unknown09 = m_unknown09 + 1;
-        if (m_unknown09 > 5)
-            m_unknown09 = 0;
-        else if (m_unknown09 < 0)
-            m_unknown09 = 5;
+            m_animationFrame = m_animationFrame + 1;
+        if (m_animationFrame > 5)
+            m_animationFrame = 0;
+        else if (m_animationFrame < 0)
+            m_animationFrame = 5;
         posX = xStep + posX;
         posY = posY + yStep;
     }
@@ -312,8 +312,8 @@ short army::FlyTo(short destination)
     if (m_stats.attributes & 1)
         gpCombatManager->m_hexCells[(m_facing == 1 ? -1 : 1) + destination].TakeOccupant(&otherCell);
     m_hex = destination;
-    m_unknown08 = 0;
-    m_unknown09 = 1;
+    m_animationSequence = 0;
+    m_animationFrame = 1;
     gpCombatManager->UpdateGrid(destination, m_stats.attributes);
     gpCombatManager->DrawFrame(1);
     return 1;

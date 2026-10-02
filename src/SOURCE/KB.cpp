@@ -555,11 +555,11 @@ int oldmain(void) {
                 } else if (giEndSequence == 1) {
                     gpGame->m_campaignDay = giCurTurn + 1;
                     gpGame->m_campaignScenario++;
-                    gpGame->m_unknown000b++;
+                    gpGame->m_campaignScenariosWon++;
                     if (gpGame->m_campaignScenario - 4 == gpGame->m_campaignType - 1)
                         gpGame->m_campaignScenario++;
                     gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
-                    sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_unknown000b);
+                    sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_campaignScenariosWon);
                     gpGame->SaveGame(saveBuf, 1);
                     sprintf(
                         gText,
@@ -1527,7 +1527,7 @@ void CheckEndGame(int forced) {
                     gText, 1, 0x61, -1, 9, gpGame->m_players[(signed char)player].Color(), -1,
                     0, -1);
             } else if (!pd->m_townCount) {
-                if (pd->m_unknown55 == -1) {
+                if (pd->m_daysLeft == -1) {
                     if (gbThisNetHumanPlayer[player]) {
                         sprintf(
                             gText,
@@ -1539,8 +1539,8 @@ void CheckEndGame(int forced) {
                             gText, 1, -1, -1, 9, gpGame->m_players[(signed char)player].Color(),
                             -1, 0, -1);
                     }
-                    pd->m_unknown55 = 7;
-                } else if (!pd->m_unknown55) {
+                    pd->m_daysLeft = 7;
+                } else if (!pd->m_daysLeft) {
                     PlayerDead(player);
                     if (gbThisNetHumanPlayer[player]) {
                         sprintf(
@@ -1562,7 +1562,7 @@ void CheckEndGame(int forced) {
                         0, -1);
                 }
             } else {
-                pd->m_unknown55 = -1;
+                pd->m_daysLeft = -1;
             }
         }
     }
@@ -1763,7 +1763,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_BAD]);
     sprintf(gText, gMoraleInfoText[MORALE_INFO_HEADER], buffer);
     baseLen = strlen(gText);
-    if (!h->m_unknown1c)
+    if (!h->m_heroClass)
         strcat(gText, gMoraleInfoText[MORALE_INFO_KNIGHT]);
     alignments = h->m_army.IsHomogeneous(-1);
     if (alignments > 0) {

@@ -48,11 +48,11 @@ short swapManager::Open(short id) {
     SetWinText(m_window, 13);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_ICON;
-    sprintf(gText, "port%04d.icn", m_heroes[1]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[1]->m_portrait);
     message.id = 65;
     message.text = gText;
     m_window->BroadcastMessage(message);
-    sprintf(gText, "port%04d.icn", m_heroes[0]->m_unknown1d);
+    sprintf(gText, "port%04d.icn", m_heroes[0]->m_portrait);
     message.id = 66;
     m_window->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;

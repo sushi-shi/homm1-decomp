@@ -120,7 +120,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         else
             m_heroes[i] = defenderHero;
         if (m_heroes[i])
-            m_heroType[i] = m_heroes[i]->m_unknown1c;
+            m_heroType[i] = m_heroes[i]->m_heroClass;
         else
             m_heroType[i] = -1;
         if (i == 1)
@@ -179,8 +179,8 @@ short combatManager::Open(short priority)
     m_sideRetreated[1] = 0;
     m_combatResult = 3;
     gbUseClippedIconRenderer = 0;
-    m_unknown727 = 0;
-    m_unknown72b = 0;
+    m_computeExtent = 0;
+    m_redrawExtent = 0;
     gCurLoadedSpellIcon = 0;
     gCurLoadedSpellEffect = 0;
     gpMouseManager->SetPointer("cmbtmous.mse", 6);
@@ -683,7 +683,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     else
         sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
-    activeArmy->m_unknown09 = 2;
+    activeArmy->m_animationFrame = 2;
     activeArmy->SpellEffect(25, 180);
     activeArmy->Stand(1);
     activeArmy->m_stats.attributes |= 0x80;
@@ -807,7 +807,7 @@ void combatManager::CatAttack(signed char side)
     giMaxExtentY = 420;
     m_catapultFrame[side] = 0;
     while (m_catapultFrame[side] < 8) {
-        m_unknown72b = 1;
+        m_redrawExtent = 1;
         DrawFrame(1);
         m_catapultFrame[side]++;
     }
@@ -843,7 +843,7 @@ void combatManager::CatAttack(signed char side)
         dy = (tgtY - startY) / 12;
         i = 0;
         while (i < 12) {
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             if (i) {
                 giMinExtentX = x - dx - 20;
                 giMaxExtentX = x + 75;
@@ -883,7 +883,7 @@ void combatManager::CatAttack(signed char side)
         dx = (summitX - startX) / 12;
         dy = (summitY - startY) / 78;
         for (i = 0; i < 12; i++) {
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             if (i) {
                 giMinExtentX = x - dx - 20;
                 giMaxExtentX = x + 75;
@@ -912,7 +912,7 @@ void combatManager::CatAttack(signed char side)
         dx = (tgtX - x) / 8;
         dy = (tgtY - y) / 36;
         for (i = 1; i <= 8; i++) {
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             giMinExtentX = x - dx - 20;
             giMaxExtentX = x + 75;
             giMinExtentY = y - 75;
@@ -960,7 +960,7 @@ void combatManager::CatAttack(signed char side)
             m_wallDamage = m_wallFrame;
             if (m_wallFrame == 5)
                 m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x42;
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             m_gridUpdateRow = m_catapultTarget - 2;
             if (m_gridUpdateRow < 0)
                 m_gridUpdateRow = 0;
@@ -983,26 +983,26 @@ void combatManager::CatAttack(signed char side)
         while (m_wallFrame < 10) {
             if (m_wallFrame == 5)
                 m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
-            m_unknown72b = 1;
+            m_redrawExtent = 1;
             DrawFrame(1);
             m_wallFrame++;
         }
         m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 10;
         m_wallFrame = -1;
     }
-    m_unknown72b = 1;
+    m_redrawExtent = 1;
     DrawFrame(1);
     giMinExtentX = 0;
     giMaxExtentX = 200;
     giMinExtentY = 220;
     giMaxExtentY = 420;
     while (m_catapultFrame[side] < 14) {
-        m_unknown72b = 1;
+        m_redrawExtent = 1;
         DrawFrame(1);
         m_catapultFrame[side]++;
     }
     m_catapultFrame[side] = 0;
-    m_unknown72b = 1;
+    m_redrawExtent = 1;
     DrawFrame(1);
     gpResourceManager->Dispose(boulder);
     gpMouseManager->ReallyShowPointer();

@@ -150,9 +150,11 @@ public:
     // Per stack draw state: ResetLimitCreature clears it (-1 for the dead)
     // and army::SpellEffect marks the stack it animates.
     int m_limitCreatureCount[2][5];
-    // Set before a full combat redraw.
-    int m_unknown727;
-    int m_unknown72b;
+    // Buka passes these to DrawFrame as computeExtent/redrawExtent: the first
+    // limits the redraw to the boxes of stacks in m_limitCreatureCount, the
+    // second restores only the current extent from the background buffer.
+    int m_computeExtent;
+    int m_redrawExtent;
     // UpdateCombatArea does nothing until the combat window is up.
     int m_combatWindowOpen;
     class widget *m_winLoseBottomWidgets[15];

@@ -258,7 +258,7 @@ void philAI::CheckReload(hero* pHero) {
         pHero->m_eventFlags & 0x80,
         0,
         pHero->m_remainingMobility,
-        pHero->m_unknown1c,
+        pHero->m_heroClass,
         -1,
         -1,
         0,
@@ -865,7 +865,7 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
         pHero->m_eventFlags & 0x80,
         1,
         pHero->m_remainingMobility,
-        pHero->m_unknown1c,
+        pHero->m_heroClass,
         -1,
         -1,
         0,
@@ -1297,7 +1297,7 @@ void philAI::ValueOfBuyingCreature(
     if (townPointer->m_occupyingHeroId != -1) {
         occupant = gpGame->GetHero(townPointer->m_occupyingHeroId);
         creatRV = static_cast<int>(creatRV * 1.1);
-        if (occupant->m_unknown1c == creature / 6)
+        if (occupant->m_heroClass == creature / 6)
             creatRV = static_cast<int>(creatRV * 1.1f);
         if ((gMonsterDatabase[creature].stats.attributes & 8)) {
             for (n = 0; n < 5; n++) {
@@ -1466,7 +1466,7 @@ void philAI::ValueOfBuyingHero(town* townPointer, hero* heroPointer, int& resour
         * (gpCurPlayer->m_aiData.m_attentionWeights.heroValue + 1.0
            - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase)
     );
-    if (gTownHeroClass[townPointer->m_type] == heroPointer->m_unknown1c)
+    if (gTownHeroClass[townPointer->m_type] == heroPointer->m_heroClass)
         heroRV = static_cast<int>(heroRV * 1.12f);
     heroRV += StrategicValueOfPosition(heroPointer, heroPointer->m_x, heroPointer->m_y, 0, &tmp);
     heroRV -= 200;
@@ -1827,7 +1827,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
         if (gConfig.slowVideo)
             seedDist8 = 24;
     }
-    pSearch->SeedPosition(targetX, targetY, 2, seedDist8, inBoat, 0, 999, pHero->m_unknown1c, -1, -1, 0, 0);
+    pSearch->SeedPosition(targetX, targetY, 2, seedDist8, inBoat, 0, 999, pHero->m_heroClass, -1, -1, 0, 0);
     pSearch->m_cells[targetX][targetY].visited = 0;
     for (x = 0; x < 72; x++) {
         for (mapY9 = 0; mapY9 < 72; mapY9++) {

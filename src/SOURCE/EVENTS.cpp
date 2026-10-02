@@ -77,7 +77,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 pHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 pHero->m_remainingMobility = 0;
                 pHero->m_direction = m_cursorDirection;
-                m_cursorType = pHero->m_unknown1c;
+                m_cursorType = pHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
                 gpWindowManager->SaveFizzleSource(0xc0, 0xc0, 0x60, 0x60);
@@ -1238,7 +1238,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 eventHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 eventHero->m_remainingMobility = 0;
                 eventHero->m_direction = m_cursorDirection;
-                m_cursorType = eventHero->m_unknown1c;
+                m_cursorType = eventHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
                 CheckAdjacentMon(&adjacentMonster);
@@ -1814,7 +1814,7 @@ int advManager::DoCombat(int x, int y, class hero* firstHero, class armyGroup* f
             bShowIt = 1;
             gpGame->TurnOffAIMusic();
             sprintf(gText, "%s player\'s %s is under attack!",
-                    gColorNames[gpGame->m_players[defendPlayer].m_unknown11],
+                    gColorNames[gpGame->m_players[defendPlayer].m_color],
                     combatTown ? "Town" : "Hero");
             gText[0] -= 32;
             gpGame->WaitForPlayer(gText, defendPlayer);
