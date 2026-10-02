@@ -13,10 +13,9 @@
 #include <string.h>
 
 // clang-format off
-// Buka RecruitConstant (HoMM1 values): the secondary-resource sentinel, window
-// and dialog positions and SetupRecruitWin's text buffers.
+// Buka RecruitConstant (HoMM1 values): window and dialog positions and
+// SetupRecruitWin's text buffers.
 H1_ENUM_CONST_BEGIN(RecruitConstant)
-    RECRUIT_NO_RESOURCE = -1,
     RECRUIT_WINDOW_X = 0xa0,
     RECRUIT_WINDOW_Y = 0x10,
     RECRUIT_VIEW_ARMY_X = 0x77,
@@ -75,7 +74,7 @@ void SetupRecruitWin(
     sprintf(label, "%d", goldCost);
     message.id = RECRUIT_GOLD_COST_CONTROL;
     window->BroadcastMessage(message);
-    if (resourceType != RECRUIT_NO_RESOURCE) {
+    if (resourceType != RESOURCE_NONE) {
         sprintf(label, "%d", resourceCost);
         message.id = RECRUIT_RESOURCE_COST_CONTROL;
         window->BroadcastMessage(message);
@@ -91,7 +90,7 @@ void SetupRecruitWin(
     message.id = RECRUIT_CREATURE_CONTROL;
     message.value = creatureType;
     window->BroadcastMessage(message);
-    if (resourceType != RECRUIT_NO_RESOURCE) {
+    if (resourceType != RESOURCE_NONE) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = RECRUIT_RESOURCE_ICON_CONTROL;
         message.value = resourceType;
@@ -111,7 +110,7 @@ short recruitUnit::Open(short priority) {
     m_window = new heroWindow(
         RECRUIT_WINDOW_X,
         RECRUIT_WINDOW_Y,
-        const_cast<char*>(m_resourceType == RECRUIT_NO_RESOURCE ? "recruit0.bin" : "recruit1.bin")
+        const_cast<char*>(m_resourceType == RESOURCE_NONE ? "recruit0.bin" : "recruit1.bin")
     );
     if (m_window == NULL)
         MemError();
@@ -136,7 +135,7 @@ short recruitUnit::Open(short priority) {
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
 
     goldMaximum = gpCurPlayer->m_resources[RESOURCE_GOLD] / m_goldCost;
-    if (m_resourceType != RECRUIT_NO_RESOURCE) {
+    if (m_resourceType != RESOURCE_NONE) {
         resourceMaximum = gpCurPlayer->m_resources[m_resourceType] / m_resourceCost;
         m_maximum = goldMaximum < resourceMaximum ? goldMaximum : resourceMaximum;
     } else
@@ -218,7 +217,7 @@ void recruitUnit::Update(void) {
     sprintf(gText, "%d", m_goldTotal);
     message.id = RECRUIT_GOLD_TOTAL_CONTROL;
     m_window->BroadcastMessage(message);
-    if (m_resourceType != RECRUIT_NO_RESOURCE) {
+    if (m_resourceType != RESOURCE_NONE) {
         m_resourceTotal = m_quantity * m_resourceCost;
         sprintf(gText, "%d", m_resourceTotal);
         message.id = RECRUIT_RESOURCE_TOTAL_CONTROL;
@@ -320,7 +319,7 @@ short recruitUnit::Main(struct tag_message& message) {
                             goto checkClose;
                         }
                         gpCurPlayer->m_resources[RESOURCE_GOLD] -= m_quantity * m_goldCost;
-                        if (m_resourceType != RECRUIT_NO_RESOURCE)
+                        if (m_resourceType != RESOURCE_NONE)
                             gpCurPlayer->m_resources[m_resourceType] -= m_quantity * m_resourceCost;
                         *m_available -= m_quantity;
                         m_recruited = 1;
@@ -355,15 +354,15 @@ recruitUnit::recruitUnit(armyGroup* army, int creatureType, short* available) {
     m_available = available;
     GetMonsterCost(m_creatureType, unitCosts);
     m_goldCost = unitCosts[RESOURCE_GOLD];
-    for (i = 0; i < RESOURCE_GOLD; i++) {
+    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
         if (unitCosts[i])
             break;
     }
-    if (i < RESOURCE_GOLD) {
+    if (i < RESOURCE_NON_GOLD_END) {
         m_resourceType = i;
         m_resourceCost = unitCosts[m_resourceType];
     } else {
-        m_resourceType = RECRUIT_NO_RESOURCE;
+        m_resourceType = RESOURCE_NONE;
         m_resourceCost = 0;
     }
 }
@@ -379,15 +378,15 @@ recruitUnit::recruitUnit(town* townData, signed char dwelling) {
     m_available = &townData->m_garrison[dwelling];
     GetMonsterCost(m_creatureType, unitCosts);
     m_goldCost = unitCosts[RESOURCE_GOLD];
-    for (i = 0; i < RESOURCE_GOLD; i++) {
+    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
         if (unitCosts[i])
             break;
     }
-    if (i < RESOURCE_GOLD) {
+    if (i < RESOURCE_NON_GOLD_END) {
         m_resourceType = i;
         m_resourceCost = unitCosts[m_resourceType];
     } else {
-        m_resourceType = RECRUIT_NO_RESOURCE;
+        m_resourceType = RESOURCE_NONE;
         m_resourceCost = 0;
     }
 }
@@ -408,22 +407,22 @@ void QuickViewRecruit(town* townData, signed char dwelling) {
     avail = townData->m_garrison[dwelling];
     GetMonsterCost(iMonsterType, unitCosts);
     iGoldCost = unitCosts[RESOURCE_GOLD];
-    for (resourceIndex = 0; resourceIndex < RESOURCE_GOLD; resourceIndex++) {
+    for (resourceIndex = 0; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {
         if (unitCosts[resourceIndex])
             break;
     }
-    if (resourceIndex < RESOURCE_GOLD) {
+    if (resourceIndex < RESOURCE_NON_GOLD_END) {
         resourceType = resourceIndex;
         resourcePrice = unitCosts[resourceType];
     } else {
-        resourceType = RECRUIT_NO_RESOURCE;
+        resourceType = RESOURCE_NONE;
         resourcePrice = 0;
     }
 
     win = new heroWindow(
         RECRUIT_WINDOW_X,
         RECRUIT_WINDOW_Y,
-        const_cast<char*>(resourceType == RECRUIT_NO_RESOURCE ? "recruiq0.bin" : "recruiq1.bin")
+        const_cast<char*>(resourceType == RESOURCE_NONE ? "recruiq0.bin" : "recruiq1.bin")
     );
     if (win == NULL)
         MemError();
