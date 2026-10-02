@@ -16,6 +16,7 @@ public:
     signed char m_groundFrame;
     // Castle pieces (5) draw towers and walls; other obstacles use frame 7.
     signed char m_obstacleType;
+    // -1 when no obstacle stands on the hex (ValidHexToStandOn).
     signed char m_obstacleIndex;
     signed char m_occupantSide;
     signed char m_occupantIndex;

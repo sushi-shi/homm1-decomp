@@ -234,7 +234,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/COMMAND"
 source = "src/SOURCE/COMMAND.cpp"
-flags = "cpp_carcass"
+# ShowWinLoseArtifact, ShowDeadArmies and DoVictory register fs:[0] frames.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/EVENTS"

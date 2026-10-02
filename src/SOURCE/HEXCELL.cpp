@@ -53,7 +53,7 @@ void hexcell::DrawTower(signed char frame) {
     signed char flip;
     short row;
 
-    flip = gpCombatManager->m_castleSide == 1;
+    flip = gpCombatManager->m_castleSide[1] == 1;
     gpCombatManager->m_combatIcons[8]->DrawToBuffer(flip ? m_x : m_x + 28, m_y, frame, 1, 0);
     row = (m_y - 139) / 80;
     if (row == 4)
@@ -70,7 +70,7 @@ void hexcell::DrawWall(void) {
     short row;
     short damageLevel;
 
-    flip = gpCombatManager->m_castleSide == 1;
+    flip = gpCombatManager->m_castleSide[1] == 1;
     row = (m_y - 139) / 80;
     damageLevel = gpCombatManager->m_wallDamage;
     gpCombatManager->m_combatIcons[9]->DrawToBuffer(flip ? m_x - 15 : m_x + 15,

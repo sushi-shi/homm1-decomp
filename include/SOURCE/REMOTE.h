@@ -66,8 +66,12 @@ struct RemoteMessage {
     short payloadSize;
     union {
         char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE];
-        // WaitForOtherPlayer passes the first payload dword to ReceiveSaveGame.
-        int saveSize;
+        // WaitForOtherPlayer passes the first payload dword to ReceiveSaveGame;
+        // CheckHandleNet also reads the sender's exit flag after it.
+        struct {
+            int saveSize;
+            int playerExited;
+        };
     } payload;
 };
 #pragma pack(pop)

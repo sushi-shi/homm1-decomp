@@ -105,7 +105,7 @@ short mouseManager::Main(tag_message&) {
 
 // HoMM1 selects the cursor family by name and forwards the requested frame.
 VA(0x004768f0, 0x45)
-void mouseManager::SetPointer(char* name, int frame) {
+void mouseManager::SetPointer(char* name, short frame) {
     if (*name == 'a' || *name == 'A')
         gMouseCursorType = MOUSE_CURSOR_ADVENTURE;
     else if (*name == 's' || *name == 'S')

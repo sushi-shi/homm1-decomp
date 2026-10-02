@@ -40,7 +40,8 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    void SetPointer(char*, int);
+    // CombatManager::ViewSpells passes a sign-extended word frame.
+    void SetPointer(char*, short);
     void SetPointer(short);
     void NewUpdate(int);
     void MouseCoords(short&, short&);

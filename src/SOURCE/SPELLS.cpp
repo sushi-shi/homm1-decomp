@@ -2,13 +2,74 @@
 
 #include <match.h>
 
+#include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
+#include <H1/KB.h>
 
-// donor PoL RVA 0x00020546; preferred Buka symbol ?ViewSpells@combatManager@@QAEHH@Z
-// donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.380473;margin=0.603680;shape=0.231;size=0.337;calls=0.235;strings=cmbtmous.mse|spelmous.mse;alternate=pol20:int combatManager::ViewSpells(int)@0x00020546
+// Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
+// checks before queueing the cast.
 VA(0x004154f0, 0x147)
-int combatManager::ViewSpells(int) { return 0; }
+signed char combatManager::ViewSpells(int)
+{
+    m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
+    if (m_selectedSpell != -1) {
+        switch (m_selectedSpell) {
+            case 3:
+            case 13:
+            case 15:
+            case 16:
+                giNextAction = 1;
+                giNextActionExtra = m_selectedSpell;
+                break;
+            default:
+                giNextAction = 1;
+                giNextActionExtra = m_selectedSpell;
+                gpMouseManager->SetPointer("spelmous.mse", m_selectedSpell);
+                gpWindowManager->DoDialog(0, HandleCastSpell, 0);
+                break;
+        }
+        gpMouseManager->SetPointer("cmbtmous.mse", 0);
+        if (m_selectedSpell != -1)
+            return 1;
+    }
+    return 0;
+}
+
+// Buka SPELLS.cpp CombatSpecialHandler: spell-book hover help.
+VA(0x00415637, 0x160)
+short CombatSpecialHandler(struct tag_message &message)
+{
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_COMMAND_HOVER:
+                if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                    return MESSAGE_DISPATCH_CONSUME;
+                gpWindowManager->m_lastHoverId = message.payload.widget.id;
+                switch (message.payload.widget.id) {
+                    case 2:
+                        gpCombatManager->CombatMessage(cSpellHelp[0], 1);
+                        break;
+                    case 3:
+                        gpCombatManager->CombatMessage(cSpellHelp[1], 1);
+                        break;
+                    case 0x7800:
+                        gpCombatManager->CombatMessage(cSpellHelp[4], 1);
+                        break;
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                        gpCombatManager->CombatMessage(cSpellHelp[6], 1);
+                        break;
+                    default:
+                        gpCombatManager->CombatMessage(cSpellHelp[7], 1);
+                        break;
+                }
+                return MESSAGE_DISPATCH_CONSUME;
+        }
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
 
 // donor PoL RVA 0x000217be; preferred Buka symbol ?CastSpell@combatManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order

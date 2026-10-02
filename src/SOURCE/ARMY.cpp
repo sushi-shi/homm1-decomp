@@ -43,10 +43,10 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     hero* commander;
 
     InitClean();
-    m_monsterType = type;
+    m_creatureType = type;
     memcpy(&m_stats, &gMonsterDatabase[type].stats, sizeof(tag_monsterStats));
     m_unknown29 = 6;
-    m_unknown51 = -1;
+    m_spellEffect = -1;
     m_unknown52 = -1;
     commander = gpCombatManager->m_heroes[side];
     if (commander) {
@@ -57,7 +57,7 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     m_unknown0b = 0;
     m_unknown08 = 0;
     m_unknown09 = 1;
-    m_speed = m_stats.speed;
+    m_baseSpeed = m_stats.speed;
     m_quantity = quantity;
     m_initialQuantity = m_quantity;
     m_hitPointsLost = 0;
@@ -73,8 +73,8 @@ void army::LoadResources(void) {
     int i;
     char buf[16];
 
-    if (m_monsterType != 3)
-        strcpy(sprite, gArmyNames[m_monsterType]);
+    if (m_creatureType != 3)
+        strcpy(sprite, gArmyNames[m_creatureType]);
     else
         strcpy(sprite, "swrdsman");
     sprintf(gText, "%s.std", sprite);
@@ -83,16 +83,16 @@ void army::LoadResources(void) {
     giMonoIconSkip = -1;
     sprintf(gText, "%s.wlk", sprite);
     m_walkIcon = gpResourceManager->GetIcon(gText);
-    sprintf(gText, "move%02d.82M", m_monsterType);
+    sprintf(gText, "move%02d.82M", m_creatureType);
     m_samples[0] = gpResourceManager->GetSample(gText);
-    sprintf(gText, "atksnd%02d.82M", m_monsterType);
+    sprintf(gText, "atksnd%02d.82M", m_creatureType);
     m_samples[1] = gpResourceManager->GetSample(gText);
-    sprintf(gText, "wince%02d.82M", m_monsterType);
+    sprintf(gText, "wince%02d.82M", m_creatureType);
     m_samples[2] = gpResourceManager->GetSample(gText);
     if (m_stats.attributes & 4) {
         sprintf(gText, "%s.atk", sprite);
         m_attackIcon = gpResourceManager->GetIcon(gText);
-        sprintf(gText, "shoot%02d.82M", m_monsterType);
+        sprintf(gText, "shoot%02d.82M", m_creatureType);
         m_samples[3] = gpResourceManager->GetSample(gText);
     } else {
         m_attackIcon = 0;
@@ -156,12 +156,12 @@ void army::ResetPath(void) {
 
 VA(0x0046a0c9, 0x27)
 short army::WalkTo(void) {
-    return WalkTo(m_targetHex);
+    return WalkTo(m_moveTargetHex);
 }
 
 VA(0x0046a1ec, 0x27)
 short army::AttackTo(void) {
-    return AttackTo(m_targetHex);
+    return AttackTo(m_moveTargetHex);
 }
 
 // donor PoL RVA 0x0004f93e; preferred Buka symbol ?CheckLuck@army@@QAEXXZ
@@ -184,7 +184,7 @@ int army::Damage(long int, int) { return 0; }
 
 VA(0x0046b2f2, 0x34)
 unsigned long int army::Strength(void) {
-    return gMonsterDatabase[m_monsterType].fightValue * m_quantity;
+    return gMonsterDatabase[m_creatureType].fightValue * m_quantity;
 }
 
 // donor PoL RVA 0x00052ad9; preferred Buka symbol ?MoveAttack@army@@QAEXHH@Z
