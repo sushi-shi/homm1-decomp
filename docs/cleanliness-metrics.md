@@ -66,8 +66,10 @@ whole tree; the other items cover audited cases.
   none is a layout workaround.
 - [ ] Review gotos: **209 statements** in 22 files (KB 42, ADVMGR 22, ARMY 21,
   EVENTS 20, GAME 15, CURSOR 14, SETUP 13, FINDPATH 10, others ≤ 9). In exact
-  functions they are byte evidence: replacing `PollRemote`'s `goto done` with
-  `return` drops it from 100 to 96.86. Per-site review remains open.
+  functions they are byte evidence: replacing one of `PollRemote`'s
+  `goto done` jumps to its closing label with `return` drops it to 98.97
+  (two fewer `jmp`s than retail; all four drop it to 96.86). Per-site review
+  remains open.
 - [x] Review artificial address arithmetic: **0 cases**; board offset-cast
   macros 0, no `(char*)this + n`.
 - [x] Review owner recovery from member pointers: **0 sites** (no `offsetof`
@@ -100,8 +102,8 @@ whole tree; the other items cover audited cases.
   member read without a proven role is `mouseManager::m_unknown49/4d` (the
   pointer position ComboDraw shifts into map cells).
 - [ ] Slot-tuned local names: **28** numeric-suffixed local declarations
-  (was 86, not counting `junk*`/`unused*` slot holders). 19 sit in open
-  Lane A rows (`ValueOfEventAtPosition`, `DrawCell`, `SpecialAttack`/`DoAttack`);
+  (was 86, not counting `junk*`/`unused*` slot holders). 19 sit in rows
+  still below 100 (`ValueOfEventAtPosition`, `DrawCell`, `SpecialAttack`/`DoAttack`);
   the rest are natural names or slot holders (`row1`/`row2`, `t1`-`t3`,
   `extra2`). A rename must keep each
   name's `/Od` identifier-hash bucket (`h = (h << 2) + (h >> 7) + c`,
