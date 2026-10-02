@@ -338,35 +338,35 @@ void Process1WindowsMessage(void) {
 // evidence: graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
 VA(0x0045c2d0, 0x127)
 void ResizeWindow(int x, int y, int width, int height) {
-    int windowX;
-    RECT windowRect;
-    int targetY;
+    int xpos;
+    RECT rect;
+    int ypos;
     if (gConfig.gfx[giCurExe].fullScreen != 0)
         return;
-    GetWindowRect(hwndApp, &windowRect);
+    GetWindowRect(hwndApp, &rect);
     if (x == -1)
-        windowX = windowRect.left;
+        xpos = rect.left;
     else
-        windowX = x;
+        xpos = x;
     if (y == -1)
-        targetY = windowRect.top;
+        ypos = rect.top;
     else
-        targetY = y;
-    windowRect.left = 0;
-    windowRect.top = 0;
-    windowRect.right = width - 1;
-    windowRect.bottom = height - 1;
-    AdjustWindowRect(&windowRect, giCurWindowsStyleFlags, gConfig.gfx[giCurExe].showMenu);
+        ypos = y;
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = width - 1;
+    rect.bottom = height - 1;
+    AdjustWindowRect(&rect, giCurWindowsStyleFlags, gConfig.gfx[giCurExe].showMenu);
     MoveWindow(
         hwndApp,
-        windowX,
-        targetY,
-        windowRect.right - windowRect.left + 1,
-        windowRect.bottom - windowRect.top + 1,
+        xpos,
+        ypos,
+        rect.right - rect.left + 1,
+        rect.bottom - rect.top + 1,
         1
     );
-    gConfig.gfx[giCurExe].x = windowX;
-    gConfig.gfx[giCurExe].y = targetY;
+    gConfig.gfx[giCurExe].x = xpos;
+    gConfig.gfx[giCurExe].y = ypos;
     gConfig.gfx[giCurExe].width = width;
     gConfig.gfx[giCurExe].height = height;
     WritePrefs();

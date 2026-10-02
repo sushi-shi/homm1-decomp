@@ -409,3 +409,18 @@ flags = "cpp_carcass"
 unit = "BASE/Iconf2bc"
 source = "src/BASE/Iconf2bc.asm"
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/ARMY"
+source = "src/SOURCE/ARMY.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/HEXCELL"
+source = "src/SOURCE/HEXCELL.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/CPUSPEED"
+source = "src/SOURCE/CPUSPEED.cpp"
+flags = "cpp_carcass"

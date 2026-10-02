@@ -445,10 +445,10 @@ void philAI::ValueOfBuyingCreature(
         creatRV = static_cast<int>(creatRV * 1.1);
         if (occupant->m_unknown1c == creature / 6)
             creatRV = static_cast<int>(creatRV * 1.1f);
-        if ((gMonsterDatabase[creature].attributes & 8)) {
+        if ((gMonsterDatabase[creature].stats.attributes & 8)) {
             for (n = 0; n < 5; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != -1
-                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].attributes & 8))
+                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & 8))
                     archers++;
             }
             creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
@@ -458,10 +458,10 @@ void philAI::ValueOfBuyingCreature(
             * (gpGame->m_players[townPointer->m_owner].m_aiData.m_attentionWeights.upgradeBase + 0.66)
         );
     }
-    if ((gMonsterDatabase[creature].attributes & 8)) {
+    if ((gMonsterDatabase[creature].stats.attributes & 8)) {
         for (slotNum = 0; slotNum < 5; slotNum++) {
             if (townPointer->m_army.m_creatureTypes[slotNum] != -1
-                && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].attributes & 8))
+                && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].stats.attributes & 8))
                 archers++;
         }
         creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
@@ -1274,7 +1274,7 @@ int philAI::CanBuyBHC(BHC& purchase) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.554517;margin=0.429398;shape=0.381;size=0.912;calls=1.000;alternate=pol20:int philAI::CombatMonsterEvent(class hero *, int, int *, class mapCell *)@0x00043007
 VA(0x00421fe5, 0x177)
-signed char philAI::CombatMonsterEvent(hero* h, int monType, int* pCount, mapCell*) {
+signed char philAI::CombatMonsterEvent(hero* h, signed char monType, int* pCount, mapCell*) {
     float casualtyRatio;
     float fLoss;
     int result;

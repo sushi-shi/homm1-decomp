@@ -2527,7 +2527,7 @@ extern char* gTownNames[];
 // Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
 // override one town by position.
 VA(0x00455aaf, 0xdc)
-char* GetTownName(signed char i) {
+char* GetTownName(int i) {
     town* townPointer = gpGame->GetTown(i);
     if (gpGame->m_campaignType > 0
         && gCampaignTownNames[gpGame->m_campaignScenario].x >= 0
