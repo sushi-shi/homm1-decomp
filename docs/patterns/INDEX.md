@@ -19,6 +19,7 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [Translation-unit context](tu-state-probe-family-decides-reachability.md) — unchanged function text can emit different code.
 - [Operand sort keys (HoMM1 VC4, measured)](vc4-operand-sort-key-is-the-symbol-handle.md) — C2 orders commutative/compare operands by a hash of their C1 symbol handles; local declaration order is the lever.
 - [/O2 register allocation (HoMM1 VC4, measured)](vc4-global-register-allocation-is-chaitin-briggs.md) — Chaitin-Briggs colouring; ties follow declaration order (C1 handle & 31); reference counts weigh 5^loop depth.
+- [Control flow consumes handles (HoMM1 VC4, measured)](vc4-control-flow-consumes-c1-handles.md) — labels, `&&`/nested `if`, loops, switches and casts take C1 handles, so a code-identical rewrite shifts every later function's handle state.
 - [Signed remainder](signed-modulo-pow2-abs-restore.md) — sign correction around a power-of-two mask.
 - [VC4 float expression shape](vc4-float-expression-shape.md) — store/compare order follows declarations; parentheses stop product reassociation; C-style float casts add a temporary (HoMM1-measured).
 

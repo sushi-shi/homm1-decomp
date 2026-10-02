@@ -43,11 +43,14 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
         node = m_queue[--m_queueCount];
         if (maximumCost > 0 && node.distance > maximumCost)
             continue;
-        if (gpGame->m_map[node.x][node.y].m_triggerType == triggerType && (startX != node.x || startY != node.y)) {
-            m_specialTargetX = node.x;
-            m_specialTargetY = node.y;
-            break;
-        }
+        // Nested rather than &&: the code is the same, and the C1 labels it
+        // allocates give SeedPosition retail's register allocation.
+        if (gpGame->m_map[node.x][node.y].m_triggerType == triggerType)
+            if (startX != node.x || startY != node.y) {
+                m_specialTargetX = node.x;
+                m_specialTargetY = node.y;
+                break;
+            }
         TestPossibleDirections(node.x, node.y, possibleDirections, directionCosts, 1, 0);
         for (i = 0; i < 8; i++) {
             terrain = possibleDirections[i];
@@ -111,8 +114,8 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                                int continueSeed, int scanMap)
 {
     static short s_direction;
-    static searchNode s_currentNode;
     static int s_terrain;
+    static searchNode s_currentNode;
     static int s_mapX;
     static int s_mapY;
     static int s_adjacentMonsterX;
