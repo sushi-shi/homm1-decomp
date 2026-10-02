@@ -70,9 +70,9 @@ void playerData::Write(int file) {
     write(file, m_availableHeroIds, sizeof(m_availableHeroIds));
     memset(unused, 0, 50);
     write(file, unused, 50);
-    write(file, &m_unknown52, 1);
-    write(file, &m_unknown53, 1);
-    write(file, &m_unknown54, 1);
+    write(file, &m_ultimateArtifactHintChance, 1);
+    write(file, &m_ultimateArtifactHintX, 1);
+    write(file, &m_ultimateArtifactHintY, 1);
     write(file, &m_unknown55, 1);
     write(file, &m_townCount, 1);
     write(file, &m_currentTown, 1);
@@ -101,9 +101,9 @@ void playerData::Read(int file) {
     read(file, m_heroIds, sizeof(m_heroIds));
     read(file, m_availableHeroIds, sizeof(m_availableHeroIds));
     read(file, unused, 50);
-    read(file, &m_unknown52, 1);
-    read(file, &m_unknown53, 1);
-    read(file, &m_unknown54, 1);
+    read(file, &m_ultimateArtifactHintChance, 1);
+    read(file, &m_ultimateArtifactHintX, 1);
+    read(file, &m_ultimateArtifactHintY, 1);
     read(file, &m_unknown55, 1);
     read(file, &m_townCount, 1);
     read(file, &m_currentTown, 1);
@@ -183,6 +183,110 @@ int playerData::BuildingsOwned(int townType, int buildingIndex, int buildState) 
         }
     }
     return count;
+}
+
+// Buka 2.1 playerData::NumOfGivenArtifact over HoMM1's fourteen hero slots.
+VA(0x004392a4, 0x99)
+int playerData::NumOfGivenArtifact(int artifact) {
+    int count = 0;
+    int i;
+    int j;
+    for (i = 0; i < m_heroCount; i++) {
+        for (j = 0; j < 14; j++) {
+            if (gpGame->m_heroRecs[m_heroIds[i]].m_artifacts[j] == artifact)
+                count++;
+        }
+    }
+    return count;
+}
+
+// Buka 2.1 ComputeUALoc: HoMM1 needs eleven obelisks (four percent each over
+// ten) and skips player 0's hint.
+VA(0x0043933d, 0x386)
+void ComputeUALoc(int player) {
+    int tries;
+    int x;
+    int y;
+    int heading;
+    int numObelisks;
+
+    if (player > 0) {
+        numObelisks = gpGame->m_players[player].CountVisitedObelisks();
+        if (numObelisks < 11 || gpGame->m_ultimateArtifactId == -1) {
+            gpGame->m_players[player].m_ultimateArtifactHintChance = 0;
+            gpGame->m_players[player].m_ultimateArtifactHintX = -1;
+            gpGame->m_players[player].m_ultimateArtifactHintY = -1;
+        } else {
+            gpGame->m_players[player].m_ultimateArtifactHintChance = (numObelisks - 11) * 4;
+            if (gpGame->m_players[player].m_ultimateArtifactHintChance >= Random(1, 100)) {
+                gpGame->m_players[player].m_ultimateArtifactHintX = gpGame->m_ultimateArtifactX;
+                gpGame->m_players[player].m_ultimateArtifactHintY = gpGame->m_ultimateArtifactY;
+            } else {
+                x = -1;
+                y = -1;
+                heading = 0;
+                tries = 0;
+                while (!(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
+                         && gpGame->m_map[x][y].m_triggerType == 0
+                         && gpGame->m_map[x][y].m_objectIndex == 0xff
+                         && gpGame->m_map[x][y].m_overlayIndex == 0xff
+                         && gpGame->m_map[x][y].m_tileIndex >= 20)) {
+                    tries++;
+                    heading = 0;
+                    while (heading == 0)
+                        heading = 3 - Random(0, 2) - Random(0, 2) - Random(0, 2);
+                    x = gpGame->m_ultimateArtifactX + heading;
+                    heading = 0;
+                    while (heading == 0)
+                        heading = 3 - Random(0, 2) - Random(0, 2) - Random(0, 2);
+                    y = gpGame->m_ultimateArtifactY + heading;
+                    if (tries >= 200) {
+                        x = gpGame->m_ultimateArtifactX;
+                        y = gpGame->m_ultimateArtifactY;
+                        goto saveLocation;
+                    }
+                }
+            saveLocation:
+                gpGame->m_players[player].m_ultimateArtifactHintX = x;
+                gpGame->m_players[player].m_ultimateArtifactHintY = y;
+            }
+        }
+    }
+}
+
+// DoEvent's obelisk visit: remove this player's share of the 48 puzzle
+// pieces (Buka 2.1 SetupPuzzlePieces' picker), then re-roll the hint.
+VA(0x004396c3, 0x1b0)
+void game::VisitObelisk(signed char player) {
+    short attempts;
+    signed char visited;
+    signed char fallback;
+    signed char piece;
+    int pieces;
+    short numRemoved;
+    int removeCount;
+
+    pieces = 48;
+    removeCount = pieces / m_obeliskCount;
+    if (removeCount < 1)
+        removeCount = 1;
+    for (numRemoved = 0; numRemoved < removeCount; numRemoved++) {
+        visited = m_players[player].CountVisitedObelisks();
+        for (piece = 0; piece < pieces; piece += Random(1, 5)) {
+            if (!BitTest(m_players[player].m_obelisksVisited, piece))
+                break;
+        }
+        for (attempts = 0; attempts < 100; attempts++) {
+            fallback = Random(0, pieces - 1);
+            if (!BitTest(m_players[player].m_obelisksVisited, fallback))
+                break;
+        }
+        if (piece < pieces)
+            BitSet(m_players[player].m_obelisksVisited, piece);
+        else
+            BitSet(m_players[player].m_obelisksVisited, fallback);
+    }
+    ComputeUALoc(player);
 }
 
 // Buka 2.1 game::IsMobile.

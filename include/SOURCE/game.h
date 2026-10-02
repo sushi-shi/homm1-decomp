@@ -251,8 +251,12 @@ public:
     void GetLossConditionText(char*);
     void GetVictoryConditionText(char*);
     int GetSideDesc(char*, int, int);
+    // DoEvent's obelisk branch (byte player, ret 4).
+    void VisitObelisk(signed char);
 };
 #pragma pack(pop)
 
 extern game* gpGame;
+// Recomputes a player's ultimate-artifact hint (cdecl, int player).
+void ComputeUALoc(int);
 #endif // HOMM1_SOURCE_GAME_H
