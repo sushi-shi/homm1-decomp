@@ -128,7 +128,9 @@ public:
     // TavernHandler advances this word as its animation counter (Buka name).
     short m_viewArmyResult;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
-    char m_unknown16e64[0x16];
+    char m_unknown16e64[0x15];
+    // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 trigger cell.
+    signed char m_unknown16e79;
     hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
@@ -235,8 +237,11 @@ public:
     // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
     void SettleOverlay(int, int);
+    // HoMM1: NewMap rerolls each cell's terrain tile variant after LoadMap.
+    void RandomizeTerrainTiles(void);
     void ProcessMapExtra(void);
-    void SetupTowns(void);
+    // Retail returns whether no town took an owner from its map extra (AL).
+    signed char SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
     int TransmitSaveGame(int, int);
@@ -268,6 +273,8 @@ public:
     void NGKPSetupDisplayString(char*, unsigned short int);
     void DrawNGKPDisplayString(int);
     void ShowScenInfo(void);
+    // HoMM1: NewMap gives every opponent a distinct crest.
+    void RandomizePlayerCrests(void);
     void GetLossConditionText(char*);
     void GetVictoryConditionText(char*);
     int GetSideDesc(char*, int, int);

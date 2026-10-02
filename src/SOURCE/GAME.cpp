@@ -1357,6 +1357,115 @@ void game::WaitForPlayer(char* text, int player) {
     }
 }
 
+// HoMM1 rerolls the variant within each four-tile group, past the first
+// four tiles of every twenty-tile terrain block.
+VA(0x00444ebb, 0xb2)
+void game::RandomizeTerrainTiles(void) {
+    mapCell* cellPtr;
+    // Retail reserves an unused slot above the loop counters.
+    int tile;
+    int x;
+    int y;
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            cellPtr = &m_map[x][y];
+            if (cellPtr->m_tileIndex % 20 >= 4)
+                cellPtr->m_tileIndex = cellPtr->m_tileIndex / 4 * 4 + Random(0, 3);
+        }
+    }
+}
+
+// Buka 2.1 game::ProcessMapExtra reduced to HoMM1's town extras; HoMM1 has
+// no late overlays.
+VA(0x00444f6d, 0x129)
+void game::ProcessMapExtra(void) {
+    mapCell* cellPtr;
+    int y;
+    int x;
+    signed char townNum;
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            cellPtr = &m_map[x][y];
+            switch (cellPtr->m_triggerType) {
+                case 0xa8:
+                case 0xc0:
+                case 0xc1:
+                    townNum = GetTownId(x, y);
+                    m_castleRecs[townNum].m_extraIndex = cellPtr->m_objectMetadata;
+                    cellPtr->m_objectMetadata = townNum;
+                    break;
+                case 0xc7:
+                    m_unknown16e79 = 0;
+                    break;
+            }
+        }
+    }
+}
+
+// A town's map-extra record: custom flag, owner, buildings, mage-guild
+// level and garrison.
+#pragma pack(push, 1)
+struct mapTownExtra {
+    signed char customized;
+    signed char owner;
+    short buildings;
+    signed char buildState;
+    signed char troopTypes[5];
+    short troopCounts[5];
+};
+#pragma pack(pop)
+
+// Buka 2.1 game::SetupTowns reduced to HoMM1's owners, garrisons and
+// buildings; a map whose towns all lack owners leaves the placeholder -2.
+VA(0x00445096, 0x213)
+signed char game::SetupTowns(void) {
+    int own;
+    signed char noOwners;
+    town* town;
+    int j;
+    int i;
+    int mask;
+    mapTownExtra* extra;
+    noOwners = 1;
+    mask = 0x1f9f;
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        town = GetTown(i);
+        town->m_customized = 0;
+        if (town->m_extraIndex >= 1) {
+            extra = (mapTownExtra*)ppMapExtra[town->m_extraIndex];
+            if (extra->customized && extra->owner != -2) {
+                if (gpGame->m_playerCount <= extra->owner)
+                    own = gpGame->m_playerCount - 1;
+                else
+                    own = extra->owner;
+                noOwners = 0;
+                if (own != -1)
+                    ClaimTown(i, own);
+            }
+            if (extra->customized) {
+                town->m_customized = 1;
+                for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+                    town->m_army.m_creatureCounts[j] = extra->troopCounts[j];
+                    if (town->m_army.m_creatureCounts[j] > 0)
+                        town->m_army.m_creatureTypes[j] = extra->troopTypes[j];
+                    else
+                        town->m_army.m_creatureTypes[j] = -1;
+                }
+                town->m_buildState = extra->buildState;
+                town->m_buildings = town->m_buildings - (town->m_buildings & mask) + (extra->buildings & mask);
+            }
+        }
+    }
+    if (!noOwners) {
+        for (i = 0; i < GAME_TOWN_COUNT; i++) {
+            town = GetTown(i);
+            if (town->m_owner == -2)
+                town->m_owner = -1;
+        }
+    }
+    return noOwners;
+}
+
 // donor PoL RVA 0x00082547; preferred Buka symbol ?ProcessOnMapHeroes@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.296138;margin=0.478209;shape=0.233;size=0.458;calls=0.545;alternate=pol20:void game::ProcessOnMapHeroes(void)@0x00082547
@@ -1567,6 +1676,29 @@ done:
 // Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
 VA(0x004472d8, 0x44e)
 void game::ShowScenInfo(void) {}
+
+// HoMM1 keeps the human's crest and gives each opponent a free one: the
+// campaign scenario's crest when it names one, else a random draw.
+VA(0x00447726, 0x14f)
+void game::RandomizePlayerCrests(void) {
+    int i;
+    signed char taken[4];
+    taken[0] = 0;
+    taken[1] = 0;
+    taken[2] = 0;
+    taken[3] = 0;
+    taken[m_players[0].m_unknown11] = 1;
+    for (i = 1; i < m_playerCount; i++) {
+        do {
+            if (m_campaignType > 0 && gCampaignScenarios[m_campaignScenario].playerCrests[i] < 4
+                && gCampaignScenarios[m_campaignScenario].playerCrests[i] >= 0)
+                m_players[i].m_unknown11 = gCampaignScenarios[m_campaignScenario].playerCrests[i];
+            else
+                m_players[i].m_unknown11 = Random(0, 3);
+        } while (taken[m_players[i].m_unknown11] == 1);
+        taken[m_players[i].m_unknown11] = 1;
+    }
+}
 
 // Buka 2.1 game::GetNumThievesGuilds.
 VA(0x00446df9, 0x98)

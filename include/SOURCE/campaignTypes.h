@@ -13,7 +13,8 @@ struct campaignScenario {
     signed char victoryTownY;
     char unknown03[0x10];
     signed char playerTypes[GAME_PLAYER_COUNT];
-    char unknown17[6];
+    // Opponent crests, indexed by player position.
+    short playerCrests[3];
     unsigned short resources[GAME_PLAYER_COUNT][7];
 };
 #pragma pack(pop)
