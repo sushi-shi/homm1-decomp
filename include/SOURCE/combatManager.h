@@ -177,7 +177,7 @@ public:
     void DrawBackground(void);
     void UpdateMouseGrid(int, int);
     // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
-    void DrawFrame(int);
+    void DrawFrame(signed char);
     // HoMM1 retail 0x00470f25: byte mode (ret 4).
     void SetGridMode(signed char);
     void DrawSmallView(int, int);
