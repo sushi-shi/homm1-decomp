@@ -14,11 +14,11 @@ H1_ENUM_BEGIN(MapDirection)
     MAP_DIRECTION_NORTH_WEST = 7
 H1_ENUM_END(MapDirection)
 
-H1_ENUM_BEGIN(CursorFrameConstant)
+H1_ENUM_CONST_BEGIN(CursorFrameConstant)
     CURSOR_FRAMES_PER_DIRECTION = 9,
     CURSOR_BOAT_BASE_FRAME_5 = 0x9b,
     CURSOR_BOAT_BASE_FRAME_6 = 0x92,
     CURSOR_BOAT_BASE_FRAME_7 = 0x89
-H1_ENUM_END(CursorFrameConstant)
+H1_ENUM_CONST_END(CursorFrameConstant)
 
 #endif

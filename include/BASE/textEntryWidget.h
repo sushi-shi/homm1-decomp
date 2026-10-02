@@ -13,7 +13,7 @@ H1_ENUM_BEGIN(TextEntryReadMode)
     TEXT_ENTRY_READ_MULTILINE = 3
 H1_ENUM_END(TextEntryReadMode)
 
-H1_ENUM_BEGIN(TextEntryConstant)
+H1_ENUM_CONST_BEGIN(TextEntryConstant)
     TEXT_ENTRY_DISPLAY_CAPACITY = 300,
     TEXT_ENTRY_PRESERVE_TEXT = 1,
     TEXT_ENTRY_ALLOCATION_PADDING = 5,
@@ -34,7 +34,7 @@ H1_ENUM_BEGIN(TextEntryConstant)
     TEXT_ENTRY_KEYPAD_2 = 0x50,
     TEXT_ENTRY_KEYPAD_3 = 0x51,
     TEXT_ENTRY_KEYPAD_0 = 0x52
-H1_ENUM_END(TextEntryConstant)
+H1_ENUM_CONST_END(TextEntryConstant)
 
 // forward declarations:
 class icon;

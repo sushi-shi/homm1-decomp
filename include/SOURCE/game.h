@@ -22,13 +22,13 @@ struct SMapHeader;
 struct tag_message;
 
 // clang-format off
-H1_ENUM_BEGIN(GameStorageConstant)
+H1_ENUM_CONST_BEGIN(GameStorageConstant)
     GAME_PLAYER_COUNT = 4,
     GAME_TOWN_COUNT = 36,
     GAME_HERO_COUNT = 36,
     GAME_MINE_COUNT = 36,
     GAME_BOAT_COUNT = 32
-H1_ENUM_END(GameStorageConstant)
+H1_ENUM_CONST_END(GameStorageConstant)
 // clang-format on
 
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the

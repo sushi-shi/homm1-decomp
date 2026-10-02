@@ -27,10 +27,10 @@ H1_ENUM_BEGIN(CombatPointerCode)
 H1_ENUM_END(CombatPointerCode)
 
 // clang-format off
-H1_ENUM_BEGIN(CombatGridConstant)
+H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6
-H1_ENUM_END(CombatGridConstant)
+H1_ENUM_CONST_END(CombatGridConstant)
 // clang-format on
 
 // Buka CombatRemotePacket: the combat action relayed through

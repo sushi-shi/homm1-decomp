@@ -13,10 +13,10 @@ H1_ENUM_BEGIN(FontAlignment)
     FONT_ALIGN_RIGHT = 2
 H1_ENUM_END(FontAlignment)
 
-H1_ENUM_BEGIN(FontGlyphConstant)
+H1_ENUM_CONST_BEGIN(FontGlyphConstant)
     FONT_GLYPH_INDEX_LAST = 95,
     FONT_GLYPH_ADVANCE_SPACING = 1
-H1_ENUM_END(FontGlyphConstant)
+H1_ENUM_CONST_END(FontGlyphConstant)
 
 #pragma pack(push, 1)
 class font : public resource {

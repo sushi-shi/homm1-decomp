@@ -25,11 +25,11 @@ H1_ENUM_BEGIN(WindowState)
     WINDOW_STATE_OPEN = 1
 H1_ENUM_END(WindowState)
 
-H1_ENUM_BEGIN(HeroWindowConstant)
+H1_ENUM_CONST_BEGIN(HeroWindowConstant)
     HERO_WINDOW_NAME_CAPACITY = 20,
     WINDOW_ALL_WIDGETS_LOW = -65535,
     WINDOW_ALL_WIDGETS_HIGH = 65535
-H1_ENUM_END(HeroWindowConstant)
+H1_ENUM_CONST_END(HeroWindowConstant)
 
 #pragma pack(push, 1)
 class heroWindow {

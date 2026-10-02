@@ -25,14 +25,14 @@ class town;
 #define HERO_EVENT_TEMPLE 0x100u
 
 // clang-format off
-H1_ENUM_BEGIN(HeroConstant)
+H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_PRIMARY_STAT_COUNT = 4,
     HERO_STARTING_STAT_COUNT = 5,
     HERO_COMBAT_SPELL_SLOT_COUNT = 19,
     HERO_SPELL_SLOT_COUNT = 29,
     HERO_ARTIFACT_SLOT_COUNT = 14,
     HERO_EXPERIENCE_LEVEL_TABLE_COUNT = 12
-H1_ENUM_END(HeroConstant)
+H1_ENUM_CONST_END(HeroConstant)
 
 
 // clang-format on

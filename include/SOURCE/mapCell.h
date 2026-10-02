@@ -7,9 +7,9 @@
 #include <Domains.h>
 
 // clang-format off
-H1_ENUM_BEGIN(MapCellConstant)
+H1_ENUM_CONST_BEGIN(MapCellConstant)
     MAP_CELL_GRID_SIZE = 72
-H1_ENUM_END(MapCellConstant)
+H1_ENUM_CONST_END(MapCellConstant)
 // clang-format on
 
 #pragma pack(push, 1)

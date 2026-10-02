@@ -26,7 +26,7 @@ struct SMapChange;
 struct tag_message;
 
 // clang-format off
-H1_ENUM_BEGIN(AdventureManagerStorageConstant)
+H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_BOTTOM_VIEW_WIDGET_COUNT = 12,
     ADVMGR_OBJECT_ICON_COUNT = 21,
     ADVMGR_PANEL_ICON_COUNT = 5,
@@ -36,7 +36,7 @@ H1_ENUM_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_ACTIVE_SOUND_COUNT = 8,
     ADVMGR_ENVIRONMENT_SOUND_COUNT = 22,
     ADVMGR_CURSOR_SAMPLE_COUNT = 7
-H1_ENUM_END(AdventureManagerStorageConstant)
+H1_ENUM_CONST_END(AdventureManagerStorageConstant)
  // clang-format on
 
  struct adventureSoundCell {

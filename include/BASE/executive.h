@@ -21,9 +21,9 @@ extern char gDialogManagerError2[];
 extern char gDialogManagerError3[];
 extern char gDialogManagerError4[];
 
-H1_ENUM_BEGIN(ExecutiveConstant)
+H1_ENUM_CONST_BEGIN(ExecutiveConstant)
     EXECUTIVE_DIALOG_MANAGER_CAPACITY = 20
-H1_ENUM_END(ExecutiveConstant)
+H1_ENUM_CONST_END(ExecutiveConstant)
 
 class executive {
 public:

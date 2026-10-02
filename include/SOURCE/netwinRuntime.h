@@ -10,7 +10,7 @@
 
 #include <nb30.h>
 
-H1_ENUM_BEGIN(NetbiosRuntimeConstant)
+H1_ENUM_CONST_BEGIN(NetbiosRuntimeConstant)
     NETBIOS_SESSION_COUNT = 7,
     NETBIOS_SESSION_ACTIVE = 1,
     NETBIOS_SESSION_NAME_REGISTERED = 2,
@@ -30,7 +30,7 @@ H1_ENUM_BEGIN(NetbiosRuntimeConstant)
     NETBIOS_RESET_NAME_LIMIT_INDEX = 2,
     NETBIOS_RESET_SESSION_LIMIT = 20,
     NETBIOS_RESET_NAME_LIMIT = 10
-H1_ENUM_END(NetbiosRuntimeConstant)
+H1_ENUM_CONST_END(NetbiosRuntimeConstant)
 
 H1_ENUM_BEGIN(NetbiosSessionOperation)
     NETBIOS_SESSION_REGISTER = 0,

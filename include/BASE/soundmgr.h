@@ -10,7 +10,7 @@ extern pcmwaveformat_tag gWaveFormat;
 extern tagAUXCAPSA gAuxCaps;
 _DIG_DRIVER* WAVE_init_driver(unsigned long, unsigned short, unsigned short, unsigned short);
 
-H1_ENUM_BEGIN(CDPlaybackConstant)
+H1_ENUM_CONST_BEGIN(CDPlaybackConstant)
     CD_POSITION_BUFFER_SIZE = 20,
     CD_POSITION_CAPACITY = 15,
     CD_MCI_RESULT_LAST = 255,
@@ -32,9 +32,9 @@ H1_ENUM_BEGIN(CDPlaybackConstant)
     SAMPLE_VOLUME_TABLE_BYTES = 0x40,
     SOUND_STATE_RESET_SPAN = 0xae,
     MUSIC_STOP_WAIT_MILLISECONDS = 5
-H1_ENUM_END(CDPlaybackConstant)
+H1_ENUM_CONST_END(CDPlaybackConstant)
 
-H1_ENUM_BEGIN(SampleStreamConstant)
+H1_ENUM_CONST_BEGIN(SampleStreamConstant)
     SAMPLE_PATH_CAPACITY = 352,
     SAMPLE_SUFFIX_COUNT = 3,
     SAMPLE_RATE_LOW = 11025,
@@ -47,7 +47,7 @@ H1_ENUM_BEGIN(SampleStreamConstant)
     SOUND_VOLUME_EFFECT = 100,
     SOUND_VOLUME_MUSIC = 101,
     PCM_BITS_PER_BYTE_SHIFT = 3
-H1_ENUM_END(SampleStreamConstant)
+H1_ENUM_CONST_END(SampleStreamConstant)
 
 H1_ENUM_BEGIN(SampleReportQuery)
     SAMPLE_REPORT_VOLUME = 1,

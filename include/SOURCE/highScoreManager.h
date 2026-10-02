@@ -11,13 +11,13 @@ struct tag_message;
 
 class heroWindow;
 
-H1_ENUM_BEGIN(HighScoreManagerConstant)
+H1_ENUM_CONST_BEGIN(HighScoreManagerConstant)
     HIGH_SCORE_DISPLAY_ENTRY_COUNT = 10,
     HIGH_SCORE_ANIMATION_FRAME_COUNT = 18,
     HIGH_SCORE_DISPATCH_MASK = 0x32f,
     HIGH_SCORE_FADE_OUT = 1,
     HIGH_SCORE_FADE_STEPS = 8
-H1_ENUM_END(HighScoreManagerConstant)
+H1_ENUM_CONST_END(HighScoreManagerConstant)
 
 #pragma pack(push, 1)
 class highScoreManager : public baseManager {

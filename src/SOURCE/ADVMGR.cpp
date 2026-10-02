@@ -36,32 +36,32 @@ int giSeedingValid;
 
 
 // clang-format off
-H1_ENUM_BEGIN(AdventureButtonConstant)
+H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
     BUTTON_BROADCAST_ARG = 1,
     PANEL_CONTINUE_ROUTE = 2
-H1_ENUM_END(AdventureButtonConstant)
+H1_ENUM_CONST_END(AdventureButtonConstant)
 
-H1_ENUM_BEGIN(AdventureScreenConstant)
+H1_ENUM_CONST_BEGIN(AdventureScreenConstant)
     LOGICAL_SCREEN_WIDTH = 640,
     LOGICAL_SCREEN_HEIGHT = 480,
     SCROLL_BORDER = 16
-H1_ENUM_END(AdventureScreenConstant)
+H1_ENUM_CONST_END(AdventureScreenConstant)
 
-H1_ENUM_BEGIN(AdventureBorderConstant)
+H1_ENUM_CONST_BEGIN(AdventureBorderConstant)
     ADVENTURE_VIEWPORT_EXTENT = 480,
     BORDER_EDGE_SIZE = 16,
     BORDER_SIDE_BYTES = 16,
     BORDER_SAVED_SIDE_BYTES = 32,
     BORDER_MIDDLE_END = 464,
     BORDER_BUFFER_SIZE = 0x7400
-H1_ENUM_END(AdventureBorderConstant)
+H1_ENUM_CONST_END(AdventureBorderConstant)
 
-H1_ENUM_BEGIN(AdventureLocatorConstant)
+H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
     LOCATOR_VISIBLE_COUNT = 4,
     LOCATOR_PAGE_THRESHOLD = 5,
     LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
     LOCATOR_SCROLL_NO_PAGES_Y = 232
-H1_ENUM_END(AdventureLocatorConstant)
+H1_ENUM_CONST_END(AdventureLocatorConstant)
 
 H1_ENUM_BEGIN(BottomViewMode)
     BOTTOM_VIEW_NONE = 0,
@@ -73,24 +73,24 @@ H1_ENUM_BEGIN(BottomViewMode)
     BOTTOM_VIEW_OVERRIDE_DISABLED = 6
 H1_ENUM_END(BottomViewMode)
 
-H1_ENUM_BEGIN(BottomViewPanelConstant)
+H1_ENUM_CONST_BEGIN(BottomViewPanelConstant)
     BOTTOM_VIEW_DRAW_FIRST_WIDGET = 2000,
     BOTTOM_VIEW_DRAW_LAST_WIDGET = 2200,
     BOTTOM_VIEW_PANEL_X = 480,
     BOTTOM_VIEW_PANEL_Y = 392,
     BOTTOM_VIEW_PANEL_WIDTH = 143,
     BOTTOM_VIEW_PANEL_HEIGHT = 71
-H1_ENUM_END(BottomViewPanelConstant)
+H1_ENUM_CONST_END(BottomViewPanelConstant)
 
-H1_ENUM_BEGIN(AdventureScrollConstant)
+H1_ENUM_CONST_BEGIN(AdventureScrollConstant)
     SCROLL_MIN_ORIGIN = -7,
     SCROLL_MAX_ORIGIN = 64,
     SCROLL_TICK_INTERVAL = 70,
     HOVER_SCROLL_FRAME_FIRST = 32,
     HOVER_SCROLL_FRAME_END = 40
-H1_ENUM_END(AdventureScrollConstant)
+H1_ENUM_CONST_END(AdventureScrollConstant)
 
-H1_ENUM_BEGIN(AdventurePanelDialogConstant)
+H1_ENUM_CONST_BEGIN(AdventurePanelDialogConstant)
     PANEL_CLOSE_WIDGET = 0x7800,
     PANEL_NO_HELP = -1,
     PANEL_VIEW_WORLD_HELP = 0,
@@ -101,7 +101,7 @@ H1_ENUM_BEGIN(AdventurePanelDialogConstant)
     PANEL_VIEW_PUZZLE = 2,
     PANEL_CAST_SPELL = 3,
     PANEL_SEARCH = 4
-H1_ENUM_END(AdventurePanelDialogConstant)
+H1_ENUM_CONST_END(AdventurePanelDialogConstant)
 
 H1_ENUM_BEGIN(AdventureSpellType)
     SPELL_VIEW_MINES = 19,
@@ -126,10 +126,10 @@ H1_ENUM_BEGIN(AdventureDrawMask)
     ADVMGR_VIEW_CELL_COUNT = 15
 H1_ENUM_END(AdventureDrawMask)
 
-H1_ENUM_BEGIN(AdventurePanelButtonConstant)
+H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
-H1_ENUM_END(AdventurePanelButtonConstant)
+H1_ENUM_CONST_END(AdventurePanelButtonConstant)
 // clang-format on
 
 // Buka 2.1's unconditional six-button enable/disable broadcast.
@@ -4077,7 +4077,7 @@ void advManager::GrabScreen(void) {
 }
 
 // clang-format off
-H1_ENUM_BEGIN(ControlPanelDialogConstant)
+H1_ENUM_CONST_BEGIN(ControlPanelDialogConstant)
     CONTROL_NEW_GAME = 1,
     CONTROL_LOAD_GAME = 2,
     CONTROL_SAVE_GAME = 3,
@@ -4089,7 +4089,7 @@ H1_ENUM_BEGIN(ControlPanelDialogConstant)
     CONTROL_SHOW_ROUTE = 12,
     CONTROL_SHOW_ENEMY_MOVES = 13,
     CONTROL_SCENARIO_INFO = 17
-H1_ENUM_END(ControlPanelDialogConstant)
+H1_ENUM_CONST_END(ControlPanelDialogConstant)
 // clang-format on
 
 // HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog

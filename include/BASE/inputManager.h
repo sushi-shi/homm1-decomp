@@ -5,7 +5,7 @@
 #include <BASE/message.h>
 #include <H1/Macros.h>
 
-H1_ENUM_BEGIN(InputManagerConstant)
+H1_ENUM_CONST_BEGIN(InputManagerConstant)
     INPUT_GAME_WIDTH = 640,
     INPUT_GAME_HEIGHT = 480,
     INPUT_EVENT_RING_CAPACITY = 32,
@@ -17,7 +17,7 @@ H1_ENUM_BEGIN(InputManagerConstant)
     INPUT_CURSOR_INTERIOR_X_MAX = 636,
     INPUT_CURSOR_INTERIOR_Y_MAX = 476,
     INPUT_KEEP_CURRENT_MOUSE_FRAME = 1000
-H1_ENUM_END(InputManagerConstant)
+H1_ENUM_CONST_END(InputManagerConstant)
 
 #pragma pack(push, 1)
 class inputManager : public baseManager {

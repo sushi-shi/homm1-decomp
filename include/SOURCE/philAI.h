@@ -11,9 +11,9 @@ extern signed char gDwellingType[4][6];
 
 extern float gafAITurnCostResource[static_cast<int>(RESOURCE_COUNT)];
 
-H1_ENUM_BEGIN(AIPlayerConstant)
+H1_ENUM_CONST_BEGIN(AIPlayerConstant)
 AI_PLAYER_COUNT = 4, AI_PLAYER_BEGIN = 0,
-                     AI_PLAYER_END = AI_PLAYER_COUNT H1_ENUM_END(AIPlayerConstant)
+                     AI_PLAYER_END = AI_PLAYER_COUNT H1_ENUM_CONST_END(AIPlayerConstant)
 
                          extern signed char giBuildShipyard[AI_PLAYER_COUNT];
 extern signed char giBuildBoat[AI_PLAYER_COUNT];

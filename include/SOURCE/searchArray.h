@@ -9,14 +9,14 @@
 // forward declarations:
 class army;
 
-H1_ENUM_BEGIN(SearchStorageConstant)
+H1_ENUM_CONST_BEGIN(SearchStorageConstant)
     SEARCH_QUEUE_CAPACITY = 1024,
     SEARCH_CELL_CAPACITY = 5184,
     SEARCH_GRID_SIZE = 72,
     SEARCH_FLAG_BIT_COUNT = 1,
     SEARCH_DIRECTION_BIT_COUNT = 4,
     SEARCH_PATH_CAPACITY = 256
-H1_ENUM_END(SearchStorageConstant)
+H1_ENUM_CONST_END(SearchStorageConstant)
 
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2

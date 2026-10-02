@@ -11,9 +11,9 @@
 class hero;
 
 // clang-format off
-H1_ENUM_BEGIN(TownConstant)
+H1_ENUM_CONST_BEGIN(TownConstant)
     TOWN_MAGE_GUILD_SPELL_COUNT = 9
-H1_ENUM_END(TownConstant)
+H1_ENUM_CONST_END(TownConstant)
 // clang-format on
 
 #pragma pack(push, 1)
