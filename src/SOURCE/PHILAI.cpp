@@ -1493,7 +1493,8 @@ void philAI::ValueOfBuyingCreature(
         if ((gMonsterDatabase[creature].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)) {
             for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
-                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK))
+                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes
+                        & MONSTER_FLAGS_BREATH_ATTACK))
                     breathStacks++;
             }
             creatRV = static_cast<int>(creatRV * (1.18 - breathStacks * 0.06));
@@ -2287,7 +2288,8 @@ int philAI::FightValueOfStack(
                     quantityMod = -0.1f;
                 else
                     quantityMod = -0.14f;
-                if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes & MONSTER_FLAGS_SHOOTER)
+                if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes
+                     & MONSTER_FLAGS_SHOOTER)
                     || group->m_creatureTypes[slot] == CREATURE_SPRITE
                     || group->m_creatureTypes[slot] == CREATURE_ROGUE)
                     quantityMod = quantityMod * 0.7;
