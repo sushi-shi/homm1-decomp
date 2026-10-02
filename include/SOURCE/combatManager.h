@@ -107,7 +107,9 @@ H1_ENUM_CONST_END(CombatViewConstant)
 H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
     COMBAT_HERO_TYPE_NONE = -1,
     COMBAT_CATAPULT_FRAME_NONE = -1,
-    COMBAT_LIMIT_CREATURE_HIDDEN = -1
+    COMBAT_LIMIT_CREATURE_HIDDEN = -1,
+    // m_wallDamage without damage frames to draw (hexcell::DrawWall).
+    COMBAT_WALL_DAMAGE_NONE = -1
 H1_ENUM_CONST_END(CombatDrawStateConstant)
 
 // Combat AI tuning thresholds (Buka combatManager.h CombatAIConstant names

@@ -4,10 +4,20 @@
 // HoMM1 keeps 12-byte cells: combatManager strides its 45 hexes by twelve
 // bytes from +0x40.
 
+#include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/combatTypes.h>
+
+// clang-format off
+// m_occupantFrame: the facing DrawOccupant last drew the occupant with; the
+// constructor and TakeOccupant reset it to NONE so the next frame redraws.
+H1_ENUM_CONST_BEGIN(HexcellConstant)
+    HEXCELL_OCCUPANT_FRAME_NONE = -1
+H1_ENUM_CONST_END(HexcellConstant)
 
 #pragma pack(push, 1)
 class hexcell {
+    // clang-format on
 public:
     short m_x;
     short m_y;
@@ -17,8 +27,8 @@ public:
     // Castle pieces (5) draw towers and walls; other obstacles use frame 7.
     signed char m_obstacleType;
     // -1 when no obstacle stands on the hex (ValidHexToStandOn).
-    signed char m_obstacleIndex;
-    signed char m_occupantSide;
+    H1_ENUM_STORAGE(CombatObstacleIndex, signed char) m_obstacleIndex;
+    H1_ENUM_STORAGE(CombatSide, signed char) m_occupantSide;
     signed char m_occupantIndex;
     signed char m_occupantFrame;
     // army::ResetPath clears the per-cell path mark.
