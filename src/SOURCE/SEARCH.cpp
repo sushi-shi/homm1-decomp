@@ -229,9 +229,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                     s_hasAdjacentMonster = 1;
             }
         }
-        // byte-evidenced: the occupancy bytes are read back zero-extended
-        // below, but TestPossibleDirections fills them through a signed-byte
-        // pointer.
+        // byte-evidenced: read back zero-extended, filled as signed bytes.
         TestPossibleDirections(s_currentNode.x, s_currentNode.y, s_possibleDirections,
                                reinterpret_cast<signed char*>(s_directionOccupied), 1, waterMode);
         s_terrain = giGroundToTerrain[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_tileIndex];

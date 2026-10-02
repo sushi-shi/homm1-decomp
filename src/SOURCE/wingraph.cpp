@@ -711,7 +711,7 @@ void WGInitGraphics() {
 
     if (hdcImage != 0)
         return;
-    if (WinGRecommendDIBFormat(static_cast<BITMAPINFO*>(static_cast<void*>(&screenImage)))) {
+    if (WinGRecommendDIBFormat(reinterpret_cast<LPBITMAPINFO>(&screenImage))) {
         screenImage.header.biBitCount = WINGRAPH_COLOR_DEPTH;
         screenImage.header.biCompression = BI_RGB;
         Orientation = screenImage.header.biHeight;
@@ -732,7 +732,7 @@ void WGInitGraphics() {
     screenImage.header.biHeight = -WINGRAPH_HEIGHT;
     bitmap = WinGCreateBitmap(
         hdcImage,
-        static_cast<BITMAPINFO*>(static_cast<void*>(&screenImage)),
+        reinterpret_cast<LPBITMAPINFO>(&screenImage),
         &screenImage.bits
     );
     screenImage.header.biSizeImage = screenImage.header.biHeight * screenImage.header.biWidth;
@@ -770,7 +770,7 @@ void WGUpdatePalette(signed char* paletteData) {
     );
     if (hpalApp != 0)
         DeleteObject(hpalApp);
-    hpalApp = CreatePalette(static_cast<LOGPALETTE*>(static_cast<void*>(&LogicalPalette)));
+    hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
     dc = GetDC(hwndApp);
     if (hpalApp != 0)
         SelectPalette(dc, hpalApp, 0);
@@ -842,7 +842,7 @@ void WGInitializePalette() {
         screenImage.colors[i].rgbReserved = 0;
         LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
     }
-    hpalApp = CreatePalette(static_cast<LOGPALETTE*>(static_cast<void*>(&LogicalPalette)));
+    hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
 }
 
 // Buka 2.1 supplies the WinG paint sequence and local lifetimes. HoMM1's
