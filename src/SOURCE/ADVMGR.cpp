@@ -1043,7 +1043,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     case ADVENTURE_CONTROL_HERO_SCROLL:
         gpMouseManager->MouseCoords(curX, curY);
         curY -= 194;
-        if (gpCurPlayer->m_heroCount > 4) {
+        if (gpCurPlayer->m_heroCount > LOCATOR_VISIBLE_COUNT) {
             iPage = curY / (92 / (gpCurPlayer->m_heroCount - 3));
             if (iPage > gpCurPlayer->m_heroCount - 4)
                 iPage = gpCurPlayer->m_heroCount - 4;
@@ -1059,7 +1059,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     case ADVENTURE_CONTROL_TOWN_SCROLL:
         gpMouseManager->MouseCoords(curX, curY);
         curY -= 194;
-        if (gpCurPlayer->m_townCount > 4) {
+        if (gpCurPlayer->m_townCount > LOCATOR_VISIBLE_COUNT) {
             iPage = curY / (92 / (gpCurPlayer->m_townCount - 3));
             if (iPage > gpCurPlayer->m_townCount - 4)
                 iPage = gpCurPlayer->m_townCount - 4;
@@ -2404,8 +2404,8 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
             m_adventureWindow->BroadcastMessage(message);
         }
     }
-    if (gpCurPlayer->m_townCount < 5) {
-        m_scrollRightButton->m_y = 232;
+    if (gpCurPlayer->m_townCount < LOCATOR_PAGE_THRESHOLD) {
+        m_scrollRightButton->m_y = LOCATOR_SCROLL_NO_PAGES_Y;
     } else {
         scrollStep = 74.0 / (gpCurPlayer->m_townCount - 4);
         m_scrollRightButton->m_y = static_cast<short>(gpCurPlayer->m_townLocatorPage * scrollStep + 195.0);
@@ -2680,7 +2680,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
 
     if (giBottomViewResource >= 0) {
-        if (giBottomViewResource == 6) {
+        if (giBottomViewResource == RESOURCE_GOLD) {
             iconW = 76;
             iconH = 26;
         } else {
@@ -2791,7 +2791,7 @@ signed char advManager::UpdBottomViewHero(void) {
     signed char creatureType;
     int n;
     int qtyX;
-    char* countStr[5];
+    char* countStr[ARMY_GROUP_SLOT_COUNT];
     short nStacks;
     short iCrest;
     hero* targetHero;
@@ -2896,15 +2896,15 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     short width;
     hero* heroPtr;
     short flagId;
-    char* labelText[5];
+    char* labelText[ARMY_GROUP_SLOT_COUNT];
     short armyW;
-    textWidget* sizeTexts[5];
+    textWidget* sizeTexts[ARMY_GROUP_SLOT_COUNT];
     short j;
     short leftEdge;
     tag_message message;
     short numArmies;
     short creatureY;
-    iconWidget* monWidgets[5];
+    iconWidget* monWidgets[ARMY_GROUP_SLOT_COUNT];
     heroWindow* viewWin;
     short savedOriginY;
     short creatureIconHeight;
@@ -2963,7 +2963,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     }
 
     if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
-        for (j = 0; j < 4; j++) {
+        for (j = 0; j < HERO_PRIMARY_STAT_COUNT; j++) {
             sprintf(gText, "%d", heroPtr->m_primaryStats[j]);
             message.id = j + 3;
             message.text = gText;
