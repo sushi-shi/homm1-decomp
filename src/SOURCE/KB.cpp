@@ -160,11 +160,11 @@ int EarlySetup(void) {
         return 1;
     LogTruncate();
     iCDRomErr = SetupCDDrive();
-    if (iCDRomErr == 1) {
+    if (iCDRomErr == CD_SETUP_NO_DRIVE) {
         MessageBoxA((HWND)hwndApp, "Unable to access CD Drive.", "Startup Error", MB_ICONHAND);
         exit(0);
     }
-    if (iCDRomErr == 2) {
+    if (iCDRomErr == CD_SETUP_NOT_FOUND) {
         MessageBoxA(
             (HWND)hwndApp,
             "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of "
@@ -174,7 +174,7 @@ int EarlySetup(void) {
         );
         exit(0);
     }
-    if (iCDRomErr == 3) {
+    if (iCDRomErr == CD_SETUP_NO_APP_PATH) {
         MessageBoxA(
             (HWND)hwndApp,
             "Unable to change to the Heroes directory.  Please run the installation "
@@ -184,7 +184,7 @@ int EarlySetup(void) {
         );
         exit(0);
     }
-    if (iCDRomErr == 4) {
+    if (iCDRomErr == CD_SETUP_NO_DATA) {
         MessageBoxA(
             (HWND)hwndApp,
             "Unable to find the Heroes data files.  Please run the installation program.",
