@@ -2,17 +2,20 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/font.h>
 #include <BASE/icon.h>
 #include <BASE/MAKEFILEID.h>
+#include <BASE/MIDIWrap.h>
 #include <BASE/Misc.h>
 #include <BASE/palette.h>
+#include <BASE/resource.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <BASE/tileset.h>
-#include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <io.h>
 #include <stdio.h>

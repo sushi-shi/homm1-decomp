@@ -6,14 +6,16 @@
 
 #include <windows.h>
 
+#include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/mouseManager.h>
-#include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/wingraph.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <io.h>
 #include <string.h>
