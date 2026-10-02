@@ -776,7 +776,7 @@ short advManager::Main(struct tag_message& message) {
                 break;
             case INPUT_SCAN_F9:
                 for (cmdValue = 0; cmdValue < PLAYER_RESOURCE_COUNT; cmdValue++) {
-                    if (cmdValue == 6)
+                    if (cmdValue == RESOURCE_GOLD)
                         gpCurPlayer->m_resources[cmdValue] += 1000;
                     else
                         gpCurPlayer->m_resources[cmdValue] += 10;
@@ -895,7 +895,7 @@ short advManager::Main(struct tag_message& message) {
                 ViewPuzzle();
                 break;
             case INPUT_SCAN_V:
-                ViewWorld(24, 0, 0);
+                ViewWorld(SPELL_VIEW_ALL, 0, 0);
                 break;
             case INPUT_SCAN_N:
                 cmdValue = 1;
@@ -4494,7 +4494,7 @@ void advManager::AdvPanel(void)
             ProcessSearch(-1, -1);
             break;
         case PANEL_VIEW_WORLD:
-            ViewWorld(0x18, 0, 0);
+            ViewWorld(SPELL_VIEW_ALL, 0, 0);
             break;
         case PANEL_VIEW_PUZZLE:
             ViewPuzzle();
