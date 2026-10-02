@@ -1,319 +1,511 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
+// Remote-game transport (network and modem sessions). Buka 2.1 REMOTE
+// correspondence. Retail starts this object at 0x00458520 on a 16-byte
+// boundary after int3 fill following SETUP's BaseSetupHandler.
 
 #include <match.h>
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/comwin.h>
-#include <SOURCE/netwinRuntime.h>
-#include <SOURCE/dialogTypes.h>
 
+#include <stdio.h>
 #include <string.h>
 
-// donor PoL RVA 0x0000d4df; preferred Buka symbol ?WriteModemPacket@@YIXPADH@Z
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.395642;margin=0.361596;shape=0.175;size=0.824;calls=0.667;alternate=pol20:void WriteModemPacket(char *, int)@0x0000d4df
-VA(0x0045a16b, 0xdc)
-void WriteModemPacket(char* buffer, int length) {
-    char buf[544];
-    int pos = 0;
-    if (length > 256)
+H1_ENUM_BEGIN(NetbiosSessionStatus)
+    NETBIOS_SESSION_ACTIVE_FLAG = 1,
+    NETBIOS_SESSION_NAME_REGISTERED = 2,
+    NETBIOS_SESSION_NAME_ERROR = 0x80
+H1_ENUM_END(NetbiosSessionStatus)
+
+#define NETBIOS_SESSION_ACTIVE NETBIOS_SESSION_ACTIVE_FLAG
+
+extern signed char iInitNetHostStatus;
+extern signed char iInitNetGuestStatus;
+extern signed char iWaitForHostStatus;
+extern signed char iWaitForGuestStatus;
+extern long iLastBroadcastTime;
+extern signed char gbDirectConnect;
+
+extern int giNumHumanPlayers;
+int nbnet_init(void);
+void RemoteMain(int);
+extern int iLastIds[];
+
+// Buka 2.1 RemoteCleanup without the HoMM2 logging and DirectPlay modes.
+VA(0x00458520, 0x8d)
+void RemoteCleanup(void) {
+    if (!gbRemoteOn)
         return;
-
-    buf[pos] = MODEM_PACKET_ESCAPE;
-    ++pos;
-    buf[pos] = 0;
-    ++pos;
-    while (length--) {
-        if (*buffer == MODEM_PACKET_ESCAPE) {
-            buf[pos] = MODEM_PACKET_ESCAPE;
-            ++pos;
-        }
-        buf[pos] = *buffer;
-        ++buffer;
-        ++pos;
+    switch (GameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+        case REMOTE_GAME_NETWORK_GUEST:
+            UnloadRemoteDriver(1);
+            break;
+        case REMOTE_GAME_MODEM_HOST:
+        case REMOTE_GAME_MODEM_GUEST:
+            UnloadRemoteDriver(0);
+            break;
+        default:
+            break;
     }
-    buf[pos] = MODEM_PACKET_ESCAPE;
-    ++pos;
-    buf[pos] = 1;
-    ++pos;
-    while (write_buffer(buf, pos) == 0)
-        ForcePollSound();
+    gbRemoteOn = 0;
 }
 
-// donor PoL RVA 0x000a3ec7; preferred Buka symbol ?TransmitRemoteData@@YIHPADHHCCCC@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.560856;margin=1.192457;shape=0.450;size=0.831;calls=1.000;alternate=pol20:int TransmitRemoteData(char *, int, int, signed char, signed char, signed char, signed char)@0x000a3ec7
-VA(0x0045a247, 0x231)
-// HoMM1 callers pass an eighth flag that maps a game position to its net position.
-int TransmitRemoteData(
-    char* data,
-    int destination,
-    int length,
-    signed char command,
-    signed char reliable,
-    signed char allowRetryDialog,
-    signed char messageType,
-    signed char gamePosDestination
-) {
-    int k;
-    int retval;
-    int j;
-    RemoteMessage msg;
-    int tries;
+// @dead-code
+// Zero-ref: reads one block from a file offset into the caller buffer.
+VA(0x004585ad, 0x74)
+void* ReadFileBlock(char* filename, void* buffer, int size, long offset) {
+    FILE* fp;
+    fp = fopen(filename, "r+b");
+    if (!fp)
+        FileError(filename);
+    fseek(fp, offset, SEEK_SET);
+    fread(buffer, size, 1, fp);
+    fclose(fp);
+    return buffer;
+}
 
-    if (!gbRemoteOn || gbInNetSetup)
-        return 1;
-    if (gamePosDestination && destination != REMOTE_BROADCAST_PLAYER)
-        destination = gbGamePosToNetPos[destination];
-    retval = 0;
-    tries = 0;
-    iIDCtr++;
-    msg.sender = giThisNetPos;
-    msg.id = iIDCtr;
-    if (messageType != REMOTE_MESSAGE_DEFAULT)
-        msg.type = messageType;
-    else if (reliable)
-        msg.type = REMOTE_MESSAGE_RELIABLE;
-    else
-        msg.type = REMOTE_MESSAGE_UNRELIABLE;
-    msg.payloadSize = length;
-    msg.command = command;
-    if (length > 0)
-        memcpy(msg.payload.data, data, length);
-    while (retval == 0 && tries <= REMOTE_RETRY_COUNT) {
-        retval = SendRemoteData(
-            (unsigned char*)&msg,
-            0,
-            destination,
-            length + REMOTE_MESSAGE_HEADER_SIZE
-        );
-        if (!reliable && retval) {
-            return 1;
-        } else if (retval) {
-            k = 0;
-            while (k < REMOTE_CONFIRM_POLL_COUNT) {
-                ForcePollSound();
-                if (giLastConfirm == iIDCtr)
-                    return 1;
-                retval = 0;
-                DelayMilli(10);
-                k++;
+// Buka 2.1 MiscRuntime FileSize.
+VA(0x00458621, 0x7b)
+long FileSize(char* filename) {
+    long length;
+    FILE* f;
+    f = fopen(filename, "r+b");
+    if (!f)
+        FileError(filename);
+    fseek(f, 0, SEEK_END);
+    length = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    fclose(f);
+    return length;
+}
+
+// Buka 2.1 RemoteMain merged with the HoMM2 ModemSetup mode switch; HoMM1
+// keeps the modem reset sequence in ModemSetup (0x459530).
+VA(0x0045869c, 0x27a)
+void RemoteMain(int gameMode) {
+    char directConnectMessage[164];
+
+    gbInNetSetup = 1;
+    memset(rcvBuf, 0, sizeof(rcvBuf));
+    memset(iLastIds, 0, 30);
+    GameMode = gameMode;
+    switch (gameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+            nbnet_init();
+            break;
+        case REMOTE_GAME_NETWORK_GUEST:
+            nbnet_init();
+            break;
+        case REMOTE_GAME_MODEM_HOST:
+            giThisNetPos = 0;
+            goto modemStart;
+        case REMOTE_GAME_MODEM_GUEST:
+            giThisNetPos = 1;
+        modemStart:
+            gbRemoteOn = 1;
+            giNumNetGuests = 1;
+            inque.writePosition = 0;
+            inque.readPosition = 0;
+            outque.writePosition = 0;
+            outque.readPosition = 0;
+            iBaudBits = 115200 / gConfig.baudRate[gbDirectConnect];
+            ModemSetup();
+            switch (gameMode) {
+                case REMOTE_GAME_MODEM_HOST:
+                    if (!gbDirectConnect && Dial()) {
+                        RemoteCleanup();
+                        GameMode = REMOTE_GAME_NONE;
+                    }
+                    break;
+                case REMOTE_GAME_MODEM_GUEST:
+                    if (!gbDirectConnect && Wait()) {
+                        RemoteCleanup();
+                        GameMode = REMOTE_GAME_NONE;
+                    }
+                    break;
+                default:
+                    return;
             }
-        } else {
-            DelayMilli(1000);
-        }
-        if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && retval == 0) {
-            NormalDialog("Error sending data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                tries = -1;
-        }
-        tries++;
+            if (gbDirectConnect) {
+                WFDCStage = 0;
+                giWaitType = 7;
+                strcpy(directConnectMessage,
+                       "Waiting for other computer to log in to direct connection.");
+                NormalDialog(directConnectMessage, 6, -1, -1, -1, 0, -1, 0, -1);
+                if (!gbFunctionComplete)
+                    ShutDown(0);
+            } else {
+                Connect();
+            }
+            break;
     }
-    return retval;
+    gbRemoteOn = 1;
+    giNumHumanPlayers = giNumNetGuests + 1;
+    iIDCtr = (iNetNameIndex * 400 + giThisNetPos + 1) * 100000000;
+    gbInNetSetup = 0;
 }
 
-// donor PoL RVA 0x000a40e1; preferred Buka symbol ?GetRemoteData@@YIPADC@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.517569;margin=0.974708;shape=0.366;size=0.825;calls=1.000;alternate=pol20:char * GetRemoteData(signed char)@0x000a40e1
-VA(0x0045a478, 0x10c)
-char* GetRemoteData(signed char remove) {
-    int oldest;
-    int i;
-    int index;
-
-    if (!gbRemoteOn || gbInNetSetup)
-        return 0;
-    oldest = 999999999;
-    index = -1;
-    for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-        if (rcvBuf[i].type && iInOrder[i] < oldest) {
-            oldest = iInOrder[i];
-            index = i;
-        }
+VA(0x00458916, 0x5b)
+void UnloadRemoteDriver(short networkDriver) {
+    switch (networkDriver) {
+        case 0:
+            com_term(0);
+            break;
+        case 1:
+            nb_term(0);
+            break;
     }
-    if (index >= 0) {
-        memcpy(rcvBufOut, &rcvBuf[index], REMOTE_MESSAGE_SIZE);
-        if (remove)
-            rcvBuf[index].type = REMOTE_MESSAGE_NONE;
-        rcvBuf[index].sender = NetPosToGamePos(rcvBuf[index].sender);
-        return rcvBufOut;
+}
+
+// CRC-16/CCITT over the packet bytes, most significant bit first.
+VA(0x00458971, 0xb6)
+void calc_crc(unsigned short* crc, unsigned char* data, int length) {
+    int unused = 0;
+    short carry;
+    short mask;
+    while (length--) {
+        for (mask = 0x80; mask; mask >>= 1) {
+            carry = *crc & 0x8000;
+            *crc <<= 1;
+            if (*data & mask)
+                *crc |= 1;
+            else
+                ;
+            if (carry)
+                *crc ^= 0x1021;
+        }
+        data++;
+    }
+}
+
+VA(0x00458a27, 0x86)
+int EncodePacket(unsigned char* data, char source, char destination, int length) {
+    unsigned short crc;
+
+    REMOTE_PACKET(PacketSend)->source = source;
+    REMOTE_PACKET(PacketSend)->destination = destination;
+    REMOTE_PACKET(PacketSend)->sequence = gPacketSequence;
+    REMOTE_PACKET(PacketSend)->payloadSize = length;
+    crc = 0;
+    REMOTE_PACKET(PacketSend)->crc = crc;
+    memcpy(PacketSend + sizeof(RemotePacketHeader), data, length);
+    calc_crc(&crc, (unsigned char*)PacketSend, length + sizeof(RemotePacketHeader));
+    REMOTE_PACKET(PacketSend)->crc = crc;
+    return length + sizeof(RemotePacketHeader);
+}
+
+// donor PoL RVA 0x000a3aa7; preferred Buka symbol ?DecodePacket@@YIHPAEH@Z
+// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.496845;margin=0.356674;shape=0.447;size=0.760;calls=0.750;alternate=pol20:int DecodePacket(unsigned char *, int)@0x000a3aa7
+VA(0x00458aad, 0x162)
+int DecodePacket(unsigned char* data, int source) {
+    unsigned short computedCrc;
+    unsigned short crc;
+    int rv;
+    unsigned long size;
+
+    computedCrc = 0;
+    if (REMOTE_PACKET(packet)->source != source && source != REMOTE_BROADCAST_PLAYER) {
+        sprintf(gText, "I want packet from %d not %d", source, REMOTE_PACKET(packet)->source);
+        LogStr(gText);
+        return 0;
+    }
+    if (REMOTE_PACKET(packet)->destination != giThisNetPos
+        && REMOTE_PACKET(packet)->destination != REMOTE_BROADCAST_PLAYER) {
+        sprintf(gText, "not mine %d", REMOTE_PACKET(packet)->destination);
+        LogStr(gText);
+        return 0;
+    }
+    size = REMOTE_PACKET(packet)->payloadSize;
+    crc = REMOTE_PACKET(packet)->crc;
+    REMOTE_PACKET(packet)->crc = 0;
+    calc_crc(&computedCrc, (unsigned char*)packet, size + sizeof(RemotePacketHeader));
+    if (crc != computedCrc) {
+        sprintf(
+            gText,
+            "CRC Check Failed on Packet %d  CRC 1 %d CRC 2 %d",
+            gPacketSequence,
+            crc,
+            computedCrc
+        );
+        LogStr(gText);
+        return 0;
+    }
+    memcpy(data, packet + sizeof(RemotePacketHeader), size);
+    return 1;
+}
+
+// donor PoL RVA 0x000a3be1; preferred Buka symbol ?SendRemoteData@@YIHPAE0HH@Z
+// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
+// evidence: graph:3;base=0.468075;margin=0.614352;shape=0.312;size=0.933;calls=0.500;alternate=pol20:int SendRemoteData(unsigned char *, unsigned char *, int, int)@0x000a3be1
+VA(0x00458c0f, 0x141)
+int SendRemoteData(unsigned char* dataToSend, unsigned char*, int destination, int length) {
+    int len;
+    int result;
+    int tries;
+    int sendStatus;
+    unsigned char buf[REMOTE_MESSAGE_SIZE];
+
+    result = 1;
+    if (iMPBaseType == MULTIPLAYER_BASE_NETWORK) {
+        if (GameMode == REMOTE_GAME_NETWORK_HOST)
+            destination = iNetNameIndex + 1;
+        else
+            destination = 0;
+    } else if (destination == REMOTE_BROADCAST_PLAYER) {
+        destination = 1 - giThisNetPos;
+    }
+    len = EncodePacket(dataToSend, giThisNetPos, destination, length);
+    switch (GameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+        case REMOTE_GAME_NETWORK_GUEST:
+            do {
+                sendStatus = nb_snd(0, destination, len, PacketSend, 0);
+                if (sendStatus) {
+                    result = 0;
+                    goto finished;
+                }
+            } while (sendStatus);
+            break;
+        case REMOTE_GAME_MODEM_HOST:
+        case REMOTE_GAME_MODEM_GUEST:
+            WriteModemPacket(PacketSend, len);
+            result = 1;
+            break;
+    }
+finished:
+    return result;
+}
+
+// donor PoL RVA 0x000a3d6f; preferred Buka symbol ?ReceiveRemoteData@@YIHPAE0H@Z
+// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
+// evidence: graph:3;base=0.404111;margin=0.668725;shape=0.214;size=0.850;calls=0.500;alternate=pol20:int ReceiveRemoteData(unsigned char *, unsigned char *, int)@0x000a3d6f
+VA(0x00458d50, 0xf4)
+int ReceiveRemoteData(unsigned char*, unsigned char* data, int decodeType) {
+    int receiveResult;
+    int result;
+
+    result = 1;
+    switch (GameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+        case REMOTE_GAME_NETWORK_GUEST:
+            if (GameMode == REMOTE_GAME_NETWORK_HOST)
+                decodeType = iNetNameIndex + 1;
+            else
+                decodeType = 0;
+            receiveResult = nb_rcv(0, 0x100, packet);
+            if (receiveResult == 0)
+                return 0;
+            result = DecodePacket(data, decodeType);
+            break;
+        case REMOTE_GAME_MODEM_HOST:
+        case REMOTE_GAME_MODEM_GUEST:
+            receiveResult = ReadPacket();
+            if (receiveResult == 0)
+                return 0;
+            result = DecodePacket(data, decodeType);
+            break;
+    }
+    return result;
+}
+
+// donor PoL RVA 0x000132f0; preferred Buka symbol ?InitNetHost@@YICXZ
+// donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
+VA(0x00458e44, 0x194)
+signed char InitNetHost(void) {
+    int unused;
+    int needName;
+
+    switch (iInitNetHostStatus) {
+        case 0:
+            if ((short)nb_init(0) == 1) {
+                ShutDown("NETBIOS is not loaded.");
+            } else {
+                iInitNetHostStatus++;
+                gbRemoteOn = 1;
+                giThisNetPos = 0;
+            }
+            break;
+        case 1:
+            needName = !(nb_stat(0, 0) & NETBIOS_SESSION_NAME_REGISTERED);
+            if (needName)
+                iInitNetHostStatus++;
+            else
+                return 1;
+            break;
+        case 2:
+            iNetNameIndex = 0;
+            sprintf(gText, "HHOST%d", iNetNameIndex);
+            if (nb_sess(0, 0, gText) == 0)
+                iInitNetHostStatus++;
+            else
+                ShutDown("Network initialization failed");
+            break;
+        case 3:
+            needName = nb_stat(0, 0);
+            if (needName & NETBIOS_SESSION_NAME_REGISTERED) {
+                return 1;
+            } else if (needName & NETBIOS_SESSION_NAME_ERROR) {
+                iNetNameIndex++;
+                if (iNetNameIndex > 10)
+                    ShutDown("Network initialization failed, all game slots used!");
+            }
+            break;
     }
     return 0;
 }
 
-// donor PoL RVA 0x000a41ec; preferred Buka symbol ?PollRemote@@YIXXZ
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: reviewed-anchor;alternate=pol20:void PollRemote(void)@0x000a41ec
-// PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
-// incoming/outgoing message buffers.
-extern long lLastHeartbeatSend;
-extern long lLastHeartbeatReceive;
-extern signed char bInTimeoutFail;
-extern RemoteMessage sndBuf;
-extern RemoteMessage rcvBufIn;
-extern int iLastIds[REMOTE_RECENT_ID_COUNT];
-extern int iInOrderCtr;
-extern int iCurLastID;
-// The other side's ready flag and the heartbeat-seen flag.
-extern int gbRemoteReady;
-extern int gbHeartbeatSeen;
+// donor PoL RVA 0x00013445; preferred Buka symbol ?InitNetGuest@@YICXZ
+// donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.423322;margin=0.095753;shape=0.173;size=0.829;calls=0.833;alternate=pol20:signed char InitNetGuest(void)@0x00013445
+VA(0x00458fd8, 0x1f1)
+signed char InitNetGuest(void) {
+    int status;
+    int unregistered;
 
-VA(0x0045a584, 0x4fe)
-void PollRemote(void) {
-    signed char newControl;
-    signed char queueFull;
-    int i;
-    int numQueued;
-    int result;
-
-    if (!gbRemoteOn)
-        return;
-    if (iMPBaseType == MULTIPLAYER_BASE_MODEM)
-        comm_wrt_task();
-    else if (iMPBaseType == MULTIPLAYER_BASE_NETWORK)
-        nb_thr_ctl();
-    if (gbInNetSetup)
-        return;
-    numQueued = 0;
-    queueFull = 0;
-    if (KBTickCount() - lLastHeartbeatSend > 5000) {
-        sndBuf.sender = giThisNetPos;
-        sndBuf.type = REMOTE_MESSAGE_HEARTBEAT;
-        sndBuf.payloadSize = 1;
-        sndBuf.command = (giCurPlayer << 4) + iCurHourGlassPhase;
-        sndBuf.payload.data[0] = 1;
-        SendRemoteData((unsigned char*)&sndBuf, 0, 1 - giThisNetPos, 10);
-        lLastHeartbeatSend = KBTickCount();
-    }
-    if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
-        NormalDialog(
-            "The other player's computer is not responding.  Do you wish to wait longer?",
-            2, -1, -1, -1, 0, -1, 0, -1);
-        if (gpWindowManager->m_dialogResult == 0x7805) {
-            lLastHeartbeatReceive = KBTickCount();
-        } else {
-            bInTimeoutFail = 1;
-            if (gbHumanPlayer[giCurPlayer]) {
-                if (giCurPlayer == giThisGamePos)
-                    newControl = 0;
-                else
-                    newControl = 1;
+    switch (iInitNetGuestStatus) {
+        case 0:
+            if ((short)nb_init(6) == 1) {
+                ShutDown("NETBIOS is not loaded.");
             } else {
-                if (giHostGamePos == giThisGamePos)
-                    newControl = 0;
-                else
-                    newControl = 1;
+                gbRemoteOn = 1;
+                giThisNetPos = 1;
+                iInitNetGuestStatus++;
             }
-            ReceiveRemotePlayerExit(1 - giThisGamePos, newControl, 0, 1);
-        }
-    }
-    for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-        if (rcvBuf[i].type)
-            numQueued++;
-    }
-    if (numQueued == REMOTE_QUEUE_CAPACITY)
-        queueFull = 1;
-    result = 1;
-    while (result) {
-    nextIncoming:
-        result = ReceiveRemoteData(0, (unsigned char*)&rcvBufIn, REMOTE_BROADCAST_PLAYER);
-        if (result && rcvBufIn.sender != giThisNetPos) {
-            if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
-                giLastConfirm = rcvBufIn.id;
-                goto done;
-            } else if (rcvBufIn.type == REMOTE_MESSAGE_HEARTBEAT) {
-                if (rcvBufIn.payloadSize == 1 && rcvBufIn.payload.data[0] == 1)
-                    gbRemoteReady = 1;
-                lLastHeartbeatReceive = KBTickCount();
-                gbHeartbeatSeen = 1;
-                if (giHostGamePos != giThisGamePos && giCurPlayer != giThisGamePos
-                    && gpAdvManager->m_active == 1 && rcvBufIn.command / 16 != giThisGamePos) {
-                    giCurPlayer = rcvBufIn.command / 16;
-                    iCurHourGlassPhase = rcvBufIn.command - giCurPlayer * 16;
+            break;
+        case 1:
+            if (nb_stat(0, 6) & NETBIOS_SESSION_NAME_REGISTERED)
+                iInitNetGuestStatus += 3;
+            else
+                iInitNetGuestStatus++;
+            break;
+        case 2:
+            sprintf(gText, "HGUEST%d", giThisNetPos);
+            if (nb_sess(0, 0, gText) == 0)
+                iInitNetGuestStatus++;
+            else
+                ShutDown("Network initialization failed");
+            break;
+        case 3:
+            status = nb_stat(0, 6);
+            unregistered = !(status & NETBIOS_SESSION_NAME_REGISTERED);
+            if (unregistered) {
+                if (status & NETBIOS_SESSION_NAME_ERROR) {
+                    giThisNetPos++;
+                    if (giThisNetPos > 10) {
+                        sprintf(gText, "Network initialization failed, all game slots used!");
+                        ShutDown(gText);
+                    } else {
+                        iInitNetGuestStatus--;
+                    }
                 }
-                goto done;
-            } else if (queueFull) {
-                goto done;
+            } else {
+                iInitNetGuestStatus++;
             }
-            if (rcvBufIn.type == REMOTE_MESSAGE_RELIABLE) {
-                sndBuf.sender = giThisNetPos;
-                sndBuf.id = rcvBufIn.id;
-                sndBuf.type = REMOTE_MESSAGE_CONFIRM;
-                sndBuf.payloadSize = 0;
-                SendRemoteData((unsigned char*)&sndBuf, 0, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE);
+            break;
+        case 4:
+            if (nb_sess(0, 1, 0) != 0) {
+                sprintf(gText, "Network initialization failed");
+                ShutDown(gText);
             }
-            for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)
-                    goto nextIncoming;
-            }
-            for (i = 0; i < REMOTE_RECENT_ID_COUNT; i++) {
-                if (iLastIds[i] == rcvBufIn.id)
-                    goto nextIncoming;
-            }
-            for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if (!rcvBuf[i].type) {
-                    iInOrder[i] = iInOrderCtr++;
-                    memcpy(&rcvBuf[i], &rcvBufIn, REMOTE_MESSAGE_SIZE);
-                    numQueued++;
-                    iLastIds[iCurLastID] = rcvBufIn.id;
-                    iCurLastID = (iCurLastID + 1) % REMOTE_RECENT_ID_COUNT;
-                    if (numQueued == REMOTE_QUEUE_CAPACITY)
-                        goto done;
-                    goto nextIncoming;
-                }
-            }
-        }
+            return 1;
     }
-done:;
+    return 0;
 }
 
-// donor PoL RVA 0x000a48e0; preferred Buka symbol ?TransmitAndWait@@YIHPADHHCCPAPAD@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.561659;margin=0.362301;shape=0.477;size=0.829;calls=1.000;alternate=pol20:int TransmitAndWait(char *, int, int, signed char, signed char, char * *)@0x000a48e0
-VA(0x0045aa82, 0x14f)
-int TransmitAndWait(
-    char* bytes,
-    int destination,
-    int length,
-    signed char command,
-    signed char responseCommand,
-    char** response
-) {
-    int start;
-    int result;
-    RemoteMessage* received;
-    char complete;
+VA(0x004591c9, 0x9e)
+signed char WaitForHost(void) {
+    char buffer[80];
+    int status;
 
-    if (!gbRemoteOn || gbInNetSetup)
-        return 1;
-    received = 0;
-    result =
-        TransmitRemoteData(bytes, destination, length, command, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
-    if (result == 0)
-        goto transmitComplete;
-    start = KBTickCount();
-    complete = 0;
-    while (!complete) {
-        if (KBTickCount() > start + 20000) {
-            NormalDialog("Error sending data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                start = KBTickCount();
-            } else {
-                result = 0;
-                goto transmitComplete;
+    switch (iWaitForHostStatus) {
+        case 0:
+            status = nb_stat(0, 0) & NETBIOS_SESSION_ACTIVE;
+            if (status != 0)
+                iWaitForHostStatus++;
+            break;
+        case 1:
+            if (nb_rcv(0, 3, buffer)) {
+                giNumNetGuests = buffer[0];
+                return 1;
             }
-        }
-        ForcePollSound();
-        received = (RemoteMessage*)GetRemoteData(1);
-        if (received && received->type == REMOTE_MESSAGE_RELIABLE
-            && received->command == responseCommand)
-            complete = 1;
+            break;
     }
-    *response = (char*)received;
-transmitComplete:
-    return result;
+    return 0;
+}
+
+// donor PoL RVA 0x0001364f; preferred Buka symbol ?WaitForGuest@@YICXZ
+// donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.465490;margin=0.416814;shape=0.321;size=0.696;calls=1.000;alternate=pol20:signed char WaitForGuest(void)@0x0001364f
+VA(0x00459267, 0x101)
+signed char WaitForGuest(void) {
+    char buffer[80];
+    int status;
+
+    switch (iWaitForGuestStatus) {
+        case 0:
+            status = nb_sess(0, 3, 6);
+            if (status == 0)
+                iWaitForGuestStatus++;
+            return 0;
+        case 1:
+            status = !(nb_stat(0, 6) & NETBIOS_SESSION_ACTIVE);
+            if (status) {
+                if (KBTickCount() > iLastBroadcastTime + 500) {
+                    iLastBroadcastTime = KBTickCount();
+                    nb_snd(0, 0, 0, 0, 0);
+                }
+            } else {
+                giNumNetGuests++;
+                nb_sess(0, 5, 6, iNetNameIndex + 1, 1);
+                return 1;
+            }
+    }
+    return 0;
+}
+
+// Buka 2.1 Netbios nbnet_init; the host also sends the guest count.
+VA(0x00459368, 0x1c8)
+int nbnet_init(void) {
+    char buffer[80];
+    int status;
+
+    giNumNetGuests = 0;
+    switch (GameMode) {
+        case REMOTE_GAME_NETWORK_HOST:
+            giWaitType = 4;
+            sprintf(gText, "Initializing network.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            giWaitType = 1;
+            sprintf(gText, "Waiting On Guest.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            buffer[0] = giNumNetGuests;
+            while (nb_snd(0, iNetNameIndex + 1, 3, buffer, 0))
+                PollSound();
+            break;
+        case REMOTE_GAME_NETWORK_GUEST:
+            giWaitType = 3;
+            sprintf(gText, "Initializing network.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            giWaitType = 2;
+            sprintf(gText, "Waiting On Host.");
+            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            if (!gbFunctionComplete)
+                ShutDown(0);
+            break;
+    }
+    return 0;
 }
