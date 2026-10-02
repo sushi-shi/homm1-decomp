@@ -831,18 +831,18 @@ VA(0x0041c83b, 0x932)
 void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed char& targetY, short mobility) {
     int bestRV;
     int cellValue;
-    int colPhase;
-    int rowCnt;
-    short x;
-    int heroIndex;
-    mapCell* thisCell;
-    short y;
-    int valid;
-    short bestY;
     int spacing;
     int heroTerrainType;
-    short bestX;
     town* portTown;
+    int rowCnt;
+    int valid;
+    int colPhase;
+    int heroIndex;
+    short x;
+    short bestY;
+    mapCell* thisCell;
+    short bestX;
+    short y;
 
     bestX = -1;
     bestY = -1;

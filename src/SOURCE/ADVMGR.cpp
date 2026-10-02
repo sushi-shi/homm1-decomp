@@ -2075,13 +2075,13 @@ mapCell* advManager::GetCell(short x, short y) {
 
 VA(0x0042b74a, 0x57e)
 void advManager::UpdateRadar(signed char updateScreen, int partial) {
-    short color;
-    int lastX;
-    int lastY;
-    short x;
-    short owner;
     short y;
     int firstX;
+    int lastY;
+    short x;
+    short color;
+    short owner;
+    int lastX;
     int firstY;
     mapCell* cellPtr;
 
@@ -2256,8 +2256,8 @@ VA(0x0042c25e, 0x3c8)
 void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, signed char updateScreen) {
     tag_message message;
     signed char whichHero;
-    int i;
     int wBase;
+    int i;
     int activeHero;
     hero* hPtr;
     int moveFrame;
