@@ -457,9 +457,9 @@ struct _SAMPLE* soundManager::StartSample(
 ) {
     short channel;
     struct _SAMPLE* sample;
-    int sampleType;
-    int stereo;
     int sampleRate;
+    int stereo;
+    int sampleType;
     short index;
     char* filename;
     char path[SAMPLE_PATH_CAPACITY];
