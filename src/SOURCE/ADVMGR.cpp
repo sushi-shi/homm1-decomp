@@ -4148,6 +4148,20 @@ short advManager::ControlPanel(void) {
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
+// UpdateCPanel's button frames: off/on pairs for music and sound, then one
+// frame per walk speed, show-route and enemy-moves state and music source
+// (the setting's value added to the _FIRST frame).
+H1_ENUM_CONST_BEGIN(ControlPanelFrame)
+    CPANEL_FRAME_MUSIC_OFF = 10,
+    CPANEL_FRAME_MUSIC_ON = 11,
+    CPANEL_FRAME_SOUND_OFF = 12,
+    CPANEL_FRAME_SOUND_ON = 13,
+    CPANEL_FRAME_WALK_SPEED_FIRST = 14,
+    CPANEL_FRAME_SHOW_ROUTE_FIRST = 21,
+    CPANEL_FRAME_ENEMY_MOVES_FIRST = 23,
+    CPANEL_FRAME_MUSIC_SOURCE_FIRST = 27
+H1_ENUM_CONST_END(ControlPanelFrame)
+
         cPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
@@ -4196,22 +4210,23 @@ void UpdateCPanel(signed char initialDraw) {
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_FRAME;
     message.id = CONTROL_MUSIC_VOLUME;
-    message.value = gConfig.musicVolume ? 11 : 10;
+    message.value = gConfig.musicVolume ? CPANEL_FRAME_MUSIC_ON : CPANEL_FRAME_MUSIC_OFF;
     cPanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME;
-    message.value = gConfig.soundVolume ? 13 : 12;
+    message.value = gConfig.soundVolume ? CPANEL_FRAME_SOUND_ON : CPANEL_FRAME_SOUND_OFF;
     cPanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED;
-    message.value = gConfig.walkSpeed + 14;
+    message.value = gConfig.walkSpeed + CPANEL_FRAME_WALK_SPEED_FIRST;
     cPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE;
-    message.value = gConfig.musicSource + 27;
+    message.value = gConfig.musicSource + CPANEL_FRAME_MUSIC_SOURCE_FIRST;
     cPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE;
-    message.value = gConfig.showRoute + 21;
+    message.value = gConfig.showRoute + CPANEL_FRAME_SHOW_ROUTE_FIRST;
     cPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES;
-    message.value = gbRemoteOn ? 23 : 1 - gConfig.blackoutComputer + 23;
+    message.value = gbRemoteOn ? CPANEL_FRAME_ENEMY_MOVES_FIRST
+                               : 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
     cPanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;
