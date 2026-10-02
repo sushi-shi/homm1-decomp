@@ -101,6 +101,27 @@ H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_LABEL_FIRST = 10
 H1_ENUM_END(SpellBookControl)
 
+// campaign.bin widget ids (Buka CampaignControlId spells RESTART 0x385); the
+// progress icon shows scenarios won + PROGRESS_FRAME_BASE. game::ShowCampaignInfo
+// fills them; KB's EventWindowHandler restarts the scenario on RESTART.
+H1_ENUM_BEGIN(CampaignInfoControl)
+    CAMPAIGN_INFO_NAME = 1,
+    CAMPAIGN_INFO_TEXT = 2,
+    CAMPAIGN_INFO_PROGRESS = 3,
+    CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
+    CAMPAIGN_INFO_RESTART = 0x385
+H1_ENUM_END(CampaignInfoControl)
+
+// game::m_campaignScenario: scenarios LORD_FIRST..LORD_LAST are the four
+// rival-lord scenarios, one per CampaignChoice in order; KB's scenario
+// advance skips the player's own lord. In them the human starts with one
+// hero and no town (NewMap), and a placed town the human owns takes the
+// crest's race (RandomizeTown).
+H1_ENUM_CONST_BEGIN(CampaignScenarioConstant)
+    CAMPAIGN_SCENARIO_LORD_FIRST = 4,
+    CAMPAIGN_SCENARIO_LORD_LAST = 7
+H1_ENUM_CONST_END(CampaignScenarioConstant)
+
 // game::m_mapSounds entry of a cell without an environment sound; new and
 // loaded games clear the table to it and EraseObj resets erased cells.
 H1_ENUM_CONST_BEGIN(MapSoundConstant)

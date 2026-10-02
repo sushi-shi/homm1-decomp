@@ -38,7 +38,12 @@ H1_ENUM_BEGIN(BuildingSlotType)
     // Dwellings per town: gDwellingNames/gDwellingRequirements rows are
     // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
     BUILDING_SLOT_DWELLING_COUNT = 6,
-    BUILDING_SLOT_COUNT = 13
+    BUILDING_SLOT_COUNT = 13,
+    // Past the buildable slots: the race special building's bit (bit 13, as
+    // in Buka's TOWN_BUILDING_COLISEUM/FORTIFICATIONS 0x2000, whose tent and
+    // castle bits 5 and 6 match HoMM1's). LoadMap, NewMap and RandomizeTown
+    // give it to barbarian towns only; no HoMM1 reader tests it.
+    BUILDING_SLOT_SPECIAL = 13
 H1_ENUM_END(BuildingSlotType)
     // clang-format on
 

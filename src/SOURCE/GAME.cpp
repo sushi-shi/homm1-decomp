@@ -848,7 +848,7 @@ short NewGameHandler(tag_message& message) {
                             gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
                             if (giNumHumanPlayers > iPlayer
                                 && !gpGame->m_players[iPlayer].m_difficulty)
-                                gpGame->m_players[iPlayer].m_difficulty = 1;
+                                gpGame->m_players[iPlayer].m_difficulty = HUMAN_HANDICAP_EASY;
                             break;
                         case NEW_GAME_COLOR:
                             gpGame->m_players[0].m_color =
@@ -1116,18 +1116,6 @@ signed char game::NewGame(void) {
     return 1;
 }
 
-// clang-format off
-// campaign.bin widget ids (Buka CampaignControlId spells RESTART 0x385); the
-// progress icon shows scenarios won + PROGRESS_FRAME_BASE.
-H1_ENUM_BEGIN(CampaignInfoControl)
-    CAMPAIGN_INFO_NAME = 1,
-    CAMPAIGN_INFO_TEXT = 2,
-    CAMPAIGN_INFO_PROGRESS = 3,
-    CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
-    CAMPAIGN_INFO_RESTART = 0x385
-H1_ENUM_END(CampaignInfoControl)
-// clang-format on
-
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
 
@@ -1188,7 +1176,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
-            giBottomViewOverride = 0;
+            giBottomViewOverride = BOTTOM_VIEW_NONE;
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
             gpAdvManager->SetInitialMapOrigin();
             gpAdvManager->RedrawAdvScreen(1);
@@ -1240,7 +1228,7 @@ void game::InitCampaignMap(int scenario, int) {
         (m_month - 1) * CALENDAR_DAYS_PER_MONTH + (m_week - 1) * CALENDAR_DAYS_PER_WEEK + m_day;
     gbIAmGreatest = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
-    m_players[0].m_difficulty = 4;
+    m_players[0].m_difficulty = HUMAN_HANDICAP_EXPERT;
     m_players[0].m_color = gCampaignSideCrests[m_campaignType - 1][0];
     m_playerCount = 1;
     for (i = 1; i < GAME_PLAYER_COUNT; i++) {
@@ -1316,9 +1304,10 @@ void game::NewMap(char* mapName) {
         m_players[i].m_ultimateArtifactHintY = PLAYER_ULTIMATE_HINT_NONE;
         heroIdx = 0;
         if (allNeutral) {
-            if (m_campaignType <= 0 || m_campaignScenario < 4 || m_campaignScenario > 7) {
+            if (m_campaignType <= 0 || m_campaignScenario < CAMPAIGN_SCENARIO_LORD_FIRST
+                || m_campaignScenario > CAMPAIGN_SCENARIO_LORD_LAST) {
                 if (m_campaignType > 0) {
-                    for (j = 0; j < 4; j++) {
+                    for (j = 0; j < GAME_PLAYER_COUNT; j++) {
                         if (gCrestTownTypes[m_players[i].m_color] == GetTown(j)->m_type) {
                             SetupTown(j, !gbHumanPlayer[i]);
                             ClaimTown(j, i);
@@ -1339,7 +1328,8 @@ void game::NewMap(char* mapName) {
             }
         }
         if (m_noMapHeroes
-            || (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7
+            || (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
+                && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST
                 && i == 0)) {
             m_players[i].m_heroCount = 1;
             if (m_campaignType > 0)
@@ -1372,7 +1362,7 @@ void game::NewMap(char* mapName) {
     if (!m_noMapHeroes)
         ProcessOnMapHeroes();
     if (m_campaignType <= 0) {
-        for (k = 0; k < 4; k++) {
+        for (k = 0; k < GAME_PLAYER_COUNT; k++) {
             if (allNeutral && m_townOwners[k] == GAME_PLAYER_NONE) {
                 xTown = m_castleRecs[k].m_x;
                 yTown = m_castleRecs[k].m_y;
@@ -1386,7 +1376,7 @@ void game::NewMap(char* mapName) {
                 }
                 m_castleRecs[k].m_buildings = 1 << BUILDING_SLOT_TENT;
                 if (m_castleRecs[k].m_type == TOWN_TYPE_BARBARIAN)
-                    m_castleRecs[k].m_buildings |= 0x2000;
+                    m_castleRecs[k].m_buildings |= 1 << BUILDING_SLOT_SPECIAL;
                 SetupTown(k, 0);
             }
         }
@@ -1893,7 +1883,7 @@ short game::LoadMap(char* filename) {
             m_castleRecs[i].m_y = y;
             m_castleRecs[i].m_type = type & MAP_TOWN_TYPE_MASK;
             if ((type & MAP_TOWN_TYPE_MASK) == TOWN_TYPE_BARBARIAN)
-                m_castleRecs[i].m_buildings |= 0x2000;
+                m_castleRecs[i].m_buildings |= 1 << BUILDING_SLOT_SPECIAL;
             if (type < 0)
                 m_castleRecs[i].m_buildings |= (1 << BUILDING_SLOT_CASTLE);
             else
@@ -3029,7 +3019,7 @@ void game::NextPlayer(void) {
         gpAdvManager->CheckDimNextHeroBut();
         TurnOnAIMusic();
         SetNoDialogMenus(0);
-        giBottomViewOverride = 6;
+        giBottomViewOverride = BOTTOM_VIEW_OVERRIDE_DISABLED;
         ShowComputerScreen();
         bShowIt = 0;
         if (gbRemoteOn && (gbHumanPlayer[giCurPlayer] || giHostGamePos != giThisGamePos)) {
@@ -3040,8 +3030,8 @@ void game::NextPlayer(void) {
             if (!gpGame->TransmitSaveGame(remote, 0))
                 ShutDown(NULL);
         }
-        if (giBottomViewOverride == 6)
-            giBottomViewOverride = 0;
+        if (giBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
+            giBottomViewOverride = BOTTOM_VIEW_NONE;
     } else {
         SetNoDialogMenus(1);
         gpInputManager->Flush();
@@ -3148,7 +3138,7 @@ void game::PerDay(void) {
                 m_players[i].m_resources[RESOURCE_ORE]++;
             }
             if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST && m_day >= 1
-                && m_day <= 6)
+                && m_day <= RESOURCE_NON_GOLD_END)
                 m_players[i].m_resources[m_day - 1]++;
         }
     }
@@ -3398,9 +3388,9 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
                     > 0
                 && (m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_triggerType
                     & MAP_TRIGGER_TYPE_MASK)
-                       <= 0x30) {
+                       <= MAP_OBJECT_EVENT_LAST) {
                 m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_secondaryTrigger |=
-                    0x28;
+                    MAP_OBJECT_TOWN;
             } else {
                 m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_triggerType =
                     MAP_OBJECT_TOWN;
@@ -3412,7 +3402,8 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
     town = GetTown(townNum);
     town->m_turnsOwned = TOWN_RANDOM_AGE;
-    if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7
+    if (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
+                && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST
         && town->m_owner == 0) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < GAME_PLAYER_COUNT) {
@@ -3443,7 +3434,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
         plain = 0;
     if (plain) {
         if (race == TOWN_TYPE_BARBARIAN)
-            m_castleRecs[townNum].m_buildings = 0x2000;
+            m_castleRecs[townNum].m_buildings = 1 << BUILDING_SLOT_SPECIAL;
         else
             m_castleRecs[townNum].m_buildings = 0;
     }
@@ -4144,9 +4135,9 @@ void game::WaitForPlayer(char* text, int player) {
         gbAllBlack = 1;
         giBottomViewOverrideEndTime = KBTickCount() + 9999999;
         if (gbThisNetHumanPlayer[giCurPlayer])
-            giBottomViewOverride = 1;
+            giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
         else
-            giBottomViewOverride = 0;
+            giBottomViewOverride = BOTTOM_VIEW_NONE;
         gpSoundManager->m_musicReady = 1;
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
         gpMouseManager->ReallyHidePointer();
@@ -4172,6 +4163,14 @@ void game::WaitForPlayer(char* text, int player) {
     }
 }
 
+// clang-format off
+// Ground tiles come in groups of four interchangeable variants;
+// RandomizeTerrainTiles rerolls the variant within its group.
+H1_ENUM_CONST_BEGIN(TerrainTileConstant)
+    TERRAIN_TILE_VARIANT_COUNT = 4
+H1_ENUM_CONST_END(TerrainTileConstant)
+// clang-format on
+
 // HoMM1 rerolls the variant within each four-tile group, past the first
 // four tiles of every twenty-tile terrain block.
 VA(0x00444ebb, 0xb2)
@@ -4184,8 +4183,10 @@ void game::RandomizeTerrainTiles(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
-            if (cellPtr->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN >= 4)
-                cellPtr->m_tileIndex = cellPtr->m_tileIndex / 4 * 4 + Random(0, 3);
+            if (cellPtr->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN >= TERRAIN_TILE_VARIANT_COUNT)
+                cellPtr->m_tileIndex = cellPtr->m_tileIndex / TERRAIN_TILE_VARIANT_COUNT
+                                           * TERRAIN_TILE_VARIANT_COUNT
+                                       + Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
         }
     }
 }
@@ -4609,7 +4610,7 @@ cleanup:
     free(fileData);
     AiPrint("Transmit End");
     if (gpAdvManager->m_active == 1) {
-        giBottomViewOverride = 0;
+        giBottomViewOverride = BOTTOM_VIEW_NONE;
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
     if (oldTrack != MUSIC_TRACK_NONE) {
@@ -4757,7 +4758,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         free(decodedData);
     AiPrint("Receive End");
     if (gpAdvManager->m_active == 1) {
-        giBottomViewOverride = 0;
+        giBottomViewOverride = BOTTOM_VIEW_NONE;
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
     if (oldTrack != MUSIC_TRACK_NONE) {
@@ -4782,7 +4783,7 @@ void game::DoNewTurn(void) {
         return;
     }
     giBottomViewOverrideEndTime = KBTickCount() + 3000;
-    giBottomViewOverride = 1;
+    giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
     gpAdvManager->UpdBottomView(1, 1, 1);
     gpAdvManager->SetInitialMapOrigin();
     gpAdvManager->CompleteDraw(0);
@@ -5152,10 +5153,10 @@ VA(0x00447726, 0x14f)
 void game::RandomizePlayerCrests(void) {
     int i;
     signed char taken[PLAYER_COLOR_COUNT];
-    taken[0] = 0;
-    taken[1] = 0;
-    taken[2] = 0;
-    taken[3] = 0;
+    taken[PLAYER_COLOR_BLUE] = 0;
+    taken[PLAYER_COLOR_GREEN] = 0;
+    taken[PLAYER_COLOR_RED] = 0;
+    taken[PLAYER_COLOR_YELLOW] = 0;
     taken[m_players[0].m_color] = 1;
     for (i = 1; i < m_playerCount; i++) {
         do {
@@ -5180,7 +5181,7 @@ void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, 
         cell = passedCell;
     else
         cell = gpAdvManager->GetCell(x, y);
-    if (y > 0 && obj == 0xa8 && gpAdvManager->GetCell(x, y - 1)->m_triggerType != MAP_OBJECT_TOWN) {
+    if (y > 0 && obj == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) && gpAdvManager->GetCell(x, y - 1)->m_triggerType != MAP_OBJECT_TOWN) {
         cell->m_triggerType = MAP_OBJECT_NONE;
         cell->m_objectMetadata = 0;
         return;
