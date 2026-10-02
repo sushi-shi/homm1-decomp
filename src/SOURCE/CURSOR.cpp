@@ -608,7 +608,7 @@ mapCell* advManager::MoveHero(
     );
     step = GetCell(m_mapOriginX + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + CURSOR_MAP_DRAW_OFFSET)
                ->m_tileIndex;
-    if (giGroundToTerrain[step] != m_currentTerrain && step % 20 < 4) {
+    if (giGroundToTerrain[step] != m_currentTerrain && step % MAP_CELL_TILES_PER_TERRAIN < 4) {
         m_currentTerrain = giGroundToTerrain[step];
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
     }
