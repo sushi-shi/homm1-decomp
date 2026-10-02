@@ -682,7 +682,7 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
         townRec->m_occupyingHeroId = gpCurPlayer->CurrentHero();
         townRec->View();
     } else if (townRec->HasGarrison()) {
-        defender = townRec->m_occupyingHeroId == -1 ? NULL : gpGame->GetHero(townRec->m_occupyingHeroId);
+        defender = townRec->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? NULL : gpGame->GetHero(townRec->m_occupyingHeroId);
         result = DoCombat(x, y, curHero, &curHero->m_army, townRec, defender, &townRec->m_army, x, y,
                           -1, 1);
         if (result == 1)

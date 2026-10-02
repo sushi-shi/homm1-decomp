@@ -17,7 +17,7 @@ town::town(void) {
     m_owner = 0;
     m_x = 0;
     m_y = 0;
-    m_occupyingHeroId = -1;
+    m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     m_buildings = (1 << BUILDING_SLOT_TENT);
     m_buildState = 0;
     m_unknown19 = 0;
@@ -44,7 +44,7 @@ void town::GiveSpells(void) {
     hero* visitingHero;
     short i;
 
-    if (m_occupyingHeroId == -1)
+    if (m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE)
         return;
     visitingHero = gpGame->GetHero(m_occupyingHeroId);
     if (!visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
@@ -84,7 +84,7 @@ void town::View(void) {
     manager->SetTown(this);
     gpWindowManager->FadeScreen(1, 8, NULL);
     gpExec->CallManager(gpTownManager);
-    if (m_occupyingHeroId != -1)
+    if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);
     gAdvDisposeLevel = 0;
 }

@@ -169,11 +169,11 @@ short townManager::Open(short id)
     } else
         crest += TOWN_CREST_NO_HERO_OFFSET;
     sprintf(gText, "crst%04d.icn", crest);
-    m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == -1 ? 4 : 1,
+    m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
                                 gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 1);
     if (m_garrisonStrip == NULL)
         MemError();
-    if (m_town->m_occupyingHeroId != -1) {
+    if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         sprintf(gText, "port%04d.icn", gpGame->GetHero(m_town->m_occupyingHeroId)->m_portrait);
         m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
                                 &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army, 0x16, 1);
@@ -494,7 +494,7 @@ short townManager::Main(struct tag_message &message)
                                     m_castleDialogActive = 0;
                                     break;
                                 case BUILDING_SLOT_MAGE_GUILD:
-                                    if (m_town->m_occupyingHeroId != -1
+                                    if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE
                                         && !gpGame->GetHero(m_town->m_occupyingHeroId)->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
                                         if (gpGame->GetHero(m_town->m_occupyingHeroId)->NumArtifacts() == 14)
                                             NormalDialog("You must purchase a spell book to use the mage guild, but "
@@ -1262,7 +1262,7 @@ void townManager::BuildObj(short building)
     if (building == TOWN_BUILDING_MAGE_GUILD) {
         if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
             m_town->m_buildState++;
-        if (m_town->m_occupyingHeroId != -1)
+        if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
             m_town->GiveSpells();
     }
     m_town->m_buildings |= 1 << building;
@@ -1388,7 +1388,7 @@ void townManager::SetupCastle(class heroWindow *window)
     }
     if (gpCurPlayer->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
         stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
-    else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY || m_town->m_occupyingHeroId != -1)
+    else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY || m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
     else if (m_recruitResult)
         stateFrame = TOWN_CASTLE_FRAME_BUILT;
@@ -1478,7 +1478,7 @@ void townManager::SetupMage(class heroWindow *window)
     int spellState;
 
     message.type = MESSAGE_WIDGET;
-    if (m_town->m_occupyingHeroId == -1) {
+    if (m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE) {
         strcpy(gText, "The above spells are available here.");
         message.command = WIDGET_COMMAND_SET_TEXT;
         message.id = TOWN_MAGE_DESCRIPTION_CONTROL;
@@ -1882,7 +1882,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         delete m_garrisonStrip;
         sprintf(gText, "crst%04d.icn",
                 m_recruitHeroes[m_recruitState]->m_heroClass + gpCurPlayer->Color() * 4);
-        m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == -1 ? 4 : 1,
+        m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
                                     gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 0);
         if (m_garrisonStrip == NULL)
             MemError();
@@ -2041,7 +2041,7 @@ short CastleHandler(struct tag_message &message)
                         else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY)
                             sprintf(gText, cCastleInfo[TOWN_CASTLE_INFO_TOO_MANY_HEROES],
                                     PLAYER_HERO_CAPACITY);
-                        else if (gpTownManager->m_town->m_occupyingHeroId != -1)
+                        else if (gpTownManager->m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
                             strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_TOWN_OCCUPIED]);
                         else
                             strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_RECRUIT_HERO]);
@@ -2109,7 +2109,7 @@ short CastleHandler(struct tag_message &message)
                         else if (!gpTownManager->m_recruitResult
                                  && gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
                                  && gpCurPlayer->m_heroCount < PLAYER_HERO_CAPACITY
-                                 && gpTownManager->m_town->m_occupyingHeroId == -1)
+                                 && gpTownManager->m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE)
                             result = gpTownManager->RecruitHero(0);
                         break;
                     default:

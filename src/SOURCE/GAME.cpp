@@ -3963,7 +3963,7 @@ void game::CheckHeroConsistency(void) {
                     if (theHero->m_owner < 0 || theHero->m_owner > 3) {
                         if (theHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                             town = gpGame->GetTown(theHero->m_occupiedTown);
-                            town->m_occupyingHeroId = -1;
+                            town->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
                         }
                         RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, NULL, 1);
                     }
