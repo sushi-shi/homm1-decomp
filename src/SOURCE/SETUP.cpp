@@ -1256,3 +1256,33 @@ void ModemSetup(void) {
         }
     }
 }
+
+// Retail's SETUP object ends at 0x00458513; the object from 0x00458520 also
+// holds Modem and REMOTE. Its .data (0x0049f808-0x0049fdb7) and .bss
+// (0x004c7e70-0x004ca487) interleave all three; each datum lives with its users.
+DATA(0x0049f6b0)
+int gbDoModemConfig = 0;
+DATA(0x0049f808)
+int iNetNameIndex = -1;
+DATA(0x0049f824)
+int iBaudBits = 8;
+DATA(0x0049f840)
+unsigned char GameMode = 0;
+DATA(0x0049f844)
+unsigned char gPacketSequence = 0;
+DATA(0x0049f850)
+signed char gbInNetSetup = 0;
+DATA(0x0049f954)
+signed char iInitNetHostStatus = 0;
+DATA(0x0049f958)
+signed char iInitNetGuestStatus = 0;
+DATA(0x0049f9d0)
+signed char iWaitForHostStatus = 0;
+DATA(0x0049fa6c)
+signed char iWaitForGuestStatus = 0;
+DATA(0x0049fa70)
+long iLastBroadcastTime = 0;
+DATA(0x004c8038)
+char PacketSend[256];
+DATA(0x004c8290)
+int giNumNetGuests;

@@ -309,3 +309,47 @@ readPacketStart:
         ++packetlen;
     } while (1);
 }
+
+// Modem's data shares the retail object that starts at 0x00458520 (see SETUP).
+DATA(0x0049f828)
+int packetlen = 0;
+DATA(0x0049f82c)
+int inescape = 0;
+DATA(0x0049f830)
+int newpacket = 0;
+DATA(0x004c7e70)
+char idstr[8];
+DATA(0x004c7f78)
+int GUIMRc;
+DATA(0x004c7f7c)
+int iModemCommandPos;
+DATA(0x004c7f80)
+int GUIMRrespptr;
+DATA(0x004c7f84)
+int localstage;
+DATA(0x004c7f88)
+char numbuf[40];
+DATA(0x004c8028)
+int WFDCStage;
+DATA(0x004c8030)
+char remoteidstr[8];
+DATA(0x004c8138)
+int stime;
+DATA(0x004c8260)
+char cModemCommand[40];
+DATA(0x004c8288)
+int iLastDialPos;
+DATA(0x004c828c)
+int remotestage;
+DATA(0x004c8298)
+char GUIMRresp[40];
+DATA(0x004c82c0)
+int oldsec;
+DATA(0x004c82c8)
+inque_t inque;
+DATA(0x004c92d8)
+char packet[256];
+DATA(0x004c93d8)
+int iLastActionTime;
+DATA(0x004c94e0)
+char GUIMRresponse[80];

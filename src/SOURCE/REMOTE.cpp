@@ -317,3 +317,31 @@ int TransmitAndWait(
 transmitComplete:
     return result;
 }
+
+// REMOTE's data shares the retail object that starts at 0x00458520 (see SETUP).
+DATA(0x0049f80c)
+int iIDCtr = 0;
+DATA(0x0049f834)
+int iInOrderCtr = 0;
+DATA(0x0049f838)
+int giLastConfirm = -1;
+DATA(0x0049f83c)
+int iCurLastID = 0;
+DATA(0x0049f848)
+long lLastHeartbeatSend = 0;
+DATA(0x0049f84c)
+long lLastHeartbeatReceive = 1999999999;
+DATA(0x0049fc80)
+signed char bInTimeoutFail = 0;
+DATA(0x004c7e78)
+char rcvBufOut[REMOTE_MESSAGE_SIZE];
+DATA(0x004c7fb0)
+int iLastIds[REMOTE_RECENT_ID_COUNT];
+DATA(0x004c8140)
+int iInOrder[REMOTE_QUEUE_CAPACITY];
+DATA(0x004c8160)
+RemoteMessage sndBuf;
+DATA(0x004c93e0)
+RemoteMessage rcvBufIn;
+DATA(0x004c9530)
+RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
