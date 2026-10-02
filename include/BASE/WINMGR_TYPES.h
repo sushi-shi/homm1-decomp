@@ -3,6 +3,7 @@
 
 #include <Domains.h>
 
+// clang-format off
 H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_IN = 0,
     WINDOW_FADE_OUT = 1
@@ -17,11 +18,14 @@ H1_ENUM_BEGIN(WindowFadeSteps)
 H1_ENUM_END(WindowFadeSteps)
 
 H1_ENUM_CONST_BEGIN(WindowManagerConstant)
-WINDOW_MANAGER_NO_DIALOG_RESULT = -1, WINDOW_MANAGER_NO_HOVER_WIDGET = -1,
-                                      // heroWindowManager::Open when the screen bitmap is missing.
-    WINDOW_MANAGER_OPEN_FAILURE = 1 H1_ENUM_CONST_END(WindowManagerConstant)
+    WINDOW_MANAGER_NO_DIALOG_RESULT = -1,
+    WINDOW_MANAGER_NO_HOVER_WIDGET = -1,
+    // heroWindowManager::Open when the screen bitmap is missing.
+    WINDOW_MANAGER_OPEN_FAILURE = 1
+H1_ENUM_CONST_END(WindowManagerConstant)
+// clang-format on
 
-        class palette;
+class palette;
 extern palette* gPalette;
 extern int gbInDialog;
 extern int iDialogNestCount;

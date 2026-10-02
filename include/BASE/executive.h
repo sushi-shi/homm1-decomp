@@ -21,9 +21,11 @@ extern char gDialogManagerError2[];
 extern char gDialogManagerError3[];
 extern char gDialogManagerError4[];
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(ExecutiveConstant)
     EXECUTIVE_DIALOG_MANAGER_CAPACITY = 20
 H1_ENUM_CONST_END(ExecutiveConstant)
+// clang-format on
 
 class executive {
 public:

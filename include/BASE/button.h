@@ -6,11 +6,13 @@
 #include <BASE/widget.h>
 #include <H1/Macros.h>
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(ButtonConstant)
     BUTTON_SELECT_DIALOG_RESULT = 1,
     BUTTON_REPEAT_DELAY_TICKS = 60,
     BUTTON_NO_HOTKEY = -1
 H1_ENUM_CONST_END(ButtonConstant)
+// clang-format on
 
 // forward declarations:
 class icon;

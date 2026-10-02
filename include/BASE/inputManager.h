@@ -5,6 +5,7 @@
 #include <BASE/message.h>
 #include <H1/Macros.h>
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(InputManagerConstant)
     INPUT_GAME_WIDTH = 640,
     INPUT_GAME_HEIGHT = 480,
@@ -19,7 +20,6 @@ H1_ENUM_CONST_BEGIN(InputManagerConstant)
     INPUT_KEEP_CURRENT_MOUSE_FRAME = 1000
 H1_ENUM_CONST_END(InputManagerConstant)
 
-// clang-format off
 // PC set-1 scan codes: KeyboardMessageHandler stores bits 16..23 of the
 // WM_KEYDOWN lParam, and MakeScanCodeTable maps every code 0x00..0x58 to
 // its character or to the code shifted into the high byte. Names follow
