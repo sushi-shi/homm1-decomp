@@ -1180,7 +1180,7 @@ void combatManager::KeepAttack(void)
     hurt = 0;
     for (i = 0; i < dice; i++)
         hurt += SRandom(2, 3);
-    hurt = (int)(hurt * gfStatPower[mod + 20]);
+    hurt = (int)(hurt * gfBattleStat[mod + 20]);
     if (hurt <= 0)
         hurt = 1;
     numLost = target->Damage(hurt);

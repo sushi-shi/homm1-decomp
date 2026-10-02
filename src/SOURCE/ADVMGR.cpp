@@ -4241,7 +4241,8 @@ signed char SaveGame(void) {
         sprintf(extension, ".GM%d", humans);
         sprintf(searchMask, "*.GM*");
     }
-    requester0 = new fileRequester(0xa0, 0x28, 1, searchMask, ".\\GAMES\\", extension);
+    extern char gcGamePath[];
+    requester0 = new fileRequester(0xa0, 0x28, 1, searchMask, gcGamePath, extension);
     if (!requester0)
         MemError();
     result6 = gpExec->DoDialog(requester0);
