@@ -190,9 +190,9 @@ int playerData::NumOfGivenArtifact(int artifact) {
 // ten) and skips player 0's hint.
 VA(0x0043933d, 0x386)
 void ComputeUALoc(int player) {
+    int y;
     int tries;
     int x;
-    int y;
     int heading;
     int numObelisks;
 
@@ -675,9 +675,9 @@ extern char* gNewGameHelp[];
 // packs the chosen opponents before closing the dialog.
 VA(0x0043afa1, 0x581)
 short NewGameHandler(tag_message& message) {
+    int iPlayer;
     int i;
     int helpIndex;
-    int iPlayer;
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
@@ -1114,6 +1114,20 @@ void game::InitEntireCampaign(int side) {
     InitCampaignMap(m_campaignScenario, 0);
 }
 
+// Town type of each crest, and the types already given to the first four
+// random towns.
+extern short gCrestTownTypes[];
+extern signed char gRandomTownTypes[4];
+
+// NewMap's per-player globals beyond Buka's current/watch player bits.
+// Starting hero class of each campaign crest and of each town type, and
+// each hero class's sight radius.
+extern short gCrestHeroClass[];
+extern signed char gTownTypeHeroClass[];
+extern signed char gClassVisionRange[];
+// Starting resources by difficulty.
+extern int gStartingResources[][7];
+
 // Buka 2.1 game::InitCampaignMap reduced to HoMM1's CAMP%d.CMP maps: the
 // calendar continues from m_campaignDay and the scenario table seeds the
 // opponents and every player's resources.
@@ -1121,8 +1135,8 @@ VA(0x0043c1bf, 0x28c)
 void game::InitCampaignMap(int scenario, int) {
     int saveType;
     int savedScenario;
-    int j;
     int i;
+    int j;
     int savedState;
     int savedDay;
 
@@ -1158,19 +1172,16 @@ void game::InitCampaignMap(int scenario, int) {
     }
 }
 
-// Town type of each crest, and the types already given to the first four
-// random towns.
-extern short gCrestTownTypes[];
-extern signed char gRandomTownTypes[4];
+// Spell AI values, attribute bits and the mage-guild pool by spell level.
+extern short gSpellAIValue[];
+extern signed char gSpellAttributes[];
+extern signed char gMageGuildSpellPool[4][8];
 
-// NewMap's per-player globals beyond Buka's current/watch player bits.
-// Starting hero class of each campaign crest and of each town type, and
-// each hero class's sight radius.
-extern short gCrestHeroClass[];
-extern signed char gTownTypeHeroClass[];
-extern signed char gClassVisionRange[];
-// Starting resources by difficulty.
-extern int gStartingResources[][7];
+// Map-extra record count and sizes read from the map file.
+extern int iMaxMapExtra;
+extern int pwSizeOfMapExtra[];
+// Vision radius a claimed town grants its new owner.
+extern signed char giVisRangeTown;
 
 // Buka 2.1 game::NewMap for HoMM1: map setup helpers, a starting town and
 // hero per player (campaign crests pick them), two tavern heroes, the
@@ -1185,12 +1196,12 @@ void game::NewMap(char* mapName) {
     signed char yTown;
     signed char xTown;
     int heroIdx;
+    int i;
+    int j;
     signed char townId;
     signed char used[GAME_TOWN_COUNT];
     int k;
-    int j;
-    int spread;
-    int i;
+    int ultimateSpread;
     signed char allNeutral;
     int difficulty;
 
@@ -1318,13 +1329,13 @@ void game::NewMap(char* mapName) {
     }
     i = Random(9, 62);
     j = Random(9, 62);
-    spread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+    ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
     while (m_map[i][j].m_objectIndex != 0xff || m_map[i][j].m_overlayIndex != 0xff || m_map[i][j].m_tileIndex < 20
            || (giNumHumanPlayers == 1
                && abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
                           + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y)
-                      <= spread)) {
-        spread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+                      <= ultimateSpread)) {
+        ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
         i = Random(9, 62);
         j = Random(9, 62);
     }
@@ -1384,16 +1395,16 @@ int GetObjectFamily(int trigger) {
 // object slot unless the eastern neighbour continues the same object.
 VA(0x0043d4c3, 0x1e4)
 void game::SettleOverlay(int x, int y) {
-    mapCell* adjCell;
     mapCell* cell;
+    mapCell* cellEast;
     cell = &m_map[x][y];
     if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
         switch (cell->m_triggerType) {
             case 0x35:
             case 0x39:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
-                    adjCell = &m_map[x + 1][y];
-                    if (GetObjectFamily(adjCell->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                    cellEast = &m_map[x + 1][y];
+                    if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
                         cell->m_unknown07 |= 0x80;
                     } else {
                         cell->m_objectIndex = cell->m_overlayIndex;
@@ -1406,8 +1417,8 @@ void game::SettleOverlay(int x, int y) {
             case 0x37:
             case 0x3b:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
-                    adjCell = &m_map[x + 1][y];
-                    if (GetObjectFamily(adjCell->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                    cellEast = &m_map[x + 1][y];
+                    if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
@@ -1423,21 +1434,16 @@ void game::SettleOverlay(int x, int y) {
     }
 }
 
-// Spell AI values, attribute bits and the mage-guild pool by spell level.
-extern short gSpellAIValue[];
-extern signed char gSpellAttributes[];
-extern signed char gMageGuildSpellPool[4][8];
-
 // Buka 2.1 game::RandomizeEvents for HoMM1's map objects: numbers sites
 // and obelisks, rolls each event's contents, files town and mine ids into
 // their footprints, then settles overlays and the passive trigger bits.
 VA(0x0043d6a7, 0xc63)
 void game::RandomizeEvents(void) {
     unsigned char overlayTileset;
-    unsigned char objTileset;
-    short j;
     short y;
+    unsigned char objTileset;
     short i;
+    short j;
     signed char id;
     short x;
     mapCell* cell;
@@ -1744,10 +1750,6 @@ void game::RandomizeEvents(void) {
     }
 }
 
-// Map-extra record count and sizes read from the map file.
-extern int iMaxMapExtra;
-extern int pwSizeOfMapExtra[];
-
 // Buka 2.1 game::LoadMap for HoMM1's .MAP files: an optional old header,
 // the world map, town and mine records, artifacts, obelisks, sounds and
 // (from version 1112) the map extras.
@@ -1820,9 +1822,6 @@ short game::LoadMap(char* filename) {
     close(handle);
     return 0;
 }
-
-// Vision radius a claimed town grants its new owner.
-extern signed char giVisRangeTown;
 
 // donor PoL RVA 0x00078fea; preferred Buka symbol ?ClaimTown@game@@QAEXHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -2432,25 +2431,25 @@ void game::Overview(void) {
     short heroTextH;
     short townTextWPos;
     short heroTextW;
+    short spacing;
     short castleFrameY;
     short limitYOff;
     short dayIdY;
     short left;
     short castleIconY;
-    short spacing;
     signed char mineNums[7];
     short fieldH;
     font* bigFont;
     short textW;
     short mineRowY;
     short i;
-    short numMines;
     short badgeY;
     short lineH;
     short mineW;
     signed char redraw;
     tag_message message;
     short totals[4];
+    short numMines;
     short numCastles;
     short numTowns;
     heroWindow* win;
@@ -3195,12 +3194,12 @@ void game::PerDay(void) {
 // map's renewable sites.
 VA(0x00441e09, 0x84b)
 void game::PerWeek(void) {
+    short posY;
+    short posX;
     short gain;
     town* townPointer;
     short j;
     short i;
-    short y;
-    short x;
     int heroClass = 0;
 
     giWeekType = 0;
@@ -3239,43 +3238,43 @@ void game::PerWeek(void) {
             gpGame->m_players[i].m_availableHeroIds[j] = gpGame->GetNewHeroId(heroClass);
         }
     }
-    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
-        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            switch (m_map[x][y].m_triggerType) {
+    for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
+        for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
+            switch (m_map[posX][posY].m_triggerType) {
                 case 0x98:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata != 0xff)
-                        m_map[x][y].m_objectMetadata = 2;
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata != 0xff)
+                        m_map[posX][posY].m_objectMetadata = 2;
                     break;
                 case 0xad:
-                    m_map[x][y].m_objectMetadata = Random(1, 5);
+                    m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
                 case 0x8d:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(3, 6);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
                     break;
                 case 0x8e:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(5, 10);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
                     break;
                 case 0x8f:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(2, 4);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
                     break;
                 case 0x90:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(2, 4);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(2, 4);
                     break;
                 case 0x91:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(5, 10);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(5, 10);
                     break;
                 case 0xa7:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(1, 3);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(1, 3);
                     break;
                 case 0xaa:
-                    if ((unsigned char)m_map[x][y].m_objectMetadata < 100)
-                        m_map[x][y].m_objectMetadata = (unsigned char)m_map[x][y].m_objectMetadata + Random(3, 6);
+                    if ((unsigned char)m_map[posX][posY].m_objectMetadata < 100)
+                        m_map[posX][posY].m_objectMetadata = (unsigned char)m_map[posX][posY].m_objectMetadata + Random(3, 6);
                     break;
                 default:
                     break;
@@ -3570,9 +3569,9 @@ int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
 VA(0x004444ca, 0x92)
 int SGenRand(void)
 {
+    int bitMask;
     int value = 0;
     int i;
-    int bitMask;
     iLastSeed &= 0xfff;
     iLastSeed *= 7;
     iLastSeed += (iLastSeed & 0xff0) >> 4;
@@ -3855,8 +3854,8 @@ void game::RandomizeTerrainTiles(void) {
 // no late overlays.
 VA(0x00444f6d, 0x129)
 void game::ProcessMapExtra(void) {
-    mapCell* cellPtr;
     int y;
+    mapCell* cellPtr;
     int x;
     signed char townNum;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
@@ -3882,13 +3881,13 @@ void game::ProcessMapExtra(void) {
 // buildings; a map whose towns all lack owners leaves the placeholder -2.
 VA(0x00445096, 0x213)
 signed char game::SetupTowns(void) {
+    mapTownExtra* extra;
     int own;
     signed char noOwners;
     town* town;
     int j;
     int i;
     int mask;
-    mapTownExtra* extra;
     noOwners = 1;
     mask = 0x1f9f;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
@@ -3934,16 +3933,16 @@ signed char game::SetupTowns(void) {
 // town gate occupies the town.
 VA(0x004452a9, 0x347)
 void game::ProcessOnMapHeroes(void) {
+    int mapY;
+    mapHeroExtra* extra;
     town* town;
     int townId;
     int iPlayer;
     int k;
-    int mapY;
     int j;
     int mapX;
     mapCell* north;
     mapCell* cell;
-    mapHeroExtra* extra;
     hero* theHero;
 
     for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
@@ -4068,19 +4067,19 @@ void BVResMsg(char*, int, int);
 VA(0x004459a5, 0x6e9)
 int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     int okay;
-    int prevReady;
     char pathname[456];
     char* outData;
+    int block;
     int numBlocks;
-    int sendPacketIndex;
-    int segCount;
+    int prevReady;
     int junk3;
     int oldTrack;
-    int fileHandle;
-    int junk2;
-    int block;
     char* sendPacket;
     int blockSize;
+    int sendPacketIndex;
+    int segCount;
+    int fileHandle;
+    int junk2;
     char* incoming;
     char acked[500];
     int junk1;

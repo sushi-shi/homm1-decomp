@@ -89,11 +89,11 @@ VA(0x0045ace4, 0x975)
 short smackManager::Main(struct tag_message &msg) {
     char savedUpdateFlags;
     int startFrame;
+    int currentFrame;
     palette *pPalette;
     signed char *savedPal;
     font *bigFont;
     Smack *smk;
-    int currentFrame;
     long frameStartTick;
     long lastTick;
 

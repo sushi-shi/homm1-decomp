@@ -1384,6 +1384,13 @@ struct playerExitMessage {
 extern playerExitMessage gPlayerExitMessage;
 extern int giHostGamePos;
 
+// Player colour names for the exit notices, CheckEndGame's re-entry guard
+// and last offered score, and the creature alignment names (by type / 6).
+extern char* gColorNames[];
+extern signed char bInCheckEndGame;
+extern char* gAlignmentNames[];
+extern int giScore;
+
 // Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
 VA(0x00452e00, 0x99)
 void HandleRemoteDeadPlayerExit(int position) {
@@ -1425,7 +1432,6 @@ void HandleRemoteSuddenExit(void) {
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
-extern char* gColorNames[];
 
 VA(0x00452f8a, 0x1ea)
 // HoMM1 callers push four byte-sized values: player, an unused flag,
@@ -1479,9 +1485,6 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
         }
     }
 }
-
-// Re-entry guard for CheckEndGame.
-extern signed char bInCheckEndGame;
 
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -1743,8 +1746,6 @@ H1_ENUM_BEGIN(MoraleInfoText)
 H1_ENUM_END(MoraleInfoText)
 // clang-format on
 extern char* gMoraleInfoText[];
-// Creature alignment names indexed by creature type / 6.
-extern char* gAlignmentNames[];
 
 VA(0x00453ba8, 0x450)
 void game::ShowMoraleInfo(hero* h, int dialogType) {
@@ -1895,9 +1896,6 @@ short GetMonType(int score, int highScoreType) {
     }
     return giScoreMon[0][1];
 }
-
-// The score CheckEndGame last offered to the high-score table.
-extern int giScore;
 
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
