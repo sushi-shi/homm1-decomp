@@ -945,23 +945,23 @@ signed char advManager::CombatMonsterEvent(class hero* eventHero, signed char mo
             UpdateScreen(0, 0);
         m_lastQuickViewX = -1;
     }
-    memset(gpMonsterGroup->m_creatureTypes, -1, 5);
-    memset(gpMonsterGroup->m_creatureCounts, 0, 10);
+    memset(gpMonGroup->m_creatureTypes, -1, 5);
+    memset(gpMonGroup->m_creatureCounts, 0, 10);
     if (count / 5 > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            gpMonsterGroup->m_creatureTypes[i] = monsterType;
-            gpMonsterGroup->m_creatureCounts[i] = count / 5;
+            gpMonGroup->m_creatureTypes[i] = monsterType;
+            gpMonGroup->m_creatureCounts[i] = count / 5;
         }
     }
     for (i = count % 5 - 1; i >= 0; i--) {
-        gpMonsterGroup->m_creatureTypes[i] = monsterType;
-        gpMonsterGroup->m_creatureCounts[i]++;
+        gpMonGroup->m_creatureTypes[i] = monsterType;
+        gpMonGroup->m_creatureCounts[i]++;
     }
     if (heroDefends)
-        res = DoCombat(fromX, fromY, 0, gpMonsterGroup, 0, eventHero, &eventHero->m_army, x, y,
+        res = DoCombat(fromX, fromY, 0, gpMonGroup, 0, eventHero, &eventHero->m_army, x, y,
                           -1, 1);
     else
-        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, 0, 0, gpMonsterGroup, x, y,
+        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, 0, 0, gpMonGroup, x, y,
                           -1, 1);
     MobilizeCurrHero(0);
     return res;
@@ -1179,7 +1179,7 @@ void advManager::FizzleCenter(int fizzleType) {
     default:
         return;
     }
-    fizzleSample = gNullSample;
+    fizzleSample = NULL_SAMPLE2;
     fizzleSample = LoadPlaySample(gText);
     gpWindowManager->SaveFizzleSource(180, 172, 120, 120);
     CompleteDraw(0);
@@ -1270,10 +1270,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             if (gpGame->m_mineOwners[0] == giCurPlayer)
                 break;
             for (counter = 0; counter < 5; counter++) {
-                gpMonsterGroup->m_creatureTypes[counter] = 0x17;
-                gpMonsterGroup->m_creatureCounts[counter] = 1;
+                gpMonGroup->m_creatureTypes[counter] = 0x17;
+                gpMonGroup->m_creatureCounts[counter] = 1;
             }
-            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonsterGroup, 0, 0, 0, 500,
+            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonGroup, 0, 0, 0, 500,
                                            win, strength);
             if (win) {
                 counter = 5;
