@@ -52,9 +52,9 @@ bitmap::bitmap(short id) : resource(RESOURCE_CATEGORY_BITMAP, id, 1, NULL) {
 }
 
 bitmap::~bitmap(void) {
-    if (m_pixels != 0)
+    if (m_pixels != NULL)
         free(m_pixels);
-    m_pixels = 0;
+    m_pixels = NULL;
 }
 
 VA(0x0047a820, 0x3e)
