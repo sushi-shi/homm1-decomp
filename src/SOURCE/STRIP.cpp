@@ -11,7 +11,7 @@
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.710816;margin=0.058489;shape=0.438;size=0.937;calls=0.800;strings=strip.icn;alternate=pol20:void strip::constructor(int, int, int, unsigned long int, int, class armyGroup *, int, int, int)@0x00032230
 VA(0x00463630, 0x2de)
-strip::strip(short x, short y, signed char stripType, unsigned long int portraitId,
+strip::strip(short x, short y, signed char stripType, short portraitId,
              signed char portraitFrame, class armyGroup* army, short firstBorderId,
              int drawWindow) {
     short i;

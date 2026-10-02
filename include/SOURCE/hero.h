@@ -69,7 +69,9 @@ public:
     signed char m_luck;
     // ShowMoraleInfo reports the cowardice byte separately.
     signed char m_cowardice;
-    char m_unknown38[5];
+    char m_unknown38;
+    // DoAIEvent tests and sets one bit per visited site index.
+    int m_visitedSites;
     short m_randomSeed;
     char m_unknown3f[0x18];
     armyGroup m_army;

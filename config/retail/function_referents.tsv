@@ -136,3 +136,6 @@ rva	name	provenance
 0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
 0x00083340	_strnicmp	fileRequester::Open and game::NewGame call it with (name, prefix, count) cdecl beside _strcmpi at 0x083410
 0x00076EC0	?SetCursorShape@mouseManager@@QAEXH@Z	Empty Windows-build hook (ret 4); fileRequester::DoKnob and advManager::DoHeroKnob pass 4 on entry and 6 on release
+0x0003D4C3	?SettleOverlay@game@@QAEXHH@Z	advManager::EraseObj calls it on gpGame with the erased cell x/y (ret 8); body lifts the overlay frame into an emptied object slot
+0x000028B0	?FindNearestObject@searchArray@@QAEXFFFHH@Z	advManager::DoEvent signpost case calls it on gpSearchArray with the hero x/y/direction words, -1 and trigger 0xa8 (ret 0x14); body clears the search, seeds and stores the nearest match at +0xc/+0x10
+0x00066A2C	?DrawToBuffer@army@@QAEXFF@Z	hexcell::DrawOccupant calls it on the occupying stack with the cell x/y words (ret 8); HoMM1 army sprite draw, Buka army::DrawToBuffer without the effects flag

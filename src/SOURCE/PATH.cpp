@@ -21,11 +21,11 @@ short army::FindPath(short sourceHex, short targetHex, signed char, signed char 
 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex))
         return 0;
-    savedSpeed = m_speed;
+    savedSpeed = m_stats.speed;
     if (ignoreSpeed)
-        m_speed = 99;
+        m_stats.speed = 99;
     pathResult = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
-    if (!pathResult && (m_attributes & 1) && !pathMode) {
+    if (!pathResult && (m_stats.attributes & 1) && !pathMode) {
         switch (m_facing) {
             case 1:
                 targetHex = GetAdjacentCellIndex(targetHex, 1);
@@ -39,7 +39,7 @@ short army::FindPath(short sourceHex, short targetHex, signed char, signed char 
         else
             pathResult = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
     }
-    m_speed = savedSpeed;
+    m_stats.speed = savedSpeed;
     return pathResult;
 }
 
@@ -52,9 +52,9 @@ short army::ValidPath(short targetHex, signed char pathMode)
 
     if (!ValidHex(targetHex))
         return 0;
-    if (m_attributes & 2)
+    if (m_stats.attributes & 2)
         return ValidFlight(targetHex, pathMode);
-    pathResult = FindPath(m_hex, targetHex, m_speed, 0, pathMode);
+    pathResult = FindPath(m_hex, targetHex, m_stats.speed, 0, pathMode);
     if (pathResult) {
         m_moveTargetHex = targetHex;
         return 1;
@@ -90,12 +90,12 @@ short army::GetAttackMask(short sourceHex, signed char targetMode, signed char t
     short mask;
     short direction;
 
-    if (m_attributes & 1)
+    if (m_stats.attributes & 1)
         blockedMask = 0;
     else
         blockedMask = 0xc0;
     mask = 1;
-    if (m_attributes & 1)
+    if (m_stats.attributes & 1)
         nDirectionCount = 8;
     else
         nDirectionCount = 6;
@@ -129,9 +129,9 @@ short army::ValidMove(short sourceHex, short direction)
     if (!ValidHex(dest))
         return 0;
     frontValid = 0;
-    if (gpCombatManager->m_hexCells[dest].m_occupantSide == -1 && gpCombatManager->m_hexCells[dest].m_obstacle == -1)
+    if (gpCombatManager->m_hexCells[dest].m_occupantSide == -1 && gpCombatManager->m_hexCells[dest].m_obstacleIndex == -1)
         frontValid = 1;
-    if (m_attributes & 1) {
+    if (m_stats.attributes & 1) {
         backHex = -1;
         switch (m_facing) {
             case 1:
@@ -149,7 +149,7 @@ short army::ValidMove(short sourceHex, short direction)
         }
         rearValid = 0;
         if (ValidHex(backHex) && gpCombatManager->m_hexCells[backHex].m_occupantSide == -1
-            && gpCombatManager->m_hexCells[backHex].m_obstacle == -1)
+            && gpCombatManager->m_hexCells[backHex].m_obstacleIndex == -1)
             rearValid = 1;
         if (direction == 1 || direction == 4)
             return rearValid;
@@ -173,7 +173,7 @@ short army::ValidAttack(short sourceHex, short direction, short targetMode, shor
     if (!ValidHex(sourceHex))
         return 0;
     adjacentHex = sourceHex;
-    if (m_attributes & 1) {
+    if (m_stats.attributes & 1) {
         if (direction == 6)
             *attackHex = GetAdjacentCellIndex(sourceHex, (signed char)(m_facing == 1 ? 5 : 0));
         else if (direction == 7)
@@ -257,7 +257,7 @@ short army::ValidRange(short targetHex)
     if (!ValidHex(targetHex))
         return 0;
     m_moveTargetHex = m_hex;
-    if (!(m_attributes & 1)) {
+    if (!(m_stats.attributes & 1)) {
         m_attackDirection = GetBestDirection(m_hex, targetHex, 0xc0);
         adjacentHex = GetAdjacentCellIndex(m_hex, m_attackDirection);
         if (adjacentHex == targetHex)
