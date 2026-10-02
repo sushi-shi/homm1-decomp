@@ -656,11 +656,11 @@ short InitMenuHandler(tag_message& message) {
     int helpIndex;
 
     PollSound();
-    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-        if (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK) {
+    if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+        if (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK) {
             helpIndex = -1;
-            switch (message.payload.widget.id) {
+            switch (message.id) {
                 case 1:
                     helpIndex = 0;
                     break;
@@ -681,9 +681,9 @@ short InitMenuHandler(tag_message& message) {
                 NormalDialog(gInitMenuHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
         }
     } else if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                if (message.payload.widget.id > 0 && message.payload.widget.id <= 6)
+                if (message.id > 0 && message.id <= 6)
                     handled = 1;
                 break;
             default:
@@ -692,8 +692,8 @@ short InitMenuHandler(tag_message& message) {
     }
 
     if (handled || giMenuCommand != -1) {
-        gpWindowManager->m_dialogResult = message.payload.widget.id;
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        gpWindowManager->m_dialogResult = message.id;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -716,12 +716,12 @@ short RecruitHeroHandler(tag_message& message) {
     int index;
 
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case viewButton1:
                     case viewButton2:
-                        index = message.payload.widget.id - viewButton1;
+                        index = message.id - viewButton1;
                         gpTownManager->m_recruitHeroes[index]->HeroView(0);
                         gpTownManager->RedrawTownScreen();
                         gpTownManager->m_heroWindow0->DrawWindow();
@@ -733,15 +733,15 @@ short RecruitHeroHandler(tag_message& message) {
                 }
                 break;
             case WIDGET_NOTIFY_DESELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 0x7801:
                         gpTownManager->m_recruitState = -1;
                         shouldClose = 1;
                         break;
                     case recruitButton1:
                     case recruitButton2:
-                        gpTownManager->m_recruitState = message.payload.widget.id - recruitButton1;
-                        gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        gpTownManager->m_recruitState = message.id - recruitButton1;
+                        gpWindowManager->m_dialogResult = message.id;
                         shouldClose = 1;
                         break;
                 }
@@ -751,7 +751,7 @@ short RecruitHeroHandler(tag_message& message) {
         }
     }
     if (shouldClose == 1) {
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -1018,21 +1018,21 @@ void NormalDialog(
         MemError();
 
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.payload.widget.data.value = NORMAL_DIALOG_BUTTON_FLAGS;
+    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.value = NORMAL_DIALOG_BUTTON_FLAGS;
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_CANCEL && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
-        message.payload.widget.id = NORMAL_DIALOG_BUTTON_OK;
+        message.id = NORMAL_DIALOG_BUTTON_OK;
         pNormalDialogWindow->BroadcastMessage(message);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_OK && dialogType != NORMAL_DIALOG_TYPE_OK
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
-        message.payload.widget.id = NORMAL_DIALOG_BUTTON_CANCEL;
+        message.id = NORMAL_DIALOG_BUTTON_CANCEL;
         pNormalDialogWindow->BroadcastMessage(message);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_YES_NO) {
-        message.payload.widget.id = NORMAL_DIALOG_BUTTON_YES;
+        message.id = NORMAL_DIALOG_BUTTON_YES;
         pNormalDialogWindow->BroadcastMessage(message);
-        message.payload.widget.id = NORMAL_DIALOG_BUTTON_NO;
+        message.id = NORMAL_DIALOG_BUTTON_NO;
         pNormalDialogWindow->BroadcastMessage(message);
     }
 
@@ -1189,9 +1189,9 @@ void NormalDialog(
     }
 
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = NORMAL_DIALOG_TEXT_WIDGET_ID;
-    message.payload.widget.data.text = text;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = NORMAL_DIALOG_TEXT_WIDGET_ID;
+    message.text = text;
     pNormalDialogWindow->BroadcastMessage(message);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
@@ -1235,9 +1235,9 @@ void UpdateNormalDialog(char* text) {
     {
         short show = 1; // Retained from donor and retail stack frame.
         message.type = MESSAGE_WIDGET;
-        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-        message.payload.widget.id = 1;
-        message.payload.widget.data.text = text;
+        message.command = WIDGET_COMMAND_SET_TEXT;
+        message.id = 1;
+        message.text = text;
         pNormalDialogWindow->BroadcastMessage(message);
         pNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
         pNormalDialogWindow
@@ -1262,9 +1262,9 @@ short WaitHandler(tag_message& message) {
     if (!gpSoundManager->MusicPlaying())
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 0x7800:
                     case 0x7801:
                     case 0x7802:
@@ -1305,7 +1305,7 @@ short WaitHandler(tag_message& message) {
     if (result) {
         gpWindowManager->m_dialogResult = 0x7801;
         message.type = MESSAGE_WIDGET;
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -1317,9 +1317,9 @@ short EventWindowHandler(tag_message& message) {
     if (!gpSoundManager->MusicPlaying())
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 0x385:
                     case 0x7800:
                     case 0x7801:
@@ -1327,8 +1327,8 @@ short EventWindowHandler(tag_message& message) {
                     case 0x7803:
                     case 0x7805:
                     case 0x7806:
-                        gpWindowManager->m_dialogResult = message.payload.widget.id;
-                        message.payload.widget.command = message.payload.widget.id =
+                        gpWindowManager->m_dialogResult = message.id;
+                        message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
                     default:
@@ -2062,12 +2062,12 @@ void PopNetBox(char* notice) {
     if (!netWin)
         MemError();
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
-    message.payload.widget.data.text = cNetBoxLine[0];
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
+    message.text = cNetBoxLine[0];
     netWin->BroadcastMessage(message);
-    message.payload.widget.id = 2;
-    message.payload.widget.data.text = cNetBoxLine[1];
+    message.id = 2;
+    message.text = cNetBoxLine[1];
     netWin->BroadcastMessage(message);
     gpWindowManager->AddWindow(netWin, -1, 1);
     gpMouseManager->ReallyHidePointer();
@@ -2109,7 +2109,7 @@ void PopNetBox(char* notice) {
         switch (incoming.type) {
             case MESSAGE_KEY_DOWN:
                 msgTime = 0;
-                switch (incoming.payload.keyboard.keyCode) {
+                switch (incoming.keyCode) {
                     case 0x1b:
                     case 0x3b00:
                         bClose = 1;
@@ -2124,11 +2124,11 @@ void PopNetBox(char* notice) {
                         sendText = 1;
                         break;
                     default:
-                        if (len < 58 && incoming.payload.keyboard.keyCode) {
+                        if (len < 58 && incoming.keyCode) {
                             text[len] = 0;
                             textWidth = font->LineWidth(text);
                             if (textWidth + 30 < 610) {
-                                text[len] = incoming.payload.keyboard.keyCode;
+                                text[len] = incoming.keyCode;
                                 len++;
                                 updateInput = 1;
                                 blinkState = 0;
@@ -2156,12 +2156,12 @@ void PopNetBox(char* notice) {
         if (drawLines) {
             drawLines = 0;
             message.type = MESSAGE_WIDGET;
-            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-            message.payload.widget.id = 1;
-            message.payload.widget.data.text = cNetBoxLine[0];
+            message.command = WIDGET_COMMAND_SET_TEXT;
+            message.id = 1;
+            message.text = cNetBoxLine[0];
             netWin->BroadcastMessage(message);
-            message.payload.widget.id = 2;
-            message.payload.widget.data.text = cNetBoxLine[1];
+            message.id = 2;
+            message.text = cNetBoxLine[1];
             netWin->BroadcastMessage(message);
             netWin->DrawWindow();
             gpWindowManager->UpdateScreenRegion(0, 418, 639, 61);
@@ -2175,9 +2175,9 @@ void PopNetBox(char* notice) {
                 text[len] = ' ';
             text[len + 1] = 0;
             message.type = MESSAGE_WIDGET;
-            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-            message.payload.widget.id = 3;
-            message.payload.widget.data.text = text;
+            message.command = WIDGET_COMMAND_SET_TEXT;
+            message.id = 3;
+            message.text = text;
             netWin->BroadcastMessage(message);
             netWin->DrawWindow();
             gpWindowManager->UpdateScreenRegion(0, 460, 639, 16);
@@ -2293,14 +2293,14 @@ void ShowCongrats(void) {
     sprintf(gText, "congrats.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.text = gText;
     if (gpGame->m_campaignType > 0) {
         win = new heroWindow(0, 0, "congrats.bin");
         if (!win)
             MemError();
         sprintf(gText, gCampaignWinTexts[gpGame->m_campaignScenario]);
-        message.payload.widget.id = 100;
+        message.id = 100;
         win->BroadcastMessage(message);
     } else {
         win = new heroWindow(0, 0, "congspre.bin");
@@ -2309,27 +2309,27 @@ void ShowCongrats(void) {
         sprintf(name, gScoreRankNames[GetMonType(result, 1)]);
         name[0] -= 32;
         sprintf(gText, "A Glorious Victory!");
-        message.payload.widget.id = 100;
+        message.id = 100;
         win->BroadcastMessage(message);
         for (i = 0; i < 5; i++) {
             sprintf(gText, gScoreLabels[i]);
-            message.payload.widget.id = i + 101;
+            message.id = i + 101;
             win->BroadcastMessage(message);
         }
         sprintf(gText, "%d", giCurTurn);
-        message.payload.widget.id = 106;
+        message.id = 106;
         win->BroadcastMessage(message);
         sprintf(gText, "%d", daysScore);
-        message.payload.widget.id = 107;
+        message.id = 107;
         win->BroadcastMessage(message);
         sprintf(gText, "%d%%", gpGame->m_difficultyRating);
-        message.payload.widget.id = 108;
+        message.id = 108;
         win->BroadcastMessage(message);
         sprintf(gText, "%d", result);
-        message.payload.widget.id = 109;
+        message.id = 109;
         win->BroadcastMessage(message);
         sprintf(gText, "%s", name);
-        message.payload.widget.id = 110;
+        message.id = 110;
         win->BroadcastMessage(message);
     }
     gpWindowManager->AddWindow(win, -1, 1);
@@ -2377,16 +2377,16 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
     if (!DataEntryWin)
         MemError();
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
-    message.payload.widget.data.text = prompt;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
+    message.text = prompt;
     DataEntryWin->BroadcastMessage(message);
     if (initialText)
         strcpy(textBuffer, initialText);
     else
         strcpy(textBuffer, "");
-    message.payload.widget.id = 10;
-    message.payload.widget.data.text = textBuffer;
+    message.id = 10;
+    message.text = textBuffer;
     DataEntryWin->BroadcastMessage(message);
     strcpy(destination, textBuffer);
     bDataEntryTime = 0;
@@ -2401,8 +2401,8 @@ short DataEntryWindowHandler(tag_message& message) {
     if (bDataEntryTime == 0) {
         ++bDataEntryTime;
         message.type = MESSAGE_LEFT_BUTTON_DOWN;
-        message.payload.mouse.x = 0xc3;
-        message.payload.mouse.y = 0x9a;
+        message.x = 0xc3;
+        message.y = 0x9a;
         DataEntryWin->BroadcastMessage(message);
         return MESSAGE_DISPATCH_CONSUME;
     }
@@ -2412,29 +2412,29 @@ short DataEntryWindowHandler(tag_message& message) {
         goto gotText;
     }
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 10:
                     gotText:
                         message.type = MESSAGE_WIDGET;
-                        message.payload.widget.id = 10;
-                        message.payload.widget.command = WIDGET_COMMAND_GET_TEXT;
+                        message.id = 10;
+                        message.command = WIDGET_COMMAND_GET_TEXT;
                         DataEntryWin->BroadcastMessage(message);
-                        if (strlen(message.payload.widget.data.text) == 0) {
+                        if (strlen(message.text) == 0) {
                             break;
                         } else {
                             memset(cDEDest, 0, iDEMaxLen);
-                            strncpy(cDEDest, message.payload.widget.data.text, iDEMaxLen - 1);
+                            strncpy(cDEDest, message.text, iDEMaxLen - 1);
                         }
                         message.type = MESSAGE_WIDGET;
-                        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-                        message.payload.widget.id = 10;
-                        message.payload.widget.data.text = cDEDest;
+                        message.command = WIDGET_COMMAND_SET_TEXT;
+                        message.id = 10;
+                        message.text = cDEDest;
                         DataEntryWin->BroadcastMessage(message);
                         DataEntryWin->DrawWindow(1, 10, 10);
-                        gpWindowManager->m_dialogResult = message.payload.widget.id;
-                        message.payload.widget.command = message.payload.widget.id =
+                        gpWindowManager->m_dialogResult = message.id;
+                        message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
                 }

@@ -50,37 +50,37 @@ void SetupRecruitWin(
     monsterName[0] -= 'a' - 'A';
     sprintf(label, "%s %s", "Recruit", monsterName);
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = RECRUIT_TITLE_CONTROL;
-    message.payload.widget.data.text = label;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = RECRUIT_TITLE_CONTROL;
+    message.text = label;
     window->BroadcastMessage(message);
 
     sprintf(label, "%d", goldCost);
-    message.payload.widget.id = RECRUIT_GOLD_COST_CONTROL;
+    message.id = RECRUIT_GOLD_COST_CONTROL;
     window->BroadcastMessage(message);
     if (resourceType != RECRUIT_NO_RESOURCE) {
         sprintf(label, "%d", resourceCost);
-        message.payload.widget.id = RECRUIT_RESOURCE_COST_CONTROL;
+        message.id = RECRUIT_RESOURCE_COST_CONTROL;
         window->BroadcastMessage(message);
     }
 
     sprintf(gText, "%s%d", "Available: ", available);
-    message.payload.widget.id = RECRUIT_AVAILABLE_CONTROL;
-    message.payload.widget.data.text = gText;
+    message.id = RECRUIT_AVAILABLE_CONTROL;
+    message.text = gText;
     window->BroadcastMessage(message);
 
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.id = RECRUIT_CREATURE_CONTROL;
-    message.payload.widget.data.value = creatureType;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.id = RECRUIT_CREATURE_CONTROL;
+    message.value = creatureType;
     window->BroadcastMessage(message);
     if (resourceType != RECRUIT_NO_RESOURCE) {
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.id = RECRUIT_RESOURCE_ICON_CONTROL;
-        message.payload.widget.data.value = resourceType;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.id = RECRUIT_RESOURCE_ICON_CONTROL;
+        message.value = resourceType;
         window->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.id = RECRUIT_RESOURCE_IMAGE_CONTROL;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.id = RECRUIT_RESOURCE_IMAGE_CONTROL;
         window->BroadcastMessage(message);
     }
 }
@@ -189,22 +189,22 @@ void recruitUnit::Update(void) {
     tag_message message;
 
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.command = WIDGET_COMMAND_SET_TEXT;
     sprintf(gText, "%s%d", "Available: ", *m_available);
-    message.payload.widget.id = RECRUIT_AVAILABLE_CONTROL;
-    message.payload.widget.data.text = gText;
+    message.id = RECRUIT_AVAILABLE_CONTROL;
+    message.text = gText;
     m_window->BroadcastMessage(message);
     sprintf(gText, "%d", m_quantity);
-    message.payload.widget.id = RECRUIT_QUANTITY_CONTROL;
+    message.id = RECRUIT_QUANTITY_CONTROL;
     m_window->BroadcastMessage(message);
     m_goldTotal = m_quantity * m_goldCost;
     sprintf(gText, "%d", m_goldTotal);
-    message.payload.widget.id = RECRUIT_GOLD_TOTAL_CONTROL;
+    message.id = RECRUIT_GOLD_TOTAL_CONTROL;
     m_window->BroadcastMessage(message);
     if (m_resourceType != RECRUIT_NO_RESOURCE) {
         m_resourceTotal = m_quantity * m_resourceCost;
         sprintf(gText, "%d", m_resourceTotal);
-        message.payload.widget.id = RECRUIT_RESOURCE_TOTAL_CONTROL;
+        message.id = RECRUIT_RESOURCE_TOTAL_CONTROL;
         m_window->BroadcastMessage(message);
     }
 }
@@ -219,14 +219,14 @@ short recruitUnit::Main(struct tag_message& message) {
     signed char quickView;
 
     done = 0;
-    if (message.payload.mouse.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+    if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         quickView = 1;
     else
         quickView = 0;
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case RECRUIT_NOTIFY_SELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case RECRUIT_INCREASE_CONTROL:
                         if (quickView)
                             break;
@@ -244,9 +244,9 @@ short recruitUnit::Main(struct tag_message& message) {
                     case RECRUIT_QUANTITY_CONTROL:
                         if (quickView)
                             break;
-                        message.payload.widget.command = RECRUIT_COMMAND_GET_TEXT;
+                        message.command = RECRUIT_COMMAND_GET_TEXT;
                         m_window->BroadcastMessage(message);
-                        m_quantity = atoi(message.payload.widget.data.text);
+                        m_quantity = atoi(message.text);
                         if (m_quantity < 0)
                             m_quantity = 0;
                         if (m_quantity > m_maximum)
@@ -274,7 +274,7 @@ short recruitUnit::Main(struct tag_message& message) {
                 m_window->MoveWindow(0, 0);
                 break;
             case WIDGET_NOTIFY_DESELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case RECRUIT_MAXIMUM_CONTROL:
                         if (quickView)
                             break;
@@ -318,7 +318,7 @@ short recruitUnit::Main(struct tag_message& message) {
     checkClose:
         if (done == 1) {
             message.type = MESSAGE_EXECUTIVE;
-            message.payload.executive.command = EXECUTIVE_COMMAND_RETURN_RESULT;
+            message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
             return MESSAGE_DISPATCH_FORWARD;
         }
     }

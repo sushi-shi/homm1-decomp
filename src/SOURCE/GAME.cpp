@@ -129,20 +129,20 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     if (!win)
         MemError();
     sprintf(gText, "port%04d.icn", m_heroes[side]->m_unknown1d);
-    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
-    message.payload.widget.id = 2;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_ICON;
+    message.id = 2;
+    message.text = gText;
     win->BroadcastMessage(message);
 
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.id = 3;
-    message.payload.widget.data.value = gpGame->GetPlayerCrest(m_heroes[side]->m_owner) + 1;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.id = 3;
+    message.value = gpGame->GetPlayerCrest(m_heroes[side]->m_owner) + 1;
     win->BroadcastMessage(message);
 
     sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_unknown1c]);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
+    message.text = gText;
     win->BroadcastMessage(message);
 
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], 0);
@@ -154,38 +154,38 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
             gViewGeneralLabels[3], m_heroes[side]->m_primaryStats[3],
             gViewGeneralLabels[4], gMoraleText[morale + 3],
             gViewGeneralLabels[5], gLuckText[luck + 3]);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 4;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 4;
+    message.text = gText;
     win->BroadcastMessage(message);
 
     if (!m_heroes[side] || !allowActions || !m_heroes[side]->HasArtifact(37) || m_heroCastSpell[side]
         || giCurGeneral != m_currentSide) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.id = 10;
-        message.payload.widget.data.value = 2;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.id = 10;
+        message.value = 2;
         win->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-        message.payload.widget.data.value = 8;
+        message.command = WIDGET_COMMAND_SET_FLAGS;
+        message.value = 8;
         win->BroadcastMessage(message);
     }
     if (!allowActions || !m_heroes[1 - m_currentSide] || giCurGeneral != m_currentSide) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.id = 12;
-        message.payload.widget.data.value = 2;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.id = 12;
+        message.value = 2;
         win->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-        message.payload.widget.data.value = 8;
+        message.command = WIDGET_COMMAND_SET_FLAGS;
+        message.value = 8;
         win->BroadcastMessage(message);
     }
     if (!allowActions || giCurGeneral != m_currentSide || (giCurGeneral == 0 && m_combatTowns[0])
         || m_sideRetreated[0] || m_sideRetreated[1]) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.id = 11;
-        message.payload.widget.data.value = 2;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.id = 11;
+        message.value = 2;
         win->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-        message.payload.widget.data.value = 8;
+        message.command = WIDGET_COMMAND_SET_FLAGS;
+        message.value = 8;
         win->BroadcastMessage(message);
     }
 
@@ -242,25 +242,25 @@ short HandleViewGeneral(tag_message& message) {
     ctlFourteen = 14;
     handled = 0;
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 10:
                     case 11:
                     case 12:
                     case 0x7800:
-                        if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
-                            gpWindowManager->m_dialogResult = message.payload.widget.id;
+                        if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                            gpWindowManager->m_dialogResult = message.id;
                             handled = 1;
                             break;
                         }
                 }
                 break;
             case WIDGET_COMMAND_HOVER:
-                if (gpWindowManager->m_lastHoverId == message.payload.widget.id)
+                if (gpWindowManager->m_lastHoverId == message.id)
                     return 1;
-                gpWindowManager->m_lastHoverId = (signed char)message.payload.widget.id;
-                switch (message.payload.widget.id) {
+                gpWindowManager->m_lastHoverId = (signed char)message.id;
+                switch (message.id) {
                     case 10:
                         hint = 1;
                         break;
@@ -283,8 +283,8 @@ short HandleViewGeneral(tag_message& message) {
         }
     }
     if (handled) {
-        message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
-        message.payload.widget.command = message.payload.widget.id;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return 2;
     }
     return 1;
@@ -936,10 +936,10 @@ short NewGameHandler(tag_message& message) {
     int helpIndex;
     int iPlayer;
     if (message.type == MESSAGE_WIDGET) {
-        if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            if (IS_WIDGET_SELECTION_NOTIFICATION(message.payload.widget.command)) {
+        if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
                 helpIndex = -1;
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 0x7802:
                         helpIndex = 0;
                         break;
@@ -973,7 +973,7 @@ short NewGameHandler(tag_message& message) {
                     case 2:
                     case 3:
                     case 4:
-                        if (message.payload.widget.id - 1 < giNumHumanPlayers)
+                        if (message.id - 1 < giNumHumanPlayers)
                             helpIndex = 8;
                         else
                             helpIndex = 5;
@@ -989,9 +989,9 @@ short NewGameHandler(tag_message& message) {
                     NormalDialog(gNewGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
             }
         } else {
-            switch (message.payload.widget.command) {
+            switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case 0x7802:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < 4; i++) {
@@ -1017,8 +1017,8 @@ short NewGameHandler(tag_message& message) {
                                 }
                             }
                         case 0x7801:
-                            gpWindowManager->m_dialogResult = message.payload.widget.id;
-                            message.payload.widget.command = message.payload.widget.id =
+                            gpWindowManager->m_dialogResult = message.id;
+                            message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
                         default:
@@ -1026,17 +1026,17 @@ short NewGameHandler(tag_message& message) {
                     }
                     break;
                 case WIDGET_NOTIFY_SELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case 0xd:
                         case 0xe:
                         case 0xf:
                         case 0x10:
-                            gpGame->m_difficulty = message.payload.widget.id - 0xd;
+                            gpGame->m_difficulty = message.id - 0xd;
                             break;
                         case 2:
                         case 3:
                         case 4:
-                            iPlayer = message.payload.widget.id - 1;
+                            iPlayer = message.id - 1;
                             gpGame->m_players[iPlayer].m_difficulty++;
                             gpGame->m_players[iPlayer].m_difficulty %= 5;
                             if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
@@ -1084,51 +1084,51 @@ void game::UpdateNewGameWindow(void) {
     if (period)
         *period = 0;
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 0x11;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 0x11;
+    message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.payload.widget.data.value = 4;
+    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.value = 4;
     for (i = 0; i < 4; i++) {
-        message.payload.widget.id = i + 13;
+        message.id = i + 13;
         m_newGameWindow->BroadcastMessage(message);
     }
-    message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-    message.payload.widget.id = m_difficulty + 13;
+    message.command = WIDGET_COMMAND_SET_FLAGS;
+    message.id = m_difficulty + 13;
     m_newGameWindow->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 1; i < 4; i++) {
-        message.payload.widget.id = i + 1;
+        message.id = i + 1;
         if (i < giNumHumanPlayers)
-            message.payload.widget.data.value = 0x1a;
+            message.value = 0x1a;
         else
-            message.payload.widget.data.value = m_players[i].m_difficulty + 5;
+            message.value = m_players[i].m_difficulty + 5;
         m_newGameWindow->BroadcastMessage(message);
     }
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 1; i < 4; i++) {
-        message.payload.widget.id = i + 4;
+        message.id = i + 4;
         if (i < giNumHumanPlayers)
-            message.payload.widget.data.text = gHumanPlayerTypeNames[m_players[i].m_difficulty];
+            message.text = gHumanPlayerTypeNames[m_players[i].m_difficulty];
         else
-            message.payload.widget.data.text = gPlayerTypeNames[m_players[i].m_difficulty];
+            message.text = gPlayerTypeNames[m_players[i].m_difficulty];
         m_newGameWindow->BroadcastMessage(message);
     }
     gpGame->m_difficultyRating = CalcDifficultyRating();
-    message.payload.widget.id = 0x14;
+    message.id = 0x14;
     sprintf(gText, "%s %d%%", "Difficulty Rating:", gpGame->m_difficultyRating);
-    message.payload.widget.data.text = gText;
+    message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[0].m_unknown11 != -1) {
-        message.payload.widget.id = 8;
-        message.payload.widget.data.value = m_players[0].m_unknown11 * 2 + 11;
+        message.id = 8;
+        message.value = m_players[0].m_unknown11 * 2 + 11;
         m_newGameWindow->BroadcastMessage(message);
     }
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.id = 0x13;
-    message.payload.widget.data.value = gbKingOfTheHill + 27;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.id = 0x13;
+    message.value = gbKingOfTheHill + 27;
     m_newGameWindow->BroadcastMessage(message);
 }
 
@@ -1308,32 +1308,32 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     if (!window)
         MemError();
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
     strcpy(gText, gCampaignScenarioNames[scenario]);
-    message.payload.widget.data.text = gText;
+    message.text = gText;
     window->BroadcastMessage(message);
-    message.payload.widget.id = 2;
+    message.id = 2;
     strcpy(gText, gCampaignScenarioText[scenario]);
-    message.payload.widget.data.text = gText;
+    message.text = gText;
     window->BroadcastMessage(message);
-    message.payload.widget.data.text = gText;
-    window->BroadcastMessage(message);
-    message.type = MESSAGE_WIDGET;
-    message.payload.widget.id = 3;
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.data.value = gpGame->m_unknown000b + 4;
+    message.text = gText;
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.payload.widget.data.value = 6;
+    message.id = 3;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.value = gpGame->m_unknown000b + 4;
+    window->BroadcastMessage(message);
+    message.type = MESSAGE_WIDGET;
+    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.value = 6;
     if (fromMenu) {
-        message.payload.widget.id = 0x7802;
+        message.id = 0x7802;
         window->BroadcastMessage(message);
     } else {
-        message.payload.widget.id = 0x7800;
+        message.id = 0x7800;
         window->BroadcastMessage(message);
-        message.payload.widget.id = 0x385;
+        message.id = 0x385;
         window->BroadcastMessage(message);
     }
     if (!fromMenu)
@@ -2204,12 +2204,12 @@ signed char game::ViewSpells(
         }
         if (spellType != 2) {
             message.type = MESSAGE_WIDGET;
-            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             if (spellType == 0)
-                message.payload.widget.id = 4;
+                message.id = 4;
             else
-                message.payload.widget.id = 5;
-            message.payload.widget.data.value = 6;
+                message.id = 5;
+            message.value = 6;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
         UpdateSpellWidgets();
@@ -2247,26 +2247,26 @@ void game::UpdateSpellWidgets(void) {
     message.type = MESSAGE_WIDGET;
     for (i = 0; i < 4; i++) {
         if (m_viewSpellsTop + i > m_spellLast) {
-            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.payload.widget.id = i + 6;
-            message.payload.widget.data.value = 6;
+            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.id = i + 6;
+            message.value = 6;
             m_viewSpellsWindow->BroadcastMessage(message);
-            message.payload.widget.id = i + 10;
+            message.id = i + 10;
             m_viewSpellsWindow->BroadcastMessage(message);
         } else {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-            message.payload.widget.id = i + 10;
-            message.payload.widget.data.value = 6;
+            message.command = WIDGET_COMMAND_SET_FLAGS;
+            message.id = i + 10;
+            message.value = 6;
             m_viewSpellsWindow->BroadcastMessage(message);
-            message.payload.widget.id = i + 6;
+            message.id = i + 6;
             m_viewSpellsWindow->BroadcastMessage(message);
             if (m_viewSpellsReadOnly) {
-                message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-                message.payload.widget.data.value = 2;
+                message.command = WIDGET_COMMAND_SET_FLAGS;
+                message.value = 2;
                 m_viewSpellsWindow->BroadcastMessage(message);
             }
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.data.value = m_viewSpellsHero->m_spells[m_viewSpellsTop + i];
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.value = m_viewSpellsHero->m_spells[m_viewSpellsTop + i];
             m_viewSpellsWindow->BroadcastMessage(message);
             sprintf(
                 gText,
@@ -2274,9 +2274,9 @@ void game::UpdateSpellWidgets(void) {
                 gSpellNames[m_viewSpellsHero->m_spells[m_viewSpellsTop + i]],
                 m_viewSpellsHero->m_spellCharges[m_viewSpellsTop + i]
             );
-            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-            message.payload.widget.id = i + 10;
-            message.payload.widget.data.text = gText;
+            message.command = WIDGET_COMMAND_SET_TEXT;
+            message.id = i + 10;
+            message.text = gText;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
     }
@@ -2288,18 +2288,18 @@ VA(0x0043f260, 0x4f8)
 short ViewSpellsHandler(tag_message& message) {
     int spell;
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
             case WIDGET_NOTIFY_RIGHT_CLICK:
-                if (message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK
-                    || (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
-                    switch (message.payload.widget.id) {
+                if (message.command == WIDGET_NOTIFY_RIGHT_CLICK
+                    || (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                    switch (message.id) {
                         case 6:
                         case 7:
                         case 8:
                         case 9:
                             spell = gpGame->m_viewSpellsHero
-                                        ->m_spells[message.payload.widget.id - 6 + gpGame->m_viewSpellsTop];
+                                        ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
                             NormalDialog(gSpellDesc[spell], 4, -1, -1, 8, spell, -1, 0, -1);
                             break;
                         case 2:
@@ -2316,20 +2316,20 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                     }
                 } else {
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case 6:
                         case 7:
                         case 8:
                         case 9:
                             if (gpGame->m_viewSpellsReadOnly) {
                                 spell = gpGame->m_viewSpellsHero
-                                            ->m_spells[message.payload.widget.id - 6 + gpGame->m_viewSpellsTop];
+                                            ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
                                 NormalDialog(gSpellDesc[spell], 1, -1, -1, 8, spell, -1, 0, -1);
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
                             gpGame->m_viewSpell = gpGame->m_viewSpellsHero
-                                                      ->m_spells[message.payload.widget.id - 6 + gpGame->m_viewSpellsTop];
-                            message.payload.widget.command = WIDGET_COMMAND_DIALOG_SELECT;
+                                                      ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
+                            message.command = WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
                         case 2:
                             if (gpGame->m_viewSpellsTop == gpGame->m_spellFirst)
@@ -2364,14 +2364,14 @@ short ViewSpellsHandler(tag_message& message) {
                 }
                 break;
             case WIDGET_COMMAND_HOVER:
-                if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                if (message.id == gpWindowManager->m_lastHoverId)
                     return MESSAGE_DISPATCH_CONSUME;
                 else
                     return gpGame->m_viewSpellsCallback(message);
                 break;
         }
-        if (message.payload.widget.id == WIDGET_COMMAND_DIALOG_SELECT) {
-            message.payload.widget.command = message.payload.widget.id;
+        if (message.id == WIDGET_COMMAND_DIALOG_SELECT) {
+            message.command = message.id;
             return MESSAGE_DISPATCH_FORWARD;
         }
     }
@@ -2383,12 +2383,12 @@ short ViewSpellsHandler(tag_message& message) {
 VA(0x0043f758, 0x175)
 short ViewSpecialHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_COMMAND_HOVER:
-                if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                if (message.id == gpWindowManager->m_lastHoverId)
                     return MESSAGE_DISPATCH_CONSUME;
-                gpWindowManager->m_lastHoverId = message.payload.widget.id;
-                switch (message.payload.widget.id) {
+                gpWindowManager->m_lastHoverId = message.id;
+                switch (message.id) {
                     case 2:
                         strcpy(gText, cSpellHelp[0]);
                         break;
@@ -2504,9 +2504,9 @@ void game::ViewArmy(
 
     strcpy(fileName, gArmyNames[monsterType]);
     fileName[0] -= 32;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 3;
-    message.payload.widget.data.text = fileName;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 3;
+    message.text = fileName;
     m_viewArmyWindow->BroadcastMessage(message);
 
     statText = (char*)malloc(550);
@@ -2568,33 +2568,33 @@ void game::ViewArmy(
     sprintf(gText, "\n%s%s", gArmyStatText[7], gLuckText[luck + 3]);
     strcat(statText, gText);
 
-    message.payload.widget.id = 4;
-    message.payload.widget.data.text = statText;
+    message.id = 4;
+    message.text = statText;
     m_viewArmyWindow->BroadcastMessage(message);
     if (disableDismiss) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = 6;
-        message.payload.widget.id = 0x7803;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = 6;
+        message.id = 0x7803;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (quickView) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = 6;
-        message.payload.widget.id = 0x7800;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = 6;
+        message.id = 0x7800;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (numTroops < 1) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = 6;
-        message.payload.widget.id = 1;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = 6;
+        message.id = 1;
         m_viewArmyWindow->BroadcastMessage(message);
-        message.payload.widget.id = 2;
+        message.id = 2;
         m_viewArmyWindow->BroadcastMessage(message);
     } else {
         sprintf(numText, "%d", numTroops);
-        message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-        message.payload.widget.id = 2;
-        message.payload.widget.data.text = numText;
+        message.command = WIDGET_COMMAND_SET_TEXT;
+        message.id = 2;
+        message.text = numText;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     gViewArmyAnimTimer = KBTickCount() + 90;
@@ -2634,20 +2634,20 @@ short ViewArmyHandler(tag_message& message) {
     gbDismissArmy = 0;
     frameDelay = 5;
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 0x7800:
                     case 0x7801:
-                        gpWindowManager->m_dialogResult = message.payload.widget.id;
-                        message.payload.widget.command = message.payload.widget.id =
+                        gpWindowManager->m_dialogResult = message.id;
+                        message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
                     case 0x7803:
                         NormalDialog("Are you sure you want to dismiss this army?", 2, 0xb1, 0x36, -1, 0, -1, 0, -1);
                         if (gpWindowManager->m_dialogResult == 0x7805) {
                             gbDismissArmy = 1;
-                            message.payload.widget.command = message.payload.widget.id =
+                            message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
                         }
@@ -2662,10 +2662,10 @@ short ViewArmyHandler(tag_message& message) {
     }
     if (KBTickCount() > gViewArmyAnimTimer) {
         message.type = MESSAGE_WIDGET;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.id = 5;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.id = 5;
         gpGame->m_viewArmyResult++;
-        message.payload.widget.data.value = gpGame->m_viewArmyResult % 6;
+        message.value = gpGame->m_viewArmyResult % 6;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
         gpGame->m_viewArmyWindow->DrawWindow();
         gViewArmyAnimTimer = KBTickCount() + 90;
@@ -2863,17 +2863,17 @@ void game::Overview(void) {
         MemError();
     SetWinText(win, 8);
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 64;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 64;
     sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
-    message.payload.widget.data.text = gText;
+    message.text = gText;
     win->BroadcastMessage(message);
-    message.payload.widget.id = 65;
+    message.id = 65;
     sprintf(gText, "%d", ComputeDailyGold(giCurPlayer));
     win->BroadcastMessage(message);
     for (i = 0; i < 7; i++) {
         sprintf(gText, "%d", gpCurPlayer->m_resources[i]);
-        message.payload.widget.id = i + 1;
+        message.id = i + 1;
         win->BroadcastMessage(message);
     }
     gpWindowManager->AddWindow(win, -1, 1);
@@ -4785,18 +4785,18 @@ void game::ShowScenInfo(void) {
     if (!scenWindow)
         MemError();
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = nameId;
-    message.payload.widget.data.text = m_mapName;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = nameId;
+    message.text = m_mapName;
     scenWindow->BroadcastMessage(message);
     difficulty = m_difficulty;
     if (giCurPlayer > 0)
         difficulty = gpCurPlayer->m_difficulty - 1;
-    message.payload.widget.id = levelId;
-    message.payload.widget.data.text = gDifficultyNames[difficulty];
+    message.id = levelId;
+    message.text = gDifficultyNames[difficulty];
     scenWindow->BroadcastMessage(message);
-    message.payload.widget.id = playersId;
-    message.payload.widget.data.text = gText;
+    message.id = playersId;
+    message.text = gText;
     sprintf(gText, "");
     for (i = 1; i < 4; i++) {
         if (giCurPlayer == 0) {
@@ -4815,27 +4815,27 @@ void game::ShowScenInfo(void) {
         strcat(gText, line1);
     }
     scenWindow->BroadcastMessage(message);
-    message.payload.widget.id = kingOfHillId;
-    message.payload.widget.data.text = gText;
+    message.id = kingOfHillId;
+    message.text = gText;
     sprintf(gText, gbKingOfTheHill ? "Yes" : "No");
     scenWindow->BroadcastMessage(message);
-    message.payload.widget.id = ratingId;
+    message.id = ratingId;
     sprintf(gText, "%d%%", gpGame->m_difficultyRating);
-    message.payload.widget.data.text = gText;
+    message.text = gText;
     scenWindow->BroadcastMessage(message);
-    message.payload.widget.id = sizeId;
-    message.payload.widget.data.text = gMapSizeNames[m_mapSize];
+    message.id = sizeId;
+    message.text = gMapSizeNames[m_mapSize];
     scenWindow->BroadcastMessage(message);
-    message.payload.widget.id = mapLevelId;
-    message.payload.widget.data.text = gMapDifficultyNames[m_mapDifficulty];
+    message.id = mapLevelId;
+    message.text = gMapDifficultyNames[m_mapDifficulty];
     scenWindow->BroadcastMessage(message);
-    message.payload.widget.id = mapDescId;
-    message.payload.widget.data.text = m_mapDescription;
+    message.id = mapDescId;
+    message.text = m_mapDescription;
     scenWindow->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[giCurPlayer].m_unknown11 != -1) {
-        message.payload.widget.id = crestId;
-        message.payload.widget.data.value = m_players[giCurPlayer].m_unknown11 * 2 + 11;
+        message.id = crestId;
+        message.value = m_players[giCurPlayer].m_unknown11 * 2 + 11;
         scenWindow->BroadcastMessage(message);
     }
     gpWindowManager->DoDialog(scenWindow, EventWindowHandler, 0);

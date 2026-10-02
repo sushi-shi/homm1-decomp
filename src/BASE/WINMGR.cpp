@@ -166,9 +166,9 @@ VA(0x00474130, 0x3c)
 short heroWindowManager::BroadcastMessage(short type, short command, short widgetId, short value) {
     tag_message message;
     message.type = type;
-    message.payload.widget.command = command;
-    message.payload.widget.id = widgetId;
-    message.payload.widget.data.value = value;
+    message.command = command;
+    message.id = widgetId;
+    message.value = value;
     return Main(message);
 }
 
@@ -276,14 +276,14 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
         if (window != 0) {
             result = window->BroadcastMessage(message);
             if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
-                && message.payload.widget.command == WIDGET_COMMAND_DIALOG_SELECT) {
-                m_dialogResult = message.payload.widget.id;
+                && message.command == WIDGET_COMMAND_DIALOG_SELECT) {
+                m_dialogResult = message.id;
                 done = 1;
             }
         }
         result = handler(message);
         if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
-            && message.payload.widget.command == WIDGET_COMMAND_DIALOG_SELECT)
+            && message.command == WIDGET_COMMAND_DIALOG_SELECT)
             done = 1;
     }
     if (done != 0) {

@@ -864,9 +864,9 @@ void SetWinText(heroWindow* window, short id) {
     for (i = 0; i < static_cast<int>(WINDOW_TEXT_ENTRY_COUNT); i++) {
         if (gWinSetup[i].windowId == id) {
             message.type = MESSAGE_WIDGET;
-            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-            message.payload.widget.id = gWinSetup[i].widgetId;
-            message.payload.widget.data.text = gWinSetupText[i];
+            message.command = WIDGET_COMMAND_SET_TEXT;
+            message.id = gWinSetup[i].widgetId;
+            message.text = gWinSetupText[i];
             window->BroadcastMessage(message);
         }
     }

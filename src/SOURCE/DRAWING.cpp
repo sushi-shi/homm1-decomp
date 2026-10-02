@@ -42,9 +42,9 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
     int prevLimit;
 
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 0xc;
-    message.payload.widget.data.text = text;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 0xc;
+    message.text = text;
     m_combatWindow->BroadcastMessage(message);
     oldCompute = gbComputeExtent;
     prevLimit = gbLimitToExtent;

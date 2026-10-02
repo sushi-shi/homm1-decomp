@@ -58,10 +58,10 @@ inline short button::Deselect(tag_message& message) {
     Draw();
     gpWindowManager
         ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
-    message.payload.widget.command = WIDGET_NOTIFY_DESELECT;
+    message.command = WIDGET_NOTIFY_DESELECT;
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.id = m_id;
-    message.payload.mouse.modifiers = iLeftRightSave;
+    message.id = m_id;
+    message.modifiers = iLeftRightSave;
     iLeftRightSave = MESSAGE_MODIFIER_NONE;
     return MESSAGE_DISPATCH_FORWARD;
 }
@@ -78,23 +78,23 @@ short button::Main(tag_message& message) {
     }
     switch (message.type) {
         case MESSAGE_KEY_DOWN:
-            if (m_hotkey != BUTTON_NO_HOTKEY && message.payload.keyboard.keyCode == m_hotkey)
+            if (m_hotkey != BUTTON_NO_HOTKEY && message.keyCode == m_hotkey)
                 return Select(message);
             return MESSAGE_DISPATCH_CONTINUE;
         case MESSAGE_KEY_UP:
-            if (m_hotkey != BUTTON_NO_HOTKEY && message.payload.keyboard.keyCode == m_hotkey)
+            if (m_hotkey != BUTTON_NO_HOTKEY && message.keyCode == m_hotkey)
                 return Deselect(message);
             return MESSAGE_DISPATCH_CONTINUE;
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.payload.mouse.x - m_owner->m_posX;
-            short y = message.payload.mouse.y - m_owner->m_posY;
+            short x = message.x - m_owner->m_posX;
+            short y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
                 if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
                     message.type = MESSAGE_WIDGET;
-                    message.payload.widget.command = WIDGET_NOTIFY_RIGHT_CLICK;
-                    message.payload.widget.id = m_id;
-                    message.payload.mouse.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                    message.command = WIDGET_NOTIFY_RIGHT_CLICK;
+                    message.id = m_id;
+                    message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                     return MESSAGE_DISPATCH_FORWARD;
                 }
                 return MESSAGE_DISPATCH_CONTINUE;
@@ -108,8 +108,8 @@ short button::Main(tag_message& message) {
                        && message.type != MESSAGE_RIGHT_BUTTON_UP) {
                     gpMouseManager->Main(message);
                     if (message.type == MESSAGE_MOUSE_MOVE) {
-                        x = message.payload.mouse.x - m_owner->m_posX;
-                        y = message.payload.mouse.y - m_owner->m_posY;
+                        x = message.x - m_owner->m_posX;
+                        y = message.y - m_owner->m_posY;
                         if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
                             if (!(m_flags & WIDGET_FLAG_SELECTED))
                                 Select(message);
@@ -140,13 +140,13 @@ short button::Select(tag_message& message) {
     gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
     m_flags |= WIDGET_FLAG_SELECTED;
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.id = m_id;
+    message.id = m_id;
     if (m_selectMode == BUTTON_SELECT_DIALOG_RESULT)
-        message.payload.widget.command = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = WIDGET_COMMAND_DIALOG_SELECT;
     else
-        message.payload.widget.command = WIDGET_NOTIFY_SELECT;
+        message.command = WIDGET_NOTIFY_SELECT;
     gButtonRepeatTimer = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
-    iLeftRightSave = message.payload.mouse.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
+    iLeftRightSave = message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
     return MESSAGE_DISPATCH_FORWARD;
 }
 

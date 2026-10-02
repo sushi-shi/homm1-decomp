@@ -49,12 +49,12 @@ VA(0x00415637, 0x160)
 short CombatSpecialHandler(struct tag_message &message)
 {
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_COMMAND_HOVER:
-                if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                if (message.id == gpWindowManager->m_lastHoverId)
                     return MESSAGE_DISPATCH_CONSUME;
-                gpWindowManager->m_lastHoverId = message.payload.widget.id;
-                switch (message.payload.widget.id) {
+                gpWindowManager->m_lastHoverId = message.id;
+                switch (message.id) {
                     case 2:
                         gpCombatManager->CombatMessage(cSpellHelp[0], 1);
                         break;
@@ -89,7 +89,7 @@ short HandleCastSpell(struct tag_message &message)
 
     switch (message.type) {
         case MESSAGE_MOUSE_MOVE:
-            hex = gpCombatManager->GetGridIndex(message.payload.mouse.x, message.payload.mouse.y);
+            hex = gpCombatManager->GetGridIndex(message.x, message.y);
             if (indexToCastOn != hex) {
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = -1;
@@ -115,7 +115,7 @@ short HandleCastSpell(struct tag_message &message)
                         bInTeleportGetDest = 1;
                         indexToCastOn = -1;
                         message.type = MESSAGE_MOUSE_MOVE;
-                        gpMouseManager->MouseCoords(message.payload.mouse.x, message.payload.mouse.y);
+                        gpMouseManager->MouseCoords(message.x, message.y);
                         HandleCastSpell(message);
                         gpCombatManager->CombatMessage("Select teleport destination.", 1);
                         return MESSAGE_DISPATCH_CONSUME;
@@ -123,18 +123,18 @@ short HandleCastSpell(struct tag_message &message)
                 }
                 bInTeleportGetDest = 0;
                 message.type = MESSAGE_WIDGET;
-                message.payload.widget.command = WIDGET_COMMAND_DIALOG_SELECT;
+                message.command = WIDGET_COMMAND_DIALOG_SELECT;
                 return MESSAGE_DISPATCH_FORWARD;
             }
             break;
         case MESSAGE_KEY_DOWN:
-            if (message.payload.keyboard.keyCode != 1)
+            if (message.keyCode != 1)
                 break;
         case MESSAGE_RIGHT_BUTTON_DOWN:
             gpCombatManager->m_selectedSpell = -1;
             giNextAction = 0;
             message.type = MESSAGE_WIDGET;
-            message.payload.widget.command = WIDGET_COMMAND_DIALOG_SELECT;
+            message.command = WIDGET_COMMAND_DIALOG_SELECT;
             bInTeleportGetDest = 0;
             return MESSAGE_DISPATCH_FORWARD;
     }

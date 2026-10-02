@@ -310,7 +310,7 @@ void heroWindow::DrawWindow(short update, int firstId, int lastId)
     tag_message windowWidgetMessage;
     widget *current = m_widgetListTail;
     windowWidgetMessage.type = MESSAGE_WIDGET;
-    windowWidgetMessage.payload.widget.command = WIDGET_COMMAND_DRAW;
+    windowWidgetMessage.command = WIDGET_COMMAND_DRAW;
     while (current != 0) {
         PollSound();
         if (firstId != WINDOW_ALL_WIDGETS_LOW

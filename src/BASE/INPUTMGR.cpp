@@ -52,17 +52,17 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
 
     tag_message* event = &gpInputManager->m_eventRing[gpInputManager->m_writeIndex];
     event->type = MESSAGE_NONE;
-    event->payload.mouse.modifiers = MESSAGE_MODIFIER_NONE;
-    event->payload.mouse.y = 0;
-    event->payload.keyboard.keyCode = 0;
+    event->modifiers = MESSAGE_MODIFIER_NONE;
+    event->y = 0;
+    event->keyCode = 0;
 
     switch (message) {
         case WM_KEYDOWN:
             event->type = MESSAGE_KEY_DOWN;
-            event->payload.keyboard.keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
-            event->payload.mouse.y = 0;
-            event->payload.mouse.modifiers = MESSAGE_MODIFIER_NONE;
-            switch (event->payload.keyboard.keyCode) {
+            event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
+            event->y = 0;
+            event->modifiers = MESSAGE_MODIFIER_NONE;
+            switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
                     gpInputManager->m_modifiers |= MESSAGE_MODIFIER_CONTROL;
                     break;
@@ -79,10 +79,10 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
             break;
         case WM_KEYUP:
             event->type = MESSAGE_KEY_UP;
-            event->payload.keyboard.keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
-            event->payload.mouse.y = 0;
-            event->payload.mouse.modifiers = MESSAGE_MODIFIER_NONE;
-            switch (event->payload.keyboard.keyCode) {
+            event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
+            event->y = 0;
+            event->modifiers = MESSAGE_MODIFIER_NONE;
+            switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
                     gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_CONTROL;
                     break;
@@ -100,7 +100,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
     }
 
     if (event->type != MESSAGE_NONE) {
-        event->payload.mouse.modifiers = gpInputManager->m_modifiers;
+        event->modifiers = gpInputManager->m_modifiers;
         gpInputManager->m_writeIndex++;
         gpInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
         if (gpInputManager->m_readIndex == gpInputManager->m_writeIndex) {
@@ -109,15 +109,15 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
         }
         gpInputManager->m_field_0x342 = 0;
         if (gpWindowManager->m_active == 1) {
-            if (event->type == MESSAGE_KEY_DOWN && event->payload.keyboard.keyCode == INPUT_SCAN_F12
-                && (event->payload.mouse.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
+            if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F12
+                && (event->modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
                 gpWindowManager->ScreenShot();
             if (event->type == MESSAGE_KEY_DOWN
-                && event->payload.keyboard.keyCode == INPUT_SCAN_F1) {
+                && event->keyCode == INPUT_SCAN_F1) {
                 SetFullScreenStatus(0);
                 AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
             }
-            if (event->type == MESSAGE_KEY_DOWN && event->payload.keyboard.keyCode == INPUT_SCAN_F4)
+            if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
                 SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
         }
     }
@@ -138,9 +138,9 @@ int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageD
     gpInputManager->m_mouseMessageActive = 1;
 
     tag_message* event = &gpInputManager->m_eventRing[gpInputManager->m_writeIndex];
-    event->payload.mouse.modifiers = MESSAGE_MODIFIER_NONE;
-    event->payload.mouse.y = 0;
-    event->payload.mouse.x = 0;
+    event->modifiers = MESSAGE_MODIFIER_NONE;
+    event->y = 0;
+    event->x = 0;
     event->type = MESSAGE_NONE;
 
     switch (message) {
@@ -181,22 +181,22 @@ mouseCoordinates:
         gInputManagerAssertFile,
         gInputManagerAssertLine + 50
     );
-    event->payload.mouse.x = LOWORD(messageData) * INPUT_GAME_WIDTH / iMainWinScreenWidth;
-    event->payload.mouse.y = HIWORD(messageData) * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
+    event->x = LOWORD(messageData) * INPUT_GAME_WIDTH / iMainWinScreenWidth;
+    event->y = HIWORD(messageData) * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
 
 mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != 0) {
-        if (event->payload.mouse.x > INPUT_CURSOR_INTERIOR_X_MIN
-            && event->payload.mouse.x < INPUT_CURSOR_INTERIOR_X_MAX
-            && event->payload.mouse.y > INPUT_CURSOR_INTERIOR_Y_MIN
-            && event->payload.mouse.y < INPUT_CURSOR_INTERIOR_Y_MAX)
+        if (event->x > INPUT_CURSOR_INTERIOR_X_MIN
+            && event->x < INPUT_CURSOR_INTERIOR_X_MAX
+            && event->y > INPUT_CURSOR_INTERIOR_Y_MIN
+            && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
             gpMouseManager->SetPointer(INPUT_KEEP_CURRENT_MOUSE_FRAME);
     }
 
 afterMouseCoordinates:
-    event->payload.mouse.modifiers = MESSAGE_MODIFIER_NONE;
+    event->modifiers = MESSAGE_MODIFIER_NONE;
     if (event->type != MESSAGE_NONE) {
-        event->payload.mouse.modifiers = gpInputManager->m_modifiers;
+        event->modifiers = gpInputManager->m_modifiers;
         gpInputManager->m_writeIndex++;
         gpInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
         if (gpInputManager->m_readIndex == gpInputManager->m_writeIndex) {
@@ -268,9 +268,9 @@ tag_message inputManager::GetEvent(void) {
     PollSound();
     if (gpInputManager->m_active != 1 || m_readIndex == m_writeIndex) {
         event.type = MESSAGE_NONE;
-        event.payload.widget.id = 0;
-        event.payload.widget.command = event.payload.widget.id;
-        event.payload.mouse.modifiers = event.payload.widget.command;
+        event.id = 0;
+        event.command = event.id;
+        event.modifiers = event.command;
     } else {
         event = m_eventRing[m_readIndex];
         m_readIndex++;
@@ -291,80 +291,80 @@ void inputManager::SetKeyCodeType(short keyCodeType) {
 
 VA(0x0047c320, 0x1cb)
 void inputManager::AsciiConvert(tag_message& event) {
-    if ((event.payload.keyboard.keyCode >= INPUT_SCAN_F1
-         && event.payload.keyboard.keyCode <= INPUT_SCAN_F10)
-        || event.payload.keyboard.keyCode == INPUT_SCAN_F11
-        || event.payload.keyboard.keyCode == INPUT_SCAN_F12)
-        event.payload.keyboard.keyCode = m_keyState[event.payload.keyboard.keyCode];
+    if ((event.keyCode >= INPUT_SCAN_F1
+         && event.keyCode <= INPUT_SCAN_F10)
+        || event.keyCode == INPUT_SCAN_F11
+        || event.keyCode == INPUT_SCAN_F12)
+        event.keyCode = m_keyState[event.keyCode];
     else
-        event.payload.keyboard.keyCode =
-            m_keyState[event.payload.keyboard.keyCode] & INPUT_SCAN_CODE_MASK;
+        event.keyCode =
+            m_keyState[event.keyCode] & INPUT_SCAN_CODE_MASK;
 
-    if ((event.payload.mouse.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0
-        && event.payload.keyboard.keyCode > 'A' - 1 && event.payload.keyboard.keyCode < 'Z' + 1)
-        event.payload.keyboard.keyCode += 'a' - 'A';
+    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0
+        && event.keyCode > 'A' - 1 && event.keyCode < 'Z' + 1)
+        event.keyCode += 'a' - 'A';
 
-    if ((event.payload.mouse.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != 0) {
-        switch (event.payload.keyboard.keyCode) {
+    if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != 0) {
+        switch (event.keyCode) {
             case '1':
-                event.payload.keyboard.keyCode = '!';
+                event.keyCode = '!';
                 break;
             case '2':
-                event.payload.keyboard.keyCode = '@';
+                event.keyCode = '@';
                 break;
             case '3':
-                event.payload.keyboard.keyCode = '#';
+                event.keyCode = '#';
                 break;
             case '4':
-                event.payload.keyboard.keyCode = '$';
+                event.keyCode = '$';
                 break;
             case '5':
-                event.payload.keyboard.keyCode = '%';
+                event.keyCode = '%';
                 break;
             case '6':
-                event.payload.keyboard.keyCode = '^';
+                event.keyCode = '^';
                 break;
             case '7':
-                event.payload.keyboard.keyCode = '&';
+                event.keyCode = '&';
                 break;
             case '8':
-                event.payload.keyboard.keyCode = '*';
+                event.keyCode = '*';
                 break;
             case '9':
-                event.payload.keyboard.keyCode = '(';
+                event.keyCode = '(';
                 break;
             case '0':
-                event.payload.keyboard.keyCode = ')';
+                event.keyCode = ')';
                 break;
             case '-':
-                event.payload.keyboard.keyCode = '_';
+                event.keyCode = '_';
                 break;
             case '=':
-                event.payload.keyboard.keyCode = '+';
+                event.keyCode = '+';
                 break;
             case '[':
-                event.payload.keyboard.keyCode = '{';
+                event.keyCode = '{';
                 break;
             case ']':
-                event.payload.keyboard.keyCode = '}';
+                event.keyCode = '}';
                 break;
             case '\\':
-                event.payload.keyboard.keyCode = '|';
+                event.keyCode = '|';
                 break;
             case ';':
-                event.payload.keyboard.keyCode = ':';
+                event.keyCode = ':';
                 break;
             case '\'':
-                event.payload.keyboard.keyCode = '"';
+                event.keyCode = '"';
                 break;
             case ',':
-                event.payload.keyboard.keyCode = '<';
+                event.keyCode = '<';
                 break;
             case '.':
-                event.payload.keyboard.keyCode = '>';
+                event.keyCode = '>';
                 break;
             case '/':
-                event.payload.keyboard.keyCode = '?';
+                event.keyCode = '?';
                 break;
         }
     }

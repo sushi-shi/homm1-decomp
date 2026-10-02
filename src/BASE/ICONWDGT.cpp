@@ -73,15 +73,15 @@ short iconWidget::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.payload.mouse.x - m_owner->m_posX;
-            short y = message.payload.mouse.y - m_owner->m_posY;
+            short x = message.x - m_owner->m_posX;
+            short y = message.y - m_owner->m_posY;
             if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
-                    message.payload.mouse.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                    message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                 message.type = MESSAGE_WIDGET;
-                message.payload.widget.command = WIDGET_NOTIFY_SELECT;
-                message.payload.widget.id = m_id;
+                message.command = WIDGET_NOTIFY_SELECT;
+                message.id = m_id;
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;
@@ -91,30 +91,30 @@ short iconWidget::Main(tag_message& message) {
             if (m_flags & WIDGET_FLAG_SELECTED) {
                 m_flags &= ~WIDGET_FLAG_SELECTED;
                 message.type = MESSAGE_WIDGET;
-                message.payload.widget.command = WIDGET_NOTIFY_DESELECT;
-                message.payload.widget.id = m_id;
+                message.command = WIDGET_NOTIFY_DESELECT;
+                message.id = m_id;
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;
         case MESSAGE_WIDGET:
-            switch (message.payload.widget.command) {
+            switch (message.command) {
                 case WIDGET_COMMAND_SET_FRAME:
-                    if (m_id == message.payload.widget.id) {
-                        m_frame = message.payload.widget.data.value;
+                    if (m_id == message.id) {
+                        m_frame = message.value;
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;
                 case WIDGET_COMMAND_SET_COLOR:
-                    if (m_id == message.payload.widget.id) {
-                        m_fillColor = message.payload.widget.data.value & 0xff;
+                    if (m_id == message.id) {
+                        m_fillColor = message.value & 0xff;
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;
                 case WIDGET_COMMAND_SET_ICON:
-                    if (m_id == message.payload.widget.id) {
+                    if (m_id == message.id) {
                         if (m_icon != 0) {
                             gpResourceManager->Dispose(m_icon);
-                            m_icon = gpResourceManager->GetIcon(message.payload.widget.data.text);
+                            m_icon = gpResourceManager->GetIcon(message.text);
                         }
                         return MESSAGE_DISPATCH_CONSUME;
                     }

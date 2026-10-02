@@ -60,50 +60,28 @@ H1_ENUM_BEGIN(MessageModifier)
 H1_ENUM_END(MessageModifier)
 
 #pragma pack(push, 1)
-struct tag_messageMousePayload {
-    short x;
-    short y;
-    H1_ENUM_STORAGE(MessageModifier, short) modifiers;
-    char unknown[8];
-};
-
-union tag_messageWidgetData {
-    long value;
-    char* text;
-};
-
-struct tag_messageKeyboardPayload {
-    short keyCode;
-    short unknown;
-    short modifiers;
-    char unknown6[8];
-};
-
-struct tag_messageWidgetPayload {
-    H1_ENUM_STORAGE(BaseWidgetCommand, short) command;
-    short id;
-    short modifiers;
-    char unknown[4];
-    tag_messageWidgetData data;
-};
-
-struct tag_messageExecutivePayload {
-    H1_ENUM_STORAGE(ExecutiveCommand, short) command;
-    char unknown[8];
-    int result;
-};
-
-union tag_messagePayload {
-    tag_messageMousePayload mouse;
-    tag_messageKeyboardPayload keyboard;
-    tag_messageWidgetPayload widget;
-    tag_messageExecutivePayload executive;
-    char unknown[14];
-};
-
+// Retail reaches every word directly off the message (evidence/
+// message-flat-layout.md); a named payload level changes VC4's operand order.
+// The anonymous unions only name the per-message-type views of each word.
 struct tag_message {
     H1_ENUM_STORAGE(MessageType, short) type;
-    tag_messagePayload payload;
+    union {
+        H1_ENUM_STORAGE(BaseWidgetCommand, short) command;
+        H1_ENUM_STORAGE(ExecutiveCommand, short) executiveCommand;
+        short keyCode;
+        short x;
+    };
+    union {
+        short id;
+        short y;
+    };
+    short modifiers;
+    char unknown8[4];
+    union {
+        long value;
+        char* text;
+        int result;
+    };
 };
 #pragma pack(pop)
 

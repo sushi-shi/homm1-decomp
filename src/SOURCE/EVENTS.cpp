@@ -387,9 +387,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             gpTownManager->SetupThievesGuild(win, 8);
             strcpy(gText, "Shrine - Player Rankings");
             event.type = MESSAGE_WIDGET;
-            event.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-            event.payload.widget.id = 0;
-            event.payload.widget.data.text = gText;
+            event.command = WIDGET_COMMAND_SET_TEXT;
+            event.id = 0;
+            event.text = gText;
             win->BroadcastMessage(event);
             gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
             delete win;

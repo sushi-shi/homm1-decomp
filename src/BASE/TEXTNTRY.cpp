@@ -93,14 +93,14 @@ short textEntryWidget::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.payload.mouse.x - m_owner->m_posX;
-            short y = message.payload.mouse.y - m_owner->m_posY;
+            short x = message.x - m_owner->m_posX;
+            short y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
                 if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
-                    message.payload.widget.command = WIDGET_NOTIFY_RIGHT_CLICK;
+                    message.command = WIDGET_NOTIFY_RIGHT_CLICK;
                     message.type = MESSAGE_WIDGET;
-                    message.payload.widget.id = m_id;
-                    message.payload.mouse.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                    message.id = m_id;
+                    message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                     return MESSAGE_DISPATCH_FORWARD;
                 }
                 return MESSAGE_DISPATCH_CONTINUE;
@@ -132,7 +132,7 @@ short textEntryWidget::Main(tag_message& message) {
                     Process1WindowsMessage();
                     event = gpInputManager->GetEvent();
                     if (event.type == MESSAGE_KEY_DOWN) {
-                        switch (event.payload.keyboard.keyCode) {
+                        switch (event.keyCode) {
                             case TEXT_ENTRY_KEY_ESCAPE:
                                 strcpy(edit, original);
                                 done++;
@@ -156,9 +156,9 @@ short textEntryWidget::Main(tag_message& message) {
                                 break;
                             default:
                                 gpInputManager->AsciiConvert(event);
-                                if (event.payload.keyboard.keyCode == TEXT_ENTRY_KEY_ACCEPT) {
+                                if (event.keyCode == TEXT_ENTRY_KEY_ACCEPT) {
                                     done++;
-                                } else if (event.payload.keyboard.keyCode
+                                } else if (event.keyCode
                                            == TEXT_ENTRY_KEY_BACKSPACE) {
                                     if (m_cursorPosition > 0) {
                                         strcpy(swap, edit + m_cursorPosition);
@@ -168,14 +168,14 @@ short textEntryWidget::Main(tag_message& message) {
                                             m_displayOffset = m_cursorPosition;
                                     }
                                 } else if (strlen(edit) + 1 < m_maxLength
-                                           && event.payload.keyboard.keyCode != 0) {
+                                           && event.keyCode != 0) {
                                     char typed = 0;
                                     strcpy(copy, edit);
-                                    if (event.payload.keyboard.keyCode
+                                    if (event.keyCode
                                         >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
                                         switch (static_cast<unsigned char>(
                                             static_cast<unsigned short>(
-                                                event.payload.keyboard.keyCode
+                                                event.keyCode
                                             )
                                             >> 8
                                         )) {
@@ -211,7 +211,7 @@ short textEntryWidget::Main(tag_message& message) {
                                                 break;
                                         }
                                     } else {
-                                        typed = static_cast<char>(event.payload.keyboard.keyCode);
+                                        typed = static_cast<char>(event.keyCode);
                                     }
                                     if (typed != 0) {
                                         strcpy(swap, m_text);
@@ -245,30 +245,30 @@ short textEntryWidget::Main(tag_message& message) {
                 Draw();
                 gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
                 gpMouseManager->ReallyShowPointer();
-                message.payload.widget.command = WIDGET_NOTIFY_SELECT;
+                message.command = WIDGET_NOTIFY_SELECT;
                 message.type = MESSAGE_WIDGET;
-                message.payload.widget.id = m_id;
+                message.id = m_id;
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;
         }
         case MESSAGE_WIDGET:
-            switch (message.payload.widget.command) {
+            switch (message.command) {
                 case WIDGET_COMMAND_SET_TEXT:
-                    if (message.payload.widget.id == m_id) {
-                        SetText(message.payload.widget.data.text);
+                    if (message.id == m_id) {
+                        SetText(message.text);
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;
                 case WIDGET_COMMAND_GET_TEXT:
-                    if (message.payload.widget.id == m_id) {
-                        message.payload.widget.data.text = m_text;
+                    if (message.id == m_id) {
+                        message.text = m_text;
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;
                 case WIDGET_COMMAND_SET_MAX_LENGTH:
-                    if (message.payload.widget.id == m_id) {
-                        m_maxLength = message.payload.widget.data.value;
+                    if (message.id == m_id) {
+                        m_maxLength = message.value;
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;

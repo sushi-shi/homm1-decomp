@@ -247,105 +247,105 @@ signed char hero::HeroView(signed char viewOnly) {
     SetWinText(heroWin, 5);
     message.type = MESSAGE_WIDGET;
     sprintf(gText, "%s the %s", m_name, gClassNames[m_unknown1c]);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 2;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 2;
+    message.text = gText;
     heroWin->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.payload.widget.data.value = 4;
+    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.value = 4;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        message.payload.widget.id = i + 81;
+        message.id = i + 81;
         heroWin->BroadcastMessage(message);
-        message.payload.widget.id = i + 102;
+        message.id = i + 102;
         heroWin->BroadcastMessage(message);
     }
     if (viewOnly || gpTownManager->m_castleDialogActive
         || (!gpCurPlayer->m_townCount && gpCurPlayer->m_heroCount == 1)) {
-        message.payload.widget.id = 0x7803;
-        message.payload.widget.data.value = 6;
+        message.id = 0x7803;
+        message.value = 6;
         heroWin->BroadcastMessage(message);
     }
     sprintf(gText, "port%04d.icn", m_unknown1d);
-    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
-    message.payload.widget.id = 65;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_ICON;
+    message.id = 65;
+    message.text = gText;
     heroWin->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < HERO_PRIMARY_STAT_COUNT; i++) {
         sprintf(gText, "%d", m_primaryStats[i]);
-        message.payload.widget.id = i + 76;
-        message.payload.widget.data.text = gText;
+        message.id = i + 76;
+        message.text = gText;
         heroWin->BroadcastMessage(message);
     }
     armyLuckLevel = gpGame->GetLuck(this, 0);
     for (i = 0; i < 3; i++) {
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.id = i + 203;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.id = i + 203;
         if (armyLuckLevel < 0)
-            message.payload.widget.data.value = 12;
+            message.value = 12;
         else if (armyLuckLevel == 0)
-            message.payload.widget.data.value = 16;
+            message.value = 16;
         else
-            message.payload.widget.data.value = 11;
+            message.value = 11;
         heroWin->BroadcastMessage(message);
     }
     shown = abs(armyLuckLevel);
     if (shown <= 0)
         shown = 1;
     for (i = 3; i > shown; i--) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.id = i + 202;
-        message.payload.widget.data.value = 6;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.id = i + 202;
+        message.value = 6;
         heroWin->BroadcastMessage(message);
     }
     armyMoraleLevel = m_army.GetMorale(this, 0);
     for (i = 0; i < 3; i++) {
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.id = i + 200;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.id = i + 200;
         if (armyMoraleLevel < 0)
-            message.payload.widget.data.value = 14;
+            message.value = 14;
         else if (armyMoraleLevel == 0)
-            message.payload.widget.data.value = 17;
+            message.value = 17;
         else
-            message.payload.widget.data.value = 13;
+            message.value = 13;
         heroWin->BroadcastMessage(message);
     }
     shown = abs(armyMoraleLevel);
     if (shown <= 0)
         shown = 1;
     for (i = 3; i > shown; i--) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.id = i + 199;
-        message.payload.widget.data.value = 6;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.id = i + 199;
+        message.value = 6;
         heroWin->BroadcastMessage(message);
     }
     sprintf(gText, "%ld", m_experience);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 207;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 207;
+    message.text = gText;
     heroWin->BroadcastMessage(message);
     sprintf(gText, "crst%04d.icn", m_unknown1c + gpCurPlayer->Color() * 4);
-    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
-    message.payload.widget.id = 86;
+    message.command = WIDGET_COMMAND_SET_ICON;
+    message.id = 86;
     heroWin->BroadcastMessage(message);
     UpdateArmies();
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        message.payload.widget.id = i + 20;
+        message.id = i + 20;
         if (m_artifacts[i] != -1) {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.data.value = m_artifacts[i];
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.value = m_artifacts[i];
             heroWin->BroadcastMessage(message);
             if (m_artifacts[i] >= 4) {
-                message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-                message.payload.widget.id = i + 6;
-                message.payload.widget.data.value = 4;
+                message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+                message.id = i + 6;
+                message.value = 4;
                 heroWin->BroadcastMessage(message);
             }
         } else {
-            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.payload.widget.data.value = 4;
+            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.value = 4;
             heroWin->BroadcastMessage(message);
-            message.payload.widget.id = i + 6;
+            message.id = i + 6;
             heroWin->BroadcastMessage(message);
         }
     }
@@ -377,9 +377,9 @@ void HeroMessageUpdate(char* text) {
     if (!gheroWin)
         return;
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 302;
-    message.payload.widget.data.text = text;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 302;
+    message.text = text;
     gheroWin->BroadcastMessage(message);
     gheroWin->DrawWindow(0, 300, 302);
     gpWindowManager->UpdateScreenRegion(0, 459, 640, 20);
@@ -397,11 +397,11 @@ void hero::HeroScreenUpdate(void) {
     UpdateArmies();
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (i == giHeroScreenSrcIndex)
-            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.command = WIDGET_COMMAND_SET_FLAGS;
         else
-            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = 4;
-        message.payload.widget.id = i + 102;
+            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = 4;
+        message.id = i + 102;
         heroWin->BroadcastMessage(message);
     }
     heroWin->DrawWindow();
@@ -419,36 +419,36 @@ void hero::UpdateArmies(void) {
     message.type = MESSAGE_WIDGET;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (m_army.m_creatureTypes[i] == -1) {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.id = i + 87;
-            message.payload.widget.data.value = 2;
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.id = i + 87;
+            message.value = 2;
             heroWin->BroadcastMessage(message);
-            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.payload.widget.id = i + 92;
-            message.payload.widget.data.value = 4;
+            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.id = i + 92;
+            message.value = 4;
             heroWin->BroadcastMessage(message);
-            message.payload.widget.id = i + 97;
+            message.id = i + 97;
             heroWin->BroadcastMessage(message);
-            message.payload.widget.id = i + 102;
+            message.id = i + 102;
             heroWin->BroadcastMessage(message);
         } else {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.id = i + 87;
-            message.payload.widget.data.value = m_army.m_creatureTypes[i] / 6 + 3;
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.id = i + 87;
+            message.value = m_army.m_creatureTypes[i] / 6 + 3;
             heroWin->BroadcastMessage(message);
-            message.payload.widget.id = i + 92;
-            message.payload.widget.data.value = m_army.m_creatureTypes[i];
+            message.id = i + 92;
+            message.value = m_army.m_creatureTypes[i];
             heroWin->BroadcastMessage(message);
-            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-            message.payload.widget.data.value = 4;
+            message.command = WIDGET_COMMAND_SET_FLAGS;
+            message.value = 4;
             heroWin->BroadcastMessage(message);
             sprintf(gText, "%d", m_army.m_creatureCounts[i]);
-            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-            message.payload.widget.id = i + 97;
-            message.payload.widget.data.text = gText;
+            message.command = WIDGET_COMMAND_SET_TEXT;
+            message.id = i + 97;
+            message.text = gText;
             heroWin->BroadcastMessage(message);
-            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-            message.payload.widget.data.value = 4;
+            message.command = WIDGET_COMMAND_SET_FLAGS;
+            message.value = 4;
             heroWin->BroadcastMessage(message);
         }
     }
@@ -469,15 +469,15 @@ void hero::ViewStat(signed char stat, signed char quickView) {
         MemError();
     strcpy(gText, gStatNames[stat]);
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
+    message.text = gText;
     win->BroadcastMessage(message);
     strcpy(gText, gStatDesc[stat]);
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 2;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 2;
+    message.text = gText;
     win->BroadcastMessage(message);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
@@ -854,21 +854,21 @@ short HeroHandler(struct tag_message& message) {
     short temporary;
     int spare;
 
-    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+    if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         quickView = 1;
     else
         quickView = 0;
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
         case WIDGET_COMMAND_HOVER:
-            if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+            if (message.id == gpWindowManager->m_lastHoverId)
                 break;
-            gpWindowManager->m_lastHoverId = message.payload.widget.id;
-            UpdateHeroScreenStatusBar(message.payload.widget.id);
+            gpWindowManager->m_lastHoverId = message.id;
+            UpdateHeroScreenStatusBar(message.id);
             return 1;
         case WIDGET_NOTIFY_DESELECT:
             if (!quickView) {
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                 case 0x7803:
                     if (gpHVHero->Dismiss())
                         finished = 1;
@@ -882,7 +882,7 @@ short HeroHandler(struct tag_message& message) {
             }
             break;
         case WIDGET_NOTIFY_SELECT:
-            switch (message.payload.widget.id) {
+            switch (message.id) {
             case 86:
                 if (!quickView) {
                     gpGame->Overview();
@@ -894,7 +894,7 @@ short HeroHandler(struct tag_message& message) {
             case 82:
             case 83:
             case 84:
-                gpHVHero->ViewStat(message.payload.widget.id - 81, quickView);
+                gpHVHero->ViewStat(message.id - 81, quickView);
                 break;
             case 200:
             case 201:
@@ -919,7 +919,7 @@ short HeroHandler(struct tag_message& message) {
             case 104:
             case 105:
             case 106:
-                slot = message.payload.widget.id - 102;
+                slot = message.id - 102;
                 if (!quickView && giHeroScreenSrcIndex == -1) {
                     if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
                         giHeroScreenSrcIndex = slot;
@@ -927,7 +927,7 @@ short HeroHandler(struct tag_message& message) {
                     }
                 } else if ((quickView && gpHVHero->m_army.m_creatureTypes[slot] != -1)
                            || (!quickView
-                               && message.payload.widget.id - 102 == giHeroScreenSrcIndex)) {
+                               && message.id - 102 == giHeroScreenSrcIndex)) {
                     gpGame->ViewArmy(119, 20, gpHVHero->m_army.m_creatureTypes[slot],
                                      gpHVHero->m_army.m_creatureCounts[slot], 0,
                                      quickView || gpTownManager->m_castleDialogActive == 1
@@ -955,7 +955,7 @@ short HeroHandler(struct tag_message& message) {
                 }
                 if (!quickView) {
                     gpWindowManager->m_lastHoverId = -1;
-                    UpdateHeroScreenStatusBar(message.payload.widget.id);
+                    UpdateHeroScreenStatusBar(message.id);
                 }
                 break;
             case 20:
@@ -972,13 +972,13 @@ short HeroHandler(struct tag_message& message) {
             case 31:
             case 32:
             case 33:
-                if (gpHVHero->m_artifacts[message.payload.widget.id - 20] != -1) {
+                if (gpHVHero->m_artifacts[message.id - 20] != -1) {
                     if (!quickView
-                        && gpHVHero->m_artifacts[message.payload.widget.id - 20]
+                        && gpHVHero->m_artifacts[message.id - 20]
                                == ARTIFACT_MAGIC_BOOK)
                         gpGame->ViewSpells(gpHVHero, 2, ViewSpecialHandler, 1);
                     else
-                        gpHVHero->ViewArtifact(gpHVHero->m_artifacts[message.payload.widget.id - 20],
+                        gpHVHero->ViewArtifact(gpHVHero->m_artifacts[message.id - 20],
                                                quickView);
                 }
                 break;
@@ -989,8 +989,8 @@ short HeroHandler(struct tag_message& message) {
         }
     }
     if (finished) {
-        gpWindowManager->m_dialogResult = message.payload.widget.id;
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        gpWindowManager->m_dialogResult = message.id;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return 2;
     } else {
         return 1;

@@ -135,19 +135,19 @@ H1_ENUM_END(AdventurePanelButtonConstant)
 // Buka 2.1's unconditional six-button enable/disable broadcast.
 #define SET_ADVENTURE_BUTTON_FLAGS(message, window, cmd)                                           \
     ((message).type = MESSAGE_WIDGET,                                                              \
-     (message).payload.widget.command = (cmd),                                                     \
-     (message).payload.widget.data.value = WIDGET_FLAG_ENABLED,                                    \
-     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST,                                      \
+     (message).command = (cmd),                                                     \
+     (message).value = WIDGET_FLAG_ENABLED,                                    \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST,                                      \
      (window)->BroadcastMessage(message),                                                          \
-     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 1,                                  \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 1,                                  \
      (window)->BroadcastMessage(message),                                                          \
-     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 2,                                  \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 2,                                  \
      (window)->BroadcastMessage(message),                                                          \
-     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 3,                                  \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 3,                                  \
      (window)->BroadcastMessage(message),                                                          \
-     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_FIRST + 4,                                  \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 4,                                  \
      (window)->BroadcastMessage(message),                                                          \
-     (message).payload.widget.id = ADVMGR_PANEL_BUTTON_LAST,                                       \
+     (message).id = ADVMGR_PANEL_BUTTON_LAST,                                       \
      (window)->BroadcastMessage(message))
 
  // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
@@ -633,7 +633,7 @@ short advManager::Main(struct tag_message& message) {
         UpdateScreen(1, 0);
     if (gbGameOver) {
         message.type = MESSAGE_EXECUTIVE;
-        message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
     }
     if (!gbHumanPlayer[giCurPlayer] && (!gbRemoteOn || giHostGamePos == giThisGamePos)) {
@@ -664,12 +664,12 @@ short advManager::Main(struct tag_message& message) {
     if (message.type) {
         switch (message.type) {
         case MESSAGE_WIDGET:
-            switch (message.payload.widget.command) {
+            switch (message.command) {
             case WIDGET_COMMAND_HOVER:
                 retVal = ProcessHover(&message);
                 break;
             case WIDGET_NOTIFY_DESELECT:
-                if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
+                if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
                     retVal = ProcessDeSelect(&message, &bQuit, &evtMapCell);
                 break;
             case WIDGET_NOTIFY_SELECT:
@@ -677,7 +677,7 @@ short advManager::Main(struct tag_message& message) {
                 break;
             case WIDGET_NOTIFY_RIGHT_CLICK:
                 helpText = -1;
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                 case 1:
                     helpText = 0;
                     break;
@@ -709,13 +709,13 @@ short advManager::Main(struct tag_message& message) {
             else
                 curHero = 0;
             if (giDebugLevel < 1
-                && (message.payload.keyboard.keyCode == 0x3d || message.payload.keyboard.keyCode == 0x3e
-                    || message.payload.keyboard.keyCode == 0x3f || message.payload.keyboard.keyCode == 0x40
-                    || message.payload.keyboard.keyCode == 0x41 || message.payload.keyboard.keyCode == 0x42
-                    || message.payload.keyboard.keyCode == 0x43 || message.payload.keyboard.keyCode == 0x44
-                    || message.payload.keyboard.keyCode == 0x57 || message.payload.keyboard.keyCode == 0x58))
+                && (message.keyCode == 0x3d || message.keyCode == 0x3e
+                    || message.keyCode == 0x3f || message.keyCode == 0x40
+                    || message.keyCode == 0x41 || message.keyCode == 0x42
+                    || message.keyCode == 0x43 || message.keyCode == 0x44
+                    || message.keyCode == 0x57 || message.keyCode == 0x58))
                 break;
-            switch (message.payload.keyboard.keyCode) {
+            switch (message.keyCode) {
             case 0x3c:
                 PopNetBox(0);
                 break;
@@ -809,49 +809,49 @@ short advManager::Main(struct tag_message& message) {
             case 1:
                 break;
             case 0x48:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(0, 0);
                 else
                     dir = 0;
                 break;
             case 0x49:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(1, 0);
                 else
                     dir = 1;
                 break;
             case 0x4d:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(2, 0);
                 else
                     dir = 2;
                 break;
             case 0x51:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(3, 0);
                 else
                     dir = 3;
                 break;
             case 0x50:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(4, 0);
                 else
                     dir = 4;
                 break;
             case 0x4f:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(5, 0);
                 else
                     dir = 5;
                 break;
             case 0x4b:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(6, 0);
                 else
                     dir = 6;
                 break;
             case 0x47:
-                if (message.payload.keyboard.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                     ScreenScroll(7, 0);
                 else
                     dir = 7;
@@ -951,7 +951,7 @@ short advManager::Main(struct tag_message& message) {
         DoEvent(evtMapCell, TrigX, TrigY);
     if (gbGameOver || bQuit == 1 || giMenuCommand != -1) {
         message.type = MESSAGE_EXECUTIVE;
-        message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return retVal;
@@ -981,16 +981,16 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     signed char mobileResult;
 
     isVisible = 1;
-    switch (message->payload.widget.id) {
+    switch (message->id) {
     case 105:
     case 112:
     case 119:
     case 126:
-        iPage = (message->payload.widget.id - 105) / 7;
+        iPage = (message->id - 105) / 7;
         if (gpCurPlayer->m_heroCount <= iPage)
             break;
         cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
-        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+        if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             HeroQuickView(cellType, iPage, -1, -1);
         } else if (gpCurPlayer->CurrentHero() == cellType) {
             m_selectedCell = 2;
@@ -1004,9 +1004,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     case 17:
     case 18:
     case 19:
-        cellType = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + message->payload.widget.id - 16];
-        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            TownQuickView(cellType, message->payload.widget.id - 16, -1, -1);
+        cellType = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + message->id - 16];
+        if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            TownQuickView(cellType, message->id - 16, -1, -1);
         } else {
             HideRoute(1, 0, 1);
             if (gpCurPlayer->CurrentTown() == cellType) {
@@ -1077,7 +1077,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         if (!(gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY] & giCurPlayerBit))
             isVisible = 0;
         hoverCell = GetCell(m_lastHoverCell + m_mapOriginX, m_hoverCellY + m_mapOriginY);
-        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+        if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (!isVisible) {
                 QuickInfo(m_lastHoverCell, m_hoverCellY);
             } else {
@@ -1135,7 +1135,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     && m_heroContextLocked) {
                     m_selectedCell = 2;
                     DoAdvCommand();
-                } else if ((!mobileResult || (message->payload.widget.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
+                } else if ((!mobileResult || (message->modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                             || (gConfig.showRoute
                                 && (hero->m_destinationX != m_commandTargetX
                                     || hero->m_destinationY != m_commandTargetY)))
@@ -1169,7 +1169,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         }
         break;
     case 9:
-        if (message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+        if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             NormalDialog("World Map (Left click to move viewing area).", 4, -1, -1, -1, 0, -1, 0, -1);
             break;
         }
@@ -1202,17 +1202,17 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 inputMessage = gpInputManager->GetEvent();
             }
             if (mouseMsg.type == MESSAGE_MOUSE_MOVE) {
-                if (mouseMsg.payload.mouse.x < 480)
-                    mouseMsg.payload.mouse.x = 480;
-                if (mouseMsg.payload.mouse.x >= 624)
-                    mouseMsg.payload.mouse.x = 623;
-                if (mouseMsg.payload.mouse.y < 16)
-                    mouseMsg.payload.mouse.y = 16;
-                if (mouseMsg.payload.mouse.y >= 160)
-                    mouseMsg.payload.mouse.y = 159;
+                if (mouseMsg.x < 480)
+                    mouseMsg.x = 480;
+                if (mouseMsg.x >= 624)
+                    mouseMsg.x = 623;
+                if (mouseMsg.y < 16)
+                    mouseMsg.y = 16;
+                if (mouseMsg.y >= 160)
+                    mouseMsg.y = 159;
                 gpMouseManager->Main(mouseMsg);
-                curX = (mouseMsg.payload.mouse.x - 480) / 2;
-                curY = (mouseMsg.payload.mouse.y - 16) / 2;
+                curX = (mouseMsg.x - 480) / 2;
+                curY = (mouseMsg.y - 16) / 2;
                 m_mapOriginX = curX - 7;
                 m_mapOriginY = curY - 7;
                 if (m_mapOriginX < -7)
@@ -1233,8 +1233,8 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     default:
         break;
     }
-    if ((message->payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) && message->payload.widget.id >= 2000
-        && message->payload.widget.id <= 2200)
+    if ((message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) && message->id >= 2000
+        && message->id <= 2200)
         NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
                      "and shows the date.  Left click here to cycle through these windows.",
                      4, -1, -1, -1, 0, -1, 0, -1);
@@ -1246,7 +1246,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
 // evidence: graph:4;base=0.346709;margin=0.551065;shape=0.313;size=0.541;calls=0.500;alternate=pol20:int advManager::ProcessDeSelect(struct tag_message *, int *, class mapCell * *)@0x00059c19
 VA(0x00428b59, 0x1ea)
 int advManager::ProcessDeSelect(struct tag_message* message, int* result, class mapCell** eventCell) {
-    switch (message->payload.widget.id) {
+    switch (message->id) {
         case 2:
             m_selectedCell = 7;
             *eventCell = DoAdvCommand();
@@ -1278,7 +1278,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
             gpWindowManager->FadeScreen(0, 8, 0);
             break;
     }
-    if (message->payload.widget.id >= 2000 && message->payload.widget.id <= 2200) {
+    if (message->id >= 2000 && message->id <= 2200) {
         if (giBottomViewOverride == 2)
             giBottomViewOverride = 1;
         else if (giBottomViewOverride != 0)
@@ -1393,7 +1393,7 @@ int advManager::ProcessHover(struct tag_message* message) {
     signed char trigType;
     int baseFrame;
 
-    switch (message->payload.widget.id) {
+    switch (message->id) {
     case 10:
         gpMouseManager->MouseCoords(curX, curY);
         if (curX > 480) {
@@ -2236,9 +2236,9 @@ void advManager::QuickInfo(short cellX, short cellY) {
                 curCell->m_objectIndex, curCell->m_triggerType, curCell->m_objectMetadata,
                 curCell->m_flags & 0x80, savedTextLocal, m_mapOriginX + cellX, m_mapOriginY + cellY);
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
+    message.text = gText;
     window->BroadcastMessage(message);
     GrabScreen();
     gpWindowManager->AddWindow(window, -1, 1);
@@ -2278,34 +2278,34 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
     wBase = locatorSlot * 7 + 100;
     message.type = MESSAGE_WIDGET;
     whichHero = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + locatorSlot];
-    message.payload.widget.command = WIDGET_COMMAND_SET_COLOR;
-    message.payload.widget.id = wBase + 6;
-    message.payload.widget.data.value =
+    message.command = WIDGET_COMMAND_SET_COLOR;
+    message.id = wBase + 6;
+    message.value =
         (gpCurPlayer->m_currentHero == whichHero && gpCurPlayer->m_currentHero != -1 && !gbAllBlack)
             ? 0xc5
             : 0;
     m_adventureWindow->BroadcastMessage(message);
     if (whichHero == -1 || gbAllBlack) {
-        message.payload.widget.id = wBase + 5;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.data.value = locatorSlot;
+        message.id = wBase + 5;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.value = locatorSlot;
         m_adventureWindow->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = 4;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = 4;
         for (i = 0; i <= 4; i++) {
-            message.payload.widget.id = i + wBase;
+            message.id = i + wBase;
             m_adventureWindow->BroadcastMessage(message);
         }
     } else {
         hPtr = gpGame->GetHero(whichHero);
-        message.payload.widget.id = wBase + 5;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.data.value = 8;
+        message.id = wBase + 5;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.value = 8;
         m_adventureWindow->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-        message.payload.widget.data.value = 6;
+        message.command = WIDGET_COMMAND_SET_FLAGS;
+        message.value = 6;
         for (i = 0; i <= 6; i++) {
-            message.payload.widget.id = i + wBase;
+            message.id = i + wBase;
             m_adventureWindow->BroadcastMessage(message);
         }
         moveFrame = hPtr->m_remainingMobility * 22 / 60;
@@ -2317,21 +2317,21 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
             moveFrame = 24;
         else if (moveFrame > 23)
             moveFrame = 23;
-        message.payload.widget.id = wBase + 1;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.data.value = moveFrame;
+        message.id = wBase + 1;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.value = moveFrame;
         m_adventureWindow->BroadcastMessage(message);
-        message.payload.widget.id = wBase + 2;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.data.value = whichHero;
+        message.id = wBase + 2;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.value = whichHero;
         m_adventureWindow->BroadcastMessage(message);
-        message.payload.widget.id = wBase + 3;
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = 6;
+        message.id = wBase + 3;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = 6;
         m_adventureWindow->BroadcastMessage(message);
-        message.payload.widget.id = wBase + 4;
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = 6;
+        message.id = wBase + 4;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = 6;
         m_adventureWindow->BroadcastMessage(message);
     }
     if (drawWindow) {
@@ -2381,29 +2381,29 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
     message.type = MESSAGE_WIDGET;
     for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
         whichTown = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + i];
-        message.payload.widget.command = WIDGET_COMMAND_SET_COLOR;
-        message.payload.widget.id = i + 32;
-        message.payload.widget.data.value =
+        message.command = WIDGET_COMMAND_SET_COLOR;
+        message.id = i + 32;
+        message.value =
             (gpCurPlayer->m_currentTown != -1 && gpCurPlayer->m_currentTown == whichTown && !gbAllBlack)
                 ? 0xc5
                 : 0;
         m_adventureWindow->BroadcastMessage(message);
-        message.payload.widget.id = i + 16;
+        message.id = i + 16;
         if (whichTown == -1 || gbAllBlack) {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.data.value = i + 4;
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.value = i + 4;
             m_adventureWindow->BroadcastMessage(message);
-            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.value = WIDGET_FLAG_ENABLED;
             m_adventureWindow->BroadcastMessage(message);
         } else {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-            message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+            message.command = WIDGET_COMMAND_SET_FLAGS;
+            message.value = WIDGET_FLAG_ENABLED;
             m_adventureWindow->BroadcastMessage(message);
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.data.value = gpGame->GetTown(whichTown)->m_type + 12;
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.value = gpGame->GetTown(whichTown)->m_type + 12;
             if (gpGame->GetTown(whichTown)->m_buildings & 0x40)
-                message.payload.widget.data.value += 4;
+                message.value += 4;
             m_adventureWindow->BroadcastMessage(message);
         }
     }
@@ -2534,9 +2534,9 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
                 iSandAnim = 16;
             updated = 1;
             if (m_bottomViewPrimaryWidgets[3]) {
-                message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-                message.payload.widget.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3;
-                message.payload.widget.data.value = iSandAnim + 11;
+                message.command = WIDGET_COMMAND_SET_FRAME;
+                message.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3;
+                message.value = iSandAnim + 11;
                 m_adventureWindow->BroadcastMessage(message);
             } else {
                 m_bottomViewPrimaryWidgets[3] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iSandAnim + 11, 0,
@@ -2554,9 +2554,9 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         if (iCurBottomViewEnemy != giCurPlayer)
             iCurHourGlassPhase = 0;
         if (m_bottomViewPrimaryWidgets[2]) {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2;
-            message.payload.widget.data.value = gpGame->m_players[giCurPlayer].Color();
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2;
+            message.value = gpGame->m_players[giCurPlayer].Color();
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[2] =
@@ -2574,9 +2574,9 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         iLastHourGlassPhase = iCurHourGlassPhase;
         giLastHourGlassUpdateTime = KBTickCount();
         if (m_bottomViewPrimaryWidgets[4]) {
-            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-            message.payload.widget.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4;
-            message.payload.widget.data.value = iCurHourGlassPhase + 1;
+            message.command = WIDGET_COMMAND_SET_FRAME;
+            message.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4;
+            message.value = iCurHourGlassPhase + 1;
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[4] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iCurHourGlassPhase + 1,
@@ -2942,21 +2942,21 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
             MemError();
     }
 
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.id = 2;
-    message.payload.widget.data.value = heroPtr->m_id;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.id = 2;
+    message.value = heroPtr->m_id;
     viewWin->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.id = 8;
-    message.payload.widget.data.value = gpGame->m_players[heroPtr->m_owner].Color() * 2;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.id = 8;
+    message.value = gpGame->m_players[heroPtr->m_owner].Color() * 2;
     viewWin->BroadcastMessage(message);
-    message.payload.widget.id++;
-    message.payload.widget.data.value++;
+    message.id++;
+    message.value++;
     viewWin->BroadcastMessage(message);
     sprintf(gText, "%s", heroPtr->m_name);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
+    message.text = gText;
     viewWin->BroadcastMessage(message);
 
     numArmies = 0;
@@ -2968,8 +2968,8 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
         for (j = 0; j < 4; j++) {
             sprintf(gText, "%d", heroPtr->m_primaryStats[j]);
-            message.payload.widget.id = j + 3;
-            message.payload.widget.data.text = gText;
+            message.id = j + 3;
+            message.text = gText;
             viewWin->BroadcastMessage(message);
         }
         if (numArmies) {
@@ -3168,32 +3168,32 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
 
     numArmies = 0;
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.id = 2;
-    message.payload.widget.data.value = townPointer->m_type + 12;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.id = 2;
+    message.value = townPointer->m_type + 12;
     if (gpGame->GetTown(townId)->m_buildings & 0x40)
-        message.payload.widget.data.value += 4;
+        message.value += 4;
     viewWin->BroadcastMessage(message);
     if (townPointer->m_owner == -1) {
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.id = 8;
-        message.payload.widget.data.value = 4;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.id = 8;
+        message.value = 4;
         viewWin->BroadcastMessage(message);
-        message.payload.widget.id++;
+        message.id++;
         viewWin->BroadcastMessage(message);
     } else {
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.id = 8;
-        message.payload.widget.data.value = gpGame->m_players[townPointer->m_owner].Color() * 2;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.id = 8;
+        message.value = gpGame->m_players[townPointer->m_owner].Color() * 2;
         viewWin->BroadcastMessage(message);
-        message.payload.widget.id++;
-        message.payload.widget.data.value++;
+        message.id++;
+        message.value++;
         viewWin->BroadcastMessage(message);
     }
     sprintf(gText, GetTownName(townPointer->m_id));
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 1;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 1;
+    message.text = gText;
     viewWin->BroadcastMessage(message);
 
     numArmies = 0;
@@ -3559,12 +3559,12 @@ void advManager::DoHeroKnob(void) {
     message = gpInputManager->GetEvent();
     while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
-            if (message.payload.mouse.y < offset + 195)
-                message.payload.mouse.y = offset + 195;
-            if (message.payload.mouse.y > offset + 268)
-                message.payload.mouse.y = offset + 268;
+            if (message.y < offset + 195)
+                message.y = offset + 195;
+            if (message.y > offset + 268)
+                message.y = offset + 268;
             gpMouseManager->Main(message);
-            m_scrollLeftButton->m_y = message.payload.mouse.y - offset;
+            m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (numHeroes > 4) {
                 pg = static_cast<short>((m_scrollLeftButton->m_y - 195) / scale);
@@ -3573,7 +3573,7 @@ void advManager::DoHeroKnob(void) {
                     if (numHeroes - 3 < pg)
                         pg = numHeroes - 3;
                     UpdateHeroLocators(0, 1);
-                    m_scrollLeftButton->m_y = message.payload.mouse.y - offset;
+                    m_scrollLeftButton->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
                     prevPage = pg;
                 }
@@ -3611,12 +3611,12 @@ void advManager::DoTownKnob(void) {
     message = gpInputManager->GetEvent();
     while (message.type != MESSAGE_LEFT_BUTTON_UP && message.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (message.type == MESSAGE_MOUSE_MOVE) {
-            if (message.payload.mouse.y < offset + 195)
-                message.payload.mouse.y = offset + 195;
-            if (message.payload.mouse.y > offset + 268)
-                message.payload.mouse.y = offset + 268;
+            if (message.y < offset + 195)
+                message.y = offset + 195;
+            if (message.y > offset + 268)
+                message.y = offset + 268;
             gpMouseManager->Main(message);
-            m_scrollRightButton->m_y = message.payload.mouse.y - offset;
+            m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (numHeroes > 4) {
                 pg = static_cast<short>((m_scrollRightButton->m_y - 195) / scale);
@@ -3625,7 +3625,7 @@ void advManager::DoTownKnob(void) {
                     if (numHeroes - 3 < pg)
                         pg = numHeroes - 3;
                     UpdateTownLocators(0, 1);
-                    m_scrollRightButton->m_y = message.payload.mouse.y - offset;
+                    m_scrollRightButton->m_y = message.y - offset;
                     m_adventureWindow->DrawWindow();
                     prevPage = pg;
                 }
@@ -4113,19 +4113,19 @@ short advManager::ControlPanel(void) {
     SetWinText(cPanel, 3);
     if (gbRemoteOn) {
         message.type = MESSAGE_WIDGET;
-        message.payload.widget.id = CONTROL_NEW_GAME;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        message.id = CONTROL_NEW_GAME;
+        message.command = WIDGET_COMMAND_SET_FLAGS;
+        message.value = WIDGET_COMMAND_DIMMED;
         cPanel->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = WIDGET_FLAG_ENABLED;
         cPanel->BroadcastMessage(message);
-        message.payload.widget.id = CONTROL_LOAD_GAME;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        message.id = CONTROL_LOAD_GAME;
+        message.command = WIDGET_COMMAND_SET_FLAGS;
+        message.value = WIDGET_COMMAND_DIMMED;
         cPanel->BroadcastMessage(message);
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = WIDGET_FLAG_ENABLED;
         cPanel->BroadcastMessage(message);
     }
     UpdateCPanel(1);
@@ -4173,43 +4173,43 @@ void UpdateCPanel(signed char initialDraw) {
     tag_message message;
 
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-    message.payload.widget.id = CONTROL_MUSIC_VOLUME;
-    message.payload.widget.data.value = gConfig.musicVolume ? 11 : 10;
+    message.command = WIDGET_COMMAND_SET_FRAME;
+    message.id = CONTROL_MUSIC_VOLUME;
+    message.value = gConfig.musicVolume ? 11 : 10;
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = CONTROL_SOUND_VOLUME;
-    message.payload.widget.data.value = gConfig.soundVolume ? 13 : 12;
+    message.id = CONTROL_SOUND_VOLUME;
+    message.value = gConfig.soundVolume ? 13 : 12;
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = CONTROL_WALK_SPEED;
-    message.payload.widget.data.value = gConfig.walkSpeed + 14;
+    message.id = CONTROL_WALK_SPEED;
+    message.value = gConfig.walkSpeed + 14;
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = CONTROL_MUSIC_SOURCE;
-    message.payload.widget.data.value = gConfig.musicSource + 27;
+    message.id = CONTROL_MUSIC_SOURCE;
+    message.value = gConfig.musicSource + 27;
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = CONTROL_SHOW_ROUTE;
-    message.payload.widget.data.value = gConfig.showRoute + 21;
+    message.id = CONTROL_SHOW_ROUTE;
+    message.value = gConfig.showRoute + 21;
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = CONTROL_SHOW_ENEMY_MOVES;
-    message.payload.widget.data.value = gbRemoteOn ? 23 : 1 - gConfig.blackoutComputer + 23;
+    message.id = CONTROL_SHOW_ENEMY_MOVES;
+    message.value = gbRemoteOn ? 23 : 1 - gConfig.blackoutComputer + 23;
     cPanel->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 8;
-    message.payload.widget.data.text = onOffText[gConfig.musicVolume];
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 8;
+    message.text = onOffText[gConfig.musicVolume];
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = 9;
-    message.payload.widget.data.text = onOffText[gConfig.soundVolume];
+    message.id = 9;
+    message.text = onOffText[gConfig.soundVolume];
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = 10;
-    message.payload.widget.data.text = walkSpeedText[gConfig.walkSpeed];
+    message.id = 10;
+    message.text = walkSpeedText[gConfig.walkSpeed];
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = 14;
-    message.payload.widget.data.text = musicQualityText[gConfig.musicSource];
+    message.id = 14;
+    message.text = musicQualityText[gConfig.musicSource];
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = 15;
-    message.payload.widget.data.text = onOffText[gConfig.showRoute];
+    message.id = 15;
+    message.text = onOffText[gConfig.showRoute];
     cPanel->BroadcastMessage(message);
-    message.payload.widget.id = 16;
-    message.payload.widget.data.text = onOffText[1 - gConfig.blackoutComputer];
+    message.id = 16;
+    message.text = onOffText[1 - gConfig.blackoutComputer];
     cPanel->BroadcastMessage(message);
     if (!initialDraw)
         cPanel->MoveWindow(0, 0);
@@ -4264,10 +4264,10 @@ short CPanelHandler(struct tag_message &message) {
     char question[120];
     signed char handled = 0;
     if (message.type == MESSAGE_WIDGET) {
-        if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            if (IS_WIDGET_SELECTION_NOTIFICATION(message.payload.widget.command)) {
+        if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
                 int helpIndex = -1;
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case CONTROL_NEW_GAME:
                         helpIndex = 0;
                         break;
@@ -4309,9 +4309,9 @@ short CPanelHandler(struct tag_message &message) {
                     NormalDialog(gCPanelHelp[helpIndex], 4, 0xb1, -1, -1, 0, -1, 0, -1);
             }
         } else {
-            switch (message.payload.widget.command) {
+            switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case CONTROL_NEW_GAME:
                             strcpy(question, "Are you sure you want to restart?  (Your current game will be lost)");
                             goto confirm_reset;
@@ -4338,7 +4338,7 @@ short CPanelHandler(struct tag_message &message) {
                     }
                     break;
                 case WIDGET_NOTIFY_SELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case CONTROL_MUSIC_VOLUME:
                             gConfig.musicVolume = (gConfig.musicVolume + 1) % 11;
                             gpSoundManager->AdjustMusicVolumes();
@@ -4395,8 +4395,8 @@ short CPanelHandler(struct tag_message &message) {
     if (changed)
         UpdateCPanel(0);
     if (handled) {
-        gpWindowManager->m_dialogResult = message.payload.widget.id;
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        gpWindowManager->m_dialogResult = message.id;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -4439,17 +4439,17 @@ void advManager::AdvPanel(void)
         MemError();
     if (gpCurPlayer->CurrentHero() == -1) {
         message.type = MESSAGE_WIDGET;
-        message.payload.widget.id = PANEL_SEARCH;
-        message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.payload.widget.data.value = WIDGET_FLAG_ENABLED;
+        message.id = PANEL_SEARCH;
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = WIDGET_FLAG_ENABLED;
         adventurePanel->BroadcastMessage(message);
-        message.payload.widget.id = PANEL_CAST_SPELL;
+        message.id = PANEL_CAST_SPELL;
         adventurePanel->BroadcastMessage(message);
-        message.payload.widget.id = PANEL_SEARCH;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
-        message.payload.widget.data.value = WIDGET_COMMAND_DIMMED;
+        message.id = PANEL_SEARCH;
+        message.command = WIDGET_COMMAND_SET_FLAGS;
+        message.value = WIDGET_COMMAND_DIMMED;
         adventurePanel->BroadcastMessage(message);
-        message.payload.widget.id = PANEL_CAST_SPELL;
+        message.id = PANEL_CAST_SPELL;
         adventurePanel->BroadcastMessage(message);
     }
 
@@ -4486,10 +4486,10 @@ short APanelHandler(struct tag_message &message)
 {
     signed char handled = 0;
     if (message.type == MESSAGE_WIDGET) {
-        if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            if (IS_WIDGET_SELECTION_NOTIFICATION(message.payload.widget.command)) {
+        if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+            if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
                 int helpIndex = PANEL_NO_HELP;
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case PANEL_VIEW_WORLD:
                         helpIndex = PANEL_VIEW_WORLD_HELP;
                         break;
@@ -4510,9 +4510,9 @@ short APanelHandler(struct tag_message &message)
                     NormalDialog(gAPanelHelp[helpIndex], 4, 0xb1, -1, -1, 0, -1, 0, -1);
             }
         } else {
-            switch (message.payload.widget.command) {
+            switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case PANEL_VIEW_WORLD:
                         case PANEL_VIEW_PUZZLE:
                         case PANEL_CAST_SPELL:
@@ -4529,8 +4529,8 @@ short APanelHandler(struct tag_message &message)
     }
 
     if (handled) {
-        gpWindowManager->m_dialogResult = message.payload.widget.id;
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        gpWindowManager->m_dialogResult = message.id;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -4550,12 +4550,12 @@ short DimensionDoorHandler(struct tag_message& message) {
     result = 0;
     switch (message.type) {
         case MESSAGE_WIDGET:
-            switch (message.payload.widget.command) {
+            switch (message.command) {
                 case WIDGET_NOTIFY_SELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case 10:
                         case 11:
-                            if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
+                            if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                             } else if (gpWindowManager->m_dialogResult == 1) {
                                 result = 1;
                             }
@@ -4565,7 +4565,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                     }
                     break;
                 case WIDGET_COMMAND_HOVER:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case 11:
                             gpWindowManager->m_dialogResult = 0;
                             gpMouseManager->SetPointer(0);
@@ -4603,7 +4603,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                     }
                     break;
                 case WIDGET_NOTIFY_DESELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case PANEL_CLOSE_WIDGET:
                             gpWindowManager->m_dialogResult = 0;
                             result = 1;
@@ -4614,7 +4614,7 @@ short DimensionDoorHandler(struct tag_message& message) {
             break;
     }
     if (result) {
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -5348,7 +5348,7 @@ void advManager::ForceNewHover(void) {
     if (!gbThisNetHumanPlayer[giCurPlayer])
         return;
     m_lastHoverCell = -1;
-    msg.payload.widget.id = 10;
+    msg.id = 10;
     ProcessHover(&msg);
 }
 
@@ -5598,15 +5598,15 @@ short advManager::CheckHandleNetPlayerWait(struct tag_message &message, signed c
 
     CheckDoMain(1, doMain);
     if (message.type == MESSAGE_KEY_DOWN) {
-        switch (message.payload.keyboard.keyCode) {
+        switch (message.keyCode) {
             case 0x3b:
                 PopNetBox(0);
                 break;
 
             case 0x10:
-                if (message.payload.keyboard.modifiers & 0xc) {
+                if (message.modifiers & 0xc) {
                     message.type = MESSAGE_EXECUTIVE;
-                    message.payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+                    message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
                     return MESSAGE_DISPATCH_FORWARD;
                 }
 

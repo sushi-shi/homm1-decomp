@@ -47,7 +47,7 @@ short combatManager::Main(struct tag_message &message)
     }
     if (!gbThisNetHasControl) {
         if (message.type == MESSAGE_KEY_DOWN) {
-            switch (message.payload.keyboard.keyCode) {
+            switch (message.keyCode) {
                 case 0x3b:
                     PopNetBox(0);
                     break;
@@ -398,8 +398,8 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatPointerCode, int) command)
 VA(0x004104e4, 0x5bb)
 int combatManager::ProcessCombatMsg(struct tag_message &message)
 {
-    short mouseX = message.payload.mouse.x;
-    short mouseY = message.payload.mouse.y;
+    short mouseX = message.x;
+    short mouseY = message.y;
     signed char unused = 0;
     short selectedHex;
 
@@ -407,11 +407,11 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
         return 0;
     switch (message.type) {
         case MESSAGE_WIDGET:
-            switch (message.payload.widget.command) {
+            switch (message.command) {
                 case WIDGET_COMMAND_HOVER:
                     if (m_gridSelectionDisabled)
                         break;
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case 0x40:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
                             selectedHex = GetGridIndex(mouseX, mouseY);
@@ -447,10 +447,10 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
                     }
                     break;
                 case WIDGET_NOTIFY_SELECT:
-                    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+                    if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
                         RightClick(m_selectedHex);
                     else {
-                        switch (message.payload.widget.id) {
+                        switch (message.id) {
                             case 0x40:
                                 DoCommand(m_currentCommand);
                                 break;
@@ -458,15 +458,15 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
                     }
                     break;
                 case WIDGET_NOTIFY_DESELECT:
-                    switch (message.payload.widget.id) {
+                    switch (message.id) {
                         case 2:
-                            if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                            if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                                 m_gridSelectionDisabled = 1;
                                 gpMouseManager->ReallyHidePointer();
                             }
                             break;
                         case 8:
-                            if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
+                            if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
                                 giNextAction = 3;
                             break;
                     }
@@ -474,7 +474,7 @@ int combatManager::ProcessCombatMsg(struct tag_message &message)
             }
             break;
         case MESSAGE_KEY_DOWN:
-            switch (message.payload.keyboard.keyCode) {
+            switch (message.keyCode) {
                 case 0x3b:
                     PopNetBox(0);
                     break;
@@ -574,7 +574,7 @@ int combatManager::CheckWin(struct tag_message *message)
     if (combatEnded) {
         DoVictory(m_combatResult);
         message->type = MESSAGE_EXECUTIVE;
-        message->payload.executive.command = EXECUTIVE_COMMAND_TERMINATE_LOOP;
+        message->executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
     }
     return combatEnded;
 }
@@ -772,9 +772,9 @@ short WinCombatHandler(struct tag_message &message)
     short frame = 1;
 
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                switch (message.payload.widget.id) {
+                switch (message.id) {
                     case 0x7800:
                         if (iMaxTransferArtifacts > iCurTransferArtifact + 1) {
                             gpCombatManager->ClearWinLoseBottom(gpCombatManager->m_winLoseWindow);
@@ -782,8 +782,8 @@ short WinCombatHandler(struct tag_message &message)
                             gpCombatManager->ShowWinLoseArtifact(gpCombatManager->m_winLoseWindow,
                                                                  iTransferArtifacts[iCurTransferArtifact]);
                         } else {
-                            gpWindowManager->m_dialogResult = message.payload.widget.id;
-                            message.payload.widget.command = message.payload.widget.id = 10;
+                            gpWindowManager->m_dialogResult = message.id;
+                            message.command = message.id = 10;
                             return MESSAGE_DISPATCH_FORWARD;
                         }
                         break;
@@ -797,10 +797,10 @@ short WinCombatHandler(struct tag_message &message)
     }
     if (KBTickCount() > glTimers[0]) {
         message.type = MESSAGE_WIDGET;
-        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
-        message.payload.widget.id = 1;
+        message.command = WIDGET_COMMAND_SET_FRAME;
+        message.id = 1;
         gpGame->m_viewArmyResult++;
-        message.payload.widget.data.value = gpGame->m_viewArmyResult % 6 + 1;
+        message.value = gpGame->m_viewArmyResult % 6 + 1;
         gpCombatManager->m_winLoseWindow->BroadcastMessage(message);
         gpCombatManager->m_winLoseWindow->DrawWindow();
         glTimers[0] = KBTickCount() + 0x5a;
@@ -839,9 +839,9 @@ void combatManager::ShowWinLoseArtifact(class heroWindow *window, int artifact)
 
     sprintf(gText, "You have captured an enemy artifact!");
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 0x65;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 0x65;
+    message.text = gText;
     m_winLoseWindow->BroadcastMessage(message);
     m_winLoseBottomWidgets[0] = new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, 0x10, 1);
     if (m_winLoseBottomWidgets[0] == 0)
@@ -1023,9 +1023,9 @@ void combatManager::DoVictory(signed char winningSide)
                         sprintf(gText, cBattleResults[2]);
                 }
                 message.type = MESSAGE_WIDGET;
-                message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-                message.payload.widget.id = 0x65;
-                message.payload.widget.data.text = gText;
+                message.command = WIDGET_COMMAND_SET_TEXT;
+                message.id = 0x65;
+                message.text = gText;
                 m_winLoseWindow->BroadcastMessage(message);
                 ShowDeadArmies(m_winLoseWindow);
                 gpWindowManager->DoDialog(m_winLoseWindow, WinCombatHandler, 0);
@@ -1112,9 +1112,9 @@ void combatManager::DoLoseWindow(void)
             sprintf(gText, cBattleResults[9]);
     }
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 0x65;
-    message.payload.widget.data.text = gText;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 0x65;
+    message.text = gText;
     loseWindow->BroadcastMessage(message);
     ShowDeadArmies(loseWindow);
     gpWindowManager->AddWindow(loseWindow, -1, 0);
@@ -1139,7 +1139,7 @@ void combatManager::DoLoseWindow(void)
         gpMouseManager->Main(message);
         result = gpWindowManager->Main(message);
         if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
-            && message.payload.widget.command == WIDGET_NOTIFY_DESELECT && message.payload.widget.id == 0x7800)
+            && message.command == WIDGET_NOTIFY_DESELECT && message.id == 0x7800)
             stop = 1;
     } while (!stop);
     gpWindowManager->RemoveWindow(loseWindow);
@@ -1171,13 +1171,13 @@ short combatManager::DoSurrender(void)
     if (win == 0)
         MemError();
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
-    message.payload.widget.id = 1;
+    message.command = WIDGET_COMMAND_SET_ICON;
+    message.id = 1;
     sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_unknown1d);
-    message.payload.widget.data.text = gText;
+    message.text = gText;
     win->BroadcastMessage(message);
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
-    message.payload.widget.id = 2;
+    message.command = WIDGET_COMMAND_SET_TEXT;
+    message.id = 2;
     sprintf(gText,
             "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage for the "
             "price of %d gold.",
@@ -1273,11 +1273,11 @@ void combatManager::ResetMouse(void)
         CombatMessage("", 1);
         gpMouseManager->MouseCoords(x, y);
         message.type = MESSAGE_WIDGET;
-        message.payload.widget.command = WIDGET_COMMAND_HOVER;
+        message.command = WIDGET_COMMAND_HOVER;
         if (y > 0x1ca)
-            message.payload.widget.id = 0;
+            message.id = 0;
         else
-            message.payload.widget.id = 0x40;
+            message.id = 0x40;
         ProcessCombatMsg(message);
     } else
         gpMouseManager->SetPointer(6);

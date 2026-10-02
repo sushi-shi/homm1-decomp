@@ -74,15 +74,15 @@ short border::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.payload.mouse.x - m_owner->m_posX;
-            short y = message.payload.mouse.y - m_owner->m_posY;
+            short x = message.x - m_owner->m_posX;
+            short y = message.y - m_owner->m_posY;
             if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
-                    message.payload.mouse.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                    message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                 message.type = MESSAGE_WIDGET;
-                message.payload.widget.command = WIDGET_NOTIFY_SELECT;
-                message.payload.widget.id = m_id;
+                message.command = WIDGET_NOTIFY_SELECT;
+                message.id = m_id;
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;
@@ -92,8 +92,8 @@ short border::Main(tag_message& message) {
             if (m_flags & WIDGET_FLAG_SELECTED) {
                 m_flags &= ~WIDGET_FLAG_SELECTED;
                 message.type = MESSAGE_WIDGET;
-                message.payload.widget.command = WIDGET_NOTIFY_DESELECT;
-                message.payload.widget.id = m_id;
+                message.command = WIDGET_NOTIFY_DESELECT;
+                message.id = m_id;
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;

@@ -490,11 +490,11 @@ VA(0x00457b4e, 0x112)
 short SetupCampaignGameHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -521,11 +521,11 @@ VA(0x00457c60, 0x149)
 short SetupComPortHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -556,11 +556,11 @@ VA(0x00457da9, 0x149)
 short SetupBaudHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -591,11 +591,11 @@ VA(0x00457ef2, 0x102)
 short SetupHotSeatGameHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -619,11 +619,11 @@ VA(0x00457ff4, 0x139)
 short SetupModemGameHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -651,11 +651,11 @@ VA(0x0045812d, 0x112)
 short SetupMultiPlayerGameHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -682,11 +682,11 @@ VA(0x0045823f, 0xe1)
 short SetupNetworkGameHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -707,11 +707,11 @@ VA(0x00458320, 0x102)
 short SetupGameHandler(tag_message& message) {
     int helpIndex;
 
-    if ((message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.payload.widget.command == WIDGET_NOTIFY_SELECT
-            || message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+    if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+        && (message.command == WIDGET_NOTIFY_SELECT
+            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
         helpIndex = -1;
-        switch (message.payload.widget.id) {
+        switch (message.id) {
             case 1:
                 helpIndex = 0;
                 break;
@@ -737,17 +737,17 @@ short BaseSetupHandler(tag_message& message) {
 
     PollSound();
     if (message.type == MESSAGE_WIDGET) {
-        switch (message.payload.widget.command) {
+        switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                if ((message.payload.widget.id > 0 && message.payload.widget.id <= 1000)
-                    || message.payload.widget.id == DIALOG_CANCEL)
+                if ((message.id > 0 && message.id <= 1000)
+                    || message.id == DIALOG_CANCEL)
                     handled = 1;
         }
     }
 
     if (handled || giMenuCommand != -1) {
-        gpWindowManager->m_dialogResult = message.payload.widget.id;
-        message.payload.widget.command = message.payload.widget.id = WIDGET_COMMAND_DIALOG_SELECT;
+        gpWindowManager->m_dialogResult = message.id;
+        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
         if (giMenuCommand != -1)
             gpWindowManager->m_dialogResult = DIALOG_CANCEL;
         return MESSAGE_DISPATCH_FORWARD;

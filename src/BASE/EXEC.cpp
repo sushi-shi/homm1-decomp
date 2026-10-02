@@ -201,12 +201,12 @@ void executive::MainLoop(void)
                     break;
                 case MESSAGE_DISPATCH_FORWARD:
                     if ((message.type & MESSAGE_EXECUTIVE) != 0) {
-                        switch (message.payload.executive.command) {
+                        switch (message.executiveCommand) {
                         case EXECUTIVE_COMMAND_TERMINATE_LOOP:
                             done++;
                             break;
                         case EXECUTIVE_COMMAND_RETURN_RESULT:
-                            m_result = message.payload.executive.result;
+                            m_result = message.result;
                             done++;
                             break;
                         case EXECUTIVE_COMMAND_REMOVE_MANAGER:

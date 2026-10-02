@@ -141,16 +141,16 @@ void bankBox::Update(void) {
     short i;
 
     message.type = MESSAGE_WIDGET;
-    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < PLAYER_RESOURCE_COUNT - 1; i++) {
         sprintf(text, "%d", m_player->m_resources[i]);
-        message.payload.widget.id = i + 30;
-        message.payload.widget.data.text = text;
+        message.id = i + 30;
+        message.text = text;
         m_window->BroadcastMessage(message);
     }
     sprintf(text, "%d", m_player->m_resources[PLAYER_RESOURCE_COUNT - 1]);
-    message.payload.widget.id = 36;
-    message.payload.widget.data.text = text;
+    message.id = 36;
+    message.text = text;
     m_window->BroadcastMessage(message);
     m_window->DrawWindow();
 }
