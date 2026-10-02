@@ -53,7 +53,38 @@ H1_C_LINKAGE void radfree(void* ptr) {
     free(ptr);
 }
 
-VA(0x0045ac48, 0x2a)
+// clang-format off
+// smackManager::Main's playback (HoMM1 movies): a skipped intro restarts at
+// frame 125; the publisher logo freezes on frame 101 under its "Presents..."
+// caption (bigfont, colour 255, an 80x20 update box); win02 draws the win
+// text box from frame 23 and waits 4.5 s before the white "Press a Key"
+// prompt (a 220x20 box); each frame waits at most 300 ms, at least 25 ms,
+// 50 ms when the music is off, pumping messages every 25 ms.
+H1_ENUM_CONST_BEGIN(SmackManagerConstant)
+    SMACK_INTRO_SKIP_FRAME = 125,
+    SMACK_LOGO_FINAL_FRAME = 101,
+    SMACK_WIN_TEXT_FRAME = 23,
+    SMACK_WIN_TEXT_X = 29,
+    SMACK_WIN_TEXT_Y = 338,
+    SMACK_WIN_TEXT_WIDTH = 325,
+    SMACK_WIN_TEXT_HEIGHT = 115,
+    SMACK_PRESENTS_X = 280,
+    SMACK_PRESENTS_Y = 440,
+    SMACK_PRESENTS_WIDTH = 80,
+    SMACK_PRESENTS_COLOR = 255,
+    SMACK_PROMPT_X = 420,
+    SMACK_PROMPT_Y = 460,
+    SMACK_PROMPT_WIDTH = 220,
+    SMACK_CAPTION_HEIGHT = 20,
+    SMACK_WIN_PROMPT_DELAY = 4500,
+    SMACK_FRAME_MAX_WAIT = 300,
+    SMACK_FRAME_MIN_WAIT = 25,
+    SMACK_FRAME_SILENT_WAIT = 50,
+    SMACK_MESSAGE_PUMP_INTERVAL = 25
+H1_ENUM_CONST_END(SmackManagerConstant)
+   // clang-format on
+
+   VA(0x0045ac48, 0x2a)
 smackManager::smackManager(void) : baseManager() {}
 
 VA(0x0045ac72, 0x53)
@@ -125,7 +156,7 @@ short smackManager::Main(struct tag_message& msg) {
         );
         SmackSoundOnOff(smk, gConfig.musicVolume);
         if (gbSkipIntro && (bSmackNum == SMACK_INTRO02C || bSmackNum == SMACK_INTRO02U)) {
-            startFrame = 125;
+            startFrame = SMACK_INTRO_SKIP_FRAME;
             SmackVolumePan(smk, SMACK_TRACK_1, 0, 0);
             SmackSoundOnOff(smk, 0);
             SmackGoto(smk, startFrame);
@@ -178,11 +209,29 @@ short smackManager::Main(struct tag_message& msg) {
                 }
                 gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, pPalette);
             } else {
-                if (bSmackNum == SMACK_WIN02 && currentFrame >= 23)
-                    bigFont->DrawBoundedString(gcWinText, 29, 338, 325, 115, 1, FONT_ALIGN_CENTER);
+                if (bSmackNum == SMACK_WIN02 && currentFrame >= SMACK_WIN_TEXT_FRAME)
+                    bigFont->DrawBoundedString(
+                        gcWinText,
+                        SMACK_WIN_TEXT_X,
+                        SMACK_WIN_TEXT_Y,
+                        SMACK_WIN_TEXT_WIDTH,
+                        SMACK_WIN_TEXT_HEIGHT,
+                        1,
+                        FONT_ALIGN_CENTER
+                    );
                 if (bSmackNum == SMACK_NWCLOGO) {
-                    bigFont->DrawString("Presents...", 280, 440, 255);
-                    gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
+                    bigFont->DrawString(
+                        "Presents...",
+                        SMACK_PRESENTS_X,
+                        SMACK_PRESENTS_Y,
+                        SMACK_PRESENTS_COLOR
+                    );
+                    gpWindowManager->UpdateScreenRegion(
+                        SMACK_PRESENTS_X,
+                        SMACK_PRESENTS_Y,
+                        SMACK_PRESENTS_WIDTH,
+                        SMACK_CAPTION_HEIGHT
+                    );
                 }
                 while (SmackToBufferRect(smk, SMACK_SURFACE_SLOW))
                     BlitBitmapToScreen(
@@ -200,10 +249,11 @@ short smackManager::Main(struct tag_message& msg) {
                 SmackNextFrame(smk);
             frameStartTick = KBTickCount();
             lastTick = frameStartTick;
-            while (KBTickCount() < frameStartTick + 300
-                   && (SmackWait(smk) || KBTickCount() < frameStartTick + 25
-                       || (!gConfig.musicVolume && KBTickCount() < frameStartTick + 50))) {
-                if (KBTickCount() > lastTick + 25) {
+            while (KBTickCount() < frameStartTick + SMACK_FRAME_MAX_WAIT
+                   && (SmackWait(smk) || KBTickCount() < frameStartTick + SMACK_FRAME_MIN_WAIT
+                       || (!gConfig.musicVolume
+                           && KBTickCount() < frameStartTick + SMACK_FRAME_SILENT_WAIT))) {
+                if (KBTickCount() > lastTick + SMACK_MESSAGE_PUMP_INTERVAL) {
                     Process1WindowsMessage();
                     lastTick = KBTickCount();
                 }
@@ -229,7 +279,7 @@ short smackManager::Main(struct tag_message& msg) {
         if (bSmackNum <= SMACK_LOGO_LAST) {
             SmackVolumePan(smk, SMACK_TRACK_1, 0, 0);
             SmackSoundOnOff(smk, 0);
-            SmackGoto(smk, 101);
+            SmackGoto(smk, SMACK_LOGO_FINAL_FRAME);
             SmackDoFrame(smk);
             while (SmackToBufferRect(smk, SMACK_SURFACE_SLOW))
                 BlitBitmapToScreen(
@@ -241,15 +291,30 @@ short smackManager::Main(struct tag_message& msg) {
                     smk->LastRectx,
                     smk->LastRecty
                 );
-            bigFont->DrawString("Presents...", 280, 440, 255);
-            gpWindowManager->UpdateScreenRegion(280, 440, 80, 20);
+            bigFont->DrawString(
+                "Presents...",
+                SMACK_PRESENTS_X,
+                SMACK_PRESENTS_Y,
+                SMACK_PRESENTS_COLOR
+            );
+            gpWindowManager->UpdateScreenRegion(
+                SMACK_PRESENTS_X,
+                SMACK_PRESENTS_Y,
+                SMACK_PRESENTS_WIDTH,
+                SMACK_CAPTION_HEIGHT
+            );
         }
         if (bSmackNum == SMACK_NWCLOGO1)
             gbSkipIntro = 1;
         if (bSmackNum == SMACK_WIN02) {
-            DelayMilli(4500);
-            bigFont->DrawString("Press a Key to Continue...", 420, 460, 1);
-            gpWindowManager->UpdateScreenRegion(420, 460, 220, 20);
+            DelayMilli(SMACK_WIN_PROMPT_DELAY);
+            bigFont->DrawString("Press a Key to Continue...", SMACK_PROMPT_X, SMACK_PROMPT_Y, 1);
+            gpWindowManager->UpdateScreenRegion(
+                SMACK_PROMPT_X,
+                SMACK_PROMPT_Y,
+                SMACK_PROMPT_WIDTH,
+                SMACK_CAPTION_HEIGHT
+            );
             for (;;) {
                 Process1WindowsMessage();
                 switch (gpInputManager->GetEvent().type) {
