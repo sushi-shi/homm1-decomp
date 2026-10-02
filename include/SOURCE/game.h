@@ -141,7 +141,16 @@ public:
     // TavernHandler advances this word as its animation counter (Buka name).
     short m_viewArmyResult;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
-    char m_unknown16e64[0x15];
+    // ViewSpells' window state (Buka m_viewSpells*): the hero's spell slots
+    // run from m_spellFirst to m_spellLast, four per page from m_viewSpellsTop.
+    class heroWindow* m_viewSpellsWindow;
+    class hero* m_viewSpellsHero;
+    short m_spellFirst;
+    short m_spellLast;
+    short m_viewSpell;
+    short m_viewSpellsTop;
+    short (*m_viewSpellsCallback)(struct tag_message&);
+    signed char m_viewSpellsReadOnly;
     // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 trigger cell.
     signed char m_unknown16e79;
     hero* GetHero(signed char id) {
@@ -198,7 +207,10 @@ public:
     int LoadMap(char*);
     void ClaimTown(signed char, signed char);
     void ClaimMine(signed char, signed char);
-    int ViewSpells(class hero*, int, short (*)(struct tag_message&), int);
+    // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
+    signed char ViewSpells(class hero*, signed char, short (*)(struct tag_message&), signed char);
+    // HoMM1: limits the spell page to the combat or adventure slots.
+    void SetupSpellRange(short);
     void UpdateSpellWidgets(void);
     // HoMM1 retail: byte creature/flags, word count, eleven arguments (ret 0x2c).
     void ViewArmy(

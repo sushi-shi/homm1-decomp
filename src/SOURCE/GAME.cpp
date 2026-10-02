@@ -1513,12 +1513,251 @@ void game::ClaimMine(signed char mineId, signed char player) {
     }
 }
 
-// donor PoL RVA 0x00079856; preferred Buka symbol ?ViewSpells@game@@QAEHPAVhero@@HP6IHAAUtag_message@@@ZH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.637141;margin=0.178696;shape=0.427;size=0.725;calls=0.733;strings=spellwin.bin;alternate=pol20:int game::ViewSpells(class hero *, int, int (*)(struct tag_message &), int)@0x00079856
+short ViewSpellsHandler(tag_message&);
+
+// Buka 2.1 game::ViewSpells for HoMM1's spell book: combat (0) and
+// adventure (1) books each have their own window position; type 2 shows
+// both tabs.
 VA(0x0043ed2e, 0x297)
-int game::ViewSpells(class hero*, int, short (*)(struct tag_message&), int) {
-    return 0;
+signed char game::ViewSpells(
+    class hero* spellHero,
+    signed char spellType,
+    short (*callback)(struct tag_message&),
+    signed char readOnly
+) {
+    tag_message message;
+
+    m_viewSpell = -1;
+    short winX[3] = {177, 97, 177};
+    short winY[3] = {100, 47, 100};
+    if (!spellHero->GetNumSpells(spellType)) {
+        NormalDialog("No spells to cast.", 1, -1, -1, -1, 0, -1, 0, -1);
+    } else {
+        m_viewSpellsCallback = callback;
+        m_viewSpellsReadOnly = readOnly;
+        m_viewSpellsHero = spellHero;
+        SetupSpellRange(spellType);
+        m_viewSpellsTop = m_spellFirst;
+        if (spellType == 2 || spellType == 0) {
+            m_viewSpellsWindow = new heroWindow(146, 145, "spellwin.bin");
+            if (!m_viewSpellsWindow)
+                MemError();
+        } else {
+            m_viewSpellsWindow = new heroWindow(97, 145, "spellwin.bin");
+            if (!m_viewSpellsWindow)
+                MemError();
+        }
+        if (spellType != 2) {
+            message.type = MESSAGE_WIDGET;
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            if (spellType == 0)
+                message.payload.widget.id = 4;
+            else
+                message.payload.widget.id = 5;
+            message.payload.widget.data.value = 6;
+            m_viewSpellsWindow->BroadcastMessage(message);
+        }
+        UpdateSpellWidgets();
+        gpWindowManager->DoDialog(m_viewSpellsWindow, ViewSpellsHandler, 0);
+        delete m_viewSpellsWindow;
+    }
+    return m_viewSpell;
+}
+
+// HoMM1: combat spells fill hero slots 0..18 and adventure spells 19..28;
+// the page ends at the last memorized slot.
+VA(0x0043efc5, 0xbb)
+void game::SetupSpellRange(short spellType) {
+    switch (spellType) {
+        case 0:
+            m_spellFirst = 0;
+            m_spellLast = m_spellFirst + 18;
+            break;
+        default:
+            m_spellFirst = 19;
+            m_spellLast = m_spellFirst + 9;
+            break;
+    }
+    while (m_viewSpellsHero->m_spellCharges[m_spellLast] < 1)
+        m_spellLast--;
+}
+
+// Buka 2.1 game::UpdateSpellWidgets for HoMM1's four-spell page: each slot
+// shows the spell icon and its name with the remaining casts.
+VA(0x0043f080, 0x1e0)
+void game::UpdateSpellWidgets(void) {
+    tag_message message;
+    short i;
+
+    message.type = MESSAGE_WIDGET;
+    for (i = 0; i < 4; i++) {
+        if (m_viewSpellsTop + i > m_spellLast) {
+            message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.payload.widget.id = i + 6;
+            message.payload.widget.data.value = 6;
+            m_viewSpellsWindow->BroadcastMessage(message);
+            message.payload.widget.id = i + 10;
+            m_viewSpellsWindow->BroadcastMessage(message);
+        } else {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+            message.payload.widget.id = i + 10;
+            message.payload.widget.data.value = 6;
+            m_viewSpellsWindow->BroadcastMessage(message);
+            message.payload.widget.id = i + 6;
+            m_viewSpellsWindow->BroadcastMessage(message);
+            if (m_viewSpellsReadOnly) {
+                message.payload.widget.command = WIDGET_COMMAND_SET_FLAGS;
+                message.payload.widget.data.value = 2;
+                m_viewSpellsWindow->BroadcastMessage(message);
+            }
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.data.value = m_viewSpellsHero->m_spells[m_viewSpellsTop + i];
+            m_viewSpellsWindow->BroadcastMessage(message);
+            sprintf(
+                gText,
+                "%s[%d]",
+                gSpellNames[m_viewSpellsHero->m_spells[m_viewSpellsTop + i]],
+                m_viewSpellsHero->m_spellCharges[m_viewSpellsTop + i]
+            );
+            message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+            message.payload.widget.id = i + 10;
+            message.payload.widget.data.text = gText;
+            m_viewSpellsWindow->BroadcastMessage(message);
+        }
+    }
+}
+
+// Buka 2.1 ViewSpellsHandler: right clicks describe a spell or control,
+// left clicks page, switch books or pick the spell to cast.
+VA(0x0043f260, 0x4f8)
+short ViewSpellsHandler(tag_message& message) {
+    int spell;
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_SELECT:
+            case WIDGET_NOTIFY_RIGHT_CLICK:
+                if (message.payload.widget.command == WIDGET_NOTIFY_RIGHT_CLICK
+                    || (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                    switch (message.payload.widget.id) {
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                            spell = gpGame->m_viewSpellsHero
+                                        ->m_spells[message.payload.widget.id - 6 + gpGame->m_viewSpellsTop];
+                            NormalDialog(gSpellDesc[spell], 4, -1, -1, 8, spell, -1, 0, -1);
+                            break;
+                        case 2:
+                            NormalDialog(cSpellHelp[0], 4, -1, -1, -1, 0, -1, 0, -1);
+                            break;
+                        case 3:
+                            NormalDialog(cSpellHelp[1], 4, -1, -1, -1, 0, -1, 0, -1);
+                            break;
+                        case 4:
+                            NormalDialog(cSpellHelp[2], 4, -1, -1, -1, 0, -1, 0, -1);
+                            break;
+                        case 5:
+                            NormalDialog(cSpellHelp[3], 4, -1, -1, -1, 0, -1, 0, -1);
+                            break;
+                    }
+                } else {
+                    switch (message.payload.widget.id) {
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                            if (gpGame->m_viewSpellsReadOnly) {
+                                spell = gpGame->m_viewSpellsHero
+                                            ->m_spells[message.payload.widget.id - 6 + gpGame->m_viewSpellsTop];
+                                NormalDialog(gSpellDesc[spell], 1, -1, -1, 8, spell, -1, 0, -1);
+                                return MESSAGE_DISPATCH_CONSUME;
+                            }
+                            gpGame->m_viewSpell = gpGame->m_viewSpellsHero
+                                                      ->m_spells[message.payload.widget.id - 6 + gpGame->m_viewSpellsTop];
+                            message.payload.widget.command = WIDGET_COMMAND_DIALOG_SELECT;
+                            return MESSAGE_DISPATCH_FORWARD;
+                        case 2:
+                            if (gpGame->m_viewSpellsTop == gpGame->m_spellFirst)
+                                break;
+                            gpGame->m_viewSpellsTop -= 4;
+                            if (gpGame->m_viewSpellsTop < gpGame->m_spellFirst)
+                                gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
+                            gpGame->UpdateSpellWidgets();
+                            gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
+                            break;
+                        case 3:
+                            if (gpGame->m_viewSpellsTop + 4 <= gpGame->m_spellLast)
+                                gpGame->m_viewSpellsTop += 4;
+                            if (gpGame->m_viewSpellsTop < gpGame->m_spellFirst)
+                                gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
+                            gpGame->UpdateSpellWidgets();
+                            gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
+                            break;
+                        case 4:
+                            gpGame->SetupSpellRange(1);
+                            gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
+                            gpGame->UpdateSpellWidgets();
+                            gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
+                            break;
+                        case 5:
+                            gpGame->SetupSpellRange(0);
+                            gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
+                            gpGame->UpdateSpellWidgets();
+                            gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
+                            break;
+                    }
+                }
+                break;
+            case WIDGET_COMMAND_HOVER:
+                if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                    return MESSAGE_DISPATCH_CONSUME;
+                else
+                    return gpGame->m_viewSpellsCallback(message);
+                break;
+        }
+        if (message.payload.widget.id == WIDGET_COMMAND_DIALOG_SELECT) {
+            message.payload.widget.command = message.payload.widget.id;
+            return MESSAGE_DISPATCH_FORWARD;
+        }
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
+
+// Buka 2.1 ViewSpecialHandler: hovering a spell-book control shows its
+// help line in the hero screen's status bar.
+VA(0x0043f758, 0x175)
+short ViewSpecialHandler(tag_message& message) {
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_COMMAND_HOVER:
+                if (message.payload.widget.id == gpWindowManager->m_lastHoverId)
+                    return MESSAGE_DISPATCH_CONSUME;
+                gpWindowManager->m_lastHoverId = message.payload.widget.id;
+                switch (message.payload.widget.id) {
+                    case 2:
+                        strcpy(gText, cSpellHelp[0]);
+                        break;
+                    case 3:
+                        strcpy(gText, cSpellHelp[1]);
+                        break;
+                    case 4:
+                        strcpy(gText, cSpellHelp[2]);
+                        break;
+                    case 5:
+                        strcpy(gText, cSpellHelp[3]);
+                        break;
+                    case 0x7800:
+                        strcpy(gText, cSpellHelp[4]);
+                        break;
+                    default:
+                        strcpy(gText, cSpellHelp[5]);
+                        break;
+                }
+                HeroMessageUpdate(gText);
+                return MESSAGE_DISPATCH_CONSUME;
+        }
+    }
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
