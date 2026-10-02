@@ -226,7 +226,7 @@ void army::DrawToBuffer(short x, short y) {
                 } else if (m_facing == 1) {
                     iconX -= 39;
                 }
-                gpCombatManager->m_combatIcons[8]->DrawToBuffer(iconX, y - 40, m_spellEffect, 0, 0);
+                gpCombatManager->m_combatIcons[8]->DrawToBuffer(iconX, y - 40, m_spellEffect, ICON_DRAW_NORMAL, 0);
             }
             if (m_animationFrame == 1 && gpCombatManager->m_showArmyQuantities) {
                 if (m_stats.attributes & 1) {
@@ -240,7 +240,7 @@ void army::DrawToBuffer(short x, short y) {
                     else
                         qtyX = x - 39;
                 }
-                gpCombatManager->m_combatIcons[1]->DrawToBuffer(qtyX, y - 11, 5, 0, 0);
+                gpCombatManager->m_combatIcons[1]->DrawToBuffer(qtyX, y - 11, 5, ICON_DRAW_NORMAL, 0);
                 sprintf(countText, "%d", m_quantity);
                 gpCombatManager->m_smallFont->DrawBoundedString(countText, qtyX, y - 12, 20, 12, 1, 1);
             }
@@ -291,7 +291,7 @@ void army::DrawToBuffer(short x, short y) {
                 x -= 39;
             }
             if (m_spellEffect != SPELL_NONE)
-                gpCombatManager->m_combatIcons[8]->DrawToBuffer(x, y - 40, m_spellEffect, 0, 0);
+                gpCombatManager->m_combatIcons[8]->DrawToBuffer(x, y - 40, m_spellEffect, ICON_DRAW_NORMAL, 0);
             gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, flip);
             break;
     }

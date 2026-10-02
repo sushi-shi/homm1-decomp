@@ -34,10 +34,11 @@ icon::~icon(void)
 // Each orientation arm sets its own top/bottom, as HoMM2 CombatClipDrawToBuffer does; VC4
 // tail-merges the two copies and carries the arm's frame-entry address across the join.
 VA(0x00479bd0, 0x22a)
-void icon::DrawToBuffer(short x, short y, short frame, signed char orientation, signed char mode)
+void icon::DrawToBuffer(short x, short y, short frame, H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
+                        signed char mode)
 {
     if (gbComputeExtent != 0) {
-        if (orientation != 0) {
+        if (orientation != ICON_DRAW_NORMAL) {
             if (mode != 0)
                 m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2); // byte-evidenced: packed frame entry in resource bytes.
             else
@@ -65,12 +66,12 @@ void icon::DrawToBuffer(short x, short y, short frame, signed char orientation, 
         || m_drawRight < giMinExtentX || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
         return;
     if (gbUseClippedIconRenderer != 0) {
-        if (orientation == 0)
+        if (orientation == ICON_DRAW_NORMAL)
             ClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
         else
             FlipClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
     } else {
-        if (orientation == 0)
+        if (orientation == ICON_DRAW_NORMAL)
             IconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
         else
             FlipIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
@@ -78,16 +79,17 @@ void icon::DrawToBuffer(short x, short y, short frame, signed char orientation, 
 }
 
 VA(0x00479e00, 0x51)
-void icon::ClipFillToBuffer(short x, short y, short frame, short color, signed char orientation, signed char mode, int clipX, int clipY, int clipW, int clipH)
+void icon::ClipFillToBuffer(short x, short y, short frame, short color,
+                            H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation, signed char mode, int clipX, int clipY, int clipW, int clipH)
 {
     ClippedMonoIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode, clipX, clipY, clipW, clipH);
 }
 
 VA(0x00479e60, 0x132)
 void icon::FillToBuffer(short x, short y, short frame, short color,
-    signed char orientation, signed char mode)
+    H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation, signed char mode)
 {
-    if (orientation == 0) {
+    if (orientation == ICON_DRAW_NORMAL) {
         if (gbLimitToExtent) {
             IconEntry *entry = reinterpret_cast<IconEntry *>(m_data) + frame; // byte-evidenced: packed frame directory decoded from icon resource bytes.
             m_drawLeft = x + entry->x;
@@ -105,10 +107,11 @@ void icon::FillToBuffer(short x, short y, short frame, short color,
 }
 
 VA(0x00479fa0, 0x1c2)
-void icon::DimToBuffer(short x, short y, short frame, signed char orientation, signed char mode)
+void icon::DimToBuffer(short x, short y, short frame, H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
+                       signed char mode)
 {
     if (gbComputeExtent != 0) {
-        if (orientation != 0) {
+        if (orientation != ICON_DRAW_NORMAL) {
             if (mode != 0)
                 m_drawRight = x - (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2); // byte-evidenced: packed frame entry in resource bytes.
             else
@@ -135,7 +138,7 @@ void icon::DimToBuffer(short x, short y, short frame, signed char orientation, s
     if (gbLimitToExtent != 0 && (gbCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX
         || m_drawRight < giMinExtentX || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
         return;
-    if (orientation == 0)
+    if (orientation == ICON_DRAW_NORMAL)
         DimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
     else
         FlipDimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);

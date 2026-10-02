@@ -15,6 +15,15 @@ H1_ENUM_CONST_BEGIN(IconMonoRleConstant)
     ICON_SCREEN_ROW_BYTES = 640
 H1_ENUM_CONST_END(IconMonoRleConstant)
 
+// clang-format off
+// The orientation argument of the icon blitters: FLIPPED selects the
+// mirrored Flip*IconToBitmap path (Buka IconDraw.h IconDrawOrientation).
+H1_ENUM_BEGIN(IconDrawOrientation)
+    ICON_DRAW_NORMAL = 0,
+    ICON_DRAW_FLIPPED = 1
+H1_ENUM_END(IconDrawOrientation)
+// clang-format on
+
 #pragma pack(push, 1)
 class icon : public resource {
 public:
@@ -28,11 +37,12 @@ public:
     icon(short);
     virtual inline ~icon();
     // --- methods ---
-    void DrawToBuffer(short, short, short, signed char, signed char);
+    void DrawToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
     int CombatClipDrawToBuffer(int, int, int, struct SLimitData *, int, int, unsigned char *, signed char *);
-    void ClipFillToBuffer(short, short, short, short, signed char, signed char, int, int, int, int);
-    void FillToBuffer(short, short, short, short, signed char, signed char);
-    void DimToBuffer(short, short, short, signed char, signed char);
+    void ClipFillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char, int, int,
+                          int, int);
+    void FillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
+    void DimToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
 };
 #pragma pack(pop)
 

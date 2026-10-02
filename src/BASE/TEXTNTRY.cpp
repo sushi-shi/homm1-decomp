@@ -284,7 +284,7 @@ void textEntryWidget::Draw(void) {
         while (m_font->LineWidth(display) > m_width)
             display[--length] = 0;
         m_icon
-            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, 0, 0);
+            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, ICON_DRAW_NORMAL, 0);
         m_font->DrawBoundedString(
             display,
             m_x + m_owner->m_posX,
@@ -296,7 +296,7 @@ void textEntryWidget::Draw(void) {
         );
     } else {
         m_icon
-            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, 0, 0);
+            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, ICON_DRAW_NORMAL, 0);
         textWidget::Draw();
     }
 }

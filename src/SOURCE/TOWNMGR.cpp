@@ -78,14 +78,14 @@ void townObject::Draw(signed char advanceAnimation)
 
     if (!m_visible)
         return;
-    m_icon->DrawToBuffer(0, 0, 0, 0, 0);
+    m_icon->DrawToBuffer(0, 0, 0, ICON_DRAW_NORMAL, 0);
     if (m_buildingId == 0) {
         for (level = 0; level < gpTownManager->m_town->m_buildState; level++)
-            m_icon->DrawToBuffer(0, 0, (level + 1) * 2, 0, 0);
-        m_icon->DrawToBuffer(0, 0, gpTownManager->m_town->m_buildState * 2 + 1, 0, 0);
+            m_icon->DrawToBuffer(0, 0, (level + 1) * 2, ICON_DRAW_NORMAL, 0);
+        m_icon->DrawToBuffer(0, 0, gpTownManager->m_town->m_buildState * 2 + 1, ICON_DRAW_NORMAL, 0);
     }
     if (m_animationFrameCount) {
-        m_icon->DrawToBuffer(0, 0, m_animationFrame + 1, 0, 0);
+        m_icon->DrawToBuffer(0, 0, m_animationFrame + 1, ICON_DRAW_NORMAL, 0);
         if (advanceAnimation == 1) {
             m_animationFrame++;
             if (m_animationFrame == m_animationFrameCount)
@@ -1188,7 +1188,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                 if (amountWidgets[resIndex] == 0)
                     MemError();
                 resWidgets[resIndex] = new iconWidget(currX, yPos, nEntryWidth, 12, "resource.icn",
-                                                      resType[resIndex], 0, -1, ICON_WIDGET_DRAW, 1);
+                                                      resType[resIndex], ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
                 if (resWidgets[resIndex] == 0)
                     MemError();
                 nBuildWindow->AddWidget(amountWidgets[resIndex], -1);
@@ -1671,7 +1671,7 @@ void townManager::SetupThievesGuild(class heroWindow *window, short categories)
                     categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH, THIEVES_RANK_ICON_HEIGHT, "townwind.icn",
                     gpGame->m_players[ranking[pos]].m_color + THIEVES_FLAG_FRAME_BASE,
-                    0, -1, ICON_WIDGET_DRAW, 1);
+                    ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
                 if (marker == NULL)
                     MemError();
                 window->AddWidget(marker, -1);

@@ -865,12 +865,12 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
     message.text = gText;
     m_winLoseWindow->BroadcastMessage(message);
     m_winLoseBottomWidgets[0] =
-        new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, ICON_WIDGET_DRAW, 1);
+        new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, ICON_DRAW_NORMAL, 0x7d1, ICON_WIDGET_DRAW, 1);
     if (m_winLoseBottomWidgets[0] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[0], -1);
     m_winLoseBottomWidgets[1] =
-        new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, 0, 0x7d2, ICON_WIDGET_DRAW, 1);
+        new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, ICON_DRAW_NORMAL, 0x7d2, ICON_WIDGET_DRAW, 1);
     if (m_winLoseBottomWidgets[1] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[1], -1);
@@ -971,7 +971,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x1c,
                 "mons32.icn",
                 casualtyType[side][armyIndex],
-                0,
+                ICON_DRAW_NORMAL,
                 side * 5 + armyIndex + 0x7d0,
                 ICON_WIDGET_DRAW,
                 1
@@ -1186,13 +1186,13 @@ void combatManager::DoLoseWindow(void) {
     ShowDeadArmies(loseWindow);
     gpWindowManager->AddWindow(loseWindow, -1, 0);
     BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
-    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, 0, 0);
+    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, 0);
     gpWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
     glTimers[0] = KBTickCount() + 0xb4;
     do {
         if (KBTickCount() > glTimers[0]) {
             BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
-            walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, 0, 0);
+            walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
             walkFrame++;
             walkFrame = walkFrame % 8;

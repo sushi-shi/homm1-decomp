@@ -171,16 +171,16 @@ void combatManager::DrawBackground(void) {
             m_hexCells[y * 9 + x].DrawGround();
         if (m_castleSide[0])
             m_combatIcons[5]->DrawToBuffer(m_hexCells[y * 9 + 5].m_x, m_hexCells[y * 9 + 5].m_y,
-                                           (signed char)((y & 1) ? 5 : 6), 0, 0);
+                                           (signed char)((y & 1) ? 5 : 6), ICON_DRAW_NORMAL, 0);
         wallY = y * 80 + 0x8b;
         if (y == 0) {
             m_backgroundBitmap->DrawToBuffer(0, 0);
             if (m_castleSide[1] == 1) {
-                m_combatIcons[5]->DrawToBuffer(0, wallY, 7, 1, 0);
-                m_combatIcons[5]->DrawToBuffer(0x6e, wallY, 7, 1, 0);
+                m_combatIcons[5]->DrawToBuffer(0, wallY, 7, ICON_DRAW_FLIPPED, 0);
+                m_combatIcons[5]->DrawToBuffer(0x6e, wallY, 7, ICON_DRAW_FLIPPED, 0);
             } else if (m_castleSide[0] == 1) {
-                m_combatIcons[5]->DrawToBuffer(0x27f, wallY, 7, 0, 0);
-                m_combatIcons[5]->DrawToBuffer(0x211, wallY, 7, 0, 0);
+                m_combatIcons[5]->DrawToBuffer(0x27f, wallY, 7, ICON_DRAW_NORMAL, 0);
+                m_combatIcons[5]->DrawToBuffer(0x211, wallY, 7, ICON_DRAW_NORMAL, 0);
             }
         }
     }
@@ -302,37 +302,37 @@ void combatManager::DrawFrame(signed char updateScreen) {
     if (!m_gridMode) {
         for (row = 0; row < 5; row++) {
             if (row == 3 && m_catapultFrame[1] != -1) {
-                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], 0, 0);
-                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_catapultFrame[1] == 7 ? 16 : 15, 0, 0);
+                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], ICON_DRAW_NORMAL, 0);
+                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_catapultFrame[1] == 7 ? 16 : 15, ICON_DRAW_NORMAL, 0);
             }
             for (hexCol = 0; hexCol < 9; hexCol++)
                 if (m_hexCells[row * 9 + hexCol].m_obstacleIndex != -1)
                     m_hexCells[row * 9 + hexCol].DrawObstacle();
             if (row == 0 && m_castleSide[0])
-                m_combatIcons[7]->DrawToBuffer(0x22d, 0, 0, 0, 0);
+                m_combatIcons[7]->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, 0);
             for (hexCol = 1; hexCol <= 7; hexCol++) {
                 if (gbLimitToExtent && m_armies[m_currentSide][m_currentArmyIndex].m_hex == row * 9 + hexCol)
                     gbCurrArmyDrawn = 1;
                 m_hexCells[row * 9 + hexCol].DrawOccupant();
             }
             if (row == 2 && m_heroType[0] != -1) {
-                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_heroType[0], 1, 0);
-                m_combatIcons[4]->DrawToBuffer(0x250, 0xeb, gpGame->m_players[m_playerId[0]].Color() + 4, 1, 0);
-                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_heroType[0], ICON_DRAW_FLIPPED, 0);
+                m_combatIcons[4]->DrawToBuffer(0x250, 0xeb, gpGame->m_players[m_playerId[0]].Color() + 4, ICON_DRAW_FLIPPED, 0);
+                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, ICON_DRAW_NORMAL, 0);
             }
             if (row == 1 && m_heroType[1] != -1) {
-                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_heroType[1], 0, 0);
-                m_combatIcons[4]->DrawToBuffer(0x2f, 0x9b, gpGame->m_players[m_playerId[1]].Color() + 4, 0, 0);
-                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_heroType[1], ICON_DRAW_NORMAL, 0);
+                m_combatIcons[4]->DrawToBuffer(0x2f, 0x9b, gpGame->m_players[m_playerId[1]].Color() + 4, ICON_DRAW_NORMAL, 0);
+                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, ICON_DRAW_NORMAL, 0);
             }
         }
     } else {
         for (row = 0; row < 5; row++) {
             if (row == 0 && m_castleSide[0])
-                m_combatIcons[7]->DrawToBuffer(0x22d, 0, 0, 0, 0);
+                m_combatIcons[7]->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, 0);
             if (row == 3 && m_catapultFrame[1] != -1) {
-                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], 0, 0);
-                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_catapultFrame[1] == 7 ? 16 : 15, 0, 0);
+                m_combatIcons[3]->DrawToBuffer(0x1b, 0x17b, m_catapultFrame[1], ICON_DRAW_NORMAL, 0);
+                m_combatIcons[3]->DimToBuffer(0x1b, 0x17b, m_catapultFrame[1] == 7 ? 16 : 15, ICON_DRAW_NORMAL, 0);
             }
             for (hexCol = 0; hexCol < 9; hexCol++)
                 if (m_hexCells[row * 9 + hexCol].m_obstacleIndex != -1)
@@ -343,14 +343,14 @@ void combatManager::DrawFrame(signed char updateScreen) {
                 m_hexCells[row * 9 + hexCol].DrawOccupant();
             }
             if (row == 1 && m_heroType[1] != -1) {
-                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_heroType[1], 0, 0);
-                m_combatIcons[4]->DrawToBuffer(0x2f, 0x9b, gpGame->m_players[m_playerId[1]].Color() + 4, 0, 0);
-                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0, 0x59, m_heroType[1], ICON_DRAW_NORMAL, 0);
+                m_combatIcons[4]->DrawToBuffer(0x2f, 0x9b, gpGame->m_players[m_playerId[1]].Color() + 4, ICON_DRAW_NORMAL, 0);
+                m_combatIcons[4]->DrawToBuffer(0x36, 0xad, m_heroType[1] + 8, ICON_DRAW_NORMAL, 0);
             }
             if (row == 2 && m_heroType[0] != -1) {
-                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_heroType[0], 1, 0);
-                m_combatIcons[4]->DrawToBuffer(0x250, 0xeb, gpGame->m_players[m_playerId[0]].Color() + 4, 1, 0);
-                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, 0, 0);
+                m_combatIcons[4]->DrawToBuffer(0x27f, 0xa9, m_heroType[0], ICON_DRAW_FLIPPED, 0);
+                m_combatIcons[4]->DrawToBuffer(0x250, 0xeb, gpGame->m_players[m_playerId[0]].Color() + 4, ICON_DRAW_FLIPPED, 0);
+                m_combatIcons[4]->DrawToBuffer(0x238, 0xfd, m_heroType[0] + 8, ICON_DRAW_NORMAL, 0);
             }
         }
     }

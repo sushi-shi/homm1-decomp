@@ -200,7 +200,7 @@ void swapManager::DrawSelector(void) {
             }
             break;
         }
-        m_selectorIcon->FillToBuffer(x + 16, y + 16, 2, frameColor, 0, 0);
+        m_selectorIcon->FillToBuffer(x + 16, y + 16, 2, frameColor, ICON_DRAW_NORMAL, 0);
         gpWindowManager->UpdateScreenRegion(x + 16, y + 16, 36, 36);
     }
 }

@@ -32,7 +32,7 @@ hexcell* hexcell::TakeOccupant(hexcell* from) {
 
 VA(0x0046e647, 0x4b)
 void hexcell::DrawGround(void) {
-    gpCombatManager->m_combatIcons[m_groundIcon]->DrawToBuffer(m_x, m_y, m_groundFrame, 0, 0);
+    gpCombatManager->m_combatIcons[m_groundIcon]->DrawToBuffer(m_x, m_y, m_groundFrame, ICON_DRAW_NORMAL, 0);
 }
 
 VA(0x0046e692, 0x8a)
@@ -54,14 +54,14 @@ void hexcell::DrawTower(signed char frame) {
     short row;
 
     flip = gpCombatManager->m_castleSide[1] == 1;
-    gpCombatManager->m_combatIcons[5]->DrawToBuffer(flip ? m_x : m_x + 28, m_y, frame, 1, 0);
+    gpCombatManager->m_combatIcons[5]->DrawToBuffer(flip ? m_x : m_x + 28, m_y, frame, ICON_DRAW_FLIPPED, 0);
     row = (m_y - 139) / 80;
     if (row == 4)
         return;
     if (row & 1)
-        gpCombatManager->m_combatIcons[5]->DrawToBuffer(flip ? m_x : m_x + 28, m_y, 9, 1, 0);
+        gpCombatManager->m_combatIcons[5]->DrawToBuffer(flip ? m_x : m_x + 28, m_y, 9, ICON_DRAW_FLIPPED, 0);
     else
-        gpCombatManager->m_combatIcons[5]->DrawToBuffer(flip ? m_x - 28 : m_x, m_y, 9, 0, 0);
+        gpCombatManager->m_combatIcons[5]->DrawToBuffer(flip ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, 0);
 }
 
 VA(0x0046e86d, 0x2b3)
@@ -75,25 +75,25 @@ void hexcell::DrawWall(void) {
     damageLevel = gpCombatManager->m_wallDamage;
     gpCombatManager->m_combatIcons[6]->DrawToBuffer(flip ? m_x - 15 : m_x + 15,
                                                     row == 0 ? m_y - 20 : m_y - 36,
-                                                    gpCombatManager->m_wallFrame, 0, 0);
+                                                    gpCombatManager->m_wallFrame, ICON_DRAW_NORMAL, 0);
     if (damageLevel != -1) {
         if (row == 4) {
             gpCombatManager->m_combatIcons[6]->DrawToBuffer(flip ? m_x : m_x + 15, m_y + 8,
-                                                            damageLevel, 0, 0);
+                                                            damageLevel, ICON_DRAW_NORMAL, 0);
             return;
         }
         if (row & 1) {
             gpCombatManager->m_combatIcons[6]->DrawToBuffer(flip ? m_x : m_x + 8, m_y + 40,
-                                                            damageLevel, 0, 0);
+                                                            damageLevel, ICON_DRAW_NORMAL, 0);
             if (damageLevel > 0)
                 gpCombatManager->m_combatIcons[6]->DrawToBuffer(flip ? m_x - 40 : m_x - 32,
-                                                                m_y + 60, damageLevel - 1, 0, 0);
+                                                                m_y + 60, damageLevel - 1, ICON_DRAW_NORMAL, 0);
         } else {
             gpCombatManager->m_combatIcons[6]->DrawToBuffer(flip ? m_x - 28 : m_x - 8,
-                                                            m_y + 40, damageLevel, 0, 0);
+                                                            m_y + 40, damageLevel, ICON_DRAW_NORMAL, 0);
             if (damageLevel > 0)
                 gpCombatManager->m_combatIcons[6]->DrawToBuffer(flip ? m_x + 20 : m_x + 40,
-                                                                m_y + 60, damageLevel - 1, 0, 0);
+                                                                m_y + 60, damageLevel - 1, ICON_DRAW_NORMAL, 0);
         }
     }
 }
@@ -121,6 +121,6 @@ void hexcell::DrawObstacle(void) {
                 break;
         }
     } else {
-        gpCombatManager->m_combatIcons[2]->DrawToBuffer(m_x, m_y, m_obstacleIndex, 0, 0);
+        gpCombatManager->m_combatIcons[2]->DrawToBuffer(m_x, m_y, m_obstacleIndex, ICON_DRAW_NORMAL, 0);
     }
 }

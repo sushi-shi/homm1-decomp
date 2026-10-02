@@ -45,7 +45,7 @@ void font::DrawString(char *text, short x, short y, short color)
         if (glyph < 0 || glyph > FONT_GLYPH_INDEX_LAST)
             glyph = FONT_GLYPH_INDEX_LAST;
         if (glyph != 0)
-            m_glyphIcon->FillToBuffer(drawX, y + m_headerWord, glyph, color, 0, 0);
+            m_glyphIcon->FillToBuffer(drawX, y + m_headerWord, glyph, color, ICON_DRAW_NORMAL, 0);
         drawX += entries[glyph].w + FONT_GLYPH_ADVANCE_SPACING;
         index++;
     }

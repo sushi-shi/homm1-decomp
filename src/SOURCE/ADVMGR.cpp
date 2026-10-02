@@ -221,11 +221,11 @@ short advManager::Open(short id) {
         m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
         if (m_adventureWindow == NULL)
             MemError();
-        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, 0, 26, ICON_WIDGET_DRAW, 1);
+        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, 26, ICON_WIDGET_DRAW, 1);
         if (m_scrollLeftButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollLeftButton, -1);
-        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, 0, 27, ICON_WIDGET_DRAW, 1);
+        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, 27, ICON_WIDGET_DRAW, 1);
         if (m_scrollRightButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollRightButton, -1);
@@ -2098,7 +2098,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
     for (x = firstX; x <= lastX; x++) {
         for (y = firstY; y <= lastY; y++) {
             if (!(gpGame->m_mapExtra[x][y] & giCurPlayerBit)) {
-                m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, 0, 0, 0);
+                m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, 0, ICON_DRAW_NORMAL, 0);
                 continue;
             }
             cellPtr = &m_mapData[x][y];
@@ -2139,10 +2139,10 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                     break;
                 }
             }
-            m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, color, 0, 0);
+            m_puzzleIcon->FillToBuffer(x * 2 + 480, y * 2 + 16, 0, color, ICON_DRAW_NORMAL, 0);
         }
     }
-    m_puzzleIcon->ClipFillToBuffer(m_mapOriginX * 2 + 480, m_mapOriginY * 2 + 16, 1, 0xbe, 0, 0, 480, 16, 144, 144);
+    m_puzzleIcon->ClipFillToBuffer(m_mapOriginX * 2 + 480, m_mapOriginY * 2 + 16, 1, 0xbe, ICON_DRAW_NORMAL, 0, 480, 16, 144, 144);
     if (updateScreen)
         gpWindowManager->UpdateScreenRegion(firstX * 2 + 480, firstY * 2 + 16, (lastX - firstX + 1) * 2,
                                             (lastY - firstY + 1) * 2);
@@ -2498,12 +2498,12 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
 
         m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                        BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                       "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
+                                                       "stonback.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
         if (!m_bottomViewPrimaryWidgets[0])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], 1000);
 
-        m_bottomViewPrimaryWidgets[1] = new iconWidget(493, 403, 118, 51, "hourglas.icn", 0, 0,
+        m_bottomViewPrimaryWidgets[1] = new iconWidget(493, 403, 118, 51, "hourglas.icn", 0, ICON_DRAW_NORMAL,
                                                        BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
         if (!m_bottomViewPrimaryWidgets[1])
             MemError();
@@ -2525,7 +2525,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
                 message.value = iSandAnim + 11;
                 m_adventureWindow->BroadcastMessage(message);
             } else {
-                m_bottomViewPrimaryWidgets[3] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iSandAnim + 11, 0,
+                m_bottomViewPrimaryWidgets[3] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iSandAnim + 11, ICON_DRAW_NORMAL,
                                                                BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3, ICON_WIDGET_DRAW, 1);
                 if (!m_bottomViewPrimaryWidgets[3])
                     MemError();
@@ -2546,7 +2546,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[2] =
-                new iconWidget(495, 405, 50, 47, "brcrest.icn", gpGame->m_players[giCurPlayer].Color(), 0,
+                new iconWidget(495, 405, 50, 47, "brcrest.icn", gpGame->m_players[giCurPlayer].Color(), ICON_DRAW_NORMAL,
                                BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2, ICON_WIDGET_DRAW, 1);
             if (!m_bottomViewPrimaryWidgets[2])
                 MemError();
@@ -2566,7 +2566,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[4] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iCurHourGlassPhase + 1,
-                                                           0, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4, ICON_WIDGET_DRAW, 1);
+                                                           ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4, ICON_WIDGET_DRAW, 1);
             if (!m_bottomViewPrimaryWidgets[4])
                 MemError();
             m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[4], 1040);
@@ -2595,7 +2595,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
         frameIndex = gpGame->m_week;
 
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
-                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
+                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, ICON_DRAW_NORMAL,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
@@ -2603,7 +2603,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
 
     m_bottomViewPrimaryWidgets[1] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                    BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                   "sunmoon.icn", frameIndex, 0,
+                                                   "sunmoon.icn", frameIndex, ICON_DRAW_NORMAL,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
@@ -2646,7 +2646,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
     ClearBottomView();
     iCurBottomView = BOTTOM_VIEW_RESOURCE;
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
-                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
+                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, ICON_DRAW_NORMAL,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
@@ -2678,7 +2678,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
         }
         m_bottomViewPrimaryWidgets[1] =
             new iconWidget((BOTTOM_VIEW_PANEL_WIDTH - iconW) / 2 + 480, 463 - iconH - 14, iconW, iconH,
-                           "resource.icn", giBottomViewResource, 0,
+                           "resource.icn", giBottomViewResource, ICON_DRAW_NORMAL,
                            BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
         if (!m_bottomViewPrimaryWidgets[1])
             MemError();
@@ -2734,14 +2734,14 @@ signed char advManager::UpdBottomViewKingdom(void) {
     nCastles = 0;
 
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
-                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
+                                                   BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, ICON_DRAW_NORMAL,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
 
     m_bottomViewPrimaryWidgets[1] = new iconWidget(481, 393, BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                   "ressmall.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1,
+                                                   "ressmall.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1,
                                                    ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
@@ -2798,13 +2798,13 @@ signed char advManager::UpdBottomViewHero(void) {
 
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                    BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                   "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
+                                                   "stonback.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
 
     iCrest = gpCurPlayer->Color() * 4 + targetHero->m_heroClass;
-    m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, 0,
+    m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, ICON_DRAW_NORMAL,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
@@ -2854,7 +2854,7 @@ signed char advManager::UpdBottomViewHero(void) {
                     x = 52;
                 }
                 m_bottomViewPrimaryWidgets[slotNum + 2] = new iconWidget(x + 480, y + 392, 32, 28, "mons32.icn",
-                                                                      creatureType, 0, slotNum + 2002, ICON_WIDGET_DRAW, 1);
+                                                                      creatureType, ICON_DRAW_NORMAL, slotNum + 2002, ICON_WIDGET_DRAW, 1);
                 if (!m_bottomViewPrimaryWidgets[slotNum + 2])
                     MemError();
                 if (gMons32Width[creatureType] < 28 && strlen(countStr[slotNum]) <= 2)
@@ -2970,7 +2970,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                     curIndex++;
                 monster = heroPtr->m_army.m_creatureTypes[curIndex];
                 if (monster != -1) {
-                    monWidgets[j] = new iconWidget(j * 32 + startPos, 110, 32, 32, "mons32.icn", monster, 0,
+                    monWidgets[j] = new iconWidget(j * 32 + startPos, 110, 32, 32, "mons32.icn", monster, ICON_DRAW_NORMAL,
                                                        -1, ICON_WIDGET_DRAW, 1);
                     if (!monWidgets[j])
                         MemError();
@@ -3021,7 +3021,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                 slotIndex++;
             creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
             monWidgets[j] =
-                new iconWidget(j * step + offsetX, rowY, 32, 32, "mons32.icn", creatureId, 0, -1, ICON_WIDGET_DRAW, 1);
+                new iconWidget(j * step + offsetX, rowY, 32, 32, "mons32.icn", creatureId, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!monWidgets[j])
                 MemError();
             labelText[j] = static_cast<char*>(malloc(15));
@@ -3043,7 +3043,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                     slotIndex++;
                 creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
                 monWidgets[j] = new iconWidget((j - 2) * step + offsetX, rowY, 32, 32, "mons32.icn",
-                                                   creatureId, 0, -1, ICON_WIDGET_DRAW, 1);
+                                                   creatureId, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
                 if (!monWidgets[j])
                     MemError();
                 labelText[j] = static_cast<char*>(malloc(15));
@@ -3251,7 +3251,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                 slot++;
             monster = townPointer->m_army.m_creatureTypes[slot];
             iconWgts[slotIndex] = new iconWidget(step * slotIndex + offsetX + xAdjust, rowY, 32, 32,
-                                                      "mons32.icn", monster, 0, -1, ICON_WIDGET_DRAW, 1);
+                                                      "mons32.icn", monster, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconWgts[slotIndex])
                 MemError();
             labels[slotIndex] = static_cast<char*>(malloc(15));
@@ -3279,7 +3279,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                     slot++;
                 monster = townPointer->m_army.m_creatureTypes[slot];
                 iconWgts[slotIndex] = new iconWidget((slotIndex - row1) * step + offsetX, rowY, 32, 32,
-                                                          "mons32.icn", monster, 0, -1, ICON_WIDGET_DRAW, 1);
+                                                          "mons32.icn", monster, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
                 if (!iconWgts[slotIndex])
                     MemError();
                 labels[slotIndex] = static_cast<char*>(malloc(15));
@@ -3639,7 +3639,7 @@ void advManager::ViewPuzzle(void) {
     gpMouseManager->SetPointer("advmice.mse", 0);
     puzzlePieces = gpResourceManager->GetIcon("puzzle.icn");
     for (j = 0; j < 48; j++)
-        puzzlePieces->DrawToBuffer(0, 0, j, 0, 0);
+        puzzlePieces->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, 0);
     gpWindowManager->UpdateScreenRegion(16, 16, 448, 448);
     gpWindowManager->SaveFizzleSource(16, 16, 448, 448);
     pWin = new heroWindow(480, 16, "viewpuzl.bin");
@@ -3670,7 +3670,7 @@ void advManager::ViewPuzzle(void) {
 
     for (j = 0; j < 48; j++) {
         if (!BitTest(gpCurPlayer->m_obelisksVisited, j)) {
-            puzzlePieces->DrawToBuffer(0, 0, j, 0, 0);
+            puzzlePieces->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, 0);
             visibleCount++;
         }
     }
@@ -3866,7 +3866,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                 if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
                     ts = cell->m_objectTileset & 0xf;
                     if (mask & (1 << ts))
-                        tilesets[ts]->DrawToBuffer(screenX, screenY, cell->m_objectIndex, 0, 0);
+                        tilesets[ts]->DrawToBuffer(screenX, screenY, cell->m_objectIndex, ICON_DRAW_NORMAL, 0);
                 }
             }
         }
@@ -3878,21 +3878,21 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                 switch (spellType) {
                 case SPELL_VIEW_ALL:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
-                        flags->DrawToBuffer(screenX, screenY, 6, 0, 0);
+                        flags->DrawToBuffer(screenX, screenY, 6, ICON_DRAW_NORMAL, 0);
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     }
                     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
@@ -3904,8 +3904,8 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                             index = gpGame->m_players[owner].m_color;
                         else
                             index = 4;
-                        spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
-                        letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0, 0);
+                        spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
+                        letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL, 0);
                         break;
                     case MAP_OBJECT_HERO:
                         switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & MAP_TRIGGER_TYPE_MASK) {
@@ -3917,8 +3917,8 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                                 index = gpGame->m_players[owner].m_color;
                             else
                                 index = 4;
-                            spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
-                            letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0,
+                            spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
+                            letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL,
                                                      0);
                             break;
                         default:
@@ -3929,7 +3929,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX, screenY, index, 0, 0);
+                            flags->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     }
                     break;
@@ -3943,8 +3943,8 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                             index = gpGame->m_players[owner].m_color;
                         else
                             index = 4;
-                        spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
-                        letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0, 0);
+                        spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
+                        letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL, 0);
                         break;
                     case MAP_OBJECT_HERO:
                         switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & MAP_TRIGGER_TYPE_MASK) {
@@ -3956,8 +3956,8 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                                 index = gpGame->m_players[owner].m_color;
                             else
                                 index = 4;
-                            spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
-                            letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0,
+                            spheres->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
+                            letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, ICON_DRAW_NORMAL,
                                                      0);
                             break;
                         default:
@@ -3970,29 +3970,29 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     break;
                 case SPELL_VIEW_RESOURCES:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE)) {
-                        spheres->DrawToBuffer(screenX - 3, screenY, 4, 0, 0);
-                        letters->DrawToBuffer(screenX - 3, screenY, cell->m_objectIndex - 0x3d, 0, 0);
+                        spheres->DrawToBuffer(screenX - 3, screenY, 4, ICON_DRAW_NORMAL, 0);
+                        letters->DrawToBuffer(screenX - 3, screenY, cell->m_objectIndex - 0x3d, ICON_DRAW_NORMAL, 0);
                     }
                     break;
                 case SPELL_VIEW_ARTIFACTS:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
-                        flags->DrawToBuffer(screenX, screenY, 6, 0, 0);
+                        flags->DrawToBuffer(screenX, screenY, 6, ICON_DRAW_NORMAL, 0);
                     break;
                 case SPELL_VIEW_TOWNS:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     }
                     break;
@@ -4001,7 +4001,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX, screenY, index, 0, 0);
+                            flags->DrawToBuffer(screenX, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     }
                     break;
@@ -4010,7 +4010,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                 }
             }
             if (curHero && curHero->m_x == x && curHero->m_y == y)
-                flags->DrawToBuffer(screenX, screenY, 5, 0, 0);
+                flags->DrawToBuffer(screenX, screenY, 5, ICON_DRAW_NORMAL, 0);
         }
         for (x = 71; x >= 0; x--) {
             cell = GetCell(x, y);
@@ -4021,7 +4021,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                 if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
                     ts = cell->m_overlayTileset & 0xf;
                     if (mask & (1 << ts))
-                        tilesets[ts]->DrawToBuffer(screenX, screenY, cell->m_overlayIndex, 0, 0);
+                        tilesets[ts]->DrawToBuffer(screenX, screenY, cell->m_overlayIndex, ICON_DRAW_NORMAL, 0);
                 }
             }
         }

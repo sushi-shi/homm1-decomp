@@ -2434,8 +2434,8 @@ void game::Overview(void) {
     for (i = 0; i < classCountY; i++) {
         while (!totals[nextType])
             nextType++;
-        ovIcon->DrawToBuffer(spacing * i + left, 32, nextType, 0, 0);
-        ovIcon->DrawToBuffer(spacing * i + left + 49, 67, 15, 0, 0);
+        ovIcon->DrawToBuffer(spacing * i + left, 32, nextType, ICON_DRAW_NORMAL, 0);
+        ovIcon->DrawToBuffer(spacing * i + left + 49, 67, 15, ICON_DRAW_NORMAL, 0);
         sprintf(gText, "%d", totals[nextType]);
         bigFont->DrawBoundedString(gText, spacing * i + left + 48, 77, 33, 16, 1, 1);
         nextType++;
@@ -2458,7 +2458,7 @@ void game::Overview(void) {
         for (i = 0; i < numCastles; i++) {
             while (!totals[nextType])
                 nextType++;
-            ovIcon->DrawToBuffer(spacing * i + left, 113, nextType + 4, 0, 0);
+            ovIcon->DrawToBuffer(spacing * i + left, 113, nextType + 4, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", totals[nextType]);
             bigFont->DrawBoundedString(gText, spacing * i + left, 173, 132, 16, 1, 1);
             nextType++;
@@ -2482,7 +2482,7 @@ void game::Overview(void) {
         for (i = 0; i < numTowns; i++) {
             while (!totals[nextType])
                 nextType++;
-            ovIcon->DrawToBuffer(spacing * i + left, 201, nextType + 8, 0, 0);
+            ovIcon->DrawToBuffer(spacing * i + left, 201, nextType + 8, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", totals[nextType]);
             bigFont->DrawBoundedString(gText, spacing * i + left, 261, 132, 16, 1, 1);
             nextType++;
@@ -2506,9 +2506,9 @@ void game::Overview(void) {
         for (i = 0; i < numMines; i++) {
             while (!mineNums[nextType])
                 nextType++;
-            ovIcon->DrawToBuffer(spacing * i + left, 289, (nextType < 2 ? nextType : 2) + 12, 0, 0);
+            ovIcon->DrawToBuffer(spacing * i + left, 289, (nextType < 2 ? nextType : 2) + 12, ICON_DRAW_NORMAL, 0);
             if (nextType >= 2)
-                ovIcon->DrawToBuffer(spacing * i + left, 289, nextType + 14, 0, 0);
+                ovIcon->DrawToBuffer(spacing * i + left, 289, nextType + 14, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", mineNums[nextType]);
             bigFont->DrawBoundedString(gText, spacing * i + left, 355, 72, 16, 1, 1);
             nextType++;

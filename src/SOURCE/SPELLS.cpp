@@ -718,7 +718,7 @@ void combatManager::MeteorShower(signed char targetHex)
         DrawFrame(0);
         for (i = 0; i < 7; i++) {
             if (adjHexes[i] != -1)
-                rockIcon->DrawToBuffer(m_hexCells[adjHexes[i]].m_x, m_hexCells[adjHexes[i]].m_y, j, 0, 0);
+                rockIcon->DrawToBuffer(m_hexCells[adjHexes[i]].m_x, m_hexCells[adjHexes[i]].m_y, j, ICON_DRAW_NORMAL, 0);
         }
         UpdateCombatArea();
         DelayTil(&glTimers[0]);
@@ -779,7 +779,7 @@ void combatManager::ElementalStorm(void)
             DrawFrame(0);
             for (y = 0; y < 7; y++) {
                 for (x = 0; x < 10; x++)
-                    storm->DrawToBuffer(x * 64, y * 64, frm, 0, 0);
+                    storm->DrawToBuffer(x * 64, y * 64, frm, ICON_DRAW_NORMAL, 0);
             }
             UpdateCombatArea();
             DelayTil(&glTimers[0]);

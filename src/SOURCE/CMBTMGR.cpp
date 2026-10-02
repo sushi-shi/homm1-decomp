@@ -875,7 +875,7 @@ void combatManager::CatAttack(signed char side)
                     giMaxExtentY = 459;
             }
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                                 giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
@@ -915,7 +915,7 @@ void combatManager::CatAttack(signed char side)
                     giMaxExtentY = 459;
             }
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                                 giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
@@ -942,7 +942,7 @@ void combatManager::CatAttack(signed char side)
             if (giMaxExtentY > 459)
                 giMaxExtentY = 459;
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                                 giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
@@ -1164,7 +1164,7 @@ void combatManager::KeepAttack(void)
         maxY = height + yRun;
         behind->DrawToBuffer(lastX, lastY);
         behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
-        m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, 0, 0);
+        m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, 0);
         DelayTil(glTimers);
         gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
         glTimers[0] = KBTickCount() + 10;

@@ -1082,14 +1082,14 @@ void NormalDialog(
 
         iconPanel = new iconWidget(
             resCenterX - resWidth / 2, resourceYPos, resWidth,
-            sizingHeight, szFilename, resourceFrame, 0, -1, ICON_WIDGET_DRAW, 1);
+            sizingHeight, szFilename, resourceFrame, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
         if (!iconPanel)
             MemError();
         pNormalDialogWindow->AddWidget(iconPanel, -1);
         if (kind[i] == NORMAL_DIALOG_ARTIFACT) {
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 + 6, resourceYPos + 6, 76, 76,
-                "artifact.icn", resourceQty[i], 0, -1, ICON_WIDGET_DRAW, 1);
+                "artifact.icn", resourceQty[i], ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconPanel)
                 MemError();
             pNormalDialogWindow->AddWidget(iconPanel, -1);
@@ -1097,7 +1097,7 @@ void NormalDialog(
         if (kind[i] == NORMAL_DIALOG_CREST) {
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 - 4, resourceYPos - 4, 58, 55,
-                "brcrest.icn", 4, 0, -1, ICON_WIDGET_DRAW, 1);
+                "brcrest.icn", 4, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconPanel)
                 MemError();
             pNormalDialogWindow->AddWidget(iconPanel, -1);
@@ -1106,7 +1106,7 @@ void NormalDialog(
             sprintf(szFilename, "port%04d.icn", resourceQty[i]);
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 + 5, resourceYPos + 5, 101, 95,
-                szFilename, 0, 0, -1, ICON_WIDGET_DRAW, 1);
+                szFilename, 0, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconPanel)
                 MemError();
             pNormalDialogWindow->AddWidget(iconPanel, -1);
