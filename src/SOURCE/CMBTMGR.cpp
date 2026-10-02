@@ -223,11 +223,40 @@ short combatManager::Open(short priority)
     return 0;
 }
 
-// donor PoL RVA 0x00090edf; preferred Buka symbol ?Close@combatManager@@UAEXXZ
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.395151;margin=0.373062;shape=0.339;size=0.542;calls=0.800;alternate=pol20:void combatManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x00090edf
+// Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
+// count of the side that held it.
 VA(0x0044bf19, 0x1ea)
-void combatManager::Close(void) {}
+void combatManager::Close(void)
+{
+    int i;
+    int survivor;
+
+    gpSoundManager->SwitchAmbientMusic(-1);
+    DrawCombatBorder();
+    gbLimitedCombatUpdatePalette = 0;
+    gpWindowManager->FadeScreen(1, 8, 0);
+    delete m_backgroundBuffer;
+    for (i = 0; i < 2; i++)
+        UpdateArmyGroup(i);
+    if (m_battlefieldCell->m_triggerType == 0x9a) {
+        survivor = (signed char)(m_playerId[0] != -1);
+        m_battlefieldCell->m_objectMetadata = 0;
+        for (i = 0; i < 5; i++) {
+            if (m_armyGroups[survivor]->m_creatureTypes[i] != -1)
+                m_battlefieldCell->m_objectMetadata += m_armyGroups[survivor]->m_creatureCounts[i];
+        }
+    }
+    gpWindowManager->RemoveWindow(m_combatWindow);
+    FreeArmies();
+    FreeIcons();
+    gpResourceManager->Dispose(m_font);
+    gpResourceManager->Dispose(m_combatPalette);
+    delete m_combatWindow;
+    if (m_savedBorder)
+        free(m_savedBorder);
+    m_active = 0;
+    m_unknown72f = 0;
+}
 
 // Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
 // side's army group; a dead stack empties its slot.
