@@ -44,3 +44,8 @@ unedited function can load `a + b` in the other order (field.c's
 operand-order swap, not a finding).  The declarations in
 scope were the original TU's, which an incomplete TU does not reproduce, so
 the board counts declarations placed away from their definition.
+
+For HoMM1 VC4, the operand-order part of this effect has been measured in
+[vc4-operand-sort-key-is-the-symbol-handle.md](vc4-operand-sort-key-is-the-symbol-handle.md).
+The order follows the operands' C1 symbol handles, so the order in which
+locals are declared can be searched instead of adding declarations to the TU.

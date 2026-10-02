@@ -837,11 +837,11 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
     int heroIndex;
     mapCell* thisCell;
     short y;
-    short bestX;
     int valid;
     short bestY;
     int spacing;
     int heroTerrainType;
+    short bestX;
     town* portTown;
 
     bestX = -1;
@@ -1223,11 +1223,11 @@ VA(0x0041dd73, 0x185)
 void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCost) {
     float buildingValue;
     int bestBuilding;
-    float bestScore;
     float bestCost;
     int curBuilding;
     int costRV;
     float score;
+    float bestScore;
 
     bestCost = -99.0f;
     bestScore = -99.0f;

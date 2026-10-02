@@ -2899,6 +2899,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     short creatureIconHeight;
     hero* heroPtr;
     tag_message message;
+    short j;
     short numArmies;
     short j;
     short enable;
@@ -3128,10 +3129,10 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     short creatureIconHeight;
     short numArmies;
     tag_message message;
-    short i;
     short flag;
     short flagId;
     short savedOriginX;
+    short i;
     short width;
     heroWindow* viewWin;
     town* townPointer;
@@ -5100,12 +5101,12 @@ void advManager::SummonBoat(void) {
     signed char foundCell;
     boatRecord* thisBoat;
     short slotIndex;
+    short drawWidth;
     signed char heroNum;
     mapCell* fromCell;
     short drawX;
     short drawY;
     short drawHeight;
-    short drawWidth;
 
     pHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     foundCell = 0;

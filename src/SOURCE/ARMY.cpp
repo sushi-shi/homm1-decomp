@@ -1310,12 +1310,12 @@ VA(0x00468861, 0x765)
 void army::DoHydraAttack(void) {
     int killedNow;
     int damage;
-    short armyIndex;
+    short occSide;
     short i;
     short dir;
     short attackMask;
-    short occSide;
     army* pTarget;
+    short armyIndex;
     short targetHex;
     int totalLost;
     int totDmg;

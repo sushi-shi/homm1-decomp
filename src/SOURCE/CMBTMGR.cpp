@@ -31,7 +31,8 @@ int giSeed;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
-combatManager::combatManager(void) {
+combatManager::combatManager(void)
+{
     m_gridMode = 0;
     m_unknown6f9 = -1;
     m_currentSide = 0;
@@ -43,8 +44,7 @@ combatManager::combatManager(void) {
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
     m_savedBorder = 0;
-    m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame =
-        m_wallDamage = -1;
+    m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
     m_castleSide[0] = m_castleSide[1] = 0;
     m_combatWindowOpen = 0;
@@ -80,18 +80,10 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
 
 // Buka CMBTMGR.cpp SetupCombat; HoMM1's attacker is side 1.
 VA(0x0044b730, 0x3db)
-void combatManager::SetupCombat(
-    int mapX,
-    int mapY,
-    hero* attackerHero,
-    armyGroup* attackerGroup,
-    town* defenderTown,
-    hero* defenderHero,
-    armyGroup* defenderGroup,
-    int combatX,
-    int combatY,
-    int randomSeed
-) {
+void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGroup* attackerGroup,
+                                town* defenderTown, hero* defenderHero, armyGroup* defenderGroup,
+                                int combatX, int combatY, int randomSeed)
+{
     int i;
 
     giSeed = randomSeed;
@@ -167,7 +159,8 @@ void combatManager::SetupCombat(
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
 // field, then the fade-in and a random combat theme.
 VA(0x0044bb0b, 0x40e)
-short combatManager::Open(short priority) {
+short combatManager::Open(short priority)
+{
     int song;
     SAMPLE2 sample;
     int musicList[4];
@@ -218,10 +211,7 @@ short combatManager::Open(short priority) {
     gpWindowManager->FadeScreen(0, 8, m_combatPalette);
     gbLimitedCombatUpdatePalette = 1;
     gpMouseManager->NewUpdate(1);
-    gpMouseManager->WarpPointer(
-        m_hexCells[m_limitCreatureHex].m_x,
-        m_hexCells[m_limitCreatureHex].m_y - 50
-    );
+    gpMouseManager->WarpPointer(m_hexCells[m_limitCreatureHex].m_x, m_hexCells[m_limitCreatureHex].m_y - 50);
     gpMouseManager->ReallyShowPointer();
     ResetMouse();
     m_gridSelectionDisabled = 0;
@@ -242,7 +232,8 @@ short combatManager::Open(short priority) {
 // Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
 // count of the side that held it.
 VA(0x0044bf19, 0x1ea)
-void combatManager::Close(void) {
+void combatManager::Close(void)
+{
     int i;
     int survivor;
 
@@ -276,7 +267,8 @@ void combatManager::Close(void) {
 // Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
 // side's army group; a dead stack empties its slot.
 VA(0x0044c103, 0x161)
-void combatManager::UpdateArmyGroup(signed char side) {
+void combatManager::UpdateArmyGroup(signed char side)
+{
     short i;
     short j;
 
@@ -299,7 +291,8 @@ void combatManager::UpdateArmyGroup(signed char side) {
 // Buka CMBTMGR.cpp GenerateMap; HoMM1 also places both armies, scatters
 // ground patches and, outside a siege, up to two obstacles.
 VA(0x0044c264, 0x7be)
-void combatManager::GenerateMap(void) {
+void combatManager::GenerateMap(void)
+{
     short x;
     short i;
     short y;
@@ -406,8 +399,7 @@ void combatManager::GenerateMap(void) {
             }
             m_hexCells[y * 9 + x].m_obstacleType = 2;
             m_hexCells[y * 9 + x].m_obstacleIndex = SRandom(0, 2);
-            if ((m_terrainType == 0 || m_terrainType == 4)
-                && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
+            if ((m_terrainType == 0 || m_terrainType == 4) && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
                 m_hexCells[y * 9 + x].m_obstacleIndex = 0;
         }
     }
@@ -421,11 +413,11 @@ void combatManager::GenerateMap(void) {
 // Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
 // one) forces the graveyard field.
 VA(0x0044ca22, 0x18e)
-char* combatManager::GetBackgroundName(void) {
+char* combatManager::GetBackgroundName(void)
+{
     if ((m_battlefieldCell->m_triggerType & 0x7f) == 0xc
         || ((m_battlefieldCell->m_triggerType & 0x7f) == 0x3d
-            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & 0x7f)
-                   == 0xc)) {
+            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & 0x7f) == 0xc)) {
         m_terrainType = 6;
         return cCombatBkgNames[10];
     }
@@ -460,13 +452,14 @@ char* combatManager::GetBackgroundName(void) {
 // Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
 // within two cells of the battle.
 VA(0x0044cbb0, 0x1e7)
-signed char combatManager::MoreTreesNear(void) {
+signed char combatManager::MoreTreesNear(void)
+{
     int yPos;
     int xPos;
-    short numTrees;
     short step;
     short homeX;
     signed char typeTable[3][8];
+    short numTrees;
     short numMountains;
     mapCell* nearCell;
     short homeY;
@@ -507,7 +500,8 @@ signed char combatManager::MoreTreesNear(void) {
 
 // Buka CMBTMGR.cpp LoadIcons.
 VA(0x0044cd97, 0x1d7)
-void combatManager::LoadIcons(void) {
+void combatManager::LoadIcons(void)
+{
     int i;
 
     for (i = 0; i < 9; i++)
@@ -521,11 +515,7 @@ void combatManager::LoadIcons(void) {
     m_combatIcons[6] = gpResourceManager->GetIcon("cloud.icn");
     if (m_castleSide[1] || m_castleSide[0]) {
         m_combatIcons[3] = gpResourceManager->GetIcon("catapult.icn");
-        sprintf(
-            gText,
-            "castle%02d.icn",
-            m_combatTowns[(signed char)(m_castleSide[1] == 1)]->m_type
-        );
+        sprintf(gText, "castle%02d.icn", m_combatTowns[(signed char)(m_castleSide[1] == 1)]->m_type);
         m_combatIcons[5] = gpResourceManager->GetIcon(gText);
         sprintf(gText, "keep%02d.icn", m_combatTowns[0]->m_type);
         m_combatIcons[7] = gpResourceManager->GetIcon(gText);
@@ -534,7 +524,8 @@ void combatManager::LoadIcons(void) {
 
 // Buka CMBTMGR.cpp FreeIcons.
 VA(0x0044cf6e, 0x7b)
-void combatManager::FreeIcons(void) {
+void combatManager::FreeIcons(void)
+{
     short i;
 
     for (i = 0; i < 9; i++) {
@@ -546,7 +537,8 @@ void combatManager::FreeIcons(void) {
 
 // Buka CMBTMGR.cpp LoadArmies; HoMM1 places stacks itself after Init.
 VA(0x0044cfe9, 0x287)
-void combatManager::LoadArmies(void) {
+void combatManager::LoadArmies(void)
+{
     short j;
     short i;
 
@@ -563,22 +555,14 @@ void combatManager::LoadArmies(void) {
     }
     for (i = 0; i < 5; i++) {
         if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
-            m_armies[1][m_numArmies[1]].Init(
-                m_armyGroups[1]->m_creatureTypes[i],
-                m_armyGroups[1]->m_creatureCounts[i],
-                1,
-                m_numArmies[1]
-            );
+            m_armies[1][m_numArmies[1]].Init(m_armyGroups[1]->m_creatureTypes[i],
+                                             m_armyGroups[1]->m_creatureCounts[i], 1, m_numArmies[1]);
             m_armies[1][m_numArmies[1]].LoadResources();
             m_numArmies[1]++;
         }
         if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
-            m_armies[0][m_numArmies[0]].Init(
-                m_armyGroups[0]->m_creatureTypes[i],
-                m_armyGroups[0]->m_creatureCounts[i],
-                0,
-                m_numArmies[0]
-            );
+            m_armies[0][m_numArmies[0]].Init(m_armyGroups[0]->m_creatureTypes[i],
+                                             m_armyGroups[0]->m_creatureCounts[i], 0, m_numArmies[0]);
             m_armies[0][m_numArmies[0]].LoadResources();
             m_numArmies[0]++;
         }
@@ -587,7 +571,8 @@ void combatManager::LoadArmies(void) {
 
 // Buka CMBTMGR.cpp FreeArmies; HoMM1 frees the defenders first.
 VA(0x0044d270, 0xdc)
-void combatManager::FreeArmies(void) {
+void combatManager::FreeArmies(void)
+{
     short i;
 
     gpSoundManager->StopAllSamples();
@@ -604,12 +589,15 @@ void combatManager::FreeArmies(void) {
 // HoMM1 retail 0x0044d34c: no callers and an empty body; HoMM2's combat log
 // for unshown battles is the nearest one-argument fit.
 VA(0x0044d34c, 0x18)
-void combatManager::NoShowCombatLog(char*) {}
+void combatManager::NoShowCombatLog(char*)
+{
+}
 
 // Buka CMBTMGR.cpp GetGridIndex over HoMM1's 9x5 grid: rows 80 pixels high
 // from y 60, odd rows indented by 66 and even rows by 27, hexes 78 wide.
 VA(0x0044d364, 0xbe)
-short combatManager::GetGridIndex(short x, short y) {
+short combatManager::GetGridIndex(short x, short y)
+{
     y -= 60;
     y /= 80;
     if (y & 1) {
@@ -632,7 +620,8 @@ short combatManager::GetGridIndex(short x, short y) {
 
 // Buka CMBTMGR.cpp CheckApplyGoodMorale; HoMM1 rolls the group's morale.
 VA(0x0044d422, 0x1d9)
-void combatManager::CheckApplyGoodMorale(int side, int index) {
+void combatManager::CheckApplyGoodMorale(int side, int index)
+{
     armyGroup* theGroup;
     army* activeArmy;
     SAMPLE2 sample;
@@ -656,17 +645,9 @@ void combatManager::CheckApplyGoodMorale(int side, int index) {
     sprintf(gText, "goodmrle.82M");
     sample = LoadPlaySample(gText);
     if (activeArmy->m_quantity <= 1)
-        sprintf(
-            gText,
-            "High morale enables the %s to attack again.",
-            gArmyNames[activeArmy->m_creatureType]
-        );
+        sprintf(gText, "High morale enables the %s to attack again.", gArmyNames[activeArmy->m_creatureType]);
     else
-        sprintf(
-            gText,
-            "High morale enables the %s to attack again.",
-            gArmyNamesPlural[activeArmy->m_creatureType]
-        );
+        sprintf(gText, "High morale enables the %s to attack again.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
     activeArmy->SpellEffect(24, 180);
     activeArmy->Stand(1);
@@ -679,7 +660,8 @@ void combatManager::CheckApplyGoodMorale(int side, int index) {
 // Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
 // in four.
 VA(0x0044d5fb, 0x1c6)
-int combatManager::CheckApplyBadMorale(int side, int index) {
+int combatManager::CheckApplyBadMorale(int side, int index)
+{
     armyGroup* theGroup;
     army* activeArmy;
     SAMPLE2 sample;
@@ -697,17 +679,9 @@ int combatManager::CheckApplyBadMorale(int side, int index) {
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("BADMRLE.82M");
     if (activeArmy->m_quantity <= 1)
-        sprintf(
-            gText,
-            "Low morale causes the %s to freeze in panic.",
-            gArmyNames[activeArmy->m_creatureType]
-        );
+        sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNames[activeArmy->m_creatureType]);
     else
-        sprintf(
-            gText,
-            "Low morale causes the %s to freeze in panic.",
-            gArmyNamesPlural[activeArmy->m_creatureType]
-        );
+        sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
     activeArmy->m_unknown09 = 2;
     activeArmy->SpellEffect(25, 180);
@@ -720,7 +694,8 @@ int combatManager::CheckApplyBadMorale(int side, int index) {
 // Buka CMBTMGR.cpp GetNextArmy: the fastest unspent stack, alternating
 // sides, high-morale stacks first.
 VA(0x0044d7c1, 0x209)
-signed char combatManager::GetNextArmy(int checkMorale) {
+signed char combatManager::GetNextArmy(int checkMorale)
+{
     army* pArmy;
     signed char iSpeed;
     int sideIter;
@@ -736,10 +711,8 @@ signed char combatManager::GetNextArmy(int checkMorale) {
             for (stackCounter = 0; stackCounter < m_numArmies[stackSide]; stackCounter++) {
                 bSkip = 0;
                 pArmy = &m_armies[stackSide][stackCounter];
-                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == 0x12
-                    || pArmy->m_spellEffect == 7
-                    || (pArmy->m_stats.speed != m_currentSpeed
-                        && !(pArmy->m_stats.attributes & 0x20)))
+                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == 0x12 || pArmy->m_spellEffect == 7
+                    || (pArmy->m_stats.speed != m_currentSpeed && !(pArmy->m_stats.attributes & 0x20)))
                     bSkip = 1;
                 if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & 0x20))
                     bSkip = 1;
@@ -768,7 +741,8 @@ signed char combatManager::GetNextArmy(int checkMorale) {
 // Buka CMBTMGR.cpp IsWinner: the other side surrendered, retreated or has
 // no live stack left.
 VA(0x0044d9ca, 0xd3)
-signed char combatManager::IsWinner(signed char side) {
+signed char combatManager::IsWinner(signed char side)
+{
     signed char isWinner;
     short i;
 
@@ -789,10 +763,13 @@ signed char combatManager::IsWinner(signed char side) {
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
 VA(0x0044da9d, 0xd55)
-void combatManager::CatAttack(signed char side) {
-    icon* boulder;
+void combatManager::CatAttack(signed char side)
+{
     short dx;
     short x;
+    icon* boulder;
+    short summitX;
+    signed char col;
     short i;
     short frm;
     short dy;
@@ -801,8 +778,6 @@ void combatManager::CatAttack(signed char side) {
     short force;
     short startX;
     SAMPLE2 catSample;
-    short summitX;
-    signed char col;
     short tgtY;
     signed char wallsLeft;
     short startY;
@@ -837,8 +812,7 @@ void combatManager::CatAttack(signed char side) {
         m_catapultFrame[side]++;
     }
     if ((m_hexCells[col + 9].m_obstacleIndex == 10 || m_hexCells[col + 9].m_obstacleIndex == -1)
-        && (m_hexCells[col + 27].m_obstacleIndex == 10
-            || m_hexCells[col + 27].m_obstacleIndex == -1)) {
+        && (m_hexCells[col + 27].m_obstacleIndex == 10 || m_hexCells[col + 27].m_obstacleIndex == -1)) {
         m_catapultTarget = SRandom(0, 4);
         while (m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == -1)
             m_catapultTarget = SRandom(0, 4);
@@ -886,12 +860,8 @@ void combatManager::CatAttack(signed char side) {
             }
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, 0, 0);
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
+                                                giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
             y = y + dy;
             frm++;
@@ -930,12 +900,8 @@ void combatManager::CatAttack(signed char side) {
             }
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, 0, 0);
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
+                                                giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
             y = (12 - i) * dy + y;
             frm++;
@@ -961,12 +927,8 @@ void combatManager::CatAttack(signed char side) {
                 giMaxExtentY = 459;
             DrawFrame(0);
             boulder->DrawToBuffer(x, y, frm, 0, 0);
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
+                                                giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
             y = dy * i + y;
             frm++;
@@ -1050,7 +1012,8 @@ void combatManager::CatAttack(signed char side) {
 // HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
 // the field before a full redraw.
 VA(0x0044e7f2, 0x4e)
-void combatManager::RegenerateField(void) {
+void combatManager::RegenerateField(void)
+{
     FreeArmies();
     LoadArmies();
     GenerateMap();
@@ -1062,36 +1025,35 @@ void combatManager::RegenerateField(void) {
 // HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
 // then flyers, then fight value) with dice from the town's buildings.
 VA(0x0044e840, 0xb8b)
-void combatManager::KeepAttack(void) {
-    int bestRank;
+void combatManager::KeepAttack(void)
+{
+    int mod;
     short minX;
     short minY;
     short lastX;
+    short gapX;
+    float yAdvance;
     signed char hexCol;
     signed char keepY;
     short lastY;
     signed char targetRow;
-    signed char srcCol;
-    int mod;
-    short gapX;
-    float yAdvance;
+    int bestRank;
     float yRun;
+    signed char srcCol;
     short distance;
     float xAdvance;
-    float xRun;
     short gapY;
-    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                                 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1,
-                                 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     int targetIndex;
     SAMPLE2 sample;
     short updRight;
     short w;
-    int power;
     short height;
     bitmap* behind;
     int i;
+    float xRun;
     int bestWorth;
+    int power;
     short startX;
     short maxY;
     short startY;
@@ -1223,17 +1185,9 @@ void combatManager::KeepAttack(void) {
         hurt = 1;
     numLost = target->Damage(hurt);
     if (numLost > 0)
-        sprintf(
-            gText,
-            "%s %d %s. %d %s %s.",
-            "Garrison does",
-            hurt,
-            "Damage",
-            numLost,
-            numLost > 1 ? gArmyNamesPlural[target->m_creatureType]
-                        : gArmyNames[target->m_creatureType],
-            numLost > 1 ? "perish" : "perishes"
-        );
+        sprintf(gText, "%s %d %s. %d %s %s.", "Garrison does", hurt, "Damage", numLost,
+                numLost > 1 ? gArmyNamesPlural[target->m_creatureType] : gArmyNames[target->m_creatureType],
+                numLost > 1 ? "perish" : "perishes");
     else
         sprintf(gText, "%s %d %s.", "Garrison does", hurt, "Damage");
     gpCombatManager->CombatMessage(gText, 1);
@@ -1249,7 +1203,8 @@ void combatManager::KeepAttack(void) {
 // Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
 // losses, plus 500 for a defeated hero.
 VA(0x0044f3cb, 0x114)
-int combatManager::ExperienceValueOfStack(signed char side) {
+int combatManager::ExperienceValueOfStack(signed char side)
+{
     int i;
     int value;
 
@@ -1266,7 +1221,8 @@ int combatManager::ExperienceValueOfStack(signed char side) {
 
 // Buka CMBTMGR.cpp ResetHitByCreature.
 VA(0x0044f4df, 0x78)
-void combatManager::ResetHitByCreature(void) {
+void combatManager::ResetHitByCreature(void)
+{
     int i;
     int j;
 
@@ -1284,7 +1240,8 @@ int ValidHex(int hex) {
 
 // HoMM1 SaveCombatBorder: keep the twenty screen rows under the field.
 VA(0x0044f587, 0x64)
-void combatManager::SaveCombatBorder(void) {
+void combatManager::SaveCombatBorder(void)
+{
     if (!m_savedBorder)
         m_savedBorder = (char*)malloc(0x3200);
     memcpy(m_savedBorder, gpWindowManager->m_screen->m_pixels + 0x47e00, 0x3200);
@@ -1292,7 +1249,8 @@ void combatManager::SaveCombatBorder(void) {
 
 // HoMM1 DrawCombatBorder: put the saved rows back.
 VA(0x0044f5eb, 0x53)
-void combatManager::DrawCombatBorder(void) {
+void combatManager::DrawCombatBorder(void)
+{
     if (!m_savedBorder)
         return;
     memcpy(gpWindowManager->m_screen->m_pixels + 0x47e00, m_savedBorder, 0x3200);

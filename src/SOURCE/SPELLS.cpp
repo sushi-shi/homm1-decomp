@@ -18,7 +18,8 @@
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
 // checks before queueing the cast.
 VA(0x004154f0, 0x147)
-signed char combatManager::ViewSpells(int) {
+signed char combatManager::ViewSpells(int)
+{
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
     if (m_selectedSpell != -1) {
         switch (m_selectedSpell) {
@@ -45,7 +46,8 @@ signed char combatManager::ViewSpells(int) {
 
 // Buka SPELLS.cpp CombatSpecialHandler: spell-book hover help.
 VA(0x00415637, 0x160)
-short CombatSpecialHandler(struct tag_message& message) {
+short CombatSpecialHandler(struct tag_message &message)
+{
     if (message.type == MESSAGE_WIDGET) {
         switch (message.payload.widget.command) {
             case WIDGET_COMMAND_HOVER:
@@ -81,7 +83,8 @@ short CombatSpecialHandler(struct tag_message& message) {
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
 VA(0x00415797, 0x295)
-short HandleCastSpell(struct tag_message& message) {
+short HandleCastSpell(struct tag_message &message)
+{
     short hex;
 
     switch (message.type) {
@@ -112,10 +115,7 @@ short HandleCastSpell(struct tag_message& message) {
                         bInTeleportGetDest = 1;
                         indexToCastOn = -1;
                         message.type = MESSAGE_MOUSE_MOVE;
-                        gpMouseManager->MouseCoords(
-                            message.payload.mouse.x,
-                            message.payload.mouse.y
-                        );
+                        gpMouseManager->MouseCoords(message.payload.mouse.x, message.payload.mouse.y);
                         HandleCastSpell(message);
                         gpCombatManager->CombatMessage("Select teleport destination.", 1);
                         return MESSAGE_DISPATCH_CONSUME;
@@ -144,17 +144,17 @@ short HandleCastSpell(struct tag_message& message) {
 // Buka SPELLS.cpp ValidSpellTarget; HoMM1 has no resurrection corpses, and
 // anti-magic, dispel and green dragons stop every spell but the area ones.
 VA(0x00415a2c, 0x2f0)
-signed char combatManager::ValidSpellTarget(signed char spell, signed char hex) {
+signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
+{
     int unused;
-    army* target = 0;
+    army *target = 0;
     short newHex;
 
     if (!ValidHex(hex))
         return 0;
     if (spell != 0 && spell != 17 && m_hexCells[hex].m_occupantSide != -1) {
         target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-        if (target->m_spellEffect == 12 || target->m_spellEffect == 13
-            || target->m_creatureType == 0x17)
+        if (target->m_spellEffect == 12 || target->m_spellEffect == 13 || target->m_creatureType == 0x17)
             return 0;
     }
     switch (spell) {
@@ -206,7 +206,8 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex) 
 
 // Buka SPELLS.cpp SpellMessage without the resurrection target.
 VA(0x00415d1c, 0x128)
-void combatManager::SpellMessage(signed char spell, signed char hex) {
+void combatManager::SpellMessage(signed char spell, signed char hex)
+{
     switch (spell) {
         case 0:
         case 15:
@@ -220,13 +221,8 @@ void combatManager::SpellMessage(signed char spell, signed char hex) {
                 break;
             }
         default:
-            sprintf(
-                gText,
-                "Cast %s on %s",
-                gSpellNames[spell],
-                gArmyNames[m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex]
-                               .m_creatureType]
-            );
+            sprintf(gText, "Cast %s on %s", gSpellNames[spell],
+                    gArmyNames[m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex].m_creatureType]);
             break;
     }
     CombatMessage(gText, 1);
@@ -235,13 +231,10 @@ void combatManager::SpellMessage(signed char spell, signed char hex) {
 // Buka SPELLS.cpp CastSpell; HoMM1 has nineteen spells, a single timed effect
 // per stack and no eagle eye, mirror image or elementals.
 VA(0x00415e44, 0xd69)
-void combatManager::CastSpell(
-    signed char spell,
-    signed char targetHex,
-    signed char castByCreature,
-    signed char teleportDest
-) {
-    army* targetArmy;
+void combatManager::CastSpell(signed char spell, signed char targetHex, signed char castByCreature,
+                              signed char teleportDest)
+{
+    army *targetArmy;
     int damage;
     int targetIndex;
     int side;
@@ -250,7 +243,7 @@ void combatManager::CastSpell(
     SAMPLE2 sample;
     int quantity;
     short newHex;
-    army* teleportArmy;
+    army *teleportArmy;
 
     sample = NULL_SAMPLE2;
     if (m_limitCreature) {
@@ -269,8 +262,7 @@ void combatManager::CastSpell(
     if (spell == 0 || spell == 17 || spell == 16 || spell == 15 || spell == 3 || spell == 13)
         targetArmy = 0;
     else if (ValidHex(targetHex) && m_hexCells[targetHex].m_occupantSide >= 0) {
-        targetArmy =
-            &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
+        targetArmy = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
         side = m_hexCells[targetHex].m_occupantSide;
         targetIndex = m_hexCells[targetHex].m_occupantIndex;
     } else
@@ -375,13 +367,10 @@ void combatManager::CastSpell(
             teleportArmy->Stand(1);
             break;
         case 1:
-            sprintf(
-                gText,
-                "The lightning bolt does %d damage to the %s.",
-                m_heroes[m_currentSide]->m_primaryStats[2] * 25,
-                targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
-                                           : gArmyNames[targetArmy->m_creatureType]
-            );
+            sprintf(gText, "The lightning bolt does %d damage to the %s.",
+                    m_heroes[m_currentSide]->m_primaryStats[2] * 25,
+                    targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
+                                               : gArmyNames[targetArmy->m_creatureType]);
             CombatMessage(gText, 1);
             targetArmy->SpellEffect(1, 0);
             targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
@@ -396,24 +385,15 @@ void combatManager::CastSpell(
             targetArmy->SpellEffect(4, 0);
             targetArmy->SpellEffect(4, 0);
             quantity = targetArmy->m_quantity;
-            targetArmy->m_quantity +=
-                m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
+            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
             if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
                 targetArmy->m_quantity = targetArmy->m_initialQuantity;
             if (targetArmy->m_quantity - quantity > 1)
-                sprintf(
-                    gText,
-                    "%d %s rise from the dead!",
-                    targetArmy->m_quantity - quantity,
-                    gArmyNamesPlural[targetArmy->m_creatureType]
-                );
+                sprintf(gText, "%d %s rise from the dead!", targetArmy->m_quantity - quantity,
+                        gArmyNamesPlural[targetArmy->m_creatureType]);
             else
-                sprintf(
-                    gText,
-                    "%d %s rises from the dead!",
-                    targetArmy->m_quantity - quantity,
-                    gArmyNames[targetArmy->m_creatureType]
-                );
+                sprintf(gText, "%d %s rises from the dead!", targetArmy->m_quantity - quantity,
+                        gArmyNames[targetArmy->m_creatureType]);
             CombatMessage(gText, 1);
             targetArmy->Stand(1);
             break;
@@ -541,8 +521,9 @@ done:
 
 // Buka SPELLS.cpp DefaultSpell; HoMM1 plays the effect in two frames.
 VA(0x00416bad, 0xcb)
-void combatManager::DefaultSpell(signed char targetHex) {
-    army* target;
+void combatManager::DefaultSpell(signed char targetHex)
+{
+    army *target;
 
     if (!ValidHex(targetHex) || m_hexCells[targetHex].m_occupantSide < 0)
         return;
@@ -557,7 +538,8 @@ void combatManager::DefaultSpell(signed char targetHex) {
 // HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
 // spells are cancelled side by side.
 VA(0x00416c78, 0x407)
-void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
+void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
+{
     int last;
     int unused;
     short side;
@@ -581,15 +563,13 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
     }
     for (side = startSide; side <= last; side++) {
         for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
-            if (m_armies[side][armyIndex].m_spellEffect != 12
-                && m_armies[side][armyIndex].m_spellEffect != 13
+            if (m_armies[side][armyIndex].m_spellEffect != 12 && m_armies[side][armyIndex].m_spellEffect != 13
                 && m_armies[side][armyIndex].m_creatureType != 0x17) {
                 if (!cureOnly) {
                     if (m_armies[side][armyIndex].m_spellEffect != -1)
                         m_armies[side][armyIndex].m_unknown08 = 3;
                 } else if (cureOnly == 1) {
-                    if (m_armies[side][armyIndex].m_spellEffect == 6
-                        || m_armies[side][armyIndex].m_spellEffect == 7
+                    if (m_armies[side][armyIndex].m_spellEffect == 6 || m_armies[side][armyIndex].m_spellEffect == 7
                         || m_armies[side][armyIndex].m_spellEffect == 10
                         || m_armies[side][armyIndex].m_spellEffect == 14
                         || m_armies[side][armyIndex].m_spellEffect == 18)
@@ -619,16 +599,16 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
 // HoMM1: lifts every stack of one side out of the glow and cancels its
 // spell (only the harmful ones for Cure).
 VA(0x0041707f, 0x12e)
-void combatManager::CancelSideSpells(signed char side, signed char cureOnly) {
-    army* curArmy;
+void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
+{
+    army *curArmy;
     short i;
 
     for (i = 0; i < m_numArmies[side]; i++) {
         curArmy = &m_armies[side][i];
         curArmy->m_unknown08 = 0;
         curArmy->m_unknown09 = 1;
-        if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13
-            && curArmy->m_creatureType != 0x17) {
+        if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13 && curArmy->m_creatureType != 0x17) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {
                     case 6:
@@ -650,11 +630,12 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly) {
 // Buka SPELLS.cpp Fireball; HoMM1 draws the clipped ball and its mirror and
 // always hits the target hex and its six neighbours.
 VA(0x004171ad, 0x432)
-void combatManager::Fireball(signed char targetHex) {
+void combatManager::Fireball(signed char targetHex)
+{
     int damage;
-    icon* fireballIcon;
+    icon *fireballIcon;
     short x;
-    army* curArmy;
+    army *curArmy;
     short y;
     short i;
     short adjHexes[7];
@@ -684,14 +665,11 @@ void combatManager::Fireball(signed char targetHex) {
     hit = 0;
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
-                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
-                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
-                                 [m_hexCells[adjHexes[i]].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
-                             [m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
+                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
                     curArmy->Damage(damage);
                     hit = 1;
@@ -706,8 +684,7 @@ void combatManager::Fireball(signed char targetHex) {
     curArmy->PowEffect(7);
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
-                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->Stand(1);
         }
@@ -718,10 +695,11 @@ void combatManager::Fireball(signed char targetHex) {
 // Buka SPELLS.cpp MeteorShower; HoMM1 drops a meteor on each of the seven
 // hexes in turn.
 VA(0x004175df, 0x439)
-void combatManager::MeteorShower(signed char targetHex) {
+void combatManager::MeteorShower(signed char targetHex)
+{
     int damage;
-    icon* rockIcon;
-    army* curArmy;
+    icon *rockIcon;
+    army *curArmy;
     short i;
     short adjHexes[7];
     short j;
@@ -740,13 +718,7 @@ void combatManager::MeteorShower(signed char targetHex) {
         DrawFrame(0);
         for (i = 0; i < 7; i++) {
             if (adjHexes[i] != -1)
-                rockIcon->DrawToBuffer(
-                    m_hexCells[adjHexes[i]].m_x,
-                    m_hexCells[adjHexes[i]].m_y,
-                    j,
-                    0,
-                    0
-                );
+                rockIcon->DrawToBuffer(m_hexCells[adjHexes[i]].m_x, m_hexCells[adjHexes[i]].m_y, j, 0, 0);
         }
         UpdateCombatArea();
         DelayTil(&glTimers[0]);
@@ -757,14 +729,11 @@ void combatManager::MeteorShower(signed char targetHex) {
     hit = 0;
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
-                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
-                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
-                                 [m_hexCells[adjHexes[i]].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide]
-                             [m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
+                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
                 if (curArmy->m_powFrames == -1) {
                     curArmy->Damage(damage);
                     hit = 1;
@@ -779,8 +748,7 @@ void combatManager::MeteorShower(signed char targetHex) {
     curArmy->PowEffect(1);
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
-            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
-                               [m_hexCells[adjHexes[i]].m_occupantIndex];
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & 0x10))
                 curArmy->Stand(1);
         }
@@ -790,15 +758,16 @@ void combatManager::MeteorShower(signed char targetHex) {
 
 // Buka SPELLS.cpp ElementalStorm over HoMM1's 10x7 grid of 64-pixel tiles.
 VA(0x00417a18, 0x2f3)
-void combatManager::ElementalStorm(void) {
+void combatManager::ElementalStorm(void)
+{
     int damage;
     short index;
     short x;
-    army* curArmy;
+    army *curArmy;
     short cycle;
     short frm;
     short y;
-    icon* storm;
+    icon *storm;
     short sideIdx;
     signed char hit;
 
@@ -848,16 +817,17 @@ void combatManager::ElementalStorm(void) {
 // Buka SPELLS.cpp Armageddon; HoMM1 fades a copy of kb.pal to red instead of
 // shaking the screen.
 VA(0x00417d0b, 0x3dc)
-void combatManager::Armageddon(void) {
+void combatManager::Armageddon(void)
+{
+    short sideIdx;
     int damage;
     short index;
-    signed char* palData;
+    signed char *palData;
     short fadeStep;
-    army* curArmy;
-    palette* kbPal;
+    army *curArmy;
+    palette *kbPal;
     short i;
-    short sideIdx;
-    palette* workPal;
+    palette *workPal;
     signed char hit;
 
     damage = m_heroes[m_currentSide]->m_primaryStats[2] * 50;

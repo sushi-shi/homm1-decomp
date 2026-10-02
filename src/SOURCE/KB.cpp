@@ -896,17 +896,16 @@ void NormalDialog(
     int secondResourceValue,
     int showOrText
 ) {
-    int resourceYPos;
-    int maxIconHeight;
     char szFilename[NORMAL_DIALOG_FILENAME_LENGTH];
     char* amountText[NORMAL_DIALOG_RESOURCE_COUNT];
     int sizingHeight;
+    int resourceYPos;
     int kind[NORMAL_DIALOG_RESOURCE_COUNT];
     iconWidget* iconPanel;
-    int width;
     int resWidth;
     short bShowMessage;
     font* bigFont;
+    int width;
     int height;
     int i;
     int contentSize;
@@ -919,6 +918,7 @@ void NormalDialog(
     int resourceFrame;
     int frameHeight;
     textWidget* captionWidget;
+    int maxIconHeight;
     int resCenterX;
     char* szOr;
 
