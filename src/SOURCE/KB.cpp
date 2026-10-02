@@ -194,6 +194,7 @@ int EarlySetup(void) {
 // oldmain dispatches it (gGameCommand re-enters with the control panel's
 // new/load/quit ids, which share these values).
 H1_ENUM_BEGIN(MainMenuControl)
+    MAIN_MENU_NO_COMMAND = -1,
     MAIN_MENU_NEW_GAME = 1,
     MAIN_MENU_LOAD_GAME = 2,
     MAIN_MENU_QUIT = 4,
@@ -210,6 +211,16 @@ H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_CREDITS = 3,
     MAIN_MENU_HELP_QUIT = 4
 H1_ENUM_END(MainMenuHelp)
+
+// giEndSequence: CheckEndGame sets LOST/WON, and WON becomes CAMPAIGN_COMPLETE
+// after the last campaign scenario; oldmain plays the matching video (the
+// value indexes lowResVideos/hiResVideos), offers a replay after LOST and
+// advances the campaign after WON.
+H1_ENUM_BEGIN(GameEndSequence)
+    GAME_END_LOST = 0,
+    GAME_END_WON = 1,
+    GAME_END_CAMPAIGN_COMPLETE = 2
+H1_ENUM_END(GameEndSequence)
 // clang-format on
 
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
@@ -272,7 +283,7 @@ int oldmain(void) {
     mainMenu:
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
         if (!backdropLoaded) {
-            if (gGameCommand != 4) {
+            if (gGameCommand != MAIN_MENU_QUIT) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 if (initialMainScreen)
@@ -284,7 +295,7 @@ int oldmain(void) {
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
         }
         backdropLoaded = 1;
-        if (gGameCommand != 4)
+        if (gGameCommand != MAIN_MENU_QUIT)
             gpWindowManager->m_updateFlags = 1;
         giCampaignChoice = 0;
         gpMouseManager->ReallyShowPointer();
@@ -326,9 +337,9 @@ int oldmain(void) {
             }
             goto gameSetupComplete;
         } else {
-            if (gGameCommand != -1) {
+            if (gGameCommand != MAIN_MENU_NO_COMMAND) {
                 command = gGameCommand;
-                gGameCommand = -1;
+                gGameCommand = MAIN_MENU_NO_COMMAND;
             } else {
                 mainWin = new heroWindow(400, 35, "stpmain.bin");
                 if (!mainWin)
@@ -469,8 +480,8 @@ int oldmain(void) {
             hiResVideos[0] = 7;
             hiResVideos[1] = 4;
             hiResVideos[2] = 6;
-            if (giEndSequence != 1) {
-                if (giEndSequence == 2) {
+            if (giEndSequence != GAME_END_WON) {
+                if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
                     PlaySmacker(4);
                     PlaySmacker(6);
                 } else {
@@ -486,7 +497,7 @@ int oldmain(void) {
                 ShowCongrats();
             }
             gbGameOver = 0;
-            if (giEndSequence == 2) {
+            if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(giCurTurn, 0, "", gCampaignSideNames[gpGame->m_campaignType - 1]);
             }
@@ -504,14 +515,14 @@ int oldmain(void) {
                 backdropLoaded = 1;
             }
             if (gpGame->m_campaignType > 0) {
-                if (giEndSequence == 0) {
+                if (giEndSequence == GAME_END_LOST) {
                     sprintf(gText, "Would you like to replay this scenario?");
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
                     }
-                } else if (giEndSequence == 1) {
+                } else if (giEndSequence == GAME_END_WON) {
                     gpGame->m_campaignDay = giCurTurn + 1;
                     gpGame->m_campaignScenario++;
                     gpGame->m_campaignScenariosWon++;
@@ -1703,7 +1714,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         RemoteCleanup();
         gbGameOver = 1;
-        giEndSequence = 0;
+        giEndSequence = GAME_END_LOST;
         return;
     }
     if (giNumHumanPlayers <= 2) {
@@ -1898,31 +1909,31 @@ void CheckEndGame(int forced) {
 
     if (lost) {
         gbGameOver = 1;
-        giEndSequence = 0;
+        giEndSequence = GAME_END_LOST;
     }
     if (win) {
         gbGameOver = 1;
-        giEndSequence = 1;
+        giEndSequence = GAME_END_WON;
     }
     if (numLiving == 1 || humansAlive == 0
         || (humansAlive == 1 && !gbThisNetHumanPlayer[lastHumanPos])) {
         if (humansAlive == 1 && gbThisNetHumanPlayer[lastHumanPos]) {
             if (normalWin) {
                 gbGameOver = 1;
-                giEndSequence = 1;
+                giEndSequence = GAME_END_WON;
             }
         } else {
             gbGameOver = 1;
-            giEndSequence = 0;
+            giEndSequence = GAME_END_LOST;
         }
     }
     if (forced) {
         gbGameOver = 1;
-        giEndSequence = 1;
+        giEndSequence = GAME_END_WON;
     }
-    if (gbGameOver && gpGame->m_campaignType > 0 && giEndSequence == 1
+    if (gbGameOver && gpGame->m_campaignType > 0 && giEndSequence == GAME_END_WON
         && gpGame->m_campaignScenario + 1 == 9)
-        giEndSequence = 2;
+        giEndSequence = GAME_END_CAMPAIGN_COMPLETE;
     bInCheckEndGame = 0;
 }
 
@@ -1954,7 +1965,7 @@ void InitVars(void) {
     NULL_SAMPLE2.pSample = NULL;
     NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
     iMaxMapExtra = 1;
-    gGameCommand = -1;
+    gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
     gpPhilAI->m_debugFont = NULL;
     gbCombatSurrender = 0;

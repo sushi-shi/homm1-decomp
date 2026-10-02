@@ -344,22 +344,22 @@ short advManager::Open(short id) {
     if (m_boatShadowIcon == NULL)
         m_boatShadowIcon = gpResourceManager->GetIcon("shadow32.icn");
     gbLoadingMonoIcon = 0;
-    if (m_flagIcons[0] == NULL)
-        m_flagIcons[0] = gpResourceManager->GetIcon("b-flag32.icn");
-    if (m_flagIcons[1] == NULL)
-        m_flagIcons[1] = gpResourceManager->GetIcon("g-flag32.icn");
-    if (m_flagIcons[2] == NULL)
-        m_flagIcons[2] = gpResourceManager->GetIcon("r-flag32.icn");
-    if (m_flagIcons[3] == NULL)
-        m_flagIcons[3] = gpResourceManager->GetIcon("y-flag32.icn");
-    if (m_boatFlagIcons[0] == NULL)
-        m_boatFlagIcons[0] = gpResourceManager->GetIcon("b-bflg32.icn");
-    if (m_boatFlagIcons[1] == NULL)
-        m_boatFlagIcons[1] = gpResourceManager->GetIcon("g-bflg32.icn");
-    if (m_boatFlagIcons[2] == NULL)
-        m_boatFlagIcons[2] = gpResourceManager->GetIcon("r-bflg32.icn");
-    if (m_boatFlagIcons[3] == NULL)
-        m_boatFlagIcons[3] = gpResourceManager->GetIcon("y-bflg32.icn");
+    if (m_flagIcons[PLAYER_COLOR_BLUE] == NULL)
+        m_flagIcons[PLAYER_COLOR_BLUE] = gpResourceManager->GetIcon("b-flag32.icn");
+    if (m_flagIcons[PLAYER_COLOR_GREEN] == NULL)
+        m_flagIcons[PLAYER_COLOR_GREEN] = gpResourceManager->GetIcon("g-flag32.icn");
+    if (m_flagIcons[PLAYER_COLOR_RED] == NULL)
+        m_flagIcons[PLAYER_COLOR_RED] = gpResourceManager->GetIcon("r-flag32.icn");
+    if (m_flagIcons[PLAYER_COLOR_YELLOW] == NULL)
+        m_flagIcons[PLAYER_COLOR_YELLOW] = gpResourceManager->GetIcon("y-flag32.icn");
+    if (m_boatFlagIcons[PLAYER_COLOR_BLUE] == NULL)
+        m_boatFlagIcons[PLAYER_COLOR_BLUE] = gpResourceManager->GetIcon("b-bflg32.icn");
+    if (m_boatFlagIcons[PLAYER_COLOR_GREEN] == NULL)
+        m_boatFlagIcons[PLAYER_COLOR_GREEN] = gpResourceManager->GetIcon("g-bflg32.icn");
+    if (m_boatFlagIcons[PLAYER_COLOR_RED] == NULL)
+        m_boatFlagIcons[PLAYER_COLOR_RED] = gpResourceManager->GetIcon("r-bflg32.icn");
+    if (m_boatFlagIcons[PLAYER_COLOR_YELLOW] == NULL)
+        m_boatFlagIcons[PLAYER_COLOR_YELLOW] = gpResourceManager->GetIcon("y-bflg32.icn");
     gbLoadingMonoIcon = 1;
     if (m_puzzleIcon == NULL)
         m_puzzleIcon = gpResourceManager->GetIcon("radar.icn");
@@ -2116,14 +2116,14 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
             if ((cellPtr->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO) {
                 owner = gpGame->m_availableHeroes[cellPtr->m_objectMetadata];
                 if (giCurPlayer == owner)
-                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : PLAYER_COLOR_NEUTRAL];
                 else
                     color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
             } else {
                 switch (cellPtr->m_objectTileset & MAP_CELL_TILESET_MASK) {
                 case TILESET_TOWN32:
                     owner = gpGame->m_townOwners[cellPtr->m_objectMetadata];
-                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : PLAYER_COLOR_NEUTRAL];
                     break;
                 case TILESET_RSRC32:
                     switch (cellPtr->m_triggerType) {
@@ -2134,7 +2134,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                     case MAP_TRIGGER_EVENT | MAP_OBJECT_MINE:
                     case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
                         owner = gpGame->m_mineOwners[cellPtr->m_objectMetadata];
-                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
+                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : PLAYER_COLOR_NEUTRAL];
                         break;
                     default:
                         color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
