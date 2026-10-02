@@ -599,6 +599,86 @@ short NewGameHandler(tag_message& message) {
 VA(0x0043b522, 0x2c3)
 void game::UpdateNewGameWindow(void) {}
 
+// Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
+// unowned town on the map gains a random tier of its own creatures.
+VA(0x0043b7e5, 0x2c3)
+void game::GiveTroopsToNeutralTowns(void) {
+    int howMany;
+    int die;
+    int i;
+    int tier;
+    int monster;
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        if ((m_castleRecs[i].m_x > 0 || m_castleRecs[i].m_y > 0) && m_castleRecs[i].m_owner < 0) {
+            die = Random(1, 15);
+            if (die <= 5) {
+                tier = 10;
+                howMany = Random(8, 15);
+            } else if (die <= 10) {
+                tier = 20;
+                howMany = Random(5, 7);
+            } else if (die <= 13) {
+                tier = 30;
+                howMany = Random(3, 5);
+            } else {
+                tier = 40;
+                howMany = Random(1, 3);
+            }
+            switch (m_castleRecs[i].m_type + tier) {
+                case 10:
+                    monster = 0;
+                    break;
+                case 20:
+                    monster = 1;
+                    break;
+                case 30:
+                    monster = 2;
+                    break;
+                case 40:
+                    monster = 3;
+                    break;
+                case 12:
+                    monster = 6;
+                    break;
+                case 22:
+                    monster = 7;
+                    break;
+                case 32:
+                    monster = 8;
+                    break;
+                case 42:
+                    monster = 9;
+                    break;
+                case 11:
+                    monster = 12;
+                    break;
+                case 21:
+                    monster = 13;
+                    break;
+                case 31:
+                    monster = 14;
+                    break;
+                case 41:
+                    monster = 15;
+                    break;
+                case 13:
+                    monster = 18;
+                    break;
+                case 23:
+                    monster = 19;
+                    break;
+                case 33:
+                    monster = 20;
+                    break;
+                case 43:
+                    monster = 21;
+                    break;
+            }
+            GiveArmy(&m_castleRecs[i].m_army, monster, howMany, -1);
+        }
+    }
+}
+
 // NewGame remembers the last new-game settings for the next setup screen.
 extern signed char gbNewGameSettingsSaved;
 extern signed char gcSavedDifficulty;
