@@ -17,18 +17,18 @@
 #include <string.h>
 
 // Pathfinder scratch state shared by PushPoint and TestPossibleDirections.
-static int gSearchNextY;
-static int gSearchNextX;
-static short gSearchHigh;
-static mapCell* gSearchCurrentCell;
-static searchNode* gSearchQueueNode;
-static short gSearchLow;
-static searchNode* gSearchCell;
-static int gSearchTriggerType;
-static int gSearchTerrain;
-static unsigned int gSearchMiddle;
-static int gSearchDirection;
-static mapCell* gSearchNextCell;
+DATA(0x004c4f20) static int gSearchNextY;
+DATA(0x004c4f1c) static int gSearchNextX;
+DATA(0x004c4f18) static short gSearchHigh;
+DATA(0x004c4f14) static mapCell* gSearchCurrentCell;
+DATA(0x004c4f10) static searchNode* gSearchQueueNode;
+DATA(0x004c4f0c) static short gSearchLow;
+DATA(0x004c4f08) static searchNode* gSearchCell;
+DATA(0x004c4f04) static int gSearchTriggerType;
+DATA(0x004c4f00) static int gSearchTerrain;
+DATA(0x004c4ef8) static unsigned int gSearchMiddle;
+DATA(0x004c4ef4) static int gSearchDirection;
+DATA(0x004c4ef0) static mapCell* gSearchNextCell;
 
 // Buka FINDPATH.cpp:48-51 without the heap cell pointer: HoMM1 cells are inline.
 VA(0x00424810, 0xa)
