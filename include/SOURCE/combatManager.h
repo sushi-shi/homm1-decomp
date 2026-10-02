@@ -81,9 +81,9 @@ public:
     class bitmap* m_backgroundBitmap;
     signed char m_unknown299;
     char m_unknown29a[4];
-    // DoVictory: an attacker winning here earns the castle bonus.
-    class town *m_combatTown;
-    char m_unknown2a2[4];
+    // Per side: the town fought in. DoVictory gives the defender's winner
+    // the castle bonus; AICheckRetreat never retreats from a town.
+    class town *m_combatTowns[2];
     class hero *m_heroes[2];
     char m_unknown2ae[8];
     // Set by a surrender (ProcessNextAction).

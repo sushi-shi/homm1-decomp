@@ -977,7 +977,7 @@ void combatManager::DoVictory(signed char winningSide)
                 m_experienceValue[1 - winningSide] = ExperienceValueOfStack(1 - winningSide);
                 if (gbRetreatWin)
                     m_experienceValue[1 - winningSide] -= 500;
-                if (m_combatTown && winningSide == 1)
+                if (m_combatTowns[0] && winningSide == 1)
                     m_experienceValue[1 - winningSide] += 500;
                 levelsGained = gpAdvManager->GiveExperience(m_heroes[winningSide], m_experienceValue[1 - winningSide],
                                                             !gbThisNetHumanPlayer[m_heroes[winningSide]->m_owner]);

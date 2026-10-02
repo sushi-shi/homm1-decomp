@@ -14,11 +14,98 @@
 #include <stdlib.h>
 #include <string.h>
 
-// donor PoL RVA 0x000c0790; preferred Buka symbol ?AICheckRetreat@combatManager@@QAEHXZ
-// donor Buka TU SOURCE/AI; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.550932;margin=0.199965;shape=0.407;size=0.920;calls=0.857;alternate=pol20:int combatManager::AICheckRetreat(void)@0x000c0790
+// Buka AI.cpp AICheckRetreat: compares the two sides' fight values,
+// weighting the defender of a town and unspent stacks, against a chance
+// raised by the hero's artifacts and experience.
 VA(0x00464520, 0x783)
-int combatManager::AICheckRetreat(void) { return 0; }
+int combatManager::AICheckRetreat(void) {
+    if (m_combatTowns[m_currentSide])
+        return 0;
+    if (!m_heroes[m_currentSide])
+        return 0;
+    if (!gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_townCount)
+        return 0;
+
+    float prob;
+    int treasureValue;
+    hero heroCopy;
+    hero* sideHero;
+    armyGroup* armyPtr;
+    int armyIndex;
+    int side;
+    armyGroup bareGroup;
+    int artifactTotals[2];
+    float expBonus;
+    int force[2];
+    float retreatRatio;
+
+    for (side = 0; side < 2; side++) {
+        if (m_heroes[side]) {
+            heroCopy = *m_heroes[side];
+            sideHero = &heroCopy;
+            armyPtr = &sideHero->m_army;
+        } else {
+            armyPtr = &bareGroup;
+            sideHero = 0;
+        }
+        for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+            if (m_armies[side][armyIndex].IsAlive()) {
+                armyPtr->m_creatureTypes[armyIndex] = m_armies[side][armyIndex].m_creatureType;
+                if (m_armies[side][armyIndex].m_stats.attributes & 0x80)
+                    armyPtr->m_creatureCounts[armyIndex] = m_armies[side][armyIndex].m_quantity;
+                else
+                    armyPtr->m_creatureCounts[armyIndex] = (short)(m_armies[side][armyIndex].m_quantity * 1.2);
+            } else {
+                armyPtr->m_creatureTypes[armyIndex] = -1;
+                armyPtr->m_creatureCounts[armyIndex] = 0;
+            }
+        }
+        force[side] = gpPhilAI->FightValueOfStack(armyPtr, sideHero, 1, 0, 0);
+        if (m_combatTowns[side])
+            force[side] = (int)(force[side] * 1.1);
+        artifactTotals[side] = 0;
+        if (sideHero) {
+            for (armyIndex = 0; armyIndex < 14; armyIndex++) {
+                if (sideHero->m_artifacts[armyIndex] >= 0 && sideHero->m_artifacts[armyIndex] < 37)
+                    artifactTotals[side] += gArtifactBaseRV[sideHero->m_artifacts[armyIndex]];
+            }
+        }
+    }
+    force[1 - m_currentSide] = (int)(force[1 - m_currentSide] * 1.1);
+    treasureValue = artifactTotals[m_currentSide];
+    if (artifactTotals[m_currentSide] < 1000)
+        return 0;
+    prob = 0.16f;
+    if (treasureValue > 10000)
+        prob = prob + 0.06;
+    else if (treasureValue > 5000)
+        prob = prob + 0.05;
+    else if (treasureValue > 0)
+        prob = prob + 0.04;
+    if (force[m_currentSide] > 40000)
+        prob -= force[m_currentSide] / 20000;
+    else if (force[m_currentSide] > 30000)
+        prob = prob - 0.08;
+    else if (force[m_currentSide] > 15000)
+        prob = prob - 0.06;
+    else if (force[m_currentSide] > 5000)
+        prob = prob - 0.04;
+    else if (force[m_currentSide] > 2500)
+        prob = prob - 0.02;
+    expBonus = m_heroes[m_currentSide]->m_experience / 200000;
+    if (expBonus > 0.03)
+        expBonus = 0.03f;
+    prob += expBonus;
+    if (m_currentSide == 1)
+        prob = prob - 0.06;
+    prob -= (4 - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_color) * 0.03;
+    retreatRatio = (float)force[m_currentSide] / (force[0] + force[1]);
+    if (retreatRatio < prob) {
+        giNextAction = 4;
+        return 1;
+    }
+    return 0;
+}
 
 // Buka AI.cpp mask helpers; HoMM1 loops word indices over m_numArmies and
 // builds word masks (dead flag 0x10, shooter 4, flyer 2).
