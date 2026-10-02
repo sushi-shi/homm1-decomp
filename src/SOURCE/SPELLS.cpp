@@ -7,8 +7,13 @@
 #include <H1/KB.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
+#include <BASE/Icon2b.h>
+#include <BASE/palette.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/combatTypes.h>
 
 #include <stdio.h>
+#include <string.h>
 
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
 // checks before queueing the cast.
@@ -622,26 +627,256 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
     }
 }
 
-// donor PoL RVA 0x00023762; preferred Buka symbol ?Fireball@combatManager@@QAEXHH@Z
-// donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.573325;margin=0.154314;shape=0.268;size=0.794;calls=0.643;strings=fireball.icn;alternate=pol20:void combatManager::Fireball(int, int)@0x00023762
+// Buka SPELLS.cpp Fireball; HoMM1 draws the clipped ball and its mirror and
+// always hits the target hex and its six neighbours.
 VA(0x004171ad, 0x432)
-void combatManager::Fireball(signed char) {}
+void combatManager::Fireball(signed char targetHex)
+{
+    int damage;
+    icon *fireballIcon;
+    short x;
+    army *curArmy;
+    short y;
+    short i;
+    short adjHexes[7];
+    signed char hit;
 
-// donor PoL RVA 0x00023d85; preferred Buka symbol ?MeteorShower@combatManager@@QAEXH@Z
-// donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.570305;margin=0.151054;shape=0.232;size=0.755;calls=0.889;strings=meteor.icn;alternate=pol20:void combatManager::MeteorShower(int)@0x00023d85
+    if (!ValidHex(targetHex))
+        return;
+    fireballIcon = gpResourceManager->GetIcon("fireball.icn");
+    x = m_hexCells[targetHex].m_x;
+    y = m_hexCells[targetHex].m_y - 30;
+    for (i = 0; i < 7; i++) {
+        glTimers[0] = KBTickCount() + 75;
+        m_unknown25c = 0;
+        ClippedIconToBitmap(fireballIcon, gpWindowManager->m_screen, x, y, i, 0);
+        FlipClippedIconToBitmap(fireballIcon, gpWindowManager->m_screen, x, y, i, 0);
+        UpdateCombatArea();
+        DrawFrame(0);
+        DelayTil(&glTimers[0]);
+    }
+    gpResourceManager->Dispose(fireballIcon);
+    curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    adjHexes[0] = targetHex;
+    for (i = 0; i < 6; i++)
+        adjHexes[i + 1] = curArmy->GetAdjacentCellIndex(targetHex, i);
+    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 10;
+    ClearEffects();
+    hit = 0;
+    for (i = 0; i < 7; i++) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
+                if (curArmy->m_unknown2b == -1) {
+                    curArmy->Damage(damage);
+                    hit = 1;
+                }
+            }
+        }
+    }
+    if (hit) {
+        sprintf(gText, "The fireball does %d damage.", damage);
+        CombatMessage(gText, 1);
+    }
+    curArmy->PowEffect(7);
+    for (i = 0; i < 7; i++) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (!(curArmy->m_attributes & 0x10))
+                curArmy->ResetAnimation(1);
+        }
+    }
+    DrawFrame(1);
+}
+
+// Buka SPELLS.cpp MeteorShower; HoMM1 drops a meteor on each of the seven
+// hexes in turn.
 VA(0x004175df, 0x439)
-void combatManager::MeteorShower(signed char) {}
+void combatManager::MeteorShower(signed char targetHex)
+{
+    int damage;
+    icon *rockIcon;
+    army *curArmy;
+    short i;
+    short adjHexes[7];
+    short j;
+    signed char hit;
 
-// donor PoL RVA 0x0002414e; preferred Buka symbol ?ElementalStorm@combatManager@@QAEXXZ
-// donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.609860;margin=0.145005;shape=0.203;size=0.928;calls=0.824;strings=storm.icn;alternate=pol20:void combatManager::ElementalStorm(void)@0x0002414e
+    if (!ValidHex(targetHex))
+        return;
+    rockIcon = gpResourceManager->GetIcon("meteor.icn");
+    curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    adjHexes[0] = targetHex;
+    for (i = 0; i < 6; i++)
+        adjHexes[i + 1] = curArmy->GetAdjacentCellIndex(targetHex, i);
+    for (j = 0; j < 10; j++) {
+        glTimers[0] = KBTickCount() + 112.5;
+        m_unknown25c = 0;
+        DrawFrame(0);
+        for (i = 0; i < 7; i++) {
+            if (adjHexes[i] != -1)
+                rockIcon->DrawToBuffer(m_hexCells[adjHexes[i]].m_x, m_hexCells[adjHexes[i]].m_y, j, 0, 0);
+        }
+        UpdateCombatArea();
+        DelayTil(&glTimers[0]);
+    }
+    gpResourceManager->Dispose(rockIcon);
+    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
+    ClearEffects();
+    hit = 0;
+    for (i = 0; i < 7; i++) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+                && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
+                if (curArmy->m_unknown2b == -1) {
+                    curArmy->Damage(damage);
+                    hit = 1;
+                }
+            }
+        }
+    }
+    if (hit) {
+        sprintf(gText, "The meteor shower does %d damage.", damage);
+        CombatMessage(gText, 1);
+    }
+    curArmy->PowEffect(1);
+    for (i = 0; i < 7; i++) {
+        if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
+            curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
+            if (!(curArmy->m_attributes & 0x10))
+                curArmy->ResetAnimation(1);
+        }
+    }
+    DrawFrame(1);
+}
+
+// Buka SPELLS.cpp ElementalStorm over HoMM1's 10x7 grid of 64-pixel tiles.
 VA(0x00417a18, 0x2f3)
-void combatManager::ElementalStorm(void) {}
+void combatManager::ElementalStorm(void)
+{
+    int damage;
+    short index;
+    short x;
+    army *curArmy;
+    short cycle;
+    short frm;
+    short y;
+    icon *storm;
+    short sideIdx;
+    signed char hit;
 
-// donor PoL RVA 0x00024449; preferred Buka symbol ?Armageddon@combatManager@@QAEXXZ
-// donor Buka TU SOURCE/SPELLS; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.422058;margin=0.013140;shape=0.223;size=0.375;calls=0.500;strings=kb.pal;alternate=pol20:void combatManager::Armageddon(void)@0x00024449
-VA(0x00417d0b, 0x3c4)
-void combatManager::Armageddon(void) {}
+    storm = gpResourceManager->GetIcon("storm.icn");
+    for (cycle = 0; cycle < 5; cycle++) {
+        for (frm = 0; frm < 10; frm++) {
+            glTimers[0] = KBTickCount() + 75;
+            m_unknown25c = 0;
+            DrawFrame(0);
+            for (y = 0; y < 7; y++) {
+                for (x = 0; x < 10; x++)
+                    storm->DrawToBuffer(x * 64, y * 64, frm, 0, 0);
+            }
+            UpdateCombatArea();
+            DelayTil(&glTimers[0]);
+        }
+    }
+    gpResourceManager->Dispose(storm);
+    hit = 0;
+    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
+    for (sideIdx = 0; sideIdx < 2; sideIdx++) {
+        for (index = 0; index < m_numArmies[sideIdx]; index++) {
+            curArmy = &m_armies[sideIdx][index];
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+                && !(curArmy->m_attributes & 0x10)) {
+                curArmy->Damage(damage);
+                hit = 1;
+            }
+        }
+    }
+    if (hit) {
+        sprintf(gText, "The elemental storm does %d damage.", damage);
+        CombatMessage(gText, 1);
+    }
+    curArmy->PowEffect(8);
+    for (sideIdx = 0; sideIdx < 2; sideIdx++) {
+        for (index = 0; index < m_numArmies[sideIdx]; index++) {
+            curArmy = &m_armies[sideIdx][index];
+            if (!(curArmy->m_attributes & 0x10))
+                curArmy->ResetAnimation(0);
+        }
+    }
+    DrawFrame(1);
+}
+
+// Buka SPELLS.cpp Armageddon; HoMM1 fades a copy of kb.pal to red instead of
+// shaking the screen.
+VA(0x00417d0b, 0x3dc)
+void combatManager::Armageddon(void)
+{
+    int damage;
+    short index;
+    signed char *palData;
+    short fadeStep;
+    army *curArmy;
+    palette *kbPal;
+    short i;
+    short sideIdx;
+    palette *workPal;
+    signed char hit;
+
+    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 50;
+    hit = 0;
+    for (sideIdx = 0; sideIdx < 2; sideIdx++) {
+        for (index = 0; index < m_numArmies[sideIdx]; index++) {
+            curArmy = &m_armies[sideIdx][index];
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+                && !(curArmy->m_attributes & 0x10)) {
+                curArmy->Damage(damage);
+                hit = 1;
+            }
+        }
+    }
+    if (hit) {
+        sprintf(gText, "The armaggedon does %d damage.", damage);
+        CombatMessage(gText, 1);
+    }
+    gpWindowManager->m_updateFlags = 0;
+    kbPal = gpResourceManager->GetPalette("kb.pal");
+    workPal = new palette;
+    if (!workPal)
+        MemError();
+    memcpy(workPal->Data(), kbPal->Data(), 0x300);
+    glTimers[0] = KBTickCount() + 75;
+    palData = workPal->Data();
+    for (fadeStep = 0; fadeStep < 32; fadeStep++) {
+        for (i = 0; i < 256; i++) {
+            if (palData[i * 3 + 1])
+                palData[i * 3 + 1]--;
+            if (palData[i * 3 + 2])
+                palData[i * 3 + 2]--;
+        }
+        DelayTil(&glTimers[0]);
+        SetPalette(palData, 1);
+        glTimers[0] = KBTickCount() + 75;
+    }
+    curArmy->PowEffect(7);
+    for (sideIdx = 0; sideIdx < 2; sideIdx++) {
+        for (index = 0; index < m_numArmies[sideIdx]; index++) {
+            curArmy = &m_armies[sideIdx][index];
+            if (!(curArmy->m_attributes & 0x10))
+                curArmy->ResetAnimation(0);
+        }
+    }
+    DrawFrame(1);
+    SetPalette(kbPal->Data(), 1);
+    gpWindowManager->m_updateFlags = 1;
+    gpResourceManager->Dispose(kbPal);
+    delete workPal;
+}

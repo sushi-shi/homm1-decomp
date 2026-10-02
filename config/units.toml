@@ -316,7 +316,8 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/SPELLS"
 source = "src/SOURCE/SPELLS.cpp"
-flags = "cpp_carcass"
+# Armageddon registers an fs:[0] frame to delete its work palette.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/STRIP"

@@ -10,7 +10,9 @@
 #pragma pack(push, 1)
 class hexcell {
 public:
-    char m_unknown00[4];
+    // Screen position of the hex centre (Fireball draws from here).
+    short m_x;
+    short m_y;
     signed char m_unknown04;
     signed char m_unknown05;
     char m_unknown06;
