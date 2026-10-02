@@ -10,6 +10,7 @@
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/WINMGR_TYPES.h>
+#include <BASE/soundmgr.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/highScoreRuntime.h>
@@ -23,9 +24,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include <fcntl.h>
+#include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 // Retail score-dialog owner bytes; initializer coverage is deferred.
 DATA(0x00494170)
@@ -1326,11 +1331,68 @@ short GetMonType(int score, int highScoreType) {
     return giScoreMon[0][1];
 }
 
+// The score CheckEndGame last offered to the high-score table.
+extern int giScore;
+
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
 VA(0x004542ed, 0x3d2)
-int AddScoreToHighScore(int, int, int, int, char*) {
+int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
+    HighScoreEntry scores[10];
+    int entry;
+    int dest;
+    int file;
+    char fileName[352];
+    char enteredPlayerName[20];
+    signed char missingFile;
+
+    missingFile = 0;
+    if (standard == 1)
+        sprintf(fileName, "%sSTANDARD.HS", gcDataPath);
+    else
+        sprintf(fileName, "%sCAMPAIGN.HS", gcDataPath);
+    file = open(fileName, _O_BINARY);
+    if (file == -1)
+        missingFile = 1;
+    if (missingFile) {
+        for (entry = 0; entry < 10; entry++) {
+            memset(&scores[entry], 0, sizeof(HighScoreEntry));
+            scores[entry].score = HIGH_SCORE_EMPTY;
+        }
+    } else {
+        for (entry = 0; entry < 10; entry++)
+            read(file, &scores[entry], sizeof(scores));
+        close(file);
+    }
+
+    gbShowHighScore = 1;
+    gbStandardHighScore = standard;
+    giHighScoreRank = HIGH_SCORE_EMPTY;
+    giScore = score;
+    for (entry = 0; entry < 10; entry++) {
+        if ((score >= scores[entry].score && standard == 1)
+            || (score <= scores[entry].score && standard == 0)
+            || scores[entry].score == HIGH_SCORE_EMPTY) {
+            giHighScoreRank = entry;
+            break;
+        }
+    }
+
+    if (entry < 10) {
+        for (dest = 8; dest >= entry; dest--)
+            scores[dest + 1] = scores[dest];
+        GetDataEntry("Please enter your name for the high score list.", enteredPlayerName, 16, 0);
+        strcpy(scores[entry].playerName, enteredPlayerName);
+        strcpy(scores[entry].scenarioName, scenarioName);
+        scores[entry].score = score;
+        file = open(fileName, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
+        if (file == -1)
+            FileError(fileName);
+        for (entry = 0; entry < 10; entry++)
+            write(file, &scores[entry], sizeof(HighScoreEntry));
+        close(file);
+    }
     return 0;
 }
 
