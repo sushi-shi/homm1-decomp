@@ -68,16 +68,16 @@ VA(0x00474b30, 0x448)
 heroWindow::heroWindow(short x, short y, char *resourceName)
 {
     short jb;
-    short idx;
-    textEntryWidget *pte;
+    short i;
+    dimmerWidget *pDimmer;
+    border *pBorder;
+    widget *pWidget;
+    iconWidget *pic;
+    button *but;
     textWidget *ptw;
-    H1_ENUM_STORAGE(WindowWidgetRecordType, short) type;
-    button *pbtn;
-    backdropWidget *pback;
-    border *pbd;
-    widget *pwdg;
-    iconWidget *picn;
-    dimmerWidget *pdim;
+    H1_ENUM_STORAGE(WindowWidgetRecordType, short) rec;
+    textEntryWidget *pEntry;
+    backdropWidget *pBack;
 
     strcpy(m_name, resourceName);
     jb = gpResourceManager->MakeId(resourceName);
@@ -95,64 +95,64 @@ heroWindow::heroWindow(short x, short y, char *resourceName)
     m_winFlags = H1_ENUM_CAST(WindowFlag, short, m_winFlags | WINDOW_FLAG_OWNS_WIDGETS);
     m_widgetListHead = 0;
     m_widgetListTail = m_widgetListHead;
-    idx = 0;
-    while (idx == 0) {
+    i = 0;
+    while (i == 0) {
         PollSound();
-        type = H1_ENUM_CAST(WindowWidgetRecordType, short,
+        rec = H1_ENUM_CAST(WindowWidgetRecordType, short,
                             gpResourceManager->ReadWord());
-        pwdg = 0;
-        switch (type) {
+        pWidget = 0;
+        switch (rec) {
         case WIDGET_RECORD_END:
-            idx++;
+            i++;
             break;
         case WIDGET_RECORD_BORDER:
-            pbd = new border();
-            pbd->Read();
-            pwdg = pbd;
+            pBorder = new border();
+            pBorder->Read();
+            pWidget = pBorder;
             break;
         case WIDGET_RECORD_BUTTON:
-            pbtn = new button();
-            pbtn->Read();
-            pwdg = pbtn;
+            but = new button();
+            but->Read();
+            pWidget = but;
             break;
         case WIDGET_RECORD_ICON:
-            picn = new iconWidget();
-            picn->Read();
-            pwdg = picn;
+            pic = new iconWidget();
+            pic->Read();
+            pWidget = pic;
             break;
         case WIDGET_RECORD_DIMMER:
-            pdim = new dimmerWidget();
-            pdim->Read();
-            pwdg = pdim;
+            pDimmer = new dimmerWidget();
+            pDimmer->Read();
+            pWidget = pDimmer;
             break;
         case WIDGET_RECORD_BACKDROP:
-            pback = new backdropWidget();
-            pback->Read();
-            pwdg = pback;
+            pBack = new backdropWidget();
+            pBack->Read();
+            pWidget = pBack;
             break;
         case WIDGET_RECORD_TEXT:
             ptw = new textWidget();
             ptw->Read();
-            pwdg = ptw;
+            pWidget = ptw;
             break;
         case WIDGET_RECORD_TEXT_ENTRY:
-            pte = new textEntryWidget();
-            pte->Read(1);
-            pwdg = pte;
+            pEntry = new textEntryWidget();
+            pEntry->Read(1);
+            pWidget = pEntry;
             break;
         case WIDGET_RECORD_TEXT_ENTRY_RECT:
-            pte = new textEntryWidget();
-            pte->Read(2);
-            pwdg = pte;
+            pEntry = new textEntryWidget();
+            pEntry->Read(2);
+            pWidget = pEntry;
             break;
         case WIDGET_RECORD_TEXT_ENTRY_MULTILINE:
-            pte = new textEntryWidget();
-            pte->Read(3);
-            pwdg = pte;
+            pEntry = new textEntryWidget();
+            pEntry->Read(3);
+            pWidget = pEntry;
             break;
         }
-        if (idx == 0 && pwdg != 0)
-            AddWidget(pwdg, -1);
+        if (i == 0 && pWidget != 0)
+            AddWidget(pWidget, -1);
     }
 }
 
