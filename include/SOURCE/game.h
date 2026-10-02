@@ -214,6 +214,8 @@ public:
     void ConvertObject(int, int, int, int, int, int, int, int, int, int, int);
     void RandomizeTown(int, int, int);
     void RandomizeMine(int, int);
+    // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
+    void SetupTown(signed char, signed char);
     void InitRandomArtifacts(void);
     signed char GetRandomArtifactId(void);
     void RandomizeHeroPool(void);

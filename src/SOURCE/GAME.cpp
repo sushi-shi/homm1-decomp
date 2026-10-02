@@ -745,6 +745,70 @@ void game::InitCampaignMap(int scenario, int) {
     }
 }
 
+// HoMM1 groups the multi-cell object triggers 0x34-0x37 and 0x38-0x3c by
+// their first trigger so neighbouring halves can be compared.
+VA(0x0043d454, 0x6f)
+int GetObjectFamily(int trigger) {
+    switch (trigger) {
+        case 0x34:
+        case 0x35:
+        case 0x36:
+        case 0x37:
+            return 0x34;
+        case 0x38:
+        case 0x39:
+        case 0x3a:
+        case 0x3b:
+        case 0x3c:
+            return 0x38;
+        default:
+            return trigger;
+    }
+}
+
+// HoMM1: once a cell's object frame is gone, its overlay drops into the
+// object slot unless the eastern neighbour continues the same object.
+VA(0x0043d4c3, 0x1e4)
+void game::SettleOverlay(int x, int y) {
+    mapCell* adjCell;
+    mapCell* cell;
+    cell = &m_map[x][y];
+    if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
+        switch (cell->m_triggerType) {
+            case 0x35:
+            case 0x39:
+                if (x + 1 < MAP_CELL_GRID_SIZE) {
+                    adjCell = &m_map[x + 1][y];
+                    if (GetObjectFamily(adjCell->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                        cell->m_unknown07 |= 0x80;
+                    } else {
+                        cell->m_objectIndex = cell->m_overlayIndex;
+                        cell->m_objectTileset = cell->m_overlayTileset;
+                        cell->m_overlayTileset = 0;
+                        cell->m_overlayIndex = 0xff;
+                    }
+                }
+                break;
+            case 0x37:
+            case 0x3b:
+                if (x + 1 < MAP_CELL_GRID_SIZE) {
+                    adjCell = &m_map[x + 1][y];
+                    if (GetObjectFamily(adjCell->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                        cell->m_objectIndex = cell->m_overlayIndex;
+                        cell->m_objectTileset = cell->m_overlayTileset;
+                        cell->m_overlayTileset = 0;
+                        cell->m_overlayIndex = 0xff;
+                    } else {
+                        cell->m_unknown07 |= 0x80;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 // donor PoL RVA 0x00078b72; preferred Buka symbol ?LoadMap@game@@QAEHPAD@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.657346;margin=0.109543;shape=0.244;size=0.995;calls=1.000;strings=%s%s|.\MAPS\;alternate=pol20:int game::LoadMap(char *)@0x00078b72
@@ -940,6 +1004,78 @@ void game::TurnOffAIMusic(void) {
 // evidence: graph:6;base=0.506997;margin=1.216721;shape=0.284;size=0.968;calls=0.889;alternate=pol20:void game::NextPlayer(void)@0x0007bd99
 VA(0x00441245, 0x4e1)
 void game::NextPlayer(void) {}
+
+// Spell AI values, attribute bits and the mage-guild pool by spell level.
+extern short gSpellAIValue[];
+extern signed char gSpellAttributes[];
+extern signed char gMageGuildSpellPool[4][8];
+
+// Buka 2.1 game::SetupTowns' per-town tail: default dwellings for towns the
+// map leaves uncustomized, then nine distinct mage-guild spells; computer
+// owners favour the stronger spells.
+VA(0x00442fb4, 0x3b4)
+void game::SetupTown(signed char townId, signed char aiOwned) {
+    short dwellingCount;
+    char dwellingRoll[10];
+    int k;
+    signed char used[29];
+    signed char townType;
+    short newSpell;
+    short spellValue;
+    int spellLevel;
+
+    dwellingRoll[0] = 1;
+    dwellingRoll[1] = 1;
+    dwellingRoll[2] = 1;
+    dwellingRoll[3] = 2;
+    dwellingRoll[4] = 1;
+    dwellingRoll[5] = 1;
+    dwellingRoll[6] = 1;
+    dwellingRoll[7] = 2;
+    dwellingRoll[8] = 1;
+    dwellingRoll[9] = 3;
+    dwellingCount = dwellingRoll[Random(0, 99) / 10];
+    townType = m_castleRecs[townId].m_type;
+    if (m_castleRecs[townId].m_customized) {
+        for (k = 0; k < 6; k++) {
+            if (m_castleRecs[townId].m_buildings & (1 << (k + 7)))
+                m_castleRecs[townId].m_garrison[k] = gMonsterDatabase[gDwellingType[townType][k]].growth;
+        }
+    }
+    if (!m_castleRecs[townId].m_customized) {
+        m_castleRecs[townId].m_buildings |= 0x80;
+        m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[townType][0]].growth;
+        if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
+            dwellingCount++;
+        if (--dwellingCount) {
+            m_castleRecs[townId].m_buildings |= 0x100;
+            m_castleRecs[townId].m_garrison[1] = gMonsterDatabase[gDwellingType[townType][1]].growth;
+            dwellingCount--;
+        }
+    }
+    memset(used, 0, 29);
+    for (k = 0; k < 9; k++) {
+        if (k <= 2)
+            spellLevel = 0;
+        else if (k <= 4)
+            spellLevel = 1;
+        else if (k <= 6)
+            spellLevel = 2;
+        else
+            spellLevel = 3;
+        do {
+            newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
+            if (aiOwned)
+                spellValue = gSpellAIValue[newSpell] * (gSpellAttributes[newSpell] & 1 ? 4 : 1) + 50;
+            else
+                spellValue = 1500;
+            if (newSpell == 27)
+                spellValue = 1500;
+        } while (used[newSpell] || Random(1, 1500) >= spellValue);
+        m_castleRecs[townId].m_mageGuildSpells[k] = newSpell;
+        used[newSpell] = 1;
+    }
+}
 
 // HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
 VA(0x004439c1, 0x79)
