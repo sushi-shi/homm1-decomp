@@ -477,7 +477,7 @@ short townManager::Main(struct tag_message &message)
                             if (rightClick)
                                 break;
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
-                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                                                              TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
                             m_coverWindow = new heroWindow(0, 0x100, 0x280, 6, 2);
                             if (m_coverWindow == NULL)
                                 MemError();
@@ -488,7 +488,7 @@ short townManager::Main(struct tag_message &message)
                                     m_heroWindow0 = new heroWindow(0, 0, "caslwind.bin");
                                     if (m_heroWindow0 == NULL)
                                         MemError();
-                                    SetWinText(m_heroWindow0, 2);
+                                    SetWinText(m_heroWindow0, WINDOW_TEXT_CASTLE);
                                     SetupCastle(m_heroWindow0);
                                     m_castleDialogActive = 1;
                                     gpWindowManager->DoDialog(m_heroWindow0, CastleHandler, 0);
@@ -506,7 +506,7 @@ short townManager::Main(struct tag_message &message)
                                             m_heroWindow0 = new heroWindow(0xb1, 0x14, "buybook.bin");
                                             if (m_heroWindow0 == NULL)
                                                 MemError();
-                                            SetWinText(m_heroWindow0, 0);
+                                            SetWinText(m_heroWindow0, WINDOW_TEXT_BUY_SPELL_BOOK);
                                             if (gpGame->m_players[gpGame->GetHero(m_town->m_occupyingHeroId)->m_owner]
                                                     .m_resources[RESOURCE_GOLD]
                                                 < 500) {
@@ -533,7 +533,7 @@ short townManager::Main(struct tag_message &message)
                                         m_heroWindow0 = new heroWindow(0, 0, "magewind.bin");
                                         if (m_heroWindow0 == NULL)
                                             MemError();
-                                        SetWinText(m_heroWindow0, 6);
+                                        SetWinText(m_heroWindow0, WINDOW_TEXT_MAGE_GUILD);
                                         SetupMage(m_heroWindow0);
                                         gpWindowManager->DoDialog(m_heroWindow0, MageGuildHandler, 0);
                                     }
@@ -550,7 +550,7 @@ short townManager::Main(struct tag_message &message)
                                     m_heroWindow0 = new heroWindow(0, 0, "thiefwin.bin");
                                     if (m_heroWindow0 == NULL)
                                         MemError();
-                                    SetWinText(m_heroWindow0, 0xf);
+                                    SetWinText(m_heroWindow0, WINDOW_TEXT_THIEVES_GUILD);
                                     SetupThievesGuild(m_heroWindow0, -1);
                                     gpWindowManager->DoDialog(m_heroWindow0, TrueFalseDialogHandler, 0);
                                     break;
@@ -583,7 +583,7 @@ short townManager::Main(struct tag_message &message)
                             }
                             gpWindowManager->ReleaseFizzleSource();
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS,
-                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                                                              TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
                             break;
                         case BUILDING_SLOT_TAVERN:
                             if (rightClick)
@@ -602,7 +602,7 @@ short townManager::Main(struct tag_message &message)
                             if (rightClick)
                                 break;
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
-                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                                                              TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
                             if (gpGame->GetBoatsBuilt() < 32
                                 && gpAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)->m_triggerType == MAP_OBJECT_NONE
                                 && m_town->m_x - 1 != gpAdvManager->m_cursorMapX
@@ -610,7 +610,7 @@ short townManager::Main(struct tag_message &message)
                                 m_heroWindow0 = new heroWindow(0xb1, 0x14, "shipwind.bin");
                                 if (m_heroWindow0 == NULL)
                                     MemError();
-                                SetWinText(m_heroWindow0, 0xc);
+                                SetWinText(m_heroWindow0, WINDOW_TEXT_SHIPYARD);
                                 if (gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] < 1000
                                     || gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] < 10) {
                                     message.type = MESSAGE_WIDGET;
@@ -638,7 +638,7 @@ short townManager::Main(struct tag_message &message)
                             } else
                                 NormalDialog("Cannot build another boat.", NORMAL_DIALOG_TYPE_OK, 0xd0, 0x28, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS,
-                                                              TOWN_CLOSE_CONTROL, 0x4008);
+                                                              TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
                             break;
                         case TOWN_CLOSE_CONTROL:
                             if (rightClick)
@@ -1129,7 +1129,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     nBuildWindow = new heroWindow(0xb1, 0x10, gText);
     if (nBuildWindow == NULL)
         MemError();
-    SetWinText(nBuildWindow, 1);
+    SetWinText(nBuildWindow, WINDOW_TEXT_BUILD);
     iEvt.type = MESSAGE_WIDGET;
     iEvt.command = WIDGET_COMMAND_SET_FRAME;
     iEvt.id = 2;
@@ -1200,7 +1200,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         }
     }
     if (!quickView)
-        gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS, TOWN_CLOSE_CONTROL, 0x4008);
+        gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS, TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
     m_selectedBuilding = -1;
     if (quickView) {
         iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1239,7 +1239,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         }
     }
     if (!quickView)
-        gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS, TOWN_CLOSE_CONTROL, 0x4008);
+        gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS, TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
     delete nBuildWindow;
     if (quickView)
         return 0;
@@ -1303,7 +1303,7 @@ void townManager::BuildObj(short building)
     m_townWindow->DrawWindow();
     gpMouseManager->ReallyShowPointer();
     gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS, TOWN_DIALOG_BUTTON_0,
-                                      0x4008);
+                                      WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
     BitSet(gpGame->m_townBuiltToday, m_town->m_id);
     m_town->GiveSpells();
 }
@@ -1811,7 +1811,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
     m_heroWindow1 = new heroWindow(0xb1, 0x10, "rcrthero.bin");
     if (m_heroWindow1 == NULL)
         MemError();
-    SetWinText(m_heroWindow1, 0xb);
+    SetWinText(m_heroWindow1, WINDOW_TEXT_RECRUIT_HERO);
     m_recruitHeroes[0] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[0]);
     m_recruitHeroes[1] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[1]);
     m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = giCurPlayer;
@@ -1906,7 +1906,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
             m_heroWindow0->DrawWindow();
     }
     m_bankBox->Update();
-    gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS, TOWN_CLOSE_CONTROL, 0x4008);
+    gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_CLEAR_FLAGS, TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
     m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = -1;
     if (m_recruitState != -1)
         m_recruitHeroes[m_recruitState]->m_owner = giCurPlayer;
@@ -1970,7 +1970,7 @@ void townManager::DoTavern(void)
     m_heroWindow0 = new heroWindow(TOWN_TAVERN_WINDOW_X, TOWN_TAVERN_WINDOW_Y, "tavwin.bin");
     if (m_heroWindow0 == NULL)
         MemError();
-    SetWinText(m_heroWindow0, TOWN_TAVERN_WINDOW_TEXT);
+    SetWinText(m_heroWindow0, WINDOW_TEXT_TAVERN);
     gpSoundManager->SwitchAmbientMusic(TOWN_TAVERN_MUSIC);
     gpWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
     delete m_heroWindow0;

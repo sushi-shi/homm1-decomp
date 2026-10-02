@@ -86,7 +86,7 @@ short swapManager::Open(short id) {
     m_window = new heroWindow(16, 16, "swapwin.bin");
     if (!m_window)
         MemError();
-    SetWinText(m_window, 13);
+    SetWinText(m_window, WINDOW_TEXT_SWAP);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_ICON;
     sprintf(gText, "port%04d.icn", m_heroes[1]->m_portrait);

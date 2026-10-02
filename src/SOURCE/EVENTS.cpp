@@ -394,7 +394,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             win = new heroWindow(0, 0, "thiefwin.bin");
             if (!win)
                 MemError();
-            SetWinText(win, 0xf);
+            SetWinText(win, WINDOW_TEXT_THIEVES_GUILD);
             gpTownManager->SetupThievesGuild(win, 8);
             strcpy(gText, "Shrine - Player Rankings");
             event.type = MESSAGE_WIDGET;

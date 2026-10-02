@@ -14,6 +14,7 @@
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
@@ -1000,7 +1001,7 @@ signed char game::NewGame(void) {
     m_newGameWindow = new heroWindow(310, 14, "newgame.bin");
     if (!m_newGameWindow)
         MemError();
-    SetWinText(m_newGameWindow, 7);
+    SetWinText(m_newGameWindow, WINDOW_TEXT_NEW_GAME);
     if (gbNewGameSettingsSaved) {
         gpGame->m_difficulty = gcSavedDifficulty;
         m_players[1].m_difficulty = gcSavedPlayerTypes[1];
@@ -2611,7 +2612,7 @@ void game::Overview(void) {
     win = new heroWindow(0, 0, "overwind.bin");
     if (!win)
         MemError();
-    SetWinText(win, 8);
+    SetWinText(win, WINDOW_TEXT_OVERVIEW);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = OVERVIEW_DATE;
