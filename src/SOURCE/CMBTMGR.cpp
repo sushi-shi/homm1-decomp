@@ -666,7 +666,7 @@ void combatManager::CheckApplyGoodMorale(int side, int index)
     else
         sprintf(gText, "High morale enables the %s to attack again.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
-    activeArmy->SpellEffect(24, 180);
+    activeArmy->SpellEffect(COMBAT_EFFECT_GOOD_MORALE, 180);
     activeArmy->Stand(1);
     if (activeArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
         activeArmy->m_stats.attributes -= 0x80;
@@ -701,7 +701,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
         sprintf(gText, "Low morale causes the %s to freeze in panic.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
     activeArmy->m_animationFrame = 2;
-    activeArmy->SpellEffect(25, 180);
+    activeArmy->SpellEffect(COMBAT_EFFECT_BAD_MORALE, 180);
     activeArmy->Stand(1);
     activeArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
     WaitEndSample(sample, -1);

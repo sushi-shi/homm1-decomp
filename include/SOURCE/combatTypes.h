@@ -53,6 +53,36 @@ H1_ENUM_FLAGS_BEGIN(CombatDirectionMask, short)
     COMBAT_DIRECTION_BIT_WIDE_EAST = 0x80,
     COMBAT_ALL_DIRECTIONS_BLOCKED = 0xff
 H1_ENUM_FLAGS_END(CombatDirectionMask)
+
+// army::SpellEffect's animation: the gCombatFxNames row (rows 0..18 follow the
+// combat SpellType order; 22..25 are rainbluk/cloudluk/moraleg/moraleb, played
+// by army::CheckLuck and CheckApplyGood/BadMorale). CastSpell picks rows per
+// spell, e.g. haste and blind reuse the slow row.
+H1_ENUM_BEGIN(CombatEffectAnimation)
+    COMBAT_EFFECT_FIREBALL = 0,
+    COMBAT_EFFECT_LIGHTNING_BOLT = 1,
+    COMBAT_EFFECT_TELEPORT = 2,
+    COMBAT_EFFECT_CURE = 3,
+    COMBAT_EFFECT_RESURRECT = 4,
+    COMBAT_EFFECT_HASTE = 5,
+    COMBAT_EFFECT_SLOW = 6,
+    COMBAT_EFFECT_BLIND = 7,
+    COMBAT_EFFECT_BLESS = 8,
+    COMBAT_EFFECT_PROTECTION = 9,
+    COMBAT_EFFECT_CURSE = 10,
+    COMBAT_EFFECT_TURN_UNDEAD = 11,
+    COMBAT_EFFECT_ANTI_MAGIC = 12,
+    COMBAT_EFFECT_DISPEL_MAGIC = 13,
+    COMBAT_EFFECT_BERZERKER = 14,
+    COMBAT_EFFECT_ARMAGEDDON = 15,
+    COMBAT_EFFECT_STORM = 16,
+    COMBAT_EFFECT_METEOR_SHOWER = 17,
+    COMBAT_EFFECT_PARALYZE = 18,
+    COMBAT_EFFECT_GOOD_LUCK = 22,
+    COMBAT_EFFECT_BAD_LUCK = 23,
+    COMBAT_EFFECT_GOOD_MORALE = 24,
+    COMBAT_EFFECT_BAD_MORALE = 25
+H1_ENUM_END(CombatEffectAnimation)
 // clang-format on
 
 H1_ENUM_BEGIN(CombatEffectDimension)

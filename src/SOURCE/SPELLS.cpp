@@ -311,7 +311,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         case SPELL_TELEPORT:
             teleportArmy = targetArmy;
             targetHex = teleportDest;
-            teleportArmy->SpellEffect(2, 0);
+            teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             m_hexCells[teleportArmy->m_hex].m_occupantSide = COMBAT_SIDE_NONE;
             m_hexCells[teleportArmy->m_hex].m_occupantIndex = -1;
             if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 1) {
@@ -321,7 +321,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = COMBAT_SIDE_NONE;
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = -1;
             }
-            teleportArmy->SpellEffect(2, 0);
+            teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             WaitEndSample(sample, -1);
             sprintf(gText, "telein.82m");
             sample = LoadPlaySample(gText);
@@ -364,13 +364,13 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         m_hexCells[teleportArmy->m_hex - 1].m_occupantFrame = 1;
                         break;
                 }
-                teleportArmy->SpellEffect(2, 0);
+                teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             } else {
                 teleportArmy->m_hex = targetHex;
                 m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                 m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
                 m_hexCells[teleportArmy->m_hex].m_occupantFrame = -1;
-                teleportArmy->SpellEffect(2, 0);
+                teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             }
             teleportArmy->Stand(1);
             break;
@@ -380,7 +380,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                     targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
                                                : gArmyNames[targetArmy->m_creatureType]);
             CombatMessage(gText, 1);
-            targetArmy->SpellEffect(1, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);
             targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
             targetArmy->PowEffect(7);
             if (!(targetArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
@@ -390,8 +390,8 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             CastMassSpell(m_currentSide, 1);
             break;
         case SPELL_RESURRECT:
-            targetArmy->SpellEffect(4, 0);
-            targetArmy->SpellEffect(4, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
             quantity = targetArmy->m_quantity;
             targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
             if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
@@ -407,8 +407,8 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_SLOW:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->SpellEffect(6, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
             targetArmy->m_stats.speed = 1;
             if (targetArmy->m_stats.attributes & MONSTER_FLAGS_FLYING)
                 targetArmy->m_stats.attributes -= 2;
@@ -419,8 +419,8 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         case SPELL_HASTE:
             gpCombatManager->m_currentSpeed = 4;
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->SpellEffect(6, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
             targetArmy->m_stats.speed = 4;
             targetArmy->m_spellEffect = SPELL_HASTE;
             targetArmy->m_spellEndCondition = 3;
@@ -428,8 +428,8 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_BLESS:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(8, 0);
-            targetArmy->SpellEffect(8, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BLESS, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BLESS, 0);
             targetArmy->m_damageMode = 3;
             targetArmy->m_spellEffect = SPELL_BLESS;
             targetArmy->m_spellEndCondition = 3;
@@ -437,8 +437,8 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_PROTECTION:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(9, 0);
-            targetArmy->SpellEffect(9, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
             targetArmy->m_spellEffect = SPELL_PROTECTION;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->m_stats.defense += 3;
@@ -446,9 +446,9 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_CURSE:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(10, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_CURSE, 0);
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(10, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_CURSE, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = SPELL_CURSE;
             targetArmy->m_spellEndCondition = 3;
@@ -456,18 +456,18 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_BERZERKER:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(14, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(14, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
             targetArmy->m_spellEffect = SPELL_BERZERKER;
             targetArmy->m_spellEndCondition = 1;
             targetArmy->Stand(1);
             break;
         case SPELL_PARALYZE:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(18, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(18, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = SPELL_PARALYZE;
             targetArmy->m_spellEndCondition = 2;
@@ -475,8 +475,8 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_BLIND:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(6, 0);
-            targetArmy->SpellEffect(6, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
             targetArmy->m_stats.speed = 0;
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = SPELL_BLIND;
@@ -485,7 +485,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_TURN_UNDEAD:
             targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(11, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_TURN_UNDEAD, 0);
             targetArmy->m_powFrames = 5;
             targetArmy->PowEffect(0);
             targetArmy->m_quantity = 0;
@@ -495,7 +495,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             break;
         case SPELL_ANTI_MAGIC:
             targetArmy->CancelSpell();
-            targetArmy->SpellEffect(12, 0);
+            targetArmy->SpellEffect(COMBAT_EFFECT_ANTI_MAGIC, 0);
             targetArmy->m_spellEffect = SPELL_ANTI_MAGIC;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
