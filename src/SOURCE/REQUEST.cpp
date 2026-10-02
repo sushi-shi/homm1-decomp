@@ -265,17 +265,11 @@ void fileRequester::SetOK(signed char enabled) {
     tag_message message;
 
     message.type = MESSAGE_WIDGET;
-    if (enabled)
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    else
-        message.command = WIDGET_COMMAND_SET_FLAGS;
+    message.command = enabled ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
     message.id = DIALOG_BUTTON_2;
     message.value = WIDGET_FLAG_DIMMED;
     m_window->BroadcastMessage(message);
-    if (enabled)
-        message.command = WIDGET_COMMAND_SET_FLAGS;
-    else
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.command = enabled ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_ENABLED;
     m_window->BroadcastMessage(message);
 }
