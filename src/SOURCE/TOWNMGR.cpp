@@ -1126,7 +1126,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         binSize = 7;
     sprintf(gText, "buybuil%d.bin", binSize);
     nBuildWindow = new heroWindow(0xb1, 0x10, gText);
-    if (nBuildWindow == 0)
+    if (nBuildWindow == NULL)
         MemError();
     SetWinText(nBuildWindow, 1);
     iEvt.type = MESSAGE_WIDGET;
@@ -1146,7 +1146,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     iEvt.text = gText;
     nBuildWindow->BroadcastMessage(iEvt);
     descWidget = new textWidget(0x18, baseY, 0xee, (numLines << 4) + 6, descText, "bigfont.fnt", 1, -1, 8);
-    if (descWidget == 0)
+    if (descWidget == NULL)
         MemError();
     nBuildWindow->AddWidget(descWidget, -1);
     resIndex = 0;
@@ -1185,11 +1185,11 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                 sprintf(amountText[resIndex], "%d", prices[resIndex]);
                 amountWidgets[resIndex] = new textWidget(currX, yPos + 32, nEntryWidth, 12, amountText[resIndex],
                                                          "smalfont.fnt", 1, -1, 8);
-                if (amountWidgets[resIndex] == 0)
+                if (amountWidgets[resIndex] == NULL)
                     MemError();
                 resWidgets[resIndex] = new iconWidget(currX, yPos, nEntryWidth, 12, "resource.icn",
                                                       resType[resIndex], ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
-                if (resWidgets[resIndex] == 0)
+                if (resWidgets[resIndex] == NULL)
                     MemError();
                 nBuildWindow->AddWidget(amountWidgets[resIndex], -1);
                 nBuildWindow->AddWidget(resWidgets[resIndex], -1);
@@ -1808,7 +1808,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
     short unusedMode = 9;
 
     m_heroWindow1 = new heroWindow(0xb1, 0x10, "rcrthero.bin");
-    if (m_heroWindow1 == 0)
+    if (m_heroWindow1 == NULL)
         MemError();
     SetWinText(m_heroWindow1, 0xb);
     m_recruitHeroes[0] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[0]);
@@ -1884,13 +1884,13 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
                 m_recruitHeroes[m_recruitState]->m_heroClass + gpCurPlayer->Color() * 4);
         m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == -1 ? 4 : 1,
                                     gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 0);
-        if (m_garrisonStrip == 0)
+        if (m_garrisonStrip == NULL)
             MemError();
         delete m_heroStrip;
         sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_portrait);
         m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
                                 &m_recruitHeroes[m_recruitState]->m_army, 0x16, 0);
-        if (m_heroStrip == 0)
+        if (m_heroStrip == NULL)
             MemError();
         if (m_town->m_buildings & 1)
             m_town->GiveSpells();

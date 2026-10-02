@@ -33,7 +33,7 @@ H1_C_LINKAGE int __stdcall WinMain(void *instance, void *previousInstance, char 
     MSG message;
 
     hInstApp = instance;
-    gEventHandle = CreateEventA(NULL, 0, 0, "Heroes");
+    gEventHandle = CreateEventA(NULL, FALSE, FALSE, "Heroes");
     error = GetLastError();
     if (gEventHandle == NULL || error == ERROR_ALREADY_EXISTS) {
         sprintf(gText, "Only one copy of %s may run at a time", "Heroes of Might and Magic");
@@ -49,7 +49,7 @@ H1_C_LINKAGE int __stdcall WinMain(void *instance, void *previousInstance, char 
         return 0;
 
     for (;;) {
-        if (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != 0) {
+        if (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
             if (message.message == WM_QUIT)
                 break;
             TranslateMessage(&message);
@@ -168,7 +168,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
     switch (message) {
     case WM_CREATE:
         srand(KBTickCount());
-        SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, 0);
+        SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, NULL);
         GdiSetBatchLimit(1);
         return 0;
     case WM_KEYDOWN:
@@ -212,7 +212,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
     case WM_ERASEBKGND:
         return 1;
     case WM_MOVE:
-        if (hwndApp == 0)
+        if (hwndApp == NULL)
             return 0;
         lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
         if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
@@ -224,7 +224,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
         }
         return 0;
     case WM_SIZE:
-        if (hwndApp != 0) {
+        if (hwndApp != NULL) {
             lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
             gbMinimized = lTemp & WS_MINIMIZE;
             if ((lTemp & WS_MINIMIZE) == 0)
@@ -243,7 +243,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
             iMainWinScreenWidth = 1;
         if (iMainWinScreenHeight < 1)
             iMainWinScreenHeight = 1;
-        if (hwndApp != 0 && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
+        if (hwndApp != NULL && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
             && gConfig.gfx[giCurExe].fullScreen == 0) {
             gConfig.gfx[giCurExe].width = iMainWinScreenWidth;
             gConfig.gfx[giCurExe].height = iMainWinScreenHeight;
@@ -258,7 +258,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
     case WM_QUERYNEWPALETTE:
         return QueryNewPalette();
     case WM_PAINT:
-        AppPaint(window, 0);
+        AppPaint(window, NULL);
         return 0;
     case WM_CLOSE:
         if (window == hwndApp) {
@@ -273,7 +273,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
         gbClosingApp = 1;
         PostQuitMessage(0);
     case WM_QUIT:
-        ShutDown(0);
+        ShutDown(NULL);
         break;
     }
     return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
@@ -288,7 +288,7 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     HWND hwndCtl;
     switch (message) {
         case WM_INITDIALOG:
-            return 1;
+            return TRUE;
         case WM_COMMAND:
             wmId = wParam & 0xffff;
             hwndCtl = reinterpret_cast<HWND>(lParam); // WM_COMMAND passes HWND in LPARAM.
@@ -298,7 +298,7 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
             break;
     }
     PollSound();
-    return 0;
+    return FALSE;
 }
 
 VA(0x0045c1ec, 0x1a)
@@ -315,7 +315,7 @@ void Process1WindowsMessage(void) {
     MSG message;
     long currentTick;
 
-    while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != 0) {
+    while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
         TranslateMessage(&message);
         DispatchMessageA(&message);
     }
@@ -327,7 +327,7 @@ void Process1WindowsMessage(void) {
     }
     if (currentTick - lLastGetMessage > 150) {
         lLastGetMessage = currentTick;
-        if (GetMessageA(&message, NULL, 0, 0) != 0) {
+        if (GetMessageA(&message, NULL, 0, 0) != FALSE) {
             TranslateMessage(&message);
             DispatchMessageA(&message);
         }
@@ -364,7 +364,7 @@ void ResizeWindow(int x, int y, int width, int height) {
         ypos,
         rect.right - rect.left + 1,
         rect.bottom - rect.top + 1,
-        1
+        TRUE
     );
     gConfig.gfx[giCurExe].x = xpos;
     gConfig.gfx[giCurExe].y = ypos;
@@ -933,13 +933,13 @@ char szAppName[] = "Heroes";
 DATA(0x0049fe58)
 char szTitle[] = "Heroes of Might and Magic";
 DATA(0x0049fe74)
-void* hwndApp = 0;
+void* hwndApp = NULL;
 DATA(0x0049fe78)
 int gbForegroundApp = 0;
 DATA(0x0049fe7c)
-void* hmnuApp = 0;
+void* hmnuApp = NULL;
 DATA(0x0049fe80)
-void* gEventHandle = 0;
+void* gEventHandle = NULL;
 DATA(0x0049fef4)
 long lLastGTimerTickCount = 0;
 DATA(0x0049fef8)

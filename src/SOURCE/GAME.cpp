@@ -2448,7 +2448,7 @@ void game::Overview(void) {
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
     sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_color);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
@@ -2581,10 +2581,10 @@ void game::Overview(void) {
         smallFont->DrawBoundedString(gText, 100, 465, 400, 12, 1, 0);
         gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(0, 8, NULL);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     gpResourceManager->Dispose(ovIcon);
     gpResourceManager->Dispose(smallFont);
     gpResourceManager->Dispose(bigFont);
@@ -3965,7 +3965,7 @@ void game::CheckHeroConsistency(void) {
                             town = gpGame->GetTown(theHero->m_occupiedTown);
                             town->m_occupyingHeroId = -1;
                         }
-                        RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, 0, 1);
+                        RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, NULL, 1);
                     }
                 } else {
                     cell->m_triggerType = MAP_OBJECT_NONE;
