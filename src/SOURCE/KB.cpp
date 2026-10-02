@@ -201,8 +201,8 @@ int oldmain(void) {
     heroWindow* mainWin;
     font* font;
     signed char backdropLoaded;
-    int idx;
     signed char initialMainScreen;
+    int idx;
     signed char done;
     signed char leave;
     int result;
