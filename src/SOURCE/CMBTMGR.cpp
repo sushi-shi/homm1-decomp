@@ -348,7 +348,7 @@ void combatManager::GenerateMap(void)
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantSide = COMBAT_SIDE_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantIndex = -1;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_occupantFrame = -1;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = -1;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = COMBAT_OBSTACLE_NONE;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_pathFlag = 0;
         }
     }
@@ -367,7 +367,7 @@ void combatManager::GenerateMap(void)
         }
         for (y = 0; y < COMBAT_GRID_ROWS; y++) {
             m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_obstacleType = 5;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_obstacleIndex = 8;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + 5].m_obstacleIndex = COMBAT_WALL_INTACT;
         }
     }
     armyCount = 0;
@@ -414,7 +414,7 @@ void combatManager::GenerateMap(void)
             }
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleType = 2;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = SRandom(0, 2);
-            if ((m_terrainType == 0 || m_terrainType == 4) && m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex == 2)
+            if ((m_terrainType == TERRAIN_WATER || m_terrainType == TERRAIN_LAVA) && m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex == 2)
                 m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_obstacleIndex = 0;
         }
     }
@@ -809,7 +809,7 @@ void combatManager::CatAttack(signed char side)
         col = 3;
     wallsLeft = 0;
     for (i = 0; i < 5; i++) {
-        if (m_hexCells[i * COMBAT_GRID_COLUMNS + col].m_obstacleIndex != -1)
+        if (m_hexCells[i * COMBAT_GRID_COLUMNS + col].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
             wallsLeft = 1;
     }
     if (!wallsLeft)
@@ -828,18 +828,18 @@ void combatManager::CatAttack(signed char side)
         DrawFrame(1);
         m_catapultFrame[side]++;
     }
-    if ((m_hexCells[col + 9].m_obstacleIndex == 10 || m_hexCells[col + 9].m_obstacleIndex == -1)
-        && (m_hexCells[col + 27].m_obstacleIndex == 10 || m_hexCells[col + 27].m_obstacleIndex == -1)) {
+    if ((m_hexCells[col + 9].m_obstacleIndex == COMBAT_WALL_DAMAGED || m_hexCells[col + 9].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
+        && (m_hexCells[col + 27].m_obstacleIndex == COMBAT_WALL_DAMAGED || m_hexCells[col + 27].m_obstacleIndex == COMBAT_OBSTACLE_NONE)) {
         m_catapultTarget = SRandom(0, 4);
-        while (m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == -1)
+        while (m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex == COMBAT_OBSTACLE_NONE)
             m_catapultTarget = SRandom(0, 4);
-    } else if (m_hexCells[col + 9].m_obstacleIndex == -1) {
+    } else if (m_hexCells[col + 9].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
         m_catapultTarget = 3;
-    } else if (m_hexCells[col + 27].m_obstacleIndex == -1) {
+    } else if (m_hexCells[col + 27].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
         m_catapultTarget = 1;
-    } else if (m_hexCells[col + 9].m_obstacleIndex != 8) {
+    } else if (m_hexCells[col + 9].m_obstacleIndex != COMBAT_WALL_INTACT) {
         m_catapultTarget = 3;
-    } else if (m_hexCells[col + 27].m_obstacleIndex != 8) {
+    } else if (m_hexCells[col + 27].m_obstacleIndex != COMBAT_WALL_INTACT) {
         m_catapultTarget = 1;
     } else {
         m_catapultTarget = SRandom(0, 1);
@@ -850,8 +850,8 @@ void combatManager::CatAttack(signed char side)
     }
     startX = 0x75;
     startY = 0x104;
-    tgtX = m_hexCells[m_catapultTarget * 9 + 5].m_x;
-    tgtY = m_hexCells[m_catapultTarget * 9 + 5].m_y - 80;
+    tgtX = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + 5].m_x;
+    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + 5].m_y - 80;
     frm = 0;
     x = startX;
     y = startY;
@@ -955,14 +955,14 @@ void combatManager::CatAttack(signed char side)
     WaitEndSample(catSample, -1);
     sprintf(gText, "catsnd%02d.82M", 2);
     catSample = LoadPlaySample(gText);
-    if (m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 10)
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
+    if (m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex == COMBAT_WALL_DAMAGED)
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex = COMBAT_WALL_DAMAGED_HIT;
     else
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x40;
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex = COMBAT_WALL_INTACT_HIT;
     force = SRandom(0, 150);
     if (!gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
         force -= 15;
-    if (force < 30 || m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 0x41) {
+    if (force < 30 || m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex == COMBAT_WALL_DAMAGED_HIT) {
         m_wallSurvives = 0;
         m_wallFrame = 0;
         giMinExtentX = 300;
@@ -976,7 +976,7 @@ void combatManager::CatAttack(signed char side)
         while (m_wallFrame < 10) {
             m_wallDamage = m_wallFrame;
             if (m_wallFrame == 5)
-                m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x42;
+                m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex = COMBAT_WALL_COLLAPSING;
             m_redrawExtent = 1;
             m_gridUpdateRow = m_catapultTarget - 2;
             if (m_gridUpdateRow < 0)
@@ -985,7 +985,7 @@ void combatManager::CatAttack(signed char side)
             m_wallFrame++;
         }
         m_wallFrame = m_wallDamage = -1;
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = -1;
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex = COMBAT_OBSTACLE_NONE;
     } else {
         m_wallSurvives = 1;
         m_wallFrame = 0;
@@ -999,12 +999,12 @@ void combatManager::CatAttack(signed char side)
             giMaxExtentY = 459;
         while (m_wallFrame < 10) {
             if (m_wallFrame == 5)
-                m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
+                m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex = COMBAT_WALL_DAMAGED_HIT;
             m_redrawExtent = 1;
             DrawFrame(1);
             m_wallFrame++;
         }
-        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 10;
+        m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex = COMBAT_WALL_DAMAGED;
         m_wallFrame = -1;
     }
     m_redrawExtent = 1;

@@ -333,7 +333,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacleIndex != -1)
+                        || m_hexCells[newHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                         targetHex--;
                 }
                 if (teleportArmy->m_facing == ARMY_FACING_LEFT) {
@@ -342,7 +342,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                         || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[newHex].m_occupantSide != side
                                 || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacleIndex != -1)
+                        || m_hexCells[newHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                         targetHex++;
                 }
                 teleportArmy->m_hex = targetHex;

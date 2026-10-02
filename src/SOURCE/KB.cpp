@@ -5442,7 +5442,7 @@ class font* smallFont;
 DATA(0x004c5158)
 long giBottomViewOverrideEndTime;
 DATA(0x004c5160)
-signed char gArmyEffected[COMBAT_EFFECT_SIDE_COUNT][COMBAT_EFFECT_SLOT_COUNT];
+signed char gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 DATA(0x004c516c)
 int giBottomViewResource;
 DATA(0x004c5170)

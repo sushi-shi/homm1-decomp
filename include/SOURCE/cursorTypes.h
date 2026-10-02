@@ -11,8 +11,16 @@ H1_ENUM_BEGIN(MapDirection)
     MAP_DIRECTION_SOUTH = 4,
     MAP_DIRECTION_SOUTH_WEST = 5,
     MAP_DIRECTION_WEST = 6,
-    MAP_DIRECTION_NORTH_WEST = 7
+    MAP_DIRECTION_NORTH_WEST = 7,
+    MAP_DIRECTION_COUNT = 8
 H1_ENUM_END(MapDirection)
+
+// The opposite direction is (d + OPPOSITE_OFFSET) & INDEX_MASK (SEARCH's
+// path walk-back and PushPoint; Buka KB_TYPES.h MapDirectionConstant).
+H1_ENUM_CONST_BEGIN(MapDirectionConstant)
+    MAP_DIRECTION_OPPOSITE_OFFSET = 4,
+    MAP_DIRECTION_INDEX_MASK = 7
+H1_ENUM_CONST_END(MapDirectionConstant)
 
 H1_ENUM_CONST_BEGIN(CursorFrameConstant)
     CURSOR_FRAMES_PER_DIRECTION = 9,

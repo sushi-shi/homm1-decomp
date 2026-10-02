@@ -2,6 +2,7 @@
 #define HOMM1_SOURCE_COMBATTYPES_H
 
 #include <Domains.h>
+#include <SOURCE/armyGroup.h>
 
 H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_INVALID = -1,
@@ -13,6 +14,8 @@ H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_NORTHWEST = 5,
     COMBAT_DIRECTION_WIDE_WEST = 6,
     COMBAT_DIRECTION_WIDE_EAST = 7,
+    COMBAT_DIRECTION_EASTERN_LAST = 2,
+    COMBAT_DIRECTION_WESTERN_FIRST = 3,
     COMBAT_DIRECTION_OPPOSITE_OFFSET = 3,
     COMBAT_DIRECTION_ADJACENT_COUNT = 6,
     COMBAT_DIRECTION_COUNT = 8
@@ -84,6 +87,21 @@ H1_ENUM_BEGIN(CombatEffectAnimation)
     COMBAT_EFFECT_BAD_MORALE = 25
 H1_ENUM_END(CombatEffectAnimation)
 
+// hexcell::m_obstacleIndex: a rock's frame in the obstacle icon, or for a
+// castle piece (column 5) the wall state. GenerateMap builds the wall INTACT;
+// Catapult marks the struck piece HIT (from INTACT) or DAMAGED_HIT, then it
+// either survives as DAMAGED or COLLAPSES and is cleared to NONE.
+// hexcell::DrawObstacle draws INTACT/DAMAGED as those tower frames and the
+// HIT states with DrawWall.
+H1_ENUM_BEGIN(CombatObstacleIndex)
+    COMBAT_OBSTACLE_NONE = -1,
+    COMBAT_WALL_INTACT = 8,
+    COMBAT_WALL_DAMAGED = 10,
+    COMBAT_WALL_INTACT_HIT = 0x40,
+    COMBAT_WALL_DAMAGED_HIT = 0x41,
+    COMBAT_WALL_COLLAPSING = 0x42
+H1_ENUM_END(CombatObstacleIndex)
+
 // The combat field: hex = row * COLUMNS + column (GenerateMap, GetGridIndex);
 // columns 0 and LAST_COLUMN are the castle/edge columns.
 H1_ENUM_CONST_BEGIN(CombatGridDimension)
@@ -93,16 +111,12 @@ H1_ENUM_CONST_BEGIN(CombatGridDimension)
 H1_ENUM_CONST_END(CombatGridDimension)
 // clang-format on
 
-H1_ENUM_BEGIN(CombatEffectDimension)
-    COMBAT_EFFECT_SIDE_COUNT = 2,
-    COMBAT_EFFECT_SLOT_COUNT = 5
-H1_ENUM_END(CombatEffectDimension)
+// Area spells mark each stack once per cast: [side][army slot].
+extern signed char gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 
-extern signed char gArmyEffected[COMBAT_EFFECT_SIDE_COUNT][COMBAT_EFFECT_SLOT_COUNT];
-
-// HoMM1 spell-AI row traversal: retail NextPos divides by nine.
+// HoMM1 spell-AI row traversal: retail NextPos steps along a row of
+// COMBAT_GRID_COLUMNS hexes, skipping the two edge columns.
 H1_ENUM_BEGIN(CombatSpellAIGrid)
-    COMBAT_SPELL_AI_ROW_LENGTH = 9,
     COMBAT_SPELL_AI_ROW_END_OFFSET = 2,
     COMBAT_SPELL_AI_ROW_SKIP = 3
 H1_ENUM_END(CombatSpellAIGrid)

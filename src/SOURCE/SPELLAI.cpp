@@ -291,8 +291,8 @@ VA(0x00437977, 0x63)
 void combatManager::ClearEffects(void) {
     int side;
     int index;
-    for (side = 0; side < COMBAT_EFFECT_SIDE_COUNT; ++side) {
-        for (index = 0; index < COMBAT_EFFECT_SLOT_COUNT; ++index)
+    for (side = 0; side < COMBAT_SIDE_COUNT; ++side) {
+        for (index = 0; index < ARMY_GROUP_SLOT_COUNT; ++index)
             gArmyEffected[side][index] = 0;
     }
 }
@@ -300,7 +300,7 @@ void combatManager::ClearEffects(void) {
 // Buka 2.1 NextPos with HoMM1's retail-backed nine-hex row width.
 VA(0x004379da, 0x40)
 void combatManager::NextPos(int* hex) {
-    if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_SPELL_AI_ROW_LENGTH == 0)
+    if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_GRID_COLUMNS == 0)
         *hex += COMBAT_SPELL_AI_ROW_SKIP;
     else
         (*hex)++;

@@ -100,7 +100,7 @@ VA(0x0040f5d1, 0xd6)
 signed char combatManager::ValidHexToStandOn(int hex) {
     if (hex == -2)
         return 1;
-    if (hex != -1 && hex % COMBAT_GRID_COLUMNS != 8 && hex % COMBAT_GRID_COLUMNS != 0 && m_hexCells[hex].m_obstacleIndex == -1
+    if (hex != -1 && hex % COMBAT_GRID_COLUMNS != 8 && hex % COMBAT_GRID_COLUMNS != 0 && m_hexCells[hex].m_obstacleIndex == COMBAT_OBSTACLE_NONE
         && (m_hexCells[hex].m_occupantSide == COMBAT_SIDE_NONE
             || (m_hexCells[hex].m_occupantSide == m_currentSide
                 && m_hexCells[hex].m_occupantIndex == m_currentArmyIndex)))
@@ -643,7 +643,7 @@ signed char combatManager::GetCommand(short hex) {
             currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
             currentArmy->m_targetSide = COMBAT_SIDE_NONE;
             currentArmy->m_targetIndex = -1;
-            if (m_hexCells[hex].m_obstacleIndex != -1)
+            if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
             else if (enemySide != -1) {
                 switch (enemySide) {
@@ -703,7 +703,7 @@ signed char combatManager::RightClick(signed char hex) {
                 return 0;
             signed char side = m_hexCells[hex].m_occupantSide;
             signed char armyIndex = m_hexCells[hex].m_occupantIndex;
-            if (m_hexCells[hex].m_obstacleIndex != -1)
+            if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                 return 0;
             else if (side != COMBAT_SIDE_NONE) {
                 switch (side) {
@@ -949,7 +949,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         else
             rowY = 0x159;
         buffer = static_cast<char*>(malloc(0x1e));
-        sprintf(buffer, side == 1 ? "Attacker" : "Defender");
+        sprintf(buffer, side == COMBAT_ATTACKER_SIDE ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, WIDGET_KIND_TEXT);
         if (m_winLoseBottomTextWidgets[10 + side] == NULL)
