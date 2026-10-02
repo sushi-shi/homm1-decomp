@@ -948,7 +948,7 @@ void combatManager::CatAttack(signed char side)
     if (!gbHumanPlayer[m_playerId[1]])
         force -= 15;
     if (force < 30 || m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 0x41) {
-        m_unknown6e3 = 0;
+        m_wallSurvives = 0;
         m_wallFrame = 0;
         giMinExtentX = 300;
         giMaxExtentX = 490;
@@ -972,7 +972,7 @@ void combatManager::CatAttack(signed char side)
         m_wallFrame = m_wallDamage = -1;
         m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = -1;
     } else {
-        m_unknown6e3 = 1;
+        m_wallSurvives = 1;
         m_wallFrame = 0;
         giMinExtentX = 300;
         giMaxExtentX = 490;

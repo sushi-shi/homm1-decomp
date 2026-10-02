@@ -72,7 +72,10 @@ public:
     // LoadIcons indexes the ground and obstacle tables by this terrain;
     // GetBackgroundName forces 6 for a graveyard field.
     signed char m_terrainType;
-    signed char m_unknown260;
+    // army::DoAttack sets it when the strike reaches the stack behind on a
+    // downward diagonal; DrawFrame then grows each limited redraw box 60 rows
+    // down. ResetLimitCreature clears it.
+    signed char m_extendLimitDown;
     // SetupCombat keeps the defending town here as well.
     class town* m_originalCombatTown;
     // Open's small font; army::DrawToBuffer prints stack quantities with it.
@@ -136,7 +139,9 @@ public:
     char m_visitingHeroPresent[2];
     // CatAttack's target row in the castle wall column.
     short m_catapultTarget;
-    signed char m_unknown6e3;
+    // CatAttack: 1 when the shot only damages the wall, 0 when it falls;
+    // hexcell::DrawObstacle keeps the tower during the impact frames.
+    signed char m_wallSurvives;
     short m_wallFrame;
     short m_wallDamage;
     signed char m_unknown6e8;

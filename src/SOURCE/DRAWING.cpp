@@ -119,7 +119,7 @@ void combatManager::ResetLimitCreature(void) {
     int side;
 
     m_computeExtent = 1;
-    m_unknown260 = 0;
+    m_extendLimitDown = 0;
     for (side = 0; side < 2; side++) {
         for (j = 0; j < 5; j++) {
             if (m_armies[side][j].m_stats.attributes & 0x10)
@@ -220,7 +220,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     row = m_armies[side][i].m_hex / 9;
                     boxTop = row * 80;
                     boxBottom = (row + 2) * 80 + 20;
-                    if (m_unknown260)
+                    if (m_extendLimitDown)
                         boxBottom += 60;
                     if (m_armies[side][i].m_facing == 1) {
                         boxLeft = hexCol * 78 - 110;

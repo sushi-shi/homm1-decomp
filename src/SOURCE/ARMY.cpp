@@ -1505,10 +1505,10 @@ void army::DoAttack(int retaliation) {
             gpCombatManager->m_limitCreatureCount[gpCombatManager->m_hexCells[behindHex].m_occupantSide]
                                                   [gpCombatManager->m_hexCells[behindHex].m_occupantIndex]++;
             if (m_attackDirection == 2 || m_attackDirection == 3)
-                gpCombatManager->m_unknown260 = 1;
+                gpCombatManager->m_extendLimitDown = 1;
         }
     }
-    oldMode = gpCombatManager->m_unknown260;
+    oldMode = gpCombatManager->m_extendLimitDown;
     m_animationSequence = 0;
     m_animationFrame = 3;
     gpCombatManager->DrawFrame(1);
@@ -1583,7 +1583,7 @@ void army::DoAttack(int retaliation) {
     gText[0] -= 32;
     gpCombatManager->CombatMessage(gText, 1);
     PowEffect(m_stats.powEffect);
-    gpCombatManager->m_unknown260 = oldMode;
+    gpCombatManager->m_extendLimitDown = oldMode;
     switch (m_creatureType) {
         case 11:
             if (SRandom(1, 5) == 3) {
@@ -1616,7 +1616,7 @@ void army::DoAttack(int retaliation) {
             break;
     }
     gpCombatManager->ResetLimitCreature();
-    gpCombatManager->m_unknown260 = oldMode;
+    gpCombatManager->m_extendLimitDown = oldMode;
     gpCombatManager->m_limitCreatureCount[m_side][m_index] = 1;
     if (target) {
         gpCombatManager->m_limitCreatureCount[target->m_side][target->m_index] = 1;
