@@ -156,16 +156,26 @@ int font::LineLength(char *str, short maxW)
 VA(0x0047b9c0, 0x108)
 int font::LineWidth(char *text)
 {
-    short s = strlen(text);
     signed char q;
     int u;
-    IconEntry *table = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    IconEntry *table;
     // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
     // retail body proves y's dword store and the five word stores below
-    // (u is the census's unused slot).
-    int y = 0;
-    short t = 0, r = 0, x = 0, p = 0, w = 0;
-    char *v = text;
+    // (u is the census's unused slot). s follows y for the operand sort key.
+    int y;
+    short s;
+    short t, r, x, p, w;
+    char *v;
+
+    s = strlen(text);
+    table = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    y = 0;
+    t = 0;
+    r = 0;
+    x = 0;
+    p = 0;
+    w = 0;
+    v = text;
     while (p < s && v[p] != 0) {
         while (v[p] != 0 && v[p] != '\n') {
             q = v[p] - ' ';
