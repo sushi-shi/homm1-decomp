@@ -137,3 +137,5 @@ rva	name	provenance
 0x000811DC	__adj_fdivr_m32	evidence/homm1-dna-bands.tsv crt-exact __adj_fdivr_m32; philAI::CheckReload float-constant fdivr FDIV-safe site calls this LIBC fdiv band member
 0x00081AB0	_pow	evidence/homm1-dna-bands.tsv LIBC band stub 0x81ab0 (mov edx,table; jmp two-argument dispatcher); philAI::ProbableOutcomeOfBattle pushes two doubles and stores the float result, Buka pow(attackerStrength, powerCurve)
 0x00002AF0	?BuildPath@searchArray@@QAEHFFFFF@Z	advManager::DoAdvCommand and philAI::DoAI call it on gpSearchArray with hero x/y, destination x/y and a word mobility limit (ret 0x14), then read m_pathLength; HoMM2 Buka 2.1 searchArray::BuildPath
+0x0004803C	??0fileRequester@@QAE@HHHPBD00@Z	SaveGame and game::PickLoadGame construct the 0x1bc-byte requester with x, y, mode and three strings (ret 0x18); HoMM2 Buka 2.1 fileRequester constructor
+0x00048879	??1fileRequester@@QAE@XZ	SaveGame and game::PickLoadGame destroy the requester directly before operator delete; HoMM2 Buka 2.1 fileRequester destructor
