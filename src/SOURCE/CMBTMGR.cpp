@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 
@@ -14,6 +15,8 @@
 extern char* cCombatBkgNames[];
 extern char* cCombatGroundNames[];
 extern char* cCombatObstacleNames[];
+// SetupCombat saves the adventure random seed here; GenerateMap restores it.
+extern int giSeed;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
@@ -104,6 +107,128 @@ void combatManager::UpdateArmyGroup(signed char side)
             }
         }
     }
+}
+
+// Buka CMBTMGR.cpp GenerateMap; HoMM1 also places both armies, scatters
+// ground patches and, outside a siege, up to two obstacles.
+VA(0x0044c264, 0x7be)
+void combatManager::GenerateMap(void)
+{
+    short x;
+    short i;
+    short y;
+    int randomRow;
+    int randomCol;
+    short count;
+    short armyCount;
+
+    if (m_castleSide[0] == 1)
+        m_unknown6c7 = 0;
+    else
+        m_unknown6c7 = -1;
+    if (m_castleSide[1] == 1)
+        m_unknown6c5 = 0;
+    else
+        m_unknown6c5 = -1;
+    for (y = 0; y < 5; y++) {
+        for (x = 0; x < 9; x++) {
+            m_hexCells[y * 9 + x].m_y = y * 80 + 139;
+            m_hexCells[y * 9 + x].m_x = ((y & 1) ? 27 : -12) + x * 78;
+            m_hexCells[y * 9 + x].m_groundIcon = 0;
+            m_hexCells[y * 9 + x].m_groundFrame = (signed char)SRandom(0, 3) + 4;
+            if (x == 0) {
+                if (m_castleSide[1] == 1)
+                    m_hexCells[y * 9 + x].m_groundIcon = 5;
+                if (y & 1)
+                    m_hexCells[y * 9 + x].m_groundFrame = 0;
+                else
+                    m_hexCells[y * 9 + x].m_groundFrame = 1;
+            } else if (x == 8) {
+                if (m_castleSide[0] == 1)
+                    m_hexCells[y * 9 + x].m_groundIcon = 5;
+                if (y & 1)
+                    m_hexCells[y * 9 + x].m_groundFrame = 3;
+                else
+                    m_hexCells[y * 9 + x].m_groundFrame = 2;
+            }
+            m_hexCells[y * 9 + x].m_occupantSide = -1;
+            m_hexCells[y * 9 + x].m_occupantIndex = -1;
+            m_hexCells[y * 9 + x].m_occupantFrame = -1;
+            m_hexCells[y * 9 + x].m_obstacleIndex = -1;
+            m_hexCells[y * 9 + x].m_pathFlag = 0;
+        }
+    }
+    count = SRandom(8, 15);
+    for (i = 0; i < count; i++) {
+        randomRow = SRandom(0, 4);
+        randomCol = SRandom(1, 7);
+        m_hexCells[randomRow * 9 + randomCol].m_groundFrame = (signed char)SRandom(0, 2) + 8;
+    }
+    if (m_castleSide[0]) {
+        for (x = 6; x < 8; x++) {
+            for (y = 0; y < 5; y++) {
+                m_hexCells[y * 9 + x].m_groundIcon = 5;
+                m_hexCells[y * 9 + x].m_groundFrame = 4;
+            }
+        }
+        for (y = 0; y < 5; y++) {
+            m_hexCells[y * 9 + 5].m_obstacleType = 5;
+            m_hexCells[y * 9 + 5].m_obstacleIndex = 8;
+        }
+    }
+    armyCount = 0;
+    for (i = 0; i < 5; i++) {
+        if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
+            m_armies[1][armyCount].m_hex = i * 9 + 1;
+            m_armies[1][armyCount].m_stats.attributes &= 0x3f;
+            m_hexCells[i * 9 + 1].m_occupantSide = 1;
+            m_hexCells[i * 9 + 1].m_occupantIndex = armyCount;
+            if (m_armies[1][armyCount].m_stats.attributes & 1) {
+                m_hexCells[i * 9 + 2].m_occupantSide = 1;
+                m_hexCells[i * 9 + 2].m_occupantIndex = armyCount;
+                m_hexCells[i * 9 + 1].m_occupantFrame = 1;
+                m_hexCells[i * 9 + 2].m_occupantFrame = 0;
+            }
+            armyCount++;
+        }
+    }
+    armyCount = 0;
+    for (i = 0; i < 5; i++) {
+        if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
+            m_armies[0][armyCount].m_hex = i * 9 + 7;
+            m_armies[0][armyCount].m_stats.attributes &= 0x3f;
+            m_hexCells[i * 9 + 7].m_occupantSide = 0;
+            m_hexCells[i * 9 + 7].m_occupantIndex = armyCount;
+            if (m_armies[0][armyCount].m_stats.attributes & 1) {
+                m_hexCells[i * 9 + 6].m_occupantSide = 0;
+                m_hexCells[i * 9 + 6].m_occupantIndex = armyCount;
+                m_hexCells[i * 9 + 6].m_occupantFrame = 1;
+                m_hexCells[i * 9 + 7].m_occupantFrame = 0;
+            }
+            armyCount++;
+        }
+    }
+    count = 0;
+    if (!m_castleSide[1] && !m_castleSide[0]) {
+        count = SRandom(0, 3);
+        for (i = 0; i < count; i++) {
+            x = SRandom(3, 5);
+            y = SRandom(0, 4);
+            while (m_hexCells[y * 9 + x].m_occupantSide != -1) {
+                x = SRandom(3, 5);
+                y = SRandom(0, 4);
+            }
+            m_hexCells[y * 9 + x].m_obstacleType = 2;
+            m_hexCells[y * 9 + x].m_obstacleIndex = SRandom(0, 2);
+            if ((m_terrainType == 0 || m_terrainType == 4) && m_hexCells[y * 9 + x].m_obstacleIndex == 2)
+                m_hexCells[y * 9 + x].m_obstacleIndex = 0;
+        }
+    }
+    m_currentSide = 0;
+    m_currentSpeed = 4;
+    GetNextArmy(0);
+    m_unknown25c = 0;
+    SRand(giSeed);
 }
 
 // Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
