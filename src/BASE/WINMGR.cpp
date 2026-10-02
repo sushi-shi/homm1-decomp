@@ -94,12 +94,12 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_activeWindow = 0;
     m_focusWindow = 0;
     m_windowListTail = 0;
-    m_screenshotIndex = 0;
     m_windowListHead = 0;
-    m_updateFlags = 0;
     m_unknown40 = 0;
     m_unknown41 = 0;
+    m_screenshotIndex = 0;
     m_screen = 0;
+    m_updateFlags = 0;
     m_fizzleSource = 0;
     m_fizzleWork = 0;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
