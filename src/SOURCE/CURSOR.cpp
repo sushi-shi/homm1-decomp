@@ -584,10 +584,10 @@ void advManager::CheckAdjacentMon(signed char *adjacentMonster)
 VA(0x004075ab, 0x20a)
 short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
 {
-    short deltaX;
-    short newX;
     short deltaY;
     short newY;
+    short deltaX;
+    short newX;
     mapCell *cell;
 
     deltaX = normalDirTable[direction].x;

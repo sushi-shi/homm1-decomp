@@ -766,7 +766,6 @@ VA(0x0044da9d, 0xd55)
 void combatManager::CatAttack(signed char side)
 {
     short dx;
-    short x;
     icon* boulder;
     short summitX;
     signed char col;
@@ -774,11 +773,12 @@ void combatManager::CatAttack(signed char side)
     short frm;
     short dy;
     short y;
+    short tgtY;
+    short x;
     short tgtX;
     short force;
     short startX;
     SAMPLE2 catSample;
-    short tgtY;
     signed char wallsLeft;
     short startY;
     short summitY;
@@ -1032,29 +1032,29 @@ void combatManager::KeepAttack(void)
     short minY;
     short lastX;
     short gapX;
-    float yAdvance;
     signed char hexCol;
     signed char keepY;
     short lastY;
     signed char targetRow;
     int bestRank;
-    float yRun;
     signed char srcCol;
+    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    float yAdvance;
+    float yRun;
     short distance;
     float xAdvance;
-    short gapY;
-    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     int targetIndex;
     SAMPLE2 sample;
     short updRight;
+    short gapY;
     short w;
     short height;
     bitmap* behind;
     int i;
-    float xRun;
     int bestWorth;
     int power;
     short startX;
+    float xRun;
     short maxY;
     short startY;
     short destX;
