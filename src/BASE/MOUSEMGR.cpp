@@ -75,25 +75,25 @@ void mouseManager::Close(void) {
     if (m_active == 1) {
         m_active = 0;
         delete m_savedUnderlying;
-        m_savedUnderlying = NULL;
-        SetCursor(LoadCursorA(NULL, IDC_ARROW));
+        m_savedUnderlying = 0;
+        SetCursor(LoadCursorA(0, IDC_ARROW));
         DelayMilli(50);
         for (cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
-            if (hMouseCursor[cursorIndex] != NULL)
+            if (hMouseCursor[cursorIndex] != 0)
                 DestroyIcon(hMouseCursor[cursorIndex]);
-            hMouseCursor[cursorIndex] = NULL;
-            if (cAndBits[cursorIndex] != NULL)
+            hMouseCursor[cursorIndex] = 0;
+            if (cAndBits[cursorIndex] != 0)
                 free(cAndBits[cursorIndex]);
-            cAndBits[cursorIndex] = NULL;
-            if (cColorBits[cursorIndex] != NULL)
+            cAndBits[cursorIndex] = 0;
+            if (cColorBits[cursorIndex] != 0)
                 free(cColorBits[cursorIndex]);
-            cColorBits[cursorIndex] = NULL;
-            if (hbmpAndMask[cursorIndex] != NULL)
+            cColorBits[cursorIndex] = 0;
+            if (hbmpAndMask[cursorIndex] != 0)
                 DeleteObject(hbmpAndMask[cursorIndex]);
-            hbmpAndMask[cursorIndex] = NULL;
-            if (hbmpColor[cursorIndex] != NULL)
+            hbmpAndMask[cursorIndex] = 0;
+            if (hbmpColor[cursorIndex] != 0)
                 DeleteObject(hbmpColor[cursorIndex]);
-            hbmpColor[cursorIndex] = NULL;
+            hbmpColor[cursorIndex] = 0;
         }
         DelayMilli(50);
     }

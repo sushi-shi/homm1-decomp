@@ -159,12 +159,12 @@ void recruitUnit::Close(void) {
     if (m_noRoom)
         NormalDialog(
             "There is no room in the garrison for this army.",
-            1,
+            NORMAL_DIALOG_TYPE_OK,
             RECRUIT_NO_ROOM_DIALOG_X,
             RECRUIT_NO_ROOM_DIALOG_Y,
-            -1,
+            NORMAL_DIALOG_NO_RESOURCE,
             0,
-            -1,
+            NORMAL_DIALOG_NO_RESOURCE,
             0,
             -1
         );

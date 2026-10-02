@@ -48,7 +48,7 @@ int combatManager::AICheckRetreat(void) {
             armyPtr = &sideHero->m_army;
         } else {
             armyPtr = &bareGroup;
-            sideHero = NULL;
+            sideHero = 0;
         }
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
             if (m_armies[side][armyIndex].IsAlive()) {
@@ -1912,7 +1912,7 @@ int army::Damage(long int damage) {
     gpCombatManager->DrawFrame(1);
     if (m_unknown52 == 2) {
         m_stats.attributes |= 0x80;
-        if (m_spellEffect != 7)
+        if (m_spellEffect != SPELL_BLIND)
             m_stats.attributes |= 0x40;
         CancelSpell();
     }
@@ -2061,20 +2061,20 @@ void army::SpellEffect(short effect, int frameDelay) {
 VA(0x0046b457, 0xb2)
 void army::CancelSpell(void) {
     switch (m_spellEffect) {
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 10:
+        case SPELL_HASTE:
+        case SPELL_SLOW:
+        case SPELL_BLIND:
+        case SPELL_BLESS:
+        case SPELL_CURSE:
             m_damageMode = 0;
             m_stats.speed = m_baseSpeed;
             m_stats.attributes |= gMonsterDatabase[m_creatureType].stats.attributes & 2;
             break;
-        case 9:
+        case SPELL_PROTECTION:
             m_stats.defense -= 3;
             break;
     }
-    m_spellEffect = -1;
+    m_spellEffect = SPELL_NONE;
     m_unknown52 = -1;
 }
 
@@ -2158,7 +2158,7 @@ void army::MoveAttack(int hex, int moveOnly) {
         if ((m_stats.attributes & 2) && meleeMask == 0xff && m_moveTargetHex != m_hex
             && !ValidFlight(m_moveTargetHex, 0))
             return;
-        if (m_spellEffect == 14)
+        if (m_spellEffect == SPELL_BERZERKER)
             atkMask = GetAttackMask(m_hex, 2, -1);
         else
             atkMask = GetAttackMask(m_hex, 1, -1);

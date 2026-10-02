@@ -8,6 +8,8 @@
 #include <H1/Macros.h>
 #include <SOURCE/army.h>
 #include <SOURCE/hexcell.h>
+#include <SOURCE/spellTypes.h>
+#include <SOURCE/terrainTypes.h>
 
 // forward declarations:
 class army;
@@ -71,7 +73,7 @@ public:
     signed char m_gridMode;
     // LoadIcons indexes the ground and obstacle tables by this terrain;
     // GetBackgroundName forces 6 for a graveyard field.
-    signed char m_terrainType;
+    H1_ENUM_STORAGE(TerrainType, signed char) m_terrainType;
     signed char m_unknown260;
     // SetupCombat keeps the defending town here as well.
     class town* m_originalCombatTown;
@@ -205,12 +207,12 @@ public:
     signed char ViewSpells(int);
     int FindResurrectArmyIndex(int, int, int);
     // HoMM1 retail 0x00415a2c: byte spell and hex, byte result (ret 8).
-    signed char ValidSpellTarget(signed char, signed char);
+    signed char ValidSpellTarget(H1_ENUM_PARAM(SpellType, signed char), signed char);
     // HoMM1 retail 0x00415d1c: byte spell and hex (ret 8).
-    void SpellMessage(signed char, signed char);
+    void SpellMessage(H1_ENUM_PARAM(SpellType, signed char), signed char);
     // HoMM1 retail 0x00415e44: byte spell, hex, creature flag and teleport
     // destination (ret 0x10).
-    void CastSpell(signed char, signed char, signed char, signed char);
+    void CastSpell(H1_ENUM_PARAM(SpellType, signed char), signed char, signed char, signed char);
     void DefaultSpell(signed char);
     // HoMM1 retail 0x00416c78: Cure (one side) and Dispel (both sides)
     // animation; byte side (2 = both) and cure-only flag (ret 8).

@@ -795,7 +795,7 @@ int advManager::GiveRandomArtifact(class hero* eventHero) {
 
     artifact = gpGame->GetRandomArtifactId();
     if (artifact == -1)
-        GiveResource(eventHero, 6, 1000);
+        GiveResource(eventHero, RESOURCE_GOLD, 1000);
     else
         GiveArtifact(eventHero, artifact);
     return artifact;
@@ -858,41 +858,41 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
 
     switch (cell->m_objectMetadata) {
     case 2:
-        if (CombatMonsterEvent(eventHero, 26, 10, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 10, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, 1, gText, 6, 1000, -1, 0, -1);
-            GiveResource(eventHero, 6, 1000);
+            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 1000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 1000);
             eventHero->CheckLevel();
             return 1;
         }
         break;
     case 3:
-        if (CombatMonsterEvent(eventHero, 26, 15, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 15, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, 1, gText, 6, 2000, -1, 0, -1);
-            GiveResource(eventHero, 6, 2000);
+            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 2000);
             eventHero->CheckLevel();
             return 1;
         }
         break;
     case 4:
-        if (CombatMonsterEvent(eventHero, 26, 25, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 25, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
-            EventWindow(-1, 1, gText, 6, 5000, -1, 0, -1);
-            GiveResource(eventHero, 6, 5000);
+            EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 5000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 5000);
             eventHero->CheckLevel();
             return 1;
         }
         break;
     default:
-        if (CombatMonsterEvent(eventHero, 26, 50, cell, x, y, 0, x, y) == 1) {
+        if (CombatMonsterEvent(eventHero, CREATURE_GHOST, 50, cell, x, y, 0, x, y) == 1) {
             artifact = GiveRandomArtifact(eventHero);
             sprintf(gText, "%s", gEventText[textId]);
             if (artifact != -1)
-                EventWindow(-1, 1, gText, 6, 2000, 7, artifact, -1);
+                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 2000, NORMAL_DIALOG_ARTIFACT, artifact, -1);
             else
-                EventWindow(-1, 1, gText, 6, 2000, -1, 0, -1);
-            GiveResource(eventHero, 6, 2000);
+                EventWindow(-1, NORMAL_DIALOG_TYPE_OK, gText, RESOURCE_GOLD, 2000, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            GiveResource(eventHero, RESOURCE_GOLD, 2000);
             eventHero->CheckLevel();
             return 1;
         }
@@ -910,17 +910,17 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
 
     houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - 13;
     if (!cell->m_objectMetadata) {
-        EventWindow(houseIndex * 3 + 25, 1, "", -1, 0, -1, 0, -1);
+        EventWindow(houseIndex * 3 + 25, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     } else {
         signed char creatures[5] = {6, 0, 1, 13, 0};
 
-        EventWindow(houseIndex * 3 + 23, 2, "", -1, 0, -1, 0, -1);
+        EventWindow(houseIndex * 3 + 23, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
                 eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, -1);
                 cell->m_objectMetadata = 0;
             } else {
-                EventWindow(houseIndex * 3 + 24, 1, "", -1, 0, -1, 0, -1);
+                EventWindow(houseIndex * 3 + 24, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             }
         }
     }
@@ -1067,8 +1067,8 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, signed char artifa
         targetHero->m_primaryStats[stat] += amount;
         if (amount < 0 && stat == 3) {
             for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
-                if (targetHero->m_spellCharges[i] > targetHero->m_primaryStats[3])
-                    targetHero->m_spellCharges[i] = targetHero->m_primaryStats[3];
+                if (targetHero->m_spellCharges[i] > targetHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE])
+                    targetHero->m_spellCharges[i] = targetHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE];
             }
         }
     }
@@ -1095,7 +1095,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                             sprintf(gText,
                                     "As you reach for the %s, it mysteriously disappears.",
                                     gArtifactNames[sourceHero->m_artifacts[j]]);
-                            NormalDialog(gText, 1, -1, -1, 7, sourceHero->m_artifacts[j], -1, 0, -1);
+                            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_ARTIFACT, sourceHero->m_artifacts[j], NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                         }
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = -1;
                     } else {
@@ -1573,14 +1573,14 @@ void advManager::PlayerMonsterInteract(class mapCell* cell, class mapCell* comba
                   * (cell->m_objectMetadata & 0x7f) * 1.75) {
             if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
                 sprintf(gText, gEventText[48], gArmyNamesPlural[cell->m_objectIndex]);
-                EventWindow(-1, 2, gText, -1, 0, -1, 0, -1);
+                EventWindow(-1, NORMAL_DIALOG_TYPE_YES_NO, gText, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                     eventHero->m_army.Add(cell->m_objectIndex,
                                           cell->m_objectMetadata & 0x7f, -1);
                     *handled = 1;
                     return;
                 } else {
-                    EventWindow(49, 1, "", -1, 0, -1, 0, -1);
+                    EventWindow(49, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 }
             }
         }
@@ -1905,9 +1905,9 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     buf->retreatWin = retreatWin;
     buf->combatSurrender = combatSurrender;
     buf->firstOwner = firstHero ? firstHero->m_owner : -1;
-    buf->firstGold = firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[6] : 0;
+    buf->firstGold = firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     buf->secondOwner = secondHero ? secondHero->m_owner : -1;
-    buf->secondGold = secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[6] : 0;
+    buf->secondGold = secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     memcpy(&buf->firstArmy, firstArmy, sizeof(armyGroup));
     memcpy(&buf->secondArmy, secondArmy, sizeof(armyGroup));
     if (combatTown)
@@ -1975,10 +1975,10 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
     *combatSurrender = ((combatRemoteMessage*)packet)->combat.combatSurrender;
     firstOwner = ((combatRemoteMessage*)packet)->combat.firstOwner;
     if (firstOwner > 0)
-        gpGame->m_players[firstOwner].m_resources[6] = ((combatRemoteMessage*)packet)->combat.firstGold;
+        gpGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] = ((combatRemoteMessage*)packet)->combat.firstGold;
     defenderOwner = ((combatRemoteMessage*)packet)->combat.secondOwner;
     if (defenderOwner > 0)
-        gpGame->m_players[defenderOwner].m_resources[6] =
+        gpGame->m_players[defenderOwner].m_resources[RESOURCE_GOLD] =
             ((combatRemoteMessage*)packet)->combat.secondGold;
 
     *firstArmy = (armyGroup*)malloc(sizeof(armyGroup));
@@ -1998,7 +1998,7 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
     while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
         PollSound();
         if (KBTickCount() > lastPacketTime + 20000) {
-            NormalDialog("Error receiving data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
             else

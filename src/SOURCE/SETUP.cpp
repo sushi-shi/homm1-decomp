@@ -512,7 +512,7 @@ short SetupCampaignGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupCampaignGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupCampaignGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -544,9 +544,9 @@ short SetupComPortHandler(tag_message& message) {
         }
         if (helpIndex >= 0) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCComPortHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupDCComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             else
-                NormalDialog(gSetupComPortHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
     }
     return BaseSetupHandler(message);
@@ -579,9 +579,9 @@ short SetupBaudHandler(tag_message& message) {
         }
         if (helpIndex >= 0) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCBaudHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupDCBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             else
-                NormalDialog(gSetupBaudHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
     }
     return BaseSetupHandler(message);
@@ -610,7 +610,7 @@ short SetupHotSeatGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupHotSeatGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupHotSeatGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -639,9 +639,9 @@ short SetupModemGameHandler(tag_message& message) {
         }
         if (helpIndex >= 0) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupDCGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             else
-                NormalDialog(gSetupModemGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gSetupModemGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         }
     }
     return BaseSetupHandler(message);
@@ -673,7 +673,7 @@ short SetupMultiPlayerGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -698,7 +698,7 @@ short SetupNetworkGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupNetworkGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupNetworkGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -726,7 +726,7 @@ short SetupGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= 0)
-            NormalDialog(gSetupGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gSetupGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     return BaseSetupHandler(message);
 }
@@ -857,7 +857,7 @@ void RemoteMain(int gameMode) {
                 giWaitType = 7;
                 strcpy(directConnectMessage,
                        "Waiting for other computer to log in to direct connection.");
-                NormalDialog(directConnectMessage, 6, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
             } else {
@@ -1202,12 +1202,12 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = 4;
             sprintf(gText, "Initializing network.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = 1;
             sprintf(gText, "Waiting On Guest.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             buffer[0] = giNumNetGuests;
@@ -1217,12 +1217,12 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = 3;
             sprintf(gText, "Initializing network.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = 2;
             sprintf(gText, "Waiting On Host.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             break;

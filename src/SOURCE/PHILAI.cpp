@@ -207,15 +207,15 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
 
     bestDirection = -1;
     maxValue = 100;
-    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_STONE_LITHS)
+    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & 0x7f) == 0x29)
         return 0;
     for (dirIndex = 0; dirIndex < 8; dirIndex++) {
         if (gpAdvManager->ValidMoveWithEvent(pHero, dirIndex)) {
             x = normalDirTable[dirIndex].x + pHero->m_x;
             y = normalDirTable[dirIndex].y + pHero->m_y;
-            if ((gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_EVENT) && !(mapExtra[x][y] & 0x80)
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_STONE_LITHS
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WHIRLPOOL) {
+            if ((gpAdvManager->GetCell(x, y)->m_triggerType & 0x80) && !(mapExtra[x][y] & 0x80)
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x29
+                && (gpAdvManager->GetCell(x, y)->m_triggerType & 0x7f) != 0x2c) {
                 value = ValueOfEventAtPosition(pHero, x, y, 2, &iChance);
                 if (iChance > 80 && value > maxValue) {
                     maxValue = value;
@@ -270,9 +270,9 @@ void philAI::CheckReload(hero* pHero) {
             if (gpSearchArray->m_cells[mapX][mapY].visited) {
                 visitedCell = gpAdvManager->GetCell(mapX, mapY);
                 switch (visitedCell->m_triggerType) {
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+                case 0xa8:
                     enemy = FightValueOfStack(
-                        &gpGame->GetTown(visitedCell->m_objectMetadata)->m_army, NULL, 0, 0, 0
+                        &gpGame->GetTown(visitedCell->m_objectMetadata)->m_army, 0, 0, 0, 0
                     );
                     if (gpGame->m_townOwners[visitedCell->m_objectMetadata] == pHero->m_owner) {
                         if (enemy > heroFightValue * 2)
@@ -285,10 +285,10 @@ void philAI::CheckReload(hero* pHero) {
                                          / (gpSearchArray->m_cells[mapX][mapY].distance + 30);
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
+                case 0xbd:
                     if (gpGame->m_availableHeroes[visitedCell->m_objectMetadata] != pHero->m_owner) {
                         enemy = FightValueOfStack(
-                            &gpGame->GetHero(visitedCell->m_objectMetadata)->m_army, NULL, 0, 0, 0
+                            &gpGame->GetHero(visitedCell->m_objectMetadata)->m_army, 0, 0, 0, 0
                         );
                         if (enemy > heroFightValue >> 1)
                             enemyPressure += ((float)enemy / (heroFightValue >> 1) - 1.0f)
@@ -390,7 +390,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         y += normalDirTable[gpSearchArray->m_directions[i]].y;
         if (abs(x - pHero->m_x) <= 7 && abs(y - pHero->m_y) <= 7) {
             cell = gpAdvManager->GetCell(x, y);
-            if (!(cell->m_triggerType & MAP_TRIGGER_EVENT) && !(cell->m_unknown07 & 0x80)) {
+            if (!(cell->m_triggerType & 0x80) && !(cell->m_unknown07 & 0x80)) {
                 bestX = x;
                 bestY = y;
                 length = gpSearchArray->m_pathLength - i;
@@ -1027,11 +1027,11 @@ void philAI::ProbableOutcomeOfBattle(
     attFight7 = (float)FightValueOfStack(attacker, attackerHero, 1, 0, 0);
     defenderFight2 = (float)FightValueOfStack(defender, defenderHero, 1, useTown, townId);
     if (townArmy)
-        defenderFight2 += (float)FightValueOfStack(townArmy, NULL, 1, 0, 0);
+        defenderFight2 += (float)FightValueOfStack(townArmy, 0, 1, 0, 0);
     rawFight[0] = (float)FightValueOfStack(attacker, attackerHero, 0, 0, 0);
     rawFight[1] = (float)FightValueOfStack(defender, defenderHero, 0, 0, 0);
     if (townArmy)
-        rawFight[1] += (float)FightValueOfStack(townArmy, NULL, 0, 0, 0);
+        rawFight[1] += (float)FightValueOfStack(townArmy, 0, 0, 0, 0);
     if (useTown)
         defenderFight2 = defenderFight2 * 1.11;
     defStr = defenderFight2;
@@ -1525,7 +1525,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     best.type = 1;
     best.what = bestHero;
     bestValue = bestCost;
-    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))
+    if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType == 0xbd)
         bestValue -= 200.0f;
 }
 

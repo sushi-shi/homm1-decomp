@@ -104,19 +104,10 @@ H1_ENUM_CONST_BEGIN(AdventurePanelDialogConstant)
     PANEL_SEARCH = 4
 H1_ENUM_CONST_END(AdventurePanelDialogConstant)
 
-H1_ENUM_BEGIN(AdventureSpellType)
-    SPELL_VIEW_MINES = 19,
-    SPELL_VIEW_RESOURCES = 20,
-    SPELL_VIEW_ARTIFACTS = 21,
-    SPELL_VIEW_TOWNS = 22,
-    SPELL_VIEW_HEROES = 23,
-    SPELL_VIEW_ALL = 24,
-    SPELL_IDENTIFY_HERO = 25,
-    SPELL_SUMMON_BOAT = 26,
-    SPELL_DIMENSION_DOOR = 27,
-    SPELL_TOWN_GATE = 28,
+// CastSpell charges Dimension Door and Town Gate this much mobility.
+H1_ENUM_CONST_BEGIN(AdventureSpellConstant)
     SPELL_TRAVEL_MOBILITY_COST = 12
-H1_ENUM_END(AdventureSpellType)
+H1_ENUM_CONST_END(AdventureSpellConstant)
 
 H1_ENUM_BEGIN(AdventureDrawMask)
     ADVMGR_DRAW_GROUND = 0x01,
@@ -699,7 +690,7 @@ short advManager::Main(struct tag_message& message) {
                     break;
                 }
                 if (helpText >= 0)
-                    NormalDialog(cAdvMenuHelp[helpText], 4, -1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog(cAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 break;
             }
             break;
@@ -883,7 +874,7 @@ short advManager::Main(struct tag_message& message) {
                 goto confirmGameCommand;
             confirmGameCommand:
                 bQuit = 1;
-                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (gpWindowManager->m_dialogResult == 30726)
                     bQuit = 0;
                 else
@@ -1171,7 +1162,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         break;
     case 9:
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            NormalDialog("World Map (Left click to move viewing area).", 4, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog("World Map (Left click to move viewing area).", NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             break;
         }
         DemobilizeCurrHero();
@@ -1238,7 +1229,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         && message->id <= 2200)
         NormalDialog("Status Window\n\nThis window provides information on the status of your hero or kingdom, "
                      "and shows the date.  Left click here to cycle through these windows.",
-                     4, -1, -1, -1, 0, -1, 0, -1);
+                     NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     return 1;
 }
 
@@ -1262,7 +1253,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
             if (gpCurPlayer->HasMobileHero()) {
                 NormalDialog(
                     "One or more Heroes may still move, are you sure you want to end your turn?",
-                    2, -1, -1, -1, 0, -1, 0, -1
+                    NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1
                 );
                 if (gpWindowManager->m_dialogResult == 0x7806)
                     break;
@@ -1308,7 +1299,7 @@ int advManager::ProcessSearch(int x, int y) {
 
     myHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     if (myHero->m_mobility != myHero->m_remainingMobility) {
-        NormalDialog("Digging for artifacts requires a whole day, try again tomorrow.", 1, -1, -1, -1, 0, -1, 0, -1);
+        NormalDialog("Digging for artifacts requires a whole day, try again tomorrow.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         return 1;
     }
     MobilizeCurrHero(0);
@@ -1320,11 +1311,11 @@ int advManager::ProcessSearch(int x, int y) {
     }
     pCell = GetCell(x, y);
     if (pCell->m_objectIndex != 0xff || pCell->m_overlayIndex != 0xff) {
-        NormalDialog("Try searching on clear ground.", 1, -1, -1, -1, 0, -1, 0, -1);
+        NormalDialog("Try searching on clear ground.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         return 1;
     }
     if (pCell->m_tileIndex < 20) {
-        NormalDialog("Try looking on land!!!", 1, -1, -1, -1, 0, -1, 0, -1);
+        NormalDialog("Try looking on land!!!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         return 1;
     }
     if (gbHumanPlayer[giCurPlayer])
@@ -1341,7 +1332,7 @@ int advManager::ProcessSearch(int x, int y) {
     if (gpGame->m_ultimateArtifactX == x && gpGame->m_ultimateArtifactY == y && gpGame->m_ultimateArtifactId != -1) {
         gaveArtifact = GiveArtifact(myHero, gpGame->m_ultimateArtifactId);
         if (gaveArtifact == -1) {
-            NormalDialog("You have no room to carry another artifact!", 1, 0x61, 0x28, -1, 0, -1, 0, -1);
+            NormalDialog("You have no room to carry another artifact!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         } else {
             if (gbHumanPlayer[giCurPlayer]) {
                 EventSound(0x3f, 0);
@@ -1350,21 +1341,21 @@ int advManager::ProcessSearch(int x, int y) {
                         gArtifactNames[gpGame->m_ultimateArtifactId]);
                 if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
                     sprintf(gText, "After spending many hours digging here, you have uncovered the Eye of Goros!!!!");
-                    NormalDialog(gText, 1, 0xb1, 0x1c, -1, 0, -1, 0, -1);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 } else {
-                    NormalDialog(gText, 1, 0xb1, 0x1c, -1, 0, -1, 0, -1);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                     myHero->ViewArtifact(gpGame->m_ultimateArtifactId, 0);
                 }
                 gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
             } else if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
                 sprintf(gText,
                         "A great tragedy - the enemy has found the Eye of Goros!!!  The people abandon you, all is lost.");
-                NormalDialog(gText, 1, 0xb1, 0x1c, -1, 0, -1, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             }
             gpGame->m_ultimateArtifactId = -1;
         }
     } else if (gbHumanPlayer[giCurPlayer]) {
-        NormalDialog("Nothing here.", 1, 0x61, 0x28, -1, 0, -1, 0, -1);
+        NormalDialog("Nothing here.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     if (gbHumanPlayer[giCurPlayer])
         WaitEndSample(sampleData, -1);
@@ -3798,7 +3789,7 @@ void advManager::CastSpell(signed char spell)
             break;
         case SPELL_IDENTIFY_HERO:
             m_identifyHeroActive = 1;
-            NormalDialog("Enemy Heroes are now fully identifiable.", 1, 0x61, 0x91, -1, 0, -1, 0, -1);
+            NormalDialog("Enemy Heroes are now fully identifiable.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             break;
         case SPELL_SUMMON_BOAT:
             SummonBoat();
@@ -3807,7 +3798,7 @@ void advManager::CastSpell(signed char spell)
         case SPELL_TOWN_GATE:
             if (caster->m_remainingMobility == 0) {
                 NormalDialog("Your hero is too tired to cast this spell today.  Try again tomorrow.",
-                             1, -1, -1, -1, 0, -1, 0, -1);
+                             NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 return;
             }
             if (caster->m_remainingMobility < SPELL_TRAVEL_MOBILITY_COST)
@@ -4252,7 +4243,7 @@ signed char SaveGame(void) {
         bFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
-            NormalDialog("Game saved successfully.", 1, 0xb1, -1, -1, 0, -1, 0, -1);
+            NormalDialog("Game saved successfully.", NORMAL_DIALOG_TYPE_OK, 0xb1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     }
     delete requester0;
     gpAdvManager->EnableButtons();
@@ -4310,7 +4301,7 @@ short CPanelHandler(struct tag_message &message) {
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gCPanelHelp[helpIndex], 4, 0xb1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog(gCPanelHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             }
         } else {
             switch (message.command) {
@@ -4327,7 +4318,7 @@ short CPanelHandler(struct tag_message &message) {
                         confirm_reset:
                             handled = 1;
                             if (!bFreshSave) {
-                                NormalDialog(question, 2, 0xb1, 0x50, -1, 0, -1, 0, -1);
+                                NormalDialog(question, NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x50, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                                 if (gpWindowManager->m_dialogResult == 0x7806)
                                     handled = 0;
                             }
@@ -4369,7 +4360,7 @@ short CPanelHandler(struct tag_message &message) {
                                     NormalDialog(
                                         "Unable to set up CD stereo music.  Your CD player might be in use by another "
                                         "program, or your sound driver might not support CD stereo.",
-                                        1, -1, -1, -1, 0, -1, 0, -1
+                                        NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1
                                     );
                                     break;
                                 }
@@ -4511,7 +4502,7 @@ short APanelHandler(struct tag_message &message)
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gAPanelHelp[helpIndex], 4, 0xb1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog(gAPanelHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             }
         } else {
             switch (message.command) {
@@ -5030,7 +5021,7 @@ void advManager::DimensionDoor(void) {
         targetCell = GetCell(x, y);
         if (((heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex >= 20)
             || (!(heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) && targetCell->m_tileIndex < 20)) {
-            NormalDialog("Dimension Door failed!!!", 1, 0x61, 0x91, -1, 0, -1, 0, -1);
+            NormalDialog("Dimension Door failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             UpdateRadar(1, 0);
         } else {
             gpSoundManager->SwitchAmbientMusic(16);
@@ -5087,7 +5078,7 @@ void advManager::TownGate(void) {
     heroPointer->UseSpell(SPELL_TOWN_GATE);
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId = heroPointer->m_id;
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
-    heroPointer->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
+    heroPointer->m_locationType = 0xa8;
     heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
     gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
 }
@@ -5652,7 +5643,7 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
     if (loaded < maxSamples) {
         for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-            if (keep[i] == 0 && m_loopingSamples[i] != NULL) {
+            if (keep[i] == 0 && m_loopingSamples[i] != 0) {
                 ++keep[i];
                 ++loaded;
                 if (loaded >= maxSamples)
@@ -5663,9 +5654,9 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
 disposeSamples:
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-        if (m_loopingSamples[i] != NULL && keep[i] == 0) {
+        if (m_loopingSamples[i] != 0 && keep[i] == 0) {
             gpResourceManager->Dispose(m_loopingSamples[i]);
-            m_loopingSamples[i] = NULL;
+            m_loopingSamples[i] = 0;
         }
     }
 }

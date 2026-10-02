@@ -21,12 +21,12 @@ VA(0x004154f0, 0x147)
 signed char combatManager::ViewSpells(int)
 {
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
-    if (m_selectedSpell != -1) {
+    if (m_selectedSpell != SPELL_NONE) {
         switch (m_selectedSpell) {
-            case 3:
-            case 13:
-            case 15:
-            case 16:
+            case SPELL_CURE:
+            case SPELL_DISPEL_MAGIC:
+            case SPELL_ARMAGEDDON:
+            case SPELL_STORM:
                 giNextAction = 1;
                 giNextActionExtra = m_selectedSpell;
                 break;
@@ -38,7 +38,7 @@ signed char combatManager::ViewSpells(int)
                 break;
         }
         gpMouseManager->SetPointer("cmbtmous.mse", 0);
-        if (m_selectedSpell != -1)
+        if (m_selectedSpell != SPELL_NONE)
             return 1;
     }
     return 0;
@@ -94,7 +94,7 @@ short HandleCastSpell(struct tag_message &message)
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = -1;
                     gpMouseManager->SetPointer(0x13);
-                    if (gpCombatManager->m_selectedSpell == 2 && bInTeleportGetDest)
+                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && bInTeleportGetDest)
                         gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
                     else
                         gpCombatManager->CombatMessage("Select Spell Target", 1);
@@ -111,7 +111,7 @@ short HandleCastSpell(struct tag_message &message)
                     giNextActionGridIndex2 = indexToCastOn;
                 else {
                     giNextActionGridIndex = indexToCastOn;
-                    if (gpCombatManager->m_selectedSpell == 2) {
+                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT) {
                         bInTeleportGetDest = 1;
                         indexToCastOn = -1;
                         message.type = MESSAGE_MOUSE_MOVE;
@@ -131,7 +131,7 @@ short HandleCastSpell(struct tag_message &message)
             if (message.keyCode != 1)
                 break;
         case MESSAGE_RIGHT_BUTTON_DOWN:
-            gpCombatManager->m_selectedSpell = -1;
+            gpCombatManager->m_selectedSpell = SPELL_NONE;
             giNextAction = 0;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_DIALOG_SELECT;
@@ -147,7 +147,7 @@ VA(0x00415a2c, 0x2f0)
 signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
 {
     int unused;
-    army *target = NULL;
+    army *target = 0;
     short newHex;
 
     if (!ValidHex(hex))
@@ -209,13 +209,13 @@ VA(0x00415d1c, 0x128)
 void combatManager::SpellMessage(signed char spell, signed char hex)
 {
     switch (spell) {
-        case 0:
-        case 15:
-        case 16:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_ARMAGEDDON:
+        case SPELL_STORM:
+        case SPELL_METEOR_SHOWER:
             sprintf(gText, "Cast %s", gSpellNames[spell]);
             break;
-        case 2:
+        case SPELL_TELEPORT:
             if (bInTeleportGetDest) {
                 sprintf(gText, "Teleport Here");
                 break;
@@ -259,7 +259,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     if (!castByCreature && m_heroes[m_currentSide])
         m_heroes[m_currentSide]->UseSpell(spell);
     targetArmy = 0;
-    if (spell == 0 || spell == 17 || spell == 16 || spell == 15 || spell == 3 || spell == 13)
+    if (spell == SPELL_FIREBALL || spell == SPELL_METEOR_SHOWER || spell == SPELL_STORM || spell == SPELL_ARMAGEDDON || spell == SPELL_CURE || spell == SPELL_DISPEL_MAGIC)
         targetArmy = 0;
     else if (ValidHex(targetHex) && m_hexCells[targetHex].m_occupantSide >= 0) {
         targetArmy = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
@@ -270,18 +270,18 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     if (!castByCreature)
         m_heroCastSpell[m_currentSide] = 1;
     switch (spell) {
-        case 0:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 7:
-        case 8:
-        case 9:
-        case 12:
-        case 15:
-        case 16:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_TELEPORT:
+        case SPELL_CURE:
+        case SPELL_RESURRECT:
+        case SPELL_HASTE:
+        case SPELL_BLIND:
+        case SPELL_BLESS:
+        case SPELL_PROTECTION:
+        case SPELL_ANTI_MAGIC:
+        case SPELL_ARMAGEDDON:
+        case SPELL_STORM:
+        case SPELL_METEOR_SHOWER:
             break;
         default:
             if (targetArmy
@@ -300,7 +300,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     sprintf(gText, "spell%02d.82M", spell);
     sample = LoadPlaySample(gText);
     switch (spell) {
-        case 2:
+        case SPELL_TELEPORT:
             teleportArmy = targetArmy;
             targetHex = teleportDest;
             teleportArmy->SpellEffect(2, 0);
@@ -366,26 +366,26 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             }
             teleportArmy->Stand(1);
             break;
-        case 1:
+        case SPELL_LIGHTNING_BOLT:
             sprintf(gText, "The lightning bolt does %d damage to the %s.",
-                    m_heroes[m_currentSide]->m_primaryStats[2] * 25,
+                    m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
                     targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
                                                : gArmyNames[targetArmy->m_creatureType]);
             CombatMessage(gText, 1);
             targetArmy->SpellEffect(1, 0);
-            targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
+            targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25);
             targetArmy->PowEffect(7);
             if (!(targetArmy->m_stats.attributes & 0x10))
                 targetArmy->Stand(1);
             break;
-        case 3:
+        case SPELL_CURE:
             CastMassSpell(m_currentSide, 1);
             break;
-        case 4:
+        case SPELL_RESURRECT:
             targetArmy->SpellEffect(4, 0);
             targetArmy->SpellEffect(4, 0);
             quantity = targetArmy->m_quantity;
-            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
+            targetArmy->m_quantity += m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50 / targetArmy->m_stats.hitPoints;
             if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
                 targetArmy->m_quantity = targetArmy->m_initialQuantity;
             if (targetArmy->m_quantity - quantity > 1)
@@ -397,111 +397,111 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             CombatMessage(gText, 1);
             targetArmy->Stand(1);
             break;
-        case 6:
+        case SPELL_SLOW:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 1;
             if (targetArmy->m_stats.attributes & 2)
                 targetArmy->m_stats.attributes -= 2;
-            targetArmy->m_spellEffect = 6;
+            targetArmy->m_spellEffect = SPELL_SLOW;
             targetArmy->m_unknown52 = 3;
             targetArmy->Stand(1);
             break;
-        case 5:
+        case SPELL_HASTE:
             gpCombatManager->m_currentSpeed = 4;
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 4;
-            targetArmy->m_spellEffect = 5;
+            targetArmy->m_spellEffect = SPELL_HASTE;
             targetArmy->m_unknown52 = 3;
             targetArmy->Stand(1);
             break;
-        case 8:
+        case SPELL_BLESS:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(8, 0);
             targetArmy->SpellEffect(8, 0);
             targetArmy->m_damageMode = 3;
-            targetArmy->m_spellEffect = 8;
+            targetArmy->m_spellEffect = SPELL_BLESS;
             targetArmy->m_unknown52 = 3;
             targetArmy->Stand(1);
             break;
-        case 9:
+        case SPELL_PROTECTION:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(9, 0);
             targetArmy->SpellEffect(9, 0);
-            targetArmy->m_spellEffect = 9;
+            targetArmy->m_spellEffect = SPELL_PROTECTION;
             targetArmy->m_unknown52 = 3;
             targetArmy->m_stats.defense += 3;
             targetArmy->Stand(1);
             break;
-        case 10:
+        case SPELL_CURSE:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_unknown09 = 2;
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_damageMode = 1;
-            targetArmy->m_spellEffect = 10;
+            targetArmy->m_spellEffect = SPELL_CURSE;
             targetArmy->m_unknown52 = 3;
             targetArmy->Stand(1);
             break;
-        case 14:
+        case SPELL_BERZERKER:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(14, 0);
             targetArmy->m_unknown09 = 2;
             targetArmy->SpellEffect(14, 0);
-            targetArmy->m_spellEffect = 14;
+            targetArmy->m_spellEffect = SPELL_BERZERKER;
             targetArmy->m_unknown52 = 1;
             targetArmy->Stand(1);
             break;
-        case 18:
+        case SPELL_PARALYZE:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_unknown09 = 2;
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_damageMode = 1;
-            targetArmy->m_spellEffect = 18;
+            targetArmy->m_spellEffect = SPELL_PARALYZE;
             targetArmy->m_unknown52 = 2;
             targetArmy->Stand(1);
             break;
-        case 7:
+        case SPELL_BLIND:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 0;
             targetArmy->m_damageMode = 1;
-            targetArmy->m_spellEffect = 7;
+            targetArmy->m_spellEffect = SPELL_BLIND;
             targetArmy->m_unknown52 = 2;
             targetArmy->Stand(1);
             break;
-        case 11:
+        case SPELL_TURN_UNDEAD:
             targetArmy->m_unknown09 = 2;
             targetArmy->SpellEffect(11, 0);
             targetArmy->m_powFrames = 5;
             targetArmy->PowEffect(0);
             targetArmy->m_quantity = 0;
             break;
-        case 13:
+        case SPELL_DISPEL_MAGIC:
             CastMassSpell(2, 0);
             break;
-        case 12:
+        case SPELL_ANTI_MAGIC:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(12, 0);
-            targetArmy->m_spellEffect = 12;
+            targetArmy->m_spellEffect = SPELL_ANTI_MAGIC;
             targetArmy->m_unknown52 = 3;
             targetArmy->Stand(1);
             break;
-        case 0:
+        case SPELL_FIREBALL:
             Fireball(targetHex);
             break;
-        case 17:
+        case SPELL_METEOR_SHOWER:
             MeteorShower(targetHex);
             break;
-        case 16:
+        case SPELL_STORM:
             ElementalStorm();
             break;
-        case 15:
+        case SPELL_ARMAGEDDON:
             Armageddon();
             break;
         default:
@@ -512,7 +512,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
         if (castByCreature)
             targetArmy->m_spellRounds = 3;
         else
-            targetArmy->m_spellRounds = m_heroes[m_currentSide]->m_primaryStats[2];
+            targetArmy->m_spellRounds = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER];
     }
     WaitEndSample(sample, -1);
 done:
@@ -563,16 +563,16 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
     }
     for (side = startSide; side <= last; side++) {
         for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
-            if (m_armies[side][armyIndex].m_spellEffect != 12 && m_armies[side][armyIndex].m_spellEffect != 13
+            if (m_armies[side][armyIndex].m_spellEffect != SPELL_ANTI_MAGIC && m_armies[side][armyIndex].m_spellEffect != SPELL_DISPEL_MAGIC
                 && m_armies[side][armyIndex].m_creatureType != 0x17) {
                 if (!cureOnly) {
-                    if (m_armies[side][armyIndex].m_spellEffect != -1)
+                    if (m_armies[side][armyIndex].m_spellEffect != SPELL_NONE)
                         m_armies[side][armyIndex].m_unknown08 = 3;
                 } else if (cureOnly == 1) {
-                    if (m_armies[side][armyIndex].m_spellEffect == 6 || m_armies[side][armyIndex].m_spellEffect == 7
-                        || m_armies[side][armyIndex].m_spellEffect == 10
-                        || m_armies[side][armyIndex].m_spellEffect == 14
-                        || m_armies[side][armyIndex].m_spellEffect == 18)
+                    if (m_armies[side][armyIndex].m_spellEffect == SPELL_SLOW || m_armies[side][armyIndex].m_spellEffect == SPELL_BLIND
+                        || m_armies[side][armyIndex].m_spellEffect == SPELL_CURSE
+                        || m_armies[side][armyIndex].m_spellEffect == SPELL_BERZERKER
+                        || m_armies[side][armyIndex].m_spellEffect == SPELL_PARALYZE)
                         m_armies[side][armyIndex].m_unknown08 = 3;
                 }
             }
@@ -608,14 +608,14 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly)
         curArmy = &m_armies[side][i];
         curArmy->m_unknown08 = 0;
         curArmy->m_unknown09 = 1;
-        if (curArmy->m_spellEffect != 12 && curArmy->m_spellEffect != 13 && curArmy->m_creatureType != 0x17) {
+        if (curArmy->m_spellEffect != SPELL_ANTI_MAGIC && curArmy->m_spellEffect != SPELL_DISPEL_MAGIC && curArmy->m_creatureType != 0x17) {
             if (cureOnly == 1) {
                 switch (curArmy->m_spellEffect) {
-                    case 6:
-                    case 7:
-                    case 10:
-                    case 14:
-                    case 18:
+                    case SPELL_SLOW:
+                    case SPELL_BLIND:
+                    case SPELL_CURSE:
+                    case SPELL_BERZERKER:
+                    case SPELL_PARALYZE:
                         curArmy->CancelSpell();
                         break;
                     default:
@@ -724,13 +724,13 @@ void combatManager::MeteorShower(signed char targetHex)
         DelayTil(&glTimers[0]);
     }
     gpResourceManager->Dispose(rockIcon);
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     ClearEffects();
     hit = 0;
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
                 && !gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex] = 1;
@@ -787,11 +787,11 @@ void combatManager::ElementalStorm(void)
     }
     gpResourceManager->Dispose(storm);
     hit = 0;
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 25;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
@@ -830,12 +830,12 @@ void combatManager::Armageddon(void)
     palette *workPal;
     signed char hit;
 
-    damage = m_heroes[m_currentSide]->m_primaryStats[2] * 50;
+    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50;
     hit = 0;
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
+            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);

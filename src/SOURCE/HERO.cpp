@@ -461,7 +461,7 @@ void hero::ViewStat(signed char stat, signed char quickView) {
 
     if (quickView) {
         sprintf(gText, "%s\n\n%s", gStatNames[stat], gStatDesc[stat]);
-        NormalDialog(gText, 4, 0xb1, 0x19, -1, 0, -1, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, 0x19, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         return;
     }
     win = new heroWindow(0xb1, 0x19, "vstat.bin");
@@ -485,7 +485,7 @@ void hero::ViewStat(signed char stat, signed char quickView) {
 
 VA(0x0046ce3f, 0x4a)
 void hero::ViewArtifact(signed char artifact, signed char quickView) {
-    NormalDialog(gArtifactDesc[artifact], quickView == 0 ? 1 : 4, -1, 0x1c, -1, 0, -1, 0, -1);
+    NormalDialog(gArtifactDesc[artifact], quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
 }
 
 // donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
@@ -493,8 +493,8 @@ void hero::ViewArtifact(signed char artifact, signed char quickView) {
 // evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
 VA(0x0046ce89, 0x59)
 signed char hero::Dismiss(void) {
-    NormalDialog("Are you sure you want to dismiss this Hero?", 2, 0xb1, 0x1c,
-                 -1, 0, -1, 0, -1);
+    NormalDialog("Are you sure you want to dismiss this Hero?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x1c,
+                 NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         Deallocate();
         return 1;
@@ -532,7 +532,7 @@ void hero::Deallocate(void) {
     }
     if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
         || !gpAdvManager->m_heroContextLocked)
-        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, NULL, 1);
+        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, 0, 1);
     if (!gbCombatSurrender) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_army.Dismiss(i);
@@ -713,7 +713,7 @@ void hero::CheckLevel(void) {
     m_level = lvl;
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
         gpSoundManager->SwitchAmbientMusic(52);
-        NormalDialog(gText, 1, -1, -1, 15, m_id, -1, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     }
 }
@@ -912,7 +912,7 @@ short HeroHandler(struct tag_message& message) {
                 nextLevelExp = gpHVHero->GetExperience(heroLevel + 1);
                 sprintf(gText, "Level %d\n\nExperience %d\n\nNext level %d", heroLevel,
                         gpHVHero->m_experience, nextLevelExp);
-                NormalDialog(gText, quickView == 0 ? 1 : 4, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 break;
             case 102:
             case 103:

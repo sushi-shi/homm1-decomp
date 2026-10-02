@@ -419,29 +419,29 @@ char* combatManager::GetBackgroundName(void)
     if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
         || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
             && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD)) {
-        m_terrainType = 6;
+        m_terrainType = TERRAIN_DIRT;
         return cCombatBkgNames[10];
     }
     switch (m_terrainType) {
-        case 0:
+        case TERRAIN_WATER:
             return cCombatBkgNames[9];
-        case 3:
+        case TERRAIN_SWAMP:
             return cCombatBkgNames[4];
-        case 4:
+        case TERRAIN_LAVA:
             return cCombatBkgNames[5];
-        case 5:
+        case TERRAIN_DESERT:
             return cCombatBkgNames[6];
-        case 1:
+        case TERRAIN_GRASS:
             if (MoreTreesNear())
                 return cCombatBkgNames[0];
             else
                 return cCombatBkgNames[1];
-        case 2:
+        case TERRAIN_SNOW:
             if (MoreTreesNear())
                 return cCombatBkgNames[2];
             else
                 return cCombatBkgNames[3];
-        case 6:
+        case TERRAIN_DIRT:
             if (MoreTreesNear())
                 return cCombatBkgNames[7];
             else
@@ -712,7 +712,7 @@ signed char combatManager::GetNextArmy(int checkMorale)
             for (stackCounter = 0; stackCounter < m_numArmies[stackSide]; stackCounter++) {
                 bSkip = 0;
                 pArmy = &m_armies[stackSide][stackCounter];
-                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == 0x12 || pArmy->m_spellEffect == 7
+                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == SPELL_PARALYZE || pArmy->m_spellEffect == SPELL_BLIND
                     || (pArmy->m_stats.speed != m_currentSpeed && !(pArmy->m_stats.attributes & 0x20)))
                     bSkip = 1;
                 if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & 0x20))

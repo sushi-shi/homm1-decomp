@@ -63,17 +63,17 @@ VA(0x004248a0, 0x54)
 short TerrainStepCost(signed char terrain, char diagonal) {
     short cost = 0;
     switch (terrain) {
-    case 0:
-    case 1:
-    case 4:
-    case 6:
+    case TERRAIN_WATER:
+    case TERRAIN_GRASS:
+    case TERRAIN_LAVA:
+    case TERRAIN_DIRT:
         cost = 4;
         break;
-    case 2:
-    case 3:
+    case TERRAIN_SNOW:
+    case TERRAIN_SWAMP:
         cost = 6;
         break;
-    case 5:
+    case TERRAIN_DESERT:
         cost = 8;
         break;
     }

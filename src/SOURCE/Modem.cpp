@@ -50,7 +50,7 @@ void GUIModemCommand(char* message, char* command) {
     iModemCommandPos = 0;
     giWaitType = 5;
     strcpy(cModemCommand, command);
-    NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     if (!gbFunctionComplete)
         ShutDown(NULL);
 }
@@ -97,7 +97,7 @@ signed char GUIModemResponse(char* message, char* response) {
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
     giWaitType = 6;
-    NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     if (!gbFunctionComplete)
         ShutDown(NULL);
     return 0;

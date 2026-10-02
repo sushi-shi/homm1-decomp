@@ -262,7 +262,7 @@ long int __stdcall AppWndProc(void *window, unsigned int message, unsigned int m
     case WM_CLOSE:
         if (window == hwndApp) {
             if (GameUnsaved() != 0) {
-                NormalDialog("Are you sure you want to quit?", 2, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog("Are you sure you want to quit?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                     DestroyWindow(static_cast<HWND>(window));
                 return 0;

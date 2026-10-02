@@ -4,6 +4,7 @@
 // 13 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
+#include <SOURCE/creatureTypes.h>
 #include <H1/Macros.h>
 
 // forward declarations:
@@ -20,7 +21,7 @@ H1_ENUM_CONST_END(ArmyGroupConstant)
 class armyGroup {
 public:
     // Retail constructor clears five signed type bytes, then five short counts.
-    signed char m_creatureTypes[5];
+    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureTypes[5];
     short m_creatureCounts[5];
     // --- constructors ---
     armyGroup(void);

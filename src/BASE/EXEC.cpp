@@ -72,7 +72,7 @@ short executive::DoDialog(baseManager *manager)
     executive dialogExecutive;
     int count = 0;
     currentManager = m_managerListHead;
-    while (currentManager != NULL) {
+    while (currentManager != 0) {
         savedManagers[count] = currentManager;
         savedPreviousManagers[count] = currentManager->m_prev;
         savedNextManagers[count] = currentManager->m_next;

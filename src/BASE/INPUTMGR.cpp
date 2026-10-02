@@ -38,6 +38,9 @@ H1_ENUM_BEGIN(InputScanCode)
     INPUT_SCAN_F1 = 0x3b,
     INPUT_SCAN_F4 = 0x3e,
     INPUT_SCAN_F10 = 0x44,
+    // AsciiConvert passes F1..F10 through as one contiguous range.
+    INPUT_SCAN_FUNCTION_KEY_FIRST = INPUT_SCAN_F1,
+    INPUT_SCAN_FUNCTION_KEY_LAST = INPUT_SCAN_F10,
     INPUT_SCAN_F11 = 0x57,
     INPUT_SCAN_F12 = 0x58,
     INPUT_SCAN_CODE_MASK = 0xff
@@ -291,8 +294,8 @@ void inputManager::SetKeyCodeType(short keyCodeType) {
 
 VA(0x0047c320, 0x1cb)
 void inputManager::AsciiConvert(tag_message& event) {
-    if ((event.keyCode >= INPUT_SCAN_F1
-         && event.keyCode <= INPUT_SCAN_F10)
+    if ((event.keyCode >= INPUT_SCAN_FUNCTION_KEY_FIRST
+         && event.keyCode <= INPUT_SCAN_FUNCTION_KEY_LAST)
         || event.keyCode == INPUT_SCAN_F11
         || event.keyCode == INPUT_SCAN_F12)
         event.keyCode = m_keyState[event.keyCode];

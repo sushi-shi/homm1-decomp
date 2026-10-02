@@ -2,6 +2,8 @@
 #define HOMM1_H1_KB_H
 
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/dialogTypes.h>
+#include <SOURCE/terrainTypes.h>
 #include <Domains.h>
 
 H1_ENUM_BEGIN(BuildingSlotType)
@@ -30,7 +32,7 @@ extern signed char gbOverviewShowing;
 extern signed char gbStandardHighScore;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
-extern signed char giGroundToTerrain[];
+extern H1_ENUM_STORAGE(TerrainType, signed char) giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];
@@ -199,7 +201,9 @@ void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
 void PopNetBox(char *);
-void NormalDialog(char*, int, int, int, int, int, int, int, int);
+void NormalDialog(char*, H1_ENUM_PARAM(NormalDialogType, int), int, int,
+                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
+                  H1_ENUM_PARAM(NormalDialogResourceType, int), int, int);
 void SetWinText(heroWindow*, short);
 extern char* cTownPrefix[];
 extern char* cNeutralObjectName[];

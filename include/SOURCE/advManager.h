@@ -6,8 +6,13 @@
 #include <BASE/baseManager.h>
 #include <H1/Macros.h>
 #include <SOURCE/armySizeNames.h>
+#include <SOURCE/artifactTypes.h>
+#include <SOURCE/creatureTypes.h>
 #include <SOURCE/cursorTypes.h>
+#include <SOURCE/dialogTypes.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/resourceTypes.h>
+#include <SOURCE/spellTypes.h>
 
 // forward declarations:
 class armyGroup;
@@ -184,7 +189,7 @@ public:
     void SetHeroContext(signed char, signed char);
     void DoHeroKnob(void);
     void DoTownKnob(void);
-    void CastSpell(signed char);
+    void CastSpell(H1_ENUM_PARAM(SpellType, signed char));
     void GrabScreen(void);
     void CheckCastSpell(void);
     signed char ComboDraw(short, short, signed char);
@@ -234,20 +239,22 @@ public:
     void JailEvent(class mapCell*, class hero*, int, int);
     void TownEvent(class mapCell*, int, int);
     void EventSound(short, short);
-    void EventWindow(short, int, char*, int, int, int, int, int);
+    void EventWindow(short, H1_ENUM_PARAM(NormalDialogType, int), char*,
+                     H1_ENUM_PARAM(NormalDialogResourceType, int), int,
+                     H1_ENUM_PARAM(NormalDialogResourceType, int), int, int);
     int GiveRandomArtifact(class hero*);
     int GiveExperience(class hero*, int, signed char);
     // HoMM1 retail: byte resource, word amount (ret 0xc).
-    void GiveResource(class hero*, signed char, short);
-    short GiveArtifact(class hero*, signed char);
-    void RecruitEvent(class hero*, int, class mapCell*);
+    void GiveResource(class hero*, H1_ENUM_PARAM(ResourceType, signed char), short);
+    short GiveArtifact(class hero*, H1_ENUM_PARAM(ArtifactType, signed char));
+    void RecruitEvent(class hero*, H1_ENUM_PARAM(CreatureType, int), class mapCell*);
     int SkeletonEvent(class hero*, class mapCell*, char*, int, int);
     int ZombieEvent(class hero*, class mapCell*, char*, int, int);
     signed char GhostEvent(class hero*, class mapCell*, int, int, int);
     void HouseEvent(class hero*, class mapCell*);
     // HoMM1 retail: nine arguments (ret 0x24), result in AL.
-    signed char CombatMonsterEvent(class hero*, signed char, short, class mapCell*, int, int,
-                                   signed char, int, int);
+    signed char CombatMonsterEvent(class hero*, H1_ENUM_PARAM(CreatureType, signed char), short,
+                                   class mapCell*, int, int, signed char, int, int);
     void TransferArtifacts(class hero*, class hero*);
     void HeroLoses(class hero*);
     void DoWhirlpool(class hero*);

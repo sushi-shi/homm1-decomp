@@ -5,6 +5,8 @@
 
 #include <H1/Macros.h>
 #include <H1/Types.h>
+#include <SOURCE/creatureTypes.h>
+#include <SOURCE/spellTypes.h>
 
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
@@ -19,7 +21,7 @@ public:
     signed char m_unknown04;
     // ValidPath records the reachable target hex here.
     signed char m_moveTargetHex;
-    signed char m_creatureType;
+    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureType;
     signed char m_hex;
     signed char m_unknown08;
     signed char m_unknown09;
@@ -54,7 +56,7 @@ public:
     // move, attack, wince and shoot sounds.
     class sample* m_samples[4];
     // Active spell; HoMM1 lets a stack carry one timed effect.
-    signed char m_spellEffect;
+    H1_ENUM_STORAGE(SpellType, signed char) m_spellEffect;
     signed char m_unknown52;
     // ResetRound counts this down and expires the effect at zero.
     signed char m_spellRounds;

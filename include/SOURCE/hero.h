@@ -5,6 +5,7 @@
 
 #include <Domains.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/spellTypes.h>
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
 
@@ -33,6 +34,16 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_ARTIFACT_SLOT_COUNT = 14,
     HERO_EXPERIENCE_LEVEL_TABLE_COUNT = 12
 H1_ENUM_CONST_END(HeroConstant)
+
+// m_primaryStats indices: the order of retail gPrimarySkillNames
+// (0x00493210) and their help texts; army::Init adds 0 and 1 to the
+// stack's attack and defense, and AddSpell receives 3 as the spell count.
+H1_ENUM_BEGIN(HeroPrimaryStat)
+    HERO_PRIMARY_ATTACK = 0,
+    HERO_PRIMARY_DEFENSE = 1,
+    HERO_PRIMARY_SPELL_POWER = 2,
+    HERO_PRIMARY_KNOWLEDGE = 3
+H1_ENUM_END(HeroPrimaryStat)
 
 
 // clang-format on
@@ -77,7 +88,7 @@ public:
     armyGroup m_army;
     // Combat spells fill the first 19 slots, adventure spells the last 10;
     // each memorized spell keeps its remaining casts in the parallel array.
-    signed char m_spells[HERO_SPELL_SLOT_COUNT];
+    H1_ENUM_STORAGE(SpellType, signed char) m_spells[HERO_SPELL_SLOT_COUNT];
     signed char m_spellCharges[HERO_SPELL_SLOT_COUNT];
     signed char m_artifacts[HERO_ARTIFACT_SLOT_COUNT];
     int m_eventFlags;
@@ -88,13 +99,13 @@ public:
     void Read(int, signed char);
     void Write(int, signed char);
     void GetArmyStrengths(unsigned long int * const);
-    signed char HasArtifact(signed char);
+    signed char HasArtifact(H1_ENUM_PARAM(ArtifactType, signed char));
     short CalcMobility(void);
-    signed char HasSpell(signed char);
+    signed char HasSpell(H1_ENUM_PARAM(SpellType, signed char));
     int GetNthSpell(int, int);
     short GetNumSpells(signed char);
-    void UseSpell(signed char);
-    int AddSpell(signed char, signed char, int);
+    void UseSpell(H1_ENUM_PARAM(SpellType, signed char));
+    int AddSpell(H1_ENUM_PARAM(SpellType, signed char), signed char, int);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);

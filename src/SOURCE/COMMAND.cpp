@@ -48,7 +48,7 @@ short combatManager::Main(struct tag_message& message) {
         if (message.type == MESSAGE_KEY_DOWN) {
             switch (message.keyCode) {
                 case 0x3b:
-                    PopNetBox(NULL);
+                    PopNetBox(0);
                     break;
             }
         }
@@ -493,12 +493,12 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                     if (!m_heroes[m_currentSide]) {
                         NormalDialog(
                             "You have no hero to cast a spell.",
-                            1,
+                            NORMAL_DIALOG_TYPE_OK,
                             -1,
                             -1,
-                            -1,
+                            NORMAL_DIALOG_NO_RESOURCE,
                             0,
-                            -1,
+                            NORMAL_DIALOG_NO_RESOURCE,
                             0,
                             -1
                         );
@@ -507,12 +507,12 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                     if (m_heroCastSpell[m_currentSide]) {
                         NormalDialog(
                             "You have already cast a spell this round.",
-                            1,
+                            NORMAL_DIALOG_TYPE_OK,
                             -1,
                             -1,
-                            -1,
+                            NORMAL_DIALOG_NO_RESOURCE,
                             0,
-                            -1,
+                            NORMAL_DIALOG_NO_RESOURCE,
                             0,
                             -1
                         );
@@ -766,7 +766,7 @@ void combatManager::DoCommand(signed char command) {
             ResetMouse();
             break;
         case 11:
-            NormalDialog("Are you sure you want to retreat?", 2, 0xc3, 0x3c, -1, 0, -1, 0, -1);
+            NormalDialog("Are you sure you want to retreat?", NORMAL_DIALOG_TYPE_YES_NO, 0xc3, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (gpWindowManager->m_dialogResult == 0x7805)
                 giNextAction = 4;
             ResetMouse();
@@ -775,7 +775,7 @@ void combatManager::DoCommand(signed char command) {
             if (DoSurrender() == 1) {
                 if (gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD]
                     < giSurrenderCost)
-                    NormalDialog("You don't have enough gold!", 1, -1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog("You don't have enough gold!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 else {
                     giNextAction = 5;
                     giNextActionExtra = giSurrenderCost;
@@ -1385,7 +1385,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         data[3] = giNextActionGridIndex2;
         result = TransmitRemoteData((char*)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
         if (!result)
-            ShutDown(NULL);
+            ShutDown(0);
     }
     actingArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     advance = 0;

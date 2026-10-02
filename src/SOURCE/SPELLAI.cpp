@@ -44,9 +44,9 @@ int combatManager::DoSpellAI(signed char side)
     bestHexWork = -1;
     if (m_heroes[side] == NULL)
         return 0;
-    if (m_heroes[m_currentSide]->m_primaryStats[2] == 1)
+    if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 1)
         giSpellAIEffectShift = 2;
-    else if (m_heroes[m_currentSide]->m_primaryStats[2] == 2)
+    else if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 2)
         giSpellAIEffectShift = 1;
     else
         giSpellAIEffectShift = 0;
@@ -90,32 +90,32 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
     target = NULL;
     *bestEffect = 0;
     switch (spell) {
-    case 3:
-    case 13:
-    case 15:
-    case 16:
+    case SPELL_CURE:
+    case SPELL_DISPEL_MAGIC:
+    case SPELL_ARMAGEDDON:
+    case SPELL_STORM:
         spellMode = 0;
         break;
-    case 0:
-    case 17:
+    case SPELL_FIREBALL:
+    case SPELL_METEOR_SHOWER:
         spellMode = 1;
         break;
-    case 2:
-    case 4:
-    case 5:
-    case 8:
-    case 9:
-    case 12:
+    case SPELL_TELEPORT:
+    case SPELL_RESURRECT:
+    case SPELL_HASTE:
+    case SPELL_BLESS:
+    case SPELL_PROTECTION:
+    case SPELL_ANTI_MAGIC:
         spellMode = 2;
         side = m_currentSide;
         break;
-    case 1:
-    case 6:
-    case 7:
-    case 10:
-    case 11:
-    case 14:
-    case 18:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_SLOW:
+    case SPELL_BLIND:
+    case SPELL_CURSE:
+    case SPELL_TURN_UNDEAD:
+    case SPELL_BERZERKER:
+    case SPELL_PARALYZE:
         spellMode = 3;
         side = 1 - m_currentSide;
         break;
@@ -131,54 +131,54 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
             giSpellAITargetSide = m_hexCells[curHex].m_occupantSide;
         }
         switch (spell) {
-        case 3:
+        case SPELL_CURE:
             EffectSpellCure(&spellEffect, m_currentSide, 1);
             break;
-        case 13:
+        case SPELL_DISPEL_MAGIC:
             EffectSpellCure(&spellEffect, 2, 0);
             break;
-        case 4:
+        case SPELL_RESURRECT:
             EffectSpellResurrect(&spellEffect, curHex);
             break;
-        case 15:
+        case SPELL_ARMAGEDDON:
             EffectSpellDamage(&spellEffect, spell, 50, curHex);
             break;
-        case 16:
+        case SPELL_STORM:
             EffectSpellDamage(&spellEffect, spell, 25, curHex);
             break;
-        case 0:
+        case SPELL_FIREBALL:
             EffectSpellDamage(&spellEffect, spell, 10, curHex);
             break;
-        case 17:
+        case SPELL_METEOR_SHOWER:
             EffectSpellDamage(&spellEffect, spell, 25, curHex);
             break;
-        case 1:
+        case SPELL_LIGHTNING_BOLT:
             EffectSpellDamage(&spellEffect, spell, 25, curHex);
             break;
-        case 5:
-        case 8:
-        case 9:
-        case 12:
-            if (spell == 12 && m_heroes[1 - m_currentSide] == NULL)
+        case SPELL_HASTE:
+        case SPELL_BLESS:
+        case SPELL_PROTECTION:
+        case SPELL_ANTI_MAGIC:
+            if (spell == SPELL_ANTI_MAGIC && m_heroes[1 - m_currentSide] == NULL)
                 spellEffect = 0;
             else
                 spellEffect = RawEffectSpellInfluence(target, spell) >> giSpellAIEffectShift;
             if (target->m_spellEffect >= 0)
                 spellEffect -= RawEffectSpellInfluence(target, target->m_spellEffect);
             break;
-        case 6:
-        case 7:
-        case 10:
-        case 14:
-        case 18:
+        case SPELL_SLOW:
+        case SPELL_BLIND:
+        case SPELL_CURSE:
+        case SPELL_BERZERKER:
+        case SPELL_PARALYZE:
             spellEffect = -(RawEffectSpellInfluence(target, spell) >> giSpellAIEffectShift);
             if (target->m_spellEffect >= 0)
                 spellEffect += RawEffectSpellInfluence(target, target->m_spellEffect);
             break;
-        case 2:
+        case SPELL_TELEPORT:
             spellEffect = 0;
             break;
-        case 11:
+        case SPELL_TURN_UNDEAD:
             if (target->m_creatureType == 0x1a)
                 spellEffect = gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
             else
@@ -220,7 +220,7 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
     effect = 0;
     stackValue = gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
     switch (spell) {
-    case 6:
+    case SPELL_SLOW:
         if (target->m_stats.attributes & 4)
             effect = 0;
         else if (target->m_stats.attributes & 2)
@@ -228,19 +228,19 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
         else
             effect = (target->m_stats.speed - 1) * (float)stackValue * SPELL_AI_SLOW_MODIFIER;
         break;
-    case 7:
+    case SPELL_BLIND:
         effect = stackValue * SPELL_AI_BLIND_MODIFIER;
         break;
-    case 10:
+    case SPELL_CURSE:
         effect = stackValue * SPELL_AI_CURSE_MODIFIER;
         break;
-    case 14:
+    case SPELL_BERZERKER:
         effect = stackValue * SPELL_AI_PARALYZE_MODIFIER;
         break;
-    case 18:
+    case SPELL_PARALYZE:
         effect = stackValue * SPELL_AI_BERSERK_MODIFIER;
         break;
-    case 5:
+    case SPELL_HASTE:
         if (target->m_stats.attributes & 2)
             effect = 0;
         else if (target->m_stats.attributes & 4)
@@ -252,20 +252,20 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
         else
             effect = 0;
         break;
-    case 8:
+    case SPELL_BLESS:
         effect = stackValue * SPELL_AI_BLESS_MODIFIER;
         break;
-    case 9:
+    case SPELL_PROTECTION:
         effect = stackValue * SPELL_AI_STONESKIN_MODIFIER;
         break;
-    case 12:
+    case SPELL_ANTI_MAGIC:
         effect = stackValue * SPELL_AI_SHIELD_MODIFIER;
         break;
     default:
         effect = 0;
         break;
     }
-    if (target->m_creatureType == 0x17 || target->m_spellEffect == 12)
+    if (target->m_creatureType == 0x17 || target->m_spellEffect == SPELL_ANTI_MAGIC)
         effect = 0;
     else if (target->m_creatureType == 0xd && effect < 0)
         effect = effect * 0.75;
