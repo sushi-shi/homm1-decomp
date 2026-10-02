@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
 #include <BASE/font.h>
 #include <BASE/heroWindow.h>
 #include <BASE/message.h>
@@ -62,7 +63,7 @@ void textWidget::Read(void) {
         reinterpret_cast<char*>(name)
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
-    m_color = gpResourceManager->ReadWord() & 0xff;
+    m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord());
     m_id = gpResourceManager->ReadWord();
     gpResourceManager->ReadWord();

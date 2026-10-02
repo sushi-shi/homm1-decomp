@@ -5,6 +5,7 @@
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/border.h>
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
@@ -61,7 +62,7 @@ void border::Read(void) {
     }
     short color = gpResourceManager->ReadWord();
     m_background = 0;
-    m_fillColor = color & 0xff;
+    m_fillColor = color & COLOR_INDEX_MASK;
 }
 
 VA(0x00479920, 0x15d)

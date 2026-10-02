@@ -8,6 +8,7 @@
 
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
+#include <BASE/display.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
@@ -177,7 +178,7 @@ VA(0x00473860, 0x60)
 void PostprocessPalette(signed char* data) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_GRAPHICS_BYTES));
     memset(remapped, 0, PALETTE_GRAPHICS_BYTES);
-    for (int index = 0; index < 256; index++)
+    for (int index = 0; index < PALETTE_COLOR_COUNT; index++)
         remapped[gMonoColorMap[index]] =
             reinterpret_cast<PaletteColor*>(data)[index]; // byte-evidenced: 3-byte colour copies
     memcpy(data, remapped, PALETTE_GRAPHICS_BYTES);

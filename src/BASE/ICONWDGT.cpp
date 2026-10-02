@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/icon.h>
 #include <BASE/iconWidget.h>
@@ -60,7 +61,7 @@ void iconWidget::Read(void) {
     m_orientation = static_cast<signed char>(gpResourceManager->ReadWord());
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
-    m_fillColor = gpResourceManager->ReadWord() & 0xff;
+    m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
 VA(0x0047aba0, 0x1bc)
@@ -106,7 +107,7 @@ short iconWidget::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_SET_COLOR:
                     if (m_id == message.id) {
-                        m_fillColor = message.value & 0xff;
+                        m_fillColor = message.value & COLOR_INDEX_MASK;
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;

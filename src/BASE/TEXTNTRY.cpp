@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
 #include <BASE/font.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
@@ -54,7 +55,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, int) type) {
         reinterpret_cast<char*>(name)
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
-    m_color = gpResourceManager->ReadWord() & 0xff;
+    m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord());
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
