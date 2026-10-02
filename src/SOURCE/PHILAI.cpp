@@ -2962,7 +2962,7 @@ int iDefaultEventType;
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
-VA(0x0042278b, 0x2085)
+VA(0x0042278b, 0x2083)
 int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate, int* liveChance) {
     int numToBuy;
     int exitRV5;
