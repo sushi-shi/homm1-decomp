@@ -239,6 +239,7 @@ extern signed char gbWaitForRemoteReceive;
 extern signed char gbDirectConnect;
 extern int iMaxMapExtra;
 extern char* gTownNames[];
+extern char* gCampaignWinTexts[];
 extern char gcCongratsText[];
 extern char* gCampaignSideNames[];
 extern signed char giCampaignChoice;
@@ -2261,7 +2262,6 @@ void FileError(char* filename) {
 // ordering, explicit grouping, `|0`, and an inline helper — all identical here).
 
 // Campaign-text and score-label tables and the score-to-rank creature names.
-extern char* gCampaignWinTexts[];
 int GetBaseScore(int);
 void CongratsWait(void);
 

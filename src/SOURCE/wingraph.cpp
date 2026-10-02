@@ -1045,7 +1045,7 @@ void CleanUpWinGraphics() {
 // evidence: graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
 VA(0x0040566a, 0xb9)
 void SetFullScreenStatus(int fullScreen) {
-    if (gbInSmackMgr != 0)
+    if (gbInSmacker != 0)
         return;
     if (gConfig.gfx[giCurExe].fullScreen == fullScreen)
         return;
