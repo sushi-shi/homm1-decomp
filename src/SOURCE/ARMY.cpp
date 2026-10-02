@@ -4,9 +4,11 @@
 
 #include <match.h>
 
+#include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/NOOPT.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -411,7 +413,7 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     m_quantity = quantity;
     m_initialQuantity = m_quantity;
     m_hitPointsLost = 0;
-    m_unknown13 = 0;
+    m_damageMode = 0;
     m_unknown2b = -1;
     m_side = side;
     m_index = index;
@@ -677,32 +679,322 @@ short army::WalkTo(void) {
     return WalkTo(m_moveTargetHex);
 }
 
+// Walks the found path one hex at a time, at most the stack's speed.
+VA(0x0046a0f0, 0xfc)
+short army::WalkTo(short destHex) {
+    signed char step;
+    int moved;
+
+    m_targetSide = m_targetIndex = -1;
+    if (!FindPath(m_hex, destHex, m_stats.speed, 1, 0))
+        return 3;
+    moved = 0;
+    for (step = gpSearchArray->m_pathLength - 1; step >= 0; step--) {
+        Walk(gpSearchArray->m_directions[step], 0, gpSearchArray->m_pathLength - 1 != step);
+        moved++;
+        if (moved >= m_stats.speed)
+            step = -1;
+    }
+    if (!m_unknown52)
+        CancelSpell();
+    Stand(1);
+    return 0;
+}
+
 VA(0x0046a1ec, 0x27)
 short army::AttackTo(void) {
     return AttackTo(m_moveTargetHex);
+}
+
+// Flyers jump next to the target; walkers stop short when out of moves.
+VA(0x0046a213, 0x1c9)
+short army::AttackTo(short destHex) {
+    signed char step;
+    int moved;
+
+    if (m_stats.attributes & 2) {
+        if (m_hex != destHex)
+            FlyTo(destHex);
+        DoAttack(0);
+        return 0;
+    }
+    if ((m_stats.attributes & 8) && m_hex == m_moveTargetHex) {
+        DoAttack(0);
+        return 0;
+    }
+    if (FindPath(m_hex, destHex, m_stats.speed, 1, 0)) {
+        if (gpSearchArray->m_pathLength == 1) {
+            m_attackDirection = gpSearchArray->m_directions[0];
+            DoAttack(0);
+        } else {
+            step = 0;
+            moved = 0;
+            for (step = gpSearchArray->m_pathLength - 1; step; step--) {
+                Walk(gpSearchArray->m_directions[step], 0, gpSearchArray->m_pathLength - 1 != step);
+                moved++;
+                if (moved >= m_stats.speed && step != 1) {
+                    Stand(1);
+                    return 3;
+                }
+            }
+            if (!m_unknown52)
+                CancelSpell();
+            m_attackDirection = gpSearchArray->m_directions[0];
+            DoAttack(0);
+        }
+        return 0;
+    }
+    return 3;
 }
 
 // donor PoL RVA 0x0004f93e; preferred Buka symbol ?CheckLuck@army@@QAEXXZ
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.723107;margin=0.234495;shape=0.473;size=0.925;calls=0.875;strings=badluck.82m|goodluck.82m;alternate=pol20:void army::CheckLuck(void)@0x0004f93e
 VA(0x0046a3dc, 0x249)
-void army::CheckLuck(void) {}
+void army::CheckLuck(void) {
+    int luck;
+
+    if (!gpCombatManager->m_heroes[m_side])
+        return;
+    m_luck = 0;
+    luck = gpGame->GetLuck(gpCombatManager->m_heroes[m_side], this);
+    if (luck > 0 && SRandom(1, 12) <= luck)
+        m_luck = 1;
+    if (luck < 0 && SRandom(1, 12) < -luck)
+        m_luck = -1;
+    if (m_luck) {
+        SAMPLE2 sample = NULL_SAMPLE2;
+        if (m_luck < 0)
+            sprintf(gText, "badluck.82m");
+        else
+            sprintf(gText, "goodluck.82m");
+        sample = LoadPlaySample(gText);
+        if (m_luck < 0) {
+            sprintf(gText, "Bad luck descends on the %s",
+                    m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType]);
+            gpCombatManager->CombatMessage(gText, 1);
+            Wince();
+            SpellEffect(23, 180);
+        } else {
+            sprintf(gText, "Good luck shines on the %s",
+                    m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType]);
+            gpCombatManager->CombatMessage(gText, 1);
+            Stand(1);
+            SpellEffect(22, 180);
+        }
+        Stand(1);
+        WaitEndSample(sample, -1);
+    }
+}
 
 // donor PoL RVA 0x0004fbc0; preferred Buka symbol ?DamageEnemy@army@@QAEXPAV1@PAH1HH@Z
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.387284;margin=0.228483;shape=0.296;size=0.628;calls=0.714;alternate=pol20:void army::DamageEnemy(class army *, int *, int *, int, int)@0x0004fbc0
 VA(0x0046a625, 0x2ae)
-void army::DamageEnemy(class army *, int *, int *, int, int) {}
+void army::DamageEnemy(class army* target, int* damageResult, int* killedResult, int rangedAttack,
+                       int defenseModifier) {
+    float total;
+    short delta;
+    int damage;
+    short defenseBonus;
+    short index;
+    short attBonus;
+    int halfDamage;
+
+    if (!target)
+        return;
+    total = 0;
+    gbGenieHalf = 0;
+    for (index = 0; index < m_quantity; index++) {
+        switch (m_damageMode) {
+            case 3:
+                total += m_stats.damageMax;
+                break;
+            case 1:
+                total += m_stats.damageMin;
+                break;
+            default:
+                total += SRandom(m_stats.damageMin, m_stats.damageMax);
+                break;
+        }
+    }
+    attBonus = 0;
+    defenseBonus = 0;
+    delta = m_stats.attack + attBonus - (target->m_stats.defense + defenseBonus + defenseModifier);
+    if (delta > 20)
+        delta = 20;
+    if (delta < -20)
+        delta = -20;
+    total *= gfBattleStat[delta + 20];
+    if (m_luck > 0)
+        total *= 2;
+    if (m_luck < 0)
+        total /= 2;
+    m_luck = 0;
+    if ((m_stats.attributes & 4) && !rangedAttack)
+        total /= 2;
+    if (m_damageMode == 2)
+        total /= 2;
+    damage = (int)(total + 0.5);
+    if (m_creatureType == 27 && SRandom(1, 5) == 2) {
+        halfDamage = target->m_stats.hitPoints * ((target->m_quantity + 1) / 2);
+        if (damage < halfDamage) {
+            gbGenieHalf = 1;
+            damage = halfDamage;
+        }
+    }
+    if (damage > 32000)
+        damage = 32000;
+    if (damage <= 0)
+        damage = 1;
+    *damageResult = damage;
+    *killedResult = target->Damage(damage);
+}
 
 // donor PoL RVA 0x0005012e; preferred Buka symbol ?Damage@army@@QAEHJH@Z
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.419408;margin=1.157007;shape=0.216;size=0.693;calls=1.000;alternate=pol20:int army::Damage(long int, int)@0x0005012e
+// A stack whose spell (2) breaks on damage loses it.
 VA(0x0046a8d3, 0x176)
-int army::Damage(long int, int) { return 0; }
+int army::Damage(long int damage) {
+    signed char facing;
+    int minKilled;
+    int kills;
+
+    damage += m_hitPointsLost;
+    kills = damage / m_stats.hitPoints;
+    m_hitPointsLost = damage % m_stats.hitPoints;
+    minKilled = m_quantity / 5;
+    if (minKilled == 0)
+        minKilled = 1;
+    if (kills > 0)
+        m_unknown2b = 4;
+    else
+        m_unknown2b = -1;
+    if (m_quantity < kills)
+        kills = m_quantity;
+    m_quantity = m_quantity - kills;
+    if (m_quantity <= 0)
+        m_unknown2b = 5;
+    facing = m_facing;
+    m_facing = gpCombatManager->m_armies[gpCombatManager->m_currentSide][gpCombatManager->m_currentArmyIndex].m_facing ^ 1;
+    Wince();
+    m_facing = facing;
+    gpCombatManager->DrawFrame(1);
+    if (m_unknown52 == 2) {
+        m_stats.attributes |= 0x80;
+        if (m_spellEffect != 7)
+            m_stats.attributes |= 0x40;
+        CancelSpell();
+    }
+    return kills;
+}
 
 VA(0x0046b2f2, 0x34)
 unsigned long int army::Strength(void) {
     return gMonsterDatabase[m_creatureType].fightValue * m_quantity;
+}
+
+// Plays a combat effect animation over this stack.
+VA(0x0046b326, 0x131)
+void army::SpellEffect(short effect, int frameDelay) {
+    short frame;
+    short effectFileId;
+    short frameCount;
+
+    m_unknown2f = effect;
+    effectFileId = MAKEFILEID(gCombatFxNames[effect]);
+    if (gCurLoadedSpellFileId != effectFileId) {
+        gpResourceManager->Dispose(gCurLoadedSpellIcon);
+        gCurLoadedSpellIcon = gpResourceManager->GetIcon(effectFileId);
+        gCurLoadedSpellFileId = effectFileId;
+    }
+    m_unknown08 = 3;
+    frameCount = 10;
+    gpCombatManager->ResetLimitCreature();
+    gpCombatManager->m_limitCreatureCount[m_side][m_index] = 1;
+    for (frame = 0; frame < frameCount; frame++) {
+        gpCombatManager->m_unknown727 = 1;
+        glTimers[1] = KBTickCount() + frameDelay;
+        giSpellEffectFrame = frame;
+        gpCombatManager->DrawFrame(1);
+        DelayTil(glTimers + 1);
+    }
+    m_unknown2f = -1;
+}
+
+// Slow (and the other speed spells) restore the base speed and flight;
+// effect 9 gave three defense.
+VA(0x0046b457, 0xb2)
+void army::CancelSpell(void) {
+    switch (m_spellEffect) {
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 10:
+            m_damageMode = 0;
+            m_stats.speed = m_baseSpeed;
+            m_stats.attributes |= gMonsterDatabase[m_creatureType].stats.attributes & 2;
+            break;
+        case 9:
+            m_stats.defense -= 3;
+            break;
+    }
+    m_spellEffect = -1;
+    m_unknown52 = -1;
+}
+
+// A berserk stack attacks a random neighbour, or flies or steps at random.
+VA(0x0046b509, 0x1de)
+void army::GoBerserk(void) {
+    signed char found;
+    short tryCount;
+    short dir;
+    short attackMask;
+    short targetHex;
+    short target;
+
+    found = 0;
+    dir = 0;
+    tryCount = 0;
+    while (!found) {
+        attackMask = GetAttackMask(m_hex, 2, -1);
+        if (attackMask != 0xff) {
+            while (!found) {
+                dir = Random(0, 7);
+                if (!(attackMask & (1 << dir))) {
+                    giNextAction = 2;
+                    ValidAttack(m_hex, dir, 2, -1, &targetHex);
+                    giNextActionGridIndex = targetHex;
+                    found = 1;
+                }
+            }
+        } else if (m_stats.attributes & 2) {
+            target = Random(1, 43);
+            if (gpCombatManager->m_hexCells[target].m_occupantSide != -1) {
+                m_targetSide = gpCombatManager->m_hexCells[target].m_occupantSide;
+                m_targetIndex = gpCombatManager->m_hexCells[target].m_occupantIndex;
+                if (ValidFlight(target, 0)) {
+                    giNextAction = 2;
+                    giNextActionGridIndex = target;
+                    found++;
+                }
+            } else {
+                giNextAction = 2;
+                giNextActionGridIndex = target;
+            }
+        } else {
+            dir = Random(0, 5);
+            if (ValidMove(dir)) {
+                giNextAction = 2;
+                giNextActionGridIndex = m_hex;
+                giNextActionGridIndex = GetAdjacentCellIndex(giNextActionGridIndex, dir);
+            }
+            found++;
+        }
+        tryCount++;
+    }
 }
 
 // donor PoL RVA 0x00052ad9; preferred Buka symbol ?MoveAttack@army@@QAEXHH@Z

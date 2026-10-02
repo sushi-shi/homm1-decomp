@@ -28,10 +28,12 @@ public:
     short m_initialQuantity;
     short m_quantity;
     short m_hitPointsLost;
-    signed char m_unknown13;
+    // DamageEnemy: 3 rolls maximum damage, 1 minimum, 2 halves it.
+    signed char m_damageMode;
     // Init copies the creature speed here; m_stats.speed is the current one.
     signed char m_baseSpeed;
-    signed char m_unknown15;
+    // CheckLuck: 1 good luck, -1 bad luck this attack.
+    signed char m_luck;
     // Creature record bytes +0xc..+0x1e (hit points through attributes);
     // Init adds the hero's two primary skills to attack and defense.
     // Attribute bit 0 is a two-hex creature, bit 1 a flyer.
@@ -72,7 +74,8 @@ public:
     // redrawing the combat screen (ret 4).
     void Stand(signed char);
     void Wince(void);
-    void Walk(int, int, int);
+    // HoMM1 retail 0x00467345: word direction, byte flag (ret 0xc).
+    void Walk(short, int, signed char);
     void SpecialAttack(void);
     // HoMM1 retail 0x00468fc6: word direction (ret 4).
     void DirDoAttack(short);
@@ -80,17 +83,20 @@ public:
     void DoAttack(int);
     void ResetPath(void);
     short WalkTo(void);
+    // HoMM1 retail 0x0046a0f0 / 0x0046a213: word hex, word result.
     short WalkTo(short);
     short AttackTo(void);
     short AttackTo(short);
     void CheckLuck(void);
     void DamageEnemy(class army *, int *, int *, int, int);
-    int Damage(long int, int);
+    // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
+    int Damage(long int);
     void PowEffect(int, int, int, int);
     unsigned long int Strength(void);
     int LeaveNoBody(void);
     void ProcessDeath(int);
-    void SpellEffect(int, int, int);
+    // HoMM1 retail 0x0046b326: word effect, frame delay (ret 8).
+    void SpellEffect(short, int);
     void CancelSpellType(int);
     void CancelIndividualSpell(int);
     int SetSpellInfluence(int, int);
@@ -113,7 +119,8 @@ public:
     int CanFit(int, int, int *);
     short ValidFlight(short, signed char);
     int FlyTo(void);
-    int FlyTo(int);
+    // HoMM1 retail 0x0044acd6: word hex, word result.
+    short FlyTo(short);
     // HoMM1 retail 0x004180f0: word hexes, byte speed/flags (ret 0x14).
     short FindPath(short, short, signed char, signed char, signed char);
     // HoMM1 retail 0x00418242: word hex, byte path mode, word result (ret 8).
@@ -136,4 +143,10 @@ short GetAdjacentCellIndexNoArmy(short, short);
 extern class icon* gCurLoadedSpellIcon;
 extern short gCurLoadedSpellFileId;
 extern short giSpellEffectFrame;
+// Spell-effect icon files by effect (0x004910d8).
+extern char* gCombatFxNames[];
+// Damage multipliers for attack minus defense, -20..20 (0x00492470).
+extern float gfBattleStat[];
+// DamageEnemy flags a genie halving the target stack.
+extern signed char gbGenieHalf;
 #endif // HOMM1_SOURCE_ARMY_H

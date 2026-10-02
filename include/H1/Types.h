@@ -75,7 +75,8 @@ struct SAMPLE2 {
 // +0, retail readers use a dword at +8 and test attribute bits at +0x1b.
 // army::Init copies these 0x13 bytes from record +0xc into each combat stack.
 struct tag_monsterStats {
-    signed char hitPoints;
+    // army::Damage divides by this as an unsigned byte.
+    unsigned char hitPoints;
     signed char speed;
     signed char missileType;
     signed char attack;

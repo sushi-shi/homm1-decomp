@@ -124,7 +124,13 @@ public:
     // ProcessCombatMsg ignores message types outside this mask.
     short m_messageTypeMask;
     signed char m_sideRetreated[2];
-    char m_unknown6ff[0x34];
+    // Per stack draw state: ResetLimitCreature clears it (-1 for the dead)
+    // and army::SpellEffect marks the stack it animates.
+    int m_limitCreatureCount[2][5];
+    // Set before a full combat redraw.
+    int m_unknown727;
+    int m_unknown72b;
+    char m_unknown72f[4];
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
     char m_unknown7ab[8];
