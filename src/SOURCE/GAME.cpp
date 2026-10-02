@@ -2263,7 +2263,7 @@ void game::ViewArmy(
     sprintf(gText, "%s%d", gArmyStatText[0], monsterInfo->stats.attack);
     strcat(statText, gText);
     if (theHero)
-        mod += theHero->m_primaryStats[0];
+        mod += theHero->m_primaryStats[HERO_PRIMARY_ATTACK];
     if (mod) {
         sprintf(gText, " (%d)", monsterInfo->stats.attack + mod);
         strcat(statText, gText);
@@ -2273,8 +2273,8 @@ void game::ViewArmy(
     sprintf(gText, "\n%s%d", gArmyStatText[1], monsterInfo->stats.defense);
     strcat(statText, gText);
     if (theHero)
-        mod += theHero->m_primaryStats[1];
-    if (theArmy && theArmy->m_spellEffect == 9)
+        mod += theHero->m_primaryStats[HERO_PRIMARY_DEFENSE];
+    if (theArmy && theArmy->m_spellEffect == SPELL_PROTECTION)
         mod += 3;
     if (mod) {
         sprintf(gText, " (%d)", monsterInfo->stats.defense + mod);
@@ -2316,19 +2316,19 @@ void game::ViewArmy(
     m_viewArmyWindow->BroadcastMessage(message);
     if (disableDismiss) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         message.id = 0x7803;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (quickView) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         message.id = 0x7800;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (numTroops < 1) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = 6;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         message.id = 1;
         m_viewArmyWindow->BroadcastMessage(message);
         message.id = 2;

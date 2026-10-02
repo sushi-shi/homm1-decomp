@@ -5051,7 +5051,7 @@ void advManager::TownGate(void) {
     if (heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) {
         NormalDialog(
             "Town Gate Failed!!!  You must be on land for this spell to work.",
-            1, -1, -1, -1, 0, -1, 0, -1
+            NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1
         );
         return;
     }
@@ -5064,9 +5064,9 @@ void advManager::TownGate(void) {
         }
     }
     if (bestTown == -1)
-        NormalDialog("No available town.  Town Gate Failed!!!", 1, -1, -1, -1, 0, -1, 0, -1);
+        NormalDialog("No available town.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId != -1) {
-        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", 1, 0x61, -1, -1, 0, -1, 0, -1);
+        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
         return;
     }
     gpSoundManager->SwitchAmbientMusic(16);
@@ -5078,7 +5078,7 @@ void advManager::TownGate(void) {
     heroPointer->UseSpell(SPELL_TOWN_GATE);
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId = heroPointer->m_id;
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
-    heroPointer->m_locationType = 0xa8;
+    heroPointer->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
     heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
     gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
 }
