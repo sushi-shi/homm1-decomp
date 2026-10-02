@@ -68,8 +68,10 @@ public:
     signed char m_unknown260;
     char m_unknown261[4];
     // hexcell draws ground (3 + index), obstacles (5), towers (8) and walls (9).
-    class icon* m_combatIcons[13];
-    signed char m_unknown299;
+    class icon* m_combatIcons[12];
+    // FlyTo saves the screen here and restores the flight path from it.
+    class bitmap* m_backgroundBuffer;
+    signed char m_backgroundDrawn;
     char m_unknown29a[4];
     // DoVictory: an attacker winning here earns the castle bonus.
     class town *m_combatTown;

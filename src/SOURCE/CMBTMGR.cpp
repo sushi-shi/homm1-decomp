@@ -4,12 +4,6 @@
 
 #include <H1/All.h>
 
-// donor PoL RVA 0x000a5b95; preferred Buka symbol ?ValidFlight@army@@QAEHHH@Z
-// donor Buka TU SOURCE/FLY; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.458791;margin=0.507880;shape=0.224;size=0.814;calls=1.000;alternate=pol20:int army::ValidFlight(int, int)@0x000a5b95
-VA(0x0044a847, 0x468)
-short army::ValidFlight(short, signed char) { return 0; }
-
 // donor PoL RVA 0x0008ff0a; preferred Buka symbol ?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.491936;margin=0.502339;shape=0.296;size=0.801;calls=1.000;alternate=pol20:void combatManager::CombineGroups(class armyGroup *, class armyGroup *)@0x0008ff0a
