@@ -1485,9 +1485,9 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     int bestHero;
     float worth;
     int curHero;
-    float bestScore;
     hero* availHero;
     float adjusted;
+    float bestScore;
     float bestCost;
     int cost;
 
@@ -2191,9 +2191,9 @@ int philAI::QuickCombat(
     float& attackerDamage,
     float& defenderDamage
 ) {
+    float rnd;
     float fracLost;
     float winChance;
-    float rnd;
     armyGroup* winner;
     int aDead;
     int unused;
@@ -2228,7 +2228,8 @@ int philAI::QuickCombat(
         dLeft,
         res
     );
-    if ((rnd = Random(0, 100) / 100.0) < winChance) {
+    rnd = Random(0, 100) / 100.0;
+    if (rnd < winChance) {
         win = 1;
         wChance = winChance;
         winner = attacker;
@@ -2236,7 +2237,7 @@ int philAI::QuickCombat(
         wChance = 1.0f - winChance;
         winner = defender;
     }
-    diff = static_cast<float>(winChance < rnd ? rnd - winChance : winChance - rnd);
+    diff = (float)(rnd > winChance ? rnd - winChance : winChance - rnd);
     if (win != 0 && winChance > 0.6)
         diff *= winChance + 0.65;
     fracLost = (1.0 - diff) * (1.0 - diff);
