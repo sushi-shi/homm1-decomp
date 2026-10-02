@@ -2337,7 +2337,7 @@ int philAI::FightValueOfStack(
         bestValue = -1;
         for (slot = 0; slot < HERO_SPELL_SLOT_COUNT; slot++) {
             if (heroPointer->m_spells[slot] >= 0
-                && (gcSpellAIFlags[heroPointer->m_spells[slot]] & 2)) {
+                && (gcSpellAIFlags[heroPointer->m_spells[slot]] & SPELL_AI_FLAG_COMBAT)) {
                 spellScore = static_cast<int>(
                     giSpellAIValue[heroPointer->m_spells[slot]]
                     * ((gcSpellAIFlags[heroPointer->m_spells[slot]] & 1)
@@ -3228,7 +3228,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
                     -1,
                     1
                 );
-                if (outcome == 1) {
+                if (outcome == COMBAT_RESULT_ATTACKER) {
                     gpGame->ClaimTown(townPointer->m_id, giCurPlayer);
                     giHumanTownConquered = townPointer->m_id;
                 }
