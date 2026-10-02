@@ -293,7 +293,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                          cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT);
             erase = 1;
             fizzleMode = EVENT_FIZZLE_PICKUP;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = -1;
+            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
             SetEnvironmentOrigin(m_mapOriginX + ENVIRONMENT_BORDER, m_mapOriginY + ENVIRONMENT_BORDER, 1);
             break;
         case MAP_OBJECT_GAZEBO:
@@ -395,7 +395,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             if (!win)
                 MemError();
             SetWinText(win, WINDOW_TEXT_THIEVES_GUILD);
-            gpTownManager->SetupThievesGuild(win, 8);
+            gpTownManager->SetupThievesGuild(win, THIEVES_CATEGORY_COUNT);
             strcpy(gText, "Shrine - Player Rankings");
             event.type = MESSAGE_WIDGET;
             event.command = WIDGET_COMMAND_SET_TEXT;
@@ -419,9 +419,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case MAP_OBJECT_TOWN:
-            if (giEventMusicVolume != -1)
+            if (giEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
                 gConfig.musicVolume = giEventMusicVolume;
-            giEventMusicVolume = -1;
+            giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
             TownEvent(cell, x, y);
             break;
         case MAP_OBJECT_WHIRLPOOL:
@@ -652,8 +652,8 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
         }
         gpGame->SettleOverlay(x, y);
     }
-    if (gpGame->m_mapSounds[x][y] != -1) {
-        gpGame->m_mapSounds[x][y] = -1;
+    if (gpGame->m_mapSounds[x][y] != MAP_SOUND_NONE) {
+        gpGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
         if (bShowIt)
             SetEnvironmentOrigin(m_mapOriginX + ENVIRONMENT_BORDER, m_mapOriginY + ENVIRONMENT_BORDER, 1);
     }
@@ -1402,7 +1402,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             GiveResource(eventHero, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK,
                          cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT);
             erase = 1;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = -1;
+            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER][m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
@@ -1750,6 +1750,17 @@ H1_ENUM_CONST_BEGIN(CombatRemoteConstant)
     COMBAT_REMOTE_BUFFER_SIZE = 0xff,
     COMBAT_REMOTE_TIMEOUT = 20000
 H1_ENUM_CONST_END(CombatRemoteConstant)
+
+// DoCombat's network wait marker and memory thresholds (Buka EVENTS.cpp
+// CombatFlowConstant names, HoMM1 values).
+H1_ENUM_CONST_BEGIN(CombatFlowConstant)
+    COMBAT_NETWORK_POLL_X = 30,
+    COMBAT_NETWORK_POLL_Y = 30,
+    COMBAT_NETWORK_POLL_WIDTH = 4,
+    COMBAT_NETWORK_POLL_HEIGHT = 4,
+    COMBAT_LOW_MEMORY_LIMIT = 600,
+    COMBAT_HIGH_MEMORY_LIMIT = 1450
+H1_ENUM_CONST_END(CombatFlowConstant)
 // clang-format on
 
 // SendHeroTownData's payload after the remote-message header, as in Buka's
@@ -1845,7 +1856,8 @@ int advManager::DoCombat(int x, int y, class hero* firstHero, class armyGroup* f
             if (!gbHumanPlayer[attackPlayer]) {
                 while (1) {
                     PollSound();
-                    FillBitmapArea(gpWindowManager->m_screen, 30, 30, 4, 4, 0);
+                    FillBitmapArea(gpWindowManager->m_screen, COMBAT_NETWORK_POLL_X, COMBAT_NETWORK_POLL_Y,
+                                   COMBAT_NETWORK_POLL_WIDTH, COMBAT_NETWORK_POLL_HEIGHT, 0);
                     receivedPacket = CheckHandleNet();
                     if (receivedPacket) {
                         switch (((combatRemoteMessage*)receivedPacket)->command) {
@@ -1897,17 +1909,17 @@ int advManager::DoCombat(int x, int y, class hero* firstHero, class armyGroup* f
     }
 
     bShowIt = 1;
-    if (giEventMusicVolume != -1)
+    if (giEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
         gConfig.musicVolume = giEventMusicVolume;
-    giEventMusicVolume = -1;
+    giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
     gpCombatManager->SetupCombat(x, y, firstHero, firstArmy, combatTown, secondHero, secondArmy,
                                  x, y, randomSeed);
-    if (giHighMemBuffer > 1450)
-        gAdvDisposeLevel = 2;
-    else if (giHighMemBuffer > 600)
-        gAdvDisposeLevel = 1;
+    if (giHighMemBuffer > COMBAT_HIGH_MEMORY_LIMIT)
+        gAdvDisposeLevel = ADV_DISPOSE_FULL;
+    else if (giHighMemBuffer > COMBAT_LOW_MEMORY_LIMIT)
+        gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
     gpExec->CallManager(gpCombatManager);
-    gAdvDisposeLevel = 0;
+    gAdvDisposeLevel = ADV_DISPOSE_NONE;
 
 combatFinished:
     if (firstHero)
@@ -2101,7 +2113,7 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
 // EVENTS owns retail .data 0x004a0504-0x004a07bb and .bss 0x004ca904. Retail
 // emits gEventsAssertLine (source-line base 1110) among GiveExperience's literals.
 DATA(0x004a0504)
-int giEventMusicVolume = -1;
+int giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
 DATA(0x004a06a0)
 short gEventsAssertLine = 1110;
 DATA(0x004ca904)

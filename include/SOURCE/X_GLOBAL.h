@@ -13,6 +13,15 @@ class armyGroup;
 
 extern int gbEnlargeScreenBlit;
 extern int gAdvDisposeLevel;
+// clang-format off
+// gAdvDisposeLevel while combat runs: how much adventure-screen art the
+// resource manager may release (Buka X_GLOBAL.h).
+H1_ENUM_BEGIN(AdvDisposeLevel)
+    ADV_DISPOSE_NONE = 0,
+    ADV_DISPOSE_PARTIAL = 1,
+    ADV_DISPOSE_FULL = 2
+H1_ENUM_END(AdvDisposeLevel)
+// clang-format on
 
 // Adventure control panel: option labels, then the control-panel and
 // adventure-panel help lines.

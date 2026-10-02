@@ -74,6 +74,14 @@ H1_ENUM_END(SpellBookControl)
 
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
 // owner at +1 and the type at +2, as in HoMM2's mineRecord.
+// clang-format off
+// game::m_mapSounds entry of a cell without an environment sound; new and
+// loaded games clear the table to it and EraseObj resets erased cells.
+H1_ENUM_CONST_BEGIN(MapSoundConstant)
+    MAP_SOUND_NONE = -1
+H1_ENUM_CONST_END(MapSoundConstant)
+// clang-format on
+
 #pragma pack(push, 1)
 struct mineRecord {
     signed char id;
@@ -182,7 +190,8 @@ public:
     signed char m_boatSlots[GAME_BOAT_COUNT];
     // Obelisk events test and set the visiting player bit, one byte per obelisk.
     signed char m_obeliskVisitors[0x30];
-    // InsertSound reads the environment sound id per [x][y] cell.
+    // InsertSound reads the environment sound id per [x][y] cell (MAP_SOUND_NONE
+    // when silent).
     signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.
     unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
