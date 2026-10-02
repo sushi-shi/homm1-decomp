@@ -1526,11 +1526,11 @@ void townManager::SetupMage(class heroWindow *window)
         } else {
             message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
             message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_ICON_CONTROL;
-            message.payload.widget.data.value = m_town->m_spells[spellIndex];
+            message.payload.widget.data.value = m_town->m_mageGuildSpells[spellIndex];
             window->BroadcastMessage(message);
             message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
             message.payload.widget.id = spellIndex + TOWN_MAGE_FIRST_NAME_CONTROL;
-            message.payload.widget.data.text = gSpellNames[m_town->m_spells[spellIndex]];
+            message.payload.widget.data.text = gSpellNames[m_town->m_mageGuildSpells[spellIndex]];
             window->BroadcastMessage(message);
         }
     }
@@ -1593,7 +1593,7 @@ short MageGuildHandler(struct tag_message &message)
                         if ((mageLevel == 0 && spellPos > 2) || (mageLevel == 1 && spellPos > 4)
                             || (mageLevel == 2 && spellPos > 6))
                             return MESSAGE_DISPATCH_CONSUME;
-                        spellId = gpTownManager->m_town->m_spells[spellPos];
+                        spellId = gpTownManager->m_town->m_mageGuildSpells[spellPos];
                         NormalDialog(gSpellDesc[spellId], quickView ? 4 : 1, -1, -1, 8, spellId, -1, 0, -1);
                         return MESSAGE_DISPATCH_CONSUME;
                 }
@@ -1829,10 +1829,10 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
     m_heroWindow1->BroadcastMessage(message);
     message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
     message.payload.widget.id = 6;
-    message.payload.widget.data.text = cHeroTypeName[m_recruitHeroes[0]->m_unknown1c];
+    message.payload.widget.data.text = gClassNames[m_recruitHeroes[0]->m_unknown1c];
     m_heroWindow1->BroadcastMessage(message);
     message.payload.widget.id = 7;
-    message.payload.widget.data.text = cHeroTypeName[m_recruitHeroes[1]->m_unknown1c];
+    message.payload.widget.data.text = gClassNames[m_recruitHeroes[1]->m_unknown1c];
     m_heroWindow1->BroadcastMessage(message);
     m_recruitState = -1;
     if (cannotRecruit) {

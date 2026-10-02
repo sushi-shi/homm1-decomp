@@ -6,6 +6,17 @@
 
 #include <BASE/Misc.h>
 #include <H1/KB.h>
+#include <SOURCE/highScoreRuntime.h>
+
+// No direct caller survives in retail; the HoMM2 timer slot names glTimers.
+VA(0x00464430, 0x40)
+void DelayTicks(int ticks)
+{
+    int unused = 0;
+
+    glTimers[1] = KBTickCount() + ticks * 15;
+    DelayTil(glTimers + 1);
+}
 
 VA(0x00464470, 0x54)
 void DelayTil(int *endTime)

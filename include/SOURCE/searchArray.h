@@ -57,7 +57,6 @@ public:
     unsigned char m_directions[SEARCH_PATH_CAPACITY];
     // --- constructors ---
     searchArray(void);
-    ~searchArray();
     // --- methods ---
     int BuildPath(short, short, short, short, int);
     void SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int);

@@ -15,6 +15,7 @@ void FadeOut(int);
 void SetPalette(signed char*, int);
 void ProcessAssert(int, char*, int);
 void LogTruncate();
+void PrintMemoryLeaks(void);
 void LogStr(char*);
 void LogInt(char*, int);
 void LogStr(char*, long, long);

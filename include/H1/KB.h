@@ -25,11 +25,12 @@ extern char gbNoSound;
 extern signed char gbShowHighScore;
 extern signed char gbStandardHighScore;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
-// InitVars fills it; SetTownContext maps a cell tile index to its terrain.
+// Cell tile index -> terrain type; IsMobile reads it zero-extended.
 extern signed char giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
 extern char *gArmyNames[];
+extern char* gArmyNamesPlural[];
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern int gbMinimized;
 extern signed char gbInMemError;
@@ -53,6 +54,7 @@ extern heroWindow* pNormalDialogWindow;
 extern advManager* gpAdvManager;
 extern signed char gbThisNetHumanPlayer[];
 extern townManager* gpTownManager;
+extern class combatManager* gpCombatManager;
 extern executive* gpExec;
 extern class game* gpGame;
 // Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
@@ -91,6 +93,8 @@ extern unsigned short gDwellingRequirements[];
 extern int gMageBuildingCosts[][7];
 extern int gNeutralBuildingCosts[][7];
 extern int gDwellingCosts[][7];
+// CanBuild's six dwelling prerequisite masks per faction.
+extern unsigned short gDwellingRequirements[];
 extern int gMageBaseResourceValues[];
 extern int gNeutralBaseResourceValues[];
 extern int gDwellingBaseResourceValues[];
@@ -163,8 +167,25 @@ void EarlyResizeWindow(int, int, int, int);
 void GetDataEntry(char*, char*, int, char*);
 short DataEntryWindowHandler(struct tag_message&);
 short EventWindowHandler(struct tag_message&);
+short TrueFalseDialogHandler(struct tag_message&);
+char* GetTownName(signed char);
 void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char);
 void ShutDown(char*);
+void HandleRemoteDeadPlayerExit(int);
+void CheckEndGame(int);
+void HandleRemoteSuddenExit(void);
+extern signed char gbRetreatWin;
+extern signed char gbGameInitialized;
+extern SAMPLE2 NULL_SAMPLE2;
+extern short gGameCommand;
+extern signed char gbCombatSurrender;
+// The new-map builder raises this while it claims towns and mines.
+extern int gbInNewGameSetup;
+extern int gbGameOver;
+extern int giEndSequence;
+extern int bInShutDown;
+void DeleteMainClasses(void);
+extern class highScoreManager* gpHighScoreManager;
 void FileError(char*);
 void MemError();
 void SetMenus(void*, int);

@@ -240,7 +240,8 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/EVENTS"
 source = "src/SOURCE/EVENTS.cpp"
-flags = "cpp_carcass"
+# HeroSwap's fs:[0] frame around new swapManager proves /GX.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/GAME"
@@ -250,7 +251,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/HERO"
 source = "src/SOURCE/HERO.cpp"
-flags = "cpp_carcass"
+# ViewStat's fs:[0] frame around new heroWindow proves /GX.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/HISCORE"
@@ -319,12 +321,14 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/STRIP"
 source = "src/SOURCE/STRIP.cpp"
-flags = "cpp_carcass"
+# strip and bankBox constructors register fs:[0] frames around new.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/SWAPMGR"
 source = "src/SOURCE/SWAPMGR.cpp"
-flags = "cpp_carcass"
+# Open's fs:[0] frame around new heroWindow proves /GX.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/TOWN"
@@ -383,3 +387,13 @@ source = "src/SOURCE/CURSOR.cpp"
 # 0x00405950..0x00407d8f sits between int3-aligned wingraph and TOWNMGR objects;
 # no fs:[0] frame appears in the band.
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/comwin"
+source = "src/SOURCE/comwin.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/PrintMemoryLeaks"
+source = "src/BASE/PrintMemoryLeaks.cpp"
+flags = "cpp_o2"

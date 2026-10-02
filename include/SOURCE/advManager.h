@@ -154,12 +154,10 @@ public:
     void CompleteDraw(short, short, int);
     void CompleteDraw(int);
     int GetCloudLookup(int, int);
-    void DrawCell(int, int, int, int, int, int, int);
+    void DrawCell(short, short, short, short, signed char, signed char, signed char);
     class mapCell* GetCell(short, short);
-    // HoMM1 retail 0x0046047e: first free artifact slot, word result (ret 8).
-    short GiveArtifact(class hero*, signed char);
-    void UpdateRadar(int, int);
-    void QuickInfo(int, int);
+    void UpdateRadar(signed char, int);
+    void QuickInfo(short, short);
     void UpdateHeroLocator(int, signed char, signed char);
     void UpdateHeroLocators(signed char, signed char);
     void UpdateTownLocators(signed char, signed char);
@@ -170,10 +168,11 @@ public:
     signed char UpdBottomViewResMsg(void);
     signed char UpdBottomViewKingdom(void);
     signed char UpdBottomViewHero(void);
-    void HeroQuickView(int, int, int, int);
+    void HeroQuickView(signed char, signed char, short, short);
     char* GetArmySizeName(short, H1_ENUM_PARAM(ArmySizeNameVariant, signed char));
-    void TownQuickView(int, int, int, int);
+    void TownQuickView(signed char, signed char, short, short);
     void RedrawAdvScreen(int);
+    void GiveTakeArtifactStat(class hero*, signed char, signed char);
     void DeactivateCurrTown(void);
     void DeactivateCurrHero(void);
     void MobilizeCurrHero(int);
@@ -185,7 +184,7 @@ public:
     void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    signed char ComboDraw(short, short, int);
+    signed char ComboDraw(short, short, signed char);
     signed char ComboDraw(int);
     void SetEnvironmentOrigin(short, short, short);
     void CheckLoadSample(int);
@@ -231,33 +230,21 @@ public:
     void ExpansionRecruitEvent(class hero*, int, short int*);
     void JailEvent(class mapCell*, class hero*, int, int);
     void TownEvent(class mapCell*, int, int);
-    void EventSound(int, int, struct SAMPLE2*);
-    void EventWindow(int, int, char*, int, int, int, int, int);
+    void EventSound(short, short);
+    void EventWindow(short, int, char*, int, int, int, int, int);
     int GiveRandomArtifact(class hero*);
-    int GiveExperience(class hero*, int, int);
-    void GiveResource(class hero*, int, int);
+    int GiveExperience(class hero*, int, signed char);
+    // HoMM1 retail: byte resource, word amount (ret 0xc).
+    void GiveResource(class hero*, signed char, short);
+    short GiveArtifact(class hero*, signed char);
     void RecruitEvent(class hero*, int, class mapCell*);
     int SkeletonEvent(class hero*, class mapCell*, char*, int, int);
     int ZombieEvent(class hero*, class mapCell*, char*, int, int);
-    int GhostEvent(class hero*, class mapCell*, char*, int, int);
+    signed char GhostEvent(class hero*, class mapCell*, int, int, int);
     void HouseEvent(class hero*, class mapCell*);
-    int CombatMonsterEvent(
-        class hero*,
-        int,
-        int,
-        class mapCell*,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int
-    );
+    // HoMM1 retail: nine arguments (ret 0x24), result in AL.
+    signed char CombatMonsterEvent(class hero*, signed char, short, class mapCell*, int, int,
+                                   signed char, int, int);
     void TransferArtifacts(class hero*, class hero*);
     void HeroLoses(class hero*);
     void DoWhirlpool(class hero*);
@@ -359,6 +346,12 @@ extern class searchArray *gpSearchArray;
 extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
+// UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
+extern long iLastSandAnimTime;
+extern long iLastNewSandAnimTime;
+extern int iSandAnim;
+extern int iLastHourGlassPhase;
+extern long giLastHourGlassUpdateTime;
 extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;

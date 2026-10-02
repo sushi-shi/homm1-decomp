@@ -94,6 +94,7 @@ extern unsigned char bProcessMessage[];
 extern char szAppName[];
 extern char szTitle[];
 extern void *hmnuDflt;
+extern void *hmnuAdv;
 extern long lTemp;
 extern struct tagRECT rcTemp;
 extern int iTempX;
@@ -152,6 +153,7 @@ int KeyboardMessageHandler(void *, unsigned int, unsigned int, long);
 int MouseMessageHandler(void *, unsigned int, unsigned int, long);
 long __stdcall AppWndProc(void *, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
+void SetWinText(class heroWindow*, short);
 void ResizeWindow(int, int, int, int);
 void SetMenuStatus(int);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).

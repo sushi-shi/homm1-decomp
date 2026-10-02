@@ -40,7 +40,33 @@ signed char town::HasGarrison(void) {
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430933;margin=0.601053;shape=0.167;size=0.987;calls=0.667;alternate=pol20:void town::GiveSpells(class hero *)@0x00032cb9
 VA(0x00463fd0, 0xe1)
-void town::GiveSpells(void) {}
+void town::GiveSpells(void) {
+    hero* visitingHero;
+    short i;
+
+    if (m_occupyingHeroId == -1)
+        return;
+    visitingHero = gpGame->GetHero(m_occupyingHeroId);
+    if (!visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
+        return;
+    if (!(m_buildings & 1))
+        return;
+    if (visitingHero->m_owner == m_owner) {
+        for (i = 0; i < gMageGuildSpellCount[m_buildState]; i++)
+            visitingHero->AddSpell(m_mageGuildSpells[i], visitingHero->m_primaryStats[3], 0);
+    }
+}
+
+VA(0x004640b1, 0x17c)
+void town::XformToCastle(void) {
+    short i;
+
+    for (i = 0; i < 4; i++) {
+        gpGame->m_map[m_x - 2 + i][m_y - 2].m_overlayIndex += 12;
+        gpGame->m_map[m_x - 2 + i][m_y - 1].m_objectIndex += 12;
+        gpGame->m_map[m_x - 2 + i][m_y].m_objectIndex += 12;
+    }
+}
 
 // donor PoL RVA 0x00032e74; preferred Buka symbol ?View@town@@QAEXH@Z
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
@@ -61,4 +87,30 @@ void town::View(void) {
     if (m_occupyingHeroId != -1)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);
     gAdvDisposeLevel = 0;
+}
+
+VA(0x004642d2, 0x152)
+void town::Deallocate(void) {
+    playerData* ownerData;
+    short i;
+    signed char found;
+
+    ownerData = &gpGame->m_players[m_owner];
+    found = -1;
+    for (i = 0; i < ownerData->m_townCount; i++) {
+        if (ownerData->m_townIds[i] == m_id)
+            found = i;
+    }
+    for (i = found; i < ownerData->m_townCount - 1; i++)
+        ownerData->m_townIds[i] = ownerData->m_townIds[i + 1];
+    ownerData->m_townIds[ownerData->m_townCount - 1] = -1;
+    if (ownerData->m_currentTown == m_id)
+        ownerData->m_currentTown = -1;
+    ownerData->m_townCount--;
+    if (ownerData->m_townCount < 5)
+        ownerData->m_townLocatorPage = 0;
+    else if (ownerData->m_townLocatorPage + 5 > ownerData->m_townCount)
+        ownerData->m_townLocatorPage = ownerData->m_townCount - 5;
+    gpGame->m_townOwners[m_id] = -1;
+    m_owner = -1;
 }

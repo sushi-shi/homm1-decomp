@@ -37,8 +37,8 @@ public:
     int m_goldTotal;
     short m_resourceTotal;
     short m_quantity;
-    // townManager::Main allocates 0x5c bytes; no reader of this word yet.
-    short m_unknown5a;
+    // RecruitEvent allocates 0x5c bytes.
+    char m_unknown5a[2];
     // --- constructors ---
     recruitUnit(class armyGroup*, int, short int*);
     // HoMM1 has no refresh-town argument (retail ret 8).

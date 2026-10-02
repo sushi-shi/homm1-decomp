@@ -8,17 +8,33 @@
 
 // forward declarations:
 class hero;
+class heroWindow;
+class icon;
 struct tag_message;
 
-class swapManager {
+// The constructors store the vtable over baseManager and fill this packed
+// tail; Reset chains the five selection bytes.
+#pragma pack(push, 1)
+class swapManager : public baseManager {
 public:
+    heroWindow* m_window;
+    icon* m_selectorIcon;
+    // Main indexes the pair by side byte: [1] is the constructor's first
+    // (left) hero, [0] the second.
+    hero* m_heroes[2];
+    signed char m_selectedSide;
+    signed char m_targetSide;
+    signed char m_selectedSlot;
+    signed char m_targetSlot;
+    signed char m_itemType;
+    short m_messageFilter;
     // --- constructors ---
     swapManager(void);
-    swapManager(class hero *, class hero *);
+    swapManager(class hero*, class hero*);
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void Reset(void);
     int DrawSwapWin(void);
@@ -29,4 +45,5 @@ public:
     void Update(void);
     void SplitMons(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_SWAPMANAGER_H

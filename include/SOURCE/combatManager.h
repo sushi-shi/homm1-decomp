@@ -306,4 +306,6 @@ extern signed char iTransferArtifacts[];
 extern signed char gbThisNetHasControl;
 // CheckWin flags a retreat victory (0x004c6d4c).
 extern signed char gbRetreatWin;
+// CheckHandleNet hands combat packets back while a battle is running.
+extern signed char gbInCombat;
 #endif // HOMM1_SOURCE_COMBATMANAGER_H
