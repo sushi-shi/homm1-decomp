@@ -2035,7 +2035,7 @@ signed char game::ViewSpells(
         m_viewSpellsHero = spellHero;
         SetupSpellRange(spellType);
         m_viewSpellsTop = m_spellFirst;
-        if (spellType == 2 || spellType == 0) {
+        if (spellType == SPELL_TYPE_ALL || spellType == SPELL_TYPE_COMBAT) {
             m_viewSpellsWindow = new heroWindow(146, 145, "spellwin.bin");
             if (!m_viewSpellsWindow)
                 MemError();
@@ -2044,10 +2044,10 @@ signed char game::ViewSpells(
             if (!m_viewSpellsWindow)
                 MemError();
         }
-        if (spellType != 2) {
+        if (spellType != SPELL_TYPE_ALL) {
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            if (spellType == 0)
+            if (spellType == SPELL_TYPE_COMBAT)
                 message.id = SPELL_BOOK_ADVENTURE_SPELLS;
             else
                 message.id = SPELL_BOOK_COMBAT_SPELLS;
@@ -2066,13 +2066,13 @@ signed char game::ViewSpells(
 VA(0x0043efc5, 0xbb)
 void game::SetupSpellRange(short spellType) {
     switch (spellType) {
-        case 0:
+        case SPELL_TYPE_COMBAT:
             m_spellFirst = 0;
-            m_spellLast = m_spellFirst + 18;
+            m_spellLast = m_spellFirst + HERO_COMBAT_SPELL_SLOT_COUNT - 1;
             break;
         default:
-            m_spellFirst = 19;
-            m_spellLast = m_spellFirst + 9;
+            m_spellFirst = HERO_COMBAT_SPELL_SLOT_COUNT;
+            m_spellLast = m_spellFirst + HERO_SPELL_SLOT_COUNT - HERO_COMBAT_SPELL_SLOT_COUNT - 1;
             break;
     }
     while (m_viewSpellsHero->m_spellCharges[m_spellLast] < 1)
@@ -2087,7 +2087,7 @@ void game::UpdateSpellWidgets(void) {
     short i;
 
     message.type = MESSAGE_WIDGET;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < SPELL_BOOK_PAGE_SIZE; i++) {
         if (m_viewSpellsTop + i > m_spellLast) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.id = i + SPELL_BOOK_ENTRY_FIRST;
@@ -2157,7 +2157,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_PREVIOUS_PAGE:
                             NormalDialog(
-                                cSpellHelp[0],
+                                cSpellHelp[SPELL_HELP_PREVIOUS_PAGE],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2170,7 +2170,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_NEXT_PAGE:
                             NormalDialog(
-                                cSpellHelp[1],
+                                cSpellHelp[SPELL_HELP_NEXT_PAGE],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2183,7 +2183,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_ADVENTURE_SPELLS:
                             NormalDialog(
-                                cSpellHelp[2],
+                                cSpellHelp[SPELL_HELP_ADVENTURE_SPELLS],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2196,7 +2196,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_COMBAT_SPELLS:
                             NormalDialog(
-                                cSpellHelp[3],
+                                cSpellHelp[SPELL_HELP_COMBAT_SPELLS],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2239,28 +2239,28 @@ short ViewSpellsHandler(tag_message& message) {
                         case SPELL_BOOK_PREVIOUS_PAGE:
                             if (gpGame->m_viewSpellsTop == gpGame->m_spellFirst)
                                 break;
-                            gpGame->m_viewSpellsTop -= 4;
+                            gpGame->m_viewSpellsTop -= SPELL_BOOK_PAGE_SIZE;
                             if (gpGame->m_viewSpellsTop < gpGame->m_spellFirst)
                                 gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
                         case SPELL_BOOK_NEXT_PAGE:
-                            if (gpGame->m_viewSpellsTop + 4 <= gpGame->m_spellLast)
-                                gpGame->m_viewSpellsTop += 4;
+                            if (gpGame->m_viewSpellsTop + SPELL_BOOK_PAGE_SIZE <= gpGame->m_spellLast)
+                                gpGame->m_viewSpellsTop += SPELL_BOOK_PAGE_SIZE;
                             if (gpGame->m_viewSpellsTop < gpGame->m_spellFirst)
                                 gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
                         case SPELL_BOOK_ADVENTURE_SPELLS:
-                            gpGame->SetupSpellRange(1);
+                            gpGame->SetupSpellRange(SPELL_TYPE_ADVENTURE);
                             gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
                         case SPELL_BOOK_COMBAT_SPELLS:
-                            gpGame->SetupSpellRange(0);
+                            gpGame->SetupSpellRange(SPELL_TYPE_COMBAT);
                             gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
@@ -2295,22 +2295,22 @@ short ViewSpecialHandler(tag_message& message) {
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case SPELL_BOOK_PREVIOUS_PAGE:
-                        strcpy(gText, cSpellHelp[0]);
+                        strcpy(gText, cSpellHelp[SPELL_HELP_PREVIOUS_PAGE]);
                         break;
                     case SPELL_BOOK_NEXT_PAGE:
-                        strcpy(gText, cSpellHelp[1]);
+                        strcpy(gText, cSpellHelp[SPELL_HELP_NEXT_PAGE]);
                         break;
                     case SPELL_BOOK_ADVENTURE_SPELLS:
-                        strcpy(gText, cSpellHelp[2]);
+                        strcpy(gText, cSpellHelp[SPELL_HELP_ADVENTURE_SPELLS]);
                         break;
                     case SPELL_BOOK_COMBAT_SPELLS:
-                        strcpy(gText, cSpellHelp[3]);
+                        strcpy(gText, cSpellHelp[SPELL_HELP_COMBAT_SPELLS]);
                         break;
                     case DIALOG_BUTTON_0:
-                        strcpy(gText, cSpellHelp[4]);
+                        strcpy(gText, cSpellHelp[SPELL_HELP_CLOSE]);
                         break;
                     default:
-                        strcpy(gText, cSpellHelp[5]);
+                        strcpy(gText, cSpellHelp[SPELL_HELP_VIEW_SPELLS]);
                         break;
                 }
                 HeroMessageUpdate(gText);
@@ -3012,7 +3012,7 @@ void game::NextPlayer(void) {
     DoNewTurn();
     gpMouseManager->ReallyShowPointer();
     CheckEndGame(0);
-    if (gbThisNetHumanPlayer[giCurPlayer] && gbRemoteOn && m_day != 1 && giForceSwitchMusic == MUSIC_TRACK_NONE) {
+    if (gbThisNetHumanPlayer[giCurPlayer] && gbRemoteOn && m_day != 1 && giForceSwitchMusic == -1) {
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
         giForceSwitchMusic = KBTickCount();
     }
@@ -4328,16 +4328,11 @@ void game::CheckHeroConsistency(void) {
 
 // clang-format off
 // REMOTE.GAM transfer (Buka RemoteSaveConstant): the sender announces the
-// size (INIT, answered by INIT_RESPONSE), streams SEGMENT_SIZE-byte segments
-// (DATA), asks for each BATCH_SIZE-segment block's acknowledgement map
-// (ACK_REQUEST / ACK_RESPONSE) and closes with FINISH.
+// size (BOX_REMOTE_SAVE, answered by REMOTE_COMMAND_SAVE_INIT_RESPONSE),
+// streams SEGMENT_SIZE-byte segments (SAVE_DATA), asks for each
+// BATCH_SIZE-segment block's acknowledgement map (SAVE_ACK_REQUEST /
+// SAVE_ACK_RESPONSE) and closes with SAVE_FINISH (RemoteCommand).
 H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
-    REMOTE_SAVE_INIT_COMMAND = 1,
-    REMOTE_SAVE_INIT_RESPONSE = 2,
-    REMOTE_SAVE_DATA_COMMAND = 3,
-    REMOTE_SAVE_ACK_REQUEST_COMMAND = 4,
-    REMOTE_SAVE_ACK_RESPONSE_COMMAND = 5,
-    REMOTE_SAVE_FINISH_COMMAND = 6,
     REMOTE_SAVE_SEGMENT_SIZE = 200,
     REMOTE_SAVE_BATCH_SIZE = 100,
     REMOTE_SAVE_HEADER_SIZE = 8,
@@ -4385,7 +4380,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     okay = 0;
     status = 0;
-    oldTrack = -1;
+    oldTrack = MUSIC_TRACK_NONE;
     prevReady = gpSoundManager->m_musicReady;
     gpSoundManager->m_musicReady = 1;
     oldTrack = gpSoundManager->m_currentTrack;
@@ -4429,8 +4424,8 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
             sendPacket,
             remotePlayer,
             REMOTE_SAVE_HEADER_SIZE,
-            REMOTE_SAVE_INIT_COMMAND,
-            REMOTE_SAVE_INIT_RESPONSE,
+            BOX_REMOTE_SAVE,
+            REMOTE_COMMAND_SAVE_INIT_RESPONSE,
             &incoming
         );
         if (!status)
@@ -4466,7 +4461,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                             sendPacket,
                             remotePlayer,
                             len + REMOTE_SAVE_INDEX_SIZE,
-                            REMOTE_SAVE_DATA_COMMAND,
+                            REMOTE_COMMAND_SAVE_DATA,
                             0,
                             1,
                             REMOTE_MESSAGE_DEFAULT,
@@ -4482,8 +4477,8 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                     sendPacket,
                     remotePlayer,
                     REMOTE_SAVE_INDEX_SIZE,
-                    REMOTE_SAVE_ACK_REQUEST_COMMAND,
-                    REMOTE_SAVE_ACK_RESPONSE_COMMAND,
+                    REMOTE_COMMAND_SAVE_ACK_REQUEST,
+                    REMOTE_COMMAND_SAVE_ACK_RESPONSE,
                     &incoming
                 );
                 LogStr("PostWait");
@@ -4507,7 +4502,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
             NULL,
             remotePlayer,
             0,
-            REMOTE_SAVE_FINISH_COMMAND,
+            REMOTE_COMMAND_SAVE_FINISH,
             1,
             1,
             REMOTE_MESSAGE_DEFAULT,
@@ -4528,7 +4523,7 @@ cleanup:
         giBottomViewOverride = 0;
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
-    if (oldTrack != -1) {
+    if (oldTrack != MUSIC_TRACK_NONE) {
         prevReady = gpSoundManager->m_musicReady;
         gpSoundManager->m_musicReady = 1;
         gpSoundManager->SwitchAmbientMusic(oldTrack);
@@ -4566,7 +4561,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     done = 0;
     unused1 = 0;
     okay = 0;
-    oldTrack = -1;
+    oldTrack = MUSIC_TRACK_NONE;
     if (gpAdvManager->m_active == 1)
         BVResMsg("Receiving Data", -1, 0);
     prevReady = gpSoundManager->m_musicReady;
@@ -4582,7 +4577,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         NULL,
         remotePlayer,
         0,
-        REMOTE_SAVE_INIT_RESPONSE,
+        REMOTE_COMMAND_SAVE_INIT_RESPONSE,
         1,
         1,
         REMOTE_MESSAGE_DEFAULT,
@@ -4623,7 +4618,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                 || receivedPacket->type == REMOTE_MESSAGE_UNRELIABLE)) {
             lastPacketTime = KBTickCount();
             switch (receivedPacket->command) {
-                case REMOTE_SAVE_DATA_COMMAND:
+                case REMOTE_COMMAND_SAVE_DATA:
                     packetStart = receivedPacket->payload.segment.index;
                     gotIt[packetStart] = 1;
                     memcpy(
@@ -4632,7 +4627,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                         receivedPacket->payloadSize - REMOTE_SAVE_INDEX_SIZE
                     );
                     break;
-                case REMOTE_SAVE_ACK_REQUEST_COMMAND:
+                case REMOTE_COMMAND_SAVE_ACK_REQUEST:
                     packetStart = receivedPacket->payload.segment.index;
                     for (k = packetStart; k < packetStart + REMOTE_SAVE_BATCH_SIZE; k++)
                         *(sendPacket + k - packetStart) = gotIt[k];
@@ -4640,7 +4635,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                         sendPacket,
                         remotePlayer,
                         REMOTE_SAVE_ACK_MAP_SIZE,
-                        REMOTE_SAVE_ACK_RESPONSE_COMMAND,
+                        REMOTE_COMMAND_SAVE_ACK_RESPONSE,
                         1,
                         1,
                         REMOTE_MESSAGE_DEFAULT,
@@ -4649,7 +4644,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                     if (!result)
                         ShutDown(NULL);
                     break;
-                case REMOTE_SAVE_FINISH_COMMAND:
+                case REMOTE_COMMAND_SAVE_FINISH:
                     done = 1;
                     break;
             }
@@ -4676,7 +4671,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         giBottomViewOverride = 0;
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
-    if (oldTrack != -1) {
+    if (oldTrack != MUSIC_TRACK_NONE) {
         prevReady = gpSoundManager->m_musicReady;
         gpSoundManager->m_musicReady = 1;
         gpSoundManager->SwitchAmbientMusic(oldTrack);

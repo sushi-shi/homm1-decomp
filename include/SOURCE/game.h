@@ -94,6 +94,11 @@ H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_LABEL_FIRST = 10
 H1_ENUM_END(SpellBookControl)
 
+// The spell book shows four spells a page (entries FIRST..LAST).
+H1_ENUM_CONST_BEGIN(SpellBookConstant)
+    SPELL_BOOK_PAGE_SIZE = 4
+H1_ENUM_CONST_END(SpellBookConstant)
+
 // ComputeUALoc: a player sees the ultimate artifact's hint only after eleven
 // obelisks, four percent per further obelisk; a missed roll scatters the
 // hint up to three cells (3 - three 0..2 rolls) for at most 200 tries.
