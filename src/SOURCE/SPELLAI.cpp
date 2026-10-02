@@ -34,11 +34,11 @@ int giSpellAITargetSide;
 VA(0x00437010, 0x1bd)
 int combatManager::DoSpellAI(signed char side)
 {
+    int spellEffect;
     int selectedSpell;
     int bestEffect;
     int bestHexWork;
     int slotIndex;
-    int spellEffect;
     int candHex;
 
     bestEffect = 0;
