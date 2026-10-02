@@ -43,7 +43,7 @@ inline void HandleMCIError(int errorCode, char* command) {
         lpszReturnString,
         command
     );
-    gConfig.musicSource = 0;
+    gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
     WritePrefs();
     ShutDown(gText);
 }
@@ -816,9 +816,9 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
             || track == MUSIC_POSITION_TRACK_3
             || (track >= CD_NOTIFY_SCENARIO_FIRST && track <= CD_NOTIFY_SCENARIO_LAST))
             loop = 1;
-        if (track == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == 0)
+        if (track == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL)
             sprintf(filename, "heroes%02d.82m", track);
-        else if (gConfig.musicSource == 1)
+        else if (gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL_STEREO)
             sprintf(filename, "heroes%02d.82s", track);
         else
             sprintf(filename, "heroes%02d.62s", track);
@@ -965,9 +965,9 @@ void soundManager::PollSound(void) {
                 Process1WindowsMessage();
                 AIL_init_sample(m_musicSample);
                 int format;
-                if (m_currentTrack == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == 0)
+                if (m_currentTrack == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL)
                     format = 0;
-                else if (gConfig.musicSource == 1)
+                else if (gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL_STEREO)
                     format = 2;
                 else
                     format = 3;

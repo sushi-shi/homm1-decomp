@@ -34,11 +34,18 @@ H1_ENUM_CONST_END(SoundManagerConstant)
 H1_ENUM_CONST_BEGIN(SoundStartupConstant)
     SOUND_SAMPLE_HANDLE_COUNT = 15,
     SOUND_MANAGER_PRIORITY = -1,
-    SOUND_MUSIC_SOURCE_DIGITAL = 0,
-    SOUND_MUSIC_SOURCE_CD = 2,
     SOUND_DEFAULT_SAMPLE_BITS = 8,
     SOUND_DEFAULT_SAMPLE_CHANNELS = 1
 H1_ENUM_CONST_END(SoundStartupConstant)
+
+// gConfig.musicSource ("Sound Quality"; musicQualityText "8 Bit Mono",
+// "8 Bit Stereo", "CD Stereo"): PlayMusic streams heroes%02d.82m for mono and
+// .82s for stereo; CD plays the disc (m_cdReady) and otherwise streams .62s.
+H1_ENUM_BEGIN(SoundMusicSource)
+    SOUND_MUSIC_SOURCE_DIGITAL = 0,
+    SOUND_MUSIC_SOURCE_DIGITAL_STEREO = 1,
+    SOUND_MUSIC_SOURCE_CD = 2
+H1_ENUM_END(SoundMusicSource)
 
 // clang-format off
 // Logical music tracks for SwitchAmbientMusic/PlayAmbientMusic (CDPlay maps
