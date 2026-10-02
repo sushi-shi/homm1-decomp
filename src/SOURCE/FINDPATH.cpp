@@ -120,7 +120,7 @@ short searchArray::FindCombatPath(
     short sourceHex,
     short targetHex,
     army* unit,
-    H1_ENUM_PARAM(ArmyPathTarget, signed char) attackPath
+    signed char attackPath
 ) {
     int bestHex;
     int direction;

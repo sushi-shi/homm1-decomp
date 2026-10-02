@@ -65,6 +65,7 @@ H1_ENUM_FLAGS_END(CombatDirectionMask)
 // by army::CheckLuck and CheckApplyGood/BadMorale). CastSpell picks rows per
 // spell, e.g. haste and blind reuse the slow row.
 H1_ENUM_BEGIN(CombatEffectAnimation)
+    COMBAT_EFFECT_NONE = -1,
     COMBAT_EFFECT_FIREBALL = 0,
     COMBAT_EFFECT_LIGHTNING_BOLT = 1,
     COMBAT_EFFECT_TELEPORT = 2,
@@ -87,7 +88,8 @@ H1_ENUM_BEGIN(CombatEffectAnimation)
     COMBAT_EFFECT_GOOD_LUCK = 22,
     COMBAT_EFFECT_BAD_LUCK = 23,
     COMBAT_EFFECT_GOOD_MORALE = 24,
-    COMBAT_EFFECT_BAD_MORALE = 25
+    COMBAT_EFFECT_BAD_MORALE = 25,
+    COMBAT_EFFECT_COUNT = 26
 H1_ENUM_END(CombatEffectAnimation)
 
 // glTimers slot the combat screens pace their animation frames with

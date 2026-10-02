@@ -451,7 +451,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
         currentArmy->m_targetIndex = targetArmy;
         targetHex = m_armies[side][targetArmy].m_hex;
         currentArmy->m_moveTargetHex = targetHex;
-        if (currentArmy->ValidPath(targetHex, 0)) {
+        if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
             giNextAction = ACTION_MOVE;
             giNextActionGridIndex = targetHex;
             return 1;
@@ -462,7 +462,7 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
             else
                 targetHex++;
             currentArmy->m_moveTargetHex = targetHex;
-            if (currentArmy->ValidPath(targetHex, 0)) {
+            if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
                 giNextAction = ACTION_MOVE;
                 giNextActionGridIndex = targetHex;
                 return 1;

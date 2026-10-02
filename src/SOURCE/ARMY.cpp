@@ -45,7 +45,7 @@ army::army(void) {
     m_hex = 0;
     for (i = 0; i < ARMY_SAMPLE_COUNT; i++)
         m_samples[i] = NULL;
-    m_effectAnimation = ARMY_EFFECT_NONE;
+    m_effectAnimation = COMBAT_EFFECT_NONE;
     m_drawShadow = 1;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
@@ -69,7 +69,7 @@ void army::InitClean(void) {
 
     for (i = 0; i < ARMY_SAMPLE_COUNT; i++)
         m_samples[i] = NULL;
-    m_effectAnimation = ARMY_EFFECT_NONE;
+    m_effectAnimation = COMBAT_EFFECT_NONE;
     m_drawShadow = 1;
     m_attackIcon = NULL;
     m_walkIcon = NULL;
@@ -1289,7 +1289,7 @@ short army::WalkTo(short destHex) {
     int moved;
 
     m_targetSide = m_targetIndex = COMBAT_ARMY_INDEX_NONE;
-    if (!FindPath(m_hex, destHex, m_stats.speed, 1, 0))
+    if (!FindPath(m_hex, destHex, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX))
         return ARMY_PATH_BLOCKED;
     moved = 0;
     for (step = gpSearchArray->m_pathLength - 1; step >= 0; step--) {
@@ -1325,7 +1325,7 @@ short army::AttackTo(short destHex) {
         DoAttack(0);
         return 0;
     }
-    if (FindPath(m_hex, destHex, m_stats.speed, 1, 0)) {
+    if (FindPath(m_hex, destHex, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX)) {
         if (gpSearchArray->m_pathLength == 1) {
             m_attackDirection = gpSearchArray->m_directions[0];
             DoAttack(0);
@@ -1380,7 +1380,7 @@ void army::CheckLuck(void) {
             );
             gpCombatManager->CombatMessage(gText, 1);
             Wince();
-            SpellEffect(ARMY_EFFECT_BAD_LUCK, 180);
+            SpellEffect(COMBAT_EFFECT_BAD_LUCK, 180);
         } else {
             sprintf(
                 gText,
@@ -1389,7 +1389,7 @@ void army::CheckLuck(void) {
             );
             gpCombatManager->CombatMessage(gText, 1);
             Stand(1);
-            SpellEffect(ARMY_EFFECT_GOOD_LUCK, 180);
+            SpellEffect(COMBAT_EFFECT_GOOD_LUCK, 180);
         }
         Stand(1);
         WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
@@ -1652,7 +1652,7 @@ void army::SpellEffect(short effect, int frameDelay) {
         gpCombatManager->DrawFrame(1);
         DelayTil(glTimers + COMBAT_EFFECT_TIMER_SLOT);
     }
-    m_effectAnimation = ARMY_EFFECT_NONE;
+    m_effectAnimation = COMBAT_EFFECT_NONE;
 }
 
 // Slow (and the other speed spells) restore the base speed and flight;
@@ -1714,7 +1714,7 @@ void army::GoBerserk(void) {
             if (gpCombatManager->m_hexCells[target].m_occupantSide != COMBAT_SIDE_NONE) {
                 m_targetSide = gpCombatManager->m_hexCells[target].m_occupantSide;
                 m_targetIndex = gpCombatManager->m_hexCells[target].m_occupantIndex;
-                if (ValidFlight(target, 0)) {
+                if (ValidFlight(target, ARMY_PATH_ANY_TARGET_HEX)) {
                     giNextAction = ACTION_MOVE;
                     giNextActionGridIndex = target;
                     found++;
@@ -1764,7 +1764,7 @@ void army::MoveAttack(int hex, int moveOnly) {
         meleeMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
         if ((m_stats.attributes & MONSTER_FLAGS_FLYING)
             && meleeMask == COMBAT_ALL_DIRECTIONS_BLOCKED && m_moveTargetHex != m_hex
-            && !ValidFlight(m_moveTargetHex, 0))
+            && !ValidFlight(m_moveTargetHex, ARMY_PATH_ANY_TARGET_HEX))
             return;
         if (m_spellEffect == SPELL_BERZERKER)
             atkMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_OCCUPIED, ARMY_HEX_INVALID);
@@ -1806,7 +1806,7 @@ void army::MoveAttack(int hex, int moveOnly) {
         }
     } else if (m_stats.attributes & MONSTER_FLAGS_FLYING) {
         m_moveTargetHex = hex;
-        if (!ValidFlight(m_moveTargetHex, 0))
+        if (!ValidFlight(m_moveTargetHex, ARMY_PATH_ANY_TARGET_HEX))
             return;
         FlyTo(m_moveTargetHex);
     } else {

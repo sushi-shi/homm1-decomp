@@ -265,10 +265,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
                         boxLeft = hexCol * COMBAT_HEX_WIDTH - 70;
                         boxRight = (hexCol + 1) * COMBAT_HEX_WIDTH + 110;
                     }
-                    if (m_armies[side][i].m_effectAnimation == ARMY_EFFECT_GOOD_LUCK
-                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_BAD_LUCK
-                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_GOOD_MORALE
-                        || m_armies[side][i].m_effectAnimation == ARMY_EFFECT_BAD_MORALE)
+                    if (m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_GOOD_LUCK
+                        || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_BAD_LUCK
+                        || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_GOOD_MORALE
+                        || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_BAD_MORALE)
                         boxTop -= 100;
                     if (m_armies[side][i].m_creatureType == CREATURE_CAVALRY)
                         boxTop -= 60;
