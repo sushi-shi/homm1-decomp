@@ -6,6 +6,10 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/Misc.h>
+
+#include <stdio.h>
+#include <stdlib.h>
 
 // donor PoL RVA 0x0002a6d0; preferred Buka symbol ?Main@combatManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
@@ -133,11 +137,51 @@ int combatManager::CheckWin(struct tag_message *message)
 VA(0x00410d35, 0x316)
 int combatManager::GetCommand(int) { return 0; }
 
-// donor PoL RVA 0x0002ce19; preferred Buka symbol ?RightClick@combatManager@@QAEHH@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.497332;margin=0.914777;shape=0.275;size=0.969;calls=0.875;alternate=pol20:int combatManager::RightClick(int)@0x0002ce19
+// Buka COMMAND.cpp RightClick; HoMM1 hero hexes are 26 and 9 and the
+// army view also takes the side.
 VA(0x0041104b, 0x1dc)
-int combatManager::RightClick(int) { return 0; }
+signed char combatManager::RightClick(signed char hex)
+{
+    signed char unusedColumn = hex % 9;
+    signed char row = hex / 9;
+
+    if (hex == -1)
+        return 0;
+    switch (hex) {
+        case 26:
+            if (m_heroes[0]) {
+                ViewGeneral(0, 0, 1);
+                ResetMouse();
+            }
+            return 0;
+        case 9:
+            if (m_heroes[1]) {
+                ViewGeneral(1, 0, 1);
+                ResetMouse();
+            }
+            return 0;
+        default:
+            if (hex % 9 == 8)
+                return 0;
+            signed char side = m_hexCells[hex].m_occupantSide;
+            signed char armyIndex = m_hexCells[hex].m_occupantIndex;
+            if (m_hexCells[hex].m_obstacle != -1)
+                return 0;
+            else if (side != -1) {
+                switch (side) {
+                    case 0:
+                    case 1:
+                        gpMouseManager->SetPointer(6);
+                        ViewArmy(&m_armies[side][m_hexCells[m_selectedHex].m_occupantIndex], side, 1);
+                        ResetMouse();
+                        return 0;
+                }
+            } else
+                return 0;
+            break;
+    }
+    return 0;
+}
 
 // donor PoL RVA 0x0002d0bf; preferred Buka symbol ?DoCommand@combatManager@@QAEXH@Z
 // donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
@@ -145,11 +189,50 @@ int combatManager::RightClick(int) { return 0; }
 VA(0x00411227, 0x333)
 void combatManager::DoCommand(int) {}
 
-// donor PoL RVA 0x0002d472; preferred Buka symbol ?WinCombatHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.240792;margin=0.378009;shape=0.252;size=0.331;calls=0.261;alternate=pol20:int WinCombatHandler(struct tag_message &)@0x0002d472
+// Buka COMMAND.cpp WinCombatHandler; HoMM1 pages captured artifacts and
+// cycles a single six-frame animation.
 VA(0x0041155a, 0x1a3)
-int WinCombatHandler(struct tag_message &) { return 0; }
+short WinCombatHandler(struct tag_message &message)
+{
+    int finalDelay = 0x5a;
+    short frame = 1;
+
+    if (message.type == MESSAGE_WIDGET) {
+        switch (message.payload.widget.command) {
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.payload.widget.id) {
+                    case 0x7800:
+                        if (iMaxTransferArtifacts > iCurTransferArtifact + 1) {
+                            gpCombatManager->ClearWinLoseBottom(gpCombatManager->m_winLoseWindow);
+                            iCurTransferArtifact++;
+                            gpCombatManager->ShowWinLoseArtifact(gpCombatManager->m_winLoseWindow,
+                                                                 iTransferArtifacts[iCurTransferArtifact]);
+                        } else {
+                            gpWindowManager->m_dialogResult = message.payload.widget.id;
+                            message.payload.widget.command = message.payload.widget.id = 10;
+                            return MESSAGE_DISPATCH_FORWARD;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (KBTickCount() > glTimers[0]) {
+        message.type = MESSAGE_WIDGET;
+        message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+        message.payload.widget.id = 1;
+        gpGame->m_viewArmyResult++;
+        message.payload.widget.data.value = gpGame->m_viewArmyResult % 6 + 1;
+        gpCombatManager->m_winLoseWindow->BroadcastMessage(message);
+        gpCombatManager->m_winLoseWindow->DrawWindow();
+        glTimers[0] = KBTickCount() + 0x5a;
+    }
+    return MESSAGE_DISPATCH_CONSUME;
+}
 
 // Buka COMMAND.cpp ClearWinLoseBottom (fifteen icon/text widget pairs).
 VA(0x004116fd, 0x110)
@@ -168,6 +251,45 @@ void combatManager::ClearWinLoseBottom(class heroWindow *window)
         }
         m_winLoseBottomWidgets[i] = 0;
         m_winLoseBottomTextWidgets[i] = 0;
+    }
+}
+
+// Buka COMMAND.cpp ShowWinLoseArtifact.
+VA(0x0041180d, 0x2fa)
+void combatManager::ShowWinLoseArtifact(class heroWindow *window, int artifact)
+{
+    char *artifactName;
+    short boxWidth = 0x140;
+    short bottom = 0x1ca;
+    tag_message message;
+
+    sprintf(gText, "You have captured an enemy artifact!");
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 0x65;
+    message.payload.widget.data.text = gText;
+    m_winLoseWindow->BroadcastMessage(message);
+    m_winLoseBottomWidgets[0] = new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, 0x10, 1);
+    if (m_winLoseBottomWidgets[0] == 0)
+        MemError();
+    window->AddWidget(m_winLoseBottomWidgets[0], -1);
+    m_winLoseBottomWidgets[1] = new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, 0, 0x7d2, 0x10, 1);
+    if (m_winLoseBottomWidgets[1] == 0)
+        MemError();
+    window->AddWidget(m_winLoseBottomWidgets[1], -1);
+    artifactName = (char *)malloc(0x3c);
+    sprintf(artifactName, gArtifactNames[artifact]);
+    m_winLoseBottomTextWidgets[0] =
+        new textWidget(0, 0x18a, 0x140, 0xc, artifactName, "smalfont.fnt", 1, 0x835, 0x200);
+    if (m_winLoseBottomTextWidgets[0] == 0)
+        MemError();
+    window->AddWidget(m_winLoseBottomTextWidgets[0], -1);
+    gpCombatManager->m_winLoseWindow->DrawWindow();
+    {
+        SAMPLE2 sample = NULL_SAMPLE2;
+        sprintf(gText, "pickup%02d.82M", SRandom(1, 5));
+        sample = LoadPlaySample(gText);
+        WaitEndSample(sample, -1);
     }
 }
 

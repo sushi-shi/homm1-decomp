@@ -70,7 +70,9 @@ public:
     char m_unknown6ff[0x34];
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
-    char m_unknown7ab[0x27];
+    char m_unknown7ab[0x22];
+    class heroWindow *m_winLoseWindow;
+    char m_unknown7d1;
     signed char m_combatResult;
     // --- constructors ---
     combatManager(void);
@@ -96,7 +98,8 @@ public:
     void DrawFrame(int);
     void DrawSmallView(int, int);
     int ViewGeneral(int, int, int);
-    void ViewArmy(class army *, int);
+    // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
+    void ViewArmy(class army *, int, int);
     int HasValidSpellTarget(int);
     int ViewSpells(int);
     int FindResurrectArmyIndex(int, int, int);
@@ -141,7 +144,7 @@ public:
     void ResetRound(void);
     int CheckWin(struct tag_message *);
     int GetCommand(int);
-    int RightClick(int);
+    signed char RightClick(signed char);
     void DoCommand(int);
     void ClearWinLoseBottom(class heroWindow *);
     void ShowWinLoseArtifact(class heroWindow *, int);
@@ -236,6 +239,11 @@ public:
 
 int ValidHex(int);
 extern combatManager *gpCombatManager;
+short WinCombatHandler(struct tag_message &);
+// Captured artifacts shown page by page on the victory window.
+extern signed char iMaxTransferArtifacts;
+extern int iCurTransferArtifact;
+extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
 // CheckWin flags a retreat victory (0x004c6d4c).

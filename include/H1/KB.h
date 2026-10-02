@@ -79,6 +79,8 @@ extern long lLastGetMessage;
 extern long lLastAilServe;
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern char* gArmyNames[];
+// Artifact names (0x00493048).
+extern char* gArtifactNames[];
 extern char* gNeutralBuildingNames[];
 extern char* gDwellingNames[];
 // BuyBuild's building descriptions (0x00493e78, 0x00493908) and per-dwelling

@@ -44,7 +44,7 @@ int combatManager::ViewGeneral(int, int, int) {
 // donor Buka TU SOURCE/VIEW; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.474703;margin=0.690322;shape=0.250;size=0.915;calls=1.000;alternate=pol20:void combatManager::ViewArmy(class army *, int)@0x0000c784
 VA(0x00438a9f, 0x161)
-void combatManager::ViewArmy(class army*, int) {}
+void combatManager::ViewArmy(class army*, int, int) {}
 
 // donor PoL RVA 0x000708b0; preferred Buka symbol ?Write@playerData@@QAEXH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
