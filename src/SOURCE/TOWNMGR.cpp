@@ -971,9 +971,9 @@ void townManager::DrawTown(signed char updateScreen, int drawFlags)
 VA(0x0040b455, 0x1023)
 short townManager::BuyBuild(short building, signed char cannotBuy, signed char quickView)
 {
+    unsigned short requirements;
     int yPos;
     int resIndex;
-    unsigned short requirements;
     char *descText;
     textWidget *amountWidgets[7];
     int nRowTypes[4];
@@ -1691,11 +1691,11 @@ void townManager::GetCategoryStats(signed char category, long *const stats,
     short townIndex;
     short index;
     long strength;
+    short player;
     short numTowns;
     short numCastles;
     hero *playerHero;
     town *theTown;
-    short player;
 
     for (player = 0; player < gpGame->m_playerCount; player++) {
         numTowns = 0;
@@ -1851,9 +1851,9 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
         gpWindowManager->DoDialog(m_heroWindow1, RecruitHeroHandler, 0);
     delete m_heroWindow1;
     if (m_recruitState != -1) {
-        short townX;
-        short townY;
         int newHeroClass;
+        short townY;
+        short townX;
 
         gpCurPlayer->m_resources[RESOURCE_GOLD] -= gHeroGoldCost;
         gpCurPlayer->m_heroIds[gpCurPlayer->m_heroCount] =

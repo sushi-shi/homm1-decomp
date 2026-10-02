@@ -455,8 +455,8 @@ void swapManager::SwapArtifacts(void) {
 
 VA(0x0046ff2a, 0x28e)
 void swapManager::SwapMons(void) {
-    armyGroup* destTroops;
     armyGroup* sourceTroops;
+    armyGroup* destTroops;
     short i;
     short j;
 
