@@ -2401,21 +2401,21 @@ void game::ViewArmy(
     if (!m_viewArmyWindow)
         MemError();
     spacing = 30;
-    if (monsterInfo->stats.attributes & 1) {
+    if (monsterInfo->stats.attributes & MONSTER_FLAGS_WIDE) {
         switch (facing) {
-            case 0:
+            case ARMY_FACING_RIGHT:
                 spacing += 43;
                 break;
-            case 1:
+            case ARMY_FACING_LEFT:
                 spacing += 119;
                 break;
         }
-    } else if (facing == 1) {
+    } else if (facing == ARMY_FACING_LEFT) {
         spacing += 76;
     } else {
         spacing += 86;
     }
-    if (monsterInfo->stats.attributes & 2)
+    if (monsterInfo->stats.attributes & MONSTER_FLAGS_FLYING)
         sprintf(fileName, "%s.wlk", iconName);
     else
         sprintf(fileName, "%s.wip", iconName);
@@ -2426,7 +2426,7 @@ void game::ViewArmy(
         149,
         fileName,
         0,
-        facing == 1,
+        facing == ARMY_FACING_LEFT,
         VIEW_ARMY_ANIMATION,
         ICON_WIDGET_DRAW,
         1
@@ -2471,7 +2471,7 @@ void game::ViewArmy(
         strcat(statText, gText);
     }
 
-    if (monsterInfo->stats.attributes & 4) {
+    if (monsterInfo->stats.attributes & MONSTER_FLAGS_SHOOTER) {
         if (theArmy)
             shotCount = theArmy->m_stats.shots;
         else
