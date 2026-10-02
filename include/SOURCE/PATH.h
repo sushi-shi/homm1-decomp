@@ -13,6 +13,16 @@ H1_ENUM_BEGIN(ArmyAttackTarget)
     ARMY_ATTACK_TARGET_OCCUPIED = 2
 H1_ENUM_END(ArmyAttackTarget)
 
+// army::ValidPath/FindPath pathMode, forwarded to searchArray::FindCombatPath
+// as attackPath: EXACT routes to attack the stack standing on the target hex
+// (GetAttackMask gets that hex), ANY lets the assigned target be attacked
+// from any hex (GetAttackMask gets ARMY_HEX_INVALID); plain moves pass ANY
+// (Buka army.h ArmyPathTarget, same values).
+H1_ENUM_BEGIN(ArmyPathTarget)
+    ARMY_PATH_ANY_TARGET_HEX = 0,
+    ARMY_PATH_EXACT_TARGET_HEX = 1
+H1_ENUM_END(ArmyPathTarget)
+
 // A hex argument or result meaning "no hex": GetAdjacentCellIndex's
 // off-grid result and ValidAttack's "any target hex" (Buka ArmyHexConstant).
 H1_ENUM_CONST_BEGIN(ArmyHexConstant)

@@ -221,7 +221,7 @@ void combatManager::SetCombatDirections(int targetHex) {
         for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
             if (canStand[dir]) {
                 if (curArmy->m_hex == directionHexes[dir]
-                    || curArmy->ValidPath(directionHexes[dir], 1))
+                    || curArmy->ValidPath(directionHexes[dir], ARMY_PATH_EXACT_TARGET_HEX))
                     hasPath[dir] = 1;
                 else
                     hasPath[dir] = 0;
@@ -703,7 +703,7 @@ signed char combatManager::GetCommand(short hex) {
                                 && currentArmy->GetAttackMask(currentArmy->m_hex, ARMY_ATTACK_TARGET_ENEMY, ARMY_HEX_INVALID)
                                        == COMBAT_ALL_DIRECTIONS_BLOCKED)
                                 return COMBAT_MESSAGE_COMMAND_SHOOT;
-                            if (currentArmy->ValidPath(hex, 1) == 1)
+                            if (currentArmy->ValidPath(hex, ARMY_PATH_EXACT_TARGET_HEX) == 1)
                                 return COMBAT_MESSAGE_COMMAND_ATTACK;
                             else {
                                 currentArmy->m_targetSide = COMBAT_SIDE_NONE;
@@ -713,7 +713,7 @@ signed char combatManager::GetCommand(short hex) {
                         }
                 }
             } else {
-                if (m_armies[m_currentSide][m_currentArmyIndex].ValidPath(hex, 0) == 1)
+                if (m_armies[m_currentSide][m_currentArmyIndex].ValidPath(hex, ARMY_PATH_ANY_TARGET_HEX) == 1)
                     return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes
                             & MONSTER_FLAGS_FLYING)
                                ? COMBAT_MESSAGE_COMMAND_FLY
