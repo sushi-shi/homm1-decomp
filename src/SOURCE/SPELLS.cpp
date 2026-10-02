@@ -2,9 +2,9 @@
 
 #include <match.h>
 
-#include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <BASE/Icon2b.h>
