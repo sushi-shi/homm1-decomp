@@ -104,8 +104,8 @@ int font::LineLength(char *str, short maxW)
 {
     short s = strlen(str);
     signed char q;
-    IconEntry *u = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
-    char aa = ' ';
+    IconEntry *widths = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    char spaceChar = ' ';
     int z = 0;
     short t = 0, r = 0, y = 0, p = 0, x = 0;
     char *w = str;
@@ -115,7 +115,7 @@ int font::LineLength(char *str, short maxW)
             q = w[p] - ' ';
             if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
                 q = FONT_GLYPH_INDEX_LAST;
-            x = u[q].w + x + FONT_GLYPH_ADVANCE_SPACING;
+            x = widths[q].w + x + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
         if (x > maxW) {
@@ -124,11 +124,11 @@ int font::LineLength(char *str, short maxW)
                 q = w[p] - ' ';
                 if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
                     q = FONT_GLYPH_INDEX_LAST;
-                x -= u[q].w + FONT_GLYPH_ADVANCE_SPACING;
+                x -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
                 p--;
             }
             if (w[p] == ' ')
-                x -= u[0].w + FONT_GLYPH_ADVANCE_SPACING;
+                x -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
         }
         y = p;
         v = w[y];
