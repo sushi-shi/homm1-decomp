@@ -650,7 +650,7 @@ void combatManager::CheckApplyGoodMorale(int side, int index)
         sprintf(gText, "High morale enables the %s to attack again.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
     activeArmy->SpellEffect(24, 180);
-    activeArmy->ResetAnimation(1);
+    activeArmy->Stand(1);
     if (activeArmy->m_stats.attributes & 0x80)
         activeArmy->m_stats.attributes -= 0x80;
     activeArmy->m_stats.attributes |= 0x20;
@@ -685,7 +685,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     CombatMessage(gText, 1);
     activeArmy->m_unknown09 = 2;
     activeArmy->SpellEffect(25, 180);
-    activeArmy->ResetAnimation(1);
+    activeArmy->Stand(1);
     activeArmy->m_stats.attributes |= 0x80;
     WaitEndSample(sample, -1);
     return 1;
@@ -1193,10 +1193,10 @@ void combatManager::KeepAttack(void)
     gpCombatManager->CombatMessage(gText, 1);
     target->PowEffect(target->m_stats.unknown07);
     if (!(target->m_stats.attributes & 0x10))
-        target->ResetAnimation(0);
+        target->Stand(0);
     WaitEndSample(sample, -1);
     if (target->m_quantity > 0)
-        target->ResetAnimation(1);
+        target->Stand(1);
     gpMouseManager->ReallyShowPointer();
 }
 
