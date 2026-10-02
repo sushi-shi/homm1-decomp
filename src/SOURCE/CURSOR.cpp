@@ -8,10 +8,52 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/X_GLOBAL.h>
+
+// clang-format off
+// Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant
+// and CURSOR.cpp CursorPrivateConstant names, HoMM1 values).
+H1_ENUM_CONST_BEGIN(CursorConstant)
+    CURSOR_DRAW_X = 0xe0,
+    CURSOR_DRAW_Y = 0xff,
+    CURSOR_BOAT_DRAW_Y_ADJUST = 10,
+    CURSOR_SHADOW_FLIP_X_ADJUST = 0x20,
+    CURSOR_FLIP_FLAG = 0x80,
+    CURSOR_FRAME_MASK = 0x7f,
+    CURSOR_FLAG_FRAME_BASE = 0x38,
+    CURSOR_FLAG_FRAME_CYCLE_MASK = 3,
+    CURSOR_LAST_FRAME_COUNT = 8,
+    CURSOR_TURN_FRAME_COUNT = 16,
+    CURSOR_SLOW_TURN_MULTIPLIER = 3,
+    CURSOR_MAP_DRAW_OFFSET = 7,
+    CURSOR_MOVE_HALF_TILE_PIXELS = 16,
+    CURSOR_NORTH_DIRECTION_MASK = 0x83,
+    CURSOR_SOUTH_DIRECTION_MASK = 0x38,
+    CURSOR_DIAGONAL_DIRECTION_BIT = 1,
+    CURSOR_TURN_TIMER_SLOT = 1,
+    BOAT_OCCUPIED_FLAG = 0x80,
+    SLOW_CURSOR_CYCLE_START = 2,
+    SKIPPED_ANIMATION_FRAME = 4,
+    FOOTSTEP_ANIMATION_FRAME = 3,
+    DIRECTION_HALF_COUNT = 4,
+    TURN_FRAME_MULTIPLIER = 2,
+    MOVE_TILE_HALF_COUNT = 2
+H1_ENUM_CONST_END(CursorConstant)
+
+// gConfig.walkSpeed: the order of retail walkSpeedText {Walk, Trot, Canter,
+// Gallop, Jump}; Jump moves a whole cell per frame without walking frames.
+H1_ENUM_BEGIN(CursorWalkSpeed)
+    WALK_SPEED_WALK = 0,
+    WALK_SPEED_TROT = 1,
+    WALK_SPEED_CANTER = 2,
+    WALK_SPEED_GALLOP = 3,
+    WALK_SPEED_JUMP = 4
+H1_ENUM_END(CursorWalkSpeed)
+// clang-format on
 
 // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
 // walk speed and indexes the map directly.
@@ -25,10 +67,10 @@ void advManager::StartCursor(signed char direction)
 
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
-    if (gConfig.walkSpeed > 0)
+    if (gConfig.walkSpeed > WALK_SPEED_WALK)
         m_cursorCycle = 1;
     else
-        m_cursorCycle = 2;
+        m_cursorCycle = SLOW_CURSOR_CYCLE_START;
     directionX = normalDirTable[direction].x;
     directionY = normalDirTable[direction].y;
     m_previousCursorMapX = m_cursorMapX;
@@ -55,7 +97,7 @@ void advManager::StopCursor(signed char stopSound)
     m_cursorCycle = 0;
     if (m_previousCursorMapX != -1) {
         m_mapData[m_mapOriginX + m_previousCursorMapX][m_mapOriginY + m_previousCursorMapY].m_flags &=
-            ~0x40;
+            ~MAP_CELL_HERO_CURSOR;
         m_previousCursorMapX = m_previousCursorMapY = -1;
     }
     m_cursorTurning = 0;
@@ -79,25 +121,26 @@ void advManager::DrawCursor(void)
         m_cursorCycle = S1cursorCycle;
         m_cursorTurning = S1cursorTurning;
     }
-    drawX = m_updateMinX + 0xe0;
-    screenY = m_updateMinY + 0xff;
+    drawX = m_updateMinX + CURSOR_DRAW_X;
+    screenY = m_updateMinY + CURSOR_DRAW_Y;
     if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
-        screenY -= 10;
-    if (m_cursorFrame & 0x80) {
-        drawX += 0x20;
-        drawFrame = (m_cursorFrame & 0x7f) + m_cursorFrameCount;
+        screenY -= CURSOR_BOAT_DRAW_Y_ADJUST;
+    if (m_cursorFrame & CURSOR_FLIP_FLAG) {
+        drawX += CURSOR_SHADOW_FLIP_X_ADJUST;
+        drawFrame = (m_cursorFrame & CURSOR_FRAME_MASK) + m_cursorFrameCount;
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             FlipDimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, drawX, screenY, drawFrame, 0);
         FlipIconToBitmap(m_heroIcons[m_cursorType], gpWindowManager->m_screen, drawX, screenY,
                          drawFrame, 0);
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
             if (m_cursorCycle == 0)
-                drawFrame = m_cursorFrame & 0x7f;
+                drawFrame = m_cursorFrame & CURSOR_FRAME_MASK;
             FlipIconToBitmap(m_boatFlagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen,
                              drawX, screenY, drawFrame, 0);
         } else {
             if (m_cursorCycle == 0)
-                drawFrame = (m_updateMaxY & 3) + (m_cursorFrame & 0x7f) + 0x38;
+                drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK) + (m_cursorFrame & CURSOR_FRAME_MASK)
+                            + CURSOR_FLAG_FRAME_BASE;
             FlipIconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                              screenY, drawFrame, 0);
             m_updateMaxY++;
@@ -115,32 +158,33 @@ void advManager::DrawCursor(void)
                          screenY, drawFrame, 0);
         } else {
             if (m_cursorCycle == 0)
-                drawFrame = (m_updateMaxY & 3) + m_cursorFrame + 0x38;
+                drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK) + m_cursorFrame + CURSOR_FLAG_FRAME_BASE;
             IconToBitmap(m_flagIcons[gpCurPlayer->m_color], gpWindowManager->m_screen, drawX,
                          screenY, drawFrame, 0);
             m_updateMaxY++;
         }
     }
-    if (m_cursorCycle && gConfig.walkSpeed != 4) {
+    if (m_cursorCycle && gConfig.walkSpeed != WALK_SPEED_JUMP) {
         m_cursorFrameCount++;
-        if (gConfig.walkSpeed == 3 && (m_cursorFrameCount == 4 || m_cursorFrameCount == 1))
+        if (gConfig.walkSpeed == WALK_SPEED_GALLOP
+            && (m_cursorFrameCount == SKIPPED_ANIMATION_FRAME || m_cursorFrameCount == 1))
             m_cursorFrameCount++;
-        if (gConfig.walkSpeed == 0) {
+        if (gConfig.walkSpeed == WALK_SPEED_WALK) {
             EveryOther = 1 - EveryOther;
             if (EveryOther)
                 m_cursorFrameCount--;
         }
     }
-    if (m_cursorFrameCount >= 8)
+    if (m_cursorFrameCount >= CURSOR_LAST_FRAME_COUNT)
         m_cursorFrameCount = 0;
     if (!m_cursorTurning) {
         if (m_cursorFrameCount == 0)
             hPrevMoveSound = hLastMoveSound;
-        if (m_cursorFrameCount == 3 || (gConfig.walkSpeed == 4 && !bMoveSoundMade)) {
+        if (m_cursorFrameCount == FOOTSTEP_ANIMATION_FRAME || (gConfig.walkSpeed == WALK_SPEED_JUMP && !bMoveSoundMade)) {
             bMoveSoundMade = 1;
             if (!EveryOther)
                 hLastMoveSound = gpSoundManager->MemorySample(
-                    m_cursorSamples[giGroundToTerrain[GetCell(m_mapOriginX + 7, m_mapOriginY + 7)->m_tileIndex]]);
+                    m_cursorSamples[giGroundToTerrain[GetCell(m_mapOriginX + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + CURSOR_MAP_DRAW_OFFSET)->m_tileIndex]]);
         }
     }
     if (!gbDrawSavedCursor) {
@@ -186,15 +230,15 @@ void advManager::TurnTo(signed char direction)
 
     if (directionDifference == 0)
         return;
-    if ((directionDifference < 0 && directionDifference >= -4)
-        || (directionDifference > 0 && directionDifference > 4))
+    if ((directionDifference < 0 && directionDifference >= -DIRECTION_HALF_COUNT)
+        || (directionDifference > 0 && directionDifference > DIRECTION_HALF_COUNT))
         frameStep = -1;
     m_cursorTurning = 1;
-    curFrame = m_cursorDirection * 2;
+    curFrame = m_cursorDirection * TURN_FRAME_MULTIPLIER;
     delayTime = giStepDelay[gConfig.walkSpeed];
-    if (gConfig.walkSpeed == 0)
-        delayTime *= 3;
-    if (gConfig.walkSpeed == 1)
+    if (gConfig.walkSpeed == WALK_SPEED_WALK)
+        delayTime *= CURSOR_SLOW_TURN_MULTIPLIER;
+    if (gConfig.walkSpeed == WALK_SPEED_TROT)
         delayTime = delayTime * 1.5;
     do {
         m_cursorCycle = 1;
@@ -203,22 +247,22 @@ void advManager::TurnTo(signed char direction)
         else
             m_cursorFrame = horseFrameFlip[curFrame];
         m_cursorFrameCount = 0;
-        glTimers[1] = KBTickCount() + delayTime;
-        if (gConfig.walkSpeed != 4) {
+        glTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
+        if (gConfig.walkSpeed != WALK_SPEED_JUMP) {
             if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
                 UpdateScreen(0, 0);
             if (bShowIt)
-                DelayTil(&glTimers[1]);
+                DelayTil(&glTimers[CURSOR_TURN_TIMER_SLOT]);
         }
         curFrame += frameStep;
         if (curFrame < 0)
-            curFrame = 15;
-        curFrame %= 16;
-    } while (curFrame != direction * 2);
+            curFrame = CURSOR_TURN_FRAME_COUNT - 1;
+        curFrame %= CURSOR_TURN_FRAME_COUNT;
+    } while (curFrame != direction * TURN_FRAME_MULTIPLIER);
     m_cursorDirection = direction;
     StopCursor(1);
     if (bShowIt)
-        DelayTil(&glTimers[1]);
+        DelayTil(&glTimers[CURSOR_TURN_TIMER_SLOT]);
     if (ComboDraw(m_mapOriginX, m_mapOriginY, 0))
         UpdateScreen(0, 0);
 }
@@ -283,7 +327,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     bShowIt = GetMoveShowIt(direction);
     terrain = giGroundToTerrain[GetCell(movingHero->m_x, movingHero->m_y)->m_tileIndex];
     nextCell = GetCell(movingHero->m_x + xInc, movingHero->m_y + yInc);
-    if (CalcTerrainCost(terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass)
+    if (CalcTerrainCost(terrain, direction & CURSOR_DIAGONAL_DIRECTION_BIT, movingHero->m_remainingMobility, movingHero->m_heroClass)
         > movingHero->m_remainingMobility) {
         *outOfMobility = 1;
         StopCursor(1);
@@ -299,7 +343,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         boatRecord *boat;
         mapCell *boatCell;
 
-        for (step = 0; step < 32; step++) {
+        for (step = 0; step < GAME_BOAT_COUNT; step++) {
             if (gpGame->m_boats[step].heroId == movingHero->m_id)
                 break;
         }
@@ -308,7 +352,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         boat->savedTriggerType = boatCell->m_triggerType;
         boat->savedEventData = boatCell->m_objectMetadata;
         boat->direction = m_cursorDirection;
-        boat->heroId |= 0x80;
+        boat->heroId |= BOAT_OCCUPIED_FLAG;
         boatCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
         boatCell->m_objectMetadata = step;
         boat->x = movingHero->m_x;
@@ -325,9 +369,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                     goto movementDone;
                 StopCursor(1);
                 m_cursorActive = 0;
-                gpWindowManager->SaveFizzleSource(0xc0, 0xc0, 0x60, 0x60);
+                gpWindowManager->SaveFizzleSource(COAST_FIZZLE_X, COAST_FIZZLE_Y, COAST_FIZZLE_WIDTH, COAST_FIZZLE_HEIGHT);
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-                gpWindowManager->FizzleForward(0xc0, 0xc0, 0x60, 0x60, -1);
+                gpWindowManager->FizzleForward(COAST_FIZZLE_X, COAST_FIZZLE_Y, COAST_FIZZLE_WIDTH, COAST_FIZZLE_HEIGHT, -1);
                 break;
             case MAP_OBJECT_BUOY:
                 if (!(movingHero->m_eventFlags & HERO_EVENT_EMBARKED))
@@ -361,7 +405,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 UpdateScreen(0, 0);
                 movingHero->m_remainingMobility -= CalcTerrainCost(
-                    terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
+                    terrain, direction & CURSOR_DIAGONAL_DIRECTION_BIT, movingHero->m_remainingMobility, movingHero->m_heroClass);
                 if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
                                     movingHero->m_heroClass)
                     > movingHero->m_remainingMobility) {
@@ -377,7 +421,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                     UpdateScreen(0, 0);
                     movingHero->m_remainingMobility -= CalcTerrainCost(
-                        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
+                        terrain, direction & CURSOR_DIAGONAL_DIRECTION_BIT, movingHero->m_remainingMobility, movingHero->m_heroClass);
                     if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0,
                                         movingHero->m_remainingMobility, movingHero->m_heroClass)
                         > movingHero->m_remainingMobility) {
@@ -403,13 +447,13 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     if (m_routeShown)
         *(m_visibilityMap + (movingHero->m_x + xInc) + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
     m_updateMinX = m_updateMinY = 0;
-    gpGame->SetVisibility(m_mapOriginX + xInc + 7, m_mapOriginY + yInc + 7, giCurPlayer,
+    gpGame->SetVisibility(m_mapOriginX + xInc + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + yInc + CURSOR_MAP_DRAW_OFFSET, giCurPlayer,
                           gHeroScoutRadius[movingHero->m_heroClass]);
     m_forceCompleteDraw = 1;
     pixelsPerStep = giPixelsPerStep[gConfig.walkSpeed];
     msDelay = giStepDelay[gConfig.walkSpeed];
     StartCursor(direction);
-    if (gConfig.walkSpeed == 4) {
+    if (gConfig.walkSpeed == WALK_SPEED_JUMP) {
         if (EveryOther)
             m_cursorFrame--;
         bMoveSoundMade = 0;
@@ -422,8 +466,8 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     } else {
         gbEnlargeScreenBlit = 0;
         gbNoBorder = 1;
-        numSteps = 16 / pixelsPerStep;
-        for (step = 0; step < numSteps * 2; step++) {
+        numSteps = CURSOR_MOVE_HALF_TILE_PIXELS / pixelsPerStep;
+        for (step = 0; step < numSteps * MOVE_TILE_HALF_COUNT; step++) {
             long tick;
 
             if (step == numSteps) {
@@ -434,7 +478,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 m_updateMinY = startVals[yInc + 1];
             }
             tick = KBTickCount();
-            if (step + 1 == numSteps * 2) {
+            if (step + 1 == numSteps * MOVE_TILE_HALF_COUNT) {
                 m_updateMinX = 0;
                 m_updateMinY = 0;
             } else {
@@ -453,7 +497,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         gbEnlargeScreenBlit = 1;
     }
     movingHero->m_remainingMobility -= CalcTerrainCost(
-        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_heroClass);
+        terrain, direction & CURSOR_DIAGONAL_DIRECTION_BIT, movingHero->m_remainingMobility, movingHero->m_heroClass);
     if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
                         movingHero->m_heroClass)
         > movingHero->m_remainingMobility) {
@@ -463,8 +507,8 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     StopCursor(stopAfterMove);
     if (processEvent && stopAfterMove && ComboDraw(0))
         UpdateScreen(0, 0);
-    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 0);
-    step = GetCell(m_mapOriginX + 7, m_mapOriginY + 7)->m_tileIndex;
+    SetEnvironmentOrigin(m_mapOriginX + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + CURSOR_MAP_DRAW_OFFSET, 0);
+    step = GetCell(m_mapOriginX + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + CURSOR_MAP_DRAW_OFFSET)->m_tileIndex;
     if (giGroundToTerrain[step] != m_currentTerrain && step % 20 < 4) {
         m_currentTerrain = giGroundToTerrain[step];
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -549,7 +593,7 @@ void advManager::CheckAdjacentMon(signed char *adjacentMonster)
         if (dead) {
             EraseObj(monsterCell, monX, monY);
             if (gbThisNetHumanPlayer[giCurPlayer])
-                FizzleCenter(0);
+                FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
         }
         *adjacentMonster = 1;
     }
@@ -641,8 +685,8 @@ short advManager::ValidMove(short direction)
             return 0;
     }
     hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
-    north = (1 << direction) & 0x83;
-    downMask = (1 << direction) & 0x38;
+    north = (1 << direction) & CURSOR_NORTH_DIRECTION_MASK;
+    downMask = (1 << direction) & CURSOR_SOUTH_DIRECTION_MASK;
     if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
         && hereCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
@@ -668,7 +712,7 @@ void advManager::MoveOrigin(short directionX, short directionY)
     directionX = oldOriginX - m_mapOriginX;
     directionY = oldOriginY - m_mapOriginY;
     if (directionX != 0 || directionY != 0) {
-        m_mapData[m_cursorMapX + oldOriginX][m_cursorMapY + oldOriginY].m_flags &= ~0x40;
+        m_mapData[m_cursorMapX + oldOriginX][m_cursorMapY + oldOriginY].m_flags &= ~MAP_CELL_HERO_CURSOR;
         m_cursorMapX += directionX;
         m_cursorMapY += directionY;
         cellX = m_cursorMapX + m_mapOriginX;
