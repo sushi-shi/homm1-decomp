@@ -30,6 +30,16 @@ H1_ENUM_CONST_BEGIN(GameStorageConstant)
     GAME_BOAT_COUNT = 32
 H1_ENUM_CONST_END(GameStorageConstant)
 
+// game::m_difficulty: the four new-game difficulty buttons and
+// gDifficultyNames ("Easy", "Normal", "Hard", "Expert"); Buka GameDifficulty.
+H1_ENUM_BEGIN(GameDifficulty)
+    DIFFICULTY_EASY = 0,
+    DIFFICULTY_NORMAL = 1,
+    DIFFICULTY_HARD = 2,
+    DIFFICULTY_EXPERT = 3,
+    DIFFICULTY_COUNT = 4
+H1_ENUM_END(GameDifficulty)
+
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
 // and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
 // 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).

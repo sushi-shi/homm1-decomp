@@ -797,7 +797,7 @@ short NewGameHandler(tag_message& message) {
                         case NEW_GAME_OPPONENT_LAST:
                             iPlayer = message.id - 1;
                             gpGame->m_players[iPlayer].m_difficulty++;
-                            gpGame->m_players[iPlayer].m_difficulty %= 5;
+                            gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
                             if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
@@ -1098,7 +1098,7 @@ VA(0x0043c140, 0x7f)
 void game::InitEntireCampaign(int side) {
     LoadGame("origdata.bin", 1, 0);
     strcpy(gFullMapName, "");
-    gpGame->m_difficulty = 3;
+    gpGame->m_difficulty = DIFFICULTY_EXPERT;
     m_campaignType = side;
     m_campaignScenario = 0;
     m_campaignScenariosWon = 0;
@@ -2783,13 +2783,13 @@ int game::ComputeDailyGold(int player) {
     gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_BAG_OF_GOLD) * 750;
     gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_PURSE_OF_GOLD) * 500;
     if (!gbHumanPlayer[player]) {
-        if (gpGame->m_players[player].m_difficulty == 1)
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_DUMB)
             gold = gold * 0.75;
-        if (gpGame->m_players[player].m_difficulty == 2) {
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_AVERAGE) {
         }
-        if (gpGame->m_players[player].m_difficulty == 3)
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_SMART)
             gold = gold * 1.29;
-        if (gpGame->m_players[player].m_difficulty == 4)
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_GENIUS)
             gold = gold * 1.45;
     }
     return gold;
@@ -2832,11 +2832,11 @@ void game::PerDay(void) {
         m_players[i].m_resources[RESOURCE_GOLD] += ComputeDailyGold(i);
     for (i = 0; i < m_playerCount; i++) {
         if (!gbHumanPlayer[i]) {
-            if (gpGame->m_players[i].m_difficulty > 2) {
+            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST) {
                 m_players[i].m_resources[RESOURCE_WOOD]++;
                 m_players[i].m_resources[RESOURCE_ORE]++;
             }
-            if (gpGame->m_players[i].m_difficulty > 3 && m_day >= 1 && m_day <= 6)
+            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST && m_day >= 1 && m_day <= 6)
                 m_players[i].m_resources[m_day - 1]++;
         }
     }
@@ -2886,9 +2886,9 @@ void game::PerWeek(void) {
                 if (townPointer->m_buildings & 0x10)
                     gain += 2;
                 if (townPointer->m_owner >= 0 && !gbHumanPlayer[townPointer->m_owner]) {
-                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == 3)
+                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_SMART)
                         gain = gain * 1.24;
-                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == 4)
+                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_GENIUS)
                         gain = gain * 1.36;
                 }
                 if (giWeekType == 1 && gDwellingType[townPointer->m_type][j - 7] == giWeekSpecial)
@@ -4404,31 +4404,31 @@ int game::CalcDifficultyRating(void) {
     int total;
 
     total = 0;
-    if (m_difficulty == 0) {
-    } else if (m_difficulty == 1) {
+    if (m_difficulty == DIFFICULTY_EASY) {
+    } else if (m_difficulty == DIFFICULTY_NORMAL) {
         total += 10;
-    } else if (m_difficulty == 2) {
+    } else if (m_difficulty == DIFFICULTY_HARD) {
         total += 20;
-    } else if (m_difficulty == 3) {
+    } else if (m_difficulty == DIFFICULTY_EXPERT) {
         total += 30;
     }
     for (i = 1; i < 4; i++) {
         if (i < giNumHumanPlayers)
             total += (m_players[i].m_difficulty - 1) * 10;
-        else if (m_players[i].m_difficulty == 0)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_NONE)
             total -= 10;
-        else if (m_players[i].m_difficulty == 1)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_DUMB)
             total += 5;
-        else if (m_players[i].m_difficulty == 2)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_AVERAGE)
             total += 10;
-        else if (m_players[i].m_difficulty == 3)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_SMART)
             total += 15;
-        else if (m_players[i].m_difficulty == 4)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_GENIUS)
             total += 20;
     }
     gpGame->m_playerCount = 0;
     for (i = 0; i < 4; i++) {
-        if (gpGame->m_players[i].m_difficulty > 0)
+        if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
             gpGame->m_playerCount++;
     }
     if (gbKingOfTheHill) {
