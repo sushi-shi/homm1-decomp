@@ -23,7 +23,8 @@ public:
     unsigned char m_objectIndex;
     unsigned char m_overlayTileset;
     unsigned char m_overlayIndex;
-    char m_unknown05;
+    // DrawCell draws this overlay frame zero-extended.
+    unsigned char m_unknown05;
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
     unsigned char m_flags;
     unsigned char m_unknown07;
