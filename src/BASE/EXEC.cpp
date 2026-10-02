@@ -7,10 +7,36 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
+#include <SOURCE/X_GLOBAL.h>
+
+// Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
+DATA(0x004a1820) char gResourceManagerInitError[] = "Unable to initialize resources - possible disk problem.";
+DATA(0x004a1858) char gInputManagerInitError[] =
+    "Unable to initialize input devices - possible problem with mouse or keyboard.";
+DATA(0x004a18a8) char gSoundManagerInitError[] = "Unable to initialize sound.";
+DATA(0x004a18c4) char gMouseManagerInitError[] = "Unable to initialize mouse.";
+DATA(0x004a18e0) char gWindowManagerInitError[] =
+    "Unable to initialize windows - possible memory or disk error.";
+DATA(0x004a1920) char gDialogManagerError1[] = "Can't add manager!";
+DATA(0x004a1934) char gDialogManagerError2[] = "Can't add manager!";
+DATA(0x004a1948) char gDialogManagerError3[] = "Can't add manager!";
+DATA(0x004a195c) char gDialogManagerError4[] = "Can't add manager!";
+// Retail keeps the manager-list dump texts (PoL SExecutiveText names) between the
+// dialog and call-manager errors; HoMM1 code no longer references them.
+DATA(0x004a1970) char gManagerListStart[] = "-----Manager List Start-----";
+DATA(0x004a1990) char gManagerListDivider1[] = "-----";
+DATA(0x004a1998) char gManagerListHeaderFormat[] = "Head %d   Tail %d";
+DATA(0x004a19ac) char gManagerListDivider2[] = "-----";
+DATA(0x004a19b4) char gManagerListEntryFormat[] = "Manager %20s  this %d   prev %d  next %d";
+DATA(0x004a19e0) char gManagerListStop[] = "--*--Manager List Stop --*--\n\n";
+DATA(0x004a1a00) char gCallManagerError1[] = "Can't add manager!";
+DATA(0x004a1a14) char gCallManagerError2[] = "Can't add manager!";
 
 VA(0x0047a170, 0x10)
 executive::executive(void)
@@ -223,18 +249,3 @@ void executive::MainLoop(void)
         }
     }
 }
-
-// Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
-DATA(0x004a1820) char gResourceManagerInitError[] = "Unable to initialize resources - possible disk problem.";
-DATA(0x004a1858) char gInputManagerInitError[] =
-    "Unable to initialize input devices - possible problem with mouse or keyboard.";
-DATA(0x004a18a8) char gSoundManagerInitError[] = "Unable to initialize sound.";
-DATA(0x004a18c4) char gMouseManagerInitError[] = "Unable to initialize mouse.";
-DATA(0x004a18e0) char gWindowManagerInitError[] =
-    "Unable to initialize windows - possible memory or disk error.";
-DATA(0x004a1920) char gDialogManagerError1[] = "Can't add manager!";
-DATA(0x004a1934) char gDialogManagerError2[] = "Can't add manager!";
-DATA(0x004a1948) char gDialogManagerError3[] = "Can't add manager!";
-DATA(0x004a195c) char gDialogManagerError4[] = "Can't add manager!";
-DATA(0x004a1a00) char gCallManagerError1[] = "Can't add manager!";
-DATA(0x004a1a14) char gCallManagerError2[] = "Can't add manager!";
