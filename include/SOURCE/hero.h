@@ -72,7 +72,9 @@ public:
     signed char m_primaryStats[HERO_STARTING_STAT_COUNT];
     signed char m_morale;
     signed char m_luck;
-    char m_unknown37[6];
+    char m_unknown37[2];
+    // DoAIEvent tests and sets one bit per visited site index.
+    int m_visitedSites;
     short m_randomSeed;
     char m_unknown3f[0x18];
     armyGroup m_army;

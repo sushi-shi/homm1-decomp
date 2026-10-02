@@ -136,3 +136,4 @@ rva	name	provenance
 0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
 0x0003D4C3	?SettleOverlay@game@@QAEXHH@Z	advManager::EraseObj calls it on gpGame with the erased cell x/y (ret 8); body lifts the overlay frame into an emptied object slot
 0x0005015C	?oldmain@@YAHXZ	AppInit calls it with no arguments and tests EAX; body guards a re-entry byte, calls executive::InitSystem and shuts down with "Initialization failed!", as Buka KB oldmain
+0x000396C3	?ComputeUALoc@game@@QAEXC@Z	DoAIEvent obelisk case calls it on gpGame with the hero owner byte (ret 4) before setting the visitor bit; body counts visited obelisks via playerData::CountVisitedObelisks, as Buka ComputeUALoc

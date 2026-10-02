@@ -96,7 +96,8 @@ public:
     signed char m_randomArtifacts[0x25];
     boatRecord m_boats[GAME_BOAT_COUNT];
     signed char m_boatSlots[GAME_BOAT_COUNT];
-    char m_unknown145a6[0x30];
+    // Obelisk events test and set the visiting player bit, one byte per obelisk.
+    signed char m_obeliskVisitors[0x30];
     // InsertSound reads the environment sound id per [x][y] cell.
     signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.
@@ -216,6 +217,8 @@ public:
     // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
     void SettleOverlay(int, int);
+    // HoMM1 retail 0x004396c3 (ret 4): Buka ComputeUALoc as a game method.
+    void ComputeUALoc(signed char);
     void ProcessMapExtra(void);
     void SetupTowns(void);
     void ProcessOnMapHeroes(void);

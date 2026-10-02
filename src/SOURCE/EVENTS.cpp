@@ -31,6 +31,8 @@ extern char* gColorNames[];
 extern signed char gbInCombat;
 // DoEvent and DoCombat restore a music volume parked here (-1 when none).
 extern int giEventMusicVolume;
+// Per-cell bitmask of the players whose heroes have stood there.
+extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 
 // SendHeroTownData's payload after the remote-message header, as in Buka's
 // combatRemoteData; hero records follow one fragment byte.
@@ -713,7 +715,368 @@ void advManager::FizzleCenter(int fizzleType) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.283401;margin=1.483201;shape=0.274;size=0.397;calls=0.409;alternate=pol20:void advManager::DoAIEvent(class mapCell *, class hero *, int, int)@0x000b1e43
 VA(0x00461484, 0x1141)
-void advManager::DoAIEvent(class mapCell *, class hero *, int, int) {}
+void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, int y) {
+    int troopType;
+    int available;
+    int purchaseValue;
+    int bestSlot;
+    playerData* origPlayerData;
+    signed char eventType;
+    int numHired;
+    int counter;
+    town* theCastle;
+    int junk[4];
+    int savedPlayer;
+    signed char erase;
+    int handled;
+    int battleResult;
+    int win;
+    boatRecord* ship;
+    signed char oldShowIt;
+    int strength;
+    int resType;
+    signed char tx;
+    signed char teleportCount;
+    signed char ty;
+    int res;
+    int cost[7];
+    int victory;
+    signed char adjacentMonster;
+    hero* enemyHero;
+    float heroLosses;
+    float theirLosses;
+
+    theCastle = 0;
+    eventType = cell->m_triggerType & 0x7f;
+    erase = 0;
+    handled = 0;
+    savedPlayer = giCurPlayer;
+    origPlayerData = gpCurPlayer;
+    --eventHero->m_remainingMobility;
+    mapVisited[x][y] |= giCurPlayerBit;
+    switch (eventType) {
+        case 31:
+            if (eventHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+                eventHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
+                eventHero->m_remainingMobility = 0;
+                eventHero->m_direction = m_cursorDirection;
+                m_cursorType = eventHero->m_unknown1c;
+                m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+                m_cursorActive = 1;
+                CheckAdjacentMon(&adjacentMonster);
+            }
+            break;
+        case 62:
+            ship = &gpGame->m_boats[(unsigned char)cell->m_objectMetadata];
+            gpGame->RestoreCell(-1, -1, ship->savedTriggerType, ship->savedEventData, cell, 3);
+            eventHero->m_eventFlags |= HERO_EVENT_EMBARKED;
+            eventHero->m_remainingMobility = 0;
+            ship->heroId = eventHero->m_id;
+            ship->owner = eventHero->m_owner;
+            m_cursorType = 4;
+            m_cursorDirection = ship->direction;
+            m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+            m_cursorActive = 1;
+            break;
+        case 1:
+        case 25:
+        case 32:
+            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+                break;
+            gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
+            break;
+        case 23:
+            if (gpGame->m_mineOwners[1] == giCurPlayer)
+                break;
+            gpGame->ClaimMine(1, giCurPlayer);
+            break;
+        case 22:
+            if (gpGame->m_mineOwners[0] == giCurPlayer)
+                break;
+            for (counter = 0; counter < 5; counter++) {
+                gpMonsterGroup->m_creatureTypes[counter] = 0x17;
+                gpMonsterGroup->m_creatureCounts[counter] = 1;
+            }
+            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonsterGroup, 0, 0, 0, 500,
+                                           win, strength);
+            if (win) {
+                counter = 5;
+                victory = gpPhilAI->CombatMonsterEvent(eventHero, 0x17, &counter, cell);
+                if (victory)
+                    gpGame->ClaimMine(0, giCurPlayer);
+            }
+            break;
+        case 6:
+            if (gpPhilAI->ChooseGoldOrExperience(eventHero,
+                                                 (unsigned char)cell->m_objectMetadata * 500,
+                                                 ((unsigned char)cell->m_objectMetadata - 1) * 500))
+                GiveResource(eventHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+            else
+                GiveExperience(eventHero, ((unsigned char)cell->m_objectMetadata - 1) * 500, 1);
+            erase = 1;
+            break;
+        case 3:
+            if (!(eventHero->m_eventFlags & HERO_EVENT_BUOY)) {
+                eventHero->m_eventFlags |= HERO_EVENT_BUOY;
+                eventHero->m_morale++;
+            }
+            break;
+        case 7:
+            if (!(eventHero->m_eventFlags & HERO_EVENT_FAERIE_RING)) {
+                eventHero->m_eventFlags |= HERO_EVENT_FAERIE_RING;
+                eventHero->m_luck++;
+            }
+            break;
+        case 9:
+            if (!(eventHero->m_eventFlags & HERO_EVENT_FOUNTAIN)) {
+                eventHero->m_eventFlags |= HERO_EVENT_FOUNTAIN;
+                eventHero->m_luck++;
+            }
+            break;
+        case 28:
+            if (!(eventHero->m_eventFlags & HERO_EVENT_OASIS)) {
+                eventHero->m_eventFlags |= HERO_EVENT_OASIS;
+                eventHero->m_morale++;
+            }
+            break;
+        case 36:
+            if (!(eventHero->m_eventFlags & HERO_EVENT_TEMPLE)) {
+                eventHero->m_eventFlags |= HERO_EVENT_TEMPLE;
+                eventHero->m_morale += 2;
+            }
+            break;
+        case 4:
+            switch ((unsigned char)cell->m_objectMetadata) {
+                case 1:
+                    break;
+                case 2:
+                    GiveRandomArtifact(eventHero);
+                    cell->m_objectMetadata = 1;
+                    break;
+            }
+            break;
+        case 8:
+            GiveResource(eventHero, 6, ((unsigned char)cell->m_objectMetadata >> 4) * 100);
+            GiveResource(eventHero, (unsigned char)cell->m_objectMetadata & 0xf,
+                         (unsigned char)cell->m_objectMetadata >> 4);
+            erase = 1;
+            gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
+            break;
+        case 10:
+            if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
+                GiveExperience(eventHero, 1000, 1);
+                eventHero->m_visitedSites |= 1 << cell->m_objectMetadata;
+            }
+            break;
+        case 24:
+            if ((unsigned char)cell->m_objectMetadata) {
+                GiveResource(eventHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+                cell->m_objectMetadata = 0;
+            }
+            break;
+        case 29:
+            resType = cell->m_objectIndex - 0x3d;
+            GiveResource(eventHero, resType,
+                         resType == 6 ? (unsigned char)cell->m_objectMetadata * 100
+                                           : (unsigned char)cell->m_objectMetadata);
+            erase = 1;
+            break;
+        case 45:
+            if ((unsigned char)cell->m_objectMetadata != 99) {
+                GiveResource(eventHero, cell->m_objectMetadata, 2);
+                cell->m_objectMetadata = 99;
+            }
+            break;
+        case 11:
+            troopType = 0x1b;
+            available = 0;
+            goto recruit;
+        case 42:
+            troopType = 0x18;
+            available = 0;
+            goto recruit;
+        case 39:
+            troopType = 0x19;
+            available = 0;
+            goto recruit;
+        case 13:
+            troopType = 6;
+            available = 1;
+            goto recruit;
+        case 14:
+            troopType = 0;
+            available = 1;
+            goto recruit;
+        case 15:
+            troopType = 1;
+            available = 1;
+            goto recruit;
+        case 16:
+            troopType = 0xd;
+            available = 1;
+            goto recruit;
+        case 17:
+            troopType = 0;
+            available = 1;
+            goto recruit;
+        recruit:
+            if ((unsigned char)cell->m_objectMetadata) {
+                gpPhilAI->EvaluateOneTimeCreaturePurchase(
+                    eventHero, troopType, (unsigned char)cell->m_objectMetadata, available,
+                    numHired, purchaseValue, bestSlot);
+                if (numHired > 0) {
+                    gpGame->GiveArmy(&eventHero->m_army, troopType, numHired,
+                                     bestSlot);
+                    cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata - numHired;
+                    if (!available) {
+                        GetMonsterCost(troopType, cost);
+                        for (counter = 0; counter < 7; counter++)
+                            gpCurPlayer->m_resources[counter] -= -(-(cost[counter] * numHired));
+                    }
+                }
+            }
+            if (!(unsigned char)cell->m_objectMetadata && eventType == 11)
+                erase = 1;
+            break;
+        case 26:
+            ComputerMonsterInteract(cell, eventHero, &erase);
+            break;
+        case 27:
+            if (!(gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1] & giCurPlayerBit)) {
+                gpGame->ComputeUALoc(eventHero->m_owner);
+                gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1] |= giCurPlayerBit;
+            }
+            break;
+        case 33:
+            break;
+        case 34:
+            if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
+                eventHero->AddSpell((unsigned char)cell->m_objectMetadata - 1,
+                                    eventHero->m_primaryStats[3], 0);
+            break;
+        case 40:
+            gpPhilAI->TownEvent(cell, eventHero, x, y);
+            break;
+        case 44:
+            DoWhirlpool(eventHero);
+        case 41:
+            teleportCount = 0;
+            for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
+                for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
+                    if (gpGame->m_map[tx][ty].m_triggerType
+                            == (unsigned char)(eventType | 0x80)
+                        && abs(tx - x) + abs(ty - y) > (eventType == 41 ? 1 : 3))
+                        teleportCount++;
+                }
+            }
+            if (teleportCount >= 1) {
+                if (teleportCount > 1)
+                    teleportCount = Random(1, teleportCount);
+                for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
+                    for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
+                        if (gpGame->m_map[tx][ty].m_triggerType
+                                == (unsigned char)(eventType | 0x80)
+                            && abs(tx - x) + abs(ty - y) > (eventType == 41 ? 1 : 3)) {
+                            if (--teleportCount <= 0)
+                                goto teleport;
+                        }
+                    }
+                }
+            teleport:
+                StopCursor(1);
+                gpAdvManager->TeleportTo(tx, ty, 0);
+            }
+            break;
+        case 48:
+            switch ((unsigned char)cell->m_objectMetadata) {
+                case 1:
+                giveArtifact:
+                    GiveArtifact(eventHero, cell->m_objectIndex);
+                    erase = 1;
+                    break;
+                case 2:
+                    counter = 50;
+                    if (gpPhilAI->CombatMonsterEvent(eventHero, 0x18, &counter, cell))
+                        goto giveArtifact;
+                    break;
+                case 3:
+                    if (gpPhilAI->ChooseToBuyArtifact(eventHero, cell->m_objectIndex, 2000)) {
+                        gpGame->m_players[eventHero->m_owner].m_resources[6] -= 2000;
+                        goto giveArtifact;
+                    } else {
+                        erase = 1;
+                    }
+                    break;
+            }
+            break;
+        case 61:
+            enemyHero = gpGame->GetHero(cell->m_objectMetadata);
+            oldShowIt = bShowIt;
+            if (enemyHero->m_owner == giCurPlayer)
+                return;
+            if (enemyHero->m_locationType == 0xa8)
+                theCastle = gpGame->GetTown(enemyHero->m_occupiedTown);
+            if (!gbHumanPlayer[enemyHero->m_owner]) {
+                battleResult = gpPhilAI->QuickCombat(&eventHero->m_army, eventHero, &enemyHero->m_army,
+                                                     enemyHero, 0, 0, heroLosses, theirLosses);
+                if (battleResult && theCastle)
+                    battleResult = gpPhilAI->QuickCombat(&eventHero->m_army, eventHero,
+                                                         &theCastle->m_army, 0, 1,
+                                                         theCastle->m_id, heroLosses,
+                                                         theirLosses);
+            } else {
+                if (theCastle)
+                    theCastle->m_occupyingHeroId = enemyHero->m_id;
+                res = DoCombat(x, y, eventHero, &eventHero->m_army, theCastle,
+                                            enemyHero, &enemyHero->m_army, x, y, -1, 1);
+                if (res == 1 && theCastle)
+                    gpGame->ClaimTown(theCastle->m_id, giCurPlayer);
+            }
+            CompleteDraw(0);
+            break;
+        case 2:
+            break;
+        case 5:
+            switch ((unsigned char)cell->m_objectMetadata) {
+                case 1:
+                    break;
+                case 2:
+                    GiveExperience(eventHero, 1000, 1);
+                    break;
+                case 3:
+                    GiveExperience(eventHero, 1000, 1);
+                    GiveRandomArtifact(eventHero);
+                    break;
+                case 4:
+                    GiveExperience(eventHero, 1000, 1);
+                    GiveResource(eventHero, 6, 2500);
+                    break;
+                case 5:
+                    if (gpGame->m_players[eventHero->m_owner].m_resources[6] >= 2500) {
+                        if (gpPhilAI->ChooseToPayRansomOnHero(eventHero, 2500))
+                            gpGame->m_players[eventHero->m_owner].m_resources[6] += -2500;
+                        else
+                            HeroLoses(eventHero);
+                    } else {
+                        HeroLoses(eventHero);
+                    }
+                    break;
+            }
+            cell->m_objectMetadata = 1;
+            break;
+        case 12:
+        case 35:
+            gpPhilAI->FightEvent(eventHero, cell);
+            break;
+        default:
+            break;
+    }
+    if (erase)
+        EraseObj(cell, x, y);
+    giCurPlayer = savedPlayer;
+    gpCurPlayer = origPlayerData;
+    CheckEndGame(0);
+}
 
 // donor PoL RVA 0x000b4fd5; preferred Buka symbol ?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PAHHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
