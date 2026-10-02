@@ -1071,11 +1071,238 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         Stand(1);
 }
 
-// donor PoL RVA 0x0004c7e5; preferred Buka symbol ?SpecialAttack@army@@QAEXXZ
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.357822;margin=0.373223;shape=0.266;size=0.572;calls=0.585;alternate=pol20:void army::SpecialAttack(void)@0x0004c7e5
+// A ranged attack: turn toward the target, animate the missile hex by hex
+// over a saved screen patch, apply wall and luck modifiers, report the
+// damage; creature 14 shoots twice.
 VA(0x00467b97, 0xcca)
-void army::SpecialAttack(void) {}
+void army::SpecialAttack(void) {
+    int targetHexCol;
+    int dmg;
+    int xEnd;
+    signed char arrowFrame;
+    int firstX;
+    int destY;
+    int killCount;
+    army* target;
+    int startY;
+    int destX;
+    int startX;
+    int maxY;
+    bitmap* saved;
+    int iMaxX;
+    int j;
+    signed char faceLeft;
+    int facing;
+    int dy;
+    int i;
+    int dx;
+    int yStep;
+    int posY;
+    int steps;
+    int yOffset[5];
+    int xStep;
+    int y2;
+    int posX;
+    signed char myRow;
+    int y0;
+    int prevY;
+    signed char targetRow;
+    signed char srcCol;
+    signed char pitchSign;
+    int offY;
+    int minY;
+    int prevX;
+    signed char tgtCol;
+    int offX;
+    int minX;
+    signed char inCastle;
+
+    facing = m_facing;
+    m_unknown0b = 0;
+    if (m_targetSide < 0 || m_targetIndex < 0)
+        return;
+    target = &gpCombatManager->m_armies[m_targetSide][m_targetIndex];
+    tgtCol = target->m_hex % 9;
+    targetRow = target->m_hex / 9;
+    srcCol = m_hex % 9;
+    myRow = m_hex / 9;
+    facing = m_facing;
+    if (tgtCol > srcCol || !(myRow & 1) && tgtCol == srcCol)
+        m_facing = 0;
+    else
+        m_facing = 1;
+    gpCombatManager->SetGridMode(m_facing == 0);
+    CheckLuck();
+    m_unknown08 = 2;
+    gpSoundManager->MemorySample(m_samples[3]);
+    for (i = 0; i < 4; i++) {
+        m_unknown09 = i + 1;
+        gpCombatManager->UpdateGrid(m_hex, m_stats.attributes);
+        gpCombatManager->DrawFrame(1);
+    }
+    targetHexCol = tgtCol;
+    if (target->m_stats.attributes & 1) {
+        if (target->m_facing == 1)
+            targetHexCol--;
+        else
+            targetHexCol++;
+    }
+    dx = targetHexCol - srcCol;
+    faceLeft = 0;
+    if (dx < 0) {
+        faceLeft = 1;
+        dx = -dx;
+    }
+    dy = targetRow - myRow;
+    if (dy < 0)
+        dy = -dy;
+    steps = dy > dx ? dy : dx;
+    arrowFrame = 7;
+    pitchSign = 0;
+    if (targetRow < myRow)
+        pitchSign = -1;
+    else if (targetRow > myRow)
+        pitchSign = 1;
+    if (dy > 1)
+        arrowFrame += pitchSign;
+    if (dx <= 3) {
+        if (dy > 2)
+            arrowFrame += pitchSign;
+        if (dy == 1)
+            arrowFrame += pitchSign;
+    }
+    yOffset[0] = -20;
+    yOffset[1] = -15;
+    yOffset[2] = 0;
+    yOffset[3] = 15;
+    yOffset[4] = 20;
+    startX = gpCombatManager->m_hexCells[m_hex].m_x + (m_facing == 0 ? 80 : -80);
+    startY = gpCombatManager->m_hexCells[m_hex].m_y - 90 + yOffset[arrowFrame - 5];
+    destX = gpCombatManager->m_hexCells[targetRow * 9 + targetHexCol].m_x;
+    destY = gpCombatManager->m_hexCells[targetRow * 9].m_y - 90;
+    if (dx == 0)
+        xStep = 0;
+    else
+        xStep = (destX - startX) / (steps * 2);
+    if (dy == 0)
+        yStep = 0;
+    else
+        yStep = (destY - startY) / (steps * 2);
+    firstX = xStep + startX;
+    xEnd = destX - xStep * steps * 2;
+    offX = (firstX + xEnd) / 2 - firstX;
+    y0 = yStep + startY;
+    y2 = destY - steps * yStep * 2;
+    offY = (y0 + y2) / 2 - y0;
+    posX = offX + startX;
+    posY = offY + startY;
+    iMaxX = 0;
+    minX = 639;
+    maxY = 0;
+    minY = 479;
+    saved = new bitmap(33, 70, 60);
+    saved->GrabBitmap(gpWindowManager->m_screen, posX - 35, posY - 30);
+    prevX = posX;
+    prevY = posY;
+    for (j = 0; j < steps * 2; j++) {
+        saved->DrawToBuffer(prevX - 35, prevY - 30);
+        if (prevX - 35 < minX)
+            minX = prevX - 35;
+        if (prevX + 35 > iMaxX)
+            iMaxX = prevX + 35;
+        if (prevY - 30 < minY)
+            minY = prevY - 30;
+        if (prevY + 30 > maxY)
+            maxY = prevY + 30;
+        saved->GrabBitmap(gpWindowManager->m_screen, posX - 35, posY - 30);
+        m_attackIcon->DrawToBuffer(posX, posY, arrowFrame, faceLeft, 0);
+        if (posX - 35 < minX)
+            minX = posX - 35;
+        if (posX + 35 > iMaxX)
+            iMaxX = posX + 35;
+        if (posY - 30 < minY)
+            minY = posY - 30;
+        if (posY + 30 > maxY)
+            maxY = posY + 30;
+        DelayTil(glTimers);
+        gpWindowManager->UpdateScreenRegion(minX, minY, iMaxX - minX + 1, maxY - minY + 1);
+        glTimers[0] = KBTickCount() + 15;
+        prevX = posX;
+        prevY = posY;
+        posX += xStep;
+        posY += yStep;
+    }
+    saved->DrawToBuffer(prevX - 35, prevY - 30);
+    gpWindowManager->UpdateScreenRegion(prevX - 35, prevY - 30, 70, 60);
+    delete saved;
+    m_stats.shots--;
+    inCastle = 0;
+    if (gpCombatManager->m_castleSide[0] && m_hex % 9 <= 4 && target->m_hex % 9 >= 6) {
+        int gateHex;
+        int hitRow;
+        int colDist;
+        int myR;
+        int sCol;
+        int targetR;
+        int tgtC;
+        int wallDist;
+
+        sCol = m_hex % 9;
+        myR = m_hex / 9;
+        colDist = sCol - 5;
+        tgtC = target->m_hex % 9;
+        targetR = target->m_hex / 9;
+        wallDist = 5 - sCol;
+        hitRow = targetR;
+        if (abs(targetR - myR) >= 2)
+            hitRow -= -(-((targetR - myR) / 2));
+        if (abs(targetR - myR) % 2 == 1) {
+            if (colDist < wallDist || colDist == wallDist && (myR == 1 || myR == 3)) {
+                if (myR < targetR)
+                    hitRow--;
+                else
+                    hitRow++;
+            }
+        }
+        if (hitRow > 4)
+            hitRow = 4;
+        if (hitRow < 0)
+            hitRow = 0;
+        if (gpCombatManager->m_hexCells[hitRow * 9 + 5].m_obstacleIndex == 10
+            || gpCombatManager->m_hexCells[hitRow * 9 + 5].m_obstacleIndex == 8)
+            inCastle = 1;
+        else
+            inCastle = 0;
+    }
+    DamageEnemy(target, &dmg, &killCount, 1, inCastle ? 4 : 0);
+    if (killCount > 0)
+        sprintf(gText, "%s %s %d %s.  %d %s %s.",
+                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+                m_quantity > 1 ? "do" : "does", dmg, "Damage", killCount,
+                killCount > 1 ? gArmyNamesPlural[target->m_creatureType] : gArmyNames[target->m_creatureType],
+                killCount > 1 ? "perish" : "perishes");
+    else
+        sprintf(gText, "%s %s %d %s.",
+                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+                m_quantity > 1 ? "do" : "does", dmg, "Damage");
+    gText[0] -= 32;
+    gpCombatManager->CombatMessage(gText, 1);
+    PowEffect(m_stats.unknown07);
+    if (!(target->m_stats.attributes & 0x10))
+        target->Stand(0);
+    if (m_unknown52 == 1)
+        CancelSpell();
+    WaitSample(3);
+    m_facing = facing;
+    Stand(1);
+    if (target->m_quantity > 0)
+        target->Stand(1);
+    if (!gbSecondShot && m_creatureType == 14 && target->m_quantity > 0) {
+        gbSecondShot = 1;
+        SpecialAttack();
+        gbSecondShot = 0;
+    }
+}
 
 // Attacks every enemy next to the stack (the hydra), then turns them back.
 VA(0x00468861, 0x765)

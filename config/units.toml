@@ -251,7 +251,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/ARMY"
 source = "src/SOURCE/ARMY.cpp"
-flags = "cpp_carcass"
+# SpecialAttack's fs:[0] frame around new bitmap proves /GX.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/HERO"

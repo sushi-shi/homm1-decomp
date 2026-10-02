@@ -157,4 +157,6 @@ extern char* gPowEffectNames[];
 extern float gfBattleStat[];
 // DamageEnemy flags a genie halving the target stack.
 extern signed char gbGenieHalf;
+// Set while SpecialAttack fires the second shot of a double shooter.
+extern int gbSecondShot;
 #endif // HOMM1_SOURCE_ARMY_H
