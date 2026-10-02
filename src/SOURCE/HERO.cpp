@@ -144,11 +144,11 @@ short hero::GetNumSpells(signed char type) {
     short i;
 
     for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
-        if (m_spells[i] != -1)
+        if (m_spells[i] != SPELL_NONE)
             combat++;
     }
     for (i = 0; i < HERO_SPELL_SLOT_COUNT - HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
-        if (m_spells[HERO_COMBAT_SPELL_SLOT_COUNT + i] != -1)
+        if (m_spells[HERO_COMBAT_SPELL_SLOT_COUNT + i] != SPELL_NONE)
             adventure++;
     }
     switch (type) {
@@ -176,13 +176,13 @@ void hero::UseSpell(signed char spell) {
         if (m_spellCharges[i] > 1) {
             m_spellCharges[i]--;
         } else {
-            m_spells[i] = -1;
+            m_spells[i] = SPELL_NONE;
             m_spellCharges[i] = 0;
             for (j = i + 1; j < HERO_COMBAT_SPELL_SLOT_COUNT; j++) {
                 m_spells[j - 1] = m_spells[j];
                 m_spellCharges[j - 1] = m_spellCharges[j];
             }
-            m_spells[HERO_COMBAT_SPELL_SLOT_COUNT - 1] = -1;
+            m_spells[HERO_COMBAT_SPELL_SLOT_COUNT - 1] = SPELL_NONE;
             m_spellCharges[HERO_COMBAT_SPELL_SLOT_COUNT - 1] = 0;
         }
     } else if (spell >= HERO_COMBAT_SPELL_SLOT_COUNT && spell < HERO_SPELL_SLOT_COUNT) {
@@ -193,13 +193,13 @@ void hero::UseSpell(signed char spell) {
         if (m_spellCharges[i] > 1) {
             m_spellCharges[i]--;
         } else {
-            m_spells[i] = -1;
+            m_spells[i] = SPELL_NONE;
             m_spellCharges[i] = 0;
             for (k = i + 1; k < HERO_SPELL_SLOT_COUNT; k++) {
                 m_spells[k - 1] = m_spells[k];
                 m_spellCharges[k - 1] = m_spellCharges[k];
             }
-            m_spells[HERO_SPELL_SLOT_COUNT - 1] = -1;
+            m_spells[HERO_SPELL_SLOT_COUNT - 1] = SPELL_NONE;
             m_spellCharges[HERO_SPELL_SLOT_COUNT - 1] = 0;
         }
     }
@@ -212,7 +212,7 @@ int hero::AddSpell(signed char spell, signed char charges, int checkOnly) {
 
     if (spell >= 0 && spell < HERO_COMBAT_SPELL_SLOT_COUNT) {
         for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
-            if (m_spells[i] == spell || m_spells[i] == -1) {
+            if (m_spells[i] == spell || m_spells[i] == SPELL_NONE) {
                 if (m_spells[i] == spell)
                     added = charges - m_spellCharges[i];
                 else
@@ -227,7 +227,7 @@ int hero::AddSpell(signed char spell, signed char charges, int checkOnly) {
     }
     if (spell >= HERO_COMBAT_SPELL_SLOT_COUNT && spell < HERO_SPELL_SLOT_COUNT) {
         for (i = HERO_COMBAT_SPELL_SLOT_COUNT; i < HERO_SPELL_SLOT_COUNT; i++) {
-            if (m_spells[i] == spell || m_spells[i] == -1) {
+            if (m_spells[i] == spell || m_spells[i] == SPELL_NONE) {
                 if (m_spells[i] == spell)
                     added = charges - m_spellCharges[i];
                 else

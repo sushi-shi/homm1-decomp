@@ -404,7 +404,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         pHero->m_remainingMobility = 0;
     else
         pHero->m_remainingMobility -= 12;
-    pHero->UseSpell(27);
+    pHero->UseSpell(SPELL_DIMENSION_DOOR);
     return 1;
 }
 
@@ -525,7 +525,7 @@ void philAI::DoAI(int player) {
                 );
                 if (gpSearchArray->m_pathLength > 0) {
                     gpAdvManager->UpdateScreen(0, 0);
-                    if (aiHero->HasSpell(27) && DoDimensionDoor(aiHero))
+                    if (aiHero->HasSpell(SPELL_DIMENSION_DOOR) && DoDimensionDoor(aiHero))
                         goto retarget;
                     steps = 0;
                     pathIndex = gpSearchArray->m_pathLength - 1;

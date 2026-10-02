@@ -1855,7 +1855,7 @@ signed char game::ViewSpells(
 ) {
     tag_message message;
 
-    m_viewSpell = -1;
+    m_viewSpell = SPELL_NONE;
     short winX[3] = {177, 97, 177};
     short winY[3] = {100, 47, 100};
     if (!spellHero->GetNumSpells(spellType)) {

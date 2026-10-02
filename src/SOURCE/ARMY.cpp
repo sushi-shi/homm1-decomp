@@ -67,7 +67,7 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     m_creatureType = type;
     memcpy(&m_stats, &gMonsterDatabase[type].stats, sizeof(tag_monsterStats));
     m_unknown29 = 6;
-    m_spellEffect = -1;
+    m_spellEffect = SPELL_NONE;
     m_spellEndCondition = -1;
     commander = gpCombatManager->m_heroes[side];
     if (commander) {
@@ -203,12 +203,12 @@ void army::DrawToBuffer(short x, short y) {
                 m_standIcon->FillToBuffer(x, y, 0, 0xe4, m_facing, flip);
                 outlined = 1;
             }
-            if (m_spellEffect != -1) {
+            if (m_spellEffect != SPELL_NONE) {
                 switch (m_spellEffect) {
-                    case 5:
-                    case 8:
-                    case 9:
-                    case 12:
+                    case SPELL_HASTE:
+                    case SPELL_BLESS:
+                    case SPELL_PROTECTION:
+                    case SPELL_ANTI_MAGIC:
                         outlineColor = 0xf7;
                         break;
                     default:
@@ -290,7 +290,7 @@ void army::DrawToBuffer(short x, short y) {
             } else if (m_facing == 1) {
                 x -= 39;
             }
-            if (m_spellEffect != -1)
+            if (m_spellEffect != SPELL_NONE)
                 gpCombatManager->m_combatIcons[8]->DrawToBuffer(x, y - 40, m_spellEffect, 0, 0);
             gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, flip);
             break;
@@ -998,25 +998,25 @@ void army::DoAttack(int retaliation) {
     switch (m_creatureType) {
         case 11:
             if (SRandom(1, 5) == 3) {
-                if (target && target->m_spellEffect != 12 && target->m_creatureType != 23
+                if (target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != 23
                     && (target->m_creatureType != 13 || SRandom(0, 4) != 1)
                     && !(target->m_stats.attributes & 0x10)) {
-                    gpCombatManager->CastSpell(18, target->m_hex, 1, -1);
+                    gpCombatManager->CastSpell(SPELL_PARALYZE, target->m_hex, 1, -1);
                     didCast = 1;
                 }
-            } else if (SRandom(1, 5) == 3 && target2 && target2->m_spellEffect != 12
+            } else if (SRandom(1, 5) == 3 && target2 && target2->m_spellEffect != SPELL_ANTI_MAGIC
                        && target2->m_creatureType != 23
                        && (target2->m_creatureType != 13 || SRandom(0, 4) != 1)
                        && !(target2->m_stats.attributes & 0x10)) {
-                gpCombatManager->CastSpell(18, target2->m_hex, 1, -1);
+                gpCombatManager->CastSpell(SPELL_PARALYZE, target2->m_hex, 1, -1);
                 didCast = 1;
             }
             break;
         case 16:
-            if (SRandom(1, 5) == 3 && target && target->m_spellEffect != 12 && target->m_creatureType != 23
+            if (SRandom(1, 5) == 3 && target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != 23
                 && (target->m_creatureType != 13 || SRandom(0, 127) % 4 != 1)
                 && !(target->m_stats.attributes & 0x10)) {
-                gpCombatManager->CastSpell(7, target->m_hex, 1, -1);
+                gpCombatManager->CastSpell(SPELL_BLIND, target->m_hex, 1, -1);
                 didCast = 1;
             }
             break;
@@ -1072,7 +1072,7 @@ void army::DoAttack(int retaliation) {
     if (target && target->m_quantity > 0) {
         gpCombatManager->m_computeExtent = 1;
         target->Stand(1);
-        if (target->m_spellEffect == 18
+        if (target->m_spellEffect == SPELL_PARALYZE
             || target->m_creatureType != 20 && (target->m_stats.attributes & 0x40) || m_creatureType == 24
             || m_creatureType == 12 || didCast || retaliation) {
             goto secondStrike;
@@ -1097,7 +1097,7 @@ void army::DoAttack(int retaliation) {
     }
 secondStrike:
     if ((m_creatureType == 8 || m_creatureType == 5) && target && target->m_quantity > 0 && !retaliation
-        && m_spellEffect != 18 && m_quantity > 0) {
+        && m_spellEffect != SPELL_PARALYZE && m_quantity > 0) {
         curDir = m_attackDirection;
         m_attackDirection = attackDir;
         DoAttack(1);

@@ -42,7 +42,7 @@ int combatManager::DoSpellAI(signed char side)
     int candHex;
 
     bestEffect = 0;
-    selectedSpell = -1;
+    selectedSpell = SPELL_NONE;
     bestHexWork = -1;
     if (m_heroes[side] == NULL)
         return 0;
@@ -380,7 +380,7 @@ void combatManager::EffectSpellResurrect(int* effect, int hex)
     int num;
 
     targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-    if (targetArmy->m_creatureType == 0x17 || targetArmy->m_spellEffect == 12) {
+    if (targetArmy->m_creatureType == 0x17 || targetArmy->m_spellEffect == SPELL_ANTI_MAGIC) {
         *effect = 0;
         return;
     }
@@ -422,20 +422,20 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
     ClearEffects();
     while (!finished) {
         switch (spell) {
-        case 15:
-        case 16:
+        case SPELL_ARMAGEDDON:
+        case SPELL_STORM:
             NextPos(&cell);
             finished = cell > 0x2b;
             break;
-        case 0:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_METEOR_SHOWER:
             if (dir < COMBAT_DIRECTION_ADJACENT_COUNT) {
                 cell = GetAdjacentCellIndexNoArmy(targetHex, dir);
                 dir++;
             } else
                 finished = 1;
             break;
-        case 1:
+        case SPELL_LIGHTNING_BOLT:
             if (cell == targetHex)
                 finished = 1;
             else
@@ -447,7 +447,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
             if (targetCreature->m_stats.hitPoints > 0
                 && !gArmyEffected[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex] = 1;
-                if (targetCreature->m_creatureType != 0x17 && targetCreature->m_spellEffect != 12) {
+                if (targetCreature->m_creatureType != 0x17 && targetCreature->m_spellEffect != SPELL_ANTI_MAGIC) {
                     if (targetCreature->m_creatureType == 0xd)
                         hitDamage = power * 0.75;
                     else
