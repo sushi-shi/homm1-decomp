@@ -12,28 +12,44 @@
 #include <stdlib.h>
 #include <string.h>
 
+// clang-format off
+// Buka RecruitConstant (HoMM1 values): window and dialog positions and
+// SetupRecruitWin's text buffers.
 H1_ENUM_CONST_BEGIN(RecruitConstant)
-RECRUIT_RESOURCE_COUNT = 6,
-    RECRUIT_GOLD_RESOURCE = 6, RECRUIT_NO_RESOURCE = -1, RECRUIT_WINDOW_X = 0xa0,
-    RECRUIT_WINDOW_Y = 0x10, RECRUIT_VIEW_ARMY_X = 0x77, RECRUIT_VIEW_ARMY_Y = 0x20,
-    RECRUIT_NO_ROOM_DIALOG_X = 0xb1, RECRUIT_NO_ROOM_DIALOG_Y = 0x64, RECRUIT_MANAGER_OPEN_OK = 0,
-    RECRUIT_WIDGET_FLAGS_DIMMED = 0x4008, RECRUIT_WIDGET_FLAG_ENABLED = 2,
-    RECRUIT_NOTIFY_SELECT = 12,
-    RECRUIT_COMMAND_GET_TEXT = 7 H1_ENUM_CONST_END(RecruitConstant)
+    RECRUIT_WINDOW_X = 0xa0,
+    RECRUIT_WINDOW_Y = 0x10,
+    RECRUIT_VIEW_ARMY_X = 0x77,
+    RECRUIT_VIEW_ARMY_Y = 0x20,
+    RECRUIT_NO_ROOM_DIALOG_X = 0xb1,
+    RECRUIT_NO_ROOM_DIALOG_Y = 0x64,
+    RECRUIT_NAME_SIZE = 20,
+    RECRUIT_LABEL_SIZE = 40
+H1_ENUM_CONST_END(RecruitConstant)
 
-        H1_ENUM_BEGIN(RecruitControl) RECRUIT_CLOSE_CONTROL = 0x7800,
-    RECRUIT_CANCEL_CONTROL = 0x7801, RECRUIT_CONFIRM_CONTROL = 0x7802, RECRUIT_TITLE_CONTROL = 0x40,
-    RECRUIT_CREATURE_CONTROL = 0x42, RECRUIT_AVAILABLE_CONTROL = 0x43,
-    RECRUIT_QUANTITY_CONTROL = 0x44, RECRUIT_INCREASE_CONTROL = 0x45,
-    RECRUIT_DECREASE_CONTROL = 0x46, RECRUIT_MAXIMUM_CONTROL = 0x47,
-    RECRUIT_GOLD_COST_CONTROL = 0x49, RECRUIT_RESOURCE_ICON_CONTROL = 0x4a,
-    RECRUIT_RESOURCE_COST_CONTROL = 0x4b, RECRUIT_GOLD_TOTAL_CONTROL = 0x4d,
+// recruit0/1.bin and recruiq0/1.bin control ids (Buka RecruitControl).
+H1_ENUM_BEGIN(RecruitControl)
+    RECRUIT_CLOSE_CONTROL = DIALOG_BUTTON_0,
+    RECRUIT_CANCEL_CONTROL = DIALOG_BUTTON_1,
+    RECRUIT_CONFIRM_CONTROL = DIALOG_BUTTON_2,
+    RECRUIT_TITLE_CONTROL = 0x40,
+    RECRUIT_CREATURE_CONTROL = 0x42,
+    RECRUIT_AVAILABLE_CONTROL = 0x43,
+    RECRUIT_QUANTITY_CONTROL = 0x44,
+    RECRUIT_INCREASE_CONTROL = 0x45,
+    RECRUIT_DECREASE_CONTROL = 0x46,
+    RECRUIT_MAXIMUM_CONTROL = 0x47,
+    RECRUIT_GOLD_COST_CONTROL = 0x49,
+    RECRUIT_RESOURCE_ICON_CONTROL = 0x4a,
+    RECRUIT_RESOURCE_COST_CONTROL = 0x4b,
+    RECRUIT_GOLD_TOTAL_CONTROL = 0x4d,
     RECRUIT_RESOURCE_IMAGE_CONTROL = 0x4e,
-    RECRUIT_RESOURCE_TOTAL_CONTROL = 0x4f H1_ENUM_END(RecruitControl)
+    RECRUIT_RESOURCE_TOTAL_CONTROL = 0x4f
+H1_ENUM_END(RecruitControl)
+// clang-format on
 
-    // Buka RECRUIT.cpp:58-112; HoMM1 capitalizes the plural name in place and
-    // sets the creature portrait by frame rather than by icon name.
-    VA(0x00401b60, 0x164)
+// Buka RECRUIT.cpp:58-112; HoMM1 capitalizes the plural name in place and
+// sets the creature portrait by frame rather than by icon name.
+VA(0x00401b60, 0x164)
 void SetupRecruitWin(
     heroWindow* window,
     int creatureType,
@@ -42,8 +58,8 @@ void SetupRecruitWin(
     int resourceCost,
     int available
 ) {
-    char monsterName[20];
-    char label[40];
+    char monsterName[RECRUIT_NAME_SIZE];
+    char label[RECRUIT_LABEL_SIZE];
     tag_message message;
 
     strcpy(monsterName, GetMonsterName(creatureType));
@@ -58,7 +74,7 @@ void SetupRecruitWin(
     sprintf(label, "%d", goldCost);
     message.id = RECRUIT_GOLD_COST_CONTROL;
     window->BroadcastMessage(message);
-    if (resourceType != RECRUIT_NO_RESOURCE) {
+    if (resourceType != RESOURCE_NONE) {
         sprintf(label, "%d", resourceCost);
         message.id = RECRUIT_RESOURCE_COST_CONTROL;
         window->BroadcastMessage(message);
@@ -74,7 +90,7 @@ void SetupRecruitWin(
     message.id = RECRUIT_CREATURE_CONTROL;
     message.value = creatureType;
     window->BroadcastMessage(message);
-    if (resourceType != RECRUIT_NO_RESOURCE) {
+    if (resourceType != RESOURCE_NONE) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = RECRUIT_RESOURCE_ICON_CONTROL;
         message.value = resourceType;
@@ -94,7 +110,7 @@ short recruitUnit::Open(short priority) {
     m_window = new heroWindow(
         RECRUIT_WINDOW_X,
         RECRUIT_WINDOW_Y,
-        const_cast<char*>(m_resourceType == RECRUIT_NO_RESOURCE ? "recruit0.bin" : "recruit1.bin")
+        const_cast<char*>(m_resourceType == RESOURCE_NONE ? "recruit0.bin" : "recruit1.bin")
     );
     if (m_window == NULL)
         MemError();
@@ -114,12 +130,12 @@ short recruitUnit::Open(short priority) {
         MESSAGE_WIDGET,
         WIDGET_COMMAND_SET_FLAGS,
         RECRUIT_CLOSE_CONTROL,
-        RECRUIT_WIDGET_FLAGS_DIMMED
+        WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
-    gpWindowManager->AddWindow(m_window, -1, 1);
+    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
 
-    goldMaximum = gpCurPlayer->m_resources[RECRUIT_GOLD_RESOURCE] / m_goldCost;
-    if (m_resourceType != RECRUIT_NO_RESOURCE) {
+    goldMaximum = gpCurPlayer->m_resources[RESOURCE_GOLD] / m_goldCost;
+    if (m_resourceType != RESOURCE_NONE) {
         resourceMaximum = gpCurPlayer->m_resources[m_resourceType] / m_resourceCost;
         m_maximum = goldMaximum < resourceMaximum ? goldMaximum : resourceMaximum;
     } else
@@ -133,13 +149,13 @@ short recruitUnit::Open(short priority) {
             MESSAGE_WIDGET,
             WIDGET_COMMAND_CLEAR_FLAGS,
             RECRUIT_CONFIRM_CONTROL,
-            RECRUIT_WIDGET_FLAG_ENABLED
+            WIDGET_FLAG_ENABLED
         );
         gpWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
             WIDGET_COMMAND_SET_FLAGS,
             RECRUIT_CONFIRM_CONTROL,
-            RECRUIT_WIDGET_FLAGS_DIMMED
+            WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
     }
     KBChangeMenu(hmnuDflt);
@@ -147,7 +163,7 @@ short recruitUnit::Open(short priority) {
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "recruitManager");
-    return RECRUIT_MANAGER_OPEN_OK;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // Buka RECRUIT.cpp:180-204; HoMM1 refreshes town strips whenever a town
@@ -172,7 +188,7 @@ void recruitUnit::Close(void) {
         MESSAGE_WIDGET,
         WIDGET_COMMAND_CLEAR_FLAGS,
         RECRUIT_CLOSE_CONTROL,
-        RECRUIT_WIDGET_FLAGS_DIMMED
+        WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
     );
     if (m_sourceType == RECRUIT_SOURCE_TOWN && m_recruited) {
         gpTownManager->ResetStrips();
@@ -201,7 +217,7 @@ void recruitUnit::Update(void) {
     sprintf(gText, "%d", m_goldTotal);
     message.id = RECRUIT_GOLD_TOTAL_CONTROL;
     m_window->BroadcastMessage(message);
-    if (m_resourceType != RECRUIT_NO_RESOURCE) {
+    if (m_resourceType != RESOURCE_NONE) {
         m_resourceTotal = m_quantity * m_resourceCost;
         sprintf(gText, "%d", m_resourceTotal);
         message.id = RECRUIT_RESOURCE_TOTAL_CONTROL;
@@ -225,7 +241,7 @@ short recruitUnit::Main(struct tag_message& message) {
         quickView = 0;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
-            case RECRUIT_NOTIFY_SELECT:
+            case WIDGET_NOTIFY_SELECT:
                 switch (message.id) {
                     case RECRUIT_INCREASE_CONTROL:
                         if (quickView)
@@ -244,7 +260,7 @@ short recruitUnit::Main(struct tag_message& message) {
                     case RECRUIT_QUANTITY_CONTROL:
                         if (quickView)
                             break;
-                        message.command = RECRUIT_COMMAND_GET_TEXT;
+                        message.command = WIDGET_COMMAND_GET_TEXT;
                         m_window->BroadcastMessage(message);
                         m_quantity = atoi(message.text);
                         if (m_quantity < 0)
@@ -296,14 +312,14 @@ short recruitUnit::Main(struct tag_message& message) {
                             goto checkClose;
                         }
                         if (m_army->CanJoin(m_creatureType)) {
-                            m_army->Add(m_creatureType, m_quantity, -1);
+                            m_army->Add(m_creatureType, m_quantity, ARMY_GROUP_EMPTY_SLOT);
                         } else {
                             done = 1;
                             m_noRoom = 1;
                             goto checkClose;
                         }
-                        gpCurPlayer->m_resources[RECRUIT_GOLD_RESOURCE] -= m_quantity * m_goldCost;
-                        if (m_resourceType != RECRUIT_NO_RESOURCE)
+                        gpCurPlayer->m_resources[RESOURCE_GOLD] -= m_quantity * m_goldCost;
+                        if (m_resourceType != RESOURCE_NONE)
                             gpCurPlayer->m_resources[m_resourceType] -= m_quantity * m_resourceCost;
                         *m_available -= m_quantity;
                         m_recruited = 1;
@@ -329,7 +345,7 @@ short recruitUnit::Main(struct tag_message& message) {
 // refresh-town argument.
 VA(0x00402523, 0xd6)
 recruitUnit::recruitUnit(armyGroup* army, int creatureType, short* available) {
-    int unitCosts[RECRUIT_RESOURCE_COUNT + 1];
+    int unitCosts[RESOURCE_COUNT];
     int i;
 
     m_sourceType = RECRUIT_SOURCE_EVENT;
@@ -337,23 +353,23 @@ recruitUnit::recruitUnit(armyGroup* army, int creatureType, short* available) {
     m_creatureType = creatureType;
     m_available = available;
     GetMonsterCost(m_creatureType, unitCosts);
-    m_goldCost = unitCosts[RECRUIT_GOLD_RESOURCE];
-    for (i = 0; i < RECRUIT_RESOURCE_COUNT; i++) {
+    m_goldCost = unitCosts[RESOURCE_GOLD];
+    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
         if (unitCosts[i])
             break;
     }
-    if (i < RECRUIT_RESOURCE_COUNT) {
+    if (i < RESOURCE_NON_GOLD_END) {
         m_resourceType = i;
         m_resourceCost = unitCosts[m_resourceType];
     } else {
-        m_resourceType = RECRUIT_NO_RESOURCE;
+        m_resourceType = RESOURCE_NONE;
         m_resourceCost = 0;
     }
 }
 
 VA(0x004025f9, 0xf4)
 recruitUnit::recruitUnit(town* townData, signed char dwelling) {
-    int unitCosts[RECRUIT_RESOURCE_COUNT + 1];
+    int unitCosts[RESOURCE_COUNT];
     int i;
 
     m_sourceType = RECRUIT_SOURCE_TOWN;
@@ -361,16 +377,16 @@ recruitUnit::recruitUnit(town* townData, signed char dwelling) {
     m_creatureType = gDwellingType[townData->m_type][dwelling];
     m_available = &townData->m_garrison[dwelling];
     GetMonsterCost(m_creatureType, unitCosts);
-    m_goldCost = unitCosts[RECRUIT_GOLD_RESOURCE];
-    for (i = 0; i < RECRUIT_RESOURCE_COUNT; i++) {
+    m_goldCost = unitCosts[RESOURCE_GOLD];
+    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
         if (unitCosts[i])
             break;
     }
-    if (i < RECRUIT_RESOURCE_COUNT) {
+    if (i < RESOURCE_NON_GOLD_END) {
         m_resourceType = i;
         m_resourceCost = unitCosts[m_resourceType];
     } else {
-        m_resourceType = RECRUIT_NO_RESOURCE;
+        m_resourceType = RESOURCE_NONE;
         m_resourceCost = 0;
     }
 }
@@ -385,34 +401,34 @@ void QuickViewRecruit(town* townData, signed char dwelling) {
     heroWindow* win;
     int resourceType;
     int iMonsterType;
-    int unitCosts[RECRUIT_RESOURCE_COUNT + 1];
+    int unitCosts[RESOURCE_COUNT];
 
     iMonsterType = gDwellingType[townData->m_type][dwelling];
     avail = townData->m_garrison[dwelling];
     GetMonsterCost(iMonsterType, unitCosts);
-    iGoldCost = unitCosts[RECRUIT_GOLD_RESOURCE];
-    for (resourceIndex = 0; resourceIndex < RECRUIT_RESOURCE_COUNT; resourceIndex++) {
+    iGoldCost = unitCosts[RESOURCE_GOLD];
+    for (resourceIndex = 0; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {
         if (unitCosts[resourceIndex])
             break;
     }
-    if (resourceIndex < RECRUIT_RESOURCE_COUNT) {
+    if (resourceIndex < RESOURCE_NON_GOLD_END) {
         resourceType = resourceIndex;
         resourcePrice = unitCosts[resourceType];
     } else {
-        resourceType = RECRUIT_NO_RESOURCE;
+        resourceType = RESOURCE_NONE;
         resourcePrice = 0;
     }
 
     win = new heroWindow(
         RECRUIT_WINDOW_X,
         RECRUIT_WINDOW_Y,
-        const_cast<char*>(resourceType == RECRUIT_NO_RESOURCE ? "recruiq0.bin" : "recruiq1.bin")
+        const_cast<char*>(resourceType == RESOURCE_NONE ? "recruiq0.bin" : "recruiq1.bin")
     );
     if (win == NULL)
         MemError();
     SetupRecruitWin(win, iMonsterType, iGoldCost, resourceType, resourcePrice, avail);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->AddWindow(win, -1, 1);
+    gpWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
     QuickViewWait();
     gpWindowManager->RemoveWindow(win);
     gpMouseManager->ReallyShowPointer();

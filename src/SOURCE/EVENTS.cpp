@@ -1706,7 +1706,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
                 eventHero->m_army
-                    .Add(creatures[houseIndex], cell->m_objectMetadata, ARMY_GROUP_ANY_SLOT);
+                    .Add(creatures[houseIndex], cell->m_objectMetadata, ARMY_GROUP_EMPTY_SLOT);
                 cell->m_objectMetadata = MAP_EVENT_DATA_EMPTY;
             } else {
                 EventWindow(

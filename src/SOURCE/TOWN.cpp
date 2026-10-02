@@ -66,10 +66,12 @@ VA(0x004640b1, 0x17c)
 void town::XformToCastle(void) {
     short i;
 
-    for (i = 0; i < 4; i++) {
-        gpGame->m_map[m_x - 2 + i][m_y - 2].m_overlayIndex += 12;
-        gpGame->m_map[m_x - 2 + i][m_y - 1].m_objectIndex += 12;
-        gpGame->m_map[m_x - 2 + i][m_y].m_objectIndex += 12;
+    for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
+        gpGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y - TOWN_FOOTPRINT_TOP].m_overlayIndex +=
+            TOWN_CASTLE_FRAME_OFFSET;
+        gpGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y - 1].m_objectIndex +=
+            TOWN_CASTLE_FRAME_OFFSET;
+        gpGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y].m_objectIndex += TOWN_CASTLE_FRAME_OFFSET;
     }
 }
 
@@ -108,14 +110,14 @@ void town::Deallocate(void) {
     }
     for (i = found; i < ownerData->m_townCount - 1; i++)
         ownerData->m_townIds[i] = ownerData->m_townIds[i + 1];
-    ownerData->m_townIds[ownerData->m_townCount - 1] = -1;
+    ownerData->m_townIds[ownerData->m_townCount - 1] = GAME_TOWN_NONE;
     if (ownerData->m_currentTown == m_id)
-        ownerData->m_currentTown = -1;
+        ownerData->m_currentTown = GAME_TOWN_NONE;
     ownerData->m_townCount--;
     if (ownerData->m_townCount < 5)
         ownerData->m_townLocatorPage = 0;
     else if (ownerData->m_townLocatorPage + 5 > ownerData->m_townCount)
         ownerData->m_townLocatorPage = ownerData->m_townCount - 5;
-    gpGame->m_townOwners[m_id] = -1;
-    m_owner = -1;
+    gpGame->m_townOwners[m_id] = GAME_PLAYER_NONE;
+    m_owner = GAME_PLAYER_NONE;
 }

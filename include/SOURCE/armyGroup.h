@@ -12,20 +12,34 @@ class hero;
 class town;
 
 // clang-format off
+// Buka ArmyGroupConstant: Add's "any slot" argument, the five troop slots,
+// IsHomogeneous' race table (creature / CREATURE_FACTION_SIZE: four town
+// races and the neutrals) and GetMorale's clamp.
 H1_ENUM_CONST_BEGIN(ArmyGroupConstant)
+    ARMY_GROUP_EMPTY_SLOT = -1,
     ARMY_GROUP_SLOT_COUNT = 5,
-    // armyGroup::Add slot argument: merge into a matching stack or the first
-    // empty slot.
-    ARMY_GROUP_ANY_SLOT = -1
+    ARMY_GROUP_RACE_COUNT = 5,
+    ARMY_GROUP_MORALE_MIN = -3,
+    ARMY_GROUP_MORALE_MAX = 3
 H1_ENUM_CONST_END(ArmyGroupConstant)
+
+// IsHomogeneous' morale modifier by the number of races in the group (Buka
+// ArmyGroupAlignmentResult, same numbering); two races give no modifier.
+H1_ENUM_BEGIN(ArmyGroupAlignmentResult)
+    ARMY_GROUP_ALIGNMENT_FIVE_OR_MORE = -3,
+    ARMY_GROUP_ALIGNMENT_FOUR = -2,
+    ARMY_GROUP_ALIGNMENT_THREE = -1,
+    ARMY_GROUP_ALIGNMENT_NO_MODIFIER = 0,
+    ARMY_GROUP_ALIGNMENT_SAME = 1
+H1_ENUM_END(ArmyGroupAlignmentResult)
 // clang-format on
 
 #pragma pack(push, 1)
-                            class armyGroup {
+class armyGroup {
 public:
     // Retail constructor clears five signed type bytes, then five short counts.
-    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureTypes[5];
-    short m_creatureCounts[5];
+    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureTypes[ARMY_GROUP_SLOT_COUNT];
+    short m_creatureCounts[ARMY_GROUP_SLOT_COUNT];
     // --- constructors ---
     armyGroup(void);
     // --- methods ---
@@ -36,7 +50,7 @@ public:
     short GetMorale(class hero*, class town*);
     void Dismiss(signed char);
     signed char IsMember(signed char);
-    signed char IsHomogeneous(signed char);
+    H1_ENUM_RETURN(ArmyGroupAlignmentResult, signed char) IsHomogeneous(signed char);
     signed char CanJoin(signed char);
     // HoMM1 returns the count in AX (callers sign-extend).
     short GetNumArmies(void);

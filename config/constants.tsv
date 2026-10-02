@@ -115,7 +115,6 @@
 *	*	*	call-argument	SetVisibility(* argument [124]	map coordinates and the scouting radius in cells
 *	*	*	call-argument	GetCell(short, short) argument [12]	map coordinates in cells
 *	*	*	call-argument	MoveWindow(short, short) argument [12]	a window offset in pixels
-*	*	*	call-argument	ResizeWindow(* argument [1-4]	the window rectangle in pixels
 *	*	*	call-argument	FillBitmapArea(* argument [2-6]	the filled rectangle in pixels and its palette colour
 *	*	*	call-argument	DimToBuffer(* argument 3	an icon frame number in the .icn resource (frames have no names)
 *	*	*	call-argument	textWidget(* argument 7	the text widget's font colour index

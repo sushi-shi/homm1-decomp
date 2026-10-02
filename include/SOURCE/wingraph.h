@@ -12,6 +12,7 @@ struct IDirectDraw;
 struct IUnknown;
 typedef long(__stdcall* DirectDrawCreateProc)(GUID*, IDirectDraw**, IUnknown*);
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
     WINGRAPH_WIDTH = 640,
     WINGRAPH_HEIGHT = 480,
@@ -30,6 +31,14 @@ H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
     WINGRAPH_PAINT_X_END = WINGRAPH_WIDTH,
     WINGRAPH_PAINT_Y_END = WINGRAPH_HEIGHT
 H1_ENUM_CONST_END(WingraphPaintConstant)
+
+// giGraphicsType: the WinG window backend or the DirectDraw full-screen one
+// (InitGraphics picks DirectDraw for full screen; Buka WingraphGraphicsType,
+// same numbering).
+H1_ENUM_BEGIN(WingraphGraphicsType)
+    WINGRAPH_GRAPHICS_WING = 1,
+    WINGRAPH_GRAPHICS_DIRECT_DRAW = 2
+H1_ENUM_END(WingraphGraphicsType)
 
 H1_ENUM_BEGIN(DirectDrawReportCode)
     DDSD_REPORT_NONE = 0,
@@ -63,6 +72,7 @@ H1_ENUM_BEGIN(DirectDrawReportCode)
     DDSD_REPORT_NOCLIPPERATTACHED = 28,
     DDSD_REPORT_UNKNOWN = 100
 H1_ENUM_END(DirectDrawReportCode)
+// clang-format on
 
 struct WingPalette {
     WORD version;
@@ -85,14 +95,14 @@ extern "C" BOOL __stdcall WinGRecommendDIBFormat(BITMAPINFO*);
 extern "C" HDC __stdcall WinGCreateDC();
 extern "C" HBITMAP __stdcall WinGCreateBitmap(HDC, BITMAPINFO*, void**);
 
-extern int giGraphicsType;
+extern H1_ENUM_STORAGE(WingraphGraphicsType, int) giGraphicsType;
 extern int giMainVideoModeHeight;
 extern int giMainVideoModeWidth;
-extern int gbDDrawAttached;
-extern int gbWinGAttached;
+extern BOOL gbDDrawAttached;
+extern BOOL gbWinGAttached;
 // Smacker playback owner; SetFullScreenStatus ignores requests while it runs.
 extern int gbInSmacker;
-extern int gbWinGraphBusy;
+extern BOOL gbWinGraphBusy;
 extern HPALETTE hpalApp;
 extern HINSTANCE hDDrawLibrary;
 extern DirectDrawCreateProc lpDirectDrawCreate;
@@ -110,7 +120,7 @@ extern short gCreatePrimaryLineBase;
 extern short gSetupClipperLineBase;
 extern short gDDInitLineBase;
 extern short gDDCreateSurfaceLineBase;
-extern int bInDDSD;
+extern BOOL bInDDSD;
 extern short gDDSetFullScreenLineBase;
 extern short gDDPaintLineBase;
 extern RECT gDDClientRect;
@@ -136,19 +146,19 @@ extern int gbLimitedCombatUpdatePalette;
 void DDRestoreDisplayMode();
 void SetFullScreenStatus(int);
 void DDSD(int, char*, int);
-int DDSetPalette();
-int SetPalette();
+BOOL DDSetPalette();
+BOOL SetPalette();
 void DDCleanUpWinGraphics();
 void DDInitializePalette();
 void WGInitializePalette();
 void WGInitGraphics();
 void WGCleanUpWinGraphics();
-int DDAppPaint(void*, void*);
-int WGAppPaint(void*, void*);
+BOOL DDAppPaint(void*, void*);
+BOOL WGAppPaint(void*, void*);
 void DDUpdatePalette(signed char*);
 void WGUpdatePalette(signed char*);
-int DDQueryNewPalette();
-int WGQueryNewPalette();
+BOOL DDQueryNewPalette();
+BOOL WGQueryNewPalette();
 void DisconnectDLLs();
 void ConnectToDLLs();
 void InitGraphics();
@@ -158,10 +168,10 @@ void SetupClipper();
 IDirectDrawSurface* DDCreateSurface(unsigned long, unsigned long, int);
 void RestoreDisplayMode();
 void InitializePalette();
-int AppPaint(void*, void*);
+BOOL AppPaint(void*, void*);
 void UpdatePalette(signed char*);
 void CleanUpWinGraphics();
-int QueryNewPalette();
-int SetGraphicsType(int);
+BOOL QueryNewPalette();
+BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, int));
 
 #endif

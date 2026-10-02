@@ -4,6 +4,8 @@
 
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/WINMGR_TYPES.h>
+#include <BASE/widget.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
@@ -43,29 +45,29 @@ highScoreManager::~highScoreManager() {}
 // evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
 VA(0x004010bf, 0x169)
 short highScoreManager::Open(short id) {
-    gpWindowManager->FadeScreen(HIGH_SCORE_FADE_OUT, HIGH_SCORE_FADE_STEPS, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
     m_window = new heroWindow(0, 0, "hiscore.bin");
     if (m_window == NULL)
         MemError();
     Update();
-    gpWindowManager->AddWindow(m_window, -1, 1);
+    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = id;
     m_active = 1;
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
-    gpWindowManager->FadeScreen(HIGH_SCORE_FADE_IN, HIGH_SCORE_FADE_STEPS, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
     glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] =
         KBTickCount() + static_cast<int>(HIGH_SCORE_ANIMATION_DELAY);
-    return static_cast<short>(HIGH_SCORE_MANAGER_OPEN_OK);
+    return static_cast<short>(BASE_MANAGER_SUCCESS);
 }
 
 // Buka HISCORE.cpp:51-56; retail window owner is +0x59, active is +0x2e.
 VA(0x00401228, 0x5d)
 void highScoreManager::Close(void) {
-    gpWindowManager->FadeScreen(HIGH_SCORE_FADE_OUT, HIGH_SCORE_FADE_STEPS, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpWindowManager->RemoveWindow(m_window);
     delete m_window;
     m_active = 0;
@@ -156,7 +158,7 @@ short highScoreManager::Main(struct tag_message& message) {
 VA(0x004014ee, 0x667)
 void highScoreManager::Update(void) {
     signed char bNoFile;
-    char fileName[350];
+    char fileName[HIGH_SCORE_FILENAME_LENGTH];
     tag_message message;
     HighScoreEntry record;
     int handle;
@@ -197,7 +199,7 @@ void highScoreManager::Update(void) {
     else
         message.id = HIGH_SCORE_STANDARD_BUTTON;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = HIGH_SCORE_WIDGET_SHOWN;
+    message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
     m_window->BroadcastMessage(message);
 
     if (m_showCampaignScores)
@@ -205,7 +207,7 @@ void highScoreManager::Update(void) {
     else
         message.id = HIGH_SCORE_CAMPAIGN_BUTTON;
     message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.value = HIGH_SCORE_WIDGET_SHOWN;
+    message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
     m_window->BroadcastMessage(message);
 
     for (i = 0; i < HIGH_SCORE_DISPLAY_ENTRY_COUNT; i++) {
@@ -227,7 +229,7 @@ void highScoreManager::Update(void) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         else
             message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = HIGH_SCORE_WIDGET_SHOWN;
+        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         m_window->BroadcastMessage(message);
 
         if (record.score != HIGH_SCORE_EMPTY) {
@@ -246,17 +248,20 @@ void highScoreManager::Update(void) {
             sprintf(gText, record.playerName);
         m_window->BroadcastMessage(message);
 
-        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 1;
+        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+                     + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
         if (record.score != HIGH_SCORE_EMPTY)
             sprintf(gText, record.scenarioName);
         m_window->BroadcastMessage(message);
 
-        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 2;
+        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+                     + HIGH_SCORE_TEXT_SCORE_OFFSET;
         if (record.score != HIGH_SCORE_EMPTY)
             sprintf(gText, "%d", record.score);
         m_window->BroadcastMessage(message);
 
-        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 3;
+        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+                     + HIGH_SCORE_TEXT_RATING_OFFSET;
         if (record.score != HIGH_SCORE_EMPTY) {
             sprintf(gText, "%s", gArmyNames[m_monsterTypes[i]]);
             gText[0] -= 'a' - 'A';
@@ -266,19 +271,22 @@ void highScoreManager::Update(void) {
         if (giHighScoreRank == i) {
             if ((m_showCampaignScores && !giHighScoreType)
                 || (!m_showCampaignScores && giHighScoreType)) {
-                message.command = WIDGET_COMMAND_SET_FILL_COLOR;
+                message.command = WIDGET_COMMAND_SET_COLOR;
                 message.value = HIGH_SCORE_HIGHLIGHT_COLOR;
             } else {
-                message.command = WIDGET_COMMAND_SET_FILL_COLOR;
+                message.command = WIDGET_COMMAND_SET_COLOR;
                 message.value = HIGH_SCORE_NORMAL_COLOR;
             }
             message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
             m_window->BroadcastMessage(message);
-            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 1;
+            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+                         + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
             m_window->BroadcastMessage(message);
-            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 2;
+            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+                         + HIGH_SCORE_TEXT_SCORE_OFFSET;
             m_window->BroadcastMessage(message);
-            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET + 3;
+            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+                         + HIGH_SCORE_TEXT_RATING_OFFSET;
             m_window->BroadcastMessage(message);
         }
     }

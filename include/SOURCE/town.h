@@ -21,16 +21,49 @@ H1_ENUM_CONST_END(TownConstant)
 // gDwellingType rows (0..5 knight, 12..17 sorceress, 6..11 barbarian, 18..23
 // warlock creatures) and GiveTroopsToNeutralTowns' recruits fix the order.
 H1_ENUM_BEGIN(TownType)
+    // gRandomTownTypes' entry before RandomizeTown picks the race.
+    TOWN_TYPE_NONE = -1,
     TOWN_TYPE_KNIGHT = 0,
     TOWN_TYPE_SORCERESS = 1,
     TOWN_TYPE_BARBARIAN = 2,
     TOWN_TYPE_WARLOCK = 3,
     TOWN_TYPE_COUNT = 4
 H1_ENUM_END(TownType)
+
+// town::m_buildState is the mage guild's level - 1 (STATE_LEVEL_1..4); its
+// nine m_mageGuildSpells slots fill three, two, two and two per level
+// (SetupTown's pools, SetupMageGuild's locks, MageGuildHandler's bounds).
+H1_ENUM_CONST_BEGIN(TownMageGuildConstant)
+    MAGE_GUILD_STATE_LEVEL_1 = 0,
+    MAGE_GUILD_STATE_LEVEL_2 = 1,
+    MAGE_GUILD_STATE_LEVEL_3 = 2,
+    MAGE_GUILD_STATE_LEVEL_4 = 3,
+    MAGE_GUILD_LEVEL_1_LAST_SLOT = 2,
+    MAGE_GUILD_LEVEL_2_LAST_SLOT = 4,
+    MAGE_GUILD_LEVEL_3_LAST_SLOT = 6,
+    // SetupMageGuild's spell frame: 0 shows the spell, 1 the locked slot.
+    MAGE_GUILD_SPELL_FRAME_SHOWN = 0,
+    MAGE_GUILD_SPELL_FRAME_LOCKED = 1
+H1_ENUM_CONST_END(TownMageGuildConstant)
+
+// A town object covers 4x3 map cells from (x - 2, y - 2) to (x + 1, y)
+// (RandomizeTown, NewMap). Its frames run per race in blocks of 24 before
+// the random town's (block TOWN_TYPE_COUNT); a town without a castle uses
+// the frames 12 before the castle's. RandomizeTown ages a placed town ten
+// turns (Buka RANDOM_TOWN_AGE).
+H1_ENUM_CONST_BEGIN(TownFootprintConstant)
+    TOWN_FOOTPRINT_LEFT = 2,
+    TOWN_FOOTPRINT_TOP = 2,
+    TOWN_FOOTPRINT_WIDTH = 4,
+    TOWN_FOOTPRINT_HEIGHT = 3,
+    TOWN_RACE_FRAME_STRIDE = 24,
+    TOWN_CASTLE_FRAME_OFFSET = 12,
+    TOWN_RANDOM_AGE = 10
+H1_ENUM_CONST_END(TownFootprintConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-class town {
+     class town {
 public:
     // Retail constructor and HasGarrison establish this packed prefix.
     signed char m_id;
