@@ -1987,12 +1987,12 @@ void advManager::DrawCell(
                 if (screenX == 0 || screenY <= 1 || screenX == 14 || screenY == 14) {
                     FlipClippedIconToBitmap(
                         m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
                     if (flagColor != -1)
                         FlipClippedIconToBitmap(
                             m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
-                            pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                         );
                 } else {
                     if (m_drawHeroShadows && iconIndex != 4)
@@ -2002,35 +2002,35 @@ void advManager::DrawCell(
                         );
                     FlipIconToBitmap(
                         m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
                     if (flagColor != -1)
                         FlipIconToBitmap(
                             m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
-                            pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                            pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                         );
                 }
             } else if (screenX == 0 || screenY <= 1 || screenX == 14 || screenY == 14) {
                 ClippedIconToBitmap(
-                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 31 + heroYOffset6,
+                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 32 - 1 + heroYOffset6,
                     frame, 0
                 );
                 if (flagColor != -1)
                     ClippedIconToBitmap(
                         m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
             } else {
                 if (m_drawHeroShadows && iconIndex != 4)
                     DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, pixelX7, pixelY3 + 31, frame, 0);
                 IconToBitmap(
-                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 31 + heroYOffset6,
+                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 32 - 1 + heroYOffset6,
                     frame, 0
                 );
                 if (flagColor != -1)
                     IconToBitmap(
                         m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
-                        pixelY3 + 31 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
             }
         }
