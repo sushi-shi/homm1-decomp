@@ -28,6 +28,10 @@ extern char* gArtifactNames[];
 extern SAMPLE2 gNullSample;
 extern armyGroup* gpMonsterGroup;
 extern char* gColorNames[];
+extern char* gResourceNames[];
+extern char* gArtifactDesc[];
+extern char* gSpellNames[];
+void BVResMsg(char*, int, int);
 extern signed char gbInCombat;
 // DoEvent and DoCombat restore a music volume parked here (-1 when none).
 extern int giEventMusicVolume;
@@ -87,7 +91,531 @@ struct heroRemoteMessage {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
 VA(0x0045dde0, 0x1f1a)
-void advManager::DoEvent(class mapCell *, int, int) {}
+void advManager::DoEvent(class mapCell* cell, int x, int y) {
+    hero* pHero;
+    tag_message unused;
+    signed char objType;
+    int artifactId;
+    int fizzleMode;
+    tag_message event;
+    signed char erase;
+    boatRecord* ship;
+    heroWindow* win;
+    char resourceName[20];
+    int resType;
+    signed char tx;
+    signed char teleportCount;
+    signed char ty;
+    int res;
+    signed char adjacentMonster;
+    int income;
+    hero* enemyHero;
+    int numDefenders;
+    mapCell* prevCell;
+    town* occupiedTown;
+
+    pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    objType = cell->m_triggerType & 0x7f;
+    erase = 0;
+    fizzleMode = 0;
+    gbEventMusicPlaying = 1;
+    gpMouseManager->ReallyHidePointer();
+    EventSound(objType, (unsigned char)cell->m_objectMetadata);
+    switch (objType) {
+        case 31:
+            if (pHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+                pHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
+                pHero->m_remainingMobility = 0;
+                pHero->m_direction = m_cursorDirection;
+                m_cursorType = pHero->m_unknown1c;
+                m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+                m_cursorActive = 1;
+                gpWindowManager->SaveFizzleSource(0xc0, 0xc0, 0x60, 0x60);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+                gpWindowManager->FizzleForward(0xc0, 0xc0, 0x60, 0x60, -1);
+                CheckAdjacentMon(&adjacentMonster);
+            }
+            break;
+        case 62:
+            ship = &gpGame->m_boats[(unsigned char)cell->m_objectMetadata];
+            gpGame->RestoreCell(-1, -1, ship->savedTriggerType, ship->savedEventData, cell, 2);
+            pHero->m_eventFlags |= HERO_EVENT_EMBARKED;
+            pHero->m_remainingMobility = 0;
+            ship->heroId = pHero->m_id;
+            ship->owner = pHero->m_owner;
+            m_cursorType = 4;
+            m_cursorDirection = ship->direction;
+            m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
+            m_cursorActive = 1;
+            CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+            UpdateScreen(0, 0);
+            break;
+        case 25:
+            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+                break;
+            if (gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type == 6)
+                income = 1000;
+            else if (gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type == 2)
+                income = 2;
+            else
+                income = 1;
+            EventWindow(gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type + 0x29, 1, "",
+                        gpGame->m_mines[(unsigned char)cell->m_objectMetadata].type, -income, -1,
+                        0, -1);
+            goto claimMine;
+        case 1:
+            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+                break;
+            EventWindow(0, 1, "", 1, -1, -1, 0, -1);
+            goto claimMine;
+        case 32:
+            if (gpGame->m_mineOwners[(unsigned char)cell->m_objectMetadata] == giCurPlayer)
+                break;
+            EventWindow(0x37, 1, "", 0, -2, -1, 0, -1);
+            goto claimMine;
+        claimMine:
+            gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
+            break;
+        case 23:
+            if (gpGame->m_mineOwners[1] == giCurPlayer)
+                break;
+            gpGame->ClaimMine(1, giCurPlayer);
+            EventWindow(0x28, 1, "", -1, 0, -1, 0, -1);
+            break;
+        case 22:
+            if (gpGame->m_mineOwners[0] == giCurPlayer)
+                break;
+            EventWindow(0x26, 2, "", -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 8)
+                    numDefenders = 20;
+                else
+                    numDefenders = 5;
+                if (CombatMonsterEvent(pHero, 0x17, numDefenders, cell, x, y, 0, x, y) == 1) {
+                    gpGame->ClaimMine(0, giCurPlayer);
+                    EventWindow(0x27, 1, "", 6, -1000, -1, 0, -1);
+                    break;
+                }
+                pHero->CheckLevel();
+            }
+            break;
+        case 6:
+            EventWindow(0xb, 2, "", 6, (unsigned char)cell->m_objectMetadata * 500, 0xe,
+                        ((unsigned char)cell->m_objectMetadata - 1) * 500, 1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                GiveResource(pHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+            else
+                GiveExperience(pHero, ((unsigned char)cell->m_objectMetadata - 1) * 500, 0);
+            erase = 1;
+            fizzleMode = 1;
+            pHero->CheckLevel();
+            break;
+        case 3:
+            if (pHero->m_eventFlags & HERO_EVENT_BUOY) {
+                EventWindow(2, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                pHero->m_eventFlags |= HERO_EVENT_BUOY;
+                pHero->m_morale++;
+                EventWindow(3, 1, "", 0xc, 0, -1, 0, -1);
+            }
+            break;
+        case 7:
+            if (pHero->m_eventFlags & HERO_EVENT_FAERIE_RING) {
+                EventWindow(0xc, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                pHero->m_eventFlags |= HERO_EVENT_FAERIE_RING;
+                pHero->m_luck++;
+                EventWindow(0xd, 1, "", 0xa, 0, -1, 0, -1);
+            }
+            break;
+        case 9:
+            if (pHero->m_eventFlags & HERO_EVENT_FOUNTAIN) {
+                EventWindow(0xf, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                pHero->m_eventFlags |= HERO_EVENT_FOUNTAIN;
+                pHero->m_luck++;
+                EventWindow(0x10, 1, "", 0xa, 0, -1, 0, -1);
+            }
+            break;
+        case 28:
+            if (pHero->m_eventFlags & HERO_EVENT_OASIS) {
+                EventWindow(0x34, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                pHero->m_eventFlags |= HERO_EVENT_OASIS;
+                pHero->m_morale++;
+                EventWindow(0x35, 1, "", 0xc, 0, -1, 0, -1);
+            }
+            break;
+        case 36:
+            if (pHero->m_eventFlags & HERO_EVENT_TEMPLE) {
+                EventWindow(0x3e, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                pHero->m_eventFlags |= HERO_EVENT_TEMPLE;
+                pHero->m_morale += 2;
+                EventWindow(0x3d, 1, "", 0xc, 0, 0xc, 0, -1);
+            }
+            break;
+        case 4:
+            switch ((unsigned char)cell->m_objectMetadata) {
+                case 1:
+                    EventWindow(0x4b, 1, "", -1, 0, -1, 0, -1);
+                    break;
+                case 2:
+                    if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
+                        sprintf(gText, "%s.", "Treasure");
+                        EventWindow(-1, 1, gText, 6, 1000, -1, 0, -1);
+                    } else {
+                        artifactId = GiveRandomArtifact(pHero);
+                        sprintf(gText, "%s %s", gEventText[76], gArtifactNames[artifactId]);
+                        EventWindow(-1, 1, gText, 7, artifactId, -1, 0, -1);
+                    }
+                    cell->m_objectMetadata = 1;
+                    break;
+            }
+            break;
+        case 8:
+            EventWindow(0xe, 1, "", 6, ((unsigned char)cell->m_objectMetadata >> 4) * 100,
+                        (unsigned char)cell->m_objectMetadata & 0xf,
+                        (unsigned char)cell->m_objectMetadata >> 4, -1);
+            GiveResource(pHero, 6, ((unsigned char)cell->m_objectMetadata >> 4) * 100);
+            GiveResource(pHero, (unsigned char)cell->m_objectMetadata & 0xf,
+                         (unsigned char)cell->m_objectMetadata >> 4);
+            erase = 1;
+            fizzleMode = 1;
+            gpGame->m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] = -1;
+            SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+            break;
+        case 10:
+            if (pHero->m_visitedSites & (1 << cell->m_objectMetadata)) {
+                EventWindow(0x11, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                EventWindow(0x12, 1, "", 0xe, 1000, -1, 0, -1);
+                GiveExperience(pHero, 1000, 0);
+                pHero->m_visitedSites |= 1 << cell->m_objectMetadata;
+                pHero->CheckLevel();
+            }
+            break;
+        case 24:
+            if (!(unsigned char)cell->m_objectMetadata) {
+                EventWindow(0x29, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                EventWindow(0x2a, 1, "", 6, (unsigned char)cell->m_objectMetadata * 500, -1, 0, -1);
+                GiveResource(pHero, 6, (unsigned char)cell->m_objectMetadata * 500);
+                cell->m_objectMetadata = 0;
+            }
+            break;
+        case 29:
+            resType = cell->m_objectIndex - 0x3d;
+            GiveResource(pHero, resType,
+                         resType == 6 ? (unsigned char)cell->m_objectMetadata * 100
+                                           : (unsigned char)cell->m_objectMetadata);
+            strcpy(resourceName, gResourceNames[resType]);
+            resourceName[0] += 32;
+            sprintf(gText, gEventText[54], resourceName);
+            BVResMsg(gText, resType,
+                     resType == 6 ? (unsigned char)cell->m_objectMetadata * 100
+                                       : (unsigned char)cell->m_objectMetadata);
+            erase = 1;
+            fizzleMode = 1;
+            break;
+        case 45:
+            if ((unsigned char)cell->m_objectMetadata <= 6) {
+                EventWindow(0x45, 1, "", (unsigned char)cell->m_objectMetadata, 2, -1, 0, -1);
+                GiveResource(pHero, cell->m_objectMetadata, 2);
+                cell->m_objectMetadata = 99;
+            } else {
+                EventWindow(0x44, 1, "", -1, 0, -1, 0, -1);
+            }
+            break;
+        case 11:
+            EventWindow(0x13, 2, "", -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                RecruitEvent(pHero, 0x1b, cell);
+                if (!(unsigned char)cell->m_objectMetadata) {
+                    erase = 1;
+                    fizzleMode = 1;
+                }
+            }
+            break;
+        case 42:
+            if (!(unsigned char)cell->m_objectMetadata) {
+                EventWindow(0x41, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                EventWindow(0x42, 2, "", -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                    RecruitEvent(pHero, 0x18, cell);
+            }
+            break;
+        case 39:
+            if (!(unsigned char)cell->m_objectMetadata) {
+                EventWindow(0x3f, 1, "", -1, 0, -1, 0, -1);
+            } else {
+                EventWindow(0x40, 2, "", -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                    RecruitEvent(pHero, 0x19, cell);
+            }
+            break;
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+        case 17:
+            HouseEvent(pHero, cell);
+            break;
+        case 26:
+            PlayerMonsterInteract(cell, cell, pHero, &erase, x, y, 0, x, y);
+            break;
+        case 27:
+            if (!(gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1]
+                  & (1 << pHero->m_owner))) {
+                gpGame->ComputeUALoc(pHero->m_owner);
+                gpGame->m_obeliskVisitors[(unsigned char)cell->m_objectMetadata - 1] |=
+                    1 << pHero->m_owner;
+                EventWindow(0x32, 1, "", -1, 0, -1, 0, -1);
+                ViewPuzzle();
+            } else {
+                EventWindow(0x33, 1, "", -1, 0, -1, 0, -1);
+            }
+            break;
+        case 33:
+            EventWindow(0x38, 1, "", -1, 0, -1, 0, -1);
+            gpMouseManager->SetPointer(0);
+            win = new heroWindow(0, 0, "thiefwin.bin");
+            if (!win)
+                MemError();
+            SetWinText(win, 0xf);
+            gpTownManager->SetupThievesGuild(win, 8);
+            strcpy(gText, "Shrine - Player Rankings");
+            event.type = MESSAGE_WIDGET;
+            event.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+            event.payload.widget.id = 0;
+            event.payload.widget.data.text = gText;
+            win->BroadcastMessage(event);
+            gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
+            delete win;
+            RedrawAdvScreen(1);
+            break;
+        case 34:
+            sprintf(gText, "%s'%s'.", gEventText[57],
+                    gSpellNames[(unsigned char)cell->m_objectMetadata - 1]);
+            if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
+                pHero->AddSpell((unsigned char)cell->m_objectMetadata - 1,
+                                    pHero->m_primaryStats[3], 0);
+                EventWindow(-1, 1, gText, 8, (unsigned char)cell->m_objectMetadata - 1, -1, 0, -1);
+            } else {
+                strcat(gText, "  Unfortunately, you have no Magic Book to record the spell with.");
+                EventWindow(-1, 1, gText, -1, 0, -1, 0, -1);
+            }
+            break;
+        case 40:
+            if (giEventMusicVolume != -1)
+                gConfig.musicVolume = giEventMusicVolume;
+            giEventMusicVolume = -1;
+            TownEvent(cell, x, y);
+            break;
+        case 44:
+            DoWhirlpool(pHero);
+        case 41:
+            teleportCount = 0;
+            for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
+                for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
+                    if (gpGame->m_map[tx][ty].m_triggerType
+                            == (unsigned char)(objType | 0x80)
+                        && abs(tx - x) + abs(ty - y) > (objType == 41 ? 1 : 3))
+                        teleportCount++;
+                }
+            }
+            if (teleportCount >= 1) {
+                if (teleportCount > 1)
+                    teleportCount = Random(1, teleportCount);
+                for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
+                    for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
+                        if (gpGame->m_map[tx][ty].m_triggerType
+                                == (unsigned char)(objType | 0x80)
+                            && abs(tx - x) + abs(ty - y) > (objType == 41 ? 1 : 3)) {
+                            if (--teleportCount <= 0)
+                                goto teleport;
+                        }
+                    }
+                }
+            teleport:
+                StopCursor(1);
+                gpAdvManager->TeleportTo(tx, ty, 1);
+            }
+            break;
+        case 48:
+            if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
+                NormalDialog("You cannot pick up this artifactId, you already have a full load!", 1, -1,
+                             -1, -1, 0, -1, 0, -1);
+                break;
+            }
+            switch ((unsigned char)cell->m_objectMetadata) {
+                case 1:
+                    EventWindow(-1, 1, gArtifactDesc[cell->m_objectIndex], 7, cell->m_objectIndex, -1,
+                                0, -1);
+                giveArtifact:
+                    GiveArtifact(pHero, cell->m_objectIndex);
+                    erase = 1;
+                    fizzleMode = 1;
+                    break;
+                case 2:
+                    EventWindow(0x46, 1, "", -1, 0, -1, 0, -1);
+                    if (CombatMonsterEvent(pHero, 0x18, 0x32, cell, x, y, 0, x, y) == 1) {
+                        sprintf(gText, gEventText[74], gArtifactNames[cell->m_objectIndex]);
+                        EventWindow(-1, 1, gText, 7, cell->m_objectIndex, -1, 0, -1);
+                        goto giveArtifact;
+                    }
+                    break;
+                case 3:
+                    sprintf(gText, gEventText[71], gArtifactNames[cell->m_objectIndex]);
+                    EventWindow(-1, 2, gText, 7, cell->m_objectIndex, -1, 0, -1);
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                        if (gpGame->m_players[pHero->m_owner].m_resources[6] >= 2000) {
+                            gpGame->m_players[pHero->m_owner].m_resources[6] -= 2000;
+                            goto giveArtifact;
+                        } else {
+                            EventWindow(0x49, 1, "", -1, 0, -1, 0, -1);
+                        }
+                    } else {
+                        EventWindow(0x48, 1, "", -1, 0, -1, 0, -1);
+                        erase = 1;
+                    }
+                    break;
+            }
+            pHero->CheckLevel();
+            break;
+        case 61:
+            DemobilizeCurrHero();
+            enemyHero = gpGame->GetHero(cell->m_objectMetadata);
+            if (enemyHero->m_owner == giCurPlayer) {
+                HeroSwap(pHero, enemyHero);
+            } else {
+                occupiedTown = 0;
+                if (enemyHero->m_locationType == 0xa8) {
+                    occupiedTown = gpGame->GetTown(enemyHero->m_occupiedTown);
+                    occupiedTown->m_occupyingHeroId = enemyHero->m_id;
+                }
+                res = DoCombat(x, y, pHero, &pHero->m_army, occupiedTown,
+                                            enemyHero, &enemyHero->m_army, x, y, -1, 1);
+                if (res == 1 && occupiedTown)
+                    gpGame->ClaimTown(occupiedTown->m_id, giCurPlayer);
+            }
+            break;
+        case 2:
+            gpSearchArray->FindNearestObject(pHero->m_x, pHero->m_y, pHero->m_direction,
+                                             -1, 0xa8);
+            if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)->m_triggerType
+                == 0xa8) {
+                sprintf(gText, gEventText[1],
+                        GetTownName(gpGame->GetTownId(gpSearchArray->m_specialTargetX,
+                                                      gpSearchArray->m_specialTargetY)));
+                EventWindow(-1, 1, gText, -1, 0, -1, 0, -1);
+            }
+            break;
+        case 5:
+            EventWindow(0xa, 2, "", -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
+                break;
+            switch ((unsigned char)cell->m_objectMetadata) {
+                case 1:
+                    EventWindow(4, 1, "", -1, 0, -1, 0, -1);
+                    cell->m_objectMetadata = 1;
+                    break;
+                case 2:
+                    GiveExperience(pHero, 1000, 0);
+                    EventWindow(5, 1, "", 0xe, 1000, -1, 0, -1);
+                    cell->m_objectMetadata = 1;
+                    pHero->CheckLevel();
+                    break;
+                case 3:
+                    if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT)
+                        goto goldReward;
+                    if (gpGame->GetRandomArtifactId() == -1)
+                        goto goldReward;
+                    GiveExperience(pHero, 1000, 0);
+                    artifactId = GiveRandomArtifact(pHero);
+                    EventWindow(6, 1, "", 7, artifactId, 0xe, 1000, -1);
+                    cell->m_objectMetadata = 1;
+                    pHero->CheckLevel();
+                    break;
+                case 4:
+                goldReward:
+                    EventWindow(7, 1, "", 6, 2500, 0xe, 1000, -1);
+                    GiveExperience(pHero, 1000, 0);
+                    GiveResource(pHero, 6, 2500);
+                    cell->m_objectMetadata = 1;
+                    pHero->CheckLevel();
+                    break;
+                case 5:
+                    EventWindow(8, 2, "", -1, 0, -1, 0, -1);
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                        if (gpGame->m_players[pHero->m_owner].m_resources[6] < 2500) {
+                            EventWindow(9, 1, "", -1, 0, -1, 0, -1);
+                            HeroLoses(pHero);
+                        } else {
+                            gpGame->m_players[pHero->m_owner].m_resources[6] -= 2500;
+                        }
+                    } else {
+                        HeroLoses(pHero);
+                    }
+                    break;
+            }
+            break;
+        case 12:
+            EventWindow(0x14, 2, "", -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                switch ((unsigned char)cell->m_objectMetadata) {
+                    case 1:
+                        EventWindow(0x15, 1, "", 0xd, 0, -1, 0, -1);
+                        if (!(pHero->m_eventFlags & HERO_EVENT_GRAVEYARD)) {
+                            pHero->m_eventFlags |= HERO_EVENT_GRAVEYARD;
+                            pHero->m_morale--;
+                        }
+                        break;
+                    default:
+                        if (GhostEvent(pHero, cell, 0x16, x, y))
+                            cell->m_objectMetadata = 1;
+                }
+            }
+            break;
+        case 35:
+            EventWindow(0x3a, 2, "", -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                switch ((unsigned char)cell->m_objectMetadata) {
+                    case 1:
+                        EventWindow(0x3b, 1, "", 0xd, 0, -1, 0, -1);
+                        if (!(pHero->m_eventFlags & HERO_EVENT_SHIPWRECK)) {
+                            pHero->m_eventFlags |= HERO_EVENT_SHIPWRECK;
+                            pHero->m_morale--;
+                        }
+                        break;
+                    default:
+                        prevCell = GetCell(x - normalDirTable[pHero->m_direction].x,
+                                            y - normalDirTable[pHero->m_direction].y);
+                        if (GhostEvent(pHero, prevCell, 0x3c, x, y))
+                            cell->m_objectMetadata = 1;
+                        break;
+                }
+            }
+            break;
+        default:
+            break;
+    }
+    UpdateRadar(1, 0);
+    UpdateHeroLocators(1, 1);
+    UpdateTownLocators(1, 1);
+    UpdBottomView(1, 1, 1);
+    if (erase) {
+        EraseObj(cell, x, y);
+        FizzleCenter(fizzleMode);
+    } else {
+        CompleteDraw(0);
+    }
+    UpdateScreen(0, 0);
+    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    gpMouseManager->ReallyShowPointer();
+    CheckEndGame(0);
+}
 
 // Buka advManager::EraseObj reduced to HoMM1's single-cell layers: the cell
 // falls back to the trigger kept in the low seven bits of byte 7 and borrows

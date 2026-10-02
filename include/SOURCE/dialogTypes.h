@@ -9,7 +9,8 @@ H1_ENUM_BEGIN(NormalDialogWidgetRange)
 H1_ENUM_END(NormalDialogWidgetRange)
 
 H1_ENUM_BEGIN(NormalDialogResult)
-    NORMAL_DIALOG_CONFIRM = 0x7805
+    NORMAL_DIALOG_CONFIRM = 0x7805,
+    NORMAL_DIALOG_CANCEL = 0x7806
 H1_ENUM_END(NormalDialogResult)
 
 #endif // HOMM1_SOURCE_DIALOGTYPES_H

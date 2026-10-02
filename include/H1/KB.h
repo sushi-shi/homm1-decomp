@@ -161,7 +161,6 @@ void GetDataEntry(char*, char*, int, char*);
 short DataEntryWindowHandler(struct tag_message&);
 short EventWindowHandler(struct tag_message&);
 short TrueFalseDialogHandler(struct tag_message&);
-char* GetTownName(signed char);
 void ReceiveRemotePlayerExit(signed char, signed char, signed char, signed char);
 void ShutDown(char*);
 void HandleRemoteDeadPlayerExit(int);

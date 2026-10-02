@@ -59,6 +59,9 @@ public:
     searchArray(void);
     // --- methods ---
     int BuildPath(short, short, short, short, int);
+    // HoMM1 retail 0x004028b0 (ret 0x14): seeds from a hero position and
+    // records the nearest cell with the given trigger in m_specialTargetX/Y.
+    void FindNearestObject(short, short, short, int, int);
     void SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int);
     void Init(void);
     void Close(void);
