@@ -43,7 +43,7 @@ H1_ENUM_BEGIN(InputScanCode)
     INPUT_SCAN_CODE_MASK = 0xff
 H1_ENUM_END(InputScanCode)
 
-VA(0x0047bb40, 0x2e3)
+VA(0x0047bb40, 0x2e4)
 int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messageData) {
     if (gpInputManager == 0)
         return 1;
