@@ -100,7 +100,7 @@ VA(0x0040f5d1, 0xd6)
 signed char combatManager::ValidHexToStandOn(int hex) {
     if (hex == -2)
         return 1;
-    if (hex != -1 && hex % 9 != 8 && hex % 9 != 0 && m_hexCells[hex].m_obstacleIndex == -1
+    if (hex != -1 && hex % COMBAT_GRID_COLUMNS != 8 && hex % COMBAT_GRID_COLUMNS != 0 && m_hexCells[hex].m_obstacleIndex == -1
         && (m_hexCells[hex].m_occupantSide == COMBAT_SIDE_NONE
             || (m_hexCells[hex].m_occupantSide == m_currentSide
                 && m_hexCells[hex].m_occupantIndex == m_currentArmyIndex)))
@@ -155,23 +155,23 @@ void combatManager::SetCombatDirections(int targetHex) {
         if ((curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) && directionHexes[dir] != -1) {
             if (curArmy->m_facing == ARMY_FACING_RIGHT) {
                 if (dir == COMBAT_DIRECTION_NORTHWEST || dir == COMBAT_DIRECTION_WEST || dir == COMBAT_DIRECTION_SOUTHWEST) {
-                    if (directionHexes[dir] % 9 == 1)
+                    if (directionHexes[dir] % COMBAT_GRID_COLUMNS == 1)
                         directionHexes[dir] = -1;
                     else
                         directionHexes[dir]--;
                 }
-                if (directionHexes[dir] % 9 == 7)
+                if (directionHexes[dir] % COMBAT_GRID_COLUMNS == 7)
                     rear[dir] = -1;
                 else
                     rear[dir] = directionHexes[dir] + 1;
             } else {
                 if (dir == COMBAT_DIRECTION_NORTHEAST || dir == COMBAT_DIRECTION_EAST || dir == COMBAT_DIRECTION_SOUTHEAST) {
-                    if (directionHexes[dir] % 9 == 7)
+                    if (directionHexes[dir] % COMBAT_GRID_COLUMNS == 7)
                         directionHexes[dir] = -1;
                     else
                         directionHexes[dir]++;
                 }
-                if (directionHexes[dir] % 9 == 1)
+                if (directionHexes[dir] % COMBAT_GRID_COLUMNS == 1)
                     rear[dir] = -1;
                 else
                     rear[dir] = directionHexes[dir] - 1;
@@ -283,12 +283,12 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
         return;
     if (m_validDirectionCount <= 1 && m_mouseDirection >= 0)
         return;
-    distX = mouseX - (targetHex % 9 - 1) * 78;
-    if ((targetHex / 9) & 1)
+    distX = mouseX - (targetHex % COMBAT_GRID_COLUMNS - 1) * 78;
+    if ((targetHex / COMBAT_GRID_COLUMNS) & 1)
         distX -= 0x42;
     else
         distX -= 0x1b;
-    distY = mouseY - 0x3c - targetHex / 9 * 80;
+    distY = mouseY - 0x3c - targetHex / COMBAT_GRID_COLUMNS * 80;
     distX -= 0x27;
     distY -= 0x28;
     index = 0;
@@ -610,8 +610,8 @@ int combatManager::CheckWin(struct tag_message* message) {
 // small view or ballista and clears the target through the current stack.
 VA(0x00410d35, 0x316)
 signed char combatManager::GetCommand(short hex) {
-    signed char unusedCol = hex % 9;
-    signed char rowIndex = hex / 9;
+    signed char unusedCol = hex % COMBAT_GRID_COLUMNS;
+    signed char rowIndex = hex / COMBAT_GRID_COLUMNS;
     army* currentArmy;
     signed char targetIndex;
     signed char enemySide;
@@ -636,7 +636,7 @@ signed char combatManager::GetCommand(short hex) {
             } else
                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
         default:
-            if (hex % 9 == 8)
+            if (hex % COMBAT_GRID_COLUMNS == 8)
                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
             enemySide = m_hexCells[hex].m_occupantSide;
             targetIndex = m_hexCells[hex].m_occupantIndex;
@@ -680,8 +680,8 @@ signed char combatManager::GetCommand(short hex) {
 // army view also takes the side.
 VA(0x0041104b, 0x1dc)
 signed char combatManager::RightClick(signed char hex) {
-    signed char unusedColumn = hex % 9;
-    signed char row = hex / 9;
+    signed char unusedColumn = hex % COMBAT_GRID_COLUMNS;
+    signed char row = hex / COMBAT_GRID_COLUMNS;
 
     if (hex == -1)
         return 0;
@@ -699,7 +699,7 @@ signed char combatManager::RightClick(signed char hex) {
             }
             return 0;
         default:
-            if (hex % 9 == 8)
+            if (hex % COMBAT_GRID_COLUMNS == 8)
                 return 0;
             signed char side = m_hexCells[hex].m_occupantSide;
             signed char armyIndex = m_hexCells[hex].m_occupantIndex;

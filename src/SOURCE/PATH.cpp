@@ -392,10 +392,10 @@ short army::GetBestDirection(short sourceHex, short targetHex, short blockedMask
 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex))
         return COMBAT_DIRECTION_INVALID;
-    sourceColumnCheck = sourceHex % 9;
-    sourceRowVal = sourceHex / 9;
-    targetCol = targetHex % 9;
-    targetRowVal = targetHex / 9;
+    sourceColumnCheck = sourceHex % COMBAT_GRID_COLUMNS;
+    sourceRowVal = sourceHex / COMBAT_GRID_COLUMNS;
+    targetCol = targetHex % COMBAT_GRID_COLUMNS;
+    targetRowVal = targetHex / COMBAT_GRID_COLUMNS;
     movingUp = 0;
     iIsMovingDown = 0;
     iLeftFl = 0;

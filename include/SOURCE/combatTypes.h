@@ -83,6 +83,14 @@ H1_ENUM_BEGIN(CombatEffectAnimation)
     COMBAT_EFFECT_GOOD_MORALE = 24,
     COMBAT_EFFECT_BAD_MORALE = 25
 H1_ENUM_END(CombatEffectAnimation)
+
+// The combat field: hex = row * COLUMNS + column (GenerateMap, GetGridIndex);
+// columns 0 and LAST_COLUMN are the castle/edge columns.
+H1_ENUM_CONST_BEGIN(CombatGridDimension)
+    COMBAT_GRID_COLUMNS = 9,
+    COMBAT_GRID_ROWS = 5,
+    COMBAT_GRID_LAST_COLUMN = 8
+H1_ENUM_CONST_END(CombatGridDimension)
 // clang-format on
 
 H1_ENUM_BEGIN(CombatEffectDimension)

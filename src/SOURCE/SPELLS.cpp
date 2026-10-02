@@ -205,7 +205,7 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
             break;
         case SPELL_FIREBALL:
         case SPELL_METEOR_SHOWER:
-            if (hex == -1 || hex % 9 == 0 || hex % 9 == 8)
+            if (hex == -1 || hex % COMBAT_GRID_COLUMNS == 0 || hex % COMBAT_GRID_COLUMNS == 8)
                 return 0;
             break;
     }
