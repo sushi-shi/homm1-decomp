@@ -9,6 +9,7 @@
 #include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/mapObjectTypes.h>
 
@@ -19,12 +20,149 @@
 
 // KB owns gDwellingType (retail KB .data band).
 extern signed char gDwellingType[4][6];
+
+// PHILAI's module state in retail address order: .data 0x0048f54c-0x0048f827
+// (shared with its logging helpers' literals), then .bss 0x004acec0-0x004c4eef
+// (VC4 orders .bss by name hash, not by definition).
+DATA(0x0048f54c)
+signed char giShowComputerRoute = 0;
+DATA(0x0048f55c)
+float gfAttackHumanBonus = 2.0f;
+DATA(0x0048f560)
+float gfAttackComputerBonus = 0.8f;
+DATA(0x0048f7b8)
+signed char bSVSearchArrayInUse = 0;
+DATA(0x0048f824)
+int bEvaluatingTravelGates = 1;
+DATA(0x004acec0)
+short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004af740)
+float fBerserkFactor;
+DATA(0x004af744)
+int iLastFrameRateTimer;
+DATA(0x004af748)
+signed char giCurPlayer;
+DATA(0x004af74c)
+float fWinChance;
+DATA(0x004af750)
+int iEventLoop;
 DATA(0x004af754)
 signed char giBuildShipyard[AI_PLAYER_COUNT];
+DATA(0x004af758)
+int giMaxHeroesForThisPlayer;
 DATA(0x004af75c)
 signed char giBuildBoat[AI_PLAYER_COUNT];
+DATA(0x004af760)
+float fReduceFactor;
+DATA(0x004af764)
+unsigned char giCurPlayerBit;
+DATA(0x004af768)
+signed char giBestShipyardDist;
+DATA(0x004af76c)
+int bHeroBuiltThisTurn;
+DATA(0x004af770)
+short gaiHeroLiveChance[GAME_HERO_COUNT];
+DATA(0x004af7b8)
+int iAttackerLoss;
+DATA(0x004af7bc)
+int iDefenderLoss;
+DATA(0x004af7c0)
+int iAttackerRemaining;
+DATA(0x004af7c4)
+int iDefenderRemaining;
+DATA(0x004af7c8)
+int giHumanTownConquered;
+DATA(0x004af7cc)
+int iOutcome;
+DATA(0x004af7d0)
+int iArtifactChoice1;
+DATA(0x004af7d4)
+int iArtifactChoice2;
+DATA(0x004af7d8)
+int iArtifactChoice3;
+DATA(0x004af7dc)
+int giCurTurn;
+DATA(0x004af7e0)
+int iEventTownId;
+DATA(0x004af7e8)
+int costTemp[RESOURCE_COUNT];
+DATA(0x004af808)
+signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004b0c48)
+int iDummy;
+DATA(0x004b0c4c)
+signed char gbPossibleShipyardFound;
+DATA(0x004be7a4)
+int bEventSeen;
+DATA(0x004be7a8)
+int iPurchaseNum;
+DATA(0x004be7b0)
+float gafAITurnCostResource[RESOURCE_COUNT];
+DATA(0x004be7cc)
+unsigned char giCurWatchPlayerHighBit;
+DATA(0x004be7d0)
+int iCurPlaceToVisit;
+DATA(0x004be7d4)
+int iPurchaseSlot;
+DATA(0x004be7d8)
+armyGroup* pEventTownArmy;
+DATA(0x004be7dc)
+signed char giBestShipyardId;
+DATA(0x004be7e0)
+signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004bfc20)
+int iDefaultEventType;
+DATA(0x004bfc28)
+short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004c24a8)
+signed char gbActualBoatFound;
+DATA(0x004c24ac)
+unsigned char giCurWatchPlayerBit;
+DATA(0x004c24b0)
+playerData* gpCurPlayer;
+DATA(0x004c24b8)
+float gfHeroInteractionBonus[GAME_HERO_COUNT];
+DATA(0x004c2548)
+int gbBerserk;
+DATA(0x004c254c)
+mapCell* pEventCell;
+DATA(0x004c2550)
+int gbReduceByReload;
+DATA(0x004c2554)
+int gbReduceByBerserk;
+DATA(0x004c2558)
+town* pEventTown;
+DATA(0x004c255c)
+unsigned char giCurPlayerHighBit;
+DATA(0x004c2560)
+short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004c4de0)
 signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
+DATA(0x004c4de8)
+int iPlacesVisited[30][2];
+DATA(0x004c4ed8)
+int iEventRV;
+DATA(0x004c4edc)
+int iMonsterCount;
+DATA(0x004c4ee0)
+int iTownValue;
+DATA(0x004c4ee4)
+int gbTroopReload;
+DATA(0x004c4ee8)
+hero* pEventHero;
+DATA(0x004c4eec)
+signed char gbActualShipyardFound;
+
+// Buka 2.1's named AI factors. They are loaded, not folded, at /Od, and
+// retail .rdata keeps them in this declaration order at 0x0048c0a8 ahead of
+// the anonymous float literals.
+static const float AI_TARGET_HUMAN_VALUE_FACTOR = 1.5f;
+static const float AI_STRATEGIC_POSITION_SCORE_FACTOR = 1.25f;
+static const float AI_CREATURE_SAME_RACE_FACTOR = 1.1f;
+static const float AI_FUTURE_DEFLATION_RATE = 0.15f;
+static const float AI_HERO_PURCHASE_SAME_RACE_FACTOR = 1.12f;
+static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
+static const float AI_ATTENTION_IDENTITY = 1.0f;
 
 // donor PoL RVA 0x000379d0; preferred Buka symbol ?CheckDoMain@@YIXHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -613,9 +751,6 @@ void philAI::GetGameAIVars(void) {
         GetGameAttentionValue(i);
 }
 
-// KB's King of the Hill flag (Buka gbIAmGreatest): only the top player is fair game.
-extern signed char gbKingOfTheHill;
-
 // donor PoL RVA 0x0003a329; preferred Buka symbol ?GetTurnAIVars@philAI@@QAEXH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.345425;margin=0.144973;shape=0.282;size=0.515;calls=0.667;alternate=pol20:void philAI::GetTurnAIVars(int)@0x0003a329
@@ -823,13 +958,6 @@ hero* philAI::DetermineHeroToMove(int player) {
     return 0;
 }
 
-// ValueOfEventAtPosition's artifact-event choices, declared ahead of
-// DetermineTargetPosition: C1 numbers file-scope symbols in declaration order
-// (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-DATA(0x004af7d0) int iArtifactChoice1;
-DATA(0x004af7d4) int iArtifactChoice2;
-DATA(0x004af7d8) int iArtifactChoice3;
-
 // donor PoL RVA 0x0003b865; preferred Buka symbol ?DetermineTargetPosition@philAI@@QAEHAAH0H0@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
@@ -942,7 +1070,7 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                     cellValue = -100;
                 }
                 if (x == targetX && y == targetY) {
-                    cellValue = static_cast<int>(cellValue * 1.5f);
+                    cellValue = static_cast<int>(cellValue * AI_TARGET_HUMAN_VALUE_FACTOR);
                     if (abs(x - pHero->m_x) + abs(y - pHero->m_y) > 3)
                         cellValue++;
                 }
@@ -985,12 +1113,6 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
     LogStr("Hero, Best RV", pHero->m_owner, bestRV, targetX * 1000 + targetY, pHero->m_x * 1000 + pHero->m_y, 0);
     LogStr("\n\n****");
 }
-
-// GetGameAttentionValue's float identity (see AI_ATTENTION_IDENTITY below).
-// Declared ahead of ProbableOutcomeOfBattle: with rawFight[] as one symbol,
-// this C1 symbol order reproduces retail's operand order through
-// MeanRVOfUnexploredTerritory (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
 
 // donor PoL RVA 0x0003c6e2; preferred Buka symbol ?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010HHHAAMAAH3333@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -1311,7 +1433,7 @@ void philAI::ValueOfBuyingCreature(
         occupant = gpGame->GetHero(townPointer->m_occupyingHeroId);
         creatRV = static_cast<int>(creatRV * 1.1);
         if (occupant->m_heroClass == creature / 6)
-            creatRV = static_cast<int>(creatRV * 1.1f);
+            creatRV = static_cast<int>(creatRV * AI_CREATURE_SAME_RACE_FACTOR);
         if ((gMonsterDatabase[creature].stats.attributes & 8)) {
             for (n = 0; n < 5; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
@@ -1480,7 +1602,7 @@ void philAI::ValueOfBuyingHero(town* townPointer, hero* heroPointer, int& resour
            - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase)
     );
     if (gTownHeroClass[townPointer->m_type] == heroPointer->m_heroClass)
-        heroRV = static_cast<int>(heroRV * 1.12f);
+        heroRV = static_cast<int>(heroRV * AI_HERO_PURCHASE_SAME_RACE_FACTOR);
     heroRV += StrategicValueOfPosition(heroPointer, heroPointer->m_x, heroPointer->m_y, 0, &tmp);
     heroRV -= 200;
     heroRV = static_cast<int>(heroRV * FutureDeflator(heroCost));
@@ -1561,9 +1683,6 @@ VA(0x0041e901, 0x1a)
 int philAI::MeanRVOfUnexploredTerritory(int) {
     return 0;
 }
-
-// Buka 2.1's attention identity constants are loaded, not folded, at /Od.
-static const float AI_ATTENTION_IDENTITY = 1.0f;
 
 // Buka 2.1 GetGameAttentionValue: randomized game weights tempered by the
 // number of players.
@@ -1651,11 +1770,6 @@ float philAI::TurnsToBuy(int* const resources) {
     }
     return maxT;
 }
-
-// ValueOfEventAtPosition's reload-reduction flag, defined ahead of
-// RVOfPosition: the symbol order retail's RVOfPosition operand sort requires.
-// VC4 lays out .bss independently of this definition order.
-DATA(0x004c2550) int gbReduceByReload;
 
 // donor PoL RVA 0x0003e918; preferred Buka symbol ?RVOfPosition@philAI@@QAEHHHHHHHHHHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -1794,10 +1908,6 @@ RVA_DYNINIT(0x0001f2a9, 0x1a, SVSearchArray)
 // int3 padding precedes it and LogTruncate follows without a gap.
 RVA_DYNINIT(0x00019990, 0x15, SVSearchArray)
 
-// ValueOfEventAtPosition's default event type, declared ahead of
-// StrategicValueOfPosition for the same C1 symbol order.
-DATA(0x004bfc20) int iDefaultEventType;
-
 // donor PoL RVA 0x0003ef45; preferred Buka symbol ?StrategicValueOfPosition@philAI@@QAEHHHHHPAHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
@@ -1911,7 +2021,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
         delete madeSearch;
     else
         bSVSearchArrayInUse = 0;
-    myValue = static_cast<int>(myValue * 1.25f);
+    myValue = static_cast<int>(myValue * AI_STRATEGIC_POSITION_SCORE_FACTOR);
     if (myValue > 32000)
         myValue = 32000;
     if (!immediate) {
@@ -1939,11 +2049,6 @@ int philAI::ValueOfTown(town* townPointer) {
     sum += 750;
     return sum;
 }
-
-// ValueOfEventAtPosition's creature-purchase state, declared ahead of
-// TurnCostResource for the same C1 symbol order.
-DATA(0x004be7a8) int iPurchaseNum;
-DATA(0x004be7d4) int iPurchaseSlot;
 
 // Buka 2.1 TurnCostResource: each resource's turn cost scales its base
 // value against the player's relative stock-plus-income share.
@@ -1997,7 +2102,7 @@ float philAI::TurnValueOfObelisk(int player) {
 VA(0x0041fedb, 0x51)
 float philAI::FutureDeflator(int* const resources) {
     float turns = TurnsToBuy(resources);
-    float value = 1.0f - turns * 0.15f;
+    float value = 1.0f - turns * AI_FUTURE_DEFLATION_RATE;
     if (value < 0.0)
         value = 0;
     return value;
@@ -2955,28 +3060,6 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
     townPointer->GiveSpells();
 }
 
-// ValueOfEventAtPosition's working state: HoMM1 keeps the event value, the
-// evaluated cell and the battle forecast in module globals.
-DATA(0x004c2554) int gbReduceByBerserk;
-DATA(0x004c4ed8) int iEventRV;
-DATA(0x004c254c) mapCell* pEventCell;
-DATA(0x004be7a4) int bEventSeen;
-DATA(0x004af750) int iEventLoop;
-DATA(0x004c4edc) int iMonsterCount;
-DATA(0x004c4ee0) int iTownValue;
-DATA(0x004c4ee8) hero* pEventHero;
-DATA(0x004c2558) town* pEventTown;
-DATA(0x004be7d8) armyGroup* pEventTownArmy;
-DATA(0x004af7e0) int iEventTownId;
-DATA(0x004af74c) float fWinChance;
-DATA(0x004af7b8) int iAttackerLoss;
-DATA(0x004af7bc) int iDefenderLoss;
-DATA(0x004af7c0) int iAttackerRemaining;
-DATA(0x004af7c4) int iDefenderRemaining;
-DATA(0x004af7cc) int iOutcome;
-DATA(0x0048f824)
-int bEvaluatingTravelGates = 1;
-
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
@@ -3483,78 +3566,3 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     }
     return iEventRV;
 }
-
-// PHILAI owns retail .data 0x0048f54c-0x0048f827 (its logging helpers' and AI
-// literals) and .bss 0x004acec0-0x004c4eef.
-DATA(0x0048f54c)
-signed char giShowComputerRoute = 0;
-DATA(0x0048f55c)
-float gfAttackHumanBonus = 2.0f;
-DATA(0x0048f560)
-float gfAttackComputerBonus = 0.8f;
-DATA(0x0048f7b8)
-signed char bSVSearchArrayInUse = 0;
-DATA(0x004acec0)
-short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004af740)
-float fBerserkFactor;
-DATA(0x004af744)
-int iLastFrameRateTimer;
-DATA(0x004af748)
-signed char giCurPlayer;
-DATA(0x004af758)
-int giMaxHeroesForThisPlayer;
-DATA(0x004af760)
-float fReduceFactor;
-DATA(0x004af764)
-unsigned char giCurPlayerBit;
-DATA(0x004af768)
-signed char giBestShipyardDist;
-DATA(0x004af76c)
-int bHeroBuiltThisTurn;
-DATA(0x004af770)
-short gaiHeroLiveChance[GAME_HERO_COUNT];
-DATA(0x004af7c8)
-int giHumanTownConquered;
-DATA(0x004af7dc)
-int giCurTurn;
-DATA(0x004af7e8)
-int costTemp[RESOURCE_COUNT];
-DATA(0x004af808)
-signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004b0c48)
-int iDummy;
-DATA(0x004b0c4c)
-signed char gbPossibleShipyardFound;
-DATA(0x004be7b0)
-float gafAITurnCostResource[RESOURCE_COUNT];
-DATA(0x004be7cc)
-unsigned char giCurWatchPlayerHighBit;
-DATA(0x004be7d0)
-int iCurPlaceToVisit;
-DATA(0x004be7dc)
-signed char giBestShipyardId;
-DATA(0x004be7e0)
-signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004bfc28)
-short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004c24a8)
-signed char gbActualBoatFound;
-DATA(0x004c24ac)
-unsigned char giCurWatchPlayerBit;
-DATA(0x004c24b0)
-playerData* gpCurPlayer;
-DATA(0x004c24b8)
-float gfHeroInteractionBonus[GAME_HERO_COUNT];
-DATA(0x004c2548)
-int gbBerserk;
-DATA(0x004c255c)
-unsigned char giCurPlayerHighBit;
-DATA(0x004c2560)
-short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004c4de8)
-int iPlacesVisited[30][2];
-DATA(0x004c4ee4)
-int gbTroopReload;
-DATA(0x004c4eec)
-signed char gbActualShipyardFound;

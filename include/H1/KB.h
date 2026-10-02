@@ -128,8 +128,6 @@ extern class icon* gBuyBuildIcons;
 extern class icon* gSystemIcons;
 extern class font* bigFont;
 extern class font* smallFont;
-// Stale alias of iMaxMapExtra (0x4c5188): unreferenced, kept so later symbol handles stay put.
-extern int gbMapExtraCleared;
 extern short giScoreMon[][2];
 extern short giScoreCampaignMon[][2];
 // Combat effect icon files by effect (0x004910d8) and the one loaded effect
@@ -165,8 +163,6 @@ void GOut(char*);
 extern signed char bEarlySetupDone;
 extern int giShowIntro;
 extern signed char giScreenScroll;
-// Stale alias of giLimitPlayer (0x4c5174): unreferenced, kept so later symbol handles stay put.
-extern signed char gbCheatMenus;
 extern int gbBlackoutPlayer;
 extern char gMapName[];
 extern char gFullMapName[];
@@ -228,10 +224,6 @@ void NormalDialog(char*, H1_ENUM_PARAM(NormalDialogType, int), int, int,
                   H1_ENUM_PARAM(NormalDialogOrText, int));
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
-// Stale alias of cTownObjectNames (0x491350): unreferenced, kept so later symbol handles stay put.
-extern char* cNeutralObjectName[];
-// Stale alias of cTownObjectNames + 9 (0x491374): unreferenced, kept so later symbol handles stay put.
-extern char* cTownObjectSuffix[];
 extern char* gSpellDesc[];
 extern char* gSpellNames[];
 // QuickInfo's name tables.

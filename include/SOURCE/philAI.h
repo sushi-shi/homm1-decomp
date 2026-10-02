@@ -24,8 +24,6 @@ int GetBuildingBaseResourceValue(int, int, int);
 extern int iDummy;
 extern int gArtifactBaseRV[];
 extern int gResourceBaseValue[];
-// Stale alias of gfSpellCastNumMod (0x492518): unreferenced, kept so later symbol handles stay put.
-extern float gfStatValue[];
 extern int bHeroBuiltThisTurn;
 extern int iCurHourGlassPhase;
 
@@ -176,18 +174,13 @@ extern float fBerserkFactor;
 extern int gbTroopReload;
 // GetBestBHC's per-player hero ceiling (GetTurnAIVars sets it).
 extern int giMaxHeroesForThisPlayer;
-// Stale alias of gbRemoteReady (0x493040, X_GLOBAL.h), which GetBestBHC now
-// names: unreferenced, kept so later symbol handles stay put.
-extern int gbSerialCompression;
 // GetTurnAIVars' per-cell enemy-hero turn distance for mines.
 extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern float gfHeroInteractionBonus[];
 extern float gfAttackHumanBonus;
 extern float gfAttackComputerBonus;
-extern signed char gbIAmGreatest; // stale alias of gbKingOfTheHill (0x4c7b50), unreferenced
-// Stale alias of mapVisited (0x4be7e0), unreferenced; then the event cache,
-// per-resource mine income and the ultimate artifact's average value.
-extern signed char gaiEnemyHeroReachable[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+// ValueOfEventAtPosition's event cache, per-resource mine income and the
+// ultimate artifact's average value.
 extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern int giMineIncome[];
 extern int gUltArtifactAvgValue;
@@ -215,8 +208,6 @@ extern class searchArray SVSearchArray;
 extern float gfStatPower[];
 extern signed char gcSpellAIFlags[];
 extern short giSpellAIValue[];
-// Stale alias of gfBattleStat (0x492470): unreferenced, kept so later symbol handles stay put.
-extern float gfSpellPowerMod[];
 extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
