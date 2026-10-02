@@ -2436,7 +2436,7 @@ void game::ViewArmy(
     m_viewArmyWindow->AddWidget(monsterWidget, WINDOW_Z_ORDER_APPEND);
 
     strcpy(fileName, gArmyNames[monsterType]);
-    fileName[0] -= 32;
+    fileName[0] -= 'a' - 'A';
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = VIEW_ARMY_TITLE;
     message.text = fileName;
@@ -3002,7 +3002,7 @@ void game::NextPlayer(void) {
         gpInputManager->Flush();
         if (gbBlackoutPlayer && giNumHumanPlayers > 1) {
             sprintf(gText, "%s player turn.", gColorNames[gpGame->m_players[giCurPlayer].m_color]);
-            gText[0] -= 32;
+            gText[0] -= 'a' - 'A';
             WaitForPlayer(gText, giCurPlayer);
         }
         if (gbThisNetHumanPlayer[giCurPlayer])
@@ -4722,7 +4722,7 @@ void game::DoNewTurn(void) {
                 gNewTurnText[NEW_TURN_TEXT_LAST_DAY],
                 gColorNames[gpGame->m_players[giCurPlayer].Color()]
             );
-            gText[0] -= 32;
+            gText[0] -= 'a' - 'A';
         } else {
             sprintf(
                 gText,
@@ -4730,7 +4730,7 @@ void game::DoNewTurn(void) {
                 gColorNames[gpGame->m_players[giCurPlayer].Color()],
                 gpCurPlayer->m_daysLeft
             );
-            gText[0] -= 32;
+            gText[0] -= 'a' - 'A';
         }
         NormalDialog(
             gText,
@@ -4763,7 +4763,7 @@ void game::DoNewTurn(void) {
                     );
                 } else if (giMonthType == CALENDAR_PERIOD_CREATURE) {
                     strcpy(monsterName, gArmyNames[giMonthTypeExtra]);
-                    monsterName[0] -= 32;
+                    monsterName[0] -= 'a' - 'A';
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE],
@@ -4783,7 +4783,7 @@ void game::DoNewTurn(void) {
                     );
                 } else {
                     strcpy(monsterName, gArmyNames[giWeekTypeExtra]);
-                    monsterName[0] -= 32;
+                    monsterName[0] -= 'a' - 'A';
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE],

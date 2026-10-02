@@ -934,7 +934,7 @@ void WGCleanUpWinGraphics() {
 VA(0x004053bc, 0x6c)
 void ConnectToDLLs() {
     hDDrawLibrary = LoadLibraryA("DDRAW.DLL");
-    if ((unsigned long)hDDrawLibrary >= 32) {
+    if ((unsigned long)hDDrawLibrary >= HINSTANCE_ERROR) {
         // API-forced: GetProcAddress returns FARPROC for the typed DirectDraw factory.
         lpDirectDrawCreate = reinterpret_cast<DirectDrawCreateProc>(
             GetProcAddress(hDDrawLibrary, "DirectDrawCreate")
@@ -949,7 +949,7 @@ void ConnectToDLLs() {
 // Buka's DLL teardown checks the Win32 module handle before release.
 VA(0x00405428, 0x29)
 void DisconnectDLLs() {
-    if ((unsigned long)hDDrawLibrary >= 32)
+    if ((unsigned long)hDDrawLibrary >= HINSTANCE_ERROR)
         FreeLibrary(hDDrawLibrary);
 }
 
