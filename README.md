@@ -20,11 +20,11 @@ _Comparison mode: code first; data-reference identities and addends are deferred
 
 | Module   | Units |   Functions exact |  Fuzzy |
 | :------- | ----: | ----------------: | -----: |
-| `SOURCE` |    36 | 737 / 763 (96.6%) |  99.9% |
+| `SOURCE` |    37 | 737 / 763 (96.6%) |  99.9% |
 | `BASE`   |    31 | 227 / 237 (95.8%) |  99.7% |
 | `lzhuf`  |     2 |  12 / 12 (100.0%) | 100.0% |
 
-_CUR / MAX / HIST: 887 / 976 / 994 exact &middot; 100.14% / 100.51% / 100.61% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._
+_CUR / MAX / HIST: 886 / 976 / 994 exact &middot; 100.15% / 100.51% / 100.61% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._
 <!-- match-score:end -->
 
 ## Quickstart
