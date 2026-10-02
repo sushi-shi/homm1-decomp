@@ -36,10 +36,10 @@ textWidget::textWidget(
 )
     : widget(x, y, width, height, id, kind) {
     m_font = gpResourceManager->GetFont(fontName);
-    m_color = color;
     m_text = text;
     m_alignment = 1;
     m_kind = WIDGET_KIND_TEXT;
+    m_color = color;
 }
 
 VA(0x0047aed0, 0xeb)
