@@ -61,6 +61,32 @@ struct boatRecord {
 };
 #pragma pack(pop)
 
+// SetupTowns and RandomizeTown read a town's map-extra record: custom flag, owner, buildings, mage-guild
+// level and garrison.
+#pragma pack(push, 1)
+struct mapTownExtra {
+    signed char customized;
+    signed char owner;
+    short buildings;
+    signed char buildState;
+    signed char troopTypes[5];
+    short troopCounts[5];
+};
+#pragma pack(pop)
+
+// ProcessOnMapHeroes reads a placed hero's map-extra record: owner,
+// garrison, hero id, four artifacts and starting experience.
+#pragma pack(push, 1)
+struct mapHeroExtra {
+    signed char owner;
+    signed char troopTypes[5];
+    short troopCounts[5];
+    signed char heroId;
+    signed char artifacts[4];
+    int experience;
+};
+#pragma pack(pop)
+
 // Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
 // are fixed by retail address arithmetic; unrecovered spans stay opaque.
@@ -128,7 +154,18 @@ public:
     // TavernHandler advances this word as its animation counter (Buka name).
     short m_viewArmyResult;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
-    char m_unknown16e64[0x16];
+    // ViewSpells' window state (Buka m_viewSpells*): the hero's spell slots
+    // run from m_spellFirst to m_spellLast, four per page from m_viewSpellsTop.
+    class heroWindow* m_viewSpellsWindow;
+    class hero* m_viewSpellsHero;
+    short m_spellFirst;
+    short m_spellLast;
+    short m_viewSpell;
+    short m_viewSpellsTop;
+    short (*m_viewSpellsCallback)(struct tag_message&);
+    signed char m_viewSpellsReadOnly;
+    // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 trigger cell.
+    signed char m_unknown16e79;
     hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
@@ -164,6 +201,10 @@ public:
     int SetupPuzzlePieces(int, int);
     signed char IsMobile(signed char);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
+    // Inline world-map file I/O (LoadMap, SaveGame, LoadGame): each
+    // expansion leaves its jmp $+0 after the read or write call.
+    void ReadWorldMap(int);
+    void WriteWorldMap(int);
     signed char CreateBoat(signed char, signed char);
     signed char Scan(signed char*, signed char, signed char);
     signed char RandomScan(signed char*, signed char, signed char, int);
@@ -172,7 +213,8 @@ public:
     signed char GetMineId(signed char, signed char);
     short SaveGame(char *, signed char);
     void SetupOrigData(void);
-    void LoadGame(char*, int, int);
+    // HoMM1 retail returns 1 in AX (ret 0xc).
+    short LoadGame(char*, int, int);
     void GiveTroopsToNeutralTown(int);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char*);
@@ -180,10 +222,14 @@ public:
     void InitializePasswords(void);
     void RandomizeBarrier(class mapCell*);
     void RandomizePassword(class mapCell*);
-    int LoadMap(char*);
+    // HoMM1 retail returns 0 in AX.
+    short LoadMap(char*);
     void ClaimTown(signed char, signed char);
     void ClaimMine(signed char, signed char);
-    int ViewSpells(class hero*, int, short (*)(struct tag_message&), int);
+    // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
+    signed char ViewSpells(class hero*, signed char, short (*)(struct tag_message&), signed char);
+    // HoMM1: limits the spell page to the combat or adventure slots.
+    void SetupSpellRange(short);
     void UpdateSpellWidgets(void);
     // HoMM1 retail: byte creature/flags, word count, eleven arguments (ret 0x2c).
     void ViewArmy(
@@ -199,7 +245,8 @@ public:
         class army*,
         class armyGroup*
     );
-    int GetRandomNumTroops(int);
+    // HoMM1 retail: byte creature, count returned in AL.
+    signed char GetRandomNumTroops(signed char);
     void TurnOnAIMusic(void);
     void TurnOffAIMusic(void);
     void NextPlayer(void);
@@ -210,13 +257,18 @@ public:
     void WeeklyGenericSite(class mapCell*);
     void PerMonth(void);
     void ConvertObject(int, int, int, int, int, int, int, int, int, int, int);
-    void RandomizeTown(int, int, int);
-    void RandomizeMine(int, int);
+    // HoMM1 retail: byte x, y and castle flag (ret 0xc).
+    void RandomizeTown(signed char, signed char, signed char);
+    // HoMM1 retail: byte x and y (ret 8).
+    void RandomizeMine(signed char, signed char);
+    // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
+    void SetupTown(signed char, signed char);
     void InitRandomArtifacts(void);
     signed char GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(short, int);
-    void ProcessRandomObjects(void);
+    // HoMM1 retail: towns-only pass flag (ret 4).
+    void ProcessRandomObjects(int);
     void SetVisibility(short, short, short, short);
     void MakeAllWaterVisible(int);
     void GiveArmy(class armyGroup*, int, int, int);
@@ -235,8 +287,11 @@ public:
     // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
     void SettleOverlay(int, int);
+    // HoMM1: NewMap rerolls each cell's terrain tile variant after LoadMap.
+    void RandomizeTerrainTiles(void);
     void ProcessMapExtra(void);
-    void SetupTowns(void);
+    // Retail returns whether no town took an owner from its map extra (AL).
+    signed char SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
     int TransmitSaveGame(int, int);
@@ -268,6 +323,8 @@ public:
     void NGKPSetupDisplayString(char*, unsigned short int);
     void DrawNGKPDisplayString(int);
     void ShowScenInfo(void);
+    // HoMM1: NewMap gives every opponent a distinct crest.
+    void RandomizePlayerCrests(void);
     void GetLossConditionText(char*);
     void GetVictoryConditionText(char*);
     int GetSideDesc(char*, int, int);

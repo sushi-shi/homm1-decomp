@@ -33,7 +33,11 @@ public:
     signed char m_buildState;
     char m_unknown19;
     short m_garrison[6];
-    char m_unknown26[6];
+    // ProcessMapExtra files the cell's map-extra index here; SetupTowns
+    // marks towns whose extra record carries a custom setup.
+    unsigned char m_extraIndex;
+    signed char m_customized;
+    char m_unknown28[4];
     signed char m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.
     // GetBestBHC logs and compares it zero-extended.
