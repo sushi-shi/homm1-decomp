@@ -50,6 +50,18 @@ H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_MAX_COST = 9999
 H1_ENUM_CONST_END(SearchConstant)
 
+// FindCombatPath's attackPath: with an assigned target, nonzero stops the
+// search at the first hex from which targetHex can be attacked instead of
+// routing onto it. army::FindPath forwards its path
+// mode; the combat AI asks for EXACT when walking to a stack's front and
+// ASSIGNED when closing on its target (Buka combatTypes.h ArmyPathTarget
+// numbering; HoMM1 treats every nonzero mode alike).
+H1_ENUM_BEGIN(ArmyPathTarget)
+    ARMY_PATH_ASSIGNED_TARGET_HEX = -1,
+    ARMY_PATH_ANY_TARGET_HEX = 0,
+    ARMY_PATH_EXACT_TARGET_HEX = 1
+H1_ENUM_END(ArmyPathTarget)
+
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
 // (CheckReload shifts it right four; the path builder masks 0xf).
@@ -131,7 +143,7 @@ public:
     void TestPossibleDirections(short, short, signed char* const, signed char* const, short, int);
     void SeedCombatPosition(class army*);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
-    short FindCombatPath(short, short, class army*, signed char);
+    short FindCombatPath(short, short, class army*, H1_ENUM_PARAM(ArmyPathTarget, signed char));
     // HoMM1 retail 0x00424c50 (ret 0x10): word hex/direction and unsigned
     // word distance/speed.
     void PushCombatPoint(short, short, unsigned short, unsigned short);

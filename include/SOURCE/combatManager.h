@@ -107,7 +107,13 @@ H1_ENUM_CONST_BEGIN(CombatAIConstant)
     COMBAT_AI_RETREAT_STRENGTH_DIVISOR = 20000,
     COMBAT_AI_RETREAT_TIER_4_THRESHOLD = 30000,
     COMBAT_AI_RETREAT_SCALED_PENALTY_THRESHOLD = 40000,
-    COMBAT_AI_EXPERIENCE_DIVISOR = 200000
+    COMBAT_AI_EXPERIENCE_DIVISOR = 200000,
+    // DoCompAI's castle shooting estimate: the town's archers start at
+    // BASE_ARCHERS, add ARCHERS_PER_DWELLING per dwelling and one per other
+    // built structure, each worth ARCHER_STRENGTH to the defender.
+    COMBAT_AI_CASTLE_BASE_ARCHERS = 5,
+    COMBAT_AI_CASTLE_ARCHERS_PER_DWELLING = 4,
+    COMBAT_AI_CASTLE_ARCHER_STRENGTH = 100
 H1_ENUM_CONST_END(CombatAIConstant)
 
 // DoCompAI's plan for the acting stack (Buka CombatAIConstant
