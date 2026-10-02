@@ -654,7 +654,7 @@ short advManager::ValidMove(short direction)
     if (newY < -7 || newY > MAP_CELL_GRID_SIZE - 7 - 1)
         return 0;
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
-    if (destCell->m_unknown07 & 0x80)
+    if (destCell->m_secondaryTrigger & 0x80)
         return 0;
     if (giGroundToTerrain[destCell->m_tileIndex] == 0) {
         if (m_cursorType != 4 && destCell->m_triggerType != 0xbe && destCell->m_triggerType != 0xa3)

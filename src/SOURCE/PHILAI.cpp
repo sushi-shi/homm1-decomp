@@ -389,7 +389,7 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
         y += normalDirTable[gpSearchArray->m_directions[i]].y;
         if (abs(x - pHero->m_x) <= 7 && abs(y - pHero->m_y) <= 7) {
             cell = gpAdvManager->GetCell(x, y);
-            if (!(cell->m_triggerType & 0x80) && !(cell->m_unknown07 & 0x80)) {
+            if (!(cell->m_triggerType & 0x80) && !(cell->m_secondaryTrigger & 0x80)) {
                 bestX = x;
                 bestY = y;
                 length = gpSearchArray->m_pathLength - i;

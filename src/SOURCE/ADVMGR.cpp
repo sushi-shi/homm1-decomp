@@ -1458,7 +1458,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                     m_selectedCell = 2;
                     return 1;
                 }
-                if (cell->m_unknown07 & 0x80) {
+                if (cell->m_secondaryTrigger & 0x80) {
                     if ((cell->m_triggerType & 0x7f) == 0x28) {
                         pTown = gpGame->GetTown(cell->m_objectMetadata);
                         if (pTown->m_owner == giCurPlayer && m_commandTargetY >= 1
@@ -1933,7 +1933,7 @@ void advManager::DrawCell(
         if (cell0->m_flags & 0x10)
             IconToBitmap(
                 m_objectIcons[cell0->m_objectTileset >> 4], gpWindowManager->m_screen, pixelX7,
-                pixelY3, cell0->m_unknown05, 0
+                pixelY3, cell0->m_extraFrame, 0
             );
     }
     if (drawMask & 8) {
@@ -2059,7 +2059,7 @@ void advManager::DrawCell(
         if (cell0->m_flags & 0x20)
             IconToBitmap(
                 m_objectIcons[cell0->m_overlayTileset >> 4], gpWindowManager->m_screen, pixelX7,
-                pixelY3, cell0->m_unknown05, 0
+                pixelY3, cell0->m_extraFrame, 0
             );
     }
 }
@@ -4581,7 +4581,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                                     gpAdvManager->m_mapOriginX + mouseX,
                                     gpAdvManager->m_mapOriginY + mouseY
                                 );
-                                if ((cell->m_triggerType & 0x80) || (cell->m_unknown07 & 0x80)) {
+                                if ((cell->m_triggerType & 0x80) || (cell->m_secondaryTrigger & 0x80)) {
                                     gpWindowManager->m_dialogResult = 0;
                                     gpMouseManager->SetPointer(0);
                                 } else {

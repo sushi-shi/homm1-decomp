@@ -1402,7 +1402,7 @@ void game::SettleOverlay(int x, int y) {
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
                     if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
-                        cell->m_unknown07 |= 0x80;
+                        cell->m_secondaryTrigger |= 0x80;
                     } else {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
@@ -1421,7 +1421,7 @@ void game::SettleOverlay(int x, int y) {
                         cell->m_overlayTileset = 0;
                         cell->m_overlayIndex = 0xff;
                     } else {
-                        cell->m_unknown07 |= 0x80;
+                        cell->m_secondaryTrigger |= 0x80;
                     }
                 }
                 break;
@@ -1661,7 +1661,7 @@ void game::RandomizeEvents(void) {
                 objTileset = cell->m_objectTileset & 0xf;
                 overlayTileset = cell->m_overlayTileset & 0xf;
                 if ((objTileset == 8 || objTileset == 9) && (overlayTileset == 8 || overlayTileset == 9))
-                    cell->m_unknown07 |= 0x80;
+                    cell->m_secondaryTrigger |= 0x80;
             }
             SettleOverlay(x, y);
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
@@ -1675,7 +1675,7 @@ void game::RandomizeEvents(void) {
                     case 0x3a:
                     case 0x3b:
                     case 0x3c:
-                        cell->m_unknown07 |= 0x80;
+                        cell->m_secondaryTrigger |= 0x80;
                         break;
                 }
             }
@@ -1850,11 +1850,11 @@ void game::ClaimTown(signed char townId, signed char player) {
     cell = &m_map[m_castleRecs[townId].m_x - 1][m_castleRecs[townId].m_y];
     cell->m_flags |= 0x10;
     cell->m_objectTileset |= 0xe0;
-    cell->m_unknown05 = m_players[player].Color() * 2;
+    cell->m_extraFrame = m_players[player].Color() * 2;
     cell = &m_map[m_castleRecs[townId].m_x + 1][m_castleRecs[townId].m_y];
     cell->m_flags |= 0x10;
     cell->m_objectTileset |= 0xe0;
-    cell->m_unknown05 = m_players[player].Color() * 2 + 1;
+    cell->m_extraFrame = m_players[player].Color() * 2 + 1;
     SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, giVisRangeTown);
     CheckEndGame(0);
 }
@@ -1903,7 +1903,7 @@ void game::ClaimMine(signed char mineId, signed char player) {
     } else {
         cell->m_flags |= 0x20;
         cell->m_overlayTileset |= 0xe0;
-        cell->m_unknown05 = m_players[player].Color() + frame;
+        cell->m_extraFrame = m_players[player].Color() + frame;
     }
 }
 
@@ -2828,7 +2828,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
         for (i = 0; i < 4; i++) {
             if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) > 0
                 && (m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) <= 0x30) {
-                m_map[x - 2 + i][y - 2 + j].m_unknown07 |= 0x28;
+                m_map[x - 2 + i][y - 2 + j].m_secondaryTrigger |= 0x28;
             } else {
                 m_map[x - 2 + i][y - 2 + j].m_triggerType = 0x28;
                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
@@ -2998,7 +2998,7 @@ void game::RandomizeMine(signed char x, signed char y) {
     } else {
         m_map[x + 1][y].m_flags |= 0x10;
         m_map[x + 1][y].m_objectTileset |= 0xb0;
-        m_map[x + 1][y].m_unknown05 = type - 2;
+        m_map[x + 1][y].m_extraFrame = type - 2;
         bits = 0x19;
     }
     mineIdx = GetMineId(x, y);
@@ -3006,7 +3006,7 @@ void game::RandomizeMine(signed char x, signed char y) {
         for (j = 0; j < 2; j++) {
             if ((m_map[x + j][y - k].m_triggerType & 0x7f) > 0
                 && (m_map[x + j][y - k].m_triggerType & 0x7f) <= 0x30) {
-                m_map[x + j][y - k].m_unknown07 |= bits;
+                m_map[x + j][y - k].m_secondaryTrigger |= bits;
             } else {
                 m_map[x + j][y - k].m_objectMetadata = mineIdx;
                 m_map[x + j][y - k].m_triggerType = bits;

@@ -303,7 +303,7 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
         }
 
         gSearchNextCell = gpAdvManager->GetCell(gSearchNextX, gSearchNextY);
-        if (gSearchNextCell->m_unknown07 & 0x80) {
+        if (gSearchNextCell->m_secondaryTrigger & 0x80) {
             gSearchTerrain = -1;
             goto storeDirection;
         }

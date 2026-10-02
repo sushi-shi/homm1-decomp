@@ -147,7 +147,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
         if (!(gpGame->m_mapExtra[targetX][targetY] & giCurPlayerBit))
             return;
         s_targetCell = gpAdvManager->GetCell(targetX, targetY);
-        if (s_targetCell->m_unknown07 & 0x80)
+        if (s_targetCell->m_secondaryTrigger & 0x80)
             return;
         if (!giGroundToTerrain[s_targetCell->m_tileIndex]) {
             if (waterMode) {
