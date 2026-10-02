@@ -2,6 +2,7 @@
 
 #include <SOURCE/FINDPATH.h>
 
+#include <BASE/Misc.h>
 #include <H1/KB.h>
 #include <H1/Types.h>
 #include <SOURCE/advManager.h>
