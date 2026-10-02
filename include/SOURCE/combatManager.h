@@ -82,10 +82,33 @@ H1_ENUM_CONST_END(CombatGridConstant)
 // twenty-row text bar: the background buffer copies 640x460 and the redraw
 // extents clamp to its last row. Walk and FlyTo start the minimum extents
 // at 640, past every view coordinate.
+// Hexes are HEX_WIDTH x HEX_HEIGHT pixels; grid rows start FIELD_TOP pixels
+// down and a hex's anchor y is row * HEX_HEIGHT + HEX_ORIGIN_Y (combatManager
+// constructor, GetGridIndex, UpdateCombatArea, DrawBackground's wall strip,
+// hexcell::DrawTower). DrawFrame draws the catapult with grid row
+// CATAPULT_ROW and the attacker's and defender's tents with rows
+// ATTACKER_HERO_ROW and DEFENDER_HERO_ROW.
 H1_ENUM_CONST_BEGIN(CombatViewConstant)
     COMBAT_VIEW_HEIGHT = 460,
-    COMBAT_EXTENT_MIN_START = 640
+    COMBAT_EXTENT_MIN_START = 640,
+    COMBAT_HEX_WIDTH = 78,
+    COMBAT_HEX_HEIGHT = 80,
+    COMBAT_FIELD_TOP = 60,
+    COMBAT_HEX_ORIGIN_Y = 139,
+    COMBAT_ATTACKER_HERO_ROW = 1,
+    COMBAT_DEFENDER_HERO_ROW = 2,
+    COMBAT_CATAPULT_ROW = 3
 H1_ENUM_CONST_END(CombatViewConstant)
+
+// Per-side draw sentinels: m_heroType and m_catapultFrame hold -1 for a side
+// without a hero or catapult (DrawFrame skips the tent / catapult);
+// ResetLimitCreature marks a dead stack's m_limitCreatureCount HIDDEN so
+// DrawFrame never grows the redraw box for it.
+H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
+    COMBAT_HERO_TYPE_NONE = -1,
+    COMBAT_CATAPULT_FRAME_NONE = -1,
+    COMBAT_LIMIT_CREATURE_HIDDEN = -1
+H1_ENUM_CONST_END(CombatDrawStateConstant)
 
 // Combat AI tuning thresholds (Buka combatManager.h CombatAIConstant names
 // with HoMM1's values): AICheckRetreat's artifact-value and army-strength
