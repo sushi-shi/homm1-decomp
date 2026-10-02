@@ -213,13 +213,13 @@ void bankBox::Update(void) {
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    for (i = 0; i < PLAYER_RESOURCE_COUNT - 1; i++) {
+    for (i = 0; i < RESOURCE_NON_GOLD_END; i++) {
         sprintf(text, "%d", m_player->m_resources[i]);
         message.id = i + BANK_BOX_RESOURCE_FIRST;
         message.text = text;
         m_window->BroadcastMessage(message);
     }
-    sprintf(text, "%d", m_player->m_resources[PLAYER_RESOURCE_COUNT - 1]);
+    sprintf(text, "%d", m_player->m_resources[RESOURCE_GOLD]);
     message.id = BANK_BOX_GOLD;
     message.text = text;
     m_window->BroadcastMessage(message);

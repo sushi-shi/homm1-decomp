@@ -16,7 +16,8 @@ H1_ENUM_BEGIN(ResourceType)
     RESOURCE_CRYSTAL = 4,
     RESOURCE_GEMS = 5,
     // The resources before gold (half-open): a creature's secondary cost is
-    // the first of them it needs (recruitUnit, QuickViewRecruit).
+    // the first of them it needs (recruitUnit, QuickViewRecruit); bankBox
+    // lists them before the gold line.
     RESOURCE_NON_GOLD_END = 6,
     RESOURCE_GOLD = 6,
     RESOURCE_LAST = RESOURCE_GOLD,

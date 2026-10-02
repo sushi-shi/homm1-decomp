@@ -5,6 +5,7 @@
 
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/gameTypes.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/playerData.h>
@@ -22,14 +23,6 @@ struct SMapHeader;
 struct tag_message;
 
 // clang-format off
-H1_ENUM_CONST_BEGIN(GameStorageConstant)
-    GAME_PLAYER_COUNT = 4,
-    GAME_TOWN_COUNT = 36,
-    GAME_HERO_COUNT = 36,
-    GAME_MINE_COUNT = 36,
-    GAME_BOAT_COUNT = 32
-H1_ENUM_CONST_END(GameStorageConstant)
-
 // game::m_difficulty: the four new-game difficulty buttons and
 // gDifficultyNames ("Easy", "Normal", "Hard", "Expert"); Buka GameDifficulty.
 H1_ENUM_BEGIN(GameDifficulty)
@@ -70,6 +63,26 @@ H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_ENTRY_LAST = 9,
     SPELL_BOOK_LABEL_FIRST = 10
 H1_ENUM_END(SpellBookControl)
+
+// ComputeUALoc: a player sees the ultimate artifact's hint only after eleven
+// obelisks, four percent per further obelisk; a missed roll scatters the
+// hint up to three cells (3 - three 0..2 rolls) for at most 200 tries.
+H1_ENUM_CONST_BEGIN(UltimateHintConstant)
+    ULTIMATE_HINT_OBELISK_MIN = 11,
+    ULTIMATE_HINT_PERCENT_PER_OBELISK = 4,
+    ULTIMATE_HINT_SCATTER = 3,
+    ULTIMATE_HINT_PLACE_TRIES = 200,
+    // VisitObelisk's fallback piece search.
+    OBELISK_PIECE_PICK_TRIES = 100
+H1_ENUM_CONST_END(UltimateHintConstant)
+
+// Save files: GenerateStandardFileName keeps an 8.3 base name (stopping its
+// scan by jumping the index to SCAN_STOP); SaveGame keeps the save name
+// unless the file is the 8-character AUTOSAVE or PLYREXIT.
+H1_ENUM_CONST_BEGIN(SaveFileConstant)
+    SAVE_FILE_BASE_NAME_LENGTH = 8,
+    SAVE_FILE_NAME_SCAN_STOP = 999
+H1_ENUM_CONST_END(SaveFileConstant)
 // clang-format on
 
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the

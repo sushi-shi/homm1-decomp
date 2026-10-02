@@ -775,7 +775,7 @@ short advManager::Main(struct tag_message& message) {
                 }
                 break;
             case INPUT_SCAN_F9:
-                for (cmdValue = 0; cmdValue < PLAYER_RESOURCE_COUNT; cmdValue++) {
+                for (cmdValue = 0; cmdValue < RESOURCE_COUNT; cmdValue++) {
                     if (cmdValue == RESOURCE_GOLD)
                         gpCurPlayer->m_resources[cmdValue] += 1000;
                     else

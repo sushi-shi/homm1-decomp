@@ -69,20 +69,6 @@ H1_ENUM_BEGIN(AdventureCommand)
     ADVMGR_COMMAND_CONTINUE_ROUTE = 7
 H1_ENUM_END(AdventureCommand)
 
-// Player colours: playerData::m_color indexes the constructor's flag ICNs
-// (b-/g-/r-/y-flag32.icn and -bflg32.icn) and KB's gColorNames
-// {"blue", "green", "red", "yellow"} (Buka PlayerColor, first four values);
-// UpdateRadar uses slot 4 of gRadarOwnerColor for unowned towns and mines.
-// Belongs with playerData (W3) if that header takes it.
-H1_ENUM_BEGIN(PlayerColor)
-    PLAYER_COLOR_BLUE = 0,
-    PLAYER_COLOR_GREEN = 1,
-    PLAYER_COLOR_RED = 2,
-    PLAYER_COLOR_YELLOW = 3,
-    PLAYER_COLOR_COUNT = 4,
-    PLAYER_COLOR_NEUTRAL = 4
-H1_ENUM_END(PlayerColor)
-
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand

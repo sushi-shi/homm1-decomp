@@ -1466,7 +1466,7 @@ void philAI::ValueOfBuyingCreature(
     int nWeeks;
     int nPoints;
     float peril;
-    int monsterCost[PLAYER_RESOURCE_COUNT];
+    int monsterCost[RESOURCE_COUNT];
     int archers;
     int creatRV;
     int rvCost;
@@ -1622,12 +1622,12 @@ int philAI::CreaturesToBuy(int creatureType, int availableCount) {
 // Buka 2.1 body: the last resource's affordable count wins.
 VA(0x0041e4a5, 0x9b)
 int philAI::MaxBuyableCreatures(int creatureType) {
-    int monsterCost[PLAYER_RESOURCE_COUNT];
+    int monsterCost[RESOURCE_COUNT];
     int maxUnits;
     int i;
 
     GetMonsterCost(creatureType, monsterCost);
-    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++) {
+    for (i = 0; i < RESOURCE_COUNT; i++) {
         if (monsterCost[i] == 0)
             maxUnits = 9999;
         else if (gpCurPlayer->m_resources[i] > 0)
@@ -1651,7 +1651,7 @@ void philAI::ValueOfBuyingHero(
     int tmp;
     int i;
     int heroRV;
-    int heroCost[PLAYER_RESOURCE_COUNT];
+    int heroCost[RESOURCE_COUNT];
     int costRV;
 
     heroCost[RESOURCE_WOOD] = 0;
@@ -2873,7 +2873,7 @@ int philAI::ChooseToPayRansomOnHero(hero*, int) {
 VA(0x0042196d, 0x194)
 void philAI::BuildBuilding(town* townPointer, short building) {
     int i;
-    int cost[PLAYER_RESOURCE_COUNT];
+    int cost[RESOURCE_COUNT];
 
     sprintf(
         gText,
@@ -2884,7 +2884,7 @@ void philAI::BuildBuilding(town* townPointer, short building) {
     );
     LogStr(gText);
     GetBuildingCost(townPointer->m_type, building, cost, townPointer->m_buildState);
-    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++)
+    for (i = 0; i < RESOURCE_COUNT; i++)
         gpCurPlayer->m_resources[i] -= cost[i];
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
@@ -2949,7 +2949,7 @@ void philAI::BuildHero(town* townPointer, short availableHeroIndex) {
 // and add the stack to the garrison.
 VA(0x00421d5d, 0x100)
 void philAI::BuildCreature(town* townPointer, int dwelling, int purchaseCount) {
-    int cost[PLAYER_RESOURCE_COUNT];
+    int cost[RESOURCE_COUNT];
     int creature;
     int i;
 
@@ -2964,7 +2964,7 @@ void philAI::BuildCreature(town* townPointer, int dwelling, int purchaseCount) {
     LogStr(gText);
     creature = gDwellingType[townPointer->m_type][dwelling];
     GetMonsterCost(creature, cost);
-    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++)
+    for (i = 0; i < RESOURCE_COUNT; i++)
         gpCurPlayer->m_resources[i] -= cost[i] * purchaseCount;
     townPointer->m_garrison[dwelling] -= purchaseCount;
     townPointer->m_army.Add(creature, purchaseCount, -1);
@@ -2978,7 +2978,7 @@ VA(0x00421e5d, 0x188)
 int philAI::CanBuyBHC(BHC& purchase) {
     int index;
     int j;
-    int cost[PLAYER_RESOURCE_COUNT];
+    int cost[RESOURCE_COUNT];
     switch (purchase.type) {
         case 0:
             if (CanBuy(purchase.pTown, purchase.what))
@@ -2997,7 +2997,7 @@ int philAI::CanBuyBHC(BHC& purchase) {
             if (!purchase.pTown->m_army.CanJoin(j))
                 return 0;
             GetMonsterCost(j, cost);
-            for (index = 0; index < PLAYER_RESOURCE_COUNT; index++)
+            for (index = 0; index < RESOURCE_COUNT; index++)
                 if (gpCurPlayer->m_resources[index] < cost[index] * purchase.num)
                     return 0;
             return 1;

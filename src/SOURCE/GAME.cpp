@@ -42,8 +42,8 @@ void playerData::Write(int file) {
     write(file, &m_heroLocatorPage, 1);
     write(file, m_heroIds, sizeof(m_heroIds));
     write(file, m_availableHeroIds, sizeof(m_availableHeroIds));
-    memset(unused, 0, 50);
-    write(file, unused, 50);
+    memset(unused, 0, PLAYER_SAVE_PAD_SIZE);
+    write(file, unused, PLAYER_SAVE_PAD_SIZE);
     write(file, &m_ultimateArtifactHintChance, 1);
     write(file, &m_ultimateArtifactHintX, 1);
     write(file, &m_ultimateArtifactHintY, 1);
@@ -74,7 +74,7 @@ void playerData::Read(int file) {
     read(file, &m_heroLocatorPage, 1);
     read(file, m_heroIds, sizeof(m_heroIds));
     read(file, m_availableHeroIds, sizeof(m_availableHeroIds));
-    read(file, unused, 50);
+    read(file, unused, PLAYER_SAVE_PAD_SIZE);
     read(file, &m_ultimateArtifactHintChance, 1);
     read(file, &m_ultimateArtifactHintX, 1);
     read(file, &m_ultimateArtifactHintY, 1);
@@ -98,7 +98,7 @@ signed char playerData::NextHero(int) {
     int curHero = -1;
     int i;
 
-    if (gpCurPlayer->m_currentHero != -1) {
+    if (gpCurPlayer->m_currentHero != GAME_HERO_NONE) {
         for (i = 0; i < gpCurPlayer->m_heroCount; ++i) {
             if (gpCurPlayer->m_heroIds[i] == gpCurPlayer->m_currentHero)
                 curHero = i;
@@ -113,7 +113,7 @@ signed char playerData::NextHero(int) {
         if (gpGame->IsMobile(gpCurPlayer->m_heroIds[i]))
             return m_heroIds[i];
     }
-    return -1;
+    return GAME_HERO_NONE;
 }
 
 // Buka 2.1 playerData::HasMobileHero.
@@ -130,7 +130,7 @@ signed char playerData::HasMobileHero(void) {
 VA(0x00439174, 0x5f)
 signed char playerData::CountVisitedObelisks(void) {
     signed char count = 0;
-    for (short i = 0; i < 48; ++i) {
+    for (short i = 0; i < PLAYER_PUZZLE_PIECE_COUNT; ++i) {
         if (BitTest(m_obelisksVisited, i))
             ++count;
     }
@@ -166,7 +166,7 @@ int playerData::NumOfGivenArtifact(int artifact) {
     int i;
     int j;
     for (i = 0; i < m_heroCount; i++) {
-        for (j = 0; j < 14; j++) {
+        for (j = 0; j < HERO_ARTIFACT_SLOT_COUNT; j++) {
             if (gpGame->m_heroRecs[m_heroIds[i]].m_artifacts[j] == artifact)
                 count++;
         }
@@ -186,37 +186,37 @@ void ComputeUALoc(int player) {
 
     if (player > 0) {
         numObelisks = gpGame->m_players[player].CountVisitedObelisks();
-        if (numObelisks < 11 || gpGame->m_ultimateArtifactId == -1) {
+        if (numObelisks < ULTIMATE_HINT_OBELISK_MIN || gpGame->m_ultimateArtifactId == ARTIFACT_NONE) {
             gpGame->m_players[player].m_ultimateArtifactHintChance = 0;
-            gpGame->m_players[player].m_ultimateArtifactHintX = -1;
-            gpGame->m_players[player].m_ultimateArtifactHintY = -1;
+            gpGame->m_players[player].m_ultimateArtifactHintX = PLAYER_ULTIMATE_HINT_NONE;
+            gpGame->m_players[player].m_ultimateArtifactHintY = PLAYER_ULTIMATE_HINT_NONE;
         } else {
-            gpGame->m_players[player].m_ultimateArtifactHintChance = (numObelisks - 11) * 4;
+            gpGame->m_players[player].m_ultimateArtifactHintChance = (numObelisks - ULTIMATE_HINT_OBELISK_MIN) * ULTIMATE_HINT_PERCENT_PER_OBELISK;
             if (gpGame->m_players[player].m_ultimateArtifactHintChance >= Random(1, 100)) {
                 gpGame->m_players[player].m_ultimateArtifactHintX = gpGame->m_ultimateArtifactX;
                 gpGame->m_players[player].m_ultimateArtifactHintY = gpGame->m_ultimateArtifactY;
             } else {
-                x = -1;
-                y = -1;
+                x = PLAYER_ULTIMATE_HINT_NONE;
+                y = PLAYER_ULTIMATE_HINT_NONE;
                 heading = 0;
                 tries = 0;
                 while (
                     !(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
                       && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
-                      && gpGame->m_map[x][y].m_objectIndex == 0xff
-                      && gpGame->m_map[x][y].m_overlayIndex == 0xff
-                      && gpGame->m_map[x][y].m_tileIndex >= 20)
+                      && gpGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
+                      && gpGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
+                      && gpGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
                 ) {
                     tries++;
                     heading = 0;
                     while (heading == 0)
-                        heading = 3 - Random(0, 2) - Random(0, 2) - Random(0, 2);
+                        heading = ULTIMATE_HINT_SCATTER - Random(0, 2) - Random(0, 2) - Random(0, 2);
                     x = gpGame->m_ultimateArtifactX + heading;
                     heading = 0;
                     while (heading == 0)
-                        heading = 3 - Random(0, 2) - Random(0, 2) - Random(0, 2);
+                        heading = ULTIMATE_HINT_SCATTER - Random(0, 2) - Random(0, 2) - Random(0, 2);
                     y = gpGame->m_ultimateArtifactY + heading;
-                    if (tries >= 200) {
+                    if (tries >= ULTIMATE_HINT_PLACE_TRIES) {
                         x = gpGame->m_ultimateArtifactX;
                         y = gpGame->m_ultimateArtifactY;
                         goto saveLocation;
@@ -242,7 +242,7 @@ void game::VisitObelisk(signed char player) {
     short numRemoved;
     int removeCount;
 
-    pieces = 48;
+    pieces = PLAYER_PUZZLE_PIECE_COUNT;
     removeCount = pieces / m_obeliskCount;
     if (removeCount < 1)
         removeCount = 1;
@@ -252,7 +252,7 @@ void game::VisitObelisk(signed char player) {
             if (!BitTest(m_players[player].m_obelisksVisited, piece))
                 break;
         }
-        for (attempts = 0; attempts < 100; attempts++) {
+        for (attempts = 0; attempts < OBELISK_PIECE_PICK_TRIES; attempts++) {
             fallback = Random(0, pieces - 1);
             if (!BitTest(m_players[player].m_obelisksVisited, fallback))
                 break;
@@ -268,7 +268,7 @@ void game::VisitObelisk(signed char player) {
 // Buka 2.1 game::IsMobile.
 VA(0x00439873, 0xb3)
 signed char game::IsMobile(signed char heroId) {
-    if (heroId == -1)
+    if (heroId == GAME_HERO_NONE)
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
     int terrain =
@@ -289,13 +289,13 @@ mapCell (*game::GetWorldMapData(void)) [MAP_CELL_GRID_SIZE] { return m_map; }
 VA(0x00439944, 0xd9)
 signed char game::CreateBoat(signed char x, signed char y) {
     signed char boatIdx = Scan(m_boatSlots, 0, GAME_BOAT_COUNT);
-    if (boatIdx != -1) {
+    if (boatIdx != GAME_TABLE_FREE) {
         m_boatSlots[boatIdx] = boatIdx;
         boatRecord* boat = &m_boats[boatIdx];
         boat->id = boatIdx;
         boat->x = x;
         boat->y = y;
-        boat->direction = 2;
+        boat->direction = MAP_DIRECTION_EAST;
         boat->owner = giCurPlayer;
         mapCell* square = &m_map[x][y];
         boat->savedTriggerType = square->m_triggerType;
@@ -311,47 +311,47 @@ VA(0x00439a1d, 0x5f)
 signed char game::Scan(signed char* array, signed char start, signed char length) {
     signed char i;
     for (i = start; i < start + length; ++i) {
-        if (array[i] == -1)
+        if (array[i] == GAME_TABLE_FREE)
             return i;
     }
-    return -1;
+    return GAME_TABLE_FREE;
 }
 
 // Buka 2.1 game::RandomScan; HoMM1 always looks for a free (-1) entry.
 VA(0x00439a7c, 0x74)
 signed char game::RandomScan(signed char* array, signed char start, signed char range, int) {
-    signed char index = -1;
+    signed char index = GAME_TABLE_FREE;
     int i;
-    for (i = 0; i < 10000; ++i) {
+    for (i = 0; i < GAME_RANDOM_SCAN_TRIES; ++i) {
         index = start + Random(0, range - 1);
-        if (array[index] == -1)
+        if (array[index] == GAME_TABLE_FREE)
             return index;
     }
-    return -1;
+    return GAME_TABLE_FREE;
 }
 
 // HoMM1 nine heroes per class; a 0x40 entry is the fallback pick.
 VA(0x00439af0, 0x10e)
 signed char game::GetNewHeroId(signed char heroClass) {
-    signed char freeSlot = -1;
-    signed char id = -1;
-    short first = heroClass * 9;
+    signed char freeSlot = GAME_TABLE_FREE;
+    signed char id = GAME_HERO_NONE;
+    short first = heroClass * HERO_PER_CLASS_COUNT;
     int i;
-    freeSlot = Scan(m_availableHeroes, first, 9);
-    if (freeSlot != -1) {
-        id = RandomScan(m_availableHeroes, first, 9, 9);
+    freeSlot = Scan(m_availableHeroes, first, HERO_PER_CLASS_COUNT);
+    if (freeSlot != GAME_TABLE_FREE) {
+        id = RandomScan(m_availableHeroes, first, HERO_PER_CLASS_COUNT, HERO_PER_CLASS_COUNT);
     } else {
         freeSlot = Scan(m_availableHeroes, 0, GAME_HERO_COUNT);
-        if (freeSlot != -1) {
+        if (freeSlot != GAME_TABLE_FREE) {
             id = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
         } else {
             for (i = 0; i < GAME_HERO_COUNT; ++i) {
-                if (m_availableHeroes[i] == 0x40)
+                if (m_availableHeroes[i] == GAME_HERO_IN_TAVERN)
                     id = i;
             }
         }
     }
-    if (id != -1)
+    if (id != GAME_HERO_NONE)
         return id;
     else
         return 0;
@@ -364,7 +364,7 @@ signed char game::GetTownId(signed char x, signed char y) {
         if (m_castleRecs[i].m_x == x && m_castleRecs[i].m_y == y)
             return i;
     }
-    return -1;
+    return GAME_TOWN_NONE;
 }
 
 // Buka 2.1 game::GetMineId.
@@ -405,8 +405,8 @@ void GenerateStandardFileName(char* source, char* destination) {
             destination[indexOut] = character;
             indexOut++;
         }
-        if (indexOut >= 8)
-            idx = 999;
+        if (indexOut >= SAVE_FILE_BASE_NAME_LENGTH)
+            idx = SAVE_FILE_NAME_SCAN_STOP;
     }
     *extension = '.';
     strcpy(destination + indexOut, extension);
@@ -458,7 +458,7 @@ short game::SaveGame(char* filename, signed char generateName) {
     } else {
         extern char gcGamePath[];
         sprintf(filePath, "%s%s", gcGamePath, fileName);
-        if (strnicmp(fileName, "AUTOSAVE", 8) && strnicmp(fileName, "PLYREXIT", 8))
+        if (strnicmp(fileName, "AUTOSAVE", SAVE_FILE_BASE_NAME_LENGTH) && strnicmp(fileName, "PLYREXIT", SAVE_FILE_BASE_NAME_LENGTH))
             strcpy(gpGame->m_saveName, filename);
     }
     file = open(filePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
@@ -601,7 +601,7 @@ short game::LoadGame(char* filename, int origData, int) {
     read(handle, &m_day, 2);
     read(handle, &m_week, 2);
     read(handle, &m_month, 2);
-    giCurTurn = (m_month - 1) * 28 + (m_week - 1) * 7 + m_day;
+    giCurTurn = (m_month - 1) * CALENDAR_DAYS_PER_MONTH + (m_week - 1) * CALENDAR_DAYS_PER_WEEK + m_day;
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
         m_players[i].Read(handle);
     ReadWorldMap(handle);
@@ -646,8 +646,8 @@ short game::LoadGame(char* filename, int origData, int) {
     while (!gbThisNetHumanPlayer[giCurWatchPlayer])
         giCurWatchPlayer = (giCurWatchPlayer + 1) % m_playerCount;
     giCurWatchPlayerBit = 1 << giCurWatchPlayer;
-    giCurPlayerHighBit = 1 << (giCurPlayer + 4);
-    giCurWatchPlayerHighBit = 1 << (giCurWatchPlayer + 4);
+    giCurPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    giCurWatchPlayerHighBit = 1 << (giCurWatchPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     bShowIt = gbThisNetHumanPlayer[giCurPlayer];
     memset(mapExtra, 0, sizeof(mapExtra));
     if (!origData)
@@ -3063,7 +3063,7 @@ void game::PerDay(void) {
     signed char resource;
 
     for (i = 0; i < gpGame->m_playerCount; i++) {
-        for (j = 0; j < PLAYER_RESOURCE_COUNT; j++)
+        for (j = 0; j < RESOURCE_COUNT; j++)
             gpGame->m_players[i].m_aiData.m_income[j] = -m_players[i].m_resources[j];
     }
     memset(m_townBuiltToday, 0, sizeof(m_townBuiltToday));
@@ -3108,7 +3108,7 @@ void game::PerDay(void) {
         PerMonth();
     }
     for (i = 0; i < gpGame->m_playerCount; i++) {
-        for (j = 0; j < PLAYER_RESOURCE_COUNT; j++)
+        for (j = 0; j < RESOURCE_COUNT; j++)
             gpGame->m_players[i].m_aiData.m_income[j] += m_players[i].m_resources[j];
     }
 }
