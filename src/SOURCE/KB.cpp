@@ -447,7 +447,16 @@ int oldmain(void) {
                 giHostGamePos = NetPosToGamePos(0);
                 giThisGamePos = giHostGamePos;
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
-                    result = TransmitRemoteData(gText, idx, 4, BOX_REMOTE_SETUP, 1, 1, -1, 0);
+                    result = TransmitRemoteData(
+                        gText,
+                        idx,
+                        4,
+                        BOX_REMOTE_SETUP,
+                        1,
+                        1,
+                        REMOTE_MESSAGE_DEFAULT,
+                        0
+                    );
                     if (!result)
                         ShutDown(NULL);
                 }
@@ -1622,7 +1631,16 @@ void HandleRemoteDeadPlayerExit(int position) {
         giNumHumanPlayers--;
         gText[0] = position;
         gText[1] = 0;
-        TransmitRemoteData(gText, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+        TransmitRemoteData(
+            gText,
+            REMOTE_BROADCAST_PLAYER,
+            3,
+            REMOTE_COMMAND_PLAYER_EXIT,
+            0,
+            0,
+            REMOTE_MESSAGE_RELIABLE,
+            1
+        );
         RemoteCleanup();
         gbHumanPlayer[position] = 0;
     }
@@ -1646,7 +1664,16 @@ void HandleRemoteSuddenExit(void) {
     } else {
         gText[1] = 0;
     }
-    TransmitRemoteData(gText, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+    TransmitRemoteData(
+        gText,
+        REMOTE_BROADCAST_PLAYER,
+        3,
+        REMOTE_COMMAND_PLAYER_EXIT,
+        0,
+        0,
+        REMOTE_MESSAGE_RELIABLE,
+        1
+    );
 }
 
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
@@ -2473,10 +2500,10 @@ void PopNetBox(char* notice) {
                 text,
                 REMOTE_BROADCAST_PLAYER,
                 strlen(text) + 1,
-                11,
+                REMOTE_COMMAND_CHAT,
                 1,
                 1,
-                -1,
+                REMOTE_MESSAGE_DEFAULT,
                 1
             );
             if (!success)

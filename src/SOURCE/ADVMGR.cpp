@@ -5583,7 +5583,7 @@ char* advManager::CheckHandleNet(void) {
     receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1));
     if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {
         switch (receivedPacket->command) {
-        case 1:
+        case BOX_REMOTE_SAVE:
             remotePlayerExited = receivedPacket->payload.playerExited;
             if (!gpGame->ReceiveSaveGame(receivedPacket->payload.saveSize, receivedPacket->sender))
                 ShutDown(NULL);
@@ -5591,16 +5591,16 @@ char* advManager::CheckHandleNet(void) {
                 ReceiveRemotePlayerExit(receivedPacket->sender, 0, 1, 0);
             LoadRemote();
             break;
-        case 11:
+        case REMOTE_COMMAND_CHAT:
             PopNetBox(receivedPacket->payload.data);
             break;
-        case 21:
+        case REMOTE_COMMAND_HERO_TOWN_DATA:
             if (gbInCombat)
                 return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
             else
                 DoNetCombat(reinterpret_cast<char*>(receivedPacket)); // API-forced: char* record.
             break;
-        case 30:
+        case REMOTE_COMMAND_PLAYER_EXIT:
             LogStr("receive exit");
             ReceiveRemotePlayerExit(receivedPacket->payload.data[0], receivedPacket->payload.data[1], 0, 0);
             break;
