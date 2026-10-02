@@ -3065,7 +3065,7 @@ int HandleAppSpecificMenuCommands(int command) {
             break;
         case APP_MENU_CD_STEREO:
             if (gConfig.musicSource) {
-                gConfig.musicSource = 0;
+                gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
             } else {
                 if (!gpSoundManager->m_cdStarted) {
                     NormalDialog(
@@ -3082,7 +3082,7 @@ int HandleAppSpecificMenuCommands(int command) {
                     );
                     break;
                 }
-                gConfig.musicSource = 2;
+                gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
             }
             gpSoundManager->SetMusicQuality(gConfig.musicSource);
             menuChanged = 1;

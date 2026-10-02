@@ -683,7 +683,7 @@ short advManager::Main(struct tag_message& message) {
         return MESSAGE_DISPATCH_CONTINUE;
     }
     if (!gbNoSound && gConfig.musicVolume && giForceSwitchMusic > 0 && KBTickCount() - giForceSwitchMusic > 6000
-        && gpSoundManager->m_currentTrack == 15) {
+        && gpSoundManager->m_currentTrack == MUSIC_TRACK_NETWORK_TURN) {
         giForceSwitchMusic = -1;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
     }
@@ -4389,8 +4389,8 @@ short CPanelHandler(struct tag_message &message) {
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_MUSIC_SOURCE:
-                            if (gConfig.musicSource == 2) {
-                                gConfig.musicSource = 0;
+                            if (gConfig.musicSource == SOUND_MUSIC_SOURCE_CD) {
+                                gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
                             } else {
                                 if (gpSoundManager->m_cdStarted == 0) {
                                     NormalDialog(
@@ -4400,7 +4400,7 @@ short CPanelHandler(struct tag_message &message) {
                                     );
                                     break;
                                 }
-                                gConfig.musicSource = 2;
+                                gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
                             }
                             gpSoundManager->SetMusicQuality(gConfig.musicSource);
                             changed = 1;
@@ -5566,7 +5566,7 @@ void advManager::LoadRemote(void)
     UpdBottomView(1, 1, 1);
     if ((gpGame->m_day != 1 || (gpGame->m_week == 1 && gpGame->m_month == 1)) && gbRemoteOn
         && gbThisNetHumanPlayer[giCurPlayer] && giForceSwitchMusic == -1) {
-        gpSoundManager->SwitchAmbientMusic(15);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
         giForceSwitchMusic = KBTickCount();
     }
 }
