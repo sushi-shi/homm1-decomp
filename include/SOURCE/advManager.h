@@ -57,6 +57,13 @@ H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
     INVALID_HERO = -1
 H1_ENUM_CONST_END(AdventureHeroConstant)
 
+// Hero sprite frame codes (m_cursorFrame, DrawCell's map heroes): bit 7 draws
+// the frame mirrored, the low seven bits index the sprite.
+H1_ENUM_CONST_BEGIN(AdventureHeroFrameConstant)
+    HERO_FRAME_MIRROR_FLAG = 0x80,
+    HERO_FRAME_INDEX_MASK = 0x7f
+H1_ENUM_CONST_END(AdventureHeroFrameConstant)
+
 // m_heroIcons slots and m_cursorType: the four hero-class sprites (the
 // constructor loads kngt32/barb32/sorc32/wrlk32.icn; MobilizeCurrHero and
 // DoEvent store the hero class) and the boat (boat32.icn; set on boarding,
