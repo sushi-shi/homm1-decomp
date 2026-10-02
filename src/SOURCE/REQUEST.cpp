@@ -38,18 +38,18 @@ fileRequester::fileRequester(
     const char* directory,
     const char* defaultExtension
 ) {
+    HANDLE dirHandle;
     int fd;
     char fullPath[412];
     SMapHeader header;
     int findResult;
-    int moveValue;
     WIN32_FIND_DATA fileData;
-    int sortedCount;
     char* ptr;
-    int index;
     char extStr[FILE_REQUESTER_LOCAL_EXTENSION_SIZE];
-    HANDLE dirHandle;
     char fileName[FILE_REQUESTER_LOCAL_NAME_SIZE];
+    int moveValue;
+    int sortedCount;
+    int index;
 
     m_selectedIndex = -1;
     m_fileCount = 0;
