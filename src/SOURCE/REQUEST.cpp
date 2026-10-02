@@ -340,8 +340,8 @@ short fileRequester::Main(tag_message& message) {
                         case 0x7802:
                             if (m_selectedIndex == -1 && !m_filename[0]) {
                                 NormalDialog(
-                                    "Please make a selection from the list, or press cancel.", 1,
-                                    -1, -1, -1, 0, -1, 0, -1);
+                                    "Please make a selection from the list, or press cancel.", NORMAL_DIALOG_TYPE_OK,
+                                    -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                                 break;
                             } else {
                                 message.value = message.id;
@@ -468,7 +468,7 @@ short fileRequester::Main(tag_message& message) {
                     "The game you have chosen only has slots for %d human(s).  You need one "
                     "with room for at least %d humans.",
                     ch, giNumHumanPlayers);
-                NormalDialog(gText, 1, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 finished = 0;
             }
             if (ch > giNumHumanPlayers) {
@@ -477,7 +477,7 @@ short fileRequester::Main(tag_message& message) {
                     "The game you have chosen was being played with %d humans. Is it OK if the "
                     "computer takes the place of the last %d human(s)?",
                     ch, ch - giNumHumanPlayers);
-                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult != 0x7805)
                     finished = 0;
             }

@@ -395,7 +395,7 @@ int oldmain(void) {
             }
             if (gbRemoteOn && gbWaitForRemoteReceive) {
                 giWaitType = 0;
-                NormalDialog("Waiting for other remote player to set up game.", NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog("Waiting for other remote player to set up game.", NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
                 gpGame->LoadGame("REMOTE.GAM", 0, 1);
@@ -483,7 +483,7 @@ int oldmain(void) {
             if (gpGame->m_campaignType > 0) {
                 if (giEndSequence == 0) {
                     sprintf(gText, "Would you like to replay this scenario?");
-                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
@@ -502,7 +502,7 @@ int oldmain(void) {
                         "Your campaign has been saved as %s.  Would you like to start the next "
                         "scenario?",
                         saveBuf);
-                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                         goto playScenario;
                 }
@@ -611,7 +611,7 @@ short InitMenuHandler(tag_message& message) {
                     break;
             }
             if (helpIndex >= 0)
-                NormalDialog(gInitMenuHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog(gInitMenuHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         }
     } else if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -818,14 +818,14 @@ int GetBuildingBaseResourceValue(int race, int building, int level) {
 VA(0x00451a31, 0xf03)
 void NormalDialog(
     char* text,
-    int dialogType,
+    H1_ENUM_PARAM(NormalDialogType, int) dialogType,
     int x,
     int y,
-    int firstResourceType,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) firstResourceType,
     int firstResourceValue,
-    int secondResourceType,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) secondResourceType,
     int secondResourceValue,
-    int showOrText
+    H1_ENUM_PARAM(NormalDialogOrText, int) showOrText
 ) {
     char szFilename[NORMAL_DIALOG_FILENAME_LENGTH];
     char* amountText[NORMAL_DIALOG_RESOURCE_COUNT];
@@ -1347,7 +1347,7 @@ VA(0x00452f8a, 0x1ea)
 void ReceiveRemotePlayerExit(signed char position, signed char, signed char eliminated, signed char timedOut) {
     if (position == giThisGamePos) {
         sprintf(gText, "You have been eliminated from the game!!!");
-        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         RemoteCleanup();
         gbGameOver = 1;
         giEndSequence = 0;
@@ -1358,7 +1358,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
         if (eliminated) {
             sprintf(gText, "%s player has been vanquished!", gColorNames[gpGame->m_players[position].Color()]);
             gText[0] -= 32;
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[position].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[position].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             goto dropPlayer;
         } else {
             if (timedOut)
@@ -1378,7 +1378,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
                     position + 1,
                     position + 1
                 );
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         }
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         dropPlayer:
@@ -1432,8 +1432,8 @@ void CheckEndGame(int forced) {
                     gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                 gText[0] -= 32;
                 NormalDialog(
-                    gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
-                    0, -1);
+                    gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[static_cast<signed char>(player)].Color(), NORMAL_DIALOG_NO_RESOURCE,
+                    0, NORMAL_DIALOG_NO_OR_TEXT);
             } else if (!pd->m_townCount) {
                 if (pd->m_daysLeft == -1) {
                     if (gbThisNetHumanPlayer[player]) {
@@ -1444,8 +1444,8 @@ void CheckEndGame(int forced) {
                             gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                         NormalDialog(
-                            gText, 1, -1, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(),
-                            -1, 0, -1);
+                            gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_CREST, gpGame->m_players[static_cast<signed char>(player)].Color(),
+                            NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     }
                     pd->m_daysLeft = 7;
                 } else if (!pd->m_daysLeft) {
@@ -1466,8 +1466,8 @@ void CheckEndGame(int forced) {
                         gText[0] -= 32;
                     }
                     NormalDialog(
-                        gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
-                        0, -1);
+                        gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[static_cast<signed char>(player)].Color(), NORMAL_DIALOG_NO_RESOURCE,
+                        0, NORMAL_DIALOG_NO_OR_TEXT);
                 }
             } else {
                 pd->m_daysLeft = -1;
@@ -1720,7 +1720,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     }
     if (strlen(gText) == baseLen)
         strcat(gText, gMoraleInfoText[MORALE_INFO_NONE]);
-    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
 }
 
 // clang-format off
@@ -1772,7 +1772,7 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (strlen(gText) == baseLen)
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
-    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
 }
 
 VA(0x004541ef, 0x70)
@@ -2491,7 +2491,7 @@ int HandleAppSpecificMenuCommands(int command) {
             strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
         confirmMenuCommand:
             if (gpAdvManager->m_active == 1) {
-                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     break;
             }
@@ -2603,7 +2603,7 @@ int HandleAppSpecificMenuCommands(int command) {
                     NormalDialog(
                         "Unable to set up CD stereo music.  Your CD player might be in use by "
                         "another program, or your sound driver might not support CD stereo.",
-                        NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
                 }
                 gConfig.musicSource = 2;

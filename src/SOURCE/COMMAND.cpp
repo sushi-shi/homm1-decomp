@@ -499,7 +499,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                             0,
                             NORMAL_DIALOG_NO_RESOURCE,
                             0,
-                            -1
+                            NORMAL_DIALOG_NO_OR_TEXT
                         );
                         break;
                     }
@@ -513,7 +513,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                             0,
                             NORMAL_DIALOG_NO_RESOURCE,
                             0,
-                            -1
+                            NORMAL_DIALOG_NO_OR_TEXT
                         );
                         break;
                     }
@@ -765,7 +765,7 @@ void combatManager::DoCommand(signed char command) {
             ResetMouse();
             break;
         case COMBAT_MESSAGE_COMMAND_RETREAT:
-            NormalDialog("Are you sure you want to retreat?", NORMAL_DIALOG_TYPE_YES_NO, 0xc3, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog("Are you sure you want to retreat?", NORMAL_DIALOG_TYPE_YES_NO, 0xc3, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 giNextAction = ACTION_RETREAT;
             ResetMouse();
@@ -774,7 +774,7 @@ void combatManager::DoCommand(signed char command) {
             if (DoSurrender() == 1) {
                 if (gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD]
                     < giSurrenderCost)
-                    NormalDialog("You don't have enough gold!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog("You don't have enough gold!", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 else {
                     giNextAction = ACTION_SURRENDER;
                     giNextActionExtra = giSurrenderCost;

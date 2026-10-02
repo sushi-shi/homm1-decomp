@@ -242,7 +242,7 @@ short swapManager::Main(struct tag_message& message) {
                 artIndex = message.id - 88;
                 if (!quickView && (m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
                                    || m_heroes[1]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
-                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
                 }
                 if (quickView) {
@@ -289,7 +289,7 @@ short swapManager::Main(struct tag_message& message) {
                 artIndex = message.id - 102;
                 if (!quickView && (m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_MAGIC_BOOK
                                    || m_heroes[0]->m_artifacts[artIndex] == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
-                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog("This item can't be traded.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
                 }
                 if (quickView) {

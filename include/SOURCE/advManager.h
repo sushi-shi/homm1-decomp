@@ -241,7 +241,8 @@ public:
     void EventSound(short, short);
     void EventWindow(short, H1_ENUM_PARAM(NormalDialogType, int), char*,
                      H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                     H1_ENUM_PARAM(NormalDialogResourceType, int), int, int);
+                     H1_ENUM_PARAM(NormalDialogResourceType, int), int,
+                     H1_ENUM_PARAM(NormalDialogOrText, int));
     int GiveRandomArtifact(class hero*);
     int GiveExperience(class hero*, int, signed char);
     // HoMM1 retail: byte resource, word amount (ret 0xc).

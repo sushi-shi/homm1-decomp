@@ -489,7 +489,7 @@ void hero::ViewStat(signed char stat, signed char quickView) {
 
     if (quickView) {
         sprintf(gText, "%s\n\n%s", gStatNames[stat], gStatDesc[stat]);
-        NormalDialog(gText, NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, 0x19, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, 0x19, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         return;
     }
     win = new heroWindow(0xb1, 0x19, "vstat.bin");
@@ -513,7 +513,7 @@ void hero::ViewStat(signed char stat, signed char quickView) {
 
 VA(0x0046ce3f, 0x4a)
 void hero::ViewArtifact(signed char artifact, signed char quickView) {
-    NormalDialog(gArtifactDesc[artifact], quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+    NormalDialog(gArtifactDesc[artifact], quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, 0x1c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
 }
 
 // donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
@@ -522,7 +522,7 @@ void hero::ViewArtifact(signed char artifact, signed char quickView) {
 VA(0x0046ce89, 0x59)
 signed char hero::Dismiss(void) {
     NormalDialog("Are you sure you want to dismiss this Hero?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x1c,
-                 NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                 NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         Deallocate();
         return 1;
@@ -739,7 +739,7 @@ void hero::CheckLevel(void) {
     m_level = lvl;
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
         gpSoundManager->SwitchAmbientMusic(52);
-        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     }
 }
@@ -936,7 +936,7 @@ short HeroHandler(struct tag_message& message) {
                 nextLevelExp = gpHVHero->GetExperience(heroLevel + 1);
                 sprintf(gText, "Level %d\n\nExperience %d\n\nNext level %d", heroLevel,
                         gpHVHero->m_experience, nextLevelExp);
-                NormalDialog(gText, quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog(gText, quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 break;
             case HERO_SCREEN_ARMY_SLOT_FIRST:
             case HERO_SCREEN_ARMY_SLOT_FIRST + 1:

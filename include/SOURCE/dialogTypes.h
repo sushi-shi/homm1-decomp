@@ -17,6 +17,12 @@ H1_ENUM_END(NormalDialogResult)
 // HoMM1 NormalDialog's resource slot kinds (frames of resource.icn first).
 H1_ENUM_BEGIN(NormalDialogResourceType)
     NORMAL_DIALOG_NO_RESOURCE = -1,
+    NORMAL_DIALOG_RESOURCE_WOOD = 0,
+    NORMAL_DIALOG_RESOURCE_MERCURY = 1,
+    NORMAL_DIALOG_RESOURCE_ORE = 2,
+    NORMAL_DIALOG_RESOURCE_SULFUR = 3,
+    NORMAL_DIALOG_RESOURCE_CRYSTAL = 4,
+    NORMAL_DIALOG_RESOURCE_GEMS = 5,
     NORMAL_DIALOG_RESOURCE_GOLD = 6,
     NORMAL_DIALOG_RESOURCE_LAST = NORMAL_DIALOG_RESOURCE_GOLD,
     NORMAL_DIALOG_ARTIFACT = 7,
@@ -41,6 +47,14 @@ H1_ENUM_BEGIN(NormalDialogType)
     NORMAL_DIALOG_TYPE_WAIT_CANCEL = 6
 H1_ENUM_END(NormalDialogType)
 
+// NormalDialog's showOrText argument: SHOW_OR_TEXT prints "or" between the two
+// resource icons (a choice, e.g. the treasure chest's gold or experience);
+// every other caller passes -1 (Buka's default).
+H1_ENUM_BEGIN(NormalDialogOrText)
+    NORMAL_DIALOG_NO_OR_TEXT = -1,
+    NORMAL_DIALOG_SHOW_OR_TEXT = 1
+H1_ENUM_END(NormalDialogOrText)
+
 H1_ENUM_BEGIN(NormalDialogButton)
     NORMAL_DIALOG_BUTTON_OK = 0x7801,
     NORMAL_DIALOG_BUTTON_CANCEL = 0x7802,
@@ -50,7 +64,6 @@ H1_ENUM_END(NormalDialogButton)
 
 H1_ENUM_CONST_BEGIN(NormalDialogLayout)
     NORMAL_DIALOG_RESOURCE_COUNT = 2,
-    NORMAL_DIALOG_SHOW_OR_TEXT = 1,
     NORMAL_DIALOG_NO_VALUE = -1,
     NORMAL_DIALOG_TEXT_LENGTH = 40,
     NORMAL_DIALOG_FILENAME_LENGTH = 16,

@@ -166,7 +166,7 @@ void recruitUnit::Close(void) {
             0,
             NORMAL_DIALOG_NO_RESOURCE,
             0,
-            -1
+            NORMAL_DIALOG_NO_OR_TEXT
         );
     gpWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,

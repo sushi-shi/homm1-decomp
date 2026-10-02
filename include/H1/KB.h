@@ -216,7 +216,8 @@ extern short gHeroGoldCost;
 void PopNetBox(char *);
 void NormalDialog(char*, H1_ENUM_PARAM(NormalDialogType, int), int, int,
                   H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                  H1_ENUM_PARAM(NormalDialogResourceType, int), int, int);
+                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
+                  H1_ENUM_PARAM(NormalDialogOrText, int));
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 // Stale alias of cTownObjectNames (0x491350): unreferenced, kept so later symbol handles stay put.
