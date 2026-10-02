@@ -178,7 +178,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         message.payload.widget.data.value = 8;
         win->BroadcastMessage(message);
     }
-    if (!allowActions || giCurGeneral != m_currentSide || (giCurGeneral == 0 && m_combatTown)
+    if (!allowActions || giCurGeneral != m_currentSide || (giCurGeneral == 0 && m_combatTowns[0])
         || m_sideRetreated[0] || m_sideRetreated[1]) {
         message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.payload.widget.id = 11;
@@ -199,7 +199,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         gpWindowManager->DoDialog(win, HandleViewGeneral, 0);
     }
     delete win;
-    m_unknown25c = 0;
+    m_gridUpdateRow = 0;
     DrawFrame(1);
     if (!quickView)
         DoCommand(gpWindowManager->m_dialogResult);
