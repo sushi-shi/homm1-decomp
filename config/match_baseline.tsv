@@ -56,9 +56,11 @@ ICON	6	4
 ICONWDGT	6	4
 INPUTMGR	11	10
 Icon2b	1	1
+Icon2bc	1	1
 Icond2b	1	1
 Icondf2b	1	1
 Iconf2b	1	1
+Iconf2bc	1	1
 Iconm2b	1	1
 Iconm2bClip	2	0
 Iconmf2b	1	1
@@ -447,9 +449,11 @@ INPUTMGR	?MouseMessageHandler@@YAHPAXIIJ@Z	100.0000	100.0000	5	ca36b95ebb5c	0x7b
 INPUTMGR	?Open@inputManager@@UAEFF@Z	99.7500	99.7500	1	1c506af92fe3	0x7c120	99.7500	
 INPUTMGR	?SetKeyCodeType@inputManager@@QAEXF@Z	100.0000	100.0000	2	12fc6c9ade19	0x7c300	100.0000	
 Icon2b	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:a9c4ba60da53	0x79280	100.0000	
+Icon2bc	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:599125630bd5	0x7ca44	100.0000	
 Icond2b	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:b9484e2b5cbc	0x795cc	100.0000	
 Icondf2b	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:19114894dba9	0x796a6	100.0000	
 Iconf2b	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:1f8d4f728eb0	0x79356	100.0000	
+Iconf2bc	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:5d4011f339c0	0x7cca4	100.0000	
 Iconm2b	?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	100.0000	100.0000	1	cpp:2e16b15474cd	0x79422	100.0000	
 Iconm2bClip	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	92.4074	90.8201	1	2fabf6ed7d0f	0x73ad0	92.4074	
 Iconm2bClip	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	84.0000	81.2160	1	c5a6ebcb52e4	0x738e0	84.0000	
