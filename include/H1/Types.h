@@ -7,8 +7,12 @@
 // remain provisional until their member accesses and allocation sizes are
 // matched in HoMM1.
 
-struct SMapChange { char _pad[64]; };
-struct SPlayerExit { signed char player[7]; };
+struct SMapChange {
+    char _pad[64];
+};
+struct SPlayerExit {
+    signed char player[7];
+};
 
 typedef unsigned int UInt32;
 struct MemEntry;
@@ -44,14 +48,31 @@ struct configStruct {
     char modemInitString[100];
     int slowVideo;
 };
-struct SCreatureInfo { unsigned short value; char pad[24]; };
-struct tag_tilePoint { signed char x; signed char _1; signed char y; signed char _3; };
-struct SSpellInfo { char m_pad0[14]; unsigned char m_e; char m_pad1[7]; };
-struct SNetPlayerInfo { char m_pad[0xcc]; };
-struct SAMPLE2 { class sample *pSample; struct _SAMPLE *pMem; };
+struct SCreatureInfo {
+    unsigned short value;
+    char pad[24];
+};
+struct tag_tilePoint {
+    signed char x;
+    signed char y;
+    short frameOffset;
+};
+struct SSpellInfo {
+    char m_pad0[14];
+    unsigned char m_e;
+    char m_pad1[7];
+};
+struct SNetPlayerInfo {
+    char m_pad[0xcc];
+};
+struct SAMPLE2 {
+    class sample* pSample;
+    struct _SAMPLE* pMem;
+};
 
 #pragma pack(push, 1)
-// Retail strides creature records by 31 bytes from 0x492060.
+// HoMM1 monster records are 0x1f bytes: GetMonsterCost reads the cost word at
+// +0, retail readers use a dword at +8 and test attribute bits at +0x1b.
 struct tag_monsterInfo {
     short cost;
     int fightValue;
@@ -68,8 +89,15 @@ struct tag_monsterInfo {
     char spriteName[8];
     int attributes;
 };
-struct monsterRV { int rv; char pad[22]; };
-struct SWinSetup { unsigned char status; unsigned short port; char *value; };
+struct monsterRV {
+    int rv;
+    char pad[22];
+};
+struct SWinSetup {
+    unsigned char status;
+    unsigned short port;
+    char* value;
+};
 #pragma pack(pop)
 
 #endif // HOMM1_H1_TYPES_H

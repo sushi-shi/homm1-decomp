@@ -3,6 +3,9 @@
 #include <match.h>
 
 #include <SOURCE/Modem.h>
+#include <SOURCE/comwin.h>
+#include <SOURCE/NOOPT.h>
+#include <SOURCE/REMOTE.h>
 
 #include <H1/All.h>
 #include <H1/KB.h>
@@ -42,7 +45,7 @@ long int Wait(void) {
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.504929;margin=0.542655;shape=0.294;size=0.956;calls=1.000;alternate=pol20:void GUIModemCommand(char *, char *)@0x0000cc30
 VA(0x00459729, 0x71)
-void GUIModemCommand(char *message, char *command) {
+void GUIModemCommand(char* message, char* command) {
     iLastActionTime = 0;
     iModemCommandPos = 0;
     giWaitType = 5;
@@ -73,11 +76,23 @@ signed char GUIModemCommandExec(void) {
     }
 }
 
+// Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
+VA(0x0045982e, 0x6c)
+void ModemCommand(char* command) {
+    int pos;
+    int len = strlen(command);
+    for (pos = 0; pos < len; ++pos) {
+        write_buffer(command + pos, 1);
+        DelayMilli(100);
+    }
+    write_buffer("\r", 1);
+}
+
 // donor PoL RVA 0x0000cdcc; preferred Buka symbol ?GUIModemResponse@@YICPAD0@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.487980;margin=0.528115;shape=0.250;size=0.959;calls=1.000;alternate=pol20:signed char GUIModemResponse(char *, char *)@0x0000cdcc
 VA(0x0045989a, 0x7a)
-signed char GUIModemResponse(char *message, char *response) {
+signed char GUIModemResponse(char* message, char* response) {
     memset(GUIMRresponse, 0, 80);
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
@@ -116,17 +131,142 @@ compareResponse:
     }
 }
 
+// Buka 2.1 serial queue helpers; HoMM1 has no outgoing-queue guard.
+VA(0x004599f6, 0x2b)
+int write_buffer(char* buffer, int length) {
+    com_snd(0, 0, length, buffer, 0);
+    return 1;
+}
+
+VA(0x00459a21, 0x47)
+int read_byte(void) {
+    unsigned char value;
+    int received = com_rcv(0, 1, &value);
+    if (received == 1)
+        return value;
+    else
+        return -1;
+}
+
+VA(0x00459a68, 0x24)
+void write_byte(int value) {
+    com_snd(0, 0, 1, &value, 0);
+}
+
 // donor PoL RVA 0x0000cfec; preferred Buka symbol ?Connect@@YIXXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
 VA(0x00459a8c, 0x2c0)
-void Connect(void) {}
+void Connect(void) {
+    int result;
+    char msg[20];
+    unsigned long seed = KBTickCount();
+    seed %= 1000000;
+    idstr[0] = seed / 100000 + '0';
+    seed -= (idstr[0] - '0') * 100000;
+    idstr[1] = seed / 10000 + '0';
+    seed -= (idstr[1] - '0') * 10000;
+    idstr[2] = seed / 1000 + '0';
+    seed -= (idstr[2] - '0') * 1000;
+    idstr[3] = seed / 100 + '0';
+    seed -= (idstr[3] - '0') * 100;
+    idstr[4] = seed / 10 + '0';
+    seed -= (idstr[4] - '0') * 10;
+    idstr[5] = seed + '0';
+    idstr[6] = 0;
+    oldsec = -1;
+    remotestage = 0;
+    localstage = remotestage;
+    do {
+        if (ReadPacket()) {
+            packet[packetlen] = 0;
+            if (packetlen != 10)
+                continue;
+            if (strncmp(packet, "ID", 2))
+                continue;
+            if (!strncmp(packet + 2, idstr, 6)) {
+                sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
+                GOut(gText);
+                RemoteCleanup();
+            }
+            strncpy(remoteidstr, packet + 2, 6);
+            remotestage = packet[9] - '0';
+            localstage = remotestage + 1;
+            oldsec = -1;
+        }
+        stime = KBTickCount();
+        if (oldsec / 1000 != stime / 1000) {
+            oldsec = stime;
+            sprintf(msg, "ID%s_%i", idstr, localstage);
+            WriteModemPacket(msg, strlen(msg));
+        }
+        PollSound();
+    } while (localstage < 2);
+    while (ReadPacket()) {
+    }
+}
 
 // donor PoL RVA 0x0000d1a7; preferred Buka symbol ?WaitForDirectConnect@@YIHXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.592752;margin=0.888123;shape=0.373;size=0.613;calls=0.929;strings=ID%s_%i;alternate=pol20:int WaitForDirectConnect(void)@0x0000d1a7
 VA(0x00459d4c, 0x316)
-int WaitForDirectConnect(void) { return 0; }
+int WaitForDirectConnect(void) {
+    char idMessage[20];
+    unsigned long seed;
+    switch (WFDCStage) {
+        case 0:
+            seed = KBTickCount();
+            seed %= 1000000;
+            idstr[0] = seed / 100000 + '0';
+            seed -= (idstr[0] - '0') * 100000;
+            idstr[1] = seed / 10000 + '0';
+            seed -= (idstr[1] - '0') * 10000;
+            idstr[2] = seed / 1000 + '0';
+            seed -= (idstr[2] - '0') * 1000;
+            idstr[3] = seed / 100 + '0';
+            seed -= (idstr[3] - '0') * 100;
+            idstr[4] = seed / 10 + '0';
+            seed -= (idstr[4] - '0') * 10;
+            idstr[5] = seed + '0';
+            idstr[6] = 0;
+            oldsec = -1;
+            remotestage = 0;
+            localstage = remotestage;
+            WFDCStage++;
+            break;
+        case 1:
+            if (ReadPacket()) {
+                packet[packetlen] = 0;
+                if (packetlen != 10)
+                    return 0;
+                if (strncmp(packet, "ID", 2))
+                    return 0;
+                if (!strncmp(packet + 2, idstr, 6)) {
+                    sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
+                    GOut(gText);
+                    RemoteCleanup();
+                }
+                strncpy(remoteidstr, packet + 2, 6);
+                remotestage = packet[9] - '0';
+                localstage = remotestage + 1;
+                oldsec = -1;
+            }
+            stime = KBTickCount();
+            if (oldsec / 1000 != stime / 1000) {
+                oldsec = stime;
+                sprintf(idMessage, "ID%s_%i", idstr, localstage);
+                WriteModemPacket(idMessage, strlen(idMessage));
+            }
+            if (localstage >= 2)
+                WFDCStage++;
+            break;
+        case 2:
+            if (!ReadPacket())
+                return 1;
+            break;
+    }
+    return 0;
+}
 
 // donor PoL RVA 0x0000d3b8; preferred Buka symbol ?ReadPacket@@YIDXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order

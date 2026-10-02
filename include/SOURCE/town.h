@@ -35,11 +35,17 @@ public:
     short m_garrison[6];
     char m_unknown26[6];
     signed char m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
-    char m_unknown35[2];
+    // ClaimTown sets two turns for a town taken from no owner, else zero.
+    short m_turnsOwned;
     // --- constructors ---
     town(void);
     // --- methods ---
     signed char HasGarrison(void);
+    // Buka town::OccupyingHero inline; townManager::Open emits its jmp $+0.
+    signed char OccupyingHero(void) {
+        return m_occupyingHeroId;
+    }
+    // HoMM1 retail 0x00463fd0 takes no argument (plain ret).
     void GiveSpells(void);
     void XformToCastle(void);
     void View(void);

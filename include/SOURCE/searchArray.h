@@ -13,7 +13,8 @@ H1_ENUM_BEGIN(SearchStorageConstant)
     SEARCH_QUEUE_CAPACITY = 1024,
     SEARCH_CELL_CAPACITY = 5184,
     SEARCH_FLAG_BIT_COUNT = 1,
-    SEARCH_DIRECTION_BIT_COUNT = 4
+    SEARCH_DIRECTION_BIT_COUNT = 4,
+    SEARCH_PATH_CAPACITY = 256
 H1_ENUM_END(SearchStorageConstant)
 
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
@@ -52,11 +53,12 @@ public:
     int m_specialTargetY;
     searchNode m_queue[SEARCH_QUEUE_CAPACITY];
     searchNode m_cells[SEARCH_CELL_CAPACITY];
+    // Retail DoDimensionDoor reads the path directions at +0xda54.
+    unsigned char m_directions[SEARCH_PATH_CAPACITY];
     // --- constructors ---
     searchArray(void);
-    ~searchArray();
     // --- methods ---
-    int BuildPath(int, int, int, int, int);
+    int BuildPath(short, short, short, short, int);
     void SeedPosition(short, short, short, int, int, int, int, int, int, int, int, int);
     void Init(void);
     void Close(void);

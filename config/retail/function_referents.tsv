@@ -2,7 +2,6 @@
 # These are symbol identities only: they remain in anonymous delink buckets and
 # do not become source claims or matching-denominator entries.
 rva	name	provenance
-0x00041220	?TurnOffAIMusic@game@@QAEXXZ	CancelComputerScreen calls this game method at 0x044b57; HoMM2 Buka 2.1 correspondence
 0x000745A0	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	evidence/window-add.md; retail FadeScreen word arguments and town::View call at 0x06427e
 0x000599F6	?write_buffer@@YAHPADH@Z	GUIModemCommandExec calls 0x0599F6 with buffer and byte count; donor names write_buffer
 0x000818A0	_strlen	GUIModemCommandExec passes command buffer to 0x0818A0; one-argument C strlen call
@@ -121,27 +120,17 @@ rva	name	provenance
 0x00039174	?CountVisitedObelisks@playerData@@QAECXZ	philAI::TurnValueOfObelisk calls it on &players[p]; counts set bits of the 48-bit obelisk bitmap at player+0x9b
 0x00039873	?IsMobile@game@@QAECC@Z	HoMM2 Buka 2.1 game::IsMobile; advManager::CheckDimHero passes the signed current-hero byte and tests the AL result
 0x0003910C	?HasMobileHero@playerData@@QAECXZ	HoMM2 Buka 2.1 playerData::HasMobileHero; CheckDimNextHeroBut tests the sign-extended AL result
-0x00039926	?GetWorldMapData@game@@QAEPAY0EI@VmapCell@@XZ	HoMM2 Buka 2.1 game::GetWorldMapData; returns game+0x620, the 72x72 ten-byte map that advManager::GetCell indexes
 0x000513FA	?NullHandler@@YAHAAUtag_message@@@Z	HoMM2 Buka 2.1 NullHandler passed to game::ViewSpells by advManager::CheckCastSpell
 0x000519D1	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
 0x00081228	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
 0x0006BEA0	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
-0x00052C78	?TrueFalseDialogHandler@@YAFAAUtag_message@@@Z	ViewStat passes it to DoDialog at 0x06cde7; body forwards its message to the 0x052b64 event-window handler as Buka KB TrueFalseDialogHandler
-0x00047CC0	?GetNumArmies@armyGroup@@QAEFXZ	swapManager::ViewMon calls it on a hero army and sign-extends AX; body counts non-empty creature slots of five
-0x00047E4B	?Swap@armyGroup@@QAEXCPAV1@C@Z	swapManager::SwapMons passes byte slots around the destination group; body reads both slots with movsx byte [ebp+8]/[ebp+0x10] (ret 0xc)
-0x0000EF8C	?SplitArmyHandler@@YAFAAUtag_message@@@Z	swapManager::SplitMons passes it to DoDialog with the splitwin.bin window; Buka SplitArmyHandler correspondence, cdecl ret
-0x000439C1	?GetRandomArtifactId@game@@QAECXZ	advManager::GiveRandomArtifact calls it on gpGame with no arguments and stores AL; body returns 0xff or a byte artifact id
-0x00044637	?SRand@@YAXH@Z	hero::CheckLevel seeds with hero seed + level*30 (cdecl, one argument); body stores the seed and calls CRT srand, as Buka SRand
-0x0004455C	?SRandom@@YAHHH@Z	hero::CheckLevel draws SRandom(1, 100) (cdecl, two arguments, int result); Buka SRandom correspondence
-0x00047A8F	?Dismiss@armyGroup@@QAEXC@Z	hero::Deallocate dismisses each of five slots; body reads a byte slot (movsx [ebp+8], ret 4) as Buka armyGroup::Dismiss
+0x00081D00	_srand	MT LIBC srand: _getptd()->_holdrand = seed, ret; SRand 0x044637 tail-calls it with the caller seed
+0x00081D10	_rand	MT LIBC rand: _getptd()->_holdrand * 214013 + 2531011, (>>16)&0x7fff; adjacent to srand in the LIBC rand object
+0x00081D70	_exit	LIBC exit: doexit(code, 0, 0) at 0x081db0; EarlySetup calls it on the CD/setup failure exits
+0x000830C0	_write	LIBC write (oldnames write -> _write): fd range check against _nhandle; playerData::Write streams its fields through it
 0x00043B3C	?SetRandomHeroArmies@game@@QAEXFH@Z	hero::Deallocate re-arms the freed hero with a word id and 0; Buka game::SetRandomHeroArmies correspondence
 0x00047974	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	hero::HeroView reads the army morale with hero and null town (ret 8) and sign-extends AX; body reads town+0x16 buildings
 0x00040366	?Overview@game@@QAEXXZ	HeroHandler crest click calls it on gpGame with no arguments; body loads overmain.bmp, advmice.mse and the fonts
-0x0003F758	?ViewSpecialHandler@@YAHAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
-0x00081D10	_rand	Random's CRT call; body is the LIBCMT per-thread LCG (holdrand at _getptd()+0x14, 214013/2531011, >>16 & 0x7fff)
-0x000830C0	_write	bitmap::Write/playerData::Write/SaveGame low-level writes; LIBCMT _write handle check, _lock_fh and _write_lk body
+0x0003F758	?ViewSpecialHandler@@YAFAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
 0x00082610	_chdir	SetupCDDrive's chdir call; evidence/homm1-dna-bands.tsv crt-exact libc.lib:/1152 __chdir
 0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
-0x00055B8B	?IsCDDrive@@YAHH@Z	SetupCDDrive probes each drive letter through it; body formats the root path and returns GetDriveTypeA(...) == DRIVE_CDROM, as Buka IsCDDrive
-0x000567BF	?EarlyResizeWindow@@YAXHHHH@Z	AppWndProc calls it with four zero arguments (cdecl); HoMM1 body only tests a flag, Buka EarlyResizeWindow identity
-0x00081D00	_srand	AppWndProc seeds the CRT; LIBCMT srand body stores the seed at _getptd()+0x14

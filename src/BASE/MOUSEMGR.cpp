@@ -269,8 +269,22 @@ void mouseManager::ReallyHidePointer(void) {}
 VA(0x00476df0, 0x1)
 void mouseManager::HideColorPointer(void) {}
 
+// townManager::DrawTown and advManager::UpdateScreen bracket a screen blit
+// under the pointer with these hooks (Buka MiscRuntime's SaveAndDraw /
+// RestoreUnderlying pair); retail keeps only the returns.
+VA(0x00476e00, 0x1)
+void mouseManager::RestoreUnderlying(void) {}
+
+VA(0x00476e10, 0x3)
+void mouseManager::SaveAndDraw(bitmap*, int, int, int) {}
+
 VA(0x00476e30, 0x1)
 void mouseManager::ShowColorPointer(void) {}
+
+// townManager::Open forces a pointer refresh here; the Windows build keeps
+// only the one-argument return.
+VA(0x00476e40, 0x3)
+void mouseManager::NewUpdate(int) {}
 
 // donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order

@@ -18,10 +18,12 @@ public:
     icon *m_icon;
     border *m_border;
     // --- constructors ---
-    townObject(int, int, char *);
+    // HoMM1 reads the placement from <name>.tod (retail ret 4).
+    townObject(char *);
     ~townObject();
     // --- methods ---
-    void Draw(int);
+    // HoMM1 passes the animation-advance flag as a byte (retail ret 4, movsx).
+    void Draw(signed char);
 };
 #pragma pack(pop)
 #endif // HOMM1_SOURCE_TOWNOBJECT_H

@@ -4,17 +4,24 @@
 
 #include <H1/All.h>
 
+// Buka 2.1 ShowThisMap; HoMM1 keeps an unreachable rejecting return.
+VA(0x00448020, 0x1c)
+int ShowThisMap(char*) {
+    return 1;
+    return 0;
+}
+
 // donor PoL RVA 0x0008d5e1; preferred Buka symbol ?Open@fileRequester@@UAEHH@Z
 // donor Buka TU SOURCE/REQUEST; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.718088;margin=0.176393;shape=0.403;size=0.976;calls=0.963;strings=fileRequester|request.bin;alternate=pol20:int fileRequester::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0008d5e1
 VA(0x004489c4, 0x431)
-int fileRequester::Open(int) { return 0; }
+short fileRequester::Open(short) { return 0; }
 
 // donor PoL RVA 0x0008daec; preferred Buka symbol ?Main@fileRequester@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/REQUEST; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.521487;margin=0.114044;shape=0.300;size=0.615;calls=0.600;strings=$%'-_@~`!(){}^#&+,;=[].;alternate=pol20:int fileRequester::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0008daec
 VA(0x00448e7f, 0xa8c)
-int fileRequester::Main(struct tag_message &) { return 0; }
+short fileRequester::Main(struct tag_message &) { return 0; }
 
 // donor PoL RVA 0x0008ec9a; preferred Buka symbol ?DoKnob@fileRequester@@QAEXXZ
 // donor Buka TU SOURCE/REQUEST; HoMM1 owner inferred from contiguous order

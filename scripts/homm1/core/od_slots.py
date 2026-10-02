@@ -4,8 +4,10 @@ The front end stores locals in sixteen identifier-hash buckets.  The back end
 walks those buckets in ascending order and each bucket newest-first, so source
 names affect frame layout even though the names never reach machine code.
 
-Ported from the proven HoMM2 matcher model.  It lives in ``core`` because both
-interactive frame inspection and source-layout searches consume it.
+Adapted from the HoMM2 matcher model: HoMM1's pinned VC4.0 shifts by seven
+and buckets the unfolded hash (evidence/od-local-slot-hash.md).  It lives in
+``core`` because both interactive frame inspection and source-layout searches
+consume it.
 """
 
 from __future__ import annotations
@@ -14,7 +16,7 @@ from __future__ import annotations
 def ident_hash(name: str) -> int:
     value = 0
     for character in name:
-        value = ((value >> 4) + value * 4 + ord(character)) & 0xFFFFFFFF
+        value = ((value >> 7) + value * 4 + ord(character)) & 0xFFFFFFFF
     return value
 
 
@@ -24,7 +26,7 @@ def key16(name: str) -> int:
 
 
 def bucket(name: str) -> int:
-    return key16(name) & 0xF
+    return ident_hash(name) & 0xF
 
 
 def slot_order(names: list[str] | tuple[str, ...]) -> list[str]:

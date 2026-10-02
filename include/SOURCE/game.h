@@ -40,15 +40,24 @@ struct mineRecord {
     signed char type;
     signed char guardianType;
     unsigned char guardianCount;
-    unsigned char x;
-    unsigned char y;
+    // GetMineId sign-extends both coordinates.
+    signed char x;
+    signed char y;
 };
-// hero::Deallocate releases a boat whose +6 byte names the hero; records
-// stride eight bytes from game+0x14486 and end at the 0x14586 slot table.
+#pragma pack(pop)
+
+// CreateBoat fills eight-byte records from game+0x14486 in HoMM2's
+// boatRecord order (direction 2, owner at +7).
+#pragma pack(push, 1)
 struct boatRecord {
-    char unknown00[6];
+    signed char id;
+    signed char x;
+    signed char y;
+    signed char direction;
+    unsigned char savedTriggerType;
+    unsigned char savedEventData;
     signed char heroId;
-    char unknown07;
+    signed char owner;
 };
 #pragma pack(pop)
 
@@ -58,9 +67,15 @@ struct boatRecord {
 #pragma pack(push, 1)
         class game {
 public:
-    char m_unknown0000[0x1ff];
+    char m_unknown0000[3];
+    // ControlPanel's scenario-info choice shows the campaign when positive.
+    int m_campaignType;
+    int m_campaignScenario;
+    char m_unknown000b[0x1f4];
     signed char m_playerCount;
-    char m_unknown200[6];
+    char m_unknown200;
+    signed char m_deadPlayerCount;
+    signed char m_playerDead[GAME_PLAYER_COUNT];
     unsigned short m_day;
     unsigned short m_week;
     unsigned short m_month;
@@ -69,25 +84,37 @@ public:
     char m_unknownd0a0[0x5100];
     signed char m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
+    // ClaimTown mirrors each town owner into this byte array.
     signed char m_townOwners[GAME_TOWN_COUNT];
-    char m_unknown12981[4];
+    unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    // Deallocate marks retreated heroes 0x40 and gone heroes -1.
     signed char m_availableHeroes[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];
-    char m_unknown1443d[0x24];
-    // GiveArtifact records the receiving hero per artifact.
-    signed char m_artifactOwners[0x25];
+    // ClaimMine mirrors each mine owner into this byte array.
+    signed char m_mineOwners[GAME_MINE_COUNT];
+    // GetRandomArtifactId scans artifacts 4..36 for a free (-1) entry.
+    signed char m_randomArtifacts[0x25];
     boatRecord m_boats[GAME_BOAT_COUNT];
     signed char m_boatSlots[GAME_BOAT_COUNT];
-    char m_unknown145a6[0x28b0];
+    char m_unknown145a6[0x30];
+    // InsertSound reads the environment sound id per [x][y] cell.
+    signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    // GetCloudLookup tests the watching player bit per [x][y] cell.
+    unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     signed char m_ultimateArtifactX;
     signed char m_ultimateArtifactY;
     signed char m_ultimateArtifactId;
-    hero* GetHero(int id) {
+    char m_unknown16e59[5];
+    // ViewArmy's open army window; ViewArmyHandler animates it.
+    class heroWindow* m_viewArmyWindow;
+    // TavernHandler advances this word as its animation counter (Buka name).
+    short m_viewArmyResult;
+    // InitMainClasses allocates 0x16e7a bytes for the game object.
+    char m_unknown16e64[0x16];
+    hero* GetHero(signed char id) {
         return &m_heroRecs[id];
     }
-    // TownEvent sign-extends the unsigned cell metadata through this byte.
+    // TownEvent passes the unsigned cell metadata through a signed byte.
     town* GetTown(signed char id) {
         return &m_castleRecs[id];
     }
@@ -98,19 +125,19 @@ public:
     void Overview(void);
     void DoKnob(void);
     int ProcessIconSelect(int, int);
-    int SetupCampaignGame(void);
-    int SetupBaud(void);
-    int SetupComPort(void);
-    int SetupHotSeatGame(void);
-    int SetupNetworkGame(void);
+    signed char SetupCampaignGame(void);
+    signed char SetupBaud(void);
+    signed char SetupComPort(void);
+    signed char SetupHotSeatGame(void);
+    signed char SetupNetworkGame(void);
     int SetupNetworkGame2(void);
-    int SetupModemGame(void);
-    int SetupMultiPlayerGame(void);
-    int SetupGame(void);
-    int PickLoadGame(void);
+    signed char SetupModemGame(void);
+    signed char SetupMultiPlayerGame(void);
+    signed char SetupGame(signed char);
+    signed char PickLoadGame(void);
     int HandleCampaignWin(void);
     void PlayPreScenarioSmacker(int, int);
-    void ShowCampaignInfo(int, int);
+    void ShowCampaignInfo(int, int, int);
     void CampaignInfoUpdate(int);
     void InitEntireCampaign(int);
     void InitCampaignMap(void);
@@ -118,13 +145,13 @@ public:
     int SetupPuzzlePieces(int, int);
     signed char IsMobile(signed char);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
-    int CreateBoat(int, int, int);
-    int Scan(signed char*, int, int);
-    int RandomScan(signed char*, int, int, int, signed char);
-    int GetNewHeroId(int, int, int);
-    int GetTownId(int, int);
-    int GetMineId(int, int);
-    int SaveGame(char*, int, signed char);
+    signed char CreateBoat(signed char, signed char);
+    signed char Scan(signed char*, signed char, signed char);
+    signed char RandomScan(signed char*, signed char, signed char, int);
+    signed char GetNewHeroId(signed char);
+    signed char GetTownId(signed char, signed char);
+    signed char GetMineId(signed char, signed char);
+    short SaveGame(char *, signed char);
     void SetupOrigData(void);
     void LoadGame(char*, int, int);
     void GiveTroopsToNeutralTown(int);
@@ -135,10 +162,9 @@ public:
     void RandomizeBarrier(class mapCell*);
     void RandomizePassword(class mapCell*);
     int LoadMap(char*);
-    // HoMM1 retail: byte town and player (ret 8).
     void ClaimTown(signed char, signed char);
-    void ClaimMine(int, int);
-    int ViewSpells(class hero*, int, int (*)(struct tag_message&), int);
+    void ClaimMine(signed char, signed char);
+    int ViewSpells(class hero*, int, short (*)(struct tag_message&), int);
     void UpdateSpellWidgets(void);
     // HoMM1 retail: byte creature/flags, word count, eleven arguments (ret 0x2c).
     void ViewArmy(
@@ -168,13 +194,11 @@ public:
     void RandomizeTown(int, int, int);
     void RandomizeMine(int, int);
     void InitRandomArtifacts(void);
-    // HoMM1 retail: no arguments, artifact in AL.
     signed char GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
-    // HoMM1 retail: word hero id (movsx word [ebp+8]).
     void SetRandomHeroArmies(short, int);
     void ProcessRandomObjects(void);
-    void SetVisibility(int, int, int, int);
+    void SetVisibility(short, short, short, short);
     void MakeAllWaterVisible(int);
     void GiveArmy(class armyGroup*, int, int, int);
     int ExperienceValueOfStack(class armyGroup*, class hero*);
@@ -193,8 +217,8 @@ public:
     void SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
-    int TransmitSaveGame(int, int, int);
-    int ReceiveSaveGame(int, int, int, int);
+    int TransmitSaveGame(int, int);
+    int ReceiveSaveGame(int, int);
     void DoNewTurn(void);
     int GetBoatsBuilt(void);
     int GetNumThievesGuilds(int);

@@ -17,7 +17,7 @@ extern char* cHeroLevel[];
 extern signed char gHeroSkillBonus[][9][HERO_PRIMARY_STAT_COUNT];
 extern int gbInNewGameSetup;
 void SRand(int);
-int ViewSpecialHandler(struct tag_message&);
+short ViewSpecialHandler(struct tag_message&);
 int SRandom(int, int);
 
 // donor PoL RVA 0x000c0790; preferred Buka symbol ?AICheckRetreat@combatManager@@QAEHXZ
@@ -307,7 +307,7 @@ signed char hero::HeroView(signed char viewOnly) {
         message.payload.widget.id = i + 102;
         heroWin->BroadcastMessage(message);
     }
-    if (viewOnly || gpTownManager->m_heroViewLocked
+    if (viewOnly || gpTownManager->m_castleDialogActive
         || (!gpCurPlayer->m_townCount && gpCurPlayer->m_heroCount == 1)) {
         message.payload.widget.id = 0x7803;
         message.payload.widget.data.value = 6;
@@ -836,7 +836,7 @@ void UpdateHeroScreenStatusBar(short widgetId) {
                 strcpy(gText, cHeroScreen[11]);
         } else if (slot == giHeroScreenSrcIndex) {
             sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
-        } else if (gpTownManager->m_heroViewLocked) {
+        } else if (gpTownManager->m_castleDialogActive) {
             if (gpHVHero->m_army.m_creatureTypes[slot] != -1)
                 sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
             else
@@ -978,13 +978,13 @@ short HeroHandler(struct tag_message& message) {
                                && message.payload.widget.id - 102 == giHeroScreenSrcIndex)) {
                     gpGame->ViewArmy(119, 20, gpHVHero->m_army.m_creatureTypes[slot],
                                      gpHVHero->m_army.m_creatureCounts[slot], 0,
-                                     quickView || gpTownManager->m_heroViewLocked == 1
+                                     quickView || gpTownManager->m_castleDialogActive == 1
                                          || gpHVHero->m_army.GetNumArmies() == 1,
                                      0, quickView, gpHVHero, 0, &gpHVHero->m_army);
                     if (!quickView)
                         giHeroScreenSrcIndex = -1;
                     gpHVHero->HeroScreenUpdate();
-                } else if (!quickView && gpTownManager->m_heroViewLocked) {
+                } else if (!quickView && gpTownManager->m_castleDialogActive) {
                     if (gpHVHero->m_army.m_creatureTypes[slot] != -1) {
                         giHeroScreenSrcIndex = slot;
                         gpHVHero->HeroScreenUpdate();

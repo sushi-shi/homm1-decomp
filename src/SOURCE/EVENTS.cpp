@@ -209,7 +209,7 @@ short advManager::GiveArtifact(class hero* eventHero, signed char artifact) {
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
         return -1;
     eventHero->m_artifacts[slot] = artifact;
-    gpGame->m_artifactOwners[artifact] = eventHero->m_id;
+    gpGame->m_randomArtifacts[artifact] = eventHero->m_id;
     GiveTakeArtifactStat(eventHero, artifact, 0);
     return slot;
 }
@@ -267,7 +267,7 @@ void advManager::RecruitEvent(class hero* eventHero, int creatureType, class map
     recruitUnit* recruitWindow;
     int result;
 
-    availableCount = cell->m_objectMetadata;
+    availableCount = (unsigned char)cell->m_objectMetadata;
     recruitWindow = new recruitUnit(&eventHero->m_army, creatureType, &availableCount);
     if (!recruitWindow)
         MemError();
@@ -284,7 +284,7 @@ signed char advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i
                                    int y) {
     int artifact;
 
-    switch (cell->m_objectMetadata) {
+    switch ((unsigned char)cell->m_objectMetadata) {
     case 2:
         if (CombatMonsterEvent(eventHero, 26, 10, cell, x, y, 0, x, y) == 1) {
             sprintf(gText, "%s", gEventText[textId]);
@@ -337,7 +337,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     short houseIndex;
 
     houseIndex = (cell->m_triggerType & 0x7f) - 13;
-    if (!cell->m_objectMetadata) {
+    if (!(unsigned char)cell->m_objectMetadata) {
         EventWindow(houseIndex * 3 + 25, 1, "", -1, 0, -1, 0, -1);
     } else {
         signed char creatures[5] = {6, 0, 1, 13, 0};
@@ -345,7 +345,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
         EventWindow(houseIndex * 3 + 23, 2, "", -1, 0, -1, 0, -1);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
-                eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, -1);
+                eventHero->m_army.Add(creatures[houseIndex], (unsigned char)cell->m_objectMetadata, -1);
                 cell->m_objectMetadata = 0;
             } else {
                 EventWindow(houseIndex * 3 + 24, 1, "", -1, 0, -1, 0, -1);
@@ -525,11 +525,11 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                     gArtifactNames[sourceHero->m_artifacts[j]]);
                             NormalDialog(gText, 1, -1, -1, 7, sourceHero->m_artifacts[j], -1, 0, -1);
                         }
-                        gpGame->m_artifactOwners[sourceHero->m_artifacts[j]] = -1;
+                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = -1;
                     } else {
                         GiveTakeArtifactStat(destHero, sourceHero->m_artifacts[j], 0);
                         destHero->m_artifacts[i] = sourceHero->m_artifacts[j];
-                        gpGame->m_artifactOwners[sourceHero->m_artifacts[j]] = destHero->m_id;
+                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
                     GiveTakeArtifactStat(sourceHero, sourceHero->m_artifacts[j], 1);
                     sourceHero->m_artifacts[j] = -1;
@@ -628,7 +628,7 @@ void advManager::DoAIEvent(class mapCell *, class hero *, int, int) {}
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.214069;margin=0.493239;shape=0.272;size=0.223;calls=0.212;alternate=pol20:void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int)@0x000b4fd5
 VA(0x004625c5, 0x19a)
-void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int) {}
+void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, signed char *, int, int, int, int, int) {}
 
 // donor PoL RVA 0x000b5c40; preferred Buka symbol ?DoNetCombat@advManager@@QAEHPAD@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order

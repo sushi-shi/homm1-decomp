@@ -61,7 +61,7 @@ public:
     signed char m_destinationY;
     unsigned char m_direction;
     unsigned char m_locationType;
-    // Deallocate zero-extends it for RestoreCell.
+    // SetHeroContext passes it zero-extended to game::RestoreCell.
     unsigned char m_occupiedTown;
     short m_mobility;
     short m_remainingMobility;

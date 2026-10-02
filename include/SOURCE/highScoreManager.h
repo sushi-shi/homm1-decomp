@@ -30,6 +30,7 @@ public:
     short m_dispatchMask;
     // --- constructors ---
     highScoreManager(void);
+    ~highScoreManager();
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;

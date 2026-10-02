@@ -17,11 +17,11 @@ class mapCell {
 public:
     // Tile index read zero-extended into the terrain lookup table.
     unsigned char m_tileIndex;
-    char m_unknown01;
-    // XformToCastle shifts the town's lower rows by twelve object frames
-    // and its top row by twelve overlay frames.
+    // PuzzleDraw masks the object and overlay tileset low nibbles and their
+    // 0xff-terminated frame indices.
+    unsigned char m_objectTileset;
     unsigned char m_objectIndex;
-    char m_unknown03;
+    unsigned char m_overlayTileset;
     unsigned char m_overlayIndex;
     char m_unknown05;
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
@@ -30,7 +30,7 @@ public:
     // Whole-byte trigger: readers mask the low seven type bits and the
     // 0x80 event bit; DemobilizeCurrHero stores the hero trigger directly.
     unsigned char m_triggerType;
-    unsigned char m_objectMetadata;
+    signed char m_objectMetadata;
 };
 #pragma pack(pop)
 

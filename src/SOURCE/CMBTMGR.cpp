@@ -26,7 +26,7 @@ void combatManager::SetupCombat(int, int, class hero *, class armyGroup *, class
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.748451;margin=0.311399;shape=0.506;size=0.976;calls=0.795;strings=PREBATTL.82M|cmbtmous.mse|cmbtwin.bin;alternate=pol20:int combatManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00090aa0
 VA(0x0044bb0b, 0x40e)
-int combatManager::Open(int) { return 0; }
+short combatManager::Open(short) { return 0; }
 
 // donor PoL RVA 0x00090edf; preferred Buka symbol ?Close@combatManager@@UAEXXZ
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
@@ -57,3 +57,9 @@ int combatManager::CheckApplyBadMorale(int, int) { return 0; }
 // evidence: graph:3;base=0.362089;margin=0.657323;shape=0.226;size=0.622;calls=0.750;alternate=pol20:int combatManager::GetNextArmy(int)@0x00092cc7
 VA(0x0044d7c1, 0x209)
 int combatManager::GetNextArmy(int) { return 0; }
+
+// HoMM1's combat grid is nine columns by five rows.
+VA(0x0044f557, 0x30)
+int ValidHex(int hex) {
+    return hex >= 0 && hex <= 44;
+}

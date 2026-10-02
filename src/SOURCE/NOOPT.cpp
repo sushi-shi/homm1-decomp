@@ -19,7 +19,7 @@ void DelayTicks(int ticks)
 }
 
 VA(0x00464470, 0x54)
-void DelayTil(long *endTime)
+void DelayTil(int *endTime)
 {
     ProcessAssert(*endTime > 10000, gNooptAssertFile, gNooptAssertLine + 1);
     while (*endTime > KBTickCount()) {

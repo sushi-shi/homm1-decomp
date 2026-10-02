@@ -28,17 +28,16 @@ public:
     void View(int);
     int HasAllUndead(void);
     int HasSomeUndead(void);
-    // HoMM1 retail: hero and town (ret 8), result in AX.
+    // HoMM1 retail: hero and town only (ret 8), morale in AX.
     short GetMorale(class hero*, class town*);
-    // HoMM1 retail: byte slot (movsx [ebp+8], ret 4).
     void Dismiss(signed char);
     signed char IsMember(signed char);
-    int IsHomogeneous(int);
+    signed char IsHomogeneous(signed char);
     signed char CanJoin(signed char);
+    // HoMM1 returns the count in AX (callers sign-extend).
     short GetNumArmies(void);
     // HoMM1 retail: byte creature/slot, word count, word result (ret 0xc).
     short Add(signed char, short, signed char);
-    // HoMM1 retail: byte slots (movsx [ebp+8]/[ebp+0x10]).
     void Swap(signed char, class armyGroup*, signed char);
     void DamageGroup(float);
 };

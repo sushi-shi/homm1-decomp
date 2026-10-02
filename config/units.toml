@@ -261,7 +261,7 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/KB"
 source = "src/SOURCE/KB.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/Modem"
@@ -310,7 +310,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/SETUP"
 source = "src/SOURCE/SETUP.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/SPELLS"
@@ -337,7 +337,8 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/TOWNMGR"
 source = "src/SOURCE/TOWNMGR.cpp"
-flags = "cpp_carcass"
+# DoTavern registers an fs:[0] frame around new heroWindow.
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/kbwin"
@@ -383,3 +384,15 @@ flags = "cpp_carcass"
 unit = "BASE/PrintMemoryLeaks"
 source = "src/BASE/PrintMemoryLeaks.cpp"
 flags = "cpp_o2"
+
+[[unit]]
+unit = "SOURCE/SMACKMGR"
+source = "src/SOURCE/SMACKMGR.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/CURSOR"
+source = "src/SOURCE/CURSOR.cpp"
+# 0x00405950..0x00407d8f sits between int3-aligned wingraph and TOWNMGR objects;
+# no fs:[0] frame appears in the band.
+flags = "cpp_carcass"

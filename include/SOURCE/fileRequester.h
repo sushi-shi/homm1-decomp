@@ -9,14 +9,19 @@
 // forward declarations:
 struct tag_message;
 
-class fileRequester {
+// PickLoadGame allocates 0x1bc bytes; the constructor fills the packed span
+// after baseManager and the list state at 0x1ae..0x1b4.
+#pragma pack(push, 1)
+class fileRequester : public baseManager {
 public:
+    char m_unknown30[0x18c];
     // --- constructors ---
-    fileRequester(int, int, int, char *, char *, char *);
+    fileRequester(int, int, int, const char *, const char *, const char *);
+    ~fileRequester();
     // --- virtual methods (vtable order) ---
-    virtual int Open(int) OVERRIDE;
+    virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual int Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
     int InitializeFiles(char *, char *, int);
     int MapExistsForFilter(int);
@@ -27,4 +32,5 @@ public:
     void Update(int);
     char * GetFilename(void);
 };
+#pragma pack(pop)
 #endif // HOMM1_SOURCE_FILEREQUESTER_H

@@ -32,9 +32,11 @@ public:
     int m_income[PLAYER_RESOURCE_COUNT];
     int m_obeliskValue;
     int m_totalObeliskValue;
-    int m_unexploredValue;
+    // EvaluateOneTimeCreaturePurchase weights fight value by the float at +0xf9;
+    // FightEvent adds the artifact float at +0xfd.
     float m_upgradeValueWeight;
     float m_artifactValue;
+    int m_unexploredValue;
 };
 
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at
@@ -45,8 +47,6 @@ public:
     char m_unknown00[0x11];
     // SetupThievesGuild adds this byte to the town-window flag frame base.
     signed char m_unknown11;
-    // CalcMobility grants computer players whose +0x12 byte is 3 or above
-    // extra moves (an AI difficulty level; master keeps the m_color name).
     signed char m_color;
     signed char m_heroCount;
     signed char m_currentHero;
@@ -70,7 +70,7 @@ public:
     // --- methods ---
     void Write(int);
     void Read(int);
-    int NextHero(int);
+    signed char NextHero(int);
     signed char HasMobileHero(void);
     int BuildingsOwned(int, int, int);
     int NumOfGivenArtifact(int);
