@@ -20,7 +20,8 @@ public:
     signed char m_occupantSide;
     signed char m_occupantIndex;
     signed char m_occupantFrame;
-    signed char m_deadOccupantCount;
+    // army::ResetPath clears the per-cell path mark.
+    signed char m_pathFlag;
     // --- constructors ---
     hexcell(void);
     // --- methods ---

@@ -4,6 +4,7 @@
 // 57 methods, 0 own-virtual, 0 static data.
 
 #include <H1/Macros.h>
+#include <H1/Types.h>
 
 // HoMM1 combat stacks are 0x54 bytes: combatManager strides sides by six
 // armies (0x1f8) from +0x2ca, and Init copies 0x13 bytes of the creature
@@ -30,19 +31,8 @@ public:
     signed char m_unknown13;
     signed char m_speed;
     signed char m_unknown15;
-    // Creature record bytes +0xc..+0x1e: hit points, speed, missile,
-    // attack, defense, damage range, shots and the attribute dword.
-    signed char m_hitPoints;
-    signed char m_baseSpeed;
-    signed char m_missileType;
-    signed char m_attack;
-    signed char m_defense;
-    signed char m_damageMin;
-    signed char m_damageMax;
-    signed char m_unknown1d;
-    signed char m_shots;
-    char m_unknown1f[6];
-    int m_attributes;
+    // Creature record bytes +0xc..+0x1e (hit points through attributes).
+    tag_monsterStats m_stats;
     short m_unknown29;
     short m_unknown2b;
     signed char m_side;
@@ -50,10 +40,11 @@ public:
     int m_unknown2f;
     signed char m_unknown33;
     char m_unknown34;
-    int m_unknown35;
-    int m_unknown39;
-    int m_unknown3d;
-    void* m_resources[4];
+    class icon* m_standIcon;
+    class icon* m_walkIcon;
+    class icon* m_attackIcon;
+    // move, attack, wince and shoot sounds.
+    class sample* m_samples[4];
     signed char m_unknown51;
     signed char m_unknown52;
     char m_unknown53;
@@ -62,7 +53,8 @@ public:
     // --- methods ---
     void WaitSample(int);
     void InitClean(void);
-    void Init(int, int, int, int, int, int);
+    // HoMM1 retail: byte type, word count, byte side and index (ret 0x10).
+    void Init(signed char, short, signed char, signed char);
     void LoadResources(void);
     void FreeResources(void);
     // HoMM1 retail: word x/y (ret 8).
@@ -74,10 +66,10 @@ public:
     void DoHydraAttack(int);
     void DoAttack(int);
     void ResetPath(void);
-    int WalkTo(void);
-    int WalkTo(int);
-    int AttackTo(void);
-    int AttackTo(int);
+    short WalkTo(void);
+    short WalkTo(short);
+    short AttackTo(void);
+    short AttackTo(short);
     void CheckLuck(void);
     void DamageEnemy(class army *, int *, int *, int, int);
     int Damage(long int, int);

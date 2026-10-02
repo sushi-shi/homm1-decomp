@@ -16,7 +16,7 @@ hexcell::hexcell(void) {
     m_occupantIndex = 0;
     m_obstacleIndex = -1;
     m_occupantFrame = -1;
-    m_deadOccupantCount = 0;
+    m_pathFlag = 0;
 }
 
 // Moves the live occupant from another cell into this one.

@@ -445,7 +445,7 @@ void philAI::ValueOfBuyingCreature(
         creatRV = static_cast<int>(creatRV * 1.1);
         if (occupant->m_unknown1c == creature / 6)
             creatRV = static_cast<int>(creatRV * 1.1f);
-        if ((gMonsterDatabase[creature].attributes & 8)) {
+        if ((gMonsterDatabase[creature].stats.attributes & 8)) {
             for (n = 0; n < 5; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != -1
                     && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].attributes & 8))
@@ -458,7 +458,7 @@ void philAI::ValueOfBuyingCreature(
             * (gpGame->m_players[townPointer->m_owner].m_aiData.m_attentionWeights.upgradeBase + 0.66)
         );
     }
-    if ((gMonsterDatabase[creature].attributes & 8)) {
+    if ((gMonsterDatabase[creature].stats.attributes & 8)) {
         for (slotNum = 0; slotNum < 5; slotNum++) {
             if (townPointer->m_army.m_creatureTypes[slotNum] != -1
                 && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].attributes & 8))
