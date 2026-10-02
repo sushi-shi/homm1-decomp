@@ -244,3 +244,7 @@ void comm_wrt_task(void)
         free(node);
     }
 }
+
+// comwin owns retail .bss 0x004ca918-0x004cabb7.
+DATA(0x004ca918)
+ComPortState gComPorts[COM_PORT_COUNT];

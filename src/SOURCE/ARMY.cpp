@@ -2201,3 +2201,9 @@ void army::MoveAttack(int hex, int moveOnly) {
     gpCombatManager->m_limitCreature = 1;
 }
 
+
+// ARMY owns retail .data 0x004a0820-0x004a0a57 and .bss 0x004ca908-0x004ca917.
+DATA(0x004a0888)
+int gbSecondShot = 0;
+DATA(0x004ca908)
+signed char gbGenieHalf;
