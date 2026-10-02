@@ -31,9 +31,9 @@ int combatManager::AICheckRetreat(void) {
     float prob;
     int treasureValue;
     hero heroCopy;
-    hero* sideHero;
     armyGroup* armyPtr;
     int armyIndex;
+    hero* sideHero;
     int side;
     armyGroup bareGroup;
     int artifactTotals[2];
