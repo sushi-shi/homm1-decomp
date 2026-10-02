@@ -312,7 +312,7 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
     if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
         == MAP_OBJECT_STONE_LITHS)
         return 0;
-    for (dirIndex = 0; dirIndex < 8; dirIndex++) {
+    for (dirIndex = 0; dirIndex < MAP_DIRECTION_COUNT; dirIndex++) {
         if (gpAdvManager->ValidMoveWithEvent(pHero, dirIndex)) {
             x = normalDirTable[dirIndex].x + pHero->m_x;
             y = normalDirTable[dirIndex].y + pHero->m_y;
@@ -789,7 +789,7 @@ void philAI::GetTurnAIVars(int player) {
         ) / (totalFightValue + 1000)
         + gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
     artTotal = 0;
-    for (i = 4; i < 37; i++)
+    for (i = ARTIFACT_REGULAR_FIRST; i < ARTIFACT_REGULAR_END; i++)
         artTotal += gArtifactBaseRV[i];
     for (i = 0; i < gpGame->m_playerCount; i++)
         gpGame->m_players[i].m_aiData.m_artifactPoolShare =
@@ -814,7 +814,7 @@ void philAI::GetTurnAIVars(int player) {
             }
         }
     }
-    for (i = 0; i < 36; i++)
+    for (i = 0; i < GAME_HERO_COUNT; i++)
         gfHeroInteractionBonus[i] = 1.0f;
     if (gpCurPlayer->m_difficulty == 1) {
         gfAttackHumanBonus = 0.6f;
@@ -848,8 +848,8 @@ void philAI::GetBestBHC(int, BHC& best) {
     float bestBHCValue = -99.0f;
     int total = 0;
     int totalWeights = 0;
-    int ideal[36];
-    int strengths[36];
+    int ideal[PLAYER_TOWN_CAPACITY];
+    int strengths[PLAYER_TOWN_CAPACITY];
     BHC choice;
     int townNo;
     town* townPointer;
@@ -1228,7 +1228,7 @@ void philAI::ProbableOutcomeOfBattle(
     outcomeValue = static_cast<int>(outcomeValue * gpCurPlayer->m_aiData.m_upgradeValueWeight);
     if (attackerHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (attackerHero->m_artifacts[artSlot] >= 0 && attackerHero->m_artifacts[artSlot] < 37)
+            if (attackerHero->m_artifacts[artSlot] >= 0 && attackerHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
                 attArts += gArtifactBaseRV[attackerHero->m_artifacts[artSlot]];
         }
         outcomeValue = static_cast<int>(outcomeValue - (attArts + 1400) * (1.0f - winChance));
@@ -1238,7 +1238,7 @@ void philAI::ProbableOutcomeOfBattle(
     }
     if (defenderHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (defenderHero->m_artifacts[artSlot] >= 0 && defenderHero->m_artifacts[artSlot] < 37)
+            if (defenderHero->m_artifacts[artSlot] >= 0 && defenderHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
                 artsD += gArtifactBaseRV[defenderHero->m_artifacts[artSlot]];
         }
         outcomeValue = static_cast<int>(
@@ -1666,7 +1666,7 @@ void philAI::ValueOfBuyingHero(
     costRV = RVConversion(heroCost);
     heroRV = heroPointer->m_experience + 2000;
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        if (heroPointer->m_artifacts[i] >= 0 && heroPointer->m_artifacts[i] < 37)
+        if (heroPointer->m_artifacts[i] >= 0 && heroPointer->m_artifacts[i] < ARTIFACT_REGULAR_END)
             heroRV += gArtifactBaseRV[heroPointer->m_artifacts[i]];
     }
     heroRV += heroPointer->m_experience / 2;
@@ -2307,7 +2307,7 @@ int philAI::FightValueOfStack(
         for (slot = BUILDING_SLOT_DWELLING_FIRST; slot <= BUILDING_SLOT_DWELLING_LAST; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows += 4;
-        for (slot = 0; slot <= 4; slot++)
+        for (slot = BUILDING_SLOT_MAGE_GUILD; slot <= BUILDING_SLOT_WELL; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows++;
         castleValue = nArrows * 120;
@@ -2931,7 +2931,7 @@ void philAI::BuildHero(town* townPointer, short availableHeroIndex) {
     newHero->m_x = townX;
     newHero->m_y = townY;
     newHero->m_eventFlags = 0;
-    newHero->m_direction = 2;
+    newHero->m_direction = MAP_DIRECTION_EAST;
     newHero->m_remainingMobility = newHero->CalcMobility();
     newHero->m_mobility = newHero->m_remainingMobility;
     newHero->m_locationType = gpGame->m_map[townX][townY].m_triggerType;
