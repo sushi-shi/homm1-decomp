@@ -1373,8 +1373,8 @@ void game::SettleOverlay(int x, int y) {
 VA(0x0043d6a7, 0xc63)
 void game::RandomizeEvents(void) {
     unsigned char overlayTileset;
-    short y;
     unsigned char objTileset;
+    short y;
     short i;
     short j;
     signed char id;
@@ -2346,8 +2346,8 @@ void game::Overview(void) {
     font* smallFont;
     short heroTextH;
     short townTextWPos;
-    short heroTextW;
     short spacing;
+    short heroTextW;
     short castleFrameY;
     short limitYOff;
     short dayIdY;
@@ -3038,10 +3038,10 @@ int game::ComputeDailyGold(int player) {
 VA(0x004419a6, 0x463)
 void game::PerDay(void) {
     short i;
-    short j;
     short production;
     // Retail reserves one more unused slot between the counters.
     short k;
+    short j;
     signed char resource;
 
     for (i = 0; i < gpGame->m_playerCount; i++) {

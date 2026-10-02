@@ -38,9 +38,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
     int resType;
     signed char tx;
     signed char teleportCount;
-    signed char ty;
     int res;
     signed char adjacentMonster;
+    signed char ty;
     int income;
     hero* enemyHero;
     int numDefenders;
