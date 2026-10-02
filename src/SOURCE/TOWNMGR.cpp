@@ -7,6 +7,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -599,7 +600,7 @@ short townManager::Main(struct tag_message &message)
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
                                                               TOWN_CLOSE_CONTROL, 0x4008);
                             if (gpGame->GetBoatsBuilt() < 32
-                                && gpAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)->m_triggerType == 0
+                                && gpAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)->m_triggerType == MAP_OBJECT_NONE
                                 && m_town->m_x - 1 != gpAdvManager->m_cursorMapX
                                 && m_town->m_y + 1 != gpAdvManager->m_cursorMapY) {
                                 m_heroWindow0 = new heroWindow(0xb1, 0x14, "shipwind.bin");
@@ -1802,7 +1803,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
     short unusedMode = 9;
 
     m_heroWindow1 = new heroWindow(0xb1, 0x10, "rcrthero.bin");
-    if (m_heroWindow1 == NULL)
+    if (m_heroWindow1 == 0)
         MemError();
     SetWinText(m_heroWindow1, 0xb);
     m_recruitHeroes[0] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[0]);
@@ -1878,13 +1879,13 @@ signed char townManager::RecruitHero(signed char cannotRecruit)
                 m_recruitHeroes[m_recruitState]->m_unknown1c + gpCurPlayer->Color() * 4);
         m_garrisonStrip = new strip(0, 0x100, m_town->m_occupyingHeroId == -1 ? 4 : 1,
                                     gpResourceManager->MakeId(gText), 0, &m_town->m_army, 0x10, 0);
-        if (m_garrisonStrip == NULL)
+        if (m_garrisonStrip == 0)
             MemError();
         delete m_heroStrip;
         sprintf(gText, "port%04d.icn", m_recruitHeroes[m_recruitState]->m_unknown1d);
         m_heroStrip = new strip(0, 0x163, 3, gpResourceManager->MakeId(gText), 0,
                                 &m_recruitHeroes[m_recruitState]->m_army, 0x16, 0);
-        if (m_heroStrip == NULL)
+        if (m_heroStrip == 0)
             MemError();
         if (m_town->m_buildings & 1)
             m_town->GiveSpells();

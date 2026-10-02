@@ -9,6 +9,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/X_GLOBAL.h>
 
@@ -657,20 +658,20 @@ short advManager::ValidMove(short direction)
     if (destCell->m_unknown07 & 0x80)
         return 0;
     if (giGroundToTerrain[destCell->m_tileIndex] == 0) {
-        if (m_cursorType != 4 && destCell->m_triggerType != 0xbe && destCell->m_triggerType != 0xa3)
+        if (m_cursorType != 4 && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
             return 0;
     } else {
-        if (m_cursorType == 4 && destCell->m_triggerType != 0x1f && destCell->m_triggerType != 0xac)
+        if (m_cursorType == 4 && destCell->m_triggerType != MAP_OBJECT_COAST && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
             return 0;
     }
     hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
     north = (1 << direction) & 0x83;
     downMask = (1 << direction) & 0x38;
     if (north && hereCell->m_objectIndex != 0xff && !(hereCell->m_flags & 0x80)
-        && hereCell->m_triggerType != 0xac)
+        && hereCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     if (downMask && destCell->m_objectIndex != 0xff && !(destCell->m_flags & 0x80)
-        && destCell->m_triggerType != 0xac)
+        && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;
 }

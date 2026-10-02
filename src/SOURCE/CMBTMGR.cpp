@@ -8,6 +8,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/icon.h>
 #include <BASE/mouseManager.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/kbwin.h>
@@ -244,7 +245,7 @@ void combatManager::Close(void)
     delete m_backgroundBuffer;
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
-    if (m_battlefieldCell->m_triggerType == 0x9a) {
+    if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
         survivor = (signed char)(m_playerId[0] != -1);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < 5; i++) {
@@ -415,9 +416,9 @@ void combatManager::GenerateMap(void)
 VA(0x0044ca22, 0x18e)
 char* combatManager::GetBackgroundName(void)
 {
-    if ((m_battlefieldCell->m_triggerType & 0x7f) == 0xc
-        || ((m_battlefieldCell->m_triggerType & 0x7f) == 0x3d
-            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & 0x7f) == 0xc)) {
+    if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
+        || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
+            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD)) {
         m_terrainType = 6;
         return cCombatBkgNames[10];
     }

@@ -15,6 +15,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/kbwin.h>
@@ -1083,14 +1084,14 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             } else {
                 if (m_lastHoverCell == 7 && m_hoverCellY == 7 && gpCurPlayer->CurrentHero() != -1
                     && m_heroContextLocked) {
-                    cellType = 0x3d;
+                    cellType = MAP_OBJECT_HERO;
                     mapIndex = gpCurPlayer->CurrentHero();
                 } else {
-                    cellType = hoverCell->m_triggerType & 0x7f;
+                    cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     mapIndex = hoverCell->m_objectMetadata;
                 }
                 switch (cellType) {
-                case 0x3d:
+                case MAP_OBJECT_HERO:
                     curX = m_lastHoverCell * 32 - 73;
                     if (curX < 16)
                         curX = 16;
@@ -1103,7 +1104,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         curY = 302;
                     HeroQuickView(mapIndex, -1, curX, curY);
                     break;
-                case 0x28:
+                case MAP_OBJECT_TOWN:
                     curX = m_lastHoverCell * 32 - 89;
                     if (curX < 16)
                         curX = 16;
@@ -1147,9 +1148,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     *eventCell = DoAdvCommand();
                 }
             } else {
-                cellType = hoverCell->m_triggerType & 0x7f;
+                cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                 mapIndex = hoverCell->m_objectMetadata;
-                if (cellType == 0x3d) {
+                if (cellType == MAP_OBJECT_HERO) {
                     if (gpCurPlayer->CurrentHero() == mapIndex) {
                         m_selectedCell = 2;
                         DoAdvCommand();
@@ -1157,7 +1158,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         SetHeroContext(mapIndex, 0);
                     }
                 }
-                if (cellType == 0x28) {
+                if (cellType == MAP_OBJECT_TOWN) {
                     if (gpCurPlayer->CurrentTown() == mapIndex) {
                         m_selectedCell = 3;
                         *eventCell = DoAdvCommand();
@@ -2119,7 +2120,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                 continue;
             }
             cellPtr = &m_mapData[x][y];
-            if ((cellPtr->m_triggerType & 0x7f) == 0x3d) {
+            if ((cellPtr->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO) {
                 owner = gpGame->m_availableHeroes[cellPtr->m_objectMetadata];
                 if (giCurPlayer == owner)
                     color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
@@ -2133,12 +2134,12 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                     break;
                 case 11:
                     switch (cellPtr->m_triggerType) {
-                    case 1:
-                    case 25:
-                    case 32:
-                    case 129:
-                    case 153:
-                    case 160:
+                    case MAP_OBJECT_ALCHEMIST_LAB:
+                    case MAP_OBJECT_MINE:
+                    case MAP_OBJECT_SAWMILL:
+                    case MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB:
+                    case MAP_TRIGGER_EVENT | MAP_OBJECT_MINE:
+                    case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
                         owner = gpGame->m_mineOwners[cellPtr->m_objectMetadata];
                         color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_unknown11 : 4];
                         break;
@@ -2203,31 +2204,31 @@ void advManager::QuickInfo(short cellX, short cellY) {
         if (!(gpGame->m_mapExtra[m_mapOriginX + cellX][m_mapOriginY + cellY] & giCurPlayerBit)) {
             sprintf(gText, "\n\n%s", "Uncharted territory");
         } else {
-            switch (curCell->m_triggerType & 0x7f) {
-            case 48:
+            switch (curCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+            case MAP_OBJECT_ARTIFACT:
                 sprintf(gText, "\n\n%s", "Artifact");
                 break;
-            case 0:
-            case 31:
+            case MAP_OBJECT_NONE:
+            case MAP_OBJECT_COAST:
             case 50:
                 sprintf(gText, "\n\n%s", gTerrainNames[giGroundToTerrain[curCell->m_tileIndex]]);
                 break;
-            case 25:
+            case MAP_OBJECT_MINE:
                 sprintf(gText, "\n\n%s %s", gResourceNames[gpGame->m_mines[curCell->m_objectMetadata].type],
                         "Mine");
                 break;
-            case 29:
+            case MAP_OBJECT_RESOURCE:
                 sprintf(gText, "\n\n%s", gSpellNames[curCell->m_objectIndex + 9]);
                 break;
             case 51:
                 sprintf(gText, "\n\n%s", gResourceNames[curCell->m_objectIndex + 2]);
                 break;
-            case 26:
+            case MAP_OBJECT_MONSTER:
                 sprintf(gText, "\n\n%s %s", GetArmySizeName(curCell->m_objectMetadata & 0x7f, 1),
                         gArmyNamesPlural[curCell->m_objectIndex]);
                 break;
             default:
-                sprintf(gText, "\n\n%s", gObjectNames[curCell->m_triggerType & 0x7f]);
+                sprintf(gText, "\n\n%s", gObjectNames[curCell->m_triggerType & MAP_TRIGGER_TYPE_MASK]);
                 break;
             }
         }
@@ -3409,7 +3410,7 @@ void advManager::DemobilizeCurrHero(void)
     currentHero->m_direction = m_cursorDirection;
     if (m_cursorType == 4)
         currentHero->m_eventFlags |= HERO_EVENT_EMBARKED;
-    cell->m_triggerType = 0xbd;
+    cell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
     cell->m_objectMetadata = currentHero->m_id;
     cell->m_flags &= ~0x40;
     m_cursorActive = 0;
@@ -3875,7 +3876,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
         for (x = 71; x >= 0; x--) {
             cell = GetCell(x, y);
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
-                || (spellType == SPELL_VIEW_TOWNS && (cell->m_triggerType & 0x7f) == 0x28)) {
+                || (spellType == SPELL_VIEW_TOWNS && (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN)) {
                 flip = 0;
                 screenX = x * 6 + 24;
                 screenY = y * 6 + 24;
@@ -3896,20 +3897,20 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
             cell = GetCell(x, y);
             screenX = x * 6 + 24;
             screenY = y * 6 + 24;
-            if ((drawAllObjects || (gpGame->m_mapExtra[x][y] & giCurPlayerBit)) && (cell->m_triggerType & 0x80)) {
+            if ((drawAllObjects || (gpGame->m_mapExtra[x][y] & giCurPlayerBit)) && (cell->m_triggerType & MAP_TRIGGER_EVENT)) {
                 switch (spellType) {
                 case SPELL_VIEW_ALL:
-                    if (cell->m_triggerType == 0xb0)
+                    if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
                         flags->DrawToBuffer(screenX, screenY, 6, 0, 0);
-                    if (cell->m_triggerType == 0xa8) {
+                    if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_unknown11;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
-                    } else if (cell->m_triggerType == 0xbd
-                               && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
+                    } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                               && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_unknown11;
@@ -3917,10 +3918,10 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
                     }
-                    switch (cell->m_triggerType & 0x7f) {
-                    case 1:
-                    case 25:
-                    case 32:
+                    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                    case MAP_OBJECT_ALCHEMIST_LAB:
+                    case MAP_OBJECT_MINE:
+                    case MAP_OBJECT_SAWMILL:
                         owner = gpGame->m_mineOwners[cell->m_objectMetadata];
                         if (owner >= 0)
                             index = gpGame->m_players[owner].m_unknown11;
@@ -3929,11 +3930,11 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
                         letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0, 0);
                         break;
-                    case 61:
-                        switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & 0x7f) {
-                        case 1:
-                        case 25:
-                        case 32:
+                    case MAP_OBJECT_HERO:
+                        switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & MAP_TRIGGER_TYPE_MASK) {
+                        case MAP_OBJECT_ALCHEMIST_LAB:
+                        case MAP_OBJECT_MINE:
+                        case MAP_OBJECT_SAWMILL:
                             owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                             if (owner >= 0)
                                 index = gpGame->m_players[owner].m_unknown11;
@@ -3947,7 +3948,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                             break;
                         }
                     }
-                    if (cell->m_triggerType == 0xbd) {
+                    if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_unknown11;
@@ -3956,10 +3957,10 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     }
                     break;
                 case SPELL_VIEW_MINES:
-                    switch (cell->m_triggerType & 0x7f) {
-                    case 1:
-                    case 25:
-                    case 32:
+                    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                    case MAP_OBJECT_ALCHEMIST_LAB:
+                    case MAP_OBJECT_MINE:
+                    case MAP_OBJECT_SAWMILL:
                         owner = gpGame->m_mineOwners[cell->m_objectMetadata];
                         if (owner >= 0)
                             index = gpGame->m_players[owner].m_unknown11;
@@ -3968,11 +3969,11 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                         spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
                         letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0, 0);
                         break;
-                    case 61:
-                        switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & 0x7f) {
-                        case 1:
-                        case 25:
-                        case 32:
+                    case MAP_OBJECT_HERO:
+                        switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & MAP_TRIGGER_TYPE_MASK) {
+                        case MAP_OBJECT_ALCHEMIST_LAB:
+                        case MAP_OBJECT_MINE:
+                        case MAP_OBJECT_SAWMILL:
                             owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                             if (owner >= 0)
                                 index = gpGame->m_players[owner].m_unknown11;
@@ -3991,25 +3992,25 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     }
                     break;
                 case SPELL_VIEW_RESOURCES:
-                    if (cell->m_triggerType == 0x9d) {
+                    if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE)) {
                         spheres->DrawToBuffer(screenX - 3, screenY, 4, 0, 0);
                         letters->DrawToBuffer(screenX - 3, screenY, cell->m_objectIndex - 0x3d, 0, 0);
                     }
                     break;
                 case SPELL_VIEW_ARTIFACTS:
-                    if (cell->m_triggerType == 0xb0)
+                    if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
                         flags->DrawToBuffer(screenX, screenY, 6, 0, 0);
                     break;
                 case SPELL_VIEW_TOWNS:
-                    if (cell->m_triggerType == 0xa8) {
+                    if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_unknown11;
                             flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
                             flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
                         }
-                    } else if (cell->m_triggerType == 0xbd
-                               && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
+                    } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                               && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_unknown11;
@@ -4019,7 +4020,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     }
                     break;
                 case SPELL_VIEW_HEROES:
-                    if (cell->m_triggerType == 0xbd) {
+                    if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                         owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_unknown11;
@@ -4037,7 +4038,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
         for (x = 71; x >= 0; x--) {
             cell = GetCell(x, y);
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
-                || (cell->m_triggerType == 0x28 && spellType == SPELL_VIEW_TOWNS)) {
+                || (cell->m_triggerType == MAP_OBJECT_TOWN && spellType == SPELL_VIEW_TOWNS)) {
                 screenX = x * 6 + 24;
                 screenY = y * 6 + 24;
                 if (cell->m_overlayIndex != 0xff) {
@@ -4592,7 +4593,7 @@ short DimensionDoorHandler(struct tag_message& message) {
                                     gpAdvManager->m_mapOriginX + mouseX,
                                     gpAdvManager->m_mapOriginY + mouseY
                                 );
-                                if ((cell->m_triggerType & 0x80) || (cell->m_unknown07 & 0x80)) {
+                                if ((cell->m_triggerType & MAP_TRIGGER_EVENT) || (cell->m_unknown07 & 0x80)) {
                                     gpWindowManager->m_dialogResult = 0;
                                     gpMouseManager->SetPointer(0);
                                 } else {
@@ -5086,7 +5087,7 @@ void advManager::TownGate(void) {
     heroPointer->UseSpell(SPELL_TOWN_GATE);
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId = heroPointer->m_id;
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
-    heroPointer->m_locationType = 0xa8;
+    heroPointer->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
     heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
     gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
 }

@@ -6,6 +6,7 @@
 #include <BASE/bmap2.h>
 #include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/X_GLOBAL.h>
 #include <H1/All.h>
 #include <H1/KB.h>
@@ -654,79 +655,79 @@ void advManager::EventSound(short eventType, short eventData) {
     int musicTrack = -1;
 
     switch (eventType) {
-    case 13:
-    case 14:
-    case 15:
-    case 16:
-    case 17:
+    case MAP_OBJECT_STRAW_HUT:
+    case MAP_OBJECT_HOUSE:
+    case MAP_OBJECT_CABIN:
+    case MAP_OBJECT_DWARF_LOG_CABIN:
+    case MAP_OBJECT_PEASANT_LOG_CABIN:
         musicTrack = 0x16;
         break;
     case 63:
         musicTrack = 0x2e;
         break;
-    case 23:
+    case MAP_OBJECT_LIGHTHOUSE:
         musicTrack = 0x1a;
         break;
-    case 34:
+    case MAP_OBJECT_SPELL_SHRINE:
         musicTrack = 0x1b;
         break;
-    case 48:
+    case MAP_OBJECT_ARTIFACT:
         if (eventData == 1)
             musicTrack = 0x1c;
         break;
-    case 4:
-    case 6:
-    case 8:
-    case 24:
-    case 45:
+    case MAP_OBJECT_SKELETON:
+    case MAP_OBJECT_TREASURE_CHEST:
+    case MAP_OBJECT_CAMPFIRE:
+    case MAP_OBJECT_WATERWHEEL:
+    case MAP_OBJECT_WINDMILL:
         musicTrack = 0x1c;
         break;
-    case 1:
-    case 25:
-    case 32:
+    case MAP_OBJECT_ALCHEMIST_LAB:
+    case MAP_OBJECT_MINE:
+    case MAP_OBJECT_SAWMILL:
         musicTrack = 0x17;
         break;
-    case 3:
-    case 28:
+    case MAP_OBJECT_BUOY:
+    case MAP_OBJECT_OASIS:
         musicTrack = 0x14;
         break;
-    case 5:
+    case MAP_OBJECT_DAEMON_CAVE:
         musicTrack = 7;
         break;
-    case 7:
+    case MAP_OBJECT_FAERIE_RING:
         musicTrack = 8;
         break;
-    case 9:
+    case MAP_OBJECT_FOUNTAIN:
         musicTrack = 0x18;
         break;
-    case 10:
+    case MAP_OBJECT_GAZEBO:
         musicTrack = 9;
         break;
-    case 11:
+    case MAP_OBJECT_ANCIENT_LAMP:
         musicTrack = 0xa;
         break;
-    case 12:
+    case MAP_OBJECT_GRAVEYARD:
         musicTrack = 0xb;
         break;
-    case 22:
+    case MAP_OBJECT_DRAGON_CITY:
         musicTrack = 0xc;
         break;
-    case 27:
+    case MAP_OBJECT_OBELISK:
         musicTrack = 0x15;
         break;
-    case 36:
+    case MAP_OBJECT_STATUE:
         musicTrack = 0xe;
         break;
-    case 39:
+    case MAP_OBJECT_DESERT_TENT:
         musicTrack = 0xf;
         break;
-    case 41:
+    case MAP_OBJECT_STONE_LITHS:
         musicTrack = 0x10;
         break;
-    case 42:
+    case MAP_OBJECT_WAGON_CAMP:
         musicTrack = 0x11;
         break;
-    case 44:
+    case MAP_OBJECT_WHIRLPOOL:
         musicTrack = 0x19;
         break;
     default:
@@ -907,7 +908,7 @@ VA(0x00460a5c, 0x11e)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     short houseIndex;
 
-    houseIndex = (cell->m_triggerType & 0x7f) - 13;
+    houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - 13;
     if (!cell->m_objectMetadata) {
         EventWindow(houseIndex * 3 + 25, 1, "", -1, 0, -1, 0, -1);
     } else {
@@ -1224,7 +1225,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     float heroLosses;
     float theirLosses;
 
-    theCastle = NULL;
+    theCastle = 0;
     eventType = cell->m_triggerType & 0x7f;
     erase = 0;
     handled = 0;
@@ -1275,7 +1276,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 gpMonsterGroup->m_creatureTypes[counter] = 0x17;
                 gpMonsterGroup->m_creatureCounts[counter] = 1;
             }
-            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonsterGroup, NULL, 0, 0, 500,
+            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonsterGroup, 0, 0, 0, 500,
                                            win, strength);
             if (win) {
                 counter = 5;
@@ -1499,7 +1500,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                                                      enemyHero, 0, 0, heroLosses, theirLosses);
                 if (battleResult && theCastle)
                     battleResult = gpPhilAI->QuickCombat(&eventHero->m_army, eventHero,
-                                                         &theCastle->m_army, NULL, 1,
+                                                         &theCastle->m_army, 0, 1,
                                                          theCastle->m_id, heroLosses,
                                                          theirLosses);
             } else {
