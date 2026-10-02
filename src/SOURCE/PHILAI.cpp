@@ -1986,76 +1986,76 @@ float philAI::FutureDeflator(int* const resources) {
 // HoMM1 retail returns with ret 0x14: five stack arguments.
 VA(0x0041ff2c, 0x764)
 int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, signed char useTown, signed char townId) {
-    int stackWorth5;
-    float magicMod8;
+    int worth;
+    float fPowerMod;
     int spellScore;
     int slot;
-    int numShooters2;
+    int nArrows;
     int castleValue;
     int luck;
-    int maxScore3;
-    int armyValue4;
+    int bestValue;
+    int armyWorth;
     town* pTown;
     int magicTotal;
     int stats;
     int morale;
-    float countMod0;
+    float quantityMod;
 
-    armyValue4 = 0;
+    armyWorth = 0;
     magicTotal = 0;
     castleValue = 0;
     for (slot = 0; slot < 5; slot++) {
         if (group->m_creatureTypes[slot] != -1) {
-            stackWorth5 = gMonsterDatabase[group->m_creatureTypes[slot]].fightValue * group->m_creatureCounts[slot];
+            worth = gMonsterDatabase[group->m_creatureTypes[slot]].fightValue * group->m_creatureCounts[slot];
             if (useHero) {
                 if (group->m_creatureCounts[slot] > 180)
-                    countMod0 = 1.7f;
+                    quantityMod = 1.7f;
                 else if (group->m_creatureCounts[slot] > 140)
-                    countMod0 = 1.3f;
+                    quantityMod = 1.3f;
                 else if (group->m_creatureCounts[slot] > 100)
-                    countMod0 = 1.1f;
+                    quantityMod = 1.1f;
                 else if (group->m_creatureCounts[slot] > 75)
-                    countMod0 = 0.95f;
+                    quantityMod = 0.95f;
                 else if (group->m_creatureCounts[slot] > 50)
-                    countMod0 = 0.81f;
+                    quantityMod = 0.81f;
                 else if (group->m_creatureCounts[slot] > 35)
-                    countMod0 = 0.57f;
+                    quantityMod = 0.57f;
                 else if (group->m_creatureCounts[slot] > 23)
-                    countMod0 = 0.37f;
+                    quantityMod = 0.37f;
                 else if (group->m_creatureCounts[slot] > 16)
-                    countMod0 = 0.25f;
+                    quantityMod = 0.25f;
                 else if (group->m_creatureCounts[slot] > 11)
-                    countMod0 = 0.13f;
+                    quantityMod = 0.13f;
                 else if (group->m_creatureCounts[slot] > 8)
-                    countMod0 = 0.06f;
+                    quantityMod = 0.06f;
                 else if (group->m_creatureCounts[slot] > 5)
-                    countMod0 = 0.0f;
+                    quantityMod = 0.0f;
                 else if (group->m_creatureCounts[slot] > 3)
-                    countMod0 = -0.05f;
+                    quantityMod = -0.05f;
                 else if (group->m_creatureCounts[slot] > 2)
-                    countMod0 = -0.1f;
+                    quantityMod = -0.1f;
                 else
-                    countMod0 = -0.14f;
+                    quantityMod = -0.14f;
                 if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes & 4)
                     || group->m_creatureTypes[slot] == 12 || group->m_creatureTypes[slot] == 24)
-                    countMod0 = countMod0 * 0.7;
+                    quantityMod = quantityMod * 0.7;
                 else if (group->m_creatureTypes[slot] == 20)
-                    countMod0 = countMod0 * 1.2;
-                stackWorth5 = static_cast<int>(stackWorth5 * (countMod0 + 1.0f));
+                    quantityMod = quantityMod * 1.2;
+                worth = static_cast<int>(worth * (quantityMod + 1.0f));
             }
-            armyValue4 += stackWorth5;
+            armyWorth += worth;
         }
     }
     if (useTown) {
-        numShooters2 = 5;
+        nArrows = 5;
         pTown = gpGame->GetTown(townId);
         for (slot = 7; slot <= 12; slot++)
             if (pTown->m_buildings & (1 << slot))
-                numShooters2 += 4;
+                nArrows += 4;
         for (slot = 0; slot <= 4; slot++)
             if (pTown->m_buildings & (1 << slot))
-                numShooters2++;
-        castleValue = numShooters2 * 120;
+                nArrows++;
+        castleValue = nArrows * 120;
     }
     if (useHero && heroPointer) {
         stats = heroPointer->m_primaryStats[0] + heroPointer->m_primaryStats[1] + 20;
@@ -2063,23 +2063,23 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
             stats = 0;
         if (stats > 40)
             stats = 40;
-        armyValue4 = static_cast<int>(armyValue4 * gfStatPower[stats]);
+        armyWorth = static_cast<int>(armyWorth * gfStatPower[stats]);
         castleValue = static_cast<int>(castleValue * gfStatPower[stats]);
         morale = heroPointer->m_army.GetMorale(heroPointer, 0);
         if (morale > 0)
-            armyValue4 = armyValue4 * (morale + 48) / 48;
+            armyWorth = armyWorth * (morale + 48) / 48;
         else if (morale < 0)
-            armyValue4 = armyValue4 * (morale + 24) / 24;
+            armyWorth = armyWorth * (morale + 24) / 24;
         luck = gpGame->GetLuck(heroPointer, 0);
         if (luck)
-            armyValue4 = armyValue4 * (luck + 16) / 16;
+            armyWorth = armyWorth * (luck + 16) / 16;
         if (heroPointer->m_primaryStats[2] == 1)
-            magicMod8 = 0.25f;
+            fPowerMod = 0.25f;
         else if (heroPointer->m_primaryStats[2] == 2)
-            magicMod8 = 0.5f;
+            fPowerMod = 0.5f;
         else
-            magicMod8 = 1.0f;
-        maxScore3 = -1;
+            fPowerMod = 1.0f;
+        bestValue = -1;
         for (slot = 0; slot < HERO_SPELL_SLOT_COUNT; slot++) {
             if (heroPointer->m_spells[slot] >= 0 && (gcSpellAIFlags[heroPointer->m_spells[slot]] & 2)) {
                 spellScore = static_cast<int>(giSpellAIValue[heroPointer->m_spells[slot]]
@@ -2087,33 +2087,33 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
                                           ? (heroPointer->m_primaryStats[2] > 40
                                                  ? gfSpellPowerMod[40]
                                                  : gfSpellPowerMod[heroPointer->m_primaryStats[2]])
-                                          : magicMod8));
+                                          : fPowerMod));
                 magicTotal += spellScore
                               * gfSpellCastNumMod[heroPointer->m_spellCharges[slot] < 20
                                                       ? heroPointer->m_spellCharges[slot]
                                                       : 20];
-                if (maxScore3 < spellScore)
-                    maxScore3 = spellScore;
+                if (bestValue < spellScore)
+                    bestValue = spellScore;
             }
         }
-        if (magicTotal > maxScore3 * 3.5)
-            magicTotal = static_cast<int>(maxScore3 * 3.5);
-        if (magicTotal > armyValue4 * 2)
-            magicTotal = static_cast<int>(armyValue4 * 1.25);
-        else if (magicTotal > armyValue4 * 1.5)
-            magicTotal = armyValue4;
-        else if (magicTotal > armyValue4)
-            magicTotal = static_cast<int>(armyValue4 * 0.75);
+        if (magicTotal > bestValue * 3.5)
+            magicTotal = static_cast<int>(bestValue * 3.5);
+        if (magicTotal > armyWorth * 2)
+            magicTotal = static_cast<int>(armyWorth * 1.25);
+        else if (magicTotal > armyWorth * 1.5)
+            magicTotal = armyWorth;
+        else if (magicTotal > armyWorth)
+            magicTotal = static_cast<int>(armyWorth * 0.75);
     }
-    if (castleValue > armyValue4 * 2)
-        castleValue = static_cast<int>(armyValue4 * 1.5);
-    else if (castleValue > armyValue4 * 1.5)
-        castleValue = static_cast<int>(armyValue4 * 1.25);
-    else if (castleValue > armyValue4)
-        castleValue = static_cast<int>(armyValue4 * 0.9);
-    armyValue4 += magicTotal;
-    armyValue4 += castleValue;
-    return armyValue4;
+    if (castleValue > armyWorth * 2)
+        castleValue = static_cast<int>(armyWorth * 1.5);
+    else if (castleValue > armyWorth * 1.5)
+        castleValue = static_cast<int>(armyWorth * 1.25);
+    else if (castleValue > armyWorth)
+        castleValue = static_cast<int>(armyWorth * 0.9);
+    armyWorth += magicTotal;
+    armyWorth += castleValue;
+    return armyWorth;
 }
 
 // donor PoL RVA 0x00040aca; preferred Buka symbol ?EvaluateOneTimeCreaturePurchase@philAI@@QAEXHHHAAH00@Z
@@ -2283,28 +2283,28 @@ VA(0x00420c11, 0xbae)
 void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doInteraction, int* value) {
     int garrisonFV;
     int transferRating;
-    int slot6;
+    int pick;
     int j;
     int speedLimit;
     int stackFV;
-    int keepGoing2;
-    float townShare4;
-    int bestValue15;
-    int heroFV4;
+    int nRunning;
+    float fTownShare;
+    int curBest;
+    int heroStrength;
     int statSum;
     int armyCount;
     int i;
-    float transferFactor2;
-    int moveCount9;
+    float estWeight;
+    int estTransferValue;
     int toHero;
     float curveTerm;
     armyGroup* fromArmy;
     int room;
-    float transferShare6;
-    int learned8;
+    float fShareDiff;
+    int newLearned;
     armyGroup* toArmy;
     int moveNum;
-    float wantShare3;
+    float myTargetShare;
 
     *value = 0;
     if (doInteraction) {
@@ -2347,40 +2347,40 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
     }
     if ((townPointer->m_buildings & 1) && (doInteraction || heroPointer->HasArtifact(37))) {
         for (i = 0; i < gMageGuildSpellCount[townPointer->m_buildState]; i++) {
-            learned8 = heroPointer->AddSpell(
+            newLearned = heroPointer->AddSpell(
                 townPointer->m_mageGuildSpells[i], heroPointer->m_primaryStats[3], doInteraction
             );
-            *value += StatChangeValue(heroPointer->m_primaryStats[3] - learned8, heroPointer->m_primaryStats[3])
+            *value += StatChangeValue(heroPointer->m_primaryStats[3] - newLearned, heroPointer->m_primaryStats[3])
                       * giSpellAIValue[townPointer->m_mageGuildSpells[i]]
                       * ((gcSpellAIFlags[townPointer->m_mageGuildSpells[i]] & 1) ? heroPointer->m_primaryStats[3]
                                                                                  : 1);
         }
     }
-    heroFV4 = FightValueOfStack(&heroPointer->m_army, 0, 0, 0, 0);
+    heroStrength = FightValueOfStack(&heroPointer->m_army, 0, 0, 0, 0);
     garrisonFV = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0);
-    townShare4 = static_cast<float>(garrisonFV) / (heroFV4 + garrisonFV);
+    fTownShare = static_cast<float>(garrisonFV) / (heroStrength + garrisonFV);
     statSum = 0;
     statSum = heroPointer->m_primaryStats[0] + heroPointer->m_primaryStats[1];
     if (statSum > 10)
         statSum = 10;
     if (townPointer->m_buildings & 0x40)
-        wantShare3 = 0.54 - statSum * 0.02;
+        myTargetShare = 0.54 - statSum * 0.02;
     else
-        wantShare3 = 0.33 - statSum * 0.01;
-    transferShare6 = (wantShare3 < townShare4 ? townShare4 - wantShare3 : wantShare3 - townShare4);
-    if (wantShare3 * 0.15 > transferShare6)
+        myTargetShare = 0.33 - statSum * 0.01;
+    fShareDiff = (myTargetShare < fTownShare ? fTownShare - myTargetShare : myTargetShare - fTownShare);
+    if (myTargetShare * 0.15 > fShareDiff)
         return;
     toHero = 0;
-    if (townShare4 > wantShare3)
+    if (fTownShare > myTargetShare)
         toHero = 1;
     if (doInteraction) {
-        if (heroFV4 < garrisonFV)
-            transferFactor2 = 0.25f;
+        if (heroStrength < garrisonFV)
+            estWeight = 0.25f;
         else
-            transferFactor2 = 0.13f;
-        curveTerm = transferShare6 + 1.0f - 0.22;
-        transferRating = static_cast<int>((curveTerm * curveTerm - 1.0f) * (heroFV4 + garrisonFV)
-                               * gpCurPlayer->m_aiData.m_upgradeValueWeight * transferFactor2);
+            estWeight = 0.13f;
+        curveTerm = fShareDiff + 1.0f - 0.22;
+        transferRating = static_cast<int>((curveTerm * curveTerm - 1.0f) * (heroStrength + garrisonFV)
+                               * gpCurPlayer->m_aiData.m_upgradeValueWeight * estWeight);
         if (transferRating < 0)
             transferRating = 0;
         room = 0;
@@ -2409,13 +2409,13 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
         return;
     }
     if (toHero)
-        transferShare6 = transferShare6 + 0.04;
-    moveCount9 = static_cast<int>((heroFV4 + garrisonFV) * transferShare6);
+        fShareDiff = fShareDiff + 0.04;
+    estTransferValue = static_cast<int>((heroStrength + garrisonFV) * fShareDiff);
     fromArmy = toHero ? &townPointer->m_army : &heroPointer->m_army;
     toArmy = toHero ? &heroPointer->m_army : &townPointer->m_army;
-    keepGoing2 = 1;
+    nRunning = 1;
     gbTroopReload = 0;
-    while (keepGoing2) {
+    while (nRunning) {
         if (!toHero) {
             armyCount = 0;
             for (i = 0; i < 5; i++)
@@ -2424,20 +2424,20 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             if (armyCount <= 1)
                 return;
         }
-        slot6 = -1;
+        pick = -1;
         for (i = 0; i < 5; i++) {
-            if (slot6 == -1) {
+            if (pick == -1) {
                 for (j = 0; j < 5; j++) {
                     if (fromArmy->m_creatureTypes[i] != -1
                         && fromArmy->m_creatureTypes[i] == toArmy->m_creatureTypes[j]) {
-                        slot6 = i;
+                        pick = i;
                         break;
                     }
                 }
             }
         }
-        if (slot6 == -1) {
-            bestValue15 = -9999;
+        if (pick == -1) {
+            curBest = -9999;
             if (toHero)
                 speedLimit = 1;
             else
@@ -2449,50 +2449,50 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
                     if ((toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed > speedLimit)
                         || (!toHero && gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed < speedLimit)) {
                         speedLimit = gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed;
-                        bestValue15 = stackFV;
-                        slot6 = i;
+                        curBest = stackFV;
+                        pick = i;
                     } else if (gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed == speedLimit
-                               && bestValue15 < stackFV) {
-                        bestValue15 = stackFV;
-                        slot6 = i;
+                               && curBest < stackFV) {
+                        curBest = stackFV;
+                        pick = i;
                     }
                 }
             }
         }
-        if (slot6 == -1) {
-            keepGoing2 = 0;
-        } else if (toArmy->CanJoin(fromArmy->m_creatureTypes[slot6])) {
-            moveNum = static_cast<int>(static_cast<float>(moveCount9) / gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue + 0.5);
+        if (pick == -1) {
+            nRunning = 0;
+        } else if (toArmy->CanJoin(fromArmy->m_creatureTypes[pick])) {
+            moveNum = static_cast<int>(static_cast<float>(estTransferValue) / gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue + 0.5);
             if (moveNum > 0) {
-                if (fromArmy->m_creatureCounts[slot6] < moveNum) {
-                    moveNum = fromArmy->m_creatureCounts[slot6];
+                if (fromArmy->m_creatureCounts[pick] < moveNum) {
+                    moveNum = fromArmy->m_creatureCounts[pick];
                 } else {
-                    keepGoing2 = 0;
-                    if (moveNum >= fromArmy->m_creatureCounts[slot6] * 0.65
-                        || moveNum >= fromArmy->m_creatureCounts[slot6] - 1) {
-                        if (((toHero ? garrisonFV : heroFV4) - moveCount9) * 0.2
-                            > gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue
-                                  * (fromArmy->m_creatureCounts[slot6] - moveNum))
-                            moveNum = fromArmy->m_creatureCounts[slot6];
+                    nRunning = 0;
+                    if (moveNum >= fromArmy->m_creatureCounts[pick] * 0.65
+                        || moveNum >= fromArmy->m_creatureCounts[pick] - 1) {
+                        if (((toHero ? garrisonFV : heroStrength) - estTransferValue) * 0.2
+                            > gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue
+                                  * (fromArmy->m_creatureCounts[pick] - moveNum))
+                            moveNum = fromArmy->m_creatureCounts[pick];
                     }
                 }
                 if (!toHero && moveNum >= armyCount) {
                     moveNum = armyCount - 1;
-                    keepGoing2 = 0;
+                    nRunning = 0;
                 }
-                if (moveCount9 < gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue * moveNum * 1.2)
-                    keepGoing2 = 0;
+                if (estTransferValue < gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue * moveNum * 1.2)
+                    nRunning = 0;
                 else
-                    moveCount9 -= gMonsterDatabase[fromArmy->m_creatureTypes[slot6]].fightValue * moveNum;
-                toArmy->Add(fromArmy->m_creatureTypes[slot6], moveNum, -1);
-                fromArmy->m_creatureCounts[slot6] -= moveNum;
-                if (fromArmy->m_creatureCounts[slot6] == 0)
-                    fromArmy->m_creatureTypes[slot6] = -1;
+                    estTransferValue -= gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue * moveNum;
+                toArmy->Add(fromArmy->m_creatureTypes[pick], moveNum, -1);
+                fromArmy->m_creatureCounts[pick] -= moveNum;
+                if (fromArmy->m_creatureCounts[pick] == 0)
+                    fromArmy->m_creatureTypes[pick] = -1;
             } else {
-                keepGoing2 = 0;
+                nRunning = 0;
             }
         } else {
-            keepGoing2 = 0;
+            nRunning = 0;
         }
     }
     if (!doInteraction && townPointer->m_id == giHumanTownConquered && heroPointer->m_remainingMobility <= 20)
