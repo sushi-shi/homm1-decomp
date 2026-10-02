@@ -667,17 +667,15 @@ short InitMenuHandler(tag_message& message) {
                 case 2:
                     helpIndex = 1;
                     break;
-                case 3:
+                case 5:
                     helpIndex = 2;
                     break;
-                case 4:
+                case 6:
                     helpIndex = 3;
                     break;
-                case 5:
+                case 4:
                     helpIndex = 4;
                     break;
-                case 6:
-                    ;
             }
             if (helpIndex >= 0)
                 NormalDialog(gInitMenuHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
@@ -1281,10 +1279,10 @@ short WaitHandler(tag_message& message) {
             case 0:
                 result = WaitForOtherPlayer();
                 break;
-            case 1:
+            case 2:
                 result = WaitForHost();
                 break;
-            case 2:
+            case 1:
                 result = WaitForGuest();
                 break;
             case 3:
