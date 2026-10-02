@@ -189,6 +189,29 @@ int EarlySetup(void) {
 }
 
 
+// clang-format off
+// stpmain.bin buttons: InitMenuHandler returns the id as m_dialogResult and
+// oldmain dispatches it (gGameCommand re-enters with the control panel's
+// new/load/quit ids, which share these values).
+H1_ENUM_BEGIN(MainMenuControl)
+    MAIN_MENU_NEW_GAME = 1,
+    MAIN_MENU_LOAD_GAME = 2,
+    MAIN_MENU_QUIT = 4,
+    MAIN_MENU_HIGH_SCORES = 5,
+    MAIN_MENU_CREDITS = 6
+H1_ENUM_END(MainMenuControl)
+
+// InitMenuHandler's right-click help: the gInitMenuHelp row.
+H1_ENUM_BEGIN(MainMenuHelp)
+    MAIN_MENU_HELP_NONE = -1,
+    MAIN_MENU_HELP_NEW_GAME = 0,
+    MAIN_MENU_HELP_LOAD_GAME = 1,
+    MAIN_MENU_HELP_HIGH_SCORES = 2,
+    MAIN_MENU_HELP_CREDITS = 3,
+    MAIN_MENU_HELP_QUIT = 4
+H1_ENUM_END(MainMenuHelp)
+// clang-format on
+
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
 // handshake and the campaign replay/next-scenario loop.
@@ -247,7 +270,7 @@ int oldmain(void) {
 
     while (!leave) {
     mainMenu:
-        gpSoundManager->SwitchAmbientMusic(48);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
         if (!backdropLoaded) {
             if (gGameCommand != 4) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
@@ -258,7 +281,7 @@ int oldmain(void) {
                     gpWindowManager->FadeScreen(0, 8, gPalette);
                 initialMainScreen = 0;
             }
-            gpMouseManager->SetPointer("advmice.mse", 0);
+            gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
         }
         backdropLoaded = 1;
         if (gGameCommand != 4)
@@ -322,22 +345,22 @@ int oldmain(void) {
 
         gpMouseManager->ReallyHidePointer();
         switch (command) {
-            case 2:
+            case MAIN_MENU_LOAD_GAME:
                 if (!gpGame->PickLoadGame())
                     goto mainMenu;
                 break;
-            case 5:
+            case MAIN_MENU_HIGH_SCORES:
                 if (gpExec->AddManager(gpHighScoreManager, -1))
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
                 backdropLoaded = 0;
                 goto mainMenu;
-            case 1:
+            case MAIN_MENU_NEW_GAME:
                 if (!gpGame->NewGame())
                     goto mainMenu;
                 break;
-            case 6:
+            case MAIN_MENU_CREDITS:
                 gpWindowManager->FadeScreen(1, 8, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
@@ -358,7 +381,7 @@ int oldmain(void) {
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
                 goto mainMenu;
-            case 4:
+            case MAIN_MENU_QUIT:
                 leave = 1;
                 break;
         }
@@ -395,7 +418,7 @@ int oldmain(void) {
             }
             if (gbRemoteOn && gbWaitForRemoteReceive) {
                 giWaitType = 0;
-                NormalDialog("Waiting for other remote player to set up game.", NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog("Waiting for other remote player to set up game.", NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
                 gpGame->LoadGame("REMOTE.GAM", 0, 1);
@@ -432,7 +455,7 @@ int oldmain(void) {
         if (gbGameOver) {
             RemoteCleanup();
             bShowIt = 1;
-            gpMouseManager->SetPointer("advmice.mse", 0);
+            gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
             gpMouseManager->ReallyHidePointer();
             sprintf(
                 gcCongratsText,
@@ -464,7 +487,7 @@ int oldmain(void) {
             }
             gbGameOver = 0;
             if (giEndSequence == 2) {
-                gpSoundManager->SwitchAmbientMusic(54);
+                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(giCurTurn, 0, "", gCampaignSideNames[gpGame->m_campaignType - 1]);
             }
             if (gbShowHighScore) {
@@ -474,7 +497,7 @@ int oldmain(void) {
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
                 giHighScoreRank = -1;
-                gpSoundManager->SwitchAmbientMusic(48);
+                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(0, 8, gPalette);
@@ -483,7 +506,7 @@ int oldmain(void) {
             if (gpGame->m_campaignType > 0) {
                 if (giEndSequence == 0) {
                     sprintf(gText, "Would you like to replay this scenario?");
-                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
@@ -502,7 +525,7 @@ int oldmain(void) {
                         "Your campaign has been saved as %s.  Would you like to start the next "
                         "scenario?",
                         saveBuf);
-                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                    NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                         goto playScenario;
                 }
@@ -592,26 +615,26 @@ short InitMenuHandler(tag_message& message) {
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
         if (message.command == WIDGET_NOTIFY_SELECT
             || message.command == WIDGET_NOTIFY_RIGHT_CLICK) {
-            helpIndex = -1;
+            helpIndex = MAIN_MENU_HELP_NONE;
             switch (message.id) {
-                case 1:
-                    helpIndex = 0;
+                case MAIN_MENU_NEW_GAME:
+                    helpIndex = MAIN_MENU_HELP_NEW_GAME;
                     break;
-                case 2:
-                    helpIndex = 1;
+                case MAIN_MENU_LOAD_GAME:
+                    helpIndex = MAIN_MENU_HELP_LOAD_GAME;
                     break;
-                case 5:
-                    helpIndex = 2;
+                case MAIN_MENU_HIGH_SCORES:
+                    helpIndex = MAIN_MENU_HELP_HIGH_SCORES;
                     break;
-                case 6:
-                    helpIndex = 3;
+                case MAIN_MENU_CREDITS:
+                    helpIndex = MAIN_MENU_HELP_CREDITS;
                     break;
-                case 4:
-                    helpIndex = 4;
+                case MAIN_MENU_QUIT:
+                    helpIndex = MAIN_MENU_HELP_QUIT;
                     break;
             }
             if (helpIndex >= 0)
-                NormalDialog(gInitMenuHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog(gInitMenuHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         }
     } else if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -818,14 +841,14 @@ int GetBuildingBaseResourceValue(int race, int building, int level) {
 VA(0x00451a31, 0xf03)
 void NormalDialog(
     char* text,
-    int dialogType,
+    H1_ENUM_PARAM(NormalDialogType, int) dialogType,
     int x,
     int y,
-    int firstResourceType,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) firstResourceType,
     int firstResourceValue,
-    int secondResourceType,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) secondResourceType,
     int secondResourceValue,
-    int showOrText
+    H1_ENUM_PARAM(NormalDialogOrText, int) showOrText
 ) {
     char szFilename[NORMAL_DIALOG_FILENAME_LENGTH];
     char* amountText[NORMAL_DIALOG_RESOURCE_COUNT];
@@ -1082,14 +1105,14 @@ void NormalDialog(
 
         iconPanel = new iconWidget(
             resCenterX - resWidth / 2, resourceYPos, resWidth,
-            sizingHeight, szFilename, resourceFrame, 0, -1, ICON_WIDGET_DRAW, 1);
+            sizingHeight, szFilename, resourceFrame, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
         if (!iconPanel)
             MemError();
         pNormalDialogWindow->AddWidget(iconPanel, -1);
         if (kind[i] == NORMAL_DIALOG_ARTIFACT) {
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 + 6, resourceYPos + 6, 76, 76,
-                "artifact.icn", resourceQty[i], 0, -1, ICON_WIDGET_DRAW, 1);
+                "artifact.icn", resourceQty[i], ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconPanel)
                 MemError();
             pNormalDialogWindow->AddWidget(iconPanel, -1);
@@ -1097,7 +1120,7 @@ void NormalDialog(
         if (kind[i] == NORMAL_DIALOG_CREST) {
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 - 4, resourceYPos - 4, 58, 55,
-                "brcrest.icn", 4, 0, -1, ICON_WIDGET_DRAW, 1);
+                "brcrest.icn", 4, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconPanel)
                 MemError();
             pNormalDialogWindow->AddWidget(iconPanel, -1);
@@ -1106,14 +1129,14 @@ void NormalDialog(
             sprintf(szFilename, "port%04d.icn", resourceQty[i]);
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 + 5, resourceYPos + 5, 101, 95,
-                szFilename, 0, 0, -1, ICON_WIDGET_DRAW, 1);
+                szFilename, 0, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconPanel)
                 MemError();
             pNormalDialogWindow->AddWidget(iconPanel, -1);
         }
         captionWidget = new textWidget(
             resCenterX - 50, resourceYPos + sizingHeight - 10, 100, 12,
-            amountText[i], "smalfont.fnt", 1, id++, 0x200);
+            amountText[i], "smalfont.fnt", 1, id++, WIDGET_KIND_TEXT);
         if (!captionWidget)
             MemError();
         pNormalDialogWindow->AddWidget(captionWidget, -1);
@@ -1130,16 +1153,16 @@ void NormalDialog(
         strcpy(szOr, "or");
         captionWidget = new textWidget(
             width / 2 - 17, resourceYPos + 30, 40, 12, szOr, "smalfont.fnt", 1,
-            id++, 0x200);
+            id++, WIDGET_KIND_TEXT);
         if (!captionWidget)
             MemError();
         pNormalDialogWindow->AddWidget(captionWidget, -1);
     }
 
     if (gpAdvManager->m_active == 1)
-        gpMouseManager->SetPointer(0);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
     else if (gpCombatManager->m_active == 1)
-        gpMouseManager->SetPointer(6);
+        gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
 
     if (dialogType == NORMAL_DIALOG_TYPE_WAIT_CANCEL || dialogType == NORMAL_DIALOG_TYPE_WAIT_OK) {
         gpWindowManager->DoDialog(pNormalDialogWindow, WaitHandler, 0);
@@ -1347,7 +1370,7 @@ VA(0x00452f8a, 0x1ea)
 void ReceiveRemotePlayerExit(signed char position, signed char, signed char eliminated, signed char timedOut) {
     if (position == giThisGamePos) {
         sprintf(gText, "You have been eliminated from the game!!!");
-        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         RemoteCleanup();
         gbGameOver = 1;
         giEndSequence = 0;
@@ -1358,7 +1381,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
         if (eliminated) {
             sprintf(gText, "%s player has been vanquished!", gColorNames[gpGame->m_players[position].Color()]);
             gText[0] -= 32;
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[position].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[position].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             goto dropPlayer;
         } else {
             if (timedOut)
@@ -1378,7 +1401,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
                     position + 1,
                     position + 1
                 );
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         }
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         dropPlayer:
@@ -1432,8 +1455,8 @@ void CheckEndGame(int forced) {
                     gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                 gText[0] -= 32;
                 NormalDialog(
-                    gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
-                    0, -1);
+                    gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[static_cast<signed char>(player)].Color(), NORMAL_DIALOG_NO_RESOURCE,
+                    0, NORMAL_DIALOG_NO_OR_TEXT);
             } else if (!pd->m_townCount) {
                 if (pd->m_daysLeft == -1) {
                     if (gbThisNetHumanPlayer[player]) {
@@ -1444,8 +1467,8 @@ void CheckEndGame(int forced) {
                             gColorNames[gpGame->m_players[static_cast<signed char>(player)].Color()]);
                         gText[0] -= 32;
                         NormalDialog(
-                            gText, 1, -1, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(),
-                            -1, 0, -1);
+                            gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_CREST, gpGame->m_players[static_cast<signed char>(player)].Color(),
+                            NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     }
                     pd->m_daysLeft = 7;
                 } else if (!pd->m_daysLeft) {
@@ -1466,8 +1489,8 @@ void CheckEndGame(int forced) {
                         gText[0] -= 32;
                     }
                     NormalDialog(
-                        gText, 1, 0x61, -1, 9, gpGame->m_players[static_cast<signed char>(player)].Color(), -1,
-                        0, -1);
+                        gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[static_cast<signed char>(player)].Color(), NORMAL_DIALOG_NO_RESOURCE,
+                        0, NORMAL_DIALOG_NO_OR_TEXT);
                 }
             } else {
                 pd->m_daysLeft = -1;
@@ -1720,7 +1743,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     }
     if (strlen(gText) == baseLen)
         strcat(gText, gMoraleInfoText[MORALE_INFO_NONE]);
-    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
 }
 
 // clang-format off
@@ -1772,7 +1795,7 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
     if (strlen(gText) == baseLen)
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
-    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+    NormalDialog(gText, dialogType, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
 }
 
 VA(0x004541ef, 0x70)
@@ -2175,7 +2198,7 @@ void ShowCongrats(void) {
 
     daysScore = GetBaseScore(giCurTurn);
     result = gpGame->m_difficultyRating * daysScore / 100;
-    gpSoundManager->SwitchAmbientMusic(54);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
     gpMouseManager->ReallyHidePointer();
     sprintf(gText, "congrats.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
@@ -2256,7 +2279,7 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
     tag_message message;
     char textBuffer[100];
 
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     cDEDest = destination;
     iDEMaxLen = maximumLength;
     strcpy(cDEDest, "");
@@ -2491,7 +2514,7 @@ int HandleAppSpecificMenuCommands(int command) {
             strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
         confirmMenuCommand:
             if (gpAdvManager->m_active == 1) {
-                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     break;
             }
@@ -2603,7 +2626,7 @@ int HandleAppSpecificMenuCommands(int command) {
                     NormalDialog(
                         "Unable to set up CD stereo music.  Your CD player might be in use by "
                         "another program, or your sound driver might not support CD stereo.",
-                        NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                     break;
                 }
                 gConfig.musicSource = 2;

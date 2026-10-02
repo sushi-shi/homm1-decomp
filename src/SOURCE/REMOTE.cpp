@@ -9,7 +9,6 @@
 #include <match.h>
 
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/SETUP.h>
 
 #include <BASE/Misc.h>
 #include <H1/All.h>
@@ -19,6 +18,7 @@
 #include <SOURCE/Modem.h>
 #include <SOURCE/netwinRuntime.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/SETUP.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
@@ -132,7 +132,7 @@ void RemoteMain(int gameMode) {
                 giWaitType = 7;
                 strcpy(directConnectMessage,
                        "Waiting for other computer to log in to direct connection.");
-                NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
             } else {
@@ -479,12 +479,12 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = 4;
             sprintf(gText, "Initializing network.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = 1;
             sprintf(gText, "Waiting On Guest.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             buffer[0] = giNumNetGuests;
@@ -494,12 +494,12 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = 3;
             sprintf(gText, "Initializing network.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = 2;
             sprintf(gText, "Waiting On Host.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             break;
@@ -571,7 +571,7 @@ void GUIModemCommand(char* message, char* command) {
     iModemCommandPos = 0;
     giWaitType = 5;
     strcpy(cModemCommand, command);
-    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     if (!gbFunctionComplete)
         ShutDown(NULL);
 }
@@ -618,7 +618,7 @@ signed char GUIModemResponse(char* message, char* response) {
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
     giWaitType = 6;
-    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     if (!gbFunctionComplete)
         ShutDown(NULL);
     return 0;
@@ -927,7 +927,7 @@ int TransmitRemoteData(
             DelayMilli(1000);
         }
         if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && retval == 0) {
-            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 tries = -1;
         }
@@ -999,7 +999,7 @@ void PollRemote(void) {
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
         NormalDialog(
             "The other player's computer is not responding.  Do you wish to wait longer?",
-            NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             lLastHeartbeatReceive = KBTickCount();
         } else {
@@ -1106,7 +1106,7 @@ int TransmitAndWait(
     complete = 0;
     while (!complete) {
         if (KBTickCount() > start + 20000) {
-            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 start = KBTickCount();
             } else {

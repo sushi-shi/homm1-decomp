@@ -249,7 +249,7 @@ VA(0x0045b659, 0x93)
 void PlaySmacker(signed char smackNumber) {
     gbInSmacker = 1;
     gpSoundManager->m_musicReady = 1;
-    gpSoundManager->PlayAmbientMusic(-1, 0, -1);
+    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
     bSmackNum = smackNumber;
     if (gpExec->AddManager(gpSmackManager, -1))
         ShutDown("Can't add manager!");

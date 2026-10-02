@@ -4,13 +4,14 @@
 
 #include <match.h>
 
-#include <string.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/town.h>
+
+#include <string.h>
 
 // donor PoL RVA 0x0008c040; preferred Buka symbol ??0armyGroup@@QAE@XZ
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order

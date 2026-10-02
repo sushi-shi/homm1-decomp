@@ -136,7 +136,7 @@ VA(0x0047f580, 0x92)
 short button::Select(tag_message& message) {
     short x = m_owner->m_posX + m_x;
     short y = m_owner->m_posY + m_y;
-    m_icon->DrawToBuffer(x, y, m_pressedFrame, 0, 0);
+    m_icon->DrawToBuffer(x, y, m_pressedFrame, ICON_DRAW_NORMAL, 0);
     gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
     m_flags |= WIDGET_FLAG_SELECTED;
     message.type = MESSAGE_WIDGET;
@@ -153,8 +153,8 @@ short button::Select(tag_message& message) {
 VA(0x0047f620, 0x4d)
 void button::Draw(void) {
     if (m_flags & WIDGET_FLAG_SELECTED) {
-        m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_pressedFrame, 0, 0);
+        m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_pressedFrame, ICON_DRAW_NORMAL, 0);
         return;
     }
-    m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_normalFrame, 0, 0);
+    m_icon->DrawToBuffer(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_normalFrame, ICON_DRAW_NORMAL, 0);
 }

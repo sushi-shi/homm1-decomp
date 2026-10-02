@@ -55,19 +55,19 @@ short CombatSpecialHandler(struct tag_message &message)
                     return MESSAGE_DISPATCH_CONSUME;
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
-                    case 2:
+                    case SPELL_BOOK_PREVIOUS_PAGE:
                         gpCombatManager->CombatMessage(cSpellHelp[0], 1);
                         break;
-                    case 3:
+                    case SPELL_BOOK_NEXT_PAGE:
                         gpCombatManager->CombatMessage(cSpellHelp[1], 1);
                         break;
                     case DIALOG_BUTTON_0:
                         gpCombatManager->CombatMessage(cSpellHelp[4], 1);
                         break;
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
+                    case SPELL_BOOK_ENTRY_FIRST:
+                    case SPELL_BOOK_ENTRY_FIRST + 1:
+                    case SPELL_BOOK_ENTRY_FIRST + 2:
+                    case SPELL_BOOK_ENTRY_LAST:
                         gpCombatManager->CombatMessage(cSpellHelp[6], 1);
                         break;
                     default:
@@ -79,6 +79,14 @@ short CombatSpecialHandler(struct tag_message &message)
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
+
+// clang-format off
+// spelmous.mse frames: HandleCastSpell shows the selected SpellType's own
+// frame over a valid target and frame 19, after the combat spells, otherwise.
+H1_ENUM_BEGIN(SpellPointerFrame)
+    SPELL_POINTER_NO_TARGET = 19
+H1_ENUM_END(SpellPointerFrame)
+// clang-format on
 
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
@@ -93,7 +101,7 @@ short HandleCastSpell(struct tag_message &message)
             if (indexToCastOn != hex) {
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = -1;
-                    gpMouseManager->SetPointer(0x13);
+                    gpMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
                     if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && bInTeleportGetDest)
                         gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
                     else
@@ -259,7 +267,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     if (!castByCreature && m_heroes[m_currentSide])
         m_heroes[m_currentSide]->UseSpell(spell);
     targetArmy = 0;
-    if (spell == 0 || spell == 17 || spell == 16 || spell == 15 || spell == 3 || spell == 13)
+    if (spell == SPELL_FIREBALL || spell == SPELL_METEOR_SHOWER || spell == SPELL_STORM || spell == SPELL_ARMAGEDDON || spell == SPELL_CURE || spell == SPELL_DISPEL_MAGIC)
         targetArmy = 0;
     else if (ValidHex(targetHex) && m_hexCells[targetHex].m_occupantSide >= 0) {
         targetArmy = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
@@ -270,25 +278,25 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     if (!castByCreature)
         m_heroCastSpell[m_currentSide] = 1;
     switch (spell) {
-        case 0:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 7:
-        case 8:
-        case 9:
-        case 12:
-        case 15:
-        case 16:
-        case 17:
+        case SPELL_FIREBALL:
+        case SPELL_TELEPORT:
+        case SPELL_CURE:
+        case SPELL_RESURRECT:
+        case SPELL_HASTE:
+        case SPELL_BLIND:
+        case SPELL_BLESS:
+        case SPELL_PROTECTION:
+        case SPELL_ANTI_MAGIC:
+        case SPELL_ARMAGEDDON:
+        case SPELL_STORM:
+        case SPELL_METEOR_SHOWER:
             break;
         default:
             if (targetArmy
-                && (targetArmy->m_creatureType == 0x17
-                    || (targetArmy->m_creatureType == 0xd && SRandom(0, 4) == 1))) {
+                && (targetArmy->m_creatureType == CREATURE_DRAGON
+                    || (targetArmy->m_creatureType == CREATURE_DWARF && SRandom(0, 4) == 1))) {
                 sample = LoadPlaySample("RSBRYFZL.82M");
-                if (targetArmy->m_creatureType == 0x17)
+                if (targetArmy->m_creatureType == CREATURE_DRAGON)
                     CombatMessage("Dragons are not affected by magic!", 1);
                 else
                     CombatMessage("The Dwarves' magic resistance canceled the spell!", 1);
@@ -300,7 +308,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     sprintf(gText, "spell%02d.82M", spell);
     sample = LoadPlaySample(gText);
     switch (spell) {
-        case 2:
+        case SPELL_TELEPORT:
             teleportArmy = targetArmy;
             targetHex = teleportDest;
             teleportArmy->SpellEffect(2, 0);
@@ -366,7 +374,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             }
             teleportArmy->Stand(1);
             break;
-        case 1:
+        case SPELL_LIGHTNING_BOLT:
             sprintf(gText, "The lightning bolt does %d damage to the %s.",
                     m_heroes[m_currentSide]->m_primaryStats[2] * 25,
                     targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
@@ -378,10 +386,10 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             if (!(targetArmy->m_stats.attributes & 0x10))
                 targetArmy->Stand(1);
             break;
-        case 3:
+        case SPELL_CURE:
             CastMassSpell(m_currentSide, 1);
             break;
-        case 4:
+        case SPELL_RESURRECT:
             targetArmy->SpellEffect(4, 0);
             targetArmy->SpellEffect(4, 0);
             quantity = targetArmy->m_quantity;
@@ -397,111 +405,111 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             CombatMessage(gText, 1);
             targetArmy->Stand(1);
             break;
-        case 6:
+        case SPELL_SLOW:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 1;
             if (targetArmy->m_stats.attributes & 2)
                 targetArmy->m_stats.attributes -= 2;
-            targetArmy->m_spellEffect = 6;
+            targetArmy->m_spellEffect = SPELL_SLOW;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
-        case 5:
+        case SPELL_HASTE:
             gpCombatManager->m_currentSpeed = 4;
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 4;
-            targetArmy->m_spellEffect = 5;
+            targetArmy->m_spellEffect = SPELL_HASTE;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
-        case 8:
+        case SPELL_BLESS:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(8, 0);
             targetArmy->SpellEffect(8, 0);
             targetArmy->m_damageMode = 3;
-            targetArmy->m_spellEffect = 8;
+            targetArmy->m_spellEffect = SPELL_BLESS;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
-        case 9:
+        case SPELL_PROTECTION:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(9, 0);
             targetArmy->SpellEffect(9, 0);
-            targetArmy->m_spellEffect = 9;
+            targetArmy->m_spellEffect = SPELL_PROTECTION;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->m_stats.defense += 3;
             targetArmy->Stand(1);
             break;
-        case 10:
+        case SPELL_CURSE:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(10, 0);
             targetArmy->m_damageMode = 1;
-            targetArmy->m_spellEffect = 10;
+            targetArmy->m_spellEffect = SPELL_CURSE;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
-        case 14:
+        case SPELL_BERZERKER:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(14, 0);
             targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(14, 0);
-            targetArmy->m_spellEffect = 14;
+            targetArmy->m_spellEffect = SPELL_BERZERKER;
             targetArmy->m_spellEndCondition = 1;
             targetArmy->Stand(1);
             break;
-        case 18:
+        case SPELL_PARALYZE:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(18, 0);
             targetArmy->m_damageMode = 1;
-            targetArmy->m_spellEffect = 18;
+            targetArmy->m_spellEffect = SPELL_PARALYZE;
             targetArmy->m_spellEndCondition = 2;
             targetArmy->Stand(1);
             break;
-        case 7:
+        case SPELL_BLIND:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 0;
             targetArmy->m_damageMode = 1;
-            targetArmy->m_spellEffect = 7;
+            targetArmy->m_spellEffect = SPELL_BLIND;
             targetArmy->m_spellEndCondition = 2;
             targetArmy->Stand(1);
             break;
-        case 11:
+        case SPELL_TURN_UNDEAD:
             targetArmy->m_animationFrame = 2;
             targetArmy->SpellEffect(11, 0);
             targetArmy->m_powFrames = 5;
             targetArmy->PowEffect(0);
             targetArmy->m_quantity = 0;
             break;
-        case 13:
+        case SPELL_DISPEL_MAGIC:
             CastMassSpell(2, 0);
             break;
-        case 12:
+        case SPELL_ANTI_MAGIC:
             targetArmy->CancelSpell();
             targetArmy->SpellEffect(12, 0);
-            targetArmy->m_spellEffect = 12;
+            targetArmy->m_spellEffect = SPELL_ANTI_MAGIC;
             targetArmy->m_spellEndCondition = 3;
             targetArmy->Stand(1);
             break;
-        case 0:
+        case SPELL_FIREBALL:
             Fireball(targetHex);
             break;
-        case 17:
+        case SPELL_METEOR_SHOWER:
             MeteorShower(targetHex);
             break;
-        case 16:
+        case SPELL_STORM:
             ElementalStorm();
             break;
-        case 15:
+        case SPELL_ARMAGEDDON:
             Armageddon();
             break;
         default:
@@ -566,13 +574,13 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly)
             if (m_armies[side][armyIndex].m_spellEffect != SPELL_ANTI_MAGIC && m_armies[side][armyIndex].m_spellEffect != SPELL_DISPEL_MAGIC
                 && m_armies[side][armyIndex].m_creatureType != CREATURE_DRAGON) {
                 if (!cureOnly) {
-                    if (m_armies[side][armyIndex].m_spellEffect != -1)
+                    if (m_armies[side][armyIndex].m_spellEffect != SPELL_NONE)
                         m_armies[side][armyIndex].m_animationSequence = 3;
                 } else if (cureOnly == 1) {
-                    if (m_armies[side][armyIndex].m_spellEffect == 6 || m_armies[side][armyIndex].m_spellEffect == 7
-                        || m_armies[side][armyIndex].m_spellEffect == 10
-                        || m_armies[side][armyIndex].m_spellEffect == 14
-                        || m_armies[side][armyIndex].m_spellEffect == 18)
+                    if (m_armies[side][armyIndex].m_spellEffect == SPELL_SLOW || m_armies[side][armyIndex].m_spellEffect == SPELL_BLIND
+                        || m_armies[side][armyIndex].m_spellEffect == SPELL_CURSE
+                        || m_armies[side][armyIndex].m_spellEffect == SPELL_BERZERKER
+                        || m_armies[side][armyIndex].m_spellEffect == SPELL_PARALYZE)
                         m_armies[side][armyIndex].m_animationSequence = 3;
                 }
             }
@@ -718,7 +726,7 @@ void combatManager::MeteorShower(signed char targetHex)
         DrawFrame(0);
         for (i = 0; i < 7; i++) {
             if (adjHexes[i] != -1)
-                rockIcon->DrawToBuffer(m_hexCells[adjHexes[i]].m_x, m_hexCells[adjHexes[i]].m_y, j, 0, 0);
+                rockIcon->DrawToBuffer(m_hexCells[adjHexes[i]].m_x, m_hexCells[adjHexes[i]].m_y, j, ICON_DRAW_NORMAL, 0);
         }
         UpdateCombatArea();
         DelayTil(&glTimers[0]);
@@ -779,7 +787,7 @@ void combatManager::ElementalStorm(void)
             DrawFrame(0);
             for (y = 0; y < 7; y++) {
                 for (x = 0; x < 10; x++)
-                    storm->DrawToBuffer(x * 64, y * 64, frm, 0, 0);
+                    storm->DrawToBuffer(x * 64, y * 64, frm, ICON_DRAW_NORMAL, 0);
             }
             UpdateCombatArea();
             DelayTil(&glTimers[0]);
@@ -791,8 +799,8 @@ void combatManager::ElementalStorm(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (curArmy->m_creatureType != 0x17 && curArmy->m_spellEffect != 12
-                && (curArmy->m_creatureType != 0xd || SRandom(0, 127) % 4 != 1)
+            if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
+                && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & 0x10)) {
                 curArmy->Damage(damage);
                 hit = 1;

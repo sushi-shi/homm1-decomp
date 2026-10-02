@@ -469,7 +469,7 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         return 0;
     oneBit = 1;
     enemyMask = 0;
-    for (dir = 0; dir < 8; dir++) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (openMask & oneBit) {
             hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, dir);
             if (ValidHex(hex) && (currentArmy->m_stats.attributes & 1)
@@ -490,7 +490,7 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         }
         oneBit <<= 1;
     }
-    if (currentArmy->m_creatureType == 26)
+    if (currentArmy->m_creatureType == CREATURE_GHOST)
         target = GetWorstArmy(1 - m_currentSide, enemyMask);
     else
         target = GetBestArmy(1 - m_currentSide, enemyMask);

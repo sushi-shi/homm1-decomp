@@ -484,14 +484,14 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
             case 50:
             case 51:
             case MAP_OBJECT_MOUNTAINS:
-            case 53:
-            case 54:
-            case 55:
+            case MAP_OBJECT_MOUNTAINS_2:
+            case MAP_OBJECT_MOUNTAINS_3:
+            case MAP_OBJECT_MOUNTAINS_4:
             case MAP_OBJECT_TREES:
-            case 57:
-            case 58:
-            case 59:
-            case 60:
+            case MAP_OBJECT_TREES_2:
+            case MAP_OBJECT_TREES_3:
+            case MAP_OBJECT_TREES_4:
+            case MAP_OBJECT_TREES_5:
                 retCell = NULL;
                 break;
         }
@@ -574,32 +574,32 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
     if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
         return 0;
     cell = &m_mapData[newX][newY];
-    switch (cell->m_triggerType & 0x7f) {
-        case 3:
+    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+        case MAP_OBJECT_BUOY:
             if (!(movingHero->m_eventFlags & 0x80))
                 return 1;
             else
                 return 0;
-        case 61:
+        case MAP_OBJECT_HERO:
             if (movingHero->m_eventFlags & 0x80) {
                 if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & 0x80)
                     return 1;
                 else
                     return 0;
             }
-        case 2:
-        case 4:
-        case 6:
-        case 8:
-        case 9:
-        case 11:
-        case 26:
-        case 27:
-        case 28:
-        case 29:
-        case 36:
-        case 43:
-        case 48:
+        case MAP_OBJECT_SIGNPOST:
+        case MAP_OBJECT_SKELETON:
+        case MAP_OBJECT_TREASURE_CHEST:
+        case MAP_OBJECT_CAMPFIRE:
+        case MAP_OBJECT_FOUNTAIN:
+        case MAP_OBJECT_ANCIENT_LAMP:
+        case MAP_OBJECT_MONSTER:
+        case MAP_OBJECT_OBELISK:
+        case MAP_OBJECT_OASIS:
+        case MAP_OBJECT_RESOURCE:
+        case MAP_OBJECT_STATUE:
+        case MAP_OBJECT_WELL:
+        case MAP_OBJECT_ARTIFACT:
             if (m_cursorType == 4)
                 return 0;
             else

@@ -142,8 +142,8 @@ int playerData::BuildingsOwned(int townType, int buildingIndex, int buildState) 
     int i;
     for (i = 0; i < m_townCount; ++i) {
         town* ownedTown = &gpGame->m_castleRecs[m_townIds[i]];
-        if (buildingIndex < 7 || ownedTown->m_type == townType) {
-            if (buildingIndex == 0) {
+        if (buildingIndex < BUILDING_SLOT_DWELLING_FIRST || ownedTown->m_type == townType) {
+            if (buildingIndex == BUILDING_SLOT_MAGE_GUILD) {
                 if (ownedTown->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD)) {
                     if (ownedTown->m_buildState == buildState)
                         ++count;
@@ -199,7 +199,7 @@ void ComputeUALoc(int player) {
                 heading = 0;
                 tries = 0;
                 while (!(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                         && gpGame->m_map[x][y].m_triggerType == 0
+                         && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
                          && gpGame->m_map[x][y].m_objectIndex == 0xff
                          && gpGame->m_map[x][y].m_overlayIndex == 0xff
                          && gpGame->m_map[x][y].m_tileIndex >= 20)) {
@@ -652,6 +652,40 @@ short game::LoadGame(char* filename, int origData, int) {
     return 1;
 }
 
+// clang-format off
+// newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);
+// difficulty buttons are FIRST + game::m_difficulty. OK and CANCEL are role
+// names on the reserved dialog slots (gNewGameHelp: 0x7802 accepts, 0x7801
+// returns to the main menu).
+H1_ENUM_BEGIN(NewGameControl)
+    NEW_GAME_OPPONENT_FIRST = 2,
+    NEW_GAME_OPPONENT_LAST = 4,
+    NEW_GAME_COLOR = 8,
+    NEW_GAME_SCENARIO_SELECT = 0xc,
+    NEW_GAME_DIFFICULTY_FIRST = 0xd,
+    NEW_GAME_DIFFICULTY_LAST = 0x10,
+    NEW_GAME_SCENARIO_NAME = 0x11,
+    NEW_GAME_KING_OF_THE_HILL = 0x13,
+    NEW_GAME_RATING = 0x14,
+    NEW_GAME_CANCEL = DIALOG_BUTTON_1,
+    NEW_GAME_OK = DIALOG_BUTTON_2
+H1_ENUM_END(NewGameControl)
+
+// NewGameHandler's right-click help: the gNewGameHelp row shown.
+H1_ENUM_BEGIN(NewGameHelp)
+    NEW_GAME_HELP_NONE = -1,
+    NEW_GAME_HELP_ACCEPT = 0,
+    NEW_GAME_HELP_MAIN_MENU = 1,
+    NEW_GAME_HELP_KING_OF_THE_HILL = 2,
+    NEW_GAME_HELP_SCENARIO = 3,
+    NEW_GAME_HELP_DIFFICULTY = 4,
+    NEW_GAME_HELP_OPPONENT = 5,
+    NEW_GAME_HELP_COLOR = 6,
+    NEW_GAME_HELP_RATING = 7,
+    NEW_GAME_HELP_HUMAN_OPPONENT = 8
+H1_ENUM_END(NewGameHelp)
+// clang-format on
+
 // Buka 2.1 NewGameHandler without HoMM2's remote chat and player races:
 // right clicks show help, the player toggles cycle the opponents and OK
 // packs the chosen opponents before closing the dialog.
@@ -663,68 +697,68 @@ short NewGameHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
-                helpIndex = -1;
+                helpIndex = NEW_GAME_HELP_NONE;
                 switch (message.id) {
-                    case 0x7802:
-                        helpIndex = 0;
+                    case NEW_GAME_OK:
+                        helpIndex = NEW_GAME_HELP_ACCEPT;
                         break;
-                    case 0x7801:
-                        helpIndex = 1;
+                    case NEW_GAME_CANCEL:
+                        helpIndex = NEW_GAME_HELP_MAIN_MENU;
                         break;
-                    case 0x13:
-                        helpIndex = 2;
+                    case NEW_GAME_KING_OF_THE_HILL:
+                        helpIndex = NEW_GAME_HELP_KING_OF_THE_HILL;
                         break;
-                    case 0x11:
-                        helpIndex = 3;
+                    case NEW_GAME_SCENARIO_NAME:
+                        helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
                     case 0x12:
-                        helpIndex = 3;
+                        helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
-                    case 0xc:
-                        helpIndex = 3;
+                    case NEW_GAME_SCENARIO_SELECT:
+                        helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
-                    case 0xd:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_FIRST:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 0xe:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_FIRST + 1:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 0xf:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_FIRST + 2:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 0x10:
-                        helpIndex = 4;
+                    case NEW_GAME_DIFFICULTY_LAST:
+                        helpIndex = NEW_GAME_HELP_DIFFICULTY;
                         break;
-                    case 2:
-                    case 3:
-                    case 4:
+                    case NEW_GAME_OPPONENT_FIRST:
+                    case NEW_GAME_OPPONENT_FIRST + 1:
+                    case NEW_GAME_OPPONENT_LAST:
                         if (message.id - 1 < giNumHumanPlayers)
-                            helpIndex = 8;
+                            helpIndex = NEW_GAME_HELP_HUMAN_OPPONENT;
                         else
-                            helpIndex = 5;
+                            helpIndex = NEW_GAME_HELP_OPPONENT;
                         break;
-                    case 8:
-                        helpIndex = 6;
+                    case NEW_GAME_COLOR:
+                        helpIndex = NEW_GAME_HELP_COLOR;
                         break;
-                    case 0x14:
-                        helpIndex = 7;
+                    case NEW_GAME_RATING:
+                        helpIndex = NEW_GAME_HELP_RATING;
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(gNewGameHelp[helpIndex], 4, -1, -1, -1, 0, -1, 0, -1);
+                    NormalDialog(gNewGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
         } else {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 0x7802:
+                        case NEW_GAME_OK:
                             gpGame->m_playerCount = 0;
                             for (i = 0; i < 4; i++) {
                                 if (gpGame->m_players[i].m_difficulty > 0)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
-                                NormalDialog("A game requires at least one iPlayer.", 1, 0xb1, 0x3c, -1, 0, -1, 0, -1);
+                                NormalDialog("A game requires at least one iPlayer.", NORMAL_DIALOG_TYPE_OK, 0xb1, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                                 break;
                             } else {
                                 if (!gpGame->m_players[1].m_difficulty) {
@@ -741,7 +775,7 @@ short NewGameHandler(tag_message& message) {
                                     gpGame->m_players[3].m_difficulty = 0;
                                 }
                             }
-                        case 0x7801:
+                        case NEW_GAME_CANCEL:
                             gpWindowManager->m_dialogResult = message.id;
                             message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
@@ -752,29 +786,29 @@ short NewGameHandler(tag_message& message) {
                     break;
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case 0xd:
-                        case 0xe:
-                        case 0xf:
-                        case 0x10:
-                            gpGame->m_difficulty = message.id - 0xd;
+                        case NEW_GAME_DIFFICULTY_FIRST:
+                        case NEW_GAME_DIFFICULTY_FIRST + 1:
+                        case NEW_GAME_DIFFICULTY_FIRST + 2:
+                        case NEW_GAME_DIFFICULTY_LAST:
+                            gpGame->m_difficulty = message.id - NEW_GAME_DIFFICULTY_FIRST;
                             break;
-                        case 2:
-                        case 3:
-                        case 4:
+                        case NEW_GAME_OPPONENT_FIRST:
+                        case NEW_GAME_OPPONENT_FIRST + 1:
+                        case NEW_GAME_OPPONENT_LAST:
                             iPlayer = message.id - 1;
                             gpGame->m_players[iPlayer].m_difficulty++;
                             gpGame->m_players[iPlayer].m_difficulty %= 5;
                             if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
-                        case 8:
+                        case NEW_GAME_COLOR:
                             gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % 4;
                             break;
-                        case 0x13:
+                        case NEW_GAME_KING_OF_THE_HILL:
                             gbKingOfTheHill = 1 - gbKingOfTheHill;
                             break;
-                        case 0xc:
-                        case 0x11:
+                        case NEW_GAME_SCENARIO_SELECT:
+                        case NEW_GAME_SCENARIO_NAME:
                         case 0x12:
                             game::GetMap();
                             break;
@@ -806,17 +840,17 @@ void game::UpdateNewGameWindow(void) {
         *period = 0;
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 0x11;
+    message.id = NEW_GAME_SCENARIO_NAME;
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
     for (i = 0; i < 4; i++) {
-        message.id = i + 13;
+        message.id = i + NEW_GAME_DIFFICULTY_FIRST;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.id = m_difficulty + 13;
+    message.id = m_difficulty + NEW_GAME_DIFFICULTY_FIRST;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 1; i < 4; i++) {
@@ -837,18 +871,18 @@ void game::UpdateNewGameWindow(void) {
         m_newGameWindow->BroadcastMessage(message);
     }
     gpGame->m_difficultyRating = CalcDifficultyRating();
-    message.id = 0x14;
+    message.id = NEW_GAME_RATING;
     sprintf(gText, "%s %d%%", "Difficulty Rating:", gpGame->m_difficultyRating);
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[0].m_color != -1) {
-        message.id = 8;
+        message.id = NEW_GAME_COLOR;
         message.value = m_players[0].m_color * 2 + 11;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = 0x13;
+    message.id = NEW_GAME_KING_OF_THE_HILL;
     message.value = gbKingOfTheHill + 27;
     m_newGameWindow->BroadcastMessage(message);
 }
@@ -880,52 +914,52 @@ void game::GiveTroopsToNeutralTowns(void) {
             }
             switch (m_castleRecs[i].m_type + tier) {
                 case 10:
-                    monster = 0;
+                    monster = CREATURE_PEASANT;
                     break;
                 case 20:
-                    monster = 1;
+                    monster = CREATURE_ARCHER;
                     break;
                 case 30:
-                    monster = 2;
+                    monster = CREATURE_PIKEMAN;
                     break;
                 case 40:
-                    monster = 3;
+                    monster = CREATURE_SWORDSMAN;
                     break;
                 case 12:
-                    monster = 6;
+                    monster = CREATURE_GOBLIN;
                     break;
                 case 22:
-                    monster = 7;
+                    monster = CREATURE_ORC;
                     break;
                 case 32:
-                    monster = 8;
+                    monster = CREATURE_WOLF;
                     break;
                 case 42:
-                    monster = 9;
+                    monster = CREATURE_OGRE;
                     break;
                 case 11:
-                    monster = 12;
+                    monster = CREATURE_SPRITE;
                     break;
                 case 21:
-                    monster = 13;
+                    monster = CREATURE_DWARF;
                     break;
                 case 31:
-                    monster = 14;
+                    monster = CREATURE_ELF;
                     break;
                 case 41:
-                    monster = 15;
+                    monster = CREATURE_DRUID;
                     break;
                 case 13:
-                    monster = 18;
+                    monster = CREATURE_CENTAUR;
                     break;
                 case 23:
-                    monster = 19;
+                    monster = CREATURE_GARGOYLE;
                     break;
                 case 33:
-                    monster = 20;
+                    monster = CREATURE_GRIFFIN;
                     break;
                 case 43:
-                    monster = 21;
+                    monster = CREATURE_MINOTAUR;
                     break;
             }
             GiveArmy(&m_castleRecs[i].m_army, monster, howMany, -1);
@@ -1007,7 +1041,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     heroWindow* window;
     tag_message message;
 
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     window = new heroWindow(105, 96, "campaign.bin");
     if (!window)
         MemError();
@@ -1041,11 +1075,11 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
         window->BroadcastMessage(message);
     }
     if (!fromMenu)
-        gpSoundManager->SwitchAmbientMusic(0x30);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
     if (gpWindowManager->m_dialogResult == 0x385) {
-        NormalDialog("Are you sure you want to restart this scenario?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog("Are you sure you want to restart this scenario?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
@@ -1252,7 +1286,7 @@ void game::NewMap(char* mapName) {
             heroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
             m_heroRecs[m_players[i].m_heroIds[j]].m_locationType = m_map[heroX][heroY].m_triggerType;
             m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown = m_map[heroX][heroY].m_objectMetadata;
-            m_map[heroX][heroY].m_triggerType = 0xbd;
+            m_map[heroX][heroY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
             m_map[heroX][heroY].m_objectMetadata = m_players[i].m_heroIds[j];
         }
         if (m_players[i].m_heroCount > 0)
@@ -1308,17 +1342,17 @@ void game::NewMap(char* mapName) {
 VA(0x0043d454, 0x6f)
 int GetObjectFamily(int trigger) {
     switch (trigger) {
-        case 0x34:
-        case 0x35:
-        case 0x36:
-        case 0x37:
-            return 0x34;
-        case 0x38:
-        case 0x39:
-        case 0x3a:
-        case 0x3b:
-        case 0x3c:
-            return 0x38;
+        case MAP_OBJECT_MOUNTAINS:
+        case MAP_OBJECT_MOUNTAINS_2:
+        case MAP_OBJECT_MOUNTAINS_3:
+        case MAP_OBJECT_MOUNTAINS_4:
+            return MAP_OBJECT_MOUNTAINS;
+        case MAP_OBJECT_TREES:
+        case MAP_OBJECT_TREES_2:
+        case MAP_OBJECT_TREES_3:
+        case MAP_OBJECT_TREES_4:
+        case MAP_OBJECT_TREES_5:
+            return MAP_OBJECT_TREES;
         default:
             return trigger;
     }
@@ -1333,8 +1367,8 @@ void game::SettleOverlay(int x, int y) {
     cell = &m_map[x][y];
     if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
         switch (cell->m_triggerType) {
-            case 0x35:
-            case 0x39:
+            case MAP_OBJECT_MOUNTAINS_2:
+            case MAP_OBJECT_TREES_2:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
                     if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
@@ -1347,8 +1381,8 @@ void game::SettleOverlay(int x, int y) {
                     }
                 }
                 break;
-            case 0x37:
-            case 0x3b:
+            case MAP_OBJECT_MOUNTAINS_4:
+            case MAP_OBJECT_TREES_4:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
                     if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
@@ -1389,27 +1423,27 @@ void game::RandomizeEvents(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map[x][y];
             switch (cell->m_triggerType) {
-                case 0x8a:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_GAZEBO:
                     cell->m_objectMetadata = siteNum;
                     siteNum++;
                     break;
-                case 0x2c:
-                    cell->m_triggerType |= 0x80;
+                case MAP_OBJECT_WHIRLPOOL:
+                    cell->m_triggerType |= MAP_TRIGGER_EVENT;
                     break;
-                case 0x9b:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_OBELISK:
                     cell->m_objectMetadata = obeliskId;
                     obeliskId++;
                     break;
-                case 0xa4:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_STATUE:
                     cell->m_objectMetadata = 1;
                     break;
-                case 0x84:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_SKELETON:
                     if (Random(0, 9) == 3)
                         cell->m_objectMetadata = 2;
                     else
                         cell->m_objectMetadata = 1;
                     break;
-                case 0x85:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_DAEMON_CAVE:
                     switch (Random(0, 99) % 10) {
                         case 0:
                         case 1:
@@ -1431,23 +1465,23 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case 0x86:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_TREASURE_CHEST:
                     cell->m_objectMetadata = Random(2, 4);
                     break;
-                case 0x88:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_CAMPFIRE:
                     cell->m_objectMetadata = Random(4, 6) << 4;
                     cell->m_objectMetadata |= static_cast<signed char>(Random(0, 5));
                     break;
-                case 0x8b:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_ANCIENT_LAMP:
                     cell->m_objectMetadata = Random(0, 3) + 2;
                     break;
-                case 0xa3:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & 0x7f) != 0x23) {
-                        cell->m_triggerType &= 0x7f;
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK:
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x23) {
+                        cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
                     goto treasure;
-                case 0x8c:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_GRAVEYARD:
                 treasure:
                     switch (Random(0, 99) % 10) {
                         case 0:
@@ -1470,32 +1504,32 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case 0x8d:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
                     cell->m_objectMetadata = Random(10, 30);
                     break;
-                case 0x8e:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
                     cell->m_objectMetadata = Random(20, 50);
                     break;
-                case 0x8f:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
                     cell->m_objectMetadata = Random(0, 127) % 4 + 1;
                     break;
-                case 0x90:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
                     cell->m_objectMetadata = Random(0, 98) % 3 + 1;
                     break;
-                case 0x91:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
                     cell->m_objectMetadata = Random(20, 50);
                     break;
-                case 0x98:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
                     cell->m_objectMetadata = 1;
                     break;
-                case 0x9a:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER:
                     if (!static_cast<unsigned char>(cell->m_objectMetadata)) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
                         if (Random(0, 99) <= 25 && cell->m_objectIndex != 26)
                             cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | 0x80;
                     }
                     break;
-                case 0x9d:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
                         cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - 61;
@@ -1512,7 +1546,7 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case 0xa2:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_SPELL_SHRINE:
                     switch (Random(0, 9)) {
                         case 0:
                         case 1:
@@ -1531,18 +1565,18 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case 0xa7:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
                     cell->m_objectMetadata = Random(10, 20);
                     break;
-                case 0xaa:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & 0x7f) != 0x2a
-                        || (m_map[x + 1][y].m_triggerType & 0x7f) != 0x2a) {
-                        cell->m_triggerType &= 0x7f;
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x2a
+                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x2a) {
+                        cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
                     cell->m_objectMetadata = Random(30, 50);
                     break;
-                case 0xb0:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT:
                     switch (Random(0, 99) % 10) {
                         case 0:
                         case 1:
@@ -1562,7 +1596,7 @@ void game::RandomizeEvents(void) {
                             break;
                     }
                     break;
-                case 0xa8:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
                     id = GetTownId(x, y);
                     for (j = 0; j < 3; j++) {
                         for (i = 0; i < 4; i++) {
@@ -1572,19 +1606,19 @@ void game::RandomizeEvents(void) {
                     }
                     SetupTown(id, 0);
                     break;
-                case 0x81:
-                case 0x99:
-                case 0xa0:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_MINE:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
                     id = GetMineId(x, y);
                     for (j = 0; j < 2; j++) {
                         for (i = 0; i < 2; i++) {
                             if (!static_cast<unsigned char>(m_map[x + i][y - j].m_objectMetadata)
-                                || (cell->m_triggerType & 0x7f) == (m_map[x + i][y - j].m_triggerType & 0x7f))
+                                || (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
                     }
                     break;
-                case 0xad:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_WINDMILL:
                     cell->m_objectMetadata = Random(1, 5);
                     break;
             }
@@ -1602,15 +1636,15 @@ void game::RandomizeEvents(void) {
             SettleOverlay(x, y);
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
                 switch (cell->m_triggerType) {
-                    case 0x34:
-                    case 0x35:
-                    case 0x36:
-                    case 0x37:
-                    case 0x38:
-                    case 0x39:
-                    case 0x3a:
-                    case 0x3b:
-                    case 0x3c:
+                    case MAP_OBJECT_MOUNTAINS:
+                    case MAP_OBJECT_MOUNTAINS_2:
+                    case MAP_OBJECT_MOUNTAINS_3:
+                    case MAP_OBJECT_MOUNTAINS_4:
+                    case MAP_OBJECT_TREES:
+                    case MAP_OBJECT_TREES_2:
+                    case MAP_OBJECT_TREES_3:
+                    case MAP_OBJECT_TREES_4:
+                    case MAP_OBJECT_TREES_5:
                         cell->m_secondaryTrigger |= 0x80;
                         break;
                 }
@@ -1622,60 +1656,60 @@ void game::RandomizeEvents(void) {
             cell = &m_map[x][y];
             if (cell->m_triggerType == 0x32)
                 cell->m_flags |= 0x80;
-            if (cell->m_triggerType & 0x80) {
-                switch (cell->m_triggerType & 0x7f) {
+            if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
+                switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                     case 0x1:
-                    case 0x2:
-                    case 0x3:
-                    case 0x4:
-                    case 0x5:
-                    case 0x6:
-                    case 0x7:
-                    case 0x8:
-                    case 0x9:
-                    case 0xa:
-                    case 0xb:
-                    case 0xc:
-                    case 0xd:
-                    case 0xe:
-                    case 0xf:
-                    case 0x10:
-                    case 0x11:
-                    case 0x12:
-                    case 0x13:
-                    case 0x14:
-                    case 0x15:
-                    case 0x16:
-                    case 0x17:
-                    case 0x18:
-                    case 0x19:
-                    case 0x1a:
-                    case 0x1b:
-                    case 0x1c:
-                    case 0x1d:
-                    case 0x1f:
-                    case 0x20:
-                    case 0x21:
-                    case 0x22:
-                    case 0x23:
-                    case 0x24:
-                    case 0x26:
-                    case 0x27:
-                    case 0x28:
-                    case 0x29:
-                    case 0x2a:
-                    case 0x2b:
-                    case 0x2c:
-                    case 0x2d:
-                    case 0x2f:
-                    case 0x30:
-                    case 0x31:
-                    case 0x3d:
-                    case 0x3e:
+                    case MAP_OBJECT_SIGNPOST:
+                    case MAP_OBJECT_BUOY:
+                    case MAP_OBJECT_SKELETON:
+                    case MAP_OBJECT_DAEMON_CAVE:
+                    case MAP_OBJECT_TREASURE_CHEST:
+                    case MAP_OBJECT_FAERIE_RING:
+                    case MAP_OBJECT_CAMPFIRE:
+                    case MAP_OBJECT_FOUNTAIN:
+                    case MAP_OBJECT_GAZEBO:
+                    case MAP_OBJECT_ANCIENT_LAMP:
+                    case MAP_OBJECT_GRAVEYARD:
+                    case MAP_OBJECT_STRAW_HUT:
+                    case MAP_OBJECT_HOUSE:
+                    case MAP_OBJECT_CABIN:
+                    case MAP_OBJECT_DWARF_LOG_CABIN:
+                    case MAP_OBJECT_PEASANT_LOG_CABIN:
+                    case MAP_OBJECT_INN_1:
+                    case MAP_OBJECT_INN_2:
+                    case MAP_OBJECT_INN_3:
+                    case MAP_OBJECT_INN_4:
+                    case MAP_OBJECT_DRAGON_CITY:
+                    case MAP_OBJECT_LIGHTHOUSE:
+                    case MAP_OBJECT_WATERWHEEL:
+                    case MAP_OBJECT_MINE:
+                    case MAP_OBJECT_MONSTER:
+                    case MAP_OBJECT_OBELISK:
+                    case MAP_OBJECT_OASIS:
+                    case MAP_OBJECT_RESOURCE:
+                    case MAP_OBJECT_COAST:
+                    case MAP_OBJECT_SAWMILL:
+                    case MAP_OBJECT_RANKING_SHRINE:
+                    case MAP_OBJECT_SPELL_SHRINE:
+                    case MAP_OBJECT_SHIPWRECK:
+                    case MAP_OBJECT_STATUE:
+                    case MAP_OBJECT_SWAN_POND:
+                    case MAP_OBJECT_DESERT_TENT:
+                    case MAP_OBJECT_TOWN:
+                    case MAP_OBJECT_STONE_LITHS:
+                    case MAP_OBJECT_WAGON_CAMP:
+                    case MAP_OBJECT_WELL:
+                    case MAP_OBJECT_WHIRLPOOL:
+                    case MAP_OBJECT_WINDMILL:
+                    case MAP_OBJECT_MEGALITH:
+                    case MAP_OBJECT_ARTIFACT:
+                    case MAP_OBJECT_NOTHING_HERE:
+                    case MAP_OBJECT_HERO:
+                    case MAP_OBJECT_SHIP:
                     case 0x3f:
                         break;
                     default:
-                        cell->m_triggerType -= 0x80;
+                        cell->m_triggerType -= MAP_TRIGGER_EVENT;
                         break;
                 }
             }
@@ -1855,11 +1889,11 @@ signed char game::ViewSpells(
 ) {
     tag_message message;
 
-    m_viewSpell = -1;
+    m_viewSpell = SPELL_NONE;
     short winX[3] = {177, 97, 177};
     short winY[3] = {100, 47, 100};
     if (!spellHero->GetNumSpells(spellType)) {
-        NormalDialog("No spells to cast.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog("No spells to cast.", NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     } else {
         m_viewSpellsCallback = callback;
         m_viewSpellsReadOnly = readOnly;
@@ -1921,17 +1955,17 @@ void game::UpdateSpellWidgets(void) {
     for (i = 0; i < 4; i++) {
         if (m_viewSpellsTop + i > m_spellLast) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.id = i + 6;
+            message.id = i + SPELL_BOOK_ENTRY_FIRST;
             message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
-            message.id = i + 10;
+            message.id = i + SPELL_BOOK_LABEL_FIRST;
             m_viewSpellsWindow->BroadcastMessage(message);
         } else {
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.id = i + 10;
+            message.id = i + SPELL_BOOK_LABEL_FIRST;
             message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
-            message.id = i + 6;
+            message.id = i + SPELL_BOOK_ENTRY_FIRST;
             m_viewSpellsWindow->BroadcastMessage(message);
             if (m_viewSpellsReadOnly) {
                 message.command = WIDGET_COMMAND_SET_FLAGS;
@@ -1948,7 +1982,7 @@ void game::UpdateSpellWidgets(void) {
                 m_viewSpellsHero->m_spellCharges[m_viewSpellsTop + i]
             );
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = i + 10;
+            message.id = i + SPELL_BOOK_LABEL_FIRST;
             message.text = gText;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
@@ -1967,44 +2001,44 @@ short ViewSpellsHandler(tag_message& message) {
                 if (message.command == WIDGET_NOTIFY_RIGHT_CLICK
                     || (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                     switch (message.id) {
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
+                        case SPELL_BOOK_ENTRY_FIRST:
+                        case SPELL_BOOK_ENTRY_FIRST + 1:
+                        case SPELL_BOOK_ENTRY_FIRST + 2:
+                        case SPELL_BOOK_ENTRY_LAST:
                             spell = gpGame->m_viewSpellsHero
-                                        ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
-                            NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                                        ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
+                            NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 2:
-                            NormalDialog(cSpellHelp[0], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        case SPELL_BOOK_PREVIOUS_PAGE:
+                            NormalDialog(cSpellHelp[0], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 3:
-                            NormalDialog(cSpellHelp[1], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        case SPELL_BOOK_NEXT_PAGE:
+                            NormalDialog(cSpellHelp[1], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 4:
-                            NormalDialog(cSpellHelp[2], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        case SPELL_BOOK_ADVENTURE_SPELLS:
+                            NormalDialog(cSpellHelp[2], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
-                        case 5:
-                            NormalDialog(cSpellHelp[3], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        case SPELL_BOOK_COMBAT_SPELLS:
+                            NormalDialog(cSpellHelp[3], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                             break;
                     }
                 } else {
                     switch (message.id) {
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
+                        case SPELL_BOOK_ENTRY_FIRST:
+                        case SPELL_BOOK_ENTRY_FIRST + 1:
+                        case SPELL_BOOK_ENTRY_FIRST + 2:
+                        case SPELL_BOOK_ENTRY_LAST:
                             if (gpGame->m_viewSpellsReadOnly) {
                                 spell = gpGame->m_viewSpellsHero
-                                            ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
-                                NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                                            ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
+                                NormalDialog(gSpellDesc[spell], NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_SPELL, spell, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
                             gpGame->m_viewSpell = gpGame->m_viewSpellsHero
-                                                      ->m_spells[message.id - 6 + gpGame->m_viewSpellsTop];
+                                                      ->m_spells[message.id - SPELL_BOOK_ENTRY_FIRST + gpGame->m_viewSpellsTop];
                             message.command = WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
-                        case 2:
+                        case SPELL_BOOK_PREVIOUS_PAGE:
                             if (gpGame->m_viewSpellsTop == gpGame->m_spellFirst)
                                 break;
                             gpGame->m_viewSpellsTop -= 4;
@@ -2013,7 +2047,7 @@ short ViewSpellsHandler(tag_message& message) {
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
-                        case 3:
+                        case SPELL_BOOK_NEXT_PAGE:
                             if (gpGame->m_viewSpellsTop + 4 <= gpGame->m_spellLast)
                                 gpGame->m_viewSpellsTop += 4;
                             if (gpGame->m_viewSpellsTop < gpGame->m_spellFirst)
@@ -2021,13 +2055,13 @@ short ViewSpellsHandler(tag_message& message) {
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
-                        case 4:
+                        case SPELL_BOOK_ADVENTURE_SPELLS:
                             gpGame->SetupSpellRange(1);
                             gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
                             gpGame->m_viewSpellsWindow->MoveWindow(0, 0);
                             break;
-                        case 5:
+                        case SPELL_BOOK_COMBAT_SPELLS:
                             gpGame->SetupSpellRange(0);
                             gpGame->m_viewSpellsTop = gpGame->m_spellFirst;
                             gpGame->UpdateSpellWidgets();
@@ -2062,16 +2096,16 @@ short ViewSpecialHandler(tag_message& message) {
                     return MESSAGE_DISPATCH_CONSUME;
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
-                    case 2:
+                    case SPELL_BOOK_PREVIOUS_PAGE:
                         strcpy(gText, cSpellHelp[0]);
                         break;
-                    case 3:
+                    case SPELL_BOOK_NEXT_PAGE:
                         strcpy(gText, cSpellHelp[1]);
                         break;
-                    case 4:
+                    case SPELL_BOOK_ADVENTURE_SPELLS:
                         strcpy(gText, cSpellHelp[2]);
                         break;
-                    case 5:
+                    case SPELL_BOOK_COMBAT_SPELLS:
                         strcpy(gText, cSpellHelp[3]);
                         break;
                     case DIALOG_BUTTON_0:
@@ -2162,7 +2196,7 @@ void game::ViewArmy(
         sprintf(fileName, "%s.wlk", iconName);
     else
         sprintf(fileName, "%s.wip", iconName);
-    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, 16, 1);
+    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, ICON_WIDGET_DRAW, 1);
     if (!monsterWidget)
         MemError();
     m_viewArmyWindow->AddWidget(monsterWidget, -1);
@@ -2305,7 +2339,7 @@ short ViewArmyHandler(tag_message& message) {
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
                     case DIALOG_BUTTON_3:
-                        NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+                        NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
                             message.command = message.id =
@@ -2411,7 +2445,7 @@ void game::Overview(void) {
     dayIdY = 64;
     incomeWidgetY = 65;
 
-    gpMouseManager->SetPointer("advmice.mse", 0);
+    gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
     gpWindowManager->FadeScreen(1, 8, 0);
@@ -2434,8 +2468,8 @@ void game::Overview(void) {
     for (i = 0; i < classCountY; i++) {
         while (!totals[nextType])
             nextType++;
-        ovIcon->DrawToBuffer(spacing * i + left, 32, nextType, 0, 0);
-        ovIcon->DrawToBuffer(spacing * i + left + 49, 67, 15, 0, 0);
+        ovIcon->DrawToBuffer(spacing * i + left, 32, nextType, ICON_DRAW_NORMAL, 0);
+        ovIcon->DrawToBuffer(spacing * i + left + 49, 67, 15, ICON_DRAW_NORMAL, 0);
         sprintf(gText, "%d", totals[nextType]);
         bigFont->DrawBoundedString(gText, spacing * i + left + 48, 77, 33, 16, 1, 1);
         nextType++;
@@ -2458,7 +2492,7 @@ void game::Overview(void) {
         for (i = 0; i < numCastles; i++) {
             while (!totals[nextType])
                 nextType++;
-            ovIcon->DrawToBuffer(spacing * i + left, 113, nextType + 4, 0, 0);
+            ovIcon->DrawToBuffer(spacing * i + left, 113, nextType + 4, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", totals[nextType]);
             bigFont->DrawBoundedString(gText, spacing * i + left, 173, 132, 16, 1, 1);
             nextType++;
@@ -2482,7 +2516,7 @@ void game::Overview(void) {
         for (i = 0; i < numTowns; i++) {
             while (!totals[nextType])
                 nextType++;
-            ovIcon->DrawToBuffer(spacing * i + left, 201, nextType + 8, 0, 0);
+            ovIcon->DrawToBuffer(spacing * i + left, 201, nextType + 8, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", totals[nextType]);
             bigFont->DrawBoundedString(gText, spacing * i + left, 261, 132, 16, 1, 1);
             nextType++;
@@ -2506,9 +2540,9 @@ void game::Overview(void) {
         for (i = 0; i < numMines; i++) {
             while (!mineNums[nextType])
                 nextType++;
-            ovIcon->DrawToBuffer(spacing * i + left, 289, (nextType < 2 ? nextType : 2) + 12, 0, 0);
+            ovIcon->DrawToBuffer(spacing * i + left, 289, (nextType < 2 ? nextType : 2) + 12, ICON_DRAW_NORMAL, 0);
             if (nextType >= 2)
-                ovIcon->DrawToBuffer(spacing * i + left, 289, nextType + 14, 0, 0);
+                ovIcon->DrawToBuffer(spacing * i + left, 289, nextType + 14, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", mineNums[nextType]);
             bigFont->DrawBoundedString(gText, spacing * i + left, 355, 72, 16, 1, 1);
             nextType++;
@@ -2626,7 +2660,7 @@ signed char game::GetRandomNumTroops(signed char monsterType) {
 VA(0x004411e3, 0x3d)
 void game::TurnOnAIMusic(void) {
     gpSoundManager->StopAllSamples();
-    gpSoundManager->SwitchAmbientMusic(49);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_AI_TURN);
     gpSoundManager->m_musicReady = 0;
 }
 
@@ -2682,7 +2716,7 @@ void game::NextPlayer(void) {
         currentHero->m_remainingMobility = currentHero->m_mobility;
     }
     if (!gbThisNetHumanPlayer[giCurPlayer]) {
-        gpMouseManager->SetPointer(1);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_WAIT);
         gpAdvManager->HideRoute(1, 0, 1);
         gpAdvManager->CheckDimNextHeroBut();
         TurnOnAIMusic();
@@ -2745,9 +2779,9 @@ int game::ComputeDailyGold(int player) {
                 gold += 1000;
         }
     }
-    gold += m_players[player].NumOfGivenArtifact(26) * 1000;
-    gold += m_players[player].NumOfGivenArtifact(27) * 750;
-    gold += m_players[player].NumOfGivenArtifact(28) * 500;
+    gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_SACK_OF_GOLD) * 1000;
+    gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_BAG_OF_GOLD) * 750;
+    gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_PURSE_OF_GOLD) * 500;
     if (!gbHumanPlayer[player]) {
         if (gpGame->m_players[player].m_difficulty == 1)
             gold = gold * 0.75;
@@ -2782,13 +2816,13 @@ void game::PerDay(void) {
         if (m_mines[i].owner != -1) {
             resource = m_mines[i].type;
             production = 0;
-            if (resource == 2)
+            if (resource == RESOURCE_ORE)
                 production = 2;
-            else if (resource == 0)
+            else if (resource == RESOURCE_WOOD)
                 production = 2;
-            else if (resource != 6)
+            else if (resource != RESOURCE_GOLD)
                 production = 1;
-            if (resource != 6)
+            if (resource != RESOURCE_GOLD)
                 m_players[m_mines[i].owner].m_resources[resource] += production;
         }
     }
@@ -2874,38 +2908,38 @@ void game::PerWeek(void) {
     for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             switch (m_map[posX][posY].m_triggerType) {
-                case 0x98:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) != 0xff)
                         m_map[posX][posY].m_objectMetadata = 2;
                     break;
-                case 0xad:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_WINDMILL:
                     m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
-                case 0x8d:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
                         m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
-                case 0x8e:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
                         m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
-                case 0x8f:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
                         m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
-                case 0x90:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
                         m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
-                case 0x91:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
                         m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
-                case 0xa7:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
                         m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(1, 3);
                     break;
-                case 0xaa:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
                     if (static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) < 100)
                         m_map[posX][posY].m_objectMetadata = static_cast<unsigned char>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
@@ -3040,7 +3074,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
             m_castleRecs[townNum].m_buildings = 0;
     }
     if (isCastle) {
-        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_FIRST));
+        m_castleRecs[townNum].m_buildings |= ((1 << BUILDING_SLOT_CASTLE) | (1 << BUILDING_SLOT_DWELLING_1));
         m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
         if (m_castleRecs[townNum].m_buildings & (1 << BUILDING_SLOT_TENT))
             m_castleRecs[townNum].m_buildings -= (1 << BUILDING_SLOT_TENT);
@@ -3085,7 +3119,7 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
         }
     }
     if (!m_castleRecs[townId].m_customized) {
-        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_FIRST);
+        m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_1);
         m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[townType][0]].growth;
         if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
             dwellingCount++;
@@ -3136,22 +3170,22 @@ void game::RandomizeMine(signed char x, signed char y) {
     terrain = giGroundToTerrain[m_map[x][y].m_tileIndex];
     for (tries = 0; tries < 30; tries++) {
         switch (terrain) {
-            case 1:
-            case 6:
+            case TERRAIN_GRASS:
+            case TERRAIN_DIRT:
                 type = Random(1, 6);
-                if (type == 1)
-                    type = 0;
+                if (type == RESOURCE_MERCURY)
+                    type = RESOURCE_WOOD;
                 break;
-            case 2:
+            case TERRAIN_SNOW:
                 type = Random(2, 6);
                 break;
-            case 3:
+            case TERRAIN_SWAMP:
                 type = Random(0, 6);
                 break;
-            case 4:
-                type = 1;
+            case TERRAIN_LAVA:
+                type = RESOURCE_MERCURY;
                 break;
-            case 5:
+            case TERRAIN_DESERT:
             default:
                 type = Random(1, 6);
                 break;
@@ -3161,18 +3195,18 @@ void game::RandomizeMine(signed char x, signed char y) {
     }
     giMineTypeCount[type]++;
     switch (type) {
-        case 0:
+        case RESOURCE_WOOD:
             upFrame = 5;
             break;
-        case 1:
+        case RESOURCE_MERCURY:
             upFrame = 0x19;
             break;
         default:
             switch (terrain) {
-                case 1:
+                case TERRAIN_GRASS:
                     upFrame = 0xf;
                     break;
-                case 2:
+                case TERRAIN_SNOW:
                     upFrame = 0x13;
                     break;
                 default:
@@ -3182,15 +3216,15 @@ void game::RandomizeMine(signed char x, signed char y) {
             break;
     }
     switch (type) {
-        case 0:
+        case RESOURCE_WOOD:
             objFrame = 7;
             break;
-        case 1:
+        case RESOURCE_MERCURY:
             switch (terrain) {
-                case 3:
+                case TERRAIN_SWAMP:
                     objFrame = 0x2b;
                     break;
-                case 4:
+                case TERRAIN_LAVA:
                     objFrame = 0x23;
                     break;
                 default:
@@ -3200,16 +3234,16 @@ void game::RandomizeMine(signed char x, signed char y) {
             break;
         default:
             switch (terrain) {
-                case 1:
+                case TERRAIN_GRASS:
                     objFrame = 0x11;
                     break;
-                case 2:
+                case TERRAIN_SNOW:
                     objFrame = 0x15;
                     break;
-                case 3:
+                case TERRAIN_SWAMP:
                     objFrame = 0x17;
                     break;
-                case 5:
+                case TERRAIN_DESERT:
                     objFrame = 0xd;
                     break;
                 default:
@@ -3222,22 +3256,22 @@ void game::RandomizeMine(signed char x, signed char y) {
     m_map[x + 1][y].m_objectIndex = objFrame + 1;
     m_map[x][y - 1].m_overlayIndex = upFrame;
     m_map[x + 1][y - 1].m_overlayIndex = upFrame + 1;
-    if (type == 1) {
+    if (type == RESOURCE_MERCURY) {
         m_map[x + 1][y].m_flags |= 4;
-        bits = 1;
-    } else if (type == 0) {
-        bits = 0x20;
+        bits = MAP_OBJECT_ALCHEMIST_LAB;
+    } else if (type == RESOURCE_WOOD) {
+        bits = MAP_OBJECT_SAWMILL;
     } else {
         m_map[x + 1][y].m_flags |= 0x10;
         m_map[x + 1][y].m_objectTileset |= 0xb0;
         m_map[x + 1][y].m_extraFrame = type - 2;
-        bits = 0x19;
+        bits = MAP_OBJECT_MINE;
     }
     mineIdx = GetMineId(x, y);
     for (k = 0; k < 2; k++) {
         for (j = 0; j < 2; j++) {
-            if ((m_map[x + j][y - k].m_triggerType & 0x7f) > 0
-                && (m_map[x + j][y - k].m_triggerType & 0x7f) <= 0x30) {
+            if ((m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
+                && (m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
                 m_map[x + j][y - k].m_secondaryTrigger |= bits;
             } else {
                 m_map[x + j][y - k].m_objectMetadata = mineIdx;
@@ -3245,7 +3279,7 @@ void game::RandomizeMine(signed char x, signed char y) {
             }
         }
     }
-    m_map[x][y].m_triggerType |= 0x80;
+    m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
     m_mines[mineIdx].type = type;
 }
 
@@ -3256,7 +3290,7 @@ signed char game::GetRandomArtifactId(void) {
     if (freeSlot == -1)
         return -1;
     signed char artifact = RandomScan(m_randomArtifacts, 4, 33, 37);
-    if (artifact == -1)
+    if (artifact == ARTIFACT_NONE)
         return freeSlot;
     else
         return artifact;
@@ -3333,51 +3367,51 @@ void game::ProcessRandomObjects(int castlesOnly) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
-            if (!castlesOnly || cellPtr->m_triggerType == 0xc1) {
+            if (!castlesOnly || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)) {
                 switch (cellPtr->m_triggerType) {
-                    case 0xc0:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN:
                         RandomizeTown(x, y, 0);
                         break;
-                    case 0xc1:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE:
                         RandomizeTown(x, y, 1);
                         break;
-                    case 0xbf:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER:
                         lowFV = 80;
                         highFV = 2000;
                         goto pickMonster;
-                    case 0xc3:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK:
                         lowFV = 0;
                         highFV = 400;
                         goto pickMonster;
-                    case 0xc4:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM:
                         lowFV = 80;
                         highFV = 1000;
                         goto pickMonster;
-                    case 0xc5:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG:
                         lowFV = 500;
                         highFV = 2500;
                         goto pickMonster;
-                    case 0xc6:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG:
                         lowFV = 2000;
                         highFV = 100000;
                         goto pickMonster;
                     pickMonster:
-                        cellPtr->m_triggerType = 0x9a;
+                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
                         cellPtr->m_objectIndex = Random(0, 27);
                         while (gMonsterDatabase[cellPtr->m_objectIndex].fightValue <= lowFV
                                || gMonsterDatabase[cellPtr->m_objectIndex].fightValue >= highFV)
                             cellPtr->m_objectIndex = Random(0, 27);
                         break;
-                    case 0xbe:
-                        cellPtr->m_triggerType = 0x9d;
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_RESOURCE:
+                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE);
                         cellPtr->m_objectIndex = Random(61, 67);
                         break;
-                    case 0xbd:
-                        cellPtr->m_triggerType = 0xb0;
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_ARTIFACT:
+                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT);
                         cellPtr->m_objectIndex = GetRandomArtifactId();
                         m_randomArtifacts[cellPtr->m_objectIndex] = 36;
                         break;
-                    case 0xc2:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE:
                         RandomizeMine(x, y);
                         break;
                 }
@@ -3572,7 +3606,7 @@ signed char advManager::FindAdjacentMonster(
              ++s_adjacentMonsterX) {
             for (s_adjacentMonsterY = originY - 1; s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
@@ -3598,7 +3632,7 @@ signed char advManager::FindAdjacentMonster(
             for (s_adjacentMonsterY = s_adjacentMonsterMinY;
                  s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
@@ -3709,7 +3743,7 @@ void game::ShowHeroesLogo(void) {
 VA(0x00444d66, 0x155)
 void game::WaitForPlayer(char* text, int player) {
     if (gbBlackoutPlayer && giNumHumanPlayers > 1 && !gbRemoteOn) {
-        gpMouseManager->SetPointer(0);
+        gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         gbAllBlack = 1;
         giBottomViewOverrideEndTime = KBTickCount() + 9999999;
         if (gbThisNetHumanPlayer[giCurPlayer])
@@ -3726,8 +3760,8 @@ void game::WaitForPlayer(char* text, int player) {
         ShowHeroesLogo();
         gbAllBlack = 0;
         gpMouseManager->ReallyShowPointer();
-        NormalDialog(text, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[player].m_color, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-        gpSoundManager->SwitchAmbientMusic(-1);
+        NormalDialog(text, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[player].m_color, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     }
 }
 
@@ -3761,14 +3795,14 @@ void game::ProcessMapExtra(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
             switch (cellPtr->m_triggerType) {
-                case 0xa8:
-                case 0xc0:
-                case 0xc1:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+                case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN:
+                case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE:
                     townNum = GetTownId(x, y);
                     m_castleRecs[townNum].m_extraIndex = cellPtr->m_objectMetadata;
                     cellPtr->m_objectMetadata = townNum;
                     break;
-                case 0xc7:
+                case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_HERO:
                     m_noMapHeroes = 0;
                     break;
             }
@@ -3847,7 +3881,7 @@ void game::ProcessOnMapHeroes(void) {
     for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
-            if ((cell->m_triggerType & 0x7f) == 0x47) {
+            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x47) {
                 extra = static_cast<mapHeroExtra*>(ppMapExtra[static_cast<unsigned char>(cell->m_objectMetadata)]);
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
@@ -3855,7 +3889,7 @@ void game::ProcessOnMapHeroes(void) {
                     if (theHero->m_army.m_creatureCounts[k] > 0)
                         theHero->m_army.m_creatureTypes[k] = extra->troopTypes[k];
                     else
-                        theHero->m_army.m_creatureTypes[k] = -1;
+                        theHero->m_army.m_creatureTypes[k] = CREATURE_NONE;
                 }
                 for (j = 0; j < 4; j++) {
                     if (extra->artifacts[j] >= 0)
@@ -3876,7 +3910,7 @@ void game::ProcessOnMapHeroes(void) {
                 m_players[theHero->m_owner].m_heroCount++;
                 if (mapY > 0) {
                     north = &m_map[mapX][mapY - 1];
-                    if (north->m_triggerType == 0xa8) {
+                    if (north->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         theHero->m_y--;
                         townId = GetTownId(mapX, mapY - 1);
                         town = GetTown(townId);
@@ -3888,7 +3922,7 @@ void game::ProcessOnMapHeroes(void) {
                 cell->m_overlayTileset = 0;
                 cell->m_overlayIndex = 0xff;
                 cell->m_objectMetadata = 0;
-                cell->m_triggerType = 0;
+                cell->m_triggerType = MAP_OBJECT_NONE;
                 SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gHeroScoutRadius[theHero->m_heroClass]);
             }
         }
@@ -3923,31 +3957,31 @@ void game::CheckHeroConsistency(void) {
     for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
-            if (cell->m_triggerType == 0xbd) {
+            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                 if (static_cast<unsigned char>(cell->m_objectMetadata) >= 0 && static_cast<unsigned char>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
                     theHero = GetHero(cell->m_objectMetadata);
                     if (theHero->m_owner < 0 || theHero->m_owner > 3) {
-                        if (theHero->m_locationType == 0xa8) {
+                        if (theHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                             town = gpGame->GetTown(theHero->m_occupiedTown);
                             town->m_occupyingHeroId = -1;
                         }
                         RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, 0, 1);
                     }
                 } else {
-                    cell->m_triggerType = 0;
+                    cell->m_triggerType = MAP_OBJECT_NONE;
                 }
             }
         }
     }
     for (i = 0; i < GAME_HERO_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_heroRecs[i].m_army.m_creatureTypes[j] == -1 || m_heroRecs[i].m_army.m_creatureCounts[j] < 0)
+            if (m_heroRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE || m_heroRecs[i].m_army.m_creatureCounts[j] < 0)
                 m_heroRecs[i].m_army.m_creatureCounts[j] = 0;
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_castleRecs[i].m_army.m_creatureTypes[j] == -1 || m_castleRecs[i].m_army.m_creatureCounts[j] < 0)
+            if (m_castleRecs[i].m_army.m_creatureTypes[j] == CREATURE_NONE || m_castleRecs[i].m_army.m_creatureCounts[j] < 0)
                 m_castleRecs[i].m_army.m_creatureCounts[j] = 0;
         }
     }
@@ -3992,7 +4026,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     prevReady = gpSoundManager->m_musicReady;
     gpSoundManager->m_musicReady = 1;
     oldTrack = gpSoundManager->m_currentTrack;
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpSoundManager->m_musicReady = prevReady;
 
     LogStr("Transmit Game Start");
@@ -4134,7 +4168,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     prevReady = gpSoundManager->m_musicReady;
     oldTrack = gpSoundManager->m_currentTrack;
     gpSoundManager->m_musicReady = 1;
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpSoundManager->m_musicReady = prevReady;
     while (!gbHeartbeatSeen) {
         PollSound();
@@ -4153,7 +4187,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         CheckDoMain(0, 1);
         if (lastPacketTime + 20000 < KBTickCount()) {
-            NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
             else
@@ -4245,7 +4279,7 @@ void game::DoNewTurn(void) {
             );
             gText[0] -= 32;
         }
-        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[giCurPlayer].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_CREST, gpGame->m_players[giCurPlayer].Color(), NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
     }
     if (gpCurPlayer->m_heroCount > 0)
         gpAdvManager->SetHeroContext(gpCurPlayer->NextHero(0), 0);
@@ -4278,8 +4312,8 @@ void game::DoNewTurn(void) {
                 }
             }
             gpSoundManager->SwitchAmbientMusic(track);
-            gpMouseManager->SetPointer(0);
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
+            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
         }
     }
@@ -4478,7 +4512,7 @@ void game::ShowScenInfo(void) {
     // Retail reserves one unused slot between the seat counters.
     int pad;
 
-    gpMouseManager->SetPointer(0);
+    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
     scenWindow = new heroWindow(159, 14, "sceninfo.bin");
     if (!scenWindow)
         MemError();

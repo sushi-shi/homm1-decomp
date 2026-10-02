@@ -42,6 +42,37 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_ENVIRONMENT_SOUND_COUNT = 22,
     ADVMGR_CURSOR_SAMPLE_COUNT = 7
 H1_ENUM_CONST_END(AdventureManagerStorageConstant)
+
+// Adventure-window widget ids handled by advManager::Main,
+// ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
+// the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand
+// and AdventureLocatorConstant use the same ids; HoMM2 adds buttons 7, 8).
+H1_ENUM_BEGIN(AdventureControl)
+    ADVENTURE_CONTROL_NEXT_HERO = 1,
+    ADVENTURE_CONTROL_CONTINUE_ROUTE = 2,
+    ADVENTURE_CONTROL_OVERVIEW = 3,
+    ADVENTURE_CONTROL_END_TURN = 4,
+    ADVENTURE_CONTROL_ADVENTURE_OPTIONS = 5,
+    ADVENTURE_CONTROL_GAME_OPTIONS = 6,
+    ADVENTURE_CONTROL_RADAR = 9,
+    ADVENTURE_CONTROL_MAP_VIEW = 10,
+    ADVENTURE_CONTROL_TOWN_LOCATOR_1 = 16,
+    ADVENTURE_CONTROL_TOWN_LOCATOR_2 = 17,
+    ADVENTURE_CONTROL_TOWN_LOCATOR_3 = 18,
+    ADVENTURE_CONTROL_TOWN_LOCATOR_4 = 19,
+    ADVENTURE_CONTROL_HERO_PAGE_PREVIOUS = 20,
+    ADVENTURE_CONTROL_HERO_PAGE_NEXT = 21,
+    ADVENTURE_CONTROL_HERO_SCROLL = 22,
+    ADVENTURE_CONTROL_TOWN_PAGE_PREVIOUS = 23,
+    ADVENTURE_CONTROL_TOWN_PAGE_NEXT = 24,
+    ADVENTURE_CONTROL_TOWN_SCROLL = 25,
+    ADVENTURE_CONTROL_HERO_KNOB = 26,
+    ADVENTURE_CONTROL_TOWN_KNOB = 27,
+    ADVENTURE_CONTROL_HERO_LOCATOR_1 = 105,
+    ADVENTURE_CONTROL_HERO_LOCATOR_2 = 112,
+    ADVENTURE_CONTROL_HERO_LOCATOR_3 = 119,
+    ADVENTURE_CONTROL_HERO_LOCATOR_4 = 126
+H1_ENUM_END(AdventureControl)
  // clang-format on
 
  struct adventureSoundCell {
@@ -241,7 +272,8 @@ public:
     void EventSound(short, short);
     void EventWindow(short, H1_ENUM_PARAM(NormalDialogType, int), char*,
                      H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                     H1_ENUM_PARAM(NormalDialogResourceType, int), int, int);
+                     H1_ENUM_PARAM(NormalDialogResourceType, int), int,
+                     H1_ENUM_PARAM(NormalDialogOrText, int));
     int GiveRandomArtifact(class hero*);
     int GiveExperience(class hero*, int, signed char);
     // HoMM1 retail: byte resource, word amount (ret 0xc).

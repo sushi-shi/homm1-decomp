@@ -29,6 +29,19 @@ H1_ENUM_CONST_BEGIN(GameStorageConstant)
     GAME_MINE_COUNT = 36,
     GAME_BOAT_COUNT = 32
 H1_ENUM_CONST_END(GameStorageConstant)
+
+// spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
+// and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
+// 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).
+H1_ENUM_BEGIN(SpellBookControl)
+    SPELL_BOOK_PREVIOUS_PAGE = 2,
+    SPELL_BOOK_NEXT_PAGE = 3,
+    SPELL_BOOK_ADVENTURE_SPELLS = 4,
+    SPELL_BOOK_COMBAT_SPELLS = 5,
+    SPELL_BOOK_ENTRY_FIRST = 6,
+    SPELL_BOOK_ENTRY_LAST = 9,
+    SPELL_BOOK_LABEL_FIRST = 10
+H1_ENUM_END(SpellBookControl)
 // clang-format on
 
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the

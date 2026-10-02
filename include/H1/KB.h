@@ -2,8 +2,8 @@
 #define HOMM1_H1_KB_H
 
 #include <Domains.h>
-#include <SOURCE/FINDPATH.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/FINDPATH.h>
 #include <SOURCE/terrainTypes.h>
 
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
@@ -18,7 +18,15 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_WELL = 4,
     BUILDING_SLOT_TENT = 5,
     BUILDING_SLOT_CASTLE = 6,
-    BUILDING_SLOT_DWELLING_FIRST = 7
+    BUILDING_SLOT_DWELLING_FIRST = 7,
+    BUILDING_SLOT_DWELLING_1 = 7,
+    BUILDING_SLOT_DWELLING_2 = 8,
+    BUILDING_SLOT_DWELLING_3 = 9,
+    BUILDING_SLOT_DWELLING_4 = 10,
+    BUILDING_SLOT_DWELLING_5 = 11,
+    BUILDING_SLOT_DWELLING_6 = 12,
+    BUILDING_SLOT_DWELLING_LAST = 12,
+    BUILDING_SLOT_COUNT = 13
 H1_ENUM_END(BuildingSlotType)
 
 class soundManager;
@@ -120,8 +128,6 @@ extern class icon* gBuyBuildIcons;
 extern class icon* gSystemIcons;
 extern class font* bigFont;
 extern class font* smallFont;
-// Stale alias of iMaxMapExtra (0x4c5188): unreferenced, kept so later symbol handles stay put.
-extern int gbMapExtraCleared;
 extern short giScoreMon[][2];
 extern short giScoreCampaignMon[][2];
 // Combat effect icon files by effect (0x004910d8) and the one loaded effect
@@ -157,8 +163,6 @@ void GOut(char*);
 extern signed char bEarlySetupDone;
 extern int giShowIntro;
 extern signed char giScreenScroll;
-// Stale alias of giLimitPlayer (0x4c5174): unreferenced, kept so later symbol handles stay put.
-extern signed char gbCheatMenus;
 extern int gbBlackoutPlayer;
 extern char gMapName[];
 extern char gFullMapName[];
@@ -216,13 +220,10 @@ extern short gHeroGoldCost;
 void PopNetBox(char *);
 void NormalDialog(char*, H1_ENUM_PARAM(NormalDialogType, int), int, int,
                   H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                  H1_ENUM_PARAM(NormalDialogResourceType, int), int, int);
+                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
+                  H1_ENUM_PARAM(NormalDialogOrText, int));
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
-// Stale alias of cTownObjectNames (0x491350): unreferenced, kept so later symbol handles stay put.
-extern char* cNeutralObjectName[];
-// Stale alias of cTownObjectNames + 9 (0x491374): unreferenced, kept so later symbol handles stay put.
-extern char* cTownObjectSuffix[];
 extern char* gSpellDesc[];
 extern char* gSpellNames[];
 // QuickInfo's name tables.

@@ -165,7 +165,7 @@ short combatManager::Open(short priority)
     m_messageTypeMask = 0x32f;
     m_combatWindowOpen = 0;
     m_savedBorder = NULL;
-    gpSoundManager->PlayAmbientMusic(-1, 0, -1);
+    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
     m_backgroundBuffer = new bitmap(0, 640, 460);
     m_backgroundDrawn = 0;
     sample = NULL_SAMPLE2;
@@ -180,7 +180,7 @@ short combatManager::Open(short priority)
     m_redrawExtent = 0;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
-    gpMouseManager->SetPointer("cmbtmous.mse", 6);
+    gpMouseManager->SetPointer("cmbtmous.mse", COMBAT_POINTER_DEFAULT);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
         MemError();
@@ -213,10 +213,10 @@ short combatManager::Open(short priority)
     ResetMouse();
     m_gridSelectionDisabled = 0;
     WaitEndSample(sample, -1);
-    musicList[0] = 0x29;
-    musicList[1] = 0x2a;
-    musicList[2] = 0x28;
-    musicList[3] = 0x35;
+    musicList[0] = MUSIC_TRACK_BATTLE_2;
+    musicList[1] = MUSIC_TRACK_BATTLE_3;
+    musicList[2] = MUSIC_TRACK_BATTLE_1;
+    musicList[3] = MUSIC_TRACK_BATTLE_4;
     song = musicList[SRandom(0, 3)];
     gpSoundManager->SwitchAmbientMusic(song);
     m_messageMask = 0x200;
@@ -251,7 +251,7 @@ void combatManager::Close(void)
     int i;
     int survivor;
 
-    gpSoundManager->SwitchAmbientMusic(-1);
+    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     DrawCombatBorder();
     gbLimitedCombatUpdatePalette = 0;
     gpWindowManager->FadeScreen(1, 8, NULL);
@@ -371,7 +371,7 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[1]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[1]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[1][armyCount].m_hex = i * 9 + 1;
             m_armies[1][armyCount].m_stats.attributes &= 0x3f;
             m_hexCells[i * 9 + 1].m_occupantSide = 1;
@@ -387,7 +387,7 @@ void combatManager::GenerateMap(void)
     }
     armyCount = 0;
     for (i = 0; i < 5; i++) {
-        if (m_armyGroups[0]->m_creatureTypes[i] != -1) {
+        if (m_armyGroups[0]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[0][armyCount].m_hex = i * 9 + 7;
             m_armies[0][armyCount].m_stats.attributes &= 0x3f;
             m_hexCells[i * 9 + 7].m_occupantSide = 0;
@@ -875,7 +875,7 @@ void combatManager::CatAttack(signed char side)
                     giMaxExtentY = 459;
             }
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                                 giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
@@ -915,7 +915,7 @@ void combatManager::CatAttack(signed char side)
                     giMaxExtentY = 459;
             }
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                                 giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
@@ -942,7 +942,7 @@ void combatManager::CatAttack(signed char side)
             if (giMaxExtentY > 459)
                 giMaxExtentY = 459;
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
             gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                                 giMaxExtentY - giMinExtentY + 1);
             x = dx + x;
@@ -1164,7 +1164,7 @@ void combatManager::KeepAttack(void)
         maxY = height + yRun;
         behind->DrawToBuffer(lastX, lastY);
         behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
-        m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, 0, 0);
+        m_combatIcons[7]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, 0);
         DelayTil(glTimers);
         gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
         glTimers[0] = KBTickCount() + 10;

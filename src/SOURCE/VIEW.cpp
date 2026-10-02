@@ -14,6 +14,38 @@
 
 #include <stdio.h>
 
+// clang-format off
+// vgenwin.bin widget ids (Buka 2.1 VIEW.cpp ViewGeneralControl): name,
+// portrait, colour and stats boxes, the Cast Spell / Retreat / Surrender
+// buttons ViewGeneral disables and HandleViewGeneral returns, and the
+// frame widgets the retail block names without using.
+H1_ENUM_BEGIN(ViewGeneralControl)
+    GENERAL_CONTROL_NONE = 0,
+    GENERAL_NAME_WIDGET = 1,
+    GENERAL_PORTRAIT_WIDGET = 2,
+    GENERAL_COLOR_WIDGET = 3,
+    GENERAL_STATS_WIDGET = 4,
+    GENERAL_CONTROL_SEVEN = 7,
+    GENERAL_CONTROL_EIGHT = 8,
+    GENERAL_CONTROL_NINE = 9,
+    GENERAL_CAST_SPELL = 10,
+    GENERAL_RETREAT = 11,
+    GENERAL_SURRENDER = 12,
+    GENERAL_CONTROL_THIRTEEN = 13,
+    GENERAL_CONTROL_FOURTEEN = 14
+H1_ENUM_END(ViewGeneralControl)
+
+// HandleViewGeneral's hover line: the cViewGeneralHelp row (Buka
+// ViewGeneralHoverHelp).
+H1_ENUM_BEGIN(ViewGeneralHoverHelp)
+    GENERAL_HOVER_HELP_CAST_SPELL = 1,
+    GENERAL_HOVER_HELP_RETREAT = 2,
+    GENERAL_HOVER_HELP_SURRENDER = 3,
+    GENERAL_HOVER_HELP_CLOSE = 4,
+    GENERAL_HOVER_HELP_HERO = 5
+H1_ENUM_END(ViewGeneralHoverHelp)
+// clang-format on
+
 // Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.
@@ -44,20 +76,20 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         return 0;
     // vgenwin.bin widget ids: retail stores the whole block (as Buka does)
     // though nothing reads it; their slots and the unused spare fix the frame.
-    nameCtrl = 1;
-    pictureCtrl = 2;
-    colorControl = 3;
-    statBoxId = 4;
-    borderId = 0;
-    captionCtrl = 1;
-    cornerCtrl = 7;
-    barId = 8;
-    edgeCtrl = 9;
-    castSpellControl = 10;
-    retreatId = 11;
-    surrenderBtn = 12;
-    baseCtrl = 13;
-    frameWidgetId = 14;
+    nameCtrl = GENERAL_NAME_WIDGET;
+    pictureCtrl = GENERAL_PORTRAIT_WIDGET;
+    colorControl = GENERAL_COLOR_WIDGET;
+    statBoxId = GENERAL_STATS_WIDGET;
+    borderId = GENERAL_CONTROL_NONE;
+    captionCtrl = GENERAL_NAME_WIDGET;
+    cornerCtrl = GENERAL_CONTROL_SEVEN;
+    barId = GENERAL_CONTROL_EIGHT;
+    edgeCtrl = GENERAL_CONTROL_NINE;
+    castSpellControl = GENERAL_CAST_SPELL;
+    retreatId = GENERAL_RETREAT;
+    surrenderBtn = GENERAL_SURRENDER;
+    baseCtrl = GENERAL_CONTROL_THIRTEEN;
+    frameWidgetId = GENERAL_CONTROL_FOURTEEN;
     giCurGeneral = side;
     message.type = MESSAGE_WIDGET;
     wnd = new heroWindow(195, 60, "vgenwin.bin");
@@ -65,16 +97,16 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         MemError();
     sprintf(gText, "port%04d.icn", m_heroes[side]->m_portrait);
     message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = 2;
+    message.id = GENERAL_PORTRAIT_WIDGET;
     message.text = gText;
     wnd->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = 3;
+    message.id = GENERAL_COLOR_WIDGET;
     message.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
     wnd->BroadcastMessage(message);
     sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = GENERAL_NAME_WIDGET;
     message.text = gText;
     wnd->BroadcastMessage(message);
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
@@ -87,13 +119,13 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
             cViewGeneralLabels[4], gMoraleText[morale + 3],
             cViewGeneralLabels[5], gLuckText[iLuck + 3]);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 4;
+    message.id = GENERAL_STATS_WIDGET;
     message.text = gText;
     wnd->BroadcastMessage(message);
     if (m_heroes[side] == NULL || allowActions == 0 || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK)
         || m_heroCastSpell[side] != 0 || m_currentSide != giCurGeneral) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = 10;
+        message.id = GENERAL_CAST_SPELL;
         message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
@@ -102,7 +134,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     }
     if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || m_currentSide != giCurGeneral) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = 12;
+        message.id = GENERAL_SURRENDER;
         message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
@@ -113,7 +145,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
         || (giCurGeneral == 0 && m_combatTowns[0] != NULL)
         || m_sideRetreated[0] != 0 || m_sideRetreated[1] != 0) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = 11;
+        message.id = GENERAL_RETREAT;
         message.value = WIDGET_FLAG_ENABLED;
         wnd->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
@@ -158,28 +190,28 @@ short HandleViewGeneral(tag_message& message)
     short retreatId;
     short baseCtrl;
 
-    nameCtrl = 1;
-    pictureCtrl = 2;
-    colorControl = 3;
-    statBoxId = 4;
-    borderId = 0;
-    captionCtrl = 1;
-    cornerCtrl = 7;
-    barId = 8;
-    edgeCtrl = 9;
-    castSpellControl = 10;
-    retreatId = 11;
-    surrenderBtn = 12;
-    baseCtrl = 13;
-    frameWidgetId = 14;
+    nameCtrl = GENERAL_NAME_WIDGET;
+    pictureCtrl = GENERAL_PORTRAIT_WIDGET;
+    colorControl = GENERAL_COLOR_WIDGET;
+    statBoxId = GENERAL_STATS_WIDGET;
+    borderId = GENERAL_CONTROL_NONE;
+    captionCtrl = GENERAL_NAME_WIDGET;
+    cornerCtrl = GENERAL_CONTROL_SEVEN;
+    barId = GENERAL_CONTROL_EIGHT;
+    edgeCtrl = GENERAL_CONTROL_NINE;
+    castSpellControl = GENERAL_CAST_SPELL;
+    retreatId = GENERAL_RETREAT;
+    surrenderBtn = GENERAL_SURRENDER;
+    baseCtrl = GENERAL_CONTROL_THIRTEEN;
+    frameWidgetId = GENERAL_CONTROL_FOURTEEN;
     retVal = 0;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
         case WIDGET_NOTIFY_DESELECT:
             switch (message.id) {
-            case 10:
-            case 11:
-            case 12:
+            case GENERAL_CAST_SPELL:
+            case GENERAL_RETREAT:
+            case GENERAL_SURRENDER:
             case DIALOG_BUTTON_0:
                 if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                     gpWindowManager->m_dialogResult = message.id;
@@ -193,20 +225,20 @@ short HandleViewGeneral(tag_message& message)
                 return MESSAGE_DISPATCH_CONSUME;
             gpWindowManager->m_lastHoverId = message.id;
             switch (message.id) {
-            case 10:
-                hintIndex = 1;
+            case GENERAL_CAST_SPELL:
+                hintIndex = GENERAL_HOVER_HELP_CAST_SPELL;
                 break;
-            case 11:
-                hintIndex = 2;
+            case GENERAL_RETREAT:
+                hintIndex = GENERAL_HOVER_HELP_RETREAT;
                 break;
-            case 12:
-                hintIndex = 3;
+            case GENERAL_SURRENDER:
+                hintIndex = GENERAL_HOVER_HELP_SURRENDER;
                 break;
             case DIALOG_BUTTON_0:
-                hintIndex = 4;
+                hintIndex = GENERAL_HOVER_HELP_CLOSE;
                 break;
             default:
-                hintIndex = 5;
+                hintIndex = GENERAL_HOVER_HELP_HERO;
                 break;
             }
             gpCombatManager->CombatMessage(cViewGeneralHelp[hintIndex], 1);

@@ -34,7 +34,7 @@ army::army(void) {
     giSpellEffectFrame = 0;
     m_targetSide = -1;
     m_targetIndex = -1;
-    m_attackDirection = -1;
+    m_attackDirection = COMBAT_DIRECTION_INVALID;
     m_unknown04 = 0;
     m_moveTargetHex = 0;
 }
@@ -67,7 +67,7 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     m_creatureType = type;
     memcpy(&m_stats, &gMonsterDatabase[type].stats, sizeof(tag_monsterStats));
     m_unknown29 = 6;
-    m_spellEffect = -1;
+    m_spellEffect = SPELL_NONE;
     m_spellEndCondition = -1;
     commander = gpCombatManager->m_heroes[side];
     if (commander) {
@@ -181,13 +181,13 @@ void army::DrawToBuffer(short x, short y) {
     switch (m_animationSequence) {
         case 0:
             switch (m_creatureType) {
-                case 22:
+                case CREATURE_HYDRA:
                     if (m_drawShadow)
                         m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, flip);
                     break;
-                case 11:
-                case 17:
-                case 23:
+                case CREATURE_CYCLOPS:
+                case CREATURE_PHOENIX:
+                case CREATURE_DRAGON:
                     if (m_drawShadow)
                         m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, flip);
                     break;
@@ -196,19 +196,19 @@ void army::DrawToBuffer(short x, short y) {
                         m_standIcon->DimToBuffer(x, y, m_animationFrame + 9, m_facing, flip);
                     break;
             }
-            if (m_animationFrame > 4 && m_creatureType != 22)
+            if (m_animationFrame > 4 && m_creatureType != CREATURE_HYDRA)
                 m_standIcon->DrawToBuffer(x, y, 5, m_facing, flip);
             m_standIcon->DrawToBuffer(x, y, m_animationFrame, m_facing, flip);
             if (m_hex == gpCombatManager->m_limitCreatureHex && gpCombatManager->m_limitCreature == 1) {
                 m_standIcon->FillToBuffer(x, y, 0, 0xe4, m_facing, flip);
                 outlined = 1;
             }
-            if (m_spellEffect != -1) {
+            if (m_spellEffect != SPELL_NONE) {
                 switch (m_spellEffect) {
-                    case 5:
-                    case 8:
-                    case 9:
-                    case 12:
+                    case SPELL_HASTE:
+                    case SPELL_BLESS:
+                    case SPELL_PROTECTION:
+                    case SPELL_ANTI_MAGIC:
                         outlineColor = 0xf7;
                         break;
                     default:
@@ -226,7 +226,7 @@ void army::DrawToBuffer(short x, short y) {
                 } else if (m_facing == 1) {
                     iconX -= 39;
                 }
-                gpCombatManager->m_combatIcons[8]->DrawToBuffer(iconX, y - 40, m_spellEffect, 0, 0);
+                gpCombatManager->m_combatIcons[8]->DrawToBuffer(iconX, y - 40, m_spellEffect, ICON_DRAW_NORMAL, 0);
             }
             if (m_animationFrame == 1 && gpCombatManager->m_showArmyQuantities) {
                 if (m_stats.attributes & 1) {
@@ -240,7 +240,7 @@ void army::DrawToBuffer(short x, short y) {
                     else
                         qtyX = x - 39;
                 }
-                gpCombatManager->m_combatIcons[1]->DrawToBuffer(qtyX, y - 11, 5, 0, 0);
+                gpCombatManager->m_combatIcons[1]->DrawToBuffer(qtyX, y - 11, 5, ICON_DRAW_NORMAL, 0);
                 sprintf(countText, "%d", m_quantity);
                 gpCombatManager->m_smallFont->DrawBoundedString(countText, qtyX, y - 12, 20, 12, 1, 1);
             }
@@ -261,13 +261,13 @@ void army::DrawToBuffer(short x, short y) {
         case 3:
             if (!(m_stats.attributes & 0x10)) {
                 switch (m_creatureType) {
-                    case 22:
+                    case CREATURE_HYDRA:
                         if (m_drawShadow)
                             m_standIcon->DimToBuffer(x, y, m_animationFrame + 8, m_facing, flip);
                         break;
-                    case 11:
-                    case 17:
-                    case 23:
+                    case CREATURE_CYCLOPS:
+                    case CREATURE_PHOENIX:
+                    case CREATURE_DRAGON:
                         if (m_drawShadow)
                             m_standIcon->DimToBuffer(x, y, m_animationFrame + 15, m_facing, flip);
                         break;
@@ -290,8 +290,8 @@ void army::DrawToBuffer(short x, short y) {
             } else if (m_facing == 1) {
                 x -= 39;
             }
-            if (m_spellEffect != -1)
-                gpCombatManager->m_combatIcons[8]->DrawToBuffer(x, y - 40, m_spellEffect, 0, 0);
+            if (m_spellEffect != SPELL_NONE)
+                gpCombatManager->m_combatIcons[8]->DrawToBuffer(x, y - 40, m_spellEffect, ICON_DRAW_NORMAL, 0);
             gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, flip);
             break;
     }
@@ -377,9 +377,9 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         step = -1;
         reverse = 1;
     }
-    if (direction == 5 || direction == 0)
+    if (direction == COMBAT_DIRECTION_NORTHWEST || direction == COMBAT_DIRECTION_NORTHEAST)
         m_walkYStep = -16;
-    if (direction == 3 || direction == 2)
+    if (direction == COMBAT_DIRECTION_SOUTHWEST || direction == COMBAT_DIRECTION_SOUTHEAST)
         m_walkYStep = 16;
     baseHex = m_hex;
     hexcell tempCell;
@@ -400,9 +400,9 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         }
     } else {
         flag = 0;
-        if (m_facing == 0 && direction == 2)
+        if (m_facing == 0 && direction == COMBAT_DIRECTION_SOUTHEAST)
             flag = 1;
-        else if (m_facing == 1 && direction == 5)
+        else if (m_facing == 1 && direction == COMBAT_DIRECTION_NORTHWEST)
             flag = 1;
         gpCombatManager->SetGridMode(flag);
     }
@@ -710,7 +710,7 @@ void army::SpecialAttack(void) {
     Stand(1);
     if (target->m_quantity > 0)
         target->Stand(1);
-    if (!gbSecondShot && m_creatureType == 14 && target->m_quantity > 0) {
+    if (!gbSecondShot && m_creatureType == CREATURE_ELF && target->m_quantity > 0) {
         gbSecondShot = 1;
         SpecialAttack();
         gbSecondShot = 0;
@@ -751,7 +751,7 @@ void army::DoHydraAttack(void) {
     gpCombatManager->ResetHitByCreature();
     totalLost = 0;
     totDmg = totalLost;
-    for (dir = 0; dir < 8; dir++) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (!(attackMask & (1 << dir))) {
             targetHex = m_hex;
             if ((m_stats.attributes & 1)
@@ -803,7 +803,7 @@ void army::DoHydraAttack(void) {
         attackMask = GetAttackMask(m_hex, 2, -1);
     else
         attackMask = GetAttackMask(m_hex, 1, -1);
-    for (dir = 0; dir < 8; dir++) {
+    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (!(attackMask & (1 << dir))) {
             targetHex = m_hex;
             if ((m_stats.attributes & 1)
@@ -870,7 +870,7 @@ void army::DoAttack(int retaliation) {
     didCast = 0;
     if (retaliation)
         gpCombatManager->m_currentSide = 1 - gpCombatManager->m_currentSide;
-    if (m_creatureType == 22) {
+    if (m_creatureType == CREATURE_HYDRA) {
         DoHydraAttack();
         if (m_spellEndCondition == 1 && !retaliation)
             CancelSpell();
@@ -883,9 +883,9 @@ void army::DoAttack(int retaliation) {
         m_facing = 0;
     else if (m_attackDirection <= 5)
         m_facing = 1;
-    if (m_attackDirection == 5 || m_attackDirection == 0 || m_attackDirection == 6)
+    if (m_attackDirection == COMBAT_DIRECTION_NORTHWEST || m_attackDirection == COMBAT_DIRECTION_NORTHEAST || m_attackDirection == COMBAT_DIRECTION_WIDE_WEST)
         frameBase = 6;
-    else if (m_attackDirection == 3 || m_attackDirection == 2 || m_attackDirection == 7)
+    else if (m_attackDirection == COMBAT_DIRECTION_SOUTHWEST || m_attackDirection == COMBAT_DIRECTION_SOUTHEAST || m_attackDirection == COMBAT_DIRECTION_WIDE_EAST)
         frameBase = 8;
     else
         frameBase = 7;
@@ -915,7 +915,7 @@ void army::DoAttack(int retaliation) {
             && gpCombatManager->m_hexCells[behindHex].m_occupantIndex >= 0) {
             gpCombatManager->m_limitCreatureCount[gpCombatManager->m_hexCells[behindHex].m_occupantSide]
                                                   [gpCombatManager->m_hexCells[behindHex].m_occupantIndex]++;
-            if (m_attackDirection == 2 || m_attackDirection == 3)
+            if (m_attackDirection == COMBAT_DIRECTION_SOUTHEAST || m_attackDirection == COMBAT_DIRECTION_SOUTHWEST)
                 gpCombatManager->m_extendLimitDown = 1;
         }
     }
@@ -955,7 +955,7 @@ void army::DoAttack(int retaliation) {
         }
         savedKilled = kills;
         nextHex = GetAdjacentCellIndex(newHex, m_attackDirection);
-        if ((m_stats.attributes & 8) && m_attackDirection < 6 && ValidHex(nextHex)
+        if ((m_stats.attributes & 8) && m_attackDirection < COMBAT_DIRECTION_ADJACENT_COUNT && ValidHex(nextHex)
             && gpCombatManager->m_hexCells[nextHex].m_occupantSide >= 0
             && gpCombatManager->m_hexCells[nextHex].m_occupantIndex >= 0
             && gpCombatManager->m_hexCells[newHex].m_occupantIndex
@@ -996,31 +996,31 @@ void army::DoAttack(int retaliation) {
     PowEffect(m_stats.powEffect);
     gpCombatManager->m_extendLimitDown = oldMode;
     switch (m_creatureType) {
-        case 11:
+        case CREATURE_CYCLOPS:
             if (SRandom(1, 5) == 3) {
-                if (target && target->m_spellEffect != 12 && target->m_creatureType != 23
-                    && (target->m_creatureType != 13 || SRandom(0, 4) != 1)
+                if (target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != CREATURE_DRAGON
+                    && (target->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
                     && !(target->m_stats.attributes & 0x10)) {
-                    gpCombatManager->CastSpell(18, target->m_hex, 1, -1);
+                    gpCombatManager->CastSpell(SPELL_PARALYZE, target->m_hex, 1, -1);
                     didCast = 1;
                 }
-            } else if (SRandom(1, 5) == 3 && target2 && target2->m_spellEffect != 12
-                       && target2->m_creatureType != 23
-                       && (target2->m_creatureType != 13 || SRandom(0, 4) != 1)
+            } else if (SRandom(1, 5) == 3 && target2 && target2->m_spellEffect != SPELL_ANTI_MAGIC
+                       && target2->m_creatureType != CREATURE_DRAGON
+                       && (target2->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
                        && !(target2->m_stats.attributes & 0x10)) {
-                gpCombatManager->CastSpell(18, target2->m_hex, 1, -1);
+                gpCombatManager->CastSpell(SPELL_PARALYZE, target2->m_hex, 1, -1);
                 didCast = 1;
             }
             break;
-        case 16:
-            if (SRandom(1, 5) == 3 && target && target->m_spellEffect != 12 && target->m_creatureType != 23
-                && (target->m_creatureType != 13 || SRandom(0, 127) % 4 != 1)
+        case CREATURE_UNICORN:
+            if (SRandom(1, 5) == 3 && target && target->m_spellEffect != SPELL_ANTI_MAGIC && target->m_creatureType != CREATURE_DRAGON
+                && (target->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(target->m_stats.attributes & 0x10)) {
-                gpCombatManager->CastSpell(7, target->m_hex, 1, -1);
+                gpCombatManager->CastSpell(SPELL_BLIND, target->m_hex, 1, -1);
                 didCast = 1;
             }
             break;
-        case 26:
+        case CREATURE_GHOST:
             gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[m_hex].m_occupantSide] = kills;
             break;
         default:
@@ -1067,37 +1067,37 @@ void army::DoAttack(int retaliation) {
         CancelSpell();
     gpCombatManager->m_computeExtent = 1;
     Stand(1);
-    if (m_creatureType == 26)
+    if (m_creatureType == CREATURE_GHOST)
         m_quantity += gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[m_hex].m_occupantSide];
     if (target && target->m_quantity > 0) {
         gpCombatManager->m_computeExtent = 1;
         target->Stand(1);
-        if (target->m_spellEffect == 18
-            || target->m_creatureType != 20 && (target->m_stats.attributes & 0x40) || m_creatureType == 24
-            || m_creatureType == 12 || didCast || retaliation) {
+        if (target->m_spellEffect == SPELL_PARALYZE
+            || target->m_creatureType != CREATURE_GRIFFIN && (target->m_stats.attributes & 0x40) || m_creatureType == CREATURE_ROGUE
+            || m_creatureType == CREATURE_SPRITE || didCast || retaliation) {
             goto secondStrike;
         } else {
             target->m_attackDirection = OppositeDirection(m_attackDirection);
             if (target->m_stats.attributes & 1) {
                 short checkHex;
 
-                checkHex = GetAdjacentCellIndex(target->m_hex, target->m_facing ? 5 : 0);
+                checkHex = GetAdjacentCellIndex(target->m_hex, target->m_facing ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST);
                 if (m_hex == checkHex)
-                    target->m_attackDirection = 6;
-                checkHex = GetAdjacentCellIndex(target->m_hex, static_cast<signed char>(target->m_facing ? 3 : 2));
+                    target->m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
+                checkHex = GetAdjacentCellIndex(target->m_hex, static_cast<signed char>(target->m_facing ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST));
                 if (m_hex == checkHex)
-                    target->m_attackDirection = 7;
+                    target->m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
             }
             target->DoAttack(1);
             target->m_stats.attributes |= 0x40;
-            if (target->m_creatureType == 26)
+            if (target->m_creatureType == CREATURE_GHOST)
                 target->m_quantity +=
                     gpCombatManager->m_ghostKills[gpCombatManager->m_hexCells[target->m_hex].m_occupantSide];
         }
     }
 secondStrike:
-    if ((m_creatureType == 8 || m_creatureType == 5) && target && target->m_quantity > 0 && !retaliation
-        && m_spellEffect != 18 && m_quantity > 0) {
+    if ((m_creatureType == CREATURE_WOLF || m_creatureType == CREATURE_PALADIN) && target && target->m_quantity > 0 && !retaliation
+        && m_spellEffect != SPELL_PARALYZE && m_quantity > 0) {
         curDir = m_attackDirection;
         m_attackDirection = attackDir;
         DoAttack(1);
@@ -1282,7 +1282,7 @@ void army::DamageEnemy(class army* target, int* damageResult, int* killedResult,
     if (m_damageMode == 2)
         total /= 2;
     damage = static_cast<int>(total + 0.5);
-    if (m_creatureType == 27 && SRandom(1, 5) == 2) {
+    if (m_creatureType == CREATURE_GENIE && SRandom(1, 5) == 2) {
         halfDamage = target->m_stats.hitPoints * ((target->m_quantity + 1) / 2);
         if (damage < halfDamage) {
             gbGenieHalf = 1;
@@ -1506,7 +1506,7 @@ void army::GoBerserk(void) {
     short target;
 
     found = 0;
-    dir = 0;
+    dir = COMBAT_DIRECTION_NORTHEAST;
     tryCount = 0;
     while (!found) {
         attackMask = GetAttackMask(m_hex, 2, -1);

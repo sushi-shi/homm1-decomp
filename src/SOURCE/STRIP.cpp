@@ -82,34 +82,34 @@ void strip::DrawIcons(signed char drawWindow) {
     short i;
     signed char creatureType;
 
-    m_portraitIcon->DrawToBuffer(m_x + 5, m_y + 6, m_portraitFrame, 0, 0);
+    m_portraitIcon->DrawToBuffer(m_x + 5, m_y + 6, m_portraitFrame, ICON_DRAW_NORMAL, 0);
     if (!m_army) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
-            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, 2, 0, 0);
+            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, 2, ICON_DRAW_NORMAL, 0);
         m_window->DrawWindow(drawWindow);
         return;
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         creatureType = m_army->m_creatureTypes[i];
-        if (creatureType != -1) {
-            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, creatureType / 6 + 3, 0, 0);
-            m_monsterIcon->DrawToBuffer(m_x + i * 88 + 119, m_y + 19, creatureType, 0, 0);
+        if (creatureType != CREATURE_NONE) {
+            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, creatureType / 6 + 3, ICON_DRAW_NORMAL, 0);
+            m_monsterIcon->DrawToBuffer(m_x + i * 88 + 119, m_y + 19, creatureType, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", m_army->m_creatureCounts[i]);
             m_font->DrawBoundedString(gText, m_x + i * 88 + 112, m_y + 86, 77, 13, 1, 2);
         } else {
-            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, 2, 0, 0);
+            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, 2, ICON_DRAW_NORMAL, 0);
         }
     }
     m_window->DrawWindow(drawWindow);
     if (m_selectedSlot != -1)
-        m_stripIcon->DrawToBuffer(m_x + m_selectedSlot * 88 + 112, m_y + 6, 1, 0, 0);
+        m_stripIcon->DrawToBuffer(m_x + m_selectedSlot * 88 + 112, m_y + 6, 1, ICON_DRAW_NORMAL, 0);
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00463cd0, 0x37)
 void strip::DrawFrame(void) {
-    m_stripIcon->DrawToBuffer(m_x, m_y, 0, 0, 0);
+    m_stripIcon->DrawToBuffer(m_x, m_y, 0, ICON_DRAW_NORMAL, 0);
 }
 
 // donor PoL RVA 0x00032a38; preferred Buka symbol ??0bankBox@@QAE@HHPAVplayerData@@@Z

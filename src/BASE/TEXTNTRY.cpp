@@ -6,12 +6,15 @@
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
+#include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/message.h>
+#include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/textEntryWidget.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -284,7 +287,7 @@ void textEntryWidget::Draw(void) {
         while (m_font->LineWidth(display) > m_width)
             display[--length] = 0;
         m_icon
-            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, 0, 0);
+            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, ICON_DRAW_NORMAL, 0);
         m_font->DrawBoundedString(
             display,
             m_x + m_owner->m_posX,
@@ -296,7 +299,7 @@ void textEntryWidget::Draw(void) {
         );
     } else {
         m_icon
-            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, 0, 0);
+            ->DrawToBuffer(m_rectX + m_owner->m_posX, m_owner->m_posY + m_rectY, m_iconFrame, ICON_DRAW_NORMAL, 0);
         textWidget::Draw();
     }
 }

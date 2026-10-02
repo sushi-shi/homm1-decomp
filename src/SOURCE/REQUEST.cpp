@@ -199,7 +199,7 @@ short fileRequester::Open(short priority) {
     m_window = new heroWindow(m_x, m_y, "request.bin");
     if (!m_window)
         MemError();
-    m_scrollKnob = new iconWidget(283, 56, 8, 17, "scroll.icn", 4, 0, scrollId, 16, 1);
+    m_scrollKnob = new iconWidget(283, 56, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, scrollId, ICON_WIDGET_DRAW, 1);
     if (!m_scrollKnob)
         MemError();
     m_window->AddWidget(m_scrollKnob, -1);
@@ -315,7 +315,7 @@ short fileRequester::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_KEY_DOWN:
             switch (message.keyCode) {
-                case 0x48:
+                case INPUT_SCAN_NUMPAD_8:
                     if (m_selectedIndex > 0) {
                         m_selectedIndex--;
                         if (m_topIndex > m_selectedIndex)
@@ -323,7 +323,7 @@ short fileRequester::Main(tag_message& message) {
                         Update(1);
                     }
                     break;
-                case 0x50:
+                case INPUT_SCAN_NUMPAD_2:
                     if (m_selectedIndex < m_fileCount - 1) {
                         m_selectedIndex++;
                         if (m_topIndex + 10 <= m_selectedIndex)
@@ -337,18 +337,18 @@ short fileRequester::Main(tag_message& message) {
             switch (message.command) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 0x7802:
+                        case DIALOG_BUTTON_2:
                             if (m_selectedIndex == -1 && !m_filename[0]) {
                                 NormalDialog(
-                                    "Please make a selection from the list, or press cancel.", 1,
-                                    -1, -1, -1, 0, -1, 0, -1);
+                                    "Please make a selection from the list, or press cancel.", NORMAL_DIALOG_TYPE_OK,
+                                    -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                                 break;
                             } else {
                                 message.value = message.id;
                                 finished = 1;
                             }
                             break;
-                        case 0x7801:
+                        case DIALOG_BUTTON_1:
                             message.value = message.id;
                             finished = 1;
                             break;
@@ -423,19 +423,19 @@ short fileRequester::Main(tag_message& message) {
                             DoKnob();
                             break;
                         case firstRowId:
-                        case 5:
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
-                        case 10:
-                        case 11:
-                        case 12:
-                        case 13:
+                        case firstRowId + 1:
+                        case firstRowId + 2:
+                        case firstRowId + 3:
+                        case firstRowId + 4:
+                        case firstRowId + 5:
+                        case firstRowId + 6:
+                        case firstRowId + 7:
+                        case firstRowId + 8:
+                        case firstRowId + 9:
                             if (message.id - firstRowId + m_topIndex
                                 == m_selectedIndex) {
-                                message.value = 0x7802;
-                                message.id = 0x7802;
+                                message.value = DIALOG_BUTTON_2;
+                                message.id = DIALOG_BUTTON_2;
                                 finished = 1;
                                 break;
                             }
@@ -468,7 +468,7 @@ short fileRequester::Main(tag_message& message) {
                     "The game you have chosen only has slots for %d human(s).  You need one "
                     "with room for at least %d humans.",
                     ch, giNumHumanPlayers);
-                NormalDialog(gText, 1, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 finished = 0;
             }
             if (ch > giNumHumanPlayers) {
@@ -477,7 +477,7 @@ short fileRequester::Main(tag_message& message) {
                     "The game you have chosen was being played with %d humans. Is it OK if the "
                     "computer takes the place of the last %d human(s)?",
                     ch, ch - giNumHumanPlayers);
-                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (gpWindowManager->m_dialogResult != 0x7805)
                     finished = 0;
             }
