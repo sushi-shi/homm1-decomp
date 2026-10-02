@@ -1,0 +1,9 @@
+# homm1 constants work list - numeric constants kept on purpose, one row each,
+# with the reason. Every other numeric spelling in src/ and include/ is open
+# until it is written as a name (enumerator, named macro, NULL, TRUE/FALSE;
+# VC4 has no bool keywords). `homm1 verify constants --list [FILTER]` prints
+# the open ones; the floor never rises (`--update-floor` lowers it). Columns
+# (tab-separated; every field is an fnmatch glob, `*` matches anything; the
+# first matching row wins): file owner spelling group detail reason.
+# group/detail are the census' review_group/review_context columns.
+#floor	18735
