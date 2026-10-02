@@ -309,13 +309,13 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case MAP_OBJECT_RESOURCE:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(pHero, resType,
-                         resType == 6 ? cell->m_objectMetadata * 100
+                         resType == RESOURCE_GOLD ? cell->m_objectMetadata * 100
                                            : cell->m_objectMetadata);
             strcpy(resourceName, gResourceNames[resType]);
             resourceName[0] += 32;
             sprintf(gText, gEventText[EVENT_TEXT_RESOURCE_PICKUP], resourceName);
             BVResMsg(gText, resType,
-                     resType == 6 ? cell->m_objectMetadata * 100
+                     resType == RESOURCE_GOLD ? cell->m_objectMetadata * 100
                                        : cell->m_objectMetadata);
             erase = 1;
             fizzleMode = 1;
@@ -1409,7 +1409,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
         case MAP_OBJECT_RESOURCE:
             resType = cell->m_objectIndex - 0x3d;
             GiveResource(eventHero, resType,
-                         resType == 6 ? cell->m_objectMetadata * 100
+                         resType == RESOURCE_GOLD ? cell->m_objectMetadata * 100
                                            : cell->m_objectMetadata);
             erase = 1;
             break;
