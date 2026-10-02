@@ -194,7 +194,9 @@ struct boatRecord {
 H1_ENUM_CONST_BEGIN(MapTownRecordConstant)
     MAP_TOWN_TYPE_MASK = 0x7f,
     MAP_TOWN_OWNER_UNSET = -2,
-    MAP_TOWN_EXTRA_BUILDING_MASK = 0x1f9f
+    MAP_TOWN_EXTRA_BUILDING_MASK = 0x1f9f,
+    // mapHeroExtra::artifacts: a placed hero's four starting artifacts.
+    MAP_HERO_EXTRA_ARTIFACT_COUNT = 4
 H1_ENUM_CONST_END(MapTownRecordConstant)
 // clang-format on
 
@@ -219,7 +221,7 @@ struct mapHeroExtra {
     signed char troopTypes[ARMY_GROUP_SLOT_COUNT];
     short troopCounts[ARMY_GROUP_SLOT_COUNT];
     signed char heroId;
-    signed char artifacts[4];
+    signed char artifacts[MAP_HERO_EXTRA_ARTIFACT_COUNT];
     int experience;
 };
 #pragma pack(pop)

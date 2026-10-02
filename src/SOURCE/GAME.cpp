@@ -4230,7 +4230,7 @@ void game::ProcessOnMapHeroes(void) {
                     else
                         theHero->m_army.m_creatureTypes[k] = CREATURE_NONE;
                 }
-                for (j = 0; j < 4; j++) {
+                for (j = 0; j < MAP_HERO_EXTRA_ARTIFACT_COUNT; j++) {
                     if (extra->artifacts[j] >= 0)
                         gpAdvManager->GiveArtifact(theHero, extra->artifacts[j]);
                 }
