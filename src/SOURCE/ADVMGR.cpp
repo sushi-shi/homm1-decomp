@@ -267,6 +267,28 @@ H1_ENUM_CONST_BEGIN(AdventureAnimationPhaseIndex)
     ANIMATION_PHASE_COLUMN_3_INITIAL = 5
 H1_ENUM_CONST_END(AdventureAnimationPhaseIndex)
 
+// advManager::ViewWorld's 6-pixel map (HoMM1's own view; window position
+// as Buka 2.1 Viewwrld's WORLD_WINDOW_X/Y): cells start 24 pixels in;
+// ground6.icn has one frame per four ground tiles, vertically flipped tiles
+// 31 frames on and horizontally flipped ones drawn one cell-width minus one
+// to the right; tilesets[] is indexed by MapTileset; flag6.icn frames 0..3
+// are player colours, 5 marks the current hero and 6 an artifact; town flags
+// straddle the cell and resource letters sit 3 pixels left.
+H1_ENUM_CONST_BEGIN(ViewWorldConstant)
+    WORLD_WINDOW_X = 480,
+    WORLD_WINDOW_Y = 16,
+    VIEW_WORLD_CELL_PIXELS = 6,
+    VIEW_WORLD_ORIGIN = 24,
+    VIEW_WORLD_TILESET_COUNT = 16,
+    VIEW_WORLD_GROUND_TILE_SHIFT = 2,
+    VIEW_WORLD_GROUND_FLIPPED_FRAMES = 31,
+    VIEW_WORLD_FLAG_CURRENT_HERO = 5,
+    VIEW_WORLD_FLAG_ARTIFACT = 6,
+    VIEW_WORLD_TOWN_FLAG_LEFT = 4,
+    VIEW_WORLD_TOWN_FLAG_RIGHT = 3,
+    VIEW_WORLD_RESOURCE_X_SHIFT = 3
+H1_ENUM_CONST_END(ViewWorldConstant)
+
 // ViewPuzzle (Buka 2.1 AdventurePuzzleViewConstant names): puzzle.icn has
 // one piece per obelisk bit (playerData::m_obelisksVisited); the window sits
 // beside the viewport; the view centre is nudged off the artifact by
@@ -4251,7 +4273,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
     short x;
     short owner;
     mapCell* cell;
-    icon* tilesets[16];
+    icon* tilesets[VIEW_WORLD_TILESET_COUNT];
     short i;
     short y;
     short screenX;
@@ -4260,19 +4282,19 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
     icon* ground;
 
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
-    mask = 0x300;
+    mask = (1 << TILESET_MTN32) | (1 << TILESET_TREE32);
     if (spellType == SPELL_VIEW_TOWNS || spellType == SPELL_VIEW_ALL)
-        mask |= 0x400;
+        mask |= 1 << TILESET_TOWN32;
     ground = gpResourceManager->GetIcon("ground6.icn");
     flags = gpResourceManager->GetIcon("flag6.icn");
     spheres = gpResourceManager->GetIcon("spheres.icn");
     letters = gpResourceManager->GetIcon("letters.icn");
     curHero = NULL;
-    for (i = 0; i < 16; i++)
+    for (i = 0; i < VIEW_WORLD_TILESET_COUNT; i++)
         tilesets[i] = NULL;
-    tilesets[9] = gpResourceManager->GetIcon("tree6.icn");
-    tilesets[8] = gpResourceManager->GetIcon("mtn6.icn");
-    tilesets[10] = gpResourceManager->GetIcon("town6.icn");
+    tilesets[TILESET_TREE32] = gpResourceManager->GetIcon("tree6.icn");
+    tilesets[TILESET_MTN32] = gpResourceManager->GetIcon("mtn6.icn");
+    tilesets[TILESET_TOWN32] = gpResourceManager->GetIcon("town6.icn");
     if (gpCurPlayer->CurrentHero() != -1)
         curHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     FillBitmapArea(gpWindowManager->m_screen, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, 0);
@@ -4283,14 +4305,14 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
                 || (spellType == SPELL_VIEW_TOWNS && (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN)) {
                 flip = 0;
-                screenX = x * 6 + 24;
-                screenY = y * 6 + 24;
-                index = cell->m_tileIndex >> 2;
+                screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
+                screenY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
+                index = cell->m_tileIndex >> VIEW_WORLD_GROUND_TILE_SHIFT;
                 if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL)
                     flip = 1;
                 if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL)
-                    index += 31;
-                ground->DrawToBuffer((flip == 1 ? 5 : 0) + screenX, screenY, index, flip, 0);
+                    index += VIEW_WORLD_GROUND_FLIPPED_FRAMES;
+                ground->DrawToBuffer((flip == 1 ? VIEW_WORLD_CELL_PIXELS - 1 : 0) + screenX, screenY, index, flip, 0);
                 if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
                     ts = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
                     if (mask & (1 << ts))
@@ -4300,27 +4322,27 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
         }
         for (x = MAP_CELL_GRID_SIZE - 1; x >= 0; x--) {
             cell = GetCell(x, y);
-            screenX = x * 6 + 24;
-            screenY = y * 6 + 24;
+            screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
+            screenY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
             if ((drawAllObjects || (gpGame->m_mapExtra[x][y] & giCurPlayerBit)) && (cell->m_triggerType & MAP_TRIGGER_EVENT)) {
                 switch (spellType) {
                 case SPELL_VIEW_ALL:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
-                        flags->DrawToBuffer(screenX, screenY, 6, ICON_DRAW_NORMAL, 0);
+                        flags->DrawToBuffer(screenX, screenY, VIEW_WORLD_FLAG_ARTIFACT, ICON_DRAW_NORMAL, 0);
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
+                            flags->DrawToBuffer(screenX - VIEW_WORLD_TOWN_FLAG_LEFT, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + VIEW_WORLD_TOWN_FLAG_RIGHT, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
+                            flags->DrawToBuffer(screenX - VIEW_WORLD_TOWN_FLAG_LEFT, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + VIEW_WORLD_TOWN_FLAG_RIGHT, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     }
                     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
@@ -4398,29 +4420,29 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                     break;
                 case SPELL_VIEW_RESOURCES:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE)) {
-                        spheres->DrawToBuffer(screenX - 3, screenY, PLAYER_COLOR_NEUTRAL, ICON_DRAW_NORMAL, 0);
-                        letters->DrawToBuffer(screenX - 3, screenY, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE, ICON_DRAW_NORMAL, 0);
+                        spheres->DrawToBuffer(screenX - VIEW_WORLD_RESOURCE_X_SHIFT, screenY, PLAYER_COLOR_NEUTRAL, ICON_DRAW_NORMAL, 0);
+                        letters->DrawToBuffer(screenX - VIEW_WORLD_RESOURCE_X_SHIFT, screenY, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE, ICON_DRAW_NORMAL, 0);
                     }
                     break;
                 case SPELL_VIEW_ARTIFACTS:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
-                        flags->DrawToBuffer(screenX, screenY, 6, ICON_DRAW_NORMAL, 0);
+                        flags->DrawToBuffer(screenX, screenY, VIEW_WORLD_FLAG_ARTIFACT, ICON_DRAW_NORMAL, 0);
                     break;
                 case SPELL_VIEW_TOWNS:
                     if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[cell->m_objectMetadata];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
+                            flags->DrawToBuffer(screenX - VIEW_WORLD_TOWN_FLAG_LEFT, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + VIEW_WORLD_TOWN_FLAG_RIGHT, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                                && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
                         if (owner >= 0) {
                             index = gpGame->m_players[owner].m_color;
-                            flags->DrawToBuffer(screenX - 4, screenY, index, ICON_DRAW_FLIPPED, 0);
-                            flags->DrawToBuffer(screenX + 3, screenY, index, ICON_DRAW_NORMAL, 0);
+                            flags->DrawToBuffer(screenX - VIEW_WORLD_TOWN_FLAG_LEFT, screenY, index, ICON_DRAW_FLIPPED, 0);
+                            flags->DrawToBuffer(screenX + VIEW_WORLD_TOWN_FLAG_RIGHT, screenY, index, ICON_DRAW_NORMAL, 0);
                         }
                     }
                     break;
@@ -4438,14 +4460,14 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                 }
             }
             if (curHero && curHero->m_x == x && curHero->m_y == y)
-                flags->DrawToBuffer(screenX, screenY, 5, ICON_DRAW_NORMAL, 0);
+                flags->DrawToBuffer(screenX, screenY, VIEW_WORLD_FLAG_CURRENT_HERO, ICON_DRAW_NORMAL, 0);
         }
         for (x = MAP_CELL_GRID_SIZE - 1; x >= 0; x--) {
             cell = GetCell(x, y);
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
                 || (cell->m_triggerType == MAP_OBJECT_TOWN && spellType == SPELL_VIEW_TOWNS)) {
-                screenX = x * 6 + 24;
-                screenY = y * 6 + 24;
+                screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
+                screenY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
                     ts = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
                     if (mask & (1 << ts))
@@ -4457,13 +4479,13 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
 
     gpWindowManager->UpdateScreenRegion(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
     sprintf(gText, "view-%02d.bin", spellType - SPELL_VIEW_MINES);
-    win = new heroWindow(480, 16, gText);
+    win = new heroWindow(WORLD_WINDOW_X, WORLD_WINDOW_Y, gText);
     if (!win)
         MemError();
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
     UpdateRadar(1, 0);
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < VIEW_WORLD_TILESET_COUNT; i++) {
         if (tilesets[i])
             gpResourceManager->Dispose(tilesets[i]);
     }
