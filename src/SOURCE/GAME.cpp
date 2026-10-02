@@ -1005,6 +1005,86 @@ void game::TurnOffAIMusic(void) {
 VA(0x00441245, 0x4e1)
 void game::NextPlayer(void) {}
 
+// Town type of each crest, and the types already given to the first four
+// random towns.
+extern short gCrestTownTypes[];
+extern signed char gRandomTownTypes[4];
+
+// Buka 2.1 game::RandomizeTown for HoMM1's 4x3 town footprint: the town
+// type comes from the campaign crest, a distinct roll for the first four
+// towns or a plain roll, and shifts every town frame to that type.
+VA(0x00442935, 0x67f)
+void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
+    signed char unique;
+    town* town;
+    signed char j;
+    signed char i;
+    unsigned char frameShift;
+    signed char townNum;
+    signed char race;
+    signed char plain;
+
+    townNum = GetTownId(x, y);
+    for (j = 0; j < 3; j++) {
+        for (i = 0; i < 4; i++) {
+            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) > 0
+                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) <= 0x30) {
+                m_map[x - 2 + i][y - 2 + j].m_unknown07 |= 0x28;
+            } else {
+                m_map[x - 2 + i][y - 2 + j].m_triggerType = 0x28;
+                m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
+            }
+        }
+    }
+    m_map[x][y].m_triggerType |= 0x80;
+    town = GetTown(townNum);
+    town->m_turnsOwned = 10;
+    if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
+        race = gCrestTownTypes[m_players[0].m_unknown11];
+    } else if (townNum < 4) {
+        unique = 0;
+        race = 0;
+        while (!unique) {
+            race = Random(0, 3);
+            unique = 1;
+            for (i = 0; i < 4; i++) {
+                if (gRandomTownTypes[i] == race)
+                    unique = 0;
+            }
+        }
+        gRandomTownTypes[townNum] = race;
+    } else {
+        race = Random(0, 3);
+    }
+    frameShift = (4 - race) * 24;
+    for (i = 0; i < 4; i++) {
+        m_map[x - 2 + i][y - 2].m_overlayIndex -= frameShift;
+        m_map[x - 2 + i][y - 1].m_objectIndex -= frameShift;
+        m_map[x - 2 + i][y].m_objectIndex -= frameShift;
+    }
+    m_castleRecs[townNum].m_type = race;
+    plain = 1;
+    if (town->m_extraIndex >= 1 && ((mapTownExtra*)ppMapExtra[town->m_extraIndex])->customized)
+        plain = 0;
+    if (plain) {
+        if (race == 2)
+            m_castleRecs[townNum].m_buildings = 0x2000;
+        else
+            m_castleRecs[townNum].m_buildings = 0;
+    }
+    if (isCastle) {
+        m_castleRecs[townNum].m_buildings |= 0xc0;
+        m_castleRecs[townNum].m_garrison[0] = gMonsterDatabase[gDwellingType[race][0]].growth;
+        if (m_castleRecs[townNum].m_buildings & 0x20)
+            m_castleRecs[townNum].m_buildings -= 0x20;
+    } else {
+        m_castleRecs[townNum].m_buildings |= 0x20;
+        if (m_castleRecs[townNum].m_buildings & 0x40)
+            m_castleRecs[townNum].m_buildings -= 0x40;
+        SetupTown(townNum, 0);
+    }
+}
+
 // Spell AI values, attribute bits and the mage-guild pool by spell level.
 extern short gSpellAIValue[];
 extern signed char gSpellAttributes[];
@@ -1537,19 +1617,6 @@ void game::ProcessMapExtra(void) {
         }
     }
 }
-
-// A town's map-extra record: custom flag, owner, buildings, mage-guild
-// level and garrison.
-#pragma pack(push, 1)
-struct mapTownExtra {
-    signed char customized;
-    signed char owner;
-    short buildings;
-    signed char buildState;
-    signed char troopTypes[5];
-    short troopCounts[5];
-};
-#pragma pack(pop)
 
 // Buka 2.1 game::SetupTowns reduced to HoMM1's owners, garrisons and
 // buildings; a map whose towns all lack owners leaves the placeholder -2.

@@ -61,6 +61,19 @@ struct boatRecord {
 };
 #pragma pack(pop)
 
+// SetupTowns and RandomizeTown read a town's map-extra record: custom flag, owner, buildings, mage-guild
+// level and garrison.
+#pragma pack(push, 1)
+struct mapTownExtra {
+    signed char customized;
+    signed char owner;
+    short buildings;
+    signed char buildState;
+    signed char troopTypes[5];
+    short troopCounts[5];
+};
+#pragma pack(pop)
+
 // Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
 // are fixed by retail address arithmetic; unrecovered spans stay opaque.
@@ -212,7 +225,8 @@ public:
     void WeeklyGenericSite(class mapCell*);
     void PerMonth(void);
     void ConvertObject(int, int, int, int, int, int, int, int, int, int, int);
-    void RandomizeTown(int, int, int);
+    // HoMM1 retail: byte x, y and castle flag (ret 0xc).
+    void RandomizeTown(signed char, signed char, signed char);
     void RandomizeMine(int, int);
     // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
     void SetupTown(signed char, signed char);
