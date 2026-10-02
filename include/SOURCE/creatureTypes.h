@@ -45,7 +45,11 @@ H1_ENUM_END(CreatureType)
 H1_ENUM_BEGIN(CreatureSpeed)
     CREATURE_SPEED_NONE = 0,
     CREATURE_SPEED_SLOW = 1,
+    // Half-open ends of the speed bands the spell AI weighs haste by
+    // (speed < SLOW_END: slow or stopped; speed < MEDIUM_END: at most medium).
+    CREATURE_SPEED_SLOW_END = 2,
     CREATURE_SPEED_MEDIUM = 2,
+    CREATURE_SPEED_MEDIUM_END = 3,
     CREATURE_SPEED_FAST = 3,
     CREATURE_SPEED_BLAZING = 4
 H1_ENUM_END(CreatureSpeed)

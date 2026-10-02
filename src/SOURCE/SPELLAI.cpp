@@ -261,9 +261,9 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell) {
                 effect = 0;
             else if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 effect = 0;
-            else if (target->m_stats.speed < 2)
+            else if (target->m_stats.speed < CREATURE_SPEED_SLOW_END)
                 effect = stackValue * SPELL_AI_HASTE_MODIFIER;
-            else if (target->m_stats.speed < 3)
+            else if (target->m_stats.speed < CREATURE_SPEED_MEDIUM_END)
                 effect = stackValue * SPELL_AI_HASTE_MODIFIER / 2.0f;
             else
                 effect = 0;

@@ -1309,13 +1309,13 @@ void combatManager::DoLoseWindow(void) {
     ShowDeadArmies(loseWindow);
     gpWindowManager->AddWindow(loseWindow, WINDOW_Z_ORDER_APPEND, 0);
     BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
-    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, 0);
+    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gpWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
     glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
     do {
         if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
             BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
-            walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, 0);
+            walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             gpWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
             walkFrame++;
             walkFrame = walkFrame % 8;

@@ -932,7 +932,7 @@ void combatManager::CatAttack(signed char side) {
                     giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             gpWindowManager->UpdateScreenRegion(
                 giMinExtentX,
                 giMinExtentY,
@@ -976,7 +976,7 @@ void combatManager::CatAttack(signed char side) {
                     giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             }
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             gpWindowManager->UpdateScreenRegion(
                 giMinExtentX,
                 giMinExtentY,
@@ -1007,7 +1007,7 @@ void combatManager::CatAttack(signed char side) {
             if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
                 giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             DrawFrame(0);
-            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, 0);
+            boulder->DrawToBuffer(x, y, frm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             gpWindowManager->UpdateScreenRegion(
                 giMinExtentX,
                 giMinExtentY,
@@ -1243,7 +1243,7 @@ void combatManager::KeepAttack(void) {
         maxY = height + yRun;
         behind->DrawToBuffer(lastX, lastY);
         behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
-        m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, 0);
+        m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
         DelayTil(glTimers);
         gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;

@@ -762,7 +762,7 @@ void combatManager::MeteorShower(signed char targetHex) {
                     m_hexCells[adjHexes[i]].m_y,
                     j,
                     ICON_DRAW_NORMAL,
-                    0
+                    ICON_DRAW_OFFSET_FULL
                 );
         }
         UpdateCombatArea();
@@ -828,7 +828,7 @@ void combatManager::ElementalStorm(void) {
             DrawFrame(0);
             for (y = 0; y < 7; y++) {
                 for (x = 0; x < 10; x++)
-                    storm->DrawToBuffer(x * 64, y * 64, frm, ICON_DRAW_NORMAL, 0);
+                    storm->DrawToBuffer(x * 64, y * 64, frm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             }
             UpdateCombatArea();
             DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
