@@ -1065,7 +1065,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 case DAEMON_REWARD_ARTIFACT:
                     if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT)
                         goto goldReward;
-                    if (gpGame->GetRandomArtifactId() == -1)
+                    if (gpGame->GetRandomArtifactId() == ARTIFACT_NONE)
                         goto goldReward;
                     GiveExperience(pHero, DAEMON_EXPERIENCE, 0);
                     artifactId = GiveRandomArtifact(pHero);
@@ -1330,7 +1330,7 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
 // object type and records that an event track is playing.
 VA(0x0046015d, 0x243)
 void advManager::EventSound(short eventType, short eventData) {
-    int musicTrack = -1;
+    int musicTrack = MUSIC_TRACK_NONE;
 
     switch (eventType) {
         case MAP_OBJECT_STRAW_HUT:
@@ -1806,7 +1806,7 @@ void advManager::GiveTakeArtifactStat(
     signed char artifact,
     signed char take
 ) {
-    signed char stat = -1;
+    signed char stat = HERO_PRIMARY_NONE;
     signed char amount = 0;
     int i;
 
@@ -1895,7 +1895,7 @@ void advManager::GiveTakeArtifactStat(
     }
     if (take == EVENT_ARTIFACT_TAKE)
         amount = -amount;
-    if (stat != -1) {
+    if (stat != HERO_PRIMARY_NONE) {
         targetHero->m_primaryStats[stat] += amount;
         if (amount < 0 && stat == HERO_PRIMARY_KNOWLEDGE) {
             for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
@@ -1943,7 +1943,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 NORMAL_DIALOG_NO_OR_TEXT
                             );
                         }
-                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = -1;
+                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = GAME_HERO_NONE;
                     } else {
                         GiveTakeArtifactStat(
                             destHero,
@@ -2804,13 +2804,13 @@ int advManager::DoCombat(
     int unused;
 
     gbInCombat = 1;
-    attackPlayer = firstHero ? firstHero->m_owner : -1;
+    attackPlayer = firstHero ? firstHero->m_owner : GAME_PLAYER_NONE;
     if (secondHero)
         defendPlayer = secondHero->m_owner;
     else if (combatTown)
         defendPlayer = combatTown->m_owner;
     else
-        defendPlayer = -1;
+        defendPlayer = GAME_PLAYER_NONE;
     if (randomSeed == COMBAT_RANDOM_SEED_NEW)
         randomSeed = Random(1, COMBAT_RANDOM_SEED_MAX);
     DemobilizeCurrHero();
@@ -3012,10 +3012,10 @@ void advManager::SendHeroTownData(
     buf->combatResult = combatResult;
     buf->retreatWin = retreatWin;
     buf->combatSurrender = combatSurrender;
-    buf->firstOwner = firstHero ? firstHero->m_owner : -1;
+    buf->firstOwner = firstHero ? firstHero->m_owner : GAME_PLAYER_NONE;
     buf->firstGold =
         firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
-    buf->secondOwner = secondHero ? secondHero->m_owner : -1;
+    buf->secondOwner = secondHero ? secondHero->m_owner : GAME_PLAYER_NONE;
     buf->secondGold =
         secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     memcpy(&buf->firstArmy, firstArmy, sizeof(armyGroup));
