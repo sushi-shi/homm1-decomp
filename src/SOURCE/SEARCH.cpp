@@ -8,8 +8,8 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/searchArray.h>
 
-// SeedPosition's working mobility, read back by PushPoint.
-short giCurTempMobility;
+// SeedPosition's working mobility, read back by PushPoint (FINDPATH storage).
+extern short giCurTempMobility;
 
 
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
@@ -132,7 +132,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
     static int s_adjacentY;
     static int s_adjacentCost;
     static int s_bestTargetCost;
-    static short s_processedPointCount;
+    static short s_processedPointCount = 0;
 
     if (!continueSeed) {
         giFullySeeded = 0;
@@ -298,3 +298,8 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
     }
     giFullySeeded = 1;
 }
+
+// SEARCH owns retail .bss 0x004a4620-0x004a469f (SeedPosition's statics and
+// this flag); s_processedPointCount is its only initialized datum (0x0048e170).
+DATA(0x004a4680)
+int giFullySeeded;

@@ -370,3 +370,8 @@ void searchArray::TestPossibleDirections(short x, short y, signed char* const te
         terrain[gSearchDirection] = (signed char)gSearchTerrain;
     }
 }
+
+// FINDPATH owns retail .bss 0x004c4ef0-0x004c4f2b: the search statics above
+// and the working mobility SEARCH seeds.
+DATA(0x004c4efc)
+short giCurTempMobility;
