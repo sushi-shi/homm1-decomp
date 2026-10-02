@@ -1347,7 +1347,7 @@ void philAI::ValueOfBuyingBuilding(
         case BUILDING_SLOT_DWELLING_4:
         case BUILDING_SLOT_DWELLING_5:
         case BUILDING_SLOT_DWELLING_6:
-            if (numFilledSlots == 5) {
+            if (numFilledSlots == ARMY_GROUP_SLOT_COUNT) {
                 creatureLocated = 0;
                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                     if (gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST]
@@ -1426,7 +1426,8 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
     for (curBuilding = BUILDING_SLOT_MAGE_GUILD; curBuilding <= BUILDING_SLOT_DWELLING_LAST;
          curBuilding++) {
         if (!(townPointer->m_buildings & (1 << curBuilding))
-            || (curBuilding == 0 && townPointer->m_buildState < 3)) {
+            || (curBuilding == BUILDING_SLOT_MAGE_GUILD
+                && townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST)) {
             if (CanBuild(townPointer, curBuilding)) {
                 ValueOfBuyingBuilding(townPointer, curBuilding, costRV, buildingValue);
                 score = (Random(1, 5) + 95) * buildingValue / 100.0f;

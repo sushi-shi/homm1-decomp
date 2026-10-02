@@ -842,7 +842,7 @@ signed char CanBuild(town* t, short building) {
         else
             return 0;
     }
-    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= 3)
+    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
         return 0;
     if (building == BUILDING_SLOT_TENT)
         return 0;
@@ -869,7 +869,8 @@ signed char CanBuy(town* t, short type) {
         type,
         cost,
         (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            ? (t->m_buildState >= 3 ? 3 : t->m_buildState + 1)
+            ? (t->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST ? TOWN_MAGE_GUILD_COST_LEVEL_LAST
+                                                                  : t->m_buildState + 1)
             : 0
     );
     rec = &gpGame->m_players[giCurPlayer];
