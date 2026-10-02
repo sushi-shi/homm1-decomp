@@ -66,24 +66,10 @@ DATA(0x004af7b8)
 int iAttackerLoss;
 DATA(0x004af7bc)
 int iDefenderLoss;
-DATA(0x004af7c0)
-int iAttackerRemaining;
-DATA(0x004af7c4)
-int iDefenderRemaining;
 DATA(0x004af7c8)
 int giHumanTownConquered;
-DATA(0x004af7cc)
-int iOutcome;
-DATA(0x004af7d0)
-int iArtifactChoice1;
-DATA(0x004af7d4)
-int iArtifactChoice2;
-DATA(0x004af7d8)
-int iArtifactChoice3;
 DATA(0x004af7dc)
 int giCurTurn;
-DATA(0x004af7e0)
-int iEventTownId;
 DATA(0x004af7e8)
 int costTemp[RESOURCE_COUNT];
 DATA(0x004af808)
@@ -92,26 +78,16 @@ DATA(0x004b0c48)
 int iDummy;
 DATA(0x004b0c4c)
 signed char gbPossibleShipyardFound;
-DATA(0x004be7a4)
-int bEventSeen;
-DATA(0x004be7a8)
-int iPurchaseNum;
 DATA(0x004be7b0)
 float gafAITurnCostResource[RESOURCE_COUNT];
 DATA(0x004be7cc)
 unsigned char giCurWatchPlayerHighBit;
 DATA(0x004be7d0)
 int iCurPlaceToVisit;
-DATA(0x004be7d4)
-int iPurchaseSlot;
-DATA(0x004be7d8)
-armyGroup* pEventTownArmy;
 DATA(0x004be7dc)
 signed char giBestShipyardId;
 DATA(0x004be7e0)
 signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004bfc20)
-int iDefaultEventType;
 DATA(0x004bfc28)
 short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004c24a8)
@@ -124,14 +100,6 @@ DATA(0x004c24b8)
 float gfHeroInteractionBonus[GAME_HERO_COUNT];
 DATA(0x004c2548)
 int gbBerserk;
-DATA(0x004c254c)
-mapCell* pEventCell;
-DATA(0x004c2550)
-int gbReduceByReload;
-DATA(0x004c2554)
-int gbReduceByBerserk;
-DATA(0x004c2558)
-town* pEventTown;
 DATA(0x004c255c)
 unsigned char giCurPlayerHighBit;
 DATA(0x004c2560)
@@ -140,16 +108,8 @@ DATA(0x004c4de0)
 signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
 DATA(0x004c4de8)
 int iPlacesVisited[30][2];
-DATA(0x004c4ed8)
-int iEventRV;
-DATA(0x004c4edc)
-int iMonsterCount;
-DATA(0x004c4ee0)
-int iTownValue;
 DATA(0x004c4ee4)
 int gbTroopReload;
-DATA(0x004c4ee8)
-hero* pEventHero;
 DATA(0x004c4eec)
 signed char gbActualShipyardFound;
 
@@ -1610,6 +1570,16 @@ void philAI::ValueOfBuyingHero(town* townPointer, hero* heroPointer, int& resour
     resourceValue = heroRV;
 }
 
+// ValueOfEventAtPosition module state (.bss order follows names, not position).
+DATA(0x004af7c0)
+int iAttackerRemaining;
+DATA(0x004af7c4)
+int iDefenderRemaining;
+DATA(0x004af7cc)
+int iOutcome;
+DATA(0x004af7d0)
+int iArtifactChoice1;
+
 // donor PoL RVA 0x0003e2a8; preferred Buka symbol ?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.649528;margin=0.194728;shape=0.311;size=0.925;calls=0.800;strings=Town:%2d  Hero    : % 15i   Raw BC = %8.2f,  RandBC = %8.2f.;alternate=pol20:void philAI::GetBestHero(class town *, struct BHC &, float &)@0x0003e2a8
@@ -2030,6 +2000,10 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
     }
     return myValue;
 }
+
+// ValueOfEventAtPosition module state (.bss order follows names, not position).
+DATA(0x004af7d4)
+int iArtifactChoice2;
 
 // Buka 2.1 ValueOfTown without the later scenario-town bonuses: built
 // structures' base values plus a fixed gold-turn allowance.
@@ -3059,6 +3033,38 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
     gpAdvManager->MobilizeCurrHero(0);
     townPointer->GiveSpells();
 }
+
+// ValueOfEventAtPosition module state (.bss order follows names, not position).
+DATA(0x004af7d8)
+int iArtifactChoice3;
+DATA(0x004af7e0)
+int iEventTownId;
+DATA(0x004be7a4)
+int bEventSeen;
+DATA(0x004be7a8)
+int iPurchaseNum;
+DATA(0x004be7d4)
+int iPurchaseSlot;
+DATA(0x004be7d8)
+armyGroup* pEventTownArmy;
+DATA(0x004bfc20)
+int iDefaultEventType;
+DATA(0x004c254c)
+mapCell* pEventCell;
+DATA(0x004c2550)
+int gbReduceByReload;
+DATA(0x004c2554)
+int gbReduceByBerserk;
+DATA(0x004c2558)
+town* pEventTown;
+DATA(0x004c4ed8)
+int iEventRV;
+DATA(0x004c4edc)
+int iMonsterCount;
+DATA(0x004c4ee0)
+int iTownValue;
+DATA(0x004c4ee8)
+hero* pEventHero;
 
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
