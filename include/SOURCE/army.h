@@ -155,13 +155,10 @@ public:
 #pragma pack(pop)
 
 short GetAdjacentCellIndexNoArmy(short, short);
-// The combat spell-effect icon cache: army draws and PowEffect share one
-// icon, reloaded when the effect file changes.
-extern class icon* gCurLoadedSpellIcon;
+// The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
+// and PowEffect share one icon, reloaded when the effect file changes.
 extern short gCurLoadedSpellFileId;
 extern short giSpellEffectFrame;
-// Spell-effect icon files by effect (0x004910d8).
-extern char* gCombatFxNames[];
 // Pow (impact) effect icons by effect (0x00491098).
 extern char* gPowEffectNames[];
 // Damage multipliers for attack minus defense, -20..20 (0x00492470).

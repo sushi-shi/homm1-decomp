@@ -339,7 +339,6 @@ signed char SaveGame(void);
 short CPanelHandler(struct tag_message &);
 
 extern int gbNoBorder;
-extern int gbRemoteOn;
 extern long giForceSwitchMusic;
 extern long iLastScrollTime;
 extern int gbForceUpdate;
@@ -366,8 +365,6 @@ extern int giCurWatchPlayer;
 extern char* cAdvMenuHelp[];
 extern int giCheatSeq;
 extern int giMenuCommand;
-extern short gGameCommand;
-extern int gbHeroMoving;
 extern unsigned char giCurPlayerBit;
 // Volume per environment-sound distance step.
 extern long glEnvironmentVolume[];

@@ -6,6 +6,7 @@
 
 #include <H1/All.h>
 #include <BASE/Misc.h>
+#include <H1/KB.h>
 
 // Compiler line-base words for PATH.CPP's ProcessAssert sites.
 DATA(0x0048f4d4) short gAdjacentCellAssertLine;

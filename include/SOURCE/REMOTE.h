@@ -83,7 +83,6 @@ struct RemoteMessage {
 };
 #pragma pack(pop)
 
-extern int gbRemoteOn;
 extern signed char gbInNetSetup;
 extern int giThisNetPos;
 extern int giThisGamePos;

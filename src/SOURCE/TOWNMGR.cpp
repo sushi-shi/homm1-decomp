@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/BITS.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>

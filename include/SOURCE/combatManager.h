@@ -371,7 +371,6 @@ public:
 #pragma pack(pop)
 
 int ValidHex(int);
-extern combatManager *gpCombatManager;
 short WinCombatHandler(struct tag_message &);
 short CombatSpecialHandler(struct tag_message &);
 short HandleCastSpell(struct tag_message &);
@@ -379,11 +378,8 @@ short HandleCastSpell(struct tag_message &);
 // teleport second-click state (0x0048f28c).
 extern signed char indexToCastOn;
 extern signed char bInTeleportGetDest;
-// Combat effect icon names (0x004910d8); the loaded effect icon's file id
-// (0x004c6d64) and icon (0x004c709c).
-extern char *gCombatFxNames[];
+// The loaded combat effect icon's file id (0x004c6d64).
 extern short gCurLoadedSpellEffect;
-extern class icon *gCurLoadedSpellIcon;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
 extern short giCombatFxFrame;
 // Spell-book hover help lines (0x00493a78).
@@ -404,8 +400,6 @@ extern char *cCombatMessage[];
 extern char *cCombatHelp[];
 // ProcessCombatMsg records the hero casting from the combat screen.
 extern int giCurGeneral;
-// A surrender ended the combat (0x004c6720).
-extern signed char gbCombatSurrender;
 // Fallback net player for a combat action broadcast (0x004c6710).
 extern int giRemoteDefaultPlayer;
 // Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
@@ -415,8 +409,6 @@ extern char *cBattleResults[];
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
-// CheckWin flags a retreat victory (0x004c6d4c).
-extern signed char gbRetreatWin;
 // CheckHandleNet hands combat packets back while a battle is running.
 extern signed char gbInCombat;
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

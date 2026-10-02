@@ -21,7 +21,5 @@ struct campaignScenario {
 extern campaignScenario gCampaignScenarios[];
 // New-game "King of the Hill" option; campaign scenarios preset it.
 extern signed char gbKingOfTheHill;
-// Days elapsed in the current game (week/month calendar flattened).
-extern int giCurTurn;
 
 #endif // HOMM1_SOURCE_CAMPAIGNTYPES_H

@@ -341,7 +341,6 @@ public:
 };
 #pragma pack(pop)
 
-extern game* gpGame;
 // Recomputes a player's ultimate-artifact hint (cdecl, int player).
 void ComputeUALoc(int);
 #endif // HOMM1_SOURCE_GAME_H

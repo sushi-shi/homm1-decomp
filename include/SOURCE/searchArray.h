@@ -93,7 +93,6 @@ public:
 };
 #pragma pack(pop)
 
-// SeedPosition's working mobility (0x004c4efc) and seeding state.
-extern short giCurTempMobility;
+// SeedPosition's seeding state.
 extern int giSeedingValid;
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

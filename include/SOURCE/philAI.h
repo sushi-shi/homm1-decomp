@@ -168,7 +168,6 @@ extern int costTemp[];
 extern int iLastFrameRateTimer;
 extern signed char gbDrawSavedCursor;
 extern int bSpecialHideCursor;
-extern int gbHumanPlayer[];
 extern int giHumanTownConquered;
 extern int gbBerserk;
 extern float fBerserkFactor;

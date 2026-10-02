@@ -93,16 +93,12 @@ extern char gcCommandLine[];
 extern unsigned char bProcessMessage[];
 extern char szAppName[];
 extern char szTitle[];
-extern void *hmnuDflt;
-extern void *hmnuAdv;
 extern long lTemp;
 extern struct tagRECT rcTemp;
 extern int iTempX;
 extern int iTempY;
 extern long lLastGTimerTickCount;
 extern long lLastCycleTickCount;
-extern int gbClosingApp;
-extern int gbHeroMoving;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {

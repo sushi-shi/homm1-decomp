@@ -137,7 +137,6 @@ extern char* gStatNames[];
 extern char* gStatDesc[];
 extern char* gArtifactDesc[];
 extern char* gClassNames[];
-extern char* gArtifactNames[];
 extern char* cHeroScreen[];
 void UpdateHeroScreenStatusBar(short);
 extern class hero* gpHVHero;

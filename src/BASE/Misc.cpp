@@ -7,6 +7,7 @@
 
 #include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
+#include <H1/KB.h>
 
 #include <stdio.h>
 #include <stdlib.h>

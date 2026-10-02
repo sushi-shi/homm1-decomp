@@ -49,6 +49,7 @@ extern int gbLoadingMonoIcon;
 extern long gNextSoundPollTick;
 extern long gMusicFadeTimer;
 extern configStruct gConfig;
+// Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
 extern struct tag_tilePoint normalDirTable[];
 extern char* DEFAULT_AGGREGATE_NAME;
 extern resourceManager* gpResourceManager;
@@ -61,8 +62,6 @@ extern townManager* gpTownManager;
 extern class combatManager* gpCombatManager;
 extern executive* gpExec;
 extern class game* gpGame;
-// Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
-extern tag_tilePoint normalDirTable[];
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;
 extern long giBottomViewOverrideEndTime;
@@ -72,9 +71,12 @@ extern char gcBottomViewText[];
 extern int gbNoDialogMenusOn;
 extern void* hmnuApp;
 extern void* hmnuAdv;
+extern void* hmnuDflt;
 extern void* hmnuCmbt;
 extern void* hmnuTown;
 extern int gbClosingApp;
+extern int gbHeroMoving;
+extern int gbRemoteOn;
 extern heroWindow* DataEntryWin;
 extern char* cDEDest;
 extern int iDEMaxLen;
@@ -83,22 +85,19 @@ extern signed char giWaitType;
 extern signed char gbFunctionComplete;
 extern long lLastGetMessage;
 extern long lLastAilServe;
-extern struct tag_monsterInfo gMonsterDatabase[];
-extern char* gArmyNames[];
 // Artifact names (0x00493048).
 extern char* gArtifactNames[];
 extern char* gNeutralBuildingNames[];
 extern char* gDwellingNames[];
 // BuyBuild's building descriptions (0x00493e78, 0x00493908) and per-dwelling
-// prerequisite building masks (0x00491a68).
+// prerequisite building masks (0x00491a68); CanBuild reads six masks per
+// faction.
 extern char* gNeutralBuildingDescriptions[];
 extern char* gDwellingDescriptions[];
 extern unsigned short gDwellingRequirements[];
 extern int gMageBuildingCosts[][7];
 extern int gNeutralBuildingCosts[][7];
 extern int gDwellingCosts[][7];
-// CanBuild's six dwelling prerequisite masks per faction.
-extern unsigned short gDwellingRequirements[];
 extern int gMageBaseResourceValues[];
 extern int gNeutralBaseResourceValues[];
 extern int gDwellingBaseResourceValues[];
@@ -111,6 +110,10 @@ extern class font* smallFont;
 extern int gbMapExtraCleared;
 extern short giScoreMon[][2];
 extern short giScoreCampaignMon[][2];
+// Combat effect icon files by effect (0x004910d8) and the one loaded effect
+// icon (0x004c709c) army draws and PowEffect share.
+extern char* gCombatFxNames[];
+extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(int);
@@ -119,7 +122,6 @@ struct SAMPLE2 LoadPlaySample(char*);
 void WaitEndSample(struct SAMPLE2, int);
 // Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
 extern struct SAMPLE2 NULL_SAMPLE2;
-extern "C" void BitSet(void*, unsigned int);
 extern int glTimers[];
 void Process1WindowsMessage();
 void SetNoDialogMenus(int);
@@ -146,7 +148,6 @@ extern int gbBlackoutPlayer;
 extern char gMapName[];
 extern char gFullMapName[];
 extern char gMapDescription[];
-extern char gcCommandLine[];
 extern char cAggPathName[];
 extern int giFrameStep;
 extern int giNumHumanPlayers;
@@ -182,7 +183,6 @@ void CheckEndGame(int);
 void HandleRemoteSuddenExit(void);
 extern signed char gbRetreatWin;
 extern signed char gbGameInitialized;
-extern SAMPLE2 NULL_SAMPLE2;
 extern short gGameCommand;
 extern signed char gbCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
