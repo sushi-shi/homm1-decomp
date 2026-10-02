@@ -662,16 +662,16 @@ void game::ClaimMine(signed char mineId, signed char player) {
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
     switch (m_mines[mineId].type) {
-        case 0:
+        case 0x16:
             frame = 0x14;
             break;
-        case 1:
+        case 0x17:
             frame = 0x18;
             break;
-        case 0x16:
+        case 0:
             frame = 0x10;
             break;
-        case 0x17:
+        case 1:
             frame = 0xc;
             break;
         default:
