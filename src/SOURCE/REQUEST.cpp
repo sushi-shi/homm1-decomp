@@ -720,3 +720,7 @@ void fileRequester::ShowMapInfo(void) {
     gpReqExtraWindow->BroadcastMessage(message);
     gpReqExtraWindow->DrawWindow();
 }
+
+// REQUEST owns retail .bss 0x004c5130-0x004c5137.
+DATA(0x004c5130)
+signed char gbRequestingGames;

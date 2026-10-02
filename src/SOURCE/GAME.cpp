@@ -4900,3 +4900,37 @@ void armyGroup::DamageGroup(float damagePercent) {
         }
     }
 }
+
+// GAME owns retail .data 0x00490600-0x00490b4b and .bss 0x004c50d0-0x004c512f.
+// Retail emits gbNewGameSettingsSaved, giMonType and iLastSeed among the
+// literals of their users; gbShowMapInfo is defined above GetMap.
+DATA(0x00490600)
+int gbGameOver = 0;
+DATA(0x004906c0)
+signed char gbNewGameSettingsSaved = 0;
+DATA(0x004909c0)
+signed char giMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
+DATA(0x004909cc)
+unsigned long iLastSeed = 135621123;
+DATA(0x004c50d0)
+signed char gSaveCurPlayer;
+DATA(0x004c50dc)
+signed char gcSavedCrest;
+DATA(0x004c50e0)
+signed char gcSavedDifficulty;
+DATA(0x004c50e4)
+int giEndSequence;
+DATA(0x004c50e8)
+signed char gbDismissArmy;
+DATA(0x004c50f4)
+heroWindow* gpReqExtraWindow;
+DATA(0x004c50f8)
+signed char gcSavedPlayerTypes[4];
+DATA(0x004c5108)
+short giMineTypeCount[RESOURCE_COUNT];
+DATA(0x004c5118)
+char gcCurMapName[16];
+DATA(0x004c5128)
+signed char gbSavedKingOfTheHill;
+DATA(0x004c512c)
+signed char gRandomTownTypes[4];

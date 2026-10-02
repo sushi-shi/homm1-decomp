@@ -24,8 +24,10 @@ static const float SPELL_AI_STONESKIN_MODIFIER = 0.24f;
 static const float SPELL_AI_SHIELD_MODIFIER = 0.15f;
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
+DATA(0x004c50c4)
 int giSpellAIEffectShift;
 // Side of the stack standing on the hex DetermineEffectOfSpell evaluates.
+DATA(0x004c50c8)
 int giSpellAITargetSide;
 
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
