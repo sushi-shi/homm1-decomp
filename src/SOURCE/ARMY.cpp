@@ -299,10 +299,11 @@ short combatManager::GetShooterMask(signed char side) {
 VA(0x0046573b, 0xbb)
 short combatManager::GetFlyerMask(signed char side) {
     short armyIndex = 0;
+    short armyMask;
     short bitMask = 1;
-    short armyMask = 0;
     class army* army;
 
+    armyMask = 0;
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
         if (army && !(army->m_stats.attributes & 0x10) && (army->m_stats.attributes & 2))
