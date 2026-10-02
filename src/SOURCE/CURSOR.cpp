@@ -10,6 +10,7 @@
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/X_GLOBAL.h>
 
 // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
 // walk speed and indexes the map directly.
@@ -268,11 +269,277 @@ int advManager::GetMoveShowIt(signed char direction)
         return 0;
 }
 
-// donor PoL RVA 0x0000e51f; preferred Buka symbol ?MoveHero@advManager@@QAEPAVmapCell@@HHPAH00H0H@Z
-// donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.461867;margin=0.353958;shape=0.281;size=0.831;calls=0.879;alternate=pol20:class mapCell * advManager::MoveHero(int, int, int *, int *, int *, int, int *, int)@0x0000e51f
+// Buka CURSOR.cpp MoveHero; HoMM1 recomputes the step cost from the hero
+// type, parks the boat on a coast step and has no deferred object draw.
+extern short giPixelsPerStep[];
+extern short startVals[];
+
 VA(0x0040660c, 0xe1e)
-class mapCell * advManager::MoveHero(int, int, int *, int *, int *, int, int *, int) { return 0; }
+mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, int *eventX, int *eventY,
+                              int *outOfMobility, signed char processEvent, signed char *adjacentMonster)
+{
+    mapCell *pCursorCell;
+    int step;
+    int origX;
+    mapCell *nextCell;
+    hero *movingHero;
+    int origY;
+    signed char terrain;
+    mapCell *retCell;
+    int msDelay;
+    short xInc;
+    short yInc;
+    short pixelsPerStep;
+    short numSteps;
+
+    if (gbThisNetHumanPlayer[giCurPlayer])
+        SetNoDialogMenus(0);
+    *adjacentMonster = 0;
+    *outOfMobility = 0;
+    gbHeroMoving = 1;
+    retCell = 0;
+    movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    origX = movingHero->m_x;
+    origY = movingHero->m_y;
+    xInc = normalDirTable[direction].x;
+    yInc = normalDirTable[direction].y;
+    bShowIt = GetMoveShowIt(direction);
+    terrain = giGroundToTerrain[GetCell(movingHero->m_x, movingHero->m_y)->m_tileIndex];
+    nextCell = GetCell(movingHero->m_x + xInc, movingHero->m_y + yInc);
+    if (CalcTerrainCost(terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c)
+        > movingHero->m_remainingMobility) {
+        *outOfMobility = 1;
+        StopCursor(1);
+        goto movementDone;
+    }
+    MobilizeCurrHero(0);
+    *eventX = movingHero->m_x + xInc;
+    *eventY = movingHero->m_y + yInc;
+    if (m_cursorDirection != direction)
+        TurnTo(direction);
+    movingHero->m_direction = direction;
+    if ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && nextCell->m_triggerType == 0x1f) {
+        boatRecord *boat;
+        mapCell *boatCell;
+
+        for (step = 0; step < 32; step++) {
+            if (gpGame->m_boats[step].heroId == movingHero->m_id)
+                break;
+        }
+        boat = &gpGame->m_boats[step];
+        boatCell = GetCell(movingHero->m_x, movingHero->m_y);
+        boat->savedTriggerType = boatCell->m_triggerType;
+        boat->savedEventData = boatCell->m_objectMetadata;
+        boat->direction = m_cursorDirection;
+        boat->heroId |= 0x80;
+        boatCell->m_triggerType = 0xbe;
+        boatCell->m_objectMetadata = step;
+        boat->x = movingHero->m_x;
+        boat->y = movingHero->m_y;
+        StopCursor(1);
+        CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+        UpdateScreen(0, 0);
+        m_cursorActive = 0;
+    }
+    if (nextCell->m_triggerType & 0x80) {
+        switch (nextCell->m_triggerType & 0x7f) {
+            case 62:
+                if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                    goto movementDone;
+                StopCursor(1);
+                m_cursorActive = 0;
+                gpWindowManager->SaveFizzleSource(0xc0, 0xc0, 0x60, 0x60);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+                gpWindowManager->FizzleForward(0xc0, 0xc0, 0x60, 0x60, -1);
+                break;
+            case 3:
+                if (!(movingHero->m_eventFlags & HERO_EVENT_EMBARKED))
+                    goto movementDone;
+                else
+                    goto stoppingEvent;
+            case 61:
+                if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+                    if (gpGame->GetHero(nextCell->m_objectMetadata)->m_eventFlags & HERO_EVENT_EMBARKED)
+                        goto stoppingEvent;
+                    else
+                        goto movementDone;
+                }
+            case 2:
+            case 4:
+            case 6:
+            case 8:
+            case 9:
+            case 11:
+            case 26:
+            case 27:
+            case 28:
+            case 29:
+            case 36:
+            case 43:
+            case 48:
+                if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                    goto movementDone;
+            stoppingEvent:
+                StopCursor(1);
+                CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+                UpdateScreen(0, 0);
+                movingHero->m_remainingMobility -= CalcTerrainCost(
+                    terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+                if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
+                                    movingHero->m_unknown1c)
+                    > movingHero->m_remainingMobility) {
+                    movingHero->m_remainingMobility = 0;
+                    stopAfterMove = 1;
+                }
+                retCell = nextCell;
+                goto movementDone;
+            case 40:
+                if (gpGame->GetTown(nextCell->m_objectMetadata)->m_owner != giCurPlayer
+                    && gpGame->GetTown(nextCell->m_objectMetadata)->HasGarrison()) {
+                    StopCursor(1);
+                    CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
+                    UpdateScreen(0, 0);
+                    movingHero->m_remainingMobility -= CalcTerrainCost(
+                        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+                    if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0,
+                                        movingHero->m_remainingMobility, movingHero->m_unknown1c)
+                        > movingHero->m_remainingMobility) {
+                        movingHero->m_remainingMobility = 0;
+                        stopAfterMove = 1;
+                    }
+                    retCell = nextCell;
+                    goto movementDone;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (!ValidMove(direction))
+        goto movementDone;
+    if (movingHero->m_locationType == 0xa8) {
+        town *occupiedTown;
+
+        occupiedTown = gpGame->GetTown(movingHero->m_occupiedTown);
+        occupiedTown->m_occupyingHeroId = -1;
+    }
+    if (m_routeShown)
+        *(m_visibilityMap + (movingHero->m_x + xInc) + (movingHero->m_y + yInc) * MAP_CELL_GRID_SIZE) = 0;
+    m_updateMinX = m_updateMinY = 0;
+    gpGame->SetVisibility(m_mapOriginX + xInc + 7, m_mapOriginY + yInc + 7, giCurPlayer,
+                          gHeroScoutRadius[movingHero->m_unknown1c]);
+    m_forceCompleteDraw = 1;
+    pixelsPerStep = giPixelsPerStep[gConfig.walkSpeed];
+    msDelay = giStepDelay[gConfig.walkSpeed];
+    StartCursor(direction);
+    if (gConfig.walkSpeed == 4) {
+        if (EveryOther)
+            m_cursorFrame--;
+        bMoveSoundMade = 0;
+        MoveOrigin(xInc, yInc);
+        movingHero->m_x += xInc;
+        movingHero->m_y += yInc;
+        if (ComboDraw(0))
+            UpdateScreen(0, 0);
+        EveryOther = 1 - EveryOther;
+    } else {
+        gbEnlargeScreenBlit = 0;
+        gbNoBorder = 1;
+        numSteps = 16 / pixelsPerStep;
+        for (step = 0; step < numSteps * 2; step++) {
+            long tick;
+
+            if (step == numSteps) {
+                MoveOrigin(xInc, yInc);
+                movingHero->m_x += xInc;
+                movingHero->m_y += yInc;
+                m_updateMinX = startVals[xInc + 1];
+                m_updateMinY = startVals[yInc + 1];
+            }
+            tick = KBTickCount();
+            if (step + 1 == numSteps * 2) {
+                m_updateMinX = 0;
+                m_updateMinY = 0;
+            } else {
+                m_updateMinX += xInc * pixelsPerStep;
+                m_updateMinY += yInc * pixelsPerStep;
+            }
+            if (ComboDraw(0)) {
+                giLimitUpdMinX = -1;
+                UpdateScreen(0, 0);
+            }
+            if (bShowIt)
+                DelayTilMilli(msDelay + tick);
+        }
+        gbNoBorder = 0;
+        DrawAdventureBorder();
+        gbEnlargeScreenBlit = 1;
+    }
+    movingHero->m_remainingMobility -= CalcTerrainCost(
+        terrain, direction & 1, movingHero->m_remainingMobility, movingHero->m_unknown1c);
+    if (CalcTerrainCost(giGroundToTerrain[nextCell->m_tileIndex], 0, movingHero->m_remainingMobility,
+                        movingHero->m_unknown1c)
+        > movingHero->m_remainingMobility) {
+        movingHero->m_remainingMobility = 0;
+        stopAfterMove = 1;
+    }
+    StopCursor(stopAfterMove);
+    if (processEvent && stopAfterMove && ComboDraw(0))
+        UpdateScreen(0, 0);
+    SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 0);
+    step = GetCell(m_mapOriginX + 7, m_mapOriginY + 7)->m_tileIndex;
+    if (giGroundToTerrain[step] != m_currentTerrain && step % 20 < 4) {
+        m_currentTerrain = giGroundToTerrain[step];
+        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    }
+    m_updateMinX = m_updateMinY = 0;
+    pCursorCell = GetCell(m_cursorMapX + m_mapOriginX, m_cursorMapY + m_mapOriginY);
+    *eventX = m_cursorMapX + m_mapOriginX;
+    *eventY = m_cursorMapY + m_mapOriginY;
+    if ((pCursorCell->m_triggerType & 0x80)
+        || ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && pCursorCell->m_triggerType == 0x1f)) {
+        retCell = pCursorCell;
+        switch (pCursorCell->m_triggerType & 0x7f) {
+            case 30:
+            case 37:
+            case 46:
+            case 49:
+            case 50:
+            case 51:
+            case 52:
+            case 53:
+            case 54:
+            case 55:
+            case 56:
+            case 57:
+            case 58:
+            case 59:
+            case 60:
+                retCell = 0;
+                break;
+        }
+        goto movementDone;
+    } else
+        goto movementDone;
+movementDone:
+    UpdateRadar(1, 1);
+    gbHeroMoving = 0;
+    if (movingHero->m_x != origX || movingHero->m_y != origY) {
+        if (mapExtra[movingHero->m_x][movingHero->m_y] & 0x80) {
+            if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                goto adjacentDone;
+            if (retCell && (char)(retCell->m_triggerType & 0x7f) == 0x3e)
+                goto adjacentDone;
+            CheckAdjacentMon(adjacentMonster);
+            if (movingHero->m_owner == -1)
+                retCell = 0;
+        }
+    }
+adjacentDone:
+    if (gbThisNetHumanPlayer[giCurPlayer])
+        SetNoDialogMenus(1);
+    return retCell;
+}
 
 // donor PoL RVA 0x0000f753; preferred Buka symbol ?CheckAdjacentMon@advManager@@QAEXPAH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order

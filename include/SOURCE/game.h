@@ -29,6 +29,20 @@ H1_ENUM_BEGIN(GameStorageConstant)
 H1_ENUM_END(GameStorageConstant)
 // clang-format on
 
+// Buka boatRecord; MoveHero parks the hero's boat in one of 32 slots.
+#pragma pack(push, 1)
+struct boatRecord {
+    signed char id;
+    signed char x;
+    signed char y;
+    signed char direction;
+    unsigned char savedTriggerType;
+    unsigned char savedEventData;
+    signed char heroId;
+    signed char owner;
+};
+#pragma pack(pop)
+
 // Player records (0x105 bytes at 0x20c), the embedded 72x72 world map at
 // 0x620, towns (0x37 bytes at 0x121a1) and heroes (0xb6 bytes at 0x12985)
 // are fixed by retail address arithmetic; unrecovered spans stay opaque.
@@ -57,7 +71,9 @@ public:
     unsigned char m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
     signed char m_availableHeroes[GAME_HERO_COUNT];
-    char m_unknown14341[0x295];
+    char m_unknown14341[0x145];
+    boatRecord m_boats[32];
+    char m_unknown14586[0x50];
     // InsertSound reads the environment sound id per [x][y] cell.
     signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.
