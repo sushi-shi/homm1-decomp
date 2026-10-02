@@ -4,7 +4,7 @@ Equal integer values are review leads, never proof that two domains are the
 same.  This audit combines two views:
 
 * a lexical inventory of every enum block and member under ``src/`` and
-  ``include/``, including GZ_ENUM_* declarations and inactive/unreferenced
+  ``include/``, including H1_ENUM_* declarations and inactive/unreferenced
   source; and
 * a libclang pass over every project translation unit, which evaluates aliases,
   shifts, negative values, character constants, and implicit increments with
@@ -13,7 +13,7 @@ same.  This audit combines two views:
 The two views must cover one another.  A declaration missing from the evaluated
 view is a fatal coverage hole rather than a silently incomplete report.
 
-    homm1 verify enum-reuse                  # write the three derived TSV reports
+    homm1 verify enum-reuse                  # write the four derived TSV reports
     homm1 verify enum-reuse --duplicates     # print values declared twice+
     homm1 verify enum-reuse --value 10       # inspect one value
     homm1 verify enum-reuse --json           # machine-readable full census
@@ -45,6 +45,7 @@ CDB = BUILD / "clangd/compile_commands.json"
 REPORT = BUILD / "gen/enum_reuse.tsv"
 COLLISION_REPORT = BUILD / "gen/enum_value_collisions.tsv"
 PAIR_REPORT = BUILD / "gen/enum_domain_pairs.tsv"
+ROLE_PAIR_REPORT = BUILD / "gen/enum_role_pairs.tsv"
 BARE_CONSTANTS = BUILD / "gen/bare_constants.tsv"
 LEDGER = REPO / "config/reviews/enum-reuse.tsv"
 
@@ -55,9 +56,9 @@ LEDGER_FIELDS = (
 LEDGER_DECISIONS = frozenset(("pending", "retain", "canonical", "reuse"))
 
 _MACRO_BLOCK = re.compile(
-    r"\bGZ_ENUM_(BEGIN|BEGIN_SPLIT|FLAGS_BEGIN|CONST_BEGIN)"
+    r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|FLAGS_BEGIN|CONST_BEGIN)"
     r"\(\s*(\w+)\s*(?:,\s*(\w+)\s*)?\)(?P<body>.*?)"
-    r"\bGZ_ENUM_(?:END|END_SPLIT|FLAGS_END|CONST_END)\(",
+    r"\bH1_ENUM_(?:END|END_SPLIT|FLAGS_END|CONST_END)\(",
     re.S,
 )
 _RAW_ENUM = re.compile(
@@ -201,7 +202,8 @@ def scan_blocks(*, repo: Path = REPO, paths=None) -> list[Block]:
     blocks = []
     seen: Counter = Counter()
     for path in list(paths) if paths is not None else _project_files(repo):
-        if path.resolve() == (repo / "include/Enums.h").resolve():
+        # Domains.h's macro machinery names formal parameters, not domains.
+        if path.resolve() == (repo / "include/Domains.h").resolve():
             continue
         original = path.read_text(errors="replace")
         text = blank_comments(original)
@@ -482,6 +484,51 @@ def write_pair_report(path: Path, constants: list[Constant]) -> None:
     _write_tsv(path, fields, rows)
 
 
+def _member_roles(members: list[Constant]) -> dict[tuple[int, tuple[str, ...]], str]:
+    """Remove only a prefix common to every member of one source enum."""
+    names = [member.name.split("_") for member in members]
+    prefix_length = 0
+    for parts in zip(*names):
+        if len(set(parts)) != 1:
+            break
+        prefix_length += 1
+    if prefix_length == min(map(len, names)):
+        prefix_length -= 1
+    return {
+        (member.value, tuple(parts[prefix_length:])): member.name
+        for member, parts in zip(members, names)
+    }
+
+
+def write_role_pair_report(path: Path, constants: list[Constant]) -> None:
+    """Shortlist equal values with equal member roles; still only review leads."""
+    by_domain = _members_by_enum(constants)
+    roles = {name: _member_roles(members) for name, members in by_domain.items()}
+    fields = ("left", "right", "matching_roles", "left_count", "right_count", "role_coverage_pct")
+    rows = []
+    for left, right in combinations(sorted(roles), 2):
+        shared = sorted(roles[left].keys() & roles[right].keys())
+        if len(shared) < 2:
+            continue
+        rows.append({
+            "left": left,
+            "right": right,
+            "matching_roles": ";".join(
+                f"{value}:{roles[left][value, role]}={roles[right][value, role]}"
+                for value, role in shared
+            ),
+            "left_count": len(by_domain[left]),
+            "right_count": len(by_domain[right]),
+            "role_coverage_pct": f"{100.0 * len(shared) / min(len(by_domain[left]), len(by_domain[right])):.2f}",
+        })
+    rows.sort(key=lambda row: (
+        -float(row["role_coverage_pct"]),
+        -len(row["matching_roles"].split(";")),
+        row["left"], row["right"],
+    ))
+    _write_tsv(path, fields, rows)
+
+
 def _members_by_enum(constants: list[Constant]) -> dict[str, list[Constant]]:
     result = defaultdict(list)
     for constant in constants:
@@ -697,6 +744,7 @@ def main(argv=None) -> int:
         write_report(REPORT, constants)
         write_collision_report(COLLISION_REPORT, constants, BARE_CONSTANTS)
         write_pair_report(PAIR_REPORT, constants)
+        write_role_pair_report(ROLE_PAIR_REPORT, constants)
     if args.init_ledger:
         try:
             init_ledger(LEDGER, constants, blocks)
@@ -717,7 +765,8 @@ def main(argv=None) -> int:
     if not args.no_report:
         print(f"[enum-reuse] reports: {REPORT.relative_to(REPO)}, "
               f"{COLLISION_REPORT.relative_to(REPO)}, "
-              f"{PAIR_REPORT.relative_to(REPO)}", file=sys.stderr)
+              f"{PAIR_REPORT.relative_to(REPO)}, "
+              f"{ROLE_PAIR_REPORT.relative_to(REPO)}", file=sys.stderr)
     if findings:
         print(f"[enum-reuse] FAIL: {len(findings)} ledger finding(s)", file=sys.stderr)
         return 1

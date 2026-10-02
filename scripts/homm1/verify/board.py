@@ -134,10 +134,14 @@ _IDENT = re.compile(r"[A-Za-z_]\w*")
 _ARRAY_BOUND = re.compile(r"\[[^\]]*\]")
 _DECLSPEC = re.compile(
     r"\b(?:__declspec|__attribute__)\s*\([^()]*(?:\([^()]*\)[^()]*)*\)")
+#: Domains.h's storage annotations spell a type, not a declarator.
+_ENUM_TYPE_MACRO = re.compile(
+    r"\bH1_ENUM_(?:STORAGE|PARAM|RETURN|LOCAL|BITFIELD)\s*\([^()]*\)")
 
 
 def _declarator_name(part: str) -> str | None:
     head = _DECLSPEC.sub(" ", part)
+    head = _ENUM_TYPE_MACRO.sub(" T ", head)
     head = head.split("(", 1)[0]
     head = _ARRAY_BOUND.sub(" ", head)
     ids = _IDENT.findall(head)
@@ -315,7 +319,7 @@ METRICS = (
      re.compile(r"[=!]=[ \t]*(?:0[xX](?!0\b|1\b)[0-9a-fA-F]+"
                 r"|(?!0\b|1\b)[0-9]+)\b"), False),
     (".cpp-local enums",
-     re.compile(r"\bGZ_ENUM_(?:BEGIN|BEGIN_SPLIT|CONST_BEGIN|FLAGS_BEGIN)\b"
+     re.compile(r"\bH1_ENUM_(?:BEGIN|BEGIN_SPLIT|CONST_BEGIN|FLAGS_BEGIN)\b"
                 r"|^[ \t]*(?:typedef[ \t]+)?enum[ \t]+\w*[ \t]*\{", re.M), True),
     ("C-style casts", _count_c_style_casts, False),
     ("reinterpret_casts", _REINTERPRET_CAST, False),

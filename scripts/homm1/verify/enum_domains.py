@@ -1,9 +1,10 @@
 """homm1.verify.enum_domains - the enum-domain layer's structural gate (fast).
 
-Ported invariants (docs/enum-modeling-plan.md, docs/patterns/enum-domains.md):
+Ported invariants (https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/enum-modeling-plan.md, https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/patterns/enum-domains.md):
   1. SPLIT-WIDTH AGREEMENT (fatal): every H1_ENUM_STORAGE(N, S) matches the
-     domain's declared narrow storage.
-  2. STORAGE NAMES A REAL DOMAIN (fatal).
+     domain's declared narrow storage. Local temporaries and ABI parameter/return
+     widths are independently evidenced and may differ from a packed field.
+  2. STORAGE NAMES A REAL DOMAIN, NOT A CONSTANT GROUP (fatal).
   3. NO BARE `enum X { ... }` IN A HEADER (fatal; single-enumerator tag types
      exempt).
   4. EXPLICIT ENUMERATOR VALUES (warning only).
@@ -27,7 +28,7 @@ DECL_SPLIT = re.compile(r"\bH1_ENUM_BEGIN_SPLIT\(\s*(\w+)\s*,\s*(\w+)\s*\)")
 DECL_FLAGS = re.compile(r"\bH1_ENUM_FLAGS_BEGIN\(\s*(\w+)\s*,\s*(\w+)\s*\)")
 DECL_CONST = re.compile(r"\bH1_ENUM_CONST_BEGIN\(\s*(\w+)\s*\)")
 FORWARD = re.compile(r"\bH1_ENUM_FORWARD(?:_SPLIT)?\(\s*(\w+)\s*(?:,\s*(\w+)\s*)?\)")
-STORAGE = re.compile(r"\bH1_ENUM_(?:STORAGE|STORAGE_STEPPED|PARAM|RETURN|BITFIELD)"
+STORAGE = re.compile(r"\bH1_ENUM_(?P<usage>STORAGE|STORAGE_STEPPED|LOCAL|PARAM|RETURN|BITFIELD)"
                      r"\(\s*(\w+)\s*,\s*(\w+)\s*\)")
 BARE_ENUM = re.compile(
     r"^[ \t]*(?:typedef[ \t]+)?enum[ \t]+(\w+)[ \t]*\{(?P<body>[^}]*)\}", re.M)
@@ -58,8 +59,11 @@ def audit():
     warn: list[str] = []
     declared: dict[str, str | None] = {}
     decl_site: dict[str, str] = {}
+    constant_groups = set()
 
-    files = list(source_files())
+    # Macro formal parameters in the machinery are not project domains.
+    files = [path for path in source_files()
+             if path.relative_to(REPO).as_posix() != "include/Domains.h"]
     texts = {}
     for f in files:
         texts[f] = blank_comments(f.read_text(errors="replace"))
@@ -73,6 +77,7 @@ def audit():
         for m in DECL_CONST.finditer(t):
             declared.setdefault(m.group(1), None)
             decl_site.setdefault(m.group(1), r)
+            constant_groups.add(m.group(1))
         for rx in (DECL_SPLIT, DECL_FLAGS):
             for m in rx.finditer(t):
                 declared[m.group(1)] = m.group(2)
@@ -84,15 +89,19 @@ def audit():
         r = str(f.relative_to(REPO))
         t = texts[f]
         for m in STORAGE.finditer(t):
-            dom, st = m.group(1), m.group(2)
+            dom, st = m.group(2), m.group(3)
             line = t[:m.start()].count("\n") + 1
             if dom not in declared:
-                fatal.append(f"{r}:{line}: H1_ENUM_STORAGE names undeclared "
+                fatal.append(f"{r}:{line}: H1_ENUM_{m.group('usage')} names undeclared "
                              f"domain '{dom}' - typo, or the domain header is "
                              f"missing")
                 continue
+            if dom in constant_groups:
+                fatal.append(f"{r}:{line}: '{dom}' is a constant group, not a typed domain")
+                continue
             want = declared[dom]
-            if want is not None and st != want:
+            if (m.group("usage") not in {"LOCAL", "PARAM", "RETURN"}
+                    and want is not None and st != want):
                 fatal.append(f"{r}:{line}: '{dom}' is declared with narrow "
                              f"storage '{want}' ({decl_site.get(dom, '?')}) "
                              f"but stored as '{st}' here - two beliefs about "
