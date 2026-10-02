@@ -637,47 +637,47 @@ void ReadPrefsFromRegistry(void)
     rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
     if (rc == 0) {
         cbData = REGISTRY_DWORD_BYTES;
-        if (RegQueryValueExA(key, "Music Volume", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicVolume), &cbData) != 0) {
+        if (RegQueryValueExA(key, "Music Volume", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicVolume), &cbData) != 0) {
             memset(&gConfig, 0, sizeof(gConfig));
             SetGameDefaults();
             RegCloseKey(key);
             WritePrefs();
             return;
         }
-        RegQueryValueExA(key, "Music Volume", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicVolume), &cbData);
-        RegQueryValueExA(key, "Sound Volume", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.soundVolume), &cbData);
-        RegQueryValueExA(key, "Walk Speed", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.walkSpeed), &cbData);
-        RegQueryValueExA(key, "Show Route", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.showRoute), &cbData);
-        RegQueryValueExA(key, "Blackout Computer", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer), &cbData);
-        RegQueryValueExA(key, "Sound Quality", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicSource), &cbData);
-        RegQueryValueExA(key, "Direct Connect Com Port", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]), &cbData);
-        RegQueryValueExA(key, "Direct Connect Baud Rate", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]), &cbData);
-        RegQueryValueExA(key, "Modem Com Port", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]), &cbData);
-        RegQueryValueExA(key, "Modem Baud Rate", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]), &cbData);
+        RegQueryValueExA(key, "Music Volume", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicVolume), &cbData);
+        RegQueryValueExA(key, "Sound Volume", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.soundVolume), &cbData);
+        RegQueryValueExA(key, "Walk Speed", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.walkSpeed), &cbData);
+        RegQueryValueExA(key, "Show Route", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.showRoute), &cbData);
+        RegQueryValueExA(key, "Blackout Computer", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer), &cbData);
+        RegQueryValueExA(key, "Sound Quality", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.musicSource), &cbData);
+        RegQueryValueExA(key, "Direct Connect Com Port", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]), &cbData);
+        RegQueryValueExA(key, "Direct Connect Baud Rate", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]), &cbData);
+        RegQueryValueExA(key, "Modem Com Port", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]), &cbData);
+        RegQueryValueExA(key, "Modem Baud Rate", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]), &cbData);
         cbData = REGISTRY_TEXT_VALUE_SIZE;
-        RegQueryValueExA(key, "Modem Init String", 0, &dataType, reinterpret_cast<LPBYTE>(gConfig.modemInitString), &cbData);
+        RegQueryValueExA(key, "Modem Init String", NULL, &dataType, reinterpret_cast<LPBYTE>(gConfig.modemInitString), &cbData);
         cbData = REGISTRY_DWORD_BYTES;
-        RegQueryValueExA(key, "Autosave", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.autosave), &cbData);
-        RegQueryValueExA(key, "CD Offset", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.cdOffset), &cbData);
-        RegQueryValueExA(key, "Slow Video", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.slowVideo), &cbData);
-        RegQueryValueExA(key, "First Map Offset", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset), &cbData);
-        RegQueryValueExA(key, "Current Map Offset", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset), &cbData);
-        RegQueryValueExA(key, "Main Game Show Menu", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu), &cbData);
-        RegQueryValueExA(key, "Main Game X", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x), &cbData);
-        RegQueryValueExA(key, "Main Game Y", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y), &cbData);
-        RegQueryValueExA(key, "Main Game Width", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width), &cbData);
-        RegQueryValueExA(key, "Main Game Height", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height), &cbData);
-        RegQueryValueExA(key, "Main Game Full Screen", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen), &cbData);
-        RegQueryValueExA(key, "Editor Show Menu", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu), &cbData);
-        RegQueryValueExA(key, "Editor X", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x), &cbData);
-        RegQueryValueExA(key, "Editor Y", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y), &cbData);
-        RegQueryValueExA(key, "Editor Width", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width), &cbData);
-        RegQueryValueExA(key, "Editor Height", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height), &cbData);
-        RegQueryValueExA(key, "Editor Full Screen", 0, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen), &cbData);
+        RegQueryValueExA(key, "Autosave", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.autosave), &cbData);
+        RegQueryValueExA(key, "CD Offset", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.cdOffset), &cbData);
+        RegQueryValueExA(key, "Slow Video", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.slowVideo), &cbData);
+        RegQueryValueExA(key, "First Map Offset", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset), &cbData);
+        RegQueryValueExA(key, "Current Map Offset", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset), &cbData);
+        RegQueryValueExA(key, "Main Game Show Menu", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu), &cbData);
+        RegQueryValueExA(key, "Main Game X", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x), &cbData);
+        RegQueryValueExA(key, "Main Game Y", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y), &cbData);
+        RegQueryValueExA(key, "Main Game Width", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width), &cbData);
+        RegQueryValueExA(key, "Main Game Height", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height), &cbData);
+        RegQueryValueExA(key, "Main Game Full Screen", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen), &cbData);
+        RegQueryValueExA(key, "Editor Show Menu", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu), &cbData);
+        RegQueryValueExA(key, "Editor X", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x), &cbData);
+        RegQueryValueExA(key, "Editor Y", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y), &cbData);
+        RegQueryValueExA(key, "Editor Width", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width), &cbData);
+        RegQueryValueExA(key, "Editor Height", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height), &cbData);
+        RegQueryValueExA(key, "Editor Full Screen", NULL, &dataType, reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen), &cbData);
         cbData = REGISTRY_TEXT_VALUE_SIZE;
-        if (RegQueryValueExA(key, "AppPath", 0, &dataType, reinterpret_cast<LPBYTE>(gcRegAppPath), &cbData) != 0)
+        if (RegQueryValueExA(key, "AppPath", NULL, &dataType, reinterpret_cast<LPBYTE>(gcRegAppPath), &cbData) != 0)
             strcpy(gcRegAppPath, "");
-        if (RegQueryValueExA(key, "CDDrive", 0, &dataType, reinterpret_cast<LPBYTE>(gcRegCDDrive), &cbData) != 0)
+        if (RegQueryValueExA(key, "CDDrive", NULL, &dataType, reinterpret_cast<LPBYTE>(gcRegCDDrive), &cbData) != 0)
             strcpy(gcRegCDDrive, "");
         RegCloseKey(key);
     }

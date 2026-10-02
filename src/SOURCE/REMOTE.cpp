@@ -132,9 +132,9 @@ void RemoteMain(int gameMode) {
                 giWaitType = 7;
                 strcpy(directConnectMessage,
                        "Waiting for other computer to log in to direct connection.");
-                NormalDialog(directConnectMessage, 6, -1, -1, -1, 0, -1, 0, -1);
+                NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
                 if (!gbFunctionComplete)
-                    ShutDown(0);
+                    ShutDown(NULL);
             } else {
                 Connect();
             }
@@ -457,7 +457,7 @@ signed char WaitForGuest(void) {
             if (status) {
                 if (KBTickCount() > iLastBroadcastTime + 500) {
                     iLastBroadcastTime = KBTickCount();
-                    nb_snd(0, 0, 0, 0, 0);
+                    nb_snd(0, 0, 0, NULL, 0);
                 }
             } else {
                 giNumNetGuests++;
@@ -479,14 +479,14 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = 4;
             sprintf(gText, "Initializing network.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             giWaitType = 1;
             sprintf(gText, "Waiting On Guest.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             buffer[0] = giNumNetGuests;
             while (nb_snd(0, iNetNameIndex + 1, 3, buffer, 0))
                 PollSound();
@@ -494,14 +494,14 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = 3;
             sprintf(gText, "Initializing network.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             giWaitType = 2;
             sprintf(gText, "Waiting On Host.");
-            NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             break;
     }
     return 0;
@@ -571,9 +571,9 @@ void GUIModemCommand(char* message, char* command) {
     iModemCommandPos = 0;
     giWaitType = 5;
     strcpy(cModemCommand, command);
-    NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     if (!gbFunctionComplete)
-        ShutDown(0);
+        ShutDown(NULL);
 }
 
 // donor PoL RVA 0x0000cca9; preferred Buka symbol ?GUIModemCommandExec@@YICXZ
@@ -618,9 +618,9 @@ signed char GUIModemResponse(char* message, char* response) {
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
     giWaitType = 6;
-    NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
     if (!gbFunctionComplete)
-        ShutDown(0);
+        ShutDown(NULL);
     return 0;
 }
 
@@ -907,7 +907,7 @@ int TransmitRemoteData(
     while (retval == 0 && tries <= REMOTE_RETRY_COUNT) {
         retval = SendRemoteData(
             reinterpret_cast<unsigned char*>(&msg), // API-forced: SendRemoteData takes wire bytes.
-            0,
+            NULL,
             destination,
             length + REMOTE_MESSAGE_HEADER_SIZE
         );
@@ -993,7 +993,7 @@ void PollRemote(void) {
         sndBuf.payloadSize = 1;
         sndBuf.command = (giCurPlayer << 4) + iCurHourGlassPhase;
         sndBuf.payload.data[0] = 1;
-        SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), 0, 1 - giThisNetPos, 10); // API-forced: wire bytes.
+        SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), NULL, 1 - giThisNetPos, 10); // API-forced: wire bytes.
         lLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
@@ -1027,7 +1027,7 @@ void PollRemote(void) {
     result = 1;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(0, reinterpret_cast<unsigned char*>(&rcvBufIn), REMOTE_BROADCAST_PLAYER); // API-forced: wire bytes.
+        result = ReceiveRemoteData(NULL, reinterpret_cast<unsigned char*>(&rcvBufIn), REMOTE_BROADCAST_PLAYER); // API-forced: wire bytes.
         if (result && rcvBufIn.sender != giThisNetPos) {
             if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
                 giLastConfirm = rcvBufIn.id;
@@ -1051,7 +1051,7 @@ void PollRemote(void) {
                 sndBuf.id = rcvBufIn.id;
                 sndBuf.type = REMOTE_MESSAGE_CONFIRM;
                 sndBuf.payloadSize = 0;
-                SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), 0, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE); // API-forced: wire bytes.
+                SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), NULL, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE); // API-forced: wire bytes.
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)

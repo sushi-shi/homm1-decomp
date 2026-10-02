@@ -315,7 +315,7 @@ short resourceManager::LoadAggregateHeader(char *aggregateName)
     }
     if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE)
         _close(m_aggregateFd);
-    if (m_aggregateDir != 0)
+    if (m_aggregateDir != NULL)
         free(m_aggregateDir);
     m_aggregateFd = aggregateFp;
     _read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
