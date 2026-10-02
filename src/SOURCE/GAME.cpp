@@ -1475,7 +1475,7 @@ void game::SettleOverlay(int x, int y) {
     mapCell* cell;
     mapCell* cellEast;
     cell = &m_map[x][y];
-    if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
+    if (cell->m_objectIndex == MAP_CELL_NO_FRAME && cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
         switch (cell->m_triggerType) {
             case MAP_OBJECT_MOUNTAINS_2:
             case MAP_OBJECT_TREES_2:
@@ -1483,12 +1483,12 @@ void game::SettleOverlay(int x, int y) {
                     cellEast = &m_map[x + 1][y];
                     if (GetObjectFamily(cellEast->m_triggerType)
                         == GetObjectFamily(cell->m_triggerType)) {
-                        cell->m_secondaryTrigger |= 0x80;
+                        cell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
                     } else {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
-                        cell->m_overlayIndex = 0xff;
+                        cell->m_overlayIndex = MAP_CELL_NO_FRAME;
                     }
                 }
                 break;
@@ -1501,9 +1501,9 @@ void game::SettleOverlay(int x, int y) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
-                        cell->m_overlayIndex = 0xff;
+                        cell->m_overlayIndex = MAP_CELL_NO_FRAME;
                     } else {
-                        cell->m_secondaryTrigger |= 0x80;
+                        cell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
                     }
                 }
                 break;
@@ -1751,12 +1751,12 @@ void game::RandomizeEvents(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map[x][y];
-            if (cell->m_objectIndex != 0xff && cell->m_overlayIndex != 0xff) {
-                objTileset = cell->m_objectTileset & 0xf;
-                overlayTileset = cell->m_overlayTileset & 0xf;
-                if ((objTileset == 8 || objTileset == 9)
-                    && (overlayTileset == 8 || overlayTileset == 9))
-                    cell->m_secondaryTrigger |= 0x80;
+            if (cell->m_objectIndex != MAP_CELL_NO_FRAME && cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
+                objTileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
+                overlayTileset = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
+                if ((objTileset == TILESET_MTN32 || objTileset == TILESET_TREE32)
+                    && (overlayTileset == TILESET_MTN32 || overlayTileset == TILESET_TREE32))
+                    cell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
             }
             SettleOverlay(x, y);
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
@@ -1770,7 +1770,7 @@ void game::RandomizeEvents(void) {
                     case MAP_OBJECT_TREES_3:
                     case MAP_OBJECT_TREES_4:
                     case MAP_OBJECT_TREES_5:
-                        cell->m_secondaryTrigger |= 0x80;
+                        cell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
                         break;
                 }
             }
@@ -1780,10 +1780,10 @@ void game::RandomizeEvents(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map[x][y];
             if (cell->m_triggerType == 0x32)
-                cell->m_flags |= 0x80;
+                cell->m_flags |= MAP_CELL_OBJECT_SHADOW_ONLY;
             if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
                 switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
-                    case 0x1:
+                    case MAP_OBJECT_ALCHEMIST_LAB:
                     case MAP_OBJECT_SIGNPOST:
                     case MAP_OBJECT_BUOY:
                     case MAP_OBJECT_SKELETON:
@@ -1831,7 +1831,7 @@ void game::RandomizeEvents(void) {
                     case MAP_OBJECT_NOTHING_HERE:
                     case MAP_OBJECT_HERO:
                     case MAP_OBJECT_SHIP:
-                    case 0x3f:
+                    case MAP_OBJECT_ULTIMATE_ARTIFACT:
                         break;
                     default:
                         cell->m_triggerType -= MAP_TRIGGER_EVENT;
@@ -1927,13 +1927,13 @@ void game::ClaimTown(signed char townId, signed char player) {
     townRec = &m_castleRecs[townId];
     if (townRec->m_owner == player)
         return;
-    if (m_townOwners[townId] != -1)
+    if (m_townOwners[townId] != GAME_PLAYER_NONE)
         gpGame->GetTown(townId)->Deallocate();
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         townRec->m_army.m_creatureTypes[i] = CREATURE_NONE;
         townRec->m_army.m_creatureCounts[i] = 0;
     }
-    if (m_castleRecs[townId].m_owner == -1)
+    if (m_castleRecs[townId].m_owner == GAME_PLAYER_NONE)
         m_castleRecs[townId].m_turnsOwned = 2;
     else
         m_castleRecs[townId].m_turnsOwned = 0;
@@ -1943,12 +1943,12 @@ void game::ClaimTown(signed char townId, signed char player) {
     m_players[player].m_townCount++;
 
     cell = &m_map[m_castleRecs[townId].m_x - 1][m_castleRecs[townId].m_y];
-    cell->m_flags |= 0x10;
-    cell->m_objectTileset |= 0xe0;
+    cell->m_flags |= MAP_CELL_OBJECT_EXTRA;
+    cell->m_objectTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
     cell->m_extraFrame = m_players[player].Color() * 2;
     cell = &m_map[m_castleRecs[townId].m_x + 1][m_castleRecs[townId].m_y];
-    cell->m_flags |= 0x10;
-    cell->m_objectTileset |= 0xe0;
+    cell->m_flags |= MAP_CELL_OBJECT_EXTRA;
+    cell->m_objectTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
     cell->m_extraFrame = m_players[player].Color() * 2 + 1;
     SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, giVisRangeTown);
     CheckEndGame(0);
@@ -1993,11 +1993,11 @@ void game::ClaimMine(signed char mineId, signed char player) {
             cell = &m_map[m_mines[mineId].x][m_mines[mineId].y - 1];
             break;
     }
-    if (player == -1) {
-        cell->m_flags ^= 0x20;
+    if (player == GAME_PLAYER_NONE) {
+        cell->m_flags ^= MAP_CELL_OVERLAY_EXTRA;
     } else {
-        cell->m_flags |= 0x20;
-        cell->m_overlayTileset |= 0xe0;
+        cell->m_flags |= MAP_CELL_OVERLAY_EXTRA;
+        cell->m_overlayTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
         cell->m_extraFrame = m_players[player].Color() + frame;
     }
 }
@@ -3560,14 +3560,14 @@ void game::RandomizeMine(signed char x, signed char y) {
     m_map[x][y - 1].m_overlayIndex = upFrame;
     m_map[x + 1][y - 1].m_overlayIndex = upFrame + 1;
     if (type == RESOURCE_MERCURY) {
-        m_map[x + 1][y].m_flags |= 4;
+        m_map[x + 1][y].m_flags |= MAP_CELL_OBJECT_ANIMATED;
         bits = MAP_OBJECT_ALCHEMIST_LAB;
     } else if (type == RESOURCE_WOOD) {
         bits = MAP_OBJECT_SAWMILL;
     } else {
-        m_map[x + 1][y].m_flags |= 0x10;
-        m_map[x + 1][y].m_objectTileset |= 0xb0;
-        m_map[x + 1][y].m_extraFrame = type - 2;
+        m_map[x + 1][y].m_flags |= MAP_CELL_OBJECT_EXTRA;
+        m_map[x + 1][y].m_objectTileset |= TILESET_RSRC32 << MAP_CELL_EXTRA_TILESET_SHIFT;
+        m_map[x + 1][y].m_extraFrame = type - RESOURCE_ORE;
         bits = MAP_OBJECT_MINE;
     }
     mineIdx = GetMineId(x, y);
@@ -3666,9 +3666,9 @@ void game::ProcessRandomObjects(int castlesOnly) {
     int x;
     int highFV;
 
-    for (i = 0; i < 7; i++)
+    for (i = 0; i < RESOURCE_COUNT; i++)
         giMineTypeCount[i] = 0;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < GAME_PLAYER_COUNT; i++)
         gRandomTownTypes[i] = -1;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
@@ -3737,7 +3737,7 @@ void game::SetVisibility(short x, short y, short player, short radius) {
     int rangeLeft;
     int cutoff;
     unsigned char viewMask = 1 << player;
-    unsigned char outerMask = 1 << (player + 4);
+    unsigned char outerMask = 1 << (player + GAME_PLAYER_HIGH_BIT_SHIFT);
 
     if (radius >= 5)
         cutoff = 3;
