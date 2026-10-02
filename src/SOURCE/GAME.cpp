@@ -3261,11 +3261,62 @@ void game::ProcessOnMapHeroes(void) {
     CheckHeroConsistency();
 }
 
-// donor PoL RVA 0x00082cbb; preferred Buka symbol ?CheckHeroConsistency@game@@QAEXXZ
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.487324;margin=0.544395;shape=0.344;size=0.775;calls=1.000;alternate=pol20:void game::CheckHeroConsistency(void)@0x00082cbb
+// Buka 2.1 game::CheckHeroConsistency for HoMM1: replaces tavern heroes
+// some player already owns, clears map heroes that lost their owner and
+// zeroes the counts of empty or negative stacks.
 VA(0x004455f0, 0x3b5)
-void game::CheckHeroConsistency(void) {}
+void game::CheckHeroConsistency(void) {
+    town* town;
+    int j;
+    int i;
+    int y;
+    int x;
+    mapCell* cell;
+    hero* theHero;
+
+    for (i = 0; i < m_playerCount; i++) {
+        if (!m_playerDead[i]) {
+            for (j = 0; j < 2; j++) {
+                if (m_availableHeroes[m_players[i].m_availableHeroIds[j]] >= 0
+                    && m_availableHeroes[m_players[i].m_availableHeroIds[j]] <= 3) {
+                    m_players[i].m_availableHeroIds[j] = GetNewHeroId(0);
+                    m_availableHeroes[m_players[i].m_availableHeroIds[j]] = 0x40;
+                }
+            }
+        }
+    }
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+            cell = gpAdvManager->GetCell(x, y);
+            if (cell->m_triggerType == 0xbd) {
+                if ((unsigned char)cell->m_objectMetadata >= 0 && (unsigned char)cell->m_objectMetadata < GAME_HERO_COUNT) {
+                    theHero = GetHero(cell->m_objectMetadata);
+                    if (theHero->m_owner < 0 || theHero->m_owner > 3) {
+                        if (theHero->m_locationType == 0xa8) {
+                            town = gpGame->GetTown(theHero->m_occupiedTown);
+                            town->m_occupyingHeroId = -1;
+                        }
+                        RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, 0, 1);
+                    }
+                } else {
+                    cell->m_triggerType = 0;
+                }
+            }
+        }
+    }
+    for (i = 0; i < GAME_HERO_COUNT; i++) {
+        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+            if (m_heroRecs[i].m_army.m_creatureTypes[j] == -1 || m_heroRecs[i].m_army.m_creatureCounts[j] < 0)
+                m_heroRecs[i].m_army.m_creatureCounts[j] = 0;
+        }
+    }
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+            if (m_castleRecs[i].m_army.m_creatureTypes[j] == -1 || m_castleRecs[i].m_army.m_creatureCounts[j] < 0)
+                m_castleRecs[i].m_army.m_creatureCounts[j] = 0;
+        }
+    }
+}
 
 // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
