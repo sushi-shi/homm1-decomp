@@ -58,7 +58,10 @@ public:
     short m_unknown25c;
     char m_unknown25e[0x48];
     class hero *m_heroes[2];
-    char m_unknown2ae[0xc];
+    char m_unknown2ae[8];
+    // Set by a surrender (ProcessNextAction).
+    signed char m_sideDefeated[2];
+    char m_unknown2b8[2];
     signed char m_playerId[2];
     char m_unknown2bc[8];
     signed char m_heroCastSpell[2];
@@ -86,12 +89,16 @@ public:
     short m_unknown6db;
     // Per side: the side fights from a castle.
     signed char m_castleSide[2];
-    char m_unknown6df[0x1e];
+    char m_unknown6df[0x1c];
+    // ProcessCombatMsg ignores message types outside this mask.
+    short m_messageTypeMask;
     signed char m_sideRetreated[2];
     char m_unknown6ff[0x34];
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
-    char m_unknown7ab[0x22];
+    char m_unknown7ab[0x20];
+    signed char m_mouseDirection;
+    char m_unknown7cc;
     class heroWindow *m_winLoseWindow;
     char m_unknown7d1;
     signed char m_combatResult;
@@ -107,7 +114,8 @@ public:
     void CheckUpdateCombatMessages(void);
     // HoMM1 retail 0x00470aa9: text and a redraw flag (ret 8).
     void CombatMessage(char *, int);
-    void CombatMessage(int);
+    // HoMM1 retail 0x00470b5e: command help line (ret 4).
+    void CombatMessage(short);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army *);
@@ -213,10 +221,11 @@ public:
     void FreeIcons(void);
     void LoadArmies(void);
     void FreeArmies(void);
-    int GetGridIndex(int, int);
+    short GetGridIndex(short, short);
     void CheckApplyGoodMorale(int, int);
     int CheckApplyBadMorale(int, int);
-    int GetNextArmy(int);
+    // HoMM1 returns the found flag in AL.
+    signed char GetNextArmy(int);
     // HoMM1 retail 0x0044d9ca: byte side, byte result.
     signed char IsWinner(signed char);
     void CatAttack(signed char);
@@ -271,6 +280,14 @@ extern int giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;
+// Combat help lines for the auto-combat, skip and other controls.
+extern char *cCombatHelp[];
+// ProcessCombatMsg records the hero casting from the combat screen.
+extern int giCurGeneral;
+// A surrender ended the combat (0x004c6720).
+extern signed char gbCombatSurrender;
+// Fallback net player for a combat action broadcast (0x004c6710).
+extern int giRemoteDefaultPlayer;
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;

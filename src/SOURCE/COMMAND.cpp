@@ -121,11 +121,123 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatPointerCode, int) command)
         return command;
 }
 
-// donor PoL RVA 0x0002bb26; preferred Buka symbol ?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.392432;margin=0.340460;shape=0.273;size=0.720;calls=0.630;alternate=pol20:int combatManager::ProcessCombatMsg(struct tag_message &)@0x0002bb26
+// Buka COMMAND.cpp ProcessCombatMsg; HoMM1 hovers the combat field as
+// widget 0x40 and handles F1, space, H, T and C keys.
 VA(0x004104e4, 0x5bb)
-int combatManager::ProcessCombatMsg(struct tag_message &) { return 0; }
+int combatManager::ProcessCombatMsg(struct tag_message &message)
+{
+    short mouseX = message.payload.mouse.x;
+    short mouseY = message.payload.mouse.y;
+    signed char unused = 0;
+    short selectedHex;
+
+    if (!(m_messageTypeMask & message.type))
+        return 0;
+    switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.payload.widget.command) {
+                case WIDGET_COMMAND_HOVER:
+                    if (m_gridSelectionDisabled)
+                        break;
+                    switch (message.payload.widget.id) {
+                        case 0x40:
+                            gpMouseManager->MouseCoords(mouseX, mouseY);
+                            selectedHex = GetGridIndex(mouseX, mouseY);
+                            if (m_selectedHex != selectedHex || selectedHex == -1) {
+                                m_selectedHex = selectedHex;
+                                m_previousCommand = -99;
+                                m_currentCommand = GetCommand(m_selectedHex);
+                                m_mouseDirection = -1;
+                                if (m_currentCommand == 7) {
+                                    SetCombatDirections(selectedHex);
+                                    CheckSetMouseDirection(mouseX, mouseY, selectedHex);
+                                } else
+                                    gpMouseManager->SetPointer(GetPointer(m_currentCommand));
+                            } else if (m_currentCommand == 7)
+                                CheckSetMouseDirection(mouseX, mouseY, selectedHex);
+                            if (m_previousCommand != m_currentCommand) {
+                                m_previousCommand = m_currentCommand;
+                                CombatMessage(m_currentCommand);
+                            }
+                            break;
+                        default:
+                            gpMouseManager->MouseCoords(mouseX, mouseY);
+                            if (mouseX <= 0x32)
+                                CombatMessage(cCombatHelp[0], 1);
+                            else if (mouseX >= 0x24e)
+                                CombatMessage(cCombatHelp[1], 1);
+                            else
+                                CombatMessage(cCombatHelp[2], 1);
+                            gpMouseManager->SetPointer(6);
+                            m_selectedHex = -1;
+                            m_previousCommand = -99;
+                            break;
+                    }
+                    break;
+                case WIDGET_NOTIFY_SELECT:
+                    if (message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
+                        RightClick(m_selectedHex);
+                    else {
+                        switch (message.payload.widget.id) {
+                            case 0x40:
+                                DoCommand(m_currentCommand);
+                                break;
+                        }
+                    }
+                    break;
+                case WIDGET_NOTIFY_DESELECT:
+                    switch (message.payload.widget.id) {
+                        case 2:
+                            if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                                m_gridSelectionDisabled = 1;
+                                gpMouseManager->ReallyHidePointer();
+                            }
+                            break;
+                        case 8:
+                            if (!(message.payload.widget.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
+                                giNextAction = 3;
+                            break;
+                    }
+                    break;
+            }
+            break;
+        case MESSAGE_KEY_DOWN:
+            switch (message.payload.keyboard.keyCode) {
+                case 0x3b:
+                    PopNetBox(0);
+                    break;
+                case 0x39:
+                    giNextAction = 3;
+                    break;
+                case 0x23:
+                    if (m_heroes[m_currentSide]) {
+                        gpMouseManager->SetPointer(6);
+                        ViewGeneral(m_currentSide, 1, 0);
+                        ResetMouse();
+                    }
+                    break;
+                case 0x14:
+                    gpMouseManager->SetPointer(6);
+                    ViewArmy(&m_armies[m_currentSide][m_currentArmyIndex], m_currentSide, 0);
+                    ResetMouse();
+                    break;
+                case 0x2e:
+                    if (!m_heroes[m_currentSide])
+                        NormalDialog("You have no hero to cast a spell.", 1, -1, -1, -1, 0, -1, 0, -1);
+                    else if (m_heroCastSpell[m_currentSide])
+                        NormalDialog("You have already cast a spell this round.", 1, -1, -1, -1, 0, -1, 0, -1);
+                    else {
+                        gpMouseManager->SetPointer(6);
+                        giCurGeneral = m_currentSide;
+                        ViewSpells(0);
+                        ResetMouse();
+                    }
+                    break;
+            }
+            break;
+    }
+    return 1;
+}
 
 // Buka COMMAND.cpp ResetRound; HoMM1 has five stacks a side, one keep and
 // a byte spell-round counter.
@@ -636,8 +748,95 @@ void combatManager::ResetMouse(void)
         gpMouseManager->SetPointer(6);
 }
 
-// donor PoL RVA 0x00030536; preferred Buka symbol ?ProcessNextAction@combatManager@@QAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.593971;margin=0.483478;shape=0.242;size=0.886;calls=0.629;strings=Process Act;alternate=pol20:int combatManager::ProcessNextAction(struct tag_message &)@0x00030536
+// Buka COMMAND.cpp ProcessNextAction; HoMM1 hides the pointer around the
+// action, broadcasts it to a human net opponent and has no door or cycling.
 VA(0x004136e6, 0x55a)
-short combatManager::ProcessNextAction(struct tag_message &) { return 0; }
+short combatManager::ProcessNextAction(struct tag_message &message)
+{
+    army *actingArmy;
+    signed char advance;
+    int result;
+    int data[4];
+
+    if (giNextAction)
+        LogStr("Process Act", giNextAction, giNextActionGridIndex, giNextActionGridIndex2, giNextActionExtra,
+               m_currentSide, m_currentArmyIndex, m_armies[m_currentSide][m_currentArmyIndex].m_hex);
+    if (gbThisNetHasControl && gbRemoteOn && m_playerId[1] >= 0 && m_playerId[0] >= 0
+        && gbHumanPlayer[m_playerId[0]] && gbHumanPlayer[m_playerId[1]]) {
+        int netPos;
+
+        netPos = m_playerId[1 - m_currentSide];
+        if (netPos < 0 || !gbHumanPlayer[netPos])
+            netPos = giRemoteDefaultPlayer;
+        data[0] = giNextAction;
+        data[1] = giNextActionExtra;
+        data[2] = giNextActionGridIndex;
+        data[3] = giNextActionGridIndex2;
+        result = TransmitRemoteData((char *)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
+        if (!result)
+            ShutDown(0);
+    }
+    actingArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    advance = 0;
+    if (CheckWin(&message))
+        return MESSAGE_DISPATCH_FORWARD;
+    switch (giNextAction) {
+        case 0:
+            break;
+        case 1:
+            gpMouseManager->ReallyHidePointer();
+            CastSpell(giNextActionExtra, giNextActionGridIndex, 0, giNextActionGridIndex2);
+            if (m_armies[m_currentSide][m_currentArmyIndex].m_quantity <= 0)
+                advance = 1;
+            break;
+        case 2:
+            gpMouseManager->ReallyHidePointer();
+            actingArmy->MoveAttack(giNextActionGridIndex, 0);
+            actingArmy->m_attributes |= 0x80;
+            if (CheckWin(&message))
+                return MESSAGE_DISPATCH_FORWARD;
+            CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
+            advance = 1;
+            break;
+        case 6:
+            gpMouseManager->ReallyHidePointer();
+            if (giNextActionExtra != -1 && actingArmy->m_hex != giNextActionExtra)
+                actingArmy->MoveAttack(giNextActionExtra, 1);
+            actingArmy->MoveAttack(giNextActionGridIndex, 0);
+            actingArmy->m_attributes |= 0x80;
+            if (CheckWin(&message))
+                return MESSAGE_DISPATCH_FORWARD;
+            CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
+            advance = 1;
+            break;
+        case 4:
+            m_sideRetreated[m_currentSide] = 1;
+            gbRetreatWin = 1;
+            break;
+        case 5:
+            gbCombatSurrender = 1;
+            gbRetreatWin = 1;
+            m_sideDefeated[m_currentSide] = 1;
+            gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD] -= giNextActionExtra;
+            gpGame->m_players[m_playerId[1 - m_currentSide]].m_resources[RESOURCE_GOLD] += giNextActionExtra;
+            break;
+        case 3:
+            actingArmy->m_attributes |= 0x80;
+            advance = 1;
+            break;
+    }
+    giNextAction = 0;
+    if (CheckWin(&message))
+        return MESSAGE_DISPATCH_FORWARD;
+    if (advance && !GetNextArmy(1)) {
+        ResetRound();
+        GetNextArmy(1);
+    }
+    CheckChangeSelector();
+    if (gbThisNetHasControl && !m_gridSelectionDisabled && m_playerId[m_currentSide] != -1
+        && gbThisNetHumanPlayer[m_playerId[m_currentSide]])
+        gpMouseManager->ReallyShowPointer();
+    else
+        gpMouseManager->ReallyHidePointer();
+    return MESSAGE_DISPATCH_CONSUME;
+}

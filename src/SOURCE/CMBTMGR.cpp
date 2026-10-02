@@ -56,7 +56,7 @@ int combatManager::CheckApplyBadMorale(int, int) { return 0; }
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.362089;margin=0.657323;shape=0.226;size=0.622;calls=0.750;alternate=pol20:int combatManager::GetNextArmy(int)@0x00092cc7
 VA(0x0044d7c1, 0x209)
-int combatManager::GetNextArmy(int) { return 0; }
+signed char combatManager::GetNextArmy(int) { return 0; }
 
 // HoMM1's combat grid is nine columns by five rows.
 VA(0x0044f557, 0x30)
