@@ -1995,9 +1995,9 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
     int castleValue;
     float countMod0;
     float magicMod8;
+    int spellScore;
     int maxScore3;
     town* pTown;
-    int spellScore;
     int stats;
     int luck;
     int morale;
