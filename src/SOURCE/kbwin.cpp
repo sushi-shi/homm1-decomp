@@ -256,7 +256,7 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
                                                                    : KBWIN_MIN_WIDTH;
                     iTempY = HIWORD(messageData) > KBWIN_MIN_HEIGHT ? HIWORD(messageData)
                                                                     : KBWIN_MIN_HEIGHT;
-                    ResizeWindow(-1, -1, iTempX, iTempY);
+                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, iTempX, iTempY);
                     return 0;
                 }
             }
@@ -379,11 +379,11 @@ void ResizeWindow(int x, int y, int width, int height) {
     if (gConfig.gfx[giCurExe].fullScreen != 0)
         return;
     GetWindowRect(hwndApp, &rect);
-    if (x == -1)
+    if (x == KBWIN_KEEP_POSITION)
         xpos = rect.left;
     else
         xpos = x;
-    if (y == -1)
+    if (y == KBWIN_KEEP_POSITION)
         ypos = rect.top;
     else
         ypos = y;
@@ -427,16 +427,36 @@ AppCommand(void* window, unsigned int message, unsigned int messageParam, long i
             WinHelpA(static_cast<HWND>(hwndApp), ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
             break;
         case KBWIN_MENU_SIZE_640_480:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_640, KBWIN_HEIGHT_480);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_640,
+                KBWIN_HEIGHT_480
+            );
             break;
         case KBWIN_MENU_SIZE_800_600:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_800, KBWIN_HEIGHT_600);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_800,
+                KBWIN_HEIGHT_600
+            );
             break;
         case KBWIN_MENU_SIZE_1024_768:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_1024, KBWIN_HEIGHT_768);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_1024,
+                KBWIN_HEIGHT_768
+            );
             break;
         case KBWIN_MENU_SIZE_1280_1024:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_1280, KBWIN_HEIGHT_1024);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_1280,
+                KBWIN_HEIGHT_1024
+            );
             break;
         case KBWIN_MENU_FULLSCREEN:
             SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
@@ -515,7 +535,12 @@ void SetMenuStatus(int showMenu) {
         giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
     replacedStyle = SetWindowLongA(hwndApp, GWL_STYLE, giCurWindowsStyleFlags);
     ShowWindow(hwndApp, SW_SHOWNA);
-    ResizeWindow(-1, -1, gConfig.gfx[giCurExe].width, gConfig.gfx[giCurExe].height);
+    ResizeWindow(
+        KBWIN_KEEP_POSITION,
+        KBWIN_KEEP_POSITION,
+        gConfig.gfx[giCurExe].width,
+        gConfig.gfx[giCurExe].height
+    );
 }
 
 // donor PoL RVA 0x0001ce3d; preferred Buka symbol ?SetNoDialogMenus@@YIXH@Z

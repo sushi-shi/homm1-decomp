@@ -746,7 +746,7 @@ short townManager::Main(struct tag_message& message) {
                                 delete m_heroWindow0;
                                 if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
                                     if (gpGame->CreateBoat(m_town->m_x - 1, m_town->m_y + 1)
-                                        != -1) {
+                                        != GAME_TABLE_FREE) {
                                         res = NULL_SAMPLE2;
                                         res = LoadPlaySample("buildtwn.82M");
                                         gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] -=

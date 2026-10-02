@@ -21,6 +21,8 @@ H1_ENUM_CONST_END(TownConstant)
 // gDwellingType rows (0..5 knight, 12..17 sorceress, 6..11 barbarian, 18..23
 // warlock creatures) and GiveTroopsToNeutralTowns' recruits fix the order.
 H1_ENUM_BEGIN(TownType)
+    // gRandomTownTypes' entry before RandomizeTown picks the race.
+    TOWN_TYPE_NONE = -1,
     TOWN_TYPE_KNIGHT = 0,
     TOWN_TYPE_SORCERESS = 1,
     TOWN_TYPE_BARBARIAN = 2,

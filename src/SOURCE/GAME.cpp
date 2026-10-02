@@ -374,7 +374,7 @@ signed char game::GetMineId(signed char x, signed char y) {
         if (m_mines[i].x == x && m_mines[i].y == y)
             return i;
     }
-    return -1;
+    return GAME_MINE_NONE;
 }
 
 // donor PoL RVA 0x00071d89; preferred Buka symbol ?GenerateStandardFileName@@YIXPAD0@Z
@@ -920,7 +920,7 @@ void game::UpdateNewGameWindow(void) {
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_players[0].m_color != -1) {
+    if (m_players[0].m_color != PLAYER_COLOR_NONE) {
         message.id = NEW_GAME_COLOR;
         message.value =
             m_players[0].m_color * NEW_GAME_FRAME_CREST_STRIDE + NEW_GAME_FRAME_CREST_BASE;
@@ -3680,7 +3680,7 @@ void game::ProcessRandomObjects(int castlesOnly) {
     for (i = 0; i < RESOURCE_COUNT; i++)
         giMineTypeCount[i] = 0;
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
-        gRandomTownTypes[i] = -1;
+        gRandomTownTypes[i] = TOWN_TYPE_NONE;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
@@ -4816,7 +4816,7 @@ int game::GetBoatsBuilt(void) {
     int count = 0;
     int i;
     for (i = 0; i < GAME_BOAT_COUNT; ++i) {
-        if (m_boatSlots[i] != -1)
+        if (m_boatSlots[i] != GAME_TABLE_FREE)
             ++count;
     }
     return count;
@@ -5064,7 +5064,7 @@ void game::ShowScenInfo(void) {
     message.text = m_mapDescription;
     scenWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_players[giCurPlayer].m_color != -1) {
+    if (m_players[giCurPlayer].m_color != PLAYER_COLOR_NONE) {
         message.id = crestId;
         message.value = m_players[giCurPlayer].m_color * 2 + 11;
         scenWindow->BroadcastMessage(message);

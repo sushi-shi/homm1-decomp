@@ -71,6 +71,8 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     CONFIG_EXECUTABLE_EDITOR_RECORD = 1,
     CONFIG_EXECUTABLE_COUNT = 2,
     CONFIG_UNINITIALIZED = 99,
+    // ResizeWindow keeps the window's current left/top for this x/y.
+    KBWIN_KEEP_POSITION = -1,
     CPU_FAMILY_PENTIUM = 5,
     DEFAULT_WINDOW_ORIGIN = 10,
     DEFAULT_WINDOW_WIDTH = 640,
