@@ -479,7 +479,7 @@ short fileRequester::Main(tag_message& message) {
                     "computer takes the place of the last %d human(s)?",
                     ch, ch - giNumHumanPlayers);
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                if (gpWindowManager->m_dialogResult != 0x7805)
+                if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     finished = 0;
             }
         }

@@ -214,7 +214,7 @@ void ComputeUALoc(int player) {
                 heading = 0;
                 tries = 0;
                 while (!(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                         && gpGame->m_map[x][y].m_triggerType == 0
+                         && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
                          && gpGame->m_map[x][y].m_objectIndex == 0xff
                          && gpGame->m_map[x][y].m_overlayIndex == 0xff
                          && gpGame->m_map[x][y].m_tileIndex >= 20)) {
@@ -1086,7 +1086,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     delete window;
     if (gpWindowManager->m_dialogResult == 0x385) {
         NormalDialog("Are you sure you want to restart this scenario?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-        if (gpWindowManager->m_dialogResult == 0x7805) {
+        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
             giBottomViewOverride = 0;
@@ -2388,7 +2388,7 @@ short ViewArmyHandler(tag_message& message) {
                         return MESSAGE_DISPATCH_FORWARD;
                     case 0x7803:
                         NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                        if (gpWindowManager->m_dialogResult == 0x7805) {
+                        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
                             message.command = message.id =
                                 WIDGET_COMMAND_DIALOG_SELECT;
@@ -2830,16 +2830,16 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     townNum = GetTownId(x, y);
     for (j = 0; j < 3; j++) {
         for (i = 0; i < 4; i++) {
-            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) > 0
-                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & 0x7f) <= 0x30) {
+            if ((m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
+                && (m_map[x - 2 + i][y - 2 + j].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
                 m_map[x - 2 + i][y - 2 + j].m_unknown07 |= 0x28;
             } else {
-                m_map[x - 2 + i][y - 2 + j].m_triggerType = 0x28;
+                m_map[x - 2 + i][y - 2 + j].m_triggerType = MAP_OBJECT_TOWN;
                 m_map[x - 2 + i][y - 2 + j].m_objectMetadata = townNum;
             }
         }
     }
-    m_map[x][y].m_triggerType |= 0x80;
+    m_map[x][y].m_triggerType |= MAP_TRIGGER_EVENT;
     town = GetTown(townNum);
     town->m_turnsOwned = 10;
     if (m_campaignType > 0 && m_campaignScenario >= 4 && m_campaignScenario <= 7 && town->m_owner == 0) {
@@ -3429,51 +3429,51 @@ void game::ProcessRandomObjects(int castlesOnly) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
-            if (!castlesOnly || cellPtr->m_triggerType == 0xc1) {
+            if (!castlesOnly || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)) {
                 switch (cellPtr->m_triggerType) {
-                    case 0xc0:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN:
                         RandomizeTown(x, y, 0);
                         break;
-                    case 0xc1:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE:
                         RandomizeTown(x, y, 1);
                         break;
-                    case 0xbf:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER:
                         lowFV = 80;
                         highFV = 2000;
                         goto pickMonster;
-                    case 0xc3:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK:
                         lowFV = 0;
                         highFV = 400;
                         goto pickMonster;
-                    case 0xc4:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM:
                         lowFV = 80;
                         highFV = 1000;
                         goto pickMonster;
-                    case 0xc5:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG:
                         lowFV = 500;
                         highFV = 2500;
                         goto pickMonster;
-                    case 0xc6:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG:
                         lowFV = 2000;
                         highFV = 100000;
                         goto pickMonster;
                     pickMonster:
-                        cellPtr->m_triggerType = 0x9a;
+                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
                         cellPtr->m_objectIndex = Random(0, 27);
                         while (gMonsterDatabase[cellPtr->m_objectIndex].fightValue <= lowFV
                                || gMonsterDatabase[cellPtr->m_objectIndex].fightValue >= highFV)
                             cellPtr->m_objectIndex = Random(0, 27);
                         break;
-                    case 0xbe:
-                        cellPtr->m_triggerType = 0x9d;
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_RESOURCE:
+                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE);
                         cellPtr->m_objectIndex = Random(61, 67);
                         break;
-                    case 0xbd:
-                        cellPtr->m_triggerType = 0xb0;
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_ARTIFACT:
+                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT);
                         cellPtr->m_objectIndex = GetRandomArtifactId();
                         m_randomArtifacts[cellPtr->m_objectIndex] = 36;
                         break;
-                    case 0xc2:
+                    case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE:
                         RandomizeMine(x, y);
                         break;
                 }
@@ -3668,7 +3668,7 @@ signed char advManager::FindAdjacentMonster(
              ++s_adjacentMonsterX) {
             for (s_adjacentMonsterY = originY - 1; s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
@@ -3700,7 +3700,7 @@ signed char advManager::FindAdjacentMonster(
             for (s_adjacentMonsterY = s_adjacentMonsterMinY;
                  s_adjacentMonsterY < s_adjacentMonsterEndY;
                  ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == 0x9a) {
+                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     if (s_adjacentMonsterY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == 0xff
                              || (GetCell(originX, originY)->m_flags & 0x80))
@@ -3863,7 +3863,7 @@ void game::ProcessMapExtra(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
             switch (cellPtr->m_triggerType) {
-                case 0xa8:
+                case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
                 case 0xc0:
                 case 0xc1:
                     townNum = GetTownId(x, y);
@@ -3949,7 +3949,7 @@ void game::ProcessOnMapHeroes(void) {
     for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
-            if ((cell->m_triggerType & 0x7f) == 0x47) {
+            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == 0x47) {
                 extra = (mapHeroExtra*)ppMapExtra[(unsigned char)cell->m_objectMetadata];
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
@@ -3978,7 +3978,7 @@ void game::ProcessOnMapHeroes(void) {
                 m_players[theHero->m_owner].m_heroCount++;
                 if (mapY > 0) {
                     north = &m_map[mapX][mapY - 1];
-                    if (north->m_triggerType == 0xa8) {
+                    if (north->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                         theHero->m_y--;
                         townId = GetTownId(mapX, mapY - 1);
                         town = GetTown(townId);
@@ -3990,7 +3990,7 @@ void game::ProcessOnMapHeroes(void) {
                 cell->m_overlayTileset = 0;
                 cell->m_overlayIndex = 0xff;
                 cell->m_objectMetadata = 0;
-                cell->m_triggerType = 0;
+                cell->m_triggerType = MAP_OBJECT_NONE;
                 SetVisibility(theHero->m_x, theHero->m_y, theHero->m_owner, gClassVisionRange[theHero->m_unknown1c]);
             }
         }
@@ -4259,7 +4259,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         CheckDoMain(0, 1);
         if (lastPacketTime + 20000 < KBTickCount()) {
             NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-            if (gpWindowManager->m_dialogResult == 0x7805)
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
             else
                 ShutDown(NULL);

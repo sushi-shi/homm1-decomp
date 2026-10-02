@@ -193,7 +193,7 @@ void PollRemote(void) {
         NormalDialog(
             "The other player's computer is not responding.  Do you wish to wait longer?",
             NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-        if (gpWindowManager->m_dialogResult == 0x7805) {
+        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             lLastHeartbeatReceive = KBTickCount();
         } else {
             bInTimeoutFail = 1;

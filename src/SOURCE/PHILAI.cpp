@@ -329,12 +329,12 @@ void philAI::CheckBerserk(hero* pHero) {
         for (y = 0; y < 72; y++) {
             cell = gpAdvManager->GetCell(x, y);
             switch (cell->m_triggerType) {
-            case 0xa8:
+            case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
                 if (gpGame->m_townOwners[cell->m_objectMetadata] != pHero->m_owner) {
                     if (gpGame->m_townOwners[cell->m_objectMetadata] != -1) {
                         enemy = FightValueOfStack(
                             &gpGame->GetTown(cell->m_objectMetadata)->m_army,
-                            0,
+                            NULL,
                             1,
                             1,
                             cell->m_objectMetadata
@@ -346,14 +346,14 @@ void philAI::CheckBerserk(hero* pHero) {
                     }
                 }
                 break;
-            case 0xbd:
+            case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
                 if (gpGame->m_availableHeroes[cell->m_objectMetadata] != pHero->m_owner) {
                     enemyHero = gpGame->GetHero(cell->m_objectMetadata);
                     enemy = FightValueOfStack(
                         &enemyHero->m_army,
-                        0,
+                        NULL,
                         1,
-                        enemyHero->m_locationType == 0xa8,
+                        enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN),
                         enemyHero->m_occupiedTown
                     );
                     if (enemy * 2 > heroFightValue)

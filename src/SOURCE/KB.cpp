@@ -548,7 +548,7 @@ int oldmain(void) {
                 if (giEndSequence == 0) {
                     sprintf(gText, "Would you like to replay this scenario?");
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                    if (gpWindowManager->m_dialogResult == 0x7805) {
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
                     }
@@ -567,7 +567,7 @@ int oldmain(void) {
                         "scenario?",
                         saveBuf);
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                    if (gpWindowManager->m_dialogResult == 0x7805)
+                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                         goto playScenario;
                 }
             }
@@ -2613,7 +2613,7 @@ int HandleAppSpecificMenuCommands(int command) {
         confirmMenuCommand:
             if (gpAdvManager->m_active == 1) {
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                if (gpWindowManager->m_dialogResult != 0x7805)
+                if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     break;
             }
             giMenuCommand = command;

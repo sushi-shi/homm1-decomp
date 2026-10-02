@@ -875,7 +875,7 @@ short advManager::Main(struct tag_message& message) {
             confirmGameCommand:
                 bQuit = 1;
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                if (gpWindowManager->m_dialogResult == 30726)
+                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                     bQuit = 0;
                 else
                     gGameCommand = cmdValue;
@@ -1255,7 +1255,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
                     "One or more Heroes may still move, are you sure you want to end your turn?",
                     NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1
                 );
-                if (gpWindowManager->m_dialogResult == 0x7806)
+                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                     break;
             }
             gpGame->NextPlayer();
@@ -2171,7 +2171,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
     heroWindow* window;
 
     flag = 1;
-    curCell = 0;
+    curCell = NULL;
     posX = cellX * 32 - 57;
     if (posX < 16)
         posX = 16;
@@ -4319,7 +4319,7 @@ short CPanelHandler(struct tag_message &message) {
                             handled = 1;
                             if (!bFreshSave) {
                                 NormalDialog(question, NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x50, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-                                if (gpWindowManager->m_dialogResult == 0x7806)
+                                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                                     handled = 0;
                             }
                             break;

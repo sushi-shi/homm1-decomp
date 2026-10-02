@@ -298,7 +298,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     *adjacentMonster = 0;
     *outOfMobility = 0;
     gbHeroMoving = 1;
-    retCell = 0;
+    retCell = NULL;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     origX = movingHero->m_x;
     origY = movingHero->m_y;
@@ -319,7 +319,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     if (m_cursorDirection != direction)
         TurnTo(direction);
     movingHero->m_direction = direction;
-    if ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && nextCell->m_triggerType == 0x1f) {
+    if ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && nextCell->m_triggerType == MAP_OBJECT_COAST) {
         boatRecord *boat;
         mapCell *boatCell;
 
@@ -333,7 +333,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         boat->savedEventData = boatCell->m_objectMetadata;
         boat->direction = m_cursorDirection;
         boat->heroId |= 0x80;
-        boatCell->m_triggerType = 0xbe;
+        boatCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
         boatCell->m_objectMetadata = step;
         boat->x = movingHero->m_x;
         boat->y = movingHero->m_y;
@@ -342,9 +342,9 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
         UpdateScreen(0, 0);
         m_cursorActive = 0;
     }
-    if (nextCell->m_triggerType & 0x80) {
-        switch (nextCell->m_triggerType & 0x7f) {
-            case 62:
+    if (nextCell->m_triggerType & MAP_TRIGGER_EVENT) {
+        switch (nextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+            case MAP_OBJECT_SHIP:
                 if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     goto movementDone;
                 StopCursor(1);
@@ -353,31 +353,31 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 gpWindowManager->FizzleForward(0xc0, 0xc0, 0x60, 0x60, -1);
                 break;
-            case 3:
+            case MAP_OBJECT_BUOY:
                 if (!(movingHero->m_eventFlags & HERO_EVENT_EMBARKED))
                     goto movementDone;
                 else
                     goto stoppingEvent;
-            case 61:
+            case MAP_OBJECT_HERO:
                 if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED) {
                     if (gpGame->GetHero(nextCell->m_objectMetadata)->m_eventFlags & HERO_EVENT_EMBARKED)
                         goto stoppingEvent;
                     else
                         goto movementDone;
                 }
-            case 2:
-            case 4:
-            case 6:
-            case 8:
-            case 9:
-            case 11:
-            case 26:
-            case 27:
-            case 28:
-            case 29:
-            case 36:
-            case 43:
-            case 48:
+            case MAP_OBJECT_SIGNPOST:
+            case MAP_OBJECT_SKELETON:
+            case MAP_OBJECT_TREASURE_CHEST:
+            case MAP_OBJECT_CAMPFIRE:
+            case MAP_OBJECT_FOUNTAIN:
+            case MAP_OBJECT_ANCIENT_LAMP:
+            case MAP_OBJECT_MONSTER:
+            case MAP_OBJECT_OBELISK:
+            case MAP_OBJECT_OASIS:
+            case MAP_OBJECT_RESOURCE:
+            case MAP_OBJECT_STATUE:
+            case MAP_OBJECT_WELL:
+            case MAP_OBJECT_ARTIFACT:
                 if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     goto movementDone;
             stoppingEvent:
@@ -394,7 +394,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
                 }
                 retCell = nextCell;
                 goto movementDone;
-            case 40:
+            case MAP_OBJECT_TOWN:
                 if (gpGame->GetTown(nextCell->m_objectMetadata)->m_owner != giCurPlayer
                     && gpGame->GetTown(nextCell->m_objectMetadata)->HasGarrison()) {
                     StopCursor(1);
@@ -418,7 +418,7 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     }
     if (!ValidMove(direction))
         goto movementDone;
-    if (movingHero->m_locationType == 0xa8) {
+    if (movingHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
         town *occupiedTown;
 
         occupiedTown = gpGame->GetTown(movingHero->m_occupiedTown);
@@ -497,26 +497,26 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
     pCursorCell = GetCell(m_cursorMapX + m_mapOriginX, m_cursorMapY + m_mapOriginY);
     *eventX = m_cursorMapX + m_mapOriginX;
     *eventY = m_cursorMapY + m_mapOriginY;
-    if ((pCursorCell->m_triggerType & 0x80)
-        || ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && pCursorCell->m_triggerType == 0x1f)) {
+    if ((pCursorCell->m_triggerType & MAP_TRIGGER_EVENT)
+        || ((movingHero->m_eventFlags & HERO_EVENT_EMBARKED) && pCursorCell->m_triggerType == MAP_OBJECT_COAST)) {
         retCell = pCursorCell;
-        switch (pCursorCell->m_triggerType & 0x7f) {
-            case 30:
-            case 37:
-            case 46:
-            case 49:
+        switch (pCursorCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+            case MAP_OBJECT_ROSEBUSH:
+            case MAP_OBJECT_TREE_STUMP:
+            case MAP_OBJECT_OAK_TREE:
+            case MAP_OBJECT_NOTHING_HERE:
             case 50:
             case 51:
-            case 52:
+            case MAP_OBJECT_MOUNTAINS:
             case 53:
             case 54:
             case 55:
-            case 56:
+            case MAP_OBJECT_TREES:
             case 57:
             case 58:
             case 59:
             case 60:
-                retCell = 0;
+                retCell = NULL;
                 break;
         }
         goto movementDone;
@@ -529,11 +529,11 @@ movementDone:
         if (mapExtra[movingHero->m_x][movingHero->m_y] & 0x80) {
             if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
                 goto adjacentDone;
-            if (retCell && (char)(retCell->m_triggerType & 0x7f) == 0x3e)
+            if (retCell && (char)(retCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_SHIP)
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
             if (movingHero->m_owner == -1)
-                retCell = 0;
+                retCell = NULL;
         }
     }
 adjacentDone:
@@ -598,32 +598,32 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
     if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
         return 0;
     cell = &m_mapData[newX][newY];
-    switch (cell->m_triggerType & 0x7f) {
-        case 3:
+    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+        case MAP_OBJECT_BUOY:
             if (!(movingHero->m_eventFlags & 0x80))
                 return 1;
             else
                 return 0;
-        case 61:
+        case MAP_OBJECT_HERO:
             if (movingHero->m_eventFlags & 0x80) {
                 if (gpGame->GetHero(cell->m_objectMetadata)->m_eventFlags & 0x80)
                     return 1;
                 else
                     return 0;
             }
-        case 2:
-        case 4:
-        case 6:
-        case 8:
-        case 9:
-        case 11:
-        case 26:
-        case 27:
-        case 28:
-        case 29:
-        case 36:
-        case 43:
-        case 48:
+        case MAP_OBJECT_SIGNPOST:
+        case MAP_OBJECT_SKELETON:
+        case MAP_OBJECT_TREASURE_CHEST:
+        case MAP_OBJECT_CAMPFIRE:
+        case MAP_OBJECT_FOUNTAIN:
+        case MAP_OBJECT_ANCIENT_LAMP:
+        case MAP_OBJECT_MONSTER:
+        case MAP_OBJECT_OBELISK:
+        case MAP_OBJECT_OASIS:
+        case MAP_OBJECT_RESOURCE:
+        case MAP_OBJECT_STATUE:
+        case MAP_OBJECT_WELL:
+        case MAP_OBJECT_ARTIFACT:
             if (m_cursorType == 4)
                 return 0;
             else

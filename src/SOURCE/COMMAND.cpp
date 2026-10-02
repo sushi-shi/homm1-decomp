@@ -767,7 +767,7 @@ void combatManager::DoCommand(signed char command) {
             break;
         case 11:
             NormalDialog("Are you sure you want to retreat?", NORMAL_DIALOG_TYPE_YES_NO, 0xc3, 0x3c, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, -1);
-            if (gpWindowManager->m_dialogResult == 0x7805)
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 giNextAction = 4;
             ResetMouse();
             break;
