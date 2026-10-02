@@ -4,8 +4,8 @@
 // 13 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
-#include <SOURCE/creatureTypes.h>
 #include <H1/Macros.h>
+#include <SOURCE/creatureTypes.h>
 
 // forward declarations:
 class hero;
