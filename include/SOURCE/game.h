@@ -71,10 +71,15 @@ public:
     // ControlPanel's scenario-info choice shows the campaign when positive.
     int m_campaignType;
     int m_campaignScenario;
-    char m_unknown000b[0x94];
-    // SaveGame/LoadGame and the save requester's default name; the span
-    // runs to m_playerCount.
-    char m_saveName[0x160];
+    int m_unknown000b;
+    // InitEntireCampaign starts it at 1; InitCampaignMap derives the
+    // calendar from it.
+    int m_campaignDay;
+    char m_unknown0013[0x8c];
+    // SaveGame/LoadGame and the save requester's default name.
+    char m_saveName[0x15f];
+    // InitEntireCampaign stores 3 here.
+    signed char m_difficulty;
     signed char m_playerCount;
     char m_unknown200;
     signed char m_deadPlayerCount;
@@ -143,7 +148,8 @@ public:
     void ShowCampaignInfo(int, int, int);
     void CampaignInfoUpdate(int);
     void InitEntireCampaign(int);
-    void InitCampaignMap(void);
+    // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
+    void InitCampaignMap(int, int);
     int MineTypesOwned(int, int);
     int SetupPuzzlePieces(int, int);
     signed char IsMobile(signed char);
@@ -253,6 +259,7 @@ public:
     int GetSideDesc(char*, int, int);
     // DoEvent's obelisk branch (byte player, ret 4).
     void VisitObelisk(signed char);
+
 };
 #pragma pack(pop)
 

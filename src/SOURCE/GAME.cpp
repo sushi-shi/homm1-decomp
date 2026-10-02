@@ -463,11 +463,80 @@ void game::UpdateNewGameWindow(void) {}
 VA(0x0043be93, 0x2ad)
 void game::ShowCampaignInfo(int, int, int) {}
 
-// donor PoL RVA 0x000bb843; preferred Buka symbol ?InitMap@ExpCampaign@@QAEXXZ
-// donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.361177;margin=0.269979;shape=0.160;size=0.387;calls=0.167;strings=origdata.bin;alternate=pol20:void ExpCampaign::InitMap(void)@0x000bb843
+// HoMM1's campaign scenario table: 85-byte records with the King of the Hill
+// flag, the three opponents' player types and every player's resources.
+#pragma pack(push, 1)
+struct campaignScenario {
+    signed char kingOfTheHill;
+    char unknown01[0x12];
+    signed char playerTypes[GAME_PLAYER_COUNT];
+    char unknown17[6];
+    unsigned short resources[GAME_PLAYER_COUNT][7];
+};
+#pragma pack(pop)
+extern campaignScenario gCampaignScenarios[];
+// Two bytes per campaign side; the first is the human player's crest.
+extern signed char gCampaignSideCrests[][2];
+extern signed char gbKingOfTheHill;
+extern int giCurTurn;
+
+// Buka 2.1 game::InitEntireCampaign; HoMM1 reloads origdata.bin first and
+// starts the campaign calendar on day 1.
+VA(0x0043c140, 0x7f)
+void game::InitEntireCampaign(int side) {
+    LoadGame("origdata.bin", 1, 0);
+    strcpy(gFullMapName, "");
+    gpGame->m_difficulty = 3;
+    m_campaignType = side;
+    m_campaignScenario = 0;
+    m_unknown000b = 0;
+    m_campaignDay = 1;
+    InitCampaignMap(m_campaignScenario, 0);
+}
+
+// Buka 2.1 game::InitCampaignMap reduced to HoMM1's CAMP%d.CMP maps: the
+// calendar continues from m_campaignDay and the scenario table seeds the
+// opponents and every player's resources.
 VA(0x0043c1bf, 0x28c)
-void ExpCampaign::InitMap(void) {}
+void game::InitCampaignMap(int scenario, int) {
+    int saveType;
+    int savedScenario;
+    int j;
+    int i;
+    int savedState;
+    int savedDay;
+
+    saveType = m_campaignType;
+    savedScenario = m_campaignScenario;
+    savedState = m_unknown000b;
+    savedDay = m_campaignDay;
+    LoadGame("origdata.bin", 1, 0);
+    m_campaignType = saveType;
+    m_campaignScenario = savedScenario;
+    m_unknown000b = savedState;
+    m_campaignDay = savedDay;
+    m_month = (m_campaignDay - 1) / 28 + 1;
+    m_week = (m_campaignDay - 1 - (m_month - 1) * 28) / 7 + 1;
+    m_day = (m_campaignDay - 1) % 7 + 1;
+    giCurTurn = (m_month - 1) * 28 + (m_week - 1) * 7 + m_day;
+    gbKingOfTheHill = gCampaignScenarios[scenario].kingOfTheHill;
+    giNumHumanPlayers = 0;
+    m_players[0].m_color = 4;
+    m_players[0].m_unknown11 = gCampaignSideCrests[m_campaignType][0];
+    m_playerCount = 1;
+    for (i = 1; i < 4; i++) {
+        m_players[i].m_color = gCampaignScenarios[scenario].playerTypes[i];
+        if (m_players[i].m_color)
+            m_playerCount++;
+    }
+    giNumHumanPlayers = 1;
+    sprintf(gMapName, "CAMP%d.CMP", scenario + 1);
+    NewMap(gMapName);
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 7; j++)
+            m_players[i].m_resources[j] = gCampaignScenarios[scenario].resources[i][j];
+    }
+}
 
 // donor PoL RVA 0x00078b72; preferred Buka symbol ?LoadMap@game@@QAEHPAD@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
