@@ -387,6 +387,11 @@ source = "src/SOURCE/HEXCELL.cpp"
 flags = "cpp_carcass"
 
 [[unit]]
+unit = "SOURCE/DRAWING"
+source = "src/SOURCE/DRAWING.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "SOURCE/CPUSPEED"
 source = "src/SOURCE/CPUSPEED.cpp"
 flags = "cpp_carcass"

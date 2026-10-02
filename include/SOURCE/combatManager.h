@@ -63,7 +63,8 @@ class combatManager : public baseManager {
 public:
     char m_unknown30[0x10];
     hexcell m_hexCells[COMBAT_HEX_COUNT];
-    short m_unknown25c;
+    // First grid row (0-4) UpdateCombatArea must redraw; 5 when clean.
+    short m_gridUpdateRow;
     // DrawFrame skips the grid overlay while this is set.
     signed char m_gridMode;
     char m_unknown25f;
@@ -121,7 +122,14 @@ public:
     signed char m_unknown6e3;
     short m_wallFrame;
     short m_wallDamage;
-    char m_unknown6e8[0x13];
+    signed char m_unknown6e8;
+    short m_unknown6e9[2];
+    // Drawn first by DrawBackground.
+    class bitmap* m_backdropBitmap;
+    // The combat screen window; CombatMessage sets its text widget (0xc).
+    class heroWindow* m_combatWindow;
+    char m_unknown6f5[4];
+    short m_unknown6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     short m_messageTypeMask;
     signed char m_sideRetreated[2];
@@ -131,7 +139,8 @@ public:
     // Set before a full combat redraw.
     int m_unknown727;
     int m_unknown72b;
-    char m_unknown72f[4];
+    // UpdateCombatArea does nothing until the combat window is up.
+    int m_combatWindowOpen;
     class widget *m_winLoseBottomWidgets[15];
     class widget *m_winLoseBottomTextWidgets[15];
     char m_unknown7ab[8];
@@ -160,6 +169,9 @@ public:
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army *);
+    // HoMM1 retail 0x00470a4f: word hex, byte direction, attributes
+    // (ret 0xc); the upward directions also redraw the row above.
+    void UpdateGridForMove(short, signed char, int);
     // HoMM1 retail 0x004709f0: word first hex, redraw flag (ret 8).
     void UpdateGrid(short, int);
     void DrawBackground(void);
@@ -327,6 +339,8 @@ extern int giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;
+// Command help lines for CombatMessage(short) (0x00493b38).
+extern char *cCombatMessage[];
 // Combat help lines for the auto-combat, skip and other controls.
 extern char *cCombatHelp[];
 // ProcessCombatMsg records the hero casting from the combat screen.
