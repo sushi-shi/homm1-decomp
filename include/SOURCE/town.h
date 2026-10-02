@@ -28,6 +28,22 @@ H1_ENUM_BEGIN(TownType)
     TOWN_TYPE_COUNT = 4
 H1_ENUM_END(TownType)
 
+// town::m_buildState is the mage guild's level - 1 (STATE_LEVEL_1..4); its
+// nine m_mageGuildSpells slots fill three, two, two and two per level
+// (SetupTown's pools, SetupMageGuild's locks, MageGuildHandler's bounds).
+H1_ENUM_CONST_BEGIN(TownMageGuildConstant)
+    MAGE_GUILD_STATE_LEVEL_1 = 0,
+    MAGE_GUILD_STATE_LEVEL_2 = 1,
+    MAGE_GUILD_STATE_LEVEL_3 = 2,
+    MAGE_GUILD_STATE_LEVEL_4 = 3,
+    MAGE_GUILD_LEVEL_1_LAST_SLOT = 2,
+    MAGE_GUILD_LEVEL_2_LAST_SLOT = 4,
+    MAGE_GUILD_LEVEL_3_LAST_SLOT = 6,
+    // SetupMageGuild's spell frame: 0 shows the spell, 1 the locked slot.
+    MAGE_GUILD_SPELL_FRAME_SHOWN = 0,
+    MAGE_GUILD_SPELL_FRAME_LOCKED = 1
+H1_ENUM_CONST_END(TownMageGuildConstant)
+
 // A town object covers 4x3 map cells from (x - 2, y - 2) to (x + 1, y)
 // (RandomizeTown, NewMap). Its frames run per race in blocks of 24 before
 // the random town's (block TOWN_TYPE_COUNT); a town without a castle uses

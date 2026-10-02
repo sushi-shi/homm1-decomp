@@ -4,6 +4,7 @@
 // 26 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
+#include <BASE/dialog.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 
@@ -29,6 +30,8 @@ H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_STATUS_REGION_HEIGHT = 0x10,
     TOWN_NAME_TEXT_CONTROL = 0x25,
     TOWN_REDRAW_INTERVAL = 0x96,
+    // glTimers slot the town screen and the tavern animate on.
+    TOWN_FRAME_TIMER_SLOT = 0,
     TOWN_FIRST_FACTION_OBJECT = 5,
     TOWN_CREST_NO_HERO_OFFSET = 0x10,
     TOWN_MANAGER_MESSAGE_MASK = 0x800,
@@ -76,11 +79,31 @@ H1_ENUM_BEGIN(TownControl)
     TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d,
     TOWN_GARRISON_FIRST_CONTROL = 0x10,
     TOWN_GARRISON_SLOT_FIRST = 0x11,
+    // The five army slots of each strip run FIRST..LAST (Main's hover range).
+    TOWN_GARRISON_SLOT_LAST = 0x15,
     TOWN_HERO_FIRST_CONTROL = 0x16,
     TOWN_HERO_SLOT_FIRST = 0x17,
-    TOWN_CLOSE_CONTROL = 0x7800
+    TOWN_HERO_SLOT_LAST = 0x1b,
+    TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0
 H1_ENUM_END(TownControl)
 
+// Town objects: gTownObjectType's empty entry and a .tod without a border
+// widget are NONE, as is townManager::m_selectedBuilding with no building
+// picked. cTownObjectNames holds the neutral objects, the four town-type
+// prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
+// The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
+// its level frames come in pairs.
+H1_ENUM_CONST_BEGIN(TownObjectConstant)
+    TOWN_OBJECT_NONE = -1,
+    TOWN_BUILDING_NONE = -1,
+    TOWN_MAGE_GUILD_LEVEL_HEIGHT = 20,
+    TOWN_MAGE_GUILD_BASE_HEIGHT = 0x61,
+    TOWN_MAGE_GUILD_BOTTOM_Y = 0x99,
+    // Two tower frames (and tower controls) per mage-guild level.
+    TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE = 2
+H1_ENUM_CONST_END(TownObjectConstant)
+
+// SetupThievesGuild's rows (gThievesCategoryNames order).
 H1_ENUM_BEGIN(TownThievesCategory)
     THIEVES_CATEGORY_TOWNS = 0,
     THIEVES_CATEGORY_CASTLES = 1,
@@ -90,9 +113,16 @@ H1_ENUM_BEGIN(TownThievesCategory)
     THIEVES_CATEGORY_RARE_RESOURCES = 5,
     THIEVES_CATEGORY_OBELISKS = 6,
     THIEVES_CATEGORY_ARMY_STRENGTH = 7,
+    THIEVES_CATEGORY_COUNT = 8
+H1_ENUM_END(TownThievesCategory)
+
+// SetupThievesGuild's layout: a dead player's stat, the rank columns and
+// category rows, the flag frames and the tie centring step.
+H1_ENUM_CONST_BEGIN(ThievesGuildLayoutConstant)
+    // SetupThievesGuild's categories argument: count the rows from the
+    // player's thieves' guilds (one guild 3 rows, two 5, three 7, four all).
+    THIEVES_CATEGORIES_BY_GUILDS = -1,
     TOWN_THIEVES_DEAD_PLAYER_STAT = -1,
-    TOWN_BUILDING_TENT_FLAG = 0x20,
-    TOWN_BUILDING_CASTLE_FLAG = 0x40,
     THIEVES_RANK_FIRST_X = 0x120,
     THIEVES_PLAYER_COLUMN_WIDTH = 0x61,
     THIEVES_FIRST_CATEGORY_Y = 0x1b,
@@ -102,32 +132,31 @@ H1_ENUM_BEGIN(TownThievesCategory)
     THIEVES_RANK_ICON_HEIGHT = 0x16,
     THIEVES_PLAYER_WIDTH = 0x48,
     THIEVES_TIE_CENTERING_STEP = 9,
-    THIEVES_CATEGORY_COUNT = 8,
     THIEVES_RANK_COUNT = 4
-H1_ENUM_END(TownThievesCategory)
+H1_ENUM_CONST_END(ThievesGuildLayoutConstant)
 
+// well.bin control bases (one per dwelling) and the well's frames per type.
 H1_ENUM_CONST_BEGIN(TownWellConstant)
-    TOWN_WELL_DWELLING_COUNT = 6,
     TOWN_WELL_FIRST_ICON_CONTROL = 1,
     TOWN_WELL_FIRST_NAME_CONTROL = 7,
     TOWN_WELL_FIRST_MONSTER_ICON_CONTROL = 0xd,
     TOWN_WELL_FIRST_CREATURE_CONTROL = 0x13,
     TOWN_WELL_FIRST_AVAILABLE_CONTROL = 0x19,
-    TOWN_WELL_FRAMES_PER_TYPE = 7,
-    TOWN_WELL_FIRST_DWELLING_BUILDING = 7
+    TOWN_WELL_FRAMES_PER_TYPE = 7
 H1_ENUM_CONST_END(TownWellConstant)
 
+// mageguild.bin control bases (one per spell slot), the description and the
+// tower frames.
 H1_ENUM_CONST_BEGIN(TownMageConstant)
     TOWN_MAGE_FIRST_SPELL_CONTROL = 1,
     TOWN_MAGE_FIRST_ICON_CONTROL = 10,
     TOWN_MAGE_FIRST_NAME_CONTROL = 0x13,
     TOWN_MAGE_FIRST_TOWER_CONTROL = 0x1c,
     TOWN_MAGE_DESCRIPTION_CONTROL = 0x50,
-    TOWN_MAGE_SPELL_COUNT = 9,
-    TOWN_MAGE_TOWER_FRAME_COUNT = 8,
-    TOWN_MAGE_WIDGET_VISIBLE_FLAG = 4
+    TOWN_MAGE_TOWER_FRAME_COUNT = 8
 H1_ENUM_CONST_END(TownMageConstant)
 
+// splitwin.bin (swapManager/townManager split dialog) and ViewArmy's position.
 H1_ENUM_CONST_BEGIN(TownSplitConstant)
     TOWN_SPLIT_PROMPT_CONTROL = 1,
     TOWN_SPLIT_AMOUNT_CONTROL = 0x44,
@@ -136,25 +165,52 @@ H1_ENUM_CONST_BEGIN(TownSplitConstant)
     TOWN_SPLIT_SETUP_AMOUNT_CONTROL = 4,
     TOWN_SPLIT_WINDOW_X = 0xb1,
     TOWN_SPLIT_WINDOW_Y = 0x14,
-    TOWN_CASTLE_BUILDING_COUNT = 13,
-    TOWN_CASTLE_FRAME_BUILT = 0xb,
-    TOWN_CASTLE_FRAME_CANNOT_BUILD = 0xc,
-    TOWN_CASTLE_FRAME_CANNOT_AFFORD = 0xd,
+    TOWN_ARMY_VIEW_X = 0x77,
+    TOWN_ARMY_VIEW_Y = 0x14
+H1_ENUM_CONST_END(TownSplitConstant)
+
+// castle.bin controls SetupCastle fills: icon/name/state bases per building
+// (generic structures first, then the dwellings), the hero and status rows.
+H1_ENUM_CONST_BEGIN(TownCastleControl)
     TOWN_CASTLE_FIRST_ICON_CONTROL = 1,
     TOWN_CASTLE_FIRST_DWELLING_NAME_CONTROL = 0x17,
     TOWN_CASTLE_FIRST_STATE_CONTROL = 0x20,
     TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL = 0x27,
-    TOWN_CASTLE_HERO_STATE_CONTROL = 0x50,
-    TOWN_CASTLE_SPECIAL_BUILDING_COUNT = 5,
-    TOWN_WIDGET_VISIBLE_FLAG = 4,
     TOWN_CASTLE_HERO_CONTROL = 0x30,
     TOWN_CASTLE_STATUS_CONTROL = 0x32,
+    TOWN_CASTLE_HERO_STATE_CONTROL = 0x50,
     TOWN_CASTLE_STATUS_FIRST_CONTROL = 0x1f4,
     TOWN_CASTLE_STATUS_TEXT_CONTROL = 0x1f6,
+    // The generic structures before the tent (mage guild .. well).
+    TOWN_CASTLE_SPECIAL_BUILDING_COUNT = 5,
     TOWN_CASTLE_STATUS_X = 0xa,
     TOWN_CASTLE_STATUS_Y = 0xf0,
     TOWN_CASTLE_STATUS_WIDTH = 0x21a,
-    TOWN_CASTLE_STATUS_HEIGHT = 0x10,
+    TOWN_CASTLE_STATUS_HEIGHT = 0x10
+H1_ENUM_CONST_END(TownCastleControl)
+
+// RecruitHero's m_recruitState: which of the two tavern heroes was hired.
+H1_ENUM_CONST_BEGIN(TownRecruitHeroConstant)
+    RECRUIT_HERO_NONE = -1
+H1_ENUM_CONST_END(TownRecruitHeroConstant)
+
+// buybuil%d.bin controls BuyBuild fills: the building's picture and name.
+H1_ENUM_BEGIN(TownBuyBuildControl)
+    BUY_BUILD_ICON_CONTROL = 2,
+    BUY_BUILD_NAME_CONTROL = 3
+H1_ENUM_END(TownBuyBuildControl)
+
+// castle.bin state frames over a building's icon.
+H1_ENUM_BEGIN(TownCastleFrame)
+    // No state frame: SetupCastle clears the state widget.
+    TOWN_CASTLE_FRAME_NONE = -1,
+    TOWN_CASTLE_FRAME_BUILT = 0xb,
+    TOWN_CASTLE_FRAME_CANNOT_BUILD = 0xc,
+    TOWN_CASTLE_FRAME_CANNOT_AFFORD = 0xd
+H1_ENUM_END(TownCastleFrame)
+
+// The castle window's status-bar text rows (cCastleInfo).
+H1_ENUM_BEGIN(TownCastleInfoText)
     TOWN_CASTLE_INFO_BUILD_MAGE_GUILD = 0,
     TOWN_CASTLE_INFO_MAGE_GUILD_MAX_LEVEL = 1,
     TOWN_CASTLE_INFO_CANNOT_AFFORD_MAGE_LEVEL = 2,
@@ -168,17 +224,11 @@ H1_ENUM_CONST_BEGIN(TownSplitConstant)
     TOWN_CASTLE_INFO_TOWN_OCCUPIED = 10,
     TOWN_CASTLE_INFO_RECRUIT_HERO = 11,
     TOWN_CASTLE_INFO_EXIT = 12,
-    TOWN_CASTLE_INFO_OPTIONS = 13,
-    TOWN_ARMY_VIEW_X = 0x77,
-    TOWN_ARMY_VIEW_Y = 0x14,
-    TOWN_BUILDING_MAGE_GUILD = 0,
-    TOWN_BUILDING_TENT = 5,
-    TOWN_BUILDING_CASTLE = 6,
-    TOWN_BUILDING_FIRST_DWELLING = 7,
-    TOWN_BUILDING_LAST_DWELLING = 12,
-    TOWN_OBJECT_ENABLED_FLAG = 2
-H1_ENUM_CONST_END(TownSplitConstant)
+    TOWN_CASTLE_INFO_OPTIONS = 13
+H1_ENUM_END(TownCastleInfoText)
 
+// The tavern window, its animation and the town music (TOWN_THEME_MUSIC_BASE
+// + townTheme[type] is a town's ambient track).
 H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,
@@ -188,10 +238,7 @@ H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_UNUSED_FRAME = 2,
     TOWN_TAVERN_ANIMATION_CONTROL = 2,
     TOWN_TAVERN_ANIMATION_FRAME_COUNT = 8,
-    TOWN_TAVERN_FIRST_ANIMATION_FRAME = 1,
-    TOWN_DIALOG_BUTTON_0 = 0x7800,
-    TOWN_DIALOG_BUTTON_1 = 0x7801,
-    TOWN_DIALOG_BUTTON_2 = 0x7802
+    TOWN_TAVERN_FIRST_ANIMATION_FRAME = 1
 H1_ENUM_CONST_END(TownTavernConstant)
 
 // Town purchases and building tables: the spell book and boat prices

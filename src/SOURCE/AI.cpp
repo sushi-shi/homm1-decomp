@@ -166,11 +166,11 @@ void combatManager::DoCompAI(signed char) {
     if (m_castleSide[0]) {
         numArchers = 5;
         castleTown = m_combatTowns[0];
-        for (dirIndex = TOWN_BUILDING_FIRST_DWELLING; dirIndex <= TOWN_BUILDING_LAST_DWELLING;
+        for (dirIndex = BUILDING_SLOT_DWELLING_FIRST; dirIndex <= BUILDING_SLOT_DWELLING_LAST;
              dirIndex++)
             if (castleTown->m_buildings & (1 << dirIndex))
                 numArchers += 4;
-        for (dirIndex = TOWN_BUILDING_MAGE_GUILD; dirIndex <= TOWN_BUILDING_TENT - 1; dirIndex++)
+        for (dirIndex = BUILDING_SLOT_MAGE_GUILD; dirIndex <= BUILDING_SLOT_RACE_FIRST - 1; dirIndex++)
             if (castleTown->m_buildings & (1 << dirIndex))
                 numArchers++;
         wallStrength = numArchers * 100;

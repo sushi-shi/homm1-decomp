@@ -955,11 +955,11 @@ H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
     REINFORCEMENT_TIER_FOUR_COUNT_MIN = 1,
     REINFORCEMENT_TIER_FOUR_COUNT_MAX = 3
 H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
- // clang-format on
+// clang-format on
 
- // Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
- // unowned town on the map gains a random tier of its own creatures.
- VA(0x0043b7e5, 0x2c3)
+// Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
+// unowned town on the map gains a random tier of its own creatures.
+VA(0x0043b7e5, 0x2c3)
 void game::GiveTroopsToNeutralTowns(void) {
     int howMany;
     int die;
@@ -2337,14 +2337,16 @@ H1_ENUM_END(ViewArmyControl)
 H1_ENUM_CONST_BEGIN(ViewArmyConstant)
     VIEW_ARMY_ANIMATION_FRAMES = 6,
     VIEW_ARMY_FRAME_DELAY = 90,
-    VIEW_ARMY_STAT_TEXT_SIZE = 550
+    VIEW_ARMY_STAT_TEXT_SIZE = 550,
+    // glTimers slot the army window's animation runs on.
+    VIEW_ARMY_TIMER_SLOT = 0
 H1_ENUM_CONST_END(ViewArmyConstant)
- // clang-format on
+// clang-format on
 
- // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
- // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
- // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
- VA(0x0043f8cd, 0x8e1)
+// donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
+// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
+// evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
+VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
     short x,
     short y,
@@ -2531,7 +2533,7 @@ void game::ViewArmy(
         message.text = numText;
         m_viewArmyWindow->BroadcastMessage(message);
     }
-    glTimers[0] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
+    glTimers[VIEW_ARMY_TIMER_SLOT] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
     m_viewArmyResult = 0;
     if (quickView) {
         gpMouseManager->ReallyHidePointer();
@@ -2598,7 +2600,7 @@ short ViewArmyHandler(tag_message& message) {
                 break;
         }
     }
-    if (KBTickCount() > glTimers[0]) {
+    if (KBTickCount() > glTimers[VIEW_ARMY_TIMER_SLOT]) {
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = VIEW_ARMY_ANIMATION;
@@ -2606,7 +2608,7 @@ short ViewArmyHandler(tag_message& message) {
         message.value = gpGame->m_viewArmyResult % VIEW_ARMY_ANIMATION_FRAMES;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
         gpGame->m_viewArmyWindow->DrawWindow();
-        glTimers[0] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
+        glTimers[VIEW_ARMY_TIMER_SLOT] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
@@ -3430,14 +3432,14 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
     }
     memset(used, 0, 29);
     for (k = 0; k < TOWN_MAGE_GUILD_SPELL_COUNT; k++) {
-        if (k <= 2)
-            spellLevel = 0;
-        else if (k <= 4)
-            spellLevel = 1;
-        else if (k <= 6)
-            spellLevel = 2;
+        if (k <= MAGE_GUILD_LEVEL_1_LAST_SLOT)
+            spellLevel = MAGE_GUILD_STATE_LEVEL_1;
+        else if (k <= MAGE_GUILD_LEVEL_2_LAST_SLOT)
+            spellLevel = MAGE_GUILD_STATE_LEVEL_2;
+        else if (k <= MAGE_GUILD_LEVEL_3_LAST_SLOT)
+            spellLevel = MAGE_GUILD_STATE_LEVEL_3;
         else
-            spellLevel = 3;
+            spellLevel = MAGE_GUILD_STATE_LEVEL_4;
         do {
             newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
             if (aiOwned)
@@ -4346,15 +4348,15 @@ H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
     REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
     REMOTE_SAVE_TRANSFER_SOUNDS = 8
 H1_ENUM_CONST_END(RemoteSaveConstant)
- // clang-format on
+// clang-format on
 
- // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
- // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
- // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
+// donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
+// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
 
- // Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
- // segments, 100 segments per acknowledged block.
- VA(0x004459a5, 0x6e9)
+// Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
+// segments, 100 segments per acknowledged block.
+VA(0x004459a5, 0x6e9)
 int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     int okay;
     char pathname[456];
