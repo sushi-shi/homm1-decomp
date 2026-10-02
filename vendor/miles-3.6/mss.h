@@ -39,6 +39,13 @@
 #define DXDEC MSS_EXTERN __declspec(dllimport)
 
 
+/* Digital sample formats and the signed-PCM flag (MSS.H). */
+#define DIG_F_MONO_8      0
+#define DIG_F_MONO_16     1
+#define DIG_F_STEREO_8    2
+#define DIG_F_STEREO_16   3
+#define DIG_PCM_SIGN      0x0001
+
 typedef struct _DIG_DRIVER FAR* HDIGDRIVER;
 typedef struct _MDI_DRIVER FAR* HMDIDRIVER;
 typedef struct _SAMPLE     FAR* HSAMPLE;

@@ -43,7 +43,7 @@ inline void HandleMCIError(int errorCode, char* command) {
         lpszReturnString,
         command
     );
-    gConfig.musicSource = 0;
+    gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
     WritePrefs();
     ShutDown(gText);
 }
@@ -97,12 +97,12 @@ void soundManager::CDStop(void) {
         return;
     wsprintfA(CommandString, "stop CD");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, position, sizeof(position), NULL);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
         strcpy(CDPreviousPosition[CDTrackMap[m_currentTrack]], position);
         ValidatePreviousPosition(CDTrackMap[m_currentTrack]);
@@ -116,7 +116,7 @@ inline int soundManager::CDIsPlaying(void) {
         return 0;
     wsprintfA(CommandString, "status CD mode");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     return _stricmp(lpszReturnString, "playing") == 0;
 }
@@ -129,7 +129,7 @@ unsigned long soundManager::CDStartup(void) {
         return 0;
     wsprintfA(CommandString, "open %c: type cdaudio alias CD shareable", gcSoundPath[0]);
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0) {
+    if (nMCIError != MMSYSERR_NOERROR) {
         m_cdStarted = 0;
         gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
         m_cdReady = 0;
@@ -197,16 +197,16 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     cdTrack = CDTrackMap[track];
     wsprintfA(CommandString, "set CD time format tmsf");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     wsprintfA(CommandString, "status CD mode");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     if (_stricmp(lpszReturnString, "stopped") != 0) {
         wsprintfA(CommandString, "status CD position");
         nMCIError = mciSendStringA(CommandString, buffer, sizeof(buffer), NULL);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
         strcpy(CDPreviousPosition[CDTrackMap[m_currentTrack]], buffer);
         ValidatePreviousPosition(CDTrackMap[m_currentTrack]);
@@ -223,7 +223,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
         );
         window = notify ? hwndApp : NULL;
         nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, window);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
     } else {
         wsprintfA(
@@ -235,7 +235,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
         );
         newWindow = notify ? hwndApp : NULL;
         nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, newWindow);
-        if (nMCIError != 0)
+        if (nMCIError != MMSYSERR_NOERROR)
             HandleMCIError(nMCIError, CommandString);
     }
     CDPlaying = 1;
@@ -300,7 +300,7 @@ struct _DIG_DRIVER* WAVE_init_driver(
             hwndApp,
             "Sound initialization error!  No wave devices found.",
             "Startup Error",
-            0
+            MB_OK
         );
         drvr = NULL;
         return NULL;
@@ -315,7 +315,7 @@ struct _DIG_DRIVER* WAVE_init_driver(
     rc = AIL_waveOutOpen(&drvr, NULL, 0, &gWaveFormat.wf);
     if (rc != 0) {
         if (showErrors != 0)
-            MessageBoxA(hwndApp, AIL_last_error(), "Sound initialization error!", 0);
+            MessageBoxA(hwndApp, AIL_last_error(), "Sound initialization error!", MB_OK);
         drvr = NULL;
         return NULL;
     }
@@ -403,11 +403,11 @@ inline void soundManager::CDShutdown(void) {
         return;
     wsprintfA(CommandString, "stop CD");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
     wsprintfA(CommandString, "close CD");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
-    if (nMCIError != 0)
+    if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
 }
 
@@ -533,7 +533,7 @@ struct _SAMPLE* soundManager::StartSample(
     sampleType += stereo;
     filename = _strrev(filename);
     AIL_init_sample(sample);
-    AIL_set_sample_type(sample, sampleType, 1);
+    AIL_set_sample_type(sample, sampleType, DIG_PCM_SIGN);
     AIL_set_sample_playback_rate(sample, sampleRate);
     Process1WindowsMessage();
     sprintf(path, "%s%s", gcSoundPath, filename);
@@ -816,7 +816,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
             || track == MUSIC_POSITION_TRACK_3
             || (track >= CD_NOTIFY_SCENARIO_FIRST && track <= CD_NOTIFY_SCENARIO_LAST))
             loop = 1;
-        if (track == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == 0)
+        if (track == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL)
             sprintf(filename, "heroes%02d.82m", track);
         else if (gConfig.musicSource == 1)
             sprintf(filename, "heroes%02d.82s", track);
@@ -921,9 +921,9 @@ void soundManager::PollSound(void) {
                     volume = gConfig.musicVolume;
                 unsigned long stereoVolume;
                 if (volume != 0) {
-                    volume = volume / 12 + 1;
-                    volume <<= 12;
-                    stereoVolume = volume << 16 | volume;
+                    volume = volume / CD_VOLUME_LEVEL_COUNT + 1;
+                    volume <<= CD_VOLUME_LEVEL_SHIFT;
+                    stereoVolume = volume << CD_STEREO_CHANNEL_SHIFT | volume;
                 } else
                     stereoVolume = 0;
                 auxSetVolume(m_auxDevice, stereoVolume);
@@ -965,13 +965,13 @@ void soundManager::PollSound(void) {
                 Process1WindowsMessage();
                 AIL_init_sample(m_musicSample);
                 int format;
-                if (m_currentTrack == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == 0)
-                    format = 0;
+                if (m_currentTrack == MUSIC_POSITION_TRACK_1 || gConfig.musicSource == SOUND_MUSIC_SOURCE_DIGITAL)
+                    format = DIG_F_MONO_8;
                 else if (gConfig.musicSource == 1)
-                    format = 2;
+                    format = DIG_F_STEREO_8;
                 else
-                    format = 3;
-                AIL_set_sample_type(m_musicSample, format, 1);
+                    format = DIG_F_STEREO_16;
+                AIL_set_sample_type(m_musicSample, format, DIG_PCM_SIGN);
                 AIL_set_sample_playback_rate(m_musicSample, MUSIC_STREAM_RATE);
 
                 volume = 0;
@@ -1082,7 +1082,7 @@ struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
     m_channelVolumes[channel] = static_cast<char>(playback->volume);
     gSampleVolumes[channel] = static_cast<short>(playback->volume);
     AIL_init_sample(handle);
-    AIL_set_sample_type(handle, playback->format, 1);
+    AIL_set_sample_type(handle, playback->format, DIG_PCM_SIGN);
     AIL_set_sample_playback_rate(handle, playback->sampleRate);
     AIL_set_sample_loop_count(handle, playback->loopCount);
     AIL_set_sample_address(handle, playback->data, playback->size);
