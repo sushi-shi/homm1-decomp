@@ -1114,6 +1114,20 @@ void game::InitEntireCampaign(int side) {
     InitCampaignMap(m_campaignScenario, 0);
 }
 
+// Town type of each crest, and the types already given to the first four
+// random towns.
+extern short gCrestTownTypes[];
+extern signed char gRandomTownTypes[4];
+
+// NewMap's per-player globals beyond Buka's current/watch player bits.
+// Starting hero class of each campaign crest and of each town type, and
+// each hero class's sight radius.
+extern short gCrestHeroClass[];
+extern signed char gTownTypeHeroClass[];
+extern signed char gClassVisionRange[];
+// Starting resources by difficulty.
+extern int gStartingResources[][7];
+
 // Buka 2.1 game::InitCampaignMap reduced to HoMM1's CAMP%d.CMP maps: the
 // calendar continues from m_campaignDay and the scenario table seeds the
 // opponents and every player's resources.
@@ -1121,8 +1135,8 @@ VA(0x0043c1bf, 0x28c)
 void game::InitCampaignMap(int scenario, int) {
     int saveType;
     int savedScenario;
-    int j;
     int i;
+    int j;
     int savedState;
     int savedDay;
 
@@ -1157,20 +1171,6 @@ void game::InitCampaignMap(int scenario, int) {
             m_players[i].m_resources[j] = gCampaignScenarios[scenario].resources[i][j];
     }
 }
-
-// Town type of each crest, and the types already given to the first four
-// random towns.
-extern short gCrestTownTypes[];
-extern signed char gRandomTownTypes[4];
-
-// NewMap's per-player globals beyond Buka's current/watch player bits.
-// Starting hero class of each campaign crest and of each town type, and
-// each hero class's sight radius.
-extern short gCrestHeroClass[];
-extern signed char gTownTypeHeroClass[];
-extern signed char gClassVisionRange[];
-// Starting resources by difficulty.
-extern int gStartingResources[][7];
 
 // Buka 2.1 game::NewMap for HoMM1: map setup helpers, a starting town and
 // hero per player (campaign crests pick them), two tavern heroes, the
