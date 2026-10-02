@@ -77,6 +77,8 @@ textWidget::~textWidget(void) {
 
 VA(0x0047aff0, 0x1ea)
 short textWidget::Main(tag_message& message) {
+    short y;
+    short x;
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
@@ -85,8 +87,8 @@ short textWidget::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.x - m_owner->m_posX;
-            short y = message.y - m_owner->m_posY;
+            x = message.x - m_owner->m_posX;
+            y = message.y - m_owner->m_posY;
             if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 message.type = MESSAGE_WIDGET;
