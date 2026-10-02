@@ -10,19 +10,29 @@
 class army;
 
 H1_ENUM_CONST_BEGIN(SearchStorageConstant)
-    SEARCH_QUEUE_CAPACITY = 1024,
-    SEARCH_CELL_CAPACITY = 5184,
-    SEARCH_GRID_SIZE = 72,
-    SEARCH_FLAG_BIT_COUNT = 1,
+SEARCH_QUEUE_CAPACITY = 1024,
+    SEARCH_CELL_CAPACITY = 5184, SEARCH_GRID_SIZE = 72, SEARCH_FLAG_BIT_COUNT = 1,
     SEARCH_DIRECTION_BIT_COUNT = 4,
-    SEARCH_PATH_CAPACITY = 256
-H1_ENUM_CONST_END(SearchStorageConstant)
+    SEARCH_PATH_CAPACITY = 256 H1_ENUM_CONST_END(SearchStorageConstant)
+
+    // clang-format off
+// Direction bit masks over MapDirection (1 << direction): north, north-east
+// and north-west steps test the current cell's object, south-east, south and
+// south-west the next cell's (TestPossibleDirections, SeedPosition; Buka
+// searchArray.h numbering). A step is diagonal when bit 0 of its direction
+// kind is set (TerrainStepCost).
+H1_ENUM_CONST_BEGIN(SearchDirectionConstant)
+    SEARCH_DIAGONAL_COST_MASK = 1,
+    SEARCH_DIRECTION_EDGE_OBJECT_MASK = 0x83,
+    SEARCH_DIRECTION_OBJECT_MASK = 0x38
+H1_ENUM_CONST_END(SearchDirectionConstant)
+// clang-format on
 
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
 // (CheckReload shifts it right four; the path builder masks 0xf).
 #pragma pack(push, 1)
-struct searchNode {
+        struct searchNode {
     // BuildPath sign-extends both coordinates.
     signed char x;
     signed char y;
@@ -80,13 +90,25 @@ public:
     short QuickDistance(short, short, short, short);
     // HoMM1 retail 0x00424d90 (ret 0x30): word x/y, unsigned word
     // direction/cost/mobility and byte flags and coordinates.
-    void PushPoint(short, short, unsigned short, unsigned short, unsigned short, char, char, signed char,
-                   signed char, char, signed char, signed char);
+    void PushPoint(
+        short,
+        short,
+        unsigned short,
+        unsigned short,
+        unsigned short,
+        char,
+        char,
+        signed char,
+        signed char,
+        char,
+        signed char,
+        signed char
+    );
     // HoMM1 retail 0x00425040 (ret 0x18): word coordinates and occupancy flag.
-    void TestPossibleDirections(short, short, signed char * const, signed char * const, short, int);
-    void SeedCombatPosition(class army *);
+    void TestPossibleDirections(short, short, signed char* const, signed char* const, short, int);
+    void SeedCombatPosition(class army*);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
-    short FindCombatPath(short, short, class army *, signed char);
+    short FindCombatPath(short, short, class army*, signed char);
     // HoMM1 retail 0x00424c50 (ret 0x10): word hex/direction and unsigned
     // word distance/speed.
     void PushCombatPoint(short, short, unsigned short, unsigned short);

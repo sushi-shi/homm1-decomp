@@ -37,11 +37,11 @@ int combatManager::AICheckRetreat(void) {
     int armyIndex;
     int side;
     armyGroup bareGroup;
-    int artifactTotals[2];
+    int artifactTotals[COMBAT_SIDE_COUNT];
     float expBonus;
-    int force[2];
+    int force[COMBAT_SIDE_COUNT];
 
-    for (side = 0; side < 2; side++) {
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         if (m_heroes[side]) {
             heroCopy = *m_heroes[side];
             sideHero = &heroCopy;
@@ -50,13 +50,14 @@ int combatManager::AICheckRetreat(void) {
             armyPtr = &bareGroup;
             sideHero = NULL;
         }
-        for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+        for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
             if (m_armies[side][armyIndex].IsAlive()) {
                 armyPtr->m_creatureTypes[armyIndex] = m_armies[side][armyIndex].m_creatureType;
-                if (m_armies[side][armyIndex].m_stats.attributes & 0x80)
+                if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
                     armyPtr->m_creatureCounts[armyIndex] = m_armies[side][armyIndex].m_quantity;
                 else
-                    armyPtr->m_creatureCounts[armyIndex] = static_cast<short>(m_armies[side][armyIndex].m_quantity * 1.2);
+                    armyPtr->m_creatureCounts[armyIndex] =
+                        static_cast<short>(m_armies[side][armyIndex].m_quantity * 1.2);
             } else {
                 armyPtr->m_creatureTypes[armyIndex] = CREATURE_NONE;
                 armyPtr->m_creatureCounts[armyIndex] = 0;
@@ -67,7 +68,7 @@ int combatManager::AICheckRetreat(void) {
             force[side] = static_cast<int>(force[side] * 1.1);
         artifactTotals[side] = 0;
         if (sideHero) {
-            for (armyIndex = 0; armyIndex < 14; armyIndex++) {
+            for (armyIndex = 0; armyIndex < HERO_ARTIFACT_SLOT_COUNT; armyIndex++) {
                 if (sideHero->m_artifacts[armyIndex] >= 0 && sideHero->m_artifacts[armyIndex] < 37)
                     artifactTotals[side] += gArtifactBaseRV[sideHero->m_artifacts[armyIndex]];
             }
@@ -75,32 +76,34 @@ int combatManager::AICheckRetreat(void) {
     }
     force[1 - m_currentSide] = static_cast<int>(force[1 - m_currentSide] * 1.1);
     treasureValue = artifactTotals[m_currentSide];
-    if (artifactTotals[m_currentSide] < 1000)
+    if (artifactTotals[m_currentSide] < COMBAT_AI_MIN_ARTIFACT_VALUE)
         return 0;
     prob = 0.16f;
-    if (treasureValue > 10000)
+    if (treasureValue > COMBAT_AI_HIGH_ARTIFACT_VALUE)
         prob = prob + 0.06;
-    else if (treasureValue > 5000)
+    else if (treasureValue > COMBAT_AI_MEDIUM_ARTIFACT_VALUE)
         prob = prob + 0.05;
     else if (treasureValue > 0)
         prob = prob + 0.04;
-    if (force[m_currentSide] > 40000)
-        prob -= force[m_currentSide] / 20000;
-    else if (force[m_currentSide] > 30000)
+    if (force[m_currentSide] > COMBAT_AI_RETREAT_SCALED_PENALTY_THRESHOLD)
+        prob -= force[m_currentSide] / COMBAT_AI_RETREAT_STRENGTH_DIVISOR;
+    else if (force[m_currentSide] > COMBAT_AI_RETREAT_TIER_4_THRESHOLD)
         prob = prob - 0.08;
-    else if (force[m_currentSide] > 15000)
+    else if (force[m_currentSide] > COMBAT_AI_RETREAT_TIER_3_THRESHOLD)
         prob = prob - 0.06;
-    else if (force[m_currentSide] > 5000)
+    else if (force[m_currentSide] > COMBAT_AI_RETREAT_TIER_2_THRESHOLD)
         prob = prob - 0.04;
-    else if (force[m_currentSide] > 2500)
+    else if (force[m_currentSide] > COMBAT_AI_RETREAT_TIER_1_THRESHOLD)
         prob = prob - 0.02;
-    expBonus = m_heroes[m_currentSide]->m_experience / 200000;
+    expBonus = m_heroes[m_currentSide]->m_experience / COMBAT_AI_EXPERIENCE_DIVISOR;
     if (expBonus > 0.03)
         expBonus = 0.03f;
     prob += expBonus;
     if (m_currentSide == 1)
         prob = prob - 0.06;
-    prob -= (4 - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_difficulty) * 0.03;
+    prob -= (COMBAT_AI_MAX_DIFFICULTY
+             - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_difficulty)
+            * 0.03;
     retreatRatio = static_cast<float>(force[m_currentSide]) / (force[0] + force[1]);
     if (retreatRatio < prob) {
         giNextAction = ACTION_RETREAT;
@@ -116,16 +119,16 @@ int combatManager::AICheckRetreat(void) {
 VA(0x00464ca3, 0x9ce)
 void combatManager::DoCompAI(signed char) {
     signed char stronger;
-    short ranged[2];
-    long shootStrengths[2];
+    short ranged[COMBAT_SIDE_COUNT];
+    long shootStrengths[COMBAT_SIDE_COUNT];
     long total;
-    short walkerMask[2];
+    short walkerMask[COMBAT_SIDE_COUNT];
     short plan;
     int dirIndex;
     army* currentArmy;
     short sideEnemy;
     long foeShooters;
-    short flyerMasks[2];
+    short flyerMasks[COMBAT_SIDE_COUNT];
     int minShootPower;
     signed char targetIndex;
     int dummy;
@@ -141,7 +144,7 @@ void combatManager::DoCompAI(signed char) {
     m_limitCreature = 0;
     gpMouseManager->ReallyHidePointer();
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    plan = 0;
+    plan = COMBAT_AI_ATTACK_NONE;
     sideEnemy = 1 - m_currentSide;
     ranged[m_currentSide] = GetShooterMask(m_currentSide);
     ranged[sideEnemy] = GetShooterMask(sideEnemy);
@@ -151,8 +154,11 @@ void combatManager::DoCompAI(signed char) {
     walkerMask[sideEnemy] = GetWalkerMask(sideEnemy);
     shootStrengths[m_currentSide] = GetStrength(m_currentSide, ranged[m_currentSide]);
     shootStrengths[sideEnemy] = GetStrength(sideEnemy, ranged[sideEnemy]);
-    total = GetStrength(m_currentSide, ranged[m_currentSide] | flyerMasks[m_currentSide] | walkerMask[m_currentSide]);
-    minShootPower = (total + 4) / 5;
+    total = GetStrength(
+        m_currentSide,
+        ranged[m_currentSide] | flyerMasks[m_currentSide] | walkerMask[m_currentSide]
+    );
+    minShootPower = (total + COMBAT_AI_STRENGTH_ROUNDING) / COMBAT_AI_STRENGTH_FRACTION;
     canOutshoot = 0;
     stronger = 0;
     myShootPower = GetStrength(m_currentSide, ranged[m_currentSide]);
@@ -160,10 +166,11 @@ void combatManager::DoCompAI(signed char) {
     if (m_castleSide[0]) {
         numArchers = 5;
         castleTown = m_combatTowns[0];
-        for (dirIndex = 7; dirIndex <= 12; dirIndex++)
+        for (dirIndex = TOWN_BUILDING_FIRST_DWELLING; dirIndex <= TOWN_BUILDING_LAST_DWELLING;
+             dirIndex++)
             if (castleTown->m_buildings & (1 << dirIndex))
                 numArchers += 4;
-        for (dirIndex = 0; dirIndex <= 4; dirIndex++)
+        for (dirIndex = TOWN_BUILDING_MAGE_GUILD; dirIndex <= TOWN_BUILDING_TENT - 1; dirIndex++)
             if (castleTown->m_buildings & (1 << dirIndex))
                 numArchers++;
         wallStrength = numArchers * 100;
@@ -172,48 +179,48 @@ void combatManager::DoCompAI(signed char) {
         else
             foeShooters += wallStrength;
     }
-    if ((total + 4) / 5 < myShootPower)
+    if ((total + COMBAT_AI_STRENGTH_ROUNDING) / COMBAT_AI_STRENGTH_FRACTION < myShootPower)
         canOutshoot = 1;
     if (foeShooters > myShootPower)
         stronger = 1;
-    if (currentArmy->m_stats.attributes & 4) {
+    if (currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) {
         if (currentArmy->m_stats.shots > 0)
-            plan = 1;
+            plan = COMBAT_AI_ATTACK_SHOOT;
         else
-            plan = 3;
-    } else if (currentArmy->m_stats.attributes & 2) {
-        plan = 2;
+            plan = COMBAT_AI_ATTACK_WALK;
+    } else if (currentArmy->m_stats.attributes & MONSTER_FLAGS_FLYING) {
+        plan = COMBAT_AI_ATTACK_FLY;
     } else {
-        plan = 3;
+        plan = COMBAT_AI_ATTACK_WALK;
     }
     switch (plan) {
-        case 1:
+        case COMBAT_AI_ATTACK_SHOOT:
             if (AttemptAdjacentAttack(currentArmy)) {
                 goto finish;
             } else {
                 targetIndex = GetBestArmy(sideEnemy, ranged[sideEnemy]);
                 if (targetIndex != -1) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
                     goto finish;
                 }
                 targetIndex = GetBestArmy(sideEnemy, flyerMasks[sideEnemy]);
                 if (targetIndex != -1) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
                     goto finish;
                 }
                 if (walkerMask[sideEnemy]) {
                     targetIndex = GetClosestArmy(currentArmy, sideEnemy, walkerMask[sideEnemy]);
                     if (targetIndex != -1) {
-                        giNextAction = 2;
+                        giNextAction = ACTION_MOVE;
                         giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
                         goto finish;
                     }
                 }
             }
             break;
-        case 2:
+        case COMBAT_AI_ATTACK_FLY:
             if (canOutshoot && !stronger) {
                 if (AttemptAttack(currentArmy, sideEnemy, ranged[sideEnemy]))
                     goto finish;
@@ -230,7 +237,7 @@ void combatManager::DoCompAI(signed char) {
                     goto finish;
             }
             break;
-        case 3:
+        case COMBAT_AI_ATTACK_WALK:
             if (AttemptAdjacentAttack(currentArmy)) {
                 goto finish;
             } else {
@@ -251,11 +258,14 @@ void combatManager::DoCompAI(signed char) {
                     goto finish;
                 else if (WalkTowardArmy(currentArmy, sideEnemy, flyerMasks[sideEnemy]))
                     goto finish;
-                if (m_currentSide == 1 && m_castleSide[0] && currentArmy->m_hex % 9 < 4) {
-                    targetHex = currentArmy->m_hex / 9 * 9 + 4;
+                if (m_currentSide == 1 && m_castleSide[0]
+                    && currentArmy->m_hex % COMBAT_GRID_COLUMNS < COMBAT_CASTLE_WALL_COLUMN - 1) {
+                    targetHex = currentArmy->m_hex / COMBAT_GRID_COLUMNS * COMBAT_GRID_COLUMNS
+                                + (COMBAT_CASTLE_WALL_COLUMN - 1);
                     hexCell = &gpCombatManager->m_hexCells[targetHex];
-                    if (ValidHex(targetHex) && hexCell->m_occupantSide == -1 && hexCell->m_obstacleIndex == -1) {
-                        giNextAction = 2;
+                    if (ValidHex(targetHex) && hexCell->m_occupantSide == -1
+                        && hexCell->m_obstacleIndex == -1) {
+                        giNextAction = ACTION_MOVE;
                         giNextActionGridIndex = targetHex;
                         goto finish;
                     }
@@ -263,13 +273,14 @@ void combatManager::DoCompAI(signed char) {
             }
             break;
     }
-    giNextAction = 3;
+    giNextAction = ACTION_SKIP_TURN;
 finish:
-    if (giNextAction == 2 && giNextActionGridIndex > 0 && giNextActionGridIndex <= 43
+    if (giNextAction == ACTION_MOVE && giNextActionGridIndex > 0 && giNextActionGridIndex <= 43
         && gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantSide == -1) {
-        for (dirIndex = 0; dirIndex < 6; dirIndex++) {
+        for (dirIndex = 0; dirIndex < COMBAT_DIRECTION_ADJACENT_COUNT; dirIndex++) {
             adj = currentArmy->GetAdjacentCellIndex(giNextActionGridIndex, dirIndex);
-            if (adj > 0 && adj <= 43 && gpCombatManager->m_hexCells[adj].m_occupantSide == 1 - m_currentSide) {
+            if (adj > 0 && adj <= 43
+                && gpCombatManager->m_hexCells[adj].m_occupantSide == 1 - m_currentSide) {
                 giNextActionGridIndex = adj;
                 return;
             }
@@ -283,13 +294,13 @@ VA(0x00465671, 0xca)
 short combatManager::GetShooterMask(signed char side) {
     short armyIndex = 0;
     short bitMask = 1;
-    short armyMask = 0;
     class army* army;
+    short armyMask = 0;
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & 0x10) && (army->m_stats.attributes & 4)
-            && army->m_stats.shots > 0)
+        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD)
+            && (army->m_stats.attributes & MONSTER_FLAGS_SHOOTER) && army->m_stats.shots > 0)
             armyMask |= bitMask;
         bitMask <<= 1;
     }
@@ -306,7 +317,8 @@ short combatManager::GetFlyerMask(signed char side) {
     armyMask = 0;
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & 0x10) && (army->m_stats.attributes & 2))
+        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD)
+            && (army->m_stats.attributes & MONSTER_FLAGS_FLYING))
             armyMask |= bitMask;
         bitMask <<= 1;
     }
@@ -322,8 +334,9 @@ short combatManager::GetWalkerMask(signed char side) {
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & 0x10) && !(army->m_stats.attributes & 2)
-            && (!(army->m_stats.attributes & 4) || army->m_stats.shots <= 0))
+        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD)
+            && !(army->m_stats.attributes & MONSTER_FLAGS_FLYING)
+            && (!(army->m_stats.attributes & MONSTER_FLAGS_SHOOTER) || army->m_stats.shots <= 0))
             armyMask |= bitMask;
         bitMask <<= 1;
     }
@@ -338,7 +351,7 @@ short combatManager::GetBestArmy(signed char side, short mask) {
     unsigned long bestStrength = 0;
     short best = -1;
 
-    for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
             strength = m_armies[side][armyIndex].Strength();
             if (strength > bestStrength) {
@@ -356,10 +369,10 @@ short combatManager::GetWorstArmy(signed char side, short mask) {
     short armyIndex = 0;
     short bitFlag = 1;
     unsigned long strength;
-    unsigned long worstStrength = 999999999;
+    unsigned long worstStrength = COMBAT_AI_WORST_STRENGTH_LIMIT;
     short worst = -1;
 
-    for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
             strength = m_armies[side][armyIndex].Strength();
             if (strength < worstStrength) {
@@ -374,18 +387,22 @@ short combatManager::GetWorstArmy(signed char side, short mask) {
 
 VA(0x00465a33, 0x109)
 short combatManager::GetClosestArmy(class army* currentArmy, signed char side, short mask) {
+    int val;
     short armyIndex = 0;
     army* target;
     short bitFlag = 1;
-    int closestDist = 640;
+    int closestDist = FINDPATH_INITIAL_BEST_DISTANCE;
     short bestArmy = -1;
-    int val;
 
-    for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
             target = &m_armies[side][armyIndex];
-            val = gpSearchArray->QuickDistance(m_hexCells[currentArmy->m_hex].m_x, m_hexCells[currentArmy->m_hex].m_y,
-                                                m_hexCells[target->m_hex].m_x, m_hexCells[target->m_hex].m_y);
+            val = gpSearchArray->QuickDistance(
+                m_hexCells[currentArmy->m_hex].m_x,
+                m_hexCells[currentArmy->m_hex].m_y,
+                m_hexCells[target->m_hex].m_x,
+                m_hexCells[target->m_hex].m_y
+            );
             if (val < closestDist) {
                 bestArmy = armyIndex;
                 closestDist = val;
@@ -406,7 +423,7 @@ unsigned long int combatManager::GetStrength(signed char side, short mask) {
     for (index = 0; index < m_numArmies[side]; index++) {
         if (mask & bitMask) {
             army = &m_armies[side][index];
-            if (army && !(army->m_stats.attributes & 0x10))
+            if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 total += army->Strength();
         }
         bitMask <<= 1;
@@ -437,8 +454,8 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
             giNextActionGridIndex = targetHex;
             return 1;
         }
-        if (m_armies[side][targetArmy].m_stats.attributes & 1) {
-            if (m_armies[side][targetArmy].m_facing == 1)
+        if (m_armies[side][targetArmy].m_stats.attributes & MONSTER_FLAGS_WIDE) {
+            if (m_armies[side][targetArmy].m_facing == ARMY_FACING_RIGHT)
                 targetHex--;
             else
                 targetHex++;
@@ -472,15 +489,16 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (openMask & oneBit) {
             hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, dir);
-            if (ValidHex(hex) && (currentArmy->m_stats.attributes & 1)
+            if (ValidHex(hex) && (currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
                     && m_hexCells[hex].m_occupantSide != 1 - m_currentSide
                 || m_hexCells[hex].m_occupantIndex == m_currentArmyIndex
-                    && m_hexCells[hex].m_occupantSide == m_currentSide) {
-                if (currentArmy->m_facing == 0)
+                       && m_hexCells[hex].m_occupantSide == m_currentSide) {
+                if (currentArmy->m_facing == ARMY_FACING_LEFT)
                     otherHex = currentArmy->m_hex + 1;
                 else
                     otherHex = currentArmy->m_hex - 1;
-                if (hex % 9 != 0 && hex % 9 != 8)
+                if (hex % COMBAT_GRID_COLUMNS != 0
+                    && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN)
                     hex = currentArmy->GetAdjacentCellIndex(otherHex, dir);
                 if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
                     hex = -1;
@@ -495,7 +513,7 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     else
         target = GetBestArmy(1 - m_currentSide, enemyMask);
     if (target != -1) {
-        giNextAction = 2;
+        giNextAction = ACTION_MOVE;
         giNextActionGridIndex = m_armies[1 - m_currentSide][target].m_hex;
         return 1;
     } else {
@@ -504,11 +522,12 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
 }
 
 VA(0x00466050, 0x20f)
-signed char combatManager::WalkTowardArmyFront(class army* currentArmy, signed char side, short mask) {
+signed char
+combatManager::WalkTowardArmyFront(class army* currentArmy, signed char side, short mask) {
+    short frontHex;
     int armyIndex;
     int frontDelta;
     int canReach;
-    short frontHex;
     signed char oldSpeed;
     short pathNdx;
     short left;
@@ -520,26 +539,29 @@ signed char combatManager::WalkTowardArmyFront(class army* currentArmy, signed c
         return 0;
     frontDelta = 1;
     frontHex = m_armies[side][armyIndex].m_hex;
-    if (m_armies[side][armyIndex].m_stats.attributes & 1)
+    if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_WIDE)
         frontDelta = 2;
-    if (currentArmy->m_facing == 0)
+    if (currentArmy->m_facing == ARMY_FACING_LEFT)
         frontHex = frontHex + frontDelta;
     else
         frontHex = frontHex + -frontDelta;
-    if (frontHex % 9 == 8 || frontHex % 9 == 0)
+    if (frontHex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN
+        || frontHex % COMBAT_GRID_COLUMNS == 0)
         return WalkTowardArmy(currentArmy, side, mask);
     oldSpeed = currentArmy->m_stats.speed;
-    currentArmy->m_stats.speed = 127;
+    currentArmy->m_stats.speed = COMBAT_AI_UNLIMITED_PATH_SPEED;
     canReach = gpSearchArray->FindCombatPath(currentArmy->m_hex, frontHex, currentArmy, 1);
     currentArmy->m_stats.speed = oldSpeed;
     if (gpSearchArray->m_pathLength > 0) {
-        giNextAction = 2;
+        giNextAction = ACTION_MOVE;
         left = currentArmy->m_stats.speed;
         pathNdx = gpSearchArray->m_pathLength - 1;
         giNextActionGridIndex = currentArmy->m_hex;
         while (pathNdx >= 0 && left) {
-            giNextActionGridIndex =
-                currentArmy->GetAdjacentCellIndex(giNextActionGridIndex, gpSearchArray->m_directions[pathNdx]);
+            giNextActionGridIndex = currentArmy->GetAdjacentCellIndex(
+                giNextActionGridIndex,
+                gpSearchArray->m_directions[pathNdx]
+            );
             pathNdx--;
             left--;
         }
@@ -573,14 +595,14 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
         return 1;
     }
     savedSpeed = currentArmy->m_stats.speed;
-    currentArmy->m_stats.speed = 127;
+    currentArmy->m_stats.speed = COMBAT_AI_UNLIMITED_PATH_SPEED;
     routeGot = gpSearchArray->FindCombatPath(currentArmy->m_hex, goalHex, currentArmy, -1);
-    if (!routeGot && (targetPtr->m_stats.attributes & 1)) {
+    if (!routeGot && (targetPtr->m_stats.attributes & MONSTER_FLAGS_WIDE)) {
         switch (targetPtr->m_facing) {
-            case 1:
+            case ARMY_FACING_RIGHT:
                 goalHex = goalHex - 1;
                 break;
-            case 0:
+            case ARMY_FACING_LEFT:
                 goalHex = goalHex + 1;
                 break;
         }
@@ -594,8 +616,10 @@ signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char s
         pathNdx = gpSearchArray->m_pathLength - 1;
         giNextActionGridIndex = currentArmy->m_hex;
         while (pathNdx >= 1 && left) {
-            giNextActionGridIndex =
-                currentArmy->GetAdjacentCellIndex(giNextActionGridIndex, gpSearchArray->m_directions[pathNdx]);
+            giNextActionGridIndex = currentArmy->GetAdjacentCellIndex(
+                giNextActionGridIndex,
+                gpSearchArray->m_directions[pathNdx]
+            );
             pathNdx--;
             left--;
         }

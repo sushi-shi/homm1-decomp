@@ -23,7 +23,7 @@ class town;
 #define HERO_EVENT_FAERIE_RING 0x10u
 #define HERO_EVENT_GRAVEYARD 0x20u
 #define HERO_EVENT_SHIPWRECK 0x40u
-#define HERO_EVENT_TEMPLE 0x100u
+#define HERO_EVENT_STATUE 0x100u
 
 // clang-format off
 H1_ENUM_CONST_BEGIN(HeroConstant)
@@ -38,13 +38,17 @@ H1_ENUM_CONST_END(HeroConstant)
 // m_primaryStats indices: the order of retail gPrimarySkillNames
 // (0x00493210) and their help texts; army::Init adds 0 and 1 to the
 // stack's attack and defense, and AddSpell receives 3 as the spell count.
+// advManager::GiveTakeArtifactStat also raises the fifth byte (index 4)
+// for the Ballista of Quickness, which no retail code reads (CMBTMGR tests
+// the artifact itself), and uses -1 for artifacts without a stat bonus.
 H1_ENUM_BEGIN(HeroPrimaryStat)
+    HERO_PRIMARY_NONE = -1,
     HERO_PRIMARY_ATTACK = 0,
     HERO_PRIMARY_DEFENSE = 1,
     HERO_PRIMARY_SPELL_POWER = 2,
-    HERO_PRIMARY_KNOWLEDGE = 3
+    HERO_PRIMARY_KNOWLEDGE = 3,
+    HERO_PRIMARY_BALLISTA = 4
 H1_ENUM_END(HeroPrimaryStat)
-
 
 // clang-format on
 
@@ -101,7 +105,7 @@ public:
     // --- methods ---
     void Read(int, signed char);
     void Write(int, signed char);
-    void GetArmyStrengths(unsigned long int * const);
+    void GetArmyStrengths(unsigned long int* const);
     signed char HasArtifact(H1_ENUM_PARAM(ArtifactType, signed char));
     short CalcMobility(void);
     signed char HasSpell(H1_ENUM_PARAM(SpellType, signed char));
@@ -129,7 +133,7 @@ public:
     int CreatureTypeCount(int);
     void UpgradeCreatures(int, int);
     int GetNthSS(int);
-    class town * GetOccupiedTown(void);
+    class town* GetOccupiedTown(void);
     signed char Stats(int);
     signed char GetSSLevel(int);
     void DoSSLevelDialog(int, int);
