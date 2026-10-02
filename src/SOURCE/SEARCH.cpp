@@ -18,20 +18,21 @@ VA(0x004028b0, 0x23a)
 short searchArray::FindNearestObject(short startX, short startY, short direction, short maximumCost,
                                      unsigned char triggerType)
 {
-    short nodeY;
+    // node.x/node.y are read in place: retail spills the coordinate as a CSE
+    // temporary in the dword slot below node. The declaration order gives the
+    // start-versus-destination compares their retail operand order.
     searchNode node;
     signed char possibleDirections[8];
     signed char directionCosts[8];
-    short nodeX;
     short i;
     short terrain;
     short cost;
-    short neighborX;
-    short neighborY;
     searchNode *pathNode;
     unsigned char *pathDirection;
     short destinationY;
     short destinationX;
+    short neighborX;
+    short neighborY;
 
     giCurTempMobility = 500;
     m_specialTargetX = -1;
@@ -41,20 +42,18 @@ short searchArray::FindNearestObject(short startX, short startY, short direction
         node = m_queue[--m_queueCount];
         if (maximumCost > 0 && node.distance > maximumCost)
             continue;
-        nodeX = node.x;
-        nodeY = node.y;
-        if (gpGame->m_map[nodeX][nodeY].m_triggerType == triggerType && (startX != nodeX || startY != nodeY)) {
+        if (gpGame->m_map[node.x][node.y].m_triggerType == triggerType && (startX != node.x || startY != node.y)) {
             m_specialTargetX = node.x;
             m_specialTargetY = node.y;
             break;
         }
-        TestPossibleDirections(nodeX, nodeY, possibleDirections, directionCosts, 1, 0);
+        TestPossibleDirections(node.x, node.y, possibleDirections, directionCosts, 1, 0);
         for (i = 0; i < 8; i++) {
             terrain = possibleDirections[i];
             if (terrain != -1) {
                 cost = CalcTerrainCost(terrain, i & 1, 999, 0);
-                neighborX = nodeX + normalDirTable[i].x;
-                neighborY = nodeY + normalDirTable[i].y;
+                neighborX = node.x + normalDirTable[i].x;
+                neighborY = node.y + normalDirTable[i].y;
                 PushPoint(neighborX, neighborY, i, node.distance + cost, maximumCost, 0, 0, 0, 0, node.rvFlag2,
                           node.previousX, node.previousY);
             }
