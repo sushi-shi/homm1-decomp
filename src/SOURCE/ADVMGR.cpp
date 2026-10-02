@@ -25,31 +25,6 @@
 DATA(0x004c5170)
 int giSeedingValid;
 
-// UpdBottomViewHero's per-creature mons32.icn frame width.
-extern signed char gMons32Width[];
-// ComboDraw's per-view-cell redraw marks and its animation frame clock.
-extern signed char bComboDraw[][17];
-extern int giFrameCount;
-
-// UpdateRadar's per-owner and per-terrain radar pixel colours.
-extern short gRadarOwnerColor[];
-extern short gRadarTerrainColor[];
-// QuickInfo's name tables.
-extern char* gTerrainNames[];
-extern char* gResourceNames[];
-extern char* gSpellNames[];
-extern char* gArmyNamesPlural[];
-extern char* gObjectNames[];
-// HoMM1 town-name lookup by town id (retail 0x00455aaf).
-char* GetTownName(int);
-// Buka TrueFalseDialogHandler (retail 0x00452c78), the plain dialog dispatcher.
-short TrueFalseDialogHandler(struct tag_message&);
-// KB/GAME entry points ProcessSearch reaches.
-SAMPLE2 LoadPlaySample(char*);
-void WaitEndSample(SAMPLE2, int);
-extern SAMPLE2 NULL_SAMPLE2;
-void CheckEndGame(int);
-void ComputeUALoc(int);
 
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)

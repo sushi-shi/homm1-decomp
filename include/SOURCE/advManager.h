@@ -372,4 +372,13 @@ extern class heroWindow *cPanel;
 extern signed char bPrefsChanged;
 extern signed char bFreshSave;
 extern unsigned char giCloudType[];
+// UpdBottomViewHero's per-creature mons32.icn frame width.
+extern signed char gMons32Width[];
+// ComboDraw's per-view-cell redraw marks and its animation frame clock.
+extern signed char bComboDraw[][17];
+extern int giFrameCount;
+// UpdateRadar's per-owner and per-terrain radar pixel colours.
+extern short gRadarOwnerColor[];
+extern short gRadarTerrainColor[];
+void ComputeUALoc(int);
 #endif // HOMM1_SOURCE_ADVMANAGER_H
