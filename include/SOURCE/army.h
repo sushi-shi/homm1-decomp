@@ -66,6 +66,24 @@ H1_ENUM_BEGIN(ArmySpellCancelType)
     ARMY_CANCEL_SPELLS_ROUNDS_ONLY = 3
 H1_ENUM_END(ArmySpellCancelType)
 
+// army::m_damageMode, how DamageEnemy rolls each creature's damage:
+// random by default, the minimum or maximum roll (SPELLS' curse/bless
+// set them) or a halved total.
+H1_ENUM_BEGIN(ArmyDamageMode)
+    ARMY_DAMAGE_RANDOM = 0,
+    ARMY_DAMAGE_MINIMUM = 1,
+    ARMY_DAMAGE_HALF = 2,
+    ARMY_DAMAGE_MAXIMUM = 3
+H1_ENUM_END(ArmyDamageMode)
+
+// army::m_powFrames: how many PowEffect frames the stack still shows; Damage
+// sets the hit and killed counts, Init clears it.
+H1_ENUM_CONST_BEGIN(ArmyPowConstant)
+    ARMY_POW_NONE = -1,
+    ARMY_POW_FRAMES_HIT = 4,
+    ARMY_POW_FRAMES_KILLED = 5
+H1_ENUM_CONST_END(ArmyPowConstant)
+
 // LoadResources' sample playback settings and DrawToBuffer's quantity text
 // buffer (Buka ArmyCombatConstant ARMY_SAMPLE_VOLUME/CHANNEL and
 // ARMY_QUANTITY_TEXT_SIZE).
@@ -102,7 +120,7 @@ public:
     short m_quantity;
     short m_hitPointsLost;
     // DamageEnemy: 3 rolls maximum damage, 1 minimum, 2 halves it.
-    signed char m_damageMode;
+    H1_ENUM_STORAGE(ArmyDamageMode, signed char) m_damageMode;
     // Init copies the creature speed here; m_stats.speed is the current one.
     signed char m_baseSpeed;
     // CheckLuck: 1 good luck, -1 bad luck this attack.

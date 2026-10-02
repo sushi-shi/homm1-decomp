@@ -82,8 +82,8 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     m_quantity = quantity;
     m_initialQuantity = m_quantity;
     m_hitPointsLost = 0;
-    m_damageMode = 0;
-    m_powFrames = -1;
+    m_damageMode = ARMY_DAMAGE_RANDOM;
+    m_powFrames = ARMY_POW_NONE;
     m_side = side;
     m_index = index;
 }
@@ -831,7 +831,7 @@ void army::DoHydraAttack(void) {
     for (occSide = 0; occSide < 2; occSide++) {
         for (armyIndex = 0; armyIndex < gpCombatManager->m_numArmies[occSide]; armyIndex++) {
             eachArmy = &gpCombatManager->m_armies[occSide][armyIndex];
-            if (!(eachArmy->m_stats.attributes & MONSTER_FLAGS_DEAD) || eachArmy->m_powFrames == -1)
+            if (!(eachArmy->m_stats.attributes & MONSTER_FLAGS_DEAD) || eachArmy->m_powFrames == ARMY_POW_NONE)
                 eachArmy->Stand(0);
         }
     }
@@ -1253,10 +1253,10 @@ void army::DamageEnemy(class army* target, int* damageResult, int* killedResult,
     gbGenieHalf = 0;
     for (index = 0; index < m_quantity; index++) {
         switch (m_damageMode) {
-            case 3:
+            case ARMY_DAMAGE_MAXIMUM:
                 total += m_stats.damageMax;
                 break;
-            case 1:
+            case ARMY_DAMAGE_MINIMUM:
                 total += m_stats.damageMin;
                 break;
             default:
@@ -1279,7 +1279,7 @@ void army::DamageEnemy(class army* target, int* damageResult, int* killedResult,
     m_luck = 0;
     if ((m_stats.attributes & MONSTER_FLAGS_SHOOTER) && !rangedAttack)
         total /= 2;
-    if (m_damageMode == 2)
+    if (m_damageMode == ARMY_DAMAGE_HALF)
         total /= 2;
     damage = static_cast<int>(total + 0.5);
     if (m_creatureType == CREATURE_GENIE && SRandom(1, 5) == 2) {
@@ -1314,14 +1314,14 @@ int army::Damage(long int damage) {
     if (minKilled == 0)
         minKilled = 1;
     if (kills > 0)
-        m_powFrames = 4;
+        m_powFrames = ARMY_POW_FRAMES_HIT;
     else
-        m_powFrames = -1;
+        m_powFrames = ARMY_POW_NONE;
     if (m_quantity < kills)
         kills = m_quantity;
     m_quantity = m_quantity - kills;
     if (m_quantity <= 0)
-        m_powFrames = 5;
+        m_powFrames = ARMY_POW_FRAMES_KILLED;
     facing = m_facing;
     m_facing = gpCombatManager->m_armies[gpCombatManager->m_currentSide][gpCombatManager->m_currentArmyIndex].m_facing ^ 1;
     Wince();
@@ -1397,7 +1397,7 @@ void army::PowEffect(signed char effect) {
         glTimers[1] = KBTickCount() + 30;
         for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
             for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
-                if (gpCombatManager->m_armies[side][stackIndex].m_powFrames >= 5) {
+                if (gpCombatManager->m_armies[side][stackIndex].m_powFrames >= ARMY_POW_FRAMES_KILLED) {
                     gpCombatManager->m_armies[side][stackIndex].m_animationSequence = ARMY_ANIMATION_EFFECT;
                     gpCombatManager->m_armies[side][stackIndex].m_stats.attributes |= MONSTER_FLAGS_DEAD;
                     if (!gpCombatManager->m_limitCreatureCount[side][stackIndex])
@@ -1419,7 +1419,7 @@ void army::PowEffect(signed char effect) {
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
             curArmy = &gpCombatManager->m_armies[side][stackIndex];
-            if ((curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD) && curArmy->m_powFrames != -1) {
+            if ((curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD) && curArmy->m_powFrames != ARMY_POW_NONE) {
                 cellHex = curArmy->m_hex;
                 if (ValidHex(cellHex))
                     gpCombatManager->m_hexCells[cellHex].m_occupantSide = -1;
@@ -1483,7 +1483,7 @@ void army::CancelSpell(void) {
         case SPELL_BLIND:
         case SPELL_BLESS:
         case SPELL_CURSE:
-            m_damageMode = 0;
+            m_damageMode = ARMY_DAMAGE_RANDOM;
             m_stats.speed = m_baseSpeed;
             m_stats.attributes |= gMonsterDatabase[m_creatureType].stats.attributes & MONSTER_FLAGS_FLYING;
             break;
