@@ -40,6 +40,17 @@ H1_ENUM_BEGIN(GameDifficulty)
     DIFFICULTY_COUNT = 4
 H1_ENUM_END(GameDifficulty)
 
+// giWeekType / giMonthType (Buka CalendarPeriodType): a named week or month
+// (gWeekNames / gMonthNames[special]), a creature week or month
+// (gArmyNames[special] grows), or the month of the plague. NONE suppresses
+// the new-week announcement.
+H1_ENUM_BEGIN(CalendarPeriodType)
+    CALENDAR_PERIOD_NONE = -1,
+    CALENDAR_PERIOD_NORMAL = 0,
+    CALENDAR_PERIOD_CREATURE = 1,
+    CALENDAR_PERIOD_PLAGUE = 2
+H1_ENUM_END(CalendarPeriodType)
+
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
 // and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
 // 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).

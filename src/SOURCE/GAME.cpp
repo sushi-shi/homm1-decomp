@@ -2914,6 +2914,24 @@ void game::PerDay(void) {
     }
 }
 
+// clang-format off
+// Calendar draws: gWeekNames / gMonthNames sizes, the creature tables a
+// creature week or month picks from, and gNewTurnText's announcement rows.
+H1_ENUM_CONST_BEGIN(CalendarConstant)
+    CALENDAR_WEEK_NAME_COUNT = 15,
+    CALENDAR_WEEK_CREATURE_COUNT = 24,
+    CALENDAR_MONTH_NAME_COUNT = 10,
+    CALENDAR_MONTH_CREATURE_COUNT = 12,
+    NEW_TURN_TEXT_DAYS_LEFT = 0,
+    NEW_TURN_TEXT_LAST_DAY = 1,
+    NEW_TURN_TEXT_MONTH_NORMAL = 2,
+    NEW_TURN_TEXT_MONTH_CREATURE = 3,
+    NEW_TURN_TEXT_MONTH_PLAGUE = 4,
+    NEW_TURN_TEXT_WEEK_NORMAL = 5,
+    NEW_TURN_TEXT_WEEK_CREATURE = 6
+H1_ENUM_CONST_END(CalendarConstant)
+// clang-format on
+
 // Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
 // (computer towns grow faster), refreshes the tavern heroes and restocks the
 // map's renewable sites.
@@ -2927,13 +2945,13 @@ void game::PerWeek(void) {
     short i;
     int heroClass = 0;
 
-    giWeekType = 0;
-    giWeekSpecial = Random(0, 14);
+    giWeekType = CALENDAR_PERIOD_NORMAL;
+    giWeekSpecial = Random(0, CALENDAR_WEEK_NAME_COUNT - 1);
     if (m_week != 4) {
         i = Random(1, 4);
         if (i == 1) {
-            giWeekType = 1;
-            giWeekSpecial = Random(0, 23);
+            giWeekType = CALENDAR_PERIOD_CREATURE;
+            giWeekSpecial = Random(0, CALENDAR_WEEK_CREATURE_COUNT - 1);
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
@@ -2949,7 +2967,7 @@ void game::PerWeek(void) {
                     if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_GENIUS)
                         gain = gain * 1.36;
                 }
-                if (giWeekType == 1 && gDwellingType[townPointer->m_type][j - 7] == giWeekSpecial)
+                if (giWeekType == CALENDAR_PERIOD_CREATURE && gDwellingType[townPointer->m_type][j - 7] == giWeekSpecial)
                     gain += 5;
                 townPointer->m_garrison[j - 7] += gain;
             }
@@ -3025,13 +3043,13 @@ void game::PerMonth(void) {
     m_month++;
     i = Random(1, 10);
     if (i <= 5) {
-        giMonthType = 0;
-        giMonthSpecial = Random(0, 9);
+        giMonthType = CALENDAR_PERIOD_NORMAL;
+        giMonthSpecial = Random(0, CALENDAR_MONTH_NAME_COUNT - 1);
     } else if (i <= 9) {
-        giMonthType = 1;
-        giMonthSpecial = giMonType[Random(0, 11)];
+        giMonthType = CALENDAR_PERIOD_CREATURE;
+        giMonthSpecial = giMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)];
     } else {
-        giMonthType = 2;
+        giMonthType = CALENDAR_PERIOD_PLAGUE;
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         for (j = 7; j <= 12; j++) {
@@ -3040,9 +3058,9 @@ void game::PerMonth(void) {
                 growth = gMonsterDatabase[gDwellingType[townPointer->m_type][j - 7]].growth;
                 if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                     growth += 2;
-                if (giMonthType == 1 && gDwellingType[townPointer->m_type][j - 7] == giMonthSpecial)
+                if (giMonthType == CALENDAR_PERIOD_CREATURE && gDwellingType[townPointer->m_type][j - 7] == giMonthSpecial)
                     townPointer->m_garrison[j - 7] *= 2;
-                if (giMonthType == 2) {
+                if (giMonthType == CALENDAR_PERIOD_PLAGUE) {
                     townPointer->m_garrison[j - 7] -= growth;
                     if (townPointer->m_garrison[j - 7] < 0)
                         townPointer->m_garrison[j - 7] = 0;
@@ -3051,7 +3069,7 @@ void game::PerMonth(void) {
             }
         }
     }
-    if (giMonthType == 1) {
+    if (giMonthType == CALENDAR_PERIOD_CREATURE) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
                 spot = gpAdvManager->GetCell(x, y);
@@ -4350,12 +4368,12 @@ void game::DoNewTurn(void) {
     CheckEndGame(0);
     if (gpCurPlayer->m_daysLeft >= 0) {
         if (gpCurPlayer->m_daysLeft == 1) {
-            sprintf(gText, gNewTurnText[1], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
+            sprintf(gText, gNewTurnText[NEW_TURN_TEXT_LAST_DAY], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
             gText[0] -= 32;
         } else {
             sprintf(
                 gText,
-                gNewTurnText[0],
+                gNewTurnText[NEW_TURN_TEXT_DAYS_LEFT],
                 gColorNames[gpGame->m_players[giCurPlayer].Color()],
                 gpCurPlayer->m_daysLeft
             );
@@ -4370,27 +4388,27 @@ void game::DoNewTurn(void) {
     gpAdvManager->CheckDimNextHeroBut();
     gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     if (m_day == 1) {
-        if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != -1) {
+        if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != CALENDAR_PERIOD_NONE) {
             track = -1;
             if (m_week == 1) {
                 track = 0x33;
-                if (giMonthType == 0) {
-                    sprintf(gText, gNewTurnText[2], gMonthNames[giMonthSpecial]);
-                } else if (giMonthType == 1) {
+                if (giMonthType == CALENDAR_PERIOD_NORMAL) {
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_NORMAL], gMonthNames[giMonthSpecial]);
+                } else if (giMonthType == CALENDAR_PERIOD_CREATURE) {
                     strcpy(monsterName, gArmyNames[giMonthSpecial]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[3], gArmyNames[giMonthSpecial], monsterName);
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE], gArmyNames[giMonthSpecial], monsterName);
                 } else {
-                    sprintf(gText, gNewTurnText[4]);
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_PLAGUE]);
                 }
             } else {
                 track = 0x32;
-                if (giWeekType == 0) {
-                    sprintf(gText, gNewTurnText[5], gWeekNames[giWeekSpecial]);
+                if (giWeekType == CALENDAR_PERIOD_NORMAL) {
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_WEEK_NORMAL], gWeekNames[giWeekSpecial]);
                 } else {
                     strcpy(monsterName, gArmyNames[giWeekSpecial]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[6], gArmyNames[giWeekSpecial], monsterName);
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE], gArmyNames[giWeekSpecial], monsterName);
                 }
             }
             gpSoundManager->SwitchAmbientMusic(track);
