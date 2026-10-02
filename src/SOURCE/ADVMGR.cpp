@@ -130,6 +130,40 @@ H1_ENUM_CONST_END(BottomViewPanelConstant)
 // AdventureEnemyTurnViewConstant names, same values): the hourglass,
 // running-sand and crest icons, their widget ids and z-orders, the sand
 // frame cycle and the animation delays.
+// DrawCell's sprite layout (Buka 2.1 AdventureDrawConstant names, HoMM1
+// values): cell pixels, the stone border tiles around the map (corners, then
+// four-tile runs per side picked by the coordinate's low bits, the inner
+// pattern offset by 16), the cloud variants and flipped/alternate frames,
+// the route arrow's y offset, minimon frames (seven per creature, the
+// facing frame last), the boat's y offset and the hero frame's mirror bit.
+H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
+    CELL_PIXELS = 32,
+    CELL_LAST_PIXEL = CELL_PIXELS - 1,
+    STONE_TILE_NONE = -1,
+    STONE_TILE_TOP_LEFT = 16,
+    STONE_TILE_TOP_RIGHT = 17,
+    STONE_TILE_BOTTOM_RIGHT = 18,
+    STONE_TILE_BOTTOM_LEFT = 19,
+    STONE_TILE_TOP_BASE = 20,
+    STONE_TILE_RIGHT_BASE = 24,
+    STONE_TILE_BOTTOM_BASE = 28,
+    STONE_TILE_LEFT_BASE = 32,
+    STONE_PATTERN_COORDINATE_SHIFT = 16,
+    CLOUD_VARIANTS = 4,
+    CLOUD_VARIANT_MASK = CLOUD_VARIANTS - 1,
+    CLOUD_FLIPPED_FRAME_BASE = 100,
+    CLOUD_X_ALTERNATE_FRAME_1 = 1,
+    CLOUD_Y_ALTERNATE_FRAME = 3,
+    CLOUD_X_ALTERNATE_FRAME_2 = 5,
+    ROUTE_DRAW_Y_OFFSET = 2,
+    MONSTER_FRAME_STRIDE = 7,
+    MONSTER_FACING_FRAME_BASE = MONSTER_FRAME_STRIDE - 1,
+    MONSTER_DRAW_Y_OFFSET = 5,
+    HERO_BOAT_Y_OFFSET = -10,
+    HERO_FRAME_MIRROR_FLAG = 0x80,
+    HERO_FRAME_INDEX_MASK = 0x7f
+H1_ENUM_CONST_END(AdventureDrawConstant)
+
 // Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
 // the network-turn music hold, the quick-view "none shown" origin, the walk
 // sample set and volume, the looping-sample budget per high-memory unit and
@@ -2051,29 +2085,30 @@ void advManager::DrawCell(
     pixelY3 = screenY << 5;
     cell0 = GetCell(mapX, mapY);
     if (!gbAllBlack && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
-        s_drawStoneTile = -1;
+        s_drawStoneTile = STONE_TILE_NONE;
         if (mapX == -1) {
             if (mapY == -1)
-                s_drawStoneTile = 16;
+                s_drawStoneTile = STONE_TILE_TOP_LEFT;
             else if (mapY == MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = 19;
+                s_drawStoneTile = STONE_TILE_BOTTOM_LEFT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = (mapY & 3) + 32;
+                s_drawStoneTile = (mapY & CLOUD_VARIANT_MASK) + STONE_TILE_LEFT_BASE;
         } else if (mapX == MAP_CELL_GRID_SIZE) {
             if (mapY == -1)
-                s_drawStoneTile = 17;
+                s_drawStoneTile = STONE_TILE_TOP_RIGHT;
             else if (mapY == MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = 18;
+                s_drawStoneTile = STONE_TILE_BOTTOM_RIGHT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = (mapY & 3) + 24;
+                s_drawStoneTile = (mapY & CLOUD_VARIANT_MASK) + STONE_TILE_RIGHT_BASE;
         } else if (mapY == -1) {
             if (mapX >= 0 && mapX < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = (mapX & 3) + 20;
+                s_drawStoneTile = (mapX & CLOUD_VARIANT_MASK) + STONE_TILE_TOP_BASE;
         } else if (mapY == MAP_CELL_GRID_SIZE && mapX >= 0 && mapX < MAP_CELL_GRID_SIZE) {
-            s_drawStoneTile = (mapX & 3) + 28;
+            s_drawStoneTile = (mapX & CLOUD_VARIANT_MASK) + STONE_TILE_BOTTOM_BASE;
         }
-        if (s_drawStoneTile == -1)
-            s_drawStoneTile = (mapX + 16) % 4 + ((mapY + 16) % 4) * 4;
+        if (s_drawStoneTile == STONE_TILE_NONE)
+            s_drawStoneTile = (mapX + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS
+                              + ((mapY + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS) * CLOUD_VARIANTS;
         TileToBitmap(m_stoneTiles, s_drawStoneTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         return;
     } else {
@@ -2085,18 +2120,18 @@ void advManager::DrawCell(
                 s_drawCloudFrame = GetCloudLookup(mapX, mapY);
             if (s_drawCloudFrame == 0) {
                 if (drawMask & ADVMGR_DRAW_CLOUD)
-                    TileToBitmap(m_cloudTiles, (mapX + mapY) & 3, gpWindowManager->m_screen, pixelX7, pixelY3);
+                    TileToBitmap(m_cloudTiles, (mapX + mapY) & CLOUD_VARIANT_MASK, gpWindowManager->m_screen, pixelX7, pixelY3);
                 return;
             }
-            if (s_drawCloudFrame >= 100) {
+            if (s_drawCloudFrame >= CLOUD_FLIPPED_FRAME_BASE) {
                 s_drawFlipCloud = 1;
-                s_drawCloudFrame -= 100;
+                s_drawCloudFrame -= CLOUD_FLIPPED_FRAME_BASE;
             } else {
                 s_drawFlipCloud = 0;
             }
-            if ((s_drawCloudFrame == 1 || s_drawCloudFrame == 5) && (mapX & 1))
+            if ((s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_1 || s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_2) && (mapX & 1))
                 s_drawCloudFrame++;
-            if (s_drawCloudFrame == 3 && (mapY & 1))
+            if (s_drawCloudFrame == CLOUD_Y_ALTERNATE_FRAME && (mapY & 1))
                 s_drawCloudFrame++;
         } else {
             s_drawCovered = 0;
@@ -2106,7 +2141,7 @@ void advManager::DrawCell(
         if (s_drawCovered) {
             if (s_drawFlipCloud)
                 FlipIconToBitmap(
-                    m_cloudOverlayIcon, gpWindowManager->m_screen, pixelX7 + 31, pixelY3, s_drawCloudFrame - 1, 0
+                    m_cloudOverlayIcon, gpWindowManager->m_screen, pixelX7 + CELL_LAST_PIXEL, pixelY3, s_drawCloudFrame - 1, 0
                 );
             else
                 IconToBitmap(
@@ -2115,12 +2150,12 @@ void advManager::DrawCell(
         } else if (m_routeShown && m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX]) {
             if (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FLIPPED)
                 FlipIconToBitmap(
-                    m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7 + 31, pixelY3 + 2,
+                    m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7 + CELL_LAST_PIXEL, pixelY3 + ROUTE_DRAW_Y_OFFSET,
                     (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1, 0
                 );
             else
                 IconToBitmap(
-                    m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7, pixelY3 + 2,
+                    m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7, pixelY3 + ROUTE_DRAW_Y_OFFSET,
                     (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1, 0
                 );
         }
@@ -2170,18 +2205,19 @@ void advManager::DrawCell(
                 if (m_lastQuickViewX == mapX && m_lastQuickViewY == mapY) {
                     if (m_mineGuardianFacingLeft)
                         FlipIconToBitmap(
-                            m_objectIcons[TILESET_MINIMON], gpWindowManager->m_screen, pixelX7 + 36, pixelY3 - 5,
-                            cell0->m_objectIndex * 7 + 6, 0
+                            m_objectIcons[TILESET_MINIMON], gpWindowManager->m_screen, pixelX7 + 36, pixelY3 - MONSTER_DRAW_Y_OFFSET,
+                            cell0->m_objectIndex * MONSTER_FRAME_STRIDE + MONSTER_FACING_FRAME_BASE, 0
                         );
                     else
                         IconToBitmap(
-                            m_objectIcons[TILESET_MINIMON], gpWindowManager->m_screen, pixelX7, pixelY3 - 5,
-                            cell0->m_objectIndex * 7 + 6, 0
+                            m_objectIcons[TILESET_MINIMON], gpWindowManager->m_screen, pixelX7, pixelY3 - MONSTER_DRAW_Y_OFFSET,
+                            cell0->m_objectIndex * MONSTER_FRAME_STRIDE + MONSTER_FACING_FRAME_BASE, 0
                         );
                 } else {
                     ClipIconToBitmap(
-                        m_objectIcons[TILESET_MINIMON], gpWindowManager->m_screen, pixelX7, pixelY3 - 5,
-                        cell0->m_objectIndex * 7 + m_animationPhases[mapX & 3], 0, 0, 0, 480, 480
+                        m_objectIcons[TILESET_MINIMON], gpWindowManager->m_screen, pixelX7, pixelY3 - MONSTER_DRAW_Y_OFFSET,
+                        cell0->m_objectIndex * MONSTER_FRAME_STRIDE + m_animationPhases[mapX & (ADVMGR_ANIMATION_PHASE_COUNT - 1)],
+                        0, 0, 0, ADVENTURE_VIEWPORT_EXTENT, ADVENTURE_VIEWPORT_EXTENT
                     );
                 }
             }
@@ -2191,7 +2227,7 @@ void advManager::DrawCell(
             iconIndex = ADVMGR_HERO_ICON_BOAT;
             frame = GetCursorBaseFrame(gpGame->m_boats[cell0->m_objectMetadata].direction);
             drawHeroIcon0 = 1;
-            heroYOffset6 = -10;
+            heroYOffset6 = HERO_BOAT_Y_OFFSET;
         } else {
             heroYOffset6 = 0;
             if (cell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
@@ -2207,58 +2243,58 @@ void advManager::DrawCell(
                 frame = GetCursorBaseFrame(drawHero->m_direction);
                 drawHeroIcon0 = 1;
                 if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                    heroYOffset6 = -10;
+                    heroYOffset6 = HERO_BOAT_Y_OFFSET;
             }
         }
         if (drawHeroIcon0) {
-            if (frame & 0x80) {
+            if (frame & HERO_FRAME_MIRROR_FLAG) {
                 if (screenX == 0 || screenY <= 1 || screenX == ADVMGR_VIEW_CELL_COUNT - 1 || screenY == ADVMGR_VIEW_CELL_COUNT - 1) {
                     FlipClippedIconToBitmap(
-                        m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
-                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
+                        m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + CELL_PIXELS,
+                        pixelY3 + CELL_PIXELS - 1 + heroYOffset6, frame & HERO_FRAME_INDEX_MASK, 0
                     );
                     if (flagColor != -1)
                         FlipClippedIconToBitmap(
-                            m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
-                            pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
+                            m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + CELL_PIXELS,
+                            pixelY3 + CELL_PIXELS - 1 + heroYOffset6, frame & HERO_FRAME_INDEX_MASK, 0
                         );
                 } else {
                     if (m_drawHeroShadows && iconIndex != ADVMGR_HERO_ICON_BOAT)
                         FlipDimIconToBitmap(
-                            m_boatShadowIcon, gpWindowManager->m_screen, pixelX7 + 32, pixelY3 + 31,
-                            frame & 0x7f, 0
+                            m_boatShadowIcon, gpWindowManager->m_screen, pixelX7 + CELL_PIXELS, pixelY3 + CELL_LAST_PIXEL,
+                            frame & HERO_FRAME_INDEX_MASK, 0
                         );
                     FlipIconToBitmap(
-                        m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + 32,
-                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
+                        m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7 + CELL_PIXELS,
+                        pixelY3 + CELL_PIXELS - 1 + heroYOffset6, frame & HERO_FRAME_INDEX_MASK, 0
                     );
                     if (flagColor != -1)
                         FlipIconToBitmap(
-                            m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + 32,
-                            pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
+                            m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7 + CELL_PIXELS,
+                            pixelY3 + CELL_PIXELS - 1 + heroYOffset6, frame & HERO_FRAME_INDEX_MASK, 0
                         );
                 }
             } else if (screenX == 0 || screenY <= 1 || screenX == ADVMGR_VIEW_CELL_COUNT - 1 || screenY == ADVMGR_VIEW_CELL_COUNT - 1) {
                 ClippedIconToBitmap(
-                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 32 - 1 + heroYOffset6,
+                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + CELL_PIXELS - 1 + heroYOffset6,
                     frame, 0
                 );
                 if (flagColor != -1)
                     ClippedIconToBitmap(
                         m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
-                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + CELL_PIXELS - 1 + heroYOffset6, frame & HERO_FRAME_INDEX_MASK, 0
                     );
             } else {
                 if (m_drawHeroShadows && iconIndex != ADVMGR_HERO_ICON_BOAT)
-                    DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, pixelX7, pixelY3 + 31, frame, 0);
+                    DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, pixelX7, pixelY3 + CELL_LAST_PIXEL, frame, 0);
                 IconToBitmap(
-                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 32 - 1 + heroYOffset6,
+                    m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + CELL_PIXELS - 1 + heroYOffset6,
                     frame, 0
                 );
                 if (flagColor != -1)
                     IconToBitmap(
                         m_flagIcons[flagColor], gpWindowManager->m_screen, pixelX7,
-                        pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
+                        pixelY3 + CELL_PIXELS - 1 + heroYOffset6, frame & HERO_FRAME_INDEX_MASK, 0
                     );
             }
         }
