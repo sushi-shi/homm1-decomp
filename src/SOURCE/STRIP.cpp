@@ -33,7 +33,8 @@ strip::strip(
     m_stripIcon = gpResourceManager->GetIcon("strip.icn");
     m_monsterIcon = gpResourceManager->GetIcon("monsters.icn");
     m_font = gpResourceManager->GetFont("smalfont.fnt");
-    m_window = new heroWindow(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT, WINDOW_FLAG_STRIP_WINDOW);
+    m_window =
+        new heroWindow(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT, WINDOW_FLAG_STRIP_WINDOW);
     if (!m_window)
         MemError();
     if (m_army) {

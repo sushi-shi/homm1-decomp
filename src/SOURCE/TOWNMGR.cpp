@@ -191,7 +191,7 @@ short townManager::Open(short id) {
         0,
         TOWN_GARRISON_STRIP_Y,
         m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? TOWN_CREST_FRAME_WITHOUT_HERO
-                                                                : TOWN_CREST_FRAME_WITH_HERO,
+                                                              : TOWN_CREST_FRAME_WITH_HERO,
         gpResourceManager->MakeId(gText),
         0,
         &m_town->m_army,
@@ -553,7 +553,8 @@ short townManager::Main(struct tag_message& message) {
                                 TOWN_CLOSE_CONTROL,
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
-                            m_coverWindow = new heroWindow(0, 0x100, 0x280, 6, WINDOW_FLAG_SAVE_BACKGROUND);
+                            m_coverWindow =
+                                new heroWindow(0, 0x100, 0x280, 6, WINDOW_FLAG_SAVE_BACKGROUND);
                             if (m_coverWindow == NULL)
                                 MemError();
                             gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
@@ -2127,7 +2128,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit) {
             0,
             TOWN_GARRISON_STRIP_Y,
             m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? TOWN_CREST_FRAME_WITHOUT_HERO
-                                                                : TOWN_CREST_FRAME_WITH_HERO,
+                                                                  : TOWN_CREST_FRAME_WITH_HERO,
             gpResourceManager->MakeId(gText),
             0,
             &m_town->m_army,

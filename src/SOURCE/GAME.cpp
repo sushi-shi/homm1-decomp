@@ -1329,8 +1329,7 @@ void game::NewMap(char* mapName) {
         }
         if (m_noMapHeroes
             || (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
-                && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST
-                && i == 0)) {
+                && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && i == 0)) {
             m_players[i].m_heroCount = 1;
             if (m_campaignType > 0)
                 m_players[i].m_heroIds[0] = GetNewHeroId(gCrestHeroClass[m_players[i].m_color]);
@@ -1668,16 +1667,19 @@ void game::RandomizeEvents(void) {
                         case 1:
                         case 2:
                         case 3:
-                            cell->m_objectMetadata = gMageGuildSpellPool[0][Random(0, 7)] + 1;
+                            cell->m_objectMetadata =
+                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_1][Random(0, 7)] + 1;
                             break;
                         case 4:
                         case 5:
                         case 6:
                         case 7:
-                            cell->m_objectMetadata = gMageGuildSpellPool[1][Random(0, 7)] + 1;
+                            cell->m_objectMetadata =
+                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_2][Random(0, 7)] + 1;
                             break;
                         default:
-                            cell->m_objectMetadata = gMageGuildSpellPool[2][Random(0, 7)] + 1;
+                            cell->m_objectMetadata =
+                                gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_3][Random(0, 7)] + 1;
                             break;
                     }
                     break;
@@ -3403,8 +3405,7 @@ void game::RandomizeTown(signed char x, signed char y, signed char isCastle) {
     town = GetTown(townNum);
     town->m_turnsOwned = TOWN_RANDOM_AGE;
     if (m_campaignType > 0 && m_campaignScenario >= CAMPAIGN_SCENARIO_LORD_FIRST
-                && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST
-        && town->m_owner == 0) {
+        && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && town->m_owner == 0) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < GAME_PLAYER_COUNT) {
         unique = 0;
@@ -3510,7 +3511,10 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
         do {
             newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
             if (aiOwned)
-                spellValue = giSpellAIValue[newSpell] * (gcSpellAIFlags[newSpell] & 1 ? 4 : 1) + 50;
+                spellValue =
+                    giSpellAIValue[newSpell]
+                        * (gcSpellAIFlags[newSpell] & SPELL_AI_FLAG_SCALES_WITH_POWER ? 4 : 1)
+                    + 50;
             else
                 spellValue = 1500;
             if (newSpell == SPELL_DIMENSION_DOOR)
@@ -3694,10 +3698,10 @@ void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     armyGroup* army = &m_heroRecs[heroId].m_army;
     short slot = 0;
     short armyTable[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] =
-        {{{0, 30, 50}, {1, 3, 5}, {2, 2, 4}},
-         {{6, 15, 25}, {7, 3, 5}, {8, 2, 3}},
-         {{12, 10, 20}, {13, 2, 4}, {14, 1, 2}},
-         {{18, 6, 10}, {19, 2, 4}, {20, 1, 2}}};
+        {{{CREATURE_PEASANT, 30, 50}, {CREATURE_ARCHER, 3, 5}, {CREATURE_PIKEMAN, 2, 4}},
+         {{CREATURE_GOBLIN, 15, 25}, {CREATURE_ORC, 3, 5}, {CREATURE_WOLF, 2, 3}},
+         {{CREATURE_SPRITE, 10, 20}, {CREATURE_DWARF, 2, 4}, {CREATURE_ELF, 1, 2}},
+         {{CREATURE_CENTAUR, 6, 10}, {CREATURE_GARGOYLE, 2, 4}, {CREATURE_GRIFFIN, 1, 2}}};
     int present[RANDOM_HERO_ARMY_OPTION_COUNT];
     int i;
     int max;
@@ -3716,9 +3720,12 @@ void game::SetRandomHeroArmies(short heroId, int strongArmy) {
     }
     for (i = 0; i < RANDOM_HERO_ARMY_SELECTION_COUNT; i++) {
         if (present[i]) {
-            army->m_creatureTypes[slot] = armyTable[m_heroRecs[heroId].m_heroClass][i][0];
-            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][1] * RANDOM_HERO_COUNT_SCALE;
-            max = armyTable[m_heroRecs[heroId].m_heroClass][i][2] * RANDOM_HERO_COUNT_SCALE
+            army->m_creatureTypes[slot] =
+                armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE];
+            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
+                     * RANDOM_HERO_COUNT_SCALE;
+            max = armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
+                      * RANDOM_HERO_COUNT_SCALE
                   + RANDOM_HERO_COUNT_ROUNDING;
             if (strongArmy)
                 minNum = (minNum + max) / 2;
@@ -4170,11 +4177,11 @@ void game::WaitForPlayer(char* text, int player) {
 H1_ENUM_CONST_BEGIN(TerrainTileConstant)
     TERRAIN_TILE_VARIANT_COUNT = 4
 H1_ENUM_CONST_END(TerrainTileConstant)
-// clang-format on
+    // clang-format on
 
-// HoMM1 rerolls the variant within each four-tile group, past the first
-// four tiles of every twenty-tile terrain block.
-VA(0x00444ebb, 0xb2)
+    // HoMM1 rerolls the variant within each four-tile group, past the first
+    // four tiles of every twenty-tile terrain block.
+    VA(0x00444ebb, 0xb2)
 void game::RandomizeTerrainTiles(void) {
     mapCell* cellPtr;
     // Retail reserves an unused slot above the loop counters.
@@ -4185,9 +4192,9 @@ void game::RandomizeTerrainTiles(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cellPtr = &m_map[x][y];
             if (cellPtr->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN >= TERRAIN_TILE_VARIANT_COUNT)
-                cellPtr->m_tileIndex = cellPtr->m_tileIndex / TERRAIN_TILE_VARIANT_COUNT
-                                           * TERRAIN_TILE_VARIANT_COUNT
-                                       + Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
+                cellPtr->m_tileIndex =
+                    cellPtr->m_tileIndex / TERRAIN_TILE_VARIANT_COUNT * TERRAIN_TILE_VARIANT_COUNT
+                    + Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
         }
     }
 }
@@ -4480,7 +4487,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
 
     LogStr("Transmit Game Start");
     if (gpAdvManager->m_active == 1)
-        BVResMsg("Sending Data", -1, 0);
+        BVResMsg("Sending Data", RESOURCE_NONE, 0);
     while (!gbHeartbeatSeen) {
         PollSound();
         Process1WindowsMessage();
@@ -4654,7 +4661,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     okay = 0;
     oldTrack = MUSIC_TRACK_NONE;
     if (gpAdvManager->m_active == 1)
-        BVResMsg("Receiving Data", -1, 0);
+        BVResMsg("Receiving Data", RESOURCE_NONE, 0);
     prevReady = gpSoundManager->m_musicReady;
     oldTrack = gpSoundManager->m_currentTrack;
     gpSoundManager->m_musicReady = 1;
@@ -5182,7 +5189,8 @@ void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, 
         cell = passedCell;
     else
         cell = gpAdvManager->GetCell(x, y);
-    if (y > 0 && obj == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN) && gpAdvManager->GetCell(x, y - 1)->m_triggerType != MAP_OBJECT_TOWN) {
+    if (y > 0 && obj == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+        && gpAdvManager->GetCell(x, y - 1)->m_triggerType != MAP_OBJECT_TOWN) {
         cell->m_triggerType = MAP_OBJECT_NONE;
         cell->m_objectMetadata = 0;
         return;
