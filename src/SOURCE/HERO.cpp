@@ -46,6 +46,49 @@ H1_ENUM_BEGIN(HeroScreenControl)
     HERO_SCREEN_EXIT = DIALOG_BUTTON_0,
     HERO_SCREEN_DISMISS = DIALOG_BUTTON_3
 H1_ENUM_END(HeroScreenControl)
+
+// cHeroScreen (0x00493998) status-bar texts, as UpdateHeroScreenStatusBar
+// picks them: "Kingdom Overview", "View %s Info", "Additional hero
+// characteristics", good/neutral/bad morale and luck, "View Experience
+// Info", "Select %s", "Empty", "Move %s", "Exchange %s with %s", "View
+// Spells", "View %s Info", "Dismiss %s the %s", "Exit Hero Screen",
+// "Hero Screen" (Buka HeroScreenText numbering from 1).
+H1_ENUM_BEGIN(HeroScreenText)
+    HERO_TEXT_KINGDOM_OVERVIEW = 0,
+    HERO_TEXT_PRIMARY_STAT = 1,
+    HERO_TEXT_ADDITIONAL_STATS = 2,
+    HERO_TEXT_GOOD_MORALE = 3,
+    HERO_TEXT_NEUTRAL_MORALE = 4,
+    HERO_TEXT_BAD_MORALE = 5,
+    HERO_TEXT_GOOD_LUCK = 6,
+    HERO_TEXT_NEUTRAL_LUCK = 7,
+    HERO_TEXT_BAD_LUCK = 8,
+    HERO_TEXT_EXPERIENCE = 9,
+    HERO_TEXT_SELECT_ARMY = 10,
+    HERO_TEXT_EMPTY = 11,
+    HERO_TEXT_MOVE_ARMY = 12,
+    HERO_TEXT_EXCHANGE_ARMIES = 13,
+    HERO_TEXT_VIEW_SPELLS = 14,
+    HERO_TEXT_ARTIFACT = 15,
+    HERO_TEXT_DISMISS = 16,
+    HERO_TEXT_EXIT = 17,
+    HERO_TEXT_SCREEN = 18
+H1_ENUM_END(HeroScreenText)
+
+// Frames HeroView sets on the three luck and three morale icons, and how
+// many of each the screen shows.
+H1_ENUM_BEGIN(HeroScreenMoodFrame)
+    HERO_LUCK_FRAME_GOOD = 11,
+    HERO_LUCK_FRAME_BAD = 12,
+    HERO_MORALE_FRAME_GOOD = 13,
+    HERO_MORALE_FRAME_BAD = 14,
+    HERO_LUCK_FRAME_NEUTRAL = 16,
+    HERO_MORALE_FRAME_NEUTRAL = 17
+H1_ENUM_END(HeroScreenMoodFrame)
+
+H1_ENUM_CONST_BEGIN(HeroScreenMoodConstant)
+    HERO_SCREEN_MOOD_ICON_COUNT = 3
+H1_ENUM_CONST_END(HeroScreenMoodConstant)
 // clang-format on
 
 // donor PoL RVA 0x0006c3a0; preferred Buka symbol ??0hero@@QAE@XZ
@@ -306,42 +349,42 @@ signed char hero::HeroView(signed char viewOnly) {
         heroWin->BroadcastMessage(message);
     }
     armyLuckLevel = gpGame->GetLuck(this, NULL);
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < HERO_SCREEN_MOOD_ICON_COUNT; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = i + HERO_SCREEN_LUCK_FIRST;
         if (armyLuckLevel < 0)
-            message.value = 12;
+            message.value = HERO_LUCK_FRAME_BAD;
         else if (armyLuckLevel == 0)
-            message.value = 16;
+            message.value = HERO_LUCK_FRAME_NEUTRAL;
         else
-            message.value = 11;
+            message.value = HERO_LUCK_FRAME_GOOD;
         heroWin->BroadcastMessage(message);
     }
     shown = abs(armyLuckLevel);
     if (shown <= 0)
         shown = 1;
-    for (i = 3; i > shown; i--) {
+    for (i = HERO_SCREEN_MOOD_ICON_COUNT; i > shown; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + (HERO_SCREEN_LUCK_FIRST - 1);
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
     armyMoraleLevel = m_army.GetMorale(this, NULL);
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < HERO_SCREEN_MOOD_ICON_COUNT; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = i + HERO_SCREEN_MORALE_FIRST;
         if (armyMoraleLevel < 0)
-            message.value = 14;
+            message.value = HERO_MORALE_FRAME_BAD;
         else if (armyMoraleLevel == 0)
-            message.value = 17;
+            message.value = HERO_MORALE_FRAME_NEUTRAL;
         else
-            message.value = 13;
+            message.value = HERO_MORALE_FRAME_GOOD;
         heroWin->BroadcastMessage(message);
     }
     shown = abs(armyMoraleLevel);
     if (shown <= 0)
         shown = 1;
-    for (i = 3; i > shown; i--) {
+    for (i = HERO_SCREEN_MOOD_ICON_COUNT; i > shown; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + (HERO_SCREEN_MORALE_FIRST - 1);
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
@@ -704,28 +747,28 @@ void hero::CheckLevel(void) {
     else
         sprintf(text, cHeroLevel[2], levelCount);
     strcat(gText, text);
-    stats[0] = 0;
-    stats[1] = 0;
-    stats[2] = 0;
-    stats[3] = 0;
+    stats[HERO_PRIMARY_ATTACK] = 0;
+    stats[HERO_PRIMARY_DEFENSE] = 0;
+    stats[HERO_PRIMARY_SPELL_POWER] = 0;
+    stats[HERO_PRIMARY_KNOWLEDGE] = 0;
     for (i = m_level + 1; i <= lvl; i++) {
         highIndex = i - 2;
         if (highIndex > 8)
             highIndex = 8;
         SRand(m_randomSeed + i * 30);
         roll = SRandom(1, 100);
-        if (gHeroSkillBonus[m_heroClass][highIndex][0] > roll) {
-            stats[0]++;
+        if (gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_ATTACK] > roll) {
+            stats[HERO_PRIMARY_ATTACK]++;
         } else {
-            roll -= gHeroSkillBonus[m_heroClass][highIndex][0];
-            if (gHeroSkillBonus[m_heroClass][highIndex][1] > roll) {
-                stats[1]++;
+            roll -= gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_ATTACK];
+            if (gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_DEFENSE] > roll) {
+                stats[HERO_PRIMARY_DEFENSE]++;
             } else {
-                roll -= gHeroSkillBonus[m_heroClass][highIndex][1];
-                if (gHeroSkillBonus[m_heroClass][highIndex][2] > roll)
-                    stats[2]++;
+                roll -= gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_DEFENSE];
+                if (gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_SPELL_POWER] > roll)
+                    stats[HERO_PRIMARY_SPELL_POWER]++;
                 else
-                    stats[3]++;
+                    stats[HERO_PRIMARY_KNOWLEDGE]++;
             }
         }
     }
@@ -764,40 +807,40 @@ void UpdateHeroScreenStatusBar(short widgetId) {
 
     switch (widgetId) {
     case HERO_SCREEN_CREST:
-        strcpy(gText, cHeroScreen[0]);
+        strcpy(gText, cHeroScreen[HERO_TEXT_KINGDOM_OVERVIEW]);
         break;
     case HERO_SCREEN_ATTACK:
     case HERO_SCREEN_DEFENSE:
     case HERO_SCREEN_SPELL_POWER:
     case HERO_SCREEN_KNOWLEDGE:
-        sprintf(gText, cHeroScreen[1], gStatNames[widgetId - HERO_SCREEN_STAT_FIRST]);
+        sprintf(gText, cHeroScreen[HERO_TEXT_PRIMARY_STAT], gStatNames[widgetId - HERO_SCREEN_STAT_FIRST]);
         break;
     case HERO_SCREEN_CHARACTERISTICS:
-        sprintf(gText, cHeroScreen[2]);
+        sprintf(gText, cHeroScreen[HERO_TEXT_ADDITIONAL_STATS]);
         break;
     case HERO_SCREEN_MORALE_FIRST:
     case HERO_SCREEN_MORALE_FIRST + 1:
     case HERO_SCREEN_MORALE_LAST:
         if (gpHVHero->m_army.GetMorale(gpHVHero, NULL) > 0)
-            sprintf(gText, cHeroScreen[3]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_GOOD_MORALE]);
         else if (gpHVHero->m_army.GetMorale(gpHVHero, NULL) == 0)
-            sprintf(gText, cHeroScreen[4]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_NEUTRAL_MORALE]);
         else
-            sprintf(gText, cHeroScreen[5]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_BAD_MORALE]);
         break;
     case HERO_SCREEN_LUCK_FIRST:
     case HERO_SCREEN_LUCK_FIRST + 1:
     case HERO_SCREEN_LUCK_LAST:
         if (gpGame->GetLuck(gpHVHero, NULL) > 0)
-            sprintf(gText, cHeroScreen[6]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_GOOD_LUCK]);
         else if (gpGame->GetLuck(gpHVHero, NULL) == 0)
-            sprintf(gText, cHeroScreen[7]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_NEUTRAL_LUCK]);
         else
-            sprintf(gText, cHeroScreen[8]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_BAD_LUCK]);
         break;
     case HERO_SCREEN_EXPERIENCE_ICON:
     case HERO_SCREEN_EXPERIENCE:
-        sprintf(gText, cHeroScreen[9]);
+        sprintf(gText, cHeroScreen[HERO_TEXT_EXPERIENCE]);
         break;
     case HERO_SCREEN_ARMY_SLOT_FIRST:
     case HERO_SCREEN_ARMY_SLOT_FIRST + 1:
@@ -807,21 +850,21 @@ void UpdateHeroScreenStatusBar(short widgetId) {
         slot = widgetId - HERO_SCREEN_ARMY_SLOT_FIRST;
         if (giHeroScreenSrcIndex == -1) {
             if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
-                sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
+                sprintf(gText, cHeroScreen[HERO_TEXT_SELECT_ARMY], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
             else
-                strcpy(gText, cHeroScreen[11]);
+                strcpy(gText, cHeroScreen[HERO_TEXT_EMPTY]);
         } else if (slot == giHeroScreenSrcIndex) {
-            sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_SELECT_ARMY], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
         } else if (gpTownManager->m_castleDialogActive) {
             if (gpHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
-                sprintf(gText, cHeroScreen[10], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
+                sprintf(gText, cHeroScreen[HERO_TEXT_SELECT_ARMY], gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
             else
-                strcpy(gText, cHeroScreen[11]);
+                strcpy(gText, cHeroScreen[HERO_TEXT_EMPTY]);
         } else if (gpHVHero->m_army.m_creatureTypes[slot] == CREATURE_NONE) {
-            sprintf(gText, cHeroScreen[12],
+            sprintf(gText, cHeroScreen[HERO_TEXT_MOVE_ARMY],
                     gArmyNames[gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]);
         } else {
-            sprintf(gText, cHeroScreen[13],
+            sprintf(gText, cHeroScreen[HERO_TEXT_EXCHANGE_ARMIES],
                     gArmyNames[gpHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]],
                     gArmyNames[gpHVHero->m_army.m_creatureTypes[slot]]);
         }
@@ -841,20 +884,20 @@ void UpdateHeroScreenStatusBar(short widgetId) {
     case HERO_SCREEN_ARTIFACT_FIRST + 12:
     case HERO_SCREEN_ARTIFACT_FIRST + 13:
         if (gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST] == ARTIFACT_NONE)
-            sprintf(gText, cHeroScreen[11]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_EMPTY]);
         else if (gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST] == ARTIFACT_MAGIC_BOOK)
-            strcpy(gText, cHeroScreen[14]);
+            strcpy(gText, cHeroScreen[HERO_TEXT_VIEW_SPELLS]);
         else
-            sprintf(gText, cHeroScreen[15], gArtifactNames[gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]]);
+            sprintf(gText, cHeroScreen[HERO_TEXT_ARTIFACT], gArtifactNames[gpHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]]);
         break;
     case HERO_SCREEN_DISMISS:
-        sprintf(gText, cHeroScreen[16], gpHVHero->m_name, gClassNames[gpHVHero->m_heroClass]);
+        sprintf(gText, cHeroScreen[HERO_TEXT_DISMISS], gpHVHero->m_name, gClassNames[gpHVHero->m_heroClass]);
         break;
     case HERO_SCREEN_EXIT:
-        strcpy(gText, cHeroScreen[17]);
+        strcpy(gText, cHeroScreen[HERO_TEXT_EXIT]);
         break;
     default:
-        strcpy(gText, cHeroScreen[18]);
+        strcpy(gText, cHeroScreen[HERO_TEXT_SCREEN]);
         break;
     }
     HeroMessageUpdate(gText);
