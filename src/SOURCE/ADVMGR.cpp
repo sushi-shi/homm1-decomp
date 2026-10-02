@@ -30,6 +30,12 @@ extern signed char gMons32Width[];
 // UpdateRadar's per-owner and per-terrain radar pixel colours.
 extern short gRadarOwnerColor[];
 extern short gRadarTerrainColor[];
+// QuickInfo's name tables.
+extern char* gTerrainNames[];
+extern char* gResourceNames[];
+extern char* gSpellNames[];
+extern char* gArmyNamesPlural[];
+extern char* gObjectNames[];
 
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)
@@ -671,7 +677,88 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.437984;margin=0.160503;shape=0.304;size=0.325;calls=0.543;strings=qwikinfo.bin;alternate=pol20:void advManager::QuickInfo(int, int)@0x0005f127
 VA(0x0042bcc8, 0x596)
-void advManager::QuickInfo(int, int) {}
+void advManager::QuickInfo(short cellX, short cellY) {
+    short posX;
+    tag_message message;
+    char savedTextLocal[200];
+    mapCell* curCell;
+    short posY;
+    short flag;
+    heroWindow* window;
+
+    flag = 1;
+    curCell = 0;
+    posX = cellX * 32 - 57;
+    if (posX < 16)
+        posX = 16;
+    if (posX + 146 > 464)
+        posX = 318;
+    posY = cellY * 32 - 25;
+    if (posY < 16)
+        posY = 16;
+    if (posY + 82 > 464)
+        posY = 382;
+
+    window = new heroWindow(posX, posY, "qwikinfo.bin");
+    if (!window)
+        MemError();
+
+    if (m_mapOriginX + cellX < 0 || m_mapOriginX + cellX >= 72 || m_mapOriginY + cellY < 0
+        || m_mapOriginY + cellY >= 72) {
+        sprintf(gText, "\n\n%s", "Border");
+    } else {
+        curCell = GetCell(m_mapOriginX + cellX, m_mapOriginY + cellY);
+        if (!(gpGame->m_mapExtra[m_mapOriginX + cellX][m_mapOriginY + cellY] & giCurPlayerBit)) {
+            sprintf(gText, "\n\n%s", "Uncharted territory");
+        } else {
+            switch (curCell->m_triggerType & 0x7f) {
+            case 48:
+                sprintf(gText, "\n\n%s", "Artifact");
+                break;
+            case 0:
+            case 31:
+            case 50:
+                sprintf(gText, "\n\n%s", gTerrainNames[giGroundToTerrain[curCell->m_tileIndex]]);
+                break;
+            case 25:
+                sprintf(gText, "\n\n%s %s", gResourceNames[gpGame->m_mines[curCell->m_objectMetadata].type],
+                        "Mine");
+                break;
+            case 29:
+                sprintf(gText, "\n\n%s", gSpellNames[curCell->m_objectIndex + 9]);
+                break;
+            case 51:
+                sprintf(gText, "\n\n%s", gResourceNames[curCell->m_objectIndex + 2]);
+                break;
+            case 26:
+                sprintf(gText, "\n\n%s %s", GetArmySizeName(curCell->m_objectMetadata & 0x7f, 1),
+                        gArmyNamesPlural[curCell->m_objectIndex]);
+                break;
+            default:
+                sprintf(gText, "\n\n%s", gObjectNames[curCell->m_triggerType & 0x7f]);
+                break;
+            }
+        }
+    }
+
+    strcpy(savedTextLocal, gText);
+    if (giDebugLevel > 0 && curCell)
+        sprintf(gText, "otile%d oi%d ot%d ei%d fl%d %s X%d Y%d", curCell->m_objectTileset,
+                curCell->m_objectIndex, curCell->m_triggerType, curCell->m_objectMetadata,
+                curCell->m_flags & 0x80, savedTextLocal, m_mapOriginX + cellX, m_mapOriginY + cellY);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    message.payload.widget.data.text = gText;
+    window->BroadcastMessage(message);
+    GrabScreen();
+    gpWindowManager->AddWindow(window, -1, 1);
+    gpMouseManager->HideSystemCursor();
+    QuickViewWait();
+    gpWindowManager->RemoveWindow(window);
+    delete window;
+    gpMouseManager->ShowSystemCursor();
+}
 
 // donor PoL RVA 0x00060465; preferred Buka symbol ?UpdateHeroLocator@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
