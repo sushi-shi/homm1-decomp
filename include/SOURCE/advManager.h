@@ -43,6 +43,19 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_CURSOR_SAMPLE_COUNT = 7
 H1_ENUM_CONST_END(AdventureManagerStorageConstant)
 
+// m_heroIcons slots and m_cursorType: the four hero-class sprites (the
+// constructor loads kngt32/barb32/sorc32/wrlk32.icn; MobilizeCurrHero and
+// DoEvent store the hero class) and the boat (boat32.icn; set on boarding,
+// tested for water moves and shadows).
+H1_ENUM_BEGIN(AdventureHeroIcon)
+    ADVMGR_HERO_ICON_KNIGHT = 0,
+    ADVMGR_HERO_ICON_BARBARIAN = 1,
+    ADVMGR_HERO_ICON_SORCERESS = 2,
+    ADVMGR_HERO_ICON_WARLOCK = 3,
+    ADVMGR_HERO_ICON_CLASS_END = 4,
+    ADVMGR_HERO_ICON_BOAT = 4
+H1_ENUM_END(AdventureHeroIcon)
+
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand

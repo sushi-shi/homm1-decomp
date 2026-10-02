@@ -2154,7 +2154,7 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
         for (slot = BUILDING_SLOT_DWELLING_FIRST; slot <= BUILDING_SLOT_DWELLING_LAST; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows += 4;
-        for (slot = BUILDING_SLOT_MAGE_GUILD; slot <= BUILDING_SLOT_WELL; slot++)
+        for (slot = 0; slot <= 4; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows++;
         castleValue = nArrows * 120;

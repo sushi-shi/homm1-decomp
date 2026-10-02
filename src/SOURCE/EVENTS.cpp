@@ -145,7 +145,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             pHero->m_remainingMobility = 0;
             ship->heroId = pHero->m_id;
             ship->owner = pHero->m_owner;
-            m_cursorType = 4;
+            m_cursorType = ADVMGR_HERO_ICON_BOAT;
             m_cursorDirection = ship->direction;
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
             m_cursorActive = 1;
@@ -878,7 +878,7 @@ int advManager::GiveExperience(class hero* eventHero, int experience, signed cha
 
 VA(0x00460636, 0x5a)
 void advManager::GiveResource(class hero* eventHero, signed char resource, short amount) {
-    if (resource >= RESOURCE_WOOD && resource <= RESOURCE_GOLD)
+    if (resource >= 0 && resource <= 6)
         gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
 }
 
@@ -1305,7 +1305,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             eventHero->m_remainingMobility = 0;
             ship->heroId = eventHero->m_id;
             ship->owner = eventHero->m_owner;
-            m_cursorType = 4;
+            m_cursorType = ADVMGR_HERO_ICON_BOAT;
             m_cursorDirection = ship->direction;
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
             m_cursorActive = 1;

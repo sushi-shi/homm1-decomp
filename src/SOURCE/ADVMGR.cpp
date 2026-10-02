@@ -330,16 +330,16 @@ short advManager::Open(short id) {
         m_objectIcons[TILESET_STONBACK] = gpResourceManager->GetIcon("stonback.icn");
     if (m_objectIcons[TILESET_MINIMON] == NULL)
         m_objectIcons[TILESET_MINIMON] = gpResourceManager->GetIcon("minimon.icn");
-    if (m_heroIcons[0] == NULL)
-        m_heroIcons[0] = gpResourceManager->GetIcon("kngt32.icn");
-    if (m_heroIcons[1] == NULL)
-        m_heroIcons[1] = gpResourceManager->GetIcon("barb32.icn");
-    if (m_heroIcons[2] == NULL)
-        m_heroIcons[2] = gpResourceManager->GetIcon("sorc32.icn");
-    if (m_heroIcons[3] == NULL)
-        m_heroIcons[3] = gpResourceManager->GetIcon("wrlk32.icn");
-    if (m_heroIcons[4] == NULL)
-        m_heroIcons[4] = gpResourceManager->GetIcon("boat32.icn");
+    if (m_heroIcons[ADVMGR_HERO_ICON_KNIGHT] == NULL)
+        m_heroIcons[ADVMGR_HERO_ICON_KNIGHT] = gpResourceManager->GetIcon("kngt32.icn");
+    if (m_heroIcons[ADVMGR_HERO_ICON_BARBARIAN] == NULL)
+        m_heroIcons[ADVMGR_HERO_ICON_BARBARIAN] = gpResourceManager->GetIcon("barb32.icn");
+    if (m_heroIcons[ADVMGR_HERO_ICON_SORCERESS] == NULL)
+        m_heroIcons[ADVMGR_HERO_ICON_SORCERESS] = gpResourceManager->GetIcon("sorc32.icn");
+    if (m_heroIcons[ADVMGR_HERO_ICON_WARLOCK] == NULL)
+        m_heroIcons[ADVMGR_HERO_ICON_WARLOCK] = gpResourceManager->GetIcon("wrlk32.icn");
+    if (m_heroIcons[ADVMGR_HERO_ICON_BOAT] == NULL)
+        m_heroIcons[ADVMGR_HERO_ICON_BOAT] = gpResourceManager->GetIcon("boat32.icn");
     gbLoadingMonoIcon = 1;
     if (m_boatShadowIcon == NULL)
         m_boatShadowIcon = gpResourceManager->GetIcon("shadow32.icn");
@@ -1471,9 +1471,9 @@ int advManager::ProcessHover(struct tag_message* message) {
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                     return 1;
                 }
-                if (!((m_cursorType == 4 || cell->m_tileIndex >= 20 || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                if (!((m_cursorType == ADVMGR_HERO_ICON_BOAT || cell->m_tileIndex >= 20 || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                        || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
-                      && (m_cursorType != 4 || cell->m_tileIndex < 20 || cell->m_triggerType == MAP_OBJECT_COAST))) {
+                      && (m_cursorType != ADVMGR_HERO_ICON_BOAT || cell->m_tileIndex < 20 || cell->m_triggerType == MAP_OBJECT_COAST))) {
                     gpSearchArray->m_pathLength = 0;
                     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                     return 1;
@@ -1494,7 +1494,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                     baseFrame = nDays * ADVENTURE_POINTER_DAY_STRIDE;
                     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                     case MAP_OBJECT_SHIP:
-                        if (m_cursorType != 4) {
+                        if (m_cursorType != ADVMGR_HERO_ICON_BOAT) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SAIL);
                             m_selectedCell = 1;
                         } else {
@@ -1502,7 +1502,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                         }
                         break;
                     case MAP_OBJECT_COAST:
-                        if (m_cursorType == 4)
+                        if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_DISEMBARK);
                         else if (mapExtra[m_commandTargetX][m_commandTargetY] & MAP_EXTRA_MONSTER_ADJACENT)
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
@@ -1534,12 +1534,12 @@ int advManager::ProcessHover(struct tag_message* message) {
                     default:
                     defaultHover:
                         trigType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-                        if ((mapExtra[m_commandTargetX][m_commandTargetY] & MAP_EXTRA_MONSTER_ADJACENT) && m_cursorType != 4
+                        if ((mapExtra[m_commandTargetX][m_commandTargetY] & MAP_EXTRA_MONSTER_ADJACENT) && m_cursorType != ADVMGR_HERO_ICON_BOAT
                             && trigType != MAP_OBJECT_SKELETON && trigType != MAP_OBJECT_TREASURE_CHEST && trigType != MAP_OBJECT_CAMPFIRE && trigType != MAP_OBJECT_ANCIENT_LAMP
                             && trigType != MAP_OBJECT_RESOURCE && trigType != MAP_OBJECT_ARTIFACT) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                         } else if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
-                            if (m_cursorType != 4) {
+                            if (m_cursorType != ADVMGR_HERO_ICON_BOAT) {
                                 switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                                 case 1:
                                 case MAP_OBJECT_SIGNPOST:
@@ -1603,7 +1603,7 @@ int advManager::ProcessHover(struct tag_message* message) {
                                     break;
                                 }
                             }
-                        } else if (m_cursorType == 4) {
+                        } else if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SAIL);
                         } else {
                             gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_MOVE);
@@ -1960,7 +1960,7 @@ void advManager::DrawCell(
         }
         if (cell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
             flagColor = -1;
-            iconIndex = 4;
+            iconIndex = ADVMGR_HERO_ICON_BOAT;
             frame = GetCursorBaseFrame(gpGame->m_boats[cell0->m_objectMetadata].direction);
             drawHeroIcon0 = 1;
             heroYOffset6 = -10;
@@ -1973,7 +1973,7 @@ void advManager::DrawCell(
                 else
                     flagColor = gpGame->m_players[drawHero->m_owner].m_color;
                 if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                    iconIndex = 4;
+                    iconIndex = ADVMGR_HERO_ICON_BOAT;
                 else
                     iconIndex = drawHero->m_heroClass;
                 frame = GetCursorBaseFrame(drawHero->m_direction);
@@ -1995,7 +1995,7 @@ void advManager::DrawCell(
                             pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                         );
                 } else {
-                    if (m_drawHeroShadows && iconIndex != 4)
+                    if (m_drawHeroShadows && iconIndex != ADVMGR_HERO_ICON_BOAT)
                         FlipDimIconToBitmap(
                             m_boatShadowIcon, gpWindowManager->m_screen, pixelX7 + 32, pixelY3 + 31,
                             frame & 0x7f, 0
@@ -2021,7 +2021,7 @@ void advManager::DrawCell(
                         pixelY3 + 32 - 1 + heroYOffset6, frame & 0x7f, 0
                     );
             } else {
-                if (m_drawHeroShadows && iconIndex != 4)
+                if (m_drawHeroShadows && iconIndex != ADVMGR_HERO_ICON_BOAT)
                     DimIconToBitmap(m_boatShadowIcon, gpWindowManager->m_screen, pixelX7, pixelY3 + 31, frame, 0);
                 IconToBitmap(
                     m_heroIcons[iconIndex], gpWindowManager->m_screen, pixelX7, pixelY3 + 32 - 1 + heroYOffset6,
@@ -3398,7 +3398,7 @@ void advManager::DemobilizeCurrHero(void)
     currentHero->m_locationType = cell->m_triggerType;
     currentHero->m_occupiedTown = cell->m_objectMetadata;
     currentHero->m_direction = m_cursorDirection;
-    if (m_cursorType == 4)
+    if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
         currentHero->m_eventFlags |= HERO_EVENT_EMBARKED;
     cell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
     cell->m_objectMetadata = currentHero->m_id;
@@ -3479,7 +3479,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     m_cursorMapX = m_cursorMapY = 7;
     m_previousCursorMapX = m_previousCursorMapY = -1;
     if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
-        m_cursorType = 4;
+        m_cursorType = ADVMGR_HERO_ICON_BOAT;
     else
         m_cursorType = currentHero->m_heroClass;
     m_cursorDirection = currentHero->m_direction;
@@ -4730,7 +4730,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
             for (drawX = 6; drawX <= 8; drawX++)
                 ++bComboDraw[drawX][drawY];
     }
-    if (m_cursorType == 4) {
+    if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
         ++bComboDraw[6][5];
         ++bComboDraw[7][5];
         ++bComboDraw[8][5];
@@ -5334,11 +5334,11 @@ void advManager::SeedTo(int targetX, int targetY)
     currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     if (!giSeedingValid)
         gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
-                                    m_cursorType == 4, 0, currentHero->m_remainingMobility,
+                                    m_cursorType == ADVMGR_HERO_ICON_BOAT, 0, currentHero->m_remainingMobility,
                                     currentHero->m_heroClass, targetX, targetY, 0, 1);
     else if (!giFullySeeded)
         gpSearchArray->SeedPosition(currentHero->m_x, currentHero->m_y, m_cursorDirection, 999,
-                                    m_cursorType == 4, 0, currentHero->m_remainingMobility,
+                                    m_cursorType == ADVMGR_HERO_ICON_BOAT, 0, currentHero->m_remainingMobility,
                                     currentHero->m_heroClass, targetX, targetY, 1, 1);
 }
 
