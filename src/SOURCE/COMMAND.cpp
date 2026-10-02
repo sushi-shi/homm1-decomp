@@ -1453,3 +1453,23 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         gpMouseManager->ReallyHidePointer();
     return MESSAGE_DISPATCH_CONSUME;
 }
+
+// COMMAND owns retail .bss 0x004a4b98-0x004a4bc7.
+DATA(0x004a4b98)
+signed char gbThisNetHasControl;
+DATA(0x004a4b9c)
+int iCurTransferArtifact;
+DATA(0x004a4ba0)
+signed char iMaxTransferArtifacts;
+DATA(0x004a4ba4)
+int giNextActionExtra;
+DATA(0x004a4ba8)
+int giNextActionGridIndex;
+DATA(0x004a4bac)
+int giSurrenderCost;
+DATA(0x004a4bb0)
+signed char iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
+DATA(0x004a4bc0)
+int giNextAction;
+DATA(0x004a4bc4)
+int giNextActionGridIndex2;
