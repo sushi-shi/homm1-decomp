@@ -2008,7 +2008,7 @@ void game::ClaimMine(signed char mineId, signed char player) {
 VA(0x0043ed2e, 0x297)
 signed char game::ViewSpells(
     class hero* spellHero,
-    signed char spellType,
+    H1_ENUM_PARAM(HeroSpellType, signed char) spellType,
     short (*callback)(struct tag_message&),
     signed char readOnly
 ) {
@@ -2064,7 +2064,7 @@ signed char game::ViewSpells(
 // HoMM1: combat spells fill hero slots 0..18 and adventure spells 19..28;
 // the page ends at the last memorized slot.
 VA(0x0043efc5, 0xbb)
-void game::SetupSpellRange(short spellType) {
+void game::SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, short) spellType) {
     switch (spellType) {
         case SPELL_TYPE_COMBAT:
             m_spellFirst = 0;

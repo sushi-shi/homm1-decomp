@@ -342,9 +342,14 @@ public:
     void ClaimTown(signed char, signed char);
     void ClaimMine(signed char, signed char);
     // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
-    signed char ViewSpells(class hero*, signed char, short (*)(struct tag_message&), signed char);
+    signed char ViewSpells(
+        class hero*,
+        H1_ENUM_PARAM(HeroSpellType, signed char),
+        short (*)(struct tag_message&),
+        signed char
+    );
     // HoMM1: limits the spell page to the combat or adventure slots.
-    void SetupSpellRange(short);
+    void SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, short));
     void UpdateSpellWidgets(void);
     // HoMM1 retail: word x/y, byte creature/flags, word count, eleven
     // arguments (ret 0x2c); combatManager::ViewArmy pushes its word locals
