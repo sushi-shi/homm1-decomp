@@ -68,6 +68,44 @@ H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
     LOCATOR_SCROLL_NO_PAGES_Y = 232
 H1_ENUM_CONST_END(AdventureLocatorConstant)
 
+// adv_wind.bin hero locator rows: seven widgets per slot from
+// HERO_LOCATOR_WIDGET_BASE + slot * HERO_LOCATOR_WIDGET_STRIDE (UpdateHeroLocator);
+// +1 is the mobility bar, +2 the portrait, +5 the clickable
+// ADVENTURE_CONTROL_HERO_LOCATOR_n and +6 the selection frame. The town
+// column's selection frames start at TOWN_LOCATOR_HIGHLIGHT_FIRST; the
+// selected entry's frame takes LOCATOR_HIGHLIGHT_COLOR.
+H1_ENUM_CONST_BEGIN(AdventureLocatorWidget)
+    HERO_LOCATOR_WIDGET_BASE = 100,
+    HERO_LOCATOR_WIDGET_STRIDE = 7,
+    HERO_LOCATOR_MOBILITY = 1,
+    HERO_LOCATOR_PORTRAIT = 2,
+    HERO_LOCATOR_BUTTON = 5,
+    HERO_LOCATOR_HIGHLIGHT = 6,
+    TOWN_LOCATOR_HIGHLIGHT_FIRST = 32,
+    LOCATOR_HIGHLIGHT_COLOR = 0xc5
+H1_ENUM_CONST_END(AdventureLocatorWidget)
+
+// locators.icn frames: the empty hero slots (one per slot), the empty town
+// slots from EMPTY_TOWN_FIRST, the occupied hero frame, and the town frames
+// by town type from TOWN_FIRST, CASTLE_OFFSET further on once it has a castle.
+// m_visibilityMap while a route is shown (ShowRoute, DrawCell): a 1-based
+// route.icn frame (FRAME_MASK) with FLIPPED mirroring it. The last step is
+// the DESTINATION mark; steps the hero reaches today move REACHABLE_OFFSET
+// frames on to the second arrow set.
+H1_ENUM_CONST_BEGIN(AdventureRouteCell)
+    ROUTE_CELL_FRAME_MASK = 0x1f,
+    ROUTE_CELL_FLIPPED = 0x20,
+    ROUTE_CELL_DESTINATION = 14,
+    ROUTE_CELL_REACHABLE_OFFSET = 14
+H1_ENUM_CONST_END(AdventureRouteCell)
+
+H1_ENUM_CONST_BEGIN(AdventureLocatorFrame)
+    LOCATOR_FRAME_EMPTY_TOWN_FIRST = 4,
+    LOCATOR_FRAME_HERO = 8,
+    LOCATOR_FRAME_TOWN_FIRST = 12,
+    LOCATOR_FRAME_CASTLE_OFFSET = 4
+H1_ENUM_CONST_END(AdventureLocatorFrame)
+
 H1_ENUM_CONST_BEGIN(BottomViewPanelConstant)
     BOTTOM_VIEW_DRAW_FIRST_WIDGET = 2000,
     BOTTOM_VIEW_DRAW_LAST_WIDGET = 2200,
@@ -150,6 +188,19 @@ H1_ENUM_BEGIN(AdventurePanelHelp)
     ADVENTURE_HELP_ADVENTURE_OPTIONS = 4,
     ADVENTURE_HELP_GAME_OPTIONS = 5
 H1_ENUM_END(AdventurePanelHelp)
+
+// qhero0/qhero1/qtown1.bin widgets: name, portrait, the hero's four primary
+// stats from STAT_FIRST, and the owner's flag pair from FLAG (frames colour
+// * 2 and the next). The retail frames keep portraitId/statWidget/flagId
+// locals with these values. A window x of AT_LOCATOR places the hero view
+// beside its locator slot, the town view at its fixed spot.
+H1_ENUM_CONST_BEGIN(QuickViewWidget)
+    QUICK_VIEW_NAME = 1,
+    QUICK_VIEW_PORTRAIT = 2,
+    QUICK_VIEW_STAT_FIRST = 3,
+    QUICK_VIEW_FLAG = 8,
+    QUICK_VIEW_AT_LOCATOR = -1
+H1_ENUM_CONST_END(QuickViewWidget)
 // clang-format on
 
 // Buka 2.1's unconditional six-button enable/disable broadcast.
@@ -1014,7 +1065,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             break;
         cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            HeroQuickView(cellType, iPage, -1, -1);
+            HeroQuickView(cellType, iPage, QUICK_VIEW_AT_LOCATOR, QUICK_VIEW_AT_LOCATOR);
         } else if (gpCurPlayer->CurrentHero() == cellType) {
             m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
             DoAdvCommand();
@@ -1029,7 +1080,8 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
     case ADVENTURE_CONTROL_TOWN_LOCATOR_4:
         cellType = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + message->id - ADVENTURE_CONTROL_TOWN_LOCATOR_1];
         if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-            TownQuickView(cellType, message->id - ADVENTURE_CONTROL_TOWN_LOCATOR_1, -1, -1);
+            TownQuickView(cellType, message->id - ADVENTURE_CONTROL_TOWN_LOCATOR_1, QUICK_VIEW_AT_LOCATOR,
+                          QUICK_VIEW_AT_LOCATOR);
         } else {
             HideRoute(1, 0, 1);
             if (gpCurPlayer->CurrentTown() == cellType) {
@@ -2283,18 +2335,18 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
         if (locatorSlot == -1)
             return;
     }
-    wBase = locatorSlot * 7 + 100;
+    wBase = locatorSlot * HERO_LOCATOR_WIDGET_STRIDE + HERO_LOCATOR_WIDGET_BASE;
     message.type = MESSAGE_WIDGET;
     whichHero = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + locatorSlot];
     message.command = WIDGET_COMMAND_SET_COLOR;
-    message.id = wBase + 6;
+    message.id = wBase + HERO_LOCATOR_HIGHLIGHT;
     message.value =
         (gpCurPlayer->m_currentHero == whichHero && gpCurPlayer->m_currentHero != -1 && !gbAllBlack)
-            ? 0xc5
+            ? LOCATOR_HIGHLIGHT_COLOR
             : 0;
     m_adventureWindow->BroadcastMessage(message);
     if (whichHero == -1 || gbAllBlack) {
-        message.id = wBase + 5;
+        message.id = wBase + HERO_LOCATOR_BUTTON;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.value = locatorSlot;
         m_adventureWindow->BroadcastMessage(message);
@@ -2306,13 +2358,13 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
         }
     } else {
         hPtr = gpGame->GetHero(whichHero);
-        message.id = wBase + 5;
+        message.id = wBase + HERO_LOCATOR_BUTTON;
         message.command = WIDGET_COMMAND_SET_FRAME;
-        message.value = 8;
+        message.value = LOCATOR_FRAME_HERO;
         m_adventureWindow->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        for (i = 0; i <= 6; i++) {
+        for (i = 0; i <= HERO_LOCATOR_HIGHLIGHT; i++) {
             message.id = i + wBase;
             m_adventureWindow->BroadcastMessage(message);
         }
@@ -2325,11 +2377,11 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
             moveFrame = 24;
         else if (moveFrame > 23)
             moveFrame = 23;
-        message.id = wBase + 1;
+        message.id = wBase + HERO_LOCATOR_MOBILITY;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.value = moveFrame;
         m_adventureWindow->BroadcastMessage(message);
-        message.id = wBase + 2;
+        message.id = wBase + HERO_LOCATOR_PORTRAIT;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.value = whichHero;
         m_adventureWindow->BroadcastMessage(message);
@@ -2343,7 +2395,7 @@ void advManager::UpdateHeroLocator(int locatorSlot, signed char drawWindow, sign
         m_adventureWindow->BroadcastMessage(message);
     }
     if (drawWindow) {
-        m_adventureWindow->DrawWindow(0, wBase, wBase + 6);
+        m_adventureWindow->DrawWindow(0, wBase, wBase + HERO_LOCATOR_HIGHLIGHT);
         if (updateScreen)
             gpWindowManager->UpdateScreenRegion(481, locatorSlot * 32 + 177, 54, 30);
     }
@@ -2390,16 +2442,16 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
     for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
         whichTown = gpCurPlayer->m_townIds[gpCurPlayer->m_townLocatorPage + i];
         message.command = WIDGET_COMMAND_SET_COLOR;
-        message.id = i + 32;
+        message.id = i + TOWN_LOCATOR_HIGHLIGHT_FIRST;
         message.value =
             (gpCurPlayer->m_currentTown != -1 && gpCurPlayer->m_currentTown == whichTown && !gbAllBlack)
-                ? 0xc5
+                ? LOCATOR_HIGHLIGHT_COLOR
                 : 0;
         m_adventureWindow->BroadcastMessage(message);
         message.id = i + ADVENTURE_CONTROL_TOWN_LOCATOR_1;
         if (whichTown == -1 || gbAllBlack) {
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = i + 4;
+            message.value = i + LOCATOR_FRAME_EMPTY_TOWN_FIRST;
             m_adventureWindow->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.value = WIDGET_FLAG_ENABLED;
@@ -2409,9 +2461,9 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
             message.value = WIDGET_FLAG_ENABLED;
             m_adventureWindow->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = gpGame->GetTown(whichTown)->m_type + 12;
+            message.value = gpGame->GetTown(whichTown)->m_type + LOCATOR_FRAME_TOWN_FIRST;
             if (gpGame->GetTown(whichTown)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
-                message.value += 4;
+                message.value += LOCATOR_FRAME_CASTLE_OFFSET;
             m_adventureWindow->BroadcastMessage(message);
         }
     }
@@ -2928,15 +2980,15 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     width = 32;
     creatureIconHeight = 32;
     enable = 1;
-    portraitId = 2;
-    statWidget = 3;
-    flagId = 8;
+    portraitId = QUICK_VIEW_PORTRAIT;
+    statWidget = QUICK_VIEW_STAT_FIRST;
+    flagId = QUICK_VIEW_FLAG;
     message.type = MESSAGE_WIDGET;
     if (heroId == -1)
         return;
     heroPtr = gpGame->GetHero(heroId);
     if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
-        if (windowX == -1) {
+        if (windowX == QUICK_VIEW_AT_LOCATOR) {
             windowX = 302;
             windowY = locatorSlot * 30 + 111;
         }
@@ -2951,11 +3003,11 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     }
 
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = 2;
+    message.id = QUICK_VIEW_PORTRAIT;
     message.value = heroPtr->m_id;
     viewWin->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = 8;
+    message.id = QUICK_VIEW_FLAG;
     message.value = gpGame->m_players[heroPtr->m_owner].Color() * 2;
     viewWin->BroadcastMessage(message);
     message.id++;
@@ -2963,7 +3015,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     viewWin->BroadcastMessage(message);
     sprintf(gText, "%s", heroPtr->m_name);
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = QUICK_VIEW_NAME;
     message.text = gText;
     viewWin->BroadcastMessage(message);
 
@@ -2976,7 +3028,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
         for (j = 0; j < HERO_PRIMARY_STAT_COUNT; j++) {
             sprintf(gText, "%d", heroPtr->m_primaryStats[j]);
-            message.id = j + 3;
+            message.id = j + QUICK_VIEW_STAT_FIRST;
             message.text = gText;
             viewWin->BroadcastMessage(message);
         }
@@ -3153,12 +3205,12 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     width = 32;
     creatureIconHeight = 32;
     flag = 1;
-    portraitId = 2;
-    flagId = 8;
+    portraitId = QUICK_VIEW_PORTRAIT;
+    flagId = QUICK_VIEW_FLAG;
     if (townId == -1)
         return;
     townPointer = gpGame->GetTown(townId);
-    if (windowX == -1) {
+    if (windowX == QUICK_VIEW_AT_LOCATOR) {
         windowX = 342;
         windowY = 176;
     }
@@ -3177,21 +3229,21 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     numArmies = 0;
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = 2;
+    message.id = QUICK_VIEW_PORTRAIT;
     message.value = townPointer->m_type + 12;
     if (gpGame->GetTown(townId)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
         message.value += 4;
     viewWin->BroadcastMessage(message);
     if (townPointer->m_owner == -1) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = 8;
+        message.id = QUICK_VIEW_FLAG;
         message.value = WIDGET_FLAG_DRAW;
         viewWin->BroadcastMessage(message);
         message.id++;
         viewWin->BroadcastMessage(message);
     } else {
         message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = 8;
+        message.id = QUICK_VIEW_FLAG;
         message.value = gpGame->m_players[townPointer->m_owner].Color() * 2;
         viewWin->BroadcastMessage(message);
         message.id++;
@@ -3200,7 +3252,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     }
     sprintf(gText, GetTownName(townPointer->m_id));
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = QUICK_VIEW_NAME;
     message.text = gText;
     viewWin->BroadcastMessage(message);
 
