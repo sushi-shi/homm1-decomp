@@ -1113,7 +1113,7 @@ void NormalDialog(
         }
         captionWidget = new textWidget(
             resCenterX - 50, resourceYPos + sizingHeight - 10, 100, 12,
-            amountText[i], "smalfont.fnt", 1, id++, 0x200);
+            amountText[i], "smalfont.fnt", 1, id++, WIDGET_KIND_TEXT);
         if (!captionWidget)
             MemError();
         pNormalDialogWindow->AddWidget(captionWidget, -1);
@@ -1130,7 +1130,7 @@ void NormalDialog(
         strcpy(szOr, "or");
         captionWidget = new textWidget(
             width / 2 - 17, resourceYPos + 30, 40, 12, szOr, "smalfont.fnt", 1,
-            id++, 0x200);
+            id++, WIDGET_KIND_TEXT);
         if (!captionWidget)
             MemError();
         pNormalDialogWindow->AddWidget(captionWidget, -1);

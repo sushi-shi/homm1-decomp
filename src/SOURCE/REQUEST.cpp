@@ -199,7 +199,7 @@ short fileRequester::Open(short priority) {
     m_window = new heroWindow(m_x, m_y, "request.bin");
     if (!m_window)
         MemError();
-    m_scrollKnob = new iconWidget(283, 56, 8, 17, "scroll.icn", 4, 0, scrollId, 16, 1);
+    m_scrollKnob = new iconWidget(283, 56, 8, 17, "scroll.icn", 4, 0, scrollId, ICON_WIDGET_DRAW, 1);
     if (!m_scrollKnob)
         MemError();
     m_window->AddWidget(m_scrollKnob, -1);

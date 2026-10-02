@@ -1188,7 +1188,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                 if (amountWidgets[resIndex] == 0)
                     MemError();
                 resWidgets[resIndex] = new iconWidget(currX, yPos, nEntryWidth, 12, "resource.icn",
-                                                      resType[resIndex], 0, -1, 16, 1);
+                                                      resType[resIndex], 0, -1, ICON_WIDGET_DRAW, 1);
                 if (resWidgets[resIndex] == 0)
                     MemError();
                 nBuildWindow->AddWidget(amountWidgets[resIndex], -1);
@@ -1671,7 +1671,7 @@ void townManager::SetupThievesGuild(class heroWindow *window, short categories)
                     categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH, THIEVES_RANK_ICON_HEIGHT, "townwind.icn",
                     gpGame->m_players[ranking[pos]].m_color + THIEVES_FLAG_FRAME_BASE,
-                    0, -1, 0x10, 1);
+                    0, -1, ICON_WIDGET_DRAW, 1);
                 if (marker == NULL)
                     MemError();
                 window->AddWidget(marker, -1);

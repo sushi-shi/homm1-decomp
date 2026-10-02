@@ -2162,7 +2162,7 @@ void game::ViewArmy(
         sprintf(fileName, "%s.wlk", iconName);
     else
         sprintf(fileName, "%s.wip", iconName);
-    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, 16, 1);
+    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, ICON_WIDGET_DRAW, 1);
     if (!monsterWidget)
         MemError();
     m_viewArmyWindow->AddWidget(monsterWidget, -1);

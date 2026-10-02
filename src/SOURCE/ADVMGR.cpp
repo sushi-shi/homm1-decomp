@@ -221,11 +221,11 @@ short advManager::Open(short id) {
         m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
         if (m_adventureWindow == NULL)
             MemError();
-        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, 0, 26, 16, 1);
+        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, 0, 26, ICON_WIDGET_DRAW, 1);
         if (m_scrollLeftButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollLeftButton, -1);
-        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, 0, 27, 16, 1);
+        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, 0, 27, ICON_WIDGET_DRAW, 1);
         if (m_scrollRightButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollRightButton, -1);
@@ -2498,13 +2498,13 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
 
         m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                        BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                       "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+                                                       "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
         if (!m_bottomViewPrimaryWidgets[0])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], 1000);
 
         m_bottomViewPrimaryWidgets[1] = new iconWidget(493, 403, 118, 51, "hourglas.icn", 0, 0,
-                                                       BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+                                                       BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
         if (!m_bottomViewPrimaryWidgets[1])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], 1010);
@@ -2526,7 +2526,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
                 m_adventureWindow->BroadcastMessage(message);
             } else {
                 m_bottomViewPrimaryWidgets[3] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iSandAnim + 11, 0,
-                                                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3, 16, 1);
+                                                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3, ICON_WIDGET_DRAW, 1);
                 if (!m_bottomViewPrimaryWidgets[3])
                     MemError();
                 m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[3], 1020);
@@ -2547,7 +2547,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         } else {
             m_bottomViewPrimaryWidgets[2] =
                 new iconWidget(495, 405, 50, 47, "brcrest.icn", gpGame->m_players[giCurPlayer].Color(), 0,
-                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2, 16, 1);
+                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2, ICON_WIDGET_DRAW, 1);
             if (!m_bottomViewPrimaryWidgets[2])
                 MemError();
             m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[2], 1030);
@@ -2566,7 +2566,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[4] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iCurHourGlassPhase + 1,
-                                                           0, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4, 16, 1);
+                                                           0, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4, ICON_WIDGET_DRAW, 1);
             if (!m_bottomViewPrimaryWidgets[4])
                 MemError();
             m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[4], 1040);
@@ -2596,7 +2596,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
 
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
                                                    BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
@@ -2604,7 +2604,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
     m_bottomViewPrimaryWidgets[1] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                    BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
                                                    "sunmoon.icn", frameIndex, 0,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
@@ -2612,7 +2612,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
     weekStr = static_cast<char*>(malloc(30));
     sprintf(weekStr, "%s: %d  %s: %d", "Month", gpGame->m_month, "Week", gpGame->m_week);
     m_bottomViewSecondaryWidgets[0] =
-        new textWidget(479, 421, 145, 12, weekStr, "smalfont.fnt", 1, 2100, 512);
+        new textWidget(479, 421, 145, 12, weekStr, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
@@ -2620,7 +2620,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
     dayStr = static_cast<char*>(malloc(30));
     sprintf(dayStr, "%s: %d", "Day", gpGame->m_day);
     m_bottomViewSecondaryWidgets[0] =
-        new textWidget(479, 438, 145, 25, dayStr, "bigfont.fnt", 1, 2100, 512);
+        new textWidget(479, 438, 145, 25, dayStr, "bigfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
@@ -2647,7 +2647,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
     iCurBottomView = BOTTOM_VIEW_RESOURCE;
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
                                                    BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
@@ -2663,7 +2663,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
     messageText = static_cast<char*>(malloc(strlen(gcBottomViewText) + 1));
     sprintf(messageText, gcBottomViewText);
     m_bottomViewSecondaryWidgets[0] = new textWidget(480, y + 395, BOTTOM_VIEW_PANEL_WIDTH, 36,
-                                                     messageText, "smalfont.fnt", 1, 2100, 512);
+                                                     messageText, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
@@ -2679,7 +2679,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
         m_bottomViewPrimaryWidgets[1] =
             new iconWidget((BOTTOM_VIEW_PANEL_WIDTH - iconW) / 2 + 480, 463 - iconH - 14, iconW, iconH,
                            "resource.icn", giBottomViewResource, 0,
-                           BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+                           BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
         if (!m_bottomViewPrimaryWidgets[1])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
@@ -2687,7 +2687,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
         countString = static_cast<char*>(malloc(8));
         sprintf(countString, "%d", giBottomViewResourceQty);
         m_bottomViewSecondaryWidgets[1] =
-            new textWidget(511, 450, 80, 12, countString, "smalfont.fnt", 1, 2101, 512);
+            new textWidget(511, 450, 80, 12, countString, "smalfont.fnt", 1, 2101, WIDGET_KIND_TEXT);
         if (!m_bottomViewSecondaryWidgets[1])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[1], -1);
@@ -2735,14 +2735,14 @@ signed char advManager::UpdBottomViewKingdom(void) {
 
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y, 159,
                                                    BOTTOM_VIEW_PANEL_HEIGHT, "stonback.icn", 0, 0,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
 
     m_bottomViewPrimaryWidgets[1] = new iconWidget(481, 393, BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
                                                    "ressmall.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1,
-                                                   16, 1);
+                                                   ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
@@ -2763,7 +2763,7 @@ signed char advManager::UpdBottomViewKingdom(void) {
         else
             sprintf(texts[i], "%d", numVillages);
         m_bottomViewSecondaryWidgets[i] = new textWidget(colX[i] + 464, rowY[i] + 392, 32, 12, texts[i],
-                                                         "smalfont.fnt", 1, i + 2100, 512);
+                                                         "smalfont.fnt", 1, i + 2100, WIDGET_KIND_TEXT);
         if (!m_bottomViewSecondaryWidgets[i])
             MemError();
         m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[i], -1);
@@ -2798,14 +2798,14 @@ signed char advManager::UpdBottomViewHero(void) {
 
     m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                    BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
-                                                   "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+                                                   "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
 
     iCrest = gpCurPlayer->Color() * 4 + targetHero->m_heroClass;
     m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, 0,
-                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
@@ -2813,7 +2813,7 @@ signed char advManager::UpdBottomViewHero(void) {
     heroName = static_cast<char*>(malloc(9));
     strcpy(heroName, targetHero->m_shortName);
     heroName[8] = 0;
-    m_bottomViewSecondaryWidgets[0] = new textWidget(475, 418, 66, 12, heroName, "smalfont.fnt", 1, 2100, 512);
+    m_bottomViewSecondaryWidgets[0] = new textWidget(475, 418, 66, 12, heroName, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
@@ -2854,7 +2854,7 @@ signed char advManager::UpdBottomViewHero(void) {
                     x = 52;
                 }
                 m_bottomViewPrimaryWidgets[slotNum + 2] = new iconWidget(x + 480, y + 392, 32, 28, "mons32.icn",
-                                                                      creatureType, 0, slotNum + 2002, 16, 1);
+                                                                      creatureType, 0, slotNum + 2002, ICON_WIDGET_DRAW, 1);
                 if (!m_bottomViewPrimaryWidgets[slotNum + 2])
                     MemError();
                 if (gMons32Width[creatureType] < 28 && strlen(countStr[slotNum]) <= 2)
@@ -2863,7 +2863,7 @@ signed char advManager::UpdBottomViewHero(void) {
                     qtyX = gMons32Width[creatureType] + x + 2;
                 m_bottomViewSecondaryWidgets[slotNum + 1] =
                     new textWidget(qtyX + 480, y + 414, strlen(countStr[slotNum]) * 5, 12, countStr[slotNum], "smalfont.fnt",
-                                   1, slotNum + 2101, 512);
+                                   1, slotNum + 2101, WIDGET_KIND_TEXT);
                 if (!m_bottomViewSecondaryWidgets[slotNum + 1])
                     MemError();
                 m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[slotNum + 2], -1);
@@ -2971,13 +2971,13 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                 monster = heroPtr->m_army.m_creatureTypes[curIndex];
                 if (monster != -1) {
                     monWidgets[j] = new iconWidget(j * 32 + startPos, 110, 32, 32, "mons32.icn", monster, 0,
-                                                       -1, 16, 1);
+                                                       -1, ICON_WIDGET_DRAW, 1);
                     if (!monWidgets[j])
                         MemError();
                     labelText[j] = static_cast<char*>(malloc(5));
                     sprintf(labelText[j], "%d", heroPtr->m_army.m_creatureCounts[curIndex]);
                     sizeTexts[j] = new textWidget(j * 32 + startPos, 140, 32, 12, labelText[j],
-                                                        "smalfont.fnt", 1, -1, 512);
+                                                        "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
                     if (!sizeTexts[j])
                         MemError();
                     viewWin->AddWidget(monWidgets[j], -1);
@@ -3021,13 +3021,13 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                 slotIndex++;
             creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
             monWidgets[j] =
-                new iconWidget(j * step + offsetX, rowY, 32, 32, "mons32.icn", creatureId, 0, -1, 16, 1);
+                new iconWidget(j * step + offsetX, rowY, 32, 32, "mons32.icn", creatureId, 0, -1, ICON_WIDGET_DRAW, 1);
             if (!monWidgets[j])
                 MemError();
             labelText[j] = static_cast<char*>(malloc(15));
             strcpy(labelText[j], GetArmySizeName(heroPtr->m_army.m_creatureCounts[slotIndex], 0));
             sizeTexts[j] = new textWidget(j * step + 9, rowY + 30, step, 12, labelText[j],
-                                                "smalfont.fnt", 1, -1, 512);
+                                                "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
             if (!sizeTexts[j])
                 MemError();
             viewWin->AddWidget(monWidgets[j], -1);
@@ -3043,13 +3043,13 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                     slotIndex++;
                 creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
                 monWidgets[j] = new iconWidget((j - 2) * step + offsetX, rowY, 32, 32, "mons32.icn",
-                                                   creatureId, 0, -1, 16, 1);
+                                                   creatureId, 0, -1, ICON_WIDGET_DRAW, 1);
                 if (!monWidgets[j])
                     MemError();
                 labelText[j] = static_cast<char*>(malloc(15));
                 strcpy(labelText[j], GetArmySizeName(heroPtr->m_army.m_creatureCounts[slotIndex], 0));
                 sizeTexts[j] = new textWidget((j - 2) * step + 9, rowY + 30, step, 12,
-                                                    labelText[j], "smalfont.fnt", 1, -1, 512);
+                                                    labelText[j], "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
                 if (!sizeTexts[j])
                     MemError();
                 viewWin->AddWidget(monWidgets[j], -1);
@@ -3197,7 +3197,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
             sprintf(garrisonStr, "Unknown");
         else
             sprintf(garrisonStr, "None");
-        garrisonWidget = new textWidget(0, 100, 210, 12, garrisonStr, "smalfont.fnt", 1, -1, 512);
+        garrisonWidget = new textWidget(0, 100, 210, 12, garrisonStr, "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
         if (!garrisonWidget)
             MemError();
         viewWin->AddWidget(garrisonWidget, -1);
@@ -3251,7 +3251,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                 slot++;
             monster = townPointer->m_army.m_creatureTypes[slot];
             iconWgts[slotIndex] = new iconWidget(step * slotIndex + offsetX + xAdjust, rowY, 32, 32,
-                                                      "mons32.icn", monster, 0, -1, 16, 1);
+                                                      "mons32.icn", monster, 0, -1, ICON_WIDGET_DRAW, 1);
             if (!iconWgts[slotIndex])
                 MemError();
             labels[slotIndex] = static_cast<char*>(malloc(15));
@@ -3262,7 +3262,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
             else
                 strcpy(labels[slotIndex], "?");
             texts[slotIndex] = new textWidget(step * slotIndex + offsetX + xAdjust - 14, rowY + 30, 60,
-                                                       12, labels[slotIndex], "smalfont.fnt", 1, -1, 512);
+                                                       12, labels[slotIndex], "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
             if (!texts[slotIndex])
                 MemError();
             viewWin->AddWidget(iconWgts[slotIndex], -1);
@@ -3279,7 +3279,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                     slot++;
                 monster = townPointer->m_army.m_creatureTypes[slot];
                 iconWgts[slotIndex] = new iconWidget((slotIndex - row1) * step + offsetX, rowY, 32, 32,
-                                                          "mons32.icn", monster, 0, -1, 16, 1);
+                                                          "mons32.icn", monster, 0, -1, ICON_WIDGET_DRAW, 1);
                 if (!iconWgts[slotIndex])
                     MemError();
                 labels[slotIndex] = static_cast<char*>(malloc(15));
@@ -3291,7 +3291,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                     strcpy(labels[slotIndex], "?");
                 texts[slotIndex] = new textWidget((slotIndex - row1) * step + offsetX - 14,
                                                            rowY + 30, 60, 12, labels[slotIndex], "smalfont.fnt",
-                                                           1, -1, 512);
+                                                           1, -1, WIDGET_KIND_TEXT);
                 if (!texts[slotIndex])
                     MemError();
                 viewWin->AddWidget(iconWgts[slotIndex], -1);

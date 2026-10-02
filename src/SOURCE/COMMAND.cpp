@@ -865,19 +865,19 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
     message.text = gText;
     m_winLoseWindow->BroadcastMessage(message);
     m_winLoseBottomWidgets[0] =
-        new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, 0x10, 1);
+        new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, ICON_WIDGET_DRAW, 1);
     if (m_winLoseBottomWidgets[0] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[0], -1);
     m_winLoseBottomWidgets[1] =
-        new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, 0, 0x7d2, 0x10, 1);
+        new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, 0, 0x7d2, ICON_WIDGET_DRAW, 1);
     if (m_winLoseBottomWidgets[1] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[1], -1);
     artifactName = static_cast<char*>(malloc(0x3c));
     sprintf(artifactName, gArtifactNames[artifact]);
     m_winLoseBottomTextWidgets[0] =
-        new textWidget(0, 0x18a, 0x140, 0xc, artifactName, "smalfont.fnt", 1, 0x835, 0x200);
+        new textWidget(0, 0x18a, 0x140, 0xc, artifactName, "smalfont.fnt", 1, 0x835, WIDGET_KIND_TEXT);
     if (m_winLoseBottomTextWidgets[0] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[0], -1);
@@ -927,7 +927,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     buffer = static_cast<char*>(malloc(0x1e));
     sprintf(buffer, "Battlefield Casualties");
     m_winLoseBottomTextWidgets[12] =
-        new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
+        new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, WIDGET_KIND_TEXT);
     if (m_winLoseBottomTextWidgets[12] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[12], -1);
@@ -939,7 +939,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         buffer = static_cast<char*>(malloc(0x1e));
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
-            new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
+            new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, WIDGET_KIND_TEXT);
         if (m_winLoseBottomTextWidgets[10 + side] == NULL)
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
@@ -955,7 +955,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 "smalfont.fnt",
                 1,
                 side * 5 + 0x834,
-                0x200
+                WIDGET_KIND_TEXT
             );
             if (m_winLoseBottomTextWidgets[side * 5] == NULL)
                 MemError();
@@ -973,7 +973,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 casualtyType[side][armyIndex],
                 0,
                 side * 5 + armyIndex + 0x7d0,
-                0x10,
+                ICON_WIDGET_DRAW,
                 1
             );
             if (m_winLoseBottomWidgets[side * 5 + armyIndex] == NULL)
@@ -989,7 +989,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 "smalfont.fnt",
                 1,
                 side * 5 + armyIndex + 0x834,
-                0x200
+                WIDGET_KIND_TEXT
             );
             if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == NULL)
                 MemError();
