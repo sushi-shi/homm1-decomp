@@ -985,7 +985,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     COMBAT_RANDOM_SEED_NEW,
                     1
                 );
-                if (res == 1 && occupiedTown)
+                if (res == COMBAT_ATTACKER_SIDE && occupiedTown)
                     gpGame->ClaimTown(occupiedTown->m_id, giCurPlayer);
             }
             break;
@@ -1312,7 +1312,7 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
             COMBAT_RANDOM_SEED_NEW,
             1
         );
-        if (result == 1)
+        if (result == COMBAT_ATTACKER_SIDE)
             gpGame->ClaimTown(townRec->m_id, giCurPlayer);
     } else {
         gpGame->ClaimTown(townRec->m_id, giCurPlayer);
@@ -1340,7 +1340,7 @@ void advManager::EventSound(short eventType, short eventData) {
         case MAP_OBJECT_PEASANT_LOG_CABIN:
             musicTrack = MUSIC_TRACK_HOUSE;
             break;
-        case 63:
+        case MAP_OBJECT_ULTIMATE_ARTIFACT:
             musicTrack = MUSIC_TRACK_ULTIMATE_ARTIFACT;
             break;
         case MAP_OBJECT_LIGHTHOUSE:
@@ -2449,7 +2449,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     COMBAT_RANDOM_SEED_NEW,
                     1
                 );
-                if (res == 1 && theCastle)
+                if (res == COMBAT_ATTACKER_SIDE && theCastle)
                     gpGame->ClaimTown(theCastle->m_id, giCurPlayer);
             }
             CompleteDraw(0);
@@ -2569,7 +2569,7 @@ void advManager::PlayerMonsterInteract(
         combatX,
         combatY
     );
-    if (result == 1 || result == -1)
+    if (result == COMBAT_ATTACKER_SIDE || result == COMBAT_SIDE_NONE)
         *handled = 1;
 }
 
@@ -2940,17 +2940,17 @@ combatFinished:
         secondHero->CheckLevel();
     if (processLosses) {
         switch (gpCombatManager->m_combatResult) {
-            case 1:
+            case COMBAT_ATTACKER_SIDE:
                 if (!gbRetreatWin)
                     TransferArtifacts(secondHero, firstHero);
                 HeroLoses(secondHero);
                 break;
-            case 0:
+            case COMBAT_DEFENDER_SIDE:
                 if (!gbRetreatWin)
                     TransferArtifacts(firstHero, secondHero);
                 HeroLoses(firstHero);
                 break;
-            case -1:
+            case COMBAT_SIDE_NONE:
                 HeroLoses(firstHero);
                 HeroLoses(secondHero);
                 break;
