@@ -23,7 +23,7 @@ VA(0x0047e100, 0x2d)
 textEntryWidget::textEntryWidget(void) : textWidget() {
     m_cursorPosition = 0;
     m_icon = NULL;
-    m_kind = 0x4000;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
     m_maxLength = 0;
     m_iconFrame = 0;
     m_displayOffset = 0;
@@ -84,7 +84,7 @@ void textEntryWidget::Read(int type) {
     m_iconFrame = gpResourceManager->ReadWord();
     m_id = gpResourceManager->ReadWord();
     gpResourceManager->ReadWord();
-    m_kind = 0x4000;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
 VA(0x0047e360, 0x7f4)

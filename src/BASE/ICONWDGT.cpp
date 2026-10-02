@@ -10,11 +10,11 @@
 #include <H1/KB.h>
 
 VA(0x0047a9f0, 0x2a)
-iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, 0) {
+iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_frame = 0;
     m_icon = 0;
     m_fillColor = 0;
-    m_orientation = 0;
+    m_orientation = ICON_DRAW_NORMAL;
 }
 
 VA_COMPGEN(0x0047aa20, 0x36, "??_GiconWidget@@UAEPAXI@Z", 0x0047a9f0)

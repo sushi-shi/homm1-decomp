@@ -26,7 +26,7 @@ widget::widget(
     m_width = width;
     m_height = height;
     m_id = id;
-    m_flags = 6;
+    m_flags = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
     m_zOrder = -1;
     m_kind = kind;
 }

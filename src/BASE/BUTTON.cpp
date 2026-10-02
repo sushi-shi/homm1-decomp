@@ -17,12 +17,12 @@ long gButtonRepeatTimer;
 int iLeftRightSave;
 
 VA(0x0047eef0, 0x31)
-button::button(void) : widget(0, 0, 0, 0, 0, 0) {
+button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_normalFrame = 0;
     m_pressedFrame = 0;
     m_selectMode = 0;
     m_icon = NULL;
-    m_hotkey = -1;
+    m_hotkey = BUTTON_NO_HOTKEY;
 }
 
 VA_COMPGEN(0x0047ef30, 0x36, "??_Gbutton@@UAEPAXI@Z", 0x0047eef0)

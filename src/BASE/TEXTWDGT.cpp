@@ -14,12 +14,12 @@
 
 VA(0x0047add0, 0x3e)
 VA_COMPGEN(0x0047ae10, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x0047add0)
-textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, 0) {
+textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
     m_color = 1;
-    m_alignment = 1;
-    m_kind = 0x200;
+    m_alignment = FONT_ALIGN_CENTER;
+    m_kind = WIDGET_KIND_TEXT;
 }
 
 VA(0x0047ae60, 0x61)
@@ -37,7 +37,7 @@ textWidget::textWidget(
     : widget(x, y, width, height, id, kind) {
     m_font = gpResourceManager->GetFont(fontName);
     m_text = text;
-    m_alignment = 1;
+    m_alignment = FONT_ALIGN_CENTER;
     m_kind = WIDGET_KIND_TEXT;
     m_color = color;
 }
@@ -66,7 +66,7 @@ void textWidget::Read(void) {
     m_alignment = static_cast<char>(gpResourceManager->ReadWord());
     m_id = gpResourceManager->ReadWord();
     gpResourceManager->ReadWord();
-    m_kind = 0x200;
+    m_kind = WIDGET_KIND_TEXT;
 }
 
 VA(0x0047afc0, 0x2d)

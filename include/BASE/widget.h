@@ -14,20 +14,23 @@
 class heroWindow;
 struct tag_message;
 
-H1_ENUM_BEGIN(WidgetFlag)
+// clang-format off
+H1_ENUM_FLAGS_BEGIN(WidgetFlag, short)
     WIDGET_FLAG_SELECTED = 1,
     WIDGET_FLAG_ENABLED = 2,
     WIDGET_FLAG_DRAW = 4,
     WIDGET_FLAG_DIMMED = 8,
     WIDGET_FLAG_UPDATE = 0x4000
-H1_ENUM_END(WidgetFlag)
+H1_ENUM_FLAGS_END(WidgetFlag)
 
 H1_ENUM_BEGIN(WidgetKind)
+    WIDGET_KIND_NONE = 0,
     WIDGET_KIND_TEXT = 0x200,
     WIDGET_KIND_AUTO_REPEAT = 0x1000,
     WIDGET_KIND_TRACK_PRESS = 0x2000,
     WIDGET_KIND_TEXT_ENTRY = 0x4000
 H1_ENUM_END(WidgetKind)
+// clang-format on
 
 #pragma pack(push, 1)
 class widget /* abstract */ {

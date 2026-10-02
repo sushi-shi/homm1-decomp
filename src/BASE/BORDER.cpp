@@ -14,7 +14,7 @@
 #include <H1/KB.h>
 
 VA(0x00479780, 0x2b)
-border::border(void) : widget(0, 0, 0, 0, 0, 0), m_background(0), m_fillColor(0) {}
+border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE), m_background(0), m_fillColor(0) {}
 
 VA_COMPGEN(0x004797b0, 0x3a, "??_Gborder@@UAEPAXI@Z", 0x00479780)
 border::~border(void) {
