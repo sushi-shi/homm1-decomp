@@ -209,6 +209,14 @@ extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
+// clang-format off
+// The per-cell/per-hero resource-value caches (gaiHeroStrategicRVOfPos,
+// gaiHeroEventStratRVOfPos, gaiHeroLiveChance) hold RV_UNSET until
+// evaluated; ResetHeroRVs writes it back (Buka's name).
+H1_ENUM_CONST_BEGIN(AIResourceValue)
+    RV_UNSET = -32001
+H1_ENUM_CONST_END(AIResourceValue)
+// clang-format on
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
 extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // clang-format off

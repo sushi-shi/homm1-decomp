@@ -1899,7 +1899,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
     searchArray* madeSearch;
     int destTerrain;
 
-    if (!immediate && gaiHeroStrategicRVOfPos[targetX][targetY] != -32001) {
+    if (!immediate && gaiHeroStrategicRVOfPos[targetX][targetY] != RV_UNSET) {
         *liveChance = gaiLiveChanceOfPos[targetX][targetY];
         return gaiHeroStrategicRVOfPos[targetX][targetY];
     }
@@ -1937,9 +1937,9 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
                                / (pSearch->m_cells[x][thisY].distance + 2.0);
                 }
                 if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
-                    if (gaiHeroLiveChance[cell->m_objectMetadata] == -32001)
+                    if (gaiHeroLiveChance[cell->m_objectMetadata] == RV_UNSET)
                         ValueOfEventAtPosition(pHero, x, thisY, 0, &iDummy);
-                    if (gaiHeroLiveChance[cell->m_objectMetadata] != -32001
+                    if (gaiHeroLiveChance[cell->m_objectMetadata] != RV_UNSET
                         && gaiHeroLiveChance[cell->m_objectMetadata] < 100) {
                         iReach = gpGame->GetHero(cell->m_objectMetadata)->m_mobility;
                         if (gbHumanPlayer[gpGame->m_availableHeroes[cell->m_objectMetadata]]) {
@@ -3089,7 +3089,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     int chosenExitY27;
     int chosenExitX0;
 
-    if (!immediate && gaiHeroEventStratRVOfPos[x][y] != -32001)
+    if (!immediate && gaiHeroEventStratRVOfPos[x][y] != RV_UNSET)
         return gaiHeroEventStratRVOfPos[x][y];
     gbReduceByReload = 1;
     gbReduceByBerserk = 1;
