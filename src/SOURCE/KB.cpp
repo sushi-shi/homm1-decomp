@@ -1407,10 +1407,10 @@ void CheckEndGame(int forced) {
     signed char win;
     playerData* pd;
     int slot;
-    int player;
     signed char lost;
     signed char normalWin;
     int lastSurvivor;
+    int player;
     int humansAlive;
     int lastHumanPos;
 
