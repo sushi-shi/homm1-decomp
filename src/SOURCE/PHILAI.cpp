@@ -266,7 +266,7 @@ void philAI::CheckBuyStuff(void) {
     DoAllHeroInteractions();
     while (!done) {
         GetBestBHC(giCurPlayer, bestBHC);
-        if (bestBHC.type >= PURCHASE_BUILDING && CanBuyBHC(bestBHC)) {
+        if (bestBHC.type >= PURCHASE_FIRST && CanBuyBHC(bestBHC)) {
             switch (bestBHC.type) {
                 case PURCHASE_BUILDING:
                     BuildBuilding(bestBHC.pTown, bestBHC.what);
@@ -2307,7 +2307,7 @@ int philAI::FightValueOfStack(
         for (slot = BUILDING_SLOT_DWELLING_FIRST; slot <= BUILDING_SLOT_DWELLING_LAST; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows += 4;
-        for (slot = BUILDING_SLOT_MAGE_GUILD; slot <= BUILDING_SLOT_WELL; slot++)
+        for (slot = BUILDING_SLOT_MAGE_GUILD; slot <= BUILDING_SLOT_GENERIC_LAST; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows++;
         castleValue = nArrows * 120;

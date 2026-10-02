@@ -17,6 +17,9 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_TAVERN = 2,
     BUILDING_SLOT_SHIPYARD = 3,
     BUILDING_SLOT_WELL = 4,
+    // The generic structures every town type shares (philAI's castle arrow
+    // count adds one per built slot up to here).
+    BUILDING_SLOT_GENERIC_LAST = 4,
     // Slots RACE_FIRST.. use per-race build-window frames, the generic ones
     // before them frame building + 1 (TOWNMGR SetupBuildWindow).
     BUILDING_SLOT_RACE_FIRST = 5,

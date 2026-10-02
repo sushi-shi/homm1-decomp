@@ -35,9 +35,10 @@ class town;
 // BHC::type: what GetBestBHC chose to buy (Buka 2.1 PHILAI.h AIPurchaseType):
 // GetBestBuilding/GetBestHero/GetBestCreature fill BUILDING/HERO/CREATURE,
 // DoAI dispatches BuildBuilding/BuildHero/BuildCreature and CanBuyBHC checks
-// each; NONE when nothing is worth buying.
+// each; NONE when nothing is worth buying (DoAI buys when type >= FIRST).
 H1_ENUM_BEGIN(AIPurchaseType)
     PURCHASE_NONE = -1,
+    PURCHASE_FIRST = 0,
     PURCHASE_BUILDING = 0,
     PURCHASE_HERO = 1,
     PURCHASE_CREATURE = 2
