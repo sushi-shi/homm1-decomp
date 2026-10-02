@@ -1490,7 +1490,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
 
             startPos = (160 - numArmies * 32) / 2 + 9;
             curIndex = 0;
-            for (j = 0; numArmies > j; j++) {
+            for (j = 0; j < numArmies; j++) {
                 while (heroPtr->m_army.m_creatureTypes[curIndex] == -1)
                     curIndex++;
                 monster = heroPtr->m_army.m_creatureTypes[curIndex];
