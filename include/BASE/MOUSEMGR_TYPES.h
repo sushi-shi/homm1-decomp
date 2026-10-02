@@ -31,12 +31,11 @@ H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_ADVENTURE = 0,
     MOUSE_CURSOR_COMBAT = 1,
     MOUSE_CURSOR_SPELL = 2,
-    MOUSE_KEEP_CURRENT_FRAME = 1000,
-    CONFIG_EXECUTABLE_EDITOR = 1
+    MOUSE_KEEP_CURRENT_FRAME = 1000
 H1_ENUM_CONST_END(MouseManagerConstant)
- // clang-format on
+// clang-format on
 
- extern int gbColorMice;
+extern int gbColorMice;
 extern int gbSpecialMouseMasks;
 extern int gMouseCursorType;
 extern int iMouseOffset[3];
