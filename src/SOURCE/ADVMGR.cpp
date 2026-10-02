@@ -4935,6 +4935,8 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
+// TeleportTo tests the watch player's high bit (0x004be7cc).
+extern unsigned char giCurWatchPlayerHighBit;
 VA(0x00434bd7, 0x340)
 void advManager::TeleportTo(int x, int y, int) {
     int savedShow;
@@ -4959,7 +4961,7 @@ void advManager::TeleportTo(int x, int y, int) {
     CompleteDraw(0);
     if (!gbHumanPlayer[giCurPlayer]) {
         if (!gConfig.blackoutComputer && !gbRemoteOn
-            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurPlayerBit))
+            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurWatchPlayerHighBit))
             bShowIt = 1;
         else
             bShowIt = 0;
