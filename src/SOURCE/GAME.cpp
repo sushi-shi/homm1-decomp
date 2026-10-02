@@ -6,6 +6,7 @@
 #include <BASE/Misc.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/TILE.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/artifactTypes.h>
@@ -821,8 +822,65 @@ signed char game::NewGame(void) {
 // evidence: graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
+// Campaign scenario titles and briefings.
+extern char* gCampaignScenarioNames[];
+extern char* gCampaignScenarioText[];
+
 VA(0x0043be93, 0x2ad)
-void game::ShowCampaignInfo(int, int, int) {}
+void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
+    heroWindow* window;
+    tag_message message;
+
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    window = new heroWindow(105, 96, "campaign.bin");
+    if (!window)
+        MemError();
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 1;
+    strcpy(gText, gCampaignScenarioNames[scenario]);
+    message.payload.widget.data.text = gText;
+    window->BroadcastMessage(message);
+    message.payload.widget.id = 2;
+    strcpy(gText, gCampaignScenarioText[scenario]);
+    message.payload.widget.data.text = gText;
+    window->BroadcastMessage(message);
+    message.payload.widget.data.text = gText;
+    window->BroadcastMessage(message);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.id = 3;
+    message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+    message.payload.widget.data.value = gpGame->m_unknown000b + 4;
+    window->BroadcastMessage(message);
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.payload.widget.data.value = 6;
+    if (fromMenu) {
+        message.payload.widget.id = 0x7802;
+        window->BroadcastMessage(message);
+    } else {
+        message.payload.widget.id = 0x7800;
+        window->BroadcastMessage(message);
+        message.payload.widget.id = 0x385;
+        window->BroadcastMessage(message);
+    }
+    if (!fromMenu)
+        gpSoundManager->SwitchAmbientMusic(0x30);
+    gpWindowManager->DoDialog(window, EventWindowHandler, 0);
+    delete window;
+    if (gpWindowManager->m_dialogResult == 0x385) {
+        NormalDialog("Are you sure you want to restart this scenario?", 2, -1, -1, -1, 0, -1, 0, -1);
+        if (gpWindowManager->m_dialogResult == 0x7805) {
+            InitCampaignMap(m_campaignScenario, 0);
+            gpAdvManager->m_routeShown = 0;
+            giBottomViewOverride = 0;
+            gpWindowManager->FadeScreen(1, 8, gPalette);
+            gpAdvManager->SetInitialMapOrigin();
+            gpAdvManager->RedrawAdvScreen(1);
+            gpWindowManager->FadeScreen(0, 8, gPalette);
+        }
+    }
+}
 
 // Two bytes per campaign side; the first is the human player's crest.
 extern signed char gCampaignSideCrests[][2];
