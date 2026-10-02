@@ -10,8 +10,9 @@
 #pragma pack(push, 1)
 class army {
 public:
-    signed char m_unknown00;
-    signed char m_unknown01;
+    // Attack target (GetCommand clears both to -1).
+    signed char m_targetSide;
+    signed char m_targetIndex;
     short m_unknown02;
     signed char m_unknown04;
     // ValidPath records the reachable target hex here.
@@ -28,14 +29,17 @@ public:
     signed char m_unknown13;
     signed char m_baseSpeed;
     char m_unknown15;
-    signed char m_race;
+    signed char m_unknown16;
     signed char m_speed;
     signed char m_unknown18;
-    signed char m_unknown19;
-    signed char m_unknown1a;
-    signed char m_unknown1b;
-    signed char m_unknown1c;
-    char m_spriteName[8];
+    // army::Init adds the hero's two primary skills here.
+    signed char m_attack;
+    signed char m_defense;
+    signed char m_damageMin;
+    signed char m_damageMax;
+    signed char m_unknown1d;
+    signed char m_shots;
+    char m_unknown1f[6];
     // Monster attribute flags; bit 0 is a two-hex creature, bit 1 a flyer.
     int m_attributes;
     short m_unknown29;
@@ -56,6 +60,10 @@ public:
     signed char m_spellRounds;
     // --- constructors ---
     army(void);
+    // DoSurrender inlines this test (retail jmp $+0 and dead flag test).
+    int IsAlive(void) {
+        return m_creatureType >= 0 && m_quantity > 0;
+    }
     // --- methods ---
     void WaitSample(int);
     void InitClean(void);
@@ -106,9 +114,11 @@ public:
     int FlyTo(void);
     int FlyTo(int);
     int FindPath(int, int, int, int, int);
-    int ValidPath(int, int);
+    // HoMM1 retail 0x00418242: word hex, word result (ret 8).
+    short ValidPath(short, int);
     int GetMoveMask(int);
-    int GetAttackMask(int, int, int);
+    // HoMM1 retail 0x0041835b: word hex, byte mode and target (ret 0xc).
+    short GetAttackMask(short, signed char, signed char);
     int ValidMove(int);
     int ValidMove(int, int);
     int ValidAttack(int, int, int, int, int *);

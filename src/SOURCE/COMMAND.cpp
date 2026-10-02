@@ -7,15 +7,79 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <BASE/Misc.h>
+#include <SOURCE/REMOTE.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 
-// donor PoL RVA 0x0002a6d0; preferred Buka symbol ?Main@combatManager@@UAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.520039;margin=0.117792;shape=0.347;size=0.894;calls=0.889;alternate=pol20:int combatManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x0002a6d0
+// Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
+// combat screen cycling or no-show mode.
 VA(0x0040f2c0, 0x311)
-short combatManager::Main(struct tag_message &) { return 0; }
+short combatManager::Main(struct tag_message &message)
+{
+    int result = MESSAGE_DISPATCH_CONSUME;
+    CombatRemotePacket *packet;
+    army *currentArmy;
+
+    if (KBTickCount() > glTimers[0]) {
+        PollSound();
+        glTimers[0] = KBTickCount() + 0x4b;
+    }
+    CheckCastleAttack();
+    if (CheckWin(&message))
+        return MESSAGE_DISPATCH_FORWARD;
+    packet = (CombatRemotePacket *)GetRemoteData(1);
+    if (packet && packet->type == 2) {
+        switch (packet->command) {
+            case 0x17:
+                giNextAction = packet->nextAction;
+                giNextActionExtra = packet->nextActionExtra;
+                giNextActionGridIndex = packet->nextActionGridIndex;
+                giNextActionGridIndex2 = packet->nextActionGridIndex2;
+                goto processAction;
+            case 0xb:
+                PopNetBox(packet->text);
+                break;
+        }
+    }
+    if (!gbThisNetHasControl) {
+        if (message.type == MESSAGE_KEY_DOWN) {
+            switch (message.payload.keyboard.keyCode) {
+                case 0x3b:
+                    PopNetBox(0);
+                    break;
+            }
+        }
+        return MESSAGE_DISPATCH_CONSUME;
+    }
+    currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    if (currentArmy->m_spellEffect == 14) {
+        currentArmy->GoBerserk();
+        if (CheckWin(&message))
+            return MESSAGE_DISPATCH_FORWARD;
+    }
+    if (m_gridSelectionDisabled) {
+        while (message.type != MESSAGE_KEY_DOWN && message.type != MESSAGE_LEFT_BUTTON_DOWN
+               && message.type != MESSAGE_RIGHT_BUTTON_DOWN && message.type != MESSAGE_NONE)
+            message = gpInputManager->GetEvent();
+        if (message.type != MESSAGE_NONE) {
+            m_gridSelectionDisabled = 0;
+            gpMouseManager->ReallyShowPointer();
+        }
+    }
+    CheckChangeSelector();
+processAction:
+    if (!giNextAction) {
+        if (m_playerId[m_currentSide] == -1 || !gbThisNetHumanPlayer[m_playerId[m_currentSide]]
+            || m_gridSelectionDisabled)
+            CheckGetAIMove();
+        else
+            result = ProcessCombatMsg(message);
+    }
+    if (giNextAction)
+        result = ProcessNextAction(message);
+    return result;
+}
 
 // Buka COMMAND.cpp ValidHexToStandOn; HoMM1 rows are nine hexes wide and
 // the edge columns are never standable.
@@ -131,11 +195,75 @@ int combatManager::CheckWin(struct tag_message *message)
     return combatEnded;
 }
 
-// donor PoL RVA 0x0002c8ff; preferred Buka symbol ?GetCommand@combatManager@@QAEHH@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.402881;margin=0.493749;shape=0.255;size=0.779;calls=0.500;alternate=pol20:int combatManager::GetCommand(int)@0x0002c8ff
+// Buka COMMAND.cpp GetCommand; HoMM1 returns each command directly, has no
+// small view or ballista and clears the target through the current stack.
 VA(0x00410d35, 0x316)
-int combatManager::GetCommand(int) { return 0; }
+signed char combatManager::GetCommand(short hex)
+{
+    signed char unusedCol = hex % 9;
+    signed char rowIndex = hex / 9;
+    army *currentArmy;
+    signed char targetIndex;
+    signed char enemySide;
+
+    if (hex == -1)
+        return 0;
+    switch (hex) {
+        case 26:
+            if (m_heroes[0]) {
+                if (m_currentSide == 0)
+                    return 4;
+                else
+                    return 13;
+            } else
+                return 0;
+        case 9:
+            if (m_heroes[1]) {
+                if (m_currentSide == 1)
+                    return 4;
+                else
+                    return 13;
+            } else
+                return 0;
+        default:
+            if (hex % 9 == 8)
+                return 0;
+            enemySide = m_hexCells[hex].m_occupantSide;
+            targetIndex = m_hexCells[hex].m_occupantIndex;
+            currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+            currentArmy->m_targetSide = -1;
+            currentArmy->m_targetIndex = -1;
+            if (m_hexCells[hex].m_obstacle != -1)
+                return 0;
+            else if (enemySide != -1) {
+                switch (enemySide) {
+                    case 0:
+                    case 1:
+                        if (m_currentSide == enemySide)
+                            return 5;
+                        else {
+                            currentArmy->m_targetSide = enemySide;
+                            currentArmy->m_targetIndex = targetIndex;
+                            if (currentArmy->m_shots > 0
+                                && currentArmy->GetAttackMask(currentArmy->m_hex, 1, -1) == 0xff)
+                                return 3;
+                            if (currentArmy->ValidPath(hex, 1) == 1)
+                                return 7;
+                            else {
+                                currentArmy->m_targetSide = -1;
+                                currentArmy->m_targetIndex = -1;
+                                return 0;
+                            }
+                        }
+                }
+            } else {
+                if (m_armies[m_currentSide][m_currentArmyIndex].ValidPath(hex, 0) == 1)
+                    return (m_armies[m_currentSide][m_currentArmyIndex].m_attributes & 2) ? 2 : 1;
+            }
+            break;
+    }
+    return 0;
+}
 
 // Buka COMMAND.cpp RightClick; HoMM1 hero hexes are 26 and 9 and the
 // army view also takes the side.
@@ -183,11 +311,73 @@ signed char combatManager::RightClick(signed char hex)
     return 0;
 }
 
-// donor PoL RVA 0x0002d0bf; preferred Buka symbol ?DoCommand@combatManager@@QAEXH@Z
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.479004;margin=0.375974;shape=0.217;size=0.994;calls=0.842;alternate=pol20:void combatManager::DoCommand(int)@0x0002d0bf
+// Buka COMMAND.cpp DoCommand; HoMM1 has no ballista or negation sphere and
+// views the army at the selected hex on the current side.
 VA(0x00411227, 0x333)
-void combatManager::DoCommand(int) {}
+void combatManager::DoCommand(signed char command)
+{
+    int unusedValue1;
+    int unusedValue2;
+    army *currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+
+    switch (command) {
+        case 0:
+            break;
+        case 1:
+        case 2:
+        case 3:
+            giNextAction = 2, giNextActionGridIndex = m_selectedHex;
+            giNextActionExtra = -1;
+            break;
+        case 7:
+            giNextActionGridIndex = m_selectedHex;
+            if (m_playerId[m_currentSide] == -1 || !gbHumanPlayer[m_playerId[m_currentSide]]
+                || m_gridSelectionDisabled) {
+                giNextAction = 2;
+                giNextActionExtra = -1;
+            } else {
+                giNextAction = 6;
+                giNextActionExtra = m_directionTargetHex;
+            }
+            break;
+        case 4:
+            gpMouseManager->SetPointer(6);
+            ViewGeneral(m_currentSide, 1, 0);
+            ResetMouse();
+            break;
+        case 13:
+            gpMouseManager->SetPointer(6);
+            ViewGeneral(1 - m_currentSide, 1, 0);
+            ResetMouse();
+            break;
+        case 5:
+            gpMouseManager->SetPointer(6);
+            ViewArmy(&m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex], m_currentSide, 0);
+            ResetMouse();
+            break;
+        case 10:
+            ViewSpells(0);
+            ResetMouse();
+            break;
+        case 11:
+            NormalDialog("Are you sure you want to retreat?", 2, 0xc3, 0x3c, -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == 0x7805)
+                giNextAction = 4;
+            ResetMouse();
+            break;
+        case 12:
+            if (DoSurrender() == 1) {
+                if (gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD] < giSurrenderCost)
+                    NormalDialog("You don't have enough gold!", 1, -1, -1, -1, 0, -1, 0, -1);
+                else {
+                    giNextAction = 5;
+                    giNextActionExtra = giSurrenderCost;
+                }
+            }
+            ResetMouse();
+            break;
+    }
+}
 
 // Buka COMMAND.cpp WinCombatHandler; HoMM1 pages captured artifacts and
 // cycles a single six-frame animation.
@@ -311,11 +501,45 @@ void combatManager::DoVictory(signed char) {}
 VA(0x00412a78, 0x549)
 void combatManager::DoLoseWindow(void) {}
 
-// donor PoL RVA 0x0002fbf0; preferred Buka symbol ?DoSurrender@combatManager@@QAEHXZ
-// donor Buka TU SOURCE/COMMAND; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.579024;margin=0.030061;shape=0.292;size=0.742;calls=0.667;strings=port%04d.icn|surrendr.bin;alternate=pol20:int combatManager::DoSurrender(void)@0x0002fbf0
+// Buka COMMAND.cpp DoSurrender; HoMM1 charges half the stack cost and has
+// no quill or diplomacy discount.
 VA(0x00412fc1, 0x2c6)
-int combatManager::DoSurrender(void) { return 0; }
+short combatManager::DoSurrender(void)
+{
+    heroWindow *win;
+    short unusedResult;
+    int armyIndex;
+    tag_message message;
+    short unusedType;
+
+    giSurrenderCost = 0;
+    for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+        if (m_armies[m_currentSide][armyIndex].IsAlive())
+            giSurrenderCost += gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2
+                               * m_armies[m_currentSide][armyIndex].m_quantity;
+    }
+    unusedType = 1;
+    unusedResult = 2;
+    win = new heroWindow(0x55, 0x50, "surrendr.bin");
+    if (win == 0)
+        MemError();
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_ICON;
+    message.payload.widget.id = 1;
+    sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_unknown1d);
+    message.payload.widget.data.text = gText;
+    win->BroadcastMessage(message);
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = 2;
+    sprintf(gText,
+            "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage for the "
+            "price of %d gold.",
+            m_heroes[1 - m_currentSide]->m_name, giSurrenderCost);
+    win->BroadcastMessage(message);
+    gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
+    delete win;
+    return gpWindowManager->m_dialogResult == 0x7802;
+}
 
 // Buka COMMAND.cpp CheckChangeSelector; HoMM1 redraws the grid from the
 // lower of the old and new selector hexes.

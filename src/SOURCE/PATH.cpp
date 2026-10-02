@@ -10,7 +10,7 @@
 // donor Buka TU SOURCE/PATH; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.547636;margin=0.507012;shape=0.439;size=0.810;calls=1.000;alternate=pol20:int army::ValidPath(int, int)@0x000bdd3a
 VA(0x00418242, 0x9e)
-int army::ValidPath(int, int) { return 0; }
+short army::ValidPath(short, int) { return 0; }
 
 // HoMM2 donor behavior; HoMM1's WORD parameter/return prove the narrower API.
 // donor Buka TU SOURCE/PATH; HoMM1 owner inferred from contiguous order

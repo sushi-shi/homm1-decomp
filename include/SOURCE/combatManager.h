@@ -26,6 +26,27 @@ H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_VIEW = 5
 H1_ENUM_END(CombatPointerCode)
 
+// Buka CombatRemotePacket: the combat action relayed through
+// GetRemoteData (command 0x17) or a net chat line (command 0xb).
+#pragma pack(push, 1)
+struct CombatRemotePacket {
+    signed char sender;
+    int id;
+    signed char type;
+    signed char command;
+    short payloadSize;
+    union {
+        struct {
+            int nextAction;
+            int nextActionExtra;
+            int nextActionGridIndex;
+            int nextActionGridIndex2;
+        };
+        char text[0xf7];
+    };
+};
+#pragma pack(pop)
+
 // HoMM1 combat manager, 0x7d3 bytes (InitMainClasses; constructor
 // 0x0044b440). Field names follow Buka where the retail use matches;
 // unrecovered spans stay opaque.
@@ -46,12 +67,12 @@ public:
     signed char m_currentSide;
     signed char m_currentArmyIndex;
     signed char m_currentSpeed;
-    signed char m_unknown6bd;
+    signed char m_gridSelectionDisabled;
     signed char m_limitCreature;
     signed char m_limitCreatureHex;
     signed char m_unknown6c0;
     signed char m_selectedHex;
-    signed char m_unknown6c2;
+    signed char m_directionTargetHex;
     signed char m_previousCommand;
     signed char m_currentCommand;
     short m_unknown6c5;
@@ -143,9 +164,9 @@ public:
     int IsNegationSphereInEffect(void);
     void ResetRound(void);
     int CheckWin(struct tag_message *);
-    int GetCommand(int);
+    signed char GetCommand(short);
     signed char RightClick(signed char);
-    void DoCommand(int);
+    void DoCommand(signed char);
     void ClearWinLoseBottom(class heroWindow *);
     void ShowWinLoseArtifact(class heroWindow *, int);
     void ShowSkeletons(class heroWindow *);
@@ -153,7 +174,7 @@ public:
     void ShowDeadArmies(class heroWindow *);
     void DoVictory(signed char);
     void DoLoseWindow(void);
-    int DoSurrender(void);
+    short DoSurrender(void);
     void CheckChangeSelector(void);
     void CheckCastleAttack(void);
     void CheckGetAIMove(void);
@@ -243,6 +264,13 @@ short WinCombatHandler(struct tag_message &);
 // Captured artifacts shown page by page on the victory window.
 extern signed char iMaxTransferArtifacts;
 extern int iCurTransferArtifact;
+// DoSurrender: gold the enemy hero asks for (0x004a4bac).
+extern int giSurrenderCost;
+// The queued combat action and its grid/extra arguments (0x004a4bc0..).
+extern int giNextAction;
+extern int giNextActionGridIndex;
+extern int giNextActionExtra;
+extern int giNextActionGridIndex2;
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
