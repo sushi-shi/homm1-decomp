@@ -22,8 +22,6 @@ H1_ENUM_CONST_BEGIN(CursorConstant)
     CURSOR_DRAW_Y = 0xff,
     CURSOR_BOAT_DRAW_Y_ADJUST = 10,
     CURSOR_SHADOW_FLIP_X_ADJUST = 0x20,
-    CURSOR_FLIP_FLAG = 0x80,
-    CURSOR_FRAME_MASK = 0x7f,
     CURSOR_FLAG_FRAME_BASE = 0x38,
     CURSOR_FLAG_FRAME_CYCLE_MASK = 3,
     CURSOR_LAST_FRAME_COUNT = 8,
@@ -113,9 +111,9 @@ void advManager::DrawCursor(void) {
     screenY = m_updateMinY + CURSOR_DRAW_Y;
     if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
         screenY -= CURSOR_BOAT_DRAW_Y_ADJUST;
-    if (m_cursorFrame & CURSOR_FLIP_FLAG) {
+    if (m_cursorFrame & HERO_FRAME_MIRROR_FLAG) {
         drawX += CURSOR_SHADOW_FLIP_X_ADJUST;
-        drawFrame = (m_cursorFrame & CURSOR_FRAME_MASK) + m_cursorFrameCount;
+        drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK) + m_cursorFrameCount;
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             FlipDimIconToBitmap(
                 m_boatShadowIcon,
@@ -135,7 +133,7 @@ void advManager::DrawCursor(void) {
         );
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
             if (m_cursorCycle == 0)
-                drawFrame = m_cursorFrame & CURSOR_FRAME_MASK;
+                drawFrame = m_cursorFrame & HERO_FRAME_INDEX_MASK;
             FlipIconToBitmap(
                 m_boatFlagIcons[gpCurPlayer->m_color],
                 gpWindowManager->m_screen,
@@ -147,7 +145,7 @@ void advManager::DrawCursor(void) {
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK)
-                            + (m_cursorFrame & CURSOR_FRAME_MASK) + CURSOR_FLAG_FRAME_BASE;
+                            + (m_cursorFrame & HERO_FRAME_INDEX_MASK) + CURSOR_FLAG_FRAME_BASE;
             FlipIconToBitmap(
                 m_flagIcons[gpCurPlayer->m_color],
                 gpWindowManager->m_screen,

@@ -253,9 +253,7 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     MONSTER_FRAME_STRIDE = 7,
     MONSTER_FACING_FRAME_BASE = MONSTER_FRAME_STRIDE - 1,
     MONSTER_DRAW_Y_OFFSET = 5,
-    HERO_BOAT_Y_OFFSET = -10,
-    HERO_FRAME_MIRROR_FLAG = 0x80,
-    HERO_FRAME_INDEX_MASK = 0x7f
+    HERO_BOAT_Y_OFFSET = -10
 H1_ENUM_CONST_END(AdventureDrawConstant)
 
 // UpdateScreen's dirty box and animation clock (Buka 2.1
