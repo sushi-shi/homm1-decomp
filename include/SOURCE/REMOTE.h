@@ -33,13 +33,15 @@ H1_ENUM_BEGIN(RemoteGameMode)
     REMOTE_GAME_NETWORK_HOST = 1,
     REMOTE_GAME_NETWORK_GUEST = 2,
     REMOTE_GAME_MODEM_HOST = 3,
-    REMOTE_GAME_MODEM_GUEST = 4
+    REMOTE_GAME_MODEM_GUEST = 4,
+    REMOTE_GAME_UNSET = 10
 H1_ENUM_END(RemoteGameMode)
 
 H1_ENUM_BEGIN(MultiplayerBaseType)
     MULTIPLAYER_BASE_MODEM = 0,
     MULTIPLAYER_BASE_NETWORK = 1,
-    MULTIPLAYER_BASE_HOT_SEAT = 2
+    MULTIPLAYER_BASE_HOT_SEAT = 2,
+    MULTIPLAYER_BASE_UNSET = 10
 H1_ENUM_END(MultiplayerBaseType)
 
 // DecodePacket/EncodePacket frame every wire packet with this six-byte header.
