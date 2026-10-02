@@ -113,7 +113,7 @@ short swapManager::Open(short id) {
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_SYSTEM_OPTIONS;
+    message.id = ADVENTURE_CONTROL_GAME_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     Update();
     gpWindowManager->AddWindow(m_window, -1, 1);
@@ -155,7 +155,7 @@ void swapManager::Close(void) {
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_SYSTEM_OPTIONS;
+    message.id = ADVENTURE_CONTROL_GAME_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
 }
 

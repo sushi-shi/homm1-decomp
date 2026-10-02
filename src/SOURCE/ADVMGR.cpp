@@ -116,6 +116,19 @@ H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
 H1_ENUM_CONST_END(AdventurePanelButtonConstant)
+
+// advManager::Main's right-click help on the six panel buttons: the
+// cAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,
+// end turn, adventure options, game options).
+H1_ENUM_BEGIN(AdventurePanelHelp)
+    ADVENTURE_HELP_NONE = -1,
+    ADVENTURE_HELP_NEXT_HERO = 0,
+    ADVENTURE_HELP_CONTINUE_ROUTE = 1,
+    ADVENTURE_HELP_OVERVIEW = 2,
+    ADVENTURE_HELP_END_TURN = 3,
+    ADVENTURE_HELP_ADVENTURE_OPTIONS = 4,
+    ADVENTURE_HELP_GAME_OPTIONS = 5
+H1_ENUM_END(AdventurePanelHelp)
 // clang-format on
 
 // Buka 2.1's unconditional six-button enable/disable broadcast.
@@ -662,25 +675,25 @@ short advManager::Main(struct tag_message& message) {
                 retVal = ProcessSelect(&message, &evtMapCell);
                 break;
             case WIDGET_NOTIFY_RIGHT_CLICK:
-                helpText = -1;
+                helpText = ADVENTURE_HELP_NONE;
                 switch (message.id) {
                 case ADVENTURE_CONTROL_NEXT_HERO:
-                    helpText = 0;
+                    helpText = ADVENTURE_HELP_NEXT_HERO;
                     break;
                 case ADVENTURE_CONTROL_CONTINUE_ROUTE:
-                    helpText = 1;
+                    helpText = ADVENTURE_HELP_CONTINUE_ROUTE;
                     break;
                 case ADVENTURE_CONTROL_OVERVIEW:
-                    helpText = 2;
+                    helpText = ADVENTURE_HELP_OVERVIEW;
                     break;
                 case ADVENTURE_CONTROL_END_TURN:
-                    helpText = 3;
+                    helpText = ADVENTURE_HELP_END_TURN;
                     break;
                 case ADVENTURE_CONTROL_ADVENTURE_OPTIONS:
-                    helpText = 4;
+                    helpText = ADVENTURE_HELP_ADVENTURE_OPTIONS;
                     break;
-                case ADVENTURE_CONTROL_SYSTEM_OPTIONS:
-                    helpText = 5;
+                case ADVENTURE_CONTROL_GAME_OPTIONS:
+                    helpText = ADVENTURE_HELP_GAME_OPTIONS;
                     break;
                 }
                 if (helpText >= 0)
@@ -1240,7 +1253,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
         case ADVENTURE_CONTROL_ADVENTURE_OPTIONS:
             AdvPanel();
             break;
-        case ADVENTURE_CONTROL_SYSTEM_OPTIONS:
+        case ADVENTURE_CONTROL_GAME_OPTIONS:
             *result = ControlPanel();
             break;
         case ADVENTURE_CONTROL_END_TURN:
