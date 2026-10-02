@@ -2539,8 +2539,11 @@ void advManager::PlayerMonsterInteract(
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                    eventHero->m_army
-                        .Add(cell->m_objectIndex, cell->m_objectMetadata & MONSTER_COUNT_MASK, -1);
+                    eventHero->m_army.Add(
+                        cell->m_objectIndex,
+                        cell->m_objectMetadata & MONSTER_COUNT_MASK,
+                        ARMY_GROUP_EMPTY_SLOT
+                    );
                     *handled = 1;
                     return;
                 } else {

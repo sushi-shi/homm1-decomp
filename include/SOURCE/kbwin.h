@@ -67,9 +67,6 @@ H1_ENUM_BEGIN(CdSetupResult)
 H1_ENUM_END(CdSetupResult)
 
 H1_ENUM_CONST_BEGIN(PrefsConstant)
-    CONFIG_EXECUTABLE_GAME = 0,
-    CONFIG_EXECUTABLE_EDITOR_RECORD = 1,
-    CONFIG_EXECUTABLE_COUNT = 2,
     CONFIG_UNINITIALIZED = 99,
     // ResizeWindow keeps the window's current left/top for this x/y.
     KBWIN_KEEP_POSITION = -1,
@@ -110,9 +107,9 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_WIDTH = 240,
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
- // clang-format on
+    // clang-format on
 
- extern char gcRegAppPath[];
+    extern char gcRegAppPath[];
 extern char gcRegCDRomPath[];
 extern signed char gbFirstTimeThrough;
 extern char gcAnimPath[];
