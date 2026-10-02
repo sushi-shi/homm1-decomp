@@ -184,9 +184,9 @@ extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern float gfHeroInteractionBonus[];
 extern float gfAttackHumanBonus;
 extern float gfAttackComputerBonus;
-extern signed char gbIAmGreatest;
-// ValueOfEventAtPosition: cells an enemy hero can reach this turn, the event
-// cache, per-resource mine income and the ultimate artifact's average value.
+extern signed char gbIAmGreatest; // stale alias of gbKingOfTheHill (0x4c7b50), unreferenced
+// Stale alias of mapVisited (0x4be7e0), unreferenced; then the event cache,
+// per-resource mine income and the ultimate artifact's average value.
 extern signed char gaiEnemyHeroReachable[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern int giMineIncome[];
