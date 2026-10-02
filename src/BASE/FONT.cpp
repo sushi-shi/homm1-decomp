@@ -52,73 +52,77 @@ void font::DrawString(char *text, short x, short y, short color)
 }
 
 VA(0x0047b4d0, 0x2d0)
-void font::DrawBoundedString(char *str, short x, short y, short w, short h, short color, short align)
+void font::DrawBoundedString(char *str, short x, short y, short width, short height, short color, short align)
 {
     short s;
     signed char q;
-    IconEntry *u;
-    char aa;
-    short yOff;
+    IconEntry *widths;
+    char spaceChar;
+    // Names place the frame slots; the order gives the operand sort keys of
+    // p < s, p >= r, lw <= width, x + t and y + u.
     short r;
     short lineEnd;
+    short drawColor;
     short t;
     short p;
-    short width;
-    char *line;
-    short drawColor;
+    short lw;
+    short u;
+    char *w;
     char v;
 
     s = strlen(str);
-    u = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
-    aa = ' ';
+    widths = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    spaceChar = ' ';
     t = 0;
-    yOff = 0;
+    u = 0;
     r = 0;
     lineEnd = 0;
     p = 0;
-    width = 0;
-    line = str;
+    lw = 0;
+    w = str;
     drawColor = color;
-    while (p < s && line[p] != 0 && m_height + yOff <= h) {
-        while (line[p] != 0 && line[p] != '\n' && width <= w) {
-            q = line[p] - ' ';
+    while (p < s && w[p] != 0 && m_height + u <= height) {
+        while (w[p] != 0 && w[p] != '\n' && lw <= width) {
+            q = w[p] - ' ';
             if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
                 q = FONT_GLYPH_INDEX_LAST;
-            width = u[q].w + width + FONT_GLYPH_ADVANCE_SPACING;
+            lw = widths[q].w + lw + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
-        if (width > w) {
+        if (lw > width) {
             p--;
-            while (line[p] != ' ' && p >= r) {
-                q = line[p] - ' ';
+            while (w[p] != ' ' && p >= r) {
+                q = w[p] - ' ';
                 if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
                     q = FONT_GLYPH_INDEX_LAST;
-                width -= u[q].w + FONT_GLYPH_ADVANCE_SPACING;
+                lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
                 p--;
             }
-            if (line[p] == ' ')
-                width -= u[0].w + FONT_GLYPH_ADVANCE_SPACING;
+            if (w[p] == ' ')
+                lw -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
         }
         lineEnd = p;
-        v = line[lineEnd];
-        line[lineEnd] = 0;
+        v = w[lineEnd];
+        w[lineEnd] = 0;
         switch (align) {
         case FONT_ALIGN_LEFT: t = 0; break;
-        case FONT_ALIGN_CENTER: t = (w - width) / 2; break;
-        case FONT_ALIGN_RIGHT: t = w - width; break;
+        case FONT_ALIGN_CENTER: t = (width - lw) / 2; break;
+        case FONT_ALIGN_RIGHT: t = width - lw; break;
         }
-        DrawString(line + r, x + t, y + yOff, drawColor);
-        line[lineEnd] = v;
-        yOff += m_height;
+        DrawString(w + r, x + t, y + u, drawColor);
+        w[lineEnd] = v;
+        u += m_height;
         r = lineEnd + 1;
         p = r;
-        width = 0;
+        lw = 0;
     }
 }
 
 VA(0x0047b7a0, 0x211)
 int font::LineLength(char *str, short maxW)
 {
+    short lw;
+    short p;
     short s = strlen(str);
     signed char q;
     IconEntry *widths = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
@@ -126,37 +130,36 @@ int font::LineLength(char *str, short maxW)
     int z = 0;
     short t = 0;
     short y;
-    short p;
     short r;
-    short x;
     char *w;
     char v;
 
-    // r follows p for the operand sort key of p >= r; stores keep retail order.
+    // lw, then p, lead the declarations for the operand sort keys of lw <= maxW
+    // and p < s; r follows p for p >= r. Stores keep retail order.
     r = 0;
     y = 0;
     p = 0;
-    x = 0;
+    lw = 0;
     w = str;
     while (p < s && w[p] != 0) {
-        while (w[p] != 0 && w[p] != '\n' && x <= maxW) {
+        while (w[p] != 0 && w[p] != '\n' && lw <= maxW) {
             q = w[p] - ' ';
             if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
                 q = FONT_GLYPH_INDEX_LAST;
-            x = widths[q].w + x + FONT_GLYPH_ADVANCE_SPACING;
+            lw = widths[q].w + lw + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
-        if (x > maxW) {
+        if (lw > maxW) {
             p--;
             while (w[p] != ' ' && p >= r) {
                 q = w[p] - ' ';
                 if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
                     q = FONT_GLYPH_INDEX_LAST;
-                x -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
+                lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
                 p--;
             }
             if (w[p] == ' ')
-                x -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
+                lw -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
         }
         y = p;
         v = w[y];
@@ -165,7 +168,7 @@ int font::LineLength(char *str, short maxW)
         z++;
         r = y + 1;
         p = r;
-        x = 0;
+        lw = 0;
     }
     return z;
 }
