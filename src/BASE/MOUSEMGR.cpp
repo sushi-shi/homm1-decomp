@@ -275,8 +275,10 @@ void mouseManager::HideColorPointer(void) {}
 VA(0x00476e00, 0x1)
 void mouseManager::RestoreUnderlying(void) {}
 
+// advManager::UpdateScreen pushes the two origin words and a sign-extended
+// cursor flag word.
 VA(0x00476e10, 0x3)
-void mouseManager::SaveAndDraw(bitmap*, int, int, int) {}
+void mouseManager::SaveAndDraw(bitmap*, short, short, short) {}
 
 // philAI's CheckDoMain still asks for a software pointer move; the Windows
 // build ignores it (`ret 8`).

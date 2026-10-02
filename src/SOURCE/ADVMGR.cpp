@@ -1629,7 +1629,7 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
             glTimers[0] = KBTickCount() + 120;
         return;
     }
-    gpMouseManager->BeginScreenUpdate(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
+    gpMouseManager->SaveAndDraw(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
     PollSound();
     giScrollX = m_updateMinX;
     giScrollY = m_updateMinY;
@@ -1666,7 +1666,7 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
         }
     }
     giLimitUpdMinX = -1;
-    gpMouseManager->EndScreenUpdate();
+    gpMouseManager->RestoreUnderlying();
     Process1WindowsMessage();
 }
 
