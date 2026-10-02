@@ -7,6 +7,8 @@
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/comwin.h>
+#include <SOURCE/netwinRuntime.h>
 #include <SOURCE/dialogTypes.h>
 
 #include <string.h>
@@ -146,8 +148,128 @@ char* GetRemoteData(signed char remove) {
 // donor PoL RVA 0x000a41ec; preferred Buka symbol ?PollRemote@@YIXXZ
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:void PollRemote(void)@0x000a41ec
+// PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
+// incoming/outgoing message buffers.
+extern long lLastHeartbeatSend;
+extern long lLastHeartbeatReceive;
+extern signed char bInTimeoutFail;
+extern RemoteMessage sndBuf;
+extern RemoteMessage rcvBufIn;
+extern int iLastIds[REMOTE_RECENT_ID_COUNT];
+extern int iInOrderCtr;
+extern int iCurLastID;
+// The other side's ready flag and the heartbeat-seen flag.
+extern int gbRemoteReady;
+extern int gbHeartbeatSeen;
+
 VA(0x0045a584, 0x4fe)
-void PollRemote(void) {}
+void PollRemote(void) {
+    signed char newControl;
+    signed char queueFull;
+    int i;
+    int numQueued;
+    int result;
+
+    if (!gbRemoteOn)
+        return;
+    if (iMPBaseType == MULTIPLAYER_BASE_MODEM)
+        comm_wrt_task();
+    else if (iMPBaseType == MULTIPLAYER_BASE_NETWORK)
+        nb_thr_ctl();
+    if (gbInNetSetup)
+        return;
+    numQueued = 0;
+    queueFull = 0;
+    if (KBTickCount() - lLastHeartbeatSend > 5000) {
+        sndBuf.sender = giThisNetPos;
+        sndBuf.type = REMOTE_MESSAGE_HEARTBEAT;
+        sndBuf.payloadSize = 1;
+        sndBuf.command = (giCurPlayer << 4) + iCurHourGlassPhase;
+        sndBuf.payload.data[0] = 1;
+        SendRemoteData((unsigned char*)&sndBuf, 0, 1 - giThisNetPos, 10);
+        lLastHeartbeatSend = KBTickCount();
+    }
+    if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
+        NormalDialog(
+            "The other player's computer is not responding.  Do you wish to wait longer?",
+            2, -1, -1, -1, 0, -1, 0, -1);
+        if (gpWindowManager->m_dialogResult == 0x7805) {
+            lLastHeartbeatReceive = KBTickCount();
+        } else {
+            bInTimeoutFail = 1;
+            if (gbHumanPlayer[giCurPlayer]) {
+                if (giCurPlayer == giThisGamePos)
+                    newControl = 0;
+                else
+                    newControl = 1;
+            } else {
+                if (giHostGamePos == giThisGamePos)
+                    newControl = 0;
+                else
+                    newControl = 1;
+            }
+            ReceiveRemotePlayerExit(1 - giThisGamePos, newControl, 0, 1);
+        }
+    }
+    for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
+        if (rcvBuf[i].type)
+            numQueued++;
+    }
+    if (numQueued == REMOTE_QUEUE_CAPACITY)
+        queueFull = 1;
+    result = 1;
+    while (result) {
+    nextIncoming:
+        result = ReceiveRemoteData(0, (unsigned char*)&rcvBufIn, REMOTE_BROADCAST_PLAYER);
+        if (result && rcvBufIn.sender != giThisNetPos) {
+            if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
+                giLastConfirm = rcvBufIn.id;
+                goto done;
+            } else if (rcvBufIn.type == REMOTE_MESSAGE_HEARTBEAT) {
+                if (rcvBufIn.payloadSize == 1 && rcvBufIn.payload.data[0] == 1)
+                    gbRemoteReady = 1;
+                lLastHeartbeatReceive = KBTickCount();
+                gbHeartbeatSeen = 1;
+                if (giHostGamePos != giThisGamePos && giCurPlayer != giThisGamePos
+                    && gpAdvManager->m_active == 1 && rcvBufIn.command / 16 != giThisGamePos) {
+                    giCurPlayer = rcvBufIn.command / 16;
+                    iCurHourGlassPhase = rcvBufIn.command - giCurPlayer * 16;
+                }
+                goto done;
+            } else if (queueFull) {
+                goto done;
+            }
+            if (rcvBufIn.type == REMOTE_MESSAGE_RELIABLE) {
+                sndBuf.sender = giThisNetPos;
+                sndBuf.id = rcvBufIn.id;
+                sndBuf.type = REMOTE_MESSAGE_CONFIRM;
+                sndBuf.payloadSize = 0;
+                SendRemoteData((unsigned char*)&sndBuf, 0, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE);
+            }
+            for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
+                if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)
+                    goto nextIncoming;
+            }
+            for (i = 0; i < REMOTE_RECENT_ID_COUNT; i++) {
+                if (iLastIds[i] == rcvBufIn.id)
+                    goto nextIncoming;
+            }
+            for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
+                if (!rcvBuf[i].type) {
+                    iInOrder[i] = iInOrderCtr++;
+                    memcpy(&rcvBuf[i], &rcvBufIn, REMOTE_MESSAGE_SIZE);
+                    numQueued++;
+                    iLastIds[iCurLastID] = rcvBufIn.id;
+                    iCurLastID = (iCurLastID + 1) % REMOTE_RECENT_ID_COUNT;
+                    if (numQueued == REMOTE_QUEUE_CAPACITY)
+                        goto done;
+                    goto nextIncoming;
+                }
+            }
+        }
+    }
+done:;
+}
 
 // donor PoL RVA 0x000a48e0; preferred Buka symbol ?TransmitAndWait@@YIHPADHHCCPAPAD@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
