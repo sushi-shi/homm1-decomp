@@ -1467,7 +1467,7 @@ void philAI::ValueOfBuyingCreature(
     int nPoints;
     float peril;
     int monsterCost[PLAYER_RESOURCE_COUNT];
-    int archers;
+    int breathStacks;
     int creatRV;
     int rvCost;
     float attackChance;
@@ -1478,7 +1478,7 @@ void philAI::ValueOfBuyingCreature(
     hero* occupant;
     int slotNum;
 
-    archers = 0;
+    breathStacks = 0;
     GetMonsterCost(creature, monsterCost);
     rvCost = purchaseCount * RVConversion(monsterCost);
     creatRV = static_cast<int>(
@@ -1490,13 +1490,13 @@ void philAI::ValueOfBuyingCreature(
         creatRV = static_cast<int>(creatRV * 1.1);
         if (occupant->m_heroClass == creature / 6)
             creatRV = static_cast<int>(creatRV * AI_CREATURE_SAME_RACE_FACTOR);
-        if ((gMonsterDatabase[creature].stats.attributes & 8)) {
+        if ((gMonsterDatabase[creature].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)) {
             for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
-                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & 8))
-                    archers++;
+                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK))
+                    breathStacks++;
             }
-            creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
+            creatRV = static_cast<int>(creatRV * (1.18 - breathStacks * 0.06));
         }
         creatRV = static_cast<int>(
             creatRV
@@ -1504,14 +1504,14 @@ void philAI::ValueOfBuyingCreature(
                + 0.66)
         );
     }
-    if ((gMonsterDatabase[creature].stats.attributes & 8)) {
+    if ((gMonsterDatabase[creature].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)) {
         for (slotNum = 0; slotNum < ARMY_GROUP_SLOT_COUNT; slotNum++) {
             if (townPointer->m_army.m_creatureTypes[slotNum] != CREATURE_NONE
                 && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].stats.attributes
-                    & 8))
-                archers++;
+                    & MONSTER_FLAGS_BREATH_ATTACK))
+                breathStacks++;
         }
-        creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
+        creatRV = static_cast<int>(creatRV * (1.18 - breathStacks * 0.06));
     }
     LikelihoodOfEnemyAttacking(
         townPointer,
@@ -2287,7 +2287,7 @@ int philAI::FightValueOfStack(
                     quantityMod = -0.1f;
                 else
                     quantityMod = -0.14f;
-                if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes & 4)
+                if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes & MONSTER_FLAGS_SHOOTER)
                     || group->m_creatureTypes[slot] == CREATURE_SPRITE
                     || group->m_creatureTypes[slot] == CREATURE_ROGUE)
                     quantityMod = quantityMod * 0.7;
