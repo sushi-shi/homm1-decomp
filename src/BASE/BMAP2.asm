@@ -9,6 +9,9 @@ option epilogue:none
 
 PUBLIC _gDimPalette
 
+; Procedures start on even addresses: retail pads DimBitmapArea's odd end
+; with one 90h before FillBitmapArea (in-module fill, not linker int3).
+
 .data
 ; Dimming remap for 256 palette indices (retail 0x004a1aa0). It is the first
 ; datum of this module's .data: BMAP2's own skip words follow it at +100h.
@@ -85,6 +88,7 @@ blit_done:
     ret
 ?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z ENDP
 
+EVEN
 ?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -204,6 +208,7 @@ backward_same_row:
     ret
 ?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z ENDP
 
+EVEN
 ?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -243,6 +248,7 @@ dim_done:
     ret
 ?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z ENDP
 
+EVEN
 ?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
