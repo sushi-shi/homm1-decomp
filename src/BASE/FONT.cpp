@@ -107,9 +107,20 @@ int font::LineLength(char *str, short maxW)
     IconEntry *widths = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
     char spaceChar = ' ';
     int z = 0;
-    short t = 0, r = 0, y = 0, p = 0, x = 0;
-    char *w = str;
+    short t = 0;
+    short y;
+    short p;
+    short r;
+    short x;
+    char *w;
     char v;
+
+    // r follows p for the operand sort key of p >= r; stores keep retail order.
+    r = 0;
+    y = 0;
+    p = 0;
+    x = 0;
+    w = str;
     while (p < s && w[p] != 0) {
         while (w[p] != 0 && w[p] != '\n' && x <= maxW) {
             q = w[p] - ' ';
