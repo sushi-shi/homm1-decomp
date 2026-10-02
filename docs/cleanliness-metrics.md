@@ -124,12 +124,24 @@ whole tree; the other items cover audited cases.
   domain compares **606**. Owned by the enum/constant lane.
 - [ ] `unique-names` **13** data claims missing from the admitted census
   (data lane).
-- [ ] `include-order` **24** files out of order, 5 manual.
-- [ ] Board structural rows: cpp extern decls **189**, cpp external prototypes
-  **28**, duplicate header externs **24**, `.cpp`-local types **9** (wire
-  records in EVENTS/KB/comwin/SMACKMGR, `OLDASM` palette), `.cpp`-local enum
-  **1**, `void*` members **4**. Moving declarations into headers shifts C1
-  handles in every including unit; batch it with a whole-tree `homm1 match`.
+- [ ] `include-order` **0** files out of order (was 24), 5 manual: `Misc`,
+  `KB`, `REQUEST`, `comwin` and `kbwin` define `WIN32_LEAN_AND_MEAN` inside
+  the block; canonical order would also move `windows.h` ahead of their
+  project headers.
+- [ ] Board structural rows: cpp extern decls **10** (was 189), cpp external
+  prototypes **0** (was 28), duplicate header externs **0** (was 24),
+  `.cpp`-local types **6** (was 9), `.cpp`-local enum **1**, `void*` members
+  **4**. Externs and prototypes live in the owner unit's header (Buka's header
+  where Buka declares the symbol, else the retail data band's owner; KB-band
+  tables in `X_GLOBAL.h`). The remaining externs: 8 aliases whose retail
+  references reach another declared object (`iMPExtendedType` in GAME is
+  `giDebugLevel`, `gbDirectConnect` in KB is `giThisNetPos`, `gSpellAIValue`
+  is `giSpellAIValue`, `gViewArmyAnimTimer` is `glTimers[0]`,
+  `gMonsterNames`/`gScoreRankNames` are `gArmyNames`, `gNullSample` is
+  `NULL_SAMPLE2`, `gbHideComputerMoves` is `gbRemoteOn`), each needing a
+  body rename; `comwin`'s private `gComPorts`; and `AppAbout`'s `extern "C"`
+  definition, which the counter reads as a declaration. The remaining types
+  are unshared (EVENTS wire records, `OLDASM` palette, `comwin` port state).
 - [x] `label-style` OK, `source-encoding` 0, `bans` OK, `review-claims` 0.
 - [ ] `verify casts` self-recursion reports 3 false positives: the `(void)`
   overloads of `WalkTo`, `AttackTo` and `FlyTo` forward to the one-argument
