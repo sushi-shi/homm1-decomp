@@ -23,7 +23,7 @@ class town;
 #define HERO_EVENT_FAERIE_RING 0x10u
 #define HERO_EVENT_GRAVEYARD 0x20u
 #define HERO_EVENT_SHIPWRECK 0x40u
-#define HERO_EVENT_TEMPLE 0x100u
+#define HERO_EVENT_STATUE 0x100u
 
 // clang-format off
 H1_ENUM_CONST_BEGIN(HeroConstant)

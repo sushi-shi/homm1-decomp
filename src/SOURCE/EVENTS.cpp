@@ -249,10 +249,10 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case MAP_OBJECT_STATUE:
-            if (pHero->m_eventFlags & HERO_EVENT_TEMPLE) {
+            if (pHero->m_eventFlags & HERO_EVENT_STATUE) {
                 EventWindow(EVENT_TEXT_STATUE_VISITED, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
-                pHero->m_eventFlags |= HERO_EVENT_TEMPLE;
+                pHero->m_eventFlags |= HERO_EVENT_STATUE;
                 pHero->m_morale += 2;
                 EventWindow(EVENT_TEXT_STATUE_REWARD, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_MORALE_BONUS, 0, NORMAL_DIALOG_NO_OR_TEXT);
             }
@@ -1372,8 +1372,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             }
             break;
         case MAP_OBJECT_STATUE:
-            if (!(eventHero->m_eventFlags & HERO_EVENT_TEMPLE)) {
-                eventHero->m_eventFlags |= HERO_EVENT_TEMPLE;
+            if (!(eventHero->m_eventFlags & HERO_EVENT_STATUE)) {
+                eventHero->m_eventFlags |= HERO_EVENT_STATUE;
                 eventHero->m_morale += 2;
             }
             break;
