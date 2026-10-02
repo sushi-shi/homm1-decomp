@@ -223,3 +223,18 @@ void executive::MainLoop(void)
         }
     }
 }
+
+// Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
+DATA(0x004a1820) char gResourceManagerInitError[] = "Unable to initialize resources - possible disk problem.";
+DATA(0x004a1858) char gInputManagerInitError[] =
+    "Unable to initialize input devices - possible problem with mouse or keyboard.";
+DATA(0x004a18a8) char gSoundManagerInitError[] = "Unable to initialize sound.";
+DATA(0x004a18c4) char gMouseManagerInitError[] = "Unable to initialize mouse.";
+DATA(0x004a18e0) char gWindowManagerInitError[] =
+    "Unable to initialize windows - possible memory or disk error.";
+DATA(0x004a1920) char gDialogManagerError1[] = "Can't add manager!";
+DATA(0x004a1934) char gDialogManagerError2[] = "Can't add manager!";
+DATA(0x004a1948) char gDialogManagerError3[] = "Can't add manager!";
+DATA(0x004a195c) char gDialogManagerError4[] = "Can't add manager!";
+DATA(0x004a1a00) char gCallManagerError1[] = "Can't add manager!";
+DATA(0x004a1a14) char gCallManagerError2[] = "Can't add manager!";

@@ -7,9 +7,27 @@ option casemap:none
 option prologue:none
 option epilogue:none
 
-EXTERN _gDimPalette:BYTE
+PUBLIC _gDimPalette
 
 .data
+; Dimming remap for 256 palette indices (retail 0x004a1aa0). It is the first
+; datum of this module's .data: BMAP2's own skip words follow it at +100h.
+_gDimPalette BYTE 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 00Ah, 010h, 011h, 012h, 013h, 014h
+             BYTE 015h, 016h, 017h, 018h, 019h, 01Ah, 01Bh, 01Ch, 01Dh, 01Eh, 01Fh, 01Fh, 01Fh, 01Fh, 01Fh, 01Fh
+             BYTE 025h, 026h, 027h, 028h, 029h, 02Ah, 02Bh, 02Ch, 02Dh, 02Eh, 02Fh, 030h, 031h, 032h, 033h, 034h
+             BYTE 035h, 035h, 035h, 035h, 035h, 035h, 03Bh, 03Ch, 03Dh, 03Eh, 03Fh, 040h, 041h, 042h, 043h, 044h
+             BYTE 045h, 046h, 047h, 048h, 049h, 04Ah, 04Bh, 04Ch, 04Dh, 04Dh, 04Dh, 04Dh, 04Dh, 04Dh, 053h, 054h
+             BYTE 055h, 056h, 057h, 058h, 059h, 05Ah, 05Bh, 05Ch, 05Dh, 05Eh, 05Fh, 060h, 061h, 062h, 063h, 064h
+             BYTE 065h, 065h, 065h, 065h, 065h, 065h, 06Bh, 06Ch, 06Dh, 06Eh, 06Fh, 070h, 071h, 072h, 073h, 074h
+             BYTE 075h, 076h, 077h, 078h, 079h, 07Ah, 07Bh, 07Ch, 07Dh, 07Dh, 07Dh, 07Dh, 07Dh, 07Dh, 083h, 084h
+             BYTE 085h, 086h, 087h, 088h, 089h, 08Ah, 08Bh, 08Ch, 08Dh, 08Eh, 08Fh, 090h, 091h, 092h, 093h, 094h
+             BYTE 095h, 095h, 095h, 095h, 095h, 095h, 09Bh, 09Ch, 09Dh, 09Eh, 09Fh, 0A0h, 0A1h, 0A2h, 0A3h, 0A4h
+             BYTE 0A5h, 0A6h, 0A7h, 0A8h, 0A9h, 0AAh, 0ABh, 0ACh, 0ADh, 0ADh, 0ADh, 0ADh, 0ADh, 0ADh, 0B3h, 0B4h
+             BYTE 0B5h, 0B6h, 0B7h, 0B8h, 0B9h, 0BAh, 0BBh, 0BCh, 0BDh, 0BEh, 0BFh, 0C0h, 0C1h, 0C2h, 0C3h, 0C4h
+             BYTE 0C5h, 0C5h, 0C5h, 0C5h, 0C5h, 0C5h, 0CBh, 0CCh, 0CDh, 0CEh, 0CFh, 0D0h, 0D1h, 0D2h, 0D3h, 0D4h
+             BYTE 0D5h, 0D5h, 0D5h, 0D5h, 0D5h, 0D5h, 0BCh, 0BFh, 0C0h, 0C3h, 071h, 075h, 079h, 07Dh, 0E3h, 0E4h
+             BYTE 0E5h, 0E5h, 0E5h, 0E5h, 0E5h, 0E5h, 047h, 048h, 049h, 04Ah, 04Bh, 03Fh, 042h, 03Dh, 045h, 049h
+             BYTE 04Dh, 0F4h, 0F4h, 0F4h, 0F4h, 0F5h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h
 _gBitmapSourceSkip DWORD 0
 _gBitmapRowSkip DWORD 0
 

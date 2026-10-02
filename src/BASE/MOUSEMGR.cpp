@@ -326,3 +326,29 @@ VA(0x00476ef0, 0x9)
 void mouseManager::ShowSystemCursor(void) {
     ShowCursor(1);
 }
+
+// Mouse-manager data, initialized from retail .data (0x004a0e70..) and
+// zero-filled cursor tables (0x004cac88..).
+DATA(0x004a0e70) int iMouseOffset[3] = {0, 40, 55};
+DATA(0x004a0e7c) int gMouseCursorType = 0;
+DATA(0x004a0e80) unsigned char iHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
+    {2, 3}, {2, 3}, {12, 11}, {12, 13}, {15, 11}, {10, 10}, {12, 13}, {9, 12},
+    {7, 9}, {15, 15}, {15, 11}, {10, 10}, {12, 13}, {9, 12}, {7, 9}, {15, 15},
+    {15, 11}, {10, 10}, {12, 13}, {9, 12}, {7, 9}, {15, 15}, {15, 11}, {10, 10},
+    {12, 13}, {9, 12}, {7, 9}, {15, 15}, {12, 12}, {12, 12}, {12, 12}, {12, 12},
+    {3, 0}, {23, 0}, {31, 4}, {23, 23}, {3, 31}, {0, 24}, {0, 5}, {0, 0},
+    {10, 9}, {9, 11}, {10, 11}, {12, 12}, {10, 12}, {5, 8}, {1, 1}, {21, 1},
+    {30, 7}, {21, 21}, {1, 21}, {1, 7}, {1, 1}, {7, 1}, {7, 30}, {22, 23},
+    {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23},
+    {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23},
+    {22, 23}, {22, 23}, {22, 23}
+};
+DATA(0x004a0f28) int gbInSetPointer = 0;
+DATA(0x004cac88) HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
+DATA(0x004cadb8) BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
+DATA(0x004cb4c0) HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
+DATA(0x004cb5f0) unsigned char *cAndBits[MOUSE_CURSOR_COUNT];
+DATA(0x004cb720) BITMAP bmpColor[MOUSE_CURSOR_COUNT];
+DATA(0x004cbe28) signed char *cColorBits[MOUSE_CURSOR_COUNT];
+DATA(0x004cbf58) ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
+DATA(0x004cc538) HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];

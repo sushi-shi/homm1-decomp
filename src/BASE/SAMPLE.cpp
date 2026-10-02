@@ -62,3 +62,13 @@ sample::sample(char* name, long channelType, long volume, long loopCount)
     gpResourceManager->PointToFile(m_id);
     gpResourceManager->ReadBlock(m_playbackData.data, size);
 }
+
+// Retail has no out-of-line ~sample: the scalar deleting destructor at
+// 0x0047fbe0 expands this body between the vptr reset and ~resource.
+VA_COMPGEN(0x0047fbe0, 0x3b, "??_Gsample@@UAEPAXI@Z", 0x0047fa60)
+inline sample::~sample()
+{
+    free(m_playbackData.data);
+    m_playbackData.size = 0;
+    m_playbackData.volume = 0;
+}

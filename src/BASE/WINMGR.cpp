@@ -447,3 +447,11 @@ void heroWindowManager::ReleaseFizzleSource(void) {
         delete m_fizzleSource;
     m_fizzleSource = 0;
 }
+
+// Window-manager data, initialized from retail .data (0x004a0c7c..) and
+// zero-filled storage (0x004cac20..).
+DATA(0x004a0c7c) int iDialogNestCount = 0;
+DATA(0x004a0c80) short gWindowFadeAssertLine = 550;
+DATA(0x004a0c84) char gWindowFadeAssertFile[] = "D:\\Heroes\\Base\\WINMGR.CPP";
+DATA(0x004cac20) signed char gWindowFadeSavedUpdate;
+DATA(0x004cac28) signed char gCyclePal[PALETTE_CYCLE_BYTES];

@@ -33,14 +33,13 @@ from homm1.core.paths import REPO
 from homm1.tool import ToolError
 from homm1.tool.wine import winepath
 
-#: HoMM1's explicit library line, in retail import-descriptor order. The RAD
-#: libraries are synthesized from the retail import table when they carry
-#: named exports. smkwai32 is ordinal-only and therefore awaits its original
-#: import library or reviewed symbol map; it is unnecessary until a matching
-#: source object references one of those functions.
+#: HoMM1's explicit library line. The vendor libraries (smkwai32, WING32,
+#: wail32) are synthesized by `homm1.graph.implib` from the retail import
+#: table plus the reviewed import-thunk names in function_referents.tsv;
+#: smkwai32 is ordinal-only.
 LINK_LIBS = ["libc.lib", "oldnames.lib", "kernel32.lib", "user32.lib",
              "gdi32.lib", "advapi32.lib", "winmm.lib", "netapi32.lib",
-             "wing32.lib", "wail32.lib"]
+             "smkwai32.lib", "wing32.lib", "wail32.lib"]
 
 #: LIBC defines _WinMainCRTStartup and calls the program's _WinMain@16.
 ENTRY = "WinMainCRTStartup"
@@ -128,12 +127,49 @@ def collect_objs(objs_dir: Path, *, order: Path | None = None,
     return objs
 
 
+def _unit_of(obj: Path) -> str | None:
+    """`BASE/WINMGR` for build/objdiff/base/BASE/WINMGR.obj or the MASM OMF
+    twin under build/link/omf - the last two path components, sans suffix."""
+    parts = Path(obj).with_suffix("").parts
+    return "/".join(parts[-2:]) if len(parts) >= 2 else None
+
+
+def retail_code_order(objs: list[Path], claims_dir: Path | None = None
+                      ) -> tuple[list[Path], list[Path]]:
+    """`objs` sorted by each unit's lowest claimed retail function RVA.
+
+    LINK lays .text out in object order, so the order in which retail places
+    each TU's first function IS the original link order (intra-TU order is
+    source order). Dynamic-initializer pins are excluded from the key: they
+    are compiler-emitted and their TU position is a separate question.
+    Returns (ordered, unplaced) - objects with no claim keep their relative
+    order and follow the placed ones.
+    """
+    from homm1 import graph
+    claims_dir = Path(claims_dir or REPO / graph.CLAIMS_DIR)
+    keyed, unplaced = [], []
+    for i, obj in enumerate(objs):
+        unit = _unit_of(obj)
+        f = claims_dir / f"{unit}.tsv" if unit else None
+        lo = None
+        if f is not None and f.is_file():
+            for ln in f.read_text().splitlines():
+                c = ln.split("\t")
+                if (len(c) > 4 and c[0].startswith("0x") and c[3] == "func"
+                        and c[4] != "src_dyninit"):
+                    rva = int(c[0], 16)
+                    lo = rva if lo is None else min(lo, rva)
+        (keyed.append((lo, i, obj)) if lo is not None else unplaced.append(obj))
+    return [o for _lo, _i, o in sorted(keyed)] + unplaced, unplaced
+
+
 def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
               res: Path | None = None, order: Path | None = None,
               explicit: list[str] = (), extra_libs: list[str] = (),
               incremental: bool = False,
               base: str = "0x400000", keep_all: bool = True,
-              extra_flags: list[str] = (), dry_run: bool = False) -> dict:
+              extra_flags: list[str] = (), dry_run: bool = False,
+              retail_order: bool = True) -> dict:
     """Link the candidate image; returns {objs, libs, unresolved, duplicates}.
 
     `dry_run` assembles the response file and stops before link.exe - the way
@@ -149,6 +185,12 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
     objs = collect_objs(Path(objs_dir), order=order, explicit=explicit)
     if not objs:
         raise ToolError("no objects to link")
+    if order is None and retail_order:
+        objs, unplaced = retail_code_order(objs)
+        print(f"[link] object order: retail code order of each unit's first "
+              f"claimed function ({len(objs) - len(unplaced)} placed"
+              + (f", {len(unplaced)} unclaimed appended" if unplaced else "")
+              + ")")
 
     rsp_lines = [
         f"/OUT:{winepath(out)}", f"/MAP:{winepath(mapf)}",
@@ -193,7 +235,17 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         output = link_tool.link([f"@{winepath(rsp)}"], cwd=out.parent,
                                 expect=[out, mapf])
     except ToolError as e:
-        logf.write_text(str(e))
+        full = getattr(e, "output", None) or str(e)
+        logf.write_text(full)
+        unres = sorted(unresolved(full))
+        (out.parent / f"{out.stem}.unresolved.txt").write_text(
+            "".join(f"{s}\n" for s in unres))
+        if unres:
+            print(f"[link] {len(unres)} unresolved external(s) -> "
+                  f"{out.stem}.unresolved.txt")
+            for bucket, n in sorted(collections.Counter(
+                    classify(s) for s in unres).items(), key=lambda kv: -kv[1]):
+                print(f"[link]   {n:5d}  {bucket}")
         raise
     logf.write_text(output)
 
@@ -256,6 +308,10 @@ def main() -> int:
     ap.add_argument("--base", default="0x400000", help="image base (/BASE)")
     ap.add_argument("--opt-ref", dest="keep_all", action="store_false",
                     help="let the linker strip/fold unreferenced COMDATs")
+    ap.add_argument("--manifest-order", dest="retail_order",
+                    action="store_false",
+                    help="keep the given object order instead of sorting by "
+                         "each unit's first claimed retail RVA")
     ap.add_argument("--dry-run", action="store_true",
                     help="assemble the response file and stop before link.exe")
     ap.add_argument("flags", nargs=argparse.REMAINDER,
@@ -266,7 +322,8 @@ def main() -> int:
         candidate(a.out, a.objs_dir, mapfile=a.mapfile, res=a.res, order=a.order,
                   explicit=a.obj, extra_libs=a.lib,
                   incremental=a.incremental, base=a.base,
-                  keep_all=a.keep_all, extra_flags=extra, dry_run=a.dry_run)
+                  keep_all=a.keep_all, extra_flags=extra, dry_run=a.dry_run,
+                  retail_order=a.retail_order)
     except (ToolError, OSError) as e:
         print(f"[link] {e}", file=sys.stderr)
         return 1
