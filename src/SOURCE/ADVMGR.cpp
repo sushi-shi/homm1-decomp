@@ -31,8 +31,7 @@ extern char gLastFilename[];
 
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
-DATA(0x004c5170)
-int giSeedingValid;
+extern int giSeedingValid;
 
 
 // clang-format off

@@ -5507,3 +5507,223 @@ DATA(0x00494174)
 int giHighMemBuffer = 4000;
 DATA(0x00494180)
 char gbInPollSound = 0;
+// Retail places these zero-initialized flags among KB's function literals
+// (0x0049ea98-0x0049f537), each next to the literals of its only user.
+DATA(0x0049ea98)
+signed char bEarlySetupDone = 0;
+DATA(0x0049ea9c)
+signed char bKBDone = 0;
+DATA(0x0049f040)
+signed char bInCheckEndGame = 0;
+DATA(0x0049f468)
+int bInShutDown = 0;
+DATA(0x0049f534)
+signed char gbInMemError = 0;
+// KB owns retail .bss 0x004c5138-0x004c7e6f (allocation order is the compiler's
+// symbol-hash walk, not definition order).
+#include <SOURCE/combatTypes.h>
+#include <SOURCE/mapCell.h>
+DATA(0x004c5138)
+int gbHumanPlayer[4];
+DATA(0x004c5148)
+int giMaxExtentX;
+DATA(0x004c514c)
+int giMaxExtentY;
+DATA(0x004c5150)
+class font* smallFont;
+DATA(0x004c5158)
+long giBottomViewOverrideEndTime;
+DATA(0x004c5160)
+signed char gArmyEffected[COMBAT_EFFECT_SIDE_COUNT][COMBAT_EFFECT_SLOT_COUNT];
+DATA(0x004c516c)
+int giBottomViewResource;
+DATA(0x004c5170)
+int giSeedingValid;
+DATA(0x004c5174)
+signed char giLimitPlayer;
+DATA(0x004c517c)
+inputManager* gpInputManager;
+DATA(0x004c5180)
+SAMPLE2 NULL_SAMPLE2;
+DATA(0x004c5188)
+int iMaxMapExtra;
+DATA(0x004c518c)
+palette* gPalette;
+DATA(0x004c5190)
+resourceManager* gpResourceManager;
+DATA(0x004c5230)
+unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004c6670)
+int bSpecialHideCursor;
+DATA(0x004c6674)
+class searchArray* gpSearchArray;
+DATA(0x004c6678)
+int gbBlackoutPlayer;
+DATA(0x004c6680)
+char cNetBoxLine[2][60];
+DATA(0x004c66fc)
+heroWindow* DataEntryWin;
+DATA(0x004c6700)
+signed char giWeekSpecial;
+DATA(0x004c6704)
+philAI* gpPhilAI;
+DATA(0x004c6708)
+char* cDEDest;
+DATA(0x004c670c)
+heroWindow* pNormalDialogWindow;
+DATA(0x004c6710)
+int giHostGamePos;
+DATA(0x004c6714)
+mouseManager* gpMouseManager;
+DATA(0x004c6718)
+class font* bigFont;
+DATA(0x004c671c)
+class icon* gSystemIcons;
+DATA(0x004c6720)
+signed char gbCombatSurrender;
+DATA(0x004c6728)
+char gMapName[16];
+DATA(0x004c6738)
+int giMinExtentX;
+DATA(0x004c673c)
+int giMinExtentY;
+DATA(0x004c6740)
+signed char iMPBaseType;
+DATA(0x004c6744)
+class hero* gpHVHero;
+DATA(0x004c6748)
+int giHeroScreenSrcIndex;
+DATA(0x004c674c)
+signed char giWeekType;
+DATA(0x004c6750)
+char gText[768];
+DATA(0x004c6a50)
+int gbInNewGameSetup;
+DATA(0x004c6a54)
+palette* gpBufferPalette;
+DATA(0x004c6a58)
+signed char giMonthSpecial;
+DATA(0x004c6a5c)
+signed char iMPExtendedType;
+DATA(0x004c6a60)
+smackManager* gpSmackManager;
+DATA(0x004c6a68)
+char gFullMapName[20];
+DATA(0x004c6a7c)
+int giShowIntro;
+DATA(0x004c6a80)
+int glTimers[2];
+DATA(0x004c6a90)
+long gMusicFadeTimer;
+DATA(0x004c6a94)
+long gNextSoundPollTick;
+DATA(0x004c6a98)
+int giScore;
+DATA(0x004c6aa0)
+armyGroup* gpMonGroup;
+DATA(0x004c6aa8)
+configStruct gConfig;
+DATA(0x004c6be0)
+char gcRegAppPath[352];
+DATA(0x004c6d44)
+signed char giCampaignChoice;
+DATA(0x004c6d48)
+class game* gpGame;
+DATA(0x004c6d4c)
+signed char gbRetreatWin;
+DATA(0x004c6d60)
+signed char giWaitType;
+DATA(0x004c6d64)
+short gCurLoadedSpellFileId;
+DATA(0x004c6d68)
+int giBottomViewOverride;
+DATA(0x004c6d70)
+char gLastFilename[352];
+DATA(0x004c6ed0)
+class icon* gBuyBuildIcons;
+DATA(0x004c6ed4)
+char gbNoSound;
+DATA(0x004c6ed8)
+char gcBottomViewText[92];
+DATA(0x004c6f34)
+int giThisNetPos;
+DATA(0x004c6f38)
+char gcRegCDDrive[352];
+DATA(0x004c7098)
+class heroWindow* heroWin;
+DATA(0x004c709c)
+class icon* gCurLoadedSpellIcon;
+DATA(0x004c70a0)
+void* ppMapExtra[255];
+DATA(0x004c749c)
+int giCurGeneral;
+DATA(0x004c74a0)
+int giThisGamePos;
+DATA(0x004c74a4)
+int giNumHumanPlayers;
+DATA(0x004c74a8)
+signed char gbUseClippedIconRenderer;
+DATA(0x004c74b0)
+int pwSizeOfMapExtra[255];
+DATA(0x004c78ac)
+int iDEMaxLen;
+DATA(0x004c78b0)
+class combatManager* gpCombatManager;
+DATA(0x004c78b4)
+short giSpellEffectFrame;
+DATA(0x004c78b8)
+executive* gpExec;
+DATA(0x004c78c0)
+signed char giGroundToTerrain[140];
+DATA(0x004c7950)
+long giCurWindowsStyleFlags;
+DATA(0x004c7954)
+short gGameCommand;
+DATA(0x004c7958)
+signed char giMonthType;
+DATA(0x004c7960)
+char gMapDescription[124];
+DATA(0x004c79dc)
+char* DEFAULT_AGGREGATE_NAME;
+DATA(0x004c79e0)
+signed char gbThisNetHumanPlayer[4];
+DATA(0x004c79e8)
+char cAggPathName[352];
+DATA(0x004c7b48)
+class highScoreManager* gpHighScoreManager;
+DATA(0x004c7b4c)
+signed char gbFunctionComplete;
+DATA(0x004c7b50)
+signed char gbKingOfTheHill;
+DATA(0x004c7b58)
+short gMapX;
+DATA(0x004c7b5c)
+short gMapY;
+DATA(0x004c7b60)
+char gcCongratsText[300];
+DATA(0x004c7c8c)
+signed char bDataEntryTime;
+DATA(0x004c7c90)
+int bShowIt;
+DATA(0x004c7c94)
+int giDebugLevel;
+DATA(0x004c7c9c)
+heroWindowManager* gpWindowManager;
+DATA(0x004c7ca0)
+int giCurWatchPlayer;
+DATA(0x004c7ca4)
+int giBottomViewResourceQty;
+DATA(0x004c7ca8)
+soundManager* gpSoundManager;
+DATA(0x004c7cac)
+signed char gbWaitForRemoteReceive;
+DATA(0x004c7cb0)
+char gLastMapName[352];
+DATA(0x004c7e10)
+townManager* gpTownManager;
+DATA(0x004c7e14)
+signed char giScreenScroll;
+DATA(0x004c7e18)
+advManager* gpAdvManager;
+DATA(0x004c7e1c)
+signed char gbGamePosToNetPos[4];

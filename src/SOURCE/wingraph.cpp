@@ -98,8 +98,7 @@ extern int gbFullCombatScreenDrawn;
 extern int gbLimitedCombatUpdatePalette;
 DATA(0x004a4740)
 WingImage screenImage;
-DATA(0x004c6aa8)
-configStruct gConfig;
+extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
 VA(0x00403640, 0x59)
