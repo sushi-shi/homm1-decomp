@@ -12,6 +12,7 @@
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
 
@@ -2944,6 +2945,37 @@ void advManager::LoadRemote(void)
 // evidence: graph:2;base=0.410587;margin=0.478746;shape=0.288;size=0.750;calls=0.692;alternate=pol20:char * advManager::CheckHandleNet(void)@0x0006931e
 VA(0x004367ef, 0x178)
 char* advManager::CheckHandleNet(void) {
+    RemoteMessage* receivedPacket;
+    int remotePlayerExited;
+
+    receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1));
+    if (receivedPacket && receivedPacket->type == REMOTE_MESSAGE_RELIABLE) {
+        switch (receivedPacket->command) {
+        case 1:
+            remotePlayerExited = receivedPacket->payload.playerExited;
+            if (!gpGame->ReceiveSaveGame(receivedPacket->payload.saveSize, receivedPacket->sender))
+                ShutDown(0);
+            if (remotePlayerExited)
+                ReceiveRemotePlayerExit(receivedPacket->sender, 0, 1, 0);
+            LoadRemote();
+            break;
+        case 11:
+            PopNetBox(receivedPacket->payload.data);
+            break;
+        case 21:
+            if (gbInCombat)
+                return reinterpret_cast<char*>(receivedPacket);
+            else
+                DoNetCombat(reinterpret_cast<char*>(receivedPacket));
+            break;
+        case 30:
+            LogStr("receive exit");
+            ReceiveRemotePlayerExit(receivedPacket->payload.data[0], receivedPacket->payload.data[1], 0, 0);
+            break;
+        default:
+            return reinterpret_cast<char*>(receivedPacket);
+        }
+    }
     return 0;
 }
 

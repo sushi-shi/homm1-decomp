@@ -181,4 +181,6 @@ public:
 };
 
 int ValidHex(int);
+// CheckHandleNet hands combat packets back while a battle is running.
+extern signed char gbInCombat;
 #endif // HOMM1_SOURCE_COMBATMANAGER_H
