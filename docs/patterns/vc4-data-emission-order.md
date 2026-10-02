@@ -29,6 +29,15 @@ source is constrained by layout at all.
   `mid` +0, `alpha` +4, `gS` +8, `zeta` +0xc. All 60 `.bss` definitions of
   `SOURCE/PHILAI` come out sorted by this key. Moving a `.bss` definition
   within the TU therefore does not move it in the object; only renaming does.
+
+  Equal keys keep the later definition first: `int vaae; int vaba; int vabb;
+  int vaaf;` (keys 411, 411, 412, 412) emit `vaba`, `vaae`, `vaaf`, `vabb`.
+
+  The rule runs backwards too. Within one retail object, ascending `.bss`
+  address must be ascending key, so each object's original name hashes into
+  the window between its neighbours' keys. Checking a donor or invented name
+  against that window is naming evidence
+  ([evidence/bss-name-order.md](../../evidence/bss-name-order.md)).
 - **Dynamic initializers.** The compiler-generated initializer functions
   (`_$E<n>`) for a file-scope object with a constructor are emitted in `.text`
   at the definition's position, between the functions before and after it.
