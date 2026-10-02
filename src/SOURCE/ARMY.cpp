@@ -4,6 +4,7 @@
 
 #include <match.h>
 
+#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
@@ -105,6 +106,174 @@ int combatManager::AICheckRetreat(void) {
         return 1;
     }
     return 0;
+}
+
+// Buka AI.cpp DoCompAI: shooters shoot (adjacent enemies first), flyers and
+// walkers attack by target class, walkers otherwise close in; a castle
+// defender steps toward the gate. The chosen move is nudged onto a free hex
+// next to an enemy.
+VA(0x00464ca3, 0x9ce)
+void combatManager::DoCompAI(signed char) {
+    signed char stronger;
+    short ranged[2];
+    long shootStrengths[2];
+    long total;
+    short walkerMask[2];
+    short plan;
+    int dirIndex;
+    army* currentArmy;
+    short sideEnemy;
+    long foeShooters;
+    short flyerMasks[2];
+    int minShootPower;
+    signed char targetIndex;
+    int dummy;
+    long myShootPower;
+    signed char canOutshoot;
+    hexcell* hexCell;
+    int wallStrength;
+    town* castleTown;
+    int numArchers;
+    int targetHex;
+    int adj;
+
+    m_limitCreature = 0;
+    gpMouseManager->ReallyHidePointer();
+    currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
+    plan = 0;
+    sideEnemy = 1 - m_currentSide;
+    ranged[m_currentSide] = GetShooterMask(m_currentSide);
+    ranged[sideEnemy] = GetShooterMask(sideEnemy);
+    flyerMasks[m_currentSide] = GetFlyerMask(m_currentSide);
+    flyerMasks[sideEnemy] = GetFlyerMask(sideEnemy);
+    walkerMask[m_currentSide] = GetWalkerMask(m_currentSide);
+    walkerMask[sideEnemy] = GetWalkerMask(sideEnemy);
+    shootStrengths[m_currentSide] = GetStrength(m_currentSide, ranged[m_currentSide]);
+    shootStrengths[sideEnemy] = GetStrength(sideEnemy, ranged[sideEnemy]);
+    total = GetStrength(m_currentSide, ranged[m_currentSide] | flyerMasks[m_currentSide] | walkerMask[m_currentSide]);
+    minShootPower = (total + 4) / 5;
+    canOutshoot = 0;
+    stronger = 0;
+    myShootPower = GetStrength(m_currentSide, ranged[m_currentSide]);
+    foeShooters = GetStrength(sideEnemy, ranged[sideEnemy]);
+    if (m_castleSide[0]) {
+        numArchers = 5;
+        castleTown = m_combatTowns[0];
+        for (dirIndex = 7; dirIndex <= 12; dirIndex++)
+            if (castleTown->m_buildings & (1 << dirIndex))
+                numArchers += 4;
+        for (dirIndex = 0; dirIndex <= 4; dirIndex++)
+            if (castleTown->m_buildings & (1 << dirIndex))
+                numArchers++;
+        wallStrength = numArchers * 100;
+        if (m_currentSide == 0)
+            myShootPower += wallStrength;
+        else
+            foeShooters += wallStrength;
+    }
+    if ((total + 4) / 5 < myShootPower)
+        canOutshoot = 1;
+    if (foeShooters > myShootPower)
+        stronger = 1;
+    if (currentArmy->m_stats.attributes & 4) {
+        if (currentArmy->m_stats.shots > 0)
+            plan = 1;
+        else
+            plan = 3;
+    } else if (currentArmy->m_stats.attributes & 2) {
+        plan = 2;
+    } else {
+        plan = 3;
+    }
+    switch (plan) {
+        case 1:
+            if (AttemptAdjacentAttack(currentArmy)) {
+                goto finish;
+            } else {
+                targetIndex = GetBestArmy(sideEnemy, ranged[sideEnemy]);
+                if (targetIndex != -1) {
+                    giNextAction = 2;
+                    giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
+                    goto finish;
+                }
+                targetIndex = GetBestArmy(sideEnemy, flyerMasks[sideEnemy]);
+                if (targetIndex != -1) {
+                    giNextAction = 2;
+                    giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
+                    goto finish;
+                }
+                if (walkerMask[sideEnemy]) {
+                    targetIndex = GetClosestArmy(currentArmy, sideEnemy, walkerMask[sideEnemy]);
+                    if (targetIndex != -1) {
+                        giNextAction = 2;
+                        giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
+                        goto finish;
+                    }
+                }
+            }
+            break;
+        case 2:
+            if (canOutshoot && !stronger) {
+                if (AttemptAttack(currentArmy, sideEnemy, ranged[sideEnemy]))
+                    goto finish;
+                else if (AttemptAttack(currentArmy, sideEnemy, flyerMasks[sideEnemy]))
+                    goto finish;
+                else if (AttemptAttack(currentArmy, sideEnemy, walkerMask[sideEnemy]))
+                    goto finish;
+            } else {
+                if (AttemptAttack(currentArmy, sideEnemy, ranged[sideEnemy]))
+                    goto finish;
+                else if (AttemptAttack(currentArmy, sideEnemy, flyerMasks[sideEnemy]))
+                    goto finish;
+                else if (AttemptAttack(currentArmy, sideEnemy, walkerMask[sideEnemy]))
+                    goto finish;
+            }
+            break;
+        case 3:
+            if (AttemptAdjacentAttack(currentArmy)) {
+                goto finish;
+            } else {
+                if (canOutshoot && !stronger) {
+                    if (WalkTowardArmyFront(currentArmy, m_currentSide, ranged[m_currentSide]))
+                        goto finish;
+                } else {
+                    if (AttemptAttack(currentArmy, sideEnemy, ranged[sideEnemy]))
+                        goto finish;
+                    else if (AttemptAttack(currentArmy, sideEnemy, walkerMask[sideEnemy]))
+                        goto finish;
+                    else if (AttemptAttack(currentArmy, sideEnemy, flyerMasks[sideEnemy]))
+                        goto finish;
+                }
+                if (WalkTowardArmy(currentArmy, sideEnemy, ranged[sideEnemy]))
+                    goto finish;
+                else if (WalkTowardArmy(currentArmy, sideEnemy, walkerMask[sideEnemy]))
+                    goto finish;
+                else if (WalkTowardArmy(currentArmy, sideEnemy, flyerMasks[sideEnemy]))
+                    goto finish;
+                if (m_currentSide == 1 && m_castleSide[0] && currentArmy->m_hex % 9 < 4) {
+                    targetHex = currentArmy->m_hex / 9 * 9 + 4;
+                    hexCell = &gpCombatManager->m_hexCells[targetHex];
+                    if (ValidHex(targetHex) && hexCell->m_occupantSide == -1 && hexCell->m_obstacleIndex == -1) {
+                        giNextAction = 2;
+                        giNextActionGridIndex = targetHex;
+                        goto finish;
+                    }
+                }
+            }
+            break;
+    }
+    giNextAction = 3;
+finish:
+    if (giNextAction == 2 && giNextActionGridIndex > 0 && giNextActionGridIndex <= 43
+        && gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantSide == -1) {
+        for (dirIndex = 0; dirIndex < 6; dirIndex++) {
+            adj = currentArmy->GetAdjacentCellIndex(giNextActionGridIndex, dirIndex);
+            if (adj > 0 && adj <= 43 && gpCombatManager->m_hexCells[adj].m_occupantSide == 1 - m_currentSide) {
+                giNextActionGridIndex = adj;
+                return;
+            }
+        }
+    }
 }
 
 // Buka AI.cpp mask helpers; HoMM1 loops word indices over m_numArmies and

@@ -300,6 +300,7 @@ public:
     void ShootMissile(int, int, int, int, float *, class icon *);
     void CombatSystemOptions(void);
     int AICheckRetreat(void);
+    // HoMM1 retail 0x00464ca3: byte side (ret 4).
     void DoCompAI(signed char);
     float GetModLichDamage(class army *, float);
     void DoLichShot(class army *);
