@@ -809,6 +809,327 @@ void game::SettleOverlay(int x, int y) {
     }
 }
 
+// Spell AI values, attribute bits and the mage-guild pool by spell level.
+extern short gSpellAIValue[];
+extern signed char gSpellAttributes[];
+extern signed char gMageGuildSpellPool[4][8];
+
+// Buka 2.1 game::RandomizeEvents for HoMM1's map objects: numbers sites
+// and obelisks, rolls each event's contents, files town and mine ids into
+// their footprints, then settles overlays and the passive trigger bits.
+VA(0x0043d6a7, 0xc63)
+void game::RandomizeEvents(void) {
+    unsigned char overlayTileset;
+    unsigned char objTileset;
+    short j;
+    short y;
+    short i;
+    signed char id;
+    short x;
+    mapCell* cell;
+    int siteNum;
+    signed char obeliskId;
+
+    obeliskId = 1;
+    siteNum = 1;
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            cell = &m_map[x][y];
+            switch (cell->m_triggerType) {
+                case 0x8a:
+                    cell->m_objectMetadata = siteNum;
+                    siteNum++;
+                    break;
+                case 0x2c:
+                    cell->m_triggerType |= 0x80;
+                    break;
+                case 0x9b:
+                    cell->m_objectMetadata = obeliskId;
+                    obeliskId++;
+                    break;
+                case 0xa4:
+                    cell->m_objectMetadata = 1;
+                    break;
+                case 0x84:
+                    if (Random(0, 9) == 3)
+                        cell->m_objectMetadata = 2;
+                    else
+                        cell->m_objectMetadata = 1;
+                    break;
+                case 0x85:
+                    switch (Random(0, 99) % 10) {
+                        case 0:
+                        case 1:
+                        case 2:
+                            cell->m_objectMetadata = 2;
+                            break;
+                        case 3:
+                            cell->m_objectMetadata = 3;
+                            break;
+                        case 4:
+                        case 5:
+                        case 6:
+                            cell->m_objectMetadata = 4;
+                            break;
+                        case 7:
+                        case 8:
+                        case 9:
+                            cell->m_objectMetadata = 5;
+                            break;
+                    }
+                    break;
+                case 0x86:
+                    cell->m_objectMetadata = Random(2, 4);
+                    break;
+                case 0x88:
+                    cell->m_objectMetadata = Random(4, 6) << 4;
+                    cell->m_objectMetadata |= (signed char)Random(0, 5);
+                    break;
+                case 0x8b:
+                    cell->m_objectMetadata = Random(0, 3) + 2;
+                    break;
+                case 0xa3:
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & 0x7f) != 0x23) {
+                        cell->m_triggerType &= 0x7f;
+                        break;
+                    }
+                    goto treasure;
+                case 0x8c:
+                treasure:
+                    switch (Random(0, 99) % 10) {
+                        case 0:
+                        case 1:
+                        case 2:
+                            cell->m_objectMetadata = 2;
+                            break;
+                        case 3:
+                        case 4:
+                        case 5:
+                            cell->m_objectMetadata = 3;
+                            break;
+                        case 6:
+                        case 7:
+                        case 8:
+                            cell->m_objectMetadata = 4;
+                            break;
+                        case 9:
+                            cell->m_objectMetadata = 5;
+                            break;
+                    }
+                    break;
+                case 0x8d:
+                    cell->m_objectMetadata = Random(10, 30);
+                    break;
+                case 0x8e:
+                    cell->m_objectMetadata = Random(20, 50);
+                    break;
+                case 0x8f:
+                    cell->m_objectMetadata = Random(0, 127) % 4 + 1;
+                    break;
+                case 0x90:
+                    cell->m_objectMetadata = Random(0, 98) % 3 + 1;
+                    break;
+                case 0x91:
+                    cell->m_objectMetadata = Random(20, 50);
+                    break;
+                case 0x98:
+                    cell->m_objectMetadata = 1;
+                    break;
+                case 0x9a:
+                    if (!(unsigned char)cell->m_objectMetadata) {
+                        cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
+                        if (Random(0, 99) <= 25 && cell->m_objectIndex != 26)
+                            cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata | 0x80;
+                    }
+                    break;
+                case 0x9d:
+                    cell->m_objectMetadata = cell->m_objectIndex;
+                    if (cell->m_objectIndex > 4)
+                        cell->m_objectMetadata = (unsigned char)cell->m_objectMetadata - 61;
+                    switch ((unsigned char)cell->m_objectMetadata) {
+                        case 0:
+                        case 2:
+                            cell->m_objectMetadata = Random(8, 16);
+                            break;
+                        case 6:
+                            cell->m_objectMetadata = Random(5, 10);
+                            break;
+                        default:
+                            cell->m_objectMetadata = Random(3, 7);
+                            break;
+                    }
+                    break;
+                case 0xa2:
+                    switch (Random(0, 9)) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            cell->m_objectMetadata = gMageGuildSpellPool[0][Random(0, 7)] + 1;
+                            break;
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                            cell->m_objectMetadata = gMageGuildSpellPool[1][Random(0, 7)] + 1;
+                            break;
+                        default:
+                            cell->m_objectMetadata = gMageGuildSpellPool[2][Random(0, 7)] + 1;
+                            break;
+                    }
+                    break;
+                case 0xa7:
+                    cell->m_objectMetadata = Random(10, 20);
+                    break;
+                case 0xaa:
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & 0x7f) != 0x2a
+                        || (m_map[x + 1][y].m_triggerType & 0x7f) != 0x2a) {
+                        cell->m_triggerType &= 0x7f;
+                        break;
+                    }
+                    cell->m_objectMetadata = Random(30, 50);
+                    break;
+                case 0xb0:
+                    switch (Random(0, 99) % 10) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            cell->m_objectMetadata = 1;
+                            break;
+                        case 6:
+                        case 7:
+                            cell->m_objectMetadata = 2;
+                            break;
+                        case 8:
+                        case 9:
+                            cell->m_objectMetadata = 3;
+                            break;
+                    }
+                    break;
+                case 0xa8:
+                    id = GetTownId(x, y);
+                    for (j = 0; j < 3; j++) {
+                        for (i = 0; i < 4; i++) {
+                            if (!(unsigned char)m_map[x - 2 + i][y - 2 + j].m_objectMetadata)
+                                m_map[x - 2 + i][y - 2 + j].m_objectMetadata = id;
+                        }
+                    }
+                    SetupTown(id, 0);
+                    break;
+                case 0x81:
+                case 0x99:
+                case 0xa0:
+                    id = GetMineId(x, y);
+                    for (j = 0; j < 2; j++) {
+                        for (i = 0; i < 2; i++) {
+                            if (!(unsigned char)m_map[x + i][y - j].m_objectMetadata
+                                || (cell->m_triggerType & 0x7f) == (m_map[x + i][y - j].m_triggerType & 0x7f))
+                                m_map[x + i][y - j].m_objectMetadata = id;
+                        }
+                    }
+                    break;
+                case 0xad:
+                    cell->m_objectMetadata = Random(1, 5);
+                    break;
+            }
+        }
+    }
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            cell = &m_map[x][y];
+            if (cell->m_objectIndex != 0xff && cell->m_overlayIndex != 0xff) {
+                objTileset = cell->m_objectTileset & 0xf;
+                overlayTileset = cell->m_overlayTileset & 0xf;
+                if ((objTileset == 8 || objTileset == 9) && (overlayTileset == 8 || overlayTileset == 9))
+                    cell->m_unknown07 |= 0x80;
+            }
+            SettleOverlay(x, y);
+            if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
+                switch (cell->m_triggerType) {
+                    case 0x34:
+                    case 0x35:
+                    case 0x36:
+                    case 0x37:
+                    case 0x38:
+                    case 0x39:
+                    case 0x3a:
+                    case 0x3b:
+                    case 0x3c:
+                        cell->m_unknown07 |= 0x80;
+                        break;
+                }
+            }
+        }
+    }
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            cell = &m_map[x][y];
+            if (cell->m_triggerType == 0x32)
+                cell->m_flags |= 0x80;
+            if (cell->m_triggerType & 0x80) {
+                switch (cell->m_triggerType & 0x7f) {
+                    case 0x1:
+                    case 0x2:
+                    case 0x3:
+                    case 0x4:
+                    case 0x5:
+                    case 0x6:
+                    case 0x7:
+                    case 0x8:
+                    case 0x9:
+                    case 0xa:
+                    case 0xb:
+                    case 0xc:
+                    case 0xd:
+                    case 0xe:
+                    case 0xf:
+                    case 0x10:
+                    case 0x11:
+                    case 0x12:
+                    case 0x13:
+                    case 0x14:
+                    case 0x15:
+                    case 0x16:
+                    case 0x17:
+                    case 0x18:
+                    case 0x19:
+                    case 0x1a:
+                    case 0x1b:
+                    case 0x1c:
+                    case 0x1d:
+                    case 0x1f:
+                    case 0x20:
+                    case 0x21:
+                    case 0x22:
+                    case 0x23:
+                    case 0x24:
+                    case 0x26:
+                    case 0x27:
+                    case 0x28:
+                    case 0x29:
+                    case 0x2a:
+                    case 0x2b:
+                    case 0x2c:
+                    case 0x2d:
+                    case 0x2f:
+                    case 0x30:
+                    case 0x31:
+                    case 0x3d:
+                    case 0x3e:
+                    case 0x3f:
+                        break;
+                    default:
+                        cell->m_triggerType -= 0x80;
+                        break;
+                }
+            }
+        }
+    }
+}
+
 // donor PoL RVA 0x00078b72; preferred Buka symbol ?LoadMap@game@@QAEHPAD@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.657346;margin=0.109543;shape=0.244;size=0.995;calls=1.000;strings=%s%s|.\MAPS\;alternate=pol20:int game::LoadMap(char *)@0x00078b72
@@ -1282,11 +1603,6 @@ void game::RandomizeMine(signed char x, signed char y) {
     m_map[x][y].m_triggerType |= 0x80;
     m_mines[mineIdx].type = type;
 }
-
-// Spell AI values, attribute bits and the mage-guild pool by spell level.
-extern short gSpellAIValue[];
-extern signed char gSpellAttributes[];
-extern signed char gMageGuildSpellPool[4][8];
 
 // Buka 2.1 game::SetupTowns' per-town tail: default dwellings for towns the
 // map leaves uncustomized, then nine distinct mage-guild spells; computer
