@@ -35,7 +35,7 @@ textEntryWidget::~textEntryWidget(void) {
 }
 
 VA(0x0047e170, 0x1e8)
-void textEntryWidget::Read(int type) {
+void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, int) type) {
     signed char name[RESOURCE_NAME_CAPACITY];
     m_x = gpResourceManager->ReadWord();
     m_y = gpResourceManager->ReadWord();
@@ -178,7 +178,7 @@ short textEntryWidget::Main(tag_message& message) {
                                     typed = 0;
                                     if (event.keyCode
                                         >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
-                                        switch ((event.keyCode >> 8) & 0xff) {
+                                        switch ((event.keyCode >> INPUT_KEY_SCAN_SHIFT) & INPUT_SCAN_CODE_MASK) {
                                             case TEXT_ENTRY_KEYPAD_7:
                                                 typed = '7';
                                                 break;

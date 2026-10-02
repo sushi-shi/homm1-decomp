@@ -2,9 +2,9 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
 #include <BASE/Misc.h>
 #include <BASE/MOUSEMGR_TYPES.h>
-// Header order sets the Win32 import handles that colour Close's cursor-release loop.
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/NOOPT.h>
@@ -31,7 +31,6 @@ H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
     MOUSE_INITIAL_POINTER_FLAGS = 6,
     MOUSE_INITIAL_X = 320,
     MOUSE_INITIAL_Y = 240,
-    MOUSE_SAVED_BITMAP_TYPE = 0x21,
     MOUSE_SAVED_BITMAP_SIZE = 0x40,
     MOUSE_MANAGER_MESSAGE_MASK = 0x40
 H1_ENUM_CONST_END(MouseManagerStateConstant)
@@ -61,7 +60,7 @@ mouseManager::mouseManager(void) {
 VA(0x00476790, 0x46)
 short mouseManager::Open(short priority) {
     m_savedUnderlying =
-        new bitmap(MOUSE_SAVED_BITMAP_TYPE, MOUSE_SAVED_BITMAP_SIZE, MOUSE_SAVED_BITMAP_SIZE);
+        new bitmap(BITMAP_TYPE_MEMORY, MOUSE_SAVED_BITMAP_SIZE, MOUSE_SAVED_BITMAP_SIZE);
     m_messageMask = MOUSE_MANAGER_MESSAGE_MASK;
     m_active = 1;
     m_priority = priority;
@@ -306,8 +305,8 @@ void mouseManager::MouseCoords(short& x, short& y) {
 
     GetCursorPos(&point);
     ScreenToClient(hwndApp, &point);
-    x = point.x * 640 / iMainWinScreenWidth;
-    y = point.y * 480 / iMainWinScreenHeight;
+    x = point.x * LOGICAL_SCREEN_WIDTH / iMainWinScreenWidth;
+    y = point.y * LOGICAL_SCREEN_HEIGHT / iMainWinScreenHeight;
 }
 
 VA(0x00476ec0, 0x3)

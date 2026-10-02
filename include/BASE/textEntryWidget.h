@@ -53,7 +53,7 @@ public:
     short m_rectH;
     short m_maxLines;
     short m_preserveTextOnFocus;
-    short m_entryType;
+    H1_ENUM_STORAGE(TextEntryReadMode, short) m_entryType;
     short m_displayOffset;
     // --- constructors ---
     textEntryWidget(void);
@@ -79,7 +79,7 @@ public:
     virtual void Draw(void) OVERRIDE;
     virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    void Read(int);
+    void Read(H1_ENUM_PARAM(TextEntryReadMode, int));
     void SetupDisplayString(char*, unsigned short int);
 };
 #pragma pack(pop)

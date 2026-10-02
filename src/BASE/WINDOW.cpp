@@ -7,6 +7,7 @@
 #include <BASE/border.h>
 #include <BASE/button.h>
 #include <BASE/dimmerWidget.h>
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/iconWidget.h>
@@ -134,17 +135,17 @@ heroWindow::heroWindow(short x, short y, char *resourceName)
             break;
         case WIDGET_RECORD_TEXT_ENTRY:
             pEntry = new textEntryWidget();
-            pEntry->Read(1);
+            pEntry->Read(TEXT_ENTRY_READ_DEFAULT);
             pWidget = pEntry;
             break;
         case WIDGET_RECORD_TEXT_ENTRY_RECT:
             pEntry = new textEntryWidget();
-            pEntry->Read(2);
+            pEntry->Read(TEXT_ENTRY_READ_RECT);
             pWidget = pEntry;
             break;
         case WIDGET_RECORD_TEXT_ENTRY_MULTILINE:
             pEntry = new textEntryWidget();
-            pEntry->Read(3);
+            pEntry->Read(TEXT_ENTRY_READ_MULTILINE);
             pWidget = pEntry;
             break;
         }
@@ -336,7 +337,7 @@ void heroWindow::DrawWindow(short update, int firstId, int lastId)
 VA(0x00475530, 0x84)
 short heroWindow::SaveBackground(void)
 {
-    m_savedBackground = new bitmap(33, m_winWidth, m_winHeight);
+    m_savedBackground = new bitmap(BITMAP_TYPE_MEMORY, m_winWidth, m_winHeight);
     PollSound();
     m_savedBackground->GrabScreen(m_posX, m_posY);
     PollSound();
@@ -372,10 +373,10 @@ void heroWindow::MoveWindow(short dx, short dy)
         targetX = 0;
     if (targetY < 0)
         targetY = 0;
-    if (targetX + m_winWidth > 640)
-        targetX = 640 - m_winWidth;
-    if (targetY + m_winHeight > 480)
-        targetY = 480 - m_winHeight;
+    if (targetX + m_winWidth > LOGICAL_SCREEN_WIDTH)
+        targetX = LOGICAL_SCREEN_WIDTH - m_winWidth;
+    if (targetY + m_winHeight > LOGICAL_SCREEN_HEIGHT)
+        targetY = LOGICAL_SCREEN_HEIGHT - m_winHeight;
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
     m_posX = targetX;
     m_posY = targetY;

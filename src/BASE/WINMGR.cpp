@@ -4,6 +4,7 @@
 
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
+#include <BASE/display.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
@@ -24,6 +25,17 @@
 #include <string.h>
 
 #pragma intrinsic(memcpy, strcpy)
+
+// clang-format off
+// FizzleForward's colour-cycle transition (Buka WINMGR.cpp WindowFizzleConstant,
+// CYCLE_FRAME_COUNT): eight CCYCLE tables of 64K word-indexed lookups.
+H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
+    CYCLE_FRAME_COUNT = 8,
+    FIZZLE_DEFAULT_DELAY = 150,
+    FIZZLE_CYCLE_TABLE_BYTES = 0x10000,
+    FIZZLE_LOOKUP_HIGH_BYTE_SHIFT = 8
+H1_ENUM_CONST_END(WindowFizzleConstant)
+// clang-format on
 
 // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
 VA(0x00473de0, 0x1b0)
@@ -112,7 +124,7 @@ short heroWindowManager::Open(short managerOrder) {
     m_screen = new bitmap();
     if (m_screen == NULL)
         MemError();
-    m_screen->m_bitmapType = WINDOW_MANAGER_SCREEN_BITMAP_TYPE;
+    m_screen->m_bitmapType = BITMAP_TYPE_MEMORY;
     m_screen->m_width = SCREEN_BLIT_WIDTH;
     m_screen->m_height = SCREEN_BLIT_HEIGHT;
     m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
@@ -375,7 +387,7 @@ void heroWindowManager::SaveFizzleSource(short x, short y, short width, short he
         return;
     if (m_fizzleSource != NULL)
         delete m_fizzleSource;
-    m_fizzleSource = new bitmap(0, width, height);
+    m_fizzleSource = new bitmap(BITMAP_TYPE_NONE, width, height);
     BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleSource, 0, 0);
 }
 
@@ -401,15 +413,15 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
         saveFlags = gpWindowManager->m_updateFlags;
         gpWindowManager->m_updateFlags = 0;
         if (delay == -1)
-            delay = 150;
-        m_fizzleWork = new bitmap(0, width, height);
-        ccycleBuf = static_cast<signed char*>(malloc(0x10000));
+            delay = FIZZLE_DEFAULT_DELAY;
+        m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
+        ccycleBuf = static_cast<signed char*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
         BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
 
-        for (frame = 0; frame < 8; frame++) {
+        for (frame = 0; frame < CYCLE_FRAME_COUNT; frame++) {
             sprintf(gText, "CCYCLE%02d.BIN", frame);
             gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
-            gpResourceManager->ReadBlock(ccycleBuf, 0x10000);
+            gpResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
             // Buka's row arithmetic: retail strength-reduces sourceY * 640 and
             // (sourceY - y) * width into the frame's induction slots.
             for (sourceY = y; sourceY < y + height; sourceY++) {
@@ -420,9 +432,9 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
                     + (sourceY - y) * width;
                 // Byte access is proven by the retail framebuffer stores.
                 screenPixel = reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
-                    + sourceY * 640 + x;
+                    + sourceY * LOGICAL_SCREEN_WIDTH + x;
                 for (sourceX = x; sourceX < x + width; sourceX++) {
-                    unsigned short lookup = *workPixel++ | (*savePixel++ << 8);
+                    unsigned short lookup = *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
                     *screenPixel++ = ccycleBuf[lookup];
                 }
             }

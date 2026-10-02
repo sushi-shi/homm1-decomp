@@ -21,7 +21,7 @@
 VA(0x0047a6b0, 0x2a)
 VA_COMPGEN(0x0047a6e0, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047a6b0)
 bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, -1, NULL) {
-    m_bitmapType = 0;
+    m_bitmapType = BITMAP_TYPE_NONE;
     m_width = 0;
     m_height = 0;
     m_pixels = NULL;
@@ -84,7 +84,7 @@ void bitmap::Write(char* filename) {
     if (file != -1) {
         combatPalette = gpResourceManager->GetPalette("combat.pal");
         signed char* paletteData = combatPalette->Data();
-        write(file, paletteData, PALETTE_RAW_BYTES);
+        write(file, paletteData, PALETTE_DATA_SIZE);
         write(file, m_pixels, m_width * m_height);
         close(file);
         gpResourceManager->Dispose(combatPalette);
