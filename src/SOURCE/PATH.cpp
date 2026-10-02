@@ -85,24 +85,24 @@ VA(0x0041835b, 0xbf)
 short army::GetAttackMask(short sourceHex, signed char targetMode, signed char targetHex)
 {
     short hex;
+    short dirBit;
     short blockedMask;
-    short nDirectionCount;
-    short mask;
     short direction;
+    short nDirectionCount;
 
     if (m_attributes & 1)
         blockedMask = 0;
     else
         blockedMask = 0xc0;
-    mask = 1;
+    dirBit = 1;
     if (m_attributes & 1)
         nDirectionCount = 8;
     else
         nDirectionCount = 6;
     for (direction = 0; direction < nDirectionCount; direction++) {
         if (!ValidAttack(sourceHex, direction, targetMode, targetHex, &hex))
-            blockedMask |= mask;
-        mask <<= 1;
+            blockedMask |= dirBit;
+        dirBit <<= 1;
     }
     return blockedMask;
 }
