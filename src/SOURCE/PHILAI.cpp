@@ -16,8 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-DATA(0x004913a0)
-signed char gDwellingType[4][6];
+// KB owns gDwellingType (retail KB .data band).
+extern signed char gDwellingType[4][6];
 DATA(0x004af754)
 signed char giBuildShipyard[AI_PLAYER_COUNT];
 DATA(0x004af75c)

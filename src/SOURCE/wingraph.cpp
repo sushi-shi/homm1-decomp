@@ -91,14 +91,11 @@ DATA(0x0048e190)
 int Orientation;
 DATA(0x0048e59c)
 void* lpInitWin;
-DATA(0x00492e08)
-int giScrollX;
-DATA(0x00492e0c)
-int giScrollY;
-DATA(0x00494130)
-int gbFullCombatScreenDrawn;
-DATA(0x00494134)
-int gbLimitedCombatUpdatePalette;
+// KB owns these scroll and combat-palette globals (retail KB .data band).
+extern int giScrollX;
+extern int giScrollY;
+extern int gbFullCombatScreenDrawn;
+extern int gbLimitedCombatUpdatePalette;
 DATA(0x004a4740)
 WingImage screenImage;
 DATA(0x004c6aa8)
