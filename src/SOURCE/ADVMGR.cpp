@@ -130,6 +130,56 @@ H1_ENUM_CONST_END(BottomViewPanelConstant)
 // AdventureEnemyTurnViewConstant names, same values): the hourglass,
 // running-sand and crest icons, their widget ids and z-orders, the sand
 // frame cycle and the animation delays.
+// The quick views' army rows (Buka 2.1 AdventureArmyQuickViewConstant,
+// AdventureHeroQuickViewConstant and AdventureTownQuickViewConstant names,
+// HoMM1 values): 32-pixel creature icons over a 12-pixel label 30 below,
+// rows of up to three (the vague layout puts two over three, the first row
+// 22 lower when there is only one row, the second 44 lower), a five-stack
+// first row nudged 12 pixels apart, label buffers, the windows' default
+// positions, and how much a town view reveals (thieves' guilds).
+H1_ENUM_CONST_BEGIN(AdventureArmyQuickViewConstant)
+    ARMY_QUICK_ICON_SIZE = 32,
+    ARMY_QUICK_ICON_BASELINE = 30,
+    ARMY_QUICK_AREA_LEFT = 9,
+    ARMY_QUICK_LABEL_HEIGHT = 12,
+    ARMY_QUICK_FIRST_ROW_SHIFT = 22,
+    ARMY_QUICK_SECOND_ROW_SHIFT = 44,
+    ARMY_QUICK_FIRST_ROW_COUNT = 2,
+    ARMY_QUICK_FIVE_STACK_X_SHIFT = 12,
+    ARMY_QUICK_TEXT_WIDTH = 60,
+    ARMY_QUICK_TEXT_X_ADJUSTMENT = 14,
+    ARMY_QUICK_SIZE_LABEL_CAPACITY = 15,
+    HERO_QUICK_ARMY_AREA_WIDTH = 160,
+    HERO_QUICK_DETAILED_CREATURE_Y = 110,
+    HERO_QUICK_DETAILED_LABEL_Y = 140,
+    HERO_QUICK_VAGUE_FIRST_ROW_Y = 65,
+    HERO_QUICK_DEFAULT_WINDOW_X = 302,
+    HERO_QUICK_LOCATOR_ROW_HEIGHT = 30,
+    HERO_QUICK_LOCATOR_BASE_Y = 111,
+    HERO_QUICK_ARMY_LABEL_CAPACITY = 5,
+    QUICK_VIEW_FLAG_COLOR_STRIDE = 2,
+    TOWN_QUICK_ARMY_AREA_WIDTH = 192,
+    TOWN_QUICK_FIRST_ROW_Y = 75,
+    TOWN_QUICK_DEFAULT_WINDOW_X = 342,
+    TOWN_QUICK_DEFAULT_WINDOW_Y = 176,
+    TOWN_QUICK_TYPE_FRAME_BASE = 12,
+    TOWN_QUICK_CASTLE_FRAME_OFFSET = 4,
+    TOWN_QUICK_EMPTY_LABEL_CAPACITY = 20,
+    TOWN_QUICK_EMPTY_LABEL_X = 0,
+    TOWN_QUICK_EMPTY_LABEL_Y = 100,
+    TOWN_QUICK_EMPTY_LABEL_WIDTH = 210
+H1_ENUM_CONST_END(AdventureArmyQuickViewConstant)
+
+// TownQuickView's detail level: the owner sees exact counts; others see as
+// much as their thieves' guilds reveal, capped at size names (Buka 2.1
+// TOWN_QUICK_INFORMATION_* values).
+H1_ENUM_BEGIN(TownQuickInformation)
+    TOWN_QUICK_INFORMATION_UNKNOWN = 0,
+    TOWN_QUICK_INFORMATION_NAMES = 1,
+    TOWN_QUICK_INFORMATION_ESTIMATES = 2,
+    TOWN_QUICK_INFORMATION_EXACT = 3
+H1_ENUM_END(TownQuickInformation)
+
 // Right-click quick views over the map: the window is offset from the
 // clicked cell and clamped inside the viewport's inner box (Buka 2.1
 // AdventureQuickViewPlacementConstant / AdventureQuickInfoObject names,
@@ -3217,11 +3267,11 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     short enable;
     short statWidget;
 
-    armyW = 160;
-    leftEdge = 9;
-    creatureY = 110;
-    width = 32;
-    creatureIconHeight = 32;
+    armyW = HERO_QUICK_ARMY_AREA_WIDTH;
+    leftEdge = ARMY_QUICK_AREA_LEFT;
+    creatureY = HERO_QUICK_DETAILED_CREATURE_Y;
+    width = ARMY_QUICK_ICON_SIZE;
+    creatureIconHeight = ARMY_QUICK_ICON_SIZE;
     enable = 1;
     portraitId = QUICK_VIEW_PORTRAIT;
     statWidget = QUICK_VIEW_STAT_FIRST;
@@ -3232,8 +3282,8 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     heroPtr = gpGame->GetHero(heroId);
     if (heroPtr->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
         if (windowX == QUICK_VIEW_AT_LOCATOR) {
-            windowX = 302;
-            windowY = locatorSlot * 30 + 111;
+            windowX = HERO_QUICK_DEFAULT_WINDOW_X;
+            windowY = locatorSlot * HERO_QUICK_LOCATOR_ROW_HEIGHT + HERO_QUICK_LOCATOR_BASE_Y;
         }
         viewWin = new heroWindow(windowX, windowY, "qhero0.bin");
         if (!viewWin)
@@ -3251,7 +3301,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     viewWin->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
     message.id = QUICK_VIEW_FLAG;
-    message.value = gpGame->m_players[heroPtr->m_owner].Color() * 2;
+    message.value = gpGame->m_players[heroPtr->m_owner].Color() * QUICK_VIEW_FLAG_COLOR_STRIDE;
     viewWin->BroadcastMessage(message);
     message.id++;
     message.value++;
@@ -3280,20 +3330,22 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
             short curIndex;
             short startPos;
 
-            startPos = (160 - numArmies * 32) / 2 + 9;
+            startPos = (HERO_QUICK_ARMY_AREA_WIDTH - numArmies * ARMY_QUICK_ICON_SIZE) / 2 + ARMY_QUICK_AREA_LEFT;
             curIndex = 0;
             for (j = 0; j < numArmies; j++) {
                 while (heroPtr->m_army.m_creatureTypes[curIndex] == CREATURE_NONE)
                     curIndex++;
                 monster = heroPtr->m_army.m_creatureTypes[curIndex];
-                if (monster != -1) {
-                    monWidgets[j] = new iconWidget(j * 32 + startPos, 110, 32, 32, "mons32.icn", monster, ICON_DRAW_NORMAL,
+                if (monster != CREATURE_NONE) {
+                    monWidgets[j] = new iconWidget(j * ARMY_QUICK_ICON_SIZE + startPos, HERO_QUICK_DETAILED_CREATURE_Y, ARMY_QUICK_ICON_SIZE,
+                                                   ARMY_QUICK_ICON_SIZE, "mons32.icn", monster, ICON_DRAW_NORMAL,
                                                        -1, ICON_WIDGET_DRAW, 1);
                     if (!monWidgets[j])
                         MemError();
-                    labelText[j] = static_cast<char*>(malloc(5));
+                    labelText[j] = static_cast<char*>(malloc(HERO_QUICK_ARMY_LABEL_CAPACITY));
                     sprintf(labelText[j], "%d", heroPtr->m_army.m_creatureCounts[curIndex]);
-                    sizeTexts[j] = new textWidget(j * 32 + startPos, 140, 32, 12, labelText[j],
+                    sizeTexts[j] = new textWidget(j * ARMY_QUICK_ICON_SIZE + startPos, HERO_QUICK_DETAILED_LABEL_Y, ARMY_QUICK_ICON_SIZE,
+                                                  ARMY_QUICK_LABEL_HEIGHT, labelText[j],
                                                         "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
                     if (!sizeTexts[j])
                         MemError();
@@ -3312,38 +3364,39 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
         short step;
         short rowY;
 
-        rowY = 65;
+        rowY = HERO_QUICK_VAGUE_FIRST_ROW_Y;
         switch (numArmies) {
         case 1:
         case 2:
         case 3:
-            rowY += 22;
+            rowY += ARMY_QUICK_FIRST_ROW_SHIFT;
             firstRow = numArmies;
             secondRow = 0;
             break;
         case 4:
-            firstRow = 2;
+            firstRow = ARMY_QUICK_FIRST_ROW_COUNT;
             secondRow = 2;
             break;
         default:
-            firstRow = 2;
+            firstRow = ARMY_QUICK_FIRST_ROW_COUNT;
             secondRow = 3;
             break;
         }
         slotIndex = 0;
-        step = 160 / firstRow;
-        offsetX = (step - 32) / 2 + 9;
+        step = HERO_QUICK_ARMY_AREA_WIDTH / firstRow;
+        offsetX = (step - ARMY_QUICK_ICON_SIZE) / 2 + ARMY_QUICK_AREA_LEFT;
         for (j = 0; j < firstRow; j++) {
             while (heroPtr->m_army.m_creatureTypes[slotIndex] == CREATURE_NONE)
                 slotIndex++;
             creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
             monWidgets[j] =
-                new iconWidget(j * step + offsetX, rowY, 32, 32, "mons32.icn", creatureId, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
+                new iconWidget(j * step + offsetX, rowY, ARMY_QUICK_ICON_SIZE, ARMY_QUICK_ICON_SIZE, "mons32.icn", creatureId, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!monWidgets[j])
                 MemError();
-            labelText[j] = static_cast<char*>(malloc(15));
+            labelText[j] = static_cast<char*>(malloc(ARMY_QUICK_SIZE_LABEL_CAPACITY));
             strcpy(labelText[j], GetArmySizeName(heroPtr->m_army.m_creatureCounts[slotIndex], 0));
-            sizeTexts[j] = new textWidget(j * step + 9, rowY + 30, step, 12, labelText[j],
+            sizeTexts[j] = new textWidget(j * step + ARMY_QUICK_AREA_LEFT, rowY + ARMY_QUICK_ICON_BASELINE, step,
+                                          ARMY_QUICK_LABEL_HEIGHT, labelText[j],
                                                 "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
             if (!sizeTexts[j])
                 MemError();
@@ -3352,20 +3405,22 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
             slotIndex++;
         }
         if (secondRow) {
-            step = 160 / secondRow;
-            offsetX = (step - 32) / 2 + 9;
-            rowY += 44;
+            step = HERO_QUICK_ARMY_AREA_WIDTH / secondRow;
+            offsetX = (step - ARMY_QUICK_ICON_SIZE) / 2 + ARMY_QUICK_AREA_LEFT;
+            rowY += ARMY_QUICK_SECOND_ROW_SHIFT;
             for (j = firstRow; j < firstRow + secondRow; j++) {
                 while (heroPtr->m_army.m_creatureTypes[slotIndex] == CREATURE_NONE)
                     slotIndex++;
                 creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
-                monWidgets[j] = new iconWidget((j - 2) * step + offsetX, rowY, 32, 32, "mons32.icn",
+                monWidgets[j] = new iconWidget((j - ARMY_QUICK_FIRST_ROW_COUNT) * step + offsetX, rowY, ARMY_QUICK_ICON_SIZE,
+                                               ARMY_QUICK_ICON_SIZE, "mons32.icn",
                                                    creatureId, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
                 if (!monWidgets[j])
                     MemError();
-                labelText[j] = static_cast<char*>(malloc(15));
+                labelText[j] = static_cast<char*>(malloc(ARMY_QUICK_SIZE_LABEL_CAPACITY));
                 strcpy(labelText[j], GetArmySizeName(heroPtr->m_army.m_creatureCounts[slotIndex], 0));
-                sizeTexts[j] = new textWidget((j - 2) * step + 9, rowY + 30, step, 12,
+                sizeTexts[j] = new textWidget((j - ARMY_QUICK_FIRST_ROW_COUNT) * step + ARMY_QUICK_AREA_LEFT,
+                                              rowY + ARMY_QUICK_ICON_BASELINE, step, ARMY_QUICK_LABEL_HEIGHT,
                                                     labelText[j], "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
                 if (!sizeTexts[j])
                     MemError();
@@ -3443,10 +3498,10 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     short armyW;
     short leftEdge;
 
-    armyW = 192;
-    leftEdge = 9;
-    width = 32;
-    creatureIconHeight = 32;
+    armyW = TOWN_QUICK_ARMY_AREA_WIDTH;
+    leftEdge = ARMY_QUICK_AREA_LEFT;
+    width = ARMY_QUICK_ICON_SIZE;
+    creatureIconHeight = ARMY_QUICK_ICON_SIZE;
     flag = 1;
     portraitId = QUICK_VIEW_PORTRAIT;
     flagId = QUICK_VIEW_FLAG;
@@ -3454,18 +3509,18 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
         return;
     townPointer = gpGame->GetTown(townId);
     if (windowX == QUICK_VIEW_AT_LOCATOR) {
-        windowX = 342;
-        windowY = 176;
+        windowX = TOWN_QUICK_DEFAULT_WINDOW_X;
+        windowY = TOWN_QUICK_DEFAULT_WINDOW_Y;
     }
     viewWin = new heroWindow(windowX, windowY, "qtown1.bin");
     if (!viewWin)
         MemError();
     if (townPointer->m_owner == giCurPlayer) {
-        detailLevel = 3;
+        detailLevel = TOWN_QUICK_INFORMATION_EXACT;
     } else {
         detailLevel = gpGame->GetNumThievesGuilds(giCurPlayer);
-        if (detailLevel > 2)
-            detailLevel = 2;
+        if (detailLevel > TOWN_QUICK_INFORMATION_ESTIMATES)
+            detailLevel = TOWN_QUICK_INFORMATION_ESTIMATES;
     }
     SetWinText(viewWin, WINDOW_TEXT_TOWN_QUICK_VIEW);
 
@@ -3473,9 +3528,9 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_FRAME;
     message.id = QUICK_VIEW_PORTRAIT;
-    message.value = townPointer->m_type + 12;
+    message.value = townPointer->m_type + TOWN_QUICK_TYPE_FRAME_BASE;
     if (gpGame->GetTown(townId)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
-        message.value += 4;
+        message.value += TOWN_QUICK_CASTLE_FRAME_OFFSET;
     viewWin->BroadcastMessage(message);
     if (townPointer->m_owner == -1) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -3487,7 +3542,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     } else {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = QUICK_VIEW_FLAG;
-        message.value = gpGame->m_players[townPointer->m_owner].Color() * 2;
+        message.value = gpGame->m_players[townPointer->m_owner].Color() * QUICK_VIEW_FLAG_COLOR_STRIDE;
         viewWin->BroadcastMessage(message);
         message.id++;
         message.value++;
@@ -3509,12 +3564,13 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
         char* garrisonStr;
         textWidget* garrisonWidget;
 
-        garrisonStr = static_cast<char*>(malloc(20));
+        garrisonStr = static_cast<char*>(malloc(TOWN_QUICK_EMPTY_LABEL_CAPACITY));
         if (!detailLevel)
             sprintf(garrisonStr, "Unknown");
         else
             sprintf(garrisonStr, "None");
-        garrisonWidget = new textWidget(0, 100, 210, 12, garrisonStr, "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
+        garrisonWidget = new textWidget(TOWN_QUICK_EMPTY_LABEL_X, TOWN_QUICK_EMPTY_LABEL_Y, TOWN_QUICK_EMPTY_LABEL_WIDTH,
+                                        ARMY_QUICK_LABEL_HEIGHT, garrisonStr, "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
         if (!garrisonWidget)
             MemError();
         viewWin->AddWidget(garrisonWidget, WINDOW_Z_ORDER_APPEND);
@@ -3525,61 +3581,61 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
         short offsetX;
         signed char monster;
         short step;
-        iconWidget* iconWgts[5];
+        iconWidget* iconWgts[ARMY_GROUP_SLOT_COUNT];
         short row2;
         short row1;
-        textWidget* texts[5];
+        textWidget* texts[ARMY_GROUP_SLOT_COUNT];
         signed char dummy;
-        char* labels[5];
+        char* labels[ARMY_GROUP_SLOT_COUNT];
         signed char slot;
 
-        rowY = 75;
+        rowY = TOWN_QUICK_FIRST_ROW_Y;
         switch (numArmies) {
         case 1:
         case 2:
         case 3:
-            rowY += 22;
+            rowY += ARMY_QUICK_FIRST_ROW_SHIFT;
             row1 = numArmies;
             row2 = 0;
             break;
         case 4:
-            row1 = 2;
+            row1 = ARMY_QUICK_FIRST_ROW_COUNT;
             row2 = 2;
             break;
         default:
-            row1 = 2;
+            row1 = ARMY_QUICK_FIRST_ROW_COUNT;
             row2 = 3;
             break;
         }
         dummy = 0;
         slotIndex = 0;
         slot = 0;
-        step = 192 / row1;
-        offsetX = (step - 32) / 2 + 9;
+        step = TOWN_QUICK_ARMY_AREA_WIDTH / row1;
+        offsetX = (step - ARMY_QUICK_ICON_SIZE) / 2 + ARMY_QUICK_AREA_LEFT;
         xAdjust = 0;
         for (i = 0; i < row1; i++) {
-            if (numArmies == 5) {
+            if (numArmies == ARMY_GROUP_SLOT_COUNT) {
                 if (i == 0)
-                    xAdjust = 12;
+                    xAdjust = ARMY_QUICK_FIVE_STACK_X_SHIFT;
                 else
-                    xAdjust = -12;
+                    xAdjust = -ARMY_QUICK_FIVE_STACK_X_SHIFT;
             }
             while (townPointer->m_army.m_creatureTypes[slot] == CREATURE_NONE)
                 slot++;
             monster = townPointer->m_army.m_creatureTypes[slot];
-            iconWgts[slotIndex] = new iconWidget(step * slotIndex + offsetX + xAdjust, rowY, 32, 32,
+            iconWgts[slotIndex] = new iconWidget(step * slotIndex + offsetX + xAdjust, rowY, ARMY_QUICK_ICON_SIZE, ARMY_QUICK_ICON_SIZE,
                                                       "mons32.icn", monster, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
             if (!iconWgts[slotIndex])
                 MemError();
-            labels[slotIndex] = static_cast<char*>(malloc(15));
-            if (detailLevel == 3)
+            labels[slotIndex] = static_cast<char*>(malloc(ARMY_QUICK_SIZE_LABEL_CAPACITY));
+            if (detailLevel == TOWN_QUICK_INFORMATION_EXACT)
                 sprintf(labels[slotIndex], "%d", townPointer->m_army.m_creatureCounts[slot]);
-            else if (detailLevel == 2)
+            else if (detailLevel == TOWN_QUICK_INFORMATION_ESTIMATES)
                 strcpy(labels[slotIndex], GetArmySizeName(townPointer->m_army.m_creatureCounts[slot], 0));
             else
                 strcpy(labels[slotIndex], "?");
-            texts[slotIndex] = new textWidget(step * slotIndex + offsetX + xAdjust - 14, rowY + 30, 60,
-                                                       12, labels[slotIndex], "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
+            texts[slotIndex] = new textWidget(step * slotIndex + offsetX + xAdjust - ARMY_QUICK_TEXT_X_ADJUSTMENT,
+                                              rowY + ARMY_QUICK_ICON_BASELINE, ARMY_QUICK_TEXT_WIDTH, ARMY_QUICK_LABEL_HEIGHT, labels[slotIndex], "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
             if (!texts[slotIndex])
                 MemError();
             viewWin->AddWidget(iconWgts[slotIndex], WINDOW_Z_ORDER_APPEND);
@@ -3588,26 +3644,27 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
             slot++;
         }
         if (row2) {
-            step = 192 / row2;
-            offsetX = (step - 32) / 2 + 9;
-            rowY += 44;
+            step = TOWN_QUICK_ARMY_AREA_WIDTH / row2;
+            offsetX = (step - ARMY_QUICK_ICON_SIZE) / 2 + ARMY_QUICK_AREA_LEFT;
+            rowY += ARMY_QUICK_SECOND_ROW_SHIFT;
             for (i = row1; i < row1 + row2; i++) {
                 while (townPointer->m_army.m_creatureTypes[slot] == CREATURE_NONE)
                     slot++;
                 monster = townPointer->m_army.m_creatureTypes[slot];
-                iconWgts[slotIndex] = new iconWidget((slotIndex - row1) * step + offsetX, rowY, 32, 32,
+                iconWgts[slotIndex] = new iconWidget((slotIndex - row1) * step + offsetX, rowY, ARMY_QUICK_ICON_SIZE, ARMY_QUICK_ICON_SIZE,
                                                           "mons32.icn", monster, ICON_DRAW_NORMAL, -1, ICON_WIDGET_DRAW, 1);
                 if (!iconWgts[slotIndex])
                     MemError();
-                labels[slotIndex] = static_cast<char*>(malloc(15));
-                if (detailLevel == 3)
+                labels[slotIndex] = static_cast<char*>(malloc(ARMY_QUICK_SIZE_LABEL_CAPACITY));
+                if (detailLevel == TOWN_QUICK_INFORMATION_EXACT)
                     sprintf(labels[slotIndex], "%d", townPointer->m_army.m_creatureCounts[slot]);
-                else if (detailLevel == 2)
+                else if (detailLevel == TOWN_QUICK_INFORMATION_ESTIMATES)
                     strcpy(labels[slotIndex], GetArmySizeName(townPointer->m_army.m_creatureCounts[slot], 0));
                 else
                     strcpy(labels[slotIndex], "?");
-                texts[slotIndex] = new textWidget((slotIndex - row1) * step + offsetX - 14,
-                                                           rowY + 30, 60, 12, labels[slotIndex], "smalfont.fnt",
+                texts[slotIndex] = new textWidget((slotIndex - row1) * step + offsetX - ARMY_QUICK_TEXT_X_ADJUSTMENT,
+                                                  rowY + ARMY_QUICK_ICON_BASELINE, ARMY_QUICK_TEXT_WIDTH,
+                                                  ARMY_QUICK_LABEL_HEIGHT, labels[slotIndex], "smalfont.fnt",
                                                            1, -1, WIDGET_KIND_TEXT);
                 if (!texts[slotIndex])
                     MemError();
