@@ -111,8 +111,8 @@ public:
     signed char m_directionTargetHex;
     signed char m_previousCommand;
     signed char m_currentCommand;
-    short m_unknown6c5;
-    short m_unknown6c7;
+    // CatAttack animates the side's catapult through these frames.
+    short m_catapultFrame[2];
     short m_catapultAttackCount[2];
     short m_catapultAttacksRemaining[2];
     short m_keepAttacksRemaining[2];
@@ -123,7 +123,9 @@ public:
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
     // mirror the castle art from side 1's flag.
     signed char m_castleSide[2];
-    char m_unknown6df[4];
+    char m_unknown6df[2];
+    // CatAttack's target row in the castle wall column.
+    short m_catapultTarget;
     signed char m_unknown6e3;
     short m_wallFrame;
     short m_wallDamage;

@@ -42,7 +42,7 @@ combatManager::combatManager(void)
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
     m_savedBorder = 0;
-    m_heroType[0] = m_heroType[1] = m_unknown6c5 = m_unknown6c7 = m_wallFrame = m_wallDamage = -1;
+    m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
     m_castleSide[0] = m_castleSide[1] = 0;
     m_unknown72f = 0;
@@ -300,13 +300,13 @@ void combatManager::GenerateMap(void)
     short armyCount;
 
     if (m_castleSide[0] == 1)
-        m_unknown6c7 = 0;
+        m_catapultFrame[1] = 0;
     else
-        m_unknown6c7 = -1;
+        m_catapultFrame[1] = -1;
     if (m_castleSide[1] == 1)
-        m_unknown6c5 = 0;
+        m_catapultFrame[0] = 0;
     else
-        m_unknown6c5 = -1;
+        m_catapultFrame[0] = -1;
     for (y = 0; y < 5; y++) {
         for (x = 0; x < 9; x++) {
             m_hexCells[y * 9 + x].m_y = y * 80 + 139;
@@ -755,6 +755,256 @@ signed char combatManager::IsWinner(signed char side)
             isWinner = 0;
     }
     return isWinner;
+}
+
+// HoMM1 catapult: a boulder arcs (or, for the top row, flies straight) at
+// a random standing wall piece; a breach roll knocks it down, otherwise
+// the piece is damaged.
+VA(0x0044da9d, 0xd55)
+void combatManager::CatAttack(signed char side)
+{
+    icon* boulder;
+    short dx;
+    short x;
+    short i;
+    short frm;
+    short dy;
+    short y;
+    short tgtX;
+    short force;
+    short startX;
+    SAMPLE2 catSample;
+    short summitX;
+    signed char col;
+    short tgtY;
+    signed char wallsLeft;
+    short startY;
+    short summitY;
+
+    if (!m_castleSide[0])
+        return;
+    catSample = NULL_SAMPLE2;
+    if (side == 1)
+        col = 5;
+    else
+        col = 3;
+    wallsLeft = 0;
+    for (i = 0; i < 5; i++) {
+        if (m_hexCells[i * 9 + col].m_obstacleIndex != -1)
+            wallsLeft = 1;
+    }
+    if (!wallsLeft)
+        return;
+    gpMouseManager->ReallyHidePointer();
+    boulder = gpResourceManager->GetIcon("boulder.icn");
+    sprintf(gText, "catsnd%02d.82M", 0);
+    catSample = LoadPlaySample(gText);
+    giMinExtentX = 0;
+    giMaxExtentX = 200;
+    giMinExtentY = 190;
+    giMaxExtentY = 420;
+    m_catapultFrame[side] = 0;
+    while (m_catapultFrame[side] < 8) {
+        m_unknown72b = 1;
+        DrawFrame(1);
+        m_catapultFrame[side]++;
+    }
+    if ((m_hexCells[col + 9].m_obstacleIndex == 10 || m_hexCells[col + 9].m_obstacleIndex == -1)
+        && (m_hexCells[col + 27].m_obstacleIndex == 10 || m_hexCells[col + 27].m_obstacleIndex == -1)) {
+        m_catapultTarget = SRandom(0, 4);
+        while (m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == -1)
+            m_catapultTarget = SRandom(0, 4);
+    } else if (m_hexCells[col + 9].m_obstacleIndex == -1) {
+        m_catapultTarget = 3;
+    } else if (m_hexCells[col + 27].m_obstacleIndex == -1) {
+        m_catapultTarget = 1;
+    } else if (m_hexCells[col + 9].m_obstacleIndex != 8) {
+        m_catapultTarget = 3;
+    } else if (m_hexCells[col + 27].m_obstacleIndex != 8) {
+        m_catapultTarget = 1;
+    } else {
+        m_catapultTarget = SRandom(0, 1);
+        if (!m_catapultTarget)
+            m_catapultTarget = 1;
+        else
+            m_catapultTarget = 3;
+    }
+    startX = 0x75;
+    startY = 0x104;
+    tgtX = m_hexCells[m_catapultTarget * 9 + 5].m_x;
+    tgtY = m_hexCells[m_catapultTarget * 9 + 5].m_y - 80;
+    frm = 0;
+    x = startX;
+    y = startY;
+    if (!m_catapultTarget) {
+        dx = (tgtX - startX) / 12;
+        dy = (tgtY - startY) / 12;
+        i = 0;
+        while (i < 12) {
+            m_unknown72b = 1;
+            if (i) {
+                giMinExtentX = x - dx - 20;
+                giMaxExtentX = x + 75;
+                giMinExtentY = y - 75;
+                giMaxExtentY = y + 75;
+                if (giMinExtentX < 0)
+                    giMinExtentX = 0;
+                if (giMinExtentY < 0)
+                    giMinExtentY = 0;
+                if (giMaxExtentX > 639)
+                    giMaxExtentX = 639;
+                if (giMaxExtentY > 459)
+                    giMaxExtentY = 459;
+            }
+            DrawFrame(0);
+            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
+                                                giMaxExtentY - giMinExtentY + 1);
+            x = dx + x;
+            y = y + dy;
+            frm++;
+            frm %= 3;
+            if (i < 2)
+                m_catapultFrame[side]++;
+            i++;
+        }
+    } else {
+        summitX = (startX + tgtX) / 2;
+        switch (m_catapultTarget) {
+            case 1:
+                summitY = 25;
+                break;
+            default:
+                summitY = m_catapultTarget * 20 + 25;
+                break;
+        }
+        dx = (summitX - startX) / 12;
+        dy = (summitY - startY) / 78;
+        for (i = 0; i < 12; i++) {
+            m_unknown72b = 1;
+            if (i) {
+                giMinExtentX = x - dx - 20;
+                giMaxExtentX = x + 75;
+                giMinExtentY = y - 75;
+                giMaxExtentY = y + 75;
+                if (giMinExtentX < 0)
+                    giMinExtentX = 0;
+                if (giMinExtentY < 0)
+                    giMinExtentY = 0;
+                if (giMaxExtentX > 639)
+                    giMaxExtentX = 639;
+                if (giMaxExtentY > 459)
+                    giMaxExtentY = 459;
+            }
+            DrawFrame(0);
+            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
+                                                giMaxExtentY - giMinExtentY + 1);
+            x = dx + x;
+            y = (12 - i) * dy + y;
+            frm++;
+            frm %= 3;
+            if (i < 2)
+                m_catapultFrame[side]++;
+        }
+        dx = (tgtX - x) / 8;
+        dy = (tgtY - y) / 36;
+        for (i = 1; i <= 8; i++) {
+            m_unknown72b = 1;
+            giMinExtentX = x - dx - 20;
+            giMaxExtentX = x + 75;
+            giMinExtentY = y - 75;
+            giMaxExtentY = y + 75;
+            if (giMinExtentX < 0)
+                giMinExtentX = 0;
+            if (giMinExtentY < 0)
+                giMinExtentY = 0;
+            if (giMaxExtentX > 639)
+                giMaxExtentX = 639;
+            if (giMaxExtentY > 459)
+                giMaxExtentY = 459;
+            DrawFrame(0);
+            boulder->DrawToBuffer(x, y, frm, 0, 0);
+            gpWindowManager->UpdateScreenRegion(giMinExtentX, giMinExtentY, giMaxExtentX - giMinExtentX + 1,
+                                                giMaxExtentY - giMinExtentY + 1);
+            x = dx + x;
+            y = dy * i + y;
+            frm++;
+            frm %= 3;
+        }
+    }
+    WaitEndSample(catSample, -1);
+    sprintf(gText, "catsnd%02d.82M", 2);
+    catSample = LoadPlaySample(gText);
+    if (m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 10)
+        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
+    else
+        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x40;
+    force = SRandom(0, 150);
+    if (!gbHumanPlayer[m_playerId[1]])
+        force -= 15;
+    if (force < 30 || m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex == 0x41) {
+        m_unknown6e3 = 0;
+        m_wallFrame = 0;
+        giMinExtentX = 300;
+        giMaxExtentX = 490;
+        giMinExtentY = m_catapultTarget * 80 - 30;
+        giMaxExtentY = (m_catapultTarget + 2) * 80 + 30;
+        if (giMinExtentY < 0)
+            giMinExtentY = 0;
+        if (giMaxExtentY > 459)
+            giMaxExtentY = 459;
+        while (m_wallFrame < 10) {
+            m_wallDamage = m_wallFrame;
+            if (m_wallFrame == 5)
+                m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x42;
+            m_unknown72b = 1;
+            m_unknown25c = m_catapultTarget - 2;
+            if (m_unknown25c < 0)
+                m_unknown25c = 0;
+            DrawFrame(1);
+            m_wallFrame++;
+        }
+        m_wallFrame = m_wallDamage = -1;
+        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = -1;
+    } else {
+        m_unknown6e3 = 1;
+        m_wallFrame = 0;
+        giMinExtentX = 300;
+        giMaxExtentX = 490;
+        giMinExtentY = m_catapultTarget * 80 - 30;
+        giMaxExtentY = (m_catapultTarget + 2) * 80 + 30;
+        if (giMinExtentY < 0)
+            giMinExtentY = 0;
+        if (giMaxExtentY > 459)
+            giMaxExtentY = 459;
+        while (m_wallFrame < 10) {
+            if (m_wallFrame == 5)
+                m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 0x41;
+            m_unknown72b = 1;
+            DrawFrame(1);
+            m_wallFrame++;
+        }
+        m_hexCells[m_catapultTarget * 9 + col].m_obstacleIndex = 10;
+        m_wallFrame = -1;
+    }
+    m_unknown72b = 1;
+    DrawFrame(1);
+    giMinExtentX = 0;
+    giMaxExtentX = 200;
+    giMinExtentY = 220;
+    giMaxExtentY = 420;
+    while (m_catapultFrame[side] < 14) {
+        m_unknown72b = 1;
+        DrawFrame(1);
+        m_catapultFrame[side]++;
+    }
+    m_catapultFrame[side] = 0;
+    m_unknown72b = 1;
+    DrawFrame(1);
+    gpResourceManager->Dispose(boulder);
+    gpMouseManager->ReallyShowPointer();
+    WaitEndSample(catSample, -1);
 }
 
 // HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
