@@ -1941,11 +1941,236 @@ int GameUnsaved(void) {
         return 0;
 }
 
+// clang-format off
+// HoMM1 menu command ids; each menu bar repeats Restart and New Game.
+H1_ENUM_BEGIN(AppMenuCommand)
+    APP_MENU_RESTART_0 = 0x9ca6,
+    APP_MENU_RESTART_1 = 0x9ca8,
+    APP_MENU_RESTART_2 = 0x9ca9,
+    APP_MENU_RESTART_3 = 0x9caa,
+    APP_MENU_RESTART_4 = 0x9cab,
+    APP_MENU_RESTART_5 = 0x9cae,
+    APP_MENU_RESTART_6 = 0x9caf,
+    APP_MENU_RESTART_7 = 0x9cb0,
+    APP_MENU_RESTART_8 = 0x9cb2,
+    APP_MENU_RESTART_9 = 0x9cb3,
+    APP_MENU_RESTART_10 = 0x9cb5,
+    APP_MENU_RESTART_11 = 0x9cb6,
+    APP_MENU_RESTART_12 = 0x9cb8,
+    APP_MENU_RESTART_13 = 0x9cb9,
+    APP_MENU_LOAD_0 = 0x9cbb,
+    APP_MENU_LOAD_1 = 0x9cbc,
+    APP_MENU_LOAD_2 = 0x9cbf,
+    APP_MENU_LOAD_3 = 0x9cc0,
+    APP_MENU_LOAD_4 = 0x9cc1,
+    APP_MENU_LOAD_5 = 0x9cc3,
+    APP_MENU_LOAD_6 = 0x9cc4,
+    APP_MENU_LOAD_7 = 0x9cc6,
+    APP_MENU_LOAD_8 = 0x9cc7,
+    APP_MENU_LOAD_9 = 0x9cc9,
+    APP_MENU_LOAD_10 = 0x9cca,
+    APP_MENU_SAVE = 0x9ccb,
+    APP_MENU_EXIT = 0x9ccc,
+    APP_MENU_MUSIC_FIRST = 0x9c50,
+    APP_MENU_MUSIC_LAST = 0x9c5a,
+    APP_MENU_SOUND_FIRST = 0x9c5c,
+    APP_MENU_SOUND_LAST = 0x9c66,
+    APP_MENU_WALK_FASTEST = 0x9c68,
+    APP_MENU_WALK_SLOWEST = 0x9c6c,
+    APP_MENU_CD_MUSIC = 0x9c6d,
+    APP_MENU_TOGGLE_ROUTE = 0x9c6e,
+    APP_MENU_TOGGLE_BLACKOUT = 0x9c6f,
+    APP_MENU_VIEW_WORLD = 0x9c4c,
+    APP_MENU_VIEW_PUZZLE = 0x9c4d,
+    APP_MENU_CAST_SPELL = 0x9c4e,
+    APP_MENU_SEARCH = 0x9c4f
+H1_ENUM_END(AppMenuCommand)
+// clang-format on
+
 // donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.410709;margin=0.595745;shape=0.257;size=0.699;calls=0.542;alternate=pol20:int HandleAppSpecificMenuCommands(int)@0x0009ec05
 VA(0x00455d22, 0x629)
-int HandleAppSpecificMenuCommands(int) {
+int HandleAppSpecificMenuCommands(int command) {
+    int menuChanged;
+
+    menuChanged = 0;
+    switch (command) {
+        case APP_MENU_RESTART_0:
+        case APP_MENU_RESTART_1:
+        case APP_MENU_RESTART_2:
+        case APP_MENU_RESTART_3:
+        case APP_MENU_RESTART_4:
+        case APP_MENU_RESTART_5:
+        case APP_MENU_RESTART_6:
+        case APP_MENU_RESTART_7:
+        case APP_MENU_RESTART_8:
+        case APP_MENU_RESTART_9:
+        case APP_MENU_RESTART_10:
+        case APP_MENU_RESTART_11:
+        case APP_MENU_RESTART_12:
+        case APP_MENU_RESTART_13:
+            strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
+            goto confirmMenuCommand;
+        case APP_MENU_LOAD_0:
+        case APP_MENU_LOAD_1:
+        case APP_MENU_LOAD_2:
+        case APP_MENU_LOAD_3:
+        case APP_MENU_LOAD_4:
+        case APP_MENU_LOAD_5:
+        case APP_MENU_LOAD_6:
+        case APP_MENU_LOAD_7:
+        case APP_MENU_LOAD_8:
+        case APP_MENU_LOAD_9:
+        case APP_MENU_LOAD_10:
+            strcpy(gText, "Are you sure you want to load a new game?  (Your current game will be lost)");
+        confirmMenuCommand:
+            if (gpAdvManager->m_active == 1) {
+                NormalDialog(gText, 2, -1, -1, -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult != 0x7805)
+                    break;
+            }
+            giMenuCommand = command;
+            break;
+        case APP_MENU_SAVE:
+            SaveGame();
+            break;
+        case APP_MENU_EXIT:
+            PostMessage((HWND)hwndApp, WM_CLOSE, 0, 0);
+            break;
+        case APP_MENU_MUSIC_FIRST:
+            gConfig.musicVolume = 0;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 1:
+            gConfig.musicVolume = 1;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 2:
+            gConfig.musicVolume = 2;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 3:
+            gConfig.musicVolume = 3;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 4:
+            gConfig.musicVolume = 4;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 5:
+            gConfig.musicVolume = 5;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 6:
+            gConfig.musicVolume = 6;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 7:
+            gConfig.musicVolume = 7;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 8:
+            gConfig.musicVolume = 8;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_FIRST + 9:
+            gConfig.musicVolume = 9;
+            goto adjustMusic;
+        case APP_MENU_MUSIC_LAST:
+            gConfig.musicVolume = 10;
+            goto adjustMusic;
+        adjustMusic:
+            gpSoundManager->AdjustMusicVolumes();
+            menuChanged = 1;
+            break;
+        case APP_MENU_SOUND_FIRST:
+            gConfig.soundVolume = 0;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 1:
+            gConfig.soundVolume = 1;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 2:
+            gConfig.soundVolume = 2;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 3:
+            gConfig.soundVolume = 3;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 4:
+            gConfig.soundVolume = 4;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 5:
+            gConfig.soundVolume = 5;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 6:
+            gConfig.soundVolume = 6;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 7:
+            gConfig.soundVolume = 7;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 8:
+            gConfig.soundVolume = 8;
+            goto adjustSound;
+        case APP_MENU_SOUND_FIRST + 9:
+            gConfig.soundVolume = 9;
+            goto adjustSound;
+        case APP_MENU_SOUND_LAST:
+            gConfig.soundVolume = 10;
+            goto adjustSound;
+        adjustSound:
+            gpSoundManager->AdjustSoundVolumes();
+            menuChanged = 1;
+            break;
+        case APP_MENU_WALK_FASTEST:
+            gConfig.walkSpeed = 4;
+            goto walkSpeedChanged;
+        case APP_MENU_WALK_FASTEST + 1:
+            gConfig.walkSpeed = 3;
+            goto walkSpeedChanged;
+        case APP_MENU_WALK_FASTEST + 2:
+            gConfig.walkSpeed = 2;
+            goto walkSpeedChanged;
+        case APP_MENU_WALK_FASTEST + 3:
+            gConfig.walkSpeed = 1;
+            goto walkSpeedChanged;
+        case APP_MENU_WALK_SLOWEST:
+            gConfig.walkSpeed = 0;
+            goto walkSpeedChanged;
+        walkSpeedChanged:
+            menuChanged = 1;
+            break;
+        case APP_MENU_CD_MUSIC:
+            if (gConfig.musicSource) {
+                gConfig.musicSource = 0;
+            } else {
+                if (!gpSoundManager->m_cdStarted) {
+                    NormalDialog(
+                        "Unable to set up CD stereo music.  Your CD player might be in use by "
+                        "another program, or your sound driver might not support CD stereo.",
+                        1, -1, -1, -1, 0, -1, 0, -1);
+                    break;
+                }
+                gConfig.musicSource = 2;
+            }
+            gpSoundManager->SetMusicQuality(gConfig.musicSource);
+            menuChanged = 1;
+            break;
+        case APP_MENU_TOGGLE_ROUTE:
+            gConfig.showRoute = 1 - gConfig.showRoute;
+            menuChanged = 1;
+            break;
+        case APP_MENU_TOGGLE_BLACKOUT:
+            gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
+            menuChanged = 1;
+            break;
+        case APP_MENU_VIEW_WORLD:
+            gpAdvManager->ViewWorld(24, 0, 0);
+            break;
+        case APP_MENU_VIEW_PUZZLE:
+            gpAdvManager->ViewPuzzle();
+            break;
+        case APP_MENU_CAST_SPELL:
+            gpAdvManager->CheckCastSpell();
+            break;
+        case APP_MENU_SEARCH:
+            gpAdvManager->ProcessSearch(-1, -1);
+            break;
+        default:
+            return 1;
+    }
+    if (menuChanged)
+        WritePrefs();
     return 0;
 }
 
