@@ -72,7 +72,10 @@ H1_ENUM_END(CombatPointerCode)
 H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6,
-    COMBAT_CASTLE_WALL_COLUMN = 5
+    COMBAT_CASTLE_WALL_COLUMN = 5,
+    // No stack slot: hexcell::m_occupantIndex of an empty hex and
+    // army::m_targetIndex without a target (Buka COMBAT_AI_NO_ARMY).
+    COMBAT_ARMY_INDEX_NONE = -1
 H1_ENUM_CONST_END(CombatGridConstant)
 
 // The battlefield view is the logical screen less SaveCombatBorder's

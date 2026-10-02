@@ -49,13 +49,13 @@ H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_UNLIMITED_STEP_MOBILITY = 999,
     SEARCH_MAX_COST = 9999
 H1_ENUM_CONST_END(SearchConstant)
-// clang-format on
 
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
 // (CheckReload shifts it right four; the path builder masks 0xf).
 #pragma pack(push, 1)
 struct searchNode {
+    // clang-format on
     // BuildPath sign-extends both coordinates.
     signed char x;
     signed char y;

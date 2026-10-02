@@ -17,9 +17,9 @@ H1_ENUM_CONST_BEGIN(FindPathTerrainConstant)
     FINDPATH_WATER_TERRAIN = 1,
     FINDPATH_WATER_MODE = 1
 H1_ENUM_CONST_END(FindPathTerrainConstant)
-// clang-format on
 
 int CalcTerrainCost(int, int, int, int);
+// clang-format on
 short TerrainStepCost(signed char, char);
 // FindNearestObject seeds this word limit; PushPoint marks costlier nodes.
 extern short giCurTempMobility;

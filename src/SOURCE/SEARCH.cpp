@@ -58,7 +58,12 @@ short searchArray::FindNearestObject(
         for (i = 0; i < MAP_DIRECTION_COUNT; i++) {
             terrain = possibleDirections[i];
             if (terrain != TERRAIN_INVALID) {
-                cost = CalcTerrainCost(terrain, i & SEARCH_DIAGONAL_COST_MASK, SEARCH_UNLIMITED_STEP_MOBILITY, 0);
+                cost = CalcTerrainCost(
+                    terrain,
+                    i & SEARCH_DIAGONAL_COST_MASK,
+                    SEARCH_UNLIMITED_STEP_MOBILITY,
+                    0
+                );
                 neighborX = node.x + normalDirTable[i].x;
                 neighborY = node.y + normalDirTable[i].y;
                 PushPoint(
@@ -88,8 +93,14 @@ short searchArray::FindNearestObject(
         *pathDirection++ = pathNode->direction;
         if (++m_pathLength >= SEARCH_PATH_CAPACITY)
             break;
-        destinationX += normalDirTable[static_cast<short>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK].x;
-        destinationY += normalDirTable[static_cast<short>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK].y;
+        destinationX += normalDirTable
+                            [static_cast<short>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                             & MAP_DIRECTION_INDEX_MASK]
+                                .x;
+        destinationY += normalDirTable
+                            [static_cast<short>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                             & MAP_DIRECTION_INDEX_MASK]
+                                .y;
     }
     return m_pathLength;
 }
@@ -118,8 +129,14 @@ int searchArray::BuildPath(
                 break;
             }
         }
-        destinationX += normalDirTable[static_cast<short>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK].x;
-        destinationY += normalDirTable[static_cast<short>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK].y;
+        destinationX += normalDirTable
+                            [static_cast<short>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                             & MAP_DIRECTION_INDEX_MASK]
+                                .x;
+        destinationY += normalDirTable
+                            [static_cast<short>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                             & MAP_DIRECTION_INDEX_MASK]
+                                .y;
     }
     return m_pathLength;
 }
@@ -201,7 +218,8 @@ void searchArray::SeedPosition(
         s_hasTarget = 0;
     if (s_hasTarget && continueSeed) {
         s_currentNode = m_cells[targetX][targetY];
-        if (s_currentNode.visited && s_currentNode.distance <= s_currentCost + SEARCH_TARGET_COST_WINDOW)
+        if (s_currentNode.visited
+            && s_currentNode.distance <= s_currentCost + SEARCH_TARGET_COST_WINDOW)
             return;
     }
     if (!continueSeed)
@@ -305,10 +323,12 @@ void searchArray::SeedPosition(
                 continue;
             s_neighborX = s_currentNode.x + normalDirTable[s_direction].x;
             s_neighborY = s_currentNode.y + normalDirTable[s_direction].y;
-            if (findAdjacentMonster && (mapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
+            if (findAdjacentMonster
+                && (mapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && m_cells[s_neighborX][s_neighborY].visited
                 && m_cells[s_neighborX][s_neighborY].rvFlag1
-                && m_cells[s_neighborX][s_neighborY].distance < s_currentNode.distance + SEARCH_MONSTER_RESEED_WINDOW
+                && m_cells[s_neighborX][s_neighborY].distance
+                       < s_currentNode.distance + SEARCH_MONSTER_RESEED_WINDOW
                 && gpAdvManager->FindAdjacentMonster(
                     s_neighborX,
                     s_neighborY,
@@ -392,7 +412,8 @@ void searchArray::SeedPosition(
                             PushPoint(
                                 s_mapX,
                                 s_mapY,
-                                (s_direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK,
+                                (s_direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                                    & MAP_DIRECTION_INDEX_MASK,
                                 s_stepCost[s_direction & SEARCH_DIAGONAL_COST_MASK],
                                 maximumCost,
                                 1,

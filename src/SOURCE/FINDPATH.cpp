@@ -146,7 +146,7 @@ short searchArray::FindCombatPath(
     PushCombatPoint(
         sourceHex,
         (signed char)(unit->m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_WEST
-                                                          : COMBAT_DIRECTION_EAST),
+                                                         : COMBAT_DIRECTION_EAST),
         0,
         unit->m_stats.speed
     );
