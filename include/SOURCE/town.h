@@ -16,6 +16,17 @@ H1_ENUM_CONST_BEGIN(TownConstant)
     // town::m_occupyingHeroId when no hero stands in the town (Buka's name).
     TOWN_OCCUPYING_HERO_NONE = -1
 H1_ENUM_CONST_END(TownConstant)
+
+// town::m_type: the faction whose dwellings the town builds. Retail
+// gDwellingType rows (0..5 knight, 12..17 sorceress, 6..11 barbarian, 18..23
+// warlock creatures) and GiveTroopsToNeutralTowns' recruits fix the order.
+H1_ENUM_BEGIN(TownType)
+    TOWN_TYPE_KNIGHT = 0,
+    TOWN_TYPE_SORCERESS = 1,
+    TOWN_TYPE_BARBARIAN = 2,
+    TOWN_TYPE_WARLOCK = 3,
+    TOWN_TYPE_COUNT = 4
+H1_ENUM_END(TownType)
 // clang-format on
 
 #pragma pack(push, 1)

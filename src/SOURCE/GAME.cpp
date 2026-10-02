@@ -13,7 +13,9 @@
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
@@ -665,11 +667,27 @@ H1_ENUM_BEGIN(NewGameControl)
     NEW_GAME_DIFFICULTY_FIRST = 0xd,
     NEW_GAME_DIFFICULTY_LAST = 0x10,
     NEW_GAME_SCENARIO_NAME = 0x11,
+    NEW_GAME_SCENARIO_PANEL = 0x12,
     NEW_GAME_KING_OF_THE_HILL = 0x13,
     NEW_GAME_RATING = 0x14,
     NEW_GAME_CANCEL = DIALOG_BUTTON_1,
-    NEW_GAME_OK = DIALOG_BUTTON_2
+    NEW_GAME_OK = DIALOG_BUTTON_2,
+    // Player p's type toggle is p + TOGGLE_BASE (ids 2..4) and its type label
+    // p + LABEL_BASE (ids 5..7).
+    NEW_GAME_OPPONENT_TOGGLE_BASE = 1,
+    NEW_GAME_OPPONENT_LABEL_BASE = 4
 H1_ENUM_END(NewGameControl)
+
+// newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
+// the computer-type faces (type + base), the crests (two per color) and
+// the King of the Hill toggle (flag + base).
+H1_ENUM_CONST_BEGIN(NewGameFrame)
+    NEW_GAME_FRAME_COMPUTER_TYPE_BASE = 5,
+    NEW_GAME_FRAME_CREST_BASE = 11,
+    NEW_GAME_FRAME_CREST_STRIDE = 2,
+    NEW_GAME_FRAME_HUMAN_OPPONENT = 0x1a,
+    NEW_GAME_FRAME_KING_OF_THE_HILL_BASE = 27
+H1_ENUM_CONST_END(NewGameFrame)
 
 // NewGameHandler's right-click help: the gNewGameHelp row shown.
 H1_ENUM_BEGIN(NewGameHelp)
@@ -711,7 +729,7 @@ short NewGameHandler(tag_message& message) {
                     case NEW_GAME_SCENARIO_NAME:
                         helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
-                    case 0x12:
+                    case NEW_GAME_SCENARIO_PANEL:
                         helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
                     case NEW_GAME_SCENARIO_SELECT:
@@ -732,7 +750,7 @@ short NewGameHandler(tag_message& message) {
                     case NEW_GAME_OPPONENT_FIRST:
                     case NEW_GAME_OPPONENT_FIRST + 1:
                     case NEW_GAME_OPPONENT_LAST:
-                        if (message.id - 1 < giNumHumanPlayers)
+                        if (message.id - NEW_GAME_OPPONENT_TOGGLE_BASE < giNumHumanPlayers)
                             helpIndex = NEW_GAME_HELP_HUMAN_OPPONENT;
                         else
                             helpIndex = NEW_GAME_HELP_OPPONENT;
@@ -753,8 +771,8 @@ short NewGameHandler(tag_message& message) {
                     switch (message.id) {
                         case NEW_GAME_OK:
                             gpGame->m_playerCount = 0;
-                            for (i = 0; i < 4; i++) {
-                                if (gpGame->m_players[i].m_difficulty > 0)
+                            for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+                                if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
@@ -795,21 +813,21 @@ short NewGameHandler(tag_message& message) {
                         case NEW_GAME_OPPONENT_FIRST:
                         case NEW_GAME_OPPONENT_FIRST + 1:
                         case NEW_GAME_OPPONENT_LAST:
-                            iPlayer = message.id - 1;
+                            iPlayer = message.id - NEW_GAME_OPPONENT_TOGGLE_BASE;
                             gpGame->m_players[iPlayer].m_difficulty++;
-                            gpGame->m_players[iPlayer].m_difficulty %= 5;
+                            gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
                             if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
                         case NEW_GAME_COLOR:
-                            gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % 4;
+                            gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % GAME_PLAYER_COUNT;
                             break;
                         case NEW_GAME_KING_OF_THE_HILL:
                             gbIAmGreatest = 1 - gbIAmGreatest;
                             break;
                         case NEW_GAME_SCENARIO_SELECT:
                         case NEW_GAME_SCENARIO_NAME:
-                        case 0x12:
+                        case NEW_GAME_SCENARIO_PANEL:
                             game::GetMap();
                             break;
                         default:
@@ -845,7 +863,7 @@ void game::UpdateNewGameWindow(void) {
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < DIFFICULTY_COUNT; i++) {
         message.id = i + NEW_GAME_DIFFICULTY_FIRST;
         m_newGameWindow->BroadcastMessage(message);
     }
@@ -853,17 +871,17 @@ void game::UpdateNewGameWindow(void) {
     message.id = m_difficulty + NEW_GAME_DIFFICULTY_FIRST;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    for (i = 1; i < 4; i++) {
-        message.id = i + 1;
+    for (i = 1; i < GAME_PLAYER_COUNT; i++) {
+        message.id = i + NEW_GAME_OPPONENT_TOGGLE_BASE;
         if (i < giNumHumanPlayers)
-            message.value = 0x1a;
+            message.value = NEW_GAME_FRAME_HUMAN_OPPONENT;
         else
-            message.value = m_players[i].m_difficulty + 5;
+            message.value = m_players[i].m_difficulty + NEW_GAME_FRAME_COMPUTER_TYPE_BASE;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_TEXT;
-    for (i = 1; i < 4; i++) {
-        message.id = i + 4;
+    for (i = 1; i < GAME_PLAYER_COUNT; i++) {
+        message.id = i + NEW_GAME_OPPONENT_LABEL_BASE;
         if (i < giNumHumanPlayers)
             message.text = gHumanPlayerTypeNames[m_players[i].m_difficulty];
         else
@@ -878,14 +896,39 @@ void game::UpdateNewGameWindow(void) {
     message.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[0].m_color != -1) {
         message.id = NEW_GAME_COLOR;
-        message.value = m_players[0].m_color * 2 + 11;
+        message.value = m_players[0].m_color * NEW_GAME_FRAME_CREST_STRIDE + NEW_GAME_FRAME_CREST_BASE;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
     message.id = NEW_GAME_KING_OF_THE_HILL;
-    message.value = gbIAmGreatest + 27;
+    message.value = gbIAmGreatest + NEW_GAME_FRAME_KING_OF_THE_HILL_BASE;
     m_newGameWindow->BroadcastMessage(message);
 }
+
+// clang-format off
+// GiveTroopsToNeutralTowns (Buka NeutralTownReinforcementConstant names): a
+// 1..15 roll picks the tier, whose key plus the town type selects the
+// recruit and whose range the count.
+H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
+    REINFORCEMENT_ROLL_MIN = 1,
+    REINFORCEMENT_ROLL_MAX = 15,
+    REINFORCEMENT_TIER_ONE_THRESHOLD = 5,
+    REINFORCEMENT_TIER_TWO_THRESHOLD = 10,
+    REINFORCEMENT_TIER_THREE_THRESHOLD = 13,
+    REINFORCEMENT_TIER_ONE_KEY = 10,
+    REINFORCEMENT_TIER_TWO_KEY = 20,
+    REINFORCEMENT_TIER_THREE_KEY = 30,
+    REINFORCEMENT_TIER_FOUR_KEY = 40,
+    REINFORCEMENT_TIER_ONE_COUNT_MIN = 8,
+    REINFORCEMENT_TIER_ONE_COUNT_MAX = 15,
+    REINFORCEMENT_TIER_TWO_COUNT_MIN = 5,
+    REINFORCEMENT_TIER_TWO_COUNT_MAX = 7,
+    REINFORCEMENT_TIER_THREE_COUNT_MIN = 3,
+    REINFORCEMENT_TIER_THREE_COUNT_MAX = 5,
+    REINFORCEMENT_TIER_FOUR_COUNT_MIN = 1,
+    REINFORCEMENT_TIER_FOUR_COUNT_MAX = 3
+H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
+// clang-format on
 
 // Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
 // unowned town on the map gains a random tier of its own creatures.
@@ -898,67 +941,67 @@ void game::GiveTroopsToNeutralTowns(void) {
     int monster;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         if ((m_castleRecs[i].m_x > 0 || m_castleRecs[i].m_y > 0) && m_castleRecs[i].m_owner < 0) {
-            die = Random(1, 15);
-            if (die <= 5) {
-                tier = 10;
-                howMany = Random(8, 15);
-            } else if (die <= 10) {
-                tier = 20;
-                howMany = Random(5, 7);
-            } else if (die <= 13) {
-                tier = 30;
-                howMany = Random(3, 5);
+            die = Random(REINFORCEMENT_ROLL_MIN, REINFORCEMENT_ROLL_MAX);
+            if (die <= REINFORCEMENT_TIER_ONE_THRESHOLD) {
+                tier = REINFORCEMENT_TIER_ONE_KEY;
+                howMany = Random(REINFORCEMENT_TIER_ONE_COUNT_MIN, REINFORCEMENT_TIER_ONE_COUNT_MAX);
+            } else if (die <= REINFORCEMENT_TIER_TWO_THRESHOLD) {
+                tier = REINFORCEMENT_TIER_TWO_KEY;
+                howMany = Random(REINFORCEMENT_TIER_TWO_COUNT_MIN, REINFORCEMENT_TIER_TWO_COUNT_MAX);
+            } else if (die <= REINFORCEMENT_TIER_THREE_THRESHOLD) {
+                tier = REINFORCEMENT_TIER_THREE_KEY;
+                howMany = Random(REINFORCEMENT_TIER_THREE_COUNT_MIN, REINFORCEMENT_TIER_THREE_COUNT_MAX);
             } else {
-                tier = 40;
-                howMany = Random(1, 3);
+                tier = REINFORCEMENT_TIER_FOUR_KEY;
+                howMany = Random(REINFORCEMENT_TIER_FOUR_COUNT_MIN, REINFORCEMENT_TIER_FOUR_COUNT_MAX);
             }
             switch (m_castleRecs[i].m_type + tier) {
-                case 10:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_PEASANT;
                     break;
-                case 20:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_ARCHER;
                     break;
-                case 30:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_PIKEMAN;
                     break;
-                case 40:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_SWORDSMAN;
                     break;
-                case 12:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_GOBLIN;
                     break;
-                case 22:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_ORC;
                     break;
-                case 32:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_WOLF;
                     break;
-                case 42:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_BARBARIAN:
                     monster = CREATURE_OGRE;
                     break;
-                case 11:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_SPRITE;
                     break;
-                case 21:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_DWARF;
                     break;
-                case 31:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_ELF;
                     break;
-                case 41:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_SORCERESS:
                     monster = CREATURE_DRUID;
                     break;
-                case 13:
+                case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_CENTAUR;
                     break;
-                case 23:
+                case REINFORCEMENT_TIER_TWO_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_GARGOYLE;
                     break;
-                case 33:
+                case REINFORCEMENT_TIER_THREE_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_GRIFFIN;
                     break;
-                case 43:
+                case REINFORCEMENT_TIER_FOUR_KEY + TOWN_TYPE_WARLOCK:
                     monster = CREATURE_MINOTAUR;
                     break;
             }
@@ -984,7 +1027,7 @@ signed char game::NewGame(void) {
     m_newGameWindow = new heroWindow(310, 14, "newgame.bin");
     if (!m_newGameWindow)
         MemError();
-    SetWinText(m_newGameWindow, 7);
+    SetWinText(m_newGameWindow, WINDOW_TEXT_NEW_GAME);
     if (gbNewGameSettingsSaved) {
         gpGame->m_difficulty = gcSavedDifficulty;
         m_players[1].m_difficulty = gcSavedPlayerTypes[1];
@@ -1033,6 +1076,18 @@ signed char game::NewGame(void) {
     return 1;
 }
 
+// clang-format off
+// campaign.bin widget ids (Buka CampaignControlId spells RESTART 0x385); the
+// progress icon shows scenarios won + PROGRESS_FRAME_BASE.
+H1_ENUM_BEGIN(CampaignInfoControl)
+    CAMPAIGN_INFO_NAME = 1,
+    CAMPAIGN_INFO_TEXT = 2,
+    CAMPAIGN_INFO_PROGRESS = 3,
+    CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
+    CAMPAIGN_INFO_RESTART = 0x385
+H1_ENUM_END(CampaignInfoControl)
+// clang-format on
+
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
 
@@ -1047,20 +1102,20 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
         MemError();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = CAMPAIGN_INFO_NAME;
     strcpy(gText, gCampaignScenarioNames[scenario]);
     message.text = gText;
     window->BroadcastMessage(message);
-    message.id = 2;
+    message.id = CAMPAIGN_INFO_TEXT;
     strcpy(gText, gCampaignScenarioText[scenario]);
     message.text = gText;
     window->BroadcastMessage(message);
     message.text = gText;
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
-    message.id = 3;
+    message.id = CAMPAIGN_INFO_PROGRESS;
     message.command = WIDGET_COMMAND_SET_FRAME;
-    message.value = gpGame->m_campaignScenariosWon + 4;
+    message.value = gpGame->m_campaignScenariosWon + CAMPAIGN_INFO_PROGRESS_FRAME_BASE;
     window->BroadcastMessage(message);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1071,23 +1126,23 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     } else {
         message.id = DIALOG_BUTTON_0;
         window->BroadcastMessage(message);
-        message.id = 0x385;
+        message.id = CAMPAIGN_INFO_RESTART;
         window->BroadcastMessage(message);
     }
     if (!fromMenu)
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
-    if (gpWindowManager->m_dialogResult == 0x385) {
+    if (gpWindowManager->m_dialogResult == CAMPAIGN_INFO_RESTART) {
         NormalDialog("Are you sure you want to restart this scenario?", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
             giBottomViewOverride = 0;
-            gpWindowManager->FadeScreen(1, 8, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
             gpAdvManager->SetInitialMapOrigin();
             gpAdvManager->RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(0, 8, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
         }
     }
 }
@@ -1098,7 +1153,7 @@ VA(0x0043c140, 0x7f)
 void game::InitEntireCampaign(int side) {
     LoadGame("origdata.bin", 1, 0);
     strcpy(gFullMapName, "");
-    gpGame->m_difficulty = 3;
+    gpGame->m_difficulty = DIFFICULTY_EXPERT;
     m_campaignType = side;
     m_campaignScenario = 0;
     m_campaignScenariosWon = 0;
@@ -1435,33 +1490,33 @@ void game::RandomizeEvents(void) {
                     obeliskId++;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_STATUE:
-                    cell->m_objectMetadata = 1;
+                    cell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SKELETON:
                     if (Random(0, 9) == 3)
-                        cell->m_objectMetadata = 2;
+                        cell->m_objectMetadata = SKELETON_ARTIFACT;
                     else
-                        cell->m_objectMetadata = 1;
+                        cell->m_objectMetadata = SKELETON_EMPTY;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DAEMON_CAVE:
                     switch (Random(0, 99) % 10) {
                         case 0:
                         case 1:
                         case 2:
-                            cell->m_objectMetadata = 2;
+                            cell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE;
                             break;
                         case 3:
-                            cell->m_objectMetadata = 3;
+                            cell->m_objectMetadata = DAEMON_REWARD_ARTIFACT;
                             break;
                         case 4:
                         case 5:
                         case 6:
-                            cell->m_objectMetadata = 4;
+                            cell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE_GOLD;
                             break;
                         case 7:
                         case 8:
                         case 9:
-                            cell->m_objectMetadata = 5;
+                            cell->m_objectMetadata = DAEMON_REWARD_RANSOM;
                             break;
                     }
                     break;
@@ -1469,14 +1524,14 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CAMPFIRE:
-                    cell->m_objectMetadata = Random(4, 6) << 4;
+                    cell->m_objectMetadata = Random(4, 6) << CAMPFIRE_AMOUNT_SHIFT;
                     cell->m_objectMetadata |= static_cast<signed char>(Random(0, 5));
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_ANCIENT_LAMP:
                     cell->m_objectMetadata = Random(0, 3) + 2;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x23) {
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_SHIPWRECK) {
                         cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
@@ -1487,20 +1542,20 @@ void game::RandomizeEvents(void) {
                         case 0:
                         case 1:
                         case 2:
-                            cell->m_objectMetadata = 2;
+                            cell->m_objectMetadata = GHOST_SITE_SMALL;
                             break;
                         case 3:
                         case 4:
                         case 5:
-                            cell->m_objectMetadata = 3;
+                            cell->m_objectMetadata = GHOST_SITE_MEDIUM;
                             break;
                         case 6:
                         case 7:
                         case 8:
-                            cell->m_objectMetadata = 4;
+                            cell->m_objectMetadata = GHOST_SITE_LARGE;
                             break;
                         case 9:
-                            cell->m_objectMetadata = 5;
+                            cell->m_objectMetadata = GHOST_SITE_HUGE;
                             break;
                     }
                     break;
@@ -1520,25 +1575,25 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(20, 50);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
-                    cell->m_objectMetadata = 1;
+                    cell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER:
                     if (!static_cast<unsigned char>(cell->m_objectMetadata)) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
-                        if (Random(0, 99) <= 25 && cell->m_objectIndex != 26)
-                            cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | 0x80;
+                        if (Random(0, 99) <= 25 && cell->m_objectIndex != CREATURE_GHOST)
+                            cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) | MONSTER_WILLING_FLAG;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
-                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - 61;
+                        cell->m_objectMetadata = static_cast<unsigned char>(cell->m_objectMetadata) - RESOURCE_PILE_OBJECT_BASE;
                     switch (static_cast<unsigned char>(cell->m_objectMetadata)) {
-                        case 0:
-                        case 2:
+                        case RESOURCE_WOOD:
+                        case RESOURCE_ORE:
                             cell->m_objectMetadata = Random(8, 16);
                             break;
-                        case 6:
+                        case RESOURCE_GOLD:
                             cell->m_objectMetadata = Random(5, 10);
                             break;
                         default:
@@ -1569,8 +1624,8 @@ void game::RandomizeEvents(void) {
                     cell->m_objectMetadata = Random(10, 20);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
-                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x2a
-                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != 0x2a) {
+                    if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1 || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP
+                        || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_WAGON_CAMP) {
                         cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
@@ -1584,15 +1639,15 @@ void game::RandomizeEvents(void) {
                         case 3:
                         case 4:
                         case 5:
-                            cell->m_objectMetadata = 1;
+                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_PICKUP;
                             break;
                         case 6:
                         case 7:
-                            cell->m_objectMetadata = 2;
+                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_GUARDED;
                             break;
                         case 8:
                         case 9:
-                            cell->m_objectMetadata = 3;
+                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_GOLD;
                             break;
                     }
                     break;
@@ -1804,7 +1859,7 @@ void game::ClaimTown(signed char townId, signed char player) {
         return;
     if (m_townOwners[townId] != -1)
         gpGame->GetTown(townId)->Deallocate();
-    for (i = 0; i < 5; ++i) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         townRec->m_army.m_creatureTypes[i] = CREATURE_NONE;
         townRec->m_army.m_creatureCounts[i] = 0;
     }
@@ -1838,16 +1893,16 @@ void game::ClaimMine(signed char mineId, signed char player) {
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
     switch (m_mines[mineId].type) {
-        case 0x16:
+        case MAP_OBJECT_DRAGON_CITY:
             frame = 0x14;
             break;
-        case 0x17:
+        case MAP_OBJECT_LIGHTHOUSE:
             frame = 0x18;
             break;
-        case 0:
+        case RESOURCE_WOOD:
             frame = 0x10;
             break;
-        case 1:
+        case RESOURCE_MERCURY:
             frame = 0xc;
             break;
         default:
@@ -1855,13 +1910,13 @@ void game::ClaimMine(signed char mineId, signed char player) {
             break;
     }
     switch (m_mines[mineId].type) {
-        case 1:
+        case RESOURCE_MERCURY:
             cell = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
             break;
-        case 0x16:
+        case MAP_OBJECT_DRAGON_CITY:
             cell = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
             break;
-        case 0x17:
+        case MAP_OBJECT_LIGHTHOUSE:
             cell = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
             break;
         default:
@@ -1913,9 +1968,9 @@ signed char game::ViewSpells(
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             if (spellType == 0)
-                message.id = 4;
+                message.id = SPELL_BOOK_ADVENTURE_SPELLS;
             else
-                message.id = 5;
+                message.id = SPELL_BOOK_COMBAT_SPELLS;
             message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
@@ -2122,6 +2177,27 @@ short ViewSpecialHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
+// clang-format off
+// armywin.bin widget ids; Buka ViewArmyControlId names the dismiss (DIALOG_BUTTON_3)
+// and close (DIALOG_BUTTON_0) buttons. The animation icon cycles
+// VIEW_ARMY_ANIMATION_FRAMES frames every VIEW_ARMY_FRAME_DELAY ticks.
+H1_ENUM_BEGIN(ViewArmyControl)
+    VIEW_ARMY_COUNT_FRAME = 1,
+    VIEW_ARMY_COUNT_TEXT = 2,
+    VIEW_ARMY_TITLE = 3,
+    VIEW_ARMY_STATS = 4,
+    VIEW_ARMY_ANIMATION = 5,
+    VIEW_ARMY_DISMISS = DIALOG_BUTTON_3,
+    VIEW_ARMY_CLOSE = DIALOG_BUTTON_0
+H1_ENUM_END(ViewArmyControl)
+
+H1_ENUM_CONST_BEGIN(ViewArmyConstant)
+    VIEW_ARMY_ANIMATION_FRAMES = 6,
+    VIEW_ARMY_FRAME_DELAY = 90,
+    VIEW_ARMY_STAT_TEXT_SIZE = 550
+H1_ENUM_CONST_END(ViewArmyConstant)
+// clang-format on
+
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
@@ -2162,11 +2238,11 @@ void game::ViewArmy(
 
     baseX = 86;
     topY = 164;
-    blankBtn = 1;
-    numId = 2;
-    titleLabel = 3;
-    statsMessage = 4;
-    animId = 5;
+    blankBtn = VIEW_ARMY_COUNT_FRAME;
+    numId = VIEW_ARMY_COUNT_TEXT;
+    titleLabel = VIEW_ARMY_TITLE;
+    statsMessage = VIEW_ARMY_STATS;
+    animId = VIEW_ARMY_ANIMATION;
     message.type = MESSAGE_WIDGET;
 
     if (monsterType != CREATURE_SWORDSMAN)
@@ -2196,7 +2272,7 @@ void game::ViewArmy(
         sprintf(fileName, "%s.wlk", iconName);
     else
         sprintf(fileName, "%s.wip", iconName);
-    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, 5, ICON_WIDGET_DRAW, 1);
+    monsterWidget = new iconWidget(spacing, 164, 86, 149, fileName, 0, facing == 1, VIEW_ARMY_ANIMATION, ICON_WIDGET_DRAW, 1);
     if (!monsterWidget)
         MemError();
     m_viewArmyWindow->AddWidget(monsterWidget, -1);
@@ -2204,11 +2280,11 @@ void game::ViewArmy(
     strcpy(fileName, gArmyNames[monsterType]);
     fileName[0] -= 32;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 3;
+    message.id = VIEW_ARMY_TITLE;
     message.text = fileName;
     m_viewArmyWindow->BroadcastMessage(message);
 
-    statText = static_cast<char*>(malloc(550));
+    statText = static_cast<char*>(malloc(VIEW_ARMY_STAT_TEXT_SIZE));
     if (theGroup)
         morale = theGroup->GetMorale(theHero, castle);
     else
@@ -2267,36 +2343,36 @@ void game::ViewArmy(
     sprintf(gText, "\n%s%s", gArmyStatText[7], gLuckText[luck + 3]);
     strcat(statText, gText);
 
-    message.id = 4;
+    message.id = VIEW_ARMY_STATS;
     message.text = statText;
     m_viewArmyWindow->BroadcastMessage(message);
     if (disableDismiss) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = DIALOG_BUTTON_3;
+        message.id = VIEW_ARMY_DISMISS;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (quickView) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = DIALOG_BUTTON_0;
+        message.id = VIEW_ARMY_CLOSE;
         m_viewArmyWindow->BroadcastMessage(message);
     }
     if (numTroops < 1) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = 1;
+        message.id = VIEW_ARMY_COUNT_FRAME;
         m_viewArmyWindow->BroadcastMessage(message);
-        message.id = 2;
+        message.id = VIEW_ARMY_COUNT_TEXT;
         m_viewArmyWindow->BroadcastMessage(message);
     } else {
         sprintf(numText, "%d", numTroops);
         message.command = WIDGET_COMMAND_SET_TEXT;
-        message.id = 2;
+        message.id = VIEW_ARMY_COUNT_TEXT;
         message.text = numText;
         m_viewArmyWindow->BroadcastMessage(message);
     }
-    glTimers[0] = KBTickCount() + 90;
+    glTimers[0] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
     m_viewArmyResult = 0;
     if (quickView) {
         gpMouseManager->ReallyHidePointer();
@@ -2307,7 +2383,7 @@ void game::ViewArmy(
     } else {
         gpWindowManager->DoDialog(m_viewArmyWindow, ViewArmyHandler, 0);
         if (gbDismissArmy && theGroup) {
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (theGroup->m_creatureTypes[i] == monsterType) {
                     theGroup->m_creatureTypes[i] = CREATURE_NONE;
                     theGroup->m_creatureCounts[i] = 0;
@@ -2338,7 +2414,7 @@ short ViewArmyHandler(tag_message& message) {
                         message.command = message.id =
                             WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
-                    case DIALOG_BUTTON_3:
+                    case VIEW_ARMY_DISMISS:
                         NormalDialog("Are you sure you want to dismiss this army?", NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x36, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
@@ -2358,15 +2434,24 @@ short ViewArmyHandler(tag_message& message) {
     if (KBTickCount() > glTimers[0]) {
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = 5;
+        message.id = VIEW_ARMY_ANIMATION;
         gpGame->m_viewArmyResult++;
-        message.value = gpGame->m_viewArmyResult % 6;
+        message.value = gpGame->m_viewArmyResult % VIEW_ARMY_ANIMATION_FRAMES;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
         gpGame->m_viewArmyWindow->DrawWindow();
-        glTimers[0] = KBTickCount() + 90;
+        glTimers[0] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
+
+// clang-format off
+// overwind.bin widget ids: resource r's count is RESOURCE_BASE + r.
+H1_ENUM_BEGIN(OverviewControl)
+    OVERVIEW_RESOURCE_BASE = 1,
+    OVERVIEW_DATE = 64,
+    OVERVIEW_DAILY_GOLD = 65
+H1_ENUM_END(OverviewControl)
+// clang-format on
 
 // Kingdom overview: heroes by class, castles and towns by type and mines by
 // resource drawn onto the backdrop, then the date, income and resources.
@@ -2448,7 +2533,7 @@ void game::Overview(void) {
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
     sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_color);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
@@ -2553,19 +2638,19 @@ void game::Overview(void) {
     win = new heroWindow(0, 0, "overwind.bin");
     if (!win)
         MemError();
-    SetWinText(win, 8);
+    SetWinText(win, WINDOW_TEXT_OVERVIEW);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 64;
+    message.id = OVERVIEW_DATE;
     sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
     message.text = gText;
     win->BroadcastMessage(message);
-    message.id = 65;
+    message.id = OVERVIEW_DAILY_GOLD;
     sprintf(gText, "%d", ComputeDailyGold(giCurPlayer));
     win->BroadcastMessage(message);
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < RESOURCE_COUNT; i++) {
         sprintf(gText, "%d", gpCurPlayer->m_resources[i]);
-        message.id = i + 1;
+        message.id = i + OVERVIEW_RESOURCE_BASE;
         win->BroadcastMessage(message);
     }
     gpWindowManager->AddWindow(win, -1, 1);
@@ -2581,10 +2666,10 @@ void game::Overview(void) {
         smallFont->DrawBoundedString(gText, 100, 465, 400, 12, 1, 0);
         gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpResourceManager->Dispose(ovIcon);
     gpResourceManager->Dispose(smallFont);
     gpResourceManager->Dispose(bigFont);
@@ -2783,13 +2868,13 @@ int game::ComputeDailyGold(int player) {
     gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_BAG_OF_GOLD) * 750;
     gold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_PURSE_OF_GOLD) * 500;
     if (!gbHumanPlayer[player]) {
-        if (gpGame->m_players[player].m_difficulty == 1)
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_DUMB)
             gold = gold * 0.75;
-        if (gpGame->m_players[player].m_difficulty == 2) {
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_AVERAGE) {
         }
-        if (gpGame->m_players[player].m_difficulty == 3)
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_SMART)
             gold = gold * 1.29;
-        if (gpGame->m_players[player].m_difficulty == 4)
+        if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_GENIUS)
             gold = gold * 1.45;
     }
     return gold;
@@ -2832,11 +2917,11 @@ void game::PerDay(void) {
         m_players[i].m_resources[RESOURCE_GOLD] += ComputeDailyGold(i);
     for (i = 0; i < m_playerCount; i++) {
         if (!gbHumanPlayer[i]) {
-            if (gpGame->m_players[i].m_difficulty > 2) {
+            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST) {
                 m_players[i].m_resources[RESOURCE_WOOD]++;
                 m_players[i].m_resources[RESOURCE_ORE]++;
             }
-            if (gpGame->m_players[i].m_difficulty > 3 && m_day >= 1 && m_day <= 6)
+            if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST && m_day >= 1 && m_day <= 6)
                 m_players[i].m_resources[m_day - 1]++;
         }
     }
@@ -2856,6 +2941,24 @@ void game::PerDay(void) {
     }
 }
 
+// clang-format off
+// Calendar draws: gWeekNames / gMonthNames sizes, the creature tables a
+// creature week or month picks from, and gNewTurnText's announcement rows.
+H1_ENUM_CONST_BEGIN(CalendarConstant)
+    CALENDAR_WEEK_NAME_COUNT = 15,
+    CALENDAR_WEEK_CREATURE_COUNT = 24,
+    CALENDAR_MONTH_NAME_COUNT = 10,
+    CALENDAR_MONTH_CREATURE_COUNT = 12,
+    NEW_TURN_TEXT_DAYS_LEFT = 0,
+    NEW_TURN_TEXT_LAST_DAY = 1,
+    NEW_TURN_TEXT_MONTH_NORMAL = 2,
+    NEW_TURN_TEXT_MONTH_CREATURE = 3,
+    NEW_TURN_TEXT_MONTH_PLAGUE = 4,
+    NEW_TURN_TEXT_WEEK_NORMAL = 5,
+    NEW_TURN_TEXT_WEEK_CREATURE = 6
+H1_ENUM_CONST_END(CalendarConstant)
+// clang-format on
+
 // Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
 // (computer towns grow faster), refreshes the tavern heroes and restocks the
 // map's renewable sites.
@@ -2869,13 +2972,13 @@ void game::PerWeek(void) {
     short i;
     int heroClass = 0;
 
-    giWeekType = 0;
-    giWeekTypeExtra = Random(0, 14);
+    giWeekType = CALENDAR_PERIOD_NORMAL;
+    giWeekTypeExtra = Random(0, CALENDAR_WEEK_NAME_COUNT - 1);
     if (m_week != 4) {
         i = Random(1, 4);
         if (i == 1) {
-            giWeekType = 1;
-            giWeekTypeExtra = Random(0, 23);
+            giWeekType = CALENDAR_PERIOD_CREATURE;
+            giWeekTypeExtra = Random(0, CALENDAR_WEEK_CREATURE_COUNT - 1);
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
@@ -2886,12 +2989,12 @@ void game::PerWeek(void) {
                 if (townPointer->m_buildings & 0x10)
                     gain += 2;
                 if (townPointer->m_owner >= 0 && !gbHumanPlayer[townPointer->m_owner]) {
-                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == 3)
+                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_SMART)
                         gain = gain * 1.24;
-                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == 4)
+                    if (gpGame->m_players[townPointer->m_owner].m_difficulty == PLAYER_TYPE_GENIUS)
                         gain = gain * 1.36;
                 }
-                if (giWeekType == 1 && gDwellingType[townPointer->m_type][j - 7] == giWeekTypeExtra)
+                if (giWeekType == CALENDAR_PERIOD_CREATURE && gDwellingType[townPointer->m_type][j - 7] == giWeekTypeExtra)
                     gain += 5;
                 townPointer->m_garrison[j - 7] += gain;
             }
@@ -2967,13 +3070,13 @@ void game::PerMonth(void) {
     m_month++;
     i = Random(1, 10);
     if (i <= 5) {
-        giMonthType = 0;
-        giMonthTypeExtra = Random(0, 9);
+        giMonthType = CALENDAR_PERIOD_NORMAL;
+        giMonthTypeExtra = Random(0, CALENDAR_MONTH_NAME_COUNT - 1);
     } else if (i <= 9) {
-        giMonthType = 1;
-        giMonthTypeExtra = giMonType[Random(0, 11)];
+        giMonthType = CALENDAR_PERIOD_CREATURE;
+        giMonthTypeExtra = giMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)];
     } else {
-        giMonthType = 2;
+        giMonthType = CALENDAR_PERIOD_PLAGUE;
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         for (j = 7; j <= 12; j++) {
@@ -2982,9 +3085,9 @@ void game::PerMonth(void) {
                 growth = gMonsterDatabase[gDwellingType[townPointer->m_type][j - 7]].growth;
                 if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                     growth += 2;
-                if (giMonthType == 1 && gDwellingType[townPointer->m_type][j - 7] == giMonthTypeExtra)
+                if (giMonthType == CALENDAR_PERIOD_CREATURE && gDwellingType[townPointer->m_type][j - 7] == giMonthTypeExtra)
                     townPointer->m_garrison[j - 7] *= 2;
-                if (giMonthType == 2) {
+                if (giMonthType == CALENDAR_PERIOD_PLAGUE) {
                     townPointer->m_garrison[j - 7] -= growth;
                     if (townPointer->m_garrison[j - 7] < 0)
                         townPointer->m_garrison[j - 7] = 0;
@@ -2993,7 +3096,7 @@ void game::PerMonth(void) {
             }
         }
     }
-    if (giMonthType == 1) {
+    if (giMonthType == CALENDAR_PERIOD_CREATURE) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
                 spot = gpAdvManager->GetCell(x, y);
@@ -3469,19 +3572,19 @@ void game::GiveArmy(armyGroup* group, int type, int count, int slot) {
         group->m_creatureTypes[i] = type;
         group->m_creatureCounts[i] = 0;
     } else {
-        for (i = 0; i < 5; ++i) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
             if (group->m_creatureTypes[i] == type)
                 break;
         }
-        if (i >= 5) {
-            for (i = 0; i < 5; ++i) {
+        if (i >= ARMY_GROUP_SLOT_COUNT) {
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
                 if (group->m_creatureTypes[i] < 0) {
                     group->m_creatureCounts[i] = 0;
                     break;
                 }
             }
         }
-        if (i >= 5)
+        if (i >= ARMY_GROUP_SLOT_COUNT)
             return;
     }
     group->m_creatureTypes[i] = type;
@@ -3495,7 +3598,7 @@ VA(0x0044443e, 0x8c)
 int game::ExperienceValueOfStack(armyGroup* group, hero* h) {
     int expValue = 0;
     int i;
-    for (i = 0; i < 5; ++i) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (group->m_creatureCounts[i] > 0)
             expValue += group->m_creatureCounts[i] * gMonsterDatabase[group->m_creatureTypes[i]].hitPoints;
     }
@@ -3624,14 +3727,8 @@ signed char advManager::FindAdjacentMonster(
             s_adjacentMonsterEndX = originX + 1;
         if (originY == MAP_CELL_GRID_SIZE - 1)
             s_adjacentMonsterEndY = originY + 1;
-        if (originX == 0)
-            s_adjacentMonsterMinX = 0;
-        else
-            s_adjacentMonsterMinX = originX - 1;
-        if (originY == 0)
-            s_adjacentMonsterMinY = 0;
-        else
-            s_adjacentMonsterMinY = originY - 1;
+        s_adjacentMonsterMinX = originX == 0 ? 0 : originX - 1;
+        s_adjacentMonsterMinY = originY == 0 ? 0 : originY - 1;
 
         for (s_adjacentMonsterX = s_adjacentMonsterMinX; s_adjacentMonsterX < s_adjacentMonsterEndX;
              ++s_adjacentMonsterX) {
@@ -3665,11 +3762,11 @@ foundAdjacentMonster:
 // evidence: graph:3;base=0.519474;margin=0.741945;shape=0.279;size=0.996;calls=1.000;alternate=pol20:void game::SetupAdjacentMons(void)@0x0008111f
 VA(0x00444a6a, 0xde)
 void game::SetupAdjacentMons(void) {
-    int monX;
-    int monY;
     int x;
-    int mask = 0x7f;
     int y;
+    int mask = 0x7f;
+    int monY;
+    int monX;
 
     for (x = 0; x < MAP_CELL_GRID_SIZE; ++x) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; ++y) {
@@ -3969,9 +4066,9 @@ void game::CheckHeroConsistency(void) {
                     if (theHero->m_owner < 0 || theHero->m_owner > 3) {
                         if (theHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                             town = gpGame->GetTown(theHero->m_occupiedTown);
-                            town->m_occupyingHeroId = -1;
+                            town->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
                         }
-                        RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, 0, 1);
+                        RestoreCell(theHero->m_x, theHero->m_y, theHero->m_locationType, theHero->m_occupiedTown, NULL, 1);
                     }
                 } else {
                     cell->m_triggerType = MAP_OBJECT_NONE;
@@ -3992,6 +4089,30 @@ void game::CheckHeroConsistency(void) {
         }
     }
 }
+
+// clang-format off
+// REMOTE.GAM transfer (Buka RemoteSaveConstant): the sender announces the
+// size (INIT, answered by INIT_RESPONSE), streams SEGMENT_SIZE-byte segments
+// (DATA), asks for each BATCH_SIZE-segment block's acknowledgement map
+// (ACK_REQUEST / ACK_RESPONSE) and closes with FINISH.
+H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
+    REMOTE_SAVE_INIT_COMMAND = 1,
+    REMOTE_SAVE_INIT_RESPONSE = 2,
+    REMOTE_SAVE_DATA_COMMAND = 3,
+    REMOTE_SAVE_ACK_REQUEST_COMMAND = 4,
+    REMOTE_SAVE_ACK_RESPONSE_COMMAND = 5,
+    REMOTE_SAVE_FINISH_COMMAND = 6,
+    REMOTE_SAVE_SEGMENT_SIZE = 200,
+    REMOTE_SAVE_BATCH_SIZE = 100,
+    REMOTE_SAVE_HEADER_SIZE = 8,
+    REMOTE_SAVE_ACK_MAP_SIZE = 200,
+    REMOTE_SAVE_INDEX_SIZE = 2,
+    REMOTE_SAVE_RECEIVE_TIMEOUT = 20000,
+    REMOTE_SAVE_BUFFER_EXTRA = 500,
+    REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
+    REMOTE_SAVE_TRANSFER_SOUNDS = 8
+H1_ENUM_CONST_END(RemoteSaveConstant)
+// clang-format on
 
 // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -4025,7 +4146,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     char* fileData;
     char finished;
 
-    gpAdvManager->TrimLoopingSounds(8);
+    gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     okay = 0;
     status = 0;
     oldTrack = -1;
@@ -4048,8 +4169,8 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     extern char gcDataPath[];
     sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
     fileSize = FileSize(pathname);
-    sendPacket = static_cast<char*>(malloc(0x100));
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         outData = static_cast<char*>(malloc(fileSize));
     fileData = static_cast<char*>(malloc(fileSize));
     fileHandle = open(pathname, O_BINARY);
@@ -4061,60 +4182,60 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     {
         read(fileHandle, fileData, fileSize);
         close(fileHandle);
-        if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+        if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
             fileSize = EncodeData(outData, fileData, fileSize);
         else
             outData = fileData;
 
         ((int*)sendPacket)[0] = fileSize;
         ((int*)sendPacket)[1] = playerExited;
-        status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
+        status = TransmitAndWait(sendPacket, remotePlayer, REMOTE_SAVE_HEADER_SIZE, REMOTE_SAVE_INIT_COMMAND, REMOTE_SAVE_INIT_RESPONSE, &incoming);
         if (!status)
             ShutDown(NULL);
 
-        segCount = (fileSize - 1) / 200 + 1;
-        numBlocks = (segCount - 1) / 100 + 1;
+        segCount = (fileSize - 1) / REMOTE_SAVE_SEGMENT_SIZE + 1;
+        numBlocks = (segCount - 1) / REMOTE_SAVE_BATCH_SIZE + 1;
         for (block = 0; block < numBlocks; block++) {
             LogInt("Start Seg #", block);
             if (block + 1 == numBlocks)
-                blockSize = segCount - block * 100;
+                blockSize = segCount - block * REMOTE_SAVE_BATCH_SIZE;
             else
-                blockSize = 100;
+                blockSize = REMOTE_SAVE_BATCH_SIZE;
             finished = 0;
             while (!finished) {
-                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE; sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize; sendPacketIndex++) {
                     PollSound();
                     CheckDoMain(0, 1);
                     if (!acked[sendPacketIndex]) {
                         if (sendPacketIndex + 1 == segCount)
-                            len = fileSize - sendPacketIndex * 200;
+                            len = fileSize - sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE;
                         else
-                            len = 200;
+                            len = REMOTE_SAVE_SEGMENT_SIZE;
                         *(short*)sendPacket = static_cast<short>(sendPacketIndex);
-                        memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
-                        status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
+                        memcpy(sendPacket + REMOTE_SAVE_INDEX_SIZE, outData + sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE, len);
+                        status = TransmitRemoteData(sendPacket, remotePlayer, len + REMOTE_SAVE_INDEX_SIZE, REMOTE_SAVE_DATA_COMMAND, 0, 1, REMOTE_MESSAGE_DEFAULT, 1);
                         if (!status)
                             ShutDown(NULL);
                     }
                 }
                 LogStr("PreWait");
-                *(short*)sendPacket = static_cast<short>(block * 100);
-                status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
+                *(short*)sendPacket = static_cast<short>(block * REMOTE_SAVE_BATCH_SIZE);
+                status = TransmitAndWait(sendPacket, remotePlayer, REMOTE_SAVE_INDEX_SIZE, REMOTE_SAVE_ACK_REQUEST_COMMAND, REMOTE_SAVE_ACK_RESPONSE_COMMAND, &incoming);
                 LogStr("PostWait");
                 if (!status)
                     ShutDown(NULL);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
                     if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex] > 0) // API-forced: char* record.
-                        acked[block * 100 + sendPacketIndex] = 1;
+                        acked[block * REMOTE_SAVE_BATCH_SIZE + sendPacketIndex] = 1;
                 }
                 finished = 1;
-                for (sendPacketIndex = block * 100; sendPacketIndex < block * 100 + blockSize; sendPacketIndex++) {
+                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE; sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize; sendPacketIndex++) {
                     if (!acked[sendPacketIndex])
                         finished = 0;
                 }
             }
         }
-        status = TransmitRemoteData(NULL, remotePlayer, 0, 6, 1, 1, -1, 1);
+        status = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_SAVE_FINISH_COMMAND, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
         if (!status)
             ShutDown(NULL);
         okay = 1;
@@ -4122,7 +4243,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
 
 cleanup:
     free(sendPacket);
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         free(outData);
     free(fileData);
     AiPrint("Transmit End");
@@ -4163,7 +4284,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     int packetStart;
     char* decodedData;
 
-    gpAdvManager->TrimLoopingSounds(8);
+    gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     fileHandle = 0;
     done = 0;
     unused1 = 0;
@@ -4180,19 +4301,19 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         Process1WindowsMessage();
     }
-    result = TransmitRemoteData(NULL, remotePlayer, 0, 2, 1, 1, -1, 1);
+    result = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_SAVE_INIT_RESPONSE, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
     if (!result)
         ShutDown(NULL);
     memset(gotIt, 0, sizeof(gotIt));
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
-        decodedData = static_cast<char*>(malloc(0x130b0));
-    sendPacket = static_cast<char*>(malloc(0x100));
-    inData = static_cast<char*>(malloc(dataSize + 500));
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
+        decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
+    sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
+    inData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
     lastPacketTime = KBTickCount();
     while (!done) {
         PollSound();
         CheckDoMain(0, 1);
-        if (lastPacketTime + 20000 < KBTickCount()) {
+        if (lastPacketTime + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
             NormalDialog("Error receiving data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
@@ -4200,30 +4321,30 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                 ShutDown(NULL);
         }
         receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
-        if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
+        if (receivedPacket && (receivedPacket->type == REMOTE_MESSAGE_RELIABLE || receivedPacket->type == REMOTE_MESSAGE_UNRELIABLE)) {
             lastPacketTime = KBTickCount();
             switch (receivedPacket->command) {
-                case 3:
+                case REMOTE_SAVE_DATA_COMMAND:
                     packetStart = receivedPacket->payload.segment.index;
                     gotIt[packetStart] = 1;
-                    memcpy(inData + packetStart * 200, receivedPacket->payload.segment.data,
-                           receivedPacket->payloadSize - 2);
+                    memcpy(inData + packetStart * REMOTE_SAVE_SEGMENT_SIZE, receivedPacket->payload.segment.data,
+                           receivedPacket->payloadSize - REMOTE_SAVE_INDEX_SIZE);
                     break;
-                case 4:
+                case REMOTE_SAVE_ACK_REQUEST_COMMAND:
                     packetStart = receivedPacket->payload.segment.index;
-                    for (k = packetStart; k < packetStart + 100; k++)
+                    for (k = packetStart; k < packetStart + REMOTE_SAVE_BATCH_SIZE; k++)
                         *(sendPacket + k - packetStart) = gotIt[k];
-                    result = TransmitRemoteData(sendPacket, remotePlayer, 200, 5, 1, 1, -1, 1);
+                    result = TransmitRemoteData(sendPacket, remotePlayer, REMOTE_SAVE_ACK_MAP_SIZE, REMOTE_SAVE_ACK_RESPONSE_COMMAND, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
                     if (!result)
                         ShutDown(NULL);
                     break;
-                case 6:
+                case REMOTE_SAVE_FINISH_COMMAND:
                     done = 1;
                     break;
             }
         }
     }
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         dataSize = DecodeData(decodedData, inData);
     else
         decodedData = inData;
@@ -4237,7 +4358,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     okay = 1;
     free(sendPacket);
     free(inData);
-    if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
         free(decodedData);
     AiPrint("Receive End");
     if (gpAdvManager->m_active == 1) {
@@ -4274,12 +4395,12 @@ void game::DoNewTurn(void) {
     CheckEndGame(0);
     if (gpCurPlayer->m_daysLeft >= 0) {
         if (gpCurPlayer->m_daysLeft == 1) {
-            sprintf(gText, gNewTurnText[1], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
+            sprintf(gText, gNewTurnText[NEW_TURN_TEXT_LAST_DAY], gColorNames[gpGame->m_players[giCurPlayer].Color()]);
             gText[0] -= 32;
         } else {
             sprintf(
                 gText,
-                gNewTurnText[0],
+                gNewTurnText[NEW_TURN_TEXT_DAYS_LEFT],
                 gColorNames[gpGame->m_players[giCurPlayer].Color()],
                 gpCurPlayer->m_daysLeft
             );
@@ -4294,27 +4415,27 @@ void game::DoNewTurn(void) {
     gpAdvManager->CheckDimNextHeroBut();
     gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
     if (m_day == 1) {
-        if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != -1) {
+        if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != CALENDAR_PERIOD_NONE) {
             track = -1;
             if (m_week == 1) {
                 track = 0x33;
-                if (giMonthType == 0) {
-                    sprintf(gText, gNewTurnText[2], gMonthNames[giMonthTypeExtra]);
-                } else if (giMonthType == 1) {
+                if (giMonthType == CALENDAR_PERIOD_NORMAL) {
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_NORMAL], gMonthNames[giMonthTypeExtra]);
+                } else if (giMonthType == CALENDAR_PERIOD_CREATURE) {
                     strcpy(monsterName, gArmyNames[giMonthTypeExtra]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[3], gArmyNames[giMonthTypeExtra], monsterName);
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE], gArmyNames[giMonthTypeExtra], monsterName);
                 } else {
-                    sprintf(gText, gNewTurnText[4]);
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_MONTH_PLAGUE]);
                 }
             } else {
                 track = 0x32;
-                if (giWeekType == 0) {
-                    sprintf(gText, gNewTurnText[5], gWeekNames[giWeekTypeExtra]);
+                if (giWeekType == CALENDAR_PERIOD_NORMAL) {
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_WEEK_NORMAL], gWeekNames[giWeekTypeExtra]);
                 } else {
                     strcpy(monsterName, gArmyNames[giWeekTypeExtra]);
                     monsterName[0] -= 32;
-                    sprintf(gText, gNewTurnText[6], gArmyNames[giWeekTypeExtra], monsterName);
+                    sprintf(gText, gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE], gArmyNames[giWeekTypeExtra], monsterName);
                 }
             }
             gpSoundManager->SwitchAmbientMusic(track);
@@ -4410,31 +4531,31 @@ int game::CalcDifficultyRating(void) {
     int total;
 
     total = 0;
-    if (m_difficulty == 0) {
-    } else if (m_difficulty == 1) {
+    if (m_difficulty == DIFFICULTY_EASY) {
+    } else if (m_difficulty == DIFFICULTY_NORMAL) {
         total += 10;
-    } else if (m_difficulty == 2) {
+    } else if (m_difficulty == DIFFICULTY_HARD) {
         total += 20;
-    } else if (m_difficulty == 3) {
+    } else if (m_difficulty == DIFFICULTY_EXPERT) {
         total += 30;
     }
     for (i = 1; i < 4; i++) {
         if (i < giNumHumanPlayers)
             total += (m_players[i].m_difficulty - 1) * 10;
-        else if (m_players[i].m_difficulty == 0)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_NONE)
             total -= 10;
-        else if (m_players[i].m_difficulty == 1)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_DUMB)
             total += 5;
-        else if (m_players[i].m_difficulty == 2)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_AVERAGE)
             total += 10;
-        else if (m_players[i].m_difficulty == 3)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_SMART)
             total += 15;
-        else if (m_players[i].m_difficulty == 4)
+        else if (m_players[i].m_difficulty == PLAYER_TYPE_GENIUS)
             total += 20;
     }
     gpGame->m_playerCount = 0;
     for (i = 0; i < 4; i++) {
-        if (gpGame->m_players[i].m_difficulty > 0)
+        if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
             gpGame->m_playerCount++;
     }
     if (gbIAmGreatest) {

@@ -86,8 +86,8 @@ short highScoreManager::Main(struct tag_message& message) {
     if (gbShowHighScore != 0)
         gbShowHighScore = 0;
 
-    if (glTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
-        glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
+    if (glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
+        glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
         for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
             m_animationFrames[rank] =
                 (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;

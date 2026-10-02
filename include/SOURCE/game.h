@@ -30,6 +30,34 @@ H1_ENUM_CONST_BEGIN(GameStorageConstant)
     GAME_BOAT_COUNT = 32
 H1_ENUM_CONST_END(GameStorageConstant)
 
+// game::m_difficulty: the four new-game difficulty buttons and
+// gDifficultyNames ("Easy", "Normal", "Hard", "Expert"); Buka GameDifficulty.
+H1_ENUM_BEGIN(GameDifficulty)
+    DIFFICULTY_EASY = 0,
+    DIFFICULTY_NORMAL = 1,
+    DIFFICULTY_HARD = 2,
+    DIFFICULTY_EXPERT = 3,
+    DIFFICULTY_COUNT = 4
+H1_ENUM_END(GameDifficulty)
+
+// giWeekType / giMonthType (Buka CalendarPeriodType): a named week or month
+// (gWeekNames / gMonthNames[special]), a creature week or month
+// (gArmyNames[special] grows), or the month of the plague. NONE suppresses
+// the new-week announcement.
+H1_ENUM_BEGIN(CalendarPeriodType)
+    CALENDAR_PERIOD_NONE = -1,
+    CALENDAR_PERIOD_NORMAL = 0,
+    CALENDAR_PERIOD_CREATURE = 1,
+    CALENDAR_PERIOD_PLAGUE = 2
+H1_ENUM_END(CalendarPeriodType)
+
+// The first two game::m_mines records are the unique sites: Dragon City
+// (pays 1000 gold a day) and the Lighthouse (ship movement).
+H1_ENUM_BEGIN(GameMineSlot)
+    MINE_SLOT_DRAGON_CITY = 0,
+    MINE_SLOT_LIGHTHOUSE = 1
+H1_ENUM_END(GameMineSlot)
+
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
 // and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
 // 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).

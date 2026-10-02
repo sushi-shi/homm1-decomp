@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/X_GLOBAL.h>
@@ -17,7 +18,7 @@ town::town(void) {
     m_owner = 0;
     m_x = 0;
     m_y = 0;
-    m_occupyingHeroId = -1;
+    m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     m_buildings = (1 << BUILDING_SLOT_TENT);
     m_buildState = 0;
     m_unknown19 = 0;
@@ -29,7 +30,7 @@ town::town(void) {
 // HoMM1 retail returns in AL; the HoMM2 int return is a later signature.
 VA(0x00463f7b, 0x55)
 signed char town::HasGarrison(void) {
-    for (short slot = 0; slot < 5; ++slot) {
+    for (short slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
             return 1;
     }
@@ -44,7 +45,7 @@ void town::GiveSpells(void) {
     hero* visitingHero;
     short i;
 
-    if (m_occupyingHeroId == -1)
+    if (m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE)
         return;
     visitingHero = gpGame->GetHero(m_occupyingHeroId);
     if (!visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
@@ -82,9 +83,9 @@ void town::View(void) {
 
     townManager *manager = gpTownManager;
     manager->SetTown(this);
-    gpWindowManager->FadeScreen(1, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpExec->CallManager(gpTownManager);
-    if (m_occupyingHeroId != -1)
+    if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);
     gAdvDisposeLevel = 0;
 }

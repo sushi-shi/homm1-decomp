@@ -34,24 +34,24 @@ int Orientation = 1;
 DATA(0x0048e198)
 WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
 DATA(0x0048e59c)
-void* lpInitWin = 0;
+void* lpInitWin = NULL;
 // Buka's image/scroll counters are identified by the retail WinG paint path.
 DATA(0x0048e5a4)
 int giTtlBlts = 0;
 DATA(0x0048e5a8)
 int gbWinGraphBusy = 0;
 DATA(0x0048e5ac)
-DirectDrawCreateProc lpDirectDrawCreate = 0;
+DirectDrawCreateProc lpDirectDrawCreate = NULL;
 DATA(0x0048e5b0)
-IDirectDraw* lpDD = 0;
+IDirectDraw* lpDD = NULL;
 DATA(0x0048e5b4)
-IDirectDrawSurface* lpDDSPrimary = 0;
+IDirectDrawSurface* lpDDSPrimary = NULL;
 DATA(0x0048e5b8)
-IDirectDrawSurface* lpDDSOne = 0;
+IDirectDrawSurface* lpDDSOne = NULL;
 DATA(0x0048e5bc)
-IDirectDrawClipper* lpClipper = 0;
+IDirectDrawClipper* lpClipper = NULL;
 DATA(0x0048e5c0)
-IDirectDrawPalette* lpDDPal = 0;
+IDirectDrawPalette* lpDDPal = NULL;
 DATA(0x0048e5c4)
 short gDDRestoreLineBase = 49;
 DATA(0x0048e5e8)
@@ -79,13 +79,13 @@ short gDDCleanUpLineBase = 550;
 DATA(0x0048e948)
 short gDDSetFullScreenLineBase = 596;
 DATA(0x0048e94c)
-HDC hdcImage = 0;
+HDC hdcImage = NULL;
 DATA(0x0048e950)
-HBITMAP gbmOldMonoBitmap = 0;
+HBITMAP gbmOldMonoBitmap = NULL;
 DATA(0x0048e954)
-HPALETTE hpalApp = 0;
+HPALETTE hpalApp = NULL;
 DATA(0x0048e9fc)
-HINSTANCE hDDrawLibrary = 0;
+HINSTANCE hDDrawLibrary = NULL;
 DATA(0x004a4b70)
 RECT gDDClientRect;
 DATA(0x004a46a8)
@@ -208,8 +208,8 @@ VA(0x004039d6, 0x592)
 int DDAppPaint(void* window, void* paintDC) {
     int ySrc;
     int height;
-    int x;
     int width;
+    int x;
     PAINTSTRUCT ps;
     POINT pt;
 
@@ -692,12 +692,12 @@ int WGQueryNewPalette() {
 
         hdc = GetDC(hwndApp);
         if (hpalApp != NULL)
-            SelectPalette(hdc, hpalApp, 0);
+            SelectPalette(hdc, hpalApp, FALSE);
         paletteChanges = RealizePalette(hdc);
         ReleaseDC(hwndApp, hdc);
     }
     if (paletteChanges > 0) {
-        InvalidateRect(hwndApp, NULL, 1);
+        InvalidateRect(hwndApp, NULL, TRUE);
         return 1;
     } else {
         return 0;
@@ -776,7 +776,7 @@ void WGUpdatePalette(signed char* paletteData) {
     hpalApp = CreatePalette(reinterpret_cast<LPLOGPALETTE>(&LogicalPalette));
     dc = GetDC(hwndApp);
     if (hpalApp != NULL)
-        SelectPalette(dc, hpalApp, 0);
+        SelectPalette(dc, hpalApp, FALSE);
     result = RealizePalette(dc);
     ReleaseDC(hwndApp, dc);
     if (giMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
@@ -866,7 +866,7 @@ int WGAppPaint(void* window, void* paintDC) {
     unused = 0;
     if (screenImage.bits != NULL) {
         paintDC = BeginPaint(static_cast<HWND>(window), &paintStruct);
-        SelectPalette(static_cast<HDC>(paintDC), hpalApp, 0);
+        SelectPalette(static_cast<HDC>(paintDC), hpalApp, FALSE);
         RealizePalette(static_cast<HDC>(paintDC));
         GetClientRect(static_cast<HWND>(window), &rect);
         destX = 0;

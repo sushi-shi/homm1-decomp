@@ -613,14 +613,14 @@ short advManager::ValidMoveWithEvent(hero *movingHero, short direction)
 VA(0x004077b5, 0x2a3)
 short advManager::ValidMove(short direction)
 {
-    short downMask;
     short directionX;
-    short newX;
-    short directionY;
-    short newY;
-    mapCell *destCell;
+    short downMask;
     mapCell *hereCell;
+    mapCell *destCell;
+    short directionY;
     short north;
+    short newX;
+    short newY;
 
     directionX = normalDirTable[direction].x;
     directionY = normalDirTable[direction].y;

@@ -129,6 +129,7 @@ H1_ENUM_CONST_BEGIN(TownMageConstant)
 H1_ENUM_CONST_END(TownMageConstant)
 
 H1_ENUM_CONST_BEGIN(TownSplitConstant)
+    TOWN_SPLIT_PROMPT_CONTROL = 1,
     TOWN_SPLIT_AMOUNT_CONTROL = 0x44,
     TOWN_SPLIT_INCREASE_CONTROL = 0x45,
     TOWN_SPLIT_DECREASE_CONTROL = 0x46,
@@ -181,7 +182,6 @@ H1_ENUM_CONST_END(TownSplitConstant)
 H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,
-    TOWN_TAVERN_WINDOW_TEXT = 0xe,
     TOWN_TAVERN_MUSIC = 0x2f,
     TOWN_THEME_MUSIC_BASE = 0x1d,
     TOWN_TAVERN_ANIMATION_DELAY = 6,
@@ -193,6 +193,43 @@ H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_DIALOG_BUTTON_1 = 0x7801,
     TOWN_DIALOG_BUTTON_2 = 0x7802
 H1_ENUM_CONST_END(TownTavernConstant)
+
+// Town purchases and building tables: the spell book and boat prices
+// (Buka TOWN_SPELL_BOOK_COST), the six dwellings each faction's rows hold in
+// the gDwelling* tables, and BuyBuild's split between neutral buildings
+// (gNeutralBuildingCosts rows 0..6) and dwellings.
+H1_ENUM_CONST_BEGIN(TownBuildConstant)
+    TOWN_SPELL_BOOK_COST = 500,
+    TOWN_BOAT_GOLD_COST = 1000,
+    TOWN_BOAT_WOOD_COST = 10,
+    TOWN_DWELLINGS_PER_FACTION = 6,
+    TOWN_NEUTRAL_BUILDING_LAST = 6,
+    TOWN_NEUTRAL_BUILDING_COUNT = 7,
+    TOWN_DWELLING_COST_ROWS = 28,
+    TOWN_MAGE_GUILD_COST_LEVEL_LAST = 3
+H1_ENUM_CONST_END(TownBuildConstant)
+
+// Town screen layout: the garrison and visiting-hero strips below the
+// 0x100-pixel town view, the bank box beside them, and the empty hero
+// strip's placeholder portrait frame.
+H1_ENUM_CONST_BEGIN(TownScreenConstant)
+    TOWN_GARRISON_STRIP_Y = 0x100,
+    TOWN_HERO_STRIP_Y = 0x163,
+    TOWN_BANK_BOX_X = 0x222,
+    TOWN_BANK_BOX_Y = 0x100,
+    TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8
+H1_ENUM_CONST_END(TownScreenConstant)
+
+// rcrthero.bin widget ids: the two candidates' portraits, class labels and
+// select buttons (dimmed for the cannot-recruit quick view).
+H1_ENUM_BEGIN(TownRecruitHeroControl)
+    RECRUIT_HERO_PORTRAIT_FIRST = 2,
+    RECRUIT_HERO_PORTRAIT_SECOND = 3,
+    RECRUIT_HERO_CLASS_FIRST = 6,
+    RECRUIT_HERO_CLASS_SECOND = 7,
+    RECRUIT_HERO_SELECT_FIRST = 8,
+    RECRUIT_HERO_SELECT_SECOND = 9
+H1_ENUM_END(TownRecruitHeroControl)
 // clang-format on
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close

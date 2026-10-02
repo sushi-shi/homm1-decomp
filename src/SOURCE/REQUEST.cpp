@@ -155,7 +155,7 @@ fileRequester::fileRequester(
     }
 
     KBChangeMenu(hmnuDflt);
-    m_acceptMask = 0x32f;
+    m_acceptMask = FILE_REQUESTER_DISPATCH_MASK;
     m_result = -2;
 }
 
@@ -187,9 +187,9 @@ void fileRequester::Close(void) {
 // slot whose extension digit matches the human player count.
 VA(0x004489c4, 0x431)
 short fileRequester::Open(short priority) {
-    const short scrollId = 14;
+    const short scrollId = FILE_REQUESTER_SCROLL_KNOB;
     int i;
-    const short promptId = 16;
+    const short promptId = FILE_REQUESTER_FILENAME_LABEL;
     tag_message message;
     signed char enable;
     char* period;
@@ -208,7 +208,7 @@ short fileRequester::Open(short priority) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     if (m_mode == 1) {
         enable = 1;
-        const short textEntryId = 15;
+        const short textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
         strcpy(m_filename, gpGame->m_saveName);
         period = FindLastToken(m_filename, '.');
         if (period)
@@ -240,11 +240,11 @@ short fileRequester::Open(short priority) {
         message.text = gText;
         m_window->BroadcastMessage(message);
     }
-    const short nameId = 15;
+    const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_MAX_LENGTH;
     message.id = nameId;
-    message.value = 255;
+    message.value = FILE_REQUESTER_FILENAME_MAX_LENGTH;
     m_window->BroadcastMessage(message);
     Update(0);
     if (gbShowMapInfo)
@@ -265,17 +265,11 @@ void fileRequester::SetOK(signed char enabled) {
     tag_message message;
 
     message.type = MESSAGE_WIDGET;
-    if (enabled)
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    else
-        message.command = WIDGET_COMMAND_SET_FLAGS;
+    message.command = enabled ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
     message.id = DIALOG_BUTTON_2;
     message.value = WIDGET_FLAG_DIMMED;
     m_window->BroadcastMessage(message);
-    if (enabled)
-        message.command = WIDGET_COMMAND_SET_FLAGS;
-    else
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.command = enabled ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_ENABLED;
     m_window->BroadcastMessage(message);
 }
@@ -287,13 +281,13 @@ short fileRequester::Main(tag_message& message) {
     int newTop;
     int stepSize;
     int numPages;
-    const short arrowUpId = 1;
+    const short arrowUpId = FILE_REQUESTER_SCROLL_UP;
     tag_message msg;
-    const short downArrowId = 2;
-    const short railId = 3;
-    const short firstRowId = 4;
-    const short scrollerId = 14;
-    const short nameId = 15;
+    const short downArrowId = FILE_REQUESTER_SCROLL_DOWN;
+    const short railId = FILE_REQUESTER_SCROLL_GUTTER;
+    const short firstRowId = FILE_REQUESTER_LIST_FIRST;
+    const short scrollerId = FILE_REQUESTER_SCROLL_KNOB;
+    const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
     short ch;
     short len;
     int finished;
@@ -326,7 +320,7 @@ short fileRequester::Main(tag_message& message) {
                 case INPUT_SCAN_NUMPAD_2:
                     if (m_selectedIndex < m_fileCount - 1) {
                         m_selectedIndex++;
-                        if (m_topIndex + 10 <= m_selectedIndex)
+                        if (m_topIndex + FILE_REQUESTER_VISIBLE_ROWS <= m_selectedIndex)
                             m_topIndex++;
                         Update(1);
                     }
@@ -396,15 +390,15 @@ short fileRequester::Main(tag_message& message) {
                             }
                             break;
                         case downArrowId:
-                            if (m_topIndex + 10 < m_fileCount) {
+                            if (m_topIndex + FILE_REQUESTER_VISIBLE_ROWS < m_fileCount) {
                                 m_topIndex++;
-                                if (m_topIndex + 9 >= m_fileCount)
-                                    m_topIndex = m_fileCount - 10;
+                                if (m_topIndex + FILE_REQUESTER_LAST_ROW_OFFSET >= m_fileCount)
+                                    m_topIndex = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
                                 Update(1);
                             }
                             break;
                         case railId:
-                            numPages = m_fileCount - 9;
+                            numPages = m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET;
                             if (numPages < 1)
                                 numPages = 1;
                             stepSize = 15700 / numPages;
@@ -413,8 +407,8 @@ short fileRequester::Main(tag_message& message) {
                             ptrY -= 9;
                             newTop = ptrY * 100 / stepSize;
                             m_topIndex = newTop;
-                            if (m_topIndex + 9 >= m_fileCount)
-                                m_topIndex = m_fileCount - 10;
+                            if (m_topIndex + FILE_REQUESTER_LAST_ROW_OFFSET >= m_fileCount)
+                                m_topIndex = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
                             if (m_topIndex < 0)
                                 m_topIndex = 0;
                             Update(1);
@@ -460,7 +454,7 @@ short fileRequester::Main(tag_message& message) {
 
     if (finished == 1) {
         if (giCampaignChoice <= 0 && m_mode == 0 && m_selectedIndex >= 0 && gbRequestingGames
-            && message.value != 0x7801) {
+            && message.value != FILE_REQUESTER_CANCEL) {
             ch = m_extensions[m_selectedIndex].text[3] - '0';
             if (ch < giNumHumanPlayers && giDebugLevel < 2) {
                 sprintf(
@@ -478,7 +472,7 @@ short fileRequester::Main(tag_message& message) {
                     "computer takes the place of the last %d human(s)?",
                     ch, ch - giNumHumanPlayers);
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
-                if (gpWindowManager->m_dialogResult != 0x7805)
+                if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     finished = 0;
             }
         }
@@ -520,7 +514,7 @@ void fileRequester::DoKnob(void) {
 
     gpMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;
-    scale = 157.0 / (m_fileCount - 9);
+    scale = 157.0 / (m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET);
     gpMouseManager->MouseCoords(x, my);
     offset = my - m_scrollKnob->m_y;
     gpInputManager->Flush();
@@ -533,11 +527,11 @@ void fileRequester::DoKnob(void) {
                 event.y = offset + 212;
             gpMouseManager->Main(event);
             m_scrollKnob->m_y = event.y - offset;
-            if (m_fileCount > 10) {
+            if (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS) {
                 index = static_cast<short>((m_scrollKnob->m_y - 56) / scale);
                 if (index != lastTop) {
-                    if (index > m_fileCount - 10)
-                        index = m_fileCount - 10;
+                    if (index > m_fileCount - FILE_REQUESTER_VISIBLE_ROWS)
+                        index = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
                     if (index < 0)
                         index = 0;
                     m_topIndex = index;
@@ -569,8 +563,8 @@ void fileRequester::Update(signed char drawWindow) {
     int showPlayers;
     int limit;
     int pos;
-    const short firstId = 4;
-    const short nameId = 15;
+    const short firstId = FILE_REQUESTER_LIST_FIRST;
+    const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
     char extra[372];
     const short hiliteColor = 0xe8;
     const short textColor = 1;
@@ -581,7 +575,7 @@ void fileRequester::Update(signed char drawWindow) {
 
     event.type = MESSAGE_WIDGET;
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
-    for (row = 0; row < 10; row++) {
+    for (row = 0; row < FILE_REQUESTER_VISIBLE_ROWS; row++) {
         event.id = row + firstId;
         if (m_topIndex + row >= m_fileCount) {
             event.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -641,10 +635,10 @@ void fileRequester::Update(signed char drawWindow) {
         event.value = WIDGET_FLAG_ENABLED;
         m_window->BroadcastMessage(event);
     }
-    if (m_fileCount <= 10) {
+    if (m_fileCount <= FILE_REQUESTER_VISIBLE_ROWS) {
         m_scrollKnob->m_y = 134;
     } else {
-        gutterFactor = 156.0 / (m_fileCount - 10);
+        gutterFactor = 156.0 / (m_fileCount - FILE_REQUESTER_VISIBLE_ROWS);
         m_scrollKnob->m_y = m_topIndex * gutterFactor + 56.0;
     }
     if (drawWindow)
@@ -682,9 +676,9 @@ char* fileRequester::GetFilename(void) {
 // difficulty and description.
 VA(0x0044a374, 0x269)
 void fileRequester::ShowMapInfo(void) {
-    const int sizeId = 100;
-    const int levelId = 101;
-    const int descriptionId = 102;
+    const int sizeId = FILE_REQUESTER_MAP_SIZE;
+    const int levelId = FILE_REQUESTER_MAP_LEVEL;
+    const int descriptionId = FILE_REQUESTER_MAP_DESCRIPTION;
     tag_message message;
 
     sprintf(gText, "");

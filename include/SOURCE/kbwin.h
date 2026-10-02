@@ -7,6 +7,27 @@ H1_ENUM_CONST_BEGIN(WindowTextConstant)
     WINDOW_TEXT_ENTRY_COUNT = 68
 H1_ENUM_CONST_END(WindowTextConstant)
 
+// SetWinText's window id: which gWinSetup rows (widget, gWinSetupText) fill a
+// window's static labels; each caller passes the id of the .bin it opened.
+H1_ENUM_BEGIN(WindowTextId)
+    WINDOW_TEXT_BUY_SPELL_BOOK = 0,
+    WINDOW_TEXT_BUILD = 1,
+    WINDOW_TEXT_CASTLE = 2,
+    WINDOW_TEXT_CONTROL_PANEL = 3,
+    WINDOW_TEXT_DIMENSION_DOOR = 4,
+    WINDOW_TEXT_HERO = 5,
+    WINDOW_TEXT_MAGE_GUILD = 6,
+    WINDOW_TEXT_NEW_GAME = 7,
+    WINDOW_TEXT_OVERVIEW = 8,
+    WINDOW_TEXT_HERO_QUICK_VIEW = 9,
+    WINDOW_TEXT_TOWN_QUICK_VIEW = 10,
+    WINDOW_TEXT_RECRUIT_HERO = 0xb,
+    WINDOW_TEXT_SHIPYARD = 0xc,
+    WINDOW_TEXT_SWAP = 13,
+    WINDOW_TEXT_TAVERN = 0xe,
+    WINDOW_TEXT_THIEVES_GUILD = 0xf
+H1_ENUM_END(WindowTextId)
+
 H1_ENUM_CONST_BEGIN(KbwinMenuConstant)
     KBWIN_WIDTH_640 = 640,
     KBWIN_WIDTH_800 = 800,

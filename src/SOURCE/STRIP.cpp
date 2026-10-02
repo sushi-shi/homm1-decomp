@@ -26,16 +26,16 @@ strip::strip(short x, short y, signed char stripType, short portraitId,
     m_stripIcon = gpResourceManager->GetIcon("strip.icn");
     m_monsterIcon = gpResourceManager->GetIcon("monsters.icn");
     m_font = gpResourceManager->GetFont("smalfont.fnt");
-    m_window = new heroWindow(m_x, m_y, 552, 105, 8);
+    m_window = new heroWindow(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT, 8);
     if (!m_window)
         MemError();
     if (m_army) {
-        m_borders[0] = new border(5, 6, 101, 93, firstBorderId, 1, 0, NULL);
+        m_borders[0] = new border(STRIP_PORTRAIT_X, STRIP_CONTENT_Y, STRIP_PORTRAIT_BORDER_WIDTH, STRIP_BORDER_HEIGHT, firstBorderId, 1, 0, NULL);
         if (!m_borders[0])
             MemError();
         m_window->AddWidget(m_borders[0], -1);
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            m_borders[i + 1] = new border(i * 88 + 112, 6, 82, 93, i + firstBorderId + 1, 1, 0, NULL);
+            m_borders[i + 1] = new border(i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, STRIP_CONTENT_Y, STRIP_ARMY_BORDER_WIDTH, STRIP_BORDER_HEIGHT, i + firstBorderId + 1, 1, 0, NULL);
             if (!m_borders[i + 1])
                 MemError();
             m_window->AddWidget(m_borders[i + 1], -1);
@@ -71,7 +71,7 @@ strip::~strip() {
 VA(0x00463a20, 0x42)
 void strip::Draw(void) {
     DrawIcons(1);
-    gpWindowManager->UpdateScreenRegion(m_x, m_y, 552, 105);
+    gpWindowManager->UpdateScreenRegion(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT);
 }
 
 // donor PoL RVA 0x00032632; preferred Buka symbol ?DrawIcons@strip@@QAEXH@Z
@@ -82,34 +82,34 @@ void strip::DrawIcons(signed char drawWindow) {
     short i;
     signed char creatureType;
 
-    m_portraitIcon->DrawToBuffer(m_x + 5, m_y + 6, m_portraitFrame, ICON_DRAW_NORMAL, 0);
+    m_portraitIcon->DrawToBuffer(m_x + STRIP_PORTRAIT_X, m_y + STRIP_CONTENT_Y, m_portraitFrame, ICON_DRAW_NORMAL, 0);
     if (!m_army) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
-            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, 2, ICON_DRAW_NORMAL, 0);
+            m_stripIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, STRIP_EMPTY_FRAME, ICON_DRAW_NORMAL, 0);
         m_window->DrawWindow(drawWindow);
         return;
     }
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         creatureType = m_army->m_creatureTypes[i];
         if (creatureType != CREATURE_NONE) {
-            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, creatureType / 6 + 3, ICON_DRAW_NORMAL, 0);
-            m_monsterIcon->DrawToBuffer(m_x + i * 88 + 119, m_y + 19, creatureType, ICON_DRAW_NORMAL, 0);
+            m_stripIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, creatureType / STRIP_CREATURES_PER_FACTION + STRIP_FACTION_FRAME_OFFSET, ICON_DRAW_NORMAL, 0);
+            m_monsterIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_MONSTER_X, m_y + STRIP_MONSTER_Y, creatureType, ICON_DRAW_NORMAL, 0);
             sprintf(gText, "%d", m_army->m_creatureCounts[i]);
-            m_font->DrawBoundedString(gText, m_x + i * 88 + 112, m_y + 86, 77, 13, 1, 2);
+            m_font->DrawBoundedString(gText, m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_QUANTITY_Y, STRIP_QUANTITY_WIDTH, STRIP_QUANTITY_HEIGHT, 1, 2);
         } else {
-            m_stripIcon->DrawToBuffer(m_x + i * 88 + 112, m_y + 6, 2, ICON_DRAW_NORMAL, 0);
+            m_stripIcon->DrawToBuffer(m_x + i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, STRIP_EMPTY_FRAME, ICON_DRAW_NORMAL, 0);
         }
     }
     m_window->DrawWindow(drawWindow);
     if (m_selectedSlot != -1)
-        m_stripIcon->DrawToBuffer(m_x + m_selectedSlot * 88 + 112, m_y + 6, 1, ICON_DRAW_NORMAL, 0);
+        m_stripIcon->DrawToBuffer(m_x + m_selectedSlot * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X, m_y + STRIP_CONTENT_Y, STRIP_SELECTED_FRAME, ICON_DRAW_NORMAL, 0);
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00463cd0, 0x37)
 void strip::DrawFrame(void) {
-    m_stripIcon->DrawToBuffer(m_x, m_y, 0, ICON_DRAW_NORMAL, 0);
+    m_stripIcon->DrawToBuffer(m_x, m_y, STRIP_BACKGROUND_FRAME, ICON_DRAW_NORMAL, 0);
 }
 
 // donor PoL RVA 0x00032a38; preferred Buka symbol ??0bankBox@@QAE@HHPAVplayerData@@@Z
@@ -146,12 +146,12 @@ void bankBox::Update(void) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < PLAYER_RESOURCE_COUNT - 1; i++) {
         sprintf(text, "%d", m_player->m_resources[i]);
-        message.id = i + 30;
+        message.id = i + BANK_BOX_RESOURCE_FIRST;
         message.text = text;
         m_window->BroadcastMessage(message);
     }
     sprintf(text, "%d", m_player->m_resources[PLAYER_RESOURCE_COUNT - 1]);
-    message.id = 36;
+    message.id = BANK_BOX_GOLD;
     message.text = text;
     m_window->BroadcastMessage(message);
     m_window->DrawWindow();
