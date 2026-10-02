@@ -243,6 +243,30 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     HERO_FRAME_INDEX_MASK = 0x7f
 H1_ENUM_CONST_END(AdventureDrawConstant)
 
+// UpdateScreen's dirty box and animation clock (Buka 2.1
+// AdventureUpdateScreenConstant / AdventureAnimationPhaseIndex names; HoMM1
+// cycles m_updateMaxX through 6 steps and starts the columns at 0/1/3/5):
+// no limit box means the whole 448-pixel viewport at 16,16; odd steps
+// advance columns 1 and 3, even ones 0 and 2, each modulo 6 frames.
+H1_ENUM_CONST_BEGIN(AdventureUpdateScreenConstant)
+    UPDATE_NONE = -1,
+    UPDATE_VIEWPORT_ORIGIN = 16,
+    UPDATE_VIEWPORT_SIZE = 448,
+    UPDATE_ANIMATION_PHASES = 6,
+    UPDATE_FRAME_CYCLE = 6
+H1_ENUM_CONST_END(AdventureUpdateScreenConstant)
+
+H1_ENUM_CONST_BEGIN(AdventureAnimationPhaseIndex)
+    ANIMATION_PHASE_COLUMN_0 = 0,
+    ANIMATION_PHASE_COLUMN_1 = 1,
+    ANIMATION_PHASE_COLUMN_2 = 2,
+    ANIMATION_PHASE_COLUMN_3 = 3,
+    ANIMATION_PHASE_COLUMN_0_INITIAL = 0,
+    ANIMATION_PHASE_COLUMN_1_INITIAL = 1,
+    ANIMATION_PHASE_COLUMN_2_INITIAL = 3,
+    ANIMATION_PHASE_COLUMN_3_INITIAL = 5
+H1_ENUM_CONST_END(AdventureAnimationPhaseIndex)
+
 // Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
 // the network-turn music hold, the quick-view "none shown" origin, the walk
 // sample set and volume, the looping-sample budget per high-memory unit and
@@ -253,7 +277,14 @@ H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     CURSOR_SAMPLE_FAST_SET = 2,
     CURSOR_SAMPLE_VOLUME = 0x40,
     HIGH_MEMORY_BUFFER_DIVISOR = 100,
-    TIMER_DELAY = 120
+    TIMER_DELAY = 120,
+    // Open's locator scroll knobs (scroll.icn frame 4).
+    SCROLL_Y = 195,
+    SCROLL_LEFT_X = 540,
+    SCROLL_RIGHT_X = 612,
+    SCROLL_WIDTH = 8,
+    SCROLL_HEIGHT = 17,
+    SCROLL_ICON_FRAME = 4
 H1_ENUM_CONST_END(AdventureStateConstant)
 
 // SetEnvironmentOrigin/InsertSound's looping map sounds (Buka 2.1
@@ -546,10 +577,10 @@ advManager::advManager(void) {
     bShowIt = 1;
     m_lastQuickViewX = QUICK_VIEW_NONE;
     m_lastQuickViewY = QUICK_VIEW_NONE;
-    m_animationPhases[0] = 0;
-    m_animationPhases[1] = 1;
-    m_animationPhases[2] = 3;
-    m_animationPhases[3] = 5;
+    m_animationPhases[ANIMATION_PHASE_COLUMN_0] = ANIMATION_PHASE_COLUMN_0_INITIAL;
+    m_animationPhases[ANIMATION_PHASE_COLUMN_1] = ANIMATION_PHASE_COLUMN_1_INITIAL;
+    m_animationPhases[ANIMATION_PHASE_COLUMN_2] = ANIMATION_PHASE_COLUMN_2_INITIAL;
+    m_animationPhases[ANIMATION_PHASE_COLUMN_3] = ANIMATION_PHASE_COLUMN_3_INITIAL;
     m_mapData = gpGame->GetWorldMapData();
     gMapX = 0;
     gMapY = 0;
@@ -586,11 +617,13 @@ short advManager::Open(short id) {
         m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
         if (m_adventureWindow == NULL)
             MemError();
-        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, ADVENTURE_CONTROL_HERO_KNOB, ICON_WIDGET_DRAW, 1);
+        m_scrollLeftButton = new iconWidget(SCROLL_LEFT_X, SCROLL_Y, SCROLL_WIDTH, SCROLL_HEIGHT, "scroll.icn", SCROLL_ICON_FRAME,
+                                            ICON_DRAW_NORMAL, ADVENTURE_CONTROL_HERO_KNOB, ICON_WIDGET_DRAW, 1);
         if (m_scrollLeftButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollLeftButton, WINDOW_Z_ORDER_APPEND);
-        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, ADVENTURE_CONTROL_TOWN_KNOB, ICON_WIDGET_DRAW, 1);
+        m_scrollRightButton = new iconWidget(SCROLL_RIGHT_X, SCROLL_Y, SCROLL_WIDTH, SCROLL_HEIGHT, "scroll.icn", SCROLL_ICON_FRAME,
+                                             ICON_DRAW_NORMAL, ADVENTURE_CONTROL_TOWN_KNOB, ICON_WIDGET_DRAW, 1);
         if (m_scrollRightButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollRightButton, WINDOW_Z_ORDER_APPEND);
@@ -721,7 +754,7 @@ short advManager::Open(short id) {
     } else {
         SetNoDialogMenus(1);
     }
-    glTimers[0] = KBTickCount() + 120;
+    glTimers[0] = KBTickCount() + TIMER_DELAY;
     // 0x100 has no known producer (no MessageType member); retail keeps it.
     m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE | MESSAGE_LEFT_BUTTON_DOWN
                         | MESSAGE_RIGHT_BUTTON_DOWN | 0x100 | MESSAGE_WIDGET;
@@ -1977,15 +2010,18 @@ VA(0x00429de0, 0x265)
 void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate) {
     if (!forceUpdate && !bShowIt) {
         if (KBTickCount() > glTimers[0])
-            glTimers[0] = KBTickCount() + 120;
+            glTimers[0] = KBTickCount() + TIMER_DELAY;
         return;
     }
     gpMouseManager->SaveAndDraw(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
     PollSound();
     giScrollX = m_updateMinX;
     giScrollY = m_updateMinY;
-    if (giLimitUpdMinX == -1)
-        BlitBitmapToScreen(gpWindowManager->m_screen, 16, 16, 448, 448, 16, 16);
+    if (giLimitUpdMinX == UPDATE_NONE)
+        BlitBitmapToScreen(
+            gpWindowManager->m_screen, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE,
+            UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN
+        );
     else
         BlitBitmapToScreen(
             gpWindowManager->m_screen,
@@ -2001,22 +2037,22 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
     PollSound();
     if (KBTickCount() > glTimers[0]) {
         ++m_updateMaxX;
-        if (m_updateMaxX >= 6)
+        if (m_updateMaxX >= UPDATE_FRAME_CYCLE)
             m_updateMaxX = 0;
-        glTimers[0] = KBTickCount() + 120;
+        glTimers[0] = KBTickCount() + TIMER_DELAY;
         if (m_updateMaxX == 1 || m_updateMaxX == 3 || m_updateMaxX == 5) {
-            ++m_animationPhases[1];
-            m_animationPhases[1] %= 6;
-            ++m_animationPhases[3];
-            m_animationPhases[3] %= 6;
+            ++m_animationPhases[ANIMATION_PHASE_COLUMN_1];
+            m_animationPhases[ANIMATION_PHASE_COLUMN_1] %= UPDATE_ANIMATION_PHASES;
+            ++m_animationPhases[ANIMATION_PHASE_COLUMN_3];
+            m_animationPhases[ANIMATION_PHASE_COLUMN_3] %= UPDATE_ANIMATION_PHASES;
         } else {
-            ++m_animationPhases[0];
-            m_animationPhases[0] %= 6;
-            ++m_animationPhases[2];
-            m_animationPhases[2] %= 6;
+            ++m_animationPhases[ANIMATION_PHASE_COLUMN_0];
+            m_animationPhases[ANIMATION_PHASE_COLUMN_0] %= UPDATE_ANIMATION_PHASES;
+            ++m_animationPhases[ANIMATION_PHASE_COLUMN_2];
+            m_animationPhases[ANIMATION_PHASE_COLUMN_2] %= UPDATE_ANIMATION_PHASES;
         }
     }
-    giLimitUpdMinX = -1;
+    giLimitUpdMinX = UPDATE_NONE;
     gpMouseManager->RestoreUnderlying();
     Process1WindowsMessage();
 }
@@ -2033,7 +2069,7 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
     if (!forceDraw && !bShowIt)
         return;
 
-    giLimitUpdMinX = -1;
+    giLimitUpdMinX = UPDATE_NONE;
     m_previousOriginX = m_mapOriginX;
     m_previousOriginY = m_mapOriginY;
     if (gbAllBlack)
@@ -4014,8 +4050,8 @@ void advManager::ViewPuzzle(void) {
     puzzlePieces = gpResourceManager->GetIcon("puzzle.icn");
     for (j = 0; j < 48; j++)
         puzzlePieces->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, 0);
-    gpWindowManager->UpdateScreenRegion(16, 16, 448, 448);
-    gpWindowManager->SaveFizzleSource(16, 16, 448, 448);
+    gpWindowManager->UpdateScreenRegion(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
+    gpWindowManager->SaveFizzleSource(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
     pWin = new heroWindow(480, 16, "viewpuzl.bin");
     if (!pWin)
         MemError();
@@ -4050,7 +4086,7 @@ void advManager::ViewPuzzle(void) {
     }
     if (visibleCount != 48) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->FizzleForward(16, 16, 448, 448, 220);
+        gpWindowManager->FizzleForward(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, 220);
         gpMouseManager->ReallyShowPointer();
     } else {
         gpWindowManager->ReleaseFizzleSource();
@@ -4220,7 +4256,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
     tilesets[10] = gpResourceManager->GetIcon("town6.icn");
     if (gpCurPlayer->CurrentHero() != -1)
         curHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
-    FillBitmapArea(gpWindowManager->m_screen, 16, 16, 448, 448, 0);
+    FillBitmapArea(gpWindowManager->m_screen, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, 0);
 
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = MAP_CELL_GRID_SIZE - 1; x >= 0; x--) {
@@ -4400,7 +4436,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
         }
     }
 
-    gpWindowManager->UpdateScreenRegion(16, 16, 448, 448);
+    gpWindowManager->UpdateScreenRegion(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
     sprintf(gText, "view-%02d.bin", spellType - SPELL_VIEW_MINES);
     win = new heroWindow(480, 16, gText);
     if (!win)
@@ -5359,13 +5395,13 @@ void advManager::TeleportTo(int x, int y, int) {
     if (bShowIt) {
         destinationCell->m_flags |= MAP_CELL_HERO_CURSOR;
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->SaveFizzleSource(16, 16, 448, 448);
+        gpWindowManager->SaveFizzleSource(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE);
         CompleteDraw(0);
         PollSound();
         fizzle = 128;
         if (!gbHumanPlayer[giCurPlayer])
             fizzle -= 64;
-        gpWindowManager->FizzleForward(16, 16, 448, 448, -1);
+        gpWindowManager->FizzleForward(UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_ORIGIN, UPDATE_VIEWPORT_SIZE, UPDATE_VIEWPORT_SIZE, -1);
         PollSound();
         gpMouseManager->ReallyShowPointer();
     }
@@ -6126,7 +6162,7 @@ void advManager::DrawAdventureBorder(void) {
 // Retail emits giCheatSeq, the sand-animation times and giFrameCount among the
 // literals of their users.
 DATA(0x0048f828)
-int giLimitUpdMinX = -1;
+int giLimitUpdMinX = UPDATE_NONE;
 DATA(0x0048f82c)
 long iLastScrollTime = 0;
 DATA(0x0048f830)
