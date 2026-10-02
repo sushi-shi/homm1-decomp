@@ -1156,7 +1156,7 @@ void game::InitCampaignMap(int scenario, int) {
     gbKingOfTheHill = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
     m_players[0].m_difficulty = 4;
-    m_players[0].m_unknown11 = gCampaignSideCrests[m_campaignType][0];
+    m_players[0].m_unknown11 = gCampaignSideCrests[m_campaignType - 1][0];
     m_playerCount = 1;
     for (i = 1; i < 4; i++) {
         m_players[i].m_difficulty = gCampaignScenarios[scenario].playerTypes[i];
