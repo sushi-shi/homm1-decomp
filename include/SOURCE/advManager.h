@@ -57,6 +57,18 @@ H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
     INVALID_HERO = -1
 H1_ENUM_CONST_END(AdventureHeroConstant)
 
+// View-cell coordinates with no cell: m_lastHoverCell/m_hoverCellY before
+// the mouse hovers a cell and m_previousCursorMapX/Y without a drawn cursor
+// (Buka CURSOR.h CURSOR_INVALID_POSITION).
+H1_ENUM_CONST_BEGIN(AdventureCursorConstant)
+    CURSOR_INVALID_POSITION = -1
+H1_ENUM_CONST_END(AdventureCursorConstant)
+
+// advManager::GiveArtifact's result when every artifact slot is taken.
+H1_ENUM_CONST_BEGIN(AdventureGiveArtifactConstant)
+    GIVE_ARTIFACT_NO_SLOT = -1
+H1_ENUM_CONST_END(AdventureGiveArtifactConstant)
+
 // Hero sprite frame codes (m_cursorFrame, DrawCell's map heroes): bit 7 draws
 // the frame mirrored, the low seven bits index the sprite.
 H1_ENUM_CONST_BEGIN(AdventureHeroFrameConstant)
@@ -96,10 +108,22 @@ H1_ENUM_CONST_BEGIN(AdventureSpellConstant)
     SPELL_TRAVEL_MOBILITY_COST = 12
 H1_ENUM_CONST_END(AdventureSpellConstant)
 
+// ProcessSearch digs at (x, y), or at the view centre when x is
+// VIEW_CENTER (the D key, the menu and philAI pass it for both); it marks a
+// dug cell with obj32-07.icn frame 1 as a shadow-only object, which DrawCell
+// hides on the puzzle map (Buka 2.1 AdventureSearchConstant DIG_HOLE_FRAME,
+// HoMM1 frame; Buka passes CURSOR_INVALID_POSITION for the centre).
+H1_ENUM_CONST_BEGIN(AdventureSearchConstant)
+    ADVMGR_SEARCH_VIEW_CENTER = -1,
+    DIG_HOLE_FRAME = 1
+H1_ENUM_CONST_END(AdventureSearchConstant)
+
 // Hero/town locator paging: VISIBLE_COUNT rows show at once; a column with
 // fewer than PAGE_THRESHOLD entries has no pages (advManager's knobs and
-// town::Deallocate's page clamp).
+// town::Deallocate's page clamp). UpdateHeroLocator's SLOT_CURRENT_HERO
+// redraws whichever visible slot shows the current hero.
 H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
+    LOCATOR_SLOT_CURRENT_HERO = -1,
     LOCATOR_VISIBLE_COUNT = 4,
     LOCATOR_PAGE_THRESHOLD = 5,
     LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
@@ -472,6 +496,13 @@ signed char SaveGame(void);
 short CPanelHandler(struct tag_message&);
 
 extern int gbNoBorder;
+// giForceSwitchMusic: the tick a network turn hand-over forced a music
+// switch, or IDLE when none is pending (advManager::Main, game::NewDay).
+// clang-format off
+H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
+    FORCED_MUSIC_IDLE = -1
+H1_ENUM_CONST_END(ForcedMusicConstant)
+// clang-format on
 extern long giForceSwitchMusic;
 extern long iLastScrollTime;
 extern int gbForceUpdate;

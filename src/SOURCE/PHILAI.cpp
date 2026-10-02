@@ -366,8 +366,8 @@ void philAI::CheckReload(hero* pHero) {
         0,
         pHero->m_remainingMobility,
         pHero->m_heroClass,
-        -1,
-        -1,
+        SEARCH_INVALID_COORDINATE,
+        SEARCH_INVALID_COORDINATE,
         0,
         0
     );
@@ -690,7 +690,10 @@ void philAI::DoAI(int player) {
                         && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x
                         && gpCurPlayer->m_ultimateArtifactHintY == aiHero->m_y) {
                         if (aiHero->m_mobility == aiHero->m_remainingMobility)
-                            gpAdvManager->ProcessSearch(-1, -1);
+                            gpAdvManager->ProcessSearch(
+                                ADVMGR_SEARCH_VIEW_CENTER,
+                                ADVMGR_SEARCH_VIEW_CENTER
+                            );
                         else
                             aiHero->m_remainingMobility = 0;
                     }
@@ -757,7 +760,7 @@ void philAI::GetTurnAIVars(int player) {
     town* townPointer;
 
     giCurTurn = gpGame->m_day + (gpGame->m_week - 1) * CALENDAR_DAYS_PER_WEEK
-        + (gpGame->m_month - 1) * CALENDAR_DAYS_PER_MONTH;
+                + (gpGame->m_month - 1) * CALENDAR_DAYS_PER_MONTH;
     GetTurnAttentionValue(player);
     TurnCostResource(player);
     iCurHourGlassPhase = 0;
@@ -1005,8 +1008,8 @@ void philAI::DetermineTargetPosition(
         1,
         pHero->m_remainingMobility,
         pHero->m_heroClass,
-        -1,
-        -1,
+        SEARCH_INVALID_COORDINATE,
+        SEARCH_INVALID_COORDINATE,
         0,
         0
     );
@@ -2053,14 +2056,14 @@ int philAI::StrategicValueOfPosition(
     pSearch->SeedPosition(
         targetX,
         targetY,
-        2,
+        MAP_DIRECTION_EAST,
         newSeedRange,
         inBoat,
         0,
-        999,
+        SEARCH_UNLIMITED_COST,
         pHero->m_heroClass,
-        -1,
-        -1,
+        SEARCH_INVALID_COORDINATE,
+        SEARCH_INVALID_COORDINATE,
         0,
         0
     );

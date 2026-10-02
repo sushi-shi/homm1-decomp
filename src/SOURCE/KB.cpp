@@ -1177,7 +1177,7 @@ void NormalDialog(
             szFilename,
             resourceFrame,
             ICON_DRAW_NORMAL,
-            -1,
+            WIDGET_ID_NONE,
             ICON_WIDGET_DRAW,
             1
         );
@@ -1193,7 +1193,7 @@ void NormalDialog(
                 "artifact.icn",
                 resourceQty[i],
                 ICON_DRAW_NORMAL,
-                -1,
+                WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
@@ -1210,7 +1210,7 @@ void NormalDialog(
                 "brcrest.icn",
                 4,
                 ICON_DRAW_NORMAL,
-                -1,
+                WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
@@ -1228,7 +1228,7 @@ void NormalDialog(
                 szFilename,
                 0,
                 ICON_DRAW_NORMAL,
-                -1,
+                WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
@@ -3056,7 +3056,7 @@ int HandleAppSpecificMenuCommands(int command) {
             gpAdvManager->CheckCastSpell();
             break;
         case APP_MENU_DIG:
-            gpAdvManager->ProcessSearch(-1, -1);
+            gpAdvManager->ProcessSearch(ADVMGR_SEARCH_VIEW_CENTER, ADVMGR_SEARCH_VIEW_CENTER);
             break;
         default:
             return 1;
@@ -4858,7 +4858,7 @@ signed char gbInCombat = 0;
 DATA(0x00494148)
 signed char gbDirectConnect = 0;
 DATA(0x0049414c)
-long giForceSwitchMusic = -1;
+long giForceSwitchMusic = FORCED_MUSIC_IDLE;
 DATA(0x00494150)
 int gbComputeExtent = 0;
 DATA(0x00494154)
