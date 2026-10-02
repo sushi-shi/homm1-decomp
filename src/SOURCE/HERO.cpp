@@ -141,7 +141,7 @@ short hero::CalcMobility(void) {
     if (HasArtifact(ARTIFACT_TRUE_COMPASS))
         result += compass;
     if (m_owner >= 0 && !gbHumanPlayer[m_owner]
-        && gpGame->m_players[m_owner].m_color >= 3)
+        && gpGame->m_players[m_owner].m_difficulty >= 3)
         result += 3;
     return result;
 }

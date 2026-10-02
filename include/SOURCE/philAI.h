@@ -174,6 +174,17 @@ extern int gbBerserk;
 extern float fBerserkFactor;
 // CheckReload's troop-reload verdict and its reduction factor.
 extern int gbTroopReload;
+// GetBestBHC's per-player hero ceiling (GetTurnAIVars sets it).
+extern int giMaxHeroesForThisPlayer;
+// GetBestBHC lets young towns buy during a network game only with this set;
+// TransmitSaveGame tests the same dword for its serial compression path.
+extern int gbSerialCompression;
+// GetTurnAIVars' per-cell enemy-hero turn distance for mines.
+extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern float gfHeroInteractionBonus[];
+extern float gfAttackHumanBonus;
+extern float gfAttackComputerBonus;
+extern signed char gbIAmGreatest;
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];

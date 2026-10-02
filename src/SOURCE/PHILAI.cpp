@@ -425,13 +425,181 @@ void philAI::GetGameAIVars(void) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.345425;margin=0.144973;shape=0.282;size=0.515;calls=0.667;alternate=pol20:void philAI::GetTurnAIVars(int)@0x0003a329
 VA(0x0041ba7f, 0x6a0)
-void philAI::GetTurnAIVars(int) {}
+void philAI::GetTurnAIVars(int player) {
+    int totalFightValue;
+    playerData* pPlayer;
+    int yPos;
+    int mineValue;
+    int xPos;
+    float fFightVal;
+    hero* heroPointer;
+    int hIndex;
+    int i;
+    int y;
+    int x;
+    int artTotal;
+    int otherIndex;
+    int unusedFightValue;
+    town* townPointer;
+
+    giCurTurn = gpGame->m_day + (gpGame->m_week - 1) * 7 + (gpGame->m_month - 1) * 28;
+    GetTurnAttentionValue(player);
+    TurnCostResource(player);
+    iCurHourGlassPhase = 0;
+    iSandAnim = 0;
+    gpCurPlayer->m_aiData.m_obeliskValue = (int)TurnValueOfObelisk(player);
+    gpCurPlayer->m_aiData.m_unexploredValue = MeanRVOfUnexploredTerritory(player);
+    bHeroBuiltThisTurn = 0;
+    if (giCurTurn - giBuildBoatStuffTurn[player] > 8) {
+        giBuildShipyard[player] = -1;
+        giBuildBoat[player] = -1;
+    }
+    unusedFightValue = 0;
+    fFightVal = 0.0f;
+    totalFightValue = 0;
+    for (i = 0; i < gpCurPlayer->m_heroCount; i++) {
+        heroPointer = gpGame->GetHero(gpCurPlayer->m_heroIds[i]);
+        fFightVal = (float)FightValueOfStack(&heroPointer->m_army, heroPointer, 0, 0, 0);
+        totalFightValue = (int)(totalFightValue + fFightVal);
+        heroPointer->m_aiFightValue = fFightVal * 4e-05 + 0.4;
+    }
+    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
+        townPointer = gpGame->GetTown(gpCurPlayer->m_townIds[i]);
+        fFightVal = (float)FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0);
+        totalFightValue = (int)(totalFightValue + fFightVal);
+    }
+    gpCurPlayer->m_aiData.m_upgradeValueWeight =
+        (float)(gpCurPlayer->m_resources[RESOURCE_GOLD] + gpCurPlayer->m_aiData.m_income[RESOURCE_GOLD])
+            / (totalFightValue + 1000)
+        + gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
+    artTotal = 0;
+    for (i = 4; i < 37; i++)
+        artTotal += gArtifactBaseRV[i];
+    for (i = 0; i < gpGame->m_playerCount; i++)
+        gpGame->m_players[i].m_aiData.m_artifactPoolShare =
+            1.0 / (gpGame->m_playerCount + gpGame->m_deadPlayerCount);
+    gpCurPlayer->m_aiData.m_artifactValue = artTotal / 33.0;
+    memset(gaiTurnValueOfMine, 7, sizeof(gaiTurnValueOfMine));
+    for (otherIndex = 0; otherIndex < gpGame->m_playerCount; otherIndex++) {
+        if (otherIndex != giCurPlayer) {
+            pPlayer = &gpGame->m_players[otherIndex];
+            for (hIndex = 0; hIndex < pPlayer->m_heroCount; hIndex++) {
+                xPos = gpGame->GetHero(pPlayer->m_heroIds[hIndex])->m_x;
+                yPos = gpGame->GetHero(pPlayer->m_heroIds[hIndex])->m_y;
+                for (x = xPos - 10; x <= xPos + 10; x++) {
+                    for (y = yPos - 10; y <= yPos + 10; y++) {
+                        if (x >= 0 && x < 72 && y >= 0 && y < 72) {
+                            mineValue = abs(abs(x - xPos) + abs(y - yPos) - 4) >> 2;
+                            if (gaiTurnValueOfMine[x][y] > mineValue)
+                                gaiTurnValueOfMine[x][y] = mineValue;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (i = 0; i < 36; i++)
+        gfHeroInteractionBonus[i] = 1.0f;
+    if (gpCurPlayer->m_difficulty == 1) {
+        gfAttackHumanBonus = 0.6f;
+        gfAttackComputerBonus = 1.3f;
+    } else if (gpCurPlayer->m_difficulty == 2) {
+        gfAttackHumanBonus = 1.0f;
+        gfAttackComputerBonus = 1.0f;
+    } else {
+        gfAttackHumanBonus = gpCurPlayer->m_difficulty * 0.07 + 1.0;
+        gfAttackComputerBonus = 1.1 - gpCurPlayer->m_difficulty * 0.12;
+    }
+    if (gbIAmGreatest)
+        gfAttackComputerBonus = 0.1f;
+    giMaxHeroesForThisPlayer = 3;
+    if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == 2)
+        giMaxHeroesForThisPlayer++;
+    if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == 3)
+        giMaxHeroesForThisPlayer++;
+    if (gpCurPlayer->m_townCount >= 5)
+        giMaxHeroesForThisPlayer++;
+    if (gpCurPlayer->m_townCount >= 10)
+        giMaxHeroesForThisPlayer++;
+}
 
 // donor PoL RVA 0x0003b154; preferred Buka symbol ?GetBestBHC@philAI@@QAEXHAAUBHC@@@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.679791;margin=0.499826;shape=0.401;size=0.937;calls=0.722;strings=BestBHC |Turns Owned;alternate=pol20:void philAI::GetBestBHC(int, struct BHC &)@0x0003b154
 VA(0x0041c11f, 0x600)
-void philAI::GetBestBHC(int, struct BHC&) {}
+void philAI::GetBestBHC(int, BHC& best) {
+    float fValue = 1.0f;
+    float bestBHCValue = -99.0f;
+    int total = 0;
+    int totalWeights = 0;
+    int ideal[36];
+    int strengths[36];
+    BHC choice;
+    int townNo;
+    town* townPointer;
+    int meanStrength;
+
+    for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
+        townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
+        strengths[townNo] = FightValueOfStack(&townPointer->m_army, 0, 0, 0, 0) + 400;
+        total += strengths[townNo];
+        if (townPointer->m_buildings & 0x40)
+            totalWeights += 10;
+        else
+            totalWeights += 7;
+    }
+    if (totalWeights < 1)
+        totalWeights = 1;
+    meanStrength = total / totalWeights;
+    for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
+        townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
+        ideal[townNo] = meanStrength * ((townPointer->m_buildings & 0x40) ? 10 : 7) + 400;
+    }
+    for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
+        townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
+        LogInt("Turns Owned", townPointer->m_turnsOwned);
+        if (giCurTurn > 3 && (!gbRemoteOn || gbSerialCompression) && townPointer->m_turnsOwned < 3)
+            continue;
+        CheckDoMain(0, 0);
+        GetBestBuilding(townPointer, choice, fValue);
+        fValue = fValue * ((100 - Random(0, 10)) / 100.0);
+        if (fValue > bestBHCValue) {
+            bestBHCValue = fValue;
+            best = choice;
+        }
+        CheckDoMain(0, 0);
+        GetBestCreature(townPointer, choice, fValue);
+        fValue = fValue * ((float)ideal[townNo] / (float)strengths[townNo] / 3.0f + 0.66);
+        fValue = fValue * ((100 - Random(0, 10)) / 100.0);
+        if (fValue > bestBHCValue) {
+            bestBHCValue = fValue;
+            best = choice;
+        }
+        CheckDoMain(0, 0);
+        if (gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer && (townPointer->m_buildings & 0x40)) {
+            GetBestHero(townPointer, choice, fValue);
+            fValue = fValue * ((100 - Random(0, 10)) / 100.0);
+            if (!bHeroBuiltThisTurn && giCurTurn > 5 && fValue > 0.0f) {
+                if ((gpCurPlayer->m_aiData.m_income[RESOURCE_GOLD] >= 1250
+                     && gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer - 2)
+                    || gpCurPlayer->m_heroCount <= 1)
+                    fValue += 500.0f;
+                else if (gpCurPlayer->m_aiData.m_income[RESOURCE_GOLD] >= 1500
+                         && gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer - 1)
+                    fValue = fValue * 1.3;
+            } else if (gpCurPlayer->m_heroCount == 0) {
+                fValue += 500.0f;
+            }
+            if (bestBHCValue < fValue) {
+                bestBHCValue = fValue;
+                best = choice;
+            }
+        }
+    }
+    LogStr("BestBHC ", best.type, (int)(bestBHCValue * 100.0f), best.what, 0, 0);
+    if (bestBHCValue < 0.02)
+        best.type = -1;
+}
 
 // Buka 2.1 DetermineHeroToMove: the current player's hero with the most
 // remaining mobility; HoMM1 counts with a byte index.
