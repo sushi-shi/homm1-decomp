@@ -1781,6 +1781,7 @@ int philAI::RVOfPosition(
 
 // Buka SVSearchArray: StrategicValueOfPosition's shared search, constructed
 // by its dynamic initializer between RVOfPosition and its first user.
+DATA(0x004b0c50)
 searchArray SVSearchArray;
 RVA_DYNINIT(0x0001f2a9, 0x1a, SVSearchArray)
 // Its .CRT$XCU thunk (0x0048e008 -> 0x00419990) opens this retail object:
@@ -2967,6 +2968,7 @@ int iArtifactChoice2;
 int iArtifactChoice3;
 int iPurchaseNum;
 int iPurchaseSlot;
+DATA(0x0048f824)
 int bEvaluatingTravelGates = 1;
 int iDefaultEventType;
 
@@ -3476,3 +3478,78 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     }
     return iEventRV;
 }
+
+// PHILAI owns retail .data 0x0048f54c-0x0048f827 (its logging helpers' and AI
+// literals) and .bss 0x004acec0-0x004c4eef.
+DATA(0x0048f54c)
+signed char giShowComputerRoute = 0;
+DATA(0x0048f55c)
+float gfAttackHumanBonus = 2.0f;
+DATA(0x0048f560)
+float gfAttackComputerBonus = 0.8f;
+DATA(0x0048f7b8)
+signed char bSVSearchArrayInUse = 0;
+DATA(0x004acec0)
+short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004af740)
+float fBerserkFactor;
+DATA(0x004af744)
+int iLastFrameRateTimer;
+DATA(0x004af748)
+signed char giCurPlayer;
+DATA(0x004af758)
+int giMaxHeroesForThisPlayer;
+DATA(0x004af760)
+float fReduceFactor;
+DATA(0x004af764)
+unsigned char giCurPlayerBit;
+DATA(0x004af768)
+signed char giBestShipyardDist;
+DATA(0x004af76c)
+int bHeroBuiltThisTurn;
+DATA(0x004af770)
+short gaiHeroLiveChance[GAME_HERO_COUNT];
+DATA(0x004af7c8)
+int giHumanTownConquered;
+DATA(0x004af7dc)
+int giCurTurn;
+DATA(0x004af7e8)
+int costTemp[RESOURCE_COUNT];
+DATA(0x004af808)
+signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004b0c48)
+int iDummy;
+DATA(0x004b0c4c)
+signed char gbPossibleShipyardFound;
+DATA(0x004be7b0)
+float gafAITurnCostResource[RESOURCE_COUNT];
+DATA(0x004be7cc)
+unsigned char giCurWatchPlayerHighBit;
+DATA(0x004be7d0)
+int iCurPlaceToVisit;
+DATA(0x004be7dc)
+signed char giBestShipyardId;
+DATA(0x004be7e0)
+signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004bfc28)
+short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004c24a8)
+signed char gbActualBoatFound;
+DATA(0x004c24ac)
+unsigned char giCurWatchPlayerBit;
+DATA(0x004c24b0)
+playerData* gpCurPlayer;
+DATA(0x004c24b8)
+float gfHeroInteractionBonus[GAME_HERO_COUNT];
+DATA(0x004c2548)
+int gbBerserk;
+DATA(0x004c255c)
+unsigned char giCurPlayerHighBit;
+DATA(0x004c2560)
+short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+DATA(0x004c4de8)
+int iPlacesVisited[30][2];
+DATA(0x004c4ee4)
+int gbTroopReload;
+DATA(0x004c4eec)
+signed char gbActualShipyardFound;
