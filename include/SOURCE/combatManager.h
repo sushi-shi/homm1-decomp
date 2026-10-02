@@ -28,7 +28,9 @@ H1_ENUM_END(CombatPointerCode)
 class combatManager : public baseManager {
 public:
     // InitMainClasses allocates 0x7d3 bytes; the fields stay opaque here.
-    char m_unknown30[0x7a3];
+    char m_unknown30[0x7a2];
+    // advManager::DoCombat returns and hands on this outcome byte.
+    signed char m_combatResult;
     // --- constructors ---
     combatManager(void);
     // --- virtual methods (vtable order) ---

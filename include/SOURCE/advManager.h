@@ -278,7 +278,7 @@ public:
         int,
         int,
         int,
-        int
+        signed char
     );
     void SendHeroTownData(
         int,
@@ -291,10 +291,10 @@ public:
         int,
         int,
         int,
-        int,
-        int,
-        int,
-        int
+        signed char,
+        signed char,
+        signed char,
+        signed char
     );
     void ReceiveHeroTownData(
         char*,

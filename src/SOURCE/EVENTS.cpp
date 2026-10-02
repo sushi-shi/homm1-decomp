@@ -3,13 +3,19 @@
 #include <match.h>
 
 #include <BASE/Misc.h>
+#include <BASE/bmap2.h>
+#include <BASE/inputManager.h>
+#include <BASE/INPUTMGR_TYPES.h>
+#include <SOURCE/X_GLOBAL.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/REMOTE.h>
 
 #include <SOURCE/dialogTypes.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // EVENTS assertion records (file literals and line base), as in MOUSEMGR.
@@ -21,6 +27,59 @@ extern signed char gbEventMusicPlaying;
 extern char* gArtifactNames[];
 extern SAMPLE2 gNullSample;
 extern armyGroup* gpMonsterGroup;
+extern char* gColorNames[];
+extern signed char gbInCombat;
+// DoEvent and DoCombat restore a music volume parked here (-1 when none).
+extern int giEventMusicVolume;
+
+// SendHeroTownData's payload after the remote-message header, as in Buka's
+// combatRemoteData; hero records follow one fragment byte.
+#pragma pack(push, 1)
+struct combatRemoteData {
+    signed char fragment;
+    signed char x;
+    signed char y;
+    signed char hasFirstHero;
+    signed char hasTown;
+    signed char hasSecondHero;
+    signed char setupCombatX;
+    signed char setupCombatY;
+    int randomSeed;
+    signed char combatResult;
+    signed char retreatWin;
+    signed char combatSurrender;
+    signed char firstOwner;
+    int firstGold;
+    signed char secondOwner;
+    int secondGold;
+    armyGroup firstArmy;
+    armyGroup secondArmy;
+    town combatTown;
+};
+
+struct combatRemoteHeroFragment {
+    signed char fragment;
+    char data[sizeof(hero)];
+};
+
+struct combatRemoteMessage {
+    signed char sender;
+    int id;
+    signed char type;
+    signed char command;
+    short payloadSize;
+    combatRemoteData combat;
+};
+
+struct heroRemoteMessage {
+    signed char sender;
+    int id;
+    signed char type;
+    signed char command;
+    short payloadSize;
+    combatRemoteHeroFragment heroFragment;
+};
+#pragma pack(pop)
 
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
@@ -727,22 +786,342 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634004;margin=0.818203;shape=0.529;size=0.995;calls=1.000;alternate=pol20:int advManager::DoNetCombat(char *)@0x000b5c40
 VA(0x004628b1, 0x18f)
-int advManager::DoNetCombat(char *) { return 0; }
+int advManager::DoNetCombat(char* packet) {
+    hero* defendingHero;
+    int cellY;
+    int cellX;
+    int seed;
+    int opponent;
+    signed char result;
+    int side;
+    hero* attackingHero;
+    int srcY;
+    int srcX;
+    armyGroup* defendArmy;
+    armyGroup* attArmy;
+    town* siegeTown;
+    int unused;
+    int unused2;
+
+    attackingHero = 0;
+    attArmy = 0;
+    siegeTown = 0;
+    defendingHero = 0;
+    defendArmy = 0;
+    ReceiveHeroTownData(packet, &opponent, &cellX, &cellY, &attackingHero, &attArmy, &siegeTown,
+                        &defendingHero, &defendArmy, &srcX, &srcY, &seed, &result, &gbRetreatWin,
+                        &gbCombatSurrender);
+    side = attackingHero->m_owner;
+    result = DoCombat(cellX, cellY, attackingHero, attArmy, siegeTown, defendingHero, defendArmy,
+                      srcX, srcY, seed, 0);
+    if (!gbHumanPlayer[side])
+        SendHeroTownData(cellX, cellY, attackingHero, attArmy, siegeTown, defendingHero,
+                         defendArmy, srcX, srcY, seed, opponent, result, gbRetreatWin,
+                         gbCombatSurrender);
+    if (attArmy)
+        free(attArmy);
+    if (defendArmy)
+        free(defendArmy);
+    if (siegeTown)
+        free(siegeTown);
+    if (defendingHero)
+        free(defendingHero);
+    if (attackingHero)
+        free(attackingHero);
+    gbRetreatWin = 0;
+    return 1;
+}
 
 // donor PoL RVA 0x000b5e10; preferred Buka symbol ?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.590184;margin=0.564001;shape=0.455;size=0.978;calls=0.927;alternate=pol20:int advManager::DoCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int)@0x000b5e10
 VA(0x00462a40, 0x5c6)
-int advManager::DoCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int) { return 0; }
+int advManager::DoCombat(int x, int y, class hero* firstHero, class armyGroup* firstArmy,
+                         class town* combatTown, class hero* secondHero,
+                         class armyGroup* secondArmy, int setupCombatX, int setupCombatY,
+                         int randomSeed, signed char processLosses) {
+    armyGroup* army2Net;
+    hero* hero2Net;
+    hero* hero1Net;
+    armyGroup* army1Net;
+    town* townNet;
+    int sender;
+    char* receivedPacket;
+    signed char combatResult;
+    tag_message message;
+    int defendPlayer;
+    int attackPlayer;
+    int savedPlayer;
+    signed char savedShowIt;
+    int unused;
+
+    gbInCombat = 1;
+    attackPlayer = firstHero ? firstHero->m_owner : -1;
+    if (secondHero)
+        defendPlayer = secondHero->m_owner;
+    else if (combatTown)
+        defendPlayer = combatTown->m_owner;
+    else
+        defendPlayer = -1;
+    if (randomSeed == -1)
+        randomSeed = Random(1, 1000);
+    DemobilizeCurrHero();
+    savedPlayer = giCurPlayer;
+    savedShowIt = bShowIt;
+
+    if (attackPlayer >= 0 && defendPlayer >= 0 && gbHumanPlayer[defendPlayer]) {
+        if (!gbThisNetHumanPlayer[defendPlayer]) {
+            SendHeroTownData(x, y, firstHero, firstArmy, combatTown, secondHero, secondArmy,
+                             setupCombatX, setupCombatY, randomSeed, defendPlayer, 0, 0, 0);
+            if (!gbHumanPlayer[attackPlayer]) {
+                while (1) {
+                    PollSound();
+                    FillBitmapArea(gpWindowManager->m_screen, 30, 30, 4, 4, 0);
+                    receivedPacket = CheckHandleNet();
+                    if (receivedPacket) {
+                        switch (((combatRemoteMessage*)receivedPacket)->command) {
+                            case 0x15:
+                                ReceiveHeroTownData(receivedPacket, &sender, &x, &y,
+                                                    &hero1Net, &army1Net,
+                                                    &townNet, &hero2Net,
+                                                    &army2Net, &setupCombatX,
+                                                    &setupCombatY, &randomSeed, &combatResult,
+                                                    &gbRetreatWin, &gbCombatSurrender);
+                                if (army1Net) {
+                                    memcpy(firstArmy, army1Net, sizeof(armyGroup));
+                                    free(army1Net);
+                                }
+                                if (army2Net) {
+                                    memcpy(secondArmy, army2Net, sizeof(armyGroup));
+                                    free(army2Net);
+                                }
+                                if (townNet) {
+                                    memcpy(combatTown, townNet, sizeof(town));
+                                    free(townNet);
+                                }
+                                if (hero2Net) {
+                                    memcpy(secondHero, hero2Net, sizeof(hero));
+                                    free(hero2Net);
+                                }
+                                if (hero1Net) {
+                                    memcpy(firstHero, hero1Net, sizeof(hero));
+                                    free(hero1Net);
+                                }
+                                gpCombatManager->m_combatResult = combatResult;
+                                goto combatFinished;
+                        }
+                    }
+                    Process1WindowsMessage();
+                    message = gpInputManager->GetEvent();
+                    CheckHandleNetPlayerWait(message, 1);
+                }
+            }
+        } else if (!gbThisNetHumanPlayer[attackPlayer]) {
+            bShowIt = 1;
+            gpGame->TurnOffAIMusic();
+            sprintf(gText, "%s player\'s %s is under attack!",
+                    gColorNames[gpGame->m_players[defendPlayer].m_unknown11],
+                    combatTown ? "Town" : "Hero");
+            gText[0] -= 32;
+            gpGame->WaitForPlayer(gText, defendPlayer);
+        }
+    }
+
+    bShowIt = 1;
+    if (giEventMusicVolume != -1)
+        gConfig.musicVolume = giEventMusicVolume;
+    giEventMusicVolume = -1;
+    gpCombatManager->SetupCombat(x, y, firstHero, firstArmy, combatTown, secondHero, secondArmy,
+                                 x, y, randomSeed);
+    if (giHighMemBuffer > 1450)
+        gAdvDisposeLevel = 2;
+    else if (giHighMemBuffer > 600)
+        gAdvDisposeLevel = 1;
+    gpExec->CallManager(gpCombatManager);
+    gAdvDisposeLevel = 0;
+
+combatFinished:
+    if (firstHero)
+        firstHero->CheckLevel();
+    if (secondHero)
+        secondHero->CheckLevel();
+    if (processLosses) {
+        switch (gpCombatManager->m_combatResult) {
+            case 1:
+                if (!gbRetreatWin)
+                    TransferArtifacts(secondHero, firstHero);
+                HeroLoses(secondHero);
+                break;
+            case 0:
+                if (!gbRetreatWin)
+                    TransferArtifacts(firstHero, secondHero);
+                HeroLoses(firstHero);
+                break;
+            case -1:
+                HeroLoses(firstHero);
+                HeroLoses(secondHero);
+                break;
+            case 3:
+                break;
+        }
+    }
+    bShowIt = savedShowIt;
+    giCurPlayer = savedPlayer;
+    if (!gbHumanPlayer[giCurPlayer]) {
+        gpGame->ShowComputerScreen();
+        gpGame->TurnOnAIMusic();
+        SetNoDialogMenus(0);
+    } else {
+        SetNoDialogMenus(1);
+    }
+    MobilizeCurrHero(0);
+    if (processLosses)
+        gbRetreatWin = 0;
+    gbInCombat = 0;
+    return gpCombatManager->m_combatResult;
+}
 
 // donor PoL RVA 0x000b645e; preferred Buka symbol ?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.543308;margin=0.967008;shape=0.438;size=0.943;calls=0.684;alternate=pol20:void advManager::SendHeroTownData(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int, int, int, int)@0x000b645e
 VA(0x00463006, 0x2da)
-void advManager::SendHeroTownData(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int, int, int, int) {}
+void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class armyGroup* firstArmy,
+                                  class town* combatTown, class hero* secondHero,
+                                  class armyGroup* secondArmy, int setupCombatX,
+                                  int setupCombatY, int randomSeed, signed char remotePlayer,
+                                  signed char combatResult, signed char retreatWin,
+                                  signed char combatSurrender) {
+    char* reply;
+    int result;
+    combatRemoteData* buf = 0;
+
+    buf = (combatRemoteData*)malloc(0xff);
+    reply = 0;
+    buf->fragment = 0;
+    buf->x = x;
+    buf->y = y;
+    buf->hasFirstHero = firstHero != 0;
+    buf->hasTown = combatTown != 0;
+    buf->hasSecondHero = secondHero != 0;
+    buf->setupCombatX = setupCombatX;
+    buf->setupCombatY = setupCombatY;
+    buf->randomSeed = randomSeed;
+    buf->combatResult = combatResult;
+    buf->retreatWin = retreatWin;
+    buf->combatSurrender = combatSurrender;
+    buf->firstOwner = firstHero ? firstHero->m_owner : -1;
+    buf->firstGold = firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[6] : 0;
+    buf->secondOwner = secondHero ? secondHero->m_owner : -1;
+    buf->secondGold = secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[6] : 0;
+    memcpy(&buf->firstArmy, firstArmy, sizeof(armyGroup));
+    memcpy(&buf->secondArmy, secondArmy, sizeof(armyGroup));
+    if (combatTown)
+        memcpy(&buf->combatTown, combatTown, sizeof(town));
+
+    result = TransmitAndWait((char*)buf, remotePlayer, sizeof(combatRemoteData), 0x15, 0x16,
+                             &reply);
+    if (!result)
+        ShutDown(0);
+
+    if (firstHero) {
+        ((combatRemoteHeroFragment*)buf)->fragment = 1;
+        memcpy(((combatRemoteHeroFragment*)buf)->data, firstHero, sizeof(hero));
+        result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
+                                    0x15, 1, 1, -1, 1);
+        if (!result)
+            ShutDown(0);
+    }
+    if (secondHero) {
+        ((combatRemoteHeroFragment*)buf)->fragment = 2;
+        memcpy(((combatRemoteHeroFragment*)buf)->data, secondHero, sizeof(hero));
+        result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
+                                    0x15, 1, 1, -1, 1);
+        if (!result)
+            ShutDown(0);
+    }
+    free(buf);
+}
 
 // donor PoL RVA 0x000b67cd; preferred Buka symbol ?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.493176;margin=0.152223;shape=0.314;size=0.857;calls=0.909;alternate=pol20:void advManager::ReceiveHeroTownData(char *, int *, int *, int *, class hero * *, class armyGroup * *, class town * *, class hero * *, class armyGroup * *, int *, int *, int *, signed char *, signed char *, signed char *)@0x000b67cd
-VA(0x004632e0, 0x350)
-void advManager::ReceiveHeroTownData(char *, int *, int *, int *, class hero * *, class armyGroup * *, class town * *, class hero * *, class armyGroup * *, int *, int *, int *, signed char *, signed char *, signed char *) {}
+VA(0x004632e0, 0x34c)
+void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, int* y,
+                                     class hero** firstHero, class armyGroup** firstArmy,
+                                     class town** combatTown, class hero** secondHero,
+                                     class armyGroup** secondArmy, int* setupCombatX,
+                                     int* setupCombatY, int* randomSeed, signed char* combatResult,
+                                     signed char* retreatWin, signed char* combatSurrender) {
+    signed char hasTown;
+    int result;
+    long lastPacketTime;
+    signed char firstOwner;
+    signed char defenderOwner;
+    signed char bFirstHero;
+    signed char hasSecondHero;
+
+    *firstHero = 0;
+    *firstArmy = 0;
+    *combatTown = 0;
+    *secondHero = 0;
+    *secondArmy = 0;
+    bFirstHero = hasSecondHero = hasTown = 0;
+    *remotePlayer = ((combatRemoteMessage*)packet)->sender;
+    *x = ((combatRemoteMessage*)packet)->combat.x;
+    *y = ((combatRemoteMessage*)packet)->combat.y;
+    bFirstHero = ((combatRemoteMessage*)packet)->combat.hasFirstHero;
+    hasTown = ((combatRemoteMessage*)packet)->combat.hasTown;
+    hasSecondHero = ((combatRemoteMessage*)packet)->combat.hasSecondHero;
+    *setupCombatX = ((combatRemoteMessage*)packet)->combat.setupCombatX;
+    *setupCombatY = ((combatRemoteMessage*)packet)->combat.setupCombatY;
+    *randomSeed = ((combatRemoteMessage*)packet)->combat.randomSeed;
+    *combatResult = ((combatRemoteMessage*)packet)->combat.combatResult;
+    *retreatWin = ((combatRemoteMessage*)packet)->combat.retreatWin;
+    *combatSurrender = ((combatRemoteMessage*)packet)->combat.combatSurrender;
+    firstOwner = ((combatRemoteMessage*)packet)->combat.firstOwner;
+    if (firstOwner > 0)
+        gpGame->m_players[firstOwner].m_resources[6] = ((combatRemoteMessage*)packet)->combat.firstGold;
+    defenderOwner = ((combatRemoteMessage*)packet)->combat.secondOwner;
+    if (defenderOwner > 0)
+        gpGame->m_players[defenderOwner].m_resources[6] =
+            ((combatRemoteMessage*)packet)->combat.secondGold;
+
+    *firstArmy = (armyGroup*)malloc(sizeof(armyGroup));
+    memcpy(*firstArmy, &((combatRemoteMessage*)packet)->combat.firstArmy, sizeof(armyGroup));
+    *secondArmy = (armyGroup*)malloc(sizeof(armyGroup));
+    memcpy(*secondArmy, &((combatRemoteMessage*)packet)->combat.secondArmy, sizeof(armyGroup));
+    if (hasTown) {
+        *combatTown = (town*)malloc(sizeof(town));
+        memcpy(*combatTown, &((combatRemoteMessage*)packet)->combat.combatTown, sizeof(town));
+    }
+
+    result = TransmitRemoteData(0, *remotePlayer, 0, 0x16, 1, 1, -1, 1);
+    if (!result)
+        ShutDown(0);
+
+    lastPacketTime = KBTickCount();
+    while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
+        PollSound();
+        if (KBTickCount() > lastPacketTime + 20000) {
+            NormalDialog("Error receiving data.  Keep trying??", 2, -1, -1, -1, 0, -1, 0, -1);
+            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                lastPacketTime = KBTickCount();
+            else
+                ShutDown("Game canceled.");
+        }
+        packet = GetRemoteData(1);
+        if (packet && ((combatRemoteMessage*)packet)->type == 2
+            && ((combatRemoteMessage*)packet)->command == 0x15) {
+            lastPacketTime = KBTickCount();
+            if (((heroRemoteMessage*)packet)->heroFragment.fragment == 1) {
+                *firstHero = (hero*)malloc(sizeof(hero));
+                memcpy(*firstHero, ((heroRemoteMessage*)packet)->heroFragment.data, sizeof(hero));
+            }
+            if (((heroRemoteMessage*)packet)->heroFragment.fragment == 2) {
+                *secondHero = (hero*)malloc(sizeof(hero));
+                memcpy(*secondHero, ((heroRemoteMessage*)packet)->heroFragment.data,
+                       sizeof(hero));
+            }
+        }
+    }
+}
