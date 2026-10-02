@@ -12,10 +12,10 @@ H1_ENUM_CONST_BEGIN(ButtonConstant)
     BUTTON_REPEAT_DELAY_TICKS = 60,
     BUTTON_NO_HOTKEY = -1
 H1_ENUM_CONST_END(ButtonConstant)
-                     // clang-format on
+// clang-format on
 
-                     // forward declarations:
-                     class icon;
+// forward declarations:
+class icon;
 struct tag_message;
 
 #pragma pack(push, 1)

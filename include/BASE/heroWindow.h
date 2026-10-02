@@ -43,7 +43,7 @@ H1_ENUM_CONST_END(HeroWindowConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-        class heroWindow {
+class heroWindow {
 public:
     short m_zOrder;
     heroWindow* m_nextWindow;

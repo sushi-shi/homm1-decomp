@@ -37,7 +37,7 @@ H1_ENUM_CONST_END(IconDrawOffsetConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-    class icon : public resource {
+class icon : public resource {
 public:
     short m_frameCount;
     unsigned char* m_data;
