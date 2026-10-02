@@ -665,11 +665,27 @@ H1_ENUM_BEGIN(NewGameControl)
     NEW_GAME_DIFFICULTY_FIRST = 0xd,
     NEW_GAME_DIFFICULTY_LAST = 0x10,
     NEW_GAME_SCENARIO_NAME = 0x11,
+    NEW_GAME_SCENARIO_PANEL = 0x12,
     NEW_GAME_KING_OF_THE_HILL = 0x13,
     NEW_GAME_RATING = 0x14,
     NEW_GAME_CANCEL = DIALOG_BUTTON_1,
-    NEW_GAME_OK = DIALOG_BUTTON_2
+    NEW_GAME_OK = DIALOG_BUTTON_2,
+    // Player p's type toggle is p + TOGGLE_BASE (ids 2..4) and its type label
+    // p + LABEL_BASE (ids 5..7).
+    NEW_GAME_OPPONENT_TOGGLE_BASE = 1,
+    NEW_GAME_OPPONENT_LABEL_BASE = 4
 H1_ENUM_END(NewGameControl)
+
+// newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
+// the computer-type faces (type + base), the crests (two per color) and
+// the King of the Hill toggle (flag + base).
+H1_ENUM_CONST_BEGIN(NewGameFrame)
+    NEW_GAME_FRAME_COMPUTER_TYPE_BASE = 5,
+    NEW_GAME_FRAME_CREST_BASE = 11,
+    NEW_GAME_FRAME_CREST_STRIDE = 2,
+    NEW_GAME_FRAME_HUMAN_OPPONENT = 0x1a,
+    NEW_GAME_FRAME_KING_OF_THE_HILL_BASE = 27
+H1_ENUM_CONST_END(NewGameFrame)
 
 // NewGameHandler's right-click help: the gNewGameHelp row shown.
 H1_ENUM_BEGIN(NewGameHelp)
@@ -711,7 +727,7 @@ short NewGameHandler(tag_message& message) {
                     case NEW_GAME_SCENARIO_NAME:
                         helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
-                    case 0x12:
+                    case NEW_GAME_SCENARIO_PANEL:
                         helpIndex = NEW_GAME_HELP_SCENARIO;
                         break;
                     case NEW_GAME_SCENARIO_SELECT:
@@ -732,7 +748,7 @@ short NewGameHandler(tag_message& message) {
                     case NEW_GAME_OPPONENT_FIRST:
                     case NEW_GAME_OPPONENT_FIRST + 1:
                     case NEW_GAME_OPPONENT_LAST:
-                        if (message.id - 1 < giNumHumanPlayers)
+                        if (message.id - NEW_GAME_OPPONENT_TOGGLE_BASE < giNumHumanPlayers)
                             helpIndex = NEW_GAME_HELP_HUMAN_OPPONENT;
                         else
                             helpIndex = NEW_GAME_HELP_OPPONENT;
@@ -753,8 +769,8 @@ short NewGameHandler(tag_message& message) {
                     switch (message.id) {
                         case NEW_GAME_OK:
                             gpGame->m_playerCount = 0;
-                            for (i = 0; i < 4; i++) {
-                                if (gpGame->m_players[i].m_difficulty > 0)
+                            for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+                                if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
                                     gpGame->m_playerCount++;
                             }
                             if (gpGame->m_playerCount < 2) {
@@ -795,21 +811,21 @@ short NewGameHandler(tag_message& message) {
                         case NEW_GAME_OPPONENT_FIRST:
                         case NEW_GAME_OPPONENT_FIRST + 1:
                         case NEW_GAME_OPPONENT_LAST:
-                            iPlayer = message.id - 1;
+                            iPlayer = message.id - NEW_GAME_OPPONENT_TOGGLE_BASE;
                             gpGame->m_players[iPlayer].m_difficulty++;
                             gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
                             if (giNumHumanPlayers > iPlayer && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = 1;
                             break;
                         case NEW_GAME_COLOR:
-                            gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % 4;
+                            gpGame->m_players[0].m_color = (gpGame->m_players[0].m_color + 1) % GAME_PLAYER_COUNT;
                             break;
                         case NEW_GAME_KING_OF_THE_HILL:
                             gbKingOfTheHill = 1 - gbKingOfTheHill;
                             break;
                         case NEW_GAME_SCENARIO_SELECT:
                         case NEW_GAME_SCENARIO_NAME:
-                        case 0x12:
+                        case NEW_GAME_SCENARIO_PANEL:
                             game::GetMap();
                             break;
                         default:
@@ -845,7 +861,7 @@ void game::UpdateNewGameWindow(void) {
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < DIFFICULTY_COUNT; i++) {
         message.id = i + NEW_GAME_DIFFICULTY_FIRST;
         m_newGameWindow->BroadcastMessage(message);
     }
@@ -853,17 +869,17 @@ void game::UpdateNewGameWindow(void) {
     message.id = m_difficulty + NEW_GAME_DIFFICULTY_FIRST;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
-    for (i = 1; i < 4; i++) {
-        message.id = i + 1;
+    for (i = 1; i < GAME_PLAYER_COUNT; i++) {
+        message.id = i + NEW_GAME_OPPONENT_TOGGLE_BASE;
         if (i < giNumHumanPlayers)
-            message.value = 0x1a;
+            message.value = NEW_GAME_FRAME_HUMAN_OPPONENT;
         else
-            message.value = m_players[i].m_difficulty + 5;
+            message.value = m_players[i].m_difficulty + NEW_GAME_FRAME_COMPUTER_TYPE_BASE;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_TEXT;
-    for (i = 1; i < 4; i++) {
-        message.id = i + 4;
+    for (i = 1; i < GAME_PLAYER_COUNT; i++) {
+        message.id = i + NEW_GAME_OPPONENT_LABEL_BASE;
         if (i < giNumHumanPlayers)
             message.text = gHumanPlayerTypeNames[m_players[i].m_difficulty];
         else
@@ -878,12 +894,12 @@ void game::UpdateNewGameWindow(void) {
     message.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[0].m_color != -1) {
         message.id = NEW_GAME_COLOR;
-        message.value = m_players[0].m_color * 2 + 11;
+        message.value = m_players[0].m_color * NEW_GAME_FRAME_CREST_STRIDE + NEW_GAME_FRAME_CREST_BASE;
         m_newGameWindow->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
     message.id = NEW_GAME_KING_OF_THE_HILL;
-    message.value = gbKingOfTheHill + 27;
+    message.value = gbKingOfTheHill + NEW_GAME_FRAME_KING_OF_THE_HILL_BASE;
     m_newGameWindow->BroadcastMessage(message);
 }
 
