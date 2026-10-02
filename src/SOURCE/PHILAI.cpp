@@ -26,6 +26,17 @@ signed char giBuildBoat[AI_PLAYER_COUNT];
 DATA(0x004c4de0)
 signed char giBuildBoatStuffTurn[AI_PLAYER_COUNT];
 
+// Buka 2.1's named AI factors. They are loaded, not folded, at /Od, and
+// retail .rdata keeps them in this declaration order at 0x0048c0a8 ahead of
+// the anonymous float literals.
+static const float AI_TARGET_HUMAN_VALUE_FACTOR = 1.5f;
+static const float AI_STRATEGIC_POSITION_SCORE_FACTOR = 1.25f;
+static const float AI_CREATURE_SAME_RACE_FACTOR = 1.1f;
+static const float AI_FUTURE_DEFLATION_RATE = 0.15f;
+static const float AI_HERO_PURCHASE_SAME_RACE_FACTOR = 1.12f;
+static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
+static const float AI_ATTENTION_IDENTITY = 1.0f;
+
 // donor PoL RVA 0x000379d0; preferred Buka symbol ?CheckDoMain@@YIXHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.463287;margin=0.627999;shape=0.348;size=0.713;calls=0.909;alternate=pol20:void CheckDoMain(int, int)@0x000379d0
@@ -942,7 +953,7 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
                     cellValue = -100;
                 }
                 if (x == targetX && y == targetY) {
-                    cellValue = static_cast<int>(cellValue * 1.5f);
+                    cellValue = static_cast<int>(cellValue * AI_TARGET_HUMAN_VALUE_FACTOR);
                     if (abs(x - pHero->m_x) + abs(y - pHero->m_y) > 3)
                         cellValue++;
                 }
@@ -985,12 +996,6 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
     LogStr("Hero, Best RV", pHero->m_owner, bestRV, targetX * 1000 + targetY, pHero->m_x * 1000 + pHero->m_y, 0);
     LogStr("\n\n****");
 }
-
-// GetGameAttentionValue's float identity (see AI_ATTENTION_IDENTITY below).
-// Declared ahead of ProbableOutcomeOfBattle: with rawFight[] as one symbol,
-// this C1 symbol order reproduces retail's operand order through
-// MeanRVOfUnexploredTerritory (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
 
 // donor PoL RVA 0x0003c6e2; preferred Buka symbol ?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010HHHAAMAAH3333@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -1311,7 +1316,7 @@ void philAI::ValueOfBuyingCreature(
         occupant = gpGame->GetHero(townPointer->m_occupyingHeroId);
         creatRV = static_cast<int>(creatRV * 1.1);
         if (occupant->m_heroClass == creature / 6)
-            creatRV = static_cast<int>(creatRV * 1.1f);
+            creatRV = static_cast<int>(creatRV * AI_CREATURE_SAME_RACE_FACTOR);
         if ((gMonsterDatabase[creature].stats.attributes & 8)) {
             for (n = 0; n < 5; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
@@ -1480,7 +1485,7 @@ void philAI::ValueOfBuyingHero(town* townPointer, hero* heroPointer, int& resour
            - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase)
     );
     if (gTownHeroClass[townPointer->m_type] == heroPointer->m_heroClass)
-        heroRV = static_cast<int>(heroRV * 1.12f);
+        heroRV = static_cast<int>(heroRV * AI_HERO_PURCHASE_SAME_RACE_FACTOR);
     heroRV += StrategicValueOfPosition(heroPointer, heroPointer->m_x, heroPointer->m_y, 0, &tmp);
     heroRV -= 200;
     heroRV = static_cast<int>(heroRV * FutureDeflator(heroCost));
@@ -1561,9 +1566,6 @@ VA(0x0041e901, 0x1a)
 int philAI::MeanRVOfUnexploredTerritory(int) {
     return 0;
 }
-
-// Buka 2.1's attention identity constants are loaded, not folded, at /Od.
-static const float AI_ATTENTION_IDENTITY = 1.0f;
 
 // Buka 2.1 GetGameAttentionValue: randomized game weights tempered by the
 // number of players.
@@ -1911,7 +1913,7 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
         delete madeSearch;
     else
         bSVSearchArrayInUse = 0;
-    myValue = static_cast<int>(myValue * 1.25f);
+    myValue = static_cast<int>(myValue * AI_STRATEGIC_POSITION_SCORE_FACTOR);
     if (myValue > 32000)
         myValue = 32000;
     if (!immediate) {
@@ -1997,7 +1999,7 @@ float philAI::TurnValueOfObelisk(int player) {
 VA(0x0041fedb, 0x51)
 float philAI::FutureDeflator(int* const resources) {
     float turns = TurnsToBuy(resources);
-    float value = 1.0f - turns * 0.15f;
+    float value = 1.0f - turns * AI_FUTURE_DEFLATION_RATE;
     if (value < 0.0)
         value = 0;
     return value;
