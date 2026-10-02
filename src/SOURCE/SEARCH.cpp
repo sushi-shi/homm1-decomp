@@ -11,31 +11,6 @@
 // SeedPosition's working mobility, read back by PushPoint.
 short giCurTempMobility;
 
-// Buka's persistent search scratch; each owner is independently addressed.
-static short s_direction;
-static int s_terrain;
-static int s_mapX;
-static int s_mapY;
-static int s_adjacentMonsterX;
-static int s_adjacentMonsterY;
-static int s_stepCost[2];
-static signed char s_possibleDirections[8];
-static int s_currentCost;
-static int s_hasTarget;
-static hero *s_currentHero;
-static int s_neighborX;
-static int s_neighborY;
-static unsigned char s_directionCosts[8];
-static searchNode s_currentNode;
-static int s_directionBlocked;
-static mapCell *s_targetCell;
-static signed char s_hasAdjacentMonster;
-static int s_triggerType;
-static int s_adjacentX;
-static int s_adjacentY;
-static int s_adjacentCost;
-static int s_bestTargetCost;
-static short s_processedPointCount;
 
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
 // up, then walk the directions back into the path buffer.
@@ -121,12 +96,39 @@ int searchArray::BuildPath(short startX, short startY, short destinationX, short
 }
 
 // Buka SEARCH.cpp SeedPosition; HoMM1 has no roads or pathfinding skill and
-// precomputes the straight and diagonal step costs once per node.
+// precomputes the straight and diagonal step costs once per node. Buka's
+// file-scope scratch is function-static here: only that TU state gives
+// retail's esi/edi/ebx allocation of this, continueSeed and zero.
 VA(0x00402be0, 0xa53)
 void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, short maximumCost, int waterMode,
                                int findAdjacentMonster, int mobility, int costMode, int targetX, int targetY,
                                int continueSeed, int scanMap)
 {
+    static short s_direction;
+    static int s_terrain;
+    static int s_mapX;
+    static int s_mapY;
+    static int s_adjacentMonsterX;
+    static int s_adjacentMonsterY;
+    static int s_stepCost[2];
+    static signed char s_possibleDirections[8];
+    static int s_currentCost;
+    static int s_hasTarget;
+    static hero *s_currentHero;
+    static int s_neighborX;
+    static int s_neighborY;
+    static unsigned char s_directionCosts[8];
+    static searchNode s_currentNode;
+    static int s_directionBlocked;
+    static mapCell *s_targetCell;
+    static signed char s_hasAdjacentMonster;
+    static int s_triggerType;
+    static int s_adjacentX;
+    static int s_adjacentY;
+    static int s_adjacentCost;
+    static int s_bestTargetCost;
+    static short s_processedPointCount;
+
     if (!continueSeed) {
         giFullySeeded = 0;
         giCurTempMobility = mobility;
@@ -189,7 +191,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == 0x3d
-                    && gpGame->m_availableHeroes[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
+                    && gpGame->m_availableHeroes[(unsigned char)gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)
                                                      ->m_objectMetadata]
                            == giCurPlayer)
                     goto point_complete;
@@ -236,7 +238,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
             s_neighborY = s_currentNode.y + normalDirTable[s_direction].y;
             if (findAdjacentMonster && (mapExtra[s_neighborX][s_neighborY] & 0x80)
                 && m_cells[s_neighborX * 72 + s_neighborY].visited && m_cells[s_neighborX * 72 + s_neighborY].rvFlag1
-                && s_currentNode.distance + 12 > m_cells[s_neighborX * 72 + s_neighborY].distance
+                && m_cells[s_neighborX * 72 + s_neighborY].distance < s_currentNode.distance + 12
                 && gpAdvManager->FindAdjacentMonster(s_neighborX, s_neighborY, &s_adjacentMonsterX,
                                                      &s_adjacentMonsterY, -1, -1)
                 && m_cells[s_neighborX * 72 + s_neighborY].adjacentMonsterX == s_adjacentMonsterX
