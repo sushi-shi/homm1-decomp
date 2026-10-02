@@ -1385,7 +1385,7 @@ int advManager::ProcessSearch(int x, int y) {
         NormalDialog("Nothing here.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
     }
     if (gbHumanPlayer[giCurPlayer])
-        WaitEndSample(sampleData, -1);
+        WaitEndSample(sampleData, SAMPLE_WAIT_DEFAULT);
     for (i = 0; i < gpGame->m_playerCount; i++)
         ComputeUALoc(i);
     myHero->m_remainingMobility = 0;
@@ -2825,7 +2825,7 @@ signed char advManager::UpdBottomViewHero(void) {
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
-    iCrest = gpCurPlayer->Color() * 4 + targetHero->m_heroClass;
+    iCrest = gpCurPlayer->Color() * HERO_CLASS_COUNT + targetHero->m_heroClass;
     m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, ICON_DRAW_NORMAL,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
@@ -4250,7 +4250,7 @@ signed char SaveGame(void) {
     humans = 0;
     gpAdvManager->DisableButtons();
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
-    for (plIdx = 0; plIdx < 4; plIdx++)
+    for (plIdx = 0; plIdx < GAME_PLAYER_COUNT; plIdx++)
         if (!gpGame->m_playerDead[plIdx] && gbHumanPlayer[plIdx])
             humans++;
     if (giCampaignChoice > 0) {
@@ -4373,7 +4373,7 @@ short CPanelHandler(struct tag_message &message) {
                             break;
                         case CONTROL_WALK_SPEED:
                             ++gConfig.walkSpeed;
-                            gConfig.walkSpeed %= 5;
+                            gConfig.walkSpeed %= WALK_SPEED_JUMP + 1;
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
@@ -5202,7 +5202,7 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
     int j;
     int remMob;
     int terr;
-    short buttonFrame;
+    short buttonCommand;
 
     canReach = 0;
     if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
@@ -5241,8 +5241,10 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
             }
         }
         if (updateButton) {
-            buttonFrame = canReach ? 6 : 5;
-            gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, buttonFrame, 2, 0x4008);
+            buttonCommand = canReach ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
+            gpWindowManager->BroadcastMessage(
+                MESSAGE_WIDGET, buttonCommand, ADVENTURE_CONTROL_CONTINUE_ROUTE, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
+            );
         }
     } else {
         HideRoute(redraw, 1, 1);
@@ -5498,7 +5500,9 @@ void advManager::SetInitialMapOrigin(void) {
     town* townPointer;
     town* ownTown;
 
-    gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS, 2, 0x4008);
+    gpWindowManager->BroadcastMessage(
+        MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS, ADVENTURE_CONTROL_CONTINUE_ROUTE, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
+    );
     m_lastHoverCell = m_hoverCellY = 0;
     m_cursorActive = 0;
     gbHeroMoving = 0;
@@ -5611,7 +5615,7 @@ short advManager::CheckHandleNetPlayerWait(struct tag_message &message, signed c
                 break;
 
             case INPUT_SCAN_Q:
-                if (message.modifiers & 0xc) {
+                if (message.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS) {
                     message.type = MESSAGE_EXECUTIVE;
                     message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
                     return MESSAGE_DISPATCH_FORWARD;
