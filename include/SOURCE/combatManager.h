@@ -62,6 +62,7 @@ H1_ENUM_BEGIN(CombatPointerCode)
 H1_ENUM_END(CombatPointerCode)
 
 // clang-format off
+// Two sides (attacker 0, defender 1) index m_armies and m_numArmies.
 // The hex grid is nine columns by five rows (hex = row * 9 + column):
 // DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
 // m_hex with % and / 9 and treats columns 0 and 8 as the side edges.
@@ -70,7 +71,8 @@ H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_SIDE_ARMY_COUNT = 6,
     COMBAT_GRID_COLUMNS = 9,
     COMBAT_GRID_LAST_COLUMN = 8,
-    COMBAT_GRID_ROWS = 5
+    COMBAT_GRID_ROWS = 5,
+    COMBAT_SIDE_COUNT = 2
 H1_ENUM_CONST_END(CombatGridConstant)
 
 // combatManager::m_combatIcons slots, as LoadCombatResources fills them:
@@ -165,8 +167,8 @@ public:
     int m_experienceValue[2];
     signed char m_heroCastSpell[2];
     // Live stacks per side (CastMassSpell walks each side's armies).
-    short m_numArmies[2];
-    army m_armies[2][COMBAT_SIDE_ARMY_COUNT];
+    short m_numArmies[COMBAT_SIDE_COUNT];
+    army m_armies[COMBAT_SIDE_COUNT][COMBAT_SIDE_ARMY_COUNT];
     signed char m_currentSide;
     signed char m_currentArmyIndex;
     signed char m_currentSpeed;

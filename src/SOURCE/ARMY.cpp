@@ -939,8 +939,8 @@ void army::DoAttack(int retaliation) {
         gpCombatManager->DrawFrame(1);
         glTimers[0] = KBTickCount() + 105;
     }
-    target2 = 0;
-    target = 0;
+    target2 = NULL;
+    target = NULL;
     if (ValidHex(newHex)) {
         int savedKilled;
         short nextHex;
@@ -1365,7 +1365,7 @@ void army::PowEffect(signed char effect) {
         gCurLoadedSpellIcon = gpResourceManager->GetIcon(gPowEffectNames[effect]);
         gCurLoadedSpellFileId = effect;
     }
-    for (side = 0; side < 2; side++)
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++)
         for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++)
             if (gpCombatManager->m_armies[side][stackIndex].m_powFrames > 0)
                 gpSoundManager->MemorySample(gpCombatManager->m_armies[side][stackIndex].m_samples[ARMY_SAMPLE_WINCE]);
@@ -1374,7 +1374,7 @@ void army::PowEffect(signed char effect) {
     while (step < frames && step < 5) {
         gpCombatManager->m_computeExtent = 1;
         glTimers[1] = KBTickCount() + 30;
-        for (side = 0; side < 2; side++) {
+        for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
             for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
                 if (gpCombatManager->m_armies[side][stackIndex].m_powFrames >= step) {
                     gpCombatManager->m_armies[side][stackIndex].m_animationSequence = ARMY_ANIMATION_EFFECT;
@@ -1395,7 +1395,7 @@ void army::PowEffect(signed char effect) {
     while (step < frames && step < 10) {
         gpCombatManager->m_computeExtent = 1;
         glTimers[1] = KBTickCount() + 30;
-        for (side = 0; side < 2; side++) {
+        for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
             for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
                 if (gpCombatManager->m_armies[side][stackIndex].m_powFrames >= 5) {
                     gpCombatManager->m_armies[side][stackIndex].m_animationSequence = ARMY_ANIMATION_EFFECT;
@@ -1416,7 +1416,7 @@ void army::PowEffect(signed char effect) {
     }
     while (++step < 10)
         DelayMilli(15);
-    for (side = 0; side < 2; side++) {
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++) {
             curArmy = &gpCombatManager->m_armies[side][stackIndex];
             if ((curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD) && curArmy->m_powFrames != -1) {
@@ -1435,7 +1435,7 @@ void army::PowEffect(signed char effect) {
         }
     }
     gpCombatManager->DrawFrame(1);
-    for (side = 0; side < 2; side++)
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++)
         for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++)
             gpCombatManager->m_armies[side][stackIndex].WaitSample(2);
 }

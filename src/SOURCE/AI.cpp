@@ -41,7 +41,7 @@ int combatManager::AICheckRetreat(void) {
     float expBonus;
     int force[2];
 
-    for (side = 0; side < 2; side++) {
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         if (m_heroes[side]) {
             heroCopy = *m_heroes[side];
             sideHero = &heroCopy;
@@ -50,7 +50,7 @@ int combatManager::AICheckRetreat(void) {
             armyPtr = &bareGroup;
             sideHero = NULL;
         }
-        for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+        for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
             if (m_armies[side][armyIndex].IsAlive()) {
                 armyPtr->m_creatureTypes[armyIndex] = m_armies[side][armyIndex].m_creatureType;
                 if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
@@ -193,20 +193,20 @@ void combatManager::DoCompAI(signed char) {
             } else {
                 targetIndex = GetBestArmy(sideEnemy, ranged[sideEnemy]);
                 if (targetIndex != -1) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
                     goto finish;
                 }
                 targetIndex = GetBestArmy(sideEnemy, flyerMasks[sideEnemy]);
                 if (targetIndex != -1) {
-                    giNextAction = 2;
+                    giNextAction = ACTION_MOVE;
                     giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
                     goto finish;
                 }
                 if (walkerMask[sideEnemy]) {
                     targetIndex = GetClosestArmy(currentArmy, sideEnemy, walkerMask[sideEnemy]);
                     if (targetIndex != -1) {
-                        giNextAction = 2;
+                        giNextAction = ACTION_MOVE;
                         giNextActionGridIndex = m_armies[sideEnemy][targetIndex].m_hex;
                         goto finish;
                     }
@@ -255,7 +255,7 @@ void combatManager::DoCompAI(signed char) {
                     targetHex = currentArmy->m_hex / COMBAT_GRID_COLUMNS * COMBAT_GRID_COLUMNS + 4;
                     hexCell = &gpCombatManager->m_hexCells[targetHex];
                     if (ValidHex(targetHex) && hexCell->m_occupantSide == -1 && hexCell->m_obstacleIndex == -1) {
-                        giNextAction = 2;
+                        giNextAction = ACTION_MOVE;
                         giNextActionGridIndex = targetHex;
                         goto finish;
                     }
@@ -263,9 +263,9 @@ void combatManager::DoCompAI(signed char) {
             }
             break;
     }
-    giNextAction = 3;
+    giNextAction = ACTION_SKIP_TURN;
 finish:
-    if (giNextAction == 2 && giNextActionGridIndex > 0 && giNextActionGridIndex <= 43
+    if (giNextAction == ACTION_MOVE && giNextActionGridIndex > 0 && giNextActionGridIndex <= 43
         && gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantSide == -1) {
         for (dirIndex = 0; dirIndex < 6; dirIndex++) {
             adj = currentArmy->GetAdjacentCellIndex(giNextActionGridIndex, dirIndex);
@@ -338,7 +338,7 @@ short combatManager::GetBestArmy(signed char side, short mask) {
     unsigned long bestStrength = 0;
     short best = -1;
 
-    for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
             strength = m_armies[side][armyIndex].Strength();
             if (strength > bestStrength) {
@@ -359,7 +359,7 @@ short combatManager::GetWorstArmy(signed char side, short mask) {
     unsigned long worstStrength = 999999999;
     short worst = -1;
 
-    for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
             strength = m_armies[side][armyIndex].Strength();
             if (strength < worstStrength) {
@@ -381,7 +381,7 @@ short combatManager::GetClosestArmy(class army* currentArmy, signed char side, s
     int closestDist = 640;
     short bestArmy = -1;
 
-    for (armyIndex = 0; armyIndex < 5; armyIndex++) {
+    for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
             target = &m_armies[side][armyIndex];
             val = gpSearchArray->QuickDistance(m_hexCells[currentArmy->m_hex].m_x, m_hexCells[currentArmy->m_hex].m_y,
@@ -495,7 +495,7 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     else
         target = GetBestArmy(1 - m_currentSide, enemyMask);
     if (target != -1) {
-        giNextAction = 2;
+        giNextAction = ACTION_MOVE;
         giNextActionGridIndex = m_armies[1 - m_currentSide][target].m_hex;
         return 1;
     } else {
@@ -533,7 +533,7 @@ signed char combatManager::WalkTowardArmyFront(class army* currentArmy, signed c
     canReach = gpSearchArray->FindCombatPath(currentArmy->m_hex, frontHex, currentArmy, 1);
     currentArmy->m_stats.speed = oldSpeed;
     if (gpSearchArray->m_pathLength > 0) {
-        giNextAction = 2;
+        giNextAction = ACTION_MOVE;
         left = currentArmy->m_stats.speed;
         pathNdx = gpSearchArray->m_pathLength - 1;
         giNextActionGridIndex = currentArmy->m_hex;

@@ -120,8 +120,8 @@ void combatManager::ResetLimitCreature(void) {
 
     m_computeExtent = 1;
     m_extendLimitDown = 0;
-    for (side = 0; side < 2; side++) {
-        for (j = 0; j < 5; j++) {
+    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
             if (m_armies[side][j].m_stats.attributes & MONSTER_FLAGS_DEAD)
                 m_limitCreatureCount[side][j] = -1;
             else
@@ -212,8 +212,8 @@ void combatManager::DrawFrame(signed char updateScreen) {
         giMinExtentX = 639;
         giMinExtentY = 459;
         drawn = 0;
-        for (side = 0; side < 2; side++) {
-            for (i = 0; i < 5; i++) {
+        for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (m_limitCreatureCount[side][i] > 0) {
                     drawn = 1;
                     hexCol = m_armies[side][i].m_hex % COMBAT_GRID_COLUMNS;
