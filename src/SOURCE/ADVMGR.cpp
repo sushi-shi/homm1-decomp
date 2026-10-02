@@ -9,6 +9,7 @@
 #include <BASE/Iconm2b.h>
 #include <BASE/Icond2b.h>
 #include <BASE/MISC_TYPES.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/bmap2.h>
 #include <H1/All.h>
@@ -16,6 +17,7 @@
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/fileRequester.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
 #include <SOURCE/wingraph.h>
@@ -213,7 +215,191 @@ advManager::~advManager() {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.608500;margin=0.280356;shape=0.449;size=0.637;calls=0.611;strings=advManager|adv_wind.bin|advmice.mse;alternate=pol20:int advManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0005665f
 VA(0x004255ab, 0xea6)
-short advManager::Open(short) {
+short advManager::Open(short id) {
+    int savedShowIt;
+    int firstTime;
+    int oldPlayer;
+    int oldVolume;
+    int i;
+
+    firstTime = 1;
+    iCurBottomView = BOTTOM_VIEW_NONE;
+    m_openState = 0;
+    bShowIt = 0;
+    m_adventureBorder = 0;
+    for (i = 0; i < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; i++) {
+        m_bottomViewPrimaryWidgets[i] = 0;
+        m_bottomViewSecondaryWidgets[i] = 0;
+    }
+    if (m_adventureWindow == 0) {
+        m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
+        if (m_adventureWindow == 0)
+            MemError();
+        m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, 0, 26, 16, 1);
+        if (m_scrollLeftButton == 0)
+            MemError();
+        m_adventureWindow->AddWidget(m_scrollLeftButton, -1);
+        m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, 0, 27, 16, 1);
+        if (m_scrollRightButton == 0)
+            MemError();
+        m_adventureWindow->AddWidget(m_scrollRightButton, -1);
+        m_panelBackdrops[0] = new backdropWidget(480, 176, 56, 128, -1, 32);
+        if (m_panelBackdrops[0] == 0)
+            MemError();
+        m_panelBackdrops[1] = new backdropWidget(552, 176, 56, 128, -1, 32);
+        if (m_panelBackdrops[1] == 0)
+            MemError();
+        m_panelBackdrops[2] = new backdropWidget(539, 194, 10, 92, -1, 32);
+        if (m_panelBackdrops[2] == 0)
+            MemError();
+        m_panelBackdrops[3] = new backdropWidget(611, 194, 10, 92, -1, 32);
+        if (m_panelBackdrops[3] == 0)
+            MemError();
+        m_panelBackdrops[4] = new backdropWidget(480, 320, 144, 144, -1, 32);
+        if (m_panelBackdrops[4] == 0)
+            MemError();
+        for (i = 0; i < ADVMGR_PANEL_ICON_COUNT; i++)
+            m_adventureWindow->AddWidget(m_panelBackdrops[i], -1);
+    }
+    if (gbThisNetHumanPlayer[giCurPlayer])
+        gpMouseManager->SetPointer("advmice.mse", 0);
+    else
+        gpMouseManager->SetPointer("advmice.mse", 1);
+    if (m_visibilityMap == 0) {
+        m_visibilityMap = new signed char[MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE];
+        if (m_visibilityMap == 0)
+            MemError();
+    }
+    m_routeShown = 0;
+    gpWindowManager->AddWindow(m_adventureWindow, 0, 1);
+    if (m_groundTiles == 0)
+        m_groundTiles = gpResourceManager->GetTileset("ground32.til");
+    if (m_cloudTiles == 0)
+        m_cloudTiles = gpResourceManager->GetTileset("clof32.til");
+    if (m_stoneTiles == 0)
+        m_stoneTiles = gpResourceManager->GetTileset("ston.til");
+    if (m_cloudOverlayIcon == 0)
+        m_cloudOverlayIcon = gpResourceManager->GetIcon("clop32.icn");
+    if (m_objectIcons[0] == 0)
+        m_objectIcons[0] = gpResourceManager->GetIcon("obj32-00.icn");
+    if (m_objectIcons[1] == 0)
+        m_objectIcons[1] = gpResourceManager->GetIcon("obj32-01.icn");
+    if (m_objectIcons[2] == 0)
+        m_objectIcons[2] = gpResourceManager->GetIcon("obj32-02.icn");
+    if (m_objectIcons[3] == 0)
+        m_objectIcons[3] = gpResourceManager->GetIcon("obj32-03.icn");
+    if (m_objectIcons[4] == 0)
+        m_objectIcons[4] = gpResourceManager->GetIcon("obj32-04.icn");
+    if (m_objectIcons[5] == 0)
+        m_objectIcons[5] = gpResourceManager->GetIcon("obj32-05.icn");
+    if (m_objectIcons[6] == 0)
+        m_objectIcons[6] = gpResourceManager->GetIcon("obj32-06.icn");
+    if (m_objectIcons[7] == 0)
+        m_objectIcons[7] = gpResourceManager->GetIcon("obj32-07.icn");
+    if (m_objectIcons[8] == 0)
+        m_objectIcons[8] = gpResourceManager->GetIcon("mtn32.icn");
+    if (m_objectIcons[9] == 0)
+        m_objectIcons[9] = gpResourceManager->GetIcon("tree32.icn");
+    if (m_objectIcons[10] == 0)
+        m_objectIcons[10] = gpResourceManager->GetIcon("town32.icn");
+    if (m_objectIcons[11] == 0)
+        m_objectIcons[11] = gpResourceManager->GetIcon("rsrc32.icn");
+    if (m_objectIcons[12] == 0)
+        m_objectIcons[12] = gpResourceManager->GetIcon("mons32.icn");
+    if (m_objectIcons[13] == 0)
+        m_objectIcons[13] = gpResourceManager->GetIcon("art32.icn");
+    if (m_objectIcons[14] == 0)
+        m_objectIcons[14] = gpResourceManager->GetIcon("flag32.icn");
+    if (m_objectIcons[15] == 0)
+        m_objectIcons[15] = gpResourceManager->GetIcon("ressmall.icn");
+    if (m_objectIcons[16] == 0)
+        m_objectIcons[16] = gpResourceManager->GetIcon("hourglas.icn");
+    if (m_objectIcons[17] == 0)
+        m_objectIcons[17] = gpResourceManager->GetIcon("route.icn");
+    if (m_objectIcons[18] == 0)
+        m_objectIcons[18] = gpResourceManager->GetIcon("smcrest.icn");
+    if (m_objectIcons[19] == 0)
+        m_objectIcons[19] = gpResourceManager->GetIcon("stonback.icn");
+    if (m_objectIcons[20] == 0)
+        m_objectIcons[20] = gpResourceManager->GetIcon("minimon.icn");
+    if (m_heroIcons[0] == 0)
+        m_heroIcons[0] = gpResourceManager->GetIcon("kngt32.icn");
+    if (m_heroIcons[1] == 0)
+        m_heroIcons[1] = gpResourceManager->GetIcon("barb32.icn");
+    if (m_heroIcons[2] == 0)
+        m_heroIcons[2] = gpResourceManager->GetIcon("sorc32.icn");
+    if (m_heroIcons[3] == 0)
+        m_heroIcons[3] = gpResourceManager->GetIcon("wrlk32.icn");
+    if (m_heroIcons[4] == 0)
+        m_heroIcons[4] = gpResourceManager->GetIcon("boat32.icn");
+    gbLoadingMonoIcon = 1;
+    if (m_boatShadowIcon == 0)
+        m_boatShadowIcon = gpResourceManager->GetIcon("shadow32.icn");
+    gbLoadingMonoIcon = 0;
+    if (m_flagIcons[0] == 0)
+        m_flagIcons[0] = gpResourceManager->GetIcon("b-flag32.icn");
+    if (m_flagIcons[1] == 0)
+        m_flagIcons[1] = gpResourceManager->GetIcon("g-flag32.icn");
+    if (m_flagIcons[2] == 0)
+        m_flagIcons[2] = gpResourceManager->GetIcon("r-flag32.icn");
+    if (m_flagIcons[3] == 0)
+        m_flagIcons[3] = gpResourceManager->GetIcon("y-flag32.icn");
+    if (m_boatFlagIcons[0] == 0)
+        m_boatFlagIcons[0] = gpResourceManager->GetIcon("b-bflg32.icn");
+    if (m_boatFlagIcons[1] == 0)
+        m_boatFlagIcons[1] = gpResourceManager->GetIcon("g-bflg32.icn");
+    if (m_boatFlagIcons[2] == 0)
+        m_boatFlagIcons[2] = gpResourceManager->GetIcon("r-bflg32.icn");
+    if (m_boatFlagIcons[3] == 0)
+        m_boatFlagIcons[3] = gpResourceManager->GetIcon("y-bflg32.icn");
+    gbLoadingMonoIcon = 1;
+    if (m_puzzleIcon == 0)
+        m_puzzleIcon = gpResourceManager->GetIcon("radar.icn");
+    gbLoadingMonoIcon = 0;
+    for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
+        m_loopingSamples[i] = 0;
+    for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; i++) {
+        m_activeSounds[i].soundId = -1;
+        m_activeSounds[i].volume = 127;
+        m_activeSoundMask = 0;
+    }
+    GetCursorSampleSet(gConfig.walkSpeed);
+    if (!gbThisNetHumanPlayer[giCurPlayer]) {
+        gpGame->TurnOnAIMusic();
+        SetNoDialogMenus(0);
+    } else {
+        SetNoDialogMenus(1);
+    }
+    glTimers[0] = KBTickCount() + 120;
+    m_unknown25e = 815;
+    gpMouseManager->NewUpdate(1);
+    oldVolume = gConfig.soundVolume;
+    if (gConfig.soundVolume != 0)
+        gConfig.soundVolume = 10;
+    SetInitialMapOrigin();
+    bShowIt = gbThisNetHumanPlayer[giCurPlayer];
+    gpMouseManager->SetColorMice(0);
+    oldPlayer = giCurPlayer;
+    savedShowIt = bShowIt;
+    giCurPlayer = giCurWatchPlayer;
+    gpCurPlayer = &gpGame->m_players[giCurPlayer];
+    bShowIt = 1;
+    RedrawAdvScreen(1);
+    giCurPlayer = oldPlayer;
+    bShowIt = savedShowIt;
+    gpCurPlayer = &gpGame->m_players[giCurPlayer];
+    if (!gbThisNetHumanPlayer[giCurPlayer])
+        gpGame->ShowComputerScreen();
+    gpMouseManager->ReallyShowPointer();
+    KBChangeMenu(hmnuAdv);
+    gpWindowManager->FadeScreen(0, 8, gPalette);
+    giBottomViewOverride = 0;
+    gConfig.soundVolume = oldVolume;
+    gpSoundManager->AdjustSoundVolumes();
+    m_messageMask = 0x400;
+    m_priority = id;
+    m_active = 1;
+    strcpy(m_name, "advManager");
     return 0;
 }
 
