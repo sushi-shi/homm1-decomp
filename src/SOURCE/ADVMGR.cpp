@@ -414,7 +414,7 @@ short advManager::Open(short id) {
         gpGame->ShowComputerScreen();
     gpMouseManager->ReallyShowPointer();
     KBChangeMenu(hmnuAdv);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, gPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
     giBottomViewOverride = BOTTOM_VIEW_NONE;
     gConfig.soundVolume = oldVolume;
     gpSoundManager->AdjustSoundVolumes();
@@ -615,7 +615,7 @@ class mapCell* advManager::DoAdvCommand(void) {
         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
         gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
         RedrawAdvScreen(1);
-        gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
+        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
         break;
     case ADVMGR_COMMAND_SELECT_HERO:
         SetHeroContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata, 0);
@@ -1293,7 +1293,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
         case ADVENTURE_CONTROL_OVERVIEW:
             gpGame->Overview();
             RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
             break;
     }
     if (message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET && message->id <= BOTTOM_VIEW_DRAW_LAST_WIDGET) {
