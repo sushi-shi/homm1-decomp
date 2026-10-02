@@ -33,16 +33,21 @@ from homm1.core.paths import REPO
 from homm1.tool import ToolError
 from homm1.tool.wine import winepath
 
-#: HoMM1's explicit library line. The vendor libraries (smkwai32, WING32,
-#: wail32) are synthesized by `homm1.graph.implib` from the retail import
-#: table plus the reviewed import-thunk names in function_referents.tsv;
-#: smkwai32 is ordinal-only.
-LINK_LIBS = ["libc.lib", "oldnames.lib", "kernel32.lib", "user32.lib",
-             "gdi32.lib", "advapi32.lib", "winmm.lib", "netapi32.lib",
-             "smkwai32.lib", "wing32.lib", "wail32.lib"]
+#: HoMM1's explicit library line, in retail import-descriptor order (WINMM,
+#: KERNEL32, USER32, GDI32, ADVAPI32, NETAPI32, smkwai32, WING32, wail32).
+#: LINK searches libraries in this order before the objects' default
+#: libraries (LIBC, OLDNAMES), so the descriptors and the smkwai32/WING32
+#: jump thunks land ahead of the CRT, exactly where retail has them
+#: (thunks at 0x00480188, LIBC from 0x004801f0). The vendor libraries are
+#: synthesized by `homm1.graph.implib` from the retail import table plus the
+#: reviewed import-thunk names in function_referents.tsv.
+LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
+             "advapi32.lib", "netapi32.lib", "smkwai32.lib", "wing32.lib",
+             "wail32.lib"]
 
-#: LIBC defines _WinMainCRTStartup and calls the program's _WinMain@16.
-ENTRY = "WinMainCRTStartup"
+#: The module definition: export directory (AppAbout, AppWndProc), module
+#: name and stack reserve - see the file's own header.
+MODULE_DEF = REPO / "config/heroes.def"
 
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.
@@ -167,7 +172,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
               res: Path | None = None, order: Path | None = None,
               explicit: list[str] = (), extra_libs: list[str] = (),
               incremental: bool = False,
-              base: str = "0x400000", keep_all: bool = True,
+              base: str = "0x400000", keep_all: bool = False,
               extra_flags: list[str] = (), dry_run: bool = False,
               retail_order: bool = True) -> dict:
     """Link the candidate image; returns {objs, libs, unresolved, duplicates}.
@@ -192,15 +197,19 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
               + (f", {len(unplaced)} unclaimed appended" if unplaced else "")
               + ")")
 
+    # No /ENTRY: LINK's default for /SUBSYSTEM:WINDOWS is LIBC's
+    # WinMainCRTStartup, and naming it up front pulls wincrt0.obj to the head
+    # of the CRT, whereas retail's CRT begins with exsup.obj.
     rsp_lines = [
         f"/OUT:{winepath(out)}", f"/MAP:{winepath(mapf)}",
         "/NOLOGO", "/SUBSYSTEM:WINDOWS", f"/BASE:{base}",
         "/INCREMENTAL:YES" if incremental else "/INCREMENTAL:NO",
-        f"/ENTRY:{ENTRY}",
+        f"/DEF:{winepath(MODULE_DEF)}",
     ]
     if keep_all:
-        # Keep every function so the map is complete. VC4's linker predates
-        # /OPT:NOICF; it performs no identical-COMDAT folding by default.
+        # Keep every unreferenced COMDAT/thunk so the map is complete. Retail
+        # was linked with the default /OPT:REF: of the 196 import slots only
+        # the 17 smkwai32/WING32 thunks that code calls directly survive.
         rsp_lines.append("/OPT:NOREF")
     rsp_lines += list(extra_flags)
 
@@ -306,8 +315,9 @@ def main() -> int:
     ap.add_argument("--incremental", action="store_true",
                     help="experiment with /INCREMENTAL:YES (retail is NO)")
     ap.add_argument("--base", default="0x400000", help="image base (/BASE)")
-    ap.add_argument("--opt-ref", dest="keep_all", action="store_false",
-                    help="let the linker strip/fold unreferenced COMDATs")
+    ap.add_argument("--keep-all", dest="keep_all", action="store_true",
+                    help="/OPT:NOREF: keep unreferenced COMDATs and import "
+                         "thunks (a complete map; retail used /OPT:REF)")
     ap.add_argument("--manifest-order", dest="retail_order",
                     action="store_false",
                     help="keep the given object order instead of sorting by "
