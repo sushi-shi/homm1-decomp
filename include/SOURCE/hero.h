@@ -4,6 +4,7 @@
 // 34 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
+#include <SOURCE/artifactTypes.h>
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
 
@@ -34,14 +35,6 @@ H1_ENUM_BEGIN(HeroConstant)
 H1_ENUM_END(HeroConstant)
 
 
-// Artifact ids follow HoMM1's artifact table order.
-H1_ENUM_BEGIN(ArtifactType)
-    ARTIFACT_NOMAD_BOOTS = 29,
-    ARTIFACT_TRAVELER_BOOTS = 30,
-    ARTIFACT_TRUE_COMPASS = 35,
-    ARTIFACT_SAILORS_ASTROLABE = 36,
-    ARTIFACT_MAGIC_BOOK = 37
-H1_ENUM_END(ArtifactType)
 // clang-format on
 
 // Retail strides hero records by 0xb6 bytes from game+0x12985; the tail
