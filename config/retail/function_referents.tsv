@@ -135,3 +135,4 @@ rva	name	provenance
 0x00082610	_chdir	SetupCDDrive's chdir call; evidence/homm1-dna-bands.tsv crt-exact libc.lib:/1152 __chdir
 0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
 0x000811DC	__adj_fdivr_m32	evidence/homm1-dna-bands.tsv crt-exact __adj_fdivr_m32; philAI::CheckReload float-constant fdivr FDIV-safe site calls this LIBC fdiv band member
+0x00081AB0	_pow	evidence/homm1-dna-bands.tsv LIBC band stub 0x81ab0 (mov edx,table; jmp two-argument dispatcher); philAI::ProbableOutcomeOfBattle pushes two doubles and stores the float result, Buka pow(attackerStrength, powerCurve)

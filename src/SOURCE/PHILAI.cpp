@@ -11,6 +11,7 @@
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -984,21 +985,117 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
 // evidence: graph:4;base=0.549946;margin=0.581641;shape=0.449;size=0.953;calls=0.724;alternate=pol20:void philAI::ProbableOutcomeOfBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, class armyGroup *, int, int, int, float &, int &, int &, int &, int &, int &)@0x0003c6e2
 VA(0x0041d16d, 0x64d)
 void philAI::ProbableOutcomeOfBattle(
-    class armyGroup*,
-    class hero*,
-    class armyGroup*,
-    class hero*,
-    class armyGroup*,
-    signed char,
-    signed char,
-    int,
-    float&,
-    int&,
-    int&,
-    int&,
-    int&,
-    int&
-) {}
+    armyGroup* attacker,
+    hero* attackerHero,
+    armyGroup* defender,
+    hero* defenderHero,
+    armyGroup* townArmy,
+    signed char useTown,
+    signed char townId,
+    int enemyPlayer,
+    float& winChance,
+    int& attackerLoss,
+    int& defenderLoss,
+    int& attackerRemaining,
+    int& defenderRemaining,
+    int& outcomeValue
+) {
+    float attFight7;
+    float defenderFight2;
+    int artsD;
+    int notUsed;
+    float defenderRaw;
+    int i0;
+    int exp;
+    float attStr0;
+    float defP;
+    float defStr;
+    float attRaw;
+    float attackerPower;
+    float power;
+    float difficulty8;
+    int aArt0;
+
+    aArt0 = 0;
+    artsD = 0;
+    attFight7 = (float)FightValueOfStack(attacker, attackerHero, 1, 0, 0);
+    defenderFight2 = (float)FightValueOfStack(defender, defenderHero, 1, useTown, townId);
+    if (townArmy)
+        defenderFight2 += (float)FightValueOfStack(townArmy, 0, 1, 0, 0);
+    attRaw = (float)FightValueOfStack(attacker, attackerHero, 0, 0, 0);
+    defenderRaw = (float)FightValueOfStack(defender, defenderHero, 0, 0, 0);
+    if (townArmy)
+        defenderRaw += (float)FightValueOfStack(townArmy, 0, 0, 0, 0);
+    if (useTown)
+        defenderFight2 = defenderFight2 * 1.11;
+    defStr = defenderFight2;
+    if (enemyPlayer == -1) {
+        attStr0 = attFight7 * (gpCurPlayer->m_difficulty * 0.15 + 0.7);
+    } else {
+        attStr0 = attFight7;
+        if (gbHumanPlayer[enemyPlayer]) {
+            defStr = defStr * 1.14;
+            if (gpCurPlayer->m_difficulty == 1)
+                attStr0 = attStr0 * 1.5;
+        }
+    }
+    if (attStr0 < 1.0f)
+        attStr0 = 1.0f;
+    if (defStr < 1.0f)
+        defStr = 1.0f;
+    power = 2.75f;
+    if (attStr0 > 1000000.0f || defStr > 1000000.0f)
+        power = 2.0f;
+    attackerPower = pow(attStr0, power);
+    defP = pow(defStr, power);
+    winChance = attackerPower / (attackerPower + defP);
+    if (winChance < 0.08)
+        winChance = 0.0f;
+    else if (winChance < 0.12)
+        winChance = winChance - 0.07;
+    else if (winChance < 0.2)
+        winChance = winChance - 0.05;
+    else if (winChance < 0.3)
+        winChance = winChance - 0.04;
+    else if (winChance < 0.4)
+        winChance = winChance - 0.02;
+    attackerLoss = (int)((1.0 - winChance) * attRaw);
+    defenderLoss = (int)(defenderRaw * winChance);
+    attackerRemaining = (int)(attackerLoss * winChance + (1.0f - winChance) * attRaw);
+    defenderRemaining = (int)(defenderLoss * (1.0f - winChance) + defenderRaw * winChance);
+    difficulty8 = 1.33 - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
+    outcomeValue = (int)(-attackerRemaining * difficulty8 * difficulty8);
+    if (enemyPlayer >= 0) {
+        difficulty8 = gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase + 0.66;
+        if (gbHumanPlayer[enemyPlayer])
+            outcomeValue =
+                (int)(outcomeValue + defenderRemaining * difficulty8 * difficulty8 * gfAttackHumanBonus);
+        else
+            outcomeValue =
+                (int)(outcomeValue + defenderRemaining * gfAttackComputerBonus * difficulty8 * difficulty8);
+    }
+    outcomeValue = (int)(outcomeValue * gpCurPlayer->m_aiData.m_upgradeValueWeight);
+    if (attackerHero) {
+        for (i0 = 0; i0 < HERO_ARTIFACT_SLOT_COUNT; i0++) {
+            if (attackerHero->m_artifacts[i0] >= 0 && attackerHero->m_artifacts[i0] < 37)
+                aArt0 += gArtifactBaseRV[attackerHero->m_artifacts[i0]];
+        }
+        outcomeValue = (int)(outcomeValue - (aArt0 + 1400) * (1.0f - winChance));
+        exp = gpGame->ExperienceValueOfStack(defender, defenderHero);
+        outcomeValue = (int)(outcomeValue + exp * attackerHero->m_aiFightValue * winChance * 0.8);
+    }
+    if (defenderHero) {
+        for (i0 = 0; i0 < HERO_ARTIFACT_SLOT_COUNT; i0++) {
+            if (defenderHero->m_artifacts[i0] >= 0 && defenderHero->m_artifacts[i0] < 37)
+                artsD += gArtifactBaseRV[defenderHero->m_artifacts[i0]];
+        }
+        outcomeValue = (int)(outcomeValue
+                             + (artsD + 1250)
+                                   * (gbHumanPlayer[defenderHero->m_owner] ? gfAttackHumanBonus
+                                                                           : gfAttackComputerBonus)
+                                   * winChance);
+    }
+}
 
 // Buka 2.1 GetOddsOfWinning returns the exact constant seen in retail's fld.
 // @dead-code
