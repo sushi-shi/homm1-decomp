@@ -217,7 +217,7 @@ short fileRequester::Open(short priority) {
     );
     if (!m_scrollKnob)
         MemError();
-    m_window->AddWidget(m_scrollKnob, -1);
+    m_window->AddWidget(m_scrollKnob, WINDOW_Z_ORDER_APPEND);
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
@@ -263,8 +263,8 @@ short fileRequester::Open(short priority) {
     m_window->BroadcastMessage(message);
     Update(0);
     if (gbShowMapInfo)
-        gpWindowManager->AddWindow(gpReqExtraWindow, -1, 1);
-    gpWindowManager->AddWindow(m_window, -1, 1);
+        gpWindowManager->AddWindow(gpReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
+    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     SetOK(enable);
     UpdateMapInfo();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;

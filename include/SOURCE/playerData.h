@@ -17,6 +17,8 @@
 // save 50 zero bytes between the hero and hint blocks.
 H1_ENUM_CONST_BEGIN(PlayerDataConstant)
     PLAYER_HERO_CAPACITY = 8,
+    // m_availableHeroIds: the two heroes a player's taverns offer.
+    PLAYER_TAVERN_HERO_COUNT = 2,
     PLAYER_PUZZLE_PIECE_COUNT = 48,
     PLAYER_PUZZLE_PIECE_STORAGE_SIZE = (PLAYER_PUZZLE_PIECE_COUNT + 7) / 8,
     PLAYER_ULTIMATE_HINT_NONE = -1,
@@ -99,7 +101,7 @@ public:
     signed char m_currentHero;
     signed char m_heroLocatorPage;
     signed char m_heroIds[PLAYER_HERO_CAPACITY];
-    signed char m_availableHeroIds[2];
+    signed char m_availableHeroIds[PLAYER_TAVERN_HERO_COUNT];
     char m_unknown20[0x32];
     // Saved one byte at a time between the hero and town blocks.
     signed char m_ultimateArtifactHintChance;

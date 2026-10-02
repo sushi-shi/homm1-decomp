@@ -122,7 +122,7 @@ short swapManager::Open(short id) {
     message.id = ADVENTURE_CONTROL_GAME_OPTIONS;
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
     Update();
-    gpWindowManager->AddWindow(m_window, -1, 1);
+    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     KBChangeMenu(hmnuAdv);
     giMonoIconSkip = 2;
     m_selectorIcon = gpResourceManager->GetIcon("swapbtn.icn");
@@ -206,7 +206,7 @@ void swapManager::DrawSelector(void) {
                 }
                 break;
         }
-        m_selectorIcon->FillToBuffer(x + 16, y + 16, 2, frameColor, ICON_DRAW_NORMAL, 0);
+        m_selectorIcon->FillToBuffer(x + 16, y + 16, 2, frameColor, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
         gpWindowManager->UpdateScreenRegion(x + 16, y + 16, 36, 36);
     }
 }

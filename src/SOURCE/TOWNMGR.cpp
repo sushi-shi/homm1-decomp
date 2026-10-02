@@ -78,15 +78,15 @@ void townObject::Draw(signed char advanceAnimation) {
 
     if (!m_visible)
         return;
-    m_icon->DrawToBuffer(0, 0, 0, ICON_DRAW_NORMAL, 0);
+    m_icon->DrawToBuffer(0, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     if (m_buildingId == BUILDING_SLOT_MAGE_GUILD) {
         for (level = 0; level < gpTownManager->m_town->m_buildState; level++)
-            m_icon->DrawToBuffer(0, 0, (level + 1) * 2, ICON_DRAW_NORMAL, 0);
+            m_icon->DrawToBuffer(0, 0, (level + 1) * 2, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
         m_icon
-            ->DrawToBuffer(0, 0, gpTownManager->m_town->m_buildState * 2 + 1, ICON_DRAW_NORMAL, 0);
+            ->DrawToBuffer(0, 0, gpTownManager->m_town->m_buildState * 2 + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     }
     if (m_animationFrameCount) {
-        m_icon->DrawToBuffer(0, 0, m_animationFrame + 1, ICON_DRAW_NORMAL, 0);
+        m_icon->DrawToBuffer(0, 0, m_animationFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
         if (advanceAnimation == 1) {
             m_animationFrame++;
             if (m_animationFrame == m_animationFrameCount)
@@ -159,7 +159,7 @@ short townManager::Open(short id) {
                         ~TOWN_OBJECT_ENABLED_FLAG;
                     m_townObjects[m_townObjectCount]->m_visible = 0;
                 }
-                m_townWindow->AddWidget(m_townObjects[m_townObjectCount]->m_border, -1);
+                m_townWindow->AddWidget(m_townObjects[m_townObjectCount]->m_border, WINDOW_Z_ORDER_APPEND);
             }
             m_townObjectCount++;
         }
@@ -541,7 +541,7 @@ short townManager::Main(struct tag_message& message) {
                             m_coverWindow = new heroWindow(0, 0x100, 0x280, 6, 2);
                             if (m_coverWindow == NULL)
                                 MemError();
-                            gpWindowManager->AddWindow(m_coverWindow, -1, 1);
+                            gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
                             switch (message.id) {
                                 case BUILDING_SLOT_CASTLE:
                                     gpWindowManager->SaveFizzleSource(0, 0x100, 0x228, 0xcc);
@@ -1317,7 +1317,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         new textWidget(0x18, baseY, 0xee, (numLines << 4) + 6, descText, "bigfont.fnt", 1, -1, 8);
     if (descWidget == NULL)
         MemError();
-    nBuildWindow->AddWidget(descWidget, -1);
+    nBuildWindow->AddWidget(descWidget, WINDOW_Z_ORDER_APPEND);
     resIndex = 0;
     for (row = 0; row < 2; row++) {
         yPos = numLines * 16 + baseY + row * 44 + 12;
@@ -1379,8 +1379,8 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                 );
                 if (resWidgets[resIndex] == NULL)
                     MemError();
-                nBuildWindow->AddWidget(amountWidgets[resIndex], -1);
-                nBuildWindow->AddWidget(resWidgets[resIndex], -1);
+                nBuildWindow->AddWidget(amountWidgets[resIndex], WINDOW_Z_ORDER_APPEND);
+                nBuildWindow->AddWidget(resWidgets[resIndex], WINDOW_Z_ORDER_APPEND);
                 resIndex++;
                 currX = currX + space + nEntryWidth;
             }
@@ -1408,7 +1408,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         iEvt.id = 0;
         nBuildWindow->BroadcastMessage(iEvt);
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(nBuildWindow, -1, 1);
+        gpWindowManager->AddWindow(nBuildWindow, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
         gpWindowManager->RemoveWindow(nBuildWindow);
         gpMouseManager->ReallyShowPointer();
@@ -1892,7 +1892,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, short categories) 
                 );
                 if (marker == NULL)
                     MemError();
-                window->AddWidget(marker, -1);
+                window->AddWidget(marker, WINDOW_Z_ORDER_APPEND);
             }
             hi++;
             firstPlayer = hi;
@@ -2060,7 +2060,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit) {
     m_recruitState = -1;
     if (cannotRecruit) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(m_heroWindow1, -1, 1);
+        gpWindowManager->AddWindow(m_heroWindow1, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
         gpWindowManager->RemoveWindow(m_heroWindow1);
         gpMouseManager->ReallyShowPointer();

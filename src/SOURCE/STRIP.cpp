@@ -49,7 +49,7 @@ strip::strip(
         );
         if (!m_borders[0])
             MemError();
-        m_window->AddWidget(m_borders[0], -1);
+        m_window->AddWidget(m_borders[0], WINDOW_Z_ORDER_APPEND);
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             m_borders[i + 1] = new border(
                 i * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
@@ -63,11 +63,11 @@ strip::strip(
             );
             if (!m_borders[i + 1])
                 MemError();
-            m_window->AddWidget(m_borders[i + 1], -1);
+            m_window->AddWidget(m_borders[i + 1], WINDOW_Z_ORDER_APPEND);
         }
     }
     DrawIcons(drawWindow);
-    gpWindowManager->AddWindow(m_window, -1, drawWindow);
+    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, drawWindow);
 }
 
 // donor PoL RVA 0x000324ae; preferred Buka symbol ??1strip@@QAE@XZ
@@ -112,7 +112,7 @@ void strip::DrawIcons(signed char drawWindow) {
         m_y + STRIP_CONTENT_Y,
         m_portraitFrame,
         ICON_DRAW_NORMAL,
-        0
+        ICON_DRAW_OFFSET_FULL
     );
     if (!m_army) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
@@ -121,7 +121,7 @@ void strip::DrawIcons(signed char drawWindow) {
                 m_y + STRIP_CONTENT_Y,
                 STRIP_EMPTY_FRAME,
                 ICON_DRAW_NORMAL,
-                0
+                ICON_DRAW_OFFSET_FULL
             );
         m_window->DrawWindow(drawWindow);
         return;
@@ -134,14 +134,14 @@ void strip::DrawIcons(signed char drawWindow) {
                 m_y + STRIP_CONTENT_Y,
                 creatureType / STRIP_CREATURES_PER_FACTION + STRIP_FACTION_FRAME_OFFSET,
                 ICON_DRAW_NORMAL,
-                0
+                ICON_DRAW_OFFSET_FULL
             );
             m_monsterIcon->DrawToBuffer(
                 m_x + i * STRIP_ARMY_X_STEP + STRIP_MONSTER_X,
                 m_y + STRIP_MONSTER_Y,
                 creatureType,
                 ICON_DRAW_NORMAL,
-                0
+                ICON_DRAW_OFFSET_FULL
             );
             sprintf(gText, "%d", m_army->m_creatureCounts[i]);
             m_font->DrawBoundedString(
@@ -159,7 +159,7 @@ void strip::DrawIcons(signed char drawWindow) {
                 m_y + STRIP_CONTENT_Y,
                 STRIP_EMPTY_FRAME,
                 ICON_DRAW_NORMAL,
-                0
+                ICON_DRAW_OFFSET_FULL
             );
         }
     }
@@ -170,7 +170,7 @@ void strip::DrawIcons(signed char drawWindow) {
             m_y + STRIP_CONTENT_Y,
             STRIP_SELECTED_FRAME,
             ICON_DRAW_NORMAL,
-            0
+            ICON_DRAW_OFFSET_FULL
         );
 }
 
@@ -178,7 +178,7 @@ void strip::DrawIcons(signed char drawWindow) {
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00463cd0, 0x37)
 void strip::DrawFrame(void) {
-    m_stripIcon->DrawToBuffer(m_x, m_y, STRIP_BACKGROUND_FRAME, ICON_DRAW_NORMAL, 0);
+    m_stripIcon->DrawToBuffer(m_x, m_y, STRIP_BACKGROUND_FRAME, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
 // donor PoL RVA 0x00032a38; preferred Buka symbol ??0bankBox@@QAE@HHPAVplayerData@@@Z
@@ -192,7 +192,7 @@ bankBox::bankBox(short x, short y, class playerData* player) {
     m_window = new heroWindow(m_x, m_y, "bankbox.bin");
     if (!m_window)
         MemError();
-    gpWindowManager->AddWindow(m_window, -1, 1);
+    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     Update();
 }
 

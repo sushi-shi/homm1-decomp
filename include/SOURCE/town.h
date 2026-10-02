@@ -27,6 +27,21 @@ H1_ENUM_BEGIN(TownType)
     TOWN_TYPE_WARLOCK = 3,
     TOWN_TYPE_COUNT = 4
 H1_ENUM_END(TownType)
+
+// A town object covers 4x3 map cells from (x - 2, y - 2) to (x + 1, y)
+// (RandomizeTown, NewMap). Its frames run per race in blocks of 24 before
+// the random town's (block TOWN_TYPE_COUNT); a town without a castle uses
+// the frames 12 before the castle's. RandomizeTown ages a placed town ten
+// turns (Buka RANDOM_TOWN_AGE).
+H1_ENUM_CONST_BEGIN(TownFootprintConstant)
+    TOWN_FOOTPRINT_LEFT = 2,
+    TOWN_FOOTPRINT_TOP = 2,
+    TOWN_FOOTPRINT_WIDTH = 4,
+    TOWN_FOOTPRINT_HEIGHT = 3,
+    TOWN_RACE_FRAME_STRIDE = 24,
+    TOWN_CASTLE_FRAME_OFFSET = 12,
+    TOWN_RANDOM_AGE = 10
+H1_ENUM_CONST_END(TownFootprintConstant)
 // clang-format on
 
 #pragma pack(push, 1)

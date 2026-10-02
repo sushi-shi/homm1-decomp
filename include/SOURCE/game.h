@@ -48,8 +48,38 @@ H1_ENUM_END(CalendarPeriodType)
 // (pays 1000 gold a day) and the Lighthouse (ship movement).
 H1_ENUM_BEGIN(GameMineSlot)
     MINE_SLOT_DRAGON_CITY = 0,
-    MINE_SLOT_LIGHTHOUSE = 1
+    MINE_SLOT_LIGHTHOUSE = 1,
+    // The ordinary mines follow the two unique sites (PerDay, Overview,
+    // ComputeDailyGold loop from here).
+    MINE_SLOT_STANDARD_FIRST = 2
 H1_ENUM_END(GameMineSlot)
+
+// Daily income (ComputeDailyGold, PerDay): Dragon City and a gold mine pay
+// 1000 gold, a town 250 and a castle 1000; an ore or wood mine yields two
+// units a day, the other non-gold mines one.
+H1_ENUM_CONST_BEGIN(DailyIncomeConstant)
+    DAILY_GOLD_DRAGON_CITY = 1000,
+    DAILY_GOLD_MINE = 1000,
+    DAILY_GOLD_TOWN = 250,
+    DAILY_GOLD_CASTLE = 1000,
+    DAILY_GOLD_ENDLESS_SACK = 1000,
+    DAILY_GOLD_ENDLESS_BAG = 750,
+    DAILY_GOLD_ENDLESS_PURSE = 500,
+    DAILY_MINE_YIELD_WOOD_ORE = 2,
+    DAILY_MINE_YIELD_OTHER = 1
+H1_ENUM_CONST_END(DailyIncomeConstant)
+
+// Weekly growth (PerWeek/PerMonth, Buka GameWeeklyConstant): a well adds two
+// creatures a dwelling, the week's creature five; renewable sites stop
+// restocking at 100 and an emptied water wheel (0xff) refills to 2.
+H1_ENUM_CONST_BEGIN(GameWeeklyConstant)
+    WEEKLY_WELL_GROWTH_BONUS = 2,
+    WEEKLY_CREATURE_GROWTH_BONUS = 5,
+    WEEKLY_SITE_STOCK_LIMIT = 100,
+    WEEKLY_WATER_WHEEL_EMPTY = 0xff,
+    WEEKLY_WATER_WHEEL_GOLD = 2,
+    MONTHLY_CREATURE_GROWTH_FACTOR = 2
+H1_ENUM_CONST_END(GameWeeklyConstant)
 
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
 // and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
