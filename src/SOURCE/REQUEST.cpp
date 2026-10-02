@@ -32,7 +32,7 @@ VA(0x0044803c, 0x83d)
 fileRequester::fileRequester(
     short x,
     short y,
-    short mode,
+    H1_ENUM_PARAM(FileRequesterMode, short) mode,
     const char* pattern,
     const char* directory,
     const char* defaultExtension
@@ -50,7 +50,7 @@ fileRequester::fileRequester(
     int sortedCount;
     int index;
 
-    m_selectedIndex = -1;
+    m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
     m_fileCount = 0;
     m_topIndex = 0;
     m_fileNames = NULL;
@@ -143,7 +143,7 @@ fileRequester::fileRequester(
             if (fd == -1)
                 FileError(fullPath);
             read(fd, &header, sizeof(header));
-            if (header.id == 1000) {
+            if (header.id == MAP_HEADER_ID) {
                 strcpy(m_mapNames[index].text, header.name);
                 strcpy(m_mapInfo[index].description, header.description);
                 m_mapInfo[index].difficulty = header.difficulty;
@@ -160,7 +160,7 @@ fileRequester::fileRequester(
 
     KBChangeMenu(hmnuDflt);
     m_acceptMask = FILE_REQUESTER_DISPATCH_MASK;
-    m_result = -2;
+    m_result = FILE_REQUESTER_MAP_INFO_NONE;
 }
 
 VA(0x00448879, 0x1f)
@@ -221,7 +221,7 @@ short fileRequester::Open(short priority) {
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    if (m_mode == 1) {
+    if (m_mode == FILE_REQUESTER_SAVE) {
         enable = 1;
         const short textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
         strcpy(m_filename, gpGame->m_saveName);
@@ -237,14 +237,14 @@ short fileRequester::Open(short priority) {
         m_window->BroadcastMessage(message);
         for (i = 0; i < m_fileCount; i++) {
             if (!strcmpi(m_fileNames[i].text, m_filename)
-                && m_extensions[i].text[3] - '0' == giNumHumanPlayers)
+                && m_extensions[i].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0' == giNumHumanPlayers)
                 m_selectedIndex = i;
         }
     } else {
         enable = 0;
-        if (m_mode == 0 && m_defaultExtension[1] == 'M') {
+        if (m_mode == FILE_REQUESTER_LOAD && m_defaultExtension[1] == 'M') {
             for (i = 0; i < m_fileCount; i++) {
-                if (!strnicmp(m_fileNames[i].text, gMapName, 8)) {
+                if (!strnicmp(m_fileNames[i].text, gMapName, SAVE_FILE_BASE_NAME_LENGTH)) {
                     m_selectedIndex = i;
                     enable = 1;
                 }
@@ -347,7 +347,7 @@ short fileRequester::Main(tag_message& message) {
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
                         case DIALOG_BUTTON_2:
-                            if (m_selectedIndex == -1 && !m_filename[0]) {
+                            if (m_selectedIndex == FILE_REQUESTER_SELECTION_NONE && !m_filename[0]) {
                                 NormalDialog(
                                     "Please make a selection from the list, or press cancel.",
                                     NORMAL_DIALOG_TYPE_OK,
@@ -396,7 +396,7 @@ short fileRequester::Main(tag_message& message) {
                                     ch = -1;
                             }
                             if (strlen(fileName) && fileName[0] > ' ') {
-                                m_selectedIndex = -1;
+                                m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
                                 strcpy(m_filename, fileName);
                                 SetOK(1);
                             }
@@ -424,11 +424,11 @@ short fileRequester::Main(tag_message& message) {
                             numPages = m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET;
                             if (numPages < 1)
                                 numPages = 1;
-                            stepSize = 15700 / numPages;
+                            stepSize = FILE_REQUESTER_GUTTER_STEPS / numPages;
                             gpMouseManager->MouseCoords(ptrX, ptrY);
-                            ptrY -= m_y + 56;
-                            ptrY -= 9;
-                            newTop = ptrY * 100 / stepSize;
+                            ptrY -= m_y + FILE_REQUESTER_GUTTER_TOP;
+                            ptrY -= FILE_REQUESTER_SCROLL_KNOB_HALF_HEIGHT;
+                            newTop = ptrY * FILE_REQUESTER_GUTTER_SCALE / stepSize;
                             m_topIndex = newTop;
                             if (m_topIndex + FILE_REQUESTER_LAST_ROW_OFFSET >= m_fileCount)
                                 m_topIndex = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
@@ -457,7 +457,7 @@ short fileRequester::Main(tag_message& message) {
                             }
                             m_selectedIndex = message.id - firstRowId + m_topIndex;
                             if (m_selectedIndex >= m_fileCount) {
-                                m_selectedIndex = -1;
+                                m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
                                 SetOK(0);
                             } else {
                                 SetOK(1);
@@ -475,10 +475,10 @@ short fileRequester::Main(tag_message& message) {
     }
 
     if (finished == 1) {
-        if (giCampaignChoice <= 0 && m_mode == 0 && m_selectedIndex >= 0 && gbRequestingGames
+        if (giCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0 && gbRequestingGames
             && message.value != FILE_REQUESTER_CANCEL) {
-            ch = m_extensions[m_selectedIndex].text[3] - '0';
-            if (ch < giNumHumanPlayers && giDebugLevel < 2) {
+            ch = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
+            if (ch < giNumHumanPlayers && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH) {
                 sprintf(
                     gText,
                     "The game you have chosen only has slots for %d human(s).  You need one "
@@ -567,14 +567,14 @@ void fileRequester::DoKnob(void) {
     event = gpInputManager->GetEvent();
     while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (event.type == MESSAGE_MOUSE_MOVE) {
-            if (offset + 56 > event.y)
-                event.y = offset + 56;
-            if (offset + 212 < event.y)
-                event.y = offset + 212;
+            if (offset + FILE_REQUESTER_GUTTER_TOP > event.y)
+                event.y = offset + FILE_REQUESTER_GUTTER_TOP;
+            if (offset + FILE_REQUESTER_GUTTER_BOTTOM < event.y)
+                event.y = offset + FILE_REQUESTER_GUTTER_BOTTOM;
             gpMouseManager->Main(event);
             m_scrollKnob->m_y = event.y - offset;
             if (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS) {
-                index = static_cast<short>((m_scrollKnob->m_y - 56) / scale);
+                index = static_cast<short>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
                 if (index != lastTop) {
                     if (index > m_fileCount - FILE_REQUESTER_VISIBLE_ROWS)
                         index = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
@@ -596,7 +596,7 @@ void fileRequester::DoKnob(void) {
         event = gpInputManager->GetEvent();
     }
     gpMouseManager->SetCursorShape(6);
-    m_scrollKnob->m_flags &= ~1;
+    m_scrollKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     Update(1);
 }
 
@@ -611,7 +611,7 @@ void fileRequester::Update(signed char drawWindow) {
     int pos;
     const short firstId = FILE_REQUESTER_LIST_FIRST;
     const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
-    char extra[372];
+    char extra[FILE_REQUESTER_UPDATE_STORAGE_SIZE];
     const short hiliteColor = 0xe8;
     const short textColor = 1;
     tag_message event;
@@ -635,16 +635,16 @@ void fileRequester::Update(signed char drawWindow) {
                 sprintf(gText, "%s", m_mapNames[m_topIndex + row].text);
             else
                 sprintf(gText, "%s", m_fileNames[m_topIndex + row].text);
-            nHumans = m_extensions[m_topIndex + row].text[3] - '0';
+            nHumans = m_extensions[m_topIndex + row].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             showPlayers = 0;
             if (nHumans != 1 && giCampaignChoice <= 0 && gbRequestingGames) {
                 showPlayers = 1;
                 sprintf(extra, " (%d %s)", nHumans, "Players");
                 suffixWidth = bigFont->LineWidth(extra);
             }
-            limit = 207;
+            limit = FILE_REQUESTER_ROW_TEXT_WIDTH;
             if (showPlayers)
-                limit -= suffixWidth + 6;
+                limit -= suffixWidth + FILE_REQUESTER_PLAYER_SUFFIX_GAP;
             pos = strlen(gText);
             while (bigFont->LineWidth(gText) > limit) {
                 pos--;
@@ -667,7 +667,7 @@ void fileRequester::Update(signed char drawWindow) {
     event.command = WIDGET_COMMAND_SET_FLAGS;
     event.value = WIDGET_FLAG_ENABLED;
     m_window->BroadcastMessage(event);
-    if (m_selectedIndex != -1) {
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE) {
         event.command = WIDGET_COMMAND_SET_TEXT;
         if (gbShowMapInfo)
             sprintf(gText, "%s", m_mapNames[m_selectedIndex].text);
@@ -676,13 +676,13 @@ void fileRequester::Update(signed char drawWindow) {
         event.text = gText;
         m_window->BroadcastMessage(event);
     }
-    if (m_mode == 0) {
+    if (m_mode == FILE_REQUESTER_LOAD) {
         event.command = WIDGET_COMMAND_CLEAR_FLAGS;
         event.value = WIDGET_FLAG_ENABLED;
         m_window->BroadcastMessage(event);
     }
     if (m_fileCount <= FILE_REQUESTER_VISIBLE_ROWS) {
-        m_scrollKnob->m_y = 134;
+        m_scrollKnob->m_y = FILE_REQUESTER_KNOB_CENTER_Y;
     } else {
         gutterFactor = 156.0 / (m_fileCount - FILE_REQUESTER_VISIBLE_ROWS);
         m_scrollKnob->m_y = m_topIndex * gutterFactor + 56.0;
@@ -703,12 +703,12 @@ char* fileRequester::GetMapName(void) {
 // Buka 2.1 GetFilename for HoMM1's two modes.
 VA(0x0044a235, 0x13f)
 char* fileRequester::GetFilename(void) {
-    if (m_mode != 1 && (m_selectedIndex < 0 || m_selectedIndex >= m_fileCount))
+    if (m_mode != FILE_REQUESTER_SAVE && (m_selectedIndex < 0 || m_selectedIndex >= m_fileCount))
         return cFRDummy;
 
-    if (m_selectedIndex == -1)
+    if (m_selectedIndex == FILE_REQUESTER_SELECTION_NONE)
         sprintf(gText, "%s%s", m_filename, m_defaultExtension);
-    else if (m_mode == 0)
+    else if (m_mode == FILE_REQUESTER_LOAD)
         sprintf(
             gText,
             "%s%s",
@@ -732,31 +732,31 @@ void fileRequester::ShowMapInfo(void) {
 
     sprintf(gText, "");
     message.text = gText;
-    if (m_selectedIndex != -1)
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         giMapSize = m_mapInfo[m_selectedIndex].size;
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = sizeId;
-    if (m_selectedIndex != -1)
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = gMapSizeNames[m_mapInfo[m_selectedIndex].size];
     gpReqExtraWindow->BroadcastMessage(message);
-    if (m_selectedIndex != -1)
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         giMapDifficulty = m_mapInfo[m_selectedIndex].difficulty;
     sprintf(gText, gcCurMapName);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = levelId;
-    if (m_selectedIndex != -1)
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
     gpReqExtraWindow->BroadcastMessage(message);
-    if (m_selectedIndex != -1)
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
-    if (m_selectedIndex != -1)
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gMapDescription, m_mapInfo[m_selectedIndex].description);
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = descriptionId;
-    if (m_selectedIndex != -1)
+    if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = m_mapInfo[m_selectedIndex].description;
     gpReqExtraWindow->BroadcastMessage(message);
     gpReqExtraWindow->DrawWindow();

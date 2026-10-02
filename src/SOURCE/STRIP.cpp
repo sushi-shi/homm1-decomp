@@ -23,7 +23,7 @@ strip::strip(
 ) {
     short i;
 
-    m_selectedSlot = -1;
+    m_selectedSlot = STRIP_SLOT_NONE;
     m_x = x;
     m_y = y;
     m_stripType = stripType;
@@ -151,7 +151,7 @@ void strip::DrawIcons(signed char drawWindow) {
                 STRIP_QUANTITY_WIDTH,
                 STRIP_QUANTITY_HEIGHT,
                 1,
-                2
+                FONT_ALIGN_RIGHT
             );
         } else {
             m_stripIcon->DrawToBuffer(
@@ -164,7 +164,7 @@ void strip::DrawIcons(signed char drawWindow) {
         }
     }
     m_window->DrawWindow(drawWindow);
-    if (m_selectedSlot != -1)
+    if (m_selectedSlot != STRIP_SLOT_NONE)
         m_stripIcon->DrawToBuffer(
             m_x + m_selectedSlot * STRIP_ARMY_X_STEP + STRIP_ARMY_FIRST_X,
             m_y + STRIP_CONTENT_Y,

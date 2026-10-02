@@ -1863,7 +1863,7 @@ short game::LoadMap(char* filename) {
     if (handle == -1)
         FileError(gText);
     read(handle, &version, 2);
-    if (version == 1000) {
+    if (version == MAP_HEADER_ID) {
         buf = malloc(0x554);
         read(handle, buf, 0x552);
         read(handle, &version, 2);
@@ -1901,7 +1901,7 @@ short game::LoadMap(char* filename) {
     read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
     read(handle, &m_obeliskCount, 1);
     read(handle, m_mapSounds, sizeof(m_mapSounds));
-    if (version >= 1112) {
+    if (version >= MAP_EXTRA_VERSION) {
         read(handle, &iMaxMapExtra, 4);
         for (i = 1; i < iMaxMapExtra; i++) {
             read(handle, &pwSizeOfMapExtra[i], 4);
@@ -4839,7 +4839,7 @@ void game::GetMap(void) {
         sprintf(mask, "??????3?.MAP");
     else if (giNumHumanPlayers == 4)
         sprintf(mask, "???????4.MAP");
-    request = new fileRequester(310, 14, 0, mask, ".\\MAPS\\", ".MAP");
+    request = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, ".\\MAPS\\", ".MAP");
     if (!request)
         MemError();
     request->ShowMapInfo();

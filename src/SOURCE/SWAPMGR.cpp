@@ -48,6 +48,13 @@ H1_ENUM_BEGIN(SwapManagerItemType)
     SWAP_ITEM_ARMY = 0,
     SWAP_ITEM_ARTIFACT = 1
 H1_ENUM_END(SwapManagerItemType)
+
+// m_selectedSlot/m_targetSlot with nothing picked; DrawSelector lays a
+// hero's fourteen artifacts out in two columns of seven.
+H1_ENUM_CONST_BEGIN(SwapManagerConstant)
+    SWAP_SLOT_NONE = -1,
+    SWAP_ARTIFACTS_PER_COLUMN = 7
+H1_ENUM_CONST_END(SwapManagerConstant)
 // clang-format on
 
 // Buka 2.1 swapManager::swapManager(void).
@@ -60,8 +67,8 @@ swapManager::swapManager(void) {
     m_selectedSide = SWAP_SIDE_NONE;
     m_targetSide = SWAP_SIDE_NONE;
     m_itemType = SWAP_ITEM_NONE;
-    m_selectedSlot = -1;
-    m_targetSlot = -1;
+    m_selectedSlot = SWAP_SLOT_NONE;
+    m_targetSlot = SWAP_SLOT_NONE;
     m_heroes[SWAP_SIDE_LEFT] = NULL;
     m_heroes[SWAP_SIDE_RIGHT] = NULL;
 }
@@ -74,7 +81,7 @@ swapManager::swapManager(class hero* leftHero, class hero* rightHero) {
 
 VA(0x0046ed63, 0x4d)
 void swapManager::Reset(void) {
-    m_selectedSide = m_targetSide = m_itemType = m_selectedSlot = m_targetSlot = -1;
+    m_selectedSide = m_targetSide = m_itemType = m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE;
 }
 
 VA(0x0046edb0, 0x2d5)
@@ -135,7 +142,7 @@ short swapManager::Open(short id) {
     m_priority = id;
     m_active = 1;
     strcpy(m_name, "swapManager");
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // donor PoL RVA 0x000548be; preferred Buka symbol ?Close@swapManager@@UAEXXZ
@@ -181,7 +188,7 @@ void swapManager::DrawSelector(void) {
     short x = 0;
     short y = 0;
 
-    if (m_selectedSide != SWAP_SIDE_NONE && m_selectedSlot != -1) {
+    if (m_selectedSide != SWAP_SIDE_NONE && m_selectedSlot != SWAP_SLOT_NONE) {
         switch (m_selectedSide) {
             case SWAP_SIDE_LEFT:
                 switch (m_itemType) {
@@ -190,8 +197,8 @@ void swapManager::DrawSelector(void) {
                         y = troopTop - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        x = art1 + (m_selectedSlot > 6 ? itemGap : 0) - 1;
-                        y = m_selectedSlot % 7 * itemGap + artTop - 1;
+                        x = art1 + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0) - 1;
+                        y = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + artTop - 1;
                         break;
                 }
                 break;
@@ -202,8 +209,8 @@ void swapManager::DrawSelector(void) {
                         y = troopTop - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        x = art2 + (m_selectedSlot > 6 ? itemGap : 0) - 1;
-                        y = m_selectedSlot % 7 * itemGap + artTop - 1;
+                        x = art2 + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0) - 1;
+                        y = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + artTop - 1;
                         break;
                 }
                 break;
@@ -229,9 +236,9 @@ short swapManager::Main(struct tag_message& message) {
     if (!(message.type & m_messageFilter)) {
         if (message.type) {
             message.type = MESSAGE_NONE;
-            return 2;
+            return MESSAGE_DISPATCH_FORWARD;
         }
-        return 0;
+        return MESSAGE_DISPATCH_CONTINUE;
     }
     switch (message.type) {
         case MESSAGE_RIGHT_BUTTON_DOWN:
@@ -323,7 +330,7 @@ short swapManager::Main(struct tag_message& message) {
                                     m_targetSide = SWAP_SIDE_NONE;
                                     m_itemType = SWAP_ITEM_ARTIFACT;
                                     m_selectedSlot = artIndex;
-                                    m_targetSlot = -1;
+                                    m_targetSlot = SWAP_SLOT_NONE;
                                 } else {
                                     Reset();
                                 }
@@ -392,7 +399,7 @@ short swapManager::Main(struct tag_message& message) {
                                     m_targetSide = SWAP_SIDE_NONE;
                                     m_itemType = SWAP_ITEM_ARTIFACT;
                                     m_selectedSlot = artIndex;
-                                    m_targetSlot = -1;
+                                    m_targetSlot = SWAP_SLOT_NONE;
                                 } else {
                                     Reset();
                                 }
@@ -449,7 +456,7 @@ short swapManager::Main(struct tag_message& message) {
                                     m_targetSide = SWAP_SIDE_NONE;
                                     m_itemType = SWAP_ITEM_ARMY;
                                     m_selectedSlot = message.id - CONTROL_LEFT_ARMY_FIRST;
-                                    m_targetSlot = -1;
+                                    m_targetSlot = SWAP_SLOT_NONE;
                                 } else {
                                     Reset();
                                 }
@@ -514,7 +521,7 @@ short swapManager::Main(struct tag_message& message) {
                                     m_targetSide = SWAP_SIDE_NONE;
                                     m_itemType = SWAP_ITEM_ARMY;
                                     m_selectedSlot = message.id - CONTROL_RIGHT_ARMY_FIRST;
-                                    m_targetSlot = -1;
+                                    m_targetSlot = SWAP_SLOT_NONE;
                                 } else {
                                     Reset();
                                 }
@@ -561,9 +568,9 @@ short swapManager::Main(struct tag_message& message) {
     if (closeRequested == 1) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
-        return 2;
+        return MESSAGE_DISPATCH_FORWARD;
     }
-    return 1;
+    return MESSAGE_DISPATCH_CONSUME;
 }
 
 VA(0x0046fd73, 0xa5)
