@@ -4165,7 +4165,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 if (!status)
                     ShutDown(0);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
-                    if (((RemoteMessage*)incoming)->payload.data[sendPacketIndex] > 0)
+                    if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex] > 0) // API-forced: char* record.
                         acked[block * 100 + sendPacketIndex] = 1;
                 }
                 finished = 1;
@@ -4260,7 +4260,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
             else
                 ShutDown(0);
         }
-        receivedPacket = (RemoteMessage*)GetRemoteData(1);
+        receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
         if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
             lastPacketTime = KBTickCount();
             switch (receivedPacket->command) {

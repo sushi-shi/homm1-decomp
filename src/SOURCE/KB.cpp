@@ -1402,7 +1402,7 @@ void HandleRemoteDeadPlayerExit(int position) {
         giNumHumanPlayers--;
         gPlayerExitMessage.gamePosition = position;
         gPlayerExitMessage.takesControl = 0;
-        TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+        TransmitRemoteData(reinterpret_cast<char*>(&gPlayerExitMessage), REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1); // API-forced: char* payload.
         RemoteCleanup();
         gbHumanPlayer[position] = 0;
     }
@@ -1426,7 +1426,7 @@ void HandleRemoteSuddenExit(void) {
     } else {
         gPlayerExitMessage.takesControl = 0;
     }
-    TransmitRemoteData((char*)&gPlayerExitMessage, REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1);
+    TransmitRemoteData(reinterpret_cast<char*>(&gPlayerExitMessage), REMOTE_BROADCAST_PLAYER, 3, 30, 0, 0, REMOTE_MESSAGE_RELIABLE, 1); // API-forced: char* payload.
 }
 
 // donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
@@ -1994,7 +1994,7 @@ signed char WaitForOtherPlayer(void) {
     int result = 0;
     RemoteMessage* data;
     PollSound();
-    data = (RemoteMessage*)GetRemoteData(1);
+    data = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
     if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
         switch (data->command) {
             case BOX_REMOTE_SETUP:

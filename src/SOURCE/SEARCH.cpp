@@ -229,8 +229,10 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
                     s_hasAdjacentMonster = 1;
             }
         }
+        // byte-evidenced: the costs are read back zero-extended below, but
+        // TestPossibleDirections fills them through a signed-byte pointer.
         TestPossibleDirections(s_currentNode.x, s_currentNode.y, s_possibleDirections,
-                               (signed char *)s_directionCosts, 1, waterMode);
+                               reinterpret_cast<signed char*>(s_directionCosts), 1, waterMode);
         s_terrain = giGroundToTerrain[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_tileIndex];
         s_stepCost[0] = s_currentNode.distance
                         + CalcTerrainCost(s_terrain, 0, giCurTempMobility - s_currentNode.distance, costMode);

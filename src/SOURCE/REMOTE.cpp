@@ -86,7 +86,7 @@ int TransmitRemoteData(
         memcpy(msg.payload.data, data, length);
     while (retval == 0 && tries <= REMOTE_RETRY_COUNT) {
         retval = SendRemoteData(
-            (unsigned char*)&msg,
+            reinterpret_cast<unsigned char*>(&msg), // API-forced: SendRemoteData takes wire bytes.
             0,
             destination,
             length + REMOTE_MESSAGE_HEADER_SIZE
@@ -186,7 +186,7 @@ void PollRemote(void) {
         sndBuf.payloadSize = 1;
         sndBuf.command = (giCurPlayer << 4) + iCurHourGlassPhase;
         sndBuf.payload.data[0] = 1;
-        SendRemoteData((unsigned char*)&sndBuf, 0, 1 - giThisNetPos, 10);
+        SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), 0, 1 - giThisNetPos, 10); // API-forced: wire bytes.
         lLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
@@ -220,7 +220,7 @@ void PollRemote(void) {
     result = 1;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(0, (unsigned char*)&rcvBufIn, REMOTE_BROADCAST_PLAYER);
+        result = ReceiveRemoteData(0, reinterpret_cast<unsigned char*>(&rcvBufIn), REMOTE_BROADCAST_PLAYER); // API-forced: wire bytes.
         if (result && rcvBufIn.sender != giThisNetPos) {
             if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
                 giLastConfirm = rcvBufIn.id;
@@ -244,7 +244,7 @@ void PollRemote(void) {
                 sndBuf.id = rcvBufIn.id;
                 sndBuf.type = REMOTE_MESSAGE_CONFIRM;
                 sndBuf.payloadSize = 0;
-                SendRemoteData((unsigned char*)&sndBuf, 0, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE);
+                SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), 0, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE); // API-forced: wire bytes.
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)
@@ -308,12 +308,12 @@ int TransmitAndWait(
             }
         }
         ForcePollSound();
-        received = (RemoteMessage*)GetRemoteData(1);
+        received = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
         if (received && received->type == REMOTE_MESSAGE_RELIABLE
             && received->command == responseCommand)
             complete = 1;
     }
-    *response = (char*)received;
+    *response = reinterpret_cast<char*>(received); // API-forced: char* record.
 transmitComplete:
     return result;
 }

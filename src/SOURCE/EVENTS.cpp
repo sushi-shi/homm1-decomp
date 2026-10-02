@@ -1889,7 +1889,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     int result;
     combatRemoteData* buf = 0;
 
-    buf = (combatRemoteData*)malloc(0xff);
+    buf = static_cast<combatRemoteData*>(malloc(0xff));
     reply = 0;
     buf->fragment = 0;
     buf->x = x;
@@ -1912,7 +1912,8 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     if (combatTown)
         memcpy(&buf->combatTown, combatTown, sizeof(town));
 
-    result = TransmitAndWait((char*)buf, remotePlayer, sizeof(combatRemoteData), 0x15, 0x16,
+    // API-forced: TransmitAndWait/TransmitRemoteData take char* payloads.
+    result = TransmitAndWait(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteData), 0x15, 0x16,
                              &reply);
     if (!result)
         ShutDown(0);
@@ -1920,7 +1921,8 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     if (firstHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 1;
         memcpy(((combatRemoteHeroFragment*)buf)->data, firstHero, sizeof(hero));
-        result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
+        // API-forced: TransmitRemoteData takes a char* payload.
+        result = TransmitRemoteData(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
             ShutDown(0);
@@ -1928,7 +1930,8 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     if (secondHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 2;
         memcpy(((combatRemoteHeroFragment*)buf)->data, secondHero, sizeof(hero));
-        result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
+        // API-forced: TransmitRemoteData takes a char* payload.
+        result = TransmitRemoteData(reinterpret_cast<char*>(buf), remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
             ShutDown(0);
@@ -1980,12 +1983,12 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
         gpGame->m_players[defenderOwner].m_resources[6] =
             ((combatRemoteMessage*)packet)->combat.secondGold;
 
-    *firstArmy = (armyGroup*)malloc(sizeof(armyGroup));
+    *firstArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
     memcpy(*firstArmy, &((combatRemoteMessage*)packet)->combat.firstArmy, sizeof(armyGroup));
-    *secondArmy = (armyGroup*)malloc(sizeof(armyGroup));
+    *secondArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
     memcpy(*secondArmy, &((combatRemoteMessage*)packet)->combat.secondArmy, sizeof(armyGroup));
     if (hasTown) {
-        *combatTown = (town*)malloc(sizeof(town));
+        *combatTown = static_cast<town*>(malloc(sizeof(town)));
         memcpy(*combatTown, &((combatRemoteMessage*)packet)->combat.combatTown, sizeof(town));
     }
 
@@ -2008,11 +2011,11 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
             && ((combatRemoteMessage*)packet)->command == 0x15) {
             lastPacketTime = KBTickCount();
             if (((heroRemoteMessage*)packet)->heroFragment.fragment == 1) {
-                *firstHero = (hero*)malloc(sizeof(hero));
+                *firstHero = static_cast<hero*>(malloc(sizeof(hero)));
                 memcpy(*firstHero, ((heroRemoteMessage*)packet)->heroFragment.data, sizeof(hero));
             }
             if (((heroRemoteMessage*)packet)->heroFragment.fragment == 2) {
-                *secondHero = (hero*)malloc(sizeof(hero));
+                *secondHero = static_cast<hero*>(malloc(sizeof(hero)));
                 memcpy(*secondHero, ((heroRemoteMessage*)packet)->heroFragment.data,
                        sizeof(hero));
             }

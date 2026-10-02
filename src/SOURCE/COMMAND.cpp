@@ -1383,7 +1383,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         data[1] = giNextActionExtra;
         data[2] = giNextActionGridIndex;
         data[3] = giNextActionGridIndex2;
-        result = TransmitRemoteData((char*)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
+        result = TransmitRemoteData(reinterpret_cast<char*>(data), netPos, sizeof(data), 0x17, 1, 1, -1, 1); // API-forced: char* payload.
         if (!result)
             ShutDown(0);
     }

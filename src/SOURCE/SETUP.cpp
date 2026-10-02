@@ -915,7 +915,8 @@ int EncodePacket(unsigned char* data, char source, char destination, int length)
     crc = 0;
     REMOTE_PACKET(PacketSend)->crc = crc;
     memcpy(PacketSend + sizeof(RemotePacketHeader), data, length);
-    calc_crc(&crc, (unsigned char*)PacketSend, length + sizeof(RemotePacketHeader));
+    // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
+    calc_crc(&crc, reinterpret_cast<unsigned char*>(PacketSend), length + sizeof(RemotePacketHeader));
     REMOTE_PACKET(PacketSend)->crc = crc;
     return length + sizeof(RemotePacketHeader);
 }
@@ -945,7 +946,8 @@ int DecodePacket(unsigned char* data, int source) {
     size = REMOTE_PACKET(packet)->payloadSize;
     crc = REMOTE_PACKET(packet)->crc;
     REMOTE_PACKET(packet)->crc = 0;
-    calc_crc(&computedCrc, (unsigned char*)packet, size + sizeof(RemotePacketHeader));
+    // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
+    calc_crc(&computedCrc, reinterpret_cast<unsigned char*>(packet), size + sizeof(RemotePacketHeader));
     if (crc != computedCrc) {
         sprintf(
             gText,

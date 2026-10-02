@@ -188,7 +188,7 @@ short com_snd(short port, unsigned short, unsigned short length, void *data, int
             ClearCommBreak(gComPorts[port].handle);
             return 0;
         }
-        node = (tag_Node *)malloc(length + COM_NODE_HEADER_SIZE);
+        node = static_cast<tag_Node*>(malloc(length + COM_NODE_HEADER_SIZE));
         if (node) {
             node->len = length;
             memcpy(node->comData, data, length);
