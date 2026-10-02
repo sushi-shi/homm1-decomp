@@ -1289,7 +1289,7 @@ void philAI::ValueOfBuyingBuilding(
     factionId = townPointer->m_type;
     dwellingsOwned = 0;
     highestDwellingId = -1;
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
         if (townPointer->m_buildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))) {
             dwellingsOwned++;
             highestDwellingId = i;
@@ -1363,7 +1363,7 @@ void philAI::ValueOfBuyingBuilding(
                 curBenefit = (1.66 - dwellingsOwned * 0.33) * curBenefit;
             if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                 curBenefit = curBenefit * 1.1;
-            for (dwellingIndex = 0; dwellingIndex < 6; dwellingIndex++) {
+            for (dwellingIndex = 0; dwellingIndex < BUILDING_SLOT_DWELLING_COUNT; dwellingIndex++) {
                 currentCreatureType = gDwellingType[townPointer->m_type][dwellingIndex];
                 if ((townPointer->m_buildings
                      & (1 << (dwellingIndex + BUILDING_SLOT_DWELLING_FIRST)))
@@ -1488,7 +1488,7 @@ void philAI::ValueOfBuyingCreature(
     if (townPointer->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         occupant = gpGame->GetHero(townPointer->m_occupyingHeroId);
         creatRV = static_cast<int>(creatRV * 1.1);
-        if (occupant->m_heroClass == creature / 6)
+        if (occupant->m_heroClass == creature / CREATURE_FACTION_SIZE)
             creatRV = static_cast<int>(creatRV * AI_CREATURE_SAME_RACE_FACTOR);
         if ((gMonsterDatabase[creature].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)) {
             for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
@@ -1553,7 +1553,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
     bestBuy = 0;
     bestCost = -99.0f;
     bestRandScore = -99.0f;
-    for (curDwelling = 0; curDwelling < 6; curDwelling++) {
+    for (curDwelling = 0; curDwelling < BUILDING_SLOT_DWELLING_COUNT; curDwelling++) {
         mon = gDwellingType[townPointer->m_type][curDwelling];
         if ((townPointer->m_buildings & (1 << (curDwelling + BUILDING_SLOT_DWELLING_FIRST)))
             && townPointer->m_garrison[curDwelling] > 0) {

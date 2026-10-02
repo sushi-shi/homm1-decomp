@@ -809,7 +809,8 @@ char* GetBuildingName(int race, short building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return gNeutralBuildingNames[building];
     else
-        return gDwellingNames[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
+        return gDwellingNames
+            [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
 }
 
 VA(0x00451620, 0x9f)
@@ -822,7 +823,8 @@ void GetBuildingCost(int race, short building, int* const destination, int mageL
     } else {
         memcpy(
             destination,
-            gDwellingCosts[building - BUILDING_SLOT_DWELLING_FIRST + race * 6],
+            gDwellingCosts
+                [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT],
             RESOURCE_COUNT * sizeof(int)
         );
     }
@@ -883,7 +885,8 @@ signed char CanBuild(town* t, short building) {
         return 0;
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
-    required = gDwellingRequirements[building - BUILDING_SLOT_DWELLING_FIRST + t->m_type * 6];
+    required = gDwellingRequirements
+        [building - BUILDING_SLOT_DWELLING_FIRST + t->m_type * BUILDING_SLOT_DWELLING_COUNT];
     if ((t->m_buildings & required) == required)
         return 1;
     return 0;
@@ -923,7 +926,8 @@ int GetBuildingBaseResourceValue(int race, int building, int level) {
         else
             return gNeutralBaseResourceValues[building];
     } else {
-        return gDwellingBaseResourceValues[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
+        return gDwellingBaseResourceValues
+            [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
     }
 }
 
@@ -2085,7 +2089,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         faction = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
-                faction = h->m_army.m_creatureTypes[i] / 6;
+                faction = h->m_army.m_creatureTypes[i] / CREATURE_FACTION_SIZE;
         }
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[faction]);
         strcat(gText, buffer);
