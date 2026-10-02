@@ -15,5 +15,8 @@
 // Generated code has explicit retail identity and an owning source VA.
 // The compiler itself supplies the body; these are not C++ implementations.
 #define VA_COMPGEN(address, size, symbol, owner)
+// A file-scope object's compiler-emitted dynamic initializer (_$E<n>): its
+// retail VA and size, pinned to the owning datum.
+#define RVA_DYNINIT(address, size, owner)
 
 #endif

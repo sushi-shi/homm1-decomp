@@ -36,7 +36,8 @@ public:
     char m_unknown26[6];
     signed char m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.
-    short m_turnsOwned;
+    // GetBestBHC logs and compares it zero-extended.
+    unsigned short m_turnsOwned;
     // --- constructors ---
     town(void);
     // --- methods ---

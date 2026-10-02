@@ -63,7 +63,7 @@ void playerData::Write(int file) {
 
     write(file, m_unknown00, sizeof(m_unknown00));
     write(file, &m_unknown11, 1);
-    write(file, &m_color, 1);
+    write(file, &m_difficulty, 1);
     write(file, &m_heroCount, 1);
     write(file, &m_currentHero, 1);
     write(file, &m_heroLocatorPage, 1);
@@ -95,7 +95,7 @@ void playerData::Read(int file) {
 
     read(file, m_unknown00, sizeof(m_unknown00));
     read(file, &m_unknown11, 1);
-    read(file, &m_color, 1);
+    read(file, &m_difficulty, 1);
     read(file, &m_heroCount, 1);
     read(file, &m_currentHero, 1);
     read(file, &m_heroLocatorPage, 1);

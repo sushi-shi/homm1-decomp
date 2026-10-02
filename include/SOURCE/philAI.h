@@ -54,7 +54,7 @@ public:
     void CheckForCreatureUpgrades(void);
     void CheckBuyStuff(void);
     int GoodAdjacent(class hero*, int*);
-    void CheckReload(void);
+    void CheckReload(class hero*);
     void CheckBerserk(class hero*);
     void DimensionDoorTo(int, int);
     int DoAnywhereDDoorTownGate(int);
@@ -65,7 +65,7 @@ public:
     void GetTurnAIVars(int);
     void GetBestBHC(int, struct BHC&);
     class hero* DetermineHeroToMove(int);
-    int DetermineTargetPosition(int&, int&, int, int&);
+    void DetermineTargetPosition(class hero*, signed char&, signed char&, short);
     void ProbableOutcomeOfBattle(
         class armyGroup*,
         class hero*,
@@ -99,13 +99,13 @@ public:
     void GetTurnAttentionValue(int);
     int RVConversion(int* const);
     float TurnsToBuy(int* const);
-    int RVOfPosition(int, int, int, int, int, int, int, int, int, int);
+    int RVOfPosition(class hero*, short, short, signed char, short, short, signed char, short, short, int);
     int StrategicValueOfPosition(class hero*, short, short, signed char, int*);
     int ValueOfTown(class town*);
     void TurnCostResource(int);
     float TurnValueOfObelisk(int);
     float FutureDeflator(int* const);
-    int FightValueOfStack(class armyGroup*, class hero*, int, int, signed char);
+    int FightValueOfStack(class armyGroup*, class hero*, int, signed char, signed char);
     void EvaluateOneTimeCreaturePurchase(class hero*, int, int, int, int&, int&, int&);
     int QuickCombat(
         class armyGroup*,
@@ -150,7 +150,7 @@ public:
     int ComputeValueOfSS(class hero*, int, int);
     int ComputeValueOfFreeSS(class hero*, int);
     int ManaRefreshValue(class hero*, int);
-    int ValueOfEventAtPosition(class hero*, int, int, int, int*);
+    int ValueOfEventAtPosition(class hero*, short, short, int, int*);
     int EvaluateGenericSite(class mapCell*);
     int EvaluateBarrier(class mapCell*);
     int EvaluatePassword(class mapCell*);
@@ -172,6 +172,52 @@ extern int gbHumanPlayer[];
 extern int giHumanTownConquered;
 extern int gbBerserk;
 extern float fBerserkFactor;
+// CheckReload's troop-reload verdict and its reduction factor.
+extern int gbTroopReload;
+// GetBestBHC's per-player hero ceiling (GetTurnAIVars sets it).
+extern int giMaxHeroesForThisPlayer;
+// GetBestBHC lets young towns buy during a network game only with this set;
+// TransmitSaveGame tests the same dword for its serial compression path.
+extern int gbSerialCompression;
+// GetTurnAIVars' per-cell enemy-hero turn distance for mines.
+extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern float gfHeroInteractionBonus[];
+extern float gfAttackHumanBonus;
+extern float gfAttackComputerBonus;
+extern signed char gbIAmGreatest;
+// ValueOfEventAtPosition: cells an enemy hero can reach this turn, the event
+// cache, per-resource mine income and the ultimate artifact's average value.
+extern signed char gaiEnemyHeroReachable[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern int giMineIncome[];
+extern int gUltArtifactAvgValue;
+// DoAI: the single player the AI may run for, and the places each hero has
+// already started from this turn.
+extern signed char giLimitPlayer;
+extern int iPlacesVisited[30][2];
+extern int iCurPlaceToVisit;
+void ResetHeroRVs(int, int, int);
+// DetermineTargetPosition's shipyard search state.
+extern signed char giBestShipyardId;
+extern signed char gbPossibleShipyardFound;
+extern signed char gbActualShipyardFound;
+extern signed char gbActualBoatFound;
+extern signed char giBestShipyardDist;
+// StrategicValueOfPosition's per-cell cache, hero live chances and the
+// shared search it borrows unless a nested evaluation already holds it.
+extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern short gaiHeroLiveChance[];
+extern signed char bSVSearchArrayInUse;
+extern class searchArray SVSearchArray;
+// FightValueOfStack's primary-stat power curve, per-spell AI flags and
+// values, spell-power duration scale and per-charge cast weights.
+extern float gfStatPower[];
+extern signed char gcSpellAIFlags[];
+extern short giSpellAIValue[];
+extern float gfSpellPowerMod[];
+extern float gfSpellCastNumMod[];
+extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
 // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
