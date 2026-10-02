@@ -14,6 +14,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+// clang-format off
+// Combat-window widget ids ProcessCombatMsg handles: the battlefield (0x40,
+// Buka CombatControlId CONTROL_MAIN_BUTTON; ResetMouse hovers it), the button
+// that stops grid selection and hides the pointer, and the skip-turn button
+// that queues ACTION_SKIP_TURN.
+H1_ENUM_BEGIN(CombatControlId)
+    COMBAT_CONTROL_DISABLE_SELECTION = 2,
+    COMBAT_CONTROL_SKIP_TURN = 8,
+    COMBAT_CONTROL_FIELD = 0x40
+H1_ENUM_END(CombatControlId)
+// clang-format on
+
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.
 VA(0x0040f2c0, 0x311)
@@ -406,7 +418,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                     if (m_gridSelectionDisabled)
                         break;
                     switch (message.id) {
-                        case 0x40:
+                        case COMBAT_CONTROL_FIELD:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
                             selectedHex = GetGridIndex(mouseX, mouseY);
                             if (m_selectedHex != selectedHex || selectedHex == -1) {
@@ -445,7 +457,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                         RightClick(m_selectedHex);
                     else {
                         switch (message.id) {
-                            case 0x40:
+                            case COMBAT_CONTROL_FIELD:
                                 DoCommand(m_currentCommand);
                                 break;
                         }
@@ -453,14 +465,14 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                     break;
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case 2:
+                        case COMBAT_CONTROL_DISABLE_SELECTION:
                             if (!(message.modifiers
                                   & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                                 m_gridSelectionDisabled = 1;
                                 gpMouseManager->ReallyHidePointer();
                             }
                             break;
-                        case 8:
+                        case COMBAT_CONTROL_SKIP_TURN:
                             if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON))
                                 giNextAction = ACTION_SKIP_TURN;
                             break;
@@ -1345,7 +1357,7 @@ void combatManager::ResetMouse(void) {
         if (y > 0x1ca)
             message.id = 0;
         else
-            message.id = 0x40;
+            message.id = COMBAT_CONTROL_FIELD;
         ProcessCombatMsg(message);
     } else
         gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
