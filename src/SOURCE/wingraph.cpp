@@ -208,8 +208,8 @@ VA(0x004039d6, 0x592)
 int DDAppPaint(void* window, void* paintDC) {
     int ySrc;
     int height;
-    int x;
     int width;
+    int x;
     PAINTSTRUCT ps;
     POINT pt;
 
