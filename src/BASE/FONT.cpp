@@ -54,14 +54,31 @@ void font::DrawString(char *text, short x, short y, short color)
 VA(0x0047b4d0, 0x2d0)
 void font::DrawBoundedString(char *str, short x, short y, short w, short h, short color, short align)
 {
-    short s = strlen(str);
+    short s;
     signed char q;
-    IconEntry *u = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
-    char aa = ' ';
-    short t = 0, yOff = 0, r = 0, lineEnd = 0, p = 0, width = 0;
-    char *line = str;
-    short drawColor = color;
+    IconEntry *u;
+    char aa;
+    short yOff;
+    short r;
+    short lineEnd;
+    short t;
+    short p;
+    short width;
+    char *line;
+    short drawColor;
     char v;
+
+    s = strlen(str);
+    u = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    aa = ' ';
+    t = 0;
+    yOff = 0;
+    r = 0;
+    lineEnd = 0;
+    p = 0;
+    width = 0;
+    line = str;
+    drawColor = color;
     while (p < s && line[p] != 0 && m_height + yOff <= h) {
         while (line[p] != 0 && line[p] != '\n' && width <= w) {
             q = line[p] - ' ';
@@ -107,9 +124,20 @@ int font::LineLength(char *str, short maxW)
     IconEntry *widths = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
     char spaceChar = ' ';
     int z = 0;
-    short t = 0, r = 0, y = 0, p = 0, x = 0;
-    char *w = str;
+    short t = 0;
+    short y;
+    short p;
+    short r;
+    short x;
+    char *w;
     char v;
+
+    // r follows p for the operand sort key of p >= r; stores keep retail order.
+    r = 0;
+    y = 0;
+    p = 0;
+    x = 0;
+    w = str;
     while (p < s && w[p] != 0) {
         while (w[p] != 0 && w[p] != '\n' && x <= maxW) {
             q = w[p] - ' ';
@@ -145,16 +173,26 @@ int font::LineLength(char *str, short maxW)
 VA(0x0047b9c0, 0x108)
 int font::LineWidth(char *text)
 {
-    short s = strlen(text);
     signed char q;
     int u;
-    IconEntry *table = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    IconEntry *table;
     // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
     // retail body proves y's dword store and the five word stores below
-    // (u is the census's unused slot).
-    int y = 0;
-    short t = 0, r = 0, x = 0, p = 0, w = 0;
-    char *v = text;
+    // (u is the census's unused slot). s follows y for the operand sort key.
+    int y;
+    short s;
+    short t, r, x, p, w;
+    char *v;
+
+    s = strlen(text);
+    table = reinterpret_cast<IconEntry *>(m_glyphIcon->m_data); // byte-evidenced: packed frame directory decoded from resource bytes.
+    y = 0;
+    t = 0;
+    r = 0;
+    x = 0;
+    p = 0;
+    w = 0;
+    v = text;
     while (p < s && v[p] != 0) {
         while (v[p] != 0 && v[p] != '\n') {
             q = v[p] - ' ';
