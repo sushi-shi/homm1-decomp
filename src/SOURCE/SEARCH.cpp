@@ -132,7 +132,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
     static int s_adjacentY;
     static int s_adjacentCost;
     static int s_bestTargetCost;
-    static short s_processedPointCount = 0;
+    static short s_processedPointCount;
 
     if (!continueSeed) {
         giFullySeeded = 0;
@@ -300,6 +300,7 @@ void searchArray::SeedPosition(short seedX, short seedY, short seedDirection, sh
 }
 
 // SEARCH owns retail .bss 0x004a4620-0x004a469f (SeedPosition's statics and
-// this flag); s_processedPointCount is its only initialized datum (0x0048e170).
+// this flag). Retail keeps SeedPosition's point counter initialized
+// (.data 0x0048e170); that body edit waits until SeedPosition is exact.
 DATA(0x004a4680)
 int giFullySeeded;
