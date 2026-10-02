@@ -413,7 +413,7 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
         tickStart = 0;
         saveFlags = gpWindowManager->m_updateFlags;
         gpWindowManager->m_updateFlags = 0;
-        if (delay == -1)
+        if (delay == FIZZLE_USE_DEFAULT_DELAY)
             delay = FIZZLE_DEFAULT_DELAY;
         m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
         ccycleBuf = static_cast<signed char*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
