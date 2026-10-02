@@ -1718,12 +1718,14 @@ void game::RandomizeEvents(void) {
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
                     id = GetTownId(x, y);
-                    for (j = 0; j < 3; j++) {
-                        for (i = 0; i < 4; i++) {
+                    for (j = 0; j < TOWN_FOOTPRINT_HEIGHT; j++) {
+                        for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
                             if (!static_cast<unsigned char>(
-                                    m_map[x - 2 + i][y - 2 + j].m_objectMetadata
+                                    m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
+                                        .m_objectMetadata
                                 ))
-                                m_map[x - 2 + i][y - 2 + j].m_objectMetadata = id;
+                                m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
+                                    .m_objectMetadata = id;
                         }
                     }
                     SetupTown(id, 0);
@@ -1732,8 +1734,8 @@ void game::RandomizeEvents(void) {
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_MINE:
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
                     id = GetMineId(x, y);
-                    for (j = 0; j < 2; j++) {
-                        for (i = 0; i < 2; i++) {
+                    for (j = 0; j < MINE_FOOTPRINT_HEIGHT; j++) {
+                        for (i = 0; i < MINE_FOOTPRINT_WIDTH; i++) {
                             if (!static_cast<unsigned char>(m_map[x + i][y - j].m_objectMetadata)
                                 || (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                                        == (m_map[x + i][y - j].m_triggerType
@@ -3571,8 +3573,8 @@ void game::RandomizeMine(signed char x, signed char y) {
         bits = MAP_OBJECT_MINE;
     }
     mineIdx = GetMineId(x, y);
-    for (k = 0; k < 2; k++) {
-        for (j = 0; j < 2; j++) {
+    for (k = 0; k < MINE_FOOTPRINT_HEIGHT; k++) {
+        for (j = 0; j < MINE_FOOTPRINT_WIDTH; j++) {
             if ((m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
                 && (m_map[x + j][y - k].m_triggerType & MAP_TRIGGER_TYPE_MASK) <= 0x30) {
                 m_map[x + j][y - k].m_secondaryTrigger |= bits;

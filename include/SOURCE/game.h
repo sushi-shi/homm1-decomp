@@ -54,6 +54,13 @@ H1_ENUM_BEGIN(GameMineSlot)
     MINE_SLOT_STANDARD_FIRST = 2
 H1_ENUM_END(GameMineSlot)
 
+// A mine object covers 2x2 cells from its record's (x, y - 1) to (x + 1, y)
+// (RandomizeEvents, RandomizeMine).
+H1_ENUM_CONST_BEGIN(MineFootprintConstant)
+    MINE_FOOTPRINT_WIDTH = 2,
+    MINE_FOOTPRINT_HEIGHT = 2
+H1_ENUM_CONST_END(MineFootprintConstant)
+
 // Daily income (ComputeDailyGold, PerDay): Dragon City and a gold mine pay
 // 1000 gold, a town 250 and a castle 1000; an ore or wood mine yields two
 // units a day, the other non-gold mines one.
