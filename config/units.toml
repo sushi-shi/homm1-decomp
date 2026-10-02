@@ -281,12 +281,13 @@ source = "src/SOURCE/PATH.cpp"
 flags = "cpp_carcass"
 
 # Retail FINDPATH's aligned24820..24950 controls use optimized VC4 code.
-# Reuse the pinned O2 profile; no existing TU profile is changed.
+# FindCombatPath (0x424950) expands the out-of-line Clear and QuickDistance
+# bodies defined earlier in this TU, so the unit uses automatic inlining (/Ob2).
 
 [[unit]]
 unit = "SOURCE/FINDPATH"
 source = "src/SOURCE/FINDPATH.cpp"
-flags = "cpp_o2"
+flags = "cpp_o2_inline"
 
 [[unit]]
 unit = "SOURCE/PHILAI"
