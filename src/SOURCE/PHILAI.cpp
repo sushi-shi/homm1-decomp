@@ -1069,7 +1069,7 @@ void philAI::ProbableOutcomeOfBattle(
         difficulty8 = gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase + 0.66;
         if (gbHumanPlayer[enemyPlayer])
             outcomeValue =
-                (int)(outcomeValue + defenderRemaining * difficulty8 * difficulty8 * gfAttackHumanBonus);
+                (int)(outcomeValue + (defenderRemaining * difficulty8 * difficulty8) * gfAttackHumanBonus);
         else
             outcomeValue =
                 (int)(outcomeValue + defenderRemaining * gfAttackComputerBonus * difficulty8 * difficulty8);
