@@ -27,6 +27,10 @@ int giSeedingValid;
 
 // UpdBottomViewHero's per-creature mons32.icn frame width.
 extern signed char gMons32Width[];
+// ComboDraw's per-view-cell redraw marks and its animation frame clock.
+extern signed char bComboDraw[][17];
+extern int giFrameCount;
+
 // UpdateRadar's per-owner and per-terrain radar pixel colours.
 extern short gRadarOwnerColor[];
 extern short gRadarTerrainColor[];
@@ -2951,8 +2955,186 @@ short DimensionDoorHandler(struct tag_message& message) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
 VA(0x00433b10, 0xaf6)
-signed char advManager::ComboDraw(short, short, int) {
-    return 0;
+signed char advManager::ComboDraw(short originX, short originY, signed char animate) {
+    int updateCount;
+    int drawX;
+    int drawY;
+    mapCell* cell;
+
+    PollSound();
+    if (!bShowIt)
+        return 0;
+    if (m_forceCompleteDraw) {
+        CompleteDraw(originX, originY, 0);
+        return 1;
+    }
+    if (animate) {
+        giFrameCount += giFrameStep;
+        if (giFrameCount < 12) {
+            Process1WindowsMessage();
+            if (KBTickCount() > glTimers[0])
+                glTimers[0] = KBTickCount() + 120;
+            PollSound();
+            return 0;
+        } else {
+            giFrameCount = 0;
+        }
+    }
+
+    m_previousOriginX = m_mapOriginX;
+    m_previousOriginY = m_mapOriginY;
+    memset(bComboDraw, 0, 256);
+    m_comboHeroDrawn = 0;
+
+    for (drawX = 0; drawX < 15; drawX++) {
+        for (drawY = 0; drawY < 15; drawY++) {
+            if (originX + drawX >= 0 && originX + drawX < 72 && originY + drawY >= 0 && originY + drawY < 72) {
+                cell = GetCell(originX + drawX, originY + drawY);
+                if (cell->m_flags & 0xc)
+                    ++bComboDraw[drawX][drawY];
+                if (cell->m_triggerType == 0x9a) {
+                    ++bComboDraw[drawX][drawY];
+                    if (GetCloudLookup(originX + drawX, originY + drawY)) {
+                        bComboDraw[drawX + 1][drawY] += 10;
+                        if (drawY >= 1) {
+                            bComboDraw[drawX][drawY - 1] += 10;
+                            bComboDraw[drawX + 1][drawY - 1] += 10;
+                        }
+                    } else {
+                        ++bComboDraw[drawX + 1][drawY];
+                        if (drawY >= 1) {
+                            ++*(bComboDraw[drawX] + drawY - 1);
+                            ++bComboDraw[drawX + 1][drawY - 1];
+                        }
+                    }
+                }
+                if (cell->m_triggerType == 0xbd || cell->m_triggerType == 0xbe) {
+                    ++bComboDraw[drawX][drawY];
+                    if (GetCloudLookup(originX + drawX, originY + drawY)) {
+                        bComboDraw[drawX + 1][drawY] += 10;
+                        bComboDraw[drawX][drawY + 1] += 10;
+                        if (drawY >= 1)
+                            bComboDraw[drawX][drawY - 1] += 10;
+                        if (drawX >= 1)
+                            bComboDraw[drawX - 1][drawY] += 10;
+                    } else {
+                        ++bComboDraw[drawX + 1][drawY];
+                        ++bComboDraw[drawX][drawY + 1];
+                        if (drawY >= 1)
+                            ++*(bComboDraw[drawX] + drawY - 1);
+                        if (drawX >= 1)
+                            ++bComboDraw[drawX - 1][drawY];
+                    }
+                }
+            }
+        }
+    }
+
+    for (drawX = 0; drawX < 15; drawX++) {
+        for (drawY = 0; drawY < 15; drawY++) {
+            if (bComboDraw[drawX][drawY]) {
+                if (originX + drawX < 0 || originX + drawX >= 72 || originY + drawY < 0 || originY + drawY >= 72)
+                    bComboDraw[drawX][drawY] = 0;
+                else if (bComboDraw[drawX][drawY] < 10 && !GetCloudLookup(originX + drawX, originY + drawY))
+                    bComboDraw[drawX][drawY] = 0;
+            }
+        }
+    }
+
+    if (gpMouseManager->IsVis()) {
+        drawX = gpMouseManager->m_unknown49 >> 5;
+        drawY = gpMouseManager->m_unknown4d >> 5;
+        ++bComboDraw[drawX][drawY];
+        ++bComboDraw[drawX + 1][drawY];
+        ++bComboDraw[drawX][drawY + 1];
+        ++bComboDraw[drawX + 1][drawY + 1];
+        ++bComboDraw[drawX + 2][drawY + 1];
+    }
+    if (m_heroContextLocked) {
+        for (drawY = 6; drawY <= 8; drawY++)
+            for (drawX = 6; drawX <= 8; drawX++)
+                ++bComboDraw[drawX][drawY];
+    }
+    if (m_cursorType == 4) {
+        ++bComboDraw[6][5];
+        ++bComboDraw[7][5];
+        ++bComboDraw[8][5];
+    }
+
+    for (drawX = 0; drawX < 15; drawX++) {
+        if (bComboDraw[drawX][0])
+            DrawCell(originX + drawX, originY, drawX, 0, ADVMGR_DRAW_GROUND | ADVMGR_DRAW_OBJECT, 0, 0);
+    }
+    for (drawY = 1; drawY < 15; drawY++) {
+        for (drawX = 0; drawX < 15; drawX++) {
+            if (bComboDraw[drawX][drawY])
+                DrawCell(originX + drawX, originY + drawY, drawX, drawY, ADVMGR_DRAW_GROUND, 0, 0);
+        }
+    }
+    for (drawY = 1; drawY < 15; drawY++) {
+        PollSound();
+        for (drawX = 0; drawX < 15; drawX++) {
+            if (bComboDraw[drawX][drawY - 1])
+                DrawCell(originX + drawX, originY + drawY - 1, drawX, drawY - 1, ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO,
+                         0, 0);
+        }
+        for (drawX = 0; drawX < 15; drawX++) {
+            if (bComboDraw[drawX][drawY])
+                DrawCell(originX + drawX, originY + drawY, drawX, drawY, ADVMGR_DRAW_OBJECT, 0, 0);
+        }
+    }
+    for (drawX = 0; drawX < 15; drawX++) {
+        if (bComboDraw[drawX][14])
+            DrawCell(originX + drawX, originY + 14, drawX, 14, ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, 0);
+    }
+    for (drawY = 0; drawY < 15; drawY++) {
+        for (drawX = 0; drawX < 15; drawX++) {
+            if (bComboDraw[drawX][drawY])
+                DrawCell(originX + drawX, originY + drawY, drawX, drawY, ADVMGR_DRAW_CLOUD, 0, 0);
+        }
+    }
+
+    PollSound();
+    UpdBottomView(0, 1, 1);
+    DrawAdventureBorder();
+    giLimitUpdMinX = 15;
+    giLimitUpdMinY = 15;
+    giLimitUpdMaxX = 0;
+    giLimitUpdMaxY = 0;
+    updateCount = 0;
+    for (drawY = 0; drawY < 15; drawY++) {
+        for (drawX = 0; drawX < 15; drawX++) {
+            if (bComboDraw[drawX][drawY]) {
+                updateCount++;
+                if (drawX < giLimitUpdMinX)
+                    giLimitUpdMinX = drawX;
+                if (drawX > giLimitUpdMaxX)
+                    giLimitUpdMaxX = drawX;
+                if (drawY < giLimitUpdMinY)
+                    giLimitUpdMinY = drawY;
+                if (drawY > giLimitUpdMaxY)
+                    giLimitUpdMaxY = drawY;
+            }
+        }
+    }
+    giLimitUpdMinX <<= 5;
+    giLimitUpdMinY <<= 5;
+    giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << 5) - 1;
+    giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << 5) - 1;
+    if (giLimitUpdMinX < 16)
+        giLimitUpdMinX = 16;
+    if (giLimitUpdMaxX > 463)
+        giLimitUpdMaxX = 463;
+    if (giLimitUpdMinY < 16)
+        giLimitUpdMinY = 16;
+    if (giLimitUpdMaxY > 463)
+        giLimitUpdMaxY = 463;
+    if (giLimitUpdMaxX < giLimitUpdMinX || giLimitUpdMaxY < giLimitUpdMinY) {
+        giLimitUpdMinX = giLimitUpdMaxX - 1;
+        giLimitUpdMinY = giLimitUpdMaxY - 1;
+        return 0;
+    }
+    return 1;
 }
 
 // Buka 2.1 ComboDraw(update) forwards the current map origin.

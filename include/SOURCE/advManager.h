@@ -183,7 +183,7 @@ public:
     void CastSpell(signed char);
     void GrabScreen(void);
     void CheckCastSpell(void);
-    signed char ComboDraw(short, short, int);
+    signed char ComboDraw(short, short, signed char);
     signed char ComboDraw(int);
     void SetEnvironmentOrigin(short, short, short);
     void CheckLoadSample(int);
