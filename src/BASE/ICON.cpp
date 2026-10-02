@@ -31,6 +31,8 @@ icon::~icon(void)
     free(m_data);
 }
 
+// Each orientation arm sets its own top/bottom, as HoMM2 CombatClipDrawToBuffer does; VC4
+// tail-merges the two copies and carries the arm's frame-entry address across the join.
 VA(0x00479bd0, 0x22a)
 void icon::DrawToBuffer(short x, short y, short frame, signed char orientation, signed char mode)
 {
@@ -41,15 +43,17 @@ void icon::DrawToBuffer(short x, short y, short frame, signed char orientation, 
             else
                 m_drawRight = x - reinterpret_cast<IconEntry *>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawLeft = m_drawRight - reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         } else {
             if (mode != 0)
                 m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2) + x; // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawLeft = reinterpret_cast<IconEntry *>(m_data)[frame].x + x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawRight = m_drawLeft + reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         }
-        m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
-        m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         if (gbSaveBiggestExtent != 0) {
             if (giMinExtentX > m_drawLeft) giMinExtentX = m_drawLeft;
             if (giMinExtentY > m_drawTop) giMinExtentY = m_drawTop;
@@ -110,15 +114,17 @@ void icon::DimToBuffer(short x, short y, short frame, signed char orientation, s
             else
                 m_drawRight = x - reinterpret_cast<IconEntry *>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawLeft = m_drawRight - reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         } else {
             if (mode != 0)
                 m_drawLeft = (reinterpret_cast<IconEntry *>(m_data)[frame].x >> 2) + x; // byte-evidenced: packed frame entry in resource bytes.
             else
                 m_drawLeft = reinterpret_cast<IconEntry *>(m_data)[frame].x + x; // byte-evidenced: packed frame entry in resource bytes.
             m_drawRight = m_drawLeft + reinterpret_cast<IconEntry *>(m_data)[frame].w; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
+            m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         }
-        m_drawTop = reinterpret_cast<IconEntry *>(m_data)[frame].y + y; // byte-evidenced: packed frame entry in resource bytes.
-        m_drawBottom = reinterpret_cast<IconEntry *>(m_data)[frame].h + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         if (gbSaveBiggestExtent != 0) {
             if (giMinExtentX > m_drawLeft) giMinExtentX = m_drawLeft;
             if (giMinExtentY > m_drawTop) giMinExtentY = m_drawTop;
