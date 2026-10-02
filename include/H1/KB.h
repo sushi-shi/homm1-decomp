@@ -6,6 +6,7 @@
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/terrainTypes.h>
 
+// clang-format off
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
 // six dwellings named per race by gDwellingNames. town::m_buildings holds
 // bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
@@ -36,6 +37,7 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_DWELLING_COUNT = 6,
     BUILDING_SLOT_COUNT = 13
 H1_ENUM_END(BuildingSlotType)
+// clang-format on
 
 // clang-format off
 // giWaitType: which poll WaitHandler runs while a wait dialog is up
