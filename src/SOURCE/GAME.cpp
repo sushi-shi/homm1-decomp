@@ -3647,12 +3647,12 @@ int game::GetLuck(hero* h, army*) {
 }
 
 // Buka 2.1 keeps the scan cursor in file statics.
-static int s_adjacentMonsterEndX;
-static int s_adjacentMonsterEndY;
-static int s_adjacentMonsterX;
-static int s_adjacentMonsterY;
-static int s_adjacentMonsterMinX;
-static int s_adjacentMonsterMinY;
+DATA(0x004c50fc) static int s_adjacentMonsterEndX;
+DATA(0x004c5100) static int s_adjacentMonsterEndY;
+DATA(0x004c50d4) static int s_adjacentMonsterX;
+DATA(0x004c50d8) static int s_adjacentMonsterY;
+DATA(0x004c50ec) static int s_adjacentMonsterMinX;
+DATA(0x004c50f0) static int s_adjacentMonsterMinY;
 
 // donor PoL RVA 0x00069bef; preferred Buka symbol ?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
