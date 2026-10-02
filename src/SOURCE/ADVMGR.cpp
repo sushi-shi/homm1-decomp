@@ -42,6 +42,8 @@ extern char* gArmyNamesPlural[];
 extern char* gObjectNames[];
 // HoMM1 town-name lookup by town id (retail 0x00455aaf).
 char* GetTownName(int);
+// Buka TrueFalseDialogHandler (retail 0x00452c78), the plain dialog dispatcher.
+short TrueFalseDialogHandler(struct tag_message&);
 // KB/GAME entry points ProcessSearch reaches.
 SAMPLE2 LoadPlaySample(char*);
 void WaitEndSample(SAMPLE2, int);
@@ -2429,7 +2431,240 @@ void advManager::CastSpell(signed char spell)
 // HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
 // CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
 VA(0x00431507, 0x1127)
-void advManager::ViewWorld(signed char, signed char, signed char) {}
+void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, signed char drawAllTerrains) {
+    icon* flags;
+    hero* curHero;
+    signed char ts;
+    signed char flip;
+    icon* letters;
+    short index;
+    heroWindow* win;
+    unsigned short mask;
+    short x;
+    short owner;
+    mapCell* cell;
+    icon* tilesets[16];
+    short i;
+    short y;
+    short screenX;
+    icon* spheres;
+    short screenY;
+    icon* ground;
+
+    gpMouseManager->SetPointer("advmice.mse", 0);
+    mask = 0x300;
+    if (spellType == SPELL_VIEW_TOWNS || spellType == SPELL_VIEW_ALL)
+        mask |= 0x400;
+    ground = gpResourceManager->GetIcon("ground6.icn");
+    flags = gpResourceManager->GetIcon("flag6.icn");
+    spheres = gpResourceManager->GetIcon("spheres.icn");
+    letters = gpResourceManager->GetIcon("letters.icn");
+    curHero = 0;
+    for (i = 0; i < 16; i++)
+        tilesets[i] = 0;
+    tilesets[9] = gpResourceManager->GetIcon("tree6.icn");
+    tilesets[8] = gpResourceManager->GetIcon("mtn6.icn");
+    tilesets[10] = gpResourceManager->GetIcon("town6.icn");
+    if (gpCurPlayer->CurrentHero() != -1)
+        curHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
+    FillBitmapArea(gpWindowManager->m_screen, 16, 16, 448, 448, 0);
+
+    for (y = 0; y < 72; y++) {
+        for (x = 71; x >= 0; x--) {
+            cell = GetCell(x, y);
+            if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
+                || (spellType == SPELL_VIEW_TOWNS && (cell->m_triggerType & 0x7f) == 0x28)) {
+                flip = 0;
+                screenX = x * 6 + 24;
+                screenY = y * 6 + 24;
+                index = cell->m_tileIndex >> 2;
+                if (cell->m_flags & 2)
+                    flip = 1;
+                if (cell->m_flags & 1)
+                    index += 31;
+                ground->DrawToBuffer((flip == 1 ? 5 : 0) + screenX, screenY, index, flip, 0);
+                if (cell->m_objectIndex != 0xff) {
+                    ts = cell->m_objectTileset & 0xf;
+                    if (mask & (1 << ts))
+                        tilesets[ts]->DrawToBuffer(screenX, screenY, cell->m_objectIndex, 0, 0);
+                }
+            }
+        }
+        for (x = 71; x >= 0; x--) {
+            cell = GetCell(x, y);
+            screenX = x * 6 + 24;
+            screenY = y * 6 + 24;
+            if ((drawAllObjects || (gpGame->m_mapExtra[x][y] & giCurPlayerBit)) && (cell->m_triggerType & 0x80)) {
+                switch (spellType) {
+                case SPELL_VIEW_ALL:
+                    if (cell->m_triggerType == 0xb0)
+                        flags->DrawToBuffer(screenX, screenY, 6, 0, 0);
+                    if (cell->m_triggerType == 0xa8) {
+                        owner = gpGame->m_townOwners[cell->m_objectMetadata];
+                        if (owner >= 0) {
+                            index = gpGame->m_players[owner].m_unknown11;
+                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                        }
+                    } else if (cell->m_triggerType == 0xbd
+                               && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
+                        owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
+                        if (owner >= 0) {
+                            index = gpGame->m_players[owner].m_unknown11;
+                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                        }
+                    }
+                    switch (cell->m_triggerType & 0x7f) {
+                    case 1:
+                    case 25:
+                    case 32:
+                        owner = gpGame->m_mineOwners[cell->m_objectMetadata];
+                        if (owner >= 0)
+                            index = gpGame->m_players[owner].m_unknown11;
+                        else
+                            index = 4;
+                        spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
+                        letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0, 0);
+                        break;
+                    case 61:
+                        switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & 0x7f) {
+                        case 1:
+                        case 25:
+                        case 32:
+                            owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
+                            if (owner >= 0)
+                                index = gpGame->m_players[owner].m_unknown11;
+                            else
+                                index = 4;
+                            spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
+                            letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0,
+                                                     0);
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                    if (cell->m_triggerType == 0xbd) {
+                        owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
+                        if (owner >= 0) {
+                            index = gpGame->m_players[owner].m_unknown11;
+                            flags->DrawToBuffer(screenX, screenY, index, 0, 0);
+                        }
+                    }
+                    break;
+                case SPELL_VIEW_MINES:
+                    switch (cell->m_triggerType & 0x7f) {
+                    case 1:
+                    case 25:
+                    case 32:
+                        owner = gpGame->m_mineOwners[cell->m_objectMetadata];
+                        if (owner >= 0)
+                            index = gpGame->m_players[owner].m_unknown11;
+                        else
+                            index = 4;
+                        spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
+                        letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0, 0);
+                        break;
+                    case 61:
+                        switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType & 0x7f) {
+                        case 1:
+                        case 25:
+                        case 32:
+                            owner = gpGame->m_mineOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
+                            if (owner >= 0)
+                                index = gpGame->m_players[owner].m_unknown11;
+                            else
+                                index = 4;
+                            spheres->DrawToBuffer(screenX, screenY, index, 0, 0);
+                            letters->DrawToBuffer(screenX, screenY, gpGame->m_mines[cell->m_objectMetadata].type, 0,
+                                                     0);
+                            break;
+                        default:
+                            break;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                    break;
+                case SPELL_VIEW_RESOURCES:
+                    if (cell->m_triggerType == 0x9d) {
+                        spheres->DrawToBuffer(screenX - 3, screenY, 4, 0, 0);
+                        letters->DrawToBuffer(screenX - 3, screenY, cell->m_objectIndex - 0x3d, 0, 0);
+                    }
+                    break;
+                case SPELL_VIEW_ARTIFACTS:
+                    if (cell->m_triggerType == 0xb0)
+                        flags->DrawToBuffer(screenX, screenY, 6, 0, 0);
+                    break;
+                case SPELL_VIEW_TOWNS:
+                    if (cell->m_triggerType == 0xa8) {
+                        owner = gpGame->m_townOwners[cell->m_objectMetadata];
+                        if (owner >= 0) {
+                            index = gpGame->m_players[owner].m_unknown11;
+                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                        }
+                    } else if (cell->m_triggerType == 0xbd
+                               && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType == 0xa8) {
+                        owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata].m_occupiedTown];
+                        if (owner >= 0) {
+                            index = gpGame->m_players[owner].m_unknown11;
+                            flags->DrawToBuffer(screenX - 4, screenY, index, 1, 0);
+                            flags->DrawToBuffer(screenX + 3, screenY, index, 0, 0);
+                        }
+                    }
+                    break;
+                case SPELL_VIEW_HEROES:
+                    if (cell->m_triggerType == 0xbd) {
+                        owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
+                        if (owner >= 0) {
+                            index = gpGame->m_players[owner].m_unknown11;
+                            flags->DrawToBuffer(screenX, screenY, index, 0, 0);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+            if (curHero && curHero->m_x == x && curHero->m_y == y)
+                flags->DrawToBuffer(screenX, screenY, 5, 0, 0);
+        }
+        for (x = 71; x >= 0; x--) {
+            cell = GetCell(x, y);
+            if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
+                || (cell->m_triggerType == 0x28 && spellType == SPELL_VIEW_TOWNS)) {
+                screenX = x * 6 + 24;
+                screenY = y * 6 + 24;
+                if (cell->m_overlayIndex != 0xff) {
+                    ts = cell->m_overlayTileset & 0xf;
+                    if (mask & (1 << ts))
+                        tilesets[ts]->DrawToBuffer(screenX, screenY, cell->m_overlayIndex, 0, 0);
+                }
+            }
+        }
+    }
+
+    gpWindowManager->UpdateScreenRegion(16, 16, 448, 448);
+    sprintf(gText, "view-%02d.bin", spellType - SPELL_VIEW_MINES);
+    win = new heroWindow(480, 16, gText);
+    if (!win)
+        MemError();
+    gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
+    delete win;
+    UpdateRadar(1, 0);
+    for (i = 0; i < 16; i++) {
+        if (tilesets[i])
+            gpResourceManager->Dispose(tilesets[i]);
+    }
+    gpResourceManager->Dispose(ground);
+    gpResourceManager->Dispose(flags);
+    gpResourceManager->Dispose(spheres);
+    gpResourceManager->Dispose(letters);
+    RedrawAdvScreen(1);
+}
 
 // HoMM1-only helper: refresh the saved screen copy with the pointer hidden.
 VA(0x0043262e, 0x41)
