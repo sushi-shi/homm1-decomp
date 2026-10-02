@@ -706,7 +706,7 @@ void fileRequester::ShowMapInfo(void) {
     message.id = levelId;
     if (m_selectedIndex != -1)
         message.text =
-            gDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
+            gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
     gpReqExtraWindow->BroadcastMessage(message);
     if (m_selectedIndex != -1)
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);

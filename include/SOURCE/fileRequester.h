@@ -98,7 +98,7 @@ extern char gLastFilename[];
 extern char gLastMapName[];
 extern char* cFRDummy;
 extern char* gMapSizeNames[];
-extern char* gDifficultyNames[];
+extern char* gMapDifficultyNames[];
 extern int giMapSize;
 extern int giMapDifficulty;
 
