@@ -135,7 +135,9 @@ public:
     short m_wallFrame;
     short m_wallDamage;
     signed char m_unknown6e8;
-    char m_unknown6e9[4];
+    // army::DoAttack keeps each side's ghost kill count here as a word
+    // (retail stores and reloads it with word moves, indexed by side).
+    short m_unknown6e9[2];
     // LoadIcons loads the battlefield backdrop GetBackgroundName names;
     // DrawBackground draws it first.
     class bitmap* m_backgroundBitmap;
