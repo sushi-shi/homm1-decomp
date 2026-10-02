@@ -136,7 +136,7 @@ void combatManager::SetCombatDirections(int targetHex) {
     target = &m_armies[targetSide][targetIndex];
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (dir == COMBAT_DIRECTION_WIDE_WEST || dir == COMBAT_DIRECTION_WIDE_EAST) {
-            if (curArmy->m_stats.attributes & 1) {
+            if (curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 if (curArmy->m_facing == ARMY_FACING_RIGHT) {
                     if (dir == COMBAT_DIRECTION_WIDE_WEST)
                         directionHexes[dir] = gCombatAdjacency[targetHex][COMBAT_DIRECTION_NORTHWEST];
@@ -152,7 +152,7 @@ void combatManager::SetCombatDirections(int targetHex) {
                 directionHexes[dir] = -1;
         } else
             directionHexes[dir] = gCombatAdjacency[targetHex][dir];
-        if ((curArmy->m_stats.attributes & 1) && directionHexes[dir] != -1) {
+        if ((curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) && directionHexes[dir] != -1) {
             if (curArmy->m_facing == ARMY_FACING_RIGHT) {
                 if (dir == COMBAT_DIRECTION_NORTHWEST || dir == COMBAT_DIRECTION_WEST || dir == COMBAT_DIRECTION_SOUTHWEST) {
                     if (directionHexes[dir] % 9 == 1)
@@ -183,7 +183,7 @@ void combatManager::SetCombatDirections(int targetHex) {
         else
             canStand[dir] = 0;
     }
-    if (curArmy->m_stats.attributes & 2) {
+    if (curArmy->m_stats.attributes & MONSTER_FLAGS_FLYING) {
         for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++)
             hasPath[dir] = canStand[dir];
     } else {
@@ -213,7 +213,7 @@ void combatManager::SetCombatDirections(int targetHex) {
         else
             mapped = static_cast<signed char>(dir == COMBAT_DIRECTION_WIDE_WEST ? COMBAT_DIRECTION_WIDE_EAST : COMBAT_DIRECTION_WIDE_WEST);
         if (hasPath[mapped]) {
-            if (target->m_stats.attributes & 1) {
+            if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 if (dir == COMBAT_DIRECTION_NORTHEAST && m_hexCells[targetHex - 1].m_occupantSide == targetSide
                     && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
                     outDir = COMBAT_DIRECTION_WIDE_WEST;
@@ -338,7 +338,7 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     target = &m_armies[curArmy->m_targetSide][curArmy->m_targetIndex];
     if (hexDir == COMBAT_DIRECTION_WIDE_WEST || hexDir == COMBAT_DIRECTION_WIDE_EAST) {
-        if (curArmy->m_stats.attributes & 1) {
+        if (curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
             if (curArmy->m_facing == ARMY_FACING_RIGHT && hexDir == COMBAT_DIRECTION_WIDE_WEST) {
                 hexDir = COMBAT_DIRECTION_NORTHWEST;
                 alternate = 0;
@@ -362,21 +362,21 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
                 hexDir = COMBAT_DIRECTION_SOUTHEAST;
         }
     } else {
-        if (curArmy->m_facing == ARMY_FACING_RIGHT && (curArmy->m_stats.attributes & 1)) {
+        if (curArmy->m_facing == ARMY_FACING_RIGHT && (curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)) {
             if (hexDir == COMBAT_DIRECTION_NORTHWEST || hexDir == COMBAT_DIRECTION_WEST || hexDir == COMBAT_DIRECTION_SOUTHWEST)
                 targetHex--;
-        } else if (curArmy->m_facing == ARMY_FACING_LEFT && (curArmy->m_stats.attributes & 1)
+        } else if (curArmy->m_facing == ARMY_FACING_LEFT && (curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
                    && (hexDir == COMBAT_DIRECTION_NORTHEAST || hexDir == COMBAT_DIRECTION_EAST || hexDir == COMBAT_DIRECTION_SOUTHEAST))
             targetHex++;
     }
     m_directionTargetHex = gCombatAdjacency[targetHex][hexDir];
     backHex = -2;
-    if (curArmy->m_facing == ARMY_FACING_LEFT && (curArmy->m_stats.attributes & 1))
+    if (curArmy->m_facing == ARMY_FACING_LEFT && (curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE))
         backHex = m_directionTargetHex - 1;
-    if (curArmy->m_facing == ARMY_FACING_RIGHT && (curArmy->m_stats.attributes & 1))
+    if (curArmy->m_facing == ARMY_FACING_RIGHT && (curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE))
         backHex = m_directionTargetHex + 1;
     if (!ValidHexToStandOn(m_directionTargetHex) || !ValidHexToStandOn(backHex)) {
-        if ((curArmy->m_stats.attributes & 1) && (savedDir == 6 || savedDir == 7)) {
+        if ((curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) && (savedDir == 6 || savedDir == 7)) {
             if (curArmy->m_facing == ARMY_FACING_RIGHT)
                 m_directionTargetHex += 1;
             else
@@ -558,7 +558,7 @@ void combatManager::ResetRound(void) {
         for (index = 0; index < 5; index++) {
             curArmy = &m_armies[side][index];
             if (curArmy->m_quantity > 0) {
-                curArmy->m_stats.attributes &= 0x1f;
+                curArmy->m_stats.attributes &= MONSTER_FLAGS_ROUND_PERSISTENT_MASK;
                 if (curArmy->m_creatureType == CREATURE_TROLL)
                     curArmy->m_hitPointsLost = 0;
                 if (curArmy->m_spellRounds > 0) {
@@ -668,7 +668,7 @@ signed char combatManager::GetCommand(short hex) {
                 }
             } else {
                 if (m_armies[m_currentSide][m_currentArmyIndex].ValidPath(hex, 0) == 1)
-                    return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes & 2) ? COMBAT_MESSAGE_COMMAND_FLY
+                    return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes & MONSTER_FLAGS_FLYING) ? COMBAT_MESSAGE_COMMAND_FLY
                                                                                                 : COMBAT_MESSAGE_COMMAND_MOVE;
             }
             break;
@@ -1414,7 +1414,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         case ACTION_MOVE:
             gpMouseManager->ReallyHidePointer();
             actingArmy->MoveAttack(giNextActionGridIndex, 0);
-            actingArmy->m_stats.attributes |= 0x80;
+            actingArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
@@ -1425,7 +1425,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
             if (giNextActionExtra != -1 && actingArmy->m_hex != giNextActionExtra)
                 actingArmy->MoveAttack(giNextActionExtra, 1);
             actingArmy->MoveAttack(giNextActionGridIndex, 0);
-            actingArmy->m_stats.attributes |= 0x80;
+            actingArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
@@ -1445,7 +1445,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
                 giNextActionExtra;
             break;
         case ACTION_SKIP_TURN:
-            actingArmy->m_stats.attributes |= 0x80;
+            actingArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
             advance = 1;
             break;
     }

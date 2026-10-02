@@ -235,9 +235,9 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
     stackValue = gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
     switch (spell) {
     case SPELL_SLOW:
-        if (target->m_stats.attributes & 4)
+        if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
             effect = 0;
-        else if (target->m_stats.attributes & 2)
+        else if (target->m_stats.attributes & MONSTER_FLAGS_FLYING)
             effect = stackValue * SPELL_AI_SLOW_MODIFIER * 3.0f;
         else
             effect = (target->m_stats.speed - 1) * static_cast<float>(stackValue) * SPELL_AI_SLOW_MODIFIER;
@@ -255,9 +255,9 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
         effect = stackValue * SPELL_AI_BERSERK_MODIFIER;
         break;
     case SPELL_HASTE:
-        if (target->m_stats.attributes & 2)
+        if (target->m_stats.attributes & MONSTER_FLAGS_FLYING)
             effect = 0;
-        else if (target->m_stats.attributes & 4)
+        else if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
             effect = 0;
         else if (target->m_stats.speed < 2)
             effect = stackValue * SPELL_AI_HASTE_MODIFIER;

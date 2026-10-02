@@ -293,7 +293,7 @@ void combatManager::UpdateArmyGroup(signed char side)
                 break;
         }
         if (j < 5) {
-            if (m_armies[side][i].m_stats.attributes & 0x10) {
+            if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD) {
                 m_armyGroups[side]->m_creatureTypes[j] = CREATURE_NONE;
                 m_armyGroups[side]->m_creatureCounts[j] = 0;
             } else {
@@ -374,10 +374,10 @@ void combatManager::GenerateMap(void)
     for (i = 0; i < 5; i++) {
         if (m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_hex = i * 9 + 1;
-            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes &= 0x3f;
+            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes &= MONSTER_FLAGS_BATTLE_START_MASK;
             m_hexCells[i * 9 + 1].m_occupantSide = COMBAT_ATTACKER_SIDE;
             m_hexCells[i * 9 + 1].m_occupantIndex = armyCount;
-            if (m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes & 1) {
+            if (m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 m_hexCells[i * 9 + 2].m_occupantSide = COMBAT_ATTACKER_SIDE;
                 m_hexCells[i * 9 + 2].m_occupantIndex = armyCount;
                 m_hexCells[i * 9 + 1].m_occupantFrame = 1;
@@ -390,10 +390,10 @@ void combatManager::GenerateMap(void)
     for (i = 0; i < 5; i++) {
         if (m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
             m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_hex = i * 9 + 7;
-            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes &= 0x3f;
+            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes &= MONSTER_FLAGS_BATTLE_START_MASK;
             m_hexCells[i * 9 + 7].m_occupantSide = COMBAT_DEFENDER_SIDE;
             m_hexCells[i * 9 + 7].m_occupantIndex = armyCount;
-            if (m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes & 1) {
+            if (m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 m_hexCells[i * 9 + 6].m_occupantSide = COMBAT_DEFENDER_SIDE;
                 m_hexCells[i * 9 + 6].m_occupantIndex = armyCount;
                 m_hexCells[i * 9 + 6].m_occupantFrame = 1;
@@ -668,9 +668,9 @@ void combatManager::CheckApplyGoodMorale(int side, int index)
     CombatMessage(gText, 1);
     activeArmy->SpellEffect(24, 180);
     activeArmy->Stand(1);
-    if (activeArmy->m_stats.attributes & 0x80)
+    if (activeArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
         activeArmy->m_stats.attributes -= 0x80;
-    activeArmy->m_stats.attributes |= 0x20;
+    activeArmy->m_stats.attributes |= MONSTER_FLAGS_HIGH_MORALE;
     WaitEndSample(sample, -1);
 }
 
@@ -703,7 +703,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     activeArmy->m_animationFrame = 2;
     activeArmy->SpellEffect(25, 180);
     activeArmy->Stand(1);
-    activeArmy->m_stats.attributes |= 0x80;
+    activeArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
     WaitEndSample(sample, -1);
     return 1;
 }
@@ -728,10 +728,10 @@ signed char combatManager::GetNextArmy(int checkMorale)
             for (stackCounter = 0; stackCounter < m_numArmies[stackSide]; stackCounter++) {
                 bSkip = 0;
                 pArmy = &m_armies[stackSide][stackCounter];
-                if ((pArmy->m_stats.attributes & 0x90) || pArmy->m_spellEffect == SPELL_PARALYZE || pArmy->m_spellEffect == SPELL_BLIND
-                    || (pArmy->m_stats.speed != m_currentSpeed && !(pArmy->m_stats.attributes & 0x20)))
+                if ((pArmy->m_stats.attributes & (MONSTER_FLAGS_DEAD | MONSTER_FLAGS_TURN_SPENT)) || pArmy->m_spellEffect == SPELL_PARALYZE || pArmy->m_spellEffect == SPELL_BLIND
+                    || (pArmy->m_stats.speed != m_currentSpeed && !(pArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE)))
                     bSkip = 1;
-                if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & 0x20))
+                if (!bSkip && !iSpeed && !(pArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE))
                     bSkip = 1;
                 if (!bSkip && checkMorale && CheckApplyBadMorale(stackSide, stackCounter))
                     bSkip = 1;
@@ -770,7 +770,7 @@ signed char combatManager::IsWinner(signed char side)
     side ^= 1;
     isWinner = 1;
     for (i = 0; i < m_numArmies[side]; i++) {
-        if (!(m_armies[side][i].m_stats.attributes & 0x10))
+        if (!(m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_DEAD))
             isWinner = 0;
     }
     return isWinner;
@@ -1092,9 +1092,9 @@ void combatManager::KeepAttack(void)
     for (i = 0; i < 5; i++) {
         if (m_armies[COMBAT_ATTACKER_SIDE][i].IsAlive()) {
             target = &m_armies[COMBAT_ATTACKER_SIDE][i];
-            if (target->m_stats.attributes & 4)
+            if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 priority = 2;
-            else if (target->m_stats.attributes & 2)
+            else if (target->m_stats.attributes & MONSTER_FLAGS_FLYING)
                 priority = 1;
             else
                 priority = 0;
@@ -1122,7 +1122,7 @@ void combatManager::KeepAttack(void)
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample(gText);
     frontCol = hexCol;
-    if (target->m_stats.attributes & 1) {
+    if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
         if (target->m_facing == ARMY_FACING_LEFT)
             frontCol = frontCol - 1;
         else
@@ -1211,7 +1211,7 @@ void combatManager::KeepAttack(void)
         sprintf(gText, "%s %d %s.", "Garrison does", hurt, "Damage");
     gpCombatManager->CombatMessage(gText, 1);
     target->PowEffect(target->m_stats.powEffect);
-    if (!(target->m_stats.attributes & 0x10))
+    if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
         target->Stand(0);
     WaitEndSample(sample, -1);
     if (target->m_quantity > 0)

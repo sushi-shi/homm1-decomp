@@ -325,7 +325,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             WaitEndSample(sample, -1);
             sprintf(gText, "telein.82m");
             sample = LoadPlaySample(gText);
-            if (teleportArmy->m_stats.attributes & 1) {
+            if (teleportArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 newHex = targetHex;
                 if (teleportArmy->m_facing == ARMY_FACING_RIGHT) {
                     newHex = teleportArmy->GetAdjacentCellIndex(newHex, 1);
@@ -383,7 +383,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(1, 0);
             targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
             targetArmy->PowEffect(7);
-            if (!(targetArmy->m_stats.attributes & 0x10))
+            if (!(targetArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 targetArmy->Stand(1);
             break;
         case SPELL_CURE:
@@ -410,7 +410,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(6, 0);
             targetArmy->SpellEffect(6, 0);
             targetArmy->m_stats.speed = 1;
-            if (targetArmy->m_stats.attributes & 2)
+            if (targetArmy->m_stats.attributes & MONSTER_FLAGS_FLYING)
                 targetArmy->m_stats.attributes -= 2;
             targetArmy->m_spellEffect = SPELL_SLOW;
             targetArmy->m_spellEndCondition = 3;
@@ -693,7 +693,7 @@ void combatManager::Fireball(signed char targetHex)
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (!(curArmy->m_stats.attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(1);
         }
     }
@@ -757,7 +757,7 @@ void combatManager::MeteorShower(signed char targetHex)
     for (i = 0; i < 7; i++) {
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
-            if (!(curArmy->m_stats.attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(1);
         }
     }
@@ -801,7 +801,7 @@ void combatManager::ElementalStorm(void)
             curArmy = &m_armies[sideIdx][index];
             if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
-                && !(curArmy->m_stats.attributes & 0x10)) {
+                && !(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                 curArmy->Damage(damage);
                 hit = 1;
             }
@@ -815,7 +815,7 @@ void combatManager::ElementalStorm(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (!(curArmy->m_stats.attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(0);
         }
     }
@@ -845,7 +845,7 @@ void combatManager::Armageddon(void)
             curArmy = &m_armies[sideIdx][index];
             if (curArmy->m_creatureType != CREATURE_DRAGON && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
-                && !(curArmy->m_stats.attributes & 0x10)) {
+                && !(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
                 curArmy->Damage(damage);
                 hit = 1;
             }
@@ -878,7 +878,7 @@ void combatManager::Armageddon(void)
     for (sideIdx = 0; sideIdx < 2; sideIdx++) {
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
-            if (!(curArmy->m_stats.attributes & 0x10))
+            if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(0);
         }
     }

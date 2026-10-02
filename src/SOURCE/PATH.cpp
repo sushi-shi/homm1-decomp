@@ -37,7 +37,7 @@ short army::FindPath(short sourceHex, short targetHex, signed char, signed char 
     if (ignoreSpeed)
         m_stats.speed = IGNORE_SPEED;
     pathResult = gpSearchArray->FindCombatPath(sourceHex, targetHex, this, pathMode);
-    if (!pathResult && (m_stats.attributes & 1) && !pathMode) {
+    if (!pathResult && (m_stats.attributes & MONSTER_FLAGS_WIDE) && !pathMode) {
         switch (m_facing) {
             case ARMY_FACING_LEFT:
                 targetHex = GetAdjacentCellIndex(targetHex, COMBAT_DIRECTION_EAST);
@@ -64,7 +64,7 @@ short army::ValidPath(short targetHex, signed char pathMode)
 
     if (!ValidHex(targetHex))
         return 0;
-    if (m_stats.attributes & 2)
+    if (m_stats.attributes & MONSTER_FLAGS_FLYING)
         return ValidFlight(targetHex, pathMode);
     pathResult = FindPath(m_hex, targetHex, m_stats.speed, 0, pathMode);
     if (pathResult) {
@@ -102,12 +102,12 @@ short army::GetAttackMask(short sourceHex, signed char targetMode, signed char t
     short blockedMask;
     short nDirectionCount;
 
-    if (m_stats.attributes & 1)
+    if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         blockedMask = 0;
     else
         blockedMask = SPECIAL_DIRECTION_MASK;
     dirBit = 1;
-    if (m_stats.attributes & 1)
+    if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         nDirectionCount = 8;
     else
         nDirectionCount = 6;
@@ -143,7 +143,7 @@ short army::ValidMove(short sourceHex, short direction)
     frontValid = 0;
     if (gpCombatManager->m_hexCells[dest].m_occupantSide == COMBAT_SIDE_NONE && gpCombatManager->m_hexCells[dest].m_obstacleIndex == -1)
         frontValid = 1;
-    if (m_stats.attributes & 1) {
+    if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         backHex = -1;
         switch (m_facing) {
             case ARMY_FACING_LEFT:
@@ -185,7 +185,7 @@ short army::ValidAttack(short sourceHex, short direction, short targetMode, shor
     if (!ValidHex(sourceHex))
         return 0;
     adjacentHex = sourceHex;
-    if (m_stats.attributes & 1) {
+    if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         if (direction == COMBAT_DIRECTION_WIDE_WEST)
             *attackHex = GetAdjacentCellIndex(sourceHex, (signed char)(m_facing == 1 ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST));
         else if (direction == COMBAT_DIRECTION_WIDE_EAST)
@@ -271,7 +271,7 @@ short army::ValidRange(short targetHex)
     if (!ValidHex(targetHex))
         return 0;
     m_moveTargetHex = m_hex;
-    if (!(m_stats.attributes & 1)) {
+    if (!(m_stats.attributes & MONSTER_FLAGS_WIDE)) {
         m_attackDirection = GetBestDirection(m_hex, targetHex, SPECIAL_DIRECTION_MASK);
         adjacentHex = GetAdjacentCellIndex(m_hex, m_attackDirection);
         if (adjacentHex == targetHex)
