@@ -954,6 +954,58 @@ signed char game::GetRandomArtifactId(void) {
         return artifact;
 }
 
+// Buka 2.1 game::RandomizeHeroPool without HoMM2's starting spells.
+VA(0x00443a3a, 0x102)
+void game::RandomizeHeroPool(void) {
+    short heroId;
+    for (heroId = 0; heroId < GAME_HERO_COUNT; heroId++) {
+        m_heroRecs[heroId].m_experience = Random(0, 50) + 40;
+        SetRandomHeroArmies(heroId, 0);
+        m_heroRecs[heroId].m_remainingMobility = m_heroRecs[heroId].CalcMobility();
+        m_heroRecs[heroId].m_mobility = m_heroRecs[heroId].m_remainingMobility;
+        m_heroRecs[heroId].m_randomSeed = Random(1, 16000);
+    }
+}
+
+// Buka 2.1 game::SetRandomHeroArmies: HoMM1 has four classes and draws
+// only from the first two stacks of each class table.
+VA(0x00443b3c, 0x2e0)
+void game::SetRandomHeroArmies(short heroId, int strongArmy) {
+    armyGroup* army = &m_heroRecs[heroId].m_army;
+    short slot = 0;
+    short armyTable[4][3][3] = {
+        {{0, 30, 50}, {1, 3, 5}, {2, 2, 4}},
+        {{6, 15, 25}, {7, 3, 5}, {8, 2, 3}},
+        {{12, 10, 20}, {13, 2, 4}, {14, 1, 2}},
+        {{18, 6, 10}, {19, 2, 4}, {20, 1, 2}}
+    };
+    int present[3];
+    int i;
+    int max;
+    int minNum;
+
+    present[0] = 1;
+    present[1] = Random(0, 99) < 50 + (strongArmy ? 30 : 0);
+    present[2] = Random(0, 99) < 25 + (strongArmy ? 40 : 0);
+    if (!present[2])
+        present[1] = 1;
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+        army->m_creatureTypes[i] = -1;
+        army->m_creatureCounts[i] = -1;
+    }
+    for (i = 0; i < 2; i++) {
+        if (present[i]) {
+            army->m_creatureTypes[slot] = armyTable[m_heroRecs[heroId].m_unknown1c][i][0];
+            minNum = armyTable[m_heroRecs[heroId].m_unknown1c][i][1] * 10;
+            max = armyTable[m_heroRecs[heroId].m_unknown1c][i][2] * 10 + 9;
+            if (strongArmy)
+                minNum = (minNum + max) / 2;
+            army->m_creatureCounts[slot] = Random(minNum, max) / 10;
+            slot++;
+        }
+    }
+}
+
 // donor PoL RVA 0x00080b64; preferred Buka symbol ?SetVisibility@game@@QAEXHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64
