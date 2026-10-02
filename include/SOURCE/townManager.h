@@ -283,7 +283,7 @@ extern TownBuildingExtent gTownBuildingExtents[4][16];
 extern char *cTownCommand[];
 extern signed char townTheme[];
 // Open's per-type town-object layout (0x0048c028).
-extern signed char gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
+extern const signed char gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
 short TavernHandler(struct tag_message &);
 short MageGuildHandler(struct tag_message &);
 short SplitArmyHandler(struct tag_message &);

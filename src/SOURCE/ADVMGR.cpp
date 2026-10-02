@@ -5801,3 +5801,6 @@ DATA(0x004c50a0)
 signed char bFreshSave;
 DATA(0x004c50c0)
 int iLastAnimFrame;
+// ADVMGR's .rdata: ambient-sound volume by distance (0x0048c390).
+DATA(0x0048c390)
+const long glEnvironmentVolume[5] = {64, 48, 32, 16, 10};

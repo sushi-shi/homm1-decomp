@@ -12,7 +12,7 @@
 #include <string.h>
 
 // Compiler line-base word for TOWNMGR.CPP's ProcessAssert sites.
-DATA(0x0048ed8c) short gTownMgrAssertLine;
+DATA(0x0048ed8c) short gTownMgrAssertLine = 1483;
 
 // donor PoL RVA 0x00013900; preferred Buka symbol ??0townObject@@QAE@HHPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -2195,3 +2195,12 @@ short CastleHandler(struct tag_message &message)
     }
     return TrueFalseDialogHandler(message);
 }
+
+// TOWNMGR's .rdata: Open's per-type town-object layout.
+DATA(0x0048c028)
+const signed char gTownObjectType[4][16] = {
+    {5, 6, 8, 11, 7, 0, 1, 2, 10, 9, 3, 4, 12, -1, -1, -1},
+    {5, 6, 12, 8, 0, 9, 10, 1, 2, 11, 3, 4, 7, -1, -1, -1},
+    {13, 5, 6, 9, 7, 11, 0, 1, 2, 10, 8, 12, 3, 4, -1, -1},
+    {5, 6, 12, 9, 0, 11, 10, 1, 2, 7, 3, 4, 8, -1, -1, -1},
+};

@@ -370,7 +370,7 @@ extern short gGameCommand;
 extern int gbHeroMoving;
 extern unsigned char giCurPlayerBit;
 // Volume per environment-sound distance step.
-extern long glEnvironmentVolume[];
+extern const long glEnvironmentVolume[];
 // Route arrow frame by [next step][this step] path direction.
 extern signed char gRouteFrame[][8];
 // Per hero type scouting radius used by TeleportTo.
