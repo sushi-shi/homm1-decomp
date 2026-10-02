@@ -138,11 +138,13 @@ short townManager::Open(short id)
     for (i = 0; i < TOWN_MANAGER_OBJECT_CAPACITY; i++) {
         buildingType = gTownObjectType[m_town->m_type][i];
         if (buildingType != -1) {
+            // One name table: neutral objects, four town-type prefixes, then
+            // the faction-object suffixes.
             if (buildingType < TOWN_FIRST_FACTION_OBJECT)
-                strcpy(gText, cNeutralObjectName[buildingType]);
+                strcpy(gText, cTownObjectNames[buildingType]);
             else
-                sprintf(gText, "%s%s", cTownPrefix[m_town->m_type],
-                        cTownObjectSuffix[buildingType - TOWN_FIRST_FACTION_OBJECT]);
+                sprintf(gText, "%s%s", cTownObjectNames[TOWN_FIRST_FACTION_OBJECT + m_town->m_type],
+                        cTownObjectNames[buildingType + 4]);
             m_townObjects[m_townObjectCount] = new townObject(gText);
             if (m_townObjects[m_townObjectCount] == 0)
                 MemError();
@@ -192,7 +194,7 @@ short townManager::Open(short id)
     gpMouseManager->SetPointer("advmice.mse", 0);
     gpMouseManager->ReallyShowPointer();
     gpMouseManager->NewUpdate(1);
-    KBChangeMenu(hmnuDflt);
+    KBChangeMenu(hmnuTown);
     gpWindowManager->FadeScreen(0, 8, 0);
     m_castleDialogActive = 0;
     m_recruitResult = 0;

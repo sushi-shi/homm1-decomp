@@ -201,7 +201,7 @@ extern short gHeroGoldCost;
 void PopNetBox(char *);
 void NormalDialog(char*, int, int, int, int, int, int, int, int);
 void SetWinText(heroWindow*, short);
-extern char* cTownPrefix[];
+extern char* cTownObjectNames[];
 extern char* cNeutralObjectName[];
 extern char* cTownObjectSuffix[];
 extern char* gSpellDesc[];
