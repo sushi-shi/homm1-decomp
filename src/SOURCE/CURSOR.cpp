@@ -696,9 +696,9 @@ short giPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x0048eb30)
 short giStepDelay[5] = {30, 45, 30, 15, 15};
 DATA(0x0048eb3c)
-struct _SAMPLE* hPrevMoveSound = 0;
+struct _SAMPLE* hPrevMoveSound = NULL;
 DATA(0x0048eb40)
-struct _SAMPLE* hLastMoveSound = 0;
+struct _SAMPLE* hLastMoveSound = NULL;
 DATA(0x0048eb44)
 signed char EveryOther = 0;
 DATA(0x0048eb48)

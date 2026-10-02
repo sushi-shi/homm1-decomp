@@ -492,7 +492,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             if (enemyHero->m_owner == giCurPlayer) {
                 HeroSwap(pHero, enemyHero);
             } else {
-                occupiedTown = 0;
+                occupiedTown = NULL;
                 if (enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
                     occupiedTown = gpGame->GetTown(enemyHero->m_occupiedTown);
                     occupiedTown->m_occupyingHeroId = enemyHero->m_id;
@@ -1278,7 +1278,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     float heroLosses;
     float theirLosses;
 
-    theCastle = 0;
+    theCastle = NULL;
     eventType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
     erase = 0;
     handled = 0;
@@ -1329,7 +1329,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 gpMonGroup->m_creatureTypes[counter] = CREATURE_DRAGON;
                 gpMonGroup->m_creatureCounts[counter] = 1;
             }
-            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonGroup, 0, 0, 0, 500,
+            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonGroup, NULL, 0, 0, 500,
                                            win, strength);
             if (win) {
                 counter = 5;
@@ -1553,7 +1553,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                                                      enemyHero, 0, 0, heroLosses, theirLosses);
                 if (battleResult && theCastle)
                     battleResult = gpPhilAI->QuickCombat(&eventHero->m_army, eventHero,
-                                                         &theCastle->m_army, 0, 1,
+                                                         &theCastle->m_army, NULL, 1,
                                                          theCastle->m_id, heroLosses,
                                                          theirLosses);
             } else {

@@ -939,8 +939,8 @@ void army::DoAttack(int retaliation) {
         gpCombatManager->DrawFrame(1);
         glTimers[0] = KBTickCount() + 105;
     }
-    target2 = 0;
-    target = 0;
+    target2 = NULL;
+    target = NULL;
     if (ValidHex(newHex)) {
         int savedKilled;
         short nextHex;

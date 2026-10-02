@@ -266,15 +266,15 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
     gpMouseManager->ReallyHidePointer();
     if (!castByCreature && m_heroes[m_currentSide])
         m_heroes[m_currentSide]->UseSpell(spell);
-    targetArmy = 0;
+    targetArmy = NULL;
     if (spell == SPELL_FIREBALL || spell == SPELL_METEOR_SHOWER || spell == SPELL_STORM || spell == SPELL_ARMAGEDDON || spell == SPELL_CURE || spell == SPELL_DISPEL_MAGIC)
-        targetArmy = 0;
+        targetArmy = NULL;
     else if (ValidHex(targetHex) && m_hexCells[targetHex].m_occupantSide >= 0) {
         targetArmy = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
         side = m_hexCells[targetHex].m_occupantSide;
         targetIndex = m_hexCells[targetHex].m_occupantIndex;
     } else
-        targetArmy = 0;
+        targetArmy = NULL;
     if (!castByCreature)
         m_heroCastSpell[m_currentSide] = 1;
     switch (spell) {

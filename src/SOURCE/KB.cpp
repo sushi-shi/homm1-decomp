@@ -438,7 +438,7 @@ int oldmain(void) {
             gbGameInitialized = 1;
             backdropLoaded = 0;
             gpSoundManager->StopAllSamples();
-            gpWindowManager->FadeScreen(1, 8, 0);
+            gpWindowManager->FadeScreen(1, 8, NULL);
             gMapX = 0;
             gMapY = 0;
             if (gpExec->AddManager(gpAdvManager, -1))
@@ -4184,13 +4184,13 @@ int gbNoBorder = 0;
 DATA(0x00492e14)
 int gbEnlargeScreenBlit = 1;
 DATA(0x00492e18)
-void* hmnuDflt = 0;
+void* hmnuDflt = NULL;
 DATA(0x00492e1c)
-void* hmnuCmbt = 0;
+void* hmnuCmbt = NULL;
 DATA(0x00492e20)
-void* hmnuAdv = 0;
+void* hmnuAdv = NULL;
 DATA(0x00492e24)
-void* hmnuTown = 0;
+void* hmnuTown = NULL;
 DATA(0x00492e28)
 int gbColorMice = 0;
 DATA(0x00492e2c)
