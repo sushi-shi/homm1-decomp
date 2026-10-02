@@ -793,7 +793,7 @@ signed char CanBuild(town* t, short building) {
         return 0;
     if (building == BUILDING_SLOT_SHIPYARD) {
         cell = gpAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
-        if (cell->m_tileIndex < 20)
+        if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
             return 1;
         else
             return 0;
@@ -1972,7 +1972,7 @@ void InitVars(void) {
     gpGame->m_viewArmyResult = 0;
     gbInNewGameSetup = 0;
     for (i = 0; i < 140; i++)
-        giGroundToTerrain[i] = i / 20;
+        giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
         giTerrainCost[i][0] = TerrainStepCost(i, 0);
         giTerrainCost[i][1] = TerrainStepCost(i, 1);

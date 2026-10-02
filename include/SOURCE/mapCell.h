@@ -18,7 +18,10 @@ H1_ENUM_CONST_BEGIN(MapCellConstant)
     MAP_CELL_EXTRA_TILESET_SHIFT = 4,
     // m_secondaryTrigger bit 7: the cell blocks pathing (DoDimensionDoor and
     // ViewWorld's dimension-door preview skip it).
-    MAP_CELL_SECONDARY_BLOCKED = 0x80
+    MAP_CELL_SECONDARY_BLOCKED = 0x80,
+    // Ground tiles come in runs of 20 per terrain (giGroundToTerrain[i] =
+    // i / 20); tiles below 20 are water.
+    MAP_CELL_TILES_PER_TERRAIN = 20
 H1_ENUM_CONST_END(MapCellConstant)
 
 // m_flags (DrawCell, ViewWorld, ComboDraw, FINDPATH, the hero cursor). The two
