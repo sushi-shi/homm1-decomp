@@ -2796,22 +2796,6 @@ void CleanUpMenus(void) {
     hmnuApp = NULL;
 }
 
-VA(0x0045679b, 0x24)
-void UpdateAppSpecificMenus(void* hMenu) {
-    if (hmnuAdv == hMenu)
-        UpdateSystemOptionsMenu();
-}
-
-VA(0x004567bf, 0x22)
-void EarlyResizeWindow(int, int, int, int) {
-    if (gbClosingApp)
-        return;
-}
-
-// KB owns retail .data 0x00491058-0x0049ea9f: these initialized globals in
-// address order, followed by their initializer literals (0x00494184-0x0049ea97,
-// emitted in this order). Initializers are retail bytes. Unreferenced storage at
-// 0x00492570 (2 x 16 bytes), 0x0049303c and 0x00494178 is not yet named.
 DATA(0x00491058)
 char* cCombatGroundNames[8] = {
     "boat.xtl",
@@ -3141,6 +3125,23 @@ int gDwellingCosts[24][7] = {
 };
 DATA(0x00491820)
 signed char gCastleResources[4] = {0, 2, -1, -1};
+
+VA(0x0045679b, 0x24)
+void UpdateAppSpecificMenus(void* hMenu) {
+    if (hmnuAdv == hMenu)
+        UpdateSystemOptionsMenu();
+}
+
+VA(0x004567bf, 0x22)
+void EarlyResizeWindow(int, int, int, int) {
+    if (gbClosingApp)
+        return;
+}
+
+// KB owns retail .data 0x00491058-0x0049ea9f: these initialized globals in
+// address order, followed by their initializer literals (0x00494184-0x0049ea97,
+// emitted in this order). Initializers are retail bytes. Unreferenced storage at
+// 0x00492570 (2 x 16 bytes), 0x0049303c and 0x00494178 is not yet named.
 DATA(0x00491828)
 short gCastleAmounts[4] = {20, 20, 0, 0};
 DATA(0x00491830)
