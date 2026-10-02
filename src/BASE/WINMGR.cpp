@@ -94,12 +94,12 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_activeWindow = 0;
     m_focusWindow = 0;
     m_windowListTail = 0;
-    m_screenshotIndex = 0;
     m_windowListHead = 0;
-    m_updateFlags = 0;
     m_unknown40 = 0;
     m_unknown41 = 0;
+    m_screenshotIndex = 0;
     m_screen = 0;
+    m_updateFlags = 0;
     m_fizzleSource = 0;
     m_fizzleWork = 0;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
@@ -174,14 +174,14 @@ short heroWindowManager::BroadcastMessage(short type, short command, short widge
 
 // Buka list insertion correspondence; retail keeps the requested layer as a short.
 VA(0x00474170, 0xce)
-void heroWindowManager::AddWindow(heroWindow* window, short requestedOrder, int openFlags) {
+void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlags) {
     heroWindow* currentWindow = m_windowListTail;
-    short zOrder = 0;
-    if (!(window->m_winFlags & WINDOW_FLAG_FIXED_LAYER))
-        zOrder = requestedOrder;
-    if (zOrder == -1) {
+    if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = 0;
-        if (currentWindow != 0)
+    if (zOrder == -1) {
+        if (currentWindow == 0)
+            zOrder = 0;
+        else
             zOrder = currentWindow->m_zOrder + 1;
     }
     if (zOrder == 0 && m_windowListHead != 0)
@@ -193,14 +193,14 @@ void heroWindowManager::AddWindow(heroWindow* window, short requestedOrder, int 
     while (currentWindow != 0 && currentWindow->m_zOrder > zOrder)
         currentWindow = currentWindow->m_prevWindow;
     if (currentWindow == 0) {
-        window->m_prevWindow = 0;
         window->m_nextWindow = m_windowListHead;
+        window->m_prevWindow = 0;
         m_windowListHead = window;
         if (m_windowListTail == 0)
             m_windowListTail = window;
     } else if (currentWindow->m_nextWindow == 0) {
-        window->m_nextWindow = 0;
         window->m_prevWindow = m_windowListTail;
+        window->m_nextWindow = 0;
         m_windowListTail->m_nextWindow = window;
         m_windowListTail = window;
     } else {
@@ -299,15 +299,21 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
 }
 
 // HoMM1 hides the software pointer only when it overlaps the updated region.
+// Declaring top before left and bottom before right reproduces retail's VC4
+// colouring: equal-cost ranges are coloured, and spilled, in declaration order.
 VA(0x004744b0, 0xed)
 void heroWindowManager::UpdateScreenRegion(short x, short y, short width, short height) {
-    short left = x - gpMouseManager->m_savedUnderlying->m_width;
-    short top = y - gpMouseManager->m_savedUnderlying->m_height;
-    short right = x + width;
-    short bottom = y + height;
-    short pointerHidden = 0;
-    short mouseX = gpMouseManager->m_mouseX;
-    short mouseY = gpMouseManager->m_mouseY;
+    short top, left, bottom, right;
+    short pointerHidden;
+    short mouseX, mouseY;
+
+    left = x - gpMouseManager->m_savedUnderlying->m_width;
+    top = y - gpMouseManager->m_savedUnderlying->m_height;
+    right = x + width;
+    bottom = y + height;
+    pointerHidden = 0;
+    mouseX = gpMouseManager->m_mouseX;
+    mouseY = gpMouseManager->m_mouseY;
     if (gpMouseManager->IsVis()) {
         if (left > mouseX || right < mouseX || top > mouseY || bottom < mouseY)
             pointerHidden = 0;

@@ -121,8 +121,8 @@ inline int soundManager::CDIsPlaying(void) {
 
 VA(0x00477110, 0xd7)
 unsigned long soundManager::CDStartup(void) {
-    int numDevices;
     int device;
+    int numDevices;
     if (gbNoSound != 0)
         return 0;
     wsprintfA(CommandString, "open %c: type cdaudio alias CD shareable", gcSoundPath[0]);
