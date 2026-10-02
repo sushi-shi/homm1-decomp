@@ -25,6 +25,14 @@ H1_ENUM_BEGIN(WindowState)
     WINDOW_STATE_OPEN = 1
 H1_ENUM_END(WindowState)
 
+// clang-format off
+// heroWindow::Open status (Buka WINDOW.cpp OPEN_FAILURE).
+H1_ENUM_BEGIN(WindowOpenStatus)
+    WINDOW_OPEN_SUCCESS = 0,
+    WINDOW_OPEN_FAILURE = 3
+H1_ENUM_END(WindowOpenStatus)
+// clang-format on
+
 H1_ENUM_CONST_BEGIN(HeroWindowConstant)
     HERO_WINDOW_NAME_CAPACITY = 20,
     WINDOW_ALL_WIDGETS_LOW = -65535,

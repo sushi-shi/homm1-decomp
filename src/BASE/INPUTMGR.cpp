@@ -221,11 +221,11 @@ short inputManager::Open(short priority) {
     m_modifiers = MESSAGE_MODIFIER_NONE;
     MakeScanCodeTable();
     m_messageMask = BASE_MANAGER_ACCEPT_MOUSE_MOVE;
-    m_priority = -1;
+    m_priority = BASE_MANAGER_PRIORITY_UNASSIGNED;
     m_field_0x23a = 1;
     m_active = 1;
     strcpy(m_name, "inputManager");
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 VA(0x0047c1b0, 0x3b)

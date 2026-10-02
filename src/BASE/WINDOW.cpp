@@ -160,16 +160,16 @@ VA(0x00474f80, 0x9d)
 short heroWindow::Open(short zOrder, signed char flags)
 {
     if ((m_winState & WINDOW_STATE_OPEN) != 0)
-        return 3;
+        return WINDOW_OPEN_FAILURE;
     gpMouseManager->ReallyHidePointer();
     if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0
         && SaveBackground() != 0)
-        return 3;
+        return WINDOW_OPEN_FAILURE;
     m_zOrder = zOrder;
     DrawWindow(flags);
     gpMouseManager->ReallyShowPointer();
     m_winState = H1_ENUM_CAST(WindowState, short, m_winState | WINDOW_STATE_OPEN);
-    return 0;
+    return WINDOW_OPEN_SUCCESS;
 }
 
 // donor PoL RVA 0x000cf310; preferred Buka symbol ?Close@heroWindow@@QAEXXZ

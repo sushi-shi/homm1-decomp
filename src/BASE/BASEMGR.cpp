@@ -9,7 +9,7 @@
 VA(0x00473d90, 0x4a)
 baseManager::baseManager(void) : m_next(NULL), m_prev(NULL)
 {
-    m_priority = -1;
+    m_priority = BASE_MANAGER_PRIORITY_UNASSIGNED;
     m_messageMask = BASE_MANAGER_MESSAGE_MASK_ALL;
     m_active = 0;
     strcpy(m_name, "Unknown");

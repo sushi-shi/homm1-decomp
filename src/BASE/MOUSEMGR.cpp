@@ -65,7 +65,7 @@ short mouseManager::Open(short priority) {
     m_messageMask = MOUSE_MANAGER_MESSAGE_MASK;
     m_active = 1;
     m_priority = priority;
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // Retail releases both monochrome/color masks and pauses around cursor teardown.

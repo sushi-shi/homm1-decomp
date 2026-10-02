@@ -121,7 +121,7 @@ short heroWindowManager::Open(short managerOrder) {
         m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_DOWN;
         m_active = 1;
         strcpy(m_name, "heroWindowManager");
-        return 0;
+        return BASE_MANAGER_SUCCESS;
     }
     return 1;
 }
@@ -188,7 +188,7 @@ void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlag
         return;
     if (zOrder != 0 && m_windowListHead == NULL)
         return;
-    if (window->Open(zOrder, openFlags) != 0)
+    if (window->Open(zOrder, openFlags) != WINDOW_OPEN_SUCCESS)
         return;
     while (currentWindow != NULL && currentWindow->m_zOrder > zOrder)
         currentWindow = currentWindow->m_prevWindow;

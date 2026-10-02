@@ -267,7 +267,7 @@ short resourceManager::Open(short priority)
     m_active = 1;
     strcpy(m_name, "resourceManager");
     m_resourceListHead = NULL;
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // donor Buka RVA 0x000b8890; PoL 2.0 is source-identical

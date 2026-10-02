@@ -51,17 +51,17 @@ executive::executive(void)
 VA(0x0047a180, 0xa9)
 short executive::InitSystem(void)
 {
-    if (gpResourceManager->Open(-1) != 0)
+    if (gpResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gResourceManagerInitError);
-    if (gpInputManager->Open(-1) != 0)
+    if (gpInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gInputManagerInitError);
-    if (gpSoundManager->Open(-1) != 0)
+    if (gpSoundManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gSoundManagerInitError);
-    if (AddManager(gpMouseManager, -1) != 0)
+    if (AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gMouseManagerInitError);
-    if (AddManager(gpWindowManager, -1) != 0)
+    if (AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gWindowManagerInitError);
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 // Retail preserves next before removing a manager, then closes resources/input.
@@ -105,13 +105,13 @@ short executive::DoDialog(baseManager *manager)
         currentManager = currentManager->m_next;
         count++;
     }
-    if (AddManager(manager, -1) != 0)
+    if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError1);
-    if (dialogExecutive.AddManager(gpMouseManager, -1) != 0)
+    if (dialogExecutive.AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError2);
-    if (dialogExecutive.AddManager(gpWindowManager, -1) != 0)
+    if (dialogExecutive.AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError3);
-    if (dialogExecutive.AddManager(manager, -1) != 0)
+    if (dialogExecutive.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError4);
     dialogExecutive.MainLoop();
     RemoveManager(manager);
@@ -126,15 +126,15 @@ VA(0x0047a3d0, 0xd2)
 short executive::AddManager(baseManager *manager, short priority)
 {
     if (manager == NULL)
-        return 3;
-    if (priority == -1) {
+        return BASE_MANAGER_ERROR;
+    if (priority == BASE_MANAGER_PRIORITY_UNASSIGNED) {
         if (m_managerListTail == NULL)
             priority = 0;
         else
             priority = m_managerListTail->m_priority + 1;
     }
-    if (!manager->m_active && manager->Open(priority) != 0)
-        return 3;
+    if (!manager->m_active && manager->Open(priority) != BASE_MANAGER_SUCCESS)
+        return BASE_MANAGER_ERROR;
     baseManager *current = m_managerListTail;
     while (current != NULL && current->m_priority > priority)
         current = current->m_prev;
@@ -157,7 +157,7 @@ short executive::AddManager(baseManager *manager, short priority)
         current->m_next->m_prev = manager;
         current->m_next = manager;
     }
-    return 0;
+    return BASE_MANAGER_SUCCESS;
 }
 
 VA(0x0047a4b0, 0x76)
@@ -193,11 +193,11 @@ void executive::CallManager(baseManager *manager)
 {
     baseManager *saved = m_activeManager;
     RemoveManager(saved);
-    if (AddManager(manager, -1) != 0)
+    if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gCallManagerError1);
     MainLoop();
     RemoveManager(manager);
-    if (AddManager(saved, -1) != 0)
+    if (AddManager(saved, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gCallManagerError2);
     m_activeManager = saved;
 }

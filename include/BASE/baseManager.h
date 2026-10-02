@@ -5,6 +5,20 @@
 
 struct tag_message;
 
+// clang-format off
+// executive::AddManager appends a manager whose priority is unassigned after
+// the list tail (Buka BASE_MANAGER_PRIORITY_UNASSIGNED).
+H1_ENUM_BEGIN(BaseManagerPriority)
+    BASE_MANAGER_PRIORITY_UNASSIGNED = -1
+H1_ENUM_END(BaseManagerPriority)
+
+// Manager Open/AddManager status (Buka EXEC MANAGER_SUCCESS/MANAGER_ERROR).
+H1_ENUM_BEGIN(BaseManagerStatus)
+    BASE_MANAGER_SUCCESS = 0,
+    BASE_MANAGER_ERROR = 3
+H1_ENUM_END(BaseManagerStatus)
+// clang-format on
+
 H1_ENUM_BEGIN(BaseManagerMessageMask)
     BASE_MANAGER_MESSAGE_MASK_ALL = -1,
     BASE_MANAGER_ACCEPT_MOUSE_MOVE = 4,
