@@ -167,7 +167,7 @@ void searchArray::SeedPosition(
     static int s_mapY;
     static int s_adjacentMonsterX;
     static int s_adjacentMonsterY;
-    static int s_stepCost[2];
+    static int s_stepCost[FINDPATH_STEP_COST_COUNT];
     static signed char s_possibleDirections[MAP_DIRECTION_COUNT];
     static int s_currentCost;
     static int s_hasTarget;
@@ -312,12 +312,20 @@ void searchArray::SeedPosition(
         );
         s_terrain =
             giGroundToTerrain[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_tileIndex];
-        s_stepCost[0] =
-            s_currentNode.distance
-            + CalcTerrainCost(s_terrain, 0, giCurTempMobility - s_currentNode.distance, costMode);
-        s_stepCost[1] =
-            s_currentNode.distance
-            + CalcTerrainCost(s_terrain, 1, giCurTempMobility - s_currentNode.distance, costMode);
+        s_stepCost[FINDPATH_STEP_STRAIGHT] = s_currentNode.distance
+                                             + CalcTerrainCost(
+                                                 s_terrain,
+                                                 FINDPATH_STEP_STRAIGHT,
+                                                 giCurTempMobility - s_currentNode.distance,
+                                                 costMode
+                                             );
+        s_stepCost[FINDPATH_STEP_DIAGONAL] = s_currentNode.distance
+                                             + CalcTerrainCost(
+                                                 s_terrain,
+                                                 FINDPATH_STEP_DIAGONAL,
+                                                 giCurTempMobility - s_currentNode.distance,
+                                                 costMode
+                                             );
         for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
             if (s_possibleDirections[s_direction] == TERRAIN_INVALID)
                 continue;
@@ -395,20 +403,22 @@ void searchArray::SeedPosition(
                             && !(s_targetCell->m_triggerType & MAP_TRIGGER_EVENT)) {
                             s_terrain = giGroundToTerrain[s_targetCell->m_tileIndex];
                             s_adjacentCost = m_cells[s_adjacentX][s_adjacentY].distance;
-                            s_stepCost[0] = s_adjacentCost
-                                            + CalcTerrainCost(
-                                                s_terrain,
-                                                0,
-                                                giCurTempMobility - s_adjacentCost,
-                                                costMode
-                                            );
-                            s_stepCost[1] = s_adjacentCost
-                                            + CalcTerrainCost(
-                                                s_terrain,
-                                                1,
-                                                giCurTempMobility - s_adjacentCost,
-                                                costMode
-                                            );
+                            s_stepCost[FINDPATH_STEP_STRAIGHT] =
+                                s_adjacentCost
+                                + CalcTerrainCost(
+                                    s_terrain,
+                                    FINDPATH_STEP_STRAIGHT,
+                                    giCurTempMobility - s_adjacentCost,
+                                    costMode
+                                );
+                            s_stepCost[FINDPATH_STEP_DIAGONAL] =
+                                s_adjacentCost
+                                + CalcTerrainCost(
+                                    s_terrain,
+                                    FINDPATH_STEP_DIAGONAL,
+                                    giCurTempMobility - s_adjacentCost,
+                                    costMode
+                                );
                             PushPoint(
                                 s_mapX,
                                 s_mapY,
