@@ -1773,8 +1773,135 @@ float philAI::FutureDeflator(int* const resources) {
 // evidence: graph:4;base=0.393076;margin=0.447055;shape=0.297;size=0.768;calls=0.382;alternate=pol20:int philAI::FightValueOfStack(class armyGroup *, class hero *, int, int, int, int)@0x0003fed2
 // HoMM1 retail returns with ret 0x14: five stack arguments.
 VA(0x0041ff2c, 0x764)
-int philAI::FightValueOfStack(class armyGroup*, class hero*, int, int, signed char) {
-    return 0;
+int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, signed char useTown, signed char townId) {
+    int stackWorth5;
+    int slot;
+    int armyValue4;
+    int magicTotal;
+    int numShooters2;
+    int castleValue;
+    float countMod0;
+    float magicMod8;
+    int maxScore3;
+    town* pTown;
+    int spellScore;
+    int stats;
+    int luck;
+    int morale;
+
+    armyValue4 = 0;
+    magicTotal = 0;
+    castleValue = 0;
+    for (slot = 0; slot < 5; slot++) {
+        if (group->m_creatureTypes[slot] != -1) {
+            stackWorth5 = gMonsterDatabase[group->m_creatureTypes[slot]].fightValue * group->m_creatureCounts[slot];
+            if (useHero) {
+                if (group->m_creatureCounts[slot] > 180)
+                    countMod0 = 1.7f;
+                else if (group->m_creatureCounts[slot] > 140)
+                    countMod0 = 1.3f;
+                else if (group->m_creatureCounts[slot] > 100)
+                    countMod0 = 1.1f;
+                else if (group->m_creatureCounts[slot] > 75)
+                    countMod0 = 0.95f;
+                else if (group->m_creatureCounts[slot] > 50)
+                    countMod0 = 0.81f;
+                else if (group->m_creatureCounts[slot] > 35)
+                    countMod0 = 0.57f;
+                else if (group->m_creatureCounts[slot] > 23)
+                    countMod0 = 0.37f;
+                else if (group->m_creatureCounts[slot] > 16)
+                    countMod0 = 0.25f;
+                else if (group->m_creatureCounts[slot] > 11)
+                    countMod0 = 0.13f;
+                else if (group->m_creatureCounts[slot] > 8)
+                    countMod0 = 0.06f;
+                else if (group->m_creatureCounts[slot] > 5)
+                    countMod0 = 0.0f;
+                else if (group->m_creatureCounts[slot] > 3)
+                    countMod0 = -0.05f;
+                else if (group->m_creatureCounts[slot] > 2)
+                    countMod0 = -0.1f;
+                else
+                    countMod0 = -0.14f;
+                if ((gMonsterDatabase[group->m_creatureTypes[slot]].attributes & 4)
+                    || group->m_creatureTypes[slot] == 12 || group->m_creatureTypes[slot] == 24)
+                    countMod0 = countMod0 * 0.7;
+                else if (group->m_creatureTypes[slot] == 20)
+                    countMod0 = countMod0 * 1.2;
+                stackWorth5 = (int)(stackWorth5 * (countMod0 + 1.0f));
+            }
+            armyValue4 += stackWorth5;
+        }
+    }
+    if (useTown) {
+        numShooters2 = 5;
+        pTown = gpGame->GetTown(townId);
+        for (slot = 7; slot <= 12; slot++)
+            if (pTown->m_buildings & (1 << slot))
+                numShooters2 += 4;
+        for (slot = 0; slot <= 4; slot++)
+            if (pTown->m_buildings & (1 << slot))
+                numShooters2++;
+        castleValue = numShooters2 * 120;
+    }
+    if (useHero && heroPointer) {
+        stats = heroPointer->m_primaryStats[0] + heroPointer->m_primaryStats[1] + 20;
+        if (stats < 0)
+            stats = 0;
+        if (stats > 40)
+            stats = 40;
+        armyValue4 = (int)(armyValue4 * gfStatPower[stats]);
+        castleValue = (int)(castleValue * gfStatPower[stats]);
+        morale = heroPointer->m_army.GetMorale(heroPointer, 0);
+        if (morale > 0)
+            armyValue4 = armyValue4 * (morale + 48) / 48;
+        else if (morale < 0)
+            armyValue4 = armyValue4 * (morale + 24) / 24;
+        luck = gpGame->GetLuck(heroPointer, 0);
+        if (luck)
+            armyValue4 = armyValue4 * (luck + 16) / 16;
+        if (heroPointer->m_primaryStats[2] == 1)
+            magicMod8 = 0.25f;
+        else if (heroPointer->m_primaryStats[2] == 2)
+            magicMod8 = 0.5f;
+        else
+            magicMod8 = 1.0f;
+        maxScore3 = -1;
+        for (slot = 0; slot < HERO_SPELL_SLOT_COUNT; slot++) {
+            if (heroPointer->m_spells[slot] >= 0 && (gcSpellAIFlags[heroPointer->m_spells[slot]] & 2)) {
+                spellScore = (int)(giSpellAIValue[heroPointer->m_spells[slot]]
+                                   * ((gcSpellAIFlags[heroPointer->m_spells[slot]] & 1)
+                                          ? (heroPointer->m_primaryStats[2] > 40
+                                                 ? gfSpellPowerMod[40]
+                                                 : gfSpellPowerMod[heroPointer->m_primaryStats[2]])
+                                          : magicMod8));
+                magicTotal += spellScore
+                              * gfSpellCastNumMod[heroPointer->m_spellCharges[slot] < 20
+                                                      ? heroPointer->m_spellCharges[slot]
+                                                      : 20];
+                if (maxScore3 < spellScore)
+                    maxScore3 = spellScore;
+            }
+        }
+        if (magicTotal > maxScore3 * 3.5)
+            magicTotal = (int)(maxScore3 * 3.5);
+        if (magicTotal > armyValue4 * 2)
+            magicTotal = (int)(armyValue4 * 1.25);
+        else if (magicTotal > armyValue4 * 1.5)
+            magicTotal = armyValue4;
+        else if (magicTotal > armyValue4)
+            magicTotal = (int)(armyValue4 * 0.75);
+    }
+    if (castleValue > armyValue4 * 2)
+        castleValue = (int)(armyValue4 * 1.5);
+    else if (castleValue > armyValue4 * 1.5)
+        castleValue = (int)(armyValue4 * 1.25);
+    else if (castleValue > armyValue4)
+        castleValue = (int)(armyValue4 * 0.9);
+    armyValue4 += magicTotal;
+    armyValue4 += castleValue;
+    return armyValue4;
 }
 
 // donor PoL RVA 0x00040aca; preferred Buka symbol ?EvaluateOneTimeCreaturePurchase@philAI@@QAEXHHHAAH00@Z

@@ -105,7 +105,7 @@ public:
     void TurnCostResource(int);
     float TurnValueOfObelisk(int);
     float FutureDeflator(int* const);
-    int FightValueOfStack(class armyGroup*, class hero*, int, int, signed char);
+    int FightValueOfStack(class armyGroup*, class hero*, int, signed char, signed char);
     void EvaluateOneTimeCreaturePurchase(class hero*, int, int, int, int&, int&, int&);
     int QuickCombat(
         class armyGroup*,
@@ -203,6 +203,13 @@ extern short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern short gaiHeroLiveChance[];
 extern signed char bSVSearchArrayInUse;
 extern class searchArray SVSearchArray;
+// FightValueOfStack's primary-stat power curve, per-spell AI flags and
+// values, spell-power duration scale and per-charge cast weights.
+extern float gfStatPower[];
+extern signed char gcSpellAIFlags[];
+extern short giSpellAIValue[];
+extern float gfSpellPowerMod[];
+extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
