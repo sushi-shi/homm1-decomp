@@ -229,7 +229,7 @@ void searchArray::PushCombatPoint(short hex, short direction, unsigned short dis
 // Buka FINDPATH.cpp:113-183; HoMM1 keeps word binary-search bounds.
 VA(0x00424d90, 0x2ab)
 void searchArray::PushPoint(short x, short y, unsigned short direction, unsigned short cost, unsigned short mobility,
-                            char unknownFlag, char rvFlag1, signed char valueX, signed char valueY, char rvFlag2,
+                            char occupied, char rvFlag1, signed char valueX, signed char valueY, char rvFlag2,
                             signed char previousX, signed char previousY)
 {
     if (cost > mobility && mobility != 0)
@@ -277,7 +277,7 @@ void searchArray::PushPoint(short x, short y, unsigned short direction, unsigned
     gSearchQueueNode->y = (signed char)y;
     gSearchQueueNode->direction = direction;
     gSearchQueueNode->distance = cost;
-    gSearchQueueNode->unknownFlag = unknownFlag;
+    gSearchQueueNode->occupied = occupied;
     gSearchQueueNode->rvFlag1 = rvFlag1;
     gSearchQueueNode->valueX = valueX;
     gSearchQueueNode->valueY = valueY;
