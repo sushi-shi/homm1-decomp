@@ -1286,3 +1286,5 @@ DATA(0x004c8038)
 char PacketSend[256];
 DATA(0x004c8290)
 int giNumNetGuests;
+DATA(0x004c9c80)
+outque_t outque;
