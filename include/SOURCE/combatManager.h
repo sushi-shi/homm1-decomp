@@ -105,7 +105,7 @@ public:
     signed char m_mouseDirection;
     signed char m_validDirectionCount;
     class heroWindow *m_winLoseWindow;
-    char m_unknown7d1;
+    signed char m_selectedSpell;
     signed char m_combatResult;
     // --- constructors ---
     combatManager(void);
@@ -135,7 +135,7 @@ public:
     // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
     void ViewArmy(class army *, int, int);
     int HasValidSpellTarget(int);
-    int ViewSpells(int);
+    signed char ViewSpells(int);
     int FindResurrectArmyIndex(int, int, int);
     int ValidSpellTarget(int, int);
     void SpellMessage(int, int);
@@ -275,6 +275,10 @@ public:
 int ValidHex(int);
 extern combatManager *gpCombatManager;
 short WinCombatHandler(struct tag_message &);
+short CombatSpecialHandler(struct tag_message &);
+short HandleCastSpell(struct tag_message &);
+// Spell-book hover help lines (0x00493a78).
+extern char *cSpellHelp[];
 // Captured artifacts shown page by page on the victory window.
 extern signed char iMaxTransferArtifacts;
 extern int iCurTransferArtifact;
