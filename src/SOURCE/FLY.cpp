@@ -107,11 +107,11 @@ short army::ValidFlight(short destination, signed char useDestination)
         else
             targetHex = targetHex - 1;
         if (opponent->m_facing == ARMY_FACING_LEFT)
-            directionMask = 0x10;
+            directionMask = 1 << COMBAT_DIRECTION_WEST;
         else
-            directionMask = 2;
+            directionMask = 1 << COMBAT_DIRECTION_EAST;
     }
-    while (directionMask != 0x3f) {
+    while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
         dir = GetBestDirection(targetHex, m_hex, directionMask);
         nextHex = GetAdjacentCellIndex(targetHex, dir);
         if (ValidHex(nextHex) && CanFit(&nextHex)) {
@@ -120,7 +120,7 @@ short army::ValidFlight(short destination, signed char useDestination)
                 m_attackDirection = OppositeDirection(dir);
             } else {
                 attackDirections = ~GetAttackMask(m_moveTargetHex, 0, -1);
-                for (n = 0; n < 8; n++) {
+                for (n = 0; n < COMBAT_DIRECTION_COUNT; n++) {
                     if (attackDirections & (1 << n))
                         m_attackDirection = n;
                 }
@@ -136,10 +136,10 @@ short army::ValidFlight(short destination, signed char useDestination)
         else
             targetHex = targetHex + 1;
         if (opponent->m_facing == ARMY_FACING_LEFT)
-            directionMask = 2;
+            directionMask = 1 << COMBAT_DIRECTION_EAST;
         else
-            directionMask = 0x10;
-        while (directionMask != 0x3f) {
+            directionMask = 1 << COMBAT_DIRECTION_WEST;
+        while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
             dir = GetBestDirection(targetHex, m_hex, directionMask);
             nextHex = GetAdjacentCellIndex(targetHex, dir);
             if (ValidHex(nextHex) && CanFit(&nextHex)) {
