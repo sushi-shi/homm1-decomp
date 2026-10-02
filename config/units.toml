@@ -397,3 +397,13 @@ flags = "cpp_carcass"
 unit = "BASE/PrintMemoryLeaks"
 source = "src/BASE/PrintMemoryLeaks.cpp"
 flags = "cpp_o2"
+
+[[unit]]
+unit = "BASE/Icon2bc"
+source = "src/BASE/Icon2bc.asm"
+flags = "cpp_carcass"
+
+[[unit]]
+unit = "BASE/Iconf2bc"
+source = "src/BASE/Iconf2bc.asm"
+flags = "cpp_carcass"

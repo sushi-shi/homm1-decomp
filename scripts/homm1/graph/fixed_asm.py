@@ -58,6 +58,20 @@ UNITS = {
                           "?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
         ),
     ),
+    "BASE/Icon2bc": FixedAsmUnit(
+        source="src/BASE/Icon2bc.asm",
+        claims=(
+            FixedAsmClaim(0x0047CA44, 0x25F,
+                          "?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
+        ),
+    ),
+    "BASE/Iconf2bc": FixedAsmUnit(
+        source="src/BASE/Iconf2bc.asm",
+        claims=(
+            FixedAsmClaim(0x0047CCA4, 0x258,
+                          "?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z"),
+        ),
+    ),
     "BASE/Iconm2b": FixedAsmUnit(
         source="src/BASE/Iconm2b.asm",
         claims=(
