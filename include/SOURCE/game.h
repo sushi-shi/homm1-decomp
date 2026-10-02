@@ -51,6 +51,13 @@ H1_ENUM_BEGIN(CalendarPeriodType)
     CALENDAR_PERIOD_PLAGUE = 2
 H1_ENUM_END(CalendarPeriodType)
 
+// The first two game::m_mines records are the unique sites: Dragon City
+// (pays 1000 gold a day) and the Lighthouse (ship movement).
+H1_ENUM_BEGIN(GameMineSlot)
+    MINE_SLOT_DRAGON_CITY = 0,
+    MINE_SLOT_LIGHTHOUSE = 1
+H1_ENUM_END(GameMineSlot)
+
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
 // and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
 // 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).
