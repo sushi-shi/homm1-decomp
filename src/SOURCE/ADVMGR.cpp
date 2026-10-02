@@ -24,6 +24,9 @@
 DATA(0x004c5170)
 int giSeedingValid;
 
+// UpdBottomViewHero's per-creature mons32.icn frame width.
+extern signed char gMons32Width[];
+
 // clang-format off
 H1_ENUM_BEGIN(AdventureButtonConstant)
     BUTTON_BROADCAST_ARG = 1,
@@ -56,6 +59,8 @@ H1_ENUM_BEGIN(BottomViewMode)
     BOTTOM_VIEW_NONE = 0,
     BOTTOM_VIEW_NEW_TURN = 1,
     BOTTOM_VIEW_KINGDOM = 2,
+    BOTTOM_VIEW_HERO = 3,
+    BOTTOM_VIEW_ENEMY_TURN = 4,
     BOTTOM_VIEW_RESOURCE = 5,
     BOTTOM_VIEW_OVERRIDE_DISABLED = 6
 H1_ENUM_END(BottomViewMode)
@@ -827,7 +832,96 @@ void advManager::ClearBottomView(void)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
 VA(0x0042cc7e, 0x5bf)
-signed char advManager::UpdBottomViewEnemyTurn(void) { return 0; }
+signed char advManager::UpdBottomViewEnemyTurn(void) {
+    signed char updated;
+    tag_message message;
+
+    updated = 0;
+    message.type = MESSAGE_WIDGET;
+    if (iCurBottomView != BOTTOM_VIEW_ENEMY_TURN) {
+        updated = 1;
+        gbForceUpdate = 1;
+        ClearBottomView();
+        iCurBottomView = BOTTOM_VIEW_ENEMY_TURN;
+
+        m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
+                                                       BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
+                                                       "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+        if (!m_bottomViewPrimaryWidgets[0])
+            MemError();
+        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], 1000);
+
+        m_bottomViewPrimaryWidgets[1] = new iconWidget(493, 403, 118, 51, "hourglas.icn", 0, 0,
+                                                       BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+        if (!m_bottomViewPrimaryWidgets[1])
+            MemError();
+        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], 1010);
+    }
+
+    if (gbForceUpdate || KBTickCount() - iLastSandAnimTime > 300) {
+        iLastSandAnimTime = KBTickCount();
+        iLastAnimFrame = m_updateMaxX;
+        if (KBTickCount() - iLastNewSandAnimTime > 300) {
+            iLastNewSandAnimTime = KBTickCount();
+            iSandAnim++;
+            if (iSandAnim >= 20)
+                iSandAnim = 16;
+            updated = 1;
+            if (m_bottomViewPrimaryWidgets[3]) {
+                message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+                message.payload.widget.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3;
+                message.payload.widget.data.value = iSandAnim + 11;
+                m_adventureWindow->BroadcastMessage(message);
+            } else {
+                m_bottomViewPrimaryWidgets[3] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iSandAnim + 11, 0,
+                                                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 3, 16, 1);
+                if (!m_bottomViewPrimaryWidgets[3])
+                    MemError();
+                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[3], 1020);
+            }
+        }
+    }
+
+    if (gbForceUpdate || iCurBottomViewEnemy != giCurPlayer) {
+        updated = 1;
+        iCurBottomViewEnemy = giCurPlayer;
+        if (iCurBottomViewEnemy != giCurPlayer)
+            iCurHourGlassPhase = 0;
+        if (m_bottomViewPrimaryWidgets[2]) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2;
+            message.payload.widget.data.value = gpGame->m_players[giCurPlayer].Color();
+            m_adventureWindow->BroadcastMessage(message);
+        } else {
+            m_bottomViewPrimaryWidgets[2] =
+                new iconWidget(495, 405, 50, 47, "brcrest.icn", gpGame->m_players[giCurPlayer].Color(), 0,
+                               BOTTOM_VIEW_DRAW_FIRST_WIDGET + 2, 16, 1);
+            if (!m_bottomViewPrimaryWidgets[2])
+                MemError();
+            m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[2], 1030);
+        }
+    }
+
+    if (gbForceUpdate || iCurHourGlassPhase < iLastHourGlassPhase || iLastHourGlassPhase < 0
+        || (iCurHourGlassPhase > iLastHourGlassPhase && KBTickCount() - giLastHourGlassUpdateTime >= 700)) {
+        updated = 1;
+        iLastHourGlassPhase = iCurHourGlassPhase;
+        giLastHourGlassUpdateTime = KBTickCount();
+        if (m_bottomViewPrimaryWidgets[4]) {
+            message.payload.widget.command = WIDGET_COMMAND_SET_FRAME;
+            message.payload.widget.id = BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4;
+            message.payload.widget.data.value = iCurHourGlassPhase + 1;
+            m_adventureWindow->BroadcastMessage(message);
+        } else {
+            m_bottomViewPrimaryWidgets[4] = new iconWidget(559, 405, 50, 47, "hourglas.icn", iCurHourGlassPhase + 1,
+                                                           0, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 4, 16, 1);
+            if (!m_bottomViewPrimaryWidgets[4])
+                MemError();
+            m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[4], 1040);
+        }
+    }
+    return updated;
+}
 
 // donor PoL RVA 0x000613b0; preferred Buka symbol ?UpdBottomViewNewTurn@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
@@ -1029,7 +1123,105 @@ signed char advManager::UpdBottomViewKingdom(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.635193;margin=0.117414;shape=0.302;size=0.961;calls=0.625;strings=mons32.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewHero(void)@0x00061dd8
 VA(0x0042dde5, 0x62c)
-signed char advManager::UpdBottomViewHero(void) { return 0; }
+signed char advManager::UpdBottomViewHero(void) {
+    short slotNum;
+    signed char creatureType;
+    int n;
+    int qtyX;
+    char* countStr[5];
+    short nStacks;
+    short iCrest;
+    hero* targetHero;
+    int y;
+    int x;
+    char* heroName;
+
+    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_HERO)
+        return 0;
+
+    ClearBottomView();
+    iCurBottomView = BOTTOM_VIEW_HERO;
+    targetHero = gpGame->GetHero(gpCurPlayer->CurrentHero());
+    nStacks = 0;
+
+    m_bottomViewPrimaryWidgets[0] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
+                                                   BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
+                                                   "stonback.icn", 0, 0, BOTTOM_VIEW_DRAW_FIRST_WIDGET, 16, 1);
+    if (!m_bottomViewPrimaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+
+    iCrest = gpCurPlayer->Color() * 4 + targetHero->m_unknown1c;
+    m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, 0,
+                                                   BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, 16, 1);
+    if (!m_bottomViewPrimaryWidgets[1])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+
+    heroName = static_cast<char*>(malloc(9));
+    strcpy(heroName, targetHero->m_shortName);
+    heroName[8] = 0;
+    m_bottomViewSecondaryWidgets[0] = new textWidget(475, 418, 66, 12, heroName, "smalfont.fnt", 1, 2100, 512);
+    if (!m_bottomViewSecondaryWidgets[0])
+        MemError();
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+
+    for (n = 0; n < 5; n++) {
+        if (targetHero->m_army.m_creatureTypes[n] != -1)
+            nStacks++;
+    }
+    if (nStacks) {
+        slotNum = 0;
+        for (n = 0; n < 5; n++) {
+            creatureType = targetHero->m_army.m_creatureTypes[n];
+            if (creatureType != -1) {
+                countStr[slotNum] = static_cast<char*>(malloc(6));
+                sprintf(countStr[slotNum], "%d", targetHero->m_army.m_creatureCounts[n]);
+                if (slotNum > 2)
+                    y = 3;
+                else
+                    y = 38;
+                if (slotNum == 0) {
+                    if (nStacks > 2)
+                        x = 101;
+                    else
+                        x = 77;
+                } else if (slotNum == 1) {
+                    if (nStacks == 2)
+                        x = 28;
+                    else
+                        x = 52;
+                } else if (slotNum == 2) {
+                    x = 3;
+                } else if (slotNum == 3) {
+                    if (nStacks == 4)
+                        x = 77;
+                    else
+                        x = 101;
+                } else {
+                    x = 52;
+                }
+                m_bottomViewPrimaryWidgets[slotNum + 2] = new iconWidget(x + 480, y + 392, 32, 28, "mons32.icn",
+                                                                      creatureType, 0, slotNum + 2002, 16, 1);
+                if (!m_bottomViewPrimaryWidgets[slotNum + 2])
+                    MemError();
+                if (gMons32Width[creatureType] < 28 && strlen(countStr[slotNum]) <= 2)
+                    qtyX = x + 30;
+                else
+                    qtyX = gMons32Width[creatureType] + x + 2;
+                m_bottomViewSecondaryWidgets[slotNum + 1] =
+                    new textWidget(qtyX + 480, y + 414, strlen(countStr[slotNum]) * 5, 12, countStr[slotNum], "smalfont.fnt",
+                                   1, slotNum + 2101, 512);
+                if (!m_bottomViewSecondaryWidgets[slotNum + 1])
+                    MemError();
+                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[slotNum + 2], -1);
+                m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[slotNum + 1], -1);
+                slotNum++;
+            }
+        }
+    }
+    return 1;
+}
 
 // donor PoL RVA 0x0006235b; preferred Buka symbol ?HeroQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order

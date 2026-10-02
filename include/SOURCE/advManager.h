@@ -356,6 +356,12 @@ extern class searchArray *gpSearchArray;
 extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
+// UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
+extern long iLastSandAnimTime;
+extern long iLastNewSandAnimTime;
+extern int iSandAnim;
+extern int iLastHourGlassPhase;
+extern long giLastHourGlassUpdateTime;
 extern signed char giShowComputerRoute;
 extern short gMapX;
 extern short gMapY;

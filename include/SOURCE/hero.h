@@ -20,7 +20,9 @@ class hero {
 public:
     signed char m_id;
     signed char m_owner;
-    char m_name[0x1a];
+    char m_name[0x11];
+    // UpdBottomViewHero copies this 8-character label into its name widget.
+    char m_shortName[9];
     signed char m_unknown1c;
     char m_unknown1d;
     signed char m_x;
