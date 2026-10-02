@@ -1948,22 +1948,22 @@ void advManager::DrawCell(
                     m_cloudOverlayIcon, gpWindowManager->m_screen, pixelX7, pixelY3, s_drawCloudFrame - 1, 0
                 );
         } else if (m_routeShown && m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX]) {
-            if (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & 0x20)
+            if (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FLIPPED)
                 FlipIconToBitmap(
                     m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7 + 31, pixelY3 + 2,
-                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & 0x1f) - 1, 0
+                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1, 0
                 );
             else
                 IconToBitmap(
                     m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7, pixelY3 + 2,
-                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & 0x1f) - 1, 0
+                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1, 0
                 );
         }
         return;
     }
     if (drawMask & ADVMGR_DRAW_GROUND) {
         s_drawGroundTile = cell0->m_flags;
-        s_drawGroundTile <<= 14;
+        s_drawGroundTile <<= MAP_CELL_GROUND_FLIP_SHIFT;
         s_drawGroundTile |= cell0->m_tileIndex;
         TileToBitmap(m_groundTiles, s_drawGroundTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         if (cell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) {
@@ -4148,6 +4148,20 @@ H1_ENUM_CONST_BEGIN(ControlPanelDialogConstant)
     CONTROL_SHOW_ENEMY_MOVES_TEXT = 16
 H1_ENUM_CONST_END(ControlPanelDialogConstant)
 
+// UpdateCPanel's button frames: off/on pairs for music and sound, then one
+// frame per walk speed, show-route and enemy-moves state and music source
+// (the setting's value added to the _FIRST frame).
+H1_ENUM_CONST_BEGIN(ControlPanelFrame)
+    CPANEL_FRAME_MUSIC_OFF = 10,
+    CPANEL_FRAME_MUSIC_ON = 11,
+    CPANEL_FRAME_SOUND_OFF = 12,
+    CPANEL_FRAME_SOUND_ON = 13,
+    CPANEL_FRAME_WALK_SPEED_FIRST = 14,
+    CPANEL_FRAME_SHOW_ROUTE_FIRST = 21,
+    CPANEL_FRAME_ENEMY_MOVES_FIRST = 23,
+    CPANEL_FRAME_MUSIC_SOURCE_FIRST = 27
+H1_ENUM_CONST_END(ControlPanelFrame)
+
 // CPanelHandler's right-click help: the gCPanelHelp row for each control.
 H1_ENUM_BEGIN(ControlPanelHelp)
     CPANEL_HELP_NONE = -1,
@@ -4200,20 +4214,6 @@ short advManager::ControlPanel(void) {
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
-// UpdateCPanel's button frames: off/on pairs for music and sound, then one
-// frame per walk speed, show-route and enemy-moves state and music source
-// (the setting's value added to the _FIRST frame).
-H1_ENUM_CONST_BEGIN(ControlPanelFrame)
-    CPANEL_FRAME_MUSIC_OFF = 10,
-    CPANEL_FRAME_MUSIC_ON = 11,
-    CPANEL_FRAME_SOUND_OFF = 12,
-    CPANEL_FRAME_SOUND_ON = 13,
-    CPANEL_FRAME_WALK_SPEED_FIRST = 14,
-    CPANEL_FRAME_SHOW_ROUTE_FIRST = 21,
-    CPANEL_FRAME_ENEMY_MOVES_FIRST = 23,
-    CPANEL_FRAME_MUSIC_SOURCE_FIRST = 27
-H1_ENUM_CONST_END(ControlPanelFrame)
-
         cPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
@@ -5297,13 +5297,13 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
             x += normalDirTable[dir].x;
             y += normalDirTable[dir].y;
             if (j == 0) {
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = 14;
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = ROUTE_CELL_DESTINATION;
             } else {
                 fromDirection = gpSearchArray->m_directions[j - 1];
                 m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = gRouteFrame[fromDirection][dir];
             }
             if (remMob >= 0) {
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] + 14;
+                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] + ROUTE_CELL_REACHABLE_OFFSET;
                 canReach = 1;
             }
         }

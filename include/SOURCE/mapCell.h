@@ -23,7 +23,10 @@ H1_ENUM_CONST_BEGIN(MapCellConstant)
     // i / 20); tiles below 20 are water. The seven terrains' runs make the
     // 140-entry giGroundToTerrain table InitVars fills.
     MAP_CELL_TILES_PER_TERRAIN = 20,
-    MAP_CELL_GROUND_TILE_COUNT = 140
+    MAP_CELL_GROUND_TILE_COUNT = 140,
+    // DrawCell shifts m_flags' two ground-flip bits to TileToBitmap's bits
+    // 14/15 above the tile index.
+    MAP_CELL_GROUND_FLIP_SHIFT = 14
 H1_ENUM_CONST_END(MapCellConstant)
 
 // m_flags (DrawCell, ViewWorld, ComboDraw, FINDPATH, the hero cursor). The two
