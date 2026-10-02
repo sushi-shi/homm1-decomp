@@ -316,6 +316,12 @@ unit = "SOURCE/SETUP"
 source = "src/SOURCE/SETUP.cpp"
 flags = "cpp_carcass_eh"
 
+# Retail int3 padding opens the combat spell-AI object at 0x00437010.
+[[unit]]
+unit = "SOURCE/SPELLAI"
+source = "src/SOURCE/SPELLAI.cpp"
+flags = "cpp_carcass"
+
 [[unit]]
 unit = "SOURCE/SPELLS"
 source = "src/SOURCE/SPELLS.cpp"
