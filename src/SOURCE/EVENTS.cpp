@@ -402,7 +402,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     gSpellNames[cell->m_objectMetadata - 1]);
             if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
                 pHero->AddSpell(cell->m_objectMetadata - 1,
-                                    pHero->m_primaryStats[3], 0);
+                                    pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
                 EventWindow(EVENT_TEXT_CUSTOM, NORMAL_DIALOG_TYPE_OK, gText, NORMAL_DIALOG_SPELL, cell->m_objectMetadata - 1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             } else {
                 strcat(gText, "  Unfortunately, you have no Magic Book to record the spell with.");
@@ -1325,7 +1325,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
         case MAP_OBJECT_DRAGON_CITY:
             if (gpGame->m_mineOwners[0] == giCurPlayer)
                 break;
-            for (counter = 0; counter < 5; counter++) {
+            for (counter = 0; counter < ARMY_GROUP_SLOT_COUNT; counter++) {
                 gpMonGroup->m_creatureTypes[counter] = CREATURE_DRAGON;
                 gpMonGroup->m_creatureCounts[counter] = 1;
             }
@@ -1484,7 +1484,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
         case MAP_OBJECT_SPELL_SHRINE:
             if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
                 eventHero->AddSpell(cell->m_objectMetadata - 1,
-                                    eventHero->m_primaryStats[3], 0);
+                                    eventHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 0);
             break;
         case MAP_OBJECT_TOWN:
             gpPhilAI->TownEvent(cell, eventHero, x, y);

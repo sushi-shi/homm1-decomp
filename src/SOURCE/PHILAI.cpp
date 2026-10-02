@@ -363,8 +363,8 @@ void philAI::CheckReload(hero* pHero) {
         0,
         0
     );
-    for (mapX = 0; mapX < 72; mapX++) {
-        for (mapY = 0; mapY < 72; mapY++) {
+    for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
+        for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
             if (gpSearchArray->m_cells[mapX][mapY].visited) {
                 visitedCell = gpAdvManager->GetCell(mapX, mapY);
                 switch (visitedCell->m_triggerType) {
@@ -423,8 +423,8 @@ void philAI::CheckBerserk(hero* pHero) {
         heroFightValue = 100;
     if (heroFightValue < 30000)
         return;
-    for (x = 0; x < 72; x++) {
-        for (y = 0; y < 72; y++) {
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
             switch (cell->m_triggerType) {
             case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
@@ -778,7 +778,7 @@ void philAI::GetTurnAIVars(int player) {
                 yPos = gpGame->GetHero(pPlayer->m_heroIds[hIndex])->m_y;
                 for (x = xPos - 10; x <= xPos + 10; x++) {
                     for (y = yPos - 10; y <= yPos + 10; y++) {
-                        if (x >= 0 && x < 72 && y >= 0 && y < 72) {
+                        if (x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE) {
                             mineValue = abs(abs(x - xPos) + abs(y - yPos) - 4) >> 2;
                             if (gaiTurnValueOfMine[x][y] > mineValue)
                                 gaiTurnValueOfMine[x][y] = mineValue;
@@ -974,12 +974,12 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
     );
     gpSearchArray->m_cells[pHero->m_x][pHero->m_y].visited = 0;
     colPhase = -1;
-    for (x = 0; x < 72; x++) {
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
         rowCnt = -1;
         colPhase++;
         if (colPhase >= spacing)
             colPhase = 0;
-        for (y = 0; y < 72; y++) {
+        for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             rowCnt++;
             if (rowCnt >= spacing)
                 rowCnt = 0;
@@ -1231,7 +1231,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
         }
     }
     numFilledSlots = 0;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
         if (townPointer->m_army.m_creatureCounts[i] > 0)
             numFilledSlots++;
     curBenefit = static_cast<float>(GetBuildingBaseResourceValue(
@@ -1270,7 +1270,7 @@ void philAI::ValueOfBuyingBuilding(town* townPointer, int building, int& resourc
     case BUILDING_SLOT_DWELLING_6:
         if (numFilledSlots == 5) {
             creatureLocated = 0;
-            for (i = 0; i < 5; i++)
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                 if (gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST] == townPointer->m_army.m_creatureTypes[i])
                     creatureLocated = 1;
             if (!creatureLocated)
@@ -1395,7 +1395,7 @@ void philAI::ValueOfBuyingCreature(
         if (occupant->m_heroClass == creature / 6)
             creatRV = static_cast<int>(creatRV * AI_CREATURE_SAME_RACE_FACTOR);
         if ((gMonsterDatabase[creature].stats.attributes & 8)) {
-            for (n = 0; n < 5; n++) {
+            for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
                     && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & 8))
                     archers++;
@@ -1408,7 +1408,7 @@ void philAI::ValueOfBuyingCreature(
         );
     }
     if ((gMonsterDatabase[creature].stats.attributes & 8)) {
-        for (slotNum = 0; slotNum < 5; slotNum++) {
+        for (slotNum = 0; slotNum < ARMY_GROUP_SLOT_COUNT; slotNum++) {
             if (townPointer->m_army.m_creatureTypes[slotNum] != CREATURE_NONE
                 && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].stats.attributes & 8))
                 archers++;
@@ -1450,7 +1450,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
         if ((townPointer->m_buildings & (1 << (curDwelling + 7)))
             && townPointer->m_garrison[curDwelling] > 0) {
             canAdd = 0;
-            for (iArmy = 0; iArmy < 5; iArmy++) {
+            for (iArmy = 0; iArmy < ARMY_GROUP_SLOT_COUNT; iArmy++) {
                 if (townPointer->m_army.m_creatureTypes[iArmy] == CREATURE_NONE
                     || townPointer->m_army.m_creatureTypes[iArmy] == mon)
                     canAdd = 1;
@@ -1927,8 +1927,8 @@ int philAI::StrategicValueOfPosition(hero* pHero, short targetX, short targetY, 
     }
     pSearch->SeedPosition(targetX, targetY, 2, newSeedRange, inBoat, 0, 999, pHero->m_heroClass, -1, -1, 0, 0);
     pSearch->m_cells[targetX][targetY].visited = 0;
-    for (x = 0; x < 72; x++) {
-        for (thisY = 0; thisY < 72; thisY++) {
+    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+        for (thisY = 0; thisY < MAP_CELL_GRID_SIZE; thisY++) {
             if (pSearch->m_cells[x][thisY].visited) {
                 cell = gpAdvManager->GetCell(x, thisY);
                 if ((!immediate && (cell->m_triggerType & MAP_TRIGGER_EVENT)) || (immediate && cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))) {
@@ -2106,7 +2106,7 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
     armyWorth = 0;
     magicTotal = 0;
     castleValue = 0;
-    for (slot = 0; slot < 5; slot++) {
+    for (slot = 0; slot < ARMY_GROUP_SLOT_COUNT; slot++) {
         if (group->m_creatureTypes[slot] != CREATURE_NONE) {
             worth = gMonsterDatabase[group->m_creatureTypes[slot]].fightValue * group->m_creatureCounts[slot];
             if (useHero) {
@@ -2160,7 +2160,7 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
         castleValue = nArrows * 120;
     }
     if (useHero && heroPointer) {
-        stats = heroPointer->m_primaryStats[0] + heroPointer->m_primaryStats[1] + 20;
+        stats = heroPointer->m_primaryStats[HERO_PRIMARY_ATTACK] + heroPointer->m_primaryStats[HERO_PRIMARY_DEFENSE] + 20;
         if (stats < 0)
             stats = 0;
         if (stats > 40)
@@ -2175,9 +2175,9 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
         luck = gpGame->GetLuck(heroPointer, NULL);
         if (luck)
             armyWorth = armyWorth * (luck + 16) / 16;
-        if (heroPointer->m_primaryStats[2] == 1)
+        if (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 1)
             fPowerMod = 0.25f;
-        else if (heroPointer->m_primaryStats[2] == 2)
+        else if (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 2)
             fPowerMod = 0.5f;
         else
             fPowerMod = 1.0f;
@@ -2186,9 +2186,9 @@ int philAI::FightValueOfStack(armyGroup* group, hero* heroPointer, int useHero, 
             if (heroPointer->m_spells[slot] >= 0 && (gcSpellAIFlags[heroPointer->m_spells[slot]] & 2)) {
                 spellScore = static_cast<int>(giSpellAIValue[heroPointer->m_spells[slot]]
                                    * ((gcSpellAIFlags[heroPointer->m_spells[slot]] & 1)
-                                          ? (heroPointer->m_primaryStats[2] > 40
+                                          ? (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] > 40
                                                  ? gfBattleStat[40]
-                                                 : gfBattleStat[heroPointer->m_primaryStats[2]])
+                                                 : gfBattleStat[heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER]])
                                           : fPowerMod));
                 magicTotal += spellScore
                               * gfSpellCastNumMod[heroPointer->m_spellCharges[slot] < 20
@@ -2250,7 +2250,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
         return;
     purchaseFightValue = purchaseCount * gMonsterDatabase[creature].fightValue;
     if (pHero->m_army.CanJoin(creature) == 0) {
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (pHero->m_army.m_creatureTypes[i] == creature) {
                 replacementSlot = -1;
                 i = 5;
@@ -2438,7 +2438,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             }
             gbPossibleShipyardFound = 1;
         }
-    } else if (heroPointer->m_primaryStats[3] > 0 && !heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK)
+    } else if (heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] > 0 && !heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK)
                && (townPointer->m_buildings & 1)) {
         if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= 500) {
             gpAdvManager->GiveArtifact(heroPointer, 37);
@@ -2450,11 +2450,11 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
     if ((townPointer->m_buildings & 1) && (doInteraction || heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK))) {
         for (i = 0; i < gMageGuildSpellCount[townPointer->m_buildState]; i++) {
             newLearned = heroPointer->AddSpell(
-                townPointer->m_mageGuildSpells[i], heroPointer->m_primaryStats[3], doInteraction
+                townPointer->m_mageGuildSpells[i], heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], doInteraction
             );
-            *value += StatChangeValue(heroPointer->m_primaryStats[3] - newLearned, heroPointer->m_primaryStats[3])
+            *value += StatChangeValue(heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] - newLearned, heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE])
                       * giSpellAIValue[townPointer->m_mageGuildSpells[i]]
-                      * ((gcSpellAIFlags[townPointer->m_mageGuildSpells[i]] & 1) ? heroPointer->m_primaryStats[3]
+                      * ((gcSpellAIFlags[townPointer->m_mageGuildSpells[i]] & 1) ? heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE]
                                                                                  : 1);
         }
     }
@@ -2462,7 +2462,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
     garrisonFV = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0);
     fTownShare = static_cast<float>(garrisonFV) / (heroStrength + garrisonFV);
     statSum = 0;
-    statSum = heroPointer->m_primaryStats[0] + heroPointer->m_primaryStats[1];
+    statSum = heroPointer->m_primaryStats[HERO_PRIMARY_ATTACK] + heroPointer->m_primaryStats[HERO_PRIMARY_DEFENSE];
     if (statSum > 10)
         statSum = 10;
     if (townPointer->m_buildings & 0x40)
@@ -2487,17 +2487,17 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
             transferRating = 0;
         room = 0;
         if (toHero) {
-            for (i = 0; i < 5; i++)
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                 if (heroPointer->m_army.m_creatureCounts[i] <= 0)
                     room = 1;
         } else {
-            for (i = 0; i < 5; i++)
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                 if (townPointer->m_army.m_creatureCounts[i] <= 0)
                     room = 1;
         }
         if (!room) {
-            for (i = 0; i < 5; i++) {
-                for (j = 0; j < 5; j++) {
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+                for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
                     if (townPointer->m_army.m_creatureTypes[i] == heroPointer->m_army.m_creatureTypes[j]) {
                         room = 1;
                         break;
@@ -2520,16 +2520,16 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
     while (nRunning) {
         if (!toHero) {
             armyCount = 0;
-            for (i = 0; i < 5; i++)
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                 if (heroPointer->m_army.m_creatureTypes[i] != CREATURE_NONE)
                     armyCount += heroPointer->m_army.m_creatureCounts[i];
             if (armyCount <= 1)
                 return;
         }
         pick = -1;
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (pick == -1) {
-                for (j = 0; j < 5; j++) {
+                for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
                     if (fromArmy->m_creatureTypes[i] != CREATURE_NONE
                         && fromArmy->m_creatureTypes[i] == toArmy->m_creatureTypes[j]) {
                         pick = i;
@@ -2544,7 +2544,7 @@ void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doI
                 speedLimit = 1;
             else
                 speedLimit = 3;
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (fromArmy->m_creatureTypes[i] != CREATURE_NONE) {
                     stackFV = gMonsterDatabase[fromArmy->m_creatureTypes[i]].fightValue
                               * fromArmy->m_creatureCounts[i];
@@ -2828,7 +2828,7 @@ signed char philAI::CombatMonsterEvent(hero* h, signed char monType, int* pCount
     memset(gpMonGroup->m_creatureTypes, -1, sizeof(gpMonGroup->m_creatureTypes));
     memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
     if (*pCount / 5 > 0) {
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             gpMonGroup->m_creatureTypes[i] = monType;
             gpMonGroup->m_creatureCounts[i] = *pCount / 5;
         }
@@ -2839,7 +2839,7 @@ signed char philAI::CombatMonsterEvent(hero* h, signed char monType, int* pCount
     }
     result = gpPhilAI->QuickCombat(&h->m_army, h, gpMonGroup, NULL, 0, 0, casualtyRatio, fLoss);
     newCount = 0;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
         newCount += gpMonGroup->m_creatureCounts[i];
     *pCount = newCount;
     if (result != 0)
@@ -2868,7 +2868,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     guards[1] = 3;
     guards[2] = 5;
     guards[3] = 10;
-    for (n = 0; n < 5; n++) {
+    for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
         gpMonGroup->m_creatureTypes[n] = CREATURE_GHOST;
         gpMonGroup->m_creatureCounts[n] = guards[cell->m_objectMetadata - 2];
     }
@@ -3103,7 +3103,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     switch (pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
     case MAP_OBJECT_ARTIFACT:
         iArtifactChoice1 = gArtifactBaseRV[pEventCell->m_objectIndex];
-        for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
+        for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
             gpMonGroup->m_creatureTypes[iEventLoop] = CREATURE_ROGUE;
             gpMonGroup->m_creatureCounts[iEventLoop] = 10;
         }
@@ -3162,7 +3162,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         memset(gpMonGroup->m_creatureTypes, -1, sizeof(gpMonGroup->m_creatureTypes));
         memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
         if (iMonsterCount / 5 > 0) {
-            for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
+            for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
                 gpMonGroup->m_creatureTypes[iEventLoop] = pEventCell->m_objectIndex;
                 gpMonGroup->m_creatureCounts[iEventLoop] = iMonsterCount / 5;
             }
@@ -3352,15 +3352,15 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                          + gafAITurnCostResource[RESOURCE_GOLD] * 500.0f);
         break;
     case MAP_OBJECT_SPELL_SHRINE:
-        if (pHero->m_primaryStats[3] > 0 && pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
-            iEventLoop = pHero->AddSpell(pEventCell->m_objectMetadata - 1, pHero->m_primaryStats[3], 1);
+        if (pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] > 0 && pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
+            iEventLoop = pHero->AddSpell(pEventCell->m_objectMetadata - 1, pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE], 1);
             iEventRV = giSpellAIValue[pEventCell->m_objectMetadata - 1];
-            iEventRV = static_cast<int>(StatChangeValue(pHero->m_primaryStats[3] - iEventLoop, pHero->m_primaryStats[3])
+            iEventRV = static_cast<int>(StatChangeValue(pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] - iEventLoop, pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE])
                              * iEventRV);
             if (gcSpellAIFlags[pEventCell->m_objectMetadata - 1] & 1)
                 iEventRV = static_cast<int>(iEventRV
-                                 * (pHero->m_primaryStats[3] > 40 ? gfStatPower[40]
-                                                                  : gfStatPower[pHero->m_primaryStats[3]]));
+                                 * (pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] > 40 ? gfStatPower[40]
+                                                                  : gfStatPower[pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE]]));
         } else {
             iEventRV = 0;
         }
@@ -3468,7 +3468,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 goldCost = 2000;
                 break;
             }
-            for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
+            for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
                 gpMonGroup->m_creatureTypes[iEventLoop] = CREATURE_GHOST;
                 gpMonGroup->m_creatureCounts[iEventLoop] = guardCount1;
             }
@@ -3482,7 +3482,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         break;
     case MAP_OBJECT_DRAGON_CITY:
         prize5 = static_cast<int>(gaiTurnValueOfMine[x][y] * gafAITurnCostResource[RESOURCE_GOLD] * 1000.0f * 1.5);
-        for (iEventLoop = 0; iEventLoop < 5; iEventLoop++) {
+        for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
             gpMonGroup->m_creatureTypes[iEventLoop] = CREATURE_DRAGON;
             gpMonGroup->m_creatureCounts[iEventLoop] = 1;
         }
@@ -3505,8 +3505,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
         }
         bEvaluatingTravelGates = 0;
         bestRV1 = -9999;
-        for (gateY28 = 0; gateY28 < 72; gateY28++) {
-            for (gateX1 = 0; gateX1 < 72; gateX1++) {
+        for (gateY28 = 0; gateY28 < MAP_CELL_GRID_SIZE; gateY28++) {
+            for (gateX1 = 0; gateX1 < MAP_CELL_GRID_SIZE; gateX1++) {
                 exitCell = gpAdvManager->GetCell(gateX1, gateY28);
                 if (abs(gateX1 - x) + abs(gateY28 - y) > ((pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_STONE_LITHS ? 1 : 3)
                     && exitCell->m_triggerType == pEventCell->m_triggerType) {

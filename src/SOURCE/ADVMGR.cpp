@@ -1749,11 +1749,11 @@ int advManager::GetCloudLookup(int x, int y) {
 
     if (x < 1)
         cloudMask |= 0xc8;
-    else if (x >= 71)
+    else if (x >= MAP_CELL_GRID_SIZE - 1)
         cloudMask |= 0x32;
     if (y < 1)
         cloudMask |= 0x91;
-    else if (y >= 71)
+    else if (y >= MAP_CELL_GRID_SIZE - 1)
         cloudMask |= 0x64;
     if (cloudMask == 0) {
         if ((gpGame->m_mapExtra[x][y - 1] & giCurWatchPlayerBit) == 0)
@@ -1822,26 +1822,26 @@ void advManager::DrawCell(
     pixelX7 = screenX << 5;
     pixelY3 = screenY << 5;
     cell0 = GetCell(mapX, mapY);
-    if (!gbAllBlack && (mapX < 0 || mapY < 0 || mapX >= 72 || mapY >= 72)) {
+    if (!gbAllBlack && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
         s_drawStoneTile = -1;
         if (mapX == -1) {
             if (mapY == -1)
                 s_drawStoneTile = 16;
-            else if (mapY == 72)
+            else if (mapY == MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = 19;
-            else if (mapY >= 0 && mapY < 72)
+            else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = (mapY & 3) + 32;
-        } else if (mapX == 72) {
+        } else if (mapX == MAP_CELL_GRID_SIZE) {
             if (mapY == -1)
                 s_drawStoneTile = 17;
-            else if (mapY == 72)
+            else if (mapY == MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = 18;
-            else if (mapY >= 0 && mapY < 72)
+            else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = (mapY & 3) + 24;
         } else if (mapY == -1) {
-            if (mapX >= 0 && mapX < 72)
+            if (mapX >= 0 && mapX < MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = (mapX & 3) + 20;
-        } else if (mapY == 72 && mapX >= 0 && mapX < 72) {
+        } else if (mapY == MAP_CELL_GRID_SIZE && mapX >= 0 && mapX < MAP_CELL_GRID_SIZE) {
             s_drawStoneTile = (mapX & 3) + 28;
         }
         if (s_drawStoneTile == -1)
@@ -1884,8 +1884,8 @@ void advManager::DrawCell(
                 IconToBitmap(
                     m_cloudOverlayIcon, gpWindowManager->m_screen, pixelX7, pixelY3, s_drawCloudFrame - 1, 0
                 );
-        } else if (m_routeShown && m_visibilityMap[mapY * 72 + mapX]) {
-            if (m_visibilityMap[mapY * 72 + mapX] & 0x20)
+        } else if (m_routeShown && m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX]) {
+            if (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & 0x20)
                 FlipIconToBitmap(
                     m_objectIcons[17], gpWindowManager->m_screen, pixelX7 + 31, pixelY3 + 2,
                     (m_visibilityMap[mapY * 72 + mapX] & 0x1f) - 1, 0
@@ -2085,8 +2085,8 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
     if (!partial) {
         firstX = 0;
         firstY = 0;
-        lastX = 71;
-        lastY = 71;
+        lastX = MAP_CELL_GRID_SIZE - 1;
+        lastY = MAP_CELL_GRID_SIZE - 1;
     } else {
         firstX = m_mapOriginX - 1;
         firstY = m_mapOriginY - 1;
@@ -2096,10 +2096,10 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
             firstX = 0;
         if (firstY < 0)
             firstY = 0;
-        if (lastX > 71)
-            lastX = 71;
-        if (lastY > 71)
-            lastY = 71;
+        if (lastX > MAP_CELL_GRID_SIZE - 1)
+            lastX = MAP_CELL_GRID_SIZE - 1;
+        if (lastY > MAP_CELL_GRID_SIZE - 1)
+            lastY = MAP_CELL_GRID_SIZE - 1;
     }
 
     if (!gbThisNetHumanPlayer[giCurPlayer])
@@ -2189,8 +2189,8 @@ void advManager::QuickInfo(short cellX, short cellY) {
     if (!window)
         MemError();
 
-    if (m_mapOriginX + cellX < 0 || m_mapOriginX + cellX >= 72 || m_mapOriginY + cellY < 0
-        || m_mapOriginY + cellY >= 72) {
+    if (m_mapOriginX + cellX < 0 || m_mapOriginX + cellX >= MAP_CELL_GRID_SIZE || m_mapOriginY + cellY < 0
+        || m_mapOriginY + cellY >= MAP_CELL_GRID_SIZE) {
         sprintf(gText, "\n\n%s", "Border");
     } else {
         curCell = GetCell(m_mapOriginX + cellX, m_mapOriginY + cellY);
@@ -2829,13 +2829,13 @@ signed char advManager::UpdBottomViewHero(void) {
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
 
-    for (n = 0; n < 5; n++) {
+    for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
         if (targetHero->m_army.m_creatureTypes[n] != CREATURE_NONE)
             nStacks++;
     }
     if (nStacks) {
         slotNum = 0;
-        for (n = 0; n < 5; n++) {
+        for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
             creatureType = targetHero->m_army.m_creatureTypes[n];
             if (creatureType != CREATURE_NONE) {
                 countStr[slotNum] = static_cast<char*>(malloc(6));
@@ -2957,7 +2957,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     viewWin->BroadcastMessage(message);
 
     numArmies = 0;
-    for (j = 0; j < 5; j++) {
+    for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
         if (heroPtr->m_army.m_creatureTypes[j] != CREATURE_NONE)
             numArmies++;
     }
@@ -3194,7 +3194,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     viewWin->BroadcastMessage(message);
 
     numArmies = 0;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (townPointer->m_army.m_creatureTypes[i] != CREATURE_NONE)
             numArmies++;
     }
@@ -3860,8 +3860,8 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
         curHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     FillBitmapArea(gpWindowManager->m_screen, 16, 16, 448, 448, 0);
 
-    for (y = 0; y < 72; y++) {
-        for (x = 71; x >= 0; x--) {
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = MAP_CELL_GRID_SIZE - 1; x >= 0; x--) {
             cell = GetCell(x, y);
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
                 || (spellType == SPELL_VIEW_TOWNS && (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN)) {
@@ -3881,7 +3881,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
                 }
             }
         }
-        for (x = 71; x >= 0; x--) {
+        for (x = MAP_CELL_GRID_SIZE - 1; x >= 0; x--) {
             cell = GetCell(x, y);
             screenX = x * 6 + 24;
             screenY = y * 6 + 24;
@@ -4023,7 +4023,7 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
             if (curHero && curHero->m_x == x && curHero->m_y == y)
                 flags->DrawToBuffer(screenX, screenY, 5, ICON_DRAW_NORMAL, 0);
         }
-        for (x = 71; x >= 0; x--) {
+        for (x = MAP_CELL_GRID_SIZE - 1; x >= 0; x--) {
             cell = GetCell(x, y);
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
                 || (cell->m_triggerType == MAP_OBJECT_TOWN && spellType == SPELL_VIEW_TOWNS)) {
@@ -4663,7 +4663,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
 
     for (drawX = 0; drawX < 15; drawX++) {
         for (drawY = 0; drawY < 15; drawY++) {
-            if (originX + drawX >= 0 && originX + drawX < 72 && originY + drawY >= 0 && originY + drawY < 72) {
+            if (originX + drawX >= 0 && originX + drawX < MAP_CELL_GRID_SIZE && originY + drawY >= 0 && originY + drawY < MAP_CELL_GRID_SIZE) {
                 cellPtr = GetCell(originX + drawX, originY + drawY);
                 if (cellPtr->m_flags & 0xc)
                     ++bComboDraw[drawX][drawY];
@@ -4708,7 +4708,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
     for (drawX = 0; drawX < 15; drawX++) {
         for (drawY = 0; drawY < 15; drawY++) {
             if (bComboDraw[drawX][drawY]) {
-                if (originX + drawX < 0 || originX + drawX >= 72 || originY + drawY < 0 || originY + drawY >= 72)
+                if (originX + drawX < 0 || originX + drawX >= MAP_CELL_GRID_SIZE || originY + drawY < 0 || originY + drawY >= MAP_CELL_GRID_SIZE)
                     bComboDraw[drawX][drawY] = 0;
                 else if (bComboDraw[drawX][drawY] < 10 && !GetCloudLookup(originX + drawX, originY + drawY))
                     bComboDraw[drawX][drawY] = 0;
@@ -4897,7 +4897,7 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
     int i;
     int soundId;
 
-    if (x < 0 || y < 0 || x >= 72 || y >= 72)
+    if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
         return;
     soundId = gpGame->m_mapSounds[x][y];
     if (soundId == -1)

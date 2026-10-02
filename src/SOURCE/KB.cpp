@@ -2028,7 +2028,7 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     alignments = h->m_army.IsHomogeneous(-1);
     if (alignments > 0) {
         faction = 0;
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
                 faction = h->m_army.m_creatureTypes[i] / 6;
         }
