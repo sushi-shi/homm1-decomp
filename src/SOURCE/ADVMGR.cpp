@@ -1200,8 +1200,8 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         gpMouseManager->MouseCoords(curX, curY);
         curX = (curX - 480) / 2;
         curY = (curY - 16) / 2;
-        m_mapOriginX = curX - 7;
-        m_mapOriginY = curY - 7;
+        m_mapOriginX = curX - ADVMGR_VIEW_CENTER;
+        m_mapOriginY = curY - ADVMGR_VIEW_CENTER;
         if (m_mapOriginX < SCROLL_MIN_ORIGIN)
             m_mapOriginX = SCROLL_MIN_ORIGIN;
         if (m_mapOriginY < SCROLL_MIN_ORIGIN)
@@ -1236,8 +1236,8 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 gpMouseManager->Main(mouseMsg);
                 curX = (mouseMsg.x - 480) / 2;
                 curY = (mouseMsg.y - 16) / 2;
-                m_mapOriginX = curX - 7;
-                m_mapOriginY = curY - 7;
+                m_mapOriginX = curX - ADVMGR_VIEW_CENTER;
+                m_mapOriginY = curY - ADVMGR_VIEW_CENTER;
                 if (m_mapOriginX < SCROLL_MIN_ORIGIN)
                     m_mapOriginX = SCROLL_MIN_ORIGIN;
                 if (m_mapOriginY < SCROLL_MIN_ORIGIN)
@@ -1362,7 +1362,7 @@ int advManager::ProcessSearch(int x, int y) {
             NormalDialog("You have no room to carry another artifact!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
         } else {
             if (gbHumanPlayer[giCurPlayer]) {
-                EventSound(0x3f, 0);
+                EventSound(MAP_OBJECT_ULTIMATE_ARTIFACT, 0);
                 sprintf(gText, "%s%s",
                         "Congratulations! After spending many hours digging here, you have uncovered the ",
                         gArtifactNames[gpGame->m_ultimateArtifactId]);
@@ -1899,12 +1899,12 @@ void advManager::DrawCell(
             if (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & 0x20)
                 FlipIconToBitmap(
                     m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7 + 31, pixelY3 + 2,
-                    (m_visibilityMap[mapY * 72 + mapX] & 0x1f) - 1, 0
+                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & 0x1f) - 1, 0
                 );
             else
                 IconToBitmap(
                     m_objectIcons[TILESET_ROUTE], gpWindowManager->m_screen, pixelX7, pixelY3 + 2,
-                    (m_visibilityMap[mapY * 72 + mapX] & 0x1f) - 1, 0
+                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & 0x1f) - 1, 0
                 );
         }
         return;
@@ -1949,7 +1949,7 @@ void advManager::DrawCell(
         drawHero = NULL;
         if (!(cell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) && cell0->m_objectIndex != MAP_CELL_NO_FRAME) {
             s_drawTileset = cell0->m_objectTileset & MAP_CELL_TILESET_MASK;
-            if (s_drawTileset == TILESET_MONS32 && cell0->m_objectIndex <= 27) {
+            if (s_drawTileset == TILESET_MONS32 && cell0->m_objectIndex <= CREATURE_COUNT - 1) {
                 if (m_lastQuickViewX == mapX && m_lastQuickViewY == mapY) {
                     if (m_mineGuardianFacingLeft)
                         FlipIconToBitmap(
@@ -3413,7 +3413,7 @@ void advManager::DemobilizeCurrHero(void)
         currentHero->m_eventFlags |= HERO_EVENT_EMBARKED;
     cell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
     cell->m_objectMetadata = currentHero->m_id;
-    cell->m_flags &= ~0x40;
+    cell->m_flags &= ~MAP_CELL_HERO_CURSOR;
     m_cursorActive = 0;
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
@@ -3487,7 +3487,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     m_mapOriginX = currentHero->m_x - ADVMGR_VIEW_CENTER;
     m_mapOriginY = currentHero->m_y - ADVMGR_VIEW_CENTER;
-    m_cursorMapX = m_cursorMapY = 7;
+    m_cursorMapX = m_cursorMapY = ADVMGR_VIEW_CENTER;
     m_previousCursorMapX = m_previousCursorMapY = -1;
     if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
         m_cursorType = ADVMGR_HERO_ICON_BOAT;
@@ -3669,8 +3669,8 @@ void advManager::ViewPuzzle(void) {
         MemError();
     gpWindowManager->AddWindow(pWin, WINDOW_Z_ORDER_APPEND, 1);
 
-    puzzleX = gpGame->m_ultimateArtifactX - 7;
-    puzzleY = gpGame->m_ultimateArtifactY - 7;
+    puzzleX = gpGame->m_ultimateArtifactX - ADVMGR_VIEW_CENTER;
+    puzzleY = gpGame->m_ultimateArtifactY - ADVMGR_VIEW_CENTER;
     int biasX = 0;
     int biasY = 0;
     biasX = (gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % 3 - 1;
@@ -4977,8 +4977,8 @@ void advManager::TeleportTo(int x, int y, int) {
     if (savedShow)
         HideRoute(1, 1, 1);
     if (bShowIt) {
-        m_mapOriginX = x - 7;
-        m_mapOriginY = y - 7;
+        m_mapOriginX = x - ADVMGR_VIEW_CENTER;
+        m_mapOriginY = y - ADVMGR_VIEW_CENTER;
         DelayMilli(90);
     }
     mapHero->m_x = x;
@@ -5122,7 +5122,7 @@ void advManager::SummonBoat(void) {
     pCell = GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER);
     if (pCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
         goto summon_done;
-    for (iDirection = 0; iDirection < 8; iDirection++) {
+    for (iDirection = 0; iDirection < MAP_DIRECTION_COUNT; iDirection++) {
         pCell = GetCell(normalDirTable[iDirection].x + m_mapOriginX + ADVMGR_VIEW_CENTER,
                                   normalDirTable[iDirection].y + m_mapOriginY + ADVMGR_VIEW_CENTER);
         if (pCell->m_objectIndex == MAP_CELL_NO_FRAME && pCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
