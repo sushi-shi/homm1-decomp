@@ -112,6 +112,21 @@ H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     // giEventMusicVolume when no music volume is parked.
     EVENT_MUSIC_VOLUME_NONE = -1
 H1_ENUM_CONST_END(MapEventDisplayConstant)
+
+// DoCombat's network wait marker and memory thresholds (Buka EVENTS.cpp
+// CombatFlowConstant names, HoMM1 values).
+H1_ENUM_CONST_BEGIN(CombatFlowConstant)
+    COMBAT_NETWORK_POLL_X = 30,
+    COMBAT_NETWORK_POLL_Y = 30,
+    COMBAT_NETWORK_POLL_WIDTH = 4,
+    COMBAT_NETWORK_POLL_HEIGHT = 4,
+    COMBAT_LOW_MEMORY_LIMIT = 600,
+    COMBAT_HIGH_MEMORY_LIMIT = 1450,
+    // DoCombat's randomSeed argument when the caller has none; it then draws
+    // one in 1..COMBAT_RANDOM_SEED_MAX.
+    COMBAT_RANDOM_SEED_NEW = -1,
+    COMBAT_RANDOM_SEED_MAX = 1000
+H1_ENUM_CONST_END(CombatFlowConstant)
 // clang-format on
 
 // EVENTS data (Buka EVENTS.h owner): the assertion records (file literals and

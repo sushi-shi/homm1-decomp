@@ -507,7 +507,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     occupiedTown->m_occupyingHeroId = enemyHero->m_id;
                 }
                 res = DoCombat(x, y, pHero, &pHero->m_army, occupiedTown,
-                                            enemyHero, &enemyHero->m_army, x, y, -1, 1);
+                                            enemyHero, &enemyHero->m_army, x, y, COMBAT_RANDOM_SEED_NEW, 1);
                 if (res == 1 && occupiedTown)
                     gpGame->ClaimTown(occupiedTown->m_id, giCurPlayer);
             }
@@ -693,7 +693,7 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
     } else if (townRec->HasGarrison()) {
         defender = townRec->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? NULL : gpGame->GetHero(townRec->m_occupyingHeroId);
         result = DoCombat(x, y, curHero, &curHero->m_army, townRec, defender, &townRec->m_army, x, y,
-                          -1, 1);
+                          COMBAT_RANDOM_SEED_NEW, 1);
         if (result == 1)
             gpGame->ClaimTown(townRec->m_id, giCurPlayer);
     } else {
@@ -979,7 +979,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
         EventWindow(houseIndex * EVENT_TEXT_HOUSE_STRIDE + EVENT_TEXT_HOUSE_RECRUIT, NORMAL_DIALOG_TYPE_YES_NO, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
-                eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, -1);
+                eventHero->m_army.Add(creatures[houseIndex], cell->m_objectMetadata, ARMY_GROUP_ANY_SLOT);
                 cell->m_objectMetadata = MAP_EVENT_DATA_EMPTY;
             } else {
                 EventWindow(houseIndex * EVENT_TEXT_HOUSE_STRIDE + EVENT_TEXT_HOUSE_RANKS_FULL, NORMAL_DIALOG_TYPE_OK, "", NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
@@ -1024,10 +1024,10 @@ signed char advManager::CombatMonsterEvent(class hero* eventHero, signed char mo
     }
     if (heroDefends)
         res = DoCombat(fromX, fromY, NULL, gpMonGroup, NULL, eventHero, &eventHero->m_army, x, y,
-                          -1, 1);
+                          COMBAT_RANDOM_SEED_NEW, 1);
     else
         res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, NULL, NULL, gpMonGroup, x, y,
-                          -1, 1);
+                          COMBAT_RANDOM_SEED_NEW, 1);
     MobilizeCurrHero(0);
     return res;
 }
@@ -1570,7 +1570,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 if (theCastle)
                     theCastle->m_occupyingHeroId = enemyHero->m_id;
                 res = DoCombat(x, y, eventHero, &eventHero->m_army, theCastle,
-                                            enemyHero, &enemyHero->m_army, x, y, -1, 1);
+                                            enemyHero, &enemyHero->m_army, x, y, COMBAT_RANDOM_SEED_NEW, 1);
                 if (res == 1 && theCastle)
                     gpGame->ClaimTown(theCastle->m_id, giCurPlayer);
             }
@@ -1751,16 +1751,6 @@ H1_ENUM_CONST_BEGIN(CombatRemoteConstant)
     COMBAT_REMOTE_TIMEOUT = 20000
 H1_ENUM_CONST_END(CombatRemoteConstant)
 
-// DoCombat's network wait marker and memory thresholds (Buka EVENTS.cpp
-// CombatFlowConstant names, HoMM1 values).
-H1_ENUM_CONST_BEGIN(CombatFlowConstant)
-    COMBAT_NETWORK_POLL_X = 30,
-    COMBAT_NETWORK_POLL_Y = 30,
-    COMBAT_NETWORK_POLL_WIDTH = 4,
-    COMBAT_NETWORK_POLL_HEIGHT = 4,
-    COMBAT_LOW_MEMORY_LIMIT = 600,
-    COMBAT_HIGH_MEMORY_LIMIT = 1450
-H1_ENUM_CONST_END(CombatFlowConstant)
 // clang-format on
 
 // SendHeroTownData's payload after the remote-message header, as in Buka's
@@ -1843,8 +1833,8 @@ int advManager::DoCombat(int x, int y, class hero* firstHero, class armyGroup* f
         defendPlayer = combatTown->m_owner;
     else
         defendPlayer = -1;
-    if (randomSeed == -1)
-        randomSeed = Random(1, 1000);
+    if (randomSeed == COMBAT_RANDOM_SEED_NEW)
+        randomSeed = Random(1, COMBAT_RANDOM_SEED_MAX);
     DemobilizeCurrHero();
     savedPlayer = giCurPlayer;
     savedShowIt = bShowIt;

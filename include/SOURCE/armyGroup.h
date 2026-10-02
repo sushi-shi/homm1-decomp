@@ -13,7 +13,10 @@ class town;
 
 // clang-format off
 H1_ENUM_CONST_BEGIN(ArmyGroupConstant)
-    ARMY_GROUP_SLOT_COUNT = 5
+    ARMY_GROUP_SLOT_COUNT = 5,
+    // armyGroup::Add slot argument: merge into a matching stack or the first
+    // empty slot.
+    ARMY_GROUP_ANY_SLOT = -1
 H1_ENUM_CONST_END(ArmyGroupConstant)
 // clang-format on
 
