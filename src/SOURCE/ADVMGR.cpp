@@ -1132,7 +1132,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 }
             }
         } else if (isVisible) {
-            hero = 0;
+            hero = NULL;
             mobileResult = 0;
             if (gpCurPlayer->m_currentHero != -1) {
                 hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -1935,7 +1935,7 @@ void advManager::DrawCell(
     }
     if (drawMask & 8) {
         drawHeroIcon0 = 0;
-        drawHero = 0;
+        drawHero = NULL;
         if (!(cell0->m_flags & 0x80) && cell0->m_objectIndex != 0xff) {
             s_drawTileset = cell0->m_objectTileset & 0xf;
             if (s_drawTileset == 12 && cell0->m_objectIndex <= 27) {
@@ -5146,7 +5146,7 @@ void advManager::SummonBoat(void) {
         if (boatFound) {
             thisBoat = &gpGame->m_boats[slotIndex];
             fromCell = GetCell(thisBoat->x, thisBoat->y);
-            gpGame->RestoreCell(thisBoat->x, thisBoat->y, thisBoat->savedTriggerType, thisBoat->savedEventData, 0, 5);
+            gpGame->RestoreCell(thisBoat->x, thisBoat->y, thisBoat->savedTriggerType, thisBoat->savedEventData, NULL, 5);
             if (thisBoat->x >= m_mapOriginX && thisBoat->x < m_mapOriginX + 15 && thisBoat->y >= m_mapOriginY
                 && thisBoat->y < m_mapOriginY + 15) {
                 drawX = (thisBoat->x - m_mapOriginX) * 32 - 32;
@@ -5651,7 +5651,7 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
     if (loaded < maxSamples) {
         for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-            if (keep[i] == 0 && m_loopingSamples[i] != 0) {
+            if (keep[i] == 0 && m_loopingSamples[i] != NULL) {
                 ++keep[i];
                 ++loaded;
                 if (loaded >= maxSamples)
@@ -5662,9 +5662,9 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
 disposeSamples:
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-        if (m_loopingSamples[i] != 0 && keep[i] == 0) {
+        if (m_loopingSamples[i] != NULL && keep[i] == 0) {
             gpResourceManager->Dispose(m_loopingSamples[i]);
-            m_loopingSamples[i] = 0;
+            m_loopingSamples[i] = NULL;
         }
     }
 }
