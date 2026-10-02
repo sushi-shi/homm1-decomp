@@ -1380,12 +1380,12 @@ int advManager::ProcessSearch(int x, int y) {
 // defines it ahead of its functions). Declared ahead of ProcessHover: the C1
 // symbol order retail's ProcessHover and GetCloudLookup operand sorts require
 // (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
-int s_drawStoneTile;
-int s_drawCovered;
-int s_drawCloudFrame;
-signed char s_drawFlipCloud;
-unsigned short s_drawGroundTile;
-unsigned char s_drawTileset;
+DATA(0x004c50ac) int s_drawStoneTile;
+DATA(0x004c50a8) int s_drawCovered;
+DATA(0x004c4f48) int s_drawCloudFrame;
+DATA(0x004c509c) signed char s_drawFlipCloud;
+DATA(0x004c4f70) unsigned short s_drawGroundTile;
+DATA(0x004c50a4) unsigned char s_drawTileset;
 
 // donor PoL RVA 0x0005a644; preferred Buka symbol ?ProcessHover@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
