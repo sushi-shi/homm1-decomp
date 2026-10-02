@@ -252,3 +252,20 @@ void PlaySmacker(signed char smackNumber) {
     gpExec->RemoveManager(gpSmackManager);
     gbInSmacker = 0;
 }
+
+// SMACKMGR owns retail .data 0x0049fd08-0x0049fe4f and .bss 0x004ca488-0x004ca48f.
+DATA(0x0049fd08)
+SSmackOptions SmackOptions[8] = {
+    {"nwclogo.smk", 0, 1, 0, 32},
+    {"nwclogo1.smk", 0, 1, 0, 32},
+    {"intro02c.smk", 1, 1, 0, 32},
+    {"intro02u.smk", 1, 1, 0, 32},
+    {"win01c.smk", 1, 1, 1, 0},
+    {"win01u.smk", 1, 1, 1, 0},
+    {"win02.smk", 0, 1, 1, 0},
+    {"lose1.smk", 0, 1, 1, 0},
+};
+DATA(0x004ca488)
+signed char bSmackNum;
+DATA(0x004ca48c)
+signed char gbSmackAborted;
