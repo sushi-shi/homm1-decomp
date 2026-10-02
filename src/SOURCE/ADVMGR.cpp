@@ -130,6 +130,63 @@ H1_ENUM_CONST_END(BottomViewPanelConstant)
 // AdventureEnemyTurnViewConstant names, same values): the hourglass,
 // running-sand and crest icons, their widget ids and z-orders, the sand
 // frame cycle and the animation delays.
+// Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
+// the network-turn music hold, the quick-view "none shown" origin, the walk
+// sample set and volume, the looping-sample budget per high-memory unit and
+// the animation timer step.
+H1_ENUM_CONST_BEGIN(AdventureStateConstant)
+    FORCED_MUSIC_DELAY = 6000,
+    QUICK_VIEW_NONE = -99,
+    CURSOR_SAMPLE_FAST_SET = 2,
+    CURSOR_SAMPLE_VOLUME = 0x40,
+    HIGH_MEMORY_BUFFER_DIVISOR = 100,
+    TIMER_DELAY = 120
+H1_ENUM_CONST_END(AdventureStateConstant)
+
+// SetEnvironmentOrigin/InsertSound's looping map sounds (Buka 2.1
+// AdventureEnvironmentSoundConstant names): slots reset to the far volume
+// index, two passes (refresh known sounds, then insert new ones) over rings
+// whose edges span radius * 2 cells, sounds beyond MAX_DISTANCE stop, and
+// the loops play on channel type 3.
+H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
+    ENVIRONMENT_SOUND_DEFAULT_VOLUME = 127,
+    ENVIRONMENT_SOUND_MAX_DISTANCE = 5,
+    ENVIRONMENT_SOUND_FIRST_LAYER = 1,
+    ENVIRONMENT_SOUND_LAYER_COUNT = 2,
+    ENVIRONMENT_SOUND_CHANNEL_TYPE = 3,
+    ENVIRONMENT_SOUND_EDGE_SPAN = 2
+H1_ENUM_CONST_END(AdventureEnvironmentSoundConstant)
+
+// ComboDraw's dirty-cell grid (Buka 2.1 AdventureComboDrawConstant names):
+// cloud-covered neighbours of a moving sprite get CLOUD_MARK so the cloud
+// pass redraws them, animation runs every FRAME_LIMIT frame steps, the
+// cursor marks two cells right, and the update box is clipped to the
+// viewport's inner pixels.
+H1_ENUM_CONST_BEGIN(AdventureComboDrawConstant)
+    COMBO_CLEAR_BYTES = 256,
+    COMBO_CLOUD_MARK = 10,
+    COMBO_FRAME_LIMIT = 12,
+    COMBO_UPDATE_MIN = 16,
+    COMBO_UPDATE_MAX = 463,
+    COMBO_FAR_NEIGHBOR_OFFSET = 2
+H1_ENUM_CONST_END(AdventureComboDrawConstant)
+
+// advManager::Main's debug keys and digit cheat (Buka 2.1
+// AdventureCheatConstant names, HoMM1 values): the typed digits roll into a
+// six-digit sequence; 101495 reveals the whole map to every player.
+H1_ENUM_CONST_BEGIN(AdventureCheatConstant)
+    CHEAT_SEQUENCE_RADIX = 10,
+    CHEAT_SEQUENCE_MODULUS = 1000000,
+    CHEAT_REVEAL_MAP = 101495,
+    CHEAT_RESOURCE_AMOUNT = 10,
+    CHEAT_GOLD_AMOUNT = 1000,
+    CHEAT_EXPERIENCE_AMOUNT = 800,
+    CHEAT_SPELL_CHARGES = 5,
+    CHEAT_MOBILITY = 2999,
+    CHEAT_REVEAL_CENTER = 30,
+    CHEAT_REVEAL_RADIUS = 100
+H1_ENUM_CONST_END(AdventureCheatConstant)
+
 H1_ENUM_CONST_BEGIN(AdventureEnemyTurnViewConstant)
     ENEMY_TURN_HOURGLASS_X = 493,
     ENEMY_TURN_HOURGLASS_Y = 403,
@@ -372,8 +429,8 @@ advManager::advManager(void) {
     m_heroContextLocked = 0;
     m_townContextLocked = 0;
     bShowIt = 1;
-    m_lastQuickViewX = -99;
-    m_lastQuickViewY = -99;
+    m_lastQuickViewX = QUICK_VIEW_NONE;
+    m_lastQuickViewY = QUICK_VIEW_NONE;
     m_animationPhases[0] = 0;
     m_animationPhases[1] = 1;
     m_animationPhases[2] = 3;
@@ -655,12 +712,12 @@ void advManager::Close(void) {
 VA(0x0042680e, 0xc7)
 void advManager::GetCursorSampleSet(int sampleSet) {
     if (sampleSet >= 1)
-        sampleSet = 2;
+        sampleSet = CURSOR_SAMPLE_FAST_SET;
     signed char suffixSample[ADVMGR_CURSOR_SAMPLE_COUNT] = {0, 3, 5, 3, 4, 5, 6};
     for (int index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
         sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
         m_cursorSamples[index] = gpResourceManager->GetSample(gText);
-        m_cursorSamples[index]->m_playbackData.volume = 0x40;
+        m_cursorSamples[index]->m_playbackData.volume = CURSOR_SAMPLE_VOLUME;
         m_cursorSamples[index]->m_playbackData.channelType = SAMPLE_PLAYBACK_CHANNEL_GROUP;
     }
 }
@@ -834,7 +891,7 @@ short advManager::Main(struct tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    if (!gbNoSound && gConfig.musicVolume && giForceSwitchMusic > 0 && KBTickCount() - giForceSwitchMusic > 6000
+    if (!gbNoSound && gConfig.musicVolume && giForceSwitchMusic > 0 && KBTickCount() - giForceSwitchMusic > FORCED_MUSIC_DELAY
         && gpSoundManager->m_currentTrack == MUSIC_TRACK_NETWORK_TURN) {
         giForceSwitchMusic = -1;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -913,12 +970,12 @@ short advManager::Main(struct tag_message& message) {
             case INPUT_SCAN_F6:
                 if (curHero) {
                     for (cmdValue = 0; cmdValue < HERO_SPELL_SLOT_COUNT; cmdValue++)
-                        curHero->AddSpell(cmdValue, 5, 0);
+                        curHero->AddSpell(cmdValue, CHEAT_SPELL_CHARGES, 0);
                 }
                 break;
             case INPUT_SCAN_F7:
                 if (curHero)
-                    GiveExperience(curHero, 800, 1);
+                    GiveExperience(curHero, CHEAT_EXPERIENCE_AMOUNT, 1);
                 break;
             case INPUT_SCAN_F8:
                 if (curHero) {
@@ -929,17 +986,17 @@ short advManager::Main(struct tag_message& message) {
             case INPUT_SCAN_F9:
                 for (cmdValue = 0; cmdValue < PLAYER_RESOURCE_COUNT; cmdValue++) {
                     if (cmdValue == RESOURCE_GOLD)
-                        gpCurPlayer->m_resources[cmdValue] += 1000;
+                        gpCurPlayer->m_resources[cmdValue] += CHEAT_GOLD_AMOUNT;
                     else
-                        gpCurPlayer->m_resources[cmdValue] += 10;
+                        gpCurPlayer->m_resources[cmdValue] += CHEAT_RESOURCE_AMOUNT;
                 }
                 break;
             case INPUT_SCAN_F11:
                 if (curHero)
-                    curHero->m_remainingMobility = 2999;
+                    curHero->m_remainingMobility = CHEAT_MOBILITY;
                 break;
             case INPUT_SCAN_F12:
-                gpGame->SetVisibility(30, 30, giCurPlayer, 100);
+                gpGame->SetVisibility(CHEAT_REVEAL_CENTER, CHEAT_REVEAL_CENTER, giCurPlayer, CHEAT_REVEAL_RADIUS);
                 UpdateRadar(1, 0);
                 CompleteDraw(0);
                 UpdateScreen(0, 0);
@@ -975,12 +1032,12 @@ short advManager::Main(struct tag_message& message) {
                 cmdValue = 9;
                 goto processCheatDigit;
             processCheatDigit:
-                giCheatSeq = giCheatSeq * 10 % 1000000 + cmdValue;
-                if (giCheatSeq == 101495) {
-                    gpGame->SetVisibility(30, 30, 0, 100);
-                    gpGame->SetVisibility(30, 30, 1, 100);
-                    gpGame->SetVisibility(30, 30, 2, 100);
-                    gpGame->SetVisibility(30, 30, 3, 100);
+                giCheatSeq = giCheatSeq * CHEAT_SEQUENCE_RADIX % CHEAT_SEQUENCE_MODULUS + cmdValue;
+                if (giCheatSeq == CHEAT_REVEAL_MAP) {
+                    gpGame->SetVisibility(CHEAT_REVEAL_CENTER, CHEAT_REVEAL_CENTER, 0, CHEAT_REVEAL_RADIUS);
+                    gpGame->SetVisibility(CHEAT_REVEAL_CENTER, CHEAT_REVEAL_CENTER, 1, CHEAT_REVEAL_RADIUS);
+                    gpGame->SetVisibility(CHEAT_REVEAL_CENTER, CHEAT_REVEAL_CENTER, 2, CHEAT_REVEAL_RADIUS);
+                    gpGame->SetVisibility(CHEAT_REVEAL_CENTER, CHEAT_REVEAL_CENTER, 3, CHEAT_REVEAL_RADIUS);
                     Reseed(0, 0);
                     UpdateRadar(1, 0);
                     CompleteDraw(0);
@@ -4838,10 +4895,10 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
     }
     if (animate) {
         giFrameCount += giFrameStep;
-        if (giFrameCount < 12) {
+        if (giFrameCount < COMBO_FRAME_LIMIT) {
             Process1WindowsMessage();
             if (KBTickCount() > glTimers[0])
-                glTimers[0] = KBTickCount() + 120;
+                glTimers[0] = KBTickCount() + TIMER_DELAY;
             PollSound();
             return 0;
         } else {
@@ -4851,7 +4908,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
 
     m_previousOriginX = m_mapOriginX;
     m_previousOriginY = m_mapOriginY;
-    memset(bComboDraw, 0, 256);
+    memset(bComboDraw, 0, COMBO_CLEAR_BYTES);
     m_comboHeroDrawn = 0;
 
     for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++) {
@@ -4863,10 +4920,10 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
                 if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(originX + drawX, originY + drawY)) {
-                        bComboDraw[drawX + 1][drawY] += 10;
+                        bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
                         if (drawY >= 1) {
-                            bComboDraw[drawX][drawY - 1] += 10;
-                            bComboDraw[drawX + 1][drawY - 1] += 10;
+                            bComboDraw[drawX][drawY - 1] += COMBO_CLOUD_MARK;
+                            bComboDraw[drawX + 1][drawY - 1] += COMBO_CLOUD_MARK;
                         }
                     } else {
                         ++bComboDraw[drawX + 1][drawY];
@@ -4879,12 +4936,12 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
                 if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO) || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(originX + drawX, originY + drawY)) {
-                        bComboDraw[drawX + 1][drawY] += 10;
-                        bComboDraw[drawX][drawY + 1] += 10;
+                        bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
+                        bComboDraw[drawX][drawY + 1] += COMBO_CLOUD_MARK;
                         if (drawY >= 1)
-                            bComboDraw[drawX][drawY - 1] += 10;
+                            bComboDraw[drawX][drawY - 1] += COMBO_CLOUD_MARK;
                         if (drawX >= 1)
-                            bComboDraw[drawX - 1][drawY] += 10;
+                            bComboDraw[drawX - 1][drawY] += COMBO_CLOUD_MARK;
                     } else {
                         ++bComboDraw[drawX + 1][drawY];
                         ++bComboDraw[drawX][drawY + 1];
@@ -4903,7 +4960,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
             if (bComboDraw[drawX][drawY]) {
                 if (originX + drawX < 0 || originX + drawX >= MAP_CELL_GRID_SIZE || originY + drawY < 0 || originY + drawY >= MAP_CELL_GRID_SIZE)
                     bComboDraw[drawX][drawY] = 0;
-                else if (bComboDraw[drawX][drawY] < 10 && !GetCloudLookup(originX + drawX, originY + drawY))
+                else if (bComboDraw[drawX][drawY] < COMBO_CLOUD_MARK && !GetCloudLookup(originX + drawX, originY + drawY))
                     bComboDraw[drawX][drawY] = 0;
             }
         }
@@ -4916,17 +4973,17 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
         ++bComboDraw[drawX + 1][drawY];
         ++bComboDraw[drawX][drawY + 1];
         ++bComboDraw[drawX + 1][drawY + 1];
-        ++bComboDraw[drawX + 2][drawY + 1];
+        ++bComboDraw[drawX + COMBO_FAR_NEIGHBOR_OFFSET][drawY + 1];
     }
     if (m_heroContextLocked) {
-        for (drawY = 6; drawY <= 8; drawY++)
-            for (drawX = 6; drawX <= 8; drawX++)
+        for (drawY = ADVMGR_VIEW_CENTER - 1; drawY <= ADVMGR_VIEW_CENTER + 1; drawY++)
+            for (drawX = ADVMGR_VIEW_CENTER - 1; drawX <= ADVMGR_VIEW_CENTER + 1; drawX++)
                 ++bComboDraw[drawX][drawY];
     }
     if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
-        ++bComboDraw[6][5];
-        ++bComboDraw[7][5];
-        ++bComboDraw[8][5];
+        ++bComboDraw[ADVMGR_VIEW_CENTER - 1][ADVMGR_VIEW_CENTER - 2];
+        ++bComboDraw[ADVMGR_VIEW_CENTER][ADVMGR_VIEW_CENTER - 2];
+        ++bComboDraw[ADVMGR_VIEW_CENTER + 1][ADVMGR_VIEW_CENTER - 2];
     }
 
     for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++) {
@@ -4952,8 +5009,8 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
         }
     }
     for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++) {
-        if (bComboDraw[drawX][14])
-            DrawCell(originX + drawX, originY + 14, drawX, 14, ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, 0);
+        if (bComboDraw[drawX][ADVMGR_VIEW_CELL_COUNT - 1])
+            DrawCell(originX + drawX, originY + ADVMGR_VIEW_CELL_COUNT - 1, drawX, ADVMGR_VIEW_CELL_COUNT - 1, ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, 0);
     }
     for (drawY = 0; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++) {
         for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++) {
@@ -4965,8 +5022,8 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
     PollSound();
     UpdBottomView(0, 1, 1);
     DrawAdventureBorder();
-    giLimitUpdMinX = 15;
-    giLimitUpdMinY = 15;
+    giLimitUpdMinX = ADVMGR_VIEW_CELL_COUNT;
+    giLimitUpdMinY = ADVMGR_VIEW_CELL_COUNT;
     giLimitUpdMaxX = 0;
     giLimitUpdMaxY = 0;
     updateCount = 0;
@@ -4989,14 +5046,14 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
     giLimitUpdMinY <<= 5;
     giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << 5) - 1;
     giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << 5) - 1;
-    if (giLimitUpdMinX < 16)
-        giLimitUpdMinX = 16;
-    if (giLimitUpdMaxX > 463)
-        giLimitUpdMaxX = 463;
-    if (giLimitUpdMinY < 16)
-        giLimitUpdMinY = 16;
-    if (giLimitUpdMaxY > 463)
-        giLimitUpdMaxY = 463;
+    if (giLimitUpdMinX < COMBO_UPDATE_MIN)
+        giLimitUpdMinX = COMBO_UPDATE_MIN;
+    if (giLimitUpdMaxX > COMBO_UPDATE_MAX)
+        giLimitUpdMaxX = COMBO_UPDATE_MAX;
+    if (giLimitUpdMinY < COMBO_UPDATE_MIN)
+        giLimitUpdMinY = COMBO_UPDATE_MIN;
+    if (giLimitUpdMaxY > COMBO_UPDATE_MAX)
+        giLimitUpdMaxY = COMBO_UPDATE_MAX;
     if (giLimitUpdMaxX < giLimitUpdMinX || giLimitUpdMaxY < giLimitUpdMinY) {
         giLimitUpdMinX = giLimitUpdMaxX - 1;
         giLimitUpdMinY = giLimitUpdMaxY - 1;
@@ -5030,18 +5087,18 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
                     m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample
                 );
                 m_activeSounds[edgeOffset].soundId = -1;
-                m_activeSounds[edgeOffset].volume = 127;
+                m_activeSounds[edgeOffset].volume = ENVIRONMENT_SOUND_DEFAULT_VOLUME;
             } else {
-                m_activeSounds[edgeOffset].volume = 127;
+                m_activeSounds[edgeOffset].volume = ENVIRONMENT_SOUND_DEFAULT_VOLUME;
             }
         }
     }
     if (gConfig.soundVolume != 0) {
         m_activeSoundMask = 0;
-        for (layer = 1; layer <= 2; ++layer) {
+        for (layer = ENVIRONMENT_SOUND_FIRST_LAYER; layer <= ENVIRONMENT_SOUND_LAYER_COUNT; ++layer) {
             InsertSound(originX, originY, 0, layer);
             for (soundRadius = 0; soundRadius < 4; ++soundRadius) {
-                for (edgeOffset = 0; edgeOffset < soundRadius * 2; ++edgeOffset) {
+                for (edgeOffset = 0; edgeOffset < soundRadius * ENVIRONMENT_SOUND_EDGE_SPAN; ++edgeOffset) {
                     InsertSound(originX - soundRadius + edgeOffset, originY - soundRadius, soundRadius, layer);
                     InsertSound(originX + soundRadius, originY - soundRadius + edgeOffset, soundRadius, layer);
                     InsertSound(originX + soundRadius - edgeOffset, originY + soundRadius, soundRadius, layer);
@@ -5050,7 +5107,7 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
             }
         }
         for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
-            if (m_activeSounds[edgeOffset].soundId != -1 && m_activeSounds[edgeOffset].volume > 5) {
+            if (m_activeSounds[edgeOffset].soundId != -1 && m_activeSounds[edgeOffset].volume > ENVIRONMENT_SOUND_MAX_DISTANCE) {
                 gpSoundManager->StopSample(
                     m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.activeSample
                 );
@@ -5104,7 +5161,7 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
             return;
         }
     }
-    if (soundLayer == 1)
+    if (soundLayer == ENVIRONMENT_SOUND_FIRST_LAYER)
         return;
     distanceLimit = distance;
     slot = -1;
@@ -5122,7 +5179,7 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
         CheckLoadSample(soundId);
         m_loopingSamples[soundId]->m_playbackData.volume = glEnvironmentVolume[distance];
         m_loopingSamples[soundId]->m_playbackData.loopCount = 0;
-        m_loopingSamples[soundId]->m_playbackData.channelType = 3;
+        m_loopingSamples[soundId]->m_playbackData.channelType = ENVIRONMENT_SOUND_CHANNEL_TYPE;
         gpSoundManager->MemorySample(m_loopingSamples[soundId]);
         m_activeSoundMask ^= 1 << m_activeSounds[slot].soundId;
     }
@@ -5823,7 +5880,7 @@ VA(0x00436a3b, 0x1c2)
 void advManager::TrimLoopingSounds(int maxSamples)
 {
     if (giHighMemBuffer > 0)
-        maxSamples += giHighMemBuffer / 100;
+        maxSamples += giHighMemBuffer / HIGH_MEMORY_BUFFER_DIVISOR;
 
     if (maxSamples >= ADVMGR_ENVIRONMENT_SOUND_COUNT)
         return;
