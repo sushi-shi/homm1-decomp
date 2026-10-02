@@ -1380,20 +1380,25 @@ int GetObjectFamily(int trigger) {
     }
 }
 
+// Spell AI values, attribute bits and the mage-guild pool by spell level.
+extern short gSpellAIValue[];
+extern signed char gSpellAttributes[];
+extern signed char gMageGuildSpellPool[4][8];
+
 // HoMM1: once a cell's object frame is gone, its overlay drops into the
 // object slot unless the eastern neighbour continues the same object.
 VA(0x0043d4c3, 0x1e4)
 void game::SettleOverlay(int x, int y) {
-    mapCell* adjCell;
     mapCell* cell;
+    mapCell* cellEast;
     cell = &m_map[x][y];
     if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
         switch (cell->m_triggerType) {
             case 0x35:
             case 0x39:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
-                    adjCell = &m_map[x + 1][y];
-                    if (GetObjectFamily(adjCell->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                    cellEast = &m_map[x + 1][y];
+                    if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
                         cell->m_unknown07 |= 0x80;
                     } else {
                         cell->m_objectIndex = cell->m_overlayIndex;
@@ -1406,8 +1411,8 @@ void game::SettleOverlay(int x, int y) {
             case 0x37:
             case 0x3b:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
-                    adjCell = &m_map[x + 1][y];
-                    if (GetObjectFamily(adjCell->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
+                    cellEast = &m_map[x + 1][y];
+                    if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
@@ -1422,11 +1427,6 @@ void game::SettleOverlay(int x, int y) {
         }
     }
 }
-
-// Spell AI values, attribute bits and the mage-guild pool by spell level.
-extern short gSpellAIValue[];
-extern signed char gSpellAttributes[];
-extern signed char gMageGuildSpellPool[4][8];
 
 // Buka 2.1 game::RandomizeEvents for HoMM1's map objects: numbers sites
 // and obelisks, rolls each event's contents, files town and mine ids into
