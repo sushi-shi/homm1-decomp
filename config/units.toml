@@ -398,7 +398,7 @@ flags = "cpp_o2"
 [[unit]]
 unit = "SOURCE/SMACKMGR"
 source = "src/SOURCE/SMACKMGR.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_eh"
 
 [[unit]]
 unit = "SOURCE/CURSOR"
@@ -458,3 +458,9 @@ unit = "SOURCE/FLY"
 source = "src/SOURCE/FLY.cpp"
 # int3 padding brackets CanFit..FlyTo (0x0044a5e0..0x0044b434) as one object.
 flags = "cpp_carcass"
+
+[[unit]]
+unit = "SOURCE/VIEW"
+source = "src/SOURCE/VIEW.cpp"
+# ViewGeneral registers fs:[0] around its new heroWindow.
+flags = "cpp_carcass_eh"

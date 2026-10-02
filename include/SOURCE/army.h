@@ -94,7 +94,7 @@ public:
     short AttackTo(void);
     short AttackTo(short);
     void CheckLuck(void);
-    void DamageEnemy(class army *, int *, int *, int, int);
+    void DamageEnemy(class army*, int*, int*, int, int);
     // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
     int Damage(long int);
     // HoMM1 retail 0x0046aa49: byte effect index (ret 4).
@@ -115,9 +115,6 @@ public:
     void DispelGood(void);
     // HoMM1 retail 0x0046b457: undoes m_spellEffect when it expires.
     void CancelSpell(void);
-    // HoMM1 retail 0x00467281: back to the standing frame, regrid and
-    // optionally redraw (ret 4).
-    void ResetAnimation(signed char);
     void Cure(int);
     int MidX(void);
     int MidY(void);
@@ -127,7 +124,7 @@ public:
     int OtherArmyAdjacent(int, int);
     int GetPowBaseY(void);
     // HoMM1 retail 0x0044a5e0: hex through a word pointer, word result (ret 4).
-    short CanFit(short *);
+    short CanFit(short*);
     short ValidFlight(short, signed char);
     // HoMM1 retail 0x0044acaf/0x0044acd6: word destination, word result.
     short FlyTo(void);
@@ -141,7 +138,7 @@ public:
     short GetAttackMask(short, signed char, signed char);
     short ValidMove(short);
     short ValidMove(short, short);
-    short ValidAttack(short, short, short, short, short *);
+    short ValidAttack(short, short, short, short, short*);
     short GetAdjacentCellIndex(short, short);
     short ValidRange(short);
     short GetBestDirection(short, short, short);

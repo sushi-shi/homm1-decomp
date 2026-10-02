@@ -970,6 +970,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     char *descText;
     textWidget *amountWidgets[7];
     int nRowTypes[4];
+    int row;
     short currX;
     int space;
     short unusedTop;
@@ -979,7 +980,6 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     short unusedValue;
     short unusedField;
     short unusedControl;
-    int row;
     short firstRow;
     tag_message iEvt;
     signed char resType[7];
@@ -993,13 +993,13 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     int inRow;
     short pResourceCount;
     int j;
+    unsigned short requirements;
     textWidget *descWidget;
     int iTotalHeight;
     short prices[7];
     short unusedKind;
     int nEntryWidth;
     int curCost;
-    unsigned short requirements;
     int numPrereqs;
     short unusedMode1;
     int iMageLevel;

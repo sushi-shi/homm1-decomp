@@ -93,6 +93,8 @@ public:
     // the castle bonus; AICheckRetreat never retreats from a town.
     class town *m_combatTowns[2];
     class hero *m_heroes[2];
+    // Per side: the army group fought with (ViewArmy hands it to
+    // game::ViewArmy).
     class armyGroup *m_armyGroups[2];
     // Set by a surrender (ProcessNextAction).
     signed char m_sideDefeated[2];
@@ -195,6 +197,7 @@ public:
     // HoMM1 retail 0x00470f25: byte mode (ret 4).
     void SetGridMode(signed char);
     void DrawSmallView(int, int);
+    // HoMM1 retail 0x00438310 returns its result in AL (ret 0xc).
     signed char ViewGeneral(int, int, int);
     // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
     void ViewArmy(class army *, int, int);
@@ -287,7 +290,7 @@ public:
     // HoMM1 retail 0x00437aa1 (ret 0xc), 0x00437d14 (ret 8) and 0x00437e0d
     // (ret 0x10): DetermineEffectOfSpell passes the effect, then a side and
     // flag, a hex, or the spell, base damage and hex.
-    void EffectSpellCure(int *, int, int);
+    void EffectSpellCure(int *, int, signed char);
     void EffectSpellResurrect(int *, int);
     void EffectSpellDamage(int *, int, int, int);
     void CombineGroups(class armyGroup *, class armyGroup *);

@@ -364,7 +364,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                 m_hexCells[teleportArmy->m_hex].m_occupantFrame = -1;
                 teleportArmy->SpellEffect(2, 0);
             }
-            teleportArmy->ResetAnimation(1);
+            teleportArmy->Stand(1);
             break;
         case 1:
             sprintf(gText, "The lightning bolt does %d damage to the %s.",
@@ -376,7 +376,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->Damage(m_heroes[m_currentSide]->m_primaryStats[2] * 25);
             targetArmy->PowEffect(7);
             if (!(targetArmy->m_stats.attributes & 0x10))
-                targetArmy->ResetAnimation(1);
+                targetArmy->Stand(1);
             break;
         case 3:
             CastMassSpell(m_currentSide, 1);
@@ -395,7 +395,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                 sprintf(gText, "%d %s rises from the dead!", targetArmy->m_quantity - quantity,
                         gArmyNames[targetArmy->m_creatureType]);
             CombatMessage(gText, 1);
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 6:
             targetArmy->CancelSpell();
@@ -406,7 +406,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
                 targetArmy->m_stats.attributes -= 2;
             targetArmy->m_spellEffect = 6;
             targetArmy->m_unknown52 = 3;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 5:
             gpCombatManager->m_currentSpeed = 4;
@@ -416,7 +416,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_stats.speed = 4;
             targetArmy->m_spellEffect = 5;
             targetArmy->m_unknown52 = 3;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 8:
             targetArmy->CancelSpell();
@@ -425,7 +425,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_damageMode = 3;
             targetArmy->m_spellEffect = 8;
             targetArmy->m_unknown52 = 3;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 9:
             targetArmy->CancelSpell();
@@ -434,7 +434,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_spellEffect = 9;
             targetArmy->m_unknown52 = 3;
             targetArmy->m_stats.defense += 3;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 10:
             targetArmy->CancelSpell();
@@ -444,7 +444,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 10;
             targetArmy->m_unknown52 = 3;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 14:
             targetArmy->CancelSpell();
@@ -453,7 +453,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(14, 0);
             targetArmy->m_spellEffect = 14;
             targetArmy->m_unknown52 = 1;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 18:
             targetArmy->CancelSpell();
@@ -463,7 +463,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 18;
             targetArmy->m_unknown52 = 2;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 7:
             targetArmy->CancelSpell();
@@ -473,7 +473,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->m_damageMode = 1;
             targetArmy->m_spellEffect = 7;
             targetArmy->m_unknown52 = 2;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 11:
             targetArmy->m_unknown09 = 2;
@@ -490,7 +490,7 @@ void combatManager::CastSpell(signed char spell, signed char targetHex, signed c
             targetArmy->SpellEffect(12, 0);
             targetArmy->m_spellEffect = 12;
             targetArmy->m_unknown52 = 3;
-            targetArmy->ResetAnimation(1);
+            targetArmy->Stand(1);
             break;
         case 0:
             Fireball(targetHex);
@@ -532,7 +532,7 @@ void combatManager::DefaultSpell(signed char targetHex)
     target->SpellEffect(m_selectedSpell, 0);
     target->m_unknown09 = 2;
     target->SpellEffect(m_selectedSpell, 0);
-    target->ResetAnimation(1);
+    target->Stand(1);
 }
 
 // HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
@@ -686,7 +686,7 @@ void combatManager::Fireball(signed char targetHex)
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & 0x10))
-                curArmy->ResetAnimation(1);
+                curArmy->Stand(1);
         }
     }
     DrawFrame(1);
@@ -750,7 +750,7 @@ void combatManager::MeteorShower(signed char targetHex)
         if (adjHexes[i] != -1 && m_hexCells[adjHexes[i]].m_occupantSide != -1) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide][m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & 0x10))
-                curArmy->ResetAnimation(1);
+                curArmy->Stand(1);
         }
     }
     DrawFrame(1);
@@ -808,7 +808,7 @@ void combatManager::ElementalStorm(void)
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
             if (!(curArmy->m_stats.attributes & 0x10))
-                curArmy->ResetAnimation(0);
+                curArmy->Stand(0);
         }
     }
     DrawFrame(1);
@@ -819,6 +819,7 @@ void combatManager::ElementalStorm(void)
 VA(0x00417d0b, 0x3dc)
 void combatManager::Armageddon(void)
 {
+    short sideIdx;
     int damage;
     short index;
     signed char *palData;
@@ -826,7 +827,6 @@ void combatManager::Armageddon(void)
     army *curArmy;
     palette *kbPal;
     short i;
-    short sideIdx;
     palette *workPal;
     signed char hit;
 
@@ -871,7 +871,7 @@ void combatManager::Armageddon(void)
         for (index = 0; index < m_numArmies[sideIdx]; index++) {
             curArmy = &m_armies[sideIdx][index];
             if (!(curArmy->m_stats.attributes & 0x10))
-                curArmy->ResetAnimation(0);
+                curArmy->Stand(0);
         }
     }
     DrawFrame(1);

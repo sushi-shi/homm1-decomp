@@ -112,6 +112,11 @@ def engine_universe(model=None) -> dict:
             if index < 0:
                 continue
             owner = model.functions[index]
+            # Only rows inside the owner's extent are carved out of it: a
+            # claim trimmed to exclude trailing int3 fill no longer covers
+            # the pad row that follows it.
+            if rva >= owner.rva + owner.size:
+                continue
             if category(owner) == "target":
                 code["target"] = code.get("target", 0) - size
                 if not owner.channel:

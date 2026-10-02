@@ -7,6 +7,7 @@
 
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/combatTypes.h>
 
 #include <stdlib.h>
 
@@ -269,4 +270,214 @@ int combatManager::RawEffectSpellInfluence(army* target, int spell)
     else if (target->m_creatureType == 0xd && effect < 0)
         effect = effect * 0.75;
     return effect;
+}
+
+// Buka SPELLAI.cpp:962-973.
+VA(0x00437977, 0x63)
+void combatManager::ClearEffects(void) {
+    int side;
+    int index;
+    for (side = 0; side < COMBAT_EFFECT_SIDE_COUNT; ++side) {
+        for (index = 0; index < COMBAT_EFFECT_SLOT_COUNT; ++index)
+            gArmyEffected[side][index] = 0;
+    }
+}
+
+// Buka 2.1 NextPos with HoMM1's retail-backed nine-hex row width.
+VA(0x004379da, 0x40)
+void combatManager::NextPos(int* hex) {
+    if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_SPELL_AI_ROW_LENGTH == 0)
+        *hex += COMBAT_SPELL_AI_ROW_SKIP;
+    else
+        (*hex)++;
+}
+
+// Buka SPELLAI.cpp:983-995: the next hex at or after startHex holding a
+// stack of the side (2: either side).
+VA(0x00437a1a, 0x87)
+int combatManager::FirstArmy(int startHex, int side, int* hex)
+{
+    while (startHex <= 0x2b) {
+        if (m_hexCells[startHex].m_occupantSide == side
+            || (side == 2 && m_hexCells[startHex].m_occupantSide >= 0)) {
+            *hex = startHex;
+            return 0;
+        }
+        NextPos(&startHex);
+    }
+    *hex = -1;
+    return 1;
+}
+
+// Buka SPELLAI.cpp:1022-1136: the value of cancelling a side's (2: both
+// sides') spell effects; HoMM1 stacks carry a single effect.
+VA(0x00437aa1, 0x273)
+void combatManager::EffectSpellCure(int* effect, int targetSide, signed char cure)
+{
+    int curSide;
+    int index;
+    army* armyPtr;
+    int posEffect;
+    int negEffect;
+    int finished;
+    int fightValue;
+
+    *effect = 0;
+    finished = 0;
+    if (targetSide == 2)
+        curSide = m_currentSide;
+    else
+        curSide = targetSide;
+    while (!finished) {
+        negEffect = 0;
+        posEffect = 0;
+        for (index = 0; index < 5; index++) {
+            if (m_armies[curSide][index].IsAlive()) {
+                armyPtr = &m_armies[curSide][index];
+                fightValue = gMonsterDatabase[armyPtr->m_creatureType].fightValue * armyPtr->m_quantity;
+                switch (armyPtr->m_spellEffect) {
+                case 6:
+                case 7:
+                case 10:
+                case 14:
+                case 18:
+                    negEffect += -RawEffectSpellInfluence(armyPtr, armyPtr->m_spellEffect);
+                    break;
+                case 5:
+                case 8:
+                case 9:
+                case 12:
+                    posEffect += RawEffectSpellInfluence(armyPtr, armyPtr->m_spellEffect);
+                    break;
+                }
+            }
+        }
+        if (cure == 1)
+            posEffect = 0;
+        if (targetSide == 2) {
+            if (m_currentSide == curSide)
+                *effect += negEffect - posEffect;
+            else
+                *effect += posEffect - negEffect;
+        } else
+            *effect += negEffect;
+        if (targetSide == 2 && m_currentSide == curSide)
+            curSide = 1 - m_currentSide;
+        else
+            finished = 1;
+    }
+}
+
+// Buka SPELLAI.cpp:1147-1166: the fight value Resurrect would restore to
+// the stack on hex.
+VA(0x00437d14, 0xf9)
+void combatManager::EffectSpellResurrect(int* effect, int hex)
+{
+    army* targetArmy;
+    int resurrectPower;
+    int num;
+
+    targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
+    if (targetArmy->m_creatureType == 0x17 || targetArmy->m_spellEffect == 12) {
+        *effect = 0;
+        return;
+    }
+    num = m_heroes[m_currentSide]->m_primaryStats[2] * 50 / targetArmy->m_stats.hitPoints;
+    if (targetArmy->m_quantity + num > targetArmy->m_initialQuantity)
+        num = targetArmy->m_initialQuantity - targetArmy->m_quantity;
+    *effect = gMonsterDatabase[targetArmy->m_creatureType].fightValue * num;
+}
+
+// Buka SPELLAI.cpp:1183-1525: the net fight value a damage spell destroys,
+// or a decisive value when it wipes out a side.
+VA(0x00437e0d, 0x501)
+void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower, int targetHex)
+{
+    int partValue[2];
+    int killed;
+    int stacksKilled[2];
+    int extra;
+    int finished;
+    army* targetCreature;
+    int combatValue[2];
+    int side;
+    int hitDamage;
+    int cell;
+    int power;
+    int dir;
+
+    power = m_heroes[m_currentSide]->m_primaryStats[2] * damagePerPower;
+    cell = 0;
+    dir = 0;
+    finished = 0;
+    if (m_hexCells[targetHex].m_occupantIndex >= 0)
+        targetCreature = &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
+    for (side = 0; side < 2; side++) {
+        stacksKilled[side] = 0;
+        partValue[side] = 0;
+        combatValue[side] = 0;
+    }
+    ClearEffects();
+    while (!finished) {
+        switch (spell) {
+        case 15:
+        case 16:
+            NextPos(&cell);
+            finished = cell > 0x2b;
+            break;
+        case 0:
+        case 17:
+            if (dir < 6) {
+                cell = GetAdjacentCellIndexNoArmy(targetHex, dir);
+                dir++;
+            } else
+                finished = 1;
+            break;
+        case 1:
+            if (cell == targetHex)
+                finished = 1;
+            else
+                cell = targetHex;
+            break;
+        }
+        if (!finished && m_hexCells[cell].m_occupantIndex >= 0 && m_hexCells[cell].m_occupantSide >= 0) {
+            targetCreature = &m_armies[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex];
+            if (targetCreature->m_stats.hitPoints > 0
+                && !gArmyEffected[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex] = 1;
+                if (targetCreature->m_creatureType != 0x17 && targetCreature->m_spellEffect != 12) {
+                    if (targetCreature->m_creatureType == 0xd)
+                        hitDamage = power * 0.75;
+                    else
+                        hitDamage = power;
+                    killed = hitDamage / targetCreature->m_stats.hitPoints;
+                    extra = hitDamage % targetCreature->m_stats.hitPoints;
+                    if (extra + targetCreature->m_hitPointsLost >= targetCreature->m_stats.hitPoints) {
+                        killed++;
+                        extra -= targetCreature->m_stats.hitPoints - targetCreature->m_hitPointsLost;
+                    }
+                    if (targetCreature->m_quantity <= killed) {
+                        killed = targetCreature->m_quantity;
+                        extra = 0;
+                        stacksKilled[m_hexCells[cell].m_occupantSide]++;
+                    }
+                    partValue[m_hexCells[cell].m_occupantSide] +=
+                        (killed * targetCreature->m_stats.hitPoints + extra * 0.75)
+                        * gMonsterDatabase[targetCreature->m_creatureType].fightValue
+                        / targetCreature->m_stats.hitPoints;
+                    combatValue[m_hexCells[cell].m_occupantSide] +=
+                        gMonsterDatabase[targetCreature->m_creatureType].fightValue
+                        * targetCreature->m_stats.hitPoints * killed
+                        / targetCreature->m_stats.hitPoints;
+                }
+            }
+        }
+    }
+    if (stacksKilled[0] >= m_numArmies[0] || stacksKilled[1] >= m_numArmies[1]) {
+        if (combatValue[m_currentSide] <= 0)
+            *effect = 100000000 - giSpellAIValue[spell];
+        else
+            *effect = combatValue[1 - m_currentSide] - combatValue[m_currentSide];
+    } else
+        *effect = partValue[1 - m_currentSide] - partValue[m_currentSide];
 }

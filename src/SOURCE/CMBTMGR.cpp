@@ -456,10 +456,10 @@ signed char combatManager::MoreTreesNear(void)
 {
     int yPos;
     int xPos;
-    short numTrees;
     short step;
     short homeX;
     signed char typeTable[3][8];
+    short numTrees;
     short numMountains;
     mapCell* nearCell;
     short homeY;
@@ -650,7 +650,7 @@ void combatManager::CheckApplyGoodMorale(int side, int index)
         sprintf(gText, "High morale enables the %s to attack again.", gArmyNamesPlural[activeArmy->m_creatureType]);
     CombatMessage(gText, 1);
     activeArmy->SpellEffect(24, 180);
-    activeArmy->ResetAnimation(1);
+    activeArmy->Stand(1);
     if (activeArmy->m_stats.attributes & 0x80)
         activeArmy->m_stats.attributes -= 0x80;
     activeArmy->m_stats.attributes |= 0x20;
@@ -685,7 +685,7 @@ int combatManager::CheckApplyBadMorale(int side, int index)
     CombatMessage(gText, 1);
     activeArmy->m_unknown09 = 2;
     activeArmy->SpellEffect(25, 180);
-    activeArmy->ResetAnimation(1);
+    activeArmy->Stand(1);
     activeArmy->m_stats.attributes |= 0x80;
     WaitEndSample(sample, -1);
     return 1;
@@ -765,9 +765,11 @@ signed char combatManager::IsWinner(signed char side)
 VA(0x0044da9d, 0xd55)
 void combatManager::CatAttack(signed char side)
 {
-    icon* boulder;
     short dx;
     short x;
+    icon* boulder;
+    short summitX;
+    signed char col;
     short i;
     short frm;
     short dy;
@@ -776,8 +778,6 @@ void combatManager::CatAttack(signed char side)
     short force;
     short startX;
     SAMPLE2 catSample;
-    short summitX;
-    signed char col;
     short tgtY;
     signed char wallsLeft;
     short startY;
@@ -1027,33 +1027,33 @@ void combatManager::RegenerateField(void)
 VA(0x0044e840, 0xb8b)
 void combatManager::KeepAttack(void)
 {
-    int bestRank;
+    int mod;
     short minX;
     short minY;
     short lastX;
+    short gapX;
+    float yAdvance;
     signed char hexCol;
     signed char keepY;
     short lastY;
     signed char targetRow;
-    signed char srcCol;
-    int mod;
-    short gapX;
-    float yAdvance;
+    int bestRank;
     float yRun;
+    signed char srcCol;
     short distance;
     float xAdvance;
-    float xRun;
     short gapY;
     signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     int targetIndex;
     SAMPLE2 sample;
     short updRight;
     short w;
-    int power;
     short height;
     bitmap* behind;
     int i;
+    float xRun;
     int bestWorth;
+    int power;
     short startX;
     short maxY;
     short startY;
@@ -1193,10 +1193,10 @@ void combatManager::KeepAttack(void)
     gpCombatManager->CombatMessage(gText, 1);
     target->PowEffect(target->m_stats.unknown07);
     if (!(target->m_stats.attributes & 0x10))
-        target->ResetAnimation(0);
+        target->Stand(0);
     WaitEndSample(sample, -1);
     if (target->m_quantity > 0)
-        target->ResetAnimation(1);
+        target->Stand(1);
     gpMouseManager->ReallyShowPointer();
 }
 
