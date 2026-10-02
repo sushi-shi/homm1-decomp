@@ -185,7 +185,9 @@ H1_ENUM_BEGIN(TownQuickInformation)
     TOWN_QUICK_INFORMATION_UNKNOWN = 0,
     TOWN_QUICK_INFORMATION_NAMES = 1,
     TOWN_QUICK_INFORMATION_ESTIMATES = 2,
-    TOWN_QUICK_INFORMATION_EXACT = 3
+    TOWN_QUICK_INFORMATION_EXACT = 3,
+    // The most a rival's thieves' guilds can reveal.
+    TOWN_QUICK_INFORMATION_THIEVES_LAST = TOWN_QUICK_INFORMATION_ESTIMATES
 H1_ENUM_END(TownQuickInformation)
 
 // Right-click quick views over the map: the window is offset from the
@@ -2179,7 +2181,7 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
 
     for (drawY = 1; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++) {
         PollSound();
-        if (m_cursorDirection > MAP_DIRECTION_SOUTH) {
+        if (m_cursorDirection > 4) {
             for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
                 DrawCell(originX + drawX, originY + drawY - 1, drawX, drawY - 1,
                          ADVMGR_DRAW_OVERLAY | ADVMGR_DRAW_HERO, 0, forceDraw);
@@ -3651,8 +3653,8 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
         detailLevel = TOWN_QUICK_INFORMATION_EXACT;
     } else {
         detailLevel = gpGame->GetNumThievesGuilds(giCurPlayer);
-        if (detailLevel > TOWN_QUICK_INFORMATION_ESTIMATES)
-            detailLevel = TOWN_QUICK_INFORMATION_ESTIMATES;
+        if (detailLevel > TOWN_QUICK_INFORMATION_THIEVES_LAST)
+            detailLevel = TOWN_QUICK_INFORMATION_THIEVES_LAST;
     }
     SetWinText(viewWin, WINDOW_TEXT_TOWN_QUICK_VIEW);
 

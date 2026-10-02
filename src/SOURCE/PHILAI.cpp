@@ -2128,8 +2128,8 @@ int philAI::StrategicValueOfPosition(
                              gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY
                          )
                          ->m_tileIndex];
-                if (!((baseTerrain == TERRAIN_WATER && destTerrain > TERRAIN_WATER)
-                      || (baseTerrain > TERRAIN_WATER && destTerrain == TERRAIN_WATER)))
+                if (!((baseTerrain == TERRAIN_WATER && destTerrain > 0)
+                      || (baseTerrain > 0 && destTerrain == TERRAIN_WATER)))
                     myValue -= (9 - nGap) * 1250 / 9;
             }
         }
