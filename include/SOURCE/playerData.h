@@ -55,9 +55,9 @@ public:
     signed char m_availableHeroIds[2];
     char m_unknown20[0x32];
     // Saved one byte at a time between the hero and town blocks.
-    signed char m_unknown52;
-    signed char m_unknown53;
-    signed char m_unknown54;
+    signed char m_ultimateArtifactHintChance;
+    signed char m_ultimateArtifactHintX;
+    signed char m_ultimateArtifactHintY;
     signed char m_unknown55;
     signed char m_townCount;
     signed char m_currentTown;

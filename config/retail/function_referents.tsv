@@ -134,3 +134,5 @@ rva	name	provenance
 0x0003F758	?ViewSpecialHandler@@YAFAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
 0x00082610	_chdir	SetupCDDrive's chdir call; evidence/homm1-dna-bands.tsv crt-exact libc.lib:/1152 __chdir
 0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
+0x00083340	_strnicmp	fileRequester::Open and game::NewGame call it with (name, prefix, count) cdecl beside _strcmpi at 0x083410
+0x00076EC0	?SetCursorShape@mouseManager@@QAEXH@Z	Empty Windows-build hook (ret 4); fileRequester::DoKnob and advManager::DoHeroKnob pass 4 on entry and 6 on release

@@ -74,7 +74,9 @@ public:
     signed char m_primaryStats[HERO_STARTING_STAT_COUNT];
     signed char m_morale;
     signed char m_luck;
-    char m_unknown37[6];
+    // ShowMoraleInfo reports the cowardice byte separately.
+    signed char m_cowardice;
+    char m_unknown38[5];
     short m_randomSeed;
     char m_unknown3f[0x18];
     armyGroup m_army;

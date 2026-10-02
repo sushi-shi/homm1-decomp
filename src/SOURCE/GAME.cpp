@@ -8,6 +8,8 @@
 #include <BASE/TILE.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/artifactTypes.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/FINDPATH.h>
 
@@ -69,9 +71,9 @@ void playerData::Write(int file) {
     write(file, m_availableHeroIds, sizeof(m_availableHeroIds));
     memset(unused, 0, 50);
     write(file, unused, 50);
-    write(file, &m_unknown52, 1);
-    write(file, &m_unknown53, 1);
-    write(file, &m_unknown54, 1);
+    write(file, &m_ultimateArtifactHintChance, 1);
+    write(file, &m_ultimateArtifactHintX, 1);
+    write(file, &m_ultimateArtifactHintY, 1);
     write(file, &m_unknown55, 1);
     write(file, &m_townCount, 1);
     write(file, &m_currentTown, 1);
@@ -100,9 +102,9 @@ void playerData::Read(int file) {
     read(file, m_heroIds, sizeof(m_heroIds));
     read(file, m_availableHeroIds, sizeof(m_availableHeroIds));
     read(file, unused, 50);
-    read(file, &m_unknown52, 1);
-    read(file, &m_unknown53, 1);
-    read(file, &m_unknown54, 1);
+    read(file, &m_ultimateArtifactHintChance, 1);
+    read(file, &m_ultimateArtifactHintX, 1);
+    read(file, &m_ultimateArtifactHintY, 1);
     read(file, &m_unknown55, 1);
     read(file, &m_townCount, 1);
     read(file, &m_currentTown, 1);
@@ -182,6 +184,110 @@ int playerData::BuildingsOwned(int townType, int buildingIndex, int buildState) 
         }
     }
     return count;
+}
+
+// Buka 2.1 playerData::NumOfGivenArtifact over HoMM1's fourteen hero slots.
+VA(0x004392a4, 0x99)
+int playerData::NumOfGivenArtifact(int artifact) {
+    int count = 0;
+    int i;
+    int j;
+    for (i = 0; i < m_heroCount; i++) {
+        for (j = 0; j < 14; j++) {
+            if (gpGame->m_heroRecs[m_heroIds[i]].m_artifacts[j] == artifact)
+                count++;
+        }
+    }
+    return count;
+}
+
+// Buka 2.1 ComputeUALoc: HoMM1 needs eleven obelisks (four percent each over
+// ten) and skips player 0's hint.
+VA(0x0043933d, 0x386)
+void ComputeUALoc(int player) {
+    int tries;
+    int x;
+    int y;
+    int heading;
+    int numObelisks;
+
+    if (player > 0) {
+        numObelisks = gpGame->m_players[player].CountVisitedObelisks();
+        if (numObelisks < 11 || gpGame->m_ultimateArtifactId == -1) {
+            gpGame->m_players[player].m_ultimateArtifactHintChance = 0;
+            gpGame->m_players[player].m_ultimateArtifactHintX = -1;
+            gpGame->m_players[player].m_ultimateArtifactHintY = -1;
+        } else {
+            gpGame->m_players[player].m_ultimateArtifactHintChance = (numObelisks - 11) * 4;
+            if (gpGame->m_players[player].m_ultimateArtifactHintChance >= Random(1, 100)) {
+                gpGame->m_players[player].m_ultimateArtifactHintX = gpGame->m_ultimateArtifactX;
+                gpGame->m_players[player].m_ultimateArtifactHintY = gpGame->m_ultimateArtifactY;
+            } else {
+                x = -1;
+                y = -1;
+                heading = 0;
+                tries = 0;
+                while (!(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
+                         && gpGame->m_map[x][y].m_triggerType == 0
+                         && gpGame->m_map[x][y].m_objectIndex == 0xff
+                         && gpGame->m_map[x][y].m_overlayIndex == 0xff
+                         && gpGame->m_map[x][y].m_tileIndex >= 20)) {
+                    tries++;
+                    heading = 0;
+                    while (heading == 0)
+                        heading = 3 - Random(0, 2) - Random(0, 2) - Random(0, 2);
+                    x = gpGame->m_ultimateArtifactX + heading;
+                    heading = 0;
+                    while (heading == 0)
+                        heading = 3 - Random(0, 2) - Random(0, 2) - Random(0, 2);
+                    y = gpGame->m_ultimateArtifactY + heading;
+                    if (tries >= 200) {
+                        x = gpGame->m_ultimateArtifactX;
+                        y = gpGame->m_ultimateArtifactY;
+                        goto saveLocation;
+                    }
+                }
+            saveLocation:
+                gpGame->m_players[player].m_ultimateArtifactHintX = x;
+                gpGame->m_players[player].m_ultimateArtifactHintY = y;
+            }
+        }
+    }
+}
+
+// DoEvent's obelisk visit: remove this player's share of the 48 puzzle
+// pieces (Buka 2.1 SetupPuzzlePieces' picker), then re-roll the hint.
+VA(0x004396c3, 0x1b0)
+void game::VisitObelisk(signed char player) {
+    short attempts;
+    signed char visited;
+    signed char fallback;
+    signed char piece;
+    int pieces;
+    short numRemoved;
+    int removeCount;
+
+    pieces = 48;
+    removeCount = pieces / m_obeliskCount;
+    if (removeCount < 1)
+        removeCount = 1;
+    for (numRemoved = 0; numRemoved < removeCount; numRemoved++) {
+        visited = m_players[player].CountVisitedObelisks();
+        for (piece = 0; piece < pieces; piece += Random(1, 5)) {
+            if (!BitTest(m_players[player].m_obelisksVisited, piece))
+                break;
+        }
+        for (attempts = 0; attempts < 100; attempts++) {
+            fallback = Random(0, pieces - 1);
+            if (!BitTest(m_players[player].m_obelisksVisited, fallback))
+                break;
+        }
+        if (piece < pieces)
+            BitSet(m_players[player].m_obelisksVisited, piece);
+        else
+            BitSet(m_players[player].m_obelisksVisited, fallback);
+    }
+    ComputeUALoc(player);
 }
 
 // Buka 2.1 game::IsMobile.
@@ -350,6 +456,84 @@ void game::LoadGame(char*, int, int) {}
 VA(0x0043b522, 0x2c3)
 void game::UpdateNewGameWindow(void) {}
 
+// NewGame remembers the last new-game settings for the next setup screen.
+extern signed char gbNewGameSettingsSaved;
+extern signed char gcSavedDifficulty;
+extern signed char gcSavedPlayerTypes[];
+extern signed char gbSavedKingOfTheHill;
+extern signed char gcSavedCrest;
+extern signed char gbWaitForRemoteReceive;
+extern signed char giCampaignChoice;
+extern int giMapSize;
+extern int giMapDifficulty;
+short NewGameHandler(tag_message&);
+
+// Buka 2.1 game::NewGame: HoMM1 starts campaigns directly, restores the
+// previous setup choices and falls back to a default map when the remembered
+// one does not fit the human player count.
+VA(0x0043baa8, 0x3eb)
+signed char game::NewGame(void) {
+    if (!SetupGame(1))
+        return 0;
+    if (giCampaignChoice > 0) {
+        InitEntireCampaign(giCampaignChoice);
+        return 1;
+    }
+    if (gbWaitForRemoteReceive)
+        return 1;
+    LoadGame("origdata.bin", 1, 0);
+    m_newGameWindow = new heroWindow(310, 14, "newgame.bin");
+    if (!m_newGameWindow)
+        MemError();
+    SetWinText(m_newGameWindow, 7);
+    if (gbNewGameSettingsSaved) {
+        gpGame->m_difficulty = gcSavedDifficulty;
+        m_players[1].m_color = gcSavedPlayerTypes[1];
+        m_players[2].m_color = gcSavedPlayerTypes[2];
+        m_players[3].m_color = gcSavedPlayerTypes[3];
+        gbKingOfTheHill = gbSavedKingOfTheHill;
+        m_players[0].m_unknown11 = gcSavedCrest;
+    }
+    if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
+        || (giNumHumanPlayers == 2 && gMapName[5] != '2')
+        || (giNumHumanPlayers == 3 && gMapName[6] != '3')
+        || (giNumHumanPlayers == 4 && gMapName[7] != '4')) {
+        if (giNumHumanPlayers == 1) {
+            strcpy(gMapName, "AES31000.map");
+            strcpy(gFullMapName, "Claw ( Easy )");
+            strcpy(gMapDescription, "The Griffons will protect you until you are ready to make your move.");
+            giMapSize = 0;
+            giMapDifficulty = 0;
+        } else {
+            strcpy(gMapName, "CNM51234.map");
+            strcpy(gFullMapName, "Around the Bay");
+            strcpy(gMapDescription, "A large island of tight passes with a circular feel.");
+            giMapSize = 1;
+            giMapDifficulty = 1;
+        }
+    }
+    UpdateNewGameWindow();
+    gpMouseManager->ReallyShowPointer();
+    gpWindowManager->DoDialog(m_newGameWindow, NewGameHandler, 0);
+    delete m_newGameWindow;
+    if (gpWindowManager->m_dialogResult == 0x7801)
+        return 0;
+    strcpy(m_mapName, gFullMapName);
+    strcpy(m_mapDescription, gMapDescription);
+    m_mapSize = giMapSize;
+    m_mapDifficulty = giMapDifficulty;
+    strcpy(m_mapName, gFullMapName);
+    gbNewGameSettingsSaved = 1;
+    gcSavedDifficulty = gpGame->m_difficulty;
+    gcSavedPlayerTypes[1] = m_players[1].m_color;
+    gcSavedPlayerTypes[2] = m_players[2].m_color;
+    gcSavedPlayerTypes[3] = m_players[3].m_color;
+    gbSavedKingOfTheHill = gbKingOfTheHill;
+    gcSavedCrest = m_players[0].m_unknown11;
+    NewMap(gMapName);
+    return 1;
+}
+
 // donor PoL RVA 0x000bc00e; preferred Buka symbol ?ShowInfo@ExpCampaign@@QAEXHH@Z
 // donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.710255;margin=0.146523;shape=0.500;size=0.813;calls=0.958;strings=advmice.mse;alternate=pol20:void ExpCampaign::ShowInfo(int, int)@0x000bc00e
@@ -358,11 +542,66 @@ void game::UpdateNewGameWindow(void) {}
 VA(0x0043be93, 0x2ad)
 void game::ShowCampaignInfo(int, int, int) {}
 
-// donor PoL RVA 0x000bb843; preferred Buka symbol ?InitMap@ExpCampaign@@QAEXXZ
-// donor Buka TU SOURCE/X_CAMPGN; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.361177;margin=0.269979;shape=0.160;size=0.387;calls=0.167;strings=origdata.bin;alternate=pol20:void ExpCampaign::InitMap(void)@0x000bb843
+// Two bytes per campaign side; the first is the human player's crest.
+extern signed char gCampaignSideCrests[][2];
+
+// Buka 2.1 game::InitEntireCampaign; HoMM1 reloads origdata.bin first and
+// starts the campaign calendar on day 1.
+VA(0x0043c140, 0x7f)
+void game::InitEntireCampaign(int side) {
+    LoadGame("origdata.bin", 1, 0);
+    strcpy(gFullMapName, "");
+    gpGame->m_difficulty = 3;
+    m_campaignType = side;
+    m_campaignScenario = 0;
+    m_unknown000b = 0;
+    m_campaignDay = 1;
+    InitCampaignMap(m_campaignScenario, 0);
+}
+
+// Buka 2.1 game::InitCampaignMap reduced to HoMM1's CAMP%d.CMP maps: the
+// calendar continues from m_campaignDay and the scenario table seeds the
+// opponents and every player's resources.
 VA(0x0043c1bf, 0x28c)
-void ExpCampaign::InitMap(void) {}
+void game::InitCampaignMap(int scenario, int) {
+    int saveType;
+    int savedScenario;
+    int j;
+    int i;
+    int savedState;
+    int savedDay;
+
+    saveType = m_campaignType;
+    savedScenario = m_campaignScenario;
+    savedState = m_unknown000b;
+    savedDay = m_campaignDay;
+    LoadGame("origdata.bin", 1, 0);
+    m_campaignType = saveType;
+    m_campaignScenario = savedScenario;
+    m_unknown000b = savedState;
+    m_campaignDay = savedDay;
+    m_month = (m_campaignDay - 1) / 28 + 1;
+    m_week = (m_campaignDay - 1 - (m_month - 1) * 28) / 7 + 1;
+    m_day = (m_campaignDay - 1) % 7 + 1;
+    giCurTurn = (m_month - 1) * 28 + (m_week - 1) * 7 + m_day;
+    gbKingOfTheHill = gCampaignScenarios[scenario].kingOfTheHill;
+    giNumHumanPlayers = 0;
+    m_players[0].m_color = 4;
+    m_players[0].m_unknown11 = gCampaignSideCrests[m_campaignType][0];
+    m_playerCount = 1;
+    for (i = 1; i < 4; i++) {
+        m_players[i].m_color = gCampaignScenarios[scenario].playerTypes[i];
+        if (m_players[i].m_color)
+            m_playerCount++;
+    }
+    giNumHumanPlayers = 1;
+    sprintf(gMapName, "CAMP%d.CMP", scenario + 1);
+    NewMap(gMapName);
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 7; j++)
+            m_players[i].m_resources[j] = gCampaignScenarios[scenario].resources[i][j];
+    }
+}
 
 // donor PoL RVA 0x00078b72; preferred Buka symbol ?LoadMap@game@@QAEHPAD@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
@@ -423,16 +662,16 @@ void game::ClaimMine(signed char mineId, signed char player) {
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
     switch (m_mines[mineId].type) {
-        case 0:
+        case 0x16:
             frame = 0x14;
             break;
-        case 1:
+        case 0x17:
             frame = 0x18;
             break;
-        case 0x16:
+        case 0:
             frame = 0x10;
             break;
-        case 0x17:
+        case 1:
             frame = 0xc;
             break;
         default:
@@ -580,8 +819,8 @@ VA(0x004440e9, 0x259)
 void game::SetVisibility(short x, short y, short player, short radius) {
     int i;
     int j;
-    int cutoff;
     int rangeLeft;
+    int cutoff;
     unsigned char viewMask = 1 << player;
     unsigned char outerMask = 1 << (player + 4);
 
@@ -712,8 +951,26 @@ void SRand(int seed)
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.340271;margin=0.529148;shape=0.188;size=0.654;calls=0.667;alternate=pol20:int game::GetLuck(class hero *, class army *, class town *)@0x00080ff9
 VA(0x0044465b, 0xbf)
-int game::GetLuck(class hero*, class army*) {
+int game::GetLuck(hero* h, army*) {
+    int luck;
+
+    if (!h)
     return 0;
+    luck = 0;
+    if (h->HasArtifact(ARTIFACT_LUCKY_RABBITS_FOOT))
+        luck++;
+    if (h->HasArtifact(ARTIFACT_GOLDEN_HORSESHOE))
+        luck++;
+    if (h->HasArtifact(ARTIFACT_GAMBLERS_LUCKY_COIN))
+        luck++;
+    if (h->HasArtifact(ARTIFACT_FOUR_LEAF_CLOVER))
+        luck++;
+    luck += h->m_luck;
+    if (luck < -3)
+        luck = -3;
+    if (luck > 3)
+        luck = 3;
+    return luck;
 }
 
 // Buka 2.1 keeps the scan cursor in file statics.
@@ -1025,11 +1282,89 @@ int game::GetBoatsBuilt(void) {
     return count;
 }
 
+DATA(0x00490abc)
+signed char gbShowMapInfo = 0;
+
 // donor PoL RVA 0x000b6f40; preferred Buka symbol ?GetMap@game@@QAEXXZ
 // donor Buka TU SOURCE/Newgame; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.547944;margin=0.077231;shape=0.356;size=0.530;calls=0.607;strings=.\MAPS\;alternate=pol20:void game::GetMap(void)@0x000b6f40
+// Buka 2.1 GetMap with HoMM1's player-count file masks and the reqextra.bin
+// map-info window; a cancelled pick restores the previous map's texts.
 VA(0x00446a8a, 0x36f)
-void game::GetMap(void) {}
+void game::GetMap(void) {
+    char saveFullName[20];
+    char oldDescription[124];
+    char oldMapName[16];
+    char mask[16];
+    short result;
+    fileRequester* request;
+
+    strcpy(oldMapName, gMapName);
+    strcpy(saveFullName, gFullMapName);
+    strcpy(oldDescription, gMapDescription);
+    gbShowMapInfo = 1;
+    strcpy(gcCurMapName, "");
+    gpReqExtraWindow = new heroWindow(310, 332, "reqextra.bin");
+    if (!gpReqExtraWindow)
+        MemError();
+    if (giNumHumanPlayers == 1)
+        sprintf(mask, "????1???.MAP");
+    else if (giNumHumanPlayers == 2)
+        sprintf(mask, "?????2??.MAP");
+    else if (giNumHumanPlayers == 3)
+        sprintf(mask, "??????3?.MAP");
+    else if (giNumHumanPlayers == 4)
+        sprintf(mask, "???????4.MAP");
+    request = new fileRequester(310, 14, 0, mask, ".\\MAPS\\", ".MAP");
+    if (!request)
+        MemError();
+    request->ShowMapInfo();
+    result = gpExec->DoDialog(request);
+    gpWindowManager->RemoveWindow(gpReqExtraWindow);
+    if (result == 0x7802) {
+        strcpy(gMapName, gLastFilename);
+        delete request;
+    } else {
+        strcpy(gMapName, oldMapName);
+        strcpy(gFullMapName, saveFullName);
+        strcpy(gMapDescription, oldDescription);
+        delete request;
+    }
+    delete gpReqExtraWindow;
+    gbShowMapInfo = 0;
+}
+
+// ShowCongrats' base score: 200 less a day per day for two months, then a
+// half, a quarter and an eighth per day, never below 20.
+VA(0x004471a0, 0x138)
+int GetBaseScore(int days) {
+    int score;
+
+    score = 200;
+    if (days <= 60) {
+        score -= days;
+        goto done;
+    } else {
+        score -= 60;
+    }
+    if (days <= 120) {
+        score -= (days - 60) * 0.5;
+        goto done;
+    } else {
+        score -= 30.0;
+    }
+    if (days <= 360) {
+        score -= (days - 120) * 0.25;
+        goto done;
+    } else {
+        score -= 60.0;
+    }
+    score -= (days - 360) * 0.125;
+done:
+    if (score < 20)
+        score = 20;
+    return score;
+}
 
 // donor PoL RVA 0x000333c0; preferred Buka symbol ?ViewWorld@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/Viewwrld; HoMM1 owner inferred from contiguous order
@@ -1081,6 +1416,39 @@ armyGroup::armyGroup(void) {
 
 VA(0x0044795c, 0x18)
 void armyGroup::View(int) {}
+
+// HoMM1 adds the town's building bit 4 and clamps to -3..3 in AX.
+VA(0x00447974, 0x11b)
+short armyGroup::GetMorale(hero* h, town* t) {
+    int morale;
+    int alignment;
+
+    morale = 0;
+    alignment = IsHomogeneous(-1);
+    morale += alignment;
+    if (h) {
+        if (!h->m_unknown1c)
+            morale++;
+        morale += h->m_morale;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
+            morale++;
+        if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+            morale -= 2;
+    }
+    if (t && (t->m_buildings & 4))
+        morale++;
+    if (morale < -3)
+        morale = -3;
+    else if (morale > 3)
+        morale = 3;
+    return morale;
+}
 
 VA(0x00447a8f, 0x31)
 void armyGroup::Dismiss(signed char slot) {
