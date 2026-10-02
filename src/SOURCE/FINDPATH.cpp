@@ -117,7 +117,7 @@ short searchArray::FindCombatPath(short sourceHex, short targetHex, army* unit, 
     int bestDistance;
     int opposite;
 
-    bestDistance = 640;
+    bestDistance = FINDPATH_INITIAL_BEST_DISTANCE;
     bestHex = -1;
     if (attackPath)
         attackTargetHex = (signed char)targetHex;

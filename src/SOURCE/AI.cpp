@@ -378,7 +378,7 @@ short combatManager::GetClosestArmy(class army* currentArmy, signed char side, s
     short armyIndex = 0;
     army* target;
     short bitFlag = 1;
-    int closestDist = 640;
+    int closestDist = FINDPATH_INITIAL_BEST_DISTANCE;
     short bestArmy = -1;
 
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {

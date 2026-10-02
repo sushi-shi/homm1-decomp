@@ -71,8 +71,8 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
     m_spellEndCondition = ARMY_CANCEL_SPELLS_NONE;
     commander = gpCombatManager->m_heroes[side];
     if (commander) {
-        m_stats.attack = commander->m_primaryStats[0] + m_stats.attack;
-        m_stats.defense = commander->m_primaryStats[1] + m_stats.defense;
+        m_stats.attack = commander->m_primaryStats[HERO_PRIMARY_ATTACK] + m_stats.attack;
+        m_stats.defense = commander->m_primaryStats[HERO_PRIMARY_DEFENSE] + m_stats.defense;
     }
     m_facing = side ^ 1;
     m_walkYStep = 0;
@@ -337,7 +337,7 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
     int nextTail;
 
     if (!continued) {
-        giMinExtentX = giMinExtentY = 640;
+        giMinExtentX = giMinExtentY = COMBAT_EXTENT_MIN_START;
         giMaxExtentX = giMaxExtentY = 0;
         gbComputeExtent = 1;
         gbSaveBiggestExtent = 1;
@@ -349,10 +349,10 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         giMinExtentX = 0;
     if (giMinExtentY < 0)
         giMinExtentY = 0;
-    if (giMaxExtentX > 639)
-        giMaxExtentX = 639;
-    if (giMaxExtentY > 459)
-        giMaxExtentY = 459;
+    if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+        giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+    if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+        giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
     rectMinX = giMinExtentX - 5;
     rectMinY = giMinExtentY - 5;
     rectMaxX = giMaxExtentX + 5;
@@ -415,7 +415,7 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         gpCombatManager->DrawFrame(0);
         if (ValidHex(m_hex))
             gpCombatManager->m_hexCells[m_hex].m_occupantSide = gpCombatManager->m_currentSide;
-        gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
+        gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBuffer, 0, 0, 0, 0, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
         gpCombatManager->m_backgroundDrawn = 0;
     }
     for (i = 0; i < 6; i++) {
@@ -429,7 +429,7 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
             rectMaxX = giMaxExtentX;
             rectMaxY = giMaxExtentY;
         }
-        giMinExtentX = giMinExtentY = 640;
+        giMinExtentX = giMinExtentY = COMBAT_EXTENT_MIN_START;
         giMaxExtentX = giMaxExtentY = 0;
         gbComputeExtent = 1;
         gbSaveBiggestExtent = 1;
@@ -440,10 +440,10 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
             giMinExtentX = 0;
         if (giMinExtentY < 0)
             giMinExtentY = 0;
-        if (giMaxExtentX > 639)
-            giMaxExtentX = 639;
-        if (giMaxExtentY > 459)
-            giMaxExtentY = 459;
+        if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+            giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
         gbCurrArmyDrawn = 0;
         gbComputeExtent = 1;
         gbLimitToExtent = 1;
@@ -610,9 +610,9 @@ void army::SpecialAttack(void) {
     posX = offX + startX;
     posY = offY + startY;
     iMaxX = 0;
-    minX = 639;
+    minX = LOGICAL_SCREEN_WIDTH - 1;
     maxY = 0;
-    minY = 479;
+    minY = LOGICAL_SCREEN_HEIGHT - 1;
     saved = new bitmap(33, 70, 60);
     saved->GrabBitmap(gpWindowManager->m_screen, posX - 35, posY - 30);
     prevX = posX;

@@ -246,7 +246,7 @@ short army::FlyTo(short destination)
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         otherCell.m_occupantSide = -1;
     gpCombatManager->DrawFrame(0);
-    gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
+    gpWindowManager->m_screen->CopyTo(gpCombatManager->m_backgroundBuffer, 0, 0, 0, 0, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     gpCombatManager->m_backgroundDrawn = 0;
     for (i = 0; i < steps * 6; i++) {
         if (i % 6 == 1)
@@ -263,10 +263,10 @@ short army::FlyTo(short destination)
         } else {
             oldX = 0;
             oldY = 0;
-            maxExtentX = 639;
-            oldMaxY = 459;
+            maxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+            oldMaxY = COMBAT_VIEW_HEIGHT - 1;
         }
-        giMinExtentY = 640;
+        giMinExtentY = COMBAT_EXTENT_MIN_START;
         giMinExtentX = giMinExtentY;
         giMaxExtentY = 0;
         giMaxExtentX = giMaxExtentY;
@@ -279,10 +279,10 @@ short army::FlyTo(short destination)
             giMinExtentX = 0;
         if (giMinExtentY < 0)
             giMinExtentY = 0;
-        if (giMaxExtentX > 639)
-            giMaxExtentX = 639;
-        if (giMaxExtentY > 459)
-            giMaxExtentY = 459;
+        if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+            giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
         if (oldX > giMinExtentX)
             oldX = giMinExtentX;
         if (oldY > giMinExtentY)

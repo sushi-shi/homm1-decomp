@@ -153,7 +153,7 @@ void combatManager::UpdateCombatArea(void) {
     if (y + height > 460)
         height = 460 - y;
     gbEnlargeScreenBlit = 0;
-    gpWindowManager->UpdateScreenRegion(0, y, 640, height);
+    gpWindowManager->UpdateScreenRegion(0, y, LOGICAL_SCREEN_WIDTH, height);
     gbEnlargeScreenBlit = 1;
     m_gridUpdateRow = COMBAT_GRID_ROWS;
 }
@@ -184,7 +184,7 @@ void combatManager::DrawBackground(void) {
             }
         }
     }
-    gpWindowManager->m_screen->CopyTo(m_backgroundBuffer, 0, 0, 0, 0, 640, 460);
+    gpWindowManager->m_screen->CopyTo(m_backgroundBuffer, 0, 0, 0, 0, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 1;
 }
 
@@ -209,8 +209,8 @@ void combatManager::DrawFrame(signed char updateScreen) {
         return;
     if (m_computeExtent) {
         giMaxExtentX = giMaxExtentY = 0;
-        giMinExtentX = 639;
-        giMinExtentY = 459;
+        giMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        giMinExtentY = COMBAT_VIEW_HEIGHT - 1;
         drawn = 0;
         for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -277,10 +277,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
             giMinExtentX = 0;
         if (giMinExtentY < 0)
             giMinExtentY = 0;
-        if (giMaxExtentX > 639)
-            giMaxExtentX = 639;
-        if (giMaxExtentY > 459)
-            giMaxExtentY = 459;
+        if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+            giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
     }
     m_gridUpdateRow = 0;
     if (!gbLimitToExtent) {
@@ -290,7 +290,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
                                            giMinExtentY, giMaxExtentX - giMinExtentX + 1,
                                            giMaxExtentY - giMinExtentY + 1);
             else
-                m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, 0, 0, 0, 0, 640, 460);
+                m_backgroundBuffer->CopyTo(gpWindowManager->m_screen, 0, 0, 0, 0, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
         } else {
             DrawBackground();
         }

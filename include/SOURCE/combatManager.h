@@ -75,6 +75,15 @@ H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_SIDE_COUNT = 2
 H1_ENUM_CONST_END(CombatGridConstant)
 
+// The battlefield view is the logical screen less SaveCombatBorder's
+// twenty-row text bar: the background buffer copies 640x460 and the redraw
+// extents clamp to its last row. Walk and FlyTo start the minimum extents
+// at 640, past every view coordinate.
+H1_ENUM_CONST_BEGIN(CombatViewConstant)
+    COMBAT_VIEW_HEIGHT = 460,
+    COMBAT_EXTENT_MIN_START = 640
+H1_ENUM_CONST_END(CombatViewConstant)
+
 // combatManager::m_combatIcons slots, as LoadCombatResources fills them:
 // the terrain's ground and obstacle icons, textbar.icn, catapult.icn,
 // tent.icn, castle%02d.icn, cloud.icn, keep%02d.icn and spells.icn.

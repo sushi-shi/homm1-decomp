@@ -3,8 +3,11 @@
 
 #include <Domains.h>
 
+// FindCombatPath and combatManager::GetClosestArmy start their best
+// QuickDistance at 640 (Buka FINDPATH.cpp INITIAL_BEST_DISTANCE).
 H1_ENUM_CONST_BEGIN(FindPathDistanceConstant)
-    DISTANCE_MINOR_DIVISOR = 2
+    DISTANCE_MINOR_DIVISOR = 2,
+    FINDPATH_INITIAL_BEST_DISTANCE = 640
 H1_ENUM_CONST_END(FindPathDistanceConstant)
 
 H1_ENUM_CONST_BEGIN(FindPathTerrainConstant)
