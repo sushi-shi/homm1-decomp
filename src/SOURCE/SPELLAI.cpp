@@ -72,6 +72,18 @@ int combatManager::DoSpellAI(signed char side)
     return 0;
 }
 
+// clang-format off
+// DetermineEffectOfSpell's target walk (Buka 2.1 SPELLAI.cpp
+// CombatSpellAITargetMode; HoMM1 numbers its four modes in this order): one
+// global evaluation, every area position, or each friendly / enemy stack.
+H1_ENUM_BEGIN(CombatSpellAITargetMode)
+    SPELL_AI_GLOBAL = 0,
+    SPELL_AI_AREA = 1,
+    SPELL_AI_FRIENDLY = 2,
+    SPELL_AI_ENEMY = 3
+H1_ENUM_END(CombatSpellAITargetMode)
+// clang-format on
+
 // Buka SPELLAI.cpp:141-733 reduced to HoMM1's nineteen combat spells: each
 // spell is scored once, across the area grid, or over one side's stacks.
 VA(0x004371cd, 0x4b4)
@@ -96,11 +108,11 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
     case SPELL_DISPEL_MAGIC:
     case SPELL_ARMAGEDDON:
     case SPELL_STORM:
-        spellMode = 0;
+        spellMode = SPELL_AI_GLOBAL;
         break;
     case SPELL_FIREBALL:
     case SPELL_METEOR_SHOWER:
-        spellMode = 1;
+        spellMode = SPELL_AI_AREA;
         break;
     case SPELL_TELEPORT:
     case SPELL_RESURRECT:
@@ -108,7 +120,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
     case SPELL_BLESS:
     case SPELL_PROTECTION:
     case SPELL_ANTI_MAGIC:
-        spellMode = 2;
+        spellMode = SPELL_AI_FRIENDLY;
         side = m_currentSide;
         break;
     case SPELL_LIGHTNING_BOLT:
@@ -118,14 +130,14 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
     case SPELL_TURN_UNDEAD:
     case SPELL_BERZERKER:
     case SPELL_PARALYZE:
-        spellMode = 3;
+        spellMode = SPELL_AI_ENEMY;
         side = 1 - m_currentSide;
         break;
     default:
         *bestEffect = 0;
         return;
     }
-    if (spellMode == 2 || spellMode == 3)
+    if (spellMode == SPELL_AI_FRIENDLY || spellMode == SPELL_AI_ENEMY)
         bDone = FirstArmy(1, side, &curHex);
     while (!bDone) {
         if (m_hexCells[curHex].m_occupantIndex >= 0) {
@@ -195,14 +207,14 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
             *bestHex = curHex;
         }
         switch (spellMode) {
-        case 0:
+        case SPELL_AI_GLOBAL:
             bDone = 1;
             break;
-        case 2:
-        case 3:
+        case SPELL_AI_FRIENDLY:
+        case SPELL_AI_ENEMY:
             bDone = FirstArmy(curHex + 1, side, &curHex);
             break;
-        case 1:
+        case SPELL_AI_AREA:
             NextPos(&curHex);
             if (curHex > 0x2b)
                 bDone = 1;
