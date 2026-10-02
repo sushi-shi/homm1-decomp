@@ -283,8 +283,8 @@ VA(0x00465671, 0xca)
 short combatManager::GetShooterMask(signed char side) {
     short armyIndex = 0;
     short bitMask = 1;
-    short armyMask = 0;
     class army* army;
+    short armyMask = 0;
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
@@ -374,12 +374,12 @@ short combatManager::GetWorstArmy(signed char side, short mask) {
 
 VA(0x00465a33, 0x109)
 short combatManager::GetClosestArmy(class army* currentArmy, signed char side, short mask) {
+    int val;
     short armyIndex = 0;
     army* target;
     short bitFlag = 1;
     int closestDist = 640;
     short bestArmy = -1;
-    int val;
 
     for (armyIndex = 0; armyIndex < 5; armyIndex++) {
         if (mask & bitFlag) {
@@ -505,10 +505,10 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
 
 VA(0x00466050, 0x20f)
 signed char combatManager::WalkTowardArmyFront(class army* currentArmy, signed char side, short mask) {
+    short frontHex;
     int armyIndex;
     int frontDelta;
     int canReach;
-    short frontHex;
     signed char oldSpeed;
     short pathNdx;
     short left;
