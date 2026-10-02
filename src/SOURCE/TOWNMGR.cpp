@@ -459,12 +459,12 @@ short townManager::Main(struct tag_message &message)
                         case BUILDING_SLOT_DWELLING_5:
                         case BUILDING_SLOT_DWELLING_6:
                             if (rightClick) {
-                                QuickViewRecruit(m_town, message.id - 7);
+                                QuickViewRecruit(m_town, message.id - BUILDING_SLOT_DWELLING_FIRST);
                                 break;
                             }
                             gpMouseManager->ReallyHidePointer();
                             DrawTown(1, 1);
-                            recruitMgr = new recruitUnit(m_town, message.id - 7);
+                            recruitMgr = new recruitUnit(m_town, message.id - BUILDING_SLOT_DWELLING_FIRST);
                             if (recruitMgr == NULL)
                                 MemError();
                             gpExec->DoDialog(recruitMgr);
@@ -497,7 +497,7 @@ short townManager::Main(struct tag_message &message)
                                 case BUILDING_SLOT_MAGE_GUILD:
                                     if (m_town->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE
                                         && !gpGame->GetHero(m_town->m_occupyingHeroId)->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
-                                        if (gpGame->GetHero(m_town->m_occupyingHeroId)->NumArtifacts() == 14)
+                                        if (gpGame->GetHero(m_town->m_occupyingHeroId)->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT)
                                             NormalDialog("You must purchase a spell book to use the mage guild, but "
                                                          "you currently have no room for a spell book.  Try giving "
                                                          "one of your artifacts to another hero.",
@@ -509,7 +509,7 @@ short townManager::Main(struct tag_message &message)
                                             SetWinText(m_heroWindow0, WINDOW_TEXT_BUY_SPELL_BOOK);
                                             if (gpGame->m_players[gpGame->GetHero(m_town->m_occupyingHeroId)->m_owner]
                                                     .m_resources[RESOURCE_GOLD]
-                                                < 500) {
+                                                < TOWN_SPELL_BOOK_COST) {
                                                 message.type = MESSAGE_WIDGET;
                                                 message.command = WIDGET_COMMAND_SET_FLAGS;
                                                 message.id = TOWN_DIALOG_BUTTON_2;
@@ -523,7 +523,7 @@ short townManager::Main(struct tag_message &message)
                                             if (gpWindowManager->m_dialogResult == TOWN_DIALOG_BUTTON_2) {
                                                 gpAdvManager->GiveArtifact(gpGame->GetHero(m_town->m_occupyingHeroId),
                                                                            ARTIFACT_MAGIC_BOOK);
-                                                gpCurPlayer->m_resources[RESOURCE_GOLD] -= 500;
+                                                gpCurPlayer->m_resources[RESOURCE_GOLD] -= TOWN_SPELL_BOOK_COST;
                                                 m_bankBox->Update();
                                                 m_townWindow->DrawWindow();
                                                 m_town->GiveSpells();
@@ -603,7 +603,7 @@ short townManager::Main(struct tag_message &message)
                                 break;
                             gpWindowManager->BroadcastMessage(MESSAGE_WIDGET, WIDGET_COMMAND_SET_FLAGS,
                                                               TOWN_CLOSE_CONTROL, WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED);
-                            if (gpGame->GetBoatsBuilt() < 32
+                            if (gpGame->GetBoatsBuilt() < GAME_BOAT_COUNT
                                 && gpAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)->m_triggerType == MAP_OBJECT_NONE
                                 && m_town->m_x - 1 != gpAdvManager->m_cursorMapX
                                 && m_town->m_y + 1 != gpAdvManager->m_cursorMapY) {
@@ -611,8 +611,8 @@ short townManager::Main(struct tag_message &message)
                                 if (m_heroWindow0 == NULL)
                                     MemError();
                                 SetWinText(m_heroWindow0, WINDOW_TEXT_SHIPYARD);
-                                if (gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] < 1000
-                                    || gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] < 10) {
+                                if (gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] < TOWN_BOAT_GOLD_COST
+                                    || gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] < TOWN_BOAT_WOOD_COST) {
                                     message.type = MESSAGE_WIDGET;
                                     message.command = WIDGET_COMMAND_SET_FLAGS;
                                     message.id = TOWN_DIALOG_BUTTON_2;
@@ -628,8 +628,8 @@ short townManager::Main(struct tag_message &message)
                                     if (gpGame->CreateBoat(m_town->m_x - 1, m_town->m_y + 1) != -1) {
                                         res = NULL_SAMPLE2;
                                         res = LoadPlaySample("buildtwn.82M");
-                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] -= 1000;
-                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] -= 10;
+                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] -= TOWN_BOAT_GOLD_COST;
+                                        gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] -= TOWN_BOAT_WOOD_COST;
                                         m_bankBox->Update();
                                         WaitEndSample(res, -1);
                                     } else
@@ -976,7 +976,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     int yPos;
     int resIndex;
     char *descText;
-    textWidget *amountWidgets[7];
+    textWidget *amountWidgets[RESOURCE_COUNT];
     int nRowTypes[4];
     int row;
     short currX;
@@ -990,10 +990,10 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     short firstRow;
     int space;
     tag_message iEvt;
-    signed char resType[7];
+    signed char resType[RESOURCE_COUNT];
     int binSize;
     int dwellIndex;
-    iconWidget *resWidgets[7];
+    iconWidget *resWidgets[RESOURCE_COUNT];
     short startX;
     font *iF;
     short unusedType;
@@ -1003,42 +1003,42 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     int j;
     textWidget *descWidget;
     int iTotalHeight;
-    short prices[7];
+    short prices[RESOURCE_COUNT];
     short unusedKind;
     int nEntryWidth;
     int curCost;
     int numPrereqs;
     short unusedMode1;
     int iMageLevel;
-    char *amountText[7];
+    char *amountText[RESOURCE_COUNT];
     int baseY;
 
     iMageLevel = 0;
     j = 0;
     curCost = 0;
     descText = static_cast<char*>(malloc(300));
-    for (j = 0; j < 7; j++)
+    for (j = 0; j < RESOURCE_COUNT; j++)
         resType[j] = prices[j] = -1;
     dwellIndex = -1;
-    if (building > 6)
-        dwellIndex = building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * 6;
+    if (building > TOWN_NEUTRAL_BUILDING_LAST)
+        dwellIndex = building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION;
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & 1)
             iMageLevel = gpTownManager->m_town->m_buildState + 1;
         else
             iMageLevel = 0;
-        if (iMageLevel > 3)
-            iMageLevel = 3;
-        for (j = 0; j < 7; j++) {
+        if (iMageLevel > TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+            iMageLevel = TOWN_MAGE_GUILD_COST_LEVEL_LAST;
+        for (j = 0; j < RESOURCE_COUNT; j++) {
             if (gMageBuildingCosts[iMageLevel][j] > 0) {
                 resType[curCost] = j;
                 prices[curCost] = gMageBuildingCosts[iMageLevel][j];
                 curCost++;
             }
         }
-    } else if (building <= 6) {
-        for (j = 0; j < 7; j++) {
-            ProcessAssert(building >= 0 && building < 7, "D:\\Heroes\\Source\\TOWNMGR.CPP",
+    } else if (building <= TOWN_NEUTRAL_BUILDING_LAST) {
+        for (j = 0; j < RESOURCE_COUNT; j++) {
+            ProcessAssert(building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT, "D:\\Heroes\\Source\\TOWNMGR.CPP",
                           gTownMgrAssertLine + 42);
             ProcessAssert(j >= 0 && j <= 6, "D:\\Heroes\\Source\\TOWNMGR.CPP", gTownMgrAssertLine + 43);
             if (gNeutralBuildingCosts[building][j] > 0) {
@@ -1048,8 +1048,8 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
             }
         }
     } else {
-        for (j = 0; j < 7; j++) {
-            ProcessAssert(dwellIndex >= 0 && dwellIndex < 28, "D:\\Heroes\\Source\\TOWNMGR.CPP",
+        for (j = 0; j < RESOURCE_COUNT; j++) {
+            ProcessAssert(dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS, "D:\\Heroes\\Source\\TOWNMGR.CPP",
                           gTownMgrAssertLine + 57);
             ProcessAssert(j >= 0 && j <= 6, "D:\\Heroes\\Source\\TOWNMGR.CPP", gTownMgrAssertLine + 58);
             LogStr("DwellCost", gDwellingCosts[dwellIndex][j], dwellIndex, j, 0, 0);
@@ -1071,7 +1071,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     pResourceCount = 0;
     firstRow = 0;
     nBottomCount = 0;
-    for (j = 0; j < 7; j++) {
+    for (j = 0; j < RESOURCE_COUNT; j++) {
         if (resType[j] != -1)
             pResourceCount++;
     }
@@ -1087,13 +1087,13 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         firstRow = 3;
         nBottomCount = 4;
     }
-    if (building <= 6)
+    if (building <= TOWN_NEUTRAL_BUILDING_LAST)
         sprintf(descText, gNeutralBuildingDescriptions[building]);
     else
         sprintf(descText, gDwellingDescriptions[dwellIndex]);
     if (dwellIndex >= 0) {
         numPrereqs = 0;
-        requirements = gDwellingRequirements[building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * 6];
+        requirements = gDwellingRequirements[building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION];
         for (j = 0; j < 12; j++) {
             if (requirements & (1 << j)) {
                 if (numPrereqs == 0)
@@ -1103,7 +1103,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                 if (j <= 6)
                     strcat(descText, gNeutralBuildingNames[j]);
                 else
-                    strcat(descText, gDwellingNames[j - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * 6]);
+                    strcat(descText, gDwellingNames[j - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION]);
             }
         }
     }

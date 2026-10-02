@@ -192,6 +192,21 @@ H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_DIALOG_BUTTON_1 = 0x7801,
     TOWN_DIALOG_BUTTON_2 = 0x7802
 H1_ENUM_CONST_END(TownTavernConstant)
+
+// Town purchases and building tables: the spell book and boat prices
+// (Buka TOWN_SPELL_BOOK_COST), the six dwellings each faction's rows hold in
+// the gDwelling* tables, and BuyBuild's split between neutral buildings
+// (gNeutralBuildingCosts rows 0..6) and dwellings.
+H1_ENUM_CONST_BEGIN(TownBuildConstant)
+    TOWN_SPELL_BOOK_COST = 500,
+    TOWN_BOAT_GOLD_COST = 1000,
+    TOWN_BOAT_WOOD_COST = 10,
+    TOWN_DWELLINGS_PER_FACTION = 6,
+    TOWN_NEUTRAL_BUILDING_LAST = 6,
+    TOWN_NEUTRAL_BUILDING_COUNT = 7,
+    TOWN_DWELLING_COST_ROWS = 28,
+    TOWN_MAGE_GUILD_COST_LEVEL_LAST = 3
+H1_ENUM_CONST_END(TownBuildConstant)
 // clang-format on
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
