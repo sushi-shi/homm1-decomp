@@ -655,7 +655,7 @@ signed char combatManager::GetCommand(short hex) {
                             currentArmy->m_targetSide = enemySide;
                             currentArmy->m_targetIndex = targetIndex;
                             if (currentArmy->m_stats.shots > 0
-                                && currentArmy->GetAttackMask(currentArmy->m_hex, 1, -1) == 0xff)
+                                && currentArmy->GetAttackMask(currentArmy->m_hex, 1, -1) == COMBAT_ALL_DIRECTIONS_BLOCKED)
                                 return COMBAT_MESSAGE_COMMAND_SHOOT;
                             if (currentArmy->ValidPath(hex, 1) == 1)
                                 return COMBAT_MESSAGE_COMMAND_ATTACK;

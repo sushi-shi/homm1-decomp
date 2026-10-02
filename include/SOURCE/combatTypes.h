@@ -38,6 +38,21 @@ H1_ENUM_BEGIN(ArmyFacing)
     ARMY_FACING_RIGHT = 0,
     ARMY_FACING_LEFT = 1
 H1_ENUM_END(ArmyFacing)
+
+// GetMoveMask/GetAttackMask/GetBestDirection blocked-direction masks: bit n
+// is CombatHexDirection n (GetBestDirection returns n when bit n is clear);
+// GetAttackMask == ALL_BLOCKED means no stack can be attacked from here.
+H1_ENUM_FLAGS_BEGIN(CombatDirectionMask, short)
+    COMBAT_DIRECTION_BIT_NORTHEAST = 0x01,
+    COMBAT_DIRECTION_BIT_EAST = 0x02,
+    COMBAT_DIRECTION_BIT_SOUTHEAST = 0x04,
+    COMBAT_DIRECTION_BIT_SOUTHWEST = 0x08,
+    COMBAT_DIRECTION_BIT_WEST = 0x10,
+    COMBAT_DIRECTION_BIT_NORTHWEST = 0x20,
+    COMBAT_DIRECTION_BIT_WIDE_WEST = 0x40,
+    COMBAT_DIRECTION_BIT_WIDE_EAST = 0x80,
+    COMBAT_ALL_DIRECTIONS_BLOCKED = 0xff
+H1_ENUM_FLAGS_END(CombatDirectionMask)
 // clang-format on
 
 H1_ENUM_BEGIN(CombatEffectDimension)
