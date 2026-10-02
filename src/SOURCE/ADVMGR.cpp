@@ -1407,6 +1407,7 @@ signed char advManager::UpdBottomViewHero(void) {
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
 VA(0x0042e411, 0xd46)
 void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, short windowX, short windowY) {
+    short j;
     short portraitId;
     short creatureY;
     short creatureIconHeight;
@@ -1415,7 +1416,6 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     short numArmies;
     short enable;
     char* labelText[5];
-    short j;
     iconWidget* monWidgets[5];
     short flagId;
     textWidget* sizeTexts[5];
@@ -1543,7 +1543,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
         slotIndex = 0;
         step = 160 / firstRow;
         offsetX = (step - 32) / 2 + 9;
-        for (j = 0; firstRow > j; j++) {
+        for (j = 0; j < firstRow; j++) {
             while (heroPtr->m_army.m_creatureTypes[slotIndex] == -1)
                 slotIndex++;
             creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
