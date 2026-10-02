@@ -278,6 +278,11 @@ void mouseManager::RestoreUnderlying(void) {}
 VA(0x00476e10, 0x3)
 void mouseManager::SaveAndDraw(bitmap*, int, int, int) {}
 
+// philAI's CheckDoMain still asks for a software pointer move; the Windows
+// build ignores it (`ret 8`).
+VA(0x00476e20, 0x3)
+void mouseManager::MovePointer(short, short) {}
+
 VA(0x00476e30, 0x1)
 void mouseManager::ShowColorPointer(void) {}
 
@@ -285,6 +290,9 @@ void mouseManager::ShowColorPointer(void) {}
 // only the one-argument return.
 VA(0x00476e40, 0x3)
 void mouseManager::NewUpdate(int) {}
+
+VA(0x00476e50, 0x3)
+void mouseManager::WarpPointer(int, int) {}
 
 // donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
@@ -297,4 +305,21 @@ void mouseManager::MouseCoords(short& x, short& y) {
     ScreenToClient(hwndApp, &point);
     x = point.x * 640 / iMainWinScreenWidth;
     y = point.y * 480 / iMainWinScreenHeight;
+}
+
+VA(0x00476ec0, 0x3)
+void mouseManager::SetCursorShape(int) {}
+
+// advManager::Open passes the colour-pointer preference; Windows ignores it.
+VA(0x00476ed0, 0x3)
+void mouseManager::SetColorMice(int) {}
+
+VA(0x00476ee0, 0x9)
+void mouseManager::HideSystemCursor(void) {
+    ShowCursor(0);
+}
+
+VA(0x00476ef0, 0x9)
+void mouseManager::ShowSystemCursor(void) {
+    ShowCursor(1);
 }
