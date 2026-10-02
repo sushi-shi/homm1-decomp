@@ -697,10 +697,10 @@ void combatManager::Fireball(signed char targetHex)
 VA(0x004175df, 0x439)
 void combatManager::MeteorShower(signed char targetHex)
 {
+    short i;
     int damage;
     icon *rockIcon;
     army *curArmy;
-    short i;
     short adjHexes[7];
     short j;
     signed char hit;
