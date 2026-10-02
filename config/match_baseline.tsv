@@ -132,7 +132,7 @@ ADVMGR	?CheckLoadSample@advManager@@QAEXH@Z	100.0000	100.0000	2	a73810deb6cd	0x3
 ADVMGR	?CheckScreenScroll@advManager@@QAEXXZ	100.0000	100.0000	2	5cbb430f90df	0x36196	100.0000	
 ADVMGR	?ClearBottomView@advManager@@QAEXXZ	100.0000	100.0000	2	94fdb1e844b1	0x2cb4c	100.0000	
 ADVMGR	?Close@advManager@@UAEXXZ	100.0000	100.0000	2	33a6c371daed	0x26451	100.0000	
-ADVMGR	?ComboDraw@advManager@@QAECFFC@Z	99.2927	99.2927	5	overload1:ae545ced2ede	0x33b10	99.2927	
+ADVMGR	?ComboDraw@advManager@@QAECFFC@Z	100.0000	99.2927	5	overload1:ae545ced2ede	0x33b10	100.0000	
 ADVMGR	?ComboDraw@advManager@@QAECH@Z	100.0000	100.0000	2	overload1:0398019fbbdd	0x34606	100.0000	
 ADVMGR	?CompleteDraw@advManager@@QAEXFFH@Z	100.0000	100.0000	2	overload1:e778abc6e896	0x2a045	100.0000	
 ADVMGR	?CompleteDraw@advManager@@QAEXH@Z	100.0000	100.0000	1	overload1:353890e4d995	0x2a39e	100.0000	
