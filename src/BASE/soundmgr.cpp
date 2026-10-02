@@ -4,6 +4,10 @@
 
 #include <match.h>
 
+// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
+// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
+#include <mss.h>
+
 #include <BASE/soundmgr.h>
 
 #include <windows.h>
@@ -15,7 +19,6 @@
 #include <SOURCE/NOOPT.h>
 
 #include <io.h>
-#include <mss.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -148,8 +151,13 @@ unsigned long soundManager::CDStartup(void) {
     return nMCIError;
 }
 
+// PoL declares t1..t3 for KBTickCount timings. HoMM1 emits no timing calls, but the three
+// C1 handles are needed by later functions' register ties (WAVE_init_driver).
 VA(0x004771f0, 0x5b7)
 void soundManager::CDPlay(int track, int resume, int volume, int restart) {
+    long t1;
+    long t2;
+    long t3;
     char buffer[CD_POSITION_BUFFER_SIZE];
     unsigned char notify;
     int cdTrack;
@@ -330,6 +338,8 @@ inline void soundManager::AllocateSampleHandles(void) {
     m_numSampleHandles = sampleIndex;
 }
 
+// PoL keeps the gbNoSound bypass as `goto managerReady`; the label also places the
+// inlined AllocateSampleHandles handles where retail colours them.
 VA(0x00477970, 0x1bc)
 short soundManager::Open(short) {
     int keyState;
@@ -343,42 +353,43 @@ short soundManager::Open(short) {
         gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
         WritePrefs();
     }
-    m_currentTrack = -1;
     m_cdReady = gConfig.musicSource == SOUND_MUSIC_SOURCE_CD;
-    if (gbNoSound == 0) {
-        m_pollToggle = m_pollDue = m_pollRequested = 0;
-        AIL_startup();
-        CDStartup();
-        m_musicReady = 1;
-        m_musicBuffers[0] = malloc(MUSIC_STREAM_BUFFER_SIZE);
-        m_musicBuffers[1] = malloc(MUSIC_STREAM_BUFFER_SIZE);
-        if (m_digitalDriver == NULL)
-            m_digitalDriver = WAVE_init_driver(
-                MUSIC_STREAM_RATE,
-                SOUND_DEFAULT_SAMPLE_BITS,
-                SOUND_DEFAULT_SAMPLE_CHANNELS,
-                0
-            );
-        if (m_digitalDriver == NULL) {
-            gbNoSound = 1;
-            if (m_musicBuffers[0] != NULL)
-                free(m_musicBuffers[0]);
-            m_musicBuffers[0] = NULL;
-            if (m_musicBuffers[1] != NULL)
-                free(m_musicBuffers[1]);
-            m_musicBuffers[1] = NULL;
-            m_musicReady = 0;
-            AIL_shutdown();
-        } else {
-            AllocateSampleHandles();
-            m_samplesReady = 1;
-            m_musicStreamOpen = 0;
-            m_musicSample = NULL;
-            m_midiFile = NULL;
-            memset(m_savedTrackPositions, 0, sizeof(m_savedTrackPositions));
-            m_fading = 1;
-        }
+    m_currentTrack = -1;
+    if (gbNoSound != 0)
+        goto managerReady;
+    m_pollToggle = m_pollDue = m_pollRequested = 0;
+    AIL_startup();
+    CDStartup();
+    m_musicReady = 1;
+    m_musicBuffers[0] = malloc(MUSIC_STREAM_BUFFER_SIZE);
+    m_musicBuffers[1] = malloc(MUSIC_STREAM_BUFFER_SIZE);
+    if (m_digitalDriver == NULL)
+        m_digitalDriver = WAVE_init_driver(
+            MUSIC_STREAM_RATE,
+            SOUND_DEFAULT_SAMPLE_BITS,
+            SOUND_DEFAULT_SAMPLE_CHANNELS,
+            0
+        );
+    if (m_digitalDriver == NULL) {
+        gbNoSound = 1;
+        if (m_musicBuffers[0] != NULL)
+            free(m_musicBuffers[0]);
+        m_musicBuffers[0] = NULL;
+        if (m_musicBuffers[1] != NULL)
+            free(m_musicBuffers[1]);
+        m_musicBuffers[1] = NULL;
+        m_musicReady = 0;
+        AIL_shutdown();
+    } else {
+        AllocateSampleHandles();
+        m_samplesReady = 1;
+        m_musicStreamOpen = 0;
+        m_musicSample = NULL;
+        m_midiFile = NULL;
+        memset(m_savedTrackPositions, 0, sizeof(m_savedTrackPositions));
+        m_fading = 1;
     }
+managerReady:
     m_messageMask = BASE_MANAGER_ACCEPT_LEFT_BUTTON_UP;
     m_priority = SOUND_MANAGER_PRIORITY;
     m_active = 1;
@@ -445,6 +456,7 @@ inline int soundManager::ConvertVolume(int volume, int soundType) {
     return result;
 }
 
+// Retail shares one `return NULL` tail between the missing-file and fopen-failure exits.
 VA(0x00477cc0, 0x331)
 struct _SAMPLE* soundManager::StartSample(
     char* name,
@@ -529,13 +541,13 @@ struct _SAMPLE* soundManager::StartSample(
         if (_access(path, 0) == -1) {
             sprintf(path, "%s%s", gcDataPath, filename);
             if (_access(path, 0) == -1)
-                return NULL;
+                goto notFound;
         }
     }
     file = fopen(path, "rb");
     fseek(file, resume, SEEK_SET);
     if (file == NULL)
-        return NULL;
+        goto notFound;
     AIL_set_sample_volume(sample, ConvertVolume(volume, SOUND_VOLUME_MUSIC));
     m_midiFile = file;
     m_musicSample = sample;
@@ -543,6 +555,8 @@ struct _SAMPLE* soundManager::StartSample(
     m_musicStreamRestart = static_cast<char>(loop);
     Process1WindowsMessage();
     return sample;
+notFound:
+    return NULL;
 }
 
 VA(0x00478000, 0xe1)

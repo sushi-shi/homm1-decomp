@@ -2,11 +2,12 @@
 
 #include <match.h>
 
-#include <BASE/Misc.h>
-#include <BASE/MOUSEMGR_TYPES.h>
+// Header order sets the Win32 import handles that colour Close's cursor-release loop.
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/NOOPT.h>
+#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/Misc.h>
+#include <H1/KB.h>
 
 #include <stdio.h>
 #include <stdlib.h>
