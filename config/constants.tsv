@@ -20,6 +20,8 @@
 *	*	0	trivial-function-literal	0 store i	an index back at the first entry
 *	*	0	trivial-function-literal	0 store index	an index back at the first entry
 *	*	*	data-or-extent	array extent	the element count of an array, written in its declaration
+*	*	*	data-or-extent	table entry	a retail data payload: an element of a file-scope data definition's initializer, copied from the retail image bytes (data, not a code constant)
+*	*	*	data-or-extent	zero fill	a retail data payload: the zero fill of a file-scope data definition's initializer, copied from the retail image bytes (data, not a code constant)
 *	*	*	call-argument	Random(int, int) argument 1	the low bound of a random roll
 *	*	*	call-argument	Random(int, int) argument 2	the high bound of a random roll
 *	*	*	call-argument	SRandom(int, int) argument 1	the low bound of a seeded random roll
