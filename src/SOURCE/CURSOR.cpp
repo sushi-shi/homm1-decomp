@@ -484,14 +484,14 @@ mapCell *advManager::MoveHero(signed char direction, signed char stopAfterMove, 
             case 50:
             case 51:
             case MAP_OBJECT_MOUNTAINS:
-            case 53:
-            case 54:
-            case 55:
+            case MAP_OBJECT_MOUNTAINS_2:
+            case MAP_OBJECT_MOUNTAINS_3:
+            case MAP_OBJECT_MOUNTAINS_4:
             case MAP_OBJECT_TREES:
-            case 57:
-            case 58:
-            case 59:
-            case 60:
+            case MAP_OBJECT_TREES_2:
+            case MAP_OBJECT_TREES_3:
+            case MAP_OBJECT_TREES_4:
+            case MAP_OBJECT_TREES_5:
                 retCell = NULL;
                 break;
         }

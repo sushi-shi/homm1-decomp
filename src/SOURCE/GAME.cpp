@@ -1343,16 +1343,16 @@ VA(0x0043d454, 0x6f)
 int GetObjectFamily(int trigger) {
     switch (trigger) {
         case MAP_OBJECT_MOUNTAINS:
-        case 0x35:
-        case 0x36:
-        case 0x37:
-            return 0x34;
+        case MAP_OBJECT_MOUNTAINS_2:
+        case MAP_OBJECT_MOUNTAINS_3:
+        case MAP_OBJECT_MOUNTAINS_4:
+            return MAP_OBJECT_MOUNTAINS;
         case MAP_OBJECT_TREES:
-        case 0x39:
-        case 0x3a:
-        case 0x3b:
-        case 0x3c:
-            return 0x38;
+        case MAP_OBJECT_TREES_2:
+        case MAP_OBJECT_TREES_3:
+        case MAP_OBJECT_TREES_4:
+        case MAP_OBJECT_TREES_5:
+            return MAP_OBJECT_TREES;
         default:
             return trigger;
     }
@@ -1367,8 +1367,8 @@ void game::SettleOverlay(int x, int y) {
     cell = &m_map[x][y];
     if (cell->m_objectIndex == 0xff && cell->m_overlayIndex != 0xff) {
         switch (cell->m_triggerType) {
-            case 0x35:
-            case 0x39:
+            case MAP_OBJECT_MOUNTAINS_2:
+            case MAP_OBJECT_TREES_2:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
                     if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
@@ -1381,8 +1381,8 @@ void game::SettleOverlay(int x, int y) {
                     }
                 }
                 break;
-            case 0x37:
-            case 0x3b:
+            case MAP_OBJECT_MOUNTAINS_4:
+            case MAP_OBJECT_TREES_4:
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
                     if (GetObjectFamily(cellEast->m_triggerType) == GetObjectFamily(cell->m_triggerType)) {
@@ -1637,14 +1637,14 @@ void game::RandomizeEvents(void) {
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
                 switch (cell->m_triggerType) {
                     case MAP_OBJECT_MOUNTAINS:
-                    case 0x35:
-                    case 0x36:
-                    case 0x37:
+                    case MAP_OBJECT_MOUNTAINS_2:
+                    case MAP_OBJECT_MOUNTAINS_3:
+                    case MAP_OBJECT_MOUNTAINS_4:
                     case MAP_OBJECT_TREES:
-                    case 0x39:
-                    case 0x3a:
-                    case 0x3b:
-                    case 0x3c:
+                    case MAP_OBJECT_TREES_2:
+                    case MAP_OBJECT_TREES_3:
+                    case MAP_OBJECT_TREES_4:
+                    case MAP_OBJECT_TREES_5:
                         cell->m_secondaryTrigger |= 0x80;
                         break;
                 }

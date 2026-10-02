@@ -22,7 +22,8 @@ H1_ENUM_CONST_END(MapTriggerEncoding)
 // reader treats it as a wandering monster stack, and names 31 "Sandpit" but
 // every reader uses it as the coast cell where an embarked hero lands.
 // Mountain and tree variants 52..55 and 56..60 fold to their first member in
-// GetObjectFamily; the individual variants remain numeric (@identity-TODO).
+// GetObjectFamily (gObjectNames repeats "Mountains"/"Trees"); the variants are
+// numbered after it, since no table names them individually.
 // 61 and 62 are the runtime hero and boat; the map file uses the same codes
 // for placeholders (MapFileObjectType).
 H1_ENUM_BEGIN(MapObjectType)
@@ -78,7 +79,16 @@ H1_ENUM_BEGIN(MapObjectType)
     MAP_OBJECT_ARTIFACT = 48,
     MAP_OBJECT_NOTHING_HERE = 49,
     MAP_OBJECT_MOUNTAINS = 52,
+    MAP_OBJECT_MOUNTAINS_2 = 53,
+    MAP_OBJECT_MOUNTAINS_3 = 54,
+    MAP_OBJECT_MOUNTAINS_4 = 55,
+    MAP_OBJECT_MOUNTAINS_LAST = MAP_OBJECT_MOUNTAINS_4,
     MAP_OBJECT_TREES = 56,
+    MAP_OBJECT_TREES_2 = 57,
+    MAP_OBJECT_TREES_3 = 58,
+    MAP_OBJECT_TREES_4 = 59,
+    MAP_OBJECT_TREES_5 = 60,
+    MAP_OBJECT_TREES_LAST = MAP_OBJECT_TREES_5,
     MAP_OBJECT_HERO = 61,
     MAP_OBJECT_SHIP = 62
 H1_ENUM_END(MapObjectType)
