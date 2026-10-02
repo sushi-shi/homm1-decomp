@@ -31,6 +31,10 @@ DATA(0x00494170)
 signed char gbShowHighScore;
 DATA(0x004c794c)
 signed char gbStandardHighScore;
+DATA(0x00494128)
+signed char gbHeroWindShowing;
+DATA(0x0049412c)
+signed char gbOverviewShowing;
 // InitVars proves seven terrain rows, ordinary/diagonal cost columns.
 DATA(0x004c6d50)
 signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
@@ -425,6 +429,351 @@ int GetBuildingBaseResourceValue(int race, int building, int level) {
     } else {
         return gDwellingBaseResourceValues[building - BUILDING_SLOT_DWELLING_FIRST + race * 6];
     }
+}
+
+short WaitHandler(tag_message&);
+
+// Buka 2.1 NormalDialog without HoMM2's timeout, saved resource globals,
+// primary-skill/monster/secondary-skill slots and centered x; HoMM1 measures
+// the text with a temporary bigfont.fnt and frames heroes with port%04d.icn.
+VA(0x00451a31, 0xf03)
+void NormalDialog(
+    char* text,
+    int dialogType,
+    int x,
+    int y,
+    int firstResourceType,
+    int firstResourceValue,
+    int secondResourceType,
+    int secondResourceValue,
+    int showOrText
+) {
+    int resourceYPos;
+    int maxIconHeight;
+    char szFilename[NORMAL_DIALOG_FILENAME_LENGTH];
+    char* amountText[NORMAL_DIALOG_RESOURCE_COUNT];
+    int sizingHeight;
+    int kind[NORMAL_DIALOG_RESOURCE_COUNT];
+    iconWidget* iconPanel;
+    int width;
+    int resWidth;
+    short bShowMessage;
+    font* bigFont;
+    int height;
+    int i;
+    int contentSize;
+    int id;
+    int iHeight;
+    int resourceQty[NORMAL_DIALOG_RESOURCE_COUNT];
+    tag_message message;
+    int heightIndex;
+    int lineCount;
+    int resourceFrame;
+    int frameHeight;
+    textWidget* captionWidget;
+    int resCenterX;
+    char* szOr;
+
+    resCenterX = 0;
+    resourceYPos = 0;
+    resourceFrame = 0;
+    id = NORMAL_DIALOG_TEXT_WIDGET_FIRST_ID;
+    resWidth = 0;
+    iHeight = 0;
+    bShowMessage = 1;
+    kind[0] = firstResourceType;
+    resourceQty[0] = firstResourceValue;
+    kind[1] = secondResourceType;
+    resourceQty[1] = secondResourceValue;
+
+    bigFont = gpResourceManager->GetFont("bigfont.fnt");
+    lineCount = bigFont->LineLength(text, NORMAL_DIALOG_TEXT_LINE_WIDTH);
+    gpResourceManager->Dispose(bigFont);
+    contentSize = lineCount * NORMAL_DIALOG_TEXT_LINE_HEIGHT;
+    if (dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
+        contentSize += NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
+
+    maxIconHeight = 0;
+    for (i = 0; i < NORMAL_DIALOG_RESOURCE_COUNT; i++) {
+        switch (kind[i]) {
+            case NORMAL_DIALOG_ARTIFACT:
+                sizingHeight = 76;
+                break;
+            case NORMAL_DIALOG_LUCK_BONUS:
+                sizingHeight = 28;
+                break;
+            case NORMAL_DIALOG_LUCK_PENALTY:
+                sizingHeight = 57;
+                break;
+            case NORMAL_DIALOG_MORALE_BONUS:
+                sizingHeight = 62;
+                break;
+            case NORMAL_DIALOG_MORALE_PENALTY:
+                sizingHeight = 59;
+                break;
+            case NORMAL_DIALOG_EXPERIENCE:
+                sizingHeight = 76;
+                break;
+            case NORMAL_DIALOG_CREST:
+                sizingHeight = 55;
+                break;
+            case NORMAL_DIALOG_HERO:
+                sizingHeight = 111;
+                break;
+            case NORMAL_DIALOG_RESOURCE_GOLD:
+                sizingHeight = 26;
+                break;
+            case RESOURCE_WOOD:
+            case RESOURCE_MERCURY:
+            case RESOURCE_ORE:
+            case RESOURCE_SULFUR:
+            case RESOURCE_CRYSTAL:
+            case RESOURCE_GEMS:
+                sizingHeight = 44;
+                break;
+            case NORMAL_DIALOG_SPELL:
+                sizingHeight = 52;
+                break;
+            default:
+                sizingHeight = 0;
+                break;
+        }
+        if (sizingHeight > maxIconHeight)
+            maxIconHeight = sizingHeight;
+    }
+
+    if (maxIconHeight > 0)
+        contentSize += maxIconHeight + 12;
+    heightIndex = (contentSize - 12) / NORMAL_DIALOG_WINDOW_ROW_HEIGHT;
+    if (heightIndex > NORMAL_DIALOG_MAX_ROWS)
+        heightIndex = NORMAL_DIALOG_MAX_ROWS;
+    if (heightIndex <= 0 && dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
+        heightIndex = 1;
+    width = NORMAL_DIALOG_WINDOW_WIDTH;
+    height = heightIndex * NORMAL_DIALOG_WINDOW_ROW_HEIGHT + NORMAL_DIALOG_WINDOW_BASE_HEIGHT;
+
+    if (x == -1 || x + width >= 639) {
+        if (gpAdvManager->m_active == 1 && !gbHeroWindShowing && !gbOverviewShowing)
+            x = NORMAL_DIALOG_ADVENTURE_X;
+        else
+            x = (640 - width) / 2;
+    }
+    if (y == -1 || y + height >= 479) {
+        y = (480 - height) / 2;
+        if (y > NORMAL_DIALOG_MAX_TOP)
+            y = NORMAL_DIALOG_MAX_TOP;
+    }
+
+    sprintf(szFilename, "evntwin%d.bin", heightIndex);
+    pNormalDialogWindow = new heroWindow(x, y, szFilename);
+    if (!pNormalDialogWindow)
+        MemError();
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.payload.widget.data.value = NORMAL_DIALOG_BUTTON_FLAGS;
+    if (dialogType != NORMAL_DIALOG_TYPE_WAIT_CANCEL && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
+        message.payload.widget.id = NORMAL_DIALOG_BUTTON_OK;
+        pNormalDialogWindow->BroadcastMessage(message);
+    }
+    if (dialogType != NORMAL_DIALOG_TYPE_WAIT_OK && dialogType != NORMAL_DIALOG_TYPE_OK
+        && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
+        message.payload.widget.id = NORMAL_DIALOG_BUTTON_CANCEL;
+        pNormalDialogWindow->BroadcastMessage(message);
+    }
+    if (dialogType != NORMAL_DIALOG_TYPE_YES_NO) {
+        message.payload.widget.id = NORMAL_DIALOG_BUTTON_YES;
+        pNormalDialogWindow->BroadcastMessage(message);
+        message.payload.widget.id = NORMAL_DIALOG_BUTTON_NO;
+        pNormalDialogWindow->BroadcastMessage(message);
+    }
+
+    for (i = 0; i < NORMAL_DIALOG_RESOURCE_COUNT; i++) {
+        iconPanel = 0;
+        captionWidget = 0;
+        if (kind[i] == NORMAL_DIALOG_NO_RESOURCE)
+            break;
+
+        amountText[i] = (char*)malloc(NORMAL_DIALOG_TEXT_LENGTH);
+        if (kind[i] <= NORMAL_DIALOG_RESOURCE_LAST) {
+            if (resourceQty[i] > 0)
+                sprintf(amountText[i], "%d", resourceQty[i]);
+            else if (resourceQty[i] == 0)
+                strcpy(amountText[i], "");
+            else
+                sprintf(amountText[i], "%d/day", -resourceQty[i]);
+            strcpy(szFilename, "resource.icn");
+            resourceFrame = kind[i];
+        } else if (kind[i] == NORMAL_DIALOG_SPELL) {
+            sprintf(amountText[i], "%s", gSpellNames[resourceQty[i]]);
+            strcpy(szFilename, "spells.icn");
+            resourceFrame = resourceQty[i];
+        } else if (kind[i] == NORMAL_DIALOG_CREST) {
+            sprintf(amountText[i], "%s", "");
+            strcpy(szFilename, "brcrest.icn");
+            resourceFrame = resourceQty[i];
+        } else if (kind[i] == NORMAL_DIALOG_HERO) {
+            sprintf(amountText[i], "%s", "");
+            sprintf(szFilename, "surrendr.icn");
+            resourceFrame = 4;
+        } else if (kind[i] == NORMAL_DIALOG_EXPERIENCE
+                   || kind[i] == NORMAL_DIALOG_MORALE_BONUS
+                   || kind[i] == NORMAL_DIALOG_MORALE_PENALTY
+                   || kind[i] == NORMAL_DIALOG_LUCK_BONUS
+                   || kind[i] == NORMAL_DIALOG_LUCK_PENALTY) {
+            strcpy(amountText[i], "");
+            strcpy(szFilename, "expmrl.icn");
+            resourceFrame = kind[i] - NORMAL_DIALOG_EXPMRL_FIRST;
+            if (kind[i] == NORMAL_DIALOG_EXPERIENCE
+                && resourceQty[i] != NORMAL_DIALOG_NO_VALUE)
+                sprintf(amountText[i], "%d", resourceQty[i]);
+        } else {
+            strcpy(amountText[i], "");
+            strcpy(szFilename, "resource.icn");
+            resourceFrame = kind[i];
+        }
+
+        switch (kind[i]) {
+            case NORMAL_DIALOG_ARTIFACT:
+                resWidth = 76;
+                sizingHeight = 76;
+                break;
+            case NORMAL_DIALOG_LUCK_BONUS:
+                resWidth = 64;
+                sizingHeight = 28;
+                break;
+            case NORMAL_DIALOG_LUCK_PENALTY:
+                resWidth = 64;
+                sizingHeight = 57;
+                break;
+            case NORMAL_DIALOG_MORALE_BONUS:
+                resWidth = 64;
+                sizingHeight = 62;
+                break;
+            case NORMAL_DIALOG_MORALE_PENALTY:
+                resWidth = 64;
+                sizingHeight = 59;
+                break;
+            case NORMAL_DIALOG_EXPERIENCE:
+                resWidth = 64;
+                sizingHeight = 64;
+                break;
+            case NORMAL_DIALOG_CREST:
+                resWidth = 50;
+                sizingHeight = 55;
+                break;
+            case NORMAL_DIALOG_HERO:
+                resWidth = 111;
+                sizingHeight = 105;
+                break;
+            case NORMAL_DIALOG_RESOURCE_GOLD:
+                resWidth = 76;
+                sizingHeight = 26;
+                break;
+            case RESOURCE_WOOD:
+            case RESOURCE_MERCURY:
+            case RESOURCE_ORE:
+            case RESOURCE_SULFUR:
+            case RESOURCE_CRYSTAL:
+            case RESOURCE_GEMS:
+                resWidth = 38;
+                sizingHeight = 32;
+                break;
+            case NORMAL_DIALOG_SPELL:
+                resWidth = 38;
+                sizingHeight = 40;
+                break;
+        }
+
+        if (strlen(amountText[i]) > 0)
+            sizingHeight += NORMAL_DIALOG_RESOURCE_LABEL_HEIGHT;
+        if (i == 0) {
+            if (kind[1] == NORMAL_DIALOG_NO_RESOURCE)
+                resCenterX = width / 2;
+            else
+                resCenterX = width / 3;
+        } else {
+            resCenterX = width * 2 / 3;
+        }
+        resourceYPos = height - sizingHeight - NORMAL_DIALOG_RESOURCE_BOTTOM_INSET;
+        if (dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
+            resourceYPos -= NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
+        if (maxIconHeight > sizingHeight)
+            resourceYPos -= (maxIconHeight - sizingHeight) / 2;
+
+        iconPanel = new iconWidget(
+            resCenterX - resWidth / 2, resourceYPos, resWidth,
+            sizingHeight, szFilename, resourceFrame, 0, -1, ICON_WIDGET_DRAW, 1);
+        if (!iconPanel)
+            MemError();
+        pNormalDialogWindow->AddWidget(iconPanel, -1);
+        if (kind[i] == NORMAL_DIALOG_ARTIFACT) {
+            iconPanel = new iconWidget(
+                resCenterX - resWidth / 2 + 6, resourceYPos + 6, 76, 76,
+                "artifact.icn", resourceQty[i], 0, -1, ICON_WIDGET_DRAW, 1);
+            if (!iconPanel)
+                MemError();
+            pNormalDialogWindow->AddWidget(iconPanel, -1);
+        }
+        if (kind[i] == NORMAL_DIALOG_CREST) {
+            iconPanel = new iconWidget(
+                resCenterX - resWidth / 2 - 4, resourceYPos - 4, 58, 55,
+                "brcrest.icn", 4, 0, -1, ICON_WIDGET_DRAW, 1);
+            if (!iconPanel)
+                MemError();
+            pNormalDialogWindow->AddWidget(iconPanel, -1);
+        }
+        if (kind[i] == NORMAL_DIALOG_HERO) {
+            sprintf(szFilename, "port%04d.icn", resourceQty[i]);
+            iconPanel = new iconWidget(
+                resCenterX - resWidth / 2 + 5, resourceYPos + 5, 101, 95,
+                szFilename, 0, 0, -1, ICON_WIDGET_DRAW, 1);
+            if (!iconPanel)
+                MemError();
+            pNormalDialogWindow->AddWidget(iconPanel, -1);
+        }
+        captionWidget = new textWidget(
+            resCenterX - 50, resourceYPos + sizingHeight - 10, 100, 12,
+            amountText[i], "smalfont.fnt", 1, id++, 0x200);
+        if (!captionWidget)
+            MemError();
+        pNormalDialogWindow->AddWidget(captionWidget, -1);
+    }
+
+    message.type = MESSAGE_WIDGET;
+    message.payload.widget.command = WIDGET_COMMAND_SET_TEXT;
+    message.payload.widget.id = NORMAL_DIALOG_TEXT_WIDGET_ID;
+    message.payload.widget.data.text = text;
+    pNormalDialogWindow->BroadcastMessage(message);
+
+    if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
+        szOr = (char*)malloc(3);
+        strcpy(szOr, "or");
+        captionWidget = new textWidget(
+            width / 2 - 17, resourceYPos + 30, 40, 12, szOr, "smalfont.fnt", 1,
+            id++, 0x200);
+        if (!captionWidget)
+            MemError();
+        pNormalDialogWindow->AddWidget(captionWidget, -1);
+    }
+
+    if (gpAdvManager->m_active == 1)
+        gpMouseManager->SetPointer(0);
+    else if (gpCombatManager->m_active == 1)
+        gpMouseManager->SetPointer(6);
+
+    if (dialogType == NORMAL_DIALOG_TYPE_WAIT_CANCEL || dialogType == NORMAL_DIALOG_TYPE_WAIT_OK) {
+        gpWindowManager->DoDialog(pNormalDialogWindow, WaitHandler, 0);
+    } else if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
+        gpMouseManager->ReallyHidePointer();
+        gpWindowManager->AddWindow(pNormalDialogWindow, -1, 1);
+        QuickViewWait();
+        gpWindowManager->RemoveWindow(pNormalDialogWindow);
+        gpMouseManager->ReallyShowPointer();
+    } else {
+        gpWindowManager->DoDialog(pNormalDialogWindow, EventWindowHandler, 0);
+    }
+    delete pNormalDialogWindow;
 }
 
 // donor PoL RVA 0x000a2565; preferred Buka symbol ?UpdateNormalDialog@@YIXPAD@Z
