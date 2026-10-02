@@ -305,7 +305,7 @@ void PlaySmacker(H1_ENUM_PARAM(SmackVideo, signed char) smackNumber) {
     gpSoundManager->m_musicReady = 1;
     gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
     bSmackNum = smackNumber;
-    if (gpExec->AddManager(gpSmackManager, -1))
+    if (gpExec->AddManager(gpSmackManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
         ShutDown("Can't add manager!");
     gpExec->MainLoop();
     gpExec->RemoveManager(gpSmackManager);

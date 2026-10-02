@@ -267,11 +267,11 @@ short advManager::Open(short id) {
         m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, ADVENTURE_CONTROL_HERO_KNOB, ICON_WIDGET_DRAW, 1);
         if (m_scrollLeftButton == NULL)
             MemError();
-        m_adventureWindow->AddWidget(m_scrollLeftButton, -1);
+        m_adventureWindow->AddWidget(m_scrollLeftButton, WINDOW_Z_ORDER_APPEND);
         m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, ICON_DRAW_NORMAL, ADVENTURE_CONTROL_TOWN_KNOB, ICON_WIDGET_DRAW, 1);
         if (m_scrollRightButton == NULL)
             MemError();
-        m_adventureWindow->AddWidget(m_scrollRightButton, -1);
+        m_adventureWindow->AddWidget(m_scrollRightButton, WINDOW_Z_ORDER_APPEND);
         m_panelBackdrops[0] = new backdropWidget(480, 176, 56, 128, -1, 32);
         if (m_panelBackdrops[0] == NULL)
             MemError();
@@ -288,7 +288,7 @@ short advManager::Open(short id) {
         if (m_panelBackdrops[4] == NULL)
             MemError();
         for (i = 0; i < ADVMGR_PANEL_ICON_COUNT; i++)
-            m_adventureWindow->AddWidget(m_panelBackdrops[i], -1);
+            m_adventureWindow->AddWidget(m_panelBackdrops[i], WINDOW_Z_ORDER_APPEND);
     }
     if (gbThisNetHumanPlayer[giCurPlayer])
         gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -2259,7 +2259,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
     message.text = gText;
     window->BroadcastMessage(message);
     GrabScreen();
-    gpWindowManager->AddWindow(window, -1, 1);
+    gpWindowManager->AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->HideSystemCursor();
     QuickViewWait();
     gpWindowManager->RemoveWindow(window);
@@ -2631,7 +2631,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     m_bottomViewPrimaryWidgets[1] = new iconWidget(BOTTOM_VIEW_PANEL_X, BOTTOM_VIEW_PANEL_Y,
                                                    BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
@@ -2639,7 +2639,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
 
     weekStr = static_cast<char*>(malloc(30));
     sprintf(weekStr, "%s: %d  %s: %d", "Month", gpGame->m_month, "Week", gpGame->m_week);
@@ -2647,7 +2647,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
         new textWidget(479, 421, 145, 12, weekStr, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     dayStr = static_cast<char*>(malloc(30));
     sprintf(dayStr, "%s: %d", "Day", gpGame->m_day);
@@ -2655,7 +2655,7 @@ signed char advManager::UpdBottomViewNewTurn(void) {
         new textWidget(479, 438, 145, 25, dayStr, "bigfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
     return 1;
 }
 
@@ -2682,7 +2682,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     y = 0;
     if (giBottomViewResource < 0) {
@@ -2698,7 +2698,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
                                                      messageText, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     if (giBottomViewResource >= 0) {
         if (giBottomViewResource == RESOURCE_GOLD) {
@@ -2714,7 +2714,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
                            BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
         if (!m_bottomViewPrimaryWidgets[1])
             MemError();
-        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+        m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
 
         countString = static_cast<char*>(malloc(8));
         sprintf(countString, "%d", giBottomViewResourceQty);
@@ -2722,7 +2722,7 @@ signed char advManager::UpdBottomViewResMsg(void) {
             new textWidget(511, 450, 80, 12, countString, "smalfont.fnt", 1, 2101, WIDGET_KIND_TEXT);
         if (!m_bottomViewSecondaryWidgets[1])
             MemError();
-        m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[1], -1);
+        m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[1], WINDOW_Z_ORDER_APPEND);
     }
     return 1;
 }
@@ -2770,14 +2770,14 @@ signed char advManager::UpdBottomViewKingdom(void) {
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     m_bottomViewPrimaryWidgets[1] = new iconWidget(481, 393, BOTTOM_VIEW_PANEL_WIDTH, BOTTOM_VIEW_PANEL_HEIGHT,
                                                    "ressmall.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1,
                                                    ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
 
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
         if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & (1 << BUILDING_SLOT_CASTLE))
@@ -2798,7 +2798,7 @@ signed char advManager::UpdBottomViewKingdom(void) {
                                                          "smalfont.fnt", 1, i + 2100, WIDGET_KIND_TEXT);
         if (!m_bottomViewSecondaryWidgets[i])
             MemError();
-        m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[i], -1);
+        m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[i], WINDOW_Z_ORDER_APPEND);
     }
     return 1;
 }
@@ -2833,14 +2833,14 @@ signed char advManager::UpdBottomViewHero(void) {
                                                    "stonback.icn", 0, ICON_DRAW_NORMAL, BOTTOM_VIEW_DRAW_FIRST_WIDGET, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     iCrest = gpCurPlayer->Color() * 4 + targetHero->m_heroClass;
     m_bottomViewPrimaryWidgets[1] = new iconWidget(495, 395, 25, 25, "smcrest.icn", iCrest, ICON_DRAW_NORMAL,
                                                    BOTTOM_VIEW_DRAW_FIRST_WIDGET + 1, ICON_WIDGET_DRAW, 1);
     if (!m_bottomViewPrimaryWidgets[1])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], -1);
+    m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[1], WINDOW_Z_ORDER_APPEND);
 
     heroName = static_cast<char*>(malloc(9));
     strcpy(heroName, targetHero->m_shortName);
@@ -2848,7 +2848,7 @@ signed char advManager::UpdBottomViewHero(void) {
     m_bottomViewSecondaryWidgets[0] = new textWidget(475, 418, 66, 12, heroName, "smalfont.fnt", 1, 2100, WIDGET_KIND_TEXT);
     if (!m_bottomViewSecondaryWidgets[0])
         MemError();
-    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], -1);
+    m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
         if (targetHero->m_army.m_creatureTypes[n] != CREATURE_NONE)
@@ -2898,8 +2898,8 @@ signed char advManager::UpdBottomViewHero(void) {
                                    1, slotNum + 2101, WIDGET_KIND_TEXT);
                 if (!m_bottomViewSecondaryWidgets[slotNum + 1])
                     MemError();
-                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[slotNum + 2], -1);
-                m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[slotNum + 1], -1);
+                m_adventureWindow->AddWidget(m_bottomViewPrimaryWidgets[slotNum + 2], WINDOW_Z_ORDER_APPEND);
+                m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[slotNum + 1], WINDOW_Z_ORDER_APPEND);
                 slotNum++;
             }
         }
@@ -3012,8 +3012,8 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                                                         "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
                     if (!sizeTexts[j])
                         MemError();
-                    viewWin->AddWidget(monWidgets[j], -1);
-                    viewWin->AddWidget(sizeTexts[j], -1);
+                    viewWin->AddWidget(monWidgets[j], WINDOW_Z_ORDER_APPEND);
+                    viewWin->AddWidget(sizeTexts[j], WINDOW_Z_ORDER_APPEND);
                 }
                 curIndex++;
             }
@@ -3062,8 +3062,8 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                                                 "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
             if (!sizeTexts[j])
                 MemError();
-            viewWin->AddWidget(monWidgets[j], -1);
-            viewWin->AddWidget(sizeTexts[j], -1);
+            viewWin->AddWidget(monWidgets[j], WINDOW_Z_ORDER_APPEND);
+            viewWin->AddWidget(sizeTexts[j], WINDOW_Z_ORDER_APPEND);
             slotIndex++;
         }
         if (secondRow) {
@@ -3084,8 +3084,8 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
                                                     labelText[j], "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
                 if (!sizeTexts[j])
                     MemError();
-                viewWin->AddWidget(monWidgets[j], -1);
-                viewWin->AddWidget(sizeTexts[j], -1);
+                viewWin->AddWidget(monWidgets[j], WINDOW_Z_ORDER_APPEND);
+                viewWin->AddWidget(sizeTexts[j], WINDOW_Z_ORDER_APPEND);
                 slotIndex++;
             }
         }
@@ -3097,7 +3097,7 @@ void advManager::HeroQuickView(signed char heroId, signed char locatorSlot, shor
     m_mapOriginY = heroPtr->m_y - ADVMGR_VIEW_CENTER;
     UpdateRadar(1, 0);
     GrabScreen();
-    gpWindowManager->AddWindow(viewWin, -1, 1);
+    gpWindowManager->AddWindow(viewWin, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->HideSystemCursor();
     QuickViewWait();
     gpWindowManager->RemoveWindow(viewWin);
@@ -3232,7 +3232,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
         garrisonWidget = new textWidget(0, 100, 210, 12, garrisonStr, "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
         if (!garrisonWidget)
             MemError();
-        viewWin->AddWidget(garrisonWidget, -1);
+        viewWin->AddWidget(garrisonWidget, WINDOW_Z_ORDER_APPEND);
     } else {
         short slotIndex;
         short rowY;
@@ -3297,8 +3297,8 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                                                        12, labels[slotIndex], "smalfont.fnt", 1, -1, WIDGET_KIND_TEXT);
             if (!texts[slotIndex])
                 MemError();
-            viewWin->AddWidget(iconWgts[slotIndex], -1);
-            viewWin->AddWidget(texts[slotIndex], -1);
+            viewWin->AddWidget(iconWgts[slotIndex], WINDOW_Z_ORDER_APPEND);
+            viewWin->AddWidget(texts[slotIndex], WINDOW_Z_ORDER_APPEND);
             slotIndex++;
             slot++;
         }
@@ -3326,8 +3326,8 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                                                            1, -1, WIDGET_KIND_TEXT);
                 if (!texts[slotIndex])
                     MemError();
-                viewWin->AddWidget(iconWgts[slotIndex], -1);
-                viewWin->AddWidget(texts[slotIndex], -1);
+                viewWin->AddWidget(iconWgts[slotIndex], WINDOW_Z_ORDER_APPEND);
+                viewWin->AddWidget(texts[slotIndex], WINDOW_Z_ORDER_APPEND);
                 slotIndex++;
                 slot++;
             }
@@ -3335,7 +3335,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     }
 
     GrabScreen();
-    gpWindowManager->AddWindow(viewWin, -1, 1);
+    gpWindowManager->AddWindow(viewWin, WINDOW_Z_ORDER_APPEND, 1);
     savedOriginX = m_mapOriginX;
     savedOriginY = m_mapOriginY;
     m_mapOriginX = townPointer->m_x - ADVMGR_VIEW_CENTER;
@@ -3677,7 +3677,7 @@ void advManager::ViewPuzzle(void) {
     pWin = new heroWindow(480, 16, "viewpuzl.bin");
     if (!pWin)
         MemError();
-    gpWindowManager->AddWindow(pWin, -1, 1);
+    gpWindowManager->AddWindow(pWin, WINDOW_Z_ORDER_APPEND, 1);
 
     puzzleX = gpGame->m_ultimateArtifactX - 7;
     puzzleY = gpGame->m_ultimateArtifactY - 7;

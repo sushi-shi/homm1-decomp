@@ -390,7 +390,7 @@ int oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_HIGH_SCORES:
-                if (gpExec->AddManager(gpHighScoreManager, -1))
+                if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
@@ -503,7 +503,7 @@ int oldmain(void) {
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
             gMapX = 0;
             gMapY = 0;
-            if (gpExec->AddManager(gpAdvManager, -1))
+            if (gpExec->AddManager(gpAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                 ShutDown("Can't add manager!");
             if (command == 1)
                 gpAdvManager->SetHeroContext(gpGame->m_players[0].NextHero(0), 0);
@@ -562,7 +562,7 @@ int oldmain(void) {
             }
             if (gbShowHighScore) {
                 gpMouseManager->ReallyShowPointer();
-                if (gpExec->AddManager(gpHighScoreManager, -1))
+                if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
@@ -1219,7 +1219,7 @@ void NormalDialog(
         );
         if (!iconPanel)
             MemError();
-        pNormalDialogWindow->AddWidget(iconPanel, -1);
+        pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         if (kind[i] == NORMAL_DIALOG_ARTIFACT) {
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 + 6,
@@ -1235,7 +1235,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, -1);
+            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         if (kind[i] == NORMAL_DIALOG_CREST) {
             iconPanel = new iconWidget(
@@ -1252,7 +1252,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, -1);
+            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         if (kind[i] == NORMAL_DIALOG_HERO) {
             sprintf(szFilename, "port%04d.icn", resourceQty[i]);
@@ -1270,7 +1270,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, -1);
+            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         captionWidget = new textWidget(
             resCenterX - 50,
@@ -1285,7 +1285,7 @@ void NormalDialog(
         );
         if (!captionWidget)
             MemError();
-        pNormalDialogWindow->AddWidget(captionWidget, -1);
+        pNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
     }
 
     message.type = MESSAGE_WIDGET;
@@ -1310,7 +1310,7 @@ void NormalDialog(
         );
         if (!captionWidget)
             MemError();
-        pNormalDialogWindow->AddWidget(captionWidget, -1);
+        pNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
     }
 
     if (gpAdvManager->m_active == 1)
@@ -1322,7 +1322,7 @@ void NormalDialog(
         gpWindowManager->DoDialog(pNormalDialogWindow, WaitHandler, 0);
     } else if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(pNormalDialogWindow, -1, 1);
+        gpWindowManager->AddWindow(pNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
         gpWindowManager->RemoveWindow(pNormalDialogWindow);
         gpMouseManager->ReallyShowPointer();
@@ -2415,7 +2415,7 @@ void PopNetBox(char* notice) {
     message.id = 2;
     message.text = cNetBoxLine[1];
     netWin->BroadcastMessage(message);
-    gpWindowManager->AddWindow(netWin, -1, 1);
+    gpWindowManager->AddWindow(netWin, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->ReallyHidePointer();
     exitForIncomingData = 0;
     bClose = 0;
@@ -2677,7 +2677,7 @@ void ShowCongrats(void) {
         message.id = 110;
         win->BroadcastMessage(message);
     }
-    gpWindowManager->AddWindow(win, -1, 1);
+    gpWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->ReallyHidePointer();
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
     CongratsWait();
