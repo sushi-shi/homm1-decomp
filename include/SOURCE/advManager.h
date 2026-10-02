@@ -261,7 +261,7 @@ public:
         signed char*,
         int,
         int,
-        int,
+        signed char,
         int,
         int
     );

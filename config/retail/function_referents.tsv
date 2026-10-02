@@ -134,3 +134,4 @@ rva	name	provenance
 0x0003F758	?ViewSpecialHandler@@YAFAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
 0x00082610	_chdir	SetupCDDrive's chdir call; evidence/homm1-dna-bands.tsv crt-exact libc.lib:/1152 __chdir
 0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
+0x0003D4C3	?SettleOverlay@game@@QAEXHH@Z	advManager::EraseObj calls it on gpGame with the erased cell x/y (ret 8); body lifts the overlay frame into an emptied object slot

@@ -28,6 +28,38 @@ extern armyGroup* gpMonsterGroup;
 VA(0x0045dde0, 0x1f1a)
 void advManager::DoEvent(class mapCell *, int, int) {}
 
+// Buka advManager::EraseObj reduced to HoMM1's single-cell layers: the cell
+// falls back to the trigger kept in the low seven bits of byte 7 and borrows
+// the metadata of a neighbouring cell with that trigger.
+VA(0x0045fcfa, 0x1d7)
+void advManager::EraseObj(class mapCell* cell, int x, int y) {
+    signed char erased = 0;
+    int i;
+    int j;
+
+    erased = 1;
+    cell->m_triggerType = 0;
+    cell->m_objectIndex = 0xff;
+    if ((cell->m_unknown07 & 0x7f) > 0 && (cell->m_unknown07 & 0x7f) < 0x7f) {
+        cell->m_triggerType = cell->m_unknown07 & 0x7f;
+        cell->m_unknown07 = cell->m_unknown07 - cell->m_triggerType;
+        for (i = x - 1; i <= x + 1; i++) {
+            for (j = y - 1; j <= y + 1; j++) {
+                if (i >= 0 && i < MAP_CELL_GRID_SIZE && j >= 0 && j < MAP_CELL_GRID_SIZE
+                    && gpGame->m_map[i][j].m_triggerType == cell->m_triggerType)
+                    cell->m_objectMetadata = gpGame->m_map[i][j].m_objectMetadata;
+            }
+        }
+        gpGame->SettleOverlay(x, y);
+    }
+    if (gpGame->m_mapSounds[x][y] != -1) {
+        gpGame->m_mapSounds[x][y] = -1;
+        if (bShowIt)
+            SetEnvironmentOrigin(m_mapOriginX + 7, m_mapOriginY + 7, 1);
+    }
+    gpGame->SetupAdjacentMons();
+}
+
 // donor PoL RVA 0x000aea02; preferred Buka symbol ?HeroSwap@advManager@@QAEXPAVhero@@0@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.621863;margin=0.183841;shape=0.591;size=0.854;calls=1.000;alternate=pol20:void advManager::HeroSwap(class hero *, class hero *)@0x000aea02
@@ -628,7 +660,68 @@ void advManager::DoAIEvent(class mapCell *, class hero *, int, int) {}
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.214069;margin=0.493239;shape=0.272;size=0.223;calls=0.212;alternate=pol20:void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int)@0x000b4fd5
 VA(0x004625c5, 0x19a)
-void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, signed char *, int, int, int, int, int) {}
+void advManager::PlayerMonsterInteract(class mapCell* cell, class mapCell* combatCell,
+                                       class hero* eventHero, signed char* handled, int x, int y,
+                                       signed char unused, int combatX, int combatY) {
+    int result;
+
+    unused = 0;
+    if ((unsigned char)cell->m_objectMetadata & 0x80) {
+        if (gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
+            > gMonsterDatabase[cell->m_objectIndex].fightValue
+                  * ((unsigned char)cell->m_objectMetadata & 0x7f) * 1.75) {
+            if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
+                sprintf(gText, gEventText[48], gArmyNamesPlural[cell->m_objectIndex]);
+                EventWindow(-1, 2, gText, -1, 0, -1, 0, -1);
+                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                    eventHero->m_army.Add(cell->m_objectIndex,
+                                          (unsigned char)cell->m_objectMetadata & 0x7f, -1);
+                    *handled = 1;
+                    return;
+                } else {
+                    EventWindow(49, 1, "", -1, 0, -1, 0, -1);
+                }
+            }
+        }
+    }
+    result = CombatMonsterEvent(eventHero, cell->m_objectIndex,
+                                (unsigned char)cell->m_objectMetadata & 0x7f, combatCell, x, y,
+                                unused, combatX, combatY);
+    if (result == 1 || result == -1)
+        *handled = 1;
+}
+
+// HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
+// 7:4, otherwise fight it through philAI's quick combat.
+VA(0x0046275f, 0x152)
+void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventHero,
+                                         signed char* handled) {
+    int numToBuy;
+    int purchaseValue;
+    int bestSlot;
+    int result;
+    int creatureCount;
+
+    if ((unsigned char)cell->m_objectMetadata & 0x80
+        && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
+               > gMonsterDatabase[cell->m_objectIndex].fightValue
+                     * ((unsigned char)cell->m_objectMetadata & 0x7f) * 1.75) {
+        gpPhilAI->EvaluateOneTimeCreaturePurchase(
+            eventHero, cell->m_objectIndex, (unsigned char)cell->m_objectMetadata & 0x7f, 1,
+            numToBuy, purchaseValue, bestSlot);
+        if (numToBuy > 0) {
+            gpGame->GiveArmy(&eventHero->m_army, cell->m_objectIndex,
+                             (unsigned char)cell->m_objectMetadata & 0x7f, bestSlot);
+            *handled = 1;
+        }
+    } else {
+        creatureCount = (unsigned char)cell->m_objectMetadata & 0x7f;
+        result = gpPhilAI->CombatMonsterEvent(eventHero, cell->m_objectIndex, &creatureCount, cell);
+        cell->m_objectMetadata = ((unsigned char)cell->m_objectMetadata & 0x80) + creatureCount;
+        if (result)
+            *handled = 1;
+    }
+}
 
 // donor PoL RVA 0x000b5c40; preferred Buka symbol ?DoNetCombat@advManager@@QAEHPAD@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order

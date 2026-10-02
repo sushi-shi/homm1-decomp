@@ -213,6 +213,9 @@ public:
     void ConvertFlagToLateOverlay(int, int);
     int HasObjectTilesetIndex(int, int, int, int);
     void ConvertAllToLateOverlay(int, int);
+    // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
+    // pulls its overlay frame down into the object layer.
+    void SettleOverlay(int, int);
     void ProcessMapExtra(void);
     void SetupTowns(void);
     void ProcessOnMapHeroes(void);

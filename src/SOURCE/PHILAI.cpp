@@ -1274,7 +1274,7 @@ int philAI::CanBuyBHC(BHC& purchase) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.554517;margin=0.429398;shape=0.381;size=0.912;calls=1.000;alternate=pol20:int philAI::CombatMonsterEvent(class hero *, int, int *, class mapCell *)@0x00043007
 VA(0x00421fe5, 0x177)
-signed char philAI::CombatMonsterEvent(hero* h, int monType, int* pCount, mapCell*) {
+signed char philAI::CombatMonsterEvent(hero* h, signed char monType, int* pCount, mapCell*) {
     float casualtyRatio;
     float fLoss;
     int result;
