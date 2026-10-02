@@ -13,7 +13,7 @@ class hero;
 // clang-format off
 H1_ENUM_CONST_BEGIN(TownConstant)
     TOWN_MAGE_GUILD_SPELL_COUNT = 9,
-    // m_occupyingHeroId when no hero is inside (Buka town.h).
+    // town::m_occupyingHeroId when no hero stands in the town (Buka's name).
     TOWN_OCCUPYING_HERO_NONE = -1
 H1_ENUM_CONST_END(TownConstant)
 

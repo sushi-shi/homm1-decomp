@@ -9,13 +9,11 @@
 struct SLimitData;
 
 H1_ENUM_CONST_BEGIN(IconMonoRleConstant)
-    ICON_MONO_SKIP_MASK = 0x7f,
-    ICON_MONO_END_COMMAND = 0x80,
-    ICON_MONO_NEWLINE_COMMAND = 0,
-    ICON_SCREEN_ROW_BYTES = 640
-H1_ENUM_CONST_END(IconMonoRleConstant)
+ICON_MONO_SKIP_MASK = 0x7f,
+    ICON_MONO_END_COMMAND = 0x80, ICON_MONO_NEWLINE_COMMAND = 0,
+    ICON_SCREEN_ROW_BYTES = 640 H1_ENUM_CONST_END(IconMonoRleConstant)
 
-// clang-format off
+    // clang-format off
 // The orientation argument of the icon blitters: FLIPPED selects the
 // mirrored Flip*IconToBitmap path (Buka IconDraw.h IconDrawOrientation).
 H1_ENUM_BEGIN(IconDrawOrientation)
@@ -28,7 +26,7 @@ H1_ENUM_END(IconDrawOrientation)
 class icon : public resource {
 public:
     short m_frameCount;
-    unsigned char *m_data;
+    unsigned char* m_data;
     short m_drawLeft;
     short m_drawRight;
     short m_drawTop;
@@ -37,18 +35,46 @@ public:
     icon(short);
     virtual inline ~icon();
     // --- methods ---
-    void DrawToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
-    int CombatClipDrawToBuffer(int, int, int, struct SLimitData *, int, int, unsigned char *, signed char *);
-    void ClipFillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char, int, int,
-                          int, int);
-    void FillToBuffer(short, short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
-    void DimToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
+    void
+    DrawToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
+    int CombatClipDrawToBuffer(
+        int,
+        int,
+        int,
+        struct SLimitData*,
+        int,
+        int,
+        unsigned char*,
+        signed char*
+    );
+    void ClipFillToBuffer(
+        short,
+        short,
+        short,
+        short,
+        H1_ENUM_PARAM(IconDrawOrientation, signed char),
+        signed char,
+        int,
+        int,
+        int,
+        int
+    );
+    void FillToBuffer(
+        short,
+        short,
+        short,
+        short,
+        H1_ENUM_PARAM(IconDrawOrientation, signed char),
+        signed char
+    );
+    void
+    DimToBuffer(short, short, short, H1_ENUM_PARAM(IconDrawOrientation, signed char), signed char);
 };
 #pragma pack(pop)
 
-void PostprocessIcon(icon *);
+void PostprocessIcon(icon*);
 
-extern signed char gbUseClippedIconRenderer;
+extern signed char gbIconClipOn;
 extern int gbComputeExtent;
 extern int gbSaveBiggestExtent;
 extern int gbLimitToExtent;

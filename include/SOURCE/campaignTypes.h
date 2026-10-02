@@ -34,6 +34,6 @@ struct campaignScenario {
 #pragma pack(pop)
 extern campaignScenario gCampaignScenarios[];
 // New-game "King of the Hill" option; campaign scenarios preset it.
-extern signed char gbKingOfTheHill;
+extern signed char gbIAmGreatest;
 
 #endif // HOMM1_SOURCE_CAMPAIGNTYPES_H

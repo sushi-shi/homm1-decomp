@@ -37,7 +37,7 @@ H1_ENUM_BEGIN(BuildingSlotType)
     BUILDING_SLOT_COUNT = 13
 H1_ENUM_END(BuildingSlotType)
 
-// clang-format off
+    // clang-format off
 // giWaitType: which poll WaitHandler runs while a wait dialog is up
 // (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
 // GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect; Buka
@@ -57,9 +57,9 @@ H1_ENUM_END(DialogWaitType)
 H1_ENUM_CONST_BEGIN(SampleWaitConstant)
     SAMPLE_WAIT_DEFAULT = -1
 H1_ENUM_CONST_END(SampleWaitConstant)
-// clang-format on
+                    // clang-format on
 
-class soundManager;
+                    class soundManager;
 class heroWindowManager;
 class heroWindow;
 class resourceManager;
@@ -77,13 +77,13 @@ extern signed char gbShowHighScore;
 // NormalDialog only parks over the adventure map when neither is showing.
 extern signed char gbHeroWindShowing;
 extern signed char gbOverviewShowing;
-extern signed char gbStandardHighScore;
+extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
 extern H1_ENUM_STORAGE(TerrainType, signed char) giGroundToTerrain[];
 extern int bShowIt;
 extern char gText[];
-extern char *gArmyNames[];
+extern char* gArmyNames[];
 extern char* gArmyNamesPlural[];
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern int gbMinimized;
@@ -247,11 +247,18 @@ void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
-void PopNetBox(char *);
-void NormalDialog(char*, H1_ENUM_PARAM(NormalDialogType, int), int, int,
-                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                  H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                  H1_ENUM_PARAM(NormalDialogOrText, int));
+void PopNetBox(char*);
+void NormalDialog(
+    char*,
+    H1_ENUM_PARAM(NormalDialogType, int),
+    int,
+    int,
+    H1_ENUM_PARAM(NormalDialogResourceType, int),
+    int,
+    H1_ENUM_PARAM(NormalDialogResourceType, int),
+    int,
+    H1_ENUM_PARAM(NormalDialogOrText, int)
+);
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 extern char* gSpellDesc[];

@@ -174,7 +174,7 @@ void army::DrawToBuffer(short x, short y) {
                 && (m_hex % COMBAT_GRID_COLUMNS <= 2 || m_hex % COMBAT_GRID_COLUMNS >= 6)
             || !(m_stats.attributes & MONSTER_FLAGS_WIDE)
                    && (m_hex % COMBAT_GRID_COLUMNS <= 1 || m_hex % COMBAT_GRID_COLUMNS >= 7)))
-        gbUseClippedIconRenderer = 1;
+        gbIconClipOn = 1;
     if (m_walkYStep) {
         y += m_animationFrame * m_walkYStep;
         if (m_animationFrame > 0 && m_animationFrame <= 5)
@@ -305,7 +305,7 @@ void army::DrawToBuffer(short x, short y) {
             gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, offsetMode);
             break;
     }
-    gbUseClippedIconRenderer = 0;
+    gbIconClipOn = 0;
 }
 
 VA(0x00467281, 0x63)

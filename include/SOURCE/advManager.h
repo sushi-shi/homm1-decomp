@@ -43,6 +43,46 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_CURSOR_SAMPLE_COUNT = 7
 H1_ENUM_CONST_END(AdventureManagerStorageConstant)
 
+// m_heroIcons slots and m_cursorType: the four hero-class sprites (the
+// constructor loads kngt32/barb32/sorc32/wrlk32.icn; MobilizeCurrHero and
+// DoEvent store the hero class) and the boat (boat32.icn; set on boarding,
+// tested for water moves and shadows).
+H1_ENUM_BEGIN(AdventureHeroIcon)
+    ADVMGR_HERO_ICON_KNIGHT = 0,
+    ADVMGR_HERO_ICON_BARBARIAN = 1,
+    ADVMGR_HERO_ICON_SORCERESS = 2,
+    ADVMGR_HERO_ICON_WARLOCK = 3,
+    ADVMGR_HERO_ICON_CLASS_END = 4,
+    ADVMGR_HERO_ICON_BOAT = 4
+H1_ENUM_END(AdventureHeroIcon)
+
+// m_selectedCell: the action ProcessSelect queues and advManager::DoSelect
+// runs (Buka 2.1 AdventureCommand, same numbering).
+H1_ENUM_BEGIN(AdventureCommand)
+    ADVMGR_COMMAND_NONE = -1,
+    ADVMGR_COMMAND_MOVE_TO = 1,
+    ADVMGR_COMMAND_HERO_VIEW = 2,
+    ADVMGR_COMMAND_TOWN_VIEW = 3,
+    ADVMGR_COMMAND_SELECT_HERO = 4,
+    ADVMGR_COMMAND_SELECT_TOWN = 5,
+    ADVMGR_COMMAND_OCCUPIED_TOWN_VIEW = 6,
+    ADVMGR_COMMAND_CONTINUE_ROUTE = 7
+H1_ENUM_END(AdventureCommand)
+
+// Player colours: playerData::m_color indexes the constructor's flag ICNs
+// (b-/g-/r-/y-flag32.icn and -bflg32.icn) and KB's gColorNames
+// {"blue", "green", "red", "yellow"} (Buka PlayerColor, first four values);
+// UpdateRadar uses slot 4 of gRadarOwnerColor for unowned towns and mines.
+// Belongs with playerData (W3) if that header takes it.
+H1_ENUM_BEGIN(PlayerColor)
+    PLAYER_COLOR_BLUE = 0,
+    PLAYER_COLOR_GREEN = 1,
+    PLAYER_COLOR_RED = 2,
+    PLAYER_COLOR_YELLOW = 3,
+    PLAYER_COLOR_COUNT = 4,
+    PLAYER_COLOR_NEUTRAL = 4
+H1_ENUM_END(PlayerColor)
+
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand
@@ -73,9 +113,9 @@ H1_ENUM_BEGIN(AdventureControl)
     ADVENTURE_CONTROL_HERO_LOCATOR_3 = 119,
     ADVENTURE_CONTROL_HERO_LOCATOR_4 = 126
 H1_ENUM_END(AdventureControl)
- // clang-format on
+// clang-format on
 
- struct adventureSoundCell {
+struct adventureSoundCell {
     int soundId;
     int volume;
 };
@@ -245,7 +285,7 @@ public:
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
     char* CheckHandleNet(void);
-    short CheckHandleNetPlayerWait(struct tag_message &, signed char);
+    short CheckHandleNetPlayerWait(struct tag_message&, signed char);
     void TrimLoopingSounds(int);
     void DisableButtons(void);
     void EnableButtons(void);
@@ -270,10 +310,16 @@ public:
     void JailEvent(class mapCell*, class hero*, int, int);
     void TownEvent(class mapCell*, int, int);
     void EventSound(short, short);
-    void EventWindow(short, H1_ENUM_PARAM(NormalDialogType, int), char*,
-                     H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                     H1_ENUM_PARAM(NormalDialogResourceType, int), int,
-                     H1_ENUM_PARAM(NormalDialogOrText, int));
+    void EventWindow(
+        short,
+        H1_ENUM_PARAM(NormalDialogType, int),
+        char*,
+        H1_ENUM_PARAM(NormalDialogResourceType, int),
+        int,
+        H1_ENUM_PARAM(NormalDialogResourceType, int),
+        int,
+        H1_ENUM_PARAM(NormalDialogOrText, int)
+    );
     int GiveRandomArtifact(class hero*);
     int GiveExperience(class hero*, int, signed char);
     // HoMM1 retail: byte resource, word amount (ret 0xc).
@@ -285,8 +331,17 @@ public:
     signed char GhostEvent(class hero*, class mapCell*, int, int, int);
     void HouseEvent(class hero*, class mapCell*);
     // HoMM1 retail: nine arguments (ret 0x24), result in AL.
-    signed char CombatMonsterEvent(class hero*, H1_ENUM_PARAM(CreatureType, signed char), short,
-                                   class mapCell*, int, int, signed char, int, int);
+    signed char CombatMonsterEvent(
+        class hero*,
+        H1_ENUM_PARAM(CreatureType, signed char),
+        short,
+        class mapCell*,
+        int,
+        int,
+        signed char,
+        int,
+        int
+    );
     void TransferArtifacts(class hero*, class hero*);
     void HeroLoses(class hero*);
     void DoWhirlpool(class hero*);
@@ -372,10 +427,10 @@ public:
 };
 #pragma pack(pop)
 
-short APanelHandler(struct tag_message &);
+short APanelHandler(struct tag_message&);
 void UpdateCPanel(signed char);
 signed char SaveGame(void);
-short CPanelHandler(struct tag_message &);
+short CPanelHandler(struct tag_message&);
 
 extern int gbNoBorder;
 extern long giForceSwitchMusic;
@@ -383,7 +438,7 @@ extern long iLastScrollTime;
 extern int gbForceUpdate;
 extern int gbAllBlack;
 extern int giFullySeeded;
-extern class searchArray *gpSearchArray;
+extern class searchArray* gpSearchArray;
 extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
@@ -415,7 +470,7 @@ extern int giLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;
 extern int giLimitUpdMaxY;
-extern class heroWindow *cPanel;
+extern class heroWindow* cPanel;
 extern signed char bPrefsChanged;
 extern signed char bFreshSave;
 extern unsigned char giCloudType[];

@@ -94,7 +94,7 @@ H1_ENUM_CONST_END(PrefsConstant)
     // clang-format on
 
     extern char gcRegAppPath[];
-extern char gcRegCDDrive[];
+extern char gcRegCDRomPath[];
 extern signed char gbFirstTimeThrough;
 extern char gcAnimPath[];
 extern int giCDDrive;

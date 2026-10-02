@@ -464,12 +464,12 @@ short game::SaveGame(char* filename, signed char generateName) {
     file = open(filePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
     if (file == -1)
         FileError(filePath);
-    write(file, &gbKingOfTheHill, 1);
+    write(file, &gbIAmGreatest, 1);
     write(file, this, 2);
     write(file, &giMonthType, 1);
-    write(file, &giMonthSpecial, 1);
+    write(file, &giMonthTypeExtra, 1);
     write(file, &giWeekType, 1);
-    write(file, &giWeekSpecial, 1);
+    write(file, &giWeekTypeExtra, 1);
     write(file, &m_campaignType, 4);
     write(file, &m_campaignScenario, 4);
     write(file, &m_campaignDay, 4);
@@ -556,12 +556,12 @@ short game::LoadGame(char* filename, int origData, int) {
     if (handle == -1)
         FileError(pathName);
     ClearMapExtra();
-    read(handle, &gbKingOfTheHill, 1);
+    read(handle, &gbIAmGreatest, 1);
     read(handle, this, 2);
     read(handle, &giMonthType, 1);
-    read(handle, &giMonthSpecial, 1);
+    read(handle, &giMonthTypeExtra, 1);
     read(handle, &giWeekType, 1);
-    read(handle, &giWeekSpecial, 1);
+    read(handle, &giWeekTypeExtra, 1);
     read(handle, &m_campaignType, 4);
     read(handle, &m_campaignScenario, 4);
     read(handle, &m_campaignDay, 4);
@@ -849,7 +849,7 @@ short NewGameHandler(tag_message& message) {
                                 (gpGame->m_players[0].m_color + 1) % GAME_PLAYER_COUNT;
                             break;
                         case NEW_GAME_KING_OF_THE_HILL:
-                            gbKingOfTheHill = 1 - gbKingOfTheHill;
+                            gbIAmGreatest = 1 - gbIAmGreatest;
                             break;
                         case NEW_GAME_SCENARIO_SELECT:
                         case NEW_GAME_SCENARIO_NAME:
@@ -928,7 +928,7 @@ void game::UpdateNewGameWindow(void) {
     }
     message.command = WIDGET_COMMAND_SET_FRAME;
     message.id = NEW_GAME_KING_OF_THE_HILL;
-    message.value = gbKingOfTheHill + NEW_GAME_FRAME_KING_OF_THE_HILL_BASE;
+    message.value = gbIAmGreatest + NEW_GAME_FRAME_KING_OF_THE_HILL_BASE;
     m_newGameWindow->BroadcastMessage(message);
 }
 
@@ -1064,7 +1064,7 @@ signed char game::NewGame(void) {
         m_players[1].m_difficulty = gcSavedPlayerTypes[1];
         m_players[2].m_difficulty = gcSavedPlayerTypes[2];
         m_players[3].m_difficulty = gcSavedPlayerTypes[3];
-        gbKingOfTheHill = gbSavedKingOfTheHill;
+        gbIAmGreatest = gbSavedKingOfTheHill;
         m_players[0].m_color = gcSavedCrest;
     }
     if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
@@ -1104,7 +1104,7 @@ signed char game::NewGame(void) {
     gcSavedPlayerTypes[1] = m_players[1].m_difficulty;
     gcSavedPlayerTypes[2] = m_players[2].m_difficulty;
     gcSavedPlayerTypes[3] = m_players[3].m_difficulty;
-    gbSavedKingOfTheHill = gbKingOfTheHill;
+    gbSavedKingOfTheHill = gbIAmGreatest;
     gcSavedCrest = m_players[0].m_color;
     NewMap(gMapName);
     return 1;
@@ -1230,7 +1230,7 @@ void game::InitCampaignMap(int scenario, int) {
     m_week = (m_campaignDay - 1 - (m_month - 1) * 28) / 7 + 1;
     m_day = (m_campaignDay - 1) % 7 + 1;
     giCurTurn = (m_month - 1) * 28 + (m_week - 1) * 7 + m_day;
-    gbKingOfTheHill = gCampaignScenarios[scenario].kingOfTheHill;
+    gbIAmGreatest = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
     m_players[0].m_difficulty = 4;
     m_players[0].m_color = gCampaignSideCrests[m_campaignType - 1][0];
@@ -3145,12 +3145,12 @@ void game::PerWeek(void) {
     int heroClass = 0;
 
     giWeekType = CALENDAR_PERIOD_NORMAL;
-    giWeekSpecial = Random(0, CALENDAR_WEEK_NAME_COUNT - 1);
+    giWeekTypeExtra = Random(0, CALENDAR_WEEK_NAME_COUNT - 1);
     if (m_week != 4) {
         i = Random(1, 4);
         if (i == 1) {
             giWeekType = CALENDAR_PERIOD_CREATURE;
-            giWeekSpecial = Random(0, CALENDAR_WEEK_CREATURE_COUNT - 1);
+            giWeekTypeExtra = Random(0, CALENDAR_WEEK_CREATURE_COUNT - 1);
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
@@ -3167,7 +3167,7 @@ void game::PerWeek(void) {
                         gain = gain * 1.36;
                 }
                 if (giWeekType == CALENDAR_PERIOD_CREATURE
-                    && gDwellingType[townPointer->m_type][j - 7] == giWeekSpecial)
+                    && gDwellingType[townPointer->m_type][j - 7] == giWeekTypeExtra)
                     gain += 5;
                 townPointer->m_garrison[j - 7] += gain;
             }
@@ -3258,10 +3258,10 @@ void game::PerMonth(void) {
     i = Random(1, 10);
     if (i <= 5) {
         giMonthType = CALENDAR_PERIOD_NORMAL;
-        giMonthSpecial = Random(0, CALENDAR_MONTH_NAME_COUNT - 1);
+        giMonthTypeExtra = Random(0, CALENDAR_MONTH_NAME_COUNT - 1);
     } else if (i <= 9) {
         giMonthType = CALENDAR_PERIOD_CREATURE;
-        giMonthSpecial = giMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)];
+        giMonthTypeExtra = giMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)];
     } else {
         giMonthType = CALENDAR_PERIOD_PLAGUE;
     }
@@ -3273,7 +3273,7 @@ void game::PerMonth(void) {
                 if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                     growth += 2;
                 if (giMonthType == CALENDAR_PERIOD_CREATURE
-                    && gDwellingType[townPointer->m_type][j - 7] == giMonthSpecial)
+                    && gDwellingType[townPointer->m_type][j - 7] == giMonthTypeExtra)
                     townPointer->m_garrison[j - 7] *= 2;
                 if (giMonthType == CALENDAR_PERIOD_PLAGUE) {
                     townPointer->m_garrison[j - 7] -= growth;
@@ -3292,8 +3292,8 @@ void game::PerMonth(void) {
                     if (Random(0, 360) == 10) {
                         spot->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
                         spot->m_objectTileset = 0xc;
-                        spot->m_objectIndex = giMonthSpecial;
-                        spot->m_objectMetadata = GetRandomNumTroops(giMonthSpecial);
+                        spot->m_objectIndex = giMonthTypeExtra;
+                        spot->m_objectMetadata = GetRandomNumTroops(giMonthTypeExtra);
                     }
                 }
             }
@@ -4743,15 +4743,15 @@ void game::DoNewTurn(void) {
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_MONTH_NORMAL],
-                        gMonthNames[giMonthSpecial]
+                        gMonthNames[giMonthTypeExtra]
                     );
                 } else if (giMonthType == CALENDAR_PERIOD_CREATURE) {
-                    strcpy(monsterName, gArmyNames[giMonthSpecial]);
+                    strcpy(monsterName, gArmyNames[giMonthTypeExtra]);
                     monsterName[0] -= 32;
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE],
-                        gArmyNames[giMonthSpecial],
+                        gArmyNames[giMonthTypeExtra],
                         monsterName
                     );
                 } else {
@@ -4763,15 +4763,15 @@ void game::DoNewTurn(void) {
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_WEEK_NORMAL],
-                        gWeekNames[giWeekSpecial]
+                        gWeekNames[giWeekTypeExtra]
                     );
                 } else {
-                    strcpy(monsterName, gArmyNames[giWeekSpecial]);
+                    strcpy(monsterName, gArmyNames[giWeekTypeExtra]);
                     monsterName[0] -= 32;
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE],
-                        gArmyNames[giWeekSpecial],
+                        gArmyNames[giWeekTypeExtra],
                         monsterName
                     );
                 }
@@ -4906,7 +4906,7 @@ int game::CalcDifficultyRating(void) {
         if (gpGame->m_players[i].m_difficulty > PLAYER_TYPE_NONE)
             gpGame->m_playerCount++;
     }
-    if (gbKingOfTheHill) {
+    if (gbIAmGreatest) {
         if (m_playerCount - giNumHumanPlayers == 0) {
         } else if (m_playerCount - giNumHumanPlayers == 1) {
         } else if (m_playerCount - giNumHumanPlayers == 2) {
@@ -5032,7 +5032,7 @@ void game::ShowScenInfo(void) {
     scenWindow->BroadcastMessage(message);
     message.id = kingOfHillId;
     message.text = gText;
-    sprintf(gText, gbKingOfTheHill ? "Yes" : "No");
+    sprintf(gText, gbIAmGreatest ? "Yes" : "No");
     scenWindow->BroadcastMessage(message);
     message.id = ratingId;
     sprintf(gText, "%d%%", gpGame->m_difficultyRating);

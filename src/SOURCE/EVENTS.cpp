@@ -154,7 +154,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             pHero->m_remainingMobility = 0;
             ship->heroId = pHero->m_id;
             ship->owner = pHero->m_owner;
-            m_cursorType = 4;
+            m_cursorType = ADVMGR_HERO_ICON_BOAT;
             m_cursorDirection = ship->direction;
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
             m_cursorActive = 1;
@@ -752,7 +752,11 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 gSpellNames[cell->m_objectMetadata - 1]
             );
             if (pHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
-                pHero->AddSpell(cell->m_objectMetadata - 1, pHero->m_primaryStats[3], 0);
+                pHero->AddSpell(
+                    cell->m_objectMetadata - 1,
+                    pHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
+                    0
+                );
                 EventWindow(
                     EVENT_TEXT_CUSTOM,
                     NORMAL_DIALOG_TYPE_OK,
@@ -967,7 +971,13 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case MAP_OBJECT_SIGNPOST:
-            gpSearchArray->FindNearestObject(pHero->m_x, pHero->m_y, pHero->m_direction, -1, 0xa8);
+            gpSearchArray->FindNearestObject(
+                pHero->m_x,
+                pHero->m_y,
+                pHero->m_direction,
+                -1,
+                MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN
+            );
             if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)
                     ->m_triggerType
                 == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
@@ -1210,9 +1220,10 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
 
     erased = 1;
     cell->m_triggerType = MAP_OBJECT_NONE;
-    cell->m_objectIndex = 0xff;
-    if ((cell->m_secondaryTrigger & 0x7f) > 0 && (cell->m_secondaryTrigger & 0x7f) < 0x7f) {
-        cell->m_triggerType = cell->m_secondaryTrigger & 0x7f;
+    cell->m_objectIndex = MAP_CELL_NO_FRAME;
+    if ((cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) > 0
+        && (cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) < 0x7f) {
+        cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
         cell->m_secondaryTrigger = cell->m_secondaryTrigger - cell->m_triggerType;
         for (i = x - 1; i <= x + 1; i++) {
             for (j = y - 1; j <= y + 1; j++) {
@@ -1643,7 +1654,7 @@ VA(0x00460a5c, 0x11e)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     short houseIndex;
 
-    houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - MAP_OBJECT_STRAW_HUT;
+    houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - MAP_OBJECT_HOUSE_FIRST;
     if (!cell->m_objectMetadata) {
         EventWindow(
             houseIndex * EVENT_TEXT_HOUSE_STRIDE + EVENT_TEXT_HOUSE_EMPTY,
@@ -2029,7 +2040,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     signed char tx;
     signed char teleportCount;
     int res;
-    int cost[7];
+    int cost[RESOURCE_COUNT];
     int victory;
     signed char adjacentMonster;
     hero* enemyHero;
@@ -2063,7 +2074,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             eventHero->m_remainingMobility = 0;
             ship->heroId = eventHero->m_id;
             ship->owner = eventHero->m_owner;
-            m_cursorType = 4;
+            m_cursorType = ADVMGR_HERO_ICON_BOAT;
             m_cursorDirection = ship->direction;
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
             m_cursorActive = 1;
@@ -2260,7 +2271,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     cell->m_objectMetadata = cell->m_objectMetadata - numHired;
                     if (!available) {
                         GetMonsterCost(troopType, cost);
-                        for (counter = 0; counter < 7; counter++)
+                        for (counter = 0; counter < RESOURCE_COUNT; counter++)
                             gpCurPlayer->m_resources[counter] -= -(-(cost[counter] * numHired));
                     }
                 }
@@ -2281,7 +2292,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             break;
         case MAP_OBJECT_SPELL_SHRINE:
             if (eventHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
-                eventHero->AddSpell(cell->m_objectMetadata - 1, eventHero->m_primaryStats[3], 0);
+                eventHero->AddSpell(
+                    cell->m_objectMetadata - 1,
+                    eventHero->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
+                    0
+                );
             break;
         case MAP_OBJECT_TOWN:
             gpPhilAI->TownEvent(cell, eventHero, x, y);
