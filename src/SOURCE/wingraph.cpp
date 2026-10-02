@@ -530,9 +530,9 @@ void DDSD(int error, char* file, int line) {
             unused = DDSD_REPORT_UNKNOWN;
             break;
     }
-    MessageBeep(0);
-    MessageBeep(0);
-    MessageBeep(0);
+    MessageBeep(MB_OK);
+    MessageBeep(MB_OK);
+    MessageBeep(MB_OK);
     sprintf(gText, "Direct Draw Error #%d in file '%s' at Line #%d", unused, file, line);
     LogStr(gText);
     ShutDown(gText);
