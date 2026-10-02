@@ -21,26 +21,28 @@ extern char gDialogManagerError2[];
 extern char gDialogManagerError3[];
 extern char gDialogManagerError4[];
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(ExecutiveConstant)
     EXECUTIVE_DIALOG_MANAGER_CAPACITY = 20
 H1_ENUM_CONST_END(ExecutiveConstant)
+    // clang-format on
 
-class executive {
+    class executive {
 public:
-    baseManager *m_managerListHead;
-    baseManager *m_managerListTail;
-    baseManager *m_activeManager;
+    baseManager* m_managerListHead;
+    baseManager* m_managerListTail;
+    baseManager* m_activeManager;
     int m_result;
     // --- constructors ---
     executive(void);
     // --- methods ---
     short InitSystem(void);
     void ShutDownSystem(void);
-    short DoDialog(class baseManager *);
+    short DoDialog(class baseManager*);
     void PrintManagerList(void);
-    short AddManager(class baseManager *, short);
-    void RemoveManager(class baseManager *);
-    void CallManager(class baseManager *);
+    short AddManager(class baseManager*, short);
+    void RemoveManager(class baseManager*);
+    void CallManager(class baseManager*);
     void MainLoop(void);
     void Terminate(void);
 };

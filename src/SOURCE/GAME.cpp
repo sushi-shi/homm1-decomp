@@ -627,7 +627,7 @@ short game::LoadGame(char* filename, int origData, int) {
     read(handle, &m_ultimateArtifactY, 1);
     read(handle, &m_ultimateArtifactId, 1);
     if (origData) {
-        memset(m_mapSounds, -1, sizeof(m_mapSounds));
+        memset(m_mapSounds, MAP_SOUND_NONE, sizeof(m_mapSounds));
         memset(m_mapExtra, 0, sizeof(m_mapExtra));
         memset(mapVisited, 0, sizeof(mapVisited));
         strcpy(gpGame->m_saveName, "NEWGAME");

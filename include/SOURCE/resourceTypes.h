@@ -3,6 +3,7 @@
 
 #include <Domains.h>
 
+// clang-format off
 H1_ENUM_BEGIN(ResourceType)
     RESOURCE_WOOD = 0,
     RESOURCE_FIRST = RESOURCE_WOOD,
@@ -15,5 +16,6 @@ H1_ENUM_BEGIN(ResourceType)
     RESOURCE_LAST = RESOURCE_GOLD,
     RESOURCE_COUNT = 7
 H1_ENUM_END(ResourceType)
+// clang-format on
 
 #endif

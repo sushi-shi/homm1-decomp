@@ -5,6 +5,7 @@
 #include <BASE/message.h>
 #include <H1/Macros.h>
 
+// clang-format off
 H1_ENUM_CONST_BEGIN(InputManagerConstant)
     INPUT_GAME_WIDTH = 640,
     INPUT_GAME_HEIGHT = 480,
@@ -19,7 +20,6 @@ H1_ENUM_CONST_BEGIN(InputManagerConstant)
     INPUT_KEEP_CURRENT_MOUSE_FRAME = 1000
 H1_ENUM_CONST_END(InputManagerConstant)
 
-// clang-format off
 // PC set-1 scan codes: KeyboardMessageHandler stores bits 16..23 of the
 // WM_KEYDOWN lParam, and MakeScanCodeTable maps every code 0x00..0x58 to
 // its character or to the code shifted into the high byte. Names follow
@@ -130,7 +130,7 @@ H1_ENUM_CONST_END(InputKeyCodeConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-class inputManager : public baseManager {
+        class inputManager : public baseManager {
 public:
     tag_message m_eventRing[INPUT_EVENT_RING_CAPACITY];
     short m_readIndex;
@@ -163,7 +163,9 @@ public:
     void MakeScanCodeTable(void);
     void ForceMouseMove(void);
     // Inline qualifier accessor; townManager::ShiftQualChange retains its jmp.
-    short GetModifiers(void) { return m_modifiers; }
+    short GetModifiers(void) {
+        return m_modifiers;
+    }
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_INPUTMANAGER_H

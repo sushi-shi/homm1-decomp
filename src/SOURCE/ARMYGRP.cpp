@@ -148,24 +148,25 @@ short armyGroup::GetNumArmies(void) {
 VA(0x00447d19, 0x132)
 short armyGroup::Add(signed char creatureType, short quantity, signed char slot) {
     short searchSlot;
-    if (slot == -1) {
-        for (searchSlot = 0; searchSlot < 5; ++searchSlot) {
+    if (slot == ARMY_GROUP_ANY_SLOT) {
+        for (searchSlot = 0; searchSlot < ARMY_GROUP_SLOT_COUNT; ++searchSlot) {
             if (m_creatureTypes[searchSlot] == creatureType) {
                 slot = searchSlot;
                 break;
             }
         }
     }
-    if (slot == -1) {
-        for (searchSlot = 0; searchSlot < 5; ++searchSlot) {
-            if (m_creatureTypes[searchSlot] == CREATURE_NONE || m_creatureTypes[searchSlot] == creatureType) {
+    if (slot == ARMY_GROUP_ANY_SLOT) {
+        for (searchSlot = 0; searchSlot < ARMY_GROUP_SLOT_COUNT; ++searchSlot) {
+            if (m_creatureTypes[searchSlot] == CREATURE_NONE
+                || m_creatureTypes[searchSlot] == creatureType) {
                 slot = searchSlot;
                 break;
             }
         }
     }
     if (slot >= 5)
-    return 0;
+        return 0;
 
     m_creatureTypes[slot] = creatureType;
     if (m_creatureCounts[slot] < 0)
