@@ -880,3 +880,10 @@ void combatManager::Armageddon(void)
     gpResourceManager->Dispose(kbPal);
     delete workPal;
 }
+
+// SPELLS owns retail .data 0x0048f28c-0x0048f4d3. Retail emits indexToCastOn
+// among the combat-spell handler's literals (0x0048f2b0).
+DATA(0x0048f28c)
+signed char bInTeleportGetDest = 0;
+DATA(0x0048f2b0)
+signed char indexToCastOn = -1;

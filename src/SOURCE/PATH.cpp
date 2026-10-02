@@ -8,8 +8,8 @@
 #include <BASE/Misc.h>
 
 // Compiler line-base words for PATH.CPP's ProcessAssert sites.
-DATA(0x0048f4d4) short gAdjacentCellAssertLine;
-DATA(0x0048f510) short gAdjacentCellNoArmyAssertLine;
+DATA(0x0048f4d4) short gAdjacentCellAssertLine = 311;
+DATA(0x0048f510) short gAdjacentCellNoArmyAssertLine = 328;
 
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.
