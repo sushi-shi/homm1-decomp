@@ -1299,7 +1299,7 @@ void UpdateNormalDialog(char* text) {
         short show = 1; // Retained from donor and retail stack frame.
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_SET_TEXT;
-        message.id = 1;
+        message.id = NORMAL_DIALOG_TEXT_WIDGET_ID;
         message.text = text;
         pNormalDialogWindow->BroadcastMessage(message);
         pNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
@@ -2264,6 +2264,16 @@ signed char WaitForOtherPlayer(void) {
     return result;
 }
 
+// clang-format off
+// netbox.bin text widgets: the two scrolled chat lines (cNetBoxLine) and the
+// line being typed.
+H1_ENUM_BEGIN(NetBoxControl)
+    NET_BOX_LINE_PREVIOUS = 1,
+    NET_BOX_LINE_LATEST = 2,
+    NET_BOX_INPUT = 3
+H1_ENUM_END(NetBoxControl)
+// clang-format on
+
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
@@ -2312,10 +2322,10 @@ void PopNetBox(char* notice) {
         MemError();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = NET_BOX_LINE_PREVIOUS;
     message.text = cNetBoxLine[0];
     netWin->BroadcastMessage(message);
-    message.id = 2;
+    message.id = NET_BOX_LINE_LATEST;
     message.text = cNetBoxLine[1];
     netWin->BroadcastMessage(message);
     gpWindowManager->AddWindow(netWin, WINDOW_Z_ORDER_APPEND, 1);
@@ -2327,7 +2337,7 @@ void PopNetBox(char* notice) {
     sendText = 0;
     drawLines = 1;
     strcpy(text, "");
-    gpInputManager->SetKeyCodeType(0);
+    gpInputManager->SetKeyCodeType(INPUT_KEY_CODE_ASCII);
 
     while (!bClose) {
         PollSound();
@@ -2340,7 +2350,7 @@ void PopNetBox(char* notice) {
                 switch (
                     reinterpret_cast<RemoteMessage*>(data)->command
                 ) { // API-forced: char* record.
-                    case 11:
+                    case REMOTE_COMMAND_CHAT:
                         data = GetRemoteData(1);
                         AddNetBoxLine(
                             reinterpret_cast<RemoteMessage*>(data)->payload.data
@@ -2364,17 +2374,17 @@ void PopNetBox(char* notice) {
             case MESSAGE_KEY_DOWN:
                 msgTime = 0;
                 switch (incoming.keyCode) {
-                    case 0x1b:
-                    case 0x3b00:
+                    case INPUT_ASCII_ESCAPE:
+                    case INPUT_SCAN_F1 << INPUT_KEY_SCAN_SHIFT:
                         bClose = 1;
                         break;
-                    case 0x7f:
+                    case INPUT_ASCII_DELETE:
                         if (len > 0)
                             len--;
                         updateInput = 1;
                         blinkState = 1;
                         break;
-                    case 10:
+                    case '\n':
                         sendText = 1;
                         break;
                     default:
@@ -2420,10 +2430,10 @@ void PopNetBox(char* notice) {
             drawLines = 0;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = 1;
+            message.id = NET_BOX_LINE_PREVIOUS;
             message.text = cNetBoxLine[0];
             netWin->BroadcastMessage(message);
-            message.id = 2;
+            message.id = NET_BOX_LINE_LATEST;
             message.text = cNetBoxLine[1];
             netWin->BroadcastMessage(message);
             netWin->DrawWindow();
@@ -2439,7 +2449,7 @@ void PopNetBox(char* notice) {
             text[len + 1] = 0;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = 3;
+            message.id = NET_BOX_INPUT;
             message.text = text;
             netWin->BroadcastMessage(message);
             netWin->DrawWindow();
@@ -2455,7 +2465,7 @@ void PopNetBox(char* notice) {
             bClose = 1;
         }
     }
-    gpInputManager->SetKeyCodeType(1);
+    gpInputManager->SetKeyCodeType(INPUT_KEY_CODE_SCAN);
     gpWindowManager->RemoveWindow(netWin);
     bShowIt = oldShowIt;
     if (shown)
@@ -2522,10 +2532,29 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
-// scenario's win text; standard games score the days played, rank the result
-// as a creature and file it with the high scores.
-VA(0x00455123, 0x3be)
+// clang-format off
+// congspre.bin / congrats.bin text widgets: the title (or the campaign's win
+// text), the five gScoreLabels captions, and the standard game's days, base
+// score, difficulty, final score and creature rating.
+H1_ENUM_BEGIN(CongratsControl)
+    CONGRATS_TITLE = 100,
+    CONGRATS_SCORE_LABEL_FIRST = 101,
+    CONGRATS_DAYS = 106,
+    CONGRATS_BASE_SCORE = 107,
+    CONGRATS_DIFFICULTY = 108,
+    CONGRATS_FINAL_SCORE = 109,
+    CONGRATS_RATING = 110
+H1_ENUM_END(CongratsControl)
+
+H1_ENUM_CONST_BEGIN(CongratsConstant)
+    CONGRATS_SCORE_LABEL_COUNT = 5
+H1_ENUM_CONST_END(CongratsConstant)
+    // clang-format on
+
+    // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
+    // scenario's win text; standard games score the days played, rank the result
+    // as a creature and file it with the high scores.
+    VA(0x00455123, 0x3be)
 void ShowCongrats(void) {
     char name[32];
     int i;
@@ -2548,7 +2577,7 @@ void ShowCongrats(void) {
         if (!win)
             MemError();
         sprintf(gText, gCampaignWinTexts[gpGame->m_campaignScenario]);
-        message.id = 100;
+        message.id = CONGRATS_TITLE;
         win->BroadcastMessage(message);
     } else {
         win = new heroWindow(0, 0, "congspre.bin");
@@ -2557,32 +2586,32 @@ void ShowCongrats(void) {
         sprintf(name, gArmyNames[GetMonType(result, HIGH_SCORE_TYPE_STANDARD)]);
         name[0] -= 32;
         sprintf(gText, "A Glorious Victory!");
-        message.id = 100;
+        message.id = CONGRATS_TITLE;
         win->BroadcastMessage(message);
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < CONGRATS_SCORE_LABEL_COUNT; i++) {
             sprintf(gText, gScoreLabels[i]);
-            message.id = i + 101;
+            message.id = i + CONGRATS_SCORE_LABEL_FIRST;
             win->BroadcastMessage(message);
         }
         sprintf(gText, "%d", giCurTurn);
-        message.id = 106;
+        message.id = CONGRATS_DAYS;
         win->BroadcastMessage(message);
         sprintf(gText, "%d", daysScore);
-        message.id = 107;
+        message.id = CONGRATS_BASE_SCORE;
         win->BroadcastMessage(message);
         sprintf(gText, "%d%%", gpGame->m_difficultyRating);
-        message.id = 108;
+        message.id = CONGRATS_DIFFICULTY;
         win->BroadcastMessage(message);
         sprintf(gText, "%d", result);
-        message.id = 109;
+        message.id = CONGRATS_FINAL_SCORE;
         win->BroadcastMessage(message);
         sprintf(gText, "%s", name);
-        message.id = 110;
+        message.id = CONGRATS_RATING;
         win->BroadcastMessage(message);
     }
     gpWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
     CongratsWait();
     gpWindowManager->RemoveWindow(win);
     delete win;
@@ -2610,10 +2639,18 @@ void CongratsWait(void) {
     }
 }
 
+// clang-format off
+// dataentr.bin widgets: the prompt text and the edit field.
+H1_ENUM_BEGIN(DataEntryControl)
+    DATA_ENTRY_PROMPT = 1,
+    DATA_ENTRY_TEXT = 10
+H1_ENUM_END(DataEntryControl)
+    // clang-format on
+
 // Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
 VA(0x00455592, 0x1c7)
 void GetDataEntry(char* prompt, char* destination, int maximumLength, char* initialText) {
-    short widgetId = 10;
+    short widgetId = DATA_ENTRY_TEXT;
     tag_message message;
     char textBuffer[100];
 
@@ -2626,14 +2663,14 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
         MemError();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    message.id = DATA_ENTRY_PROMPT;
     message.text = prompt;
     DataEntryWin->BroadcastMessage(message);
     if (initialText)
         strcpy(textBuffer, initialText);
     else
         strcpy(textBuffer, "");
-    message.id = 10;
+    message.id = DATA_ENTRY_TEXT;
     message.text = textBuffer;
     DataEntryWin->BroadcastMessage(message);
     strcpy(destination, textBuffer);
@@ -2644,7 +2681,7 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
 
 VA(0x00455759, 0x1d9)
 short DataEntryWindowHandler(tag_message& message) {
-    short widgetId = 10;
+    short widgetId = DATA_ENTRY_TEXT;
 
     if (bDataEntryTime == 0) {
         ++bDataEntryTime;
@@ -2663,10 +2700,10 @@ short DataEntryWindowHandler(tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
                 switch (message.id) {
-                    case 10:
+                    case DATA_ENTRY_TEXT:
                     gotText:
                         message.type = MESSAGE_WIDGET;
-                        message.id = 10;
+                        message.id = DATA_ENTRY_TEXT;
                         message.command = WIDGET_COMMAND_GET_TEXT;
                         DataEntryWin->BroadcastMessage(message);
                         if (strlen(message.text) == 0) {
@@ -2677,10 +2714,10 @@ short DataEntryWindowHandler(tag_message& message) {
                         }
                         message.type = MESSAGE_WIDGET;
                         message.command = WIDGET_COMMAND_SET_TEXT;
-                        message.id = 10;
+                        message.id = DATA_ENTRY_TEXT;
                         message.text = cDEDest;
                         DataEntryWin->BroadcastMessage(message);
-                        DataEntryWin->DrawWindow(1, 10, 10);
+                        DataEntryWin->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
                         gpWindowManager->m_dialogResult = message.id;
                         message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
                         return MESSAGE_DISPATCH_FORWARD;
@@ -4686,7 +4723,7 @@ char* gDifficultyNames[4] = {"Easy", "Normal", "Hard", "Expert"};
 DATA(0x00493fa0)
 char* gCampaignSideNames[4] = {"Lord Ironfist", "Lord Slayer", "Queen Lamanda", "Lord Alamar"};
 DATA(0x00493fb0)
-char* gScoreLabels[5] =
+char* gScoreLabels[CONGRATS_SCORE_LABEL_COUNT] =
     {"Days Spent:", "Base Score:", "Difficulty Rating:", "Final Score:", "Ranking:"};
 DATA(0x00493fc8)
 char* gHumanPlayerTypeNames[5] =
