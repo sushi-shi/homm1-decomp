@@ -376,6 +376,11 @@ source = "src/BASE/OLDASM.cpp"
 flags = "cpp_o2"
 
 [[unit]]
+unit = "SOURCE/CPUSPEED"
+source = "src/SOURCE/CPUSPEED.cpp"
+flags = "cpp_carcass"
+
+[[unit]]
 unit = "SOURCE/comwin"
 source = "src/SOURCE/comwin.cpp"
 flags = "cpp_carcass"
