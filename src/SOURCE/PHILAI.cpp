@@ -980,6 +980,12 @@ void philAI::DetermineTargetPosition(hero* pHero, signed char& targetX, signed c
     LogStr("\n\n****");
 }
 
+// GetGameAttentionValue's float identity (see AI_ATTENTION_IDENTITY below).
+// Declared ahead of ProbableOutcomeOfBattle: with rawFight[] as one symbol,
+// this C1 symbol order reproduces retail's operand order through
+// MeanRVOfUnexploredTerritory (docs/patterns/vc4-operand-sort-key-is-the-symbol-handle.md).
+static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
+
 // donor PoL RVA 0x0003c6e2; preferred Buka symbol ?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010HHHAAMAAH3333@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.549946;margin=0.581641;shape=0.449;size=0.953;calls=0.724;alternate=pol20:void philAI::ProbableOutcomeOfBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, class armyGroup *, int, int, int, float &, int &, int &, int &, int &, int &)@0x0003c6e2
@@ -1001,16 +1007,15 @@ void philAI::ProbableOutcomeOfBattle(
     int& outcomeValue
 ) {
     float attFight7;
+    int i0;
     float defenderFight2;
     int artsD;
     int notUsed;
-    float defenderRaw;
-    int i0;
     int exp;
     float attStr0;
     float defP;
     float defStr;
-    float attRaw;
+    float rawFight[2];
     float attackerPower;
     float power;
     float difficulty8;
@@ -1022,10 +1027,10 @@ void philAI::ProbableOutcomeOfBattle(
     defenderFight2 = (float)FightValueOfStack(defender, defenderHero, 1, useTown, townId);
     if (townArmy)
         defenderFight2 += (float)FightValueOfStack(townArmy, 0, 1, 0, 0);
-    attRaw = (float)FightValueOfStack(attacker, attackerHero, 0, 0, 0);
-    defenderRaw = (float)FightValueOfStack(defender, defenderHero, 0, 0, 0);
+    rawFight[0] = (float)FightValueOfStack(attacker, attackerHero, 0, 0, 0);
+    rawFight[1] = (float)FightValueOfStack(defender, defenderHero, 0, 0, 0);
     if (townArmy)
-        defenderRaw += (float)FightValueOfStack(townArmy, 0, 0, 0, 0);
+        rawFight[1] += (float)FightValueOfStack(townArmy, 0, 0, 0, 0);
     if (useTown)
         defenderFight2 = defenderFight2 * 1.11;
     defStr = defenderFight2;
@@ -1059,10 +1064,10 @@ void philAI::ProbableOutcomeOfBattle(
         winChance = winChance - 0.04;
     else if (winChance < 0.4)
         winChance = winChance - 0.02;
-    attackerLoss = (int)((1.0 - winChance) * attRaw);
-    defenderLoss = (int)(defenderRaw * winChance);
-    attackerRemaining = (int)(attackerLoss * winChance + (1.0f - winChance) * attRaw);
-    defenderRemaining = (int)(defenderLoss * (1.0f - winChance) + defenderRaw * winChance);
+    attackerLoss = (int)((1.0 - winChance) * rawFight[0]);
+    defenderLoss = (int)(rawFight[1] * winChance);
+    attackerRemaining = (int)(attackerLoss * winChance + (1.0f - winChance) * rawFight[0]);
+    defenderRemaining = (int)(defenderLoss * (1.0f - winChance) + rawFight[1] * winChance);
     difficulty8 = 1.33 - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
     outcomeValue = (int)(-attackerRemaining * difficulty8 * difficulty8);
     if (enemyPlayer >= 0) {
@@ -1552,7 +1557,6 @@ int philAI::MeanRVOfUnexploredTerritory(int) {
 }
 
 // Buka 2.1's attention identity constants are loaded, not folded, at /Od.
-static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
 static const float AI_ATTENTION_IDENTITY = 1.0f;
 
 // Buka 2.1 GetGameAttentionValue: randomized game weights tempered by the
@@ -1641,6 +1645,11 @@ float philAI::TurnsToBuy(int* const resources) {
     }
     return maxT;
 }
+
+// ValueOfEventAtPosition's reload-reduction flag, defined ahead of
+// RVOfPosition: the symbol order retail's RVOfPosition operand sort requires.
+// VC4 lays out .bss independently of this definition order.
+int gbReduceByReload;
 
 // donor PoL RVA 0x0003e918; preferred Buka symbol ?RVOfPosition@philAI@@QAEHHHHHHHHHHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
@@ -2936,7 +2945,6 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
 
 // ValueOfEventAtPosition's working state: HoMM1 keeps the event value, the
 // evaluated cell and the battle forecast in module globals.
-int gbReduceByReload;
 int gbReduceByBerserk;
 int iEventRV;
 mapCell* pEventCell;
@@ -2972,13 +2980,13 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
     int costList[7];
     int guardCount1;
     int exitRV5;
+    mapCell* exitCell;
     int gateY28;
     int bestRV1;
     int gateX1;
     int exitLiveChance;
     int goldCost;
     int armySlot2;
-    mapCell* exitCell;
     int positionValue;
     int prize5;
     int bBattleWon9;
@@ -3100,64 +3108,62 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             else
                 iEventRV = -5000;
             *liveChance = 0;
-            break;
-        }
-        if (gbIAmGreatest && !gbHumanPlayer[gpGame->m_availableHeroes[pEventCell->m_objectMetadata]]) {
+        } else if (gbIAmGreatest && !gbHumanPlayer[gpGame->m_availableHeroes[pEventCell->m_objectMetadata]]) {
             iEventRV = 0;
             *liveChance = 100;
-            break;
+        } else {
+            iTownValue = 0;
+            pEventTown = 0;
+            pEventTownArmy = 0;
+            pEventHero = gpGame->GetHero(pEventCell->m_objectMetadata);
+            if (pEventHero->m_locationType == 0xa8) {
+                pEventTown = gpGame->GetTown(pEventHero->m_occupiedTown);
+                pEventTownArmy = &pEventTown->m_army;
+                iTownValue = ValueOfTown(pEventTown);
+                iEventTownId = pEventTown->m_id;
+                if (pEventTown->m_owner >= 0)
+                    iTownValue = (int)(((gbHumanPlayer[pEventTown->m_owner] ? gfAttackHumanBonus
+                                                                            : gfAttackComputerBonus)
+                                            * ((5 - gpGame->m_playerCount) * 0.25)
+                                        + 1.0)
+                                       * iTownValue);
+            }
+            if (immediate && giDebugLevel == 5 && x == 15)
+                giDebugLevel = 9;
+            ProbableOutcomeOfBattle(
+                &pHero->m_army, pHero, &pEventHero->m_army, pEventHero, pEventTownArmy, pEventTownArmy != 0,
+                iEventTownId, pEventHero->m_owner, fWinChance, iAttackerLoss, iDefenderLoss, iAttackerRemaining,
+                iDefenderRemaining, iEventRV
+            );
+            if (immediate && giDebugLevel == 9)
+                giDebugLevel = 5;
+            *liveChance = (int)(fWinChance * 100.0f);
+            if (iTownValue > 0)
+                iEventRV = (int)(iTownValue * fWinChance + iEventRV);
+            if (immediate && gbHumanPlayer[pEventHero->m_owner] && iEventRV > 200)
+                iEventRV = (int)(iEventRV * 1.5);
+            if (fWinChance > 0.75)
+                gaiHeroLiveChance[pEventCell->m_objectMetadata] = 100;
+            else if (fWinChance > 0.5)
+                gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 136.0f);
+            else if (fWinChance > 0.4)
+                gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 130.0f);
+            else if (fWinChance > 0.3)
+                gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 125.0f);
+            else if (fWinChance > 0.2)
+                gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 113.0f);
+            else
+                gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 100.0f);
+            if (gaiHeroLiveChance[pEventCell->m_objectMetadata] > 100)
+                gaiHeroLiveChance[pEventCell->m_objectMetadata] = 100;
+            if (!immediate && fWinChance < 0.4)
+                iEventRV = (int)(iEventRV * (3.0f - fWinChance * 2.0f));
+            if (!immediate && fWinChance < 0.2)
+                iEventRV = (int)(iEventRV * (2.0f - fWinChance * 2.0f));
+            if (iEventRV < 0)
+                gbReduceByReload = 0;
+    gbReduceByBerserk = 0;
         }
-        iTownValue = 0;
-        pEventTown = 0;
-        pEventTownArmy = 0;
-        pEventHero = gpGame->GetHero(pEventCell->m_objectMetadata);
-        if (pEventHero->m_locationType == 0xa8) {
-            pEventTown = gpGame->GetTown(pEventHero->m_occupiedTown);
-            pEventTownArmy = &pEventTown->m_army;
-            iTownValue = ValueOfTown(pEventTown);
-            iEventTownId = pEventTown->m_id;
-            if (pEventTown->m_owner >= 0)
-                iTownValue = (int)(((gbHumanPlayer[pEventTown->m_owner] ? gfAttackHumanBonus
-                                                                        : gfAttackComputerBonus)
-                                        * ((5 - gpGame->m_playerCount) * 0.25)
-                                    + 1.0)
-                                   * iTownValue);
-        }
-        if (immediate && giDebugLevel == 5 && x == 15)
-            giDebugLevel = 9;
-        ProbableOutcomeOfBattle(
-            &pHero->m_army, pHero, &pEventHero->m_army, pEventHero, pEventTownArmy, pEventTownArmy != 0,
-            iEventTownId, pEventHero->m_owner, fWinChance, iAttackerLoss, iDefenderLoss, iAttackerRemaining,
-            iDefenderRemaining, iEventRV
-        );
-        if (immediate && giDebugLevel == 9)
-            giDebugLevel = 5;
-        *liveChance = (int)(fWinChance * 100.0f);
-        if (iTownValue > 0)
-            iEventRV = (int)(iTownValue * fWinChance + iEventRV);
-        if (immediate && gbHumanPlayer[pEventHero->m_owner] && iEventRV > 200)
-            iEventRV = (int)(iEventRV * 1.5);
-        if (fWinChance > 0.75)
-            gaiHeroLiveChance[pEventCell->m_objectMetadata] = 100;
-        else if (fWinChance > 0.5)
-            gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 136.0f);
-        else if (fWinChance > 0.4)
-            gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 130.0f);
-        else if (fWinChance > 0.3)
-            gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 125.0f);
-        else if (fWinChance > 0.2)
-            gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 113.0f);
-        else
-            gaiHeroLiveChance[pEventCell->m_objectMetadata] = (short)(fWinChance * 100.0f);
-        if (gaiHeroLiveChance[pEventCell->m_objectMetadata] > 100)
-            gaiHeroLiveChance[pEventCell->m_objectMetadata] = 100;
-        if (!immediate && fWinChance < 0.4)
-            iEventRV = (int)(iEventRV * (3.0f - fWinChance * 2.0f));
-        if (!immediate && fWinChance < 0.2)
-            iEventRV = (int)(iEventRV * (2.0f - fWinChance * 2.0f));
-        if (iEventRV < 0)
-            gbReduceByReload = 0;
-        gbReduceByBerserk = 0;
         break;
     case 40:
         pEventTown = gpGame->GetTown(pEventCell->m_objectMetadata);
