@@ -37,7 +37,7 @@ void advManager::StartCursor(signed char direction)
     m_cursorMapY += directionY;
     newX = m_mapOriginX + m_cursorMapX;
     newY = m_mapOriginY + m_cursorMapY;
-    m_mapData[newX][newY].m_flags |= 0x40;
+    m_mapData[newX][newY].m_flags |= MAP_CELL_HERO_CURSOR;
 }
 
 // Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
@@ -631,7 +631,7 @@ short advManager::ValidMove(short direction)
     if (newY < -7 || newY > MAP_CELL_GRID_SIZE - 7 - 1)
         return 0;
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
-    if (destCell->m_secondaryTrigger & 0x80)
+    if (destCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
         return 0;
     if (giGroundToTerrain[destCell->m_tileIndex] == TERRAIN_WATER) {
         if (m_cursorType != 4 && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP) && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
@@ -643,10 +643,10 @@ short advManager::ValidMove(short direction)
     hereCell = &m_mapData[m_cursorMapX + m_mapOriginX][m_cursorMapY + m_mapOriginY];
     north = (1 << direction) & 0x83;
     downMask = (1 << direction) & 0x38;
-    if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & 0x80)
+    if (north && hereCell->m_objectIndex != MAP_CELL_NO_FRAME && !(hereCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
         && hereCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
-    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME && !(destCell->m_flags & 0x80)
+    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME && !(destCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
         && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;
@@ -673,7 +673,7 @@ void advManager::MoveOrigin(short directionX, short directionY)
         m_cursorMapY += directionY;
         cellX = m_cursorMapX + m_mapOriginX;
         cellY = m_cursorMapY + m_mapOriginY;
-        m_mapData[cellX][cellY].m_flags |= 0x40;
+        m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
         if (m_previousCursorMapX != -1) {
             m_mapData[m_previousCursorMapX + oldOriginX][m_previousCursorMapY + oldOriginY].m_flags &=
                 ~0x40;
@@ -681,7 +681,7 @@ void advManager::MoveOrigin(short directionX, short directionY)
             m_previousCursorMapY += directionY;
             cellX = m_previousCursorMapX + m_mapOriginX;
             cellY = m_previousCursorMapY + m_mapOriginY;
-            m_mapData[cellX][cellY].m_flags |= 0x40;
+            m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
         }
     }
     m_forceCompleteDraw = 1;

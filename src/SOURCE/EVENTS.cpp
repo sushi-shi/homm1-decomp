@@ -631,7 +631,7 @@ void advManager::EraseObj(class mapCell* cell, int x, int y) {
     erased = 1;
     cell->m_triggerType = MAP_OBJECT_NONE;
     cell->m_objectIndex = 0xff;
-    if ((cell->m_secondaryTrigger & 0x7f) > 0 && (cell->m_secondaryTrigger & 0x7f) < 0x7f) {
+    if ((cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) > 0 && (cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) < 0x7f) {
         cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
         cell->m_secondaryTrigger = cell->m_secondaryTrigger - cell->m_triggerType;
         for (i = x - 1; i <= x + 1; i++) {
