@@ -107,7 +107,7 @@ void FadeOut(int increment)
     signed char done;
     int i, j;
     palette *currentPalette = new palette;
-    if (currentPalette == 0)
+    if (currentPalette == NULL)
         MemError();
     done = 0;
     if (gConfig.gfx[giCurExe].fullScreen == 0)

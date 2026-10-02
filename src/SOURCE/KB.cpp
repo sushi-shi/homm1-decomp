@@ -99,52 +99,52 @@ VA(0x0044fcd9, 0x36d)
 void DeleteMainClasses(void) {
     if (gpBufferPalette)
         delete gpBufferPalette;
-    gpBufferPalette = 0;
+    gpBufferPalette = NULL;
     if (gpMonGroup)
         delete gpMonGroup;
-    gpMonGroup = 0;
+    gpMonGroup = NULL;
     if (gpPhilAI)
         delete gpPhilAI;
-    gpPhilAI = 0;
+    gpPhilAI = NULL;
     if (gpSearchArray)
         delete gpSearchArray;
-    gpSearchArray = 0;
+    gpSearchArray = NULL;
     if (gpTownManager)
         delete gpTownManager;
-    gpTownManager = 0;
+    gpTownManager = NULL;
     if (gpCombatManager)
         delete gpCombatManager;
-    gpCombatManager = 0;
+    gpCombatManager = NULL;
     if (gpAdvManager)
         delete gpAdvManager;
-    gpAdvManager = 0;
+    gpAdvManager = NULL;
     if (gpGame)
         delete gpGame;
-    gpGame = 0;
+    gpGame = NULL;
     if (gpHighScoreManager)
         delete gpHighScoreManager;
-    gpHighScoreManager = 0;
+    gpHighScoreManager = NULL;
     if (gpSmackManager)
         delete gpSmackManager;
-    gpSmackManager = 0;
+    gpSmackManager = NULL;
     if (gpSoundManager)
         delete gpSoundManager;
-    gpSoundManager = 0;
+    gpSoundManager = NULL;
     if (gpResourceManager)
         delete gpResourceManager;
-    gpResourceManager = 0;
+    gpResourceManager = NULL;
     if (gpWindowManager)
         delete gpWindowManager;
-    gpWindowManager = 0;
+    gpWindowManager = NULL;
     if (gpMouseManager)
         delete gpMouseManager;
-    gpMouseManager = 0;
+    gpMouseManager = NULL;
     if (gpInputManager)
         delete gpInputManager;
-    gpInputManager = 0;
+    gpInputManager = NULL;
     if (gpExec)
         delete gpExec;
-    gpExec = 0;
+    gpExec = NULL;
 }
 
 // donor PoL RVA 0x00096e21; preferred Buka symbol ?EarlySetup@@YIHXZ
@@ -448,12 +448,12 @@ int oldmain(void) {
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
                     result = TransmitRemoteData(gText, idx, 4, BOX_REMOTE_SETUP, 1, 1, -1, 0);
                     if (!result)
-                        ShutDown(0);
+                        ShutDown(NULL);
                 }
                 for (idx = 0; idx < gpGame->m_playerCount; idx++) {
                     if (gbHumanPlayer[idx] && !gbThisNetHumanPlayer[idx]) {
                         if (!gpGame->TransmitSaveGame(idx, 0))
-                            ShutDown(0);
+                            ShutDown(NULL);
                     }
                 }
             }
@@ -461,7 +461,7 @@ int oldmain(void) {
                 giWaitType = 0;
                 NormalDialog("Waiting for other remote player to set up game.", 6, -1, -1, -1, 0, -1, 0, -1);
                 if (!gbFunctionComplete)
-                    ShutDown(0);
+                    ShutDown(NULL);
                 gpGame->LoadGame("REMOTE.GAM", 0, 1);
                 goto playScenario;
             }
@@ -479,7 +479,7 @@ int oldmain(void) {
             gbGameInitialized = 1;
             backdropLoaded = 0;
             gpSoundManager->StopAllSamples();
-            gpWindowManager->FadeScreen(1, 8, 0);
+            gpWindowManager->FadeScreen(1, 8, NULL);
             giLastMapOriginX = 0;
             giLastMapOriginY = 0;
             if (gpExec->AddManager(gpAdvManager, -1))
@@ -575,7 +575,7 @@ int oldmain(void) {
         if (gbRemoteOn)
             leave = 1;
     }
-    ShutDown(0);
+    ShutDown(NULL);
     return 0;
 }
 
@@ -726,7 +726,7 @@ short RecruitHeroHandler(tag_message& message) {
                         gpTownManager->RedrawTownScreen();
                         gpTownManager->m_heroWindow0->DrawWindow();
                         gpTownManager->m_heroWindow1->DrawWindow();
-                        gpWindowManager->FadeScreen(0, 8, 0);
+                        gpWindowManager->FadeScreen(0, 8, NULL);
                         break;
                     default:
                         break;
@@ -1037,8 +1037,8 @@ void NormalDialog(
     }
 
     for (i = 0; i < NORMAL_DIALOG_RESOURCE_COUNT; i++) {
-        iconPanel = 0;
-        captionWidget = 0;
+        iconPanel = NULL;
+        captionWidget = NULL;
         if (kind[i] == NORMAL_DIALOG_NO_RESOURCE)
             break;
 
@@ -1396,7 +1396,7 @@ VA(0x00452e00, 0x99)
 void HandleRemoteDeadPlayerExit(int position) {
     if (position == giThisGamePos) {
         if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
-            ShutDown(0);
+            ShutDown(NULL);
         RemoteCleanup();
     } else if (giNumHumanPlayers == 2) {
         giNumHumanPlayers--;
@@ -1481,7 +1481,7 @@ void ReceiveRemotePlayerExit(signed char position, signed char, signed char elim
             }
         } else {
             RemoteCleanup();
-            ShutDown(0);
+            ShutDown(NULL);
         }
     }
 }
@@ -1690,12 +1690,12 @@ void QuickViewWait(void) {
 VA(0x004539dd, 0x1cb)
 void InitVars(void) {
     int i;
-    NULL_SAMPLE2.pSample = 0;
+    NULL_SAMPLE2.pSample = NULL;
     NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
     gbMapExtraCleared = 1;
     gGameCommand = -1;
-    gPalette = 0;
-    gpPhilAI->m_debugFont = 0;
+    gPalette = NULL;
+    gpPhilAI->m_debugFont = NULL;
     gbCombatSurrender = 0;
     gpGame->m_viewArmyResult = 0;
     gbInNewGameSetup = 0;
@@ -1708,7 +1708,7 @@ void InitVars(void) {
     strcpy(cNetBoxLine[0], "");
     strcpy(cNetBoxLine[1], "");
     for (i = 0; i < 255; i++)
-        ppMapExtra[i] = 0;
+        ppMapExtra[i] = NULL;
     hmnuDflt = LoadMenuA((HINSTANCE)hInstApp, "mnuDflt");
     hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
     hmnuAdv = LoadMenuA((HINSTANCE)hInstApp, "mnuAdv");
@@ -1755,9 +1755,9 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     int baseLen;
     char buffer[200];
 
-    if (h->m_army.GetMorale(h, 0) > 0)
+    if (h->m_army.GetMorale(h, NULL) > 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_GOOD]);
-    else if (h->m_army.GetMorale(h, 0) == 0)
+    else if (h->m_army.GetMorale(h, NULL) == 0)
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_NEUTRAL]);
     else
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_BAD]);
@@ -1844,9 +1844,9 @@ void game::ShowLuckInfo(hero* h, int dialogType) {
     int baseLen;
     char buffer[200];
 
-    if (gpGame->GetLuck(h, 0) > 0)
+    if (gpGame->GetLuck(h, NULL) > 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_GOOD]);
-    else if (gpGame->GetLuck(h, 0) == 0)
+    else if (gpGame->GetLuck(h, NULL) == 0)
         sprintf(buffer, gLuckInfoText[LUCK_INFO_NEUTRAL]);
     else
         sprintf(buffer, gLuckInfoText[LUCK_INFO_BAD]);
@@ -1875,7 +1875,7 @@ void ClearMapExtra(void) {
     for (i = 0; i < 255; i++) {
         if (ppMapExtra[i]) {
             free(ppMapExtra[i]);
-            ppMapExtra[i] = 0;
+            ppMapExtra[i] = NULL;
         }
     }
     gbMapExtraCleared = 1;
@@ -1945,7 +1945,7 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
     if (entry < 10) {
         for (dest = 8; dest >= entry; dest--)
             scores[dest + 1] = scores[dest];
-        GetDataEntry("Please enter your name for the high score list.", enteredPlayerName, 16, 0);
+        GetDataEntry("Please enter your name for the high score list.", enteredPlayerName, 16, NULL);
         strcpy(scores[entry].playerName, enteredPlayerName);
         strcpy(scores[entry].scenarioName, scenarioName);
         scores[entry].score = score;
@@ -2145,7 +2145,7 @@ void PopNetBox(char* notice) {
             AddNetBoxLine(text);
             success = TransmitRemoteData(text, REMOTE_BROADCAST_PLAYER, strlen(text) + 1, 11, 1, 1, -1, 1);
             if (!success)
-                ShutDown(0);
+                ShutDown(NULL);
             len = 0;
             strcpy(text, "");
             updateInput = 1;
@@ -2228,17 +2228,17 @@ void ShutDown(char* message) {
         HandleRemoteSuddenExit();
     if (gPalette) {
         gpResourceManager->Dispose(gPalette);
-        gPalette = 0;
+        gPalette = NULL;
     }
     if (gpPhilAI->m_debugFont) {
         gpResourceManager->Dispose(gpPhilAI->m_debugFont);
-        gpPhilAI->m_debugFont = 0;
+        gpPhilAI->m_debugFont = NULL;
     }
     gpExec->ShutDownSystem();
     RemoteCleanup();
     if (gEventHandle) {
         CloseHandle(gEventHandle);
-        gEventHandle = 0;
+        gEventHandle = NULL;
     }
     DeleteMainClasses();
     AppExit();
@@ -2332,7 +2332,7 @@ void ShowCongrats(void) {
     }
     gpWindowManager->AddWindow(win, -1, 1);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(0, 8, NULL);
     CongratsWait();
     gpWindowManager->RemoveWindow(win);
     delete win;
@@ -2881,7 +2881,7 @@ void UpdateSystemOptionsMenu(void) {
 VA(0x00456702, 0x99)
 void CleanUpMenus(void) {
     if (hmnuApp) {
-        SetMenu((HWND)hwndApp, 0);
+        SetMenu((HWND)hwndApp, NULL);
         if (hmnuAdv)
             DestroyMenu((HMENU)hmnuAdv);
         if (hmnuDflt)
@@ -2891,7 +2891,7 @@ void CleanUpMenus(void) {
         if (hmnuTown)
             DestroyMenu((HMENU)hmnuTown);
     }
-    hmnuApp = 0;
+    hmnuApp = NULL;
 }
 
 VA(0x0045679b, 0x24)

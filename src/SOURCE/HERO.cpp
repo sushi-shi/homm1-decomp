@@ -32,7 +32,7 @@ hero::hero(void) {
     m_unknown1c = 0;
     m_unknown1d = 0;
     m_name[0] = 0;
-    heroWin = 0;
+    heroWin = NULL;
     giHeroScreenSrcIndex = -1;
 }
 
@@ -239,7 +239,7 @@ signed char hero::HeroView(signed char viewOnly) {
 
     gpAdvManager->TrimLoopingSounds(8);
     gbHeroScreenActive = 1;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     heroWin = new heroWindow(0, 0, "herowind.bin");
     if (!heroWin)
         MemError();
@@ -277,7 +277,7 @@ signed char hero::HeroView(signed char viewOnly) {
         message.text = gText;
         heroWin->BroadcastMessage(message);
     }
-    armyLuckLevel = gpGame->GetLuck(this, 0);
+    armyLuckLevel = gpGame->GetLuck(this, NULL);
     for (i = 0; i < 3; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = i + 203;
@@ -298,7 +298,7 @@ signed char hero::HeroView(signed char viewOnly) {
         message.value = 6;
         heroWin->BroadcastMessage(message);
     }
-    armyMoraleLevel = m_army.GetMorale(this, 0);
+    armyMoraleLevel = m_army.GetMorale(this, NULL);
     for (i = 0; i < 3; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = i + 200;
@@ -350,12 +350,12 @@ signed char hero::HeroView(signed char viewOnly) {
         }
     }
     RedrawHeroScreen();
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(0, 8, NULL);
     gpHVHero = this;
     gpWindowManager->DoDialog(heroWin, HeroHandler, 0);
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     delete heroWin;
-    gheroWin = 0;
+    gheroWin = NULL;
     if (gpWindowManager->m_dialogResult == 0x7803) {
         return 1;
     } else {
@@ -532,7 +532,7 @@ void hero::Deallocate(void) {
     }
     if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
         || !gpAdvManager->m_heroContextLocked)
-        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, 0, 1);
+        gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, NULL, 1);
     if (!gbCombatSurrender) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
             m_army.Dismiss(i);
@@ -754,9 +754,9 @@ void UpdateHeroScreenStatusBar(short widgetId) {
     case 200:
     case 201:
     case 202:
-        if (gpHVHero->m_army.GetMorale(gpHVHero, 0) > 0)
+        if (gpHVHero->m_army.GetMorale(gpHVHero, NULL) > 0)
             sprintf(gText, cHeroScreen[3]);
-        else if (gpHVHero->m_army.GetMorale(gpHVHero, 0) == 0)
+        else if (gpHVHero->m_army.GetMorale(gpHVHero, NULL) == 0)
             sprintf(gText, cHeroScreen[4]);
         else
             sprintf(gText, cHeroScreen[5]);
@@ -764,9 +764,9 @@ void UpdateHeroScreenStatusBar(short widgetId) {
     case 203:
     case 204:
     case 205:
-        if (gpGame->GetLuck(gpHVHero, 0) > 0)
+        if (gpGame->GetLuck(gpHVHero, NULL) > 0)
             sprintf(gText, cHeroScreen[6]);
-        else if (gpGame->GetLuck(gpHVHero, 0) == 0)
+        else if (gpGame->GetLuck(gpHVHero, NULL) == 0)
             sprintf(gText, cHeroScreen[7]);
         else
             sprintf(gText, cHeroScreen[8]);
@@ -887,7 +887,7 @@ short HeroHandler(struct tag_message& message) {
                 if (!quickView) {
                     gpGame->Overview();
                     gpHVHero->RedrawHeroScreen();
-                    gpWindowManager->FadeScreen(0, 8, 0);
+                    gpWindowManager->FadeScreen(0, 8, NULL);
                 }
                 break;
             case 81:
@@ -929,10 +929,10 @@ short HeroHandler(struct tag_message& message) {
                            || (!quickView
                                && message.id - 102 == giHeroScreenSrcIndex)) {
                     gpGame->ViewArmy(119, 20, gpHVHero->m_army.m_creatureTypes[slot],
-                                     gpHVHero->m_army.m_creatureCounts[slot], 0,
+                                     gpHVHero->m_army.m_creatureCounts[slot], NULL,
                                      quickView || gpTownManager->m_castleDialogActive == 1
                                          || gpHVHero->m_army.GetNumArmies() == 1,
-                                     0, quickView, gpHVHero, 0, &gpHVHero->m_army);
+                                     0, quickView, gpHVHero, NULL, &gpHVHero->m_army);
                     if (!quickView)
                         giHeroScreenSrcIndex = -1;
                     gpHVHero->HeroScreenUpdate();

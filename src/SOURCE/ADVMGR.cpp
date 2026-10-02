@@ -157,8 +157,8 @@ H1_ENUM_END(AdventurePanelButtonConstant)
 advManager::advManager(void) {
     int i;
 
-    m_groundTiles = 0;
-    m_puzzleIcon = 0;
+    m_groundTiles = NULL;
+    m_puzzleIcon = NULL;
     m_mapOriginX = 0;
     m_mapOriginY = 0;
     m_updateMinX = 0;
@@ -169,27 +169,27 @@ advManager::advManager(void) {
     m_cursorActive = 0;
     m_identifyHeroActive = 0;
     m_drawHeroShadows = 1;
-    m_adventureBorder = 0;
+    m_adventureBorder = NULL;
     for (i = 0; i < ADVMGR_OBJECT_ICON_COUNT; i++)
-        m_objectIcons[i] = 0;
+        m_objectIcons[i] = NULL;
     for (i = 0; i < ADVMGR_HERO_ICON_COUNT; i++)
-        m_heroIcons[i] = 0;
+        m_heroIcons[i] = NULL;
     for (i = 0; i < ADVMGR_PLAYER_COLOR_COUNT; i++) {
-        m_flagIcons[i] = 0;
-        m_boatFlagIcons[i] = 0;
+        m_flagIcons[i] = NULL;
+        m_boatFlagIcons[i] = NULL;
     }
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
-        m_loopingSamples[i] = 0;
+        m_loopingSamples[i] = NULL;
     for (i = 0; i < ADVMGR_CURSOR_SAMPLE_COUNT; i++)
-        m_cursorSamples[i] = 0;
-    m_puzzleIcon = 0;
-    m_cloudOverlayIcon = 0;
-    m_boatShadowIcon = 0;
-    m_groundTiles = 0;
-    m_cloudTiles = 0;
-    m_stoneTiles = 0;
-    m_adventureWindow = 0;
-    m_visibilityMap = 0;
+        m_cursorSamples[i] = NULL;
+    m_puzzleIcon = NULL;
+    m_cloudOverlayIcon = NULL;
+    m_boatShadowIcon = NULL;
+    m_groundTiles = NULL;
+    m_cloudTiles = NULL;
+    m_stoneTiles = NULL;
+    m_adventureWindow = NULL;
+    m_visibilityMap = NULL;
     m_heroContextLocked = 0;
     m_townContextLocked = 0;
     bShowIt = 1;
@@ -226,37 +226,37 @@ short advManager::Open(short id) {
     iCurBottomView = BOTTOM_VIEW_NONE;
     m_openState = 0;
     bShowIt = 0;
-    m_adventureBorder = 0;
+    m_adventureBorder = NULL;
     for (i = 0; i < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; i++) {
-        m_bottomViewPrimaryWidgets[i] = 0;
-        m_bottomViewSecondaryWidgets[i] = 0;
+        m_bottomViewPrimaryWidgets[i] = NULL;
+        m_bottomViewSecondaryWidgets[i] = NULL;
     }
-    if (m_adventureWindow == 0) {
+    if (m_adventureWindow == NULL) {
         m_adventureWindow = new heroWindow(0, 0, "adv_wind.bin");
-        if (m_adventureWindow == 0)
+        if (m_adventureWindow == NULL)
             MemError();
         m_scrollLeftButton = new iconWidget(540, 195, 8, 17, "scroll.icn", 4, 0, 26, 16, 1);
-        if (m_scrollLeftButton == 0)
+        if (m_scrollLeftButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollLeftButton, -1);
         m_scrollRightButton = new iconWidget(612, 195, 8, 17, "scroll.icn", 4, 0, 27, 16, 1);
-        if (m_scrollRightButton == 0)
+        if (m_scrollRightButton == NULL)
             MemError();
         m_adventureWindow->AddWidget(m_scrollRightButton, -1);
         m_panelBackdrops[0] = new backdropWidget(480, 176, 56, 128, -1, 32);
-        if (m_panelBackdrops[0] == 0)
+        if (m_panelBackdrops[0] == NULL)
             MemError();
         m_panelBackdrops[1] = new backdropWidget(552, 176, 56, 128, -1, 32);
-        if (m_panelBackdrops[1] == 0)
+        if (m_panelBackdrops[1] == NULL)
             MemError();
         m_panelBackdrops[2] = new backdropWidget(539, 194, 10, 92, -1, 32);
-        if (m_panelBackdrops[2] == 0)
+        if (m_panelBackdrops[2] == NULL)
             MemError();
         m_panelBackdrops[3] = new backdropWidget(611, 194, 10, 92, -1, 32);
-        if (m_panelBackdrops[3] == 0)
+        if (m_panelBackdrops[3] == NULL)
             MemError();
         m_panelBackdrops[4] = new backdropWidget(480, 320, 144, 144, -1, 32);
-        if (m_panelBackdrops[4] == 0)
+        if (m_panelBackdrops[4] == NULL)
             MemError();
         for (i = 0; i < ADVMGR_PANEL_ICON_COUNT; i++)
             m_adventureWindow->AddWidget(m_panelBackdrops[i], -1);
@@ -265,99 +265,99 @@ short advManager::Open(short id) {
         gpMouseManager->SetPointer("advmice.mse", 0);
     else
         gpMouseManager->SetPointer("advmice.mse", 1);
-    if (m_visibilityMap == 0) {
+    if (m_visibilityMap == NULL) {
         m_visibilityMap = new signed char[MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE];
-        if (m_visibilityMap == 0)
+        if (m_visibilityMap == NULL)
             MemError();
     }
     m_routeShown = 0;
     gpWindowManager->AddWindow(m_adventureWindow, 0, 1);
-    if (m_groundTiles == 0)
+    if (m_groundTiles == NULL)
         m_groundTiles = gpResourceManager->GetTileset("ground32.til");
-    if (m_cloudTiles == 0)
+    if (m_cloudTiles == NULL)
         m_cloudTiles = gpResourceManager->GetTileset("clof32.til");
-    if (m_stoneTiles == 0)
+    if (m_stoneTiles == NULL)
         m_stoneTiles = gpResourceManager->GetTileset("ston.til");
-    if (m_cloudOverlayIcon == 0)
+    if (m_cloudOverlayIcon == NULL)
         m_cloudOverlayIcon = gpResourceManager->GetIcon("clop32.icn");
-    if (m_objectIcons[0] == 0)
+    if (m_objectIcons[0] == NULL)
         m_objectIcons[0] = gpResourceManager->GetIcon("obj32-00.icn");
-    if (m_objectIcons[1] == 0)
+    if (m_objectIcons[1] == NULL)
         m_objectIcons[1] = gpResourceManager->GetIcon("obj32-01.icn");
-    if (m_objectIcons[2] == 0)
+    if (m_objectIcons[2] == NULL)
         m_objectIcons[2] = gpResourceManager->GetIcon("obj32-02.icn");
-    if (m_objectIcons[3] == 0)
+    if (m_objectIcons[3] == NULL)
         m_objectIcons[3] = gpResourceManager->GetIcon("obj32-03.icn");
-    if (m_objectIcons[4] == 0)
+    if (m_objectIcons[4] == NULL)
         m_objectIcons[4] = gpResourceManager->GetIcon("obj32-04.icn");
-    if (m_objectIcons[5] == 0)
+    if (m_objectIcons[5] == NULL)
         m_objectIcons[5] = gpResourceManager->GetIcon("obj32-05.icn");
-    if (m_objectIcons[6] == 0)
+    if (m_objectIcons[6] == NULL)
         m_objectIcons[6] = gpResourceManager->GetIcon("obj32-06.icn");
-    if (m_objectIcons[7] == 0)
+    if (m_objectIcons[7] == NULL)
         m_objectIcons[7] = gpResourceManager->GetIcon("obj32-07.icn");
-    if (m_objectIcons[8] == 0)
+    if (m_objectIcons[8] == NULL)
         m_objectIcons[8] = gpResourceManager->GetIcon("mtn32.icn");
-    if (m_objectIcons[9] == 0)
+    if (m_objectIcons[9] == NULL)
         m_objectIcons[9] = gpResourceManager->GetIcon("tree32.icn");
-    if (m_objectIcons[10] == 0)
+    if (m_objectIcons[10] == NULL)
         m_objectIcons[10] = gpResourceManager->GetIcon("town32.icn");
-    if (m_objectIcons[11] == 0)
+    if (m_objectIcons[11] == NULL)
         m_objectIcons[11] = gpResourceManager->GetIcon("rsrc32.icn");
-    if (m_objectIcons[12] == 0)
+    if (m_objectIcons[12] == NULL)
         m_objectIcons[12] = gpResourceManager->GetIcon("mons32.icn");
-    if (m_objectIcons[13] == 0)
+    if (m_objectIcons[13] == NULL)
         m_objectIcons[13] = gpResourceManager->GetIcon("art32.icn");
-    if (m_objectIcons[14] == 0)
+    if (m_objectIcons[14] == NULL)
         m_objectIcons[14] = gpResourceManager->GetIcon("flag32.icn");
-    if (m_objectIcons[15] == 0)
+    if (m_objectIcons[15] == NULL)
         m_objectIcons[15] = gpResourceManager->GetIcon("ressmall.icn");
-    if (m_objectIcons[16] == 0)
+    if (m_objectIcons[16] == NULL)
         m_objectIcons[16] = gpResourceManager->GetIcon("hourglas.icn");
-    if (m_objectIcons[17] == 0)
+    if (m_objectIcons[17] == NULL)
         m_objectIcons[17] = gpResourceManager->GetIcon("route.icn");
-    if (m_objectIcons[18] == 0)
+    if (m_objectIcons[18] == NULL)
         m_objectIcons[18] = gpResourceManager->GetIcon("smcrest.icn");
-    if (m_objectIcons[19] == 0)
+    if (m_objectIcons[19] == NULL)
         m_objectIcons[19] = gpResourceManager->GetIcon("stonback.icn");
-    if (m_objectIcons[20] == 0)
+    if (m_objectIcons[20] == NULL)
         m_objectIcons[20] = gpResourceManager->GetIcon("minimon.icn");
-    if (m_heroIcons[0] == 0)
+    if (m_heroIcons[0] == NULL)
         m_heroIcons[0] = gpResourceManager->GetIcon("kngt32.icn");
-    if (m_heroIcons[1] == 0)
+    if (m_heroIcons[1] == NULL)
         m_heroIcons[1] = gpResourceManager->GetIcon("barb32.icn");
-    if (m_heroIcons[2] == 0)
+    if (m_heroIcons[2] == NULL)
         m_heroIcons[2] = gpResourceManager->GetIcon("sorc32.icn");
-    if (m_heroIcons[3] == 0)
+    if (m_heroIcons[3] == NULL)
         m_heroIcons[3] = gpResourceManager->GetIcon("wrlk32.icn");
-    if (m_heroIcons[4] == 0)
+    if (m_heroIcons[4] == NULL)
         m_heroIcons[4] = gpResourceManager->GetIcon("boat32.icn");
     gbLoadingMonoIcon = 1;
-    if (m_boatShadowIcon == 0)
+    if (m_boatShadowIcon == NULL)
         m_boatShadowIcon = gpResourceManager->GetIcon("shadow32.icn");
     gbLoadingMonoIcon = 0;
-    if (m_flagIcons[0] == 0)
+    if (m_flagIcons[0] == NULL)
         m_flagIcons[0] = gpResourceManager->GetIcon("b-flag32.icn");
-    if (m_flagIcons[1] == 0)
+    if (m_flagIcons[1] == NULL)
         m_flagIcons[1] = gpResourceManager->GetIcon("g-flag32.icn");
-    if (m_flagIcons[2] == 0)
+    if (m_flagIcons[2] == NULL)
         m_flagIcons[2] = gpResourceManager->GetIcon("r-flag32.icn");
-    if (m_flagIcons[3] == 0)
+    if (m_flagIcons[3] == NULL)
         m_flagIcons[3] = gpResourceManager->GetIcon("y-flag32.icn");
-    if (m_boatFlagIcons[0] == 0)
+    if (m_boatFlagIcons[0] == NULL)
         m_boatFlagIcons[0] = gpResourceManager->GetIcon("b-bflg32.icn");
-    if (m_boatFlagIcons[1] == 0)
+    if (m_boatFlagIcons[1] == NULL)
         m_boatFlagIcons[1] = gpResourceManager->GetIcon("g-bflg32.icn");
-    if (m_boatFlagIcons[2] == 0)
+    if (m_boatFlagIcons[2] == NULL)
         m_boatFlagIcons[2] = gpResourceManager->GetIcon("r-bflg32.icn");
-    if (m_boatFlagIcons[3] == 0)
+    if (m_boatFlagIcons[3] == NULL)
         m_boatFlagIcons[3] = gpResourceManager->GetIcon("y-bflg32.icn");
     gbLoadingMonoIcon = 1;
-    if (m_puzzleIcon == 0)
+    if (m_puzzleIcon == NULL)
         m_puzzleIcon = gpResourceManager->GetIcon("radar.icn");
     gbLoadingMonoIcon = 0;
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
-        m_loopingSamples[i] = 0;
+        m_loopingSamples[i] = NULL;
     for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; i++) {
         m_activeSounds[i].soundId = -1;
         m_activeSounds[i].volume = 127;
@@ -416,54 +416,54 @@ void advManager::Close(void) {
     gpSoundManager->StopAllSamples();
     if (m_adventureBorder) {
         free(m_adventureBorder);
-        m_adventureBorder = 0;
+        m_adventureBorder = NULL;
     }
     if (gAdvDisposeLevel <= 1) {
         for (index = 0; index < ADVMGR_OBJECT_ICON_COUNT; index++) {
             if (m_objectIcons[index])
                 gpResourceManager->Dispose(m_objectIcons[index]);
-            m_objectIcons[index] = 0;
+            m_objectIcons[index] = NULL;
         }
     }
     if (gAdvDisposeLevel <= 0) {
         gpResourceManager->Dispose(m_puzzleIcon);
-        m_puzzleIcon = 0;
+        m_puzzleIcon = NULL;
         gpResourceManager->Dispose(m_cloudOverlayIcon);
-        m_cloudOverlayIcon = 0;
+        m_cloudOverlayIcon = NULL;
         for (index = 0; index < ADVMGR_HERO_ICON_COUNT; index++) {
             gpResourceManager->Dispose(m_heroIcons[index]);
-            m_heroIcons[index] = 0;
+            m_heroIcons[index] = NULL;
         }
         gpResourceManager->Dispose(m_boatShadowIcon);
-        m_boatShadowIcon = 0;
+        m_boatShadowIcon = NULL;
         for (index = 0; index < ADVMGR_PLAYER_COLOR_COUNT; index++) {
             gpResourceManager->Dispose(m_flagIcons[index]);
-            m_flagIcons[index] = 0;
+            m_flagIcons[index] = NULL;
             gpResourceManager->Dispose(m_boatFlagIcons[index]);
-            m_boatFlagIcons[index] = 0;
+            m_boatFlagIcons[index] = NULL;
         }
         gpResourceManager->Dispose(m_groundTiles);
-        m_groundTiles = 0;
+        m_groundTiles = NULL;
         gpResourceManager->Dispose(m_cloudTiles);
-        m_cloudTiles = 0;
+        m_cloudTiles = NULL;
         gpResourceManager->Dispose(m_stoneTiles);
-        m_stoneTiles = 0;
+        m_stoneTiles = NULL;
     }
     for (index = 0; index < ADVMGR_ENVIRONMENT_SOUND_COUNT; index++) {
         if (m_loopingSamples[index])
             gpResourceManager->Dispose(m_loopingSamples[index]);
-        m_loopingSamples[index] = 0;
+        m_loopingSamples[index] = NULL;
     }
     for (index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; index++) {
         gpResourceManager->Dispose(m_cursorSamples[index]);
-        m_cursorSamples[index] = 0;
+        m_cursorSamples[index] = NULL;
     }
     gpWindowManager->RemoveWindow(m_adventureWindow);
     delete m_adventureWindow;
-    m_adventureWindow = 0;
+    m_adventureWindow = NULL;
     if (m_visibilityMap)
         delete m_visibilityMap;
-    m_visibilityMap = 0;
+    m_visibilityMap = NULL;
     iCurBottomView = BOTTOM_VIEW_NONE;
     m_active = 0;
 }
@@ -500,7 +500,7 @@ class mapCell* advManager::DoAdvCommand(void) {
     int moveChanged;
     short pathIndex;
 
-    eventCellState16 = 0;
+    eventCellState16 = NULL;
     selectedHero15 = gpGame->GetHero(gpCurPlayer->m_currentHero);
     bMoveStopped0 = 0;
     newHover3 = 0;
@@ -566,7 +566,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             if (eventCellState16) {
                 StopCursor(1);
                 DoEvent(eventCellState16, TrigX, TrigY);
-                eventCellState16 = 0;
+                eventCellState16 = NULL;
             }
             Reseed(0, 0);
             newHover3 = 1;
@@ -578,7 +578,7 @@ class mapCell* advManager::DoAdvCommand(void) {
         gpMouseManager->SetPointer(0);
         viewTown = gpGame->GetTown(selectedHero15->m_occupiedTown);
         viewTown->View();
-        eventCellState16 = 0;
+        eventCellState16 = NULL;
         break;
     case 3:
         DemobilizeCurrHero();
@@ -587,13 +587,13 @@ class mapCell* advManager::DoAdvCommand(void) {
             gpGame->GetTown(gpCurPlayer->m_currentTown)->m_x, gpGame->GetTown(gpCurPlayer->m_currentTown)->m_y
         );
         gpGame->GetTown(gpCurPlayer->m_currentTown)->View();
-        eventCellState16 = 0;
+        eventCellState16 = NULL;
         break;
     case 2:
         gpMouseManager->SetPointer(0);
         gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
         RedrawAdvScreen(1);
-        gpWindowManager->FadeScreen(0, 8, 0);
+        gpWindowManager->FadeScreen(0, 8, NULL);
         break;
     case 4:
         SetHeroContext(GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY)->m_objectMetadata, 0);
@@ -660,7 +660,7 @@ short advManager::Main(struct tag_message& message) {
     }
     retVal = MESSAGE_DISPATCH_CONSUME;
     bQuit = 0;
-    evtMapCell = 0;
+    evtMapCell = NULL;
     if (message.type) {
         switch (message.type) {
         case MESSAGE_WIDGET:
@@ -707,7 +707,7 @@ short advManager::Main(struct tag_message& message) {
             if (gpCurPlayer->CurrentHero() != -1)
                 curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
             else
-                curHero = 0;
+                curHero = NULL;
             if (giDebugLevel < 1
                 && (message.keyCode == 0x3d || message.keyCode == 0x3e
                     || message.keyCode == 0x3f || message.keyCode == 0x40
@@ -717,7 +717,7 @@ short advManager::Main(struct tag_message& message) {
                 break;
             switch (message.keyCode) {
             case 0x3c:
-                PopNetBox(0);
+                PopNetBox(NULL);
                 break;
             case 0x3d:
                 gpGame->m_playerDead[1] = 1;
@@ -936,7 +936,7 @@ short advManager::Main(struct tag_message& message) {
                 if (evtMapCell) {
                     StopCursor(1);
                     DoEvent(evtMapCell, TrigX, TrigY);
-                    evtMapCell = 0;
+                    evtMapCell = NULL;
                 }
                 Reseed(0, 0);
                 ForceNewHover();
@@ -1124,7 +1124,7 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 }
             }
         } else if (isVisible) {
-            hero = 0;
+            hero = NULL;
             mobileResult = 0;
             if (gpCurPlayer->m_currentHero != -1) {
                 hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -1275,7 +1275,7 @@ int advManager::ProcessDeSelect(struct tag_message* message, int* result, class 
         case 3:
             gpGame->Overview();
             RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(0, 8, 0);
+            gpWindowManager->FadeScreen(0, 8, NULL);
             break;
     }
     if (message->id >= 2000 && message->id <= 2200) {
@@ -2481,16 +2481,16 @@ void advManager::ClearBottomView(void)
         return;
 
     for (widgetIndex = 0; widgetIndex < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; ++widgetIndex) {
-        if (m_bottomViewPrimaryWidgets[widgetIndex] != 0) {
+        if (m_bottomViewPrimaryWidgets[widgetIndex] != NULL) {
             m_adventureWindow->RemoveWidget(m_bottomViewPrimaryWidgets[widgetIndex]);
             delete m_bottomViewPrimaryWidgets[widgetIndex];
         }
-        if (m_bottomViewSecondaryWidgets[widgetIndex] != 0) {
+        if (m_bottomViewSecondaryWidgets[widgetIndex] != NULL) {
             m_adventureWindow->RemoveWidget(m_bottomViewSecondaryWidgets[widgetIndex]);
             delete m_bottomViewSecondaryWidgets[widgetIndex];
         }
-        m_bottomViewPrimaryWidgets[widgetIndex] = 0;
-        m_bottomViewSecondaryWidgets[widgetIndex] = 0;
+        m_bottomViewPrimaryWidgets[widgetIndex] = NULL;
+        m_bottomViewSecondaryWidgets[widgetIndex] = NULL;
     }
     iCurBottomViewEnemy = -1;
     iCurBottomView = BOTTOM_VIEW_NONE;
@@ -3500,7 +3500,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
         currentHero->m_y,
         currentHero->m_locationType,
         currentHero->m_occupiedTown,
-        0,
+        NULL,
         4
     );
     heroSlot = 0;
@@ -3784,7 +3784,7 @@ void advManager::CastSpell(signed char spell)
     if (gpCurPlayer->CurrentHero() != -1)
         caster = gpGame->GetHero(gpCurPlayer->m_currentHero);
     else
-        caster = 0;
+        caster = NULL;
 
     switch (spell) {
         case SPELL_VIEW_MINES:
@@ -3861,9 +3861,9 @@ void advManager::ViewWorld(signed char spellType, signed char drawAllObjects, si
     flags = gpResourceManager->GetIcon("flag6.icn");
     spheres = gpResourceManager->GetIcon("spheres.icn");
     letters = gpResourceManager->GetIcon("letters.icn");
-    curHero = 0;
+    curHero = NULL;
     for (i = 0; i < 16; i++)
-        tilesets[i] = 0;
+        tilesets[i] = NULL;
     tilesets[9] = gpResourceManager->GetIcon("tree6.icn");
     tilesets[8] = gpResourceManager->GetIcon("mtn6.icn");
     tilesets[10] = gpResourceManager->GetIcon("town6.icn");
@@ -4111,7 +4111,7 @@ short advManager::ControlPanel(void) {
     bPrefsChanged = 0;
     DemobilizeCurrHero();
     cPanel = new heroWindow(160, 10, "cpanel.bin");
-    if (cPanel == 0)
+    if (cPanel == NULL)
         MemError();
     SetWinText(cPanel, 3);
     if (gbRemoteOn) {
@@ -4438,7 +4438,7 @@ void advManager::AdvPanel(void)
     DemobilizeCurrHero();
 
     adventurePanel = new heroWindow(160, 40, "apanel.bin");
-    if (adventurePanel == 0)
+    if (adventurePanel == NULL)
         MemError();
     if (gpCurPlayer->CurrentHero() == -1) {
         message.type = MESSAGE_WIDGET;
@@ -4878,7 +4878,7 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
 // evidence: graph:1;base=0.741786;margin=0.490066;shape=0.533;size=0.857;calls=1.000;strings=loop%04d.82M;alternate=pol20:void advManager::CheckLoadSample(int)@0x000669c6
 VA(0x0043491d, 0x69)
 void advManager::CheckLoadSample(int index) {
-    if (m_loopingSamples[index] == 0) {
+    if (m_loopingSamples[index] == NULL) {
         TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
         sprintf(gText, "loop%04d.82M", index);
         m_loopingSamples[index] = gpResourceManager->GetSample(gText);
@@ -5017,7 +5017,7 @@ void advManager::DimensionDoor(void) {
     mapCell* targetCell;
 
     win = new heroWindow(0, 0, "dimdoor.bin");
-    if (win == 0)
+    if (win == NULL)
         MemError();
     SetWinText(win, 4);
     gpWindowManager->DoDialog(win, DimensionDoorHandler, 0);
@@ -5565,7 +5565,7 @@ char* advManager::CheckHandleNet(void) {
         case 1:
             remotePlayerExited = receivedPacket->payload.playerExited;
             if (!gpGame->ReceiveSaveGame(receivedPacket->payload.saveSize, receivedPacket->sender))
-                ShutDown(0);
+                ShutDown(NULL);
             if (remotePlayerExited)
                 ReceiveRemotePlayerExit(receivedPacket->sender, 0, 1, 0);
             LoadRemote();
@@ -5587,7 +5587,7 @@ char* advManager::CheckHandleNet(void) {
             return reinterpret_cast<char*>(receivedPacket);
         }
     }
-    return 0;
+    return NULL;
 }
 
 // donor PoL RVA 0x0006952a; preferred Buka symbol ?CheckHandleNetPlayerWait@advManager@@QAEHAAUtag_message@@H@Z
@@ -5603,7 +5603,7 @@ short advManager::CheckHandleNetPlayerWait(struct tag_message &message, signed c
     if (message.type == MESSAGE_KEY_DOWN) {
         switch (message.keyCode) {
             case 0x3b:
-                PopNetBox(0);
+                PopNetBox(NULL);
                 break;
 
             case 0x10:
@@ -5651,7 +5651,7 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
     if (loaded < maxSamples) {
         for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-            if (keep[i] == 0 && m_loopingSamples[i] != 0) {
+            if (keep[i] == 0 && m_loopingSamples[i] != NULL) {
                 ++keep[i];
                 ++loaded;
                 if (loaded >= maxSamples)
@@ -5662,9 +5662,9 @@ void advManager::TrimLoopingSounds(int maxSamples)
 
 disposeSamples:
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; ++i) {
-        if (m_loopingSamples[i] != 0 && keep[i] == 0) {
+        if (m_loopingSamples[i] != NULL && keep[i] == 0) {
             gpResourceManager->Dispose(m_loopingSamples[i]);
-            m_loopingSamples[i] = 0;
+            m_loopingSamples[i] = NULL;
         }
     }
 }
@@ -5690,7 +5690,7 @@ void advManager::EnableButtons(void) {
 
 VA(0x00436d9d, 0x138)
 void advManager::SaveAdventureBorder(void) {
-    if (m_adventureBorder != 0)
+    if (m_adventureBorder != NULL)
         return;
 
     m_adventureBorder = static_cast<unsigned char*>(malloc(BORDER_BUFFER_SIZE));
@@ -5724,7 +5724,7 @@ void advManager::DrawAdventureBorder(void) {
     unsigned char* dest;
     int row;
 
-    if (m_adventureBorder == 0)
+    if (m_adventureBorder == NULL)
         return;
     if (gbNoBorder != 0)
         return;

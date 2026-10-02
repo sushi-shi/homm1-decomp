@@ -51,11 +51,11 @@ VA(0x0045abe0, 0x4c)
 H1_C_LINKAGE void *radmalloc(unsigned long numbytes) {
     void *mem;
     if (numbytes == 0)
-        return 0;
+        return NULL;
     if (numbytes != 0xffffffff)
         mem = malloc(numbytes);
     else
-        mem = 0;
+        mem = NULL;
     return mem;
 }
 
@@ -134,7 +134,7 @@ short smackManager::Main(struct tag_message &msg) {
         }
         gpWindowManager->m_updateFlags = SmackOptions[bSmackNum].updateFlags;
         if (SmackOptions[bSmackNum].fadeIn)
-            gpWindowManager->FadeScreen(1, 8, 0);
+            gpWindowManager->FadeScreen(1, 8, NULL);
         SmackToBuffer(smk, 0, 0, 640, 480, gpWindowManager->m_screen->m_pixels, 0);
         for (currentFrame = startFrame; currentFrame <= smk->Frames; currentFrame++) {
             SmackDoFrame(smk);

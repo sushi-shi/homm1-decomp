@@ -10,7 +10,7 @@
 
 VA(0x0047cf00, 0x2b)
 palette::palette(void)
-    : resource(RESOURCE_CATEGORY_PALETTE, -1, 1, 0)
+    : resource(RESOURCE_CATEGORY_PALETTE, -1, 1, NULL)
 {
     m_data = static_cast<signed char *>(malloc(0x300));
 }
@@ -19,7 +19,7 @@ palette::palette(void)
 VA_COMPGEN(0x0047cf30, 0x33, "??_Gpalette@@UAEPAXI@Z", 0x0047cf70)
 VA(0x0047cf70, 0x53)
 palette::palette(short id)
-    : resource(RESOURCE_CATEGORY_PALETTE, id, 1, 0)
+    : resource(RESOURCE_CATEGORY_PALETTE, id, 1, NULL)
 {
     m_data = static_cast<signed char *>(malloc(0x300));
     gpResourceManager->PointToFile(id);

@@ -243,7 +243,7 @@ signed char game::SetupModemGame(void) {
                     return 0;
             }
             if (!gbDirectConnect)
-                GetDataEntry("Please enter the telephone number.", numbuf, 35, 0);
+                GetDataEntry("Please enter the telephone number.", numbuf, 35, NULL);
             break;
         case 2:
             iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
@@ -859,7 +859,7 @@ void RemoteMain(int gameMode) {
                        "Waiting for other computer to log in to direct connection.");
                 NormalDialog(directConnectMessage, 6, -1, -1, -1, 0, -1, 0, -1);
                 if (!gbFunctionComplete)
-                    ShutDown(0);
+                    ShutDown(NULL);
             } else {
                 Connect();
             }
@@ -1180,7 +1180,7 @@ signed char WaitForGuest(void) {
             if (status) {
                 if (KBTickCount() > iLastBroadcastTime + 500) {
                     iLastBroadcastTime = KBTickCount();
-                    nb_snd(0, 0, 0, 0, 0);
+                    nb_snd(0, 0, 0, NULL, 0);
                 }
             } else {
                 giNumNetGuests++;
@@ -1204,12 +1204,12 @@ int nbnet_init(void) {
             sprintf(gText, "Initializing network.");
             NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             giWaitType = 1;
             sprintf(gText, "Waiting On Guest.");
             NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             buffer[0] = giNumNetGuests;
             while (nb_snd(0, iNetNameIndex + 1, 3, buffer, 0))
                 PollSound();
@@ -1219,12 +1219,12 @@ int nbnet_init(void) {
             sprintf(gText, "Initializing network.");
             NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             giWaitType = 2;
             sprintf(gText, "Waiting On Host.");
             NormalDialog(gText, 6, -1, -1, -1, 0, -1, 0, -1);
             if (!gbFunctionComplete)
-                ShutDown(0);
+                ShutDown(NULL);
             break;
     }
     return 0;

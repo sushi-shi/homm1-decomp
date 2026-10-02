@@ -630,7 +630,7 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
         townRec->m_occupyingHeroId = gpCurPlayer->CurrentHero();
         townRec->View();
     } else if (townRec->HasGarrison()) {
-        defender = townRec->m_occupyingHeroId == -1 ? 0 : gpGame->GetHero(townRec->m_occupyingHeroId);
+        defender = townRec->m_occupyingHeroId == -1 ? NULL : gpGame->GetHero(townRec->m_occupyingHeroId);
         result = DoCombat(x, y, curHero, &curHero->m_army, townRec, defender, &townRec->m_army, x, y,
                           -1, 1);
         if (result == 1)
@@ -960,10 +960,10 @@ signed char advManager::CombatMonsterEvent(class hero* eventHero, signed char mo
         gpMonsterGroup->m_creatureCounts[i]++;
     }
     if (heroDefends)
-        res = DoCombat(fromX, fromY, 0, gpMonsterGroup, 0, eventHero, &eventHero->m_army, x, y,
+        res = DoCombat(fromX, fromY, NULL, gpMonsterGroup, NULL, eventHero, &eventHero->m_army, x, y,
                           -1, 1);
     else
-        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, 0, 0, gpMonsterGroup, x, y,
+        res = DoCombat(fromX, fromY, eventHero, &eventHero->m_army, NULL, NULL, gpMonsterGroup, x, y,
                           -1, 1);
     MobilizeCurrHero(0);
     return res;
@@ -1224,7 +1224,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
     float heroLosses;
     float theirLosses;
 
-    theCastle = 0;
+    theCastle = NULL;
     eventType = cell->m_triggerType & 0x7f;
     erase = 0;
     handled = 0;
@@ -1275,7 +1275,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 gpMonsterGroup->m_creatureTypes[counter] = 0x17;
                 gpMonsterGroup->m_creatureCounts[counter] = 1;
             }
-            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonsterGroup, 0, 0, 0, 500,
+            gpPhilAI->ChooseEvaluateBattle(&eventHero->m_army, eventHero, gpMonsterGroup, NULL, 0, 0, 500,
                                            win, strength);
             if (win) {
                 counter = 5;
@@ -1499,7 +1499,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                                                      enemyHero, 0, 0, heroLosses, theirLosses);
                 if (battleResult && theCastle)
                     battleResult = gpPhilAI->QuickCombat(&eventHero->m_army, eventHero,
-                                                         &theCastle->m_army, 0, 1,
+                                                         &theCastle->m_army, NULL, 1,
                                                          theCastle->m_id, heroLosses,
                                                          theirLosses);
             } else {
@@ -1644,11 +1644,11 @@ int advManager::DoNetCombat(char* packet) {
     int unused;
     int unused2;
 
-    attackingHero = 0;
-    attArmy = 0;
-    siegeTown = 0;
-    defendingHero = 0;
-    defendArmy = 0;
+    attackingHero = NULL;
+    attArmy = NULL;
+    siegeTown = NULL;
+    defendingHero = NULL;
+    defendArmy = NULL;
     ReceiveHeroTownData(packet, &opponent, &cellX, &cellY, &attackingHero, &attArmy, &siegeTown,
                         &defendingHero, &defendArmy, &srcX, &srcY, &seed, &result, &gbRetreatWin,
                         &gbCombatSurrender);
@@ -1887,16 +1887,16 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
                                   signed char combatSurrender) {
     char* reply;
     int result;
-    combatRemoteData* buf = 0;
+    combatRemoteData* buf = NULL;
 
     buf = (combatRemoteData*)malloc(0xff);
-    reply = 0;
+    reply = NULL;
     buf->fragment = 0;
     buf->x = x;
     buf->y = y;
-    buf->hasFirstHero = firstHero != 0;
-    buf->hasTown = combatTown != 0;
-    buf->hasSecondHero = secondHero != 0;
+    buf->hasFirstHero = firstHero != NULL;
+    buf->hasTown = combatTown != NULL;
+    buf->hasSecondHero = secondHero != NULL;
     buf->setupCombatX = setupCombatX;
     buf->setupCombatY = setupCombatY;
     buf->randomSeed = randomSeed;
@@ -1915,7 +1915,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
     result = TransmitAndWait((char*)buf, remotePlayer, sizeof(combatRemoteData), 0x15, 0x16,
                              &reply);
     if (!result)
-        ShutDown(0);
+        ShutDown(NULL);
 
     if (firstHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 1;
@@ -1923,7 +1923,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
         result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
-            ShutDown(0);
+            ShutDown(NULL);
     }
     if (secondHero) {
         ((combatRemoteHeroFragment*)buf)->fragment = 2;
@@ -1931,7 +1931,7 @@ void advManager::SendHeroTownData(int x, int y, class hero* firstHero, class arm
         result = TransmitRemoteData((char*)buf, remotePlayer, sizeof(combatRemoteHeroFragment),
                                     0x15, 1, 1, -1, 1);
         if (!result)
-            ShutDown(0);
+            ShutDown(NULL);
     }
     free(buf);
 }
@@ -1954,11 +1954,11 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
     signed char bFirstHero;
     signed char hasSecondHero;
 
-    *firstHero = 0;
-    *firstArmy = 0;
-    *combatTown = 0;
-    *secondHero = 0;
-    *secondArmy = 0;
+    *firstHero = NULL;
+    *firstArmy = NULL;
+    *combatTown = NULL;
+    *secondHero = NULL;
+    *secondArmy = NULL;
     bFirstHero = hasSecondHero = hasTown = 0;
     *remotePlayer = ((combatRemoteMessage*)packet)->sender;
     *x = ((combatRemoteMessage*)packet)->combat.x;
@@ -1989,9 +1989,9 @@ void advManager::ReceiveHeroTownData(char* packet, int* remotePlayer, int* x, in
         memcpy(*combatTown, &((combatRemoteMessage*)packet)->combat.combatTown, sizeof(town));
     }
 
-    result = TransmitRemoteData(0, *remotePlayer, 0, 0x16, 1, 1, -1, 1);
+    result = TransmitRemoteData(NULL, *remotePlayer, 0, 0x16, 1, 1, -1, 1);
     if (!result)
-        ShutDown(0);
+        ShutDown(NULL);
 
     lastPacketTime = KBTickCount();
     while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {

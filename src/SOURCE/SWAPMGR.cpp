@@ -16,15 +16,15 @@
 // evidence: graph:5;base=0.683274;margin=0.416085;shape=0.517;size=0.729;calls=0.800;strings=port%04d.icn|swapManager|swapbtn.icn;alternate=pol20:int swapManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00054502
 VA(0x0046ecb0, 0x75)
 swapManager::swapManager(void) {
-    m_window = 0;
-    m_selectorIcon = 0;
+    m_window = NULL;
+    m_selectorIcon = NULL;
     m_selectedSide = -1;
     m_targetSide = -1;
     m_itemType = -1;
     m_selectedSlot = -1;
     m_targetSlot = -1;
-    m_heroes[1] = 0;
-    m_heroes[0] = 0;
+    m_heroes[1] = NULL;
+    m_heroes[0] = NULL;
 }
 
 VA(0x0046ed25, 0x3e)
@@ -432,9 +432,9 @@ short swapManager::Main(struct tag_message& message) {
 VA(0x0046fd73, 0xa5)
 void swapManager::ViewMon(void) {
     gpGame->ViewArmy(119, 20, m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_targetSlot],
-                     m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot], 0,
+                     m_heroes[m_selectedSide]->m_army.m_creatureCounts[m_targetSlot], NULL,
                      m_heroes[m_selectedSide]->m_army.GetNumArmies() == 1, 0, 0,
-                     m_heroes[m_selectedSide], 0, &m_heroes[m_selectedSide]->m_army);
+                     m_heroes[m_selectedSide], NULL, &m_heroes[m_selectedSide]->m_army);
 }
 
 // donor PoL RVA 0x000556d3; preferred Buka symbol ?ViewMon@swapManager@@QAEXXZ

@@ -55,8 +55,8 @@ void advManager::StopCursor(signed char stopSound)
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
         m_cursorFrameCount = 0;
         EveryOther = 0;
-        hPrevMoveSound = 0;
-        hLastMoveSound = 0;
+        hPrevMoveSound = NULL;
+        hLastMoveSound = NULL;
     }
     m_cursorCycle = 0;
     if (m_previousCursorMapX != -1) {

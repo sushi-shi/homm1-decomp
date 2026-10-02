@@ -2498,7 +2498,7 @@ void game::Overview(void) {
     gpMouseManager->SetPointer("advmice.mse", 0);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
     sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_unknown11);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
@@ -2631,10 +2631,10 @@ void game::Overview(void) {
         smallFont->DrawBoundedString(gText, 100, 465, 400, 12, 1, 0);
         gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
-    gpWindowManager->FadeScreen(0, 8, 0);
+    gpWindowManager->FadeScreen(0, 8, NULL);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
     delete win;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     gpResourceManager->Dispose(ovIcon);
     gpResourceManager->Dispose(smallFont);
     gpResourceManager->Dispose(bigFont);
@@ -2785,7 +2785,7 @@ void game::NextPlayer(void) {
             else
                 remote = giCurPlayer;
             if (!gpGame->TransmitSaveGame(remote, 0))
-                ShutDown(0);
+                ShutDown(NULL);
         }
         if (giBottomViewOverride == 6)
             giBottomViewOverride = 0;
@@ -4134,7 +4134,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
         ((int*)sendPacket)[1] = playerExited;
         status = TransmitAndWait(sendPacket, remotePlayer, 8, 1, 2, &incoming);
         if (!status)
-            ShutDown(0);
+            ShutDown(NULL);
 
         segCount = (fileSize - 1) / 200 + 1;
         numBlocks = (segCount - 1) / 100 + 1;
@@ -4158,7 +4158,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                         memcpy(sendPacket + 2, outData + sendPacketIndex * 200, len);
                         status = TransmitRemoteData(sendPacket, remotePlayer, len + 2, 3, 0, 1, -1, 1);
                         if (!status)
-                            ShutDown(0);
+                            ShutDown(NULL);
                     }
                 }
                 LogStr("PreWait");
@@ -4166,7 +4166,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 status = TransmitAndWait(sendPacket, remotePlayer, 2, 4, 5, &incoming);
                 LogStr("PostWait");
                 if (!status)
-                    ShutDown(0);
+                    ShutDown(NULL);
                 for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
                     if (((RemoteMessage*)incoming)->payload.data[sendPacketIndex] > 0)
                         acked[block * 100 + sendPacketIndex] = 1;
@@ -4178,9 +4178,9 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                 }
             }
         }
-        status = TransmitRemoteData(0, remotePlayer, 0, 6, 1, 1, -1, 1);
+        status = TransmitRemoteData(NULL, remotePlayer, 0, 6, 1, 1, -1, 1);
         if (!status)
-            ShutDown(0);
+            ShutDown(NULL);
         okay = 1;
     }
 
@@ -4244,9 +4244,9 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
         PollSound();
         Process1WindowsMessage();
     }
-    result = TransmitRemoteData(0, remotePlayer, 0, 2, 1, 1, -1, 1);
+    result = TransmitRemoteData(NULL, remotePlayer, 0, 2, 1, 1, -1, 1);
     if (!result)
-        ShutDown(0);
+        ShutDown(NULL);
     memset(gotIt, 0, sizeof(gotIt));
     if (!iMPBaseType || (iMPBaseType == 1 && gbRemoteReady))
         decodedData = (char*)malloc(0x130b0);
@@ -4261,7 +4261,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
             if (gpWindowManager->m_dialogResult == 0x7805)
                 lastPacketTime = KBTickCount();
             else
-                ShutDown(0);
+                ShutDown(NULL);
         }
         receivedPacket = (RemoteMessage*)GetRemoteData(1);
         if (receivedPacket && (receivedPacket->type == 2 || receivedPacket->type == 3)) {
@@ -4279,7 +4279,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
                         *(sendPacket + k - packetStart) = gotIt[k];
                     result = TransmitRemoteData(sendPacket, remotePlayer, 200, 5, 1, 1, -1, 1);
                     if (!result)
-                        ShutDown(0);
+                        ShutDown(NULL);
                     break;
                 case 6:
                     done = 1;

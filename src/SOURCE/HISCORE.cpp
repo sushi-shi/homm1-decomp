@@ -45,11 +45,11 @@ highScoreManager::~highScoreManager()
 // evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
 VA(0x004010bf, 0x169)
 short highScoreManager::Open(short id) {
-    gpWindowManager->FadeScreen(HIGH_SCORE_FADE_OUT, HIGH_SCORE_FADE_STEPS, 0);
+    gpWindowManager->FadeScreen(HIGH_SCORE_FADE_OUT, HIGH_SCORE_FADE_STEPS, NULL);
     sprintf(gText, "hiscore.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
     m_window = new heroWindow(0, 0, "hiscore.bin");
-    if (m_window == 0)
+    if (m_window == NULL)
         MemError();
     Update();
     gpWindowManager->AddWindow(m_window, -1, 1);
@@ -58,7 +58,7 @@ short highScoreManager::Open(short id) {
     m_active = 1;
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
-    gpWindowManager->FadeScreen(HIGH_SCORE_FADE_IN, HIGH_SCORE_FADE_STEPS, 0);
+    gpWindowManager->FadeScreen(HIGH_SCORE_FADE_IN, HIGH_SCORE_FADE_STEPS, NULL);
     glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] =
         KBTickCount() + static_cast<int>(HIGH_SCORE_ANIMATION_DELAY);
     return static_cast<short>(HIGH_SCORE_MANAGER_OPEN_OK);

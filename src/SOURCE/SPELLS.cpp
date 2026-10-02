@@ -34,7 +34,7 @@ signed char combatManager::ViewSpells(int)
                 giNextAction = 1;
                 giNextActionExtra = m_selectedSpell;
                 gpMouseManager->SetPointer("spelmous.mse", m_selectedSpell);
-                gpWindowManager->DoDialog(0, HandleCastSpell, 0);
+                gpWindowManager->DoDialog(NULL, HandleCastSpell, 0);
                 break;
         }
         gpMouseManager->SetPointer("cmbtmous.mse", 0);
@@ -147,7 +147,7 @@ VA(0x00415a2c, 0x2f0)
 signed char combatManager::ValidSpellTarget(signed char spell, signed char hex)
 {
     int unused;
-    army *target = 0;
+    army *target = NULL;
     short newHex;
 
     if (!ValidHex(hex))

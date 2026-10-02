@@ -21,7 +21,7 @@ button::button(void) : widget(0, 0, 0, 0, 0, 0) {
     m_normalFrame = 0;
     m_pressedFrame = 0;
     m_selectMode = 0;
-    m_icon = 0;
+    m_icon = NULL;
     m_hotkey = -1;
 }
 

@@ -48,7 +48,7 @@ int combatManager::AICheckRetreat(void) {
             armyPtr = &sideHero->m_army;
         } else {
             armyPtr = &bareGroup;
-            sideHero = 0;
+            sideHero = NULL;
         }
         for (armyIndex = 0; armyIndex < 5; armyIndex++) {
             if (m_armies[side][armyIndex].IsAlive()) {
@@ -610,15 +610,15 @@ army::army(void) {
 
     m_unknown08 = 0;
     m_unknown09 = 0;
-    m_attackIcon = 0;
-    m_walkIcon = 0;
-    m_standIcon = 0;
+    m_attackIcon = NULL;
+    m_walkIcon = NULL;
+    m_standIcon = NULL;
     m_hex = 0;
     for (i = 0; i < 4; i++)
-        m_samples[i] = 0;
+        m_samples[i] = NULL;
     m_unknown2f = -1;
     m_unknown33 = 1;
-    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
     giSpellEffectFrame = 0;
     m_targetSide = -1;
@@ -639,12 +639,12 @@ void army::InitClean(void) {
     int i;
 
     for (i = 0; i < 4; i++)
-        m_samples[i] = 0;
+        m_samples[i] = NULL;
     m_unknown2f = -1;
     m_unknown33 = 1;
-    m_attackIcon = 0;
-    m_walkIcon = 0;
-    m_standIcon = 0;
+    m_attackIcon = NULL;
+    m_walkIcon = NULL;
+    m_standIcon = NULL;
 }
 
 // The commanding hero's attack and defense raise the copied creature stats.
@@ -705,8 +705,8 @@ void army::LoadResources(void) {
         sprintf(gText, "shoot%02d.82M", m_creatureType);
         m_samples[3] = gpResourceManager->GetSample(gText);
     } else {
-        m_attackIcon = 0;
-        m_samples[3] = 0;
+        m_attackIcon = NULL;
+        m_samples[3] = NULL;
     }
     for (i = 0; i < 4; i++) {
         if (m_samples[i]) {
@@ -726,20 +726,20 @@ void army::FreeResources(void) {
 
     if (m_standIcon) {
         gpResourceManager->Dispose(m_standIcon);
-        m_standIcon = 0;
+        m_standIcon = NULL;
     }
     if (m_walkIcon) {
         gpResourceManager->Dispose(m_walkIcon);
-        m_walkIcon = 0;
+        m_walkIcon = NULL;
     }
     if ((m_stats.attributes & 4) && m_attackIcon) {
         gpResourceManager->Dispose(m_attackIcon);
-        m_attackIcon = 0;
+        m_attackIcon = NULL;
     }
     for (i = 0; i < 4; i++) {
         if (m_samples[i]) {
             gpResourceManager->Dispose(m_samples[i]);
-            m_samples[i] = 0;
+            m_samples[i] = NULL;
         }
     }
 }

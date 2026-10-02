@@ -15,7 +15,7 @@
 
 VA(0x00479b20, 0x6d)
 icon::icon(short id)
-    : resource(RESOURCE_CATEGORY_ICON, id, 1, 0)
+    : resource(RESOURCE_CATEGORY_ICON, id, 1, NULL)
 {
     gpResourceManager->PointToFile(id);
     m_frameCount = gpResourceManager->ReadWord();

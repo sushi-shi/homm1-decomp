@@ -70,7 +70,7 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned
         init_anchor(&gNbSndQueue, 1, 0);
         init_anchor(&gNbFreeQueue, 1, 0);
         for (i = 0; i < static_cast<int>(NETBIOS_THREAD_EVENT_COUNT); i++)
-            gNbEvents[i] = CreateEventA(0, 1, 0, 0);
+            gNbEvents[i] = CreateEventA(NULL, 1, 0, NULL);
         memset(&ncb, 0, sizeof(ncb));
         statusBuf = static_cast<unsigned char*>(
             GlobalAlloc(GPTR, static_cast<int>(NETBIOS_ADAPTER_STATUS_SIZE))
@@ -122,20 +122,20 @@ H1_C_LINKAGE void __cdecl nb_term(void)
         Netbios(&ncb);
     }
     EnterCriticalSection(&gNbSndLock);
-    while ((node = pop_node(&gNbSndQueue)) != 0)
+    while ((node = pop_node(&gNbSndQueue)) != NULL)
         free(node);
-    while ((node = pop_node(&gNbFreeQueue)) != 0)
+    while ((node = pop_node(&gNbFreeQueue)) != NULL)
         free(node);
     LeaveCriticalSection(&gNbSndLock);
     DeleteCriticalSection(&gNbSndLock);
     for (i = 0; i < static_cast<int>(NETBIOS_THREAD_EVENT_COUNT); i++) {
         CloseHandle(gNbEvents[i]);
-        gNbEvents[i] = 0;
+        gNbEvents[i] = NULL;
     }
     gNbShutdown |= 1;
     SetEvent(gNbEvents[0]);
     EnterCriticalSection(&gNbRcvLock);
-    while ((node = pop_node(&gNbRcvQueue)) != 0)
+    while ((node = pop_node(&gNbRcvQueue)) != NULL)
         free(node);
     LeaveCriticalSection(&gNbRcvLock);
     DeleteCriticalSection(&gNbRcvLock);
@@ -248,7 +248,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
 
         case NETBIOS_SESSION_LISTEN_ANY:
             destinationSession = va_arg(argList, int);
-            nb_snd(0, gNbMaxSess, 0, 0, 0);
+            nb_snd(0, gNbMaxSess, 0, NULL, 0);
             returnCode = nb_listen(destinationSession, gNbListenName);
             break;
 
@@ -347,10 +347,10 @@ void nb_thr_ctl(void)
     while (keepRunning) {
         EnterCriticalSection(&gNbSndLock);
         pkt = pop_node(&gNbFreeQueue);
-        if (pkt == 0)
+        if (pkt == NULL)
             pkt = pop_node(&gNbSndQueue);
         LeaveCriticalSection(&gNbSndLock);
-        if (pkt == 0) {
+        if (pkt == NULL) {
             keepRunning = 0;
         } else {
             memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
@@ -609,7 +609,7 @@ void nb_recv_complete(int session)
                 case NRC_GOODRET:
                     node = static_cast<tag_Node *>(
                         malloc(gNbSessNcb[session].ncb_length + NETBIOS_PACKET_HEADER_SIZE));
-                    if (node != 0) {
+                    if (node != NULL) {
                         node->len = gNbSessNcb[session].ncb_length;
                         node->sessionIndex = static_cast<unsigned char>(session);
                         memcpy(node->data, gNbRcvData[session], node->len);

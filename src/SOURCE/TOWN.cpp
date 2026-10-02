@@ -82,7 +82,7 @@ void town::View(void) {
 
     townManager *manager = gpTownManager;
     manager->SetTown(this);
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     gpExec->CallManager(gpTownManager);
     if (m_occupyingHeroId != -1)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);

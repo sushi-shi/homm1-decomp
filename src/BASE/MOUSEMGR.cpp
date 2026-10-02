@@ -38,8 +38,8 @@ H1_ENUM_END(MouseManagerStateConstant)
 
 VA(0x004766e0, 0xab)
 mouseManager::mouseManager(void) {
-    m_savedUnderlying = 0;
-    m_cursorImage = 0;
+    m_savedUnderlying = NULL;
+    m_cursorImage = NULL;
     m_pointerFlags = MOUSE_INITIAL_POINTER_FLAGS;
     m_mouseX = MOUSE_INITIAL_X;
     m_mouseY = MOUSE_INITIAL_Y;
@@ -50,7 +50,7 @@ mouseManager::mouseManager(void) {
     m_unknown49 = 0;
     m_unknown4d = 0;
     m_unknown51 = 0;
-    m_savedUnderlying = 0;
+    m_savedUnderlying = NULL;
     memset(hbmpColor, 0, sizeof(hbmpColor));
     memset(hbmpAndMask, 0, sizeof(hbmpAndMask));
     memset(cColorBits, 0, sizeof(cColorBits));
@@ -75,25 +75,25 @@ void mouseManager::Close(void) {
     if (m_active == 1) {
         m_active = 0;
         delete m_savedUnderlying;
-        m_savedUnderlying = 0;
-        SetCursor(LoadCursorA(0, IDC_ARROW));
+        m_savedUnderlying = NULL;
+        SetCursor(LoadCursorA(NULL, IDC_ARROW));
         DelayMilli(50);
         for (cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
-            if (hMouseCursor[cursorIndex] != 0)
+            if (hMouseCursor[cursorIndex] != NULL)
                 DestroyIcon(hMouseCursor[cursorIndex]);
-            hMouseCursor[cursorIndex] = 0;
-            if (cAndBits[cursorIndex] != 0)
+            hMouseCursor[cursorIndex] = NULL;
+            if (cAndBits[cursorIndex] != NULL)
                 free(cAndBits[cursorIndex]);
-            cAndBits[cursorIndex] = 0;
-            if (cColorBits[cursorIndex] != 0)
+            cAndBits[cursorIndex] = NULL;
+            if (cColorBits[cursorIndex] != NULL)
                 free(cColorBits[cursorIndex]);
-            cColorBits[cursorIndex] = 0;
-            if (hbmpAndMask[cursorIndex] != 0)
+            cColorBits[cursorIndex] = NULL;
+            if (hbmpAndMask[cursorIndex] != NULL)
                 DeleteObject(hbmpAndMask[cursorIndex]);
-            hbmpAndMask[cursorIndex] = 0;
-            if (hbmpColor[cursorIndex] != 0)
+            hbmpAndMask[cursorIndex] = NULL;
+            if (hbmpColor[cursorIndex] != NULL)
                 DeleteObject(hbmpColor[cursorIndex]);
-            hbmpColor[cursorIndex] = 0;
+            hbmpColor[cursorIndex] = NULL;
         }
         DelayMilli(50);
     }
@@ -151,7 +151,7 @@ void mouseManager::SetPointer(short frame) {
         gMouseManagerAssertLine + 34
     );
 
-    if (hMouseCursor[cursorIndex] == 0) {
+    if (hMouseCursor[cursorIndex] == NULL) {
         cColorBits[cursorIndex] = static_cast<signed char*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
         if (gbColorMice)
             cAndBits[cursorIndex] =
@@ -246,7 +246,7 @@ void mouseManager::SetPointer(short frame) {
         mouseIconInfo[cursorIndex].xHotspot = iHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
         mouseIconInfo[cursorIndex].yHotspot = iHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
         mouseIconInfo[cursorIndex].hbmMask = hbmpAndMask[cursorIndex];
-        mouseIconInfo[cursorIndex].hbmColor = gbColorMice ? hbmpColor[cursorIndex] : 0;
+        mouseIconInfo[cursorIndex].hbmColor = gbColorMice ? hbmpColor[cursorIndex] : NULL;
         hMouseCursor[cursorIndex] = CreateIconIndirect(&mouseIconInfo[cursorIndex]);
         ProcessAssert(
             reinterpret_cast<int>(hMouseCursor[cursorIndex]), // API-forced handle value.

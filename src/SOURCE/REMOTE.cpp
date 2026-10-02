@@ -87,7 +87,7 @@ int TransmitRemoteData(
     while (retval == 0 && tries <= REMOTE_RETRY_COUNT) {
         retval = SendRemoteData(
             (unsigned char*)&msg,
-            0,
+            NULL,
             destination,
             length + REMOTE_MESSAGE_HEADER_SIZE
         );
@@ -126,7 +126,7 @@ char* GetRemoteData(signed char remove) {
     int index;
 
     if (!gbRemoteOn || gbInNetSetup)
-        return 0;
+        return NULL;
     oldest = 999999999;
     index = -1;
     for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
@@ -142,7 +142,7 @@ char* GetRemoteData(signed char remove) {
         rcvBuf[index].sender = NetPosToGamePos(rcvBuf[index].sender);
         return rcvBufOut;
     }
-    return 0;
+    return NULL;
 }
 
 // donor PoL RVA 0x000a41ec; preferred Buka symbol ?PollRemote@@YIXXZ
@@ -186,7 +186,7 @@ void PollRemote(void) {
         sndBuf.payloadSize = 1;
         sndBuf.command = (giCurPlayer << 4) + iCurHourGlassPhase;
         sndBuf.payload.data[0] = 1;
-        SendRemoteData((unsigned char*)&sndBuf, 0, 1 - giThisNetPos, 10);
+        SendRemoteData((unsigned char*)&sndBuf, NULL, 1 - giThisNetPos, 10);
         lLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
@@ -220,7 +220,7 @@ void PollRemote(void) {
     result = 1;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(0, (unsigned char*)&rcvBufIn, REMOTE_BROADCAST_PLAYER);
+        result = ReceiveRemoteData(NULL, (unsigned char*)&rcvBufIn, REMOTE_BROADCAST_PLAYER);
         if (result && rcvBufIn.sender != giThisNetPos) {
             if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
                 giLastConfirm = rcvBufIn.id;
@@ -244,7 +244,7 @@ void PollRemote(void) {
                 sndBuf.id = rcvBufIn.id;
                 sndBuf.type = REMOTE_MESSAGE_CONFIRM;
                 sndBuf.payloadSize = 0;
-                SendRemoteData((unsigned char*)&sndBuf, 0, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE);
+                SendRemoteData((unsigned char*)&sndBuf, NULL, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE);
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)
@@ -290,7 +290,7 @@ int TransmitAndWait(
 
     if (!gbRemoteOn || gbInNetSetup)
         return 1;
-    received = 0;
+    received = NULL;
     result =
         TransmitRemoteData(bytes, destination, length, command, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
     if (result == 0)

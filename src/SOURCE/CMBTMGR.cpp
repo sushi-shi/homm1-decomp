@@ -43,7 +43,7 @@ combatManager::combatManager(void)
     m_currentCommand = 0;
     m_unknown6e8 = 0;
     m_currentSpeed = 4;
-    m_savedBorder = 0;
+    m_savedBorder = NULL;
     m_heroType[0] = m_heroType[1] = m_catapultFrame[0] = m_catapultFrame[1] = m_wallFrame = m_wallDamage = -1;
     m_unknown6d9 = m_unknown6db = 0;
     m_castleSide[0] = m_castleSide[1] = 0;
@@ -93,7 +93,7 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
     if (mapX >= 0 && mapY >= 0)
         m_battlefieldCell = gpAdvManager->GetCell(mapX, mapY);
     else
-        m_battlefieldCell = 0;
+        m_battlefieldCell = NULL;
     m_terrainType = giGroundToTerrain[m_battlefieldCell->m_tileIndex];
     if (attackerHero) {
         m_playerId[1] = attackerHero->m_owner;
@@ -151,9 +151,9 @@ void combatManager::SetupCombat(int mapX, int mapY, hero* attackerHero, armyGrou
         m_originalCombatTown = m_combatTowns[0];
     } else {
         m_castleSide[0] = 0;
-        m_combatTowns[0] = 0;
+        m_combatTowns[0] = NULL;
     }
-    m_combatTowns[1] = 0;
+    m_combatTowns[1] = NULL;
 }
 
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
@@ -167,21 +167,21 @@ short combatManager::Open(short priority)
 
     m_messageTypeMask = 0x32f;
     m_combatWindowOpen = 0;
-    m_savedBorder = 0;
+    m_savedBorder = NULL;
     gpSoundManager->PlayAmbientMusic(-1, 0, -1);
     m_backgroundBuffer = new bitmap(0, 640, 460);
     m_backgroundDrawn = 0;
     sample = NULL_SAMPLE2;
     sample = LoadPlaySample("PREBATTL.82M");
     giNextAction = 0;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     m_sideRetreated[0] = 0;
     m_sideRetreated[1] = 0;
     m_combatResult = 3;
     gbUseClippedIconRenderer = 0;
     m_unknown727 = 0;
     m_unknown72b = 0;
-    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellEffect = 0;
     gpMouseManager->SetPointer("cmbtmous.mse", 6);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
@@ -240,7 +240,7 @@ void combatManager::Close(void)
     gpSoundManager->SwitchAmbientMusic(-1);
     DrawCombatBorder();
     gbLimitedCombatUpdatePalette = 0;
-    gpWindowManager->FadeScreen(1, 8, 0);
+    gpWindowManager->FadeScreen(1, 8, NULL);
     delete m_backgroundBuffer;
     for (i = 0; i < 2; i++)
         UpdateArmyGroup(i);
@@ -505,7 +505,7 @@ void combatManager::LoadIcons(void)
     int i;
 
     for (i = 0; i < 9; i++)
-        m_combatIcons[i] = 0;
+        m_combatIcons[i] = NULL;
     m_combatIcons[8] = gpResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
     m_combatIcons[0] = gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
@@ -582,7 +582,7 @@ void combatManager::FreeArmies(void)
         m_armies[0][i].FreeResources();
     if (gCurLoadedSpellIcon)
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
-    gCurLoadedSpellIcon = 0;
+    gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellEffect = 0;
 }
 

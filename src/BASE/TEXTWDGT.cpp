@@ -15,8 +15,8 @@
 VA(0x0047add0, 0x3e)
 VA_COMPGEN(0x0047ae10, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x0047add0)
 textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, 0) {
-    m_font = 0;
-    m_text = 0;
+    m_font = NULL;
+    m_text = NULL;
     m_color = 1;
     m_alignment = 1;
     m_kind = 0x200;

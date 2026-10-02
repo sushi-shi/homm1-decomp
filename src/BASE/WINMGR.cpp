@@ -30,9 +30,9 @@ VA(0x00473de0, 0x1b0)
 void CycleColors(void) {
     signed char savedColor[PALETTE_GRAPHICS_CHANNELS];
 
-    if (gpWindowManager == 0)
+    if (gpWindowManager == NULL)
         return;
-    if (gpBufferPalette == 0)
+    if (gpBufferPalette == NULL)
         return;
     if (gpWindowManager->m_active != 1)
         return;
@@ -91,17 +91,17 @@ void CycleColors(void) {
 VA(0x00473f90, 0x46)
 heroWindowManager::heroWindowManager(void) : baseManager() {
     m_active = 0;
-    m_activeWindow = 0;
-    m_focusWindow = 0;
-    m_windowListTail = 0;
-    m_windowListHead = 0;
+    m_activeWindow = NULL;
+    m_focusWindow = NULL;
+    m_windowListTail = NULL;
+    m_windowListHead = NULL;
     m_unknown40 = 0;
     m_unknown41 = 0;
     m_screenshotIndex = 0;
-    m_screen = 0;
+    m_screen = NULL;
     m_updateFlags = 0;
-    m_fizzleSource = 0;
-    m_fizzleWork = 0;
+    m_fizzleSource = NULL;
+    m_fizzleWork = NULL;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
 }
@@ -110,13 +110,13 @@ VA(0x00473fe0, 0xba)
 short heroWindowManager::Open(short managerOrder) {
     FadeOut(WINDOW_MANAGER_INITIAL_FADE_STEP);
     m_screen = new bitmap();
-    if (m_screen == 0)
+    if (m_screen == NULL)
         MemError();
     m_screen->m_bitmapType = WINDOW_MANAGER_SCREEN_BITMAP_TYPE;
     m_screen->m_width = SCREEN_BLIT_WIDTH;
     m_screen->m_height = SCREEN_BLIT_HEIGHT;
     m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
-    if (m_screen != 0) {
+    if (m_screen != NULL) {
         m_priority = managerOrder;
         m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_DOWN;
         m_active = 1;
@@ -131,13 +131,13 @@ void heroWindowManager::Close(void) {
     if (m_active != 1)
         return;
     heroWindow* window = m_windowListTail;
-    while (window != 0) {
+    while (window != NULL) {
         heroWindow* previous = window->m_prevWindow;
         RemoveWindow(window);
         window = previous;
     }
-    m_screen->m_pixels = 0;
-    if (m_screen != 0)
+    m_screen->m_pixels = NULL;
+    if (m_screen != NULL)
         delete m_screen;
     m_active = 0;
 }
@@ -218,31 +218,31 @@ void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlag
 // evidence: graph:2;base=0.383824;margin=0.385483;shape=0.180;size=0.618;calls=1.000;alternate=pol20:void heroWindowManager::RemoveWindow(class heroWindow *)@0x000cad40
 VA(0x00474240, 0x87)
 void heroWindowManager::RemoveWindow(heroWindow* window) {
-    if (window != 0) {
+    if (window != NULL) {
         window->Close();
         if (m_windowListHead == window) {
             heroWindow* next = window->m_nextWindow;
             m_windowListHead = next;
-            if (next == 0)
-                m_windowListTail = 0;
+            if (next == NULL)
+                m_windowListTail = NULL;
             else
-                next->m_prevWindow = 0;
+                next->m_prevWindow = NULL;
         } else {
             if (m_windowListTail == window) {
                 heroWindow* previous = window->m_prevWindow;
                 m_windowListTail = previous;
-                previous->m_nextWindow = 0;
+                previous->m_nextWindow = NULL;
             } else {
                 heroWindow* previous = window->m_prevWindow;
-                if (previous != 0)
+                if (previous != NULL)
                     previous->m_nextWindow = window->m_nextWindow;
-                if (window->m_nextWindow != 0)
+                if (window->m_nextWindow != NULL)
                     window->m_nextWindow->m_prevWindow = window->m_prevWindow;
             }
         }
         if (m_activeWindow == window)
-            m_activeWindow = 0;
-        if (m_activeWindow == 0) {
+            m_activeWindow = NULL;
+        if (m_activeWindow == NULL) {
             m_focusWindow = m_windowListTail;
             return;
         }
@@ -261,7 +261,7 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
         SetNoDialogMenus(0);
     iDialogNestCount++;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
-    if (window != 0)
+    if (window != NULL)
         AddWindow(window, -1, 1);
     if (fade != 0)
         gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_MANAGER_DIALOG_FADE_STEP, gPalette);
@@ -273,7 +273,7 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
         Process1WindowsMessage();
         message = gpInputManager->GetEvent();
         gpMouseManager->Main(message);
-        if (window != 0) {
+        if (window != NULL) {
             result = window->BroadcastMessage(message);
             if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
                 && message.command == WIDGET_COMMAND_DIALOG_SELECT) {
@@ -287,7 +287,7 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
             done = 1;
     }
     if (done != 0) {
-        if (window != 0)
+        if (window != NULL)
             RemoveWindow(window);
         gpInputManager->Flush();
     }
@@ -337,7 +337,7 @@ void heroWindowManager::FadeScreen(short direction, short steps, palette* curren
         gWindowFadeAssertFile,
         gWindowFadeAssertLine + 1
     );
-    if (currentPalette != 0)
+    if (currentPalette != NULL)
         SetPalette(currentPalette->m_data, 0);
     PollSound();
     switch (direction) {
@@ -373,7 +373,7 @@ VA(0x004746b0, 0x88)
 void heroWindowManager::SaveFizzleSource(short x, short y, short width, short height) {
     if (bShowIt == 0)
         return;
-    if (m_fizzleSource != 0)
+    if (m_fizzleSource != NULL)
         delete m_fizzleSource;
     m_fizzleSource = new bitmap(0, width, height);
     BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleSource, 0, 0);
@@ -443,7 +443,7 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
 // Donor WINMGR ownership; seven trailing padding bytes are excluded.
 VA(0x00474a60, 0x19)
 void heroWindowManager::ReleaseFizzleSource(void) {
-    if (m_fizzleSource != 0)
+    if (m_fizzleSource != NULL)
         delete m_fizzleSource;
-    m_fizzleSource = 0;
+    m_fizzleSource = NULL;
 }

@@ -54,10 +54,10 @@ fileRequester::fileRequester(
     m_selectedIndex = -1;
     m_fileCount = 0;
     m_topIndex = 0;
-    m_fileNames = 0;
-    m_extensions = 0;
-    m_mapNames = 0;
-    m_mapInfo = 0;
+    m_fileNames = NULL;
+    m_extensions = NULL;
+    m_mapNames = NULL;
+    m_mapInfo = NULL;
     m_x = x;
     m_y = y;
     strcpy(m_defaultExtension, defaultExtension);

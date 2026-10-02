@@ -48,7 +48,7 @@ short combatManager::Main(struct tag_message& message) {
         if (message.type == MESSAGE_KEY_DOWN) {
             switch (message.keyCode) {
                 case 0x3b:
-                    PopNetBox(0);
+                    PopNetBox(NULL);
                     break;
             }
         }
@@ -472,7 +472,7 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
         case MESSAGE_KEY_DOWN:
             switch (message.keyCode) {
                 case 0x3b:
-                    PopNetBox(0);
+                    PopNetBox(NULL);
                     break;
                 case 0x39:
                     giNextAction = 3;
@@ -846,8 +846,8 @@ void combatManager::ClearWinLoseBottom(class heroWindow* window) {
             window->RemoveWidget(m_winLoseBottomTextWidgets[i]);
             delete m_winLoseBottomTextWidgets[i];
         }
-        m_winLoseBottomWidgets[i] = 0;
-        m_winLoseBottomTextWidgets[i] = 0;
+        m_winLoseBottomWidgets[i] = NULL;
+        m_winLoseBottomTextWidgets[i] = NULL;
     }
 }
 
@@ -867,19 +867,19 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
     m_winLoseWindow->BroadcastMessage(message);
     m_winLoseBottomWidgets[0] =
         new iconWidget(0x78, 0x136, 0x50, 0x50, "winloseb.icn", 0, 0, 0x7d1, 0x10, 1);
-    if (m_winLoseBottomWidgets[0] == 0)
+    if (m_winLoseBottomWidgets[0] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[0], -1);
     m_winLoseBottomWidgets[1] =
         new iconWidget(0x80, 0x13e, 0x40, 0x40, "artifact.icn", artifact, 0, 0x7d2, 0x10, 1);
-    if (m_winLoseBottomWidgets[1] == 0)
+    if (m_winLoseBottomWidgets[1] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomWidgets[1], -1);
     artifactName = (char*)malloc(0x3c);
     sprintf(artifactName, gArtifactNames[artifact]);
     m_winLoseBottomTextWidgets[0] =
         new textWidget(0, 0x18a, 0x140, 0xc, artifactName, "smalfont.fnt", 1, 0x835, 0x200);
-    if (m_winLoseBottomTextWidgets[0] == 0)
+    if (m_winLoseBottomTextWidgets[0] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[0], -1);
     gpCombatManager->m_winLoseWindow->DrawWindow();
@@ -909,8 +909,8 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     int firstX;
 
     for (side = 0; side < 15; side++) {
-        m_winLoseBottomWidgets[side] = 0;
-        m_winLoseBottomTextWidgets[side] = 0;
+        m_winLoseBottomWidgets[side] = NULL;
+        m_winLoseBottomTextWidgets[side] = NULL;
     }
     for (side = 0; side < 2; side++) {
         numLost[side] = 0;
@@ -929,7 +929,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
     sprintf(buffer, "Battlefield Casualties");
     m_winLoseBottomTextWidgets[12] =
         new textWidget(0, 0x104, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-    if (m_winLoseBottomTextWidgets[12] == 0)
+    if (m_winLoseBottomTextWidgets[12] == NULL)
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[12], -1);
     for (side = 0; side < 2; side++) {
@@ -941,7 +941,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         sprintf(buffer, side == 1 ? "Attacker" : "Defender");
         m_winLoseBottomTextWidgets[10 + side] =
             new textWidget(0, rowY, 0x140, 0x14, buffer, "smalfont.fnt", 1, 0x83e, 0x200);
-        if (m_winLoseBottomTextWidgets[10 + side] == 0)
+        if (m_winLoseBottomTextWidgets[10 + side] == NULL)
             MemError();
         window->AddWidget(m_winLoseBottomTextWidgets[10 + side], -1);
         if (numLost[side] <= 0) {
@@ -958,7 +958,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5] == 0)
+            if (m_winLoseBottomTextWidgets[side * 5] == NULL)
                 MemError();
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5], -1);
         }
@@ -977,7 +977,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 0x10,
                 1
             );
-            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == 0)
+            if (m_winLoseBottomWidgets[side * 5 + armyIndex] == NULL)
                 MemError();
             buffer = (char*)malloc(9);
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
@@ -992,7 +992,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
                 side * 5 + armyIndex + 0x834,
                 0x200
             );
-            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == 0)
+            if (m_winLoseBottomTextWidgets[side * 5 + armyIndex] == NULL)
                 MemError();
             window->AddWidget(m_winLoseBottomWidgets[side * 5 + armyIndex], -1);
             window->AddWidget(m_winLoseBottomTextWidgets[side * 5 + armyIndex], -1);
@@ -1057,7 +1057,7 @@ void combatManager::DoVictory(signed char winningSide) {
                 )) {
                 gpSoundManager->SwitchAmbientMusic(0x2c);
                 m_winLoseWindow = new heroWindow(0x9f, 2, "wincmbt.bin");
-                if (m_winLoseWindow == 0)
+                if (m_winLoseWindow == NULL)
                     MemError();
                 if (m_heroes[winningSide]) {
                     if (gbCombatSurrender)
@@ -1158,7 +1158,7 @@ void combatManager::DoLoseWindow(void) {
     else
         losingSide = 0;
     loseWindow = new heroWindow(0x9f, 2, "losecmbt.bin");
-    if (loseWindow == 0)
+    if (loseWindow == NULL)
         MemError();
     bmp = gpResourceManager->GetBitmap("losecmbt.bmp");
     gbLoadingMonoIcon = 1;
@@ -1237,7 +1237,7 @@ short combatManager::DoSurrender(void) {
     unusedType = 1;
     unusedResult = 2;
     win = new heroWindow(0x55, 0x50, "surrendr.bin");
-    if (win == 0)
+    if (win == NULL)
         MemError();
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_ICON;
@@ -1385,7 +1385,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
         data[3] = giNextActionGridIndex2;
         result = TransmitRemoteData((char*)data, netPos, sizeof(data), 0x17, 1, 1, -1, 1);
         if (!result)
-            ShutDown(0);
+            ShutDown(NULL);
     }
     actingArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     advance = 0;

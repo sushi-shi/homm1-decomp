@@ -45,7 +45,7 @@ H1_ENUM_END(InputScanCode)
 
 VA(0x0047bb40, 0x2e4)
 int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messageData) {
-    if (gpInputManager == 0)
+    if (gpInputManager == NULL)
         return 1;
     if (gpInputManager->m_active != 1)
         return 1;
@@ -129,7 +129,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
 // evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
 VA(0x0047be30, 0x27c)
 int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageData) {
-    if (gpInputManager == 0)
+    if (gpInputManager == NULL)
         return 1;
     if (gpInputManager->m_active != 1)
         return 1;
@@ -185,7 +185,7 @@ mouseCoordinates:
     event->y = HIWORD(messageData) * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
 
 mouseMoveCursorCheck:
-    if (message == WM_MOUSEMOVE && gpMouseManager != 0) {
+    if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
         if (event->x > INPUT_CURSOR_INTERIOR_X_MIN
             && event->x < INPUT_CURSOR_INTERIOR_X_MAX
             && event->y > INPUT_CURSOR_INTERIOR_Y_MIN

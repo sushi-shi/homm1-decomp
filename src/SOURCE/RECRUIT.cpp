@@ -96,7 +96,7 @@ short recruitUnit::Open(short priority) {
         RECRUIT_WINDOW_Y,
         const_cast<char*>(m_resourceType == RECRUIT_NO_RESOURCE ? "recruit0.bin" : "recruit1.bin")
     );
-    if (m_window == 0)
+    if (m_window == NULL)
         MemError();
     m_quantity = 0;
     m_goldTotal = 0;
@@ -258,13 +258,13 @@ short recruitUnit::Main(struct tag_message& message) {
                             RECRUIT_VIEW_ARMY_Y,
                             m_creatureType,
                             0,
-                            0,
+                            NULL,
                             1,
                             0,
                             quickView,
-                            0,
-                            0,
-                            0
+                            NULL,
+                            NULL,
+                            NULL
                         );
                         break;
                     default:
@@ -408,7 +408,7 @@ void QuickViewRecruit(town* townData, signed char dwelling) {
         RECRUIT_WINDOW_Y,
         const_cast<char*>(resourceType == RECRUIT_NO_RESOURCE ? "recruiq0.bin" : "recruiq1.bin")
     );
-    if (win == 0)
+    if (win == NULL)
         MemError();
     SetupRecruitWin(win, iMonsterType, iGoldCost, resourceType, resourcePrice, avail);
     gpMouseManager->ReallyHidePointer();

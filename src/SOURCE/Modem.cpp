@@ -52,7 +52,7 @@ void GUIModemCommand(char* message, char* command) {
     strcpy(cModemCommand, command);
     NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
     if (!gbFunctionComplete)
-        ShutDown(0);
+        ShutDown(NULL);
 }
 
 // donor PoL RVA 0x0000cca9; preferred Buka symbol ?GUIModemCommandExec@@YICXZ
@@ -99,7 +99,7 @@ signed char GUIModemResponse(char* message, char* response) {
     giWaitType = 6;
     NormalDialog(message, 6, -1, -1, -1, 0, -1, 0, -1);
     if (!gbFunctionComplete)
-        ShutDown(0);
+        ShutDown(NULL);
     return 0;
 }
 
