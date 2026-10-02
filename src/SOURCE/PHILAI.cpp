@@ -1444,8 +1444,8 @@ int philAI::MaxBuyableCreatures(int creatureType) {
 VA(0x0041e540, 0x1bc)
 void philAI::ValueOfBuyingHero(town* townPointer, hero* heroPointer, int& resourceValue, float& benefitCost) {
     int tmp;
-    int heroRV;
     int i;
+    int heroRV;
     int heroCost[PLAYER_RESOURCE_COUNT];
     int costRV;
 
@@ -1658,22 +1658,22 @@ int philAI::RVOfPosition(
     short strategicY,
     int eventMode
 ) {
-    int eventValue7;
-    int primaryEventChance4;
-    int triggerType2;
-    int adjacentX;
     int adjacentMonsterEventChance5;
-    int strategicDelta6;
-    int objectType6;
-    int currentLiveChance4;
-    int targetLiveChance1;
-    int currentStrategicValue2;
-    int adjacentY;
     int totalValue;
     int strategicLiveChance29;
-    int adjacentEventChance;
+    int strategicDelta6;
+    int objectType6;
+    int eventValue7;
     float distanceFactor1;
+    int currentLiveChance4;
+    int targetLiveChance1;
+    int primaryEventChance4;
+    int adjacentEventChance;
     int strategicEventValue;
+    int currentStrategicValue2;
+    int adjacentX;
+    int triggerType2;
+    int adjacentY;
 
     strategicEventValue = 0;
     targetLiveChance1 = 100;
@@ -2194,22 +2194,22 @@ int philAI::QuickCombat(
     float& attackerDamage,
     float& defenderDamage
 ) {
-    float rnd;
-    float fracLost;
-    float winChance;
-    armyGroup* winner;
     int aDead;
-    int unused;
-    int dDead;
+    float fracLost;
     int win;
-    int aLeft;
+    float rnd;
+    int unused;
     int dLeft;
-    int tmp;
-    int atkExp;
-    int defenderExp;
+    int dDead;
+    armyGroup* winner;
     float diff;
-    int res;
+    float winChance;
+    int atkExp;
+    int tmp;
+    int defenderExp;
     float wChance;
+    int res;
+    int aLeft;
 
     atkExp = gpGame->ExperienceValueOfStack(attacker, attackerHero);
     defenderExp = gpGame->ExperienceValueOfStack(defender, defenderHero);
@@ -2283,30 +2283,30 @@ int philAI::QuickCombat(
 // evidence: graph:3;base=0.484024;margin=0.235954;shape=0.394;size=0.661;calls=0.952;alternate=pol20:void philAI::HeroInteractionAtTown(class hero *, class town *, int, int *)@0x0004183b
 VA(0x00420c11, 0xbae)
 void philAI::HeroInteractionAtTown(hero* heroPointer, town* townPointer, int doInteraction, int* value) {
-    int keepGoing2;
-    int heroFV4;
-    int armyCount;
-    int moveCount9;
-    int transferRating;
-    int toHero;
-    float townShare4;
-    int statSum;
-    float transferShare6;
-    armyGroup* toArmy;
-    armyGroup* fromArmy;
-    int slot6;
-    int i;
     int garrisonFV;
+    int transferRating;
+    int slot6;
     int j;
     int speedLimit;
     int stackFV;
+    int keepGoing2;
+    float townShare4;
     int bestValue15;
+    int heroFV4;
+    int statSum;
+    int armyCount;
+    int i;
     float transferFactor2;
+    int moveCount9;
+    int toHero;
     float curveTerm;
+    armyGroup* fromArmy;
     int room;
+    float transferShare6;
     int learned8;
-    float wantShare3;
+    armyGroup* toArmy;
     int moveNum;
+    float wantShare3;
 
     *value = 0;
     if (doInteraction) {

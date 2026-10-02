@@ -4627,8 +4627,8 @@ short DimensionDoorHandler(struct tag_message& message) {
 VA(0x00433b10, 0xaf6)
 signed char advManager::ComboDraw(short originX, short originY, signed char animate) {
     int updateCount;
-    int drawX;
     int drawY;
+    int drawX;
     mapCell* cellPtr;
 
     PollSound();
