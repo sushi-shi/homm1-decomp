@@ -48,6 +48,7 @@ H1_ENUM_CONST_END(CursorConstant)
 // Gallop, Jump}; Jump moves a whole cell per frame without walking frames.
 H1_ENUM_BEGIN(CursorWalkSpeed)
     WALK_SPEED_WALK = 0,
+    WALK_SPEED_FIRST = WALK_SPEED_WALK,
     WALK_SPEED_TROT = 1,
     WALK_SPEED_CANTER = 2,
     WALK_SPEED_GALLOP = 3,
@@ -67,7 +68,7 @@ void advManager::StartCursor(signed char direction)
 
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
-    if (gConfig.walkSpeed > WALK_SPEED_WALK)
+    if (gConfig.walkSpeed > WALK_SPEED_FIRST)
         m_cursorCycle = 1;
     else
         m_cursorCycle = SLOW_CURSOR_CYCLE_START;
