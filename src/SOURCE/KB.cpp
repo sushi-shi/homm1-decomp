@@ -237,8 +237,8 @@ H1_ENUM_END(GameEndSequence)
 VA(0x0045015c, 0xe22)
 int oldmain(void) {
     char saveBuf[20];
-    char hiResVideos[3];
-    char lowResVideos[3];
+    H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[3];
+    H1_ENUM_STORAGE(SmackVideo, char) lowResVideos[3];
     int n;
     heroWindow* mainWin;
     font* font;
@@ -292,14 +292,14 @@ int oldmain(void) {
         gpResourceManager->Dispose(font);
         if (!gbSkipIntro) {
             if (gConfig.slowVideo)
-                PlaySmacker(1);
+                PlaySmacker(SMACK_NWCLOGO1);
             else
-                PlaySmacker(0);
+                PlaySmacker(SMACK_NWCLOGO);
         }
         if (gConfig.slowVideo)
-            PlaySmacker(2);
+            PlaySmacker(SMACK_INTRO02C);
         else
-            PlaySmacker(3);
+            PlaySmacker(SMACK_INTRO02U);
     }
     LoadSystemwideIcons();
     memset(gbThisNetHumanPlayer, 0, 4);
@@ -517,16 +517,16 @@ int oldmain(void) {
                 "High King!\n\nOur victory was achieved in %d days!",
                 giCurTurn
             );
-            lowResVideos[0] = 7;
-            lowResVideos[1] = 5;
-            lowResVideos[2] = 6;
-            hiResVideos[0] = 7;
-            hiResVideos[1] = 4;
-            hiResVideos[2] = 6;
+            lowResVideos[GAME_END_LOST] = SMACK_LOSE1;
+            lowResVideos[GAME_END_WON] = SMACK_WIN01U;
+            lowResVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN02;
+            hiResVideos[GAME_END_LOST] = SMACK_LOSE1;
+            hiResVideos[GAME_END_WON] = SMACK_WIN01C;
+            hiResVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN02;
             if (giEndSequence != GAME_END_WON) {
                 if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
-                    PlaySmacker(4);
-                    PlaySmacker(6);
+                    PlaySmacker(SMACK_WIN01C);
+                    PlaySmacker(SMACK_WIN02);
                 } else {
                     PlaySmacker(
                         gConfig.slowVideo ? hiResVideos[giEndSequence] : lowResVideos[giEndSequence]

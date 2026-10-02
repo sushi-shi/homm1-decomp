@@ -300,7 +300,7 @@ short smackManager::Main(struct tag_message& msg) {
 }
 
 VA(0x0045b659, 0x93)
-void PlaySmacker(signed char smackNumber) {
+void PlaySmacker(H1_ENUM_PARAM(SmackVideo, signed char) smackNumber) {
     gbInSmacker = 1;
     gpSoundManager->m_musicReady = 1;
     gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
