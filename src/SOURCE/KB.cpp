@@ -290,7 +290,7 @@ int oldmain(void) {
             PlaySmacker(SMACK_INTRO02U);
     }
     LoadSystemwideIcons();
-    memset(gbThisNetHumanPlayer, 0, 4);
+    memset(gbThisNetHumanPlayer, 0, GAME_PLAYER_COUNT);
     leave = 0;
     backdropLoaded = 0;
     initialMainScreen = 1;
@@ -422,7 +422,7 @@ int oldmain(void) {
         if (!leave) {
             if (gbRemoteOn && !giThisNetPos) {
                 n = 0;
-                for (idx = 0; idx < 4; idx++) {
+                for (idx = 0; idx < GAME_PLAYER_COUNT; idx++) {
                     if (gbHumanPlayer[idx]) {
                         gbGamePosToNetPos[idx] = n;
                         n++;
@@ -430,8 +430,8 @@ int oldmain(void) {
                         gbGamePosToNetPos[idx] = -1;
                     }
                 }
-                for (idx = 0; idx < 4; idx++)
-                    memcpy(gText, gbGamePosToNetPos, 4);
+                for (idx = 0; idx < GAME_PLAYER_COUNT; idx++)
+                    memcpy(gText, gbGamePosToNetPos, GAME_PLAYER_COUNT);
                 giHostGamePos = NetPosToGamePos(0);
                 giThisGamePos = giHostGamePos;
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
@@ -645,7 +645,7 @@ int InterpretCommandLine(void) {
     sprintf(cAggPathName, "%s%s", gcDataPath, "heroes.agg");
     DEFAULT_AGGREGATE_NAME = cAggPathName;
     giFrameStep = 6;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         if (giNumHumanPlayers > i)
             gbHumanPlayer[i] = 1;
         else
@@ -2252,7 +2252,7 @@ signed char WaitForOtherPlayer(void) {
     if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
         switch (data->command) {
             case BOX_REMOTE_SETUP:
-                memcpy(gbGamePosToNetPos, data->payload.data, 4);
+                memcpy(gbGamePosToNetPos, data->payload.data, GAME_PLAYER_COUNT);
                 giThisGamePos = NetPosToGamePos(giThisNetPos);
                 giHostGamePos = NetPosToGamePos(0);
                 break;
