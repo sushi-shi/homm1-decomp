@@ -178,7 +178,7 @@ extern int gbTroopReload;
 extern int giMaxHeroesForThisPlayer;
 // GetBestBHC lets young towns buy during a network game only with this set;
 // TransmitSaveGame tests the same dword for its serial compression path.
-extern int gbSerialCompression;
+extern int gbRemoteReady;
 // GetTurnAIVars' per-cell enemy-hero turn distance for mines.
 extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern float gfHeroInteractionBonus[];
