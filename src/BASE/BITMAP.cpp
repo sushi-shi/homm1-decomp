@@ -82,7 +82,8 @@ void bitmap::Write(char* filename) {
     int file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
     if (file != -1) {
         palette* combatPalette = gpResourceManager->GetPalette("combat.pal");
-        write(file, combatPalette->Data(), PALETTE_RAW_BYTES);
+        signed char* paletteData = combatPalette->Data();
+        write(file, paletteData, PALETTE_RAW_BYTES);
         write(file, m_pixels, m_width * m_height);
         close(file);
         gpResourceManager->Dispose(combatPalette);
