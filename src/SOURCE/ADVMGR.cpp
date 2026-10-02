@@ -17,6 +17,7 @@
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/wingraph.h>
@@ -25,7 +26,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SOURCE/mapObjectTypes.h>
 
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.

@@ -9,7 +9,6 @@
 #include <match.h>
 
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/SETUP.h>
 
 #include <BASE/Misc.h>
 #include <H1/All.h>
@@ -19,6 +18,7 @@
 #include <SOURCE/Modem.h>
 #include <SOURCE/netwinRuntime.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/SETUP.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>

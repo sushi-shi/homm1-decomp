@@ -12,13 +12,13 @@
 #include <H1/KB.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SOURCE/mapObjectTypes.h>
 
 // clang-format off
 // advManager::EventWindow's eventId: the gEventText row it prints, or

@@ -2,8 +2,8 @@
 #define HOMM1_H1_KB_H
 
 #include <Domains.h>
-#include <SOURCE/FINDPATH.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/FINDPATH.h>
 #include <SOURCE/terrainTypes.h>
 
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
