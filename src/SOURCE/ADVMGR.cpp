@@ -1815,7 +1815,7 @@ int advManager::ProcessSearch(int x, int y) {
     UpdateScreen(0, 0);
     GrabScreen();
 
-    if (gpGame->m_ultimateArtifactX == x && gpGame->m_ultimateArtifactY == y && gpGame->m_ultimateArtifactId != -1) {
+    if (gpGame->m_ultimateArtifactX == x && gpGame->m_ultimateArtifactY == y && gpGame->m_ultimateArtifactId != ARTIFACT_NONE) {
         gaveArtifact = GiveArtifact(myHero, gpGame->m_ultimateArtifactId);
         if (gaveArtifact == -1) {
             NormalDialog("You have no room to carry another artifact!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
@@ -1838,7 +1838,7 @@ int advManager::ProcessSearch(int x, int y) {
                         "A great tragedy - the enemy has found the Eye of Goros!!!  The people abandon you, all is lost.");
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
             }
-            gpGame->m_ultimateArtifactId = -1;
+            gpGame->m_ultimateArtifactId = ARTIFACT_NONE;
         }
     } else if (gbHumanPlayer[giCurPlayer]) {
         NormalDialog("Nothing here.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);

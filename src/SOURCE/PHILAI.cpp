@@ -2128,8 +2128,8 @@ int philAI::StrategicValueOfPosition(
                              gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY
                          )
                          ->m_tileIndex];
-                if (!((baseTerrain == 0 && destTerrain > 0)
-                      || (baseTerrain > 0 && destTerrain == 0)))
+                if (!((baseTerrain == TERRAIN_WATER && destTerrain > TERRAIN_WATER)
+                      || (baseTerrain > TERRAIN_WATER && destTerrain == TERRAIN_WATER)))
                     myValue -= (9 - nGap) * 1250 / 9;
             }
         }
@@ -2204,7 +2204,7 @@ float philAI::TurnValueOfObelisk(int player) {
     int each;
     playerAI = &gpGame->m_players[player].m_aiData;
     each = gArtifactBaseRV[gpGame->m_ultimateArtifactId] / 110;
-    if (gpGame->m_ultimateArtifactId == -1)
+    if (gpGame->m_ultimateArtifactId == ARTIFACT_NONE)
         return 0.0f;
     playerAI->m_obeliskValue = each * 48 / gpGame->m_obeliskCount;
     playerAI->m_obeliskValue = static_cast<int>(
@@ -2415,7 +2415,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (pHero->m_army.m_creatureTypes[i] == creature) {
                 replacementSlot = -1;
-                i = 5;
+                i = ARMY_GROUP_SLOT_COUNT;
             } else {
                 replacementValue =
                     pHero->m_army.m_creatureCounts[i] * gMonsterDatabase[i].fightValue;
