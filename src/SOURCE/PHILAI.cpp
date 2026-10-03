@@ -1723,7 +1723,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     bestHero = -1;
     bestCost = -99.0f;
     bestScore = -99.0f;
-    for (curHero = 0; curHero < 2; curHero++) {
+    for (curHero = 0; curHero < HERO_AVAILABLE_SLOT_COUNT; curHero++) {
         availHero = &gpGame->m_heroRecs[gpCurPlayer->m_availableHeroIds[curHero]];
         ValueOfBuyingHero(townPointer, availHero, cost, worth);
         adjusted = (Random(1, 10) + 90.0) * worth / 100.0;
