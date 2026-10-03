@@ -124,6 +124,9 @@ extern int bShowIt;
 extern char gText[];
 extern char* gArmyNames[];
 extern char* gArmyNamesPlural[];
+// A creature's name, plural for counts above one (Buka 2.1 KBDeclarations.h; HoMM1
+// tests count > 1).
+#define CREATURE_DISPLAY_NAME(type, count) ((count) > 1 ? gArmyNamesPlural[type] : gArmyNames[type])
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern int gbMinimized;
 extern signed char gbInMemError;

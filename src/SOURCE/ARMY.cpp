@@ -780,20 +780,19 @@ void army::SpecialAttack(void) {
         sprintf(
             gText,
             "%s %s %d %s.  %d %s %s.",
-            m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity > 1 ? "do" : "does",
             dmg,
             "Damage",
             killCount,
-            killCount > 1 ? gArmyNamesPlural[target->m_creatureType]
-                          : gArmyNames[target->m_creatureType],
+            CREATURE_DISPLAY_NAME(target->m_creatureType, killCount),
             killCount > 1 ? "perish" : "perishes"
         );
     else
         sprintf(
             gText,
             "%s %s %d %s.",
-            m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity > 1 ? "do" : "does",
             dmg,
             "Damage"
@@ -885,7 +884,7 @@ void army::DoHydraAttack(void) {
         sprintf(
             gText,
             "%s %s %d %s.  %d %s %s.",
-            m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity > 1 ? "do" : "does",
             totDmg,
             "Damage",
@@ -897,7 +896,7 @@ void army::DoHydraAttack(void) {
         sprintf(
             gText,
             "%s %s %d %s.",
-            m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity > 1 ? "do" : "does",
             totDmg,
             "Damage"
@@ -1114,27 +1113,26 @@ void army::DoAttack(int retaliation) {
         sprintf(
             gText,
             "%s %s half the enemy troops!",
-            m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity > 1 ? "destroy" : "destroys"
         );
     else if (kills > 0)
         sprintf(
             gText,
             "%s %s %d %s.  %d %s %s.",
-            m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity > 1 ? "do" : "does",
             dmg,
             "Damage",
             kills,
-            kills > 1 ? gArmyNamesPlural[target->m_creatureType]
-                      : gArmyNames[target->m_creatureType],
+            CREATURE_DISPLAY_NAME(target->m_creatureType, kills),
             kills > 1 ? "perish" : "perishes"
         );
     else
         sprintf(
             gText,
             "%s %s %d %s.",
-            m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity > 1 ? "do" : "does",
             dmg,
             "Damage"
@@ -1383,7 +1381,7 @@ void army::CheckLuck(void) {
             sprintf(
                 gText,
                 "Bad luck descends on the %s",
-                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType]
+                CREATURE_DISPLAY_NAME(m_creatureType, m_quantity)
             );
             gpCombatManager->CombatMessage(gText, 1);
             Wince();
@@ -1392,7 +1390,7 @@ void army::CheckLuck(void) {
             sprintf(
                 gText,
                 "Good luck shines on the %s",
-                m_quantity > 1 ? gArmyNamesPlural[m_creatureType] : gArmyNames[m_creatureType]
+                CREATURE_DISPLAY_NAME(m_creatureType, m_quantity)
             );
             gpCombatManager->CombatMessage(gText, 1);
             Stand(1);

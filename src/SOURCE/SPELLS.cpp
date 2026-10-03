@@ -392,8 +392,7 @@ void combatManager::CastSpell(
                 gText,
                 "The lightning bolt does %d damage to the %s.",
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
-                targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
-                                           : gArmyNames[targetArmy->m_creatureType]
+                CREATURE_DISPLAY_NAME(targetArmy->m_creatureType, targetArmy->m_quantity)
             );
             CombatMessage(gText, 1);
             targetArmy->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);

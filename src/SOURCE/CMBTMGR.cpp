@@ -1291,8 +1291,7 @@ void combatManager::KeepAttack(void) {
             hurt,
             "Damage",
             numLost,
-            numLost > 1 ? gArmyNamesPlural[target->m_creatureType]
-                        : gArmyNames[target->m_creatureType],
+            CREATURE_DISPLAY_NAME(target->m_creatureType, numLost),
             numLost > 1 ? "perish" : "perishes"
         );
     else
