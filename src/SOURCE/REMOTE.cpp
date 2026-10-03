@@ -16,6 +16,7 @@
 #include <SOURCE/comwin.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/Modem.h>
+#include <SOURCE/netwin.h>
 #include <SOURCE/netwinRuntime.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/SETUP.h>
