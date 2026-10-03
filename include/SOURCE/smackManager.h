@@ -1,10 +1,10 @@
 #ifndef HOMM1_SOURCE_SMACKMANAGER_H
 #define HOMM1_SOURCE_SMACKMANAGER_H
 
-#include <SOURCE/smack.h>
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/smack.h>
 
 struct tag_message;
 
