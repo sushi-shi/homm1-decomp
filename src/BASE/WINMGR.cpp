@@ -344,12 +344,10 @@ void heroWindowManager::UpdateScreenRegion(short x, short y, short width, short 
 
 // Retail byte saved-update state and word arguments precede the later donor widening.
 VA(0x004745a0, 0xbf)
+#line 550 "D:\\Heroes\\Base\\WINMGR.CPP"
 void heroWindowManager::FadeScreen(short direction, short steps, palette* currentPalette) {
-    ProcessAssert(
-        direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT,
-        gWindowFadeAssertFile,
-        gWindowFadeAssertLine + 1
-    );
+#line 551
+    ProcessAssert(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT, __FILE__, __LINE__);
     if (currentPalette != NULL)
         SetPalette(currentPalette->m_data, 0);
     PollSound();
@@ -474,10 +472,6 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 // zero-filled storage (0x004cac20..).
 DATA(0x004a0c7c)
 int iDialogNestCount = 0;
-DATA(0x004a0c80)
-short gWindowFadeAssertLine = 550;
-DATA(0x004a0c84)
-char gWindowFadeAssertFile[] = "D:\\Heroes\\Base\\WINMGR.CPP";
 DATA(0x004cac20)
 signed char gWindowFadeSavedUpdate;
 DATA(0x004cac28)

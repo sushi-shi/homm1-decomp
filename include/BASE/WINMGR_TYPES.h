@@ -30,6 +30,8 @@ extern palette* gPalette;
 extern int gbInDialog;
 extern int iDialogNestCount;
 
+// Stale: FadeScreen's line base is now its /Gi compiler static; these two
+// externs stay until a header retune (dropping them costs -12 CUR exact elsewhere).
 extern short gWindowFadeAssertLine;
 extern char gWindowFadeAssertFile[];
 extern signed char gWindowFadeSavedUpdate;
