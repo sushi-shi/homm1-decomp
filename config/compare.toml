@@ -1,4 +1,5 @@
 # Scores in different modes are not comparable; the MAX ledger records its mode.
-# Code first, data later: use the pinned Giten campaign's current mode.
+# Strict data matching is always on (user direction): every referenced datum
+# needs a provided identity and relocation targets are scored by name and addend.
 [compare]
-data_matching = false
+data_matching = true
