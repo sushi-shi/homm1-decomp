@@ -1188,8 +1188,7 @@ short HeroHandler(struct tag_message& message) {
         }
     }
     if (finished) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     } else {
         return MESSAGE_DISPATCH_CONSUME;

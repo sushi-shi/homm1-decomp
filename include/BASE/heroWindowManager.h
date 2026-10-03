@@ -61,4 +61,12 @@ public:
     void ReleaseFizzleSource(void);
 };
 #pragma pack(pop)
+
+// A dialog handler records the selected widget as the dialog result and turns
+// the message into the dialog-select notification (Buka 2.1
+// heroWindowManager.h; HoMM1 assigns id and command in one chain).
+#define FINISH_DIALOG_MESSAGE(message)                                                             \
+    (gpWindowManager->m_dialogResult = (message).id,                                               \
+     (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
+
 #endif // HOMM1_BASE_HEROWINDOWMANAGER_H

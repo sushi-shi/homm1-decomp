@@ -920,8 +920,7 @@ short WinCombatHandler(struct tag_message& message) {
                                 iTransferArtifacts[iCurTransferArtifact]
                             );
                         } else {
-                            gpWindowManager->m_dialogResult = message.id;
-                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                            FINISH_DIALOG_MESSAGE(message);
                             return MESSAGE_DISPATCH_FORWARD;
                         }
                         break;

@@ -2194,8 +2194,7 @@ short TavernHandler(struct tag_message& message) {
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
                     case DIALOG_BUTTON_2:
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                     default:
                         break;

@@ -5917,8 +5917,7 @@ short CPanelHandler(struct tag_message& message) {
     if (changed)
         UpdateCPanel(0);
     if (handled) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -6047,8 +6046,7 @@ short APanelHandler(struct tag_message& message) {
     }
 
     if (handled) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;

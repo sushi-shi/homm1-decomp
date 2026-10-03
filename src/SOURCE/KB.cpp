@@ -710,8 +710,7 @@ short InitMenuHandler(tag_message& message) {
     }
 
     if (handled || giMenuCommand != APP_MENU_NONE) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -1391,8 +1390,7 @@ short EventWindowHandler(tag_message& message) {
                     case DIALOG_BUTTON_3:
                     case DIALOG_BUTTON_5:
                     case DIALOG_BUTTON_6:
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                     default:
                         break;
@@ -2741,8 +2739,7 @@ short DataEntryWindowHandler(tag_message& message) {
                         message.text = cDEDest;
                         DataEntryWin->BroadcastMessage(message);
                         DataEntryWin->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                 }
         }

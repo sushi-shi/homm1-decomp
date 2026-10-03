@@ -825,8 +825,7 @@ short NewGameHandler(tag_message& message) {
                                 }
                             }
                         case NEW_GAME_CANCEL:
-                            gpWindowManager->m_dialogResult = message.id;
-                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                            FINISH_DIALOG_MESSAGE(message);
                             return MESSAGE_DISPATCH_FORWARD;
                         default:
                             break;
@@ -2573,8 +2572,7 @@ short ViewArmyHandler(tag_message& message) {
                 switch (message.id) {
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                     case VIEW_ARMY_DISMISS:
                         NormalDialog(
