@@ -79,7 +79,6 @@ struct SampleChannelStruct {
 extern SampleChannelStruct SCS[];
 
 char* FindToken(char*, char);
-char* FindLastToken(char*, char);
 void SetReady2Poll(void);
 void HandleMCIError(int, char*);
 

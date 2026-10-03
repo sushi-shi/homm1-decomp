@@ -6,10 +6,10 @@
 
 #include <BASE/Misc.h>
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/hero.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/town.h>
 
 #include <string.h>

@@ -9,7 +9,7 @@
 #include <BASE/LZHUF_internal.h>
 inline void InitializeTree(void);
 inline void ReconstructEncoderTree(void);
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 #include <stdio.h>
 #include <stdlib.h>

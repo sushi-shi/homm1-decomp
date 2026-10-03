@@ -10,9 +10,9 @@
 #include <BASE/widget.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/highScoreManager.h>
 #include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
 #include <fcntl.h>

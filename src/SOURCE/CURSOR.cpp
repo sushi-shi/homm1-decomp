@@ -7,8 +7,8 @@
 #include <BASE/Icond2b.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/EVENTS.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>

@@ -6,8 +6,8 @@
 #include <match.h>
 
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/PATH.h>
 
 #include <stdlib.h>

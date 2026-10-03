@@ -9,8 +9,8 @@
 
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>

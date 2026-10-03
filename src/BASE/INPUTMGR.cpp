@@ -12,7 +12,7 @@
 #include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/X_GLOBAL.h>

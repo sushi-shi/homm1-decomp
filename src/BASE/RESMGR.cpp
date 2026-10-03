@@ -14,14 +14,13 @@
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <BASE/tileset.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 
 // HoMM1 owns one aggregate descriptor rather than Buka's descriptor array.
 VA(0x00475830, 0x9b)

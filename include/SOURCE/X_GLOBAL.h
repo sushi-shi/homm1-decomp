@@ -1,14 +1,13 @@
 #ifndef HOMM1_SOURCE_X_GLOBAL_H
 #define HOMM1_SOURCE_X_GLOBAL_H
 
-#include <H1/Types.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/mapCell.h>
 
 class armyGroup;
 
 // Global tables and state as in Buka's X_GLOBAL.h; KBDeclarations-style
-// globals stay in H1/KB.h. Most sit in KB's retail data band; the rest wait
+// globals stay in SOURCE/KB.h. Most sit in KB's retail data band; the rest wait
 // for the data campaign to place them.
 
 extern int gbEnlargeScreenBlit;

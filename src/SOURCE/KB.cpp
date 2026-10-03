@@ -7,7 +7,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/X_GLOBAL.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/MOUSEMGR_TYPES.h>

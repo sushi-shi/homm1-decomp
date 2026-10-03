@@ -342,6 +342,12 @@ public:
     town* GetTown(signed char id) {
         return &m_castleRecs[id];
     }
+    hero* GetPlayerHero(int player, int index) {
+        return &m_heroRecs[m_players[player].m_heroIds[index]];
+    }
+    town* GetPlayerTown(int player, int index) {
+        return &m_castleRecs[m_players[player].m_townIds[index]];
+    }
     // --- methods ---
     void SetupDynamicStuff(int, int, int);
     void SetupNewOverviewType(int, int);
@@ -519,4 +525,7 @@ short ViewSpellsHandler(struct tag_message&);
 short ViewSpecialHandler(struct tag_message&);
 short ViewArmyHandler(struct tag_message&);
 int GetBaseScore(int);
+extern int gbGameOver;
+extern int giEndSequence;
+
 #endif // HOMM1_SOURCE_GAME_H

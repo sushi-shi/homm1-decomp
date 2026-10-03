@@ -4,7 +4,7 @@
 
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 #include <stdlib.h>
 #include <string.h>

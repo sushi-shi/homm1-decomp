@@ -1,67 +1,10 @@
-#ifndef HOMM1_H1_KB_H
-#define HOMM1_H1_KB_H
+#ifndef HOMM1_SOURCE_KB_H
+#define HOMM1_SOURCE_KB_H
 
 #include <Domains.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/terrainTypes.h>
-
-// Town building ids: the order of retail gBuildingNames (0x004933a8), then
-// six dwellings named per race by gDwellingNames. town::m_buildings holds
-// bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
-// at the dock cell, 5 is never built and 0 has mage-guild levels.
-H1_ENUM_BEGIN(BuildingSlotType)
-    BUILDING_SLOT_MAGE_GUILD = 0,
-    BUILDING_SLOT_THIEVES_GUILD = 1,
-    BUILDING_SLOT_TAVERN = 2,
-    BUILDING_SLOT_SHIPYARD = 3,
-    BUILDING_SLOT_WELL = 4,
-    // The generic structures every town type shares (philAI's castle arrow
-    // count adds one per built slot up to here).
-    BUILDING_SLOT_GENERIC_LAST = 4,
-    // Slots RACE_FIRST.. use per-race build-window frames, the generic ones
-    // before them frame building + 1 (TOWNMGR SetupBuildWindow).
-    BUILDING_SLOT_RACE_FIRST = 5,
-    BUILDING_SLOT_TENT = 5,
-    BUILDING_SLOT_CASTLE = 6,
-    // The non-dwelling structures end here (TOWNMGR building <= 6 tests).
-    BUILDING_SLOT_STRUCTURE_LAST = 6,
-    BUILDING_SLOT_DWELLING_FIRST = 7,
-    BUILDING_SLOT_DWELLING_1 = 7,
-    BUILDING_SLOT_DWELLING_2 = 8,
-    BUILDING_SLOT_DWELLING_3 = 9,
-    BUILDING_SLOT_DWELLING_4 = 10,
-    BUILDING_SLOT_DWELLING_5 = 11,
-    BUILDING_SLOT_DWELLING_6 = 12,
-    BUILDING_SLOT_DWELLING_LAST = 12,
-    // gDwellingRequirements masks name only slots before the sixth dwelling
-    // (nothing requires it); BuyBuild lists the prerequisites below this.
-    BUILDING_SLOT_REQUIREMENT_END = 12,
-    // Dwellings per town: gDwellingNames/gDwellingRequirements rows are
-    // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
-    BUILDING_SLOT_DWELLING_COUNT = 6,
-    BUILDING_SLOT_COUNT = 13,
-    // Past the buildable slots: the race special building's bit (bit 13, as
-    // in Buka's TOWN_BUILDING_COLISEUM/FORTIFICATIONS 0x2000, whose tent and
-    // castle bits 5 and 6 match HoMM1's). LoadMap, NewMap and RandomizeTown
-    // give it to barbarian towns only; no HoMM1 reader tests it.
-    BUILDING_SLOT_SPECIAL = 13
-H1_ENUM_END(BuildingSlotType)
-
-// giWaitType: which poll WaitHandler runs while a wait dialog is up
-// (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
-// GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect; Buka
-// KBDeclarations.h DialogWaitType, same numbering).
-H1_ENUM_BEGIN(DialogWaitType)
-    DIALOG_WAIT_OTHER_PLAYER = 0,
-    DIALOG_WAIT_NETBIOS_GUEST = 1,
-    DIALOG_WAIT_NETBIOS_HOST = 2,
-    DIALOG_WAIT_NETBIOS_INIT_GUEST = 3,
-    DIALOG_WAIT_NETBIOS_INIT_HOST = 4,
-    DIALOG_WAIT_MODEM_COMMAND = 5,
-    DIALOG_WAIT_MODEM_RESPONSE = 6,
-    DIALOG_WAIT_DIRECT_CONNECT = 7
-H1_ENUM_END(DialogWaitType)
 
 // WaitEndSample's waitTime: a negative wait means the default 4000 ms.
 H1_ENUM_CONST_BEGIN(SampleWaitConstant)
@@ -84,17 +27,6 @@ H1_ENUM_BEGIN(MainMenuControl)
     MAIN_MENU_LAST = MAIN_MENU_CREDITS
 H1_ENUM_END(MainMenuControl)
 
-class soundManager;
-class heroWindowManager;
-class heroWindow;
-class resourceManager;
-class advManager;
-class townManager;
-class executive;
-class game;
-struct configStruct;
-struct tag_tilePoint;
-
 extern char gbInPollSound;
 extern char gbNoSound;
 extern signed char gbShowHighScore;
@@ -102,14 +34,6 @@ extern signed char gbShowHighScore;
 // NormalDialog only parks over the adventure map when neither is showing.
 extern signed char gbHeroWindShowing;
 extern signed char gbOverviewShowing;
-// giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
-// scores (CAMPAIGN.HS, fewest days first; giScoreCampaignMon) or standard
-// scores (STANDARD.HS, highest first; giScoreMon). highScoreManager shows the
-// matching list.
-H1_ENUM_BEGIN(HighScoreType)
-    HIGH_SCORE_TYPE_CAMPAIGN = 0,
-    HIGH_SCORE_TYPE_STANDARD = 1
-H1_ENUM_END(HighScoreType)
 extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
@@ -132,22 +56,21 @@ extern char* gcExtendedMemoryUnits;
 extern char* gcConventionalMemoryUnits;
 extern int giRequiredExtendedMemory;
 extern int giRequiredConventionalMemory;
-extern int gbForegroundApp;
 extern int gbLoadingMonoIcon;
-extern configStruct gConfig;
+extern struct configStruct gConfig;
 // Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
 extern struct tag_tilePoint normalDirTable[];
 extern char* DEFAULT_AGGREGATE_NAME;
-extern resourceManager* gpResourceManager;
-extern soundManager* gpSoundManager;
-extern heroWindowManager* gpWindowManager;
+extern class resourceManager* gpResourceManager;
+extern class soundManager* gpSoundManager;
+extern class heroWindowManager* gpWindowManager;
 extern class mouseManager* gpMouseManager;
-extern heroWindow* pNormalDialogWindow;
-extern advManager* gpAdvManager;
+extern class heroWindow* pNormalDialogWindow;
+extern class advManager* gpAdvManager;
 extern signed char gbThisNetHumanPlayer[];
-extern townManager* gpTownManager;
+extern class townManager* gpTownManager;
 extern class combatManager* gpCombatManager;
-extern executive* gpExec;
+extern class executive* gpExec;
 extern class game* gpGame;
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;
@@ -155,23 +78,18 @@ extern long giBottomViewOverrideEndTime;
 extern int giBottomViewResource;
 extern int giBottomViewResourceQty;
 extern char gcBottomViewText[];
-extern int gbNoDialogMenusOn;
-extern void* hmnuApp;
 extern void* hmnuAdv;
 extern void* hmnuDflt;
 extern void* hmnuCmbt;
 extern void* hmnuTown;
-extern int gbClosingApp;
 extern int gbHeroMoving;
 extern int gbRemoteOn;
-extern heroWindow* DataEntryWin;
+extern class heroWindow* DataEntryWin;
 extern char* cDEDest;
 extern int iDEMaxLen;
 extern signed char bDataEntryTime;
 extern H1_ENUM_STORAGE(DialogWaitType, signed char) giWaitType;
 extern signed char gbFunctionComplete;
-extern long lLastGetMessage;
-extern long lLastAilServe;
 // Artifact names (0x00493048).
 extern char* gArtifactNames[];
 extern char* gNeutralBuildingNames[];
@@ -211,7 +129,6 @@ extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(int);
-long KBTickCount();
 struct SAMPLE2 LoadPlaySample(char*);
 void WaitEndSample(struct SAMPLE2, int);
 // Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
@@ -225,10 +142,7 @@ H1_ENUM_CONST_BEGIN(GlobalTimerConstant)
     GLOBAL_MUSIC_FADE_TIMER_SLOT = 4,
     GLOBAL_POLL_SOUND_TIMER_SLOT = 5
 H1_ENUM_CONST_END(GlobalTimerConstant)
-void Process1WindowsMessage();
-void SetNoDialogMenus(int);
 void EarlyShutDownSystem();
-void PollRemote();
 void QuickViewWait();
 signed char CanBuild(class town*, short);
 signed char CanBuy(class town*, short);
@@ -250,16 +164,11 @@ extern char gMapName[];
 extern char gFullMapName[];
 extern char gMapDescription[];
 extern char cAggPathName[];
-extern int giFrameStep;
 extern int giNumHumanPlayers;
 extern int gbHumanPlayer[];
 void InitMainClasses(void);
 void InitVars(void);
-void GetGraphicsInfo(void);
-void ReadPrefs(void);
 int InterpretCommandLine(void);
-int SetupCDDrive(void);
-char* FindLastToken(char*, char);
 void ClearMapExtra(void);
 short GetMonType(int, int);
 int MemSize(int);
@@ -288,14 +197,11 @@ extern H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 extern signed char gbCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
 extern int gbInNewGameSetup;
-extern int gbGameOver;
-extern int giEndSequence;
 extern int bInShutDown;
 void DeleteMainClasses(void);
 extern class highScoreManager* gpHighScoreManager;
 void FileError(char*);
 void MemError();
-void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
@@ -320,7 +226,6 @@ void NormalDialog(
     int = 0,
     H1_ENUM_PARAM(NormalDialogOrText, int) = NORMAL_DIALOG_NO_OR_TEXT
 );
-void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 extern char* gSpellDesc[];
 extern char* gSpellNames[];
@@ -339,5 +244,43 @@ short WaitHandler(struct tag_message&);
 void ShowCongrats(void);
 void CongratsWait(void);
 int AddScoreToHighScore(int, int, char*, char*);
+
+// HoMM1 uses six-word graphics records; HoMM2 adds colorMouseCursor.
+struct exeGfxConfig {
+    int showMenu;
+    int x;
+    int y;
+    int width;
+    int height;
+    int fullScreen;
+};
+// ReadPrefsFromFile reads 0x134 bytes at the owner base. The registry
+// readers and writers name every persisted field except the 0x50 interval.
+struct configStruct {
+    int walkSpeed;
+    int musicVolume;
+    int soundVolume;
+    int autosave;
+    int showRoute;
+    int blackoutComputer;
+    exeGfxConfig gfx[2];
+    int firstMapOffset;
+    int currentMapOffset;
+    char _pad_0x050[0x64];
+    int cdOffset;
+    int musicSource;
+    int comPort[2];
+    int baudRate[2];
+    char modemInitString[100];
+    int slowVideo;
+};
+struct tag_tilePoint {
+    signed char x;
+    signed char y;
+    short frameOffset;
+};
+struct SPlayerExit {
+    signed char player[7];
+};
 
 #endif

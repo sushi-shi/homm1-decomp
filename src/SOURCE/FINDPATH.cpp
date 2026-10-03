@@ -3,12 +3,11 @@
 #include <SOURCE/FINDPATH.h>
 
 #include <BASE/Misc.h>
-#include <H1/KB.h>
-#include <H1/Types.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/game.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/PATH.h>

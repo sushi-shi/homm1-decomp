@@ -17,7 +17,7 @@
 #include <BASE/Misc.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/soundmgr.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <H1/All.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>

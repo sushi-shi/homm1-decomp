@@ -38,4 +38,9 @@ public:
 };
 #pragma pack(pop)
 
+struct SAMPLE2 {
+    class sample* pSample;
+    struct _SAMPLE* pMem;
+};
+
 #endif // HOMM1_BASE_SAMPLE_H

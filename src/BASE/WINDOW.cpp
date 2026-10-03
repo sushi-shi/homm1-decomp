@@ -17,7 +17,7 @@
 #include <BASE/textEntryWidget.h>
 #include <BASE/textWidget.h>
 #include <BASE/widget.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 #include <stdlib.h>
 #include <string.h>

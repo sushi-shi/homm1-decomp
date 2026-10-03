@@ -8,7 +8,7 @@
 #include <BASE/message.h>
 #include <BASE/resourceManager.h>
 #include <BASE/textWidget.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 #include <stdlib.h>
 #include <string.h>

@@ -15,7 +15,8 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/WINMGR_TYPES.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/X_GLOBAL.h>

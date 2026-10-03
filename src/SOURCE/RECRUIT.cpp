@@ -4,8 +4,8 @@
 
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
 #include <stdio.h>

@@ -5,6 +5,7 @@
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/smack.h>
 
 struct tag_message;
 

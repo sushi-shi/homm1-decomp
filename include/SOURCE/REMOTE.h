@@ -191,5 +191,6 @@ extern signed char iInitNetGuestStatus;
 extern signed char iWaitForHostStatus;
 extern signed char iWaitForGuestStatus;
 extern long iLastBroadcastTime;
+void PollRemote();
 
 #endif

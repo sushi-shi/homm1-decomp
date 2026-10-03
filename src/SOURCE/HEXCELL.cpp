@@ -4,9 +4,9 @@
 #include <match.h>
 
 #include <BASE/icon.h>
-#include <H1/KB.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/hexcell.h>
+#include <SOURCE/KB.h>
 
 VA(0x0046e5b0, 0x4a)
 hexcell::hexcell(void) {

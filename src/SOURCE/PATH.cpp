@@ -6,7 +6,7 @@
 
 #include <BASE/Misc.h>
 #include <H1/All.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 // Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two
 // wide-creature directions, the speed FindPath grants when speed is ignored,
