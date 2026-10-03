@@ -12,6 +12,7 @@
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
 
 #include <io.h>
