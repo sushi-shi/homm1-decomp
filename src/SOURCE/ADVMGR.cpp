@@ -1109,6 +1109,7 @@ class mapCell* advManager::DoAdvCommand(void) {
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x00426eee, 0xe10)
 short advManager::Main(struct tag_message& message) {
+    DATA(0x0048fae8) static int giCheatSeq = 0;
     int yPos;
     int xPos;
     int retVal;
@@ -3393,6 +3394,8 @@ void advManager::ClearBottomView(void) {
 // evidence: graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
 VA(0x0042cc7e, 0x5bf)
 signed char advManager::UpdBottomViewEnemyTurn(void) {
+    DATA(0x0048ff4c) static long iLastSandAnimTime = 0;
+    DATA(0x0048ff50) static long iLastNewSandAnimTime = 0;
     signed char updated;
     tag_message message;
 
@@ -6158,6 +6161,7 @@ short DimensionDoorHandler(struct tag_message& message) {
 // HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
 VA(0x00433b10, 0xaf6)
 signed char advManager::ComboDraw(short originX, short originY, signed char animate) {
+    DATA(0x004904a4) static int giFrameCount = 0;
     int updateCount;
     int drawY;
     int drawX;
@@ -7457,14 +7461,6 @@ DATA(0x0048f84c)
 int iLastHourGlassPhase = 1;
 DATA(0x0048f850)
 int gbForceUpdate = 0;
-DATA(0x0048fae8)
-int giCheatSeq = 0;
-DATA(0x0048ff4c)
-long iLastSandAnimTime = 0;
-DATA(0x0048ff50)
-long iLastNewSandAnimTime = 0;
-DATA(0x004904a4)
-int giFrameCount = 0;
 DATA(0x004c4f2c)
 class heroWindow* cPanel;
 DATA(0x004c4f4c)

@@ -538,8 +538,6 @@ extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
 // UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
-extern long iLastSandAnimTime;
-extern long iLastNewSandAnimTime;
 extern int iSandAnim;
 extern int iLastHourGlassPhase;
 extern long giLastHourGlassUpdateTime;
@@ -552,7 +550,6 @@ extern int giCurWatchPlayer;
 // Main: right-click help for the six adventure panel buttons, the typed
 // cheat-digit sequence and the pending menu command.
 extern char* cAdvMenuHelp[];
-extern int giCheatSeq;
 extern int giMenuCommand;
 extern unsigned char giCurPlayerBit;
 // Volume per environment-sound distance step.
@@ -581,7 +578,6 @@ extern unsigned char giCloudType[];
 extern signed char gMons32Width[];
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 extern signed char bComboDraw[][17];
-extern int giFrameCount;
 // UpdateRadar's per-owner and per-terrain radar pixel colours.
 extern short gRadarOwnerColor[];
 extern short gRadarTerrainColor[];
