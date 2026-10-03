@@ -22,10 +22,18 @@ from homm1.tool.wine import ensure_link_deps, era_tool, run
 
 
 def link(args: list[str], *, cwd: Path | None = None,
-         expect: list[Path] = (), timeout: float | None = None) -> str:
-    """Run link.exe with `args`; verify every `expect` path exists after."""
-    ensure_link_deps()
-    link_exe = era_tool("link.exe")
+         expect: list[Path] = (), timeout: float | None = None,
+         exe: Path | None = None) -> str:
+    """Run link.exe with `args`; verify every `expect` path exists after.
+
+    `exe` selects another pinned linker (the VC 2.0 LINK that rebuilds a
+    period vendor import library); the default is the VC4 LINK.EXE.
+    """
+    if exe is None:
+        ensure_link_deps()
+        link_exe = era_tool("link.exe")
+    else:
+        link_exe = Path(exe)
     expect = [Path(p) for p in expect]
     for p in expect:
         p.unlink(missing_ok=True)

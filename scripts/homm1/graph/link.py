@@ -34,8 +34,15 @@ from homm1.core.paths import REPO
 from homm1.tool import ToolError
 from homm1.tool.wine import winepath
 
-#: HoMM1's explicit library line, in retail import-descriptor order (WINMM,
-#: KERNEL32, USER32, GDI32, ADVAPI32, NETAPI32, smkwai32, WING32, wail32).
+#: HoMM1's explicit library line. LINK emits import descriptors in the order
+#: it first pulls each library, and lays hint/name entries in pull order.
+#: Retail's descriptors read WINMM, KERNEL32, USER32, GDI32, ADVAPI32,
+#: NETAPI32, smkwai32, WING32, wail32, yet wail32's hint/names come after the
+#: second-pass USER32/GDI32 entries (0x004d72b4). Only BASE's soundmgr calls
+#: AIL, so wail32.lib was searched before the BASE library: it pulls nothing
+#: in the first pass and everything in the second. Any slot between gdi32.lib
+#: and the BASE library gives the same image. smkwai32 and WING32 follow the
+#: BASE library, because their thunks follow the BASE run.
 #: LINK searches libraries in this order before the objects' default
 #: libraries (OLDNAMES) and the CRT, so the descriptors and the smkwai32/WING32
 #: jump thunks land ahead of the CRT, exactly where retail has them
@@ -43,8 +50,8 @@ from homm1.tool.wine import winepath
 #: synthesized by `homm1.graph.implib` from the retail import table plus the
 #: reviewed import-thunk names in function_referents.tsv.
 LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
-             "advapi32.lib", "netapi32.lib", "smkwai32.lib", "wing32.lib",
-             "wail32.lib"]
+             "advapi32.lib", "netapi32.lib", "wail32.lib", "smkwai32.lib",
+             "wing32.lib"]
 
 #: Retail's C runtime is the VC4.0 multithreaded LIBCMT.LIB, not the
 #: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's
@@ -66,11 +73,12 @@ MODULE_DEF = REPO / "config/heroes.def"
 #: at 0x00473450. A thunk is an import-library member, and LINK places
 #: library members after every object on the line, in the order it pulls
 #: them; so everything from here on was itself pulled from a library searched
-#: after netapi32.lib - the BASE library. Its member order is VC4 LINK's pull
-#: order (first reference in the undefined-symbol list), not a list we choose.
+#: after netapi32.lib (and after wail32.lib, see LINK_LIBS) - the BASE
+#: library. Its member order is VC4 LINK's pull order (first reference in
+#: the undefined-symbol list), not a list we choose.
 BASE_LIBRARY_FROM = 0x00073450
 BASE_LIBRARY = "base.lib"
-BASE_LIBRARY_AFTER = "netapi32.lib"
+BASE_LIBRARY_AFTER = "wail32.lib"
 
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.

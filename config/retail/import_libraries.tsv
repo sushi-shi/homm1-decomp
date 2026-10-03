@@ -1,0 +1,8 @@
+# Vendor import libraries whose archive shape differs from what the pinned VC4
+# LINK /IMPLIB emits. `format` vc2 = the VC 2.0 LINK 2.50 import format:
+# descriptor `<DLL>_IMPORT_DESCRIPTOR` and its own `NULL_IMPORT_DESCRIPTOR`,
+# which VC4's `__NULL_IMPORT_DESCRIPTOR` does not satisfy, so the image gets a
+# second 20-byte .idata$3 terminator. `member` is the archive member name;
+# LINK 3.00 orders the .idata$4/$5 (ILT/IAT) groups by it.
+dll	format	member	evidence
+WING32.dll	vc2	wing32.dll	evidence/link-layout.md (Import libraries): retail .idata has two null descriptors (0xd60b4, 0xd60c8) and WING32's ILT/IAT after wail32's

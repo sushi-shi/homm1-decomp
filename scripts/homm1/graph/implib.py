@@ -43,6 +43,13 @@ so the interleave always exists. Fillers never reach the image: nothing
 references them, so no member of theirs is pulled. `_verify_hints` re-reads the
 produced lib's `.idata$6` and fails on any mismatch.
 
+The library's own shape also reaches the image. config/retail/
+import_libraries.tsv records the vendor libraries that retail shows were not
+VC4 import libraries: WING32's was the VC 2.0 (LINK 2.50) format, whose own
+`NULL_IMPORT_DESCRIPTOR` adds a second .idata$3 terminator, and its archive
+members sort after wail32's, which places its ILT/IAT last. Such a library is
+linked with the pinned VC 2.0 LINK and its member headers are renamed.
+
 The stub DLL is discarded; only the `.lib` is a build input, and nothing here
 needs the real MSS32/SMACKW32 DLLs (those are runtime-only).
 """
@@ -431,18 +438,99 @@ def _verify_ordinals(lib: Path, want: dict[int, str]) -> None:
         raise ToolError(f"{lib.name}: ordinal mismatch after synthesis: {bad}")
 
 
+def lib_shapes() -> dict[str, dict[str, str]]:
+    """{dll: {format, member}} from config/retail/import_libraries.tsv.
+
+    A vendor library absent from the table takes the pinned VC4 LINK's
+    import format and its default member name (the DLL name).
+    """
+    from homm1.core.paths import RETAIL
+    path = RETAIL / "import_libraries.tsv"
+    out: dict[str, dict[str, str]] = {}
+    if not path.exists():
+        return out
+    for ln in path.read_text().splitlines():
+        if not ln or ln.startswith("#") or ln.startswith("dll\t"):
+            continue
+        dll, fmt, member = ln.split("\t")[:3]
+        if fmt not in SHAPE_LINKERS:
+            raise ToolError(f"import_libraries.tsv {dll}: unknown format {fmt!r}")
+        if not 0 < len(member) < 16 or "/" in member:
+            raise ToolError(f"import_libraries.tsv {dll}: member name "
+                            f"{member!r} does not fit an archive header")
+        out[dll] = {"format": fmt, "member": member}
+    return out
+
+
+#: Import-library formats and the pinned toolchain whose LINK emits them.
+#: vc4: `__IMPORT_DESCRIPTOR_<DLL>` + `__NULL_IMPORT_DESCRIPTOR` (LINK 3.00).
+#: vc2: `<DLL>_IMPORT_DESCRIPTOR` + `NULL_IMPORT_DESCRIPTOR` (LINK 2.50, the
+#: format of the 1994 SDK libraries still in VC4's lib/, e.g. ctl3d32.lib).
+#: The two null-descriptor symbols differ, so a vc2 library linked beside the
+#: VC4 Win32 libraries adds a second 20-byte .idata$3 terminator.
+SHAPE_LINKERS = {"vc4": "vc40", "vc2": "vc20"}
+
+
+def _shape_linker(fmt: str, dll: str, verbose: bool) -> Path | None:
+    """The LINK.EXE for `fmt`, or None for the default VC4 linker.
+
+    A missing VC 2.0 toolchain falls back to VC4 with a warning, so the
+    candidate still links; its .idata then lacks the vendor shape.
+    """
+    if fmt == "vc4":
+        return None
+    from homm1 import toolchain
+    from homm1.tool.wine import find_ci
+    name = SHAPE_LINKERS[fmt]
+    try:
+        toolchain.verify(name)
+    except (KeyError, ValueError) as e:
+        if verbose:
+            print(f"[implib] {dll}: {fmt} import format needs the pinned "
+                  f"{name} LINK ({e}); using VC4's format instead, so the "
+                  f"candidate .idata will not match retail")
+        return None
+    return find_ci(toolchain.root(name) / "bin", "link.exe")
+
+
+def _rename_members(lib: Path, member: str) -> None:
+    """Rename every import member of `lib` to `member` (header field only).
+
+    LINK 3.00 orders the .idata$4/$5 groups by archive member name. Only the
+    16-byte header name changes: symbols, offsets and sizes stay as emitted.
+    """
+    data = bytearray(lib.read_bytes())
+    field = (member + "/").ljust(16).encode("ascii")
+    off = 8
+    renamed = 0
+    while off + 60 <= len(data):
+        size = int(data[off + 48:off + 58].decode().strip() or "0")
+        name = bytes(data[off:off + 16]).rstrip()
+        if not name.startswith(b"/"):
+            data[off:off + 16] = field
+            renamed += 1
+        off += 60 + size + (size & 1)
+    if not renamed:
+        raise ToolError(f"{lib.name}: no import member to rename")
+    lib.write_bytes(bytes(data))
+
+
 def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
                verbose: bool = True,
-               decorated: dict[str | int, str] | None = None) -> Path:
+               decorated: dict[str | int, str] | None = None,
+               shape: dict[str, str] | None = None) -> Path:
     """Build `<out_dir>/<stem>.lib` for `dll`; returns the lib path.
 
     `decorated` (from `referent_imports`) supplies the reviewed caller-side
-    symbol of undecorated and ordinal-only imports.
+    symbol of undecorated and ordinal-only imports. `shape` (from
+    `lib_shapes`) selects the vendor library's import format and member name.
     """
     from homm1.tool import cl, link
     from homm1.tool.wine import era_tool
 
     decorated = decorated or {}
+    shape = shape or {}
+    linker = _shape_linker(shape.get("format", "vc4"), dll, verbose)
     out_dir.mkdir(parents=True, exist_ok=True)
     stem = Path(dll).stem
     names = sorted(hints)
@@ -465,7 +553,9 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
                *([f"/DEF:{winepath(deff)}"] if entries else []),
                f"/OUT:{winepath(stub_dll)}",
                f"/IMPLIB:{winepath(tmp_lib)}", winepath(obj)],
-              cwd=out_dir, expect=[tmp_lib])
+              cwd=out_dir, expect=[tmp_lib], exe=linker)
+    if shape.get("member") and linker is not None:
+        _rename_members(tmp_lib, shape["member"])
     tmp_lib.replace(lib)
     # The stub DLL and its .exp are scaffolding; only the .lib is a build input.
     # link.exe names the .exp after the /IMPLIB path, so the temp lib's name is
@@ -484,8 +574,11 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
                         f"synthesis: {missing}")
     if verbose:
         nord = sum(isinstance(k, int) for k in decorated)
+        form = (f", {shape['format']} format, members {shape['member']}"
+                if linker is not None else "")
         print(f"[implib] {dll}: {len(names)} named + {nord} ordinal "
-              f"import(s) -> {lib} (hints/ordinals verified against retail)")
+              f"import(s) -> {lib} (hints/ordinals verified against retail"
+              f"{form})")
     return lib
 
 
@@ -507,8 +600,10 @@ def ensure_all(out_dir: Path = OUT_DIR, verbose: bool = True) -> list[Path]:
     from homm1.core.paths import RETAIL, retail_exe
     stamp = max(p.stat().st_mtime
                 for p in (Path(__file__), retail_exe(),
-                          RETAIL / "function_referents.tsv") if p.exists())
+                          RETAIL / "function_referents.tsv",
+                          RETAIL / "import_libraries.tsv") if p.exists())
     referents = referent_imports()
+    shapes = lib_shapes()
     ordinals = ordinal_imports()
     libs = []
     for dll, hints, existing in survey():
@@ -528,7 +623,8 @@ def ensure_all(out_dir: Path = OUT_DIR, verbose: bool = True) -> list[Path]:
         if lib.exists() and lib.stat().st_mtime >= stamp:
             libs.append(lib)
             continue
-        libs.append(synthesize(dll, hints, out_dir, verbose, decorated))
+        libs.append(synthesize(dll, hints, out_dir, verbose, decorated,
+                               shapes.get(dll)))
     return libs
 
 

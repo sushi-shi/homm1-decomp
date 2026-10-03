@@ -10,8 +10,8 @@ The candidate link itself (`homm1 link`) never uses `/FORCE`.
   `AppAbout` (ordinal 1, 0x0045c15c) and `AppWndProc` (ordinal 2,
   0x0045bb45), both by undecorated name. `config/heroes.def` states these.
 - Import descriptors: WINMM, KERNEL32, USER32, GDI32, ADVAPI32, NETAPI32,
-  smkwai32, WING32, wail32. LINK emits descriptors in library command-line
-  order, so the explicit library line follows this order.
+  smkwai32, WING32, wail32. LINK emits descriptors in the order it first pulls
+  each library. See [Import libraries](#import-libraries) for wail32's place.
 - Only 17 jump thunks survive in the game band (smkwai32 x11 and WING32 x6 at
   0x00480188). Thunks for the other 179 import slots are absent, so retail was
   linked with the default `/OPT:REF`.
@@ -213,3 +213,52 @@ RVAs are taken relative to the section, except the 12 directory
 `TimeDateStamp` fields. CVTRES writes its conversion time there, and retail's
 0x31104c71 lies 4 seconds before the PE header stamp 0x31104c75, so these
 fields are build-time values like the header stamp.
+
+## Import libraries
+
+Retail `.idata` is 0x1480 bytes. With VC4-format import libraries for all
+nine DLLs, the candidate's was 0x146c, and its ILT/IAT groups came in a
+different order. Three link facts close both differences. The candidate's
+descriptor table, ILT/IAT group placement and hint/name layout now equal
+retail's.
+
+- **Two null descriptors.** Retail has 20 zero bytes at 0x004d60b4 (the
+  terminator after the nine descriptors) and 20 more at 0x004d60c8, before
+  the first ILT at 0x004d60dc. VC4 import libraries define
+  `__NULL_IMPORT_DESCRIPTOR`. The VC 2.0 LINK 2.50 import format (the 1994
+  SDK libraries still in VC4's `lib/`, such as ctl3d32.lib and mapi32.lib)
+  names its descriptor `<DLL>_IMPORT_DESCRIPTOR` and its terminator
+  `NULL_IMPORT_DESCRIPTOR`. One library of each format in a link therefore
+  produces two `.idata$3` terminators. WinG 1.0 dates from 1994. WING32.lib,
+  rebuilt with the pinned VC 2.0 LINK (`/DLL /IMPLIB` over the same stub),
+  gives retail's size, and its hints still check against retail.
+- **ILT/IAT group order.** Retail's ILT groups run ADVAPI32, GDI32, KERNEL32,
+  NETAPI32, USER32, WINMM, smkwai32, wail32, WING32. LINK 3.00 sorts the
+  `.idata$4`/`.idata$5` contributions by archive member name, case-sensitively
+  (renaming only the member headers moves a group). WING32 after wail32
+  needs a member name that sorts after `wail32.dll`. LIB 2.50 names members
+  after the `LIBRARY` statement, which would also lowercase the DLL string,
+  and retail's string is `WING32.dll`. The vendor's tool is not known. The
+  build renames the members `wing32.dll`, the smallest change that gives
+  retail's order.
+- **wail32 is pulled in the second pass.** Hint/name entries follow pull
+  order. Retail's wail32 entries (0x004d72b4 to 0x004d7474) come after the
+  second-pass USER32 and GDI32 entries, and its descriptor is last. Only
+  BASE's soundmgr calls AIL. So wail32.lib was searched before the library
+  that supplies soundmgr: it pulls nothing in the first pass and everything
+  in the second. The candidate line puts it after netapi32.lib and before
+  base.lib. Any slot between gdi32.lib and base.lib gives the same image.
+
+The `.idata` bytes still differ in the slot order inside each DLL's ILT/IAT
+(WINMM, KERNEL32, USER32, GDI32, smkwai32, WING32 and wail32). Within one
+member-name group, the order is neither pull order nor name order. For
+example, retail's WING32 slots follow pull order and the candidate's are a
+rotation of it. The slot order depends on LINK's internal symbol ordering
+and is left for data matching.
+
+## Resources in the candidate
+
+`homm1 link` puts `build/gen/heroes.res` on the link line when the pinned
+RC.EXE and CVTRES.EXE are installed (`homm1 toolchain install --id vc40
+--media build/downloads/MSVC40.iso`). The linked `.rsrc` is 0x1728 bytes, as
+in retail, and differs only in the 12 directory `TimeDateStamp` fields.
