@@ -6,7 +6,8 @@
 
 #include <SOURCE/kbwin.h>
 
-// The 800-instruction divide loop TimeProcessor clocks against PIT channel 2.
+// The 800-instruction divide loop TimeProcessor clocks against PIT channel 2:
+// each DIV_BX is one 16-bit "div bx" (DX:AX / BX).
 #define DIV_BX __asm div bx
 #define DIV_BX_10 DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX
 #define DIV_BX_100                                                                                 \
@@ -49,6 +50,20 @@ int CPUSpeed(unsigned char cpuType) {
 
 // Family 3 when EFLAGS.AC cannot toggle, 4 when EFLAGS.ID cannot toggle,
 // otherwise the CPUID family with 1 in the high byte.
+// What the assembly does, in C++ (the 3 and 4 only reach AX, which the final
+// pops restore, so on a 386/486 cpuType is returned unwritten):
+//
+//   short cpuType;                                  // uninitialized
+//   if (EFLAGS.AC (bit 18) toggles) {               // not a 386
+//       if (EFLAGS.ID (bit 21) toggles) {            // CPUID present
+//           unsigned eax = cpuid(1).eax;             // emitted 0F A2
+//           cpuType = (short)(0x100 | ((eax & 0xf00) >> 8));
+//       }                                            // else ax = 4, discarded
+//   }                                                // else ax = 3, discarded
+//   return cpuType;
+//
+// Each flag probe saves EFLAGS, flips the bit with interrupts off, reads
+// EFLAGS back and restores it; EAX..EDX, DS and ES are saved around the block.
 VA(0x004721f9, 0x80)
 short GetCPUType(void) {
     short cpuType;
@@ -118,6 +133,20 @@ short GetCPUType(void) {
 
 // Counts PIT channel-2 ticks across the divide loop with the speaker gate
 // raised and NMI masked.
+// What the assembly does, in C++ (jmp-short pairs are I/O delays):
+//
+//   outp(0x43, 0xb0);                    // channel 2, lo/hi byte, mode 0
+//   outp(0x42, 0xff); outp(0x42, 0xff);  // count 0xffff
+//   _disable(); outp(0x70, 0x80);        // mask interrupts and NMI
+//   unsigned short ax = inp(0x61) | 1;   // gate channel 2 on
+//   outp(0x61, ax);
+//   for (int i = 0; i < 800; ++i) ax = (unsigned short)(((unsigned long)0 << 16 | ax) / 1);
+//                                        // DIV_BX_100 x 8: 800 "div bx", DX = 0, BX = 1
+//   outp(0x61, inp(0x61) & 0xfe);        // gate off
+//   outp(0x70, 0); _enable();            // unmask NMI and interrupts
+//   outp(0x43, 0x80);                    // latch channel 2
+//   unsigned short left = inp(0x42); left |= inp(0x42) << 8;
+//   return (short)~left;                 // ticks elapsed from 0xffff
 VA(0x00472279, 0x9d9)
 short TimeProcessor(void) {
     short ticks;
