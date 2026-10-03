@@ -275,8 +275,7 @@ signed char game::IsMobile(signed char heroId) {
     if (heroId == GAME_HERO_NONE)
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
-    int terrain =
-        CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
+    int terrain = CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
     return mobileHero->m_remainingMobility >= CalcTerrainCost(
                terrain,
                mobileHero->m_direction & MAP_DIRECTION_DIAGONAL_BIT,
@@ -1045,6 +1044,8 @@ void game::GiveTroopsToNeutralTowns(void) {
 // one does not fit the human player count.
 VA(0x0043baa8, 0x3eb)
 signed char game::NewGame(void) {
+    DATA(0x004906c0)
+    static signed char gbNewGameSettingsSaved = 0;
     if (!SetupGame(1))
         return 0;
     if (giCampaignChoice > 0) {
@@ -3288,6 +3289,8 @@ void game::PerWeek(void) {
 // plague month, the creature month also seeding wandering monsters.
 VA(0x00442654, 0x2e1)
 void game::PerMonth(void) {
+    DATA(0x004909c0)
+    static signed char giMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
     town* townPointer;
     short growth;
     short j;
@@ -5180,10 +5183,6 @@ void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, 
 // literals of their users; gbShowMapInfo is defined above GetMap.
 DATA(0x00490600)
 int gbGameOver = 0;
-DATA(0x004906c0)
-signed char gbNewGameSettingsSaved = 0;
-DATA(0x004909c0)
-signed char giMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
 DATA(0x004909cc)
 unsigned long iLastSeed = 135621123;
 DATA(0x004c50d0)

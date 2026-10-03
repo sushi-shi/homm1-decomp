@@ -128,6 +128,8 @@ void mouseManager::SetPointer(char* name, short frame) {
 VA(0x00476940, 0x489)
 #line 232 "D:\\Heroes\\Base\\MOUSEMGR.CPP"
 void mouseManager::SetPointer(short frame) {
+    DATA(0x004a0f28)
+    static BOOL gbInSetPointer = FALSE;
     int cursorIndex;
     int x;
     int y;
@@ -345,8 +347,6 @@ unsigned char iHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23},
     {22, 23}, {22, 23}, {22, 23}
 };
-DATA(0x004a0f28)
-BOOL gbInSetPointer = FALSE;
 DATA(0x004cac88)
 HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
 DATA(0x004cadb8)

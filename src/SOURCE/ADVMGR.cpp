@@ -614,7 +614,7 @@ H1_ENUM_CONST_END(QuickViewWidget)
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
-        VA(0x004252c0, 0x2cc)
+VA(0x004252c0, 0x2cc)
 advManager::advManager(void) {
     int i;
 
@@ -1109,6 +1109,8 @@ class mapCell* advManager::DoAdvCommand(void) {
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x00426eee, 0xe10)
 short advManager::Main(struct tag_message& message) {
+    DATA(0x0048fae8)
+    static int giCheatSeq = 0;
     int yPos;
     int xPos;
     int retVal;
@@ -2427,7 +2429,6 @@ void advManager::CompleteDraw(int update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
-
 // Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
 // masks first, then each unseen neighbour, indexed into the cloud table.
 VA(0x0042a3d8, 0x40d)
@@ -2979,8 +2980,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                         break;
                     case TILESET_MTN32:
                     case TILESET_TREE32:
-                        color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)]
-                                + RADAR_TERRAIN_SHADE;
+                        color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)] + RADAR_TERRAIN_SHADE;
                         break;
                     default:
                         color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
@@ -3063,11 +3063,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
                 case MAP_OBJECT_NONE:
                 case MAP_OBJECT_COAST:
                 case MAP_OBJECT_SHADOW:
-                    sprintf(
-                        gText,
-                        "\n\n%s",
-                        gTerrainNames[CELL_TERRAIN(curCell)]
-                    );
+                    sprintf(gText, "\n\n%s", gTerrainNames[CELL_TERRAIN(curCell)]);
                     break;
                 case MAP_OBJECT_MINE:
                     sprintf(
@@ -3393,6 +3389,10 @@ void advManager::ClearBottomView(void) {
 // evidence: graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
 VA(0x0042cc7e, 0x5bf)
 signed char advManager::UpdBottomViewEnemyTurn(void) {
+    DATA(0x0048ff4c)
+    static long iLastSandAnimTime = 0;
+    DATA(0x0048ff50)
+    static long iLastNewSandAnimTime = 0;
     signed char updated;
     tag_message message;
 
@@ -6158,6 +6158,8 @@ short DimensionDoorHandler(struct tag_message& message) {
 // HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
 VA(0x00433b10, 0xaf6)
 signed char advManager::ComboDraw(short originX, short originY, signed char animate) {
+    DATA(0x004904a4)
+    static int giFrameCount = 0;
     int updateCount;
     int drawY;
     int drawX;
@@ -7457,14 +7459,6 @@ DATA(0x0048f84c)
 int iLastHourGlassPhase = 1;
 DATA(0x0048f850)
 int gbForceUpdate = 0;
-DATA(0x0048fae8)
-int giCheatSeq = 0;
-DATA(0x0048ff4c)
-long iLastSandAnimTime = 0;
-DATA(0x0048ff50)
-long iLastNewSandAnimTime = 0;
-DATA(0x004904a4)
-int giFrameCount = 0;
 DATA(0x004c4f2c)
 class heroWindow* cPanel;
 DATA(0x004c4f4c)

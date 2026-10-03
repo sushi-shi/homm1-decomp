@@ -556,6 +556,8 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
 // damage; creature 14 shoots twice.
 VA(0x00467b97, 0xcca)
 void army::SpecialAttack(void) {
+    DATA(0x004a0888)
+    static int gbSecondShot = 0;
     int targetHexCol;
     int dmg;
     int xEnd;
@@ -1818,7 +1820,5 @@ void army::MoveAttack(int hex, int moveOnly) {
 }
 
 // ARMY owns retail .data 0x004a0820-0x004a0a57 and .bss 0x004ca908-0x004ca917.
-DATA(0x004a0888)
-int gbSecondShot = 0;
 DATA(0x004ca908)
 signed char gbGenieHalf;

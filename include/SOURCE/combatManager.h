@@ -523,7 +523,6 @@ short CombatSpecialHandler(struct tag_message&);
 short HandleCastSpell(struct tag_message&);
 // HandleCastSpell: the hex under the spell pointer (0x0048f2b0) and the
 // teleport second-click state (0x0048f28c).
-extern signed char indexToCastOn;
 extern signed char bInTeleportGetDest;
 // The loaded combat effect icon's file id (0x004c6d64).
 extern short gCurLoadedSpellFileId;
@@ -578,5 +577,4 @@ extern signed char gbThisNetHasControl;
 extern signed char gbInCombat;
 // Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
 // ground and obstacle tables are in X_GLOBAL.h.
-extern char* cCombatBkgNames[];
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

@@ -35,10 +35,6 @@ DATA(0x0048f55c)
 float gfAttackHumanBonus = 2.0f;
 DATA(0x0048f560)
 float gfAttackComputerBonus = 0.8f;
-DATA(0x0048f7b8)
-signed char bSVSearchArrayInUse = 0;
-DATA(0x0048f824)
-int bEvaluatingTravelGates = 1;
 DATA(0x004acec0)
 short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004af740)
@@ -1227,17 +1223,16 @@ void philAI::DetermineTargetPosition(
                                 || (thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
                                     && !(pHero->m_eventFlags & HERO_EVENT_EMBARKED));
                 } else {
-                    valid =
-                        (thisCell->m_triggerType & MAP_TRIGGER_EVENT)
-                        || (thisCell->m_triggerType == MAP_OBJECT_COAST
-                            && (pHero->m_eventFlags & HERO_EVENT_EMBARKED))
-                        || (x % spacing == 0 && y % spacing == 0
-                            && (((pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                 && CELL_TERRAIN(thisCell) == TERRAIN_WATER)
-                                || (!(pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                    && CELL_TERRAIN(thisCell) != TERRAIN_WATER)))
-                        || (x == gpCurPlayer->m_ultimateArtifactHintX
-                            && y == gpCurPlayer->m_ultimateArtifactHintY);
+                    valid = (thisCell->m_triggerType & MAP_TRIGGER_EVENT)
+                            || (thisCell->m_triggerType == MAP_OBJECT_COAST
+                                && (pHero->m_eventFlags & HERO_EVENT_EMBARKED))
+                            || (x % spacing == 0 && y % spacing == 0
+                                && (((pHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                                     && CELL_TERRAIN(thisCell) == TERRAIN_WATER)
+                                    || (!(pHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                                        && CELL_TERRAIN(thisCell) != TERRAIN_WATER)))
+                            || (x == gpCurPlayer->m_ultimateArtifactHintX
+                                && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
                 if (valid) {
                     for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
@@ -2212,6 +2207,8 @@ int philAI::StrategicValueOfPosition(
     signed char immediate,
     int* liveChance
 ) {
+    DATA(0x0048f7b8)
+    static signed char bSVSearchArrayInUse = 0;
     int nGap;
     searchArray* pSearch;
     int inBoat;
@@ -2786,7 +2783,10 @@ void philAI::HeroInteractionAtTown(
     if (doInteraction) {
         if ((townPointer->m_buildings & (1 << BUILDING_SLOT_SHIPYARD))
             && townPointer->m_id != giBestShipyardId) {
-            i = MANHATTAN_LENGTH(townPointer->m_x - heroPointer->m_x, townPointer->m_y - heroPointer->m_y);
+            i = MANHATTAN_LENGTH(
+                townPointer->m_x - heroPointer->m_x,
+                townPointer->m_y - heroPointer->m_y
+            );
             if (gbActualShipyardFound) {
                 if (giBestShipyardDist > i) {
                     giBestShipyardDist = i;
@@ -2802,7 +2802,10 @@ void philAI::HeroInteractionAtTown(
                    && gpAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1)->m_tileIndex
                           < MAP_CELL_TILES_PER_TERRAIN
                    && !gbActualShipyardFound && townPointer->m_id != giBestShipyardId) {
-            i = MANHATTAN_LENGTH(townPointer->m_x - heroPointer->m_x, townPointer->m_y - heroPointer->m_y);
+            i = MANHATTAN_LENGTH(
+                townPointer->m_x - heroPointer->m_x,
+                townPointer->m_y - heroPointer->m_y
+            );
             if (gbPossibleShipyardFound) {
                 if (giBestShipyardDist > i) {
                     giBestShipyardDist = i;
@@ -3504,6 +3507,8 @@ hero* pEventHero;
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
 VA(0x0042278b, 0x2083)
 int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate, int* liveChance) {
+    DATA(0x0048f824)
+    static int bEvaluatingTravelGates = 1;
     int numToBuy;
     int bWon9;
     int costList[RESOURCE_COUNT];

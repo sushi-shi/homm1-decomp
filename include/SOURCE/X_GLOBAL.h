@@ -72,7 +72,6 @@ extern char* gNewGameHelp[];
 extern char* gHumanPlayerTypeNames[];
 extern char* gPlayerTypeNames[];
 // NewGame remembers the last new-game settings for the next setup screen.
-extern signed char gbNewGameSettingsSaved;
 extern signed char gcSavedDifficulty;
 extern signed char gcSavedPlayerTypes[];
 extern signed char gbSavedKingOfTheHill;

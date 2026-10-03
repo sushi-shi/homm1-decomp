@@ -171,6 +171,10 @@ BOOL AppIdle(void) {
 VA(0x0045bb45, 0x617)
 long int __stdcall
 AppWndProc(void* window, unsigned int message, unsigned int messageParam, long int messageData) {
+    DATA(0x0049fef4)
+    static long lLastGTimerTickCount = 0;
+    DATA(0x0049fef8)
+    static long lLastCycleTickCount = 0;
     if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
         LogStr(
             "AWP",
@@ -346,6 +350,10 @@ void AppExit(void) {
 // evidence: graph:2;base=0.631126;margin=0.664983;shape=0.634;size=0.797;calls=1.000;alternate=pol20:void Process1WindowsMessage(void)@0x0001c7b8
 VA(0x0045c206, 0xca)
 void Process1WindowsMessage(void) {
+    DATA(0x0049ff2c)
+    static long lLastGetMessage = 0;
+    DATA(0x0049ff30)
+    static long lLastAilServe = 0;
     MSG message;
     long currentTick;
 
@@ -548,6 +556,8 @@ void SetMenuStatus(int showMenu) {
 // evidence: graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
 VA(0x0045c82b, 0x79)
 void SetNoDialogMenus(int menusEnabled) {
+    DATA(0x0049ff50)
+    static int gbNoDialogMenusOn = 0;
     if (gbNoDialogMenusOn && !menusEnabled)
         return;
     if (!gbNoDialogMenusOn && menusEnabled)
@@ -1413,18 +1423,8 @@ DATA(0x0049fe7c)
 void* hmnuApp = NULL;
 DATA(0x0049fe80)
 void* gEventHandle = NULL;
-DATA(0x0049fef4)
-long lLastGTimerTickCount = 0;
-DATA(0x0049fef8)
-long lLastCycleTickCount = 0;
 DATA(0x0049fefc)
 int gbClosingApp = 0;
-DATA(0x0049ff2c)
-long lLastGetMessage = 0;
-DATA(0x0049ff30)
-long lLastAilServe = 0;
-DATA(0x0049ff50)
-int gbNoDialogMenusOn = 0;
 DATA(0x004ca490)
 void* hInstApp;
 DATA(0x004ca498)

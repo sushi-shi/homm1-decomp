@@ -38,7 +38,6 @@ extern int gbSpecialMouseMasks;
 extern int gMouseCursorType;
 extern int iMouseOffset[3];
 extern unsigned char iHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];
-extern BOOL gbInSetPointer;
 extern HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
 extern signed char* cColorBits[MOUSE_CURSOR_COUNT];
 extern unsigned char* cAndBits[MOUSE_CURSOR_COUNT];

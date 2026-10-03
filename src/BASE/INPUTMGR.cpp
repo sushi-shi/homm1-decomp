@@ -20,11 +20,6 @@
 #include <io.h>
 #include <string.h>
 
-DATA(0x004a1a44)
-char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
-DATA(0x004a1a5c)
-char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
-
 static inline void ResetEventQueue(inputManager* manager) {
     manager->m_writeIndex = 0;
     manager->m_readIndex = 0;
@@ -116,6 +111,10 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
 VA(0x0047be30, 0x27c)
 #line 137 "D:\\Heroes\\Base\\INPUTMGR.CPP"
 int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageData) {
+    DATA(0x004a1a44)
+    static char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
+    DATA(0x004a1a5c)
+    static char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
     if (gpInputManager == NULL)
         return 1;
     if (gpInputManager->m_active != 1)

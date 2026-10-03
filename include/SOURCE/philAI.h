@@ -236,7 +236,6 @@ extern signed char giBestShipyardDist;
 extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern short gaiHeroLiveChance[];
-extern signed char bSVSearchArrayInUse;
 extern class searchArray SVSearchArray;
 // FightValueOfStack's primary-stat power curve, per-spell AI flags and
 // values, spell-power duration scale and per-charge cast weights.
@@ -269,6 +268,5 @@ extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern unsigned char giCurPlayerHighBit;
 extern unsigned char giCurWatchPlayerHighBit;
 extern signed char gbDismissArmy;
-extern signed char giMonType[];
 
 #endif // HOMM1_SOURCE_PHILAI_H
