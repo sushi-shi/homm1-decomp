@@ -6,6 +6,7 @@
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/townManager.h>
 
