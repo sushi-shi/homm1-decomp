@@ -77,7 +77,7 @@ short border::Main(tag_message& message) {
         case MESSAGE_RIGHT_BUTTON_DOWN: {
             short x = message.x - m_owner->m_posX;
             short y = message.y - m_owner->m_posY;
-            if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+            if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
                     message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;

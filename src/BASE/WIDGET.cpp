@@ -94,7 +94,7 @@ short widget::Main(tag_message& message) {
         case MESSAGE_MOUSE_MOVE:
             x = message.x - m_owner->m_posX;
             y = message.y - m_owner->m_posY;
-            if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+            if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 message.type = MESSAGE_WIDGET;
                 message.command = WIDGET_COMMAND_HOVER;
                 message.id = m_id;

@@ -40,6 +40,11 @@ H1_ENUM_CONST_BEGIN(WidgetIdConstant)
 H1_ENUM_CONST_END(WidgetIdConstant)
 // clang-format on
 
+// (x, y), in the owner window's coordinates, lies inside widget w (Buka 2.1
+// widget.h).
+#define WIDGET_CONTAINS_LOCAL_POINT(w, x, y) \
+    ((x) >= (w).m_x && (y) >= (w).m_y && (x) < (w).m_x + (w).m_width && (y) < (w).m_y + (w).m_height)
+
 #pragma pack(push, 1)
                    class widget /* abstract */ {
 public:

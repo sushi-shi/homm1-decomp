@@ -92,7 +92,7 @@ short button::Main(tag_message& message) {
             short x = message.x - m_owner->m_posX;
             short y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
-                if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+                if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                     message.type = MESSAGE_WIDGET;
                     message.command = WIDGET_NOTIFY_RIGHT_CLICK;
                     message.id = m_id;
@@ -101,8 +101,7 @@ short button::Main(tag_message& message) {
                 }
                 return MESSAGE_DISPATCH_CONTINUE;
             }
-            if (!(m_flags & WIDGET_FLAG_DIMMED) && x >= m_x && y >= m_y && x < m_x + m_width
-                && y < m_y + m_height) {
+            if (!(m_flags & WIDGET_FLAG_DIMMED) && WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 if (m_kind != WIDGET_KIND_TRACK_PRESS)
                     return Select(message);
                 Select(message);
@@ -112,7 +111,7 @@ short button::Main(tag_message& message) {
                     if (message.type == MESSAGE_MOUSE_MOVE) {
                         x = message.x - m_owner->m_posX;
                         y = message.y - m_owner->m_posY;
-                        if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+                        if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                             if (!(m_flags & WIDGET_FLAG_SELECTED))
                                 Select(message);
                         } else if (m_flags & WIDGET_FLAG_SELECTED) {

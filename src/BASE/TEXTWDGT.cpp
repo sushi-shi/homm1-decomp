@@ -90,7 +90,7 @@ short textWidget::Main(tag_message& message) {
         case MESSAGE_RIGHT_BUTTON_DOWN: {
             x = message.x - m_owner->m_posX;
             y = message.y - m_owner->m_posY;
-            if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+            if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 message.type = MESSAGE_WIDGET;
                 message.command = WIDGET_NOTIFY_SELECT;
