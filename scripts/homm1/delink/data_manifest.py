@@ -76,6 +76,8 @@ ORDINARY_STORAGE = {".data": "data", ".rdata": "rdata"}
 
 #: cl's floating-point literal pool member spelling.
 FP_POOL_NAME = re.compile(r"^\$T[0-9]+$")
+#: The CRT's absolute SEH-chain head, `fs:[__except_list]` in /GX code.
+EXCEPT_LIST = "__except_list"
 #: cl's unpooled (no /Gf) string literal spelling.
 SG_LITERAL_NAME = re.compile(r"^\$SG[0-9]+$")
 #: literal family -> (cl's member spelling, manifest name prefix, provenance,
@@ -740,9 +742,12 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
         for sec in c.section_table:
             if not sec["characteristics"] & MEM_EXECUTE:
                 continue
+            # `__except_list` is the absolute fs:[0] slot (value 0): the
+            # linker leaves no base relocation for it, so it has no retail
+            # partner and would shift every later pair of a /GX function.
             rel = {site: nm for site, (nm, typ)
                    in c.typed_relocations(sec["index"]).items()
-                   if typ == COFF_DIR32}
+                   if typ == COFF_DIR32 and nm != EXCEPT_LIST}
             if not rel:
                 continue
             text = c.section_payload(sec["index"])
