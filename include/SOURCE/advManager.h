@@ -606,4 +606,8 @@ extern short giPixelsPerStep[];
 extern short startVals[];
 extern int giFrameStep;
 
+struct SMapChange {
+    char _pad[64];
+};
+
 #endif // HOMM1_SOURCE_ADVMANAGER_H

@@ -3,7 +3,6 @@
 #include <SOURCE/FINDPATH.h>
 
 #include <BASE/Misc.h>
-#include <H1/Types.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/combatManager.h>

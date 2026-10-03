@@ -13,7 +13,6 @@
 #include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/palette.h>
-#include <H1/Types.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/X_GLOBAL.h>

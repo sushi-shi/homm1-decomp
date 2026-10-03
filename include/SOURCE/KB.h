@@ -245,4 +245,42 @@ void ShowCongrats(void);
 void CongratsWait(void);
 int AddScoreToHighScore(int, int, char*, char*);
 
+// HoMM1 uses six-word graphics records; HoMM2 adds colorMouseCursor.
+struct exeGfxConfig {
+    int showMenu;
+    int x;
+    int y;
+    int width;
+    int height;
+    int fullScreen;
+};
+// ReadPrefsFromFile reads 0x134 bytes at the owner base. The registry
+// readers and writers name every persisted field except the 0x50 interval.
+struct configStruct {
+    int walkSpeed;
+    int musicVolume;
+    int soundVolume;
+    int autosave;
+    int showRoute;
+    int blackoutComputer;
+    exeGfxConfig gfx[2];
+    int firstMapOffset;
+    int currentMapOffset;
+    char _pad_0x050[0x64];
+    int cdOffset;
+    int musicSource;
+    int comPort[2];
+    int baudRate[2];
+    char modemInitString[100];
+    int slowVideo;
+};
+struct tag_tilePoint {
+    signed char x;
+    signed char y;
+    short frameOffset;
+};
+struct SPlayerExit {
+    signed char player[7];
+};
+
 #endif

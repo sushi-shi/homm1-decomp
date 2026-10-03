@@ -1,7 +1,6 @@
 #ifndef HOMM1_SOURCE_X_GLOBAL_H
 #define HOMM1_SOURCE_X_GLOBAL_H
 
-#include <H1/Types.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/mapCell.h>
 

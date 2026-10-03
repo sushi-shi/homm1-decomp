@@ -4,7 +4,6 @@
 // 57 methods, 0 own-virtual, 0 static data.
 
 #include <H1/Macros.h>
-#include <H1/Types.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/spellTypes.h>

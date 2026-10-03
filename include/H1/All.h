@@ -31,7 +31,6 @@
 #include <BASE/widget.h>
 #include <H1/Ints.h>
 #include <H1/Macros.h>
-#include <H1/Types.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/armyGroup.h>
