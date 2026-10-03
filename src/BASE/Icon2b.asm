@@ -26,7 +26,45 @@ _gIconHeight DWORD 0
 
 .code
 
+; C++ equivalents (include/BASE/Icon2b.h, Iconm2b.h, Icond2b.h; all __cdecl).
+; Every routine opens with the same frame setup; offsetMode is the last
+; argument (IconDrawOffsetMode) and quarters the frame's x offset:
+;
+;   IconEntry* e = (IconEntry*)ic->m_data + frame;       // 12-byte entries
+;   gIconDataBase = ic->m_data;
+;   int xAdjust = e->x;
+;   if (offsetMode) {
+;       int half = xAdjust >> 1;                         // arithmetic shifts
+;       xAdjust = half - ((xAdjust - half) >> 1);        // about x / 4
+;   }
+;   gIconXAdjust = xAdjust;  gIconYAdjust = e->y;
+;   gIconWidth = (unsigned short)e->w;  gIconHeight = (unsigned short)e->h;
+;   unsigned char* src = gIconDataBase + e->srcOffset;
+;   x += xAdjust;  if (x < 0) x = 0;                    // Flip*: x -= xAdjust
+;   y += gIconYAdjust;  if (y < 0) y = 0;
+;
+; The frame is run-length coded per row. A byte b means:
+;   b == 0          next row: rowStart += pitch, out = rowStart
+;   b & 0x80        skip (b & 0x7f) pixels; b == 0x80 ends the frame
+;   otherwise       b pixels (colour icons: b literal bytes follow in src;
+;                   Mono/Dim: no payload, the count alone is the shape)
+; Buka BASE/Icon2b.cpp etc. are the C++ successors, with HoMM2's richer RLE.
+
 ; Draw one unscaled icon frame into a bitmap.
+;
+;   void IconToBitmap(icon* ic, bitmap* bmp, int x, int y, int frame, int offsetMode) {
+;       /* frame setup */
+;       if ((short)(x + gIconWidth) > bmp->m_width) return;
+;       if ((short)(y + gIconHeight) > bmp->m_height) return;
+;       unsigned char* rowStart = (unsigned char*)bmp->m_pixels + y * bmp->m_width + x;
+;       unsigned char* out = rowStart;
+;       for (;;) {
+;           unsigned char b = *src++;
+;           if (b & 0x80) { if (!(b & 0x7f)) return; out += b & 0x7f; }
+;           else if (b == 0) out = rowStart += bmp->m_width;
+;           else { memcpy(out, src, b); out += b; src += b; }   // DWORDs + tail
+;       }
+;   }
 ?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -115,7 +153,22 @@ icon_done:
 ?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z ENDP
 
 EVEN
-; Draw one unscaled icon frame, mirrored horizontally.
+; Draw one unscaled icon frame, mirrored horizontally: x is the frame's
+; right edge, rows are written right to left.
+;
+;   void FlipIconToBitmap(icon* ic, bitmap* bmp, int x, int y, int frame, int offsetMode) {
+;       /* frame setup, with x -= xAdjust */
+;       if (x - gIconWidth + 1 < 0) return;
+;       if ((short)(y + gIconHeight) > bmp->m_height) return;
+;       unsigned char* rowStart = (unsigned char*)bmp->m_pixels + y * bmp->m_width + x;
+;       unsigned char* out = rowStart;
+;       for (;;) {
+;           unsigned char b = *src++;
+;           if (b & 0x80) { if (!(b & 0x7f)) return; out -= b & 0x7f; }
+;           else if (b == 0) out = rowStart += bmp->m_width;
+;           else while (b--) *out-- = *src++;
+;       }
+;   }
 ?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -203,6 +256,17 @@ flip_icon_done:
 
 EVEN
 ; Draw one unscaled icon frame using a single color.
+;
+;   void MonoIconToBitmap(icon* ic, bitmap* bmp, int x, int y, int frame,
+;                         int color, int offsetMode) {
+;       /* frame setup and the two bounds checks of IconToBitmap */
+;       for (;;) {
+;           unsigned char b = *src++;
+;           if (b & 0x80) { if (!(b & 0x7f)) return; out += b & 0x7f; }
+;           else if (b == 0) out = rowStart += bmp->m_width;
+;           else { memset(out, (unsigned char)color, b); out += b; }
+;       }
+;   }
 ?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -290,6 +354,19 @@ mono_icon_done:
 
 EVEN
 ; Draw one unscaled monochrome icon frame, mirrored horizontally.
+;
+;   void FlipMonoIconToBitmap(icon* ic, bitmap* bmp, int x, int y, int frame,
+;                             int color, int offsetMode) {
+;       /* frame setup, with x -= xAdjust */
+;       if (x - gIconWidth < 0) return;                  // no +1, unlike FlipIcon
+;       if ((short)(y + gIconHeight) > bmp->m_height) return;
+;       for (;;) {                                       // run fills use STD
+;           unsigned char b = *src++;
+;           if (b & 0x80) { if (!(b & 0x7f)) return; out -= b & 0x7f; }
+;           else if (b == 0) out = rowStart += bmp->m_width;
+;           else while (b--) *out-- = (unsigned char)color;
+;       }
+;   }
 ?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -377,7 +454,18 @@ flip_mono_done:
 ?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z ENDP
 
 EVEN
-; Dim the destination through the shape of one unscaled icon frame.
+; Dim the destination through the shape of one unscaled icon frame. The row
+; step is the screen pitch 640 (280h), not bmp->m_width.
+;
+;   void DimIconToBitmap(icon* ic, bitmap* bmp, int x, int y, int frame, int offsetMode) {
+;       /* frame setup and the two bounds checks of IconToBitmap */
+;       for (;;) {
+;           unsigned char b = *src++;
+;           if (b & 0x80) { if (!(b & 0x7f)) return; out += b & 0x7f; }
+;           else if (b == 0) out = rowStart += 640;
+;           else for (; b; --b, ++out) *out = gDimPalette[*out];
+;       }
+;   }
 ?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -467,7 +555,18 @@ dim_icon_done:
 ?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z ENDP
 
 EVEN
-; Dim the destination through a horizontally mirrored icon frame.
+; Dim the destination through a horizontally mirrored icon frame (row step
+; 640, like DimIconToBitmap).
+;
+;   void FlipDimIconToBitmap(icon* ic, bitmap* bmp, int x, int y, int frame, int offsetMode) {
+;       /* frame setup, with x -= xAdjust; checks as FlipMonoIconToBitmap */
+;       for (;;) {
+;           unsigned char b = *src++;
+;           if (b & 0x80) { if (!(b & 0x7f)) return; out -= b & 0x7f; }
+;           else if (b == 0) out = rowStart += 640;
+;           else for (; b; --b, --out) *out = gDimPalette[*out];
+;       }
+;   }
 ?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
