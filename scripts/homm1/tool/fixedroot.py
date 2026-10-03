@@ -16,7 +16,8 @@ needed) that shows the compiler the same tree, whatever the checkout path:
     D:\\Heroes\\Source\\   src/SOURCE/* and include/SOURCE/* (symlinks)
     D:\\Heroes\\Base\\     src/BASE/* and include/BASE/*
     D:\\Heroes\\H1\\, EDITOR\\, match.h, Domains.h      the rest of include/
-    D:\\Heroes\\Vendor\\<sdk>\\                          vendor/<sdk>
+    D:\\Heroes\\Vendor\\<sdk>\\                          vendor/<sdk>, or a pinned SDK's
+                                                     build/toolchains/<sdk>/include
     D:\\MSDEV\\                                          the pinned VC4 tree
 
 The source compiles as D:\\Heroes\\Source\\<NAME>.CPP (retail __FILE__ shape:
@@ -79,7 +80,7 @@ def disposable_stem(stem: str) -> str:
 def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: str | None = None,
             unit: str | None = None, repo: Path | None = None, msvc: Path | None = None, timeout: float | None = None) -> str:
     """Compile SRC to OUT through the fixed view; return the compiler output."""
-    from homm1.core.paths import REPO, msvc_dir
+    from homm1.core.paths import REPO, msvc_dir, vendor_include_dirs
     from homm1.tool import ToolError
     src, out = Path(src).resolve(), Path(out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -93,7 +94,9 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
            # research knob: put include/ under D:\\Heroes\\<dir> instead of beside the sources
            "include": os.environ.get("HOMM1_FIXEDROOT_INCLUDE", ""),
            # the object directory under D:\\ (empty: the source directory)
-           "objdir": os.environ.get("HOMM1_FIXEDROOT_OBJDIR", OBJ_DIR)}
+           "objdir": os.environ.get("HOMM1_FIXEDROOT_OBJDIR", OBJ_DIR),
+           # vendor/<sdk> trees and the pinned SDKs' installed include dirs
+           "vendor": [[name, str(d.resolve())] for name, d in vendor_include_dirs()]}
     env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[2]) + os.pathsep
                + os.environ.get("PYTHONPATH", ""))
     if timeout is None:
@@ -149,10 +152,10 @@ def _inner(job: dict) -> int:
             elif not (base / d.name).exists():
                 base.mkdir(parents=True, exist_ok=True)
                 (base / d.name).symlink_to(d.resolve())
-    vendor = sorted(d for d in (repo / "vendor").iterdir() if d.is_dir()) if (repo / "vendor").is_dir() else []
+    vendor = [name for name, _d in job["vendor"]]
     (heroes / "Vendor").mkdir(parents=True, exist_ok=True)
-    for d in vendor:
-        (heroes / "Vendor" / d.name).symlink_to(d.resolve())
+    for name, d in job["vendor"]:
+        (heroes / "Vendor" / name).symlink_to(d)
     (ROOT / "MSDEV").symlink_to(msvc)
     rdir, rname = split_name(job["name"])
     workdir = heroes / rdir
@@ -193,7 +196,7 @@ def _inner(job: dict) -> int:
     else:
         odir, fo = workdir, d
     obj = odir / (Path(rname).stem + ".obj")
-    incs = ["/X", "/ID:\\Heroes" + (f"\\{inc}" if inc else ""), *[f"/ID:\\Heroes\\Vendor\\{v.name}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
+    incs = ["/X", "/ID:\\Heroes" + (f"\\{inc}" if inc else ""), *[f"/ID:\\Heroes\\Vendor\\{v}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
     argv = ["wine", "D:\\MSDEV\\BIN\\CL.EXE", *incs, *job["flags"], f"/Fo{fo}\\{obj.name}",
             f"{d}\\{rname}"]
     env = dict(os.environ, WINEPREFIX=str(private),

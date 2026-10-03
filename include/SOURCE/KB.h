@@ -53,7 +53,6 @@ extern char* gArmyNamesPlural[];
 #define CREATURE_DISPLAY_NAME(type, count) ((count) > 1 ? gArmyNamesPlural[type] : gArmyNames[type])
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern int gbMinimized;
-extern signed char gbInMemError;
 extern char* gcMemoryErrorTitle;
 extern char* gcMemoryRequirements;
 extern char* gcExtendedMemoryUnits;
@@ -160,7 +159,6 @@ char* GetMonsterName(int);
 int GetBuildingBaseResourceValue(int, int, int);
 void AddNetBoxLine(char*);
 void GOut(char*);
-extern signed char bEarlySetupDone;
 extern int giShowIntro;
 extern signed char giScreenScroll;
 extern int gbBlackoutPlayer;
@@ -201,7 +199,6 @@ extern H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 extern signed char gbCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
 extern int gbInNewGameSetup;
-extern int bInShutDown;
 void DeleteMainClasses(void);
 extern class highScoreManager* gpHighScoreManager;
 void FileError(char*);

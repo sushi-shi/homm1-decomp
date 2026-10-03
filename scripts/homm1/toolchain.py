@@ -1,4 +1,4 @@
-"""Provision and verify compiler files from hash-pinned original media."""
+"""Provision and verify compiler and vendor-SDK files from hash-pinned original media."""
 import hashlib
 import json
 import os
@@ -12,10 +12,13 @@ from homm1.core.inputs import REPO
 
 
 RELEASE_REPOSITORY = "sushi-shi/homm1-decomp"
-RELEASE_TAG = "toolchain-vc40-masm611"
-RELEASE_ASSET = "homm1-toolchain-vc40-masm611.tar.xz"
-RELEASE_SHA256 = "d489c97f0625ae6cedd4de7f349bb7efc77d7497206dfe815b254e1046e692da"
-RELEASE_COMPONENTS = ("vc40",)
+RELEASE_TAG = "toolchain-vc40-masm611-sdk1"
+RELEASE_ASSET = "homm1-toolchain-vc40-masm611-sdk1.tar.xz"
+RELEASE_SHA256 = "eb582d9a293cd0d666ea56eb937b6b8c0891da231bce1c5566e6450f15c4e9a5"
+#: VC4 + MASM, and the vendor SDK files pinned in config/toolchains.json
+#: (each extracted from its original media; `install --id <sdk> --media`
+#: rebuilds any of them from archive.org).
+RELEASE_COMPONENTS = ("vc40", "wing10", "dx1")
 
 
 def pins():
@@ -97,7 +100,17 @@ def install(name, media):
         for relative, entry in files.items():
             target = staged / relative
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(extraction / entry['media_path'], target)
+            source = extraction / entry['media_path']
+            if entry.get('expand') == 'szdd':
+                # Setup disks ship MS COMPRESS (SZDD) members (`WING.H_`);
+                # 7z expands them to the file the vendor's SETUP installed.
+                expanded = scratch / 'expanded' / relative
+                subprocess.run([sevenzip, 'x', '-y', f'-o{expanded}', str(source)],
+                               check=True, stdout=subprocess.DEVNULL)
+                (source,) = [p for p in expanded.iterdir() if p.is_file()]
+            elif 'expand' in entry:
+                raise ValueError(f"{name}: unknown expansion {entry['expand']!r} for {relative}")
+            shutil.copyfile(source, target)
         _verify_entries(name, staged, files)
         if destination.exists():
             # Repair individual files atomically; never remove unrelated files.
@@ -185,7 +198,7 @@ def command(args):
         print(f'{args.id}: indexed {len(index)} external symbols from verified libraries')
     else:
         verify(args.id)
-        print(f'{args.id}: all pinned compiler files verified')
+        print(f'{args.id}: all pinned files verified')
         if resource_entries(args.id):
             state = ('verified' if resources_installed(args.id) else
                      'not installed (install from the media to link .rsrc)')

@@ -523,7 +523,6 @@ short CombatSpecialHandler(struct tag_message&);
 short HandleCastSpell(struct tag_message&);
 // HandleCastSpell: the hex under the spell pointer (0x0048f2b0) and the
 // teleport second-click state (0x0048f28c).
-extern signed char indexToCastOn;
 extern signed char bInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
 // Stale alias of giSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
@@ -560,7 +559,4 @@ extern int giRemoteDefaultPlayer;
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
-// Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
-// ground and obstacle tables are KB's (KB.h).
-extern char* cCombatBkgNames[];
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

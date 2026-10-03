@@ -46,7 +46,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from homm1.core.paths import BUILD, INCLUDE, REPO, VENDOR, msvc_dir
+from homm1.core.paths import BUILD, INCLUDE, REPO, msvc_dir, vendor_include_dirs
 
 OUT_DIR = BUILD / "clangd"
 OUT_FILE = OUT_DIR / "compile_commands.json"
@@ -111,8 +111,7 @@ def base_flags(msvc_inc: Path, msvc_low: Path) -> list[str]:
     for exact-case includes; DX before MSVC in both tiers so the DX6 SDK wins
     over VC5's DirectX 3-era copies.
     """
-    vendor_dirs = sorted(d for d in VENDOR.iterdir() if d.is_dir()) \
-        if VENDOR.is_dir() else []
+    vendor_dirs = [d for _name, d in vendor_include_dirs()]
     return [
         f"--target={TARGET}",
         f"-fms-compatibility-version={MSC_COMPAT}",

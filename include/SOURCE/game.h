@@ -530,7 +530,6 @@ extern int giEndSequence;
 // SaveGame files the current player through this byte.
 extern signed char gSaveCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
-extern signed char gbNewGameSettingsSaved;
 extern signed char gcSavedDifficulty;
 extern signed char gcSavedPlayerTypes[];
 extern signed char gbSavedKingOfTheHill;
@@ -548,6 +547,5 @@ extern signed char gbShowMapInfo;
 extern heroWindow* gpReqExtraWindow;
 extern char gcCurMapName[];
 extern signed char gbDismissArmy;
-extern signed char giMonType[];
 
 #endif // HOMM1_SOURCE_GAME_H

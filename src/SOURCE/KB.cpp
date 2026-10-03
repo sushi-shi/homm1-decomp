@@ -171,6 +171,8 @@ void DeleteMainClasses(void) {
 // evidence: graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
 VA(0x00450046, 0x116)
 int EarlySetup(void) {
+    DATA(0x0049ea98)
+    static signed char bEarlySetupDone = 0;
     int iCDRomErr;
 
     if (bEarlySetupDone)
@@ -2520,6 +2522,8 @@ void AddNetBoxLine(char* text) {
 // evidence: graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
 VA(0x00454f8a, 0x14f)
 void ShutDown(char* message) {
+    DATA(0x0049f468)
+    static int bInShutDown = 0;
     char buffer[768];
     if (bInShutDown)
         return;
@@ -2791,6 +2795,8 @@ void WaitEndSample(SAMPLE2 s, int waitTime) {
 // evidence: graph:4;base=0.499168;margin=0.828160;shape=0.176;size=0.610;calls=1.000;strings=Out of Memory;alternate=pol20:void MemError(void)@0x0009ea7c
 VA(0x00455a0d, 0x7b)
 void MemError(void) {
+    DATA(0x0049f534)
+    static signed char gbInMemError = 0;
     if (gbInMemError)
         return;
     gbInMemError = 1;
@@ -4882,16 +4888,10 @@ DATA(0x00494180)
 char gbInPollSound = 0;
 // Retail places these zero-initialized flags among KB's function literals
 // (0x0049ea98-0x0049f537), each next to the literals of its only user.
-DATA(0x0049ea98)
-signed char bEarlySetupDone = 0;
 DATA(0x0049ea9c)
 signed char bKBDone = 0;
 DATA(0x0049f040)
 signed char bInCheckEndGame = 0;
-DATA(0x0049f468)
-int bInShutDown = 0;
-DATA(0x0049f534)
-signed char gbInMemError = 0;
 // KB owns retail .bss 0x004c5138-0x004c7e6f (allocation order is the compiler's
 // symbol-hash walk, not definition order).
 #include <SOURCE/combatTypes.h>

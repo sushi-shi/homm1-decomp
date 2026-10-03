@@ -132,9 +132,22 @@ void RemoteMain(int gameMode) {
             if (gbDirectConnect) {
                 WFDCStage = 0;
                 giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
-                strcpy(directConnectMessage,
-                       "Waiting for other computer to log in to direct connection.\n\nPress 'CANCEL' to abort.");
-                NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                strcpy(
+                    directConnectMessage,
+                    "Waiting for other computer to log in to direct connection.\n\nPress 'CANCEL' "
+                    "to abort."
+                );
+                NormalDialog(
+                    directConnectMessage,
+                    NORMAL_DIALOG_TYPE_WAIT_CANCEL,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
             } else {
@@ -199,7 +212,11 @@ int EncodePacket(unsigned char* data, char source, char destination, int length)
     REMOTE_PACKET(PacketSend)->crc = crc;
     memcpy(PacketSend + sizeof(RemotePacketHeader), data, length);
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(&crc, reinterpret_cast<unsigned char*>(PacketSend), length + sizeof(RemotePacketHeader));
+    calc_crc(
+        &crc,
+        reinterpret_cast<unsigned char*>(PacketSend),
+        length + sizeof(RemotePacketHeader)
+    );
     REMOTE_PACKET(PacketSend)->crc = crc;
     return length + sizeof(RemotePacketHeader);
 }
@@ -230,7 +247,11 @@ int DecodePacket(unsigned char* data, int source) {
     crc = REMOTE_PACKET(packet)->crc;
     REMOTE_PACKET(packet)->crc = 0;
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(&computedCrc, reinterpret_cast<unsigned char*>(packet), size + sizeof(RemotePacketHeader));
+    calc_crc(
+        &computedCrc,
+        reinterpret_cast<unsigned char*>(packet),
+        size + sizeof(RemotePacketHeader)
+    );
     if (crc != computedCrc) {
         sprintf(
             gText,
@@ -325,6 +346,8 @@ int ReceiveRemoteData(unsigned char*, unsigned char* data, int decodeType) {
 // evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
 VA(0x00458e44, 0x194)
 signed char InitNetHost(void) {
+    DATA(0x0049f954)
+    static signed char iInitNetHostStatus = 0;
     int unused;
     int needName;
 
@@ -451,6 +474,10 @@ signed char WaitForHost(void) {
 // evidence: graph:2;base=0.465490;margin=0.416814;shape=0.321;size=0.696;calls=1.000;alternate=pol20:signed char WaitForGuest(void)@0x0001364f
 VA(0x00459267, 0x101)
 signed char WaitForGuest(void) {
+    DATA(0x0049fa6c)
+    static signed char iWaitForGuestStatus = 0;
+    DATA(0x0049fa70)
+    static long iLastBroadcastTime = 0;
     char buffer[80];
     int status;
 
@@ -487,12 +514,32 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
             sprintf(gText, "Initializing network.\n\n  Press 'CANCEL' to abort.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gText,
+                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_GUEST;
             sprintf(gText, "Waiting On Guest.\n\n  Press 'CANCEL' to abort.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gText,
+                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             buffer[0] = giNumNetGuests;
@@ -502,12 +549,32 @@ int nbnet_init(void) {
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
             sprintf(gText, "Initializing network.\n\n  Press 'CANCEL' to abort.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gText,
+                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_HOST;
             sprintf(gText, "Waiting On Host.\n\n  Press 'CANCEL' to abort.");
-            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gText,
+                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             break;
@@ -579,7 +646,17 @@ void GUIModemCommand(char* message, char* command) {
     iModemCommandPos = 0;
     giWaitType = DIALOG_WAIT_MODEM_COMMAND;
     strcpy(cModemCommand, command);
-    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+    NormalDialog(
+        message,
+        NORMAL_DIALOG_TYPE_WAIT_CANCEL,
+        -1,
+        -1,
+        NORMAL_DIALOG_NO_RESOURCE,
+        0,
+        NORMAL_DIALOG_NO_RESOURCE,
+        0,
+        NORMAL_DIALOG_NO_OR_TEXT
+    );
     if (!gbFunctionComplete)
         ShutDown(NULL);
 }
@@ -626,7 +703,17 @@ signed char GUIModemResponse(char* message, char* response) {
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
     giWaitType = DIALOG_WAIT_MODEM_RESPONSE;
-    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+    NormalDialog(
+        message,
+        NORMAL_DIALOG_TYPE_WAIT_CANCEL,
+        -1,
+        -1,
+        NORMAL_DIALOG_NO_RESOURCE,
+        0,
+        NORMAL_DIALOG_NO_RESOURCE,
+        0,
+        NORMAL_DIALOG_NO_OR_TEXT
+    );
     if (!gbFunctionComplete)
         ShutDown(NULL);
     return 0;
@@ -935,7 +1022,17 @@ int TransmitRemoteData(
             DelayMilli(1000);
         }
         if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && retval == 0) {
-            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                "Error sending data.  Keep trying??",
+                NORMAL_DIALOG_TYPE_YES_NO,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 tries = -1;
         }
@@ -979,6 +1076,8 @@ char* GetRemoteData(signed char remove) {
 
 VA(0x0045a584, 0x4fe)
 void PollRemote(void) {
+    DATA(0x0049fc80)
+    static signed char bInTimeoutFail = 0;
     signed char newControl;
     signed char queueFull;
     int i;
@@ -1001,13 +1100,27 @@ void PollRemote(void) {
         sndBuf.payloadSize = 1;
         sndBuf.command = (giCurPlayer << 4) + iCurHourGlassPhase;
         sndBuf.payload.data[0] = 1;
-        SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), NULL, 1 - giThisNetPos, REMOTE_MESSAGE_HEADER_SIZE + 1); // API-forced: wire bytes.
+        SendRemoteData(
+            reinterpret_cast<unsigned char*>(&sndBuf),
+            NULL,
+            1 - giThisNetPos,
+            REMOTE_MESSAGE_HEADER_SIZE + 1
+        ); // API-forced: wire bytes.
         lLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
         NormalDialog(
-            "The other player's computer is not responding.  Do you wish to keep waiting for a response?",
-            NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            "The other player's computer is not responding.  Do you wish to keep waiting for a "
+            "response?",
+            NORMAL_DIALOG_TYPE_YES_NO,
+            -1,
+            -1,
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_RESOURCE,
+            0,
+            NORMAL_DIALOG_NO_OR_TEXT
+        );
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             lLastHeartbeatReceive = KBTickCount();
         } else {
@@ -1035,7 +1148,11 @@ void PollRemote(void) {
     result = 1;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(NULL, reinterpret_cast<unsigned char*>(&rcvBufIn), REMOTE_BROADCAST_PLAYER); // API-forced: wire bytes.
+        result = ReceiveRemoteData(
+            NULL,
+            reinterpret_cast<unsigned char*>(&rcvBufIn),
+            REMOTE_BROADCAST_PLAYER
+        ); // API-forced: wire bytes.
         if (result && rcvBufIn.sender != giThisNetPos) {
             if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
                 giLastConfirm = rcvBufIn.id;
@@ -1059,7 +1176,12 @@ void PollRemote(void) {
                 sndBuf.id = rcvBufIn.id;
                 sndBuf.type = REMOTE_MESSAGE_CONFIRM;
                 sndBuf.payloadSize = 0;
-                SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), NULL, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE); // API-forced: wire bytes.
+                SendRemoteData(
+                    reinterpret_cast<unsigned char*>(&sndBuf),
+                    NULL,
+                    rcvBufIn.sender,
+                    REMOTE_MESSAGE_HEADER_SIZE
+                ); // API-forced: wire bytes.
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)
@@ -1114,7 +1236,17 @@ int TransmitAndWait(
     complete = 0;
     while (!complete) {
         if (KBTickCount() > start + 20000) {
-            NormalDialog("Error sending data.  Keep trying??", NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                "Error sending data.  Keep trying??",
+                NORMAL_DIALOG_TYPE_YES_NO,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 start = KBTickCount();
             } else {
@@ -1162,18 +1294,10 @@ DATA(0x0049f84c)
 long lLastHeartbeatReceive = 1999999999;
 DATA(0x0049f850)
 signed char gbInNetSetup = 0;
-DATA(0x0049f954)
-signed char iInitNetHostStatus = 0;
 DATA(0x0049f958)
 signed char iInitNetGuestStatus = 0;
 DATA(0x0049f9d0)
 signed char iWaitForHostStatus = 0;
-DATA(0x0049fa6c)
-signed char iWaitForGuestStatus = 0;
-DATA(0x0049fa70)
-long iLastBroadcastTime = 0;
-DATA(0x0049fc80)
-signed char bInTimeoutFail = 0;
 DATA(0x004c7e70)
 char idstr[8];
 DATA(0x004c7e78)

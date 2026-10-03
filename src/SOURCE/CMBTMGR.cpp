@@ -276,22 +276,9 @@ H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_COUNT = 11
 H1_ENUM_END(CombatBackground)
 
-// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
-// table after Open's literals, followed by its own literals.
-DATA(0x00490db0)
-char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
-    "frstwgrs.bkg",
-    "mtnwgrsf.bkg",
-    "snowfrst.bkg",
-    "snowmtnf.bkg",
-    "swamp.bkg",
-    "lava.bkg",
-    "desert.bkg",
-    "frstwdrt.bkg",
-    "mtnwdrtf.bkg",
-    "boat.bkg",
-    "gravyard.bkg",
-};
+// CMBTMGR owns retail .data 0x00490d50-0x00491057. The backdrop table is
+// GetBackgroundName's local static: /Gi emits it after Open's literals,
+// followed by its own.
 
 // Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
 // count of the side that held it.
@@ -372,8 +359,10 @@ void combatManager::GenerateMap(void) {
         m_catapultFrame[COMBAT_DEFENDER_SIDE] = COMBAT_CATAPULT_FRAME_NONE;
     for (y = 0; y < COMBAT_GRID_ROWS; y++) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++) {
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y = y * COMBAT_HEX_HEIGHT + COMBAT_HEX_ORIGIN_Y;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_x = ((y & 1) ? 27 : -12) + x * COMBAT_HEX_WIDTH;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y =
+                y * COMBAT_HEX_HEIGHT + COMBAT_HEX_ORIGIN_Y;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_x =
+                ((y & 1) ? 27 : -12) + x * COMBAT_HEX_WIDTH;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_GROUND;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame =
                 static_cast<signed char>(SRandom(0, 3)) + 4;
@@ -414,23 +403,32 @@ void combatManager::GenerateMap(void) {
             }
         }
         for (y = 0; y < COMBAT_GRID_ROWS; y++) {
-            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleType = COMBAT_ICON_CASTLE;
-            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleIndex = COMBAT_WALL_INTACT;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleType =
+                COMBAT_ICON_CASTLE;
+            m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_obstacleIndex =
+                COMBAT_WALL_INTACT;
         }
     }
     armyCount = 0;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (m_armyGroups[COMBAT_ATTACKER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_hex = i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN;
+            m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_hex =
+                i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN;
             m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes &=
                 MONSTER_FLAGS_BATTLE_START_MASK;
-            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN].m_occupantSide = COMBAT_ATTACKER_SIDE;
-            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN].m_occupantIndex = armyCount;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN].m_occupantSide =
+                COMBAT_ATTACKER_SIDE;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN].m_occupantIndex =
+                armyCount;
             if (m_armies[COMBAT_ATTACKER_SIDE][armyCount].m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1].m_occupantSide = COMBAT_ATTACKER_SIDE;
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1].m_occupantIndex = armyCount;
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN].m_occupantFrame = ARMY_FACING_LEFT;
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1].m_occupantFrame = ARMY_FACING_RIGHT;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1]
+                    .m_occupantSide = COMBAT_ATTACKER_SIDE;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1]
+                    .m_occupantIndex = armyCount;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN]
+                    .m_occupantFrame = ARMY_FACING_LEFT;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_FIRST_INNER_COLUMN + 1]
+                    .m_occupantFrame = ARMY_FACING_RIGHT;
             }
             armyCount++;
         }
@@ -438,16 +436,23 @@ void combatManager::GenerateMap(void) {
     armyCount = 0;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (m_armyGroups[COMBAT_DEFENDER_SIDE]->m_creatureTypes[i] != CREATURE_NONE) {
-            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_hex = i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN;
+            m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_hex =
+                i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN;
             m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes &=
                 MONSTER_FLAGS_BATTLE_START_MASK;
-            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN].m_occupantSide = COMBAT_DEFENDER_SIDE;
-            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN].m_occupantIndex = armyCount;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN].m_occupantSide =
+                COMBAT_DEFENDER_SIDE;
+            m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN].m_occupantIndex =
+                armyCount;
             if (m_armies[COMBAT_DEFENDER_SIDE][armyCount].m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1].m_occupantSide = COMBAT_DEFENDER_SIDE;
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1].m_occupantIndex = armyCount;
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1].m_occupantFrame = ARMY_FACING_LEFT;
-                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN].m_occupantFrame = ARMY_FACING_RIGHT;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1]
+                    .m_occupantSide = COMBAT_DEFENDER_SIDE;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1]
+                    .m_occupantIndex = armyCount;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN - 1]
+                    .m_occupantFrame = ARMY_FACING_LEFT;
+                m_hexCells[i * COMBAT_GRID_COLUMNS + COMBAT_GRID_LAST_INNER_COLUMN]
+                    .m_occupantFrame = ARMY_FACING_RIGHT;
             }
             armyCount++;
         }
@@ -480,6 +485,20 @@ void combatManager::GenerateMap(void) {
 // one) forces the graveyard field.
 VA(0x0044ca22, 0x18e)
 char* combatManager::GetBackgroundName(void) {
+    DATA(0x00490db0)
+    static char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
+        "frstwgrs.bkg",
+        "mtnwgrsf.bkg",
+        "snowfrst.bkg",
+        "snowmtnf.bkg",
+        "swamp.bkg",
+        "lava.bkg",
+        "desert.bkg",
+        "frstwdrt.bkg",
+        "mtnwdrtf.bkg",
+        "boat.bkg",
+        "gravyard.bkg",
+    };
     if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
         || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
             && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType
@@ -573,8 +592,10 @@ void combatManager::LoadIcons(void) {
         m_combatIcons[i] = NULL;
     m_combatIcons[COMBAT_ICON_SPELLS] = gpResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
-    m_combatIcons[COMBAT_ICON_GROUND] = gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
-    m_combatIcons[COMBAT_ICON_OBSTACLES] = gpResourceManager->GetIcon(cCombatObstacleNames[m_terrainType]);
+    m_combatIcons[COMBAT_ICON_GROUND] =
+        gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
+    m_combatIcons[COMBAT_ICON_OBSTACLES] =
+        gpResourceManager->GetIcon(cCombatObstacleNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_TEXTBAR] = gpResourceManager->GetIcon("textbar.icn");
     m_combatIcons[COMBAT_ICON_TENT] = gpResourceManager->GetIcon("tent.icn");
     m_combatIcons[COMBAT_ICON_CLOUD] = gpResourceManager->GetIcon("cloud.icn");
@@ -923,7 +944,8 @@ void combatManager::CatAttack(signed char side) {
     startX = 0x75;
     startY = 0x104;
     tgtX = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x;
-    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y - COMBAT_HEX_HEIGHT;
+    tgtY = m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y
+           - COMBAT_HEX_HEIGHT;
     frm = 0;
     x = startX;
     y = startY;
@@ -1259,7 +1281,8 @@ void combatManager::KeepAttack(void) {
         maxY = height + yRun;
         behind->DrawToBuffer(lastX, lastY);
         behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
-        m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+        m_combatIcons[COMBAT_ICON_KEEP]
+            ->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
         DelayTil(glTimers);
         UPDATE_INCLUSIVE_REGION(minX, minY, updRight, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
@@ -1360,9 +1383,14 @@ int ValidHex(int hex) {
 VA(0x0044f587, 0x64)
 void combatManager::SaveCombatBorder(void) {
     if (!m_savedBorder)
-        m_savedBorder = static_cast<char*>(malloc(LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT)));
-    memcpy(m_savedBorder, gpWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT,
-           LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT));
+        m_savedBorder = static_cast<char*>(
+            malloc(LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT))
+        );
+    memcpy(
+        m_savedBorder,
+        gpWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT,
+        LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT)
+    );
 }
 
 // HoMM1 DrawCombatBorder: put the saved rows back.
@@ -1370,6 +1398,9 @@ VA(0x0044f5eb, 0x53)
 void combatManager::DrawCombatBorder(void) {
     if (!m_savedBorder)
         return;
-    memcpy(gpWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT, m_savedBorder,
-           LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT));
+    memcpy(
+        gpWindowManager->m_screen->m_pixels + LOGICAL_SCREEN_WIDTH * COMBAT_VIEW_HEIGHT,
+        m_savedBorder,
+        LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT)
+    );
 }

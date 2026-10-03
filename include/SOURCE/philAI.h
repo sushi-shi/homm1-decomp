@@ -221,7 +221,6 @@ extern signed char giBestShipyardDist;
 extern short gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern short gaiHeroLiveChance[];
-extern signed char bSVSearchArrayInUse;
 extern class searchArray SVSearchArray;
 extern float fReduceFactor;
 // The per-cell/per-hero resource-value caches (gaiHeroStrategicRVOfPos,

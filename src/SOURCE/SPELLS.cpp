@@ -106,6 +106,8 @@ H1_ENUM_END(SpellPointerFrame)
 // mouse manager before re-entering for the teleport destination.
 VA(0x00415797, 0x295)
 short HandleCastSpell(struct tag_message& message) {
+    DATA(0x0048f2b0)
+    static signed char indexToCastOn = -1;
     short hex;
 
     switch (message.type) {
@@ -219,7 +221,8 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex) 
             break;
         case SPELL_FIREBALL:
         case SPELL_METEOR_SHOWER:
-            if (hex == ARMY_HEX_INVALID || hex % COMBAT_GRID_COLUMNS == 0 || hex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
+            if (hex == ARMY_HEX_INVALID || hex % COMBAT_GRID_COLUMNS == 0
+                || hex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
                 return 0;
             break;
     }
@@ -710,7 +713,8 @@ void combatManager::Fireball(signed char targetHex) {
     ClearEffects();
     hit = 0;
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
-        if (adjHexes[i] != ARMY_HEX_INVALID && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+        if (adjHexes[i] != ARMY_HEX_INVALID
+            && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
                                [m_hexCells[adjHexes[i]].m_occupantIndex];
             if (curArmy->m_creatureType != CREATURE_DRAGON
@@ -733,7 +737,8 @@ void combatManager::Fireball(signed char targetHex) {
     }
     curArmy->PowEffect(COMBAT_POW_RED_FIRE);
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
-        if (adjHexes[i] != ARMY_HEX_INVALID && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+        if (adjHexes[i] != ARMY_HEX_INVALID
+            && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
                                [m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
@@ -784,7 +789,8 @@ void combatManager::MeteorShower(signed char targetHex) {
     ClearEffects();
     hit = 0;
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
-        if (adjHexes[i] != ARMY_HEX_INVALID && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+        if (adjHexes[i] != ARMY_HEX_INVALID
+            && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
                                [m_hexCells[adjHexes[i]].m_occupantIndex];
             if (curArmy->m_creatureType != CREATURE_DRAGON
@@ -807,7 +813,8 @@ void combatManager::MeteorShower(signed char targetHex) {
     }
     curArmy->PowEffect(COMBAT_POW_PHYSICAL);
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
-        if (adjHexes[i] != ARMY_HEX_INVALID && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
+        if (adjHexes[i] != ARMY_HEX_INVALID
+            && m_hexCells[adjHexes[i]].m_occupantSide != COMBAT_SIDE_NONE) {
             curArmy = &m_armies[m_hexCells[adjHexes[i]].m_occupantSide]
                                [m_hexCells[adjHexes[i]].m_occupantIndex];
             if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
@@ -839,7 +846,13 @@ void combatManager::ElementalStorm(void) {
             DrawFrame(0);
             for (y = 0; y < 7; y++) {
                 for (x = 0; x < 10; x++)
-                    storm->DrawToBuffer(x * 64, y * 64, frm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+                    storm->DrawToBuffer(
+                        x * 64,
+                        y * 64,
+                        frm,
+                        ICON_DRAW_NORMAL,
+                        ICON_DRAW_OFFSET_FULL
+                    );
             }
             UpdateCombatArea();
             DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
@@ -942,9 +955,8 @@ void combatManager::Armageddon(void) {
     delete workPal;
 }
 
-// SPELLS owns retail .data 0x0048f28c-0x0048f4d3. Retail emits indexToCastOn
-// among the combat-spell handler's literals (0x0048f2b0).
+// SPELLS owns retail .data 0x0048f28c-0x0048f4d3. HandleCastSpell's
+// indexToCastOn (0x0048f2b0) is its local static: /Gi emits it at the head
+// of that function's literals.
 DATA(0x0048f28c)
 signed char bInTeleportGetDest = 0;
-DATA(0x0048f2b0)
-signed char indexToCastOn = -1;

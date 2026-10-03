@@ -47,7 +47,7 @@ int is_netbios_avail(void) {
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.569810;margin=0.557141;shape=0.568;size=0.810;calls=0.714;alternate=pol20:@nb_init@8@0x000a6c88
 VA(0x00413ce8, 0x1b2)
-H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned short maxNames) {
+H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions) {
     unsigned char* statusBuf;
     NCB ncb;
     int i;
@@ -98,7 +98,7 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned
 // Buka netwin.cpp:149-193; HoMM1 drains the free queue and keeps the
 // cancel/delete-name sequence on one stack NCB.
 VA(0x00413e9a, 0x1f0)
-H1_C_LINKAGE void __cdecl nb_term(void)
+H1_C_LINKAGE void __cdecl nb_term(int)
 {
     NCB ncb;
     tag_Node *node;
@@ -142,7 +142,7 @@ H1_C_LINKAGE void __cdecl nb_term(void)
 
 // Buka netwin.cpp:195-217; HoMM1 keeps the unused leading argument.
 VA(0x0041408a, 0x90)
-H1_C_LINKAGE unsigned short __cdecl nb_rcv(int, unsigned short len, void *buffer)
+H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short len, void *buffer)
 {
     tag_Node *node;
     int size;
@@ -314,7 +314,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
 
 // Buka netwin.cpp:374-380.
 VA(0x00414714, 0x1e)
-H1_C_LINKAGE char __cdecl nb_stat(int, unsigned short session)
+H1_C_LINKAGE unsigned char __cdecl nb_stat(int, unsigned short session)
 {
     return gNetStatus[session];
 }

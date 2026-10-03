@@ -6,6 +6,7 @@
 
 #include <windows.h>
 #include <nb30.h>
+#include <H1/Macros.h>
 #include <SOURCE/comwin.h>
 
 H1_ENUM_BEGIN(NetbiosProbeCommand)
@@ -87,5 +88,12 @@ extern tag_Anchor gNbRcvQueue;
 extern tag_Anchor gNbSndQueue;
 extern tag_Anchor gNbFreeQueue;
 extern HANDLE gNbEvents[9];
+// NetBIOS driver entry points REMOTE calls (C linkage, cdecl).
+H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short);
+H1_C_LINKAGE void __cdecl nb_term(int);
+H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short, void*);
+H1_C_LINKAGE short __cdecl nb_snd(int, unsigned short, unsigned short, void*, int);
+H1_C_LINKAGE short __cdecl nb_sess(int, int, ...);
+H1_C_LINKAGE unsigned char __cdecl nb_stat(int, unsigned short);
 
 #endif

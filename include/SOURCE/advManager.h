@@ -539,12 +539,9 @@ extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
 // UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
-extern long iLastSandAnimTime;
-extern long iLastNewSandAnimTime;
 extern int iSandAnim;
 extern int iLastHourGlassPhase;
 extern long giLastHourGlassUpdateTime;
-extern int giCheatSeq;
 // Volume per environment-sound distance step.
 extern const long glEnvironmentVolume[];
 // giLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
@@ -564,7 +561,6 @@ extern signed char bPrefsChanged;
 extern signed char bFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 extern signed char bComboDraw[][17];
-extern int giFrameCount;
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
 extern int TrigX;
 extern int TrigY;

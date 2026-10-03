@@ -75,7 +75,6 @@ public:
     (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
 extern signed char gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
-extern int iDialogNestCount;
 extern signed char gWindowFadeSavedUpdate;
 
 H1_ENUM_BEGIN(WindowFadeMode)

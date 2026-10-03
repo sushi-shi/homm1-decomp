@@ -263,6 +263,8 @@ void heroWindowManager::RemoveWindow(heroWindow* window) {
 
 VA(0x004742d0, 0x1e0)
 short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_message&), int fade) {
+    DATA(0x004a0c7c)
+    static int iDialogNestCount = 0;
     tag_message message;
     short done;
     int result;
@@ -468,8 +470,6 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 
 // Window-manager data, initialized from retail .data (0x004a0c7c..) and
 // zero-filled storage (0x004cac20..).
-DATA(0x004a0c7c)
-int iDialogNestCount = 0;
 DATA(0x004cac20)
 signed char gWindowFadeSavedUpdate;
 DATA(0x004cac28)

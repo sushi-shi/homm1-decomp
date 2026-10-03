@@ -185,8 +185,11 @@ def referent_imports(pe: Pe | None = None
 # what the toolchain already covers
 # --------------------------------------------------------------------------- #
 def lib_dirs() -> list[Path]:
-    """DX6 first, then VC5 - the precedence init_prefix writes into wine's LIB."""
-    dirs = []
+    """The pinned vendor SDKs' lib/ first (their real import libraries, e.g.
+    WinG 1.0's wing32.lib), then DX6, then VC - the precedence init_prefix
+    writes into wine's LIB."""
+    from homm1.core.paths import sdk_lib_dirs
+    dirs = list(sdk_lib_dirs())
     for root, sub in ((dxsdk_dir, "Lib"), (msvc_dir, "lib")):
         try:
             dirs.append(root() / sub)
