@@ -20,6 +20,10 @@ COMMENT = "\x02"
 #: `#include` of them; their macros are resolved at each use.
 DROP_HEADERS = ("match.h", "Domains.h", "H1/Macros.h")
 DROP_FILES = tuple(f"include/{name}" for name in DROP_HEADERS)
+#: Real declarations a dropped header also carries, and where they live in the
+#: clean tree: match.h defines the integer aliases of H1/Ints.h so every unit
+#: has them without opening another header (a /Gi path-state concern only).
+REPLACE_HEADERS = {"match.h": "H1/Ints.h"}
 
 
 def _drop(args: list[str]) -> str:
@@ -223,14 +227,21 @@ def rewrite_directives(text: str, *, keep_lines: bool = False) -> str:
     `keep_lines` keeps both: the control build's path and line state."""
     if keep_lines:
         return text
+    lines = text.split("\n")
+    included = {m.group(1) for m in map(_INCLUDE.match, lines) if m}
     out = []
-    for line in text.split("\n"):
+    for line in lines:
         if _LINE.match(line):
             out.append(DROPPED)
             continue
         include = _INCLUDE.match(line)
         if include and include.group(1) in DROP_HEADERS:
-            out.append(DROPPED)
+            replacement = REPLACE_HEADERS.get(include.group(1))
+            if replacement and replacement not in included:
+                out.append(f"#include <{replacement}>")
+                included.add(replacement)
+            else:
+                out.append(DROPPED)
             continue
         out.append(line)
     return "\n".join(out)

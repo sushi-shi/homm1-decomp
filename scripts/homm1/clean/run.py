@@ -96,8 +96,8 @@ def generate(files: dict[str, bytes], *, control: bool = False
     """The clean tree as {path: bytes}, plus any self-check failures.
 
     `control` gives verification's line-preserving variant: the same macro
-    expansions and comment removal, with every line, `#line` pin and include
-    of the (now empty) scaffolding headers kept, so VC4's /Gi path and line
+    expansions and comment removal, with every line, `#line` pin and
+    scaffolding header and include kept, so VC4's /Gi path and line
     state equals the matching build's."""
     transforms = {"cpp": source.clean_cpp, "asm": source.clean_asm, "rc": source.clean_rc}
     kinds = {"cpp": {}, "asm": {"asm": True}, "rc": {"rc": True}}
@@ -121,7 +121,10 @@ def generate(files: dict[str, bytes], *, control: bool = False
                      for line in source.stranded(text, cleaned, **kinds[kind])]
         output[name] = cleaned.encode("utf-8")
     if control:
-        output.update({name: b"" for name in source.DROP_FILES})
+        # The scaffolding headers keep their declarations and definitions
+        # (match.h now also carries the integer aliases), comments blanked.
+        output.update({name: source.blank(source.strip_comments(files[name].decode())).encode()
+                       for name in source.DROP_FILES})
         return output, problems
     from homm1.clean.project import project_files
     output.update(project_files(files))
