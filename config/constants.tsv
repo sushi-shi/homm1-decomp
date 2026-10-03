@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1984
+#floor	1982
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1718,3 +1718,4 @@ src/SOURCE/EVENTS.cpp	*	0	call-argument	PlayerMonsterInteract(* argument 7	Playe
 src/SOURCE/EVENTS.cpp	*	-1	call-argument	FindNearestObject(* argument 4	FindNearestObject's no-limit argument
 src/SOURCE/EVENTS.cpp	*	-1	call-argument	FizzleForward(* argument 5	FizzleForward's default delay
 src/SOURCE/EVENTS.cpp	advManager::EraseObj	0x7f	comparison-or-bound	operator <	EraseObj's object-index limit
+src/SOURCE/SETUP.cpp	game::PickLoadGame	0	call-argument	fileRequester(* argument [46]	a campaign is chosen; retail compares > 0, so neither a member nor a boundary name keeps the operator
