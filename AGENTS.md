@@ -8,9 +8,9 @@ authority. The editor and other releases are secondary evidence.
   compiler, delinker or comparison changes. Run `homm1 test` after tooling
   changes.
 - Use `homm1 match` for the normal edit loop and `homm1 sema` for detailed
-  object/retail inspection. The current code-first mode relaxes data-reference
-  identities/addends; calls, imports and EH identities remain checked. Strict
-  relocation/data matching follows the code campaign.
+  object/retail inspection. Comparison is strict (`config/compare.toml`
+  `data_matching = true`): data-reference identities and addends are checked
+  together with calls, imports and EH identities.
 - Keep candidate linking working through `homm1 link`; unresolved definitions
   are reconstruction findings. Never add `/FORCE` to hide them.
 - Recover ordinary C++ and real types. Do not use byte arrays, naked assembly,
@@ -20,8 +20,8 @@ authority. The editor and other releases are secondary evidence.
   `include`, and reconstruction source under `src/BASE` or `src/SOURCE`.
 - Retail executables, compiler media/toolchains, Wine prefixes and generated
   artifacts belong in ignored `build/`.
-- Data matching is last. Until then, admit only identities and layout evidence
-  required by code; do not claim initializer or data-byte coverage.
+- Data identities, types and initializers come from retail bytes and their code
+  users; never model data as untyped byte blobs.
 - Use the pinned VC4 profiles in `config/units.toml`; compiler claims require
   retail-backed controls. Do not reuse HoMM3
   VC6 flags. HoMM2 Buka 2.1 is the preferred source-correspondence donor, with

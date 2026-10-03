@@ -5,8 +5,8 @@ description: Recover the inline helpers, accessors, and macros hidden inside HoM
 
 Adapted from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
 Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
-The active score is code first (`data_matching=false`); data identity/addend
-coverage is deferred. `AGENTS.md` and the user's instructions take precedence.
+The active score is strict (`data_matching=true`): data-reference identities
+and addends count. `AGENTS.md` and the user's instructions take precedence.
 
 
 # holista — recover the helpers behind a function

@@ -1,7 +1,7 @@
 > Donor evidence from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
 > Named closures below are historical examples from other projects. VC5/VC6
 > claims are not validated VC4 rules. Use HoMM2 correspondence for HoMM1;
-> code-first scoring defers data-reference names/addends.
+> strict scoring checks data-reference names and addends.
 
 # Exact-match lever catalog
 

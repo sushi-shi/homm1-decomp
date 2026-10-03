@@ -6,9 +6,6 @@ The target is the February 1996 `HEROES.EXE`; hashes live in
 [config/retail/targets.json](config/retail/targets.json).
 Supply your own game executable and assets; they are not included here.
 
-**Code first, data later.** Calls, imports and exception identities are checked;
-data-reference identities and addends are deferred.
-
 <!-- match-score:start -->
 ## Match status
 
