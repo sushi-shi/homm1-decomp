@@ -1,4 +1,4 @@
-"""Provision and verify compiler files from hash-pinned original media."""
+"""Provision and verify compiler and vendor-SDK files from hash-pinned original media."""
 import hashlib
 import json
 import os
@@ -97,7 +97,17 @@ def install(name, media):
         for relative, entry in files.items():
             target = staged / relative
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(extraction / entry['media_path'], target)
+            source = extraction / entry['media_path']
+            if entry.get('expand') == 'szdd':
+                # Setup disks ship MS COMPRESS (SZDD) members (`WING.H_`);
+                # 7z expands them to the file the vendor's SETUP installed.
+                expanded = scratch / 'expanded' / relative
+                subprocess.run([sevenzip, 'x', '-y', f'-o{expanded}', str(source)],
+                               check=True, stdout=subprocess.DEVNULL)
+                (source,) = [p for p in expanded.iterdir() if p.is_file()]
+            elif 'expand' in entry:
+                raise ValueError(f"{name}: unknown expansion {entry['expand']!r} for {relative}")
+            shutil.copyfile(source, target)
         _verify_entries(name, staged, files)
         if destination.exists():
             # Repair individual files atomically; never remove unrelated files.
@@ -185,7 +195,7 @@ def command(args):
         print(f'{args.id}: indexed {len(index)} external symbols from verified libraries')
     else:
         verify(args.id)
-        print(f'{args.id}: all pinned compiler files verified')
+        print(f'{args.id}: all pinned files verified')
         if resource_entries(args.id):
             state = ('verified' if resources_installed(args.id) else
                      'not installed (install from the media to link .rsrc)')

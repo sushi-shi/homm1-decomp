@@ -1550,5 +1550,39 @@
         "sha256": "9c77ff721768cde62c9a042ec95bda9ff5f1040368507c357251c7d683aa8853"
       }
     }
+  },
+  "wing10": {
+    "sdk": "Microsoft WinG 1.0 Development Kit (the setup disk as distributed on the 1996 Coriolis 'Windows Game SDK Developer's Guide' CD, TOOLS/WING)",
+    "media": {
+      "filename": "Windows Game SDK Developer's Guide - The Coriolis Group 1996.ISO",
+      "url": "https://archive.org/download/Windows_Game_SDK_Developers_Guide_The_Coriolis_Group_1996/Windows%20Game%20SDK%20Developer%27s%20Guide%20-%20The%20Coriolis%20Group%201996.ISO",
+      "sha256": "a0c166ff833ef35627eace0d4dd8a28ce741ea7c076e213f9c4d0c652d4b73a5"
+    },
+    "files": {
+      "include/wing.h": {
+        "media_path": "TOOLS/WING/WING.H_",
+        "expand": "szdd",
+        "sha256": "817590d5a052f9969e93f59c90222113ea81e1adf866ce7b0a0a3538821fab9b"
+      },
+      "lib/wing32.lib": {
+        "media_path": "TOOLS/WING/WING32.LI_",
+        "expand": "szdd",
+        "sha256": "c71def88227f517ab6ede7bf2f3e0f06fc45d2758e38ca53dad9201e06f0aef1"
+      }
+    }
+  },
+  "dx1": {
+    "sdk": "Microsoft Windows 95 Game SDK featuring DirectX 1.0 (September 1995)",
+    "media": {
+      "filename": "Windows 95 Game SDK Featuring DirectX.iso",
+      "url": "https://archive.org/download/windows-95-game-sdk-featuring-direct-x/Windows%2095%20Game%20SDK%20Featuring%20DirectX.iso",
+      "sha256": "3dc115445572cba4488eeb25f70f0c3a4d53109f4952ea6274f0538a3d39295b"
+    },
+    "files": {
+      "include/ddraw.h": {
+        "media_path": "SDK/INC/DDRAW.H",
+        "sha256": "59ecc524d55686d6fa9b4521d6064c9551b21ceed68e51f3bac23e65c8ce8f4d"
+      }
+    }
   }
 }
