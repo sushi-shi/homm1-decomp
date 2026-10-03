@@ -262,3 +262,101 @@ and is left for data matching.
 RC.EXE and CVTRES.EXE are installed (`homm1 toolchain install --id vc40
 --media build/downloads/MSVC40.iso`). The linked `.rsrc` is 0x1728 bytes, as
 in retail, and differs only in the 12 directory `TimeDateStamp` fields.
+
+## Remaining candidate differences
+
+Measured on the candidate linked from master e571578 plus the import-library
+changes above. Section virtual sizes, candidate minus retail: `.text` +0x22,
+`.rdata` -0x20, `.data` -0x450 (with `.bss`), `.idata` 0, `.rsrc` 0, `.reloc`
+-0xe8 (follows the other sections).
+
+### `.text`
+
+The claimed game and BASE functions end 0x30 late. Each step comes from one
+cause:
+
+| Where | Step | Cause |
+| --- | --- | --- |
+| Misc/PHILAI, 0x004199a5 to 0x00424810 | +0x10 | object composition: `_$E2` (0x15 bytes) is emitted beside `_$E1` mid-PHILAI instead of at 0x00419990, and Misc ends in its own 16-byte-aligned object |
+| FINDPATH `FindCombatPath` | +0x10 | body 2 bytes long under `/Gy` crosses a 16-byte boundary |
+| KB `InterpretCommandLine`, `UpdateAppSpecificMenus` | -0x10 | bodies 1 byte short each; the KB object ends one paragraph early |
+| miscwin `FadeIn` | +0x10 | body 4 bytes long under `/Gy` |
+| BITMAP `CopyTo` | +0x10 | body 4 bytes long under `/Gy` |
+
+Other short or long bodies are absorbed by object padding: TOWNMGR `BuyBuild`,
+PHILAI `DoDimensionDoor`, `DoAI` and `DetermineHeroToMove`, ADVMGR `DrawCell`
+and `ComboDraw`, GAME `NewGameHandler`, `SGenRand`, `CheckHeroConsistency`
+and `GetNumThievesGuilds`, REQUEST's constructor, FLY `CanFit`, kbwin
+`AppWndProc`, EVENTS `EraseObj`, ARMY `DrawToBuffer` and `Walk`, and in BASE
+`BlitBitmapToScreen`, `PostprocessPalette`, `ClippedMonoIconToBitmap`,
+`FizzleForward`, `MemorySample` and `EncodeData`. SEARCH
+`FindNearestObject` is 1 byte long.
+
+The CRT band then shrinks by 0xe of fill. Its members are the same, but four
+are out of place: `__purecall` comes directly after wincrt0, `write` and
+`strnicmp` come at the end, and `strrev` comes early (see
+[CRT member order](#crt-member-order)).
+
+### `.rdata`
+
+- ADVMGR: retail has 8 more bytes between `glEnvironmentVolume` (5 longs at
+  0x0048c390) and the first double at 0x0048c3b0. The candidate's double is
+  at 0x0048c3a8.
+- Retail ends `.rdata` with 8 zero bytes and the unreferenced string
+  `Heroes of Might and Magic` (0x0048c818 to 0x0048c840), after the CRT
+  constants. No relocation refers to it. Its owner is unknown.
+- `.xdata$x` has the same 70 FuncInfo records. Its tail differs by +8.
+
+### `.data`
+
+The first differing byte, with relocated fields masked, of each object that
+has claimed identities. Where it lies is the class.
+
+- **SEARCH**: retail's 8 bytes at 0x0048e170 are SeedPosition's initialized
+  counter. The candidate has none, so every later object starts 8 early.
+- **Assert line words and `__FILE__` arrays.** Retail emits them after the
+  object's literals: TOWNMGR's pair follows SplitArmyHandler's literals at
+  the end of the object, and wingraph's and netwin's line words are
+  interleaved with literals. The candidate's file-scope definitions are
+  emitted first. This affects wingraph, TOWNMGR, netwin, PATH, EVENTS,
+  RESMGR, MOUSEMGR, soundmgr, INPUTMGR and EXEC. The pinned VC4
+  (`/Od`, `/Od /Gy`, `/O2`, C and C++, file-scope or function-local `static`)
+  always emits initialized variables before literals.
+- **Literals under `/Gy`.** The pinned VC4.0, VC 2.0 and VC 2.2 all put each
+  literal in its own 8-aligned `.data` COMDAT under `/Gy` (and `/O2`). Retail
+  BASE objects pack their literals at 4-byte alignment: RESMGR's `File Error:
+  .AGG File not valid` follows the 20-byte `Can't open file: %s` at +0x14,
+  where the candidate has +0x18. Retail also keeps the literals of functions
+  that the candidate does not contain (WINMGR's `wb` and its second
+  `CCYCLE%02d.BIN`, WINDOW's `Default Construct`). RESMGR's and WINMGR's
+  variables follow some of the object's literals in retail. The candidate's
+  variable section comes first and is 8-aligned. No pinned compiler and flag
+  set has been found that keeps `/Gy` functions but leaves literals in one
+  section.
+- **Definition order or storage class.** SPELLS has an extra 4-byte variable
+  before `spelmous.mse`. PHILAI has the known interleave of
+  `bSVSearchArrayInUse`. ADVMGR has an extra 16 zero bytes after
+  `giCheatSeq`. In GAME, `gbShowMapInfo` is followed by variables instead of
+  `%s\n`. CMBTMGR's `cCombatBkgNames` pointer table sits where retail has
+  `PREBATTL.82M`. In KB, `gMinExpForLevel` sits where retail has a byte table
+  (+0x151a). REMOTE's variables after `iBaudBits` differ. kbwin has zero
+  variables where retail has `Heroes`.
+- **Literal order or content.** ARMY: after `gbSecondShot`, retail has
+  `perishes`, the candidate `swrdsman`. HERO at +0x44: retail has `\n%d`, the
+  candidate `%ld`. REQUEST: retail's `bigfont.fnt` comes before the candidate's
+  `%s%s`.
+- Byte-equal over the candidate's extent: CURSOR, SETUP, SMACKMGR, NOOPT,
+  WINDOW, Icon2b and BMAP2.
+
+### `.bss`
+
+The objects whose identities are out of order are those in
+[bss-name-order.md](bss-name-order.md): wingraph, netwin, PHILAI, ADVMGR,
+SPELLAI, GAME, KB, REMOTE, WINMGR, soundmgr and LZHUF. The names decide this
+order. SEARCH, CURSOR, COMMAND, FINDPATH, REQUEST, SMACKMGR, kbwin, EVENTS,
+ARMY, comwin and MOUSEMGR keep a constant offset.
+
+### `.idata`
+
+The slots inside each DLL's ILT/IAT are in a different order, as described in
+[Import libraries](#import-libraries).
