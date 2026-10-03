@@ -231,12 +231,10 @@ BOOL DDAppPaint(void* window, void* paintDC) {
             ps.rcPaint.bottom++;
 
         gDDDestinationRect = ps.rcPaint;
-        width = ((gDDDestinationRect.right - gDDDestinationRect.left + 1) * WINGRAPH_WIDTH)
-                / iMainWinScreenWidth;
-        height = ((gDDDestinationRect.bottom - gDDDestinationRect.top + 1) * WINGRAPH_HEIGHT)
-                 / iMainWinScreenHeight;
-        x = (gDDDestinationRect.left * WINGRAPH_WIDTH) / iMainWinScreenWidth;
-        ySrc = (gDDDestinationRect.top * WINGRAPH_HEIGHT) / iMainWinScreenHeight;
+        width = CLIENT_TO_GAME_X(gDDDestinationRect.right - gDDDestinationRect.left + 1);
+        height = CLIENT_TO_GAME_Y(gDDDestinationRect.bottom - gDDDestinationRect.top + 1);
+        x = CLIENT_TO_GAME_X(gDDDestinationRect.left);
+        ySrc = CLIENT_TO_GAME_Y(gDDDestinationRect.top);
         if (giScrollX != 0) {
             x = giScrollX + WINGRAPH_SCROLL_MARGIN;
             width = WINGRAPH_SCROLL_SIZE;
@@ -872,8 +870,8 @@ BOOL WGAppPaint(void* window, void* paintDC) {
         iSrcY = nDestY;
         dstW = rect.right - rect.left;
         destHeight = rect.bottom - rect.top;
-        srcX = destX * WINGRAPH_WIDTH / iMainWinScreenWidth;
-        iSrcY = nDestY * WINGRAPH_HEIGHT / iMainWinScreenHeight;
+        srcX = CLIENT_TO_GAME_X(destX);
+        iSrcY = CLIENT_TO_GAME_Y(nDestY);
         if (giScrollX != 0)
             srcX += giScrollX;
         if (giScrollY != 0)
@@ -904,8 +902,8 @@ BOOL WGAppPaint(void* window, void* paintDC) {
                 hdcImage,
                 srcX,
                 iSrcY,
-                dstW * WINGRAPH_WIDTH / iMainWinScreenWidth,
-                destHeight * WINGRAPH_HEIGHT / iMainWinScreenHeight
+                CLIENT_TO_GAME_X(dstW),
+                CLIENT_TO_GAME_Y(destHeight)
             );
         }
         EndPaint(static_cast<HWND>(window), &paintStruct);

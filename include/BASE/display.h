@@ -19,4 +19,9 @@ H1_ENUM_CONST_BEGIN(PaletteFormatConstant)
 H1_ENUM_CONST_END(PaletteFormatConstant)
 // clang-format on
 
+// A client-area coordinate scaled to the logical screen (Buka 2.1
+// inputManager.h). iMainWinScreenWidth/Height are kbwin's client extents.
+#define CLIENT_TO_GAME_X(x) (((x) * LOGICAL_SCREEN_WIDTH) / iMainWinScreenWidth)
+#define CLIENT_TO_GAME_Y(y) (((y) * LOGICAL_SCREEN_HEIGHT) / iMainWinScreenHeight)
+
 #endif // HOMM1_BASE_DISPLAY_H
