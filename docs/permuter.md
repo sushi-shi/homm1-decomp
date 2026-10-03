@@ -99,4 +99,4 @@ compiler-state peak for the unchanged function: unrounded score 100, exact size,
 complete ordered relocations, restored source hash, a unique existing bank row,
 and the same comparison mode are required. Only MAX/HIST change; banked CUR,
 source hash and other rows remain unchanged. Sub-100 trials never update the bank.
-Remove probes and run `homm1 build` after applying ordinary source changes. Tooling changes run `homm1 test`.
+Remove probes and run `homm1 build` after applying ordinary source or tooling changes.

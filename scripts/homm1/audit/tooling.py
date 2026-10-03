@@ -30,7 +30,7 @@ def _normalized(text):
     text = text.replace("GRUNTZ", "HOMM1").replace("Gruntz", "Homm1")
     text = text.replace("gruntz", "homm1").replace("GZ_", "H1_")
     tree = ast.parse(text)
-    # Instrumentation is expected everywhere and is checked by test_usage.
+    # Instrumentation is expected everywhere and is checked by `homm1 audit usage`.
     tree.body = [n for n in tree.body if not
                  (isinstance(n, ast.ImportFrom) and n.module == "homm1.core.usage")]
     for node in ast.walk(tree):
@@ -60,7 +60,10 @@ def inventory(donor: Path, name="gruntz"):
         relative = path.removeprefix(prefix)
         destination = REPO / "scripts/homm1" / relative
         entry = {"module": relative}
-        if not destination.is_file():
+        if Path(relative).name.startswith("test_") and not destination.is_file():
+            entry["status"] = "inapplicable"
+            entry["reason"] = "Test suite removed by the user"
+        elif not destination.is_file():
             entry["status"] = "missing"
         else:
             original = _git(donor, "show", f"{revision}:{path}")
@@ -80,8 +83,6 @@ def whole_tree(donor: Path):
     paths = _git(donor, "ls-tree", "-r", "--name-only", GITEN_REV).splitlines()
     mapping = {
         "include/rva.h": "include/match.h",
-        "scripts/giten/core/test_usage.py": "tests/test_usage.py",
-        "scripts/giten/delink/test_pdb_synth.py": "tests/test_pdb_synth.py",
         "docs/toolchain-vc50-sp3.md": "docs/compiler.md",
         "scripts/create-toolchain-release.py": "scripts/toolchain/create-toolchain-release.py",
         "scripts/create-toolchain-release.nix": "scripts/toolchain/create-toolchain-release.nix",
@@ -90,8 +91,6 @@ def whole_tree(donor: Path):
         "scripts/giten/delink/reloc_image.py": ("inapplicable", "HoMM1 retains retail relocations; Giten synthesizes .reloc for /FIXED DDS.EXE"),
         "scripts/giten/tool/cdfs.py": ("inapplicable", "Giten disc extraction; HoMM1 uses hash-pinned local PE inputs"),
         "scripts/giten/verify/placement.py": ("deferred", "Data-claim extent and declaration placement audit needs HoMM1 fixtures; data campaign follows code"),
-        "scripts/giten/walls/test_inline_measure.py": ("deferred", "VC5 budget model not calibrated for VC4"),
-        "scripts/giten/retail_labels/test_censuses.py": ("deferred", "Executable-section data census controls accompany the deferred text-data delinker patch"),
         "nix/patches/vostok-iat-in-rdata.patch": ("inapplicable", "HoMM1 imports are modeled from its own .idata; donor IAT-in-rdata layout differs"),
         "nix/patches/vostok-text-data-symbols.patch": ("deferred", "Require HoMM1 code-section data evidence before changing the pinned delinker"),
         "docs/todos/rule-exceptions.tsv": ("inapplicable", "Donor rule exceptions are not HoMM1 authorizations"),
@@ -107,6 +106,9 @@ def whole_tree(donor: Path):
             row["status"], row["reason"] = exceptions[path]
         elif path.startswith("editor/nvim/"):
             row.update(status="inapplicable", reason="Editor integration removed by the user")
+        elif (Path(path).name.startswith("test_") or path.startswith("tests/")) \
+                and not (target.is_file() or target.is_symlink()):
+            row.update(status="inapplicable", reason="Test suite removed by the user")
         elif (path.startswith(("src/", "include/", "config/retail/", "config/cleanliness/")) and path not in mapping) or path == "config/match_baseline.tsv":
             row.update(status="target_specific", reason="Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts")
         elif target.is_file() or target.is_symlink():

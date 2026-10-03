@@ -25,7 +25,7 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 | Source/identity gates | Retained normal source gates, review-claims and contradictory-data-identity checks even in code mode. Data coverage/placement checks remain in the explicit later data tier. |
 | Constants/enum review | Ported from giten-enums into the existing `verify` modules: `constants` gains the `config/constants.tsv` glob work list (first match wins, stale rows fail), committed floor (`--update-floor`), `--list`, `build/gen/constants_open.tsv`, strict-domain parse with retail fallback, switch-subject/store-target review details and float literals; `enum-reuse` gains the role-pair report and the `config/reviews/enum-reuse.tsv` ledger; `enum-domains` gains constant groups as non-storage and LOCAL/PARAM/RETURN width exemption; `board` reads `H1_ENUM_*` blocks and declarators. Adapted: `H1_ENUM_*`/`include/Domains.h` instead of `GZ_ENUM_*`/`EnumDomain.h`, strict view via `/std:c++20 /Zc:__cplusplus` instead of `GZ_STRICT_ENUMS`, and VC4 booleans: only Win32 `BOOL` is a boolean domain, its proven spelling is `TRUE`/`FALSE`, and `true`/`false` spellings fail (C2065; Giten's TRUE->true check is inverted). See [constants](constants.md) and [enum reuse](enum-reuse.md). Deferred: Giten's handoff evidence notes are game-specific. |
 | Skills/workflow | Adapted all four skills, canonical instruction symlinks, safe staged formatting and unit-block merge driver. See [workflow](workflow.md). |
-| Negative controls | Retained applicable tests in `homm1 test`. The larger imported `verify selftest` has compiler/project-specific failures and missing APIs; it is a separate validation backlog. |
+| Negative controls | The unit test suite was removed by the user; `homm1 audit usage` keeps the entry-point logging check. The larger imported `verify selftest` has compiler/project-specific failures and missing APIs; it is a separate validation backlog. |
 | Gruntz-only scanners | Deferred: `walls/calibrate`, `ehactions`, `escapescan`, `framescan`, `jccscan`, `loopscan`, `offsetscan`, `reloadscan`, `residue`, `retscan`, `signscan`, `storescan`, `thisscan`, `uninitscan`, `vptrscan` need separate applicability review and VC4 controls; the Giten diagnostic port does not establish their parity. |
 | Inline-budget prediction | Deferred: VC5 thresholds need measured VC4 controls. The local gap command reports definitions/calls only. |
 | Executable-section data/placement | Deferred: requires HoMM1 fixtures and the later data campaign. No initializer coverage is admitted. |
@@ -73,7 +73,7 @@ Run inside `nix develop .#build`; reports belong in ignored `build/`:
 ```sh
 homm1 audit tooling --giten /path/to/giten --whole-tree --json > build/tooling-giten.json
 homm1 audit tooling --gruntz /path/to/gruntz --json > build/tooling-gruntz.json
-homm1 test
+homm1 audit usage
 homm1 build
 homm1 build verify
 homm1 link --dry-run

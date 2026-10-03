@@ -124,16 +124,6 @@
         inherit vostok-delinker objdiff objdiff-cli;
         default = vostok-delinker;
       };
-      checks.${system}.tooling = pkgs.runCommand "homm1-tooling-tests" {
-        nativeBuildInputs = [ python pkgs.git pkgs.llvmPackages.clang-unwrapped ];
-      } ''
-        cp -r ${./.} source
-        chmod -R u+w source
-        cd source
-        export PYTHONPATH="$PWD/scripts"
-        python3 -m unittest discover -s tests -v
-        touch $out
-      '';
       devShells.${system} = {
         default = pkgs.mkShell {
           packages = commonTools;

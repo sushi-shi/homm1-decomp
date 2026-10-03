@@ -5,8 +5,7 @@ Use the pinned February 1996 Windows `HEROES.EXE` from
 authority. The editor and other releases are secondary evidence.
 
 - Enter `nix develop .#build` and run `homm1 build` after source, claim,
-  compiler, delinker or comparison changes. Run `homm1 test` after tooling
-  changes.
+  compiler, delinker or comparison changes, including tooling changes.
 - Use `homm1 match` for the normal edit loop and `homm1 sema` for detailed
   object/retail inspection. The current code-first mode relaxes data-reference
   identities/addends; calls, imports and EH identities remain checked. Strict
@@ -31,7 +30,7 @@ authority. The editor and other releases are secondary evidence.
   `docs/tooling.md`. Adapt target facts in the existing modules; do not add a
   parallel adapter pipeline.
 - Preserve usage logging on every tooling entry point (`homm1.core.usage.logged`),
-  including direct module and batch commands. Run `homm1 test` to check coverage.
+  including direct module and batch commands. `homm1 audit usage` checks coverage.
 - Review tooling ports against both Gruntz and HoMM2. Record donor revisions and
   retained/adapted/deferred/inapplicable capabilities in
   `docs/tooling-inheritance.md`; repeat `homm1 audit tooling`. A copied package

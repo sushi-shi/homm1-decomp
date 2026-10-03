@@ -10,7 +10,7 @@ gate failures remain visible during the tooling port. Code-first relaxation
 changes data-reference scoring; it does not license false code, wrong callees,
 contradictory identities or silent gate exceptions.
 
-Run `homm1 test` for tooling changes. The imported `verify selftest` is a separate,
+Run `homm1 build` for tooling changes. The imported `verify selftest` is a separate,
 currently incomplete whole-donor validation suite; see the inheritance review.
 
 Counters identify candidates, not source truth. Preserve authentic SDK/ABI types,

@@ -14,7 +14,6 @@ homm1 workflow setup
 homm1 match BASE/MOUSEMGR
 homm1 verify readme
 homm1 build
-homm1 test
 ```
 
 `workflow setup` installs repository-local Git settings for `.githooks` and

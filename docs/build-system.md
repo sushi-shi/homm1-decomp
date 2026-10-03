@@ -60,7 +60,7 @@ it is not part of the current campaign.
 
 `homm1 verify readme` refreshes generated status independently of banking.
 `homm1 verify check` runs MAX plus fast/normal gates; `--tier full`, `data`, or
-`link` opt into further checks. `homm1 test` runs tooling controls. The imported
+`link` opt into further checks. The imported
 whole-donor selftest remains a separate validation backlog, documented in the
 inheritance review. No failing gate authorizes weakening it or fabricating source.
 
