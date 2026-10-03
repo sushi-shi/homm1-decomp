@@ -2,6 +2,8 @@
 
 - [Matching workflow](tooling.md), [build system](build-system.md),
   [command map](tooling-map.md), [repository workflow](workflow.md).
+- [Maintained Win95 1.2 branch](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2),
+  [1.1 → 1.2 changes and port evidence](https://github.com/sushi-shi/homm1-decomp/blob/decomp-win95-1.2/docs/win95-1.2.md).
 - [Compiler and toolchain](compiler.md), [other builds](builds.md),
   [candidate linking](linker-flags.md),
   [candidate-image checks](image-diff.md), [playing the build](play.md),
