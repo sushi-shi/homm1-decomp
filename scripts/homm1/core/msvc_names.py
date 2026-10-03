@@ -6,8 +6,7 @@ Two directions over the same vocabulary:
     for the same declaration is a DETERMINISTIC function of that name plus the
     declaration's linkage, so `func`/`data` derive it from SOURCE alone - no
     object is read, and a stale build artifact can no longer answer for source
-    that has changed. Three rules, each measured over the whole claim corpus
-    (`homm1 verify selftest -k SourceNameRewrite` re-proves them per build):
+    that has changed. Three rules, each measured over the whole claim corpus:
       1. the i386 COFF global prefix - LLVM adds `_` to every name that is not
          already MSVC-mangled (`?...`); the IR value name lacks it, libclang's
          `mangledName` already carries it;

@@ -6,10 +6,9 @@ describes generated artifacts. All entry points use `homm1.core.usage.logged`.
 Run `homm1 audit usage` and `homm1 build` after changes and
 [repeat donor review](../docs/tooling-inheritance.md).
 
-Keep reusable analysis in the existing package. `homm1.labels.donor_align`
-remains a research-only correspondence tool; it does not generate source or
-admit claims. Completed bootstrap generators and their embedded source copies
-are retired. Reports and disposable experiments belong under ignored `build/`.
+Keep reusable analysis in the existing package; a module belongs here only if
+a `homm1` command or the build graph reaches it. Reports and disposable
+experiments belong under ignored `build/`.
 
 `toolchain/create-toolchain-release.*` reproduces the pinned compiler archive;
 `merge-units.sh` is the repository's manifest merge-driver wrapper.

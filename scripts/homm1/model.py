@@ -126,8 +126,8 @@ def unmaterialized(claims: list[Claim]) -> list[Claim]:
     not that gap: the two pins compete for one body, the materialized one wins
     the binding and the loser is recorded as its alias (the pre-canonical
     pipeline forgave exactly this case, by the same test). Derived, never a
-    hand-kept list; the selftest's corpus control reads it to tell a missing
-    body apart from a name-spelling defect. A unit with no object on disk
+    hand-kept list; it tells a missing body apart from a name-spelling
+    defect. A unit with no object on disk
     cannot adjudicate and its group is skipped.
     """
     from collections import Counter

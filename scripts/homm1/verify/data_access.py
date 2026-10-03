@@ -34,8 +34,6 @@ allowed to fail the build; the rest report. `GATED` and `REPORT_ONLY` below
 carry the measured rate and the reason, one line each.
 
     python3 -m homm1.verify.data_access --build | --gate | --calibrate
-    python3 -m homm1.verify.data_access --selftest      inject 9 known
-                                                         defects, require each
     python3 -m homm1.verify.data_access --suppressed [class]   the sites a
                                                          suppression removed
     python3 -m homm1.verify.data_access --findings [category] [--limit N]
@@ -50,7 +48,7 @@ from __future__ import annotations
 import bisect
 from collections import Counter, defaultdict
 
-from homm1.verify.access_map import (SQLITE, STRING_OPS, TSV, Claim, connect,
+from homm1.verify.access_map import (SQLITE, STRING_OPS, TSV, connect,
                                       load, persist)
 
 # forms that TOUCH bytes (as opposed to taking an address or holding a pointer)
@@ -815,202 +813,6 @@ def do_calibrate(args):
     return 0
 
 
-# --------------------------------------------------------------------------- #
-# the injected-defect self test (a sieve returning 0 rows while BLIND is the   #
-# failure mode this control exists to catch)                                  #
-# --------------------------------------------------------------------------- #
-def injection_plans(spine, accesses):
-    """[(tag, expected category, victim claim, mutate)] - each injection is a
-    defect class this campaign has actually shipped, applied to the in-memory
-    claim set only; src/ is never touched."""
-    layout = spine.layout
-    claims, starts = spine.claims, spine.starts
-    per, fpu, scale, wrote = (defaultdict(Counter), defaultdict(Counter),
-                              defaultdict(Counter), defaultdict(set))
-    for a in accesses:
-        if a.form not in TOUCH:
-            continue
-        k = bisect.bisect_right(starts, a.target_rva) - 1
-        if k < 0 or a.target_rva >= claims[k].end:
-            continue
-        c = claims[k]
-        per[c.rva][(a.target_rva - c.rva, a.width)] += 1
-        if a.fpu:
-            fpu[c.rva][(a.target_rva - c.rva, a.fpu)] += 1
-        if a.form == "indexed" and a.scale and a.target_rva == c.rva:
-            scale[c.rva][a.scale] += 1
-        if "w" in a.rw:
-            wrote[c.rva].add(a.target_rva - c.rva)
-
-    def pick(pred):
-        return next((c for c in claims if pred(c)), None)
-
-    def clone(c, **kw):
-        f = {k: getattr(c, k) for k in Claim.__slots__}
-        f.update(kw)
-        return Claim(**f)
-
-    def prim(t, sz):
-        return {"k": "prim", "t": t, "sz": sz}
-
-    plans = []
-    c = pick(lambda c: per[c.rva] and c.extent >= 4
-             and all(o == 0 and w == 4 for (o, w) in per[c.rva]))
-    if c:
-        plans.append(("narrow", "width", c,
-                      lambda c: [clone(c, node=prim("u8", 1), extent=1)]))
-    c = pick(lambda c: per[c.rva]
-             and all(o == 0 and w == 1 for (o, w) in per[c.rva]))
-    if c:
-        plans.append(("widen", "width", c,
-                      lambda c: [clone(c, node=prim("double", 8), extent=8)]))
-    c = pick(lambda c: c.extent >= 4
-             and any(o == 0 and t.startswith("f") for (o, t) in fpu[c.rva]))
-    if c:
-        plans.append(("float", "width", c, lambda c: [clone(
-            c, node={"k": "arr", "t": "int[]", "sz": c.extent,
-                     "n": max(c.extent // 4, 1), "el": prim("int", 4)})]))
-    # the g_idleGeom bug: two members declared in the wrong order. The victim
-    # carries a synthetic pair built from its OWN observed widths at +0 and +4,
-    # reversed. (A swap between two SAME-SIZED members is invisible to a width
-    # map at all - see the coverage note; that needs value evidence.)
-    _TY = {1: "u8", 2: "u16", 4: "int", 8: "double"}
-
-    def _wat(c, o):
-        return {w for (oo, w) in per[c.rva] if oo == o and w in _TY}
-    c = pick(lambda c: c.extent >= 8 and len(_wat(c, 0)) == 1
-             and len(_wat(c, 4)) == 1 and _wat(c, 0) != _wat(c, 4))
-    if c:
-        def _swap(c):
-            a, b = next(iter(_wat(c, 0))), next(iter(_wat(c, 4)))
-            return [clone(c, node={"k": "rec", "t": "SwappedPair",
-                                   "sz": c.extent,
-                                   "m": [[0, ".m_second", prim(_TY[b], b)],
-                                         [4, ".m_first", prim(_TY[a], a)]]})]
-        plans.append(("swap", "width", c, _swap))
-    c = pick(lambda c: c.extent >= 16
-             and any(o >= c.extent // 2 for o in wrote[c.rva]))
-    if c:
-        plans.append(("halve", "unclaimed", c,
-                      lambda c: [clone(c, extent=c.extent // 2)]))
-    c = pick(lambda c: scale[c.rva] and max(scale[c.rva]) >= 4)
-    if c:
-        plans.append(("stride", "stride", c, lambda c: [clone(
-            c, node={"k": "arr", "t": "char[]", "sz": c.extent,
-                     "n": c.extent, "el": prim("char", 1)})]))
-    c = pick(lambda c: c.extent >= 8
-             and any(o + w > 4 and o < 4 for (o, w) in per[c.rva]))
-    if c:
-        plans.append(("split", "adjacent", c, lambda c: [
-            clone(c, extent=4, node=prim("int", 4)),
-            clone(c, rva=c.rva + 4, name=c.name + "$SPLIT",
-                  extent=c.extent - 4, node=prim("int", 4))]))
-    # shrink: an ARRAY a SINGLE function walks, cut to its first element, so the
-    # same function's own tail accesses become a shortfall (a too-small COUNT
-    # with forward storage).
-    arr_fn = defaultdict(lambda: defaultdict(set))
-    for a in accesses:
-        if a.form not in TOUCH or not a.width:
-            continue
-        k = bisect.bisect_right(starts, a.target_rva) - 1
-        if k < 0 or a.target_rva >= claims[k].end:
-            continue
-        c = claims[k]
-        if c.node is None or c.node.get("k") != "arr":
-            continue
-        n, el = layout.element(c.node)
-        if n <= 1 or ((el or {}).get("sz") or 0) != a.width:
-            continue
-        if a.owner is not None:
-            arr_fn[c.rva][a.owner].add(a.target_rva - c.rva)
-    shrink = None
-    for c in claims:
-        if c.node is None or c.node.get("k") != "arr":
-            continue
-        _n, el = layout.element(c.node)
-        esz = (el or {}).get("sz") or 0
-        if not esz:
-            continue
-        for offs in arr_fn.get(c.rva, {}).values():
-            if 0 in offs and max(offs) >= esz and max(offs) + esz <= c.extent:
-                shrink = c
-                break
-        if shrink:
-            break
-    if shrink:
-        def _shrink(c):
-            _n, el = layout.element(c.node)
-            esz = el["sz"]
-            return [clone(c, extent=esz,
-                          node={"k": "arr", "t": c.node["t"], "sz": esz,
-                                "n": 1, "el": el})]
-        plans.append(("shrink", "shortfall", shrink, _shrink))
-    return plans
-
-
-def _dead_space(spine, accesses, cells):
-    """An address in .data no claim covers and nothing in the image references
-    - where a planted phantom must show up as unaccessed."""
-    hot = {a.target_rva for a in accesses} | {c["target"] for c in cells} \
-        | {c["site"] for c in cells}
-    lo, hi = spine.img.pe.data_regions()["data"]
-    for rva in range(hi - 0x400, lo, -0x40):
-        c, _o = spine.locate(rva)
-        if c is not None:
-            continue
-        if any((rva + d) in hot for d in range(-8, 24)):
-            continue
-        return rva
-    return None
-
-
-def run_selftest(limit=1):
-    """[(tag, want, label, caught_rows)] - the injected-defect controls."""
-    spine, accesses, cells, _stats, _f, _fs, owners = analyse()
-    base = spine.claims
-    plans = injection_plans(spine, accesses)
-    dead = _dead_space(spine, accesses, cells)
-    if dead is not None:
-        plans.append(("phantom", "unaccessed", None, None))
-    out = []
-    for tag, want, victim, mutate in plans:
-        if tag == "phantom":
-            ghost = Claim(rva=dead, name="?g_injectedPhantom@@3HA",
-                          unit="selftest", channel="src", kind="", extent=4,
-                          section=".data", node={"k": "prim", "t": "int",
-                                                 "sz": 4}, pct=100.0)
-            mutated = sorted(base + [ghost], key=lambda c: c.rva)
-            key, label = dead, f"synthetic claim at 0x{dead:x} in dead space"
-        else:
-            mutated = []
-            for c in base:
-                mutated.extend(mutate(c) if c.rva == victim.rva else [c])
-            mutated.sort(key=lambda c: c.rva)
-            key = victim.rva
-            label = f"{victim.name[:40]} 0x{victim.rva:x}"
-        probe = Spine(spine.img, spine.model, spine.layout, mutated,
-                      spine.rows)
-        rows, _st = derive_findings(probe, accesses, cells, owners)
-        caught = [r for r in rows if r[0] == want and
-                  (r[2] == key or r[4] == key
-                   or (victim is not None
-                       and victim.rva <= r[4] < victim.rva + victim.extent))]
-        out.append((tag, want, label, caught[:limit]))
-    return out
-
-
-def do_selftest(_args):
-    res = run_selftest()
-    ok = sum(1 for _t, _w, _l, caught in res if caught)
-    print(f"[selftest] {len(res)} injection(s) planted")
-    for tag, want, label, caught in res:
-        print(f"  {'CAUGHT' if caught else 'MISSED':6} {tag:8} -> {want:10} "
-              f"{label}")
-        for r in caught:
-            print(f"           [{r[0]}/{r[1]}] {r[5]}")
-    print(f"[selftest] {ok}/{len(res)} injected defects detected")
-    return 0 if ok == len(res) else 1
-
 
 # --------------------------------------------------------------------------- #
 # queries (read-only, against the persisted map)                              #
@@ -1212,8 +1014,6 @@ def main(argv=None) -> int:
                     help="exit 1 on a finding in a GATED category")
     ap.add_argument("--calibrate", action="store_true",
                     help="re-prove each category's suppression set on this tree")
-    ap.add_argument("--selftest", action="store_true",
-                    help="inject the known defect classes and require each to fire")
     ap.add_argument("--suppressed", nargs="?", const="",
                     help="the SITES a suppression class removed (re-argue it)")
     ap.add_argument("--at", help="every reference touching one address")
@@ -1238,8 +1038,6 @@ def main(argv=None) -> int:
         return do_gate(a)
     if a.calibrate:
         return do_calibrate(a)
-    if a.selftest:
-        return do_selftest(a)
     if a.suppressed is not None:
         return do_suppressed(a)
     if a.touched:

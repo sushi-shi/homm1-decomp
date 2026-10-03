@@ -108,10 +108,6 @@ def main(argv: list[str] | None = None) -> int:
         return _init(rest)
     if cmd == "inspect":
         return _inspect(rest)
-    if cmd == "test":
-        print("homm1 test: the test suite was removed; `homm1 audit usage` checks "
-              "entry-point usage logging and `homm1 verify selftest` runs the gate controls.")
-        return 0
     if cmd == "toolchain":
         return _toolchain(rest)
     if cmd in ("labels", "model", "delink", "compare"):

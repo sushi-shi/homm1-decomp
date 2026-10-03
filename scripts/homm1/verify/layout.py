@@ -103,7 +103,7 @@ class Layout:
 
     def node(self, ref) -> dict | None:
         """A type by id, or an INLINE node (what a synthetic/injected layout
-        carries - the selftest builds trees the cache never saw)."""
+        carries)."""
         if isinstance(ref, dict):
             return ref
         return self.types[ref] if isinstance(ref, int) \

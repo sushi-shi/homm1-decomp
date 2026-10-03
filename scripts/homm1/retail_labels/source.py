@@ -29,9 +29,7 @@ COFF prefix, the `@@<d>Q` -> `@@<d>P` array storage class, and the `$S`
 TU-local wrapper whose per-object CodeView counter is dropped, exactly as
 compare's canonicalization masks it on the object side). No compiled object is
 consulted, so a stale build artifact can never answer for source that has
-changed and a rule gap can never hide as a silent per-claim drop - the
-corpus-wide control in `homm1 verify selftest` re-proves every rewrite
-against the base objs once per build.
+changed and a rule gap can never hide as a silent per-claim drop.
 
 The one channel that still reads cl's object is DATA_COMPGEN, by doctrine: a
 pin is admitted only when the TU's own base obj emitted that exact payload -

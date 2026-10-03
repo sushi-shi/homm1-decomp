@@ -13,8 +13,6 @@ read by the named tooling. Generated state belongs in `build/`.
 - `toolchains.json`: pinned compiler media, components and release hashes
   (`homm1 toolchain`).
 - `heroes.def`: module name and exports for the candidate link (`homm1 link`).
-- `probes/compiler.cpp`: ABI fixture for the compiler-contract probe
-  (`homm1.probes`).
 - `constants.tsv`: numeric spellings kept on purpose (`homm1 verify constants`).
 - `reviews/enum-reuse.tsv`: enum-reuse review ledger (`homm1 verify enum-reuse`).
 

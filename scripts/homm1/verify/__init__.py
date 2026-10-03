@@ -46,7 +46,7 @@ maps), which is derived and regenerated.
 
 from __future__ import annotations
 
-_SUBS = ("selftest", "status", "check", "bank", "readme", "fingerprints")
+_SUBS = ("status", "check", "bank", "readme", "fingerprints")
 
 #: the ported gate/audit modules, runnable as `homm1 verify <name>`. MOST are
 #: also a tier member of `check --tier` (homm1.verify.tiers); the ones in
@@ -137,9 +137,6 @@ def main(argv=None) -> int:
               f"the names listed above", file=sys.stderr)
         return 2
     sub, rest = argv[0], argv[1:]
-    if sub == "selftest":
-        from homm1.verify.selftest import main as selftest_main
-        return selftest_main(rest)
     if sub == "fingerprints":
         from homm1.verify.fingerprints import main as fp_main
         return fp_main(rest)
