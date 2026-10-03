@@ -479,9 +479,9 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     short otherHex;
     short hex;
     short oneBit;
-    short openMask;
     short dir;
     short enemyMask;
+    short openMask;
     short target;
 
     openMask =
