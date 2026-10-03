@@ -189,7 +189,7 @@ VA(0x00473820, 0x3a)
 #line 207 "D:\\Heroes\\Base\\OLDASM.CPP"
 i32 Random(i32 low, i32 high) {
 #line 208
-    ProcessAssert(high > low, __FILE__, __LINE__);
+    H1_ASSERT(high > low);
     return rand() % (high - low + 1) + low;
 }
 

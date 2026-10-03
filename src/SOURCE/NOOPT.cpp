@@ -30,7 +30,7 @@ VA(0x00464470, 0x54)
 #line 15 "D:\\Heroes\\Source\\NOOPT.CPP"
 void DelayTil(i32* endTime) {
 #line 16
-    ProcessAssert(*endTime > 10000, __FILE__, __LINE__);
+    H1_ASSERT(*endTime > 10000);
     while (*endTime > KBTickCount()) {
         Process1WindowsMessage();
         PollSound();

@@ -1234,10 +1234,10 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         for (j = 0; j < RESOURCE_COUNT; j++) {
             // clang-format off
 #line 1525
-            ProcessAssert(building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT, __FILE__, __LINE__);
+            H1_ASSERT(building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT);
             // clang-format on
 #line 1526
-            ProcessAssert(j >= 0 && j <= 6, __FILE__, __LINE__);
+            H1_ASSERT(j >= 0 && j <= 6);
             if (gNeutralBuildingCosts[building][j] > 0) {
                 resType[curCost] = j;
                 prices[curCost] = gNeutralBuildingCosts[building][j];
@@ -1248,10 +1248,10 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         for (j = 0; j < RESOURCE_COUNT; j++) {
             // clang-format off
 #line 1540
-            ProcessAssert(dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS, __FILE__, __LINE__);
+            H1_ASSERT(dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS);
             // clang-format on
 #line 1541
-            ProcessAssert(j >= 0 && j <= 6, __FILE__, __LINE__);
+            H1_ASSERT(j >= 0 && j <= 6);
             LogStr("DwellCost", gDwellingCosts[dwellIndex][j], dwellIndex, j, 0, 0);
             if (gDwellingCosts[dwellIndex][j] > 0) {
                 resType[curCost] = j;

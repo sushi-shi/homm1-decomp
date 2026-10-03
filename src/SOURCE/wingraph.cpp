@@ -570,7 +570,7 @@ void DDUpdatePalette(i8* paletteData) {
     }
     // API-forced: ProcessAssert accepts the donor pointer assertion as a 32-bit int.
 #line 542
-    ProcessAssert(reinterpret_cast<i32>(gDDPal), __FILE__, __LINE__);
+    H1_ASSERT(reinterpret_cast<i32>(gDDPal));
     res = gDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,

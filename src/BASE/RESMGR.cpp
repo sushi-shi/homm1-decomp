@@ -370,7 +370,7 @@ VA(0x004764d0, 0x55)
 #line 598 "D:\\Heroes\\Base\\RESMGR.CPP"
 i8 resourceManager::ReadByte(void) {
 #line 599
-    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
+    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     i8 value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -383,7 +383,7 @@ VA(0x00476530, 0x58)
 #line 619 "D:\\Heroes\\Base\\RESMGR.CPP"
 i16 resourceManager::ReadWord(void) {
 #line 620
-    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
+    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     i16 value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -394,7 +394,7 @@ VA(0x00476590, 0x58)
 #line 639 "D:\\Heroes\\Base\\RESMGR.CPP"
 i32 resourceManager::ReadLong(void) {
 #line 640
-    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
+    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     i32 value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -420,7 +420,7 @@ VA(0x00476680, 0x5f)
 #line 679 "D:\\Heroes\\Base\\RESMGR.CPP"
 void resourceManager::ReadBlock(i8* destination, u32 size) {
 #line 680
-    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
+    H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     PollSound();
     i32 bytesRead = _read(m_aggregateFd, destination, size);
     PollSound();

@@ -347,7 +347,7 @@ VA(0x004745a0, 0xbf)
 #line 550 "D:\\Heroes\\Base\\WINMGR.CPP"
 void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
 #line 551
-    ProcessAssert(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT, __FILE__, __LINE__);
+    H1_ASSERT(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT);
     if (currentPalette != NULL)
         SetPalette(currentPalette->m_data, 0);
     PollSound();

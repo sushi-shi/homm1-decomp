@@ -61,7 +61,7 @@ void soundManager::ValidatePreviousPosition(i32 track) {
     char buffer[CD_POSITION_BUFFER_SIZE];
     char* separator;
 #line 56
-    ProcessAssert(track >= 0 && track < MUSIC_TRACK_COUNT, __FILE__, __LINE__);
+    H1_ASSERT(track >= 0 && track < MUSIC_TRACK_COUNT);
     if (CDPreviousPosition[track][0] == 0)
         return;
     strcpy(buffer, CDPreviousPosition[track]);
@@ -492,7 +492,7 @@ struct _SAMPLE* soundManager::StartSample(
             m_musicStreamOpen = 0;
             // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
 #line 642
-            ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+            H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
             fclose(m_midiFile);
             m_midiFile = NULL;
         }
@@ -577,7 +577,7 @@ void soundManager::StopAllSamples(void) {
         m_musicStreamOpen = 0;
         // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 767
-        ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+        H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
         fclose(m_midiFile);
         m_midiFile = NULL;
     }
@@ -629,7 +629,7 @@ void soundManager::ModifySample(struct _SAMPLE* sampleHandle, i16 operation, i32
             break;
         case SOUND_OPERATION_MUSIC_VOLUME:
 #line 835
-            ProcessAssert(m_cdReady == 0, __FILE__, __LINE__);
+            H1_ASSERT(m_cdReady == 0);
             AIL_set_sample_volume(sampleHandle, ConvertVolume(value, SOUND_VOLUME_MUSIC));
             if (foundChannel >= 0)
                 gSampleVolumes[foundChannel] = static_cast<i16>(value);
@@ -711,7 +711,7 @@ void soundManager::AdjustMusicVolumes(void) {
             if (savePosition != 0) {
                 // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 940
-                ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+                H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
                 m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
             }
             ModifySample(m_sampleHandles[0], SOUND_OPERATION_VOLUME, 0);
@@ -778,7 +778,7 @@ void soundManager::PlayAmbientMusic(i32 track, i32 resume, i32 volume) {
             || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
         // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 1045
-        ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+        H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
         m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
     }
     m_currentTrack = static_cast<char>(track);
@@ -865,7 +865,7 @@ void soundManager::PollSound(void) {
                 if (m_cdReady == 0) {
                     // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 1160
-                    ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+                    H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
                     m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
                 }
             } else {
@@ -935,7 +935,7 @@ void soundManager::PollSound(void) {
             Process1WindowsMessage();
             // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 1221
-            ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+            H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
             u32 bytesRead = fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
             AIL_load_sample_buffer(m_musicSample, buffer, m_musicBuffers[buffer], bytesRead);
         }
@@ -946,7 +946,7 @@ void soundManager::PollSound(void) {
                 if (m_fading == 0) {
                     // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 1234
-                    ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+                    H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
                     rewind(m_midiFile);
                 } else {
                     m_fading = 0;
@@ -985,7 +985,7 @@ void soundManager::PollSound(void) {
                     Process1WindowsMessage();
                     // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 1263
-                    ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+                    H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
                     u32 bytesRead =
                         fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
                     AIL_load_sample_buffer(
@@ -999,7 +999,7 @@ void soundManager::PollSound(void) {
                 m_musicStreamOpen = 0;
                 // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 1271
-                ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
+                H1_ASSERT(reinterpret_cast<i32>(m_midiFile));
                 fclose(m_midiFile);
                 m_midiFile = NULL;
             }

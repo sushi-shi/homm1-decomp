@@ -158,7 +158,7 @@ void mouseManager::SetPointer(i16 frame) {
 
     cursorIndex = gMouseOffset[gMouseCursorType] + frame;
 #line 266
-    ProcessAssert(cursorIndex >= 0 && cursorIndex < MOUSE_CURSOR_COUNT, __FILE__, __LINE__);
+    H1_ASSERT(cursorIndex >= 0 && cursorIndex < MOUSE_CURSOR_COUNT);
 
     if (hMouseCursor[cursorIndex] == NULL) {
         gColorBits[cursorIndex] = static_cast<i8*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
@@ -235,7 +235,7 @@ void mouseManager::SetPointer(i16 frame) {
         hbmpAndMask[cursorIndex] = CreateBitmapIndirect(&bmpAndMask[cursorIndex]);
         // API-forced handle value.
 #line 338
-        ProcessAssert(reinterpret_cast<i32>(hbmpAndMask[cursorIndex]), __FILE__, __LINE__);
+        H1_ASSERT(reinterpret_cast<i32>(hbmpAndMask[cursorIndex]));
 
         if (gColorMice) {
             bmpColor[cursorIndex].bmType = 0;
@@ -256,7 +256,7 @@ void mouseManager::SetPointer(i16 frame) {
         hMouseCursor[cursorIndex] = CreateIconIndirect(&mouseIconInfo[cursorIndex]);
         // API-forced handle value.
 #line 359
-        ProcessAssert(reinterpret_cast<i32>(hMouseCursor[cursorIndex]), __FILE__, __LINE__);
+        H1_ASSERT(reinterpret_cast<i32>(hMouseCursor[cursorIndex]));
     }
 
     SetCursor(hMouseCursor[cursorIndex]);

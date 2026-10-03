@@ -262,10 +262,10 @@ i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
         );
     // clang-format off
 #line 322
-    ProcessAssert(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT, __FILE__, __LINE__);
+    H1_ASSERT(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT);
     // clang-format on
 #line 323
-    ProcessAssert(hex >= 0 && hex < COMBAT_HEX_COUNT, __FILE__, __LINE__);
+    H1_ASSERT(hex >= 0 && hex < COMBAT_HEX_COUNT);
     return gCombatAdjacency[hex][direction];
 }
 
@@ -282,10 +282,10 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
         direction = COMBAT_DIRECTION_SOUTHWEST;
     // clang-format off
 #line 339
-    ProcessAssert(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT, __FILE__, __LINE__);
+    H1_ASSERT(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT);
     // clang-format on
 #line 340
-    ProcessAssert(hex >= 0 && hex < COMBAT_HEX_COUNT, __FILE__, __LINE__);
+    H1_ASSERT(hex >= 0 && hex < COMBAT_HEX_COUNT);
     return gCombatAdjacency[hex][direction];
 }
 

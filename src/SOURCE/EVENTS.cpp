@@ -1537,9 +1537,9 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     eventHero->m_level = prevLevel;
     eventHero->m_experience += experience;
 #line 1118
-    ProcessAssert(experience >= 0, __FILE__, __LINE__);
+    H1_ASSERT(experience >= 0);
 #line 1119
-    ProcessAssert(eventHero->m_experience >= 0, __FILE__, __LINE__);
+    H1_ASSERT(eventHero->m_experience >= 0);
     newLevel = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)
         eventHero->CheckLevel();

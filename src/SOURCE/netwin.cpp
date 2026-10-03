@@ -365,7 +365,7 @@ void nb_thr_ctl(void)
                             break;
                         case NRC_PENDING:
 #line 496
-                            ProcessAssert(0, __FILE__, __LINE__);
+                            H1_ASSERT(0);
                             break;
                         case NRC_SNUMOUT:
                         case NRC_SCLOSED:
@@ -412,7 +412,7 @@ void __stdcall nb_add_name_done(NCB* ncb)
     i32 j;
 
 #line 541
-    ProcessAssert(ncb == &gNbSessNcb[gNbMaxSess], __FILE__, __LINE__);
+    H1_ASSERT(ncb == &gNbSessNcb[gNbMaxSess]);
     switch (ncb->ncb_retcode) {
         case NRC_GOODRET:
         case NRC_CANOCCR:
@@ -548,7 +548,7 @@ void nb_arm_recv(i32 session)
 
     while (1) {
 #line 747
-        ProcessAssert(gNbSessNcb[session].ncb_retcode != NRC_PENDING, __FILE__, __LINE__);
+        H1_ASSERT(gNbSessNcb[session].ncb_retcode != NRC_PENDING);
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
         gNbSessNcb[session].ncb_command = NCBRECV | ASYNCH;
         gNbSessNcb[session].ncb_lsn = gNbSessLsn[session];

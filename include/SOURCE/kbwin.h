@@ -177,6 +177,7 @@ extern void* hwndApp;
 extern i32 iMainWinScreenWidth;
 extern i32 gMainWinScreenHeight;
 void ProcessAssert(i32 condition, char* file, i32 line);
+#define H1_ASSERT(condition) ProcessAssert((condition), __FILE__, __LINE__)
 void WritePrefs();
 char* FindToken(char* text, char token);
 
