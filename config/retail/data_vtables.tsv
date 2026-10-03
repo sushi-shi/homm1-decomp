@@ -8,3 +8,6 @@ rva	size	name	kind	note
 0x8c498	0xc	??_7combatManager@@6B@	primary	Open/Close/Main
 0x8c4a8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
 0x8c528	0xc	??_7swapManager@@6B@	primary	Open/Close/Main
+0x8c600	0x4	??_7bitmap@@6B@	primary	virtual destructor; retail relocates 0x48c600 only (0x48c604 is zero)
+0x8c678	0xc	??_7widget@@6B@	primary	three pure slots, each relocated to _purecall (0x483510)
+0x8c68c	0x4	??_7resource@@6B@	primary	pure virtual destructor slot (_purecall); 0x48c690 is EH data (-1)
