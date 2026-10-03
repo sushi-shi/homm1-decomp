@@ -4,37 +4,52 @@ C++ source for the Windows 95 release of Heroes of Might and Magic
 (New World Computing, February 1996 `HEROES.EXE`), built with the original
 Visual C++ 4.0 toolchain.
 
+## Branches
+
 ```text
-          master
-             |
-             v
+              master
+                 |
+                 v
   source-win95-1996 (you are here)
 ```
 
 | Branch | Purpose |
 | --- | --- |
-| `master` | Reconstruction and matching |
-| `source-win95-1996` | Clean, buildable source |
+| `master` | Reconstruction and matching against the Win95 1.0 `HEROES.EXE` |
+| `source-win95-1996` | Generated clean source (`homm1 clean`): no matching annotations or comments; builds the game with the pinned toolchain |
+
+## Play
+
+On x86-64 Linux with Nix flakes enabled, from this directory:
+
+```sh
+nix run path:. -- --data "/path/to/HEROES"
+nix run path:.                      # later launches reuse the remembered folder
+```
+
+`--data` is your installed Windows 95 game folder with `DATA/HEROES.AGG`,
+`SMKWAI32.DLL` and `WAIL32.DLL`. Pass `--cd /path/to/cd` with the CD's contents
+for sound effects and videos. Each launch builds the game, installs it in
+`build/game/game/` (saves and high scores stay there; your folder is never
+written) and runs it in its own Wine prefix with the CD mapped as drive `D:`.
+gamescope integer-scales the 640x480 desktop; `PLAY_GAMESCOPE=0` runs plain
+Wine. `--dry-run` prepares everything without starting the game.
 
 ## Build
-
-On x86-64 Linux with Nix flakes enabled:
 
 ```sh
 nix develop -c python3 build.py --icon-from /path/to/HEROES.EXE
 ```
 
-This writes `build/HEROES.EXE`. Copy it into your installed game directory and
-run it with Wine. The flake fetches the hash-pinned Visual C++ 4.0, MASM 6.11,
-WinG and DirectX 1 files and supplies Wine and LLVM's resource tools.
-`--icon-from` takes the program icon from your own executable; without it the
-build has no icon. Game data is not included.
+This writes `build/HEROES.EXE`. The flake fetches the hash-pinned Visual C++
+4.0, MASM 6.11, WinG and DirectX 1 files and supplies Wine and LLVM's resource
+tools. `--icon-from` takes the program icon from your own executable. Game data
+and the Smacker and Miles runtime DLLs are not included.
 
 ## Regeneration
 
-`master` generates this branch with `homm1 clean`. Matching annotations,
-retail line pins, reconstruction comments and tooling are absent. Make source
-changes on `master` and regenerate; do not edit this branch by hand.
+`master` generates this branch with `homm1 clean`. Make source changes on
+`master` and regenerate; do not edit this branch by hand.
 
 ## License
 

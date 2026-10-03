@@ -15,10 +15,29 @@
         mkdir -p $out
         tar xf ${release} -C $out
       '';
+      wine = pkgs.wineWow64Packages.staging;
+      launcher = pkgs.writeShellApplication {
+        name = "homm1-play";
+        runtimeInputs = [ pkgs.python3 wine pkgs.llvm pkgs.gamescope pkgs.bash pkgs.coreutils ];
+        text = ''
+          export HOMM1_TOOLCHAIN="${toolchain}/toolchains"
+          export WINEDLLOVERRIDES="mscoree,mshtml="
+          exec python3 "$PWD/play.py" "$@"
+        '';
+      };
     in {
-      devShells.${system}.default = pkgs.mkShell {
-        packages = [ pkgs.python3 pkgs.wineWow64Packages.staging pkgs.llvm ];
-        HOMM1_TOOLCHAIN = "${toolchain}/toolchains";
+      apps.${system}.default = {
+        type = "app";
+        program = "${launcher}/bin/homm1-play";
+      };
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          packages = [ pkgs.python3 wine pkgs.llvm ];
+          HOMM1_TOOLCHAIN = "${toolchain}/toolchains";
+        };
+        play = pkgs.mkShell {
+          packages = [ pkgs.gamescope wine ];
+        };
       };
     };
 }

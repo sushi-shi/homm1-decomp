@@ -44,7 +44,7 @@ stranded `;` or `,`, or if `src/` holds a file no rule covers.
 The tree carries the unit sources, every header, `Heroes.rc`, the module
 definition, a `build.json` link contract, import stubs for `wail32.dll` and
 `smkwai32.dll` (from the retail import table through `homm1.graph.implib`), a
-`build.py`, a flake and a short README. LZHUF's reference sources, research
+`build.py`, the `play.py` runner, a flake and a short README. LZHUF's reference sources, research
 notes and all tooling stay on `master`. `build.json` keeps retail object order
 and the BASE library, computed from the annotations before removal; no address
 reaches the tree.
@@ -95,3 +95,17 @@ the stubs, compiles resources with `llvm-rc`/`llvm-cvtres` and links with the
 retail library line and object order. The program icon is a retail asset, so
 `--icon-from` extracts it from the user's executable. Without the fixedroot
 view the code is equivalent but not identical to the matching build.
+
+## Playing the generated tree
+
+```sh
+nix run path:. -- --data "/path/to/HEROES"    # remembered; later: nix run path:.
+```
+
+The flake's app runs `play.py`, a copy of `homm1.graph.play` (see
+[playing the build](play.md)): it builds with `build.py`, taking the icon from the
+`HEROES.EXE` in `--data`, installs the result in `build/game/game/` beside copies
+of the user's `DATA`, `MAPS` and `GAMES`, maps `--cd` or a stand-in as `D:`
+and starts the game through gamescope in its own Wine prefix. `--dry-run`
+stops before launching. The generated README carries the branch diagram and
+these instructions.

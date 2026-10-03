@@ -20,6 +20,8 @@ from homm1.clean import source
 IMAGE_BASE = 0x400000
 TEMPLATE = "scripts/homm1/clean/template/"
 EXECUTABLE = ("build.py",)
+#: The game runner shared with `homm1 play`.
+RUNNER = "scripts/homm1/graph/play.py"
 
 
 def _units(files: dict[str, bytes]) -> list[dict]:
@@ -101,6 +103,7 @@ def project_files(files: dict[str, bytes]) -> dict[str, bytes]:
     from homm1 import toolchain
     output = {name.removeprefix(TEMPLATE): data for name, data in files.items()
               if name.startswith(TEMPLATE)}
+    output["play.py"] = files[RUNNER]
     output["build.json"] = (json.dumps(manifest(files), indent=2) + "\n").encode()
     output["heroes.def"] = source.clean_asm(files["config/heroes.def"].decode()).encode()
     output.update(import_stubs())
