@@ -22,7 +22,9 @@
 
 #pragma intrinsic(memset, strcpy)
 
+DATA(0x004a1a44)
 char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
+DATA(0x004a1a5c)
 char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
 
 static inline void ResetEventQueue(inputManager* manager) {

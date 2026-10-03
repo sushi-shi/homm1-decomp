@@ -14,14 +14,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+DATA(0x004a0f4c)
 char gAdventureColor[] = "CO";
+DATA(0x004a0f50)
 char gAdventureMonochrome[] = "BW";
+DATA(0x004a0f54)
 char gAdventureBitmapFormat[] = "ADVM%s%02d.BMP";
+DATA(0x004a0f64)
 char gSpellColor[] = "CO";
+DATA(0x004a0f68)
 char gSpellMonochrome[] = "BW";
+DATA(0x004a0f6c)
 char gSpellBitmapFormat[] = "SPEL%s%02d.BMP";
+DATA(0x004a0f7c)
 char gCombatColor[] = "CO";
+DATA(0x004a0f80)
 char gCombatMonochrome[] = "BW";
+DATA(0x004a0f84)
 char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
 
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)

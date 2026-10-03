@@ -847,7 +847,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case MAP_OBJECT_ARTIFACT:
             if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
                 NormalDialog(
-                    "You cannot pick up this artifactId, you already have a full load!",
+                    "You cannot pick up this artifact, you already have a full load!",
                     NORMAL_DIALOG_TYPE_OK,
                     -1,
                     -1,
