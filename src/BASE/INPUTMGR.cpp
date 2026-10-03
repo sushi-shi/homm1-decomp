@@ -22,10 +22,8 @@
 
 #pragma intrinsic(memset, strcpy)
 
-short gInputManagerAssertLine = 137;
 char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
 char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
-char gInputManagerAssertFile[] = "D:\\Heroes\\Base\\INPUTMGR.CPP";
 
 static inline void ResetEventQueue(inputManager* manager) {
     manager->m_writeIndex = 0;
@@ -116,6 +114,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
 // donor Buka TU BASE/INPUTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
 VA(0x0047be30, 0x27c)
+#line 137 "D:\\Heroes\\Base\\INPUTMGR.CPP"
 int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageData) {
     if (gpInputManager == NULL)
         return 1;
@@ -164,11 +163,8 @@ int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageD
     }
 
 mouseCoordinates:
-    ProcessAssert(
-        iMainWinScreenHeight > 0 && iMainWinScreenWidth > 0,
-        gInputManagerAssertFile,
-        gInputManagerAssertLine + 50
-    );
+#line 187
+    ProcessAssert(iMainWinScreenHeight > 0 && iMainWinScreenWidth > 0, __FILE__, __LINE__);
     event->x = LOWORD(messageData) * INPUT_GAME_WIDTH / iMainWinScreenWidth;
     event->y = HIWORD(messageData) * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
 

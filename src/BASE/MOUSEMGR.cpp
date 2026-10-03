@@ -14,8 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-short gMouseManagerAssertLine = 232;
-char gMouseManagerAssertFile1[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
 char gAdventureColor[] = "CO";
 char gAdventureMonochrome[] = "BW";
 char gAdventureBitmapFormat[] = "ADVM%s%02d.BMP";
@@ -25,8 +23,6 @@ char gSpellBitmapFormat[] = "SPEL%s%02d.BMP";
 char gCombatColor[] = "CO";
 char gCombatMonochrome[] = "BW";
 char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
-char gMouseManagerAssertFile2[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
-char gMouseManagerAssertFile3[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
 
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
 MOUSE_INITIAL_POINTER_FLAGS = 6,
@@ -118,6 +114,7 @@ void mouseManager::SetPointer(char* name, short frame) {
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.417606;margin=1.286688;shape=0.189;size=0.849;calls=0.737;alternate=pol20:void mouseManager::SetPointer(int)@0x000c9630
 VA(0x00476940, 0x489)
+#line 232 "D:\\Heroes\\Base\\MOUSEMGR.CPP"
 void mouseManager::SetPointer(short frame) {
     int cursorIndex;
     int x;
@@ -143,11 +140,8 @@ void mouseManager::SetPointer(short frame) {
         m_cursorFrame = frame;
 
     cursorIndex = iMouseOffset[gMouseCursorType] + frame;
-    ProcessAssert(
-        cursorIndex >= 0 && cursorIndex < MOUSE_CURSOR_COUNT,
-        gMouseManagerAssertFile1,
-        gMouseManagerAssertLine + 34
-    );
+#line 266
+    ProcessAssert(cursorIndex >= 0 && cursorIndex < MOUSE_CURSOR_COUNT, __FILE__, __LINE__);
 
     if (hMouseCursor[cursorIndex] == NULL) {
         cColorBits[cursorIndex] = static_cast<signed char*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
@@ -223,11 +217,9 @@ void mouseManager::SetPointer(short frame) {
         bmpAndMask[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
         bmpAndMask[cursorIndex].bmBits = cAndBits[cursorIndex];
         hbmpAndMask[cursorIndex] = CreateBitmapIndirect(&bmpAndMask[cursorIndex]);
-        ProcessAssert(
-            reinterpret_cast<int>(hbmpAndMask[cursorIndex]), // API-forced handle value.
-            gMouseManagerAssertFile2,
-            gMouseManagerAssertLine + 106
-        );
+        // API-forced handle value.
+#line 338
+        ProcessAssert(reinterpret_cast<int>(hbmpAndMask[cursorIndex]), __FILE__, __LINE__);
 
         if (gbColorMice) {
             bmpColor[cursorIndex].bmType = 0;
@@ -246,11 +238,9 @@ void mouseManager::SetPointer(short frame) {
         mouseIconInfo[cursorIndex].hbmMask = hbmpAndMask[cursorIndex];
         mouseIconInfo[cursorIndex].hbmColor = gbColorMice ? hbmpColor[cursorIndex] : NULL;
         hMouseCursor[cursorIndex] = CreateIconIndirect(&mouseIconInfo[cursorIndex]);
-        ProcessAssert(
-            reinterpret_cast<int>(hMouseCursor[cursorIndex]), // API-forced handle value.
-            gMouseManagerAssertFile3,
-            gMouseManagerAssertLine + 127
-        );
+        // API-forced handle value.
+#line 359
+        ProcessAssert(reinterpret_cast<int>(hMouseCursor[cursorIndex]), __FILE__, __LINE__);
     }
 
     SetCursor(hMouseCursor[cursorIndex]);

@@ -25,6 +25,8 @@ cpp_o2_inline = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
 # Incremental compilation (/Gi, which needs /Zi): VC4 then makes __LINE__ relative to
 # a per-function static (?__LINE__Var@...), which is exactly retail's assertion
 # pattern (movsx reg, word [line var]; add reg, offset). See evidence/vc4-gi-line-var.md.
+cpp_o2_gi = ["/nologo", "/c", "/O2", "/Zi", "/Gi", "/G5"]
+cpp_carcass_oi_gy_gi = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/G5", "/Ob1", "/Oi", "/Gy"]
 cpp_o2_inline_gi = ["/nologo", "/c", "/O2", "/Ob2", "/Zi", "/Gi", "/G5"]
 cpp_codec = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
 
@@ -103,12 +105,12 @@ flags = "cpp_o2_inline"
 [[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
-flags = "cpp_o2"
+flags = "cpp_o2_gi"
 
 [[unit]]
 unit = "BASE/MOUSEMGR"
 source = "src/BASE/MOUSEMGR.cpp"
-flags = "cpp_o2"
+flags = "cpp_o2_gi"
 
 [[unit]]
 unit = "BASE/Misc"
@@ -118,7 +120,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/RESMGR"
 source = "src/BASE/RESMGR.cpp"
-flags = "cpp_carcass_oi_gy"
+flags = "cpp_carcass_oi_gy_gi"
 
 [[unit]]
 unit = "BASE/RESOURCE"
@@ -337,7 +339,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "BASE/miscwin"
 source = "src/BASE/miscwin.cpp"
-flags = "cpp_o2"
+flags = "cpp_o2_gi"
 
 [[unit]]
 unit = "BASE/SAMPLE"

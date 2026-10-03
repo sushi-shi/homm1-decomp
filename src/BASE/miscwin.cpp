@@ -190,12 +190,12 @@ struct PaletteColor {
     unsigned char blue;
 };
 
-short gOldAsmAssertLine = 207;
-char gOldAsmAssertFile[] = "D:\\Heroes\\Base\\OLDASM.CPP";
 
 VA(0x00473820, 0x3a)
+#line 207 "D:\\Heroes\\Base\\OLDASM.CPP"
 int Random(int low, int high) {
-    ProcessAssert(high > low, gOldAsmAssertFile, gOldAsmAssertLine + 1);
+#line 208
+    ProcessAssert(high > low, __FILE__, __LINE__);
     return rand() % (high - low + 1) + low;
 }
 

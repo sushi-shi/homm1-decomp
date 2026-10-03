@@ -22,14 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-short gReadByteAssertLine = 598;
-char gReadByteAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
-short gReadWordAssertLine = 619;
-char gReadWordAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
-short gReadLongAssertLine = 639;
-char gReadLongAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
-short gReadBlockAssertLine = 679;
-char gReadBlockAssertFile[] = "D:\\Heroes\\Base\\RESMGR.CPP";
 
 // HoMM1 owns one aggregate descriptor rather than Buka's descriptor array.
 VA(0x00475830, 0x9b)
@@ -375,12 +367,10 @@ void resourceManager::RestorePosition(void) {
 
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
 VA(0x004764d0, 0x55)
+#line 598 "D:\\Heroes\\Base\\RESMGR.CPP"
 signed char resourceManager::ReadByte(void) {
-    ProcessAssert(
-        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
-        gReadByteAssertFile,
-        gReadByteAssertLine + 1
-    );
+#line 599
+    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
     signed char value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -390,12 +380,10 @@ signed char resourceManager::ReadByte(void) {
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
 VA(0x00476530, 0x58)
+#line 619 "D:\\Heroes\\Base\\RESMGR.CPP"
 short int resourceManager::ReadWord(void) {
-    ProcessAssert(
-        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
-        gReadWordAssertFile,
-        gReadWordAssertLine + 1
-    );
+#line 620
+    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
     short value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -403,12 +391,10 @@ short int resourceManager::ReadWord(void) {
 
 // donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
 VA(0x00476590, 0x58)
+#line 639 "D:\\Heroes\\Base\\RESMGR.CPP"
 long resourceManager::ReadLong(void) {
-    ProcessAssert(
-        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
-        gReadLongAssertFile,
-        gReadLongAssertLine + 1
-    );
+#line 640
+    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
     long value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
@@ -431,12 +417,10 @@ void resourceManager::Read13(signed char* destination) {
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
 VA(0x00476680, 0x5f)
+#line 679 "D:\\Heroes\\Base\\RESMGR.CPP"
 void resourceManager::ReadBlock(signed char* destination, unsigned long size) {
-    ProcessAssert(
-        m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE,
-        gReadBlockAssertFile,
-        gReadBlockAssertLine + 1
-    );
+#line 680
+    ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
     PollSound();
     int bytesRead = _read(m_aggregateFd, destination, size);
     PollSound();
