@@ -77,6 +77,13 @@ void army::InitClean(void) {
 }
 
 // The commanding hero's attack and defense raise the copied creature stats.
+// @early-stop 99.91: `commander->m_primaryStats[0] + m_stats.attack` - the /Od
+// add takes m_stats.attack first. vc4trace sortsim: both sides are two constant
+// adds over a load (member offsets are value-hashed constants, so header member
+// order cannot move them); only k4(this) and k4(commander) decide. Retail needs
+// commander's C1 handle 10-11 past its place relative to `this` (or a whole-TU
+// shift S with +k: S=1 k=9..11, S=2 k=8..11, S=5 k=5..8); no uniform shift in
+// 0..511 works. Declaring commander at its first assignment moves it +1 only.
 VA(0x004665e2, 0x122)
 void army::Init(signed char type, short quantity, signed char side, signed char index) {
     hero* commander;
