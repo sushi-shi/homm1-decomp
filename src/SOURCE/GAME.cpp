@@ -794,7 +794,7 @@ short NewGameHandler(tag_message& message) {
                             }
                             if (gpGame->m_playerCount < GAME_MIN_PLAYER_COUNT) {
                                 NormalDialog(
-                                    "A game requires at least one iPlayer.",
+                                    "A game requires at least one opponent.",
                                     NORMAL_DIALOG_TYPE_OK,
                                     0xb1,
                                     0x3c,

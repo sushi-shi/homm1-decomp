@@ -1949,7 +1949,7 @@ int advManager::ProcessSearch(int x, int y) {
             gpGame->m_ultimateArtifactId = ARTIFACT_NONE;
         }
     } else if (gbHumanPlayer[giCurPlayer]) {
-        NormalDialog("Nothing here.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
+        NormalDialog("Nothing here.\nWhere could it be?", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
     }
     if (gbHumanPlayer[giCurPlayer])
         WaitEndSample(sampleData, SAMPLE_WAIT_DEFAULT);

@@ -563,7 +563,7 @@ void fileRequester::DoKnob(void) {
 
     gpMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;
-    scale = 157.0 / (m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET);
+    scale = 156.0 / (m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET);
     gpMouseManager->MouseCoords(x, my);
     offset = my - m_scrollKnob->m_y;
     gpInputManager->Flush();

@@ -132,7 +132,7 @@ void RemoteMain(int gameMode) {
                 WFDCStage = 0;
                 giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
                 strcpy(directConnectMessage,
-                       "Waiting for other computer to log in to direct connection.");
+                       "Waiting for other computer to log in to direct connection.\n\nPress 'CANCEL' to abort.");
                 NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
@@ -217,13 +217,13 @@ int DecodePacket(unsigned char* data, int source) {
 
     computedCrc = 0;
     if (REMOTE_PACKET(packet)->source != source && source != REMOTE_BROADCAST_PLAYER) {
-        sprintf(gText, "I want packet from %d not %d", source, REMOTE_PACKET(packet)->source);
+        sprintf(gText, "I want packet from %d not %d\n", source, REMOTE_PACKET(packet)->source);
         LogStr(gText);
         return 0;
     }
     if (REMOTE_PACKET(packet)->destination != giThisNetPos
         && REMOTE_PACKET(packet)->destination != REMOTE_BROADCAST_PLAYER) {
-        sprintf(gText, "not mine %d", REMOTE_PACKET(packet)->destination);
+        sprintf(gText, "not mine %d\n", REMOTE_PACKET(packet)->destination);
         LogStr(gText);
         return 0;
     }
@@ -235,7 +235,7 @@ int DecodePacket(unsigned char* data, int source) {
     if (crc != computedCrc) {
         sprintf(
             gText,
-            "CRC Check Failed on Packet %d  CRC 1 %d CRC 2 %d",
+            "CRC Check Failed on Packet %d  CRC 1 %d CRC 2 %d\n",
             gPacketSequence,
             crc,
             computedCrc
@@ -487,12 +487,12 @@ int nbnet_init(void) {
     switch (GameMode) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
-            sprintf(gText, "Initializing network.");
+            sprintf(gText, "Initializing network.\n\n  Press 'CANCEL' to abort.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_GUEST;
-            sprintf(gText, "Waiting On Guest.");
+            sprintf(gText, "Waiting On Guest.\n\n  Press 'CANCEL' to abort.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
@@ -502,12 +502,12 @@ int nbnet_init(void) {
             break;
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
-            sprintf(gText, "Initializing network.");
+            sprintf(gText, "Initializing network.\n\n  Press 'CANCEL' to abort.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_HOST;
-            sprintf(gText, "Waiting On Host.");
+            sprintf(gText, "Waiting On Host.\n\n  Press 'CANCEL' to abort.");
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
@@ -1007,7 +1007,7 @@ void PollRemote(void) {
     }
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {
         NormalDialog(
-            "The other player's computer is not responding.  Do you wish to wait longer?",
+            "The other player's computer is not responding.  Do you wish to keep waiting for a response?",
             NORMAL_DIALOG_TYPE_YES_NO, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             lLastHeartbeatReceive = KBTickCount();

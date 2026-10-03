@@ -1088,7 +1088,7 @@ short HeroHandler(struct tag_message& message) {
                         nextLevelExp = gpHVHero->GetExperience(heroLevel + 1);
                         sprintf(
                             gText,
-                            "Level %d\n\nExperience %d\n\nNext level %d",
+                            "Level %d\n\nCurrent experience %d\nNext level %d",
                             heroLevel,
                             gpHVHero->m_experience,
                             nextLevelExp
