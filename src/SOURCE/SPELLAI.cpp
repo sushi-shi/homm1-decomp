@@ -34,9 +34,9 @@ int giSpellAITargetSide;
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
 VA(0x00437010, 0x1bd)
 int combatManager::DoSpellAI(signed char side) {
-    int spellEffect;
     int selectedSpell;
     int bestEffect;
+    int spellEffect;
     int bestHexWork;
     int slotIndex;
     int candHex;
@@ -329,10 +329,10 @@ int combatManager::FirstArmy(int startHex, int side, int* hex) {
 VA(0x00437aa1, 0x273)
 void combatManager::EffectSpellCure(int* effect, int targetSide, signed char cure) {
     int curSide;
+    int negEffect;
     int index;
     army* armyPtr;
     int posEffect;
-    int negEffect;
     int finished;
     int fightValue;
 
