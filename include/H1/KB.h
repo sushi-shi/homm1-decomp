@@ -27,17 +27,6 @@ H1_ENUM_BEGIN(MainMenuControl)
     MAIN_MENU_LAST = MAIN_MENU_CREDITS
 H1_ENUM_END(MainMenuControl)
 
-class soundManager;
-class heroWindowManager;
-class heroWindow;
-class resourceManager;
-class advManager;
-class townManager;
-class executive;
-class game;
-struct configStruct;
-struct tag_tilePoint;
-
 extern char gbInPollSound;
 extern char gbNoSound;
 extern signed char gbShowHighScore;
@@ -68,20 +57,20 @@ extern char* gcConventionalMemoryUnits;
 extern int giRequiredExtendedMemory;
 extern int giRequiredConventionalMemory;
 extern int gbLoadingMonoIcon;
-extern configStruct gConfig;
+extern struct configStruct gConfig;
 // Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
 extern struct tag_tilePoint normalDirTable[];
 extern char* DEFAULT_AGGREGATE_NAME;
-extern resourceManager* gpResourceManager;
-extern soundManager* gpSoundManager;
-extern heroWindowManager* gpWindowManager;
+extern class resourceManager* gpResourceManager;
+extern class soundManager* gpSoundManager;
+extern class heroWindowManager* gpWindowManager;
 extern class mouseManager* gpMouseManager;
-extern heroWindow* pNormalDialogWindow;
-extern advManager* gpAdvManager;
+extern class heroWindow* pNormalDialogWindow;
+extern class advManager* gpAdvManager;
 extern signed char gbThisNetHumanPlayer[];
-extern townManager* gpTownManager;
+extern class townManager* gpTownManager;
 extern class combatManager* gpCombatManager;
-extern executive* gpExec;
+extern class executive* gpExec;
 extern class game* gpGame;
 extern int giHighMemBuffer;
 extern int giBottomViewOverride;
@@ -95,7 +84,7 @@ extern void* hmnuCmbt;
 extern void* hmnuTown;
 extern int gbHeroMoving;
 extern int gbRemoteOn;
-extern heroWindow* DataEntryWin;
+extern class heroWindow* DataEntryWin;
 extern char* cDEDest;
 extern int iDEMaxLen;
 extern signed char bDataEntryTime;
