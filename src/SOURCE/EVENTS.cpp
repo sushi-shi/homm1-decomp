@@ -98,6 +98,13 @@ H1_ENUM_CONST_BEGIN(HouseEventConstant)
 H1_ENUM_CONST_END(HouseEventConstant)
     // clang-format on
 
+    // @early-stop 99.45: m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] in
+    // the campfire arm - retail adds the column term first. As in EraseObj,
+    // the column mul (one add below it) is lighter than the row's (x 72) for
+    // every handle state and no authentic spelling is known; one more
+    // code-free node on the column reproduces retail (99.69 with `+ 0`). The
+    // abs(tx - x) + abs(ty - y) operand orders are handle state (solver:
+    // whole-TU shift T=58 leaves only this site, 4 lines).
     // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
     // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
     // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
@@ -1228,6 +1235,17 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
     CheckEndGame(0);
 }
 
+// @early-stop 97.31: m_mapSounds[x][y] (test and store) - retail adds the
+// column term first (mov eax,y; ecx=x*72; add eax,ecx). vc4trace sortnode:
+// the column mul 4(load y, 1) weighs 0x47 against the row's 4(load x, 72)
+// 0x53, so VC4 emits the row first for every handle state (x/y/gpGame/
+// locals, whole-TU and per-function shifts, all slot-preserving local
+// orders: replay and compiles). Retail needs one extra code-free node on the
+// column (a `y + 0` compile is exact). Callers pass full ints; casts,
+// pointer/1-D spellings and an inline accessor do not add it; a 1-byte
+// element or row struct for game::m_mapSounds flips this site but not
+// DoEvent's and shifts every game.h TU's handles, so no authentic
+// construct is known.
 // Buka advManager::EraseObj reduced to HoMM1's single-cell layers: the cell
 // falls back to the trigger kept in the low seven bits of byte 7 and borrows
 // the metadata of a neighbouring cell with that trigger.
