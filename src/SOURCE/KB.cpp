@@ -215,7 +215,8 @@ H1_ENUM_END(MainMenuHelp)
 H1_ENUM_BEGIN(GameEndSequence)
     GAME_END_LOST = 0,
     GAME_END_WON = 1,
-    GAME_END_CAMPAIGN_COMPLETE = 2
+    GAME_END_CAMPAIGN_COMPLETE = 2,
+    GAME_END_SEQUENCE_COUNT = 3
 H1_ENUM_END(GameEndSequence)
 
 // Network positions (gbGamePosToNetPos, giThisNetPos): the host is
@@ -232,8 +233,8 @@ H1_ENUM_CONST_END(NetPositionConstant)
 VA(0x0045015c, 0xe22)
 int oldmain(void) {
     char saveBuf[20];
-    H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[3];
-    H1_ENUM_STORAGE(SmackVideo, char) lowResVideos[3];
+    H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[GAME_END_SEQUENCE_COUNT];
+    H1_ENUM_STORAGE(SmackVideo, char) lowResVideos[GAME_END_SEQUENCE_COUNT];
     int n;
     heroWindow* mainWin;
     font* font;
@@ -545,7 +546,7 @@ int oldmain(void) {
                     giCurTurn,
                     HIGH_SCORE_TYPE_CAMPAIGN,
                     "",
-                    gCampaignSideNames[gpGame->m_campaignType - 1]
+                    gCampaignSideNames[gpGame->m_campaignType - CAMPAIGN_IRONFIST]
                 );
             }
             if (gbShowHighScore) {
@@ -574,7 +575,8 @@ int oldmain(void) {
                     gpGame->m_campaignDay = giCurTurn + 1;
                     gpGame->m_campaignScenario++;
                     gpGame->m_campaignScenariosWon++;
-                    if (gpGame->m_campaignScenario - 4 == gpGame->m_campaignType - 1)
+                    if (gpGame->m_campaignScenario - 4
+                        == gpGame->m_campaignType - CAMPAIGN_IRONFIST)
                         gpGame->m_campaignScenario++;
                     gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                     sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_campaignScenariosWon);
@@ -1967,8 +1969,8 @@ void InitVars(void) {
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
-        giTerrainCost[i][0] = TerrainStepCost(i, 0);
-        giTerrainCost[i][1] = TerrainStepCost(i, 1);
+        giTerrainCost[i][FINDPATH_STEP_STRAIGHT] = TerrainStepCost(i, FINDPATH_STEP_STRAIGHT);
+        giTerrainCost[i][FINDPATH_STEP_DIAGONAL] = TerrainStepCost(i, FINDPATH_STEP_DIAGONAL);
     }
     strcpy(cNetBoxLine[0], "");
     strcpy(cNetBoxLine[1], "");
@@ -2778,7 +2780,8 @@ void WaitEndSample(SAMPLE2 s, int waitTime) {
         waitTime = 4000;
     long endTime = KBTickCount() + waitTime;
     if (s.pMem) {
-        while (gpSoundManager->DigitalReport(s.pMem, 4) && KBTickCount() < endTime) {
+        while (gpSoundManager->DigitalReport(s.pMem, SAMPLE_REPORT_PLAYING)
+               && KBTickCount() < endTime) {
             Process1WindowsMessage();
             PollSound();
         }
