@@ -111,8 +111,6 @@ public:
 };
 #pragma pack(pop)
 
-// Spells taught per mage-guild level (retail 0x492514).
-extern signed char gMageGuildSpellCount[];
 
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
 // six dwellings named per race by gDwellingNames. town::m_buildings holds

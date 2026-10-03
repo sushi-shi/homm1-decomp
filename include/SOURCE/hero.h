@@ -173,23 +173,11 @@ public:
 };
 #pragma pack(pop)
 
-// Per-class sea mobility multiplier and level thresholds (retail 0x492038,
-// 0x492598).
-extern float gfClassNavigationMod[];
-extern class heroWindow* heroWin;
 extern class heroWindow* gheroWin;
 
 void HeroMessageUpdate(char*);
-extern char* gStatNames[];
-extern char* gStatDesc[];
-extern char* gArtifactDesc[];
-extern char* gClassNames[];
-extern char* cHeroScreen[];
 void UpdateHeroScreenStatusBar(short);
-extern class hero* gpHVHero;
 // Stale alias of gbHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
 extern signed char gbHeroScreenActive;
 short HeroHandler(struct tag_message&);
-extern int giHeroScreenSrcIndex;
-extern short gMinExpForLevel[][HERO_EXPERIENCE_LEVEL_TABLE_COUNT];
 #endif // HOMM1_SOURCE_HERO_H

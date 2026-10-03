@@ -25,7 +25,6 @@ H1_ENUM_BEGIN(ArmySizeLimit)
     ARMY_HORDE_LIMIT = 100
 H1_ENUM_END(ArmySizeLimit)
 
-extern char* gArmySizeNames[6][2];
 extern char cArmySizeName[];
 
 #endif

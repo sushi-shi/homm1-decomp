@@ -185,12 +185,6 @@ extern heroWindow* gpReqExtraWindow;
 extern char gcCurMapName[];
 // Set while the default extension is a saved-game one (".G??").
 extern signed char gbRequestingGames;
-extern char gLastFilename[];
-extern char gLastMapName[];
 extern char* cFRDummy;
-extern char* gMapSizeNames[];
-extern char* gDifficultyNames[];
-extern int giMapSize;
-extern int giMapDifficulty;
 
 #endif // HOMM1_SOURCE_FILEREQUESTER_H

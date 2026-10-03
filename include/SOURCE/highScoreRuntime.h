@@ -19,6 +19,5 @@ H1_ENUM_CONST_END(HighScoreRuntimeConstant)
 };
 #pragma pack(pop)
 
-extern signed char giHighScoreRank;
 
 #endif

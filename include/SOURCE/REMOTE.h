@@ -116,22 +116,13 @@ struct RemoteMessage {
 #pragma pack(pop)
 
 extern signed char gbInNetSetup;
-extern int giThisNetPos;
-// WaitForOtherPlayer stores the game position of net position zero here
-// (0x004c6710). Declared ahead of giThisGamePos (0x004c74a0): only this order
-// gives the host/this compares in advManager::Main, game::NextPlayer,
-// PollRemote and HandleRemoteSuddenExit retail's load order.
-extern int giHostGamePos;
 extern int iIDCtr;
 extern unsigned char GameMode;
-extern signed char iMPBaseType;
 extern unsigned char gPacketSequence;
 extern int iNetNameIndex;
 extern char PacketSend[];
 extern int giNumNetGuests;
 extern int giLastConfirm;
-extern signed char gbGamePosToNetPos[];
-extern int giThisGamePos;
 extern int iInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
@@ -150,8 +141,6 @@ int TransmitRemoteData(
 );
 char* GetRemoteData(signed char);
 int TransmitAndWait(char*, int, int, signed char, signed char, char**);
-signed char NetPosToGamePos(int);
-signed char WaitForOtherPlayer(void);
 void RemoteCleanup(void);
 void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short));
 long FileSize(char*);

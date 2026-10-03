@@ -239,11 +239,6 @@ short GetAdjacentCellIndexNoArmy(short, short);
 // Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager):
 // unreferenced, kept so later symbol handles stay put.
 extern short gCurLoadedSpellEffect;
-extern short giSpellEffectFrame;
-// Pow (impact) effect icons by effect (0x00491098).
-extern char* gPowEffectNames[];
-// Damage multipliers for attack minus defense, -20..20 (0x00492470).
-extern float gfBattleStat[];
 // DamageEnemy flags a genie halving the target stack.
 extern signed char gbGenieHalf;
 // Set while SpecialAttack fires the second shot of a double shooter.

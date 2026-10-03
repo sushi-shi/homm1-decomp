@@ -8,8 +8,6 @@
 #include <SOURCE/game.h>
 #include <SOURCE/resourceTypes.h>
 
-extern signed char gDwellingType[4][6];
-
 extern float gafAITurnCostResource[static_cast<int>(RESOURCE_COUNT)];
 
 extern signed char giBuildShipyard[GAME_PLAYER_COUNT];
@@ -17,10 +15,7 @@ extern signed char giBuildBoat[GAME_PLAYER_COUNT];
 extern signed char giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 void ShowStatus();
 void CheckDoMain(int, int);
-int GetBuildingBaseResourceValue(int, int, int);
 extern int iDummy;
-extern int gArtifactBaseRV[];
-extern int gResourceBaseValue[];
 extern int bHeroBuiltThisTurn;
 extern int iCurHourGlassPhase;
 
@@ -189,12 +184,8 @@ public:
     int EvaluateHeroEvent(int, int, int, int, int*);
     int EvaluateTownEvent(int, int, int, int, int*);
 };
-extern philAI* gpPhilAI;
-extern armyGroup* gpMonGroup;
 extern int costTemp[];
 extern int iLastFrameRateTimer;
-extern signed char gbDrawSavedCursor;
-extern int bSpecialHideCursor;
 extern int giHumanTownConquered;
 extern int gbBerserk;
 extern float fBerserkFactor;
@@ -210,11 +201,6 @@ extern float gfAttackComputerBonus;
 // ValueOfEventAtPosition's event cache, per-resource mine income and the
 // ultimate artifact's average value.
 extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern int giMineIncome[];
-extern int gUltArtifactAvgValue;
-// DoAI: the single player the AI may run for, and the places each hero has
-// already started from this turn.
-extern signed char giLimitPlayer;
 // DoAI's per-turn visit log: up to 30 positions (x, y) a hero has moved
 // from; a target already in it ends the hero's turn (Buka 2.1 ADVMGR.h
 // names).
@@ -238,23 +224,13 @@ extern short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern short gaiHeroLiveChance[];
 extern signed char bSVSearchArrayInUse;
 extern class searchArray SVSearchArray;
-// FightValueOfStack's primary-stat power curve, per-spell AI flags and
-// values, spell-power duration scale and per-charge cast weights.
-extern float gfStatPower[];
-extern signed char gcSpellAIFlags[];
-extern short giSpellAIValue[];
-extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
-// ValueOfBuyingHero: the hero class native to each town type.
-extern signed char gTownHeroClass[];
 // The per-cell/per-hero resource-value caches (gaiHeroStrategicRVOfPos,
 // gaiHeroEventStratRVOfPos, gaiHeroLiveChance) hold RV_UNSET until
 // evaluated; ResetHeroRVs writes it back (Buka's name).
 H1_ENUM_CONST_BEGIN(AIResourceValue)
     RV_UNSET = -32001
 H1_ENUM_CONST_END(AIResourceValue)
-// GoodAdjacent skips cells whose adjacency byte carries the monster bit.
-extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // mapExtra bit 7: game::SetupAdjacentMons sets it where FindAdjacentMonster
 // finds a guard next to the cell and clears it (mask 0x7f) elsewhere.
 H1_ENUM_BEGIN(MapExtraFlag)

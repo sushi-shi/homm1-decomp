@@ -18,10 +18,5 @@ void RemoteMain(int);
 int nbnet_init(void);
 
 extern int gbDoModemConfig;
-// KB-band setup state (Buka X_GLOBAL.h): the direct-connect flag and the
-// multiplayer game type. They stay out of X_GLOBAL.h while GAME and KB still
-// use these names for other retail objects (see the aliases there).
-extern signed char gbDirectConnect;
-extern signed char iMPExtendedType;
 
 #endif // HOMM1_SOURCE_SETUP_H

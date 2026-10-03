@@ -525,13 +525,9 @@ short HandleCastSpell(struct tag_message&);
 // teleport second-click state (0x0048f28c).
 extern signed char indexToCastOn;
 extern signed char bInTeleportGetDest;
-// The loaded combat effect icon's file id (0x004c6d64).
-extern short gCurLoadedSpellFileId;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
 // Stale alias of giSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
 extern short giCombatFxFrame;
-// Spell-book hover help lines (0x00493a78).
-extern char* cSpellHelp[];
 // Captured artifacts shown page by page on the victory window.
 extern signed char iMaxTransferArtifacts;
 extern int iCurTransferArtifact;
@@ -558,24 +554,12 @@ H1_ENUM_BEGIN(CombatMessageText)
     COMBAT_TEXT_NO_SHOTS = 8,
     COMBAT_TEXT_COUNT = 9
 H1_ENUM_END(CombatMessageText)
-// Command help lines for CombatMessage(short) (0x00493b38).
-extern char* cCombatMessage[];
-// Combat help lines for the auto-combat, skip and other controls.
-extern char* cCombatHelp[];
-// ProcessCombatMsg records the hero casting from the combat screen.
-extern int giCurGeneral;
 // Fallback net player for a combat action broadcast (0x004c6710).
 // Stale alias of giHostGamePos (0x4c6710): unreferenced, kept so later symbol handles stay put.
 extern int giRemoteDefaultPlayer;
-// Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
-extern signed char gCombatAdjacency[45][6];
-// Victory/defeat window texts (0x00493e48).
-extern char* cBattleResults[];
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
-// CheckHandleNet hands combat packets back while a battle is running.
-extern signed char gbInCombat;
 // Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
 // ground and obstacle tables are in X_GLOBAL.h.
 extern char* cCombatBkgNames[];

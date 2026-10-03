@@ -24,8 +24,6 @@ H1_ENUM_CONST_BEGIN(WindowManagerConstant)
 H1_ENUM_CONST_END(WindowManagerConstant)
 
 class palette;
-extern palette* gPalette;
-extern int gbInDialog;
 extern int iDialogNestCount;
 
 extern signed char gWindowFadeSavedUpdate;

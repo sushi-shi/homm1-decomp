@@ -143,6 +143,4 @@ public:
 };
 #pragma pack(pop)
 
-// SeedPosition's seeding state.
-extern int giSeedingValid;
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

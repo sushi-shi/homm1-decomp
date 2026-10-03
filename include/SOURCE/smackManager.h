@@ -40,10 +40,8 @@ public:
 };
 #pragma pack(pop)
 
-extern smackManager* gpSmackManager;
 extern signed char bSmackNum;
 extern signed char gbSmackAborted;
-extern int gbInSmacker;
 
 H1_C_LINKAGE void* radmalloc(unsigned long);
 H1_C_LINKAGE void radfree(void*);

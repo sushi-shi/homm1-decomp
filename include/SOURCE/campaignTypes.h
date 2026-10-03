@@ -36,8 +36,5 @@ H1_ENUM_CONST_END(CampaignScenarioTableConstant)
     unsigned short resources[GAME_PLAYER_COUNT][7];
 };
 #pragma pack(pop)
-extern campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT];
-// New-game "King of the Hill" option; campaign scenarios preset it.
-extern signed char gbIAmGreatest;
 
 #endif // HOMM1_SOURCE_CAMPAIGNTYPES_H

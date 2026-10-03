@@ -96,15 +96,4 @@ public:
 
 void PostprocessIcon(icon*);
 
-extern signed char gbIconClipOn;
-extern int gbComputeExtent;
-extern int gbSaveBiggestExtent;
-extern int gbLimitToExtent;
-extern int gbCurrArmyDrawn;
-extern int giMaxExtentX;
-extern int giMaxExtentY;
-extern int giMinExtentX;
-extern int giMinExtentY;
-extern unsigned char gMonoColorMap[];
-extern int giMonoIconSkip;
 #endif // HOMM1_BASE_ICON_H

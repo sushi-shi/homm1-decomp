@@ -69,8 +69,6 @@ extern char CommandString[];
 extern char lpszReturnString[];
 extern unsigned long nMCIError;
 extern short gSampleVolumes[];
-extern char gcSoundPath[];
-extern char gcDataPath[];
 struct SampleChannelStruct {
     int startChannel;
     int endChannel;

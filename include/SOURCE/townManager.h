@@ -367,17 +367,11 @@ struct TownBuildingExtent {
     short width;
     short height;
 };
-extern TownBuildingExtent gTownBuildingExtents[4][16];
 
-extern char* cTownCommand[];
-extern signed char townTheme[];
 // Open's per-type town-object layout (0x0048c028).
 extern const signed char gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
 short TavernHandler(struct tag_message&);
 short MageGuildHandler(struct tag_message&);
 short SplitArmyHandler(struct tag_message&);
 short CastleHandler(struct tag_message&);
-// KB's tavern recruit dialog handler (retail 0x0045140e).
-short RecruitHeroHandler(struct tag_message&);
-extern char* cCastleInfo[];
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

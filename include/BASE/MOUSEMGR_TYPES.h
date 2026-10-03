@@ -33,8 +33,6 @@ H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_KEEP_CURRENT_FRAME = 1000
 H1_ENUM_CONST_END(MouseManagerConstant)
 
-extern int gbColorMice;
-extern int gbSpecialMouseMasks;
 extern int gMouseCursorType;
 extern int iMouseOffset[3];
 extern unsigned char iHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];

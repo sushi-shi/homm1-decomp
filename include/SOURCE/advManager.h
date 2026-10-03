@@ -509,18 +509,14 @@ void UpdateCPanel(signed char);
 signed char SaveGame(void);
 short CPanelHandler(struct tag_message&);
 
-extern int gbNoBorder;
 // giForceSwitchMusic: the tick a network turn hand-over forced a music
 // switch, or IDLE when none is pending (advManager::Main, game::NewDay).
 H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
     FORCED_MUSIC_IDLE = -1
 H1_ENUM_CONST_END(ForcedMusicConstant)
-extern long giForceSwitchMusic;
 extern long iLastScrollTime;
 extern int gbForceUpdate;
-extern int gbAllBlack;
 extern int giFullySeeded;
-extern class searchArray* gpSearchArray;
 // The adventure screen's bottom-right panel: iCurBottomView is the view
 // UpdBottomView last drew, giBottomViewOverride (KB.h) a temporary one that
 // wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
@@ -544,23 +540,11 @@ extern int iSandAnim;
 extern int iLastHourGlassPhase;
 extern long giLastHourGlassUpdateTime;
 extern signed char giShowComputerRoute;
-extern short gMapX;
-extern short gMapY;
 extern unsigned char giCurWatchPlayerBit;
-// GAME stores and reloads it as a dword (retail 0x4c7ca0).
-extern int giCurWatchPlayer;
-// Main: right-click help for the six adventure panel buttons, the typed
-// cheat-digit sequence and the pending menu command.
-extern char* cAdvMenuHelp[];
 extern int giCheatSeq;
-extern int giMenuCommand;
 extern unsigned char giCurPlayerBit;
 // Volume per environment-sound distance step.
 extern const long glEnvironmentVolume[];
-// Route arrow frame by [next step][this step] path direction.
-extern signed char gRouteFrame[][8];
-// Per hero type scouting radius used by TeleportTo.
-extern signed char gHeroScoutRadius[];
 // giLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
 // whole viewport), and m_previousCursorMapX/Y with no hero-cursor cell to
 // clear (Buka 2.1 AdventureUpdateScreenConstant UPDATE_NONE).
@@ -576,15 +560,9 @@ extern int giLimitUpdMaxY;
 extern class heroWindow* cPanel;
 extern signed char bPrefsChanged;
 extern signed char bFreshSave;
-extern unsigned char giCloudType[];
-// UpdBottomViewHero's per-creature mons32.icn frame width.
-extern signed char gMons32Width[];
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 extern signed char bComboDraw[][17];
 extern int giFrameCount;
-// UpdateRadar's per-owner and per-terrain radar pixel colours.
-extern short gRadarOwnerColor[];
-extern short gRadarTerrainColor[];
 void ComputeUALoc(int);
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
 extern int TrigX;

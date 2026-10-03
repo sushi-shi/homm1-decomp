@@ -33,7 +33,6 @@ H1_ENUM_CONST_BEGIN(PaletteGraphicsConstant)
 H1_ENUM_CONST_END(PaletteGraphicsConstant)
 
 class palette;
-extern palette* gpBufferPalette;
 extern signed char gCyclePal[PALETTE_CYCLE_BYTES];
 
 // giCurExe and the gConfig.gfx rows: the game and the map editor share the
@@ -45,10 +44,8 @@ H1_ENUM_BEGIN(ConfigExecutable)
     CONFIG_EXECUTABLE_COUNT = 2
 H1_ENUM_END(ConfigExecutable)
 
-extern int giCurExe;
 extern void* hwndApp;
 extern int iMainWinScreenWidth;
 extern int iMainWinScreenHeight;
-extern int giDebugLevel;
 
 #endif

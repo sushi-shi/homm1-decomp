@@ -4,6 +4,4 @@
 #include <BASE/inputManager.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 
-extern inputManager *gpInputManager;
-
 #endif

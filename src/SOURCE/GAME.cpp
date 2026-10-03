@@ -552,10 +552,6 @@ short game::SaveGame(char* filename, signed char generateName) {
 // donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.668603;margin=0.422052;shape=0.401;size=0.926;calls=0.741;strings=%s%s|.\DATA\|.\GAMES\;alternate=pol20:void game::LoadGame(char *, int, int)@0x000735bf
-// Alias: retail reaches the debug-level dword (0x004c7c94, giDebugLevel), not
-// SETUP's byte iMPExtendedType (SETUP.h); rename at the use.
-extern int iMPExtendedType;
-
 // Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
 // the default hero names and blank visibility, and the seats are re-dealt
 // to this session's human players.
