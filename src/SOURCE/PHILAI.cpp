@@ -345,8 +345,8 @@ VA(0x0041a89d, 0x473)
 void philAI::CheckReload(hero* pHero) {
     int mapY;
     mapCell* visitedCell;
-    int mapX;
     int heroFightValue;
+    int mapX;
     int enemy;
     float enemyPressure;
     float friendly;
@@ -1427,8 +1427,8 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
     float bestCost;
     int curBuilding;
     int costRV;
-    float score;
     float bestScore;
+    float score;
 
     bestCost = -99.0f;
     bestScore = -99.0f;
