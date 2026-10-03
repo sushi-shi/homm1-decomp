@@ -38,7 +38,6 @@ VC2.0 (9.00), VC2.2 (9.10) and VC4.0 (10.00.5270) all emit identical `/Od`
 code for the original probe; their `/O2` versions are 73 bytes and differ.
 Retail's linker 3.00 agrees with VC4's linker 3.00.5270, but this callback
 alone does not prove every object's compiler, packing or exception settings.
-The initial `/GX` fixture was a probe, not a game-wide flag claim.
 
 Retail ends the callback with `leave; ret 16` at VA `0x45c1e9`, before the
 next prologue at `0x45c1ec`. Message `0x110` returns true; `0x111` splits command
@@ -46,7 +45,7 @@ ID, handle and notification code, including unused local stores. ID 1 calls
 EndDialog; other paths call PollSound and return false. An explicit default/break
 adds a five-byte `/Od` jump absent from retail. The operand at RVA `0x5c1ac`
 relocates to EndDialog's IAT slot `0xd661c`; the call at `0x5c1da` targets
-PollSound VA `0x44f640`. Source is now owned by SOURCE/kbwin.
+PollSound VA `0x44f640`. Source: SOURCE/kbwin.
 
 Inspect with `homm1 walls semdiff 0x0005c15c` and `homm1 inspect --json`.
 FPO `.debug$F` records are debugger metadata, excluded from code comparison.

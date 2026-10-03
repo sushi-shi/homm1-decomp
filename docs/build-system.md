@@ -42,27 +42,22 @@ and timestamps where supported, stopping downstream work.
 
 ## Data matching
 
-Current policy is code first: `config/compare.toml` sets `data_matching=false`.
-Eligible code references to data normalize to `$data+0`; function calls, IAT and
-EH identities remain strict. A 100% score in this mode is not full data-reference
-or executable identity. The raw objects preserve the deferred evidence.
-Identity contradictions remain checked by `verify data-identity`; initializer
-and placement coverage belong to the later data phase.
+`config/compare.toml` sets `data_matching = true`: data-reference identities
+and addends are compared together with function calls, IAT and EH identities.
+With `data_matching = false`, eligible code references to data normalize to
+`$data+0` instead. `verify data-identity` checks identity contradictions in
+either mode.
 
 The ledger records its mode. On a deliberate mode change, rebuild comparisons,
 then use `homm1 verify bank --rebase-data-matching` to establish that mode's
 scores. The normalizer refreshes all pairs even if the triggering build selected
-one unit. MAX/HIST from different modes are never compared. Re-enabling strict
-mode also requires resolving deferred data ownership, definitions and placement;
-it is not part of the current campaign.
+one unit. MAX/HIST from different modes are never compared.
 
 ## Verification and integration
 
 `homm1 verify readme` refreshes generated status independently of banking.
 `homm1 verify check` runs MAX plus fast/normal gates; `--tier full`, `data`, or
-`link` opt into further checks. The imported
-whole-donor selftest remains a separate validation backlog, documented in the
-inheritance review. No failing gate authorizes weakening it or fabricating source.
+`link` opt into further checks. No failing gate authorizes weakening it or fabricating source.
 
 To enroll a TU, add its evidence-backed source/owner and full flag profile to the
 manifest, use ordinary types and VA annotations, configure and build. Do not use

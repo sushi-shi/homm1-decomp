@@ -44,12 +44,7 @@ set, not only the handle state.
 
 ## Not this mechanism
 
-`soundManager::SetMusicQuality` lost its TU-state closure at the same time,
-but for a different reason:
-
-- Reverting its enum spellings did not change its code.
-- A bisect places the loss at a header-only merge (`c07cb76`, W1's
-  army/combatManager enum blocks).
-- No probe family reaches the earlier state.
-
-That is header state, not a type change.
+A function whose code does not change when its own enum spellings are
+reverted, but which moves with a header-only change (for example new enum
+blocks in a shared header), is responding to header state, not to a type
+change; `soundManager::SetMusicQuality` is such a case.

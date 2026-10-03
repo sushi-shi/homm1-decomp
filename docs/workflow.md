@@ -1,8 +1,8 @@
 # Repository workflow
 
 The four project skills live under `.agents/skills`: `matcher`,
-`wall-identifier`, `holista`, and `permute`. They retain the donor's evidence
-loop while using HoMM1's VC4 profiles, VA annotations and code-first score.
+`wall-identifier`, `holista`, and `permute`. They follow the donor's evidence
+loop with HoMM1's VC4 profiles, VA annotations and strict score.
 Their reference catalog and `docs/patterns` preserve donor compiler observations
 as hypotheses to test, not established HoMM1 behavior.
 `CLAUDE.md` and `.claude/skills` link to the canonical instructions and skills;
@@ -20,8 +20,8 @@ homm1 build
 its unit-manifest merge driver. It refuses to replace an unrelated hooks path.
 The pre-commit hook formats fully staged C/C++ files under `src` and `include`.
 It refuses partially staged files before changing anything, so unstaged edits
-cannot enter a commit accidentally. Vendor files are excluded. Unlike the
-donor formatter, this configuration does not insert braces or trailing commas.
+cannot enter a commit accidentally. Vendor files are excluded. The configuration does not insert braces or
+trailing commas.
 Formatting still requires the normal comparison validation before committing.
 
 The unit merge driver preserves independent additions/deletions and refuses

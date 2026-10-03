@@ -6,7 +6,8 @@
   [candidate-image checks](image-diff.md), [playing the build](play.md),
   [clean source branch](clean-source.md).
 - [Score tracking](match-status.md), [permutation](permuter.md),
-  [compiler patterns](patterns/INDEX.md).
+  [compiler patterns](patterns/INDEX.md), per-unit
+  [equivalence surveys](equivalence/) of non-exact functions.
 - [Cleanliness](cleanliness-metrics.md), [source markers](comment-markers.md),
   [constants](constants.md), [enum reuse](enum-reuse.md), [clangd](clangd.md).
 - [Tooling inheritance](tooling-inheritance.md),

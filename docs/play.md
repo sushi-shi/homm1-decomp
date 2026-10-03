@@ -1,7 +1,7 @@
 # Playing the build
 
 `homm1 play` builds, links the candidate with its resources, installs it beside
-your game data and starts it, after Gruntz's `gruntz play`:
+your game data and starts it:
 
 ```sh
 nix develop .#build

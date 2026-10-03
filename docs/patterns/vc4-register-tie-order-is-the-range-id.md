@@ -42,76 +42,61 @@ those pinned buckets.
 
 ## Measurements
 
-- **Tracer** `scripts/homm1/research/vc4trace/ra-graph.spec` (README there) logs:
-  - the range-id assignment (id, bucket);
-  - the simplify list, removals and edges;
-  - the colours.
-- **Replay.** `rasim check` replays every allocator pass from the traced list,
-  degrees and edges, and was exact on every traced pass:
-  - soundmgr at HEAD: 50/50;
-  - soundmgr at d950846, base and with tu_state_noise trial 14: 49/49 each;
-  - WINMGR: 27/27;
-  - INPUTMGR: 10/10;
-  - SEARCH: 21/21.
-- **`soundManager::SetMusicQuality` (d950846 exact against HEAD 96.14).** The two
-  graphs are isomorphic; only the ids differ.
-  - At HEAD: `this` is in bucket 0, `track` in 2, the AIL_serve import pointer in
-    `0x19`, and the counter in `0xc`. Ties go `this`→esi, `track`→ebp, counter→edi,
-    pointer→ebx.
-  - Retail needs `bucket(this) > bucket(track)`. Because `track = this + 2`, that means
-    `this & 31 ∈ {0x1e, 0x1f}`.
-  - Retail also needs AIL_serve's bucket below the counter's fixed `0xc`.
-  - No single region offset satisfies both conditions. The c07cb76 header enums moved
-    AIL_serve from bucket 0 to `0x19`.
-  - `rasolve` predicts four colouring classes over two region offsets (the mss.h
-    declarations and the .cpp). Each class has a distinct measured distance (23, 19,
-    4, 0). 12 out of 12 traced compiles matched the predicted colouring.
-- **Prediction against traced colourings** at random region offsets: SetMusicQuality
-  12/12, `heroWindowManager::AddWindow` 8/8, `searchArray::FindNearestObject` 8/8,
-  `inputManager::Open` 8/8.
-- **Spill rounds.** `searchArray::SeedPosition` re-runs the allocator after inserting
-  spill code: 7 passes in 3 rounds (each round tries both spill metrics, then re-runs
-  the one with the smaller spilled weight). `rasolve` replays every round and continues
-  only while the predicted spill set equals the traced one; the base state replays
-  exactly. Under TU offsets, though, SeedPosition's graph itself changes (15 of 16
-  sampled offsets): its statics and parameters feed the operand sort, so the IL that
-  reaches the allocator differs, and no allocator-only replay can predict it. `rasolve`
-  reports such states as graph changes.
-- **SeedPosition measured.** After-include offsets 0..600 give at best 10 diff lines
-  (offsets 69, 103, 326, 549, 583; base 15) and never 0. Single moves of its 24 static
-  declarations (`.bss` order is name-hashed, so the move is data-neutral) reach only 24.
+Measured with an in-process C2 tracer that logged range-id assignment (id,
+bucket), the simplify list, removals, edges and colours; the tracer and its
+replay/solver scripts were research tooling and are not kept in the tree.
+
+- **Replay.** Replaying every allocator pass from the traced list, degrees and
+  edges was exact on every traced pass (soundmgr 50/50 and 49/49, WINMGR 27/27,
+  INPUTMGR 10/10, SEARCH 21/21).
+- **`soundManager::SetMusicQuality`.** Exact and non-exact graphs were
+  isomorphic; only the ids differed. With `this` in bucket 0, `track` in 2, the
+  AIL_serve import pointer in `0x19` and the counter in `0xc`, ties went
+  `this`→esi, `track`→ebp, counter→edi, pointer→ebx. Retail needs
+  `bucket(this) > bucket(track)`; because `track = this + 2`, that means
+  `this & 31 ∈ {0x1e, 0x1f}`, and AIL_serve's bucket below the counter's fixed
+  `0xc`. No single region offset satisfies both; over two region offsets (the
+  mss.h declarations and the .cpp) there are four colouring classes, and 12 of
+  12 traced compiles matched the predicted class.
+- **Prediction against traced colourings** at random region offsets:
+  SetMusicQuality 12/12, `heroWindowManager::AddWindow` 8/8,
+  `searchArray::FindNearestObject` 8/8, `inputManager::Open` 8/8.
+- **Spill rounds.** `searchArray::SeedPosition` re-runs the allocator after
+  inserting spill code: 7 passes in 3 rounds (each round tries both spill
+  metrics, then re-runs the one with the smaller spilled weight). Under TU
+  offsets its graph itself changes (15 of 16 sampled offsets): its statics and
+  parameters feed the operand sort, so the IL reaching the allocator differs and
+  no allocator-only model predicts it. After-include offsets 0..600 never reach
+  0 diff lines; single moves of its 24 static declarations (`.bss` order is
+  name-hashed, so the move is data-neutral) do not either.
 
 ## Using it
 
-1. `python3 -m homm1.research.vc4trace.rasolve UNIT FUNC [--point before:TEXT|after:TEXT|fn:DEC]... --validate 8`
-   lists the colouring classes reachable by region handle offsets. It labels each class
-   with a measured distance and reports how many traced compiles the prediction matched.
-   The default points are the top of the TU, the end of the includes and the function.
-   Add header-level points (`before:#include <mss.h>`) when a cached global decides the
-   tie.
-2. If a class reaches distance 0, realise its offsets authentically:
+1. Identify the tied ranges and their buckets (C1 handle & 31) in our build and
+   the buckets retail requires; region handle offsets (top of TU, end of the
+   includes, before the function, or header-level points such as
+   `before:#include <mss.h>` when a cached global decides the tie) select the
+   colouring class.
+2. Realise a required offset authentically:
    - include order per the donor;
-   - a value-preserving spelling that changes the handle count (a dropped cast, or
-     `if (a && b)` against nested ifs: [control flow consumes handles](vc4-control-flow-consumes-c1-handles.md));
+   - a value-preserving spelling that changes the handle count (a dropped cast,
+     or `if (a && b)` against nested ifs:
+     [control flow consumes handles](vc4-control-flow-consumes-c1-handles.md));
    - a retail-evidenced declaration.
 
-   Then check the whole unit.
-
-   `SetMusicQuality` became exact this way. MSS now precedes `windows.h` as in Buka's
-   include list, and `CDPlay` stores `m_currentTrack = track` without the
-   reconstruction's `static_cast<char>`. soundmgr went from 11 to 14 of 23 exact
-   (`SetMusicQuality`, `StopSample`, `Open`), and no function scored lower.
-3. If no class reaches 0, the residue is not the tie order. Look at the graph instead:
-   temporaries, live ranges, references (see the Chaitin-Briggs entry).
-   - `AddWindow`: two classes (44 and 36 lines), neither exact.
-   - `FindNearestObject`: three classes; the current one (28 lines) is best.
-   - `inputManager::Open`: one class.
+   Then check the whole unit. `SetMusicQuality` is exact this way: MSS precedes
+   `windows.h` as in Buka's include list, and `CDPlay` stores
+   `m_currentTrack = track` without a cast.
+3. If no class reaches retail, the residue is not the tie order. Look at the
+   graph instead: temporaries, live ranges, references (see the Chaitin-Briggs
+   entry). `AddWindow`, `FindNearestObject` and `inputManager::Open` are such
+   cases.
 
 ## Not established
 
 - How C2 picks the fixed buckets of the symbols it creates (`0xc` for the reversed-loop
   counter, multiples of 4 in SEARCH).
-- Predicting allocator input when the operand sort changes the IL (sortsim and rasim
-  combined). SeedPosition needs it.
+- Predicting allocator input when the operand sort changes the IL (operand-sort
+  and allocator replay combined). SeedPosition needs it.
 - `/Od` units have no register allocation. `advManager::DrawCell`'s `|=` residue (ADVMGR
   is `/Od`) belongs to the sortnode replay, not here.

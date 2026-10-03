@@ -52,10 +52,10 @@ Consequences:
   at `0x408daf` (node weight), `0x408588` (leaf handle), `0x413ded` (exchange), `0x413e5c` (rotation),
   `0x47576f`/`0x408b61`/`0x408bc4`/`0x408bec` (tree roots, with the function's C1 handle
   `[[[0x48173c]+4]+0x24]`).
-- Replay (`sortsim.py check`) reproduces every traced weight, exchange and rotation:
+- A replay of the traced sort reproduces every traced weight, exchange and rotation:
   - `SOURCE/ARMY`: 1338 trees.
   - `BASE/WINMGR` (`/O2`): 1007 walks.
-- Prediction (`sortsim.py diff`) runs the replay from one trace with a pure handle map `+N` above the
+- Prediction runs the replay from one trace with a pure handle map `+N` above the
   first handle the `.cpp` allocates, and compares the predicted sorted trees with a real traced
   compile of the shifted TU. All of them matched:
 
@@ -88,26 +88,25 @@ Consequences:
 
 ## Using it
 
-Tools: `scripts/homm1/research/vc4trace/` (README there; research tooling, not part of the CLI).
+The tracer and replay scripts were research tooling and are not kept in the
+tree; the mechanism above is what carries over.
 
-1. Trace the TU once (`python3 -m homm1.research.vc4trace.trace SOURCE/UNIT`, about 2 s), then
-   `python3 -m homm1.research.vc4trace.sortsim check build/research/vc4trace/tu/UNIT.trace`. The
-   check must be exact.
-2. For a local operand residue, run `python3 -m homm1.research.vc4trace.sortplan TRACE ILPREFIX FUNC --od`.
-   Compile one representative per outcome class and keep the class that matches retail. Pick an
-   authentic declaration order inside it.
-3. For a parameter, member or global residue, run `python3 -m homm1.research.vc4trace.fnshift TRACE
-   ILPREFIX FUNC LO`. It gives the handle windows that produce each outcome. Look for authentic
-   earlier-TU content (declaration order, or a control-flow spelling per the control-flow entry) that
-   supplies a shift inside the retail window. Do not add declarations only to shift handles.
-4. Several functions share one TU prefix, so evaluate all of a TU's residues against the same shift
-   before choosing. `python3 -m homm1.research.vc4trace.solver SOURCE/UNIT` does this search.
+1. For a local operand residue, the outcome depends only on the locals' handle
+   order: enumerate declaration orders that keep the `/Od` slots, group them by
+   predicted sorted tree, compile one representative per class and keep the class
+   that matches retail. Pick an authentic declaration order inside it.
+2. For a parameter, member or global residue, find the handle window that
+   produces retail's outcome and look for authentic earlier-TU content
+   (declaration order, or a control-flow spelling per the control-flow entry)
+   that supplies a shift inside it. Do not add declarations only to shift
+   handles.
+3. Several functions share one TU prefix, so evaluate all of a TU's residues
+   against the same shift before choosing.
 
 ## Not established
 
 - The constant-weight formula: replayed from the trace, not re-derived.
 - The rotation's float/pointer branch (type word `& 0xc00`): flagged, unmodelled.
 - Whether C1's own pre-sort order can matter on exact ties: no counterexample yet.
-- A full `/O2` colouring replay from traced interference graphs. The tracer can dump the select phase
-  (`0x40cbe1`: node `+0x18` id, `+0x16` weight, register); the graph re-simulation is the earlier
-  patched-C2 work.
+- A full `/O2` colouring replay from traced interference graphs. The select phase is at
+  `0x40cbe1` (node `+0x18` id, `+0x16` weight, register).

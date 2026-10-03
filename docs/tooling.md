@@ -27,9 +27,9 @@ and `build verify` for final gates. Source uses
 absolute VAs; the model uses RVAs. `VA_DECL` identifies a declaration without
 claiming a body. See [build details](build-system.md) and the [command map](tooling-map.md).
 
-`config/compare.toml` selects code-first comparison: data identities/addends are
-deferred; calls, imports and EH identities remain checked. Exact code scores do
-not establish data or executable identity. Strict data matching comes later.
+`config/compare.toml` selects strict comparison (`data_matching = true`):
+data-reference identities and addends are checked together with calls, imports
+and EH identities. Exact code scores do not establish executable identity.
 
 [CUR/MAX/HIST and banking](match-status.md) have one contract. README generation
 previews the bank rules without writing the ledger. `verify bank` explicitly
@@ -55,6 +55,4 @@ completion lines. Successful routine output, stdin and environment are not
 stored. Concurrent appends lock; logging failures warn once without changing
 the command result. Logs are ignored and are not automatically rotated.
 
-`homm1 audit usage` checks that every entry point keeps usage logging. The
-separate donor selftest has remaining porting gaps; see
-[inheritance and limits](tooling-inheritance.md).
+`homm1 audit usage` checks that every entry point keeps usage logging.

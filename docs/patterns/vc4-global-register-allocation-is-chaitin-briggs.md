@@ -88,7 +88,7 @@ Consequences:
    initializers must keep their statement order, put a plain declaration block
    first and the assignments after it. An initialized declaration also fixes the
    statement order. Examples:
-   - `heroWindowManager::UpdateScreenRegion` went from 81 to 100 by declaring
+   - `heroWindowManager::UpdateScreenRegion` matches by declaring
      `top, left, bottom, right` before assigning `left, top, right, bottom`.
    - `soundManager::CDStartup` reached 100 by declaring `device` before
      `numDevices`.

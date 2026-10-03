@@ -24,8 +24,7 @@ regressions. Use its actual output rather than inferring a verdict from the
 aggregate exact count or fuzzy percentage.
 
 The [fingerprinter](../scripts/homm1/verify/fingerprints.py) writes
-`build/gen/func_fingerprints.tsv`. Its old `build/clangd/` path is only a seed
-for migration, not the active cache location.
+`build/gen/func_fingerprints.tsv`.
 
 `homm1 verify bank` is an explicit ledger-writing operation. Review and stage
 the corresponding source snapshot first; do not bank an unexplained mismatch.

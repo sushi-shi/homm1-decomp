@@ -27,7 +27,7 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 | Source/identity gates | Retained normal source gates, review-claims and contradictory-data-identity checks even in code mode. Data coverage/placement checks remain in the explicit later data tier. |
 | Constants/enum review | Ported from giten-enums into the existing `verify` modules: `constants` gains the `config/constants.tsv` glob work list (first match wins, stale rows fail), committed floor (`--update-floor`), `--list`, `build/gen/constants_open.tsv`, strict-domain parse with retail fallback, switch-subject/store-target review details and float literals; `enum-reuse` gains the role-pair report and the `config/reviews/enum-reuse.tsv` ledger; `enum-domains` gains constant groups as non-storage and LOCAL/PARAM/RETURN width exemption; `board` reads `H1_ENUM_*` blocks and declarators. Adapted: `H1_ENUM_*`/`include/Domains.h` instead of `GZ_ENUM_*`/`EnumDomain.h`, strict view via `/std:c++20 /Zc:__cplusplus` instead of `GZ_STRICT_ENUMS`, and VC4 booleans: only Win32 `BOOL` is a boolean domain, its proven spelling is `TRUE`/`FALSE`, and `true`/`false` spellings fail (C2065; Giten's TRUE->true check is inverted). See [constants](constants.md) and [enum reuse](enum-reuse.md). Deferred: Giten's handoff evidence notes are game-specific. |
 | Skills/workflow | Adapted all four skills, canonical instruction symlinks, safe staged formatting and unit-block merge driver. See [workflow](workflow.md). |
-| Negative controls | The unit test suite was removed by the user; `homm1 audit usage` keeps the entry-point logging check. The larger imported `verify selftest` has compiler/project-specific failures and missing APIs; it is a separate validation backlog. |
+| Negative controls | Inapplicable: HoMM1 keeps no test suite or self-test verb; `homm1 audit usage` checks entry-point logging and the build graph runs the gates. |
 | Gruntz-only scanners | Deferred: `walls/calibrate`, `ehactions`, `escapescan`, `framescan`, `jccscan`, `loopscan`, `offsetscan`, `reloadscan`, `residue`, `retscan`, `signscan`, `storescan`, `thisscan`, `uninitscan`, `vptrscan` need separate applicability review and VC4 controls; the Giten diagnostic port does not establish their parity. |
 | Inline-budget prediction | Deferred: VC5 thresholds need measured VC4 controls. The local gap command reports definitions/calls only. |
 | Executable-section data/placement | Deferred: requires HoMM1 fixtures and the later data campaign. No initializer coverage is admitted. |
@@ -47,9 +47,8 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 - Overloaded definitions use exact mangled AST identities through the existing
   extractor. Giten/Gruntz union sibling ranges; Buka's VA-owned blocks preserve
   unrelated bodies. HoMM1 keeps unambiguous hashes and uses `overload1:` for
-  exact overloads; cache v2 invalidates stale derived seeds. Legacy hash-domain
-  migration is unknown provenance, not proof of an edit. Buka's argument
-  normalization and inline-helper hash propagation remain deferred.
+  exact overloads. Buka's argument normalization and inline-helper hash
+  propagation remain deferred.
 - VC4 inline EH groups stay within their full owner; packed groups retain
   separate records. Resolved offsets, handler and FuncInfo/map identities remain
   protected. Unsupported continuations fail closed.
@@ -63,11 +62,9 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
   that MASM resolved inside one module the REL32 relocation that the delinked
   target carries. A postcondition proves that the call target is unchanged.
   This lets one retail module stay a single object (`BASE/LZHUFDEC`).
-- HoMM2's build-time README refresh, worktree-local editor roots and VA workflow
-  informed the port. Its VC6 worker/compiler settings and C++11 strict-enum
-  hook are not HoMM1 build controls.
-- Giten's `editor/nvim` integration was removed by the user; the whole-tree
-  audit reports those donor paths as `inapplicable`.
+- HoMM2's VC6 worker/compiler settings and C++11 strict-enum hook are not
+  HoMM1 build controls. Giten's `editor/nvim` integration and research
+  solvers are `inapplicable`.
 
 ## Repeat the review
 
@@ -88,14 +85,3 @@ coverage only. New ports or removals must update the dispositions above, review
 both Gruntz and HoMM2, preserve usage logging and run applicable controls.
 Candidate linking remains incomplete; unresolved definitions are reconstruction
 findings, not grounds for forced linking.
-
-## Repository cleanup
-
-HoMM3's documentation/evidence/experiment cleanups (`401806759`, `02474f5d1`,
-`dce7317cc`) informed this layout. Generated audit and donor-candidate snapshots
-are retired; reproducible commands remain. The completed HoMM2 stub materializer
-and embedded bootstrap bodies are retired, while donor alignment remains a
-research tool. Reviewed DNA/link-band/TU-segment tables remain because live
-census consumers use them. Reconstruction evidence keeps retail facts and
-source hypotheses; current scores come from the generated ledger/report.
-Historical reports and retired scripts remain recoverable from Git history.
