@@ -2425,6 +2425,23 @@ void advManager::CompleteDraw(int update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
+// Retail ADVMGR .bss keeps four objects no HoMM1 code references: the
+// Buka/PoL ADVMGR globals iThisMaxY, iThisMinY, USMsg and CDMsg (both donors
+// declare them in advManager.h and never use them). VC4 orders .bss by name
+// key, and these keys fit the unclaimed retail slots: 229, 317 and 351 between
+// cPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
+// bytes; HoMM1 has no town portal, so giTownPortalChoice/townPortalWin are
+// absent), and 892 between bComboDraw (596) and iLastAnimFrame (957) fills
+// 0x004c50b0-0x004c50bf. .bss position is free; they sit with the drawing code.
+DATA(0x004c4f30)
+int iThisMaxY;
+DATA(0x004c4f34)
+int iThisMinY;
+DATA(0x004c4f38)
+struct tag_message USMsg;
+DATA(0x004c50b0)
+struct tag_message CDMsg;
+
 // Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
 // masks first, then each unseen neighbour, indexed into the cloud table.
 VA(0x0042a3d8, 0x40d)
