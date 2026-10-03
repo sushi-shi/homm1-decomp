@@ -21,3 +21,28 @@ function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x00076940	0x000CBF68	0x00076D61	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	evidence/mouse-coordinates.md; ICONINFO hbmColor field
 0x00076940	0x000CBF68	0x00076D69	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	evidence/mouse-coordinates.md; ICONINFO hbmColor zero branch
 0x0007FF0C	0x000D0906	0x0007FF2B	_son	0xFFFFFFFE	1	evidence/lzhuf-provenance.md; legacy object overlapping dword load uses son-2
+0x00033B10	0x000C4F77	0x00033D45	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033D5C	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033D72	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033D8A	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033DC2	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033DD7	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033EAC	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033EC3	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x00033F47	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033B10	0x000C4F77	0x000342B2	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x0005DDE0	0x0009332C	0x0005EF1C	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	retail operand below the claimed start (biased subscript): DoEvent indexes spell names by a 1-based spell
+0x0003C1BF	0x00092C4E	0x0003C303	?gCampaignSideCrests@@3PAY01CA	0xFFFFFFFE	1	retail operand below the claimed start (biased subscript): InitCampaignMap indexes crest pairs by a 1-based campaign side
+0x00041E09	0x00091399	0x00041F00	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00041E09	0x00091399	0x00041FF9	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00042654	0x00091399	0x0004275D	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00042654	0x00091399	0x000427B0	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0006D9AE	0x000930CC	0x0006D9E2	?gStatNames@@3PAPADA	0xFFFFFEBC	1	retail operand below the claimed start (biased subscript): status-bar widget id less the first stat widget id
+0x0005015C	0x00093F9C	0x00050CF9	?gCampaignSideNames@@3PAPADA	0xFFFFFFFC	1	retail operand below the claimed start (biased subscript): campaign type less CAMPAIGN_IRONFIST
+0x0001D7D8	0x00091399	0x0001DA83	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0001D7D8	0x00091399	0x0001DBFC	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0002196D	0x00091399	0x00021A91	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0002278B	0x0009113E	0x00023B1F	?giSpellAIValue@@3PAFA	0xFFFFFFFE	1	retail operand below the claimed start (biased subscript): event spell is 1-based
+0x0002278B	0x0009117F	0x00023B70	?gcSpellAIFlags@@3PACA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): event spell is 1-based
+0x00008ED2	0x00091399	0x00009256	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0000C478	0x00091399	0x0000C52F	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST

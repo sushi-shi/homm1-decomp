@@ -54,6 +54,10 @@ source is constrained by layout at all.
 
 ## Open
 
+Retail's interleaving of variables with literals is the `/Gi` per-function
+section layout: see [incremental compilation](vc4-gi-incremental-compilation.md).
+
+
 Retail PHILAI `.data` interleaves two variables with string literals:
 `bSVSearchArrayInUse` (0x48f7b8) sits after `GetBestHero`'s literals, and
 `bEvaluatingTravelGates` (0x48f824) after `BuildCreature`'s. The

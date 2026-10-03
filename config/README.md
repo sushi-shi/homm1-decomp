@@ -22,6 +22,9 @@ small evidence-backed exceptions.
   source claims or matching-denominator entries.
 - `reloc_referents.tsv` uses the donor schema for exceptional relocation
   aliases that containment cannot infer. It is currently empty.
+- `import_libraries.tsv` records vendor import libraries whose archive
+  format or member names differ from what VC4 LINK emits (WING32). The
+  import-library synthesis in `homm1.graph.implib` reads it.
 - `link_order.tsv` and `link_bands.tsv` are empty until link-layout evidence is
   admitted.
 - `functions_static_libs.tsv`, `functions_zlib.tsv`, `data_zlib.tsv`,

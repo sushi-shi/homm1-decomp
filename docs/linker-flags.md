@@ -14,14 +14,19 @@ retail import table. The reviewed import-thunk rows of
 `config/retail/function_referents.tsv` supply what the table cannot: the
 caller-side stdcall decoration of WinG's undecorated exports and the names of
 smkwai32's ordinal-only imports. Hints and ordinals are re-read from each
-produced library and checked against retail.
+produced library and checked against retail. `config/retail/import_libraries.tsv`
+records a vendor library whose archive shape differs from VC4's: WING32.lib
+is built with the pinned VC 2.0 LINK (`homm1 toolchain install --id vc20`),
+whose import format carries its own null descriptor, and its members are
+renamed `wing32.dll`. Without vc20 the tool warns and uses VC4's format.
 
 Without `--order`, objects are linked in retail code order: each unit sorts by
 its lowest claimed function RVA (dynamic-initializer pins excluded), because
 LINK lays out `.text` in object order. `--manifest-order` keeps the given order.
 Units from the BASE run (0x00473450 onward) are archived into `base.lib` and
 searched after `netapi32.lib`, as retail's `Netbios` thunk at 0x0047343c
-requires. Their order is LINK's pull order. `--no-base-library` links them as
+requires, and after `wail32.lib`, which retail pulls only in the second pass.
+Their order is LINK's pull order. `--no-base-library` links them as
 explicit objects. `config/heroes.def` supplies the export directory, module
 name and stack reserve. The C runtime is VC4.0 LIBCMT: `/NODEFAULTLIB:libc.lib`
 drops the LIBC the objects request, and `libcmt.lib` follows the Win32

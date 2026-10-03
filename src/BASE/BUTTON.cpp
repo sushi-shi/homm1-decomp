@@ -15,7 +15,8 @@
 #include <SOURCE/kbwin.h>
 
 long gButtonRepeatTimer;
-int iLeftRightSave;
+DATA(0x004a2f98)
+int iLeftRightSave = 0;
 
 VA(0x0047eef0, 0x31)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {

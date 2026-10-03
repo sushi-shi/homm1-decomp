@@ -299,15 +299,25 @@ void ClippedMonoIconToBitmap(
 // working value in file statics, as in the assembly renderers. Their
 // declaration order sets the compare operand sort keys; the .bss layout
 // follows the names, not this order.
+DATA(0x004cabd0)
 static int sClipY;
+DATA(0x004cabc8)
 static int sClipBottom;
+DATA(0x004cac1c)
 static int sClipRowStart;
+DATA(0x004cabbc)
 static signed char* sClipRow;
+DATA(0x004cabc0)
 static IconEntry* sClipEntry;
+DATA(0x004cabd4)
 static unsigned char* sClipSource;
+DATA(0x004cabb8)
 static int sClipRight;
+DATA(0x004cabcc)
 static int sClipX;
+DATA(0x004cabc4)
 static unsigned int sClipRun;
+DATA(0x004cac18)
 static BOOL sClipInside;
 
 VA(0x00473ad0, 0x2ad)

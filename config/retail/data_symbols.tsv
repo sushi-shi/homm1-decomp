@@ -127,3 +127,10 @@ rva	size	symbol	provenance
 0x000A1708	2	?gAdjustMusicAssertLine@@3FA	evidence/sound-volume-control.md; signed word assertion base used by AdjustMusicVolumes
 0x000A170C	28	?gAdjustMusicAssertFile@@3PADA	evidence/sound-volume-control.md; retail source assertion path, identity only
 0x000A0C7C	4	?iDialogNestCount@@3HA	evidence/window-lifecycle.md; dialog nesting counter
+0x000A1BB4	4	_gClipRowsLeft	src/BASE/Icon2bc.asm; clipped icon renderer scratch (rows still to draw), code-required identity
+0x000A1BB8	4	_gClipLeftSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (left clip skip), code-required identity
+0x000A1BBC	4	_gClipVisibleWidth	src/BASE/Icon2bc.asm; clipped icon renderer scratch (visible span width), code-required identity
+0x000A1BC0	4	_gClipRowSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (destination row skip), code-required identity
+0x000A1BC4	4	_gClipColumn	src/BASE/Icon2bc.asm; clipped icon renderer scratch (current column), code-required identity
+0x000A2FB8	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity
+0x000C6A88	4	?gButtonRepeatTimer@@3JA	retail button repeat deadline, referenced by button::Main/Select; lies in KB.cpp's .bss band, so its owning definition is not settled (data-tu-order)

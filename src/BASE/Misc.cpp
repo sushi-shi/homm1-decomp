@@ -71,7 +71,7 @@ void LogStr(char* label, long value1, long value2) {
     if (giDebugLevel < MISC_FILE_DEBUG_BEGIN)
         return;
     out = fopen("KB.LOG", "at+");
-    sprintf(logText, "%s : % 8d  % 8d", label, value1, value2);
+    sprintf(logText, "%s : % 8d  % 8d\n", label, value1, value2);
     fputs(logText, out);
     fclose(out);
     if (giDebugLevel == MISC_DEBUGGER_OUTPUT_LEVEL)
@@ -89,7 +89,7 @@ void LogStr(char* label, long value1, long value2, long value3, long value4, lon
     out = fopen("KB.LOG", "at+");
     sprintf(
         logText,
-        "%s : % 8d  % 8d  % 8d  % 8d  % 8d",
+        "%s : % 8d  % 8d  % 8d  % 8d  % 8d\n",
         label,
         value1,
         value2,
@@ -123,7 +123,7 @@ void LogStr(
     out = fopen("KB.LOG", "at+");
     sprintf(
         logText,
-        "%s: % 6d % 6d % 6d % 6d % 6d % 6d % 6d",
+        "%s: % 6d % 6d % 6d % 6d % 6d % 6d % 6d\n",
         label,
         value1,
         value2,

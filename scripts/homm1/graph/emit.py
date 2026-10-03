@@ -116,7 +116,8 @@ PROJECT_MODS = _mods("compare/project.py", "compare/normalize.py", "manifest.py"
 REPORT_MODS = _mods("tool/objdiff.py")
 LINK_MODS = _mods("graph/link.py", "graph/implib.py", "tool/link.py",
                   "core/pe.py") + TOOL_MODS + [
-    "config/heroes.def", "config/retail/function_referents.tsv"]
+    "config/heroes.def", "config/retail/function_referents.tsv",
+    "config/retail/import_libraries.tsv"]
 VERIFY_MODS = _mods("verify/", "model.py", "core/tsv.py", "core/paths.py")
 #: committed inputs of the default-tier verify gates (fast+normal): the MAX
 #: ledger and every gate's own baseline/allowlist. Named so a bless re-runs
