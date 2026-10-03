@@ -1949,7 +1949,7 @@ int advManager::ProcessSearch(int x, int y) {
             gpGame->m_ultimateArtifactId = ARTIFACT_NONE;
         }
     } else if (gbHumanPlayer[giCurPlayer]) {
-        NormalDialog("Nothing here.", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
+        NormalDialog("Nothing here.\nWhere could it be?", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
     }
     if (gbHumanPlayer[giCurPlayer])
         WaitEndSample(sampleData, SAMPLE_WAIT_DEFAULT);
@@ -4512,7 +4512,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                     )
                 );
             else
-                strcpy(labels[slotIndex], "?");
+                strcpy(labels[slotIndex], "???");
             texts[slotIndex] = new textWidget(
                 step * slotIndex + offsetX + xAdjust - ARMY_QUICK_TEXT_X_ADJUSTMENT,
                 rowY + ARMY_QUICK_ICON_BASELINE,
@@ -4565,7 +4565,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                         )
                     );
                 else
-                    strcpy(labels[slotIndex], "?");
+                    strcpy(labels[slotIndex], "???");
                 texts[slotIndex] = new textWidget(
                     (slotIndex - row1) * step + offsetX - ARMY_QUICK_TEXT_X_ADJUSTMENT,
                     rowY + ARMY_QUICK_ICON_BASELINE,

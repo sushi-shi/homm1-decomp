@@ -14,14 +14,23 @@
 
 // Per-spell weights of a stack's fight value (Buka keeps the same named
 // float constants for its larger spell list).
+DATA(0x0048c3d8)
 static const float SPELL_AI_SLOW_MODIFIER = -0.11f;
+DATA(0x0048c3dc)
 static const float SPELL_AI_BLIND_MODIFIER = -0.6f;
+DATA(0x0048c3e0)
 static const float SPELL_AI_CURSE_MODIFIER = -0.18f;
+DATA(0x0048c3e4)
 static const float SPELL_AI_PARALYZE_MODIFIER = -0.6f;
+DATA(0x0048c3e8)
 static const float SPELL_AI_BERSERK_MODIFIER = -0.7f;
+DATA(0x0048c3ec)
 static const float SPELL_AI_HASTE_MODIFIER = 0.33f;
+DATA(0x0048c3f0)
 static const float SPELL_AI_BLESS_MODIFIER = 0.18f;
+DATA(0x0048c3f4)
 static const float SPELL_AI_STONESKIN_MODIFIER = 0.24f;
+DATA(0x0048c3f8)
 static const float SPELL_AI_SHIELD_MODIFIER = 0.15f;
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.

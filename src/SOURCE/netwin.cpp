@@ -431,7 +431,7 @@ void __stdcall nb_add_name_done(NCB *ncb)
         case NRC_CMDCAN:
             break;
         default:
-            wsprintfA(buf, "Add Name Error %02x", ncb->ncb_retcode);
+            wsprintfA(buf, "Add Name Error %02x\n", ncb->ncb_retcode);
             OutputDebugStringA(buf);
             gNetStatus[gNbMaxSess] |= NETBIOS_SESSION_ERROR;
             break;

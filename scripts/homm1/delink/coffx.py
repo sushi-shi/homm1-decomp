@@ -185,11 +185,17 @@ class Obj:
 
 
 def objects(base_dir: Path) -> list[tuple[str, Obj]]:
-    """[(unit stem, Obj)] for every parseable base object, sorted by stem."""
+    """[(unit stem, Obj)] for every parseable base object, sorted by stem.
+
+    The stem is the unit path relative to `base_dir` (`SOURCE/ADVMGR`): the
+    candidate objects live under per-directory subtrees, and every caller
+    spells the owning object `<stem>.c`, the manifest's unit form."""
     out = []
-    for path in sorted(Path(base_dir).glob("*.obj")):
+    base_dir = Path(base_dir)
+    for path in sorted(base_dir.rglob("*.obj")):
         try:
-            out.append((path.stem, Obj(path)))
+            out.append((path.relative_to(base_dir).with_suffix("").as_posix(),
+                        Obj(path)))
         except (ValueError, OSError, struct.error):
             continue
     return out

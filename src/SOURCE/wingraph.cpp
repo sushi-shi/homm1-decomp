@@ -984,7 +984,9 @@ void GetGraphicsInfo(void) {
         giMainVideoModeHeight = GetDeviceCaps(screenDC, VERTRES);
         ReleaseDC(NULL, screenDC);
         if (giMainVideoModeColorDepth < WINGRAPH_COLOR_DEPTH)
-            ShutDown("Heroes requires 256 color mode or higher.");
+            ShutDown("Heroes requires 256 color mode or higher.\n\nTo change color mode, right "
+                     "click in an open area on the Windows 95 background, choose 'Properties', "
+                     "then the 'Settings' tab, then change the entry in the 'Color Palette Box'.");
     }
 }
 

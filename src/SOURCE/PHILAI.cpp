@@ -117,12 +117,19 @@ signed char gbActualShipyardFound;
 // Buka 2.1's named AI factors. They are loaded, not folded, at /Od, and
 // retail .rdata keeps them in this declaration order at 0x0048c0a8 ahead of
 // the anonymous float literals.
+DATA(0x0048c0a8)
 static const float AI_TARGET_HUMAN_VALUE_FACTOR = 1.5f;
+DATA(0x0048c0ac)
 static const float AI_STRATEGIC_POSITION_SCORE_FACTOR = 1.25f;
+DATA(0x0048c0b0)
 static const float AI_CREATURE_SAME_RACE_FACTOR = 1.1f;
+DATA(0x0048c0b4)
 static const float AI_FUTURE_DEFLATION_RATE = 0.15f;
+DATA(0x0048c0b8)
 static const float AI_HERO_PURCHASE_SAME_RACE_FACTOR = 1.12f;
+DATA(0x0048c0bc)
 static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
+DATA(0x0048c0c0)
 static const float AI_ATTENTION_IDENTITY = 1.0f;
 
 // donor PoL RVA 0x000379d0; preferred Buka symbol ?CheckDoMain@@YIXHH@Z

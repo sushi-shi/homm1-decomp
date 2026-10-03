@@ -76,6 +76,18 @@ ORDINARY_STORAGE = {".data": "data", ".rdata": "rdata"}
 
 #: cl's floating-point literal pool member spelling.
 FP_POOL_NAME = re.compile(r"^\$T[0-9]+$")
+#: The CRT's absolute SEH-chain head, `fs:[__except_list]` in /GX code.
+EXCEPT_LIST = "__except_list"
+#: cl's pooled (/Gf) string literal spelling: the payload is the name.
+POOLED_LITERAL_NAME = re.compile(r"^\?\?_C@.*$")
+#: cl's unpooled (no /Gf) string literal spelling.
+SG_LITERAL_NAME = re.compile(r"^\$SG[0-9]+$")
+#: literal family -> (cl's member spelling, manifest name prefix, provenance,
+#: the noun the withheld reasons use).
+_LITERAL_FAMILIES = {
+    "fp": (FP_POOL_NAME, "$T", "retail-reloc-fp-pool", "FP constant"),
+    "sg": (SG_LITERAL_NAME, "$SG", "retail-reloc-sg-literal", "string literal"),
+}
 
 #: The value c2's per-section alignment ratchet starts at (see _alignment).
 UNLATCHED_RATCHET = 4
@@ -376,7 +388,7 @@ def claim_rows(model: Model, tail_oracle) -> tuple[list, list, Counter]:
     return rows, withheld, skipped
 
 
-def string_rows(base_dir=BASE_DIR):
+def string_rows(base_dir=BASE_DIR, model: Model | None = None):
     """Enrollable `??_C@` string-literal definitions + the withheld ones.
 
     Both facts are PROVEN: the retail RVA comes from content-matching each
@@ -385,9 +397,13 @@ def string_rows(base_dir=BASE_DIR):
     that defines the literal. A payload emitted by SEVERAL units enrolls once
     PER OWNING UNIT (that is what a COMDAT is - the linker folded all of them
     onto one rva). Identical payloads at two retail RVAs collide on one
-    content-derived name; both are withheld.
+    content-derived name; both are withheld unless (given the `model`) the
+    relocation-paired referrers of that name, across every owning unit,
+    agree on exactly one of those rvas.
     """
     owners: dict[bytes, dict[str, str]] = defaultdict(dict)
+    votes: dict[str, set[int]] = defaultdict(set)
+    maps = _referrer_maps(model) if model is not None else None
     for stem, c in coffx.objects(base_dir):
         for idx, value, secnum in c.iter_symbols():
             name = c.sym_name(idx)
@@ -395,6 +411,10 @@ def string_rows(base_dir=BASE_DIR):
                 cs = c.cstring(secnum, value)
                 if cs is not None:
                     owners[cs][stem] = name
+        if maps is not None:
+            for name, seen in _paired_votes(c, POOLED_LITERAL_NAME,
+                                            *maps).items():
+                votes[name] |= seen
 
     img = retail()
     rows, withheld, by_name = [], [], defaultdict(list)
@@ -417,6 +437,13 @@ def string_rows(base_dir=BASE_DIR):
                  "provenance": "candidate-COFF-string"})
     for name, group in by_name.items():
         addrs = {r["rva"] for r in group}
+        if len(addrs) > 1 and len(votes.get(name, ())) == 1 \
+                and votes[name] <= addrs:
+            chosen = next(iter(votes[name]))
+            group = [r for r in group if r["rva"] == chosen]
+            for r in group:
+                r["provenance"] = "candidate-COFF-string"
+            addrs = {chosen}
         if len(addrs) == 1:
             rows += group
         else:
@@ -655,12 +682,120 @@ def ehfuncinfo_rows(model: Model):
     return rows, withheld
 
 
-def fp_pool_rows(model: Model, base_dir=BASE_DIR):
+def _referrer_maps(model: Model):
+    """(known, fn_extent, data_rva): every claimed symbol's rva, and the
+    claimed functions' and data's own rva (+ size for functions), all keyed
+    by the MASKED name so a base obj's own relocation symbol (cl's CodeView
+    counter intact) meets the Model's canonical one."""
+    from homm1.delink.pdb_synth import UNIT_CHANNELS
+    known, fn_extent, data_rva = {}, {}, {}
+    for b in model.functions:
+        if b.channel in UNIT_CHANNELS and b.name:
+            known[msvc_names.mask(b.name)] = b.rva
+            fn_extent[msvc_names.mask(b.name)] = (b.rva, b.size)
+    for b in model.data:
+        if not b.channel or not b.name:
+            continue
+        known.setdefault(msvc_names.mask(b.name), b.rva)
+        data_rva.setdefault(msvc_names.mask(b.name), b.rva)
+    return known, fn_extent, data_rva
+
+
+def _paired_votes(c, member_re, known, fn_extent, data_rva):
+    """{member: {rva, ...}} - the retail address each relocation-paired
+    referrer of a `member_re` symbol of base obj `c` reaches (see
+    fp_pool_rows for the pairing and its corroboration)."""
+    import struct
+
+    img = retail()
+    sites = img.reloc_sites
+    votes: dict[str, set[int]] = defaultdict(set)
+    for sec in c.section_table:
+        code = bool(sec["characteristics"] & MEM_EXECUTE)
+        if not code and (ORDINARY_STORAGE.get(sec["name"]) is None
+                         or sec["characteristics"] & LNK_COMDAT):
+            continue
+        # `__except_list` is the absolute fs:[0] slot (value 0): the
+        # linker leaves no base relocation for it, so it has no retail
+        # partner and would shift every later pair of a /GX function.
+        rel = {site: nm for site, (nm, typ)
+               in c.typed_relocations(sec["index"]).items()
+               if typ == COFF_DIR32 and nm != EXCEPT_LIST}
+        if not rel:
+            continue
+        text = c.section_payload(sec["index"])
+        # The referrers: claimed functions in code, and claimed data
+        # (a table of literal pointers) in .data/.rdata, whose extent is
+        # cl's own member span.
+        if code:
+            referrers = [(off, fn_extent.get(msvc_names.mask(name)))
+                         for off, name in c.defined_symbols(sec["index"])]
+        else:
+            members = c.section_members(sec["index"])
+            starts = sorted({o for o, _n, _s in members})
+            referrers = []
+            for off, name, _scl in members:
+                rva = data_rva.get(msvc_names.mask(name))
+                if rva is not None:
+                    end = next((o for o in starts if o > off), sec["size"])
+                    referrers.append((off, (rva, end - off)))
+        for off, hit in referrers:
+            if hit is None:
+                continue
+            rva, size = hit
+            mine = sorted((s, n) for s, n in rel.items()
+                          if off <= s < off + size)
+            lo = bisect.bisect_left(sites, rva)
+            hi = bisect.bisect_left(sites, rva + size)
+            theirs = sites[lo:hi]
+            if not mine or len(mine) != len(theirs):
+                continue
+            found, corroborated = [], True
+            for (site, sym), target in zip(mine, theirs):
+                at = img.off(target)
+                if at is None:
+                    corroborated = False
+                    break
+                value = struct.unpack("<I", img.data[at:at + 4])[0] \
+                    - img.image_base
+                # The inline addend is signed (`gTable[i - 7]`), and a
+                # literal's own sites carry one too (a double's high
+                # dword is `$T+4`): the member's base is value - addend.
+                addend = struct.unpack("<i", text[site:site + 4])[0]
+                if member_re.fullmatch(sym):
+                    found.append((sym, value - addend))
+                    continue
+                anchor = known.get(msvc_names.mask(sym))
+                if anchor is None:      # not ours to check
+                    continue
+                if value != anchor + addend:
+                    corroborated = False
+                    break
+            if corroborated:
+                for sym, value in found:
+                    votes[sym].add(value)
+
+    return votes
+
+
+def sg_literal_rows(model: Model, base_dir=BASE_DIR):
+    """`$SG<n>` string literals, addressed exactly as `fp_pool_rows` addresses
+    the FP pool: VC4 does not pool them (no /Gf), so identical payloads sit at
+    several retail rvas and content matching cannot place one. Each member is
+    read off a self-proving relocation pairing and its NUL-terminated payload
+    re-proven against retail's bytes; the row is `$SG<decimal rva>` (the
+    compare canonicalizer content-addresses that family on both sides) and
+    its extent is the literal, never the obj's zero alignment tail."""
+    return fp_pool_rows(model, base_dir, literal="sg")
+
+
+def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
     """`$T<n>` FP-pool constants, ADDRESSED OUT OF RETAIL'S OWN RELOC TABLE.
 
     Content matching cannot answer this (FP pools are not /Gf-pooled, and a
     content-derived address is self-confirming). Instead, retail's DIR32 sites
-    inside each claimed function pair positionally with the base obj's COFF
+    inside each claimed function (and each claimed datum, e.g. a table of
+    literal pointers) pair positionally with the base obj's COFF
     relocations; the pairing PROVES ITSELF (every known symbol's rva must
     equal the address retail wrote, plus the addend in our own bytes), and
     only then is a `$T` site read off and byte-re-proven. The manifest name is
@@ -672,101 +807,60 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
     """
     import struct
 
+    member_re, prefix, provenance, noun = _LITERAL_FAMILIES[literal]
     img = retail()
     sites = img.reloc_sites
 
-    # both maps are keyed by the MASKED name so a base obj's own relocation
-    # symbol (cl's CodeView counter intact) meets the Model's canonical one.
-    from homm1.delink.pdb_synth import UNIT_CHANNELS
-    known, fn_extent = {}, {}
-    for b in model.functions:
-        if b.channel in UNIT_CHANNELS and b.name:
-            known[msvc_names.mask(b.name)] = b.rva
-            fn_extent[msvc_names.mask(b.name)] = (b.rva, b.size)
+    known, fn_extent, data_rva = _referrer_maps(model)
     pins: dict[str, list[tuple[int, int]]] = defaultdict(list)
     for b in model.data:
-        if not b.channel or not b.name:
-            continue
-        known.setdefault(msvc_names.mask(b.name), b.rva)
-        if b.channel in ("data_compgen", "src_data_compgen") \
-                and FP_POOL_NAME.fullmatch(b.name):
+        if b.channel in ("data_compgen", "src_data_compgen") and b.name \
+                and member_re.fullmatch(b.name):
             pins[b.unit].append((b.rva, b.size))
 
     rows, withheld = [], []
     for stem, c in coffx.objects(base_dir):
         pool = {}                       # member -> (storage, off, payload, size)
+        section_of = {}                 # member -> its section index
         for sec in c.section_table:
+            # A /Gy TU gives each function's literals their own COMDAT data
+            # section; the members are still TU-local `$SG`/`$T` literals.
             storage = ORDINARY_STORAGE.get(sec["name"])
-            if storage is None or sec["characteristics"] & LNK_COMDAT:
+            if storage is None:
                 continue
             members = c.section_members(sec["index"])
             offsets = sorted(o for o, _n, _s in members)
             payload = c.section_payload(sec["index"])[:sec["size"]]
             for off, name, _scl in members:
-                if not FP_POOL_NAME.fullmatch(name):
+                if not member_re.fullmatch(name):
                     continue
                 end = next((o for o in offsets if o > off), sec["size"])
-                pool[name] = (storage, off, payload[off:end], end - off)
+                want = payload[off:end]
+                if literal == "sg":
+                    nul = want.find(b"\0")
+                    if nul < 0:
+                        continue
+                    want = want[:nul + 1]
+                pool[name] = (storage, off, want, len(want))
+                section_of[name] = sec["index"]
         if not pool:
             continue
 
-        votes: dict[str, set[int]] = defaultdict(set)
-        for sec in c.section_table:
-            if not sec["characteristics"] & MEM_EXECUTE:
-                continue
-            rel = {site: nm for site, (nm, typ)
-                   in c.typed_relocations(sec["index"]).items()
-                   if typ == COFF_DIR32}
-            if not rel:
-                continue
-            text = c.section_payload(sec["index"])
-            for off, name in c.defined_symbols(sec["index"]):
-                hit = fn_extent.get(msvc_names.mask(name))
-                if hit is None:
-                    continue
-                rva, size = hit
-                mine = sorted((s, n) for s, n in rel.items()
-                              if off <= s < off + size)
-                lo = bisect.bisect_left(sites, rva)
-                hi = bisect.bisect_left(sites, rva + size)
-                theirs = sites[lo:hi]
-                if not mine or len(mine) != len(theirs):
-                    continue
-                found, corroborated = [], True
-                for (site, sym), target in zip(mine, theirs):
-                    at = img.off(target)
-                    if at is None:
-                        corroborated = False
-                        break
-                    value = struct.unpack("<I", img.data[at:at + 4])[0] \
-                        - img.image_base
-                    if FP_POOL_NAME.fullmatch(sym):
-                        found.append((sym, value))
-                        continue
-                    anchor = known.get(msvc_names.mask(sym))
-                    if anchor is None:      # not ours to check
-                        continue
-                    addend = struct.unpack("<I", text[site:site + 4])[0]
-                    if value != anchor + addend:
-                        corroborated = False
-                        break
-                if corroborated:
-                    for sym, value in found:
-                        votes[sym].add(value)
+        votes = _paired_votes(c, member_re, known, fn_extent, data_rva)
 
         def emit(member, rva, storage, size, want, how):
             at = img.off(rva)
             if at is None or img.data[at:at + size] != want:
                 withheld.append((rva, member,
-                                 "retail bytes contradict the candidate FP constant"))
+                                 f"retail bytes contradict the candidate {noun}"))
                 return
             start = _classify(rva)
             end = _classify(rva + size - 1)
             if STORAGE.get(start) != storage or start != end:
                 withheld.append((rva, member,
-                                 f"FP-pool storage {start} is not {storage}"))
+                                 f"{noun} storage {start} is not {storage}"))
                 return
-            rows.append({"name": f"$T{rva}", "member": member,
+            rows.append({"name": f"{prefix}{rva}", "member": member,
                          "object": f"{stem}.c", "rva": rva, "size": size,
                          "storage": storage, "provenance": how})
 
@@ -776,11 +870,56 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
             seen = votes.get(member) or set()
             if len(seen) == 1:
                 emit(member, next(iter(seen)), storage, size, want,
-                     "retail-reloc-fp-pool")
+                     provenance)
             elif seen:
                 withheld.append((0, member, "referrers disagree on the rva"))
             else:
                 stranded.append(member)
+
+        # Members no paired referrer addresses sit in runs between members
+        # that are addressed. A run is laid out as retail laid it out when one
+        # of its two neighbours' rva - offset deltas re-proves EVERY member's
+        # bytes and the other delta does not (a datum retail interleaves at
+        # one end of the run shifts only one side). Nothing is extrapolated
+        # past the last proven member.
+        placed = {r["member"]: r["rva"] for r in rows
+                  if r["object"] == f"{stem}.c" and r["member"] in pool}
+        runs: dict[int, list[tuple[int, str]]] = defaultdict(list)
+        for member, (_storage, off, _want, _size) in pool.items():
+            runs[section_of[member]].append((off, member))
+        stranded_set = set(stranded)
+        unplaced = []
+
+        def proves(run, delta):
+            for member in run:
+                _st, off, want, size = pool[member]
+                at = img.off(off + delta)
+                if at is None or img.data[at:at + size] != want:
+                    return False
+            return True
+
+        for ordered in runs.values():
+            ordered.sort()
+            gap, before = [], None
+            for off, member in ordered:
+                if member in placed:
+                    if gap and before is not None:
+                        deltas = {placed[before[1]] - before[0],
+                                  placed[member] - off}
+                        good = [d for d in deltas if proves(gap, d)]
+                        if len(good) == 1:
+                            for m in gap:
+                                storage, _o, want, size = pool[m]
+                                emit(m, pool[m][1] + good[0], storage, size,
+                                     want, f"{provenance}-interpolated")
+                            stranded_set -= set(gap)
+                    gap, before = [], (off, member)
+                elif member in stranded_set:
+                    gap.append(member)
+                else:               # withheld for its own reason: a run edge
+                    gap, before = [], None
+        unplaced = [m for m in stranded if m in stranded_set]
+        stranded = unplaced
 
         taken = {r["rva"] for r in rows}
         pairs: dict[int, list[str]] = defaultdict(list)
@@ -816,7 +955,7 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
     kept = []
     for rva, group in sorted(by_rva.items()):
         if len({r["size"] for r in group}) != 1:
-            withheld += [(rva, r["member"], "FP-pool copies disagree on the extent")
+            withheld += [(rva, r["member"], f"{noun} copies disagree on the extent")
                          for r in group]
             continue
         by_object = {}
@@ -833,7 +972,7 @@ def candidates(model: Model):
     tail_oracle = _candidate_member_storage()
     rows, withheld, skipped = claim_rows(model, tail_oracle)
 
-    strings, w = string_rows()
+    strings, w = string_rows(model=model)
     rows += strings
     withheld += w
     vtables, w = vtable_rows(model)
@@ -851,8 +990,10 @@ def candidates(model: Model):
     # never displace an enrolled row.
     fp, w = fp_pool_rows(model)
     withheld += w
+    sg, w = sg_literal_rows(model)
+    withheld += w
     spoken_for = {r["rva"]: r["name"] for r in rows}
-    for r in fp:
+    for r in fp + sg:
         other = spoken_for.get(r["rva"])
         if other in (None, r["name"]):
             rows.append(r)
@@ -1244,6 +1385,17 @@ def manifest_bytes(rows, refuted=None) -> bytes:
     be lowered for placement - not source defects)."""
     out = ["\t".join(HEADER)]
     types = declared_types()
+    # The delinker packs an object's legacy rows of one storage into one
+    # section from the lowest of their rvas, padding each to its alignment.
+    # A row whose alignment does not divide its distance from that start
+    # (an 8-byte FP slot at 0x48c0d0 after a run opened at 0x48c0c4) would
+    # be pushed off its rva and leave slack in the row before it, so the
+    # usable alignment must divide that distance as well as the rva.
+    legacy_base: dict[tuple[str, str], int] = {}
+    for r in rows:
+        if "section_ordinal" not in r:
+            key = (r["object"], r["storage"])
+            legacy_base[key] = min(legacy_base.get(key, r["rva"]), r["rva"])
     for r in rows:
         placed = "section_ordinal" in r
         if placed:
@@ -1251,6 +1403,9 @@ def manifest_bytes(rows, refuted=None) -> bytes:
         else:
             kind = _object_kind(r["name"], r["rva"], r["size"], types)
             align, modelled = _alignment(r["rva"], r["size"], kind)
+            distance = r["rva"] - legacy_base[(r["object"], r["storage"])]
+            while distance % align:
+                align //= 2
             if align != modelled and refuted is not None:
                 refuted.append((r["rva"], r["name"], r["size"], kind,
                                 modelled, align))
