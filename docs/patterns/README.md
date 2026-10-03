@@ -5,7 +5,9 @@
 # Compiler patterns
 
 Observations from the Giten/Gruntz MSVC 5.0 SP3 work and HoMM1 VC4
-measurements. Start with [the index](INDEX.md). These are clues for reading compiler output,
+measurements. This branch uses [the verified VC4.1 toolchain](vc41-win95-1997.md)
+for Win95 1.2; earlier VC4.0 observations retain their original scope.
+Start with [the index](INDEX.md). These are clues for reading compiler output,
 not a catalogue of matching victories or proof of original source.
 
 ## Keep it small and falsifiable

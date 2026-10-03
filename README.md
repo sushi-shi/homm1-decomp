@@ -10,8 +10,12 @@ Supply your own game executable and assets; they are not included here.
 
 ## Branches
 
+Win95 1.2 is maintained on [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2).
+See the [1.1 → 1.2 changes](https://github.com/sushi-shi/homm1-decomp/blob/decomp-win95-1.2/docs/win95-1.2.md)
+for behavior differences and port validation.
+
 ```text
-decomp-win95-1.0 --------------------> decomp-win95-1.1 --------------------> decomp-win95-1.2
+decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2
         |
         v
 source-win95-1.0
@@ -19,10 +23,10 @@ source-win95-1.0
 
 | Branch | Purpose |
 | --- | --- |
-| `decomp-win95-1.0` | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
-| `decomp-win95-1.1` | Derived reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
-| `decomp-win95-1.2` | Derived reconstruction of the August 1997 Win95 1.2 `HEROESW.EXE` |
-| `source-win95-1.0` | Generated clean source for Win95 1.0 |
+| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
+| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
+| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Maintained reconstruction of the August 1997 Win95 1.2 `HEROESW.EXE`, using VC4.1 |
+| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
 
 <!-- match-score:start -->
 ## Match status

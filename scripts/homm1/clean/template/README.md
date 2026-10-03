@@ -4,6 +4,26 @@ C++ source for the Windows 95 release of Heroes of Might and Magic
 (New World Computing, August 1997 (Windows 95 1.2) `HEROESW.EXE`), built with the original
 Visual C++ 4.1 toolchain.
 
+## Branches
+
+Win95 1.2 is maintained on [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2).
+See the [1.1 → 1.2 changes](https://github.com/sushi-shi/homm1-decomp/blob/decomp-win95-1.2/docs/win95-1.2.md)
+for behavior differences and port validation.
+
+```text
+decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2
+        |
+        v
+source-win95-1.0
+```
+
+| Branch | Purpose |
+| --- | --- |
+| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
+| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
+| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Maintained reconstruction of the August 1997 Win95 1.2 `HEROESW.EXE`, using VC4.1 |
+| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
+
 ## Play
 
 On x86-64 Linux with Nix flakes enabled, from this directory:
@@ -34,8 +54,8 @@ and the Smacker and Miles runtime DLLs are not included.
 
 ## Regeneration
 
-`decomp-win95-1.1` generates this branch with `homm1 clean`. Make source changes on
-`decomp-win95-1.1` and regenerate; do not edit this branch by hand.
+`decomp-win95-1.2` generates this branch with `homm1 clean`. Make source changes on
+`decomp-win95-1.2` and regenerate; do not edit this branch by hand.
 
 ## License
 
