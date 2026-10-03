@@ -25,7 +25,8 @@ generator's marker.
 | `H1_ENUM_CAST(Name, type, value)` | `static_cast<type>(value)` |
 | `OVERRIDE` | deleted |
 | `H1_C_LINKAGE` | `extern "C"` |
-| `#include <match.h>`, `<Domains.h>`, `<H1/Macros.h>` | deleted with the headers |
+| `#include <match.h>` | `#include <H1/Ints.h>` (match.h also defines the integer aliases) |
+| `#include <Domains.h>`, `<H1/Macros.h>` | deleted with the headers |
 | `#line N "D:\\Heroes\\..."` | deleted; the compiler supplies `__FILE__`/`__LINE__` |
 | `//`, `/* */` and MASM/RC/DEF `;` comments | deleted |
 
@@ -55,7 +56,7 @@ current. It then compiles two trees through `homm1.tool.cl`/fixedroot with each
 unit's profile and links both through `homm1.graph.link` without `/FORCE`.
 
 - The control tree applies the same expansions and comment removal but keeps
-  every line, the `#line` pins and the includes of empty scaffolding headers.
+  every line, the `#line` pins and the scaffolding headers and their includes.
   It must reproduce every non-debug object section and the candidate
   `HEROES.EXE` byte for byte, apart from LINK's timestamps.
 - The clean tree must compile and link. Its code differs: under retail's `/Gi`,
