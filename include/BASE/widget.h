@@ -25,6 +25,8 @@ H1_ENUM_FLAGS_END(WidgetFlag)
 
 H1_ENUM_BEGIN(WidgetKind)
     WIDGET_KIND_NONE = 0,
+    // border kind 1: drawn without its background (Buka widgetKind.h).
+    WIDGET_KIND_TRANSPARENT = 1,
     WIDGET_KIND_TEXT = 0x200,
     WIDGET_KIND_AUTO_REPEAT = 0x1000,
     WIDGET_KIND_TRACK_PRESS = 0x2000,
