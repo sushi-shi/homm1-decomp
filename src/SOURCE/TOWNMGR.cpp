@@ -14,9 +14,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Compiler line-base word for TOWNMGR.CPP's ProcessAssert sites.
-DATA(0x0048ed8c)
-short gTownMgrAssertLine = 1483;
+// Retail compiled this file incrementally (/Gi): each ProcessAssert line is the
+// function's compiler line static plus an offset; #line restores the original
+// file and lines (evidence/vc4-gi-line-var.md).
 
 // donor PoL RVA 0x00013900; preferred Buka symbol ??0townObject@@QAE@HHPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
@@ -1139,6 +1139,7 @@ void townManager::DrawTown(signed char updateScreen, int drawFlags) {
 // tables with asserts, sizes resource slots by the gold-icon width and
 // draws the building through the castle frame of buybuil%d.bin.
 VA(0x0040b455, 0x1023)
+#line 1483 "D:\\Heroes\\Source\\TOWNMGR.CPP"
 short townManager::BuyBuild(short building, signed char cannotBuy, signed char quickView) {
     unsigned short requirements;
     int yPos;
@@ -1207,16 +1208,10 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         }
     } else if (building <= TOWN_NEUTRAL_BUILDING_LAST) {
         for (j = 0; j < RESOURCE_COUNT; j++) {
-            ProcessAssert(
-                building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT,
-                "D:\\Heroes\\Source\\TOWNMGR.CPP",
-                gTownMgrAssertLine + 42
-            );
-            ProcessAssert(
-                j >= 0 && j <= 6,
-                "D:\\Heroes\\Source\\TOWNMGR.CPP",
-                gTownMgrAssertLine + 43
-            );
+#line 1525
+            ProcessAssert(building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT, __FILE__, __LINE__);
+#line 1526
+            ProcessAssert(j >= 0 && j <= 6, __FILE__, __LINE__);
             if (gNeutralBuildingCosts[building][j] > 0) {
                 resType[curCost] = j;
                 prices[curCost] = gNeutralBuildingCosts[building][j];
@@ -1225,16 +1220,10 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         }
     } else {
         for (j = 0; j < RESOURCE_COUNT; j++) {
-            ProcessAssert(
-                dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS,
-                "D:\\Heroes\\Source\\TOWNMGR.CPP",
-                gTownMgrAssertLine + 57
-            );
-            ProcessAssert(
-                j >= 0 && j <= 6,
-                "D:\\Heroes\\Source\\TOWNMGR.CPP",
-                gTownMgrAssertLine + 58
-            );
+#line 1540
+            ProcessAssert(dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS, __FILE__, __LINE__);
+#line 1541
+            ProcessAssert(j >= 0 && j <= 6, __FILE__, __LINE__);
             LogStr("DwellCost", gDwellingCosts[dwellIndex][j], dwellIndex, j, 0, 0);
             if (gDwellingCosts[dwellIndex][j] > 0) {
                 resType[curCost] = j;

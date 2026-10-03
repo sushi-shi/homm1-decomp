@@ -17,10 +17,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Compiler line-base word for netlo.cpp's ProcessAssert sites.
-DATA(0x0048f214) short gNbThrCtlLineBase = 414;
-DATA(0x0048f234) short gNbAddNameDoneLineBase = 538;
-DATA(0x0048f26c) short gNbArmRecvLineBase = 742;
+// Retail compiled this file incrementally (/Gi): each netlo.cpp ProcessAssert line is the
+// function's compiler line static plus an offset; #line restores the original
+// file and lines (evidence/vc4-gi-line-var.md).
 
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
@@ -322,6 +321,7 @@ H1_C_LINKAGE char __cdecl nb_stat(int, unsigned short session)
 // Buka netwin.cpp:382-453; HoMM1 asserts through its netlo.cpp line base.
 VA(0x00414732, 0x26f)
 void nb_thr_ctl(void)
+#line 414 "D:\\Heroes\\Source\\netlo.cpp"
 {
     NCB ncb;
     tag_Node *pkt;
@@ -366,7 +366,8 @@ void nb_thr_ctl(void)
                             sendComplete = 1;
                             break;
                         case NRC_PENDING:
-                            ProcessAssert(0, "D:\\Heroes\\Source\\netlo.cpp", gNbThrCtlLineBase + 82);
+#line 496
+                            ProcessAssert(0, __FILE__, __LINE__);
                             break;
                         case NRC_SNUMOUT:
                         case NRC_SCLOSED:
@@ -404,12 +405,13 @@ void nb_add_name(void)
 // OutputDebugString instead of ShutDown.
 VA(0x00414a5c, 0x1cc)
 void __stdcall nb_add_name_done(NCB *ncb)
+#line 538 "D:\\Heroes\\Source\\netlo.cpp"
 {
     char buf[80];
     int j;
 
-    ProcessAssert(ncb == &gNbSessNcb[gNbMaxSess], "D:\\Heroes\\Source\\netlo.cpp",
-                  gNbAddNameDoneLineBase + 3);
+#line 541
+    ProcessAssert(ncb == &gNbSessNcb[gNbMaxSess], __FILE__, __LINE__);
     switch (ncb->ncb_retcode) {
         case NRC_GOODRET:
         case NRC_CANOCCR:
@@ -543,12 +545,13 @@ void __stdcall nb_call_done(NCB *ncb)
 // Buka netwin.cpp:630-659.
 VA(0x004150e6, 0x14e)
 void nb_arm_recv(int session)
+#line 742 "D:\\Heroes\\Source\\netlo.cpp"
 {
     unsigned char result;
 
     while (1) {
-        ProcessAssert(gNbSessNcb[session].ncb_retcode != NRC_PENDING,
-                      "D:\\Heroes\\Source\\netlo.cpp", gNbArmRecvLineBase + 5);
+#line 747
+        ProcessAssert(gNbSessNcb[session].ncb_retcode != NRC_PENDING, __FILE__, __LINE__);
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
         gNbSessNcb[session].ncb_command = NCBRECV | ASYNCH;
         gNbSessNcb[session].ncb_lsn = gNbSessLsn[session];

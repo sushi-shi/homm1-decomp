@@ -15,8 +15,7 @@
 
 // wingraph owns retail .data 0x0048e178-0x0048eb17 (definitions below in
 // retail order; initializers are retail bytes) and .bss 0x004a46a0-0x004a4b7f.
-// Retail emits the *LineBase source-line bases among their functions'
-// literals.
+// Its DDSD line arguments are /Gi compiler line statics (evidence/vc4-gi-line-var.md).
 DATA(0x0048e178)
 BOOL gbWinGAttached = TRUE;
 DATA(0x0048e17c)
@@ -52,32 +51,10 @@ DATA(0x0048e5bc)
 IDirectDrawClipper* lpClipper = NULL;
 DATA(0x0048e5c0)
 IDirectDrawPalette* lpDDPal = NULL;
-DATA(0x0048e5c4)
-short gDDRestoreLineBase = 49;
-DATA(0x0048e5e8)
-short gCreatePrimaryLineBase = 71;
-DATA(0x0048e60c)
-short gSetupClipperLineBase = 91;
-DATA(0x0048e670)
-short gDDInitLineBase = 114;
 DATA(0x0048e674)
 int iBusyRetry = 0;
-DATA(0x0048e6f8)
-short gDDPaintLineBase = 161;
-DATA(0x0048e800)
-short gDDInitializePaletteLineBase = 315;
-DATA(0x0048e824)
-short gDDSetPaletteLineBase = 387;
-DATA(0x0048e848)
-short gDDCreateSurfaceLineBase = 417;
 DATA(0x0048e84c)
 BOOL bInDDSD = FALSE;
-DATA(0x0048e8c0)
-short gDDUpdatePaletteLineBase = 524;
-DATA(0x0048e904)
-short gDDCleanUpLineBase = 550;
-DATA(0x0048e948)
-short gDDSetFullScreenLineBase = 596;
 DATA(0x0048e94c)
 HDC hdcImage = NULL;
 DATA(0x0048e950)
@@ -109,12 +86,14 @@ extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
 VA(0x00403640, 0x59)
+#line 49 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDRestoreDisplayMode() {
     long result;
     if (lpDD != NULL) {
         result = lpDD->RestoreDisplayMode();
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDRestoreLineBase + 7);
+#line 56
+            DDSD(result, __FILE__, __LINE__);
     }
 }
 
@@ -134,6 +113,7 @@ BOOL DDQueryNewPalette() {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.466160;margin=0.260025;shape=0.308;size=0.761;calls=1.000;alternate=pol20:void CreatePrimary(void)@0x0003532b
 VA(0x004036df, 0x9b)
+#line 71 "D:\\Heroes\\Source\\wingraph.cpp"
 void CreatePrimary(void) {
     long result;
 
@@ -141,7 +121,8 @@ void CreatePrimary(void) {
     if (lpClipper != NULL) {
         result = lpDDSPrimary->SetClipper(NULL);
         if (result != DD_OK && result != DDERR_NOCLIPPERATTACHED)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gCreatePrimaryLineBase + 10);
+#line 81
+            DDSD(result, __FILE__, __LINE__);
         lpClipper->Release();
         lpClipper = NULL;
     }
@@ -151,19 +132,23 @@ void CreatePrimary(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.462387;margin=0.608484;shape=0.302;size=0.757;calls=1.000;alternate=pol20:void SetupClipper(void)@0x000353bf
 VA(0x0040377a, 0xeb)
+#line 91 "D:\\Heroes\\Source\\wingraph.cpp"
 void SetupClipper(void) {
     long result;
 
     if (gConfig.gfx[giCurExe].fullScreen == 0) {
         result = lpDD->CreateClipper(0, &lpClipper, NULL);
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gSetupClipperLineBase + 8);
+#line 99
+            DDSD(result, __FILE__, __LINE__);
         result = lpClipper->SetHWnd(0, hwndApp);
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gSetupClipperLineBase + 13);
+#line 104
+            DDSD(result, __FILE__, __LINE__);
         result = lpDDSPrimary->SetClipper(lpClipper);
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gSetupClipperLineBase + 18);
+#line 109
+            DDSD(result, __FILE__, __LINE__);
     }
 }
 
@@ -171,6 +156,7 @@ void SetupClipper(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.478180;margin=0.785524;shape=0.323;size=0.780;calls=1.000;alternate=pol20:void DDInitGraphics(void)@0x000354a2
 VA(0x00403865, 0x171)
+#line 114 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDInitGraphics(void) {
     long result;
 
@@ -178,7 +164,8 @@ void DDInitGraphics(void) {
         return;
     result = lpDirectDrawCreate(NULL, &lpDD, NULL);
     if (result != DD_OK)
-        DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 8);
+#line 122
+        DDSD(result, __FILE__, __LINE__);
     if (gConfig.gfx[giCurExe].fullScreen != 0) {
         SetMenuStatus(0);
         result = lpDD->SetCooperativeLevel(
@@ -186,14 +173,17 @@ void DDInitGraphics(void) {
             DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT
         );
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 20);
+#line 134
+            DDSD(result, __FILE__, __LINE__);
         result = lpDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 24);
+#line 138
+            DDSD(result, __FILE__, __LINE__);
     } else {
         result = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitLineBase + 31);
+#line 145
+            DDSD(result, __FILE__, __LINE__);
     }
     CreatePrimary();
     SetupClipper();
@@ -205,6 +195,7 @@ void DDInitGraphics(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
 VA(0x004039d6, 0x592)
+#line 161 "D:\\Heroes\\Source\\wingraph.cpp"
 BOOL DDAppPaint(void* window, void* paintDC) {
     int ySrc;
     int height;
@@ -256,7 +247,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         OffsetRect(&gDDDestinationRect, pt.x, pt.y);
         gDDResult = lpDDSOne->Unlock(NULL);
         if (gDDResult != DD_OK)
-            DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 72);
+#line 233
+            DDSD(gDDResult, __FILE__, __LINE__);
 
         if (gDDSourceRect.left < 0)
             gDDSourceRect.left = 0;
@@ -294,19 +286,23 @@ BOOL DDAppPaint(void* window, void* paintDC) {
                     gDDResult =
                         lpDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
                     if (gDDResult != DD_OK)
-                        DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 106);
+#line 267
+                        DDSD(gDDResult, __FILE__, __LINE__);
                     gDDResult = lpDDSPrimary->Restore();
                     if (gDDResult != DD_OK)
-                        DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 110);
+#line 271
+                        DDSD(gDDResult, __FILE__, __LINE__);
                     gDDDestinationRect = gDDSourceRect;
                 }
                 if (gDDResult != DD_OK)
-                    DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 118);
+#line 279
+                    DDSD(gDDResult, __FILE__, __LINE__);
             } else if (gDDResult == DDERR_SURFACEBUSY
                        && KBTickCount() < lPaintStart + WINGRAPH_PAINT_TIMEOUT) {
                 iBusyRetry++;
             } else if (gDDResult != DD_OK) {
-                DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 123);
+#line 284
+                DDSD(gDDResult, __FILE__, __LINE__);
             } else {
                 break;
             }
@@ -316,7 +312,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         gDDSurfaceDesc.dwSize = sizeof(gDDSurfaceDesc);
         gDDResult = lpDDSOne->Lock(NULL, &gDDSurfaceDesc, DDLOCK_WAIT, NULL);
         if (gDDResult != DD_OK)
-            DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 133);
+#line 294
+            DDSD(gDDResult, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels =
                 static_cast<signed char*>(gDDSurfaceDesc.lpSurface);
@@ -325,7 +322,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
             lpInitWin = gDDSurfaceDesc.lpSurface;
         }
         if (gDDResult != DD_OK)
-            DDSD(gDDResult, "D:\\Heroes\\Source\\wingraph.cpp", gDDPaintLineBase + 144);
+#line 305
+            DDSD(gDDResult, __FILE__, __LINE__);
         EndPaint(static_cast<HWND>(window), &ps);
         gbWinGraphBusy = FALSE;
     }
@@ -334,6 +332,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 
 // Both donors retain the DirectDraw palette setup and its three locals.
 VA(0x00403f68, 0x140)
+#line 315 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDInitializePalette() {
     long ddrval;
     HDC hdc;
@@ -362,13 +361,15 @@ void DDInitializePalette() {
         }
         ddrval = lpDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &lpDDPal, NULL);
         if (ddrval != DD_OK)
-            DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDInitializePaletteLineBase + 63);
+#line 378
+            DDSD(ddrval, __FILE__, __LINE__);
         SetPalette();
     }
 }
 
 // Buka's palette attachment; PoL retains the error line-base source form.
 VA(0x004040a8, 0xb3)
+#line 387 "D:\\Heroes\\Source\\wingraph.cpp"
 BOOL DDSetPalette() {
     long result;
     if (gbWinGraphBusy != FALSE)
@@ -379,7 +380,8 @@ BOOL DDSetPalette() {
         return TRUE;
     result = lpDDSPrimary->SetPalette(lpDDPal);
     if (result != DD_OK)
-        DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetPaletteLineBase + 20);
+#line 407
+        DDSD(result, __FILE__, __LINE__);
     return FALSE;
 }
 
@@ -387,6 +389,7 @@ BOOL DDSetPalette() {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.607502;margin=0.616633;shape=0.536;size=0.889;calls=1.000;alternate=pol20:struct IDirectDrawSurface * DDCreateSurface(unsigned long int, unsigned long int, int)@0x00035d1c
 VA(0x0040415b, 0x12a)
+#line 417 "D:\\Heroes\\Source\\wingraph.cpp"
 struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long height, int primary) {
     _DDSURFACEDESC ddsd;
     IDirectDrawSurface* lpSurface;
@@ -411,11 +414,13 @@ struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long he
     }
     ddrval = lpDD->CreateSurface(&ddsd, &lpSurface, NULL);
     if (ddrval != DD_OK)
-        DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDCreateSurfaceLineBase + 28);
+#line 445
+        DDSD(ddrval, __FILE__, __LINE__);
     if (primary == 0) {
         ddrval = lpSurface->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL);
         if (ddrval != DD_OK)
-            DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDCreateSurfaceLineBase + 36);
+#line 453
+            DDSD(ddrval, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(ddsd.lpSurface);
             lpInitWin = ddsd.lpSurface;
@@ -542,6 +547,7 @@ void DDSD(int error, char* file, int line) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.482125;margin=0.532523;shape=0.296;size=0.838;calls=1.000;alternate=pol20:void DDUpdatePalette(signed char *)@0x00036421
 VA(0x00404673, 0x11c)
+#line 524 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDUpdatePalette(signed char* paletteData) {
     int entry;
     long res;
@@ -562,11 +568,8 @@ void DDUpdatePalette(signed char* paletteData) {
         LogicalPalette.entries[entry].peFlags = PC_NOCOLLAPSE;
     }
     // API-forced: ProcessAssert accepts the donor pointer assertion as a 32-bit int.
-    ProcessAssert(
-        reinterpret_cast<int>(lpDDPal),
-        "D:\\Heroes\\Source\\wingraph.cpp",
-        gDDUpdatePaletteLineBase + 18
-    );
+#line 542
+    ProcessAssert(reinterpret_cast<int>(lpDDPal), __FILE__, __LINE__);
     res = lpDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
@@ -574,13 +577,15 @@ void DDUpdatePalette(signed char* paletteData) {
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     if (res != DD_OK)
-        DDSD(res, "D:\\Heroes\\Source\\wingraph.cpp", gDDUpdatePaletteLineBase + 22);
+#line 546
+        DDSD(res, __FILE__, __LINE__);
 }
 
 // donor PoL RVA 0x00036539; preferred Buka symbol ?DDCleanUpWinGraphics@@YIXXZ
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.511358;margin=0.374406;shape=0.341;size=0.862;calls=1.000;alternate=pol20:void DDCleanUpWinGraphics(void)@0x00036539
 VA(0x0040478f, 0x17f)
+#line 550 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDCleanUpWinGraphics(void) {
     // Both locals survive in Buka591-632 and PoL481-519; restoreVal is written.
     long restoreVal;
@@ -592,7 +597,8 @@ void DDCleanUpWinGraphics(void) {
             if (lpDDSPrimary != NULL) {
                 result = lpDDSPrimary->SetClipper(NULL);
                 if (result != DD_OK && result != DDERR_NOCLIPPERATTACHED)
-                    DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDCleanUpLineBase + 14);
+#line 564
+                    DDSD(result, __FILE__, __LINE__);
             }
             lpClipper->Release();
             lpClipper = NULL;
@@ -611,7 +617,8 @@ void DDCleanUpWinGraphics(void) {
         }
         result = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
         if (result != DD_OK)
-            DDSD(result, "D:\\Heroes\\Source\\wingraph.cpp", gDDCleanUpLineBase + 38);
+#line 588
+            DDSD(result, __FILE__, __LINE__);
         lpDD->Release();
         lpDD = NULL;
     }
@@ -621,6 +628,7 @@ void DDCleanUpWinGraphics(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.474854;margin=0.471351;shape=0.269;size=0.849;calls=1.000;alternate=pol20:void DDSetFullScreenStatus(int)@0x000366b0
 VA(0x0040490e, 0x2ea)
+#line 596 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDSetFullScreenStatus(int fullScreen) {
     int w;
     int x;
@@ -647,18 +655,22 @@ void DDSetFullScreenStatus(int fullScreen) {
             DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT
         );
         if (ddrval != DD_OK)
-            DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetFullScreenLineBase + 21);
+#line 617
+            DDSD(ddrval, __FILE__, __LINE__);
         if (gConfig.gfx[giCurExe].fullScreen != 0) {
             ddrval = lpDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
             if (ddrval != DD_OK)
-                DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetFullScreenLineBase + 27);
+#line 623
+                DDSD(ddrval, __FILE__, __LINE__);
         } else {
             ddrval = lpDD->RestoreDisplayMode();
             if (ddrval != DD_OK)
-                DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetFullScreenLineBase + 34);
+#line 630
+                DDSD(ddrval, __FILE__, __LINE__);
             ddrval = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
             if (ddrval != DD_OK)
-                DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetFullScreenLineBase + 39);
+#line 635
+                DDSD(ddrval, __FILE__, __LINE__);
         }
         if (lpDDSPrimary != NULL) {
             lpDDSPrimary->Release();
@@ -667,7 +679,8 @@ void DDSetFullScreenStatus(int fullScreen) {
         CreatePrimary();
         ddrval = lpDDSPrimary->SetPalette(lpDDPal);
         if (ddrval != DD_OK)
-            DDSD(ddrval, "D:\\Heroes\\Source\\wingraph.cpp", gDDSetFullScreenLineBase + 51);
+#line 647
+            DDSD(ddrval, __FILE__, __LINE__);
         WritePrefs();
         gbWinGraphBusy = FALSE;
         if (gConfig.gfx[giCurExe].fullScreen == 0) {

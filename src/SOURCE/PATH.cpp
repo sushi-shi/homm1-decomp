@@ -19,9 +19,9 @@ H1_ENUM_CONST_BEGIN(CombatPathConstant)
 H1_ENUM_CONST_END(CombatPathConstant)
 // clang-format on
 
-// Compiler line-base words for PATH.CPP's ProcessAssert sites.
-DATA(0x0048f4d4) short gAdjacentCellAssertLine = 311;
-DATA(0x0048f510) short gAdjacentCellNoArmyAssertLine = 328;
+// Retail compiled this file incrementally (/Gi): each ProcessAssert line is the
+// function's compiler line static plus an offset; #line restores the original
+// file and lines (evidence/vc4-gi-line-var.md).
 
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.
@@ -232,6 +232,7 @@ short army::ValidAttack(short sourceHex, short direction, short targetMode, shor
 // Buka PATH.cpp GetAdjacentCellIndex with HoMM1's asserts.
 VA(0x004188d8, 0x11e)
 short army::GetAdjacentCellIndex(short hex, short direction)
+#line 311 "D:\\Heroes\\Source\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
@@ -239,14 +240,17 @@ short army::GetAdjacentCellIndex(short hex, short direction)
         direction = (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST);
     else if (direction == COMBAT_DIRECTION_WIDE_EAST)
         direction = (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST);
-    ProcessAssert(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT, "D:\\Heroes\\Source\\PATH.CPP", gAdjacentCellAssertLine + 11);
-    ProcessAssert(hex >= 0 && hex < COMBAT_HEX_COUNT, "D:\\Heroes\\Source\\PATH.CPP", gAdjacentCellAssertLine + 12);
+#line 322
+    ProcessAssert(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT, __FILE__, __LINE__);
+#line 323
+    ProcessAssert(hex >= 0 && hex < COMBAT_HEX_COUNT, __FILE__, __LINE__);
     return gCombatAdjacency[hex][direction];
 }
 
 // Buka PATH.cpp GetAdjacentCellIndexNoArmy with HoMM1's asserts.
 VA(0x004189f6, 0xf8)
 short GetAdjacentCellIndexNoArmy(short hex, short direction)
+#line 328 "D:\\Heroes\\Source\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
@@ -254,8 +258,10 @@ short GetAdjacentCellIndexNoArmy(short hex, short direction)
         direction = COMBAT_DIRECTION_NORTHWEST;
     else if (direction == COMBAT_DIRECTION_WIDE_EAST)
         direction = COMBAT_DIRECTION_SOUTHWEST;
-    ProcessAssert(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT, "D:\\Heroes\\Source\\PATH.CPP", gAdjacentCellNoArmyAssertLine + 11);
-    ProcessAssert(hex >= 0 && hex < COMBAT_HEX_COUNT, "D:\\Heroes\\Source\\PATH.CPP", gAdjacentCellNoArmyAssertLine + 12);
+#line 339
+    ProcessAssert(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT, __FILE__, __LINE__);
+#line 340
+    ProcessAssert(hex >= 0 && hex < COMBAT_HEX_COUNT, __FILE__, __LINE__);
     return gCombatAdjacency[hex][direction];
 }
 

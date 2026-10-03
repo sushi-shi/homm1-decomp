@@ -25,6 +25,8 @@ cpp_o2_inline = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
 # Incremental compilation (/Gi, which needs /Zi): VC4 then makes __LINE__ relative to
 # a per-function static (?__LINE__Var@...), which is exactly retail's assertion
 # pattern (movsx reg, word [line var]; add reg, offset). See evidence/vc4-gi-line-var.md.
+cpp_carcass_gi = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/G5", "/Ob1"]
+cpp_carcass_eh_gi = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/G5", "/Ob1", "/GX"]
 cpp_o2_gi = ["/nologo", "/c", "/O2", "/Zi", "/Gi", "/G5"]
 cpp_carcass_oi_gy_gi = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/G5", "/Ob1", "/Oi", "/Gy"]
 cpp_o2_inline_gi = ["/nologo", "/c", "/O2", "/Ob2", "/Zi", "/Gi", "/G5"]
@@ -244,7 +246,7 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/PATH"
 source = "src/SOURCE/PATH.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_gi"
 
 # Retail FINDPATH's aligned24820..24950 controls use optimized VC4 code.
 # FindCombatPath (0x424950) expands the out-of-line Clear and QuickDistance
@@ -319,7 +321,7 @@ flags = "cpp_carcass"
 unit = "SOURCE/TOWNMGR"
 source = "src/SOURCE/TOWNMGR.cpp"
 # DoTavern registers an fs:[0] frame around new heroWindow.
-flags = "cpp_carcass_eh"
+flags = "cpp_carcass_eh_gi"
 
 [[unit]]
 unit = "SOURCE/kbwin"
@@ -329,12 +331,12 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/netwin"
 source = "src/SOURCE/netwin.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_gi"
 
 [[unit]]
 unit = "SOURCE/wingraph"
 source = "src/SOURCE/wingraph.cpp"
-flags = "cpp_carcass"
+flags = "cpp_carcass_gi"
 
 [[unit]]
 unit = "BASE/miscwin"
