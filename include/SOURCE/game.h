@@ -5,6 +5,7 @@
 
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/gameTypes.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/playerData.h>
@@ -22,17 +23,6 @@ struct SMapHeader;
 struct tag_message;
 
 // clang-format off
-H1_ENUM_CONST_BEGIN(GameStorageConstant)
-    GAME_PLAYER_COUNT = 4,
-    // A player id slot with no player (combatManager::m_playerId for a
-    // neutral side; tested before gbHumanPlayer[] lookups).
-    GAME_PLAYER_NONE = -1,
-    GAME_TOWN_COUNT = 36,
-    GAME_HERO_COUNT = 36,
-    GAME_MINE_COUNT = 36,
-    GAME_BOAT_COUNT = 32
-H1_ENUM_CONST_END(GameStorageConstant)
-
 // game::m_difficulty: the four new-game difficulty buttons and
 // gDifficultyNames ("Easy", "Normal", "Hard", "Expert"); Buka GameDifficulty.
 H1_ENUM_BEGIN(GameDifficulty)
@@ -58,8 +48,45 @@ H1_ENUM_END(CalendarPeriodType)
 // (pays 1000 gold a day) and the Lighthouse (ship movement).
 H1_ENUM_BEGIN(GameMineSlot)
     MINE_SLOT_DRAGON_CITY = 0,
-    MINE_SLOT_LIGHTHOUSE = 1
+    MINE_SLOT_LIGHTHOUSE = 1,
+    // The ordinary mines follow the two unique sites (PerDay, Overview,
+    // ComputeDailyGold loop from here).
+    MINE_SLOT_STANDARD_FIRST = 2
 H1_ENUM_END(GameMineSlot)
+
+// A mine object covers 2x2 cells from its record's (x, y - 1) to (x + 1, y)
+// (RandomizeEvents, RandomizeMine).
+H1_ENUM_CONST_BEGIN(MineFootprintConstant)
+    MINE_FOOTPRINT_WIDTH = 2,
+    MINE_FOOTPRINT_HEIGHT = 2
+H1_ENUM_CONST_END(MineFootprintConstant)
+
+// Daily income (ComputeDailyGold, PerDay): Dragon City and a gold mine pay
+// 1000 gold, a town 250 and a castle 1000; an ore or wood mine yields two
+// units a day, the other non-gold mines one.
+H1_ENUM_CONST_BEGIN(DailyIncomeConstant)
+    DAILY_GOLD_DRAGON_CITY = 1000,
+    DAILY_GOLD_MINE = 1000,
+    DAILY_GOLD_TOWN = 250,
+    DAILY_GOLD_CASTLE = 1000,
+    DAILY_GOLD_ENDLESS_SACK = 1000,
+    DAILY_GOLD_ENDLESS_BAG = 750,
+    DAILY_GOLD_ENDLESS_PURSE = 500,
+    DAILY_MINE_YIELD_WOOD_ORE = 2,
+    DAILY_MINE_YIELD_OTHER = 1
+H1_ENUM_CONST_END(DailyIncomeConstant)
+
+// Weekly growth (PerWeek/PerMonth, Buka GameWeeklyConstant): a well adds two
+// creatures a dwelling, the week's creature five; renewable sites stop
+// restocking at 100 and an emptied water wheel (0xff) refills to 2.
+H1_ENUM_CONST_BEGIN(GameWeeklyConstant)
+    WEEKLY_WELL_GROWTH_BONUS = 2,
+    WEEKLY_CREATURE_GROWTH_BONUS = 5,
+    WEEKLY_SITE_STOCK_LIMIT = 100,
+    WEEKLY_WATER_WHEEL_EMPTY = 0xff,
+    WEEKLY_WATER_WHEEL_GOLD = 2,
+    MONTHLY_CREATURE_GROWTH_FACTOR = 2
+H1_ENUM_CONST_END(GameWeeklyConstant)
 
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
 // and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
@@ -73,12 +100,70 @@ H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_ENTRY_LAST = 9,
     SPELL_BOOK_LABEL_FIRST = 10
 H1_ENUM_END(SpellBookControl)
+
+// game::m_mapSounds entry of a cell without an environment sound; new and
+// loaded games clear the table to it and EraseObj resets erased cells.
+H1_ENUM_CONST_BEGIN(MapSoundConstant)
+    MAP_SOUND_NONE = -1
+H1_ENUM_CONST_END(MapSoundConstant)
+// The spell book shows four spells a page (entries FIRST..LAST).
+H1_ENUM_CONST_BEGIN(SpellBookConstant)
+    SPELL_BOOK_PAGE_SIZE = 4
+H1_ENUM_CONST_END(SpellBookConstant)
+
+// ComputeUALoc: a player sees the ultimate artifact's hint only after eleven
+// obelisks, four percent per further obelisk; a missed roll scatters the
+// hint up to three cells (3 - three 0..2 rolls) for at most 200 tries.
+H1_ENUM_CONST_BEGIN(UltimateHintConstant)
+    ULTIMATE_HINT_OBELISK_MIN = 11,
+    ULTIMATE_HINT_PERCENT_PER_OBELISK = 4,
+    ULTIMATE_HINT_SCATTER = 3,
+    ULTIMATE_HINT_PLACE_TRIES = 200,
+    // VisitObelisk's fallback piece search.
+    OBELISK_PIECE_PICK_TRIES = 100
+H1_ENUM_CONST_END(UltimateHintConstant)
+
+// RandomizeHeroPool / SetRandomHeroArmies (Buka GameRandomHeroConstant):
+// starting experience 40 + 0..50, the strong-army flag (PHILAI's hires), the
+// chance of the second and third table stacks (50/25 percent, +30/+40 for a
+// strong army) and the counts drawn in tenths (min * 10 .. max * 10 + 9).
+// armyTable rows: per hero class three (creature, min, max) options, of
+// which the first two are drawn; unused slots get count -1.
+H1_ENUM_CONST_BEGIN(GameRandomHeroConstant)
+    RANDOM_HERO_NORMAL_ARMY = 0,
+    RANDOM_HERO_STRONG_ARMY = 1,
+    RANDOM_HERO_EXPERIENCE_BASE = 40,
+    RANDOM_HERO_FIRST_STACK_CHANCE = 50,
+    RANDOM_HERO_FIRST_STACK_BONUS_CHANCE = 30,
+    RANDOM_HERO_SECOND_STACK_CHANCE = 25,
+    RANDOM_HERO_SECOND_STACK_BONUS_CHANCE = 40,
+    RANDOM_HERO_ARMY_SELECTION_COUNT = 2,
+    RANDOM_HERO_ARMY_OPTION_COUNT = 3,
+    RANDOM_HERO_ARMY_FIELD_COUNT = 3,
+    RANDOM_HERO_COUNT_SCALE = 10,
+    RANDOM_HERO_COUNT_ROUNDING = 9,
+    RANDOM_HERO_EMPTY_COUNT = -1
+H1_ENUM_CONST_END(GameRandomHeroConstant)
+
+// game::GetLuck clamps a hero's luck to -3..3.
+H1_ENUM_CONST_BEGIN(GameLuckConstant)
+    GAME_LUCK_MIN = -3,
+    GAME_LUCK_MAX = 3
+H1_ENUM_CONST_END(GameLuckConstant)
+
+// Save files: GenerateStandardFileName keeps an 8.3 base name (stopping its
+// scan by jumping the index to SCAN_STOP); SaveGame keeps the save name
+// unless the file is the 8-character AUTOSAVE or PLYREXIT.
+H1_ENUM_CONST_BEGIN(SaveFileConstant)
+    SAVE_FILE_BASE_NAME_LENGTH = 8,
+    SAVE_FILE_NAME_SCAN_STOP = 999
+H1_ENUM_CONST_END(SaveFileConstant)
 // clang-format on
 
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
 // owner at +1 and the type at +2, as in HoMM2's mineRecord.
 #pragma pack(push, 1)
-struct mineRecord {
+        struct mineRecord {
     signed char id;
     signed char owner;
     signed char type;
@@ -105,16 +190,31 @@ struct boatRecord {
 };
 #pragma pack(pop)
 
-// SetupTowns and RandomizeTown read a town's map-extra record: custom flag, owner, buildings, mage-guild
-// level and garrison.
+// The map file's town records (LoadMap): a type byte whose low seven bits
+// are the TownType and whose sign bit marks a castle. A customized
+// mapTownExtra's owner is UNSET (-2) when the map leaves it open; SetupTowns
+// copies only the buildings in EXTRA_BUILDING_MASK (every slot but the tent
+// and castle bits, which the record's castle flag decides).
+// clang-format off
+H1_ENUM_CONST_BEGIN(MapTownRecordConstant)
+    MAP_TOWN_TYPE_MASK = 0x7f,
+    MAP_TOWN_OWNER_UNSET = -2,
+    MAP_TOWN_EXTRA_BUILDING_MASK = 0x1f9f,
+    // mapHeroExtra::artifacts: a placed hero's four starting artifacts.
+    MAP_HERO_EXTRA_ARTIFACT_COUNT = 4
+H1_ENUM_CONST_END(MapTownRecordConstant)
+// clang-format on
+
+// SetupTowns and RandomizeTown read a town's map-extra record: custom flag,
+// owner, buildings, mage-guild level and garrison.
 #pragma pack(push, 1)
-struct mapTownExtra {
+        struct mapTownExtra {
     signed char customized;
     signed char owner;
     short buildings;
     signed char buildState;
-    signed char troopTypes[5];
-    short troopCounts[5];
+    signed char troopTypes[ARMY_GROUP_SLOT_COUNT];
+    short troopCounts[ARMY_GROUP_SLOT_COUNT];
 };
 #pragma pack(pop)
 
@@ -123,10 +223,10 @@ struct mapTownExtra {
 #pragma pack(push, 1)
 struct mapHeroExtra {
     signed char owner;
-    signed char troopTypes[5];
-    short troopCounts[5];
+    signed char troopTypes[ARMY_GROUP_SLOT_COUNT];
+    short troopCounts[ARMY_GROUP_SLOT_COUNT];
     signed char heroId;
-    signed char artifacts[4];
+    signed char artifacts[MAP_HERO_EXTRA_ARTIFACT_COUNT];
     int experience;
 };
 #pragma pack(pop)
@@ -185,7 +285,8 @@ public:
     signed char m_boatSlots[GAME_BOAT_COUNT];
     // Obelisk events test and set the visiting player bit, one byte per obelisk.
     signed char m_obeliskVisitors[0x30];
-    // InsertSound reads the environment sound id per [x][y] cell.
+    // InsertSound reads the environment sound id per [x][y] cell (MAP_SOUND_NONE
+    // when silent).
     signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.
     unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
@@ -275,9 +376,14 @@ public:
     void ClaimTown(signed char, signed char);
     void ClaimMine(signed char, signed char);
     // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
-    signed char ViewSpells(class hero*, signed char, short (*)(struct tag_message&), signed char);
+    signed char ViewSpells(
+        class hero*,
+        H1_ENUM_PARAM(HeroSpellType, signed char),
+        short (*)(struct tag_message&),
+        signed char
+    );
     // HoMM1: limits the spell page to the combat or adventure slots.
-    void SetupSpellRange(short);
+    void SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, short));
     void UpdateSpellWidgets(void);
     // HoMM1 retail: word x/y, byte creature/flags, word count, eleven
     // arguments (ret 0x2c); combatManager::ViewArmy pushes its word locals

@@ -21,6 +21,7 @@ H1_ENUM_END(MapDirection)
 // frames and sounds at JUMP.
 H1_ENUM_BEGIN(WalkSpeed)
     WALK_SPEED_WALK = 0,
+    WALK_SPEED_FIRST = WALK_SPEED_WALK,
     WALK_SPEED_TROT = 1,
     WALK_SPEED_CANTER = 2,
     WALK_SPEED_GALLOP = 3,

@@ -17,7 +17,6 @@ H1_ENUM_BEGIN(BaseManagerStatus)
     BASE_MANAGER_SUCCESS = 0,
     BASE_MANAGER_ERROR = 3
 H1_ENUM_END(BaseManagerStatus)
-// clang-format on
 
 H1_ENUM_BEGIN(BaseManagerMessageMask)
     BASE_MANAGER_MESSAGE_MASK_ALL = -1,
@@ -34,7 +33,9 @@ H1_ENUM_BEGIN(BaseManagerMessageMask)
 H1_ENUM_END(BaseManagerMessageMask)
 
 H1_ENUM_CONST_BEGIN(BaseManagerConstant)
-BASE_MANAGER_NAME_CAPACITY = 30 H1_ENUM_CONST_END(BaseManagerConstant)
+    BASE_MANAGER_NAME_CAPACITY = 30
+H1_ENUM_CONST_END(BaseManagerConstant)
+// clang-format on
 
 #pragma pack(push, 1)
     class baseManager {

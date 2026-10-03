@@ -3,13 +3,13 @@
 
 #include <BASE/resource.h>
 
+// clang-format off
 H1_ENUM_BEGIN(SamplePlaybackChannel)
     SAMPLE_PLAYBACK_CHANNEL_MUSIC = 0,
     SAMPLE_PLAYBACK_CHANNEL_GROUP = 2,
     SAMPLE_PLAYBACK_CHANNEL_NONE = 4
 H1_ENUM_END(SamplePlaybackChannel)
 
-    // clang-format off
 // Miles sample settings a resource sample is created with: full AIL sample
 // volume (0..127, MSS.H DEFAULT_DDV) and a loop count of one pass (0 loops forever).
 H1_ENUM_CONST_BEGIN(SampleDefaultConstant)

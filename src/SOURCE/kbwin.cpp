@@ -67,7 +67,7 @@ WinMain(void* instance, void* previousInstance, char* commandLine, int showComma
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
 VA(0x0045b83e, 0x2d6)
-int AppInit(void* instance, void* previousInstance, int showCommand, char* commandLine) {
+BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* commandLine) {
     WNDCLASSA appClass;
     HMENU windowMenu;
     RECT rc;
@@ -113,7 +113,7 @@ int AppInit(void* instance, void* previousInstance, int showCommand, char* comma
         appClass.cbWndExtra = 0;
         appClass.cbClsExtra = 0;
         if (RegisterClassA(&appClass) == 0)
-            return 0;
+            return FALSE;
     }
 
     if (gConfig.gfx[giCurExe].showMenu != 0)
@@ -150,19 +150,19 @@ int AppInit(void* instance, void* previousInstance, int showCommand, char* comma
         InitGraphics();
         SetCursor(LoadCursorA(NULL, IDC_ARROW));
         oldmain();
-        return 1;
+        return TRUE;
     } else {
-        return 0;
+        return FALSE;
     }
 }
 
 // PoL 2.0 AppIdle correspondence: both foreground states report idle work.
 VA(0x0045bb14, 0x31)
-int AppIdle(void) {
+BOOL AppIdle(void) {
     if (gbForegroundApp != 0)
-        return 1;
+        return TRUE;
     else
-        return 1;
+        return TRUE;
 }
 
 // donor PoL RVA 0x0001c190; preferred Buka symbol ?AppWndProc@@YGJPAXIIJ@Z
@@ -212,9 +212,9 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
             }
             if (lLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
                 lLastCycleTickCount = lTemp;
-                if (giGraphicsType == KBWIN_GRAPHICS_DIRECT_DRAW
-                    && giMainVideoModeColorDepth != 8) {
-                    lLastCycleTickCount += KBWIN_CYCLE_DIRECT_DRAW_DELAY;
+                if (giGraphicsType == WINGRAPH_GRAPHICS_WING
+                    && giMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
+                    lLastCycleTickCount += KBWIN_CYCLE_WING_DELAY;
                     if (gbHeroMoving)
                         return 0;
                 }
@@ -256,7 +256,7 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
                                                                    : KBWIN_MIN_WIDTH;
                     iTempY = HIWORD(messageData) > KBWIN_MIN_HEIGHT ? HIWORD(messageData)
                                                                     : KBWIN_MIN_HEIGHT;
-                    ResizeWindow(-1, -1, iTempX, iTempY);
+                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, iTempX, iTempY);
                     return 0;
                 }
             }
@@ -379,11 +379,11 @@ void ResizeWindow(int x, int y, int width, int height) {
     if (gConfig.gfx[giCurExe].fullScreen != 0)
         return;
     GetWindowRect(hwndApp, &rect);
-    if (x == -1)
+    if (x == KBWIN_KEEP_POSITION)
         xpos = rect.left;
     else
         xpos = x;
-    if (y == -1)
+    if (y == KBWIN_KEEP_POSITION)
         ypos = rect.top;
     else
         ypos = y;
@@ -427,16 +427,36 @@ AppCommand(void* window, unsigned int message, unsigned int messageParam, long i
             WinHelpA(static_cast<HWND>(hwndApp), ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
             break;
         case KBWIN_MENU_SIZE_640_480:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_640, KBWIN_HEIGHT_480);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_640,
+                KBWIN_HEIGHT_480
+            );
             break;
         case KBWIN_MENU_SIZE_800_600:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_800, KBWIN_HEIGHT_600);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_800,
+                KBWIN_HEIGHT_600
+            );
             break;
         case KBWIN_MENU_SIZE_1024_768:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_1024, KBWIN_HEIGHT_768);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_1024,
+                KBWIN_HEIGHT_768
+            );
             break;
         case KBWIN_MENU_SIZE_1280_1024:
-            ResizeWindow(-1, -1, KBWIN_WIDTH_1280, KBWIN_HEIGHT_1024);
+            ResizeWindow(
+                KBWIN_KEEP_POSITION,
+                KBWIN_KEEP_POSITION,
+                KBWIN_WIDTH_1280,
+                KBWIN_HEIGHT_1024
+            );
             break;
         case KBWIN_MENU_FULLSCREEN:
             SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
@@ -463,7 +483,7 @@ void UpdateDfltMenu(void* menu) {
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1024_768, MF_GRAYED);
     if (giMainVideoModeWidth <= KBWIN_WIDTH_1280)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1280_1024, MF_GRAYED);
-    if (gbDDrawAttached == 0)
+    if (gbDDrawAttached == FALSE)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_FULLSCREEN, MF_GRAYED);
 }
 
@@ -515,7 +535,12 @@ void SetMenuStatus(int showMenu) {
         giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
     replacedStyle = SetWindowLongA(hwndApp, GWL_STYLE, giCurWindowsStyleFlags);
     ShowWindow(hwndApp, SW_SHOWNA);
-    ResizeWindow(-1, -1, gConfig.gfx[giCurExe].width, gConfig.gfx[giCurExe].height);
+    ResizeWindow(
+        KBWIN_KEEP_POSITION,
+        KBWIN_KEEP_POSITION,
+        gConfig.gfx[giCurExe].width,
+        gConfig.gfx[giCurExe].height
+    );
 }
 
 // donor PoL RVA 0x0001ce3d; preferred Buka symbol ?SetNoDialogMenus@@YIXH@Z
@@ -602,14 +627,14 @@ void SetGameDefaults(void) {
     gConfig.currentMapOffset = 0;
     gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
     gConfig.cdOffset = 0;
-    gConfig.musicSource = CONFIG_MUSIC_SOURCE_CD;
+    gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
     gbFirstTimeThrough = 1;
     cpuType = GetCPUType();
     if ((cpuType & 0xff) >= CPU_FAMILY_PENTIUM) {
-        gConfig.walkSpeed = CONFIG_WALK_SPEED_FAST;
+        gConfig.walkSpeed = WALK_SPEED_CANTER;
         gConfig.slowVideo = 0;
     } else {
-        gConfig.walkSpeed = CONFIG_WALK_SPEED_SLOW;
+        gConfig.walkSpeed = WALK_SPEED_GALLOP;
         gConfig.slowVideo = 1;
     }
 }
@@ -1205,7 +1230,7 @@ void WritePrefs(void) {
 // HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
 // drive's autorun file and remember the first one in the registry.
 VA(0x0045d75a, 0x4c5)
-int SetupCDDrive(void) {
+H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
     int count;
     unsigned long logicalDrives;
     int cd;

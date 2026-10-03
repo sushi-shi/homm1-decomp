@@ -28,12 +28,15 @@ H1_ENUM_CONST_BEGIN(StripConstant)
     STRIP_SELECTED_FRAME = 1,
     STRIP_EMPTY_FRAME = 2,
     STRIP_FACTION_FRAME_OFFSET = 3,
-    STRIP_CREATURES_PER_FACTION = 6
+    STRIP_CREATURES_PER_FACTION = 6,
+    // m_selectedSlot (and the town/swap managers' selected army slots) with
+    // no slot picked.
+    STRIP_SLOT_NONE = -1
 H1_ENUM_CONST_END(StripConstant)
- // clang-format on
+                    // clang-format on
 
- // forward declarations:
- class armyGroup;
+                    // forward declarations:
+                    class armyGroup;
 class border;
 class font;
 class heroWindow;

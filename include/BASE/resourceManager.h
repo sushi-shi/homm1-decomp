@@ -12,12 +12,17 @@ class mouse;
 class palette;
 class sample;
 class tileset;
+// clang-format off
 H1_ENUM_CONST_BEGIN(ResourceManagerConstant)
-RESOURCE_MANAGER_INVALID_FILE = -1,
-    RESOURCE_MANAGER_LOAD_ERROR = 3, RESOURCE_MANAGER_BINARY_OPEN_MODE = 0x8000,
-    RESOURCE_MANAGER_BACKDROP_ROW_BYTES = 640, RESOURCE_MANAGER_FILENAME_CAPACITY = 60,
+    RESOURCE_MANAGER_INVALID_FILE = -1,
+    RESOURCE_MANAGER_LOAD_ERROR = 3,
+    RESOURCE_MANAGER_BINARY_OPEN_MODE = 0x8000,
+    RESOURCE_MANAGER_BACKDROP_ROW_BYTES = 640,
+    RESOURCE_MANAGER_FILENAME_CAPACITY = 60,
     // Read13's fixed-width resource name field (name plus terminator).
-    RESOURCE_NAME_CAPACITY = 13 H1_ENUM_CONST_END(ResourceManagerConstant)
+    RESOURCE_NAME_CAPACITY = 13
+H1_ENUM_CONST_END(ResourceManagerConstant)
+// clang-format on
 
 #pragma pack(push, 1)
         struct aggEntry {

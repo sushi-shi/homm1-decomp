@@ -63,7 +63,7 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
         return;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
         if (to->IsMember(from->m_creatureTypes[i])) {
-            to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], ARMY_GROUP_SLOT_ANY);
+            to->Add(from->m_creatureTypes[i], from->m_creatureCounts[i], ARMY_GROUP_EMPTY_SLOT);
             from->Dismiss(i);
         }
     }

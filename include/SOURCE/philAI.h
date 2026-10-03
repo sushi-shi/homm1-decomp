@@ -31,6 +31,28 @@ class hero;
 class mapCell;
 class town;
 // Buka 2.1 purchase record: town, kind, building/dwelling and count.
+// clang-format off
+// DoAI's boat plan holds back the shipyard's price (gNeutralBuildingCosts
+// row BUILDING_SLOT_SHIPYARD: 2000 gold, 20 wood) while it buys other things,
+// as it holds back TOWN_BOAT_GOLD_COST/WOOD_COST for the boat.
+H1_ENUM_CONST_BEGIN(AIBoatPlanConstant)
+    AI_SHIPYARD_GOLD_RESERVE = 2000,
+    AI_SHIPYARD_WOOD_RESERVE = 20
+H1_ENUM_CONST_END(AIBoatPlanConstant)
+
+// BHC::type: what GetBestBHC chose to buy (Buka 2.1 PHILAI.h AIPurchaseType):
+// GetBestBuilding/GetBestHero/GetBestCreature fill BUILDING/HERO/CREATURE,
+// DoAI dispatches BuildBuilding/BuildHero/BuildCreature and CanBuyBHC checks
+// each; NONE when nothing is worth buying (DoAI buys when type >= FIRST).
+H1_ENUM_BEGIN(AIPurchaseType)
+    PURCHASE_NONE = -1,
+    PURCHASE_FIRST = 0,
+    PURCHASE_BUILDING = 0,
+    PURCHASE_HERO = 1,
+    PURCHASE_CREATURE = 2
+H1_ENUM_END(AIPurchaseType)
+// clang-format on
+
 struct BHC {
     town* pTown;
     int type;
@@ -195,7 +217,16 @@ extern int gUltArtifactAvgValue;
 // DoAI: the single player the AI may run for, and the places each hero has
 // already started from this turn.
 extern signed char giLimitPlayer;
-extern int iPlacesVisited[30][2];
+// clang-format off
+// DoAI's per-turn visit log: up to 30 positions (x, y) a hero has moved
+// from; a target already in it ends the hero's turn (Buka 2.1 ADVMGR.h
+// names).
+H1_ENUM_CONST_BEGIN(AIPlaceVisitConstant)
+    ADVMGR_PLACE_VISIT_COUNT = 30,
+    ADVMGR_PLACE_COORDINATE_COUNT = 2
+H1_ENUM_CONST_END(AIPlaceVisitConstant)
+    // clang-format on
+    extern int iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
 extern int iCurPlaceToVisit;
 void ResetHeroRVs(int, int, int);
 // DetermineTargetPosition's shipyard search state.

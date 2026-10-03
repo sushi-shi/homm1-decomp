@@ -11,8 +11,26 @@
 // older layout's +0x6c palette selector and +0x374 second palette are named
 // from smackManager::Main's use alone.
 
+#include <Domains.h>
+
+// clang-format off
+// Flags and sentinels of this SDK generation as smackManager::Main passes
+// them. SmackOpen's audio-track bits sit four bits lower than in the 3.0g
+// SDK HoMM2 ships (SMACKTRACK1 0x2000, Buka AUDIO_OPEN_FLAGS 0xfe000): the
+// seven tracks are 0x200..0x8000, and SmackVolumePan addresses track 1 by its
+// bit. SMACK_AUTO_EXTRA is SmackOpen's automatic extra-buffer sentinel and
+// SMACK_SURFACE_SLOW the SmackToBufferRect copy mode (3.0g SMACKAUTOEXTRA /
+// SMACKSURFACESLOW, as Buka's SMACKMGR spells the same calls).
+H1_ENUM_CONST_BEGIN(SmackApiConstant)
+    SMACK_TRACK_1 = 0x200,
+    SMACK_TRACKS = 0xfe00,
+    SMACK_AUTO_EXTRA = -1,
+    SMACK_SURFACE_SLOW = 1
+H1_ENUM_CONST_END(SmackApiConstant)
+// clang-format on
+
 #pragma pack(push, 1)
-struct Smack {
+        struct Smack {
     unsigned long Version;
     unsigned long Width;
     unsigned long Height;
@@ -29,17 +47,24 @@ struct Smack {
 };
 #pragma pack(pop)
 
-extern "C" Smack *SmackOpen(char *, unsigned long, long);
-extern "C" void SmackClose(Smack *);
-extern "C" unsigned short SmackDoFrame(Smack *);
-extern "C" void SmackNextFrame(Smack *);
-extern "C" void SmackGoto(Smack *, unsigned long);
-extern "C" unsigned short SmackSoundOnOff(Smack *, unsigned long);
-extern "C" void SmackToBuffer(Smack *, unsigned long, unsigned long, unsigned long, unsigned long, void *,
-                              unsigned long);
-extern "C" unsigned short SmackToBufferRect(Smack *, unsigned long);
-extern "C" void SmackVolumePan(Smack *, unsigned long, unsigned long, unsigned long);
-extern "C" unsigned short SmackWait(Smack *);
-extern "C" unsigned char SmackSoundUseMSS(void *);
+extern "C" Smack* SmackOpen(char*, unsigned long, long);
+extern "C" void SmackClose(Smack*);
+extern "C" unsigned short SmackDoFrame(Smack*);
+extern "C" void SmackNextFrame(Smack*);
+extern "C" void SmackGoto(Smack*, unsigned long);
+extern "C" unsigned short SmackSoundOnOff(Smack*, unsigned long);
+extern "C" void SmackToBuffer(
+    Smack*,
+    unsigned long,
+    unsigned long,
+    unsigned long,
+    unsigned long,
+    void*,
+    unsigned long
+);
+extern "C" unsigned short SmackToBufferRect(Smack*, unsigned long);
+extern "C" void SmackVolumePan(Smack*, unsigned long, unsigned long, unsigned long);
+extern "C" unsigned short SmackWait(Smack*);
+extern "C" unsigned char SmackSoundUseMSS(void*);
 
 #endif

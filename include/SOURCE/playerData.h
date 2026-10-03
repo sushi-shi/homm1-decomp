@@ -5,12 +5,24 @@
 
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/gameTypes.h>
+#include <SOURCE/resourceTypes.h>
 
 // clang-format off
+// playerData::m_heroIds: a player keeps at most eight heroes (TOWNMGR's
+// recruit and swap tests).
+// The obelisk puzzle has 48 pieces kept as bits in m_obelisksVisited (Buka
+// PUZZLE_PIECE_COUNT / PUZZLE_PIECE_STORAGE_SIZE). The ultimate-artifact
+// hint coordinates are HINT_NONE until ComputeUALoc places them. Write/Read
+// save 50 zero bytes between the hero and hint blocks.
 H1_ENUM_CONST_BEGIN(PlayerDataConstant)
     PLAYER_HERO_CAPACITY = 8,
-    PLAYER_TOWN_CAPACITY = 36,
-    PLAYER_RESOURCE_COUNT = 7
+    // m_availableHeroIds: the two heroes a player's taverns offer.
+    PLAYER_TAVERN_HERO_COUNT = 2,
+    PLAYER_PUZZLE_PIECE_COUNT = 48,
+    PLAYER_PUZZLE_PIECE_STORAGE_SIZE = (PLAYER_PUZZLE_PIECE_COUNT + 7) / 8,
+    PLAYER_ULTIMATE_HINT_NONE = -1,
+    PLAYER_SAVE_PAD_SIZE = 50
 H1_ENUM_CONST_END(PlayerDataConstant)
 
 // A computer seat's playerData::m_difficulty, named by gPlayerTypeNames
@@ -28,6 +40,22 @@ H1_ENUM_BEGIN(ComputerPlayerType)
     PLAYER_TYPE_NO_WOOD_ORE_BONUS_LAST = 2,
     PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST = 3
 H1_ENUM_END(ComputerPlayerType)
+
+// Player colours: playerData::m_color indexes the constructor's flag ICNs
+// (b-/g-/r-/y-flag32.icn and -bflg32.icn) and KB's gColorNames
+// {"blue", "green", "red", "yellow"} (Buka PlayerColor, first four values);
+// UpdateRadar uses slot 4 of gRadarOwnerColor for unowned towns and mines.
+H1_ENUM_BEGIN(PlayerColor)
+    // A seat whose crest is not chosen yet (the new-game and scenario
+    // windows skip the crest frame).
+    PLAYER_COLOR_NONE = -1,
+    PLAYER_COLOR_BLUE = 0,
+    PLAYER_COLOR_GREEN = 1,
+    PLAYER_COLOR_RED = 2,
+    PLAYER_COLOR_YELLOW = 3,
+    PLAYER_COLOR_COUNT = 4,
+    PLAYER_COLOR_NEUTRAL = 4
+H1_ENUM_END(PlayerColor)
 // clang-format on
 
 // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
@@ -45,7 +73,7 @@ class playerAIData {
 public:
     playerAttentionWeights m_attentionWeights;
     char m_unknown18[0x1c];
-    int m_income[PLAYER_RESOURCE_COUNT];
+    int m_income[RESOURCE_COUNT];
     int m_obeliskValue;
     // GetTurnAIVars stores MeanRVOfUnexploredTerritory here (+0xf5).
     int m_unexploredValue;
@@ -65,7 +93,7 @@ public:
     char m_unknown00[0x11];
     // Buka m_color (Color()); SetupThievesGuild adds it to the town-window
     // flag frame base.
-    signed char m_color;
+    H1_ENUM_STORAGE(PlayerColor, signed char) m_color;
     // Computer-player difficulty: GetTurnAIVars scales the attack bonuses by
     // it and hero::CalcMobility grants computer heroes +3 from level 3.
     signed char m_difficulty;
@@ -73,7 +101,7 @@ public:
     signed char m_currentHero;
     signed char m_heroLocatorPage;
     signed char m_heroIds[PLAYER_HERO_CAPACITY];
-    signed char m_availableHeroIds[2];
+    signed char m_availableHeroIds[PLAYER_TAVERN_HERO_COUNT];
     char m_unknown20[0x32];
     // Saved one byte at a time between the hero and town blocks.
     signed char m_ultimateArtifactHintChance;
@@ -85,10 +113,10 @@ public:
     signed char m_townCount;
     signed char m_currentTown;
     signed char m_townLocatorPage;
-    signed char m_townIds[PLAYER_TOWN_CAPACITY];
-    int m_resources[PLAYER_RESOURCE_COUNT];
+    signed char m_townIds[GAME_TOWN_COUNT];
+    int m_resources[RESOURCE_COUNT];
     char m_unknown99[2];
-    unsigned char m_obelisksVisited[6];
+    unsigned char m_obelisksVisited[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
     playerAIData m_aiData;
     // --- methods ---
     void Write(int);
@@ -105,7 +133,7 @@ public:
         return m_currentTown;
     }
     // Buka Color(); RecruitHero's crest index inlines this byte read.
-    signed char Color(void) {
+    H1_ENUM_RETURN(PlayerColor, signed char) Color(void) {
         return m_color;
     }
 };

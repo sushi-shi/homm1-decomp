@@ -10,6 +10,7 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/campaignTypes.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/mapObjectTypes.h>
 
@@ -107,7 +108,7 @@ short gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004c4de0)
 signed char giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 DATA(0x004c4de8)
-int iPlacesVisited[30][2];
+int iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
 DATA(0x004c4ee4)
 int gbTroopReload;
 DATA(0x004c4eec)
@@ -244,36 +245,36 @@ void philAI::CheckBuyStuff(void) {
             BuildBuilding(dockTown, BUILDING_SLOT_SHIPYARD);
             giBuildShipyard[giCurPlayer] = -1;
         } else {
-            gpCurPlayer->m_resources[RESOURCE_GOLD] -= 2000;
-            gpCurPlayer->m_resources[RESOURCE_WOOD] -= 20;
+            gpCurPlayer->m_resources[RESOURCE_GOLD] -= AI_SHIPYARD_GOLD_RESERVE;
+            gpCurPlayer->m_resources[RESOURCE_WOOD] -= AI_SHIPYARD_WOOD_RESERVE;
         }
     }
     if (giBuildBoat[giCurPlayer] >= 0) {
         if ((dockTown->m_buildings & (1 << BUILDING_SLOT_SHIPYARD))
-            && gpCurPlayer->m_resources[RESOURCE_GOLD] >= 1000
-            && gpCurPlayer->m_resources[RESOURCE_WOOD] >= 10) {
+            && gpCurPlayer->m_resources[RESOURCE_GOLD] >= TOWN_BOAT_GOLD_COST
+            && gpCurPlayer->m_resources[RESOURCE_WOOD] >= TOWN_BOAT_WOOD_COST) {
             if (gpGame->CreateBoat(dockTown->m_x - 1, dockTown->m_y + 1) != -1) {
-                gpCurPlayer->m_resources[RESOURCE_GOLD] -= 1000;
-                gpCurPlayer->m_resources[RESOURCE_WOOD] -= 10;
+                gpCurPlayer->m_resources[RESOURCE_GOLD] -= TOWN_BOAT_GOLD_COST;
+                gpCurPlayer->m_resources[RESOURCE_WOOD] -= TOWN_BOAT_WOOD_COST;
             }
             giBuildBoat[giCurPlayer] = -1;
         } else {
-            gpCurPlayer->m_resources[RESOURCE_GOLD] -= 1000;
-            gpCurPlayer->m_resources[RESOURCE_WOOD] -= 10;
+            gpCurPlayer->m_resources[RESOURCE_GOLD] -= TOWN_BOAT_GOLD_COST;
+            gpCurPlayer->m_resources[RESOURCE_WOOD] -= TOWN_BOAT_WOOD_COST;
         }
     }
     DoAllHeroInteractions();
     while (!done) {
         GetBestBHC(giCurPlayer, bestBHC);
-        if (bestBHC.type >= 0 && CanBuyBHC(bestBHC)) {
+        if (bestBHC.type >= PURCHASE_FIRST && CanBuyBHC(bestBHC)) {
             switch (bestBHC.type) {
-                case 0:
+                case PURCHASE_BUILDING:
                     BuildBuilding(bestBHC.pTown, bestBHC.what);
                     break;
-                case 1:
+                case PURCHASE_HERO:
                     BuildHero(bestBHC.pTown, bestBHC.what);
                     break;
-                case 2:
+                case PURCHASE_CREATURE:
                     BuildCreature(bestBHC.pTown, bestBHC.what, bestBHC.num);
                     break;
             }
@@ -282,12 +283,12 @@ void philAI::CheckBuyStuff(void) {
             done = 1;
     }
     if (giBuildShipyard[giCurPlayer] >= 0) {
-        gpCurPlayer->m_resources[RESOURCE_GOLD] += 2000;
-        gpCurPlayer->m_resources[RESOURCE_WOOD] += 20;
+        gpCurPlayer->m_resources[RESOURCE_GOLD] += AI_SHIPYARD_GOLD_RESERVE;
+        gpCurPlayer->m_resources[RESOURCE_WOOD] += AI_SHIPYARD_WOOD_RESERVE;
     }
     if (giBuildBoat[giCurPlayer] >= 0) {
-        gpCurPlayer->m_resources[RESOURCE_GOLD] += 1000;
-        gpCurPlayer->m_resources[RESOURCE_WOOD] += 10;
+        gpCurPlayer->m_resources[RESOURCE_GOLD] += TOWN_BOAT_GOLD_COST;
+        gpCurPlayer->m_resources[RESOURCE_WOOD] += TOWN_BOAT_WOOD_COST;
     }
     DoAllHeroInteractions();
     LogInt("CheckBuy End  ", gpCurPlayer->m_resources[RESOURCE_GOLD]);
@@ -311,7 +312,7 @@ int philAI::GoodAdjacent(hero* pHero, int* direction) {
     if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
         == MAP_OBJECT_STONE_LITHS)
         return 0;
-    for (dirIndex = 0; dirIndex < 8; dirIndex++) {
+    for (dirIndex = 0; dirIndex < MAP_DIRECTION_COUNT; dirIndex++) {
         if (gpAdvManager->ValidMoveWithEvent(pHero, dirIndex)) {
             x = normalDirTable[dirIndex].x + pHero->m_x;
             y = normalDirTable[dirIndex].y + pHero->m_y;
@@ -519,10 +520,10 @@ signed char philAI::DoDimensionDoor(hero* pHero) {
     if (bestX == -1 || length <= 4)
         return 0;
     gpAdvManager->TeleportTo(bestX, bestY, 0);
-    if (pHero->m_remainingMobility < 12)
+    if (pHero->m_remainingMobility < SPELL_TRAVEL_MOBILITY_COST)
         pHero->m_remainingMobility = 0;
     else
-        pHero->m_remainingMobility -= 12;
+        pHero->m_remainingMobility -= SPELL_TRAVEL_MOBILITY_COST;
     pHero->UseSpell(SPELL_DIMENSION_DOOR);
     return 1;
 }
@@ -560,7 +561,7 @@ void philAI::DoAI(int player) {
     LogInt("DO AI", player);
     GetTurnAIVars(player);
     ShowStatus();
-    for (pathIndex = 0; pathIndex < 7; pathIndex++) {
+    for (pathIndex = 0; pathIndex < RESOURCE_COUNT; pathIndex++) {
         sprintf(
             gText,
             "RES - %15s  %d  %d",
@@ -625,7 +626,7 @@ void philAI::DoAI(int player) {
                            != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
                     aiHero->m_remainingMobility = 0;
             }
-            if (iCurPlaceToVisit < 30) {
+            if (iCurPlaceToVisit < ADVMGR_PLACE_VISIT_COUNT) {
                 iPlacesVisited[iCurPlaceToVisit][0] = aiHero->m_x;
                 iPlacesVisited[iCurPlaceToVisit][1] = aiHero->m_y;
                 iCurPlaceToVisit++;
@@ -709,7 +710,7 @@ void philAI::DoAI(int player) {
                 }
                 if (eventCell) {
                     gpAdvManager->DoAIEvent(eventCell, aiHero, x, y);
-                    if (gpCurPlayer->m_currentHero == -1)
+                    if (gpCurPlayer->m_currentHero == INVALID_HERO)
                         goto nextHero;
                     ResetHeroRVs(1, aiHero->m_destinationX, aiHero->m_destinationY);
                 }
@@ -788,7 +789,7 @@ void philAI::GetTurnAIVars(int player) {
         ) / (totalFightValue + 1000)
         + gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
     artTotal = 0;
-    for (i = 4; i < 37; i++)
+    for (i = ARTIFACT_REGULAR_FIRST; i < ARTIFACT_REGULAR_END; i++)
         artTotal += gArtifactBaseRV[i];
     for (i = 0; i < gpGame->m_playerCount; i++)
         gpGame->m_players[i].m_aiData.m_artifactPoolShare =
@@ -813,7 +814,7 @@ void philAI::GetTurnAIVars(int player) {
             }
         }
     }
-    for (i = 0; i < 36; i++)
+    for (i = 0; i < GAME_HERO_COUNT; i++)
         gfHeroInteractionBonus[i] = 1.0f;
     if (gpCurPlayer->m_difficulty == 1) {
         gfAttackHumanBonus = 0.6f;
@@ -847,8 +848,8 @@ void philAI::GetBestBHC(int, BHC& best) {
     float bestBHCValue = -99.0f;
     int total = 0;
     int totalWeights = 0;
-    int ideal[36];
-    int strengths[36];
+    int ideal[GAME_TOWN_COUNT];
+    int strengths[GAME_TOWN_COUNT];
     BHC choice;
     int townNo;
     town* townPointer;
@@ -919,7 +920,7 @@ void philAI::GetBestBHC(int, BHC& best) {
     }
     LogStr("BestBHC ", best.type, static_cast<int>(bestBHCValue * 100.0f), best.what, 0, 0);
     if (bestBHCValue < 0.02)
-        best.type = -1;
+        best.type = PURCHASE_NONE;
 }
 
 // Buka 2.1 DetermineHeroToMove: the current player's hero with the most
@@ -945,7 +946,7 @@ hero* philAI::DetermineHeroToMove(int player) {
     }
     if (bestHero >= 0)
         return &gpGame->m_heroRecs[gpGame->m_players[player].m_heroIds[bestHero]];
-    gpGame->m_players[player].m_currentHero = -1;
+    gpGame->m_players[player].m_currentHero = INVALID_HERO;
     return NULL;
 }
 
@@ -1227,7 +1228,8 @@ void philAI::ProbableOutcomeOfBattle(
     outcomeValue = static_cast<int>(outcomeValue * gpCurPlayer->m_aiData.m_upgradeValueWeight);
     if (attackerHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (attackerHero->m_artifacts[artSlot] >= 0 && attackerHero->m_artifacts[artSlot] < 37)
+            if (attackerHero->m_artifacts[artSlot] >= 0
+                && attackerHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
                 attArts += gArtifactBaseRV[attackerHero->m_artifacts[artSlot]];
         }
         outcomeValue = static_cast<int>(outcomeValue - (attArts + 1400) * (1.0f - winChance));
@@ -1237,7 +1239,8 @@ void philAI::ProbableOutcomeOfBattle(
     }
     if (defenderHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (defenderHero->m_artifacts[artSlot] >= 0 && defenderHero->m_artifacts[artSlot] < 37)
+            if (defenderHero->m_artifacts[artSlot] >= 0
+                && defenderHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
                 artsD += gArtifactBaseRV[defenderHero->m_artifacts[artSlot]];
         }
         outcomeValue = static_cast<int>(
@@ -1289,7 +1292,7 @@ void philAI::ValueOfBuyingBuilding(
     factionId = townPointer->m_type;
     dwellingsOwned = 0;
     highestDwellingId = -1;
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
         if (townPointer->m_buildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))) {
             dwellingsOwned++;
             highestDwellingId = i;
@@ -1344,7 +1347,7 @@ void philAI::ValueOfBuyingBuilding(
         case BUILDING_SLOT_DWELLING_4:
         case BUILDING_SLOT_DWELLING_5:
         case BUILDING_SLOT_DWELLING_6:
-            if (numFilledSlots == 5) {
+            if (numFilledSlots == ARMY_GROUP_SLOT_COUNT) {
                 creatureLocated = 0;
                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                     if (gDwellingType[townPointer->m_type][building - BUILDING_SLOT_DWELLING_FIRST]
@@ -1363,7 +1366,7 @@ void philAI::ValueOfBuyingBuilding(
                 curBenefit = (1.66 - dwellingsOwned * 0.33) * curBenefit;
             if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                 curBenefit = curBenefit * 1.1;
-            for (dwellingIndex = 0; dwellingIndex < 6; dwellingIndex++) {
+            for (dwellingIndex = 0; dwellingIndex < BUILDING_SLOT_DWELLING_COUNT; dwellingIndex++) {
                 currentCreatureType = gDwellingType[townPointer->m_type][dwellingIndex];
                 if ((townPointer->m_buildings
                      & (1 << (dwellingIndex + BUILDING_SLOT_DWELLING_FIRST)))
@@ -1423,7 +1426,8 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
     for (curBuilding = BUILDING_SLOT_MAGE_GUILD; curBuilding <= BUILDING_SLOT_DWELLING_LAST;
          curBuilding++) {
         if (!(townPointer->m_buildings & (1 << curBuilding))
-            || (curBuilding == 0 && townPointer->m_buildState < 3)) {
+            || (curBuilding == BUILDING_SLOT_MAGE_GUILD
+                && townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST)) {
             if (CanBuild(townPointer, curBuilding)) {
                 ValueOfBuyingBuilding(townPointer, curBuilding, costRV, buildingValue);
                 score = (Random(1, 5) + 95) * buildingValue / 100.0f;
@@ -1447,7 +1451,7 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
         }
     }
     purchase.pTown = townPointer;
-    purchase.type = 0;
+    purchase.type = PURCHASE_BUILDING;
     purchase.what = bestBuilding;
     benefitCost = bestCost;
 }
@@ -1466,8 +1470,8 @@ void philAI::ValueOfBuyingCreature(
     int nWeeks;
     int nPoints;
     float peril;
-    int monsterCost[PLAYER_RESOURCE_COUNT];
-    int archers;
+    int monsterCost[RESOURCE_COUNT];
+    int breathStacks;
     int creatRV;
     int rvCost;
     float attackChance;
@@ -1478,7 +1482,7 @@ void philAI::ValueOfBuyingCreature(
     hero* occupant;
     int slotNum;
 
-    archers = 0;
+    breathStacks = 0;
     GetMonsterCost(creature, monsterCost);
     rvCost = purchaseCount * RVConversion(monsterCost);
     creatRV = static_cast<int>(
@@ -1488,15 +1492,16 @@ void philAI::ValueOfBuyingCreature(
     if (townPointer->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
         occupant = gpGame->GetHero(townPointer->m_occupyingHeroId);
         creatRV = static_cast<int>(creatRV * 1.1);
-        if (occupant->m_heroClass == creature / 6)
+        if (occupant->m_heroClass == creature / CREATURE_FACTION_SIZE)
             creatRV = static_cast<int>(creatRV * AI_CREATURE_SAME_RACE_FACTOR);
-        if ((gMonsterDatabase[creature].stats.attributes & 8)) {
+        if ((gMonsterDatabase[creature].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)) {
             for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
                 if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
-                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes & 8))
-                    archers++;
+                    && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes
+                        & MONSTER_FLAGS_BREATH_ATTACK))
+                    breathStacks++;
             }
-            creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
+            creatRV = static_cast<int>(creatRV * (1.18 - breathStacks * 0.06));
         }
         creatRV = static_cast<int>(
             creatRV
@@ -1504,14 +1509,14 @@ void philAI::ValueOfBuyingCreature(
                + 0.66)
         );
     }
-    if ((gMonsterDatabase[creature].stats.attributes & 8)) {
+    if ((gMonsterDatabase[creature].stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)) {
         for (slotNum = 0; slotNum < ARMY_GROUP_SLOT_COUNT; slotNum++) {
             if (townPointer->m_army.m_creatureTypes[slotNum] != CREATURE_NONE
                 && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].stats.attributes
-                    & 8))
-                archers++;
+                    & MONSTER_FLAGS_BREATH_ATTACK))
+                breathStacks++;
         }
-        creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
+        creatRV = static_cast<int>(creatRV * (1.18 - breathStacks * 0.06));
     }
     LikelihoodOfEnemyAttacking(
         townPointer,
@@ -1552,7 +1557,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
     bestBuy = 0;
     bestCost = -99.0f;
     bestRandScore = -99.0f;
-    for (curDwelling = 0; curDwelling < 6; curDwelling++) {
+    for (curDwelling = 0; curDwelling < BUILDING_SLOT_DWELLING_COUNT; curDwelling++) {
         mon = gDwellingType[townPointer->m_type][curDwelling];
         if ((townPointer->m_buildings & (1 << (curDwelling + BUILDING_SLOT_DWELLING_FIRST)))
             && townPointer->m_garrison[curDwelling] > 0) {
@@ -1589,7 +1594,7 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
         }
     }
     best.pTown = townPointer;
-    best.type = 2;
+    best.type = PURCHASE_CREATURE;
     best.what = topDwelling;
     best.num = bestBuy;
     bestValue = bestCost;
@@ -1622,12 +1627,12 @@ int philAI::CreaturesToBuy(int creatureType, int availableCount) {
 // Buka 2.1 body: the last resource's affordable count wins.
 VA(0x0041e4a5, 0x9b)
 int philAI::MaxBuyableCreatures(int creatureType) {
-    int monsterCost[PLAYER_RESOURCE_COUNT];
+    int monsterCost[RESOURCE_COUNT];
     int maxUnits;
     int i;
 
     GetMonsterCost(creatureType, monsterCost);
-    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++) {
+    for (i = 0; i < RESOURCE_COUNT; i++) {
         if (monsterCost[i] == 0)
             maxUnits = 9999;
         else if (gpCurPlayer->m_resources[i] > 0)
@@ -1651,7 +1656,7 @@ void philAI::ValueOfBuyingHero(
     int tmp;
     int i;
     int heroRV;
-    int heroCost[PLAYER_RESOURCE_COUNT];
+    int heroCost[RESOURCE_COUNT];
     int costRV;
 
     heroCost[RESOURCE_WOOD] = 0;
@@ -1664,7 +1669,7 @@ void philAI::ValueOfBuyingHero(
     costRV = RVConversion(heroCost);
     heroRV = heroPointer->m_experience + 2000;
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
-        if (heroPointer->m_artifacts[i] >= 0 && heroPointer->m_artifacts[i] < 37)
+        if (heroPointer->m_artifacts[i] >= 0 && heroPointer->m_artifacts[i] < ARTIFACT_REGULAR_END)
             heroRV += gArtifactBaseRV[heroPointer->m_artifacts[i]];
     }
     heroRV += heroPointer->m_experience / 2;
@@ -1731,7 +1736,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
         }
     }
     best.pTown = townPointer;
-    best.type = 1;
+    best.type = PURCHASE_HERO;
     best.what = bestHero;
     bestValue = bestCost;
     if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType
@@ -2123,8 +2128,8 @@ int philAI::StrategicValueOfPosition(
                              gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY
                          )
                          ->m_tileIndex];
-                if (!((baseTerrain == 0 && destTerrain > 0)
-                      || (baseTerrain > 0 && destTerrain == 0)))
+                if (!((baseTerrain == TERRAIN_WATER && destTerrain > 0)
+                      || (baseTerrain > 0 && destTerrain == TERRAIN_WATER)))
                     myValue -= (9 - nGap) * 1250 / 9;
             }
         }
@@ -2199,7 +2204,7 @@ float philAI::TurnValueOfObelisk(int player) {
     int each;
     playerAI = &gpGame->m_players[player].m_aiData;
     each = gArtifactBaseRV[gpGame->m_ultimateArtifactId] / 110;
-    if (gpGame->m_ultimateArtifactId == -1)
+    if (gpGame->m_ultimateArtifactId == ARTIFACT_NONE)
         return 0.0f;
     playerAI->m_obeliskValue = each * 48 / gpGame->m_obeliskCount;
     playerAI->m_obeliskValue = static_cast<int>(
@@ -2287,7 +2292,8 @@ int philAI::FightValueOfStack(
                     quantityMod = -0.1f;
                 else
                     quantityMod = -0.14f;
-                if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes & 4)
+                if ((gMonsterDatabase[group->m_creatureTypes[slot]].stats.attributes
+                     & MONSTER_FLAGS_SHOOTER)
                     || group->m_creatureTypes[slot] == CREATURE_SPRITE
                     || group->m_creatureTypes[slot] == CREATURE_ROGUE)
                     quantityMod = quantityMod * 0.7;
@@ -2304,7 +2310,7 @@ int philAI::FightValueOfStack(
         for (slot = BUILDING_SLOT_DWELLING_FIRST; slot <= BUILDING_SLOT_DWELLING_LAST; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows += 4;
-        for (slot = 0; slot <= 4; slot++)
+        for (slot = BUILDING_SLOT_MAGE_GUILD; slot <= BUILDING_SLOT_GENERIC_LAST; slot++)
             if (pTown->m_buildings & (1 << slot))
                 nArrows++;
         castleValue = nArrows * 120;
@@ -2335,7 +2341,7 @@ int philAI::FightValueOfStack(
         bestValue = -1;
         for (slot = 0; slot < HERO_SPELL_SLOT_COUNT; slot++) {
             if (heroPointer->m_spells[slot] >= 0
-                && (gcSpellAIFlags[heroPointer->m_spells[slot]] & 2)) {
+                && (gcSpellAIFlags[heroPointer->m_spells[slot]] & SPELL_AI_FLAG_COMBAT)) {
                 spellScore = static_cast<int>(
                     giSpellAIValue[heroPointer->m_spells[slot]]
                     * ((gcSpellAIFlags[heroPointer->m_spells[slot]] & 1)
@@ -2409,7 +2415,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (pHero->m_army.m_creatureTypes[i] == creature) {
                 replacementSlot = -1;
-                i = 5;
+                i = ARMY_GROUP_SLOT_COUNT;
             } else {
                 replacementValue =
                     pHero->m_army.m_creatureCounts[i] * gMonsterDatabase[i].fightValue;
@@ -2873,7 +2879,7 @@ int philAI::ChooseToPayRansomOnHero(hero*, int) {
 VA(0x0042196d, 0x194)
 void philAI::BuildBuilding(town* townPointer, short building) {
     int i;
-    int cost[PLAYER_RESOURCE_COUNT];
+    int cost[RESOURCE_COUNT];
 
     sprintf(
         gText,
@@ -2884,7 +2890,7 @@ void philAI::BuildBuilding(town* townPointer, short building) {
     );
     LogStr(gText);
     GetBuildingCost(townPointer->m_type, building, cost, townPointer->m_buildState);
-    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++)
+    for (i = 0; i < RESOURCE_COUNT; i++)
         gpCurPlayer->m_resources[i] -= cost[i];
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
@@ -2928,7 +2934,7 @@ void philAI::BuildHero(town* townPointer, short availableHeroIndex) {
     newHero->m_x = townX;
     newHero->m_y = townY;
     newHero->m_eventFlags = 0;
-    newHero->m_direction = 2;
+    newHero->m_direction = MAP_DIRECTION_EAST;
     newHero->m_remainingMobility = newHero->CalcMobility();
     newHero->m_mobility = newHero->m_remainingMobility;
     newHero->m_locationType = gpGame->m_map[townX][townY].m_triggerType;
@@ -2949,7 +2955,7 @@ void philAI::BuildHero(town* townPointer, short availableHeroIndex) {
 // and add the stack to the garrison.
 VA(0x00421d5d, 0x100)
 void philAI::BuildCreature(town* townPointer, int dwelling, int purchaseCount) {
-    int cost[PLAYER_RESOURCE_COUNT];
+    int cost[RESOURCE_COUNT];
     int creature;
     int i;
 
@@ -2964,7 +2970,7 @@ void philAI::BuildCreature(town* townPointer, int dwelling, int purchaseCount) {
     LogStr(gText);
     creature = gDwellingType[townPointer->m_type][dwelling];
     GetMonsterCost(creature, cost);
-    for (i = 0; i < PLAYER_RESOURCE_COUNT; i++)
+    for (i = 0; i < RESOURCE_COUNT; i++)
         gpCurPlayer->m_resources[i] -= cost[i] * purchaseCount;
     townPointer->m_garrison[dwelling] -= purchaseCount;
     townPointer->m_army.Add(creature, purchaseCount, -1);
@@ -2978,26 +2984,26 @@ VA(0x00421e5d, 0x188)
 int philAI::CanBuyBHC(BHC& purchase) {
     int index;
     int j;
-    int cost[PLAYER_RESOURCE_COUNT];
+    int cost[RESOURCE_COUNT];
     switch (purchase.type) {
-        case 0:
+        case PURCHASE_BUILDING:
             if (CanBuy(purchase.pTown, purchase.what))
                 return 1;
             break;
-        case 1:
+        case PURCHASE_HERO:
             if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost
                 && purchase.pTown->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
                 && bHeroBuiltThisTurn == 0)
                 return 1;
             break;
-        case 2:
+        case PURCHASE_CREATURE:
             j = gDwellingType[purchase.pTown->m_type][purchase.what];
             if (purchase.num > purchase.pTown->m_garrison[purchase.what])
                 return 0;
             if (!purchase.pTown->m_army.CanJoin(j))
                 return 0;
             GetMonsterCost(j, cost);
-            for (index = 0; index < PLAYER_RESOURCE_COUNT; index++)
+            for (index = 0; index < RESOURCE_COUNT; index++)
                 if (gpCurPlayer->m_resources[index] < cost[index] * purchase.num)
                     return 0;
             return 1;
@@ -3053,7 +3059,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     short n;
     int won;
 
-    if (cell->m_objectMetadata == 1)
+    if (cell->m_objectMetadata == GHOST_SITE_EMPTY)
         return;
     guards[0] = 2;
     guards[1] = 3;
@@ -3061,19 +3067,19 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     guards[3] = 10;
     for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
         gpMonGroup->m_creatureTypes[n] = CREATURE_GHOST;
-        gpMonGroup->m_creatureCounts[n] = guards[cell->m_objectMetadata - 2];
+        gpMonGroup->m_creatureCounts[n] = guards[cell->m_objectMetadata - GHOST_SITE_SMALL];
     }
     switch (cell->m_objectMetadata) {
-        case 2:
+        case GHOST_SITE_SMALL:
             rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 1000.0f);
             break;
-        case 3:
+        case GHOST_SITE_MEDIUM:
             rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 2000.0f);
             break;
-        case 4:
+        case GHOST_SITE_LARGE:
             rewardValue = static_cast<int>(gafAITurnCostResource[RESOURCE_GOLD] * 5000.0f);
             break;
-        case 5:
+        case GHOST_SITE_HUGE:
             rewardValue = static_cast<int>(
                 gafAITurnCostResource[RESOURCE_GOLD] * 2000.0f
                 + gpCurPlayer->m_aiData.m_artifactValue
@@ -3106,21 +3112,21 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
         );
         if (won) {
             switch (cell->m_objectMetadata) {
-                case 2:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 1000);
+                case GHOST_SITE_SMALL:
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_SMALL_GOLD);
                     break;
-                case 3:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
+                case GHOST_SITE_MEDIUM:
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_MEDIUM_GOLD);
                     break;
-                case 4:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 5000);
+                case GHOST_SITE_LARGE:
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_LARGE_GOLD);
                     break;
-                case 5:
-                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, 2000);
+                case GHOST_SITE_HUGE:
+                    gpAdvManager->GiveResource(heroPointer, RESOURCE_GOLD, GHOST_HUGE_GOLD);
                     gpAdvManager->GiveRandomArtifact(heroPointer);
                     break;
             }
-            cell->m_objectMetadata = 1;
+            cell->m_objectMetadata = GHOST_SITE_EMPTY;
         }
     }
 }
@@ -3226,7 +3232,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, int x, int y) {
                     -1,
                     1
                 );
-                if (outcome == 1) {
+                if (outcome == COMBAT_RESULT_ATTACKER) {
                     gpGame->ClaimTown(townPointer->m_id, giCurPlayer);
                     giHumanTownConquered = townPointer->m_id;
                 }
@@ -3345,13 +3351,13 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iArtifactChoice3 = 0;
             if (bEventSeen) {
                 switch (pEventCell->m_objectMetadata) {
-                    case 1:
+                    case ARTIFACT_EVENT_MODE_PICKUP:
                         iEventRV = iArtifactChoice1;
                         break;
-                    case 2:
+                    case ARTIFACT_EVENT_MODE_GUARDED:
                         iEventRV = iArtifactChoice2;
                         break;
-                    case 3:
+                    case ARTIFACT_EVENT_MODE_GOLD:
                         iEventRV = iArtifactChoice3;
                         break;
                 }
@@ -3391,7 +3397,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = gpCurPlayer->m_aiData.m_obeliskValue;
             break;
         case MAP_OBJECT_MONSTER:
-            iMonsterCount = pEventCell->m_objectMetadata & 0x7f;
+            iMonsterCount = pEventCell->m_objectMetadata & MONSTER_COUNT_MASK;
             memset(gpMonGroup->m_creatureTypes, -1, sizeof(gpMonGroup->m_creatureTypes));
             memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
             if (iMonsterCount / 5 > 0) {
@@ -3429,10 +3435,10 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iAttackerLoss,
                 armySlot2
             );
-            if ((pEventCell->m_objectMetadata & 0x80)
+            if ((pEventCell->m_objectMetadata & MONSTER_WILLING_FLAG)
                 && gpPhilAI->FightValueOfStack(&pHero->m_army, pHero, 0, 0, 0)
                        > gMonsterDatabase[pEventCell->m_objectIndex].fightValue
-                             * (pEventCell->m_objectMetadata & 0x7f) * 1.75) {
+                             * (pEventCell->m_objectMetadata & MONSTER_COUNT_MASK) * 1.75) {
                 *liveChance = 100;
                 *liveChance = static_cast<int>(fWinChance * 60.0f + 40.0f);
                 if (pHero->m_army.CanJoin(pEventCell->m_objectIndex))
@@ -3604,7 +3610,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             }
             break;
         case MAP_OBJECT_DAEMON_CAVE:
-            if (pEventCell->m_objectMetadata == 1) {
+            if (pEventCell->m_objectMetadata == DAEMON_CAVE_EMPTY) {
                 iEventRV = 0;
             } else {
                 iEventRV = static_cast<int>(
@@ -3612,8 +3618,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                     + (gpCurPlayer->m_aiData.m_artifactValue + pHero->m_aiFightValue * 100.0)
                     + pHero->m_aiFightValue * 300.0 + gafAITurnCostResource[RESOURCE_GOLD] * -750.0
                 );
-                if (pEventCell->m_objectMetadata == 5
-                    && gpCurPlayer->m_resources[RESOURCE_GOLD] < 2500)
+                if (pEventCell->m_objectMetadata == DAEMON_REWARD_RANSOM
+                    && gpCurPlayer->m_resources[RESOURCE_GOLD] < DAEMON_GOLD)
                     iEventRV = -100;
             }
             break;
@@ -3689,10 +3695,11 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                 iEventRV = 1000;
             break;
         case MAP_OBJECT_RESOURCE:
-            switch (pEventCell->m_objectIndex - 61) {
+            switch (pEventCell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE) {
                 case RESOURCE_GOLD:
                     iEventRV = static_cast<int>(
-                        pEventCell->m_objectMetadata * 100 * gafAITurnCostResource[RESOURCE_GOLD]
+                        pEventCell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
+                        * gafAITurnCostResource[RESOURCE_GOLD]
                     );
                     break;
                 case RESOURCE_WOOD:
@@ -3728,16 +3735,16 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             }
             break;
         case MAP_OBJECT_WINDMILL:
-            if (pEventCell->m_objectMetadata == 99) {
+            if (pEventCell->m_objectMetadata == WINDMILL_EMPTY) {
                 iEventRV = 0;
             } else {
                 memset(costList, 0, sizeof(costList));
-                costList[pEventCell->m_objectMetadata] = 2;
+                costList[pEventCell->m_objectMetadata] = WINDMILL_RESOURCE_AMOUNT;
                 iEventRV = RVConversion(costList);
             }
             break;
         case MAP_OBJECT_SKELETON:
-            if (pEventCell->m_objectMetadata == 1)
+            if (pEventCell->m_objectMetadata == SKELETON_EMPTY)
                 iEventRV = 0;
             else
                 iEventRV = static_cast<int>(gpCurPlayer->m_aiData.m_artifactValue * 0.1);
@@ -3828,25 +3835,25 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             break;
         case MAP_OBJECT_GRAVEYARD:
         case MAP_OBJECT_SHIPWRECK:
-            if (pEventCell->m_objectMetadata == 1) {
+            if (pEventCell->m_objectMetadata == GHOST_SITE_EMPTY) {
                 iEventRV = 0;
             } else {
                 switch (pEventCell->m_objectMetadata) {
-                    case 2:
+                    case GHOST_SITE_SMALL:
                         guardCount1 = 2;
-                        goldCost = 1000;
+                        goldCost = GHOST_SMALL_GOLD;
                         break;
-                    case 3:
+                    case GHOST_SITE_MEDIUM:
                         guardCount1 = 3;
-                        goldCost = 2000;
+                        goldCost = GHOST_MEDIUM_GOLD;
                         break;
-                    case 4:
+                    case GHOST_SITE_LARGE:
                         guardCount1 = 5;
-                        goldCost = 5000;
+                        goldCost = GHOST_LARGE_GOLD;
                         break;
-                    case 5:
+                    case GHOST_SITE_HUGE:
                         guardCount1 = 10;
-                        goldCost = 2000;
+                        goldCost = GHOST_HUGE_GOLD;
                         break;
                 }
                 for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
@@ -3862,8 +3869,9 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                     0,
                     static_cast<int>(
                         goldCost * gafAITurnCostResource[RESOURCE_GOLD]
-                        + (pEventCell->m_objectMetadata == 5 ? gpCurPlayer->m_aiData.m_artifactValue
-                                                             : 0)
+                        + (pEventCell->m_objectMetadata == GHOST_SITE_HUGE
+                               ? gpCurPlayer->m_aiData.m_artifactValue
+                               : 0)
                     ),
                     bWon9,
                     iEventRV
@@ -3948,7 +3956,8 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             break;
         case MAP_OBJECT_WATERWHEEL:
             iEventRV = static_cast<int>(
-                pEventCell->m_objectMetadata * 500 * gafAITurnCostResource[RESOURCE_GOLD]
+                pEventCell->m_objectMetadata * WATERWHEEL_GOLD_MULTIPLIER
+                * gafAITurnCostResource[RESOURCE_GOLD]
             );
             break;
         case MAP_OBJECT_SHIP:

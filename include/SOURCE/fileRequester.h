@@ -18,8 +18,48 @@ H1_ENUM_CONST_BEGIN(FileRequesterStorageConstant)
     FILE_REQUESTER_EXTENSION_SIZE = 5,
     FILE_REQUESTER_LOCAL_NAME_SIZE = 352,
     FILE_REQUESTER_LOCAL_EXTENSION_SIZE = 208,
-    FILE_REQUESTER_MAP_DESCRIPTION_SIZE = 101
+    FILE_REQUESTER_MAP_DESCRIPTION_SIZE = 101,
+    FILE_REQUESTER_UPDATE_STORAGE_SIZE = 372
 H1_ENUM_CONST_END(FileRequesterStorageConstant)
+
+// fileRequester::m_mode (the constructor's mode): pick a game or map to load,
+// or name the game to save (HoMM1 numbering; Buka FileRequesterMode splits
+// map/game loads).
+H1_ENUM_BEGIN(FileRequesterMode)
+    FILE_REQUESTER_LOAD = 0,
+    FILE_REQUESTER_SAVE = 1
+H1_ENUM_END(FileRequesterMode)
+
+// m_selectedIndex with no list row picked; m_result's "no map info shown
+// yet" start value; the player-count digit of a ".GM4" extension and the
+// debug level that lets a game load with another player count (Buka
+// FileRequesterFileSelectionConstant).
+H1_ENUM_CONST_BEGIN(FileRequesterSelectionConstant)
+    FILE_REQUESTER_SELECTION_NONE = -1,
+    FILE_REQUESTER_MAP_INFO_NONE = -2,
+    FILE_REQUESTER_EXTENSION_PLAYER_DIGIT = 3,
+    FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH = 2
+H1_ENUM_CONST_END(FileRequesterSelectionConstant)
+
+// The list rows' text width, the gutter the scroll knob travels (56..212
+// with the knob centred at 134 for a short list) and the click-to-page
+// arithmetic (Buka FileRequesterScrollGeometry).
+H1_ENUM_CONST_BEGIN(FileRequesterScrollGeometry)
+    FILE_REQUESTER_ROW_TEXT_WIDTH = 207,
+    FILE_REQUESTER_PLAYER_SUFFIX_GAP = 6,
+    FILE_REQUESTER_GUTTER_TOP = 56,
+    FILE_REQUESTER_GUTTER_BOTTOM = 212,
+    FILE_REQUESTER_SCROLL_KNOB_HALF_HEIGHT = 9,
+    FILE_REQUESTER_GUTTER_SCALE = 100,
+    FILE_REQUESTER_GUTTER_STEPS = 15700
+H1_ENUM_CONST_END(FileRequesterScrollGeometry)
+
+// SMapHeader::id of a valid .MAP (game::LoadMap also reads it as the map
+// version; versions from MAP_EXTRA_VERSION carry map-extra records).
+H1_ENUM_CONST_BEGIN(MapHeaderConstant)
+    MAP_HEADER_ID = 1000,
+    MAP_EXTRA_VERSION = 1112
+H1_ENUM_CONST_END(MapHeaderConstant)
 
 // request.bin widget ids (Buka FileRequesterControlId, HoMM1 layout): the
 // scroll arrows, gutter and knob, the ten list rows from LIST_FIRST, the
@@ -83,7 +123,7 @@ public:
     short m_x;
     short m_y;
     // 0 lists files to load, 1 saves the current game.
-    short m_mode;
+    H1_ENUM_STORAGE(FileRequesterMode, short) m_mode;
     FileRequesterName* m_fileNames;
     FileRequesterExtension* m_extensions;
     FileRequesterName* m_mapNames;
@@ -97,7 +137,14 @@ public:
     iconWidget* m_scrollKnob;
     short m_acceptMask;
     // --- constructors ---
-    fileRequester(short, short, short, const char*, const char*, const char*);
+    fileRequester(
+        short,
+        short,
+        H1_ENUM_PARAM(FileRequesterMode, short),
+        const char*,
+        const char*,
+        const char*
+    );
     ~fileRequester();
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
