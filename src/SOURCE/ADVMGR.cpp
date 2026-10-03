@@ -2485,6 +2485,15 @@ int advManager::GetCloudLookup(int x, int y) {
     return giCloudType[cloudMask];
 }
 
+// @early-stop 99.88: `s_drawGroundTile |= cell0->m_tileIndex;` - retail
+// builds the result in eax (mov eax,ecx after the zero-extended byte load,
+// then loads the global into cx); we or into ecx. 2 bytes, no other diff.
+// Types match retail (byte m_tileIndex at +0 of the local cell0, unsigned
+// 16-bit global: zero-extending loads); vc4trace: no handle state of
+// s_drawGroundTile/cell0 changes it, solver distance 5 in every tier, no
+// TU-state trial closes it. `a = a | b`, `a = b | a`, casts of the byte
+// (unsigned short, short, int, unsigned) and of the result, and static
+// linkage all compile identically.
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
