@@ -16,11 +16,11 @@ public:
     virtual ~listBoxWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message & message) OVERRIDE;
     // --- methods ---
     void Read(void);
-    void DeleteItem(int);
-    void DrawLBStuff(int);
-    int ProcessMouseMessage(struct tag_message &);
+    void DeleteItem(int index);
+    void DrawLBStuff(int doUpdate);
+    int ProcessMouseMessage(struct tag_message & message);
 };
 #endif // HOMM1_BASE_LISTBOXWIDGET_H

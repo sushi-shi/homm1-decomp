@@ -28,15 +28,15 @@ public:
     bitmap(short);
     virtual inline ~bitmap();
     // --- methods ---
-    void DrawToBufferCareful(short int, short int);
+    void DrawToBufferCareful(short int x, short int y);
     void DrawToBuffer(short int, short int);
-    void DrawToScreen(short int, short int);
+    void DrawToScreen(short int x, short int y);
     void GrabScreen(short int, short int);
     void GrabBitmap(class bitmap*, short int, short int);
-    void GrabBitmapCareful(class bitmap*, short int, short int);
+    void GrabBitmapCareful(class bitmap* source, short int x, short int y);
     void Write(char*);
     void CopyTo(class bitmap*, int, int, int, int, int, int);
-    void CopyToCareful(class bitmap*, int, int, int, int, int, int);
+    void CopyToCareful(class bitmap* destination, int destinationX, int destinationY, int sourceX, int sourceY, int width, int height);
 };
 #pragma pack(pop)
 

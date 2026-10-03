@@ -135,13 +135,13 @@ public:
     // --- constructors ---
     hero(void);
     // --- methods ---
-    void Read(int, signed char);
-    void Write(int, signed char);
+    void Read(int file, signed char expansion);
+    void Write(int file, signed char expansion);
     void GetArmyStrengths(unsigned long int* const);
     signed char HasArtifact(H1_ENUM_PARAM(ArtifactType, signed char));
     short CalcMobility(void);
     signed char HasSpell(H1_ENUM_PARAM(SpellType, signed char));
-    int GetNthSpell(int, int);
+    int GetNthSpell(int type, int spellNumber);
     short GetNumSpells(H1_ENUM_PARAM(HeroSpellType, signed char));
     void UseSpell(H1_ENUM_PARAM(SpellType, signed char));
     int AddSpell(H1_ENUM_PARAM(SpellType, signed char), signed char, int);
@@ -159,17 +159,17 @@ public:
     void ApplyBattleLossTemps(void);
     void CheckLevel(void);
     int NumArtifacts(void);
-    void SetSS(int, int);
-    int TakeSS(int, int);
-    int GiveSS(int, int);
-    int CreatureTypeCount(int);
-    void UpgradeCreatures(int, int);
-    int GetNthSS(int);
+    void SetSS(int skill, int level);
+    int TakeSS(int skill, int levels);
+    int GiveSS(int skill, int levels);
+    int CreatureTypeCount(int creatureType);
+    void UpgradeCreatures(int oldCreatureType, int newCreatureType);
+    int GetNthSS(int ordinal);
     class town* GetOccupiedTown(void);
-    signed char Stats(int);
-    signed char GetSSLevel(int);
-    void DoSSLevelDialog(int, int);
-    void CheckAnduranPieces(int);
+    signed char Stats(int stat);
+    signed char GetSSLevel(int skill);
+    void DoSSLevelDialog(int skill, int quickView);
+    void CheckAnduranPieces(int showDialog);
 };
 #pragma pack(pop)
 

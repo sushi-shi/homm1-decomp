@@ -55,14 +55,14 @@ public:
         H1_ENUM_PARAM(IconDrawOffsetMode, signed char)
     );
     int CombatClipDrawToBuffer(
-        int,
-        int,
-        int,
-        struct SLimitData*,
-        int,
-        int,
-        unsigned char*,
-        signed char*
+        int x,
+        int y,
+        int frame,
+        struct SLimitData* limits,
+        int orientation,
+        int offset,
+        unsigned char* colorTable,
+        signed char* yModify
     );
     void ClipFillToBuffer(
         short,

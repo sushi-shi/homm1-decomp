@@ -36,7 +36,7 @@ public:
     virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void Read(void);
-    void SetColorIndex(short int);
+    void SetColorIndex(short int color);
     void SetText(char*);
 };
 #pragma pack(pop)

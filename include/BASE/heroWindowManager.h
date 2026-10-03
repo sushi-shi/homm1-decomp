@@ -44,7 +44,7 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual short Main(struct tag_message &) OVERRIDE;
     // --- methods ---
-    short ConvertToHover(struct tag_message &);
+    short ConvertToHover(struct tag_message & message);
     short BroadcastMessage(short, short, short, short);
     void AddWindow(class heroWindow *, short, signed char);
     void RemoveWindow(class heroWindow *);

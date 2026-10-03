@@ -30,10 +30,10 @@ public:
     // --- methods ---
 protected:
     void
-    DrawStringExecute(char*, int, int, int, int, int, int, int); // ?...@font@@IAE... (protected)
+    DrawStringExecute(char* text, int x, int y, int mode, int clipL, int clipT, int clipR, int clipB); // ?...@font@@IAE... (protected)
 public:
     void DrawString(char*, short, short, short);
-    int GetCharacterWidth(unsigned char);
+    int GetCharacterWidth(unsigned char character);
     void DrawBoundedString(char*, short, short, short, short, short, short);
     int LineLength(char*, short);
     int LineWidth(char*);

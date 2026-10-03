@@ -349,12 +349,12 @@ public:
         return &m_castleRecs[m_players[player].m_townIds[index]];
     }
     // --- methods ---
-    void SetupDynamicStuff(int, int, int);
-    void SetupNewOverviewType(int, int);
+    void SetupDynamicStuff(int redraw, int updateKnob, int forceUpdate);
+    void SetupNewOverviewType(int overviewType, int redrawFrom);
     void SetupResources(void);
     void Overview(void);
     void DoKnob(void);
-    int ProcessIconSelect(int, int);
+    int ProcessIconSelect(int widgetId, int quickView);
     signed char SetupCampaignGame(void);
     signed char SetupBaud(void);
     signed char SetupComPort(void);
@@ -366,14 +366,14 @@ public:
     signed char SetupGame(signed char);
     signed char PickLoadGame(void);
     int HandleCampaignWin(void);
-    void PlayPreScenarioSmacker(int, int);
+    void PlayPreScenarioSmacker(int side, int map);
     void ShowCampaignInfo(int, int, int);
-    void CampaignInfoUpdate(int);
+    void CampaignInfoUpdate(int redraw);
     void InitEntireCampaign(int);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
     void InitCampaignMap(int, int);
-    int MineTypesOwned(int, int);
-    int SetupPuzzlePieces(int, int);
+    int MineTypesOwned(int owner, int mineType);
+    int SetupPuzzlePieces(int player, int justCount);
     signed char IsMobile(signed char);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
     // Inline world-map file I/O (LoadMap, SaveGame, LoadGame): each
@@ -390,13 +390,13 @@ public:
     void SetupOrigData(void);
     // HoMM1 retail returns 1 in AX (ret 0xc).
     short LoadGame(char*, int, int);
-    void GiveTroopsToNeutralTown(int);
+    void GiveTroopsToNeutralTown(int townId);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char*);
     void RandomizeEvents(void);
     void InitializePasswords(void);
-    void RandomizeBarrier(class mapCell*);
-    void RandomizePassword(class mapCell*);
+    void RandomizeBarrier(class mapCell* cell);
+    void RandomizePassword(class mapCell* cell);
     // HoMM1 retail returns 0 in AX.
     short LoadMap(char*);
     void ClaimTown(signed char, signed char);
@@ -435,10 +435,10 @@ public:
     int ComputeDailyGold(int);
     void PerDay(void);
     void PerWeek(void);
-    void WeeklyRecruitSite(class mapCell*);
-    void WeeklyGenericSite(class mapCell*);
+    void WeeklyRecruitSite(class mapCell* cell);
+    void WeeklyGenericSite(class mapCell* cell);
     void PerMonth(void);
-    void ConvertObject(int, int, int, int, int, int, int, int, int, int, int);
+    void ConvertObject(int left, int top, int right, int bottom, int oldTileset, int oldFirstIndex, int oldLastIndex, int newTileset, int newFirstIndex, int oldTrigger, int newTrigger);
     // HoMM1 retail: byte x, y and castle flag (ret 0xc).
     void RandomizeTown(signed char, signed char, signed char);
     // HoMM1 retail: byte x and y (ret 8).
@@ -452,7 +452,7 @@ public:
     // HoMM1 retail: towns-only pass flag (ret 4).
     void ProcessRandomObjects(int);
     void SetVisibility(short, short, short, short);
-    void MakeAllWaterVisible(int);
+    void MakeAllWaterVisible(int player);
     void GiveArmy(class armyGroup*, int, int, int);
     int ExperienceValueOfStack(class armyGroup*, class hero*);
     // HoMM1 retail: hero and army only (ret 8).
@@ -465,10 +465,10 @@ public:
     void ShowComputerScreen(void);
     void ShowHeroesLogo(void);
     void WaitForPlayer(char*, int);
-    int HasLateOverlay(int, int);
-    void ConvertFlagToLateOverlay(int, int);
-    int HasObjectTilesetIndex(int, int, int, int);
-    void ConvertAllToLateOverlay(int, int);
+    int HasLateOverlay(int column, int row);
+    void ConvertFlagToLateOverlay(int column, int row);
+    int HasObjectTilesetIndex(int column, int row, int tileset, int index);
+    void ConvertAllToLateOverlay(int column, int row);
     // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
     void SettleOverlay(int, int);
@@ -486,33 +486,33 @@ public:
     int GetNumThievesGuilds(int);
     int CalcDifficultyRating(void);
     void RestoreCell(int, int, int, int, class mapCell*, int);
-    void SetMapSize(int, int);
-    int HeroIDToHeroPos(class playerData*, int);
-    int TownIDToTownPos(class playerData*, int);
+    void SetMapSize(int width, int height);
+    int HeroIDToHeroPos(class playerData* player, int heroId);
+    int TownIDToTownPos(class playerData* player, int townId);
     void SetupNewRumour(void);
     void CheckForTimeEvent(void);
-    int CountShrines(int);
+    int CountShrines(int player);
     void ShowMoraleInfo(class hero*, int);
     void ShowLuckInfo(class hero*, int);
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
-    void ProcessNewMap(struct SMapHeader*);
-    void InitNewGame(struct SMapHeader*);
+    void ProcessNewMap(struct SMapHeader* header);
+    void InitNewGame(struct SMapHeader* header);
     void SetupNetPlayerNames(void);
     // Retail returns the started flag in AL.
     signed char NewGame(void);
     void CleanUpNewGameWindow(void);
     void InitNewGameWindow(void);
     void UpdateNewGameWindow(void);
-    int ProcessNGKeyPress(struct tag_message&);
-    void NGKPSetupDisplayString(char*, unsigned short int);
-    void DrawNGKPDisplayString(int);
+    int ProcessNGKeyPress(struct tag_message& message);
+    void NGKPSetupDisplayString(char* text, unsigned short int cursor);
+    void DrawNGKPDisplayString(int updateScreen);
     void ShowScenInfo(void);
     // HoMM1: NewMap gives every opponent a distinct crest.
     void RandomizePlayerCrests(void);
-    void GetLossConditionText(char*);
-    void GetVictoryConditionText(char*);
-    int GetSideDesc(char*, int, int);
+    void GetLossConditionText(char* text);
+    void GetVictoryConditionText(char* text);
+    int GetSideDesc(char* text, int firstPlayer, int lastPlayer);
     // DoEvent's obelisk branch (byte player, ret 4).
     void VisitObelisk(signed char);
 };

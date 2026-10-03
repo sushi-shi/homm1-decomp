@@ -177,7 +177,7 @@ public:
     int MusicPlaying(void);
     void MIDIStartup(void);
     void MIDIShutdown(void);
-    void MIDIPlay(int);
+    void MIDIPlay(int midiTrack);
     void MIDIStop(void);
     int MIDIIsPlaying(void);
     void MIDISetVolume(void);

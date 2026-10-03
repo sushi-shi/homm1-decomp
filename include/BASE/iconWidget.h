@@ -25,16 +25,16 @@ public:
     // --- constructors ---
     iconWidget(void);
     iconWidget(
-        short int,
-        short int,
-        short int,
-        short int,
-        unsigned long int,
-        short int,
-        signed char,
-        short int,
-        short int,
-        short int
+        short int x,
+        short int y,
+        short int width,
+        short int height,
+        unsigned long int iconId,
+        short int frame,
+        signed char orientation,
+        short int id,
+        short int kind,
+        short int fillColor
     );
     iconWidget(
         short int,

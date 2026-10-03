@@ -289,18 +289,18 @@ public:
     short ValidMoveWithEvent(class hero*, short);
     short ValidMove(short);
     void MoveOrigin(short, short);
-    void ProcessMapChange(struct SMapChange);
-    void ProcessIncomingSingleMapChange(struct SMapChange*);
-    void ProcessIncomingGroupMapChange(char*);
+    void ProcessMapChange(struct SMapChange change);
+    void ProcessIncomingSingleMapChange(struct SMapChange* incoming);
+    void ProcessIncomingGroupMapChange(char* incomingData);
     void PurgeMapChangeQueue(void);
-    void UnwindMapChangeQueue(int, int);
+    void UnwindMapChangeQueue(int maximumToUnwind, int processChanges);
     void ViewWorld(signed char, signed char, signed char);
     void VWCleanup(void);
-    void VWInit(int, int);
+    void VWInit(int centerX, int centerY);
     void VWCompleteDraw(void);
     void GetCursorSampleSet(int);
     class mapCell* DoAdvCommand(void);
-    void CheckSetEvilInterface(int, int);
+    void CheckSetEvilInterface(int redraw, int player);
     void Reseed(int, int);
     int ProcessSelect(struct tag_message*, class mapCell**);
     int ProcessDeSelect(struct tag_message*, int*, class mapCell**);
@@ -344,7 +344,7 @@ public:
     signed char ComboDraw(int);
     void SetEnvironmentOrigin(short, short, short);
     void CheckLoadSample(int);
-    int GetSoundId(int, int);
+    int GetSoundId(int x, int y);
     void InsertSound(short, short, short, signed char);
     void TeleportTo(int, int, int);
     void DimensionDoor(void);
@@ -374,17 +374,17 @@ public:
     void AdvPanel(void);
     short ControlPanel(void);
     void SystemOptions(void);
-    int DoVisions(class hero*);
-    int IsCrystalBallInEffect(int, int, int);
+    int DoVisions(class hero* visionHero);
+    int IsCrystalBallInEffect(int x, int y, int radius);
     void DoEvent(class mapCell*, int, int);
     void EraseObj(class mapCell*, int, int);
     void HeroSwap(class hero*, class hero*);
     int BarrierEvent(class mapCell*, class hero*);
     void PasswordEvent(class mapCell*, class hero*);
-    void GenericSiteEvent(class mapCell*, class hero*);
-    void RecruitSiteEvent(class mapCell*, class hero*);
-    void ExpansionRecruitEvent(class hero*, int, short int*);
-    void JailEvent(class mapCell*, class hero*, int, int);
+    void GenericSiteEvent(class mapCell* cell, class hero* eventHero);
+    void RecruitSiteEvent(class mapCell* cell, class hero* eventHero);
+    void ExpansionRecruitEvent(class hero* eventHero, int creatureType, short int* availableCount);
+    void JailEvent(class mapCell* cell, class hero* eventHero, int x, int y);
     void TownEvent(class mapCell*, int, int);
     void EventSound(short, short);
     void EventWindow(
@@ -403,8 +403,8 @@ public:
     void GiveResource(class hero*, H1_ENUM_PARAM(ResourceType, signed char), short);
     short GiveArtifact(class hero*, H1_ENUM_PARAM(ArtifactType, signed char));
     void RecruitEvent(class hero*, H1_ENUM_PARAM(CreatureType, int), class mapCell*);
-    int SkeletonEvent(class hero*, class mapCell*, char*, int, int);
-    int ZombieEvent(class hero*, class mapCell*, char*, int, int);
+    int SkeletonEvent(class hero* eventHero, class mapCell* cell, char* text, int x, int y);
+    int ZombieEvent(class hero* eventHero, class mapCell* cell, char* text, int x, int y);
     signed char GhostEvent(class hero*, class mapCell*, int, int, int);
     void HouseEvent(class hero*, class mapCell*);
     // HoMM1 retail: nine arguments (ret 0x24), result in AL.
@@ -426,9 +426,9 @@ public:
     void DoAIEvent(class mapCell*, class hero*, int, int);
     int BarrierAIEvent(class mapCell*, class hero*);
     void PasswordAIEvent(class mapCell*, class hero*);
-    void GenericSiteAIEvent(class mapCell*, class hero*);
-    void RecruitSiteAIEvent(class mapCell*, class hero*);
-    void JailAIEvent(class mapCell*, class hero*, int, int);
+    void GenericSiteAIEvent(class mapCell* cell, class hero* eventHero);
+    void RecruitSiteAIEvent(class mapCell* cell, class hero* eventHero);
+    void JailAIEvent(class mapCell* cell, class hero* eventHero, int x, int y);
     void PlayerMonsterInteract(
         class mapCell*,
         class mapCell*,
@@ -489,17 +489,17 @@ public:
         signed char*
     );
     int AutoResolveCombat(
-        int,
-        int,
-        class hero*,
-        class armyGroup*,
-        class town*,
-        class hero*,
-        class armyGroup*,
-        int,
-        int,
-        int,
-        int
+        int x,
+        int y,
+        class hero* firstHero,
+        class armyGroup* firstArmy,
+        class town* combatTown,
+        class hero* secondHero,
+        class armyGroup* secondArmy,
+        int setupCombatX,
+        int setupCombatY,
+        int randomSeed,
+        int processLosses
     );
 };
 #pragma pack(pop)

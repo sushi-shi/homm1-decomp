@@ -13,7 +13,7 @@ class dimmerWidget : public widget {
 public:
     // --- constructors ---
     dimmerWidget(void);
-    dimmerWidget(short int, short int, short int, short int, short int, short int);
+    dimmerWidget(short int x, short int y, short int width, short int height, short int id, short int kind);
     virtual ~dimmerWidget() OVERRIDE {}   // EXPLICIT but inline: retail has ??_E/??_G (deleting
                                           // dtors) at 0x4dd410 with the base dtor folded in and
                                           // NO standalone ??1 — an out-of-line body would emit one.

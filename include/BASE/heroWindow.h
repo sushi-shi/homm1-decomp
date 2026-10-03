@@ -63,7 +63,7 @@ public:
     heroWindow(short, short, char*);
     // --- methods ---
     short Open(short, signed char);
-    void RemoveAndDeleteWidget(int);
+    void RemoveAndDeleteWidget(int id);
     void Close(void);
     void AddWidget(class widget*, short);
     void RemoveWidget(class widget*);

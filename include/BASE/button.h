@@ -27,30 +27,30 @@ public:
     // --- constructors ---
     button(void);
     button(
-        short int,
-        short int,
-        short int,
-        short int,
-        unsigned long int,
-        short int,
-        short int,
-        short int,
-        short int,
-        short int,
-        short int
+        short int x,
+        short int y,
+        short int width,
+        short int height,
+        unsigned long int iconId,
+        short int normalFrame,
+        short int pressedFrame,
+        short int selectMode,
+        short int hotkey,
+        short int id,
+        short int kind
     );
     button(
-        short int,
-        short int,
-        short int,
-        short int,
-        char*,
-        short int,
-        short int,
-        short int,
-        short int,
-        short int,
-        short int
+        short int x,
+        short int y,
+        short int width,
+        short int height,
+        char* iconId,
+        short int normalFrame,
+        short int pressedFrame,
+        short int selectMode,
+        short int hotkey,
+        short int id,
+        short int kind
     );
     virtual inline ~button() OVERRIDE;
     // --- virtual methods (vtable order) ---

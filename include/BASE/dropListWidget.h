@@ -16,10 +16,10 @@ public:
     virtual ~dropListWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message & message) OVERRIDE;
     // --- methods ---
     void Read(void);
-    void DeleteItem(int);
+    void DeleteItem(int index);
     void DrawDropStuff(void);
     void SaveDropBackground(void);
     void RestoreDropBackground(void);

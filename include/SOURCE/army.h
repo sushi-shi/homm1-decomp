@@ -190,27 +190,27 @@ public:
     void PowEffect(signed char);
     unsigned long int Strength(void);
     int LeaveNoBody(void);
-    void ProcessDeath(int);
+    void ProcessDeath(int immediate);
     // HoMM1 retail 0x0046b326: word effect, frame delay (ret 8).
     void SpellEffect(short, int);
-    void CancelSpellType(int);
-    void CancelIndividualSpell(int);
-    int SetSpellInfluence(int, int);
+    void CancelSpellType(int cancelType);
+    void CancelIndividualSpell(int influence);
+    int SetSpellInfluence(int influence, int rounds);
     void DecrementSpellRounds(void);
     void GoBerserk(void);
     void MoveAttack(int, int);
-    float SpellCastWorkChance(int);
-    int SpellCastWorks(int);
+    float SpellCastWorkChance(int spell);
+    int SpellCastWorks(int spell);
     void DispelGood(void);
     // HoMM1 retail 0x0046b457: undoes m_spellEffect when it expires.
     void CancelSpell(void);
-    void Cure(int);
+    void Cure(int amount);
     int MidX(void);
     int MidY(void);
     int TopY(void);
     int RightX(void);
     int LeftX(void);
-    int OtherArmyAdjacent(int, int);
+    int OtherArmyAdjacent(int side, int index);
     int GetPowBaseY(void);
     // HoMM1 retail 0x0044a5e0: hex through a word pointer, word result (ret 4).
     short CanFit(short*);

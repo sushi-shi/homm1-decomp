@@ -133,7 +133,7 @@ public:
     );
     // HoMM1 retail 0x00425040 (ret 0x18): word coordinates and occupancy flag.
     void TestPossibleDirections(short, short, signed char* const, signed char* const, short, int);
-    void SeedCombatPosition(class army*);
+    void SeedCombatPosition(class army* unit);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
     // attackPath is an ArmyPathTarget (PATH.h).
     short FindCombatPath(short, short, class army*, signed char);

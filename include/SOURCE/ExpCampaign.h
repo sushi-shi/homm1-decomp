@@ -18,14 +18,14 @@ public:
     void ResetMapsPlayed(void);
     void ResetAwards(void);
     void ResetBonusChoices(void);
-    void GrantAward(int);
-    void RemoveAward(int);
-    signed char HasAward(int);
+    void GrantAward(int award);
+    void RemoveAward(int award);
+    signed char HasAward(int award);
     void SetMapWasPlayed(void);
-    void InitNewCampaign(int);
+    void InitNewCampaign(int campaignId);
     void InitMap(void);
     void ShowInfo(int, int);
-    void UpdateInfo(int);
+    void UpdateInfo(int redraw);
     int HandleVictory(void);
     void HandleVictory1(void);
     void HandleVictory2(void);
@@ -39,7 +39,7 @@ public:
     unsigned char IsCompleted(void);
     signed char IsThisMapCompleted(void);
 private:
-    static int MessageHandler(struct tag_message &);   // ?...@ExpCampaign@@CIH... (private static)
+    static int MessageHandler(struct tag_message & message);   // ?...@ExpCampaign@@CIH... (private static)
 public:
     void Autosave(void);
     int Choose(void);
@@ -47,8 +47,8 @@ public:
     int CampaignID(void);
     char * JosephName(void);
     char * IvanName(void);
-    signed char IsSpecialGoldenBow(int, int);
+    signed char IsSpecialGoldenBow(int x, int y);
     signed char IsSpecialUA(void);
-    signed char IsSpecialLossCondition(int);
+    signed char IsSpecialLossCondition(int playerIndex);
 };
 #endif // HOMM1_SOURCE_EXPCAMPAIGN_H

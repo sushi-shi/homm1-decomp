@@ -72,8 +72,8 @@ public:
     int GoodAdjacent(class hero*, int*);
     void CheckReload(class hero*);
     void CheckBerserk(class hero*);
-    void DimensionDoorTo(int, int);
-    int DoAnywhereDDoorTownGate(int);
+    void DimensionDoorTo(int x, int y);
+    int DoAnywhereDDoorTownGate(int targetValue);
     signed char DoDimensionDoor(class hero*);
     void SetupRelativeHeroStrengths(void);
     void DoAI(int);
@@ -144,9 +144,9 @@ public:
         float&,
         float&
     );
-    void HeroInteractionAtHero(class hero*, class hero*, int, int*);
+    void HeroInteractionAtHero(class hero* firstHero, class hero* secondHero, int evaluateOnly, int* value);
     void HeroInteractionAtTown(class hero*, class town*, int, int*);
-    void RedistributeTroops(class armyGroup*, class armyGroup*, int, int, int, int, int);
+    void RedistributeTroops(class armyGroup* sourceArmy, class armyGroup* destinationArmy, int preserveOne, int preferFast, int sourceStrength, int destinationStrength, int transferBudget);
     int ChooseGoldOrExperience(class hero*, int, int);
     void ChooseEvaluateBattle(
         class armyGroup*,
@@ -159,9 +159,9 @@ public:
         int&,
         int&
     );
-    int ChooseToFightForArtifact(int, int, int);
+    int ChooseToFightForArtifact(int artifact, int monster, int quantity);
     int ChooseToBuyArtifact(class hero*, int, int);
-    int NetValueOfArtifact(int, int, int, int);
+    int NetValueOfArtifact(int artifact, int goldCost, int resourceType, int resourceCost);
     int ChooseToPayRansomOnHero(class hero*, int);
     void BuildBuilding(class town*, short);
     void BuildHero(class town*, short);
@@ -173,21 +173,21 @@ public:
     float StatChangeValue(int, int);
     void IncrementHourGlass(void);
     void TownEvent(class mapCell*, class hero*, int, int);
-    int ComputeUpgradeValue(int, int);
-    int ComputeValueOfSS(class hero*, int, int);
-    int ComputeValueOfFreeSS(class hero*, int);
-    int ManaRefreshValue(class hero*, int);
+    int ComputeUpgradeValue(int baseCreatureType, int upgradedCreatureType);
+    int ComputeValueOfSS(class hero* heroPointer, int skill, int level);
+    int ComputeValueOfFreeSS(class hero* heroPointer, int skill);
+    int ManaRefreshValue(class hero* heroPointer, int level);
     int ValueOfEventAtPosition(class hero*, short, short, int, int*);
-    int EvaluateGenericSite(class mapCell*);
-    int EvaluateBarrier(class mapCell*);
-    int EvaluatePassword(class mapCell*);
-    int EvaluateRecruitSite(class mapCell*);
+    int EvaluateGenericSite(class mapCell* cell);
+    int EvaluateBarrier(class mapCell* cell);
+    int EvaluatePassword(class mapCell* cell);
+    int EvaluateRecruitSite(class mapCell* cell);
     int EvaluateJail(class mapCell*);
-    int EvaluateArtifactEvent(int, int);
-    int EvaluateMineEvent(int, int, int, int*);
-    int EvaluateMonsterEvent(int, int, int*);
-    int EvaluateHeroEvent(int, int, int, int, int*);
-    int EvaluateTownEvent(int, int, int, int, int*);
+    int EvaluateArtifactEvent(int artifact, int eventData);
+    int EvaluateMineEvent(int mineIndex, int x, int y, int* liveChance);
+    int EvaluateMonsterEvent(int monsterType, int eventData, int* liveChance);
+    int EvaluateHeroEvent(int heroId, int x, int y, int mode, int* liveChance);
+    int EvaluateTownEvent(int townId, int x, int y, int mode, int* liveChance);
 };
 extern philAI* gpPhilAI;
 extern armyGroup* gpMonGroup;

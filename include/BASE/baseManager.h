@@ -50,9 +50,9 @@ public:
     void Activate(void) {
         m_active = 1;
     }
-    virtual short Open(short) = 0;
+    virtual short Open(short priority) = 0;
     virtual void Close() = 0;
-    virtual short Main(tag_message&) = 0;
+    virtual short Main(tag_message& message) = 0;
 };
 #pragma pack(pop)
 

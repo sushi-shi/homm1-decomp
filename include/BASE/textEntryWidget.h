@@ -58,21 +58,21 @@ public:
     // --- constructors ---
     textEntryWidget(void);
     textEntryWidget(
-        short int,
-        short int,
-        short int,
-        short int,
-        short int,
-        char*,
-        char*,
-        short int,
-        char*,
-        short int,
-        short int,
-        short int,
-        short int,
-        int,
-        int
+        short int x,
+        short int y,
+        short int width,
+        short int height,
+        short int maxLength,
+        char* text,
+        char* fontName,
+        short int color,
+        char* iconName,
+        short int iconFrame,
+        short int id,
+        short int kind,
+        short int layout,
+        int horizontalInset,
+        int verticalInset
     );
     virtual inline ~textEntryWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---

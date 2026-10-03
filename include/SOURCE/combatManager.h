@@ -326,7 +326,7 @@ public:
     virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void NoShowCombatLog(char*);
-    void ClearCombatMessages(int);
+    void ClearCombatMessages(int force);
     void CheckUpdateCombatMessages(void);
     // HoMM1 retail 0x00470aa9: text and a redraw flag (ret 8).
     void CombatMessage(char*, int);
@@ -334,26 +334,26 @@ public:
     void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short));
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
-    void SetupGridForArmy(class army*);
+    void SetupGridForArmy(class army* armyPointer);
     // HoMM1 retail 0x00470a4f: word hex, byte direction, attributes
     // (ret 0xc); the upward directions also redraw the row above.
     void UpdateGridForMove(short, signed char, int);
     // HoMM1 retail 0x004709f0: word first hex, redraw flag (ret 8).
     void UpdateGrid(short, int);
     void DrawBackground(void);
-    void UpdateMouseGrid(int, int);
+    void UpdateMouseGrid(int hexIndex, int forceUpdate);
     // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
     void DrawFrame(signed char);
     // HoMM1 retail 0x00470f25: byte mode (ret 4).
     void SetGridMode(signed char);
-    void DrawSmallView(int, int);
+    void DrawSmallView(int viewIndex, int updateScreen);
     // HoMM1 retail 0x00438310 returns its result in AL (ret 0xc).
     signed char ViewGeneral(int, int, int);
     // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
     void ViewArmy(class army*, int, int);
-    int HasValidSpellTarget(int);
+    int HasValidSpellTarget(int spell);
     signed char ViewSpells(int);
-    int FindResurrectArmyIndex(int, int, int);
+    int FindResurrectArmyIndex(int side, int spell, int hex);
     // HoMM1 retail 0x00415a2c: byte spell and hex, byte result (ret 8).
     signed char ValidSpellTarget(H1_ENUM_PARAM(SpellType, signed char), signed char);
     // HoMM1 retail 0x00415d1c: byte spell and hex (ret 8).
@@ -372,29 +372,29 @@ public:
     void MeteorShower(signed char);
     void ElementalStorm(void);
     void Armageddon(void);
-    void TurnToStone(class army*);
-    void BloodLustEffect(class army*, int);
-    void Ripple(int);
-    void Blur(int, int, int);
-    void ResetBoltAngle(struct SBolt*);
-    void DrawBolt(struct SBolt*, int);
-    void AddBolt(struct SBolt*, int, int, int, int, int, int, int, int, int, int, int, int);
+    void TurnToStone(class army* target);
+    void BloodLustEffect(class army* target, int effect);
+    void Ripple(int strength);
+    void Blur(int redAdjust, int greenAdjust, int blueAdjust);
+    void ResetBoltAngle(struct SBolt* bolt);
+    void DrawBolt(struct SBolt* bolt, int stepCount);
+    void AddBolt(struct SBolt* bolt, int startX, int startY, int endX, int endY, int branchDistance, int startWidth, int endWidth, int colorMode, int minAngle, int maxAngle, int angleDistance, int forceAngle);
     void
-    DoBolt(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
-    int GetNextChainLightningTarget(class army*, int);
-    void ChainLightning(int, int);
-    void VaporizeCreature(int, int);
-    void RippleCreature(int, int, int);
-    void MirrorImage(int);
-    void SummonElemental(int, int);
-    void DoLuck(int, int);
-    void DoBlast(int, int);
-    void Resurrect(int, int, int);
+    DoBolt(int managePointer, int startX, int startY, int endX, int endY, int branchDistance, int branchLength, int startWidth, int endWidth, int colorMode, int minAngle, int maxAngle, int angleDistance, int unusedParameter, int forceAngle, int frameDelay, int brightenPalette);
+    int GetNextChainLightningTarget(class army* source, int requireWorks);
+    void ChainLightning(int targetHex, int spellPower);
+    void VaporizeCreature(int side, int armyIndex);
+    void RippleCreature(int side, int armyIndex, int mode);
+    void MirrorImage(int targetHex);
+    void SummonElemental(int monsterType, int spellPower);
+    void DoLuck(int side, int armyIndex);
+    void DoBlast(int targetHex, int spell);
+    void Resurrect(int spell, int targetHex, int spellPower);
     int SpaceForElementalExists(void);
     void ShowSpellCastFailure(class army*, int);
-    void ModifyDamageForArtifacts(long int*, int, class hero*, class hero*);
+    void ModifyDamageForArtifacts(long int* damage, int spell, class hero* attacker, class hero* defender);
     void Earthquake(void);
-    void ShowSpellMessage(int, int, class army*);
+    void ShowSpellMessage(int castByCreature, int spell, class army* target);
     signed char ValidHexToStandOn(int);
     void SetCombatDirections(int);
     void CheckSetMouseDirection(int, int, int);
@@ -408,8 +408,8 @@ public:
     void DoCommand(signed char);
     void ClearWinLoseBottom(class heroWindow*);
     void ShowWinLoseArtifact(class heroWindow*, int);
-    void ShowSkeletons(class heroWindow*);
-    void ShowEagleEyeSpell(class heroWindow*);
+    void ShowSkeletons(class heroWindow* window);
+    void ShowEagleEyeSpell(class heroWindow* window);
     void ShowDeadArmies(class heroWindow*);
     void DoVictory(signed char);
     void DoLoseWindow(void);
@@ -423,20 +423,20 @@ public:
     void ResetCyclingCreatures(void);
     void ResetCycleTimers(void);
     void CycleCombatScreen(void);
-    void SetCombatViewArmySmallLevel(int);
-    void SetCombatGrid(int, int, int);
-    void AddArmy(int, int, int, int, int, int);
+    void SetCombatViewArmySmallLevel(int level);
+    void SetCombatGrid(int showGrid, int showMouseHex, int shadeLevel);
+    void AddArmy(int side, int monsterType, int quantity, int hex, int flags, int animate);
     void SetupSmallView(void);
-    void ViewBallista(int);
+    void ViewBallista(int quickView);
     // HoMM1 retail 0x00437010: byte side (ret 4).
     int DoSpellAI(signed char);
     void DetermineEffectOfSpell(int, int*, int*);
-    int EffectSpellCreateCreature(int, int);
+    int EffectSpellCreateCreature(int hex, int spell);
     int RawEffectSpellInfluence(class army*, int);
     void ClearEffects(void);
     void NextPos(int*);
     int FirstArmy(int, int, int*);
-    int FirstResurrectable(int, int*, int);
+    int FirstResurrectable(int startHex, int* hex, int spell);
     // HoMM1 retail 0x00437aa1 (ret 0xc), 0x00437d14 (ret 8) and 0x00437e0d
     // (ret 0x10): DetermineEffectOfSpell passes the effect, then a side and
     // flag, a hex, or the spell, base damage and hex.
@@ -489,23 +489,23 @@ public:
     void LowerDoor(void);
     void RaiseDoor(void);
     void TestRaiseDoor(void);
-    int InCastle(int);
-    int ShotIsThroughWall(int, int, int);
-    void ShootMissile(int, int, int, int, float*, class icon*);
+    int InCastle(int hex);
+    int ShotIsThroughWall(int side, int sourceHex, int targetHex);
+    void ShootMissile(int sourceX, int sourceY, int targetX, int targetY, float* directionAngles, class icon* missileIcon);
     void CombatSystemOptions(void);
     int AICheckRetreat(void);
     // HoMM1 retail 0x00464ca3: byte side (ret 4).
     void DoCompAI(signed char);
-    float GetModLichDamage(class army*, float);
-    void DoLichShot(class army*);
+    float GetModLichDamage(class army* target, float damage);
+    void DoLichShot(class army* lich);
     // HoMM1 AI masks take a byte side and return word bit masks.
     short GetShooterMask(signed char);
-    int GetMirrorImageMask(int);
+    int GetMirrorImageMask(int side);
     short GetFlyerMask(signed char);
-    int GetAllMask(int);
+    int GetAllMask(int side);
     short GetWalkerMask(signed char);
-    int GetOutOfItMask(int);
-    int GetTraitorMask(int);
+    int GetOutOfItMask(int side);
+    int GetTraitorMask(int side);
     short GetBestArmy(signed char, short);
     short GetWorstArmy(signed char, short);
     short GetClosestArmy(class army*, signed char, short);
