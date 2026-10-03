@@ -22,8 +22,18 @@ H1_ENUM_BEGIN(CombatHexDirection)
     COMBAT_DIRECTION_WIDE_FIRST = 6,
     COMBAT_DIRECTION_OPPOSITE_OFFSET = 3,
     COMBAT_DIRECTION_ADJACENT_COUNT = 6,
+    COMBAT_DIRECTION_LAST = 7,
     COMBAT_DIRECTION_COUNT = 8
 H1_ENUM_END(CombatHexDirection)
+
+// combatManager::m_directionMap: the attack pointer's 24 sectors around the
+// target hex, four per neighbour direction; SetCombatDirections marks
+// sectors it fills from a neighbour with +FILLED during a pass.
+H1_ENUM_CONST_BEGIN(CombatPointerSectorConstant)
+    COMBAT_POINTER_SECTOR_COUNT = 24,
+    COMBAT_POINTER_SECTORS_PER_DIRECTION = 4,
+    COMBAT_POINTER_SECTOR_FILLED = 10
+H1_ENUM_CONST_END(CombatPointerSectorConstant)
 
 // clang-format off
 // combatManager's per-side arrays (m_armies, m_heroes, m_playerId, ...).
@@ -162,7 +172,10 @@ H1_ENUM_CONST_BEGIN(CombatGridDimension)
     COMBAT_GRID_COLUMNS = 9,
     COMBAT_GRID_ROWS = 5,
     COMBAT_GRID_LAST_COLUMN = 8,
-    COMBAT_GRID_LAST_ROW = 4
+    COMBAT_GRID_LAST_ROW = 4,
+    // The standable columns lie between the edge columns (SetCombatDirections).
+    COMBAT_GRID_FIRST_INNER_COLUMN = 1,
+    COMBAT_GRID_LAST_INNER_COLUMN = 7
 H1_ENUM_CONST_END(CombatGridDimension)
 // clang-format on
 
@@ -173,7 +186,11 @@ extern signed char gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 // COMBAT_GRID_COLUMNS hexes, skipping the two edge columns.
 H1_ENUM_BEGIN(CombatSpellAIGrid)
     COMBAT_SPELL_AI_ROW_END_OFFSET = 2,
-    COMBAT_SPELL_AI_ROW_SKIP = 3
+    COMBAT_SPELL_AI_ROW_SKIP = 3,
+    // The scan runs over the field's inner hexes, from row 0 column 1 to
+    // row 4 column 7 (DetermineEffectOfSpell, FirstArmy, EffectSpellDamage).
+    COMBAT_SPELL_AI_HEX_FIRST = 1,
+    COMBAT_SPELL_AI_HEX_LAST = 0x2b
 H1_ENUM_END(CombatSpellAIGrid)
 
 #endif

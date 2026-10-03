@@ -3,13 +3,23 @@
 
 #include <Domains.h>
 
+// clang-format off
 H1_ENUM_BEGIN(ModemResponseLimit)
     MODEM_RESPONSE_LAST = 79
 H1_ENUM_END(ModemResponseLimit)
 
+// WriteModemPacket frames a packet as ESCAPE START ... ESCAPE END, doubling
+// an ESCAPE byte inside it; ReadPacket undoes it.
 H1_ENUM_BEGIN(ModemPacketControl)
+    MODEM_PACKET_START = 0,
+    MODEM_PACKET_END = 1,
     MODEM_PACKET_ESCAPE = 0x70
 H1_ENUM_END(ModemPacketControl)
+
+H1_ENUM_CONST_BEGIN(ModemPacketConstant)
+    MODEM_PACKET_MAX_LENGTH = 0x100
+H1_ENUM_CONST_END(ModemPacketConstant)
+// clang-format on
 
 extern int iLastActionTime;
 extern int iModemCommandPos;

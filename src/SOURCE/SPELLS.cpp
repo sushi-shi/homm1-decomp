@@ -101,7 +101,7 @@ short HandleCastSpell(struct tag_message& message) {
             hex = gpCombatManager->GetGridIndex(message.x, message.y);
             if (indexToCastOn != hex) {
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
-                    indexToCastOn = -1;
+                    indexToCastOn = ARMY_HEX_INVALID;
                     gpMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
                     if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && bInTeleportGetDest)
                         gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
@@ -115,14 +115,14 @@ short HandleCastSpell(struct tag_message& message) {
             }
             break;
         case MESSAGE_LEFT_BUTTON_DOWN:
-            if (indexToCastOn != -1) {
+            if (indexToCastOn != ARMY_HEX_INVALID) {
                 if (bInTeleportGetDest)
                     giNextActionGridIndex2 = indexToCastOn;
                 else {
                     giNextActionGridIndex = indexToCastOn;
                     if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT) {
                         bInTeleportGetDest = 1;
-                        indexToCastOn = -1;
+                        indexToCastOn = ARMY_HEX_INVALID;
                         message.type = MESSAGE_MOUSE_MOVE;
                         gpMouseManager->MouseCoords(message.x, message.y);
                         HandleCastSpell(message);
@@ -269,7 +269,7 @@ void combatManager::CastSpell(
             m_limitCreatureCount[m_hexCells[m_limitCreatureHex].m_occupantSide]
                                 [m_hexCells[m_limitCreatureHex].m_occupantIndex]++;
         m_limitCreature = 0;
-        m_limitCreatureHex = -1;
+        m_limitCreatureHex = ARMY_HEX_INVALID;
         gpCombatManager->DrawFrame(1);
     }
     gpMouseManager->ReallyHidePointer();
@@ -325,10 +325,10 @@ void combatManager::CastSpell(
             teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             m_hexCells[teleportArmy->m_hex].m_occupantSide = COMBAT_SIDE_NONE;
             m_hexCells[teleportArmy->m_hex].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
-            if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 1) {
+            if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == ARMY_FACING_LEFT) {
                 m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = COMBAT_SIDE_NONE;
                 m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
-            } else if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == 0) {
+            } else if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == ARMY_FACING_RIGHT) {
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = COMBAT_SIDE_NONE;
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             }
@@ -361,18 +361,18 @@ void combatManager::CastSpell(
                     case ARMY_FACING_RIGHT:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = 1;
+                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = ARMY_FACING_LEFT;
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex + 1].m_occupantFrame = 0;
+                        m_hexCells[teleportArmy->m_hex + 1].m_occupantFrame = ARMY_FACING_RIGHT;
                         break;
                     case ARMY_FACING_LEFT:
                         m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = 0;
+                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = ARMY_FACING_RIGHT;
                         m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = side;
                         m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex - 1].m_occupantFrame = 1;
+                        m_hexCells[teleportArmy->m_hex - 1].m_occupantFrame = ARMY_FACING_LEFT;
                         break;
                 }
                 teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
@@ -380,7 +380,7 @@ void combatManager::CastSpell(
                 teleportArmy->m_hex = targetHex;
                 m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
                 m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                m_hexCells[teleportArmy->m_hex].m_occupantFrame = -1;
+                m_hexCells[teleportArmy->m_hex].m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
                 teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             }
             teleportArmy->Stand(1);
@@ -588,8 +588,8 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
         gCurLoadedSpellFileId = fileId;
     }
     if (castSide == COMBAT_SIDE_ANY) {
-        startSide = 0;
-        last = 1;
+        startSide = COMBAT_DEFENDER_SIDE;
+        last = COMBAT_ATTACKER_SIDE;
     } else {
         startSide = m_currentSide;
         last = m_currentSide;
@@ -640,7 +640,7 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly) {
 
     for (i = 0; i < m_numArmies[side]; i++) {
         curArmy = &m_armies[side][i];
-        curArmy->m_animationSequence = 0;
+        curArmy->m_animationSequence = ARMY_ANIMATION_STAND;
         curArmy->m_animationFrame = 1;
         if (curArmy->m_spellEffect != SPELL_ANTI_MAGIC
             && curArmy->m_spellEffect != SPELL_DISPEL_MAGIC

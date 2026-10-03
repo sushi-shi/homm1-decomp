@@ -109,7 +109,7 @@ void RemoteMain(int gameMode) {
             inque.readPosition = 0;
             outque.writePosition = 0;
             outque.readPosition = 0;
-            iBaudBits = 115200 / gConfig.baudRate[gbDirectConnect];
+            iBaudBits = CBR_115200 / gConfig.baudRate[gbDirectConnect];
             ModemSetup();
             switch (gameMode) {
                 case REMOTE_GAME_MODEM_HOST:
@@ -159,21 +159,29 @@ void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short) networkDriver) {
 }
 
 // CRC-16/CCITT over the packet bytes, most significant bit first.
+// clang-format off
+H1_ENUM_CONST_BEGIN(RemoteCrcConstant)
+    REMOTE_CRC_BYTE_TOP_BIT = 0x80,
+    REMOTE_CRC_TOP_BIT = 0x8000,
+    REMOTE_CRC_POLYNOMIAL = 0x1021
+H1_ENUM_CONST_END(RemoteCrcConstant)
+// clang-format on
+
 VA(0x00458971, 0xb6)
 void calc_crc(unsigned short* crc, unsigned char* data, int length) {
     int unused = 0;
     short carry;
     short mask;
     while (length--) {
-        for (mask = 0x80; mask; mask >>= 1) {
-            carry = *crc & 0x8000;
+        for (mask = REMOTE_CRC_BYTE_TOP_BIT; mask; mask >>= 1) {
+            carry = *crc & REMOTE_CRC_TOP_BIT;
             *crc <<= 1;
             if (*data & mask)
                 *crc |= 1;
             else
                 ;
             if (carry)
-                *crc ^= 0x1021;
+                *crc ^= REMOTE_CRC_POLYNOMIAL;
         }
         data++;
     }
@@ -815,10 +823,10 @@ readPacketStart:
             return 0;
         if (inescape) {
             inescape = 0;
-            if (input == 1) {
+            if (input == MODEM_PACKET_END) {
                 newpacket = 1;
                 return 1;
-            } else if (input == 0) {
+            } else if (input == MODEM_PACKET_START) {
                 newpacket = 1;
                 goto readPacketStart;
             }
@@ -826,7 +834,7 @@ readPacketStart:
             inescape = 1;
             goto readNextByte;
         }
-        if (packetlen >= 256)
+        if (packetlen >= MODEM_PACKET_MAX_LENGTH)
             goto readPacketStart;
         packet[packetlen] = static_cast<char>(input);
         ++packetlen;
@@ -840,12 +848,12 @@ VA(0x0045a16b, 0xdc)
 void WriteModemPacket(char* buffer, int length) {
     char buf[544];
     int pos = 0;
-    if (length > 256)
+    if (length > MODEM_PACKET_MAX_LENGTH)
         return;
 
     buf[pos] = MODEM_PACKET_ESCAPE;
     ++pos;
-    buf[pos] = 0;
+    buf[pos] = MODEM_PACKET_START;
     ++pos;
     while (length--) {
         if (*buffer == MODEM_PACKET_ESCAPE) {
@@ -858,7 +866,7 @@ void WriteModemPacket(char* buffer, int length) {
     }
     buf[pos] = MODEM_PACKET_ESCAPE;
     ++pos;
-    buf[pos] = 1;
+    buf[pos] = MODEM_PACKET_END;
     ++pos;
     while (write_buffer(buf, pos) == 0)
         ForcePollSound();
@@ -993,7 +1001,7 @@ void PollRemote(void) {
         sndBuf.payloadSize = 1;
         sndBuf.command = (giCurPlayer << 4) + iCurHourGlassPhase;
         sndBuf.payload.data[0] = 1;
-        SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), NULL, 1 - giThisNetPos, 10); // API-forced: wire bytes.
+        SendRemoteData(reinterpret_cast<unsigned char*>(&sndBuf), NULL, 1 - giThisNetPos, REMOTE_MESSAGE_HEADER_SIZE + 1); // API-forced: wire bytes.
         lLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > lLastHeartbeatReceive + 60000 && !bInTimeoutFail) {

@@ -31,7 +31,8 @@ H1_ENUM_BEGIN(SetupDialogChoice)
     CHOICE_ONE = 1,
     CHOICE_TWO = 2,
     CHOICE_THREE = 3,
-    CHOICE_FOUR = 4
+    CHOICE_FOUR = 4,
+    CHOICE_ID_LAST = 1000
 H1_ENUM_END(SetupDialogChoice)
 
 H1_ENUM_BEGIN(SetupHelpIndex)
@@ -780,7 +781,7 @@ short BaseSetupHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                if ((message.id > 0 && message.id <= 1000)
+                if ((message.id > 0 && message.id <= CHOICE_ID_LAST)
                     || message.id == DIALOG_CANCEL)
                     handled = 1;
         }

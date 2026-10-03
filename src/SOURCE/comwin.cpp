@@ -111,18 +111,18 @@ short com_init(unsigned char portNumber, int baudRate, int useDtr)
         state.BaudRate = baudRate;
         break;
     }
-    state.fParity = 0;
-    state.fOutxCtsFlow = 1;
+    state.fParity = FALSE;
+    state.fOutxCtsFlow = TRUE;
     if (useDtr)
-        state.fOutxDsrFlow = 1;
+        state.fOutxDsrFlow = TRUE;
     else
-        state.fOutxDsrFlow = 0;
+        state.fOutxDsrFlow = FALSE;
     state.fDtrControl = DTR_CONTROL_ENABLE;
-    state.fInX = 0;
-    state.fOutX = 0;
-    state.fNull = 0;
+    state.fInX = FALSE;
+    state.fOutX = FALSE;
+    state.fNull = FALSE;
     state.fRtsControl = RTS_CONTROL_HANDSHAKE;
-    state.fAbortOnError = 1;
+    state.fAbortOnError = TRUE;
     state.ByteSize = 8;
     state.Parity = NOPARITY;
     state.StopBits = ONESTOPBIT;

@@ -109,7 +109,9 @@ H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
     COMBAT_CATAPULT_FRAME_NONE = -1,
     COMBAT_LIMIT_CREATURE_HIDDEN = -1,
     // m_wallDamage without damage frames to draw (hexcell::DrawWall).
-    COMBAT_WALL_DAMAGE_NONE = -1
+    COMBAT_WALL_DAMAGE_NONE = -1,
+    // m_wallFrame while no wall animation runs (CatAttack resets it).
+    COMBAT_WALL_FRAME_NONE = -1
 H1_ENUM_CONST_END(CombatDrawStateConstant)
 
 // Combat AI tuning thresholds (Buka combatManager.h CombatAIConstant names

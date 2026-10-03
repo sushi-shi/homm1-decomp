@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	6732
+#floor	5688
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -370,3 +370,401 @@ src/SOURCE/SPELLS.cpp	*	4	arithmetic	operator % SRandom()	the dwarves' magic-res
 src/SOURCE/ARMY.cpp	*	*	*	* store giMonoIconSkip	giMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	store to giMonoIconSkip	giMonoIconSkip writes; retail never reads the variable
 src/SOURCE/SWAPMGR.cpp	*	*	*	* store giMonoIconSkip	giMonoIconSkip writes; retail never reads the variable
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridMode	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store m_unknown6f9	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreatureHex	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_showArmyQuantities	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6e8	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_unknown6db	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_castleSide[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_combatWindowOpen	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_humanSide[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_catapultAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_keepAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_visitingHeroPresent[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_heroCastSpell[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_visitingHeroPresent[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 bitwise	an odd/even row test or a single low bit
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_castleSide[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_backgroundDrawn	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideRetreated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbIconClipOn	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_computeExtent	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_redrawExtent	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gCurLoadedSpellFileId	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbRetreatWin	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideDefeated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_combatWindowOpen	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store gbLimitedCombatUpdatePalette	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_gridSelectionDisabled	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 array-index musicList	the first or second element of a local buffer, table or slot pair
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 array-index musicList	the first or second element of a local buffer, table or slot pair
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_active	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbLimitedCombatUpdatePalette	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_objectMetadata	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_active	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_creatureCounts[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 equality m_castleSide[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_catapultFrame[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 equality x	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_groundFrame	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_pathFlag	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_obstacleIndex	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store typeTable[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store typeTable[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store numTrees	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store numMountains	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 equality typeTable[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 equality typeTable[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_numArmies[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_quantity	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store x	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store bInHighMoraleBonus	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store bInHighMoraleBonus	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 bound m_quantity	a bound at one (the last remaining item, more than one)
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 equality SRandom()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store bSkip	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store bSkip	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store isWinner	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store isWinner	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store wallsLeft	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store wallsLeft	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store giMinExtentX	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_redrawExtent	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_catapultTarget	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store frm	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store giMinExtentY	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 case	a step of the unit's state machine (InitNet*/WaitFor*/WFDCStage polling)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_wallSurvives	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_wallFrame	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store m_wallSurvives	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	-1	trivial-function-literal	-1 store bestRank	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store bestWorth	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store priority	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store priority	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store keepY	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store updRight	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store maxY	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 equality arrowFrame	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 equality arrowFrame	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store hurt	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	1	trivial-function-literal	1 store hurt	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store value	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_hitByCreature	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store m_gridSelectionDisabled	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store canStand[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store canStand[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store hasPath[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store hasPath[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 array-index m_directionMap	the first or second element of a local buffer, table or slot pair
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 array-index m_directionMap	the first or second element of a local buffer, table or slot pair
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store numUnset	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 bound m_validDirectionCount	a bound at one (the last remaining item, more than one)
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 bitwise	an odd/even row test or a single low bit
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 compound-assignment	the zero sector offset of the first quadrant (CheckSetMouseDirection)
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 equality index	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_gridSelectionDisabled	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_keepAttacksRemaining[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store m_heroCastSpell[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store m_hitPointsLost	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 equality m_spellRounds	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store combatEnded	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store combatEnded	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbRetreatWin	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 equality ValidPath()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 equality DoSurrender()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 initializer	a counter or frame starting at one
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 array-index m_winLoseBottomWidgets	the first or second element of a local buffer, table or slot pair
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 array-index m_winLoseBottomWidgets	the first or second element of a local buffer, table or slot pair
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 array-index m_winLoseBottomTextWidgets	the first or second element of a local buffer, table or slot pair
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store numLost[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store levelsGained	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store iMaxTransferArtifacts	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	-1	trivial-function-literal	-1 store iCurTransferArtifact	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 bound giNumHumanPlayers	a bound at one (the last remaining item, more than one)
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store walkFrame	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store offset	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store stop	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbLoadingMonoIcon	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store gbLoadingMonoIcon	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store stop	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store giSurrenderCost	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store unusedType	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbThisNetHasControl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store gbThisNetHasControl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store id	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 array-index data	the first or second element of a local buffer, table or slot pair
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 array-index data	the first or second element of a local buffer, table or slot pair
+src/SOURCE/COMMAND.cpp	*	0	trivial-function-literal	0 store advance	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store advance	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideRetreated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/COMMAND.cpp	*	1	trivial-function-literal	1 store m_sideDefeated[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store pathResult	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store blockedMask	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store mask	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store dirBit	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store frontValid	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store frontValid	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store rearValid	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store rearValid	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality frontValid	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality rearValid	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store movingUp	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store iIsMovingDown	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store iLeftFl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store rightFl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store rightFl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store iLeftFl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store iIsMovingDown	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store movingUp	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality movingUp	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 bitwise	an odd/even row test or a single low bit
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality iLeftFl	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality iIsMovingDown	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality rightFl	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store gbRemoteOn	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gbInNetSetup	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store giThisNetPos	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store giThisNetPos	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gbRemoteOn	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store giNumNetGuests	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store writePosition	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store readPosition	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store WFDCStage	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store gbInNetSetup	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store crc	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store computedCrc	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store result	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store destination	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store result	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store decodeType	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 equality receiveResult	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 case	a step of the unit's state machine (InitNet*/WaitFor*/WFDCStage polling)
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 case	a step of the unit's state machine (InitNet*/WaitFor*/WFDCStage polling)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store iNetNameIndex	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 equality nb_sess()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 equality status	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 array-index buffer	the first or second element of a local buffer, table or slot pair
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store giNumNetGuests	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 bound comPort[[][]]	a bound at one (the last remaining item, more than one)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store iLastDialPos	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store iLastActionTime	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store iModemCommandPos	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store GUIMRrespptr	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store GUIMRresponse[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 equality received	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	-1	trivial-function-literal	-1 return	the -1 failure / no-result return
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 array-index idstr	the first or second element of a local buffer, table or slot pair
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 array-index idstr	the first or second element of a local buffer, table or slot pair
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store idstr[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	-1	trivial-function-literal	-1 store oldsec	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store remotestage	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store packet[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store newpacket	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store packetlen	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store newpacket	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store inescape	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store inescape	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 condition	an unconditional loop
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 equality write_buffer()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store retval	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store tries	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 equality retval	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store k	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	-1	trivial-function-literal	-1 store tries	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/REMOTE.cpp	*	-1	trivial-function-literal	-1 store index	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store numQueued	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store queueFull	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store payloadSize	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 array-index data	the first or second element of a local buffer, table or slot pair
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store data[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store bInTimeoutFail	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store newControl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store newControl	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store queueFull	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 equality payloadSize	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 equality data[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gbRemoteReady	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gbHeartbeatSeen	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 equality m_active	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store payloadSize	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 equality result	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store complete	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store complete	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store comPort[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 equality comPort[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store gbDoModemConfig	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 store gbDirectConnect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store gbDirectConnect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store loop	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 store gbDoModemConfig	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 store loop	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store result	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store giNumHumanPlayers	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 store gbWaitForRemoteReceive	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store gbInSetupDialog	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store gbWaitForRemoteReceive	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 store result	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	0	trivial-function-literal	0 store gbInSetupDialog	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SETUP.cpp	*	1	trivial-function-literal	1 store handled	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store bestEffect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	-1	trivial-function-literal	-1 store bestHexWork	an index, position or timer local/field reset to -1 (none yet)
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 equality m_primaryStats[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store giSpellAIEffectShift	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store giSpellAIEffectShift	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store bDone	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store spellEffect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store bDone	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store effect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store finished	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store negEffect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store posEffect	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 equality cure	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store finished	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store cell	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store stacksKilled[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store partValue[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store combatValue[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLAI.cpp	*	0	trivial-function-literal	0 store extra	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store bInTeleportGetDest	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store bInTeleportGetDest	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_limitCreature	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_heroCastSpell[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality SRandom()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 bound	a bound at one (the last remaining item, more than one)
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_quantity	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_animationFrame	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_redrawExtent	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality cureOnly	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 array-index adjHexes	the first or second element of a local buffer, table or slot pair
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store hit	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 equality	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store gArmyEffected[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store hit	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	0	trivial-function-literal	0 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/SPELLS.cpp	*	1	trivial-function-literal	1 store m_updateFlags	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 equality allowActions	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 equality m_heroCastSpell[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 equality m_sideRetreated[[][]]	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 store m_gridUpdateRow	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/VIEW.cpp	*	0	trivial-function-literal	0 store retVal	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/VIEW.cpp	*	1	trivial-function-literal	1 store retVal	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/comwin.cpp	*	-1	trivial-function-literal	-1 return	the -1 failure / no-result return
+src/SOURCE/comwin.cpp	*	0	trivial-function-literal	0 store ReadTotalTimeoutConstant	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/comwin.cpp	*	0	trivial-function-literal	0 store WriteTotalTimeoutConstant	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/comwin.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/comwin.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/comwin.cpp	*	0	trivial-function-literal	0 store totalWritten	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 store gNetbiosAvail	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 return	a 0/1 function result (failure/success, false/true; VC4 has no bool)
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality is_netbios_avail()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality gNetbiosAvail	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNetStatus[[][]]	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbShutdown	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality len	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality bFree	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 store keepRunning	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store keepRunning	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store sendComplete	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 store sendComplete	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality memcmp()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbCallRetries	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 condition	an unconditional loop
+src/SOURCE/CMBTMGR.cpp	*	*	initializer-payload	initializer list	KeepAttack's per-hex shot-shape table (retail data)
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	45	store	initializer of shotShape	the shot-shape table's extent (one entry per hex)
+src/SOURCE/CMBTMGR.cpp	combatManager::KeepAttack	*	comparison-or-bound	operator <= i	the keep shot's dice loop bounds
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	1	trivial-function-literal	1 for-init	the boulder descent's first step
+src/SOURCE/CMBTMGR.cpp	combatManager::CatAttack	3	store	store to m_catapultTarget	the lower wall row the boulder hits (rows 1 and 3 hold wall pieces)
+src/SOURCE/CMBTMGR.cpp	combatManager::SetupCombat	2	store	store to m_catapultAttacksRemaining[]	the ballista's two catapult shots per round
+src/SOURCE/CMBTMGR.cpp	combatManager::Open	4	store	initializer of musicList	the four battle tracks Open picks from
+src/SOURCE/CMBTMGR.cpp	combatManager::Open	[23]	array-index	array subscript musicList	a battle-track list slot
+src/SOURCE/CMBTMGR.cpp	combatManager::Open	*	call-argument	PlayAmbientMusic(* argument [23]	PlayAmbientMusic's resume position and default volume (-1)
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	*	arithmetic	operator +	a ground/obstacle frame range base in the terrain's .icn
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	*	store	store to m_groundFrame	a ground frame number in the terrain's .icn (castle field strip)
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	6	store	store to x	the castle courtyard's first column (behind the wall)
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	8	comparison-or-bound	operator < x	the castle courtyard ends before the last column
+src/SOURCE/CMBTMGR.cpp	combatManager::GenerateMap	2	comparison-or-bound	operator == m_obstacleIndex	the obstacle frame water and lava fields swap out
+src/SOURCE/CMBTMGR.cpp	combatManager::MoreTreesNear	3	*	*	the terrain survey radius in map cells
+src/SOURCE/CMBTMGR.cpp	combatManager::CheckApplyBadMorale	2	store	store to m_animationFrame	an icon frame number in the .icn resource (frames have no names)
+src/SOURCE/CMBTMGR.cpp	combatManager::GetNextArmy	5	comparison-or-bound	operator < iSpeed	GetNextArmy's five scheduling passes (morale pass, then the speeds)
+src/SOURCE/CMBTMGR.cpp	combatManager::ExperienceValueOfStack	500	arithmetic	*	the experience bonus for defeating a hero
+src/SOURCE/COMMAND.cpp	combatManager::SetCombatDirections	*	array-index	array subscript m_directionMap	the pointer sectors of the wide-stack attack directions
+src/SOURCE/COMMAND.cpp	combatManager::CheckSetMouseDirection	12	comparison-or-bound	operator == index	the sector index of the horizontal quadrant boundary
+src/SOURCE/COMMAND.cpp	combatManager::ProcessCombatMsg	*	comparison-or-bound	operator [<>]= mouseX	the auto-combat / skip strip edges in pixels
+src/SOURCE/COMMAND.cpp	*	1	call-argument	*(signed char) argument 1	1 - side: the opposing side
+src/SOURCE/COMMAND.cpp	combatManager::DoCommand	1	call-argument	ViewGeneral(* argument 1	1 - side: the opposing side
+src/SOURCE/COMMAND.cpp	WinCombatHandler	*	*	*	the victory animation's frame delay and frame count
+src/SOURCE/COMMAND.cpp	combatManager::ShowWinLoseArtifact	*	*	*	the result panel's pixel layout and widget slots
+src/SOURCE/COMMAND.cpp	combatManager::ShowDeadArmies	*	*	*	the casualty panel's pixel layout and widget slots
+src/SOURCE/COMMAND.cpp	combatManager::DoVictory	156	store	initializer of expText	the experience text buffer's extent
+src/SOURCE/COMMAND.cpp	combatManager::DoVictory	500	arithmetic	*	the experience bonus/penalty for a hero
+src/SOURCE/COMMAND.cpp	combatManager::DoLoseWindow	*	*	*	the lose window's walking-hero animation geometry, frame count and fill colour
+src/SOURCE/COMMAND.cpp	combatManager::DoSurrender	2	*	*	surrender costs half the creatures' price; the unused dialog result slot
+src/SOURCE/COMMAND.cpp	combatManager::ResetMouse	*	comparison-or-bound	operator > y	the battlefield's bottom pixel row (the text bar starts below)
+src/SOURCE/COMMAND.cpp	combatManager::ProcessNextAction	*	*	*data*	the four-int combat action packet (action, extra, hex, second hex)
+src/SOURCE/PATH.cpp	army::ValidPath	0	call-argument	FindPath(* argument 4	FindPath's ignore-speed flag
+src/SOURCE/REMOTE.cpp	*	*	store	initializer of *	a local text or packet buffer's extent
+src/SOURCE/REMOTE.cpp	RemoteMain	*	arithmetic	*	the message id base built from the NetBIOS name slot and position
+src/SOURCE/REMOTE.cpp	*	*	arithmetic	operator + iLast*Time	a polling interval in ticks
+src/SOURCE/REMOTE.cpp	ModemSetup	*	comparison-or-bound	*	the modem reset retries and the init-string pause loop
+src/SOURCE/REMOTE.cpp	GUIModemResponseExec	*	*	*	the modem response buffer's last index and read_byte's no-byte (-1)
+src/SOURCE/REMOTE.cpp	Connect	*	*	*	the direct-connect id's decimal digits, packet layout and handshake stages
+src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	*	*	the direct-connect id packet layout and handshake stages
+src/SOURCE/REMOTE.cpp	ReadPacket	*	*	*	the receive queue's wrap point and an unused frame buffer
+src/SOURCE/REMOTE.cpp	GetRemoteData	999999999	store	store to oldest	a larger-than-any arrival order to start the minimum search
+src/SOURCE/REMOTE.cpp	PollRemote	*	*	*	the heartbeat interval/timeout, its player/hourglass nibble packing and the remote-exit arguments
+src/SOURCE/REMOTE.cpp	TransmitAndWait	20000	arithmetic	*	the response timeout in ticks
+src/SOURCE/SETUP.cpp	game::SetupComPort	40	store	initializer of initStr	the modem init string buffer's extent
+src/SOURCE/SETUP.cpp	game::SetupComPort	*	store	store to comPort[]	a COM port number (COM1..COM4)
+src/SOURCE/SETUP.cpp	*	*	store	store to giNumHumanPlayers	a hot-seat human player count
+src/SOURCE/SETUP.cpp	game::PickLoadGame	0	call-argument	SetupGame(* argument 1	SetupGame's flag argument
+src/SOURCE/SETUP.cpp	game::PickLoadGame	*	call-argument	fileRequester(* argument [123]	the load requester's position and mode
+src/SOURCE/SPELLAI.cpp	combatManager::DoSpellAI	2	*	*	the spell-power tiers that set the AI effect shift
+src/SOURCE/SPELLAI.cpp	*	[01]	call-argument	EffectSpellCure(* argument 3	EffectSpellCure's cure flag
+src/SOURCE/SPELLAI.cpp	combatManager::DetermineEffectOfSpell	1	call-argument	FirstArmy(* argument 1	the next hex after the current one
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellResurrect	50	arithmetic	*	resurrect's hit points per spell-power point
+src/SOURCE/SPELLAI.cpp	combatManager::EffectSpellDamage	100000000	arithmetic	*	a decisive effect value (every enemy stack killed)
+src/SOURCE/SPELLS.cpp	combatManager::ViewSpells	0	call-argument	SetPointer(* argument 2	the combat pointer set's first frame
+src/SOURCE/SPELLS.cpp	CombatSpecialHandler	2	arithmetic	*	the third spell-book entry
+src/SOURCE/SPELLS.cpp	*	*	*	operator * m_primaryStats[]	a spell's damage or hit points per spell-power point
+src/SOURCE/SPELLS.cpp	combatManager::CastSpell	25	call-argument	Damage(* argument 1	lightning's damage per spell-power point
+src/SOURCE/SPELLS.cpp	*	2	store	store to m_animationFrame	an icon frame number in the .icn resource (frames have no names)
+src/SOURCE/SPELLS.cpp	combatManager::CastSpell	3	store	store to m_spellRounds	a spell's three-round duration
+src/SOURCE/SPELLS.cpp	*	10	comparison-or-bound	*	a spell animation's frame count
+src/SOURCE/SPELLS.cpp	combatManager::Fireball	*	*	*	the fireball's pixel offset and draw mode
+src/SOURCE/SPELLS.cpp	combatManager::ElementalStorm	*	comparison-or-bound	*	the storm's cycles, frames and 64-pixel tile grid
+src/SOURCE/SPELLS.cpp	combatManager::Armageddon	*	*	*	the palette fade's step count and RGB triplet arithmetic
+src/SOURCE/VIEW.cpp	combatManager::ViewGeneral	*	call-argument	sprintf(* argument 1[1-4]	the morale/luck label rows and the -3..3 text table offset
+src/SOURCE/comwin.cpp	com_init	*	*	*	the port name buffer, CreateFileA's no-share/no-flag zeros and 8 data bits
+src/SOURCE/netwin.cpp	nb_thr_ctl	0	call-argument	WaitFor*(* argument [24]	a zero (poll) wait timeout
+src/SOURCE/netwin.cpp	nb_add_name_done	80	store	initializer of buf	a local text buffer's extent

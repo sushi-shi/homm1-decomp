@@ -16,10 +16,12 @@ H1_ENUM_CONST_BEGIN(NetbiosRuntimeConstant)
     NETBIOS_SESSION_NAME_REGISTERED = 2,
     NETBIOS_SESSION_CONNECTED = 8,
     NETBIOS_SESSION_ERROR = 0x80,
-    NETBIOS_RESULT_SESSION_OUT_OF_RANGE = 8,
     NETBIOS_PACKET_HEADER_SIZE = 11,
     NETBIOS_INVALID_ID = 0xff,
     NETBIOS_THREAD_EVENT_COUNT = 9,
+    // nb_snd/nb_term signal it to wake the NetBIOS thread (nb_thr_ctl polls it
+    // first); session receive events follow from RECEIVE_EVENT_FIRST.
+    NETBIOS_WAKE_EVENT = 0,
     NETBIOS_RECEIVE_EVENT_FIRST = 2,
     NETBIOS_PAYLOAD_SIZE = 0x1000,
     NETBIOS_CALL_RETRY_LIMIT = 20,

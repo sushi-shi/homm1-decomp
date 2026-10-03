@@ -99,7 +99,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
 
     bDone = 0;
     side = COMBAT_DEFENDER_SIDE;
-    curHex = 1;
+    curHex = COMBAT_SPELL_AI_HEX_FIRST;
     spellEffect = 0;
     target = NULL;
     *bestEffect = 0;
@@ -138,7 +138,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
             return;
     }
     if (spellMode == SPELL_AI_FRIENDLY || spellMode == SPELL_AI_ENEMY)
-        bDone = FirstArmy(1, side, &curHex);
+        bDone = FirstArmy(COMBAT_SPELL_AI_HEX_FIRST, side, &curHex);
     while (!bDone) {
         if (m_hexCells[curHex].m_occupantIndex >= 0) {
             target =
@@ -218,7 +218,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
                 break;
             case SPELL_AI_AREA:
                 NextPos(&curHex);
-                if (curHex > 0x2b)
+                if (curHex > COMBAT_SPELL_AI_HEX_LAST)
                     bDone = 1;
                 break;
         }
@@ -312,7 +312,7 @@ void combatManager::NextPos(int* hex) {
 // stack of the side (2: either side).
 VA(0x00437a1a, 0x87)
 int combatManager::FirstArmy(int startHex, int side, int* hex) {
-    while (startHex <= 0x2b) {
+    while (startHex <= COMBAT_SPELL_AI_HEX_LAST) {
         if (m_hexCells[startHex].m_occupantSide == side
             || (side == COMBAT_SIDE_ANY && m_hexCells[startHex].m_occupantSide >= 0)) {
             *hex = startHex;
@@ -439,7 +439,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
             case SPELL_ARMAGEDDON:
             case SPELL_STORM:
                 NextPos(&cell);
-                finished = cell > 0x2b;
+                finished = cell > COMBAT_SPELL_AI_HEX_LAST;
                 break;
             case SPELL_FIREBALL:
             case SPELL_METEOR_SHOWER:

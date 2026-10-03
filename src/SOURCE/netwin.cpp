@@ -132,7 +132,7 @@ H1_C_LINKAGE void __cdecl nb_term(void)
         gNbEvents[i] = NULL;
     }
     gNbShutdown |= 1;
-    SetEvent(gNbEvents[0]);
+    SetEvent(gNbEvents[NETBIOS_WAKE_EVENT]);
     EnterCriticalSection(&gNbRcvLock);
     while ((node = pop_node(&gNbRcvQueue)) != NULL)
         free(node);
@@ -170,10 +170,10 @@ nb_snd(int, unsigned short session, unsigned short len, void* data, int queueToF
     tag_Node* node;
     if (gNbMaxSess == session && len == 0) {
         nb_add_name();
-        return 0;
+        return NRC_GOODRET;
     }
     if (!(gNetStatus[session] & static_cast<int>(NETBIOS_SESSION_ACTIVE)))
-        return static_cast<short>(NETBIOS_RESULT_SESSION_OUT_OF_RANGE);
+        return NRC_SNUMOUT;
     node = static_cast<tag_Node*>(malloc(len + static_cast<int>(NETBIOS_PACKET_HEADER_SIZE)));
     node->len = len;
     node->sessionIndex = static_cast<unsigned char>(session);
@@ -184,8 +184,8 @@ nb_snd(int, unsigned short session, unsigned short len, void* data, int queueToF
     else
         add_node(&gNbSndQueue, node);
     LeaveCriticalSection(&gNbSndLock);
-    SetEvent(gNbEvents[0]);
-    return 0;
+    SetEvent(gNbEvents[NETBIOS_WAKE_EVENT]);
+    return NRC_GOODRET;
 }
 
 // donor PoL RVA 0x000a726a; preferred Buka symbol _nb_sess
@@ -222,7 +222,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
                 switch (gNbSessNcb[destinationSession].ncb_command & ~ASYNCH) {
                     case NCBCALL:
                     case NCBDGRECVBC:
-                        return 0;
+                        return NRC_GOODRET;
                     default:
                         break;
                 }
@@ -264,7 +264,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
             if (oldSession == gNbMaxSess)
                 gNbMaxSess = static_cast<u8>(destinationSession);
             if (gNbSessLsn[oldSession] == static_cast<int>(NETBIOS_INVALID_ID))
-                return 0;
+                return NRC_GOODRET;
             gNbSessLsn[destinationSession] = gNbSessLsn[oldSession];
             gNetStatus[destinationSession] = gNetStatus[oldSession];
             memcpy(gNbNameBuf[destinationSession].bytes, gNbNameBuf[oldSession].bytes, NCBNAMSZ);
@@ -274,7 +274,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
                 gNetStatus[oldSession] = 0;
                 memset(gNbNameBuf[oldSession].bytes, 0, NCBNAMSZ);
             }
-            returnCode = 0;
+            returnCode = NRC_GOODRET;
             break;
 
         case NETBIOS_SESSION_CLOSE:
@@ -288,27 +288,27 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
                 Netbios(&ncb);
             }
             nb_close_session(destinationSession);
-            returnCode = 0;
+            returnCode = NRC_GOODRET;
             break;
 
         case NETBIOS_SESSION_CLEAR_CONNECTED:
             destinationSession = va_arg(argList, int);
             gNetStatus[destinationSession] &= ~static_cast<int>(NETBIOS_SESSION_CONNECTED);
-            returnCode = 0;
+            returnCode = NRC_GOODRET;
             break;
 
         case NETBIOS_SESSION_GET_NAME:
             destinationSession = va_arg(argList, int);
             callName = va_arg(argList, char*);
             memcpy(callName, gNbNameBuf[destinationSession].bytes, NCBNAMSZ);
-            returnCode = 0;
+            returnCode = NRC_GOODRET;
             break;
 
         default:
             return 1;
     }
     if (returnCode == NRC_PENDING)
-        returnCode = 0;
+        returnCode = NRC_GOODRET;
     return returnCode;
 }
 
@@ -333,8 +333,8 @@ void nb_thr_ctl(void)
     keepRunning = 1;
     if (WaitForMultipleObjects(NETBIOS_THREAD_EVENT_COUNT, gNbEvents, FALSE, 0) == WAIT_TIMEOUT)
         return;
-    if (WaitForSingleObject(gNbEvents[0], 0) == WAIT_OBJECT_0)
-        ResetEvent(gNbEvents[0]);
+    if (WaitForSingleObject(gNbEvents[NETBIOS_WAKE_EVENT], 0) == WAIT_OBJECT_0)
+        ResetEvent(gNbEvents[NETBIOS_WAKE_EVENT]);
     for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
         if (WaitForSingleObject(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST], 0) == WAIT_OBJECT_0) {
             ResetEvent(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST]);
