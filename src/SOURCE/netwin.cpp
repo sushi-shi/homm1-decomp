@@ -151,7 +151,7 @@ H1_C_LINKAGE unsigned short __cdecl nb_rcv(int, unsigned short len, void *buffer
     node = pop_node(&gNbRcvQueue);
     LeaveCriticalSection(&gNbRcvLock);
     if (node) {
-        size = node->len < len ? node->len : len;
+        size = __min(node->len, len);
         memcpy(buffer, node->data, size);
         free(node);
         return size;

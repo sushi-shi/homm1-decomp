@@ -1872,7 +1872,7 @@ float philAI::TurnsToBuy(int* const resources) {
                 );
             else
                 fTurns = 99.0f;
-            maxT = fTurns > maxT ? fTurns : maxT;
+            maxT = __max(fTurns, maxT);
         }
     }
     return maxT;
@@ -2189,7 +2189,7 @@ int philAI::ValueOfTown(town* townPointer) {
             sum += GetBuildingBaseResourceValue(
                 townPointer->m_type,
                 building,
-                townPointer->m_buildState > 0 ? townPointer->m_buildState : 0
+                __max(townPointer->m_buildState, 0)
             );
     }
     sum = static_cast<int>(sum + gafAITurnCostResource[RESOURCE_GOLD] * 1250.0f * 1.5);

@@ -637,7 +637,7 @@ void army::SpecialAttack(void) {
     dy = targetRow - myRow;
     if (dy < 0)
         dy = -dy;
-    steps = dy > dx ? dy : dx;
+    steps = __max(dy, dx);
     arrowFrame = 7;
     pitchSign = 0;
     if (targetRow < myRow)

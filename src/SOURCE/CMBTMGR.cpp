@@ -1210,7 +1210,7 @@ void combatManager::KeepAttack(void) {
     }
     gapX = abs(frontCol - srcCol);
     gapY = abs(targetRow - keepY);
-    distance = gapX > gapY ? gapX : gapY;
+    distance = __max(gapX, gapY);
     arrowFrame = shotShape[target->m_hex];
     startX = 0x24d;
     startY = 0x19;

@@ -2822,7 +2822,7 @@ void game::Overview(void) {
             ovIcon->DrawToBuffer(
                 spacing * i + left,
                 289,
-                (nextType < 2 ? nextType : 2) + 12,
+                __min(nextType, 2) + 12,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );

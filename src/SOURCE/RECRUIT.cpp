@@ -133,7 +133,7 @@ short recruitUnit::Open(short priority) {
     goldMaximum = gpCurPlayer->m_resources[RESOURCE_GOLD] / m_goldCost;
     if (m_resourceType != RESOURCE_NONE) {
         resourceMaximum = gpCurPlayer->m_resources[m_resourceType] / m_resourceCost;
-        m_maximum = goldMaximum < resourceMaximum ? goldMaximum : resourceMaximum;
+        m_maximum = __min(goldMaximum, resourceMaximum);
     } else
         m_maximum = goldMaximum;
     if (*m_available < m_maximum)
