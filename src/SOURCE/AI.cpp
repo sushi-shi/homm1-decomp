@@ -5,12 +5,11 @@
 #include <match.h>
 
 #include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/MAKEFILEID.h>
-#include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
+#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
