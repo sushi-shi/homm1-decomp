@@ -45,10 +45,12 @@ H1_ENUM_BEGIN(SpellType)
 H1_ENUM_END(SpellType)
 
 // gcSpellAIFlags bits: the AI casts COMBAT spells in battle (rows 0..18) and
-// values ADVENTURE spells (19..28) on the map; bit 0 (the 4x value weight
-// philAI gives fireball, lightning, resurrect, armageddon, storm and meteor
-// shower) stays unnamed until its role is proven.
+// values ADVENTURE spells (19..28) on the map. SCALES_WITH_POWER marks
+// fireball, lightning, resurrect, armageddon, storm and meteor shower, whose
+// value philAI scales by the hero's spell power (CastSpell scores) or
+// knowledge (mage guild and shrine values) and SetupTown weights four times.
 H1_ENUM_FLAGS_BEGIN(SpellAIFlag, int)
+    SPELL_AI_FLAG_SCALES_WITH_POWER = 0x01,
     SPELL_AI_FLAG_COMBAT = 0x02,
     SPELL_AI_FLAG_ADVENTURE = 0x04
 H1_ENUM_FLAGS_END(SpellAIFlag)

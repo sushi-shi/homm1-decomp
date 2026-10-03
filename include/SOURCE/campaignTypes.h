@@ -17,9 +17,9 @@ H1_ENUM_END(CampaignChoice)
 
 // gCampaignScenarios rows: CheckEndGame completes the campaign after the
 // last of the COUNT scenarios.
-H1_ENUM_CONST_BEGIN(CampaignScenarioConstant)
+H1_ENUM_CONST_BEGIN(CampaignScenarioTableConstant)
     CAMPAIGN_SCENARIO_COUNT = 9
-H1_ENUM_CONST_END(CampaignScenarioConstant)
+H1_ENUM_CONST_END(CampaignScenarioTableConstant)
 // clang-format on
 
 // HoMM1's campaign scenario table: 85-byte records with the King of the Hill

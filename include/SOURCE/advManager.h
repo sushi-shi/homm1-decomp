@@ -57,6 +57,15 @@ H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
     INVALID_HERO = -1
 H1_ENUM_CONST_END(AdventureHeroConstant)
 
+// m_lastQuickViewX/Y: the map cell of the monster DoCombat turns to face the
+// attacker (DrawCell draws it facing); the constructor starts it at NONE
+// (Buka 2.1 QUICK_VIEW_NONE, -99, off every drawable cell) and DoCombat
+// clears the x back to CLEARED (-1) after the redraw.
+H1_ENUM_CONST_BEGIN(AdventureQuickViewCellConstant)
+    QUICK_VIEW_NONE = -99,
+    QUICK_VIEW_CLEARED = -1
+H1_ENUM_CONST_END(AdventureQuickViewCellConstant)
+
 // m_lastHoverCell/m_hoverCellY before the mouse hovers a view cell (Buka
 // ADVMGR's m_lastHoverCell = CURSOR_INVALID_POSITION).
 H1_ENUM_CONST_BEGIN(AdventureCursorConstant)

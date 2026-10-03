@@ -348,12 +348,11 @@ H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
 H1_ENUM_CONST_END(AdventurePuzzleViewConstant)
 
 // Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
-// the network-turn music hold, the quick-view "none shown" origin, the walk
+// the network-turn music hold, the walk
 // sample set and volume, the looping-sample budget per high-memory unit and
 // the animation timer step.
 H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     FORCED_MUSIC_DELAY = 6000,
-    QUICK_VIEW_NONE = -99,
     CURSOR_SAMPLE_FAST_SET = 2,
     CURSOR_SAMPLE_VOLUME = 0x40,
     HIGH_MEMORY_BUFFER_DIVISOR = 100,
