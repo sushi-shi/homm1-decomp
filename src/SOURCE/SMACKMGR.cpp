@@ -26,7 +26,6 @@
 #include <SOURCE/smack.h>
 #include <SOURCE/smackManager.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

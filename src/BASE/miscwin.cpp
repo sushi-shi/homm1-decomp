@@ -15,7 +15,6 @@
 #include <BASE/palette.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <string.h>
 

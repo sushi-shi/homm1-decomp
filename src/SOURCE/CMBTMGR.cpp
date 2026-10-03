@@ -35,7 +35,6 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/town.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

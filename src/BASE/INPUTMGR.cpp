@@ -15,7 +15,6 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <io.h>
 #include <string.h>

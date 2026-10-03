@@ -20,7 +20,6 @@
 #include <SOURCE/game.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 

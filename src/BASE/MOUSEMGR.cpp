@@ -12,7 +12,6 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/NOOPT.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -552,4 +552,12 @@ extern char* musicQualityText[];
 extern char* onOffText[];
 extern char* walkSpeedText[];
 
+// gAdvDisposeLevel while combat runs: how much adventure-screen art the
+// resource manager may release (Buka X_GLOBAL.h).
+H1_ENUM_BEGIN(AdvDisposeLevel)
+    ADV_DISPOSE_NONE = 0,
+    ADV_DISPOSE_PARTIAL = 1,
+    ADV_DISPOSE_FULL = 2
+H1_ENUM_END(AdvDisposeLevel)
+
 #endif

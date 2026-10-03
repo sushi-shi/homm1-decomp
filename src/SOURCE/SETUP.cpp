@@ -20,7 +20,6 @@
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <string.h>

@@ -17,7 +17,6 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/searchArray.h>
 #include <SOURCE/town.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

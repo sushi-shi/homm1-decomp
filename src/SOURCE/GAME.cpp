@@ -40,7 +40,6 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/REMOTE.h>
 #include <SOURCE/town.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <fcntl.h>
 #include <io.h>

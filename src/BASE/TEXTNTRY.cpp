@@ -15,7 +15,6 @@
 #include <BASE/textEntryWidget.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdlib.h>
 #include <string.h>

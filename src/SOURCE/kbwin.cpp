@@ -26,7 +26,6 @@
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 // donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order

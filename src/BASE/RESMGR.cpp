@@ -15,7 +15,6 @@
 #include <BASE/sample.h>
 #include <BASE/tileset.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <io.h>
 #include <stdio.h>

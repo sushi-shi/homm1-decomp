@@ -24,7 +24,6 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/SETUP.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <string.h>

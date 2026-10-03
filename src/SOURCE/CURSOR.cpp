@@ -22,7 +22,6 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 #include <SOURCE/town.h>
-#include <SOURCE/X_GLOBAL.h>
 
 // Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant
 // and CURSOR.cpp CursorPrivateConstant names, HoMM1 values).

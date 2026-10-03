@@ -13,7 +13,6 @@
 #include <BASE/soundManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/X_GLOBAL.h>
 
 // Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
 DATA(0x004a1820)

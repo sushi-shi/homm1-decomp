@@ -13,7 +13,6 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/town.h>
 #include <SOURCE/townManager.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdlib.h>
 

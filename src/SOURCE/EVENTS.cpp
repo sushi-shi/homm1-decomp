@@ -33,7 +33,6 @@
 #include <SOURCE/swapManager.h>
 #include <SOURCE/town.h>
 #include <SOURCE/townManager.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

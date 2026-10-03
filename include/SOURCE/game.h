@@ -527,5 +527,15 @@ short ViewArmyHandler(struct tag_message&);
 int GetBaseScore(int);
 extern int gbGameOver;
 extern int giEndSequence;
+// SaveGame files the current player through this byte.
+extern signed char gSaveCurPlayer;
+// NewGame remembers the last new-game settings for the next setup screen.
+extern signed char gbNewGameSettingsSaved;
+extern signed char gcSavedDifficulty;
+extern signed char gcSavedPlayerTypes[];
+extern signed char gbSavedKingOfTheHill;
+extern signed char gcSavedCrest;
+extern signed char gRandomTownTypes[4];
+extern short giMineTypeCount[];
 
 #endif // HOMM1_SOURCE_GAME_H
