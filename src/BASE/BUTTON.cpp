@@ -35,10 +35,7 @@ button::~button(void) {
 VA(0x0047ef70, 0xda)
 void button::Read(void) {
     signed char name[RESOURCE_NAME_CAPACITY];
-    m_x = gpResourceManager->ReadWord();
-    m_y = gpResourceManager->ReadWord();
-    m_width = gpResourceManager->ReadWord();
-    m_height = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_icon = gpResourceManager->GetIcon(

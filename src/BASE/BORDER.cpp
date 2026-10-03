@@ -45,10 +45,7 @@ border::border(
 VA(0x00479850, 0xc3)
 void border::Read(void) {
     signed char name[RESOURCE_NAME_CAPACITY];
-    m_x = gpResourceManager->ReadWord();
-    m_y = gpResourceManager->ReadWord();
-    m_width = gpResourceManager->ReadWord();
-    m_height = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
     if (m_kind == BORDER_BACKGROUND_BITMAP) {

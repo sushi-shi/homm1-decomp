@@ -45,6 +45,13 @@ H1_ENUM_CONST_END(WidgetIdConstant)
 #define WIDGET_CONTAINS_LOCAL_POINT(w, x, y) \
     ((x) >= (w).m_x && (y) >= (w).m_y && (x) < (w).m_x + (w).m_width && (y) < (w).m_y + (w).m_height)
 
+// A widget record's four geometry words, read in order from the open resource
+// (Buka 2.1 widget.h). VC4 rejects an assignment through (*this).member, so
+// the widget is passed by pointer.
+#define READ_WIDGET_GEOMETRY(w, resources)                                                         \
+    ((w)->m_x = (resources)->ReadWord(), (w)->m_y = (resources)->ReadWord(),                       \
+     (w)->m_width = (resources)->ReadWord(), (w)->m_height = (resources)->ReadWord())
+
 #pragma pack(push, 1)
                    class widget /* abstract */ {
 public:

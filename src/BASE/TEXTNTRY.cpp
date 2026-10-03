@@ -38,10 +38,7 @@ textEntryWidget::~textEntryWidget(void) {
 VA(0x0047e170, 0x1e8)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, int) type) {
     signed char name[RESOURCE_NAME_CAPACITY];
-    m_x = gpResourceManager->ReadWord();
-    m_y = gpResourceManager->ReadWord();
-    m_width = gpResourceManager->ReadWord();
-    m_height = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
     // byte-evidenced: ReadBlock accepts signed bytes for text storage.
