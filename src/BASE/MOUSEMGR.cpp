@@ -307,8 +307,8 @@ void mouseManager::MouseCoords(short& x, short& y) {
 
     GetCursorPos(&point);
     ScreenToClient(hwndApp, &point);
-    x = point.x * LOGICAL_SCREEN_WIDTH / iMainWinScreenWidth;
-    y = point.y * LOGICAL_SCREEN_HEIGHT / iMainWinScreenHeight;
+    x = CLIENT_TO_GAME_X(point.x);
+    y = CLIENT_TO_GAME_Y(point.y);
 }
 
 VA(0x00476ec0, 0x3)

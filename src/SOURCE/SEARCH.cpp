@@ -200,7 +200,7 @@ void searchArray::SeedPosition(
         s_targetCell = gpAdvManager->GetCell(targetX, targetY);
         if (s_targetCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
             return;
-        if (!giGroundToTerrain[s_targetCell->m_tileIndex]) {
+        if (!CELL_TERRAIN(s_targetCell)) {
             if (waterMode) {
                 if (s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
                     || s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP))
@@ -311,7 +311,7 @@ void searchArray::SeedPosition(
             waterMode
         );
         s_terrain =
-            giGroundToTerrain[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_tileIndex];
+            CELL_TERRAIN(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y));
         s_stepCost[FINDPATH_STEP_STRAIGHT] = s_currentNode.distance
                                              + CalcTerrainCost(
                                                  s_terrain,
@@ -401,7 +401,7 @@ void searchArray::SeedPosition(
                             s_directionBlocked = 0;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited
                             && !(s_targetCell->m_triggerType & MAP_TRIGGER_EVENT)) {
-                            s_terrain = giGroundToTerrain[s_targetCell->m_tileIndex];
+                            s_terrain = CELL_TERRAIN(s_targetCell);
                             s_adjacentCost = m_cells[s_adjacentX][s_adjacentY].distance;
                             s_stepCost[FINDPATH_STEP_STRAIGHT] =
                                 s_adjacentCost

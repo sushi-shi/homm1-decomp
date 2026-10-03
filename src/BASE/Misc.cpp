@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
@@ -170,7 +171,7 @@ void ResetHeroRVs(int resetAll, int x, int y) {
     for (i = 0; i < MAP_CELL_GRID_SIZE; i++) {
         for (j = 0; j < MAP_CELL_GRID_SIZE; j++) {
             if (resetAll) {
-                if (abs(x - i) + abs(y - j) < 10)
+                if (MANHATTAN_LENGTH(x - i, y - j) < 10)
                     gaiHeroStrategicRVOfPos[i][j] = RV_UNSET;
             } else {
                 gaiHeroStrategicRVOfPos[i][j] = RV_UNSET;
@@ -181,7 +182,7 @@ void ResetHeroRVs(int resetAll, int x, int y) {
     gaiHeroEventStratRVOfPos[x][y] = RV_UNSET;
     for (i = 0; i < GAME_HERO_COUNT; i++) {
         if (!resetAll
-            || abs(y - gpGame->m_heroRecs[i].m_x) + abs(x - gpGame->m_heroRecs[i].m_x) < 10)
+            || MANHATTAN_LENGTH(y - gpGame->m_heroRecs[i].m_x, x - gpGame->m_heroRecs[i].m_x) < 10)
             gaiHeroLiveChance[i] = RV_UNSET;
     }
 }

@@ -35,10 +35,7 @@ button::~button(void) {
 VA(0x0047ef70, 0xda)
 void button::Read(void) {
     signed char name[RESOURCE_NAME_CAPACITY];
-    m_x = gpResourceManager->ReadWord();
-    m_y = gpResourceManager->ReadWord();
-    m_width = gpResourceManager->ReadWord();
-    m_height = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_icon = gpResourceManager->GetIcon(
@@ -92,17 +89,14 @@ short button::Main(tag_message& message) {
             short x = message.x - m_owner->m_posX;
             short y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
-                if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
-                    message.type = MESSAGE_WIDGET;
-                    message.command = WIDGET_NOTIFY_RIGHT_CLICK;
-                    message.id = m_id;
+                if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
+                    SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_RIGHT_CLICK, m_id);
                     message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                     return MESSAGE_DISPATCH_FORWARD;
                 }
                 return MESSAGE_DISPATCH_CONTINUE;
             }
-            if (!(m_flags & WIDGET_FLAG_DIMMED) && x >= m_x && y >= m_y && x < m_x + m_width
-                && y < m_y + m_height) {
+            if (!(m_flags & WIDGET_FLAG_DIMMED) && WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 if (m_kind != WIDGET_KIND_TRACK_PRESS)
                     return Select(message);
                 Select(message);
@@ -112,7 +106,7 @@ short button::Main(tag_message& message) {
                     if (message.type == MESSAGE_MOUSE_MOVE) {
                         x = message.x - m_owner->m_posX;
                         y = message.y - m_owner->m_posY;
-                        if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+                        if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                             if (!(m_flags & WIDGET_FLAG_SELECTED))
                                 Select(message);
                         } else if (m_flags & WIDGET_FLAG_SELECTED) {

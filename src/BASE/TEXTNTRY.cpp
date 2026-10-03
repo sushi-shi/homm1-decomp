@@ -38,10 +38,7 @@ textEntryWidget::~textEntryWidget(void) {
 VA(0x0047e170, 0x1e8)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, int) type) {
     signed char name[RESOURCE_NAME_CAPACITY];
-    m_x = gpResourceManager->ReadWord();
-    m_y = gpResourceManager->ReadWord();
-    m_width = gpResourceManager->ReadWord();
-    m_height = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
     // byte-evidenced: ReadBlock accepts signed bytes for text storage.
@@ -98,7 +95,7 @@ short textEntryWidget::Main(tag_message& message) {
             short x = message.x - m_owner->m_posX;
             short y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
-                if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+                if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                     message.command = WIDGET_NOTIFY_RIGHT_CLICK;
                     message.type = MESSAGE_WIDGET;
                     message.id = m_id;
@@ -107,7 +104,7 @@ short textEntryWidget::Main(tag_message& message) {
                 }
                 return MESSAGE_DISPATCH_CONTINUE;
             }
-            if (x >= m_x && y >= m_y && x < m_x + m_width && y < m_y + m_height) {
+            if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 char edit[TEXT_ENTRY_DISPLAY_CAPACITY];
                 char swap[TEXT_ENTRY_DISPLAY_CAPACITY];
                 char copy[TEXT_ENTRY_DISPLAY_CAPACITY];

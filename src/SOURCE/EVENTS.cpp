@@ -756,9 +756,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             SetWinText(win, WINDOW_TEXT_THIEVES_GUILD);
             gpTownManager->SetupThievesGuild(win, THIEVES_CATEGORY_COUNT);
             strcpy(gText, "Shrine - Player Rankings");
-            event.type = MESSAGE_WIDGET;
-            event.command = WIDGET_COMMAND_SET_TEXT;
-            event.id = 0;
+            SET_WIDGET_MESSAGE(event, WIDGET_COMMAND_SET_TEXT, 0);
             event.text = gText;
             win->BroadcastMessage(event);
             gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
@@ -816,7 +814,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y)
+                        && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                     : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
@@ -829,7 +827,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y)
+                            && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                         : WHIRLPOOL_MIN_DISTANCE)) {
                             if (--teleportCount <= 0)
@@ -1771,8 +1769,7 @@ signed char advManager::CombatMonsterEvent(
             UpdateScreen(0, 0);
         m_lastQuickViewX = QUICK_VIEW_CLEARED;
     }
-    memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, ARMY_GROUP_SLOT_COUNT);
-    memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+    CLEAR_ARMY_GROUP(*gpMonGroup);
     if (count / ARMY_GROUP_SLOT_COUNT > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             gpMonGroup->m_creatureTypes[i] = monsterType;
@@ -2367,7 +2364,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y)
+                        && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                       : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
@@ -2380,7 +2377,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y)
+                            && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (eventType == MAP_OBJECT_STONE_LITHS
                                           ? STONE_LITHS_MIN_DISTANCE
                                           : WHIRLPOOL_MIN_DISTANCE)) {

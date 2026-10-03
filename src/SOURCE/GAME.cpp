@@ -276,7 +276,7 @@ signed char game::IsMobile(signed char heroId) {
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
     int terrain =
-        giGroundToTerrain[gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y)->m_tileIndex];
+        CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
     return mobileHero->m_remainingMobility >= CalcTerrainCost(
                terrain,
                mobileHero->m_direction & MAP_DIRECTION_DIAGONAL_BIT,
@@ -823,8 +823,7 @@ short NewGameHandler(tag_message& message) {
                                 }
                             }
                         case NEW_GAME_CANCEL:
-                            gpWindowManager->m_dialogResult = message.id;
-                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                            FINISH_DIALOG_MESSAGE(message);
                             return MESSAGE_DISPATCH_FORWARD;
                         default:
                             break;
@@ -886,9 +885,7 @@ void game::UpdateNewGameWindow(void) {
     period = strchr(gText, '.');
     if (period)
         *period = 0;
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = NEW_GAME_SCENARIO_NAME;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NEW_GAME_SCENARIO_NAME);
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1124,9 +1121,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     window = new heroWindow(105, 96, "campaign.bin");
     if (!window)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = CAMPAIGN_INFO_NAME;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, CAMPAIGN_INFO_NAME);
     strcpy(gText, gCampaignScenarioNames[scenario]);
     message.text = gText;
     window->BroadcastMessage(message);
@@ -2571,8 +2566,7 @@ short ViewArmyHandler(tag_message& message) {
                 switch (message.id) {
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                     case VIEW_ARMY_DISMISS:
                         NormalDialog(
@@ -2601,9 +2595,7 @@ short ViewArmyHandler(tag_message& message) {
         }
     }
     if (KBTickCount() > glTimers[VIEW_ARMY_TIMER_SLOT]) {
-        message.type = MESSAGE_WIDGET;
-        message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = VIEW_ARMY_ANIMATION;
+        SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, VIEW_ARMY_ANIMATION);
         gpGame->m_viewArmyResult++;
         message.value = gpGame->m_viewArmyResult % VIEW_ARMY_ANIMATION_FRAMES;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
@@ -2822,7 +2814,7 @@ void game::Overview(void) {
             ovIcon->DrawToBuffer(
                 spacing * i + left,
                 289,
-                (nextType < 2 ? nextType : 2) + 12,
+                __min(nextType, 2) + 12,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -2846,9 +2838,7 @@ void game::Overview(void) {
     if (!win)
         MemError();
     SetWinText(win, WINDOW_TEXT_OVERVIEW);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = OVERVIEW_DATE;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, OVERVIEW_DATE);
     sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
     message.text = gText;
     win->BroadcastMessage(message);
@@ -3345,7 +3335,7 @@ void game::PerMonth(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
                 spot = gpAdvManager->GetCell(x, y);
-                if (!spot->m_triggerType && giGroundToTerrain[spot->m_tileIndex]) {
+                if (!spot->m_triggerType && CELL_TERRAIN(spot)) {
                     if (Random(0, 360) == 10) {
                         spot->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
                         spot->m_objectTileset = TILESET_MONS32;
@@ -5078,9 +5068,7 @@ void game::ShowScenInfo(void) {
     scenWindow = new heroWindow(159, 14, "sceninfo.bin");
     if (!scenWindow)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = nameId;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, nameId);
     message.text = m_mapName;
     scenWindow->BroadcastMessage(message);
     difficulty = m_difficulty;

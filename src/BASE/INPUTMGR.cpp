@@ -168,8 +168,8 @@ mouseCoordinates:
         gInputManagerAssertFile,
         gInputManagerAssertLine + 50
     );
-    event->x = LOWORD(messageData) * INPUT_GAME_WIDTH / iMainWinScreenWidth;
-    event->y = HIWORD(messageData) * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
+    event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
+    event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
 
 mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {

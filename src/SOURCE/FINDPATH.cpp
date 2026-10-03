@@ -377,7 +377,7 @@ void searchArray::TestPossibleDirections(
             }
         }
 
-        gSearchTerrain = giGroundToTerrain[gSearchNextCell->m_tileIndex];
+        gSearchTerrain = CELL_TERRAIN(gSearchNextCell);
         if (gSearchTerrain == TERRAIN_WATER) {
             if (waterMode) {
                 if (gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)

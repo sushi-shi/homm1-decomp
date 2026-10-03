@@ -30,6 +30,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+// The route-overlay byte at (column, row) of this->m_visibilityMap (Buka 2.1
+// ADVMGR.cpp; HoMM1 indexes row-major as row * size + column).
+#define ADVMGR_VISIBILITY_AT(column, row) (m_visibilityMap[(row) * MAP_CELL_GRID_SIZE + (column)])
+
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
 extern int giSeedingValid;
@@ -2605,14 +2609,14 @@ void advManager::DrawCell(
                     s_drawCloudFrame - 1,
                     ICON_DRAW_OFFSET_FULL
                 );
-        } else if (m_routeShown && m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX]) {
-            if (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FLIPPED)
+        } else if (m_routeShown && ADVMGR_VISIBILITY_AT(mapX, mapY)) {
+            if (ADVMGR_VISIBILITY_AT(mapX, mapY) & ROUTE_CELL_FLIPPED)
                 FlipIconToBitmap(
                     m_objectIcons[TILESET_ROUTE],
                     gpWindowManager->m_screen,
                     pixelX7 + CELL_LAST_PIXEL,
                     pixelY3 + ROUTE_DRAW_Y_OFFSET,
-                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1,
+                    (ADVMGR_VISIBILITY_AT(mapX, mapY) & ROUTE_CELL_FRAME_MASK) - 1,
                     ICON_DRAW_OFFSET_FULL
                 );
             else
@@ -2621,7 +2625,7 @@ void advManager::DrawCell(
                     gpWindowManager->m_screen,
                     pixelX7,
                     pixelY3 + ROUTE_DRAW_Y_OFFSET,
-                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1,
+                    (ADVMGR_VISIBILITY_AT(mapX, mapY) & ROUTE_CELL_FRAME_MASK) - 1,
                     ICON_DRAW_OFFSET_FULL
                 );
         }
@@ -2948,7 +2952,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                 if (giCurPlayer == owner)
                     color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                 else
-                    color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                    color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
             } else {
                 switch (cellPtr->m_objectTileset & MAP_CELL_TILESET_MASK) {
                     case TILESET_TOWN32:
@@ -2968,17 +2972,17 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                                     [owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                                 break;
                             default:
-                                color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                                color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
                                 break;
                         }
                         break;
                     case TILESET_MTN32:
                     case TILESET_TREE32:
-                        color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]]
+                        color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)]
                                 + RADAR_TERRAIN_SHADE;
                         break;
                     default:
-                        color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                        color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
                         break;
                 }
             }
@@ -3061,7 +3065,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
                     sprintf(
                         gText,
                         "\n\n%s",
-                        gTerrainNames[giGroundToTerrain[curCell->m_tileIndex]]
+                        gTerrainNames[CELL_TERRAIN(curCell)]
                     );
                     break;
                 case MAP_OBJECT_MINE:
@@ -3114,9 +3118,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
             m_mapOriginX + cellX,
             m_mapOriginY + cellY
         );
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, 1);
     message.text = gText;
     window->BroadcastMessage(message);
     GrabScreen();
@@ -4376,9 +4378,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     SetWinText(viewWin, WINDOW_TEXT_TOWN_QUICK_VIEW);
 
     numArmies = 0;
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = QUICK_VIEW_PORTRAIT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, QUICK_VIEW_PORTRAIT);
     message.value = townPointer->m_type + TOWN_QUICK_TYPE_FRAME_BASE;
     if (gpGame->GetTown(townId)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
         message.value += TOWN_QUICK_CASTLE_FRAME_OFFSET;
@@ -4713,7 +4713,7 @@ void advManager::SetTownContext(signed char townId) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    townNo = giGroundToTerrain[GetCell(townPointer->m_x, townPointer->m_y)->m_tileIndex];
+    townNo = CELL_TERRAIN(GetCell(townPointer->m_x, townPointer->m_y));
     if (m_currentTerrain != townNo) {
         m_currentTerrain = townNo;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -4787,7 +4787,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    heroSlot = giGroundToTerrain[cellPtr->m_tileIndex];
+    heroSlot = CELL_TERRAIN(cellPtr);
     if (m_currentTerrain != heroSlot) {
         m_currentTerrain = heroSlot;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -5684,9 +5684,7 @@ VA(0x00432990, 0x227)
 void UpdateCPanel(signed char initialDraw) {
     tag_message message;
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = CONTROL_MUSIC_VOLUME;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, CONTROL_MUSIC_VOLUME);
     message.value = gConfig.musicVolume ? CPANEL_FRAME_MUSIC_ON : CPANEL_FRAME_MUSIC_OFF;
     cPanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME;
@@ -5919,8 +5917,7 @@ short CPanelHandler(struct tag_message& message) {
     if (changed)
         UpdateCPanel(0);
     if (handled) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -6049,8 +6046,7 @@ short APanelHandler(struct tag_message& message) {
     }
 
     if (handled) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -6592,7 +6588,7 @@ void advManager::TeleportTo(int x, int y, int) {
         gpMouseManager->ReallyShowPointer();
     }
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    newTerrain = giGroundToTerrain[destinationCell->m_tileIndex];
+    newTerrain = CELL_TERRAIN(destinationCell);
     if (m_currentTerrain != newTerrain) {
         m_currentTerrain = newTerrain;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -6848,20 +6844,20 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
         y = pHero->m_y;
         for (j = gpSearchArray->m_pathLength - 1; j >= 0; --j) {
             dir = gpSearchArray->m_directions[j];
-            terr = giGroundToTerrain[GetCell(x, y)->m_tileIndex];
+            terr = CELL_TERRAIN(GetCell(x, y));
             remMob -=
                 CalcTerrainCost(terr, dir & MAP_DIRECTION_DIAGONAL_BIT, remMob, pHero->m_heroClass);
             x += normalDirTable[dir].x;
             y += normalDirTable[dir].y;
             if (j == 0) {
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = ROUTE_CELL_DESTINATION;
+                ADVMGR_VISIBILITY_AT(x, y) = ROUTE_CELL_DESTINATION;
             } else {
                 fromDirection = gpSearchArray->m_directions[j - 1];
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = gRouteFrame[fromDirection][dir];
+                ADVMGR_VISIBILITY_AT(x, y) = gRouteFrame[fromDirection][dir];
             }
             if (remMob >= 0) {
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] =
-                    m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] + ROUTE_CELL_REACHABLE_OFFSET;
+                ADVMGR_VISIBILITY_AT(x, y) =
+                    ADVMGR_VISIBILITY_AT(x, y) + ROUTE_CELL_REACHABLE_OFFSET;
                 canReach = 1;
             }
         }

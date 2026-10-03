@@ -708,8 +708,7 @@ short InitMenuHandler(tag_message& message) {
     }
 
     if (handled || giMenuCommand != APP_MENU_NONE) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -1252,9 +1251,7 @@ void NormalDialog(
         pNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
     }
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = NORMAL_DIALOG_TEXT_WIDGET_ID;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
     message.text = text;
     pNormalDialogWindow->BroadcastMessage(message);
 
@@ -1306,9 +1303,7 @@ void UpdateNormalDialog(char* text) {
     tag_message message;
     {
         short show = 1; // Retained from donor and retail stack frame.
-        message.type = MESSAGE_WIDGET;
-        message.command = WIDGET_COMMAND_SET_TEXT;
-        message.id = NORMAL_DIALOG_TEXT_WIDGET_ID;
+        SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
         message.text = text;
         pNormalDialogWindow->BroadcastMessage(message);
         pNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
@@ -1393,8 +1388,7 @@ short EventWindowHandler(tag_message& message) {
                     case DIALOG_BUTTON_3:
                     case DIALOG_BUTTON_5:
                     case DIALOG_BUTTON_6:
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                     default:
                         break;
@@ -2345,9 +2339,7 @@ void PopNetBox(char* notice) {
     netWin = new heroWindow(0, 418, "netbox.bin");
     if (!netWin)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = NET_BOX_LINE_PREVIOUS;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
     message.text = cNetBoxLine[0];
     netWin->BroadcastMessage(message);
     message.id = NET_BOX_LINE_LATEST;
@@ -2453,9 +2445,7 @@ void PopNetBox(char* notice) {
         }
         if (drawLines) {
             drawLines = 0;
-            message.type = MESSAGE_WIDGET;
-            message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = NET_BOX_LINE_PREVIOUS;
+            SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
             message.text = cNetBoxLine[0];
             netWin->BroadcastMessage(message);
             message.id = NET_BOX_LINE_LATEST;
@@ -2472,9 +2462,7 @@ void PopNetBox(char* notice) {
             else
                 text[len] = ' ';
             text[len + 1] = 0;
-            message.type = MESSAGE_WIDGET;
-            message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = NET_BOX_INPUT;
+            SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NET_BOX_INPUT);
             message.text = text;
             netWin->BroadcastMessage(message);
             netWin->DrawWindow();
@@ -2682,9 +2670,7 @@ void GetDataEntry(char* prompt, char* destination, int maximumLength, char* init
     DataEntryWin = new heroWindow(0xb1, 0x14, "dataentr.bin");
     if (!DataEntryWin)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = DATA_ENTRY_PROMPT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, DATA_ENTRY_PROMPT);
     message.text = prompt;
     DataEntryWin->BroadcastMessage(message);
     if (initialText)
@@ -2733,14 +2719,11 @@ short DataEntryWindowHandler(tag_message& message) {
                             memset(cDEDest, 0, iDEMaxLen);
                             strncpy(cDEDest, message.text, iDEMaxLen - 1);
                         }
-                        message.type = MESSAGE_WIDGET;
-                        message.command = WIDGET_COMMAND_SET_TEXT;
-                        message.id = DATA_ENTRY_TEXT;
+                        SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, DATA_ENTRY_TEXT);
                         message.text = cDEDest;
                         DataEntryWin->BroadcastMessage(message);
                         DataEntryWin->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                 }
         }

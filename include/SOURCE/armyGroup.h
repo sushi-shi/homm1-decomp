@@ -34,6 +34,11 @@ H1_ENUM_BEGIN(ArmyGroupAlignmentResult)
     ARMY_GROUP_ALIGNMENT_SAME = 1
 H1_ENUM_END(ArmyGroupAlignmentResult)
 
+// Empty every slot of an army group (Buka 2.1 armyGroup.h).
+#define CLEAR_ARMY_GROUP(group)                                                                    \
+    (memset((group).m_creatureTypes, CREATURE_NONE, sizeof((group).m_creatureTypes)),              \
+     memset((group).m_creatureCounts, 0, sizeof((group).m_creatureCounts)))
+
 #pragma pack(push, 1)
 class armyGroup {
 public:

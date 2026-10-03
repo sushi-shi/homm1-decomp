@@ -136,9 +136,7 @@ short townManager::Open(short id) {
     if (m_townWindow == NULL)
         MemError();
     sprintf(gText, GetTownName(m_town->m_id));
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = TOWN_NAME_TEXT_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_NAME_TEXT_CONTROL);
     message.text = gText;
     m_townWindow->BroadcastMessage(message);
     strcpy(gText, "Town Screen");
@@ -478,9 +476,7 @@ VA(0x0040933a, 0x74)
 void townManager::ShowText(char*) {
     tag_message message;
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = TOWN_STATUS_TEXT_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow(0, TOWN_STATUS_TEXT_CONTROL - 2, TOWN_STATUS_TEXT_CONTROL);
@@ -604,9 +600,7 @@ short townManager::Main(struct tag_message& message) {
                                                              ->m_owner]
                                                     .m_resources[RESOURCE_GOLD]
                                                 < TOWN_SPELL_BOOK_COST) {
-                                                message.type = MESSAGE_WIDGET;
-                                                message.command = WIDGET_COMMAND_SET_FLAGS;
-                                                message.id = DIALOG_BUTTON_2;
+                                                SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FLAGS, DIALOG_BUTTON_2);
                                                 message.value = WIDGET_FLAG_DIMMED;
                                                 m_heroWindow0->BroadcastMessage(message);
                                                 message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -740,9 +734,7 @@ short townManager::Main(struct tag_message& message) {
                                         < TOWN_BOAT_GOLD_COST
                                     || gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD]
                                            < TOWN_BOAT_WOOD_COST) {
-                                    message.type = MESSAGE_WIDGET;
-                                    message.command = WIDGET_COMMAND_SET_FLAGS;
-                                    message.id = DIALOG_BUTTON_2;
+                                    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FLAGS, DIALOG_BUTTON_2);
                                     message.value = WIDGET_FLAG_DIMMED;
                                     m_heroWindow0->BroadcastMessage(message);
                                     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -992,9 +984,7 @@ void townManager::RedrawTownScreen(void) {
     DrawTown(1, 1);
     m_garrisonStrip->DrawIcons(1);
     m_heroStrip->DrawIcons(1);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = TOWN_STATUS_TEXT_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow(0);
@@ -1068,9 +1058,7 @@ void townManager::ShiftQualChange(void) {
         && (m_command == TOWN_ARMY_COMMAND_NONE || m_command == TOWN_ARMY_COMMAND_SPLIT
             || m_command == TOWN_ARMY_COMMAND_MERGE || m_command == TOWN_ARMY_COMMAND_SWAP))
         SetArmyCommand(gpInputManager->GetModifiers() & TOWN_SHIFT_QUALIFIER_MASK);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = TOWN_STATUS_TEXT_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow();
@@ -1319,9 +1307,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     if (nBuildWindow == NULL)
         MemError();
     SetWinText(nBuildWindow, WINDOW_TEXT_BUILD);
-    iEvt.type = MESSAGE_WIDGET;
-    iEvt.command = WIDGET_COMMAND_SET_FRAME;
-    iEvt.id = BUY_BUILD_ICON_CONTROL;
+    SET_WIDGET_MESSAGE(iEvt, WIDGET_COMMAND_SET_FRAME, BUY_BUILD_ICON_CONTROL);
     if (building >= BUILDING_SLOT_RACE_FIRST)
         iEvt.value = (gpTownManager->m_town->m_type + 1) * 7 + building - 6;
     else
@@ -2208,8 +2194,7 @@ short TavernHandler(struct tag_message& message) {
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
                     case DIALOG_BUTTON_2:
-                        gpWindowManager->m_dialogResult = message.id;
-                        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                        FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                     default:
                         break;
@@ -2220,9 +2205,7 @@ short TavernHandler(struct tag_message& message) {
         }
     }
     if (glTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
-        message.type = MESSAGE_WIDGET;
-        message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = TOWN_TAVERN_ANIMATION_CONTROL;
+        SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, TOWN_TAVERN_ANIMATION_CONTROL);
         ++gpGame->m_viewArmyResult;
         message.value = gpGame->m_viewArmyResult % TOWN_TAVERN_ANIMATION_FRAME_COUNT
                         + TOWN_TAVERN_FIRST_ANIMATION_FRAME;
@@ -2496,9 +2479,7 @@ short SplitArmyHandler(struct tag_message& message) {
 
 update_amount:
     sprintf(gText, "%d", gpTownManager->m_splitAmount);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = TOWN_SPLIT_AMOUNT_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_SPLIT_AMOUNT_CONTROL);
     message.text = gText;
     gpTownManager->m_heroWindow1->BroadcastMessage(message);
     gpTownManager->m_heroWindow1->DrawWindow();

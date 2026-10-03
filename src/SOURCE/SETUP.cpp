@@ -786,8 +786,7 @@ short BaseSetupHandler(tag_message& message) {
     }
 
     if (handled || giMenuCommand != APP_MENU_NONE) {
-        gpWindowManager->m_dialogResult = message.id;
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        FINISH_DIALOG_MESSAGE(message);
         if (giMenuCommand != APP_MENU_NONE)
             gpWindowManager->m_dialogResult = DIALOG_CANCEL;
         return MESSAGE_DISPATCH_FORWARD;

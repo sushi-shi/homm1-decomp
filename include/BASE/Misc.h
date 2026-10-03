@@ -3,6 +3,9 @@
 
 class bitmap;
 
+// Map-grid (taxicab) distance of an offset (Buka 2.1 Misc.h).
+#define MANHATTAN_LENGTH(dx, dy) (abs((dx)) + abs((dy)))
+
 int Random(int, int);
 extern unsigned long iLastSeed;
 int SGenRand(void);
