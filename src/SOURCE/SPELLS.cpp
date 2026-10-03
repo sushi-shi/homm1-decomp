@@ -94,6 +94,7 @@ H1_ENUM_END(SpellPointerFrame)
 // mouse manager before re-entering for the teleport destination.
 VA(0x00415797, 0x295)
 short HandleCastSpell(struct tag_message& message) {
+    DATA(0x0048f2b0) static signed char indexToCastOn = -1;
     short hex;
 
     switch (message.type) {
@@ -930,9 +931,8 @@ void combatManager::Armageddon(void) {
     delete workPal;
 }
 
-// SPELLS owns retail .data 0x0048f28c-0x0048f4d3. Retail emits indexToCastOn
-// among the combat-spell handler's literals (0x0048f2b0).
+// SPELLS owns retail .data 0x0048f28c-0x0048f4d3. HandleCastSpell's
+// indexToCastOn (0x0048f2b0) is its local static: /Gi emits it at the head
+// of that function's literals.
 DATA(0x0048f28c)
 signed char bInTeleportGetDest = 0;
-DATA(0x0048f2b0)
-signed char indexToCastOn = -1;
