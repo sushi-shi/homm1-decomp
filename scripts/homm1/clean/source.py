@@ -228,7 +228,7 @@ def rewrite_directives(text: str, *, keep_lines: bool = False) -> str:
     if keep_lines:
         return text
     lines = text.split("\n")
-    included = {m.group(1) for m in map(_INCLUDE.match, lines) if m}
+    included: set[str] = set()
     out = []
     for line in lines:
         if _LINE.match(line):
@@ -243,6 +243,11 @@ def rewrite_directives(text: str, *, keep_lines: bool = False) -> str:
             else:
                 out.append(DROPPED)
             continue
+        if include and include.group(1) in REPLACE_HEADERS.values():
+            if include.group(1) in included:
+                out.append(DROPPED)         # already opened where match.h was
+                continue
+            included.add(include.group(1))
         out.append(line)
     return "\n".join(out)
 

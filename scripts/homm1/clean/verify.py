@@ -114,19 +114,32 @@ def compare_objects(clean: Path, matching: Path) -> list[str]:
 # --------------------------------------------------------------------------
 
 def _stamp_offsets(data: bytes) -> set[int]:
-    """File offsets of the PE header and export-directory TimeDateStamps."""
+    """File offsets of the PE header, export-directory and resource-directory
+    TimeDateStamps (LINK and CVTRES stamp each with the build time)."""
     pe = struct.unpack_from("<I", data, 0x3C)[0]
     stamps = set(range(pe + 8, pe + 12))
     optional = pe + 24
     count = struct.unpack_from("<H", data, pe + 6)[0]
     first = optional + struct.unpack_from("<H", data, pe + 20)[0]
-    export_rva = struct.unpack_from("<I", data, optional + 96)[0]
+    export_rva = struct.unpack_from("<I", data, optional + 96)[0]       # DataDirectory[0]
+    resource_rva = struct.unpack_from("<I", data, optional + 112)[0]    # DataDirectory[2]
     for i in range(count):
         base = first + i * 40
         vsize, vaddr, rawsize, rawptr = struct.unpack_from("<IIII", data, base + 8)
         if export_rva and vaddr <= export_rva < vaddr + max(vsize, rawsize):
             at = rawptr + export_rva - vaddr + 4
             stamps |= set(range(at, at + 4))
+        if resource_rva and vaddr <= resource_rva < vaddr + max(vsize, rawsize):
+            root = rawptr + resource_rva - vaddr
+            pending = [0]
+            while pending:
+                directory = root + pending.pop()
+                stamps |= set(range(directory + 4, directory + 8))
+                named, ids = struct.unpack_from("<HH", data, directory + 12)
+                for k in range(named + ids):
+                    target = struct.unpack_from("<I", data, directory + 20 + 8 * k)[0]
+                    if target & 0x80000000:
+                        pending.append(target & 0x7FFFFFFF)
     return stamps
 
 
@@ -208,7 +221,7 @@ def _link(work: Path, built: list, res: Path | None, label: str) -> tuple[bool, 
     same, counts = compare_images(exe, REPO / graph.CANDIDATE_EXE)
     print(f"[clean] verify: {label}: linked {exe.relative_to(REPO) if exe.is_relative_to(REPO) else exe} "
           f"({len(result['unresolved'])} unresolved, no /FORCE); "
-          + ("byte-identical to " + graph.CANDIDATE_EXE + " apart from LINK's timestamps"
+          + ("byte-identical to " + graph.CANDIDATE_EXE + " apart from build timestamps"
              if same else "differs from " + graph.CANDIDATE_EXE + " in "
              + ", ".join(f"{name} {n} B" for name, n in sorted(counts.items()))))
     return same, counts
