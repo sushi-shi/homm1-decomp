@@ -147,6 +147,21 @@ public:
     H1_ENUM_RETURN(PlayerColor, signed char) Color(void) {
         return m_color;
     }
+    signed char HeroCount(void) {
+        return m_heroCount;
+    }
+    signed char TownCount(void) {
+        return m_townCount;
+    }
+    signed char HeroId(int index) {
+        return m_heroIds[index];
+    }
+    signed char TownId(int index) {
+        return m_townIds[index];
+    }
+    signed char AvailableHeroId(int index) {
+        return m_availableHeroIds[index];
+    }
 };
 #pragma pack(pop)
 
