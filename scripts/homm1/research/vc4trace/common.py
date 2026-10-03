@@ -68,7 +68,9 @@ def compile_separately(source: Path, mode: str, *, c2: Path | None = None,
     out_dir = Path(out_dir or WORK / 'tu').resolve()
     (out_dir / 'il').mkdir(parents=True, exist_ok=True)
     env = wine_env()
-    env['INCLUDE'] = ';'.join(windows_path(p, env) for p in (REPO / 'include', vc_bin().parent / 'include'))
+    vendor = sorted(p for p in (REPO / 'vendor').iterdir() if p.is_dir()) if (REPO / 'vendor').is_dir() else []
+    roots = [REPO / 'include', vc_bin().parent / 'include', *vendor]   # same roots as the match build
+    env['INCLUDE'] = ';'.join(windows_path(p, env) for p in roots)
     stem = source.stem
     il = out_dir / 'il' / stem
     obj = out_dir / f'{stem}.obj'
@@ -78,7 +80,7 @@ def compile_separately(source: Path, mode: str, *, c2: Path | None = None,
     c1 = ['wine', str(vb / 'C1XX.EXE'), '-ef', windows_path(vb / 'C1.ERR', env), *common,
           '-Ze', '-Zp8', '-ZB64', '-D_INTEGRAL_MAX_BITS=64', '-Fo' + windows_path(obj, env),
           '-pc', '\\:/', '-D_MSC_VER=1000', '-D_WIN32', '-nologo', *C1_FLAGS[mode],
-          '-I', windows_path(REPO / 'include', env), '-I', windows_path(vb.parent / 'include', env)]
+          *(arg for p in roots for arg in ('-I', windows_path(p, env)))]
     r = subprocess.run(c1, cwd=out_dir, env=env, capture_output=True, text=True, errors='replace', timeout=300)
     if r.returncode:
         raise SystemExit(f'C1XX failed on {source.name}:\n{(r.stdout + r.stderr)[-2000:]}')
