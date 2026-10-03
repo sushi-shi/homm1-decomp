@@ -20,11 +20,10 @@ homm1 sema disasm 0x0004f640
 homm1 verify status
 homm1 build
 homm1 build verify
-homm1 test
 ```
 
 `match UNIT` is the selected-unit edit loop. Use `build` for cross-unit changes,
-`build verify` for final gates, and `test` after tooling changes. Source uses
+and `build verify` for final gates. Source uses
 absolute VAs; the model uses RVAs. `VA_DECL` identifies a declaration without
 claiming a body. See [build details](build-system.md) and the [command map](tooling-map.md).
 
@@ -56,6 +55,6 @@ completion lines. Successful routine output, stdin and environment are not
 stored. Concurrent appends lock; logging failures warn once without changing
 the command result. Logs are ignored and are not automatically rotated.
 
-`homm1 test` checks entry-point instrumentation, public tool dispatch, concurrent
-logging, failures and batch commands. The separate donor selftest has remaining
-porting gaps; see [inheritance and limits](tooling-inheritance.md).
+`homm1 audit usage` checks that every entry point keeps usage logging. The
+separate donor selftest has remaining porting gaps; see
+[inheritance and limits](tooling-inheritance.md).

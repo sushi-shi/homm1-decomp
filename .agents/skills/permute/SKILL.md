@@ -83,8 +83,8 @@ ordered relocation identity all pass. A sub-100 improvement is a clue, not a
 commit criterion. Keep correct modeling changes even if unrelated current fuzzy
 moves; the MAX gate (`homm1 verify check`) judges them at merge preparation.
 
-Matching is checked by compilation and comparison. Tooling changes run `homm1 test`;
-run `homm1 build` after source, claim, compiler or comparison changes.
+Matching is checked by compilation and comparison. Run `homm1 build` after
+source, claim, compiler, comparison or tooling changes.
 Consolidate a genuinely reusable compiler mechanism under the admission rules
 in `docs/patterns/README.md`; do not add campaign logs or per-function closure
 entries. Commit tooling, documentation/skill work, and reconstructed source

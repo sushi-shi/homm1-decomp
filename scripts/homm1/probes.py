@@ -9,7 +9,7 @@ from homm1.core.matching import confirm_object, function_payload
 
 
 def run(args):
-    source = REPO / 'tests/fixtures/compiler.cpp'
+    source = REPO / 'config/probes/compiler.cpp'
     reports = []
     for compiler in args.ids:
         toolchain.verify(compiler)

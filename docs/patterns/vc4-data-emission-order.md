@@ -36,8 +36,7 @@ source is constrained by layout at all.
   The rule runs backwards too. Within one retail object, ascending `.bss`
   address must be ascending key, so each object's original name hashes into
   the window between its neighbours' keys. Checking a donor or invented name
-  against that window is naming evidence
-  ([evidence/bss-name-order.md](../../evidence/bss-name-order.md)).
+  against that window is naming evidence.
 - **Dynamic initializers.** The compiler-generated initializer functions
   (`_$E<n>`) for a file-scope object with a constructor are emitted in `.text`
   at the definition's position, between the functions before and after it.

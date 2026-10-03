@@ -26,7 +26,6 @@ prove a local static.
 Check enclosing linkage and all emitters before deciding whether state is
 shared or per-TU. Do not invent guard globals, pin volatile compiler ordinals,
 or infer source duplication from multiple emitted copies.
-Use [data attribution](../data-attribution.md) for the current naming rules.
 
 Matching the guard does not validate the initializer: preserve side effects,
 evaluation order, and the number of calls. An object's address is not its stored

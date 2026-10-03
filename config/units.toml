@@ -20,7 +20,7 @@ cpp_carcass_gy = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Gy"]
 cpp_carcass_oi_gy = ["/nologo", "/c", "/Od", "/Z7", "/G5", "/Ob1", "/Oi", "/Gy"]
 cpp_o2 = ["/nologo", "/c", "/O2", "/Z7", "/G5"]
 # Standalone DigitalReport/FadeScreen and expanded callers jointly require
-# automatic inlining; see evidence/sound-volume-control.md and window-lifecycle.md.
+# automatic inlining (retail expands them in their callers).
 cpp_o2_inline = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
 cpp_codec = ["/nologo", "/c", "/O2", "/Ob2", "/Z7", "/G5"]
 

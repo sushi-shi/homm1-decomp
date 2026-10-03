@@ -60,11 +60,11 @@ it is not part of the current campaign.
 
 `homm1 verify readme` refreshes generated status independently of banking.
 `homm1 verify check` runs MAX plus fast/normal gates; `--tier full`, `data`, or
-`link` opt into further checks. `homm1 test` runs tooling controls. The imported
+`link` opt into further checks. The imported
 whole-donor selftest remains a separate validation backlog, documented in the
 inheritance review. No failing gate authorizes weakening it or fabricating source.
 
 To enroll a TU, add its evidence-backed source/owner and full flag profile to the
 manifest, use ordinary types and VA annotations, configure and build. Do not use
 TU ownership changes merely to shift a score. See [workflow](workflow.md) for
-formatting, the manifest merge driver, skills and editor setup.
+formatting, the manifest merge driver and skills.

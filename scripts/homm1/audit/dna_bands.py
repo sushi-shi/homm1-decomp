@@ -34,12 +34,12 @@ from homm1.retail_labels.censuses import functions
 
 
 OUTPUT = BUILD / "gen/homm1-dna-bands.tsv"
-EVIDENCE = REPO / "evidence/homm1-dna-bands.tsv"
+EVIDENCE = RETAIL / "dna_bands.tsv"
 STATIC_LIBS = RETAIL / "functions_static_libs.tsv"
-BANDS_EVIDENCE = REPO / "evidence/homm1-code-link-bands.tsv"
+BANDS_EVIDENCE = RETAIL / "code_link_bands.tsv"
 #: Retail links VC4.0 LIBCMT.LIB (multithreaded), not LIBC.LIB: its _mtinit,
 #: _getptd and _lock/*_lk bodies match retail exactly (189 exact CRT bodies
-#: against LIBCMT, 106 against LIBC). See evidence/link-layout.md.
+#: against LIBCMT, 106 against LIBC).
 RUNTIME_LIBS = ("libcmt.lib", "oldnames.lib")
 PREFIX = 24
 PRIVATE = re.compile(r"^(?:_?\$E\d+|\?\?_[EG])")
@@ -183,7 +183,7 @@ def _donor_helper_hints() -> dict[int, tuple[str, str]]:
     first retail row is a lifecycle helper.  Keep the ordinal as evidence and
     classify the row by kind, exactly as HoMM2's compgen census does.
     """
-    path = REPO / "evidence/homm2-tu-segments.tsv"
+    path = RETAIL / "homm2_tu_segments.tsv"
     if not path.is_file():
         return {}
     _body, _header, rows = read_tsv(path)
@@ -395,7 +395,7 @@ def write_config(rows) -> dict[str, int]:
                              f"{source}:{member}"))
     STATIC_LIBS.write_text(
         "# Delinker-active CRT/SDK providers. DNA identities intentionally stay\n"
-        "# in evidence/homm1-dna-bands.tsv: enrolling the whole runtime band here\n"
+        "# in config/retail/dna_bands.tsv: enrolling the whole runtime band here\n"
         "# changes Vostok's anonymous-module partition.\n"
         "rva\tname\tlib\tconfidence\tsource\n"
     )

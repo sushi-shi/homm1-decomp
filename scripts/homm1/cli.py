@@ -72,13 +72,6 @@ def _inspect(argv: list[str]) -> int:
     return 0
 
 
-def _test(_argv: list[str]) -> int:
-    from homm1.core.paths import REPO
-    return subprocess.run(
-        [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"],
-        cwd=REPO, env={**os.environ, "PYTHONPATH": str(REPO / "scripts")}).returncode
-
-
 def _toolchain(argv: list[str]) -> int:
     import argparse
     from homm1 import toolchain
@@ -108,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__.strip())
         print("\ncommands: init inspect toolchain configure build link match labels "
-              "model delink compare audit sema walls permute lsp ghidra verify workflow tool test")
+              "model delink compare audit sema walls permute lsp ghidra verify workflow tool")
         return 0 if argv else 2
     cmd, rest = argv[0], argv[1:]
     if cmd == "init":
@@ -116,7 +109,9 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "inspect":
         return _inspect(rest)
     if cmd == "test":
-        return _test(rest)
+        print("homm1 test: the test suite was removed; `homm1 audit usage` checks "
+              "entry-point usage logging and `homm1 verify selftest` runs the gate controls.")
+        return 0
     if cmd == "toolchain":
         return _toolchain(rest)
     if cmd in ("labels", "model", "delink", "compare"):
@@ -132,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
         from homm1.workflow import main as workflow_main
         return workflow_main(rest)
     if cmd == "audit":
-        audits = {"dna-bands": "dna_bands", "tooling": "tooling"}
+        audits = {"dna-bands": "dna_bands", "tooling": "tooling", "usage": "usage"}
         if not rest or rest[0] not in audits:
             print("homm1 audit: expected " + ", ".join(audits), file=sys.stderr)
             return 2

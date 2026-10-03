@@ -42,7 +42,7 @@ The optional editor is supplied with `init --editor-exe /path/to/EDITOR.EXE`.
 Retail inputs, tools, Wine state and generated reports stay in ignored `build/`.
 
 See [the matching workflow](docs/tooling.md), [setup and editors](docs/workflow.md),
-[documentation index](docs/README.md), and [retail evidence](evidence/README.md).
+and the [documentation index](docs/README.md).
 Contributor rules and verification commands are in [AGENTS.md](AGENTS.md).
 
 ## License

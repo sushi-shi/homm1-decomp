@@ -17,4 +17,3 @@ homm1 lsp hover include/BASE/mouseManager.h:10
 
 Keep types and owner headers canonical so references and rename operate on a
 single symbol identity. Review a bulk rename's diff and rebuild affected TUs.
-The [Neovim plugin](../editor/nvim/README.md) adds object comparison views.

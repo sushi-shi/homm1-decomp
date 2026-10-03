@@ -49,7 +49,4 @@ relocates to EndDialog's IAT slot `0xd661c`; the call at `0x5c1da` targets
 PollSound VA `0x44f640`. Source is now owned by SOURCE/kbwin.
 
 Inspect with `homm1 walls semdiff 0x0005c15c` and `homm1 inspect --json`.
-Further controls: [sound inlining](../evidence/sound-volume-control.md),
-[VC4 inline EH](../evidence/vc4-inline-eh.md), and
-[the target survey](../evidence/target-survey.md). FPO `.debug$F` records are
-debugger metadata, excluded from code comparison.
+FPO `.debug$F` records are debugger metadata, excluded from code comparison.
