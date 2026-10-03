@@ -134,7 +134,19 @@ def install(new: bytes, out: Path) -> bool:
     return True
 
 
-def compile_unit(src: Path | str, out: Path | str, flags: list[str]) -> bool:
+def retail_name(unit: str | None) -> str | None:
+    """The unit's retail source file name (units.toml `retail_file`), if recorded."""
+    if not unit:
+        return None
+    from homm1.manifest import units
+    for row in units():
+        if row.get("unit") == unit:
+            return row.get("retail_file")
+    return None
+
+
+def compile_unit(src: Path | str, out: Path | str, flags: list[str],
+                 unit: str | None = None) -> bool:
     """Compile one TU into `out`. Returns True when the object changed."""
     from homm1.tool import cl
 
@@ -147,7 +159,7 @@ def compile_unit(src: Path | str, out: Path | str, flags: list[str]) -> bool:
     scratch.mkdir(parents=True, exist_ok=True)
     staged = scratch / out.name
     try:
-        cl.compile(src, staged, flags)
+        cl.compile(src, staged, flags, retail_name=retail_name(unit), unit=unit)
         return install(staged.read_bytes(), out)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
@@ -170,7 +182,7 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
     flags = a.flags[1:] if a.flags and a.flags[0] == "--" else a.flags
     try:
-        compile_unit(a.src, a.out, flags)
+        compile_unit(a.src, a.out, flags, a.unit)
     except ToolError as e:
         print(f"[cl] {a.unit or a.src}: {e}", file=sys.stderr)
         return 1

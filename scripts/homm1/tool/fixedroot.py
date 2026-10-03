@@ -1,0 +1,189 @@
+"""homm1.tool.fixedroot - run the era compiler under a fixed, retail-shaped path view.
+
+    python3 -m homm1.tool.fixedroot --src S --out O [--retail-name NAME] -- <cl flags>
+
+VC4's incremental compilation (/Gi, which retail used; see
+docs/patterns/vc4-gi-incremental-compilation.md and evidence/vc4-gi-line-var.md)
+makes the generated code depend on the path strings of the files the compiler
+opens (the source and every header): the same ARMY.cpp compiled from two
+directories whose names differ in length gives different operand orders.
+Without a fixed view the score of a function depends on where the worktree or
+sandbox lives.
+
+So every compile runs in a private mount namespace (`unshare -r -m`, no root
+needed) that shows the compiler the same tree, whatever the checkout path:
+
+    D:\\Heroes\\Source\\   src/SOURCE/* and include/SOURCE/* (symlinks)
+    D:\\Heroes\\Base\\     src/BASE/* and include/BASE/*
+    D:\\Heroes\\H1\\, EDITOR\\, match.h, Domains.h      the rest of include/
+    D:\\Heroes\\Vendor\\<sdk>\\                          vendor/<sdk>
+    D:\\MSDEV\\                                          the pinned VC4 tree
+
+The source compiles as D:\\Heroes\\Source\\<NAME>.CPP (retail __FILE__ shape:
+D:\\Heroes\\Source\\TOWNMGR.CPP, D:\\Heroes\\Base\\WINMGR.CPP); a unit whose
+retail name differs passes --retail-name. Includes are `/X /I D:\\Heroes ...
+/I D:\\MSDEV\\INCLUDE`, so `#include <SOURCE/army.h>` opens
+D:\\Heroes\\SOURCE\\army.h. The working directory (vc40.pdb/vc40.idb, /Fa
+listings) is D:\\Heroes\\<Dir>\\ on a private tmpfs.
+
+The namespace also gets its own wineserver (a tmpfs over /tmp/.wine-0), its own
+dosdevices (d: -> the fixed root) and private copies of the prefix's registry
+files, so concurrent compiles from several worktrees never see each other's
+view and never write the shared prefix's registry.
+"""
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path("/tmp/homm1-fixedroot")          # empty mount point; a tmpfs inside the namespace
+SERVER_DIR = Path("/tmp/.wine-0")           # wineserver socket dir of uid 0 (the namespace uid)
+DIR_NAMES = {"SOURCE": "Source", "BASE": "Base"}
+
+
+def split_name(name: str) -> tuple[str, str]:
+    """'Source\\TOWNMGR.CPP' -> ('Source', 'TOWNMGR.CPP')."""
+    d, _, f = name.replace("/", "\\").rpartition("\\")
+    return DIR_NAMES.get(d.upper(), d), f
+
+
+def default_name(src: Path, unit: str | None = None) -> str:
+    """Retail-shaped Dir\\NAME.CPP: the unit's directory and stem (SOURCE/ARMY ->
+    Source\\ARMY.CPP), else the source file's."""
+    if unit and "/" in unit:
+        d, stem = unit.split("/", 1)
+    else:
+        d, stem = Path(src).parent.name, Path(src).stem
+    return f"{DIR_NAMES.get(d.upper(), d)}\\{stem.upper()}.CPP"
+
+
+# --------------------------------------------------------------------------- outer
+def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: str | None = None,
+            unit: str | None = None, repo: Path | None = None, msvc: Path | None = None, timeout: float | None = None) -> str:
+    """Compile SRC to OUT through the fixed view; return the compiler output."""
+    from homm1.core.paths import REPO, msvc_dir
+    from homm1.tool import ToolError
+    src, out = Path(src).resolve(), Path(out).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.unlink(missing_ok=True)
+    ROOT.mkdir(exist_ok=True)
+    SERVER_DIR.mkdir(mode=0o700, exist_ok=True)
+    job = {"src": str(src), "out": str(out), "flags": flags,
+           "name": retail_name or default_name(src, unit),
+           "repo": str((repo or REPO).resolve()), "msvc": str((msvc or msvc_dir()).resolve()),
+           "prefix": str(Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine").resolve())}
+    env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[2]) + os.pathsep
+               + os.environ.get("PYTHONPATH", ""))
+    if timeout is None:
+        timeout = float(os.environ.get("HOMM1_WINE_TIMEOUT", "300"))
+    with tempfile.TemporaryFile() as logf:
+        p = subprocess.Popen(["unshare", "-r", "-m", sys.executable, "-m", "homm1.tool.fixedroot",
+                              "--inner", json.dumps(job)], env=env, stdin=subprocess.DEVNULL,
+                             stdout=logf, stderr=subprocess.STDOUT, start_new_session=True)
+        try:
+            p.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            os.killpg(p.pid, 9)
+            p.wait()
+        logf.seek(0)
+        output = logf.read().decode("utf-8", "replace")
+    if not out.exists():
+        tail = "\n".join(output.strip().splitlines()[-12:]) or "(cl said nothing)"
+        raise ToolError(f"cl produced no object for {src.name} (rc={p.returncode}):\n{tail}")
+    return output
+
+
+# --------------------------------------------------------------------------- inner
+def _mount(*args: str) -> None:
+    subprocess.run(["mount", *args], check=True)
+
+
+def _link_tree(dst: Path, srcdir: Path) -> None:
+    dst.mkdir(parents=True, exist_ok=True)
+    for f in srcdir.iterdir():
+        t = dst / f.name
+        if not t.exists():
+            t.symlink_to(f.resolve())
+
+
+def _inner(job: dict) -> int:
+    repo, msvc, prefix = Path(job["repo"]), Path(job["msvc"]), Path(job["prefix"])
+    src, out = Path(job["src"]), Path(job["out"])
+    _mount("-t", "tmpfs", "homm1-fixedroot", str(ROOT))
+    _mount("-t", "tmpfs", "homm1-wineserver", str(SERVER_DIR))
+    os.chmod(SERVER_DIR, 0o700)
+    heroes = ROOT / "Heroes"
+    for top in (repo / "src", repo / "include"):
+        for d in sorted(top.iterdir()):
+            if d.is_dir():
+                _link_tree(heroes / DIR_NAMES.get(d.name.upper(), d.name), d)
+            elif not (heroes / d.name).exists():
+                heroes.mkdir(parents=True, exist_ok=True)
+                (heroes / d.name).symlink_to(d.resolve())
+    vendor = sorted(d for d in (repo / "vendor").iterdir() if d.is_dir()) if (repo / "vendor").is_dir() else []
+    (heroes / "Vendor").mkdir(parents=True, exist_ok=True)
+    for d in vendor:
+        (heroes / "Vendor" / d.name).symlink_to(d.resolve())
+    (ROOT / "MSDEV").symlink_to(msvc)
+    rdir, rname = split_name(job["name"])
+    workdir = heroes / rdir
+    workdir.mkdir(parents=True, exist_ok=True)
+    named = workdir / rname
+    if named.exists() or named.is_symlink():
+        named.unlink()
+    named.symlink_to(src)
+    # private dosdevices and registry copies over the shared prefix
+    dos = ROOT / ".dosdevices"
+    dos.mkdir()
+    (dos / "c:").symlink_to(prefix / "drive_c")
+    (dos / "d:").symlink_to(ROOT)
+    (dos / "z:").symlink_to("/")
+    _mount("--bind", str(dos), str(prefix / "dosdevices"))
+    reg = ROOT / ".reg"
+    reg.mkdir()
+    for f in prefix.glob("*.reg"):
+        shutil.copy2(f, reg / f.name)
+        _mount("--bind", str(reg / f.name), str(f))
+    # wine numbers processes from scratch under each private wineserver, so the
+    # compiler's pid-named intermediates would collide in the shared %TEMP%.
+    for temp in prefix.glob("drive_c/users/*/AppData/Local/Temp"):
+        _mount("-t", "tmpfs", "homm1-temp", str(temp))
+    d = f"D:\\Heroes\\{rdir}"
+    obj = workdir / (Path(rname).stem + ".obj")
+    incs = ["/X", "/ID:\\Heroes", *[f"/ID:\\Heroes\\Vendor\\{v.name}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
+    argv = ["wine", "D:\\MSDEV\\BIN\\CL.EXE", *incs, *job["flags"], f"/Fo{d}\\{obj.name}",
+            f"{d}\\{rname}"]
+    env = dict(os.environ, WINEDEBUG=os.environ.get("WINEDEBUG", "fixme-all,err-kerberos"))
+    r = subprocess.run(argv, cwd=workdir, env=env, stdin=subprocess.DEVNULL)
+    if obj.exists():
+        shutil.copyfile(obj, out)
+        for lst in workdir.glob(Path(rname).stem + ".[aA][sS][mM]"):
+            shutil.copyfile(lst, out.with_suffix(".asm"))
+    subprocess.run(["wineserver", "-k"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return 0 if obj.exists() else (r.returncode or 1)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 2 and sys.argv[1] == "--inner":
+        raise SystemExit(_inner(json.loads(sys.argv[2])))
+    from homm1.core.usage import logged
+
+    @logged
+    def main() -> int:
+        import argparse
+        ap = argparse.ArgumentParser(description=__doc__)
+        ap.add_argument("--src", required=True)
+        ap.add_argument("--out", required=True)
+        ap.add_argument("--retail-name")
+        ap.add_argument("flags", nargs=argparse.REMAINDER)
+        a = ap.parse_args()
+        flags = a.flags[1:] if a.flags[:1] == ["--"] else a.flags
+        print(compile(a.src, a.out, flags, retail_name=a.retail_name))
+        return 0
+
+    raise SystemExit(main())

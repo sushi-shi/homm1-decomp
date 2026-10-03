@@ -37,8 +37,17 @@ def repo_include_flags() -> list[str]:
 
 
 def compile(src: Path | str, out: Path | str, flags: list[str], *,
-            extra_includes: list[Path] = (), timeout: float | None = None) -> str:
-    """Compile one TU; return cl's output. Raises ToolError without an .obj."""
+            extra_includes: list[Path] = (), timeout: float | None = None,
+            retail_name: str | None = None, unit: str | None = None) -> str:
+    """Compile one TU; return cl's output. Raises ToolError without an .obj.
+
+    /Gi compiles go through homm1.tool.fixedroot: VC4's incremental code depends
+    on the path strings of the opened files, so they see one fixed, retail-shaped
+    tree (D:\\Heroes\\Source\\X.CPP) whatever the checkout path."""
+    if "/Gi" in flags and not extra_includes:
+        from homm1.tool import fixedroot
+        return fixedroot.compile(src, out, flags, retail_name=retail_name, unit=unit,
+                                 timeout=timeout)
     src, out = Path(src).resolve(), Path(out).resolve()
     if not src.exists():
         raise ToolError(f"source missing: {src}")
