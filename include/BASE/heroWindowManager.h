@@ -48,7 +48,7 @@ public:
     // --- methods ---
     short ConvertToHover(struct tag_message &);
     short BroadcastMessage(short, short, short, short);
-    void AddWindow(class heroWindow *, short, int);
+    void AddWindow(class heroWindow *, short, signed char);
     void RemoveWindow(class heroWindow *);
     short DoDialog(class heroWindow *, short (*)(struct tag_message &), int);
     void UpdateScreen(void);

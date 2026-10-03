@@ -762,3 +762,6 @@ rva	kind
 0x000CABD4	
 0x000CAC18	
 0x000CAC1C	
+0x0008C600	vtable
+0x0008C678	vtable
+0x0008C68C	vtable

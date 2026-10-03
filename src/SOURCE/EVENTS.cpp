@@ -859,12 +859,13 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 );
                 break;
             }
+            extern char* gArtifactEvent[];
             switch (cell->m_objectMetadata) {
                 case ARTIFACT_EVENT_MODE_PICKUP:
                     EventWindow(
                         EVENT_TEXT_CUSTOM,
                         NORMAL_DIALOG_TYPE_OK,
-                        gArtifactDesc[cell->m_objectIndex],
+                        gArtifactEvent[cell->m_objectIndex],
                         NORMAL_DIALOG_ARTIFACT,
                         cell->m_objectIndex,
                         NORMAL_DIALOG_NO_RESOURCE,

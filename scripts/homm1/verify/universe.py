@@ -53,9 +53,11 @@ def category(binding) -> str:
 
 
 def engine_universe(model=None) -> dict:
-    """{'real_fn','real_code','unmatched_fn','unmatched_code','categories'}.
+    """{'real_fn','real_code','unmatched_fn','unmatched_code','categories','sizes'}.
 
-    real_* is the match-% denominator (claimed + unclaimed targets); each
+    real_* is the match-% denominator (claimed + unclaimed targets); `sizes`
+    maps each target function (unit, name) to its carved size, so every
+    score weight and its denominator come from the same bytes; each
     category row is (label, fn, code, note). Sizes are the Model's extents
     (claimed size where a channel states one, else the census-derived span).
     """
@@ -65,6 +67,7 @@ def engine_universe(model=None) -> dict:
     counts: dict[str, int] = {}
     code: dict[str, int] = {}
     unmatched_fn = unmatched_code = 0
+    carved: dict[int, int] = {}
     for b in model.functions:
         cat = category(b)
         counts[cat] = counts.get(cat, 0) + 1
@@ -119,13 +122,18 @@ def engine_universe(model=None) -> dict:
                 continue
             if category(owner) == "target":
                 code["target"] = code.get("target", 0) - size
+                carved[index] = carved.get(index, 0) + size
                 if not owner.channel:
                     unmatched_code -= size
                 if key not in ("eh", "pad"):
                     counts["target"] = counts.get("target", 0) - 1
                     if not owner.channel:
                         unmatched_fn -= 1
+    sizes = {(b.unit.rsplit("/", 1)[-1], b.name): b.size - carved.get(i, 0)
+             for i, b in enumerate(model.functions)
+             if category(b) == "target" and b.name and b.unit}
     return {
+        "sizes": sizes,
         "real_fn": counts.get("target", 0),
         "real_code": code.get("target", 0),
         "unmatched_fn": unmatched_fn,

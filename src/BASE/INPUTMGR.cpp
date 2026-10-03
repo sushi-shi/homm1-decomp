@@ -206,6 +206,12 @@ inputManager::inputManager(void) {
     m_field_0x34f = 0;
 }
 
+// @early-stop 99.75: the inline strcpy saves its length in edx where retail
+// uses eax; nothing else differs. /O2 RA trace: the length is not a colouring
+// node (priority, this, the 0/1 constants and the scan temporary colour as in
+// retail). Probes: `return 1` moves it to ebp; an int priority, or swapping the
+// two stores of 1, keeps edx. Retail's heroWindowManager::Open also uses edx,
+// mouseManager's constructor eax.
 VA(0x0047c120, 0x85)
 short inputManager::Open(short priority) {
     memset(m_eventRing, 0, sizeof(m_eventRing));

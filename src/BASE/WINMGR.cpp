@@ -186,8 +186,11 @@ short heroWindowManager::BroadcastMessage(short type, short command, short widge
 }
 
 // Buka list insertion correspondence; retail keeps the requested layer as a short.
+// The open flags are a signed char, the type heroWindow::Open takes: the char-typed
+// argument range (no esi/edi/ebp) is what makes /O2 colour cur/window/layer/this as
+// esi/edi/ebx/ebp; an int parameter gives esi/edi/ebx/ebp to window/this/cur/layer.
 VA(0x00474170, 0xce)
-void heroWindowManager::AddWindow(heroWindow* window, short zOrder, int openFlags) {
+void heroWindowManager::AddWindow(heroWindow* window, short zOrder, signed char openFlags) {
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = 0;

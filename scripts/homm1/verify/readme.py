@@ -59,66 +59,47 @@ def _md_table(headers: list[str], aligns: str, rows: list[list[str]]) -> list[st
     return [row(headers), "| " + " | ".join(sep) + " |", *(row(r) for r in rows)]
 
 
-def collect_modules(umeas: dict[str, dict]):
-    """Per-module aggregates from the (EH-carved) unit measures, plus the
-    started-unit fuzzy-weighted sum + code."""
+def score_table(cur: dict, ledger: dict, eng: dict) -> tuple[dict, dict]:
+    """Per-module and whole-tree CUR/MAX/HIST exact counts and byte-weighted
+    fuzzy sums, all from one size per function (`eng["sizes"]`, the carved
+    extents whose total is the denominator `eng["real_code"]`). `ledger` is
+    the would-be banked ledger, so an edited function's MAX is its new CUR."""
     modules = unit_modules()
+    sizes = eng["sizes"]
     mods: dict[str, dict] = {}
-    started_fzw = 0.0
-    started_code = 0
-    for unit, m in umeas.items():
-        mod = modules.get(unit, "?")
-        tc = int(m.get("total_code") or 0)
-        fz = float(m.get("fuzzy_match_percent") or 0.0)
-        a = mods.setdefault(mod, {"tc": 0, "mc": 0, "fzw": 0.0, "tf": 0,
-                                  "mf": 0, "units": 0, "cw": 0.0})
-        a["tc"] += tc
-        a["mc"] += int(m.get("matched_code") or 0)
-        a["fzw"] += fz * tc
-        a["tf"] += int(m.get("total_functions") or 0)
-        a["mf"] += int(m.get("matched_functions") or 0)
-        a["units"] += 1
-        started_fzw += fz * tc
-        started_code += tc
-    return mods, started_fzw, started_code
-
-
-def score_weights(cur: dict, ledger: dict, sizes: dict,
-                  mods: dict, modules: dict) -> dict:
-    """Fill each module's MAX exact count (`mx`) and MAX churn weight (`cw`,
-    sum (MAX - CUR) * bytes), and return the whole-tree CUR/MAX/HIST exact
-    counts and churn weights. `ledger` is the would-be banked ledger, so an
-    edited function's MAX is its new CUR."""
-    for a in mods.values():
-        a["cw"], a["mx"] = 0.0, 0
-    tot = {"cur": 0, "max": 0, "hist": 0, "cw": 0.0, "hw": 0.0}
+    tot = {"cur": 0, "max": 0, "hist": 0, "cw": 0.0, "mw": 0.0, "hw": 0.0}
     for key, pct in cur.items():
         row = ledger.get(key) or {}
         mx = max(row.get("best", pct), pct)
         hs = max(row.get("hist", mx), mx)
         size = sizes.get(key, 0)
+        a = mods.setdefault(modules.get(key[0], "?"),
+                            {"units": set(), "tf": 0, "mx": 0, "tc": 0, "mw": 0.0})
+        a["units"].add(key[0])
+        a["tf"] += 1
+        a["mx"] += mx >= 100.0
+        a["tc"] += size
+        a["mw"] += mx * size
         tot["cur"] += pct >= 100.0
         tot["max"] += mx >= 100.0
         tot["hist"] += hs >= 100.0
-        tot["cw"] += (mx - pct) * size
-        tot["hw"] += (hs - pct) * size
-        mod = modules.get(key[0], "?")
-        if mod in mods:
-            mods[mod]["mx"] += mx >= 100.0
-            mods[mod]["cw"] += (mx - pct) * size
-    return tot
+        tot["cw"] += pct * size
+        tot["mw"] += mx * size
+        tot["hw"] += hs * size
+    return mods, tot
 
 
-def render_block(mods: dict, started_fzw: float, eng: dict, tot: dict) -> str:
+def render_block(cur: dict, ledger: dict, eng: dict) -> str:
     """The README score block (between the markers): everything at MAX, plus
     one CUR/MAX/HIST line."""
+    mods, tot = score_table(cur, ledger, eng)
     tot_fn, tot_code = eng["real_fn"], eng["real_code"]
 
     rows = []
     for mod in sorted(mods, key=lambda k: -mods[k]["tf"]):
         a = mods[mod]
-        fz = (a["fzw"] + a["cw"]) / a["tc"] if a["tc"] else 0.0
-        rows.append([f"`{mod}`", f"{a['units']}",
+        fz = a["mw"] / a["tc"] if a["tc"] else 0.0
+        rows.append([f"`{mod}`", f"{len(a['units'])}",
                      f"{a['mx']:,} / {a['tf']:,} ({_pct(a['mx'], a['tf']):.1f}%)",
                      f"{fz:.1f}%"])
     if eng["unmatched_fn"]:
@@ -127,8 +108,8 @@ def render_block(mods: dict, started_fzw: float, eng: dict, tot: dict) -> str:
     table = _md_table(["Module", "Units", "Functions exact", "Fuzzy"],
                       "lrrr", rows)
 
-    def fuzzy(extra: float) -> float:
-        return (started_fzw + extra) / tot_code if tot_code else 0.0
+    def fuzzy(weight: float) -> float:
+        return weight / tot_code if tot_code else 0.0
 
     from homm1.core import data_matching
     mode_note = ("_Comparison mode: strict data references._" if data_matching.enabled()
@@ -143,15 +124,15 @@ def render_block(mods: dict, started_fzw: float, eng: dict, tot: dict) -> str:
         "",
         f"**{tot['max']:,} / {tot_fn:,} functions exact "
         f"({_pct(tot['max'], tot_fn):.2f}%) &middot; "
-        f"{fuzzy(tot['cw']):.2f}% fuzzy.**",
+        f"{fuzzy(tot['mw']):.2f}% fuzzy.**",
         "",
         mode_note,
         "",
         *table,
         "",
         f"_CUR / MAX / HIST: {tot['cur']:,} / {tot['max']:,} / "
-        f"{tot['hist']:,} exact &middot; {fuzzy(0.0):.2f}% / "
-        f"{fuzzy(tot['cw']):.2f}% / {fuzzy(tot['hw']):.2f}% fuzzy "
+        f"{tot['hist']:,} exact &middot; {fuzzy(tot['cw']):.2f}% / "
+        f"{fuzzy(tot['mw']):.2f}% / {fuzzy(tot['hw']):.2f}% fuzzy "
         "(defined in AGENTS.md). Totals cover every in-`.text` "
         "reconstruction target; generated and library code is excluded._",
         RM_END,
