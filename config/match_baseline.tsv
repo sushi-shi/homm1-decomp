@@ -34,7 +34,7 @@
 # [data_matching]	false
 # [units]	unit	n_functions	matched
 ADVMGR	82	72
-AI	13	8
+AI	13	10
 ARMY	28	21
 ARMYGRP	11	11
 BACKDROP	6	6
@@ -186,12 +186,12 @@ ADVMGR	?UpdateScreen@advManager@@QAEXCC@Z	100.0000	100.0000	4	ccc12babb2ca	0x29d
 ADVMGR	?UpdateTownLocators@advManager@@QAEXCC@Z	100.0000	100.0000	5	1887c213bc4b	0x2c72e	100.0000	
 ADVMGR	?ViewPuzzle@advManager@@QAEXXZ	100.0000	99.1719	3	6380a4addd24	0x30d05	100.0000	
 ADVMGR	?ViewWorld@advManager@@QAEXCCC@Z	100.0000	100.0000	4	db11d5d094c2	0x31507	100.0000	
-AI	?AICheckRetreat@combatManager@@QAEHXZ	100.0000	86.4974	5	8d1b5dfc2771	0x64520	100.0000	
+AI	?AICheckRetreat@combatManager@@QAEHXZ	100.0000	100.0000	5	8d1b5dfc2771	0x64520	100.0000	
 AI	?AttemptAdjacentAttack@combatManager@@QAECPAVarmy@@@Z	100.0000	100.0000	3	1969b77591e0	0x65da7	100.0000	
 AI	?AttemptAttack@combatManager@@QAECPAVarmy@@CF@Z	100.0000	100.0000	3	312b172e78be	0x65bf7	100.0000	
 AI	?DoCompAI@combatManager@@QAEXC@Z	100.0000	100.0000	2	617c7acda9fd	0x64ca3	100.0000	
 AI	?GetBestArmy@combatManager@@QAEFCF@Z	100.0000	100.0000	2	f8f2a532225a	0x658cd	100.0000	
-AI	?GetClosestArmy@combatManager@@QAEFPAVarmy@@CF@Z	100.0000	99.8461	2	44bf9d53f116	0x65a33	100.0000	
+AI	?GetClosestArmy@combatManager@@QAEFPAVarmy@@CF@Z	100.0000	100.0000	2	44bf9d53f116	0x65a33	100.0000	
 AI	?GetFlyerMask@combatManager@@QAEFC@Z	100.0000	100.0000	3	f4bdeaacbc02	0x6573b	100.0000	
 AI	?GetShooterMask@combatManager@@QAEFC@Z	100.0000	99.9649	2	285920b84ef4	0x65671	100.0000	
 AI	?GetStrength@combatManager@@QAEKCF@Z	100.0000	99.7736	2	3895a7839066	0x65b3c	100.0000	
