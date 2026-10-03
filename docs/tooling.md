@@ -23,7 +23,7 @@ homm1 build verify
 ```
 
 `match UNIT` is the selected-unit edit loop. Use `build` for cross-unit changes,
-`build verify` for final gates, and `test` after tooling changes. Source uses
+and `build verify` for final gates. Source uses
 absolute VAs; the model uses RVAs. `VA_DECL` identifies a declaration without
 claiming a body. See [build details](build-system.md) and the [command map](tooling-map.md).
 

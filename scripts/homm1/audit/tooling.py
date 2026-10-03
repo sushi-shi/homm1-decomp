@@ -94,6 +94,10 @@ def whole_tree(donor: Path):
         "nix/patches/vostok-iat-in-rdata.patch": ("inapplicable", "HoMM1 imports are modeled from its own .idata; donor IAT-in-rdata layout differs"),
         "nix/patches/vostok-text-data-symbols.patch": ("deferred", "Require HoMM1 code-section data evidence before changing the pinned delinker"),
         "docs/todos/rule-exceptions.tsv": ("inapplicable", "Donor rule exceptions are not HoMM1 authorizations"),
+        **{doc: ("inapplicable", "Redundant documentation trimmed by the user")
+           for doc in ("docs/compiler-detection.md", "docs/compiler-flags.md",
+                       "docs/data-attribution.md", "docs/relocations.md",
+                       "docs/todos/README.md")},
         "docs/todos/syntactic-recovery.tsv": ("adapted", "HoMM1 derives build/match/syntactic-recovery.tsv; no foreign task rows imported"),
     }
     rows = []
