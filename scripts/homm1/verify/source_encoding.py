@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from homm1.core.usage import logged
 
-import sys
 
 from homm1.verify.srcscan import blank_comments, rel, source_files
 

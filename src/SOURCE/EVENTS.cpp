@@ -1252,7 +1252,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
 }
 
 // @early-stop 97.31: m_mapSounds[x][y] (test and store) - retail adds the
-// column term first (mov eax,y; ecx=x*72; add eax,ecx). vc4trace sortnode:
+// column term first (mov eax,y; ecx=x*72; add eax,ecx). sortnode model:
 // the column mul 4(load y, 1) weighs 0x47 against the row's 4(load x, 72)
 // 0x53, so VC4 emits the row first for every handle state (x/y/gpGame/
 // locals, whole-TU and per-function shifts, all slot-preserving local

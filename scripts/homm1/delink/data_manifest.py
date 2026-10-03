@@ -823,7 +823,6 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
     site (src_data_compgen) or a reviewed data_compgen row - bridges to a
     still-unaddressed member when extent and bytes agree.
     """
-    import struct
 
     member_re, prefix, provenance, noun = _LITERAL_FAMILIES[literal]
     img = retail()

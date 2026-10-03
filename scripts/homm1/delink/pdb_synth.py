@@ -863,10 +863,11 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     library_rvas: set[int] = set()
     deferred_thunks: dict[int, str] = {}
     nlib = 0
+    ilt_end = ilt_band_end()
     for b in model.functions:
         if b.channel != "functions_static_libs" or b.rva in names_map:
             continue
-        if b.kind == "thunk" and b.rva < ILT_BAND_END:
+        if b.kind == "thunk" and b.rva < ilt_end:
             deferred_thunks[b.rva] = b.name
             continue
         names_map[b.rva] = (b.name, "", 0)

@@ -51,7 +51,6 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
 
-from homm1.compare.canonicalize import canonicalize_coff
 from homm1.permute.tu_state_metrics import read_coff
 from homm1.permute.topology import (
     compare_topology, function_topology, topology_rank,

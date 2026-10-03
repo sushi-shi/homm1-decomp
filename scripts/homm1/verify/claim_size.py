@@ -19,7 +19,6 @@ from homm1.core.usage import logged
 
 import bisect
 import re
-import sys
 
 from homm1.core.paths import RETAIL
 from homm1.core.pe import image

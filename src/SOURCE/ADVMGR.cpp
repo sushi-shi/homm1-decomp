@@ -2517,7 +2517,7 @@ i32 advManager::GetCloudLookup(i32 x, i32 y) {
 // builds the result in eax (mov eax,ecx after the zero-extended byte load,
 // then loads the global into cx); we or into ecx. 2 bytes, no other diff.
 // Types match retail (byte m_tileIndex at +0 of the local cell0, unsigned
-// 16-bit global: zero-extending loads); vc4trace: no handle state of
+// 16-bit global: zero-extending loads); C1 trace: no handle state of
 // s_drawGroundTile/cell0 changes it, solver distance 5 in every tier, no
 // TU-state trial closes it. `a = a | b`, `a = b | a`, casts of the byte
 // (unsigned short, short, int, unsigned) and of the result, and static

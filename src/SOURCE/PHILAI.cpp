@@ -3502,7 +3502,7 @@ hero* gEventHero;
 // fv*300 + gold*2500.0f first and keeps (fv*100 + m_artifactValue) as a unit;
 // VC4 here reassociates the float chain (m_artifactValue moves next to the
 // first term, gold*2500.0f after fv*300). Float reassociation is outside
-// the vc4trace replay; the solver's 64 TU shifts (32 classes) never beat
+// a C1/C2 trace replay; the solver's 64 TU shifts (32 classes) never beat
 // this state and TU-state trials stay at 99.773. Regroupings, swapped
 // inner order, double/float casts of either term and paired grouping of
 // the tail do not reproduce it. One handle-state cmp operand order
