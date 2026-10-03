@@ -62,8 +62,8 @@ H1_ENUM_END(MessageModifier)
 // clang-format on
 
 #pragma pack(push, 1)
-// Retail reaches every word directly off the message (evidence/
-// message-flat-layout.md); a named payload level changes VC4's operand order.
+// Retail reaches every word directly off the message (the hover filters load
+// m_lastHoverId first); a named payload level changes VC4's operand order.
 // The anonymous unions only name the per-message-type views of each word.
 struct tag_message {
     H1_ENUM_STORAGE(MessageType, short) type;

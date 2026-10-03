@@ -5,7 +5,7 @@ walks those buckets in ascending order and each bucket newest-first, so source
 names affect frame layout even though the names never reach machine code.
 
 Adapted from the HoMM2 matcher model: HoMM1's pinned VC4.0 shifts by seven
-and buckets the unfolded hash (evidence/od-local-slot-hash.md).  It lives in
+and buckets the unfolded hash (measured against retail /Od frames).  It lives in
 ``core`` because both interactive frame inspection and source-layout searches
 consume it.
 """

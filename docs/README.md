@@ -10,8 +10,9 @@
   [cleanliness](cleanliness-metrics.md), [markers](comment-markers.md),
   [constants work list](constants.md), [enum reuse review](enum-reuse.md).
 - [Inheritance and validation](tooling-inheritance.md),
-  [retail evidence](../evidence/README.md), [script maintenance](../scripts/README.md).
+  [script maintenance](../scripts/README.md).
 
 Retail facts are under `config/retail`; build contracts under `config`;
-generated state under `build`; research under `evidence`. Documentation is
+generated state under `build`; reusable compiler mechanisms under
+`docs/patterns`. Documentation is
 not a runtime input or a substitute for current reports.

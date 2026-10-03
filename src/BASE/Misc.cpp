@@ -62,7 +62,7 @@ void LogInt(char* label, int value) {
         OutputDebugStringA(logText);
 }
 
-// Prior LZHUF source uses this two-long LogStr overload (evidence/lzhuf-provenance.md).
+// Prior LZHUF source uses this two-long LogStr overload.
 VA(0x00419b4a, 0x8a)
 void LogStr(char* label, long value1, long value2) {
     char logText[MISC_LOG_VALUE_TEXT_CAPACITY];

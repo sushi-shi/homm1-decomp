@@ -49,7 +49,7 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
   normalization and inline-helper hash propagation remain deferred.
 - VC4 inline EH groups stay within their full owner; packed groups retain
   separate records. Resolved offsets, handler and FuncInfo/map identities remain
-  protected. Unsupported continuations fail closed. See [retail controls](../evidence/vc4-inline-eh.md).
+  protected. Unsupported continuations fail closed.
 - Comparison resolves OLDNAMES references as LINK does. `runtime_aliases`
   reads the pinned OLDNAMES.LIB weak externals and LIBCMT label aliases, and
   `canonicalize_coff` names each undefined alias reference by its runtime

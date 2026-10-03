@@ -1,9 +1,0 @@
-# FINDPATH Clear
-
-Initial unnamed24820 ends24843 (35bytes); remaining13bytes are alignment and not claimed. Buka FINDPATH.cpp73–78 and PoL Clear supply zero queue/cells, reset path length and queue count. HoMM1 has inline cell storage instead of donor heap. Retail zeroes0x2400bytes atthis+14 and0xb640bytes atthis+2414, then zeroswords+8 and+0. Actual pinned cpp_o2 compile reaches100 with the two ordinary memset calls lowered to repstos, no fake storage or assembly.
-
-The real packed nine-byte searchNode record is retained from donor searchArray.h: coordinates, distance, four one-bit flags/four-bit direction, and four-byte union of monster/previousterrain or value/previouscoordinate members. Neither branch contains padding. Queue1024records and cells5184records exactly account for the proven arrays. Prefix five ordinary dwords correspond to donor queueCount/maxQueueCount/pathLength/specialTargetX/Y. Names follow donor except m_cells, an inferred name for HoMM1 inline storage replacing heap storage. Current header models the needed genuine prefix; terminal path-direction storage begins+da54 (retail249e7) and is not yet recovered/admitted. Do not use this partial declaration for sizeof/allocations/arraystrides before completing that real tail.
-
-The already inspected neighboring24950 routine inlines exactly Clear's two-array/reset sequence24980..249a1, corroborating ordinary helper boundaries. No new claim of that routine is made.
-
-Final full build report preserves Clear100 and improves unchanged QuickDistance24850 to100 under actual intended three-function TU composition; CalcTerrainCost24900 becomes94.4000 (unit match had97.20 but full report is authoritative for this checkpoint). No fresh REGRESS/RESET; own-source gates pass; private snapshot board/include-order/widget debts remain. No data coverage or compiler-generated/CRT coverage is claimed. No new target follows the user wind-down.
