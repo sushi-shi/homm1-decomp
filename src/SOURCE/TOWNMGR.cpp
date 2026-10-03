@@ -2024,8 +2024,8 @@ void townManager::GetCategoryStats(
 VA(0x0040db41, 0xea)
 void townManager::SortStats(long* const stats, signed char* const order) {
     long temp;
-    short secondPlayer;
     short firstPlayer;
+    short secondPlayer;
     signed char tempColor;
 
     for (firstPlayer = 0; firstPlayer < gpGame->m_playerCount - 1; firstPlayer++) {

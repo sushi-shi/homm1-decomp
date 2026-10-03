@@ -208,8 +208,8 @@ VA(0x004039d6, 0x592)
 BOOL DDAppPaint(void* window, void* paintDC) {
     int ySrc;
     int height;
-    int width;
     int x;
+    int width;
     PAINTSTRUCT ps;
     POINT pt;
 
@@ -852,12 +852,12 @@ BOOL WGAppPaint(void* window, void* paintDC) {
     int srcX;
     int iSrcY;
     int dstW;
+    int destX;
+    int nDestY;
     RECT rect;
     int destHeight;
     int padding;
     PAINTSTRUCT paintStruct;
-    int destX;
-    int nDestY;
     char unused;
 
     unused = 0;

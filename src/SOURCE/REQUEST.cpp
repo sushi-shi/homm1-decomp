@@ -553,13 +553,13 @@ char* cFRDummy = "";
 // Buka 2.1 DoKnob with HoMM1's ten-row list and 156-pixel gutter.
 VA(0x004499a8, 0x2b2)
 void fileRequester::DoKnob(void) {
-    short offset;
     int lastTop;
     short index;
     double scale;
+    tag_message event;
     short x;
     short my;
-    tag_message event;
+    short offset;
 
     gpMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;

@@ -178,9 +178,9 @@ int playerData::NumOfGivenArtifact(int artifact) {
 // ten) and skips player 0's hint.
 VA(0x0043933d, 0x386)
 void ComputeUALoc(int player) {
-    int y;
     int tries;
     int x;
+    int y;
     int heading;
     int numObelisks;
 
@@ -389,8 +389,8 @@ void GenerateStandardFileName(char* source, char* destination) {
     char* extension;
     int indexOut;
     int idx;
-    char character;
     int size;
+    char character;
 
     extension = FindLastToken(source, '.');
     if (!extension) {
@@ -1522,9 +1522,9 @@ void game::RandomizeEvents(void) {
     short i;
     short j;
     signed char id;
+    int siteNum;
     short x;
     mapCell* cell;
-    int siteNum;
     signed char obeliskId;
 
     obeliskId = 1;
@@ -3743,8 +3743,8 @@ void game::ProcessRandomObjects(int castlesOnly) {
     mapCell* cellPtr;
     int lowFV;
     int y;
-    int i;
     int x;
+    int i;
     int highFV;
 
     for (i = 0; i < RESOURCE_COUNT; i++)
