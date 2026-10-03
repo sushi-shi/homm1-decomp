@@ -41,8 +41,7 @@ named for its rva - AND the retail image holds those bytes at the pinned
 address. A TU that compiles under cl but yields no IR is an ERROR: silently
 contributing zero labels shrinks every denominator.
 
-Vendored TUs (no rva.h macro in the source) are SKIPPED - their claims are
-the functions_zlib/data_zlib provider tables, not extraction.
+Vendored TUs (no rva.h macro in the source) are SKIPPED: they carry no claims.
 """
 
 from __future__ import annotations
@@ -67,7 +66,7 @@ from homm1.tool import clang
 BASE_OBJS = BUILD / "objdiff/base"
 
 # Presence test ONLY (never extraction): a TU with no rva.h macro at all is a
-# vendored TU whose claims are the functions_zlib/data_zlib tables - skip it.
+# vendored TU with no claims - skip it.
 ANN_DECL_RE = re.compile(r"^decl-va:(0x[0-9a-fA-F]+)$")
 LABELED_TU_RE = re.compile(r"\b(?:VA_DECL|VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
 DATA_MACRO_RE = re.compile(r"\bDATA\s*\(\s*(0x[0-9a-fA-F]+)\s*\)")

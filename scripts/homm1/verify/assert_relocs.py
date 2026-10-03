@@ -12,7 +12,7 @@ Ground truth is read, never guessed (the ported design): the retail-side
 value comes from the IMAGE at each delinked reloc site's rva (DIR32 = the
 stored VA, REL32 = site+4+disp), thunk-chased - so delinker naming артефacts
 cannot enter. Base-side names resolve through the Model (winners + aliases,
-static-libs and zlib labels included); `??_C@` string literals resolve by
+static-libs labels included); `??_C@` string literals resolve by
 CONTENT against the bytes at the retail-referenced address; COMMONs, weak
 externals and own-obj definitions always link and are never FAKE.
 

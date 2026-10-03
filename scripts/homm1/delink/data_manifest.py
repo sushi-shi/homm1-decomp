@@ -61,7 +61,7 @@ STORAGE = {"rdata": "rdata", "data-initialized": "data",
 
 #: Data channels candidates() enrolls. data_vtables is label-only (its rows
 #: enroll through vtable_rows, against the candidate COMDATs).
-_ENROLL_CHANNELS = ("src", "data_compgen", "data_zlib", "data_static_libs",
+_ENROLL_CHANNELS = ("src", "data_compgen", "data_static_libs",
                     "src_data_compgen")
 
 #: `IMAGE_SCN_LNK_COMDAT`.
