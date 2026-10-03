@@ -342,8 +342,8 @@ VA(0x0044c264, 0x7be)
 void combatManager::GenerateMap(void) {
     short x;
     short i;
-    short count;
     short y;
+    short count;
     int randomRow;
     int randomCol;
     short armyCount;
@@ -1328,8 +1328,8 @@ int combatManager::ExperienceValueOfStack(signed char side) {
 // Buka CMBTMGR.cpp ResetHitByCreature.
 VA(0x0044f4df, 0x78)
 void combatManager::ResetHitByCreature(void) {
-    int i;
     int j;
+    int i;
 
     for (i = 0; i < COMBAT_SIDE_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++)
