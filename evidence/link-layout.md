@@ -336,8 +336,8 @@ has claimed identities. Where it lies is the class.
 - **Definition order or storage class.** SPELLS has an extra 4-byte variable
   before `spelmous.mse`. PHILAI has the known interleave of
   `bSVSearchArrayInUse`. ADVMGR has an extra 16 zero bytes after
-  `giCheatSeq`. In GAME, `gbShowMapInfo` is followed by variables instead of
-  `%s\n`. CMBTMGR's `cCombatBkgNames` pointer table sits where retail has
+  `giCheatSeq`. GAME's identities (`gbGameOver`, `gbNewGameSettingsSaved`,
+  `giMonType`, `gbShowMapInfo`) are in a different order in the candidate. CMBTMGR's `cCombatBkgNames` pointer table sits where retail has
   `PREBATTL.82M`. In KB, `gMinExpForLevel` sits where retail has a byte table
   (+0x151a). REMOTE's variables after `iBaudBits` differ. kbwin has zero
   variables where retail has `Heroes`.
