@@ -876,32 +876,49 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
             else:
                 stranded.append(member)
 
-        # A member no paired function references sits between two that are
-        # addressed: when both neighbours (in cl's own section order) were
-        # placed by the same rva - offset delta, the run between them is laid
-        # out as retail laid it out, and the member's bytes at that delta
-        # re-prove it. Nothing is extrapolated past the last proven member.
+        # Members no paired referrer addresses sit in runs between members
+        # that are addressed. A run is laid out as retail laid it out when one
+        # of its two neighbours' rva - offset deltas re-proves EVERY member's
+        # bytes and the other delta does not (a datum retail interleaves at
+        # one end of the run shifts only one side). Nothing is extrapolated
+        # past the last proven member.
         placed = {r["member"]: r["rva"] for r in rows
                   if r["object"] == f"{stem}.c" and r["member"] in pool}
         runs: dict[int, list[tuple[int, str]]] = defaultdict(list)
         for member, (_storage, off, _want, _size) in pool.items():
             runs[section_of[member]].append((off, member))
+        stranded_set = set(stranded)
         unplaced = []
-        for member in stranded:
-            storage, off, want, size = pool[member]
-            run = sorted(runs[section_of[member]])
-            before = [(o, m) for o, m in run if o < off and m in placed]
-            after = [(o, m) for o, m in run if o > off and m in placed]
-            if before and after:
-                (o_before, m_before), (o_after, m_after) = before[-1], after[0]
-                delta = placed[m_before] - o_before
+
+        def proves(run, delta):
+            for member in run:
+                _st, off, want, size = pool[member]
                 at = img.off(off + delta)
-                if (delta == placed[m_after] - o_after and at is not None
-                        and img.data[at:at + size] == want):
-                    emit(member, off + delta, storage, size, want,
-                         f"{provenance}-interpolated")
-                    continue
-            unplaced.append(member)
+                if at is None or img.data[at:at + size] != want:
+                    return False
+            return True
+
+        for ordered in runs.values():
+            ordered.sort()
+            gap, before = [], None
+            for off, member in ordered:
+                if member in placed:
+                    if gap and before is not None:
+                        deltas = {placed[before[1]] - before[0],
+                                  placed[member] - off}
+                        good = [d for d in deltas if proves(gap, d)]
+                        if len(good) == 1:
+                            for m in gap:
+                                storage, _o, want, size = pool[m]
+                                emit(m, pool[m][1] + good[0], storage, size,
+                                     want, f"{provenance}-interpolated")
+                            stranded_set -= set(gap)
+                    gap, before = [], (off, member)
+                elif member in stranded_set:
+                    gap.append(member)
+                else:               # withheld for its own reason: a run edge
+                    gap, before = [], None
+        unplaced = [m for m in stranded if m in stranded_set]
         stranded = unplaced
 
         taken = {r["rva"] for r in rows}
