@@ -24,7 +24,7 @@ _Comparison mode: code first; data-reference identities and addends are deferred
 | `BASE`   |    31 | 231 / 237 (97.5%) |  99.6% |
 | `lzhuf`  |     2 |  12 / 12 (100.0%) | 100.0% |
 
-_CUR / MAX / HIST: 894 / 997 / 997 exact &middot; 100.13% / 100.59% / 100.62% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._
+_CUR / MAX / HIST: 901 / 997 / 997 exact &middot; 100.20% / 100.59% / 100.62% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._
 <!-- match-score:end -->
 
 ## Quickstart
