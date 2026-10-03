@@ -3,28 +3,28 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/executive.h>
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
+#include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <BASE/soundmgr.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <H1/Macros.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/smack.h>
 #include <SOURCE/smackManager.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

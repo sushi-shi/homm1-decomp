@@ -3,7 +3,14 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <BASE/bitmap.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
+#include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
@@ -29,8 +36,9 @@ short army::CanFit(short* hex) {
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         candidateHex = GetAdjacentCellIndex(
             *hex,
-            static_cast<signed char>(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_EAST
-                                                        : COMBAT_DIRECTION_WEST)
+            static_cast<signed char>(
+                m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_EAST : COMBAT_DIRECTION_WEST
+            )
         );
         if (ValidHex(candidateHex))
             cell = &gpCombatManager->m_hexCells[candidateHex];
@@ -43,8 +51,9 @@ short army::CanFit(short* hex) {
         } else {
             candidateHex = GetAdjacentCellIndex(
                 *hex,
-                static_cast<signed char>(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_WEST
-                                                            : COMBAT_DIRECTION_EAST)
+                static_cast<signed char>(
+                    m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST
+                )
             );
             if (ValidHex(candidateHex))
                 cell = &gpCombatManager->m_hexCells[candidateHex];

@@ -185,7 +185,7 @@ H1_ENUM_CONST_END(SaveFileConstant)
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
 // owner at +1 and the type at +2, as in HoMM2's mineRecord.
 #pragma pack(push, 1)
-     struct mineRecord {
+struct mineRecord {
     signed char id;
     signed char owner;
     signed char type;
@@ -228,7 +228,7 @@ H1_ENUM_CONST_END(MapTownRecordConstant)
 // SetupTowns and RandomizeTown read a town's map-extra record: custom flag,
 // owner, buildings, mage-guild level and garrison.
 #pragma pack(push, 1)
-        struct mapTownExtra {
+struct mapTownExtra {
     signed char customized;
     signed char owner;
     short buildings;
@@ -438,7 +438,19 @@ public:
     void WeeklyRecruitSite(class mapCell* cell);
     void WeeklyGenericSite(class mapCell* cell);
     void PerMonth(void);
-    void ConvertObject(int left, int top, int right, int bottom, int oldTileset, int oldFirstIndex, int oldLastIndex, int newTileset, int newFirstIndex, int oldTrigger, int newTrigger);
+    void ConvertObject(
+        int left,
+        int top,
+        int right,
+        int bottom,
+        int oldTileset,
+        int oldFirstIndex,
+        int oldLastIndex,
+        int newTileset,
+        int newFirstIndex,
+        int oldTrigger,
+        int newTrigger
+    );
     // HoMM1 retail: byte x, y and castle flag (ret 0xc).
     void RandomizeTown(signed char, signed char, signed char);
     // HoMM1 retail: byte x and y (ret 8).
@@ -527,5 +539,25 @@ short ViewArmyHandler(struct tag_message&);
 int GetBaseScore(int);
 extern int gbGameOver;
 extern int giEndSequence;
+// SaveGame files the current player through this byte.
+extern signed char gSaveCurPlayer;
+// NewGame remembers the last new-game settings for the next setup screen.
+extern signed char gcSavedDifficulty;
+extern signed char gcSavedPlayerTypes[];
+extern signed char gbSavedKingOfTheHill;
+extern signed char gcSavedCrest;
+extern signed char gRandomTownTypes[4];
+extern short giMineTypeCount[];
+extern unsigned long iLastSeed;
+int SGenRand(void);
+int SRandom(int, int);
+void SIncRandomize(int, int);
+void SRand(int);
+// GetMap raises gbShowMapInfo around its .MAP requester and owns the
+// reqextra.bin side window the requester fills.
+extern signed char gbShowMapInfo;
+extern heroWindow* gpReqExtraWindow;
+extern char gcCurMapName[];
+extern signed char gbDismissArmy;
 
 #endif // HOMM1_SOURCE_GAME_H

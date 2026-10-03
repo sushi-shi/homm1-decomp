@@ -15,13 +15,19 @@
 #include <string.h>
 
 #include <BASE/Misc.h>
-#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/mouseManager.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/KB.h>
-#include <H1/All.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
+#include <BASE/message.h>
+#include <BASE/miscwin.h>
+#include <BASE/soundManager.h>
+#include <H1/Macros.h>
+#include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 // donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order

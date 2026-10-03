@@ -9,13 +9,14 @@
 #include <BASE/MAKEFILEID.h>
 #include <BASE/MIDIWrap.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
 #include <BASE/palette.h>
 #include <BASE/resource.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <BASE/tileset.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/X_GLOBAL.h>
+#include <SOURCE/kbwin.h>
 
 #include <io.h>
 #include <stdio.h>

@@ -2,13 +2,16 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
+#include <BASE/bitmap.h>
 #include <BASE/display.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MOUSEMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/mouseManager.h>
+#include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <stdlib.h>

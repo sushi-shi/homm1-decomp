@@ -378,9 +378,40 @@ public:
     void Blur(int redAdjust, int greenAdjust, int blueAdjust);
     void ResetBoltAngle(struct SBolt* bolt);
     void DrawBolt(struct SBolt* bolt, int stepCount);
-    void AddBolt(struct SBolt* bolt, int startX, int startY, int endX, int endY, int branchDistance, int startWidth, int endWidth, int colorMode, int minAngle, int maxAngle, int angleDistance, int forceAngle);
-    void
-    DoBolt(int managePointer, int startX, int startY, int endX, int endY, int branchDistance, int branchLength, int startWidth, int endWidth, int colorMode, int minAngle, int maxAngle, int angleDistance, int unusedParameter, int forceAngle, int frameDelay, int brightenPalette);
+    void AddBolt(
+        struct SBolt* bolt,
+        int startX,
+        int startY,
+        int endX,
+        int endY,
+        int branchDistance,
+        int startWidth,
+        int endWidth,
+        int colorMode,
+        int minAngle,
+        int maxAngle,
+        int angleDistance,
+        int forceAngle
+    );
+    void DoBolt(
+        int managePointer,
+        int startX,
+        int startY,
+        int endX,
+        int endY,
+        int branchDistance,
+        int branchLength,
+        int startWidth,
+        int endWidth,
+        int colorMode,
+        int minAngle,
+        int maxAngle,
+        int angleDistance,
+        int unusedParameter,
+        int forceAngle,
+        int frameDelay,
+        int brightenPalette
+    );
     int GetNextChainLightningTarget(class army* source, int requireWorks);
     void ChainLightning(int targetHex, int spellPower);
     void VaporizeCreature(int side, int armyIndex);
@@ -392,7 +423,12 @@ public:
     void Resurrect(int spell, int targetHex, int spellPower);
     int SpaceForElementalExists(void);
     void ShowSpellCastFailure(class army*, int);
-    void ModifyDamageForArtifacts(long int* damage, int spell, class hero* attacker, class hero* defender);
+    void ModifyDamageForArtifacts(
+        long int* damage,
+        int spell,
+        class hero* attacker,
+        class hero* defender
+    );
     void Earthquake(void);
     void ShowSpellMessage(int castByCreature, int spell, class army* target);
     signed char ValidHexToStandOn(int);
@@ -491,7 +527,14 @@ public:
     void TestRaiseDoor(void);
     int InCastle(int hex);
     int ShotIsThroughWall(int side, int sourceHex, int targetHex);
-    void ShootMissile(int sourceX, int sourceY, int targetX, int targetY, float* directionAngles, class icon* missileIcon);
+    void ShootMissile(
+        int sourceX,
+        int sourceY,
+        int targetX,
+        int targetY,
+        float* directionAngles,
+        class icon* missileIcon
+    );
     void CombatSystemOptions(void);
     int AICheckRetreat(void);
     // HoMM1 retail 0x00464ca3: byte side (ret 4).
@@ -524,13 +567,9 @@ short HandleCastSpell(struct tag_message&);
 // HandleCastSpell: the hex under the spell pointer (0x0048f2b0) and the
 // teleport second-click state (0x0048f28c).
 extern signed char bInTeleportGetDest;
-// The loaded combat effect icon's file id (0x004c6d64).
-extern short gCurLoadedSpellFileId;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
 // Stale alias of giSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
 extern short giCombatFxFrame;
-// Spell-book hover help lines (0x00493a78).
-extern char* cSpellHelp[];
 // Captured artifacts shown page by page on the victory window.
 extern signed char iMaxTransferArtifacts;
 extern int iCurTransferArtifact;
@@ -557,24 +596,10 @@ H1_ENUM_BEGIN(CombatMessageText)
     COMBAT_TEXT_NO_SHOTS = 8,
     COMBAT_TEXT_COUNT = 9
 H1_ENUM_END(CombatMessageText)
-// Command help lines for CombatMessage(short) (0x00493b38).
-extern char* cCombatMessage[];
-// Combat help lines for the auto-combat, skip and other controls.
-extern char* cCombatHelp[];
-// ProcessCombatMsg records the hero casting from the combat screen.
-extern int giCurGeneral;
 // Fallback net player for a combat action broadcast (0x004c6710).
 // Stale alias of giHostGamePos (0x4c6710): unreferenced, kept so later symbol handles stay put.
 extern int giRemoteDefaultPlayer;
-// Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
-extern signed char gCombatAdjacency[45][6];
-// Victory/defeat window texts (0x00493e48).
-extern char* cBattleResults[];
 extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
-// CheckHandleNet hands combat packets back while a battle is running.
-extern signed char gbInCombat;
-// Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
-// ground and obstacle tables are in X_GLOBAL.h.
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

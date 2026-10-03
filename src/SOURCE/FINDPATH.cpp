@@ -11,6 +11,7 @@
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/PATH.h>
+#include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
@@ -144,8 +145,9 @@ short searchArray::FindCombatPath(
     path = m_directions;
     PushCombatPoint(
         sourceHex,
-        static_cast<signed char>(unit->m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_WEST
-                                                         : COMBAT_DIRECTION_EAST),
+        static_cast<signed char>(
+            unit->m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST
+        ),
         0,
         unit->m_stats.speed
     );

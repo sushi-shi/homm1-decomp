@@ -10,18 +10,18 @@
 
 #include <SOURCE/REMOTE.h>
 
+#include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/comwin.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/Modem.h>
 #include <SOURCE/netwin.h>
-#include <SOURCE/netwinRuntime.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
 #include <SOURCE/SETUP.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <string.h>

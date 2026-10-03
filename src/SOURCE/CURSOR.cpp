@@ -3,16 +3,26 @@
 
 #include <match.h>
 
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
 #include <BASE/Icon2b.h>
 #include <BASE/Icond2b.h>
-#include <BASE/INPUTMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/inputManager.h>
+#include <BASE/mouseManager.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/EVENTS.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
-#include <SOURCE/X_GLOBAL.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/town.h>
 
 // Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant
 // and CURSOR.cpp CursorPrivateConstant names, HoMM1 values).
@@ -219,7 +229,10 @@ void advManager::DrawCursor(void) {
             bMoveSoundMade = 1;
             if (!EveryOther)
                 hLastMoveSound = gpSoundManager->MemorySample(
-                    m_cursorSamples[CELL_TERRAIN(GetCell(m_mapOriginX + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + CURSOR_MAP_DRAW_OFFSET))]
+                    m_cursorSamples[CELL_TERRAIN(GetCell(
+                        m_mapOriginX + CURSOR_MAP_DRAW_OFFSET,
+                        m_mapOriginY + CURSOR_MAP_DRAW_OFFSET
+                    ))]
                 );
         }
     }
@@ -671,7 +684,14 @@ void advManager::CheckAdjacentMon(signed char* adjacentMonster) {
 
     theHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dead = 0;
-    if (FindAdjacentMonster(theHero->m_x, theHero->m_y, &monX, &monY, SEARCH_INVALID_COORDINATE, SEARCH_INVALID_COORDINATE)) {
+    if (FindAdjacentMonster(
+            theHero->m_x,
+            theHero->m_y,
+            &monX,
+            &monY,
+            SEARCH_INVALID_COORDINATE,
+            SEARCH_INVALID_COORDINATE
+        )) {
         StopCursor(1);
         CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
         UpdateScreen(0, 0);

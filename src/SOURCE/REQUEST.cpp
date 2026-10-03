@@ -2,12 +2,20 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <BASE/baseManager.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/iconWidget.h>
+#include <BASE/inputManager.h>
+#include <BASE/message.h>
+#include <BASE/widget.h>
+#include <SOURCE/fileRequester.h>
+#include <SOURCE/game.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/X_GLOBAL.h>
-#include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/MISC_TYPES.h>
-#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/mouseManager.h>
+#include <BASE/resourceManager.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/kbwin.h>
 
@@ -278,7 +286,11 @@ VA(0x00448df5, 0x8a)
 void fileRequester::SetOK(signed char enabled) {
     tag_message message;
 
-    SET_WIDGET_MESSAGE(message, enabled ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS, DIALOG_BUTTON_2);
+    SET_WIDGET_MESSAGE(
+        message,
+        enabled ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS,
+        DIALOG_BUTTON_2
+    );
     message.value = WIDGET_FLAG_DIMMED;
     m_window->BroadcastMessage(message);
     message.command = enabled ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;

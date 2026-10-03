@@ -2,6 +2,7 @@
 #define HOMM1_BASE_RESOURCEMANAGER_H
 
 #include <BASE/baseManager.h>
+#include <BASE/icon.h>
 #include <BASE/resource.h>
 
 class MIDIWrap;

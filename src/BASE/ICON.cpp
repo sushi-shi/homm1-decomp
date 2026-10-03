@@ -8,6 +8,7 @@
 #include <BASE/Icond2b.h>
 #include <BASE/IconEntry.h>
 #include <BASE/Iconm2b.h>
+#include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 

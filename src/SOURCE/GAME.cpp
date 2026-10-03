@@ -3,22 +3,44 @@
 #include <match.h>
 
 #include <BASE/BITS.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/executive.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/iconWidget.h>
+#include <BASE/inputManager.h>
 #include <BASE/LZHUF.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
+#include <BASE/resource.h>
+#include <BASE/resourceManager.h>
+#include <BASE/soundManager.h>
 #include <BASE/TILE.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/tileset.h>
+#include <BASE/widget.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/EVENTS.h>
+#include <SOURCE/fileRequester.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/X_GLOBAL.h>
+#include <SOURCE/town.h>
 
 #include <fcntl.h>
 #include <io.h>
@@ -529,10 +551,6 @@ short game::SaveGame(char* filename, signed char generateName) {
 // donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.668603;margin=0.422052;shape=0.401;size=0.926;calls=0.741;strings=%s%s|.\DATA\|.\GAMES\;alternate=pol20:void game::LoadGame(char *, int, int)@0x000735bf
-// Alias: retail reaches the debug-level dword (0x004c7c94, giDebugLevel), not
-// SETUP's byte iMPExtendedType (SETUP.h); rename at the use.
-extern int iMPExtendedType;
-
 // Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
 // the default hero names and blank visibility, and the seats are re-dealt
 // to this session's human players.
@@ -4496,8 +4514,10 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
         else
             outData = fileData;
 
-        reinterpret_cast<int*>(sendPacket)[0] = fileSize; // byte-evidenced: the save-transfer packet header words
-        reinterpret_cast<int*>(sendPacket)[1] = playerExited; // byte-evidenced: the save-transfer packet header words
+        reinterpret_cast<int*>(sendPacket)[0] =
+            fileSize; // byte-evidenced: the save-transfer packet header words
+        reinterpret_cast<int*>(sendPacket)[1] =
+            playerExited; // byte-evidenced: the save-transfer packet header words
         status = TransmitAndWait(
             sendPacket,
             remotePlayer,
@@ -4529,7 +4549,9 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                             len = fileSize - sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE;
                         else
                             len = REMOTE_SAVE_SEGMENT_SIZE;
-                        *reinterpret_cast<short*>(sendPacket) = static_cast<short>(sendPacketIndex); // byte-evidenced: the save-transfer packet header words
+                        *reinterpret_cast<short*>(sendPacket) = static_cast<short>(
+                            sendPacketIndex
+                        ); // byte-evidenced: the save-transfer packet header words
                         memcpy(
                             sendPacket + REMOTE_SAVE_INDEX_SIZE,
                             outData + sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE,
@@ -4550,7 +4572,9 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                     }
                 }
                 LogStr("PreWait");
-                *reinterpret_cast<short*>(sendPacket) = static_cast<short>(block * REMOTE_SAVE_BATCH_SIZE); // byte-evidenced: the save-transfer packet header words
+                *reinterpret_cast<short*>(sendPacket) = static_cast<short>(
+                    block * REMOTE_SAVE_BATCH_SIZE
+                ); // byte-evidenced: the save-transfer packet header words
                 status = TransmitAndWait(
                     sendPacket,
                     remotePlayer,

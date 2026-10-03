@@ -6,14 +6,12 @@
 #include <BASE/executive.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/X_GLOBAL.h>
 
 // Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
 DATA(0x004a1820)

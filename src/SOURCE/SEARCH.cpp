@@ -2,11 +2,14 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
 // SeedPosition's working mobility, read back by PushPoint (FINDPATH storage).
@@ -160,30 +163,54 @@ void searchArray::SeedPosition(
     int continueSeed,
     int scanMap
 ) {
-    DATA(0x004a4620) static short s_direction;
-    DATA(0x004a4624) static int s_terrain;
-    DATA(0x004a4670) static searchNode s_currentNode;
-    DATA(0x004a4628) static int s_mapX;
-    DATA(0x004a462c) static int s_mapY;
-    DATA(0x004a4630) static int s_adjacentMonsterX;
-    DATA(0x004a4634) static int s_adjacentMonsterY;
-    DATA(0x004a4638) static int s_stepCost[FINDPATH_STEP_COST_COUNT];
-    DATA(0x004a4640) static signed char s_possibleDirections[MAP_DIRECTION_COUNT];
-    DATA(0x004a4648) static int s_currentCost;
-    DATA(0x004a464c) static int s_hasTarget;
-    DATA(0x004a4650) static hero* s_currentHero;
-    DATA(0x004a4654) static int s_neighborX;
-    DATA(0x004a4658) static int s_neighborY;
-    DATA(0x004a4660) static unsigned char s_directionOccupied[MAP_DIRECTION_COUNT];
-    DATA(0x004a467c) static int s_directionBlocked;
-    DATA(0x004a4684) static mapCell* s_targetCell;
-    DATA(0x004a4688) static signed char s_hasAdjacentMonster;
-    DATA(0x004a468c) static int s_triggerType;
-    DATA(0x004a4690) static int s_adjacentX;
-    DATA(0x004a4694) static int s_adjacentY;
-    DATA(0x004a4698) static int s_adjacentCost;
-    DATA(0x004a469c) static int s_bestTargetCost;
-    DATA(0x0048e170) static short s_processedPointCount = 0;
+    DATA(0x004a4620)
+    static short s_direction;
+    DATA(0x004a4624)
+    static int s_terrain;
+    DATA(0x004a4670)
+    static searchNode s_currentNode;
+    DATA(0x004a4628)
+    static int s_mapX;
+    DATA(0x004a462c)
+    static int s_mapY;
+    DATA(0x004a4630)
+    static int s_adjacentMonsterX;
+    DATA(0x004a4634)
+    static int s_adjacentMonsterY;
+    DATA(0x004a4638)
+    static int s_stepCost[FINDPATH_STEP_COST_COUNT];
+    DATA(0x004a4640)
+    static signed char s_possibleDirections[MAP_DIRECTION_COUNT];
+    DATA(0x004a4648)
+    static int s_currentCost;
+    DATA(0x004a464c)
+    static int s_hasTarget;
+    DATA(0x004a4650)
+    static hero* s_currentHero;
+    DATA(0x004a4654)
+    static int s_neighborX;
+    DATA(0x004a4658)
+    static int s_neighborY;
+    DATA(0x004a4660)
+    static unsigned char s_directionOccupied[MAP_DIRECTION_COUNT];
+    DATA(0x004a467c)
+    static int s_directionBlocked;
+    DATA(0x004a4684)
+    static mapCell* s_targetCell;
+    DATA(0x004a4688)
+    static signed char s_hasAdjacentMonster;
+    DATA(0x004a468c)
+    static int s_triggerType;
+    DATA(0x004a4690)
+    static int s_adjacentX;
+    DATA(0x004a4694)
+    static int s_adjacentY;
+    DATA(0x004a4698)
+    static int s_adjacentCost;
+    DATA(0x004a469c)
+    static int s_bestTargetCost;
+    DATA(0x0048e170)
+    static short s_processedPointCount = 0;
 
     if (!continueSeed) {
         giFullySeeded = 0;
@@ -310,8 +337,7 @@ void searchArray::SeedPosition(
             1,
             waterMode
         );
-        s_terrain =
-            CELL_TERRAIN(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y));
+        s_terrain = CELL_TERRAIN(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y));
         s_stepCost[FINDPATH_STEP_STRAIGHT] = s_currentNode.distance
                                              + CalcTerrainCost(
                                                  s_terrain,

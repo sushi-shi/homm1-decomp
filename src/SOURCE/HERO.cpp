@@ -2,15 +2,28 @@
 
 #include <match.h>
 
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/miscwin.h>
+#include <BASE/resourceManager.h>
+#include <BASE/soundManager.h>
+#include <BASE/widget.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/armyGroup.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/EVENTS.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
-#include <SOURCE/X_GLOBAL.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -4,6 +4,8 @@
 
 #include <match.h>
 
+#include <BASE/miscwin.h>
+
 #include <windows.h>
 
 #include <BASE/bitmap.h>
@@ -11,11 +13,10 @@
 #include <BASE/display.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/palette.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/wingraph.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <string.h>
 
@@ -174,18 +175,15 @@ void FadeOut(int increment) {
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 
 #include <stdlib.h>
 #include <string.h>
-
 
 struct PaletteColor {
     unsigned char red;
     unsigned char green;
     unsigned char blue;
 };
-
 
 VA(0x00473820, 0x3a)
 #line 207 "D:\\Heroes\\Base\\OLDASM.CPP"
@@ -221,7 +219,6 @@ void PostprocessIcon(icon*) {}
 #include <BASE/Iconm2b.h>
 
 #include <string.h>
-
 
 VA(0x004738e0, 0x1e6)
 void ClippedMonoIconToBitmap(

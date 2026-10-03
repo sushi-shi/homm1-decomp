@@ -4,22 +4,44 @@
 
 #include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <BASE/baseManager.h>
+#include <BASE/executive.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/iconWidget.h>
+#include <BASE/inputManager.h>
+#include <BASE/message.h>
+#include <BASE/mouseManager.h>
+#include <BASE/palette.h>
+#include <BASE/resourceManager.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
+#include <BASE/textWidget.h>
+#include <BASE/widget.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
+#include <SOURCE/fileRequester.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/highScoreManager.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/X_GLOBAL.h>
-#include <BASE/MISC_TYPES.h>
-#include <BASE/MOUSEMGR_TYPES.h>
-#include <BASE/WINMGR_TYPES.h>
+#include <BASE/miscwin.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/creatureTypes.h>
-#include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/Modem.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
@@ -163,7 +185,12 @@ int EarlySetup(void) {
     LogTruncate();
     iCDRomErr = SetupCDDrive();
     if (iCDRomErr == CD_SETUP_NO_DRIVE) {
-        MessageBoxA(static_cast<HWND>(hwndApp), "Unable to access CD Drive.", "Startup Error", MB_ICONHAND);
+        MessageBoxA(
+            static_cast<HWND>(hwndApp),
+            "Unable to access CD Drive.",
+            "Startup Error",
+            MB_ICONHAND
+        );
         exit(0);
     }
     if (iCDRomErr == CD_SETUP_NOT_FOUND) {
@@ -1950,7 +1977,9 @@ VA(0x004539dd, 0x1cb)
 void InitVars(void) {
     int i;
     NULL_SAMPLE2.pSample = NULL;
-    NULL_SAMPLE2.pMem = reinterpret_cast<struct _SAMPLE*>(NULL_SAMPLE2.pSample); // faithful: SAMPLE2 stores the MSS sample handle as a sample*
+    NULL_SAMPLE2.pMem = reinterpret_cast<struct _SAMPLE*>(
+        NULL_SAMPLE2.pSample
+    ); // faithful: SAMPLE2 stores the MSS sample handle as a sample*
     iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
     gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
@@ -2512,7 +2541,12 @@ void ShutDown(char* message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
         LogStr(buffer);
-        MessageBoxA(static_cast<HWND>(hwndApp), buffer, "Unexpected Program Termination", MB_ICONHAND);
+        MessageBoxA(
+            static_cast<HWND>(hwndApp),
+            buffer,
+            "Unexpected Program Termination",
+            MB_ICONHAND
+        );
     }
     ClearMapExtra();
     UnloadSystemwideIcons();

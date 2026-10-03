@@ -2,14 +2,42 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
+#include <BASE/bitmap.h>
 #include <BASE/BITS.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/border.h>
+#include <BASE/executive.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/iconWidget.h>
+#include <BASE/inputManager.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
+#include <BASE/resourceManager.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
+#include <BASE/textWidget.h>
+#include <BASE/widget.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/bankBox.h>
+#include <SOURCE/cursorTypes.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/recruitUnit.h>
+#include <SOURCE/strip.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
+#include <SOURCE/townObject.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -600,7 +628,11 @@ short townManager::Main(struct tag_message& message) {
                                                              ->m_owner]
                                                     .m_resources[RESOURCE_GOLD]
                                                 < TOWN_SPELL_BOOK_COST) {
-                                                SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FLAGS, DIALOG_BUTTON_2);
+                                                SET_WIDGET_MESSAGE(
+                                                    message,
+                                                    WIDGET_COMMAND_SET_FLAGS,
+                                                    DIALOG_BUTTON_2
+                                                );
                                                 message.value = WIDGET_FLAG_DIMMED;
                                                 m_heroWindow0->BroadcastMessage(message);
                                                 message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -734,7 +766,11 @@ short townManager::Main(struct tag_message& message) {
                                         < TOWN_BOAT_GOLD_COST
                                     || gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD]
                                            < TOWN_BOAT_WOOD_COST) {
-                                    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FLAGS, DIALOG_BUTTON_2);
+                                    SET_WIDGET_MESSAGE(
+                                        message,
+                                        WIDGET_COMMAND_SET_FLAGS,
+                                        DIALOG_BUTTON_2
+                                    );
                                     message.value = WIDGET_FLAG_DIMMED;
                                     m_heroWindow0->BroadcastMessage(message);
                                     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1197,7 +1233,11 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     } else if (building <= TOWN_NEUTRAL_BUILDING_LAST) {
         for (j = 0; j < RESOURCE_COUNT; j++) {
 #line 1525
-            ProcessAssert(building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT, __FILE__, __LINE__);
+            ProcessAssert(
+                building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT,
+                __FILE__,
+                __LINE__
+            );
 #line 1526
             ProcessAssert(j >= 0 && j <= 6, __FILE__, __LINE__);
             if (gNeutralBuildingCosts[building][j] > 0) {
@@ -1209,7 +1249,11 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     } else {
         for (j = 0; j < RESOURCE_COUNT; j++) {
 #line 1540
-            ProcessAssert(dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS, __FILE__, __LINE__);
+            ProcessAssert(
+                dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS,
+                __FILE__,
+                __LINE__
+            );
 #line 1541
             ProcessAssert(j >= 0 && j <= 6, __FILE__, __LINE__);
             LogStr("DwellCost", gDwellingCosts[dwellIndex][j], dwellIndex, j, 0, 0);

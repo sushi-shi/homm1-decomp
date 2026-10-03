@@ -142,7 +142,6 @@ public:
     void PushCombatPoint(short, short, unsigned short, unsigned short);
 };
 #pragma pack(pop)
+extern int giFullySeeded;
 
-// SeedPosition's seeding state.
-extern int giSeedingValid;
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

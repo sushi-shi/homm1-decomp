@@ -177,9 +177,6 @@ H1_ENUM_CONST_BEGIN(CombatGridDimension)
     COMBAT_GRID_LAST_INNER_COLUMN = 7
 H1_ENUM_CONST_END(CombatGridDimension)
 
-// Area spells mark each stack once per cast: [side][army slot].
-extern signed char gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
-
 // HoMM1 spell-AI row traversal: retail NextPos steps along a row of
 // COMBAT_GRID_COLUMNS hexes, skipping the two edge columns.
 H1_ENUM_BEGIN(CombatSpellAIGrid)

@@ -69,8 +69,6 @@ extern char CommandString[];
 extern char lpszReturnString[];
 extern unsigned long nMCIError;
 extern short gSampleVolumes[];
-extern char gcSoundPath[];
-extern char gcDataPath[];
 struct SampleChannelStruct {
     int startChannel;
     int endChannel;
@@ -78,8 +76,8 @@ struct SampleChannelStruct {
 };
 extern SampleChannelStruct SCS[];
 
-char* FindToken(char*, char);
 void SetReady2Poll(void);
 void HandleMCIError(int, char*);
+extern int giCDDrive;
 
 #endif

@@ -116,22 +116,13 @@ struct RemoteMessage {
 #pragma pack(pop)
 
 extern signed char gbInNetSetup;
-extern int giThisNetPos;
-// WaitForOtherPlayer stores the game position of net position zero here
-// (0x004c6710). Declared ahead of giThisGamePos (0x004c74a0): only this order
-// gives the host/this compares in advManager::Main, game::NextPlayer,
-// PollRemote and HandleRemoteSuddenExit retail's load order.
-extern int giHostGamePos;
 extern int iIDCtr;
 extern unsigned char GameMode;
-extern signed char iMPBaseType;
 extern unsigned char gPacketSequence;
 extern int iNetNameIndex;
 extern char PacketSend[];
 extern int giNumNetGuests;
 extern int giLastConfirm;
-extern signed char gbGamePosToNetPos[];
-extern int giThisGamePos;
 extern int iInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
@@ -150,8 +141,6 @@ int TransmitRemoteData(
 );
 char* GetRemoteData(signed char);
 int TransmitAndWait(char*, int, int, signed char, signed char, char**);
-signed char NetPosToGamePos(int);
-signed char WaitForOtherPlayer(void);
 void RemoteCleanup(void);
 void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short));
 long FileSize(char*);
@@ -165,15 +154,6 @@ signed char InitNetGuest(void);
 signed char WaitForHost(void);
 signed char WaitForGuest(void);
 
-// HoMM1 transport entry points as the remote layer calls them: each carries a
-// leading unused selector, unlike HoMM2's narrower netwin signatures.
-void com_term(short);
-H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short);
-H1_C_LINKAGE void __cdecl nb_term(int);
-H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short, void*);
-H1_C_LINKAGE short __cdecl nb_snd(int, unsigned short, unsigned short, void*, int);
-H1_C_LINKAGE short __cdecl nb_sess(int, int, ...);
-H1_C_LINKAGE unsigned char __cdecl nb_stat(int, unsigned short);
 // PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
 // incoming/outgoing message buffers (Buka REMOTE.h).
 extern long lLastHeartbeatSend;
@@ -188,5 +168,69 @@ extern int iCurLastID;
 extern signed char iInitNetGuestStatus;
 extern signed char iWaitForHostStatus;
 void PollRemote();
+// HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
+void RemoteMain(int);
+int nbnet_init(void);
+
+H1_ENUM_BEGIN(ModemResponseLimit)
+    MODEM_RESPONSE_LAST = 79
+H1_ENUM_END(ModemResponseLimit)
+
+// WriteModemPacket frames a packet as ESCAPE START ... ESCAPE END, doubling
+// an ESCAPE byte inside it; ReadPacket undoes it.
+H1_ENUM_BEGIN(ModemPacketControl)
+    MODEM_PACKET_START = 0,
+    MODEM_PACKET_END = 1,
+    MODEM_PACKET_ESCAPE = 0x70
+H1_ENUM_END(ModemPacketControl)
+
+H1_ENUM_CONST_BEGIN(ModemPacketConstant)
+    MODEM_PACKET_MAX_LENGTH = 0x100
+H1_ENUM_CONST_END(ModemPacketConstant)
+
+extern int iLastActionTime;
+extern int iModemCommandPos;
+extern char cModemCommand[];
+extern char GUIMRresponse[];
+extern char GUIMRresp[];
+extern int GUIMRrespptr;
+extern int GUIMRc;
+extern int iLastDialPos;
+extern char numbuf[];
+struct inque_t {
+    int readPosition;
+    int writePosition;
+    char data[4096];
+};
+extern inque_t inque;
+// The transmit queue holds 2K (retail 0x004c9c80-0x004ca487); SETUP.cpp
+// completes its type.
+extern struct outque_t outque;
+extern int iBaudBits;
+extern int inescape;
+extern int newpacket;
+extern int packetlen;
+extern char packet[];
+extern char idstr[];
+extern char remoteidstr[];
+extern int oldsec;
+extern int stime;
+extern int remotestage;
+extern int localstage;
+extern int WFDCStage;
+
+void GUIModemCommand(char*, char*);
+void ModemCommand(char*);
+void ModemSetup(void);
+long Dial(void);
+long Wait(void);
+void Connect(void);
+signed char GUIModemResponse(char*, char*);
+int write_buffer(char*, int);
+int read_byte(void);
+// Modem.cpp's wait-loop steps that KB's WaitHandler drives.
+signed char GUIModemCommandExec(void);
+signed char GUIModemResponseExec(void);
+int WaitForDirectConnect(void);
 
 #endif

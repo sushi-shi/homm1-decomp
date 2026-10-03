@@ -13,15 +13,7 @@ short SetupModemGameHandler(struct tag_message&);
 short SetupMultiPlayerGameHandler(struct tag_message&);
 short SetupNetworkGameHandler(struct tag_message&);
 short SetupGameHandler(struct tag_message&);
-// HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
-void RemoteMain(int);
-int nbnet_init(void);
 
 extern int gbDoModemConfig;
-// KB-band setup state (Buka X_GLOBAL.h): the direct-connect flag and the
-// multiplayer game type. They stay out of X_GLOBAL.h while GAME and KB still
-// use these names for other retail objects (see the aliases there).
-extern signed char gbDirectConnect;
-extern signed char iMPExtendedType;
 
 #endif // HOMM1_SOURCE_SETUP_H

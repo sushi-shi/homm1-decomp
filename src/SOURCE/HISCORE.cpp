@@ -2,16 +2,15 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
 #include <BASE/widget.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
 #include <SOURCE/highScoreManager.h>
-#include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 

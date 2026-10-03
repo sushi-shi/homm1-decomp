@@ -67,7 +67,7 @@ H1_ENUM_CONST_BEGIN(TownViewConstant)
 H1_ENUM_CONST_END(TownViewConstant)
 
 #pragma pack(push, 1)
-         class town {
+class town {
 public:
     // Retail constructor and HasGarrison establish this packed prefix.
     signed char m_id;
@@ -110,9 +110,6 @@ public:
     void CalcNumLevelArchers(int* numArchers, int* mageGuildLevel);
 };
 #pragma pack(pop)
-
-// Spells taught per mage-guild level (retail 0x492514).
-extern signed char gMageGuildSpellCount[];
 
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
 // six dwellings named per race by gDwellingNames. town::m_buildings holds

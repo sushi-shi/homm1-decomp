@@ -112,11 +112,6 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
 
-extern char gcRegAppPath[];
-extern char gcRegCDRomPath[];
-extern signed char gbFirstTimeThrough;
-extern char gcAnimPath[];
-extern int giCDDrive;
 extern void* hInstApp;
 extern void* gEventHandle;
 extern char gcCommandLine[];
@@ -137,8 +132,6 @@ struct SMenuEnableStatus {
 };
 #pragma pack(pop)
 
-extern SMenuEnableStatus gsMenuEnableStatus[KBWIN_MENU_ENTRY_COUNT];
-
 #pragma pack(push, 1)
 struct WindowTextEntry {
     short widgetId;
@@ -146,16 +139,10 @@ struct WindowTextEntry {
 };
 #pragma pack(pop)
 
-extern WindowTextEntry gWinSetup[];
-extern char* gWinSetupText[];
-
 extern void* hmnuCurrent;
-extern long giCurWindowsStyleFlags;
 long AppCommand(void*, unsigned int, unsigned int, long);
 int AppIdle(void);
 void AppExit(void);
-void CleanUpMenus(void);
-void UpdateSystemOptionsMenu(void);
 short GetCPUType(void);
 // CPUSpeed's PIT-timed divide loop (CPUSPEED.cpp).
 short TimeProcessor(void);
@@ -165,17 +152,8 @@ void ReadPrefsFromRegistry(void);
 void ReadPrefs(void);
 void WritePrefsToFile(void);
 void WritePrefsToRegistry(void);
-void FileError(char*);
-int IsCDDrive(int);
 H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void);
-int EarlySetup(void);
 int AppInit(void*, void*, int, char*);
-int oldmain(void);
-int HandleAppSpecificMenuCommands(int);
-void EarlyResizeWindow(int, int, int, int);
-int GameUnsaved(void);
-int KeyboardMessageHandler(void*, unsigned int, unsigned int, long);
-int MouseMessageHandler(void*, unsigned int, unsigned int, long);
 long __stdcall AppWndProc(void*, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);
@@ -183,7 +161,6 @@ void SetMenuStatus(int);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
 void SetWinText(class heroWindow*, short);
 void UpdateDfltMenu(void*);
-void UpdateAppSpecificMenus(void*);
 extern int gbForegroundApp;
 extern int gbNoDialogMenusOn;
 extern void* hmnuApp;
@@ -195,5 +172,11 @@ void Process1WindowsMessage();
 void SetNoDialogMenus(int);
 char* FindLastToken(char*, char);
 void SetMenus(void*, int);
+extern void* hwndApp;
+extern int iMainWinScreenWidth;
+extern int iMainWinScreenHeight;
+void ProcessAssert(int, char*, int);
+void WritePrefs();
+char* FindToken(char*, char);
 
 #endif

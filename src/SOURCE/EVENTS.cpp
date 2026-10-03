@@ -5,16 +5,35 @@
 #include <SOURCE/EVENTS.h>
 
 #include <BASE/bmap2.h>
+#include <BASE/executive.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
+#include <BASE/resource.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/recruitUnit.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/X_GLOBAL.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/swapManager.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -2861,7 +2880,9 @@ int advManager::DoCombat(
                     );
                     receivedPacket = CheckHandleNet();
                     if (receivedPacket) {
-                        switch (reinterpret_cast<combatRemoteMessage*>(receivedPacket)->command) { // byte-evidenced: the remote packet buffer holds this message layout
+                        switch (
+                            reinterpret_cast<combatRemoteMessage*>(receivedPacket)->command
+                        ) { // byte-evidenced: the remote packet buffer holds this message layout
                             case COMBAT_REMOTE_COMMAND:
                                 ReceiveHeroTownData(
                                     receivedPacket,
@@ -3049,8 +3070,13 @@ void advManager::SendHeroTownData(
         ShutDown(NULL);
 
     if (firstHero) {
-        reinterpret_cast<combatRemoteHeroFragment*>(buf)->fragment = COMBAT_REMOTE_FRAGMENT_FIRST_HERO; // byte-evidenced: the remote packet buffer holds this message layout
-        memcpy(reinterpret_cast<combatRemoteHeroFragment*>(buf)->data, firstHero, sizeof(hero)); // byte-evidenced: the remote packet buffer holds this message layout
+        reinterpret_cast<combatRemoteHeroFragment*>(buf)->fragment =
+            COMBAT_REMOTE_FRAGMENT_FIRST_HERO; // byte-evidenced: the remote packet buffer holds this message layout
+        memcpy(
+            reinterpret_cast<combatRemoteHeroFragment*>(buf)->data,
+            firstHero,
+            sizeof(hero)
+        ); // byte-evidenced: the remote packet buffer holds this message layout
         // API-forced: TransmitRemoteData takes a char* payload.
         result = TransmitRemoteData(
             reinterpret_cast<char*>(buf),
@@ -3066,8 +3092,13 @@ void advManager::SendHeroTownData(
             ShutDown(NULL);
     }
     if (secondHero) {
-        reinterpret_cast<combatRemoteHeroFragment*>(buf)->fragment = COMBAT_REMOTE_FRAGMENT_SECOND_HERO; // byte-evidenced: the remote packet buffer holds this message layout
-        memcpy(reinterpret_cast<combatRemoteHeroFragment*>(buf)->data, secondHero, sizeof(hero)); // byte-evidenced: the remote packet buffer holds this message layout
+        reinterpret_cast<combatRemoteHeroFragment*>(buf)->fragment =
+            COMBAT_REMOTE_FRAGMENT_SECOND_HERO; // byte-evidenced: the remote packet buffer holds this message layout
+        memcpy(
+            reinterpret_cast<combatRemoteHeroFragment*>(buf)->data,
+            secondHero,
+            sizeof(hero)
+        ); // byte-evidenced: the remote packet buffer holds this message layout
         // API-forced: TransmitRemoteData takes a char* payload.
         result = TransmitRemoteData(
             reinterpret_cast<char*>(buf),
@@ -3120,34 +3151,86 @@ void advManager::ReceiveHeroTownData(
     *secondHero = NULL;
     *secondArmy = NULL;
     bFirstHero = hasSecondHero = hasTown = 0;
-    *remotePlayer = reinterpret_cast<combatRemoteMessage*>(packet)->sender; // byte-evidenced: the remote packet buffer holds this message layout
-    *x = reinterpret_cast<combatRemoteMessage*>(packet)->combat.x; // byte-evidenced: the remote packet buffer holds this message layout
-    *y = reinterpret_cast<combatRemoteMessage*>(packet)->combat.y; // byte-evidenced: the remote packet buffer holds this message layout
-    bFirstHero = reinterpret_cast<combatRemoteMessage*>(packet)->combat.hasFirstHero; // byte-evidenced: the remote packet buffer holds this message layout
-    hasTown = reinterpret_cast<combatRemoteMessage*>(packet)->combat.hasTown; // byte-evidenced: the remote packet buffer holds this message layout
-    hasSecondHero = reinterpret_cast<combatRemoteMessage*>(packet)->combat.hasSecondHero; // byte-evidenced: the remote packet buffer holds this message layout
-    *setupCombatX = reinterpret_cast<combatRemoteMessage*>(packet)->combat.setupCombatX; // byte-evidenced: the remote packet buffer holds this message layout
-    *setupCombatY = reinterpret_cast<combatRemoteMessage*>(packet)->combat.setupCombatY; // byte-evidenced: the remote packet buffer holds this message layout
-    *randomSeed = reinterpret_cast<combatRemoteMessage*>(packet)->combat.randomSeed; // byte-evidenced: the remote packet buffer holds this message layout
-    *combatResult = reinterpret_cast<combatRemoteMessage*>(packet)->combat.combatResult; // byte-evidenced: the remote packet buffer holds this message layout
-    *retreatWin = reinterpret_cast<combatRemoteMessage*>(packet)->combat.retreatWin; // byte-evidenced: the remote packet buffer holds this message layout
-    *combatSurrender = reinterpret_cast<combatRemoteMessage*>(packet)->combat.combatSurrender; // byte-evidenced: the remote packet buffer holds this message layout
-    firstOwner = reinterpret_cast<combatRemoteMessage*>(packet)->combat.firstOwner; // byte-evidenced: the remote packet buffer holds this message layout
+    *remotePlayer =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->sender; // byte-evidenced: the remote packet buffer holds this message layout
+    *x = reinterpret_cast<combatRemoteMessage*>(packet)
+             ->combat.x; // byte-evidenced: the remote packet buffer holds this message layout
+    *y = reinterpret_cast<combatRemoteMessage*>(packet)
+             ->combat.y; // byte-evidenced: the remote packet buffer holds this message layout
+    bFirstHero =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .hasFirstHero; // byte-evidenced: the remote packet buffer holds this message layout
+    hasTown =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat.hasTown; // byte-evidenced: the remote packet buffer holds this message layout
+    hasSecondHero =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .hasSecondHero; // byte-evidenced: the remote packet buffer holds this message layout
+    *setupCombatX =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .setupCombatX; // byte-evidenced: the remote packet buffer holds this message layout
+    *setupCombatY =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .setupCombatY; // byte-evidenced: the remote packet buffer holds this message layout
+    *randomSeed =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .randomSeed; // byte-evidenced: the remote packet buffer holds this message layout
+    *combatResult =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .combatResult; // byte-evidenced: the remote packet buffer holds this message layout
+    *retreatWin =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .retreatWin; // byte-evidenced: the remote packet buffer holds this message layout
+    *combatSurrender =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .combatSurrender; // byte-evidenced: the remote packet buffer holds this message layout
+    firstOwner =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .firstOwner; // byte-evidenced: the remote packet buffer holds this message layout
     if (firstOwner > 0)
         gpGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] =
-            reinterpret_cast<combatRemoteMessage*>(packet)->combat.firstGold; // byte-evidenced: the remote packet buffer holds this message layout
-    defenderOwner = reinterpret_cast<combatRemoteMessage*>(packet)->combat.secondOwner; // byte-evidenced: the remote packet buffer holds this message layout
+            reinterpret_cast<combatRemoteMessage*>(packet)
+                ->combat
+                .firstGold; // byte-evidenced: the remote packet buffer holds this message layout
+    defenderOwner =
+        reinterpret_cast<combatRemoteMessage*>(packet)
+            ->combat
+            .secondOwner; // byte-evidenced: the remote packet buffer holds this message layout
     if (defenderOwner > 0)
         gpGame->m_players[defenderOwner].m_resources[RESOURCE_GOLD] =
-            reinterpret_cast<combatRemoteMessage*>(packet)->combat.secondGold; // byte-evidenced: the remote packet buffer holds this message layout
+            reinterpret_cast<combatRemoteMessage*>(packet)
+                ->combat
+                .secondGold; // byte-evidenced: the remote packet buffer holds this message layout
 
     *firstArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
-    memcpy(*firstArmy, &reinterpret_cast<combatRemoteMessage*>(packet)->combat.firstArmy, sizeof(armyGroup)); // byte-evidenced: the remote packet buffer holds this message layout
+    memcpy(
+        *firstArmy,
+        &reinterpret_cast<combatRemoteMessage*>(packet)->combat.firstArmy,
+        sizeof(armyGroup)
+    ); // byte-evidenced: the remote packet buffer holds this message layout
     *secondArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
-    memcpy(*secondArmy, &reinterpret_cast<combatRemoteMessage*>(packet)->combat.secondArmy, sizeof(armyGroup)); // byte-evidenced: the remote packet buffer holds this message layout
+    memcpy(
+        *secondArmy,
+        &reinterpret_cast<combatRemoteMessage*>(packet)->combat.secondArmy,
+        sizeof(armyGroup)
+    ); // byte-evidenced: the remote packet buffer holds this message layout
     if (hasTown) {
         *combatTown = static_cast<town*>(malloc(sizeof(town)));
-        memcpy(*combatTown, &reinterpret_cast<combatRemoteMessage*>(packet)->combat.combatTown, sizeof(town)); // byte-evidenced: the remote packet buffer holds this message layout
+        memcpy(
+            *combatTown,
+            &reinterpret_cast<combatRemoteMessage*>(packet)->combat.combatTown,
+            sizeof(town)
+        ); // byte-evidenced: the remote packet buffer holds this message layout
     }
 
     result = TransmitRemoteData(
@@ -3184,18 +3267,33 @@ void advManager::ReceiveHeroTownData(
                 ShutDown("Game canceled.");
         }
         packet = GetRemoteData(1);
-        if (packet && reinterpret_cast<combatRemoteMessage*>(packet)->type == REMOTE_MESSAGE_RELIABLE // byte-evidenced: the remote packet buffer holds this message layout
-            && reinterpret_cast<combatRemoteMessage*>(packet)->command == COMBAT_REMOTE_COMMAND) { // byte-evidenced: the remote packet buffer holds this message layout
+        if (packet
+            && reinterpret_cast<combatRemoteMessage*>(packet)->type
+                   == REMOTE_MESSAGE_RELIABLE // byte-evidenced: the remote packet buffer holds this message layout
+            && reinterpret_cast<combatRemoteMessage*>(packet)->command
+                   == COMBAT_REMOTE_COMMAND) { // byte-evidenced: the remote packet buffer holds this message layout
             lastPacketTime = KBTickCount();
-            if (reinterpret_cast<heroRemoteMessage*>(packet)->heroFragment.fragment // byte-evidenced: the remote packet buffer holds this message layout
+            if (reinterpret_cast<heroRemoteMessage*>(packet)
+                    ->heroFragment
+                    .fragment // byte-evidenced: the remote packet buffer holds this message layout
                 == COMBAT_REMOTE_FRAGMENT_FIRST_HERO) {
                 *firstHero = static_cast<hero*>(malloc(sizeof(hero)));
-                memcpy(*firstHero, reinterpret_cast<heroRemoteMessage*>(packet)->heroFragment.data, sizeof(hero)); // byte-evidenced: the remote packet buffer holds this message layout
+                memcpy(
+                    *firstHero,
+                    reinterpret_cast<heroRemoteMessage*>(packet)->heroFragment.data,
+                    sizeof(hero)
+                ); // byte-evidenced: the remote packet buffer holds this message layout
             }
-            if (reinterpret_cast<heroRemoteMessage*>(packet)->heroFragment.fragment // byte-evidenced: the remote packet buffer holds this message layout
+            if (reinterpret_cast<heroRemoteMessage*>(packet)
+                    ->heroFragment
+                    .fragment // byte-evidenced: the remote packet buffer holds this message layout
                 == COMBAT_REMOTE_FRAGMENT_SECOND_HERO) {
                 *secondHero = static_cast<hero*>(malloc(sizeof(hero)));
-                memcpy(*secondHero, reinterpret_cast<heroRemoteMessage*>(packet)->heroFragment.data, sizeof(hero)); // byte-evidenced: the remote packet buffer holds this message layout
+                memcpy(
+                    *secondHero,
+                    reinterpret_cast<heroRemoteMessage*>(packet)->heroFragment.data,
+                    sizeof(hero)
+                ); // byte-evidenced: the remote packet buffer holds this message layout
             }
         }
     }

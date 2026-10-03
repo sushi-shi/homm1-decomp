@@ -36,9 +36,16 @@ public:
     void GrabBitmapCareful(class bitmap* source, short int x, short int y);
     void Write(char*);
     void CopyTo(class bitmap*, int, int, int, int, int, int);
-    void CopyToCareful(class bitmap* destination, int destinationX, int destinationY, int sourceX, int sourceY, int width, int height);
+    void CopyToCareful(
+        class bitmap* destination,
+        int destinationX,
+        int destinationY,
+        int sourceX,
+        int sourceY,
+        int width,
+        int height
+    );
 };
 #pragma pack(pop)
 
-void PostprocessBitmap(signed char*, int, int);
 #endif // HOMM1_BASE_BITMAP_H

@@ -5,7 +5,7 @@
 #include <SOURCE/NOOPT.h>
 
 #include <BASE/Misc.h>
-#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/highScoreManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 

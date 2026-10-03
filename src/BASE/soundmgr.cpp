@@ -15,9 +15,12 @@
 #include <mss.h>
 #include <windows.h>
 
+#include <BASE/baseManager.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MOUSEMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/mouseManager.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>

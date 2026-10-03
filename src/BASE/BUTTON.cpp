@@ -7,7 +7,6 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/message.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>

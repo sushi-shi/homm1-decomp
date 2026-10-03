@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/bitmap.h>
+#include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
 #include <BASE/tileset.h>
 #include <SOURCE/KB.h>

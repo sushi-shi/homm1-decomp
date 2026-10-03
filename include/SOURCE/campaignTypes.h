@@ -24,7 +24,7 @@ H1_ENUM_CONST_END(CampaignScenarioTableConstant)
 // flag, the town CheckEndGame watches, the three opponents' player types and
 // every player's starting resources.
 #pragma pack(push, 1)
-    struct campaignScenario {
+struct campaignScenario {
     signed char kingOfTheHill;
     signed char victoryTownX;
     signed char victoryTownY;
@@ -36,8 +36,5 @@ H1_ENUM_CONST_END(CampaignScenarioTableConstant)
     unsigned short resources[GAME_PLAYER_COUNT][7];
 };
 #pragma pack(pop)
-extern campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT];
-// New-game "King of the Hill" option; campaign scenarios preset it.
-extern signed char gbIAmGreatest;
 
 #endif // HOMM1_SOURCE_CAMPAIGNTYPES_H

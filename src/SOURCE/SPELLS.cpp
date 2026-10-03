@@ -2,13 +2,24 @@
 
 #include <match.h>
 
+#include <BASE/display.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
 #include <BASE/Icon2b.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/inputManager.h>
 #include <BASE/MAKEFILEID.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/mouseManager.h>
 #include <BASE/palette.h>
-#include <H1/All.h>
+#include <BASE/resourceManager.h>
+#include <BASE/sample.h>
+#include <SOURCE/army.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>

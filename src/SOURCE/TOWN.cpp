@@ -2,10 +2,18 @@
 
 #include <match.h>
 
-#include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/executive.h>
+#include <BASE/heroWindowManager.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/X_GLOBAL.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
+
+#include <stdlib.h>
 
 // donor PoL RVA 0x00032c00; preferred Buka symbol ??0town@@QAE@XZ
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order

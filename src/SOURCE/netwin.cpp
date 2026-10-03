@@ -9,8 +9,9 @@
 #include <windows.h>
 
 #include <BASE/Misc.h>
-#include <H1/All.h>
-#include <SOURCE/netwinRuntime.h>
+#include <H1/Ints.h>
+#include <H1/Macros.h>
+#include <SOURCE/kbwin.h>
 
 #include <nb30.h>
 #include <stdarg.h>
@@ -46,7 +47,7 @@ int is_netbios_avail(void) {
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.569810;margin=0.557141;shape=0.568;size=0.810;calls=0.714;alternate=pol20:@nb_init@8@0x000a6c88
 VA(0x00413ce8, 0x1b2)
-H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned short maxNames) {
+H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions) {
     unsigned char* statusBuf;
     NCB ncb;
     int i;
@@ -97,10 +98,9 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions, unsigned
 // Buka netwin.cpp:149-193; HoMM1 drains the free queue and keeps the
 // cancel/delete-name sequence on one stack NCB.
 VA(0x00413e9a, 0x1f0)
-H1_C_LINKAGE void __cdecl nb_term(void)
-{
+H1_C_LINKAGE void __cdecl nb_term(int) {
     NCB ncb;
-    tag_Node *node;
+    tag_Node* node;
     int i;
 
     for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++)
@@ -109,7 +109,9 @@ H1_C_LINKAGE void __cdecl nb_term(void)
         memset(&ncb, 0, sizeof(ncb));
         ncb.ncb_command = NCBCANCEL;
         ncb.ncb_lana_num = gNetbiosLana;
-        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbCtlNcb); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(
+            &gNbCtlNcb
+        ); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
     if (gNetStatus[gNbMaxSess] & static_cast<int>(NETBIOS_SESSION_NAME_REGISTERED)) {
@@ -141,9 +143,8 @@ H1_C_LINKAGE void __cdecl nb_term(void)
 
 // Buka netwin.cpp:195-217; HoMM1 keeps the unused leading argument.
 VA(0x0041408a, 0x90)
-H1_C_LINKAGE unsigned short __cdecl nb_rcv(int, unsigned short len, void *buffer)
-{
-    tag_Node *node;
+H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short len, void* buffer) {
+    tag_Node* node;
     int size;
 
     EnterCriticalSection(&gNbRcvLock);
@@ -313,8 +314,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
 
 // Buka netwin.cpp:374-380.
 VA(0x00414714, 0x1e)
-H1_C_LINKAGE char __cdecl nb_stat(int, unsigned short session)
-{
+H1_C_LINKAGE unsigned char __cdecl nb_stat(int, unsigned short session) {
     return gNetStatus[session];
 }
 
@@ -324,7 +324,7 @@ void nb_thr_ctl(void)
 #line 414 "D:\\Heroes\\Source\\netlo.cpp"
 {
     NCB ncb;
-    tag_Node *pkt;
+    tag_Node* pkt;
     int keepRunning;
     unsigned char result;
     int i;
@@ -372,7 +372,8 @@ void nb_thr_ctl(void)
                         case NRC_SNUMOUT:
                         case NRC_SCLOSED:
                         case NRC_SABORT:
-                            gNetStatus[pkt->sessionIndex] &= ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
+                            gNetStatus[pkt->sessionIndex] &=
+                                ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
                             break;
                         default:
                             break;
@@ -386,10 +387,12 @@ void nb_thr_ctl(void)
 
 // Buka netwin.cpp:455-475.
 VA(0x004149a1, 0xbb)
-void nb_add_name(void)
-{
+void nb_add_name(void) {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
-        strcpy(reinterpret_cast<char *>(gNbSessBuf), gNbGroupName); // API-forced: NCB name bytes are unsigned.
+        strcpy(
+            reinterpret_cast<char*>(gNbSessBuf),
+            gNbGroupName
+        ); // API-forced: NCB name bytes are unsigned.
         memcpy(gNbSessBuf + strlen(gNbGroupName), gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
         memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
         gNbCtlNcb.ncb_command = NCBDGSENDBC | ASYNCH;
@@ -404,7 +407,7 @@ void nb_add_name(void)
 // Buka netwin.cpp:477-518; HoMM1 reports failures with wsprintf and
 // OutputDebugString instead of ShutDown.
 VA(0x00414a5c, 0x1cc)
-void __stdcall nb_add_name_done(NCB *ncb)
+void __stdcall nb_add_name_done(NCB* ncb)
 #line 538 "D:\\Heroes\\Source\\netlo.cpp"
 {
     char buf[80];
@@ -442,8 +445,7 @@ void __stdcall nb_add_name_done(NCB *ncb)
 
 // Buka netwin.cpp:520-536.
 VA(0x00414c28, 0xb8)
-unsigned short nb_recv_any(int session)
-{
+unsigned short nb_recv_any(int session) {
     if (gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING) {
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
         gNbSessNcb[session].ncb_command = NCBDGRECVBC | ASYNCH;
@@ -458,8 +460,7 @@ unsigned short nb_recv_any(int session)
 
 // Buka netwin.cpp:538-567.
 VA(0x00414ce0, 0x146)
-void __stdcall nb_recv_any_done(NCB *ncb)
-{
+void __stdcall nb_recv_any_done(NCB* ncb) {
     int i;
 
     for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
@@ -475,15 +476,15 @@ void __stdcall nb_recv_any_done(NCB *ncb)
         } else {
             Netbios(&gNbSessNcb[i]);
         }
-    } else if (gNbSessNcb[i].ncb_retcode != NRC_CMDCAN && gNbSessNcb[i].ncb_retcode != NRC_CANOCCR) {
+    } else if (gNbSessNcb[i].ncb_retcode != NRC_CMDCAN
+               && gNbSessNcb[i].ncb_retcode != NRC_CANOCCR) {
         Netbios(&gNbSessNcb[i]);
     }
 }
 
 // Buka netwin.cpp:569-580.
 VA(0x00414e26, 0xc6)
-unsigned short nb_call(int session, void *name)
-{
+unsigned short nb_call(int session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
     memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
     memcpy(gNbSessNcb[session].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
@@ -497,8 +498,7 @@ unsigned short nb_call(int session, void *name)
 
 // Buka netwin.cpp:582-596.
 VA(0x00414eec, 0xc6)
-unsigned short nb_listen(int session, void *name)
-{
+unsigned short nb_listen(int session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
     memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
     memcpy(gNbSessNcb[session].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
@@ -512,8 +512,7 @@ unsigned short nb_listen(int session, void *name)
 
 // Buka netwin.cpp:598-628.
 VA(0x00414fb2, 0x134)
-void __stdcall nb_call_done(NCB *ncb)
-{
+void __stdcall nb_call_done(NCB* ncb) {
     int i;
 
     for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
@@ -576,15 +575,16 @@ void nb_arm_recv(int session)
 
 // Buka netwin.cpp:661-679.
 VA(0x00415234, 0xbf)
-void nb_close_session(int session)
-{
+void nb_close_session(int session) {
     NCB ncb;
 
     if (gNbSessNcb[session].ncb_cmd_cplt == NRC_PENDING) {
         memset(&ncb, 0, sizeof(ncb));
         ncb.ncb_command = NCBCANCEL;
         ncb.ncb_lana_num = gNetbiosLana;
-        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(&gNbSessNcb[session]); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
+        ncb.ncb_buffer = reinterpret_cast<PUCHAR>(
+            &gNbSessNcb[session]
+        ); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
     if (gNbSessLsn[session] != NETBIOS_INVALID_ID) {
@@ -599,16 +599,16 @@ void nb_close_session(int session)
 
 // Buka netwin.cpp:681-711.
 VA(0x004152f3, 0x176)
-void nb_recv_complete(int session)
-{
-    tag_Node *node;
+void nb_recv_complete(int session) {
+    tag_Node* node;
 
     switch (gNbSessNcb[session].ncb_command & ~ASYNCH) {
         case NCBRECV:
             switch (gNbSessNcb[session].ncb_retcode) {
                 case NRC_GOODRET:
-                    node = static_cast<tag_Node *>(
-                        malloc(gNbSessNcb[session].ncb_length + NETBIOS_PACKET_HEADER_SIZE));
+                    node = static_cast<tag_Node*>(
+                        malloc(gNbSessNcb[session].ncb_length + NETBIOS_PACKET_HEADER_SIZE)
+                    );
                     if (node != NULL) {
                         node->len = gNbSessNcb[session].ncb_length;
                         node->sessionIndex = static_cast<unsigned char>(session);
@@ -633,8 +633,7 @@ void nb_recv_complete(int session)
 
 // Buka netwin.cpp:713-721.
 VA(0x00415469, 0x81)
-void nb_format_name(char *source, unsigned char *destination)
-{
+void nb_format_name(char* source, unsigned char* destination) {
     unsigned int i;
 
     memset(destination, 0, NCBNAMSZ);
@@ -658,7 +657,9 @@ unsigned char gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 DATA(0x0048f1fc)
 char* gNbGroupName = "Empire Too ";
 DATA(0x0048f200)
-unsigned char* gNbListenName = reinterpret_cast<unsigned char*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
+unsigned char* gNbListenName = reinterpret_cast<unsigned char*>(
+    const_cast<char*>("*")
+); // API-forced: NetBIOS names are unsigned bytes
 DATA(0x004a4bc8)
 tag_Anchor gNbFreeQueue;
 DATA(0x004a4bd0)

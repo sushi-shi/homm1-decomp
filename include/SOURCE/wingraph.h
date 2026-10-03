@@ -6,6 +6,7 @@
 #include <windows.h>
 
 #include <Domains.h>
+
 #include <ddraw.h>
 #include <wing.h>
 
@@ -91,8 +92,6 @@ extern int giMainVideoModeHeight;
 extern int giMainVideoModeWidth;
 extern BOOL gbDDrawAttached;
 extern BOOL gbWinGAttached;
-// Smacker playback owner; SetFullScreenStatus ignores requests while it runs.
-extern int gbInSmacker;
 extern BOOL gbWinGraphBusy;
 extern HPALETTE hpalApp;
 extern HINSTANCE hDDrawLibrary;
@@ -127,12 +126,8 @@ extern WingImage screenImage;
 extern WingPalette LogicalPalette;
 extern int Orientation;
 extern void* lpInitWin;
-extern int giScrollX;
-extern int giScrollY;
 extern int giTtlBlts;
 extern int giMainVideoModeColorDepth;
-extern int gbFullCombatScreenDrawn;
-extern int gbLimitedCombatUpdatePalette;
 
 void DDRestoreDisplayMode();
 void SetFullScreenStatus(int);

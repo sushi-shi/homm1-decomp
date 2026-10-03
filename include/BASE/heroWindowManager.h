@@ -6,6 +6,8 @@
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
 #include <BASE/display.h>
+#include <BASE/palette.h>
+#include <Domains.h>
 #include <H1/Macros.h>
 
 // forward declarations:
@@ -23,15 +25,15 @@ H1_ENUM_CONST_END(FizzleDelayConstant)
 #pragma pack(push, 1)
 class heroWindowManager : public baseManager {
 public:
-    heroWindow *m_windowListHead;
-    heroWindow *m_windowListTail;
-    heroWindow *m_focusWindow;
-    heroWindow *m_activeWindow;
+    heroWindow* m_windowListHead;
+    heroWindow* m_windowListTail;
+    heroWindow* m_focusWindow;
+    heroWindow* m_activeWindow;
     char m_unknown40;
     char m_unknown41;
-    bitmap *m_screen;
-    bitmap *m_fizzleSource;
-    bitmap *m_fizzleWork;
+    bitmap* m_screen;
+    bitmap* m_fizzleSource;
+    bitmap* m_fizzleWork;
     short m_screenshotIndex;
     short m_updateFlags;
     int m_dialogResult;
@@ -42,17 +44,17 @@ public:
     // --- virtual methods (vtable order) ---
     virtual short Open(short) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message &) OVERRIDE;
+    virtual short Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    short ConvertToHover(struct tag_message & message);
+    short ConvertToHover(struct tag_message& message);
     short BroadcastMessage(short, short, short, short);
-    void AddWindow(class heroWindow *, short, signed char);
-    void RemoveWindow(class heroWindow *);
-    short DoDialog(class heroWindow *, short (*)(struct tag_message &), int);
+    void AddWindow(class heroWindow*, short, signed char);
+    void RemoveWindow(class heroWindow*);
+    short DoDialog(class heroWindow*, short (*)(struct tag_message&), int);
     void UpdateScreen(void);
     void UpdateScreenRegion(short, short, short, short);
     void RedrawScreen(void);
-    void FadeScreen(short, short, class palette *);
+    void FadeScreen(short, short, class palette*);
     void ScreenShot(void);
     void SaveFizzleSource(short, short, short, short);
     void FizzleForward(short, short, short, short, int);
@@ -71,5 +73,30 @@ public:
 // heroWindowManager.h).
 #define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
     (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
+extern signed char gCyclePal[PALETTE_CYCLE_BYTES];
+void CycleColors(void);
+extern signed char gWindowFadeSavedUpdate;
+
+H1_ENUM_BEGIN(WindowFadeMode)
+    WINDOW_FADE_IN = 0,
+    WINDOW_FADE_OUT = 1
+H1_ENUM_END(WindowFadeMode)
+
+// Palette fade lengths passed to FadeIn/FadeOut/FadeScreen (Buka SMACKMGR
+// SHORT_FADE / NORMAL_FADE): the short fade of dialogs and screen changes and
+// the long fade of the window manager's start-up.
+H1_ENUM_BEGIN(WindowFadeSteps)
+    WINDOW_FADE_STEPS_SHORT = 8,
+    WINDOW_FADE_STEPS_NORMAL = 0x80
+H1_ENUM_END(WindowFadeSteps)
+
+H1_ENUM_CONST_BEGIN(WindowManagerConstant)
+    WINDOW_MANAGER_NO_DIALOG_RESULT = -1,
+    WINDOW_MANAGER_NO_HOVER_WIDGET = -1,
+    // heroWindowManager::Open when the screen bitmap is missing.
+    WINDOW_MANAGER_OPEN_FAILURE = 1
+H1_ENUM_CONST_END(WindowManagerConstant)
+
+class palette;
 
 #endif // HOMM1_BASE_HEROWINDOWMANAGER_H

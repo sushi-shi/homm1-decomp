@@ -4,17 +4,23 @@
 
 #include <SOURCE/SETUP.h>
 
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/executive.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <BASE/mouseManager.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/comwin.h>
+#include <SOURCE/fileRequester.h>
+#include <SOURCE/game.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/Modem.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -199,9 +205,13 @@ signed char game::SetupComPort(void) {
     if (!gbDirectConnect) {
         strcpy(gConfig.modemInitString, "ATZ");
         sprintf(gText, "%s", gConfig.modemInitString);
-        GetDataEntry("Please enter any special initialization string required by your modem, or "
-                     "hit 'ENTER' to accept the default.",
-                     initStr, 40, gText);
+        GetDataEntry(
+            "Please enter any special initialization string required by your modem, or "
+            "hit 'ENTER' to accept the default.",
+            initStr,
+            40,
+            gText
+        );
         strcpy(gConfig.modemInitString, initStr);
     }
     WritePrefs();
@@ -480,7 +490,8 @@ signed char game::SetupGame(signed char newGame) {
 
     if (iMPBaseType == MULTIPLAYER_BASE_NETWORK || iMPBaseType == MULTIPLAYER_BASE_MODEM) {
         RemoteMain(iMPExtendedType);
-        if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
+        if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST
+            || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
             gbWaitForRemoteReceive = 1;
     }
 
@@ -552,7 +563,17 @@ short SetupCampaignGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(gSetupCampaignGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gSetupCampaignGameHelp[helpIndex],
+                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
     }
     return BaseSetupHandler(message);
 }
@@ -584,9 +605,29 @@ short SetupComPortHandler(tag_message& message) {
         }
         if (helpIndex >= HELP_FIRST) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(
+                    gSetupDCComPortHelp[helpIndex],
+                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
             else
-                NormalDialog(gSetupComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(
+                    gSetupComPortHelp[helpIndex],
+                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
         }
     }
     return BaseSetupHandler(message);
@@ -619,9 +660,29 @@ short SetupBaudHandler(tag_message& message) {
         }
         if (helpIndex >= HELP_FIRST) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(
+                    gSetupDCBaudHelp[helpIndex],
+                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
             else
-                NormalDialog(gSetupBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(
+                    gSetupBaudHelp[helpIndex],
+                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
         }
     }
     return BaseSetupHandler(message);
@@ -650,7 +711,17 @@ short SetupHotSeatGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(gSetupHotSeatGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gSetupHotSeatGameHelp[helpIndex],
+                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
     }
     return BaseSetupHandler(message);
 }
@@ -679,9 +750,29 @@ short SetupModemGameHandler(tag_message& message) {
         }
         if (helpIndex >= HELP_FIRST) {
             if (gbDirectConnect)
-                NormalDialog(gSetupDCGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(
+                    gSetupDCGameHelp[helpIndex],
+                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
             else
-                NormalDialog(gSetupModemGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+                NormalDialog(
+                    gSetupModemGameHelp[helpIndex],
+                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                    -1,
+                    -1,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_RESOURCE,
+                    0,
+                    NORMAL_DIALOG_NO_OR_TEXT
+                );
         }
     }
     return BaseSetupHandler(message);
@@ -713,7 +804,17 @@ short SetupMultiPlayerGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gSetupMultiPlayerGameHelp[helpIndex],
+                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
     }
     return BaseSetupHandler(message);
 }
@@ -738,7 +839,17 @@ short SetupNetworkGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(gSetupNetworkGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gSetupNetworkGameHelp[helpIndex],
+                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
     }
     return BaseSetupHandler(message);
 }
@@ -766,7 +877,17 @@ short SetupGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(gSetupGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW, -1, -1, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_RESOURCE, 0, NORMAL_DIALOG_NO_OR_TEXT);
+            NormalDialog(
+                gSetupGameHelp[helpIndex],
+                NORMAL_DIALOG_TYPE_QUICK_VIEW,
+                -1,
+                -1,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_RESOURCE,
+                0,
+                NORMAL_DIALOG_NO_OR_TEXT
+            );
     }
     return BaseSetupHandler(message);
 }
@@ -779,8 +900,7 @@ short BaseSetupHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
-                if ((message.id > 0 && message.id <= CHOICE_ID_LAST)
-                    || message.id == DIALOG_CANCEL)
+                if ((message.id > 0 && message.id <= CHOICE_ID_LAST) || message.id == DIALOG_CANCEL)
                     handled = 1;
         }
     }

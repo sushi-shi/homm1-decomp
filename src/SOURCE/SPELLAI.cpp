@@ -5,10 +5,14 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/PATH.h>
+#include <SOURCE/philAI.h>
 
 #include <stdlib.h>
 

@@ -166,4 +166,7 @@ public:
     }
 };
 #pragma pack(pop)
+int KeyboardMessageHandler(void*, unsigned int, unsigned int, long);
+int MouseMessageHandler(void*, unsigned int, unsigned int, long);
+
 #endif // HOMM1_BASE_INPUTMANAGER_H

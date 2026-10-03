@@ -1,7 +1,6 @@
 #ifndef HOMM1_SOURCE_SMACKMANAGER_H
 #define HOMM1_SOURCE_SMACKMANAGER_H
 
-#include <SOURCE/smack.h>
 #include <BASE/baseManager.h>
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -41,10 +40,8 @@ public:
 };
 #pragma pack(pop)
 
-extern smackManager* gpSmackManager;
 extern signed char bSmackNum;
 extern signed char gbSmackAborted;
-extern int gbInSmacker;
 
 H1_C_LINKAGE void* radmalloc(unsigned long);
 H1_C_LINKAGE void radfree(void*);

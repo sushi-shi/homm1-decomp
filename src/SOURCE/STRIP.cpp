@@ -2,8 +2,20 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <BASE/border.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/message.h>
+#include <BASE/resourceManager.h>
+#include <BASE/widget.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/bankBox.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/strip.h>
 
 #include <stdio.h>
 

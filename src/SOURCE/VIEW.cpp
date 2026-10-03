@@ -7,11 +7,20 @@
 
 #include <SOURCE/VIEW.h>
 
-#include <BASE/INPUTMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/dialog.h>
+#include <BASE/display.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
+#include <BASE/message.h>
+#include <BASE/mouseManager.h>
+#include <BASE/widget.h>
+#include <SOURCE/army.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
-#include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>
 
@@ -49,8 +58,7 @@ H1_ENUM_END(ViewGeneralHoverHelp)
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.
 VA(0x00438310, 0x56d)
-signed char combatManager::ViewGeneral(int side, int allowActions, int quickView)
-{
+signed char combatManager::ViewGeneral(int side, int allowActions, int quickView) {
     short pictureCtrl;
     short borderId;
     int morale;
@@ -110,19 +118,29 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     wnd->BroadcastMessage(message);
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
     iLuck = gpGame->GetLuck(m_heroes[side], NULL);
-    sprintf(gText, "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
-            cViewGeneralLabels[0], m_heroes[side]->m_primaryStats[HERO_PRIMARY_ATTACK],
-            cViewGeneralLabels[1], m_heroes[side]->m_primaryStats[HERO_PRIMARY_DEFENSE],
-            cViewGeneralLabels[2], m_heroes[side]->m_primaryStats[HERO_PRIMARY_SPELL_POWER],
-            cViewGeneralLabels[3], m_heroes[side]->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
-            cViewGeneralLabels[4], gMoraleText[morale + 3],
-            cViewGeneralLabels[5], gLuckText[iLuck + 3]);
+    sprintf(
+        gText,
+        "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
+        cViewGeneralLabels[0],
+        m_heroes[side]->m_primaryStats[HERO_PRIMARY_ATTACK],
+        cViewGeneralLabels[1],
+        m_heroes[side]->m_primaryStats[HERO_PRIMARY_DEFENSE],
+        cViewGeneralLabels[2],
+        m_heroes[side]->m_primaryStats[HERO_PRIMARY_SPELL_POWER],
+        cViewGeneralLabels[3],
+        m_heroes[side]->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
+        cViewGeneralLabels[4],
+        gMoraleText[morale + 3],
+        cViewGeneralLabels[5],
+        gLuckText[iLuck + 3]
+    );
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = GENERAL_STATS_WIDGET;
     message.text = gText;
     wnd->BroadcastMessage(message);
-    if (m_heroes[side] == NULL || allowActions == 0 || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK)
-        || m_heroCastSpell[side] != 0 || m_currentSide != giCurGeneral) {
+    if (m_heroes[side] == NULL || allowActions == 0
+        || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK) || m_heroCastSpell[side] != 0
+        || m_currentSide != giCurGeneral) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = GENERAL_CAST_SPELL;
         message.value = WIDGET_FLAG_ENABLED;
@@ -142,7 +160,8 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     }
     if (allowActions == 0 || m_currentSide != giCurGeneral
         || (giCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
-        || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0 || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {
+        || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0
+        || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = GENERAL_RETREAT;
         message.value = WIDGET_FLAG_ENABLED;
@@ -170,8 +189,7 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
 // Buka VIEW.cpp:290-390 without the right-click help: Cast Spell, Retreat,
 // Surrender and Close end the dialog; hovering shows their help line.
 VA(0x0043887d, 0x222)
-short HandleViewGeneral(tag_message& message)
-{
+short HandleViewGeneral(tag_message& message) {
     int hintIndex;
     short pictureCtrl;
     short borderId;
@@ -206,43 +224,43 @@ short HandleViewGeneral(tag_message& message)
     retVal = 0;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
-        case WIDGET_NOTIFY_DESELECT:
-            switch (message.id) {
-            case GENERAL_CAST_SPELL:
-            case GENERAL_RETREAT:
-            case GENERAL_SURRENDER:
-            case DIALOG_BUTTON_0:
-                if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
-                    gpWindowManager->m_dialogResult = message.id;
-                    retVal = 1;
-                    break;
+            case WIDGET_NOTIFY_DESELECT:
+                switch (message.id) {
+                    case GENERAL_CAST_SPELL:
+                    case GENERAL_RETREAT:
+                    case GENERAL_SURRENDER:
+                    case DIALOG_BUTTON_0:
+                        if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
+                            gpWindowManager->m_dialogResult = message.id;
+                            retVal = 1;
+                            break;
+                        }
                 }
-            }
-            break;
-        case WIDGET_COMMAND_HOVER:
-            if (message.id == gpWindowManager->m_lastHoverId)
+                break;
+            case WIDGET_COMMAND_HOVER:
+                if (message.id == gpWindowManager->m_lastHoverId)
+                    return MESSAGE_DISPATCH_CONSUME;
+                gpWindowManager->m_lastHoverId = message.id;
+                switch (message.id) {
+                    case GENERAL_CAST_SPELL:
+                        hintIndex = GENERAL_HOVER_HELP_CAST_SPELL;
+                        break;
+                    case GENERAL_RETREAT:
+                        hintIndex = GENERAL_HOVER_HELP_RETREAT;
+                        break;
+                    case GENERAL_SURRENDER:
+                        hintIndex = GENERAL_HOVER_HELP_SURRENDER;
+                        break;
+                    case DIALOG_BUTTON_0:
+                        hintIndex = GENERAL_HOVER_HELP_CLOSE;
+                        break;
+                    default:
+                        hintIndex = GENERAL_HOVER_HELP_HERO;
+                        break;
+                }
+                gpCombatManager->CombatMessage(cViewGeneralHelp[hintIndex], 1);
                 return MESSAGE_DISPATCH_CONSUME;
-            gpWindowManager->m_lastHoverId = message.id;
-            switch (message.id) {
-            case GENERAL_CAST_SPELL:
-                hintIndex = GENERAL_HOVER_HELP_CAST_SPELL;
                 break;
-            case GENERAL_RETREAT:
-                hintIndex = GENERAL_HOVER_HELP_RETREAT;
-                break;
-            case GENERAL_SURRENDER:
-                hintIndex = GENERAL_HOVER_HELP_SURRENDER;
-                break;
-            case DIALOG_BUTTON_0:
-                hintIndex = GENERAL_HOVER_HELP_CLOSE;
-                break;
-            default:
-                hintIndex = GENERAL_HOVER_HELP_HERO;
-                break;
-            }
-            gpCombatManager->CombatMessage(cViewGeneralHelp[hintIndex], 1);
-            return MESSAGE_DISPATCH_CONSUME;
-            break;
         }
     }
     if (retVal) {
@@ -255,8 +273,7 @@ short HandleViewGeneral(tag_message& message)
 // Buka VIEW.cpp:442-488: the creature quick view, placed beside the stack
 // and clamped to the screen.
 VA(0x00438a9f, 0x152)
-void combatManager::ViewArmy(army* viewedArmy, int side, int quickView)
-{
+void combatManager::ViewArmy(army* viewedArmy, int side, int quickView) {
     short xPos;
     short yPos;
     short wndWidth;
@@ -284,6 +301,17 @@ void combatManager::ViewArmy(army* viewedArmy, int side, int quickView)
         yPos = 0;
     if (yPos + 229 > COMBAT_VIEW_HEIGHT)
         yPos = 230;
-    gpGame->ViewArmy(xPos, yPos, viewedArmy->m_creatureType, viewedArmy->m_quantity, m_combatTowns[side], 1,
-                     viewedArmy->m_facing, quickView, m_heroes[side], viewedArmy, m_armyGroups[side]);
+    gpGame->ViewArmy(
+        xPos,
+        yPos,
+        viewedArmy->m_creatureType,
+        viewedArmy->m_quantity,
+        m_combatTowns[side],
+        1,
+        viewedArmy->m_facing,
+        quickView,
+        m_heroes[side],
+        viewedArmy,
+        m_armyGroups[side]
+    );
 }

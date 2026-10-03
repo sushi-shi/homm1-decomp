@@ -4,12 +4,16 @@
 
 #include <SOURCE/wingraph.h>
 
+#include <BASE/bitmap.h>
+#include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
-#include <BASE/MOUSEMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
+#include <BASE/palette.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -945,7 +949,8 @@ void WGCleanUpWinGraphics() {
 VA(0x004053bc, 0x6c)
 void ConnectToDLLs() {
     hDDrawLibrary = LoadLibraryA("DDRAW.DLL");
-    if (reinterpret_cast<unsigned long>(hDDrawLibrary) >= HINSTANCE_ERROR) { // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
+    if (reinterpret_cast<unsigned long>(hDDrawLibrary)
+        >= HINSTANCE_ERROR) { // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
         // API-forced: GetProcAddress returns FARPROC for the typed DirectDraw factory.
         lpDirectDrawCreate = reinterpret_cast<DirectDrawCreateProc>(
             GetProcAddress(hDDrawLibrary, "DirectDrawCreate")
@@ -960,7 +965,8 @@ void ConnectToDLLs() {
 // Buka's DLL teardown checks the Win32 module handle before release.
 VA(0x00405428, 0x29)
 void DisconnectDLLs() {
-    if (reinterpret_cast<unsigned long>(hDDrawLibrary) >= HINSTANCE_ERROR) // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
+    if (reinterpret_cast<unsigned long>(hDDrawLibrary)
+        >= HINSTANCE_ERROR) // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
         FreeLibrary(hDDrawLibrary);
 }
 
@@ -995,9 +1001,11 @@ void GetGraphicsInfo(void) {
         giMainVideoModeHeight = GetDeviceCaps(screenDC, VERTRES);
         ReleaseDC(NULL, screenDC);
         if (giMainVideoModeColorDepth < WINGRAPH_COLOR_DEPTH)
-            ShutDown("Heroes requires 256 color mode or higher.\n\nTo change color mode, right "
-                     "click in an open area on the Windows 95 background, choose 'Properties', "
-                     "then the 'Settings' tab, then change the entry in the 'Color Palette Box'.");
+            ShutDown(
+                "Heroes requires 256 color mode or higher.\n\nTo change color mode, right "
+                "click in an open area on the Windows 95 background, choose 'Properties', "
+                "then the 'Settings' tab, then change the entry in the 'Color Palette Box'."
+            );
     }
 }
 
