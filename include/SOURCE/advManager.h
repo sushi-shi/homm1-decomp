@@ -57,6 +57,14 @@ H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
     INVALID_HERO = -1
 H1_ENUM_CONST_END(AdventureHeroConstant)
 
+// The adventure screen's animation clock: glTimers slot FRAME_TIMER_SLOT
+// re-armed TIMER_DELAY ms ahead (advManager::Open/Main/UpdateScreen,
+// DimensionDoorHandler, philAI's CheckDoMain).
+H1_ENUM_CONST_BEGIN(AdventureFrameTimerConstant)
+    ADVENTURE_FRAME_TIMER_SLOT = 0,
+    TIMER_DELAY = 120
+H1_ENUM_CONST_END(AdventureFrameTimerConstant)
+
 // m_lastQuickViewX/Y: the map cell of the monster DoCombat turns to face the
 // attacker (DrawCell draws it facing); the constructor starts it at NONE
 // (Buka 2.1 QUICK_VIEW_NONE, -99, off every drawable cell) and DoCombat

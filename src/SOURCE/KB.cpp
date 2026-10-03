@@ -2302,6 +2302,13 @@ H1_ENUM_BEGIN(NetBoxControl)
     NET_BOX_LINE_LATEST = 2,
     NET_BOX_INPUT = 3
 H1_ENUM_END(NetBoxControl)
+
+// PopNetBox blinks the input cursor on glTimers slot BLINK_TIMER_SLOT every
+// BLINK_DELAY ms.
+H1_ENUM_CONST_BEGIN(NetBoxConstant)
+    NET_BOX_BLINK_TIMER_SLOT = 0,
+    NET_BOX_BLINK_DELAY = 360
+H1_ENUM_CONST_END(NetBoxConstant)
 // clang-format on
 
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
@@ -2431,7 +2438,7 @@ void PopNetBox(char* notice) {
                 }
         }
 
-        if (!updateInput && KBTickCount() > glTimers[0]) {
+        if (!updateInput && KBTickCount() > glTimers[NET_BOX_BLINK_TIMER_SLOT]) {
             blinkState = 1 - blinkState;
             updateInput = 1;
         }
@@ -2471,7 +2478,7 @@ void PopNetBox(char* notice) {
         }
         if (updateInput) {
             updateInput = 0;
-            glTimers[0] = KBTickCount() + 360;
+            glTimers[NET_BOX_BLINK_TIMER_SLOT] = KBTickCount() + NET_BOX_BLINK_DELAY;
             if (blinkState)
                 text[len] = '_';
             else

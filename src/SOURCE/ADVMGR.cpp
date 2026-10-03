@@ -350,14 +350,12 @@ H1_ENUM_CONST_END(AdventurePuzzleViewConstant)
 
 // Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
 // the network-turn music hold, the walk
-// sample set and volume, the looping-sample budget per high-memory unit and
-// the animation timer step.
+// sample set and volume, and the looping-sample budget per high-memory unit.
 H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     FORCED_MUSIC_DELAY = 6000,
     CURSOR_SAMPLE_FAST_SET = 2,
     CURSOR_SAMPLE_VOLUME = 0x40,
     HIGH_MEMORY_BUFFER_DIVISOR = 100,
-    TIMER_DELAY = 120,
     // Open's locator scroll knobs (scroll.icn frame 4).
     SCROLL_Y = 195,
     SCROLL_LEFT_X = 540,
@@ -853,7 +851,7 @@ short advManager::Open(short id) {
     } else {
         SetNoDialogMenus(1);
     }
-    glTimers[0] = KBTickCount() + TIMER_DELAY;
+    glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
     // 0x100 has no known producer (no MessageType member); retail keeps it.
     m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
                         | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
@@ -1122,7 +1120,7 @@ short advManager::Main(struct tag_message& message) {
     int helpText;
     int dir;
 
-    if (KBTickCount() > glTimers[0] && ComboDraw(1))
+    if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT] && ComboDraw(1))
         UpdateScreen(1, 0);
     if (gbGameOver) {
         message.type = MESSAGE_EXECUTIVE;
@@ -2257,8 +2255,8 @@ int advManager::ProcessHover(struct tag_message* message) {
 VA(0x00429de0, 0x265)
 void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate) {
     if (!forceUpdate && !bShowIt) {
-        if (KBTickCount() > glTimers[0])
-            glTimers[0] = KBTickCount() + TIMER_DELAY;
+        if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
+            glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
         return;
     }
     gpMouseManager
@@ -2289,11 +2287,11 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
     giScrollY = 0;
     giScrollX = giScrollY;
     PollSound();
-    if (KBTickCount() > glTimers[0]) {
+    if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
         ++m_updateMaxX;
         if (m_updateMaxX >= UPDATE_FRAME_CYCLE)
             m_updateMaxX = 0;
-        glTimers[0] = KBTickCount() + TIMER_DELAY;
+        glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
         if (m_updateMaxX == 1 || m_updateMaxX == 3 || m_updateMaxX == 5) {
             ++m_animationPhases[ANIMATION_PHASE_COLUMN_1];
             m_animationPhases[ANIMATION_PHASE_COLUMN_1] %= UPDATE_ANIMATION_PHASES;
@@ -6078,7 +6076,7 @@ short DimensionDoorHandler(struct tag_message& message) {
     short mouseY;
     mapCell* cell;
 
-    if (KBTickCount() > glTimers[0]) {
+    if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
         gpAdvManager->CompleteDraw(gpAdvManager->m_mapOriginX, gpAdvManager->m_mapOriginY, 0);
         gpAdvManager->UpdateScreen(0, 0);
     }
@@ -6179,8 +6177,8 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
         giFrameCount += giFrameStep;
         if (giFrameCount < COMBO_FRAME_LIMIT) {
             Process1WindowsMessage();
-            if (KBTickCount() > glTimers[0])
-                glTimers[0] = KBTickCount() + TIMER_DELAY;
+            if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
+                glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
             PollSound();
             return 0;
         } else {

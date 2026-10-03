@@ -130,10 +130,11 @@ static const float AI_ATTENTION_IDENTITY = 1.0f;
 // evidence: graph:5;base=0.463287;margin=0.627999;shape=0.348;size=0.713;calls=0.909;alternate=pol20:void CheckDoMain(int, int)@0x000379d0
 VA(0x00419f16, 0x1ef)
 void CheckDoMain(int, int doMain) {
-    if (KBTickCount() > iLastFrameRateTimer + 15 || KBTickCount() > glTimers[0]) {
+    if (KBTickCount() > iLastFrameRateTimer + 15
+        || KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
         Process1WindowsMessage();
         PollSound();
-        if (KBTickCount() > glTimers[0]) {
+        if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
             if (doMain == 0) {
                 int oldShowIt = bShowIt;
                 int oldX = gpAdvManager->m_previousOriginX;
@@ -159,7 +160,7 @@ void CheckDoMain(int, int doMain) {
                 gpAdvManager->m_previousOriginX = oldX;
                 gpAdvManager->m_previousOriginY = oldY;
             }
-            glTimers[0] = KBTickCount() + 120;
+            glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
         } else if (gpMouseManager->m_mouseX - gpMouseManager->m_hotspotX != gpMouseManager->m_drawnX
                    || gpMouseManager->m_mouseY - gpMouseManager->m_hotspotY
                           != gpMouseManager->m_drawnY) {
