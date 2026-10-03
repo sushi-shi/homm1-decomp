@@ -1,48 +1,70 @@
-# /Gi: C1 handles shift with the source and object path lengths (HoMM1 VC4, measured)
+# /Gi: C1 handles depend on the compile's path strings (HoMM1 VC4, measured)
 
-Measured with the pinned VC4.0 `C1XX` on `SOURCE/PHILAI`. For each compile,
-the C1 handle of the first initialized datum is read from the IL `in` stream
-(the 2-byte value after its record tag: `b[1] & 0x7f | b[2] << 7`). C2's
-operand sort and register tie order are functions of these handles. A
-uniform shift of all handles therefore changes code. Two of the 60 PHILAI
-functions changed when only the source directory name grew by 15
-characters.
+Measured with the pinned VC4.0 `C1XX` and `C2`, first on `SOURCE/PHILAI` and
+then on the whole tree through `homm1.tool.fixedroot`. C2's operand sort and
+its register tie order are functions of C1 symbol handles. So anything that
+shifts handles can change code.
 
-## Rule
+## Which paths matter
 
-Under `/Zi /Gi` (fresh `.pdb`/`.idb` each compile), every C1 symbol handle
-grows by one per character of:
+Under `/Zi /Gi`, with a fresh `.pdb`/`.idb` for each compile, three paths move
+the handles:
 
-- the source path as passed to C1 (`-f`, the path CL was given): 143 to 206
-  characters gave +1 per character;
-- the object path as passed to C1 (`-Fo`, the whole path including its
-  directory): a 24-character longer directory gave +24, and a longer
-  basename +1 per character.
+- **The source path** as passed to C1 (`-f`). In split compiles, each extra
+  character added one to every handle. This held for paths of 143 to 206
+  characters.
+- **The object path** (`-Fo`, directory included). Through fixedroot, PHILAI
+  changed in 2 to 6 functions when only the object directory changed.
+- **The paths of the opened headers.** Fixedroot's `HOMM1_FIXEDROOT_INCLUDE`
+  knob moves `include/` under a subdirectory of `D:\Heroes`. That changed 6
+  (`I`) or 1 (`INCLUDE`) of PHILAI's 60 functions. An earlier test reported
+  that include roots made no difference. It used a symlinked `-I` root, which
+  wine resolves to its target, so the opened paths never changed. That test
+  was wrong.
 
-These do not move handles: case (`OZ.OBJ` vs `oz.obj`), the include
-directories (`-I` roots 10 and 50 characters longer gave the same handles
-and byte-identical PHILAI code), the `-Fd` PDB path, and the `-il` IL temp
-path.
+**The strings matter, not only their lengths.** For GAME, an object directory
+of `Heroes\Source` (the source's own directory) gave the same code as the
+default. Same-length variants did not: `Heroes\Sourcf`, `Xeroes\Source` and a
+13-character placeholder each changed 3 to 5 functions, and differently from
+each other. Across the whole tree, the default layout (objects beside their
+sources) does not equal the length-equivalent sweep points either: SOURCE at
+13 characters with BASE at 11 differs in 23 functions. So no length-only model
+predicts the result.
 
-So, apart from boundary effects, only the sum `len(source path) +
-len(object path)` matters. One boundary effect seen: when handles cross
-0x4000, the shift for the 64-character case was +128 rather than +64. A
-relative source path (`sy/PHILAI.cpp`) moved the handles by twice its length
-change. Without `/Gi`, handles do not depend on these paths.
+Without `/Gi`, handles do not depend on any of these paths.
 
 ## An existing .idb freezes handles
 
-C1 reuses the previous compile's handle assignment when the `-Fd`
-`.pdb`/`.idb` already exist, even for a different path or source text. This
-is incremental compilation. A sweep that reused one `-Fd` measured no path
-effect at all. Any `/Gi` build or measurement must start each unit's compile
-without a stale `.pdb`/`.idb`, or results depend on what was compiled before
-it.
+If the `-Fd` `.pdb`/`.idb` already exist, C1 reuses the previous compile's
+handles, even for a different path or source text. One split-compile sweep
+that reused a single `-Fd` measured no path effect at all. Fixedroot runs
+every compile in a private tmpfs working directory, so `vc40.pdb` and
+`vc40.idb` are always fresh. This covers match, build, `tu_state_noise` and
+`batch_source_variants`, which all compile through `homm1.graph.cc`, then
+`homm1.tool.cl`, then fixedroot.
 
-## Consequence
+## Fitting the object directory (whole tree, relaxed comparison)
 
-Retail's handles reflect the length of its own source path plus object path
-for each unit. That is a single unknown integer per unit (or one per build
-layout, such as `D:\Heroes\Source\X.CPP` with its `.obj` directory). Padding
-the object directory sets it without touching sources, so the retail length
-can be found by sweeping that sum and scoring each unit.
+The tree is n2-cur's `/Zi /Gi` profiles, before the master merge. Every C++
+object was rebuilt for each run, and exact functions were counted out of
+1,012. The object directory was set with `HOMM1_FIXEDROOT_OBJDIR`:
+
+| Object directory under `D:\` | Exact |
+| --- | --- |
+| default: beside the source (`Heroes\Source`, `Heroes\Base`) | 954 |
+| `Heroes\Debug` / `Release` / `WinDebug` / `WinRel` | 946 / 949 / 950 / 948 |
+| `Heroes\Source\Debug` / `Release` / `WinDebug` / `WinRel` | 954 / 949 / 947 / 951 |
+| `Heroes\Obj`, `Heroes`, `Heroes\Source`, `Heroes\Base` (all units) | 949, 951, 950, 951 |
+| synthetic `Ox…x`, 1 to 30 characters | 942 to 957 (best: 25 characters, 957) |
+
+Over all 31 sweep points, 923 functions are exact everywhere, 39 nowhere, and
+only 50 depend on the object path. No directory stands out: the spread is ±6
+around the default. The best synthetic point gains 3 over the default, and its
+name is not retail-shaped. The sources were tuned under the default layout,
+which biases the fit towards it. A clear peak would need source that was not
+tuned under any `/Gi` path.
+
+The build keeps objects beside their sources (`fixedroot.OBJ_DIR = ""`).
+`HOMM1_FIXEDROOT_OBJDIR` remains for further fits. Header path spellings
+(`D:\Heroes\SOURCE\army.h` against retail's unknown case and layout) are a
+second unfitted parameter of the same kind.
