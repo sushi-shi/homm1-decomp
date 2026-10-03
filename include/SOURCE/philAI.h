@@ -269,6 +269,5 @@ extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern unsigned char giCurPlayerHighBit;
 extern unsigned char giCurWatchPlayerHighBit;
 extern signed char gbDismissArmy;
-extern signed char giMonType[];
 
 #endif // HOMM1_SOURCE_PHILAI_H
