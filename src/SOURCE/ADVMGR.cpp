@@ -2425,22 +2425,6 @@ void advManager::CompleteDraw(int update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
-// Retail ADVMGR .bss keeps four objects no HoMM1 code references: the
-// Buka/PoL ADVMGR globals iThisMaxY, iThisMinY, USMsg and CDMsg (both donors
-// declare them in advManager.h and never use them). VC4 orders .bss by name
-// key, and these keys fit the unclaimed retail slots: 229, 317 and 351 between
-// cPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
-// bytes; HoMM1 has no town portal, so giTownPortalChoice/townPortalWin are
-// absent), and 892 between bComboDraw (596) and iLastAnimFrame (957) fills
-// 0x004c50b0-0x004c50bf. .bss position is free; they sit with the drawing code.
-DATA(0x004c4f30)
-int iThisMaxY;
-DATA(0x004c4f34)
-int iThisMinY;
-DATA(0x004c4f38)
-struct tag_message USMsg;
-DATA(0x004c50b0)
-struct tag_message CDMsg;
 
 // Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
 // masks first, then each unseen neighbour, indexed into the cloud table.
@@ -6543,6 +6527,20 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
     }
 }
 
+// Retail ADVMGR .bss keeps four objects no HoMM1 code references: the
+// Buka/PoL ADVMGR globals iThisMaxY, iThisMinY, USMsg and CDMsg (both donors
+// declare them in advManager.h and never use them). VC4 orders .bss by name
+// key, and these keys fit the unclaimed retail slots: 229, 317 and 351 between
+// cPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
+// bytes; HoMM1 has no town portal, so giTownPortalChoice/townPortalWin are
+// absent), and 892 between bComboDraw (596) and iLastAnimFrame (957) fills
+// 0x004c50b0-0x004c50bf. .bss position does not move them, so they sit with
+// the spell code (USMsg and CDMsg after TeleportTo).
+DATA(0x004c4f30)
+int iThisMaxY;
+DATA(0x004c4f34)
+int iThisMinY;
+
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
@@ -6664,6 +6662,11 @@ void advManager::DimensionDoor(void) {
         UpdateRadar(1, 0);
     }
 }
+
+DATA(0x004c4f38)
+struct tag_message USMsg;
+DATA(0x004c50b0)
+struct tag_message CDMsg;
 
 // donor PoL RVA 0x0006785d; preferred Buka symbol ?TownGate@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
