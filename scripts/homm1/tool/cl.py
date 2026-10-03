@@ -22,7 +22,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from homm1.core.paths import INCLUDE, VENDOR
+from homm1.core.paths import INCLUDE, vendor_include_dirs
 from homm1.tool import ToolError
 from homm1.tool.wine import era_tool, run, winepath
 
@@ -31,8 +31,7 @@ def repo_include_flags() -> list[str]:
     dirs = []
     if INCLUDE.is_dir():
         dirs.append(INCLUDE)
-    if VENDOR.is_dir():
-        dirs += sorted(d for d in VENDOR.iterdir() if d.is_dir())
+    dirs += [d for _name, d in vendor_include_dirs()]
     return [f"/I{winepath(d)}" for d in dirs]
 
 

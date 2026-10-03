@@ -21,7 +21,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from homm1.core.paths import BUILD, INCLUDE, VENDOR, REPO
+from homm1.core.paths import BUILD, INCLUDE, REPO, vendor_include_dirs
 
 COMPDB = BUILD / "clangd/compile_commands.json"
 
@@ -37,8 +37,7 @@ MS_FLAGS = [f"--target={TARGET}", f"-fms-compatibility-version={MSC_COMPAT}",
 
 def _include_dirs() -> list[str]:
     dirs = [str(INCLUDE)]
-    if VENDOR.is_dir():
-        dirs += sorted(str(d) for d in VENDOR.iterdir() if d.is_dir())
+    dirs += [str(d) for _name, d in vendor_include_dirs()]
     return dirs
 
 

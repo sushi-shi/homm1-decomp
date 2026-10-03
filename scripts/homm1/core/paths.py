@@ -28,6 +28,31 @@ RETAIL = CONFIG / "retail"
 BUILD = REPO / "build"
 
 
+def sdk_names() -> list[str]:
+    """The pinned vendor SDKs (config/toolchains.json entries with `sdk`)."""
+    import json
+    pins = json.loads((CONFIG / "toolchains.json").read_text())
+    return sorted(name for name, entry in pins.items() if "sdk" in entry)
+
+
+def vendor_include_dirs() -> list[tuple[str, Path]]:
+    """[(name, dir)] of every vendor header tree, in one fixed order: the
+    in-repo vendor/<name> trees, then each pinned SDK's installed include/
+    (build/toolchains/<sdk>/include; `homm1 toolchain install --id <sdk>`)."""
+    dirs = [(d.name, d) for d in sorted(VENDOR.iterdir()) if d.is_dir()] \
+        if VENDOR.is_dir() else []
+    for name in sdk_names():
+        inc = BUILD / "toolchains" / name / "include"
+        if inc.is_dir():
+            dirs.append((name, inc))
+    return dirs
+
+
+def sdk_lib_dirs() -> list[Path]:
+    """Each pinned SDK's installed lib/ directory."""
+    return [d for d in (BUILD / "toolchains" / n / "lib" for n in sdk_names()) if d.is_dir()]
+
+
 def msvc_dir() -> Path:
     """The installed VC4 tree, overridable for compiler probes."""
     return Path(os.environ.get("MSVC_DIR") or BUILD / "toolchains/vc40")
