@@ -6,6 +6,20 @@ The target is the February 1996 `HEROES.EXE`; hashes live in
 [config/retail/targets.json](config/retail/targets.json).
 Supply your own game executable and assets; they are not included here.
 
+## Branches
+
+```text
+       master (you are here)
+              |
+              v
+     source-win95-1996
+```
+
+| Branch | Purpose |
+| --- | --- |
+| `master` | Reconstruction and matching against the Win95 1.0 `HEROES.EXE` |
+| `source-win95-1996` | Generated clean source (`homm1 clean`): no matching annotations or comments; builds the game with the pinned toolchain |
+
 <!-- match-score:start -->
 ## Match status
 
