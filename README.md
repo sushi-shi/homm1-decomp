@@ -34,7 +34,7 @@ _Comparison mode: strict data references._
 | Module   | Units |   Functions exact | Fuzzy |
 | :------- | ----: | ----------------: | ----: |
 | `SOURCE` |    37 | 725 / 773 (93.8%) | 99.9% |
-| `BASE`   |    30 | 216 / 229 (94.3%) | 99.6% |
+| `BASE`   |    30 | 216 / 229 (94.3%) | 99.7% |
 | `lzhuf`  |     2 |    9 / 12 (75.0%) | 99.1% |
 
 _CUR / MAX / HIST: 950 / 950 / 950 exact &middot; 99.86% / 99.86% / 99.86% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target; generated and library code is excluded._

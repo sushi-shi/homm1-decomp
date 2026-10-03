@@ -312,7 +312,7 @@ static u32 sClipRun;
 DATA(0x004cb0c8)
 static BOOL sClipInside;
 
-VA(0x004740a0, 0x2ad)
+VA(0x004740a0, 0x2a5)
 void ClipIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,
