@@ -816,7 +816,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y)
+                        && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                     : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
@@ -829,7 +829,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y)
+                            && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                         : WHIRLPOOL_MIN_DISTANCE)) {
                             if (--teleportCount <= 0)
@@ -2367,7 +2367,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y)
+                        && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                       : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
@@ -2380,7 +2380,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y)
+                            && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (eventType == MAP_OBJECT_STONE_LITHS
                                           ? STONE_LITHS_MIN_DISTANCE
                                           : WHIRLPOOL_MIN_DISTANCE)) {

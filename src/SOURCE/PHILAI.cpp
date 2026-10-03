@@ -822,7 +822,7 @@ void philAI::GetTurnAIVars(int player) {
                 for (x = xPos - 10; x <= xPos + 10; x++) {
                     for (y = yPos - 10; y <= yPos + 10; y++) {
                         if (x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE) {
-                            mineValue = abs(abs(x - xPos) + abs(y - yPos) - 4) >> 2;
+                            mineValue = abs(MANHATTAN_LENGTH(x - xPos, y - yPos) - 4) >> 2;
                             if (gaiTurnValueOfMine[x][y] > mineValue)
                                 gaiTurnValueOfMine[x][y] = mineValue;
                         }
@@ -1093,7 +1093,7 @@ void philAI::DetermineTargetPosition(
                 }
                 if (x == targetX && y == targetY) {
                     cellValue = static_cast<int>(cellValue * AI_TARGET_HUMAN_VALUE_FACTOR);
-                    if (abs(x - pHero->m_x) + abs(y - pHero->m_y) > 3)
+                    if (MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y) > 3)
                         cellValue++;
                 }
             scored:
@@ -1102,8 +1102,8 @@ void philAI::DetermineTargetPosition(
                     bestY = y;
                     bestRV = cellValue;
                 } else if (cellValue == bestRV && cellValue == 0) {
-                    if (abs(bestY - pHero->m_y) + abs(bestX - pHero->m_x)
-                        < abs(x - pHero->m_x) + abs(y - pHero->m_y)) {
+                    if (MANHATTAN_LENGTH(bestY - pHero->m_y, bestX - pHero->m_x)
+                        < MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y)) {
                         bestX = x;
                         bestY = y;
                     }
@@ -2607,7 +2607,7 @@ void philAI::HeroInteractionAtTown(
     if (doInteraction) {
         if ((townPointer->m_buildings & (1 << BUILDING_SLOT_SHIPYARD))
             && townPointer->m_id != giBestShipyardId) {
-            i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
+            i = MANHATTAN_LENGTH(townPointer->m_x - heroPointer->m_x, townPointer->m_y - heroPointer->m_y);
             if (gbActualShipyardFound) {
                 if (giBestShipyardDist > i) {
                     giBestShipyardDist = i;
@@ -2623,7 +2623,7 @@ void philAI::HeroInteractionAtTown(
                    && gpAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1)->m_tileIndex
                           < MAP_CELL_TILES_PER_TERRAIN
                    && !gbActualShipyardFound && townPointer->m_id != giBestShipyardId) {
-            i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
+            i = MANHATTAN_LENGTH(townPointer->m_x - heroPointer->m_x, townPointer->m_y - heroPointer->m_y);
             if (gbPossibleShipyardFound) {
                 if (giBestShipyardDist > i) {
                     giBestShipyardDist = i;
@@ -3969,7 +3969,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             for (gateY28 = 0; gateY28 < MAP_CELL_GRID_SIZE; gateY28++) {
                 for (gateX1 = 0; gateX1 < MAP_CELL_GRID_SIZE; gateX1++) {
                     exitCell = gpAdvManager->GetCell(gateX1, gateY28);
-                    if (abs(gateX1 - x) + abs(gateY28 - y)
+                    if (MANHATTAN_LENGTH(gateX1 - x, gateY28 - y)
                             > ((pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                                        == MAP_OBJECT_STONE_LITHS
                                    ? 1
