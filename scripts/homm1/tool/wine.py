@@ -96,11 +96,12 @@ def winepath(p: Path | str) -> str:
 
 
 def ensure_wineserver() -> None:
-    """`wineserver -p`: persist the server past the last client, so parallel
-    `wine cl` invocations under ninja skip the cold start. Idempotent."""
+    """`wineserver -p60`: keep the server 60s past the last client, so parallel
+    `wine cl` invocations under ninja skip the cold start, yet it exits on
+    its own afterwards (bare `-p` persisted forever and leaked). Idempotent."""
     ws = shutil.which("wineserver")
     if ws:
-        subprocess.run([ws, "-p"], check=False, stdin=subprocess.DEVNULL,
+        subprocess.run([ws, "-p60"], check=False, stdin=subprocess.DEVNULL,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 

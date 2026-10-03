@@ -20,21 +20,27 @@ recursive walker `0x408d62`, exchange `0x413ded` (assert string `sortnode.c`).
 
 | node | rank | hash |
 |---|---|---|
-| symbol (IL `0x26`) | `0x10` | `k4(handle + 0x3000)` |
+| symbol (IL `0x26`) | `0x10` | `k4(handle)` |
 | constant (IL `0x33`) | 0 | function of the value |
 | unary (load, convert) | child + `0x20` (`0x10` for IL load `0x30`) | child + `(op>>4) - op` |
 | binary | `(L + R + 0x20) & 0xfff0` | `L + R + (op>>4) - op` |
 
 ```python
-def k4(v):                      # v = C1 symbol handle + 0x3000
+def k4(v):                      # v = C1 symbol handle (symbol +0x24 in C2)
     a = v >> 8
     e = ((a - v) & 0xffffffff) >> 4
     return (e - a + v) & 0xf    # == floor(15*u/16) % 16, u = v - (v >> 8)
 ```
 
-For two same-width leaves this reduces to comparing `(k4(h) + rot) % 16`, with
+A symbol leaf always sits under a load (IL `0x30`), and the load adds
+`(0x30>>4) - 0x30 = 3 (mod 16)`.  The key the measurements fitted,
+`k4(handle + 0x3000)`, is that sum: `k4(h + 0x3000) == (k4(h) + 3) % 16` for every
+16-bit `h` ([replay entry](vc4-sortnode-is-a-replayable-function-of-handles.md)).
+For two same-width leaves this reduces to comparing `(k4(h + 0x3000) + rot) % 16`, with
 `rot` 0 for 4-byte operands (int, long, pointer, float), 15 for 2-byte and 14 for
-1-byte operands (the load/convert hash).  Global, parameter and local leaves use
+1-byte operands.  These rotations are the widening conversion `0x34`, which adds 15
+once for short to int and twice for char to short to int.  Each conversion also adds
+`0x20` to the rank.  Global, parameter and local leaves use
 the same formula.  A 4-byte leaf against a narrow leaf is decided by rank, not by
 handles.  Because the binary rank adds the children's hashes, a carry out of the
 low nibble can also change a rank.
@@ -89,10 +95,11 @@ shift handles.
 
 ## Not established
 
-- The meaning of the `+0x3000` base and whether other symbol classes use another
-  base.  Leaf locals and externs agree with it.
+- Whether other symbol classes take a different path through the leaf weight. A
+  symbol of kind byte `0x18` weighs `0x10` with no hash; the others measured use
+  `k4(handle)`.
 - Exact constant and operator hashes for every IL opcode.  The table above is read
   from the disassembly; only the leaf, width-rotation and tie rules were measured
   in isolation.
-- `/O2` units.  The same `sortnode` pass runs, but the optimizer and register
-  allocator change the emitted order afterwards.
+- `/O2` units.  The same `sortnode` pass runs and replays exactly (the replay entry), but the
+  optimizer and register allocator change the emitted order afterwards.

@@ -73,6 +73,9 @@ def read_coff(path: Path):
 
     symbols = {}
     section_functions = {}
+    # Static function symbols (e.g. VC4's dynamic-initializer `_$E1`) end the
+    # preceding function's extent but get no row of their own.
+    section_boundaries = {}
     i = 0
     while i < nsym:
         off = symptr + i * 18
@@ -84,6 +87,8 @@ def read_coff(path: Path):
         symbols[i] = name
         if secnum > 0 and storage == 2 and typ == 0x20:
             section_functions.setdefault(secnum, []).append((value, name))
+        if secnum > 0 and storage in (2, 3) and typ == 0x20:
+            section_boundaries.setdefault(secnum, set()).add(value)
         i += 1 + naux
 
     rows = []
@@ -101,7 +106,8 @@ def read_coff(path: Path):
             relocs.append(
                 (offset, reltype, symbols.get(symidx, "#" + str(symidx)), addend)
             )
-        starts = sorted(set(value for value, _name in functions))
+        starts = sorted(section_boundaries.get(secnum, set())
+                        | set(value for value, _name in functions))
         next_start = {
             start: starts[index + 1] if index + 1 < len(starts)
             else len(sec["bytes"])
