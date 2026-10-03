@@ -49,12 +49,12 @@ signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // comparison and placement of the re-entry guard.
 VA(0x0044f640, 0x72)
 void PollSound() {
-    if (KBTickCount() < gNextSoundPollTick)
+    if (KBTickCount() < glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT])
         return;
     if (gbInPollSound)
         return;
     gbInPollSound = 1;
-    gNextSoundPollTick = KBTickCount() + 30;
+    glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT] = KBTickCount() + 30;
     if (gbForegroundApp)
         gpSoundManager->PollSound();
     PollRemote();
@@ -63,7 +63,7 @@ void PollSound() {
 
 VA(0x0044f6b2, 0x20)
 void ForcePollSound() {
-    gNextSoundPollTick = KBTickCount() - 1;
+    glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT] = KBTickCount() - 1;
     PollSound();
 }
 
@@ -4907,6 +4907,7 @@ signed char gbInMemError = 0;
 // symbol-hash walk, not definition order).
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/mapCell.h>
+
 DATA(0x004c5138)
 int gbHumanPlayer[4];
 DATA(0x004c5148)
@@ -4996,11 +4997,7 @@ char gFullMapName[20];
 DATA(0x004c6a7c)
 int giShowIntro;
 DATA(0x004c6a80)
-int glTimers[2];
-DATA(0x004c6a90)
-long gMusicFadeTimer;
-DATA(0x004c6a94)
-long gNextSoundPollTick;
+int glTimers[GLOBAL_TIMER_COUNT];
 DATA(0x004c6a98)
 int giScore;
 DATA(0x004c6aa0)

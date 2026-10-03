@@ -14,7 +14,6 @@
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 
-long gButtonRepeatTimer;
 DATA(0x004a2f98)
 int iLeftRightSave = 0;
 
@@ -71,7 +70,7 @@ inline short button::Deselect(tag_message& message) {
 VA(0x0047f050, 0x528)
 short button::Main(tag_message& message) {
     if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
-        && KBTickCount() > gButtonRepeatTimer)
+        && KBTickCount() > glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT])
         return Deselect(message);
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
@@ -147,7 +146,7 @@ short button::Select(tag_message& message) {
         message.command = WIDGET_COMMAND_DIALOG_SELECT;
     else
         message.command = WIDGET_NOTIFY_SELECT;
-    gButtonRepeatTimer = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
+    glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
     iLeftRightSave = message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
     return MESSAGE_DISPATCH_FORWARD;
 }

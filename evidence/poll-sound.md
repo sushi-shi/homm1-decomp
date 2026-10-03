@@ -37,10 +37,12 @@ services mouse/color timers. Those later behaviors are not copied to HoMM1.
 | 0xC6A94 | next sound-poll deadline, long | Signed compare with KBTickCount and dword writes of now+30 / now-1. |
 | 0xC7CA8 | `gpSoundManager`, pointer | Dword load into ECX preceding the member call. |
 
-Only the four accessed storage extents are admitted. The timer's enclosing
-array and the sound-manager layout remain unresolved; the deadline slot has
-the descriptive local identity `gNextSoundPollTick`. HoMM2's larger timer array
-does not by itself prove HoMM1's complete array bounds or ownership.
+Only the four accessed storage extents are admitted. The deadline at 0xC6A94
+is `glTimers[5]`: Buka's KBDeclarations.h numbers slot 5 the poll-sound timer
+(slot 4 music fade at 0xC6A90, slot 2 button repeat at 0xC6A88, the same
+offsets from glTimers at 0xC6A80), and KB's `.bss` name-hash order runs from
+glTimers (key 430) to giScore (433) at 0xC6A98, leaving no window for separate
+objects in between. HoMM1's table therefore has six slots.
 
 The sound-manager declaration exposes only a method ABI. Its unresolved layout
 is registered in the cleanliness configuration; allocation, by-value use,

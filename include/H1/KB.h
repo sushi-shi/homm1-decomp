@@ -135,8 +135,6 @@ extern int giRequiredExtendedMemory;
 extern int giRequiredConventionalMemory;
 extern int gbForegroundApp;
 extern int gbLoadingMonoIcon;
-extern long gNextSoundPollTick;
-extern long gMusicFadeTimer;
 extern configStruct gConfig;
 // Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
 extern struct tag_tilePoint normalDirTable[];
@@ -222,6 +220,14 @@ void WaitEndSample(struct SAMPLE2, int);
 // Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
 extern struct SAMPLE2 NULL_SAMPLE2;
 extern int glTimers[];
+// Shared glTimers slots (Buka KBDeclarations.h numbers the same ones); the
+// table ends at giScore (0x004c6a98), six slots. Units keep slots 0 and 1.
+H1_ENUM_CONST_BEGIN(GlobalTimerConstant)
+    GLOBAL_TIMER_COUNT = 6,
+    GLOBAL_BUTTON_REPEAT_TIMER_SLOT = 2,
+    GLOBAL_MUSIC_FADE_TIMER_SLOT = 4,
+    GLOBAL_POLL_SOUND_TIMER_SLOT = 5
+H1_ENUM_CONST_END(GlobalTimerConstant)
 void Process1WindowsMessage();
 void SetNoDialogMenus(int);
 void EarlyShutDownSystem();

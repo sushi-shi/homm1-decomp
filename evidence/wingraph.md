@@ -23,8 +23,8 @@ stride `0x18`, two elements and fullScreen at record+`0x14`. The selection at
 VA `0x492e30` therefore indexes the fullScreen read at `0x4c6ad4`.
 HoMM2's later colorMouseCursor member is absent. PollSound establishes
 musicVolume at owner+4 and musicSource at +`0xb8`. Defaults (`0x5c9fe`) write
-2/3 at offset zero; its name remains unknown. VA `0x4c6a94` is the separate
-gNextSoundPollTick, not a config base.
+2/3 at offset zero; its name remains unknown. VA `0x4c6a94` is
+glTimers[5] (the poll-sound deadline), not a config base.
 
 | RVA | Identity | Retail evidence |
 | --- | --- | --- |

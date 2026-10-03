@@ -250,7 +250,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     ServiceSound();
     if (m_fadeSteps > 0) {
         m_fadeSteps = MUSIC_FADE_TOTAL_STEPS;
-        gMusicFadeTimer = KBTickCount() + CD_FADE_DELAY_TICKS;
+        glTimers[GLOBAL_MUSIC_FADE_TIMER_SLOT] = KBTickCount() + CD_FADE_DELAY_TICKS;
         CDSetVolume(SOUND_VOLUME_LAST, 0);
     } else {
         CDSetVolume(volume, 0);
@@ -854,8 +854,8 @@ void soundManager::PollSound(void) {
     if (m_fadeSteps > 0) {
         Process1WindowsMessage();
         if (m_currentTrack >= MUSIC_POSITION_TRACK_END || m_currentTrack < 0)
-            gMusicFadeTimer = KBTickCount();
-        delta = gMusicFadeTimer - KBTickCount();
+            glTimers[GLOBAL_MUSIC_FADE_TIMER_SLOT] = KBTickCount();
+        delta = glTimers[GLOBAL_MUSIC_FADE_TIMER_SLOT] - KBTickCount();
         m_fadeSteps = delta / MUSIC_FADE_STEP_TICKS;
         if (m_fadeSteps < 1)
             m_fadeSteps = 0;
@@ -873,7 +873,7 @@ void soundManager::PollSound(void) {
                     m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
                 }
             } else {
-                gMusicFadeTimer = KBTickCount();
+                glTimers[GLOBAL_MUSIC_FADE_TIMER_SLOT] = KBTickCount();
             }
             m_fading = 1;
             if ((m_fadeTargetTrack >= 0 && m_fadeTargetTrack < MUSIC_POSITION_TRACK_END)
@@ -887,7 +887,7 @@ void soundManager::PollSound(void) {
                 );
             else
                 PlayAmbientMusic(m_fadeTargetTrack, 0, SOUND_VOLUME_FROM_CONFIG);
-            delta = gMusicFadeTimer - KBTickCount();
+            delta = glTimers[GLOBAL_MUSIC_FADE_TIMER_SLOT] - KBTickCount();
             m_fadeSteps = delta / MUSIC_FADE_STEP_TICKS;
             if (m_fadeSteps < 1)
                 m_fadeSteps = 0;
@@ -1032,7 +1032,7 @@ void soundManager::SwitchAmbientMusic(int track) {
         || (m_fadeSteps == 0 && m_currentTrack != track)) {
         if (m_fadeSteps <= MUSIC_FADE_HOLD_LAST) {
             m_fadeSteps = MUSIC_FADE_TOTAL_STEPS;
-            gMusicFadeTimer = KBTickCount() + AMBIENT_FADE_DELAY_TICKS;
+            glTimers[GLOBAL_MUSIC_FADE_TIMER_SLOT] = KBTickCount() + AMBIENT_FADE_DELAY_TICKS;
         }
         m_fadeTargetTrack = track;
         PollSound();
