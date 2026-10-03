@@ -324,6 +324,7 @@ int ReceiveRemoteData(unsigned char*, unsigned char* data, int decodeType) {
 // evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
 VA(0x00458e44, 0x194)
 signed char InitNetHost(void) {
+    DATA(0x0049f954) static signed char iInitNetHostStatus = 0;
     int unused;
     int needName;
 
@@ -450,6 +451,8 @@ signed char WaitForHost(void) {
 // evidence: graph:2;base=0.465490;margin=0.416814;shape=0.321;size=0.696;calls=1.000;alternate=pol20:signed char WaitForGuest(void)@0x0001364f
 VA(0x00459267, 0x101)
 signed char WaitForGuest(void) {
+    DATA(0x0049fa6c) static signed char iWaitForGuestStatus = 0;
+    DATA(0x0049fa70) static long iLastBroadcastTime = 0;
     char buffer[80];
     int status;
 
@@ -978,6 +981,7 @@ char* GetRemoteData(signed char remove) {
 
 VA(0x0045a584, 0x4fe)
 void PollRemote(void) {
+    DATA(0x0049fc80) static signed char bInTimeoutFail = 0;
     signed char newControl;
     signed char queueFull;
     int i;
@@ -1161,18 +1165,10 @@ DATA(0x0049f84c)
 long lLastHeartbeatReceive = 1999999999;
 DATA(0x0049f850)
 signed char gbInNetSetup = 0;
-DATA(0x0049f954)
-signed char iInitNetHostStatus = 0;
 DATA(0x0049f958)
 signed char iInitNetGuestStatus = 0;
 DATA(0x0049f9d0)
 signed char iWaitForHostStatus = 0;
-DATA(0x0049fa6c)
-signed char iWaitForGuestStatus = 0;
-DATA(0x0049fa70)
-long iLastBroadcastTime = 0;
-DATA(0x0049fc80)
-signed char bInTimeoutFail = 0;
 DATA(0x004c7e70)
 char idstr[8];
 DATA(0x004c7e78)
