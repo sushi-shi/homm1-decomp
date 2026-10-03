@@ -281,16 +281,9 @@ def refresh_readme_block(report=None) -> bool:
     """
     from homm1.model import resolve
     from homm1.verify.universe import engine_universe
-    doc, cur, base, fp, _stale, rvas = load_state(report)
-    umeas = scores.unit_measures(doc)
-    mods, started_fzw, started_code = rm.collect_modules(umeas)
-    model = resolve()
-    sizes = {(b.unit.rsplit("/", 1)[-1], b.name): b.size for b in model.functions
-             if b.name and b.size}
+    _doc, cur, base, fp, _stale, rvas = load_state(report)
     ledger, *_ = bank_rows(cur, base, fp, rvas)
-    tot = rm.score_weights(cur, ledger, sizes, mods, rm.unit_modules())
-    block = rm.render_block(mods, started_fzw, engine_universe(model), tot)
-    return rm.write_block(block)
+    return rm.write_block(rm.render_block(cur, ledger, engine_universe(resolve())))
 
 
 def cmd_readme(argv) -> int:
@@ -442,7 +435,7 @@ def rebase_rows(new_funcs: dict) -> tuple[dict, list]:
     return rebased, sorted(dropped)
 
 
-def _reconcile(overall, mods, started_fzw, started_code, eng, cur,
+def _reconcile(overall, eng, cur,
                base_funcs, rvas) -> None:
     old = rm.old_block_numbers(rm.current_block() or "")
     if old is None:
@@ -488,7 +481,8 @@ def _reconcile(overall, mods, started_fzw, started_code, eng, cur,
                 print(f"      {label}: (not in old block) -> {fn:,} fns / "
                       f"{code:,} B")
     tot_code = eng["real_code"]
-    new_fuzzy = started_fzw / tot_code if tot_code else 0.0
+    _mods, tot = rm.score_table(cur, {}, eng)
+    new_fuzzy = tot["cw"] / tot_code if tot_code else 0.0
     if "fuzzy" in old:
         print(f"  overall fuzzy:     {old['fuzzy']:.2f}% -> {new_fuzzy:.2f}% "
               f"(denominator {old.get('engine_code', 0):,} -> {tot_code:,} "
@@ -553,18 +547,12 @@ def cmd_bank(argv) -> int:
         bank_rows(cur, base_funcs, fp, rvas)
 
     overall = doc.get("measures", {})
-    umeas = scores.unit_measures(doc)
-    mods, started_fzw, started_code = rm.collect_modules(umeas)
     from homm1.model import resolve
-    model = resolve()
-    sizes = {(b.unit.rsplit("/", 1)[-1], b.name): b.size for b in model.functions
-             if b.name and b.unit}
     from homm1.verify.universe import engine_universe
-    eng = engine_universe(model)
+    eng = engine_universe(resolve())
 
     if not a.baseline_only:
-        _reconcile(overall, mods, started_fzw, started_code, eng, cur,
-                   base_funcs, rvas)
+        _reconcile(overall, eng, cur, base_funcs, rvas)
 
     if a.rebase_data_matching:
         from homm1.core import data_matching
@@ -597,10 +585,7 @@ def cmd_bank(argv) -> int:
     if not a.baseline_only:
         # `Fuzzy Max` reads the JUST-banked baseline, so the block and the
         # ledger describe the same tree state.
-        banked = bl.load()
-        tot = rm.score_weights(cur, banked, sizes, mods, rm.unit_modules())
-        block = rm.render_block(mods, started_fzw, eng, tot)
-        changed_r = rm.write_block(block)
+        changed_r = rm.write_block(rm.render_block(cur, bl.load(), eng))
         print(f"README score block "
               f"{'UPDATED' if changed_r else 'unchanged'} "
               f"({rm.README.relative_to(REPO)})")
