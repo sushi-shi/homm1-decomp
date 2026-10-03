@@ -17,6 +17,9 @@ every line, `#line` pin and include of the (now empty) scaffolding headers
 kept. The control must reproduce every matching object section and the
 candidate HEROES.EXE byte for byte, LINK's TimeDateStamps aside.
 
+Finally the tree's own `build.py` runs through its flake, which fetches the
+hash-pinned toolchain release, and must produce HEROES.EXE.
+
 Objects are compared section by section outside `.debug$*` (raw bytes,
 relocation offsets/types/target names, flags). Nothing is patched or banked;
 this proves the generated source compiles to the matching program, not a
@@ -261,7 +264,32 @@ def verify(tree: Path, inputs: dict[str, bytes]) -> int:
     except (ToolError, ValueError, OSError) as error:
         print(f"[clean] verify: FAIL: {error}", file=sys.stderr)
         return 1
+    status = standalone(tree) or status
     (work / "differences.tsv").write_text("tree\tunit\tsection\n" + "".join(
         line + "\n" for line in report))
     print(f"[clean] verify: per-section differences: {work / 'differences.tsv'}")
     return status
+
+
+def standalone(tree: Path) -> int:
+    """Run the tree's own build (its flake's toolchain, Wine and llvm-rc)."""
+    import os
+    import subprocess
+    from homm1.core.paths import retail_exe
+
+    env = {key: value for key, value in os.environ.items()
+           if key not in ("WINEPREFIX", "PYTHONPATH", "HOMM1_TOOLCHAIN")}
+    command = ["nix", "develop", f"path:{tree}", "-c", "python3", "build.py"]
+    if retail_exe().is_file():
+        command += ["--icon-from", str(retail_exe())]
+    print(f"[clean] verify: standalone: {' '.join(command[:4])} -c python3 build.py")
+    result = subprocess.run(command, cwd=tree, env=env, capture_output=True, text=True)
+    exe = tree / "build" / "HEROES.EXE"
+    if result.returncode or not exe.is_file():
+        print("\n".join((result.stdout + result.stderr).strip().splitlines()[-20:]),
+              file=sys.stderr)
+        print("[clean] verify: FAIL: the tree's own build failed", file=sys.stderr)
+        return 1
+    print(f"[clean] verify: standalone: built {exe.relative_to(tree)} "
+          f"({exe.stat().st_size:,} B) with the flake's pinned toolchain")
+    return 0

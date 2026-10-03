@@ -15,9 +15,8 @@ from pathlib import Path
 import subprocess
 import tempfile
 
+from homm1.clean.project import EXECUTABLE
 from homm1.clean.run import PROVENANCE, git
-
-EXECUTABLE_SUFFIXES = (".sh",)
 
 
 def publish(repo: Path, files: dict[str, bytes], commit: str, branch: str) -> str:
@@ -41,7 +40,7 @@ def publish(repo: Path, files: dict[str, bytes], commit: str, branch: str) -> st
         for name, data in sorted(files.items()):
             blob = subprocess.run(["git", "-C", str(repo), "hash-object", "-w", "--stdin"],
                                   input=data, capture_output=True, check=True).stdout.decode().strip()
-            mode = "100755" if name.endswith(EXECUTABLE_SUFFIXES) else "100644"
+            mode = "100755" if name in EXECUTABLE else "100644"
             entries.append(f"{mode} {blob}\t{name}\n")
         subprocess.run(["git", "-C", str(repo), "update-index", "--index-info"],
                        input="".join(entries), text=True, env=env, check=True)

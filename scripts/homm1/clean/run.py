@@ -26,12 +26,12 @@ import tarfile
 import tempfile
 
 from homm1.clean import source
+from homm1.clean.project import EXECUTABLE
 from homm1.core.paths import REPO
 from homm1.core.usage import logged
 
 MARKER = ".homm1-clean-generated"
 PROVENANCE = "Generated-By: homm1 clean"
-PROJECT = "scripts/homm1/clean/project/"
 DEFAULT_BRANCH = "source-win95-1996"
 
 
@@ -123,10 +123,8 @@ def generate(files: dict[str, bytes], *, control: bool = False
     if control:
         output.update({name: b"" for name in source.DROP_FILES})
         return output, problems
-    for name, data in sorted(files.items()):
-        if name.startswith(PROJECT):
-            output[name.removeprefix(PROJECT)] = data
-    output["LICENSE"] = files["LICENSE"]
+    from homm1.clean.project import project_files
+    output.update(project_files(files))
     return output, problems
 
 
@@ -158,6 +156,8 @@ def write_output(repo: Path, requested: Path, files: dict[str, bytes], commit: s
             path = staging / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
+            if name in EXECUTABLE:
+                path.chmod(0o755)
         (staging / MARKER).write_text(json.dumps({"commit": commit, "working": working}) + "\n")
         if output.exists():
             shutil.rmtree(output)
