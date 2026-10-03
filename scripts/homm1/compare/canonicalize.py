@@ -52,7 +52,8 @@ from homm1.delink import eh_band
 
 
 SYMBOL_SIZE = 18
-VOLATILE_SG = re.compile(r"^\$SG[0-9]+$")
+# /Gi suffixes the literal's index within its function: `$SG3396$3`.
+VOLATILE_SG = re.compile(r"^\$SG[0-9]+(?:\$[0-9]+)?$")
 VOLATILE_T = re.compile(r"^\$T[0-9]+$")
 # The trailing ordinal is optional: cl's own object carries its per-object
 # CodeView counter, while the delinked target carries the canonical spelling

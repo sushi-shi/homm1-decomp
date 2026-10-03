@@ -843,7 +843,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
         case MAP_OBJECT_ARTIFACT:
             if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
                 NormalDialog(
-                    "You cannot pick up this artifactId, you already have a full load!",
+                    "You cannot pick up this artifact, you already have a full load!",
                     NORMAL_DIALOG_TYPE_OK,
                     -1,
                     -1,
@@ -2738,7 +2738,7 @@ H1_ENUM_CONST_END(CombatRemoteConstant)
 // SendHeroTownData's payload after the remote-message header, as in Buka's
 // combatRemoteData; hero records follow one fragment byte.
 #pragma pack(push, 1)
-     struct combatRemoteData {
+struct combatRemoteData {
     signed char fragment;
     signed char x;
     signed char y;
