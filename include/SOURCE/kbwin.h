@@ -127,8 +127,6 @@ extern long lTemp;
 extern struct tagRECT rcTemp;
 extern int iTempX;
 extern int iTempY;
-extern long lLastGTimerTickCount;
-extern long lLastCycleTickCount;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {

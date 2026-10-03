@@ -154,7 +154,6 @@ extern long giBottomViewOverrideEndTime;
 extern int giBottomViewResource;
 extern int giBottomViewResourceQty;
 extern char gcBottomViewText[];
-extern int gbNoDialogMenusOn;
 extern void* hmnuApp;
 extern void* hmnuAdv;
 extern void* hmnuDflt;
@@ -169,8 +168,6 @@ extern int iDEMaxLen;
 extern signed char bDataEntryTime;
 extern H1_ENUM_STORAGE(DialogWaitType, signed char) giWaitType;
 extern signed char gbFunctionComplete;
-extern long lLastGetMessage;
-extern long lLastAilServe;
 // Artifact names (0x00493048).
 extern char* gArtifactNames[];
 extern char* gNeutralBuildingNames[];
