@@ -3305,6 +3305,15 @@ int iTownValue;
 DATA(0x004c4ee8)
 hero* pEventHero;
 
+// @early-stop 99.77: the daemon-cave reward sum. Retail adds
+// fv*300 + gold*2500.0f first and keeps (fv*100 + m_artifactValue) as a unit;
+// VC4 here reassociates the float chain (m_artifactValue moves next to the
+// first term, gold*2500.0f after fv*300). Float reassociation is outside
+// the vc4trace replay; the solver's 64 TU shifts (32 classes) never beat
+// this state and TU-state trials stay at 99.773. Regroupings, swapped
+// inner order, double/float casts of either term and paired grouping of
+// the tail do not reproduce it. One handle-state cmp operand order
+// (locals -0x38/-0x14) also remains.
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
