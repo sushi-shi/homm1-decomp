@@ -348,14 +348,14 @@ mapCell* advManager::MoveHero(
     int step;
     int origX;
     mapCell* nextCell;
-    hero* movingHero;
-    int origY;
     signed char terrain;
     mapCell* retCell;
-    int msDelay;
     short xInc;
     short yInc;
     short pixelsPerStep;
+    hero* movingHero;
+    int origY;
+    int msDelay;
     short numSteps;
 
     if (gbThisNetHumanPlayer[giCurPlayer])
@@ -810,10 +810,10 @@ short advManager::ValidMove(short direction) {
 // Buka CURSOR.cpp:1099 MoveOrigin; HoMM1 indexes the map directly.
 VA(0x00407a58, 0x329)
 void advManager::MoveOrigin(short directionX, short directionY) {
+    short cellY;
+    short cellX;
     short oldOriginX;
     short oldOriginY;
-    short cellX;
-    short cellY;
 
     oldOriginX = m_mapOriginX;
     oldOriginY = m_mapOriginY;
