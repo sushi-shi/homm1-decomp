@@ -308,7 +308,7 @@ inline void InitializeTree(void)
 VA(0x0047da60, 0x14f)
 inline void ReconstructEncoderTree(void)
 {
-    short i, j, k;
+    short k, i, j;
     unsigned short value, length;
 
     j = 0;

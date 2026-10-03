@@ -104,9 +104,9 @@ VA(0x0047a2c0, 0x10c)
 short executive::DoDialog(baseManager* manager) {
     baseManager* savedPreviousManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     int index;
-    baseManager* currentManager;
     baseManager* savedManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     baseManager* savedNextManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    baseManager* currentManager;
     executive dialogExecutive;
     int count = 0;
     currentManager = m_managerListHead;
