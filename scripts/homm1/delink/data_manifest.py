@@ -926,26 +926,40 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
                     return False
             return True
 
+        def place(gap, deltas, how):
+            good = [d for d in deltas if proves(gap, d)]
+            if len(good) == 1:
+                for m in gap:
+                    storage, _o, want, size = pool[m]
+                    emit(m, pool[m][1] + good[0], storage, size, want, how)
+                return set(gap)
+            return set()
+
         for ordered in runs.values():
             ordered.sort()
-            gap, before = [], None
+            # A section's leading or trailing members (cl keeps the slot of a
+            # constant whose every use it folded: CPUSpeed's 838.0965152, AI's
+            # 0.03f stored as an immediate) have one proven neighbour; its
+            # delta places them when it re-proves every byte.
+            gap, before, edge = [], None, True
             for off, member in ordered:
                 if member in placed:
                     if gap and before is not None:
-                        deltas = {placed[before[1]] - before[0],
-                                  placed[member] - off}
-                        good = [d for d in deltas if proves(gap, d)]
-                        if len(good) == 1:
-                            for m in gap:
-                                storage, _o, want, size = pool[m]
-                                emit(m, pool[m][1] + good[0], storage, size,
-                                     want, f"{provenance}-interpolated")
-                            stranded_set -= set(gap)
-                    gap, before = [], (off, member)
+                        stranded_set -= place(
+                            gap, {placed[before[1]] - before[0],
+                                  placed[member] - off},
+                            f"{provenance}-interpolated")
+                    elif gap and edge:
+                        stranded_set -= place(gap, {placed[member] - off},
+                                              f"{provenance}-section-edge")
+                    gap, before, edge = [], (off, member), False
                 elif member in stranded_set:
                     gap.append(member)
                 else:               # withheld for its own reason: a run edge
-                    gap, before = [], None
+                    gap, before, edge = [], None, False
+            if gap and before is not None:
+                stranded_set -= place(gap, {placed[before[1]] - before[0]},
+                                      f"{provenance}-section-edge")
         unplaced = [m for m in stranded if m in stranded_set]
         stranded = unplaced
 
