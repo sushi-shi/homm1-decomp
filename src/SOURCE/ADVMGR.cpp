@@ -2939,16 +2939,14 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
             if ((cellPtr->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO) {
                 owner = gpGame->m_availableHeroes[cellPtr->m_objectMetadata];
                 if (giCurPlayer == owner)
-                    color = gRadarOwnerColor
-                        [owner >= 0 ? gpGame->m_players[owner].m_color : PLAYER_COLOR_NEUTRAL];
+                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                 else
                     color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
             } else {
                 switch (cellPtr->m_objectTileset & MAP_CELL_TILESET_MASK) {
                     case TILESET_TOWN32:
                         owner = gpGame->m_townOwners[cellPtr->m_objectMetadata];
-                        color = gRadarOwnerColor
-                            [owner >= 0 ? gpGame->m_players[owner].m_color : PLAYER_COLOR_NEUTRAL];
+                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                         break;
                     case TILESET_RSRC32:
                         switch (cellPtr->m_triggerType) {
@@ -2960,8 +2958,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                             case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
                                 owner = gpGame->m_mineOwners[cellPtr->m_objectMetadata];
                                 color = gRadarOwnerColor
-                                    [owner >= 0 ? gpGame->m_players[owner].m_color
-                                                : PLAYER_COLOR_NEUTRAL];
+                                    [owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                                 break;
                             default:
                                 color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
@@ -6817,7 +6814,9 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
     int j;
     int remMob;
     int terr;
-    short buttonCommand;
+    // The widget command for the continue-route button; retail allocation
+    // follows this local name (renaming it moves registers).
+    short buttonFrame;
 
     canReach = 0;
     if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
@@ -6864,10 +6863,10 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
             }
         }
         if (updateButton) {
-            buttonCommand = canReach ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
+            buttonFrame = canReach ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
             gpWindowManager->BroadcastMessage(
                 MESSAGE_WIDGET,
-                buttonCommand,
+                buttonFrame,
                 ADVENTURE_CONTROL_CONTINUE_ROUTE,
                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
             );
