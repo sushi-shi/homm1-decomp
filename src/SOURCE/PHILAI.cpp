@@ -2017,20 +2017,20 @@ void philAI::GetTurnAttentionValue(i32 player) {
 VA(0x0041ebd7, 0xa6)
 i32 philAI::RVConversion(i32* const resources) {
     return static_cast<i32>(
-        ((((((static_cast<float>(resources[static_cast<i32>(RESOURCE_GOLD)])
-              * gafAITurnCostResource[static_cast<i32>(RESOURCE_GOLD)])
+        ((((((static_cast<float>(resources[static_cast<i32>(RESOURCE_ORE)])
+              * gafAITurnCostResource[static_cast<i32>(RESOURCE_ORE)])
              + static_cast<float>(resources[static_cast<i32>(RESOURCE_GEMS)])
                    * gafAITurnCostResource[static_cast<i32>(RESOURCE_GEMS)])
             + static_cast<float>(resources[static_cast<i32>(RESOURCE_MERCURY)])
                   * gafAITurnCostResource[static_cast<i32>(RESOURCE_MERCURY)])
-           + static_cast<float>(resources[static_cast<i32>(RESOURCE_ORE)])
-                 * gafAITurnCostResource[static_cast<i32>(RESOURCE_ORE)])
-          + static_cast<float>(resources[static_cast<i32>(RESOURCE_SULFUR)])
-                * gafAITurnCostResource[static_cast<i32>(RESOURCE_SULFUR)])
-         + static_cast<float>(resources[static_cast<i32>(RESOURCE_CRYSTAL)])
-               * gafAITurnCostResource[static_cast<i32>(RESOURCE_CRYSTAL)])
-        + static_cast<float>(resources[static_cast<i32>(RESOURCE_WOOD)])
-              * gafAITurnCostResource[static_cast<i32>(RESOURCE_WOOD)]
+           + static_cast<float>(resources[static_cast<i32>(RESOURCE_GOLD)])
+                 * gafAITurnCostResource[static_cast<i32>(RESOURCE_GOLD)])
+          + static_cast<float>(resources[static_cast<i32>(RESOURCE_WOOD)])
+                * gafAITurnCostResource[static_cast<i32>(RESOURCE_WOOD)])
+         + static_cast<float>(resources[static_cast<i32>(RESOURCE_SULFUR)])
+               * gafAITurnCostResource[static_cast<i32>(RESOURCE_SULFUR)])
+        + static_cast<float>(resources[static_cast<i32>(RESOURCE_CRYSTAL)])
+              * gafAITurnCostResource[static_cast<i32>(RESOURCE_CRYSTAL)]
     );
 }
 

@@ -148,7 +148,7 @@ VA(0x00473231, 0x358)
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     i32 error; // Unused, as in Buka; retail still reserves its slot.
     i32 slot;
-    BOOL result;
+    BOOL commStatus;
     DCB state;
     char portName[12];
     COMMTIMEOUTS commTimeouts;
@@ -208,17 +208,17 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     state.ByteSize = 8;
     state.Parity = NOPARITY;
     state.StopBits = ONESTOPBIT;
-    result = SetupComm(gComPorts[slot].handle, COM_RECEIVE_BUFFER_SIZE, COM_TRANSMIT_BUFFER_SIZE);
-    if (!result)
+    commStatus = SetupComm(gComPorts[slot].handle, COM_RECEIVE_BUFFER_SIZE, COM_TRANSMIT_BUFFER_SIZE);
+    if (!commStatus)
         ShutdownComError("Initialize communications paramaters");
-    result = SetCommState(gComPorts[slot].handle, &state);
-    if (!result)
+    commStatus = SetCommState(gComPorts[slot].handle, &state);
+    if (!commStatus)
         ShutdownComError("Configure communications device");
     commTimeouts.ReadIntervalTimeout = MAXDWORD;
     commTimeouts.ReadTotalTimeoutMultiplier = commTimeouts.ReadTotalTimeoutConstant = 0;
     commTimeouts.WriteTotalTimeoutMultiplier = commTimeouts.WriteTotalTimeoutConstant = 0;
-    result = SetCommTimeouts(gComPorts[slot].handle, &commTimeouts);
-    if (!result)
+    commStatus = SetCommTimeouts(gComPorts[slot].handle, &commTimeouts);
+    if (!commStatus)
         ShutdownComError("Set communications timeouts");
     init_anchor(&gComPorts[slot].normalQueue, 1, 0);
     init_anchor(&gComPorts[slot].priorityQueue, 1, 0);
@@ -247,19 +247,19 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
     COMSTAT status;
     u32 currentBytesRead;
     DWORD nRead;
-    BOOL success;
+    BOOL ioResult;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
-        success = ClearCommError(gComPorts[port].handle, &currentError, &status);
-        if (!success)
+        ioResult = ClearCommError(gComPorts[port].handle, &currentError, &status);
+        if (!ioResult)
             ShutdownComError("Clear communications error queue");
         if (status.cbInQue <= requested)
             currentBytesRead = status.cbInQue;
         else
             currentBytesRead = requested;
         if (currentBytesRead) {
-            success = ReadFile(gComPorts[port].handle, buffer, currentBytesRead, &nRead, NULL);
-            if (!success)
+            ioResult = ReadFile(gComPorts[port].handle, buffer, currentBytesRead, &nRead, NULL);
+            if (!ioResult)
                 ShutdownComError("Read communications data");
             return static_cast<i16>(nRead);
         }
@@ -269,8 +269,8 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
 
 VA(0x00473773, 0x147)
 i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
-    BOOL result;
     tag_Node* node;
+    BOOL result;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
         if (!length) {
@@ -320,8 +320,8 @@ u8 com_stat(i16 port, u16) {
 VA(0x00473933, 0xe7)
 void comm_wrt_task(void) {
     ComPortState* portState;
-    BOOL result;
     tag_Node* node;
+    BOOL result;
     u32 totalWritten;
     DWORD sizeWritten;
 

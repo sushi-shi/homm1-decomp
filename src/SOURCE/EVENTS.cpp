@@ -1527,7 +1527,7 @@ i32 advManager::GiveRandomArtifact(class hero* eventHero) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
 VA(0x004606a8, 0xb0)
-#line 1110 "D:\\Heroes\\Source\\EVENTS.CPP"
+#line 1113 "D:\\Heroes\\Source\\EVENTS.CPP"
 i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel) {
     i32 prevLevel;
     i32 unusedValue1;
@@ -1538,9 +1538,9 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
     eventHero->m_level = prevLevel;
     eventHero->m_experience += experience;
-#line 1118
+#line 1121
     H1_ASSERT(experience >= 0);
-#line 1119
+#line 1122
     H1_ASSERT(eventHero->m_experience >= 0);
     newLevel = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)

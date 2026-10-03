@@ -1085,10 +1085,10 @@ i8 game::NewGame(void) {
         m_players[3].m_difficulty = gSavedPlayerTypes[3];
         gbIAmGreatest = gSavedKingOfTheHill;
         m_players[0].m_color = gSavedCrest;
-    }
-    for (player = 1; giNumHumanPlayers > player; player++) {
-        if (m_players[player].m_difficulty == HUMAN_HANDICAP_NONE)
-            m_players[player].m_difficulty = m_players[0].m_difficulty;
+        for (player = 1; giNumHumanPlayers > player; player++) {
+            if (m_players[player].m_difficulty == HUMAN_HANDICAP_NONE)
+                m_players[player].m_difficulty = m_players[0].m_difficulty;
+        }
     }
     if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
         || (giNumHumanPlayers == 2 && gMapName[5] != '2')
@@ -1413,7 +1413,9 @@ void game::NewMap(char* mapName) {
     }
     i = Random(9, 62);
     j = Random(9, 62);
-    ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+    // 1.1 consumes the 30-range roll first; sequence it before the two 20-range rolls.
+    ultimateSpread = Random(1, 30);
+    ultimateSpread += Random(1, 20) + Random(1, 20);
     while (m_map[i][j].m_objectIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_overlayIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
@@ -1421,7 +1423,8 @@ void game::NewMap(char* mapName) {
                && abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
                           + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y)
                       <= ultimateSpread)) {
-        ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
+        ultimateSpread = Random(1, 30);
+        ultimateSpread += Random(1, 20) + Random(1, 20);
         i = Random(9, 62);
         j = Random(9, 62);
     }

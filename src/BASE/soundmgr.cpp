@@ -101,7 +101,7 @@ void soundManager::CDStop(void) {
     char position[CD_POSITION_BUFFER_SIZE];
     if (gbNoSound != 0)
         return;
-    wsprintfA(CommandString, "stop CD");
+    wsprintfA(CommandString, "stop CD wait");
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != MMSYSERR_NOERROR)
         HandleMCIError(nMCIError, CommandString);
