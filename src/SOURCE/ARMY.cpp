@@ -50,8 +50,7 @@ army::army(void) {
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
     giSpellEffectFrame = 0;
-    m_targetSide = COMBAT_SIDE_NONE;
-    m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+    CLEAR_ARMY_TARGET(this);
     m_attackDirection = COMBAT_DIRECTION_INVALID;
     m_unknown04 = 0;
     m_moveTargetHex = 0;
@@ -1753,8 +1752,7 @@ void army::MoveAttack(int hex, int moveOnly) {
     int dirIndex;
 
     gpCombatManager->m_limitCreature = 0;
-    m_targetSide = COMBAT_SIDE_NONE;
-    m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+    CLEAR_ARMY_TARGET(this);
     if (!ValidHex(hex))
         return;
     if (gpCombatManager->m_hexCells[hex].m_occupantSide != COMBAT_SIDE_NONE

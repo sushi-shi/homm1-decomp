@@ -191,8 +191,7 @@ void combatManager::SetCombatDirections(int targetHex) {
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     targetSide = curArmy->m_targetSide;
     targetIndex = curArmy->m_targetIndex;
-    curArmy->m_targetSide = COMBAT_SIDE_NONE;
-    curArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+    CLEAR_ARMY_TARGET(curArmy);
     target = &m_armies[targetSide][targetIndex];
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (dir == COMBAT_DIRECTION_WIDE_WEST || dir == COMBAT_DIRECTION_WIDE_EAST) {
@@ -721,8 +720,7 @@ signed char combatManager::GetCommand(short hex) {
             enemySide = m_hexCells[hex].m_occupantSide;
             targetIndex = m_hexCells[hex].m_occupantIndex;
             currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-            currentArmy->m_targetSide = COMBAT_SIDE_NONE;
-            currentArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+            CLEAR_ARMY_TARGET(currentArmy);
             if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
             else if (enemySide != COMBAT_SIDE_NONE) {
@@ -741,8 +739,7 @@ signed char combatManager::GetCommand(short hex) {
                             if (currentArmy->ValidPath(hex, ARMY_PATH_EXACT_TARGET_HEX) == 1)
                                 return COMBAT_MESSAGE_COMMAND_ATTACK;
                             else {
-                                currentArmy->m_targetSide = COMBAT_SIDE_NONE;
-                                currentArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+                                CLEAR_ARMY_TARGET(currentArmy);
                                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
                             }
                         }
