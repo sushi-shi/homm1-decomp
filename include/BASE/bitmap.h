@@ -24,18 +24,18 @@ public:
 
     // --- constructors ---
     bitmap(void);
-    bitmap(i16, i16, i16);
-    bitmap(i16);
+    bitmap(i16 type, i16 width, i16 height);
+    bitmap(i16 id);
     virtual inline ~bitmap();
     // --- methods ---
     void DrawToBufferCareful(i16 x, i16 y);
-    void DrawToBuffer(i16, i16);
+    void DrawToBuffer(i16 x, i16 y);
     void DrawToScreen(i16 x, i16 y);
-    void GrabScreen(i16, i16);
-    void GrabBitmap(class bitmap*, i16, i16);
+    void GrabScreen(i16 x, i16 y);
+    void GrabBitmap(class bitmap* source, i16 x, i16 y);
     void GrabBitmapCareful(class bitmap* source, i16 x, i16 y);
-    void Write(char*);
-    void CopyTo(class bitmap*, i32, i32, i32, i32, i32, i32);
+    void Write(char* filename);
+    void CopyTo(class bitmap* destination, i32 destinationX, i32 destinationY, i32 sourceX, i32 sourceY, i32 width, i32 height);
     void CopyToCareful(
         class bitmap* destination,
         i32 destinationX,

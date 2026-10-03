@@ -34,18 +34,18 @@ public:
     i16 m_unknown30;
 
     smackManager(void);
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& msg) OVERRIDE;
 };
 #pragma pack(pop)
 
 extern i8 gSmackNum;
 extern i8 gbSmackAborted;
 
-H1_C_LINKAGE void* radmalloc(u32);
-H1_C_LINKAGE void radfree(void*);
-void PlaySmacker(H1_ENUM_PARAM(SmackVideo, i8));
+H1_C_LINKAGE void* radmalloc(u32 numbytes);
+H1_C_LINKAGE void radfree(void* ptr);
+void PlaySmacker(H1_ENUM_PARAM(SmackVideo, i8) smackNumber);
 
 // One 0x16-byte row per movie: file name, the window manager's update mode
 // while it plays, the fades around it and its SmackOpen flags (Buka

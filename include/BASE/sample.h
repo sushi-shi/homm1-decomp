@@ -33,7 +33,7 @@ class sample : public resource {
 public:
     SamplePlaybackData m_playbackData;
 
-    sample(char*, i32, i32, i32);
+    sample(char* name, i32 channelType, i32 volume, i32 loopCount);
     virtual ~sample();
 };
 #pragma pack(pop)

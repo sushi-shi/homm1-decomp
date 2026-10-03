@@ -34,10 +34,10 @@ public:
     // --- constructors ---
     hexcell(void);
     // --- methods ---
-    hexcell* TakeOccupant(hexcell*);
+    hexcell* TakeOccupant(hexcell* from);
     void DrawGround(void);
     void DrawOccupant(void);
-    void DrawTower(i8);
+    void DrawTower(i8 frame);
     void DrawWall(void);
     void DrawObstacle(void);
 };

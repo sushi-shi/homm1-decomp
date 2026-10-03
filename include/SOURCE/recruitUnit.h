@@ -44,18 +44,18 @@ public:
     // RecruitEvent allocates 0x5c bytes.
     char m_unknown5a[2];
     // --- constructors ---
-    recruitUnit(class armyGroup*, i32, i16*);
+    recruitUnit(class armyGroup* army, i32 creatureType, i16* available);
     // HoMM1 has no refresh-town argument (retail ret 8).
-    recruitUnit(class town*, i8);
+    recruitUnit(class town* townData, i8 dwelling);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Update(void);
 };
 #pragma pack(pop)
 
-void SetupRecruitWin(class heroWindow*, i32, i32, i32, i32, i32);
-void QuickViewRecruit(class town*, i8);
+void SetupRecruitWin(class heroWindow* window, i32 creatureType, i32 goldCost, i32 resourceType, i32 resourceCost, i32 available);
+void QuickViewRecruit(class town* townData, i8 dwelling);
 #endif // HOMM1_SOURCE_RECRUITUNIT_H

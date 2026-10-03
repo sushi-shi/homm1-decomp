@@ -140,7 +140,7 @@ struct WindowTextEntry {
 #pragma pack(pop)
 
 extern void* hmnuCurrent;
-i32 AppCommand(void*, u32, u32, i32);
+i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData);
 i32 AppIdle(void);
 void AppExit(void);
 i16 GetCPUType(void);
@@ -153,15 +153,15 @@ void ReadPrefs(void);
 void WritePrefsToFile(void);
 void WritePrefsToRegistry(void);
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void);
-i32 AppInit(void*, void*, i32, char*);
+i32 AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine);
 // WNDPROC: LRESULT and LPARAM are the SDK's long.
-long __stdcall AppWndProc(void*, u32, u32, long);
-void KBChangeMenu(void*);
-void ResizeWindow(i32, i32, i32, i32);
-void SetMenuStatus(i32);
+long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData);
+void KBChangeMenu(void* menu);
+void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
+void SetMenuStatus(i32 showMenu);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
-void SetWinText(class heroWindow*, i16);
-void UpdateDfltMenu(void*);
+void SetWinText(class heroWindow* window, i16 id);
+void UpdateDfltMenu(void* menu);
 extern i32 gForegroundApp;
 extern i32 gNoDialogMenusOn;
 extern void* hmnuApp;
@@ -170,14 +170,14 @@ extern i32 gLastGetMessage;
 extern i32 gLastAilServe;
 i32 KBTickCount();
 void Process1WindowsMessage();
-void SetNoDialogMenus(i32);
-char* FindLastToken(char*, char);
-void SetMenus(void*, i32);
+void SetNoDialogMenus(i32 menusEnabled);
+char* FindLastToken(char* text, char token);
+void SetMenus(void* menu, i32 enabled);
 extern void* hwndApp;
 extern i32 iMainWinScreenWidth;
 extern i32 gMainWinScreenHeight;
-void ProcessAssert(i32, char*, i32);
+void ProcessAssert(i32 condition, char* file, i32 line);
 void WritePrefs();
-char* FindToken(char*, char);
+char* FindToken(char* text, char token);
 
 #endif

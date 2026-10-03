@@ -324,9 +324,9 @@ public:
     // --- constructors ---
     townManager(void);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void SetupExtraStuff(void);
     void SetTown(town* value) {
@@ -335,28 +335,28 @@ public:
     void ChangeTown(void);
     void SetupTown(void);
     void UnloadTown(void);
-    void SetArmyCommand(i16);
-    void SetCommandAndText(struct tag_message&);
+    void SetArmyCommand(i16 qualifier);
+    void SetCommandAndText(struct tag_message& message);
     void ShowText(char*);
-    void DoCommand(i8);
+    void DoCommand(i8 command);
     void RedrawTownScreen(void);
     void SplitArmy(void);
     void ShiftQualChange(void);
     void ResetStrips(void);
-    void Toggle(i8);
-    void DrawTown(i8, i32);
-    i16 BuyBuild(i16, i8, i8);
-    void BuildObj(i16);
-    void SetupMage(class heroWindow*);
-    i8 RecruitHero(i8);
+    void Toggle(i8 building);
+    void DrawTown(i8 updateScreen, i32 drawFlags);
+    i16 BuyBuild(i16 building, i8 cannotBuy, i8 quickView);
+    void BuildObj(i16 building);
+    void SetupMage(class heroWindow* window);
+    i8 RecruitHero(i8 cannotRecruit);
     void DoTavern(void);
-    void SetupWell(class heroWindow*);
-    void SetupThievesGuild(class heroWindow*, i16);
-    void SetupCastle(class heroWindow*);
-    char* GetBuildingName(i16);
+    void SetupWell(class heroWindow* window);
+    void SetupThievesGuild(class heroWindow* window, i16 categories);
+    void SetupCastle(class heroWindow* window);
+    char* GetBuildingName(i16 building);
     // HoMM1 keeps the thieves-guild helpers as townManager members.
-    void GetCategoryStats(i8, i32* const, i8* const);
-    void SortStats(i32* const, i8* const);
+    void GetCategoryStats(i8 category, i32* const stats, i8* const order);
+    void SortStats(i32* const stats, i8* const order);
 };
 #pragma pack(pop)
 
@@ -370,8 +370,8 @@ struct TownBuildingExtent {
 
 // Open's per-type town-object layout (0x0048c028).
 extern const i8 gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
-i16 TavernHandler(struct tag_message&);
-i16 MageGuildHandler(struct tag_message&);
-i16 SplitArmyHandler(struct tag_message&);
-i16 CastleHandler(struct tag_message&);
+i16 TavernHandler(struct tag_message& message);
+i16 MageGuildHandler(struct tag_message& message);
+i16 SplitArmyHandler(struct tag_message& message);
+i16 CastleHandler(struct tag_message& message);
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

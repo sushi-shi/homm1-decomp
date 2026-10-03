@@ -321,55 +321,55 @@ public:
     // --- constructors ---
     combatManager(void);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void NoShowCombatLog(char*);
     void ClearCombatMessages(i32 force);
     void CheckUpdateCombatMessages(void);
     // HoMM1 retail 0x00470aa9: text and a redraw flag (ret 8).
-    void CombatMessage(char*, i32);
+    void CombatMessage(char* text, i32 updateScreen);
     // HoMM1 retail 0x00470b5e: command help line (ret 4).
-    void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16));
+    void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army* armyPointer);
     // HoMM1 retail 0x00470a4f: word hex, byte direction, attributes
     // (ret 0xc); the upward directions also redraw the row above.
-    void UpdateGridForMove(i16, i8, i32);
+    void UpdateGridForMove(i16 hex, i8 direction, i32 attributes);
     // HoMM1 retail 0x004709f0: word first hex, redraw flag (ret 8).
-    void UpdateGrid(i16, i32);
+    void UpdateGrid(i16 hex, i32);
     void DrawBackground(void);
     void UpdateMouseGrid(i32 hexIndex, i32 forceUpdate);
     // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
-    void DrawFrame(i8);
+    void DrawFrame(i8 updateScreen);
     // HoMM1 retail 0x00470f25: byte mode (ret 4).
-    void SetGridMode(i8);
+    void SetGridMode(i8 mode);
     void DrawSmallView(i32 viewIndex, i32 updateScreen);
     // HoMM1 retail 0x00438310 returns its result in AL (ret 0xc).
-    i8 ViewGeneral(i32, i32, i32);
+    i8 ViewGeneral(i32 side, i32 allowActions, i32 quickView);
     // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
-    void ViewArmy(class army*, i32, i32);
+    void ViewArmy(class army* viewedArmy, i32 side, i32 quickView);
     i32 HasValidSpellTarget(i32 spell);
     i8 ViewSpells(i32);
     i32 FindResurrectArmyIndex(i32 side, i32 spell, i32 hex);
     // HoMM1 retail 0x00415a2c: byte spell and hex, byte result (ret 8).
-    i8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8), i8);
+    i8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     // HoMM1 retail 0x00415d1c: byte spell and hex (ret 8).
-    void SpellMessage(H1_ENUM_PARAM(SpellType, i8), i8);
+    void SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     // HoMM1 retail 0x00415e44: byte spell, hex, creature flag and teleport
     // destination (ret 0x10).
-    void CastSpell(H1_ENUM_PARAM(SpellType, i8), i8, i8, i8);
-    void DefaultSpell(i8);
+    void CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, i8 castByCreature, i8 teleportDest);
+    void DefaultSpell(i8 targetHex);
     // HoMM1 retail 0x00416c78: Cure (one side) and Dispel (both sides)
     // animation; byte side (2 = both) and cure-only flag (ret 8).
-    void CastMassSpell(i8, i8);
+    void CastMassSpell(i8 castSide, i8 cureOnly);
     // HoMM1 retail 0x0041707f: cancels the side's spells after the mass
     // animation (ret 8).
-    void CancelSideSpells(i8, i8);
-    void Fireball(i8);
-    void MeteorShower(i8);
+    void CancelSideSpells(i8 side, i8 cureOnly);
+    void Fireball(i8 targetHex);
+    void MeteorShower(i8 targetHex);
     void ElementalStorm(void);
     void Armageddon(void);
     void TurnToStone(class army* target);
@@ -431,23 +431,23 @@ public:
     );
     void Earthquake(void);
     void ShowSpellMessage(i32 castByCreature, i32 spell, class army* target);
-    i8 ValidHexToStandOn(i32);
-    void SetCombatDirections(i32);
-    void CheckSetMouseDirection(i32, i32, i32);
-    H1_ENUM_RETURN(CombatPointerCode, i32) GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32));
-    i32 ProcessCombatMsg(struct tag_message&);
+    i8 ValidHexToStandOn(i32 hex);
+    void SetCombatDirections(i32 targetHex);
+    void CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex);
+    H1_ENUM_RETURN(CombatPointerCode, i32) GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command);
+    i32 ProcessCombatMsg(struct tag_message& message);
     i32 IsNegationSphereInEffect(void);
     void ResetRound(void);
-    i32 CheckWin(struct tag_message*);
-    i8 GetCommand(i16);
-    i8 RightClick(i8);
-    void DoCommand(i8);
-    void ClearWinLoseBottom(class heroWindow*);
-    void ShowWinLoseArtifact(class heroWindow*, i32);
+    i32 CheckWin(struct tag_message* message);
+    i8 GetCommand(i16 hex);
+    i8 RightClick(i8 hex);
+    void DoCommand(i8 command);
+    void ClearWinLoseBottom(class heroWindow* window);
+    void ShowWinLoseArtifact(class heroWindow* window, i32 artifact);
     void ShowSkeletons(class heroWindow* window);
     void ShowEagleEyeSpell(class heroWindow* window);
-    void ShowDeadArmies(class heroWindow*);
-    void DoVictory(i8);
+    void ShowDeadArmies(class heroWindow* window);
+    void DoVictory(i8 winningSide);
     void DoLoseWindow(void);
     i16 DoSurrender(void);
     void CheckChangeSelector(void);
@@ -455,7 +455,7 @@ public:
     void CheckGetAIMove(void);
     void GetControl(void);
     void ResetMouse(void);
-    i16 ProcessNextAction(struct tag_message&);
+    i16 ProcessNextAction(struct tag_message& message);
     void ResetCyclingCreatures(void);
     void ResetCycleTimers(void);
     void CycleCombatScreen(void);
@@ -465,37 +465,37 @@ public:
     void SetupSmallView(void);
     void ViewBallista(i32 quickView);
     // HoMM1 retail 0x00437010: byte side (ret 4).
-    i32 DoSpellAI(i8);
-    void DetermineEffectOfSpell(i32, i32*, i32*);
+    i32 DoSpellAI(i8 side);
+    void DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex);
     i32 EffectSpellCreateCreature(i32 hex, i32 spell);
-    i32 RawEffectSpellInfluence(class army*, i32);
+    i32 RawEffectSpellInfluence(class army* target, i32 spell);
     void ClearEffects(void);
-    void NextPos(i32*);
-    i32 FirstArmy(i32, i32, i32*);
+    void NextPos(i32* hex);
+    i32 FirstArmy(i32 startHex, i32 side, i32* hex);
     i32 FirstResurrectable(i32 startHex, i32* hex, i32 spell);
     // HoMM1 retail 0x00437aa1 (ret 0xc), 0x00437d14 (ret 8) and 0x00437e0d
     // (ret 0x10): DetermineEffectOfSpell passes the effect, then a side and
     // flag, a hex, or the spell, base damage and hex.
-    void EffectSpellCure(i32*, i32, i8);
-    void EffectSpellResurrect(i32*, i32);
-    void EffectSpellDamage(i32*, i32, i32, i32);
-    void CombineGroups(class armyGroup*, class armyGroup*);
+    void EffectSpellCure(i32* effect, i32 targetSide, i8 cure);
+    void EffectSpellResurrect(i32* effect, i32 hex);
+    void EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex);
+    void CombineGroups(class armyGroup* from, class armyGroup* to);
     void SetupCombat(
-        i32,
-        i32,
-        class hero*,
-        class armyGroup*,
-        class town*,
-        class hero*,
-        class armyGroup*,
-        i32,
-        i32,
-        i32
+        i32 mapX,
+        i32 mapY,
+        class hero* attackerHero,
+        class armyGroup* attackerGroup,
+        class town* defenderTown,
+        class hero* defenderHero,
+        class armyGroup* defenderGroup,
+        i32 combatX,
+        i32 combatY,
+        i32 randomSeed
     );
     void InitNonVisualVars(void);
     void SetupAdjacencyArray(void);
     // HoMM1 retail 0x0044c103: byte side (ret 4).
-    void UpdateArmyGroup(i8);
+    void UpdateArmyGroup(i8 side);
     void GenerateMap(void);
     char* GetBackgroundName(void);
     i8 MoreTreesNear(void);
@@ -505,18 +505,18 @@ public:
     void FreeIcons(void);
     void LoadArmies(void);
     void FreeArmies(void);
-    i16 GetGridIndex(i16, i16);
-    void CheckApplyGoodMorale(i32, i32);
-    i32 CheckApplyBadMorale(i32, i32);
+    i16 GetGridIndex(i16 x, i16 y);
+    void CheckApplyGoodMorale(i32 side, i32 index);
+    i32 CheckApplyBadMorale(i32 side, i32 index);
     // HoMM1 returns the found flag in AL.
-    i8 GetNextArmy(i32);
+    i8 GetNextArmy(i32 checkMorale);
     // HoMM1 retail 0x0044d9ca: byte side, byte result.
-    i8 IsWinner(i8);
-    void CatAttack(i8);
+    i8 IsWinner(i8 side);
+    void CatAttack(i8 side);
     // HoMM1 has a single keep (retail 0x0044e840, plain ret).
     void KeepAttack(void);
     // HoMM1 retail 0x0044f3cb: byte side (ret 4).
-    i32 ExperienceValueOfStack(i8);
+    i32 ExperienceValueOfStack(i8 side);
     void ResetHitByCreature(void);
     void SaveCombatBorder(void);
     void DrawCombatBorder(void);
@@ -542,28 +542,28 @@ public:
     float GetModLichDamage(class army* target, float damage);
     void DoLichShot(class army* lich);
     // HoMM1 AI masks take a byte side and return word bit masks.
-    i16 GetShooterMask(i8);
+    i16 GetShooterMask(i8 side);
     i32 GetMirrorImageMask(i32 side);
-    i16 GetFlyerMask(i8);
+    i16 GetFlyerMask(i8 side);
     i32 GetAllMask(i32 side);
-    i16 GetWalkerMask(i8);
+    i16 GetWalkerMask(i8 side);
     i32 GetOutOfItMask(i32 side);
     i32 GetTraitorMask(i32 side);
-    i16 GetBestArmy(i8, i16);
-    i16 GetWorstArmy(i8, i16);
-    i16 GetClosestArmy(class army*, i8, i16);
-    u32 GetStrength(i8, i16);
-    i8 AttemptAttack(class army*, i8, i16);
-    i8 AttemptAdjacentAttack(class army*);
-    i8 WalkTowardArmyFront(class army*, i8, i16);
-    i8 WalkTowardArmy(class army*, i8, i16);
+    i16 GetBestArmy(i8 side, i16 mask);
+    i16 GetWorstArmy(i8 side, i16 mask);
+    i16 GetClosestArmy(class army* currentArmy, i8 side, i16 mask);
+    u32 GetStrength(i8 side, i16 mask);
+    i8 AttemptAttack(class army* currentArmy, i8 side, i16 mask);
+    i8 AttemptAdjacentAttack(class army* currentArmy);
+    i8 WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask);
+    i8 WalkTowardArmy(class army* currentArmy, i8 side, i16 mask);
 };
 #pragma pack(pop)
 
-i32 ValidHex(i32);
-i16 WinCombatHandler(struct tag_message&);
-i16 CombatSpecialHandler(struct tag_message&);
-i16 HandleCastSpell(struct tag_message&);
+i32 ValidHex(i32 hex);
+i16 WinCombatHandler(struct tag_message& message);
+i16 CombatSpecialHandler(struct tag_message& message);
+i16 HandleCastSpell(struct tag_message& message);
 // HandleCastSpell: the hex under the spell pointer (0x0048f2b0) and the
 // teleport second-click state (0x0048f28c).
 extern i8 gInTeleportGetDest;

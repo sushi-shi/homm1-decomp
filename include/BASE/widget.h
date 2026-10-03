@@ -66,14 +66,14 @@ public:
     i16 m_height;
 
     // --- constructors ---
-    widget(i16, i16, i16, i16, i16, i16);
+    widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind);
     widget(void);
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) = 0;
     virtual ~widget(void) = 0;
-    virtual i16 Main(struct tag_message&) = 0;
+    virtual i16 Main(struct tag_message& message) = 0;
     // --- methods ---
-    i16 Open(i16, class heroWindow*);
+    i16 Open(i16 zOrder, class heroWindow* owner);
     void Close(void);
     void Dim(void);
 };

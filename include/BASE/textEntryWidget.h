@@ -77,10 +77,10 @@ public:
     virtual inline ~textEntryWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void Read(H1_ENUM_PARAM(TextEntryReadMode, i32));
-    void SetupDisplayString(char*, u16);
+    void Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type);
+    void SetupDisplayString(char* source, u16 cursor);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_TEXTENTRYWIDGET_H

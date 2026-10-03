@@ -22,9 +22,9 @@ H1_ENUM_CONST_BEGIN(FindPathTerrainConstant)
     FINDPATH_WATER_MODE = 1
 H1_ENUM_CONST_END(FindPathTerrainConstant)
 
-i32 CalcTerrainCost(i32, i32, i32, i32);
+i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode);
 // clang-format on
-i16 TerrainStepCost(i8, i8);
+i16 TerrainStepCost(i8 terrain, i8 diagonal);
 // FindNearestObject seeds this word limit; PushPoint marks costlier nodes.
 extern i16 gCurTempMobility;
 

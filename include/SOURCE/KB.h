@@ -131,9 +131,9 @@ extern char* gCombatFxNames[];
 extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
-char* GetMonsterName(i32);
-struct SAMPLE2 LoadPlaySample(char*);
-void WaitEndSample(struct SAMPLE2, i32);
+char* GetMonsterName(i32 monster);
+struct SAMPLE2 LoadPlaySample(char* name);
+void WaitEndSample(struct SAMPLE2 s, i32 waitTime);
 // Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
 extern struct SAMPLE2 NULL_SAMPLE2;
 extern i32 glTimers[];
@@ -147,18 +147,18 @@ H1_ENUM_CONST_BEGIN(GlobalTimerConstant)
 H1_ENUM_CONST_END(GlobalTimerConstant)
 void EarlyShutDownSystem();
 void QuickViewWait();
-i8 CanBuild(class town*, i16);
-i8 CanBuy(class town*, i16);
+i8 CanBuild(class town* t, i16 building);
+i8 CanBuy(class town* t, i16 type);
 extern "C" void PollSound();
 void ForcePollSound();
-char toupper(char);
+char toupper(char character);
 i16 NullHandler(struct tag_message&);
-char* GetBuildingName(i32, i16);
-void GetBuildingCost(i32, i16, i32* const, i32);
-char* GetMonsterName(i32);
-i32 GetBuildingBaseResourceValue(i32, i32, i32);
-void AddNetBoxLine(char*);
-void GOut(char*);
+char* GetBuildingName(i32 race, i16 building);
+void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel);
+char* GetMonsterName(i32 monster);
+i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level);
+void AddNetBoxLine(char* text);
+void GOut(char* text);
 extern i32 giShowIntro;
 extern i8 giScreenScroll;
 extern i32 gbBlackoutPlayer;
@@ -172,26 +172,26 @@ void InitMainClasses(void);
 void InitVars(void);
 i32 InterpretCommandLine(void);
 void ClearMapExtra(void);
-i16 GetMonType(i32, i32);
+i16 GetMonType(i32 score, i32 highScoreType);
 i32 MemSize(i32);
 i8 CheckMem(void);
-i32 IsCDDrive(i32);
+i32 IsCDDrive(i32 driveIndex);
 void LoadSystemwideIcons(void);
 void UnloadSystemwideIcons(void);
 void UpdateSystemOptionsMenu(void);
 void CleanUpMenus(void);
 void EarlyResizeWindow(i32, i32, i32, i32);
-void GetDataEntry(char*, char*, i32, char*);
-i16 DataEntryWindowHandler(struct tag_message&);
-i16 EventWindowHandler(struct tag_message&);
-i16 TrueFalseDialogHandler(struct tag_message&);
+void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* initialText);
+i16 DataEntryWindowHandler(struct tag_message& message);
+i16 EventWindowHandler(struct tag_message& message);
+i16 TrueFalseDialogHandler(struct tag_message& message);
 // HoMM1 town-name lookup by town id (retail 0x00455aaf); the inline
 // game::GetTown narrows the id, hence retail's movsx after jmp $+5.
-char* GetTownName(i32);
-void ReceiveRemotePlayerExit(i8, i8, i8, i8);
-void ShutDown(char*);
-void HandleRemoteDeadPlayerExit(i32);
-void CheckEndGame(i32);
+char* GetTownName(i32 i);
+void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut);
+void ShutDown(char* message);
+void HandleRemoteDeadPlayerExit(i32 position);
+void CheckEndGame(i32 forced);
 void HandleRemoteSuddenExit(void);
 extern i8 gbRetreatWin;
 extern i8 gGameInitialized;
@@ -201,12 +201,12 @@ extern i8 gbCombatSurrender;
 extern i32 gbInNewGameSetup;
 void DeleteMainClasses(void);
 extern class highScoreManager* gpHighScoreManager;
-void FileError(char*);
+void FileError(char* filename);
 void MemError();
-void GetMonsterCost(i32, i32* const);
+void GetMonsterCost(i32 monster, i32* const cost);
 // philAI::BuildHero charges this word-sized gold price.
 extern i16 gHeroGoldCost;
-void PopNetBox(char*);
+void PopNetBox(char* notice);
 // NormalDialog's x/y: AUTO_POSITION lets it place the window (the adventure
 // screen's NORMAL_DIALOG_ADVENTURE_X or centred; y centred up to
 // NORMAL_DIALOG_MAX_TOP).
@@ -217,15 +217,15 @@ H1_ENUM_CONST_END(NormalDialogPosition)
 // Buka 2.1 KBDeclarations.h declares the same trailing defaults (HoMM1 has no
 // timeout argument).
 void NormalDialog(
-    char*,
-    H1_ENUM_PARAM(NormalDialogType, i32),
-    i32 = NORMAL_DIALOG_AUTO_POSITION,
-    i32 = NORMAL_DIALOG_AUTO_POSITION,
-    H1_ENUM_PARAM(NormalDialogResourceType, i32) = NORMAL_DIALOG_NO_RESOURCE,
-    i32 = 0,
-    H1_ENUM_PARAM(NormalDialogResourceType, i32) = NORMAL_DIALOG_NO_RESOURCE,
-    i32 = 0,
-    H1_ENUM_PARAM(NormalDialogOrText, i32) = NORMAL_DIALOG_NO_OR_TEXT
+    char* text,
+    H1_ENUM_PARAM(NormalDialogType, i32) dialogType,
+    i32 x = NORMAL_DIALOG_AUTO_POSITION,
+    i32 y = NORMAL_DIALOG_AUTO_POSITION,
+    H1_ENUM_PARAM(NormalDialogResourceType, i32) firstResourceType = NORMAL_DIALOG_NO_RESOURCE,
+    i32 firstResourceValue = 0,
+    H1_ENUM_PARAM(NormalDialogResourceType, i32) secondResourceType = NORMAL_DIALOG_NO_RESOURCE,
+    i32 secondResourceValue = 0,
+    H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText = NORMAL_DIALOG_NO_OR_TEXT
 );
 extern char* gTownObjectNames[];
 extern char* gSpellDesc[];
@@ -239,12 +239,12 @@ extern i32 iMaxMapExtra;
 extern i32 pwSizeOfMapExtra[];
 // KB's adventure status-bar resource message and its menu, wait and victory
 // screens.
-void BVResMsg(char*, i32, i32);
-i16 InitMenuHandler(struct tag_message&);
-i16 WaitHandler(struct tag_message&);
+void BVResMsg(char* s, i32 res, i32 qty);
+i16 InitMenuHandler(struct tag_message& message);
+i16 WaitHandler(struct tag_message& message);
 void ShowCongrats(void);
 void CongratsWait(void);
-i32 AddScoreToHighScore(i32, i32, char*, char*);
+i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName);
 
 // HoMM1 uses six-word graphics records; HoMM2 adds colorMouseCursor.
 struct exeGfxConfig {
@@ -382,9 +382,9 @@ extern i32 giCurWindowsStyleFlags;
 extern struct SMenuEnableStatus gMenuEnableStatus[];
 extern struct WindowTextEntry gWinSetup[];
 extern char* gWinSetupText[];
-i32 HandleAppSpecificMenuCommands(i32);
+i32 HandleAppSpecificMenuCommands(i32 command);
 i32 oldmain(void);
-void UpdateAppSpecificMenus(void*);
+void UpdateAppSpecificMenus(void* hMenu);
 extern i32 bSpecialHideCursor;
 extern i32 gArtifactBaseRV[];
 extern i8 gDrawSavedCursor;
@@ -416,7 +416,7 @@ extern i32 giHostGamePos;
 extern i32 giThisGamePos;
 extern i32 giThisNetPos;
 extern i8 iMPBaseType;
-i8 NetPosToGamePos(i32);
+i8 NetPosToGamePos(i32 netPos);
 i8 WaitForOtherPlayer(void);
 // SeedPosition's seeding state.
 extern i32 giSeedingValid;
@@ -432,7 +432,7 @@ extern char* gCastleInfo[];
 extern char* gTownCommand[];
 extern struct TownBuildingExtent gTownBuildingExtents[4][16];
 // KB's tavern recruit dialog handler (retail 0x0045140e).
-i16 RecruitHeroHandler(struct tag_message&);
+i16 RecruitHeroHandler(struct tag_message& message);
 extern i8 townTheme[];
 extern i32 gFullCombatScreenDrawn;
 extern i32 gLimitedCombatUpdatePalette;

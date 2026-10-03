@@ -36,11 +36,11 @@ public:
     // --- methods ---
     i16 InitSystem(void);
     void ShutDownSystem(void);
-    i16 DoDialog(class baseManager*);
+    i16 DoDialog(class baseManager* manager);
     void PrintManagerList(void);
-    i16 AddManager(class baseManager*, i16);
-    void RemoveManager(class baseManager*);
-    void CallManager(class baseManager*);
+    i16 AddManager(class baseManager* manager, i16 priority);
+    void RemoveManager(class baseManager* manager);
+    void CallManager(class baseManager* manager);
     void MainLoop(void);
     void Terminate(void);
 };

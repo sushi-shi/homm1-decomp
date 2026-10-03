@@ -20,24 +20,24 @@ public:
     // --- constructors ---
     textWidget(void);
     textWidget(
-        i16,
-        i16,
-        i16,
-        i16,
-        char*,
-        char*,
-        i16,
-        i16,
-        i16
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
+        char* text,
+        char* fontName,
+        i16 color,
+        i16 id,
+        i16 kind
     );
     virtual ~textWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
     void SetColorIndex(i16 color);
-    void SetText(char*);
+    void SetText(char* text);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_TEXTWIDGET_H

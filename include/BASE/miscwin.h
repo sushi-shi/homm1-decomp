@@ -5,27 +5,27 @@
 
 // miscwin.cpp: Windows-side screen, palette and clipped-icon helpers.
 void ClippedMonoIconToBitmap(
-    class icon*,
-    class bitmap*,
-    i32,
-    i32,
-    i32,
-    i32,
-    i32,
-    i32,
-    i32,
-    i32,
-    i32
+    class icon* sourceIcon,
+    class bitmap* destination,
+    i32 x,
+    i32 y,
+    i32 frame,
+    i32 color,
+    i32 mode,
+    i32 clipX,
+    i32 clipY,
+    i32 clipW,
+    i32 clipH
 );
-void ClipIconToBitmap(class icon*, class bitmap*, i32, i32, i32, i32, i32, i32, i32, i32);
-i32 Random(i32, i32);
-void FadeIn(i32);
-void FadeOut(i32);
+void ClipIconToBitmap(class icon* sourceIcon, class bitmap* destination, i32 x, i32 y, i32 frame, i32 mode, i32 clipX, i32 clipY, i32 clipW, i32 clipH);
+i32 Random(i32 low, i32 high);
+void FadeIn(i32 increment);
+void FadeOut(i32 increment);
 void PrintMemoryLeaks(void);
-void PostprocessPalette(i8*);
-void BlitBitmapToScreen(class bitmap*, i32, i32, i32, i32, i32, i32);
+void PostprocessPalette(i8* data);
+void BlitBitmapToScreen(class bitmap* sourceBitmap, i32 sourceX, i32 sourceY, i32 width, i32 height, i32 destinationX, i32 destinationY);
 void PostprocessBitmap(i8*, i32, i32);
-void GrabScreenBitmap(class bitmap*, i32, i32);
+void GrabScreenBitmap(class bitmap* destination, i32 x, i32 y);
 void PostprocessIcon(class icon*);
 
 H1_ENUM_CONST_BEGIN(ScreenBlitConstant)

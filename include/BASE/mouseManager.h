@@ -46,15 +46,15 @@ public:
     // --- constructors ---
     mouseManager(void);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     // CombatManager::ViewSpells passes a sign-extended word frame.
-    void SetPointer(char*, i16);
-    void SetPointer(i16);
+    void SetPointer(char* name, i16 frame);
+    void SetPointer(i16 frame);
     void NewUpdate(i32);
-    void MouseCoords(i16&, i16&);
+    void MouseCoords(i16& x, i16& y);
     void SaveAndDraw(void);
     // HoMM1 Windows keeps the DOS buffer-pointer hooks as empty stubs.
     void SaveAndDraw(class bitmap*, i16, i16, i16);

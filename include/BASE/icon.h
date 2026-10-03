@@ -44,15 +44,15 @@ public:
     i16 m_drawTop;
     i16 m_drawBottom;
     // --- constructors ---
-    icon(i16);
+    icon(i16 id);
     virtual inline ~icon();
     // --- methods ---
     void DrawToBuffer(
-        i16,
-        i16,
-        i16,
-        H1_ENUM_PARAM(IconDrawOrientation, i8),
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8)
+        i16 x,
+        i16 y,
+        i16 frame,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
     );
     i32 CombatClipDrawToBuffer(
         i32 x,
@@ -65,31 +65,31 @@ public:
         i8* yModify
     );
     void ClipFillToBuffer(
-        i16,
-        i16,
-        i16,
-        i16,
-        H1_ENUM_PARAM(IconDrawOrientation, i8),
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8),
-        i32,
-        i32,
-        i32,
-        i32
+        i16 x,
+        i16 y,
+        i16 frame,
+        i16 color,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode,
+        i32 clipX,
+        i32 clipY,
+        i32 clipW,
+        i32 clipH
     );
     void FillToBuffer(
-        i16,
-        i16,
-        i16,
-        i16,
-        H1_ENUM_PARAM(IconDrawOrientation, i8),
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8)
+        i16 x,
+        i16 y,
+        i16 frame,
+        i16 color,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
     );
     void DimToBuffer(
-        i16,
-        i16,
-        i16,
-        H1_ENUM_PARAM(IconDrawOrientation, i8),
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8)
+        i16 x,
+        i16 y,
+        i16 frame,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
     );
 };
 #pragma pack(pop)

@@ -130,12 +130,12 @@ public:
     u8 m_obelisksVisited[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
     playerAIData m_aiData;
     // --- methods ---
-    void Write(i32);
-    void Read(i32);
+    void Write(i32 file);
+    void Read(i32 file);
     i8 NextHero(i32);
     i8 HasMobileHero(void);
-    i32 BuildingsOwned(i32, i32, i32);
-    i32 NumOfGivenArtifact(i32);
+    i32 BuildingsOwned(i32 townType, i32 buildingIndex, i32 buildState);
+    i32 NumOfGivenArtifact(i32 artifact);
     i8 CountVisitedObelisks(void);
     i8 CurrentHero(void) {
         return m_currentHero;

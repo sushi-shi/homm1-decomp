@@ -23,11 +23,11 @@ public:
     i16 m_fillColor;
     // --- constructors ---
     border(void);
-    border(i16, i16, i16, i16, i16, i16, i16, char*);
+    border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name);
     virtual inline ~border() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
 };

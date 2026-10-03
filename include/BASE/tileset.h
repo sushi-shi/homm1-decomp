@@ -13,7 +13,7 @@ public:
     u16 m_tileHeight;
     i8 *m_data;
     // --- constructors ---
-    tileset(i16);
+    tileset(i16 id);
     virtual inline ~tileset();
 };
 #pragma pack(pop)

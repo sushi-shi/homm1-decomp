@@ -149,15 +149,15 @@ public:
     i32 m_field_0x34f;
 
     inputManager(void);
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(tag_message&) OVERRIDE;
     void Flush(void);
     tag_message GetEvent(void);
     tag_message PeekEvent(void);
     void SetMouseCoords(i32, i32);
-    void SetKeyCodeType(i16);
-    void AsciiConvert(tag_message&);
+    void SetKeyCodeType(i16 keyCodeType);
+    void AsciiConvert(tag_message& event);
     void MakeScanCodeTable(void);
     void ForceMouseMove(void);
     // Inline qualifier accessor; townManager::ShiftQualChange retains its jmp.
@@ -166,7 +166,7 @@ public:
     }
 };
 #pragma pack(pop)
-i32 KeyboardMessageHandler(void*, u32, u32, i32);
-i32 MouseMessageHandler(void*, u32, u32, i32);
+i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData);
+i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData);
 
 #endif // HOMM1_BASE_INPUTMANAGER_H

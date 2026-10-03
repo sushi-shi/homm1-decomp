@@ -31,11 +31,11 @@ public:
     i16 m_messageFilter;
     // --- constructors ---
     swapManager(void);
-    swapManager(class hero*, class hero*);
+    swapManager(class hero* leftHero, class hero* rightHero);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Reset(void);
     i32 DrawSwapWin(void);

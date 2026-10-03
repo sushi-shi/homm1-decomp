@@ -127,28 +127,28 @@ extern i32 iInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
 
-i32 SendRemoteData(u8*, u8*, i32, i32);
-i32 ReceiveRemoteData(u8*, u8*, i32);
+i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length);
+i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType);
 i32 TransmitRemoteData(
-    char*,
-    i32,
-    i32,
-    i8,
-    i8,
-    i8,
-    i8,
-    i8
+    char* data,
+    i32 destination,
+    i32 length,
+    i8 command,
+    i8 reliable,
+    i8 allowRetryDialog,
+    i8 messageType,
+    i8 gamePosDestination
 );
-char* GetRemoteData(i8);
-i32 TransmitAndWait(char*, i32, i32, i8, i8, char**);
+char* GetRemoteData(i8 remove);
+i32 TransmitAndWait(char* bytes, i32 destination, i32 length, i8 command, i8 responseCommand, char** response);
 void RemoteCleanup(void);
-void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16));
-i32 FileSize(char*);
-void WriteModemPacket(char*, i32);
+void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16) networkDriver);
+i32 FileSize(char* filename);
+void WriteModemPacket(char* buffer, i32 length);
 char ReadPacket(void);
-void calc_crc(u16*, u8*, i32);
-i32 EncodePacket(u8*, i8, i8, i32);
-i32 DecodePacket(u8*, i32);
+void calc_crc(u16* crc, u8* data, i32 length);
+i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length);
+i32 DecodePacket(u8* data, i32 source);
 i8 InitNetHost(void);
 i8 InitNetGuest(void);
 i8 WaitForHost(void);
@@ -169,7 +169,7 @@ extern i8 gInitNetGuestStatus;
 extern i8 gWaitForHostStatus;
 void PollRemote();
 // HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
-void RemoteMain(i32);
+void RemoteMain(i32 gameMode);
 i32 nbnet_init(void);
 
 H1_ENUM_BEGIN(ModemResponseLimit)
@@ -219,14 +219,14 @@ extern i32 remotestage;
 extern i32 localstage;
 extern i32 WFDCStage;
 
-void GUIModemCommand(char*, char*);
-void ModemCommand(char*);
+void GUIModemCommand(char* message, char* command);
+void ModemCommand(char* command);
 void ModemSetup(void);
 i32 Dial(void);
 i32 Wait(void);
 void Connect(void);
-i8 GUIModemResponse(char*, char*);
-i32 write_buffer(char*, i32);
+i8 GUIModemResponse(char* message, char* response);
+i32 write_buffer(char* buffer, i32 length);
 i32 read_byte(void);
 // Modem.cpp's wait-loop steps that KB's WaitHandler drives.
 i8 GUIModemCommandExec(void);

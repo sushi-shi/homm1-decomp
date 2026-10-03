@@ -32,16 +32,16 @@ struct tag_Anchor {
     tag_Node *tail;
 };
 
-void init_anchor(tag_Anchor *, i32, i32);
-void add_node(tag_Anchor *, tag_Node *);
-tag_Node *pop_node(tag_Anchor *);
+void init_anchor(tag_Anchor * anchor, i32, i32);
+void add_node(tag_Anchor * anchor, tag_Node * node);
+tag_Node *pop_node(tag_Anchor * anchor);
 
-i16 com_init(u8, i32, i32);
-void com_term(i16);
-i16 com_rcv(i16, u16, void *);
-i16 com_snd(i16, u16, u16, void *, i32);
+i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr);
+void com_term(i16 port);
+i16 com_rcv(i16 port, u16 requested, void * buffer);
+i16 com_snd(i16 port, u16, u16 length, void * data, i32 priority);
 i16 __cdecl com_sess(i32, i32, ...);
-u8 com_stat(i16, u16);
+u8 com_stat(i16 port, u16);
 void comm_wrt_task(void);
 
 #endif

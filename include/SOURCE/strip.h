@@ -59,11 +59,11 @@ public:
     armyGroup* m_army;
     // --- constructors ---
     // HoMM1 retail: eight arguments (ret 0x20).
-    strip(i16, i16, i8, i16, i8, class armyGroup*, i16, i32);
+    strip(i16 x, i16 y, i8 stripType, i16 portraitId, i8 portraitFrame, class armyGroup* army, i16 firstBorderId, i32 drawWindow);
     ~strip();
     // --- methods ---
     void Draw(void);
-    void DrawIcons(i8);
+    void DrawIcons(i8 drawWindow);
     void DrawFrame(void);
 };
 #pragma pack(pop)

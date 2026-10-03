@@ -141,23 +141,23 @@ public:
     void Read(i32 file, i8 expansion);
     void Write(i32 file, i8 expansion);
     void GetArmyStrengths(u32* const);
-    i8 HasArtifact(H1_ENUM_PARAM(ArtifactType, i8));
+    i8 HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact);
     i16 CalcMobility(void);
-    i8 HasSpell(H1_ENUM_PARAM(SpellType, i8));
+    i8 HasSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     i32 GetNthSpell(i32 type, i32 spellNumber);
-    i16 GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8));
-    void UseSpell(H1_ENUM_PARAM(SpellType, i8));
-    i32 AddSpell(H1_ENUM_PARAM(SpellType, i8), i8, i32);
+    i16 GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type);
+    void UseSpell(H1_ENUM_PARAM(SpellType, i8) spell);
+    i32 AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, i32 checkOnly);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
-    i8 HeroView(i8);
-    void ViewStat(i8, i8);
-    void ViewArtifact(i8, i8);
+    i8 HeroView(i8 viewOnly);
+    void ViewStat(i8 stat, i8 quickView);
+    void ViewArtifact(i8 artifact, i8 quickView);
     i8 Dismiss(void);
     void Deallocate(void);
-    i32 GetExperience(i32);
-    i32 GetLevel(i32);
+    i32 GetExperience(i32 level);
+    i32 GetLevel(i32 experienceValue);
     void ApplyBattleWinTemps(void);
     void ApplyBattleLossTemps(void);
     void CheckLevel(void);
@@ -178,9 +178,9 @@ public:
 
 extern class heroWindow* gheroWin;
 
-void HeroMessageUpdate(char*);
-void UpdateHeroScreenStatusBar(i16);
+void HeroMessageUpdate(char* text);
+void UpdateHeroScreenStatusBar(i16 widgetId);
 // Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
 extern i8 gbHeroScreenActive;
-i16 HeroHandler(struct tag_message&);
+i16 HeroHandler(struct tag_message& message);
 #endif // HOMM1_SOURCE_HERO_H

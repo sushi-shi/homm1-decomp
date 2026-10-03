@@ -157,48 +157,48 @@ public:
     void WaitSample(i32);
     void InitClean(void);
     // HoMM1 retail: byte type, word count, byte side and index (ret 0x10).
-    void Init(i8, i16, i8, i8);
+    void Init(i8 type, i16 quantity, i8 side, i8 index);
     void LoadResources(void);
     void FreeResources(void);
     // HoMM1 retail: word x/y (ret 8).
-    void DrawToBuffer(i16, i16);
+    void DrawToBuffer(i16 x, i16 y);
     // HoMM1 retail 0x00467281: back to the standing frame, optionally
     // redrawing the combat screen (ret 4).
-    void Stand(i8);
+    void Stand(i8 redraw);
     void Wince(void);
     // HoMM1 retail 0x00467345: word direction, byte stand-after and
     // continued-walk flags (ret 0xc).
-    void Walk(i16, i8, i8);
+    void Walk(i16 direction, i8 standAfter, i8 continued);
     void SpecialAttack(void);
     // HoMM1 retail 0x00468fc6: word direction (ret 4).
-    void DirDoAttack(i16);
+    void DirDoAttack(i16 direction);
     // HoMM1 retail 0x00468861 takes no argument.
     void DoHydraAttack(void);
     // HoMM1 retail 0x00468ff3: nonzero for a retaliation strike (ret 4).
-    void DoAttack(i32);
+    void DoAttack(i32 retaliation);
     void ResetPath(void);
     i16 WalkTo(void);
     // HoMM1 retail 0x0046a0f0 / 0x0046a213: word hex, word result.
-    i16 WalkTo(i16);
+    i16 WalkTo(i16 destHex);
     i16 AttackTo(void);
-    i16 AttackTo(i16);
+    i16 AttackTo(i16 destHex);
     void CheckLuck(void);
-    void DamageEnemy(class army*, i32*, i32*, i32, i32);
+    void DamageEnemy(class army* target, i32* damageResult, i32* killedResult, i32 rangedAttack, i32 defenseModifier);
     // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
-    i32 Damage(i32);
+    i32 Damage(i32 damage);
     // HoMM1 retail 0x0046aa49: byte effect index (ret 4).
-    void PowEffect(i8);
+    void PowEffect(i8 effect);
     u32 Strength(void);
     i32 LeaveNoBody(void);
     void ProcessDeath(i32 immediate);
     // HoMM1 retail 0x0046b326: word effect, frame delay (ret 8).
-    void SpellEffect(i16, i32);
+    void SpellEffect(i16 effect, i32 frameDelay);
     void CancelSpellType(i32 cancelType);
     void CancelIndividualSpell(i32 influence);
     i32 SetSpellInfluence(i32 influence, i32 rounds);
     void DecrementSpellRounds(void);
     void GoBerserk(void);
-    void MoveAttack(i32, i32);
+    void MoveAttack(i32 hex, i32 moveOnly);
     float SpellCastWorkChance(i32 spell);
     i32 SpellCastWorks(i32 spell);
     void DispelGood(void);
@@ -213,28 +213,28 @@ public:
     i32 OtherArmyAdjacent(i32 side, i32 index);
     i32 GetPowBaseY(void);
     // HoMM1 retail 0x0044a5e0: hex through a word pointer, word result (ret 4).
-    i16 CanFit(i16*);
-    i16 ValidFlight(i16, i8);
+    i16 CanFit(i16* hex);
+    i16 ValidFlight(i16 destination, i8 useDestination);
     // HoMM1 retail 0x0044acaf/0x0044acd6: word destination, word result.
     i16 FlyTo(void);
-    i16 FlyTo(i16);
+    i16 FlyTo(i16 destination);
     // HoMM1 retail 0x004180f0: word hexes, byte speed/flags (ret 0x14).
-    i16 FindPath(i16, i16, i8, i8, i8);
+    i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);
     // HoMM1 retail 0x00418242: word hex, byte path mode, word result (ret 8).
-    i16 ValidPath(i16, i8);
-    i16 GetMoveMask(i16);
+    i16 ValidPath(i16 targetHex, i8 pathMode);
+    i16 GetMoveMask(i16 sourceHex);
     // HoMM1 retail 0x0041835b: word hex, byte mode and target (ret 0xc).
-    i16 GetAttackMask(i16, i8, i8);
-    i16 ValidMove(i16);
-    i16 ValidMove(i16, i16);
-    i16 ValidAttack(i16, i16, i16, i16, i16*);
-    i16 GetAdjacentCellIndex(i16, i16);
-    i16 ValidRange(i16);
-    i16 GetBestDirection(i16, i16, i16);
+    i16 GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex);
+    i16 ValidMove(i16 direction);
+    i16 ValidMove(i16 sourceHex, i16 direction);
+    i16 ValidAttack(i16 sourceHex, i16 direction, i16 targetMode, i16 requiredTargetHex, i16* attackHex);
+    i16 GetAdjacentCellIndex(i16 hex, i16 direction);
+    i16 ValidRange(i16 targetHex);
+    i16 GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask);
 };
 #pragma pack(pop)
 
-i16 GetAdjacentCellIndexNoArmy(i16, i16);
+i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
 // The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
 // and PowEffect share one icon, reloaded when the effect file changes.
 // Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager):

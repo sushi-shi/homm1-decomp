@@ -17,7 +17,7 @@ public:
     i8* m_data;
     // --- constructors ---
     palette(void);
-    palette(i16);
+    palette(i16 id);
     virtual inline ~palette();
     // --- methods ---
     i8* Data(void);

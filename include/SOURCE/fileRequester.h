@@ -155,23 +155,23 @@ public:
     i16 m_acceptMask;
     // --- constructors ---
     fileRequester(
-        i16,
-        i16,
-        H1_ENUM_PARAM(FileRequesterMode, i16),
-        const char*,
-        const char*,
-        const char*
+        i16 x,
+        i16 y,
+        H1_ENUM_PARAM(FileRequesterMode, i16) mode,
+        const char* pattern,
+        const char* directory,
+        const char* defaultExtension
     );
     ~fileRequester();
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void SetOK(i8);
+    void SetOK(i8 enabled);
     void UpdateMapInfo(void);
     void DoKnob(void);
-    void Update(i8);
+    void Update(i8 drawWindow);
     char* GetMapName(void);
     char* GetFilename(void);
     void ShowMapInfo(void);

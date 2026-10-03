@@ -37,21 +37,21 @@ public:
         i16 fillColor
     );
     iconWidget(
-        i16,
-        i16,
-        i16,
-        i16,
-        char*,
-        i8,
-        i8,
-        i16,
-        i16,
-        i16
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
+        char* name,
+        i8 frame,
+        i8 orientation,
+        i16 id,
+        i16 kind,
+        i16 fillColor
     );
     virtual inline ~iconWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
 };

@@ -19,11 +19,11 @@ public:
     border *m_border;
     // --- constructors ---
     // HoMM1 reads the placement from <name>.tod (retail ret 4).
-    townObject(char *);
+    townObject(char * name);
     ~townObject();
     // --- methods ---
     // HoMM1 passes the animation-advance flag as a byte (retail ret 4, movsx).
-    void Draw(i8);
+    void Draw(i8 advanceAnimation);
 };
 #pragma pack(pop)
 #endif // HOMM1_SOURCE_TOWNOBJECT_H

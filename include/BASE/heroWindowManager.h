@@ -42,22 +42,22 @@ public:
     // --- constructors ---
     heroWindowManager(void);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16) OVERRIDE;
+    virtual i16 Open(i16 managerOrder) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     i16 ConvertToHover(struct tag_message& message);
-    i16 BroadcastMessage(i16, i16, i16, i16);
-    void AddWindow(class heroWindow*, i16, i8);
-    void RemoveWindow(class heroWindow*);
-    i16 DoDialog(class heroWindow*, i16 (*)(struct tag_message&), i32);
+    i16 BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value);
+    void AddWindow(class heroWindow* window, i16 zOrder, i8 openFlags);
+    void RemoveWindow(class heroWindow* window);
+    i16 DoDialog(class heroWindow* window, i16 (*handler)(struct tag_message&), i32 fade);
     void UpdateScreen(void);
-    void UpdateScreenRegion(i16, i16, i16, i16);
+    void UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height);
     void RedrawScreen(void);
-    void FadeScreen(i16, i16, class palette*);
+    void FadeScreen(i16 direction, i16 steps, class palette* currentPalette);
     void ScreenShot(void);
-    void SaveFizzleSource(i16, i16, i16, i16);
-    void FizzleForward(i16, i16, i16, i16, i32);
+    void SaveFizzleSource(i16 x, i16 y, i16 width, i16 height);
+    void FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay);
     void ReleaseFizzleSource(void);
 };
 #pragma pack(pop)

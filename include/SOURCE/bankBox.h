@@ -23,7 +23,7 @@ public:
     i16 m_y;
     heroWindow* m_window;
     // --- constructors ---
-    bankBox(i16, i16, class playerData*);
+    bankBox(i16 x, i16 y, class playerData* player);
     ~bankBox();
     // --- methods ---
     // HoMM1 callers pass no argument (retail 0x00463e48).

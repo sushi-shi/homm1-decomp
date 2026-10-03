@@ -57,16 +57,16 @@ struct NetbiosName {
 };
 
 void nb_add_name(void);
-void nb_format_name(char*, u8*);
-void __stdcall nb_add_name_done(NCB*);
-u16 nb_recv_any(i32);
-u16 nb_call(i32, void*);
-u16 nb_listen(i32, void*);
-void nb_arm_recv(i32);
-void nb_close_session(i32);
-void nb_recv_complete(i32);
-void __stdcall nb_recv_any_done(NCB*);
-void __stdcall nb_call_done(NCB*);
+void nb_format_name(char* source, u8* destination);
+void __stdcall nb_add_name_done(NCB* ncb);
+u16 nb_recv_any(i32 session);
+u16 nb_call(i32 session, void* name);
+u16 nb_listen(i32 session, void* name);
+void nb_arm_recv(i32 session);
+void nb_close_session(i32 session);
+void nb_recv_complete(i32 session);
+void __stdcall nb_recv_any_done(NCB* ncb);
+void __stdcall nb_call_done(NCB* ncb);
 void nb_thr_ctl(void);
 extern u8* gNbListenName;
 
@@ -89,11 +89,11 @@ extern tag_Anchor gNbSndQueue;
 extern tag_Anchor gNbFreeQueue;
 extern HANDLE gNbEvents[9];
 // NetBIOS driver entry points REMOTE calls (C linkage, cdecl).
-H1_C_LINKAGE u16 __cdecl nb_init(u16);
+H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions);
 H1_C_LINKAGE void __cdecl nb_term(i32);
-H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16, void*);
-H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16, u16, void*, i32);
-H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32, ...);
-H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16);
+H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer);
+H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree);
+H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...);
+H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session);
 
 #endif

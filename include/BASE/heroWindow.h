@@ -59,21 +59,21 @@ public:
 
     // --- constructors ---
     heroWindow(void);
-    heroWindow(i16, i16, i16, i16, i16);
-    heroWindow(i16, i16, char*);
+    heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags);
+    heroWindow(i16 x, i16 y, char* resourceName);
     // --- methods ---
-    i16 Open(i16, i8);
+    i16 Open(i16 zOrder, i8 flags);
     void RemoveAndDeleteWidget(i32 id);
     void Close(void);
-    void AddWidget(class widget*, i16);
-    void RemoveWidget(class widget*);
-    i16 BroadcastMessage(struct tag_message&);
+    void AddWidget(class widget* newWidget, i16 zOrder);
+    void RemoveWidget(class widget* w);
+    i16 BroadcastMessage(struct tag_message& message);
     void DrawWindow(void);
-    void DrawWindow(i16);
-    void DrawWindow(i16, i32, i32);
+    void DrawWindow(i16 flags);
+    void DrawWindow(i16 update, i32 firstId, i32 lastId);
     i16 SaveBackground(void);
     void RestoreBackground(void);
-    void MoveWindow(i16, i16);
+    void MoveWindow(i16 dx, i16 dy);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_HEROWINDOW_H

@@ -55,11 +55,11 @@ public:
     virtual inline ~button() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
-    i16 Select(struct tag_message&);
-    i16 Deselect(struct tag_message&);
+    i16 Select(struct tag_message& message);
+    i16 Deselect(struct tag_message& message);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_BUTTON_H
