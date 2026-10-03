@@ -69,4 +69,9 @@ public:
     (gpWindowManager->m_dialogResult = (message).id,                                               \
      (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
 
+// Redraw the inclusive screen rectangle left..right, top..bottom (Buka 2.1
+// heroWindowManager.h).
+#define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
+    (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
+
 #endif // HOMM1_BASE_HEROWINDOWMANAGER_H

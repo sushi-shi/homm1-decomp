@@ -715,7 +715,7 @@ void army::SpecialAttack(void) {
         if (posY + ARMY_MISSILE_HALF_HEIGHT > maxY)
             maxY = posY + ARMY_MISSILE_HALF_HEIGHT;
         DelayTil(glTimers);
-        gpWindowManager->UpdateScreenRegion(minX, minY, iMaxX - minX + 1, maxY - minY + 1);
+        UPDATE_INCLUSIVE_REGION(minX, minY, iMaxX, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 15;
         prevX = posX;
         prevY = posY;

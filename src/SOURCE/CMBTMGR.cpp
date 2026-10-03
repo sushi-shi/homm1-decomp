@@ -1247,7 +1247,7 @@ void combatManager::KeepAttack(void) {
         behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
         m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
         DelayTil(glTimers);
-        gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
+        UPDATE_INCLUSIVE_REGION(minX, minY, updRight, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = xRun;
         lastY = yRun;
