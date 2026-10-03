@@ -76,6 +76,14 @@ ORDINARY_STORAGE = {".data": "data", ".rdata": "rdata"}
 
 #: cl's floating-point literal pool member spelling.
 FP_POOL_NAME = re.compile(r"^\$T[0-9]+$")
+#: cl's unpooled (no /Gf) string literal spelling.
+SG_LITERAL_NAME = re.compile(r"^\$SG[0-9]+$")
+#: literal family -> (cl's member spelling, manifest name prefix, provenance,
+#: the noun the withheld reasons use).
+_LITERAL_FAMILIES = {
+    "fp": (FP_POOL_NAME, "$T", "retail-reloc-fp-pool", "FP constant"),
+    "sg": (SG_LITERAL_NAME, "$SG", "retail-reloc-sg-literal", "string literal"),
+}
 
 #: The value c2's per-section alignment ratchet starts at (see _alignment).
 UNLATCHED_RATCHET = 4
@@ -655,7 +663,18 @@ def ehfuncinfo_rows(model: Model):
     return rows, withheld
 
 
-def fp_pool_rows(model: Model, base_dir=BASE_DIR):
+def sg_literal_rows(model: Model, base_dir=BASE_DIR):
+    """`$SG<n>` string literals, addressed exactly as `fp_pool_rows` addresses
+    the FP pool: VC4 does not pool them (no /Gf), so identical payloads sit at
+    several retail rvas and content matching cannot place one. Each member is
+    read off a self-proving relocation pairing and its NUL-terminated payload
+    re-proven against retail's bytes; the row is `$SG<decimal rva>` (the
+    compare canonicalizer content-addresses that family on both sides) and
+    its extent is the literal, never the obj's zero alignment tail."""
+    return fp_pool_rows(model, base_dir, literal="sg")
+
+
+def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
     """`$T<n>` FP-pool constants, ADDRESSED OUT OF RETAIL'S OWN RELOC TABLE.
 
     Content matching cannot answer this (FP pools are not /Gf-pooled, and a
@@ -672,6 +691,7 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
     """
     import struct
 
+    member_re, prefix, provenance, noun = _LITERAL_FAMILIES[literal]
     img = retail()
     sites = img.reloc_sites
 
@@ -689,7 +709,7 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
             continue
         known.setdefault(msvc_names.mask(b.name), b.rva)
         if b.channel in ("data_compgen", "src_data_compgen") \
-                and FP_POOL_NAME.fullmatch(b.name):
+                and member_re.fullmatch(b.name):
             pins[b.unit].append((b.rva, b.size))
 
     rows, withheld = [], []
@@ -703,10 +723,16 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
             offsets = sorted(o for o, _n, _s in members)
             payload = c.section_payload(sec["index"])[:sec["size"]]
             for off, name, _scl in members:
-                if not FP_POOL_NAME.fullmatch(name):
+                if not member_re.fullmatch(name):
                     continue
                 end = next((o for o in offsets if o > off), sec["size"])
-                pool[name] = (storage, off, payload[off:end], end - off)
+                want = payload[off:end]
+                if literal == "sg":
+                    nul = want.find(b"\0")
+                    if nul < 0:
+                        continue
+                    want = want[:nul + 1]
+                pool[name] = (storage, off, want, len(want))
         if not pool:
             continue
 
@@ -740,13 +766,16 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
                         break
                     value = struct.unpack("<I", img.data[at:at + 4])[0] \
                         - img.image_base
-                    if FP_POOL_NAME.fullmatch(sym):
-                        found.append((sym, value))
+                    # The inline addend is signed (`gTable[i - 7]`), and a
+                    # literal's own sites carry one too (a double's high
+                    # dword is `$T+4`): the member's base is value - addend.
+                    addend = struct.unpack("<i", text[site:site + 4])[0]
+                    if member_re.fullmatch(sym):
+                        found.append((sym, value - addend))
                         continue
                     anchor = known.get(msvc_names.mask(sym))
                     if anchor is None:      # not ours to check
                         continue
-                    addend = struct.unpack("<I", text[site:site + 4])[0]
                     if value != anchor + addend:
                         corroborated = False
                         break
@@ -758,15 +787,15 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
             at = img.off(rva)
             if at is None or img.data[at:at + size] != want:
                 withheld.append((rva, member,
-                                 "retail bytes contradict the candidate FP constant"))
+                                 f"retail bytes contradict the candidate {noun}"))
                 return
             start = _classify(rva)
             end = _classify(rva + size - 1)
             if STORAGE.get(start) != storage or start != end:
                 withheld.append((rva, member,
-                                 f"FP-pool storage {start} is not {storage}"))
+                                 f"{noun} storage {start} is not {storage}"))
                 return
-            rows.append({"name": f"$T{rva}", "member": member,
+            rows.append({"name": f"{prefix}{rva}", "member": member,
                          "object": f"{stem}.c", "rva": rva, "size": size,
                          "storage": storage, "provenance": how})
 
@@ -776,7 +805,7 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
             seen = votes.get(member) or set()
             if len(seen) == 1:
                 emit(member, next(iter(seen)), storage, size, want,
-                     "retail-reloc-fp-pool")
+                     provenance)
             elif seen:
                 withheld.append((0, member, "referrers disagree on the rva"))
             else:
@@ -816,7 +845,7 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR):
     kept = []
     for rva, group in sorted(by_rva.items()):
         if len({r["size"] for r in group}) != 1:
-            withheld += [(rva, r["member"], "FP-pool copies disagree on the extent")
+            withheld += [(rva, r["member"], f"{noun} copies disagree on the extent")
                          for r in group]
             continue
         by_object = {}
@@ -851,8 +880,10 @@ def candidates(model: Model):
     # never displace an enrolled row.
     fp, w = fp_pool_rows(model)
     withheld += w
+    sg, w = sg_literal_rows(model)
+    withheld += w
     spoken_for = {r["rva"]: r["name"] for r in rows}
-    for r in fp:
+    for r in fp + sg:
         other = spoken_for.get(r["rva"])
         if other in (None, r["name"]):
             rows.append(r)
