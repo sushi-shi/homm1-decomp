@@ -681,7 +681,13 @@ short townManager::Main(struct tag_message& message) {
                                 }
                                 width = width * 88 + 0x70;
                                 DrawTown(1, 1);
-                                gpWindowManager->FizzleForward(0, 0x100, width, 0xcc, -1);
+                                gpWindowManager->FizzleForward(
+                                    0,
+                                    0x100,
+                                    width,
+                                    0xcc,
+                                    FIZZLE_USE_DEFAULT_DELAY
+                                );
                                 WaitEndSample(res, SAMPLE_WAIT_DEFAULT);
                                 m_recruitResult = 0;
                                 gpMouseManager->ReallyShowPointer();
@@ -1329,8 +1335,17 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     iEvt.id = BUY_BUILD_NAME_CONTROL;
     iEvt.text = gText;
     nBuildWindow->BroadcastMessage(iEvt);
-    descWidget =
-        new textWidget(0x18, baseY, 0xee, (numLines << 4) + 6, descText, "bigfont.fnt", 1, -1, 8);
+    descWidget = new textWidget(
+        0x18,
+        baseY,
+        0xee,
+        (numLines << 4) + 6,
+        descText,
+        "bigfont.fnt",
+        1,
+        WIDGET_ID_NONE,
+        8
+    );
     if (descWidget == NULL)
         MemError();
     nBuildWindow->AddWidget(descWidget, WINDOW_Z_ORDER_APPEND);
@@ -1376,7 +1391,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                     amountText[resIndex],
                     "smalfont.fnt",
                     1,
-                    -1,
+                    WIDGET_ID_NONE,
                     8
                 );
                 if (amountWidgets[resIndex] == NULL)
@@ -1389,7 +1404,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                     "resource.icn",
                     resType[resIndex],
                     ICON_DRAW_NORMAL,
-                    -1,
+                    WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
                     1
                 );
@@ -1512,7 +1527,7 @@ void townManager::BuildObj(short building) {
         gTownBuildingExtents[m_town->m_type][building].y,
         gTownBuildingExtents[m_town->m_type][building].width,
         gTownBuildingExtents[m_town->m_type][building].height,
-        -1
+        FIZZLE_USE_DEFAULT_DELAY
     );
     WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     m_selectedBuilding = TOWN_BUILDING_NONE;
@@ -1909,7 +1924,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, short categories) 
                     "townwind.icn",
                     gpGame->m_players[ranking[pos]].m_color + THIEVES_FLAG_FRAME_BASE,
                     ICON_DRAW_NORMAL,
-                    -1,
+                    WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
                     1
                 );
