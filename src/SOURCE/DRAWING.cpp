@@ -81,9 +81,9 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
 // The help line for the current mouse command.
 VA(0x00470b5e, 0x2f3)
 void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) messageType) {
+    army* target;
     army* currentArmy;
     short targetMonster;
-    army* target;
     short actingType;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
@@ -231,11 +231,11 @@ void combatManager::DrawBackground(void) {
 VA(0x004711fb, 0xe27)
 void combatManager::DrawFrame(signed char updateScreen) {
     short hexCol;
+    int boxRight;
+    signed char drawn;
     int side;
     int i;
-    signed char drawn;
     int boxBottom;
-    int boxRight;
     int boxTop;
     int boxLeft;
     int sideDelta;

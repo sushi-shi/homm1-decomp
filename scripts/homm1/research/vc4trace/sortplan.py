@@ -35,9 +35,12 @@ def local_block(ilprefix, stmts):
     if not locs:
         return [], None
     base = locs[0][0]
-    if [h for h, _n in locs] != list(range(base, base + len(locs))):
-        return [], None                       # nested-block locals: not one declaration run
-    return [n for _h, n in locs], base
+    run = []
+    for h, n in locs:                         # the leading declaration run; later block-scoped
+        if h != base + len(run):              # locals (after statement labels) stay put
+            break
+        run.append(n)
+    return run, base
 
 
 def outcome(stmts, hmap):

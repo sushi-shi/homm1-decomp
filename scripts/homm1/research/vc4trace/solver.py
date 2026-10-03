@@ -122,9 +122,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument('--tops', type=int, default=3, help='whole-TU shifts searched in tier 3')
     ap.add_argument('--verify', action='store_true')
     ap.add_argument('--out')
+    ap.add_argument('--source', help='plan from this variant of the unit source instead of src/')
     a = ap.parse_args(argv)
     U = Unit(a.unit, a.out)
-    text = U.src.read_text()
+    text = Path(a.source).read_text() if a.source else U.src.read_text()
 
     # 1. trace once
     obj, ilp, log = U.compile(text, 'base', traced=True)
