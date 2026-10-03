@@ -1862,7 +1862,8 @@ short game::LoadMap(char* filename) {
     int unused;
     short version;
 
-    sprintf(gText, "%s%s", ".\\MAPS\\", filename);
+    extern char gcMapPath[];
+    sprintf(gText, "%s%s", gcMapPath, filename);
     handle = open(gText, O_BINARY);
     if (handle == -1)
         FileError(gText);
@@ -4937,7 +4938,8 @@ void game::GetMap(void) {
         sprintf(mask, "??????3?.MAP");
     else if (giNumHumanPlayers == 4)
         sprintf(mask, "???????4.MAP");
-    request = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, ".\\MAPS\\", ".MAP");
+    extern char gcMapPath[];
+    request = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, gcMapPath, ".MAP");
     if (!request)
         MemError();
     request->ShowMapInfo();
