@@ -49,3 +49,65 @@ The edge exists only when the vc40 `resource_files` are installed. The
 compiler release bundle does not carry them, so run
 `homm1 toolchain install --id vc40 --media build/downloads/MSVC40.iso`.
 `homm1 toolchain check` reports their state.
+
+## Per-DLL import order (open; measured on `work/n2-exe`)
+
+At master 3e819d4 the candidate `.idata` has the same descriptors, hints, RVAs
+and per-DLL counts as retail, but 547 bytes still differ. Within each DLL the
+ILT/IAT entries are a permutation of retail's. WINMM, ADVAPI32 and NETAPI32
+already match. The order is not first-reference order in `.text`. It is not the
+import library's member order either: `gdi32.lib` members and linker-member
+symbols are alphabetical.
+
+### Measurements with LINK 3.00
+
+Test setup: one C object with `/Od` that takes the address of n GDI functions
+through `windows.h` dllimport declarations, linked with `/NODEFAULTLIB`.
+
+- **Symbol-table order.** The ILT follows the object's COFF symbol-table order
+  of the `__imp_` externals. C1 emits these in reverse source order.
+- **Small DLLs rotate by one.** For 2 to 7 imports the first entry moves to
+  the end. With the null thunk, that makes 3 to 8 contributions per DLL.
+- **No rotation from 8 imports.** From 8 up to at least 40 imports the order
+  is unchanged.
+- **Interpretation.** This is consistent with an unstable sort of the
+  `.idata$4`/`$5` contributions whose small-partition path is a
+  selection-style short sort with a cutoff of 8, as in the MS CRT `qsort`.
+- **Several objects.** The `__imp_` symbol tables concatenate in link order,
+  then the same rule applies. Swapping the two objects swaps their blocks.
+- **Library position.** Placing `gdi32.lib` before or after the objects does
+  not change the order.
+
+### The full link does not reduce to this model
+
+The candidate's GDI32 symbols come from three objects:
+
+| Object | GDI32 references |
+|---|---|
+| `wingraph.obj` | 10 |
+| `kbwin.obj` | `GdiSetBatchLimit` |
+| `base:MOUSEMGR.obj` | `CreateBitmapIndirect`, `DeleteObject` |
+
+The candidate gives `GdiSetBatchLimit GetDeviceCaps DeleteDC DeleteObject ...
+CreateBitmapIndirect AnimatePalette`. That is wingraph's block reversed, with
+`AnimatePalette` placed last.
+
+Relinking with `wingraph.obj` moved to the end of the object list gives
+`GetDeviceCaps DeleteDC AnimatePalette CreatePalette ... GdiSetBatchLimit
+CreateBitmapIndirect DeleteObject`. The symbol shared with MOUSEMGR,
+`DeleteObject`, now lands last.
+
+Retail is `DeleteObject GetDeviceCaps GdiSetBatchLimit` followed by
+wingraph's block in symbol-table order (`GetSystemPaletteEntries ...
+CreatePalette AnimatePalette DeleteDC`) and then `CreateBitmapIndirect`. This
+suggests that some object linked before wingraph references `DeleteObject`,
+`GetDeviceCaps` and `GdiSetBatchLimit` in that symbol-table order. Retail's
+WinG order (`WinGCreateBitmap` first) likewise implies a different producer
+order.
+
+### Next step if this resumes
+
+Model the global sort over all DLLs' `.idata$4`/`$5` contributions, since the
+sort key probably includes the DLL. Relinking the candidate takes about 6
+seconds from `build/exe/HEROES.candidate.objs.rsp`, which makes it cheap to
+test.
