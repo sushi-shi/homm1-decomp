@@ -35,7 +35,15 @@ public:
     void GrabBitmap(class bitmap* source, i16 x, i16 y);
     void GrabBitmapCareful(class bitmap* source, i16 x, i16 y);
     void Write(char* filename);
-    void CopyTo(class bitmap* destination, i32 destinationX, i32 destinationY, i32 sourceX, i32 sourceY, i32 width, i32 height);
+    void CopyTo(
+        class bitmap* destination,
+        i32 destinationX,
+        i32 destinationY,
+        i32 sourceX,
+        i32 sourceY,
+        i32 width,
+        i32 height
+    );
     void CopyToCareful(
         class bitmap* destination,
         i32 destinationX,

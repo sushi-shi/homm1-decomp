@@ -28,13 +28,7 @@ H1_ENUM_CONST_END(CombatPathConstant)
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.
 VA(0x004180f0, 0x152)
-i16 army::FindPath(
-    i16 sourceHex,
-    i16 targetHex,
-    i8,
-    i8 ignoreSpeed,
-    i8 pathMode
-) {
+i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode) {
     i16 pathResult;
     i32 savedSpeed;
 

@@ -1960,11 +1960,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
 // Buka TOWNMGR.cpp:3727-3833; HoMM1 has eight categories, sums three
 // resources per row and counts obelisks through playerData.
 VA(0x0040d6bd, 0x484)
-void townManager::GetCategoryStats(
-    i8 category,
-    i32* const stats,
-    i8* const order
-) {
+void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const order) {
     i16 townIndex;
     i16 index;
     i32 strength;

@@ -1169,9 +1169,8 @@ void combatManager::KeepAttack(void) {
     float yAdvance;
     i16 lastY;
     i8 targetRow;
-    i8 shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                                 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1,
-                                 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    i8 shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1,
+                        1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     i32 bestRank;
     i8 srcCol;
     float yRun;

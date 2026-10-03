@@ -56,6 +56,13 @@ public:
 };
 #pragma pack(pop)
 
-void SetupRecruitWin(class heroWindow* window, i32 creatureType, i32 goldCost, i32 resourceType, i32 resourceCost, i32 available);
+void SetupRecruitWin(
+    class heroWindow* window,
+    i32 creatureType,
+    i32 goldCost,
+    i32 resourceType,
+    i32 resourceCost,
+    i32 available
+);
 void QuickViewRecruit(class town* townData, i8 dwelling);
 #endif // HOMM1_SOURCE_RECRUITUNIT_H

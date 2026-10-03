@@ -284,7 +284,15 @@ public:
     void TurnTo(i8 direction);
     i32 GetMoveShowIt(i8 direction);
     // HoMM1 retail 0x0040660c: byte direction/flags, seven arguments (ret 0x1c).
-    class mapCell* MoveHero(i8 direction, i8 stopAfterMove, i32* eventX, i32* eventY, i32* outOfMobility, i8 processEvent, i8* adjacentMonster);
+    class mapCell* MoveHero(
+        i8 direction,
+        i8 stopAfterMove,
+        i32* eventX,
+        i32* eventY,
+        i32* outOfMobility,
+        i8 processEvent,
+        i8* adjacentMonster
+    );
     void CheckAdjacentMon(i8* adjacentMonster);
     i16 ValidMoveWithEvent(class hero* movingHero, i16 direction);
     i16 ValidMove(i16 direction);
@@ -316,7 +324,15 @@ public:
     void CompleteDraw(i16 originX, i16 originY, i32 forceDraw);
     void CompleteDraw(i32 update);
     i32 GetCloudLookup(i32 x, i32 y);
-    void DrawCell(i16 mapX, i16 mapY, i16 screenX, i16 screenY, i8 drawMask, i8 drawingPuzzle, i8 forceDraw);
+    void DrawCell(
+        i16 mapX,
+        i16 mapY,
+        i16 screenX,
+        i16 screenY,
+        i8 drawMask,
+        i8 drawingPuzzle,
+        i8 forceDraw
+    );
     class mapCell* GetCell(i16 x, i16 y);
     void UpdateRadar(i8 updateScreen, i32 partial);
     void QuickInfo(i16 cellX, i16 cellY);
@@ -374,7 +390,14 @@ public:
     void EnableButtons(void);
     void SaveAdventureBorder(void);
     void DrawAdventureBorder(void);
-    i8 FindAdjacentMonster(i32 originX, i32 originY, i32* monsterX, i32* monsterY, i32 excludedX, i32 excludedY);
+    i8 FindAdjacentMonster(
+        i32 originX,
+        i32 originY,
+        i32* monsterX,
+        i32* monsterY,
+        i32 excludedX,
+        i32 excludedY
+    );
     void ViewPuzzle(void);
     void PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY);
     void AdvPanel(void);
@@ -408,7 +431,11 @@ public:
     // HoMM1 retail: byte resource, word amount (ret 0xc).
     void GiveResource(class hero* eventHero, H1_ENUM_PARAM(ResourceType, i8) resource, i16 amount);
     i16 GiveArtifact(class hero* eventHero, H1_ENUM_PARAM(ArtifactType, i8) artifact);
-    void RecruitEvent(class hero* eventHero, H1_ENUM_PARAM(CreatureType, i32) creatureType, class mapCell* cell);
+    void RecruitEvent(
+        class hero* eventHero,
+        H1_ENUM_PARAM(CreatureType, i32) creatureType,
+        class mapCell* cell
+    );
     i32 SkeletonEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
     i32 ZombieEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
     i8 GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y);

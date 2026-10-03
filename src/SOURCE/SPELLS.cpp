@@ -260,12 +260,7 @@ void combatManager::SpellMessage(i8 spell, i8 hex) {
 // Buka SPELLS.cpp CastSpell; HoMM1 has nineteen spells, a single timed effect
 // per stack and no eagle eye, mirror image or elementals.
 VA(0x00415e44, 0xd69)
-void combatManager::CastSpell(
-    i8 spell,
-    i8 targetHex,
-    i8 castByCreature,
-    i8 teleportDest
-) {
+void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 teleportDest) {
     army* targetArmy;
     i32 damage;
     i32 targetIndex;

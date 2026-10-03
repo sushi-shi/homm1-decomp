@@ -1649,15 +1649,14 @@ void game::RandomizeEvents(void) {
                         cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
                         if (Random(0, 99) <= 25 && cell->m_objectIndex != CREATURE_GHOST)
                             cell->m_objectMetadata =
-                                static_cast<u8>(cell->m_objectMetadata)
-                                | MONSTER_WILLING_FLAG;
+                                static_cast<u8>(cell->m_objectMetadata) | MONSTER_WILLING_FLAG;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE:
                     cell->m_objectMetadata = cell->m_objectIndex;
                     if (cell->m_objectIndex > 4)
-                        cell->m_objectMetadata = static_cast<u8>(cell->m_objectMetadata)
-                                                 - RESOURCE_PILE_OBJECT_BASE;
+                        cell->m_objectMetadata =
+                            static_cast<u8>(cell->m_objectMetadata) - RESOURCE_PILE_OBJECT_BASE;
                     switch (static_cast<u8>(cell->m_objectMetadata)) {
                         case RESOURCE_WOOD:
                         case RESOURCE_ORE:
@@ -2503,12 +2502,7 @@ void game::ViewArmy(
         sprintf(gText, "-%d", monsterInfo->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(
-        gText,
-        "\n%s%d",
-        gArmyStatText[4],
-        static_cast<u8>(monsterInfo->stats.hitPoints)
-    );
+    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<u8>(monsterInfo->stats.hitPoints));
     strcat(statText, gText);
     sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfo->stats.speed]);
     strcat(statText, gText);
@@ -3249,50 +3243,43 @@ void game::PerWeek(void) {
                     if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
                         < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata =
-                            static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                            + Random(3, 6);
+                            static_cast<u8>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
                     if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
                         < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata =
-                            static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                            + Random(5, 10);
+                            static_cast<u8>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
                     if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
                         < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata =
-                            static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                            + Random(2, 4);
+                            static_cast<u8>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
                     if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
                         < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata =
-                            static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                            + Random(2, 4);
+                            static_cast<u8>(m_map[posX][posY].m_objectMetadata) + Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
                     if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
                         < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata =
-                            static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                            + Random(5, 10);
+                            static_cast<u8>(m_map[posX][posY].m_objectMetadata) + Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
                     if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
                         < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata =
-                            static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                            + Random(1, 3);
+                            static_cast<u8>(m_map[posX][posY].m_objectMetadata) + Random(1, 3);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
                     if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
                         < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata =
-                            static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                            + Random(3, 6);
+                            static_cast<u8>(m_map[posX][posY].m_objectMetadata) + Random(3, 6);
                     break;
                 default:
                     break;
@@ -3699,11 +3686,12 @@ VA(0x00443b3c, 0x2e0)
 void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     armyGroup* army = &m_heroRecs[heroId].m_army;
     i16 slot = 0;
-    i16 armyTable[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] =
-        {{{CREATURE_PEASANT, 30, 50}, {CREATURE_ARCHER, 3, 5}, {CREATURE_PIKEMAN, 2, 4}},
-         {{CREATURE_GOBLIN, 15, 25}, {CREATURE_ORC, 3, 5}, {CREATURE_WOLF, 2, 3}},
-         {{CREATURE_SPRITE, 10, 20}, {CREATURE_DWARF, 2, 4}, {CREATURE_ELF, 1, 2}},
-         {{CREATURE_CENTAUR, 6, 10}, {CREATURE_GARGOYLE, 2, 4}, {CREATURE_GRIFFIN, 1, 2}}};
+    i16 armyTable[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] = {
+        {{CREATURE_PEASANT, 30, 50}, {CREATURE_ARCHER, 3, 5}, {CREATURE_PIKEMAN, 2, 4}},
+        {{CREATURE_GOBLIN, 15, 25}, {CREATURE_ORC, 3, 5}, {CREATURE_WOLF, 2, 3}},
+        {{CREATURE_SPRITE, 10, 20}, {CREATURE_DWARF, 2, 4}, {CREATURE_ELF, 1, 2}},
+        {{CREATURE_CENTAUR, 6, 10}, {CREATURE_GARGOYLE, 2, 4}, {CREATURE_GRIFFIN, 1, 2}}
+    };
     i32 present[RANDOM_HERO_ARMY_OPTION_COUNT];
     i32 i;
     i32 max;
@@ -4299,9 +4287,8 @@ void game::ProcessOnMapHeroes(void) {
         for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
             cell = &m_map[mapX][mapY];
             if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
-                extra = static_cast<mapHeroExtra*>(
-                    ppMapExtra[static_cast<u8>(cell->m_objectMetadata)]
-                );
+                extra =
+                    static_cast<mapHeroExtra*>(ppMapExtra[static_cast<u8>(cell->m_objectMetadata)]);
                 theHero = GetHero(extra->heroId);
                 for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
                     theHero->m_army.m_creatureCounts[k] = extra->troopCounts[k];

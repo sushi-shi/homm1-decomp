@@ -219,8 +219,7 @@ void highScoreManager::Update(void) {
             m_monsterTypes[i] = 0;
             sprintf(gText, "");
         } else {
-            m_monsterTypes[i] =
-                GetMonType(record.score, static_cast<i8>(!m_showCampaignScores));
+            m_monsterTypes[i] = GetMonType(record.score, static_cast<i8>(!m_showCampaignScores));
         }
 
         message.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;

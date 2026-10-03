@@ -317,8 +317,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 #line 294
             DDSD(gDDResult, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels =
-                static_cast<i8*>(gDDSurfaceDesc.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gDDSurfaceDesc.lpSurface);
             gInitWin = gDDSurfaceDesc.lpSurface;
         } else {
             gInitWin = gDDSurfaceDesc.lpSurface;

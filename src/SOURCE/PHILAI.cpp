@@ -1160,12 +1160,7 @@ hero* philAI::DetermineHeroToMove(i32 player) {
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
 VA(0x0041c83b, 0x932)
-void philAI::DetermineTargetPosition(
-    hero* pHero,
-    i8& targetX,
-    i8& targetY,
-    i16 mobility
-) {
+void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 mobility) {
     i32 bestRV;
     i32 cellValue;
     i32 spacing;
@@ -1510,9 +1505,7 @@ void philAI::ValueOfBuyingBuilding(
     curBenefit = static_cast<float>(GetBuildingBaseResourceValue(
         factionId,
         building,
-        static_cast<i8>(
-            building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0
-        )
+        static_cast<i8>(building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0)
     ));
     if (building == BUILDING_SLOT_MAGE_GUILD && townPointer->m_buildState > 0)
         curBenefit -= static_cast<float>(
@@ -1603,9 +1596,7 @@ void philAI::ValueOfBuyingBuilding(
         factionId,
         building,
         buildingCost,
-        static_cast<i8>(
-            building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0
-        )
+        static_cast<i8>(building == BUILDING_SLOT_MAGE_GUILD ? townPointer->m_buildState : 0)
     );
     curBenefit = FutureDeflator(buildingCost) * curBenefit;
     resourceValue = static_cast<i32>(curBenefit);
@@ -2565,7 +2556,7 @@ i32 philAI::FightValueOfStack(
                            ? (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] > 40
                                   ? gBattleStat[40]
                                   : gBattleStat[heroPointer
-                                                     ->m_primaryStats[HERO_PRIMARY_SPELL_POWER]])
+                                                    ->m_primaryStats[HERO_PRIMARY_SPELL_POWER]])
                            : fPowerMod)
                 );
                 magicTotal +=

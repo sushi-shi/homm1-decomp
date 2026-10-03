@@ -14,7 +14,16 @@ void LogInt(char* label, i32 value);
 void LogStr(char* text);
 void LogStr(char* label, i32 value1, i32 value2);
 void LogStr(char* label, i32 value1, i32 value2, i32 value3, i32 value4, i32 value5);
-void LogStr(char* label, i32 value1, i32 value2, i32 value3, i32 value4, i32 value5, i32 value6, i32 value7);
+void LogStr(
+    char* label,
+    i32 value1,
+    i32 value2,
+    i32 value3,
+    i32 value4,
+    i32 value5,
+    i32 value6,
+    i32 value7
+);
 
 H1_ENUM_CONST_BEGIN(MiscLogConstant)
     MISC_FILE_DEBUG_BEGIN = 2,

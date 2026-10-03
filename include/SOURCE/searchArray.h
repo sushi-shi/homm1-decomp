@@ -107,7 +107,20 @@ public:
     // HoMM1 retail 0x00402af0: word coordinates and cost cap (ret 0x14).
     i32 BuildPath(i16 startX, i16 startY, i16 destinationX, i16 destinationY, i16 maximumCost);
     // HoMM1 retail 0x00402be0: word seed and cost cap (ret 0x30).
-    void SeedPosition(i16 seedX, i16 seedY, i16 seedDirection, i16 maximumCost, i32 waterMode, i32 findAdjacentMonster, i32 mobility, i32 costMode, i32 targetX, i32 targetY, i32 continueSeed, i32 scanMap);
+    void SeedPosition(
+        i16 seedX,
+        i16 seedY,
+        i16 seedDirection,
+        i16 maximumCost,
+        i32 waterMode,
+        i32 findAdjacentMonster,
+        i32 mobility,
+        i32 costMode,
+        i32 targetX,
+        i32 targetY,
+        i32 continueSeed,
+        i32 scanMap
+    );
     // HoMM1 retail 0x004028b0: seeds from a hero and builds the path to the
     // nearest cell carrying the trigger type (EVENTS finds a town with 0xa8).
     i16 FindNearestObject(i16 startX, i16 startY, i16 direction, i16 maximumCost, u8 triggerType);
@@ -132,7 +145,14 @@ public:
         i8 previousY
     );
     // HoMM1 retail 0x00425040 (ret 0x18): word coordinates and occupancy flag.
-    void TestPossibleDirections(i16 x, i16 y, i8* const terrain, i8* const occupied, i16 allowOccupied, i32 waterMode);
+    void TestPossibleDirections(
+        i16 x,
+        i16 y,
+        i8* const terrain,
+        i8* const occupied,
+        i16 allowOccupied,
+        i32 waterMode
+    );
     void SeedCombatPosition(class army* unit);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
     // attackPath is an ArmyPathTarget (PATH.h).

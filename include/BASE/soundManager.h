@@ -159,7 +159,8 @@ public:
     void CDPoll(void);
     i32 ConvertVolume(i32 volume, i32 soundType);
     void AllocateSampleHandles(void);
-    struct _SAMPLE* StartSample(char* name, char**, i16, i16 loop, i32 volume, i32 channelType, i32 resume);
+    struct _SAMPLE*
+    StartSample(char* name, char**, i16, i16 loop, i32 volume, i32 channelType, i32 resume);
     void StopAllSamples(void);
     void StopSample(struct _SAMPLE* sample);
     void ModifySample(struct _SAMPLE* sampleHandle, i16 operation, i32 value);

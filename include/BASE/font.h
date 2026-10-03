@@ -29,8 +29,16 @@ public:
     virtual ~font();
     // --- methods ---
 protected:
-    void
-    DrawStringExecute(char* text, i32 x, i32 y, i32 mode, i32 clipL, i32 clipT, i32 clipR, i32 clipB); // ?...@font@@IAE... (protected)
+    void DrawStringExecute(
+        char* text,
+        i32 x,
+        i32 y,
+        i32 mode,
+        i32 clipL,
+        i32 clipT,
+        i32 clipR,
+        i32 clipB
+    ); // ?...@font@@IAE... (protected)
 public:
     void DrawString(char* text, i16 x, i16 y, i16 color);
     i32 GetCharacterWidth(u8 character);

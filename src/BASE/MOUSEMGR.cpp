@@ -163,8 +163,7 @@ void mouseManager::SetPointer(i16 frame) {
     if (hMouseCursor[cursorIndex] == NULL) {
         gColorBits[cursorIndex] = static_cast<i8*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
         if (gColorMice)
-            cAndBits[cursorIndex] =
-                static_cast<u8*>(malloc(MOUSE_CURSOR_MASK_PLANE_BYTES));
+            cAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_MASK_PLANE_BYTES));
         else
             cAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_AND_BYTES));
 

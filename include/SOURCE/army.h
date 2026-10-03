@@ -183,7 +183,13 @@ public:
     i16 AttackTo(void);
     i16 AttackTo(i16 destHex);
     void CheckLuck(void);
-    void DamageEnemy(class army* target, i32* damageResult, i32* killedResult, i32 rangedAttack, i32 defenseModifier);
+    void DamageEnemy(
+        class army* target,
+        i32* damageResult,
+        i32* killedResult,
+        i32 rangedAttack,
+        i32 defenseModifier
+    );
     // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
     i32 Damage(i32 damage);
     // HoMM1 retail 0x0046aa49: byte effect index (ret 4).
@@ -227,7 +233,13 @@ public:
     i16 GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex);
     i16 ValidMove(i16 direction);
     i16 ValidMove(i16 sourceHex, i16 direction);
-    i16 ValidAttack(i16 sourceHex, i16 direction, i16 targetMode, i16 requiredTargetHex, i16* attackHex);
+    i16 ValidAttack(
+        i16 sourceHex,
+        i16 direction,
+        i16 targetMode,
+        i16 requiredTargetHex,
+        i16* attackHex
+    );
     i16 GetAdjacentCellIndex(i16 hex, i16 direction);
     i16 ValidRange(i16 targetHex);
     i16 GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask);

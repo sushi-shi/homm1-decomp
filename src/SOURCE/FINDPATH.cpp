@@ -116,12 +116,7 @@ i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
 // Buka FINDPATH.cpp:405-582 without the moat slowdown: HoMM1 has no castle
 // moat, and the retail body inlines Clear and QuickDistance.
 VA(0x00424950, 0x2ff)
-i16 searchArray::FindCombatPath(
-    i16 sourceHex,
-    i16 targetHex,
-    army* unit,
-    i8 attackPath
-) {
+i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 attackPath) {
     i32 bestHex;
     i32 direction;
     i8 attackTargetHex;
@@ -214,12 +209,7 @@ i16 searchArray::FindCombatPath(
 
 // Buka FINDPATH.cpp:585-646; combat nodes use the first column of m_cells.
 VA(0x00424c50, 0x13a)
-void searchArray::PushCombatPoint(
-    i16 hex,
-    i16 direction,
-    u16 distance,
-    u16 speed
-) {
+void searchArray::PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed) {
     i32 low;
     i32 high;
     u32 middle;

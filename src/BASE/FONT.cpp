@@ -59,15 +59,7 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
 }
 
 VA(0x0047b4d0, 0x2d0)
-void font::DrawBoundedString(
-    char* str,
-    i16 x,
-    i16 y,
-    i16 width,
-    i16 height,
-    i16 color,
-    i16 align
-) {
+void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
     i16 s;
     i8 q;
     IconEntry* widths;

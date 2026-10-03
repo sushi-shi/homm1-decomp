@@ -37,8 +37,7 @@ bitmap::bitmap(i16 type, i16 width, i16 height)
 
 // Retail's ID constructor reads the packed bitmap and postprocesses its pixels.
 VA(0x0047a770, 0xa1)
-bitmap::bitmap(i16 id)
-    : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
+bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
     m_bitmapType = gpResourceManager->ReadWord();
     m_width = gpResourceManager->ReadWord();

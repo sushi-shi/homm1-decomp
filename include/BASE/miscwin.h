@@ -17,13 +17,32 @@ void ClippedMonoIconToBitmap(
     i32 clipW,
     i32 clipH
 );
-void ClipIconToBitmap(class icon* sourceIcon, class bitmap* destination, i32 x, i32 y, i32 frame, i32 mode, i32 clipX, i32 clipY, i32 clipW, i32 clipH);
+void ClipIconToBitmap(
+    class icon* sourceIcon,
+    class bitmap* destination,
+    i32 x,
+    i32 y,
+    i32 frame,
+    i32 mode,
+    i32 clipX,
+    i32 clipY,
+    i32 clipW,
+    i32 clipH
+);
 i32 Random(i32 low, i32 high);
 void FadeIn(i32 increment);
 void FadeOut(i32 increment);
 void PrintMemoryLeaks(void);
 void PostprocessPalette(i8* data);
-void BlitBitmapToScreen(class bitmap* sourceBitmap, i32 sourceX, i32 sourceY, i32 width, i32 height, i32 destinationX, i32 destinationY);
+void BlitBitmapToScreen(
+    class bitmap* sourceBitmap,
+    i32 sourceX,
+    i32 sourceY,
+    i32 width,
+    i32 height,
+    i32 destinationX,
+    i32 destinationY
+);
 void PostprocessBitmap(i8*, i32, i32);
 void GrabScreenBitmap(class bitmap* destination, i32 x, i32 y);
 void PostprocessIcon(class icon*);

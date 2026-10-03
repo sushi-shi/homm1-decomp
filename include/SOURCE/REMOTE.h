@@ -140,7 +140,14 @@ i32 TransmitRemoteData(
     i8 gamePosDestination
 );
 char* GetRemoteData(i8 remove);
-i32 TransmitAndWait(char* bytes, i32 destination, i32 length, i8 command, i8 responseCommand, char** response);
+i32 TransmitAndWait(
+    char* bytes,
+    i32 destination,
+    i32 length,
+    i8 command,
+    i8 responseCommand,
+    char** response
+);
 void RemoteCleanup(void);
 void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16) networkDriver);
 i32 FileSize(char* filename);

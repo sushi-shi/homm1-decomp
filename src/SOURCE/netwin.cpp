@@ -71,9 +71,8 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
         for (i = 0; i < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); i++)
             gNbEvents[i] = CreateEventA(NULL, TRUE, FALSE, NULL);
         memset(&ncb, 0, sizeof(ncb));
-        statusBuf = static_cast<u8*>(
-            GlobalAlloc(GPTR, static_cast<i32>(NETBIOS_ADAPTER_STATUS_SIZE))
-        );
+        statusBuf =
+            static_cast<u8*>(GlobalAlloc(GPTR, static_cast<i32>(NETBIOS_ADAPTER_STATUS_SIZE)));
         ncb.ncb_command = NCBASTAT;
         ncb.ncb_length = static_cast<u16>(NETBIOS_ADAPTER_STATUS_SIZE);
         ncb.ncb_buffer = statusBuf;
@@ -165,8 +164,7 @@ H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer) {
 VA(0x0041411a, 0x104)
 // Retail has an unused leading argument and an explicit queue selection argument.
 // Their stack positions are proven by all four retail call sites.
-H1_C_LINKAGE i16 __cdecl
-nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree) {
+H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree) {
     tag_Node* node;
     if (gNbMaxSess == session && len == 0) {
         nb_add_name();
@@ -657,9 +655,8 @@ u8 gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 DATA(0x0048f1fc)
 char* gNbGroupName = "Empire Too ";
 DATA(0x0048f200)
-u8* gNbListenName = reinterpret_cast<u8*>(
-    const_cast<char*>("*")
-); // API-forced: NetBIOS names are unsigned bytes
+u8* gNbListenName =
+    reinterpret_cast<u8*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
 DATA(0x004a4bc8)
 tag_Anchor gNbFreeQueue;
 DATA(0x004a4bd0)

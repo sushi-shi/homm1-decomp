@@ -286,12 +286,8 @@ soundManager::soundManager(void) {
 }
 
 VA(0x00477870, 0xf3)
-struct _DIG_DRIVER* WAVE_init_driver(
-    u32 sampleRate,
-    u16 bitsPerSample,
-    u16 channels,
-    u16 showErrors
-) {
+struct _DIG_DRIVER*
+WAVE_init_driver(u32 sampleRate, u16 bitsPerSample, u16 channels, u16 showErrors) {
     u32 numDevs;
     struct _DIG_DRIVER* drvr;
     WAVEOUTCAPSA caps;
@@ -940,8 +936,7 @@ void soundManager::PollSound(void) {
             // byte-evidenced: retail passes the FILE pointer as its assertion condition.
 #line 1221
             ProcessAssert(reinterpret_cast<i32>(m_midiFile), __FILE__, __LINE__);
-            u32 bytesRead =
-                fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
+            u32 bytesRead = fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
             AIL_load_sample_buffer(m_musicSample, buffer, m_musicBuffers[buffer], bytesRead);
         }
 
@@ -1118,11 +1113,11 @@ DATA(0x004a138c)
 i32 CDPlaying = 0;
 DATA(0x004a1390)
 i8 CDTrackMap[100] = {2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18,
-                               19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 99,
-                               99, 99, 99, 99, 99, 99, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
-                               46, 47, 48, 49, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-                               99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-                               99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 50};
+                      19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 99,
+                      99, 99, 99, 99, 99, 99, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+                      46, 47, 48, 49, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+                      99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+                      99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 50};
 DATA(0x004a1620)
 i32 gCDDrive = 0;
 DATA(0x004cc668)

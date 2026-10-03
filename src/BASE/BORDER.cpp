@@ -23,16 +23,7 @@ border::~border(void) {
 }
 
 VA(0x004797f0, 0x5d)
-border::border(
-    i16 x,
-    i16 y,
-    i16 width,
-    i16 height,
-    i16 id,
-    i16 kind,
-    i16 fillColor,
-    char* name
-)
+border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name)
     : widget(x, y, width, height, id, kind) {
     if (name != 0)
         m_background = gpResourceManager->GetBitmap(name);

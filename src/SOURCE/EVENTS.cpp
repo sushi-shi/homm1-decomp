@@ -1575,8 +1575,7 @@ void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class map
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.581832;margin=0.097486;shape=0.425;size=0.973;calls=1.000;alternate=pol20:int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int)@0x000b07e5
 VA(0x0046077c, 0x2e0)
-i8
-advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y) {
+i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y) {
     i32 artifact;
 
     switch (cell->m_objectMetadata) {
@@ -1833,11 +1832,7 @@ i8 advManager::CombatMonsterEvent(
 // Buka's free GiveTakeArtifactStat; HoMM1 keeps per-artifact primary-stat
 // bonuses here and is called through gpAdvManager.
 VA(0x00460d7a, 0x243)
-void advManager::GiveTakeArtifactStat(
-    class hero* targetHero,
-    i8 artifact,
-    i8 take
-) {
+void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take) {
     i8 stat = HERO_PRIMARY_NONE;
     i8 amount = 0;
     i32 i;
@@ -2611,11 +2606,7 @@ void advManager::PlayerMonsterInteract(
 // HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
 VA(0x0046275f, 0x152)
-void advManager::ComputerMonsterInteract(
-    class mapCell* cell,
-    class hero* eventHero,
-    i8* handled
-) {
+void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled) {
     i32 numToBuy;
     i32 purchaseValue;
     i32 bestSlot;

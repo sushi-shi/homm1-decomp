@@ -38,15 +38,17 @@ public:
     void ReplaySmacker4(void);
     u8 IsCompleted(void);
     i8 IsThisMapCompleted(void);
+
 private:
-    static i32 MessageHandler(struct tag_message & message);   // ?...@ExpCampaign@@CIH... (private static)
+    static i32
+    MessageHandler(struct tag_message& message); // ?...@ExpCampaign@@CIH... (private static)
 public:
     void Autosave(void);
     i32 Choose(void);
     i16 Days(void);
     i32 CampaignID(void);
-    char * JosephName(void);
-    char * IvanName(void);
+    char* JosephName(void);
+    char* IvanName(void);
     i8 IsSpecialGoldenBow(i32 x, i32 y);
     i8 IsSpecialUA(void);
     i8 IsSpecialLossCondition(i32 playerIndex);

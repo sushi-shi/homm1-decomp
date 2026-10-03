@@ -175,8 +175,7 @@ BOOL AppIdle(void) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x0045bb45, 0x617)
-long __stdcall
-AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
+long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
     DATA(0x0049fef4)
     static i32 gLastGTimerTickCount = 0;
     DATA(0x0049fef8)
@@ -418,8 +417,7 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
 VA(0x0045c3f7, 0x185)
-i32
-AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
+i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
     DLGPROC appDialogProc;
     i32 command;
 

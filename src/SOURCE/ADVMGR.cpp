@@ -3155,11 +3155,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.539169;margin=0.099782;shape=0.447;size=0.791;calls=0.917;alternate=pol20:void advManager::UpdateHeroLocator(int, int, int)@0x00060465
 VA(0x0042c25e, 0x3c8)
-void advManager::UpdateHeroLocator(
-    i32 locatorSlot,
-    i8 drawWindow,
-    i8 updateScreen
-) {
+void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScreen) {
     tag_message message;
     i8 whichHero;
     i32 wBase;
@@ -3328,11 +3324,7 @@ void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.587774;margin=0.642167;shape=0.494;size=0.843;calls=1.000;alternate=pol20:void advManager::UpdBottomView(int, int, int)@0x00060b97
 VA(0x0042c9ad, 0x19f)
-void advManager::UpdBottomView(
-    i8 forceUpdate,
-    i8 drawWindow,
-    i8 updateScreen
-) {
+void advManager::UpdBottomView(i8 forceUpdate, i8 drawWindow, i8 updateScreen) {
     i8 updated;
 
     updated = 0;
@@ -4057,12 +4049,7 @@ i8 advManager::UpdBottomViewHero(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
 VA(0x0042e411, 0xd46)
-void advManager::HeroQuickView(
-    i8 heroId,
-    i8 locatorSlot,
-    i16 windowX,
-    i16 windowY
-) {
+void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY) {
     i16 savedOriginX;
     i16 portraitId;
     i16 width;
@@ -4334,10 +4321,7 @@ void advManager::HeroQuickView(
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463915;margin=0.489878;shape=0.171;size=0.973;calls=1.000;alternate=pol20:char * advManager::GetArmySizeName(int, int)@0x0006308d
 VA(0x0042f157, 0xe2)
-char* advManager::GetArmySizeName(
-    i16 armySize,
-    H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar
-) {
+char* advManager::GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar) {
     if (giDebugLevel > 0) {
         sprintf(cArmySizeName, "%d", armySize);
         return cArmySizeName;
@@ -5154,11 +5138,7 @@ void advManager::CastSpell(i8 spell) {
 // HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
 // CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
 VA(0x00431507, 0x1127)
-void advManager::ViewWorld(
-    i8 spellType,
-    i8 drawAllObjects,
-    i8 drawAllTerrains
-) {
+void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) {
     icon* flags;
     hero* curHero;
     i8 ts;
@@ -5726,7 +5706,7 @@ void UpdateCPanel(i8 initialDraw) {
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES;
     message.value = gRemoteOn ? CPANEL_FRAME_ENEMY_MOVES_FIRST
-                               : 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
+                              : 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
     gPanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;

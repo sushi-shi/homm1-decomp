@@ -16,8 +16,8 @@ H1_ENUM_END(ComBaudCode)
 // Serial packets start their payload at +0xa (com_snd's malloc(len + 10));
 // NetBIOS packets keep a session byte there and their payload at +0xb.
 struct tag_Node {
-    tag_Node *prev;
-    tag_Node *next;
+    tag_Node* prev;
+    tag_Node* next;
     u16 len;
     union {
         u8 comData[1];
@@ -28,18 +28,18 @@ struct tag_Node {
     };
 };
 struct tag_Anchor {
-    tag_Node *head;
-    tag_Node *tail;
+    tag_Node* head;
+    tag_Node* tail;
 };
 
-void init_anchor(tag_Anchor * anchor, i32, i32);
-void add_node(tag_Anchor * anchor, tag_Node * node);
-tag_Node *pop_node(tag_Anchor * anchor);
+void init_anchor(tag_Anchor* anchor, i32, i32);
+void add_node(tag_Anchor* anchor, tag_Node* node);
+tag_Node* pop_node(tag_Anchor* anchor);
 
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr);
 void com_term(i16 port);
-i16 com_rcv(i16 port, u16 requested, void * buffer);
-i16 com_snd(i16 port, u16, u16 length, void * data, i32 priority);
+i16 com_rcv(i16 port, u16 requested, void* buffer);
+i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority);
 i16 __cdecl com_sess(i32, i32, ...);
 u8 com_stat(i16 port, u16);
 void comm_wrt_task(void);

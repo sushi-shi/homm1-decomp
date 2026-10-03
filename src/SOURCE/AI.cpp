@@ -533,8 +533,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
 }
 
 VA(0x00466050, 0x20f)
-i8
-combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask) {
+i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask) {
     i16 frontHex;
     i32 armyIndex;
     i32 frontDelta;

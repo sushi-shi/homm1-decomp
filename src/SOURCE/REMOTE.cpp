@@ -212,11 +212,7 @@ i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length) {
     REMOTE_PACKET(PacketSend)->crc = crc;
     memcpy(PacketSend + sizeof(RemotePacketHeader), data, length);
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(
-        &crc,
-        reinterpret_cast<u8*>(PacketSend),
-        length + sizeof(RemotePacketHeader)
-    );
+    calc_crc(&crc, reinterpret_cast<u8*>(PacketSend), length + sizeof(RemotePacketHeader));
     REMOTE_PACKET(PacketSend)->crc = crc;
     return length + sizeof(RemotePacketHeader);
 }
@@ -247,11 +243,7 @@ i32 DecodePacket(u8* data, i32 source) {
     crc = REMOTE_PACKET(packet)->crc;
     REMOTE_PACKET(packet)->crc = 0;
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(
-        &computedCrc,
-        reinterpret_cast<u8*>(packet),
-        size + sizeof(RemotePacketHeader)
-    );
+    calc_crc(&computedCrc, reinterpret_cast<u8*>(packet), size + sizeof(RemotePacketHeader));
     if (crc != computedCrc) {
         sprintf(
             gText,

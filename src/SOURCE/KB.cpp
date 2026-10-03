@@ -1672,12 +1672,7 @@ void HandleRemoteSuddenExit(void) {
 VA(0x00452f8a, 0x1ea)
 // HoMM1 callers push four byte-sized values: player, an unused flag,
 // elimination and timeout.
-void ReceiveRemotePlayerExit(
-    i8 position,
-    i8,
-    i8 eliminated,
-    i8 timedOut
-) {
+void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
     if (position == giThisGamePos) {
         sprintf(gText, "You have been eliminated from the game!!!");
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);

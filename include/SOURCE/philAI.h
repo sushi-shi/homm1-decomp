@@ -93,17 +93,41 @@ public:
         i32& outcomeValue
     );
     float GetOddsOfWinning(i32);
-    void ValueOfBuyingBuilding(class town* townPointer, i32 building, i32& resourceValue, float& benefitCost);
+    void ValueOfBuyingBuilding(
+        class town* townPointer,
+        i32 building,
+        i32& resourceValue,
+        float& benefitCost
+    );
     void GetBestBuilding(class town* townPointer, struct BHC& purchase, float& benefitCost);
-    void ValueOfBuyingCreature(class town* townPointer, i32 creature, i32& resourceValue, i32 purchaseCount, float& benefitCost);
+    void ValueOfBuyingCreature(
+        class town* townPointer,
+        i32 creature,
+        i32& resourceValue,
+        i32 purchaseCount,
+        float& benefitCost
+    );
     void GetBestCreature(class town* townPointer, struct BHC& best, float& bestValue);
     i32 CreaturesToBuy(class town* townPointer, i32 level);
     i32 CreaturesToBuy(i32 creatureType, i32 availableCount);
     i32 MaxBuyableCreatures(i32 creatureType);
-    void ValueOfBuyingHero(class town* townPointer, class hero* heroPointer, i32& resourceValue, float& benefitCost);
+    void ValueOfBuyingHero(
+        class town* townPointer,
+        class hero* heroPointer,
+        i32& resourceValue,
+        float& benefitCost
+    );
     void GetBestHero(class town* townPointer, struct BHC& best, float& bestValue);
-    void
-    LikelihoodOfEnemyAttacking(class town*, class hero*, float& chanceA, float& chanceB, i32& nAttack, i32& nValue, i32& nWeeks, float& fOut);
+    void LikelihoodOfEnemyAttacking(
+        class town*,
+        class hero*,
+        float& chanceA,
+        float& chanceB,
+        i32& nAttack,
+        i32& nValue,
+        i32& nWeeks,
+        float& fOut
+    );
     i32 MeanRVOfUnexploredTerritory(i32);
     void GetGameAttentionValue(i32 player);
     void GetTurnAttentionValue(i32 player);
@@ -121,13 +145,33 @@ public:
         i16 strategicY,
         i32 eventMode
     );
-    i32 StrategicValueOfPosition(class hero* pHero, i16 targetX, i16 targetY, i8 immediate, i32* liveChance);
+    i32 StrategicValueOfPosition(
+        class hero* pHero,
+        i16 targetX,
+        i16 targetY,
+        i8 immediate,
+        i32* liveChance
+    );
     i32 ValueOfTown(class town* townPointer);
     void TurnCostResource(i32 player);
     float TurnValueOfObelisk(i32 player);
     float FutureDeflator(i32* const resources);
-    i32 FightValueOfStack(class armyGroup* group, class hero* heroPointer, i32 useHero, i8 useTown, i8 townId);
-    void EvaluateOneTimeCreaturePurchase(class hero* pHero, i32 creature, i32 availableCount, i32 useAvailableCount, i32& purchaseCount, i32& purchaseValue, i32& replacementSlot);
+    i32 FightValueOfStack(
+        class armyGroup* group,
+        class hero* heroPointer,
+        i32 useHero,
+        i8 useTown,
+        i8 townId
+    );
+    void EvaluateOneTimeCreaturePurchase(
+        class hero* pHero,
+        i32 creature,
+        i32 availableCount,
+        i32 useAvailableCount,
+        i32& purchaseCount,
+        i32& purchaseValue,
+        i32& replacementSlot
+    );
     i32 QuickCombat(
         class armyGroup* attacker,
         class hero* attackerHero,
@@ -144,7 +188,12 @@ public:
         i32 evaluateOnly,
         i32* value
     );
-    void HeroInteractionAtTown(class hero* heroPointer, class town* townPointer, i32 doInteraction, i32* value);
+    void HeroInteractionAtTown(
+        class hero* heroPointer,
+        class town* townPointer,
+        i32 doInteraction,
+        i32* value
+    );
     void RedistributeTroops(
         class armyGroup* sourceArmy,
         class armyGroup* destinationArmy,

@@ -425,18 +425,15 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
             // (sourceY - y) * width into the frame's induction slots.
             for (sourceY = y; sourceY < y + height; sourceY++) {
                 // Byte access is proven by the retail load/shift sequence.
-                savePixel =
-                    reinterpret_cast<u8*>(m_fizzleSource->m_pixels) // byte-evidenced
-                    + m_fizzleSource->m_width * (sourceY - y);
-                workPixel =
-                    reinterpret_cast<u8*>(m_fizzleWork->m_pixels) // byte-evidenced
-                    + (sourceY - y) * width;
+                savePixel = reinterpret_cast<u8*>(m_fizzleSource->m_pixels) // byte-evidenced
+                            + m_fizzleSource->m_width * (sourceY - y);
+                workPixel = reinterpret_cast<u8*>(m_fizzleWork->m_pixels) // byte-evidenced
+                            + (sourceY - y) * width;
                 // Byte access is proven by the retail framebuffer stores.
                 screenPixel = reinterpret_cast<u8*>(m_screen->m_pixels) // byte-evidenced
                               + sourceY * LOGICAL_SCREEN_WIDTH + x;
                 for (sourceX = x; sourceX < x + width; sourceX++) {
-                    u16 lookup =
-                        *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
+                    u16 lookup = *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
                     *screenPixel++ = ccycleBuf[lookup];
                 }
             }

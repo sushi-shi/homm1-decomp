@@ -360,7 +360,8 @@ public:
     void SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     // HoMM1 retail 0x00415e44: byte spell, hex, creature flag and teleport
     // destination (ret 0x10).
-    void CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, i8 castByCreature, i8 teleportDest);
+    void
+    CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, i8 castByCreature, i8 teleportDest);
     void DefaultSpell(i8 targetHex);
     // HoMM1 retail 0x00416c78: Cure (one side) and Dispel (both sides)
     // animation; byte side (2 = both) and cure-only flag (ret 8).
@@ -423,12 +424,8 @@ public:
     void Resurrect(i32 spell, i32 targetHex, i32 spellPower);
     i32 SpaceForElementalExists(void);
     void ShowSpellCastFailure(class army*, i32);
-    void ModifyDamageForArtifacts(
-        i32* damage,
-        i32 spell,
-        class hero* attacker,
-        class hero* defender
-    );
+    void
+    ModifyDamageForArtifacts(i32* damage, i32 spell, class hero* attacker, class hero* defender);
     void Earthquake(void);
     void ShowSpellMessage(i32 castByCreature, i32 spell, class army* target);
     i8 ValidHexToStandOn(i32 hex);
