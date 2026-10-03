@@ -1280,6 +1280,17 @@ def manifest_bytes(rows, refuted=None) -> bytes:
     be lowered for placement - not source defects)."""
     out = ["\t".join(HEADER)]
     types = declared_types()
+    # The delinker packs an object's legacy rows of one storage into one
+    # section from the lowest of their rvas, padding each to its alignment.
+    # A row whose alignment does not divide its distance from that start
+    # (an 8-byte FP slot at 0x48c0d0 after a run opened at 0x48c0c4) would
+    # be pushed off its rva and leave slack in the row before it, so the
+    # usable alignment must divide that distance as well as the rva.
+    legacy_base: dict[tuple[str, str], int] = {}
+    for r in rows:
+        if "section_ordinal" not in r:
+            key = (r["object"], r["storage"])
+            legacy_base[key] = min(legacy_base.get(key, r["rva"]), r["rva"])
     for r in rows:
         placed = "section_ordinal" in r
         if placed:
@@ -1287,6 +1298,9 @@ def manifest_bytes(rows, refuted=None) -> bytes:
         else:
             kind = _object_kind(r["name"], r["rva"], r["size"], types)
             align, modelled = _alignment(r["rva"], r["size"], kind)
+            distance = r["rva"] - legacy_base[(r["object"], r["storage"])]
+            while distance % align:
+                align //= 2
             if align != modelled and refuted is not None:
                 refuted.append((r["rva"], r["name"], r["size"], kind,
                                 modelled, align))
