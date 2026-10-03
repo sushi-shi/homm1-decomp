@@ -45,7 +45,7 @@ The tree carries the unit sources, every header, `Heroes.rc`, the module
 definition, a `build.json` link contract, import stubs for `wail32.dll` and
 `smkwai32.dll` (from the retail import table through `homm1.graph.implib`), a
 `build.py`, the `play.py` runner, a flake and a short README. LZHUF's reference sources, research
-notes and all tooling stay on `master`. `build.json` keeps retail object order
+notes and all tooling stay on `decomp-win95-1.1`. `build.json` keeps retail object order
 and the BASE library, computed from the annotations before removal; no address
 reaches the tree.
 

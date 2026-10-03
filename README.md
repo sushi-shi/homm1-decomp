@@ -11,16 +11,24 @@ Supply your own game executable and assets; they are not included here.
 ## Branches
 
 ```text
-       master (you are here)
-              |
-              v
-     source-win95-1.1-1996
+decomp-win95-1.0 --------------------> decomp-win95-1.1
+        |                                      |
+        v                                      v
+source-win95-1996                  source-win95-1.1-1996 (planned)
 ```
 
 | Branch | Purpose |
 | --- | --- |
-| `master` | Reconstruction and matching against the Win95 1.1 `HEROES.EXE` |
-| `source-win95-1.1-1996` | Generated clean source (`homm1 clean`): no matching annotations or comments; builds the game with the pinned toolchain |
+| `decomp-win95-1.0` | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
+| `decomp-win95-1.1` | Derived reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
+| `source-win95-1996` | Generated clean source for Win95 1.0 |
+| `source-win95-1.1-1996` | Generated clean source for Win95 1.1 (not generated yet) |
+
+This checkout is `decomp-win95-1.1`. The rightward arrow records the 1.0 → 1.1
+reconstruction lineage, starting at `f323b279`. The downward arrows are
+`homm1 clean` exports: `source-*` names the generated output's game version,
+not the branch from which reconstruction started. The existing
+`source-win95-1996` snapshot remains the 1.0 export.
 
 <!-- match-score:start -->
 ## Match status
