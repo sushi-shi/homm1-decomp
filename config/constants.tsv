@@ -1419,15 +1419,12 @@ src/SOURCE/ADVMGR.cpp	advManager::Main	*	array-index	array subscript m_playerDea
 src/SOURCE/ADVMGR.cpp	advManager::Main	*	call-argument	SetVisibility(* argument 3	the debug reveal's player slot
 src/SOURCE/ADVMGR.cpp	advManager::Open	*	array-index	array subscript m_panelBackdrops	a right-panel backdrop slot
 src/SOURCE/ADVMGR.cpp	advManager::Open	*	call-argument	backdropWidget(* argument [56]	the panel backdrops' widget id and kind arguments
-src/SOURCE/ADVMGR.cpp	advManager::Open	10	store	store to soundVolume	the default sound volume (the top level)
 src/SOURCE/ADVMGR.cpp	advManager::UpdBottomViewHero	*	*	*	the bottom panel's per-slot army layout (positions, label limits, stack-count cases)
 src/SOURCE/ADVMGR.cpp	advManager::UpdateHeroLocator	*	*	*	the locator's mobility-bar frames and geometry
-src/SOURCE/ADVMGR.cpp	CPanelHandler	11	arithmetic	operator %	the eleven volume levels (0..10) the control panel cycles
 src/SOURCE/ADVMGR.cpp	CPanelHandler	120	store	initializer of question	the question text buffer's extent
 src/SOURCE/ADVMGR.cpp	advManager::GetCursorSampleSet	*	initializer-payload	initializer list	the cursor sample suffix table (retail data)
 src/SOURCE/ADVMGR.cpp	advManager::SetEnvironmentOrigin	100	call-argument	ModifySample(* argument 2	the environment sound's pan setting
 src/SOURCE/ADVMGR.cpp	advManager::ProcessSearch	2	comparison-or-bound	operator == m_campaignScenario	a campaign scenario index (the campaign's map order)
-src/SOURCE/ADVMGR.cpp	DimensionDoorHandler	11	case-label	switch on id	the dimension-door window's map widget id
 src/SOURCE/KB.cpp	CheckEndGame	*	*	*	the campaign end-game tests (scenario indices, ASCII case offset, day limit, text buffer)
 src/SOURCE/KB.cpp	*	32	arithmetic	*	the ASCII lower-to-upper case offset
 src/SOURCE/KB.cpp	InterpretCommandLine	*	*	*	the command line's option offsets and the frame step
@@ -1471,7 +1468,6 @@ src/SOURCE/PHILAI.cpp	philAI::DoAI	*	arithmetic	compound assignment to stepMax	a
 src/SOURCE/PHILAI.cpp	philAI::DoAI	*	comparison-or-bound	operator >= m_remainingMobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DoAI	*	comparison-or-bound	operator > m_ultimateArtifactHintChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::DoAI	*	comparison-or-bound	operator < m_remainingMobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	*	arithmetic	operator [*]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	*	comparison-or-bound	operator >	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	*	store	store to fFightVal	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetTurnAIVars	*	arithmetic	operator [*] fFightVal	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1533,7 +1529,6 @@ src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	*	arithmetic	operator / m_experi
 src/SOURCE/PHILAI.cpp	philAI::ValueOfBuyingHero	*	arithmetic	compound assignment to heroRV	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetBestHero	*	store	store to bestCost	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::GetBestHero	*	store	store to bestScore	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::GetBestHero	*	comparison-or-bound	operator < curHero	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to chanceA	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to chanceB	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::LikelihoodOfEnemyAttacking	*	store	store to nAttack	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1604,8 +1599,6 @@ src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	store	store to estWeight	a
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	store	store to curBest	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	store	store to speedLimit	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::HeroInteractionAtTown	*	comparison-or-bound	operator <= m_remainingMobility	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	*	arithmetic	operator / pCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::CombatMonsterEvent	*	arithmetic	operator % pCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightEvent	*	store	initializer of guards	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightEvent	*	store	store to guards[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::FightEvent	*	array-index	array subscript guards	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
@@ -1620,8 +1613,6 @@ src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	comparison-or-bound	operator 
 src/SOURCE/PHILAI.cpp	philAI::IncrementHourGlass	*	store	store to iCurHourGlassPhase	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to liveChance	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to m_creatureCounts[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator / iMonsterCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
-src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator % iMonsterCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to gaiHeroLiveChance[[][]]	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	store	store to iEventRV	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)
 src/SOURCE/PHILAI.cpp	philAI::ValueOfEventAtPosition	*	arithmetic	operator - m_playerCount	an AI tuning weight, threshold, estimate or sentinel (philAI evaluation)

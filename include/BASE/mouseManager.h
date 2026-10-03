@@ -20,7 +20,7 @@ H1_ENUM_CONST_END(MouseCursorFrameConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-class mouseManager : public baseManager {
+                               class mouseManager : public baseManager {
 public:
     void* m_cursorResource;
     bitmap* m_savedUnderlying;

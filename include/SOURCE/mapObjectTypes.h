@@ -96,6 +96,9 @@ H1_ENUM_BEGIN(MapObjectType)
     MAP_OBJECT_TREES_4 = 59,
     MAP_OBJECT_TREES_5 = 60,
     MAP_OBJECT_TREES_LAST = MAP_OBJECT_TREES_5,
+    // NOTHING_HERE..TREES_LAST: the non-event objects philAI's
+    // ValueOfEventAtPosition values at zero.
+    MAP_OBJECT_NON_EVENT_FIRST = MAP_OBJECT_NOTHING_HERE,
     MAP_OBJECT_HERO = 61,
     MAP_OBJECT_SHIP = 62,
     // Past gObjectNames: the dug-up ultimate artifact (EventSound plays

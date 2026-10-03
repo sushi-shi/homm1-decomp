@@ -14,13 +14,19 @@ H1_ENUM_BEGIN(CampaignChoice)
     CAMPAIGN_LAMANDA = 3,
     CAMPAIGN_ALAMAR = 4
 H1_ENUM_END(CampaignChoice)
+
+// gCampaignScenarios rows: CheckEndGame completes the campaign after the
+// last of the COUNT scenarios.
+H1_ENUM_CONST_BEGIN(CampaignScenarioTableConstant)
+    CAMPAIGN_SCENARIO_COUNT = 9
+H1_ENUM_CONST_END(CampaignScenarioTableConstant)
 // clang-format on
 
 // HoMM1's campaign scenario table: 85-byte records with the King of the Hill
 // flag, the town CheckEndGame watches, the three opponents' player types and
 // every player's starting resources.
 #pragma pack(push, 1)
-struct campaignScenario {
+    struct campaignScenario {
     signed char kingOfTheHill;
     signed char victoryTownX;
     signed char victoryTownY;
@@ -32,7 +38,7 @@ struct campaignScenario {
     unsigned short resources[GAME_PLAYER_COUNT][7];
 };
 #pragma pack(pop)
-extern campaignScenario gCampaignScenarios[];
+extern campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT];
 // New-game "King of the Hill" option; campaign scenarios preset it.
 extern signed char gbIAmGreatest;
 

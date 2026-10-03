@@ -215,18 +215,26 @@ H1_ENUM_END(MainMenuHelp)
 H1_ENUM_BEGIN(GameEndSequence)
     GAME_END_LOST = 0,
     GAME_END_WON = 1,
-    GAME_END_CAMPAIGN_COMPLETE = 2
+    GAME_END_CAMPAIGN_COMPLETE = 2,
+    GAME_END_SEQUENCE_COUNT = 3
 H1_ENUM_END(GameEndSequence)
-// clang-format on
 
-// Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
-// menu (new, load, campaign, high scores, credits, quit), one network
-// handshake and the campaign replay/next-scenario loop.
-VA(0x0045015c, 0xe22)
+// Network positions (gbGamePosToNetPos, giThisNetPos): the host is
+// position HOST; a game position with no network player maps to NONE.
+H1_ENUM_CONST_BEGIN(NetPositionConstant)
+    NET_POSITION_NONE = -1,
+    NET_POSITION_HOST = 0
+H1_ENUM_CONST_END(NetPositionConstant)
+                     // clang-format on
+
+                     // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
+                     // menu (new, load, campaign, high scores, credits, quit), one network
+                     // handshake and the campaign replay/next-scenario loop.
+                     VA(0x0045015c, 0xe22)
 int oldmain(void) {
     char saveBuf[20];
-    H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[3];
-    H1_ENUM_STORAGE(SmackVideo, char) lowResVideos[3];
+    H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[GAME_END_SEQUENCE_COUNT];
+    H1_ENUM_STORAGE(SmackVideo, char) lowResVideos[GAME_END_SEQUENCE_COUNT];
     int n;
     heroWindow* mainWin;
     font* font;
@@ -427,12 +435,12 @@ int oldmain(void) {
                         gbGamePosToNetPos[idx] = n;
                         n++;
                     } else {
-                        gbGamePosToNetPos[idx] = -1;
+                        gbGamePosToNetPos[idx] = NET_POSITION_NONE;
                     }
                 }
                 for (idx = 0; idx < GAME_PLAYER_COUNT; idx++)
                     memcpy(gText, gbGamePosToNetPos, GAME_PLAYER_COUNT);
-                giHostGamePos = NetPosToGamePos(0);
+                giHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 giThisGamePos = giHostGamePos;
                 for (idx = 1; idx < giNumHumanPlayers; idx++) {
                     result = TransmitRemoteData(
@@ -538,7 +546,7 @@ int oldmain(void) {
                     giCurTurn,
                     HIGH_SCORE_TYPE_CAMPAIGN,
                     "",
-                    gCampaignSideNames[gpGame->m_campaignType - 1]
+                    gCampaignSideNames[gpGame->m_campaignType - CAMPAIGN_IRONFIST]
                 );
             }
             if (gbShowHighScore) {
@@ -567,7 +575,8 @@ int oldmain(void) {
                     gpGame->m_campaignDay = giCurTurn + 1;
                     gpGame->m_campaignScenario++;
                     gpGame->m_campaignScenariosWon++;
-                    if (gpGame->m_campaignScenario - 4 == gpGame->m_campaignType - 1)
+                    if (gpGame->m_campaignScenario - CAMPAIGN_SCENARIO_LORD_FIRST
+                        == gpGame->m_campaignType - CAMPAIGN_IRONFIST)
                         gpGame->m_campaignScenario++;
                     gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                     sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_campaignScenariosWon);
@@ -714,13 +723,14 @@ short NullHandler(tag_message&) {
 }
 
 // Buka 2.1 RecruitHeroHandler: HoMM1 offers two heroes, each with its own
-// view (ids 2-3) and recruit (ids 8-9) button.
+// view (its portrait, rcrthero.bin ids 2-3) and recruit (ids 8-9) button.
 VA(0x0045140e, 0x1cb)
 short RecruitHeroHandler(tag_message& message) {
-    const short viewButton1 = 2;
-    const short viewButton2 = 3;
-    const short recruitButton1 = 8;
-    const short recruitButton2 = 9;
+    // Retail keeps these four ids as stored locals.
+    const short viewButton1 = RECRUIT_HERO_PORTRAIT_FIRST;
+    const short viewButton2 = RECRUIT_HERO_PORTRAIT_SECOND;
+    const short recruitButton1 = RECRUIT_HERO_SELECT_FIRST;
+    const short recruitButton2 = RECRUIT_HERO_SELECT_SECOND;
     int shouldClose = 0;
     int index;
 
@@ -744,7 +754,7 @@ short RecruitHeroHandler(tag_message& message) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
                     case DIALOG_BUTTON_1:
-                        gpTownManager->m_recruitState = -1;
+                        gpTownManager->m_recruitState = RECRUIT_HERO_NONE;
                         shouldClose = 1;
                         break;
                     case recruitButton1:
@@ -1169,7 +1179,7 @@ void NormalDialog(
             szFilename,
             resourceFrame,
             ICON_DRAW_NORMAL,
-            -1,
+            WIDGET_ID_NONE,
             ICON_WIDGET_DRAW,
             1
         );
@@ -1185,7 +1195,7 @@ void NormalDialog(
                 "artifact.icn",
                 resourceQty[i],
                 ICON_DRAW_NORMAL,
-                -1,
+                WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
@@ -1202,7 +1212,7 @@ void NormalDialog(
                 "brcrest.icn",
                 4,
                 ICON_DRAW_NORMAL,
-                -1,
+                WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
@@ -1220,7 +1230,7 @@ void NormalDialog(
                 szFilename,
                 0,
                 ICON_DRAW_NORMAL,
-                -1,
+                WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
@@ -1378,7 +1388,7 @@ short EventWindowHandler(tag_message& message) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
-                    case 0x385:
+                    case CAMPAIGN_INFO_RESTART:
                     case DIALOG_BUTTON_0:
                     case DIALOG_BUTTON_1:
                     case DIALOG_BUTTON_2:
@@ -1418,13 +1428,15 @@ void PlayerDead(int player) {
     ++gpGame->m_deadPlayerCount;
     for (i = 0; i < GAME_MINE_COUNT; ++i) {
         if (gpGame->m_mineOwners[i] == player)
-            gpGame->ClaimMine(i, -1);
+            gpGame->ClaimMine(i, GAME_PLAYER_NONE);
     }
     for (i = currentPlayer->m_heroCount - 1; i >= 0; --i)
         gpGame->GetHero(currentPlayer->m_heroIds[i])->Deallocate();
-    for (i = 0; i < 2; ++i) {
-        if (gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] == 0x40)
-            gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] = -1;
+    for (i = 0; i < HERO_AVAILABLE_SLOT_COUNT; ++i) {
+        if (gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]]
+            == HERO_AVAILABILITY_RETREATED)
+            gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] =
+                HERO_AVAILABILITY_UNAVAILABLE;
     }
     if (gbRemoteOn && gbHumanPlayer[player])
         HandleRemoteDeadPlayerExit(player);
@@ -1711,7 +1723,17 @@ void ReceiveRemotePlayerExit(
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
-VA(0x00453174, 0x7d4)
+// clang-format off
+// playerData::m_daysLeft: NO_GRACE_PERIOD while the player holds a town;
+// losing the last town starts a GRACE_DAYS countdown (Buka
+// END_GAME_GRACE_DAYS) that game::NewDay runs down to elimination.
+H1_ENUM_CONST_BEGIN(CheckEndGameConstant)
+    END_GAME_NO_GRACE_PERIOD = -1,
+    END_GAME_GRACE_DAYS = CALENDAR_DAYS_PER_WEEK
+H1_ENUM_CONST_END(CheckEndGameConstant)
+                            // clang-format on
+
+                            VA(0x00453174, 0x7d4)
 void CheckEndGame(int forced) {
     town* goalTown;
     hero* artifactHero;
@@ -1756,7 +1778,7 @@ void CheckEndGame(int forced) {
                     gpGame->m_players[static_cast<signed char>(player)].Color()
                 );
             } else if (!pd->m_townCount) {
-                if (pd->m_daysLeft == -1) {
+                if (pd->m_daysLeft == END_GAME_NO_GRACE_PERIOD) {
                     if (gbThisNetHumanPlayer[player]) {
                         sprintf(
                             gText,
@@ -1774,7 +1796,7 @@ void CheckEndGame(int forced) {
                             gpGame->m_players[static_cast<signed char>(player)].Color()
                         );
                     }
-                    pd->m_daysLeft = 7;
+                    pd->m_daysLeft = END_GAME_GRACE_DAYS;
                 } else if (!pd->m_daysLeft) {
                     PlayerDead(player);
                     if (gbThisNetHumanPlayer[player]) {
@@ -1804,7 +1826,7 @@ void CheckEndGame(int forced) {
                     );
                 }
             } else {
-                pd->m_daysLeft = -1;
+                pd->m_daysLeft = END_GAME_NO_GRACE_PERIOD;
             }
         }
     }
@@ -1848,7 +1870,7 @@ void CheckEndGame(int forced) {
                 break;
             case 2:
                 normalWin = 0;
-                ultimateOwner = -1;
+                ultimateOwner = GAME_PLAYER_NONE;
                 for (player = 0; player < gpGame->m_playerCount; player++) {
                     if (!gpGame->m_playerDead[player]) {
                         for (slot = 0; slot < gpGame->m_players[player].m_heroCount; slot++) {
@@ -1905,7 +1927,7 @@ void CheckEndGame(int forced) {
         giEndSequence = GAME_END_WON;
     }
     if (gbGameOver && gpGame->m_campaignType > 0 && giEndSequence == GAME_END_WON
-        && gpGame->m_campaignScenario + 1 == 9)
+        && gpGame->m_campaignScenario + 1 == CAMPAIGN_SCENARIO_COUNT)
         giEndSequence = GAME_END_CAMPAIGN_COMPLETE;
     bInCheckEndGame = 0;
 }
@@ -1947,8 +1969,8 @@ void InitVars(void) {
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
         giGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
     for (i = 0; i < FINDPATH_TERRAIN_COUNT; i++) {
-        giTerrainCost[i][0] = TerrainStepCost(i, 0);
-        giTerrainCost[i][1] = TerrainStepCost(i, 1);
+        giTerrainCost[i][FINDPATH_STEP_STRAIGHT] = TerrainStepCost(i, FINDPATH_STEP_STRAIGHT);
+        giTerrainCost[i][FINDPATH_STEP_DIAGONAL] = TerrainStepCost(i, FINDPATH_STEP_DIAGONAL);
     }
     strcpy(cNetBoxLine[0], "");
     strcpy(cNetBoxLine[1], "");
@@ -2016,8 +2038,8 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     baseLen = strlen(gText);
     if (!h->m_heroClass)
         strcat(gText, gMoraleInfoText[MORALE_INFO_KNIGHT]);
-    alignments = h->m_army.IsHomogeneous(-1);
-    if (alignments > 0) {
+    alignments = h->m_army.IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
+    if (alignments > ARMY_GROUP_ALIGNMENT_NO_BONUS_LAST) {
         faction = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (h->m_army.m_creatureTypes[i] != CREATURE_NONE)
@@ -2026,15 +2048,15 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_ALL_TROOPS], gAlignmentNames[faction]);
         strcat(gText, buffer);
     }
-    if (alignments == -1) {
+    if (alignments == ARMY_GROUP_ALIGNMENT_THREE) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_THREE_ALIGNMENTS]);
         strcat(gText, buffer);
     }
-    if (alignments == -2) {
+    if (alignments == ARMY_GROUP_ALIGNMENT_FOUR) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_FOUR_ALIGNMENTS]);
         strcat(gText, buffer);
     }
-    if (alignments == -3) {
+    if (alignments == ARMY_GROUP_ALIGNMENT_FIVE_OR_MORE) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_FIVE_ALIGNMENTS]);
         strcat(gText, buffer);
     }
@@ -2132,19 +2154,26 @@ void ClearMapExtra(void) {
 }
 
 // HoMM1 score-to-monster tables pair a threshold word with a monster word.
-VA(0x0045425f, 0x8e)
+// clang-format off
+H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)
+    SCORE_MONSTER_COUNT = 28,
+    SCORE_MONSTER_THRESHOLD = 0,
+    SCORE_MONSTER_TYPE = 1
+H1_ENUM_CONST_END(ScoreMonsterConstant)
+    // clang-format on
+    VA(0x0045425f, 0x8e)
 short GetMonType(int score, int highScoreType) {
     int index;
-    for (index = 27; index >= 0; index--) {
+    for (index = SCORE_MONSTER_COUNT - 1; index >= 0; index--) {
         if (highScoreType == HIGH_SCORE_TYPE_CAMPAIGN) {
-            if (giScoreCampaignMon[index][0] >= score)
-                return giScoreCampaignMon[index][1];
+            if (giScoreCampaignMon[index][SCORE_MONSTER_THRESHOLD] >= score)
+                return giScoreCampaignMon[index][SCORE_MONSTER_TYPE];
         } else {
-            if (giScoreMon[index][0] <= score)
-                return giScoreMon[index][1];
+            if (giScoreMon[index][SCORE_MONSTER_THRESHOLD] <= score)
+                return giScoreMon[index][SCORE_MONSTER_TYPE];
         }
     }
-    return giScoreMon[0][1];
+    return giScoreMon[0][SCORE_MONSTER_TYPE];
 }
 
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
@@ -2237,11 +2266,11 @@ void GOut(char* text) {
 // HoMM1 maps every remote position other than the host to the one opponent slot.
 VA(0x00454748, 0x39)
 signed char NetPosToGamePos(int netPos) {
-    if (netPos == 0)
+    if (netPos == NET_POSITION_HOST)
         return 0;
-    else if (netPos > 0)
+    else if (netPos > NET_POSITION_HOST)
         return 1;
-    return -1;
+    return GAME_PLAYER_NONE;
 }
 
 VA(0x00454781, 0xda)
@@ -2255,7 +2284,7 @@ signed char WaitForOtherPlayer(void) {
             case BOX_REMOTE_SETUP:
                 memcpy(gbGamePosToNetPos, data->payload.data, GAME_PLAYER_COUNT);
                 giThisGamePos = NetPosToGamePos(giThisNetPos);
-                giHostGamePos = NetPosToGamePos(0);
+                giHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 break;
             case BOX_REMOTE_SAVE:
                 result = gpGame->ReceiveSaveGame(data->payload.saveSize, data->sender);
@@ -2273,12 +2302,19 @@ H1_ENUM_BEGIN(NetBoxControl)
     NET_BOX_LINE_LATEST = 2,
     NET_BOX_INPUT = 3
 H1_ENUM_END(NetBoxControl)
-// clang-format on
 
-// donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
-VA(0x0045485b, 0x6f4)
+// PopNetBox blinks the input cursor on glTimers slot BLINK_TIMER_SLOT every
+// BLINK_DELAY ms.
+H1_ENUM_CONST_BEGIN(NetBoxConstant)
+    NET_BOX_BLINK_TIMER_SLOT = 0,
+    NET_BOX_BLINK_DELAY = 360
+H1_ENUM_CONST_END(NetBoxConstant)
+    // clang-format on
+
+    // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
+    // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
+    // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
+    VA(0x0045485b, 0x6f4)
 void PopNetBox(char* notice) {
     char* data;
     signed char blinkState;
@@ -2402,7 +2438,7 @@ void PopNetBox(char* notice) {
                 }
         }
 
-        if (!updateInput && KBTickCount() > glTimers[0]) {
+        if (!updateInput && KBTickCount() > glTimers[NET_BOX_BLINK_TIMER_SLOT]) {
             blinkState = 1 - blinkState;
             updateInput = 1;
         }
@@ -2442,7 +2478,7 @@ void PopNetBox(char* notice) {
         }
         if (updateInput) {
             updateInput = 0;
-            glTimers[0] = KBTickCount() + 360;
+            glTimers[NET_BOX_BLINK_TIMER_SLOT] = KBTickCount() + NET_BOX_BLINK_DELAY;
             if (blinkState)
                 text[len] = '_';
             else
@@ -2751,7 +2787,8 @@ void WaitEndSample(SAMPLE2 s, int waitTime) {
         waitTime = 4000;
     long endTime = KBTickCount() + waitTime;
     if (s.pMem) {
-        while (gpSoundManager->DigitalReport(s.pMem, 4) && KBTickCount() < endTime) {
+        while (gpSoundManager->DigitalReport(s.pMem, SAMPLE_REPORT_PLAYING)
+               && KBTickCount() < endTime) {
             Process1WindowsMessage();
             PollSound();
         }
@@ -2903,10 +2940,10 @@ int HandleAppSpecificMenuCommands(int command) {
             PostMessage((HWND)hwndApp, WM_CLOSE, 0, 0);
             break;
         case APP_MENU_MUSIC_OFF:
-            gConfig.musicVolume = 0;
+            gConfig.musicVolume = SOUND_VOLUME_OFF;
             goto adjustMusic;
         case APP_MENU_MUSIC_100:
-            gConfig.musicVolume = 1;
+            gConfig.musicVolume = SOUND_VOLUME_FIRST;
             goto adjustMusic;
         case APP_MENU_MUSIC_90:
             gConfig.musicVolume = 2;
@@ -2933,17 +2970,17 @@ int HandleAppSpecificMenuCommands(int command) {
             gConfig.musicVolume = 9;
             goto adjustMusic;
         case APP_MENU_MUSIC_10:
-            gConfig.musicVolume = 10;
+            gConfig.musicVolume = SOUND_VOLUME_LAST;
             goto adjustMusic;
         adjustMusic:
             gpSoundManager->AdjustMusicVolumes();
             menuChanged = 1;
             break;
         case APP_MENU_SOUND_OFF:
-            gConfig.soundVolume = 0;
+            gConfig.soundVolume = SOUND_VOLUME_OFF;
             goto adjustSound;
         case APP_MENU_SOUND_100:
-            gConfig.soundVolume = 1;
+            gConfig.soundVolume = SOUND_VOLUME_FIRST;
             goto adjustSound;
         case APP_MENU_SOUND_90:
             gConfig.soundVolume = 2;
@@ -2970,7 +3007,7 @@ int HandleAppSpecificMenuCommands(int command) {
             gConfig.soundVolume = 9;
             goto adjustSound;
         case APP_MENU_SOUND_10:
-            gConfig.soundVolume = 10;
+            gConfig.soundVolume = SOUND_VOLUME_LAST;
             goto adjustSound;
         adjustSound:
             gpSoundManager->AdjustSoundVolumes();
@@ -3029,7 +3066,7 @@ int HandleAppSpecificMenuCommands(int command) {
             gpAdvManager->CheckCastSpell();
             break;
         case APP_MENU_DIG:
-            gpAdvManager->ProcessSearch(-1, -1);
+            gpAdvManager->ProcessSearch(ADVMGR_SEARCH_VIEW_CENTER, ADVMGR_SEARCH_VIEW_CENTER);
             break;
         default:
             return 1;
@@ -3419,14 +3456,14 @@ signed char gMons32Width[28] = {
     21, 22, 25, 23, 27, 22, 29, 28, 32, 27, 21, 26, 21, 29,
 };
 DATA(0x00492758)
-short giScoreMon[28][2] = {
+short giScoreMon[SCORE_MONSTER_COUNT][2] = {
     {0, 0},    {7, 6},    {14, 12},  {21, 18},  {28, 24},  {35, 7},   {42, 1},
     {49, 19},  {56, 13},  {63, 2},   {70, 8},   {77, 25},  {84, 14},  {91, 20},
     {98, 3},   {105, 9},  {112, 15}, {119, 21}, {126, 4},  {133, 26}, {140, 16},
     {147, 10}, {154, 22}, {161, 5},  {168, 27}, {175, 11}, {182, 17}, {189, 23},
 };
 DATA(0x004927c8)
-short giScoreCampaignMon[28][2] = {
+short giScoreCampaignMon[SCORE_MONSTER_COUNT][2] = {
     {3600, 0},  {3400, 6},  {3200, 12}, {3000, 18}, {2600, 24}, {2400, 7},  {2200, 1},
     {2000, 19}, {1800, 13}, {1600, 2},  {1500, 8},  {1400, 25}, {1300, 14}, {1200, 20},
     {1100, 3},  {1000, 9},  {900, 15},  {800, 21},  {750, 4},   {700, 26},  {650, 16},
@@ -3447,7 +3484,7 @@ WindowTextEntry gWinSetup[68] = {
 DATA(0x00492948)
 signed char townTheme[4] = {3, 0, 2, 1};
 DATA(0x00492950)
-campaignScenario gCampaignScenarios[9] = {
+campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
      36,
      35,
@@ -4831,7 +4868,7 @@ signed char gbInCombat = 0;
 DATA(0x00494148)
 signed char gbDirectConnect = 0;
 DATA(0x0049414c)
-long giForceSwitchMusic = -1;
+long giForceSwitchMusic = FORCED_MUSIC_IDLE;
 DATA(0x00494150)
 int gbComputeExtent = 0;
 DATA(0x00494154)

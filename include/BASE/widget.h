@@ -41,7 +41,7 @@ H1_ENUM_CONST_END(WidgetIdConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-class widget /* abstract */ {
+                   class widget /* abstract */ {
 public:
     heroWindow* m_owner;
     widget* m_next;

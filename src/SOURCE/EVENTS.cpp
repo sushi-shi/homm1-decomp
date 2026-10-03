@@ -1752,7 +1752,7 @@ signed char advManager::CombatMonsterEvent(
             m_mineGuardianFacingLeft = 1;
         if (ComboDraw(0))
             UpdateScreen(0, 0);
-        m_lastQuickViewX = -1;
+        m_lastQuickViewX = QUICK_VIEW_CLEARED;
     }
     memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, ARMY_GROUP_SLOT_COUNT);
     memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
@@ -2539,8 +2539,11 @@ void advManager::PlayerMonsterInteract(
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                    eventHero->m_army
-                        .Add(cell->m_objectIndex, cell->m_objectMetadata & MONSTER_COUNT_MASK, ARMY_GROUP_EMPTY_SLOT);
+                    eventHero->m_army.Add(
+                        cell->m_objectIndex,
+                        cell->m_objectMetadata & MONSTER_COUNT_MASK,
+                        ARMY_GROUP_EMPTY_SLOT
+                    );
                     *handled = 1;
                     return;
                 } else {
