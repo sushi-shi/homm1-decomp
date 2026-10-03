@@ -15,6 +15,7 @@ All Python commands use `scripts/homm1` and the shared usage logger.
 | `ghidra` | `ghidra` | Viewer export and verification |
 | `tool` | `tool` | Individual external-tool drivers and manifest merge |
 | `workflow` | `workflow` | Repository hooks and safe staged formatting |
+| `clean` | `clean` | Clean source tree, VC4 verification and snapshot branch ([clean source](clean-source.md)) |
 | `audit tooling --whole-tree` | `audit.tooling` | Pinned donor inventory beyond Python modules |
 
 Run each command's help for its current options. `homm1 sema -` accepts batch

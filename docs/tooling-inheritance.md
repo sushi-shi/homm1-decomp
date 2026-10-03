@@ -6,7 +6,8 @@
 | Giten (giten-enums) | `94435eff949d6190fa0b1b697caae9f21c53bb6b` | Constants work list and enum-domain/reuse review |
 | Gruntz | `b1de0e555576a215898907b8ec8ed5423368883e` | Original pipeline ancestry and cross-review |
 | HoMM2 Buka | `299514f88900c0cf30ba03422c72830a38fc1cb7` | Initial capability review |
-| HoMM2 Buka | `e0689d3f71b2942b544fd677cb54085a13503d7b` | Exact-overload fingerprint review |
+| HoMM2 Buka | `e0689d3f71b2942b544fd677cb54085a13503d7b` | Exact-overload fingerprint review; `homm2 clean` |
+| kf1 | `62870641`, `1a1e594e`, `904687dd`, `5ad5875f`, `655774b2`, `53cc73af` | `kf clean` export, verification and snapshot branches |
 
 These are implementation reviews, not a claim of complete behavioral parity.
 The executable, source ownership, types, VC4 profiles and data policy stay
@@ -30,6 +31,7 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 | Inline-budget prediction | Deferred: VC5 thresholds need measured VC4 controls. The local gap command reports definitions/calls only. |
 | Executable-section data/placement | Deferred: requires HoMM1 fixtures and the later data campaign. No initializer coverage is admitted. |
 | Resources | Adapted from HoMM2 Buka `rc_res.py` (reviewed at `e0689d3`): `homm1.tool.rc` stages the retail icon in a temporary directory and gates every compiled payload against retail in both directions. RC/RCDLL/CVTRES are the VC4 media tools pinned as vc40 `resource_files`. See [candidate linking](linker-flags.md). |
+| Clean source branch | Adapted from HoMM2 `scripts/homm2/clean/clean_source.py` and kf1 `scripts/kf/clean.py`/`clean_lexer.py` as `homm1 clean` (`scripts/homm1/clean`). Retained: the literal-aware lexer, innermost-first macro rules, comment removal without token joining, residue and stranded-punctuation self-checks, marked output replacement, kf1's committed-`HEAD` snapshot input and single-root-commit branch with `Source-Commit` provenance. Adapted: VC4's production `H1_ENUM_*` branch instead of HoMM2's strict typed branch (VC4 cannot compile it), and verification with the pinned VC4 through fixedroot plus a line-preserving control that must reproduce the candidate EXE, in place of kf1's CPE comparison; publication uses a private index, never a worktree. The standalone tree builds with VC4 under Wine from the pinned toolchain release. Deferred: HoMM2's `--classic-from`/C++20 typed view and `GENERATED_PATCHES` (no portable target yet). Inapplicable: HoMM2 allocation-wrapper, locale and `--publish-parent` rules. See [clean source](clean-source.md). |
 | Runtime deployment | Deferred pending HoMM1 deployment evidence. |
 | Relocation synthesis/disc/IAT patches | Inapplicable to current inputs: HoMM1 retains retail relocations and its own `.idata`; Giten's fixed-image and disc-layout assumptions differ. |
 | LithTech lineage/REZ and donor ledgers | Inapplicable to HoMM1. Foreign task rows and exceptions are not evidence or authorization. |

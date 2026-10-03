@@ -101,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__.strip())
         print("\ncommands: init inspect toolchain configure build link match labels "
-              "model delink compare audit sema walls permute lsp ghidra verify workflow tool")
+              "model delink compare audit sema walls permute lsp ghidra verify workflow clean tool")
         return 0 if argv else 2
     cmd, rest = argv[0], argv[1:]
     if cmd == "init":
@@ -126,6 +126,9 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "workflow":
         from homm1.workflow import main as workflow_main
         return workflow_main(rest)
+    if cmd == "clean":
+        from homm1.clean.run import main as clean_main
+        return clean_main(rest)
     if cmd == "audit":
         audits = {"dna-bands": "dna_bands", "tooling": "tooling", "usage": "usage"}
         if not rest or rest[0] not in audits:

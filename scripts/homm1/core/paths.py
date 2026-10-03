@@ -35,12 +35,13 @@ def sdk_names() -> list[str]:
     return sorted(name for name, entry in pins.items() if "sdk" in entry)
 
 
-def vendor_include_dirs() -> list[tuple[str, Path]]:
+def vendor_include_dirs(vendor: Path = VENDOR) -> list[tuple[str, Path]]:
     """[(name, dir)] of every vendor header tree, in one fixed order: the
     in-repo vendor/<name> trees, then each pinned SDK's installed include/
-    (build/toolchains/<sdk>/include; `homm1 toolchain install --id <sdk>`)."""
-    dirs = [(d.name, d) for d in sorted(VENDOR.iterdir()) if d.is_dir()] \
-        if VENDOR.is_dir() else []
+    (build/toolchains/<sdk>/include; `homm1 toolchain install --id <sdk>`).
+    `vendor` selects another tree's vendor/ (the generated clean tree)."""
+    dirs = [(d.name, d) for d in sorted(vendor.iterdir()) if d.is_dir()] \
+        if vendor.is_dir() else []
     for name in sdk_names():
         inc = BUILD / "toolchains" / name / "include"
         if inc.is_dir():
