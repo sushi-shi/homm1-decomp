@@ -75,14 +75,16 @@ def func(name: str, *, decorated: bool = False) -> str:
 def data(name: str, *, internal: bool, decorated: bool = False) -> str:
     """cl 5.0's spelling for a clang-proposed DATA name.
 
-    `internal` is the declaration's storage, not its spelling: a file static, a
-    namespace-scope `const`, and a function-local static all reach the object
-    as `_<mangled>$S<n>`, whatever their mangling.
+    `internal` is the declaration's storage, not its spelling: a file static
+    and a namespace-scope `const` reach the object as `_<mangled>$S<n>`,
+    whatever their mangling. VC4 keeps a function-local static's own mangled
+    name (`?s@?1??fn@...@4HA`, measured on SOURCE/SEARCH), so that form is
+    never wrapped.
     """
     out = ARRAY_ELEMENT_CV.sub(r"\1", ARRAY_STORAGE.sub(r"@@\1P", name))
     if not decorated:
         out = decorate(out)
-    if internal:
+    if internal and not LOCAL_STATIC_SCOPE.search(out):
         if not out.startswith("_"):
             out = "_" + out
         out += "$S"
