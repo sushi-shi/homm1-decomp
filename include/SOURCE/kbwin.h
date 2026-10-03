@@ -180,12 +180,22 @@ int KeyboardMessageHandler(void*, unsigned int, unsigned int, long);
 int MouseMessageHandler(void*, unsigned int, unsigned int, long);
 long __stdcall AppWndProc(void*, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
-void SetWinText(class heroWindow*, short);
 void ResizeWindow(int, int, int, int);
 void SetMenuStatus(int);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
 void SetWinText(class heroWindow*, short);
 void UpdateDfltMenu(void*);
 void UpdateAppSpecificMenus(void*);
+extern int gbForegroundApp;
+extern int gbNoDialogMenusOn;
+extern void* hmnuApp;
+extern int gbClosingApp;
+extern long lLastGetMessage;
+extern long lLastAilServe;
+long KBTickCount();
+void Process1WindowsMessage();
+void SetNoDialogMenus(int);
+char* FindLastToken(char*, char);
+void SetMenus(void*, int);
 
 #endif

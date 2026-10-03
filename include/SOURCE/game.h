@@ -525,4 +525,7 @@ short ViewSpellsHandler(struct tag_message&);
 short ViewSpecialHandler(struct tag_message&);
 short ViewArmyHandler(struct tag_message&);
 int GetBaseScore(int);
+extern int gbGameOver;
+extern int giEndSequence;
+
 #endif // HOMM1_SOURCE_GAME_H

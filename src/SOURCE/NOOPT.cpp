@@ -7,6 +7,7 @@
 #include <BASE/Misc.h>
 #include <H1/KB.h>
 #include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/kbwin.h>
 
 // DelayTicks waits on its own glTimers slot, in ticks of 15 milliseconds.
 H1_ENUM_CONST_BEGIN(DelayTicksConstant)

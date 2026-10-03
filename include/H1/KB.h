@@ -67,7 +67,6 @@ extern char* gcExtendedMemoryUnits;
 extern char* gcConventionalMemoryUnits;
 extern int giRequiredExtendedMemory;
 extern int giRequiredConventionalMemory;
-extern int gbForegroundApp;
 extern int gbLoadingMonoIcon;
 extern configStruct gConfig;
 // Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
@@ -90,13 +89,10 @@ extern long giBottomViewOverrideEndTime;
 extern int giBottomViewResource;
 extern int giBottomViewResourceQty;
 extern char gcBottomViewText[];
-extern int gbNoDialogMenusOn;
-extern void* hmnuApp;
 extern void* hmnuAdv;
 extern void* hmnuDflt;
 extern void* hmnuCmbt;
 extern void* hmnuTown;
-extern int gbClosingApp;
 extern int gbHeroMoving;
 extern int gbRemoteOn;
 extern heroWindow* DataEntryWin;
@@ -105,8 +101,6 @@ extern int iDEMaxLen;
 extern signed char bDataEntryTime;
 extern H1_ENUM_STORAGE(DialogWaitType, signed char) giWaitType;
 extern signed char gbFunctionComplete;
-extern long lLastGetMessage;
-extern long lLastAilServe;
 // Artifact names (0x00493048).
 extern char* gArtifactNames[];
 extern char* gNeutralBuildingNames[];
@@ -146,7 +140,6 @@ extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(int);
-long KBTickCount();
 struct SAMPLE2 LoadPlaySample(char*);
 void WaitEndSample(struct SAMPLE2, int);
 // Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
@@ -160,10 +153,7 @@ H1_ENUM_CONST_BEGIN(GlobalTimerConstant)
     GLOBAL_MUSIC_FADE_TIMER_SLOT = 4,
     GLOBAL_POLL_SOUND_TIMER_SLOT = 5
 H1_ENUM_CONST_END(GlobalTimerConstant)
-void Process1WindowsMessage();
-void SetNoDialogMenus(int);
 void EarlyShutDownSystem();
-void PollRemote();
 void QuickViewWait();
 signed char CanBuild(class town*, short);
 signed char CanBuy(class town*, short);
@@ -185,16 +175,11 @@ extern char gMapName[];
 extern char gFullMapName[];
 extern char gMapDescription[];
 extern char cAggPathName[];
-extern int giFrameStep;
 extern int giNumHumanPlayers;
 extern int gbHumanPlayer[];
 void InitMainClasses(void);
 void InitVars(void);
-void GetGraphicsInfo(void);
-void ReadPrefs(void);
 int InterpretCommandLine(void);
-int SetupCDDrive(void);
-char* FindLastToken(char*, char);
 void ClearMapExtra(void);
 short GetMonType(int, int);
 int MemSize(int);
@@ -223,14 +208,11 @@ extern H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 extern signed char gbCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
 extern int gbInNewGameSetup;
-extern int gbGameOver;
-extern int giEndSequence;
 extern int bInShutDown;
 void DeleteMainClasses(void);
 extern class highScoreManager* gpHighScoreManager;
 void FileError(char*);
 void MemError();
-void SetMenus(void*, int);
 void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
@@ -255,7 +237,6 @@ void NormalDialog(
     int = 0,
     H1_ENUM_PARAM(NormalDialogOrText, int) = NORMAL_DIALOG_NO_OR_TEXT
 );
-void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 extern char* gSpellDesc[];
 extern char* gSpellNames[];

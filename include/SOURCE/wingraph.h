@@ -171,5 +171,6 @@ void UpdatePalette(signed char*);
 void CleanUpWinGraphics();
 BOOL QueryNewPalette();
 BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, int));
+void GetGraphicsInfo(void);
 
 #endif

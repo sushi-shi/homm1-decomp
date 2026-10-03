@@ -15,6 +15,7 @@
 #include <H1/KB.h>
 #include <SOURCE/comwin.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/netwin.h>
 #include <SOURCE/netwinRuntime.h>

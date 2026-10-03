@@ -7,6 +7,7 @@
 #include <BASE/Misc.h>
 #include <H1/All.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/PATH.h>
 #include <SOURCE/REMOTE.h>
 
