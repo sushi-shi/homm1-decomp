@@ -1635,7 +1635,7 @@ src/SOURCE/ADVMGR.cpp	*	[46]	call-argument	SetCursorShape(* argument 1	the drag 
 src/BASE/BITMAP.cpp	bitmap::bitmap	*	call-argument	resource(* argument 2	resource id 0 (or -1) for an in-memory bitmap
 src/BASE/PALETTE.cpp	palette::palette	*	call-argument	resource(* argument 2	resource id -1 for an in-memory palette
 src/BASE/FONT.cpp	font::DrawBoundedString	2	arithmetic	operator /	centring: half the spare width
-src/BASE/Misc.cpp	ResetHeroRVs	10	comparison-or-bound	operator <	the reset distance in map cells
+src/SOURCE/PHILAI.cpp	ResetHeroRVs	10	comparison-or-bound	operator <	the reset distance in map cells
 src/BASE/RESMGR.cpp	resourceManager::Expunge	*	*	*	Expunge's two-entry cursor pair
 src/BASE/TEXTNTRY.cpp	*	1	call-argument	strcpy(* argument [12]	a one-character shift of the edit buffer
 src/BASE/INPUTMGR.cpp	KeyboardMessageHandler	0	call-argument	AppCommand(* argument [24]	AppCommand's zero wParam/lParam

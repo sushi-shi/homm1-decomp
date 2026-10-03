@@ -113,11 +113,6 @@ source = "src/BASE/MOUSEMGR.cpp"
 flags = "cpp_o2"
 
 [[unit]]
-unit = "BASE/Misc"
-source = "src/BASE/Misc.cpp"
-flags = "cpp_carcass"
-
-[[unit]]
 unit = "BASE/RESMGR"
 source = "src/BASE/RESMGR.cpp"
 flags = "cpp_carcass_oi_gy"
