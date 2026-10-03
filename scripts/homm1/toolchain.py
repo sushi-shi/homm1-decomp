@@ -12,10 +12,13 @@ from homm1.core.inputs import REPO
 
 
 RELEASE_REPOSITORY = "sushi-shi/homm1-decomp"
-RELEASE_TAG = "toolchain-vc40-masm611"
-RELEASE_ASSET = "homm1-toolchain-vc40-masm611.tar.xz"
-RELEASE_SHA256 = "d489c97f0625ae6cedd4de7f349bb7efc77d7497206dfe815b254e1046e692da"
-RELEASE_COMPONENTS = ("vc40",)
+RELEASE_TAG = "toolchain-vc40-masm611-sdk1"
+RELEASE_ASSET = "homm1-toolchain-vc40-masm611-sdk1.tar.xz"
+RELEASE_SHA256 = "eb582d9a293cd0d666ea56eb937b6b8c0891da231bce1c5566e6450f15c4e9a5"
+#: VC4 + MASM, and the vendor SDK files pinned in config/toolchains.json
+#: (each extracted from its original media; `install --id <sdk> --media`
+#: rebuilds any of them from archive.org).
+RELEASE_COMPONENTS = ("vc40", "wing10", "dx1")
 
 
 def pins():
