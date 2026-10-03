@@ -57,9 +57,8 @@ H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
     INVALID_HERO = -1
 H1_ENUM_CONST_END(AdventureHeroConstant)
 
-// View-cell coordinates with no cell: m_lastHoverCell/m_hoverCellY before
-// the mouse hovers a cell and m_previousCursorMapX/Y without a drawn cursor
-// (Buka CURSOR.h CURSOR_INVALID_POSITION).
+// m_lastHoverCell/m_hoverCellY before the mouse hovers a view cell (Buka
+// ADVMGR's m_lastHoverCell = CURSOR_INVALID_POSITION).
 H1_ENUM_CONST_BEGIN(AdventureCursorConstant)
     CURSOR_INVALID_POSITION = -1
 H1_ENUM_CONST_END(AdventureCursorConstant)

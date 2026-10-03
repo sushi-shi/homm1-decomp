@@ -10,6 +10,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
+#include <BASE/soundmgr.h>
 #include <BASE/TILE.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
@@ -859,8 +860,8 @@ short advManager::Open(short id) {
                         | MESSAGE_WIDGET;
     gpMouseManager->NewUpdate(1);
     oldVolume = gConfig.soundVolume;
-    if (gConfig.soundVolume != 0)
-        gConfig.soundVolume = 10;
+    if (gConfig.soundVolume != SOUND_VOLUME_OFF)
+        gConfig.soundVolume = SOUND_VOLUME_LAST;
     SetInitialMapOrigin();
     bShowIt = gbThisNetHumanPlayer[giCurPlayer];
     gpMouseManager->SetColorMice(0);
@@ -5859,13 +5860,13 @@ short CPanelHandler(struct tag_message& message) {
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
                         case CONTROL_MUSIC_VOLUME:
-                            gConfig.musicVolume = (gConfig.musicVolume + 1) % 11;
+                            gConfig.musicVolume = (gConfig.musicVolume + 1) % (SOUND_VOLUME_LAST + 1);
                             gpSoundManager->AdjustMusicVolumes();
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_SOUND_VOLUME:
-                            gConfig.soundVolume = (gConfig.soundVolume + 1) % 11;
+                            gConfig.soundVolume = (gConfig.soundVolume + 1) % (SOUND_VOLUME_LAST + 1);
                             gpSoundManager->AdjustSoundVolumes();
                             changed = 1;
                             bPrefsChanged = 1;
@@ -6400,7 +6401,7 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
             }
         }
     }
-    if (gConfig.soundVolume != 0) {
+    if (gConfig.soundVolume != SOUND_VOLUME_OFF) {
         m_activeSoundMask = 0;
         for (layer = ENVIRONMENT_SOUND_FIRST_LAYER; layer <= ENVIRONMENT_SOUND_LAYER_COUNT;
              ++layer) {

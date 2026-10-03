@@ -2930,10 +2930,10 @@ int HandleAppSpecificMenuCommands(int command) {
             PostMessage((HWND)hwndApp, WM_CLOSE, 0, 0);
             break;
         case APP_MENU_MUSIC_OFF:
-            gConfig.musicVolume = 0;
+            gConfig.musicVolume = SOUND_VOLUME_OFF;
             goto adjustMusic;
         case APP_MENU_MUSIC_100:
-            gConfig.musicVolume = 1;
+            gConfig.musicVolume = SOUND_VOLUME_FIRST;
             goto adjustMusic;
         case APP_MENU_MUSIC_90:
             gConfig.musicVolume = 2;
@@ -2960,17 +2960,17 @@ int HandleAppSpecificMenuCommands(int command) {
             gConfig.musicVolume = 9;
             goto adjustMusic;
         case APP_MENU_MUSIC_10:
-            gConfig.musicVolume = 10;
+            gConfig.musicVolume = SOUND_VOLUME_LAST;
             goto adjustMusic;
         adjustMusic:
             gpSoundManager->AdjustMusicVolumes();
             menuChanged = 1;
             break;
         case APP_MENU_SOUND_OFF:
-            gConfig.soundVolume = 0;
+            gConfig.soundVolume = SOUND_VOLUME_OFF;
             goto adjustSound;
         case APP_MENU_SOUND_100:
-            gConfig.soundVolume = 1;
+            gConfig.soundVolume = SOUND_VOLUME_FIRST;
             goto adjustSound;
         case APP_MENU_SOUND_90:
             gConfig.soundVolume = 2;
@@ -2997,7 +2997,7 @@ int HandleAppSpecificMenuCommands(int command) {
             gConfig.soundVolume = 9;
             goto adjustSound;
         case APP_MENU_SOUND_10:
-            gConfig.soundVolume = 10;
+            gConfig.soundVolume = SOUND_VOLUME_LAST;
             goto adjustSound;
         adjustSound:
             gpSoundManager->AdjustSoundVolumes();
