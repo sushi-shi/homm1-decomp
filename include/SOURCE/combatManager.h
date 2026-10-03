@@ -561,6 +561,6 @@ extern signed char iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern signed char gbThisNetHasControl;
 // Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
-// ground and obstacle tables are in X_GLOBAL.h.
+// ground and obstacle tables are KB's (KB.h).
 extern char* cCombatBkgNames[];
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

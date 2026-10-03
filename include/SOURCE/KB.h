@@ -424,8 +424,7 @@ signed char WaitForOtherPlayer(void);
 // SeedPosition's seeding state.
 extern int giSeedingValid;
 // KB-band setup state (Buka X_GLOBAL.h): the direct-connect flag and the
-// multiplayer game type. They stay out of X_GLOBAL.h while GAME and KB still
-// use these names for other retail objects (see the aliases there).
+// multiplayer game type.
 extern signed char gbDirectConnect;
 extern signed char iMPExtendedType;
 extern int gbInSmacker;
