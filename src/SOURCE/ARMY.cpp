@@ -967,13 +967,13 @@ void army::DoAttack(int retaliation) {
     int oldMode;
     short frameBase;
     army* target2;
+    int dmg;
+    short newHex;
     int curDir;
     short facing;
     int attackDir;
     int didCast;
     army* target;
-    int dmg;
-    short newHex;
     int kills;
 
     oldMode = 0;
