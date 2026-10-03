@@ -6,63 +6,6 @@
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/terrainTypes.h>
 
-// Town building ids: the order of retail gBuildingNames (0x004933a8), then
-// six dwellings named per race by gDwellingNames. town::m_buildings holds
-// bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
-// at the dock cell, 5 is never built and 0 has mage-guild levels.
-H1_ENUM_BEGIN(BuildingSlotType)
-    BUILDING_SLOT_MAGE_GUILD = 0,
-    BUILDING_SLOT_THIEVES_GUILD = 1,
-    BUILDING_SLOT_TAVERN = 2,
-    BUILDING_SLOT_SHIPYARD = 3,
-    BUILDING_SLOT_WELL = 4,
-    // The generic structures every town type shares (philAI's castle arrow
-    // count adds one per built slot up to here).
-    BUILDING_SLOT_GENERIC_LAST = 4,
-    // Slots RACE_FIRST.. use per-race build-window frames, the generic ones
-    // before them frame building + 1 (TOWNMGR SetupBuildWindow).
-    BUILDING_SLOT_RACE_FIRST = 5,
-    BUILDING_SLOT_TENT = 5,
-    BUILDING_SLOT_CASTLE = 6,
-    // The non-dwelling structures end here (TOWNMGR building <= 6 tests).
-    BUILDING_SLOT_STRUCTURE_LAST = 6,
-    BUILDING_SLOT_DWELLING_FIRST = 7,
-    BUILDING_SLOT_DWELLING_1 = 7,
-    BUILDING_SLOT_DWELLING_2 = 8,
-    BUILDING_SLOT_DWELLING_3 = 9,
-    BUILDING_SLOT_DWELLING_4 = 10,
-    BUILDING_SLOT_DWELLING_5 = 11,
-    BUILDING_SLOT_DWELLING_6 = 12,
-    BUILDING_SLOT_DWELLING_LAST = 12,
-    // gDwellingRequirements masks name only slots before the sixth dwelling
-    // (nothing requires it); BuyBuild lists the prerequisites below this.
-    BUILDING_SLOT_REQUIREMENT_END = 12,
-    // Dwellings per town: gDwellingNames/gDwellingRequirements rows are
-    // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
-    BUILDING_SLOT_DWELLING_COUNT = 6,
-    BUILDING_SLOT_COUNT = 13,
-    // Past the buildable slots: the race special building's bit (bit 13, as
-    // in Buka's TOWN_BUILDING_COLISEUM/FORTIFICATIONS 0x2000, whose tent and
-    // castle bits 5 and 6 match HoMM1's). LoadMap, NewMap and RandomizeTown
-    // give it to barbarian towns only; no HoMM1 reader tests it.
-    BUILDING_SLOT_SPECIAL = 13
-H1_ENUM_END(BuildingSlotType)
-
-// giWaitType: which poll WaitHandler runs while a wait dialog is up
-// (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
-// GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect; Buka
-// KBDeclarations.h DialogWaitType, same numbering).
-H1_ENUM_BEGIN(DialogWaitType)
-    DIALOG_WAIT_OTHER_PLAYER = 0,
-    DIALOG_WAIT_NETBIOS_GUEST = 1,
-    DIALOG_WAIT_NETBIOS_HOST = 2,
-    DIALOG_WAIT_NETBIOS_INIT_GUEST = 3,
-    DIALOG_WAIT_NETBIOS_INIT_HOST = 4,
-    DIALOG_WAIT_MODEM_COMMAND = 5,
-    DIALOG_WAIT_MODEM_RESPONSE = 6,
-    DIALOG_WAIT_DIRECT_CONNECT = 7
-H1_ENUM_END(DialogWaitType)
-
 // WaitEndSample's waitTime: a negative wait means the default 4000 ms.
 H1_ENUM_CONST_BEGIN(SampleWaitConstant)
     SAMPLE_WAIT_DEFAULT = -1
@@ -102,14 +45,6 @@ extern signed char gbShowHighScore;
 // NormalDialog only parks over the adventure map when neither is showing.
 extern signed char gbHeroWindShowing;
 extern signed char gbOverviewShowing;
-// giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
-// scores (CAMPAIGN.HS, fewest days first; giScoreCampaignMon) or standard
-// scores (STANDARD.HS, highest first; giScoreMon). highScoreManager shows the
-// matching list.
-H1_ENUM_BEGIN(HighScoreType)
-    HIGH_SCORE_TYPE_CAMPAIGN = 0,
-    HIGH_SCORE_TYPE_STANDARD = 1
-H1_ENUM_END(HighScoreType)
 extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.

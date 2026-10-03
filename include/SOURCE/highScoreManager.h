@@ -95,4 +95,14 @@ public:
     void Update(void);
 };
 #pragma pack(pop)
+
+// giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
+// scores (CAMPAIGN.HS, fewest days first; giScoreCampaignMon) or standard
+// scores (STANDARD.HS, highest first; giScoreMon). highScoreManager shows the
+// matching list.
+H1_ENUM_BEGIN(HighScoreType)
+    HIGH_SCORE_TYPE_CAMPAIGN = 0,
+    HIGH_SCORE_TYPE_STANDARD = 1
+H1_ENUM_END(HighScoreType)
+
 #endif // HOMM1_SOURCE_HIGHSCOREMANAGER_H
