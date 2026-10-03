@@ -134,15 +134,22 @@ def install(new: bytes, out: Path) -> bool:
     return True
 
 
-def retail_name(unit: str | None) -> str | None:
-    """The unit's retail source file name (units.toml `retail_file`), if recorded."""
-    if not unit:
-        return None
+def retail_name(unit: str | None, src: Path | str | None = None) -> str | None:
+    """The unit's retail source path (units.toml `retail_file`, else
+    Dir\\STEM.CPP), matched by unit name or, for a permuter's disposable
+    sibling (.ARMY.trial0003.cpp), by the configured source it stands for."""
     from homm1.manifest import units
-    for row in units():
-        if row.get("unit") == unit:
-            return row.get("retail_file")
-    return None
+    from homm1.tool.fixedroot import default_name, disposable_stem
+    rows = units()
+    row = next((r for r in rows if unit and r.get("unit") == unit), None)
+    if row is None and src is not None:
+        src = Path(src)
+        want = (src.parent.name, disposable_stem(src.stem))
+        row = next((r for r in rows if (Path(r["source"]).parent.name,
+                                        Path(r["source"]).stem) == want), None)
+    if row is None:
+        return None
+    return row.get("retail_file") or default_name(Path(row["source"]), row["unit"])
 
 
 def compile_unit(src: Path | str, out: Path | str, flags: list[str],
@@ -159,7 +166,7 @@ def compile_unit(src: Path | str, out: Path | str, flags: list[str],
     scratch.mkdir(parents=True, exist_ok=True)
     staged = scratch / out.name
     try:
-        cl.compile(src, staged, flags, retail_name=retail_name(unit), unit=unit)
+        cl.compile(src, staged, flags, retail_name=retail_name(unit, src), unit=unit)
         return install(staged.read_bytes(), out)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)

@@ -35,10 +35,12 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 ROOT = Path("/tmp/homm1-fixedroot")          # empty mount point; a tmpfs inside the namespace
@@ -58,8 +60,15 @@ def default_name(src: Path, unit: str | None = None) -> str:
     if unit and "/" in unit:
         d, stem = unit.split("/", 1)
     else:
-        d, stem = Path(src).parent.name, Path(src).stem
+        d, stem = Path(src).parent.name, disposable_stem(Path(src).stem)
     return f"{DIR_NAMES.get(d.upper(), d)}\\{stem.upper()}.CPP"
+
+
+def disposable_stem(stem: str) -> str:
+    """The unit stem of a permuter's sibling probe (.ARMY.trial0003 -> ARMY)."""
+    if stem.startswith(".") and "." in stem[1:]:
+        return stem[1:].split(".", 1)[0]
+    return stem
 
 
 # --------------------------------------------------------------------------- outer
@@ -100,6 +109,12 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
 
 # --------------------------------------------------------------------------- inner
 def _mount(*args: str) -> None:
+    # A wineserver outside may be replacing a registry file (write + rename)
+    # at this moment; the bind target then briefly does not exist.
+    for attempt in range(20):
+        if subprocess.run(["mount", *args], stderr=subprocess.DEVNULL).returncode == 0:
+            return
+        time.sleep(0.05 * (attempt + 1))
     subprocess.run(["mount", *args], check=True)
 
 
@@ -147,12 +162,14 @@ def _inner(job: dict) -> int:
     reg = ROOT / ".reg"
     reg.mkdir()
     for f in prefix.glob("*.reg"):
-        shutil.copy2(f, reg / f.name)
+        text = f.read_text(encoding="latin-1")
+        if f.name == "user.reg":
+            # %TEMP% (the compiler's -il intermediates) on the private root, at a
+            # path that does not depend on the host user name.
+            text = re.sub(r'^"(TEMP|TMP)"=".*"$', r'"\1"="D:\\\\TMP"', text, flags=re.M)
+        (reg / f.name).write_text(text, encoding="latin-1")
         _mount("--bind", str(reg / f.name), str(f))
-    # wine numbers processes from scratch under each private wineserver, so the
-    # compiler's pid-named intermediates would collide in the shared %TEMP%.
-    for temp in prefix.glob("drive_c/users/*/AppData/Local/Temp"):
-        _mount("-t", "tmpfs", "homm1-temp", str(temp))
+    (ROOT / "TMP").mkdir()
     d = f"D:\\Heroes\\{rdir}"
     obj = workdir / (Path(rname).stem + ".obj")
     incs = ["/X", "/ID:\\Heroes", *[f"/ID:\\Heroes\\Vendor\\{v.name}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
