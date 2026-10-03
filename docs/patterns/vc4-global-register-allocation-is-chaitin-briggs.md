@@ -119,4 +119,5 @@ Consequences:
 - Live-range splitting (`range.c`, `-norange`) and coalescing heuristics.
 - How a node's position inside one bucket's chain is ordered: the simulation
   assumes the newest first. Every checked graph agreed, but no graph tested
-  this directly.
+  this directly. The ids themselves, and the fixed buckets of C2-created symbols,
+  are traced in [register ties follow the range id](vc4-register-tie-order-is-the-range-id.md).
