@@ -221,6 +221,7 @@ H1_ENUM_CONST_END(AdventureQuickViewPlacementConstant)
 // facing frame last), the boat's y offset and the hero frame's mirror bit.
 H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     CELL_PIXELS = 32,
+    CELL_PIXEL_SHIFT = 5,
     CELL_LAST_PIXEL = CELL_PIXELS - 1,
     STONE_TILE_NONE = -1,
     STONE_TILE_TOP_LEFT = 16,
@@ -2512,8 +2513,8 @@ void advManager::DrawCell(
 
     if (!forceDraw && !bShowIt)
         return;
-    pixelX7 = screenX << 5;
-    pixelY3 = screenY << 5;
+    pixelX7 = screenX << CELL_PIXEL_SHIFT;
+    pixelY3 = screenY << CELL_PIXEL_SHIFT;
     cell0 = GetCell(mapX, mapY);
     if (!gbAllBlack
         && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
@@ -5859,13 +5860,15 @@ short CPanelHandler(struct tag_message& message) {
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
                         case CONTROL_MUSIC_VOLUME:
-                            gConfig.musicVolume = (gConfig.musicVolume + 1) % (SOUND_VOLUME_LAST + 1);
+                            gConfig.musicVolume =
+                                (gConfig.musicVolume + 1) % (SOUND_VOLUME_LAST + 1);
                             gpSoundManager->AdjustMusicVolumes();
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_SOUND_VOLUME:
-                            gConfig.soundVolume = (gConfig.soundVolume + 1) % (SOUND_VOLUME_LAST + 1);
+                            gConfig.soundVolume =
+                                (gConfig.soundVolume + 1) % (SOUND_VOLUME_LAST + 1);
                             gpSoundManager->AdjustSoundVolumes();
                             changed = 1;
                             bPrefsChanged = 1;
@@ -6250,8 +6253,8 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
     }
 
     if (gpMouseManager->IsVis()) {
-        drawX = gpMouseManager->m_unknown49 >> 5;
-        drawY = gpMouseManager->m_unknown4d >> 5;
+        drawX = gpMouseManager->m_unknown49 >> CELL_PIXEL_SHIFT;
+        drawY = gpMouseManager->m_unknown4d >> CELL_PIXEL_SHIFT;
         ++bComboDraw[drawX][drawY];
         ++bComboDraw[drawX + 1][drawY];
         ++bComboDraw[drawX][drawY + 1];
@@ -6348,10 +6351,10 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
             }
         }
     }
-    giLimitUpdMinX <<= 5;
-    giLimitUpdMinY <<= 5;
-    giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << 5) - 1;
-    giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << 5) - 1;
+    giLimitUpdMinX <<= CELL_PIXEL_SHIFT;
+    giLimitUpdMinY <<= CELL_PIXEL_SHIFT;
+    giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << CELL_PIXEL_SHIFT) - 1;
+    giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << CELL_PIXEL_SHIFT) - 1;
     if (giLimitUpdMinX < COMBO_UPDATE_MIN)
         giLimitUpdMinX = COMBO_UPDATE_MIN;
     if (giLimitUpdMaxX > COMBO_UPDATE_MAX)
