@@ -17,7 +17,7 @@
 DATA(0x004c6a88)
 long gButtonRepeatTimer;
 DATA(0x004a2f98)
-int iLeftRightSave;
+int iLeftRightSave = 0;
 
 VA(0x0047eef0, 0x31)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
