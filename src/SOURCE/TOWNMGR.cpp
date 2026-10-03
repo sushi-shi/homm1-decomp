@@ -2,14 +2,43 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
+#include <BASE/bitmap.h>
 #include <BASE/BITS.h>
+#include <BASE/border.h>
+#include <BASE/executive.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/iconWidget.h>
+#include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/mouseManager.h>
+#include <BASE/resourceManager.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
+#include <BASE/textWidget.h>
+#include <BASE/widget.h>
 #include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/bankBox.h>
+#include <SOURCE/cursorTypes.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/recruitUnit.h>
+#include <SOURCE/strip.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
+#include <SOURCE/townObject.h>
 
 #include <stdlib.h>
 #include <string.h>

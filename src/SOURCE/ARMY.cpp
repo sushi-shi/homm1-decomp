@@ -3,14 +3,27 @@
 
 #include <match.h>
 
+#include <BASE/bitmap.h>
+#include <BASE/font.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <BASE/resourceManager.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/combatManager.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
+#include <SOURCE/searchArray.h>
 
 #include <stdio.h>
 #include <stdlib.h>

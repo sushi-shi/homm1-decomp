@@ -5,8 +5,11 @@
 #include <SOURCE/PATH.h>
 
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/searchArray.h>
 
 // Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two
 // wide-creature directions, the speed FindPath grants when speed is ignored,

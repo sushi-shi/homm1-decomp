@@ -18,7 +18,12 @@
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/KB.h>
-#include <H1/All.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/message.h>
+#include <BASE/soundManager.h>
+#include <H1/Macros.h>
+#include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/X_GLOBAL.h>

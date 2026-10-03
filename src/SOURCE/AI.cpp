@@ -5,10 +5,18 @@
 #include <match.h>
 
 #include <BASE/INPUTMGR_TYPES.h>
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/town.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>

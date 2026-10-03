@@ -4,8 +4,16 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <BASE/bitmap.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/message.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/game.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>

@@ -4,12 +4,18 @@
 
 #include <SOURCE/SETUP.h>
 
+#include <BASE/executive.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/comwin.h>
+#include <SOURCE/fileRequester.h>
+#include <SOURCE/game.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>

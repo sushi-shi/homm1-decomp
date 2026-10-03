@@ -9,7 +9,8 @@
 #include <windows.h>
 
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <H1/Ints.h>
+#include <H1/Macros.h>
 #include <SOURCE/netwinRuntime.h>
 
 #include <nb30.h>

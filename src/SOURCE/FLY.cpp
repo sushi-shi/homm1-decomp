@@ -3,7 +3,14 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <BASE/bitmap.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
+#include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>

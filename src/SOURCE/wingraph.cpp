@@ -4,12 +4,15 @@
 
 #include <SOURCE/wingraph.h>
 
+#include <BASE/bitmap.h>
+#include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
 #include <BASE/MOUSEMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/palette.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 

@@ -3,15 +3,25 @@
 
 #include <match.h>
 
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
 #include <BASE/Icon2b.h>
 #include <BASE/Icond2b.h>
 #include <BASE/INPUTMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/EVENTS.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/town.h>
 #include <SOURCE/X_GLOBAL.h>
 
 // Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant

@@ -3,6 +3,7 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/executive.h>
@@ -10,6 +11,7 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/palette.h>
@@ -17,7 +19,7 @@
 #include <BASE/soundManager.h>
 #include <BASE/soundmgr.h>
 #include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <H1/Macros.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>

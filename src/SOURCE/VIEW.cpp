@@ -7,9 +7,18 @@
 
 #include <SOURCE/VIEW.h>
 
+#include <BASE/dialog.h>
+#include <BASE/display.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
-#include <H1/All.h>
+#include <BASE/message.h>
+#include <BASE/widget.h>
+#include <SOURCE/army.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/X_GLOBAL.h>
 

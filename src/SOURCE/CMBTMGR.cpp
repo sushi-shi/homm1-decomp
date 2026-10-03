@@ -2,20 +2,38 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
+#include <BASE/bitmap.h>
+#include <BASE/font.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
+#include <BASE/palette.h>
+#include <BASE/resourceManager.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
 #include <BASE/soundmgr.h>
 #include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/cursorTypes.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
 #include <SOURCE/philAI.h>
+#include <SOURCE/town.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/X_GLOBAL.h>
 

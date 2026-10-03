@@ -7,10 +7,23 @@
 
 #include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
+#include <BASE/display.h>
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
-#include <H1/All.h>
+#include <BASE/font.h>
+#include <BASE/heroWindowManager.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/army.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/mapCell.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/EVENTS.h>

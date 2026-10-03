@@ -2,11 +2,14 @@
 
 #include <match.h>
 
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
 #include <SOURCE/FINDPATH.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
 // SeedPosition's working mobility, read back by PushPoint (FINDPATH storage).

@@ -5,15 +5,34 @@
 #include <SOURCE/EVENTS.h>
 
 #include <BASE/bmap2.h>
+#include <BASE/executive.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <H1/All.h>
+#include <BASE/resource.h>
+#include <BASE/sample.h>
+#include <BASE/soundManager.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/philAI.h>
+#include <SOURCE/playerData.h>
+#include <SOURCE/recruitUnit.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/searchArray.h>
+#include <SOURCE/swapManager.h>
+#include <SOURCE/town.h>
+#include <SOURCE/townManager.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <stdio.h>

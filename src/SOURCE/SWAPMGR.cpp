@@ -2,12 +2,23 @@
 
 #include <match.h>
 
+#include <BASE/baseManager.h>
+#include <BASE/heroWindow.h>
+#include <BASE/heroWindowManager.h>
+#include <BASE/icon.h>
 #include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/message.h>
+#include <BASE/resourceManager.h>
+#include <BASE/widget.h>
 #include <BASE/WINMGR_TYPES.h>
-#include <H1/All.h>
+#include <SOURCE/advManager.h>
+#include <SOURCE/armyGroup.h>
 #include <SOURCE/EVENTS.h>
+#include <SOURCE/game.h>
+#include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/swapManager.h>
 #include <SOURCE/townManager.h>
 
 #include <stdio.h>
