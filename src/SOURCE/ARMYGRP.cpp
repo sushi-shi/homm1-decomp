@@ -19,8 +19,7 @@
 // evidence: graph:2;base=0.513410;margin=0.267257;shape=0.385;size=0.817;calls=1.000;alternate=pol20:void armyGroup::constructor(void)@0x0008c040
 VA(0x00447920, 0x3c)
 armyGroup::armyGroup(void) {
-    memset(m_creatureTypes, -1, sizeof(m_creatureTypes));
-    memset(m_creatureCounts, 0, sizeof(m_creatureCounts));
+    CLEAR_ARMY_GROUP(*this);
 }
 
 // @dead-code

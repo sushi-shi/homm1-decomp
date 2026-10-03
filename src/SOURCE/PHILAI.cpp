@@ -3051,8 +3051,7 @@ signed char philAI::CombatMonsterEvent(hero* h, signed char monType, int* pCount
     short newCount;
     short i;
 
-    memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, sizeof(gpMonGroup->m_creatureTypes));
-    memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+    CLEAR_ARMY_GROUP(*gpMonGroup);
     if (*pCount / ARMY_GROUP_SLOT_COUNT > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             gpMonGroup->m_creatureTypes[i] = monType;
@@ -3436,8 +3435,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             break;
         case MAP_OBJECT_MONSTER:
             iMonsterCount = pEventCell->m_objectMetadata & MONSTER_COUNT_MASK;
-            memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, sizeof(gpMonGroup->m_creatureTypes));
-            memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+            CLEAR_ARMY_GROUP(*gpMonGroup);
             if (iMonsterCount / ARMY_GROUP_SLOT_COUNT > 0) {
                 for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
                     gpMonGroup->m_creatureTypes[iEventLoop] = pEventCell->m_objectIndex;

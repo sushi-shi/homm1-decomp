@@ -1771,8 +1771,7 @@ signed char advManager::CombatMonsterEvent(
             UpdateScreen(0, 0);
         m_lastQuickViewX = QUICK_VIEW_CLEARED;
     }
-    memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, ARMY_GROUP_SLOT_COUNT);
-    memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+    CLEAR_ARMY_GROUP(*gpMonGroup);
     if (count / ARMY_GROUP_SLOT_COUNT > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             gpMonGroup->m_creatureTypes[i] = monsterType;
