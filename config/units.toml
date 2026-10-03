@@ -209,7 +209,7 @@ flags = "cpp_carcass_eh"
 unit = "SOURCE/EVENTS"
 source = "src/SOURCE/EVENTS.cpp"
 # HeroSwap's fs:[0] frame around new swapManager proves /GX.
-flags = "cpp_carcass_eh"
+flags = "cpp_carcass_eh_gi"
 
 [[unit]]
 unit = "SOURCE/GAME"

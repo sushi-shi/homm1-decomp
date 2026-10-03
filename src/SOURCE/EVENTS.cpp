@@ -1509,6 +1509,7 @@ int advManager::GiveRandomArtifact(class hero* eventHero) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
 VA(0x00460586, 0xb0)
+#line 1110 "D:\\Heroes\\Source\\EVENTS.CPP"
 int advManager::GiveExperience(class hero* eventHero, int experience, signed char checkLevel) {
     int prevLevel;
     int unusedValue1;
@@ -1519,12 +1520,10 @@ int advManager::GiveExperience(class hero* eventHero, int experience, signed cha
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
     eventHero->m_level = prevLevel;
     eventHero->m_experience += experience;
-    ProcessAssert(experience >= 0, "D:\\Heroes\\Source\\EVENTS.CPP", gEventsAssertLine + 8);
-    ProcessAssert(
-        eventHero->m_experience >= 0,
-        "D:\\Heroes\\Source\\EVENTS.CPP",
-        gEventsAssertLine + 9
-    );
+#line 1118
+    ProcessAssert(experience >= 0, __FILE__, __LINE__);
+#line 1119
+    ProcessAssert(eventHero->m_experience >= 0, __FILE__, __LINE__);
     newLevel = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)
         eventHero->CheckLevel();
@@ -3209,11 +3208,9 @@ void advManager::ReceiveHeroTownData(
     }
 }
 
-// EVENTS owns retail .data 0x004a0504-0x004a07bb and .bss 0x004ca904. Retail
-// emits gEventsAssertLine (source-line base 1110) among GiveExperience's literals.
+// EVENTS owns retail .data 0x004a0504-0x004a07bb and .bss 0x004ca904. GiveExperience's
+// assertion line is its /Gi compiler line static (1110, evidence/vc4-gi-line-var.md).
 DATA(0x004a0504)
 int giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
-DATA(0x004a06a0)
-short gEventsAssertLine = 1110;
 DATA(0x004ca904)
 signed char gbEventMusicPlaying;
