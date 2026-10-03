@@ -2353,7 +2353,7 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
 
     for (drawY = 1; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++) {
         PollSound();
-        if (m_cursorDirection > 4) {
+        if (m_cursorDirection > MAP_DIRECTION_UNMIRRORED_LAST) {
             for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++)
                 DrawCell(
                     originX + drawX,
@@ -5873,7 +5873,7 @@ short CPanelHandler(struct tag_message& message) {
                             break;
                         case CONTROL_WALK_SPEED:
                             ++gConfig.walkSpeed;
-                            gConfig.walkSpeed %= WALK_SPEED_JUMP + 1;
+                            gConfig.walkSpeed %= WALK_SPEED_COUNT;
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
@@ -6847,7 +6847,8 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
         for (j = gpSearchArray->m_pathLength - 1; j >= 0; --j) {
             dir = gpSearchArray->m_directions[j];
             terr = giGroundToTerrain[GetCell(x, y)->m_tileIndex];
-            remMob -= CalcTerrainCost(terr, dir & 1, remMob, pHero->m_heroClass);
+            remMob -=
+                CalcTerrainCost(terr, dir & MAP_DIRECTION_DIAGONAL_BIT, remMob, pHero->m_heroClass);
             x += normalDirTable[dir].x;
             y += normalDirTable[dir].y;
             if (j == 0) {

@@ -19,7 +19,9 @@ H1_ENUM_BEGIN(TerrainType)
     TERRAIN_SWAMP = 3,
     TERRAIN_LAVA = 4,
     TERRAIN_DESERT = 5,
-    TERRAIN_DIRT = 6
+    TERRAIN_DIRT = 6,
+    // Terrains after WATER_LAST are land (philAI's embark/landing tests).
+    TERRAIN_WATER_LAST = TERRAIN_WATER
 H1_ENUM_END(TerrainType)
 // clang-format on
 
