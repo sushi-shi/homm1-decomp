@@ -84,7 +84,12 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
     ROOT.mkdir(exist_ok=True)
     SERVER_DIR.mkdir(mode=0o700, exist_ok=True)
     source_repo = (repo or REPO).resolve()
-    contract = tomllib.loads((source_repo / "config/units.toml").read_text())
+    # A generated clean/control tree deliberately has no reconstruction config.
+    # Its verification still uses this checkout's compiler/path contract.
+    contract_path = source_repo / "config/units.toml"
+    if not contract_path.is_file():
+        contract_path = REPO / "config/units.toml"
+    contract = tomllib.loads(contract_path.read_text())
     source_dir = (unit.split("/", 1)[0] if unit else src.parent.name).upper()
     source_root = contract.get("build", {}).get("source_roots", {}).get(source_dir)
     job = {"source_root": source_root, "src": str(src), "out": str(out), "flags": flags,
