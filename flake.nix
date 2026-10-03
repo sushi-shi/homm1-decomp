@@ -137,6 +137,15 @@
             export WINEDEBUG="fixme-all"
           '';
         };
+        # Playing, not building: gamescope's closure stays out of `.#build`.
+        # `homm1 play` writes build/game-wine/play.sh, which enters this shell
+        # when gamescope is not on PATH.
+        play = pkgs.mkShell {
+          packages = [ pkgs.gamescope pkgs.wineWow64Packages.staging ];
+          shellHook = ''
+            export WINEDLLOVERRIDES="mscoree,mshtml="
+          '';
+        };
       };
     };
 }

@@ -36,6 +36,7 @@ homm1 tool wine --init
 homm1 build
 homm1 match BASE/MOUSEMGR
 homm1 verify status
+homm1 play --data /path/to/HEROES   # optional: run the build
 ```
 
 The optional editor is supplied with `init --editor-exe /path/to/EDITOR.EXE`.

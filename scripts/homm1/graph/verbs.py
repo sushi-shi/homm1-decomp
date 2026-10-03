@@ -472,7 +472,65 @@ def match_main(argv: list[str] | None = None) -> int:
     return rc
 
 
-VERBS = {"build": build_main, "link": link_main, "match": match_main}
+# --------------------------------------------------------------------------- #
+# homm1 play
+# --------------------------------------------------------------------------- #
+GAME_ENV = "build/game-wine"
+
+
+def play_main(argv: list[str] | None = None) -> int:
+    """Build, link with resources, install the candidate beside your game data
+    and run it (Gruntz's `gruntz play`; runner in homm1.graph.play).
+
+    The installed game folder is given once with --data and remembered; the
+    user's folder is never written. `--retail` runs the staged retail
+    HEROES.EXE in the same environment, the control for triaging Wine.
+    """
+    import argparse
+    from homm1.graph import play
+    from homm1.graph.link import has_rsrc
+    ap = argparse.ArgumentParser(prog="homm1 play", description=play_main.__doc__)
+    ap.add_argument("--data", type=Path,
+                    help="installed Heroes of Might and Magic (Windows 95) folder; "
+                         "remembered after the first launch")
+    ap.add_argument("--cd", type=Path, help="the game CD's contents (remembered)")
+    ap.add_argument("--retail", action="store_true",
+                    help="run the staged retail HEROES.EXE instead of the candidate")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="build, install and prepare the prefix, but do not launch")
+    a = ap.parse_args(argv)
+    target = REPO / GAME_ENV
+    data = play.remembered(target, "data", a.data)
+    cd = play.remembered(target, "cd", a.cd)
+    if data is None:
+        print('[play] first launch: homm1 play --data "/path/to/HEROES"', file=sys.stderr)
+        return 2
+    try:
+        play.runtime(data, cd)
+    except ValueError as error:
+        print(f"[play] {error}", file=sys.stderr)
+        return 1
+    if a.retail:
+        from homm1.core.paths import retail_exe
+        executable = retail_exe()
+    else:
+        rc = build_main([]) or link_main([])
+        if rc:
+            return rc
+        executable = REPO / graph.CANDIDATE_EXE
+        if not has_rsrc(executable):
+            print("[play] the candidate has no .rsrc (menus, About box, icon): install "
+                  "the pinned resource compiler with `homm1 toolchain install --id vc40 "
+                  "--media build/downloads/MSVC40.iso`", file=sys.stderr)
+            return 1
+    try:
+        return play.play(target, data, cd, executable, f"{REPO}#play", a.dry_run)
+    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+        print(f"[play] {error}", file=sys.stderr)
+        return 1
+
+
+VERBS = {"build": build_main, "link": link_main, "match": match_main, "play": play_main}
 
 
 from homm1.core.usage import logged

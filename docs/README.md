@@ -3,7 +3,8 @@
 - [Matching workflow](tooling.md), [build system](build-system.md),
   [command map](tooling-map.md), [repository workflow](workflow.md).
 - [Compiler and toolchain](compiler.md), [candidate linking](linker-flags.md),
-  [candidate-image checks](image-diff.md), [clean source branch](clean-source.md).
+  [candidate-image checks](image-diff.md), [playing the build](play.md),
+  [clean source branch](clean-source.md).
 - [Score tracking](match-status.md), [permutation](permuter.md),
   [compiler patterns](patterns/INDEX.md).
 - [Cleanliness](cleanliness-metrics.md), [source markers](comment-markers.md),

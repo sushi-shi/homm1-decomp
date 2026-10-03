@@ -100,7 +100,7 @@ def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__.strip())
-        print("\ncommands: init inspect toolchain configure build link match labels "
+        print("\ncommands: init inspect toolchain configure build link match play labels "
               "model delink compare audit sema walls permute lsp ghidra verify workflow clean tool")
         return 0 if argv else 2
     cmd, rest = argv[0], argv[1:]
@@ -202,7 +202,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             from homm1.permute.match_variants import main as permute_main
         return permute_main(permute_args)
-    if cmd in ("build", "link", "match"):
+    if cmd in ("build", "link", "match", "play"):
         from homm1.graph.verbs import VERBS
         return VERBS[cmd](rest)
     if cmd == "configure":
