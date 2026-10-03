@@ -720,9 +720,12 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
     rows, withheld = [], []
     for stem, c in coffx.objects(base_dir):
         pool = {}                       # member -> (storage, off, payload, size)
+        section_of = {}                 # member -> its section index
         for sec in c.section_table:
+            # A /Gy TU gives each function's literals their own COMDAT data
+            # section; the members are still TU-local `$SG`/`$T` literals.
             storage = ORDINARY_STORAGE.get(sec["name"])
-            if storage is None or sec["characteristics"] & LNK_COMDAT:
+            if storage is None:
                 continue
             members = c.section_members(sec["index"])
             offsets = sorted(o for o, _n, _s in members)
@@ -738,6 +741,7 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
                         continue
                     want = want[:nul + 1]
                 pool[name] = (storage, off, want, len(want))
+                section_of[name] = sec["index"]
         if not pool:
             continue
 
@@ -842,13 +846,13 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
         # re-prove it. Nothing is extrapolated past the last proven member.
         placed = {r["member"]: r["rva"] for r in rows
                   if r["object"] == f"{stem}.c" and r["member"] in pool}
-        runs: dict[str, list[tuple[int, str]]] = defaultdict(list)
-        for member, (storage, off, _want, _size) in pool.items():
-            runs[storage].append((off, member))
+        runs: dict[int, list[tuple[int, str]]] = defaultdict(list)
+        for member, (_storage, off, _want, _size) in pool.items():
+            runs[section_of[member]].append((off, member))
         unplaced = []
         for member in stranded:
             storage, off, want, size = pool[member]
-            run = sorted(runs[storage])
+            run = sorted(runs[section_of[member]])
             before = [(o, m) for o, m in run if o < off and m in placed]
             after = [(o, m) for o, m in run if o > off and m in placed]
             if before and after:
