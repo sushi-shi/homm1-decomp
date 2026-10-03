@@ -6,7 +6,8 @@
 #include <windows.h>
 
 #include <Domains.h>
-#include <SOURCE/DirectDraw.h>
+#include <ddraw.h>
+#include <wing.h>
 
 struct IDirectDraw;
 struct IUnknown;
@@ -84,14 +85,6 @@ struct WingImage {
     RGBQUAD colors[256];
     void* bits;
 };
-
-extern "C" BOOL __stdcall WinGBitBlt(HDC, int, int, int, int, HDC, int, int);
-extern "C" BOOL __stdcall WinGStretchBlt(HDC, int, int, int, int, HDC, int, int, int, int);
-extern "C" UINT __stdcall WinGSetDIBColorTable(HDC, UINT, UINT, const RGBQUAD*);
-
-extern "C" BOOL __stdcall WinGRecommendDIBFormat(BITMAPINFO*);
-extern "C" HDC __stdcall WinGCreateDC();
-extern "C" HBITMAP __stdcall WinGCreateBitmap(HDC, BITMAPINFO*, void**);
 
 extern H1_ENUM_STORAGE(WingraphGraphicsType, int) giGraphicsType;
 extern int giMainVideoModeHeight;
