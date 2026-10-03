@@ -681,7 +681,8 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
 
     Content matching cannot answer this (FP pools are not /Gf-pooled, and a
     content-derived address is self-confirming). Instead, retail's DIR32 sites
-    inside each claimed function pair positionally with the base obj's COFF
+    inside each claimed function (and each claimed datum, e.g. a table of
+    literal pointers) pair positionally with the base obj's COFF
     relocations; the pairing PROVES ITSELF (every known symbol's rva must
     equal the address retail wrote, plus the addend in our own bytes), and
     only then is a `$T` site read off and byte-re-proven. The manifest name is
@@ -706,10 +707,12 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
             known[msvc_names.mask(b.name)] = b.rva
             fn_extent[msvc_names.mask(b.name)] = (b.rva, b.size)
     pins: dict[str, list[tuple[int, int]]] = defaultdict(list)
+    data_rva: dict[str, int] = {}
     for b in model.data:
         if not b.channel or not b.name:
             continue
         known.setdefault(msvc_names.mask(b.name), b.rva)
+        data_rva.setdefault(msvc_names.mask(b.name), b.rva)
         if b.channel in ("data_compgen", "src_data_compgen") \
                 and member_re.fullmatch(b.name):
             pins[b.unit].append((b.rva, b.size))
@@ -740,7 +743,9 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
 
         votes: dict[str, set[int]] = defaultdict(set)
         for sec in c.section_table:
-            if not sec["characteristics"] & MEM_EXECUTE:
+            code = bool(sec["characteristics"] & MEM_EXECUTE)
+            if not code and (ORDINARY_STORAGE.get(sec["name"]) is None
+                             or sec["characteristics"] & LNK_COMDAT):
                 continue
             # `__except_list` is the absolute fs:[0] slot (value 0): the
             # linker leaves no base relocation for it, so it has no retail
@@ -751,8 +756,22 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
             if not rel:
                 continue
             text = c.section_payload(sec["index"])
-            for off, name in c.defined_symbols(sec["index"]):
-                hit = fn_extent.get(msvc_names.mask(name))
+            # The referrers: claimed functions in code, and claimed data
+            # (a table of literal pointers) in .data/.rdata, whose extent is
+            # cl's own member span.
+            if code:
+                referrers = [(off, fn_extent.get(msvc_names.mask(name)))
+                             for off, name in c.defined_symbols(sec["index"])]
+            else:
+                members = c.section_members(sec["index"])
+                starts = sorted({o for o, _n, _s in members})
+                referrers = []
+                for off, name, _scl in members:
+                    rva = data_rva.get(msvc_names.mask(name))
+                    if rva is not None:
+                        end = next((o for o in starts if o > off), sec["size"])
+                        referrers.append((off, (rva, end - off)))
+            for off, hit in referrers:
                 if hit is None:
                     continue
                 rva, size = hit
@@ -815,6 +834,34 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
                 withheld.append((0, member, "referrers disagree on the rva"))
             else:
                 stranded.append(member)
+
+        # A member no paired function references sits between two that are
+        # addressed: when both neighbours (in cl's own section order) were
+        # placed by the same rva - offset delta, the run between them is laid
+        # out as retail laid it out, and the member's bytes at that delta
+        # re-prove it. Nothing is extrapolated past the last proven member.
+        placed = {r["member"]: r["rva"] for r in rows
+                  if r["object"] == f"{stem}.c" and r["member"] in pool}
+        runs: dict[str, list[tuple[int, str]]] = defaultdict(list)
+        for member, (storage, off, _want, _size) in pool.items():
+            runs[storage].append((off, member))
+        unplaced = []
+        for member in stranded:
+            storage, off, want, size = pool[member]
+            run = sorted(runs[storage])
+            before = [(o, m) for o, m in run if o < off and m in placed]
+            after = [(o, m) for o, m in run if o > off and m in placed]
+            if before and after:
+                (o_before, m_before), (o_after, m_after) = before[-1], after[0]
+                delta = placed[m_before] - o_before
+                at = img.off(off + delta)
+                if (delta == placed[m_after] - o_after and at is not None
+                        and img.data[at:at + size] == want):
+                    emit(member, off + delta, storage, size, want,
+                         f"{provenance}-interpolated")
+                    continue
+            unplaced.append(member)
+        stranded = unplaced
 
         taken = {r["rva"] for r in rows}
         pairs: dict[int, list[str]] = defaultdict(list)
