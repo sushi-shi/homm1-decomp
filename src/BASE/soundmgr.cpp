@@ -29,15 +29,18 @@
 
 #pragma intrinsic(strcpy, memset)
 
-short gSoundManagerAssertLine = 0;
-char gSoundManagerAssertFile1[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-char gSoundManagerAssertFile2[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-char gSoundManagerAssertFile3[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-char gSoundManagerAssertFile4[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-char gSoundManagerAssertFile5[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
+// Retail compiled Soundmgr.cpp incrementally (/Gi): every assertion's __LINE__ is
+// read from a per-function static (?__LINE__Var@...) holding the function's
+// original line, plus the assertion's offset (`movsx reg, word [var]; add reg, n`).
+// The #line directives restore the original file name and the retail line values
+// (52, 605, 740, 808, 900, 1008, 1118) so VC4 emits the same statics; see
+// evidence/vc4-gi-line-var.md. PoL's CD/sample helpers are ordinary member
+// functions: /Ob2 expands them and the linker drops the unreferenced copies, and
+// ValidatePreviousPosition's single line static (52) is shared by CDStop and CDPlay.
+
 
 // PoL preserves this helper family; retail expands these helpers in CDPlay.
-inline void HandleMCIError(int errorCode, char* command) {
+void HandleMCIError(int errorCode, char* command) {
     mciGetErrorStringA(errorCode, lpszReturnString, CD_MCI_RESULT_LAST);
     sprintf(
         gText,
@@ -53,14 +56,12 @@ inline void HandleMCIError(int errorCode, char* command) {
     ShutDown(gText);
 }
 
-inline void soundManager::ValidatePreviousPosition(int track) {
+#line 52 "D:\\Heroes\\Base\\Soundmgr.cpp"
+void soundManager::ValidatePreviousPosition(int track) {
     char buffer[CD_POSITION_BUFFER_SIZE];
     char* separator;
-    ProcessAssert(
-        track >= 0 && track < MUSIC_TRACK_COUNT,
-        gCDPositionAssertFile,
-        gCDPositionAssertLine + 4
-    );
+#line 56
+    ProcessAssert(track >= 0 && track < MUSIC_TRACK_COUNT, __FILE__, __LINE__);
     if (CDPreviousPosition[track][0] == 0)
         return;
     strcpy(buffer, CDPreviousPosition[track]);
@@ -71,7 +72,7 @@ inline void soundManager::ValidatePreviousPosition(int track) {
         CDPreviousPosition[track][0] = 0;
 }
 
-inline void soundManager::CDSetVolume(int volume, int fadeScale) {
+void soundManager::CDSetVolume(int volume, int fadeScale) {
     int level;
     unsigned long stereoVolume;
     if (gbNoSound != 0 || m_auxDevice == CD_AUX_DEVICE_NONE)
@@ -116,7 +117,7 @@ void soundManager::CDStop(void) {
 }
 
 // PoL keeps this out of line; HoMM1 retains only its expansions.
-inline int soundManager::CDIsPlaying(void) {
+int soundManager::CDIsPlaying(void) {
     if (gbNoSound != 0)
         return 0;
     wsprintfA(CommandString, "status CD mode");
@@ -327,7 +328,7 @@ struct _DIG_DRIVER* WAVE_init_driver(
     return drvr;
 }
 
-inline void soundManager::AllocateSampleHandles(void) {
+void soundManager::AllocateSampleHandles(void) {
     int sampleIndex;
     if (gbNoSound != 0)
         return;
@@ -401,7 +402,7 @@ managerReady:
     return 0;
 }
 
-inline void soundManager::CDShutdown(void) {
+void soundManager::CDShutdown(void) {
     if (gbNoSound != 0)
         return;
     if (m_cdStarted == 0)
@@ -439,7 +440,7 @@ short soundManager::Main(tag_message&) {
     return 0;
 }
 
-inline int soundManager::ConvertVolume(int volume, int soundType) {
+int soundManager::ConvertVolume(int volume, int soundType) {
     int result = 0;
     if (soundType == SOUND_VOLUME_MUSIC) {
         if (gConfig.musicVolume >= SOUND_VOLUME_FIRST && gConfig.musicVolume <= SOUND_VOLUME_LAST) {
@@ -462,6 +463,7 @@ inline int soundManager::ConvertVolume(int volume, int soundType) {
 
 // Retail shares one `return NULL` tail between the missing-file and fopen-failure exits.
 VA(0x00477cc0, 0x331)
+#line 605 "D:\\Heroes\\Base\\Soundmgr.cpp"
 struct _SAMPLE* soundManager::StartSample(
     char* name,
     char**,
@@ -493,11 +495,8 @@ struct _SAMPLE* soundManager::StartSample(
             StopSample(m_musicSample);
             m_musicStreamOpen = 0;
             // byte-evidenced: retail passes its FILE pointer to the integer assertion API.
-            ProcessAssert(
-                reinterpret_cast<int>(m_midiFile),
-                gStartSampleAssertFile,
-                gStartSampleAssertLine + 37
-            );
+#line 642
+            ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
             fclose(m_midiFile);
             m_midiFile = NULL;
         }
@@ -563,6 +562,7 @@ notFound:
 }
 
 VA(0x00478000, 0xe1)
+#line 740 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::StopAllSamples(void) {
     short sampleIndex;
     int wait;
@@ -580,11 +580,8 @@ void soundManager::StopAllSamples(void) {
     } else if (m_musicStreamOpen != 0) {
         m_musicStreamOpen = 0;
         // byte-evidenced: retail passes the FILE pointer as its assertion condition.
-        ProcessAssert(
-            reinterpret_cast<int>(m_midiFile),
-            gStopAllSamplesAssertFile,
-            gStopAllSamplesAssertLine + 27
-        );
+#line 767
+        ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
         fclose(m_midiFile);
         m_midiFile = NULL;
     }
@@ -614,6 +611,7 @@ void soundManager::StopSample(struct _SAMPLE* sample) {
 }
 
 VA(0x00478140, 0x1f1)
+#line 808 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::ModifySample(struct _SAMPLE* sampleHandle, short operation, long value) {
     if (gbNoSound != 0)
         return;
@@ -634,7 +632,8 @@ void soundManager::ModifySample(struct _SAMPLE* sampleHandle, short operation, l
                 gSampleVolumes[foundChannel] = static_cast<short>(value);
             break;
         case SOUND_OPERATION_MUSIC_VOLUME:
-            ProcessAssert(m_cdReady == 0, gModifySampleAssertFile, gModifySampleAssertLine + 27);
+#line 835
+            ProcessAssert(m_cdReady == 0, __FILE__, __LINE__);
             AIL_set_sample_volume(sampleHandle, ConvertVolume(value, SOUND_VOLUME_MUSIC));
             if (foundChannel >= 0)
                 gSampleVolumes[foundChannel] = static_cast<short>(value);
@@ -686,6 +685,7 @@ void soundManager::AdjustSoundVolumes(void) {
 }
 
 VA(0x00478450, 0x16c)
+#line 900 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::AdjustMusicVolumes(void) {
     unsigned char savePosition;
     if (gbNoSound != 0)
@@ -713,11 +713,9 @@ void soundManager::AdjustMusicVolumes(void) {
             CDSetVolume(SOUND_VOLUME_FROM_CONFIG, 0);
         } else {
             if (savePosition != 0) {
-                ProcessAssert(
-                    reinterpret_cast<int>(m_midiFile), // byte-evidenced
-                    gAdjustMusicAssertFile,
-                    gAdjustMusicAssertLine + 40
-                );
+                // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+#line 940
+                ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
                 m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
             }
             ModifySample(m_sampleHandles[0], SOUND_OPERATION_VOLUME, 0);
@@ -757,6 +755,7 @@ void soundManager::SetMusicQuality(int musicSource) {
 }
 
 VA(0x004786d0, 0x26e)
+#line 1008 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
     char filename[MUSIC_FILENAME_CAPACITY];
     char* data;
@@ -782,11 +781,8 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
             || m_currentTrack == MUSIC_POSITION_TRACK_1 || m_currentTrack == MUSIC_POSITION_TRACK_2
             || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
         // byte-evidenced: retail passes the FILE pointer as its assertion condition.
-        ProcessAssert(
-            reinterpret_cast<int>(m_midiFile),
-            gAmbientMusicAssertFile,
-            gAmbientMusicAssertLine + 37
-        );
+#line 1045
+        ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
         m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
     }
     m_currentTrack = static_cast<char>(track);
@@ -841,6 +837,7 @@ void soundManager::PlayAmbientMusic(int track, long resume, int volume) {
 // donor Buka TU BASE/soundmgr; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:void soundManager::PollSound(void)@0x000cd320
 VA(0x00478940, 0x489)
+#line 1118 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::PollSound(void) {
     int volume;
     int buffer;
@@ -870,11 +867,9 @@ void soundManager::PollSound(void) {
                     || m_currentTrack == MUSIC_POSITION_TRACK_2
                     || m_currentTrack == MUSIC_POSITION_TRACK_3)) {
                 if (m_cdReady == 0) {
-                    ProcessAssert(
-                        reinterpret_cast<int>(m_midiFile), // byte-evidenced
-                        gSoundManagerAssertFile1,
-                        gSoundManagerAssertLine + 42
-                    );
+                    // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+#line 1160
+                    ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
                     m_savedTrackPositions[m_currentTrack] = ftell(m_midiFile);
                 }
             } else {
@@ -942,11 +937,9 @@ void soundManager::PollSound(void) {
         buffer = AIL_sample_buffer_ready(m_musicSample);
         if (buffer != -1) {
             Process1WindowsMessage();
-            ProcessAssert(
-                reinterpret_cast<int>(m_midiFile), // byte-evidenced
-                gSoundManagerAssertFile2,
-                gSoundManagerAssertLine + 103
-            );
+            // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+#line 1221
+            ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
             unsigned long bytesRead =
                 fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
             AIL_load_sample_buffer(m_musicSample, buffer, m_musicBuffers[buffer], bytesRead);
@@ -956,11 +949,9 @@ void soundManager::PollSound(void) {
         if (AIL_sample_status(m_musicSample) != SAMPLE_STATUS_PLAYING) {
             if (m_musicStreamRestart != 0) {
                 if (m_fading == 0) {
-                    ProcessAssert(
-                        reinterpret_cast<int>(m_midiFile), // byte-evidenced
-                        gSoundManagerAssertFile3,
-                        gSoundManagerAssertLine + 116
-                    );
+                    // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+#line 1234
+                    ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
                     rewind(m_midiFile);
                 } else {
                     m_fading = 0;
@@ -997,11 +988,9 @@ void soundManager::PollSound(void) {
                 buffer = AIL_sample_buffer_ready(m_musicSample);
                 if (buffer != -1) {
                     Process1WindowsMessage();
-                    ProcessAssert(
-                        reinterpret_cast<int>(m_midiFile), // byte-evidenced
-                        gSoundManagerAssertFile4,
-                        gSoundManagerAssertLine + 145
-                    );
+                    // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+#line 1263
+                    ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
                     unsigned long bytesRead =
                         fread(m_musicBuffers[buffer], 1, MUSIC_STREAM_BUFFER_SIZE, m_midiFile);
                     AIL_load_sample_buffer(
@@ -1013,11 +1002,9 @@ void soundManager::PollSound(void) {
                 }
             } else {
                 m_musicStreamOpen = 0;
-                ProcessAssert(
-                    reinterpret_cast<int>(m_midiFile), // byte-evidenced
-                    gSoundManagerAssertFile5,
-                    gSoundManagerAssertLine + 153
-                );
+                // byte-evidenced: retail passes the FILE pointer as its assertion condition.
+#line 1271
+                ProcessAssert(reinterpret_cast<int>(m_midiFile), __FILE__, __LINE__);
                 fclose(m_midiFile);
                 m_midiFile = NULL;
             }
@@ -1136,32 +1123,8 @@ signed char CDTrackMap[100] = {2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 1
                                46, 47, 48, 49, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
                                99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
                                99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 50};
-DATA(0x004a14f8)
-short gCDPositionAssertLine = 52;
-DATA(0x004a14fc)
-char gCDPositionAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
 DATA(0x004a1620)
 int giCDDrive = 0;
-DATA(0x004a1694)
-short gStartSampleAssertLine = 605;
-DATA(0x004a1698)
-char gStartSampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a16c8)
-short gStopAllSamplesAssertLine = 740;
-DATA(0x004a16cc)
-char gStopAllSamplesAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a16e8)
-short gModifySampleAssertLine = 808;
-DATA(0x004a16ec)
-char gModifySampleAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a1708)
-short gAdjustMusicAssertLine = 900;
-DATA(0x004a170c)
-char gAdjustMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
-DATA(0x004a1728)
-short gAmbientMusicAssertLine = 1008;
-DATA(0x004a172c)
-char gAmbientMusicAssertFile[] = "D:\\Heroes\\Base\\Soundmgr.cpp";
 DATA(0x004cc668)
 char lpszReturnString[CD_MCI_RESULT_LAST + 1];
 DATA(0x004cc768)
