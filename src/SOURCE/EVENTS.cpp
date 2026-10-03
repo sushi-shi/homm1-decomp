@@ -1234,8 +1234,8 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
 VA(0x0045fcfa, 0x1d7)
 void advManager::EraseObj(class mapCell* cell, int x, int y) {
     signed char erased = 0;
-    int i;
     int j;
+    int i;
 
     erased = 1;
     cell->m_triggerType = MAP_OBJECT_NONE;
