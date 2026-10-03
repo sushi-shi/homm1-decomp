@@ -3,8 +3,8 @@
 Ported: DUPLICATES, ORDER, and header SELF-SUFFICIENCY are gated. The order
 (groups, blank-line separated): 0 config #defines; 1 <rva.h>; 2 the TU's own
 header; 3 the platform preludes in DEPENDENCY order (Mfc.h, MfcNoInline.h,
-MfcWin.h, windows.h - they configure how later headers parse, so group 3 is
-RANKED, not sorted); 4 project headers; 5 libraries. A header that names a
+MfcWin.h, mss.h, windows.h - they configure how later headers parse, so group 3
+is RANKED, not sorted; Miles' mss.h includes windows.h and mmsystem.h itself); 4 project headers; 5 libraries. A header that names a
 platform type pulls its own prelude (self-sufficiency; proven by the
 2026-08-02 standalone-compile sweep). Anything unrecognised in the block
 makes the file MANUAL: reported, never mangled.
@@ -32,7 +32,7 @@ PP_RE = re.compile(r"^\s*#\s*(\w+)")
 
 RVA_H = "match.h"
 
-PRELUDE_RANK = {"Mfc.h": 0, "MfcNoInline.h": 1, "MfcWin.h": 2, "windows.h": 3}
+PRELUDE_RANK = {"Mfc.h": 0, "MfcNoInline.h": 1, "MfcWin.h": 2, "mss.h": 3, "windows.h": 4}
 
 G_RVA, G_OWN, G_PRELUDE, G_PROJECT, G_LIBRARY = 1, 2, 3, 4, 5
 GROUPS = (G_RVA, G_OWN, G_PRELUDE, G_PROJECT, G_LIBRARY)
