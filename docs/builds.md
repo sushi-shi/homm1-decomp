@@ -152,13 +152,19 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   - `com_init`, `com_rcv`, `com_snd`, `comm_wrt_task`: serial code rewritten,
     and new strings appear ("Initialize communications paramaters", "Suggested
     solutions: … lowering the BAUD rate").
-  - A small new function before `army::FlyTo`.
-- **Unchanged source, different code:** about 19 further functions differ from
-  1.0 only in register choice or commuted operands, with identical source
-  shape. They are DoAI, DoAttack, Walk, ComboDraw, PushPoint, SeedPosition,
-  NewMap, RVConversion, ViewPuzzle, GetCategoryStats, LoadGame,
-  CalcDifficultyRating, UpdBottomViewEnemyTurn, HandleRemoteDeadPlayerExit,
-  executive::ShutDownSystem and several soundmgr, ICON and miscwin functions.
+  - `ShutdownComError` is the added function, between `init_anchor` and
+    `com_init`, at 1.1 RVA `0x072e57`. The earlier attribution before
+    `army::FlyTo` was a discovery error.
+  - `NewMap` changes the ultimate-artifact RNG call order to 30/20/20.
+  - `CDStop` sends `stop CD wait` instead of `stop CD`.
+  - `GiveExperience` changes its `/Gi` line static from 1110 to 1113.
+- **Other code differences:** mirrored integer comparisons, reordered integer
+  sums and address calculations, and register assignments preserve the observed
+  decisions. Floating accumulation in `RVConversion` and
+  `ValueOfEventAtPosition` also changes; identical rounding is not assumed.
+  The initial masked-byte survey could not establish unchanged source or
+  behavioral equivalence. The complete per-function findings and current
+  reconstruction limits are in [the 1.1 review](win95-1.1.md#changed-function-review).
 - **Readme (patch) fixes:** cursor refresh after AI turns; cursor over castles;
   first combat monster behaviour; Identify Hero visibility.
 - **Usefulness:** a second compile-state sample from the same compiler and tree.
